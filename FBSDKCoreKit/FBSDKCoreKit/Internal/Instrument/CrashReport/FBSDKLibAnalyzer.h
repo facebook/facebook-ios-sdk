@@ -18,9 +18,12 @@
 
 #import <Foundation/Foundation.h>
 
-@interface FBSDKCrashHandler : NSObject
+#import "FBSDKCrashHandler.h"
 
-+ (void)installExceptionsHandler;
-+ (void)uninstallExceptionsHandler;
+@interface FBSDKLibAnalyzer : NSObject
+
++ (void)generateMethodsTable;
++ (void)processCrashInfo:(NSDictionary<NSString *, id> *)crashInfo
+                   block:(FBSDKCrashLoggerReportBlock)reportBlock;
 
 @end

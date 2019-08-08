@@ -18,21 +18,12 @@
 
 #import <Foundation/Foundation.h>
 
-NS_ASSUME_NONNULL_BEGIN
+@interface FBSDKCrashHandler : NSObject
 
-FOUNDATION_EXPORT NSString *const kFBSDKCallstack;
-FOUNDATION_EXPORT NSString *const kFBSDKCrashReason;
+typedef void (^FBSDKCrashLoggerReportBlock)(NSDictionary<NSString *, id> *crashInfo);
 
-@interface FBSDKCrashStorage : NSObject
-
-+ (void)setupWithLibName:(NSString *)libName;
-
-+ (void)saveException:(NSException *)exception;
-+ (void)saveSignal:(int)signal
-     withCallStack:(NSArray<NSString *> *)callStack;
-+ (void)clearCrashInfo;
-+ (NSDictionary<NSString *, id> *)loadCrashInfo;
++ (void)installExceptionsHandler;
++ (void)uninstallExceptionsHandler;
++ (void)processCrash:(FBSDKCrashLoggerReportBlock)reportBlock;
 
 @end
-
-NS_ASSUME_NONNULL_END

@@ -92,6 +92,12 @@ NS_SWIFT_NAME(jpegCompressionQuality);
 @property (class, nonatomic, assign, getter=isAutoInitEnabled) BOOL autoInitEnabled;
 
 /**
+ Controls sdk crash report
+ If not explicitly set, the default is true
+ */
+@property (class, nonatomic, assign, getter=isInstrumentEnabled) BOOL instrumentEnabled;
+
+/**
  Controls the auto logging of basic app events, such as activateApp and deactivateApp.
  If not explicitly set, the default is true
  */

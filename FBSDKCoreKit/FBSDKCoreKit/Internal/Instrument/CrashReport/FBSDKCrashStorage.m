@@ -76,9 +76,30 @@ NSString *const kFBSDKCrashTimeStamp = @"crash_time_stamp";
               atomically:YES];
 }
 
++ (void)saveLibData:(NSDictionary<NSString *, NSString *> *)data
+{
+  if (data){
+    [data writeToFile:[self pathToLibDataFile]
+           atomically:YES];
+  } else {
+    [[NSFileManager defaultManager] removeItemAtPath:[self pathToLibDataFile] error:nil];
+  }
+}
+
++ (NSDictionary<NSString *, NSString *> *)loadLibData
+{
+  return [NSDictionary dictionaryWithContentsOfFile:[self pathToLibDataFile]];
+}
+
 + (NSString *)pathToCrashFile
 {
   return [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"crash_%@.bin",CrashReportStorageLibName]];
+}
+
++ (NSString *)pathToLibDataFile
+{
+  return [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"static_lib_data_%@.bin",CrashReportStorageLibName]];
+
 }
 
 @end

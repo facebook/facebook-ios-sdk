@@ -18,6 +18,8 @@
 
 #import "FBSDKCrashHandler.h"
 
+#import "FBSDKCrashStorage.h"
+
 static NSUncaughtExceptionHandler *previousExceptionHandler = NULL;
 
 @implementation FBSDKCrashHandler
@@ -40,8 +42,20 @@ static NSUncaughtExceptionHandler *previousExceptionHandler = NULL;
 
 static void FBSDKExceptionHandler(NSException *exception)
 {
+  [FBSDKCrashStorage saveException:exception];
   if (previousExceptionHandler) {
     previousExceptionHandler(exception);
+  }
+}
+
++ (void)processCrash:(void (^)(NSDictionary<NSString *, id> *crashInfo))block
+{
+  NSDictionary<NSString *, id> *crashInfo = [FBSDKCrashStorage loadCrashInfo];
+  if (crashInfo) {
+    if (block) {
+      block(crashInfo);
+    }
+    [FBSDKCrashStorage clearCrashInfo];
   }
 }
 

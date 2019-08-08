@@ -18,6 +18,17 @@
 
 #import <Foundation/Foundation.h>
 
-@interface FBSDKLibAnalyzer : NSObject
+NS_ASSUME_NONNULL_BEGIN
+
+@interface FBSDKCrashLog : NSObject
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
+@property (class, nonatomic, readonly, strong) FBSDKCrashLog *sharedInstance
+
+NS_SWIFT_NAME(shared);
 
 @end
+
+NS_ASSUME_NONNULL_END
