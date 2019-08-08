@@ -69,7 +69,7 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 
 - (UIFont *)defaultFont
 {
-  return [UIFont systemFontOfSize:15 weight:UIFontWeightSemibold];
+  return [UIFont systemFontOfSize:13];
 }
 
 #pragma mark - UIView
