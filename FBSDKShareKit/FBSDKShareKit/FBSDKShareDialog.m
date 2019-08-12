@@ -24,6 +24,7 @@
 #import "FBSDKShareCameraEffectContent.h"
 #import "FBSDKShareConstants.h"
 #import "FBSDKShareDefines.h"
+#import "FBSDKShareExtension.h"
 #import "FBSDKShareLinkContent.h"
 #import "FBSDKShareMediaContent.h"
 #import "FBSDKShareOpenGraphAction.h"
@@ -145,7 +146,8 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
 - (BOOL)show
 {
   BOOL didShow = NO;
-  NSError *error = nil;
+  NSError *error;
+  NSError *validationError;
 
   if ([self _validateWithError:&error]) {
     switch (self.mode) {
@@ -166,11 +168,11 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
         break;
       }
       case FBSDKShareDialogModeNative:{
-        didShow = [self _showNativeWithCanShowError:&error validationError:&error];
+        didShow = [self _showNativeWithCanShowError:&error validationError:&validationError];
         break;
       }
       case FBSDKShareDialogModeShareSheet:{
-        didShow = [self _showShareSheetWithCanShowError:&error validationError:&error];
+        didShow = [self _showShareSheetWithCanShowError:&error validationError:&validationError];
         break;
       }
       case FBSDKShareDialogModeWeb:{
@@ -180,7 +182,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
     }
   }
   if (!didShow) {
-    [self _invokeDelegateDidFailWithError:error];
+    [self _invokeDelegateDidFailWithError:error ?: validationError];
   } else {
     [self _logDialogShow];
     [FBSDKInternalUtility registerTransientObject:self];
@@ -188,7 +190,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   return didShow;
 }
 
-- (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef
+- (BOOL)validateWithError:(NSError **)errorRef
 {
   return [self _validateWithError:errorRef] && [self _validateFullyCompatibleWithError:errorRef];
 }
@@ -262,7 +264,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   return hasOGURL;
 }
 
--(BOOL)_showAutomatic:(NSError *__autoreleasing *)errorRef
+-(BOOL)_showAutomatic:(NSError **)errorRef
 {
   BOOL isDefaultToShareSheet = [self _isDefaultToShareSheet];
   BOOL useNativeDialog = [self _useNativeDialog];
@@ -528,7 +530,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   if ([shareContent isKindOfClass:[FBSDKSharePhotoContent class]] && [self _photoContentHasAtLeastOneImage:(FBSDKSharePhotoContent *)shareContent]) {
     void(^completion)(BOOL, NSString *, NSDictionary *) = ^(BOOL successfullyBuilt, NSString *cMethodName, NSDictionary *cParameters) {
       if (successfullyBuilt) {
-        FBSDKBridgeAPICallbackBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
+        FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
           [self _handleWebResponseParameters:response.responseParameters error:response.error cancelled: response.isCancelled];
           [FBSDKInternalUtility unregisterTransientObject:self];
         };
@@ -539,7 +541,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
                                                             methodVersion:nil
                                                                parameters:cParameters
                                                                  userInfo:nil];
-        [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:request
+        [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:request
                                                 useSafariViewController:[self _useSafariViewController]
                                                      fromViewController:self.fromViewController
                                                         completionBlock:completionBlock];
@@ -557,7 +559,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
                                            error:errorRef]) {
       return NO;
     }
-    FBSDKBridgeAPICallbackBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
+    FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
       [self _handleWebResponseParameters:response.responseParameters error:response.error cancelled: response.isCancelled];
       [FBSDKInternalUtility unregisterTransientObject:self];
     };
@@ -568,7 +570,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
                                                         methodVersion:nil
                                                            parameters:parameters
                                                              userInfo:nil];
-    [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:request
+    [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:request
                                             useSafariViewController:[self _useSafariViewController]
                                                  fromViewController:self.fromViewController
                                                     completionBlock:completionBlock];
@@ -583,7 +585,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   }
   id<FBSDKSharingContent> shareContent = self.shareContent;
   NSDictionary *parameters = [FBSDKShareUtility feedShareDictionaryForContent:shareContent];
-  FBSDKBridgeAPICallbackBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
+  FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
     [self _handleWebResponseParameters:response.responseParameters error:response.error cancelled:response.isCancelled];
     [FBSDKInternalUtility unregisterTransientObject:self];
   };
@@ -594,7 +596,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
                                                       methodVersion:nil
                                                          parameters:parameters
                                                            userInfo:nil];
-  [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:request
+  [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:request
                                           useSafariViewController:[self _useSafariViewController]
                                                fromViewController:self.fromViewController
                                                   completionBlock:completionBlock];
@@ -647,7 +649,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
                                                       methodVersion:methodVersion
                                                          parameters:parameters
                                                            userInfo:nil];
-  FBSDKBridgeAPICallbackBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
+  FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
     if (response.error.code == FBSDKErrorAppVersionUnsupported) {
       NSError *fallbackError;
       if ([self _showShareSheetWithCanShowError:NULL validationError:&fallbackError] ||
@@ -671,7 +673,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
     }
     [FBSDKInternalUtility unregisterTransientObject:self];
   };
-  [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:request
+  [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:request
                                           useSafariViewController:[self _useSafariViewController]
                                                fromViewController:self.fromViewController
                                                   completionBlock:completionBlock];
@@ -789,7 +791,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   return [configuration useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameShare];
 }
 
-- (BOOL)_validateWithError:(NSError *__autoreleasing *)errorRef
+- (BOOL)_validateWithError:(NSError **)errorRef
 {
   if (errorRef != NULL) {
     *errorRef = nil;
@@ -866,7 +868,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
 
  This method exists to enable the behavior described above and should only be called from `validateWithError:`.
  */
-- (BOOL)_validateFullyCompatibleWithError:(NSError *__autoreleasing *)errorRef
+- (BOOL)_validateFullyCompatibleWithError:(NSError **)errorRef
 {
   id<FBSDKSharingContent> shareContent = self.shareContent;
   if ([shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
@@ -886,7 +888,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   return YES;
 }
 
-- (BOOL)_validateShareContentForBrowserWithOptions:(FBSDKShareBridgeOptions)bridgeOptions error:(NSError *__autoreleasing *)errorRef
+- (BOOL)_validateShareContentForBrowserWithOptions:(FBSDKShareBridgeOptions)bridgeOptions error:(NSError **)errorRef
 {
   id<FBSDKSharingContent> shareContent = self.shareContent;
   if ([shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
@@ -1168,56 +1170,42 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
 - (NSString *)_calculateInitialText
 {
   NSString *initialText;
+  NSString *const hashtag = [FBSDKShareUtility hashtagStringFromHashtag:self.shareContent.hashtag];
   if ([self _canAttributeThroughShareSheet]) {
-    NSMutableDictionary *initialTextDictionary = [NSMutableDictionary new];
-    initialTextDictionary[@"app_id"] = [FBSDKSettings appID];
-    NSString *hashtag = [FBSDKShareUtility hashtagStringFromHashtag:self.shareContent.hashtag];
-    if (hashtag != nil) {
-      initialTextDictionary[@"hashtags"] = @[hashtag];
+    NSMutableDictionary<NSString *, id> *const parameters = [NSMutableDictionary new];
+    NSString *const appID = [FBSDKSettings appID];
+    if (appID.length > 0) {
+      parameters[FBSDKShareExtensionParamAppID] = [FBSDKSettings appID];
+    }
+    if (hashtag.length > 0) {
+      parameters[FBSDKShareExtensionParamHashtags] = @[hashtag];
     }
     if ([self.shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
-      NSString *quote = ((FBSDKShareLinkContent *)self.shareContent).quote;
-      if (quote != nil) {
-        initialTextDictionary[@"quotes"] = @[quote];
+      NSString *const quote = ((FBSDKShareLinkContent *)self.shareContent).quote;
+      if (quote.length > 0) {
+        parameters[FBSDKShareExtensionParamQuotes] = @[quote];
       }
     }
     if ([self.shareContent isKindOfClass:[FBSDKShareOpenGraphContent class]]) {
-      NSDictionary *ogData = [FBSDKShareUtility parametersForShareContent:self.shareContent
-                                                            bridgeOptions:FBSDKShareBridgeOptionsDefault
-                                                    shouldFailOnDataError:self.shouldFailOnDataError];
-      initialTextDictionary[@"og_data"] = ogData;
+      NSDictionary<NSString *, id> *const ogData = [FBSDKShareUtility parametersForShareContent:self.shareContent
+                                                                                  bridgeOptions:FBSDKShareBridgeOptionsDefault
+                                                                          shouldFailOnDataError:self.shouldFailOnDataError];
+      parameters[FBSDKShareExtensionParamOGData] = ogData;
     }
 
     NSError *error = nil;
-    NSString *jsonString = [FBSDKInternalUtility JSONStringForObject:initialTextDictionary error:&error invalidObjectHandler:NULL];
+    NSString *const jsonString = [FBSDKInternalUtility JSONStringForObject:parameters error:&error invalidObjectHandler:NULL];
     if (error != nil) {
       return nil;
     }
 
-    NSString *JSONStartDelimiter = @"|";
-    initialText = [NSString stringWithFormat:@"%@%@%@",
-                   [self _calculatePreJSONInitialTextWithHashtag:hashtag],
-                   JSONStartDelimiter,
-                   jsonString];
+    initialText = FBSDKShareExtensionInitialText(appID, hashtag, jsonString);
   } else {
-    NSString *hashtag = [FBSDKShareUtility hashtagStringFromHashtag:self.shareContent.hashtag];
-    if (hashtag != nil) {
+    if (hashtag.length > 0) {
       initialText = hashtag;
     }
   }
   return initialText;
-}
-
-// Not all versions of the Share Extension support JSON. Adding this text before allows backward compatibility
-- (NSString *)_calculatePreJSONInitialTextWithHashtag:(NSString *)hashtag
-{
-  NSMutableString *text = [NSMutableString new];
-  [text appendString:[NSString stringWithFormat:@"fb-app-id:%@", [FBSDKSettings appID]]];
-  if (hashtag != nil) {
-    [text appendString:@" "];
-    [text appendString:hashtag];
-  }
-  return [text copy];
 }
 
 @end

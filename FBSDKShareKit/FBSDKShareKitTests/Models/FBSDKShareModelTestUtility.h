@@ -74,6 +74,7 @@ FOUNDATION_EXPORT NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey;
 + (NSString *)openGraphString;
 + (NSArray *)peopleIDs;
 + (FBSDKSharePhotoContent *)photoContent;
++ (FBSDKSharePhotoContent *)photoContentWithFileURLs;
 + (FBSDKSharePhotoContent *)photoContentWithImages;
 + (UIImage *)photoImage;
 + (NSURL *)photoImageURL;

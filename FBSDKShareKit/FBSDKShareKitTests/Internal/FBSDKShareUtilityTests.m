@@ -30,11 +30,6 @@
 
 @implementation FBSDKShareUtilityTests
 
-- (NSURL *)fileURL
-{
-  return [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask].lastObject;
-}
-
 - (void)testShareLinkContentValidationWithNilValues
 {
   FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];

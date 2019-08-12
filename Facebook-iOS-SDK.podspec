@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'Facebook-iOS-SDK'
-  s.version      = '4.38.0'
+  s.version      = '4.41.2'
   s.summary      = '(DEPRECATED: Use FacebookSDK instead) Official Facebook SDK for iOS to access Facebook Platform'
 
   s.description  = <<-DESC
@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '9.0'
 
   s.source       = { :git => 'https://github.com/facebook/facebook-objc-sdk.git',
-                     :tag => 'sdk-version-4.38.0' }
+                     :tag => "v#{s.version}" }
 
   s.ios.weak_frameworks = 'Accounts', 'CoreLocation', 'Social', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox', 'WebKit'
   s.tvos.weak_frameworks = 'CoreLocation', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'

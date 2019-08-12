@@ -38,7 +38,7 @@
                    completion:NULL];
 }
 
-- (void)deviceLoginViewControllerDidFail:(FBSDKDeviceLoginViewController *)viewController error:(NSError *)error
+- (void)deviceLoginViewController:(FBSDKDeviceLoginViewController *)viewController didFailWithError:(NSError *)error
 {
   [self dispatchEventWithName:@"onFacebookLoginViewControllerError"
                     canBubble:YES
@@ -46,4 +46,5 @@
                     extraInfo: @{ @"error": error }
                    completion:NULL];
 }
+
 @end

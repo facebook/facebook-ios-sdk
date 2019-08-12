@@ -92,7 +92,12 @@ NS_ASSUME_NONNULL_BEGIN
 /*!
  @abstract Indicates an error with the login.
  */
-- (void)deviceLoginButtonDidFail:(FBSDKDeviceLoginButton *)button error:(NSError *)error;
+- (void)deviceLoginButton:(FBSDKDeviceLoginButton *)button didFailWithError:(NSError *)error;
+
+@optional
+
+- (void)deviceLoginButtonDidFail:(FBSDKDeviceLoginButton *)button error:(NSError *)error
+DEPRECATED_MSG_ATTRIBUTE("Renamed: `deviceLoginButton:didFailWithError:`");
 
 @end
 

@@ -667,7 +667,7 @@
 		9DEC557A1BBA636A00C7DB4A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					9DEC55821BBA636A00C7DB4A = {
@@ -686,6 +686,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 9DEC55791BBA636A00C7DB4A;
@@ -859,7 +860,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "../scripts/build-universal-tvos-framework.sh";
+			shellScript = "../scripts/xcode/build-universal-tvos-framework.sh";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -976,6 +977,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8117C21C1D302F6900784D79 /* Debug.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
@@ -993,6 +995,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8117C21D1D302F6900784D79 /* Release.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;

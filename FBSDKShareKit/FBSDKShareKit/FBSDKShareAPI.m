@@ -774,7 +774,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
 {
   NSUInteger requestCount = connection.requests.count;
   NSString *batchEntryName = [[NSString alloc] initWithFormat:@"request_%lu", (unsigned long)requestCount];
-  [connection addRequest:request completionHandler:completionHandler batchEntryName:batchEntryName];
+  [connection addRequest:request batchEntryName:batchEntryName completionHandler:completionHandler];
   return batchEntryName;
 }
 

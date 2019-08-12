@@ -25,8 +25,6 @@
 
 NSString *const FBSDKLoginManagerLoggerAuthMethod_Native = @"fb_application_web_auth";
 NSString *const FBSDKLoginManagerLoggerAuthMethod_Browser = @"browser_auth";
-NSString *const FBSDKLoginManagerLoggerAuthMethod_System = @"integrated_auth";
-NSString *const FBSDKLoginManagerLoggerAuthMethod_Webview = @"fallback_auth";
 NSString *const FBSDKLoginManagerLoggerAuthMethod_SFVC = @"sfvc_auth";
 
 static NSString *const FBSDKLoginManagerLoggingClientStateKey = @"state";
@@ -50,8 +48,6 @@ static NSString *const FBSDKLoginManagerLoggerResultSkippedString = @"skipped";
 
 static NSString *const FBSDKLoginManagerLoggerTryNative = @"tryFBAppAuth";
 static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
-static NSString *const FBSDKLoginManagerLoggerTrySystemAccount = @"tryIntegratedAuth";
-static NSString *const FBSDKLoginManagerLoggerTryWebView = @"tryFallback";
 
 @implementation FBSDKLoginManagerLogger
 {
@@ -98,37 +94,18 @@ static NSString *const FBSDKLoginManagerLoggerTryWebView = @"tryFallback";
   BOOL isReauthorize = ([FBSDKAccessToken currentAccessToken] != nil);
   BOOL willTryNative = NO;
   BOOL willTryBrowser = NO;
-  BOOL willTrySystemAccount = NO;
-  BOOL willTryWebView = NO;
   NSString *behaviorString = nil;
 
   switch (loginManager.loginBehavior) {
-    case FBSDKLoginBehaviorNative:
-      willTryNative = YES;
-      willTryBrowser = YES;
-      behaviorString = @"FBSDKLoginBehaviorNative";
-      break;
     case FBSDKLoginBehaviorBrowser:
       willTryBrowser = YES;
       behaviorString = @"FBSDKLoginBehaviorBrowser";
-      break;
-    case FBSDKLoginBehaviorSystemAccount:
-      willTryNative = YES;
-      willTryBrowser = YES;
-      willTrySystemAccount = YES;
-      behaviorString = @"FBSDKLoginBehaviorSystemAccount";
-      break;
-    case FBSDKLoginBehaviorWeb:
-      willTryWebView = YES;
-      behaviorString = @"FBSDKLoginBehaviorWeb";
       break;
   }
 
   [_extras addEntriesFromDictionary:@{
     FBSDKLoginManagerLoggerTryNative : @(willTryNative),
     FBSDKLoginManagerLoggerTryBrowser : @(willTryBrowser),
-    FBSDKLoginManagerLoggerTrySystemAccount : @(willTrySystemAccount),
-    FBSDKLoginManagerLoggerTryWebView : @(willTryWebView),
     @"isReauthorize" : @(isReauthorize),
     @"login_behavior" : behaviorString,
     @"default_audience" : [FBSDKLoginUtility stringForAudience:loginManager.defaultAudience],

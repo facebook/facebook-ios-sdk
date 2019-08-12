@@ -79,9 +79,22 @@ class FirstViewController: UIViewController {
       Int(imageView.bounds.size.height),
       FBSDKAccessToken.current().tokenString)
 
-    let url = URL(string: urlString)
-    let userImage = UIImage(data: try! Data(contentsOf: url!))
-    flipImageViewToImage(userImage!)
+    guard let url = URL(string: urlString) else {
+      print("Invalid URL")
+      return
+    }
+
+    guard let data = try? Data(contentsOf: url) else {
+      print("Failed to download with the URL")
+      return
+    }
+
+    guard let userImage = UIImage(data: data) else {
+      print("Failed to load the downloaded data as image")
+      return
+    }
+
+    flipImageViewToImage(userImage)
   }
 }
 

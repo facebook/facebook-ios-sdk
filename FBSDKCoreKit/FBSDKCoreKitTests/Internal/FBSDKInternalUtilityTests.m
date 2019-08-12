@@ -65,7 +65,7 @@
 
 - (void)testQueryString
 {
-  NSURL *URL = [[NSURL alloc] initWithString:@"http://example.com/path/to/page.html?key1&key2=value2&key3=value+3%20%3D%20foo#fragment=go"];
+  NSURL *URL = [NSURL URLWithString:@"http://example.com/path/to/page.html?key1&key2=value2&key3=value+3%20%3D%20foo#fragment=go"];
   NSDictionary *dictionary = [FBSDKUtility dictionaryWithQueryString:URL.query];
   NSDictionary *expectedDictionary = @{
                                        @"key1": @"",

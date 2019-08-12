@@ -69,14 +69,14 @@
 
 - (void)testWithInvalidKey
 {
-  FBSDKShareOpenGraphAction *action = [[FBSDKShareOpenGraphAction alloc] init];
+  FBSDKShareOpenGraphAction *action = [FBSDKShareModelTestUtility openGraphAction];
   NSDictionary *properties = @{ [[NSDate alloc] init]: @"test" };
   XCTAssertThrowsSpecificNamed([action parseProperties:properties], NSException, NSInvalidArgumentException);
 }
 
 - (void)testWithInvalidValue
 {
-  FBSDKShareOpenGraphAction *action = [[FBSDKShareOpenGraphAction alloc] init];
+  FBSDKShareOpenGraphAction *action = [FBSDKShareModelTestUtility openGraphAction];
   NSDictionary *properties = @{ @"test": [[NSDate alloc] init] };
   XCTAssertThrowsSpecificNamed([action parseProperties:properties], NSException, NSInvalidArgumentException);
 }

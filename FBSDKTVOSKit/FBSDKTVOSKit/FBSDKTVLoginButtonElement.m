@@ -30,7 +30,7 @@
                     extraInfo:nil
                    completion:NULL];
 }
-- (void)deviceLoginButtonDidFail:(FBSDKDeviceLoginButton *)button error:(NSError *)error
+- (void)deviceLoginButton:(FBSDKDeviceLoginButton *)button didFailWithError:(NSError *)error
 {
   [self dispatchEventWithName:@"onFacebookLoginError"
                     canBubble:YES

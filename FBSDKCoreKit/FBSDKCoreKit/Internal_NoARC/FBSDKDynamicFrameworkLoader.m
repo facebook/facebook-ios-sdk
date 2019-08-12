@@ -373,6 +373,18 @@ Class fbsdkdfl_SFAuthenticationSessionClass(void)
   return c;
 }
 
+#pragma mark - Authentication Services
+_fbsdkdfl_load_framework_once_impl_(AuthenticationServices)
+_fbsdkdfl_handle_get_impl_(AuthenticationServices)
+
+#define _fbsdkdfl_AuthenticationServices_get_c(SYMBOL) _fbsdkdfl_symbol_get_c(AuthenticationServices, SYMBOL);
+
+Class fbsdkdfl_ASWebAuthenticationSessionClass(void)
+{
+  _fbsdkdfl_AuthenticationServices_get_c(ASWebAuthenticationSession);
+  return c;
+}
+
 #pragma mark - Accounts Constants
 
 _fbsdkdfl_load_framework_once_impl_(Accounts)

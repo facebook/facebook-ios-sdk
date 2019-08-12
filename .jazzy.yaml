@@ -1,7 +1,7 @@
 ---
 author: Facebook
-author_url: https://developers.facebook.com
-objc: true
 clean: true
-github_url: https://github.com/facebook/facebook-objc-sdk
+objc: true
+readme: /dev/null
 sdk: iphonesimulator
+theme: apple

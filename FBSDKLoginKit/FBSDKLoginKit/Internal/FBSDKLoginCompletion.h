@@ -40,7 +40,6 @@
 
 @property (nonatomic, copy, readonly) NSError *error;
 
-@property (nonatomic, readonly, getter=isSystemAccount) BOOL systemAccount;
 @property (nonatomic, copy, readonly) NSDate *expirationDate;
 @property (nonatomic, copy, readonly) NSDate *dataAccessExpirationDate;
 
@@ -73,32 +72,5 @@
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)initWithURLParameters:(NSDictionary *)parameters appID:(NSString *)appID NS_DESIGNATED_INITIALIZER;
-
-@end
-
-/**
-  Requests the User ID, granted permissions and declined permissions from the server
- using the given access token, which must occur before authentication can be completed.
-
- Completion occurs asynchronously.
- */
-@interface FBSDKLoginSystemAccountCompleter : NSObject <FBSDKLoginCompleting>
-
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
-- (instancetype)initWithTokenString:(NSString *)tokenString appID:(NSString *)appID NS_DESIGNATED_INITIALIZER;
-
-@end
-
-/**
-  Converts an Accounts framework error in to an error or cancellation result
-
- Completion occurs synchronously.
- */
-@interface FBSDKLoginSystemAccountErrorCompleter : NSObject <FBSDKLoginCompleting>
-
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
-- (instancetype)initWithError:(NSError *)accountStoreError permissions:(NSSet *)permissions NS_DESIGNATED_INITIALIZER;
 
 @end

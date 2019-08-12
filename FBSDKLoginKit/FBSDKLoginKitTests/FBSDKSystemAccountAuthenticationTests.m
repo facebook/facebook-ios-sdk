@@ -146,8 +146,8 @@
   [target setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *authError) {
     XCTAssertNil(result.token);
     XCTAssertTrue(result.isCancelled);
-    XCTAssertNil(result.grantedPermissions);
-    XCTAssertNil(result.declinedPermissions);
+    XCTAssertEqual(result.grantedPermissions.count, 0);
+    XCTAssertEqual(result.declinedPermissions.count, 0);
     XCTAssertNil(authError);
   }];
 
@@ -235,7 +235,6 @@
                             smartLoginMenuIconURL:nil
                                     updateMessage:nil
                                     eventBindings:nil
-                             codelessSetupEnabled:NO
    ];
 
   id serverConfigurationManager = [OCMockObject mockForClass:[FBSDKServerConfigurationManager class]];

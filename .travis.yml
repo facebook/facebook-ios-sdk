@@ -1,86 +1,83 @@
 language: objective-c
 os: osx
-osx_image: xcode10
 
 env:
   global:
-  - SCRIPT_ENV=TRAVISCI
-  - XCODE_WORKSPACE=FacebookSDK.xcworkspace
-
-matrix:
-  include:
-  - name: "iOS 12.0"
-    env:
-    - MATRIX_TYPE=Xcode
-    - XCODE_SDK=iphonesimulator12.0
-    - XCODE_SCHEME=BuildAllKits
-  - name: "tvOS 12.0"
-    env:
-    - MATRIX_TYPE=Xcode
-    - XCODE_SDK=appletvsimulator12.0
-    - XCODE_SCHEME=BuildAllKits_TV
-  - name: "iOS 11.0"
-    osx_image: xcode9.4
-    env:
-    - MATRIX_TYPE=Xcode
-    - XCODE_SDK=iphonesimulator11.4
-    - XCODE_SCHEME=BuildAllKits
-  - name: "Carthage Xcode 10"
-    env:
-    - MATRIX_TYPE=Carthage
+    # $api_key
+    - secure: vjVOdxnuHnkDiPXoddLycTQ2WwbYudHU53xbaz86Su0J+xTSNDmxmd2GFn45EMn5BixwVzTnLWhDg7EvNvQhHWDAuHUaK7X/KXoR41s3PzlucWtxczxxt3eIRtk7U4y22tSwr/r1cl6Q2QM5IK8ICZshhSyiHHEz/EAaodcJkUE=
+    # $COCOAPODS_TRUNK_TOKEN
+    - secure: mpObzf4FG+JHEN6Gm/Jp96pLONe4nYpgtXxkRLlULlD23c6aHAwMJhT/pjYKINmBmxd0/Vnw5LVvBcU0rCrjANFn4nfotP4KoexIO4As+wjRGAmd9IUvosio9zdv1DasUZlHliyPElfsbKqK3aZjBDw1Cx99t6dog0H6aIKUOQA=
+    - XCODE_WORKSPACE=FacebookSDK.xcworkspace
+    - GITHUB_ACCESS_TOKEN=$api_key
 
 branches:
   only:
-  - master
+    - master
+    - 4.x-branch
+    - /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
 
-before_install:
-- echo "Will update Brew"
-- brew update
+stages:
+  - name: test
+    if: '! tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/'
+  # - name: tag
+  #   if: '! tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/'
+  - name: release
+    if: tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
 
-install:
-- echo "Will Bundle Brew"
-- brew bundle
+jobs:
+  include:
+    - stage: test
+      name: Xcode - iOS 12.2
+      osx_image: xcode10.2
+      env:
+        - XCODE_SDK=iphonesimulator12.2
+        - XCODE_SCHEME=BuildAllKits
+    - stage: test
+      name: Xcode - tvOS 12.2
+      osx_image: xcode10.2
+      env:
+        - XCODE_SDK=appletvsimulator12.2
+        - XCODE_SCHEME=BuildAllKits_TV
+    - stage: test
+      name: Xcode - iOS 11.4
+      osx_image: xcode9.4
+      env:
+        - XCODE_SDK=iphonesimulator11.4
+        - XCODE_SCHEME=BuildAllKits
+    - stage: test
+      name: Carthage - Xcode 10.2
+      osx_image: xcode10.2
+    - stage: test
+      name: Pod Lint - Xcode 10.2
+      osx_image: xcode10.2
+      script: sh scripts/run.sh lint cocoapods --allow-warnings
+    # - stage: tag
+    #   name: Tag Version
+    #   osx_image: xcode10.2
+    #   script: sh scripts/run.sh tag-current-version --push
+    - stage: release
+      name: GitHub Release
+      osx_image: xcode10.2
+      script: sh scripts/run.sh build carthage --archive
+      deploy:
+        provider: releases
+        skip_cleanup: true
+        api_key: $GITHUB_ACCESS_TOKEN
+        file: Carthage/Release/*
+        file_glob: true
+        name: Facebook SDK $TRAVIS_TAG
+        body: Consult Changelog $TRAVIS_TAG
+        on:
+          all_branches: true
+          tags: true
+    - stage: release
+      name: Publish Cocoapods
+      osx_image: xcode10.2
+      script: sh scripts/run.sh release cocoapods --allow-warnings
 
-before_script:
-- echo "Will start scripts"
-
-script:
-- echo "Did start scripts"
-- echo "Env $SCRIPT_ENV $TEST_GLOBAL $MATRIX_TYPE $XCODE_SDK $XCODE_SCHEME $XCODE_DESTINATION"
-- |
-  if [ "$MATRIX_TYPE" = Carthage ]; then
-    carthage build --no-skip-current
-  elif [ "$MATRIX_TYPE" = Xcode ]; then
-    xcodebuild build \
-      -workspace $XCODE_WORKSPACE \
-      -sdk $XCODE_SDK \
-      -scheme $XCODE_SCHEME \
-      -configuration Debug | \
-      xcpretty
-  fi
-
-after_success:
-- echo "Did succeed"
-
-after_failure:
-- echo "Did fail"
-
-after_script:
-- echo "Did complete scripts"
-
-before_deploy:
-- echo "Will deploy"
-- test $TRAVIS_TEST_RESULT = 0
-
-deploy:
-- provider: script
-  script: echo "Should deploy"
-  on:
-    tags: true
-    branch: master
-
-after_deploy:
-- echo "Did deploy"
+before_install: sh scripts/travis/before_install.sh
+install: sh scripts/travis/install.sh
+script: sh scripts/travis/script.sh
 
 notifications: # set notification options
   email:
@@ -90,4 +87,4 @@ notifications: # set notification options
       - codytwinton@fb.com
   # Enable webhooks later
   # webhooks:
-    # on_failure: always
+  # on_failure: always

@@ -42,7 +42,12 @@ NS_ASSUME_NONNULL_BEGIN
 /*!
  @abstract Indicates an error with the login.
 */
-- (void)deviceLoginViewControllerDidFail:(FBSDKDeviceLoginViewController *)viewController error:(NSError *)error;
+- (void)deviceLoginViewController:(FBSDKDeviceLoginViewController *)viewController didFailWithError:(NSError *)error;
+
+@optional
+
+- (void)deviceLoginViewControllerDidFail:(FBSDKDeviceLoginViewController *)viewController error:(NSError *)error
+DEPRECATED_MSG_ATTRIBUTE("Renamed: `deviceLoginViewController:didFailWithError:`");
 
 @end
 

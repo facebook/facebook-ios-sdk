@@ -68,7 +68,6 @@
     dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
     XCTAssertTrue([dialog canShow]);
   }];
-  dialog.shareContent = nil;
   [self _mockApplicationForURL:OCMOCK_ANY canOpen:NO usingBlock:^{
     XCTAssertFalse([dialog canShow]);
     dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
@@ -87,22 +86,17 @@
   FBSDKMessageDialog *dialog = [[FBSDKMessageDialog alloc] init];
   NSError *error;
   dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
-  XCTAssertTrue([dialog validateWithError:&error]);
-  XCTAssertNil(error);
-  dialog.shareContent = [FBSDKShareModelTestUtility photoContentWithImages];
-  XCTAssertTrue([dialog validateWithError:&error]);
-  XCTAssertNil(error);
-  dialog.shareContent = [FBSDKShareModelTestUtility openGraphContent];
-  XCTAssertTrue([dialog validateWithError:&error]);
-  XCTAssertNil(error);
-  dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
-  XCTAssertTrue([dialog validateWithError:&error]);
-  XCTAssertNil(error);
+  XCTAssertTrue([dialog validateWithError:&error],
+                @"Known valid content should pass validation without issue if this test fails then the criteria for the fixture may no longer be valid");
+  XCTAssertNil(error,
+               @"A successful validation should not populate the error reference that was passed to it");
 
-  dialog.shareContent = [FBSDKShareModelTestUtility cameraEffectContent];
+  dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
   error = nil;
-  XCTAssertFalse([dialog validateWithError:&error]);
-  XCTAssertNotNil(error);
+  XCTAssertFalse([dialog validateWithError:&error],
+                 @"Should not successfully validate share content that is known to be missing content");
+  XCTAssertNotNil(error,
+                  @"A failed validation should populate the error reference that was passed to it");
 }
 
 @end

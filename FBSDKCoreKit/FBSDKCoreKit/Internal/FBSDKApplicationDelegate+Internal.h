@@ -32,30 +32,10 @@ FOUNDATION_EXPORT NSString *const FBSDKApplicationDidBecomeActiveNotification;
 
 #endif
 
-@class FBSDKApplicationCall;
-
-#if !TARGET_OS_TV
-typedef void(^FBSDKBridgeAPICallbackBlock)(FBSDKBridgeAPIResponse *response);
-#endif
-
 @interface FBSDKApplicationDelegate ()
-#if !TARGET_OS_TV
-<FBSDKContainerViewControllerDelegate>
 
-- (void)openBridgeAPIRequest:(FBSDKBridgeAPIRequest *)request
-     useSafariViewController:(BOOL)useSafariViewController
-          fromViewController:(UIViewController *)fromViewController
-             completionBlock:(FBSDKBridgeAPICallbackBlock)completionBlock;
-
-- (void)openURLWithSafariViewController:(NSURL *)url
-                                 sender:(id<FBSDKURLOpening>)sender
-                     fromViewController:(UIViewController *)fromViewController
-                                handler:(void(^)(BOOL, NSError *))handler;
-
-- (void)openURL:(NSURL *)url sender:(id<FBSDKURLOpening>)sender handler:(void(^)(BOOL, NSError *))handler;
-
-#endif
-
-@property (nonatomic, readonly, getter=isActive) BOOL active;
+- (void)addObserver:(id<FBSDKApplicationObserving>)observer;
+- (void)removeObserver:(id<FBSDKApplicationObserving>)observer;
++ (UIApplicationState)applicationState;
 
 @end

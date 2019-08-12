@@ -136,4 +136,19 @@
   XCTAssertTrue([str isEqualToString:@"1234.56"]);
 }
 
+- (void)testIsSensitiveUserData
+{
+  NSString *text = @"test@sample.com";
+  XCTAssertTrue([FBSDKAppEventsUtility isSensitiveUserData:text]);
+
+  text = @"4716 5255 0221 9085";
+  XCTAssertTrue([FBSDKAppEventsUtility isSensitiveUserData:text]);
+
+  text = @"4716525502219085";
+  XCTAssertTrue([FBSDKAppEventsUtility isSensitiveUserData:text]);
+
+  text = @"4716525502219086";
+  XCTAssertFalse([FBSDKAppEventsUtility isSensitiveUserData:text]);
+}
+
 @end

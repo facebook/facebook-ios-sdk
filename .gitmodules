@@ -1,15 +1,15 @@
 [submodule "Carthage/Checkouts/Bolts-ObjC"]
-  path = Carthage/Checkouts/Bolts-ObjC
-  url = https://github.com/BoltsFramework/Bolts-ObjC.git
+	path = Carthage/Checkouts/Bolts-ObjC
+	url = https://github.com/BoltsFramework/Bolts-ObjC.git
 [submodule "Carthage/Checkouts/OHHTTPStubs"]
-  path = Carthage/Checkouts/OHHTTPStubs
-  url = https://github.com/AliSoftware/OHHTTPStubs.git
+	path = Carthage/Checkouts/OHHTTPStubs
+	url = https://github.com/AliSoftware/OHHTTPStubs.git
 [submodule "Carthage/Checkouts/Tweaks"]
-  path = Carthage/Checkouts/Tweaks
-  url = https://github.com/facebook/Tweaks.git
+	path = Carthage/Checkouts/Tweaks
+	url = https://github.com/facebook/Tweaks.git
 [submodule "Carthage/Checkouts/ocmock"]
-  path = Carthage/Checkouts/ocmock
-  url = https://github.com/erikdoe/ocmock.git
+	path = Carthage/Checkouts/ocmock
+	url = https://github.com/erikdoe/ocmock.git
 [submodule "Carthage/Checkouts/xctool"]
-  path = Carthage/Checkouts/xctool
-  url = https://github.com/facebook/xctool.git
+	path = Carthage/Checkouts/xctool
+	url = https://github.com/facebook/xctool.git
