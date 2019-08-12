@@ -70,16 +70,11 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 - (UIFont *)defaultFont
 {
   CGFloat size = 15;
-  UIFontWeight weight = UIFontWeightSemibold;
 
   if (@available(iOS 8.2, *)) {
-    return [UIFont systemFontOfSize:size weight:weight];
+    return [UIFont systemFontOfSize:size weight:UIFontWeightSemibold];
   } else {
-    UIFont *font = [UIFont systemFontOfSize:size];
-    UIFontDescriptor *fontDescriptor = [font.fontDescriptor fontDescriptorByAddingAttributes:@{UIFontDescriptorTraitsAttribute: @{
-                                                                                                   UIFontWeightTrait: @(weight)
-                                                                                                   }}];
-    return [UIFont fontWithDescriptor:fontDescriptor size:size];
+    return [UIFont boldSystemFontOfSize:size];
   }
 }
 
