@@ -815,6 +815,7 @@
 		F9FD9A8021659F320068DEAF /* FBSDKGateKeeperManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F9FD9A7C21659F320068DEAF /* FBSDKGateKeeperManager.m */; };
 		F9FFE01D2252D666007B2346 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F9FFE01C2252D665007B2346 /* libz.tbd */; };
 		F9FFE01F2252D66E007B2346 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F9FFE01E2252D66E007B2346 /* libz.tbd */; };
+		FD8E438122FBF8F1008B6DD3 /* FBSDKErrorReport.m in Sources */ = {isa = PBXBuildFile; fileRef = FD8E438022FBF8F1008B6DD3 /* FBSDKErrorReport.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1262,6 +1263,8 @@
 		F9FD9A7C21659F320068DEAF /* FBSDKGateKeeperManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKGateKeeperManager.m; sourceTree = "<group>"; };
 		F9FFE01C2252D665007B2346 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
 		F9FFE01E2252D66E007B2346 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
+		FD8E437F22FBF8CA008B6DD3 /* FBSDKErrorReport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKErrorReport.h; sourceTree = "<group>"; };
+		FD8E438022FBF8F1008B6DD3 /* FBSDKErrorReport.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKErrorReport.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1352,6 +1355,7 @@
 		5DB7ADCA22EA59E60012E8CB /* Instrument */ = {
 			isa = PBXGroup;
 			children = (
+				FD2A237F22FBF7A700DC928F /* ErrorReport */,
 				5DB7AF2422FAB2980012E8CB /* CrashReport */,
 			);
 			path = Instrument;
@@ -2024,6 +2028,15 @@
 				F9098FC222BC332C00857C2D /* FBSDKURLSession.m */,
 			);
 			path = Internal;
+			sourceTree = "<group>";
+		};
+		FD2A237F22FBF7A700DC928F /* ErrorReport */ = {
+			isa = PBXGroup;
+			children = (
+				FD8E437F22FBF8CA008B6DD3 /* FBSDKErrorReport.h */,
+				FD8E438022FBF8F1008B6DD3 /* FBSDKErrorReport.m */,
+			);
+			path = ErrorReport;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -3194,6 +3207,7 @@
 				520223F81D83C8D200CE0AB5 /* FBSDKDeviceRequestsHelper.m in Sources */,
 				9DE1F3CE1A89D9CD00B54D98 /* FBSDKKeychainStoreViaBundleID.m in Sources */,
 				89830F301A7805E100226ABB /* FBSDKServerConfiguration.m in Sources */,
+				FD8E438122FBF8F1008B6DD3 /* FBSDKErrorReport.m in Sources */,
 				899C3D031A8C1ED200EA8658 /* FBSDKMaleSilhouetteIcon.m in Sources */,
 				C5C7B74E22D84F64004A5A0C /* FBSDKFeatureManager.m in Sources */,
 				F92F8F8122BA274300494727 /* FBSDKURLSessionTask.m in Sources */,
