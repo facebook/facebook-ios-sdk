@@ -30,12 +30,7 @@ static NSUncaughtExceptionHandler *previousExceptionHandler = NULL;
 
 # pragma mark - Class Methods
 
-+ (void)initialize
-{
-  [self enableCrashLogger];
-}
-
-+ (void)enableCrashLogger
++ (void)enable
 {
   if ([FBSDKSettings isInstrumentEnabled] && [FBSDKFeatureManager isEnabled:FBSDKFeatureCrashReport]) {
     static dispatch_once_t onceToken = 0;

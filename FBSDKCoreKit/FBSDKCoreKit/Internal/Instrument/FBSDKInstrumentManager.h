@@ -20,7 +20,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKCrashHandler : NSObject
+@interface FBSDKInstrumentManager : NSObject
 
 + (void)enable;
 
