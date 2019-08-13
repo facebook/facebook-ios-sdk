@@ -19,10 +19,56 @@
 #import "FBSDKCrashHandler.h"
 
 #import "FBSDKCrashStorage.h"
+#import "FBSDKFeatureManager.h"
+#import "FBSDKLibAnalyzer.h"
+#import "FBSDKLogger.h"
+#import "FBSDKSettings.h"
 
 static NSUncaughtExceptionHandler *previousExceptionHandler = NULL;
 
 @implementation FBSDKCrashHandler
+
+# pragma mark - Class Methods
+
++ (void)initialize
+{
+  [self enableCrashLogger];
+}
+
++ (void)enableCrashLogger
+{
+  if ([FBSDKSettings isInstrumentEnabled] && [FBSDKFeatureManager isEnabled:FBSDKFeatureCrashReport]) {
+    static dispatch_once_t onceToken = 0;
+    dispatch_once(&onceToken, ^{
+      [FBSDKCrashHandler installExceptionsHandler];
+      [FBSDKCrashStorage generateMethodMapping];
+      [self uploadCrashLogs];
+    });
+  } else {
+    [FBSDKCrashStorage clearCrashReportFiles:nil];
+  }
+}
+
++ (void)uploadCrashLogs
+{
+  NSArray<NSDictionary<NSString *, id> *> *processedCrashLogs = [FBSDKCrashStorage getProcessedCrashLogs];
+  if (0 == processedCrashLogs) {
+    return;
+  }
+  NSMutableArray<NSString *> *encodedCrashLogs = [NSMutableArray array];
+  for (NSDictionary<NSString *, id> * crashLog in processedCrashLogs) {
+    NSData *data = [NSJSONSerialization dataWithJSONObject:crashLog options:0 error:nil];
+    if (data) {
+      NSString *encodedCrashLog = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+      if (encodedCrashLog) {
+        [encodedCrashLogs addObject:encodedCrashLog];
+      }
+    }
+  }
+  // TODO(T48499181): add graph request to send crash log
+}
+
+# pragma mark handler function
 
 + (void)installExceptionsHandler
 {
@@ -45,17 +91,6 @@ static void FBSDKExceptionHandler(NSException *exception)
   [FBSDKCrashStorage saveException:exception];
   if (previousExceptionHandler) {
     previousExceptionHandler(exception);
-  }
-}
-
-+ (void)processCrash:(void (^)(NSDictionary<NSString *, id> *crashInfo))block
-{
-  NSDictionary<NSString *, id> *crashInfo = [FBSDKCrashStorage loadCrashInfo];
-  if (crashInfo) {
-    if (block) {
-      block(crashInfo);
-    }
-    [FBSDKCrashStorage clearCrashInfo];
   }
 }
 

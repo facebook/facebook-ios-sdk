@@ -20,21 +20,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-FOUNDATION_EXPORT NSString *const kFBSDKCallstack;
-FOUNDATION_EXPORT NSString *const kFBSDKCrashReason;
-
 @interface FBSDKCrashStorage : NSObject
-
-+ (void)setupWithLibName:(NSString *)libName;
 
 + (void)saveException:(NSException *)exception;
 + (void)saveSignal:(int)signal
      withCallStack:(NSArray<NSString *> *)callStack;
-+ (void)clearCrashInfo;
-+ (NSDictionary<NSString *, id> *)loadCrashInfo;
++ (NSArray<NSDictionary<NSString *, id> *> *)getProcessedCrashLogs;
 
-+ (void)saveLibData:(nullable NSDictionary<NSString *, NSString *> *)data;
-+ (NSDictionary<NSString *, NSString *> *)loadLibData;
++ (void)generateMethodMapping;
++ (NSDictionary<NSString *, id> *)loadLibData:(NSDictionary<NSString *, id> *)crashLog;
++ (void)clearCrashReportFiles:(nullable NSString*)timestamp;
 
 @end
 

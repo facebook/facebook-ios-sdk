@@ -21,28 +21,41 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-static NSString *CrashReportStorageLibName = @"unknown";
+#import "FBSDKLibAnalyzer.h"
+#import "FBSDKLogger.h"
+#import "FBSDKSettings.h"
+
+static NSString *mappingTableSavedTime = NULL;
+static NSString *directoryPath;
 
 NSString *const kFBSDKCallstack = @"callstack";
 NSString *const kFBSDKCrashReason = @"reason";
-NSString *const kFBSDKCrashTimeStamp = @"timestamp";
+NSString *const kFBSDKCrashTimestamp = @"timestamp";
+
+NSString *const kFBSDKMapingTableTimestamp = @"mapping_table_timestamp";
 
 @implementation FBSDKCrashStorage
 
-+ (void)setupWithLibName:(NSString *)libName
++ (void)initialize
 {
-  CrashReportStorageLibName = libName;
+  NSString *dirPath = [NSTemporaryDirectory() stringByAppendingString:@"instrument/"];
+  if (![[NSFileManager defaultManager] fileExistsAtPath:dirPath]) {
+    if (![[NSFileManager defaultManager] createDirectoryAtPath:dirPath withIntermediateDirectories:NO attributes:NULL error:NULL]) {
+      [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational formatString:@"Failed to create library at %@", dirPath];
+    }
+  }
+  directoryPath = dirPath;
+  mappingTableSavedTime = [NSString stringWithFormat:@"%.0lf", [[NSDate date] timeIntervalSince1970]];
 }
 
 + (void)saveException:(NSException *)exception
 {
   if (exception.callStackSymbols && exception.name) {
     NSArray<NSString *> *stackSymbols = [NSArray arrayWithArray:exception.callStackSymbols];
-    [self saveCrashInfoToDisk:@{
-                                kFBSDKCallstack : stackSymbols,
-                                kFBSDKCrashReason : [NSString stringWithFormat: @"NSException: %@", exception.name],
-                                kFBSDKCrashTimeStamp: @((int) [[NSDate date] timeIntervalSince1970]),
-                                }];
+    [self saveCrashLog:@{
+                         kFBSDKCallstack : stackSymbols,
+                         kFBSDKCrashReason : [NSString stringWithFormat: @"NSException: %@", exception.name],
+                         }];
   }
 }
 
@@ -50,55 +63,116 @@ NSString *const kFBSDKCrashTimeStamp = @"timestamp";
 {
   if (callStack) {
     NSString *signalDescription = [NSString stringWithCString:strsignal(signal) encoding:NSUTF8StringEncoding] ?: [NSString stringWithFormat:@"SIGNUM(%i)", signal];
-    [self saveCrashInfoToDisk:@{
-                                kFBSDKCallstack : callStack,
-                                kFBSDKCrashReason : signalDescription,
-                                kFBSDKCrashTimeStamp: @((int) [[NSDate date] timeIntervalSince1970]),
-                                }];
+    [self saveCrashLog:@{
+                         kFBSDKCallstack : callStack,
+                         kFBSDKCrashReason : signalDescription,
+                         }];
   }
 }
 
-+ (NSDictionary<NSString *,id> *)loadCrashInfo
++ (NSArray<NSDictionary<NSString *, id> *> *)getProcessedCrashLogs
 {
-  return [NSDictionary dictionaryWithContentsOfFile:[self pathToCrashFile]];
+  NSArray<NSDictionary<NSString *, id> *> *crashLogs = [self loadCrashLogs];
+  NSMutableArray<NSDictionary<NSString *, id> *> *processedCrashLogs = [NSMutableArray array];
+
+  for (NSDictionary<NSString *, id> *crashLog in crashLogs) {
+    NSArray<NSString *> *callstack = crashLog[kFBSDKCallstack];
+    NSDictionary<NSString *, id> *methodMapping = [self loadLibData:crashLog];
+    NSArray<NSString *> *symbolicatedCallstack = [FBSDKLibAnalyzer symbolicateCallstack:callstack methodMapping:methodMapping];
+    NSMutableDictionary<NSString *, id> *symbolicatedCrashLog = [NSMutableDictionary dictionaryWithDictionary:crashLog];
+    if (symbolicatedCallstack) {
+      [symbolicatedCrashLog setObject:symbolicatedCallstack forKey:kFBSDKCallstack];
+      [processedCrashLogs addObject:symbolicatedCrashLog];
+    }
+  }
+  return processedCrashLogs;
 }
 
-+ (void)clearCrashInfo
++ (NSArray<NSDictionary<NSString *, id> *> *)loadCrashLogs
 {
-  [[NSFileManager defaultManager] removeItemAtPath:[self pathToCrashFile] error:nil];
+  NSArray<NSString *> *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directoryPath error:NULL];
+  NSArray<NSString *> *fileNames = [self getCrashLogFileNames:files];
+  NSMutableArray<NSDictionary<NSString *, id> *> *crashLogArray = [NSMutableArray array];
+
+  for (NSUInteger i = 0; i < fileNames.count; i++) {
+    NSDictionary<NSString *, id> *crashLog = [FBSDKCrashStorage loadCrashLog:fileNames[i]];
+    [crashLogArray addObject:crashLog];
+  }
+  return [crashLogArray copy];
+}
+
++ (NSDictionary<NSString *,id> *)loadCrashLog:(NSString *)fileName
+{
+  return [NSDictionary dictionaryWithContentsOfFile:[directoryPath stringByAppendingPathComponent:fileName]];
+}
+
++ (void)clearCrashReportFiles:(nullable NSString*)timestamp
+{
+  if (!timestamp) {
+    NSArray<NSString *> *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directoryPath error:nil];
+
+    for (NSUInteger i = 0; i < files.count; i++) {
+      if ([files[i] hasPrefix:@"crash_"]) {
+        [[NSFileManager defaultManager] removeItemAtPath:[directoryPath stringByAppendingPathComponent:files[i]] error:nil];
+      }
+    }
+  } else {
+    [[NSFileManager defaultManager] removeItemAtPath:[self getPathToCrashFile:timestamp] error:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:[self getPathToLibDataFile:timestamp] error:nil];
+  }
+}
+
++ (NSArray<NSString *> *)getCrashLogFileNames:(NSArray<NSString *> *)files
+{
+  NSMutableArray<NSString *> *fileNames = [NSMutableArray array];
+
+  for (NSString *fileName in files) {
+    if ([fileName hasPrefix:@"crash_log_"] && [fileName hasSuffix:@".json"]) {
+      [fileNames addObject:fileName];
+    }
+  }
+
+  return fileNames;
 }
 
 #pragma mark - disk operations
 
-+ (void)saveCrashInfoToDisk:(NSDictionary<NSString *, id> *)crashInfo
++ (void)saveCrashLog:(NSDictionary<NSString *, id> *)crashLog
 {
-  [crashInfo writeToFile:[self pathToCrashFile]
-              atomically:YES];
+  NSMutableDictionary<NSString *, id> *crashLogWithTimestamp = [NSMutableDictionary dictionaryWithDictionary:crashLog];
+  NSString *currentTimestamp = [NSString stringWithFormat:@"%.0lf", [[NSDate date] timeIntervalSince1970]];
+  [crashLogWithTimestamp setObject:currentTimestamp forKey:kFBSDKCrashTimestamp];
+  [crashLogWithTimestamp setObject:mappingTableSavedTime forKey:kFBSDKMapingTableTimestamp];
+
+  [crashLogWithTimestamp writeToFile:[self getPathToCrashFile:mappingTableSavedTime]
+                          atomically:YES];
 }
 
-+ (void)saveLibData:(NSDictionary<NSString *, NSString *> *)data
++ (void)generateMethodMapping
 {
-  if (data){
-    [data writeToFile:[self pathToLibDataFile]
-           atomically:YES];
-  } else {
-    [[NSFileManager defaultManager] removeItemAtPath:[self pathToLibDataFile] error:nil];
+  NSDictionary<NSString *, NSString *> *methodMapping = [FBSDKLibAnalyzer getMethodsTable];
+  if (methodMapping){
+    [methodMapping writeToFile:[self getPathToLibDataFile:mappingTableSavedTime]
+                    atomically:YES];
   }
 }
 
-+ (NSDictionary<NSString *, NSString *> *)loadLibData
++ (NSDictionary<NSString *, id> *)loadLibData:(NSDictionary<NSString *, id> *)crashLog
 {
-  return [NSDictionary dictionaryWithContentsOfFile:[self pathToLibDataFile]];
+  NSString *timestamp = [crashLog objectForKey:kFBSDKMapingTableTimestamp];
+  return [NSDictionary dictionaryWithContentsOfFile:[self getPathToLibDataFile:timestamp]];
 }
 
-+ (NSString *)pathToCrashFile
++ (NSString *)getPathToCrashFile:(NSString *)timestamp
 {
-  return [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"crash_%@.bin",CrashReportStorageLibName]];
+  return [directoryPath stringByAppendingPathComponent:
+          [NSString stringWithFormat:@"crash_log_%@.json", timestamp]];
 }
 
-+ (NSString *)pathToLibDataFile
++ (NSString *)getPathToLibDataFile:(NSString *)timestamp
 {
-  return [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"static_lib_data_%@.bin",CrashReportStorageLibName]];
+  return [directoryPath stringByAppendingPathComponent:
+          [NSString stringWithFormat:@"crash_lib_data_%@.json", timestamp]];
 
 }
 

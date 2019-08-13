@@ -20,29 +20,23 @@
 
 #import <objc/runtime.h>
 
-#import "FBSDKCrashHandler.h"
-#import "FBSDKCrashStorage.h"
-
 @implementation FBSDKLibAnalyzer
 
-static NSDictionary<NSString *,NSString *> *previousMapping;
-
-+ (void)generateMethodsTable
++ (NSDictionary<NSString *, NSString *> *)getMethodsTable
 {
-    previousMapping = [FBSDKCrashStorage loadLibData];
-    NSMutableDictionary<NSString *, NSString *> *methodMapping = [NSMutableDictionary dictionary];
-    NSArray<NSString *> *allClasses = [self getClassNames];
-    for (NSString *className in allClasses) {
-      Class class = NSClassFromString(className);
-      [self addClass:class methodMapping:methodMapping isClassMethod:NO];
-      [self addClass:object_getClass(class) methodMapping:methodMapping isClassMethod:YES];
-    }
-    [FBSDKCrashStorage saveLibData:methodMapping];
+  NSMutableDictionary<NSString *, NSString *> *methodMapping = [NSMutableDictionary dictionary];
+  NSArray<NSString *> *allClasses = [self getClassNames];
+  for (NSString *className in allClasses) {
+    Class class = NSClassFromString(className);
+    [self addClass:class methodMapping:methodMapping isClassMethod:NO];
+    [self addClass:object_getClass(class) methodMapping:methodMapping isClassMethod:YES];
+  }
+  return methodMapping;
 }
 
 #pragma mark - private methods
 
-+(NSArray<NSString *> *)getClassNames
++ (NSArray<NSString *> *)getClassNames
 {
   unsigned int numClasses;
   Class *classes = objc_copyClassList(&numClasses);
@@ -95,42 +89,30 @@ static NSDictionary<NSString *,NSString *> *previousMapping;
   free(methods);
 }
 
-+ (void)processCrashInfo:(NSDictionary<NSString *, id> *)crashInfo
-                   block:(FBSDKCrashLoggerReportBlock)reportBlock
-{
-  if (crashInfo && reportBlock && previousMapping) {
-    NSArray<NSString *> *sortedAllAddress = [previousMapping.allKeys sortedArrayUsingComparator:^NSComparisonResult(id _Nonnull obj1, id _Nonnull obj2) {
-      return [obj1 compare:obj2];
-    }];
-    NSArray<NSString *> *callstack = crashInfo[kFBSDKCallstack];
-
-    NSArray<NSString *> *symbolicatedCallstack = [self symbolicateCallstack:callstack sortedAllAddress:sortedAllAddress addressMapping:previousMapping];
-
-    NSMutableDictionary<NSString *, id> *mutableCrashInfo = [NSMutableDictionary dictionaryWithDictionary:crashInfo];
-    if (symbolicatedCallstack) {
-      mutableCrashInfo[kFBSDKCallstack] = symbolicatedCallstack;
-      reportBlock(mutableCrashInfo);
-    }
-  }
-}
-
 + (NSArray<NSString *> *)symbolicateCallstack:(NSArray<NSString *> *)callstack
-                             sortedAllAddress:(NSArray<NSString *> *)sortedAllAddress
-                               addressMapping:(NSDictionary<NSString *, NSString *> *)addressMapping
+                                methodMapping:(NSDictionary<NSString *,id> *)methodMapping
 {
-  if (!callstack){
+  if (!callstack || !methodMapping) {
     return nil;
   }
+  NSArray<NSString *> *sortedAllAddress = [methodMapping.allKeys sortedArrayUsingComparator:^NSComparisonResult(id _Nonnull obj1, id _Nonnull obj2) {
+    return [obj1 compare:obj2];
+  }];
+
+  BOOL containsFBSDKFunction = NO;
   NSInteger nonSDKMethodCount = 0;
   NSMutableArray<NSString *> *symbolicatedCallstack = [NSMutableArray array];
+
   for (NSUInteger i = 0; i < callstack.count; i++){
     NSString *rawAddress = [self getAddress:callstack[i]];
     NSString *addressString = [NSString stringWithFormat:@"0x%@",[rawAddress substringWithRange:NSMakeRange(rawAddress.length - 10, 10)]];
     NSString *methodAddress = [self searchMethod:addressString sortedAllAddress:sortedAllAddress];
+
     if (methodAddress) {
+      containsFBSDKFunction = YES;
       nonSDKMethodCount == 0 ?: [symbolicatedCallstack addObject:[NSString stringWithFormat:@"(%ld DEV METHODS)", (long)nonSDKMethodCount]];
       nonSDKMethodCount = 0;
-      NSString *methodName = [addressMapping objectForKey:methodAddress];
+      NSString *methodName = [methodMapping objectForKey:methodAddress];
       [symbolicatedCallstack addObject:[NSString stringWithFormat:@"%@%@", methodName, [self getOffset:addressString secondString:methodAddress]]];
     } else {
       nonSDKMethodCount++;
@@ -138,7 +120,7 @@ static NSDictionary<NSString *,NSString *> *previousMapping;
   }
   nonSDKMethodCount == 0 ?: [symbolicatedCallstack addObject:[NSString stringWithFormat:@"(%ld DEV METHODS)", (long)nonSDKMethodCount]];
 
-  return symbolicatedCallstack;
+  return containsFBSDKFunction ? symbolicatedCallstack : nil;
 }
 
 + (NSString *)getAddress:(NSString *)callstackEntry
@@ -172,8 +154,7 @@ static NSDictionary<NSString *,NSString *> *previousMapping;
 + (NSString *)searchMethod:(NSString *)address
           sortedAllAddress:(NSArray<NSString *> *)sortedAllAddress
 {
-  if (0 == sortedAllAddress.count)
-  {
+  if (0 == sortedAllAddress.count) {
     return nil;
   }
   NSString *lowestAddress = sortedAllAddress[0];

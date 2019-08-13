@@ -18,12 +18,13 @@
 
 #import <Foundation/Foundation.h>
 
-@interface FBSDKCrashHandler : NSObject
+NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^FBSDKCrashLoggerReportBlock)(NSDictionary<NSString *, id> *crashInfo);
+@interface FBSDKCrashHandler : NSObject
 
 + (void)installExceptionsHandler;
 + (void)uninstallExceptionsHandler;
-+ (void)processCrash:(FBSDKCrashLoggerReportBlock)reportBlock;
 
 @end
+
+NS_ASSUME_NONNULL_END
