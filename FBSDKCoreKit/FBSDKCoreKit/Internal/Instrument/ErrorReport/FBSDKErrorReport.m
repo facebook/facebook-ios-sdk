@@ -28,7 +28,9 @@
   // TODO (linajin) T48556791 Error Report Logger behavior upon APP loading
 }
 
-- (void)saveError
++ (void)saveError:(NSInteger)errorCode
+      errorDomain:(NSErrorDomain)errorDomain
+          message:(nullable NSString *)message
 {
   // TODO (linajin) T48558698 Load Error Report in Local Storage
 }
