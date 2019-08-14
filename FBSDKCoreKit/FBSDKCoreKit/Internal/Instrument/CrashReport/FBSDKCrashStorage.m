@@ -27,6 +27,8 @@
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
 
+#define FBSDK_MAX_CRASH_LOGS 5
+
 static NSString *mappingTableSavedTime = NULL;
 static NSString *directoryPath;
 
@@ -101,10 +103,12 @@ NSString *const kFBSDKMapingTableTimestamp = @"mapping_table_timestamp";
 + (NSArray<NSDictionary<NSString *, id> *> *)loadCrashLogs
 {
   NSArray<NSString *> *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directoryPath error:NULL];
-  NSArray<NSString *> *fileNames = [self getCrashLogFileNames:files];
+  NSArray<NSString *> *fileNames = [[self getCrashLogFileNames:files] sortedArrayUsingComparator:^NSComparisonResult(id _Nonnull obj1, id _Nonnull obj2){
+    return [obj2 compare:obj1];
+  }];
   NSMutableArray<NSDictionary<NSString *, id> *> *crashLogArray = [NSMutableArray array];
 
-  for (NSUInteger i = 0; i < fileNames.count; i++) {
+  for (NSUInteger i = 0; i < MIN(fileNames.count, FBSDK_MAX_CRASH_LOGS); i++) {
     NSDictionary<NSString *, id> *crashLog = [FBSDKCrashStorage loadCrashLog:fileNames[i]];
     [crashLogArray addObject:crashLog];
   }
