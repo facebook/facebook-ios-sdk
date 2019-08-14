@@ -172,16 +172,18 @@ NSString *const kFBSDKMapingTableTimestamp = @"mapping_table_timestamp";
   [completeCrashLog setObject:[UIDevice currentDevice].systemVersion forKey:kFBSDKDeviceOSVersion];
 
   [completeCrashLog writeToFile:[self getPathToCrashFile:mappingTableSavedTime]
-                          atomically:YES];
+                     atomically:YES];
 }
 
 + (void)generateMethodMapping
 {
-  NSDictionary<NSString *, NSString *> *methodMapping = [FBSDKLibAnalyzer getMethodsTable];
-  if (methodMapping){
-    [methodMapping writeToFile:[self getPathToLibDataFile:mappingTableSavedTime]
-                    atomically:YES];
-  }
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+    NSDictionary<NSString *, NSString *> *methodMapping = [FBSDKLibAnalyzer getMethodsTable];
+    if (methodMapping){
+      [methodMapping writeToFile:[self getPathToLibDataFile:mappingTableSavedTime]
+                      atomically:YES];
+    }
+  });
 }
 
 + (NSDictionary<NSString *, id> *)loadLibData:(NSDictionary<NSString *, id> *)crashLog
