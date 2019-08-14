@@ -78,6 +78,10 @@ NSString *const kFBSDKMapingTableTimestamp = @"mapping_table_timestamp";
 + (NSArray<NSDictionary<NSString *, id> *> *)getProcessedCrashLogs
 {
   NSArray<NSDictionary<NSString *, id> *> *crashLogs = [self loadCrashLogs];
+  if (0 == crashLogs.count) {
+    [self clearCrashReportFiles:nil];
+    return nil;
+  }
   NSMutableArray<NSDictionary<NSString *, id> *> *processedCrashLogs = [NSMutableArray array];
 
   for (NSDictionary<NSString *, id> *crashLog in crashLogs) {
