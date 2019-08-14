@@ -20,6 +20,8 @@
 
 #import "FBSDKCrashStorage.h"
 #import "FBSDKFeatureManager.h"
+#import "FBSDKGraphRequest.h"
+#import "FBSDKGraphRequestConnection.h"
 #import "FBSDKLibAnalyzer.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
@@ -47,20 +49,23 @@ static NSUncaughtExceptionHandler *previousExceptionHandler = NULL;
 + (void)uploadCrashLogs
 {
   NSArray<NSDictionary<NSString *, id> *> *processedCrashLogs = [FBSDKCrashStorage getProcessedCrashLogs];
-  if (0 == processedCrashLogs) {
+  if (0 == processedCrashLogs.count) {
     return;
   }
-  NSMutableArray<NSString *> *encodedCrashLogs = [NSMutableArray array];
-  for (NSDictionary<NSString *, id> * crashLog in processedCrashLogs) {
-    NSData *data = [NSJSONSerialization dataWithJSONObject:crashLog options:0 error:nil];
-    if (data) {
-      NSString *encodedCrashLog = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-      if (encodedCrashLog) {
-        [encodedCrashLogs addObject:encodedCrashLog];
+  NSData *jsonData = [NSJSONSerialization dataWithJSONObject:processedCrashLogs options:0 error:nil];
+  if (jsonData) {
+    NSString *crashReports = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/instruments", [FBSDKSettings appID]]
+                                                                   parameters:@{@"crash_reports" : crashReports ?: @""}
+                                                                   HTTPMethod:FBSDKHTTPMethodPOST];
+
+    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+      if (!error && [result isKindOfClass:[NSDictionary class]] && result[@"success"]) {
+        [FBSDKCrashStorage clearCrashReportFiles:nil];
       }
-    }
+    }];
   }
-  // TODO(T48499181): add graph request to send crash log
 }
 
 # pragma mark handler function

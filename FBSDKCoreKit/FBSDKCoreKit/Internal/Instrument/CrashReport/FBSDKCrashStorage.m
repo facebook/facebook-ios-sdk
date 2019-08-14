@@ -18,6 +18,8 @@
 
 #import "FBSDKCrashStorage.h"
 
+#import <sys/utsname.h>
+
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
@@ -28,9 +30,12 @@
 static NSString *mappingTableSavedTime = NULL;
 static NSString *directoryPath;
 
+NSString *const kFBSDKAppVersion = @"app_version";
 NSString *const kFBSDKCallstack = @"callstack";
 NSString *const kFBSDKCrashReason = @"reason";
 NSString *const kFBSDKCrashTimestamp = @"timestamp";
+NSString *const kFBSDKDeviceModel = @"device_model";
+NSString *const kFBSDKDeviceOSVersion = @"device_os_version";
 
 NSString *const kFBSDKMapingTableTimestamp = @"mapping_table_timestamp";
 
@@ -82,6 +87,7 @@ NSString *const kFBSDKMapingTableTimestamp = @"mapping_table_timestamp";
     NSMutableDictionary<NSString *, id> *symbolicatedCrashLog = [NSMutableDictionary dictionaryWithDictionary:crashLog];
     if (symbolicatedCallstack) {
       [symbolicatedCrashLog setObject:symbolicatedCallstack forKey:kFBSDKCallstack];
+      [symbolicatedCrashLog removeObjectForKey:kFBSDKMapingTableTimestamp];
       [processedCrashLogs addObject:symbolicatedCrashLog];
     }
   }
@@ -112,7 +118,8 @@ NSString *const kFBSDKMapingTableTimestamp = @"mapping_table_timestamp";
     NSArray<NSString *> *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directoryPath error:nil];
 
     for (NSUInteger i = 0; i < files.count; i++) {
-      if ([files[i] hasPrefix:@"crash_"]) {
+      // remove all crash related files except for the current mapping table
+      if ([files[i] hasPrefix:@"crash_"] && ![files[i] containsString:mappingTableSavedTime]) {
         [[NSFileManager defaultManager] removeItemAtPath:[directoryPath stringByAppendingPathComponent:files[i]] error:nil];
       }
     }
@@ -139,12 +146,24 @@ NSString *const kFBSDKMapingTableTimestamp = @"mapping_table_timestamp";
 
 + (void)saveCrashLog:(NSDictionary<NSString *, id> *)crashLog
 {
-  NSMutableDictionary<NSString *, id> *crashLogWithTimestamp = [NSMutableDictionary dictionaryWithDictionary:crashLog];
+  NSMutableDictionary<NSString *, id> *completeCrashLog = [NSMutableDictionary dictionaryWithDictionary:crashLog];
   NSString *currentTimestamp = [NSString stringWithFormat:@"%.0lf", [[NSDate date] timeIntervalSince1970]];
-  [crashLogWithTimestamp setObject:currentTimestamp forKey:kFBSDKCrashTimestamp];
-  [crashLogWithTimestamp setObject:mappingTableSavedTime forKey:kFBSDKMapingTableTimestamp];
 
-  [crashLogWithTimestamp writeToFile:[self getPathToCrashFile:mappingTableSavedTime]
+  [completeCrashLog setObject:currentTimestamp forKey:kFBSDKCrashTimestamp];
+  [completeCrashLog setObject:mappingTableSavedTime forKey:kFBSDKMapingTableTimestamp];
+
+  NSBundle *mainBundle = [NSBundle mainBundle];
+  NSString *version = [mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+  NSString *build = [mainBundle objectForInfoDictionaryKey:@"CFBundleVersion"];
+  [completeCrashLog setObject:[NSString stringWithFormat:@"%@(%@)", version, build] forKey:kFBSDKAppVersion];
+
+  struct utsname systemInfo;
+  uname(&systemInfo);
+  [completeCrashLog setObject:@(systemInfo.machine) forKey:kFBSDKDeviceModel];
+
+  [completeCrashLog setObject:[UIDevice currentDevice].systemVersion forKey:kFBSDKDeviceOSVersion];
+
+  [completeCrashLog writeToFile:[self getPathToCrashFile:mappingTableSavedTime]
                           atomically:YES];
 }
 
