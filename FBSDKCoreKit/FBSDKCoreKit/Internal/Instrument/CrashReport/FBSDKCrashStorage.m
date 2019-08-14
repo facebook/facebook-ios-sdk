@@ -61,7 +61,7 @@ NSString *const kFBSDKMapingTableTimestamp = @"mapping_table_timestamp";
     NSArray<NSString *> *stackSymbols = [NSArray arrayWithArray:exception.callStackSymbols];
     [self saveCrashLog:@{
                          kFBSDKCallstack : stackSymbols,
-                         kFBSDKCrashReason : [NSString stringWithFormat: @"NSException: %@", exception.name],
+                         kFBSDKCrashReason : exception.name,
                          }];
   }
 }
