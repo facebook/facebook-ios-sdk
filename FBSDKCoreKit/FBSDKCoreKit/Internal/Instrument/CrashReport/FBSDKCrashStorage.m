@@ -28,6 +28,7 @@
 #import "FBSDKSettings.h"
 
 #define FBSDK_MAX_CRASH_LOGS 5
+#define FBSDK_CRASH_PATH_NAME @"instrument"
 
 static NSString *mappingTableSavedTime = NULL;
 static NSString *directoryPath;
@@ -45,7 +46,7 @@ NSString *const kFBSDKMapingTableTimestamp = @"mapping_table_timestamp";
 
 + (void)initialize
 {
-  NSString *dirPath = [NSTemporaryDirectory() stringByAppendingString:@"instrument/"];
+  NSString *dirPath = [NSTemporaryDirectory() stringByAppendingPathComponent:FBSDK_CRASH_PATH_NAME];
   if (![[NSFileManager defaultManager] fileExistsAtPath:dirPath]) {
     if (![[NSFileManager defaultManager] createDirectoryAtPath:dirPath withIntermediateDirectories:NO attributes:NULL error:NULL]) {
       [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational formatString:@"Failed to create library at %@", dirPath];
