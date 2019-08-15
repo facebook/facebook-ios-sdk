@@ -18,6 +18,8 @@
 
 #import "FBSDKErrorReport.h"
 
+#import "FBSDKGraphRequest.h"
+#import "FBSDKGraphRequestConnection.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
 
@@ -29,8 +31,8 @@ static NSString *ErrorReportStorageDirName = @"instrument/";
 static NSString *directoryPath;
 
 NSString *const kFBSDKErrorCode = @"error_code";
-NSString *const kFBSDKErrorDomain = @"error_domain";
-NSString *const kFBSDKErrorTimestamp = @"error_time_stamp";
+NSString *const kFBSDKErrorDomain = @"domain";
+NSString *const kFBSDKErrorTimestamp = @"timestamp";
 
 # pragma mark - Class Methods
 
@@ -47,7 +49,24 @@ NSString *const kFBSDKErrorTimestamp = @"error_time_stamp";
 
 + (void)enable
 {
-  // TODO (linajin) T48556791 Error Report Logger behavior upon APP loading
+  NSArray<NSDictionary<NSString *, id> *> *errorReports = [self loadErrorReports];
+  if ([errorReports count] == 0) {
+    return [self clearErrorInfo];
+  }
+  NSData *jsonData = [NSJSONSerialization dataWithJSONObject:errorReports options:0 error:nil];
+  if (!jsonData){
+    return;
+  }
+  NSString *errorData = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/instruments", [FBSDKSettings appID]]
+                                                                 parameters:@{@"error_reports" : errorData ?: @""}
+                                                                 HTTPMethod:FBSDKHTTPMethodPOST];
+
+  [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+    if (!error && [result isKindOfClass:[NSDictionary class]] && result[@"success"]) {
+      [self clearErrorInfo];
+    }
+  }];
 }
 
 + (void)saveError:(NSInteger)errorCode
