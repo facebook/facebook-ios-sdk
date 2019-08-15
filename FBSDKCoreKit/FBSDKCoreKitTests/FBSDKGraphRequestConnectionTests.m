@@ -32,34 +32,36 @@
 #import "FBSDKGraphRequestPiggybackManager.h"
 #import "FBSDKSettings+Internal.h"
 
-@interface FBSDKGraphRequestConnectionTests : XCTestCase <FBSDKGraphRequestConnectionDelegate>
+@interface FBSDKGraphRequestConnectionTests : XCTestCase <FBSDKGraphRequestConnectionDelegate> {
+  id _settingsMock;
+}
 @property (nonatomic, copy) void (^requestConnectionStartingCallback)(FBSDKGraphRequestConnection *connection);
 @property (nonatomic, copy) void (^requestConnectionCallback)(FBSDKGraphRequestConnection *connection, NSError *error);
 @end
 
 static id g_mockNSBundle;
+
 static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
 
 @implementation FBSDKGraphRequestConnectionTests
 
 #pragma mark - XCTestCase
 
-- (void)tearDown
-{
-  [OHHTTPStubs removeAllStubs];
-}
-
-+ (void)setUp
+- (void)setUp
 {
   [FBSDKSettings setAppID:@"appid"];
   [FBSDKApplicationDelegate initializeSDK:nil];
   g_mockNSBundle = [FBSDKCoreKitTestUtility mainBundleMock];
+  _settingsMock = OCMStrictClassMock([FBSDKSettings class]);
 }
 
-+ (void)tearDown
+- (void)tearDown
 {
+  [OHHTTPStubs removeAllStubs];
   [g_mockNSBundle stopMocking];
   g_mockNSBundle = nil;
+  [_settingsMock stopMocking];
+  _settingsMock = nil;
 }
 
 #pragma mark - Helpers
@@ -652,6 +654,7 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
 {
   id mockUtility  = [OCMockObject niceMockForClass:[FBSDKBasicUtility class]];
   [[[mockUtility stub] andReturn:nil] gzip:[OCMArg any]];
+  [OCMStub(ClassMethod([_settingsMock isAdvertiserIDCollectionEnabled])) andReturnValue: OCMOCK_VALUE(YES)];
 
   XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
 
