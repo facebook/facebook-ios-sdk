@@ -21,6 +21,8 @@
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
 
+#define FBSDK_MAX_ERROR_REPORT_LOGS 1000
+
 @implementation FBSDKErrorReport
 
 static NSString *ErrorReportStorageDirName = @"instrument/";
@@ -60,10 +62,28 @@ NSString *const kFBSDKErrorTimestamp = @"error_time_stamp";
                                }];
 }
 
-+ (NSDictionary<NSString *,id> *)loadErrorInfo
++ (NSArray<NSDictionary<NSString *, id> *> *)loadErrorReports
 {
-  // TODO (linajin) T48556791 Error Report Logger behavior upon APP loading
-  return @{};
+  NSMutableArray<NSDictionary<NSString *, id> *> *errorReportArr = [NSMutableArray array];
+  NSArray<NSString *> *fileNames = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directoryPath error:NULL];
+  NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id  _Nullable evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
+    NSString *str = (NSString *)evaluatedObject;
+    return [str hasPrefix:@"error_report_"] && [str hasSuffix:@".plist"];
+  }];
+  fileNames = [fileNames filteredArrayUsingPredicate:predicate];
+  fileNames = [fileNames sortedArrayUsingComparator:^NSComparisonResult(id _Nonnull obj1, id _Nonnull obj2){
+    return [obj2 compare:obj1];
+  }];
+  if (fileNames.count > 0){
+    fileNames = [fileNames subarrayWithRange:NSMakeRange(0, MIN(fileNames.count, FBSDK_MAX_ERROR_REPORT_LOGS))];
+    for (NSUInteger i = 0; i < fileNames.count; i++) {
+      NSDictionary<NSString *, id> *errorReport =  [NSDictionary dictionaryWithContentsOfFile:[directoryPath stringByAppendingPathComponent:fileNames[i]]];
+      if (errorReport) {
+        [errorReportArr addObject:errorReport];
+      }
+    }
+  }
+  return [errorReportArr copy];
 }
 
 + (void)clearErrorInfo
@@ -82,7 +102,7 @@ NSString *const kFBSDKErrorTimestamp = @"error_time_stamp";
 {
   [errorInfo writeToFile:[self pathToErrorInfoFile]
               atomically:YES];
-  }
+}
 
 + (NSString *)pathToErrorInfoFile
 {
