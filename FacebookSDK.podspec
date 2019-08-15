@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'FacebookSDK'
-  s.version      = '5.3.0'
+  s.version      = '5.4.0'
   s.summary      = 'Official Facebook SDK for iOS to access Facebook Platform'
 
   s.description  = <<-DESC
