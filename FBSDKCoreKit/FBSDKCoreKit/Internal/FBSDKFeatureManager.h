@@ -46,6 +46,7 @@ typedef NS_ENUM(NSUInteger, FBSDKFeature)
   FBSDKFeatureRestrictiveDataFiltering,
   FBSDKFeatureInstrument = 0x000200,
   FBSDKFeatureCrashReport,
+  FBSDKFeatureErrorReport,
 
 
   // Features in LoginKit

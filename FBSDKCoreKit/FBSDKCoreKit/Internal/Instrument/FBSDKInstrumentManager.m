@@ -19,6 +19,7 @@
 #import "FBSDKInstrumentManager.h"
 
 #import "FBSDKCrashHandler.h"
+#import "FBSDKErrorReport.h"
 #import "FBSDKFeatureManager.h"
 
 @implementation FBSDKInstrumentManager
@@ -27,6 +28,9 @@
 {
   if ([FBSDKFeatureManager isEnabled:FBSDKFeatureCrashReport]) {
     [FBSDKCrashHandler enable];
+  }
+  if ([FBSDKFeatureManager isEnabled:FBSDKFeatureErrorReport]) {
+    [FBSDKErrorReport enable];
   }
 }
 

@@ -45,7 +45,7 @@ NSString *const kFBSDKErrorTimestamp = @"error_time_stamp";
   directoryPath = dirPath;
 }
 
-- (void)enable
++ (void)enable
 {
   // TODO (linajin) T48556791 Error Report Logger behavior upon APP loading
 }
