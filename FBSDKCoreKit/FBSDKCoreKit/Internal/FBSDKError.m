@@ -20,7 +20,9 @@
 
 #import "FBSDKConstants.h"
 #import "FBSDKErrorReport.h"
+#import "FBSDKFeatureManager.h"
 #import "FBSDKInternalUtility.h"
+#import "FBSDKSettings.h"
 
 @implementation FBSDKError
 
@@ -71,7 +73,9 @@
   [FBSDKBasicUtility dictionary:fullUserInfo setObject:message forKey:FBSDKErrorDeveloperMessageKey];
   [FBSDKBasicUtility dictionary:fullUserInfo setObject:underlyingError forKey:NSUnderlyingErrorKey];
   userInfo = fullUserInfo.count ? [fullUserInfo copy] : nil;
-  [FBSDKErrorReport saveError:code errorDomain:domain message:message];
+  if ([FBSDKSettings isInstrumentEnabled] && [FBSDKFeatureManager isEnabled:FBSDKFeatureErrorReport]) {
+    [FBSDKErrorReport saveError:code errorDomain:domain message:message];
+  }
   return [[NSError alloc] initWithDomain:domain code:code userInfo:userInfo];
 }
 

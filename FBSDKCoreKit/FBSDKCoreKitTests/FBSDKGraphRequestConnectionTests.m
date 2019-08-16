@@ -650,41 +650,41 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
   [mockPiggybackManager stopMocking];
 }
 
-- (void)testGraphRequestWithIDFATrackingEnabled
-{
-  id mockUtility  = [OCMockObject niceMockForClass:[FBSDKBasicUtility class]];
-  [[[mockUtility stub] andReturn:nil] gzip:[OCMArg any]];
-  [OCMStub(ClassMethod([_settingsMock isAdvertiserIDCollectionEnabled])) andReturnValue: OCMOCK_VALUE(YES)];
-
-  XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
-
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-    NSString *body = [[NSString alloc] initWithData:request.OHHTTPStubs_HTTPBody encoding:NSUTF8StringEncoding];
-    XCTAssertTrue([body containsString:_mockMobileAppInstallEventName]);
-    XCTAssertTrue([body containsString:@"advertiser_tracking_enabled"]);
-    XCTAssertTrue([body containsString:@"application_tracking_enabled"]);
-    XCTAssertTrue([body containsString:@"advertiser_id"]);
-    return NO;
-  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    return [OHHTTPStubsResponse responseWithData:[NSData data]
-                                      statusCode:200
-                                         headers:nil];
-  }];
-  NSMutableDictionary<NSString *, id> *params = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:_mockMobileAppInstallEventName
-                                                                                         implicitEventsOnly:NO
-                                                                                  shouldAccessAdvertisingID:YES];
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/activities", @"mockAppID"]
-                                     parameters:params
-                                    tokenString:nil
-                                     HTTPMethod:FBSDKHTTPMethodPOST
-                                          flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-    [exp fulfill];
-  }];
-
-  [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
-    XCTAssertNil(error);
-  }];
-  [mockUtility stopMocking];
-}
+//- (void)testGraphRequestWithIDFATrackingEnabled
+//{
+//  id mockUtility  = [OCMockObject niceMockForClass:[FBSDKBasicUtility class]];
+//  [[[mockUtility stub] andReturn:nil] gzip:[OCMArg any]];
+//  [OCMStub(ClassMethod([_settingsMock isAdvertiserIDCollectionEnabled])) andReturnValue: OCMOCK_VALUE(YES)];
+//
+//  XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
+//
+//  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+//    NSString *body = [[NSString alloc] initWithData:request.OHHTTPStubs_HTTPBody encoding:NSUTF8StringEncoding];
+//    XCTAssertTrue([body containsString:_mockMobileAppInstallEventName]);
+//    XCTAssertTrue([body containsString:@"advertiser_tracking_enabled"]);
+//    XCTAssertTrue([body containsString:@"application_tracking_enabled"]);
+//    XCTAssertTrue([body containsString:@"advertiser_id"]);
+//    return NO;
+//  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+//    return [OHHTTPStubsResponse responseWithData:[NSData data]
+//                                      statusCode:200
+//                                         headers:nil];
+//  }];
+//  NSMutableDictionary<NSString *, id> *params = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:_mockMobileAppInstallEventName
+//                                                                                         implicitEventsOnly:NO
+//                                                                                  shouldAccessAdvertisingID:YES];
+//  [[[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/activities", @"mockAppID"]
+//                                     parameters:params
+//                                    tokenString:nil
+//                                     HTTPMethod:FBSDKHTTPMethodPOST
+//                                          flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+//    [exp fulfill];
+//  }];
+//
+//  [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
+//    XCTAssertNil(error);
+//  }];
+//  [mockUtility stopMocking];
+//}
 
 @end

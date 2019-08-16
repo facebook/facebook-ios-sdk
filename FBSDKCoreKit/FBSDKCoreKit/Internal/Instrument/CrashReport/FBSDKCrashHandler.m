@@ -39,7 +39,9 @@ static NSUncaughtExceptionHandler *previousExceptionHandler = NULL;
     dispatch_once(&onceToken, ^{
       [FBSDKCrashHandler installExceptionsHandler];
       [FBSDKCrashStorage generateMethodMapping];
-      [self uploadCrashLogs];
+      if ([FBSDKSettings isAutoLogAppEventsEnabled]){
+        [self uploadCrashLogs];
+      }
     });
   } else {
     [FBSDKCrashStorage clearCrashReportFiles:nil];
@@ -55,11 +57,10 @@ static NSUncaughtExceptionHandler *previousExceptionHandler = NULL;
   NSData *jsonData = [NSJSONSerialization dataWithJSONObject:processedCrashLogs options:0 error:nil];
   if (jsonData) {
     NSString *crashReports = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-
     FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/instruments", [FBSDKSettings appID]]
                                                                    parameters:@{@"crash_reports" : crashReports ?: @""}
                                                                    HTTPMethod:FBSDKHTTPMethodPOST];
-
+    
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
       if (!error && [result isKindOfClass:[NSDictionary class]] && result[@"success"]) {
         [FBSDKCrashStorage clearCrashReportFiles:nil];
