@@ -79,6 +79,9 @@
 {
   switch (feature) {
     case FBSDKFeatureRestrictiveDataFiltering:
+    case FBSDKFeatureInstrument:
+    case FBSDKFeatureCrashReport:
+    case FBSDKFeatureErrorReport:
       return NO;
     default: return YES;
   }

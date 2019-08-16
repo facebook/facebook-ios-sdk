@@ -21,11 +21,16 @@
 #import "FBSDKCrashHandler.h"
 #import "FBSDKErrorReport.h"
 #import "FBSDKFeatureManager.h"
+#import "FBSDKSettings.h"
 
 @implementation FBSDKInstrumentManager
 
 + (void)enable
 {
+  if (![FBSDKSettings isAutoLogAppEventsEnabled]) {
+    return;
+  }
+
   if ([FBSDKFeatureManager isEnabled:FBSDKFeatureCrashReport]) {
     [FBSDKCrashHandler enable];
   }
