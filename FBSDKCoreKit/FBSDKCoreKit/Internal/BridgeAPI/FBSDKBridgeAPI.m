@@ -321,13 +321,11 @@ didFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *
     _authenticationSession = [[AuthenticationSessionClass alloc] initWithURL:url
                                                            callbackURLScheme:[FBSDKInternalUtility appURLScheme]
                                                            completionHandler:_authenticationSessionCompletionHandler];
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
     if (@available(iOS 13.0, *)) {
       if ([_authenticationSession respondsToSelector:@selector(setPresentationContextProvider:)]) {
         [_authenticationSession setPresentationContextProvider:self];
       }
     }
-#endif
     _isRequestingSFAuthenticationSession = YES;
     [_authenticationSession start];
   }
@@ -425,12 +423,13 @@ didFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *
   _pendingRequestCompletionBlock = NULL;
 }
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
 #pragma mark - ASWebAuthenticationPresentationContextProviding
-
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
 - (ASPresentationAnchor)presentationAnchorForWebAuthenticationSession:(ASWebAuthenticationSession *)session API_AVAILABLE(ios(13.0)){
-    return UIApplication.sharedApplication.keyWindow;
-}
+#else
+- (UIWindow *)presentationAnchorForWebAuthenticationSession:(id<FBSDKAuthenticationSession>)session API_AVAILABLE(ios(11.0)) {
 #endif
+  return UIApplication.sharedApplication.keyWindow;
+}
 
 @end
