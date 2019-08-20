@@ -348,6 +348,13 @@ static UIApplicationState _applicationState;
     bit++;
   }
 
+  // Tracking if the consuming Application is using Swift
+  id delegate = [UIApplication sharedApplication].delegate;
+  NSString const *className = NSStringFromClass([delegate class]);
+  if ([className componentsSeparatedByString:@"."].count > 1) {
+    params[@"is_using_swift"] = @YES;
+  }
+
   NSInteger existingBitmask = [[NSUserDefaults standardUserDefaults] integerForKey:FBSDKKitsBitmaskKey];
   if (existingBitmask != bitmask) {
     [[NSUserDefaults standardUserDefaults] setInteger:bitmask forKey:FBSDKKitsBitmaskKey];
