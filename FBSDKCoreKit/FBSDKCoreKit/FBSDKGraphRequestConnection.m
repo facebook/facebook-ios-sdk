@@ -643,7 +643,7 @@ NSURLSessionDataDelegate
 //
 - (NSArray *)parseJSONResponse:(NSData *)data
                          error:(NSError **)error
-                    statusCode:(NSInteger)statusCode;
+                    statusCode:(NSInteger)statusCode
 {
   // Graph API can return "true" or "false", which is not valid JSON.
   // Translate that before asking JSON parser to look at it.

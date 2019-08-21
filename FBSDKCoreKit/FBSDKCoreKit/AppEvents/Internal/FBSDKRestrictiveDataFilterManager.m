@@ -37,7 +37,7 @@
 @implementation FBSDKRestrictiveEventFilter
 
 -(instancetype)initWithEventName:(NSString *)eventName
-                     eventParams:(NSDictionary<NSString *, id> *)eventParams;
+                     eventParams:(NSDictionary<NSString *, id> *)eventParams
 {
   self = [super init];
   if (self) {

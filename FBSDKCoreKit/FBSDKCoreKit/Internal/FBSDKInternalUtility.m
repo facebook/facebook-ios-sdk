@@ -238,7 +238,7 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift)
   }
 }
 
-+ (BOOL)object:(id)object isEqualToObject:(id)other;
++ (BOOL)object:(id)object isEqualToObject:(id)other
 {
   if (object == other) {
     return YES;

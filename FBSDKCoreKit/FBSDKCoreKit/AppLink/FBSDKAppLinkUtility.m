@@ -79,7 +79,7 @@ static NSString *const FBSDKDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
   }];
 }
 
-+ (NSString *)appInvitePromotionCodeFromURL:(NSURL *)url;
++ (NSString *)appInvitePromotionCodeFromURL:(NSURL *)url
 {
   FBSDKURL *parsedUrl = [FBSDKURL URLWithURL:url];
   NSDictionary *extras = parsedUrl.appLinkExtras;
