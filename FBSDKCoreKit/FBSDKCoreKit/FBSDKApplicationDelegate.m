@@ -105,9 +105,11 @@ static UIApplicationState _applicationState;
 
   [delegate application:[UIApplication sharedApplication] didFinishLaunchingWithOptions:launchOptions];
 
-  if ([FBSDKFeatureManager isEnabled:FBSDKFeatureInstrument]) {
-    [FBSDKInstrumentManager enable];
-  }
+  [FBSDKFeatureManager checkFeature:FBSDKFeatureInstrument completionBlock:^(BOOL enabled) {
+    if (enabled) {
+      [FBSDKInstrumentManager enable];
+    }
+  }];
 
 #if !TARGET_OS_TV
   // Register Listener for App Link measurement events

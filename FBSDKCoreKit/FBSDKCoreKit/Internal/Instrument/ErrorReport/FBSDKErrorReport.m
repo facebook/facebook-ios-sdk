@@ -49,9 +49,8 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
 
 + (void)enable
 {
-  if ([FBSDKSettings isAutoLogAppEventsEnabled]) {
-    [self uploadError];
-  }
+  [self uploadError];
+  [FBSDKError enableErrorReport];
 }
 
 + (void)uploadError

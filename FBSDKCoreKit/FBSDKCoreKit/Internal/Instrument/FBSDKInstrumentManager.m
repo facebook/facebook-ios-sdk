@@ -31,12 +31,16 @@
     return;
   }
 
-  if ([FBSDKFeatureManager isEnabled:FBSDKFeatureCrashReport]) {
-    [FBSDKCrashHandler enable];
-  }
-  if ([FBSDKFeatureManager isEnabled:FBSDKFeatureErrorReport]) {
-    [FBSDKErrorReport enable];
-  }
+  [FBSDKFeatureManager checkFeature:FBSDKFeatureCrashReport completionBlock:^(BOOL enabled) {
+    if (enabled) {
+      [FBSDKCrashHandler enable];
+    }
+  }];
+  [FBSDKFeatureManager checkFeature:FBSDKFeatureErrorReport completionBlock:^(BOOL enabled) {
+    if (enabled) {
+      [FBSDKErrorReport enable];
+    }
+  }];
 }
 
 @end

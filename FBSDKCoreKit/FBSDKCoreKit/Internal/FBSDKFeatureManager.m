@@ -21,6 +21,16 @@
 
 @implementation FBSDKFeatureManager
 
++ (void)checkFeature:(FBSDKFeature)feature
+     completionBlock:(FBSDKFeatureManagerBlock)completionBlock
+{
+  [FBSDKGateKeeperManager loadGateKeepers:^(NSError * _Nullable error) {
+    if (completionBlock) {
+      completionBlock([FBSDKFeatureManager isEnabled:feature]);
+    }
+  }];
+}
+
 + (BOOL)isEnabled:(FBSDKFeature)feature
 {
   if (FBSDKFeatureCore == feature) {

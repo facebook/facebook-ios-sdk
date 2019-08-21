@@ -34,18 +34,14 @@ static NSUncaughtExceptionHandler *previousExceptionHandler = NULL;
 
 + (void)enable
 {
-  if ([FBSDKSettings isInstrumentEnabled] && [FBSDKFeatureManager isEnabled:FBSDKFeatureCrashReport]) {
-    static dispatch_once_t onceToken = 0;
-    dispatch_once(&onceToken, ^{
-      [FBSDKCrashHandler installExceptionsHandler];
-      [FBSDKCrashStorage generateMethodMapping];
-      if ([FBSDKSettings isAutoLogAppEventsEnabled]){
-        [self uploadCrashLogs];
-      }
-    });
-  } else {
-    [FBSDKCrashStorage clearCrashReportFiles:nil];
-  }
+  static dispatch_once_t onceToken = 0;
+  dispatch_once(&onceToken, ^{
+    [FBSDKCrashHandler installExceptionsHandler];
+    [FBSDKCrashStorage generateMethodMapping];
+    if ([FBSDKSettings isAutoLogAppEventsEnabled]){
+      [self uploadCrashLogs];
+    }
+  });
 }
 
 + (void)uploadCrashLogs

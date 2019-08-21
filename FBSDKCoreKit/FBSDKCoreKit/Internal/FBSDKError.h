@@ -91,6 +91,7 @@ NS_SWIFT_NAME(SDKError)
 + (NSError *)unknownErrorWithMessage:(NSString *)message;
 
 + (BOOL)isNetworkError:(NSError *)error;
++ (void)enableErrorReport;
 
 @end
 

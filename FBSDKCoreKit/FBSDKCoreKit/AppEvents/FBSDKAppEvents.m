@@ -1066,9 +1066,11 @@ static NSString *g_overrideAppID = nil;
       [FBSDKPaymentObserver stopObservingTransactions];
     }
 #if !TARGET_OS_TV
-    if ([FBSDKFeatureManager isEnabled:FBSDKFeatureCodelessEvents]) {
-      [self enableCodelessEvents];
-    }
+    [FBSDKFeatureManager checkFeature:FBSDKFeatureCodelessEvents completionBlock:^(BOOL enabled) {
+      if (enabled) {
+        [self enableCodelessEvents];
+      }
+    }];
 #endif
     if (callback) {
       callback();
