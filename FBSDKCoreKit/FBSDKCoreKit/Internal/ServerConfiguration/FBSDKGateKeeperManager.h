@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// typedef for FBSDKAppEventUserDataType
 typedef NSString *const FBSDKGateKeeperKey NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(GateKeeperManager.GateKeeperKey);
+typedef void (^FBSDKGKManagerBlock)(NSError * _Nullable error)
+NS_SWIFT_NAME(GKManagerBlock);
 
 @interface FBSDKGateKeeperManager : NSObject
 - (instancetype)init NS_UNAVAILABLE;
@@ -37,7 +39,7 @@ typedef NSString *const FBSDKGateKeeperKey NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAM
 /**
  Load the gate keeper configurations from server
  */
-+ (void)loadGateKeepers;
++ (void)loadGateKeepers:(nullable FBSDKGKManagerBlock)completionBlock;
 
 @end
 

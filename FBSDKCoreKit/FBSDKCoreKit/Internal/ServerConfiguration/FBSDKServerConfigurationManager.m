@@ -171,7 +171,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   }
 
   // Fetch app gatekeepers
-  [FBSDKGateKeeperManager loadGateKeepers];
+  [FBSDKGateKeeperManager loadGateKeepers:nil];
 }
 
 #pragma mark - Internal Class Methods
