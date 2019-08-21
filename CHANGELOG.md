@@ -7,7 +7,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.4.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.4.1...HEAD)
+
+## 5.4.1
+
+[2019-08-21](https://github.com/facebook/facebook-objc-sdk/releases/tag/v5.4.1) |
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.4.0...v5.4.1)
+
+### Changed
+- Deprecated `+[FBSDKSettings isInstrumentEnabled]`, please use `+[FBSDKSettings isAutoLogEnabled]` instead
+
+### Fixed
+- Fix Facebook Login for iOS 13 beta
+- Various bug fixes
 
 ## 5.4.0
 
