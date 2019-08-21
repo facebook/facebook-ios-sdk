@@ -47,8 +47,8 @@
     Class singleClass = nil;
     for (int i = 0; i < numClasses; i++) {
       singleClass = classes[i];
-
-      className = NSStringFromClass(singleClass);
+      const char *name = class_getName(singleClass);
+      className = [NSString stringWithUTF8String:name];
       if ([className containsString:@"FBSDK"]) {
         [classNames addObject:className];
       }
