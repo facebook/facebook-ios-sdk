@@ -357,6 +357,15 @@ static UIApplicationState _applicationState;
     params[@"is_using_swift"] = @YES;
   }
 
+  // Additional check to see if the consuming application perhaps was
+  // originally an objc project but is now using Swift
+  UIWindow *window = [delegate window];
+  id rootViewController = [window rootViewController];
+  className = NSStringFromClass([rootViewController class]);
+  if ([className componentsSeparatedByString:@"."].count > 1) {
+    params[@"is_using_swift"] = @YES;
+  }
+
   NSInteger existingBitmask = [[NSUserDefaults standardUserDefaults] integerForKey:FBSDKKitsBitmaskKey];
   if (existingBitmask != bitmask) {
     [[NSUserDefaults standardUserDefaults] setInteger:bitmask forKey:FBSDKKitsBitmaskKey];
