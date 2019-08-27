@@ -361,9 +361,8 @@ static UIApplicationState _applicationState;
   {
     // Additional check to see if the consuming application perhaps was
     // originally an objc project but is now using Swift
-    UIWindow *window = [delegate window];
-    UIViewController *rootViewController = [window rootViewController];
-    NSString const *vcClassName = NSStringFromClass([rootViewController class]);
+    UIViewController *topMostViewController = [FBSDKInternalUtility topMostViewController];
+    NSString const *vcClassName = NSStringFromClass([topMostViewController class]);
     if ([vcClassName componentsSeparatedByString:@"."].count > 1) {
       params[@"is_using_swift"] = @YES;
     }
