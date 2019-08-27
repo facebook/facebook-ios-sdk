@@ -372,7 +372,7 @@ static UIApplicationState _applicationState;
   if ([NSThread isMainThread]) {
     checkViewForSwift();
   } else {
-    dispatch_async(dispatch_get_main_queue(), ^{
+    dispatch_sync(dispatch_get_main_queue(), ^{
       checkViewForSwift();
     });
   }
