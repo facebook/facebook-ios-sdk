@@ -357,13 +357,24 @@ static UIApplicationState _applicationState;
     params[@"is_using_swift"] = @YES;
   }
 
-  // Additional check to see if the consuming application perhaps was
-  // originally an objc project but is now using Swift
-  UIWindow *window = [delegate window];
-  id rootViewController = [window rootViewController];
-  className = NSStringFromClass([rootViewController class]);
-  if ([className componentsSeparatedByString:@"."].count > 1) {
-    params[@"is_using_swift"] = @YES;
+  void (^checkViewForSwift)() = ^void ()
+  {
+    // Additional check to see if the consuming application perhaps was
+    // originally an objc project but is now using Swift
+    UIWindow *window = [delegate window];
+    UIViewController *rootViewController = [window rootViewController];
+    NSString const *vcClassName = NSStringFromClass([rootViewController class]);
+    if ([vcClassName componentsSeparatedByString:@"."].count > 1) {
+      params[@"is_using_swift"] = @YES;
+    }
+  };
+
+  if ([NSThread isMainThread]) {
+    checkViewForSwift();
+  } else {
+    dispatch_async(dispatch_get_main_queue(), ^{
+      checkViewForSwift();
+    });
   }
 
   NSInteger existingBitmask = [[NSUserDefaults standardUserDefaults] integerForKey:FBSDKKitsBitmaskKey];
