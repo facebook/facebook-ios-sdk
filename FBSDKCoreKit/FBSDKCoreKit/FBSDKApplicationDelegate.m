@@ -357,7 +357,7 @@ static UIApplicationState _applicationState;
     params[@"is_using_swift"] = @YES;
   }
 
-  void (^checkViewForSwift)() = ^void ()
+  void (^checkViewForSwift)(void) = ^void ()
   {
     // Additional check to see if the consuming application perhaps was
     // originally an objc project but is now using Swift
