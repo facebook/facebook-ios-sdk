@@ -308,7 +308,7 @@ static NSString *const kFakeChallenge = @"a =bcdef";
   FBSDKLoginManager *manager = [OCMockObject partialMockForObject:[FBSDKLoginManager new]];
   [[[(id)manager stub] andDo:^(NSInvocation *invocation) {
     loginCount++;
-  }] logInWithBehavior:FBSDKLoginBehaviorBrowser];
+  }] logIn];
   [manager logInWithPermissions:@[@"public_profile"] fromViewController:nil handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
     // This will never be called
     XCTFail(@"Should not be called");
