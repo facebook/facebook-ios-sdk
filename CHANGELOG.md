@@ -7,7 +7,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.4.1...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.5.0...HEAD)
+
+## 5.5.0
+
+[2019-08-30](https://github.com/facebook/facebook-objc-sdk/releases/tag/v5.5.0) |
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.4.1...v5.5.0)
+
+### Changed
+- Replaced UIWebView with WKWebView as Apple will stop accepting submissions of apps that use UIWebView APIs
+- Added support for Catalyst
+
+### Fixed
+- Various bug fixes
 
 ## 5.4.1
 
