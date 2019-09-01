@@ -52,6 +52,8 @@
 
 @implementation FBSDKRestrictiveDataFilterManager
 
+static BOOL isRestrictiveEventFilterEnabled = NO;
+
 static NSMutableArray<FBSDKRestrictiveEventFilter *>  *_params;
 static NSMutableSet<NSString *> *_deprecatedEvents;
 
@@ -134,6 +136,11 @@ static NSMutableSet<NSString *> *_deprecatedEvents;
   }
 
   return nil;
+}
+
++ (void)enable
+{
+  isRestrictiveEventFilterEnabled = YES;
 }
 
 #pragma mark Helper functions
