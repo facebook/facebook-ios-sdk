@@ -32,7 +32,7 @@ Pod::Spec.new do |s|
                             LICENSE
                           }
     s.platform          = :ios
-    s.source            = { :http => "https://github.com/facebook/facebook-objc-sdk/releases/download/v#{s.version}/FBSDKMarketingKit.framework.zip",
+    s.source            = { :http => "https://github.com/facebook/facebook-objc-sdk/releases/download/v#{s.version}/FBSDKMarketingKit.zip",
                             :type => :zip }
     s.source_files      = 'FBSDKMarketingKit.framework/**/*.h'
     s.public_header_files = 'FBSDKMarketingKit.framework/**/*.h'
@@ -40,5 +40,5 @@ Pod::Spec.new do |s|
 
     s.ios.deployment_target = '8.0'
 
-    s.ios.dependency 'FBSDKCoreKit', "~> 5.0"
+    s.ios.dependency 'FBSDKCoreKit', "~> 5.5"
 end
