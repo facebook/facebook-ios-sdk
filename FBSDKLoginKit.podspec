@@ -30,21 +30,40 @@ Pod::Spec.new do |s|
 
   s.requires_arc = true
 
-  s.dependency 'FBSDKCoreKit', "~> 5.0"
+  s.subspec 'Login' do |ss|
+    ss.dependency 'FBSDKCoreKit', "~> 5.0"
+    ss.ios.source_files   = 'FBSDKLoginKit/FBSDKLoginKit/**/*.{h,m}'
+    ss.ios.public_header_files = 'FBSDKLoginKit/FBSDKLoginKit/*.{h}'
+    ss.tvos.source_files = 'FBSDKLoginKit/FBSDKLoginKit/FBSDKLoginConstants.{h,m}',
+                          'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginCodeInfo.{h,m}',
+                          'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginManager.{h,m}',
+                          'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginManagerResult.{h,m}',
+                          'FBSDKLoginKit/FBSDKLoginKit/Internal/FBSDKError.{h,m}',
+                          'FBSDKLoginKit/FBSDKLoginKit/Internal/FBSDKDeviceLoginCodeInfo+Internal.h',
+                          'FBSDKLoginKit/FBSDKLoginKit/Internal/FBSDKDeviceLoginError.{h,m}',
+                          'FBSDKLoginKit/FBSDKLoginKit/Internal/FBSDKDeviceLoginManagerResult+Internal.h'
+    ss.tvos.public_header_files = 'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginCodeInfo.h',
+                                 'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginManager.h',
+                                 'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginManagerResult.h',
+                                 'FBSDKLoginKit/FBSDKLoginKit/FBSDKLoginConstants.h'
+  end
 
-  s.ios.source_files   = 'FBSDKLoginKit/FBSDKLoginKit/**/*.{h,m}'
-  s.ios.public_header_files = 'FBSDKLoginKit/FBSDKLoginKit/*.{h}'
-  s.tvos.source_files = 'FBSDKLoginKit/FBSDKLoginKit/FBSDKLoginConstants.{h,m}',
-                        'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginCodeInfo.{h,m}',
-                        'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginManager.{h,m}',
-                        'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginManagerResult.{h,m}',
-                        'FBSDKLoginKit/FBSDKLoginKit/Internal/FBSDKError.{h,m}',
-                        'FBSDKLoginKit/FBSDKLoginKit/Internal/FBSDKDeviceLoginCodeInfo+Internal.h',
-                        'FBSDKLoginKit/FBSDKLoginKit/Internal/FBSDKDeviceLoginError.{h,m}',
-                        'FBSDKLoginKit/FBSDKLoginKit/Internal/FBSDKDeviceLoginManagerResult+Internal.h'
-  s.tvos.public_header_files = 'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginCodeInfo.h',
-                               'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginManager.h',
-                               'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginManagerResult.h',
-                               'FBSDKLoginKit/FBSDKLoginKit/FBSDKLoginConstants.h'
+  s.subspec 'Swift' do |ss|
+    ss.dependency 'FBSDKCoreKit/Swift', "~> 5.5"
+    ss.ios.source_files   = 'FBSDKLoginKit/FBSDKLoginKit/**/*.{h,m,swift}'
+    ss.ios.public_header_files = 'FBSDKLoginKit/FBSDKLoginKit/*.{h}'
+    ss.tvos.source_files = 'FBSDKLoginKit/FBSDKLoginKit/FBSDKLoginConstants.{h,m}',
+                          'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginCodeInfo.{h,m}',
+                          'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginManager.{h,m}',
+                          'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginManagerResult.{h,m}',
+                          'FBSDKLoginKit/FBSDKLoginKit/Internal/FBSDKError.{h,m}',
+                          'FBSDKLoginKit/FBSDKLoginKit/Internal/FBSDKDeviceLoginCodeInfo+Internal.h',
+                          'FBSDKLoginKit/FBSDKLoginKit/Internal/FBSDKDeviceLoginError.{h,m}',
+                          'FBSDKLoginKit/FBSDKLoginKit/Internal/FBSDKDeviceLoginManagerResult+Internal.h'
+    ss.tvos.public_header_files = 'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginCodeInfo.h',
+                                 'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginManager.h',
+                                 'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginManagerResult.h',
+                                 'FBSDKLoginKit/FBSDKLoginKit/FBSDKLoginConstants.h'
+  end
 
 end
