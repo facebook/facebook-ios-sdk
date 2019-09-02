@@ -79,4 +79,42 @@ Pod::Spec.new do |s|
                             'FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.{h,m}',
                             'FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*'
   end
+
+  s.subspec 'Swift' do |ss|
+    ss.dependency 'FBSDKCoreKit/Basics'
+    ss.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/Basics/*',
+                       'FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.{h,m}'
+    ss.source_files = 'FBSDKCoreKit/FBSDKCoreKit/**/*.{h,m,swift}'
+    ss.public_header_files = 'FBSDKCoreKit/FBSDKCoreKit/*.h',
+                             'FBSDKCoreKit/FBSDKCoreKit/AppEvents/*.h',
+                             'FBSDKCoreKit/FBSDKCoreKit/AppLink/*.h'
+    ss.resources = 'FacebookSDKStrings.bundle'
+    ss.ios.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.{h,m}',
+                           'FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.{h,m}',
+                           'FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*'
+    ss.tvos.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/Codeless/*',
+                            'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/FBSDKHybridAppEventsScriptMessageHandler.{h,m}',
+                            'FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*',
+                            'FBSDKCoreKit/FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.{h,m}',
+                            'FBSDKCoreKit/FBSDKCoreKit/FBSDKMeasurementEvent.{h,m}',
+                            'FBSDKCoreKit/FBSDKCoreKit/FBSDKMutableCopying.h',
+                            'FBSDKCoreKit/FBSDKCoreKit/FBSDKProfile.{h,m}',
+                            'FBSDKCoreKit/FBSDKCoreKit/FBSDKProfilePictureView.{h,m}',
+                            'FBSDKCoreKit/FBSDKCoreKit/FBSDKURL.{h,m}',
+                            'FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*',
+                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAppLinkReturnToRefererView_Internal.h',
+                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAppLink_Internal.h',
+                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAudioResourceLoader.{h,m}',
+                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKContainerViewController.{h,m}',
+                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKMeasurementEvent_Internal.h',
+                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKMonotonicTime.{h,m}',
+                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKProfile+Internal.h',
+                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKSystemAccountStoreAdapter.{h,m}',
+                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKTriStateBOOL.{h,m}',
+                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKURL_Internal.h',
+                            'FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKCloseIcon.{h,m}',
+                            'FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKColor.{h,m}',
+                            'FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.{h,m}',
+                            'FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*'
+  end
 end
