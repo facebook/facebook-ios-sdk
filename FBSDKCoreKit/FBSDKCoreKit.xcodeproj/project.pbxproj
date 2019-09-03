@@ -1483,7 +1483,6 @@
 		C5D25D3521795B790037B13D /* FBSDKCodelessIndexer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKCodelessIndexer.m; sourceTree = "<group>"; };
 		C5F6EC851FA24FAF009EB258 /* FBSDKPaymentObserverTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKPaymentObserverTests.m; sourceTree = "<group>"; };
 		F487DBB9231EBCD2008416A9 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKCoreKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F487DBC7231EBCD2008416A9 /* FBSDKCoreKit copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "FBSDKCoreKit copy-Info.plist"; path = "/Users/joesusnick/Projects/iOS/facebook-objc-sdk/FBSDKCoreKit/FBSDKCoreKit copy-Info.plist"; sourceTree = "<absolute>"; };
 		F487DBCB231EC1A0008416A9 /* Permission.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Permission.swift; sourceTree = "<group>"; };
 		F487DBCD231EC20E008416A9 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		F487DBCE231EC20E008416A9 /* Dictionary+KeyValueMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dictionary+KeyValueMap.swift"; sourceTree = "<group>"; };
@@ -2005,7 +2004,6 @@
 				893F44A31A644536001DB0B6 /* Frameworks */,
 				9D2697481A5DF40700143BFC /* Products */,
 				9D222B581A670D1300832F83 /* Submodules */,
-				F487DBC7231EBCD2008416A9 /* FBSDKCoreKit copy-Info.plist */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
