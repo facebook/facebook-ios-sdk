@@ -35,6 +35,8 @@ Pod::Spec.new do |s|
 		                'FBSDKCoreKit/FBSDKCoreKit/Basics/**/*',
                     'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*']
 
+  s.default_subspecs = 'Core', 'Basics'
+
   s.subspec 'Basics' do |ss|
     ss.source_files = 'FBSDKCoreKit/FBSDKCoreKit/Basics/*.{h,m}',
                       'FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.{h,m}'
@@ -78,5 +80,10 @@ Pod::Spec.new do |s|
                             'FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKColor.{h,m}',
                             'FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.{h,m}',
                             'FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*'
+  end
+
+  s.subspec 'Swift' do |ss|
+    ss.dependency 'FBSDKCoreKit/Core'
+    ss.source_files = 'FBSDKCoreKit/FBSDKCoreKit/Swift/*.{h,m,swift}'
   end
 end
