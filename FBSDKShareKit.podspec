@@ -31,6 +31,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.default_subspecs = 'Share'
+  s.swift_version = '5.0'
 
   s.header_dir = 'FBSDKShareKit'
 
@@ -98,7 +99,7 @@ Pod::Spec.new do |s|
   s.subspec 'Swift' do |ss|
     ss.dependency 'FBSDKCoreKit/Swift', "~> #{s.version}"
     ss.dependency 'FBSDKShareKit/Share'
-
+    ss.platform = :ios
     ss.ios.source_files   = 'FBSDKShareKit/FBSDKShareKit/Swift/*.{swift}'
   end
 end
