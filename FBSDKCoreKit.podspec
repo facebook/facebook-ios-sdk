@@ -36,6 +36,7 @@ Pod::Spec.new do |s|
                     'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*']
 
   s.default_subspecs = 'Core', 'Basics'
+  s.swift_version = '5.0'
 
   s.subspec 'Basics' do |ss|
     ss.source_files = 'FBSDKCoreKit/FBSDKCoreKit/Basics/*.{h,m}',
@@ -84,6 +85,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'Swift' do |ss|
     ss.dependency 'FBSDKCoreKit/Core'
+    ss.platform = :ios
     ss.source_files = 'FBSDKCoreKit/FBSDKCoreKit/Swift/*.{h,m,swift}'
   end
 end
