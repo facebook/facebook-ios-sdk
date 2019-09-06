@@ -31,6 +31,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.default_subspecs = 'Login'
+  s.swift_version = '5.0'
 
   s.subspec 'Login' do |ss|
     ss.dependency 'FBSDKCoreKit', "~> 5.0"
@@ -54,7 +55,7 @@ Pod::Spec.new do |s|
   s.subspec 'Swift' do |ss|
     ss.dependency 'FBSDKCoreKit/Swift', "~> #{s.version}"
     ss.dependency 'FBSDKLoginKit/Login'
-
+    ss.platform = :ios
     ss.ios.source_files   = 'FBSDKLoginKit/FBSDKLoginKit/Swift/*.{swift}'
   end
 
