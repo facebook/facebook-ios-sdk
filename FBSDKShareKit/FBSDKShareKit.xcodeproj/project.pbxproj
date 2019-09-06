@@ -374,6 +374,7 @@
 		EA3D469F1AA6835900D0C7D5 /* FBSDKAppInviteContent.m in Sources */ = {isa = PBXBuildFile; fileRef = EA3D469E1AA6835900D0C7D5 /* FBSDKAppInviteContent.m */; };
 		EA6CCE941AA7855D00F1EC35 /* FBSDKAppInviteContentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EA6CCE931AA7855D00F1EC35 /* FBSDKAppInviteContentTests.m */; };
 		EAC370A31AAE3A9C000F0F04 /* FBSDKGameRequestContentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC370A21AAE3A9C000F0F04 /* FBSDKGameRequestContentTests.m */; };
+		F4430BAE2322AF66004C3925 /* Enums+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4430BAD2322AF65004C3925 /* Enums+Extensions.swift */; };
 		F487DC1C231EC4CC008416A9 /* FBSDKSendButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 890414A41A6EAC0200617215 /* FBSDKSendButton.m */; };
 		F487DC1D231EC4CC008416A9 /* FBSDKLikeBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = 89688B3A1AA62BD800A98519 /* FBSDKLikeBoxView.m */; };
 		F487DC1E231EC4CC008416A9 /* FBSDKShareMessengerGenericTemplateElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 88A887F11F97E0420075C8BF /* FBSDKShareMessengerGenericTemplateElement.m */; };
@@ -474,7 +475,6 @@
 		F487DC7F231EC4CC008416A9 /* FBSDKShareAPI.h in Headers */ = {isa = PBXBuildFile; fileRef = 89DC6CC61A81792000814152 /* FBSDKShareAPI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F487DC80231EC4CC008416A9 /* FBSDKLikeDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 89D05A761A9FE4CB00609300 /* FBSDKLikeDialog.h */; };
 		F487DC81231EC4CC008416A9 /* FBSDKGameRequestContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 89F2037E1AA922DB0053499E /* FBSDKGameRequestContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F487DC97231EC577008416A9 /* Enums+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F487DC96231EC577008416A9 /* Enums+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -784,8 +784,8 @@
 		EA3D469E1AA6835900D0C7D5 /* FBSDKAppInviteContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppInviteContent.m; sourceTree = "<group>"; };
 		EA6CCE931AA7855D00F1EC35 /* FBSDKAppInviteContentTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppInviteContentTests.m; sourceTree = "<group>"; };
 		EAC370A21AAE3A9C000F0F04 /* FBSDKGameRequestContentTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKGameRequestContentTests.m; sourceTree = "<group>"; };
+		F4430BAD2322AF65004C3925 /* Enums+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Enums+Extensions.swift"; path = "Swift/Enums+Extensions.swift"; sourceTree = "<group>"; };
 		F487DC86231EC4CC008416A9 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKShareKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F487DC96231EC577008416A9 /* Enums+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Enums+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1176,7 +1176,7 @@
 		F487DC98231EC582008416A9 /* Swift */ = {
 			isa = PBXGroup;
 			children = (
-				F487DC96231EC577008416A9 /* Enums+Extensions.swift */,
+				F4430BAD2322AF65004C3925 /* Enums+Extensions.swift */,
 			);
 			name = Swift;
 			sourceTree = "<group>";
@@ -1982,13 +1982,13 @@
 				F487DC27231EC4CC008416A9 /* FBSDKShareMessengerMediaTemplateContent.m in Sources */,
 				F487DC28231EC4CC008416A9 /* FBSDKSharePhotoContent.m in Sources */,
 				F487DC29231EC4CC008416A9 /* FBSDKShareMessengerGenericTemplateContent.m in Sources */,
+				F4430BAE2322AF66004C3925 /* Enums+Extensions.swift in Sources */,
 				F487DC2A231EC4CC008416A9 /* FBSDKShareDialog.m in Sources */,
 				F487DC2B231EC4CC008416A9 /* FBSDKLikeDialog.m in Sources */,
 				F487DC2C231EC4CC008416A9 /* FBSDKCheckmarkIcon.m in Sources */,
 				F487DC2D231EC4CC008416A9 /* FBSDKGameRequestContent.m in Sources */,
 				F487DC2E231EC4CC008416A9 /* FBSDKShareOpenGraphValueContainer.m in Sources */,
 				F487DC2F231EC4CC008416A9 /* FBSDKLikeActionControllerCache.m in Sources */,
-				F487DC97231EC577008416A9 /* Enums+Extensions.swift in Sources */,
 				F487DC30231EC4CC008416A9 /* FBSDKShareCameraEffectContent.m in Sources */,
 				F487DC31231EC4CC008416A9 /* FBSDKGameRequestDialog.m in Sources */,
 				F487DC32231EC4CC008416A9 /* FBSDKShareConstants.m in Sources */,
