@@ -66,17 +66,17 @@ NS_SWIFT_NAME(init(inboundURL:sourceApplication:));
  If this link target is an App Link, this is the data found in al_applink_data.
  Otherwise, it is nil.
  */
-@property (nonatomic, strong, readonly) NSDictionary<NSString *, id> *appLinkData;
+@property (nonatomic, strong, readonly, nullable) NSDictionary<NSString *, id> *appLinkData;
 
 /**
  If this link target is an App Link, this is the data found in extras.
  */
-@property (nonatomic, strong, readonly) NSDictionary<NSString *, id> *appLinkExtras;
+@property (nonatomic, strong, readonly, nullable) NSDictionary<NSString *, id> *appLinkExtras;
 
 /**
  The App Link indicating how to navigate back to the referer app, if any.
  */
-@property (nonatomic, strong, readonly) FBSDKAppLink *appLinkReferer;
+@property (nonatomic, strong, readonly, nullable) FBSDKAppLink *appLinkReferer;
 
 /**
  The URL that was used to create this FBSDKURL.
