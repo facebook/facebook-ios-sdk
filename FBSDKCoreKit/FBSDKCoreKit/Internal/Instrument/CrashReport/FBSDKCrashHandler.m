@@ -43,6 +43,7 @@ NSString *const kFBSDKDeviceModel = @"device_model";
 NSString *const kFBSDKDeviceOSVersion = @"device_os_version";
 
 NSString *const kFBSDKMapingTableTimestamp = @"mapping_table_timestamp";
+NSString *const kFBSDKFailedToGenerateTable = @"failed_to_generate_table";
 
 @implementation FBSDKCrashHandler
 
@@ -57,6 +58,9 @@ NSString *const kFBSDKMapingTableTimestamp = @"mapping_table_timestamp";
   directoryPath = dirPath;
   mappingTableSavedTime = [NSString stringWithFormat:@"%.0lf", [[NSDate date] timeIntervalSince1970]];
 
+  if (![self isSafeToGenerateMapping]) {
+    return;
+  }
   static dispatch_once_t onceToken = 0;
   dispatch_once(&onceToken, ^{
     [FBSDKCrashHandler installExceptionsHandler];
@@ -235,10 +239,13 @@ static void FBSDKExceptionHandler(NSException *exception)
 + (void)generateMethodMapping
 {
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setBool:YES forKey:kFBSDKFailedToGenerateTable];
     NSDictionary<NSString *, NSString *> *methodMapping = [FBSDKLibAnalyzer getMethodsTable];
     if (methodMapping){
       [methodMapping writeToFile:[self getPathToLibDataFile:mappingTableSavedTime]
                       atomically:YES];
+      [userDefaults setBool:NO forKey:kFBSDKFailedToGenerateTable];
     }
   });
 }
@@ -260,6 +267,26 @@ static void FBSDKExceptionHandler(NSException *exception)
   return [directoryPath stringByAppendingPathComponent:
           [NSString stringWithFormat:@"crash_lib_data_%@.json", timestamp]];
 
+}
+
++ (BOOL)mappingExists
+{
+  NSArray<NSString *> *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directoryPath error:NULL];
+  for (NSString *file in files) {
+    if ([file hasPrefix:@"crash_lib_data"]) {
+      return YES;
+    }
+  }
+  return NO;
+}
+
++ (BOOL)isSafeToGenerateMapping
+{
+  NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+  if (![self mappingExists] && [userDefaults boolForKey:kFBSDKFailedToGenerateTable]) {
+    return NO;
+  }
+  return YES;
 }
 
 @end
