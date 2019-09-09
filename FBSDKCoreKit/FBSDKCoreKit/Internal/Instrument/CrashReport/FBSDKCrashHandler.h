@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)addObserver:(id<FBSDKCrashObserving>)observer;
 + (void)removeObserver:(id<FBSDKCrashObserving>)observer;
-+ (void)clearCrashReportFiles:(nullable NSString*)timestamp;
++ (void)clearCrashReportFiles;
 
 @end
 

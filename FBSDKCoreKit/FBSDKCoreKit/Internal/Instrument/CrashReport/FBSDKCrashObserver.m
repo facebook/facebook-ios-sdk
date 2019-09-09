@@ -63,7 +63,7 @@
 
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
       if (!error && [result isKindOfClass:[NSDictionary class]] && result[@"success"]) {
-        [FBSDKCrashHandler clearCrashReportFiles:nil];
+        [FBSDKCrashHandler clearCrashReportFiles];
       }
     }];
   }
