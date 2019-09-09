@@ -22,21 +22,29 @@
 
 @implementation FBSDKLibAnalyzer
 
-+ (NSDictionary<NSString *, NSString *> *)getMethodsTable
+static NSMutableDictionary<NSString *, NSString *> *_methodMapping;
+
++ (void)initialize
 {
-  NSMutableDictionary<NSString *, NSString *> *methodMapping = [NSMutableDictionary dictionary];
-  NSArray<NSString *> *allClasses = [self getClassNames];
+  _methodMapping = [NSMutableDictionary dictionary];
+}
+
++ (NSDictionary<NSString *, NSString *> *)getMethodsTable:(NSArray<NSString *> *)prefixList
+{
+  NSArray<NSString *> *allClasses = [self getClassNames:prefixList];
   for (NSString *className in allClasses) {
     Class class = NSClassFromString(className);
-    [self addClass:class methodMapping:methodMapping isClassMethod:NO];
-    [self addClass:object_getClass(class) methodMapping:methodMapping isClassMethod:YES];
+    if (class) {
+      [self addClass:class isClassMethod:NO];
+      [self addClass:object_getClass(class) isClassMethod:YES];
+    }
   }
-  return methodMapping;
+  return [_methodMapping copy];
 }
 
 #pragma mark - private methods
 
-+ (NSArray<NSString *> *)getClassNames
++ (NSArray<NSString *> *)getClassNames:(NSArray<NSString *> *)prefixList
 {
   NSMutableArray<NSString *> *classNames = [NSMutableArray new];
   unsigned int numClasses;
@@ -47,8 +55,11 @@
       const char *name = class_getName(classes[i]);
       if (name != NULL) {
         NSString *className = [NSString stringWithUTF8String:name];
-        if ([className hasPrefix:@"FBSDK"] || [className hasPrefix:@"_FBSDK"]) {
-          [classNames addObject:className];
+        for (NSString *prefix in prefixList){
+          if ([className hasPrefix:prefix]) {
+            [classNames addObject:className];
+            break;
+          }
         }
       }
     }
@@ -59,7 +70,6 @@
 }
 
 + (void)addClass:(Class)class
-   methodMapping:(NSMutableDictionary<NSString *, NSString *> *)methodMapping
    isClassMethod:(BOOL)isClassMethod
 {
   unsigned int methodsCount = 0;
@@ -81,7 +91,7 @@
                               NSStringFromSelector(selector)];
 
       if (methodAddress && methodName) {
-        [methodMapping setObject:methodName forKey:methodAddress];
+        [_methodMapping setObject:methodName forKey:methodAddress];
       }
     }
   }

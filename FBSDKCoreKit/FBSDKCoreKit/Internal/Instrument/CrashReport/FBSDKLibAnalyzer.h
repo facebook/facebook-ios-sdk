@@ -20,7 +20,7 @@
 
 @interface FBSDKLibAnalyzer : NSObject
 
-+ (NSDictionary<NSString *, NSString *> *)getMethodsTable;
++ (NSDictionary<NSString *, NSString *> *)getMethodsTable:(NSArray<NSString *> *)prefixList;
 + (NSArray<NSString *> *)symbolicateCallstack:(NSArray<NSString *> *)callstack
                                 methodMapping:(NSDictionary<NSString *,id> *)methodMapping;
 

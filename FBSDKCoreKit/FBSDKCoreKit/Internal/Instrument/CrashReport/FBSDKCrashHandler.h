@@ -18,11 +18,15 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKCrashObserving.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKCrashHandler : NSObject
 
-+ (void)enable;
++ (void)addObserver:(id<FBSDKCrashObserving>)observer;
++ (void)removeObserver:(id<FBSDKCrashObserving>)observer;
++ (void)clearCrashReportFiles:(nullable NSString*)timestamp;
 
 @end
 

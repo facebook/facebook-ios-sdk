@@ -22,11 +22,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "FBSDKFeatureManager.h"
-#import "FBSDKGraphRequest.h"
-#import "FBSDKGraphRequestConnection.h"
 #import "FBSDKLibAnalyzer.h"
-#import "FBSDKSettings.h"
 
 #define FBSDK_MAX_CRASH_LOGS 5
 #define FBSDK_CRASH_PATH_NAME @"instrument"
@@ -47,9 +43,12 @@ NSString *const kFBSDKFailedToGenerateTable = @"failed_to_generate_table";
 
 @implementation FBSDKCrashHandler
 
+static NSHashTable<id<FBSDKCrashObserving>> *_observers;
+static NSArray<NSDictionary<NSString *, id> *> *_processedCrashLogs;
+
 # pragma mark - Class Methods
 
-+ (void)enable
++ (void)initialize
 {
   NSString *dirPath = [NSTemporaryDirectory() stringByAppendingPathComponent:FBSDK_CRASH_PATH_NAME];
   if (![[NSFileManager defaultManager] fileExistsAtPath:dirPath]) {
@@ -57,36 +56,68 @@ NSString *const kFBSDKFailedToGenerateTable = @"failed_to_generate_table";
   }
   directoryPath = dirPath;
   mappingTableSavedTime = [NSString stringWithFormat:@"%.0lf", [[NSDate date] timeIntervalSince1970]];
+  _observers = [[NSHashTable alloc] init];
+  _processedCrashLogs = [self getProcessedCrashLogs];
+}
 
++ (void)sendCrashLogs
+{
+  NSArray<id<FBSDKCrashObserving>> *observers = [_observers copy];
+  for (id<FBSDKCrashObserving> observer in observers) {
+    if (observer && [observer respondsToSelector:@selector(didReceiveCrashLogs:)]) {
+      NSArray<NSDictionary<NSString *, id> *> *filteredCrashLogs = [self filterCrashLogs:observer.prefixList];
+      [observer didReceiveCrashLogs:filteredCrashLogs];
+    }
+  }
+}
+
++ (NSArray<NSDictionary<NSString *, id> *> *)filterCrashLogs:(NSArray<NSString *> *)prefixList
+{
+  NSMutableArray<NSDictionary<NSString *, id> *> *crashLogs = [NSMutableArray array];
+  for (NSDictionary<NSString *, id> *crashLog in _processedCrashLogs) {
+    NSArray<NSString *> *callstack = crashLog[kFBSDKCallstack];
+    if ([self callstack:callstack containsPrefix:prefixList]) {
+      [crashLogs addObject:crashLog];
+    }
+  }
+  return crashLogs;
+}
+
++ (BOOL)callstack:(NSArray<NSString *> *)callstack
+   containsPrefix:(NSArray<NSString *> *)prefixList
+{
+  NSString *callStackString = [callstack componentsJoinedByString:@""];
+  for (NSString *prefix in prefixList) {
+    if ([callStackString containsString:prefix]) {
+      return YES;
+    }
+  }
+  return NO;
+}
+
++ (void)addObserver:(id<FBSDKCrashObserving>)observer
+{
   if (![self isSafeToGenerateMapping]) {
     return;
   }
   static dispatch_once_t onceToken = 0;
   dispatch_once(&onceToken, ^{
     [FBSDKCrashHandler installExceptionsHandler];
-    [self generateMethodMapping];
-    [self uploadCrashLogs];
   });
+  if (![_observers containsObject:observer]) {
+    [_observers addObject:observer];
+    [self generateMethodMapping:observer.prefixList];
+    [self sendCrashLogs];
+  }
 }
 
-+ (void)uploadCrashLogs
++ (void)removeObserver:(id<FBSDKCrashObserving>)observer
 {
-  NSArray<NSDictionary<NSString *, id> *> *processedCrashLogs = [self getProcessedCrashLogs];
-  if (0 == processedCrashLogs.count) {
-    return;
-  }
-  NSData *jsonData = [NSJSONSerialization dataWithJSONObject:processedCrashLogs options:0 error:nil];
-  if (jsonData) {
-    NSString *crashReports = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/instruments", [FBSDKSettings appID]]
-                                                                   parameters:@{@"crash_reports" : crashReports ?: @""}
-                                                                   HTTPMethod:FBSDKHTTPMethodPOST];
-
-    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-      if (!error && [result isKindOfClass:[NSDictionary class]] && result[@"success"]) {
-        [self clearCrashReportFiles:nil];
-      }
-    }];
+  if ([_observers containsObject:observer]) {
+    [_observers removeObject:observer];
+    if (_observers.count == 0) {
+      [FBSDKCrashHandler uninstallExceptionsHandler];
+    }
   }
 }
 
@@ -236,18 +267,19 @@ static void FBSDKExceptionHandler(NSException *exception)
                      atomically:YES];
 }
 
-+ (void)generateMethodMapping
++ (void)generateMethodMapping:(NSArray<NSString *> *)prefixList
 {
-  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    [userDefaults setBool:YES forKey:kFBSDKFailedToGenerateTable];
-    NSDictionary<NSString *, NSString *> *methodMapping = [FBSDKLibAnalyzer getMethodsTable];
-    if (methodMapping){
-      [methodMapping writeToFile:[self getPathToLibDataFile:mappingTableSavedTime]
-                      atomically:YES];
-      [userDefaults setBool:NO forKey:kFBSDKFailedToGenerateTable];
-    }
-  });
+  if (prefixList.count == 0) {
+    return;
+  }
+  NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+  [userDefaults setBool:YES forKey:kFBSDKFailedToGenerateTable];
+  NSDictionary<NSString *, NSString *> *methodMapping = [FBSDKLibAnalyzer getMethodsTable:prefixList];
+  if (methodMapping.count != 0){
+    [methodMapping writeToFile:[self getPathToLibDataFile:mappingTableSavedTime]
+                    atomically:YES];
+    [userDefaults setBool:NO forKey:kFBSDKFailedToGenerateTable];
+  }
 }
 
 + (NSDictionary<NSString *, id> *)loadLibData:(NSDictionary<NSString *, id> *)crashLog
