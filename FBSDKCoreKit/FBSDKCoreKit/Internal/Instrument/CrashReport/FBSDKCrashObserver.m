@@ -26,10 +26,17 @@
 
 @implementation FBSDKCrashObserver
 
+@synthesize prefixes, frameworks;
+
 - (instancetype)init
 {
   if ((self = [super init])) {
-    _prefixList = @[@"FBSDK", @"_FBSDK"];
+    prefixes = @[@"FBSDK", @"_FBSDK"];
+    frameworks = @[@"FBSDKCoreKit",
+                   @"FBSDKLoginKit",
+                   @"FBSDKShareKit",
+                   @"FBSDKPlacesKit",
+                   @"FBSDKTVOSKit"];
   }
   return self;
 }

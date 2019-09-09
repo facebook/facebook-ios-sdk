@@ -66,7 +66,7 @@ static BOOL _isTurnedOff;
   NSArray<id<FBSDKCrashObserving>> *observers = [_observers copy];
   for (id<FBSDKCrashObserving> observer in observers) {
     if (observer && [observer respondsToSelector:@selector(didReceiveCrashLogs:)]) {
-      NSArray<NSDictionary<NSString *, id> *> *filteredCrashLogs = [self filterCrashLogs:observer.prefixList];
+      NSArray<NSDictionary<NSString *, id> *> *filteredCrashLogs = [self filterCrashLogs:observer.prefixes];
       [observer didReceiveCrashLogs:filteredCrashLogs];
     }
   }
@@ -115,7 +115,7 @@ static BOOL _isTurnedOff;
   });
   if (![_observers containsObject:observer]) {
     [_observers addObject:observer];
-    [self generateMethodMapping:observer.prefixList];
+    [self generateMethodMapping:observer];
     [self sendCrashLogs];
   }
 }
@@ -271,13 +271,14 @@ static void FBSDKExceptionHandler(NSException *exception)
                      atomically:YES];
 }
 
-+ (void)generateMethodMapping:(NSArray<NSString *> *)prefixList
++ (void)generateMethodMapping:(id<FBSDKCrashObserving>)observer
 {
-  if (prefixList.count == 0) {
+  if (observer.prefixes.count == 0) {
     return;
   }
   [[NSUserDefaults standardUserDefaults] setObject:mappingTableIdentifier forKey:kFBSDKMappingTableIdentifier];
-  NSDictionary<NSString *, NSString *> *methodMapping = [FBSDKLibAnalyzer getMethodsTable:prefixList];
+  NSDictionary<NSString *, NSString *> *methodMapping = [FBSDKLibAnalyzer getMethodsTable:observer.prefixes
+                                                                               frameworks:observer.frameworks];
   if (methodMapping.count > 0){
     [methodMapping writeToFile:[self getPathToLibDataFile:mappingTableIdentifier]
                     atomically:YES];
@@ -305,6 +306,9 @@ static void FBSDKExceptionHandler(NSException *exception)
 
 + (BOOL)isSafeToGenerateMapping
 {
+#if TARGET_OS_SIMULATOR
+  return YES;
+#else
   NSString *identifier = [[NSUserDefaults standardUserDefaults] objectForKey:kFBSDKMappingTableIdentifier];
   //first app start
   if (!identifier) {
@@ -312,6 +316,7 @@ static void FBSDKExceptionHandler(NSException *exception)
   }
 
   return [[NSFileManager defaultManager] fileExistsAtPath:[self getPathToLibDataFile:identifier]];
+#endif
 }
 
 @end

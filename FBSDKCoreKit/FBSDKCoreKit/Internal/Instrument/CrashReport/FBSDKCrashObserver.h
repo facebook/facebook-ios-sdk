@@ -24,8 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKCrashObserver : NSObject<FBSDKCrashObserving>
 
-@property (nonatomic, copy) NSArray<NSString *> *prefixList;
-
 + (void)enable;
 
 @end

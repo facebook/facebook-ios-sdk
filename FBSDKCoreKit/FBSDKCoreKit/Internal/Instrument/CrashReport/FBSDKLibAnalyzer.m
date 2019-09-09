@@ -29,9 +29,10 @@ static NSMutableDictionary<NSString *, NSString *> *_methodMapping;
   _methodMapping = [NSMutableDictionary dictionary];
 }
 
-+ (NSDictionary<NSString *, NSString *> *)getMethodsTable:(NSArray<NSString *> *)prefixList
++ (NSDictionary<NSString *, NSString *> *)getMethodsTable:(NSArray<NSString *> *)prefixes
+                                               frameworks:(NSArray<NSString *> *)frameworks
 {
-  NSArray<NSString *> *allClasses = [self getClassNames:prefixList];
+  NSArray<NSString *> *allClasses = [self getClassNames:prefixes frameworks:frameworks];
   for (NSString *className in allClasses) {
     Class class = NSClassFromString(className);
     if (class) {
@@ -44,29 +45,51 @@ static NSMutableDictionary<NSString *, NSString *> *_methodMapping;
 
 #pragma mark - private methods
 
-+ (NSArray<NSString *> *)getClassNames:(NSArray<NSString *> *)prefixList
++ (NSArray<NSString *> *)getClassNames:(NSArray<NSString *> *)prefixes
+                            frameworks:(NSArray<NSString *> *)frameworks
 {
   NSMutableArray<NSString *> *classNames = [NSMutableArray new];
-  unsigned int numClasses;
-  Class *classes = objc_copyClassList(&numClasses);
-
-  if (numClasses > 0) {
-    for (int i = 0; i < numClasses; i++) {
-      const char *name = class_getName(classes[i]);
-      if (name != NULL) {
-        NSString *className = [NSString stringWithUTF8String:name];
-        for (NSString *prefix in prefixList){
-          if ([className hasPrefix:prefix]) {
-            [classNames addObject:className];
-            break;
-          }
+  // from main bundle
+  [classNames addObjectsFromArray:[self getClassesFrom:[NSBundle mainBundle]
+                                              prefixes:prefixes]];
+  // from dynamic libraries
+  if (frameworks.count > 0) {
+    NSArray *bundles = [NSBundle allFrameworks];
+    for (NSBundle *bundle in bundles) {
+      for (NSString *framework in frameworks) {
+        if ([bundle.bundlePath hasSuffix:
+             [framework stringByAppendingPathExtension:@"framework"]]) {
+          [classNames addObjectsFromArray:[self getClassesFrom:bundle
+                                                      prefixes:nil]];
         }
       }
     }
-    free(classes);
   }
 
-  return classNames;
+  return [classNames copy];
+}
+
++ (NSArray<NSString *> *)getClassesFrom:(NSBundle *)bundle
+                               prefixes:(NSArray<NSString *> *)prefixes
+{
+  NSMutableArray<NSString *> *classNames = [NSMutableArray array];
+  unsigned int count = 0;
+  const char **classes = objc_copyClassNamesForImage([[bundle executablePath] UTF8String], &count);
+  for (unsigned int i = 0; i < count; i++){
+    NSString *className = [NSString stringWithUTF8String:classes[i]];
+    if (prefixes.count > 0) {
+      for (NSString *prefix in prefixes) {
+        if ([className hasPrefix:prefix]) {
+          [classNames addObject:className];
+          break;
+        }
+      }
+    } else {
+      [classNames addObject:className];
+    }
+  }
+
+  return [classNames copy];
 }
 
 + (void)addClass:(Class)class
