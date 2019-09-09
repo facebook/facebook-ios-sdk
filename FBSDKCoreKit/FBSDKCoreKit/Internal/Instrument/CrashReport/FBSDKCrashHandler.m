@@ -45,6 +45,7 @@ NSString *const kFBSDKMappingTableIdentifier = @"mapping_table_identifier";
 
 static NSHashTable<id<FBSDKCrashObserving>> *_observers;
 static NSArray<NSDictionary<NSString *, id> *> *_processedCrashLogs;
+static BOOL _isTurnedOff;
 
 # pragma mark - Class Methods
 
@@ -95,9 +96,16 @@ static NSArray<NSDictionary<NSString *, id> *> *_processedCrashLogs;
   return NO;
 }
 
++ (void)disable
+{
+  _isTurnedOff = YES;
+  [FBSDKCrashHandler uninstallExceptionsHandler];
+  _observers = nil;
+}
+
 + (void)addObserver:(id<FBSDKCrashObserving>)observer
 {
-  if (![self isSafeToGenerateMapping]) {
+  if (_isTurnedOff || ![self isSafeToGenerateMapping]) {
     return;
   }
   static dispatch_once_t onceToken = 0;

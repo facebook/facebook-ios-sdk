@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKCrashHandler : NSObject
 
++ (void)disable;
 + (void)addObserver:(id<FBSDKCrashObserving>)observer;
 + (void)removeObserver:(id<FBSDKCrashObserving>)observer;
 + (void)clearCrashReportFiles;
