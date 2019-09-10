@@ -50,31 +50,33 @@ static NSMutableDictionary<NSString *, NSString *> *_methodMapping;
 {
   NSMutableArray<NSString *> *classNames = [NSMutableArray new];
   // from main bundle
-  [classNames addObjectsFromArray:[self getClassesFrom:[NSBundle mainBundle]
+  [classNames addObjectsFromArray:[self getClassesFrom:[[NSBundle mainBundle] executablePath]
                                               prefixes:prefixes]];
   // from dynamic libraries
   if (frameworks.count > 0) {
-    NSArray *bundles = [NSBundle allFrameworks];
-    for (NSBundle *bundle in bundles) {
+    unsigned int count = 0;
+    const char **images = objc_copyImageNames(&count);
+    for (int i = 0; i < count; i++) {
+      NSString *image = [NSString stringWithUTF8String:images[i]];
       for (NSString *framework in frameworks) {
-        if ([bundle.bundlePath hasSuffix:
-             [framework stringByAppendingPathExtension:@"framework"]]) {
-          [classNames addObjectsFromArray:[self getClassesFrom:bundle
+        if ([image containsString:framework]) {
+          [classNames addObjectsFromArray:[self getClassesFrom:image
                                                       prefixes:nil]];
         }
       }
     }
+    free(images);
   }
 
   return [classNames copy];
 }
 
-+ (NSArray<NSString *> *)getClassesFrom:(NSBundle *)bundle
++ (NSArray<NSString *> *)getClassesFrom:(NSString *)image
                                prefixes:(NSArray<NSString *> *)prefixes
 {
   NSMutableArray<NSString *> *classNames = [NSMutableArray array];
   unsigned int count = 0;
-  const char **classes = objc_copyClassNamesForImage([[bundle executablePath] UTF8String], &count);
+  const char **classes = objc_copyClassNamesForImage([image UTF8String], &count);
   for (unsigned int i = 0; i < count; i++){
     NSString *className = [NSString stringWithUTF8String:classes[i]];
     if (prefixes.count > 0) {
@@ -88,7 +90,7 @@ static NSMutableDictionary<NSString *, NSString *> *_methodMapping;
       [classNames addObject:className];
     }
   }
-
+  free(classes);
   return [classNames copy];
 }
 
