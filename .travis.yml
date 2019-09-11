@@ -46,7 +46,7 @@ jobs:
       name: Swift - Xcode 10.3
       osx_image: xcode10.3
       env:
-        - XCODE_SDK=iOS 12.2
+        - XCODE_SDK=iphonesimulator12.4
         - XCODE_SCHEME=SwiftKits
     - stage: test
       name: Carthage - Xcode 10.2
