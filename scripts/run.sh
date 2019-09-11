@@ -325,8 +325,15 @@ lint_sdk() {
         continue
       fi
 
+      local dependent_spec
+
       set +e
-      if ! pod lib lint "$spec" "$@"; then
+      # Needs to include dependent specs for some pods so that we can
+      # test linting without relying on specs being pushed to the trunk
+      if [ "$spec" != FBSDKCoreKit.podspec ]; then
+        dependent_spec="--include-podspecs=FBSDKCoreKit.podspec"
+      fi
+      if ! pod lib lint "$spec" $dependent_spec "$@"; then
         pod_lint_failures+=("$spec")
       fi
       set -e

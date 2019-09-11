@@ -53,7 +53,7 @@ jobs:
       osx_image: xcode10.2
     - stage: test
       name: Pod Lint - Xcode 10.3
-      osx_image: xcode10.2
+      osx_image: xcode10.3
       script: sh scripts/run.sh lint cocoapods --allow-warnings
     # - stage: tag
     #   name: Tag Version
