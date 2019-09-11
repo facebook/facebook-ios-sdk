@@ -55,6 +55,7 @@ static NSString *_MediaTemplateURLSerializationKey(NSURL *mediaURL)
   }
 }
 
+DEPRECATED_FOR_MESSENGER
 static NSString *_MediaTypeString(FBSDKShareMessengerMediaTemplateMediaType mediaType)
 {
   switch (mediaType) {
@@ -65,6 +66,7 @@ static NSString *_MediaTypeString(FBSDKShareMessengerMediaTemplateMediaType medi
   }
 }
 
+DEPRECATED_FOR_MESSENGER
 static NSArray<NSDictionary<NSString *, id> *> *_SerializableMediaTemplateContentFromContent(FBSDKShareMessengerMediaTemplateContent *mediaTemplateContent)
 {
   NSMutableArray<NSDictionary<NSString *, id> *> *serializableMediaTemplateContent = [NSMutableArray array];
@@ -79,7 +81,10 @@ static NSArray<NSDictionary<NSString *, id> *> *_SerializableMediaTemplateConten
   return serializableMediaTemplateContent;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FBSDKShareMessengerMediaTemplateContent
+#pragma clang diagnostic pop
 
 #pragma mark - Properties
 

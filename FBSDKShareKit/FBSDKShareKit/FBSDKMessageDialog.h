@@ -19,6 +19,7 @@
 #import <Foundation/Foundation.h>
 
 #import <FBSDKShareKit/FBSDKSharing.h>
+#import <FBSDKShareKit/FBSDKShareConstants.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -38,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
  - Any other types that are not one of the four supported types listed above
  */
 NS_SWIFT_NAME(MessageDialog)
+DEPRECATED_FOR_MESSENGER
 @interface FBSDKMessageDialog : NSObject <FBSDKSharingDialog>
 
 /**

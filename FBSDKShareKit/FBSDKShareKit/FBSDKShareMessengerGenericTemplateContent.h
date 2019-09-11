@@ -19,11 +19,13 @@
 #import <Foundation/Foundation.h>
 
 #import <FBSDKShareKit/FBSDKSharingContent.h>
+#import <FBSDKShareKit/FBSDKShareConstants.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class FBSDKShareMessengerGenericTemplateElement;
 
+DEPRECATED_FOR_MESSENGER
 typedef NS_ENUM(NSUInteger, FBSDKShareMessengerGenericTemplateImageAspectRatio) {
   FBSDKShareMessengerGenericTemplateImageAspectRatioHorizontal = 0,
   FBSDKShareMessengerGenericTemplateImageAspectRatioSquare
@@ -35,6 +37,7 @@ typedef NS_ENUM(NSUInteger, FBSDKShareMessengerGenericTemplateImageAspectRatio) 
  See https://developers.facebook.com/docs/messenger-platform/send-messages/template/generic
  for more details.
  */
+DEPRECATED_FOR_MESSENGER
 NS_SWIFT_NAME(ShareMessengerGenericTemplateContent)
 @interface FBSDKShareMessengerGenericTemplateContent : NSObject <FBSDKSharingContent>
 

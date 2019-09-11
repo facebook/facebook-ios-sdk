@@ -31,7 +31,10 @@
 
 #define FBSDK_MESSAGE_DIALOG_APP_SCHEME @"fb-messenger-share-api"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FBSDKMessageDialog
+#pragma clang diagnostic pop
 
 #pragma mark - Class Methods
 

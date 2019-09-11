@@ -27,6 +27,7 @@ static NSString *const kMusicTemplateURLKey = @"url";
 static NSString *const kMusicTemplateButtonKey = @"button";
 static NSString *const kMusicTemplateUUIDKey = @"uuid";
 
+DEPRECATED_FOR_MESSENGER
 static NSArray<NSDictionary<NSString *, id> *> *_SerializableOpenGraphMusicTemplateContentFromContent(FBSDKShareMessengerOpenGraphMusicTemplateContent *openGraphMusicTemplateContent)
 {
   NSMutableArray<NSDictionary<NSString *, id> *> *serializableOpenGraphMusicTemplateContent = [NSMutableArray array];
@@ -39,7 +40,11 @@ static NSArray<NSDictionary<NSString *, id> *> *_SerializableOpenGraphMusicTempl
   return serializableOpenGraphMusicTemplateContent;
 }
 
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FBSDKShareMessengerOpenGraphMusicTemplateContent
+#pragma clang diagnostic pop
 
 #pragma mark - Properties
 

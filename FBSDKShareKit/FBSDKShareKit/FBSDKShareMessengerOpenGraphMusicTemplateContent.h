@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
  See https://developers.facebook.com/docs/messenger-platform/send-messages/template/open-graph
  for details. Passing <FBSDKSharingContent> property pageID is required for this type of share.
  */
+DEPRECATED_FOR_MESSENGER
 NS_SWIFT_NAME(ShareMessengerOpenGraphMusicTemplateContent)
 @interface FBSDKShareMessengerOpenGraphMusicTemplateContent : NSObject <FBSDKSharingContent>
 

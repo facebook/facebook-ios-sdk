@@ -19,12 +19,14 @@
 #import <Foundation/Foundation.h>
 
 #import <FBSDKCoreKit/FBSDKCopying.h>
+#import <FBSDKShareKit/FBSDKShareConstants.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 /**
  A base interface for Messenger share action buttons.
  */
+DEPRECATED_FOR_MESSENGER
 NS_SWIFT_NAME(ShareMessengerActionButton)
 @protocol FBSDKShareMessengerActionButton <FBSDKCopying, NSSecureCoding>
 
