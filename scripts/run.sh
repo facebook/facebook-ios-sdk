@@ -47,10 +47,14 @@ main() {
     SDK_SCRIPTS_DIR=$(realpath "$(dirname "${BASH_SOURCE[0]}")")
     SDK_DIR="$(dirname "$SDK_SCRIPTS_DIR")"
 
-    SDK_KITS=(
+    SDK_BASE_KITS=(
       "FBSDKCoreKit"
       "FBSDKLoginKit"
       "FBSDKShareKit"
+    )
+
+    SDK_KITS=(
+      "${SDK_BASE_KITS[@]}"
       "FBSDKPlacesKit"
       "FBSDKMarketingKit"
       "FBSDKTVOSKit"
@@ -269,6 +273,27 @@ build_sdk() {
       | xcpretty
   }
 
+  # Builds all Swift dynamic frameworks.
+  # Stores the output in the top level build directory
+  # This should be combined with the build_carthage function
+  # once we drop support for Xcode 10.2
+  build_swift() {
+    mkdir -p Temp
+    xcodebuild clean build \
+      -workspace "${1:-}" \
+      -sdk "${2:-}" \
+      -scheme SwiftKits \
+      -configuration Debug \
+      -derivedDataPath Temp \
+      | xcpretty
+
+    for kit in "${SDK_BASE_KITS[@]}"; do
+      mv Temp/Build/Products/Debug-iphonesimulator/"$kit".framework build
+    done
+
+    rm -rf Temp
+  }
+
   build_carthage() {
     carthage build --no-skip-current
 
@@ -282,6 +307,7 @@ build_sdk() {
 
   case "$build_type" in
   "carthage") build_carthage "$@" ;;
+  "swift") build_swift "$@" ;;
   "xcode") build_xcode_workspace "$@" ;;
   *) echo "Unsupported Build: $build_type" ;;
   esac
@@ -329,6 +355,29 @@ release_sdk() {
   release_github() {
     mkdir -p build/Release
     rm -rf build/Release/*
+
+    # Should be combined with
+    release_swift() {
+      mkdir -p Temp
+
+      xcodebuild build \
+       -workspace FacebookSDK.xcworkspace \
+       -scheme SwiftKits \
+       -configuration Release \
+       -derivedDataPath Temp \
+       | xcpretty
+
+      for kit in "${SDK_BASE_KITS[@]}"; do
+        mkdir -p build/Release/"$kit"
+        mv Temp/Build/Products/Release-iphoneos/"$kit".framework build/Release/"$kit"
+        cd build/Release || exit
+        zip -r -m "$kit"-Swift.zip "$kit"
+        cd ..
+        cd ..
+      done
+
+      rm -rf Temp
+    }
 
     # Release frameworks in dynamic (mostly for Carthage)
     release_dynamic() {
@@ -397,8 +446,12 @@ release_sdk() {
       release_basics
     }
 
-    release_dynamic
-    release_static
+    if [ "${1:-}" == "swift" ]; then
+      release_swift
+    else
+      release_dynamic
+      release_static
+    fi
   }
 
   # Release Cocoapods

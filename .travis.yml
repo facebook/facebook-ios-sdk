@@ -43,12 +43,18 @@ jobs:
         - XCODE_SDK=iphonesimulator11.4
         - XCODE_SCHEME=BuildAllKits
     - stage: test
+      name: Swift - Xcode 10.3
+      osx_image: xcode10.3
+      env:
+        - XCODE_SDK=iOS 12.2
+        - XCODE_SCHEME=SwiftKits
+    - stage: test
       name: Carthage - Xcode 10.2
       osx_image: xcode10.2
-    # - stage: test # Re-enable after 5.0 releases
-    #   name: Pod Lint - Xcode 10.2
-    #   osx_image: xcode10.2
-    #   script: sh scripts/run.sh lint cocoapods --allow-warnings
+    - stage: test
+      name: Pod Lint - Xcode 10.3
+      osx_image: xcode10.2
+      script: sh scripts/run.sh lint cocoapods --allow-warnings
     # - stage: tag
     #   name: Tag Version
     #   osx_image: xcode10.2
@@ -69,8 +75,23 @@ jobs:
           all_branches: true
           tags: true
     - stage: release
+      name: GitHub Release Swift
+      osx_image: xcode10.3
+      script: sh scripts/run.sh release github swift
+      deploy:
+        provider: releases
+        skip_cleanup: true
+        api_key: $GITHUB_ACCESS_TOKEN
+        file: build/Release/*
+        file_glob: true
+        name: Facebook SDK $TRAVIS_TAG
+        body: Consult Changelog $TRAVIS_TAG
+        on:
+          all_branches: true
+          tags: true
+    - stage: release
       name: Publish Cocoapods
-      osx_image: xcode10.2
+      osx_image: xcode10.3
       script: sh scripts/run.sh release cocoapods --allow-warnings
 
 before_install: sh scripts/travis/before_install.sh
