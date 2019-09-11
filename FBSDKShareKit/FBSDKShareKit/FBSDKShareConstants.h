@@ -18,6 +18,10 @@
 
 #import <Foundation/Foundation.h>
 
+#ifndef DEPRECATED_FOR_MESSENGER
+#define DEPRECATED_FOR_MESSENGER DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
+#endif
+
 NS_ASSUME_NONNULL_BEGIN
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0

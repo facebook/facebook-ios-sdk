@@ -23,7 +23,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
+DEPRECATED_FOR_MESSENGER
 typedef NS_ENUM(NSUInteger, FBSDKShareMessengerMediaTemplateMediaType) {
   FBSDKShareMessengerMediaTemplateMediaTypeImage = 0,
   FBSDKShareMessengerMediaTemplateMediaTypeVideo
@@ -34,7 +34,7 @@ typedef NS_ENUM(NSUInteger, FBSDKShareMessengerMediaTemplateMediaType) {
  https://developers.facebook.com/docs/messenger-platform/send-messages/template/media for details.
  */
 NS_SWIFT_NAME(ShareMessengerMediaTemplateContent)
-DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
+DEPRECATED_FOR_MESSENGER
 @interface FBSDKShareMessengerMediaTemplateContent : NSObject <FBSDKSharingContent>
 
 - (instancetype)init NS_UNAVAILABLE;

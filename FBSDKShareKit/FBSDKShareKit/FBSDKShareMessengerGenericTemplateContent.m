@@ -30,7 +30,7 @@ static NSString *const kGenericTemplateIsSharableKey = @"isSharable";
 static NSString *const kGenericTemplateImageAspectRatioKey = @"imageAspectRatio";
 static NSString *const kGenericTemplateElementKey = @"element";
 
-DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
+DEPRECATED_FOR_MESSENGER
 static NSString *_ImageAspectRatioString(FBSDKShareMessengerGenericTemplateImageAspectRatio imageAspectRatio)
 {
   switch (imageAspectRatio) {
@@ -41,7 +41,7 @@ static NSString *_ImageAspectRatioString(FBSDKShareMessengerGenericTemplateImage
   }
 }
 
-DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
+DEPRECATED_FOR_MESSENGER
 static NSArray<NSDictionary<NSString *, id> *> *_SerializableGenericTemplateElementsFromElements(NSArray<FBSDKShareMessengerGenericTemplateElement *> *elements)
 {
   NSMutableArray<NSDictionary<NSString *, id> *> *serializableElements = [NSMutableArray array];

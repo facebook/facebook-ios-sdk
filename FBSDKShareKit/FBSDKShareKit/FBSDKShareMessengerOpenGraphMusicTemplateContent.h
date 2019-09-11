@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
  See https://developers.facebook.com/docs/messenger-platform/send-messages/template/open-graph
  for details. Passing <FBSDKSharingContent> property pageID is required for this type of share.
  */
-DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
+DEPRECATED_FOR_MESSENGER
 NS_SWIFT_NAME(ShareMessengerOpenGraphMusicTemplateContent)
 @interface FBSDKShareMessengerOpenGraphMusicTemplateContent : NSObject <FBSDKSharingContent>
 
