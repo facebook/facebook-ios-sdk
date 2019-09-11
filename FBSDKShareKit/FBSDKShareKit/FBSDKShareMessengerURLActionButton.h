@@ -31,6 +31,7 @@ typedef NS_ENUM(NSUInteger, FBSDKShareMessengerURLActionButtonWebviewHeightRatio
 /**
  A model for a Messenger share URL action button.
  */
+DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
 NS_SWIFT_NAME(ShareMessengerURLActionButton)
 @interface FBSDKShareMessengerURLActionButton : NSObject <FBSDKShareMessengerActionButton>
 

@@ -55,6 +55,7 @@ static NSString *_MediaTemplateURLSerializationKey(NSURL *mediaURL)
   }
 }
 
+DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
 static NSString *_MediaTypeString(FBSDKShareMessengerMediaTemplateMediaType mediaType)
 {
   switch (mediaType) {
@@ -65,6 +66,7 @@ static NSString *_MediaTypeString(FBSDKShareMessengerMediaTemplateMediaType medi
   }
 }
 
+DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
 static NSArray<NSDictionary<NSString *, id> *> *_SerializableMediaTemplateContentFromContent(FBSDKShareMessengerMediaTemplateContent *mediaTemplateContent)
 {
   NSMutableArray<NSDictionary<NSString *, id> *> *serializableMediaTemplateContent = [NSMutableArray array];
@@ -79,7 +81,10 @@ static NSArray<NSDictionary<NSString *, id> *> *_SerializableMediaTemplateConten
   return serializableMediaTemplateContent;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FBSDKShareMessengerMediaTemplateContent
+#pragma clang diagnostic pop
 
 #pragma mark - Properties
 

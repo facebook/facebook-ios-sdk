@@ -35,6 +35,7 @@ NSString *const kFBSDKShareMessengerAttachmentKey = @"attachment";
 NSString *const kFBSDKShareMessengerElementsKey = @"elements";
 NSString *const kFBSDKShareMessengerButtonsKey = @"buttons";
 
+DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
 static void _AddToContentPreviewDictionaryForURLButton(NSMutableDictionary<NSString *, id> *dictionary,
                                                        FBSDKShareMessengerURLActionButton *urlButton)
 {
@@ -59,7 +60,10 @@ void AddToContentPreviewDictionaryForButton(NSMutableDictionary<NSString *, id> 
   }
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FBSDKShareMessengerContentUtility
+#pragma clang diagnostic pop
 
 static NSString *_WebviewHeightRatioString(FBSDKShareMessengerURLActionButtonWebviewHeightRatio heightRatio) {
   switch (heightRatio) {

@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
  Tapping the receiver will invoke the FBSDKShareDialog with the attached shareContent.  If the dialog cannot
  be shown, the button will be disable.
  */
+DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
 NS_SWIFT_NAME(FBSendButton)
 @interface FBSDKSendButton : FBSDKButton <FBSDKSharingButton>
 

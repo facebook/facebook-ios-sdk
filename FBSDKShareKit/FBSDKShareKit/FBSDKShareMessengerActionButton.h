@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  A base interface for Messenger share action buttons.
  */
+DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
 NS_SWIFT_NAME(ShareMessengerActionButton)
 @protocol FBSDKShareMessengerActionButton <FBSDKCopying, NSSecureCoding>
 

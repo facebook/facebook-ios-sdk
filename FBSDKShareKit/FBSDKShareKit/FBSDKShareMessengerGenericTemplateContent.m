@@ -30,6 +30,7 @@ static NSString *const kGenericTemplateIsSharableKey = @"isSharable";
 static NSString *const kGenericTemplateImageAspectRatioKey = @"imageAspectRatio";
 static NSString *const kGenericTemplateElementKey = @"element";
 
+DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
 static NSString *_ImageAspectRatioString(FBSDKShareMessengerGenericTemplateImageAspectRatio imageAspectRatio)
 {
   switch (imageAspectRatio) {
@@ -40,6 +41,7 @@ static NSString *_ImageAspectRatioString(FBSDKShareMessengerGenericTemplateImage
   }
 }
 
+DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
 static NSArray<NSDictionary<NSString *, id> *> *_SerializableGenericTemplateElementsFromElements(NSArray<FBSDKShareMessengerGenericTemplateElement *> *elements)
 {
   NSMutableArray<NSDictionary<NSString *, id> *> *serializableElements = [NSMutableArray array];
@@ -59,7 +61,10 @@ static NSArray<NSDictionary<NSString *, id> *> *_SerializableGenericTemplateElem
   return serializableElements;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FBSDKShareMessengerGenericTemplateContent
+#pragma clang diagnostic pop
 
 #pragma mark - Properties
 

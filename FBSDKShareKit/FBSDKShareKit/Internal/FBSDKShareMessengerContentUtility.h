@@ -21,20 +21,31 @@
 @class FBSDKShareMessengerURLActionButton;
 @protocol FBSDKShareMessengerActionButton;
 
+DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
 FOUNDATION_EXPORT NSString *const kFBSDKShareMessengerTemplateTypeKey;
+DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
 FOUNDATION_EXPORT NSString *const kFBSDKShareMessengerTemplateKey;
+DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
 FOUNDATION_EXPORT NSString *const kFBSDKShareMessengerPayloadKey;
+DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
 FOUNDATION_EXPORT NSString *const kFBSDKShareMessengerTypeKey;
+DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
 FOUNDATION_EXPORT NSString *const kFBSDKShareMessengerAttachmentKey;
+DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
 FOUNDATION_EXPORT NSString *const kFBSDKShareMessengerElementsKey;
+DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
 FOUNDATION_EXPORT NSString *const kFBSDKShareMessengerButtonsKey;
 
+DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
 void AddToContentPreviewDictionaryForButton(NSMutableDictionary<NSString *, id> *dictionary,
                                             id<FBSDKShareMessengerActionButton> button);
 
 NSDictionary<NSString *, id> *SerializableButtonFromURLButton(FBSDKShareMessengerURLActionButton *button, BOOL isDefaultAction);
+
+DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
 NSArray<NSDictionary<NSString *, id> *> *SerializableButtonsFromButton(id<FBSDKShareMessengerActionButton> button);
 
+DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
 NS_SWIFT_NAME(ShareMessengerContentUtility)
 @interface FBSDKShareMessengerContentUtility : NSObject
 

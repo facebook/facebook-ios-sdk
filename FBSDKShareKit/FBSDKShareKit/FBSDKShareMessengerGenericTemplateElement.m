@@ -24,7 +24,10 @@ static NSString *const kGenericTemplateImageURLKey = @"imageURL";
 static NSString *const kGenericTemplateDefaultActionKey = @"defaultAction";
 static NSString *const kGenericTemplateButtonKey = @"button";
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FBSDKShareMessengerGenericTemplateElement
+#pragma clang diagnostic pop
 
 #pragma mark - NSCoding
 

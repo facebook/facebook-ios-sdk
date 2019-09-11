@@ -38,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
  - Any other types that are not one of the four supported types listed above
  */
 NS_SWIFT_NAME(MessageDialog)
+DEPRECATED_MSG_ATTRIBUTE("Sharing to Messenger via the SDK is unsupported. https://developers.facebook.com/docs/messenger-platform/changelog/#20190610. Sharing should be performed by the native share sheet.")
 @interface FBSDKMessageDialog : NSObject <FBSDKSharingDialog>
 
 /**
