@@ -7,7 +7,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.5.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.6.0...HEAD)
+
+## 5.6.0
+
+[2019-09-13](https://github.com/facebook/facebook-objc-sdk/releases/tag/v5.6.0) |
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.5.0...v5.6.0)
+
+### Changed
+- Fixed FB Login for multi-window apps that created via Xcode 11
+- Added support for generate_multiple_pod_projects for cocoapods 1.7.0
+- Improved performance and stability of crash reporting
+- Added user agent suffix for macOS
+
+### Fixed
+- Various bug fixes
 
 ## 5.5.0
 
