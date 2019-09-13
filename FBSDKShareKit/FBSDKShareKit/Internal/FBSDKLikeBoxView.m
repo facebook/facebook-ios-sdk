@@ -18,7 +18,11 @@
 
 #import "FBSDKLikeBoxView.h"
 
+#ifdef COCOAPODS
+#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
 #import "FBSDKCoreKit+Internal.h"
+#endif
 #import "FBSDKLikeBoxBorderView.h"
 
 @implementation FBSDKLikeBoxView

@@ -22,7 +22,11 @@
 
 #import <TVMLKit/TVElementFactory.h>
 
+#ifdef COCOAPODS
+#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
 #import "FBSDKCoreKit+Internal.h"
+#endif
 #import "FBSDKDeviceLoginButton.h"
 #import "FBSDKTVLoginButtonElement.h"
 #import "FBSDKTVLoginViewControllerElement.h"

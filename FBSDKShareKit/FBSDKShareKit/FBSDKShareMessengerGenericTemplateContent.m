@@ -18,7 +18,11 @@
 
 #import "FBSDKShareMessengerGenericTemplateContent.h"
 
+#ifdef COCOAPODS
+#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
 #import "FBSDKCoreKit+Internal.h"
+#endif
 #import "FBSDKShareMessengerContentUtility.h"
 #import "FBSDKShareMessengerGenericTemplateElement.h"
 #import "FBSDKShareMessengerURLActionButton.h"

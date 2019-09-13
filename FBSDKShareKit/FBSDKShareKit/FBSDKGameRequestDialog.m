@@ -18,7 +18,11 @@
 
 #import "FBSDKGameRequestDialog.h"
 
+#ifdef COCOAPODS
+#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
 #import "FBSDKCoreKit+Internal.h"
+#endif
 #import "FBSDKGameRequestFrictionlessRecipientCache.h"
 #import "FBSDKShareConstants.h"
 #import "FBSDKShareUtility.h"

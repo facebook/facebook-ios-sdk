@@ -19,7 +19,11 @@
 #import "FBSDKShareOpenGraphValueContainer.h"
 #import "FBSDKShareOpenGraphValueContainer+Internal.h"
 
+#ifdef COCOAPODS
+#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
 #import "FBSDKCoreKit+Internal.h"
+#endif
 #import "FBSDKShareOpenGraphObject.h"
 #import "FBSDKSharePhoto.h"
 #import "FBSDKShareUtility.h"

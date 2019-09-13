@@ -19,7 +19,7 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKAppEventsState.h"
-#import "FBSDKBasicUtility+Internal.h"
+#import "FBSDKBasicUtility.h"
 
 #define FBSDK_APPEVENTSSTATE_MAX_EVENTS 1000
 

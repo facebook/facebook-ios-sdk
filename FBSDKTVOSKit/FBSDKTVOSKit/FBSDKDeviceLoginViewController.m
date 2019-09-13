@@ -20,7 +20,11 @@
 
 #import <FBSDKLoginKit/FBSDKDeviceLoginManager.h>
 
+#ifdef COCOAPODS
+#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
 #import "FBSDKCoreKit+Internal.h"
+#endif
 
 @interface FBSDKDeviceLoginViewController() <
   FBSDKDeviceLoginManagerDelegate

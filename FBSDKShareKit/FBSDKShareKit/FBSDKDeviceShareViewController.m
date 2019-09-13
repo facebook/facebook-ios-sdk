@@ -18,7 +18,11 @@
 
 #import "FBSDKDeviceShareViewController.h"
 
+#ifdef COCOAPODS
+#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
 #import "FBSDKCoreKit+Internal.h"
+#endif
 #import "FBSDKShareLinkContent.h"
 #import "FBSDKShareOpenGraphContent.h"
 #import "FBSDKShareUtility.h"

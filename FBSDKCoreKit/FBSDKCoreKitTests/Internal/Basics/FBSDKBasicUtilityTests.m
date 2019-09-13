@@ -17,7 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #import <XCTest/XCTest.h>
 
-#import "FBSDKBasicUtility+Internal.h"
+#import "FBSDKBasicUtility.h"
 #import "FBSDKCoreKit.h"
 
 @interface FBSDKBasicUtilityTests : XCTestCase

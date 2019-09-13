@@ -18,7 +18,11 @@
 
 #import "FBSDKShareDialogMode.h"
 
+#ifdef COCOAPODS
+#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
 #import "FBSDKCoreKit+Internal.h"
+#endif
 
 NSString *NSStringFromFBSDKShareDialogMode(FBSDKShareDialogMode dialogMode)
 {

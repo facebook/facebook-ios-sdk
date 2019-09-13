@@ -18,7 +18,7 @@
 
 #import "FBSDKRestrictiveDataFilterManager.h"
 
-#import "FBSDKBasicUtility+Internal.h"
+#import "FBSDKBasicUtility.h"
 #import "FBSDKTypeUtility.h"
 
 @interface FBSDKRestrictiveEventFilter : NSObject

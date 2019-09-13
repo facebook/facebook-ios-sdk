@@ -20,7 +20,11 @@
 
 #import <FBSDKShareKit/FBSDKHashtag.h>
 
+#ifdef COCOAPODS
+#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
 #import "FBSDKCoreKit+Internal.h"
+#endif
 #import "FBSDKShareConstants.h"
 #import "FBSDKShareLinkContent.h"
 

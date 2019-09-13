@@ -41,7 +41,11 @@ Pod::Spec.new do |s|
   s.subspec 'Basics' do |ss|
     ss.source_files = 'FBSDKCoreKit/FBSDKCoreKit/Basics/*.{h,m}',
                       'FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.{h,m}'
-    ss.public_header_files = 'FBSDKCoreKit/FBSDKCoreKit/Basics/*.h'
+    ss.public_header_files = 'FBSDKCoreKit/FBSDKCoreKit/Basics/Internal/**/*.h',
+                             'FBSDKCoreKit/FBSDKCoreKit/Basics/Instrument/**/*.h',
+                             'FBSDKCoreKit/FBSDKCoreKit/Basics/*.h'
+    ss.private_header_files = 'FBSDKCoreKit/FBSDKCoreKit/Basics/Internal/**/*.h',
+                              'FBSDKCoreKit/FBSDKCoreKit/Basics/Instrument/**/*.h'
     ss.library = 'z'
   end
 
@@ -50,13 +54,18 @@ Pod::Spec.new do |s|
     ss.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/Basics/*',
                        'FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.{h,m}'
     ss.source_files = 'FBSDKCoreKit/FBSDKCoreKit/**/*.{h,m}'
-    ss.public_header_files = 'FBSDKCoreKit/FBSDKCoreKit/*.h',
+    ss.public_header_files = 'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.h',
+                             'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/**/*.h',
+                             'FBSDKCoreKit/FBSDKCoreKit/*.h',
                              'FBSDKCoreKit/FBSDKCoreKit/AppEvents/*.h',
                              'FBSDKCoreKit/FBSDKCoreKit/AppLink/*.h'
+    ss.private_header_files = 'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.h',
+                              'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/**/*.h'
     ss.resources = 'FacebookSDKStrings.bundle'
     ss.ios.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.{h,m}',
                            'FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.{h,m}',
-                           'FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*'
+                           'FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*',
+                           'FBSDKCoreKit/FBSDKCoreKit/Swift/**/*'
     ss.tvos.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/Codeless/*',
                             'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/FBSDKHybridAppEventsScriptMessageHandler.{h,m}',
                             'FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*',

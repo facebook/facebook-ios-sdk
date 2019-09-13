@@ -18,7 +18,11 @@
 
 #import "FBSDKDeviceLoginButton.h"
 
+#ifdef COCOAPODS
+#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
 #import "FBSDKCoreKit+Internal.h"
+#endif
 #import "FBSDKDeviceLoginViewController.h"
 
 @interface FBSDKDeviceLoginButton() <FBSDKDeviceLoginViewControllerDelegate>

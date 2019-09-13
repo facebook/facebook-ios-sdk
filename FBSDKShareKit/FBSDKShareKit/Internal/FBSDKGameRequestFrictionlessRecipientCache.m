@@ -20,7 +20,11 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#ifdef COCOAPODS
+#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
 #import "FBSDKCoreKit+Internal.h"
+#endif
 
 @implementation FBSDKGameRequestFrictionlessRecipientCache
 {

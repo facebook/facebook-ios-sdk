@@ -18,7 +18,11 @@
 
 #import "FBSDKLikeBoxBorderView.h"
 
+#ifdef COCOAPODS
+#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
 #import "FBSDKCoreKit+Internal.h"
+#endif
 
 #define FBSDK_LIKE_BOX_BORDER_CARET_WIDTH 6.0
 #define FBSDK_LIKE_BOX_BORDER_CARET_HEIGHT 3.0

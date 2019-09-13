@@ -18,7 +18,11 @@
 
 #import "FBSDKShareOpenGraphAction.h"
 
+#ifdef COCOAPODS
+#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
 #import "FBSDKCoreKit+Internal.h"
+#endif
 #import "FBSDKShareOpenGraphValueContainer+Internal.h"
 
 #define FBSDK_SHARE_OPEN_GRAPH_ACTION_TYPE_KEY @"type"

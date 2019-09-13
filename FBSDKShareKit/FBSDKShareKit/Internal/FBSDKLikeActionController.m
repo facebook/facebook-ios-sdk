@@ -22,7 +22,11 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#ifdef COCOAPODS
+#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
 #import "FBSDKCoreKit+Internal.h"
+#endif
 #import "FBSDKLikeActionControllerCache.h"
 #import "FBSDKLikeDialog.h"
 
