@@ -142,7 +142,8 @@
 #endif
 }
 
-// for tests only.
+#pragma mark - Internal, for testing
+
 + (void)clearLibraryFiles
 {
   [[NSFileManager defaultManager] removeItemAtPath:[[self class] persistenceFilePath:FBSDK_APPEVENTSUTILITY_ANONYMOUSIDFILENAME]
