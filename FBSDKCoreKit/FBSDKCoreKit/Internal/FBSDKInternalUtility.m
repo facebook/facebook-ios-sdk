@@ -531,7 +531,7 @@ static NSMapTable *_transientObjects;
 {
   UIWindow *keyWindow = [self findWindow];
   // SDK expects a key window at this point, if it is not, make it one
-  if (keyWindow !=  nil && !keyWindow.isKeyWindow) {
+  if (keyWindow != nil && !keyWindow.isKeyWindow) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                        formatString:@"Unable to obtain a key window, marking %@ as keyWindow", keyWindow.description];
     [keyWindow makeKeyWindow];
