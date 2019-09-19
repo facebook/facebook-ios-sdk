@@ -28,45 +28,6 @@
 
 @implementation FBSDKInternalUtilityTests
 
-- (void)testURLEncode
-{
-  NSString *value = @"test this \"string\u2019s\" encoded value";
-  NSString *encoded = [FBSDKUtility URLEncode:value];
-  XCTAssertEqualObjects(encoded, @"test%20this%20%22string%E2%80%99s%22%20encoded%20value");
-  NSString *decoded = [FBSDKUtility URLDecode:encoded];
-  XCTAssertEqualObjects(decoded, value);
-}
-
-- (void)testURLEncodeSpecialCharacters
-{
-  NSString *value = @":!*();@/&?#[]+$,='%\"\u2019";
-  NSString *encoded = [FBSDKUtility URLEncode:value];
-  XCTAssertEqualObjects(encoded, @"%3A%21%2A%28%29%3B%40%2F%26%3F%23%5B%5D%2B%24%2C%3D%27%25%22%E2%80%99");
-  NSString *decoded = [FBSDKUtility URLDecode:encoded];
-  XCTAssertEqualObjects(decoded, value);
-}
-
-- (void)testQueryString
-{
-  NSURL *URL = [NSURL URLWithString:@"http://example.com/path/to/page.html?key1&key2=value2&key3=value+3%20%3D%20foo#fragment=go"];
-  NSDictionary *dictionary = [FBSDKUtility dictionaryWithQueryString:URL.query];
-  NSDictionary *expectedDictionary = @{
-                                       @"key1": @"",
-                                       @"key2": @"value2",
-                                       @"key3": @"value 3 = foo",
-                                       };
-  XCTAssertEqualObjects(dictionary, expectedDictionary);
-  NSString *queryString = [FBSDKUtility queryStringWithDictionary:dictionary error:NULL];
-  NSString *expectedQueryString = @"key1=&key2=value2&key3=value%203%20%3D%20foo";
-  XCTAssertEqualObjects(queryString, expectedQueryString);
-
-  // test repetition now that the query string has been cleaned and normalized
-  NSDictionary *dictionary2 = [FBSDKUtility dictionaryWithQueryString:queryString];
-  XCTAssertEqualObjects(dictionary2, expectedDictionary);
-  NSString *queryString2 = [FBSDKUtility queryStringWithDictionary:dictionary2 error:NULL];
-  XCTAssertEqualObjects(queryString2, expectedQueryString);
-}
-
 - (void)testFacebookURL
 {
   NSString *URLString;
