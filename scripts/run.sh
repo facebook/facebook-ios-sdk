@@ -47,10 +47,14 @@ main() {
     SDK_SCRIPTS_DIR=$(realpath "$(dirname "${BASH_SOURCE[0]}")")
     SDK_DIR="$(dirname "$SDK_SCRIPTS_DIR")"
 
+    CORE_KIT="FBSDKCoreKit"
+    LOGIN_KIT="FBSDKLoginKit"
+    SHARE_KIT="FBSDKShareKit"
+
     SDK_BASE_KITS=(
-      "FBSDKCoreKit"
-      "FBSDKLoginKit"
-      "FBSDKShareKit"
+      "$CORE_KIT"
+      "$LOGIN_KIT"
+      "$SHARE_KIT"
     )
 
     SDK_KITS=(
@@ -482,29 +486,15 @@ release_sdk() {
 
   release_docs() {
     for kit in "${SDK_KITS[@]}"; do
-      local prefix
-      if [ "$kit" == "FBSDKMarketingKit" ]; then prefix="internal/"; else prefix=""; fi
-
-      local header_file="$prefix$kit/$kit/$kit".h
-
-      if [ ! -f "$header_file" ]; then
-        echo "*** ERROR: unable to document $kit"
-        continue
-      fi
-
-      jazzy \
-        --framework-root "$prefix$kit" \
-        --output docs/"$kit" \
-        --umbrella-header "$header_file"
-
-      # Zip the result so it can be uploaded easily
-      pushd docs/ || continue
-      zip -r "$kit.zip" "$kit"
-      popd || continue
+      ruby "$SDK_SCRIPTS_DIR"/genDocs.rb "$kit"
 
       if [[ $SDK_INTERNAL == 1 ]] && [ "${1:-}" == "--publish" ]; then
         api_update_reference_doc "$kit"
       fi
+      # Zip the result so it can be uploaded easily
+      pushd docs/ || continue
+      zip -r "$kit".zip "$kit"
+      popd || continue
     done
   }
 

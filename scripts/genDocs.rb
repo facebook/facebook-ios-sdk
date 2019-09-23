@@ -1,0 +1,123 @@
+#!/usr/bin/env ruby
+
+require "json"
+require "FileUtils"
+
+kit = ARGV[0]
+
+# Constants
+CORE_KIT = 'FBSDKCoreKit'
+LOGIN_KIT = 'FBSDKLoginKit'
+SHARE_KIT = 'FBSDKShareKit'
+MARKETING_KIT = 'FBSDKMarketingKit'
+
+def generateSourceKittenOutputForSwift(kit)
+  swiftKit = "#{kit}Swift"
+
+  File.delete("tmpSwift") if File.exist?("tmpSwift")
+
+  # Moves the scheme back to the shareddata directory where it can be found by the xcodebuild tool
+  # keeping it there from the beginning breaks Carthage when building on Xcode 10.2
+  # The scheme can be moved permanently and this line deleted when we drop support for Xcode 10.2
+  #
+  FileUtils.mv("#{kit}/#{kit}/Swift/#{swiftKit}.xcscheme", "#{kit}/#{kit}.xcodeproj/xcshareddata/xcschemes/")
+
+  system "sourcekitten doc -- -workspace FacebookSDK.xcworkspace -scheme #{swiftKit} > tmpSwift"
+end
+
+def prefixFor(kit)
+  kit == MARKETING_KIT ? "internal/" : ""
+end
+
+def scriptsDirectory
+  File.dirname(__FILE__)
+end
+
+def parentDirectory
+  File.dirname(scriptsDirectory)
+end
+
+def headerFileFor(kit)
+  header_file = "#{parentDirectory()}/#{prefixFor(kit)}#{kit}/#{kit}/#{kit}.h"
+
+  if !File.exist?(header_file)
+    abort "*** ERROR: unable to document #{kit}. Missing header at #{header_file}"
+  end
+
+  return header_file
+end
+
+def generateSourceKittenOutputForObjC(kit)
+  parentDirectory = parentDirectory()
+
+  header_file = headerFileFor(kit)
+
+  # hacky fix because of https://github.com/realm/jazzy/issues/667:
+  FileUtils.cp_r(
+    "#{parentDirectory}/FBSDKCoreKit/FBSDKCoreKit/AppEvents/.",
+    "#{parentDirectory}/FBSDKCoreKit/FBSDKCoreKit"
+  )
+  FileUtils.cp_r(
+    "#{parentDirectory}/FBSDKCoreKit/FBSDKCoreKit/AppLink/.",
+    "#{parentDirectory}/FBSDKCoreKit/FBSDKCoreKit"
+  )
+
+  # This is a little weird. We need to include paths to the FBSDKCoreKit headers in order for sourcekitten to
+  # include the symbols in the output for FBSDKLoginKit and FBSDKShareKit
+  # However, if you include the header path in the command for FBSDKCoreKit itself
+  # then it won't include Swift definitions. Hence the need to have a separate commend for FBSDKCoreKit.
+  #
+  if kit == CORE_KIT
+    system "sourcekitten doc --objc #{header_file} \
+      -- -x objective-c  -isysroot $(xcrun --show-sdk-path --sdk iphonesimulator) \
+      -I #{parentDirectory}/#{kit} > tmpObjC"
+  else
+    system "sourcekitten doc --objc #{header_file} \
+    -- -x objective-c  -isysroot $(xcrun --show-sdk-path --sdk iphonesimulator) \
+    -I #{parentDirectory}/FBSDKCoreKit \
+    -I #{parentDirectory}/#{kit} > tmpObjC"
+  end
+end
+
+def combineSourceKittenOutputFor(kit)
+  puts "Generating source kitten output for #{kit}"
+
+  swiftSourceKittenOutput = File.open "tmpSwift"
+  swiftSourceKittenJSON = JSON.load swiftSourceKittenOutput
+
+  objCSourceKittenOutput = File.open "tmpObjC"
+  objCSourceKittenJSON = JSON.load objCSourceKittenOutput
+
+  sourceKittenJSON = JSON.pretty_generate(
+    swiftSourceKittenJSON + objCSourceKittenJSON
+  )
+
+  output = File.open( "sourceKittenJSON","w" )
+  output << sourceKittenJSON
+  output.close
+
+  puts "Generating documentations for #{kit}"
+
+  system "jazzy \
+    --config #{parentDirectory())}/.jazzy.yaml \
+    --output docs/#{kit} \
+    --sourcekitten sourceKittenJSON"
+end
+
+case kit
+when /#{CORE_KIT}|#{LOGIN_KIT}|#{SHARE_KIT}/
+  generateSourceKittenOutputForSwift(kit)
+  generateSourceKittenOutputForObjC(kit)
+  combineSourceKittenOutputFor(kit)
+
+else
+  header_file = headerFileFor(kit)
+
+  system "jazzy \
+    --framework-root #{prefixFor(kit)}#{kit} \
+    --output docs/#{kit} \
+    --umbrella-header #{header_file}"
+end
+
+File.delete("tmpSwift") if File.exist?("tmpSwift")
+File.delete("tmpObjC") if File.exist?("tmpObjC")
