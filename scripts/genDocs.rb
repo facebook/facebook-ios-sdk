@@ -38,7 +38,7 @@ def parentDirectory
 end
 
 def headerFileFor(kit)
-  header_file = "#{parentDirectory()}/#{prefixFor(kit)}#{kit}/#{kit}/#{kit}.h"
+  header_file = "#{parentDirectory}/#{prefixFor(kit)}#{kit}/#{kit}/#{kit}.h"
 
   if !File.exist?(header_file)
     abort "*** ERROR: unable to document #{kit}. Missing header at #{header_file}"
@@ -48,8 +48,6 @@ def headerFileFor(kit)
 end
 
 def generateSourceKittenOutputForObjC(kit)
-  parentDirectory = parentDirectory()
-
   header_file = headerFileFor(kit)
 
   # hacky fix because of https://github.com/realm/jazzy/issues/667:
@@ -99,7 +97,7 @@ def combineSourceKittenOutputFor(kit)
   puts "Generating documentations for #{kit}"
 
   system "jazzy \
-    --config #{parentDirectory())}/.jazzy.yaml \
+    --config #{parentDirectory}/.jazzy.yaml \
     --output docs/#{kit} \
     --sourcekitten sourceKittenJSON"
 end
