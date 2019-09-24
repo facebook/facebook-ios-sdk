@@ -1630,6 +1630,15 @@
 			path = Instrument;
 			sourceTree = "<group>";
 		};
+		5D9031C0233AAC5D0001450C /* RestrictiveDataFilter */ = {
+			isa = PBXGroup;
+			children = (
+				5D411318229F27DD002FF65A /* FBSDKRestrictiveDataFilterManager.m */,
+				5D411319229F27DD002FF65A /* FBSDKRestrictiveDataFilterManager.h */,
+			);
+			path = RestrictiveDataFilter;
+			sourceTree = "<group>";
+		};
 		5DB7ADCA22EA59E60012E8CB /* Instrument */ = {
 			isa = PBXGroup;
 			children = (
@@ -2216,6 +2225,7 @@
 		C5188EC322371F4000F4D8BC /* Internal */ = {
 			isa = PBXGroup;
 			children = (
+				5D9031C0233AAC5D0001450C /* RestrictiveDataFilter */,
 				C5696F1D209BBC35009C931F /* Codeless */,
 				9D0BC1531A8D23DB00BE8BA4 /* FBSDKAppEvents+Internal.h */,
 				5F7063FA1AF733F300E42ED7 /* FBSDKAppEventsDeviceInfo.h */,
@@ -2230,8 +2240,6 @@
 				9D0BC15A1A8D427800BE8BA4 /* FBSDKAppEventsUtility.m */,
 				9D0BC14A1A8D236200BE8BA4 /* FBSDKPaymentObserver.h */,
 				9D0BC14B1A8D236200BE8BA4 /* FBSDKPaymentObserver.m */,
-				5D411319229F27DD002FF65A /* FBSDKRestrictiveDataFilterManager.h */,
-				5D411318229F27DD002FF65A /* FBSDKRestrictiveDataFilterManager.m */,
 				9D0BC14C1A8D236200BE8BA4 /* FBSDKTimeSpentData.h */,
 				9D0BC14D1A8D236200BE8BA4 /* FBSDKTimeSpentData.m */,
 				F9169B822155A02000FA1789 /* FBSDKUserDataStore.h */,
