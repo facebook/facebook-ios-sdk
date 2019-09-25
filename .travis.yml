@@ -99,6 +99,7 @@ jobs:
         api_key: $GITHUB_ACCESS_TOKEN
         file: build/Release/*
         file_glob: true
+        overwrite: true
         name: Facebook SDK $TRAVIS_TAG
         body: Consult Changelog $TRAVIS_TAG
         on:
