@@ -90,6 +90,21 @@ jobs:
           all_branches: true
           tags: true
     - stage: release
+      name: GitHub Release Combine Output for Carthage
+      osx_image: xcode10.3
+      script: sh scripts/run.sh release github combine
+      deploy:
+        provider: releases
+        skip_cleanup: true
+        api_key: $GITHUB_ACCESS_TOKEN
+        file: build/Release/*
+        file_glob: true
+        name: Facebook SDK $TRAVIS_TAG
+        body: Consult Changelog $TRAVIS_TAG
+        on:
+          all_branches: true
+          tags: true
+    - stage: release
       name: Publish Cocoapods
       osx_image: xcode10.3
       script: sh scripts/run.sh release cocoapods --allow-warnings
