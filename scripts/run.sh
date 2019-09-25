@@ -361,33 +361,57 @@ lint_sdk() {
 }
 
 # Release
+# Builds and stores various build flavors under build/Release
+# where they can be found and uploaded by a travis job
 release_sdk() {
   # Release github
   release_github() {
     mkdir -p build/Release
     rm -rf build/Release/*
 
-    # Should be combined with
-    release_swift() {
+    build_swift_dynamic() {
       mkdir -p Temp
 
-      xcodebuild build \
-       -workspace FacebookSDK.xcworkspace \
-       -scheme SwiftKits \
-       -configuration Release \
-       -derivedDataPath Temp \
-       | xcpretty
-
       for kit in "${SDK_BASE_KITS[@]}"; do
-        mkdir -p build/Release/"$kit"
-        mv Temp/Build/Products/Release-iphoneos/"$kit".framework build/Release/"$kit"
-        cd build/Release || exit
-        zip -r -m "$kit"-Swift.zip "$kit"
-        cd ..
-        cd ..
+        xcodebuild build \
+        -workspace FacebookSDK.xcworkspace \
+        -scheme "$kit"Swift-Dynamic \
+        -configuration Release \
+        -derivedDataPath Temp \
+        | xcpretty
+
+        mkdir -p build/Release/Swift/Dynamic/"$kit"
+        mv Temp/Build/Products/Release-iphoneos/"$kit".framework build/Release/Swift/Dynamic/"$kit"
       done
 
       rm -rf Temp
+    }
+
+    build_swift_static() {
+      mkdir -p Temp
+
+      for kit in "${SDK_BASE_KITS[@]}"; do
+        xcodebuild build \
+        -workspace FacebookSDK.xcworkspace \
+        -scheme "$kit"Swift \
+        -configuration Release \
+        -derivedDataPath Temp \
+        | xcpretty
+
+        mkdir -p build/Release/Swift/Static/"$kit"
+        mv Temp/Build/Products/Release-iphoneos/"$kit".framework build/Release/Swift/Static/"$kit"
+      done
+
+      rm -rf Temp
+    }
+
+    # Warning: This function will move the Swift schemes and not clean up after itself.
+    # This is intended to be run in CI on container jobs so this is not an issue.
+    # If running locally you will need to clean the directory after running.
+    include_swift_schemes() {
+      for kit in "${SDK_BASE_KITS[@]}"; do
+        mv "$kit/$kit/Swift/"*.xcscheme "$kit/$kit.xcodeproj/xcshareddata/xcschemes/"
+      done
     }
 
     # Release frameworks in dynamic (mostly for Carthage)
@@ -457,8 +481,26 @@ release_sdk() {
       release_basics
     }
 
+    # Carthage only supports a single build artifact with the name `*.framework.zip`.
+    # Because we need to build some artifacts using Xcode 10.2 and other artifacts using
+    # later than 10.2, and travis does not support multiple Xcode versions, we need to build
+    # and upload the separate artifacts as two separate build jobs.
+    # This function pulls the latest artifacts from github for each of those runs
+    # and combines them so they can be re-uploaded as a single zip file that Carthage can
+    # find.
+    combine_releases_for_carthage() {
+      ruby "$SDK_SCRIPTS_DIR"/combineReleases.rb
+    }
+
+    # TODO: Remove conditional when we drop support for Xcode 10.2
     if [ "${1:-}" == "swift" ]; then
-      release_swift
+      include_swift_schemes
+      build_swift_dynamic
+      build_swift_static
+      cd build/Release || exit
+      zip -r -m Swift.zip Swift
+    elif [ "${1:-}" == "combine" ]; then
+      combine_releases_for_carthage
     else
       release_dynamic
       release_static
