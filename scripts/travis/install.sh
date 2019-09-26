@@ -30,4 +30,6 @@ BUILD_TYPE=$(echo "$TRAVIS_JOB_NAME" | awk '{print $1}' | tr '[:upper:]' '[:lowe
 
 if [ "$BUILD_TYPE" == "pod" ]; then
   pod repo update
+elif [ "$BUILD_TYPE" == "swift" ]; then
+  brew install swiftlint || brew upgrade swiftlint
 fi
