@@ -46,150 +46,150 @@ static dispatch_queue_t serialQueue;
 
 + (void)initialize
 {
-    FBSDKMetadataIndexerKeys = @[FBSDKAppEventRule1, FBSDKAppEventRule2];
-    serialQueue = dispatch_queue_create("com.facebook.appevents.MetadataIndexer", DISPATCH_QUEUE_SERIAL);
+  FBSDKMetadataIndexerKeys = @[FBSDKAppEventRule1, FBSDKAppEventRule2];
+  serialQueue = dispatch_queue_create("com.facebook.appevents.MetadataIndexer", DISPATCH_QUEUE_SERIAL);
 }
 
 + (void)setupWithRules:(NSDictionary<NSString *, id> *)rules
 {
-    [FBSDKMetadataIndexer constructRules:rules];
-    [FBSDKMetadataIndexer initStore];
+  [FBSDKMetadataIndexer constructRules:rules];
+  [FBSDKMetadataIndexer initStore];
 
-    BOOL isEnabled = NO;
-    for (NSString *key in FBSDKMetadataIndexerKeys) {
-      BOOL isRuleEnabled = (nil != [FBSDKMetadataIndexerRules objectForKey:key]);
-      if (isRuleEnabled) {
-        isEnabled = YES;
-      }
-      if (!isRuleEnabled) {
-        [FBSDKMetadataIndexerStore removeObjectForKey:key];
-        [FBSDKUserDataStore setHashData:nil forType:key];
-      }
+  BOOL isEnabled = NO;
+  for (NSString *key in FBSDKMetadataIndexerKeys) {
+    BOOL isRuleEnabled = (nil != [FBSDKMetadataIndexerRules objectForKey:key]);
+    if (isRuleEnabled) {
+      isEnabled = YES;
     }
+    if (!isRuleEnabled) {
+      [FBSDKMetadataIndexerStore removeObjectForKey:key];
+      [FBSDKUserDataStore setHashData:nil forType:key];
+    }
+  }
 
-    if (isEnabled) {
-      [FBSDKMetadataIndexer setupMetadataIndexing];
-    }
+  if (isEnabled) {
+    [FBSDKMetadataIndexer setupMetadataIndexing];
+  }
 }
 
 + (void)initStore
 {
-    FBSDKMetadataIndexerStore = [[NSMutableDictionary alloc] init];
-    for (NSString *key in FBSDKMetadataIndexerKeys) {
-        NSString *data = [FBSDKUserDataStore getHashedDataForType:key];
-        if (data.length > 0) {
-            FBSDKMetadataIndexerStore[key] = [NSMutableArray arrayWithArray:[data componentsSeparatedByString:FIELD_K_DELIMITER]];
-        }
+  FBSDKMetadataIndexerStore = [[NSMutableDictionary alloc] init];
+  for (NSString *key in FBSDKMetadataIndexerKeys) {
+    NSString *data = [FBSDKUserDataStore getHashedDataForType:key];
+    if (data.length > 0) {
+      FBSDKMetadataIndexerStore[key] = [NSMutableArray arrayWithArray:[data componentsSeparatedByString:FIELD_K_DELIMITER]];
     }
+  }
 
-    for (NSString *key in FBSDKMetadataIndexerKeys) {
-        if (!FBSDKMetadataIndexerStore[key]) {
-            FBSDKMetadataIndexerStore[key] = [[NSMutableArray alloc] init];
-        }
+  for (NSString *key in FBSDKMetadataIndexerKeys) {
+    if (!FBSDKMetadataIndexerStore[key]) {
+      FBSDKMetadataIndexerStore[key] = [[NSMutableArray alloc] init];
     }
+  }
 }
 
 + (void)constructRules:(NSDictionary<NSString *, id> *)rules
 {
-    if (!FBSDKMetadataIndexerRules) {
-        FBSDKMetadataIndexerRules = [[NSMutableDictionary alloc] init];
-    }
+  if (!FBSDKMetadataIndexerRules) {
+    FBSDKMetadataIndexerRules = [[NSMutableDictionary alloc] init];
+  }
 
-    for (NSString *key in rules) {
-        NSDictionary<NSString *, NSString *> *value = [FBSDKTypeUtility dictionaryValue:rules[key]];
-        if (value && value[FIELD_K].length > 0 && value[FIELD_V].length > 0) {
-            FBSDKMetadataIndexerRules[key] = value;
-        }
+  for (NSString *key in rules) {
+    NSDictionary<NSString *, NSString *> *value = [FBSDKTypeUtility dictionaryValue:rules[key]];
+    if (value && value[FIELD_K].length > 0 && value[FIELD_V].length > 0) {
+      FBSDKMetadataIndexerRules[key] = value;
     }
+  }
 }
 
 + (void)setupMetadataIndexing
 {
-    void (^block)(UIView *) = ^(UIView *view) {
-        // Indexing when the view is removed from window and conforms to UITextInput, and skip UIFieldEditor, which is an internval view of UITextField
-        if (![view window] && ![NSStringFromClass([view class]) isEqualToString:@"UIFieldEditor"] && [view conformsToProtocol:@protocol(UITextInput)]) {
-            NSString *text = [FBSDKViewHierarchy getText:view];
-            NSString *placeholder = [FBSDKViewHierarchy getHint:view];
-            BOOL secureTextEntry = [self checkSecureTextEntry:view];
-            NSArray<NSString *> *labels = [self getLabelsOfView:view];
-            UIKeyboardType keyboardType = [self getKeyboardType:view];
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
-                [self getMetadataWithText:[self normalizedValue:text]
-                              placeholder:[self normalizeField:placeholder]
-                                   labels:labels
-                          secureTextEntry:secureTextEntry
-                                inputType:keyboardType];
-            });
-        }
-    };
-
-    [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:[UIView class] withBlock:block named:@"metadataIndexingUIView"];
-
-    // iOS 12: UITextField implements didMoveToWindow without calling parent implementation
-    if (@available(iOS 12, *)) {
-        [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:[UITextField class] withBlock:block named:@"metadataIndexingUITextField"];
-    } else {
-        [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:[UIControl class] withBlock:block named:@"metadataIndexingUIControl"];
+  void (^block)(UIView *) = ^(UIView *view) {
+    // Indexing when the view is removed from window and conforms to UITextInput, and skip UIFieldEditor, which is an internval view of UITextField
+    if (![view window] && ![NSStringFromClass([view class]) isEqualToString:@"UIFieldEditor"] && [view conformsToProtocol:@protocol(UITextInput)]) {
+      NSString *text = [FBSDKViewHierarchy getText:view];
+      NSString *placeholder = [FBSDKViewHierarchy getHint:view];
+      BOOL secureTextEntry = [self checkSecureTextEntry:view];
+      NSArray<NSString *> *labels = [self getLabelsOfView:view];
+      UIKeyboardType keyboardType = [self getKeyboardType:view];
+      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+        [self getMetadataWithText:[self normalizedValue:text]
+                      placeholder:[self normalizeField:placeholder]
+                           labels:labels
+                  secureTextEntry:secureTextEntry
+                        inputType:keyboardType];
+      });
     }
+  };
+
+  [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:[UIView class] withBlock:block named:@"metadataIndexingUIView"];
+
+  // iOS 12: UITextField implements didMoveToWindow without calling parent implementation
+  if (@available(iOS 12, *)) {
+    [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:[UITextField class] withBlock:block named:@"metadataIndexingUITextField"];
+  } else {
+    [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:[UIControl class] withBlock:block named:@"metadataIndexingUIControl"];
+  }
 }
 
 + (NSArray<UIView *> *)getSiblingViewsOfView:(UIView *)view
 {
-    NSObject *parent = [FBSDKViewHierarchy getParent:view];
-    if (parent) {
-        NSArray<id> *views = [FBSDKViewHierarchy getChildren:parent];
-        if (views) {
-            NSMutableArray<id> *siblings = [NSMutableArray arrayWithArray:views];
-            [siblings removeObject:view];
-            return [siblings copy];
-        }
+  NSObject *parent = [FBSDKViewHierarchy getParent:view];
+  if (parent) {
+    NSArray<id> *views = [FBSDKViewHierarchy getChildren:parent];
+    if (views) {
+      NSMutableArray<id> *siblings = [NSMutableArray arrayWithArray:views];
+      [siblings removeObject:view];
+      return [siblings copy];
     }
-    return nil;
+  }
+  return nil;
 }
 
 + (NSArray<NSString *> *)getLabelsOfView:(UIView *)view
 {
-    NSMutableArray<NSString *> *labels = [[NSMutableArray alloc] init];
+  NSMutableArray<NSString *> *labels = [[NSMutableArray alloc] init];
 
-    NSString *placeholder = [self normalizeField:[FBSDKViewHierarchy getHint:view]];
-    if (placeholder) {
-        [labels addObject:placeholder];
-    }
+  NSString *placeholder = [self normalizeField:[FBSDKViewHierarchy getHint:view]];
+  if (placeholder) {
+    [labels addObject:placeholder];
+  }
 
-    NSArray<id> *siblingViews = [self getSiblingViewsOfView:view];
-    for (id sibling in siblingViews) {
-        if ([sibling isKindOfClass:[UILabel class]]) {
-            NSString *text = [self normalizeField:[FBSDKViewHierarchy getText:sibling]];
-            if (text) {
-                [labels addObject:text];
-            }
-        }
+  NSArray<id> *siblingViews = [self getSiblingViewsOfView:view];
+  for (id sibling in siblingViews) {
+    if ([sibling isKindOfClass:[UILabel class]]) {
+      NSString *text = [self normalizeField:[FBSDKViewHierarchy getText:sibling]];
+      if (text) {
+        [labels addObject:text];
+      }
     }
-    return [labels copy];
+  }
+  return [labels copy];
 }
 
 + (BOOL)checkSecureTextEntry:(UIView *)view
 {
-    if ([view isKindOfClass:[UITextField class]]) {
-        return ((UITextField *)view).secureTextEntry;
-    }
-    if ([view isKindOfClass:[UITextView class]]) {
-        return ((UITextView *)view).secureTextEntry;
-    }
+  if ([view isKindOfClass:[UITextField class]]) {
+    return ((UITextField *)view).secureTextEntry;
+  }
+  if ([view isKindOfClass:[UITextView class]]) {
+    return ((UITextView *)view).secureTextEntry;
+  }
 
-    return NO;
+  return NO;
 }
 
 + (UIKeyboardType)getKeyboardType:(UIView *)view
 {
-    if ([view isKindOfClass:[UITextField class]]) {
-        return ((UITextField *)view).keyboardType;
-    }
-    if ([view isKindOfClass:[UITextView class]]) {
-        return ((UITextView *)view).keyboardType;
-    }
+  if ([view isKindOfClass:[UITextField class]]) {
+    return ((UITextField *)view).keyboardType;
+  }
+  if ([view isKindOfClass:[UITextView class]]) {
+    return ((UITextView *)view).keyboardType;
+  }
 
-    return UIKeyboardTypeDefault;
+  return UIKeyboardTypeDefault;
 }
 
 + (void)getMetadataWithText:(NSString *)text
@@ -198,23 +198,23 @@ static dispatch_queue_t serialQueue;
             secureTextEntry:(BOOL)secureTextEntry
                   inputType:(UIKeyboardType)inputType
 {
-    if (secureTextEntry ||
-        [placeholder containsString:@"password"] ||
-        text.length == 0 ||
-        text.length > FBSDKMetadataIndexerMaxTextLength ||
-        placeholder.length >= FBSDKMetadataIndexerMaxIndicatorLength) {
-        return;
-    }
+  if (secureTextEntry ||
+      [placeholder containsString:@"password"] ||
+      text.length == 0 ||
+      text.length > FBSDKMetadataIndexerMaxTextLength ||
+      placeholder.length >= FBSDKMetadataIndexerMaxIndicatorLength) {
+    return;
+  }
 
-    for (NSString *key in FBSDKMetadataIndexerRules) {
-        NSDictionary<NSString *, NSString *> *rule = FBSDKMetadataIndexerRules[key];
-        BOOL isRuleKMatched = [self checkMetadataHint:placeholder matchRuleK:rule[FIELD_K]]
-        || [self checkMetadataLabels:labels matchRuleK:rule[FIELD_K]];
-        BOOL isRuleVMatched = [self checkMetadataText:text matchRuleV:rule[FIELD_V]];
-        if (isRuleKMatched && isRuleVMatched) {
-            [FBSDKMetadataIndexer checkAndAppendData:text forKey:key];
-        }
+  for (NSString *key in FBSDKMetadataIndexerRules) {
+    NSDictionary<NSString *, NSString *> *rule = FBSDKMetadataIndexerRules[key];
+    BOOL isRuleKMatched = [self checkMetadataHint:placeholder matchRuleK:rule[FIELD_K]]
+    || [self checkMetadataLabels:labels matchRuleK:rule[FIELD_K]];
+    BOOL isRuleVMatched = [self checkMetadataText:text matchRuleV:rule[FIELD_V]];
+    if (isRuleKMatched && isRuleVMatched) {
+      [FBSDKMetadataIndexer checkAndAppendData:text forKey:key];
     }
+  }
 }
 
 #pragma mark - Helper Methods
@@ -222,83 +222,83 @@ static dispatch_queue_t serialQueue;
 + (void)checkAndAppendData:(NSString *)data
                     forKey:(NSString *)key
 {
-    NSString *hashData = [FBSDKUtility SHA256Hash:data];
-    dispatch_async(serialQueue, ^{
-        if (hashData.length == 0 || [FBSDKMetadataIndexerStore[key] containsObject:hashData]) {
-            return;
-        }
+  NSString *hashData = [FBSDKUtility SHA256Hash:data];
+  dispatch_async(serialQueue, ^{
+    if (hashData.length == 0 || [FBSDKMetadataIndexerStore[key] containsObject:hashData]) {
+      return;
+    }
 
-        while (FBSDKMetadataIndexerStore[key].count >= FBSDKMetadataIndexerMaxValue) {
-            [FBSDKMetadataIndexerStore[key] removeObjectAtIndex:0];
-        }
-        [FBSDKMetadataIndexerStore[key] addObject:hashData];
-        [FBSDKUserDataStore setHashData:[FBSDKMetadataIndexerStore[key] componentsJoinedByString:@","]
-                                forType:key];
-    });
+    while (FBSDKMetadataIndexerStore[key].count >= FBSDKMetadataIndexerMaxValue) {
+      [FBSDKMetadataIndexerStore[key] removeObjectAtIndex:0];
+    }
+    [FBSDKMetadataIndexerStore[key] addObject:hashData];
+    [FBSDKUserDataStore setHashData:[FBSDKMetadataIndexerStore[key] componentsJoinedByString:@","]
+                            forType:key];
+  });
 }
 
 + (BOOL)checkMetadataLabels:(NSArray<NSString *> *)labels
                  matchRuleK:(NSString *)ruleK
 {
-    for (NSString *label in labels) {
-        if ([self checkMetadataHint:label matchRuleK:ruleK]) {
-            return YES;
-        }
+  for (NSString *label in labels) {
+    if ([self checkMetadataHint:label matchRuleK:ruleK]) {
+      return YES;
     }
-    return NO;
+  }
+  return NO;
 }
 
 + (BOOL)checkMetadataHint:(NSString *)hint
                matchRuleK:(NSString *)ruleK
 {
-    if (hint.length > 0 && ruleK) {
-        NSArray<NSString *> *items = [ruleK componentsSeparatedByString:@","];
-        for (NSString *item in items) {
-            if ([hint containsString:item]) {
-                return YES;
-            }
-        }
+  if (hint.length > 0 && ruleK) {
+    NSArray<NSString *> *items = [ruleK componentsSeparatedByString:@","];
+    for (NSString *item in items) {
+      if ([hint containsString:item]) {
+        return YES;
+      }
     }
-    return NO;
+  }
+  return NO;
 }
 
 + (BOOL)checkMetadataText:(NSString *)text
                matchRuleV:(NSString *)ruleV
 {
-    if (text.length > 0 && ruleV) {
-        NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:ruleV
-                                                                          options:NSRegularExpressionCaseInsensitive
-                                                                            error:nil];
-        NSUInteger matches = [regex numberOfMatchesInString:text options:0 range:NSMakeRange(0, text.length)];
+  if (text.length > 0 && ruleV) {
+    NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:ruleV
+                                                                      options:NSRegularExpressionCaseInsensitive
+                                                                        error:nil];
+    NSUInteger matches = [regex numberOfMatchesInString:text options:0 range:NSMakeRange(0, text.length)];
 
-        NSString *prunedText = [[text componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"+- ()."]] componentsJoinedByString:@""];
-        NSUInteger prunedMatches = [regex numberOfMatchesInString:prunedText options:0 range:NSMakeRange(0, prunedText.length)];
+    NSString *prunedText = [[text componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"+- ()."]] componentsJoinedByString:@""];
+    NSUInteger prunedMatches = [regex numberOfMatchesInString:prunedText options:0 range:NSMakeRange(0, prunedText.length)];
 
-        return matches > 0 || prunedMatches > 0;
-    }
-    return NO;
+    return matches > 0 || prunedMatches > 0;
+  }
+  return NO;
 }
 
 + (NSString *)normalizeField:(NSString *)field
 {
-    if (!field) {
-        return nil;
-    }
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[_-]|\\s"
-                                                                           options:NSRegularExpressionCaseInsensitive
-                                                                             error:nil];
-    return [regex stringByReplacingMatchesInString:field
-                                           options:0
-                                             range:NSMakeRange(0, field.length)
-                                      withTemplate:@""].lowercaseString;
+  if (!field) {
+    return nil;
+  }
+  NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[_-]|\\s"
+                                                                         options:NSRegularExpressionCaseInsensitive
+                                                                           error:nil];
+  return [regex stringByReplacingMatchesInString:field
+                                         options:0
+                                           range:NSMakeRange(0, field.length)
+                                    withTemplate:@""].lowercaseString;
 }
 
 + (NSString *)normalizedValue:(NSString *)value
 {
-    if (!value) {
-        return nil;
-    }
-    return [value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].lowercaseString;
+  if (!value) {
+    return nil;
+  }
+  return [value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].lowercaseString;
 }
 
 @end

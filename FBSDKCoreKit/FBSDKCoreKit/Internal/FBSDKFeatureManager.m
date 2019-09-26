@@ -93,6 +93,7 @@
     case FBSDKFeatureInstrument:
     case FBSDKFeatureCrashReport:
     case FBSDKFeatureErrorReport:
+    case FBSDKFeatureAAM:
       return NO;
     default: return YES;
   }
