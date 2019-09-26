@@ -1,0 +1,178 @@
+excluded:
+  - Pods
+  - Carthage
+  - Vendor
+  - samples
+
+cyclomatic_complexity: 11
+explicit_type_interface:
+  excluded:
+    - local
+file_header:
+  required_pattern: |
+    \/\/ Copyright \(c\) \d{4}-present, Facebook, Inc\. All rights reserved\.
+    \/\/
+    \/\/ You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
+    \/\/ copy, modify, and distribute this software in source code or binary form for use
+    \/\/ in connection with the web services and APIs provided by Facebook\.
+    \/\/
+    \/\/ As with any software that integrates with the Facebook platform, your use of
+    \/\/ this software is subject to the Facebook Developer Principles and Policies
+    \/\/ \[http:\/\/developers\.facebook\.com\/policy\/\]\. This copyright notice shall be
+    \/\/ included in all copies or substantial portions of the software\.
+    \/\/
+    \/\/ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    \/\/ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+    \/\/ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT\. IN NO EVENT SHALL THE AUTHORS OR
+    \/\/ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+    \/\/ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+    \/\/ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE\.
+identifier_name:
+  excluded:
+    - ok
+indentation: 2
+large_tuple: 3
+line_length: 120
+nesting:
+  type_level: 2
+private_outlet:
+  allow_private_set: true
+
+disabled_rules:
+  - conditional_returns_on_newline
+  - discouraged_object_literal
+  - explicit_acl
+  - explicit_enum_raw_value
+  - explicit_top_level_acl
+  - no_extension_access_modifier
+  - number_separator
+  - prefixed_toplevel_constant
+  - switch_case_on_newline
+  # TODO: All below to move to Opt In
+  - discouraged_optional_boolean
+  - discouraged_optional_collection
+  - function_default_parameter_at_end
+  - todo
+
+opt_in_rules:
+  - array_init
+  - attributes
+  - block_based_kvo
+  - class_delegate_protocol
+  - closing_brace
+  - closure_end_indentation
+  - closure_parameter_position
+  - closure_spacing
+  - colon
+  - comma
+  - compiler_protocol_init
+  - contains_over_first_not_nil
+  - control_statement
+  - convenience_type
+  - cyclomatic_complexity
+  - discarded_notification_center_observer
+  - discouraged_direct_init
+  - dynamic_inline
+  - empty_count
+  - empty_string
+  - empty_enum_arguments
+  - empty_parameters
+  - empty_parentheses_with_trailing_closure
+  - empty_xctest_method
+  - explicit_init
+  - explicit_type_interface
+  - extension_access_modifier
+  - fallthrough
+  - fatal_error_message
+  - file_header
+  - file_length
+  - first_where
+  - for_where
+  - force_cast
+  - force_try
+  - force_unwrapping
+  - function_body_length
+  - function_parameter_count
+  - generic_type_name
+  - identifier_name
+  - implicit_getter
+  - implicit_return
+  - implicitly_unwrapped_optional
+  - is_disjoint
+  - joined_default_parameter
+  - large_tuple
+  - leading_whitespace
+  - legacy_cggeometry_functions
+  - legacy_constant
+  - legacy_constructor
+  - legacy_nsgeometry_functions
+  - let_var_whitespace
+  - line_length
+  - literal_expression_end_indentation
+  - lower_acl_than_parent
+  - mark
+  - modifier_order
+  - multiline_arguments
+  - multiline_function_chains
+  - multiline_parameters
+  - multiple_closures_with_trailing_closure
+  - nesting
+  - nimble_operator
+  - no_fallthrough_only
+  - no_grouping_extension
+  - notification_center_detachment
+  - object_literal
+  - opening_brace
+  - operator_usage_whitespace
+  - operator_whitespace
+  - overridden_super_call
+  - override_in_extension
+  - pattern_matching_keywords
+  - private_action
+  - private_outlet
+  - private_over_fileprivate
+  - private_unit_test
+  - prohibited_super_call
+  - protocol_property_accessors_order
+  - quick_discouraged_call
+  - quick_discouraged_focused_test
+  - quick_discouraged_pending_test
+  - redundant_discardable_let
+  - redundant_nil_coalescing
+  - redundant_optional_initialization
+  - redundant_set_access_control
+  - redundant_string_enum_value
+  - redundant_void_return
+  - required_enum_case
+  - return_arrow_whitespace
+  - shorthand_operator
+  - single_test_class
+  - sorted_first_last
+  - sorted_imports
+  - statement_position
+  - strict_fileprivate
+  - superfluous_disable_command
+  - switch_case_alignment
+  - syntactic_sugar
+  - trailing_closure
+  - trailing_comma
+  - trailing_newline
+  - trailing_semicolon
+  - trailing_whitespace
+  - type_body_length
+  - type_name
+  - unavailable_function
+  - unneeded_break_in_switch
+  - unneeded_parentheses_in_closure_argument
+  - untyped_error_in_catch
+  - unused_closure_parameter
+  - unused_enumerated
+  - unused_optional_binding
+  - valid_ibinspectable
+  - vertical_parameter_alignment
+  - vertical_parameter_alignment_on_call
+  - vertical_whitespace
+  - void_return
+  - weak_delegate
+  - xctfail_message
+  - yoda_condition

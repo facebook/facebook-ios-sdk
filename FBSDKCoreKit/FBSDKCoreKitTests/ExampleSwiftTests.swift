@@ -20,7 +20,10 @@ import XCTest
 
 class ExampleSwiftTests: XCTestCase {
   func testCanAccessCoreKit() {
-    XCTAssertEqual(InternalUtility.bundleForStrings, Bundle.main,
-                   "Should use the main bundle for strings")
+    XCTAssertEqual(
+      InternalUtility.bundleForStrings,
+      Bundle.main,
+      "Should use the main bundle for strings"
+    )
   }
 }

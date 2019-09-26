@@ -1746,6 +1746,7 @@
 				F483F48B233AC91700703DE3 /* Frameworks */,
 				F483F48C233AC91700703DE3 /* Headers */,
 				F483F4C6233AC91700703DE3 /* Resources */,
+				F463B09E233D339200E6EE00 /* Swiftlint */,
 			);
 			buildRules = (
 			);
@@ -1765,6 +1766,7 @@
 				F487DC47231EC4CC008416A9 /* Frameworks */,
 				F487DC48231EC4CC008416A9 /* Headers */,
 				F487DC82231EC4CC008416A9 /* Resources */,
+				F463B093233D337900E6EE00 /* Swiftlint */,
 			);
 			buildRules = (
 			);
@@ -1998,6 +2000,42 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "../scripts/xcode/build-universal-framework.sh\n";
+		};
+		F463B093233D337900E6EE00 /* Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Swiftlint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ \"${CONFIGURATION}\" == \"Debug\" ]; then\n    if which swiftlint >/dev/null; then\n        swiftlint\n    else\n        echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\n    fi\nfi\n";
+		};
+		F463B09E233D339200E6EE00 /* Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Swiftlint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ \"${CONFIGURATION}\" == \"Debug\" ]; then\n    if which swiftlint >/dev/null; then\n        swiftlint\n    else\n        echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\n    fi\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
