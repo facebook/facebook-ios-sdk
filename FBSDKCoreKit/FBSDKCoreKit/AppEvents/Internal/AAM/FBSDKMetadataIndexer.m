@@ -50,22 +50,16 @@ static dispatch_queue_t serialQueue;
 
 + (void)load
 {
-    [self initStore];
     [self loadAndSetup];
 }
 
 + (void)initStore
 {
     FBSDKMetadataIndexerStore = [[NSMutableDictionary alloc] init];
-    NSString *userData = [[NSUserDefaults standardUserDefaults] stringForKey:@"com.facebook.appevents.UserDataStore.userData"];
-    if (userData) {
-        NSMutableDictionary<NSString *, NSString *> * hashedUserData = (NSMutableDictionary<NSString *, NSString *> *)[NSJSONSerialization JSONObjectWithData:[userData dataUsingEncoding:NSUTF8StringEncoding]
-                                                                                                                                                      options:NSJSONReadingMutableContainers
-                                                                                                                                                        error:nil];
-        for (NSString *key in FBSDKMetadataIndexerRules) {
-            if (hashedUserData[key].length > 0) {
-                FBSDKMetadataIndexerStore[key] = [NSMutableArray arrayWithArray:[hashedUserData[key] componentsSeparatedByString:FIELD_K_DELIMITER]];
-            }
+    for (NSString *key in FBSDKMetadataIndexerRules) {
+        NSString *data = [FBSDKUserDataStore getHashedDataForType:key];
+        if (data.length > 0) {
+            FBSDKMetadataIndexerStore[key] = [NSMutableArray arrayWithArray:[data componentsSeparatedByString:FIELD_K_DELIMITER]];
         }
     }
 
@@ -90,6 +84,7 @@ static dispatch_queue_t serialQueue;
             NSString *json = [(NSDictionary *)result objectForKey:@"aam_rules"];
             if (json) {
                 [FBSDKMetadataIndexer constructRules:[FBSDKBasicUtility objectForJSONString:json error:nil]];
+                [FBSDKMetadataIndexer initStore];
                 BOOL isR1Enabled = (nil != [FBSDKMetadataIndexerRules objectForKey:FBSDKAppEventRule1]);
                 BOOL isR2Enabled = (nil != [FBSDKMetadataIndexerRules objectForKey:FBSDKAppEventRule2]);
                 if (!isR1Enabled) {
@@ -101,7 +96,7 @@ static dispatch_queue_t serialQueue;
                     [FBSDKUserDataStore setHashData:nil forType:FBSDKAppEventRule2];
                 }
                 if (isR1Enabled || isR2Enabled) {
-                    [self setupMetadataIndexing];
+                    [FBSDKMetadataIndexer setupMetadataIndexing];
                 }
             }
         }
