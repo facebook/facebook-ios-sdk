@@ -71,6 +71,7 @@
     case FBSDKFeatureAppEvents: featureName = @"AppEvents"; break;
     case FBSDKFeatureCodelessEvents: featureName = @"CodelessEvents"; break;
     case FBSDKFeatureRestrictiveDataFiltering: featureName = @"RestrictiveDataFiltering"; break;
+    case FBSDKFeatureAAM: featureName = @"AAM"; break;
     case FBSDKFeatureInstrument: featureName = @"Instrument"; break;
     case FBSDKFeatureCrashReport: featureName = @"CrashReport"; break;
     case FBSDKFeatureErrorReport: featureName = @"ErrorReport"; break;

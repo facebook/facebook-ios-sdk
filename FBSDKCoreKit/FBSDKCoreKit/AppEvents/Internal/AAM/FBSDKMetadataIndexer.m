@@ -37,6 +37,7 @@ static NSString * const FIELD_K_DELIMITER                       = @",";
 FBSDKAppEventUserDataType FBSDKAppEventRule1                    = @"r1";
 FBSDKAppEventUserDataType FBSDKAppEventRule2                    = @"r2";
 
+static NSArray<FBSDKAppEventUserDataType> *FBSDKMetadataIndexerKeys;
 static NSMutableDictionary<NSString *, NSDictionary<NSString *, NSString *> *> *FBSDKMetadataIndexerRules;
 static NSMutableDictionary<NSString *, NSMutableArray<NSString *> *> *FBSDKMetadataIndexerStore;
 static dispatch_queue_t serialQueue;
@@ -45,62 +46,47 @@ static dispatch_queue_t serialQueue;
 
 + (void)initialize
 {
+    FBSDKMetadataIndexerKeys = @[FBSDKAppEventRule1, FBSDKAppEventRule2];
     serialQueue = dispatch_queue_create("com.facebook.appevents.MetadataIndexer", DISPATCH_QUEUE_SERIAL);
 }
 
-+ (void)load
++ (void)setupWithRules:(NSDictionary<NSString *, id> *)rules
 {
-    [self loadAndSetup];
+    [FBSDKMetadataIndexer constructRules:rules];
+    [FBSDKMetadataIndexer initStore];
+
+    BOOL isEnabled = NO;
+    for (NSString *key in FBSDKMetadataIndexerKeys) {
+      BOOL isRuleEnabled = (nil != [FBSDKMetadataIndexerRules objectForKey:key]);
+      if (isRuleEnabled) {
+        isEnabled = YES;
+      }
+      if (!isRuleEnabled) {
+        [FBSDKMetadataIndexerStore removeObjectForKey:key];
+        [FBSDKUserDataStore setHashData:nil forType:key];
+      }
+    }
+
+    if (isEnabled) {
+      [FBSDKMetadataIndexer setupMetadataIndexing];
+    }
 }
 
 + (void)initStore
 {
     FBSDKMetadataIndexerStore = [[NSMutableDictionary alloc] init];
-    for (NSString *key in FBSDKMetadataIndexerRules) {
+    for (NSString *key in FBSDKMetadataIndexerKeys) {
         NSString *data = [FBSDKUserDataStore getHashedDataForType:key];
         if (data.length > 0) {
             FBSDKMetadataIndexerStore[key] = [NSMutableArray arrayWithArray:[data componentsSeparatedByString:FIELD_K_DELIMITER]];
         }
     }
 
-    for (NSString *key in FBSDKMetadataIndexerRules) {
+    for (NSString *key in FBSDKMetadataIndexerKeys) {
         if (!FBSDKMetadataIndexerStore[key]) {
             FBSDKMetadataIndexerStore[key] = [[NSMutableArray alloc] init];
         }
     }
-}
-
-+ (void)loadAndSetup
-{
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
-                                  initWithGraphPath:[NSString stringWithFormat:@"%@?fields=aam_rules", [FBSDKSettings appID]]
-                                  HTTPMethod:FBSDKHTTPMethodGET];
-    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-        if (error) {
-            return;
-        }
-
-        if ([result isKindOfClass:[NSDictionary class]]) {
-            NSString *json = [(NSDictionary *)result objectForKey:@"aam_rules"];
-            if (json) {
-                [FBSDKMetadataIndexer constructRules:[FBSDKBasicUtility objectForJSONString:json error:nil]];
-                [FBSDKMetadataIndexer initStore];
-                BOOL isR1Enabled = (nil != [FBSDKMetadataIndexerRules objectForKey:FBSDKAppEventRule1]);
-                BOOL isR2Enabled = (nil != [FBSDKMetadataIndexerRules objectForKey:FBSDKAppEventRule2]);
-                if (!isR1Enabled) {
-                    [FBSDKMetadataIndexerStore removeObjectForKey:FBSDKAppEventRule1];
-                    [FBSDKUserDataStore setHashData:nil forType:FBSDKAppEventRule1];
-                }
-                if (!isR2Enabled) {
-                    [FBSDKMetadataIndexerStore removeObjectForKey:FBSDKAppEventRule2];
-                    [FBSDKUserDataStore setHashData:nil forType:FBSDKAppEventRule2];
-                }
-                if (isR1Enabled || isR2Enabled) {
-                    [FBSDKMetadataIndexer setupMetadataIndexing];
-                }
-            }
-        }
-    }];
 }
 
 + (void)constructRules:(NSDictionary<NSString *, id> *)rules
@@ -110,7 +96,7 @@ static dispatch_queue_t serialQueue;
     }
 
     for (NSString *key in rules) {
-        NSDictionary<NSString *, NSString *> *value = [self dictionaryValueOf:rules[key]];
+        NSDictionary<NSString *, NSString *> *value = [FBSDKTypeUtility dictionaryValue:rules[key]];
         if (value && value[FIELD_K].length > 0 && value[FIELD_V].length > 0) {
             FBSDKMetadataIndexerRules[key] = value;
         }
@@ -313,14 +299,6 @@ static dispatch_queue_t serialQueue;
         return nil;
     }
     return [value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].lowercaseString;
-}
-
-+ (NSDictionary *)dictionaryValueOf:(id)object
-{
-    if ([object isKindOfClass:[NSDictionary class]]) {
-        return (NSDictionary *)object;
-    }
-    return nil;
 }
 
 @end
