@@ -66,7 +66,8 @@ Pod::Spec.new do |s|
                            'FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.{h,m}',
                            'FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*',
                            'FBSDKCoreKit/FBSDKCoreKit/Swift/**/*'
-    ss.tvos.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/Codeless/*',
+    ss.tvos.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/AAM/*',
+                            'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/Codeless/*',
                             'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/FBSDKHybridAppEventsScriptMessageHandler.{h,m}',
                             'FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*',
                             'FBSDKCoreKit/FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.{h,m}',
