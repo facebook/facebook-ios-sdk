@@ -3493,6 +3493,7 @@
 				F483F396233AC13000703DE3 /* Frameworks */,
 				F483F399233AC13000703DE3 /* Headers */,
 				F483F410233AC13000703DE3 /* Resources */,
+				F463B092233D333900E6EE00 /* Swiftlint */,
 			);
 			buildRules = (
 			);
@@ -3511,6 +3512,7 @@
 				F487DB3C231EBCD2008416A9 /* Frameworks */,
 				F487DB3F231EBCD2008416A9 /* Headers */,
 				F487DBB5231EBCD2008416A9 /* Resources */,
+				F4A961E8233D323500221E58 /* Swiftlint */,
 			);
 			buildRules = (
 			);
@@ -3823,6 +3825,42 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "../scripts/xcode/build-universal-tvos-framework.sh\n";
+		};
+		F463B092233D333900E6EE00 /* Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Swiftlint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ \"${CONFIGURATION}\" == \"Debug\" ]; then\n    if which swiftlint >/dev/null; then\n        swiftlint\n    else\n        echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\n    fi\nfi\n";
+		};
+		F4A961E8233D323500221E58 /* Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Swiftlint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ \"${CONFIGURATION}\" == \"Debug\" ]; then\n    if which swiftlint >/dev/null; then\n        swiftlint\n    else\n        echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\n    fi\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

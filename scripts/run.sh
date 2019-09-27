@@ -351,11 +351,20 @@ lint_sdk() {
     fi
   }
 
+  lint_swift() {
+    if command -v swiftlint >/dev/null; then
+      swiftlint
+    else
+      echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
+    fi
+  }
+
   local lint_type=${1:-}
   if [ -n "$lint_type" ]; then shift; fi
 
   case "$lint_type" in
   "cocoapods") lint_cocoapods "$@" ;;
+  "swift") lint_swift "$@" ;;
   *) echo "Unsupported Lint: $lint_type" ;;
   esac
 }
