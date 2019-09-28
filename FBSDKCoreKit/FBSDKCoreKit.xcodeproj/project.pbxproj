@@ -1235,6 +1235,8 @@
 		F487DBD8231EC20F008416A9 /* FBProfilePictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F487DBD2231EC20F008416A9 /* FBProfilePictureView.swift */; };
 		F487DBDA231EC293008416A9 /* AccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = F487DBD9231EC293008416A9 /* AccessToken.swift */; };
 		F4B3CA3222B3FED80098ADF5 /* ExampleSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B3CA3122B3FED80098ADF5 /* ExampleSwiftTests.swift */; };
+		F4FF852F233FFA8600B4CBF7 /* FBSDKMetadataIndexer.m in Sources */ = {isa = PBXBuildFile; fileRef = F952EA452339403900B20652 /* FBSDKMetadataIndexer.m */; };
+		F4FF853D233FFA9600B4CBF7 /* FBSDKMetadataIndexer.h in Headers */ = {isa = PBXBuildFile; fileRef = F952EA462339403900B20652 /* FBSDKMetadataIndexer.h */; };
 		F9098FC322BC332C00857C2D /* FBSDKURLSession.h in Headers */ = {isa = PBXBuildFile; fileRef = F9098FC122BC332C00857C2D /* FBSDKURLSession.h */; };
 		F9098FC422BC332C00857C2D /* FBSDKURLSession.h in Headers */ = {isa = PBXBuildFile; fileRef = F9098FC122BC332C00857C2D /* FBSDKURLSession.h */; };
 		F9098FC522BC332C00857C2D /* FBSDKURLSession.h in Headers */ = {isa = PBXBuildFile; fileRef = F9098FC122BC332C00857C2D /* FBSDKURLSession.h */; };
@@ -3128,6 +3130,7 @@
 				F483F3CF233AC13000703DE3 /* FBSDKHybridAppEventsScriptMessageHandler.h in Headers */,
 				F483F3D0233AC13000703DE3 /* FBSDKWebViewAppLinkResolver.h in Headers */,
 				F483F3D1233AC13000703DE3 /* FBSDKLibAnalyzer.h in Headers */,
+				F4FF853D233FFA9600B4CBF7 /* FBSDKMetadataIndexer.h in Headers */,
 				F483F3D2233AC13000703DE3 /* FBSDKBridgeAPIProtocolWebV2.h in Headers */,
 				F483F3D3233AC13000703DE3 /* FBSDKInternalUtility.h in Headers */,
 				F483F3D4233AC13000703DE3 /* FBSDKConstants.h in Headers */,
@@ -4379,6 +4382,7 @@
 				F483F387233AC13000703DE3 /* FBSDKURLSession.m in Sources */,
 				F483F388233AC13000703DE3 /* _FBSDKTemporaryErrorRecoveryAttempter.m in Sources */,
 				F483F389233AC13000703DE3 /* FBSDKMeasurementEvent.m in Sources */,
+				F4FF852F233FFA8600B4CBF7 /* FBSDKMetadataIndexer.m in Sources */,
 				F483F38A233AC13000703DE3 /* FBSDKBridgeAPIProtocolNativeV1.m in Sources */,
 				F483F38B233AC13000703DE3 /* FBSDKCrashObserver.m in Sources */,
 				F483F38C233AC13000703DE3 /* FBSDKWebDialogView.m in Sources */,
