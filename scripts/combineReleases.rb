@@ -69,4 +69,6 @@ end
 
 system "zip -r -m Artifacts.zip Artifacts"
 system 'rm -rf Artifacts'
-system "mv Artifacts.zip build/Release/#{Filenames::Carthage}"
+
+# Use the same name as the original release to preserve CI for existing users.
+system "mv Artifacts.zip build/Release/#{Filenames::RemoteObjCFrameworks}"
