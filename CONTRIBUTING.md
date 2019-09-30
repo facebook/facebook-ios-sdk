@@ -11,3 +11,7 @@ All contributions:
 2. authors MAY retain copyright by adding their copyright notice to the appropriate flies
 
 More information on the Apache License can be found [here](http://www.apache.org/foundation/license-faq.html)
+
+Setup:
+
+We use Carthage to manage our dependencies. You will need to run `carthage bootstrap` before you will be able to build the project.
