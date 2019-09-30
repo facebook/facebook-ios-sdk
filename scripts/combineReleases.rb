@@ -14,7 +14,6 @@ class GitHubConstants
 end
 
 class Filenames
-  Carthage = 'Carthage.frameworks.zip'
   RemoteObjCFrameworks = 'FacebookSDK_Dynamic.framework.zip'
   RemoteSwiftFrameworks = 'SwiftDynamic.zip'
 
