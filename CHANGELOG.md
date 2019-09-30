@@ -7,12 +7,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.6.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.6.0...HEAD)
 
 ## 5.6.0
 
-[2019-09-13](https://github.com/facebook/facebook-objc-sdk/releases/tag/v5.6.0) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.5.0...v5.6.0)
+[2019-09-13](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.6.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.5.0...v5.6.0)
 
 ### Changed
 - Fixed FB Login for multi-window apps that created via Xcode 11
@@ -25,8 +25,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## 5.5.0
 
-[2019-08-30](https://github.com/facebook/facebook-objc-sdk/releases/tag/v5.5.0) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.4.1...v5.5.0)
+[2019-08-30](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.5.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.4.1...v5.5.0)
 
 ### Changed
 - Replaced UIWebView with WKWebView as Apple will stop accepting submissions of apps that use UIWebView APIs
@@ -37,8 +37,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## 5.4.1
 
-[2019-08-21](https://github.com/facebook/facebook-objc-sdk/releases/tag/v5.4.1) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.4.0...v5.4.1)
+[2019-08-21](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.4.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.4.0...v5.4.1)
 
 ### Changed
 - Deprecated `+[FBSDKSettings isInstrumentEnabled]`, please use `+[FBSDKSettings isAutoLogEnabled]` instead
@@ -49,32 +49,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## 5.4.0
 
-[2019-08-15](https://github.com/facebook/facebook-objc-sdk/releases/tag/v5.4.0) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.3.0...v5.4.0)
+[2019-08-15](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.4.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.3.0...v5.4.0)
 
 ### Changed
 - Add handling for crash and error to make SDK more stable
 
 ## 5.3.0
 
-[2019-07-29](https://github.com/facebook/facebook-objc-sdk/releases/tag/v5.3.0) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.2.3...v5.3.0)
+[2019-07-29](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.3.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.2.3...v5.3.0)
 
 ### Changed
 - Graph API update to v4.0
 
 ## 5.2.3
 
-[2019-07-15](https://github.com/facebook/facebook-objc-sdk/releases/tag/v5.2.3) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.2.2...v5.2.3)
+[2019-07-15](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.2.3) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.2.2...v5.2.3)
 
 ### Fixed
 - Fixed Facebook Login issues
 
 ## 5.2.2
 
-[2019-07-14](https://github.com/facebook/facebook-objc-sdk/releases/tag/v5.2.2) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.2.1...v5.2.2)
+[2019-07-14](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.2.2) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.2.1...v5.2.2)
 
 ### Fixed
 - Fixed Facebook Login on iOS 13 beta
@@ -82,8 +82,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## 5.2.1
 
-[2019-07-02](https://github.com/facebook/facebook-objc-sdk/releases/tag/v5.2.1) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.2.0...v5.2.1)
+[2019-07-02](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.2.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.2.0...v5.2.1)
 
 ### Fixed
 
@@ -91,8 +91,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## 5.2.0
 
-[2019-06-30](https://github.com/facebook/facebook-objc-sdk/releases/tag/v5.2.0) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.1.1...v5.2.0)
+[2019-06-30](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.2.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.1.1...v5.2.0)
 
 ### Fixed
 
@@ -101,25 +101,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## 5.1.1
 
-[2019-06-22](https://github.com/facebook/facebook-objc-sdk/releases/tag/v5.1.1) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.1.0...v5.1.1)
+[2019-06-22](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.1.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.1.0...v5.1.1)
 
 ## 5.1.0
 
-[2019-06-21](https://github.com/facebook/facebook-objc-sdk/releases/tag/v5.1.0) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.0.2...v5.1.0)
+[2019-06-21](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.1.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.0.2...v5.1.0)
 
 ## 5.0.2
-[2019-06-05](https://github.com/facebook/facebook-objc-sdk/releases/tag/v5.0.2) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.0.1...v5.0.2)
+[2019-06-05](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.0.2) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.0.1...v5.0.2)
 
 ### Fixed
 
 - Various bug fixes
 
 ## 5.0.1
-[2019-05-21](https://github.com/facebook/facebook-objc-sdk/releases/tag/v5.0.1) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.0.0...v5.0.1)
+[2019-05-21](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.0.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.0.0...v5.0.1)
 
 ### Fixed
 
@@ -127,8 +127,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## 5.0.0
 
-[2019-04-30](https://github.com/facebook/facebook-objc-sdk/releases/tag/v5.0.0) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.44.1...v5.0.0)
+[2019-04-30](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.0.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v4.44.1...v5.0.0)
 
 ### Added
 - support manual SDK initialization
@@ -247,8 +247,8 @@ let description: String = "\(mode)"
 
 ## 4.44.1
 
-[2019-04-11](https://github.com/facebook/facebook-objc-sdk/releases/tag/v4.44.1) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.44.0...v4.44.1)
+[2019-04-11](https://github.com/facebook/facebook-ios-sdk/releases/tag/v4.44.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v4.44.0...v4.44.1)
 
 ### Fixed
 
@@ -256,8 +256,8 @@ let description: String = "\(mode)"
 
 ## 4.44.0
 
-[2019-04-02](https://github.com/facebook/facebook-objc-sdk/releases/tag/v4.44.0) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.43.0...v4.44.0)
+[2019-04-02](https://github.com/facebook/facebook-ios-sdk/releases/tag/v4.44.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v4.43.0...v4.44.0)
 
 ### Added
 
@@ -269,8 +269,8 @@ let description: String = "\(mode)"
 
 ## 4.43.0
 
-[2019-04-01](https://github.com/facebook/facebook-objc-sdk/releases/tag/v4.43.0) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.42.0...v4.43.0)
+[2019-04-01](https://github.com/facebook/facebook-ios-sdk/releases/tag/v4.43.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v4.42.0...v4.43.0)
 
 ### Added
 
@@ -289,8 +289,8 @@ let description: String = "\(mode)"
 
 ## 4.42.0
 
-[2019-03-20](https://github.com/facebook/facebook-objc-sdk/releases/tag/v4.42.0) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.41.2...v4.42.0)
+[2019-03-20](https://github.com/facebook/facebook-ios-sdk/releases/tag/v4.42.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v4.41.2...v4.42.0)
 
 ### Changed
 
@@ -302,8 +302,8 @@ let description: String = "\(mode)"
 
 ## 4.41.2
 
-[2019-03-18](https://github.com/facebook/facebook-objc-sdk/releases/tag/v4.41.2) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.41.1...v4.41.2)
+[2019-03-18](https://github.com/facebook/facebook-ios-sdk/releases/tag/v4.41.2) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v4.41.1...v4.41.2)
 
 ### Fixed
 
@@ -312,8 +312,8 @@ let description: String = "\(mode)"
 
 ## 4.41.1
 
-[2019-03-18](https://github.com/facebook/facebook-objc-sdk/releases/tag/v4.41.1) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.41.0...v4.41.1)
+[2019-03-18](https://github.com/facebook/facebook-ios-sdk/releases/tag/v4.41.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v4.41.0...v4.41.1)
 
 ### Fixed
 
@@ -322,8 +322,8 @@ let description: String = "\(mode)"
 
 ## 4.41.0
 
-[2019-03-13](https://github.com/facebook/facebook-objc-sdk/releases/tag/v4.41.0) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.40.0...v4.41.0)
+[2019-03-13](https://github.com/facebook/facebook-ios-sdk/releases/tag/v4.41.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v4.40.0...v4.41.0)
 
 ### Fixed
 
@@ -331,8 +331,8 @@ let description: String = "\(mode)"
 
 ## 4.40.0
 
-[2019-01-17](https://github.com/facebook/facebook-objc-sdk/releases/tag/v4.40.0) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.39.1...v4.40.0)
+[2019-01-17](https://github.com/facebook/facebook-ios-sdk/releases/tag/v4.40.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v4.39.1...v4.40.0)
 
 ### Fixed
 
@@ -340,6 +340,6 @@ let description: String = "\(mode)"
 
 ## 4.39.1
 
-[2019-01-08](https://github.com/facebook/facebook-objc-sdk/releases/tag/v4.39.1) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/sdk-version-4.0.0...v4.39.1) |
+[2019-01-08](https://github.com/facebook/facebook-ios-sdk/releases/tag/v4.39.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/sdk-version-4.0.0...v4.39.1) |
 [Facebook Developer Docs Changelog](https://developers.facebook.com/docs/ios/change-log-4x)

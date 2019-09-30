@@ -181,7 +181,7 @@ test_main_setup() {
     ((test_failures += 1))
   fi
 
-  if [ "$SDK_GIT_REMOTE" != "https://github.com/facebook/facebook-objc-sdk" ]; then
+  if [ "$SDK_GIT_REMOTE" != "https://github.com/facebook/facebook-ios-sdk" ]; then
     test_failure "SDK_GIT_REMOTE not correct"
     ((test_failures += 1))
   fi

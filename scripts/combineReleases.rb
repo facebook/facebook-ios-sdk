@@ -10,7 +10,7 @@ require 'byebug'
 class GitHubConstants
   Name = 'name'
   DownloadURL = 'browser_download_url'
-  BaseURL = 'https://api.github.com/repos/facebook/facebook-objc-sdk/releases/'
+  BaseURL = 'https://api.github.com/repos/facebook/facebook-ios-sdk/releases/'
 end
 
 class Filenames
