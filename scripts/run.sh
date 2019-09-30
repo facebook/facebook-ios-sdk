@@ -389,8 +389,8 @@ release_sdk() {
         -derivedDataPath Temp \
         | xcpretty
 
-        mkdir -p build/Release/Swift/Dynamic/"$kit"
-        mv Temp/Build/Products/Release-iphoneos/"$kit".framework build/Release/Swift/Dynamic/"$kit"
+        mkdir -p build/Release/SwiftDynamic
+        mv Temp/Build/Products/Release-iphoneos/"$kit".framework build/Release/SwiftDynamic
       done
 
       rm -rf Temp
@@ -407,8 +407,13 @@ release_sdk() {
         -derivedDataPath Temp \
         | xcpretty
 
-        mkdir -p build/Release/Swift/Static/"$kit"
-        mv Temp/Build/Products/Release-iphoneos/"$kit".framework build/Release/Swift/Static/"$kit"
+        mv Temp/Build/Products/Release-iphoneos/"$kit".framework build/Release
+
+        cd build/Release || exit
+        zip -r -m "$kit"-Swift.zip "$kit".framework
+        cd ..
+
+        cd ..
       done
 
       rm -rf Temp
@@ -507,7 +512,7 @@ release_sdk() {
       build_swift_dynamic
       build_swift_static
       cd build/Release || exit
-      zip -r -m Swift.zip Swift
+      zip -r -m SwiftDynamic.zip SwiftDynamic
     elif [ "${1:-}" == "combine" ]; then
       combine_releases_for_carthage
     else
