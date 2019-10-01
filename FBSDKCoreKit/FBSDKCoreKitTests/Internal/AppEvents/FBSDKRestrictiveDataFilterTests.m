@@ -44,7 +44,7 @@
 - (void)setUp
 {
   [super setUp];
-
+  [FBSDKRestrictiveDataFilterManager enable];
 }
 
 - (void)tearDown
