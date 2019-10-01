@@ -5,8 +5,6 @@ require "net/http"
 require 'open-uri'
 require 'zip'
 
-require 'byebug'
-
 class GitHubConstants
   Name = 'name'
   DownloadURL = 'browser_download_url'
