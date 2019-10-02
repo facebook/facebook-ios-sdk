@@ -543,12 +543,12 @@ release_sdk() {
     for kit in "${SDK_KITS[@]}"; do
       ruby "$SDK_SCRIPTS_DIR"/genDocs.rb "$kit"
 
-      if [[ $SDK_INTERNAL == 1 ]] && [ "${1:-}" == "--publish" ]; then
-        api_update_reference_doc "$kit"
-      fi
       # Zip the result so it can be uploaded easily
       pushd docs/ || continue
       zip -r "$kit".zip "$kit"
+      if [[ $SDK_INTERNAL == 1 ]] && [ "${1:-}" == "--publish" ]; then
+        api_update_reference_doc "$kit"
+      fi
       popd || continue
     done
   }
