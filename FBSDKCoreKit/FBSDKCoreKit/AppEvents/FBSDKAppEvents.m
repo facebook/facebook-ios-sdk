@@ -1052,10 +1052,6 @@ static NSString *g_overrideAppID = nil;
     }
   }
 }
-
-- (void)enableAAM {
-  [FBSDKMetadataIndexer setupWithRules:_serverConfiguration.AAMRules];
-}
 #endif
 
 // app events can use a server configuration up to 24 hours old to minimize network traffic.
@@ -1077,7 +1073,8 @@ static NSString *g_overrideAppID = nil;
     }];
     [FBSDKFeatureManager checkFeature:FBSDKFeatureAAM completionBlock:^(BOOL enabled) {
       if (enabled) {
-        [self enableAAM];
+        // Enable AAM
+        [FBSDKMetadataIndexer enable];
       }
     }];
 #endif

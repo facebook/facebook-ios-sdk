@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKMetadataIndexer : NSObject
 
-+ (void)setupWithRules:(NSDictionary<NSString *, id> *)rules;
++ (void)enable;
 
 @end
 
