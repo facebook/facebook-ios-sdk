@@ -494,17 +494,6 @@ release_sdk() {
       release_basics
     }
 
-    # Carthage only supports a single build artifact with the name `*.framework.zip`.
-    # Because we need to build some artifacts using Xcode 10.2 and other artifacts using
-    # later than 10.2, and travis does not support multiple Xcode versions, we need to build
-    # and upload the separate artifacts as two separate build jobs.
-    # This function pulls the latest artifacts from github for each of those runs
-    # and combines them so they can be re-uploaded as a single zip file that Carthage can
-    # find.
-    combine_releases_for_carthage() {
-      ruby "$SDK_SCRIPTS_DIR"/combineReleases.rb
-    }
-
     # TODO: Remove conditional when we drop support for Xcode 10.2
     if [ "${1:-}" == "swift" ]; then
       include_swift_schemes
@@ -512,8 +501,6 @@ release_sdk() {
       build_swift_static
       cd build/Release || exit
       zip -r -m SwiftDynamic.zip SwiftDynamic
-    elif [ "${1:-}" == "combine" ]; then
-      combine_releases_for_carthage
     else
       release_dynamic
       release_static

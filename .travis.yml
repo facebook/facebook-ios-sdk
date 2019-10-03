@@ -19,8 +19,6 @@ stages:
     if: '! tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/'
   # - name: tag
   #   if: '! tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/'
-  - name: prepare-release
-    if: tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
   - name: release
     if: tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
 
@@ -65,7 +63,7 @@ jobs:
     #   name: Tag Version
     #   osx_image: xcode10.2
     #   script: sh scripts/run.sh tag-current-version --push
-    - stage: prepare-release
+    - stage: release
       name: GitHub Release
       osx_image: xcode10.1
       script: sh scripts/run.sh release github
@@ -80,7 +78,7 @@ jobs:
         on:
           all_branches: true
           tags: true
-    - stage: prepare-release
+    - stage: release
       name: GitHub Release Swift
       osx_image: xcode10.3
       script: sh scripts/run.sh release github swift
@@ -90,22 +88,6 @@ jobs:
         api_key: $GITHUB_ACCESS_TOKEN
         file: build/Release/*
         file_glob: true
-        name: Facebook SDK $TRAVIS_TAG
-        body: Consult Changelog $TRAVIS_TAG
-        on:
-          all_branches: true
-          tags: true
-    - stage: release
-      name: GitHub Release Combine Output for Carthage
-      osx_image: xcode10.3
-      script: sh scripts/run.sh release github combine
-      deploy:
-        provider: releases
-        skip_cleanup: true
-        api_key: $GITHUB_ACCESS_TOKEN
-        file: build/Release/*
-        file_glob: true
-        overwrite: true
         name: Facebook SDK $TRAVIS_TAG
         body: Consult Changelog $TRAVIS_TAG
         on:
