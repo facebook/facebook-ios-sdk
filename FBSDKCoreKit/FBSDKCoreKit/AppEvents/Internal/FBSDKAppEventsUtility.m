@@ -62,16 +62,18 @@
     BOOL allowed = (advertisingTrackingStatus == FBSDKAdvertisingTrackingAllowed);
     parameters[@"advertiser_tracking_enabled"] = @(allowed).stringValue;
   }
+  if (advertisingTrackingStatus == FBSDKAdvertisingTrackingAllowed) {
+    NSString *userData = [FBSDKAppEvents getUserData];
+    if (userData){
+      parameters[@"ud"] = userData;
+    }
+  }
 
   parameters[@"application_tracking_enabled"] = @(!FBSDKSettings.limitEventAndDataUsage).stringValue;
 
   NSString *userID = [FBSDKAppEvents userID];
   if (userID) {
     parameters[@"app_user_id"] = userID;
-  }
-  NSString *userData = [FBSDKAppEvents getUserData];
-  if (userData){
-    parameters[@"ud"] = userData;
   }
 
   [FBSDKAppEventsDeviceInfo extendDictionaryWithDeviceInfo:parameters];
