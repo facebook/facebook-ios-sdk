@@ -18,7 +18,11 @@
 
 #import <Foundation/Foundation.h>
 
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKAccessToken.h>
+#else
+#import "FBSDKAccessToken.h"
+#endif
 
 #import "FBSDKAccessTokenCaching.h"
 

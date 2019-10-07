@@ -24,7 +24,11 @@
 
 #import <UIKit/UIKit.h>
 
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
+#import "FBSDKCoreKit+Internal.h"
+#endif
 
 static const int FBSDKMetadataIndexerMaxTextLength              = 100;
 static const int FBSDKMetadataIndexerMaxIndicatorLength         = 100;

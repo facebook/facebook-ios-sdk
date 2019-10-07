@@ -20,7 +20,11 @@
 
 #import <StoreKit/StoreKit.h>
 
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
+#import "FBSDKCoreKit+Internal.h"
+#endif
 
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKDynamicFrameworkLoader.h"

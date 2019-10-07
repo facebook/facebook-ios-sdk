@@ -22,7 +22,11 @@
 
 #import <QuartzCore/QuartzCore.h>
 
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
+#import "FBSDKCoreKit+Internal.h"
+#endif
 
 #import "FBSDKCodelessMacros.h"
 #import "FBSDKCodelessPathComponent.h"

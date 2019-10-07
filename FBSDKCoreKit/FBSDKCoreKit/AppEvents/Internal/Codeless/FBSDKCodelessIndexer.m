@@ -24,9 +24,23 @@
 
 #import <UIKit/UIKit.h>
 
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
+#import "FBSDKCoreKit+Internal.h"
+#endif
+
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKGraphRequest.h>
+#else
+#import "FBSDKGraphRequest.h"
+#endif
+
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKSettings.h>
+#else
+#import "FBSDKSettings.h"
+#endif
 
 @implementation FBSDKCodelessIndexer
 

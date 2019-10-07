@@ -18,8 +18,20 @@
 
 #import "FBSDKEventBinding.h"
 
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKAppEvents.h>
+#else
+#import "FBSDKAppEvents.h"
+#endif
+
+
+
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKUtility.h>
+#else
+#import "FBSDKUtility.h"
+#endif
+
 
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKCodelessMacros.h"

@@ -18,7 +18,11 @@
 
 #import <Foundation/Foundation.h>
 
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKApplicationDelegate.h>
+#else
+#import "FBSDKApplicationDelegate.h"
+#endif
 
 #import "FBSDKCoreKit+Internal.h"
 

@@ -18,7 +18,11 @@
 
 #import "FBSDKErrorConfiguration.h"
 
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
+#import "FBSDKCoreKit+Internal.h"
+#endif
 
 #import "FBSDKErrorRecoveryConfiguration.h"
 

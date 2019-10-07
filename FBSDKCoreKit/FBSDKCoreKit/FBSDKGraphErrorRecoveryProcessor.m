@@ -17,7 +17,11 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #import "FBSDKGraphErrorRecoveryProcessor.h"
 
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
+#import "FBSDKCoreKit+Internal.h"
+#endif
 
 #import "FBSDKErrorRecoveryAttempter.h"
 

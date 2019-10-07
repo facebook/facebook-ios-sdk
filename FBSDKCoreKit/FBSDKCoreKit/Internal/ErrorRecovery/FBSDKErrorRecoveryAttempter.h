@@ -18,7 +18,11 @@
 
 #import <Foundation/Foundation.h>
 
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKConstants.h>
+#else
+#import "FBSDKConstants.h"
+#endif
 
 @class FBSDKErrorRecoveryConfiguration;
 

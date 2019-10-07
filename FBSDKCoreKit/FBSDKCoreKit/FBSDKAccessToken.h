@@ -18,8 +18,17 @@
 
 #import <Foundation/Foundation.h>
 
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKCopying.h>
+#else
+#import "FBSDKCopying.h"
+#endif
+
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
+#else
+#import "FBSDKGraphRequestConnection.h"
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 

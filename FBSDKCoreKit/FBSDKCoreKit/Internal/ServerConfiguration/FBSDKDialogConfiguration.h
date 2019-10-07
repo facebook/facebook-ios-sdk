@@ -18,7 +18,11 @@
 
 #import <Foundation/Foundation.h>
 
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKCopying.h>
+#else
+#import "FBSDKCopying.h"
+#endif
 
 NS_SWIFT_NAME(DialogConfiguration)
 @interface FBSDKDialogConfiguration : NSObject <FBSDKCopying, NSSecureCoding>

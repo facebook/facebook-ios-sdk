@@ -18,7 +18,11 @@
 
 #import "FBSDKProfile+Internal.h"
 
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
+#import "FBSDKCoreKit+Internal.h"
+#endif
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 

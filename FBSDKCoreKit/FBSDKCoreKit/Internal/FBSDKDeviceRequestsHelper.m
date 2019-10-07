@@ -22,7 +22,11 @@
 
 #import <UIKit/UIKit.h>
 
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
+#import "FBSDKCoreKit+Internal.h"
+#endif
 
 #define FBSDK_DEVICE_INFO_DEVICE @"device"
 #define FBSDK_DEVICE_INFO_MODEL @"model"

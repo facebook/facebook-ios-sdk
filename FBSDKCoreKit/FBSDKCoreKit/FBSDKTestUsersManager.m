@@ -18,7 +18,11 @@
 
 #import "FBSDKTestUsersManager.h"
 
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
+#import "FBSDKCoreKit+Internal.h"
+#endif
 
 static NSString *const kFBGraphAPITestUsersPathFormat = @"%@/accounts/test-users";
 static NSString *const kAccountsDictionaryTokenKey = @"access_token";

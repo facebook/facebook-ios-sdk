@@ -18,7 +18,11 @@
 
 #import "FBSDKHybridAppEventsScriptMessageHandler.h"
 
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKAppEvents.h>
+#else
+#import "FBSDKAppEvents.h"
+#endif
 
 #import "FBSDKAppEvents+Internal.h"
 

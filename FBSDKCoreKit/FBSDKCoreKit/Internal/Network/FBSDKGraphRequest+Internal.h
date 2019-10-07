@@ -18,7 +18,11 @@
 
 #import <Foundation/Foundation.h>
 
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKGraphRequest.h>
+#else
+#import "FBSDKGraphRequest.h"
+#endif
 
 typedef NS_OPTIONS(NSUInteger, FBSDKGraphRequestFlags)
 {

@@ -18,7 +18,11 @@
 
 #import <Foundation/Foundation.h>
 
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
+#else
+#import "FBSDKGraphRequestConnection.h"
+#endif
 
 // Internal only class to facilitate FBSDKGraphRequest processing, specifically
 // associating FBSDKGraphRequest and FBSDKGraphRequestBlock instances and necessary

@@ -18,7 +18,11 @@
 
 #import <UIKit/UIKit.h>
 
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#else
+#import "FBSDKCoreKit.h"
+#endif
 
 #ifdef COCOAPODS
 

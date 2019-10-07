@@ -20,7 +20,12 @@
 
 #import <sys/time.h>
 
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
+#import "FBSDKCoreKit+Internal.h"
+#endif
+
 #import <mach-o/dyld.h>
 
 #import "FBSDKError.h"

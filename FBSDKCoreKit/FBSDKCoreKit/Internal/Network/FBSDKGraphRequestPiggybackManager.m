@@ -18,7 +18,11 @@
 
 #import "FBSDKGraphRequestPiggybackManager.h"
 
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
+#import "FBSDKCoreKit+Internal.h"
+#endif
 
 static int const FBSDKTokenRefreshThresholdSeconds = 24 * 60 * 60;  // day
 static int const FBSDKTokenRefreshRetrySeconds = 60 * 60;           // hour

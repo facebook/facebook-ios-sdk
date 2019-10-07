@@ -18,7 +18,11 @@
 
 #import <Foundation/Foundation.h>
 
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKCopying.h>
+#else
+#import "FBSDKCopying.h"
+#endif
 
 #import "FBSDKBridgeAPIRequest.h"
 
