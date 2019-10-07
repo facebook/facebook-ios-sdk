@@ -18,7 +18,11 @@
 
 #import <UIKit/UIKit.h>
 
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKButton.h>
+#else
+#import "FBSDKButton.h"
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
