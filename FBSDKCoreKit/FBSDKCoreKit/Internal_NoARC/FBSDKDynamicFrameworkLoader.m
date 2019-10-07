@@ -85,7 +85,7 @@ static void fbsdkdfl_load_symbol_once(void *context)
 #define _fbsdkdfl_symbol_get(LIBRARY, PREFIX, SYMBOL, TYPE, VARIABLE_NAME) \
   static TYPE VARIABLE_NAME; \
   static dispatch_once_t SYMBOL##_once; \
-  static struct FBSDKDFLLoadSymbolContext ctx = { .library = &fbsdkdfl_handle_get_##LIBRARY, .name = PREFIX #SYMBOL, .address = (void **)&VARIABLE_NAME }; \
+  static struct FBSDKDFLLoadSymbolContext ctx = { .library = &fbsdkdfl_handle_get_##LIBRARY, .name = PREFIX #SYMBOL, .address = (void *)&VARIABLE_NAME }; \
   dispatch_once_f(&SYMBOL##_once, &ctx, &fbsdkdfl_load_symbol_once)
 
 #define _fbsdkdfl_symbol_get_c(LIBRARY, SYMBOL) _fbsdkdfl_symbol_get(LIBRARY, "OBJC_CLASS_$_", SYMBOL, Class, c) // convenience symbol retrieval macro for getting an Objective-C class symbol and storing it in the local static c
@@ -235,12 +235,12 @@ _fbsdkdfl_handle_get_impl_(Social)
 
 NSString *fbsdkdfl_SLServiceTypeFacebook(void)
 {
-  _fbsdkdfl_Social_get_and_return_constant(SLServiceTypeFacebook);
+  __weak _fbsdkdfl_Social_get_and_return_constant(SLServiceTypeFacebook);
 }
 
 NSString *fbsdkdfl_SLServiceTypeTwitter(void)
 {
-  _fbsdkdfl_Social_get_and_return_constant(SLServiceTypeTwitter);
+  __weak _fbsdkdfl_Social_get_and_return_constant(SLServiceTypeTwitter);
 }
 
 #pragma mark - Social Classes
@@ -394,32 +394,32 @@ _fbsdkdfl_handle_get_impl_(Accounts)
 
 NSString *fbsdkdfl_ACFacebookAppIdKey(void)
 {
-  _fbsdkdfl_Accounts_get_and_return_NSString(ACFacebookAppIdKey);
+  __weak _fbsdkdfl_Accounts_get_and_return_NSString(ACFacebookAppIdKey);
 }
 
 NSString *fbsdkdfl_ACFacebookAudienceEveryone(void)
 {
-  _fbsdkdfl_Accounts_get_and_return_NSString(ACFacebookAudienceEveryone);
+  __weak _fbsdkdfl_Accounts_get_and_return_NSString(ACFacebookAudienceEveryone);
 }
 
 NSString *fbsdkdfl_ACFacebookAudienceFriends(void)
 {
-  _fbsdkdfl_Accounts_get_and_return_NSString(ACFacebookAudienceFriends);
+  __weak _fbsdkdfl_Accounts_get_and_return_NSString(ACFacebookAudienceFriends);
 }
 
 NSString *fbsdkdfl_ACFacebookAudienceKey(void)
 {
-  _fbsdkdfl_Accounts_get_and_return_NSString(ACFacebookAudienceKey);
+  __weak _fbsdkdfl_Accounts_get_and_return_NSString(ACFacebookAudienceKey);
 }
 
 NSString *fbsdkdfl_ACFacebookAudienceOnlyMe(void)
 {
-  _fbsdkdfl_Accounts_get_and_return_NSString(ACFacebookAudienceOnlyMe);
+  __weak _fbsdkdfl_Accounts_get_and_return_NSString(ACFacebookAudienceOnlyMe);
 }
 
 NSString *fbsdkdfl_ACFacebookPermissionsKey(void)
 {
-  _fbsdkdfl_Accounts_get_and_return_NSString(ACFacebookPermissionsKey);
+  __weak _fbsdkdfl_Accounts_get_and_return_NSString(ACFacebookPermissionsKey);
 }
 
 #pragma mark - Accounts Classes
@@ -500,17 +500,17 @@ Class fbsdkdfl_CIFilterClass(void)
 
 NSString *fbsdkdfl_kCIInputImageKey(void)
 {
-  _fbsdkdfl_CoreImage_get_and_return_NSString(kCIInputImageKey);
+  __weak _fbsdkdfl_CoreImage_get_and_return_NSString(kCIInputImageKey);
 }
 
 NSString *fbsdkdfl_kCIInputRadiusKey(void)
 {
-  _fbsdkdfl_CoreImage_get_and_return_NSString(kCIInputRadiusKey);
+  __weak _fbsdkdfl_CoreImage_get_and_return_NSString(kCIInputRadiusKey);
 }
 
 NSString *fbsdkdfl_kCIOutputImageKey(void)
 {
-  _fbsdkdfl_CoreImage_get_and_return_NSString(kCIOutputImageKey);
+  __weak _fbsdkdfl_CoreImage_get_and_return_NSString(kCIOutputImageKey);
 }
 
 #pragma mark - Photos.framework
