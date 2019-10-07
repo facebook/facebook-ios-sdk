@@ -48,9 +48,11 @@
 + (FBSDKFeature)getParentFeature:(FBSDKFeature)feature
 {
   if ((feature & 0xFF) > 0) {
-    return feature & 0xFFFF00;
+    return feature & 0xFFFFFF00;
   } else if ((feature & 0xFF00) > 0) {
-    return feature & 0xFF0000;
+    return feature & 0xFFFF0000;
+  } else if ((feature & 0xFF0000) > 0) {
+    return feature & 0xFF000000;
   } else return 0;
 }
 
