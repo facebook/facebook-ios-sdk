@@ -11,7 +11,7 @@ let package = Package(
     products: [
         .library(
             name: "FBSDKCoreKit",
-            targets: ["FBSDKCoreKit"]
+            targets: ["FBSDKCoreKit", "FacebookCore"]
         ),
     ],
     dependencies: [
@@ -50,7 +50,11 @@ let package = Package(
                 .headerSearchPath("Internal/Instrument"),
                 .headerSearchPath("AppLink/Internal"),
             ]
-
         ),
+        .target(
+            name: "FacebookCore",
+            dependencies: ["FBSDKCoreKit"],
+            path: "FBSDKCoreKit/FBSDKCoreKit/Swift"
+        )
     ]
 )

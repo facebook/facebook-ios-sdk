@@ -18,6 +18,10 @@
 
 import Foundation
 
+#if SWIFT_PACKAGE
+import FBSDKCoreKit
+#endif
+
 /**
  AccessToken Extension
  */

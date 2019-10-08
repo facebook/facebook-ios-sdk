@@ -18,13 +18,9 @@
 
 #import <UIKit/UIKit.h>
 
-#if COCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-#else
-#import "FBSDKCoreKit.h"
-#endif
-
 #ifdef COCOAPODS
+
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #if !TARGET_OS_TV
 #import "FBSDKViewHierarchy.h"
@@ -96,6 +92,8 @@
 #import "FBSDKLogo.h"
 
 #else
+
+#import "../FBSDKCoreKit.h"
 
 #if !TARGET_OS_TV
 #import "../AppEvents/Internal/Codeless/FBSDKViewHierarchy.h"
