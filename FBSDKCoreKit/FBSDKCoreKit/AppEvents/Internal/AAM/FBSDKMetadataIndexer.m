@@ -52,6 +52,9 @@ static dispatch_queue_t serialQueue;
 
 + (void)enable
 {
+  if (FBSDKAdvertisingTrackingAllowed != [FBSDKAppEventsUtility advertisingTrackingStatus]) {
+    return;
+  }
   [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
     [FBSDKMetadataIndexer setupWithRules:serverConfiguration.AAMRules];
   }];
