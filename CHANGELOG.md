@@ -7,7 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.7.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.8.0...HEAD)
+
+## 5.8.0
+
+[2019-10-08](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.8.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.7.0...v5.8.0)
+
+### Added
+
+- Launch automatic advanced matching: https://www.facebook.com/business/help/2445860982357574
 
 ## 5.7.0
 
