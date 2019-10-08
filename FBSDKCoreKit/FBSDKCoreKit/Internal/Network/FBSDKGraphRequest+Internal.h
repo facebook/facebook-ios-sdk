@@ -18,10 +18,10 @@
 
 #import <Foundation/Foundation.h>
 
-#if COCOAPODS
-#import <FBSDKCoreKit/FBSDKGraphRequest.h>
-#else
+#if SWIFT_PACKAGE
 #import "FBSDKGraphRequest.h"
+#else
+#import <FBSDKCoreKit/FBSDKGraphRequest.h>
 #endif
 
 typedef NS_OPTIONS(NSUInteger, FBSDKGraphRequestFlags)

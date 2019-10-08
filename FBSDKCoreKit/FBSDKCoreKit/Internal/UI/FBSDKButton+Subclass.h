@@ -18,10 +18,10 @@
 
 #import <Foundation/Foundation.h>
 
-#if COCOAPODS
-#import <FBSDKCoreKit/FBSDKButton.h>
-#else
+#if SWIFT_PACKAGE
 #import "FBSDKButton.h"
+#else
+#import <FBSDKCoreKit/FBSDKButton.h>
 #endif
 
 #import "FBSDKIcon.h"

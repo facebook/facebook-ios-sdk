@@ -19,10 +19,10 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#if COCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-#else
+#if SWIFT_PACKAGE
 #import "FBSDKCoreKit.h"
+#else
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #endif
 
 #import "FBSDKBridgeAPIProtocol.h"

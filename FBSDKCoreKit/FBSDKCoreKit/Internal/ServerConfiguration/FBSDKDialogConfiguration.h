@@ -18,10 +18,10 @@
 
 #import <Foundation/Foundation.h>
 
-#if COCOAPODS
-#import <FBSDKCoreKit/FBSDKCopying.h>
-#else
+#if SWIFT_PACKAGE
 #import "FBSDKCopying.h"
+#else
+#import <FBSDKCoreKit/FBSDKCopying.h>
 #endif
 
 NS_SWIFT_NAME(DialogConfiguration)

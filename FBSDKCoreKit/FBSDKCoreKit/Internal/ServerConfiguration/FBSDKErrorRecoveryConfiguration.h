@@ -18,10 +18,10 @@
 
 #import <Foundation/Foundation.h>
 
-#if COCOAPODS
-#import <FBSDKCoreKit/FBSDKConstants.h>
-#else
+#if SWIFT_PACKAGE
 #import "FBSDKConstants.h"
+#else
+#import <FBSDKCoreKit/FBSDKConstants.h>
 #endif
 
 //immutable

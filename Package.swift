@@ -28,6 +28,7 @@ let package = Package(
                 "Swift"
             ],
             cSettings: [
+                .define("SWIFT_PACKAGE"),
                 .headerSearchPath("AppEvents"),
                 .headerSearchPath("Basics/Internal"),
                 .headerSearchPath("AppEvents/Internal/RestrictiveDataFilter"),
