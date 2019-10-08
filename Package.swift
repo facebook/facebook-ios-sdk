@@ -22,9 +22,6 @@ let package = Package(
             dependencies: [],
             path: "FBSDKCoreKit/FBSDKCoreKit",
             exclude: [
-                // Either needs to be fixed and included,
-                // or included but somehow compiled no-arc
-                //"Internal_NoARC/FBSDKDynamicFrameworkLoader.m",
                 "Internal/Device",
                 "FBSDKDeviceViewControllerBase.m",
                 "FBSDKDeviceButton.m",
@@ -35,7 +32,6 @@ let package = Package(
                 .headerSearchPath("Basics/Internal"),
                 .headerSearchPath("AppEvents/Internal/RestrictiveDataFilter"),
                 .headerSearchPath("Internal"),
-//                .headerSearchPath("."),
                 .headerSearchPath("AppEvents/Internal"),
                 .headerSearchPath("AppLink"),
                 .headerSearchPath("Internal/Network"),
