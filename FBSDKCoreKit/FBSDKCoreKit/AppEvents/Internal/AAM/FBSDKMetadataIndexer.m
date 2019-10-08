@@ -56,30 +56,39 @@ static dispatch_queue_t serialQueue;
     return;
   }
   [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
+    if (error) {
+      return;
+    }
     [FBSDKMetadataIndexer setupWithRules:serverConfiguration.AAMRules];
   }];
 }
 
 + (void)setupWithRules:(NSDictionary<NSString *, id> * _Nullable)rules
 {
-  [FBSDKMetadataIndexer constructRules:rules];
-  [FBSDKMetadataIndexer initStore];
-
-  BOOL isEnabled = NO;
-  for (NSString *key in FBSDKMetadataIndexerKeys) {
-    BOOL isRuleEnabled = (nil != [_rules objectForKey:key]);
-    if (isRuleEnabled) {
-      isEnabled = YES;
-    }
-    if (!isRuleEnabled) {
-      [_store removeObjectForKey:key];
-      [FBSDKUserDataStore setHashData:nil forType:key];
-    }
+  if (0 == rules.count) {
+    return;
   }
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    [FBSDKMetadataIndexer constructRules:rules];
+    [FBSDKMetadataIndexer initStore];
 
-  if (isEnabled) {
-    [FBSDKMetadataIndexer setupMetadataIndexing];
-  }
+    BOOL isEnabled = NO;
+    for (NSString *key in FBSDKMetadataIndexerKeys) {
+      BOOL isRuleEnabled = (nil != [_rules objectForKey:key]);
+      if (isRuleEnabled) {
+        isEnabled = YES;
+      }
+      if (!isRuleEnabled) {
+        [_store removeObjectForKey:key];
+        [FBSDKUserDataStore setHashData:nil forType:key];
+      }
+    }
+
+    if (isEnabled) {
+      [FBSDKMetadataIndexer setupMetadataIndexing];
+    }
+  });
 }
 
 + (void)initStore
