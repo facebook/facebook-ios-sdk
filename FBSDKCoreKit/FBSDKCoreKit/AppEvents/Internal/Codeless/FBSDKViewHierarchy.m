@@ -270,10 +270,10 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
 
 + (NSMutableDictionary<NSString *, id> *)getDetailAttributesOf:(NSObject *)obj
 {
-  return [self getDetailAttributesOf:obj WithHash:YES];
+  return [self getDetailAttributesOf:obj withHash:YES];
 }
 
-+ (NSMutableDictionary<NSString *, id> *)getDetailAttributesOf:(NSObject *)obj WithHash:(BOOL)hash
++ (NSMutableDictionary<NSString *, id> *)getDetailAttributesOf:(NSObject *)obj withHash:(BOOL)hash
 {
   if (!obj) {
     return nil;
