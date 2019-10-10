@@ -19,6 +19,8 @@
 #import "FBSDKCrashObserver.h"
 
 #import "FBSDKCrashHandler.h"
+#import "FBSDKCrashShield.h"
+#import "FBSDKFeatureManager.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequestConnection.h"
 #import "FBSDKLibAnalyzer.h"
@@ -74,6 +76,11 @@
       }
     }];
   }
+  [FBSDKFeatureManager checkFeature:FBSDKFeatureCrashShield completionBlock:^(BOOL enabled) {
+    if (enabled) {
+      [FBSDKCrashShield analyze:processedCrashLogs];
+    }
+  }];
 }
 
 @end

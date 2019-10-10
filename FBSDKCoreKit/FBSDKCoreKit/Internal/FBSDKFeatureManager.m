@@ -76,6 +76,7 @@
     case FBSDKFeatureAAM: featureName = @"AAM"; break;
     case FBSDKFeatureInstrument: featureName = @"Instrument"; break;
     case FBSDKFeatureCrashReport: featureName = @"CrashReport"; break;
+    case FBSDKFeatureCrashShield: featureName = @"CrashShield"; break;
     case FBSDKFeatureErrorReport: featureName = @"ErrorReport"; break;
 
     case FBSDKFeatureLogin: featureName = @"LoginKit"; break;

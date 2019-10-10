@@ -49,6 +49,7 @@ typedef NS_ENUM(NSUInteger, FBSDKFeature)
   FBSDKFeatureAAM = 0x00010300,
   FBSDKFeatureInstrument = 0x00020000,
   FBSDKFeatureCrashReport = 0x00020100,
+  FBSDKFeatureCrashShield = 0x00020101,
   FBSDKFeatureErrorReport = 0x00020200,
 
 
