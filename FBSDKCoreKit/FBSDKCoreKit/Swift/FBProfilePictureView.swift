@@ -19,6 +19,12 @@
 import Foundation
 import UIKit
 
+// Need to treat ObjC as separate dependency for SPM because it does not
+// support mixed Swift and ObjC sources.
+#if SWIFT_PACKAGE
+import FBSDKCoreKitObjC
+#endif
+
 /**
  FBProfilePictureView Extension
  */
