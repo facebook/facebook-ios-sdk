@@ -19,11 +19,18 @@
 #import "FBSDKFeatureManager.h"
 #import "ServerConfiguration/FBSDKGateKeeperManager.h"
 
+static NSString *const FBSDKFeatureManagerPrefix = @"com.facebook.sdk:FBSDKFeatureManager.FBSDKFeature";
+
 @implementation FBSDKFeatureManager
 
 + (void)checkFeature:(FBSDKFeature)feature
      completionBlock:(FBSDKFeatureManagerBlock)completionBlock
 {
+  // check locally first
+  if ([[NSUserDefaults standardUserDefaults] boolForKey:[FBSDKFeatureManagerPrefix stringByAppendingString:[self featureName:feature]]]) {
+    return;
+  }
+  // check gk
   [FBSDKGateKeeperManager loadGateKeepers:^(NSError * _Nullable error) {
     if (completionBlock) {
       completionBlock([FBSDKFeatureManager isEnabled:feature]);
@@ -43,6 +50,11 @@
   } else {
     return [FBSDKFeatureManager isEnabled:parentFeature] && [self checkGK:feature];
   }
+}
+
++ (void)disableFeature:(NSString *)featureName
+{
+  [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[FBSDKFeatureManagerPrefix stringByAppendingString:featureName]];
 }
 
 + (FBSDKFeature)getParentFeature:(FBSDKFeature)feature

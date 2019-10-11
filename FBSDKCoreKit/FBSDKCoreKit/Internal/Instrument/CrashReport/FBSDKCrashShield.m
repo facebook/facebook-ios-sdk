@@ -18,6 +18,8 @@
 
 #import "FBSDKCrashShield.h"
 
+#import "FBSDKFeatureManager.h"
+
 @implementation FBSDKCrashShield
 
 static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
@@ -59,7 +61,7 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
     NSArray<NSString *> *callstack = crashLog[@"callstack"];
     NSString *featureName = [self getFeature:callstack];
       if (featureName) {
-          //TODO(T55089410):Add disable feature function
+        [FBSDKFeatureManager disableFeature:featureName];
       }
   }
 }
