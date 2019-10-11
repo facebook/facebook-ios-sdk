@@ -11,14 +11,14 @@ let package = Package(
     products: [
         .library(
             name: "FBSDKCoreKit",
-            targets: ["FBSDKCoreKit", "FacebookCore"]
+            targets: ["FBSDKCoreKit", "FBSDKCoreKitObjC"]
         ),
     ],
     dependencies: [
     ],
     targets: [
         .target(
-            name: "FBSDKCoreKit",
+            name: "FBSDKCoreKitObjC",
             dependencies: [],
             path: "FBSDKCoreKit/FBSDKCoreKit",
             exclude: [
@@ -53,8 +53,8 @@ let package = Package(
             ]
         ),
         .target(
-            name: "FacebookCore",
-            dependencies: ["FBSDKCoreKit"],
+            name: "FBSDKCoreKit",
+            dependencies: ["FBSDKCoreKitObjC"],
             path: "FBSDKCoreKit/FBSDKCoreKit/Swift"
         )
     ]
