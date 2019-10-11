@@ -64,7 +64,7 @@ static UIApplicationState _applicationState;
 
 #pragma mark - Class Methods
 
-+ (void)load
++ (void)initialize
 {
   if ([FBSDKSettings isAutoInitEnabled]) {
     // when the app becomes active by any means,  kick off the initialization.
