@@ -26,19 +26,11 @@
 
 #if COCOAPODS
 #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
-#import "FBSDKCoreKit+Internal.h"
-#endif
-
-#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKGraphRequest.h>
-#else
-#import "FBSDKGraphRequest.h"
-#endif
-
-#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKSettings.h>
 #else
+#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKGraphRequest.h"
 #import "FBSDKSettings.h"
 #endif
 

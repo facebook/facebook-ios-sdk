@@ -20,13 +20,9 @@
 
 #if COCOAPODS
 #import <FBSDKCoreKit/FBSDKCopying.h>
-#else
-#import "FBSDKCopying.h"
-#endif
-
-#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
 #else
+#import "FBSDKCopying.h"
 #import "FBSDKGraphRequestConnection.h"
 #endif
 

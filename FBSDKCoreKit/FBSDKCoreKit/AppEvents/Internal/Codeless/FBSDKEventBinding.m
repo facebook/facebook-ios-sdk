@@ -20,15 +20,9 @@
 
 #if COCOAPODS
 #import <FBSDKCoreKit/FBSDKAppEvents.h>
-#else
-#import "FBSDKAppEvents.h"
-#endif
-
-
-
-#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKUtility.h>
 #else
+#import "FBSDKAppEvents.h"
 #import "FBSDKUtility.h"
 #endif
 
