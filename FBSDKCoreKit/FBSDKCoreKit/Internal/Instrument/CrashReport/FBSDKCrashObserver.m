@@ -61,6 +61,7 @@
 - (void)didReceiveCrashLogs:(NSArray<NSDictionary<NSString *, id> *> *)processedCrashLogs
 {
   if (0 == processedCrashLogs.count) {
+    [FBSDKCrashHandler clearCrashReportFiles];
     return;
   }
   NSData *jsonData = [NSJSONSerialization dataWithJSONObject:processedCrashLogs options:0 error:nil];
