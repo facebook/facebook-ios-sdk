@@ -17,7 +17,10 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "FBSDKFeatureManager.h"
+
 #import "ServerConfiguration/FBSDKGateKeeperManager.h"
+
+#import "FBSDKSettings.h"
 
 static NSString *const FBSDKFeatureManagerPrefix = @"com.facebook.sdk:FBSDKFeatureManager.FBSDKFeature";
 
@@ -27,7 +30,8 @@ static NSString *const FBSDKFeatureManagerPrefix = @"com.facebook.sdk:FBSDKFeatu
      completionBlock:(FBSDKFeatureManagerBlock)completionBlock
 {
   // check locally first
-  if ([[NSUserDefaults standardUserDefaults] boolForKey:[FBSDKFeatureManagerPrefix stringByAppendingString:[self featureName:feature]]]) {
+  NSString *version = [[NSUserDefaults standardUserDefaults] valueForKey:[FBSDKFeatureManagerPrefix stringByAppendingString:[self featureName:feature]]];
+  if (version && [version isEqualToString:[FBSDKSettings sdkVersion]]) {
     return;
   }
   // check gk
@@ -54,7 +58,7 @@ static NSString *const FBSDKFeatureManagerPrefix = @"com.facebook.sdk:FBSDKFeatu
 
 + (void)disableFeature:(NSString *)featureName
 {
-  [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[FBSDKFeatureManagerPrefix stringByAppendingString:featureName]];
+  [[NSUserDefaults standardUserDefaults] setObject:[FBSDKSettings sdkVersion] forKey:[FBSDKFeatureManagerPrefix stringByAppendingString:featureName]];
 }
 
 + (FBSDKFeature)getParentFeature:(FBSDKFeature)feature
@@ -107,6 +111,7 @@ static NSString *const FBSDKFeatureManagerPrefix = @"com.facebook.sdk:FBSDKFeatu
     case FBSDKFeatureRestrictiveDataFiltering:
     case FBSDKFeatureInstrument:
     case FBSDKFeatureCrashReport:
+    case FBSDKFeatureCrashShield:
     case FBSDKFeatureErrorReport:
     case FBSDKFeatureAAM:
       return NO;

@@ -43,11 +43,6 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
       @"RestrictiveDataFiltering" : @[
           @"FBSDKRestrictiveDataFilterManager",
       ],
-      @"CrashReport" : @[
-          @"FBSDKCrashHandler",
-          @"FBSDKLibAnalyzer",
-          @"FBSDKCrashObserver",
-      ],
       @"ErrorReport" : @[
           @"FBSDKErrorReport",
       ],
