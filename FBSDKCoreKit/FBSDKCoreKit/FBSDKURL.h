@@ -88,6 +88,11 @@ NS_SWIFT_NAME(init(inboundURL:sourceApplication:));
  */
 @property (nonatomic, strong, readonly) NSDictionary<NSString *, id> *inputQueryParameters;
 
+/**
+ The flag indicating whether the URL comes from auto app link
+*/
+@property (nonatomic, readonly, getter=isAutoAppLink) BOOL isAutoAppLink;
+
 @end
 
 NS_ASSUME_NONNULL_END
