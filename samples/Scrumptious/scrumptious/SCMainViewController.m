@@ -351,9 +351,8 @@ static int const MIN_USER_GENERATED_PHOTO_DIMENSION = 480;
                                                                        place:_selectedPlace
                                                                      friends:_selectedFriends
                                                                        photo:self.selectedPhoto];
-    FBSDKShareOpenGraphContent *content = [shareUtility contentForSharing];
+    FBSDKShareLinkContent *content = [shareUtility contentForSharing];
 
-    self.fbSendButton.shareContent = content;
     self.fbShareButton.shareContent = content;
 }
 

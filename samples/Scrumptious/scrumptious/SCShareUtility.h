@@ -30,7 +30,7 @@
 - (instancetype)initWithMealTitle:(NSString *)mealTitle place:(NSString *)place friends:(NSArray *)friends photo:(UIImage *)photo;
 
 - (void)start;
-- (FBSDKShareOpenGraphContent *)contentForSharing;
+- (FBSDKShareLinkContent *)contentForSharing;
 
 @end
 

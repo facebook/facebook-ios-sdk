@@ -25,9 +25,7 @@
 @implementation SCShareUtility
 {
     NSString *_mealTitle;
-    FBSDKMessageDialog *_messageDialog;
     UIImage *_photo;
-    int _sendAsMessageButtonIndex;
     FBSDKShareAPI *_shareAPI;
     FBSDKShareDialog *_shareDialog;
     NSArray *_friends;
@@ -42,7 +40,7 @@
         _place = [place copy];
         _friends = [friends copy];
 
-        FBSDKShareOpenGraphContent *shareContent = [self contentForSharing];
+        FBSDKShareLinkContent *shareContent = [self contentForSharing];
 
         _shareAPI = [[FBSDKShareAPI alloc] init];
         _shareAPI.delegate = self;
@@ -52,11 +50,6 @@
         _shareDialog.delegate = self;
         _shareDialog.shouldFailOnDataError = YES;
         _shareDialog.shareContent = shareContent;
-
-        _messageDialog = [[FBSDKMessageDialog alloc] init];
-        _messageDialog.delegate = self;
-        _messageDialog.shouldFailOnDataError = YES;
-        _messageDialog.shareContent = shareContent;
     }
     return self;
 }
@@ -65,7 +58,6 @@
 {
     _shareAPI.delegate = nil;
     _shareDialog.delegate = nil;
-    _messageDialog.delegate = nil;
 }
 
 - (void)start
@@ -73,40 +65,13 @@
     [self _postOpenGraphAction];
 }
 
-- (FBSDKShareOpenGraphContent *)contentForSharing
+- (FBSDKShareLinkContent *)contentForSharing
 {
-    NSString *previewPropertyName = @"fb_sample_scrumps:meal";
-
+    FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
     if (!_mealTitle) {
         return nil;
     }
-
-    id object = [self _existingMealURLWithTitle:_mealTitle];
-    if (!object) {
-        NSDictionary *objectProperties = @{
-                                           @"og:type" : @"fb_sample_scrumps:meal",
-                                           @"og:title": _mealTitle,
-                                           @"og:description" : [@"Delicious " stringByAppendingString:_mealTitle],
-                                           };
-        object = [FBSDKShareOpenGraphObject objectWithProperties:objectProperties];
-    }
-
-    FBSDKShareOpenGraphAction *action = [[FBSDKShareOpenGraphAction alloc]
-                                         initWithActionType:@"fb_sample_scrumps:eat"];
-    [action setObject:object forKey:previewPropertyName];
-    if (_photo) {
-        [action setArray:@[[FBSDKSharePhoto photoWithImage:_photo userGenerated:YES]] forKey:@"og:image"];
-    }
-
-    FBSDKShareOpenGraphContent *content = [[FBSDKShareOpenGraphContent alloc] init];
-    content.action = action;
-    content.previewPropertyName = previewPropertyName;
-    if (_friends.count > 0) {
-        content.peopleIDs = _friends;
-    }
-    if (_place.length) {
-        content.placeID = _place;
-    }
+    content.quote = _mealTitle;
     return content;
 }
 
@@ -232,8 +197,6 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == actionSheet.cancelButtonIndex) {
         [_delegate shareUtility:self didFailWithError:nil];
-    } else if (buttonIndex == _sendAsMessageButtonIndex) {
-        [_messageDialog show];
     } else {
         _shareDialog.fromViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
         [_shareDialog show];

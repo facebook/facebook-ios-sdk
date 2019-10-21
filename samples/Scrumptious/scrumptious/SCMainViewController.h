@@ -35,7 +35,6 @@
 @property (nonatomic, strong) IBOutlet SCProfilePictureButton *profilePictureButton;
 @property (nonatomic, strong) IBOutlet UIButton *shareButton;
 @property (weak, nonatomic) IBOutlet FBSDKShareButton *fbShareButton;
-@property (weak, nonatomic) IBOutlet FBSDKSendButton *fbSendButton;
 @property (strong, nonatomic) IBOutlet UILabel *photoViewPlaceholderLabel;
 
 - (IBAction)pickMeal:(id)sender;
