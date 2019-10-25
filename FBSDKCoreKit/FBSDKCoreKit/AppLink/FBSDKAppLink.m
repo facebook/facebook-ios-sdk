@@ -21,6 +21,8 @@
 #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
 #import <FBSDKCoreKit/FBSDKURL.h>
 
+#import "FBSDKAppEvents+Internal.h"
+
 static Class autoAppLinkViewControllerClass;
 static NSString *autoAppLinkIdentifier;
 static NSString *autoAppLinkStoryBoard;
@@ -35,6 +37,7 @@ NSString *const FBSDKAppLinkRefererAppName = @"app_name";
 NSString *const FBSDKAppLinkRefererUrl = @"url";
 NSString *const FBSDKAppLinkVersionKeyName = @"version";
 NSString *const FBSDKAppLinkVersion = @"1.0";
+NSString *const FBSDKAutoAppLinkEventName = @"fb_auto_applink";
 
 @interface FBSDKAppLink () <FBSDKApplicationObserving>
 
@@ -124,6 +127,7 @@ NSString *const FBSDKAppLinkVersion = @"1.0";
         break;
     }
   }
+  [FBSDKAppEvents logInternalEvent:FBSDKAutoAppLinkEventName isImplicitlyLogged:YES];
   return YES;
 }
 
