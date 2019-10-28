@@ -97,5 +97,6 @@ Pod::Spec.new do |s|
     ss.dependency 'FBSDKCoreKit/Core'
     ss.platform = :ios
     ss.source_files = 'FBSDKCoreKit/FBSDKCoreKit/Swift/*.{h,m,swift}'
+    ss.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/Swift/Exports.swift'
   end
 end

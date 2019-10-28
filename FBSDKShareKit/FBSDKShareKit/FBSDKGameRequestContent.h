@@ -18,8 +18,13 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKCopying.h>
-#import <FBSDKShareKit/FBSDKSharingValidation.h>
+#ifdef BUCK
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#else
+@import FBSDKCoreKit;
+#endif
+
+#import "FBSDKSharingValidation.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

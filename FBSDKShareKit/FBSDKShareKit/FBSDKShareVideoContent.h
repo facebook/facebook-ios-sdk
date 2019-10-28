@@ -18,9 +18,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKShareKit/FBSDKSharePhoto.h>
-#import <FBSDKShareKit/FBSDKShareVideo.h>
-#import <FBSDKShareKit/FBSDKSharingContent.h>
+#import "FBSDKSharePhoto.h"
+#import "FBSDKShareVideo.h"
+#import "FBSDKSharingContent.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -18,13 +18,12 @@
 
 #import "FBSDKLoginCompletion+Internal.h"
 
-#import <FBSDKCoreKit/FBSDKConstants.h>
-
-#ifdef COCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#if SWIFT_PACKAGE
+@import FBSDKCoreKit;
 #else
-#import "FBSDKCoreKit+Internal.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #endif
+
 #import "FBSDKLoginConstants.h"
 #import "FBSDKLoginError.h"
 #import "FBSDKLoginManager+Internal.h"

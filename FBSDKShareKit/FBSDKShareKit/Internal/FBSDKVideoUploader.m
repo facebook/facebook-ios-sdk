@@ -20,8 +20,13 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKGraphRequestDataAttachment.h>
-#import <FBSDKShareKit/FBSDKShareConstants.h>
+#ifdef BUCK
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#else
+@import FBSDKCoreKit;
+#endif
+
+#import "FBSDKShareConstants.h"
 
 #ifdef COCOAPODS
 #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>

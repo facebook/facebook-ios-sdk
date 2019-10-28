@@ -35,7 +35,6 @@ Pod::Spec.new do |s|
 
   s.subspec 'Login' do |ss|
     ss.dependency 'FBSDKCoreKit', "~> 5.0"
-
     ss.ios.source_files   = 'FBSDKLoginKit/FBSDKLoginKit/**/*.{h,m}'
     ss.ios.public_header_files = 'FBSDKLoginKit/FBSDKLoginKit/*.{h}'
     ss.tvos.source_files = 'FBSDKLoginKit/FBSDKLoginKit/FBSDKLoginConstants.{h,m}',
@@ -56,6 +55,7 @@ Pod::Spec.new do |s|
     ss.dependency 'FBSDKCoreKit/Swift', "~> #{s.version}"
     ss.dependency 'FBSDKLoginKit/Login'
     ss.platform = :ios
+    ss.ios.exclude_files = 'FBSDKLoginKit/FBSDKLoginKit/Swift/Exports.swift'
     ss.ios.source_files   = 'FBSDKLoginKit/FBSDKLoginKit/Swift/*.{swift}'
   end
 

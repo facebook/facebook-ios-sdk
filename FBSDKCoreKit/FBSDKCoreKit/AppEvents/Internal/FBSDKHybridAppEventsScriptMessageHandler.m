@@ -18,7 +18,11 @@
 
 #import "FBSDKHybridAppEventsScriptMessageHandler.h"
 
+#if SWIFT_PACKAGE
+#import "FBSDKAppEvents.h"
+#else
 #import <FBSDKCoreKit/FBSDKAppEvents.h>
+#endif
 
 #import "FBSDKAppEvents+Internal.h"
 

@@ -20,7 +20,11 @@
 
 #import <QuartzCore/QuartzCore.h>
 
+#ifdef BUCK
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#else
+@import FBSDKCoreKit;
+#endif
 
 #ifdef COCOAPODS
 #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>

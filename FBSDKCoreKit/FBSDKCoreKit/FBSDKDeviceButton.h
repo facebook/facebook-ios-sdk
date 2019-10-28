@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKButton.h>
+#import "FBSDKButton.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

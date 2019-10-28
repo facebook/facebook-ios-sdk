@@ -18,8 +18,13 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKCopying.h>
-#import <FBSDKShareKit/FBSDKShareConstants.h>
+#ifdef BUCK
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#else
+@import FBSDKCoreKit;
+#endif
+
+#import "FBSDKShareConstants.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

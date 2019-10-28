@@ -1,4 +1,4 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+// Copyright (c) 2016-present, Facebook, Inc. All rights reserved.
 //
 // You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
 // copy, modify, and distribute this software in source code or binary form for use
@@ -16,6 +16,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-
-#import "../FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h"
+// Need to treat ObjC as separate dependency for SPM because it does not
+// support mixed Swift and ObjC sources. In order to expose the dependent
+// interface we need to pass through the import of the `FBSDKCoreKit`
+// target defined in Package.swift.
+// See: https://forums.swift.org/t/16648/2 for more details
+//
+@_exported import FBSDKCoreKit

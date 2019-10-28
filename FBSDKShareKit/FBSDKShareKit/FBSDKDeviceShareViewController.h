@@ -18,9 +18,13 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKDeviceViewControllerBase.h>
+#ifdef BUCK
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#else
+@import FBSDKCoreKit;
+#endif
 
-#import <FBSDKShareKit/FBSDKSharingContent.h>
+#import "FBSDKSharingContent.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

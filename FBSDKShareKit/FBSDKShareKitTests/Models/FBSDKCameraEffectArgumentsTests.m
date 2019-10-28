@@ -19,10 +19,14 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
+#ifdef BUCK
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <FBSDKShareKit/FBSDKCameraEffectArguments.h>
-#import <FBSDKShareKit/FBSDKShareConstants.h>
+#else
+@import FBSDKCoreKit;
+#endif
 
+#import "FBSDKCameraEffectArguments.h"
+#import "FBSDKShareConstants.h"
 #import "FBSDKShareModelTestUtility.h"
 
 @interface FBSDKCameraEffectArgumentsTests : XCTestCase

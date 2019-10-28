@@ -19,6 +19,11 @@
 import Foundation
 import UIKit
 
+#if SWIFT_PACKAGE
+import FacebookCore
+import FBSDKLoginKit
+#endif
+
 /// Login Result Block
 public typealias LoginResultBlock = (LoginResult) -> Void
 

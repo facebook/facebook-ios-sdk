@@ -101,5 +101,6 @@ Pod::Spec.new do |s|
     ss.dependency 'FBSDKShareKit/Share'
     ss.platform = :ios
     ss.ios.source_files   = 'FBSDKShareKit/FBSDKShareKit/Swift/*.{swift}'
+    ss.ios.exclude_files = 'FBSDKShareKit/FBSDKShareKit/Swift/Exports.swift'
   end
 end

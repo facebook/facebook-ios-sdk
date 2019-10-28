@@ -17,13 +17,11 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <UIKit/UIKit.h>
-
-#import <FBSDKShareKit/FBSDKShareConstants.h>
-#import <FBSDKShareKit/FBSDKShareOpenGraphObject.h>
-
 #import <XCTest/XCTest.h>
 
+#import "FBSDKShareConstants.h"
 #import "FBSDKShareModelTestUtility.h"
+#import "FBSDKShareOpenGraphObject.h"
 
 @interface FBSDKShareOpenGraphObjectTests : XCTestCase
 @end

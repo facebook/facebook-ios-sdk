@@ -195,6 +195,8 @@
 		F487DBFE231EC34B008416A9 /* FBSDKDeviceLoginManagerResult+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9DBEF7207C04FF00662776 /* FBSDKDeviceLoginManagerResult+Internal.h */; };
 		F487DC15231EC3EF008416A9 /* FBLoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F487DC13231EC3EF008416A9 /* FBLoginButton.swift */; };
 		F487DC16231EC3EF008416A9 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F487DC14231EC3EF008416A9 /* LoginManager.swift */; };
+		F4F12FC72357EB2900698B4D /* FBSDKLoginButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D65ACA61A803FF200E375C2 /* FBSDKLoginButton.h */; };
+		F4F12FC82357EB2A00698B4D /* FBSDKLoginButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D65ACA61A803FF200E375C2 /* FBSDKLoginButton.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -731,6 +733,7 @@
 				0B9DBF3B207C061D00662776 /* FBSDKDeviceLoginManagerResult.h in Headers */,
 				0B9DBF7C207C211900662776 /* FBSDKCoreKit+Internal.h in Headers */,
 				0B9DBF3C207C061D00662776 /* FBSDKDeviceLoginCodeInfo+Internal.h in Headers */,
+				F4F12FC72357EB2900698B4D /* FBSDKLoginButton.h in Headers */,
 				0B9DBF3D207C061D00662776 /* FBSDKDeviceLoginManagerResult+Internal.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -745,6 +748,7 @@
 				0B9DBF4B207C07C600662776 /* FBSDKDeviceLoginManagerResult.h in Headers */,
 				0B9DBF7D207C212500662776 /* FBSDKCoreKit+Internal.h in Headers */,
 				0B9DBF4C207C07C600662776 /* FBSDKDeviceLoginCodeInfo+Internal.h in Headers */,
+				F4F12FC82357EB2A00698B4D /* FBSDKLoginButton.h in Headers */,
 				0B9DBF4D207C07C600662776 /* FBSDKDeviceLoginManagerResult+Internal.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

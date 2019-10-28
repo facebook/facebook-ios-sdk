@@ -18,10 +18,10 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKShareKit/FBSDKCameraEffectArguments.h>
-#import <FBSDKShareKit/FBSDKCameraEffectTextures.h>
-#import <FBSDKShareKit/FBSDKSharingContent.h>
-#import <FBSDKShareKit/FBSDKSharingScheme.h>
+#import "FBSDKCameraEffectArguments.h"
+#import "FBSDKCameraEffectTextures.h"
+#import "FBSDKSharingContent.h"
+#import "FBSDKSharingScheme.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

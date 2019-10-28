@@ -18,7 +18,11 @@
 
 #import <Foundation/Foundation.h>
 
+#ifdef BUCK
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#else
+@import FBSDKCoreKit;
+#endif
 
 #import "FBSDKDeviceLoginManagerResult.h"
 

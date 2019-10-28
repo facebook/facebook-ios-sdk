@@ -22,9 +22,10 @@
 
 #import <XCTest/XCTest.h>
 
-#import "FBSDKAppEvents.h"
+#import <FBSDKCoreKit/FBSDKAppEvents.h>
+#import <FBSDKCoreKit/FBSDKSettings.h>
+
 #import "FBSDKAppEventsUtility.h"
-#import "FBSDKSettings.h"
 
 @interface FBSDKAppEventsUtilityTests : XCTestCase
 {

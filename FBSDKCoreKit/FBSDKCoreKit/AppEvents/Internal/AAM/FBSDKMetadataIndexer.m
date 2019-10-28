@@ -24,7 +24,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#import "FBSDKCoreKit+Internal.h"
 
 static const int FBSDKMetadataIndexerMaxTextLength              = 100;
 static const int FBSDKMetadataIndexerMaxIndicatorLength         = 100;

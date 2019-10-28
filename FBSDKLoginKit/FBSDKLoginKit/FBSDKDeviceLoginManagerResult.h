@@ -18,7 +18,11 @@
 
 #import <Foundation/Foundation.h>
 
+#if COCOAPODS
 #import <FBSDKCoreKit/FBSDKAccessToken.h>
+#endif
+
+@class FBSDKAccessToken;
 
 NS_ASSUME_NONNULL_BEGIN
 

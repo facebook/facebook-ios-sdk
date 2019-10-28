@@ -18,6 +18,11 @@
 
 import UIKit
 
+#if SWIFT_PACKAGE
+import FacebookCore
+import FBSDKLoginKit
+#endif
+
 /**
  A button that initiates a log in or log out flow upon tapping.
 

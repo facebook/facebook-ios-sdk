@@ -16,11 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-
-#import <FBSDKShareKit/FBSDKAppInviteContent.h>
-
 #import <XCTest/XCTest.h>
+
+#ifdef BUCK
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#else
+@import FBSDKCoreKit;
+#endif
+
+#import "FBSDKAppInviteContent.h"
 
 @interface FBSDKAppInviteContentTests : XCTestCase
 @end

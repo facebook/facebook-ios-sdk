@@ -20,9 +20,9 @@
 
 #import <sys/time.h>
 
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
 #import <mach-o/dyld.h>
 
+#import "FBSDKCoreKit+Internal.h"
 #import "FBSDKError.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKSettings.h"
