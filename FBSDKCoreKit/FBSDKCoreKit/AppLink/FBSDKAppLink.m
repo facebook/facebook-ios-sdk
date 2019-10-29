@@ -18,10 +18,9 @@
 
 #import "FBSDKAppLink_Internal.h"
 
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#import <FBSDKCoreKit/FBSDKURL.h>
-
 #import "FBSDKAppEvents+Internal.h"
+#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKURL.h"
 
 static Class autoAppLinkViewControllerClass;
 static NSString *autoAppLinkIdentifier;
