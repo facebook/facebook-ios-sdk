@@ -18,22 +18,22 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKShareKit/FBSDKCameraEffectArguments.h>
-#import <FBSDKShareKit/FBSDKHashtag.h>
-#import <FBSDKShareKit/FBSDKShareCameraEffectContent.h>
-#import <FBSDKShareKit/FBSDKShareLinkContent.h>
-#import <FBSDKShareKit/FBSDKShareMediaContent.h>
-#import <FBSDKShareKit/FBSDKShareMessengerGenericTemplateContent.h>
-#import <FBSDKShareKit/FBSDKShareMessengerGenericTemplateElement.h>
-#import <FBSDKShareKit/FBSDKShareMessengerMediaTemplateContent.h>
-#import <FBSDKShareKit/FBSDKShareMessengerOpenGraphMusicTemplateContent.h>
-#import <FBSDKShareKit/FBSDKShareMessengerURLActionButton.h>
-#import <FBSDKShareKit/FBSDKShareOpenGraphAction.h>
-#import <FBSDKShareKit/FBSDKShareOpenGraphObject.h>
-#import <FBSDKShareKit/FBSDKSharePhoto.h>
-#import <FBSDKShareKit/FBSDKSharePhotoContent.h>
-#import <FBSDKShareKit/FBSDKShareVideo.h>
-#import <FBSDKShareKit/FBSDKShareVideoContent.h>
+#import "FBSDKCameraEffectArguments.h"
+#import "FBSDKHashtag.h"
+#import "FBSDKShareCameraEffectContent.h"
+#import "FBSDKShareLinkContent.h"
+#import "FBSDKShareMediaContent.h"
+#import "FBSDKShareMessengerGenericTemplateContent.h"
+#import "FBSDKShareMessengerGenericTemplateElement.h"
+#import "FBSDKShareMessengerMediaTemplateContent.h"
+#import "FBSDKShareMessengerOpenGraphMusicTemplateContent.h"
+#import "FBSDKShareMessengerURLActionButton.h"
+#import "FBSDKShareOpenGraphAction.h"
+#import "FBSDKShareOpenGraphObject.h"
+#import "FBSDKSharePhoto.h"
+#import "FBSDKSharePhotoContent.h"
+#import "FBSDKShareVideo.h"
+#import "FBSDKShareVideoContent.h"
 
 FOUNDATION_EXPORT NSString *kFBSDKShareModelTestUtilityOpenGraphBoolValueKey;
 FOUNDATION_EXPORT NSString *kFBSDKShareModelTestUtilityOpenGraphDoubleValueKey;

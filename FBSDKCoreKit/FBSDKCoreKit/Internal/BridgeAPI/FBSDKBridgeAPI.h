@@ -19,7 +19,11 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#if SWIFT_PACKAGE
+#import "FBSDKCoreKit.h"
+#else
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#endif
 
 #import "FBSDKBridgeAPIProtocol.h"
 #import "FBSDKBridgeAPIProtocolType.h"

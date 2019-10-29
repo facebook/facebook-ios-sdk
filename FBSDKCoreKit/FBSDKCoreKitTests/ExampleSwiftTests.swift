@@ -17,13 +17,13 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import XCTest
+import FBSDKCoreKit
 
 class ExampleSwiftTests: XCTestCase {
   func testCanAccessCoreKit() {
-    XCTAssertEqual(
-      InternalUtility.bundleForStrings,
-      Bundle.main,
-      "Should use the main bundle for strings"
+    XCTAssertNil(
+      Settings.appID,
+      "Should not have default app ID"
     )
   }
 }

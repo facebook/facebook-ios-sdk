@@ -18,10 +18,9 @@
 
 #import "FBSDKGraphRequestConnection+Internal.h"
 
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKConstants.h"
+#import "FBSDKCoreKit+Internal.h"
 #import "FBSDKError.h"
 #import "FBSDKErrorConfiguration.h"
 #import "FBSDKGraphRequest+Internal.h"

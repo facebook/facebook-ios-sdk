@@ -19,6 +19,7 @@
 #import <FBSDKCoreKit/FBSDKDeviceViewControllerBase.h>
 
 #import "FBSDKCoreKit+Internal.h"
+#import "FBSDKDeviceDialogView.h"
 
 @class FBSDKDeviceDialogView;
 

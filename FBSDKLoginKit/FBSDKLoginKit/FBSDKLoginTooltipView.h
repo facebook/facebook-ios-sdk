@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKLoginKit/FBSDKTooltipView.h>
+#import "FBSDKTooltipView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

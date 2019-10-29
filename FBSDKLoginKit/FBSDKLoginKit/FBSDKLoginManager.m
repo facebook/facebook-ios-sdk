@@ -19,13 +19,14 @@
 #import "FBSDKLoginManager+Internal.h"
 #import "FBSDKLoginManagerLoginResult+Internal.h"
 
-#import <FBSDKCoreKit/FBSDKAccessToken.h>
-#import <FBSDKCoreKit/FBSDKSettings.h>
-#ifdef COCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#ifdef SWIFT_PACKAGE
+#import "FBSDKAccessToken.h"
+#import "FBSDKSettings.h"
 #else
-#import "FBSDKCoreKit+Internal.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #endif
+
+#import "FBSDKCoreKit+Internal.h"
 
 #import "_FBSDKLoginRecoveryAttempter.h"
 #import "FBSDKLoginCompletion.h"

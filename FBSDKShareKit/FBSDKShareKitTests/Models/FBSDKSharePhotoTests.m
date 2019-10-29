@@ -17,15 +17,17 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <UIKit/UIKit.h>
-
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-
-#import <FBSDKShareKit/FBSDKShareConstants.h>
-#import <FBSDKShareKit/FBSDKSharePhoto.h>
-
 #import <XCTest/XCTest.h>
 
+#ifdef BUCK
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#else
+@import FBSDKCoreKit;
+#endif
+
+#import "FBSDKShareConstants.h"
 #import "FBSDKShareModelTestUtility.h"
+#import "FBSDKSharePhoto.h"
 
 @interface FBSDKSharePhotoTests : XCTestCase
 @end

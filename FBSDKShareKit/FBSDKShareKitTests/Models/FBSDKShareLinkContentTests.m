@@ -18,9 +18,13 @@
 
 #import <UIKit/UIKit.h>
 
+#ifdef BUCK
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#else
+@import FBSDKCoreKit;
+#endif
 
-#import <FBSDKShareKit/FBSDKShareLinkContent.h>
+#import "FBSDKShareLinkContent.h"
 
 #import <XCTest/XCTest.h>
 

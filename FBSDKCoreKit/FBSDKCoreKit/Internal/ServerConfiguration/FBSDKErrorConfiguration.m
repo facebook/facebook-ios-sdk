@@ -18,7 +18,7 @@
 
 #import "FBSDKErrorConfiguration.h"
 
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#import "FBSDKCoreKit+Internal.h"
 
 #import "FBSDKErrorRecoveryConfiguration.h"
 

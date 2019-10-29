@@ -18,10 +18,13 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKButton.h>
+#if BUCK
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#else
+@import FBSDKCoreKit;
+#endif
 
-#import <FBSDKLoginKit/FBSDKLoginManager.h>
-
+#import "FBSDKLoginManager.h"
 #import "FBSDKTooltipView.h"
 
 NS_ASSUME_NONNULL_BEGIN

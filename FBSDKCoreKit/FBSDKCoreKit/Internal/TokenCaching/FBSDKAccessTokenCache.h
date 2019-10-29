@@ -18,7 +18,11 @@
 
 #import <Foundation/Foundation.h>
 
+#if SWIFT_PACKAGE
+#import "FBSDKAccessToken.h"
+#else
 #import <FBSDKCoreKit/FBSDKAccessToken.h>
+#endif
 
 #import "FBSDKAccessTokenCaching.h"
 

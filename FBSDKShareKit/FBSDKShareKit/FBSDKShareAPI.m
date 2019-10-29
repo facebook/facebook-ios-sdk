@@ -22,8 +22,11 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #endif
 
-#import <FBSDKCoreKit/FBSDKGraphRequest.h>
-#import <FBSDKCoreKit/FBSDKGraphRequestDataAttachment.h>
+#ifdef BUCK
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#else
+@import FBSDKCoreKit;
+#endif
 
 #ifdef COCOAPODS
 #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>

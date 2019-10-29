@@ -18,7 +18,7 @@
 
 #import "FBSDKShareUtility.h"
 
-#import <FBSDKShareKit/FBSDKHashtag.h>
+#import "FBSDKHashtag.h"
 
 #ifdef COCOAPODS
 #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>

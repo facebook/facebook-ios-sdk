@@ -18,9 +18,13 @@
 
 #import <UIKit/UIKit.h>
 
+#if SWIFT_PACKAGE
+#import "../FBSDKCoreKit.h"
+#else
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#endif
 
-#ifdef COCOAPODS
+#if defined COCOAPODS || defined BUCK
 
 #if !TARGET_OS_TV
 #import "FBSDKViewHierarchy.h"
