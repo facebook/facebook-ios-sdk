@@ -18,8 +18,8 @@
 
 #import "FBSDKAppLink_Internal.h"
 
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#import <FBSDKCoreKit/FBSDKURL.h>
+#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKURL.h"
 
 #import "FBSDKAppEvents+Internal.h"
 
