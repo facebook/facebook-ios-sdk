@@ -21,6 +21,7 @@
 #import <OCMock/OCMock.h>
 
 #import "FBSDKCrashShield.h"
+#import "FBSDKFeatureManager.h"
 
 @interface FBSDKCrashShield ()
 
@@ -90,6 +91,54 @@
   NSString *entry3 = @"(6 DEV METHODS)";
   NSString *className3 = [FBSDKCrashShield getClassName:entry3];
   XCTAssertNil(className3);
+}
+
+- (void)testAnalyzeCrashCausedByCoreKitFeature
+{
+  NSArray<NSDictionary<NSString *, id> *> *crashLogs = [FBSDKCrashShieldTests getCrashLogs:YES];
+  id mockCrashShield = [OCMockObject niceMockForClass:[FBSDKCrashShield class]];
+  id mockFeatureManager = [OCMockObject niceMockForClass:[FBSDKFeatureManager class]];
+
+  [[[mockCrashShield expect] andForwardToRealObject] getFeature:crashLogs[0][@"callstack"]];
+  [[[mockFeatureManager expect] andForwardToRealObject] disableFeature:@"CodelessEvents"];
+
+  [FBSDKCrashShield analyze:crashLogs];
+
+  [mockFeatureManager verify];
+  [mockCrashShield verify];
+}
+
+- (void)testAnalyzeCrashCausedByNonCoreKitFeature
+{
+  NSArray<NSDictionary<NSString *, id> *> *crashLogs = [FBSDKCrashShieldTests getCrashLogs:NO];
+  id mockCrashShield = [OCMockObject niceMockForClass:[FBSDKCrashShield class]];
+  id mockFeatureManager = [OCMockObject niceMockForClass:[FBSDKFeatureManager class]];
+
+  [[[mockCrashShield expect] andForwardToRealObject] getFeature:crashLogs[0][@"callstack"]];
+  [[[mockFeatureManager reject] andForwardToRealObject] disableFeature:[OCMArg any]];
+
+  [FBSDKCrashShield analyze:crashLogs];
+  [mockCrashShield verify];
+}
+
++ (NSArray<NSDictionary<NSString *, id> *> *)getCrashLogs:(BOOL)isCoreKitFeature
+{
+  NSArray<NSString *> *callstack = isCoreKitFeature ? @[@"(4 DEV METHODS)",
+                                                        @"+[FBSDKCodelessIndexer crash]+84",
+                                                        @"(22 DEV METHODS)"] : @[@"(4 DEV METHODS)",
+                                                                                 @"+[FBSDKTooltipView crash]+84",
+                                                                                 @"(22 DEV METHODS)"];
+  NSArray<NSDictionary<NSString *, id> *> *crashLogs = @[@{
+                                                           @"callstack" : callstack,
+                                                           @"reason" : @"NSInternalInconsistencyException",
+                                                           @"fb_sdk_version" : @"5.6.0",
+                                                           @"timestamp" : @"1572036095",
+                                                           @"app_id" : @"2416630768476176",
+                                                           @"device_model" : @"iPad5,3",
+                                                           @"device_os" : @"ios",
+                                                           @"device_os_version" : @"13.1.3",
+                                                           }];
+  return crashLogs;
 }
 
 @end
