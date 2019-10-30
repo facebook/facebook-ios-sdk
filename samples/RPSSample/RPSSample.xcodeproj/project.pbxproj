@@ -42,6 +42,10 @@
 		85C69D741602B098008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D711602B098008AD9A0 /* Default-568h@2x.png */; };
 		85C69D751602B098008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D721602B098008AD9A0 /* Default.png */; };
 		85C69D761602B098008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D731602B098008AD9A0 /* Default@2x.png */; };
+		BFE7988B235FB801002B10C7 /* game.png in Resources */ = {isa = PBXBuildFile; fileRef = BFE79886235FB800002B10C7 /* game.png */; };
+		BFE7988C235FB801002B10C7 /* tool.png in Resources */ = {isa = PBXBuildFile; fileRef = BFE79887235FB800002B10C7 /* tool.png */; };
+		BFE7988D235FB801002B10C7 /* RPSAutoAppLinkDebugTool.m in Sources */ = {isa = PBXBuildFile; fileRef = BFE79888235FB800002B10C7 /* RPSAutoAppLinkDebugTool.m */; };
+		BFE7988E235FB801002B10C7 /* RPSRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BFE79889235FB801002B10C7 /* RPSRootViewController.m */; };
 		DB8278D01AAFB72E004247DA /* RPSFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DB8278CF1AAFB72E004247DA /* RPSFriendsViewController.m */; };
 		DBCEEA4E1A95439C00D2C8AE /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBCEEA4B1A95439C00D2C8AE /* FBSDKCoreKit.framework */; };
 		DBCEEA4F1A95439C00D2C8AE /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBCEEA4C1A95439C00D2C8AE /* FBSDKLoginKit.framework */; };
@@ -96,6 +100,12 @@
 		8986C7F11890A571004B90DD /* Project-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
 		8986C7F21890A571004B90DD /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		9D9ACC431ABFBD9B0050BF2E /* ReadMe.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
+		BFE79885235FB800002B10C7 /* RPSAutoAppLinkDebugTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RPSAutoAppLinkDebugTool.h; sourceTree = "<group>"; };
+		BFE79886235FB800002B10C7 /* game.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = game.png; sourceTree = "<group>"; };
+		BFE79887235FB800002B10C7 /* tool.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tool.png; sourceTree = "<group>"; };
+		BFE79888235FB800002B10C7 /* RPSAutoAppLinkDebugTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RPSAutoAppLinkDebugTool.m; sourceTree = "<group>"; };
+		BFE79889235FB801002B10C7 /* RPSRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RPSRootViewController.m; sourceTree = "<group>"; };
+		BFE7988A235FB801002B10C7 /* RPSRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RPSRootViewController.h; sourceTree = "<group>"; };
 		DB8278CE1AAFB715004247DA /* RPSFriendsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RPSFriendsViewController.h; sourceTree = "<group>"; };
 		DB8278CF1AAFB72E004247DA /* RPSFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RPSFriendsViewController.m; sourceTree = "<group>"; };
 		DBCEEA4B1A95439C00D2C8AE /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../build/FBSDKCoreKit.framework; sourceTree = "<group>"; };
@@ -163,6 +173,10 @@
 				84C1E1D5171481E70037E406 /* RPSCommonObjects.m */,
 				84070D291540AA2B00E39703 /* RPSAppDelegate.h */,
 				84070D2A1540AA2B00E39703 /* RPSAppDelegate.m */,
+				BFE7988A235FB801002B10C7 /* RPSRootViewController.h */,
+				BFE79889235FB801002B10C7 /* RPSRootViewController.m */,
+				BFE79885235FB800002B10C7 /* RPSAutoAppLinkDebugTool.h */,
+				BFE79888235FB800002B10C7 /* RPSAutoAppLinkDebugTool.m */,
 				0366E7E218636173006122EE /* RPSAppLinkedViewController.h */,
 				0366E7E318636173006122EE /* RPSAppLinkedViewController.m */,
 				84070D2C1540AA2B00E39703 /* RPSGameViewController.h */,
@@ -182,6 +196,8 @@
 		84070D211540AA2B00E39703 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				BFE79887235FB800002B10C7 /* tool.png */,
+				BFE79886235FB800002B10C7 /* game.png */,
 				5FDCBE01171F3DC200FB7055 /* left-rock-88.png */,
 				5FDCBDFF171F3DA800FB7055 /* left-paper-88.png */,
 				5FDCBE03171F3DC900FB7055 /* left-scissors-88.png */,
@@ -255,6 +271,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				he,
 				Base,
@@ -275,7 +292,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				84070D251540AA2B00E39703 /* InfoPlist.strings in Resources */,
+				BFE7988C235FB801002B10C7 /* tool.png in Resources */,
 				84070D3C1540AA2B00E39703 /* RPSGameViewController_iPhone.xib in Resources */,
+				BFE7988B235FB801002B10C7 /* game.png in Resources */,
 				84070D3F1540AA2B00E39703 /* RPSGameViewController_iPad.xib in Resources */,
 				84070D421540AA2B00E39703 /* RPSFriendsViewController_iPhone.xib in Resources */,
 				84070D451540AA2B00E39703 /* RPSFriendsViewController_iPad.xib in Resources */,
@@ -312,9 +331,11 @@
 			files = (
 				84070D271540AA2B00E39703 /* main.m in Sources */,
 				84070D2B1540AA2B00E39703 /* RPSAppDelegate.m in Sources */,
+				BFE7988E235FB801002B10C7 /* RPSRootViewController.m in Sources */,
 				0366E7E518636173006122EE /* RPSAppLinkedViewController.m in Sources */,
 				DB8278D01AAFB72E004247DA /* RPSFriendsViewController.m in Sources */,
 				84070D2E1540AA2B00E39703 /* RPSGameViewController.m in Sources */,
+				BFE7988D235FB801002B10C7 /* RPSAutoAppLinkDebugTool.m in Sources */,
 				84C1E1D6171481E70037E406 /* RPSCommonObjects.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

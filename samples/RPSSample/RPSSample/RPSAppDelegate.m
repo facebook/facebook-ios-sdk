@@ -23,7 +23,7 @@
 
 #import "RPSAppLinkedViewController.h"
 #import "RPSCommonObjects.h"
-#import "RPSGameViewController.h"
+#import "RPSRootViewController.h"
 
 @implementation RPSAppDelegate
 
@@ -89,15 +89,8 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
 
-    UIViewController *viewControllerGame;
-
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        viewControllerGame = [[RPSGameViewController alloc] initWithNibName:@"RPSGameViewController_iPhone" bundle:nil];
-    } else {
-        viewControllerGame = [[RPSGameViewController alloc] initWithNibName:@"RPSGameViewController_iPad" bundle:nil];
-    }
-    self.navigationController = [[UINavigationController alloc] initWithRootViewController:viewControllerGame];
-    self.window.rootViewController = self.navigationController;
+    RPSRootViewController *rootViewController = [[RPSRootViewController alloc] init];
+    self.window.rootViewController = rootViewController;
     [self.window makeKeyAndVisible];
 
     [[FBSDKApplicationDelegate sharedInstance] application:application
