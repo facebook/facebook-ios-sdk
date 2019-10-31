@@ -96,6 +96,13 @@ main() {
     SDK_CURRENT_GRAPH_API_VERSION=$(grep -Eo 'FBSDK_TARGET_PLATFORM_VERSION @".*"' "$SDK_DIR/$SDK_MAIN_VERSION_FILE" | awk -F'"' '{print $2}')
 
     SDK_GIT_REMOTE="https://github.com/facebook/facebook-ios-sdk"
+
+    SWIFT_PACKAGE_SCHEMES=(
+      "FacebookCore"
+      "FacebookLogin"
+      "FacebookShare"
+    )
+
     if [ -f "$PWD/internal/scripts/internal_globals.sh" ]; then SDK_INTERNAL=1; else SDK_INTERNAL=0; fi
   fi
 
@@ -305,11 +312,22 @@ build_sdk() {
     fi
   }
 
+  build_spm() {
+    for scheme in "${SWIFT_PACKAGE_SCHEMES[@]}"; do
+    xcodebuild clean build \
+      -workspace .swiftpm/xcode/package.xcworkspace \
+      -scheme "$scheme" \
+      -sdk iphonesimulator \
+      OTHER_SWIFT_FLAGS="-D SWIFT_PACKAGE"
+    done
+  }
+
   local build_type=${1:-}
   if [ -n "$build_type" ]; then shift; fi
 
   case "$build_type" in
   "carthage") build_carthage "$@" ;;
+  "spm") build_spm "$@" ;;
   "swift") build_swift "$@" ;;
   "xcode") build_xcode_workspace "$@" ;;
   *) echo "Unsupported Build: $build_type" ;;
