@@ -635,13 +635,6 @@
 			remoteGlobalIDString = 81B71DA31D19C87400933E93;
 			remoteInfo = "FBSDKCoreKit-Dynamic";
 		};
-		817491711D1C6D80006E09DF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8118B6341D0A49B500962084 /* FBSDKCoreKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 9D2697461A5DF40700143BFC;
-			remoteInfo = FBSDKCoreKit;
-		};
 		819043EE1D261A7900B2E437 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8118B6341D0A49B500962084 /* FBSDKCoreKit.xcodeproj */;
@@ -725,6 +718,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = F487DADD231EBCD2008416A9;
 			remoteInfo = FBSDKCoreKitSwift;
+		};
+		F4D4A143236888200003AB0F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8118B6341D0A49B500962084 /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 9D2697461A5DF40700143BFC;
+			remoteInfo = FBSDKCoreKit;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -1729,8 +1729,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				817491721D1C6D80006E09DF /* PBXTargetDependency */,
-				817490EF1D1C6C04006E09DF /* PBXTargetDependency */,
+				F4D4A144236888200003AB0F /* PBXTargetDependency */,
 				9D46C5FE1A11E5D800A0DDB6 /* PBXTargetDependency */,
 			);
 			name = FBSDKShareKitTests;
@@ -2345,19 +2344,10 @@
 			name = "FBSDKCoreKit_TV-Dynamic";
 			targetProxy = 8131FB181D261D84000350FF /* PBXContainerItemProxy */;
 		};
-		817490EF1D1C6C04006E09DF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = FBSDKCoreKit;
-		};
 		817491611D1C6D73006E09DF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "FBSDKCoreKit-Dynamic";
 			targetProxy = 817491601D1C6D73006E09DF /* PBXContainerItemProxy */;
-		};
-		817491721D1C6D80006E09DF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = FBSDKCoreKit;
-			targetProxy = 817491711D1C6D80006E09DF /* PBXContainerItemProxy */;
 		};
 		9D2D99C31BC456EF00929E76 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2383,6 +2373,11 @@
 			isa = PBXTargetDependency;
 			name = FBSDKCoreKitSwift;
 			targetProxy = F487DC94231EC50C008416A9 /* PBXContainerItemProxy */;
+		};
+		F4D4A144236888200003AB0F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FBSDKCoreKit;
+			targetProxy = F4D4A143236888200003AB0F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

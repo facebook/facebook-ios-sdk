@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-#if BUCK
+#ifdef BUCK
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #else
 @import FBSDKCoreKit;

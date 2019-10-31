@@ -17,12 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #import "FBSDKGraphErrorRecoveryProcessor.h"
 
-#if SWIFT_PACKAGE
 #import "FBSDKCoreKit+Internal.h"
-#else
-#import "FBSDKCoreKit+Internal.h"
-#endif
-
 #import "FBSDKErrorRecoveryAttempter.h"
 
 @interface FBSDKGraphErrorRecoveryProcessor()
