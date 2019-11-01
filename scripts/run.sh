@@ -321,12 +321,29 @@ build_sdk() {
     done
   }
 
+  build_spm_integration() {
+    # Using a symlink so that this can be run locally as well as in CI
+    echo "SDKDIR: $SDK_DIR"
+    echo "PWD: $PWD"
+
+    ln -s $SDK_DIR /tmp/local-sdk-checkout
+    # ruby "$SDK_SCRIPTS_DIR"/SmokeTestSPMHelper.rb "$TRAVIS_COMMIT"
+
+    cd samples/SmoketestSPM
+    ls -R .
+
+    xcodebuild build -scheme SmoketestSPM \
+      -sdk iphonesimulator \
+      -verbose
+  }
+
   local build_type=${1:-}
   if [ -n "$build_type" ]; then shift; fi
 
   case "$build_type" in
   "carthage") build_carthage "$@" ;;
   "spm") build_spm "$@" ;;
+  "spm-integration") build_spm_integration ;;
   "swift") build_swift "$@" ;;
   "xcode") build_xcode_workspace "$@" ;;
   *) echo "Unsupported Build: $build_type" ;;

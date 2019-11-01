@@ -23,7 +23,7 @@ stages:
     if: tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
 
 jobs:
-  include:
+  exclude:
     - stage: test
       name: Xcode - iOS 12.2
       osx_image: xcode10.2
@@ -104,6 +104,11 @@ jobs:
       name: Publish Cocoapods
       osx_image: xcode10.3
       script: sh scripts/run.sh release cocoapods --allow-warnings
+  include:
+    - stage: test
+      name: Swift Package Integration Test
+      osx_image: xcode11.2
+      script: sh scripts/run.sh build spm-integration
 
 before_install: sh scripts/travis/before_install.sh
 install: sh scripts/travis/install.sh
