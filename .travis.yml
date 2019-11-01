@@ -63,6 +63,10 @@ jobs:
     #   name: Tag Version
     #   osx_image: xcode10.2
     #   script: sh scripts/run.sh tag-current-version --push
+    - stage: test
+      name: Build Swift Packages
+      osx_image: xcode11.2
+      script: sh scripts/run.sh build spm
     - stage: release
       name: GitHub Release
       osx_image: xcode10.1
