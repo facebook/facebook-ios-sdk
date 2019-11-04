@@ -28,9 +28,17 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "9D46C5FA1A11E5D800A0DDB6"
+               BuildableName = "FBSDKShareKitTests.xctest"
+               BlueprintName = "FBSDKShareKitTests"
+               ReferencedContainer = "container:FBSDKShareKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -51,8 +59,6 @@
             ReferencedContainer = "container:FBSDKShareKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

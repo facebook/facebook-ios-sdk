@@ -9,29 +9,43 @@
          <BuildActionEntry
             buildForTesting = "YES"
             buildForRunning = "YES"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9D6DEEFA1BC2E546001A94ED"
-               BuildableName = "FBSDKCoreKit_TV-Universal"
-               BlueprintName = "FBSDKCoreKit_TV-Universal"
-               ReferencedContainer = "container:../FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
+               BlueprintIdentifier = "F487DADD231EBCD2008416A9"
+               BuildableName = "FBSDKCoreKit.framework"
+               BlueprintName = "FBSDKCoreKitSwift"
+               ReferencedContainer = "container:FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
             buildForTesting = "YES"
             buildForRunning = "YES"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9D2D99BE1BC456B200929E76"
-               BuildableName = "FBSDKShareKit_TV-Universal"
-               BlueprintName = "FBSDKShareKit_TV-Universal"
-               ReferencedContainer = "container:FBSDKShareKit.xcodeproj">
+               BlueprintIdentifier = "F487DBDB231EC34B008416A9"
+               BuildableName = "FBSDKLoginKit.framework"
+               BlueprintName = "FBSDKLoginKitSwift"
+               ReferencedContainer = "container:FBSDKLoginKit/FBSDKLoginKit.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "F487DC18231EC4CC008416A9"
+               BuildableName = "FBSDKShareKit.framework"
+               BlueprintName = "FBSDKShareKitSwift"
+               ReferencedContainer = "container:FBSDKShareKit/FBSDKShareKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -41,19 +55,17 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
-      <Testables>
-      </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9D2D99BE1BC456B200929E76"
-            BuildableName = "FBSDKShareKit_TV-Universal"
-            BlueprintName = "FBSDKShareKit_TV-Universal"
-            ReferencedContainer = "container:FBSDKShareKit.xcodeproj">
+            BlueprintIdentifier = "F487DADD231EBCD2008416A9"
+            BuildableName = "FBSDKCoreKit.framework"
+            BlueprintName = "FBSDKCoreKitSwift"
+            ReferencedContainer = "container:FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
+      <Testables>
+      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -68,14 +80,12 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9D2D99BE1BC456B200929E76"
-            BuildableName = "FBSDKShareKit_TV-Universal"
-            BlueprintName = "FBSDKShareKit_TV-Universal"
-            ReferencedContainer = "container:FBSDKShareKit.xcodeproj">
+            BlueprintIdentifier = "F487DADD231EBCD2008416A9"
+            BuildableName = "FBSDKCoreKit.framework"
+            BlueprintName = "FBSDKCoreKitSwift"
+            ReferencedContainer = "container:FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -83,6 +93,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "F487DADD231EBCD2008416A9"
+            BuildableName = "FBSDKCoreKit.framework"
+            BlueprintName = "FBSDKCoreKitSwift"
+            ReferencedContainer = "container:FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
