@@ -292,7 +292,7 @@ build_sdk() {
     xcodebuild clean build \
       -workspace "${1:-}" \
       -sdk "${2:-}" \
-      -scheme SwiftKits \
+      -scheme BuildAllSwiftKits \
       -configuration Debug \
       -derivedDataPath Temp \
       | xcpretty
