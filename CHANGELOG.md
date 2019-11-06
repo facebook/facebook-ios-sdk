@@ -7,7 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.9.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.10.0...HEAD)
+
+## 5.10.0
+
+[2019-11-06](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.10.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.9.0...v5.10.0)
+
+### Added
+
+- Support for Swift Package Manager
 
 ## 5.9.0
 
