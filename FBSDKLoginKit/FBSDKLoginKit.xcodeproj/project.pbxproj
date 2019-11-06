@@ -284,13 +284,6 @@
 			remoteGlobalIDString = 814AC8571D1B528900D61E6C;
 			remoteInfo = "FBSDKCoreKit_TV-Dynamic";
 		};
-		817490F71D1C6C11006E09DF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8118B6781D0A5B9400962084 /* FBSDKCoreKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 9D2697461A5DF40700143BFC;
-			remoteInfo = FBSDKCoreKit;
-		};
 		817490FE1D1C6C11006E09DF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8118B6781D0A5B9400962084 /* FBSDKCoreKit.xcodeproj */;
@@ -305,19 +298,26 @@
 			remoteGlobalIDString = 81B71CFC1D19C87400933E93;
 			remoteInfo = "FBSDKCoreKit-Dynamic";
 		};
-		9D9DB8E61A114E500086167B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9D9DB8D01A114E500086167B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 9D9DB8D81A114E500086167B;
-			remoteInfo = FBSDKLoginKit;
-		};
 		9D9DB9631A116AB20086167B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9D9DB8D01A114E500086167B /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 9D9DB8D81A114E500086167B;
 			remoteInfo = FBSDKLoginKit;
+		};
+		F410D0522370CD0B005B9318 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8118B6781D0A5B9400962084 /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 81B71CFC1D19C87400933E93;
+			remoteInfo = "FBSDKCoreKit-Dynamic";
+		};
+		F410D0542370CD0F005B9318 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D9DB8D01A114E500086167B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 818EB4211D1A283100252851;
+			remoteInfo = "FBSDKLoginKit-Dynamic";
 		};
 		F483F425233AC85F00703DE3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -935,8 +935,8 @@
 			buildRules = (
 			);
 			dependencies = (
-				817490F81D1C6C11006E09DF /* PBXTargetDependency */,
-				9D9DB8E71A114E500086167B /* PBXTargetDependency */,
+				F410D0552370CD0F005B9318 /* PBXTargetDependency */,
+				F410D0532370CD0B005B9318 /* PBXTargetDependency */,
 			);
 			name = FBSDKLoginKitTests;
 			productName = FBSDKLoginKitTests;
@@ -1381,25 +1381,25 @@
 			name = FBSDKCoreKit;
 			targetProxy = 8118B6861D0A5B9900962084 /* PBXContainerItemProxy */;
 		};
-		817490F81D1C6C11006E09DF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = FBSDKCoreKit;
-			targetProxy = 817490F71D1C6C11006E09DF /* PBXContainerItemProxy */;
-		};
 		8199F1021D1A2B1D007AA5AD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "FBSDKCoreKit-Dynamic";
 			targetProxy = 8199F1011D1A2B1D007AA5AD /* PBXContainerItemProxy */;
 		};
-		9D9DB8E71A114E500086167B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 9D9DB8D81A114E500086167B /* FBSDKLoginKit */;
-			targetProxy = 9D9DB8E61A114E500086167B /* PBXContainerItemProxy */;
-		};
 		9D9DB9641A116AB20086167B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 9D9DB8D81A114E500086167B /* FBSDKLoginKit */;
 			targetProxy = 9D9DB9631A116AB20086167B /* PBXContainerItemProxy */;
+		};
+		F410D0532370CD0B005B9318 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "FBSDKCoreKit-Dynamic";
+			targetProxy = F410D0522370CD0B005B9318 /* PBXContainerItemProxy */;
+		};
+		F410D0552370CD0F005B9318 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 818EB4211D1A283100252851 /* FBSDKLoginKit-Dynamic */;
+			targetProxy = F410D0542370CD0F005B9318 /* PBXContainerItemProxy */;
 		};
 		F483F424233AC85F00703DE3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

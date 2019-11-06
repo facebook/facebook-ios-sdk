@@ -1440,12 +1440,12 @@
 			remoteGlobalIDString = C5C4B3BE2276B67200CA3706;
 			remoteInfo = FBSDKCoreKit_Basics_TV;
 		};
-		F4AD5D68235D190E0012DBC1 /* PBXContainerItemProxy */ = {
+		F410D0332370CBC2005B9318 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9D26973E1A5DF40700143BFC /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = F487DADD231EBCD2008416A9;
-			remoteInfo = FBSDKCoreKitSwift;
+			remoteGlobalIDString = 81B71CFC1D19C87400933E93;
+			remoteInfo = "FBSDKCoreKit-Dynamic";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -3421,7 +3421,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				F4AD5D69235D190E0012DBC1 /* PBXTargetDependency */,
+				F410D0342370CBC2005B9318 /* PBXTargetDependency */,
 				9DAD79FB1B7B27DE00DFEF8F /* PBXTargetDependency */,
 			);
 			name = FBSDKCoreKitTests;
@@ -4571,10 +4571,10 @@
 			target = C5C4B3BE2276B67200CA3706 /* FBSDKCoreKit_Basics_TV */;
 			targetProxy = C5FCE33C228E093100867DFD /* PBXContainerItemProxy */;
 		};
-		F4AD5D69235D190E0012DBC1 /* PBXTargetDependency */ = {
+		F410D0342370CBC2005B9318 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F487DADD231EBCD2008416A9 /* FBSDKCoreKitSwift */;
-			targetProxy = F4AD5D68235D190E0012DBC1 /* PBXContainerItemProxy */;
+			target = 81B71CFC1D19C87400933E93 /* FBSDKCoreKit-Dynamic */;
+			targetProxy = F410D0332370CBC2005B9318 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
