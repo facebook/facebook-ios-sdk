@@ -38,6 +38,7 @@ Pod::Spec.new do |s|
   s.subspec 'Share' do |ss|
     ss.dependency 'FBSDKCoreKit', "~> 5.0"
 
+    ss.exclude_files = 'FBSDKShareKit/FBSDKShareKit/include/**/*'
     ss.public_header_files = 'FBSDKShareKit/FBSDKShareKit/*.{h}'
     ss.ios.source_files = 'FBSDKShareKit/FBSDKShareKit/**/*.{h,m}'
     ss.ios.exclude_files = 'FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.{h,m}',
