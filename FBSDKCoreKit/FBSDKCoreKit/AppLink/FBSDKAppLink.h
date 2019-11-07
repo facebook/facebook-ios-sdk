@@ -40,7 +40,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAutoAppLinkPresentationStyle)
    * Push to current navigation controller or a new navigation controller
    */
   FBSDKAutoAppLinkPresentationStylePush,
-} NS_SWIFT_NAME(AutoAppLink.PresentationStyle);
+} NS_SWIFT_NAME(AutoAppLinkPresentationStyle);
 
 /**
  A Protocol that Auto App Link content view controller should implement
