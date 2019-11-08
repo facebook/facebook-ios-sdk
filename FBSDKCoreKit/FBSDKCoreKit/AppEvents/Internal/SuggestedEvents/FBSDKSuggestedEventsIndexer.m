@@ -43,23 +43,34 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
 
 + (void)initialize
 {
-    [self retrieveOptInAndUnconfirmedEvents];
     _viewTrees = [NSMutableArray array];
+    _optInEvents = [NSMutableSet set];
+    _unconfirmedEvents = [NSMutableSet set];
+    [self retrieveOptInAndUnconfirmedEvents];
 }
 
 + (void)enable
 {
+    // won't do the model prediction when there is no opt-in event and unconfirmed event
+    if (_optInEvents.count == 0 && _unconfirmedEvents.count == 0 ) {
+        return;
+    }
 }
 
 // TODO: T54222097 will get the opt-in events and unconfimed events from server
 + (void)retrieveOptInAndUnconfirmedEvents
 {
-    _optInEvents = [NSMutableSet set];
-    [_optInEvents addObject:FBSDKAppEventNameAddedToCart];
-    [_optInEvents addObject:FBSDKAppEventNamePurchased];
-
-    _unconfirmedEvents = [NSMutableSet set];
-    [_unconfirmedEvents addObject:FBSDKAppEventNameCompletedRegistration];
+    [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
+        if (error) {
+            return;
+        }
+        NSDictionary<NSString *, id> *suggestedEventsSetting = serverConfiguration.suggestedEventsSetting;
+        if (suggestedEventsSetting == nil) {
+            return;
+        }
+        [_optInEvents addObjectsFromArray:suggestedEventsSetting[@"production_events"]];
+        [_unconfirmedEvents addObjectsFromArray:suggestedEventsSetting[@"eligible_for_prediction_events"]];
+    }];
 }
 
 @end

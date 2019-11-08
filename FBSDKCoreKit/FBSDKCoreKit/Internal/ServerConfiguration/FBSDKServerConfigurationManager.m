@@ -58,6 +58,7 @@
 #define FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS_FIELD  @"auto_event_mapping_ios"
 #define FBSDK_SERVER_CONFIGURATION_RESTRICTIVE_PARAMS_FIELD @"restrictive_data_filter_params"
 #define FBSDK_SERVER_CONFIGURATION_AAM_RULES_FIELD @"aam_rules"
+#define FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING_FIELD @"suggested_events_setting"
 
 @implementation FBSDKServerConfigurationManager
 
@@ -211,6 +212,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   NSArray *eventBindings = [FBSDKTypeUtility arrayValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS_FIELD]];
   NSDictionary<NSString *, id> *restrictiveParams = [FBSDKBasicUtility objectForJSONString:resultDictionary[FBSDK_SERVER_CONFIGURATION_RESTRICTIVE_PARAMS_FIELD] error:nil];
   NSDictionary<NSString *, id> *AAMRules = [FBSDKBasicUtility objectForJSONString:resultDictionary[FBSDK_SERVER_CONFIGURATION_AAM_RULES_FIELD] error:nil];
+  NSDictionary<NSString *, id> *suggestedEventsSetting = [FBSDKBasicUtility objectForJSONString:resultDictionary[FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING_FIELD] error:nil];
   FBSDKServerConfiguration *serverConfiguration = [[FBSDKServerConfiguration alloc] initWithAppID:appID
                                                                                           appName:appName
                                                                               loginTooltipEnabled:loginTooltipEnabled
@@ -237,6 +239,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                                                     eventBindings:eventBindings
                                                                                 restrictiveParams:restrictiveParams
                                                                                          AAMRules:AAMRules
+                                                                           suggestedEventsSetting:suggestedEventsSetting
                                                    ];
   if (restrictiveParams) {
     [FBSDKRestrictiveDataFilterManager updateFilters:restrictiveParams];
@@ -283,7 +286,8 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                       FBSDK_SERVER_CONFIGURATION_SESSION_TIMEOUT_FIELD,
                       FBSDK_SERVER_CONFIGURATION_LOGGIN_TOKEN_FIELD,
                       FBSDK_SERVER_CONFIGURATION_RESTRICTIVE_PARAMS_FIELD,
-                      FBSDK_SERVER_CONFIGURATION_AAM_RULES_FIELD
+                      FBSDK_SERVER_CONFIGURATION_AAM_RULES_FIELD,
+                      FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING_FIELD
 #if !TARGET_OS_TV
                       ,FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS_FIELD
 #endif
@@ -355,6 +359,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                                     eventBindings:nil
                                                                 restrictiveParams:nil
                                                                          AAMRules:nil
+                                                           suggestedEventsSetting:nil
                                    ];
   }
   return _defaultServerConfiguration;
