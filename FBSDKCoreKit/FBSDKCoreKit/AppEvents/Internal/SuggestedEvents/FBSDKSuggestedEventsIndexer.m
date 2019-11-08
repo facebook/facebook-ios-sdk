@@ -43,34 +43,36 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
 
 + (void)initialize
 {
-    _viewTrees = [NSMutableArray array];
-    _optInEvents = [NSMutableSet set];
-    _unconfirmedEvents = [NSMutableSet set];
-    [self retrieveOptInAndUnconfirmedEvents];
+  _viewTrees = [NSMutableArray array];
+  _optInEvents = [NSMutableSet set];
+  _unconfirmedEvents = [NSMutableSet set];
 }
 
 + (void)enable
 {
-    // won't do the model prediction when there is no opt-in event and unconfirmed event
-    if (_optInEvents.count == 0 && _unconfirmedEvents.count == 0 ) {
-        return;
+  [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
+    if (error) {
+      return;
     }
+
+    NSDictionary<NSString *, id> *suggestedEventsSetting = serverConfiguration.suggestedEventsSetting;
+    if (suggestedEventsSetting == nil || [suggestedEventsSetting isKindOfClass:[NSNull class]]) {
+      return;
+    }
+
+    [_optInEvents addObjectsFromArray:suggestedEventsSetting[@"production_events"]];
+    [_unconfirmedEvents addObjectsFromArray:suggestedEventsSetting[@"eligible_for_prediction_events"]];
+
+    [FBSDKSuggestedEventsIndexer setup];
+  }];
 }
 
-// TODO: T54222097 will get the opt-in events and unconfimed events from server
-+ (void)retrieveOptInAndUnconfirmedEvents
++ (void)setup
 {
-    [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
-        if (error) {
-            return;
-        }
-        NSDictionary<NSString *, id> *suggestedEventsSetting = serverConfiguration.suggestedEventsSetting;
-        if (suggestedEventsSetting == nil || [suggestedEventsSetting isKindOfClass:[NSNull class]]) {
-            return;
-        }
-        [_optInEvents addObjectsFromArray:suggestedEventsSetting[@"production_events"]];
-        [_unconfirmedEvents addObjectsFromArray:suggestedEventsSetting[@"eligible_for_prediction_events"]];
-    }];
+  // won't do the model prediction when there is no opt-in event and unconfirmed event
+  if (_optInEvents.count == 0 && _unconfirmedEvents.count == 0) {
+    return;
+  }
 }
 
 @end
