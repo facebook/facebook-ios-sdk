@@ -1077,6 +1077,12 @@ static NSString *g_overrideAppID = nil;
         [FBSDKMetadataIndexer enable];
       }
     }];
+    [FBSDKFeatureManager checkFeature:FBSDKFeatureSuggestedEvents completionBlock:^(BOOL enabled) {
+      if (enabled) {
+        // Enable Suggested Events
+        [FBSDKSuggestedEventsIndexer enable];
+      }
+    }];
 #endif
     if (callback) {
       callback();
