@@ -65,7 +65,7 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
             return;
         }
         NSDictionary<NSString *, id> *suggestedEventsSetting = serverConfiguration.suggestedEventsSetting;
-        if (suggestedEventsSetting == nil) {
+        if (suggestedEventsSetting == nil || [suggestedEventsSetting isKindOfClass:[NSNull class]]) {
             return;
         }
         [_optInEvents addObjectsFromArray:suggestedEventsSetting[@"production_events"]];
