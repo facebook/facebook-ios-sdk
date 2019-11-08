@@ -52,7 +52,8 @@ Pod::Spec.new do |s|
   s.subspec 'Core' do |ss|
     ss.dependency 'FBSDKCoreKit/Basics'
     ss.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/Basics/*',
-                       'FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.{h,m}'
+                       'FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.{h,m}',
+                       'FBSDKCoreKit/FBSDKCoreKit/include/**/*'
     ss.source_files = 'FBSDKCoreKit/FBSDKCoreKit/**/*.{h,m}'
     ss.public_header_files = 'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.h',
                              'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/**/*.h',
