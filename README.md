@@ -15,7 +15,7 @@ NOTE: By default, the Facebook SDK for iOS is installed in ~/Documents/FacebookS
 
 ## TRY IT OUT
 
-### Swift Package Manager
+### Swift Package Manager (available Xcode 11.2 and forward)
 
 1. In Xcode, select File > Swift Packages > Add Package Dependency.
 2. Follow the prompts using the URL for this repository and a minimum semantic version of v5.10.0
