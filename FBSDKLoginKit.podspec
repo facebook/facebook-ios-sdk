@@ -32,6 +32,7 @@ Pod::Spec.new do |s|
 
   s.default_subspecs = 'Login'
   s.swift_version = '5.0'
+  s.prefix_header_contents = '#define FBSDKCOCOAPODS'
 
   s.subspec 'Login' do |ss|
     ss.dependency 'FBSDKCoreKit', "~> 5.0"
