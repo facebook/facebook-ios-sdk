@@ -31,6 +31,9 @@
 #define ViewHierarchyKeyScreenName @"screenname"
 #define ViewHierarchyKeyView  @"view"
 
+NSString * const OptInEvents = @"production_events";
+NSString * const UnconfirmedEvents = @"eligible_for_prediction_events";
+
 static NSMutableArray<NSMutableDictionary<NSString *, id> *> *_viewTrees;
 static NSMutableSet<NSString *> *_optInEvents;
 static NSMutableSet<NSString *> *_unconfirmedEvents;
@@ -56,12 +59,12 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
     }
 
     NSDictionary<NSString *, id> *suggestedEventsSetting = serverConfiguration.suggestedEventsSetting;
-    if (suggestedEventsSetting == nil || [suggestedEventsSetting isKindOfClass:[NSNull class]]) {
+    if ([suggestedEventsSetting isKindOfClass:[NSNull class]] || !suggestedEventsSetting[OptInEvents] || !suggestedEventsSetting[UnconfirmedEvents]) {
       return;
     }
 
-    [_optInEvents addObjectsFromArray:suggestedEventsSetting[@"production_events"]];
-    [_unconfirmedEvents addObjectsFromArray:suggestedEventsSetting[@"eligible_for_prediction_events"]];
+    [_optInEvents addObjectsFromArray:suggestedEventsSetting[OptInEvents]];
+    [_unconfirmedEvents addObjectsFromArray:suggestedEventsSetting[UnconfirmedEvents]];
 
     [FBSDKSuggestedEventsIndexer setup];
   }];
