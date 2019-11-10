@@ -1309,6 +1309,8 @@
 		F9FFE01D2252D666007B2346 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F9FFE01C2252D665007B2346 /* libz.tbd */; };
 		F9FFE01F2252D66E007B2346 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F9FFE01E2252D66E007B2346 /* libz.tbd */; };
 		FD8E438122FBF8F1008B6DD3 /* FBSDKErrorReport.m in Sources */ = {isa = PBXBuildFile; fileRef = FD8E438022FBF8F1008B6DD3 /* FBSDKErrorReport.m */; };
+		FD9E154D23777AC900A005EC /* model_runtime.h in Headers */ = {isa = PBXBuildFile; fileRef = FD9E154C23777AC900A005EC /* model_runtime.h */; };
+		FD9E155C23777AF700A005EC /* standalone_model.h in Headers */ = {isa = PBXBuildFile; fileRef = FD9E155B23777AF700A005EC /* standalone_model.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1775,6 +1777,8 @@
 		F9FFE01E2252D66E007B2346 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
 		FD8E437F22FBF8CA008B6DD3 /* FBSDKErrorReport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKErrorReport.h; sourceTree = "<group>"; };
 		FD8E438022FBF8F1008B6DD3 /* FBSDKErrorReport.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKErrorReport.m; sourceTree = "<group>"; };
+		FD9E154C23777AC900A005EC /* model_runtime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = model_runtime.h; sourceTree = "<group>"; };
+		FD9E155B23777AF700A005EC /* standalone_model.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = standalone_model.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2482,6 +2486,8 @@
 			children = (
 				BF247C802374E1B100A522C0 /* FBSDKSuggestedEventsIndexer.h */,
 				BF247C812374E1B200A522C0 /* FBSDKSuggestedEventsIndexer.m */,
+				FD9E154C23777AC900A005EC /* model_runtime.h */,
+				FD9E155B23777AF700A005EC /* standalone_model.h */,
 			);
 			path = SuggestedEvents;
 			sourceTree = "<group>";
@@ -2935,6 +2941,7 @@
 				9D34A11F1A5F038300C37317 /* FBSDKApplicationDelegate.h in Headers */,
 				9DBA6A371A80267400B4DE6A /* FBSDKColor.h in Headers */,
 				5D4361152321C30400254DF7 /* FBSDKCrashObserving.h in Headers */,
+				FD9E155C23777AF700A005EC /* standalone_model.h in Headers */,
 				89830F331A78060A00226ABB /* FBSDKDialogConfiguration.h in Headers */,
 				520223F71D83C8D200CE0AB5 /* FBSDKDeviceRequestsHelper.h in Headers */,
 				5263EDBE215D97ED00FAAB0C /* FBSDKUserDataStore.h in Headers */,
@@ -2958,6 +2965,7 @@
 				89830F2F1A7805E100226ABB /* FBSDKServerConfiguration.h in Headers */,
 				9D0BC15F1A8D428700BE8BA4 /* FBSDKAppEventsStateManager.h in Headers */,
 				9D3AF4601A9EC24800EEF724 /* FBSDKErrorRecoveryConfiguration.h in Headers */,
+				FD9E154D23777AC900A005EC /* model_runtime.h in Headers */,
 				9D0BC1571A8D23E200BE8BA4 /* FBSDKAppEvents.h in Headers */,
 				9DC658951A6EE5C500B85AAF /* FBSDKGraphRequest.h in Headers */,
 				C5188DF9222F388400F4D8BC /* FBSDKApplicationObserving.h in Headers */,
