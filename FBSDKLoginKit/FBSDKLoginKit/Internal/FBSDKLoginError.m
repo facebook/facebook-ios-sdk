@@ -18,7 +18,7 @@
 
 #import "FBSDKLoginError.h"
 
-#ifdef COCOAPODS
+#ifdef FBSDKCOCOAPODS
 #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
 #else
 #import "FBSDKCoreKit+Internal.h"
