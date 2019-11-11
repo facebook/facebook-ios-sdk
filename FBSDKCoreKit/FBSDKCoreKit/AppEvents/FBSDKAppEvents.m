@@ -31,6 +31,7 @@
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError.h"
 #import "FBSDKFeatureManager.h"
+#import "FBSDKModelManager.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
@@ -1077,10 +1078,9 @@ static NSString *g_overrideAppID = nil;
         [FBSDKMetadataIndexer enable];
       }
     }];
-    [FBSDKFeatureManager checkFeature:FBSDKFeatureSuggestedEvents completionBlock:^(BOOL enabled) {
+    [FBSDKFeatureManager checkFeature:FBSDKFeaturePrivacyProtection completionBlock:^(BOOL enabled) {
       if (enabled) {
-        // Enable Suggested Events
-        [FBSDKSuggestedEventsIndexer enable];
+        [FBSDKModelManager enable];
       }
     }];
 #endif

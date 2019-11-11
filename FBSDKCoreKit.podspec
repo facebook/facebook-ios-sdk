@@ -71,6 +71,7 @@ Pod::Spec.new do |s|
                             'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/SuggestedEvents/*',
                             'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/Codeless/*',
                             'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/FBSDKHybridAppEventsScriptMessageHandler.{h,m}',
+                            'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/ML/*',
                             'FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*',
                             'FBSDKCoreKit/FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.{h,m}',
                             'FBSDKCoreKit/FBSDKCoreKit/FBSDKMeasurementEvent.{h,m}',
