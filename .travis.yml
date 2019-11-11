@@ -112,7 +112,8 @@ notifications: # set notification options
     on_failure: always
     recipients:
       - joesusnick@fb.com
-      - dreamolight@fb.com
+      - tianqibt@fb.com
+      - kylinchang@fb.com
   # Enable webhooks later
   # webhooks:
   # on_failure: always
