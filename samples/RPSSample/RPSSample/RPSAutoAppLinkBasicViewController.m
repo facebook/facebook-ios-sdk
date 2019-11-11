@@ -37,41 +37,41 @@ static const int paddingLen = 10;
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     int stdWidth = scrollView.frame.size.width - paddingLen*2;
 
-    UILabel *labelName = [[UILabel alloc] initWithFrame:CGRectMake(paddingLen, 50, stdWidth, 30)];
-    labelName.font = [UIFont boldSystemFontOfSize:24];
-    labelName.textColor = [UIColor grayColor];
+    UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(paddingLen, 50, stdWidth, 30)];
+    nameLabel.font = [UIFont boldSystemFontOfSize:24];
+    nameLabel.textColor = [UIColor grayColor];
 
-    UILabel *labelDesc = [[UILabel alloc] initWithFrame:CGRectMake(paddingLen, 90, stdWidth, 20)];
-    labelDesc.font = [UIFont systemFontOfSize:14];
-    labelDesc.textColor = [UIColor lightGrayColor];
+    UILabel *descLabel = [[UILabel alloc] initWithFrame:CGRectMake(paddingLen, 90, stdWidth, 20)];
+    descLabel.font = [UIFont systemFontOfSize:14];
+    descLabel.textColor = [UIColor lightGrayColor];
 
-    UILabel *labelPrice = [[UILabel alloc] initWithFrame:CGRectMake(paddingLen, 130, stdWidth, 20)];
-    labelPrice.font = [UIFont systemFontOfSize:20];
-    labelPrice.textColor = [UIColor blackColor];
+    UILabel *priceLabel = [[UILabel alloc] initWithFrame:CGRectMake(paddingLen, 130, stdWidth, 20)];
+    priceLabel.font = [UIFont systemFontOfSize:20];
+    priceLabel.textColor = [UIColor blackColor];
 
     if (self.product == nil) {
         self.product = [[Coffee alloc] initWithName:@"Coffee" desc:@"I am just a coffee" price:1];
     }
-    labelName.text = self.product.name;
-    labelDesc.text = [@"Description: " stringByAppendingString:self.product.desc];
-    labelPrice.text = [@"Price: $" stringByAppendingString:[@(self.product.price) stringValue]];
+    nameLabel.text = self.product.name;
+    descLabel.text = [@"Description: " stringByAppendingString:self.product.desc];
+    priceLabel.text = [@"Price: $" stringByAppendingString:[@(self.product.price) stringValue]];
 
-    [scrollView addSubview: labelName];
-    [scrollView addSubview: labelDesc];
-    [scrollView addSubview: labelPrice];
+    [scrollView addSubview: nameLabel];
+    [scrollView addSubview: descLabel];
+    [scrollView addSubview: priceLabel];
 
     if (self.data != nil) {
-        UILabel *labelData = [[UILabel alloc] init];
-        labelData.font = [UIFont systemFontOfSize:20];
-        labelData.textColor = [UIColor blueColor];
-        labelData.text = [NSString stringWithFormat:@"data is: %@", self.data];
-        labelData.numberOfLines = 0;
-        CGSize size = [labelData.text boundingRectWithSize:CGSizeMake(stdWidth, 1000)
+        UILabel *dataLabel = [[UILabel alloc] init];
+        dataLabel.font = [UIFont systemFontOfSize:20];
+        dataLabel.textColor = [UIColor blueColor];
+        dataLabel.text = [NSString stringWithFormat:@"data is: %@", self.data];
+        dataLabel.numberOfLines = 0;
+        CGSize size = [dataLabel.text boundingRectWithSize:CGSizeMake(stdWidth, 1000)
                                                    options:NSStringDrawingUsesLineFragmentOrigin
-                                                attributes:@{NSFontAttributeName:labelData.font}
+                                                attributes:@{NSFontAttributeName:dataLabel.font}
                                                    context:nil].size;
-        labelData.frame = CGRectMake(paddingLen, 180, size.width, size.height);
-        [scrollView addSubview:labelData];
+        dataLabel.frame = CGRectMake(paddingLen, 180, size.width, size.height);
+        [scrollView addSubview:dataLabel];
     }
     [self.view addSubview: scrollView];
 }

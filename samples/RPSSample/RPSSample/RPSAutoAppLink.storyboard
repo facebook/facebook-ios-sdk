@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina5_9" orientation="portrait">
+    <device id="retina6_1" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -15,7 +15,7 @@
             <objects>
                 <viewController storyboardIdentifier="RPSAutoAppLinkStoryboardViewController" id="zG5-ws-ebf" customClass="RPSAutoAppLinkStoryboardViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Emp-EQ-mPd">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aUs-pT-Plw">
@@ -63,10 +63,10 @@
                         <viewLayoutGuide key="safeArea" id="pFY-x7-Ymh"/>
                     </view>
                     <connections>
-                        <outlet property="labelData" destination="gWM-bt-udm" id="44G-FX-zAy"/>
-                        <outlet property="labelDesc" destination="cfA-Zd-aMx" id="gIX-AR-upU"/>
-                        <outlet property="labelName" destination="DR7-hW-PNU" id="kVf-7C-0JL"/>
-                        <outlet property="labelPrice" destination="Jpp-tW-2GH" id="2XY-Eh-SRa"/>
+                        <outlet property="dataLabel" destination="gWM-bt-udm" id="44G-FX-zAy"/>
+                        <outlet property="descLabel" destination="cfA-Zd-aMx" id="gIX-AR-upU"/>
+                        <outlet property="nameLabel" destination="DR7-hW-PNU" id="kVf-7C-0JL"/>
+                        <outlet property="priceLabel" destination="Jpp-tW-2GH" id="2XY-Eh-SRa"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dZJ-xQ-6yh" userLabel="First Responder" sceneMemberID="firstResponder"/>

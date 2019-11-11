@@ -23,10 +23,10 @@
 @property (strong, nonatomic) Coffee* product;
 @property (nonatomic, copy) NSDictionary<NSString *, id> *data;
 
-@property (weak, nonatomic) IBOutlet UILabel* labelName;
-@property (weak, nonatomic) IBOutlet UILabel* labelDesc;
-@property (weak, nonatomic) IBOutlet UILabel* labelPrice;
-@property (weak, nonatomic) IBOutlet UILabel* labelData;
+@property (weak, nonatomic) IBOutlet UILabel* nameLabel;
+@property (weak, nonatomic) IBOutlet UILabel* descLabel;
+@property (weak, nonatomic) IBOutlet UILabel* priceLabel;
+@property (weak, nonatomic) IBOutlet UILabel* dataLabel;
 
 @end
 
@@ -40,12 +40,12 @@
         self.product = [[Coffee alloc] initWithName:@"Coffee" desc:@"I am just a STORYBOARD coffee" price:1];
     }
 
-    self.labelName.text = self.product.name;
-    self.labelDesc.text = [@"Description: " stringByAppendingString:self.product.desc];
-    self.labelPrice.text = [@"Price: $" stringByAppendingString:[@(self.product.price) stringValue]];
+    self.nameLabel.text = self.product.name;
+    self.descLabel.text = [@"Description: " stringByAppendingString:self.product.desc];
+    self.priceLabel.text = [@"Price: $" stringByAppendingString:[@(self.product.price) stringValue]];
 
     if (self.data != nil) {
-        self.labelData.text = [NSString stringWithFormat:@"data is: %@", self.data];
+        self.dataLabel.text = [NSString stringWithFormat:@"data is: %@", self.data];
     }
 }
 

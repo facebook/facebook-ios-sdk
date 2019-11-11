@@ -22,8 +22,22 @@
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 
 #import "RPSAppLinkedViewController.h"
+#import "RPSAutoAppLinkBasicViewController.h"
+#import "RPSAutoAppLinkStoryboardViewController.h"
 #import "RPSCommonObjects.h"
 #import "RPSRootViewController.h"
+#import "RPSSample-Swift.h"
+
+@interface FBSDKAppLink ()
+
++ (void)registerViewController:(Class)viewControllerClass
+                         style:(FBSDKAutoAppLinkPresentationStyle)style;
+
++ (void)registerIdentifier:(NSString *)identifier
+                storyBoard:(NSString *)storyBoard
+                     style:(FBSDKAutoAppLinkPresentationStyle)style;
+
+@end
 
 @implementation RPSAppDelegate
 
@@ -72,16 +86,18 @@
   sourceApplication:(nullable NSString *)sourceApplication
          annotation:(nonnull id)annotation
 {
+    // view controller implemented in Obj-C
+    [FBSDKAppLink registerViewController:[RPSAutoAppLinkBasicViewController class] style:FBSDKAutoAppLinkPresentationStyleAuto];
+
+    // view controller implemented in Obj-C with storyboard
+    // [FBSDKAppLink registerIdentifier:@"RPSAutoAppLinkStoryboardViewController" storyBoard:@"RPSAutoAppLink" style:FBSDKAutoAppLinkPresentationStyleAuto];
+
+    // view controller implemented in Swift
+    // [FBSDKAppLink registerViewController:[RPSAutoAppLinkSwiftViewController class] style:FBSDKAutoAppLinkPresentationStyleAuto];
     BOOL result = [[FBSDKApplicationDelegate sharedInstance] application:application
                                                                  openURL:url
                                                                  sourceApplication:sourceApplication
                                                               annotation:annotation];
-
-    RPSCall appLinkCall = [RPSAppDelegate callFromAppLinkURL:url sourceApplication:sourceApplication];
-    if (appLinkCall != RPSCallNone) {
-        RPSAppLinkedViewController *vc = [[RPSAppLinkedViewController alloc] initWithCall:appLinkCall];
-        [self.navigationController presentViewController:vc animated:YES completion:nil];
-    }
     return result;
 }
 

@@ -42,6 +42,11 @@
 		85C69D741602B098008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D711602B098008AD9A0 /* Default-568h@2x.png */; };
 		85C69D751602B098008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D721602B098008AD9A0 /* Default.png */; };
 		85C69D761602B098008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D731602B098008AD9A0 /* Default@2x.png */; };
+		BF4900902378C3AE004A4A0F /* RPSAutoAppLink.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF4900872378C3AE004A4A0F /* RPSAutoAppLink.storyboard */; };
+		BF4900912378C3AE004A4A0F /* RPSAutoAppLinkBasicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF4900892378C3AE004A4A0F /* RPSAutoAppLinkBasicViewController.m */; };
+		BF4900922378C3AE004A4A0F /* RPSAutoAppLinkStoryboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF49008A2378C3AE004A4A0F /* RPSAutoAppLinkStoryboardViewController.m */; };
+		BF4900932378C3AE004A4A0F /* RPSCoffee.m in Sources */ = {isa = PBXBuildFile; fileRef = BF49008B2378C3AE004A4A0F /* RPSCoffee.m */; };
+		BF4900942378C3AE004A4A0F /* RPSAutoAppLinkSwiftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF49008C2378C3AE004A4A0F /* RPSAutoAppLinkSwiftViewController.swift */; };
 		BFE7988B235FB801002B10C7 /* game.png in Resources */ = {isa = PBXBuildFile; fileRef = BFE79886235FB800002B10C7 /* game.png */; };
 		BFE7988C235FB801002B10C7 /* tool.png in Resources */ = {isa = PBXBuildFile; fileRef = BFE79887235FB800002B10C7 /* tool.png */; };
 		BFE7988D235FB801002B10C7 /* RPSAutoAppLinkDebugTool.m in Sources */ = {isa = PBXBuildFile; fileRef = BFE79888235FB800002B10C7 /* RPSAutoAppLinkDebugTool.m */; };
@@ -100,6 +105,16 @@
 		8986C7F11890A571004B90DD /* Project-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
 		8986C7F21890A571004B90DD /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		9D9ACC431ABFBD9B0050BF2E /* ReadMe.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
+		BF4900862378C3AD004A4A0F /* RPSSample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RPSSample-Bridging-Header.h"; sourceTree = "<group>"; };
+		BF4900872378C3AE004A4A0F /* RPSAutoAppLink.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = RPSAutoAppLink.storyboard; sourceTree = "<group>"; };
+		BF4900882378C3AE004A4A0F /* RPSAutoAppLinkStoryboardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RPSAutoAppLinkStoryboardViewController.h; sourceTree = "<group>"; };
+		BF4900892378C3AE004A4A0F /* RPSAutoAppLinkBasicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RPSAutoAppLinkBasicViewController.m; sourceTree = "<group>"; };
+		BF49008A2378C3AE004A4A0F /* RPSAutoAppLinkStoryboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RPSAutoAppLinkStoryboardViewController.m; sourceTree = "<group>"; };
+		BF49008B2378C3AE004A4A0F /* RPSCoffee.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RPSCoffee.m; sourceTree = "<group>"; };
+		BF49008C2378C3AE004A4A0F /* RPSAutoAppLinkSwiftViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RPSAutoAppLinkSwiftViewController.swift; sourceTree = "<group>"; };
+		BF49008D2378C3AE004A4A0F /* RPSSample-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RPSSample-Bridging-Header.h"; sourceTree = "<group>"; };
+		BF49008E2378C3AE004A4A0F /* RPSAutoAppLinkBasicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RPSAutoAppLinkBasicViewController.h; sourceTree = "<group>"; };
+		BF49008F2378C3AE004A4A0F /* RPSCoffee.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RPSCoffee.h; sourceTree = "<group>"; };
 		BFE79885235FB800002B10C7 /* RPSAutoAppLinkDebugTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RPSAutoAppLinkDebugTool.h; sourceTree = "<group>"; };
 		BFE79886235FB800002B10C7 /* game.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = game.png; sourceTree = "<group>"; };
 		BFE79887235FB800002B10C7 /* tool.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tool.png; sourceTree = "<group>"; };
@@ -175,6 +190,15 @@
 				84070D2A1540AA2B00E39703 /* RPSAppDelegate.m */,
 				BFE7988A235FB801002B10C7 /* RPSRootViewController.h */,
 				BFE79889235FB801002B10C7 /* RPSRootViewController.m */,
+				BF49008F2378C3AE004A4A0F /* RPSCoffee.h */,
+				BF49008B2378C3AE004A4A0F /* RPSCoffee.m */,
+				BF49008E2378C3AE004A4A0F /* RPSAutoAppLinkBasicViewController.h */,
+				BF4900892378C3AE004A4A0F /* RPSAutoAppLinkBasicViewController.m */,
+				BF4900872378C3AE004A4A0F /* RPSAutoAppLink.storyboard */,
+				BF4900882378C3AE004A4A0F /* RPSAutoAppLinkStoryboardViewController.h */,
+				BF49008A2378C3AE004A4A0F /* RPSAutoAppLinkStoryboardViewController.m */,
+				BF49008D2378C3AE004A4A0F /* RPSSample-Bridging-Header.h */,
+				BF49008C2378C3AE004A4A0F /* RPSAutoAppLinkSwiftViewController.swift */,
 				BFE79885235FB800002B10C7 /* RPSAutoAppLinkDebugTool.h */,
 				BFE79888235FB800002B10C7 /* RPSAutoAppLinkDebugTool.m */,
 				0366E7E218636173006122EE /* RPSAppLinkedViewController.h */,
@@ -189,6 +213,7 @@
 				84070D401540AA2B00E39703 /* RPSFriendsViewController_iPhone.xib */,
 				84070D431540AA2B00E39703 /* RPSFriendsViewController_iPad.xib */,
 				84070D211540AA2B00E39703 /* Supporting Files */,
+				BF4900862378C3AD004A4A0F /* RPSSample-Bridging-Header.h */,
 			);
 			path = RPSSample;
 			sourceTree = "<group>";
@@ -265,6 +290,11 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0630;
+				TargetAttributes = {
+					84070D151540AA2B00E39703 = {
+						LastSwiftMigration = 1030;
+					};
+				};
 			};
 			buildConfigurationList = 84070D101540AA2B00E39703 /* Build configuration list for PBXProject "RPSSample" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -308,6 +338,7 @@
 				85C69D761602B098008AD9A0 /* Default@2x.png in Resources */,
 				84FF0AB71700AE880035CF65 /* IconFacebook-72@2x.png in Resources */,
 				5FDCBDF6171F2BF700FB7055 /* left-paper-128.png in Resources */,
+				BF4900902378C3AE004A4A0F /* RPSAutoAppLink.storyboard in Resources */,
 				5FDCBDF7171F2BF700FB7055 /* left-rock-128.png in Resources */,
 				5FDCBDF8171F2BF700FB7055 /* left-scissors-128.png in Resources */,
 				5FDCBDFC171F32A300FB7055 /* right-paper-128.png in Resources */,
@@ -335,8 +366,12 @@
 				0366E7E518636173006122EE /* RPSAppLinkedViewController.m in Sources */,
 				DB8278D01AAFB72E004247DA /* RPSFriendsViewController.m in Sources */,
 				84070D2E1540AA2B00E39703 /* RPSGameViewController.m in Sources */,
+				BF4900912378C3AE004A4A0F /* RPSAutoAppLinkBasicViewController.m in Sources */,
 				BFE7988D235FB801002B10C7 /* RPSAutoAppLinkDebugTool.m in Sources */,
+				BF4900922378C3AE004A4A0F /* RPSAutoAppLinkStoryboardViewController.m in Sources */,
 				84C1E1D6171481E70037E406 /* RPSCommonObjects.m in Sources */,
+				BF4900932378C3AE004A4A0F /* RPSCoffee.m in Sources */,
+				BF4900942378C3AE004A4A0F /* RPSAutoAppLinkSwiftViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -404,8 +439,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8986C7EF1890A571004B90DD /* Application.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
+				SWIFT_OBJC_BRIDGING_HEADER = "RPSSample/RPSSample-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -413,8 +453,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8986C7EF1890A571004B90DD /* Application.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
+				SWIFT_OBJC_BRIDGING_HEADER = "RPSSample/RPSSample-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
