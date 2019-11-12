@@ -68,8 +68,10 @@ static NSMutableDictionary<NSString *, id> *_modelInfo;
 
     [FBSDKFeatureManager checkFeature:FBSDKFeatureSuggestedEvents completionBlock:^(BOOL enabled) {
       if (enabled) {
-        [self getModelAndRules:SUGGEST_EVENT_KEY handler:^(void){
-          [FBSDKSuggestedEventsIndexer enable];
+        [self getModelAndRules:SUGGEST_EVENT_KEY handler:^(BOOL success){
+          if (success) {
+            [FBSDKSuggestedEventsIndexer enable];
+          }
         }];
       }
     }];
@@ -84,22 +86,36 @@ static NSMutableDictionary<NSString *, id> *_modelInfo;
   dispatch_group_t group = dispatch_group_create();
   NSDictionary<NSString *, id> *useCaseInfo = [_modelInfo objectForKey:useCaseKey];
   if ([_modelInfo.allKeys count] == 0 || !useCaseInfo) {
-    return;
+    if (handler) {
+      handler(NO);
+      return;
+    }
   }
   NSDictionary<NSString *, id> *model = [_modelInfo objectForKey:useCaseKey];
+
+  // download model asset
   NSString *assetUrlString = [model objectForKey:ASSET_URI_KEY];
-  NSString *rulesUrlString = [model objectForKey:RULES_URI_KEY];
+  NSString *assetFilePath;
   if (assetUrlString.length > 0) {
-    NSString *assetFilePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.weights", useCaseKey, useCaseInfo[VERSION_ID_KEY]]];
+    assetFilePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.weights", useCaseKey, useCaseInfo[VERSION_ID_KEY]]];
     [self download:assetUrlString filePath:assetFilePath queue:queue group:group];
   }
+
+  // download rules
+  NSString *rulesUrlString = [model objectForKey:RULES_URI_KEY];
+  NSString *rulesFilePath;
+  // rules are optional and rulesUrlString may be empty
   if (rulesUrlString.length > 0) {
-    NSString *rulesFilePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.rules", useCaseKey, useCaseInfo[VERSION_ID_KEY]]];
+    rulesFilePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.rules", useCaseKey, useCaseInfo[VERSION_ID_KEY]]];
     [self download:rulesUrlString filePath:rulesFilePath queue:queue group:group];
   }
   dispatch_group_notify(group, dispatch_get_main_queue(), ^{
     if (handler) {
-      handler();
+      if ([[NSFileManager defaultManager] fileExistsAtPath:assetFilePath] && (!rulesUrlString || (rulesUrlString && [[NSFileManager defaultManager] fileExistsAtPath:rulesFilePath]))) {
+          handler(YES);
+          return;
+      }
+      handler(NO);
     }
   });
 }
@@ -109,7 +125,7 @@ static NSMutableDictionary<NSString *, id> *_modelInfo;
            queue:(dispatch_queue_t)queue
            group:(dispatch_group_t)group
 {
-  if (!filePath || [[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+  if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
     return;
   }
   dispatch_group_async(group, queue, ^{

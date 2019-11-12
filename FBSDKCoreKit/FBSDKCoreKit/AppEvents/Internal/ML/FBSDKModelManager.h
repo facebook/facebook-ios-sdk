@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void (^FBSDKDownloadCompletionBlock)(void);
+typedef void (^FBSDKDownloadCompletionBlock)(BOOL success);
 
 @interface FBSDKModelManager : NSObject
 
