@@ -31,7 +31,6 @@
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError.h"
 #import "FBSDKFeatureManager.h"
-#import "FBSDKModelManager.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
@@ -47,6 +46,7 @@
 #if !TARGET_OS_TV
 #import "FBSDKEventBindingManager.h"
 #import "FBSDKHybridAppEventsScriptMessageHandler.h"
+#import "FBSDKModelManager.h"
 #endif
 
 //
