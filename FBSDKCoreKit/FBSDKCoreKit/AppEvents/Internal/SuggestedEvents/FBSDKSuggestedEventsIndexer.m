@@ -76,6 +76,26 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
   if (_optInEvents.count == 0 && _unconfirmedEvents.count == 0) {
     return;
   }
+
+  // swizzle UIButton
+  [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:[UIButton class] withBlock:^(UIButton *button) {
+    if (button.window) {
+      [button addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchDown];
+    }
+  } named:@"suggested_events"];
+
+}
+
++ (void)buttonClicked:(UIButton *)button
+{
+  [self predictEvent:button withText:[FBSDKViewHierarchy getText:button]];
+}
+
++ (void)predictEvent:(NSObject *)obj withText:(NSString *)text
+{
+  if (text.length > 100 || text.length == 0) {
+    return;
+  }
 }
 
 @end
