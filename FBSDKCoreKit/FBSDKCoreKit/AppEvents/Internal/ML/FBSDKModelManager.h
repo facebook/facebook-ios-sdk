@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+typedef void (^FBSDKDownloadCompletionBlock)(void);
+
 @interface FBSDKModelManager : NSObject
 
 + (void)enable;

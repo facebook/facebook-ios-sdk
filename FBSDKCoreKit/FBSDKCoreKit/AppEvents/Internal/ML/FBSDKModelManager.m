@@ -29,6 +29,7 @@
 
 static NSString *const MODEL_INFO_KEY= @"com.facebook.sdk:FBSDKModelInfo";
 static NSString *const ASSET_URI_KEY = @"asset_uri";
+static NSString *const RULES_URI_KEY = @"rules_uri";
 static NSString *const THRESHOLDS_KEY = @"thresholds";
 static NSString *const USE_CASE_KEY = @"use_case";
 static NSString *const VERSION_ID_KEY = @"version_id";
@@ -36,7 +37,7 @@ static NSString *const MODEL_DATA_KEY = @"data";
 static NSString *const SUGGEST_EVENT_KEY = @"SUGGEST_EVENT";
 
 static NSString *_directoryPath;
-static NSMutableDictionary<NSString *, NSString *> *_modelUris;
+static NSMutableDictionary<NSString *, id> *_modelInfo;
 
 @implementation FBSDKModelManager
 
@@ -47,6 +48,7 @@ static NSMutableDictionary<NSString *, NSString *> *_modelUris;
     [[NSFileManager defaultManager] createDirectoryAtPath:dirPath withIntermediateDirectories:NO attributes:NULL error:NULL];
   }
   _directoryPath = dirPath;
+  _modelInfo = [NSMutableDictionary dictionary];
 
   // fetch api
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
@@ -57,56 +59,69 @@ static NSMutableDictionary<NSString *, NSString *> *_modelUris;
       return;
     }
     NSDictionary<NSString *, id> *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
-    NSDictionary<NSString *, id> *modelInfo = [self convertToDictionary:resultDictionary[MODEL_DATA_KEY]];
-    if (!modelInfo) {
+    _modelInfo = [self convertToDictionary:resultDictionary[MODEL_DATA_KEY]];
+    if (!_modelInfo) {
       return;
     }
-    _modelUris = [NSMutableDictionary dictionary];
-    for (NSString *useCase in modelInfo.allKeys) {
-      if ([modelInfo[useCase] objectForKey:ASSET_URI_KEY]) {
-        [_modelUris setValue:modelInfo[useCase][ASSET_URI_KEY] forKey:useCase];
-      }
-    }
     // update cache
-    [[NSUserDefaults standardUserDefaults] setObject:modelInfo forKey:MODEL_INFO_KEY];
+    [[NSUserDefaults standardUserDefaults] setObject:_modelInfo forKey:MODEL_INFO_KEY];
 
     [FBSDKFeatureManager checkFeature:FBSDKFeatureSuggestedEvents completionBlock:^(BOOL enabled) {
       if (enabled) {
-        [self getModel:SUGGEST_EVENT_KEY];
+        [self getModelAndRules:SUGGEST_EVENT_KEY handler:^(void){
+          [FBSDKSuggestedEventsIndexer enable];
+        }];
       }
     }];
 
   }];
 }
 
-+ (void)getModel:(NSString *)useCaseKey
++ (void)getModelAndRules:(NSString *)useCaseKey
+                 handler:(FBSDKDownloadCompletionBlock)handler
 {
-  NSDictionary<NSString *, id> *modelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
-  NSDictionary<NSString *, id> *useCaseInfo = [modelInfo objectForKey:useCaseKey];
-  if ([modelInfo.allKeys count] == 0 || !useCaseInfo) {
+  dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+  dispatch_group_t group = dispatch_group_create();
+  NSDictionary<NSString *, id> *useCaseInfo = [_modelInfo objectForKey:useCaseKey];
+  if ([_modelInfo.allKeys count] == 0 || !useCaseInfo) {
     return;
   }
-  NSString *urlString = [_modelUris objectForKey:useCaseKey];
-  if (urlString) {
-    NSString *filePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.weights", useCaseKey, useCaseInfo[VERSION_ID_KEY]]];
-
-    // filePath is nil or file already exist
-    if (!filePath || [[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
-      return;
-    }
-
-    NSURL *url = [NSURL URLWithString:urlString];
-
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-      NSData *urlData = [NSData dataWithContentsOfURL:url];
-      if (urlData) {
-        [urlData writeToFile:filePath atomically:YES];
-      }
-    });
+  NSDictionary<NSString *, id> *model = [_modelInfo objectForKey:useCaseKey];
+  NSString *assetUrlString = [model objectForKey:ASSET_URI_KEY];
+  NSString *rulesUrlString = [model objectForKey:RULES_URI_KEY];
+  if (assetUrlString.length > 0) {
+    NSString *assetFilePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.weights", useCaseKey, useCaseInfo[VERSION_ID_KEY]]];
+    [self download:assetUrlString filePath:assetFilePath queue:queue group:group];
   }
+  if (rulesUrlString.length > 0) {
+    NSString *rulesFilePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.rules", useCaseKey, useCaseInfo[VERSION_ID_KEY]]];
+    [self download:rulesUrlString filePath:rulesFilePath queue:queue group:group];
+  }
+  dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+    if (handler) {
+      handler();
+    }
+  });
 }
 
-+ (nullable NSDictionary<NSString *, id> *)convertToDictionary:(NSArray<NSDictionary<NSString *, id> *> *)models
++ (void)download:(NSString *)urlString
+        filePath:(NSString *)filePath
+           queue:(dispatch_queue_t)queue
+           group:(dispatch_group_t)group
+{
+  if (!filePath || [[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+    return;
+  }
+  dispatch_group_async(group, queue, ^{
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSData *urlData = [NSData dataWithContentsOfURL:url];
+    if (urlData) {
+      [urlData writeToFile:filePath atomically:YES];
+    }
+  });
+}
+
++ (nullable NSMutableDictionary<NSString *, id> *)convertToDictionary:(NSArray<NSDictionary<NSString *, id> *> *)models
 {
   if ([models count] == 0) {
     return nil;
@@ -117,7 +132,7 @@ static NSMutableDictionary<NSString *, NSString *> *_modelUris;
       [modelInfo addEntriesFromDictionary:@{model[USE_CASE_KEY]:model}];
     }
   }
-  return [modelInfo copy];
+  return modelInfo;
 }
 
 @end
