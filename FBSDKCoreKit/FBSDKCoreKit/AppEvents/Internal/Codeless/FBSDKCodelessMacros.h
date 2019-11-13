@@ -66,14 +66,9 @@
 #define CODELESS_SETTING_CACHE_TIMEOUT          (7 * 24 * 60 * 60)
 
 //  keys for view tree
-#define CODELESS_VIEW_TREE_CLASS_NAME_KEY       @"classname"
-#define CODELESS_VIEW_TREE_CLASS_TYPE_BIT_MASK_KEY  @"classtypebitmask"
-#define CODELESS_VIEW_TREE_TEXT_KEY             @"text"
 #define CODELESS_VIEW_TREE_DESC_KEY             @"description"
 #define CODELESS_VIEW_TREE_DIMENSION_KEY        @"dimension"
 #define CODELESS_VIEW_TREE_TAG_KEY              @"tag"
-#define CODELESS_VIEW_TREE_CHILDREN_KEY         @"childviews"
-#define CODELESS_VIEW_TREE_HINT_KEY             @"hint"
 #define CODELESS_VIEW_TREE_ACTIONS_KEY          @"actions"
 
 #define CODELESS_VIEW_TREE_TOP_KEY              @"top"
@@ -88,5 +83,15 @@
 #define CODELESS_VIEW_TREE_TEXT_IS_BOLD_KEY     @"is_bold"
 #define CODELESS_VIEW_TREE_TEXT_IS_ITALIC_KEY   @"is_italic"
 #define CODELESS_VIEW_TREE_TEXT_SIZE_KEY        @"font_size"
+
+//  keys for view hierarchy
+#define VIEW_HIERARCHY_CHILD_VIEWS_KEY          @"childviews"
+#define VIEW_HIERARCHY_CLASS_NAME_KEY           @"classname"
+#define VIEW_HIERARCHY_CLASS_TYPE_BITMASK_KEY   @"classtypebitmask"
+#define VIEW_HIERARCHY_HINT_KEY                 @"hint"
+#define VIEW_HIERARCHY_IS_INTERACTED_KEY        @"is_interacted"
+#define VIEW_HIERARCHY_SCREEN_NAME_KEY          @"screenname"
+#define VIEW_HIERARCHY_TEXT_KEY                 @"text"
+#define VIEW_HIERARCHY_VIEW_KEY                 @"view"
 
 #endif /* FBSDKCodelessMacros_h */

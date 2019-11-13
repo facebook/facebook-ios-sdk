@@ -26,21 +26,12 @@
 
 #import "FBSDKCoreKit+Internal.h"
 
-#define ViewHierarchyKeyIsInteracted @"is_interacted"
-#define ViewHierarchyKeyChildViews   @"childviews"
-#define ViewHierarchyKeyScreenName @"screenname"
-#define ViewHierarchyKeyView  @"view"
-
 NSString * const OptInEvents = @"production_events";
 NSString * const UnconfirmedEvents = @"eligible_for_prediction_events";
 
 static NSMutableArray<NSMutableDictionary<NSString *, id> *> *_viewTrees;
 static NSMutableSet<NSString *> *_optInEvents;
 static NSMutableSet<NSString *> *_unconfirmedEvents;
-
-@interface FBSDKViewHierarchy ()
-+ (NSMutableDictionary<NSString *, id> *)getDetailAttributesOf:(NSObject *)obj withHash:(BOOL)hash;
-@end
 
 @implementation FBSDKSuggestedEventsIndexer
 
@@ -186,6 +177,34 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
   if (text.length > 100 || text.length == 0) {
     return;
   }
+
+  NSMutableArray<NSDictionary<NSString *, id> *> *trees = [NSMutableArray array];
+
+  fb_dispatch_on_main_thread(^{
+    NSArray<UIWindow *> *windows = [UIApplication sharedApplication].windows;
+    for (UIWindow *window in windows) {
+      NSDictionary<NSString *, id> *tree = [FBSDKViewHierarchy recursiveCaptureTree:window withObject:obj];
+      if (tree) {
+        if (window.isKeyWindow) {
+          [trees insertObject:tree atIndex:0];
+        } else {
+          [trees addObject:tree];
+        }
+      }
+    }
+    NSMutableDictionary<NSString *, id> *treeInfo = [NSMutableDictionary dictionary];
+
+    NSString *screenName = nil;
+    UIViewController *topMostViewController = [FBSDKInternalUtility topMostViewController];
+    if (topMostViewController) {
+      screenName = NSStringFromClass([topMostViewController class]);
+    }
+
+    treeInfo[VIEW_HIERARCHY_VIEW_KEY] = trees;
+    treeInfo[VIEW_HIERARCHY_SCREEN_NAME_KEY] = screenName ?: @"";
+
+    [_viewTrees addObject:treeInfo];
+  });
 }
 
 #pragma mark - Helper Methods

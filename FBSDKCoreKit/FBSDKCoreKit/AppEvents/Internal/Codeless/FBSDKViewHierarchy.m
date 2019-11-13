@@ -278,10 +278,10 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
   NSMutableDictionary *result = [NSMutableDictionary dictionaryWithDictionary:simpleAttributes];
 
   NSString *className = NSStringFromClass([obj class]);
-  result[CODELESS_VIEW_TREE_CLASS_NAME_KEY] = className;
+  result[VIEW_HIERARCHY_CLASS_NAME_KEY] = className;
 
   NSUInteger classBitmask = [FBSDKViewHierarchy getClassBitmask:obj];
-  result[CODELESS_VIEW_TREE_CLASS_TYPE_BIT_MASK_KEY] = [NSString stringWithFormat:@"%lu", (unsigned long)classBitmask];
+  result[VIEW_HIERARCHY_CLASS_TYPE_BITMASK_KEY] = [NSString stringWithFormat:@"%lu", (unsigned long)classBitmask];
 
   if ([obj isKindOfClass:[UIControl class]]) {
     // Get actions of UIControl
@@ -308,8 +308,8 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
 
   if (hash) {
     // hash text and hint
-    result[CODELESS_VIEW_TREE_TEXT_KEY] = [FBSDKUtility SHA256Hash:result[CODELESS_VIEW_TREE_TEXT_KEY]];
-    result[CODELESS_VIEW_TREE_HINT_KEY] = [FBSDKUtility SHA256Hash:result[CODELESS_VIEW_TREE_HINT_KEY]];
+    result[VIEW_HIERARCHY_TEXT_KEY] = [FBSDKUtility SHA256Hash:result[VIEW_HIERARCHY_TEXT_KEY]];
+    result[VIEW_HIERARCHY_HINT_KEY] = [FBSDKUtility SHA256Hash:result[VIEW_HIERARCHY_HINT_KEY]];
   }
 
   return result;
@@ -490,6 +490,30 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
 
   NSString *text = [FBSDKViewHierarchy getText:obj];
   return text && [FBSDKAppEventsUtility isSensitiveUserData:text];
+}
+
++ (NSDictionary<NSString *, id> *)recursiveCaptureTree:(NSObject *)obj withObject:(NSObject *)interact
+{
+  if (!obj) {
+    return nil;
+  }
+
+  NSMutableDictionary<NSString *, id> *result = [FBSDKViewHierarchy getDetailAttributesOf:obj withHash:NO];
+
+  NSArray<NSObject *> *children = [FBSDKViewHierarchy getChildren:obj];
+  NSMutableArray<NSDictionary<NSString *, id> *> *childrenTrees = [NSMutableArray array];
+  for (NSObject *child in children) {
+    NSDictionary<NSString *, id> *objTree = [self recursiveCaptureTree:child withObject:interact];
+    [childrenTrees addObject:objTree];
+  }
+
+  if (childrenTrees.count > 0) {
+    [result setObject:[childrenTrees copy] forKey:VIEW_HIERARCHY_CHILD_VIEWS_KEY];
+  }
+  if (obj == interact) {
+    [result setObject:[NSNumber numberWithBool:YES] forKey:VIEW_HIERARCHY_IS_INTERACTED_KEY];
+  }
+  return [result copy];
 }
 
 #pragma clang diagnostic push
