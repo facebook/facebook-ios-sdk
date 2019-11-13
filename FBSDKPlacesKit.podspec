@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'FBSDKPlacesKit'
-  s.version      = '5.10.0'
+  s.version      = '5.10.1'
   s.summary      = 'Official Facebook SDK for iOS to access Facebook Places'
 
   s.description  = <<-DESC

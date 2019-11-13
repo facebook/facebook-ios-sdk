@@ -7,7 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.10.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.10.1...HEAD)
+
+## 5.10.1
+
+[2019-11-12](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.10.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.10.0...v5.10.1)
+
+### Fixed
+
+- Various bugfixes with SPM implementation
 
 ## 5.10.0
 
