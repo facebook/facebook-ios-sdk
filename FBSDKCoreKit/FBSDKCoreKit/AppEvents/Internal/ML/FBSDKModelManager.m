@@ -155,4 +155,20 @@ static NSMutableDictionary<NSString *, id> *_modelInfo;
   return modelInfo;
 }
 
++ (nullable NSDictionary *)getRules
+{
+  NSDictionary<NSString *, id> *cachedModelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
+  if (!cachedModelInfo) {
+    return nil;
+  }
+  NSDictionary<NSString *, id> *model = [cachedModelInfo objectForKey:SUGGEST_EVENT_KEY];
+  if (model && model[VERSION_ID_KEY]) {
+    NSString *filePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.rules", SUGGEST_EVENT_KEY, model[VERSION_ID_KEY]]];
+    NSData *ruelsData = [NSData dataWithContentsOfFile:filePath];
+    NSDictionary *rules = [NSJSONSerialization JSONObjectWithData:ruelsData options:0 error:nil];
+    return rules;
+  }
+  return nil;
+}
+
 @end

@@ -23,5 +23,6 @@ typedef void (^FBSDKDownloadCompletionBlock)(BOOL success);
 @interface FBSDKModelManager : NSObject
 
 + (void)enable;
++ (nullable NSDictionary *)getRules;
 
 @end
