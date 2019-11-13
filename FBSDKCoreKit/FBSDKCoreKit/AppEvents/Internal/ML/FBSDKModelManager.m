@@ -43,39 +43,41 @@ static NSMutableDictionary<NSString *, id> *_modelInfo;
 
 + (void)enable
 {
-  NSString *dirPath = [NSTemporaryDirectory() stringByAppendingPathComponent:FBSDK_ML_MODEL_PATH];
-  if (![[NSFileManager defaultManager] fileExistsAtPath:dirPath]) {
-    [[NSFileManager defaultManager] createDirectoryAtPath:dirPath withIntermediateDirectories:NO attributes:NULL error:NULL];
-  }
-  _directoryPath = dirPath;
-
-  // fetch api
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
-                                initWithGraphPath:[NSString stringWithFormat:@"%@/model_asset", [FBSDKSettings appID]]];
-
-  [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-    if (error) {
-      return;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    NSString *dirPath = [NSTemporaryDirectory() stringByAppendingPathComponent:FBSDK_ML_MODEL_PATH];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:dirPath]) {
+      [[NSFileManager defaultManager] createDirectoryAtPath:dirPath withIntermediateDirectories:NO attributes:NULL error:NULL];
     }
-    NSDictionary<NSString *, id> *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
-    NSDictionary<NSString *, id> *modelInfo = [self convertToDictionary:resultDictionary[MODEL_DATA_KEY]];
-    if (!modelInfo) {
-      return;
-    }
-    // update cache
-    [[NSUserDefaults standardUserDefaults] setObject:modelInfo forKey:MODEL_INFO_KEY];
+    _directoryPath = dirPath;
 
-    [FBSDKFeatureManager checkFeature:FBSDKFeatureSuggestedEvents completionBlock:^(BOOL enabled) {
-      if (enabled) {
-        [self getModelAndRules:SUGGEST_EVENT_KEY handler:^(BOOL success){
-          if (success) {
-            [FBSDKSuggestedEventsIndexer enable];
-          }
-        }];
+    // fetch api
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
+                                  initWithGraphPath:[NSString stringWithFormat:@"%@/model_asset", [FBSDKSettings appID]]];
+
+    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+      if (error) {
+        return;
       }
-    }];
+      NSDictionary<NSString *, id> *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
+      NSDictionary<NSString *, id> *modelInfo = [self convertToDictionary:resultDictionary[MODEL_DATA_KEY]];
+      if (!modelInfo) {
+        return;
+      }
+      // update cache
+      [[NSUserDefaults standardUserDefaults] setObject:modelInfo forKey:MODEL_INFO_KEY];
 
-  }];
+      [FBSDKFeatureManager checkFeature:FBSDKFeatureSuggestedEvents completionBlock:^(BOOL enabled) {
+        if (enabled) {
+          [self getModelAndRules:SUGGEST_EVENT_KEY handler:^(BOOL success){
+            if (success) {
+              [FBSDKSuggestedEventsIndexer enable];
+            }
+          }];
+        }
+      }];
+    }];
+  });
 }
 
 + (void)getModelAndRules:(NSString *)useCaseKey
