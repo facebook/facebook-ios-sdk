@@ -48,7 +48,6 @@ static NSMutableDictionary<NSString *, id> *_modelInfo;
     [[NSFileManager defaultManager] createDirectoryAtPath:dirPath withIntermediateDirectories:NO attributes:NULL error:NULL];
   }
   _directoryPath = dirPath;
-  _modelInfo = [NSMutableDictionary dictionary];
 
   // fetch api
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
@@ -59,12 +58,12 @@ static NSMutableDictionary<NSString *, id> *_modelInfo;
       return;
     }
     NSDictionary<NSString *, id> *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
-    _modelInfo = [self convertToDictionary:resultDictionary[MODEL_DATA_KEY]];
-    if (!_modelInfo) {
+    NSDictionary<NSString *, id> *modelInfo = [self convertToDictionary:resultDictionary[MODEL_DATA_KEY]];
+    if (!modelInfo) {
       return;
     }
     // update cache
-    [[NSUserDefaults standardUserDefaults] setObject:_modelInfo forKey:MODEL_INFO_KEY];
+    [[NSUserDefaults standardUserDefaults] setObject:modelInfo forKey:MODEL_INFO_KEY];
 
     [FBSDKFeatureManager checkFeature:FBSDKFeatureSuggestedEvents completionBlock:^(BOOL enabled) {
       if (enabled) {
@@ -84,20 +83,25 @@ static NSMutableDictionary<NSString *, id> *_modelInfo;
 {
   dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
   dispatch_group_t group = dispatch_group_create();
-  NSDictionary<NSString *, id> *useCaseInfo = [_modelInfo objectForKey:useCaseKey];
-  if ([_modelInfo.allKeys count] == 0 || !useCaseInfo) {
+  _modelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
+  if (!_modelInfo) {
     if (handler) {
       handler(NO);
       return;
     }
   }
   NSDictionary<NSString *, id> *model = [_modelInfo objectForKey:useCaseKey];
-
+  if (!model) {
+    if (handler) {
+      handler(NO);
+      return;
+    }
+  }
   // download model asset
   NSString *assetUrlString = [model objectForKey:ASSET_URI_KEY];
   NSString *assetFilePath;
   if (assetUrlString.length > 0) {
-    assetFilePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.weights", useCaseKey, useCaseInfo[VERSION_ID_KEY]]];
+    assetFilePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.weights", useCaseKey, model[VERSION_ID_KEY]]];
     [self download:assetUrlString filePath:assetFilePath queue:queue group:group];
   }
 
@@ -106,7 +110,7 @@ static NSMutableDictionary<NSString *, id> *_modelInfo;
   NSString *rulesFilePath;
   // rules are optional and rulesUrlString may be empty
   if (rulesUrlString.length > 0) {
-    rulesFilePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.rules", useCaseKey, useCaseInfo[VERSION_ID_KEY]]];
+    rulesFilePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.rules", useCaseKey, model[VERSION_ID_KEY]]];
     [self download:rulesUrlString filePath:rulesFilePath queue:queue group:group];
   }
   dispatch_group_notify(group, dispatch_get_main_queue(), ^{
