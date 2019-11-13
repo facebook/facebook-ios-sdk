@@ -110,7 +110,41 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
                            onClass:[UICollectionView class]
                          withBlock:collectionViewBlock
                              named:@"suggested_events"];
+
+    fb_dispatch_on_main_thread(^{
+      [self rematchBindings];
+    });
   });
+}
+
++ (void)rematchBindings {
+  NSArray *windows = [UIApplication sharedApplication].windows;
+  for (UIWindow *window in windows) {
+    [self matchSubviewsIn:window];
+  }
+}
+
++ (void)matchSubviewsIn:(UIView *)view {
+  if (!view) {
+    return;
+  }
+
+  for (UIView *subview in view.subviews) {
+
+    if ([subview isKindOfClass:[UITableView class]]) {
+      UITableView *tableView = (UITableView *)subview;
+      [self handleView:tableView withDelegate:tableView.delegate];
+    } else if ([subview isKindOfClass:[UICollectionView class]]) {
+      UICollectionView *collectionView = (UICollectionView *)subview;
+      [self handleView:collectionView withDelegate:collectionView.delegate];
+    } else if ([subview isKindOfClass:[UIButton class]]) {
+      [(UIButton *)subview addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchDown];
+    }
+
+    if (![subview isKindOfClass:[UIControl class]]) {
+      [self matchSubviewsIn:subview];
+    }
+  }
 }
 
 + (void)buttonClicked:(UIButton *)button
@@ -135,7 +169,7 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
                          withBlock:block
                              named:@"suggested_events"];
   } else if ([view isKindOfClass:[UICollectionView class]]
-           && [delegate respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)]) {
+             && [delegate respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)]) {
     void (^block)(id, SEL, id, id) = ^(id target, SEL command, UICollectionView *collectionView, NSIndexPath *indexPath) {
       UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
       [self predictEvent:cell withText:[self getTextFromContentView:[cell contentView]]];

@@ -37,18 +37,6 @@
 #define ReactNativeClassRCTTouchEvent "RCTTouchEvent"
 #define ReactNativeClassRCTTouchHandler "RCTTouchHandler"
 
-static void fb_dispatch_on_main_thread(dispatch_block_t block) {
-  if ([NSThread isMainThread]) {
-    block();
-  } else {
-    dispatch_async(dispatch_get_main_queue(), block);
-  }
-}
-
-static void fb_dispatch_on_default_thread(dispatch_block_t block) {
-  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block);
-}
-
 @interface FBSDKEventBindingManager ()
 {
   BOOL isStarted;

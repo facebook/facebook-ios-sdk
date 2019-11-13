@@ -42,6 +42,9 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
     FBCodelessClassBitmaskUIViewController = 1 << 17,
 };
 
+extern void fb_dispatch_on_main_thread(dispatch_block_t block);
+extern void fb_dispatch_on_default_thread(dispatch_block_t block);
+
 NS_SWIFT_NAME(ViewHierarchy)
 @interface FBSDKViewHierarchy : NSObject
 
