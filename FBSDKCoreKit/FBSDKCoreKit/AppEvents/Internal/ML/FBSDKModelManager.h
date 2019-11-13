@@ -24,5 +24,6 @@ typedef void (^FBSDKDownloadCompletionBlock)(BOOL success);
 
 + (void)enable;
 + (nullable NSDictionary *)getRules;
++ (nullable NSString *)getWeightsPath:(NSString *_Nonnull)useCaseKey;
 
 @end

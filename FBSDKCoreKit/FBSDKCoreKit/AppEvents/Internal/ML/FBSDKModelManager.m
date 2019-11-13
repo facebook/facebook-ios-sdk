@@ -171,4 +171,17 @@ static NSMutableDictionary<NSString *, id> *_modelInfo;
   return nil;
 }
 
++ (nullable NSString *)getWeightsPath:(NSString *_Nonnull)useCaseKey
+{
+  NSDictionary<NSString *, id> *cachedModelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
+  if (!cachedModelInfo) {
+    return nil;
+  }
+  NSDictionary<NSString *, id> *model = [cachedModelInfo objectForKey:useCaseKey];
+  if (model && model[VERSION_ID_KEY]) {
+    return [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.weights", useCaseKey, model[VERSION_ID_KEY]]];
+  }
+  return nil;
+}
+
 @end
