@@ -107,7 +107,7 @@ namespace mat1 {
         return shape: n_examples, seq_len - kernel_size + 1, output_size
      */
     static float* conv1D(float *x, float *w, int n_examples, int seq_len, int input_size, int kernel_size, int output_size) {
-        int n, o, i, j, k, p;
+        int n, o, i, k, m;
         float sum;
         float *res = (float *)malloc(sizeof(float) * (n_examples * (seq_len - kernel_size + 1) * output_size));
         float *temp_x = (float *)malloc(sizeof(float) * (kernel_size * input_size));
@@ -115,16 +115,14 @@ namespace mat1 {
         for (n = 0; n < n_examples; n++){
             for (o = 0; o < output_size; o++){
                 for (i = 0; i < seq_len - kernel_size + 1; i++) {
-                    for (j = i; j < i + kernel_size; j ++) {
-                        for (k = 0; k < input_size; k ++) {
-                            temp_x[(j-i) * input_size + k] = x[n * (seq_len * input_size) + j * input_size + k];
+                    sum = 0;
+                    for (m = 0; m < kernel_size; m++) {
+                        for (k = 0; k < input_size; k++) {
+                          temp_x[m * input_size + k] = x[n * (seq_len * input_size) + (m + i) * input_size + k];
+                          temp_w[m * input_size + k] = w[(m * input_size + k) * output_size + o];
                         }
                     }
-                    sum = 0;
-                    for (p = 0; p < kernel_size * input_size; p++){
-                        temp_w[p] = w[p * output_size + o];
-                        sum += temp_x[p] * temp_w[p];
-                    }
+                    vDSP_dotpr(temp_x, 1, temp_w, 1, &sum, kernel_size * input_size);
                     res[(n * (output_size * (seq_len - kernel_size + 1)) + i * output_size + o)] = sum;
                 }
             }
