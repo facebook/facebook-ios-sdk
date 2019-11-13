@@ -77,13 +77,40 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
     return;
   }
 
-  // swizzle UIButton
-  [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:[UIButton class] withBlock:^(UIButton *button) {
-    if (button.window) {
-      [button addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchDown];
-    }
-  } named:@"suggested_events"];
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
 
+    // swizzle UIButton
+    [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:[UIButton class] withBlock:^(UIButton *button) {
+      if (button.window) {
+        [button addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchDown];
+      }
+    } named:@"suggested_events"];
+
+    //  UITableView
+    void (^tableViewBlock)(UITableView *tableView,
+                           SEL cmd,
+                           id<UITableViewDelegate> delegate) =
+    ^(UITableView *tableView, SEL cmd, id<UITableViewDelegate> delegate) {
+      [self handleView:tableView withDelegate:delegate];
+    };
+    [FBSDKSwizzler swizzleSelector:@selector(setDelegate:)
+                           onClass:[UITableView class]
+                         withBlock:tableViewBlock
+                             named:@"suggested_events"];
+
+    //  UICollectionView
+    void (^collectionViewBlock)(UICollectionView *collectionView,
+                                SEL cmd,
+                                id<UICollectionViewDelegate> delegate) =
+    ^(UICollectionView *collectionView, SEL cmd, id<UICollectionViewDelegate> delegate) {
+      [self handleView:collectionView withDelegate:delegate];
+    };
+    [FBSDKSwizzler swizzleSelector:@selector(setDelegate:)
+                           onClass:[UICollectionView class]
+                         withBlock:collectionViewBlock
+                             named:@"suggested_events"];
+  });
 }
 
 + (void)buttonClicked:(UIButton *)button
@@ -91,11 +118,54 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
   [self predictEvent:button withText:[FBSDKViewHierarchy getText:button]];
 }
 
++ (void)handleView:(UIView *)view withDelegate:(id)delegate
+{
+  if (!delegate) {
+    return;
+  }
+
+  if ([view isKindOfClass:[UITableView class]]
+      && [delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]) {
+    void (^block)(id, SEL, id, id) = ^(id target, SEL command, UITableView *tableView, NSIndexPath *indexPath) {
+      UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+      [self predictEvent:cell withText:[self getTextFromContentView:[cell contentView]]];
+    };
+    [FBSDKSwizzler swizzleSelector:@selector(tableView:didSelectRowAtIndexPath:)
+                           onClass:[delegate class]
+                         withBlock:block
+                             named:@"suggested_events"];
+  } else if ([view isKindOfClass:[UICollectionView class]]
+           && [delegate respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)]) {
+    void (^block)(id, SEL, id, id) = ^(id target, SEL command, UICollectionView *collectionView, NSIndexPath *indexPath) {
+      UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+      [self predictEvent:cell withText:[self getTextFromContentView:[cell contentView]]];
+    };
+    [FBSDKSwizzler swizzleSelector:@selector(collectionView:didSelectItemAtIndexPath:)
+                           onClass:[delegate class]
+                         withBlock:block
+                             named:@"suggested_events"];
+  }
+}
+
 + (void)predictEvent:(NSObject *)obj withText:(NSString *)text
 {
   if (text.length > 100 || text.length == 0) {
     return;
   }
+}
+
+#pragma mark - Helper Methods
+
++ (NSString *)getTextFromContentView:(UIView *)contentView
+{
+  NSMutableArray<NSString *> *textArray = [NSMutableArray array];
+  for (UIView *subView in [contentView subviews]) {
+    NSString *label = [FBSDKViewHierarchy getText:subView];
+    if (label.length > 0) {
+      [textArray addObject:label];
+    }
+  }
+  return [textArray componentsJoinedByString:@" "];
 }
 
 @end
