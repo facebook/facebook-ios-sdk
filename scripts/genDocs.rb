@@ -103,20 +103,12 @@ def combineSourceKittenOutputFor(kit)
   objCSourceKittenOutput = File.open "tmpObjC"
   objCSourceKittenJSON = JSON.load objCSourceKittenOutput
 
-  sourceKittenJSON = JSON.pretty_generate(
-    swiftSourceKittenJSON + objCSourceKittenJSON
-  )
-
-  output = File.open( "sourceKittenJSON","w" )
-  output << sourceKittenJSON
-  output.close
-
-  puts "Generating documentations for #{kit}"
+  puts "Generating documentation for #{kit}"
 
   system "jazzy \
     --config #{parentDirectory}/.jazzy.yaml \
     --output docs/#{kit} \
-    --sourcekitten sourceKittenJSON"
+    --sourcekitten-sourcefile tmpSwift,tmpObjC"
 end
 
 case kit
