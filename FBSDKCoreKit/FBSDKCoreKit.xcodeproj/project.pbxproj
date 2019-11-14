@@ -1331,6 +1331,8 @@
 		F952EA4C2339406500B20652 /* FBSDKMetadataIndexer.h in Headers */ = {isa = PBXBuildFile; fileRef = F952EA462339403900B20652 /* FBSDKMetadataIndexer.h */; };
 		F952EA4F2339432100B20652 /* FBSDKMetadataIndexerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F952EA4E2339432000B20652 /* FBSDKMetadataIndexerTests.m */; };
 		F96ADE7A21E6ABB400F6043F /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F96ADE6321E6ABB400F6043F /* StoreKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F9A80C9E237D02860019D7E0 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9A80C9D237D02860019D7E0 /* Accelerate.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F9A80CA6237D02F20019D7E0 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9A80C9D237D02860019D7E0 /* Accelerate.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F9FD9A6221659F120068DEAF /* FBSDKGateKeeperManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F9FD9A6121659F120068DEAF /* FBSDKGateKeeperManager.h */; };
 		F9FD9A6321659F120068DEAF /* FBSDKGateKeeperManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F9FD9A6121659F120068DEAF /* FBSDKGateKeeperManager.h */; };
 		F9FD9A6421659F120068DEAF /* FBSDKGateKeeperManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F9FD9A6121659F120068DEAF /* FBSDKGateKeeperManager.h */; };
@@ -1752,7 +1754,7 @@
 		ADEA17721B7ECA1A0070EDC0 /* FBSDKMonotonicTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKMonotonicTime.m; sourceTree = "<group>"; };
 		BF247C802374E1B100A522C0 /* FBSDKSuggestedEventsIndexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKSuggestedEventsIndexer.h; sourceTree = "<group>"; };
 		BF247C812374E1B200A522C0 /* FBSDKSuggestedEventsIndexer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKSuggestedEventsIndexer.m; sourceTree = "<group>"; };
-		BFC02435237B6A9900A596EE /* EventInferencer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventInferencer.h; sourceTree = "<group>"; };
+		BFC02435237B6A9900A596EE /* EventInferencer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; path = EventInferencer.h; sourceTree = "<group>"; };
 		BFC02443237B6A9900A596EE /* FeatureExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeatureExtractor.h; sourceTree = "<group>"; };
 		BFC02444237B6A9900A596EE /* FeatureExtractor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeatureExtractor.m; sourceTree = "<group>"; };
 		BFC02445237B6A9A00A596EE /* EventInferencer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EventInferencer.mm; sourceTree = "<group>"; };
@@ -1810,13 +1812,14 @@
 		F952EA462339403900B20652 /* FBSDKMetadataIndexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKMetadataIndexer.h; sourceTree = "<group>"; };
 		F952EA4E2339432000B20652 /* FBSDKMetadataIndexerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKMetadataIndexerTests.m; sourceTree = "<group>"; };
 		F96ADE6321E6ABB400F6043F /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		F9A80C9D237D02860019D7E0 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		F9FD9A6121659F120068DEAF /* FBSDKGateKeeperManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKGateKeeperManager.h; sourceTree = "<group>"; };
 		F9FD9A7C21659F320068DEAF /* FBSDKGateKeeperManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKGateKeeperManager.m; sourceTree = "<group>"; };
 		F9FFE01C2252D665007B2346 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
 		F9FFE01E2252D66E007B2346 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
 		FD8E437F22FBF8CA008B6DD3 /* FBSDKErrorReport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKErrorReport.h; sourceTree = "<group>"; };
 		FD8E438022FBF8F1008B6DD3 /* FBSDKErrorReport.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKErrorReport.m; sourceTree = "<group>"; };
-		FD9E154C23777AC900A005EC /* model_runtime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = model_runtime.h; sourceTree = "<group>"; };
+		FD9E154C23777AC900A005EC /* model_runtime.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = model_runtime.h; sourceTree = "<group>"; };
 		FD9E155B23777AF700A005EC /* standalone_model.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = standalone_model.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1836,6 +1839,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9A80C9E237D02860019D7E0 /* Accelerate.framework in Frameworks */,
 				C52C02ED2315039400F30E2A /* WebKit.framework in Frameworks */,
 				F9FFE01D2252D666007B2346 /* libz.tbd in Frameworks */,
 				F96ADE7A21E6ABB400F6043F /* StoreKit.framework in Frameworks */,
@@ -1907,6 +1911,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F9A80CA6237D02F20019D7E0 /* Accelerate.framework in Frameworks */,
 				F483F397233AC13000703DE3 /* WebKit.framework in Frameworks */,
 				F483F398233AC13000703DE3 /* SafariServices.framework in Frameworks */,
 			);
@@ -2156,6 +2161,7 @@
 		893F44A31A644536001DB0B6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F9A80C9D237D02860019D7E0 /* Accelerate.framework */,
 				C52C02DF2315039400F30E2A /* WebKit.framework */,
 				F9FFE01C2252D665007B2346 /* libz.tbd */,
 				F9FFE01E2252D66E007B2346 /* libz.tbd */,
