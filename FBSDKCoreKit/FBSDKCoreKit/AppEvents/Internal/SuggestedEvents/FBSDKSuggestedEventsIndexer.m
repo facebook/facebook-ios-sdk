@@ -210,7 +210,7 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
 
     fb_dispatch_on_default_thread(^{
       NSString *event = [EventInferencer predict:text viewTree:[viewTree mutableCopy] withLog:YES];
-      if (!event) {
+      if (!event || [event isEqualToString:@"fb_mobile_other"]) {
         return;
       }
       if ([_optInEvents containsObject:event]) {
