@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
                      :tag => "v#{s.version}"
                     }
 
-  s.ios.weak_frameworks = 'Accounts', 'CoreLocation', 'Social', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
+  s.ios.weak_frameworks = 'Accelerate', 'Accounts', 'CoreLocation', 'Social', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
   s.tvos.weak_frameworks = 'CoreLocation', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
 
   # This excludes `FBSDKCoreKit/FBSDKCoreKit/Internal_NoARC/` folder, as that folder includes only `no-arc` files.
@@ -54,7 +54,7 @@ Pod::Spec.new do |s|
     ss.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/Basics/*',
                        'FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.{h,m}',
                        'FBSDKCoreKit/FBSDKCoreKit/include/**/*'
-    ss.source_files = 'FBSDKCoreKit/FBSDKCoreKit/**/*.{h,m}'
+    ss.source_files = 'FBSDKCoreKit/FBSDKCoreKit/**/*.{h,m,mm}'
     ss.public_header_files = 'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.h',
                              'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/**/*.h',
                              'FBSDKCoreKit/FBSDKCoreKit/*.h',

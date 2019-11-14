@@ -87,6 +87,12 @@ namespace mat {
         free(ptr);
     }
 
+    static void MCheckPtr(void* ptr) {
+      if (ptr) {
+          MFreeMemory(ptr);
+      }
+    }
+
     class MTensor {
     public:
         MTensor(){};
@@ -103,11 +109,7 @@ namespace mat {
             for (auto size : sizes) {
                 nbytes *= size;
             }
-            storage_ = std::shared_ptr<void>(MAllocateMemory(nbytes), [](void* ptr) {
-                if (ptr) {
-                    MFreeMemory(ptr);
-                }
-            });
+            storage_ = std::shared_ptr<void>(MAllocateMemory(nbytes), MCheckPtr);
         }
 
         int64_t size(int dim) {
