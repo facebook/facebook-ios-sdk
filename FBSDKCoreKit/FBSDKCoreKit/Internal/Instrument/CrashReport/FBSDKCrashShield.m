@@ -49,6 +49,12 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
       @"ErrorReport" : @[
           @"FBSDKErrorReport",
       ],
+      @"PrivacyProtection" : @[
+          @"FBSDKModelManager",
+      ],
+      @"SuggestedEvents" : @[
+          @"FBSDKSuggestedEventsIndexer",
+      ],
     };
   }
 }
