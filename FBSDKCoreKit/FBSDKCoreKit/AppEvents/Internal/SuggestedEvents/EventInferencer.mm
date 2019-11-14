@@ -36,7 +36,7 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
 + (std::unordered_map<std::string, mat::MTensor>)loadWeights
 {
   NSData *latestData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FBSDKBetaKitResources.bundle/app_event_pred_v0_new.weights" ofType:nil]];
-  return [self loadWeights:latestData];;
+  return [self loadWeights:latestData];
 }
 
 + (std::unordered_map<std::string, mat::MTensor>)loadWeights:(NSData *)weightsData{
@@ -101,7 +101,7 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
               withLog:(BOOL)isPrint
 {
   if (buttonText.length == 0) {
-    buttonText = @" ";
+    return nil;
   }
 
   // Get bytes tensor
