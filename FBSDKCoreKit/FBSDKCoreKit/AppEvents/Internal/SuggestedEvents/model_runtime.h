@@ -32,7 +32,7 @@
 #define DENSE_FEATURE_LEN 30
 
 const int CONV_BLOCKS[3][3] = {{32, 2, SEQ_LEN - 1}, {32, 3, SEQ_LEN - 2}, {32, 5, SEQ_LEN - 4}};
-const std::unordered_set<char> DELIMETERS({' ', '\n'});
+const std::unordered_set<char> DELIMETER = {' ', '\n'};
 
 namespace mat1 {
     static void relu(float *data, int len) {
@@ -183,7 +183,7 @@ namespace mat1 {
        input shape: m, n, p
        return shape: p, n, m
     */
-    static float* transpose3D(float *input, int64_t m, int n, int p) {
+    static float* transpose3D(float *input, int m, int n, int p) {
         float *transposed = (float *)malloc(sizeof(float) * m * n * p);
         for (int i = 0; i < m; i++){
             for (int j = 0; j < n; j++) {
@@ -277,7 +277,7 @@ namespace mat1 {
         free(c3);
 
         // concatenate
-        float *concat = (float *)malloc(sizeof(float) * (conv1w_t.size(0) + conv2w_t.size(0) + conv3w_t.size(0) + 30));
+        float *concat = (float *)malloc(sizeof(float) * (size_t)(conv1w_t.size(0) + conv2w_t.size(0) + conv3w_t.size(0) + 30));
         concatenate(concat, ca, cb, (int)conv1w_t.size(0), (int)conv2w_t.size(0));
         concatenate(concat + conv1w_t.size(0) + conv2w_t.size(0), cc, df, (int)conv3w_t.size(0), 30);
         free(ca);

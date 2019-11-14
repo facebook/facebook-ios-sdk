@@ -112,13 +112,15 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
   for (int i = 0; i < textFeature.length; i++) {
     bytes_data[i] = bytes[i];
   }
-  mat::MTensor bytes_tensor = mat::mempty({1, (int64_t)textFeature.length});
+  std::vector<int64_t> bytes_vector = {1, (int64_t)textFeature.length};
+  mat::MTensor bytes_tensor = mat::mempty(bytes_vector);
   int *bytes_tensor_data = bytes_tensor.data<int>();
   memcpy(bytes_tensor_data, bytes_data, sizeof(int) * textFeature.length);
   free(bytes_data);
 
   // Get dense tensor
-  mat::MTensor dense_tensor = mat::mempty({1, 30});
+  std::vector<int64_t> dense_vector = {1, 30};
+  mat::MTensor dense_tensor = mat::mempty(dense_vector);
   float *dense_tensor_data = dense_tensor.data<float>();
   float *dense_data = [FeatureExtractor getDenseFeatures:viewTree];
   if (!dense_data) {
