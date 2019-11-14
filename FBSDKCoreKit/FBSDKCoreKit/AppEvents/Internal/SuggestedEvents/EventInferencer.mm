@@ -28,15 +28,10 @@
 
 static std::unordered_map<std::string, mat::MTensor> _weights;
 
-+ (void)initialize
-{
-  _weights = [self loadWeights];
-}
-
-+ (std::unordered_map<std::string, mat::MTensor>)loadWeights
++ (void)loadWeights
 {
   NSData *latestData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FBSDKBetaKitResources.bundle/app_event_pred_v0_new.weights" ofType:nil]];
-  return [self loadWeights:latestData];
+  _weights = [self loadWeights:latestData];
 }
 
 + (std::unordered_map<std::string, mat::MTensor>)loadWeights:(NSData *)weightsData{
