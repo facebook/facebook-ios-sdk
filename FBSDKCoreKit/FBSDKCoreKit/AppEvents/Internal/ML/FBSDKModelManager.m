@@ -45,6 +45,12 @@ static NSMutableDictionary<NSString *, id> *_modelInfo;
 {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
+    NSString *languageCode = [[NSLocale currentLocale] objectForKey:NSLocaleLanguageCode];
+    // If the languageCode could not be fetched successfully, it's regarded as "en" by default.
+    if (languageCode && ![languageCode isEqualToString:@"en"]) {
+      return;
+    }
+
     NSString *dirPath = [NSTemporaryDirectory() stringByAppendingPathComponent:FBSDK_ML_MODEL_PATH];
     if (![[NSFileManager defaultManager] fileExistsAtPath:dirPath]) {
       [[NSFileManager defaultManager] createDirectoryAtPath:dirPath withIntermediateDirectories:NO attributes:NULL error:NULL];
