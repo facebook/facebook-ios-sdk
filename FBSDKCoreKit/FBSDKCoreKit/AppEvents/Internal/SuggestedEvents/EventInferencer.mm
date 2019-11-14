@@ -21,8 +21,17 @@
 #import <QuartzCore/QuartzCore.h>
 #import <UIKit/UIKit.h>
 
+#import "../ML/FBSDKModelManager.h"
+
 #import "FeatureExtractor.h"
 #include "model_runtime.h"
+
+static NSString *const MODEL_INFO_KEY= @"com.facebook.sdk:FBSDKModelInfo";
+static NSString *const THRESHOLDS_KEY = @"thresholds";
+static NSString *const SUGGEST_EVENT_KEY = @"SUGGEST_EVENT";
+static NSString *const OTHER_EVENT = @"other";
+
+static NSString *const SUGGESTED_EVENT[4] = {@"fb_mobile_add_to_cart", @"fb_mobile_complete_registration", @"other", @"fb_mobile_purchase"};
 
 @implementation EventInferencer : NSObject
 
@@ -96,7 +105,7 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
               withLog:(BOOL)isPrint
 {
   if (buttonText.length == 0) {
-    return nil;
+    return OTHER_EVENT;
   }
 
   // Get bytes tensor
@@ -124,48 +133,27 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
   float *dense_tensor_data = dense_tensor.data<float>();
   float *dense_data = [FeatureExtractor getDenseFeatures:viewTree];
   if (!dense_data) {
-    return nil;
+    return OTHER_EVENT;
   }
   memcpy(dense_tensor_data, dense_data, sizeof(float) * 30);
   free(dense_data);
 
-  std::unordered_map<std::string, float> p_result;
   float *res = mat1::predictOnText(bytes, _weights, dense_tensor_data);
-
-  p_result["fb_mobile_add_to_cart"] = res[0];
-  p_result["fb_mobile_complete_registration"] = res[1];
-  p_result["fb_mobile_other"] = res[2];
-  p_result["fb_mobile_purchase"] = res[3];
-
-  NSString *message = @"";
-  float max_score = 0;
-  std::string predicted;
-  for (auto x: p_result) {
-    auto event = x.first;
-    auto score = x.second;
-    if (score > max_score) {
-      predicted = x.first;
-      max_score = score;
+  NSMutableDictionary<NSString *, id> *modelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
+  if (!modelInfo) {
+    return OTHER_EVENT;
+  }
+  NSDictionary<NSString *, id> * suggestedEventModelInfo = [modelInfo objectForKey:SUGGEST_EVENT_KEY];
+  if (!suggestedEventModelInfo) {
+    return OTHER_EVENT;
+  }
+  NSMutableArray *thresholds = [suggestedEventModelInfo objectForKey:THRESHOLDS_KEY];
+  for (int i = 0; i < thresholds.count; i++ ){
+    if ((float)res[i] >= (float)[thresholds[i] floatValue]) {
+      return SUGGESTED_EVENT[i];
     }
-    message = [message stringByAppendingString:@"[Suggested Events] "];
-    message = [message stringByAppendingString:[NSString stringWithCString:x.first.c_str() encoding:NSUTF8StringEncoding]];
-    message = [message stringByAppendingString:@":  "];
-    message = [message stringByAppendingString:@(score).stringValue];
-    message = [message stringByAppendingString:@"\n"];
   }
-  message = [message stringByAppendingString:@"\n[Suggested Events]"];
-  message = [message stringByAppendingString:@"\n[Suggested Events] prediction:  "];
-  message = [message stringByAppendingString:[NSString stringWithCString:predicted.c_str() encoding:NSUTF8StringEncoding]];
-  NSString *title = @"prediction for: ";
-  title = [title stringByAppendingString:buttonText];
-  if (isPrint) {
-    NSLog(@"\n[Suggested Events] ---------------------------------------------");
-    NSLog(@"\n[Suggested Events] %@", title);
-    NSLog(@"\n[Suggested Events]");
-    NSLog(@"\n[Suggested Events] scores:\n%@", message);
-    NSLog(@"\n[Suggested Events] ---------------------------------------------");
-  }
-  return [NSString stringWithCString:predicted.c_str() encoding:NSUTF8StringEncoding];
+  return OTHER_EVENT;
 }
 
 @end
