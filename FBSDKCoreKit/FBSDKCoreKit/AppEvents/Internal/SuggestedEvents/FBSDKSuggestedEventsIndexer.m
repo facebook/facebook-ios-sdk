@@ -24,6 +24,7 @@
 
 #import <UIKit/UIKit.h>
 
+#import "EventInferencer.h"
 #import "FBSDKCoreKit+Internal.h"
 
 NSString * const OptInEvents = @"production_events";
@@ -204,6 +205,22 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
     treeInfo[VIEW_HIERARCHY_SCREEN_NAME_KEY] = screenName ?: @"";
 
     [_viewTrees addObject:treeInfo];
+
+    NSDictionary<NSString *, id> *viewTree = [_viewTrees lastObject];
+
+    fb_dispatch_on_default_thread(^{
+      NSString *event = [EventInferencer predict:text viewTree:[viewTree mutableCopy] withLog:YES];
+      if (!event) {
+        return;
+      }
+      if ([_optInEvents containsObject:event]) {
+        [FBSDKAppEvents logEvent:event
+                      parameters:@{@"_is_suggested_event": @"1"}];
+      } else if ([_unconfirmedEvents containsObject:event]) {
+        // Only send back not confirmed events to advertisers
+        [self logSuggestedEvent:event withText:text];
+      }
+    });
   });
 }
 
@@ -219,6 +236,25 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
     }
   }
   return [textArray componentsJoinedByString:@" "];
+}
+
++ (void)logSuggestedEvent:(NSString *)event withText:(NSString *)text
+{
+  NSString *metadata = [FBSDKBasicUtility JSONStringForObject:@{@"button_text": text}
+                                                        error:nil
+                                         invalidObjectHandler:nil];
+  if (!metadata) {
+    return;
+  }
+
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
+                                initWithGraphPath:[NSString stringWithFormat:@"%@/suggested_events", [FBSDKSettings appID]]
+                                parameters: @{@"event_name": event,
+                                              @"metadata": metadata,
+                                              }
+                                HTTPMethod:FBSDKHTTPMethodPOST];
+  [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}];
+  return;
 }
 
 @end
