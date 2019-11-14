@@ -109,7 +109,7 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
   }
 
   // Get bytes tensor
-  NSString *textFeature = [FeatureExtractor getTextFeature:buttonText withScreenName:viewTree[@"screenname"]];
+  NSString *textFeature = [self normalize:[FeatureExtractor getTextFeature:buttonText withScreenName:viewTree[@"screenname"]]];
   const char *bytes = [textFeature UTF8String];
   int *bytes_data = (int *)malloc(sizeof(int) * textFeature.length);
   memset(bytes_data, 0, sizeof(int) * textFeature.length);
@@ -148,7 +148,10 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
     return OTHER_EVENT;
   }
   NSMutableArray *thresholds = [suggestedEventModelInfo objectForKey:THRESHOLDS_KEY];
-  for (int i = 0; i < thresholds.count; i++ ){
+  if (thresholds.count < 4) {
+    return OTHER_EVENT;
+  }
+  for (int i = 0; i < thresholds.count; i++){
     if ((float)res[i] >= (float)[thresholds[i] floatValue]) {
       return SUGGESTED_EVENT[i];
     }
@@ -156,4 +159,10 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
   return OTHER_EVENT;
 }
 
++ (NSString *)normalize:(NSString *)str
+{
+  NSMutableArray *tokens = [[str componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] mutableCopy];
+  [tokens removeObject:@""];
+  return [tokens componentsJoinedByString: @" "];
+}
 @end
