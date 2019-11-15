@@ -96,7 +96,7 @@ static NSMutableDictionary<NSString *, id> *_modelInfo;
   dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
   dispatch_group_t group = dispatch_group_create();
   _modelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
-  if (!_modelInfo) {
+  if (!_modelInfo || !_directoryPath) {
     if (handler) {
       handler(NO);
       return;
@@ -141,7 +141,7 @@ static NSMutableDictionary<NSString *, id> *_modelInfo;
            queue:(dispatch_queue_t)queue
            group:(dispatch_group_t)group
 {
-  if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+  if (!filePath || [[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
     return;
   }
   dispatch_group_async(group, queue, ^{
@@ -176,9 +176,11 @@ static NSMutableDictionary<NSString *, id> *_modelInfo;
   NSDictionary<NSString *, id> *model = [cachedModelInfo objectForKey:SUGGEST_EVENT_KEY];
   if (model && model[VERSION_ID_KEY]) {
     NSString *filePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.rules", SUGGEST_EVENT_KEY, model[VERSION_ID_KEY]]];
-    NSData *ruelsData = [NSData dataWithContentsOfFile:filePath];
-    NSDictionary *rules = [NSJSONSerialization JSONObjectWithData:ruelsData options:0 error:nil];
-    return rules;
+    if (filePath) {
+      NSData *ruelsData = [NSData dataWithContentsOfFile:filePath];
+      NSDictionary *rules = [NSJSONSerialization JSONObjectWithData:ruelsData options:0 error:nil];
+      return rules;
+    }
   }
   return nil;
 }
@@ -186,7 +188,7 @@ static NSMutableDictionary<NSString *, id> *_modelInfo;
 + (nullable NSString *)getWeightsPath:(NSString *_Nonnull)useCaseKey
 {
   NSDictionary<NSString *, id> *cachedModelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
-  if (!cachedModelInfo) {
+  if (!cachedModelInfo || !_directoryPath) {
     return nil;
   }
   NSDictionary<NSString *, id> *model = [cachedModelInfo objectForKey:useCaseKey];
