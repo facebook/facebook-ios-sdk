@@ -18,6 +18,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # shellcheck disable=SC2039
+# shellcheck disable=SC2005
 
 set -euo pipefail
 
@@ -121,10 +122,7 @@ main() {
   "setup") setup_sdk "$@" ;;
   "tag-current-version") tag_current_version "$@" ;;
   "lint") lint_sdk "$@" ;;
-  "test-file-upload")
-    mkdir -p Carthage/Release
-    echo "This is a test" >>Carthage/Release/file.txt
-    ;;
+  "verify-spm-headers") verify_spm_headers "$@" ;;
   "--help" | "help") echo "Check main() for supported commands" ;;
   esac
 }
@@ -659,6 +657,50 @@ does_version_exist() {
   fi
 
   false
+}
+
+# Verifies that all public headers exist as symlinks in the 'include' dir
+# of the SDK they belong to
+verify_spm_headers() {
+  for kit in "${SDK_BASE_KITS[@]}"; do
+    cd "$kit/$kit"
+
+    echo "Verifying the following public headers are exposed to SPM for $kit:"
+
+    headers=$(find . -name "*.h" -type f -not -path "./include/*" -not -path "**/Internal/*" -not -path "**/Basics/*")
+    echo "$(basename ${headers} )" | sort >| headers.txt
+
+    cat headers.txt
+
+    symlinks=$(find ./include -name "*.h")
+    echo "$(basename ${symlinks} )" | sort >| symlinks.txt
+
+    comm -23 headers.txt symlinks.txt >| missingHeaders.txt
+
+    if [ -s missingHeaders.txt ] ; then
+      echo ""
+      echo "Verification failed:"
+      echo "Please symlink the following public headers to the 'include' directory in $kit"
+      echo "so that they can be found by projects using Swift Package Manager."
+      cat missingHeaders.txt
+
+      rm headers.txt
+      rm symlinks.txt
+      rm missingHeaders.txt
+
+      exit 1;
+    fi
+    rm headers.txt
+    rm symlinks.txt
+    rm missingHeaders.txt
+
+    echo ""
+    cd .. || exit
+    cd .. || exit
+  done
+
+  echo ""
+  echo "Success! All of your public headers are visible to users of SPM!"
 }
 
 # --------------
