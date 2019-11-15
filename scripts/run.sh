@@ -395,25 +395,24 @@ release_sdk() {
     mkdir -p build/Release
     rm -rf build/Release/*
 
-    build_swift_dynamic() {
-      mkdir -p Temp
-
+    # Warning: This function will move the Swift schemes and not clean up after itself.
+    # This is intended to be run in CI on container jobs so this is not an issue.
+    # If running locally you will need to clean the directory after running.
+    include_swift_schemes() {
       for kit in "${SDK_BASE_KITS[@]}"; do
-        xcodebuild build \
-        -workspace FacebookSDK.xcworkspace \
-        -scheme "$kit"Swift-Dynamic \
-        -configuration Release \
-        -derivedDataPath Temp \
-        | xcpretty
-
-        mkdir -p build/Release/SwiftDynamic
-        mv Temp/Build/Products/Release-iphoneos/"$kit".framework build/Release/SwiftDynamic
+        mv "$kit/$kit/Swift/"*.xcscheme "$kit/$kit.xcodeproj/xcshareddata/xcschemes/"
       done
-
-      rm -rf Temp
     }
 
-    build_swift_static() {
+    release_swift_dynamic() {
+      carthage build --no-skip-current
+      carthage archive --output build/Release/
+      # This is a little unintuitive. Carthage outputs are based on module name instead of
+      # target/scheme name. So FBSDKCoreKit.framework.zip IS actually the Swift enabled kits.
+      mv build/Release/FBSDKCoreKit.framework.zip build/Release/SwiftDynamic.zip
+    }
+
+    release_swift_static() {
       mkdir -p Temp
 
       for kit in "${SDK_BASE_KITS[@]}"; do
@@ -434,15 +433,6 @@ release_sdk() {
       done
 
       rm -rf Temp
-    }
-
-    # Warning: This function will move the Swift schemes and not clean up after itself.
-    # This is intended to be run in CI on container jobs so this is not an issue.
-    # If running locally you will need to clean the directory after running.
-    include_swift_schemes() {
-      for kit in "${SDK_BASE_KITS[@]}"; do
-        mv "$kit/$kit/Swift/"*.xcscheme "$kit/$kit.xcodeproj/xcshareddata/xcschemes/"
-      done
     }
 
     # Release frameworks in dynamic (mostly for Carthage)
@@ -515,10 +505,8 @@ release_sdk() {
     # TODO: Remove conditional when we drop support for Xcode 10.2
     if [ "${1:-}" == "swift" ]; then
       include_swift_schemes
-      build_swift_dynamic
-      build_swift_static
-      cd build/Release || exit
-      zip -r -m SwiftDynamic.zip SwiftDynamic
+      release_swift_dynamic
+      release_swift_static
     else
       release_dynamic
       release_static
