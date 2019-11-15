@@ -64,6 +64,9 @@ jobs:
     #   osx_image: xcode10.2
     #   script: sh scripts/run.sh tag-current-version --push
     - stage: test
+      name: Verify Swift Package Headers
+      script: sh scripts/run.sh verify-spm-headers
+    - stage: test
       name: Build Swift Packages
       osx_image: xcode11.2
       script: sh scripts/run.sh build spm
