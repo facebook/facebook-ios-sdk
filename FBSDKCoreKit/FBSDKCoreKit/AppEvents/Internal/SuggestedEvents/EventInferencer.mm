@@ -30,8 +30,20 @@ static NSString *const MODEL_INFO_KEY= @"com.facebook.sdk:FBSDKModelInfo";
 static NSString *const THRESHOLDS_KEY = @"thresholds";
 static NSString *const SUGGEST_EVENT_KEY = @"SUGGEST_EVENT";
 static NSString *const OTHER_EVENT = @"other";
-
 static NSString *const SUGGESTED_EVENT[4] = {@"fb_mobile_add_to_cart", @"fb_mobile_complete_registration", @"other", @"fb_mobile_purchase"};
+static NSDictionary<NSString *, NSArray *> const *WEIGHTS_INFO = @{@"embed.weight" : @[@(256), @(64)],
+                                                                   @"convs.0.weight" : @[@(32), @(64), @(2)],
+                                                                   @"convs.0.bias" : @[@(32)],
+                                                                   @"convs.1.weight" : @[@(32), @(64), @(3)],
+                                                                   @"convs.1.bias" : @[@(32)],
+                                                                   @"convs.2.weight" : @[@(32), @(64), @(5)],
+                                                                   @"convs.2.bias" : @[@(32)],
+                                                                   @"fc1.weight": @[@(128), @(126)],
+                                                                   @"fc1.bias": @[@(128)],
+                                                                   @"fc2.weight": @[@(64), @(128)],
+                                                                   @"fc2.bias": @[@(64)],
+                                                                   @"fc3.weight": @[@(4), @(64)],
+                                                                   @"fc3.bias": @[@(4)]};
 
 @implementation EventInferencer : NSObject
 
@@ -40,7 +52,34 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
 + (void)loadWeights
 {
   NSData *latestData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FBSDKBetaKitResources.bundle/app_event_pred_v0_new.weights" ofType:nil]];
-  _weights = [self loadWeights:latestData];
+  std::unordered_map<std::string, mat::MTensor> weights = [self loadWeights:latestData];
+  if ([self validateWeights:weights]) {
+    _weights = weights;
+  }
+}
+
++ (bool)validateWeights: (std::unordered_map<std::string, mat::MTensor>) weights
+{
+  if (WEIGHTS_INFO.count != weights.size()) {
+    return false;
+  }
+  for (NSString *key in WEIGHTS_INFO) {
+    if (weights.count(std::string([key UTF8String])) == 0) {
+      return false;
+    }
+    mat::MTensor tensor = weights[std::string([key UTF8String])];
+    const std::vector<int64_t>& actualSize = tensor.sizes();
+    NSArray *expectedSize = WEIGHTS_INFO[key];
+    if (actualSize.size() != expectedSize.count) {
+      return false;
+    }
+    for (int i = 0; i < expectedSize.count; i++) {
+      if((int)actualSize[i] != (int)[expectedSize[i] intValue]) {
+        return false;
+      }
+    }
+  }
+  return true;
 }
 
 + (std::unordered_map<std::string, mat::MTensor>)loadWeights:(NSData *)weightsData{
