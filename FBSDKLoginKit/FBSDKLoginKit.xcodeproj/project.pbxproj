@@ -319,13 +319,6 @@
 			remoteGlobalIDString = 818EB4211D1A283100252851;
 			remoteInfo = "FBSDKLoginKit-Dynamic";
 		};
-		F483F425233AC85F00703DE3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8118B6781D0A5B9400962084 /* FBSDKCoreKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = F487DADD231EBCD2008416A9;
-			remoteInfo = FBSDKCoreKitSwift;
-		};
 		F483F459233AC85F00703DE3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8118B6781D0A5B9400962084 /* FBSDKCoreKit.xcodeproj */;
@@ -346,6 +339,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = F487DADD231EBCD2008416A9;
 			remoteInfo = FBSDKCoreKitSwift;
+		};
+		F4942DD5237EF27B00254928 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8118B6781D0A5B9400962084 /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F483F331233AC13000703DE3;
+			remoteInfo = "FBSDKCoreKitSwift-Dynamic";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -956,7 +956,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				F483F424233AC85F00703DE3 /* PBXTargetDependency */,
+				F4942DD6237EF27B00254928 /* PBXTargetDependency */,
 			);
 			name = "FBSDKLoginKitSwift-Dynamic";
 			productName = FBSDKLoginKit;
@@ -1401,15 +1401,15 @@
 			target = 818EB4211D1A283100252851 /* FBSDKLoginKit-Dynamic */;
 			targetProxy = F410D0542370CD0F005B9318 /* PBXContainerItemProxy */;
 		};
-		F483F424233AC85F00703DE3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = FBSDKCoreKitSwift;
-			targetProxy = F483F425233AC85F00703DE3 /* PBXContainerItemProxy */;
-		};
 		F487DC12231EC365008416A9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = FBSDKCoreKitSwift;
 			targetProxy = F487DC11231EC365008416A9 /* PBXContainerItemProxy */;
+		};
+		F4942DD6237EF27B00254928 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "FBSDKCoreKitSwift-Dynamic";
+			targetProxy = F4942DD5237EF27B00254928 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

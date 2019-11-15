@@ -698,13 +698,6 @@
 			remoteGlobalIDString = 81B71CFC1D19C87400933E93;
 			remoteInfo = "FBSDKCoreKit-Dynamic";
 		};
-		F483F45D233AC91700703DE3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8118B6341D0A49B500962084 /* FBSDKCoreKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = F487DADD231EBCD2008416A9;
-			remoteInfo = FBSDKCoreKitSwift;
-		};
 		F483F4D5233AC91700703DE3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8118B6341D0A49B500962084 /* FBSDKCoreKit.xcodeproj */;
@@ -725,6 +718,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = F487DADD231EBCD2008416A9;
 			remoteInfo = FBSDKCoreKitSwift;
+		};
+		F4942DEB237EF29F00254928 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8118B6341D0A49B500962084 /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F483F331233AC13000703DE3;
+			remoteInfo = "FBSDKCoreKitSwift-Dynamic";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -1750,7 +1750,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				F483F45C233AC91700703DE3 /* PBXTargetDependency */,
+				F4942DEC237EF29F00254928 /* PBXTargetDependency */,
 			);
 			name = "FBSDKShareKitSwift-Dynamic";
 			productName = FBSDKShareKit;
@@ -2369,15 +2369,15 @@
 			name = "FBSDKCoreKit-Dynamic";
 			targetProxy = F410D0582370CD66005B9318 /* PBXContainerItemProxy */;
 		};
-		F483F45C233AC91700703DE3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = FBSDKCoreKitSwift;
-			targetProxy = F483F45D233AC91700703DE3 /* PBXContainerItemProxy */;
-		};
 		F487DC95231EC50C008416A9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = FBSDKCoreKitSwift;
 			targetProxy = F487DC94231EC50C008416A9 /* PBXContainerItemProxy */;
+		};
+		F4942DEC237EF29F00254928 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "FBSDKCoreKitSwift-Dynamic";
+			targetProxy = F4942DEB237EF29F00254928 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

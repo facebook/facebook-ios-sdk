@@ -397,6 +397,10 @@ release_sdk() {
     # This is intended to be run in CI on container jobs so this is not an issue.
     # If running locally you will need to clean the directory after running.
     include_swift_schemes() {
+      for kit in "${SDK_KITS[@]}"; do
+        rm "$kit/$kit".xcodeproj/xcshareddata/xcschemes/* || continue
+      done
+
       for kit in "${SDK_BASE_KITS[@]}"; do
         mv "$kit/$kit/Swift/"*.xcscheme "$kit/$kit.xcodeproj/xcshareddata/xcschemes/"
       done
