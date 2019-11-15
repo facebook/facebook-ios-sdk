@@ -7,7 +7,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.10.1...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.11.0...HEAD)
+
+## 5.11.0
+
+[2019-11-14](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.11.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.10.1...v5.11.0)
+
+### Added
+- Launch event suggestions
 
 ## 5.10.1
 

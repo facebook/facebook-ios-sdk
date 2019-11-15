@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'FBSDKShareKit'
-  s.version      = '5.10.1'
+  s.version      = '5.11.0'
   s.summary      = 'Official Facebook SDK for iOS to access Facebook Platform Sharing Features'
 
   s.description  = <<-DESC
