@@ -16,22 +16,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "EventInferencer.h"
+#import "FBSDKEventInferencer.h"
 
 #import <QuartzCore/QuartzCore.h>
 #import <UIKit/UIKit.h>
 
-#import "../ML/FBSDKModelManager.h"
-
-#import "FeatureExtractor.h"
-#include "model_runtime.h"
+#import "FBSDKCodelessMacros.h"
+#import "FBSDKFeatureExtractor.h"
+#import "FBSDKModelManager.h"
+#import "FBSDKModelRuntime.h"
 
 static NSString *const MODEL_INFO_KEY= @"com.facebook.sdk:FBSDKModelInfo";
 static NSString *const THRESHOLDS_KEY = @"thresholds";
 static NSString *const SUGGEST_EVENT_KEY = @"SUGGEST_EVENT";
-static NSString *const OTHER_EVENT = @"other";
 static NSString *const SUGGESTED_EVENT[4] = {@"fb_mobile_add_to_cart", @"fb_mobile_complete_registration", @"other", @"fb_mobile_purchase"};
-static NSDictionary<NSString *, NSArray *> const *WEIGHTS_INFO = @{@"embed.weight" : @[@(256), @(64)],
+static NSDictionary<NSString *, NSArray *> *const WEIGHTS_INFO = @{@"embed.weight" : @[@(256), @(64)],
                                                                    @"convs.0.weight" : @[@(32), @(64), @(2)],
                                                                    @"convs.0.bias" : @[@(32)],
                                                                    @"convs.1.weight" : @[@(32), @(64), @(3)],
@@ -45,7 +44,7 @@ static NSDictionary<NSString *, NSArray *> const *WEIGHTS_INFO = @{@"embed.weigh
                                                                    @"fc3.weight": @[@(4), @(64)],
                                                                    @"fc3.bias": @[@(4)]};
 
-@implementation EventInferencer : NSObject
+@implementation FBSDKEventInferencer : NSObject
 
 static std::unordered_map<std::string, mat::MTensor> _weights;
 
@@ -144,11 +143,14 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
               withLog:(BOOL)isPrint
 {
   if (buttonText.length == 0) {
-    return OTHER_EVENT;
+    return SUGGESTED_EVENTS_OTHER;
   }
 
   // Get bytes tensor
-  NSString *textFeature = [self normalize:[FeatureExtractor getTextFeature:buttonText withScreenName:viewTree[@"screenname"]]];
+  NSString *textFeature = [self normalize:[FBSDKFeatureExtractor getTextFeature:buttonText withScreenName:viewTree[@"screenname"]]];
+  if (textFeature.length == 0) {
+    return SUGGESTED_EVENTS_OTHER;
+  }
   const char *bytes = [textFeature UTF8String];
   int *bytes_data = (int *)malloc(sizeof(int) * textFeature.length);
   memset(bytes_data, 0, sizeof(int) * textFeature.length);
@@ -170,9 +172,9 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
   dense_tensor_shape.push_back(30);
   mat::MTensor dense_tensor = mat::mempty(dense_tensor_shape);
   float *dense_tensor_data = dense_tensor.data<float>();
-  float *dense_data = [FeatureExtractor getDenseFeatures:viewTree];
+  float *dense_data = [FBSDKFeatureExtractor getDenseFeatures:viewTree];
   if (!dense_data) {
-    return OTHER_EVENT;
+    return SUGGESTED_EVENTS_OTHER;
   }
   memcpy(dense_tensor_data, dense_data, sizeof(float) * 30);
   free(dense_data);
@@ -180,22 +182,22 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
   float *res = mat1::predictOnText(bytes, _weights, dense_tensor_data);
   NSMutableDictionary<NSString *, id> *modelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
   if (!modelInfo) {
-    return OTHER_EVENT;
+    return SUGGESTED_EVENTS_OTHER;
   }
   NSDictionary<NSString *, id> * suggestedEventModelInfo = [modelInfo objectForKey:SUGGEST_EVENT_KEY];
   if (!suggestedEventModelInfo) {
-    return OTHER_EVENT;
+    return SUGGESTED_EVENTS_OTHER;
   }
   NSMutableArray *thresholds = [suggestedEventModelInfo objectForKey:THRESHOLDS_KEY];
   if (thresholds.count < 4) {
-    return OTHER_EVENT;
+    return SUGGESTED_EVENTS_OTHER;
   }
   for (int i = 0; i < thresholds.count; i++){
     if ((float)res[i] >= (float)[thresholds[i] floatValue]) {
       return SUGGESTED_EVENT[i];
     }
   }
-  return OTHER_EVENT;
+  return SUGGESTED_EVENTS_OTHER;
 }
 
 + (NSString *)normalize:(NSString *)str

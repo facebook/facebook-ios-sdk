@@ -24,8 +24,8 @@
 
 #import <UIKit/UIKit.h>
 
-#import "EventInferencer.h"
 #import "FBSDKCoreKit+Internal.h"
+#import "FBSDKEventInferencer.h"
 
 NSString * const OptInEvents = @"production_events";
 NSString * const UnconfirmedEvents = @"eligible_for_prediction_events";
@@ -209,8 +209,8 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
     NSDictionary<NSString *, id> *viewTree = [_viewTrees lastObject];
 
     fb_dispatch_on_default_thread(^{
-      NSString *event = [EventInferencer predict:text viewTree:[viewTree mutableCopy] withLog:YES];
-      if (!event || [event isEqualToString:@"fb_mobile_other"]) {
+      NSString *event = [FBSDKEventInferencer predict:text viewTree:[viewTree mutableCopy] withLog:YES];
+      if (!event || [event isEqualToString:SUGGESTED_EVENTS_OTHER]) {
         return;
       }
       if ([_optInEvents containsObject:event]) {

@@ -20,8 +20,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FeatureExtractor : NSObject
+@interface FBSDKFeatureExtractor : NSObject
 
++ (void)loadRules;
 + (NSString *)getTextFeature:(NSString *)text
               withScreenName:(NSString *)screenName;
 + (float *)getDenseFeatures:(NSDictionary *)viewHierarchy;

@@ -24,7 +24,7 @@
 
 #import <Accelerate/Accelerate.h>
 
-#include "standalone_model.h"
+#include "FBSDKStandaloneModel.h"
 
 #define SEQ_LEN 128
 #define ALPHABET_SIZE 256
