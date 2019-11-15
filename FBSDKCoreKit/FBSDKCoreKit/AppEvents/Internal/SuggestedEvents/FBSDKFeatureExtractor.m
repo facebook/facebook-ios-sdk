@@ -16,11 +16,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FeatureExtractor.h"
-
-#import "../ML/FBSDKModelManager.h"
+#import "FBSDKFeatureExtractor.h"
 
 #import "FBSDKCoreKit+Internal.h"
+#import "FBSDKModelManager.h"
 
 #define REGEX_CR_PASSWORD_FIELD @"password"
 #define REGEX_CR_HAS_CONFIRM_PASSWORD_FIELD @"(?i)(confirm.*password)|(password.*(confirmation|confirm)|confirmation)"
@@ -38,7 +37,7 @@ static NSDictionary *_rules;
 
 void sum(float *val0, float *val1);
 
-@implementation FeatureExtractor
+@implementation FBSDKFeatureExtractor
 
 + (void)initialize
 {
@@ -65,6 +64,10 @@ void sum(float *val0, float *val1);
                     @"RESOLVED_DOCUMENT_LINK": @"3",
                     @"BUTTON_ID": @"4"
                     };
+}
+
++ (void)loadRules
+{
   _rules = [FBSDKModelManager getRules];
 }
 

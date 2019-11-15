@@ -20,7 +20,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface EventInferencer : NSObject
+@interface FBSDKEventInferencer : NSObject
 
 + (void)loadWeights;
 + (nullable NSString *)predict:(nullable NSString *)buttonText

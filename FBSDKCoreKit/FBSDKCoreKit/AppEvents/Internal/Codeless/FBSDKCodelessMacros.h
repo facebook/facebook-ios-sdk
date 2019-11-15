@@ -94,4 +94,7 @@
 #define VIEW_HIERARCHY_TEXT_KEY                 @"text"
 #define VIEW_HIERARCHY_VIEW_KEY                 @"view"
 
+//  keys for suggested events
+#define SUGGESTED_EVENTS_OTHER                  @"other"
+
 #endif /* FBSDKCodelessMacros_h */

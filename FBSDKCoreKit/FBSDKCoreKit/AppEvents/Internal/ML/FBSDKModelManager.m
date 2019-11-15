@@ -18,7 +18,8 @@
 
 #import "FBSDKModelManager.h"
 
-#import "EventInferencer.h"
+#import "FBSDKEventInferencer.h"
+#import "FBSDKFeatureExtractor.h"
 #import "FBSDKFeatureManager.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequestConnection.h"
@@ -78,8 +79,9 @@ static NSMutableDictionary<NSString *, id> *_modelInfo;
         if (enabled) {
           [self getModelAndRules:SUGGEST_EVENT_KEY handler:^(BOOL success){
             if (success) {
+              [FBSDKEventInferencer loadWeights];
+              [FBSDKFeatureExtractor loadRules];
               [FBSDKSuggestedEventsIndexer enable];
-              [EventInferencer loadWeights];
             }
           }];
         }
