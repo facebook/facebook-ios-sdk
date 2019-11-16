@@ -107,11 +107,10 @@ jobs:
   include:
     - stage: test
       name: Swift Package Integration Test
-      install:
       osx_image: xcode11.2
       script: sh scripts/run.sh build spm-integration
 
-install: sh scripts/travis/install.sh
+# install: sh scripts/travis/install.sh
 script: sh scripts/travis/script.sh
 
 notifications: # set notification options
