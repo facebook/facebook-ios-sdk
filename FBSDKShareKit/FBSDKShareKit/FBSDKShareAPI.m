@@ -22,7 +22,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #endif
 
-#ifdef BUCK
+#if defined BUCK || defined FBSDKCOCOAPODS
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #else
 @import FBSDKCoreKit;
