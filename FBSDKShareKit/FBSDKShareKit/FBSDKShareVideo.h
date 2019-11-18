@@ -19,7 +19,7 @@
 #import <Photos/Photos.h>
 #import <UIKit/UIKit.h>
 
-#ifdef BUCK
+#if defined BUCK || defined __cplusplus
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #else
 @import FBSDKCoreKit;
