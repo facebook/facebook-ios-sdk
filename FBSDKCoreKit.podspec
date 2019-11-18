@@ -37,6 +37,7 @@ Pod::Spec.new do |s|
 
   s.default_subspecs = 'Core', 'Basics'
   s.swift_version = '5.0'
+  s.xcconfig = {'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) FBSDKCOCOAPODS=1' }
 
   s.subspec 'Basics' do |ss|
     ss.source_files = 'FBSDKCoreKit/FBSDKCoreKit/Basics/*.{h,m}',
