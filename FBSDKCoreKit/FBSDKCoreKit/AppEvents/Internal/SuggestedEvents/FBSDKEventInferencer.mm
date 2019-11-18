@@ -50,7 +50,9 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
 
 + (void)loadWeights
 {
-  NSData *latestData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"FBSDKBetaKitResources.bundle/app_event_pred_v0_new.weights" ofType:nil]];
+  NSData *latestData = [NSData dataWithContentsOfFile:[FBSDKModelManager getWeightsPath:SUGGEST_EVENT_KEY]
+                                              options:NSDataReadingMappedIfSafe
+                                                error:nil];
   std::unordered_map<std::string, mat::MTensor> weights = [self loadWeights:latestData];
   if ([self validateWeights:weights]) {
     _weights = weights;
@@ -142,7 +144,7 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
              viewTree:(NSMutableDictionary *)viewTree
               withLog:(BOOL)isPrint
 {
-  if (buttonText.length == 0) {
+  if (buttonText.length == 0 || _weights.size() == 0) {
     return SUGGESTED_EVENTS_OTHER;
   }
 
