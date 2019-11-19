@@ -59,7 +59,7 @@ See the [LICENSE](LICENSE) file.
 
 ## Security Policy
 
-See the [SECURITY POLICY](SECURITY) for more info on our bug bounty program.
+See the [SECURITY POLICY](SECURITY.md) for more info on our bug bounty program.
 
 ## DEVELOPER TERMS
 
