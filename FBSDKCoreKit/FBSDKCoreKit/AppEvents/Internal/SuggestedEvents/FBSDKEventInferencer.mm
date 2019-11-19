@@ -53,6 +53,9 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
   NSData *latestData = [NSData dataWithContentsOfFile:[FBSDKModelManager getWeightsPath:SUGGEST_EVENT_KEY]
                                               options:NSDataReadingMappedIfSafe
                                                 error:nil];
+  if (!latestData) {
+    return;
+  }
   std::unordered_map<std::string, mat::MTensor> weights = [self loadWeights:latestData];
   if ([self validateWeights:weights]) {
     _weights = weights;
