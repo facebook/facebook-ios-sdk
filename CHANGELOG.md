@@ -7,7 +7,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.11.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.11.1...HEAD)
+
+## 5.11.1
+
+[2019-11-19](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.11.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.11.0...v5.11.1)
+
+### Fixed
+
+- Accelerate automatically linked for SPM installs [6c1a7e](https://github.com/facebook/facebook-ios-sdk/commit/6c1a7ea6d8a8aec23bf00a0da1dfb03214741c58)
+- Fixes building for Unity [6a83270](https://github.com/facebook/facebook-ios-sdk/commit/6a83270d5b4f9bbbe49ae9b323a09ffc392dcc00)
+- Updates build scripts, various bug fixes
 
 ## 5.11.0
 
