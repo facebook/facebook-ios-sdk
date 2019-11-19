@@ -1078,6 +1078,9 @@ static NSString *g_overrideAppID = nil;
         [FBSDKMetadataIndexer enable];
       }
     }];
+#endif
+
+#if !defined BUCK && !TARGET_OS_TV
     [FBSDKFeatureManager checkFeature:FBSDKFeaturePrivacyProtection completionBlock:^(BOOL enabled) {
       if (enabled) {
         [FBSDKModelManager enable];
