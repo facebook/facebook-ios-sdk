@@ -175,7 +175,7 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
 
 + (void)predictEvent:(NSObject *)obj withText:(NSString *)text
 {
-  if (text.length > 100 || text.length == 0) {
+  if (text.length > 100 || text.length == 0 || [FBSDKAppEventsUtility isSensitiveUserData: text]) {
     return;
   }
 
