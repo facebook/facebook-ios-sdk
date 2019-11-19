@@ -209,7 +209,8 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
     NSDictionary<NSString *, id> *viewTree = [_viewTrees lastObject];
 
     fb_dispatch_on_default_thread(^{
-      NSString *event = [FBSDKEventInferencer predict:text viewTree:[viewTree mutableCopy] withLog:YES];
+      NSDictionary<NSString *, NSString *> *result = [FBSDKEventInferencer predict:text viewTree:[viewTree mutableCopy] withLog:YES];
+      NSString *event = result[SUGGEST_EVENT_KEY];
       if (!event || [event isEqualToString:SUGGESTED_EVENTS_OTHER]) {
         return;
       }
@@ -218,7 +219,7 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
                       parameters:@{@"_is_suggested_event": @"1"}];
       } else if ([_unconfirmedEvents containsObject:event]) {
         // Only send back not confirmed events to advertisers
-        [self logSuggestedEvent:event withText:text];
+        [self logSuggestedEvent:event withText:text withDenseFeature:result[DENSE_FEATURE_KEY] ?: @""];
       }
     });
   });
@@ -238,9 +239,11 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
   return [textArray componentsJoinedByString:@" "];
 }
 
-+ (void)logSuggestedEvent:(NSString *)event withText:(NSString *)text
++ (void)logSuggestedEvent:(NSString *)event withText:(NSString *)text withDenseFeature:(NSString *)denseFeature
 {
-  NSString *metadata = [FBSDKBasicUtility JSONStringForObject:@{@"button_text": text}
+  NSString *metadata = [FBSDKBasicUtility JSONStringForObject:@{@"button_text": text,
+                                                                @"dense": denseFeature,
+                                                                }
                                                         error:nil
                                          invalidObjectHandler:nil];
   if (!metadata) {

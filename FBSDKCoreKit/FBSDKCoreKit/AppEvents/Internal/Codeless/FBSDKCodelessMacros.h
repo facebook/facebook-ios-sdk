@@ -95,6 +95,8 @@
 #define VIEW_HIERARCHY_VIEW_KEY                 @"view"
 
 //  keys for suggested events
+#define DENSE_FEATURE_KEY                       @"DENSE_FEATURE"
+#define SUGGEST_EVENT_KEY                       @"SUGGEST_EVENT"
 #define SUGGESTED_EVENTS_OTHER                  @"other"
 
 #endif /* FBSDKCodelessMacros_h */

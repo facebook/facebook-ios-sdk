@@ -28,8 +28,8 @@
 
 static NSString *const MODEL_INFO_KEY= @"com.facebook.sdk:FBSDKModelInfo";
 static NSString *const THRESHOLDS_KEY = @"thresholds";
-static NSString *const SUGGEST_EVENT_KEY = @"SUGGEST_EVENT";
 static NSString *const SUGGESTED_EVENT[4] = {@"fb_mobile_add_to_cart", @"fb_mobile_complete_registration", @"other", @"fb_mobile_purchase"};
+static NSDictionary<NSString *, NSString *> *const DEFAULT_PREDICTION = @{SUGGEST_EVENT_KEY: SUGGESTED_EVENTS_OTHER};
 static NSDictionary<NSString *, NSArray *> *const WEIGHTS_INFO = @{@"embed.weight" : @[@(256), @(64)],
                                                                    @"convs.0.weight" : @[@(32), @(64), @(2)],
                                                                    @"convs.0.bias" : @[@(32)],
@@ -44,9 +44,9 @@ static NSDictionary<NSString *, NSArray *> *const WEIGHTS_INFO = @{@"embed.weigh
                                                                    @"fc3.weight": @[@(4), @(64)],
                                                                    @"fc3.bias": @[@(4)]};
 
-@implementation FBSDKEventInferencer : NSObject
-
 static std::unordered_map<std::string, mat::MTensor> _weights;
+
+@implementation FBSDKEventInferencer : NSObject
 
 + (void)loadWeights
 {
@@ -143,18 +143,18 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
   return weights;
 }
 
-+ (NSString *)predict:(NSString *)buttonText
-             viewTree:(NSMutableDictionary *)viewTree
-              withLog:(BOOL)isPrint
++ (NSDictionary<NSString *, NSString *> *)predict:(NSString *)buttonText
+                                         viewTree:(NSMutableDictionary *)viewTree
+                                          withLog:(BOOL)isPrint
 {
   if (buttonText.length == 0 || _weights.size() == 0) {
-    return SUGGESTED_EVENTS_OTHER;
+    return DEFAULT_PREDICTION;
   }
 
   // Get bytes tensor
   NSString *textFeature = [self normalize:[FBSDKFeatureExtractor getTextFeature:buttonText withScreenName:viewTree[@"screenname"]]];
   if (textFeature.length == 0) {
-    return SUGGESTED_EVENTS_OTHER;
+    return DEFAULT_PREDICTION;
   }
   const char *bytes = [textFeature UTF8String];
   int *bytes_data = (int *)malloc(sizeof(int) * textFeature.length);
@@ -179,30 +179,42 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
   float *dense_tensor_data = dense_tensor.data<float>();
   float *dense_data = [FBSDKFeatureExtractor getDenseFeatures:viewTree];
   if (!dense_data) {
-    return SUGGESTED_EVENTS_OTHER;
+    return DEFAULT_PREDICTION;
   }
+
+  NSMutableDictionary<NSString *, NSString *> *result = [[NSMutableDictionary alloc] init];
+
+  // Get dense feature string
+  NSMutableArray *denseDataArray = [NSMutableArray array];
+  for (int i=0; i<30; i++) {
+    [denseDataArray addObject:[NSNumber numberWithFloat: dense_data[i]]];
+  }
+  [result setObject:[denseDataArray componentsJoinedByString:@","] forKey:DENSE_FEATURE_KEY];
+
   memcpy(dense_tensor_data, dense_data, sizeof(float) * 30);
   free(dense_data);
 
   float *res = mat1::predictOnText(bytes, _weights, dense_tensor_data);
   NSMutableDictionary<NSString *, id> *modelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
   if (!modelInfo) {
-    return SUGGESTED_EVENTS_OTHER;
+    return DEFAULT_PREDICTION;
   }
   NSDictionary<NSString *, id> * suggestedEventModelInfo = [modelInfo objectForKey:SUGGEST_EVENT_KEY];
   if (!suggestedEventModelInfo) {
-    return SUGGESTED_EVENTS_OTHER;
+    return DEFAULT_PREDICTION;
   }
   NSMutableArray *thresholds = [suggestedEventModelInfo objectForKey:THRESHOLDS_KEY];
   if (thresholds.count < 4) {
-    return SUGGESTED_EVENTS_OTHER;
+    return DEFAULT_PREDICTION;
   }
+
   for (int i = 0; i < thresholds.count; i++){
     if ((float)res[i] >= (float)[thresholds[i] floatValue]) {
-      return SUGGESTED_EVENT[i];
+      [result setObject:SUGGESTED_EVENT[i] forKey:SUGGEST_EVENT_KEY];
+      return result;
     }
   }
-  return SUGGESTED_EVENTS_OTHER;
+  return DEFAULT_PREDICTION;
 }
 
 + (NSString *)normalize:(NSString *)str
@@ -211,4 +223,5 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
   [tokens removeObject:@""];
   return [tokens componentsJoinedByString: @" "];
 }
+
 @end
