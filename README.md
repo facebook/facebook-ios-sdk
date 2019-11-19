@@ -57,6 +57,10 @@ or open an issue in this repository.
 
 See the [LICENSE](LICENSE) file.
 
+## Security Policy
+
+See the [SECURITY POLICY](SECURITY) for more info on our bug bounty program.
+
 ## DEVELOPER TERMS
 
 - By enabling Facebook integrations, including through this SDK, you can share information with Facebook, including
