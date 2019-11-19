@@ -190,14 +190,13 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
 
   // Get dense feature string
   NSMutableArray *denseDataArray = [NSMutableArray array];
-  for (int i=0; i<30; i++) {
+  for (int i=0; i < 30; i++) {
     [denseDataArray addObject:[NSNumber numberWithFloat: dense_data[i]]];
   }
   [result setObject:[denseDataArray componentsJoinedByString:@","] forKey:DENSE_FEATURE_KEY];
 
   memcpy(dense_tensor_data, dense_data, sizeof(float) * 30);
   free(dense_data);
-
   float *res = mat1::predictOnText(bytes, _weights, dense_tensor_data);
   NSMutableDictionary<NSString *, id> *modelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
   if (!modelInfo) {
