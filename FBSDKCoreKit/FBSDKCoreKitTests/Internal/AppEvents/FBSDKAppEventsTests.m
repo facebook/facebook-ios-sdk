@@ -416,7 +416,6 @@ static NSString *const _mockUserID = @"mockUserID";
                                                                          HTTPMethod:nil
                                                                               flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
 
-  OCMStub([FBSDKAppEventsUtility advertisingTrackingStatus] == FBSDKAdvertisingTrackingDisallowed ).andReturn(@YES);
   OCMStub([mockAppEventsUtility attributionID]).andReturn(NULL);
 
   // without access token
