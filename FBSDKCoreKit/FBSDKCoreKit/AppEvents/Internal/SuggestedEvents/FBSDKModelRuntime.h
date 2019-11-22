@@ -157,7 +157,7 @@ namespace mat1 {
        input shape: n_examples, len, n_channel
        return shape: n_examples, len - pool_size + 1, n_channel
     */
-    static float* maxPool1D(float *input, int n_examples, int input_len, int n_channel, int pool_size) {
+    static inline float* maxPool1D(float *input, int n_examples, int input_len, int n_channel, int pool_size) {
         int res_len = input_len - pool_size + 1;
         float* res = (float *)calloc(n_examples * res_len * n_channel, sizeof(float));
 
