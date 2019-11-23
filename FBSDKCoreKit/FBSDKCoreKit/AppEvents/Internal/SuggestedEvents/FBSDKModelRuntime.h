@@ -134,30 +134,10 @@ namespace mat1 {
     }
 
     /*
-       This is deprecated method: use maxPool1D instead
-       x shape: n_examples, length, n_channel
-       return shape: n_examples, length - pool_size + 1, n_channel
-    */
-    static float* maxPool1DDeprecated(float *x, int rows, int cols, int pool_size) {
-        int len = rows - pool_size + 1;
-        float* res = (float *)calloc(len * cols, sizeof(float));
-
-        for (int c = 0; c < cols; c++) {
-            for (int i = 0; i < len; i++) {
-                for (int r = i; r < i + pool_size; r++) {
-                    res[i * cols + c] = MAX(res[i * cols + c], x[r * cols + c]);
-                }
-            }
-        }
-
-        return res;
-    }
-
-    /*
        input shape: n_examples, len, n_channel
        return shape: n_examples, len - pool_size + 1, n_channel
     */
-    static inline float* maxPool1D(float *input, int n_examples, int input_len, int n_channel, int pool_size) {
+    static float* maxPool1D(float *input, int n_examples, int input_len, int n_channel, int pool_size) {
         int res_len = input_len - pool_size + 1;
         float* res = (float *)calloc(n_examples * res_len * n_channel, sizeof(float));
 
@@ -295,9 +275,9 @@ namespace mat1 {
         relu(c3, (int)(SEQ_LEN - conv3w_t.size(2) + 1) * (int)conv3w_t.size(0));
 
         // max pooling
-        ca = maxPool1DDeprecated(c1, (int)(SEQ_LEN - conv1w_t.size(2) + 1), (int)conv1w_t.size(0), (int)(SEQ_LEN - conv1w_t.size(2) + 1)); // (1, 1, 32)
-        cb = maxPool1DDeprecated(c2, (int)(SEQ_LEN - conv2w_t.size(2) + 1), (int)conv2w_t.size(0), (int)(SEQ_LEN - conv2w_t.size(2) + 1)); // (1, 1, 32)
-        cc = maxPool1DDeprecated(c3, (int)(SEQ_LEN - conv3w_t.size(2) + 1), (int)conv3w_t.size(0), (int)(SEQ_LEN - conv3w_t.size(2) + 1)); // (1, 1, 32)
+        ca = maxPool1D(c1, 1, (int)(SEQ_LEN - conv1w_t.size(2) + 1), (int)conv1w_t.size(0), (int)(SEQ_LEN - conv1w_t.size(2) + 1)); // (1, 1, 32)
+        cb = maxPool1D(c2, 1, (int)(SEQ_LEN - conv2w_t.size(2) + 1), (int)conv2w_t.size(0), (int)(SEQ_LEN - conv2w_t.size(2) + 1)); // (1, 1, 32)
+        cc = maxPool1D(c3, 1, (int)(SEQ_LEN - conv3w_t.size(2) + 1), (int)conv3w_t.size(0), (int)(SEQ_LEN - conv3w_t.size(2) + 1)); // (1, 1, 32)
         free(c1);
         free(c2);
         free(c3);
