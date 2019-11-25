@@ -22,12 +22,12 @@
 
 #import <UIKit/UIKit.h>
 
-#import "FBSDKCodelessMacros.h"
 #import "FBSDKCodelessPathComponent.h"
 #import "FBSDKEventBinding.h"
 #import "FBSDKSwizzler.h"
 #import "FBSDKTypeUtility.h"
 #import "FBSDKViewHierarchy.h"
+#import "FBSDKViewHierarchyMacros.h"
 
 #define ReactNativeTargetKey          @"target"
 #define ReactNativeTouchEndEventName  @"touchEnd"

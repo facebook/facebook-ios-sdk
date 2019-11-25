@@ -21,10 +21,10 @@
 #import <QuartzCore/QuartzCore.h>
 #import <UIKit/UIKit.h>
 
-#import "FBSDKCodelessMacros.h"
 #import "FBSDKFeatureExtractor.h"
 #import "FBSDKModelManager.h"
 #import "FBSDKModelRuntime.h"
+#import "FBSDKViewHierarchyMacros.h"
 
 static NSString *const MODEL_INFO_KEY= @"com.facebook.sdk:FBSDKModelInfo";
 static NSString *const THRESHOLDS_KEY = @"thresholds";

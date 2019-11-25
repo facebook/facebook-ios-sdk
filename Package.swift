@@ -56,6 +56,7 @@ let package = Package(
                 .headerSearchPath("AppEvents"),
                 .headerSearchPath("AppEvents/Internal"),
                 .headerSearchPath("AppEvents/Internal/Codeless"),
+                .headerSearchPath("AppEvents/Internal/ViewHierarchy/"),
                 .headerSearchPath("AppEvents/Internal/ML"),
                 .headerSearchPath("AppEvents/Internal/RestrictiveDataFilter"),
                 .headerSearchPath("AppEvents/Internal/SuggestedEvents"),

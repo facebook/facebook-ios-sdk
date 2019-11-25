@@ -22,9 +22,9 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-#import "FBSDKCodelessMacros.h"
 #import "FBSDKCodelessPathComponent.h"
 #import "FBSDKCoreKit+Internal.h"
+#import "FBSDKViewHierarchyMacros.h"
 
 #define MAX_VIEW_HIERARCHY_LEVEL 35
 

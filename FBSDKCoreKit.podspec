@@ -71,6 +71,7 @@ Pod::Spec.new do |s|
     ss.tvos.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/AAM/*',
                             'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/SuggestedEvents/*',
                             'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/Codeless/*',
+                            'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/ViewHierarchy/*',
                             'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/FBSDKHybridAppEventsScriptMessageHandler.{h,m}',
                             'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/ML/*',
                             'FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*',

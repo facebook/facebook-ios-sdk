@@ -28,7 +28,7 @@
 
 #if !TARGET_OS_TV
 #import "FBSDKViewHierarchy.h"
-#import "FBSDKCodelessMacros.h"
+#import "FBSDKViewHierarchyMacros.h"
 #import "FBSDKCodelessIndexer.h"
 #import "FBSDKMetadataIndexer.h"
 #import "FBSDKSuggestedEventsIndexer.h"
@@ -99,8 +99,8 @@
 #else
 
 #if !TARGET_OS_TV
-#import "../AppEvents/Internal/Codeless/FBSDKViewHierarchy.h"
-#import "../AppEvents/Internal/Codeless/FBSDKCodelessMacros.h"
+#import "../AppEvents/Internal/ViewHierarchy/FBSDKViewHierarchy.h"
+#import "../AppEvents/Internal/ViewHierarchy/FBSDKViewHierarchyMacros.h"
 #import "../AppEvents/Internal/Codeless/FBSDKCodelessIndexer.h"
 #import "../AppEvents/Internal/AAM/FBSDKMetadataIndexer.h"
 #import "../AppEvents/Internal/SuggestedEvents/FBSDKSuggestedEventsIndexer.h"
