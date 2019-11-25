@@ -26,6 +26,7 @@
 #import "FBSDKSettings.h"
 #import "FBSDKSuggestedEventsIndexer.h"
 #import "FBSDKTypeUtility.h"
+#import "FBSDKViewHierarchyMacros.h"
 
 #define FBSDK_ML_MODEL_PATH @"models"
 
@@ -36,7 +37,6 @@ static NSString *const THRESHOLDS_KEY = @"thresholds";
 static NSString *const USE_CASE_KEY = @"use_case";
 static NSString *const VERSION_ID_KEY = @"version_id";
 static NSString *const MODEL_DATA_KEY = @"data";
-static NSString *const SUGGEST_EVENT_KEY = @"SUGGEST_EVENT";
 
 static NSString *_directoryPath;
 static NSMutableDictionary<NSString *, id> *_modelInfo;
