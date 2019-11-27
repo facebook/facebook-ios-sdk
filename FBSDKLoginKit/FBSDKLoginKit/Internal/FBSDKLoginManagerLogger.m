@@ -178,14 +178,6 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
   }];
 }
 
-- (void)systemAuthDidShowDialog:(BOOL)didShowDialog isUnTOSedDevice:(BOOL)isUnTOSedDevice
-{
-  [_extras addEntriesFromDictionary:@{
-    @"isUntosedDevice" : @(isUnTOSedDevice),
-    @"dialogShown" : @(didShowDialog),
-  }];
-}
-
 - (void)logNativeAppDialogResult:(BOOL)result dialogDuration:(NSTimeInterval)dialogDuration
 {
   NSOperatingSystemVersion iOS10Version = { .majorVersion = 10, .minorVersion = 0, .patchVersion = 0 };

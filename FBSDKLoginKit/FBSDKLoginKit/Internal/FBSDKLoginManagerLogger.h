@@ -41,7 +41,6 @@ NS_SWIFT_NAME(LoginManagerLogger)
 
 - (NSDictionary *)parametersWithTimeStampAndClientState:(NSDictionary *)loginParams forAuthMethod:(NSString *)authMethod;
 - (void)willAttemptAppSwitchingBehavior;
-- (void)systemAuthDidShowDialog:(BOOL)didShowDialog isUnTOSedDevice:(BOOL)isUnTOSedDevice;
 
 - (void)logNativeAppDialogResult:(BOOL)result dialogDuration:(NSTimeInterval)dialogDuration;
 @end
