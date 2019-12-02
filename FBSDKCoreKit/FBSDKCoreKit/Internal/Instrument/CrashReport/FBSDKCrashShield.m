@@ -70,6 +70,7 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
       if (featureName) {
         [FBSDKFeatureManager disableFeature:featureName];
         [disabledFeatues addObject:featureName];
+        continue;
       }
   }
   if (disabledFeatues.count > 0) {
@@ -92,11 +93,12 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
 
 + (nullable NSString *)getFeature:(NSArray<NSString *> *)callstack
 {
-  for (NSString *featureName in _featureMapping) {
-    NSArray<NSString *> *classArray = [_featureMapping objectForKey:featureName];
-    for (NSString *entry in callstack) {
-      NSString *className = [self getClassName:entry];
-      if ([classArray containsObject:className]) {
+  NSArray<NSString *> *featureNames = _featureMapping.allKeys;
+  for (NSString *entry in callstack) {
+    NSString *className = [self getClassName:entry];
+    for (NSString *featureName in featureNames) {
+      NSArray<NSString *> *classArray = [_featureMapping objectForKey:featureName];
+      if (className && [classArray containsObject:className]) {
         return featureName;
       }
     }
