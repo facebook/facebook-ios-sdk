@@ -203,6 +203,10 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
 
 @property (class, nonatomic, strong, readonly) FBSDKAppEvents *singleton;
 
+#ifdef DEBUG
++ (void)resetSingleton;
+#endif
+
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 
