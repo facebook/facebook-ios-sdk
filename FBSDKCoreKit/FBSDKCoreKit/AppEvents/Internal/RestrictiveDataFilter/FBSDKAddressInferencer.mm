@@ -22,6 +22,8 @@
 #import "FBSDKModelRuntime.h"
 #import "FBSDKStandaloneModel.h"
 
+#include<stdexcept>
+
 static NSString *const MODEL_INFO_KEY= @"com.facebook.sdk:FBSDKModelInfo";
 static NSString *const THRESHOLDS_KEY = @"thresholds";
 static NSString *const DATA_DETECTION_ADDRESS_KEY = @"DATA_DETECTION_ADDRESS";
@@ -67,10 +69,12 @@ static std::vector<float> _denseFeature;
   if (!latestData) {
     return;
   }
-  std::unordered_map<std::string, mat::MTensor> weights = [self loadWeights:latestData];
-  if ([self validateWeights:weights]) {
-    _weights = weights;
-  }
+  try {
+    std::unordered_map<std::string, mat::MTensor> weights = [self loadWeights:latestData];
+    if ([self validateWeights:weights]) {
+      _weights = weights;
+    }
+  } catch (const std::exception &e) {}
 }
 
 + (bool)validateWeights: (std::unordered_map<std::string, mat::MTensor>) weights
@@ -78,21 +82,25 @@ static std::vector<float> _denseFeature;
   if (WEIGHTS_INFO.count != weights.size()) {
     return false;
   }
-  for (NSString *key in WEIGHTS_INFO) {
-    if (weights.count(std::string([key UTF8String])) == 0) {
-      return false;
-    }
-    mat::MTensor tensor = weights[std::string([key UTF8String])];
-    const std::vector<int64_t>& actualSize = tensor.sizes();
-    NSArray *expectedSize = WEIGHTS_INFO[key];
-    if (actualSize.size() != expectedSize.count) {
-      return false;
-    }
-    for (int i = 0; i < expectedSize.count; i++) {
-      if((int)actualSize[i] != (int)[expectedSize[i] intValue]) {
+  try {
+    for (NSString *key in WEIGHTS_INFO) {
+      if (weights.count(std::string([key UTF8String])) == 0) {
         return false;
       }
+      mat::MTensor tensor = weights[std::string([key UTF8String])];
+      const std::vector<int64_t>& actualSize = tensor.sizes();
+      NSArray *expectedSize = WEIGHTS_INFO[key];
+      if (actualSize.size() != expectedSize.count) {
+        return false;
+      }
+      for (int i = 0; i < expectedSize.count; i++) {
+        if((int)actualSize[i] != (int)[expectedSize[i] intValue]) {
+          return false;
+        }
+      }
     }
+  } catch (const std::exception &e) {
+    return false;
   }
   return true;
 }
@@ -108,53 +116,54 @@ static std::vector<float> _denseFeature;
     // Make sure data length is valid
     return weights;
   }
-
-  int length;
-  memcpy(&length, data, 4);
-  if (length + 4 > totalLength) {
-    // Make sure data length is valid
-    return weights;
-  }
-
-  char *json = (char *)data + 4;
-  NSDictionary<NSString *, id> *info = [NSJSONSerialization JSONObjectWithData:[NSData dataWithBytes:json length:length]
-                                                                       options:0
-                                                                         error:nil];
-  NSArray<NSString *> *keys = [[info allKeys] sortedArrayUsingComparator:^NSComparisonResult(NSString *key1, NSString *key2) {
-    return [key1 compare:key2];
-  }];
-
-  float *floats = (float *)(json + length);
-  for (NSString *key in keys) {
-    NSString *finalKey = key;
-    NSString *mapping = [WEIGHTS_KEYS objectForKey:key];
-    if (mapping) {
-      finalKey = mapping;
-    }
-    std::string s_name([finalKey UTF8String]);
-
-    std::vector<int64_t> v_shape;
-    NSArray<NSString *> *shape = [info objectForKey:key];
-    int count = 1;
-    for (NSNumber *_s in shape) {
-      int i = [_s intValue];
-      v_shape.push_back(i);
-      count *= i;
-    }
-
-    totalFloats += count;
-
-    if ((4 + length + totalFloats * 4) > totalLength) {
+  try {
+    int length;
+    memcpy(&length, data, 4);
+    if (length + 4 > totalLength) {
       // Make sure data length is valid
-      break;
+      return weights;
     }
-    mat::MTensor tensor = mat::mempty(v_shape);
-    float *tensor_data = tensor.data<float>();
-    memcpy(tensor_data, floats, sizeof(float) * count);
-    floats += count;
 
-    weights[s_name] = tensor;
-  }
+    char *json = (char *)data + 4;
+    NSDictionary<NSString *, id> *info = [NSJSONSerialization JSONObjectWithData:[NSData dataWithBytes:json length:length]
+                                                                         options:0
+                                                                           error:nil];
+    NSArray<NSString *> *keys = [[info allKeys] sortedArrayUsingComparator:^NSComparisonResult(NSString *key1, NSString *key2) {
+      return [key1 compare:key2];
+    }];
+
+    float *floats = (float *)(json + length);
+    for (NSString *key in keys) {
+      NSString *finalKey = key;
+      NSString *mapping = [WEIGHTS_KEYS objectForKey:key];
+      if (mapping) {
+        finalKey = mapping;
+      }
+      std::string s_name([finalKey UTF8String]);
+
+      std::vector<int64_t> v_shape;
+      NSArray<NSString *> *shape = [info objectForKey:key];
+      int count = 1;
+      for (NSNumber *_s in shape) {
+        int i = [_s intValue];
+        v_shape.push_back(i);
+        count *= i;
+      }
+
+      totalFloats += count;
+
+      if ((4 + length + totalFloats * 4) > totalLength) {
+        // Make sure data length is valid
+        break;
+      }
+      mat::MTensor tensor = mat::mempty(v_shape);
+      float *tensor_data = tensor.data<float>();
+      memcpy(tensor_data, floats, sizeof(float) * count);
+      floats += count;
+
+      weights[s_name] = tensor;
+    }
+  } catch (const std::exception &e) {}
 
   return weights;
 }
@@ -175,11 +184,15 @@ static std::vector<float> _denseFeature;
   }
   NSMutableArray *thresholds = [addressModelInfo objectForKey:THRESHOLDS_KEY];
   float threshold = [thresholds[0] floatValue];
-  predictedRaw = mat1::predictOnText([param UTF8String], _weights, &_denseFeature[0]);
-  if (!predictedRaw[1]) {
+  try {
+    predictedRaw = mat1::predictOnText([param UTF8String], _weights, &_denseFeature[0]);
+    if (!predictedRaw[1]) {
+      return false;
+    }
+    return predictedRaw[1] >= threshold;
+  } catch (const std::exception &e) {
     return false;
   }
-  return predictedRaw[1] >= threshold;
 }
 
 @end
