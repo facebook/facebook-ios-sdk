@@ -162,22 +162,22 @@
 - (void)testFlushReasonToString
 {
   NSString *result1 = [FBSDKAppEventsUtility flushReasonToString:FBSDKAppEventsFlushReasonExplicit];
-  XCTAssertEqual(@"Explicit", result1);
+  XCTAssertEqualObjects(@"Explicit", result1);
 
   NSString *result2 = [FBSDKAppEventsUtility flushReasonToString:FBSDKAppEventsFlushReasonTimer];
-  XCTAssertEqual(@"Timer", result2);
+  XCTAssertEqualObjects(@"Timer", result2);
 
   NSString *result3 = [FBSDKAppEventsUtility flushReasonToString:FBSDKAppEventsFlushReasonSessionChange];
-  XCTAssertEqual(@"SessionChange", result3);
+  XCTAssertEqualObjects(@"SessionChange", result3);
 
   NSString *result4 = [FBSDKAppEventsUtility flushReasonToString:FBSDKAppEventsFlushReasonPersistedEvents];
-  XCTAssertEqual(@"PersistedEvents", result4);
+  XCTAssertEqualObjects(@"PersistedEvents", result4);
 
   NSString *result5 = [FBSDKAppEventsUtility flushReasonToString:FBSDKAppEventsFlushReasonEventThreshold];
-  XCTAssertEqual(@"EventCountThreshold", result5);
+  XCTAssertEqualObjects(@"EventCountThreshold", result5);
 
   NSString *result6 = [FBSDKAppEventsUtility flushReasonToString:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
-  XCTAssertEqual(@"EagerlyFlushingEvent", result6);
+  XCTAssertEqualObjects(@"EagerlyFlushingEvent", result6);
 }
 
 @end
