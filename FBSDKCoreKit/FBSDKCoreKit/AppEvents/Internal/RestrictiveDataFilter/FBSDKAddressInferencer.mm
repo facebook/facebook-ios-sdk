@@ -69,12 +69,10 @@ static std::vector<float> _denseFeature;
   if (!latestData) {
     return;
   }
-  try {
-    std::unordered_map<std::string, mat::MTensor> weights = [self loadWeights:latestData];
-    if ([self validateWeights:weights]) {
-      _weights = weights;
-    }
-  } catch (const std::exception &e) {}
+  std::unordered_map<std::string, mat::MTensor> weights = [self loadWeights:latestData];
+  if ([self validateWeights:weights]) {
+    _weights = weights;
+  }
 }
 
 + (bool)validateWeights: (std::unordered_map<std::string, mat::MTensor>) weights
