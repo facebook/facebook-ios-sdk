@@ -23,28 +23,37 @@
 
 static NSString *const replacementString = @"_removed_";
 
+static NSString *const RESTRICTIVE_PARAM_KEY = @"restrictive_param";
+static NSString *const DEPRECATED_PARAM_KEY = @"deprecated_param";
+static NSString *const PROCESS_EVENT_NAME_KEY = @"process_event_name";
+static NSString *const DEPRECATED_EVENT_KEY = @"is_deprecated_event";
+
 @interface FBSDKRestrictiveEventFilter : NSObject
 
 @property (nonatomic, readonly, copy) NSString *eventName;
-@property (nonatomic, readonly, copy) NSDictionary<NSString *, id> *eventParams;
+@property (nonatomic, readonly, copy, nullable) NSDictionary<NSString *, id> *restrictiveParams;
+@property (nonatomic, readonly, copy, nullable) NSSet<NSString *> *deprecatedParams;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
 -(instancetype)initWithEventName:(NSString *)eventName
-                     eventParams:(NSDictionary<NSString *, id> *)eventParams;
+               restrictiveParams:(NSDictionary<NSString *, id> *)restrictiveParams
+                deprecatedParams:(NSSet<NSString *> *)deprecatedParams;
 
 @end
 
 @implementation FBSDKRestrictiveEventFilter
 
 -(instancetype)initWithEventName:(NSString *)eventName
-                     eventParams:(NSDictionary<NSString *, id> *)eventParams
+               restrictiveParams:(nullable NSDictionary<NSString *, id> *)restrictiveParams
+                deprecatedParams:(nullable NSSet<NSString *> *)deprecatedParams
 {
   self = [super init];
   if (self) {
     _eventName = eventName;
-    _eventParams = eventParams;
+    _restrictiveParams = restrictiveParams;
+    _deprecatedParams = deprecatedParams;
   }
 
   return self;
@@ -73,15 +82,19 @@ static NSMutableSet<NSString *> *_restrictedEvents;
     NSMutableSet<NSString *> *deprecatedEventSet = [NSMutableSet set];
     NSMutableSet<NSString *> *restrictedEventSet = [NSMutableSet set];
     for (NSString *eventName in restrictiveParams.allKeys) {
-      if (restrictiveParams[eventName][@"is_deprecated_event"]) {
+      NSDictionary<NSString *, id> *eventInfo = restrictiveParams[eventName];
+      if (!eventInfo) {
+        return;
+      }
+      if (eventInfo[DEPRECATED_EVENT_KEY]) {
         [deprecatedEventSet addObject:eventName];
       }
-      if (restrictiveParams[eventName][@"restrictive_param"]) {
+      if (eventInfo[RESTRICTIVE_PARAM_KEY] || eventInfo[DEPRECATED_PARAM_KEY]) {
         FBSDKRestrictiveEventFilter *restrictiveEventFilter = [[FBSDKRestrictiveEventFilter alloc] initWithEventName:eventName
-                                                                                                         eventParams:restrictiveParams[eventName][@"restrictive_param"]];
+                                                                                                   restrictiveParams:eventInfo[RESTRICTIVE_PARAM_KEY] deprecatedParams:[NSSet setWithArray:eventInfo[DEPRECATED_PARAM_KEY]]];
         [eventFilterArray addObject:restrictiveEventFilter];
       }
-      if (restrictiveParams[eventName][@"process_event_name"]) {
+      if (eventInfo[PROCESS_EVENT_NAME_KEY]) {
         [restrictedEventSet addObject:eventName];
       }
     }
@@ -97,9 +110,12 @@ static NSMutableSet<NSString *> *_restrictedEvents;
   // match by params in custom events with event name
   for (FBSDKRestrictiveEventFilter *filter in _params) {
     if ([filter.eventName isEqualToString:eventName]) {
-      NSString *type = [FBSDKTypeUtility stringValue:filter.eventParams[paramKey]];
+      NSString *type = [FBSDKTypeUtility stringValue:filter.restrictiveParams[paramKey]];
       if (type) {
         return type;
+      }
+      if (filter.deprecatedParams && [filter.deprecatedParams containsObject:paramKey]) {
+        return DEPRECATED_EVENT_KEY;
       }
     }
   }
@@ -146,7 +162,9 @@ static NSMutableSet<NSString *> *_restrictedEvents;
     for (NSString *key in [parameters keyEnumerator]) {
       NSString *type = [FBSDKRestrictiveDataFilterManager getMatchedDataTypeWithEventName:eventName
                                                                                  paramKey:key];
-      if (type) {
+      if ([type isEqualToString:DEPRECATED_EVENT_KEY]) {
+        [params removeObjectForKey:key];
+      } else if (type) {
         [restrictedParams setObject:type forKey:key];
         [params removeObjectForKey:key];
       }
