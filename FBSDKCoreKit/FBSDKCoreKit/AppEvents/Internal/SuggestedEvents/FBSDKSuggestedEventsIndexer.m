@@ -216,7 +216,9 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
       }
       if ([_optInEvents containsObject:event]) {
         [FBSDKAppEvents logEvent:event
-                      parameters:@{@"_is_suggested_event": @"1"}];
+                      parameters:@{@"_is_suggested_event": @"1",
+                                   @"_button_text": text
+                      }];
       } else if ([_unconfirmedEvents containsObject:event]) {
         // Only send back not confirmed events to advertisers
         [self logSuggestedEvent:event withText:text withDenseFeature:result[DENSE_FEATURE_KEY] ?: @""];
