@@ -24,7 +24,6 @@
 #import <UIKit/UIApplication.h>
 
 #import "FBSDKAccessToken.h"
-#import "FBSDKAddressFilterManager.h"
 #import "FBSDKAppEventsState.h"
 #import "FBSDKAppEventsStateManager.h"
 #import "FBSDKAppEventsUtility.h"
@@ -45,6 +44,7 @@
 #import "FBSDKUserDataStore.h"
 
 #if !TARGET_OS_TV
+#import "FBSDKAddressFilterManager.h"
 #import "FBSDKEventBindingManager.h"
 #import "FBSDKHybridAppEventsScriptMessageHandler.h"
 #import "FBSDKModelManager.h"
