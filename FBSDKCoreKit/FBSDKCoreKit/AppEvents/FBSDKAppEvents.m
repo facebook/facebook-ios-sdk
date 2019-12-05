@@ -1151,7 +1151,7 @@ static dispatch_once_t *onceTokenPointer;
   if (failed) {
     return;
   }
-#if !TARGET_OS_TV
+#if !defined BUCK && !TARGET_OS_TV
   parameters = [FBSDKAddressFilterManager processParameters:parameters];
 #endif
   parameters = [FBSDKRestrictiveDataFilterManager processParameters:parameters
