@@ -20,15 +20,19 @@
 
 #import "FBSDKAddressInferencer.h"
 #import "FBSDKBasicUtility.h"
+#import "FBSDKGateKeeperManager.h"
+#import "FBSDKSettings.h"
 #import "FBSDKTypeUtility.h"
 
 static BOOL isAddressFilterEnabled = NO;
+static BOOL isSampleEnabled = NO;
 
 @implementation FBSDKAddressFilterManager
 
 + (void)enable
 {
   isAddressFilterEnabled = YES;
+  isSampleEnabled = [FBSDKGateKeeperManager boolForKey:@"FBSDKFeatureAddressDetectionSample" defaultValue:false];
 }
 
 + (nullable NSDictionary<NSString *, id> *)processParameters:(nullable NSDictionary<NSString *, id> *)parameters
@@ -37,12 +41,12 @@ static BOOL isAddressFilterEnabled = NO;
     return parameters;
   }
   NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionaryWithDictionary:parameters];
-  NSMutableArray<NSString *> *addressParams = [NSMutableArray array];
+  NSMutableDictionary<NSString *, id> *addressParams = [NSMutableDictionary dictionary];
 
   for (NSString *key in [parameters keyEnumerator]) {
-    BOOL shouldFilterKey = [FBSDKAddressInferencer shouldFilterParam:key] || [FBSDKAddressInferencer shouldFilterParam:[FBSDKTypeUtility stringValue:parameters[key]]];
-    if (shouldFilterKey) {
-      [addressParams addObject:key];
+    BOOL shouldFilter = [FBSDKAddressInferencer shouldFilterParam:[FBSDKTypeUtility stringValue:parameters[key]]];
+    if (shouldFilter) {
+      [addressParams setObject:isSampleEnabled ? parameters[key] : @"" forKey:key];
       [params removeObjectForKey:key];
     }
   }
