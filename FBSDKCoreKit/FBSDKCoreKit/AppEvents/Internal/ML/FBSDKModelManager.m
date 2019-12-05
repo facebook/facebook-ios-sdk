@@ -18,6 +18,8 @@
 
 #import "FBSDKModelManager.h"
 
+#import "FBSDKAddressFilterManager.h"
+#import "FBSDKAddressInferencer.h"
 #import "FBSDKEventInferencer.h"
 #import "FBSDKFeatureExtractor.h"
 #import "FBSDKFeatureManager.h"
@@ -37,6 +39,7 @@ static NSString *const THRESHOLDS_KEY = @"thresholds";
 static NSString *const USE_CASE_KEY = @"use_case";
 static NSString *const VERSION_ID_KEY = @"version_id";
 static NSString *const MODEL_DATA_KEY = @"data";
+static NSString *const ADDRESS_FILTERING_KEY = @"DATA_DETECTION_ADDRESS";
 
 static NSString *_directoryPath;
 static NSMutableDictionary<NSString *, id> *_modelInfo;
@@ -82,6 +85,17 @@ static NSMutableDictionary<NSString *, id> *_modelInfo;
               [FBSDKEventInferencer loadWeights];
               [FBSDKFeatureExtractor loadRules];
               [FBSDKSuggestedEventsIndexer enable];
+            }
+          }];
+        }
+      }];
+      [FBSDKFeatureManager checkFeature:FBSDKFeaturePIIFiltering completionBlock:^(BOOL enabled) {
+        if (enabled) {
+          [self getModelAndRules:ADDRESS_FILTERING_KEY handler:^(BOOL success){
+            if (success) {
+              [FBSDKAddressInferencer loadWeights];
+              [FBSDKAddressInferencer initializeDenseFeature];
+              [FBSDKAddressFilterManager enable];
             }
           }];
         }
