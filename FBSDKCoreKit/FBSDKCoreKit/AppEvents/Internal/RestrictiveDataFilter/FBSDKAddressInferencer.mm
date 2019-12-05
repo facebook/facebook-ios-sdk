@@ -20,6 +20,7 @@
 
 #import "FBSDKModelManager.h"
 #import "FBSDKModelRuntime.h"
+#import "FBSDKModelUtility.h"
 #import "FBSDKStandaloneModel.h"
 
 #include<stdexcept>
@@ -171,6 +172,8 @@ static std::vector<float> _denseFeature;
   if (!param || _weights.size() == 0 || _denseFeature.size() == 0) {
     return false;
   }
+
+  NSString *text = [FBSDKModelUtility normalizeText:param];
   float *predictedRaw;
   NSMutableDictionary<NSString *, id> *modelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
   if (!modelInfo) {
@@ -183,7 +186,7 @@ static std::vector<float> _denseFeature;
   NSMutableArray *thresholds = [addressModelInfo objectForKey:THRESHOLDS_KEY];
   float threshold = [thresholds[0] floatValue];
   try {
-    predictedRaw = mat1::predictOnText([param UTF8String], _weights, &_denseFeature[0]);
+    predictedRaw = mat1::predictOnText([text UTF8String], _weights, &_denseFeature[0]);
     if (!predictedRaw[1]) {
       return false;
     }

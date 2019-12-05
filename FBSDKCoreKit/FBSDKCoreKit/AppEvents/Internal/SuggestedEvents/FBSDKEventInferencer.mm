@@ -24,6 +24,7 @@
 #import "FBSDKFeatureExtractor.h"
 #import "FBSDKModelManager.h"
 #import "FBSDKModelRuntime.h"
+#import "FBSDKModelUtility.h"
 #import "FBSDKViewHierarchyMacros.h"
 
 #include<stdexcept>
@@ -163,7 +164,7 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
   }
   try {
     // Get bytes tensor
-    NSString *textFeature = [self normalize:[FBSDKFeatureExtractor getTextFeature:buttonText withScreenName:viewTree[@"screenname"]]];
+    NSString *textFeature = [FBSDKModelUtility normalizeText:[FBSDKFeatureExtractor getTextFeature:buttonText withScreenName:viewTree[@"screenname"]]];
     if (textFeature.length == 0) {
       return DEFAULT_PREDICTION;
     }
@@ -226,13 +227,6 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
     }
   } catch (const std::exception &e) {}
   return DEFAULT_PREDICTION;
-}
-
-+ (NSString *)normalize:(NSString *)str
-{
-  NSMutableArray *tokens = [[str componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] mutableCopy];
-  [tokens removeObject:@""];
-  return [tokens componentsJoinedByString: @" "];
 }
 
 @end
