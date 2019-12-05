@@ -19,6 +19,7 @@
 #import "FBSDKAddressFilterManager.h"
 
 #import "FBSDKAddressInferencer.h"
+#import "FBSDKBasicUtility.h"
 #import "FBSDKTypeUtility.h"
 
 static BOOL isAddressFilterEnabled = NO;
@@ -36,12 +37,20 @@ static BOOL isAddressFilterEnabled = NO;
     return parameters;
   }
   NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionaryWithDictionary:parameters];
+  NSMutableArray<NSString *> *addressParams = [NSMutableArray array];
 
   for (NSString *key in [parameters keyEnumerator]) {
     BOOL shouldFilterKey = [FBSDKAddressInferencer shouldFilterParam:key] || [FBSDKAddressInferencer shouldFilterParam:[FBSDKTypeUtility stringValue:parameters[key]]];
     if (shouldFilterKey) {
+      [addressParams addObject:key];
       [params removeObjectForKey:key];
     }
+  }
+  if ([addressParams count] > 0) {
+    NSString *addressParamsJSONString = [FBSDKBasicUtility JSONStringForObject:addressParams
+                                                                            error:NULL
+                                                             invalidObjectHandler:NULL];
+    [FBSDKBasicUtility dictionary:params setObject:addressParamsJSONString forKey:@"_addressParams"];
   }
   return [params copy];
 }
