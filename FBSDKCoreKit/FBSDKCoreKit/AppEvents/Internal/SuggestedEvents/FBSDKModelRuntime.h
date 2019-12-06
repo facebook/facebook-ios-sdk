@@ -210,7 +210,7 @@ namespace mat1 {
         return a;
     }
 
-    static float* predictOnText(const char *texts, std::unordered_map<std::string, mat::MTensor>& weights, float *df) {
+    static inline float* predictOnText(const char *texts, std::unordered_map<std::string, mat::MTensor>& weights, float *df) {
         int *x;
         float *embed_x;
         float *dense1_x;
