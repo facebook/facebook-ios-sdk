@@ -51,7 +51,6 @@ namespace mat1 {
         float sum = 0;
 
         for (i = 0; i < n; i++) {
-
             if (data[i] > max) {
                 max = data[i];
             }

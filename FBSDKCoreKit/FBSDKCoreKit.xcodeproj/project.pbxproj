@@ -1371,6 +1371,7 @@
 		FDAF4A912395D27D00711C4C /* FBSDKModelUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = FDAF4A8C2395D21700711C4C /* FBSDKModelUtility.m */; };
 		FDAF4A922395D27E00711C4C /* FBSDKModelUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = FDAF4A8C2395D21700711C4C /* FBSDKModelUtility.m */; };
 		FDAF4A932395D27F00711C4C /* FBSDKModelUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = FDAF4A8C2395D21700711C4C /* FBSDKModelUtility.m */; };
+		FDB2B4F32398D73D00AE087E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9A80C9D237D02860019D7E0 /* Accelerate.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1894,6 +1895,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FDB2B4F32398D73D00AE087E /* Accelerate.framework in Frameworks */,
 				F4AD5D77235D192A0012DBC1 /* FBSDKCoreKit.framework in Frameworks */,
 				7E55576C1A8EAC7D00344F86 /* libOHHTTPStubs.a in Frameworks */,
 				9DAD87761A8AA75700FFA324 /* libOCMock.a in Frameworks */,
