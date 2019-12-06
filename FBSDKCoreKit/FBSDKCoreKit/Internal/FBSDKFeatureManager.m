@@ -93,6 +93,7 @@ static NSString *const FBSDKFeatureManagerPrefix = @"com.facebook.sdk:FBSDKFeatu
     case FBSDKFeaturePrivacyProtection: featureName = @"PrivacyProtection"; break;
     case FBSDKFeatureSuggestedEvents: featureName = @"SuggestedEvents"; break;
     case FBSDKFeaturePIIFiltering: featureName = @"PIIFiltering"; break;
+    case FBSDKFeatureEventDeactivation: featureName = @"EventDeactivation"; break;
     case FBSDKFeatureInstrument: featureName = @"Instrument"; break;
     case FBSDKFeatureCrashReport: featureName = @"CrashReport"; break;
     case FBSDKFeatureCrashShield: featureName = @"CrashShield"; break;
@@ -112,6 +113,7 @@ static NSString *const FBSDKFeatureManagerPrefix = @"com.facebook.sdk:FBSDKFeatu
 {
   switch (feature) {
     case FBSDKFeatureRestrictiveDataFiltering:
+    case FBSDKFeatureEventDeactivation:
     case FBSDKFeatureInstrument:
     case FBSDKFeatureCrashReport:
     case FBSDKFeatureCrashShield:
