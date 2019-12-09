@@ -54,7 +54,7 @@ static BOOL isSampleEnabled = NO;
     NSString *addressParamsJSONString = [FBSDKBasicUtility JSONStringForObject:addressParams
                                                                             error:NULL
                                                              invalidObjectHandler:NULL];
-    [FBSDKBasicUtility dictionary:params setObject:addressParamsJSONString forKey:@"_addressParams"];
+    [FBSDKBasicUtility dictionary:params setObject:addressParamsJSONString forKey:@"_onDeviceParams"];
   }
   return [params copy];
 }
