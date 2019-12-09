@@ -18,6 +18,9 @@
 
 #import "FBSDKEventDeactivationManager.h"
 
+static NSString *const DEPRECATED_PARAM_KEY = @"deprecated_param";
+static NSString *const DEPRECATED_EVENT_KEY = @"is_deprecated_event";
+
 @interface FBSDKDeactivatedEvent : NSObject
 
 @property (nonatomic, readonly, copy) NSString *eventName;
@@ -29,8 +32,6 @@
 @end
 
 @implementation FBSDKDeactivatedEvent
-
-static BOOL isEventDeactivationEnabled = NO;
 
 -(instancetype)initWithEventName:(NSString *)eventName
                deactivatedParams:(NSSet<NSString *> *)deactivatedParams
@@ -48,9 +49,42 @@ static BOOL isEventDeactivationEnabled = NO;
 
 @implementation FBSDKEventDeactivationManager
 
+static BOOL isEventDeactivationEnabled = NO;
+
+static NSMutableSet<NSString *> *_deactivatedEvents;
+static NSMutableArray<FBSDKDeactivatedEvent *>  *_eventsWithDeactivatedParams;
+
 + (void)enable
 {
   isEventDeactivationEnabled = YES;
+}
+
++ (void)updateDeactivatedEvents:(nullable NSDictionary<NSString *, id> *)events
+{
+  [_deactivatedEvents removeAllObjects];
+  [_eventsWithDeactivatedParams removeAllObjects];
+
+  if (!isEventDeactivationEnabled || events.count == 0) {
+    return;
+  }
+  NSMutableArray<FBSDKDeactivatedEvent *> *deactivatedParamsArray = [NSMutableArray array];
+  NSMutableSet<NSString *> *deactivatedEventSet = [NSMutableSet set];
+  for (NSString *eventName in events.allKeys) {
+    NSDictionary<NSString *, id> *eventInfo = events[eventName];
+    if (!eventInfo) {
+      return;
+    }
+    if (eventInfo[DEPRECATED_EVENT_KEY]) {
+      [deactivatedEventSet addObject:eventName];
+    }
+    if (eventInfo[DEPRECATED_PARAM_KEY]) {
+      FBSDKDeactivatedEvent *eventWithDeactivatedParams = [[FBSDKDeactivatedEvent alloc] initWithEventName:eventName
+                                                                                         deactivatedParams:eventInfo[DEPRECATED_PARAM_KEY]];
+      [deactivatedParamsArray addObject:eventWithDeactivatedParams];
+    }
+  }
+  _deactivatedEvents = deactivatedEventSet;
+  _eventsWithDeactivatedParams = deactivatedParamsArray;
 }
 
 @end

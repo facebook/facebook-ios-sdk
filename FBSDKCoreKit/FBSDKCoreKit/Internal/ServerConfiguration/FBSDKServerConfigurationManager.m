@@ -21,6 +21,7 @@
 #import <objc/runtime.h>
 
 #import "FBSDKAppEventsUtility.h"
+#import "FBSDKEventDeactivationManager.h"
 #import "FBSDKGateKeeperManager.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequest.h"
@@ -237,6 +238,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                    ];
   if (restrictiveParams) {
     [FBSDKRestrictiveDataFilterManager updateFilters:restrictiveParams];
+    [FBSDKEventDeactivationManager updateDeactivatedEvents:restrictiveParams];
   }
 #if TARGET_OS_TV
   // don't download icons more than once a day.
