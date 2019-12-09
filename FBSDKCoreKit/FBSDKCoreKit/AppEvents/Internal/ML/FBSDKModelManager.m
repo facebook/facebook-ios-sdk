@@ -117,12 +117,24 @@ static NSMutableDictionary<NSString *, id> *_modelInfo;
     }
   }
   NSDictionary<NSString *, id> *model = [_modelInfo objectForKey:useCaseKey];
+
   if (!model) {
     if (handler) {
       handler(NO);
       return;
     }
   }
+
+  // clear old model files
+  NSArray<NSString *> *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_directoryPath error:nil];
+  NSString *prefixWithVersion = [NSString stringWithFormat:@"%@_%@", useCaseKey, model[VERSION_ID_KEY]];
+
+  for (NSString *file in files) {
+    if ([file hasPrefix:useCaseKey] && ![file hasPrefix:prefixWithVersion]) {
+      [[NSFileManager defaultManager] removeItemAtPath:[_directoryPath stringByAppendingPathComponent:file] error:nil];
+    }
+  }
+
   // download model asset
   NSString *assetUrlString = [model objectForKey:ASSET_URI_KEY];
   NSString *assetFilePath;
