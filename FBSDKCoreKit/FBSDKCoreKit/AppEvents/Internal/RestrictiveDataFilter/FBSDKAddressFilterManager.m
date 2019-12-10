@@ -44,9 +44,10 @@ static BOOL isSampleEnabled = NO;
   NSMutableDictionary<NSString *, id> *addressParams = [NSMutableDictionary dictionary];
 
   for (NSString *key in [parameters keyEnumerator]) {
-    BOOL shouldFilter = [FBSDKAddressInferencer shouldFilterParam:[FBSDKTypeUtility stringValue:parameters[key]]];
+    NSString *valueString =[FBSDKTypeUtility stringValue:parameters[key]];
+    BOOL shouldFilter = [FBSDKAddressInferencer shouldFilterParam:valueString];
     if (shouldFilter) {
-      [addressParams setObject:isSampleEnabled ? parameters[key] : @"" forKey:key];
+      [addressParams setObject:isSampleEnabled ? valueString : @"" forKey:key];
       [params removeObjectForKey:key];
     }
   }
