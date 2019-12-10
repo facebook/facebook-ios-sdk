@@ -61,6 +61,9 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
           @"FBSDKAddressFilterManager",
           @"FBSDKAddressInferencer",
       ],
+      @"EventDeactivation" : @[
+          @"FBSDKEventDeactivationManager",
+      ],
     };
   }
 }
