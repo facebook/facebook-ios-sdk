@@ -174,6 +174,10 @@ static std::vector<float> _denseFeature;
   }
 
   NSString *text = [FBSDKModelUtility normalizeText:param];
+  const char *bytes = [text UTF8String];
+  if ((int)strlen(bytes) == 0) {
+    return false;
+  }
   float *predictedRaw;
   NSMutableDictionary<NSString *, id> *modelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
   if (!modelInfo) {
@@ -186,7 +190,7 @@ static std::vector<float> _denseFeature;
   NSMutableArray *thresholds = [addressModelInfo objectForKey:THRESHOLDS_KEY];
   float threshold = [thresholds[0] floatValue];
   try {
-    predictedRaw = mat1::predictOnText([text UTF8String], _weights, &_denseFeature[0]);
+    predictedRaw = mat1::predictOnText(bytes, _weights, &_denseFeature[0]);
     if (!predictedRaw[1]) {
       return false;
     }

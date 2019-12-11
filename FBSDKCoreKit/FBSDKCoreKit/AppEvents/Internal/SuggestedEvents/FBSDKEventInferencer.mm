@@ -169,20 +169,9 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
       return DEFAULT_PREDICTION;
     }
     const char *bytes = [textFeature UTF8String];
-    int bytes_len = (int)strlen(bytes);
-    int *bytes_data = (int *)malloc(sizeof(int) * bytes_len);
-    memset(bytes_data, 0, sizeof(int) * bytes_len);
-    for (int i = 0; i < textFeature.length; i++) {
-      bytes_data[i] = bytes[i];
+    if ((int)strlen(bytes) == 0) {
+      return DEFAULT_PREDICTION;
     }
-
-    std::vector<int64_t> bytes_tensor_shape;
-    bytes_tensor_shape.push_back(1);
-    bytes_tensor_shape.push_back((int64_t)textFeature.length);
-    mat::MTensor bytes_tensor = mat::mempty(bytes_tensor_shape);
-    int *bytes_tensor_data = bytes_tensor.data<int>();
-    memcpy(bytes_tensor_data, bytes_data, sizeof(int) * textFeature.length);
-    free(bytes_data);
 
     // Get dense tensor
     std::vector<int64_t> dense_tensor_shape;
