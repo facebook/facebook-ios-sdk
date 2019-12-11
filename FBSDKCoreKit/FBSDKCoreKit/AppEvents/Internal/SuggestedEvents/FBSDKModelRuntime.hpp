@@ -162,7 +162,7 @@ namespace mat1 {
         int *res = (int *)malloc(sizeof(int) * max_len);
         for (int i = 0; i < max_len; i++) {
             if (i < str_len){
-                res[i] = (int)texts[i];
+                res[i] = static_cast<unsigned char>(texts[i]);
             } else {
                 res[i] = 0;
             }

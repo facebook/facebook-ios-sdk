@@ -169,8 +169,9 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
       return DEFAULT_PREDICTION;
     }
     const char *bytes = [textFeature UTF8String];
-    int *bytes_data = (int *)malloc(sizeof(int) * textFeature.length);
-    memset(bytes_data, 0, sizeof(int) * textFeature.length);
+    int bytes_len = (int)strlen(bytes);
+    int *bytes_data = (int *)malloc(sizeof(int) * bytes_len);
+    memset(bytes_data, 0, sizeof(int) * bytes_len);
     for (int i = 0; i < textFeature.length; i++) {
       bytes_data[i] = bytes[i];
     }
