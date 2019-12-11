@@ -19,9 +19,9 @@
 #import "FBSDKAddressInferencer.h"
 
 #import "FBSDKModelManager.h"
-#import "FBSDKModelRuntime.h"
+#import "FBSDKModelRuntime.hpp"
 #import "FBSDKModelUtility.h"
-#import "FBSDKStandaloneModel.h"
+#import "FBSDKStandaloneModel.hpp"
 
 #include<stdexcept>
 

@@ -18,7 +18,7 @@
 
 #import <XCTest/XCTest.h>
 
-#include "FBSDKModelRuntime.h"
+#include "FBSDKModelRuntime.hpp"
 
 @interface FBSDKModelRuntimeTests : XCTestCase
 
