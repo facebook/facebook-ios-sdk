@@ -7,7 +7,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.12.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.13.0...HEAD)
+
+## 5.13.0
+
+[2019-12-11](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.13.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.12.0...v5.13.0)
+
+### Added
+- Parameter deactivation
+
+### Fixed
+- Update ML model to support non-English input
 
 ## 5.12.0
 
