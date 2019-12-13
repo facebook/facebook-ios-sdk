@@ -224,6 +224,7 @@
 		5D9A706623261D6900BF9783 /* FBSDKLibAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D9A704223261D6900BF9783 /* FBSDKLibAnalyzer.m */; };
 		5D9A709C2326EB5C00BF9783 /* FBSDKCrashObserver.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4360DA23219F7900254DF7 /* FBSDKCrashObserver.h */; };
 		5D9A709D2326EB5E00BF9783 /* FBSDKCrashObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D4360DF23219F8E00254DF7 /* FBSDKCrashObserver.m */; };
+		5DAB01F123A1831A005495FB /* FBSDKCrashObserverTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DAB01F023A1831A005495FB /* FBSDKCrashObserverTests.m */; };
 		5DB612A823593AB600150851 /* FBSDKCrashShieldTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DB612A723593AB600150851 /* FBSDKCrashShieldTests.m */; };
 		5DB7B07C230363190012E8CB /* FBSDKInstrumentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB7B07B230363190012E8CB /* FBSDKInstrumentManager.h */; };
 		5DB7B07D230363190012E8CB /* FBSDKInstrumentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB7B07B230363190012E8CB /* FBSDKInstrumentManager.h */; };
@@ -1401,6 +1402,13 @@
 			remoteGlobalIDString = 817EB1621BD765130047E85A;
 			remoteInfo = "OCMock tvOS";
 		};
+		5DAB023123A1B539005495FB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D99470F1A9531B5003375EC /* OCMock.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DE97CA022B43EE60098C63F;
+			remoteInfo = "OCMock watchOS";
+		};
 		7E55574B1A8E89A800344F86 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7E55573F1A8E89A800344F86 /* OHHTTPStubs.xcodeproj */;
@@ -1579,6 +1587,7 @@
 		5D9A704023261D6900BF9783 /* FBSDKCrashHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKCrashHandler.h; sourceTree = "<group>"; };
 		5D9A704123261D6900BF9783 /* FBSDKLibAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKLibAnalyzer.h; sourceTree = "<group>"; };
 		5D9A704223261D6900BF9783 /* FBSDKLibAnalyzer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKLibAnalyzer.m; sourceTree = "<group>"; };
+		5DAB01F023A1831A005495FB /* FBSDKCrashObserverTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKCrashObserverTests.m; sourceTree = "<group>"; };
 		5DB612A723593AB600150851 /* FBSDKCrashShieldTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKCrashShieldTests.m; sourceTree = "<group>"; };
 		5DB7B07B230363190012E8CB /* FBSDKInstrumentManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKInstrumentManager.h; sourceTree = "<group>"; };
 		5DB7B08D2303632E0012E8CB /* FBSDKInstrumentManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKInstrumentManager.m; sourceTree = "<group>"; };
@@ -2015,6 +2024,7 @@
 			isa = PBXGroup;
 			children = (
 				5DB612A723593AB600150851 /* FBSDKCrashShieldTests.m */,
+				5DAB01F023A1831A005495FB /* FBSDKCrashObserverTests.m */,
 			);
 			path = Instrument;
 			sourceTree = "<group>";
@@ -2595,6 +2605,7 @@
 				9D9947291A9531B5003375EC /* OCMockLibTests.xctest */,
 				52279E562150732600F31455 /* OCMock.framework */,
 				52279E582150732600F31455 /* OCMock.framework */,
+				5DAB023223A1B539005495FB /* OCMock.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3838,6 +3849,13 @@
 			remoteRef = 52279E572150732600F31455 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		5DAB023223A1B539005495FB /* OCMock.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OCMock.framework;
+			remoteRef = 5DAB023123A1B539005495FB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		7E55574C1A8E89A800344F86 /* libOHHTTPStubs.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -4407,6 +4425,7 @@
 				7E253D811A8EAEF500CCCFE7 /* FBSDKInternalUtilityTests.m in Sources */,
 				C5F6EC861FA24FAF009EB258 /* FBSDKPaymentObserverTests.m in Sources */,
 				5D936D6622A48CA600E86921 /* FBSDKRestrictiveDataFilterTests.m in Sources */,
+				5DAB01F123A1831A005495FB /* FBSDKCrashObserverTests.m in Sources */,
 				89C8B19C1A8D7A27009B07F5 /* FBSDKUtilityTests.m in Sources */,
 				C51121CC20A27EF50041DC94 /* FBSDKSampleEventBinding.m in Sources */,
 				5DBB0447227FEF700009E0A6 /* FBSDKBasicUtilityTests.m in Sources */,
