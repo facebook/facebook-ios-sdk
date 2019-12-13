@@ -225,6 +225,7 @@
 		5D9A709C2326EB5C00BF9783 /* FBSDKCrashObserver.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4360DA23219F7900254DF7 /* FBSDKCrashObserver.h */; };
 		5D9A709D2326EB5E00BF9783 /* FBSDKCrashObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D4360DF23219F8E00254DF7 /* FBSDKCrashObserver.m */; };
 		5DAB01F123A1831A005495FB /* FBSDKCrashObserverTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DAB01F023A1831A005495FB /* FBSDKCrashObserverTests.m */; };
+		5DAB023C23A1BA17005495FB /* FBSDKEventDeactivationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DAB023B23A1BA17005495FB /* FBSDKEventDeactivationTests.m */; };
 		5DB612A823593AB600150851 /* FBSDKCrashShieldTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DB612A723593AB600150851 /* FBSDKCrashShieldTests.m */; };
 		5DB7B07C230363190012E8CB /* FBSDKInstrumentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB7B07B230363190012E8CB /* FBSDKInstrumentManager.h */; };
 		5DB7B07D230363190012E8CB /* FBSDKInstrumentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB7B07B230363190012E8CB /* FBSDKInstrumentManager.h */; };
@@ -1588,6 +1589,7 @@
 		5D9A704123261D6900BF9783 /* FBSDKLibAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKLibAnalyzer.h; sourceTree = "<group>"; };
 		5D9A704223261D6900BF9783 /* FBSDKLibAnalyzer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKLibAnalyzer.m; sourceTree = "<group>"; };
 		5DAB01F023A1831A005495FB /* FBSDKCrashObserverTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKCrashObserverTests.m; sourceTree = "<group>"; };
+		5DAB023B23A1BA17005495FB /* FBSDKEventDeactivationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKEventDeactivationTests.m; sourceTree = "<group>"; };
 		5DB612A723593AB600150851 /* FBSDKCrashShieldTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKCrashShieldTests.m; sourceTree = "<group>"; };
 		5DB7B07B230363190012E8CB /* FBSDKInstrumentManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKInstrumentManager.h; sourceTree = "<group>"; };
 		5DB7B08D2303632E0012E8CB /* FBSDKInstrumentManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKInstrumentManager.m; sourceTree = "<group>"; };
@@ -2020,6 +2022,14 @@
 			path = RestrictiveDataFilter;
 			sourceTree = "<group>";
 		};
+		5DAB023A23A1B9FC005495FB /* EventDeactivation */ = {
+			isa = PBXGroup;
+			children = (
+				5DAB023B23A1BA17005495FB /* FBSDKEventDeactivationTests.m */,
+			);
+			path = EventDeactivation;
+			sourceTree = "<group>";
+		};
 		5DB6129923593AA300150851 /* Instrument */ = {
 			isa = PBXGroup;
 			children = (
@@ -2414,6 +2424,7 @@
 		9D18A8D91A95403F00A41042 /* AppEvents */ = {
 			isa = PBXGroup;
 			children = (
+				5DAB023A23A1B9FC005495FB /* EventDeactivation */,
 				F952EA4D2339412C00B20652 /* AAM */,
 				C51121C720A27EF50041DC94 /* Codeless */,
 				9D18A8DA1A95405A00A41042 /* FBSDKAppEventsStateTests.m */,
@@ -4416,6 +4427,7 @@
 				5D2165E122264453004952D8 /* FBSDKAppEventsTests.m in Sources */,
 				9D18A8DB1A95405A00A41042 /* FBSDKAppEventsStateTests.m in Sources */,
 				E4C2B97A23867327002335A4 /* FBSDKModelRuntimeTests.mm in Sources */,
+				5DAB023C23A1BA17005495FB /* FBSDKEventDeactivationTests.m in Sources */,
 				7E253D831A8EB76500CCCFE7 /* FBSDKCoreKitTestUtility.m in Sources */,
 				F4B3CA3222B3FED80098ADF5 /* ExampleSwiftTests.swift in Sources */,
 				894C0B4A1A70524F009137EF /* FBSDKBase64Tests.m in Sources */,
