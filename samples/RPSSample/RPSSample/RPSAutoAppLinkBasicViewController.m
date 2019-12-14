@@ -76,13 +76,4 @@ static const int paddingLen = 10;
     [self.view addSubview: scrollView];
 }
 
-#pragma mark - Auto App Link
-- (void)setAutoAppLinkData:(NSDictionary<NSString *, id> *)data {
-    NSString *productIndex = [@([data[@"product_id"] integerValue]) stringValue];
-    NSString *name = [@"Coffee " stringByAppendingString:productIndex];
-    NSString *description = [@"I am auto app link coffee " stringByAppendingString:productIndex];
-    self.product = [[Coffee alloc] initWithName:name desc:description price:10];
-    self.data = [data copy];
-}
-
 @end

@@ -28,17 +28,6 @@
 #import "RPSRootViewController.h"
 #import "RPSSample-Swift.h"
 
-@interface FBSDKAppLink ()
-
-+ (void)registerViewController:(Class)viewControllerClass
-                         style:(FBSDKAutoAppLinkPresentationStyle)style;
-
-+ (void)registerIdentifier:(NSString *)identifier
-                storyBoard:(NSString *)storyBoard
-                     style:(FBSDKAutoAppLinkPresentationStyle)style;
-
-@end
-
 @implementation RPSAppDelegate
 
 #pragma mark - Class methods
@@ -86,14 +75,15 @@
   sourceApplication:(nullable NSString *)sourceApplication
          annotation:(nonnull id)annotation
 {
-    // view controller implemented in Obj-C
-    [FBSDKAppLink registerViewController:[RPSAutoAppLinkBasicViewController class] style:FBSDKAutoAppLinkPresentationStyleAuto];
+    FBSDKURL *appLink = [FBSDKURL URLWithInboundURL:url sourceApplication:sourceApplication];
+    if (appLink.isAutoAppLink) {
+      [[[UIAlertView alloc] initWithTitle:@"Received Auto App Link:"
+                                  message:[NSString stringWithFormat:@"product id: %@", appLink.appLinkData[@"product_id"]]
+                                 delegate:nil
+                        cancelButtonTitle:@"OK"
+                        otherButtonTitles:nil] show];
+    }
 
-    // view controller implemented in Obj-C with storyboard
-    // [FBSDKAppLink registerIdentifier:@"RPSAutoAppLinkStoryboardViewController" storyBoard:@"RPSAutoAppLink" style:FBSDKAutoAppLinkPresentationStyleAuto];
-
-    // view controller implemented in Swift
-    // [FBSDKAppLink registerViewController:[RPSAutoAppLinkSwiftViewController class] style:FBSDKAutoAppLinkPresentationStyleAuto];
     BOOL result = [[FBSDKApplicationDelegate sharedInstance] application:application
                                                                  openURL:url
                                                                  sourceApplication:sourceApplication
@@ -109,8 +99,15 @@
     self.window.rootViewController = rootViewController;
     [self.window makeKeyAndVisible];
 
-    [[FBSDKApplicationDelegate sharedInstance] application:application
-                             didFinishLaunchingWithOptions:launchOptions];
+    [FBSDKAppLinkUtility fetchDeferredAppLink:^(NSURL *url, NSError *error) {
+      if (error) {
+        NSLog(@"Received error while fetching deferred app link %@", error);
+      }
+      if (url) {
+        [[UIApplication sharedApplication] openURL:url];
+      }
+    }];
+
     return YES;
 }
 

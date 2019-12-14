@@ -19,7 +19,7 @@
 import Foundation
 import UIKit
 
-class RPSAutoAppLinkSwiftViewController: UIViewController, AutoAppLink {
+class RPSAutoAppLinkSwiftViewController: UIViewController {
     var product: Coffee?
     var data: Dictionary<String, Any>?
 
@@ -68,16 +68,5 @@ class RPSAutoAppLinkSwiftViewController: UIViewController, AutoAppLink {
             scrolllView.addSubview(dataLabel)
         }
         self.view.addSubview(scrolllView)
-    }
-
-    // Auto App Link delegate function, you can get the Auto App Link data in this function
-    // present your view controller with the data
-    @objc func setAutoAppLinkData(_ data: Dictionary<String, Any>)
-    {
-        let productIndex = String.init(format: "%d", data["product_id"] as! Int)
-        let name = "SWIFT Coffee " + productIndex
-        let description = "I am auto app link SWIFT coffee " + productIndex
-        self.product = Coffee(name: name, desc: description, price: 10)
-        self.data = data
     }
 }

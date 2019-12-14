@@ -18,10 +18,8 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKAppLink.h>
-
 #import "RPSCoffee.h"
 
-@interface RPSAutoAppLinkBasicViewController : UIViewController<FBSDKAutoAppLink>
+@interface RPSAutoAppLinkBasicViewController : UIViewController
 
 @end

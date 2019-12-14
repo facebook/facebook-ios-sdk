@@ -49,13 +49,4 @@
     }
 }
 
-#pragma mark - Auto App Link
-- (void)setAutoAppLinkData:(NSDictionary<NSString *, id> *)data {
-    NSString *productIndex = [@([data[@"product_id"] integerValue]) stringValue];
-    NSString *name = [@"STORYBOARD Coffee " stringByAppendingString:productIndex];
-    NSString *description = [@"I am auto app link STORYBOARD coffee " stringByAppendingString:productIndex];
-    self.product = [[Coffee alloc] initWithName:name desc:description price:10];
-    self.data = [data copy];
-}
-
 @end

@@ -19,10 +19,8 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKAppLink.h>
-
 #import "RPSCoffee.h"
 
-@interface RPSAutoAppLinkStoryboardViewController : UIViewController<FBSDKAutoAppLink>
+@interface RPSAutoAppLinkStoryboardViewController : UIViewController
 
 @end
