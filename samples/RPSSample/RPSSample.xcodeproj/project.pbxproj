@@ -42,6 +42,7 @@
 		85C69D741602B098008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D711602B098008AD9A0 /* Default-568h@2x.png */; };
 		85C69D751602B098008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D721602B098008AD9A0 /* Default.png */; };
 		85C69D761602B098008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D731602B098008AD9A0 /* Default@2x.png */; };
+		BF2CF3D523A43EF500A35D83 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF2CF3D423A43EF500A35D83 /* Accelerate.framework */; };
 		BF4900902378C3AE004A4A0F /* RPSAutoAppLink.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF4900872378C3AE004A4A0F /* RPSAutoAppLink.storyboard */; };
 		BF4900912378C3AE004A4A0F /* RPSAutoAppLinkBasicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF4900892378C3AE004A4A0F /* RPSAutoAppLinkBasicViewController.m */; };
 		BF4900922378C3AE004A4A0F /* RPSAutoAppLinkStoryboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BF49008A2378C3AE004A4A0F /* RPSAutoAppLinkStoryboardViewController.m */; };
@@ -105,6 +106,7 @@
 		8986C7F11890A571004B90DD /* Project-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
 		8986C7F21890A571004B90DD /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		9D9ACC431ABFBD9B0050BF2E /* ReadMe.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
+		BF2CF3D423A43EF500A35D83 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		BF4900862378C3AD004A4A0F /* RPSSample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RPSSample-Bridging-Header.h"; sourceTree = "<group>"; };
 		BF4900872378C3AE004A4A0F /* RPSAutoAppLink.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = RPSAutoAppLink.storyboard; sourceTree = "<group>"; };
 		BF4900882378C3AE004A4A0F /* RPSAutoAppLinkStoryboardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RPSAutoAppLinkStoryboardViewController.h; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DBCEEA4E1A95439C00D2C8AE /* FBSDKCoreKit.framework in Frameworks */,
+				BF2CF3D523A43EF500A35D83 /* Accelerate.framework in Frameworks */,
 				84EB807117033179007561AE /* AVFoundation.framework in Frameworks */,
 				DBCEEA4F1A95439C00D2C8AE /* FBSDKLoginKit.framework in Frameworks */,
 				DBCEEA501A95439C00D2C8AE /* FBSDKShareKit.framework in Frameworks */,
@@ -170,6 +173,7 @@
 		84070D191540AA2B00E39703 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				BF2CF3D423A43EF500A35D83 /* Accelerate.framework */,
 				84EB807017033179007561AE /* AVFoundation.framework */,
 				84070D1E1540AA2B00E39703 /* CoreGraphics.framework */,
 				DBCEEA4B1A95439C00D2C8AE /* FBSDKCoreKit.framework */,
@@ -442,7 +446,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-l\"c++\"",
+				);
 				SWIFT_OBJC_BRIDGING_HEADER = "RPSSample/RPSSample-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -456,7 +463,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-l\"c++\"",
+				);
 				SWIFT_OBJC_BRIDGING_HEADER = "RPSSample/RPSSample-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
