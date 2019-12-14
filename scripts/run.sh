@@ -69,6 +69,7 @@ main() {
     SDK_VERSION_FILES=(
       "Configurations/Version.xcconfig"
       "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h"
+      "FBSDKCoreKit/FBSDKCoreKit/Basics/Instrument/FBSDKCrashHandler.m"
       "AccountKit/AccountKit/Internal/AKFConstants.m"
     )
 

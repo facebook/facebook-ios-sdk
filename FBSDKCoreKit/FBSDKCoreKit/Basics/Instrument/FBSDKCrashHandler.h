@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)addObserver:(id<FBSDKCrashObserving>)observer;
 + (void)removeObserver:(id<FBSDKCrashObserving>)observer;
 + (void)clearCrashReportFiles;
++ (NSString *)getFBSDKVersion;
 
 @end
 
