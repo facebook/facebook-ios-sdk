@@ -26,6 +26,7 @@
 @interface FBSDKCrashHandler ()
 
 + (void)uninstallExceptionsHandler;
++ (NSArray<NSString *> *)getCrashLogFileNames:(NSArray<NSString *> *)files;
 
 @end
 
@@ -47,6 +48,29 @@
   NSString *basicsVersion = [FBSDKCrashHandler getFBSDKVersion];
   NSString *sdkVersion = [FBSDKSettings sdkVersion];
   XCTAssertEqual(basicsVersion, sdkVersion);
+}
+
+- (void)testGetCrashLogFileNames
+{
+  NSArray<NSString *> *files = @[@"crash_log_1576471375.json",
+                                 @"crash_lib_data_05DEDC8AFC724E09A5E68190C492B92B.json",
+                                 @"DATA_DETECTION_ADDRESS_1.weights",
+                                 @"SUGGEST_EVENT_3.weights",
+                                 @"SUGGEST_EVENT_3.rules",
+                                 @"crash.text",
+  ];
+  NSArray<NSString *> *result1 = [FBSDKCrashHandler getCrashLogFileNames:files];
+  XCTAssertTrue([result1 containsObject:@"crash_log_1576471375.json"]);
+
+  XCTAssertFalse([result1 containsObject:@"crash_lib_data_05DEDC8AFC724E09A5E68190C492B92B.json"]);
+  XCTAssertFalse([result1 containsObject:@"DATA_DETECTION_ADDRESS_1.weights"]);
+  XCTAssertFalse([result1 containsObject:@"SUGGEST_EVENT_3.weights"]);
+  XCTAssertFalse([result1 containsObject:@"SUGGEST_EVENT_3.rules"]);
+  XCTAssertFalse([result1 containsObject:@"crash.text"]);
+
+  files = [NSArray array];
+  NSArray<NSString *> *result2 = [FBSDKCrashHandler getCrashLogFileNames:files];
+  XCTAssertTrue(result2.count == 0);
 }
 
 @end
