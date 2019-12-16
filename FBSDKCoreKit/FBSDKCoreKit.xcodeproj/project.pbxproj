@@ -4929,6 +4929,7 @@
 			baseConfigurationReference = 814AC8CB1D1B5CAC00D61E6C /* FBSDKCoreKitTests.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				GCC_WARN_UNUSED_FUNCTION = NO;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -4940,6 +4941,7 @@
 			baseConfigurationReference = 814AC8CB1D1B5CAC00D61E6C /* FBSDKCoreKitTests.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				GCC_WARN_UNUSED_FUNCTION = NO;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				SWIFT_VERSION = 5.0;
 			};
