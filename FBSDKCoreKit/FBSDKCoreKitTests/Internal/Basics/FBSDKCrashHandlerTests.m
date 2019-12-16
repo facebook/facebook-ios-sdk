@@ -27,6 +27,8 @@
 
 + (void)uninstallExceptionsHandler;
 + (NSArray<NSString *> *)getCrashLogFileNames:(NSArray<NSString *> *)files;
++ (NSString *)getPathToCrashFile:(NSString *)timestamp;
++ (NSString *)getPathToLibDataFile:(NSString *)identifier;
 
 @end
 
@@ -34,6 +36,11 @@
 @end
 
 @implementation FBSDKCrashHandlerTests
+
+- (void)setUp
+{
+  [FBSDKCrashHandler initialize];
+}
 
 - (void)testDisable
 {
@@ -71,6 +78,24 @@
   files = [NSArray array];
   NSArray<NSString *> *result2 = [FBSDKCrashHandler getCrashLogFileNames:files];
   XCTAssertTrue(result2.count == 0);
+}
+
+- (void)testGetPathToCrashFile
+{
+  NSString *timestampMock = @"test_timestamp";
+  NSString *crashLogFileName =  [NSString stringWithFormat:@"crash_log_%@.json", timestampMock];
+  NSString *pathToCrashFile = [FBSDKCrashHandler getPathToCrashFile:timestampMock];
+
+  XCTAssertTrue([pathToCrashFile hasSuffix:crashLogFileName]);
+}
+
+- (void)testGetPathToLibDataFile
+{
+  NSString *identifierMock = @"test_identifier";
+  NSString *libDataFileName = [NSString stringWithFormat:@"crash_lib_data_%@.json", identifierMock];
+  NSString *pathToLibDataFile = [FBSDKCrashHandler getPathToLibDataFile:identifierMock];
+
+  XCTAssertTrue([pathToLibDataFile hasSuffix:libDataFileName]);
 }
 
 @end
