@@ -32,7 +32,7 @@
 /**
  Success Block
  */
-typedef void (^FBSDKBrowserLoginSuccessBlock)(BOOL didOpen, NSString *authMethod, NSError *error)
+typedef void (^FBSDKBrowserLoginSuccessBlock)(BOOL didOpen, NSError *error)
 NS_SWIFT_NAME(BrowserLoginSuccessBlock);
 
 @interface FBSDKLoginManager () <FBSDKURLOpening>
