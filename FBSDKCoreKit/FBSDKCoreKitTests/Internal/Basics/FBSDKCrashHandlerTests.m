@@ -29,6 +29,8 @@
 + (NSArray<NSString *> *)getCrashLogFileNames:(NSArray<NSString *> *)files;
 + (NSString *)getPathToCrashFile:(NSString *)timestamp;
 + (NSString *)getPathToLibDataFile:(NSString *)identifier;
++ (BOOL)callstack:(NSArray<NSString *> *)callstack
+   containsPrefix:(NSArray<NSString *> *)prefixList;
 
 @end
 
@@ -96,6 +98,25 @@
   NSString *pathToLibDataFile = [FBSDKCrashHandler getPathToLibDataFile:identifierMock];
 
   XCTAssertTrue([pathToLibDataFile hasSuffix:libDataFileName]);
+}
+
+- (void)testCallStackContainsPrefix
+{
+  NSArray<NSString *> *prefixList = @[@"FBSDK", @"_FBSDK"];
+  NSArray<NSString *> *callStack1 = @[
+    @"(2 DEV METHODS)",
+    @"-[FBSDKWebViewAppLinkResolver appLinkFromALData:destination:]+2110632",
+    @"-[FBSDKWebViewAppLinkResolver appLinkFromALData:destination:]+10540",
+    @"(14 DEV METHODS)",
+  ];
+  XCTAssertTrue([FBSDKCrashHandler callstack:callStack1 containsPrefix:prefixList]);
+
+  NSArray<NSString *> *callStack2 = @[
+    @"(2 DEV METHODS)",
+    @"-[FBAdPersistentCacheImpl storeAssetInMemory:forKey:expiration:]+14455428",
+    @"(12 DEV METHODS)",
+  ];
+  XCTAssertFalse([FBSDKCrashHandler callstack:callStack2 containsPrefix:prefixList]);
 }
 
 @end
