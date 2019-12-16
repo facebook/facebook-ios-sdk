@@ -148,6 +148,7 @@
 		5D4361172321C30400254DF7 /* FBSDKCrashObserving.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4361142321C30400254DF7 /* FBSDKCrashObserving.h */; };
 		5D4361182321C30400254DF7 /* FBSDKCrashObserving.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4361142321C30400254DF7 /* FBSDKCrashObserving.h */; };
 		5D59BFFD23A705010008CA5A /* FBSDKCrashHandlerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D59BFFC23A705010008CA5A /* FBSDKCrashHandlerTests.m */; };
+		5D59BFFF23A7505D0008CA5A /* FBSDKLibAnalyzerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D59BFFE23A7505D0008CA5A /* FBSDKLibAnalyzerTests.m */; };
 		5D68D7D822BAEEF60063A3E2 /* FBSDKTimeSpentDataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D68D7D722BAEEF60063A3E2 /* FBSDKTimeSpentDataTests.m */; };
 		5D6DF1632398E28000AC2D6C /* FBSDKEventDeactivationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D6DF1622398E28000AC2D6C /* FBSDKEventDeactivationManager.m */; };
 		5D6DF1642398E28000AC2D6C /* FBSDKEventDeactivationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D6DF1622398E28000AC2D6C /* FBSDKEventDeactivationManager.m */; };
@@ -1578,6 +1579,7 @@
 		5D4360DF23219F8E00254DF7 /* FBSDKCrashObserver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKCrashObserver.m; sourceTree = "<group>"; };
 		5D4361142321C30400254DF7 /* FBSDKCrashObserving.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKCrashObserving.h; sourceTree = "<group>"; };
 		5D59BFFC23A705010008CA5A /* FBSDKCrashHandlerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKCrashHandlerTests.m; sourceTree = "<group>"; };
+		5D59BFFE23A7505D0008CA5A /* FBSDKLibAnalyzerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKLibAnalyzerTests.m; sourceTree = "<group>"; };
 		5D68D7D722BAEEF60063A3E2 /* FBSDKTimeSpentDataTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKTimeSpentDataTests.m; sourceTree = "<group>"; };
 		5D6DF1622398E28000AC2D6C /* FBSDKEventDeactivationManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKEventDeactivationManager.m; sourceTree = "<group>"; };
 		5D6DF1692398E2A200AC2D6C /* FBSDKEventDeactivationManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKEventDeactivationManager.h; sourceTree = "<group>"; };
@@ -2068,6 +2070,7 @@
 			children = (
 				5DBB0446227FEF700009E0A6 /* FBSDKBasicUtilityTests.m */,
 				5D59BFFC23A705010008CA5A /* FBSDKCrashHandlerTests.m */,
+				5D59BFFE23A7505D0008CA5A /* FBSDKLibAnalyzerTests.m */,
 			);
 			path = Basics;
 			sourceTree = "<group>";
@@ -4444,6 +4447,7 @@
 				5DAB01F123A1831A005495FB /* FBSDKCrashObserverTests.m in Sources */,
 				89C8B19C1A8D7A27009B07F5 /* FBSDKUtilityTests.m in Sources */,
 				C51121CC20A27EF50041DC94 /* FBSDKSampleEventBinding.m in Sources */,
+				5D59BFFF23A7505D0008CA5A /* FBSDKLibAnalyzerTests.m in Sources */,
 				5DBB0447227FEF700009E0A6 /* FBSDKBasicUtilityTests.m in Sources */,
 				F952EA4F2339432100B20652 /* FBSDKMetadataIndexerTests.m in Sources */,
 				5DB612A823593AB600150851 /* FBSDKCrashShieldTests.m in Sources */,
