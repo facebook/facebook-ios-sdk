@@ -64,7 +64,11 @@ static std::vector<float> _denseFeature;
 
 + (void)loadWeights
 {
-  NSData *latestData = [NSData dataWithContentsOfFile:[FBSDKModelManager getWeightsPath:DATA_DETECTION_ADDRESS_KEY]
+  NSString *path = [FBSDKModelManager getWeightsPath:DATA_DETECTION_ADDRESS_KEY];
+  if (!path) {
+    return;
+  }
+  NSData *latestData = [NSData dataWithContentsOfFile:path
                                               options:NSDataReadingMappedIfSafe
                                                 error:nil];
   if (!latestData) {
