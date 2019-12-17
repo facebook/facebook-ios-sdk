@@ -124,7 +124,7 @@
   _andReturn(OCMOCK_VALUE([NSLocale localeWithLocaleIdentifier:@"fr"]));
 
   NSNumber *result = [FBSDKAppEventsUtility
-                      getNumberValue:@"Price: 1\u00a0234,56; Buy 1 get 2!"];
+                      getNumberValue:@"Price: 1\u202F234,56; Buy 1 get 2!"];
   NSString *str = [NSString stringWithFormat:@"%.2f", result.floatValue];
   XCTAssertTrue([str isEqualToString:@"1234.56"]);
 }
