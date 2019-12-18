@@ -26,7 +26,7 @@
   NSError *_error;
 }
 
-@property (nonatomic, weak, nullable) id<FBSDKGraphErrorRecoveryProcessorDelegate> delegate;
+@property (nonatomic, strong, nullable) id<FBSDKGraphErrorRecoveryProcessorDelegate>delegate;
 
 @end
 
