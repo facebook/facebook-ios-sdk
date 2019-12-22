@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKAudioResourceLoader : NSObject
@@ -38,3 +40,5 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

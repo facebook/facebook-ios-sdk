@@ -16,13 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import <UIKit/UIKit.h>
+
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 #import "FBSDKSuggestedEventsIndexer.h"
 
 #import <objc/runtime.h>
 #import <sys/sysctl.h>
 #import <sys/utsname.h>
-
-#import <UIKit/UIKit.h>
 
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKEventInferencer.h"
@@ -263,3 +265,5 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
 }
 
 @end
+
+#endif

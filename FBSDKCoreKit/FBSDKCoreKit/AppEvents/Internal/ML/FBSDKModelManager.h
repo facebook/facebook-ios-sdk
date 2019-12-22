@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 typedef void (^FBSDKDownloadCompletionBlock)(BOOL success);
 
 @interface FBSDKModelManager : NSObject
@@ -27,3 +29,5 @@ typedef void (^FBSDKDownloadCompletionBlock)(BOOL success);
 + (nullable NSString *)getWeightsPath:(NSString *_Nonnull)useCaseKey;
 
 @end
+
+#endif

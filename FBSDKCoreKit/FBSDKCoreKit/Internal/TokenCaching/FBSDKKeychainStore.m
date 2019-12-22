@@ -94,7 +94,7 @@
 
       status = fbsdkdfl_SecItemUpdate((__bridge CFDictionaryRef)query, (__bridge CFDictionaryRef)attributesToUpdate);
       if (status == errSecItemNotFound) {
-#if !TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
         if (@available(macOS 10.9, iOS 8, *)) {
           if (accessibility) {
             [query setObject:(__bridge id)(accessibility) forKey:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessible]];

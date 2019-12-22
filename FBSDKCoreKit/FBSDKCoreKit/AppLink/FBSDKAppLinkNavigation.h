@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 #import "FBSDKAppLink.h"
 #import "FBSDKAppLinkResolving.h"
 
@@ -139,3 +141,5 @@ __attribute__((swift_error(nonnull_error)));
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

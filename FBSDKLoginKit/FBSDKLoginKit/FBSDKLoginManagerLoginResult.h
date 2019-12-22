@@ -20,6 +20,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#if TARGET_OS_TV
+
+@interface LoginManagerLoginResult: NSObject
+
+@property (copy, nonatomic, nullable) FBSDKAccessToken *token;
+@property (readonly, nonatomic) BOOL isCancelled;
+@property (copy, nonatomic) NSSet<NSString *> *grantedPermissions;
+@property (copy, nonatomic) NSSet<NSString *> *declinedPermissions;
+
+@end
+
+#else
+
 @class FBSDKAccessToken;
 
 /**
@@ -68,5 +81,7 @@ NS_SWIFT_NAME(LoginManagerLoginResult)
           declinedPermissions:(NSSet<NSString *> *)declinedPermissions
 NS_DESIGNATED_INITIALIZER;
 @end
+
+#endif
 
 NS_ASSUME_NONNULL_END

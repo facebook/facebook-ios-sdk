@@ -18,6 +18,8 @@
 
 #import <UIKit/UIKit.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 #ifdef FBSDKCOCOAPODS
 #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
 #else
@@ -61,3 +63,5 @@ NS_SWIFT_NAME(BrowserLoginSuccessBlock);
 - (void)performBrowserLogInWithParameters:(NSDictionary *)loginParams handler:(FBSDKBrowserLoginSuccessBlock)handler;
 
 @end
+
+#endif

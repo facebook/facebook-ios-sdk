@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 NS_ASSUME_NONNULL_BEGIN
 
 @class FBSDKAppLink;
@@ -52,3 +54,5 @@ NS_EXTENSION_UNAVAILABLE_IOS("Not available in app extension");
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

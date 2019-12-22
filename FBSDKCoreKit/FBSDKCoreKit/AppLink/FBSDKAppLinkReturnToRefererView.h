@@ -16,8 +16,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
 
 #import "FBSDKAppLinkNavigation.h"
 
@@ -92,3 +93,5 @@ NS_SWIFT_NAME(statusBarSizeInclude);
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

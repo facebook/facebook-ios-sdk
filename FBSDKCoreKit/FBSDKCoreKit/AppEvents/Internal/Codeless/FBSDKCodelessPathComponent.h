@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 typedef NS_OPTIONS(int, FBSDKCodelessMatchBitmaskField)
 {
   FBSDKCodelessMatchBitmaskFieldID = 1,
@@ -43,3 +45,5 @@ NS_SWIFT_NAME(CodelessPathComponent)
 - (instancetype)initWithJSON:(NSDictionary*)dict;
 
 @end
+
+#endif

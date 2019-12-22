@@ -18,9 +18,13 @@
 
 #import <UIKit/UIKit.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 #import "FBSDKBridgeAPIProtocol.h"
 
 NS_SWIFT_NAME(BridgeAPIProtocolWebV2)
 @interface FBSDKBridgeAPIProtocolWebV2 : NSObject <FBSDKBridgeAPIProtocol>
 
 @end
+
+#endif

@@ -18,6 +18,8 @@
 
 #import <UIKit/UIKit.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 #import "FBSDKShareDialogMode.h"
 #import "FBSDKSharing.h"
 #import "FBSDKSharingContent.h"
@@ -69,3 +71,5 @@ NS_SWIFT_UNAVAILABLE("Use init(fromViewController:content:delegate:).show() inst
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

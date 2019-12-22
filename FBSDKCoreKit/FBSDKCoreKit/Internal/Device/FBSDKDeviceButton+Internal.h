@@ -18,7 +18,13 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_TV
+
+#if SWIFT_PACKAGE
+#import "FBSDKDeviceButton.h"
+#else
 #import <FBSDKCoreKit/FBSDKDeviceButton.h>
+#endif
 
 @interface FBSDKDeviceButton ()
 
@@ -27,3 +33,5 @@
 - (CGSize)sizeThatFits:(CGSize)size attributedTitle:(NSAttributedString *)title;
 
 @end
+
+#endif

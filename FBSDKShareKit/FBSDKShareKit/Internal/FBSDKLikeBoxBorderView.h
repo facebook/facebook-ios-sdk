@@ -18,6 +18,8 @@
 
 #import <UIKit/UIKit.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 #import "FBSDKLikeBoxView.h"
 
 NS_SWIFT_NAME(FBLikeBoxBorderView)
@@ -32,3 +34,5 @@ NS_SWIFT_NAME(FBLikeBoxBorderView)
 @property (nonatomic, strong) UIColor *foregroundColor;
 
 @end
+
+#endif

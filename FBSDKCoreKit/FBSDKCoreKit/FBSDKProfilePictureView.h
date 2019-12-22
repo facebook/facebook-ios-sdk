@@ -18,6 +18,10 @@
 
 #import <UIKit/UIKit.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
+@class FBSDKProfile;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -43,6 +47,22 @@ NS_SWIFT_NAME(FBProfilePictureView)
 @interface FBSDKProfilePictureView : UIView
 
 /**
+ Create a new instance of `FBSDKProfilePictureView`.
+
+ - Parameter frame: Frame rectangle for the view.
+ - Parameter profile: Optional profile to display a picture for.
+ */
+- (instancetype)initWithFrame:(CGRect)frame
+                      profile:(FBSDKProfile * _Nullable)profile;
+
+/**
+ Create a new instance of `FBSDKProfilePictureView`.
+
+ - Parameter profile: Optional profile to display a picture for.
+ */
+- (instancetype)initWithProfile:(FBSDKProfile * _Nullable)profile;
+
+/**
   The mode for the receiver to determine the aspect ratio of the source image.
  */
 @property (nonatomic, assign) FBSDKProfilePictureMode pictureMode;
@@ -63,3 +83,5 @@ NS_SWIFT_NAME(FBProfilePictureView)
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

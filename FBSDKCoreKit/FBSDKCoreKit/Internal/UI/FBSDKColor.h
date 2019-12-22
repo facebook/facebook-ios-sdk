@@ -18,5 +18,9 @@
 
 #import <UIKit/UIKit.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 UIColor *FBSDKUIColorWithRGBA(uint8_t r, uint8_t g, uint8_t b, CGFloat a);
 UIColor *FBSDKUIColorWithRGB(uint8_t r, uint8_t g, uint8_t b);
+
+#endif

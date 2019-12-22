@@ -18,6 +18,8 @@
 
 #import <UIKit/UIKit.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 #if defined BUCK || defined FBSDKCOCOAPODS || defined __cplusplus
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #else
@@ -51,3 +53,5 @@ NS_SWIFT_NAME(set(_:forKey:));
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

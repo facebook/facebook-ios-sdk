@@ -18,8 +18,12 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 typedef NS_ENUM(NSUInteger, FBSDKBridgeAPIProtocolType)
 {
   FBSDKBridgeAPIProtocolTypeNative,
   FBSDKBridgeAPIProtocolTypeWeb,
 } NS_SWIFT_NAME(BridgeAPIProtocol.Type);
+
+#endif

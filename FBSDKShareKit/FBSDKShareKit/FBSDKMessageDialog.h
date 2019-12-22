@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 #import "FBSDKShareConstants.h"
 #import "FBSDKSharing.h"
 
@@ -63,3 +65,5 @@ NS_SWIFT_UNAVAILABLE("Use init(content:delegate:).show() instead");
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

@@ -21,7 +21,7 @@
 #import <sys/sysctl.h>
 #import <sys/utsname.h>
 
-#if !TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
 #import <CoreTelephony/CTCarrier.h>
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #endif

@@ -18,6 +18,8 @@
 
 #import <UIKit/UIKit.h>
 
+#if TARGET_OS_TV
+
 #ifdef BUCK
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #else
@@ -99,3 +101,5 @@ NS_DESIGNATED_INITIALIZER;
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

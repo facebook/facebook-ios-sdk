@@ -44,11 +44,19 @@
 #import "FBSDKUtility.h"
 #import "FBSDKUserDataStore.h"
 
-#if !TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+#if SWIFT_PACKAGE
 #import "FBSDKAddressFilterManager.h"
 #import "FBSDKEventBindingManager.h"
 #import "FBSDKHybridAppEventsScriptMessageHandler.h"
 #import "FBSDKModelManager.h"
+#else
+#import <FBSDKCoreKit/FBSDKAddressFilterManager.h>
+#import <FBSDKCoreKit/FBSDKEventBindingManager.h>
+#import <FBSDKCoreKit/FBSDKHybridAppEventsScriptMessageHandler.h>
+#import <FBSDKCoreKit/FBSDKModelManager.h>
+#endif
+
 #endif
 
 //
@@ -353,7 +361,7 @@ static NSString *g_overrideAppID = nil;
   BOOL _explicitEventsLoggedYet;
   FBSDKServerConfiguration *_serverConfiguration;
   FBSDKAppEventsState *_appEventsState;
-#if !TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
   FBSDKEventBindingManager *_eventBindingManager;
 #endif
   BOOL _isUnityInit;
@@ -833,7 +841,7 @@ static NSString *g_overrideAppID = nil;
   [request startWithCompletionHandler:handler];
 }
 
-#if !TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
 + (void)augmentHybridWKWebView:(WKWebView *)webView {
   // Ensure we can instantiate WebKit before trying this
   Class WKWebViewClass = fbsdkdfl_WKWebViewClass();
@@ -1052,7 +1060,7 @@ static dispatch_once_t *onceTokenPointer;
   }];
 }
 
-#if !TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
 - (void)enableCodelessEvents {
   if (_serverConfiguration.isCodelessEventsEnabled) {
     [FBSDKCodelessIndexer enable];
@@ -1082,7 +1090,7 @@ static dispatch_once_t *onceTokenPointer;
     } else {
       [FBSDKPaymentObserver stopObservingTransactions];
     }
-#if !TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
     [FBSDKFeatureManager checkFeature:FBSDKFeatureCodelessEvents completionBlock:^(BOOL enabled) {
       if (enabled) {
         [self enableCodelessEvents];

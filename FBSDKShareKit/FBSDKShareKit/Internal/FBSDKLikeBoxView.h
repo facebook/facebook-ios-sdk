@@ -18,6 +18,8 @@
 
 #import <UIKit/UIKit.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 /**
  NS_ENUM(NSUInteger, FBSDKLikeBoxCaretPosition)
 
@@ -42,3 +44,5 @@ NS_SWIFT_NAME(FBLikeBoxView)
 @property (nonatomic, copy) NSString *text;
 
 @end
+
+#endif

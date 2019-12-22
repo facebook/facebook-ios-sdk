@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 #import "FBSDKAppLinkResolving.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -38,3 +40,5 @@ NS_SWIFT_NAME(shared);
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

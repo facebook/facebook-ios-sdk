@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 NS_SWIFT_NAME(CodelessParameterComponent)
 @interface FBSDKCodelessParameterComponent : NSObject
 
@@ -29,3 +31,5 @@ NS_SWIFT_NAME(CodelessParameterComponent)
 - (instancetype)initWithJSON:(NSDictionary *)dict;
 
 @end
+
+#endif

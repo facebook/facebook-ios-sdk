@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 #import "FBSDKBridgeAPIProtocolType.h"
 
 @class FBSDKBridgeAPIRequest;
@@ -41,3 +43,5 @@ NS_SWIFT_NAME(BridgeAPIProtocol)
                                           error:(NSError *__autoreleasing *)errorRef;
 
 @end
+
+#endif

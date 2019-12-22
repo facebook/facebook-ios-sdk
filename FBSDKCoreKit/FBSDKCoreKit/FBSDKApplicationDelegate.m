@@ -36,7 +36,7 @@
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKTimeSpentData.h"
 
-#if !TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
 #import "FBSDKMeasurementEventListener.h"
 #import "FBSDKContainerViewController.h"
 #import "FBSDKProfile+Internal.h"
@@ -124,7 +124,7 @@ static UIApplicationState _applicationState;
     }
   }];
 
-#if !TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
   // Register Listener for App Link measurement events
   [FBSDKMeasurementEventListener defaultListener];
 #endif
@@ -229,7 +229,7 @@ static UIApplicationState _applicationState;
     if (FBSDKSettings.isAutoLogAppEventsEnabled) {
         [self _logSDKInitialize];
     }
-#if !TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
     FBSDKProfile *cachedProfile = [FBSDKProfile fetchCachedProfile];
     [FBSDKProfile setCurrentProfile:cachedProfile];
 #endif

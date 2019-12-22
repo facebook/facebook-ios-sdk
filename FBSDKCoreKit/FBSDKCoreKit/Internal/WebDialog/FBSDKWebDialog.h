@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 NS_SWIFT_NAME(WebDialogDelegate)
 @protocol FBSDKWebDialogDelegate;
 
@@ -45,3 +47,5 @@ NS_SWIFT_NAME(WebDialogDelegate)
 - (void)webDialogDidCancel:(FBSDKWebDialog *)webDialog;
 
 @end
+
+#endif

@@ -24,7 +24,8 @@ import PackageDescription
 let package = Package(
     name: "Facebook",
     platforms: [
-        .iOS(.v8)
+        .iOS(.v8),
+        .tvOS(.v10)
     ],
     products: [
         .library(
@@ -46,12 +47,7 @@ let package = Package(
             name: "FBSDKCoreKit",
             dependencies: [],
             path: "FBSDKCoreKit/FBSDKCoreKit",
-            exclude: [
-                "Internal/Device",
-                "FBSDKDeviceViewControllerBase.m",
-                "FBSDKDeviceButton.m",
-                "Swift"
-            ],
+            exclude: ["Swift"],
             cSettings: [
                 .headerSearchPath("AppEvents"),
                 .headerSearchPath("AppEvents/Internal"),
@@ -61,8 +57,8 @@ let package = Package(
                 .headerSearchPath("AppEvents/Internal/RestrictiveDataFilter"),
                 .headerSearchPath("AppEvents/Internal/EventDeactivation"),
                 .headerSearchPath("AppEvents/Internal/SuggestedEvents"),
-                .headerSearchPath("AppLink"),
-                .headerSearchPath("AppLink/Internal"),
+                .headerSearchPath("AppLink", .when(platforms: [.iOS], configuration: nil)),
+                .headerSearchPath("AppLink/Internal", .when(platforms: [.iOS], configuration: nil)),
                 .headerSearchPath("Basics/Instrument"),
                 .headerSearchPath("Basics/Internal"),
                 .headerSearchPath("GraphAPI"),
@@ -71,6 +67,7 @@ let package = Package(
                 .headerSearchPath("Internal/BridgeAPI"),
                 .headerSearchPath("Internal/BridgeAPI/ProtocolVersions"),
                 .headerSearchPath("Internal/Cryptography"),
+                .headerSearchPath("Internal/Device", .when(platforms: [.tvOS], configuration: nil)),
                 .headerSearchPath("Internal/ErrorRecovery"),
                 .headerSearchPath("Internal/Instrument"),
                 .headerSearchPath("Internal/Instrument/CrashReport"),
@@ -79,6 +76,7 @@ let package = Package(
                 .headerSearchPath("Internal/ServerConfiguration"),
                 .headerSearchPath("Internal/TokenCaching"),
                 .headerSearchPath("Internal/UI"),
+                .headerSearchPath("Internal/WebDialog", .when(platforms: [.iOS], configuration: nil)),
             ],
             linkerSettings: [
                 .linkedFramework("Accelerate"),
@@ -93,11 +91,7 @@ let package = Package(
             name: "FBSDKLoginKit",
             dependencies: ["FBSDKCoreKit"],
             path: "FBSDKLoginKit/FBSDKLoginKit",
-            exclude: [
-                "include/FBSDKLoginKit.h",
-                "include/FBSDKLoginButton.h",
-                "Swift"
-            ],
+            exclude: ["Swift"],
             cSettings: [
                 .headerSearchPath("Internal"),
                 .headerSearchPath("../../FBSDKCoreKit/FBSDKCoreKit/Internal"),
@@ -112,13 +106,7 @@ let package = Package(
             name: "FBSDKShareKit",
             dependencies: ["FBSDKCoreKit"],
             path: "FBSDKShareKit/FBSDKShareKit",
-            exclude: [
-                "Swift",
-                "FBSDKDeviceShareButton.h",
-                "FBSDKDeviceShareButton.m",
-                "FBSDKDeviceShareViewController.h",
-                "FBSDKDeviceShareViewController.m",
-            ],
+            exclude: ["Swift"],
             cSettings: [
                 .headerSearchPath("Internal"),
                 .headerSearchPath("../../FBSDKCoreKit/FBSDKCoreKit/Internal"),

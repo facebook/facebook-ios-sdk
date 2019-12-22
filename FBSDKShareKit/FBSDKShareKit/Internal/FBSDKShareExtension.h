@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *const FBSDKShareExtensionParamAppID; // application identifier string
@@ -30,3 +32,5 @@ NSString *_Nullable FBSDKShareExtensionInitialText(NSString *_Nullable appID,
                                                    NSString *_Nullable jsonString);
 
 NS_ASSUME_NONNULL_END
+
+#endif

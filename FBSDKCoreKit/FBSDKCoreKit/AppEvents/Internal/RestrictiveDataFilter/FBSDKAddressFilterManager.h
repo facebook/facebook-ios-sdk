@@ -18,9 +18,13 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 @interface FBSDKAddressFilterManager : NSObject
 
 + (void)enable;
 + (nullable NSDictionary<NSString *, id> *)processParameters:(nullable NSDictionary<NSString *, id> *)parameters;
 
 @end
+
+#endif

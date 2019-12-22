@@ -26,7 +26,7 @@
 
 #if defined COCOAPODS || defined BUCK
 
-#if !TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
 #import "FBSDKViewHierarchy.h"
 #import "FBSDKViewHierarchyMacros.h"
 #import "FBSDKCodelessIndexer.h"
@@ -98,7 +98,7 @@
 
 #else
 
-#if !TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
 #import "../AppEvents/Internal/ViewHierarchy/FBSDKViewHierarchy.h"
 #import "../AppEvents/Internal/ViewHierarchy/FBSDKViewHierarchyMacros.h"
 #import "../AppEvents/Internal/Codeless/FBSDKCodelessIndexer.h"

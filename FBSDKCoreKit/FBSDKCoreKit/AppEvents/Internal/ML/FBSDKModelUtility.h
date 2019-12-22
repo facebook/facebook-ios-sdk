@@ -18,8 +18,12 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 @interface FBSDKModelUtility : NSObject
 
 + (NSString *)normalizeText:(NSString *)text;
 
 @end
+
+#endif

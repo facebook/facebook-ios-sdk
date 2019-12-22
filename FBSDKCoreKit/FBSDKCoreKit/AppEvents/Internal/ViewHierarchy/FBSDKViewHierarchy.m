@@ -16,12 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKViewHierarchy.h"
-
 #import <objc/runtime.h>
+
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
 
 #import <QuartzCore/QuartzCore.h>
 
+#import "FBSDKViewHierarchy.h"
 #import "FBSDKCodelessPathComponent.h"
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKViewHierarchyMacros.h"
@@ -654,3 +655,5 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
 }
 
 @end
+
+#endif

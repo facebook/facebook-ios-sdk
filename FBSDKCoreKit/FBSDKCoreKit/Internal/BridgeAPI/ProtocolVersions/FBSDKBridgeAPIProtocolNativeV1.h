@@ -18,6 +18,8 @@
 
 #import <UIKit/UIKit.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 #import "FBSDKBridgeAPIProtocol.h"
 
 typedef struct
@@ -70,3 +72,5 @@ NS_DESIGNATED_INITIALIZER;
 @property (nonatomic, strong, readonly) UIPasteboard *pasteboard;
 
 @end
+
+#endif

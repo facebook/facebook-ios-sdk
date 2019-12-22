@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
 
 #import "FBSDKLikeActionController.h"
@@ -28,3 +30,5 @@
 @property (nonatomic, strong) FBSDKLikeActionController *likeActionController;
 
 @end
+
+#endif

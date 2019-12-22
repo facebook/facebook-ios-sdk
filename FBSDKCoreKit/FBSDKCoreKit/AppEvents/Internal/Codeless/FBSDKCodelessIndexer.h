@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void(^FBSDKCodelessSettingLoadBlock)(BOOL isCodelessSetupEnabled, NSError *_Nullable error);
@@ -32,3 +34,5 @@ NS_SWIFT_NAME(CodelessIndexer)
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

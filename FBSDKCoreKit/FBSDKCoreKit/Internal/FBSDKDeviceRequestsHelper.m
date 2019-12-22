@@ -27,7 +27,7 @@
 #define FBSDK_DEVICE_INFO_DEVICE @"device"
 #define FBSDK_DEVICE_INFO_MODEL @"model"
 #define FBSDK_HEADER @"fbsdk"
-#if !TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
 #define FBSDK_FLAVOR @"ios"
 #else
 #define FBSDK_FLAVOR @"tvos"

@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(MeasurementEventListener)
@@ -29,3 +31,5 @@ NS_SWIFT_NAME(default);
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

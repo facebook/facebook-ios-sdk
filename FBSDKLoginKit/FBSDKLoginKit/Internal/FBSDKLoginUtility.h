@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 #import "FBSDKLoginManager.h"
 
 NS_SWIFT_NAME(LoginUtility)
@@ -32,3 +34,5 @@ NS_SWIFT_NAME(LoginUtility)
 + (NSString *)userIDFromSignedRequest:(NSString *)signedRequest;
 
 @end
+
+#endif

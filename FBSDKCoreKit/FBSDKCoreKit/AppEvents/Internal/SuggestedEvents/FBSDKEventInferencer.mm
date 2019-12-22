@@ -16,11 +16,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import <Foundation/Foundation.h>
+
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 #import "FBSDKEventInferencer.h"
-
-#import <QuartzCore/QuartzCore.h>
-#import <UIKit/UIKit.h>
-
 #import "FBSDKFeatureExtractor.h"
 #import "FBSDKModelManager.h"
 #import "FBSDKModelRuntime.hpp"
@@ -220,3 +220,5 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
 }
 
 @end
+
+#endif

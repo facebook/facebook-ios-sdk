@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 #import "FBSDKLoginManagerLoginResult.h"
 
 @interface FBSDKLoginManagerLoginResult()
@@ -30,3 +32,5 @@
 // adds additional logging entry to extras - only sent as part of `endLoginWithResult:`
 -(void)addLoggingExtra:(id)object forKey:(id<NSCopying>)key;
 @end
+
+#endif

@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 #if SWIFT_PACKAGE
 #import "FBSDKCopying.h"
 #else
@@ -45,3 +47,5 @@ NS_SWIFT_NAME(BridgeAPIResponse)
 @property (nonatomic, copy, readonly) NSDictionary *responseParameters;
 
 @end
+
+#endif

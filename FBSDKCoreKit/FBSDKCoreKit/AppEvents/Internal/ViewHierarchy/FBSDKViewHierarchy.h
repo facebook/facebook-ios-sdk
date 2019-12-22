@@ -16,8 +16,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
 
 typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
     /** Indicates that the class is subclass of UIControl */
@@ -67,3 +68,5 @@ NS_SWIFT_NAME(ViewHierarchy)
 + (BOOL)isUserInputView:(NSObject *)obj;
 
 @end
+
+#endif

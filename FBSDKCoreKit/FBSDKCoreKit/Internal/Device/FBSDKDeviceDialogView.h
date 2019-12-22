@@ -18,6 +18,8 @@
 
 #import <UIKit/UIKit.h>
 
+#if TARGET_OS_TV
+
 NS_SWIFT_NAME(DeviceDialogViewDelegate)
 @protocol FBSDKDeviceDialogViewDelegate;
 
@@ -39,3 +41,5 @@ NS_SWIFT_NAME(DeviceDialogViewDelegate)
 - (void)deviceDialogViewDidCancel:(FBSDKDeviceDialogView *)deviceDialogView;
 
 @end
+
+#endif

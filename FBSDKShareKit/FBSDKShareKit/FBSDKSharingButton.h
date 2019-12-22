@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 #import "FBSDKSharingContent.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -40,3 +42,5 @@ NS_SWIFT_NAME(SharingButton)
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

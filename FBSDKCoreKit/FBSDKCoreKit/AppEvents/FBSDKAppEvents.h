@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#if !TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
 #import <WebKit/WebKit.h>
 #endif
 
@@ -829,7 +829,7 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
  */
 + (void)updateUserProperties:(NSDictionary<NSString *, id> *)properties handler:(nullable FBSDKGraphRequestBlock)handler;
 
-#if !TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
 /*
   Intended to be used as part of a hybrid webapp.
  If you call this method, the FB SDK will inject a new JavaScript object into your webview.

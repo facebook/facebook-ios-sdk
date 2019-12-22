@@ -18,9 +18,13 @@
 
 #import <UIKit/UIKit.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 NS_SWIFT_NAME(FBCloseIcon)
 @interface FBSDKCloseIcon : NSObject
 
 - (UIImage *)imageWithSize:(CGSize)size;
 
 @end
+
+#endif

@@ -18,6 +18,8 @@
 
 #import <UIKit/UIKit.h>
 
+#if TARGET_OS_TV
+
 NS_ASSUME_NONNULL_BEGIN
 
 // Custom UIPresentationController that is similar to
@@ -29,3 +31,5 @@ NS_SWIFT_NAME(FBModalFormPresentationController)
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 #import "FBSDKLikeObjectType.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -54,3 +56,5 @@ NS_SWIFT_NAME(Liking)
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

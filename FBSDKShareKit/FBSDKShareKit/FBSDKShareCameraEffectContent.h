@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 #import "FBSDKCameraEffectArguments.h"
 #import "FBSDKCameraEffectTextures.h"
 #import "FBSDKSharingContent.h"
@@ -56,3 +58,5 @@ NS_SWIFT_NAME(ShareCameraEffectContent)
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

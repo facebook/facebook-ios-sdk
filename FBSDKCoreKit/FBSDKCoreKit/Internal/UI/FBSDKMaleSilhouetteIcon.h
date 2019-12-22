@@ -18,9 +18,13 @@
 
 #import <UIKit/UIKit.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 #import "FBSDKIcon.h"
 
 NS_SWIFT_NAME(FBMaleSilhouetteIcon)
 @interface FBSDKMaleSilhouetteIcon : FBSDKIcon
 
 @end
+
+#endif

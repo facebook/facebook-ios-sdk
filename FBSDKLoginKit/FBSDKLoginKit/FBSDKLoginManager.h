@@ -16,10 +16,32 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
+#if TARGET_OS_TV
+
+@class LoginManagerLoginResult;
+
+typedef NS_ENUM(NSUInteger, LoginBehavior) { LoginBehaviorBrowser };
+typedef NS_ENUM(NSUInteger, DefaultAudience) { DefaultAudienceFriends };
+typedef void (^LoginManagerLoginResultBlock)(LoginManagerLoginResult *_Nullable result,
+                                             NSError *_Nullable error);
+
+@interface LoginManager: NSObject
+
+@property (assign, nonatomic) LoginBehavior loginBehavior;
+@property (assign, nonatomic) DefaultAudience defaultAudience;
+
+- (void)logInWithPermissions:(NSArray<NSString *> *)permissions
+              fromViewController:(nullable UIViewController *)fromViewController
+                         handler:(nullable LoginManagerLoginResultBlock)handler
+NS_SWIFT_NAME(logIn(permissions:from:handler:));
+
+@end
+
+#else
 
 @class FBSDKLoginManagerLoginResult;
 
@@ -169,5 +191,7 @@ NS_SWIFT_NAME(reauthorizeDataAccess(from:handler:));
 - (void)logOut;
 
 @end
+
+#endif
 
 NS_ASSUME_NONNULL_END

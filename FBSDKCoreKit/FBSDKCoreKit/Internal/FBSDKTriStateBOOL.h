@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 typedef NS_ENUM(NSInteger, FBSDKTriStateBOOL)
 {
   FBSDKTriStateBOOLValueUnknown = -1,
@@ -28,3 +30,5 @@ typedef NS_ENUM(NSInteger, FBSDKTriStateBOOL)
 FOUNDATION_EXPORT FBSDKTriStateBOOL FBSDKTriStateBOOLFromBOOL(BOOL value);
 FOUNDATION_EXPORT FBSDKTriStateBOOL FBSDKTriStateBOOLFromNSNumber(NSNumber *value);
 FOUNDATION_EXPORT BOOL BOOLFromFBSDKTriStateBOOL(FBSDKTriStateBOOL value, BOOL defaultValue);
+
+#endif

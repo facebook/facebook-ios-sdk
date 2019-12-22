@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 NS_SWIFT_NAME(LikeActionControllerCache)
 @interface FBSDKLikeActionControllerCache : NSObject <NSSecureCoding>
 
@@ -32,3 +34,5 @@ NS_SWIFT_NAME(LikeActionControllerCache)
 - (void)setObject:(id)object forKeyedSubscript:(id)key;
 
 @end
+
+#endif

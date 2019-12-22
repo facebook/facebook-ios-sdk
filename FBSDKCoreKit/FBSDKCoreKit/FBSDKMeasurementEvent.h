@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 NS_ASSUME_NONNULL_BEGIN
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
@@ -73,3 +75,5 @@ NS_SWIFT_NAME(MeasurementEvent)
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

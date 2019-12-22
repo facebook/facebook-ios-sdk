@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 #import "FBSDKAppLinkTarget.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -67,3 +69,5 @@ NS_SWIFT_NAME(init(sourceURL:targets:webURL:));
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

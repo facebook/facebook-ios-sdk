@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 NS_SWIFT_NAME(EventBindingManager)
 @interface FBSDKEventBindingManager : NSObject
 
@@ -26,3 +28,5 @@ NS_SWIFT_NAME(EventBindingManager)
 + (NSArray *)parseArray:(NSArray *)array;
 
 @end
+
+#endif

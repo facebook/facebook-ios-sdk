@@ -18,6 +18,8 @@
 
 #import <UIKit/UIKit.h>
 
+#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+
 @protocol FBSDKWebDialogViewDelegate;
 
 NS_SWIFT_NAME(FBWebDialogView)
@@ -39,3 +41,5 @@ NS_SWIFT_NAME(WebDialogViewDelegate)
 - (void)webDialogViewDidFinishLoad:(FBSDKWebDialogView *)webDialogView;
 
 @end
+
+#endif
