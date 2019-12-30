@@ -39,12 +39,7 @@ public extension FBLoginButton {
    - Parameter permissions: Array of read permissions to request when logging in.
    */
   convenience init(frame: CGRect = .zero, permissions: [Permission] = [.publicProfile]) {
-    if #available(iOS 8, macCatalyst 10.15, *) {
         self.init(frame: frame)
         self.permissions = permissions.map { $0.name }
-    }
-    else {
-        fatalError("Not available for tvOS")
-    }
   }
 }
