@@ -2080,6 +2080,8 @@
 			children = (
 				5DBC72D02373792A00A9D859 /* FBSDKModelManager.h */,
 				5DBC72D72373795600A9D859 /* FBSDKModelManager.m */,
+				FD9E154C23777AC900A005EC /* FBSDKModelRuntime.hpp */,
+				FD9E155B23777AF700A005EC /* FBSDKStandaloneModel.hpp */,
 				FDAF4A7D2395D1DE00711C4C /* FBSDKModelUtility.h */,
 				FDAF4A8C2395D21700711C4C /* FBSDKModelUtility.m */,
 			);
@@ -2634,8 +2636,6 @@
 				BF247C812374E1B200A522C0 /* FBSDKSuggestedEventsIndexer.m */,
 				BFC02443237B6A9900A596EE /* FBSDKFeatureExtractor.h */,
 				BFC02444237B6A9900A596EE /* FBSDKFeatureExtractor.m */,
-				FD9E154C23777AC900A005EC /* FBSDKModelRuntime.hpp */,
-				FD9E155B23777AF700A005EC /* FBSDKStandaloneModel.hpp */,
 				BFC02435237B6A9900A596EE /* FBSDKEventInferencer.h */,
 				BFC02445237B6A9A00A596EE /* FBSDKEventInferencer.mm */,
 			);
