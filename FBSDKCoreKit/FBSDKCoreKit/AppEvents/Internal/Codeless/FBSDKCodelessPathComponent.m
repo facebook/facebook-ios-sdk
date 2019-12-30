@@ -18,7 +18,7 @@
 
 #import "TargetConditionals.h"
 
-#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+#if !TARGET_OS_TV
 
 #import "FBSDKCodelessPathComponent.h"
 

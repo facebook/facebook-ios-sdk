@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+#if !TARGET_OS_TV
 
 typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
     /** Indicates that the class is subclass of UIControl */

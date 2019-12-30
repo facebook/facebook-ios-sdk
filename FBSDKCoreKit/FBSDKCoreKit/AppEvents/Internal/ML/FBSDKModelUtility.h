@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+#if !TARGET_OS_TV
 
 @interface FBSDKModelUtility : NSObject
 

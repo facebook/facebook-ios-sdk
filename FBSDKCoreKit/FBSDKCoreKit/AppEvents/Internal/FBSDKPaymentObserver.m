@@ -222,7 +222,7 @@ static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_a
 
 - (BOOL)isSubscription:(SKProduct *)product
 {
-#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+#if !TARGET_OS_TV
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_1
   if (@available(iOS 11.2, *)) {
     return (product.subscriptionPeriod != nil) && ((unsigned long)product.subscriptionPeriod.numberOfUnits > 0);
@@ -269,7 +269,7 @@ static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_a
     }
   }
 
-#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+#if !TARGET_OS_TV
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_1
   if (@available(iOS 11.2, *)) {
     if ([self isSubscription:product]) {
@@ -320,7 +320,7 @@ static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_a
 - (BOOL)isStartTrial:(SKPaymentTransaction *)transaction
            ofProduct:(SKProduct *)product
 {
-#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+#if !TARGET_OS_TV
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_1
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_4
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_12_1
@@ -357,7 +357,7 @@ static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_a
 
 - (BOOL)hasStartTrial:(SKProduct *)product
 {
-#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+#if !TARGET_OS_TV
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_1
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_4
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_12_1
@@ -385,7 +385,7 @@ static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_a
 
 - (NSString *)durationOfSubscriptionPeriod:(id)subcriptionPeriod
 {
-#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+#if !TARGET_OS_TV
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_1
   if (@available(iOS 11.2, *)) {
     if (subcriptionPeriod && [subcriptionPeriod isKindOfClass:[SKProductSubscriptionPeriod class]]) {

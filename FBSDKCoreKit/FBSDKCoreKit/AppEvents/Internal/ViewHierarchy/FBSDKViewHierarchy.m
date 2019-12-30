@@ -18,7 +18,7 @@
 
 #import <objc/runtime.h>
 
-#if TARGET_OS_IOS || TARGET_OS_MACCATALYST
+#if !TARGET_OS_TV
 
 #import <QuartzCore/QuartzCore.h>
 
