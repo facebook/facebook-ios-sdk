@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 // The way to fix this is to remove extensions of ObjC types in Swift.
 // This will be be done in the next major release (6.0)
 
-@interface LoginManagerLoginResult: NSObject
+@interface LoginManagerLoginResult : NSObject
 
 @property (copy, nonatomic, nullable) FBSDKAccessToken *token;
 @property (readonly, nonatomic) BOOL isCancelled;

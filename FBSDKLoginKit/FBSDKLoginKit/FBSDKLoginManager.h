@@ -39,7 +39,7 @@ typedef NS_ENUM(NSUInteger, DefaultAudience) { DefaultAudienceFriends };
 typedef void (^LoginManagerLoginResultBlock)(LoginManagerLoginResult *_Nullable result,
                                              NSError *_Nullable error);
 
-@interface LoginManager: NSObject
+@interface LoginManager : NSObject
 
 @property (assign, nonatomic) LoginBehavior loginBehavior;
 @property (assign, nonatomic) DefaultAudience defaultAudience;
