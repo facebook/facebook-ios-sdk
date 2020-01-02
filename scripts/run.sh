@@ -664,48 +664,84 @@ does_version_exist() {
   false
 }
 
-# Verifies that all public headers exist as symlinks in the 'include' dir
-# of the SDK they belong to
 verify_spm_headers() {
-  for kit in "${SDK_BASE_KITS[@]}"; do
-    cd "$kit/$kit"
+  # Verifies that all public headers exist as symlinks in the 'include' dir
+  # of the SDK they belong to.
+  verify_inclusion() {
+    for kit in "${SDK_BASE_KITS[@]}"; do
+      cd "$kit/$kit"
 
-    echo "Verifying the following public headers are exposed to SPM for $kit:"
+      echo "Verifying the following public headers are exposed to SPM for $kit:"
 
-    headers=$(find . -name "*.h" -type f -not -path "./include/*" -not -path "**/Internal/*" -not -path "**/Basics/*")
-    echo "$(basename ${headers} )" | sort >| headers.txt
+      headers=$(find . -name "*.h" -type f -not -path "./include/*" -not -path "**/Internal/*" -not -path "**/Basics/*")
+      echo "$(basename ${headers} )" | sort >| headers.txt
 
-    cat headers.txt
+      cat headers.txt
 
-    symlinks=$(find ./include -name "*.h")
-    echo "$(basename ${symlinks} )" | sort >| symlinks.txt
+      symlinks=$(find ./include -name "*.h")
+      echo "$(basename ${symlinks} )" | sort >| symlinks.txt
 
-    comm -23 headers.txt symlinks.txt >| missingHeaders.txt
+      comm -23 headers.txt symlinks.txt >| missingHeaders.txt
 
-    if [ -s missingHeaders.txt ] ; then
-      echo ""
-      echo "Verification failed:"
-      echo "Please symlink the following public headers to the 'include' directory in $kit"
-      echo "so that they can be found by projects using Swift Package Manager."
-      cat missingHeaders.txt
+      if [ -s missingHeaders.txt ] ; then
+        echo ""
+        echo "Verification failed:"
+        echo "Please symlink the following public headers to the 'include' directory in $kit"
+        echo "so that they can be found by projects using Swift Package Manager."
+        cat missingHeaders.txt
 
+        rm headers.txt
+        rm symlinks.txt
+        rm missingHeaders.txt
+
+        exit 1;
+      fi
       rm headers.txt
       rm symlinks.txt
       rm missingHeaders.txt
 
-      exit 1;
-    fi
-    rm headers.txt
-    rm symlinks.txt
-    rm missingHeaders.txt
+      echo ""
+      cd .. || exit
+      cd .. || exit
+    done
 
     echo ""
-    cd .. || exit
-    cd .. || exit
-  done
+    echo "Success! All of your public headers are visible to users of SPM!"
+  }
 
-  echo ""
-  echo "Success! All of your public headers are visible to users of SPM!"
+  # Verifies that existing symlinks are valid since it is easy to break them by moving the
+  # original file
+  verify_validity() {
+      for kit in "${SDK_BASE_KITS[@]}"; do
+        cd "$kit"
+
+        echo ""
+        echo "Verifying that the symlinks used for exposing public headers to SPM for $kit"
+        echo "are pointing to valid source files."
+
+        find . -type l ! -exec test -e {} \; -print >| BadSymlinks.txt
+
+        if [ -s BadSymlinks.txt ] ; then
+          echo ""
+          echo "Bad symlinks found: "
+          cat BadSymlinks.txt
+          echo "Please fix these by recreating the symlink(s) from the include directory with: "
+          echo "ln -s <path_to_source_file(s)> ."
+
+         rm BadSymlinks.txt
+
+          exit 1;
+        fi
+
+        rm BadSymlinks.txt
+
+      echo ""
+      cd .. || exit
+      done
+  }
+
+  verify_inclusion
+  verify_validity
 }
 
 # --------------
