@@ -46,17 +46,10 @@
 
 #if !TARGET_OS_TV
 
-#if SWIFT_PACKAGE
 #import "FBSDKAddressFilterManager.h"
 #import "FBSDKEventBindingManager.h"
 #import "FBSDKHybridAppEventsScriptMessageHandler.h"
 #import "FBSDKModelManager.h"
-#else
-#import <FBSDKCoreKit/FBSDKAddressFilterManager.h>
-#import <FBSDKCoreKit/FBSDKEventBindingManager.h>
-#import <FBSDKCoreKit/FBSDKHybridAppEventsScriptMessageHandler.h>
-#import <FBSDKCoreKit/FBSDKModelManager.h>
-#endif
 
 #endif
 
