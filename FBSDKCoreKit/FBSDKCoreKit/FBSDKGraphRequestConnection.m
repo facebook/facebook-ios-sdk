@@ -104,7 +104,6 @@ NSURLSessionDataDelegate
 #endif
 >
 
-@property (nonatomic, strong) FBSDKURLSession *session;
 @property (nonatomic, retain) NSMutableArray *requests;
 @property (nonatomic, assign) FBSDKGraphRequestConnectionState state;
 @property (nonatomic, strong) FBSDKLogger *logger;
@@ -120,6 +119,7 @@ NSURLSessionDataDelegate
   NSString *_overrideVersionPart;
   NSUInteger _expectingResults;
   NSOperationQueue *_delegateQueue;
+  FBSDKURLSession *_session;
 #if !TARGET_OS_TV
   FBSDKGraphRequestMetadata *_recoveringRequestMetadata;
   FBSDKGraphErrorRecoveryProcessor *_errorRecoveryProcessor;
@@ -272,6 +272,11 @@ NSURLSessionDataDelegate
 {
   _session.delegateQueue = queue;
   _delegateQueue = queue;
+}
+
+- (FBSDKURLSession *)session
+{
+    return _session;
 }
 
 #pragma mark - Private methods (request generation)
