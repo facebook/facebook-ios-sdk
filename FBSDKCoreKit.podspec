@@ -32,7 +32,7 @@ Pod::Spec.new do |s|
   s.requires_arc = ['FBSDKCoreKit/FBSDKCoreKit/*',
                     'FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*',
                     'FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*',
-		                'FBSDKCoreKit/FBSDKCoreKit/Basics/**/*',
+		    'FBSDKCoreKit/FBSDKCoreKit/Basics/**/*',
                     'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*']
 
   s.default_subspecs = 'Core', 'Basics'
@@ -60,7 +60,8 @@ Pod::Spec.new do |s|
                              'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/**/*.h',
                              'FBSDKCoreKit/FBSDKCoreKit/*.h',
                              'FBSDKCoreKit/FBSDKCoreKit/AppEvents/*.h',
-                             'FBSDKCoreKit/FBSDKCoreKit/AppLink/*.h'
+                             'FBSDKCoreKit/FBSDKCoreKit/AppLink/*.h',
+                             'FBSDKCoreKit/FBSDKCoreKit/GraphAPI/*.h'
     ss.private_header_files = 'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.h',
                               'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/**/*.h'
     ss.resources = 'FacebookSDKStrings.bundle'
