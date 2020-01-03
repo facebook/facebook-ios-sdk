@@ -705,39 +705,38 @@ verify_spm_headers() {
       cd .. || exit
     done
 
-    echo ""
     echo "Success! All of your public headers are visible to users of SPM!"
   }
 
   # Verifies that existing symlinks are valid since it is easy to break them by moving the
   # original file
   verify_validity() {
-      for kit in "${SDK_BASE_KITS[@]}"; do
-        cd "$kit"
+    echo ""
+    echo "Verifying that the symlinks used for exposing public headers to SPM are pointing to valid source files."
 
-        echo ""
-        echo "Verifying that the symlinks used for exposing public headers to SPM for $kit"
-        echo "are pointing to valid source files."
+    for kit in "${SDK_BASE_KITS[@]}"; do
+      cd "$kit"
 
-        find . -type l ! -exec test -e {} \; -print >| BadSymlinks.txt
-
-        if [ -s BadSymlinks.txt ] ; then
-          echo ""
-          echo "Bad symlinks found: "
-          cat BadSymlinks.txt
-          echo "Please fix these by recreating the symlink(s) from the include directory with: "
-          echo "ln -s <path_to_source_file(s)> ."
-
-         rm BadSymlinks.txt
-
-          exit 1;
-        fi
-
-        rm BadSymlinks.txt
-
-      echo ""
+      find . -type l ! -exec test -e {} \; -print >| ../BadSymlinks.txt
       cd .. || exit
-      done
+    done
+
+    if [ -s BadSymlinks.txt ] ; then
+      echo ""
+      echo "Bad symlinks found: "
+      cat BadSymlinks.txt
+      echo "Please fix these by recreating the symlink(s) from the include directory with: "
+      echo "ln -s <path_to_source_file(s)> ."
+      echo "run ./scripts/run.sh verify-spm-headers to verify that these are fixed."
+
+      rm BadSymlinks.txt
+
+      exit 1;
+    fi
+
+    rm BadSymlinks.txt
+
+    echo "Success! All of the public header symlinks are valid!"
   }
 
   verify_inclusion
