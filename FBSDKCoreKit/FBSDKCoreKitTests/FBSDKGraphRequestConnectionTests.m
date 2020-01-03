@@ -24,8 +24,6 @@
 #import <OHHTTPStubs/NSURLRequest+HTTPBodyTesting.h>
 #import <OHHTTPStubs/OHHTTPStubs.h>
 
-#import "../FBSDKCoreKit/Basics/Internal/FBSDKBasicUtility.h"
-
 #import "FBSDKCoreKit.h"
 #import "FBSDKCoreKitTestUtility.h"
 #import "FBSDKGraphRequest+Internal.h"
