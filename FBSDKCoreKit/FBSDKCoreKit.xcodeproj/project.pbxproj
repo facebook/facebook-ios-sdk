@@ -2489,6 +2489,7 @@
 		9D2697491A5DF40700143BFC /* FBSDKCoreKit */ = {
 			isa = PBXGroup;
 			children = (
+				E4320C3123B8943700EF2653 /* GraphAPI */,
 				5DF60D07225DB6B200934A0E /* Basics */,
 				C5188EC122371EE400F4D8BC /* AppEvents */,
 				C5188F1C223857D700F4D8BC /* AppLink */,
@@ -2506,14 +2507,6 @@
 				9D9E16AB1CB46C7D00C8B68F /* FBSDKDeviceButton.m */,
 				9D10A68B1CB38D5D00F42AC1 /* FBSDKDeviceViewControllerBase.h */,
 				9D10A68C1CB38D5D00F42AC1 /* FBSDKDeviceViewControllerBase.m */,
-				9DD50A3A1A9BBA1B0088AAAA /* FBSDKGraphErrorRecoveryProcessor.h */,
-				9DD50A3B1A9BBA1B0088AAAA /* FBSDKGraphErrorRecoveryProcessor.m */,
-				9DC658931A6EE5C500B85AAF /* FBSDKGraphRequest.h */,
-				9DC658941A6EE5C500B85AAF /* FBSDKGraphRequest.m */,
-				9DC6589C1A6EE7D800B85AAF /* FBSDKGraphRequestConnection.h */,
-				9DC6589D1A6EE7D800B85AAF /* FBSDKGraphRequestConnection.m */,
-				896DE2321A9E509300195731 /* FBSDKGraphRequestDataAttachment.h */,
-				896DE2331A9E509300195731 /* FBSDKGraphRequestDataAttachment.m */,
 				52963AAA2159A16E00C7B252 /* FBSDKMeasurementEvent.h */,
 				52963AAB2159A16E00C7B252 /* FBSDKMeasurementEvent.m */,
 				890414871A64893100617215 /* FBSDKMutableCopying.h */,
@@ -2767,6 +2760,21 @@
 				F9098FC222BC332C00857C2D /* FBSDKURLSession.m */,
 			);
 			path = Internal;
+			sourceTree = "<group>";
+		};
+		E4320C3123B8943700EF2653 /* GraphAPI */ = {
+			isa = PBXGroup;
+			children = (
+				9DD50A3A1A9BBA1B0088AAAA /* FBSDKGraphErrorRecoveryProcessor.h */,
+				9DD50A3B1A9BBA1B0088AAAA /* FBSDKGraphErrorRecoveryProcessor.m */,
+				9DC658931A6EE5C500B85AAF /* FBSDKGraphRequest.h */,
+				9DC658941A6EE5C500B85AAF /* FBSDKGraphRequest.m */,
+				9DC6589C1A6EE7D800B85AAF /* FBSDKGraphRequestConnection.h */,
+				9DC6589D1A6EE7D800B85AAF /* FBSDKGraphRequestConnection.m */,
+				896DE2321A9E509300195731 /* FBSDKGraphRequestDataAttachment.h */,
+				896DE2331A9E509300195731 /* FBSDKGraphRequestDataAttachment.m */,
+			);
+			path = GraphAPI;
 			sourceTree = "<group>";
 		};
 		F487DBCA231EBD8B008416A9 /* Swift */ = {

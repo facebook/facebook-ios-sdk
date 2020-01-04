@@ -65,6 +65,7 @@ let package = Package(
                 .headerSearchPath("AppLink/Internal"),
                 .headerSearchPath("Basics/Instrument"),
                 .headerSearchPath("Basics/Internal"),
+                .headerSearchPath("GraphAPI"),
                 .headerSearchPath("Internal"),
                 .headerSearchPath("Internal/Base64"),
                 .headerSearchPath("Internal/BridgeAPI"),
