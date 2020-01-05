@@ -322,16 +322,19 @@ build_sdk() {
   }
 
   build_spm_integration() {
-    # Using a symlink so that this can be run locally as well as in CI
-    echo "SDKDIR: $SDK_DIR"
-    echo "PWD: $PWD"
-
-    cd /tmp
-
-    ln -sf "$SDK_DIR" .
-    # ruby "$SDK_SCRIPTS_DIR"/SmokeTestSPMHelper.rb "$TRAVIS_COMMIT"
-
     cd "$SDK_DIR"/samples/SmoketestSPM
+
+    /usr/libexec/PlistBuddy \
+      -c "delete :objects:F4CEA53E23C29C9E0086EB16:requirement:branch" \
+      SmoketestSPM.xcodeproj/project.pbxproj
+
+    /usr/libexec/PlistBuddy \
+      -c "add :objects:F4CEA53E23C29C9E0086EB16:requirement:revision string $TRAVIS_COMMIT" \
+      SmoketestSPM.xcodeproj/project.pbxproj
+
+    /usr/libexec/PlistBuddy \
+      -c "set :objects:F4CEA53E23C29C9E0086EB16:requirement:kind revision" \
+      SmoketestSPM.xcodeproj/project.pbxproj
 
     xcodebuild build -scheme SmoketestSPM \
       -sdk iphonesimulator \
