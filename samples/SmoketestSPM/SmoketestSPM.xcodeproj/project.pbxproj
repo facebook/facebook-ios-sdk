@@ -12,9 +12,9 @@
 		F43C34EB2370F948005145DD /* VerifyFacebookShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43C34E82370F948005145DD /* VerifyFacebookShare.swift */; };
 		F43C34EC2370F948005145DD /* VerifyFacebookLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43C34E92370F948005145DD /* VerifyFacebookLogin.swift */; };
 		F43C34EE2370F957005145DD /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = F43C34ED2370F957005145DD /* README.md */; };
-		F47D915E23C29446008CA6B6 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = F47D915D23C29446008CA6B6 /* FacebookCore */; };
-		F47D916023C29446008CA6B6 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = F47D915F23C29446008CA6B6 /* FacebookLogin */; };
-		F47D916223C29446008CA6B6 /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = F47D916123C29446008CA6B6 /* FacebookShare */; };
+		F4CEA54023C29C9E0086EB16 /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = F4CEA53F23C29C9E0086EB16 /* FacebookShare */; };
+		F4CEA54223C29C9E0086EB16 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = F4CEA54123C29C9E0086EB16 /* FacebookLogin */; };
+		F4CEA54423C29C9E0086EB16 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = F4CEA54323C29C9E0086EB16 /* FacebookCore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,9 +32,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F47D916023C29446008CA6B6 /* FacebookLogin in Frameworks */,
-				F47D915E23C29446008CA6B6 /* FacebookCore in Frameworks */,
-				F47D916223C29446008CA6B6 /* FacebookShare in Frameworks */,
+				F4CEA54223C29C9E0086EB16 /* FacebookLogin in Frameworks */,
+				F4CEA54423C29C9E0086EB16 /* FacebookCore in Frameworks */,
+				F4CEA54023C29C9E0086EB16 /* FacebookShare in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,9 +99,9 @@
 			);
 			name = SmoketestSPM;
 			packageProductDependencies = (
-				F47D915D23C29446008CA6B6 /* FacebookCore */,
-				F47D915F23C29446008CA6B6 /* FacebookLogin */,
-				F47D916123C29446008CA6B6 /* FacebookShare */,
+				F4CEA53F23C29C9E0086EB16 /* FacebookShare */,
+				F4CEA54123C29C9E0086EB16 /* FacebookLogin */,
+				F4CEA54323C29C9E0086EB16 /* FacebookCore */,
 			);
 			productName = SmoketestSPM;
 			productReference = F43C34D42370F8BD005145DD /* SmoketestSPM.framework */;
@@ -132,7 +132,7 @@
 			);
 			mainGroup = F43C34CA2370F8BD005145DD;
 			packageReferences = (
-				F47D915C23C29446008CA6B6 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
+				F4CEA53E23C29C9E0086EB16 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
 			);
 			productRefGroup = F43C34D52370F8BD005145DD /* Products */;
 			projectDirPath = "";
@@ -361,9 +361,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		F47D915C23C29446008CA6B6 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
+		F4CEA53E23C29C9E0086EB16 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "file:///tmp/facebook-ios-sdk";
+			repositoryURL = "https://github.com/facebook/facebook-ios-sdk";
 			requirement = {
 				branch = HEAD;
 				kind = branch;
@@ -372,20 +372,20 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		F47D915D23C29446008CA6B6 /* FacebookCore */ = {
+		F4CEA53F23C29C9E0086EB16 /* FacebookShare */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = F47D915C23C29446008CA6B6 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
-			productName = FacebookCore;
+			package = F4CEA53E23C29C9E0086EB16 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookShare;
 		};
-		F47D915F23C29446008CA6B6 /* FacebookLogin */ = {
+		F4CEA54123C29C9E0086EB16 /* FacebookLogin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = F47D915C23C29446008CA6B6 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			package = F4CEA53E23C29C9E0086EB16 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
 			productName = FacebookLogin;
 		};
-		F47D916123C29446008CA6B6 /* FacebookShare */ = {
+		F4CEA54323C29C9E0086EB16 /* FacebookCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = F47D915C23C29446008CA6B6 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
-			productName = FacebookShare;
+			package = F4CEA53E23C29C9E0086EB16 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

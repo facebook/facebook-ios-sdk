@@ -328,7 +328,7 @@ build_sdk() {
 
     cd /tmp
 
-    ln -sf "$SDK_DIR"
+    ln -sf "$SDK_DIR" .
     # ruby "$SDK_SCRIPTS_DIR"/SmokeTestSPMHelper.rb "$TRAVIS_COMMIT"
 
     cd "$SDK_DIR"/samples/SmoketestSPM
