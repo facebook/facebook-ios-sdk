@@ -326,11 +326,12 @@ build_sdk() {
     echo "SDKDIR: $SDK_DIR"
     echo "PWD: $PWD"
 
-    ln -s $SDK_DIR /tmp/local-sdk-checkout
+    cd /tmp
+
+    ln -sf "$SDK_DIR"
     # ruby "$SDK_SCRIPTS_DIR"/SmokeTestSPMHelper.rb "$TRAVIS_COMMIT"
 
-    cd samples/SmoketestSPM
-    ls -R .
+    cd "$SDK_DIR"/samples/SmoketestSPM
 
     xcodebuild build -scheme SmoketestSPM \
       -sdk iphonesimulator \
