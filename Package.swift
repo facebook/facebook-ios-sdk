@@ -79,10 +79,10 @@ let package = Package(
                 .headerSearchPath("Internal/ServerConfiguration"),
                 .headerSearchPath("Internal/TokenCaching"),
                 .headerSearchPath("Internal/UI"),
+            ],
+            linkerSettings: [
+                .linkedFramework("Accelerate"),
             ]
-//            linkerSettings: [
-//                .linkedFramework("Accelerate"),
-//            ]
         ),
         .target(
             name: "FacebookCore",
