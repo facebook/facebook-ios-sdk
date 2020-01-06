@@ -336,6 +336,10 @@ build_sdk() {
       -c "set :objects:F4CEA53E23C29C9E0086EB16:requirement:kind revision" \
       SmoketestSPM.xcodeproj/project.pbxproj
 
+    /usr/libexec/PlistBuddy \
+      -c 'print :objects:F4CEA53E23C29C9E0086EB16:requirement' \
+      SmoketestSPM.xcodeproj/project.pbxproj
+
     xcodebuild build -scheme SmoketestSPM \
       -sdk iphonesimulator \
       -verbose

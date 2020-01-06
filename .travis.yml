@@ -67,13 +67,13 @@ jobs:
       name: Verify Swift Package Headers
       script: sh scripts/run.sh verify-spm-headers
     - stage: test
-      name: Build Swift Packages
-      osx_image: xcode11.2
-      script: sh scripts/run.sh build spm
-    - stage: test
       name: Swift Package Integration Test
       osx_image: xcode11.2
       script: sh scripts/run.sh build spm-integration
+    - stage: test
+      name: Build Swift Packages
+      osx_image: xcode11.2
+      script: sh scripts/run.sh build spm
     - stage: release
       name: GitHub Release
       osx_image: xcode10.1
