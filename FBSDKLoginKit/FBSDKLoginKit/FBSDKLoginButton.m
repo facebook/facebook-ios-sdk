@@ -16,6 +16,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import "TargetConditionals.h"
+
+#if !TARGET_OS_TV
+
 #import "FBSDKLoginButton.h"
 
 #ifdef FBSDKCOCOAPODS
@@ -23,6 +27,7 @@
 #else
 #import "FBSDKCoreKit+Internal.h"
 #endif
+
 #import "FBSDKLoginTooltipView.h"
 
 static const CGFloat kFBLogoSize = 16.0;
@@ -331,3 +336,5 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 }
 
 @end
+
+#endif

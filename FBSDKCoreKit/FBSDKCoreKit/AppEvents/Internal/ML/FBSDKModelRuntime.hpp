@@ -16,6 +16,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import "TargetConditionals.h"
+
+#if !TARGET_OS_TV
+
 #include <float.h>
 #include <math.h>
 #include <stdint.h>
@@ -302,3 +306,5 @@ namespace mat1 {
         return dense3_x;
     }
 }
+
+#endif

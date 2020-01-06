@@ -30,6 +30,7 @@ import UIKit
  `LoginButton` has a fixed height of @c 30 pixels, but you may change the width.
  Initializing the button with `nil` frame will size the button to its minimum frame.
  */
+@available(tvOS, unavailable)
 public extension FBLoginButton {
   /**
    Create a new `LoginButton` with a given optional frame and read permissions.
@@ -38,7 +39,7 @@ public extension FBLoginButton {
    - Parameter permissions: Array of read permissions to request when logging in.
    */
   convenience init(frame: CGRect = .zero, permissions: [Permission] = [.publicProfile]) {
-    self.init(frame: frame)
-    self.permissions = permissions.map { $0.name }
+        self.init(frame: frame)
+        self.permissions = permissions.map { $0.name }
   }
 }

@@ -16,9 +16,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import "TargetConditionals.h"
 
+#if TARGET_OS_TV
+
+#if defined BUCK || defined FBSDKCOCOAPODS || defined __cplusplus
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKShareKit/FBSDKSharingContent.h>
+#else
+@import FBSDKCoreKit;
+#import "FBSDKSharingContent.h"
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -35,3 +43,5 @@ NS_SWIFT_NAME(FBDeviceShareButton)
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

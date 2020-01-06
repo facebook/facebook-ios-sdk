@@ -16,10 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKModelUtility.h"
+#import "TargetConditionals.h"
 
-#import <QuartzCore/QuartzCore.h>
-#import <UIKit/UIKit.h>
+#if !TARGET_OS_TV
+
+#import <Foundation/Foundation.h>
+
+#import "FBSDKModelUtility.h"
 
 @implementation FBSDKModelUtility : NSObject
 
@@ -31,3 +34,5 @@
 }
 
 @end
+
+#endif
