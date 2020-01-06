@@ -1,1 +1,1 @@
-FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.h
+../FBSDKDeviceShareButton.h

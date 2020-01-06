@@ -1,1 +1,1 @@
-FBSDKLoginKit/FBSDKLoginKit/FBSDKLoginKit.h
+../FBSDKLoginKit.h
