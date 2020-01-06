@@ -16,13 +16,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <objc/runtime.h>
+#import "TargetConditionals.h"
 
 #if !TARGET_OS_TV
 
+#import "FBSDKViewHierarchy.h"
+
+#import <objc/runtime.h>
+
 #import <QuartzCore/QuartzCore.h>
 
-#import "FBSDKViewHierarchy.h"
 #import "FBSDKCodelessPathComponent.h"
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKViewHierarchyMacros.h"
