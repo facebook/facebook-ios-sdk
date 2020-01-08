@@ -67,6 +67,10 @@ jobs:
       name: Verify Swift Package Headers
       script: sh scripts/run.sh verify-spm-headers
     - stage: test
+      name: Swift Package Integration Test
+      osx_image: xcode11.2
+      script: sh scripts/run.sh build spm-integration
+    - stage: test
       name: Build Swift Packages
       osx_image: xcode11.2
       script: sh scripts/run.sh build spm
@@ -105,7 +109,6 @@ jobs:
       osx_image: xcode10.3
       script: sh scripts/run.sh release cocoapods --allow-warnings
 
-before_install: sh scripts/travis/before_install.sh
 install: sh scripts/travis/install.sh
 script: sh scripts/travis/script.sh
 

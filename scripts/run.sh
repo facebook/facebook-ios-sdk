@@ -321,12 +321,33 @@ build_sdk() {
     done
   }
 
+  build_spm_integration() {
+    cd "$SDK_DIR"/samples/SmoketestSPM
+
+    /usr/libexec/PlistBuddy \
+      -c "delete :objects:F4CEA53E23C29C9E0086EB16:requirement:branch" \
+      SmoketestSPM.xcodeproj/project.pbxproj
+
+    /usr/libexec/PlistBuddy \
+      -c "add :objects:F4CEA53E23C29C9E0086EB16:requirement:revision string $TRAVIS_COMMIT" \
+      SmoketestSPM.xcodeproj/project.pbxproj
+
+    /usr/libexec/PlistBuddy \
+      -c "set :objects:F4CEA53E23C29C9E0086EB16:requirement:kind revision" \
+      SmoketestSPM.xcodeproj/project.pbxproj
+
+    xcodebuild build -scheme SmoketestSPM \
+      -sdk iphonesimulator \
+      -verbose
+  }
+
   local build_type=${1:-}
   if [ -n "$build_type" ]; then shift; fi
 
   case "$build_type" in
   "carthage") build_carthage "$@" ;;
   "spm") build_spm "$@" ;;
+  "spm-integration") build_spm_integration ;;
   "swift") build_swift "$@" ;;
   "xcode") build_xcode_workspace "$@" ;;
   *) echo "Unsupported Build: $build_type" ;;
