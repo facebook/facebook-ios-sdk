@@ -338,7 +338,11 @@ build_sdk() {
 
     xcodebuild build -scheme SmoketestSPM \
       -sdk iphonesimulator \
-      -verbose
+      | xcpretty
+
+    xcodebuild build -scheme SmoketestSPM_tvOS \
+      -sdk iphonesimulator \
+      | xcpretty
   }
 
   local build_type=${1:-}

@@ -28,5 +28,17 @@ struct VerifyFacebookCore {
 
         // Additional Sanity Check
         AppEvents.logEvent(AppEvents.Name("foo"))
+
+        #if os(iOS)
+
+        // Verifies Platform Specific ObjC symbol
+        _ = Profile.current
+
+        #elseif os(tvOS)
+
+        // Verifies Platform Specific ObjC symbol
+        _ = FBDeviceButton()
+
+        #endif
     }
 }

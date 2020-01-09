@@ -32,9 +32,21 @@ struct VerifyFacebookShare {
 
     func verifyShareSymbols() {
         // Verifies ObjC symbol
+        _ = ShareError.unknown
+
+        #if os(iOS)
+
+        // Verifies Platform Specific ObjC symbol
         _ = ShareDialog()
 
-        // Verifies Swift only symbol
+        // Verifies Platform Specific Swift only symbol
         _ = ShareDialog.Mode.automatic.description
+
+        #elseif os(tvOS)
+
+        // Verifies Platform Specific ObjC symbol
+        _ = FBDeviceButton()
+
+        #endif
     }
 }

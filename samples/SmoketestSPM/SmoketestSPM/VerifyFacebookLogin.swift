@@ -31,13 +31,20 @@ struct VerifyFacebookLogin {
     }
 
     func verifyLoginSymbols() {
-        // Verifies Swift only symbol
+        // Verifies ObjC symbol
+        _ = LoginError.passwordChanged
+
+        #if os(iOS)
+
+        // Verifies Platform Specific Swift only symbol
         _ = LoginResult.cancelled
 
-        // Verifies Swift only initializer
+        // Verifies Platform Specific Swift only initializer
         _ = LoginManager(loginBehavior: .browser, defaultAudience: .everyone)
 
-        // Verifies ObjC initializer
+        // Verifies Platform Specific ObjC initializer
         _ = LoginManager()
+
+        #endif
     }
 }

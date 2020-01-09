@@ -12,6 +12,12 @@
 		F43C34EB2370F948005145DD /* VerifyFacebookShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43C34E82370F948005145DD /* VerifyFacebookShare.swift */; };
 		F43C34EC2370F948005145DD /* VerifyFacebookLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43C34E92370F948005145DD /* VerifyFacebookLogin.swift */; };
 		F43C34EE2370F957005145DD /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = F43C34ED2370F957005145DD /* README.md */; };
+		F4BC2F0423C7A7280042820E /* VerifyFacebookCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43C34E72370F947005145DD /* VerifyFacebookCore.swift */; };
+		F4BC2F0523C7A7280042820E /* VerifyFacebookLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43C34E92370F948005145DD /* VerifyFacebookLogin.swift */; };
+		F4BC2F0623C7A7280042820E /* VerifyFacebookShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43C34E82370F948005145DD /* VerifyFacebookShare.swift */; };
+		F4BC2F0923C7A7330042820E /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = F4BC2F0823C7A7330042820E /* FacebookCore */; };
+		F4BC2F0B23C7A7330042820E /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = F4BC2F0A23C7A7330042820E /* FacebookLogin */; };
+		F4BC2F0D23C7A7330042820E /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = F4BC2F0C23C7A7330042820E /* FacebookShare */; };
 		F4CEA54023C29C9E0086EB16 /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = F4CEA53F23C29C9E0086EB16 /* FacebookShare */; };
 		F4CEA54223C29C9E0086EB16 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = F4CEA54123C29C9E0086EB16 /* FacebookLogin */; };
 		F4CEA54423C29C9E0086EB16 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = F4CEA54323C29C9E0086EB16 /* FacebookCore */; };
@@ -25,6 +31,7 @@
 		F43C34E82370F948005145DD /* VerifyFacebookShare.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyFacebookShare.swift; sourceTree = "<group>"; };
 		F43C34E92370F948005145DD /* VerifyFacebookLogin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyFacebookLogin.swift; sourceTree = "<group>"; };
 		F43C34ED2370F957005145DD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		F4BC2EFC23C7A7150042820E /* SmoketestSPM_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SmoketestSPM_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +45,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F4BC2EF923C7A7150042820E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4BC2F0B23C7A7330042820E /* FacebookLogin in Frameworks */,
+				F4BC2F0923C7A7330042820E /* FacebookCore in Frameworks */,
+				F4BC2F0D23C7A7330042820E /* FacebookShare in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -47,6 +64,7 @@
 				F43C34ED2370F957005145DD /* README.md */,
 				F43C34D62370F8BD005145DD /* SmoketestSPM */,
 				F43C34D52370F8BD005145DD /* Products */,
+				F4BC2F0723C7A7330042820E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -54,6 +72,7 @@
 			isa = PBXGroup;
 			children = (
 				F43C34D42370F8BD005145DD /* SmoketestSPM.framework */,
+				F4BC2EFC23C7A7150042820E /* SmoketestSPM_tvOS.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -70,6 +89,13 @@
 			path = SmoketestSPM;
 			sourceTree = "<group>";
 		};
+		F4BC2F0723C7A7330042820E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -78,6 +104,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				F43C34D92370F8BD005145DD /* SmoketestSPM.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F4BC2EF723C7A7150042820E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,6 +140,29 @@
 			productReference = F43C34D42370F8BD005145DD /* SmoketestSPM.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		F4BC2EFB23C7A7150042820E /* SmoketestSPM_tvOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F4BC2F0323C7A7150042820E /* Build configuration list for PBXNativeTarget "SmoketestSPM_tvOS" */;
+			buildPhases = (
+				F4BC2EF723C7A7150042820E /* Headers */,
+				F4BC2EF823C7A7150042820E /* Sources */,
+				F4BC2EF923C7A7150042820E /* Frameworks */,
+				F4BC2EFA23C7A7150042820E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SmoketestSPM_tvOS;
+			packageProductDependencies = (
+				F4BC2F0823C7A7330042820E /* FacebookCore */,
+				F4BC2F0A23C7A7330042820E /* FacebookLogin */,
+				F4BC2F0C23C7A7330042820E /* FacebookShare */,
+			);
+			productName = SmoketestSPM_tvOS;
+			productReference = F4BC2EFC23C7A7150042820E /* SmoketestSPM_tvOS.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -119,6 +175,9 @@
 					F43C34D32370F8BD005145DD = {
 						CreatedOnToolsVersion = 11.2;
 						LastSwiftMigration = 1120;
+					};
+					F4BC2EFB23C7A7150042820E = {
+						CreatedOnToolsVersion = 11.3;
 					};
 				};
 			};
@@ -139,6 +198,7 @@
 			projectRoot = "";
 			targets = (
 				F43C34D32370F8BD005145DD /* SmoketestSPM */,
+				F4BC2EFB23C7A7150042820E /* SmoketestSPM_tvOS */,
 			);
 		};
 /* End PBXProject section */
@@ -152,6 +212,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F4BC2EFA23C7A7150042820E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -162,6 +229,16 @@
 				F43C34EB2370F948005145DD /* VerifyFacebookShare.swift in Sources */,
 				F43C34EC2370F948005145DD /* VerifyFacebookLogin.swift in Sources */,
 				F43C34EA2370F948005145DD /* VerifyFacebookCore.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F4BC2EF823C7A7150042820E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4BC2F0623C7A7280042820E /* VerifyFacebookShare.swift in Sources */,
+				F4BC2F0523C7A7280042820E /* VerifyFacebookLogin.swift in Sources */,
+				F4BC2F0423C7A7280042820E /* VerifyFacebookCore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -337,6 +414,56 @@
 			};
 			name = Release;
 		};
+		F4BC2F0123C7A7150042820E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = SmoketestSPM/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.swift.SmoketestSPM-tvOS";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 13.2;
+			};
+			name = Debug;
+		};
+		F4BC2F0223C7A7150042820E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = SmoketestSPM/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.swift.SmoketestSPM-tvOS";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 13.2;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -358,6 +485,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		F4BC2F0323C7A7150042820E /* Build configuration list for PBXNativeTarget "SmoketestSPM_tvOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F4BC2F0123C7A7150042820E /* Debug */,
+				F4BC2F0223C7A7150042820E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -372,6 +508,21 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		F4BC2F0823C7A7330042820E /* FacebookCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F4CEA53E23C29C9E0086EB16 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookCore;
+		};
+		F4BC2F0A23C7A7330042820E /* FacebookLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F4CEA53E23C29C9E0086EB16 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookLogin;
+		};
+		F4BC2F0C23C7A7330042820E /* FacebookShare */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F4CEA53E23C29C9E0086EB16 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookShare;
+		};
 		F4CEA53F23C29C9E0086EB16 /* FacebookShare */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F4CEA53E23C29C9E0086EB16 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
