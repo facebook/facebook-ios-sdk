@@ -57,7 +57,7 @@ typedef NS_ENUM(NSUInteger, FBSDKShareDialogMode)
    @Displays the feed dialog in a WKWebView within the app.
    */
   FBSDKShareDialogModeFeedWeb,
-};
+} NS_SWIFT_NAME(ShareDialog.Mode);
 
 /**
   Converts an FBSDKShareDialogMode to an NSString.
