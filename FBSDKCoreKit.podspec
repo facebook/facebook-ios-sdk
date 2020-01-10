@@ -38,6 +38,7 @@ Pod::Spec.new do |s|
   s.default_subspecs = 'Core', 'Basics'
   s.swift_version = '5.0'
   s.xcconfig = {'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) FBSDKCOCOAPODS=1' }
+  s.library = 'c++', 'stdc++'
 
   s.subspec 'Basics' do |ss|
     ss.source_files = 'FBSDKCoreKit/FBSDKCoreKit/Basics/*.{h,m}',
@@ -65,6 +66,7 @@ Pod::Spec.new do |s|
     ss.private_header_files = 'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.h',
                               'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/**/*.h'
     ss.resources = 'FacebookSDKStrings.bundle'
+    ss.library = 'c++', 'stdc++'
     ss.ios.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.{h,m}',
                            'FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.{h,m}',
                            'FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*',
