@@ -32,7 +32,8 @@ Pod::Spec.new do |s|
   s.requires_arc = ['FBSDKCoreKit/FBSDKCoreKit/*',
                     'FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*',
                     'FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*',
-		    'FBSDKCoreKit/FBSDKCoreKit/Basics/**/*',
+                    'FBSDKCoreKit/FBSDKCoreKit/Basics/**/*',
+                    'FBSDKCoreKit/FBSDKCoreKit/GraphAPI/*',		
                     'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*']
 
   s.default_subspecs = 'Core', 'Basics'
