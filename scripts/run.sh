@@ -374,6 +374,11 @@ lint_sdk() {
       if [ "$spec" != FBSDKCoreKit.podspec ]; then
         dependent_spec="--include-podspecs=FBSDKCoreKit.podspec"
       fi
+
+      echo ""
+      echo "Running lib lint command:"
+      echo "pod lib lint" "$spec" $dependent_spec "$@"
+
       if ! pod lib lint "$spec" $dependent_spec "$@"; then
         pod_lint_failures+=("$spec")
       fi
@@ -381,10 +386,8 @@ lint_sdk() {
     done
 
     if [ ${#pod_lint_failures[@]} -ne 0 ]; then
-      echo "Failed lint for: ${pod_lint_failures[*]}"
+      echo "Failed lint for: ${pod_lint_failures[*]} with arguments: $*"
       exit 1
-    else
-      exit 0
     fi
   }
 
@@ -400,7 +403,9 @@ lint_sdk() {
   if [ -n "$lint_type" ]; then shift; fi
 
   case "$lint_type" in
-  "cocoapods") lint_cocoapods "$@" ;;
+  "cocoapods")
+    lint_cocoapods --allow-warnings "$@" && \
+    lint_cocoapods --allow-warnings --use-libraries "$@" ;;
   "swift") lint_swift "$@" ;;
   *) echo "Unsupported Lint: $lint_type" ;;
   esac
