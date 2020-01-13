@@ -25,6 +25,7 @@ Pod::Spec.new do |s|
   s.source_files   = 'FBSDKTVOSKit/FBSDKTVOSKit/**/*.{h,m}'
   s.public_header_files = 'FBSDKTVOSKit/FBSDKTVOSKit/*.h'
   s.header_dir = 'FBSDKTVOSKit'
+  s.xcconfig = {'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) FBSDKCOCOAPODS=1' }
 
   s.dependency 'FBSDKCoreKit', "~> 5.0"
   # We have a compile time depend on FBSDKShareKit
