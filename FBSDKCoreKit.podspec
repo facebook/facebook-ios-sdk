@@ -38,7 +38,7 @@ Pod::Spec.new do |s|
 
   s.default_subspecs = 'Core', 'Basics'
   s.swift_version = '5.0'
-  s.xcconfig = {'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) FBSDKCOCOAPODS=1' }
+  s.pod_target_xcconfig = {'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) FBSDKCOCOAPODS=1' }
   s.library = 'c++', 'stdc++'
 
   s.subspec 'Basics' do |ss|
