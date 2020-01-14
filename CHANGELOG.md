@@ -7,7 +7,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.13.1...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.14.0...HEAD)
+
+## 5.14.0
+
+### Added
+
+- SPM Support for tvOS
+
+### Fixed
+
+- fix for CocoaPods static libs (i.e. no `use-frameworks!`)
+- various bug fixes and unit test additions
+
+[2020-01-14](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.14.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.13.1...v5.14.0)
 
 ## 5.13.1
 
