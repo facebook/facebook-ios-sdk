@@ -375,6 +375,13 @@ lint_sdk() {
         dependent_spec="--include-podspecs=FBSDKCoreKit.podspec"
       fi
 
+      # This is temporary to be able to lint before a fix in the ShareKit podspec
+      # is pushed to trunk
+      # https://github.com/facebook/facebook-ios-sdk/pull/1179
+      if [ "$spec" == FBSDKTVOSKit.podspec ]; then
+        dependent_spec="--include-podspecs=FBSDKShareKit.podspec"
+      fi
+
       echo ""
       echo "Running lib lint command:"
       echo "pod lib lint" "$spec" $dependent_spec "$@"
