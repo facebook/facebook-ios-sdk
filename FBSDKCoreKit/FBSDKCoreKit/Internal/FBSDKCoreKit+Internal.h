@@ -24,7 +24,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #endif
 
-#if defined COCOAPODS || defined BUCK
+#if defined FBSDKCOCOAPODS || defined BUCK
 
 #if !TARGET_OS_TV
 #import "FBSDKViewHierarchy.h"
