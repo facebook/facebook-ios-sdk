@@ -366,14 +366,9 @@ lint_sdk() {
         continue
       fi
 
-      local dependent_spec
+      local dependent_spec="--include-podspecs=FBSDKCoreKit.podspec"
 
       set +e
-      # Needs to include dependent specs for some pods so that we can
-      # test linting without relying on specs being pushed to the trunk
-      if [ "$spec" != FBSDKCoreKit.podspec ]; then
-        dependent_spec="--include-podspecs=FBSDKCoreKit.podspec"
-      fi
 
       echo ""
       echo "Running lib lint command:"
@@ -403,9 +398,7 @@ lint_sdk() {
   if [ -n "$lint_type" ]; then shift; fi
 
   case "$lint_type" in
-  "cocoapods")
-    lint_cocoapods --allow-warnings "$@" && \
-    lint_cocoapods --allow-warnings --use-libraries "$@" ;;
+  "cocoapods") lint_cocoapods --allow-warnings "$@";;
   "swift") lint_swift "$@" ;;
   *) echo "Unsupported Lint: $lint_type" ;;
   esac
