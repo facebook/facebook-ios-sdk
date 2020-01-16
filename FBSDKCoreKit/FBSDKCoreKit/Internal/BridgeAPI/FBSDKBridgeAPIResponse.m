@@ -56,10 +56,14 @@ NS_DESIGNATED_INITIALIZER;
   FBSDKBridgeAPIProtocolType protocolType = request.protocolType;
   switch (protocolType) {
     case FBSDKBridgeAPIProtocolTypeNative:{
-      if (![FBSDKInternalUtility isFacebookBundleIdentifier:sourceApplication]) {
-        return nil;
+      if (@available(iOS 13, *)) {
+        break;
+      } else {
+        if (![FBSDKInternalUtility isFacebookBundleIdentifier:sourceApplication]) {
+          return nil;
+        }
+        break;
       }
-      break;
     }
     case FBSDKBridgeAPIProtocolTypeWeb:{
       if (![FBSDKInternalUtility isSafariBundleIdentifier:sourceApplication]) {
