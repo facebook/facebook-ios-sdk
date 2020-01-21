@@ -7,7 +7,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.14.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.15.0...HEAD)
+
+## 5.15.0
+
+### Fixed
+
+- fix for CocoaPods (i.e. macro `FBSDKCOCOAPODS`)
+- fixes a bug in for sharing callbacks for apps using SceneDelegate
+
+[2020-01-21](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.15.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.14.0...v5.15.0)
 
 ## 5.14.0
 
