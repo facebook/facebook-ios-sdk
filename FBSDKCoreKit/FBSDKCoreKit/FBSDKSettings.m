@@ -95,7 +95,6 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
 
     [FBSDKSettings _logWarnings];
     [FBSDKSettings _logIfSDKSettingsChanged];
-    [FBSDKSettings _logIfAutoAppLinkEnabled];
   }
 }
 
@@ -358,22 +357,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookCodelessDebugLo
                                        @"current": @(bitmask)}
                   isImplicitlyLogged:YES];
   }
-}
-
-+ (void)_logIfAutoAppLinkEnabled
-{
-#if !TARGET_OS_TV
-  NSNumber *enabled = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FBSDKAutoAppLinkEnabled"];
-  if (enabled.boolValue) {
-    NSMutableDictionary<NSString *, NSString *> *params = [[NSMutableDictionary alloc] init];
-    if (![FBSDKAppLinkUtility isMatchURLScheme:[NSString stringWithFormat:@"fb%@", [FBSDKSettings appID]]]) {
-      NSString *warning = @"You haven't set the Auto App Link URL scheme: fb<YOUR APP ID>";
-      params[@"SchemeWarning"] = warning;
-      NSLog(@"%@", warning);
-    }
-    [FBSDKAppEvents logInternalEvent:@"fb_auto_applink" parameters:params isImplicitlyLogged:YES];
-  }
-#endif
 }
 
 #pragma mark - Internal - Graph API Debug
