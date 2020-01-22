@@ -113,7 +113,7 @@ jobs:
       osx_image: xcode10.3
       script: sh scripts/run.sh release cocoapods --allow-warnings
 
-install: sh scripts/travis/install.sh
+# install: sh scripts/travis/install.sh
 script: sh scripts/travis/script.sh
 
 notifications: # set notification options
