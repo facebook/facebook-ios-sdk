@@ -87,7 +87,6 @@ main() {
     SDK_POD_SPECS[6]="AccountKit/${SDK_POD_SPECS[6]}"
 
     SDK_LINT_POD_SPECS=(
-      "FBSDKCoreKit.podspec"
       "FBSDKLoginKit.podspec"
       "FBSDKShareKit.podspec"
       "FBSDKPlacesKit.podspec"
