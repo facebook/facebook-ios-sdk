@@ -69,45 +69,10 @@ Pod::Spec.new do |s|
                               'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/**/*.h'
     ss.resources = 'FacebookSDKStrings.bundle'
     ss.library = 'c++', 'stdc++'
-    ss.ios.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.{h,m}',
-                           'FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.{h,m}',
-                           'FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*',
-                           'FBSDKCoreKit/FBSDKCoreKit/Swift/**/*'
-    ss.tvos.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/AAM/*',
-                            'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/SuggestedEvents/*',
-                            'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/RestrictiveDataFilter/FBSDKAddressInferencer.{h,mm}',
-                            'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/RestrictiveDataFilter/FBSDKAddressFilterManager.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/Codeless/*',
-                            'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/ViewHierarchy/*',
-                            'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/FBSDKHybridAppEventsScriptMessageHandler.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/ML/*',
-                            'FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*',
-                            'FBSDKCoreKit/FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/FBSDKMeasurementEvent.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/FBSDKMutableCopying.h',
-                            'FBSDKCoreKit/FBSDKCoreKit/FBSDKProfile.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/FBSDKProfilePictureView.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/FBSDKURL.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAppLinkReturnToRefererView_Internal.h',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAppLink_Internal.h',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAudioResourceLoader.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKContainerViewController.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKMeasurementEvent_Internal.h',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKMonotonicTime.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKProfile+Internal.h',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKSystemAccountStoreAdapter.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKTriStateBOOL.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKURL_Internal.h',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKCloseIcon.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKColor.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*'
   end
 
   s.subspec 'Swift' do |ss|
     ss.dependency 'FBSDKCoreKit/Core'
-    ss.platform = :ios
     ss.source_files = 'FBSDKCoreKit/FBSDKCoreKit/Swift/*.{h,m,swift}'
     ss.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/Swift/Exports.swift'
   end
