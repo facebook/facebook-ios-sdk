@@ -137,8 +137,8 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
                                     initWithFormat:@"Login attempt cancelled by alternate call to openURL from: %@",
                                     url];
           NSError *loginError = [[NSError alloc]
-                                 initWithDomain:@"com.facebook.sdk.login"
-                                 code:0
+                                 initWithDomain:FBSDKErrorDomain
+                                 code:FBSDKErrorBridgeAPIInterruption
                                  userInfo:@{FBSDKErrorLocalizedDescriptionKey: errorMessage}];
           _authenticationSessionCompletionHandler(url, loginError);
           _authenticationSessionCompletionHandler = nil;
