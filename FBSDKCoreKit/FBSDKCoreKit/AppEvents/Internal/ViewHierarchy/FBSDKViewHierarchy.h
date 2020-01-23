@@ -65,7 +65,7 @@ NS_SWIFT_NAME(ViewHierarchy)
 + (NSInteger)getTag:(NSObject *)obj;
 + (NSNumber *)getViewReactTag:(UIView *)view;
 
-+ (NSDictionary<NSString *, id> *)recursiveCaptureTree:(NSObject *)obj withObject:(NSObject *)interact;
++ (NSDictionary<NSString *, id> *)recursiveCaptureTreeWithCurrentNode:(NSObject *)currentNode targetNode:(NSObject *)targetNode;
 
 + (BOOL)isUserInputView:(NSObject *)obj;
 
