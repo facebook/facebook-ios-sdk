@@ -19,7 +19,7 @@
 import FacebookLogin
 import UIKit
 
-class ViewController: UIViewController {
+class LoginButtonViewController: UIViewController {
 
     @IBOutlet weak var loginButton: FBLoginButton!
 
@@ -38,7 +38,7 @@ class ViewController: UIViewController {
 
 }
 
-extension ViewController: LoginButtonDelegate {
+extension LoginButtonViewController: LoginButtonDelegate {
 
     func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
         switch error {

@@ -16,31 +16,42 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import FacebookLogin
 import UIKit
 
-extension UIViewController {
+class LoginManagerViewController: UIViewController {
 
-    func verifyAppID() {
-        guard let appID = Bundle.main.object(forInfoDictionaryKey: "FacebookAppID"),
-            appID as? String != "<enter your app ID here>"
-            else {
-                return presentAlert(
-                    title: "Invalid App Identifier",
-                    message: "Please enter your Facebook application identifier. This can be found on the developer portal at developers.facebook.com"
+    override func viewDidAppear(_ animated: Bool) {
+         super.viewDidAppear(animated)
+
+         verifyAppID()
+     }
+
+    @IBAction func login() {
+        let loginManager = LoginManager()
+        loginManager.logIn(
+            permissions: [.publicProfile, .custom("email")],
+            viewController: self
+        ) { [weak self] (result) in
+            switch result {
+            case let .failed(error):
+                self?.presentAlert(for: error)
+            case .cancelled:
+                self?.presentAlert(title: "Cancelled", message: "Login attempt was cancelled")
+            case let .success(granted, declined, token):
+                self?.presentAlert(
+                    title: "Successfully Logged In",
+                    message:
+"""
+granted permissions:
+\(granted)
+declined permissions:
+\(declined)
+access token:
+\(token)
+"""
                 )
+            }
         }
     }
-
-    func presentAlert(title: String, message: String) {
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let dismissAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
-        alertController.addAction(dismissAction)
-
-        present(alertController, animated: true, completion: nil)
-    }
-
-    func presentAlert(for error: Error) {
-        presentAlert(title: "Login Error", message: error.localizedDescription)
-    }
-
 }

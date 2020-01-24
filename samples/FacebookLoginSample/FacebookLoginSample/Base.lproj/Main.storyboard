@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="G3j-cy-weg">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
@@ -7,16 +7,16 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Login Button View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="FacebookLoginSample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="LoginButtonViewController" customModule="FacebookLoginSample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ROg-sj-lxv" customClass="FBSDKLoginButton">
-                                <rect key="frame" x="24" y="224" width="366" height="30"/>
+                                <rect key="frame" x="24" y="268" width="366" height="30"/>
                                 <state key="normal" title="Button"/>
                             </button>
                         </subviews>
@@ -29,13 +29,95 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <navigationItem key="navigationItem" id="sIW-0r-bfX"/>
                     <connections>
                         <outlet property="loginButton" destination="ROg-sj-lxv" id="zbB-5A-WfL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="1819" y="-277"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="hN4-SF-UM9">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="G3j-cy-weg" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="fwn-1u-UrJ">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Mbf-0x-RrD" kind="relationship" relationship="rootViewController" id="B7i-PH-ApA"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kGe-be-1HH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
             <point key="canvasLocation" x="137.68115942028987" y="109.82142857142857"/>
+        </scene>
+        <!--Login Manager View Controller-->
+        <scene sceneID="OKv-j9-rrr">
+            <objects>
+                <viewController id="XCs-rm-5aB" customClass="LoginManagerViewController" customModule="FacebookLoginSample" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ctG-GQ-H5y">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Au2-Tr-A5e">
+                                <rect key="frame" x="133" y="433" width="148" height="30"/>
+                                <state key="normal" title="Log In With Facebook"/>
+                                <connections>
+                                    <action selector="login" destination="XCs-rm-5aB" eventType="touchUpInside" id="4rN-yW-Sgl"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="Au2-Tr-A5e" firstAttribute="centerX" secondItem="ctG-GQ-H5y" secondAttribute="centerX" id="LYd-mt-rgH"/>
+                            <constraint firstItem="Au2-Tr-A5e" firstAttribute="centerY" secondItem="ctG-GQ-H5y" secondAttribute="centerY" id="jk5-az-F96"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="NpR-o8-Ycm"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="3ri-Eh-lZe"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WF5-gT-qEJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1819" y="406"/>
+        </scene>
+        <!--Login Examples-->
+        <scene sceneID="L8X-KZ-fWp">
+            <objects>
+                <viewController id="Mbf-0x-RrD" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="9q3-gr-vd1">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tWP-E8-WXj">
+                                <rect key="frame" x="132" y="216" width="150" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Login Button Example"/>
+                                <connections>
+                                    <segue destination="BYZ-38-t0r" kind="show" id="3FT-y7-JsZ"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UCP-OY-te2">
+                                <rect key="frame" x="125" y="331" width="164" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Login Manager Example"/>
+                                <connections>
+                                    <segue destination="XCs-rm-5aB" kind="show" id="Vu4-4J-upy"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="SQS-L8-dWW"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Login Examples" id="Qbw-Hd-mqH"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QuB-DX-0zM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="975" y="110"/>
         </scene>
     </scenes>
 </document>
