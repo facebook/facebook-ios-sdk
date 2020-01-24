@@ -19,13 +19,12 @@
 import FacebookLogin
 import UIKit
 
-class LoginButtonViewController: UIViewController {
+class LoginButtonViewController: LoginViewController {
 
     @IBOutlet weak var loginButton: FBLoginButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
 
         loginButton.delegate = self
     }
@@ -48,17 +47,14 @@ extension LoginButtonViewController: LoginButtonDelegate {
             break
         }
 
-        guard let result = result else {
-            fatalError("Login Callback with no error or result? Please file an issue at github.com/facebook/facebook-ios-sdk")
+        guard let result = result,
+            !result.isCancelled
+            else {
+            // TODO: maybe have two different alerts here?
+            return presentAlert(title: "Cancelled", message: "Login attempt was cancelled")
         }
 
-        if let token = result.token {
-            presentAlert(title: "Success!", message: "Received access token: \(token.tokenString)")
-        }
-
-        if result.isCancelled {
-            presentAlert(title: "Cancelled", message: "Login attempt was cancelled")
-        }
+        showLoginDetails()
     }
 
     func loginButtonDidLogOut(_ loginButton: FBLoginButton) {

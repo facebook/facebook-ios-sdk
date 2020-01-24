@@ -19,39 +19,58 @@
 import FacebookLogin
 import UIKit
 
-class LoginManagerViewController: UIViewController {
+class LoginManagerViewController: LoginViewController {
 
-    override func viewDidAppear(_ animated: Bool) {
-         super.viewDidAppear(animated)
+    @IBOutlet weak var loginButton: UIButton! {
+        didSet {
+            loginButton.layer.cornerRadius = 4.0
+        }
+    }
 
-         verifyAppID()
-     }
+    var isLoggedIn: Bool {
+        return AccessToken.current?.isExpired == false
+    }
 
-    @IBAction func login() {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        verifyAppID()
+        updateLoginButton()
+    }
+
+    @IBAction func toggleLoginState() {
         let loginManager = LoginManager()
+
+        guard !isLoggedIn else {
+            loginManager.logOut()
+            updateLoginButton()
+            return
+        }
+
         loginManager.logIn(
-            permissions: [.publicProfile, .custom("email")],
+            permissions: [.publicProfile, .email],
             viewController: self
         ) { [weak self] (result) in
+            guard let self = self else { return }
+
             switch result {
             case let .failed(error):
-                self?.presentAlert(for: error)
+                self.presentAlert(for: error)
             case .cancelled:
-                self?.presentAlert(title: "Cancelled", message: "Login attempt was cancelled")
-            case let .success(granted, declined, token):
-                self?.presentAlert(
-                    title: "Successfully Logged In",
-                    message:
-"""
-granted permissions:
-\(granted)
-declined permissions:
-\(declined)
-access token:
-\(token)
-"""
-                )
+                self.presentAlert(title: "Cancelled", message: "Login attempt was cancelled")
+            case .success:
+                self.updateLoginButton()
+                self.showLoginDetails()
             }
+        }
+    }
+
+    func updateLoginButton() {
+        if isLoggedIn {
+            loginButton.setTitle("Log Out", for: .normal)
+        }
+        else {
+            loginButton.setTitle("Log In With Facebook", for: .normal)
         }
     }
 }

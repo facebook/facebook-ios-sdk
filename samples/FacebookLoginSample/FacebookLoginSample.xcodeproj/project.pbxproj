@@ -15,8 +15,9 @@
 		F431CBE523DB5AAA00A243D4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F431CBE323DB5AAA00A243D4 /* LaunchScreen.storyboard */; };
 		F431CBF023DB5AAA00A243D4 /* FacebookLoginSampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F431CBEF23DB5AAA00A243D4 /* FacebookLoginSampleTests.swift */; };
 		F431CBFC23DB5CD200A243D4 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = F431CBFB23DB5CD200A243D4 /* FacebookLogin */; };
-		F4D3AE8623DB60F7001BAF89 /* ViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D3AE8523DB60F7001BAF89 /* ViewControllerExtensions.swift */; };
+		F4D3AE8623DB60F7001BAF89 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D3AE8523DB60F7001BAF89 /* LoginViewController.swift */; };
 		F4F742FD23DB7A3500A823A9 /* LoginManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F742FC23DB7A3500A823A9 /* LoginManagerViewController.swift */; };
+		F4F742FF23DB832F00A823A9 /* LoginDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F742FE23DB832F00A823A9 /* LoginDetailsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,8 +42,9 @@
 		F431CBEB23DB5AAA00A243D4 /* FacebookLoginSampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FacebookLoginSampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F431CBEF23DB5AAA00A243D4 /* FacebookLoginSampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookLoginSampleTests.swift; sourceTree = "<group>"; };
 		F431CBF123DB5AAA00A243D4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F4D3AE8523DB60F7001BAF89 /* ViewControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerExtensions.swift; sourceTree = "<group>"; };
+		F4D3AE8523DB60F7001BAF89 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		F4F742FC23DB7A3500A823A9 /* LoginManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginManagerViewController.swift; sourceTree = "<group>"; };
+		F4F742FE23DB832F00A823A9 /* LoginDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginDetailsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,7 +95,8 @@
 				F4F742FC23DB7A3500A823A9 /* LoginManagerViewController.swift */,
 				F431CBDE23DB5AA700A243D4 /* Main.storyboard */,
 				F431CBDA23DB5AA700A243D4 /* SceneDelegate.swift */,
-				F4D3AE8523DB60F7001BAF89 /* ViewControllerExtensions.swift */,
+				F4D3AE8523DB60F7001BAF89 /* LoginViewController.swift */,
+				F4F742FE23DB832F00A823A9 /* LoginDetailsViewController.swift */,
 			);
 			path = FacebookLoginSample;
 			sourceTree = "<group>";
@@ -216,7 +219,8 @@
 			files = (
 				F431CBDD23DB5AA700A243D4 /* LoginButtonViewController.swift in Sources */,
 				F431CBD923DB5AA700A243D4 /* AppDelegate.swift in Sources */,
-				F4D3AE8623DB60F7001BAF89 /* ViewControllerExtensions.swift in Sources */,
+				F4F742FF23DB832F00A823A9 /* LoginDetailsViewController.swift in Sources */,
+				F4D3AE8623DB60F7001BAF89 /* LoginViewController.swift in Sources */,
 				F4F742FD23DB7A3500A823A9 /* LoginManagerViewController.swift in Sources */,
 				F431CBDB23DB5AA700A243D4 /* SceneDelegate.swift in Sources */,
 			);

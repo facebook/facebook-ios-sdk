@@ -16,25 +16,25 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import FacebookCore
+import FacebookLogin
 import UIKit
 
-class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+class LoginDetailsViewController: UIViewController {
 
-    var window: UIWindow?
+    @IBOutlet weak var accessTokenLabel: UILabel!
+    @IBOutlet weak var permissionsLabel: UILabel!
+    @IBOutlet weak var declinedPermissionsLabel: UILabel!
 
-    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-        guard let context = URLContexts.first else {
-            fatalError("Open url called without a context. This should never happen.")
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        guard let token = AccessToken.current else {
+            fatalError("Missing access token")
         }
 
-        ApplicationDelegate.shared.application(
-            UIApplication.shared,
-            open: context.url,
-            sourceApplication: nil,
-            annotation: nil
-        )
+        accessTokenLabel.text = token.tokenString
+        permissionsLabel.text = token.permissions.compactMap { $0.name }.joined(separator: ", ")
+        declinedPermissionsLabel.text = token.declinedPermissions.compactMap { $0.name }.joined(separator: ", ")
     }
 
 }
-

@@ -16,9 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import FacebookLogin
 import UIKit
 
-extension UIViewController {
+/**
+ A base class to avoid polluting the UIViewController namespace
+ */
+class LoginViewController: UIViewController {
 
     func verifyAppID() {
         guard let appID = Bundle.main.object(forInfoDictionaryKey: "FacebookAppID"),
@@ -41,6 +45,10 @@ extension UIViewController {
 
     func presentAlert(for error: Error) {
         presentAlert(title: "Login Error", message: error.localizedDescription)
+    }
+
+    func showLoginDetails() {
+        performSegue(withIdentifier: "showLoginDetails", sender: nil)
     }
 
 }
