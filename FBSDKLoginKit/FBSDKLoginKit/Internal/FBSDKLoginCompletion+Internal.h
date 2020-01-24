@@ -41,6 +41,8 @@
 
 @property (nonatomic, copy) NSString *challenge;
 
+@property (nonatomic, copy) NSString *graphDomain;
+
 @end
 
 #endif

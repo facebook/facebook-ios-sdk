@@ -334,7 +334,7 @@ static NSString *const kFakeChallenge = @"a =bcdef";
     long long currentMilliseconds = round(1000 * [NSDate date].timeIntervalSince1970);
     XCTAssertEqualWithAccuracy(cbt, currentMilliseconds, 500);
     XCTAssertEqualObjects(params[@"client_id"], @"7391628439");
-    XCTAssertEqualObjects(params[@"response_type"], @"token_or_nonce,signed_request");
+    XCTAssertEqualObjects(params[@"response_type"], @"token_or_nonce,signed_request,graph_domain");
     XCTAssertEqualObjects(params[@"redirect_uri"], @"fbconnect://success");
     XCTAssertEqualObjects(params[@"display"], @"touch");
     XCTAssertEqualObjects(params[@"sdk"], @"ios");
