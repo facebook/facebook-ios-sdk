@@ -366,17 +366,35 @@ lint_sdk() {
         continue
       fi
 
-      local dependent_spec="--include-podspecs=FBSDKCoreKit.podspec"
+      local dependent_spec
 
       set +e
+
+      if [ "$spec" != FBSDKCoreKit.podspec ]; then
+        dependent_spec="--include-podspecs=FBSDKCoreKit.podspec"
+      fi
 
       echo ""
       echo "Running lib lint command:"
       echo "pod lib lint" "$spec" $dependent_spec "$@"
 
-      if ! pod lib lint "$spec" $dependent_spec "$@"; then
-        pod_lint_failures+=("$spec")
+      # We should not statically lint the FBSDKCoreKit podspec because it does not pass
+      # consistently in Travis
+      local should_lint_spec=true
+      for arg in "$@"; do
+          if [[ $arg == "--use-libraries" ]] && [ "$spec" == FBSDKCoreKit.podspec ]; then
+            should_lint_spec=false
+          fi
+      done
+
+      if [ $should_lint_spec == true ]; then
+        if ! pod lib lint "$spec" $dependent_spec "$@"; then
+          pod_lint_failures+=("$spec")
+        fi
+      else
+        echo "Skipping linting for $spec with arguments: $*"
       fi
+
       set -e
     done
 
