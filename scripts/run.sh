@@ -274,12 +274,12 @@ tag_current_version() {
 # Build
 build_sdk() {
   build_xcode_workspace() {
+    # Redirecting to /dev/null because we only care about errors here and the full output drowns Travis
     xcodebuild build \
       -workspace "${1:-}" \
       -sdk "${2:-}" \
       -scheme "${3:-}" \
-      -configuration Debug \
-      | xcpretty
+      -configuration Debug > /dev/null
   }
 
   # Builds all Swift dynamic frameworks.
@@ -293,8 +293,7 @@ build_sdk() {
       -sdk "${2:-}" \
       -scheme BuildAllSwiftKits \
       -configuration Debug \
-      -derivedDataPath Temp \
-      | xcpretty
+      -derivedDataPath Temp
 
     for kit in "${SDK_BASE_KITS[@]}"; do
       mv Temp/Build/Products/Debug-iphonesimulator/"$kit".framework build
@@ -460,8 +459,7 @@ release_sdk() {
         -workspace FacebookSDK.xcworkspace \
         -scheme "$kit"Swift \
         -configuration Release \
-        -derivedDataPath Temp \
-        | xcpretty
+        -derivedDataPath Temp
 
         mv Temp/Build/Products/Release-iphoneos/"$kit".framework build/Release
 
@@ -488,8 +486,8 @@ release_sdk() {
         xcodebuild build \
          -workspace FacebookSDK.xcworkspace \
          -scheme BuildCoreKitBasics \
-         -configuration Release \
-         | xcpretty
+         -configuration Release
+
         kit="FBSDKCoreKit_Basics"
         cd build || exit
 
@@ -507,13 +505,12 @@ release_sdk() {
       xcodebuild build \
        -workspace FacebookSDK.xcworkspace \
        -scheme BuildAllKits \
-       -configuration Release \
-       | xcpretty
+       -configuration Release
+
       xcodebuild build \
        -workspace FacebookSDK.xcworkspace \
        -scheme BuildAllKits_TV \
-       -configuration Release \
-       | xcpretty
+       -configuration Release
 
       cd build || exit
       zip -r FacebookSDK_static.zip ./*.framework ./*/*.framework
