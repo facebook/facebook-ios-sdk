@@ -111,7 +111,7 @@ jobs:
     - stage: release
       name: Publish Cocoapods
       osx_image: xcode10.3
-      script: sh scripts/run.sh release cocoapods --allow-warnings
+      script: sh scripts/run.sh release cocoapods
 
 script: sh scripts/travis/script.sh
 
