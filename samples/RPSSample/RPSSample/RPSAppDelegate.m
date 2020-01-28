@@ -22,8 +22,11 @@
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 
 #import "RPSAppLinkedViewController.h"
+#import "RPSAutoAppLinkBasicViewController.h"
+#import "RPSAutoAppLinkStoryboardViewController.h"
 #import "RPSCommonObjects.h"
-#import "RPSGameViewController.h"
+#import "RPSRootViewController.h"
+#import "RPSSample-Swift.h"
 
 @implementation RPSAppDelegate
 
@@ -72,16 +75,19 @@
   sourceApplication:(nullable NSString *)sourceApplication
          annotation:(nonnull id)annotation
 {
+    FBSDKURL *appLink = [FBSDKURL URLWithInboundURL:url sourceApplication:sourceApplication];
+    if (appLink.isAutoAppLink) {
+      [[[UIAlertView alloc] initWithTitle:@"Received Auto App Link:"
+                                  message:[NSString stringWithFormat:@"product id: %@", appLink.appLinkData[@"product_id"]]
+                                 delegate:nil
+                        cancelButtonTitle:@"OK"
+                        otherButtonTitles:nil] show];
+    }
+
     BOOL result = [[FBSDKApplicationDelegate sharedInstance] application:application
                                                                  openURL:url
                                                                  sourceApplication:sourceApplication
                                                               annotation:annotation];
-
-    RPSCall appLinkCall = [RPSAppDelegate callFromAppLinkURL:url sourceApplication:sourceApplication];
-    if (appLinkCall != RPSCallNone) {
-        RPSAppLinkedViewController *vc = [[RPSAppLinkedViewController alloc] initWithCall:appLinkCall];
-        [self.navigationController presentViewController:vc animated:YES completion:nil];
-    }
     return result;
 }
 
@@ -89,19 +95,19 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
 
-    UIViewController *viewControllerGame;
-
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        viewControllerGame = [[RPSGameViewController alloc] initWithNibName:@"RPSGameViewController_iPhone" bundle:nil];
-    } else {
-        viewControllerGame = [[RPSGameViewController alloc] initWithNibName:@"RPSGameViewController_iPad" bundle:nil];
-    }
-    self.navigationController = [[UINavigationController alloc] initWithRootViewController:viewControllerGame];
-    self.window.rootViewController = self.navigationController;
+    RPSRootViewController *rootViewController = [[RPSRootViewController alloc] init];
+    self.window.rootViewController = rootViewController;
     [self.window makeKeyAndVisible];
 
-    [[FBSDKApplicationDelegate sharedInstance] application:application
-                             didFinishLaunchingWithOptions:launchOptions];
+    [FBSDKAppLinkUtility fetchDeferredAppLink:^(NSURL *url, NSError *error) {
+      if (error) {
+        NSLog(@"Received error while fetching deferred app link %@", error);
+      }
+      if (url) {
+        [[UIApplication sharedApplication] openURL:url];
+      }
+    }];
+
     return YES;
 }
 

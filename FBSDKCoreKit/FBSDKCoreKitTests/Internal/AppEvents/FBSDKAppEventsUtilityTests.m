@@ -22,25 +22,26 @@
 
 #import <XCTest/XCTest.h>
 
-#import "FBSDKAppEvents.h"
+#import <FBSDKCoreKit/FBSDKAppEvents.h>
+#import <FBSDKCoreKit/FBSDKSettings.h>
+
 #import "FBSDKAppEventsUtility.h"
-#import "FBSDKSettings.h"
 
 @interface FBSDKAppEventsUtilityTests : XCTestCase
+
+@end
+
+@implementation FBSDKAppEventsUtilityTests
 {
   id _mockAppEventsUtility;
   id _mockNSLocale;
 }
 
-@end
-
-@implementation FBSDKAppEventsUtilityTests
-
 - (void)setUp
 {
   [super setUp];
   _mockAppEventsUtility = OCMClassMock([FBSDKAppEventsUtility class]);
-  [[[_mockAppEventsUtility stub] andReturn:[NSUUID UUID].UUIDString] advertiserID];
+  OCMStub([_mockAppEventsUtility advertiserID]).andReturn([NSUUID UUID].UUIDString);
   [FBSDKAppEvents setUserID:@"test-user-id"];
   _mockNSLocale = OCMClassMock([NSLocale class]);
 }
@@ -109,24 +110,27 @@
   XCTAssertTrue([FBSDKAppEventsClass respondsToSelector:logEventSelector]);
 }
 
-- (void)testGetNumberValue {
+- (void)testGetNumberValue
+{
   NSNumber *result = [FBSDKAppEventsUtility
                       getNumberValue:@"Price: $1,234.56; Buy 1 get 2!"];
   NSString *str = [NSString stringWithFormat:@"%.2f", result.floatValue];
   XCTAssertTrue([str isEqualToString:@"1234.56"]);
 }
 
-- (void)testGetNumberValueWithLocaleFR {
+- (void)testGetNumberValueWithLocaleFR
+{
   OCMStub([_mockNSLocale currentLocale]).
   _andReturn(OCMOCK_VALUE([NSLocale localeWithLocaleIdentifier:@"fr"]));
 
   NSNumber *result = [FBSDKAppEventsUtility
-                      getNumberValue:@"Price: 1\u00a0234,56; Buy 1 get 2!"];
+                      getNumberValue:@"Price: 1\u202F234,56; Buy 1 get 2!"];
   NSString *str = [NSString stringWithFormat:@"%.2f", result.floatValue];
   XCTAssertTrue([str isEqualToString:@"1234.56"]);
 }
 
-- (void)testGetNumberValueWithLocaleIT {
+- (void)testGetNumberValueWithLocaleIT
+{
   OCMStub([_mockNSLocale currentLocale]).
   _andReturn(OCMOCK_VALUE([NSLocale localeWithLocaleIdentifier:@"it"]));
 
@@ -161,22 +165,22 @@
 - (void)testFlushReasonToString
 {
   NSString *result1 = [FBSDKAppEventsUtility flushReasonToString:FBSDKAppEventsFlushReasonExplicit];
-  XCTAssertEqual(@"Explicit", result1);
+  XCTAssertEqualObjects(@"Explicit", result1);
 
   NSString *result2 = [FBSDKAppEventsUtility flushReasonToString:FBSDKAppEventsFlushReasonTimer];
-  XCTAssertEqual(@"Timer", result2);
+  XCTAssertEqualObjects(@"Timer", result2);
 
   NSString *result3 = [FBSDKAppEventsUtility flushReasonToString:FBSDKAppEventsFlushReasonSessionChange];
-  XCTAssertEqual(@"SessionChange", result3);
+  XCTAssertEqualObjects(@"SessionChange", result3);
 
   NSString *result4 = [FBSDKAppEventsUtility flushReasonToString:FBSDKAppEventsFlushReasonPersistedEvents];
-  XCTAssertEqual(@"PersistedEvents", result4);
+  XCTAssertEqualObjects(@"PersistedEvents", result4);
 
   NSString *result5 = [FBSDKAppEventsUtility flushReasonToString:FBSDKAppEventsFlushReasonEventThreshold];
-  XCTAssertEqual(@"EventCountThreshold", result5);
+  XCTAssertEqualObjects(@"EventCountThreshold", result5);
 
   NSString *result6 = [FBSDKAppEventsUtility flushReasonToString:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
-  XCTAssertEqual(@"EagerlyFlushingEvent", result6);
+  XCTAssertEqualObjects(@"EagerlyFlushingEvent", result6);
 }
 
 @end

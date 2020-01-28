@@ -16,7 +16,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#if SWIFT_PACKAGE
+#import "FBSDKAppEvents.h"
+#else
 #import <FBSDKCoreKit/FBSDKAppEvents.h>
+#endif
 
 #import "FBSDKAppEventsUtility.h"
 
@@ -198,6 +202,10 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
 @interface FBSDKAppEvents (Internal)
 
 @property (class, nonatomic, strong, readonly) FBSDKAppEvents *singleton;
+
+#ifdef DEBUG
++ (void)resetSingleton;
+#endif
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;

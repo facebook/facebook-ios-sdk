@@ -16,9 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import "TargetConditionals.h"
+
+#if !TARGET_OS_TV
+
 #import "FBSDKLoginManagerLogger.h"
 
-#ifdef COCOAPODS
+#ifdef FBSDKCOCOAPODS
 #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
 #else
 #import "FBSDKCoreKit+Internal.h"
@@ -178,14 +182,6 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
   }];
 }
 
-- (void)systemAuthDidShowDialog:(BOOL)didShowDialog isUnTOSedDevice:(BOOL)isUnTOSedDevice
-{
-  [_extras addEntriesFromDictionary:@{
-    @"isUntosedDevice" : @(isUnTOSedDevice),
-    @"dialogShown" : @(didShowDialog),
-  }];
-}
-
 - (void)logNativeAppDialogResult:(BOOL)result dialogDuration:(NSTimeInterval)dialogDuration
 {
   NSOperatingSystemVersion iOS10Version = { .majorVersion = 10, .minorVersion = 0, .patchVersion = 0 };
@@ -283,3 +279,5 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
 }
 
 @end
+
+#endif

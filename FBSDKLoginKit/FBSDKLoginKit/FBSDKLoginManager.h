@@ -16,10 +16,42 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
+#if TARGET_OS_TV
+
+// This is an unfortunate hack for Swift Package Manager support.
+// SPM does not allow us to conditionally exclude Swift files for compilation by platform.
+//
+// So to support tvOS with SPM we need to use runtime availability checks in the Swift files.
+// This means that even though the code in `LoginManager.swift` will never be run for tvOS
+// targets, it still needs to be able to compile. Hence we need to declare it here.
+//
+// The way to fix this is to remove extensions of ObjC types in Swift.
+// This will be be done in the next major release (6.0)
+
+@class LoginManagerLoginResult;
+
+typedef NS_ENUM(NSUInteger, LoginBehavior) { LoginBehaviorBrowser };
+typedef NS_ENUM(NSUInteger, DefaultAudience) { DefaultAudienceFriends };
+typedef void (^LoginManagerLoginResultBlock)(LoginManagerLoginResult *_Nullable result,
+                                             NSError *_Nullable error);
+
+@interface LoginManager : NSObject
+
+@property (assign, nonatomic) LoginBehavior loginBehavior;
+@property (assign, nonatomic) DefaultAudience defaultAudience;
+
+- (void)logInWithPermissions:(NSArray<NSString *> *)permissions
+              fromViewController:(nullable UIViewController *)fromViewController
+                         handler:(nullable LoginManagerLoginResultBlock)handler
+NS_SWIFT_NAME(logIn(permissions:from:handler:));
+
+@end
+
+#else
 
 @class FBSDKLoginManagerLoginResult;
 
@@ -169,5 +201,7 @@ NS_SWIFT_NAME(reauthorizeDataAccess(from:handler:));
 - (void)logOut;
 
 @end
+
+#endif
 
 NS_ASSUME_NONNULL_END

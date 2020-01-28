@@ -2,6 +2,6 @@
 author: Facebook
 clean: true
 objc: true
-readme: /dev/null
+readme: README.md
 sdk: iphonesimulator
 theme: fullwidth

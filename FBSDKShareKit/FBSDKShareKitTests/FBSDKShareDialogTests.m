@@ -22,9 +22,14 @@
 
 #import <OCMock/OCMock.h>
 
+#ifdef BUCK
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <FBSDKShareKit/FBSDKHashtag.h>
-#import <FBSDKShareKit/FBSDKShareDialog.h>
+#else
+@import FBSDKCoreKit;
+#endif
+
+#import "FBSDKHashtag.h"
+#import "FBSDKShareDialog.h"
 
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKShareDefines.h"

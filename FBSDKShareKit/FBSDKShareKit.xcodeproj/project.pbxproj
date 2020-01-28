@@ -375,6 +375,8 @@
 		EA6CCE941AA7855D00F1EC35 /* FBSDKAppInviteContentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EA6CCE931AA7855D00F1EC35 /* FBSDKAppInviteContentTests.m */; };
 		EAC370A31AAE3A9C000F0F04 /* FBSDKGameRequestContentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC370A21AAE3A9C000F0F04 /* FBSDKGameRequestContentTests.m */; };
 		F4430BAE2322AF66004C3925 /* Enums+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4430BAD2322AF65004C3925 /* Enums+Extensions.swift */; };
+		F462DBF223B9526200FFCECA /* FBSDKCoreKit+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 890414751A647DB200617215 /* FBSDKCoreKit+Internal.h */; };
+		F462DBFC23B9526300FFCECA /* FBSDKCoreKit+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 890414751A647DB200617215 /* FBSDKCoreKit+Internal.h */; };
 		F483F45F233AC91700703DE3 /* FBSDKSendButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 890414A41A6EAC0200617215 /* FBSDKSendButton.m */; };
 		F483F460233AC91700703DE3 /* FBSDKLikeBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = 89688B3A1AA62BD800A98519 /* FBSDKLikeBoxView.m */; };
 		F483F461233AC91700703DE3 /* FBSDKShareMessengerGenericTemplateElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 88A887F11F97E0420075C8BF /* FBSDKShareMessengerGenericTemplateElement.m */; };
@@ -635,13 +637,6 @@
 			remoteGlobalIDString = 81B71DA31D19C87400933E93;
 			remoteInfo = "FBSDKCoreKit-Dynamic";
 		};
-		817491711D1C6D80006E09DF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8118B6341D0A49B500962084 /* FBSDKCoreKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 9D2697461A5DF40700143BFC;
-			remoteInfo = FBSDKCoreKit;
-		};
 		819043EE1D261A7900B2E437 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8118B6341D0A49B500962084 /* FBSDKCoreKit.xcodeproj */;
@@ -655,13 +650,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 9D2D99931BC452DE00929E76;
 			remoteInfo = FBSDKShareKit_TV;
-		};
-		9D46C5FD1A11E5D800A0DDB6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9D46C5E71A11E5D800A0DDB6 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 9D46C5EF1A11E5D800A0DDB6;
-			remoteInfo = FBSDKShareKit;
 		};
 		9D46C6151A11E6F100A0DDB6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -698,12 +686,19 @@
 			remoteGlobalIDString = C5C4B4EA2276BA8D00CA3706;
 			remoteInfo = "FBSDKCoreKit_Basics_TV-Dynamic";
 		};
-		F483F45D233AC91700703DE3 /* PBXContainerItemProxy */ = {
+		F410D0562370CD62005B9318 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D46C5E71A11E5D800A0DDB6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 81A07EDF1D1A2E6A0041A29C;
+			remoteInfo = "FBSDKShareKit-Dynamic";
+		};
+		F410D0582370CD66005B9318 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8118B6341D0A49B500962084 /* FBSDKCoreKit.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = F487DADD231EBCD2008416A9;
-			remoteInfo = FBSDKCoreKitSwift;
+			remoteGlobalIDString = 81B71CFC1D19C87400933E93;
+			remoteInfo = "FBSDKCoreKit-Dynamic";
 		};
 		F483F4D5233AC91700703DE3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -725,6 +720,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = F487DADD231EBCD2008416A9;
 			remoteInfo = FBSDKCoreKitSwift;
+		};
+		F4942DEB237EF29F00254928 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8118B6341D0A49B500962084 /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F483F331233AC13000703DE3;
+			remoteInfo = "FBSDKCoreKitSwift-Dynamic";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -1322,6 +1324,7 @@
 				8144D9041D261D2900C8E4AC /* FBSDKSharePhotoContent.h in Headers */,
 				8144D9051D261D2900C8E4AC /* FBSDKShareUtility.h in Headers */,
 				88A887E81F97DD7F0075C8BF /* FBSDKShareMessengerGenericTemplateContent.h in Headers */,
+				F462DBFC23B9526300FFCECA /* FBSDKCoreKit+Internal.h in Headers */,
 				8144D9061D261D2900C8E4AC /* FBSDKShareAPI.h in Headers */,
 				8144D9071D261D2900C8E4AC /* FBSDKShareConstants.h in Headers */,
 				8144D9081D261D2900C8E4AC /* FBSDKShareDefines.h in Headers */,
@@ -1423,6 +1426,7 @@
 				9D2D99B51BC4544600929E76 /* FBSDKSharePhotoContent.h in Headers */,
 				9D2D99A91BC453E700929E76 /* FBSDKShareUtility.h in Headers */,
 				88A887E71F97DD7F0075C8BF /* FBSDKShareMessengerGenericTemplateContent.h in Headers */,
+				F462DBF223B9526200FFCECA /* FBSDKCoreKit+Internal.h in Headers */,
 				9D2D99A01BC4539100929E76 /* FBSDKShareAPI.h in Headers */,
 				9D2D99AB1BC453F700929E76 /* FBSDKShareConstants.h in Headers */,
 				9DE155621C161B5F005FCF5C /* FBSDKShareDefines.h in Headers */,
@@ -1729,9 +1733,8 @@
 			buildRules = (
 			);
 			dependencies = (
-				817491721D1C6D80006E09DF /* PBXTargetDependency */,
-				817490EF1D1C6C04006E09DF /* PBXTargetDependency */,
-				9D46C5FE1A11E5D800A0DDB6 /* PBXTargetDependency */,
+				F410D0592370CD66005B9318 /* PBXTargetDependency */,
+				F410D0572370CD62005B9318 /* PBXTargetDependency */,
 			);
 			name = FBSDKShareKitTests;
 			productName = FBSDKShareKitTests;
@@ -1751,7 +1754,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				F483F45C233AC91700703DE3 /* PBXTargetDependency */,
+				F4942DEC237EF29F00254928 /* PBXTargetDependency */,
 			);
 			name = "FBSDKShareKitSwift-Dynamic";
 			productName = FBSDKShareKit;
@@ -2345,44 +2348,40 @@
 			name = "FBSDKCoreKit_TV-Dynamic";
 			targetProxy = 8131FB181D261D84000350FF /* PBXContainerItemProxy */;
 		};
-		817490EF1D1C6C04006E09DF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = FBSDKCoreKit;
-		};
 		817491611D1C6D73006E09DF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "FBSDKCoreKit-Dynamic";
 			targetProxy = 817491601D1C6D73006E09DF /* PBXContainerItemProxy */;
-		};
-		817491721D1C6D80006E09DF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = FBSDKCoreKit;
-			targetProxy = 817491711D1C6D80006E09DF /* PBXContainerItemProxy */;
 		};
 		9D2D99C31BC456EF00929E76 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 9D2D99931BC452DE00929E76 /* FBSDKShareKit_TV */;
 			targetProxy = 9D2D99C21BC456EF00929E76 /* PBXContainerItemProxy */;
 		};
-		9D46C5FE1A11E5D800A0DDB6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 9D46C5EF1A11E5D800A0DDB6 /* FBSDKShareKit */;
-			targetProxy = 9D46C5FD1A11E5D800A0DDB6 /* PBXContainerItemProxy */;
-		};
 		9D46C6161A11E6F100A0DDB6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 9D46C5EF1A11E5D800A0DDB6 /* FBSDKShareKit */;
 			targetProxy = 9D46C6151A11E6F100A0DDB6 /* PBXContainerItemProxy */;
 		};
-		F483F45C233AC91700703DE3 /* PBXTargetDependency */ = {
+		F410D0572370CD62005B9318 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = FBSDKCoreKitSwift;
-			targetProxy = F483F45D233AC91700703DE3 /* PBXContainerItemProxy */;
+			target = 81A07EDF1D1A2E6A0041A29C /* FBSDKShareKit-Dynamic */;
+			targetProxy = F410D0562370CD62005B9318 /* PBXContainerItemProxy */;
+		};
+		F410D0592370CD66005B9318 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "FBSDKCoreKit-Dynamic";
+			targetProxy = F410D0582370CD66005B9318 /* PBXContainerItemProxy */;
 		};
 		F487DC95231EC50C008416A9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = FBSDKCoreKitSwift;
 			targetProxy = F487DC94231EC50C008416A9 /* PBXContainerItemProxy */;
+		};
+		F4942DEC237EF29F00254928 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "FBSDKCoreKitSwift-Dynamic";
+			targetProxy = F4942DEB237EF29F00254928 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2497,6 +2496,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 819043CF1D261A7900B2E437 /* FBSDKShareKitTests.xcconfig */;
 			buildSettings = {
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 			};
 			name = Debug;
 		};
@@ -2504,6 +2504,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 819043CF1D261A7900B2E437 /* FBSDKShareKitTests.xcconfig */;
 			buildSettings = {
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 			};
 			name = Release;
 		};

@@ -16,9 +16,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import "TargetConditionals.h"
+
+#if TARGET_OS_TV
+
 #import "FBSDKDeviceViewControllerBase+Internal.h"
 
 #import "FBSDKCoreKit+Internal.h"
+
+#import "FBSDKSmartDeviceDialogView.h"
+#import "FBSDKModalFormPresentationController.h"
 
 static const NSTimeInterval kAnimationDurationTimeInterval = .5;
 
@@ -124,3 +131,5 @@ Subclasses should generally:
   [self dismissViewControllerAnimated:YES completion:NULL];
 }
 @end
+
+#endif

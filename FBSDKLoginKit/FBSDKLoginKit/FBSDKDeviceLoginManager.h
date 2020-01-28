@@ -18,8 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKLoginKit/FBSDKDeviceLoginCodeInfo.h>
-#import <FBSDKLoginKit/FBSDKDeviceLoginManagerResult.h>
+#import "FBSDKDeviceLoginCodeInfo.h"
+#import "FBSDKDeviceLoginManagerResult.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

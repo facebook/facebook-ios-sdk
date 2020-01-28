@@ -19,6 +19,7 @@
 /**
  ShareDialog.Mode CustomStringConvertible
  */
+@available(tvOS, unavailable)
 extension ShareDialog.Mode: CustomStringConvertible {
   /// The string description
   public var description: String {
@@ -29,6 +30,7 @@ extension ShareDialog.Mode: CustomStringConvertible {
 /**
  AppGroupPrivacy CustomStringConvertible
  */
+@available(tvOS, unavailable)
 extension AppGroupPrivacy: CustomStringConvertible {
   /// The string description
   public var description: String {
@@ -39,6 +41,7 @@ extension AppGroupPrivacy: CustomStringConvertible {
 /**
  LikeObjectType CustomStringConvertible
  */
+@available(tvOS, unavailable)
 extension LikeObjectType: CustomStringConvertible {
   /// The string description
   public var description: String {

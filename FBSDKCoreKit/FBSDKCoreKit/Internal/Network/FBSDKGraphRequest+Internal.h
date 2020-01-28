@@ -18,7 +18,11 @@
 
 #import <Foundation/Foundation.h>
 
+#if SWIFT_PACKAGE
+#import "FBSDKGraphRequest.h"
+#else
 #import <FBSDKCoreKit/FBSDKGraphRequest.h>
+#endif
 
 typedef NS_OPTIONS(NSUInteger, FBSDKGraphRequestFlags)
 {

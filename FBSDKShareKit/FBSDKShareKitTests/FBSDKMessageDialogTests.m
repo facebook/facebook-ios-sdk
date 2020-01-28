@@ -20,9 +20,13 @@
 
 #import <OCMock/OCMock.h>
 
+#ifdef BUCK
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#else
+@import FBSDKCoreKit;
+#endif
 
-#import <FBSDKShareKit/FBSDKMessageDialog.h>
+#import "FBSDKMessageDialog.h"
 
 #import <XCTest/XCTest.h>
 

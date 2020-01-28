@@ -18,7 +18,20 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKCopying.h>
+#if TARGET_OS_TV
+
+typedef NS_ENUM(NSUInteger, AppGroupPrivacy) { AppGroupPrivacyOpen };
+
+FOUNDATION_EXPORT NSString *NSStringFromFBSDKAppGroupPrivacy(AppGroupPrivacy privacy)
+NS_REFINED_FOR_SWIFT;
+
+#else
+
+#if defined BUCK || defined FBSDKCOCOAPODS || defined __cplusplus
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#else
+@import FBSDKCoreKit;
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -71,3 +84,5 @@ NS_SWIFT_NAME(AppGroupContent)
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

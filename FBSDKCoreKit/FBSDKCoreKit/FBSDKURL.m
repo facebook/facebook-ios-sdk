@@ -16,11 +16,19 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import "TargetConditionals.h"
+
+#if !TARGET_OS_TV
+
 #import "FBSDKURL_Internal.h"
 
 #import "FBSDKAppLinkTarget.h"
 #import "FBSDKAppLink_Internal.h"
+#import "FBSDKCoreKit+Internal.h"
 #import "FBSDKMeasurementEvent_Internal.h"
+#import "FBSDKSettings.h"
+
+NSString *const AutoAppLinkFlagKey = @"is_auto_applink";
 
 @implementation FBSDKURL
 
@@ -110,6 +118,15 @@
     return self;
 }
 
+- (BOOL)isAutoAppLink {
+  NSString *host = self.targetURL.host;
+  NSString *scheme = self.targetURL.scheme;
+  NSString *expectedHost = @"applinks";
+  NSString *expectedScheme = [NSString stringWithFormat:@"fb%@", FBSDKSettings.appID];
+  BOOL autoFlag = [self.appLinkData[AutoAppLinkFlagKey] boolValue];
+  return autoFlag && [expectedHost isEqual:host] && [expectedScheme isEqual:scheme];
+}
+
 + (instancetype)URLWithURL:(NSURL *)url {
     return [[FBSDKURL alloc] initWithURL:url forOpenInboundURL:NO sourceApplication:nil forRenderBackToReferrerBar:NO];
 }
@@ -120,12 +137,6 @@
 
 + (instancetype)URLForRenderBackToReferrerBarURL:(NSURL *)url {
     return [[FBSDKURL alloc] initWithURL:url forOpenInboundURL:NO sourceApplication:nil forRenderBackToReferrerBar:YES];
-}
-
-+ (NSString *)decodeURLString:(NSString *)string {
-    return (NSString *)CFBridgingRelease(CFURLCreateStringByReplacingPercentEscapes(NULL,
-                                                                                    (CFStringRef)string,
-                                                                                    CFSTR("")));
 }
 
 + (NSDictionary<NSString *, id> *)queryParametersForURL:(NSURL *)url {
@@ -139,10 +150,10 @@
         NSRange equalsLocation = [component rangeOfString:@"="];
         if (equalsLocation.location == NSNotFound) {
             // There's no equals, so associate the key with NSNull
-            parameters[[self decodeURLString:component]] = [NSNull null];
+            parameters[[FBSDKBasicUtility URLDecode:component]] = [NSNull null];
         } else {
-            NSString *key = [self decodeURLString:[component substringToIndex:equalsLocation.location]];
-            NSString *value = [self decodeURLString:[component substringFromIndex:equalsLocation.location + 1]];
+            NSString *key = [FBSDKBasicUtility URLDecode:[component substringToIndex:equalsLocation.location]];
+            NSString *value = [FBSDKBasicUtility URLDecode:[component substringFromIndex:equalsLocation.location + 1]];
             parameters[key] = value;
         }
     }
@@ -150,3 +161,5 @@
 }
 
 @end
+
+#endif

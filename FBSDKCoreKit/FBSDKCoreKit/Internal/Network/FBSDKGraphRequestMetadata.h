@@ -18,7 +18,11 @@
 
 #import <Foundation/Foundation.h>
 
+#if SWIFT_PACKAGE
+#import "FBSDKGraphRequestConnection.h"
+#else
 #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
+#endif
 
 // Internal only class to facilitate FBSDKGraphRequest processing, specifically
 // associating FBSDKGraphRequest and FBSDKGraphRequestBlock instances and necessary

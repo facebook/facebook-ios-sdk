@@ -16,6 +16,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import "TargetConditionals.h"
+
+#if !TARGET_OS_TV
+
 #import "FBSDKCodelessIndexer.h"
 
 #import <objc/runtime.h>
@@ -24,9 +28,9 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#import <FBSDKCoreKit/FBSDKGraphRequest.h>
-#import <FBSDKCoreKit/FBSDKSettings.h>
+#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKGraphRequest.h"
+#import "FBSDKSettings.h"
 
 @implementation FBSDKCodelessIndexer
 
@@ -361,7 +365,7 @@ static NSString *_lastTreeHash;
   }
 
   if (childrenTrees.count > 0) {
-    [result setValue:[childrenTrees copy] forKey:CODELESS_VIEW_TREE_CHILDREN_KEY];
+    [result setValue:[childrenTrees copy] forKey:VIEW_HIERARCHY_CHILD_VIEWS_KEY];
   }
 
   return [result copy];
@@ -406,3 +410,5 @@ static NSString *_lastTreeHash;
 }
 
 @end
+
+#endif

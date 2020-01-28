@@ -18,7 +18,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import <FBSDKShareKit/FBSDKHashtag.h>
+#import "FBSDKHashtag.h"
 
 @interface FBSDKHashtagTests : XCTestCase
 

@@ -320,7 +320,28 @@ static NSString *const kFakeChallenge = @"a =bcdef";
   }];
 
   XCTAssertEqual(loginCount, 1);
+}
 
+- (void)testLoginParams
+{
+    id FBSDKInternalUtilityMock = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
+    [[[FBSDKInternalUtilityMock stub] andDo:^(NSInvocation *invocation) {
+      // Nothing
+    }] validateURLSchemes];
+    FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
+    NSDictionary *params = [loginManager logInParametersWithPermissions:[NSSet setWithArray:@[@"public_profile", @"email"]] serverConfiguration:nil];
+    long long cbt = [params[@"cbt"] longLongValue];
+    long long currentMilliseconds = round(1000 * [NSDate date].timeIntervalSince1970);
+    XCTAssertEqualWithAccuracy(cbt, currentMilliseconds, 500);
+    XCTAssertEqualObjects(params[@"client_id"], @"7391628439");
+    XCTAssertEqualObjects(params[@"response_type"], @"token_or_nonce,signed_request,graph_domain");
+    XCTAssertEqualObjects(params[@"redirect_uri"], @"fbconnect://success");
+    XCTAssertEqualObjects(params[@"display"], @"touch");
+    XCTAssertEqualObjects(params[@"sdk"], @"ios");
+    XCTAssertEqualObjects(params[@"return_scopes"], @"true");
+    XCTAssertEqual(params[@"auth_type"], FBSDKLoginAuthTypeRerequest);
+    XCTAssertEqualObjects(params[@"fbapp_pres"], @0);
+    XCTAssertEqualObjects(params[@"ies"], [FBSDKSettings isAutoLogAppEventsEnabled] ? @1 : @0);
 }
 
 @end

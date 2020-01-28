@@ -42,11 +42,16 @@ typedef NS_ENUM(NSUInteger, FBSDKFeature)
   // Features in CoreKit
   /** Essential of CoreKit */
   FBSDKFeatureCore = 0x00000000,
-
+  /** App Events */
   FBSDKFeatureAppEvents = 0x00010000,
   FBSDKFeatureCodelessEvents = 0x00010100,
   FBSDKFeatureRestrictiveDataFiltering = 0x00010200,
   FBSDKFeatureAAM = 0x00010300,
+  FBSDKFeaturePrivacyProtection = 0x00010400,
+  FBSDKFeatureSuggestedEvents = 0x00010401,
+  FBSDKFeaturePIIFiltering = 0x00010402,
+  FBSDKFeatureEventDeactivation = 0x00010500,
+  /** Instrument */
   FBSDKFeatureInstrument = 0x00020000,
   FBSDKFeatureCrashReport = 0x00020100,
   FBSDKFeatureCrashShield = 0x00020101,

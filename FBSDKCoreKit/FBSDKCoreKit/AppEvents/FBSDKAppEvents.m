@@ -30,6 +30,7 @@
 #import "FBSDKConstants.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError.h"
+#import "FBSDKEventDeactivationManager.h"
 #import "FBSDKFeatureManager.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKInternalUtility.h"
@@ -44,8 +45,12 @@
 #import "FBSDKUserDataStore.h"
 
 #if !TARGET_OS_TV
+
+#import "FBSDKAddressFilterManager.h"
 #import "FBSDKEventBindingManager.h"
 #import "FBSDKHybridAppEventsScriptMessageHandler.h"
+#import "FBSDKModelManager.h"
+
 #endif
 
 //
@@ -341,6 +346,8 @@ static NSString *g_overrideAppID = nil;
 
 @property (nonatomic, strong) dispatch_source_t flushTimer;
 
+@property (nonatomic, copy) NSString *userID;
+
 @end
 
 @implementation FBSDKAppEvents
@@ -351,7 +358,6 @@ static NSString *g_overrideAppID = nil;
 #if !TARGET_OS_TV
   FBSDKEventBindingManager *_eventBindingManager;
 #endif
-  NSString *_userID;
   BOOL _isUnityInit;
 }
 
@@ -374,8 +380,8 @@ static NSString *g_overrideAppID = nil;
     __weak FBSDKAppEvents *weakSelf = self;
     self.flushTimer = [FBSDKUtility startGCDTimerWithInterval:FLUSH_PERIOD_IN_SECONDS
                                                         block:^{
-                                                          [weakSelf flushTimerFired:nil];
-                                                        }];
+      [weakSelf flushTimerFired:nil];
+    }];
 
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     _userID = [defaults stringForKey:USER_ID_USER_DEFAULTS_KEY];
@@ -710,10 +716,10 @@ static NSString *g_overrideAppID = nil;
 
 + (void)setUserID:(NSString *)userID
 {
-  if ([[[self class] singleton]->_userID isEqualToString:userID]) {
+  if ([[[self class] singleton].userID isEqualToString:userID]) {
     return;
   }
-  [[self class] singleton]->_userID = userID;
+  [[self class] singleton].userID = userID;
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   [defaults setObject:userID forKey:USER_ID_USER_DEFAULTS_KEY];
   [defaults synchronize];
@@ -726,7 +732,7 @@ static NSString *g_overrideAppID = nil;
 
 + (NSString *)userID
 {
-  return [[self class] singleton]->_userID;
+  return [[self class] singleton].userID;
 }
 
 + (void)setUserEmail:(nullable NSString *)email
@@ -823,8 +829,8 @@ static NSString *g_overrideAppID = nil;
                                                                 tokenString:[FBSDKAccessToken currentAccessToken].tokenString
                                                                  HTTPMethod:FBSDKHTTPMethodPOST
                                                                       flags:FBSDKGraphRequestFlagDisableErrorRecovery |
-                                                                            FBSDKGraphRequestFlagDoNotInvalidateTokenOnError |
-                                                                            FBSDKGraphRequestFlagSkipClientToken
+                                FBSDKGraphRequestFlagDoNotInvalidateTokenOnError |
+                                FBSDKGraphRequestFlagSkipClientToken
                                 ];
   [request startWithCompletionHandler:handler];
 }
@@ -841,12 +847,12 @@ static NSString *g_overrideAppID = nil;
       [controller addScriptMessageHandler:scriptHandler name:FBSDKAppEventsWKWebViewMessagesHandlerKey];
 
       NSString *js =  [NSString stringWithFormat:@"window.fbmq_%@={'sendEvent': function(pixel_id,event_name,custom_data){var msg={\"%@\":pixel_id, \"%@\":event_name,\"%@\":custom_data};window.webkit.messageHandlers[\"%@\"].postMessage(msg);}, 'getProtocol':function(){return \"%@\";}}",
-                         [[self singleton] appID],
-                         FBSDKAppEventsWKWebViewMessagesPixelIDKey,
-                         FBSDKAppEventsWKWebViewMessagesEventKey,
-                         FBSDKAppEventsWKWebViewMessagesParamsKey,
-                         FBSDKAppEventsWKWebViewMessagesHandlerKey,
-                         FBSDKAPPEventsWKWebViewMessagesProtocolKey
+                       [[self singleton] appID],
+                       FBSDKAppEventsWKWebViewMessagesPixelIDKey,
+                       FBSDKAppEventsWKWebViewMessagesEventKey,
+                       FBSDKAppEventsWKWebViewMessagesParamsKey,
+                       FBSDKAppEventsWKWebViewMessagesHandlerKey,
+                       FBSDKAPPEventsWKWebViewMessagesProtocolKey
                        ];
 
       [controller addUserScript:[[WKUserScriptClass alloc] initWithSource:js injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO]];
@@ -888,7 +894,7 @@ static NSString *g_overrideAppID = nil;
 #pragma mark - Internal Methods
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
-       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 {
   [FBSDKAppEvents logInternalEvent:eventName
                         parameters:@{}
@@ -896,8 +902,8 @@ static NSString *g_overrideAppID = nil;
 }
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
-               valueToSum:(double)valueToSum
-       isImplicitlyLogged:(BOOL)isImplicitlyLogged
+              valueToSum:(double)valueToSum
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
   [FBSDKAppEvents logInternalEvent:eventName
                         valueToSum:valueToSum
@@ -906,8 +912,8 @@ static NSString *g_overrideAppID = nil;
 }
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
-               parameters:(NSDictionary *)parameters
-       isImplicitlyLogged:(BOOL)isImplicitlyLogged
+              parameters:(NSDictionary *)parameters
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
   [FBSDKAppEvents logInternalEvent:eventName
                         valueToSum:nil
@@ -929,9 +935,9 @@ static NSString *g_overrideAppID = nil;
 }
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
-               valueToSum:(double)valueToSum
-               parameters:(NSDictionary *)parameters
-       isImplicitlyLogged:(BOOL)isImplicitlyLogged
+              valueToSum:(double)valueToSum
+              parameters:(NSDictionary *)parameters
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
   [FBSDKAppEvents logInternalEvent:eventName
                         valueToSum:@(valueToSum)
@@ -941,10 +947,10 @@ static NSString *g_overrideAppID = nil;
 }
 
 + (void)logInternalEvent:(NSString *)eventName
-               valueToSum:(NSNumber *)valueToSum
-               parameters:(NSDictionary *)parameters
-       isImplicitlyLogged:(BOOL)isImplicitlyLogged
-              accessToken:(FBSDKAccessToken *)accessToken
+              valueToSum:(NSNumber *)valueToSum
+              parameters:(NSDictionary *)parameters
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged
+             accessToken:(FBSDKAccessToken *)accessToken
 {
   if ([FBSDKSettings isAutoLogAppEventsEnabled]) {
     [[FBSDKAppEvents singleton] instanceLogEvent:eventName
@@ -967,14 +973,27 @@ static NSString *g_overrideAppID = nil;
                                    accessToken:accessToken];
 }
 
+
+#ifdef DEBUG
+static dispatch_once_t *onceTokenPointer;
++ (void)resetSingleton
+{
+  if (onceTokenPointer) {
+    *onceTokenPointer = 0;
+  }
+}
+#endif
+
 + (FBSDKAppEvents *)singleton
 {
-  static dispatch_once_t pred;
+  static dispatch_once_t onceToken;
+#ifdef DEBUG
+  onceTokenPointer = &onceToken;
+#endif
   static FBSDKAppEvents *shared = nil;
-
-  dispatch_once(&pred, ^{
-      shared = [[self alloc] init];
-    });
+  dispatch_once(&onceToken, ^{
+    shared = [[self alloc] init];
+  });
   return shared;
 }
 
@@ -1020,10 +1039,10 @@ static NSString *g_overrideAppID = nil;
                                                              shouldAccessAdvertisingID:self->_serverConfiguration.isAdvertisingIDEnabled];
     NSString *path = [NSString stringWithFormat:@"%@/activities", appID];
     FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:path
-                                                         parameters:params
-                                                        tokenString:nil
-                                                         HTTPMethod:FBSDKHTTPMethodPOST
-                                                              flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
+                                                                   parameters:params
+                                                                  tokenString:nil
+                                                                   HTTPMethod:FBSDKHTTPMethodPOST
+                                                                        flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
       if (!error) {
         [defaults setObject:[NSDate date] forKey:lastAttributionPingString];
@@ -1078,6 +1097,14 @@ static NSString *g_overrideAppID = nil;
       }
     }];
 #endif
+
+#if !defined BUCK && !TARGET_OS_TV
+    [FBSDKFeatureManager checkFeature:FBSDKFeaturePrivacyProtection completionBlock:^(BOOL enabled) {
+      if (enabled) {
+        [FBSDKModelManager enable];
+      }
+    }];
+#endif
     if (callback) {
       callback();
     }
@@ -1110,24 +1137,31 @@ static NSString *g_overrideAppID = nil;
 
   // Make sure parameter dictionary is well formed.  Log and exit if not.
   [parameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-      if (![key isKindOfClass:[NSString class]]) {
-        [FBSDKAppEventsUtility logAndNotify:[NSString stringWithFormat:@"The keys in the parameters must be NSStrings, '%@' is not.", key]];
-        failed = YES;
-      }
-      if (![FBSDKAppEventsUtility validateIdentifier:key]) {
-        failed = YES;
-      }
-      if (![obj isKindOfClass:[NSString class]] && ![obj isKindOfClass:[NSNumber class]]) {
-        [FBSDKAppEventsUtility logAndNotify:[NSString stringWithFormat:@"The values in the parameters dictionary must be NSStrings or NSNumbers, '%@' is not.", obj]];
-        failed = YES;
-      }
+    if (![key isKindOfClass:[NSString class]]) {
+      [FBSDKAppEventsUtility logAndNotify:[NSString stringWithFormat:@"The keys in the parameters must be NSStrings, '%@' is not.", key]];
+      failed = YES;
     }
+    if (![FBSDKAppEventsUtility validateIdentifier:key]) {
+      failed = YES;
+    }
+    if (![obj isKindOfClass:[NSString class]] && ![obj isKindOfClass:[NSNumber class]]) {
+      [FBSDKAppEventsUtility logAndNotify:[NSString stringWithFormat:@"The values in the parameters dictionary must be NSStrings or NSNumbers, '%@' is not.", obj]];
+      failed = YES;
+    }
+  }
    ];
 
   if (failed) {
     return;
   }
+  // Filter out deactivated params
+  parameters = [FBSDKEventDeactivationManager processParameters:parameters eventName:eventName];
 
+#if !defined BUCK && !TARGET_OS_TV
+  // Filter out address data
+  parameters = [FBSDKAddressFilterManager processParameters:parameters];
+#endif
+  // Filter out restrictive keys
   parameters = [FBSDKRestrictiveDataFilterManager processParameters:parameters
                                                           eventName:eventName];
 
@@ -1211,7 +1245,7 @@ static NSString *g_overrideAppID = nil;
   @synchronized(self) {
     if (_appEventsState) {
       matchingEventsPreviouslySaved = [[FBSDKAppEventsState alloc] initWithToken:_appEventsState.tokenString
-                                                  appID:_appEventsState.appID];
+                                                                           appID:_appEventsState.appID];
     }
   }
   for (FBSDKAppEventsState *saved in existingEventsStates) {
@@ -1296,10 +1330,10 @@ static NSString *g_overrideAppID = nil;
     }
 
     FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/activities", appEventsState.appID]
-                                                         parameters:postParameters
-                                                        tokenString:appEventsState.tokenString
-                                                         HTTPMethod:FBSDKHTTPMethodPOST
-                                                              flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
+                                                                   parameters:postParameters
+                                                                  tokenString:appEventsState.tokenString
+                                                                   HTTPMethod:FBSDKHTTPMethodPOST
+                                                                        flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
 
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
       [self handleActivitiesPostCompletion:error
@@ -1442,10 +1476,10 @@ static NSString *g_overrideAppID = nil;
 
   NSString *graphPath = [NSString stringWithFormat:@"%@/custom_audience_third_party_id", [[self singleton] appID]];
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
-                                                       parameters:parameters
-                                                      tokenString:tokenString
-                                                       HTTPMethod:nil
-                                                            flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
+                                                                 parameters:parameters
+                                                                tokenString:tokenString
+                                                                 HTTPMethod:nil
+                                                                      flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
 
   return request;
 }

@@ -93,7 +93,7 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
     g_tokenCache = [[FBSDKAccessTokenCache alloc] init];
     g_accessTokenExpirer = [[FBSDKAccessTokenExpirer alloc] init];
 
-    [FBSDKSettings logWarnings];
+    [FBSDKSettings _logWarnings];
     [FBSDKSettings _logIfSDKSettingsChanged];
   }
 }
@@ -311,7 +311,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookCodelessDebugLo
   return defaultValue;
 }
 
-+ (void)logWarnings
++ (void)_logWarnings
 {
   NSBundle *mainBundle = [NSBundle mainBundle];
   // Log warnings for App Event Flags

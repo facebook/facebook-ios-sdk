@@ -18,6 +18,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # shellcheck disable=SC2039
+# shellcheck disable=SC2005
 
 set -euo pipefail
 
@@ -68,6 +69,7 @@ main() {
     SDK_VERSION_FILES=(
       "Configurations/Version.xcconfig"
       "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h"
+      "FBSDKCoreKit/FBSDKCoreKit/Basics/Instrument/FBSDKCrashHandler.m"
       "AccountKit/AccountKit/Internal/AKFConstants.m"
     )
 
@@ -96,6 +98,13 @@ main() {
     SDK_CURRENT_GRAPH_API_VERSION=$(grep -Eo 'FBSDK_TARGET_PLATFORM_VERSION @".*"' "$SDK_DIR/$SDK_MAIN_VERSION_FILE" | awk -F'"' '{print $2}')
 
     SDK_GIT_REMOTE="https://github.com/facebook/facebook-ios-sdk"
+
+    SWIFT_PACKAGE_SCHEMES=(
+      "FacebookCore"
+      "FacebookLogin"
+      "FacebookShare"
+    )
+
     if [ -f "$PWD/internal/scripts/internal_globals.sh" ]; then SDK_INTERNAL=1; else SDK_INTERNAL=0; fi
   fi
 
@@ -114,10 +123,7 @@ main() {
   "setup") setup_sdk "$@" ;;
   "tag-current-version") tag_current_version "$@" ;;
   "lint") lint_sdk "$@" ;;
-  "test-file-upload")
-    mkdir -p Carthage/Release
-    echo "This is a test" >>Carthage/Release/file.txt
-    ;;
+  "verify-spm-headers") verify_spm_headers "$@" ;;
   "--help" | "help") echo "Check main() for supported commands" ;;
   esac
 }
@@ -268,12 +274,12 @@ tag_current_version() {
 # Build
 build_sdk() {
   build_xcode_workspace() {
+    # Redirecting to /dev/null because we only care about errors here and the full output drowns Travis
     xcodebuild build \
       -workspace "${1:-}" \
       -sdk "${2:-}" \
       -scheme "${3:-}" \
-      -configuration Debug \
-      | xcpretty
+      -configuration Debug > /dev/null
   }
 
   # Builds all Swift dynamic frameworks.
@@ -285,10 +291,9 @@ build_sdk() {
     xcodebuild clean build \
       -workspace "${1:-}" \
       -sdk "${2:-}" \
-      -scheme SwiftKits \
+      -scheme BuildAllSwiftKits \
       -configuration Debug \
-      -derivedDataPath Temp \
-      | xcpretty
+      -derivedDataPath Temp
 
     for kit in "${SDK_BASE_KITS[@]}"; do
       mv Temp/Build/Products/Debug-iphonesimulator/"$kit".framework build
@@ -305,11 +310,43 @@ build_sdk() {
     fi
   }
 
+  build_spm() {
+    for scheme in "${SWIFT_PACKAGE_SCHEMES[@]}"; do
+    xcodebuild clean build \
+      -workspace .swiftpm/xcode/package.xcworkspace \
+      -scheme "$scheme" \
+      -sdk iphonesimulator \
+      OTHER_SWIFT_FLAGS="-D SWIFT_PACKAGE"
+    done
+  }
+
+  build_spm_integration() {
+    cd "$SDK_DIR"/samples/SmoketestSPM
+
+    /usr/libexec/PlistBuddy \
+      -c "delete :objects:F4CEA53E23C29C9E0086EB16:requirement:branch" \
+      SmoketestSPM.xcodeproj/project.pbxproj
+
+    /usr/libexec/PlistBuddy \
+      -c "add :objects:F4CEA53E23C29C9E0086EB16:requirement:revision string $TRAVIS_COMMIT" \
+      SmoketestSPM.xcodeproj/project.pbxproj
+
+    /usr/libexec/PlistBuddy \
+      -c "set :objects:F4CEA53E23C29C9E0086EB16:requirement:kind revision" \
+      SmoketestSPM.xcodeproj/project.pbxproj
+
+    xcodebuild build -scheme SmoketestSPM \
+      -sdk iphonesimulator \
+      -verbose
+  }
+
   local build_type=${1:-}
   if [ -n "$build_type" ]; then shift; fi
 
   case "$build_type" in
   "carthage") build_carthage "$@" ;;
+  "spm") build_spm "$@" ;;
+  "spm-integration") build_spm_integration ;;
   "swift") build_swift "$@" ;;
   "xcode") build_xcode_workspace "$@" ;;
   *) echo "Unsupported Build: $build_type" ;;
@@ -331,22 +368,38 @@ lint_sdk() {
       local dependent_spec
 
       set +e
-      # Needs to include dependent specs for some pods so that we can
-      # test linting without relying on specs being pushed to the trunk
+
       if [ "$spec" != FBSDKCoreKit.podspec ]; then
         dependent_spec="--include-podspecs=FBSDKCoreKit.podspec"
       fi
-      if ! pod lib lint "$spec" $dependent_spec "$@"; then
-        pod_lint_failures+=("$spec")
+
+      echo ""
+      echo "Running lib lint command:"
+      echo "pod lib lint" "$spec" $dependent_spec "$@"
+
+      # We should not statically lint the FBSDKCoreKit podspec because it does not pass
+      # consistently in Travis
+      local should_lint_spec=true
+      for arg in "$@"; do
+          if [[ $arg == "--use-libraries" ]] && [ "$spec" == FBSDKCoreKit.podspec ]; then
+            should_lint_spec=false
+          fi
+      done
+
+      if [ $should_lint_spec == true ]; then
+        if ! pod lib lint "$spec" $dependent_spec "$@"; then
+          pod_lint_failures+=("$spec")
+        fi
+      else
+        echo "Skipping linting for $spec with arguments: $*"
       fi
+
       set -e
     done
 
     if [ ${#pod_lint_failures[@]} -ne 0 ]; then
-      echo "Failed lint for: ${pod_lint_failures[*]}"
+      echo "Failed lint for: ${pod_lint_failures[*]} with arguments: $*"
       exit 1
-    else
-      exit 0
     fi
   }
 
@@ -362,7 +415,7 @@ lint_sdk() {
   if [ -n "$lint_type" ]; then shift; fi
 
   case "$lint_type" in
-  "cocoapods") lint_cocoapods "$@" ;;
+  "cocoapods") lint_cocoapods --allow-warnings "$@";;
   "swift") lint_swift "$@" ;;
   *) echo "Unsupported Lint: $lint_type" ;;
   esac
@@ -377,25 +430,28 @@ release_sdk() {
     mkdir -p build/Release
     rm -rf build/Release/*
 
-    build_swift_dynamic() {
-      mkdir -p Temp
-
-      for kit in "${SDK_BASE_KITS[@]}"; do
-        xcodebuild build \
-        -workspace FacebookSDK.xcworkspace \
-        -scheme "$kit"Swift-Dynamic \
-        -configuration Release \
-        -derivedDataPath Temp \
-        | xcpretty
-
-        mkdir -p build/Release/SwiftDynamic
-        mv Temp/Build/Products/Release-iphoneos/"$kit".framework build/Release/SwiftDynamic
+    # Warning: This function will move the Swift schemes and not clean up after itself.
+    # This is intended to be run in CI on container jobs so this is not an issue.
+    # If running locally you will need to clean the directory after running.
+    include_swift_schemes() {
+      for kit in "${SDK_KITS[@]}"; do
+        rm "$kit/$kit".xcodeproj/xcshareddata/xcschemes/* || continue
       done
 
-      rm -rf Temp
+      for kit in "${SDK_BASE_KITS[@]}"; do
+        mv "$kit/$kit/Swift/"*.xcscheme "$kit/$kit.xcodeproj/xcshareddata/xcschemes/"
+      done
     }
 
-    build_swift_static() {
+    release_swift_dynamic() {
+      carthage build --no-skip-current
+      carthage archive --output build/Release/
+      # This is a little unintuitive. Carthage outputs are based on module name instead of
+      # target/scheme name. So FBSDKCoreKit.framework.zip IS actually the Swift enabled kits.
+      mv build/Release/FBSDKCoreKit.framework.zip build/Release/SwiftDynamic.zip
+    }
+
+    release_swift_static() {
       mkdir -p Temp
 
       for kit in "${SDK_BASE_KITS[@]}"; do
@@ -403,8 +459,7 @@ release_sdk() {
         -workspace FacebookSDK.xcworkspace \
         -scheme "$kit"Swift \
         -configuration Release \
-        -derivedDataPath Temp \
-        | xcpretty
+        -derivedDataPath Temp
 
         mv Temp/Build/Products/Release-iphoneos/"$kit".framework build/Release
 
@@ -416,15 +471,6 @@ release_sdk() {
       done
 
       rm -rf Temp
-    }
-
-    # Warning: This function will move the Swift schemes and not clean up after itself.
-    # This is intended to be run in CI on container jobs so this is not an issue.
-    # If running locally you will need to clean the directory after running.
-    include_swift_schemes() {
-      for kit in "${SDK_BASE_KITS[@]}"; do
-        mv "$kit/$kit/Swift/"*.xcscheme "$kit/$kit.xcodeproj/xcshareddata/xcschemes/"
-      done
     }
 
     # Release frameworks in dynamic (mostly for Carthage)
@@ -440,8 +486,8 @@ release_sdk() {
         xcodebuild build \
          -workspace FacebookSDK.xcworkspace \
          -scheme BuildCoreKitBasics \
-         -configuration Release \
-         | xcpretty
+         -configuration Release
+
         kit="FBSDKCoreKit_Basics"
         cd build || exit
 
@@ -459,13 +505,12 @@ release_sdk() {
       xcodebuild build \
        -workspace FacebookSDK.xcworkspace \
        -scheme BuildAllKits \
-       -configuration Release \
-       | xcpretty
+       -configuration Release
+
       xcodebuild build \
        -workspace FacebookSDK.xcworkspace \
        -scheme BuildAllKits_TV \
-       -configuration Release \
-       | xcpretty
+       -configuration Release
 
       cd build || exit
       zip -r FacebookSDK_static.zip ./*.framework ./*/*.framework
@@ -497,10 +542,8 @@ release_sdk() {
     # TODO: Remove conditional when we drop support for Xcode 10.2
     if [ "${1:-}" == "swift" ]; then
       include_swift_schemes
-      build_swift_dynamic
-      build_swift_static
-      cd build/Release || exit
-      zip -r -m SwiftDynamic.zip SwiftDynamic
+      release_swift_dynamic
+      release_swift_static
     else
       release_dynamic
       release_static
@@ -516,12 +559,9 @@ release_sdk() {
       fi
 
       set +e
-      # shellcheck disable=SC2086
-      if [ $TRAVIS ]; then
-        pod trunk push --verbose --allow-warnings "$spec" "$@" | tee pod.log | ruby -e 'ARGF.each{ print "." }'
-      else
-        pod trunk push "$spec" "$@"
-      fi
+
+      pod trunk push --allow-warnings "$spec" "$@"
+
       set -e
     done
   }
@@ -653,6 +693,85 @@ does_version_exist() {
   fi
 
   false
+}
+
+verify_spm_headers() {
+  # Verifies that all public headers exist as symlinks in the 'include' dir
+  # of the SDK they belong to.
+  verify_inclusion() {
+    for kit in "${SDK_BASE_KITS[@]}"; do
+      cd "$kit/$kit"
+
+      echo "Verifying the following public headers are exposed to SPM for $kit:"
+
+      headers=$(find . -name "*.h" -type f -not -path "./include/*" -not -path "**/Internal/*" -not -path "**/Basics/*")
+      echo "$(basename ${headers} )" | sort >| headers.txt
+
+      cat headers.txt
+
+      symlinks=$(find ./include -name "*.h")
+      echo "$(basename ${symlinks} )" | sort >| symlinks.txt
+
+      comm -23 headers.txt symlinks.txt >| missingHeaders.txt
+
+      if [ -s missingHeaders.txt ] ; then
+        echo ""
+        echo "Verification failed:"
+        echo "Please symlink the following public headers to the 'include' directory in $kit"
+        echo "so that they can be found by projects using Swift Package Manager."
+        cat missingHeaders.txt
+
+        rm headers.txt
+        rm symlinks.txt
+        rm missingHeaders.txt
+
+        exit 1;
+      fi
+      rm headers.txt
+      rm symlinks.txt
+      rm missingHeaders.txt
+
+      echo ""
+      cd .. || exit
+      cd .. || exit
+    done
+
+    echo "Success! All of your public headers are visible to users of SPM!"
+  }
+
+  # Verifies that existing symlinks are valid since it is easy to break them by moving the
+  # original file
+  verify_validity() {
+    echo ""
+    echo "Verifying that the symlinks used for exposing public headers to SPM are pointing to valid source files."
+
+    for kit in "${SDK_BASE_KITS[@]}"; do
+      cd "$kit"
+
+      find . -type l ! -exec test -e {} \; -print >| ../BadSymlinks.txt
+      cd .. || exit
+    done
+
+    if [ -s BadSymlinks.txt ] ; then
+      echo ""
+      echo "Bad symlinks found: "
+      cat BadSymlinks.txt
+      echo "Please fix these by recreating the symlink(s) from the include directory with: "
+      echo "ln -s <path_to_source_file(s)> ."
+      echo "run ./scripts/run.sh verify-spm-headers to verify that these are fixed."
+
+      rm BadSymlinks.txt
+
+      exit 1;
+    fi
+
+    rm BadSymlinks.txt
+
+    echo "Success! All of the public header symlinks are valid!"
+  }
+
+  verify_inclusion
+  verify_validity
 }
 
 # --------------

@@ -16,10 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import "TargetConditionals.h"
+
+#if !TARGET_OS_TV
+
 #import <Foundation/Foundation.h>
 
-#import <FBSDKShareKit/FBSDKSharing.h>
-#import <FBSDKShareKit/FBSDKShareConstants.h>
+#import "FBSDKShareConstants.h"
+#import "FBSDKSharing.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -63,3 +67,5 @@ NS_SWIFT_UNAVAILABLE("Use init(content:delegate:).show() instead");
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

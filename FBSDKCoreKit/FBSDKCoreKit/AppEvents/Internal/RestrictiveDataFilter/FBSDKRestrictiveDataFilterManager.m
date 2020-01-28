@@ -21,28 +21,30 @@
 #import "FBSDKBasicUtility.h"
 #import "FBSDKTypeUtility.h"
 
+static NSString *const RESTRICTIVE_PARAM_KEY = @"restrictive_param";
+
 @interface FBSDKRestrictiveEventFilter : NSObject
 
 @property (nonatomic, readonly, copy) NSString *eventName;
-@property (nonatomic, readonly, copy) NSDictionary<NSString *, id> *eventParams;
+@property (nonatomic, readonly, copy) NSDictionary<NSString *, id> *restrictiveParams;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
 -(instancetype)initWithEventName:(NSString *)eventName
-                     eventParams:(NSDictionary<NSString *, id> *)eventParams;
+               restrictiveParams:(NSDictionary<NSString *, id> *)restrictiveParams;
 
 @end
 
 @implementation FBSDKRestrictiveEventFilter
 
 -(instancetype)initWithEventName:(NSString *)eventName
-                     eventParams:(NSDictionary<NSString *, id> *)eventParams
+               restrictiveParams:(NSDictionary<NSString *, id> *)restrictiveParams
 {
   self = [super init];
   if (self) {
     _eventName = eventName;
-    _eventParams = eventParams;
+    _restrictiveParams = restrictiveParams;
   }
 
   return self;
@@ -55,7 +57,6 @@
 static BOOL isRestrictiveEventFilterEnabled = NO;
 
 static NSMutableArray<FBSDKRestrictiveEventFilter *>  *_params;
-static NSMutableSet<NSString *> *_deprecatedEvents;
 
 + (void)updateFilters:(nullable NSDictionary<NSString *, id> *)restrictiveParams
 {
@@ -64,21 +65,19 @@ static NSMutableSet<NSString *> *_deprecatedEvents;
   }
   if (restrictiveParams.count > 0) {
     [_params removeAllObjects];
-    [_deprecatedEvents removeAllObjects];
     NSMutableArray<FBSDKRestrictiveEventFilter *> *eventFilterArray = [NSMutableArray array];
-    NSMutableSet<NSString *> *deprecatedEventSet = [NSMutableSet set];
     for (NSString *eventName in restrictiveParams.allKeys) {
-      if (restrictiveParams[eventName][@"is_deprecated_event"]) {
-        [deprecatedEventSet addObject:eventName];
+      NSDictionary<NSString *, id> *eventInfo = restrictiveParams[eventName];
+      if (!eventInfo) {
+        return;
       }
-      if (restrictiveParams[eventName][@"restrictive_param"]) {
+      if (eventInfo[RESTRICTIVE_PARAM_KEY]) {
         FBSDKRestrictiveEventFilter *restrictiveEventFilter = [[FBSDKRestrictiveEventFilter alloc] initWithEventName:eventName
-                                                                                                         eventParams:restrictiveParams[eventName][@"restrictive_param"]];
+                                                                                                   restrictiveParams:eventInfo[RESTRICTIVE_PARAM_KEY]];
         [eventFilterArray addObject:restrictiveEventFilter];
       }
     }
     _params = eventFilterArray;
-    _deprecatedEvents = deprecatedEventSet;
   }
 }
 
@@ -88,31 +87,13 @@ static NSMutableSet<NSString *> *_deprecatedEvents;
   // match by params in custom events with event name
   for (FBSDKRestrictiveEventFilter *filter in _params) {
     if ([filter.eventName isEqualToString:eventName]) {
-      NSString *type = [FBSDKTypeUtility stringValue:filter.eventParams[paramKey]];
+      NSString *type = [FBSDKTypeUtility stringValue:filter.restrictiveParams[paramKey]];
       if (type) {
         return type;
       }
     }
   }
   return nil;
-}
-
-+ (BOOL)isDeprecatedEvent:(NSString *)eventName
-{
-  return [_deprecatedEvents containsObject:eventName];
-}
-
-+ (void)processEvents:(NSMutableArray<NSDictionary<NSString *, id> *> *)events
-{
-  if (!isRestrictiveEventFilterEnabled) {
-    return;
-  }
-  NSArray<NSDictionary<NSString *, id> *> *eventArray = [events copy];
-  for (NSDictionary<NSString *, NSDictionary<NSString *, id> *> *event in eventArray) {
-    if ([FBSDKRestrictiveDataFilterManager isDeprecatedEvent:event[@"event"][@"_eventName"]]) {
-      [events removeObject:event];
-    }
-  }
 }
 
 + (NSDictionary<NSString *,id> *)processParameters:(NSDictionary<NSString *,id> *)parameters

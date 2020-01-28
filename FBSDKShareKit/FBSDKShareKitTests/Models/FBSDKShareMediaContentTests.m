@@ -18,8 +18,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import <FBSDKShareKit/FBSDKShareMediaContent.h>
-
+#import "FBSDKShareMediaContent.h"
 #import "FBSDKShareModelTestUtility.h"
 
 @interface FBSDKShareMediaContentTests : XCTestCase

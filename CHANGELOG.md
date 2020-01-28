@@ -7,7 +7,105 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.8.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.15.0...HEAD)
+
+## 5.15.0
+
+### Fixed
+
+- fix for CocoaPods (i.e. macro `FBSDKCOCOAPODS`)
+- fixes a bug in for sharing callbacks for apps using SceneDelegate
+
+[2020-01-21](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.15.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.14.0...v5.15.0)
+
+## 5.14.0
+
+### Added
+
+- SPM Support for tvOS
+
+### Fixed
+
+- fix for CocoaPods static libs (i.e. no `use-frameworks!`)
+- various bug fixes and unit test additions
+
+[2020-01-14](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.14.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.13.1...v5.14.0)
+
+## 5.13.1
+
+### Fixed
+
+- bug fix for address inferencer weights load
+
+[2019-12-16](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.13.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.13.0...v5.13.1)
+
+## 5.13.0
+
+[2019-12-11](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.13.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.12.0...v5.13.0)
+
+### Added
+- Parameter deactivation
+
+### Fixed
+- Update ML model to support non-English input
+
+## 5.12.0
+
+### Changed
+- Updated suggested events
+
+[2019-12-03](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.12.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.11.1...v5.12.0)
+
+## 5.11.1
+
+[2019-11-19](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.11.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.11.0...v5.11.1)
+
+### Fixed
+
+- Accelerate automatically linked for SPM installs [6c1a7e](https://github.com/facebook/facebook-ios-sdk/commit/6c1a7ea6d8a8aec23bf00a0da1dfb03214741c58)
+- Fixes building for Unity [6a83270](https://github.com/facebook/facebook-ios-sdk/commit/6a83270d5b4f9bbbe49ae9b323a09ffc392dcc00)
+- Updates build scripts, various bug fixes
+
+## 5.11.0
+
+[2019-11-14](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.11.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.10.1...v5.11.0)
+
+### Added
+- Launch event suggestions
+
+## 5.10.1
+
+[2019-11-12](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.10.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.10.0...v5.10.1)
+
+### Fixed
+
+- Various bugfixes with SPM implementation
+
+## 5.10.0
+
+[2019-11-06](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.10.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.9.0...v5.10.0)
+
+### Added
+
+- Support for Swift Package Manager
+
+## 5.9.0
+
+[2019-10-29](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.9.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.8.0...v5.9.0)
+
+### Changed
+
+- Using Graph API version 5.0
 
 ## 5.8.0
 

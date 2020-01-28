@@ -95,7 +95,7 @@ static NSString *const _mockUserID = @"mockUserID";
 
 @interface FBSDKAppEventsTests : XCTestCase
 {
-  id _mockAppEvents;
+  id _partialMockAppEvents;
   id _mockAppStates;
   NSString *_mockEventName;
   NSDictionary <NSString *, id> *_mockPayload;
@@ -108,7 +108,9 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)setUp
 {
-  _mockAppEvents = [OCMockObject niceMockForClass:[FBSDKAppEvents class]];
+  [FBSDKAppEvents resetSingleton];
+  _partialMockAppEvents = OCMPartialMock([FBSDKAppEvents singleton]);
+  OCMStub([_partialMockAppEvents singleton]).andReturn(_partialMockAppEvents);
   _mockAppStates = OCMClassMock([FBSDKAppEventsState class]);
   OCMStub([_mockAppStates alloc]).andReturn(_mockAppStates);
   OCMStub([_mockAppStates initWithToken:[OCMArg any] appID:[OCMArg any]]).andReturn(_mockAppStates);
@@ -122,46 +124,42 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)tearDown
 {
-  [_mockAppEvents stopMocking];
+  [_partialMockAppEvents stopMocking];
   [_mockAppStates stopMocking];
   [OHHTTPStubs removeAllStubs];
 }
 
 - (void)testLogPurchaseFlush
 {
-  id partialMockAppEvents = [OCMockObject partialMockForObject:[FBSDKAppEvents singleton]];
+  OCMExpect([_partialMockAppEvents flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent]);
 
-  [[partialMockAppEvents expect] flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
-
-  OCMStub([partialMockAppEvents flushBehavior]).andReturn(FBSDKAppEventsFlushReasonEagerlyFlushingEvent);
+  OCMStub([_partialMockAppEvents flushBehavior]).andReturn(FBSDKAppEventsFlushReasonEagerlyFlushingEvent);
 
   [FBSDKAppEvents logPurchase:_mockPurchaseAmount currency:_mockCurrency];
 
-  [partialMockAppEvents verify];
+  OCMVerifyAll(_partialMockAppEvents);
 }
 
 - (void)testLogPurchase
 {
-  [[[_mockAppEvents expect] andForwardToRealObject] logPurchase:_mockPurchaseAmount currency:_mockCurrency parameters:[OCMArg any]];
-  [[[_mockAppEvents expect] andForwardToRealObject] logPurchase:_mockPurchaseAmount currency:_mockCurrency parameters:[OCMArg any] accessToken:[OCMArg any]];
-  [[[_mockAppEvents expect] andForwardToRealObject] logEvent:FBSDKAppEventNamePurchased valueToSum:@(_mockPurchaseAmount) parameters:[OCMArg any] accessToken:[OCMArg any]];
-  [[_mockAppStates expect] addEvent:[OCMArg any] isImplicit:NO];
+  OCMExpect([_partialMockAppEvents logPurchase:_mockPurchaseAmount currency:_mockCurrency parameters:[OCMArg any]]).andForwardToRealObject();
+  OCMExpect([_partialMockAppEvents logPurchase:_mockPurchaseAmount currency:_mockCurrency parameters:[OCMArg any] accessToken:[OCMArg any]]).andForwardToRealObject();
+  OCMExpect([_partialMockAppEvents logEvent:FBSDKAppEventNamePurchased valueToSum:@(_mockPurchaseAmount) parameters:[OCMArg any] accessToken:[OCMArg any]]).andForwardToRealObject();
+  OCMExpect([_mockAppStates addEvent:[OCMArg any] isImplicit:NO]);
 
   [FBSDKAppEvents logPurchase:_mockPurchaseAmount currency:_mockCurrency];
 
-  [_mockAppEvents verify];
+  OCMVerifyAll(_partialMockAppEvents);
   [_mockAppStates verify];
 }
 
 - (void)testFlush
 {
-  id partialMockAppEvents = [OCMockObject partialMockForObject:[FBSDKAppEvents singleton]];
-
-  [[partialMockAppEvents expect] flushForReason:FBSDKAppEventsFlushReasonExplicit];
+  OCMExpect([_partialMockAppEvents flushForReason:FBSDKAppEventsFlushReasonExplicit]);
 
   [FBSDKAppEvents flush];
 
-  [partialMockAppEvents verify];
+  OCMVerifyAll(_partialMockAppEvents);
 }
 
 #pragma mark  Tests for log product item
@@ -169,21 +167,21 @@ static NSString *const _mockUserID = @"mockUserID";
 - (void)testLogProductItemNonNil
 {
   NSDictionary<NSString *, NSString *> *expectedDict = @{
-                                 @"fb_product_availability":@"IN_STOCK",
-                                 @"fb_product_brand":@"PHILZ",
-                                 @"fb_product_condition":@"NEW",
-                                 @"fb_product_description":@"description",
-                                 @"fb_product_gtin":@"BLUE MOUNTAIN",
-                                 @"fb_product_image_link":@"https://www.sample.com",
-                                 @"fb_product_item_id":@"F40CEE4E-471E-45DB-8541-1526043F4B21",
-                                 @"fb_product_link":@"https://www.sample.com",
-                                 @"fb_product_mpn":@"BLUE MOUNTAIN",
-                                 @"fb_product_price_amount":@"1.000",
-                                 @"fb_product_price_currency":@"USD",
-                                 @"fb_product_title":@"title",
-                                 };
-  [[_mockAppEvents expect] logEvent:@"fb_mobile_catalog_update"
-                         parameters:expectedDict];
+    @"fb_product_availability":@"IN_STOCK",
+    @"fb_product_brand":@"PHILZ",
+    @"fb_product_condition":@"NEW",
+    @"fb_product_description":@"description",
+    @"fb_product_gtin":@"BLUE MOUNTAIN",
+    @"fb_product_image_link":@"https://www.sample.com",
+    @"fb_product_item_id":@"F40CEE4E-471E-45DB-8541-1526043F4B21",
+    @"fb_product_link":@"https://www.sample.com",
+    @"fb_product_mpn":@"BLUE MOUNTAIN",
+    @"fb_product_price_amount":@"1.000",
+    @"fb_product_price_currency":@"USD",
+    @"fb_product_title":@"title",
+  };
+  OCMExpect([_partialMockAppEvents logEvent:@"fb_mobile_catalog_update"
+                                 parameters:expectedDict]);
 
   [FBSDKAppEvents logProductItem:@"F40CEE4E-471E-45DB-8541-1526043F4B21"
                     availability:FBSDKProductAvailabilityInStock
@@ -199,24 +197,24 @@ static NSString *const _mockUserID = @"mockUserID";
                            brand:@"PHILZ"
                       parameters:@{}];
 
-  [_mockAppEvents verify];
+  OCMVerifyAll(_partialMockAppEvents);
 }
 
 - (void)testLogProductItemNilGtinMpnBrand
 {
   NSDictionary<NSString *, NSString *> *expectedDict = @{
-                                                         @"fb_product_availability":@"IN_STOCK",
-                                                         @"fb_product_condition":@"NEW",
-                                                         @"fb_product_description":@"description",
-                                                         @"fb_product_image_link":@"https://www.sample.com",
-                                                         @"fb_product_item_id":@"F40CEE4E-471E-45DB-8541-1526043F4B21",
-                                                         @"fb_product_link":@"https://www.sample.com",
-                                                         @"fb_product_price_amount":@"1.000",
-                                                         @"fb_product_price_currency":@"USD",
-                                                         @"fb_product_title":@"title",
-                                                         };
-  [[_mockAppEvents reject] logEvent:@"fb_mobile_catalog_update"
-                         parameters:expectedDict];
+    @"fb_product_availability":@"IN_STOCK",
+    @"fb_product_condition":@"NEW",
+    @"fb_product_description":@"description",
+    @"fb_product_image_link":@"https://www.sample.com",
+    @"fb_product_item_id":@"F40CEE4E-471E-45DB-8541-1526043F4B21",
+    @"fb_product_link":@"https://www.sample.com",
+    @"fb_product_price_amount":@"1.000",
+    @"fb_product_price_currency":@"USD",
+    @"fb_product_title":@"title",
+  };
+  OCMReject([_partialMockAppEvents logEvent:@"fb_mobile_catalog_update"
+                                 parameters:expectedDict]);
 
   [FBSDKAppEvents logProductItem:@"F40CEE4E-471E-45DB-8541-1526043F4B21"
                     availability:FBSDKProductAvailabilityInStock
@@ -257,12 +255,12 @@ static NSString *const _mockUserID = @"mockUserID";
                                                                @"fn":[FBSDKUtility SHA256Hash:mockFirstName],
                                                                @"ln":[FBSDKUtility SHA256Hash:mockLastName],
                                                                @"ph":[FBSDKUtility SHA256Hash:mockPhone],
-                                                               };
+  };
   NSData *jsonData = [NSJSONSerialization dataWithJSONObject:expectedHashedDict
                                                      options:0
                                                        error:nil];
   NSString *expectedUserData = [[NSString alloc] initWithData:jsonData
-                                 encoding:NSUTF8StringEncoding];
+                                                     encoding:NSUTF8StringEncoding];
   NSString *userData = [FBSDKAppEvents getUserData];
   XCTAssertEqualObjects(userData, expectedUserData);
 
@@ -307,17 +305,17 @@ static NSString *const _mockUserID = @"mockUserID";
   NSString *mockDeviceTokenString = @"testDeviceTokenString";
   NSString *eventName = @"fb_mobile_obtain_push_token";
 
-  [[[_mockAppEvents expect] andForwardToRealObject] logEvent:eventName];
-  [[[_mockAppEvents expect] andForwardToRealObject] logEvent:eventName
-                                                  parameters:@{}];
-  [[[_mockAppEvents expect] andForwardToRealObject] logEvent:eventName
-                                                  valueToSum:nil
-                                                  parameters:@{}
-                                                 accessToken:nil];
+  OCMExpect([_partialMockAppEvents logEvent:eventName]).andForwardToRealObject();
+  OCMExpect([_partialMockAppEvents logEvent:eventName
+                                 parameters:@{}]).andForwardToRealObject();
+  OCMExpect([_partialMockAppEvents logEvent:eventName
+                                 valueToSum:nil
+                                 parameters:@{}
+                                accessToken:nil]).andForwardToRealObject();
 
   [FBSDKAppEvents setPushNotificationsDeviceTokenString:mockDeviceTokenString];
 
-  [_mockAppEvents verify];
+  OCMVerifyAll(_partialMockAppEvents);
 
   XCTAssertEqualObjects([FBSDKAppEvents singleton].pushNotificationsDeviceTokenString, mockDeviceTokenString);
 }
@@ -329,25 +327,24 @@ static NSString *const _mockUserID = @"mockUserID";
 
   NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
   id userDefaultsMock = OCMPartialMock(userDefaults);
-  [OCMStub([userDefaultsMock integerForKey:[OCMArg any]]) andReturnValue: OCMOCK_VALUE(1)];
-  [[_mockAppEvents expect] logInternalEvent:@"fb_sdk_initialize"
-                                 parameters:[OCMArg any]
-                         isImplicitlyLogged:NO];
+  OCMStub([userDefaultsMock integerForKey:[OCMArg any]]).andReturn(1);
+  OCMExpect([_partialMockAppEvents logInternalEvent:@"fb_sdk_initialize"
+                                         parameters:[OCMArg any]
+                                 isImplicitlyLogged:NO]);
 
   [delegateMock _logSDKInitialize];
 
-  [_mockAppEvents verify];
+  OCMVerifyAll(_partialMockAppEvents);
 }
 
 - (void)testActivateApp
 {
-  id partialMockAppEvents = [OCMockObject partialMockForObject:[FBSDKAppEvents singleton]];
-  [[partialMockAppEvents expect] publishInstall];
-  [[partialMockAppEvents expect] fetchServerConfiguration:NULL];
+  OCMExpect([_partialMockAppEvents publishInstall]);
+  OCMExpect([_partialMockAppEvents fetchServerConfiguration:NULL]);
 
   [FBSDKAppEvents activateApp];
 
-  [partialMockAppEvents verify];
+  OCMVerifyAll(_partialMockAppEvents);
 }
 
 #pragma mark  Test for log push notification
@@ -357,28 +354,28 @@ static NSString *const _mockUserID = @"mockUserID";
   NSString *eventName = @"fb_mobile_push_opened";
   // with action and campaign
   NSDictionary <NSString *, NSString *> *expectedParams1 = @{
-                                                            @"fb_push_action":@"testAction",
-                                                            @"fb_push_campaign":@"testCampaign",
-                                                            };
-  [[_mockAppEvents expect] logEvent:eventName parameters:expectedParams1];
+    @"fb_push_action":@"testAction",
+    @"fb_push_campaign":@"testCampaign",
+  };
+  OCMExpect([_partialMockAppEvents logEvent:eventName parameters:expectedParams1]);
   [FBSDKAppEvents logPushNotificationOpen:_mockPayload action:@"testAction"];
-  [_mockAppEvents verify];
+  OCMVerifyAll(_partialMockAppEvents);
 
   // empty action
   NSDictionary <NSString *, NSString *> *expectedParams2 = @{
-                                                             @"fb_push_campaign":@"testCampaign",
-                                                             };
-  [[_mockAppEvents expect] logEvent:eventName parameters:expectedParams2];
+    @"fb_push_campaign":@"testCampaign",
+  };
+  OCMExpect([_partialMockAppEvents logEvent:eventName parameters:expectedParams2]);
   [FBSDKAppEvents logPushNotificationOpen:_mockPayload];
-  [_mockAppEvents verify];
+  OCMVerifyAll(_partialMockAppEvents);
 
   // empty payload
-  [[_mockAppEvents reject] logEvent:eventName parameters:[OCMArg any]];
+  OCMReject([_partialMockAppEvents logEvent:eventName parameters:[OCMArg any]]);
   [FBSDKAppEvents logPushNotificationOpen:@{}];
 
   // empty campaign
   NSDictionary <NSString *, id> *mockPayload = @{@"fb_push_payload" : @{@"campaign" : @""}};
-  [[_mockAppEvents reject] logEvent:eventName parameters:[OCMArg any]];
+  OCMReject([_partialMockAppEvents logEvent:eventName parameters:[OCMArg any]]);
   [FBSDKAppEvents logPushNotificationOpen:mockPayload];
 }
 
@@ -393,15 +390,14 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testCheckPersistedEventsCalledWhenLogEvent
 {
-  id partialMockAppEvents = [OCMockObject partialMockForObject:[FBSDKAppEvents singleton]];
 
-  [[partialMockAppEvents expect] checkPersistedEvents];
+  OCMExpect([_partialMockAppEvents checkPersistedEvents]);
 
-  OCMStub([partialMockAppEvents flushBehavior]).andReturn(FBSDKAppEventsFlushReasonEagerlyFlushingEvent);
+  OCMStub([_partialMockAppEvents flushBehavior]).andReturn(FBSDKAppEventsFlushReasonEagerlyFlushingEvent);
 
   [FBSDKAppEvents logEvent:FBSDKAppEventNamePurchased valueToSum:@(_mockPurchaseAmount) parameters:@{} accessToken:nil];
 
-  [partialMockAppEvents verify];
+  OCMVerifyAll(_partialMockAppEvents);
 }
 
 - (void)testRequestForCustomAudienceThirdPartyIDWithAccessToken
@@ -416,7 +412,6 @@ static NSString *const _mockUserID = @"mockUserID";
                                                                          HTTPMethod:nil
                                                                               flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
 
-  OCMStub([FBSDKAppEventsUtility advertisingTrackingStatus] == FBSDKAdvertisingTrackingDisallowed ).andReturn(@YES);
   OCMStub([mockAppEventsUtility attributionID]).andReturn(NULL);
 
   // without access token
@@ -440,12 +435,11 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testPublishInstall
 {
-  id partialMockAppEvents = [OCMockObject partialMockForObject:[FBSDKAppEvents singleton]];
-  [[partialMockAppEvents expect] fetchServerConfiguration:[OCMArg any]];
+  OCMExpect([_partialMockAppEvents fetchServerConfiguration:[OCMArg any]]);
 
-  [[FBSDKAppEvents singleton] publishInstall];
+  [_partialMockAppEvents publishInstall];
 
-  [partialMockAppEvents verify];
+  OCMVerifyAll(_partialMockAppEvents);
 }
 
 #pragma mark  Tests for Kill Switch
@@ -456,14 +450,13 @@ static NSString *const _mockUserID = @"mockUserID";
   OCMStub([mockGateKeeperManager boolForKey:[OCMArg any]
                                defaultValue:NO]).andReturn(NO);
 
-  [[_mockAppStates expect] addEvent:[OCMArg any] isImplicit:NO];
+  OCMExpect([_mockAppStates addEvent:[OCMArg any] isImplicit:NO]);
 
-  id partialMockAppEvents = [OCMockObject partialMockForObject:[FBSDKAppEvents singleton]];
-  [partialMockAppEvents instanceLogEvent:_mockEventName
-                              valueToSum:@(_mockPurchaseAmount)
-                              parameters:nil
-                      isImplicitlyLogged:NO
-                             accessToken:nil];
+  [_partialMockAppEvents instanceLogEvent:_mockEventName
+                               valueToSum:@(_mockPurchaseAmount)
+                               parameters:nil
+                       isImplicitlyLogged:NO
+                              accessToken:nil];
 
   [_mockAppStates verify];
 }
@@ -474,14 +467,13 @@ static NSString *const _mockUserID = @"mockUserID";
   OCMStub([mockGateKeeperManager boolForKey:[OCMArg any]
                                defaultValue:NO]).andReturn(YES);
 
-  [[_mockAppStates reject] addEvent:[OCMArg any] isImplicit:NO];
+  OCMReject([_mockAppStates addEvent:[OCMArg any] isImplicit:NO]);
 
-  id partialMockAppEvents = [OCMockObject partialMockForObject:[FBSDKAppEvents singleton]];
-  [partialMockAppEvents instanceLogEvent:_mockEventName
-                              valueToSum:@(_mockPurchaseAmount)
-                              parameters:nil
-                      isImplicitlyLogged:NO
-                             accessToken:nil];
+  [_partialMockAppEvents instanceLogEvent:_mockEventName
+                               valueToSum:@(_mockPurchaseAmount)
+                               parameters:nil
+                       isImplicitlyLogged:NO
+                              accessToken:nil];
 }
 
 - (void)testGraphRequestBannedWithAutoInitDisabled
@@ -529,12 +521,12 @@ static NSString *const _mockUserID = @"mockUserID";
   }];
 
   [FBSDKAppEvents updateUserProperties:@{
-                                         @"favorite_color" : @"blue",
-                                         @"created" : [NSDate date].description,
-                                         @"email" : @"someemail@email.com",
-                                         @"some_id" : @"Custom:1",
-                                         @"validated" : @YES,
-                                         }
+    @"favorite_color" : @"blue",
+    @"created" : [NSDate date].description,
+    @"email" : @"someemail@email.com",
+    @"some_id" : @"Custom:1",
+    @"validated" : @YES,
+  }
                                handler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}];
 }
 
@@ -543,17 +535,17 @@ static NSString *const _mockUserID = @"mockUserID";
   [FBSDKAppEvents setUserID:@""];
   id mockLogger = [OCMockObject niceMockForClass:[FBSDKLogger class]];
   [[mockLogger expect] singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                                logEntry:@"Missing [FBSDKAppEvents userID] for [FBSDKAppEvents updateUserProperties:]"];
+                                 logEntry:@"Missing [FBSDKAppEvents userID] for [FBSDKAppEvents updateUserProperties:]"];
   id mockBasicUtility = [OCMockObject niceMockForClass:[FBSDKBasicUtility class]];
   [[mockBasicUtility reject] dictionary:[OCMArg any] setObject:[FBSDKAppEvents userID] forKey:@"user_unique_id"];
 
   [FBSDKAppEvents updateUserProperties:@{
-                                         @"favorite_color" : @"blue",
-                                         @"created" : [NSDate date].description,
-                                         @"email" : @"someemail@email.com",
-                                         @"some_id" : @"Custom:1",
-                                         @"validated" : @YES,
-                                         }
+    @"favorite_color" : @"blue",
+    @"created" : [NSDate date].description,
+    @"email" : @"someemail@email.com",
+    @"some_id" : @"Custom:1",
+    @"validated" : @YES,
+  }
                                handler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}];
   [mockLogger verify];
 }
@@ -562,106 +554,103 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testLogEventWithValueToSum
 {
-  [[[_mockAppEvents expect] andForwardToRealObject] logEvent:_mockEventName
-                                                  valueToSum:_mockPurchaseAmount
-                                                  parameters:@{}];
-  [[[_mockAppEvents expect] andForwardToRealObject] logEvent:_mockEventName
-                                                  valueToSum:@(_mockPurchaseAmount)
-                                                  parameters:@{}
-                                                 accessToken:nil];
+  OCMExpect([_partialMockAppEvents logEvent:_mockEventName
+                                 valueToSum:_mockPurchaseAmount
+                                 parameters:@{}]).andForwardToRealObject();
+  OCMExpect([_partialMockAppEvents logEvent:_mockEventName
+                                 valueToSum:@(_mockPurchaseAmount)
+                                 parameters:@{}
+                                accessToken:nil]).andForwardToRealObject();
 
   [FBSDKAppEvents logEvent:_mockEventName valueToSum:_mockPurchaseAmount];
 
-  [_mockAppEvents verify];
+  OCMVerifyAll(_partialMockAppEvents);
 }
 
 - (void)testLogInternalEvents
 {
-  [[[_mockAppEvents expect] andForwardToRealObject] logInternalEvent:_mockEventName
-                                                          parameters:@{}
-                                                  isImplicitlyLogged:NO];
-  [[[_mockAppEvents expect] andForwardToRealObject] logInternalEvent:_mockEventName
-                                                          valueToSum:nil
-                                                          parameters:@{}
-                                                  isImplicitlyLogged:NO
-                                                         accessToken:nil];
+  OCMExpect([_partialMockAppEvents logInternalEvent:_mockEventName
+                                         parameters:@{}
+                                 isImplicitlyLogged:NO]).andForwardToRealObject();
+  OCMExpect([_partialMockAppEvents logInternalEvent:_mockEventName
+                                         valueToSum:nil
+                                         parameters:@{}
+                                 isImplicitlyLogged:NO
+                                        accessToken:nil]).andForwardToRealObject();
 
   [FBSDKAppEvents logInternalEvent:_mockEventName isImplicitlyLogged:NO];
 
-  [_mockAppEvents verify];
+  OCMVerifyAll(_partialMockAppEvents);
 }
 
 - (void)testLogInternalEventsWithValue
 {
-  [[[_mockAppEvents expect] andForwardToRealObject] logInternalEvent:_mockEventName
-                                                          valueToSum:_mockPurchaseAmount
-                                                          parameters:@{}
-                                                  isImplicitlyLogged:NO];
-  [[[_mockAppEvents expect] andForwardToRealObject] logInternalEvent:_mockEventName
-                                                          valueToSum:@(_mockPurchaseAmount)
-                                                          parameters:@{}
-                                                  isImplicitlyLogged:NO
-                                                         accessToken:nil];
+  OCMExpect([_partialMockAppEvents logInternalEvent:_mockEventName
+                                         valueToSum:_mockPurchaseAmount
+                                         parameters:@{}
+                                 isImplicitlyLogged:NO]).andForwardToRealObject();
+  OCMExpect([_partialMockAppEvents logInternalEvent:_mockEventName
+                                         valueToSum:@(_mockPurchaseAmount)
+                                         parameters:@{}
+                                 isImplicitlyLogged:NO
+                                        accessToken:nil]).andForwardToRealObject();
 
   [FBSDKAppEvents logInternalEvent:_mockEventName valueToSum:_mockPurchaseAmount isImplicitlyLogged:NO];
 
-  [_mockAppEvents verify];
+  OCMVerifyAll(_partialMockAppEvents);
 }
 
 - (void)testLogInternalEventWithAccessToken
 {
   id mockAccessToken = [OCMockObject niceMockForClass:[FBSDKAccessToken class]];
-  [[[_mockAppEvents expect] andForwardToRealObject] logInternalEvent:_mockEventName
-                                                          valueToSum:nil
-                                                          parameters:@{}
-                                                  isImplicitlyLogged:NO
-                                                         accessToken:mockAccessToken];
+  OCMExpect([_partialMockAppEvents logInternalEvent:_mockEventName
+                                         valueToSum:nil
+                                         parameters:@{}
+                                 isImplicitlyLogged:NO
+                                        accessToken:mockAccessToken]).andForwardToRealObject();
   [FBSDKAppEvents logInternalEvent:_mockEventName parameters:@{} isImplicitlyLogged:NO accessToken:mockAccessToken];
-  [_mockAppEvents verify];
+  OCMVerifyAll(_partialMockAppEvents);
 }
 
 - (void)testInstanceLogEventWhenAutoLogAppEventsDisabled
 {
-  id mockSetting = [OCMockObject niceMockForClass:[FBSDKSettings class]];
+  id mockSetting = OCMClassMock([FBSDKSettings class]);
   OCMStub([mockSetting isAutoLogAppEventsEnabled]).andReturn(NO);
-  id partialMockAppEvents = [OCMockObject partialMockForObject:[FBSDKAppEvents singleton]];
-  [[[partialMockAppEvents reject] andForwardToRealObject] instanceLogEvent:_mockEventName
-                                                                valueToSum:@(_mockPurchaseAmount)
-                                                                parameters:@{}
-                                                        isImplicitlyLogged:NO
-                                                               accessToken:nil];
+  OCMReject([_partialMockAppEvents instanceLogEvent:_mockEventName
+                                         valueToSum:@(_mockPurchaseAmount)
+                                         parameters:@{}
+                                 isImplicitlyLogged:NO
+                                        accessToken:nil]).andForwardToRealObject();
 
   [FBSDKAppEvents logInternalEvent:_mockEventName valueToSum:_mockPurchaseAmount isImplicitlyLogged:NO];
 }
 
 - (void)testInstanceLogEventWhenAutoLogAppEventsEnabled
 {
-  id mockSetting = [OCMockObject niceMockForClass:[FBSDKSettings class]];
+  id mockSetting = OCMClassMock([FBSDKSettings class]);
   OCMStub([mockSetting isAutoLogAppEventsEnabled]).andReturn(YES);
-  id partialMockAppEvents = [OCMockObject partialMockForObject:[FBSDKAppEvents singleton]];
-  [[[partialMockAppEvents expect] andForwardToRealObject] instanceLogEvent:_mockEventName
-                                                                valueToSum:@(_mockPurchaseAmount)
-                                                                parameters:@{}
-                                                        isImplicitlyLogged:NO
-                                                               accessToken:nil];
+  OCMExpect([_partialMockAppEvents instanceLogEvent:_mockEventName
+                                         valueToSum:@(_mockPurchaseAmount)
+                                         parameters:@{}
+                                 isImplicitlyLogged:NO
+                                        accessToken:nil]).andForwardToRealObject();
 
   [FBSDKAppEvents logInternalEvent:_mockEventName valueToSum:_mockPurchaseAmount isImplicitlyLogged:NO];
 
-  [partialMockAppEvents verify];
+  OCMVerifyAll(_partialMockAppEvents);
 }
 
 - (void)testLogImplicitEvent
 {
-  id partialMockAppEvents = [OCMockObject partialMockForObject:[FBSDKAppEvents singleton]];
-  [[partialMockAppEvents expect] instanceLogEvent:_mockEventName
-                                       valueToSum:@(_mockPurchaseAmount)
-                                       parameters:@{}
-                               isImplicitlyLogged:YES
-                                      accessToken:nil];
+  OCMExpect([_partialMockAppEvents instanceLogEvent:_mockEventName
+                                         valueToSum:@(_mockPurchaseAmount)
+                                         parameters:@{}
+                                 isImplicitlyLogged:YES
+                                        accessToken:nil]);
 
   [FBSDKAppEvents logImplicitEvent:_mockEventName valueToSum:@(_mockPurchaseAmount) parameters:@{} accessToken:nil];
 
-  [partialMockAppEvents verify];
+  OCMVerifyAll(_partialMockAppEvents);
 }
 
 @end

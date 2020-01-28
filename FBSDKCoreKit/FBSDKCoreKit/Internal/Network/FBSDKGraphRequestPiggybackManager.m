@@ -18,7 +18,7 @@
 
 #import "FBSDKGraphRequestPiggybackManager.h"
 
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#import "FBSDKCoreKit+Internal.h"
 
 static int const FBSDKTokenRefreshThresholdSeconds = 24 * 60 * 60;  // day
 static int const FBSDKTokenRefreshRetrySeconds = 60 * 60;           // hour
@@ -76,7 +76,8 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60;           // hour
                                                                                 userID:currentToken.userID
                                                                         expirationDate:expirationDate
                                                                            refreshDate:[NSDate date]
-                                                                           dataAccessExpirationDate:dataExpirationDate];
+                                                                           dataAccessExpirationDate:dataExpirationDate
+                                                                           graphDomain:currentToken.graphDomain];
       if (expectedToken == currentToken) {
         [FBSDKAccessToken setCurrentAccessToken:refreshedToken];
       }
