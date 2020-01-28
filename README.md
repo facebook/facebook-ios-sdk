@@ -60,3 +60,4 @@ See the [LICENSE](LICENSE) file.
   Advertising Guidelines, as applicable <https://www.facebook.com/ad_guidelines.php>.
 
 By using the Facebook SDK for iOS you agree to these terms.
+
