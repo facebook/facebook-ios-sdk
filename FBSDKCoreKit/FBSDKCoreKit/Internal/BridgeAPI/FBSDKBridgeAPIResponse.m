@@ -54,22 +54,23 @@ NS_DESIGNATED_INITIALIZER;
                                        error:(NSError *__autoreleasing *)errorRef
 {
   FBSDKBridgeAPIProtocolType protocolType = request.protocolType;
-  switch (protocolType) {
-    case FBSDKBridgeAPIProtocolTypeNative:{
-      if (@available(iOS 13, *)) {
-        break;
-      } else {
+  if (@available(iOS 13.0, *)) {
+    // SourceApplication is not available in iOS 13.
+    // https://forums.developer.apple.com/thread/119118
+  } else {
+    switch (protocolType) {
+      case FBSDKBridgeAPIProtocolTypeNative:{
         if (![FBSDKInternalUtility isFacebookBundleIdentifier:sourceApplication]) {
           return nil;
         }
         break;
       }
-    }
-    case FBSDKBridgeAPIProtocolTypeWeb:{
-      if (![FBSDKInternalUtility isSafariBundleIdentifier:sourceApplication]) {
-        return nil;
+      case FBSDKBridgeAPIProtocolTypeWeb:{
+        if (![FBSDKInternalUtility isSafariBundleIdentifier:sourceApplication]) {
+          return nil;
+        }
+        break;
       }
-      break;
     }
   }
   NSDictionary<NSString *, NSString *> *const queryParameters = [FBSDKBasicUtility dictionaryWithQueryString:responseURL.query];
