@@ -7,7 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.15.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.15.1...HEAD)
+
+## 5.15.1
+
+### Fixed
+- fix multi-thread issue for Crash Report
+- fix write to file issue for Crash Report
+
+[2020-01-28](https://github.com/facebook/facebook-ios-sdk/releases/tag/v5.15.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.15.0...v5.15.1)
 
 ## 5.15.0
 
