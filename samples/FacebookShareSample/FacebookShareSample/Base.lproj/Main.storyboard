@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eI7-Ao-Wf8">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="O2p-oZ-LIN">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="eI7-Ao-Wf8" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="uWh-SN-XRe">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="54x-My-c2X" kind="relationship" relationship="rootViewController" id="nzm-w5-EaR"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cQy-Ix-pH7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="137.68115942028987" y="127.90178571428571"/>
+        </scene>
+        <!--Share Examples-->
+        <scene sceneID="Zaq-MW-XCy">
+            <objects>
+                <tableViewController id="54x-My-c2X" customClass="ShareViewController" customModule="FacebookShareSample" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="a98-Zo-ITL">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <sections>
+                            <tableViewSection id="nsN-ge-UJs">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="48" id="6vs-Uu-rFo">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="48"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="6vs-Uu-rFo" id="6JX-Dt-kX1">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="48"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ESe-cF-fhH">
+                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="48"/>
+                                                    <inset key="titleEdgeInsets" minX="16" minY="8" maxX="16" maxY="8"/>
+                                                    <state key="normal" title="Link"/>
+                                                    <connections>
+                                                        <action selector="shareLink" destination="54x-My-c2X" eventType="touchUpInside" id="W4w-2v-BiZ"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="ESe-cF-fhH" secondAttribute="trailing" id="7DA-0K-qY9"/>
+                                                <constraint firstItem="ESe-cF-fhH" firstAttribute="top" secondItem="6JX-Dt-kX1" secondAttribute="top" id="TE0-bt-UCe"/>
+                                                <constraint firstItem="ESe-cF-fhH" firstAttribute="leading" secondItem="6JX-Dt-kX1" secondAttribute="leading" id="TVl-8j-wcm"/>
+                                                <constraint firstAttribute="bottom" secondItem="ESe-cF-fhH" secondAttribute="bottom" id="ZMM-gm-95I"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="54x-My-c2X" id="xho-YF-ywR"/>
+                            <outlet property="delegate" destination="54x-My-c2X" id="Mt5-VC-7XO"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Share Examples" id="9ZK-vx-wkS"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UXZ-nT-Fql" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1008.6956521739131" y="127.90178571428571"/>
+        </scene>
+    </scenes>
+</document>
