@@ -16,7 +16,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import FacebookLogin
 import UIKit
 
 /**
@@ -24,13 +23,25 @@ import UIKit
  */
 class LoginViewController: UIViewController {
 
-    func verifyAppID() {
-        guard let appID = Bundle.main.object(forInfoDictionaryKey: "FacebookAppID"),
-            appID as? String != "<enter your app ID here>"
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        guard let appID = Bundle.main.object(forInfoDictionaryKey: "FacebookAppID") as? String,
+            appID != "{your-app-id}"
             else {
                 return presentAlert(
                     title: "Invalid App Identifier",
-                    message: "Please enter your Facebook application identifier. This can be found on the developer portal at developers.facebook.com"
+                    message: "Please enter your Facebook application identifier in your Info.plist. This can be found on the developer portal at developers.facebook.com"
+                )
+        }
+
+        guard let urlTypes = Bundle.main.object(forInfoDictionaryKey: "CFBundleURLTypes") as? [[String: [String]]],
+            let scheme = urlTypes.first?["CFBundleURLSchemes"]?.first,
+            scheme != "fb{your-app-id}"
+            else {
+                return presentAlert(
+                    title: "Invalid URL Scheme",
+                    message: "Please update the url scheme in your Info.plist with your Facebook application identifier to allow for the login flow to reopen this app"
                 )
         }
     }
@@ -40,15 +51,22 @@ class LoginViewController: UIViewController {
         let dismissAction = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
         alertController.addAction(dismissAction)
 
-        present(alertController, animated: true, completion: nil)
+        present(alertController, animated: true)
     }
 
     func presentAlert(for error: Error) {
-        presentAlert(title: "Login Error", message: error.localizedDescription)
+        let nsError = error as NSError
+
+        guard let sdkMessage = nsError.userInfo["com.facebook.sdk:FBSDKErrorDeveloperMessageKey"] as? String
+            else {
+                preconditionFailure("Errors from the SDK should have a developer facing message")
+        }
+
+        presentAlert(title: "Login Error", message: sdkMessage)
     }
 
     func showLoginDetails() {
-        performSegue(withIdentifier: "showLoginDetails", sender: nil)
+        performSegue(withIdentifier: "showLoginDetails", sender: self)
     }
 
 }

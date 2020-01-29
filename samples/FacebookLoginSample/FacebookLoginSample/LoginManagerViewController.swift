@@ -21,20 +21,17 @@ import UIKit
 
 class LoginManagerViewController: LoginViewController {
 
-    @IBOutlet weak var loginButton: UIButton! {
-        didSet {
-            loginButton.layer.cornerRadius = 4.0
-        }
-    }
+    @IBOutlet private weak var loginButton: UIButton!
 
     var isLoggedIn: Bool {
-        return AccessToken.current?.isExpired == false
+        guard let token = AccessToken.current else { return false }
+        
+        return !token.isExpired
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        verifyAppID()
         updateLoginButton()
     }
 
@@ -43,21 +40,21 @@ class LoginManagerViewController: LoginViewController {
 
         guard !isLoggedIn else {
             loginManager.logOut()
-            updateLoginButton()
-            return
+            return updateLoginButton()
         }
 
         loginManager.logIn(
             permissions: [.publicProfile, .email],
             viewController: self
-        ) { [weak self] (result) in
-            guard let self = self else { return }
+        ) { [unowned self] result in
 
             switch result {
-            case let .failed(error):
+            case .failed(let error):
                 self.presentAlert(for: error)
+            
             case .cancelled:
                 self.presentAlert(title: "Cancelled", message: "Login attempt was cancelled")
+            
             case .success:
                 self.updateLoginButton()
                 self.showLoginDetails()
@@ -66,11 +63,9 @@ class LoginManagerViewController: LoginViewController {
     }
 
     func updateLoginButton() {
-        if isLoggedIn {
-            loginButton.setTitle("Log Out", for: .normal)
-        }
-        else {
-            loginButton.setTitle("Log In With Facebook", for: .normal)
-        }
+        loginButton.setTitle(
+            isLoggedIn ? "Log Out" : "Log In With Facebook",
+            for: .normal
+        )
     }
 }

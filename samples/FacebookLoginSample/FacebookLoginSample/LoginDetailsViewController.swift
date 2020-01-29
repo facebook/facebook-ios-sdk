@@ -16,14 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import FacebookLogin
+import FacebookCore
 import UIKit
 
 class LoginDetailsViewController: UIViewController {
 
-    @IBOutlet weak var accessTokenLabel: UILabel!
-    @IBOutlet weak var permissionsLabel: UILabel!
-    @IBOutlet weak var declinedPermissionsLabel: UILabel!
+    @IBOutlet private weak var accessTokenLabel: UILabel!
+    @IBOutlet private weak var permissionsLabel: UILabel!
+    @IBOutlet private weak var declinedPermissionsLabel: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,8 +33,12 @@ class LoginDetailsViewController: UIViewController {
         }
 
         accessTokenLabel.text = token.tokenString
-        permissionsLabel.text = token.permissions.compactMap { $0.name }.joined(separator: ", ")
-        declinedPermissionsLabel.text = token.declinedPermissions.compactMap { $0.name }.joined(separator: ", ")
+        permissionsLabel.text = token.permissions
+            .compactMap { $0.name }
+            .joined(separator: ", ")
+        declinedPermissionsLabel.text = token.declinedPermissions
+            .compactMap { $0.name }
+            .joined(separator: ", ")
     }
 
 }

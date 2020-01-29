@@ -21,7 +21,7 @@ import UIKit
 
 class LoginButtonViewController: LoginViewController {
 
-    @IBOutlet weak var loginButton: FBLoginButton!
+    @IBOutlet private weak var loginButton: FBLoginButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,28 +29,24 @@ class LoginButtonViewController: LoginViewController {
         loginButton.delegate = self
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-        verifyAppID()
-    }
-
 }
 
 extension LoginButtonViewController: LoginButtonDelegate {
 
-    func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
-        switch error {
-        case let .some(error):
+    func loginButton(
+        _ loginButton: FBLoginButton,
+        didCompleteWith potentialResult: LoginManagerLoginResult?,
+        error potentialError: Error?
+    ) {
+        if let error = potentialError {
             return presentAlert(for: error)
-        case nil:
-            break
         }
 
-        guard let result = result,
-            !result.isCancelled
-            else {
-            // TODO: maybe have two different alerts here?
+        guard let result = potentialResult else {
+            return presentAlert(title: "Invalid Result", message: "Login attempt failed")
+        }
+        
+        guard !result.isCancelled else {
             return presentAlert(title: "Cancelled", message: "Login attempt was cancelled")
         }
 

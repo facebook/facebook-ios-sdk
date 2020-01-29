@@ -7,12 +7,12 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb&lt;enter your app ID here&gt;</string>
+				<string>fb{your-app-id}</string>
 			</array>
 		</dict>
 	</array>
 	<key>FacebookAppID</key>
-	<string>&lt;enter your app ID here&gt;</string>
+	<string>{your-app-id}</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
