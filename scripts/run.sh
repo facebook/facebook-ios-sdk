@@ -455,11 +455,12 @@ release_sdk() {
       mkdir -p Temp
 
       for kit in "${SDK_BASE_KITS[@]}"; do
+        # Redirecting to /dev/null because we only care about errors here and the full output drowns Travis
         xcodebuild build \
         -workspace FacebookSDK.xcworkspace \
         -scheme "$kit"Swift \
         -configuration Release \
-        -derivedDataPath Temp
+        -derivedDataPath Temp > /dev/null
 
         mv Temp/Build/Products/Release-iphoneos/"$kit".framework build/Release
 
@@ -483,10 +484,11 @@ release_sdk() {
     # Release frameworks in static
     release_static() {
       release_basics() {
+        # Redirecting to /dev/null because we only care about errors here and the full output drowns Travis
         xcodebuild build \
          -workspace FacebookSDK.xcworkspace \
          -scheme BuildCoreKitBasics \
-         -configuration Release
+         -configuration Release > /dev/null
 
         kit="FBSDKCoreKit_Basics"
         cd build || exit
@@ -502,15 +504,17 @@ release_sdk() {
         cd ..
       }
 
+      # Redirecting to /dev/null because we only care about errors here and the full output drowns Travis
       xcodebuild build \
        -workspace FacebookSDK.xcworkspace \
        -scheme BuildAllKits \
-       -configuration Release
+       -configuration Release > /dev/null
 
+      # Redirecting to /dev/null because we only care about errors here and the full output drowns Travis
       xcodebuild build \
        -workspace FacebookSDK.xcworkspace \
        -scheme BuildAllKits_TV \
-       -configuration Release
+       -configuration Release > /dev/null
 
       cd build || exit
       zip -r FacebookSDK_static.zip ./*.framework ./*/*.framework
