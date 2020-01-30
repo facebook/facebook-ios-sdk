@@ -611,7 +611,7 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
   [mockPiggybackManager stopMocking];
 }
 
-- (void)testRetryDisabled
+- (void)_testRetryDisabled
 {
   id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
   FBSDKSettings.graphErrorRecoveryEnabled = NO;
