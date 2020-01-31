@@ -522,12 +522,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
       [self _invokeDelegateDidCancel];
     } else {
       // not all web dialogs report cancellation, so assume that the share has completed with no additional information
-      NSMutableDictionary *results = [[NSMutableDictionary alloc] init];
-      // the web response comes back with a different payload, so we need to translate it
-      [FBSDKBasicUtility dictionary:results
-                          setObject:webResponseParameters[FBSDK_SHARE_WEB_PARAM_POST_ID_KEY]
-                             forKey:FBSDK_SHARE_RESULT_POST_ID_KEY];
-      [self _invokeDelegateDidCompleteWithResults:results];
+      [self _invokeDelegateDidCompleteWithResults:@{}];
     }
   }
 }
@@ -686,11 +681,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
     } else if (response.error) {
       [self _invokeDelegateDidFailWithError:response.error];
     } else {
-      NSMutableDictionary *results = [[NSMutableDictionary alloc] init];
-      [FBSDKBasicUtility dictionary:results
-                          setObject:responseParameters[FBSDK_SHARE_RESULT_POST_ID_KEY]
-                             forKey:FBSDK_SHARE_RESULT_POST_ID_KEY];
-      [self _invokeDelegateDidCompleteWithResults:results];
+      [self _invokeDelegateDidCompleteWithResults:@{}];
     }
     [FBSDKInternalUtility unregisterTransientObject:self];
   };

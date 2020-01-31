@@ -31,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
  If you want to use FBSDKShareAPI in a background thread, you must manage the run loop
  yourself.
  */
+DEPRECATED_MSG_ATTRIBUTE("Sharing using the publish_actions permission is deprecated. Sharing should be performed through the Facebook App, native share sheet, or mobile site. This interface will be removed in v7.0")
 NS_SWIFT_NAME(ShareAPI)
 @interface FBSDKShareAPI : NSObject <FBSDKSharing>
 

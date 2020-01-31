@@ -51,6 +51,8 @@
 static NSString *const FBSDKShareAPIDefaultGraphNode = @"me";
 static NSString *const FBSDKShareAPIPhotosEdge = @"photos";
 static NSString *const FBSDKShareAPIVideosEdge = @"videos";
+static NSString *const FBSDK_SHARE_RESULT_POST_ID_KEY = @"postId";
+
 static NSMutableArray *g_pendingFBSDKShareAPI;
 
 @interface FBSDKShareAPI () <FBSDKVideoUploaderDelegate>
