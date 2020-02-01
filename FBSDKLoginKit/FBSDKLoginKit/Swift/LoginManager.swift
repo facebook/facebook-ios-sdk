@@ -69,12 +69,10 @@ public extension LoginManager {
   /**
    Initialize an instance of `LoginManager.`
 
-   - parameter loginBehavior: Optional login behavior to use. Default: `.Native`.
    - parameter defaultAudience: Optional default audience to use. Default: `.Friends`.
    */
-  convenience init(loginBehavior: LoginBehavior = .browser, defaultAudience: DefaultAudience = .friends) {
+  convenience init(defaultAudience: DefaultAudience = .friends) {
     self.init()
-    self.loginBehavior = loginBehavior
     self.defaultAudience = defaultAudience
   }
 
