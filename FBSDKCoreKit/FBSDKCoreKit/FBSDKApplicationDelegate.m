@@ -229,7 +229,6 @@ static UIApplicationState _applicationState;
 
     if (FBSDKSettings.isAutoLogAppEventsEnabled) {
       [self _logSDKInitialize];
-      [self _logSwiftRuntimeAvailability];
     }
 #if !TARGET_OS_TV
     FBSDKProfile *cachedProfile = [FBSDKProfile fetchCachedProfile];
@@ -364,6 +363,8 @@ static UIApplicationState _applicationState;
     }
     bit++;
   }
+
+  [self _logSwiftRuntimeAvailability];
 
   NSInteger existingBitmask = [[NSUserDefaults standardUserDefaults] integerForKey:FBSDKKitsBitmaskKey];
   if (existingBitmask != bitmask) {
