@@ -67,87 +67,22 @@
   }
 }
 
-+ (void)assertOpenGraphKey:(id)key requireNamespace:(BOOL)requireNamespace
-{
-  if (![key isKindOfClass:[NSString class]]) {
-    NSString *reason = [[NSString alloc] initWithFormat:@"Invalid key found in Open Graph dictionary: %@", key];
-    @throw [NSException exceptionWithName:NSInvalidArgumentException reason:reason userInfo:nil];
-  }
-  if (!requireNamespace) {
-    return;
-  }
-  NSArray *components = [key componentsSeparatedByString:@":"];
-  if (components.count < 2) {
-    NSString *reason = [[NSString alloc] initWithFormat:@"Open Graph keys must be namespaced: %@", key];
-    @throw [NSException exceptionWithName:NSInvalidArgumentException reason:reason userInfo:nil];
-  }
-  for (NSString *component in components) {
-    if (!component.length) {
-      NSString *reason = [[NSString alloc] initWithFormat:@"Invalid key found in Open Graph dictionary: %@", key];
-      @throw [NSException exceptionWithName:NSInvalidArgumentException reason:reason userInfo:nil];
-    }
-  }
-}
-
-+ (void)assertOpenGraphValue:(id)value
-{
-  if ([self _isOpenGraphValue:value]) {
-    return;
-  }
-  if ([value isKindOfClass:[NSDictionary class]]) {
-    [self assertOpenGraphValues:(NSDictionary *)value requireKeyNamespace:YES];
-    return;
-  }
-  if ([value isKindOfClass:[NSArray class]]) {
-    for (id subValue in (NSArray *)value) {
-      [self assertOpenGraphValue:subValue];
-    }
-    return;
-  }
-  NSString *reason = [[NSString alloc] initWithFormat:@"Invalid Open Graph value found: %@", value];
-  @throw [NSException exceptionWithName:NSInvalidArgumentException reason:reason userInfo:nil];
-}
-
-+ (void)assertOpenGraphValues:(NSDictionary *)dictionary requireKeyNamespace:(BOOL)requireKeyNamespace
-{
-  [dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
-    [self assertOpenGraphKey:key requireNamespace:requireKeyNamespace];
-    [self assertOpenGraphValue:value];
-  }];
-}
-
 + (BOOL)buildWebShareContent:(id<FBSDKSharingContent>)content
                   methodName:(NSString *__autoreleasing *)methodNameRef
                   parameters:(NSDictionary *__autoreleasing *)parametersRef
                        error:(NSError *__autoreleasing *)errorRef
 {
-  NSString *methodName = nil;
+  NSString *methodName = @"share";
   NSMutableDictionary<NSString *, id> *parameters = nil;
-  if ([content isKindOfClass:NSClassFromString(@"FBSDKShareOpenGraphContent")]) {
-    methodName = @"share_open_graph";
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    FBSDKShareOpenGraphContent *const openGraphContent = (FBSDKShareOpenGraphContent *)content;
-    FBSDKShareOpenGraphAction *const action = openGraphContent.action;
-#pragma clang diagnostic pop
-    NSDictionary<NSString *, id> *const properties = [self convertOpenGraphValueContainer:action requireNamespace:NO];
-    NSString *const propertiesJSON = [FBSDKBasicUtility JSONStringForObject:properties
-                                                                         error:errorRef
-                                                          invalidObjectHandler:NULL];
-    parameters = [NSMutableDictionary new];
-    [FBSDKBasicUtility dictionary:parameters setObject:action.actionType forKey:@"action_type"];
-    [FBSDKBasicUtility dictionary:parameters setObject:propertiesJSON forKey:@"action_properties"];
-  } else {
-    methodName = @"share";
-    if ([content isKindOfClass:[FBSDKShareLinkContent class]]) {
-      FBSDKShareLinkContent *const linkContent = (FBSDKShareLinkContent *)content;
-      if (linkContent.contentURL != nil) {
-        parameters = [NSMutableDictionary new];
-        [FBSDKBasicUtility dictionary:parameters setObject:linkContent.contentURL.absoluteString forKey:@"href"];
-        [FBSDKBasicUtility dictionary:parameters setObject:linkContent.quote forKey:@"quote"];
-      }
+  if ([content isKindOfClass:[FBSDKShareLinkContent class]]) {
+    FBSDKShareLinkContent *const linkContent = (FBSDKShareLinkContent *)content;
+    if (linkContent.contentURL != nil) {
+      parameters = [NSMutableDictionary new];
+      [FBSDKBasicUtility dictionary:parameters setObject:linkContent.contentURL.absoluteString forKey:@"href"];
+      [FBSDKBasicUtility dictionary:parameters setObject:linkContent.quote forKey:@"quote"];
     }
   }
+
   if (parameters) {
     [FBSDKBasicUtility dictionary:parameters setObject:[self hashtagStringFromHashtag:content.hashtag] forKey:@"hashtag"];
     [FBSDKBasicUtility dictionary:parameters setObject:content.placeID forKey:@"place"];
@@ -204,45 +139,6 @@
 
   [self _stageImagesForPhotoContent:(FBSDKSharePhotoContent *)content
               withCompletionHandler:stageImageCompletion];
-}
-
-+ (id)convertOpenGraphValue:(id)value
-{
-  if ([self _isOpenGraphValue:value]) {
-    return value;
-  } else if ([value isKindOfClass:[NSDictionary class]]) {
-    NSDictionary *properties = (NSDictionary *)value;
-    if ([FBSDKTypeUtility stringValue:properties[@"type"]]) {
-      return [FBSDKShareOpenGraphObject objectWithProperties:properties];
-    } else {
-      NSURL *imageURL = [FBSDKTypeUtility URLValue:properties[@"url"]];
-      if (imageURL) {
-        FBSDKSharePhoto *sharePhoto = [FBSDKSharePhoto photoWithImageURL:imageURL
-                                                           userGenerated:[FBSDKTypeUtility boolValue:properties[@"user_generated"]]];
-        sharePhoto.caption = [FBSDKTypeUtility stringValue:properties[@"caption"]];
-        return sharePhoto;
-      } else {
-        return nil;
-      }
-    }
-  } else if ([value isKindOfClass:[NSArray class]]) {
-    NSMutableArray *array = [[NSMutableArray alloc] init];
-    for (id subValue in (NSArray *)value) {
-      [FBSDKBasicUtility array:array addObject:[self convertOpenGraphValue:subValue]];
-    }
-    return [array copy];
-  } else {
-    return nil;
-  }
-}
-
-+ (NSDictionary<NSString *, id> *)convertOpenGraphValues:(NSDictionary<NSString *, id> *)dictionary
-{
-  NSMutableDictionary<NSString *, id> *convertedDictionary = [[NSMutableDictionary alloc] init];
-  [dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-    [FBSDKBasicUtility dictionary:convertedDictionary setObject:[self convertOpenGraphValue:obj] forKey:key];
-  }];
-  return [convertedDictionary copy];
 }
 
 + (NSDictionary<NSString *, id> *)feedShareDictionaryForContent:(id<FBSDKSharingContent>)content
@@ -310,21 +206,10 @@
       [FBSDKBasicUtility dictionary:parameters setObject:@[hashtagString] forKey:@"hashtags"];
     }
   }
-  [FBSDKBasicUtility dictionary:parameters setObject:shareContent.pageID forKey:@"pageID"];
   [FBSDKBasicUtility dictionary:parameters setObject:shareContent.shareUUID forKey:@"shareUUID"];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  if ([shareContent isKindOfClass:NSClassFromString(@"FBSDKShareOpenGraphContent")]) {
-    FBSDKShareOpenGraphAction *const action = ((FBSDKShareOpenGraphContent *)shareContent).action;
-    [action setArray:shareContent.peopleIDs forKey:@"tags"];
-    [action setString:shareContent.placeID forKey:@"place"];
-    [action setString:shareContent.ref forKey:@"ref"];
-  } else {
-    [FBSDKBasicUtility dictionary:parameters setObject:shareContent.peopleIDs forKey:@"tags"];
-    [FBSDKBasicUtility dictionary:parameters setObject:shareContent.placeID forKey:@"place"];
-    [FBSDKBasicUtility dictionary:parameters setObject:shareContent.ref forKey:@"ref"];
-  }
-#pragma clang diagnostic pop
+  [FBSDKBasicUtility dictionary:parameters setObject:shareContent.peopleIDs forKey:@"tags"];
+  [FBSDKBasicUtility dictionary:parameters setObject:shareContent.placeID forKey:@"place"];
+  [FBSDKBasicUtility dictionary:parameters setObject:shareContent.ref forKey:@"ref"];
 
   parameters[@"dataFailuresFatal"] = @(shouldFailOnDataError);
 
@@ -363,15 +248,8 @@
         containsMedia:&containsMedia
        containsPhotos:&containsPhotos
        containsVideos:&containsVideos];
-  } else if ([shareContent isKindOfClass:NSClassFromString(@"FBSDKShareOpenGraphContent")]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    [self _testOpenGraphValueContainer:((FBSDKShareOpenGraphContent *)shareContent).action
-                         containsMedia:&containsMedia
-                        containsPhotos:&containsPhotos
-                        containsVideos:&containsVideos];
-#pragma clang diagnostic pop
   }
+
   if (containsMediaRef != NULL) {
     *containsMediaRef = containsMedia;
   }
@@ -428,9 +306,7 @@
 
 + (id)_convertObject:(id)object
 {
-  if ([object isKindOfClass:[FBSDKShareOpenGraphValueContainer class]]) {
-    object = [self convertOpenGraphValueContainer:(FBSDKShareOpenGraphValueContainer *)object requireNamespace:YES];
-  } else if ([object isKindOfClass:[FBSDKSharePhoto class]]) {
+  if ([object isKindOfClass:[FBSDKSharePhoto class]]) {
     object = [self convertPhoto:(FBSDKSharePhoto *)object];
   } else if ([object isKindOfClass:[NSArray class]]) {
     NSMutableArray *array = [[NSMutableArray alloc] init];
@@ -440,63 +316,6 @@
     object = array;
   }
   return object;
-}
-
-+ (NSDictionary<NSString *, id> *)convertOpenGraphValueContainer:(FBSDKShareOpenGraphValueContainer *)container
-                                requireNamespace:(BOOL)requireNamespace
-{
-  NSMutableDictionary<NSString *, id> *dictionary = [[NSMutableDictionary alloc] init];
-  NSMutableDictionary<NSString *, id> *data = [[NSMutableDictionary alloc] init];
-  [container enumerateKeysAndObjectsUsingBlock:^(NSString *key, id object, BOOL *stop) {
-    // if we have an FBSDKShareOpenGraphObject and a type, then we are creating a new object instance; set the flag
-    if ([key isEqualToString:@"og:type"] && [container isKindOfClass:[FBSDKShareOpenGraphObject class]]) {
-      dictionary[@"fbsdk:create_object"] = @YES;
-      dictionary[key] = object;
-    }
-    id value = [self _convertObject:object];
-    if (value) {
-      NSString *namespace;
-      key = [self getOpenGraphNameAndNamespaceFromFullName:key namespace:&namespace];
-      if (!key) {
-        return;
-      }
-
-      if (requireNamespace) {
-        if ([namespace isEqualToString:@"og"]) {
-          dictionary[key] = value;
-        } else {
-          data[key] = value;
-        }
-      } else {
-        dictionary[key] = value;
-      }
-    }
-  }];
-  if (data.count) {
-    dictionary[@"data"] = data;
-  }
-  return dictionary;
-}
-
-+ (NSString *)getOpenGraphNameAndNamespaceFromFullName:(NSString *)fullName namespace:(NSString **)namespace {
-  if (namespace) {
-    *namespace = nil;
-  }
-
-  if ([fullName isEqualToString:@"fb:explicitly_shared"]) {
-    return fullName;
-  }
-
-  NSUInteger index = [fullName rangeOfString:@":"].location;
-  if ((index != NSNotFound) && (fullName.length > index + 1)) {
-    if (namespace) {
-      *namespace = [fullName substringToIndex:index];
-    }
-
-    return [fullName substringFromIndex:index + 1];
-  }
-
-  return fullName;
 }
 
 + (NSDictionary<NSString *, id> *)convertPhoto:(FBSDKSharePhoto *)photo
@@ -510,17 +329,6 @@
 
   [FBSDKBasicUtility dictionary:dictionary setObject:photo.image ?: photo.imageURL.absoluteString forKey:@"url"];
   return dictionary;
-}
-
-+ (BOOL)_isOpenGraphValue:(id)value
-{
-  return ((value == nil) ||
-          [value isKindOfClass:[NSNull class]] ||
-          [value isKindOfClass:[NSNumber class]] ||
-          [value isKindOfClass:[NSString class]] ||
-          [value isKindOfClass:[NSURL class]] ||
-          [value isKindOfClass:[FBSDKSharePhoto class]] ||
-          [value isKindOfClass:[FBSDKShareOpenGraphObject class]]);
 }
 
 + (void)_stageImagesForPhotoContent:(FBSDKSharePhotoContent *)content
@@ -565,11 +373,6 @@
   } else if ([object isKindOfClass:[FBSDKShareVideo class]]) {
     containsMedia = YES;
     containsVideos = YES;
-  } else if ([object isKindOfClass:[FBSDKShareOpenGraphValueContainer class]]) {
-    [self _testOpenGraphValueContainer:(FBSDKShareOpenGraphValueContainer *)object
-                         containsMedia:&containsMedia
-                        containsPhotos:&containsPhotos
-                        containsVideos:&containsVideos];
   } else if ([object isKindOfClass:[NSArray class]]) {
     for (id item in (NSArray *)object) {
       BOOL itemContainsMedia = NO;
@@ -584,37 +387,6 @@
       }
     }
   }
-  if (containsMediaRef != NULL) {
-    *containsMediaRef = containsMedia;
-  }
-  if (containsPhotosRef != NULL) {
-    *containsPhotosRef = containsPhotos;
-  }
-  if (containsVideosRef != NULL) {
-    *containsVideosRef = containsVideos;
-  }
-}
-
-+ (void)_testOpenGraphValueContainer:(FBSDKShareOpenGraphValueContainer *)container
-                       containsMedia:(BOOL *)containsMediaRef
-                      containsPhotos:(BOOL *)containsPhotosRef
-                      containsVideos:(BOOL *)containsVideosRef
-{
-  __block BOOL containsMedia = NO;
-  __block BOOL containsPhotos = NO;
-  __block BOOL containsVideos = NO;
-  [container enumerateKeysAndObjectsUsingBlock:^(NSString *key, id object, BOOL *stop) {
-    BOOL itemContainsMedia = NO;
-    BOOL itemContainsPhotos = NO;
-    BOOL itemContainsVideos = NO;
-    [self _testObject:object containsMedia:&itemContainsMedia containsPhotos:&itemContainsPhotos containsVideos:&itemContainsVideos];
-    containsMedia |= itemContainsMedia;
-    containsPhotos |= itemContainsPhotos;
-    containsVideos |= itemContainsVideos;
-    if (containsMedia && containsPhotos && containsVideosRef) {
-      *stop = YES;
-    }
-  }];
   if (containsMediaRef != NULL) {
     *containsMediaRef = containsMedia;
   }

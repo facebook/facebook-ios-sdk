@@ -72,12 +72,6 @@ NS_SWIFT_NAME(SharingContent)
 @property (nonatomic, copy, nullable) NSString *ref;
 
 /**
- For shares into Messenger, this pageID will be used to map the app to page and attach attribution to the share.
- @return The ID of the Facebook page this share is associated with.
- */
-@property (nonatomic, copy, nullable) NSString *pageID;
-
-/**
  A unique identifier for a share involving this content, useful for tracking purposes.
  @return A unique string identifying this share data.
  */

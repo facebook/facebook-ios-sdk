@@ -23,31 +23,13 @@
 #import "FBSDKShareCameraEffectContent.h"
 #import "FBSDKShareLinkContent.h"
 #import "FBSDKShareMediaContent.h"
-#import "FBSDKShareMessengerGenericTemplateContent.h"
-#import "FBSDKShareMessengerGenericTemplateElement.h"
-#import "FBSDKShareMessengerMediaTemplateContent.h"
-#import "FBSDKShareMessengerOpenGraphMusicTemplateContent.h"
-#import "FBSDKShareMessengerURLActionButton.h"
-#import "FBSDKShareOpenGraphAction.h"
-#import "FBSDKShareOpenGraphObject.h"
 #import "FBSDKSharePhoto.h"
 #import "FBSDKSharePhotoContent.h"
 #import "FBSDKShareVideo.h"
 #import "FBSDKShareVideoContent.h"
 
-FOUNDATION_EXPORT NSString *kFBSDKShareModelTestUtilityOpenGraphBoolValueKey;
-FOUNDATION_EXPORT NSString *kFBSDKShareModelTestUtilityOpenGraphDoubleValueKey;
-FOUNDATION_EXPORT NSString *kFBSDKShareModelTestUtilityOpenGraphFloatValueKey;
-FOUNDATION_EXPORT NSString *kFBSDKShareModelTestUtilityOpenGraphIntegerValueKey;
-FOUNDATION_EXPORT NSString *kFBSDKShareModelTestUtilityOpenGraphNumberArrayKey;
-FOUNDATION_EXPORT NSString *kFBSDKShareModelTestUtilityOpenGraphPhotoArrayKey;
-FOUNDATION_EXPORT NSString *kFBSDKShareModelTestUtilityOpenGraphStringArrayKey;
-FOUNDATION_EXPORT NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey;
-
 @interface FBSDKShareModelTestUtility : NSObject
 
-+ (NSArray *)allOpenGraphActionKeys;
-+ (NSArray *)allOpenGraphObjectKeys;
 + (NSURL *)contentURL;
 + (NSURL *)fileURL;
 + (FBSDKHashtag *)hashtag;
@@ -56,18 +38,6 @@ FOUNDATION_EXPORT NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey;
 + (NSString *)linkContentDescription;
 + (NSString *)linkContentTitle;
 + (NSURL *)linkImageURL;
-+ (FBSDKShareOpenGraphAction *)openGraphAction;
-+ (NSString *)openGraphActionType;
-+ (FBSDKShareOpenGraphAction *)openGraphActionWithObjectID;
-+ (BOOL)openGraphBoolValue;
-+ (double)openGraphDoubleValue;
-+ (float)openGraphFloatValue;
-+ (NSInteger)openGraphIntegerValue;
-+ (NSArray *)openGraphNumberArray;
-+ (FBSDKShareOpenGraphObject *)openGraphObject;
-+ (NSString *)openGraphObjectID;
-+ (NSArray *)openGraphStringArray;
-+ (NSString *)openGraphString;
 + (NSArray *)peopleIDs;
 + (FBSDKSharePhotoContent *)photoContent;
 + (FBSDKSharePhotoContent *)photoContentWithFileURLs;

@@ -170,9 +170,6 @@ FBSDKAppEventName FBSDKAppEventNameFBDialogsPresentShareDialog      = @"fb_dialo
 FBSDKAppEventName FBSDKAppEventNameFBDialogsPresentShareDialogPhoto = @"fb_dialogs_present_share_photo";
 FBSDKAppEventName FBSDKAppEventNameFBDialogsPresentShareDialogOG    = @"fb_dialogs_present_share_og";
 FBSDKAppEventName FBSDKAppEventNameFBDialogsPresentLikeDialogOG     = @"fb_dialogs_present_like_og";
-FBSDKAppEventName FBSDKAppEventNameFBDialogsPresentMessageDialog      = @"fb_dialogs_present_message";
-FBSDKAppEventName FBSDKAppEventNameFBDialogsPresentMessageDialogPhoto = @"fb_dialogs_present_message_photo";
-FBSDKAppEventName FBSDKAppEventNameFBDialogsPresentMessageDialogOG    = @"fb_dialogs_present_message_og";
 
 FBSDKAppEventName FBSDKAppEventNameFBDialogsNativeLoginDialogStart  = @"fb_dialogs_native_login_dialog_start";
 NSString *const FBSDKAppEventsNativeLoginDialogStartTime          = @"fb_native_login_dialog_start_time";
@@ -212,11 +209,9 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKLikeControlImpression          = @"fb_li
 FBSDKAppEventName FBSDKAppEventNameFBSDKLikeControlNetworkUnavailable  = @"fb_like_control_network_unavailable";
 
 FBSDKAppEventName FBSDKAppEventNameFBSDKEventShareDialogResult =              @"fb_dialog_share_result";
-FBSDKAppEventName FBSDKAppEventNameFBSDKEventMessengerShareDialogResult =     @"fb_messenger_dialog_share_result";
 FBSDKAppEventName FBSDKAppEventNameFBSDKEventAppInviteShareDialogResult =     @"fb_app_invite_dialog_share_result";
 
 FBSDKAppEventName FBSDKAppEventNameFBSDKEventShareDialogShow =            @"fb_dialog_share_show";
-FBSDKAppEventName FBSDKAppEventNameFBSDKEventMessengerShareDialogShow =   @"fb_messenger_dialog_share_show";
 FBSDKAppEventName FBSDKAppEventNameFBSDKEventAppInviteShareDialogShow =   @"fb_app_invite_share_show";
 
 FBSDKAppEventName FBSDKAppEventNameFBSessionFASLoginDialogResult = @"fb_mobile_login_fas_dialog_result";
@@ -279,14 +274,10 @@ NSString *const FBSDKAppEventsDialogShareModeFeedBrowser    = @"FeedBrowser";
 NSString *const FBSDKAppEventsDialogShareModeFeedWeb        = @"FeedWeb";
 NSString *const FBSDKAppEventsDialogShareModeUnknown        = @"Unknown";
 
-NSString *const FBSDKAppEventsDialogShareContentTypeOpenGraph                         = @"OpenGraph";
 NSString *const FBSDKAppEventsDialogShareContentTypeStatus                            = @"Status";
 NSString *const FBSDKAppEventsDialogShareContentTypePhoto                             = @"Photo";
 NSString *const FBSDKAppEventsDialogShareContentTypeVideo                             = @"Video";
 NSString *const FBSDKAppEventsDialogShareContentTypeCamera                            = @"Camera";
-NSString *const FBSDKAppEventsDialogShareContentTypeMessengerGenericTemplate          = @"GenericTemplate";
-NSString *const FBSDKAppEventsDialogShareContentTypeMessengerMediaTemplate            = @"MediaTemplate";
-NSString *const FBSDKAppEventsDialogShareContentTypeMessengerOpenGraphMusicTemplate   = @"OpenGraphMusicTemplate";
 NSString *const FBSDKAppEventsDialogShareContentTypeUnknown                           = @"Unknown";
 
 NSString *const FBSDKGateKeeperAppEventsKillSwitch                                    = @"app_events_killswitch";

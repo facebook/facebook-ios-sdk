@@ -66,16 +66,6 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
   _loginManager.defaultAudience = defaultAudience;
 }
 
-- (FBSDKLoginBehavior)loginBehavior
-{
-  return _loginManager.loginBehavior;
-}
-
-- (void)setLoginBehavior:(FBSDKLoginBehavior)loginBehavior
-{
-  _loginManager.loginBehavior = loginBehavior;
-}
-
 - (UIFont *)defaultFont
 {
   CGFloat size = 15;

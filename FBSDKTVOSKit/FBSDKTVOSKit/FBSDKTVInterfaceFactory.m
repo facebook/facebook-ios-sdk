@@ -90,19 +90,6 @@ static Class FBSDKDynamicallyLoadShareKitClassFromString(NSString *className)
     if (element.attributes[@"href"]) {
       content = [[FBSDKDynamicallyLoadShareKitClassFromString(@"FBSDKShareLinkContent") alloc] init];
       content.contentURL = [NSURL URLWithString:element.attributes[@"href"]];
-
-    } else {
-      NSString *actionType = element.attributes[@"action_type"];
-      NSURL *url = [NSURL URLWithString:element.attributes[@"object_url"]];
-      NSString *key = element.attributes[@"key"];
-      if (actionType.length > 0 && url && key.length > 0) {
-        FBSDKShareOpenGraphAction *action = [FBSDKDynamicallyLoadShareKitClassFromString(@"FBSDKShareOpenGraphAction") actionWithType:actionType objectURL:url key:key];
-        content = [[FBSDKDynamicallyLoadShareKitClassFromString(@"FBSDKShareOpenGraphContent") alloc] init];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        ((FBSDKShareOpenGraphContent *)content).action = action;
-#pragma clang diagnostic pop
-      }
     }
 
     if (content) {

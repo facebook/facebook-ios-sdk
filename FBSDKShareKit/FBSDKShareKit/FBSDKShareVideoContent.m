@@ -34,7 +34,6 @@
 #define FBSDK_SHARE_VIDEO_CONTENT_PLACE_ID_KEY @"placeID"
 #define FBSDK_SHARE_VIDEO_CONTENT_PREVIEW_PHOTO_KEY @"previewPhoto"
 #define FBSDK_SHARE_VIDEO_CONTENT_REF_KEY @"ref"
-#define FBSDK_SHARE_VIDEO_CONTENT_PAGE_ID_KEY @"pageID"
 #define FBSDK_SHARE_VIDEO_CONTENT_VIDEO_KEY @"video"
 #define FBSDK_SHARE_VIDEO_CONTENT_UUID_KEY @"uuid"
 
@@ -47,7 +46,6 @@
 @synthesize peopleIDs = _peopleIDs;
 @synthesize placeID = _placeID;
 @synthesize ref = _ref;
-@synthesize pageID = _pageID;
 @synthesize shareUUID = _shareUUID;
 
 #pragma mark - Initializer
@@ -148,7 +146,6 @@
     _peopleIDs.hash,
     _placeID.hash,
     _ref.hash,
-    _pageID.hash,
     _video.hash,
     _shareUUID.hash,
   };
@@ -174,7 +171,6 @@
           [FBSDKInternalUtility object:_peopleIDs isEqualToObject:content.peopleIDs] &&
           [FBSDKInternalUtility object:_placeID isEqualToObject:content.placeID] &&
           [FBSDKInternalUtility object:_ref isEqualToObject:content.ref] &&
-          [FBSDKInternalUtility object:_pageID isEqualToObject:content.pageID] &&
           [FBSDKInternalUtility object:_shareUUID isEqualToObject:content.shareUUID] &&
           [FBSDKInternalUtility object:_video isEqualToObject:content.video]);
 }
@@ -194,7 +190,6 @@
     _peopleIDs = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDK_SHARE_VIDEO_CONTENT_PEOPLE_IDS_KEY];
     _placeID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_VIDEO_CONTENT_PLACE_ID_KEY];
     _ref = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_VIDEO_CONTENT_REF_KEY];
-    _pageID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_VIDEO_CONTENT_PAGE_ID_KEY];
     _video = [decoder decodeObjectOfClass:[FBSDKShareVideo class] forKey:FBSDK_SHARE_VIDEO_CONTENT_VIDEO_KEY];
     _shareUUID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_VIDEO_CONTENT_UUID_KEY];
   }
@@ -208,7 +203,6 @@
   [encoder encodeObject:_peopleIDs forKey:FBSDK_SHARE_VIDEO_CONTENT_PEOPLE_IDS_KEY];
   [encoder encodeObject:_placeID forKey:FBSDK_SHARE_VIDEO_CONTENT_PLACE_ID_KEY];
   [encoder encodeObject:_ref forKey:FBSDK_SHARE_VIDEO_CONTENT_REF_KEY];
-  [encoder encodeObject:_pageID forKey:FBSDK_SHARE_VIDEO_CONTENT_PAGE_ID_KEY];
   [encoder encodeObject:_video forKey:FBSDK_SHARE_VIDEO_CONTENT_VIDEO_KEY];
   [encoder encodeObject:_shareUUID forKey:FBSDK_SHARE_VIDEO_CONTENT_UUID_KEY];
 }
@@ -223,7 +217,6 @@
   copy->_peopleIDs = [_peopleIDs copy];
   copy->_placeID = [_placeID copy];
   copy->_ref = [_ref copy];
-  copy->_pageID = [_pageID copy];
   copy->_video = [_video copy];
   copy->_shareUUID = [_shareUUID copy];
   return copy;

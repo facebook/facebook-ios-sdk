@@ -340,13 +340,11 @@ static UIApplicationState _applicationState;
 {
   NSDictionary *metaInfo = [NSDictionary dictionaryWithObjects:@[@"login_lib_included",
                                                                  @"marketing_lib_included",
-                                                                 @"messenger_lib_included",
                                                                  @"places_lib_included",
                                                                  @"share_lib_included",
                                                                  @"tv_lib_included"]
                                                        forKeys:@[@"FBSDKLoginManager",
                                                                  @"FBSDKAutoLog",
-                                                                 @"FBSDKMessengerButton",
                                                                  @"FBSDKPlacesManager",
                                                                  @"FBSDKShareDialog",
                                                                  @"FBSDKTVInterfaceFactory"]];

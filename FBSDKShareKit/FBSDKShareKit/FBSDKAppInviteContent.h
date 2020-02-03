@@ -33,18 +33,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- NS_ENUM(NSUInteger, FBSDKAppInviteDestination)
-  Specifies the privacy of a group.
- */
-typedef NS_ENUM(NSUInteger, FBSDKAppInviteDestination)
-{
-  /** Deliver to Facebook. */
-  FBSDKAppInviteDestinationFacebook = 0,
-  /** Deliver to Messenger. */
-  FBSDKAppInviteDestinationMessenger,
-} NS_SWIFT_NAME(AppInviteDestination);
-
-/**
   A model for app invite.
  */
 NS_SWIFT_NAME(AppInviteContent)
@@ -83,14 +71,6 @@ NS_SWIFT_NAME(AppInviteContent)
  alphanumeric and spaces only.
  */
 @property (nonatomic, copy, nullable) NSString *promotionText;
-
-/**
-  Destination for the app invite.
-
-
- This is optional and for declaring destination of the invite.
- */
-@property (nonatomic, assign) FBSDKAppInviteDestination destination;
 
 /**
   Compares the receiver to another app invite content.

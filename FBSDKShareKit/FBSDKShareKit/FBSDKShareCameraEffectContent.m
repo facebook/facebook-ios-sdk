@@ -40,7 +40,6 @@ static NSString *const kFBSDKShareCameraEffectContentHashtagKey = @"hashtag";
 static NSString *const kFBSDKShareCameraEffectContentPeopleIDsKey = @"peopleIDs";
 static NSString *const kFBSDKShareCameraEffectContentPlaceIDKey = @"placeID";
 static NSString *const kFBSDKShareCameraEffectContentRefKey = @"ref";
-static NSString *const kFBSDKShareCameraEffectContentPageIDKey = @"pageID";
 static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
 
 @implementation FBSDKShareCameraEffectContent
@@ -55,7 +54,6 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
 @synthesize peopleIDs = _peopleIDs;
 @synthesize placeID = _placeID;
 @synthesize ref = _ref;
-@synthesize pageID = _pageID;
 @synthesize shareUUID = _shareUUID;
 
 #pragma mark - Initializer
@@ -156,7 +154,6 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
     _peopleIDs.hash,
     _placeID.hash,
     _ref.hash,
-    _pageID.hash,
     _shareUUID.hash,
   };
   return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
@@ -184,8 +181,7 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
           [FBSDKInternalUtility object:_peopleIDs isEqualToObject:content.peopleIDs] &&
           [FBSDKInternalUtility object:_placeID isEqualToObject:content.placeID] &&
           [FBSDKInternalUtility object:_ref isEqualToObject:content.ref] &&
-          [FBSDKInternalUtility object:_shareUUID isEqualToObject:content.shareUUID] &&
-          [FBSDKInternalUtility object:_pageID isEqualToObject:content.pageID]);
+          [FBSDKInternalUtility object:_shareUUID isEqualToObject:content.shareUUID]);
 }
 
 #pragma mark - NSCoding
@@ -206,7 +202,6 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
     _peopleIDs = [decoder decodeObjectOfClass:[NSArray class] forKey:kFBSDKShareCameraEffectContentPeopleIDsKey];
     _placeID = [decoder decodeObjectOfClass:[NSString class] forKey:kFBSDKShareCameraEffectContentPlaceIDKey];
     _ref = [decoder decodeObjectOfClass:[NSString class] forKey:kFBSDKShareCameraEffectContentRefKey];
-    _pageID = [decoder decodeObjectOfClass:[NSString class] forKey:kFBSDKShareCameraEffectContentPageIDKey];
     _shareUUID = [decoder decodeObjectOfClass:[NSString class] forKey:kFBSDKShareCameraEffectContentUUIDKey];
   }
   return self;
@@ -222,7 +217,6 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
   [encoder encodeObject:_peopleIDs forKey:kFBSDKShareCameraEffectContentPeopleIDsKey];
   [encoder encodeObject:_placeID forKey:kFBSDKShareCameraEffectContentPlaceIDKey];
   [encoder encodeObject:_ref forKey:kFBSDKShareCameraEffectContentRefKey];
-  [encoder encodeObject:_pageID forKey:kFBSDKShareCameraEffectContentPageIDKey];
   [encoder encodeObject:_shareUUID forKey:kFBSDKShareCameraEffectContentUUIDKey];
 }
 
@@ -239,7 +233,6 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
   copy->_peopleIDs = [_peopleIDs copy];
   copy->_placeID = [_placeID copy];
   copy->_ref = [_ref copy];
-  copy->_pageID = [_pageID copy];
   copy->_shareUUID = [_shareUUID copy];
   return copy;
 }

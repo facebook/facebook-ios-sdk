@@ -28,10 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
   The common interface for components that initiate sharing.
 
  @see FBSDKShareDialog
-
- @see FBSDKMessageDialog
-
- @see FBSDKShareAPI
  */
 NS_SWIFT_NAME(Sharing)
 @protocol FBSDKSharing <NSObject>

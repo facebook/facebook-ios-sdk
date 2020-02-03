@@ -28,7 +28,6 @@
 // targets, it still needs to be able to compile. Hence we need to declare it here.
 //
 // The way to fix this is to remove extensions of ObjC types in Swift.
-// This will be be done in the next major release (6.0)
 
 NS_SWIFT_NAME(ShareDialog)
 @interface FBSDKShareDialog : NSObject
