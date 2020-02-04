@@ -22,7 +22,6 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKShareMessengerContentUtility.h"
-#import "FBSDKShareMessengerGenericTemplateElement.h"
 #import "FBSDKShareMessengerMediaTemplateContent.h"
 #import "FBSDKShareMessengerOpenGraphMusicTemplateContent.h"
 #import "FBSDKShareMessengerURLActionButton.h"

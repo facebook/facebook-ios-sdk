@@ -23,7 +23,6 @@
 #import "FBSDKShareCameraEffectContent.h"
 #import "FBSDKShareLinkContent.h"
 #import "FBSDKShareMediaContent.h"
-#import "FBSDKShareMessengerGenericTemplateElement.h"
 #import "FBSDKShareMessengerMediaTemplateContent.h"
 #import "FBSDKShareMessengerOpenGraphMusicTemplateContent.h"
 #import "FBSDKShareMessengerURLActionButton.h"
