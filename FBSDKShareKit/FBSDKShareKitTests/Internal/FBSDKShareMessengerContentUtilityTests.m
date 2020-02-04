@@ -22,7 +22,6 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKShareMessengerContentUtility.h"
-#import "FBSDKShareMessengerOpenGraphMusicTemplateContent.h"
 #import "FBSDKShareMessengerURLActionButton.h"
 #import "FBSDKShareModelTestUtility.h"
 
@@ -70,50 +69,6 @@ static NSString *const kSubtitle = @"Test subtitle";
   [super tearDown];
 
   _parameters = nil;
-}
-
-#pragma mark - Open Graph Music Tests
-
-- (void)testOpenGraphMusicNoButtonSerialization {
-  FBSDKShareMessengerOpenGraphMusicTemplateContent *content = [FBSDKShareMessengerOpenGraphMusicTemplateContent new];
-  content.url = [FBSDKShareModelTestUtility contentURL];
-
-  [_parameters addEntriesFromDictionary:[content addParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault]];
-
-  NSDictionary *messengerShareContent = _parameters[kMessengerShareContentKey];
-
-  NSDictionary *contentForPreview = messengerShareContent[kContentForPreviewKey];
-  XCTAssertEqualObjects([FBSDKShareModelTestUtility contentURL].absoluteString, contentForPreview[kOpenGraphURLKey], @"%@ key has incorrect value.", kOpenGraphURLKey);
-  XCTAssertEqualObjects(@"OPEN_GRAPH", contentForPreview[kPreviewTypeKey], @"%@ key has incorrect value.", kPreviewTypeKey);
-
-  NSString *contentForShare = messengerShareContent[kContentForShareKey];
-  NSString *contentForShareExpectedValue = @"{\"attachment\":{\"type\":\"template\",\"payload\":{\"template_type\":\"open_graph\",\"elements\":[{\"url\":\"https:\\/\\/developers.facebook.com\\/\",\"buttons\":[]}]}}}";
-  XCTAssertEqualObjects(contentForShare, contentForShareExpectedValue, @"%@ key has incorrect value.", kContentForShareKey);
-}
-
-- (void)testOpenGraphMusicWithButtonSerialization {
-  FBSDKShareMessengerURLActionButton *urlButton = [[FBSDKShareMessengerURLActionButton alloc] init];
-  urlButton.title = kButtonTitle;
-  urlButton.url = [NSURL URLWithString:kButtonURL];
-  urlButton.webviewHeightRatio = FBSDKShareMessengerURLActionButtonWebviewHeightRatioTall;
-
-  FBSDKShareMessengerOpenGraphMusicTemplateContent *content = [FBSDKShareMessengerOpenGraphMusicTemplateContent new];
-  content.url = [FBSDKShareModelTestUtility contentURL];
-  content.button = urlButton;
-
-  [_parameters addEntriesFromDictionary:[content addParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault]];
-
-  NSDictionary *messengerShareContent = _parameters[kMessengerShareContentKey];
-
-  NSDictionary *contentForPreview = messengerShareContent[kContentForPreviewKey];
-  XCTAssertEqualObjects(@"OPEN_GRAPH", contentForPreview[kPreviewTypeKey], @"%@ key has incorrect value.", kPreviewTypeKey);
-  XCTAssertEqualObjects([FBSDKShareModelTestUtility contentURL].absoluteString, contentForPreview[kOpenGraphURLKey], @"%@ key has incorrect value.", kOpenGraphURLKey);
-  XCTAssertEqualObjects(kButtonURL, contentForPreview[kItemURLKey], @"%@ key has incorrect value.", kItemURLKey);
-  XCTAssertEqualObjects(@"Visit Facebook - http://www.facebook.com", contentForPreview[kTargetDisplayKey], @"%@ key has incorrect value.", kTargetDisplayKey);
-
-  NSString *contentForShare = messengerShareContent[kContentForShareKey];
-  NSString *contentForShareExpectedValue = @"{\"attachment\":{\"type\":\"template\",\"payload\":{\"template_type\":\"open_graph\",\"elements\":[{\"url\":\"https:\\/\\/developers.facebook.com\\/\",\"buttons\":[{\"webview_height_ratio\":\"tall\",\"messenger_extensions\":false,\"title\":\"Visit Facebook\",\"type\":\"web_url\",\"url\":\"http:\\/\\/www.facebook.com\\/someAdditionalURL\"}]}]}}}";
-  XCTAssertEqualObjects(contentForShare, contentForShareExpectedValue, @"%@ key has incorrect value.", kContentForShareKey);
 }
 
 @end

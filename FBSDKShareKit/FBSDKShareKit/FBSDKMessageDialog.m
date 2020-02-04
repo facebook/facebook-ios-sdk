@@ -30,7 +30,6 @@
 #import "FBSDKShareCameraEffectContent.h"
 #import "FBSDKShareConstants.h"
 #import "FBSDKShareDefines.h"
-#import "FBSDKShareMessengerOpenGraphMusicTemplateContent.h"
 #import "FBSDKShareUtility.h"
 #import "FBSDKShareVideoContent.h"
 
@@ -128,8 +127,7 @@
 - (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef
 {
   if (self.shareContent) {
-    if ([self.shareContent isKindOfClass:[FBSDKShareLinkContent class]] ||
-        [self.shareContent isKindOfClass:[FBSDKShareMessengerOpenGraphMusicTemplateContent class]]) {
+    if ([self.shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
     } else {
       if (errorRef != NULL) {
         NSString *message = [NSString stringWithFormat:@"Message dialog does not support %@.",
@@ -232,8 +230,6 @@
     contentType = FBSDKAppEventsDialogShareContentTypePhoto;
   } else if ([self.shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
     contentType = FBSDKAppEventsDialogShareContentTypeVideo;
-  } else if ([self.shareContent isKindOfClass:[FBSDKShareMessengerOpenGraphMusicTemplateContent class]]) {
-    contentType = FBSDKAppEventsDialogShareContentTypeMessengerOpenGraphMusicTemplate;
   } else {
     contentType = FBSDKAppEventsDialogShareContentTypeUnknown;
   }

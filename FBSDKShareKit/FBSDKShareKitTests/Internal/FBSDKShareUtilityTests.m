@@ -65,35 +65,4 @@
   XCTAssertEqualObjects(content.contentURL, parameters[@"messenger_link"], @"Incorrect messenger_link param.");
 }
 
-- (void)testOpenGraphMusicWithoutURL
-{
-  FBSDKShareMessengerOpenGraphMusicTemplateContent *content = [FBSDKShareMessengerOpenGraphMusicTemplateContent new];
-  content.pageID = @"123";
-  XCTAssertNotNil(content.shareUUID);
-  NSError *error;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
-  XCTAssertNotNil(error);
-}
-
-- (void)testOpenGraphMusicWithURL
-{
-  FBSDKShareMessengerOpenGraphMusicTemplateContent *content = [FBSDKShareMessengerOpenGraphMusicTemplateContent new];
-  content.pageID = @"123";
-  content.url = [NSURL URLWithString:@"www.facebook.com"];
-  XCTAssertNotNil(content.shareUUID);
-  NSError *error;
-  XCTAssertTrue([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
-  XCTAssertNil(error);
-}
-
-- (void)testOpenGraphMusicWithoutPageID
-{
-  FBSDKShareMessengerOpenGraphMusicTemplateContent *content = [FBSDKShareMessengerOpenGraphMusicTemplateContent new];
-  content.url = [NSURL URLWithString:@"www.facebook.com"];
-  XCTAssertNotNil(content.shareUUID);
-  NSError *error;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
-  XCTAssertNotNil(error);
-}
-
 @end
