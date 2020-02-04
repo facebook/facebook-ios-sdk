@@ -172,7 +172,6 @@ FBSDKAppEventName FBSDKAppEventNameFBDialogsPresentShareDialogOG    = @"fb_dialo
 FBSDKAppEventName FBSDKAppEventNameFBDialogsPresentLikeDialogOG     = @"fb_dialogs_present_like_og";
 FBSDKAppEventName FBSDKAppEventNameFBDialogsPresentMessageDialog      = @"fb_dialogs_present_message";
 FBSDKAppEventName FBSDKAppEventNameFBDialogsPresentMessageDialogPhoto = @"fb_dialogs_present_message_photo";
-FBSDKAppEventName FBSDKAppEventNameFBDialogsPresentMessageDialogOG    = @"fb_dialogs_present_message_og";
 
 FBSDKAppEventName FBSDKAppEventNameFBDialogsNativeLoginDialogStart  = @"fb_dialogs_native_login_dialog_start";
 NSString *const FBSDKAppEventsNativeLoginDialogStartTime          = @"fb_native_login_dialog_start_time";

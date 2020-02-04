@@ -66,7 +66,6 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBDialogsPresentLikeDialogOG;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBDialogsPresentShareDialogPhoto;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBDialogsPresentMessageDialog;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBDialogsPresentMessageDialogPhoto;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBDialogsPresentMessageDialogOG;
 
 /** Use to log the start of an auth request that cannot be fulfilled by the token cache */
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSessionAuthStart;
