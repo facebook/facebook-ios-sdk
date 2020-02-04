@@ -36,7 +36,7 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
 
 # pragma mark - Class Methods
 
-+ (void)initialize
++ (void)enable
 {
   NSString *dirPath = [NSTemporaryDirectory() stringByAppendingPathComponent:ErrorReportStorageDirName];
   if (![[NSFileManager defaultManager] fileExistsAtPath:dirPath]) {
@@ -45,10 +45,7 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
     }
   }
   directoryPath = dirPath;
-}
-
-+ (void)enable
-{
+  
   [self uploadError];
   [FBSDKError enableErrorReport];
 }
