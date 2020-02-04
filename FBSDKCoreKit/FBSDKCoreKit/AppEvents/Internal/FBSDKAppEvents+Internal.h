@@ -60,9 +60,6 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterLaunchSource;
 /** Use to log the result of a call to FBDialogs presentShareDialogWithParams: */
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBDialogsPresentShareDialog;
 
-/** Use to log the result of a call to FBDialogs presentShareDialogWithOpenGraphActionParams: */
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBDialogsPresentShareDialogOG;
-
 /** Use to log the result of a call to FBDialogs presentLikeDialogWithLikeParams: */
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBDialogsPresentLikeDialogOG;
 
@@ -138,7 +135,6 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogOutcomeValue_Completed;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogOutcomeValue_Cancelled;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogOutcomeValue_Failed;
 
-FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogShareContentTypeOpenGraph;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogShareContentTypeStatus;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogShareContentTypePhoto;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogShareContentTypeVideo;

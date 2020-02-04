@@ -29,16 +29,11 @@ NS_ASSUME_NONNULL_BEGIN
 
  The '<FBSDKShareButton />' tag must also have the following attributes to define
   the share content:
- - `href` the url to share; or,
- - `action_type` and `object_url` and `key` where `action_type` is the Open Graph action type
- and `object_url` is a url that supports Open Graph and `key` is the Open Graph object name (see `FBSDKShareOpenGraphAction`).
+ - `href` the url to share
 
  Examples:
  @code
  <FBSDKShareButton href="http://developers.facebook.com/docs/tvos/tvml" />
-
- <FBSDKShareButton action_type="video.watches" object_url="http://samples.ogp.me/453907197960619" key="movie"/>
-
  */
 NS_SWIFT_NAME(FBTVShareButtonElement)
 @interface FBSDKTVShareButtonElement : TVViewElement

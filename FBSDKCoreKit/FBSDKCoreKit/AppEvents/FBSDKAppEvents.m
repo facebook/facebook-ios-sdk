@@ -279,7 +279,6 @@ NSString *const FBSDKAppEventsDialogShareModeFeedBrowser    = @"FeedBrowser";
 NSString *const FBSDKAppEventsDialogShareModeFeedWeb        = @"FeedWeb";
 NSString *const FBSDKAppEventsDialogShareModeUnknown        = @"Unknown";
 
-NSString *const FBSDKAppEventsDialogShareContentTypeOpenGraph                         = @"OpenGraph";
 NSString *const FBSDKAppEventsDialogShareContentTypeStatus                            = @"Status";
 NSString *const FBSDKAppEventsDialogShareContentTypePhoto                             = @"Photo";
 NSString *const FBSDKAppEventsDialogShareContentTypeVideo                             = @"Video";

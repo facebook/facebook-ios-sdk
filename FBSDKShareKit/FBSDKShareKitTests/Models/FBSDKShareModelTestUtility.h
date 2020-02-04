@@ -46,8 +46,6 @@ FOUNDATION_EXPORT NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey;
 
 @interface FBSDKShareModelTestUtility : NSObject
 
-+ (NSArray *)allOpenGraphActionKeys;
-+ (NSArray *)allOpenGraphObjectKeys;
 + (NSURL *)contentURL;
 + (NSURL *)fileURL;
 + (FBSDKHashtag *)hashtag;
@@ -56,18 +54,6 @@ FOUNDATION_EXPORT NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey;
 + (NSString *)linkContentDescription;
 + (NSString *)linkContentTitle;
 + (NSURL *)linkImageURL;
-+ (FBSDKShareOpenGraphAction *)openGraphAction;
-+ (NSString *)openGraphActionType;
-+ (FBSDKShareOpenGraphAction *)openGraphActionWithObjectID;
-+ (BOOL)openGraphBoolValue;
-+ (double)openGraphDoubleValue;
-+ (float)openGraphFloatValue;
-+ (NSInteger)openGraphIntegerValue;
-+ (NSArray *)openGraphNumberArray;
-+ (FBSDKShareOpenGraphObject *)openGraphObject;
-+ (NSString *)openGraphObjectID;
-+ (NSArray *)openGraphStringArray;
-+ (NSString *)openGraphString;
 + (NSArray *)peopleIDs;
 + (FBSDKSharePhotoContent *)photoContent;
 + (FBSDKSharePhotoContent *)photoContentWithFileURLs;

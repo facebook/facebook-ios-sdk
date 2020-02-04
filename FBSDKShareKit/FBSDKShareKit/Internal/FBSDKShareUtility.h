@@ -20,7 +20,6 @@
 
 #import "FBSDKShareLinkContent.h"
 #import "FBSDKShareMediaContent.h"
-#import "FBSDKShareOpenGraphContent.h"
 #import "FBSDKSharePhotoContent.h"
 #import "FBSDKShareVideoContent.h"
 #import "FBSDKSharingContent.h"
@@ -39,10 +38,6 @@ NS_SWIFT_NAME(ShareUtility)
 
 + (void)assertCollection:(id<NSFastEnumeration>)collection ofClass:itemClass name:(NSString *)name;
 + (void)assertCollection:(id<NSFastEnumeration>)collection ofClassStrings:(NSArray *)classStrings name:(NSString *)name;
-+ (void)assertOpenGraphKey:(id)key requireNamespace:(BOOL)requireNamespace;
-+ (void)assertOpenGraphValue:(id)value;
-+ (void)assertOpenGraphValues:(NSDictionary *)dictionary requireKeyNamespace:(BOOL)requireKeyNamespace;
-
 + (BOOL)buildWebShareContent:(id<FBSDKSharingContent>)content
                   methodName:(NSString *__autoreleasing *)methodNameRef
                   parameters:(NSDictionary *__autoreleasing *)parametersRef
@@ -50,13 +45,8 @@ NS_SWIFT_NAME(ShareUtility)
 + (NSString *)buildWebShareTags:(NSArray<NSString *> *)peopleIDs;
 + (void)buildAsyncWebPhotoContent:(FBSDKSharePhotoContent *)content
                 completionHandler:(FBSDKWebPhotoContentBlock)completion;
-+ (id)convertOpenGraphValue:(id)value;
-+ (NSDictionary<NSString *, id> *)convertOpenGraphValueContainer:(FBSDKShareOpenGraphValueContainer *)container
-                                                requireNamespace:(BOOL)requireNamespace;
-+ (NSDictionary<NSString *, id> *)convertOpenGraphValues:(NSDictionary<NSString *, id> *)dictionary;
 + (NSDictionary<NSString *, id> *)convertPhoto:(FBSDKSharePhoto *)photo;
 + (NSDictionary *)feedShareDictionaryForContent:(id<FBSDKSharingContent>)content;
-+ (NSString *)getOpenGraphNameAndNamespaceFromFullName:(NSString *)fullName namespace:(NSString **)namespace;
 + (NSString *)hashtagStringFromHashtag:(FBSDKHashtag *)hashtag;
 + (UIImage *)imageWithCircleColor:(UIColor *)color
                        canvasSize:(CGSize)canvasSize

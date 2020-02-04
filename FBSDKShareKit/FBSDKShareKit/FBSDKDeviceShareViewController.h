@@ -73,12 +73,11 @@ NS_SWIFT_NAME(FBDeviceShareViewController)
 
 /**
   Initializes a new instance with share content.
- @param shareContent The share content. Only `FBSDKShareLinkContent` and `FBSDKShareOpenGraphContent` are supported.
+ @param shareContent The share content. Only `FBSDKShareLinkContent` is supported.
 
  Invalid content types will result in notifying the delegate with an error when the view controller is presented.
 
  For `FBSDKShareLinkContent`, only contentURL is used (e.g., <FBSDKSharingContent> properties are not supported)
- For `FBSDKShareOpenGraphContent`, only the action is used (e.g., <FBSDKSharingContent> properties are not supported).
  */
 - (instancetype)initWithShareContent:(id<FBSDKSharingContent>)shareContent
 NS_SWIFT_NAME(init(content:))

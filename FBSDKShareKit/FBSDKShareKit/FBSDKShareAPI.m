@@ -38,9 +38,6 @@
 #import "FBSDKShareConstants.h"
 #import "FBSDKShareDefines.h"
 #import "FBSDKShareLinkContent.h"
-#import "FBSDKShareOpenGraphAction.h"
-#import "FBSDKShareOpenGraphContent.h"
-#import "FBSDKShareOpenGraphObject.h"
 #import "FBSDKSharePhoto.h"
 #import "FBSDKSharePhotoContent.h"
 #import "FBSDKShareUtility.h"
@@ -122,43 +119,6 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
   return YES;
 }
 
-- (BOOL)createOpenGraphObject:(FBSDKShareOpenGraphObject *)openGraphObject
-{
-  NSError *error;
-  if (!self.canShare) {
-    NSString *message = @"Share API is not available; verify 'canShare' returns YES";
-    error = [FBSDKError errorWithDomain:FBSDKShareErrorDomain
-                                   code:FBSDKShareErrorDialogNotAvailable
-                                message:message];
-    [_delegate sharer:self didFailWithError:error];
-    return NO;
-  }
-  if (![self _hasPublishActions]) {
-    NSString *message = @"Warning: Access token is missing publish_actions permissions";
-    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:message];
-  }
-  if (!openGraphObject) {
-    error = [FBSDKError requiredArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                   name:@"openGraphObject"
-                                                message:nil];
-    [_delegate sharer:self didFailWithError:error];
-    return NO;
-  }
-
-  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
-  void(^completionHandler)(id) = ^(NSDictionary *result) {
-    [self->_delegate sharer:self didCompleteWithResults:result];
-  };
-  if (![self _stageOpenGraphObject:openGraphObject
-                        connection:connection
-                    stagingHandler:NULL
-                 completionHandler:completionHandler]) {
-    return NO;
-  }
-  [connection start];
-  return YES;
-}
-
 - (BOOL)share
 {
   NSError *error;
@@ -186,11 +146,6 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
     return [self _sharePhotoContent:(FBSDKSharePhotoContent *)shareContent];
   } else if ([shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
     return [self _shareVideoContent:(FBSDKShareVideoContent *)shareContent];
-  } else if ([shareContent isKindOfClass:NSClassFromString(@"FBSDKShareOpenGraphContent")]) {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    return [self _shareOpenGraphContent:(FBSDKShareOpenGraphContent *)shareContent];
-#pragma GCC diagnostic pop
   } else {
     return NO;
   }
@@ -306,58 +261,6 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
                                      HTTPMethod:@"POST"] startWithCompletionHandler:completionHandler];
   return YES;
 }
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-- (BOOL)_shareOpenGraphContent:(FBSDKShareOpenGraphContent *)openGraphContent
-{
-  // In order to create a new Open Graph action using a custom object that does not already exist (objectID or URL), you
-  // must first send a request to post the object and then another to post the action.  If a local image is supplied
-  // with the object or action, that must be staged first and then referenced by the staging URL that is returned by
-  // that request.
-  FBSDKShareOpenGraphAction *action = openGraphContent.action;
-  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
-  void(^stagingHandler)(NSDictionary *) = ^(NSDictionary *stagedContainer) {
-    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:stagedContainer];
-    [self _addCommonParameters:parameters content:openGraphContent];
-    [FBSDKBasicUtility dictionary:parameters setObject:self.message forKey:@"message"];
-
-    FBSDKGraphRequestBlock requestHandler = ^(FBSDKGraphRequestConnection *requestConnection,
-                                                id result,
-                                                NSError *requestError) {
-      if (!self->_delegate) {
-        return;
-      }
-      if (requestError) {
-        NSError *error = [FBSDKError errorWithDomain:FBSDKShareErrorDomain
-                                                code:FBSDKShareErrorOpenGraph
-                                             message:@"Error sharing Open Graph content"
-                                     underlyingError:requestError];
-        [self->_delegate sharer:self didFailWithError:error];
-      } else if (result) {
-        NSMutableDictionary *shareResults = [[NSMutableDictionary alloc] init];
-        [FBSDKBasicUtility dictionary:shareResults setObject:FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_POST
-                               forKey:FBSDK_SHARE_RESULT_COMPLETION_GESTURE_KEY];
-        [FBSDKBasicUtility dictionary:shareResults setObject:[FBSDKTypeUtility stringValue:result[@"id"]]
-                               forKey:FBSDK_SHARE_RESULT_POST_ID_KEY];
-        [self->_delegate sharer:self didCompleteWithResults:shareResults];
-      }
-    };
-    NSString *graphPath = [self _graphPathWithSuffix:[FBSDKUtility URLEncode:action.actionType], nil];
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
-                                                                   parameters:parameters
-                                                                  tokenString:self.accessToken.tokenString
-                                                                      version:nil
-                                                                   HTTPMethod:@"POST"];
-    [self _connection:connection addRequest:request completionHandler:requestHandler];
-    [connection start];
-  };
-  if (![self _stageOpenGraphValueContainer:action connection:connection stagingHandler:stagingHandler]) {
-    return NO;
-  }
-  return YES;
-}
-#pragma GCC diagnostic pop
 
 - (BOOL)_sharePhotoContent:(FBSDKSharePhotoContent *)photoContent
 {
@@ -573,126 +476,6 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
   return result;
 }
 
-- (BOOL)_stageOpenGraphObject:(FBSDKShareOpenGraphObject *)openGraphObject
-                   connection:(FBSDKGraphRequestConnection *)connection
-               stagingHandler:(void(^)(id stagedObject))stagingHandler
-            completionHandler:(void(^)(NSDictionary *result))completionHandler
-{
-  NSString *type = [FBSDKTypeUtility stringValue:openGraphObject[@"og:type"]];
-  if (!type) {
-    NSString *message = @"Open Graph objects must contain a og:type value.";
-    NSError *error = [FBSDKError requiredArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                            name:@"og:type"
-                                                         message:message];
-    [_delegate sharer:self didFailWithError:error];
-    return NO;
-  }
-  void(^containerHandler)(NSDictionary *) = ^(NSDictionary *stagedContainer) {
-    NSError *JSONError;
-    NSString *objectString = [FBSDKBasicUtility JSONStringForObject:stagedContainer
-                                                              error:&JSONError
-                                               invalidObjectHandler:NULL];
-    if (!objectString) {
-      [self->_delegate sharer:self didFailWithError:JSONError];
-      return;
-    }
-    NSString *graphPath = [self _graphPathWithSuffix:@"objects", type, nil];
-    NSDictionary *parameters = @{ @"object": objectString };
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
-                                                                   parameters:parameters
-                                                                  tokenString:self.accessToken.tokenString
-                                                                      version:nil
-                                                                   HTTPMethod:@"POST"];
-    FBSDKGraphRequestBlock requestCompletionHandler = ^(FBSDKGraphRequestConnection *requestConnection,
-                                                          id result,
-                                                          NSError *requestError) {
-      if (!self->_delegate) {
-        return;
-      }
-      if (requestError) {
-        NSString *message = [[NSString alloc] initWithFormat:@"Error creating Open Graph object: %@",
-                             requestError.description];
-        NSError *error = [FBSDKError errorWithDomain:FBSDKShareErrorDomain
-                                                code:FBSDKShareErrorOpenGraph
-                                             message:message
-                                     underlyingError:requestError];
-        [self->_delegate sharer:self didFailWithError:error];
-      } else if (completionHandler != NULL) {
-        completionHandler([FBSDKTypeUtility dictionaryValue:result]);
-      }
-    };
-    NSString *batchEntryName = [self _connection:connection
-                                      addRequest:request
-                               completionHandler:requestCompletionHandler];
-    if (stagingHandler != NULL) {
-      stagingHandler([[NSString alloc] initWithFormat:@"{result=%@:$.id}", batchEntryName]);
-    }
-  };
-  return [self _stageOpenGraphValueContainer:openGraphObject connection:connection stagingHandler:containerHandler];
-  return YES;
-}
-
-- (BOOL)_stageOpenGraphValueContainer:(id<FBSDKShareOpenGraphValueContaining>)container
-                           connection:(FBSDKGraphRequestConnection *)connection
-                       stagingHandler:(void(^)(NSDictionary *stagedContainer))stagingHandler
-{
-  __block BOOL result = YES;
-  __block NSUInteger pendingCount = 1;
-  NSMutableDictionary *stagedContainer = [[NSMutableDictionary alloc] init];
-  void(^itemDidFail)(void) = ^{
-    if (!result) {
-      return;
-    }
-    result = NO;
-  };
-  void(^itemDidSucceed)(void) = ^{
-    if (!result) {
-      return;
-    }
-    if ((--pendingCount == 0) && (stagingHandler != NULL)) {
-      stagingHandler(stagedContainer);
-    }
-  };
-  BOOL isAction = [container isKindOfClass:[FBSDKShareOpenGraphAction class]];
-  [container enumerateKeysAndObjectsUsingBlock:^(NSString *key, id object, BOOL *stop) {
-    pendingCount++;
-
-    // The server does not understand custom namespaces remove them until the server is fixed
-    NSString *namespace;
-    key = [FBSDKShareUtility getOpenGraphNameAndNamespaceFromFullName:key namespace:&namespace];
-    if (namespace && !isAction) {
-      if (!stagedContainer[namespace]) {
-        stagedContainer[namespace] = [[NSMutableDictionary alloc] init];
-      }
-    }
-
-    void(^itemHandler)(id) = ^(id stagedValue) {
-      if (stagedValue) {
-        if (isAction) {
-          NSError *error;
-          if (![self _addEncodedParametersToDictionary:stagedContainer key:key value:stagedValue error:&error]) {
-            [self->_delegate sharer:self didFailWithError:error];
-            itemDidFail();
-            return;
-          }
-        } else {
-          NSMutableDictionary *valueContainer = (namespace ? stagedContainer[namespace] : stagedContainer);
-          valueContainer[key] = stagedValue;
-        }
-      }
-      itemDidSucceed();
-    };
-    if (![self _stageValue:object connection:connection stagingHandler:itemHandler]) {
-      *stop = YES;
-      result = NO;
-    }
-  }];
-  if (result) {
-    itemDidSucceed();
-  }
-  return result;
-}
-
 - (BOOL)_stagePhoto:(FBSDKSharePhoto *)photo
          connection:(FBSDKGraphRequestConnection *)connection
      stagingHandler:(void(^)(id stagedPhoto))stagingHandler
@@ -763,11 +546,6 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
     return YES;
   } else if ([value isKindOfClass:[FBSDKSharePhoto class]]) {
     return [self _stagePhoto:(FBSDKSharePhoto *)value connection:connection stagingHandler:stagingHandler];
-  } else if ([value isKindOfClass:[FBSDKShareOpenGraphObject class]]) {
-    return [self _stageOpenGraphObject:(FBSDKShareOpenGraphObject *)value
-                            connection:connection
-                        stagingHandler:stagingHandler
-                     completionHandler:NULL];
   } else if ([value isKindOfClass:[NSArray class]]) {
     return [self _stageArray:(NSArray *)value connection:connection stagingHandler:stagingHandler];
   } else {
