@@ -23,8 +23,6 @@
 #import "FBSDKShareCameraEffectContent.h"
 #import "FBSDKShareLinkContent.h"
 #import "FBSDKShareMediaContent.h"
-#import "FBSDKShareOpenGraphAction.h"
-#import "FBSDKShareOpenGraphObject.h"
 #import "FBSDKSharePhoto.h"
 #import "FBSDKSharePhotoContent.h"
 #import "FBSDKShareVideo.h"

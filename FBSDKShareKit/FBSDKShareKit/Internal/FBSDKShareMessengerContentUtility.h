@@ -52,9 +52,4 @@ NS_SWIFT_NAME(ShareMessengerContentUtility)
         contentForShare:(NSMutableDictionary<NSString *, id> *)contentForShare
       contentForPreview:(NSMutableDictionary<NSString *, id> *)contentForPreview;
 
-+ (BOOL)validateMessengerActionButton:(id<FBSDKShareMessengerActionButton>)button
-                isDefaultActionButton:(BOOL)isDefaultActionButton
-                               pageID:(NSString *)pageID
-                                error:(NSError *__autoreleasing *)errorRef;
-
 @end

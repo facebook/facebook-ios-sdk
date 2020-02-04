@@ -39,21 +39,6 @@ NSString *const kFBSDKShareMessengerButtonsKey = @"buttons";
 @implementation FBSDKShareMessengerContentUtility
 #pragma clang diagnostic pop
 
-static NSString *_WebviewHeightRatioString(FBSDKShareMessengerURLActionButtonWebviewHeightRatio heightRatio) {
-  switch (heightRatio) {
-    case FBSDKShareMessengerURLActionButtonWebviewHeightRatioFull:
-      return @"full";
-    case FBSDKShareMessengerURLActionButtonWebviewHeightRatioTall:
-      return @"tall";
-    case FBSDKShareMessengerURLActionButtonWebviewHeightRatioCompact:
-      return @"compact";
-  }
-}
-
-static NSString *_WebviewShareButtonString(BOOL shouldHideWebviewShareButton) {
-  return shouldHideWebviewShareButton ? @"hide" : nil;
-}
-
 + (void)addToParameters:(NSMutableDictionary<NSString *, id> *)parameters
         contentForShare:(NSMutableDictionary<NSString *, id> *)contentForShare
       contentForPreview:(NSMutableDictionary<NSString *, id> *)contentForPreview
