@@ -28,7 +28,6 @@
 #import "FBSDKCoreKit+Internal.h"
 #endif
 #import "FBSDKShareLinkContent.h"
-#import "FBSDKShareOpenGraphContent.h"
 #import "FBSDKShareUtility.h"
 
 @implementation FBSDKDeviceShareViewController
@@ -124,8 +123,7 @@
     }
     return nil;
   }
-  if ([_shareContent isKindOfClass:[FBSDKShareLinkContent class]] ||
-      [_shareContent isKindOfClass:NSClassFromString(@"FBSDKShareOpenGraphContent")]) {
+  if ([_shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
     NSString *unused;
     NSDictionary *params;
     [FBSDKShareUtility buildWebShareContent:_shareContent

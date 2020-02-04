@@ -18,30 +18,9 @@
 
 #import "FBSDKShareModelTestUtility.h"
 
-NSString *kFBSDKShareModelTestUtilityOpenGraphBoolValueKey = @"TEST:OPEN_GRAPH_BOOL_VALUE";
-NSString *kFBSDKShareModelTestUtilityOpenGraphDoubleValueKey = @"TEST:OPEN_GRAPH_DOUBLE_VALUE";
-NSString *kFBSDKShareModelTestUtilityOpenGraphFloatValueKey = @"TEST:OPEN_GRAPH_FLOAT_VALUE";
-NSString *kFBSDKShareModelTestUtilityOpenGraphIntegerValueKey = @"TEST:OPEN_GRAPH_INTEGER_VALUE";
-NSString *kFBSDKShareModelTestUtilityOpenGraphNumberArrayKey = @"TEST:OPEN_GRAPH_NUMBER_ARRAY";
-NSString *kFBSDKShareModelTestUtilityOpenGraphPhotoArrayKey = @"TEST:OPEN_GRAPH_PHOTO_ARRAY";
-NSString *kFBSDKShareModelTestUtilityOpenGraphStringArrayKey = @"TEST:OPEN_GRAPH_STRING_ARRAY";
-NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRING";
-
 @implementation FBSDKShareModelTestUtility
 
 #pragma mark - Public Methods
-
-+ (NSArray *)allOpenGraphActionKeys
-{
-  NSMutableArray *allKeys = [[self allOpenGraphObjectKeys] mutableCopy];
-  [allKeys addObject:[self previewPropertyName]];
-  return [allKeys copy];
-}
-
-+ (NSArray *)allOpenGraphObjectKeys
-{
-  return [self _openGraphProperties:YES].allKeys;
-}
 
 + (NSURL *)contentURL
 {
@@ -89,83 +68,6 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
 + (NSURL *)linkImageURL
 {
   return [NSURL URLWithString:@"https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-xpa1/t39.2178-6/851594_549760571770473_1178259000_n.png"];
-}
-
-+ (FBSDKShareOpenGraphAction *)openGraphAction
-{
-  FBSDKShareOpenGraphAction *action = [FBSDKShareOpenGraphAction actionWithType:[self openGraphActionType]
-                                                                         object:[self openGraphObject]
-                                                                            key:[self previewPropertyName]];
-  [action parseProperties:[self _openGraphProperties:YES]];
-  return action;
-}
-
-+ (FBSDKShareOpenGraphAction *)openGraphActionWithURLObject
-{
-  FBSDKShareOpenGraphAction *action = [FBSDKShareOpenGraphAction actionWithType:[self openGraphActionType]
-                                                                      objectURL:[self contentURL]
-                                                                            key:[self previewPropertyName]];
-  return action;
-}
-
-+ (NSString *)openGraphActionType
-{
-  return @"myActionType";
-}
-
-+ (FBSDKShareOpenGraphAction *)openGraphActionWithObjectID
-{
-  FBSDKShareOpenGraphObject *graphObject = [FBSDKShareOpenGraphObject objectWithProperties: @{}];
-  FBSDKShareOpenGraphAction *action = [FBSDKShareOpenGraphAction actionWithType:@"Foo" object: graphObject key: @"Bar"];
-  action.actionType = [self openGraphActionType];
-  [action setString:[self openGraphObjectID] forKey:[self previewPropertyName]];
-  [action parseProperties:[self _openGraphProperties:NO]];
-  return action;
-}
-
-+ (BOOL)openGraphBoolValue
-{
-  return YES;
-}
-
-+ (double)openGraphDoubleValue
-{
-  return DBL_MAX;
-}
-
-+ (float)openGraphFloatValue
-{
-  return FLT_MAX;
-}
-
-+ (NSInteger)openGraphIntegerValue
-{
-  return NSIntegerMax;
-}
-
-+ (NSArray *)openGraphNumberArray
-{
-  return @[ @NSIntegerMin, @-7, @0, @42, @NSIntegerMax ];
-}
-
-+ (FBSDKShareOpenGraphObject *)openGraphObject
-{
-  return [FBSDKShareOpenGraphObject objectWithProperties:[self _openGraphProperties:YES]];
-}
-
-+ (NSString *)openGraphObjectID
-{
-  return @"9876543210";
-}
-
-+ (NSArray *)openGraphStringArray
-{
-  return @[ @"string1", @"string2", @"string3" ];
-}
-
-+ (NSString *)openGraphString
-{
-  return @"this is a string";
 }
 
 + (NSArray *)peopleIDs
@@ -397,25 +299,6 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
   UIImage *image = [[UIImage alloc] initWithCGImage:imageRef];
   CGImageRelease(imageRef);
   return image;
-}
-
-+ (NSDictionary *)_openGraphProperties:(BOOL)includePhoto
-{
-  NSDictionary *properties = @{
-                               kFBSDKShareModelTestUtilityOpenGraphBoolValueKey: @([self openGraphBoolValue]),
-                               kFBSDKShareModelTestUtilityOpenGraphDoubleValueKey: @([self openGraphDoubleValue]),
-                               kFBSDKShareModelTestUtilityOpenGraphFloatValueKey: @([self openGraphFloatValue]),
-                               kFBSDKShareModelTestUtilityOpenGraphIntegerValueKey: @([self openGraphIntegerValue]),
-                               kFBSDKShareModelTestUtilityOpenGraphNumberArrayKey: [self openGraphNumberArray],
-                               kFBSDKShareModelTestUtilityOpenGraphStringArrayKey: [self openGraphStringArray],
-                               kFBSDKShareModelTestUtilityOpenGraphStringKey: [self openGraphString],
-                               };
-  if (includePhoto) {
-    NSMutableDictionary *mutableProperties = [properties mutableCopy];
-    mutableProperties[kFBSDKShareModelTestUtilityOpenGraphPhotoArrayKey] = [self photos];
-    properties = [mutableProperties copy];
-  }
-  return properties;
 }
 
 @end

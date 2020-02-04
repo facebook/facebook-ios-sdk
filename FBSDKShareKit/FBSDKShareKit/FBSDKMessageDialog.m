@@ -30,10 +30,6 @@
 #import "FBSDKShareCameraEffectContent.h"
 #import "FBSDKShareConstants.h"
 #import "FBSDKShareDefines.h"
-#import "FBSDKShareMessengerGenericTemplateContent.h"
-#import "FBSDKShareMessengerMediaTemplateContent.h"
-#import "FBSDKShareMessengerOpenGraphMusicTemplateContent.h"
-#import "FBSDKShareOpenGraphContent.h"
 #import "FBSDKShareUtility.h"
 #import "FBSDKShareVideoContent.h"
 
@@ -131,10 +127,7 @@
 - (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef
 {
   if (self.shareContent) {
-    if ([self.shareContent isKindOfClass:[FBSDKShareLinkContent class]] ||
-        [self.shareContent isKindOfClass:[FBSDKShareMessengerGenericTemplateContent class]] ||
-        [self.shareContent isKindOfClass:[FBSDKShareMessengerMediaTemplateContent class]] ||
-        [self.shareContent isKindOfClass:[FBSDKShareMessengerOpenGraphMusicTemplateContent class]]) {
+    if ([self.shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
     } else {
       if (errorRef != NULL) {
         NSString *message = [NSString stringWithFormat:@"Message dialog does not support %@.",
@@ -231,20 +224,12 @@
 - (void)_logDialogShow
 {
   NSString *contentType;
-  if([self.shareContent isKindOfClass:NSClassFromString(@"FBSDKShareOpenGraphContent")]) {
-    contentType = FBSDKAppEventsDialogShareContentTypeOpenGraph;
-  } else if ([self.shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
+  if ([self.shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
     contentType = FBSDKAppEventsDialogShareContentTypeStatus;
   } else if ([self.shareContent isKindOfClass:[FBSDKSharePhotoContent class]]) {
     contentType = FBSDKAppEventsDialogShareContentTypePhoto;
   } else if ([self.shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
     contentType = FBSDKAppEventsDialogShareContentTypeVideo;
-  } else if ([self.shareContent isKindOfClass:[FBSDKShareMessengerGenericTemplateContent class]]) {
-    contentType = FBSDKAppEventsDialogShareContentTypeMessengerGenericTemplate;
-  } else if ([self.shareContent isKindOfClass:[FBSDKShareMessengerMediaTemplateContent class]]) {
-    contentType = FBSDKAppEventsDialogShareContentTypeMessengerMediaTemplate;
-  } else if ([self.shareContent isKindOfClass:[FBSDKShareMessengerOpenGraphMusicTemplateContent class]]) {
-    contentType = FBSDKAppEventsDialogShareContentTypeMessengerOpenGraphMusicTemplate;
   } else {
     contentType = FBSDKAppEventsDialogShareContentTypeUnknown;
   }

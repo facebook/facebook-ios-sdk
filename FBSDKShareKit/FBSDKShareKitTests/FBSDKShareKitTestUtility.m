@@ -26,7 +26,6 @@
 #import <OCMock/OCMock.h>
 
 #import "FBSDKCoreKit+Internal.h"
-#import "FBSDKMessageDialog.h"
 #import "FBSDKShareDialog.h"
 
 @implementation FBSDKShareKitTestUtility

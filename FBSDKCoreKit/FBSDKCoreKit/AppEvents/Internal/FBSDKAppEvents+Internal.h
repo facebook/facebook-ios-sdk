@@ -60,16 +60,12 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterLaunchSource;
 /** Use to log the result of a call to FBDialogs presentShareDialogWithParams: */
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBDialogsPresentShareDialog;
 
-/** Use to log the result of a call to FBDialogs presentShareDialogWithOpenGraphActionParams: */
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBDialogsPresentShareDialogOG;
-
 /** Use to log the result of a call to FBDialogs presentLikeDialogWithLikeParams: */
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBDialogsPresentLikeDialogOG;
 
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBDialogsPresentShareDialogPhoto;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBDialogsPresentMessageDialog;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBDialogsPresentMessageDialogPhoto;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBDialogsPresentMessageDialogOG;
 
 /** Use to log the start of an auth request that cannot be fulfilled by the token cache */
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSessionAuthStart;
@@ -138,14 +134,10 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogOutcomeValue_Completed;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogOutcomeValue_Cancelled;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogOutcomeValue_Failed;
 
-FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogShareContentTypeOpenGraph;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogShareContentTypeStatus;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogShareContentTypePhoto;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogShareContentTypeVideo;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogShareContentTypeCamera;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogShareContentTypeMessengerGenericTemplate;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogShareContentTypeMessengerMediaTemplate;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogShareContentTypeMessengerOpenGraphMusicTemplate;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogShareContentTypeUnknown;
 
 
