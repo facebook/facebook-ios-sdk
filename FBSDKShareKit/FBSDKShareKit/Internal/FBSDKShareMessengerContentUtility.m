@@ -24,7 +24,6 @@
 #import "FBSDKCoreKit+Internal.h"
 #endif
 #import "FBSDKShareConstants.h"
-#import "FBSDKShareMessengerURLActionButton.h"
 #import "FBSDKShareUtility.h"
 
 NSString *const kFBSDKShareMessengerTemplateTypeKey = @"template_type";
@@ -34,31 +33,6 @@ NSString *const kFBSDKShareMessengerTypeKey = @"type";
 NSString *const kFBSDKShareMessengerAttachmentKey = @"attachment";
 NSString *const kFBSDKShareMessengerElementsKey = @"elements";
 NSString *const kFBSDKShareMessengerButtonsKey = @"buttons";
-
-DEPRECATED_FOR_MESSENGER
-static void _AddToContentPreviewDictionaryForURLButton(NSMutableDictionary<NSString *, id> *dictionary,
-                                                       FBSDKShareMessengerURLActionButton *urlButton)
-{
-  NSString *urlString = urlButton.url.absoluteString;
-  NSString *urlStringPath = urlButton.url.path;
-  NSRange rangeOfPath = [urlString rangeOfString:urlStringPath];
-  NSString *shortURLString = urlString;
-  if (rangeOfPath.location != NSNotFound) {
-    shortURLString = [urlString substringWithRange:NSMakeRange(0, rangeOfPath.location)];
-  }
-
-  NSString *previewString = urlButton.title.length > 0 ? [NSString stringWithFormat:@"%@ - %@", urlButton.title, shortURLString] : shortURLString;
-  [FBSDKBasicUtility dictionary:dictionary setObject:previewString forKey:@"target_display"];
-  [FBSDKBasicUtility dictionary:dictionary setObject:urlButton.url.absoluteString forKey:@"item_url"];
-}
-
-void AddToContentPreviewDictionaryForButton(NSMutableDictionary<NSString *, id> *dictionary,
-                                            id<FBSDKShareMessengerActionButton> button)
-{
-  if ([button isKindOfClass:[FBSDKShareMessengerURLActionButton class]]) {
-    _AddToContentPreviewDictionaryForURLButton(dictionary, button);
-  }
-}
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-implementations"
@@ -80,35 +54,6 @@ static NSString *_WebviewShareButtonString(BOOL shouldHideWebviewShareButton) {
   return shouldHideWebviewShareButton ? @"hide" : nil;
 }
 
-NSDictionary<NSString *, id> *SerializableButtonFromURLButton(FBSDKShareMessengerURLActionButton *button, BOOL isDefaultAction)
-{
-  NSMutableDictionary *serializableButton = [NSMutableDictionary dictionary];
-
-  // Strip out title for default action
-  if (!isDefaultAction) {
-    [FBSDKBasicUtility dictionary:serializableButton setObject:button.title forKey:@"title"];
-  }
-
-  [FBSDKBasicUtility dictionary:serializableButton setObject:@"web_url" forKey:@"type"];
-  [FBSDKBasicUtility dictionary:serializableButton setObject:button.url.absoluteString forKey:@"url"];
-  [FBSDKBasicUtility dictionary:serializableButton setObject:_WebviewHeightRatioString(button.webviewHeightRatio) forKey:@"webview_height_ratio"];
-  [FBSDKBasicUtility dictionary:serializableButton setObject:@(button.isMessengerExtensionURL) forKey:@"messenger_extensions"];
-  [FBSDKBasicUtility dictionary:serializableButton setObject:button.fallbackURL.absoluteString forKey:@"fallback_url"];
-  [FBSDKBasicUtility dictionary:serializableButton setObject:_WebviewShareButtonString(button.shouldHideWebviewShareButton) forKey:@"webview_share_button"];
-  return serializableButton;
-}
-
-NSArray<NSDictionary<NSString *, id> *> *SerializableButtonsFromButton(id<FBSDKShareMessengerActionButton> button)
-{
-  // Return NSArray even though there is just one button to match proper json structure
-  NSMutableArray<NSDictionary<NSString *, id> *> *serializableButtons = [NSMutableArray array];
-  if ([button isKindOfClass:[FBSDKShareMessengerURLActionButton class]]) {
-    [FBSDKBasicUtility array:serializableButtons addObject:SerializableButtonFromURLButton(button, NO)];
-  }
-
-  return serializableButtons;
-}
-
 + (void)addToParameters:(NSMutableDictionary<NSString *, id> *)parameters
         contentForShare:(NSMutableDictionary<NSString *, id> *)contentForShare
       contentForPreview:(NSMutableDictionary<NSString *, id> *)contentForPreview
@@ -122,30 +67,6 @@ NSArray<NSDictionary<NSString *, id> *> *SerializableButtonsFromButton(id<FBSDKS
     [FBSDKBasicUtility dictionary:messengerShareContent setObject:contentForShareDataString forKey:@"content_for_share"];
     [FBSDKBasicUtility dictionary:messengerShareContent setObject:contentForPreview forKey:@"content_for_preview"];
     [FBSDKBasicUtility dictionary:parameters setObject:messengerShareContent forKey:@"messenger_share_content"];
-  }
-}
-
-+ (BOOL)validateMessengerActionButton:(id<FBSDKShareMessengerActionButton>)button
-                isDefaultActionButton:(BOOL)isDefaultActionButton
-                               pageID:(NSString *)pageID
-                                error:(NSError *__autoreleasing *)errorRef
-{
-  if (!button) {
-    return YES;
-  }
-  else if ([button isKindOfClass:[FBSDKShareMessengerURLActionButton class]]) {
-    FBSDKShareMessengerURLActionButton *urlActionButton = (FBSDKShareMessengerURLActionButton *)button;
-    return [FBSDKShareUtility validateRequiredValue:urlActionButton.url name:@"button.url" error:errorRef] &&
-    (!isDefaultActionButton ? [FBSDKShareUtility validateRequiredValue:urlActionButton.title name:@"button.title" error:errorRef] : YES) &&
-    (urlActionButton.isMessengerExtensionURL ? [FBSDKShareUtility validateRequiredValue:pageID name:@"content pageID" error:errorRef] : YES);
-  } else {
-    if (errorRef != NULL) {
-      *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                        name:@"buttons"
-                                                       value:button
-                                                     message:nil];
-    }
-    return NO;
   }
 }
 

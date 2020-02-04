@@ -23,7 +23,6 @@
 #import "FBSDKShareLinkContent.h"
 #import "FBSDKShareMediaContent.h"
 #import "FBSDKShareMessengerActionButton.h"
-#import "FBSDKShareMessengerURLActionButton.h"
 #import "FBSDKSharePhoto.h"
 #import "FBSDKSharePhotoContent.h"
 #import "FBSDKShareVideo.h"

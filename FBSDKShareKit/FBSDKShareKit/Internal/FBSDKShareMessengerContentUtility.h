@@ -20,7 +20,6 @@
 
 #import "FBSDKShareConstants.h"
 
-@class FBSDKShareMessengerURLActionButton;
 @protocol FBSDKShareMessengerActionButton;
 
 DEPRECATED_FOR_MESSENGER
@@ -41,8 +40,6 @@ FOUNDATION_EXPORT NSString *const kFBSDKShareMessengerButtonsKey;
 DEPRECATED_FOR_MESSENGER
 void AddToContentPreviewDictionaryForButton(NSMutableDictionary<NSString *, id> *dictionary,
                                             id<FBSDKShareMessengerActionButton> button);
-
-NSDictionary<NSString *, id> *SerializableButtonFromURLButton(FBSDKShareMessengerURLActionButton *button, BOOL isDefaultAction);
 
 DEPRECATED_FOR_MESSENGER
 NSArray<NSDictionary<NSString *, id> *> *SerializableButtonsFromButton(id<FBSDKShareMessengerActionButton> button);

@@ -22,7 +22,6 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKShareMessengerContentUtility.h"
-#import "FBSDKShareMessengerURLActionButton.h"
 #import "FBSDKShareModelTestUtility.h"
 
 // High level keys
