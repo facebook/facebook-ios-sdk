@@ -22,7 +22,6 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKShareMessengerContentUtility.h"
-#import "FBSDKShareMessengerGenericTemplateContent.h"
 #import "FBSDKShareMessengerGenericTemplateElement.h"
 #import "FBSDKShareMessengerMediaTemplateContent.h"
 #import "FBSDKShareMessengerOpenGraphMusicTemplateContent.h"
@@ -116,84 +115,6 @@ static NSString *const kSubtitle = @"Test subtitle";
 
   NSString *contentForShare = messengerShareContent[kContentForShareKey];
   NSString *contentForShareExpectedValue = @"{\"attachment\":{\"type\":\"template\",\"payload\":{\"template_type\":\"open_graph\",\"elements\":[{\"url\":\"https:\\/\\/developers.facebook.com\\/\",\"buttons\":[{\"webview_height_ratio\":\"tall\",\"messenger_extensions\":false,\"title\":\"Visit Facebook\",\"type\":\"web_url\",\"url\":\"http:\\/\\/www.facebook.com\\/someAdditionalURL\"}]}]}}}";
-  XCTAssertEqualObjects(contentForShare, contentForShareExpectedValue, @"%@ key has incorrect value.", kContentForShareKey);
-}
-
-- (void)testGenericTemplateWithButtonAndDefaultActionSerialization {
-  FBSDKShareMessengerURLActionButton *urlButton = [FBSDKShareMessengerURLActionButton new];
-  urlButton.title = kButtonTitle;
-  urlButton.url = [NSURL URLWithString:kButtonURL];
-  urlButton.shouldHideWebviewShareButton = YES;
-  urlButton.isMessengerExtensionURL = YES;
-  urlButton.fallbackURL = [NSURL URLWithString:@"https://plus.google.com/something"];
-  urlButton.webviewHeightRatio = FBSDKShareMessengerURLActionButtonWebviewHeightRatioCompact;
-
-  FBSDKShareMessengerURLActionButton *defaultActionButton = [FBSDKShareMessengerURLActionButton new];
-  defaultActionButton.title = kDefaultActionTitle;
-  defaultActionButton.url = [NSURL URLWithString:kDefaultActionURL];
-  defaultActionButton.shouldHideWebviewShareButton = NO;
-  defaultActionButton.webviewHeightRatio = FBSDKShareMessengerURLActionButtonWebviewHeightRatioTall;
-
-  FBSDKShareMessengerGenericTemplateElement *element = [FBSDKShareMessengerGenericTemplateElement new];
-  element.title = kTitle;
-  element.subtitle = kSubtitle;
-  element.imageURL = [NSURL URLWithString:kImageURL];
-  element.defaultAction = defaultActionButton;
-  element.button = urlButton;
-
-  FBSDKShareMessengerGenericTemplateContent *content = [FBSDKShareMessengerGenericTemplateContent new];
-  content.isSharable = NO;
-  content.imageAspectRatio = FBSDKShareMessengerGenericTemplateImageAspectRatioSquare;
-  content.element = element;
-
-  [_parameters addEntriesFromDictionary:[content addParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault]];
-
-  NSDictionary *messengerShareContent = _parameters[kMessengerShareContentKey];
-
-  NSDictionary *contentForPreview = messengerShareContent[kContentForPreviewKey];
-  XCTAssertEqualObjects(@"DEFAULT", contentForPreview[kPreviewTypeKey], @"%@ key has incorrect value.", kPreviewTypeKey);
-  XCTAssertEqualObjects(kTitle, contentForPreview[kTitleKey], @"%@ key has incorrect value.", kTitleKey);
-  XCTAssertEqualObjects(kSubtitle, contentForPreview[kSubtitleKey], @"%@ key has incorrect value.", kSubtitleKey);
-  XCTAssertEqualObjects(@"Visit Facebook - http://www.facebook.com", contentForPreview[kTargetDisplayKey], @"%@ key has incorrect value.", kTargetDisplayKey);
-
-  NSString *contentForShare = messengerShareContent[kContentForShareKey];
-  NSString *contentForShareExpectedValue = @"{\"attachment\":{\"type\":\"template\",\"payload\":{\"template_type\":\"generic\",\"sharable\":false,\"image_aspect_ratio\":\"square\",\"elements\":[{\"default_action\":{\"webview_height_ratio\":\"tall\",\"messenger_extensions\":false,\"type\":\"web_url\",\"url\":\"http:\\/\\/www.messenger.com\\/something\"},\"title\":\"Test title\",\"image_url\":\"http:\\/\\/www.facebook.com\\/someImageURL.jpg\",\"subtitle\":\"Test subtitle\",\"buttons\":[{\"webview_share_button\":\"hide\",\"messenger_extensions\":true,\"title\":\"Visit Facebook\",\"fallback_url\":\"https:\\/\\/plus.google.com\\/something\",\"type\":\"web_url\",\"webview_height_ratio\":\"compact\",\"url\":\"http:\\/\\/www.facebook.com\\/someAdditionalURL\"}]}]}}}";
-  XCTAssertEqualObjects(contentForShare, contentForShareExpectedValue, @"%@ key has incorrect value.", kContentForShareKey);
-}
-
-- (void)testGenericTemplateWithButtonOnlySerialization {
-  FBSDKShareMessengerURLActionButton *urlButton = [FBSDKShareMessengerURLActionButton new];
-  urlButton.title = kButtonTitle;
-  urlButton.url = [NSURL URLWithString:kButtonURL];
-  urlButton.shouldHideWebviewShareButton = YES;
-  urlButton.isMessengerExtensionURL = YES;
-  urlButton.fallbackURL = [NSURL URLWithString:@"https://plus.google.com/something"];
-  urlButton.webviewHeightRatio = FBSDKShareMessengerURLActionButtonWebviewHeightRatioCompact;
-
-  FBSDKShareMessengerGenericTemplateElement *element = [FBSDKShareMessengerGenericTemplateElement new];
-  element.title = kTitle;
-  element.subtitle = kSubtitle;
-  element.imageURL = [NSURL URLWithString:kImageURL];
-  element.button = urlButton;
-
-  FBSDKShareMessengerGenericTemplateContent *content = [FBSDKShareMessengerGenericTemplateContent new];
-  content.isSharable = YES;
-  content.imageAspectRatio = FBSDKShareMessengerGenericTemplateImageAspectRatioHorizontal;
-  content.element = element;
-
-  [_parameters addEntriesFromDictionary:[content addParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault]];
-
-  NSDictionary *messengerShareContent = _parameters[kMessengerShareContentKey];
-
-  NSDictionary *contentForPreview = messengerShareContent[kContentForPreviewKey];
-  XCTAssertEqualObjects(@"DEFAULT", contentForPreview[kPreviewTypeKey], @"%@ key has incorrect value.", kPreviewTypeKey);
-  XCTAssertEqualObjects(kTitle, contentForPreview[kTitleKey], @"%@ key has incorrect value.", kTitleKey);
-  XCTAssertEqualObjects(kSubtitle, contentForPreview[kSubtitleKey], @"%@ key has incorrect value.", kSubtitleKey);
-  XCTAssertEqualObjects(@"Visit Facebook - http://www.facebook.com", contentForPreview[kTargetDisplayKey], @"%@ key has incorrect value.", kTargetDisplayKey);
-  XCTAssertEqualObjects(kImageURL, contentForPreview[kImageURLKey], @"%@ key has incorrect value.", kImageURLKey);
-
-  NSString *contentForShare = messengerShareContent[kContentForShareKey];
-  NSString *contentForShareExpectedValue = @"{\"attachment\":{\"type\":\"template\",\"payload\":{\"template_type\":\"generic\",\"sharable\":true,\"image_aspect_ratio\":\"horizontal\",\"elements\":[{\"title\":\"Test title\",\"image_url\":\"http:\\/\\/www.facebook.com\\/someImageURL.jpg\",\"subtitle\":\"Test subtitle\",\"buttons\":[{\"webview_share_button\":\"hide\",\"messenger_extensions\":true,\"title\":\"Visit Facebook\",\"fallback_url\":\"https:\\/\\/plus.google.com\\/something\",\"type\":\"web_url\",\"webview_height_ratio\":\"compact\",\"url\":\"http:\\/\\/www.facebook.com\\/someAdditionalURL\"}]}]}}}";
   XCTAssertEqualObjects(contentForShare, contentForShareExpectedValue, @"%@ key has incorrect value.", kContentForShareKey);
 }
 

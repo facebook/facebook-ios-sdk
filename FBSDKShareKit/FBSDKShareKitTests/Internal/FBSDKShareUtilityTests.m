@@ -114,47 +114,6 @@
   XCTAssertNil(error);
 }
 
-- (void)testGenericTemplateWithoutTitle
-{
-  FBSDKShareMessengerGenericTemplateContent *content = [FBSDKShareMessengerGenericTemplateContent new];
-  content.element = [FBSDKShareMessengerGenericTemplateElement new];
-  XCTAssertNotNil(content.shareUUID);
-  NSError *error;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
-  XCTAssertNotNil(error);
-}
-
-- (void)testGenericTemplateWithTitle
-{
-  FBSDKShareMessengerGenericTemplateContent *content = [FBSDKShareMessengerGenericTemplateContent new];
-  content.element = [FBSDKShareMessengerGenericTemplateElement new];
-  content.element.title = @"Some Title";
-  XCTAssertNotNil(content.shareUUID);
-  NSError *error;
-  XCTAssertTrue([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
-  XCTAssertNil(error);
-}
-
-- (void)testGenericTemplateWithButtonAndDefaultAction
-{
-  FBSDKShareMessengerURLActionButton *button = [FBSDKShareMessengerURLActionButton new];
-  button.url = [NSURL URLWithString:@"www.facebook.com"];
-  button.title = @"test button";
-
-  FBSDKShareMessengerURLActionButton *defaultAction = [FBSDKShareMessengerURLActionButton new];
-  defaultAction.url = [NSURL URLWithString:@"www.facebook.com"];
-
-  FBSDKShareMessengerGenericTemplateContent *content = [FBSDKShareMessengerGenericTemplateContent new];
-  content.element = [FBSDKShareMessengerGenericTemplateElement new];
-  content.element.title = @"Some Title";
-  content.element.button = button;
-  content.element.defaultAction = defaultAction;
-  XCTAssertNotNil(content.shareUUID);
-  NSError *error;
-  XCTAssertTrue([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
-  XCTAssertNil(error);
-}
-
 - (void)testButtonWithoutTitle
 {
   FBSDKShareMessengerURLActionButton *button = [FBSDKShareMessengerURLActionButton new];

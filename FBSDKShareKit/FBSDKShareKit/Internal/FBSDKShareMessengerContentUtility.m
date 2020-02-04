@@ -24,7 +24,6 @@
 #import "FBSDKCoreKit+Internal.h"
 #endif
 #import "FBSDKShareConstants.h"
-#import "FBSDKShareMessengerGenericTemplateContent.h"
 #import "FBSDKShareMessengerGenericTemplateElement.h"
 #import "FBSDKShareMessengerMediaTemplateContent.h"
 #import "FBSDKShareMessengerOpenGraphMusicTemplateContent.h"
