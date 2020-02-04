@@ -19,7 +19,6 @@
 #import "TargetConditionals.h"
 
 #import "FBSDKHashtag.h"
-#import "FBSDKShareAPI.h"
 #import "FBSDKShareConstants.h"
 #import "FBSDKShareLinkContent.h"
 #import "FBSDKShareMediaContent.h"
