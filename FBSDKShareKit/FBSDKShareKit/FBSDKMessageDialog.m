@@ -30,7 +30,6 @@
 #import "FBSDKShareCameraEffectContent.h"
 #import "FBSDKShareConstants.h"
 #import "FBSDKShareDefines.h"
-#import "FBSDKShareMessengerMediaTemplateContent.h"
 #import "FBSDKShareMessengerOpenGraphMusicTemplateContent.h"
 #import "FBSDKShareUtility.h"
 #import "FBSDKShareVideoContent.h"
@@ -130,7 +129,6 @@
 {
   if (self.shareContent) {
     if ([self.shareContent isKindOfClass:[FBSDKShareLinkContent class]] ||
-        [self.shareContent isKindOfClass:[FBSDKShareMessengerMediaTemplateContent class]] ||
         [self.shareContent isKindOfClass:[FBSDKShareMessengerOpenGraphMusicTemplateContent class]]) {
     } else {
       if (errorRef != NULL) {
@@ -234,8 +232,6 @@
     contentType = FBSDKAppEventsDialogShareContentTypePhoto;
   } else if ([self.shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
     contentType = FBSDKAppEventsDialogShareContentTypeVideo;
-  } else if ([self.shareContent isKindOfClass:[FBSDKShareMessengerMediaTemplateContent class]]) {
-    contentType = FBSDKAppEventsDialogShareContentTypeMessengerMediaTemplate;
   } else if ([self.shareContent isKindOfClass:[FBSDKShareMessengerOpenGraphMusicTemplateContent class]]) {
     contentType = FBSDKAppEventsDialogShareContentTypeMessengerOpenGraphMusicTemplate;
   } else {

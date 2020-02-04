@@ -33,7 +33,6 @@ NS_ASSUME_NONNULL_BEGIN
  SUPPORTED SHARE TYPES
  - FBSDKShareLinkContent
  - FBSDKShareMessengerOpenGraphMusicTemplateContent
- - FBSDKShareMessengerMediaTemplateContent
 
  UNSUPPORTED SHARE TYPES (DEPRECATED AUGUST 2018)
  - FBSDKShareOpenGraphContent
