@@ -30,7 +30,9 @@
 
 #else
 
-#if defined BUCK || defined FBSDKCOCOAPODS || defined __cplusplus
+#if defined __cplusplus
+#import <FBSDKCoreKit.h>
+#elif defined BUCK || defined FBSDKCOCOAPODS
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #else
 @import FBSDKCoreKit;

@@ -20,13 +20,15 @@
 
 #if TARGET_OS_TV
 
-#if defined BUCK || defined FBSDKCOCOAPODS || defined __cplusplus
+#if defined __cplusplus
+#import <FBSDKCoreKit.h>
+#elif defined BUCK || defined FBSDKCOCOAPODS
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <FBSDKShareKit/FBSDKSharingContent.h>
 #else
 @import FBSDKCoreKit;
-#import "FBSDKSharingContent.h"
 #endif
+
+#import "FBSDKSharingContent.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
