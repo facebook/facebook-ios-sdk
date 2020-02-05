@@ -373,6 +373,10 @@ lint_sdk() {
         dependent_spec="--include-podspecs=FBSDKCoreKit.podspec"
       fi
 
+      if [ "$spec" == FBSDKTVOSKit.podspec ]; then
+        dependent_spec="--include-podspecs=FBSDK{Core,Share,Login}Kit.podspec"
+      fi
+
       echo ""
       echo "Running lib lint command:"
       echo "pod lib lint" "$spec" $dependent_spec "$@"

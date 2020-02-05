@@ -419,6 +419,14 @@
 		F4E7519823EA1A130061BBFC /* FBSDKMessengerIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = F4E7519023EA1A130061BBFC /* FBSDKMessengerIcon.m */; };
 		F4E7519B23EA1A130061BBFC /* FBSDKMessengerIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = F4E7519023EA1A130061BBFC /* FBSDKMessengerIcon.m */; };
 		F4E7519C23EA1A130061BBFC /* FBSDKMessengerIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = F4E7519023EA1A130061BBFC /* FBSDKMessengerIcon.m */; };
+		F4E751A723EA57560061BBFC /* FBSDKMessageDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = F4E7517323EA19000061BBFC /* FBSDKMessageDialog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F4E751B123EA57570061BBFC /* FBSDKMessageDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = F4E7517323EA19000061BBFC /* FBSDKMessageDialog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F4E751B223EA57710061BBFC /* FBSDKSendButton.h in Headers */ = {isa = PBXBuildFile; fileRef = F4E7517623EA19010061BBFC /* FBSDKSendButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F4E751B323EA57720061BBFC /* FBSDKSendButton.h in Headers */ = {isa = PBXBuildFile; fileRef = F4E7517623EA19010061BBFC /* FBSDKSendButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F4E751B523EA57930061BBFC /* FBSDKSendButton.h in Headers */ = {isa = PBXBuildFile; fileRef = F4E7517623EA19010061BBFC /* FBSDKSendButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F4E751B623EA57940061BBFC /* FBSDKSendButton.h in Headers */ = {isa = PBXBuildFile; fileRef = F4E7517623EA19010061BBFC /* FBSDKSendButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F4E751B723EA579B0061BBFC /* FBSDKMessageDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = F4E7517323EA19000061BBFC /* FBSDKMessageDialog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F4E751B823EA579C0061BBFC /* FBSDKMessageDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = F4E7517323EA19000061BBFC /* FBSDKMessageDialog.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1152,6 +1160,8 @@
 				A41549F81E6653AE001F7152 /* FBSDKCameraEffectTextures+Internal.h in Headers */,
 				81A07F291D1A2E6A0041A29C /* FBSDKLikeActionController.h in Headers */,
 				B3D17FF5212CD060000D28D6 /* FBSDKSharingScheme.h in Headers */,
+				F4E751B823EA579C0061BBFC /* FBSDKMessageDialog.h in Headers */,
+				F4E751B623EA57940061BBFC /* FBSDKSendButton.h in Headers */,
 				81A07F2A1D1A2E6A0041A29C /* FBSDKSharePhoto.h in Headers */,
 				81A07F2B1D1A2E6A0041A29C /* FBSDKShareMediaContent.h in Headers */,
 				A4B471EF1E662F74009678AA /* FBSDKCameraEffectTextures.h in Headers */,
@@ -1225,6 +1235,8 @@
 				89CE85E51AA4D1940030C6FA /* FBSDKLikeActionControllerCache.h in Headers */,
 				A41549F71E6653AE001F7152 /* FBSDKCameraEffectTextures+Internal.h in Headers */,
 				890414811A64866B00617215 /* FBSDKSharing.h in Headers */,
+				F4E751B723EA579B0061BBFC /* FBSDKMessageDialog.h in Headers */,
+				F4E751B523EA57930061BBFC /* FBSDKSendButton.h in Headers */,
 				89D05A7F1AA0E0D300609300 /* FBSDKLikeActionController.h in Headers */,
 				892EBBF61A3A50D700721B03 /* FBSDKSharePhoto.h in Headers */,
 				03A419DA1C922A2A006E7767 /* FBSDKShareMediaContent.h in Headers */,
@@ -1278,6 +1290,7 @@
 				F483F4AF233AC91700703DE3 /* FBSDKShareMediaContent.h in Headers */,
 				F483F4B2233AC91700703DE3 /* FBSDKSharingValidation.h in Headers */,
 				F483F4B3233AC91700703DE3 /* FBSDKShareDialogMode.h in Headers */,
+				F4E751B323EA57720061BBFC /* FBSDKSendButton.h in Headers */,
 				F483F4B5233AC91700703DE3 /* FBSDKSharingButton.h in Headers */,
 				F483F4B6233AC91700703DE3 /* FBSDKShareKit.h in Headers */,
 				F483F4B8233AC91700703DE3 /* FBSDKGameRequestFrictionlessRecipientCache.h in Headers */,
@@ -1287,6 +1300,7 @@
 				F483F4BC233AC91700703DE3 /* FBSDKCheckmarkIcon.h in Headers */,
 				F483F4BE233AC91700703DE3 /* FBSDKCameraEffectArguments+Internal.h in Headers */,
 				F483F4C0233AC91700703DE3 /* FBSDKShareButton.h in Headers */,
+				F4E751A723EA57560061BBFC /* FBSDKMessageDialog.h in Headers */,
 				F483F4C4233AC91700703DE3 /* FBSDKLikeDialog.h in Headers */,
 				F483F4C5233AC91700703DE3 /* FBSDKGameRequestContent.h in Headers */,
 			);
@@ -1326,6 +1340,7 @@
 				F487DC6B231EC4CC008416A9 /* FBSDKShareMediaContent.h in Headers */,
 				F487DC6E231EC4CC008416A9 /* FBSDKSharingValidation.h in Headers */,
 				F487DC6F231EC4CC008416A9 /* FBSDKShareDialogMode.h in Headers */,
+				F4E751B223EA57710061BBFC /* FBSDKSendButton.h in Headers */,
 				F487DC71231EC4CC008416A9 /* FBSDKSharingButton.h in Headers */,
 				F487DC72231EC4CC008416A9 /* FBSDKShareKit.h in Headers */,
 				F487DC74231EC4CC008416A9 /* FBSDKGameRequestFrictionlessRecipientCache.h in Headers */,
@@ -1335,6 +1350,7 @@
 				F487DC78231EC4CC008416A9 /* FBSDKCheckmarkIcon.h in Headers */,
 				F487DC7A231EC4CC008416A9 /* FBSDKCameraEffectArguments+Internal.h in Headers */,
 				F487DC7C231EC4CC008416A9 /* FBSDKShareButton.h in Headers */,
+				F4E751B123EA57570061BBFC /* FBSDKMessageDialog.h in Headers */,
 				F487DC80231EC4CC008416A9 /* FBSDKLikeDialog.h in Headers */,
 				F487DC81231EC4CC008416A9 /* FBSDKGameRequestContent.h in Headers */,
 			);

@@ -40,5 +40,5 @@ Pod::Spec.new do |s|
 
     s.ios.deployment_target = '8.0'
 
-    s.ios.dependency 'FBSDKCoreKit', "~> 5.5"
+    s.ios.dependency 'FBSDKCoreKit', "~> #{s.version}"
 end

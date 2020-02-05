@@ -29,6 +29,6 @@ Pod::Spec.new do |s|
 
   s.source_files   = 'FBSDKPlacesKit/FBSDKPlacesKit/**/*.{h,m}'
   s.public_header_files = 'FBSDKPlacesKit/FBSDKPlacesKit/*.{h}'
-  s.dependency 'FBSDKCoreKit', "~> 5.0"
+  s.dependency 'FBSDKCoreKit', "~> #{s.version}"
 
 end
