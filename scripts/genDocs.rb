@@ -39,7 +39,7 @@ def generateSourceKittenOutputForSwift(kit)
   #
   FileUtils.mv("#{kit}/#{kit}/Swift/#{swiftKit}.xcscheme", "#{kit}/#{kit}.xcodeproj/xcshareddata/xcschemes/")
 
-  system "sourcekitten doc -- -workspace FacebookSDK.xcworkspace -scheme #{swiftKit} > tmpSwift"
+  system "bundle exec sourcekitten doc -- -workspace FacebookSDK.xcworkspace -scheme #{swiftKit} > tmpSwift"
 end
 
 def prefixFor(kit)
@@ -76,6 +76,10 @@ def generateSourceKittenOutputForObjC(kit)
     "#{parentDirectory}/FBSDKCoreKit/FBSDKCoreKit/AppLink/.",
     "#{parentDirectory}/FBSDKCoreKit/FBSDKCoreKit"
   )
+  FileUtils.cp_r(
+    "#{parentDirectory}/FBSDKCoreKit/FBSDKCoreKit/GraphAPI/.",
+    "#{parentDirectory}/FBSDKCoreKit/FBSDKCoreKit"
+  )
 
   # This is a little weird. We need to include paths to the FBSDKCoreKit headers in order for sourcekitten to
   # include the symbols in the output for FBSDKLoginKit and FBSDKShareKit
@@ -83,11 +87,11 @@ def generateSourceKittenOutputForObjC(kit)
   # then it won't include Swift definitions. Hence the need to have a separate commend for FBSDKCoreKit.
   #
   if kit == CORE_KIT
-    system "sourcekitten doc --objc #{header_file} \
+    system "bundle exec sourcekitten doc --objc #{header_file} \
       -- -x objective-c  -isysroot $(xcrun --show-sdk-path --sdk iphonesimulator) \
       -I #{parentDirectory}/#{kit} > tmpObjC"
   else
-    system "sourcekitten doc --objc #{header_file} \
+    system "bundle exec sourcekitten doc --objc #{header_file} \
     -- -x objective-c  -isysroot $(xcrun --show-sdk-path --sdk iphonesimulator) \
     -I #{parentDirectory}/FBSDKCoreKit \
     -I #{parentDirectory}/#{kit} > tmpObjC"
@@ -105,7 +109,7 @@ def combineSourceKittenOutputFor(kit)
 
   puts "Generating documentation for #{kit}"
 
-  system "jazzy \
+  system "bundle exec jazzy \
     --config #{parentDirectory}/.jazzy.yaml \
     --output docs/#{kit} \
     --sourcekitten-sourcefile tmpSwift,tmpObjC"
@@ -120,7 +124,7 @@ when /#{CORE_KIT}|#{LOGIN_KIT}|#{SHARE_KIT}/
 else
   header_file = headerFileFor(kit)
 
-  system "jazzy \
+  system "bundle exec jazzy \
     --framework-root #{prefixFor(kit)}#{kit} \
     --output docs/#{kit} \
     --umbrella-header #{header_file}"
