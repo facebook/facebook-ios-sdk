@@ -7,7 +7,49 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.15.1...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v6.0.0...HEAD)
+
+## 6.0.0
+
+### Updated
+
+- Uses API version 6.0 by default
+
+### Fixed
+
+- `FBSDKShareDialog` delegate callbacks on apps using iOS 13
+
+### Removed
+
+#### ShareKit
+
+- Facebook Messenger Template and OpenGraph Sharing
+- `FBSDKMessengerActionButton`
+- `FBSDKShareMessengerGenericTemplateContent`
+- `FBSDKShareMessengerGenericTemplateElement`
+- `FBSDKShareMessengerMediaTemplateMediaType`
+- `FBSDKShareMessengerMediaTemplateContent`
+- `FBSDKShareMessengerOpenGraphMusicTemplateContent`
+- `FBSDKShareMessengerURLActionButton`
+- `FBSDKShareAPI` since it exists to make sharing of open graph objects easier. It also requires  the deprecated `publish_actions` permission which is deprecated.
+- Property `pageID` from `FBSDKSharingContent` since it only applies to sharing to Facebook Messenger
+- `FBSDKShareOpenGraphAction`
+- `FBSDKShareOpenGraphContent`
+- `FBSDKShareOpenGraphObject`
+- `FBSDKShareOpenGraphValueContainer`
+
+#### CoreKit
+
+- `FBSDKSettings` property `instrumentEnabled`
+- Sharing of open graph objects. This is because the "publish_actions" permission is deprecated so we should not be providing helper methods that encourage its use. For more details see: https://developers.facebook.com/docs/sharing/opengraph
+- `FBSDKAppEventNameSubscriptionHeartbeat`
+
+#### LoginKit
+
+- `FBSDKLoginBehavior` Login flows no longer support logging in through the native application. This change reflects that.
+
+[2020-02-03](https://github.com/facebook/facebook-ios-sdk/releases/tag/v6.0.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v5.15.1...v6.0.0)
 
 ## 5.15.1
 
