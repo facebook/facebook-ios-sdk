@@ -35,7 +35,7 @@ Pod::Spec.new do |s|
   s.prefix_header_contents = '#define FBSDKCOCOAPODS'
 
   s.subspec 'Login' do |ss|
-    ss.dependency 'FBSDKCoreKit', "~> 5.0"
+    ss.dependency 'FBSDKCoreKit', "~> #{s.version}"
     ss.exclude_files = 'FBSDKLoginKit/FBSDKLoginKit/include/**/*'
     ss.source_files   = 'FBSDKLoginKit/FBSDKLoginKit/**/*.{h,m}'
     ss.public_header_files = 'FBSDKLoginKit/FBSDKLoginKit/*.{h}'

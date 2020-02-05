@@ -37,7 +37,7 @@ Pod::Spec.new do |s|
   s.prefix_header_contents = '#define FBSDKCOCOAPODS'
 
   s.subspec 'Share' do |ss|
-    ss.dependency 'FBSDKCoreKit', "~> 5.0"
+    ss.dependency 'FBSDKCoreKit', "~> #{s.version}"
 
     ss.exclude_files = 'FBSDKShareKit/FBSDKShareKit/include/**/*'
     ss.public_header_files = 'FBSDKShareKit/FBSDKShareKit/*.{h}'
