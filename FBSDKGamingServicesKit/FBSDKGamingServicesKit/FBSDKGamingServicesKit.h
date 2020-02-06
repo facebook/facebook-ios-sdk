@@ -17,3 +17,6 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <FBSDKGamingServicesKit/FBSDKFriendFinderDialog.h>
+#import <FBSDKGamingServicesKit/FBSDKGamingImageUploader.h>
+#import <FBSDKGamingServicesKit/FBSDKGamingImageUploaderConfiguration.h>
+#import <FBSDKGamingServicesKit/FBSDKGamingServiceCompletionHandler.h>

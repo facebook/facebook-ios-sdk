@@ -16,32 +16,20 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKFriendFinderDialog.h"
+#import <Foundation/Foundation.h>
 
-#import "FBSDKCoreKit+Internal.h"
-#import "FBSDKGamingServiceController.h"
+#if SWIFT_PACKAGE
+#import "FBSDKGamingServiceCompletionHandler.h"
+#else
+#import <FBSDKGamingServicesKit/FBSDKGamingServiceCompletionHandler.h>
+#endif
 
-@interface FBSDKFriendFinderDialog ()
-@end
+@class FBSDKGamingImageUploaderConfiguration;
 
-@implementation FBSDKFriendFinderDialog
+NS_SWIFT_NAME(GamingImageUploader)
+@interface FBSDKGamingImageUploader : NSObject
 
-+ (void)launchFriendFinderDialogWithCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
-{
-  if ([FBSDKAccessToken currentAccessToken] == nil) {
-    completionHandler(false, [FBSDKError
-                            errorWithCode:FBSDKErrorAccessTokenRequired
-                            message:@"A valid access token is required to launch the Friend Finder"]);
-
-    return;
-  }
-
-  FBSDKGamingServiceController *const controller =
-  [[FBSDKGamingServiceController alloc]
-   initWithServiceType:FBSDKGamingServiceTypeFriendFinder
-   completionHandler:completionHandler];
-
-  [controller callWithArgument:FBSDKAccessToken.currentAccessToken.appID];
-}
++ (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration * _Nonnull)configuration
+                andCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler;
 
 @end
