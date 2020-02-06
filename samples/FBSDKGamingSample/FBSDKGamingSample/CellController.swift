@@ -20,6 +20,7 @@ import UIKit
 import FBSDKLoginKit
 
 enum CellType: Int, CaseIterable {
+  case status
   case login
 
   static var count: Int {
@@ -32,6 +33,9 @@ enum CellController {
 
   static func configure(_ cell: UITableViewCell, ofType type: CellType) {
     switch type {
+    case .status:
+      configureStatusCell(cell)
+
     case .login:
       loginButton.removeFromSuperview()
       loginButton.center = cell.contentView.center
@@ -41,8 +45,78 @@ enum CellController {
 
   static func didSelect(_ type: CellType, from viewController:UIViewController) {
     switch type {
+    case .status:
+      break // no-op
+
     case .login:
       break // no-op
     }
+  }
+
+  static func heightForCell(_ type: CellType) -> CGFloat {
+    switch type {
+    case .status:
+      return 88
+    case .login:
+      return 44
+    }
+  }
+
+  private static func configureStatusCell(_ cell: UITableViewCell) {
+    if (AccessToken.current == nil) {
+      cell.textLabel?.text = "No Access Token, Please Log in"
+      cell.textLabel?.textAlignment = .center
+      cell.imageView?.image = nil
+      return
+    }
+
+    GraphRequest(graphPath: "me", parameters: ["fields": "id,name,picture"])
+      .start { (connection, result, error) in
+
+        let result = result as? [String: Any]
+
+        let url = ((
+          result?["picture"] as? [String: Any]
+          )?["data"] as? [String: Any]
+          )?["url"] as? String
+
+        let id = result?["id"] as? String
+        let name = result?["name"] as? String
+
+        cell.downloadImage(url)
+
+        cell.textLabel?.attributedText =
+          NSAttributedString(string:
+            """
+            ID: \(id ?? "")
+            Name: \(name ?? "")
+            """)
+        cell.textLabel?.numberOfLines = 0
+        cell.textLabel?.textAlignment = .left
+
+        cell.setNeedsLayout()
+    }
+  }
+}
+
+extension UITableViewCell {
+  func downloadImage(_ link: String?) {
+    let url = URL(string: link ?? "")
+    if (url == nil) {
+      return
+    }
+    URLSession.shared.dataTask(with: url!) { data, response, error in
+      guard
+        let httpURLResponse = response as? HTTPURLResponse, httpURLResponse.statusCode == 200,
+        let mimeType = response?.mimeType, mimeType.hasPrefix("image"),
+        let data = data, error == nil,
+        let image = UIImage(data: data)
+        else { return }
+
+      DispatchQueue.main.async() {
+        self.imageView?.image = image
+        self.setNeedsLayout()
+      }
+    }.resume()
   }
 }
