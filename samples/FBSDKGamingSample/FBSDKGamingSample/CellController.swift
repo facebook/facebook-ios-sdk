@@ -17,27 +17,32 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import UIKit
-import FBSDKCoreKit
+import FBSDKLoginKit
 
-@UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+enum CellType: Int, CaseIterable {
+  case login
 
-  var window: UIWindow?
+  static var count: Int {
+      return allCases.count
+  }
+}
 
-  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-    let rootViewController = UINavigationController(rootViewController: MainViewController())
+enum CellController {
+  static private let loginButton = FBLoginButton()
 
-    window = UIWindow(frame: UIScreen.main.bounds)
-
-    window!.rootViewController = rootViewController
-    window!.makeKeyAndVisible()
-
-    ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
-
-    return true
+  static func configure(_ cell: UITableViewCell, ofType type: CellType) {
+    switch type {
+    case .login:
+      loginButton.removeFromSuperview()
+      loginButton.center = cell.contentView.center
+      cell.contentView.addSubview(loginButton)
+    }
   }
 
-  func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-    ApplicationDelegate.shared.application(app, open: url, options: options)
+  static func didSelect(_ type: CellType, from viewController:UIViewController) {
+    switch type {
+    case .login:
+      break // no-op
+    }
   }
 }
