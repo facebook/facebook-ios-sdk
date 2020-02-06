@@ -16,32 +16,20 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKFriendFinderDialog.h"
+#import "FBSDKGamingImageUploaderConfiguration.h"
 
-#import "FBSDKCoreKit+Internal.h"
-#import "FBSDKGamingServiceController.h"
+@implementation FBSDKGamingImageUploaderConfiguration
 
-@interface FBSDKFriendFinderDialog ()
-@end
-
-@implementation FBSDKFriendFinderDialog
-
-+ (void)launchFriendFinderDialogWithCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
+- (instancetype)initWithImage:(UIImage * _Nonnull)image
+                caption:(NSString * _Nullable)caption
+shouldLaunchMediaDialog:(BOOL)shouldLaunchMediaDialog
 {
-  if ([FBSDKAccessToken currentAccessToken] == nil) {
-    completionHandler(false, [FBSDKError
-                            errorWithCode:FBSDKErrorAccessTokenRequired
-                            message:@"A valid access token is required to launch the Friend Finder"]);
-
-    return;
+  if (self = [super init]) {
+    _image = image;
+    _caption = caption;
+    _shouldLaunchMediaDialog = shouldLaunchMediaDialog;
   }
-
-  FBSDKGamingServiceController *const controller =
-  [[FBSDKGamingServiceController alloc]
-   initWithServiceType:FBSDKGamingServiceTypeFriendFinder
-   completionHandler:completionHandler];
-
-  [controller callWithArgument:FBSDKAccessToken.currentAccessToken.appID];
+  return self;
 }
 
 @end
