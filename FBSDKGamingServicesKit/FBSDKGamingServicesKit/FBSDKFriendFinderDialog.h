@@ -18,7 +18,12 @@
 
 #import <Foundation/Foundation.h>
 
+typedef void (^FBSDKFriendFinderCompletionBlock)(BOOL success, NSError * _Nullable error)
+NS_SWIFT_NAME(FriendFinderCompletionBlock);
+
 NS_SWIFT_NAME(FriendFinderDialog)
 @interface FBSDKFriendFinderDialog : NSObject
+
++ (void)launchFriendFinderDialogWithCompletionBlock:(FBSDKFriendFinderCompletionBlock)completionBlock;
 
 @end
