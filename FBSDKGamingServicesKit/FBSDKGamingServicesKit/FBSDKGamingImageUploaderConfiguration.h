@@ -16,32 +16,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKFriendFinderDialog.h"
+#import <Foundation/Foundation.h>
 
-#import "FBSDKCoreKit+Internal.h"
-#import "FBSDKGamingServiceController.h"
+NS_SWIFT_NAME(GamingImageUploaderConfiguration)
+@interface FBSDKGamingImageUploaderConfiguration : NSObject
 
-@interface FBSDKFriendFinderDialog ()
-@end
+@property (nonatomic, strong, readonly, nonnull) UIImage *image;
+@property (nonatomic, strong, readonly, nullable) NSString *caption;
+@property (nonatomic, assign, readonly) BOOL shouldLaunchMediaDialog;
 
-@implementation FBSDKFriendFinderDialog
-
-+ (void)launchFriendFinderDialogWithCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
-{
-  if ([FBSDKAccessToken currentAccessToken] == nil) {
-    completionHandler(false, [FBSDKError
-                            errorWithCode:FBSDKErrorAccessTokenRequired
-                            message:@"A valid access token is required to launch the Friend Finder"]);
-
-    return;
-  }
-
-  FBSDKGamingServiceController *const controller =
-  [[FBSDKGamingServiceController alloc]
-   initWithServiceType:FBSDKGamingServiceTypeFriendFinder
-   completionHandler:completionHandler];
-
-  [controller callWithArgument:FBSDKAccessToken.currentAccessToken.appID];
-}
+- (instancetype)initWithImage:(UIImage * _Nonnull)image
+                      caption:(NSString * _Nullable)caption
+      shouldLaunchMediaDialog:(BOOL)shouldLaunchMediaDialog;
 
 @end

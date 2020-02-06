@@ -16,32 +16,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKFriendFinderDialog.h"
+#import <Foundation/Foundation.h>
 
-#import "FBSDKCoreKit+Internal.h"
-#import "FBSDKGamingServiceController.h"
+#if SWIFT_PACKAGE
+#import "FBSDKGamingServiceCompletionHandler.h"
+#else
+#import <FBSDKGamingServicesKit/FBSDKGamingServiceCompletionHandler.h>
+#endif
 
-@interface FBSDKFriendFinderDialog ()
-@end
+typedef NS_ENUM(NSUInteger, FBSDKGamingServiceType) {
+  FBSDKGamingServiceTypeFriendFinder,
+  FBSDKGamingServiceTypeMediaAsset,
+};
 
-@implementation FBSDKFriendFinderDialog
+@interface FBSDKGamingServiceController : NSObject
 
-+ (void)launchFriendFinderDialogWithCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
-{
-  if ([FBSDKAccessToken currentAccessToken] == nil) {
-    completionHandler(false, [FBSDKError
-                            errorWithCode:FBSDKErrorAccessTokenRequired
-                            message:@"A valid access token is required to launch the Friend Finder"]);
+- (instancetype)initWithServiceType:(FBSDKGamingServiceType)serviceType
+                  completionHandler:(FBSDKGamingServiceCompletionHandler)completionHandler;
 
-    return;
-  }
-
-  FBSDKGamingServiceController *const controller =
-  [[FBSDKGamingServiceController alloc]
-   initWithServiceType:FBSDKGamingServiceTypeFriendFinder
-   completionHandler:completionHandler];
-
-  [controller callWithArgument:FBSDKAccessToken.currentAccessToken.appID];
-}
+- (void)callWithArgument:(NSString *)argument;
 
 @end
