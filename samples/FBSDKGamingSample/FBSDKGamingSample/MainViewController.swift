@@ -81,4 +81,8 @@ class MainViewController: UITableViewController {
 
     present(alertController, animated: true)
   }
+
+  override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return CellController.heightForCell(CellType(rawValue: indexPath.row)!)
+  }
 }
