@@ -34,7 +34,6 @@
 NSString * const OptInEvents = @"production_events";
 NSString * const UnconfirmedEvents = @"eligible_for_prediction_events";
 
-static NSMutableArray<NSMutableDictionary<NSString *, id> *> *_viewTrees;
 static NSMutableSet<NSString *> *_optInEvents;
 static NSMutableSet<NSString *> *_unconfirmedEvents;
 
@@ -42,7 +41,6 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
 
 + (void)initialize
 {
-  _viewTrees = [NSMutableArray array];
   _optInEvents = [NSMutableSet set];
   _unconfirmedEvents = [NSMutableSet set];
 }
@@ -186,9 +184,12 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
   NSMutableArray<NSDictionary<NSString *, id> *> *trees = [NSMutableArray array];
 
   fb_dispatch_on_main_thread(^{
+    NSMutableSet<NSObject *> *objAddressSet = [NSMutableSet set];
     NSArray<UIWindow *> *windows = [UIApplication sharedApplication].windows;
     for (UIWindow *window in windows) {
-      NSDictionary<NSString *, id> *tree = [FBSDKViewHierarchy recursiveCaptureTree:window withObject:obj];
+      NSDictionary<NSString *, id> *tree = [FBSDKViewHierarchy recursiveCaptureTree:window
+                                                                         withObject:obj
+                                                                            withSet:objAddressSet];
       if (tree) {
         if (window.isKeyWindow) {
           [trees insertObject:tree atIndex:0];
@@ -197,7 +198,7 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
         }
       }
     }
-    NSMutableDictionary<NSString *, id> *treeInfo = [NSMutableDictionary dictionary];
+    NSMutableDictionary<NSString *, id> *viewTree = [NSMutableDictionary dictionary];
 
     NSString *screenName = nil;
     UIViewController *topMostViewController = [FBSDKInternalUtility topMostViewController];
@@ -205,12 +206,8 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
       screenName = NSStringFromClass([topMostViewController class]);
     }
 
-    treeInfo[VIEW_HIERARCHY_VIEW_KEY] = trees;
-    treeInfo[VIEW_HIERARCHY_SCREEN_NAME_KEY] = screenName ?: @"";
-
-    [_viewTrees addObject:treeInfo];
-
-    NSDictionary<NSString *, id> *viewTree = [_viewTrees lastObject];
+    viewTree[VIEW_HIERARCHY_VIEW_KEY] = trees;
+    viewTree[VIEW_HIERARCHY_SCREEN_NAME_KEY] = screenName ?: @"";
 
     fb_dispatch_on_default_thread(^{
       NSDictionary<NSString *, NSString *> *result = [FBSDKEventInferencer predict:text viewTree:[viewTree mutableCopy] withLog:YES];

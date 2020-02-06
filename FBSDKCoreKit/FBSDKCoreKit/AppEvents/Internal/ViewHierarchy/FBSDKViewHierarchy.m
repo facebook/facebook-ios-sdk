@@ -496,18 +496,21 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
   return text && [FBSDKAppEventsUtility isSensitiveUserData:text];
 }
 
-+ (NSDictionary<NSString *, id> *)recursiveCaptureTree:(NSObject *)obj withObject:(NSObject *)interact
++ (NSDictionary<NSString *, id> *)recursiveCaptureTree:(NSObject *)obj
+                                            withObject:(NSObject *)interact
+                                               withSet:(NSMutableSet *)objAddressSet
 {
-  if (!obj) {
+  if (!obj || [objAddressSet containsObject:obj]) {
     return nil;
   }
 
+  [objAddressSet addObject:obj];
   NSMutableDictionary<NSString *, id> *result = [FBSDKViewHierarchy getDetailAttributesOf:obj withHash:NO];
 
   NSArray<NSObject *> *children = [FBSDKViewHierarchy getChildren:obj];
   NSMutableArray<NSDictionary<NSString *, id> *> *childrenTrees = [NSMutableArray array];
   for (NSObject *child in children) {
-    NSDictionary<NSString *, id> *objTree = [self recursiveCaptureTree:child withObject:interact];
+    NSDictionary<NSString *, id> *objTree = [self recursiveCaptureTree:child withObject:interact withSet:objAddressSet];
     [childrenTrees addObject:objTree];
   }
 
