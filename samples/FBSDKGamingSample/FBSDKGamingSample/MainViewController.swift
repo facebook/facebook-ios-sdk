@@ -25,7 +25,6 @@ class MainViewController: UITableViewController {
     super.viewDidLoad()
 
     title = "Facebook Gaming Sample"
-    tableView.register(UITableViewCell.classForCoder(), forCellReuseIdentifier: "Cell")
 
     NotificationCenter.default.addObserver(forName: .AccessTokenDidChange, object: nil, queue: nil) { _ in
       self.tableView.reloadData()
@@ -60,7 +59,13 @@ class MainViewController: UITableViewController {
   }
 
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+    let cell: UITableViewCell = {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") else {
+          return UITableViewCell(style: .subtitle, reuseIdentifier: "Cell")
+        }
+        return cell
+    }()
+
     if let cellType = CellType(rawValue: indexPath.row) {
       CellController.configure(cell, ofType: cellType)
     }

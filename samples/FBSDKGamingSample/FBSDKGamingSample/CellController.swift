@@ -18,10 +18,13 @@
 
 import UIKit
 import FBSDKLoginKit
+import FBSDKGamingServicesKit
 
 enum CellType: Int, CaseIterable {
   case status
   case login
+  case friendFinder
+  case photoUpload
 
   static var count: Int {
       return allCases.count
@@ -30,8 +33,12 @@ enum CellType: Int, CaseIterable {
 
 enum CellController {
   static private let loginButton = FBLoginButton()
+  static private let photoDialogSwitch = UISwitch()
 
   static func configure(_ cell: UITableViewCell, ofType type: CellType) {
+    cell.textLabel?.textAlignment = .left
+    cell.imageView?.image = nil
+
     switch type {
     case .status:
       configureStatusCell(cell)
@@ -40,6 +47,16 @@ enum CellController {
       loginButton.removeFromSuperview()
       loginButton.center = cell.contentView.center
       cell.contentView.addSubview(loginButton)
+
+    case .friendFinder:
+      cell.textLabel?.text = "Launch Friend Finder"
+
+    case .photoUpload:
+      photoDialogSwitch.removeFromSuperview()
+
+      cell.textLabel?.text = "Upload Photo"
+      cell.detailTextLabel?.text = "Toggle launching of media dialog"
+      cell.accessoryView = photoDialogSwitch
     }
   }
 
@@ -50,6 +67,27 @@ enum CellController {
 
     case .login:
       break // no-op
+
+    case .friendFinder:
+      FriendFinderDialog.launch { (success, error) in
+        if success {
+          AlertUtils.log("Friend Finding Complete")
+        } else {
+          AlertUtils.error(error?.localizedDescription ?? "An unknown error occurred")
+        }
+      }
+
+    case .photoUpload:
+      GamingImageUploader.uploadImage(with: GamingImageShareConfiguration(image: UIImage(named: "facebook-gaming-logo")!,
+                                                                          caption: "Cool Photo",
+                                                                          shouldLaunchMediaDialog: photoDialogSwitch.isOn))
+      { (success, error) in
+        if success {
+          AlertUtils.log("Image Upload Complete")
+        } else {
+          AlertUtils.error(error?.localizedDescription ?? "An unknown error occurred")
+        }
+      }
     }
   }
 
@@ -58,15 +96,17 @@ enum CellController {
     case .status:
       return 88
     case .login:
+      fallthrough
+    case .friendFinder:
       return 44
+    case .photoUpload:
+      return 60
     }
   }
 
   private static func configureStatusCell(_ cell: UITableViewCell) {
     if (AccessToken.current == nil) {
       cell.textLabel?.text = "No Access Token, Please Log in"
-      cell.textLabel?.textAlignment = .center
-      cell.imageView?.image = nil
       return
     }
 
