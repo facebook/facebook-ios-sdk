@@ -17,27 +17,40 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import UIKit
-import FBSDKCoreKit
 
-@UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
-
-  var window: UIWindow?
-
-  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-    let rootViewController = UINavigationController(rootViewController: MainViewController())
-
-    window = UIWindow(frame: UIScreen.main.bounds)
-
-    window!.rootViewController = rootViewController
-    window!.makeKeyAndVisible()
-
-    ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
-
-    return true
+class AlertUtils {
+  static func error(_ message: String) {
+    show(
+      UIAlertController(
+        title: "Error",
+        message: message,
+        preferredStyle: .actionSheet
+      )
+    )
   }
 
-  func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-    ApplicationDelegate.shared.application(app, open: url, options: options)
+  static func log(_ message: String) {
+    show(
+      UIAlertController(
+        title: "Log",
+        message: message,
+        preferredStyle: .actionSheet
+      )
+    )
+  }
+
+  private static func show(_ alertController: UIAlertController) {
+    UIApplication
+      .shared
+      .windows
+      .filter {$0.isKeyWindow}
+      .first?
+      .rootViewController?
+      .present(alertController, animated: true)
+
+    weak var weakAlertController = alertController
+    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+      weakAlertController?.dismiss(animated: true)
+    }
   }
 }
