@@ -712,6 +712,8 @@ verify_spm_headers() {
 
       echo "Verifying the following public headers are exposed to SPM for $kit:"
 
+      mkdir -p include
+
       headers=$(find . -name "*.h" -type f -not -path "./include/*" -not -path "**/Internal/*" -not -path "**/Basics/*")
       echo "$(basename ${headers} )" | sort >| headers.txt
 
