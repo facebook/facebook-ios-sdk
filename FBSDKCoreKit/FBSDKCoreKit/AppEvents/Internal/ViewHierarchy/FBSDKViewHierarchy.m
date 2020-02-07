@@ -496,28 +496,31 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
   return text && [FBSDKAppEventsUtility isSensitiveUserData:text];
 }
 
-+ (NSDictionary<NSString *, id> *)recursiveCaptureTree:(NSObject *)obj
-                                            withObject:(NSObject *)interact
-                                               withSet:(NSMutableSet *)objAddressSet
++ (NSDictionary<NSString *, id> *)recursiveCaptureTreeWithCurrentNode:(NSObject *)currentNode
+                                                           targetNode:(NSObject *)targetNode
+                                                        objAddressSet:(NSMutableSet *)objAddressSet
 {
-  if (!obj || [objAddressSet containsObject:obj]) {
+  if (!currentNode || [objAddressSet containsObject: currentNode]) {
     return nil;
   }
 
-  [objAddressSet addObject:obj];
-  NSMutableDictionary<NSString *, id> *result = [FBSDKViewHierarchy getDetailAttributesOf:obj withHash:NO];
+  [objAddressSet addObject:currentNode];
+  NSMutableDictionary<NSString *, id> *result = [FBSDKViewHierarchy getDetailAttributesOf:currentNode
+                                                                                 withHash:NO];
 
-  NSArray<NSObject *> *children = [FBSDKViewHierarchy getChildren:obj];
+  NSArray<NSObject *> *children = [FBSDKViewHierarchy getChildren:currentNode];
   NSMutableArray<NSDictionary<NSString *, id> *> *childrenTrees = [NSMutableArray array];
   for (NSObject *child in children) {
-    NSDictionary<NSString *, id> *objTree = [self recursiveCaptureTree:child withObject:interact withSet:objAddressSet];
+    NSDictionary<NSString *, id> *objTree = [self recursiveCaptureTreeWithCurrentNode:child
+                                                                           targetNode:targetNode
+                                                                        objAddressSet:objAddressSet];
     [childrenTrees addObject:objTree];
   }
 
   if (childrenTrees.count > 0) {
     [result setObject:[childrenTrees copy] forKey:VIEW_HIERARCHY_CHILD_VIEWS_KEY];
   }
-  if (obj == interact) {
+  if (currentNode == targetNode) {
     [result setObject:[NSNumber numberWithBool:YES] forKey:VIEW_HIERARCHY_IS_INTERACTED_KEY];
   }
   return [result copy];
