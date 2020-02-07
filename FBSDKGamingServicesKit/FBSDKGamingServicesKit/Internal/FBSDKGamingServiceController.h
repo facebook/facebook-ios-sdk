@@ -19,8 +19,10 @@
 #import <Foundation/Foundation.h>
 
 #if SWIFT_PACKAGE
+#import "FBSDKCoreKit+Internal.h"
 #import "FBSDKGamingServiceCompletionHandler.h"
 #else
+#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
 #import <FBSDKGamingServicesKit/FBSDKGamingServiceCompletionHandler.h>
 #endif
 
@@ -29,7 +31,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGamingServiceType) {
   FBSDKGamingServiceTypeMediaAsset,
 };
 
-@interface FBSDKGamingServiceController : NSObject
+@interface FBSDKGamingServiceController : NSObject <FBSDKURLOpening>
 
 - (instancetype)initWithServiceType:(FBSDKGamingServiceType)serviceType
                   completionHandler:(FBSDKGamingServiceCompletionHandler)completionHandler;

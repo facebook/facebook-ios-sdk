@@ -27,6 +27,13 @@
 NS_SWIFT_NAME(FriendFinderDialog)
 @interface FBSDKFriendFinderDialog : NSObject
 
+/**
+ Opens the Friend Finder dialog inside the Facebook app if it's installed, otherwise
+ mobile web will be opened.
+
+ @param completionHandler a callback that is fired once the user returns to the
+  caller app or an error ocurrs
+ */
 + (void)launchFriendFinderDialogWithCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler;
 
 @end

@@ -29,6 +29,14 @@
 NS_SWIFT_NAME(GamingImageUploader)
 @interface FBSDKGamingImageUploader : NSObject
 
+/**
+ Runs an upload to a users Gaming Media Library with the given configuration
+
+ @param configuration model object contain the content that will be uploaded
+ @param completionHandler a callback that is fired dependent on the configuration.
+  Fired when the upload completes or when the users returns to the caller app
+  after the media dialog is shown.
+ */
 + (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration * _Nonnull)configuration
                 andCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler;
 
