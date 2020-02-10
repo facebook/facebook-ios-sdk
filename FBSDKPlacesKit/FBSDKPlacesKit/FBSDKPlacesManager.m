@@ -20,9 +20,11 @@
 
 #import <SystemConfiguration/CaptiveNetwork.h>
 
+#import "FBSDKCoreKit+Internal.h"
 #import "FBSDKPlacesBluetoothScanner.h"
 
 static NSString *const ParameterKeyFields = @"fields";
+static FBSDKAppEventName const FBSDKPlacesKitInitialized = @"FBSDKPlacesKitInitialized";
 
 typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, NSError *_Nullable error);
 
@@ -46,6 +48,9 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
     _locationCompletionBlocks = [NSMutableArray new];
     _bluetoothScanner = [FBSDKPlacesBluetoothScanner new];
   }
+
+  [FBSDKAppEvents logInternalEvent:FBSDKPlacesKitInitialized];
+
   return self;
 }
 
