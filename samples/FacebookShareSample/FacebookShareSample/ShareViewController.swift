@@ -19,8 +19,6 @@
 import FacebookShare
 import UIKit
 
-// TODO: Question is whether a basic example should include more than just automatic. Leaning no but that does make this less useful as a testing tool.
-
 class ShareViewController: UITableViewController {
 
     @IBAction func shareLink() {
@@ -48,9 +46,7 @@ class ShareViewController: UITableViewController {
 extension ShareViewController: SharingDelegate {
 
     func sharer(_ sharer: Sharing, didCompleteWithResults results: [String : Any]) {
-
         print(results)
-
     }
 
     func sharer(_ sharer: Sharing, didFailWithError error: Error) {

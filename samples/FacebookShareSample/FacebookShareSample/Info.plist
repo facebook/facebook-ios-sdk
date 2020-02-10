@@ -7,12 +7,12 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb566575430838582</string>
+				<string>fb{your-app-id}</string>
 			</array>
 		</dict>
 	</array>
 	<key>FacebookAppID</key>
-	<string>566575430838582</string>
+	<string>{your-app-id}</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
         <array>
@@ -30,6 +30,7 @@
           <string>fbauth</string>
           <string>fbauth2</string>
           <string>fbshareextension</string>
+          <string>fb-messenger-share-api</string>
         </array>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
