@@ -13,7 +13,6 @@
 		F46A5FAC23E1ED3200948850 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F46A5FAA23E1ED3200948850 /* Main.storyboard */; };
 		F46A5FAE23E1ED3300948850 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F46A5FAD23E1ED3300948850 /* Assets.xcassets */; };
 		F46A5FB123E1ED3300948850 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F46A5FAF23E1ED3300948850 /* LaunchScreen.storyboard */; };
-		F46A5FBC23E1ED3300948850 /* FacebookShareSampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46A5FBB23E1ED3300948850 /* FacebookShareSampleTests.swift */; };
 		F46A5FC823E1F3B800948850 /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = F46A5FC723E1F3B800948850 /* FacebookShare */; };
 		F46A5FCA23E20C5300948850 /* ShareViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46A5FC923E20C5300948850 /* ShareViewControllerExtensions.swift */; };
 /* End PBXBuildFile section */
@@ -38,8 +37,6 @@
 		F46A5FB023E1ED3300948850 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F46A5FB223E1ED3300948850 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F46A5FB723E1ED3300948850 /* FacebookShareSampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FacebookShareSampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		F46A5FBB23E1ED3300948850 /* FacebookShareSampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FacebookShareSampleTests.swift; sourceTree = "<group>"; };
-		F46A5FBD23E1ED3300948850 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F46A5FC923E20C5300948850 /* ShareViewControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewControllerExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -66,7 +63,6 @@
 			isa = PBXGroup;
 			children = (
 				F46A5FA323E1ED3200948850 /* FacebookShareSample */,
-				F46A5FBA23E1ED3300948850 /* FacebookShareSampleTests */,
 				F46A5FA223E1ED3200948850 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -93,15 +89,6 @@
 				F46A5FC923E20C5300948850 /* ShareViewControllerExtensions.swift */,
 			);
 			path = FacebookShareSample;
-			sourceTree = "<group>";
-		};
-		F46A5FBA23E1ED3300948850 /* FacebookShareSampleTests */ = {
-			isa = PBXGroup;
-			children = (
-				F46A5FBB23E1ED3300948850 /* FacebookShareSampleTests.swift */,
-				F46A5FBD23E1ED3300948850 /* Info.plist */,
-			);
-			path = FacebookShareSampleTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -222,7 +209,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F46A5FBC23E1ED3300948850 /* FacebookShareSampleTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
