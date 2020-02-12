@@ -29,6 +29,6 @@ Pod::Spec.new do |s|
 
   s.source_files   = 'FBSDKGamingServicesKit/FBSDKGamingServicesKit/**/*.{h,m}'
   s.public_header_files = 'FBSDKGamingServicesKit/FBSDKGamingServicesKit/*.{h}'
-  s.dependency 'FBSDKCoreKit', "~> 6.0"
+  s.dependency 'FBSDKCoreKit', "~> #{s.version}"
 
 end

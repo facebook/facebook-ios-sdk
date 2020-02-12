@@ -16,9 +16,18 @@
    <FileRef
       location = "group:FBSDKPlacesKit/FBSDKPlacesKit.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj">
+   </FileRef>
    <Group
       location = "group:Configurations"
       name = "Configurations">
+      <FileRef
+         location = "group:../FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:../FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj">
+      </FileRef>
       <FileRef
          location = "group:FacebookSDK-Application.xcconfig">
       </FileRef>

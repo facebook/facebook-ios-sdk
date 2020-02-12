@@ -16,30 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
+#include "Shared/Platform/iOS.xcconfig"
+#include "Shared/Target/DynamicFramework.xcconfig"
+#include "Shared/Version.xcconfig"
 
-NS_ASSUME_NONNULL_BEGIN
+PRODUCT_NAME = FBSDKGamingServicesKit
+PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBSDKGamingServicesKit
 
-NS_SWIFT_NAME(GamingImageUploaderConfiguration)
-@interface FBSDKGamingImageUploaderConfiguration : NSObject
+CURRENT_PROJECT_VERSION = $(FBSDK_PROJECT_VERSION)
 
-@property (nonatomic, strong, readonly, nonnull) UIImage *image;
-@property (nonatomic, strong, readonly, nullable) NSString *caption;
-@property (nonatomic, assign, readonly) BOOL shouldLaunchMediaDialog;
-
-/**
- A model for Gaming image upload content to be shared.
-
- @param image the image that will be shared.
- @param caption and optional caption that will appear along side the image on Facebook.
- @param shouldLaunchMediaDialog whether or not to open the media dialog on
-  Facebook when the upload completes.
- */
-- (instancetype)initWithImage:(UIImage * _Nonnull)image
-                      caption:(NSString * _Nullable)caption
-      shouldLaunchMediaDialog:(BOOL)shouldLaunchMediaDialog;
-
-@end
-
-NS_ASSUME_NONNULL_END
+INFOPLIST_FILE = $(SRCROOT)/FBSDKGamingServicesKit/Info.plist
+MODULEMAP_FILE = $(SRCROOT)/FBSDKGamingServicesKit/FBSDKGamingServicesKit.modulemap
