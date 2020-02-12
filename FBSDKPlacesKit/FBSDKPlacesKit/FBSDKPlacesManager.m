@@ -49,7 +49,7 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
     _bluetoothScanner = [FBSDKPlacesBluetoothScanner new];
   }
 
-  [FBSDKAppEvents logInternalEvent:FBSDKPlacesKitInitialized];
+  [FBSDKAppEvents logInternalEvent:FBSDKPlacesKitInitialized isImplicitlyLogged:true];
 
   return self;
 }
