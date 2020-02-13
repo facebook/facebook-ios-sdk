@@ -514,7 +514,9 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
     NSDictionary<NSString *, id> *objTree = [self recursiveCaptureTreeWithCurrentNode:child
                                                                            targetNode:targetNode
                                                                         objAddressSet:objAddressSet];
-    [childrenTrees addObject:objTree];
+    if (objTree != nil) {
+      [childrenTrees addObject:objTree];
+    }
   }
 
   if (childrenTrees.count > 0) {
