@@ -13,9 +13,6 @@
    <FileRef
       location = "group:FBSDKLoginKit/FBSDKLoginKit.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:FBSDKPlacesKit/FBSDKPlacesKit.xcodeproj">
-   </FileRef>
    <Group
       location = "group:Configurations"
       name = "Configurations">

@@ -103,7 +103,6 @@ static NSString *const FBSDKFeatureManagerPrefix = @"com.facebook.sdk:FBSDKFeatu
 
     case FBDSDKFeatureShare: featureName = @"ShareKit"; break;
 
-    case FBSDKFeaturePlaces: featureName = @"PlacesKit"; break;
   }
 
   return featureName;

@@ -60,7 +60,6 @@ main() {
 
     SDK_KITS=(
       "${SDK_BASE_KITS[@]}"
-      "FBSDKPlacesKit"
       "FBSDKMarketingKit"
       "FBSDKTVOSKit"
       "AccountKit"
@@ -90,7 +89,6 @@ main() {
       "FBSDKCoreKit.podspec"
       "FBSDKLoginKit.podspec"
       "FBSDKShareKit.podspec"
-      "FBSDKPlacesKit.podspec"
       "FBSDKTVOSKit.podspec"
     )
 

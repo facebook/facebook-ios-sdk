@@ -66,10 +66,6 @@ typedef NS_ENUM(NSUInteger, FBSDKFeature)
   /** Essential of ShareKit */
   FBDSDKFeatureShare = 0x02000000,
 
-  // Features in PlacesKit
-  /** Essential of PlacesKit */
-  FBSDKFeaturePlaces = 0x03000000,
-
 } NS_SWIFT_NAME(SDKFeature);
 
 typedef void (^FBSDKFeatureManagerBlock)(BOOL enabled);

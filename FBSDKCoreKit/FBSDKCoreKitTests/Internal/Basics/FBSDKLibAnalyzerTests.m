@@ -46,7 +46,6 @@
   NSArray<NSString *> *frameworks = @[@"FBSDKCoreKit",
                                       @"FBSDKLoginKit",
                                       @"FBSDKShareKit",
-                                      @"FBSDKPlacesKit",
                                       @"FBSDKTVOSKit"];
   id analyzerMock = [OCMockObject niceMockForClass:[FBSDKLibAnalyzer class]];
   [[analyzerMock expect] getClassNames:[OCMArg any] frameworks:[OCMArg any]];

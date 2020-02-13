@@ -48,11 +48,6 @@ Pod::Spec.new do |s|
     ss.dependency 'FacebookSDK/LoginKit'
     ss.dependency 'FBSDKTVOSKit', "~> #{s.version}"
   end
-  s.subspec 'PlacesKit' do |ss|
-    ss.platform = :ios
-    ss.dependency 'FacebookSDK/CoreKit'
-    ss.dependency 'FBSDKPlacesKit', "~> #{s.version}"
-  end
   s.subspec 'MarketingKit' do |ss|
     ss.platform = :ios
     ss.dependency 'FacebookSDK/CoreKit'

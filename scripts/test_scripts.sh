@@ -72,7 +72,6 @@ test_main_setup() {
     "FBSDKCoreKit"
     "FBSDKLoginKit"
     "FBSDKShareKit"
-    "FBSDKPlacesKit"
     "FBSDKMarketingKit"
     "FBSDKTVOSKit"
     "AccountKit"
@@ -82,7 +81,6 @@ test_main_setup() {
     "FBSDKCoreKit.podspec"
     "FBSDKLoginKit.podspec"
     "FBSDKShareKit.podspec"
-    "FBSDKPlacesKit.podspec"
     "FBSDKMarketingKit.podspec"
     "FBSDKTVOSKit.podspec"
     "AccountKit/AccountKit.podspec"
@@ -93,7 +91,6 @@ test_main_setup() {
     "FBSDKCoreKit.podspec"
     "FBSDKLoginKit.podspec"
     "FBSDKShareKit.podspec"
-    "FBSDKPlacesKit.podspec"
     "FBSDKTVOSKit.podspec"
   )
 
