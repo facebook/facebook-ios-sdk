@@ -16,29 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+// Importing FBSDKCoreKit is tricky due to build variants so putting it here allows us
+// to share that logic in one place.
 
-#if !TARGET_OS_TV
-
-#import <UIKit/UIKit.h>
-
-#import "FBSDKCoreKitImport.h"
-
-#import "FBSDKSharingButton.h"
-
-NS_ASSUME_NONNULL_BEGIN
-
-/**
-  A button to share content.
-
- Tapping the receiver will invoke the FBSDKShareDialog with the attached shareContent.  If the dialog cannot
- be shown, the button will be disabled.
- */
-NS_SWIFT_NAME(FBShareButton)
-@interface FBSDKShareButton : FBSDKButton <FBSDKSharingButton>
-
-@end
-
-NS_ASSUME_NONNULL_END
-
+#if defined BUCK
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#elif defined __cplusplus
+#import <FBSDKCoreKit.h>
+#elif defined FBSDKCOCOAPODS
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#else
+@import FBSDKCoreKit;
 #endif

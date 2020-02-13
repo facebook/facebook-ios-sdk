@@ -199,6 +199,12 @@
 		F487DBFE231EC34B008416A9 /* FBSDKDeviceLoginManagerResult+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B9DBEF7207C04FF00662776 /* FBSDKDeviceLoginManagerResult+Internal.h */; };
 		F487DC15231EC3EF008416A9 /* FBLoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F487DC13231EC3EF008416A9 /* FBLoginButton.swift */; };
 		F487DC16231EC3EF008416A9 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F487DC14231EC3EF008416A9 /* LoginManager.swift */; };
+		F4ECC67923EE2094005DBF05 /* FBSDKCoreKitImport.h in Headers */ = {isa = PBXBuildFile; fileRef = F4ECC66F23EE2094005DBF05 /* FBSDKCoreKitImport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F4ECC67A23EE2094005DBF05 /* FBSDKCoreKitImport.h in Headers */ = {isa = PBXBuildFile; fileRef = F4ECC66F23EE2094005DBF05 /* FBSDKCoreKitImport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F4ECC67B23EE2094005DBF05 /* FBSDKCoreKitImport.h in Headers */ = {isa = PBXBuildFile; fileRef = F4ECC66F23EE2094005DBF05 /* FBSDKCoreKitImport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F4ECC67C23EE2094005DBF05 /* FBSDKCoreKitImport.h in Headers */ = {isa = PBXBuildFile; fileRef = F4ECC66F23EE2094005DBF05 /* FBSDKCoreKitImport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F4ECC67D23EE2094005DBF05 /* FBSDKCoreKitImport.h in Headers */ = {isa = PBXBuildFile; fileRef = F4ECC66F23EE2094005DBF05 /* FBSDKCoreKitImport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F4ECC67E23EE2094005DBF05 /* FBSDKCoreKitImport.h in Headers */ = {isa = PBXBuildFile; fileRef = F4ECC66F23EE2094005DBF05 /* FBSDKCoreKitImport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -438,6 +444,7 @@
 		F487DC03231EC34B008416A9 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKLoginKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F487DC13231EC3EF008416A9 /* FBLoginButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBLoginButton.swift; sourceTree = "<group>"; };
 		F487DC14231EC3EF008416A9 /* LoginManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginManager.swift; sourceTree = "<group>"; };
+		F4ECC66F23EE2094005DBF05 /* FBSDKCoreKitImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKCoreKitImport.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -660,6 +667,7 @@
 		9D9DB8DB1A114E500086167B /* FBSDKLoginKit */ = {
 			isa = PBXGroup;
 			children = (
+				F4ECC66F23EE2094005DBF05 /* FBSDKCoreKitImport.h */,
 				0B9DBF08207C051800662776 /* FBSDKDeviceLoginCodeInfo.h */,
 				0B9DBF02207C051700662776 /* FBSDKDeviceLoginCodeInfo.m */,
 				0B9DBF04207C051800662776 /* FBSDKDeviceLoginManager.h */,
@@ -733,6 +741,7 @@
 				0B9DBF38207C061D00662776 /* FBSDKDeviceLoginCodeInfo.h in Headers */,
 				0B9DBF3A207C061D00662776 /* FBSDKDeviceLoginManager.h in Headers */,
 				0B9DBF3B207C061D00662776 /* FBSDKDeviceLoginManagerResult.h in Headers */,
+				F4ECC67B23EE2094005DBF05 /* FBSDKCoreKitImport.h in Headers */,
 				0B9DBF7C207C211900662776 /* FBSDKCoreKit+Internal.h in Headers */,
 				0B9DBF3C207C061D00662776 /* FBSDKDeviceLoginCodeInfo+Internal.h in Headers */,
 				F462DC0E23B958E000FFCECA /* FBSDKLoginKit.h in Headers */,
@@ -749,6 +758,7 @@
 				0B9DBF48207C07C600662776 /* FBSDKDeviceLoginCodeInfo.h in Headers */,
 				0B9DBF4A207C07C600662776 /* FBSDKDeviceLoginManager.h in Headers */,
 				0B9DBF4B207C07C600662776 /* FBSDKDeviceLoginManagerResult.h in Headers */,
+				F4ECC67C23EE2094005DBF05 /* FBSDKCoreKitImport.h in Headers */,
 				0B9DBF7D207C212500662776 /* FBSDKCoreKit+Internal.h in Headers */,
 				0B9DBF4C207C07C600662776 /* FBSDKDeviceLoginCodeInfo+Internal.h in Headers */,
 				F462DC0F23B958E100FFCECA /* FBSDKLoginKit.h in Headers */,
@@ -769,6 +779,7 @@
 				818EB4341D1A283100252851 /* FBSDKLoginConstants.h in Headers */,
 				818EB4351D1A283100252851 /* FBSDKLoginKit.h in Headers */,
 				818EB4361D1A283100252851 /* FBSDKLoginManagerLoginResult.h in Headers */,
+				F4ECC67A23EE2094005DBF05 /* FBSDKCoreKitImport.h in Headers */,
 				818EB4371D1A283100252851 /* FBSDKTooltipView.h in Headers */,
 				0B9DBF01207C04FF00662776 /* FBSDKDeviceLoginCodeInfo+Internal.h in Headers */,
 				818EB4381D1A283100252851 /* FBSDKLoginButton.h in Headers */,
@@ -792,6 +803,7 @@
 				9D03E8341A72DF5800207493 /* FBSDKLoginConstants.h in Headers */,
 				9D9DB8DF1A114E500086167B /* FBSDKLoginKit.h in Headers */,
 				9D03E8251A72D89100207493 /* FBSDKLoginManagerLoginResult.h in Headers */,
+				F4ECC67923EE2094005DBF05 /* FBSDKCoreKitImport.h in Headers */,
 				9DDFBB721A829503006C9208 /* FBSDKTooltipView.h in Headers */,
 				0B9DBF00207C04FF00662776 /* FBSDKDeviceLoginCodeInfo+Internal.h in Headers */,
 				9D65ACA81A803FF200E375C2 /* FBSDKLoginButton.h in Headers */,
@@ -815,6 +827,7 @@
 				F483F43E233AC85F00703DE3 /* FBSDKLoginConstants.h in Headers */,
 				F483F43F233AC85F00703DE3 /* FBSDKLoginKit.h in Headers */,
 				F483F440233AC85F00703DE3 /* FBSDKLoginManagerLoginResult.h in Headers */,
+				F4ECC67E23EE2094005DBF05 /* FBSDKCoreKitImport.h in Headers */,
 				F483F441233AC85F00703DE3 /* FBSDKTooltipView.h in Headers */,
 				F483F442233AC85F00703DE3 /* FBSDKDeviceLoginCodeInfo+Internal.h in Headers */,
 				F483F443233AC85F00703DE3 /* FBSDKLoginButton.h in Headers */,
@@ -838,6 +851,7 @@
 				F487DBF4231EC34B008416A9 /* FBSDKLoginConstants.h in Headers */,
 				F487DBF5231EC34B008416A9 /* FBSDKLoginKit.h in Headers */,
 				F487DBF6231EC34B008416A9 /* FBSDKLoginManagerLoginResult.h in Headers */,
+				F4ECC67D23EE2094005DBF05 /* FBSDKCoreKitImport.h in Headers */,
 				F487DBF7231EC34B008416A9 /* FBSDKTooltipView.h in Headers */,
 				F487DBF8231EC34B008416A9 /* FBSDKDeviceLoginCodeInfo+Internal.h in Headers */,
 				F487DBF9231EC34B008416A9 /* FBSDKLoginButton.h in Headers */,
