@@ -45,32 +45,36 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
     FBCodelessClassBitmaskUIViewController = 1 << 17,
 };
 
+NS_ASSUME_NONNULL_BEGIN
+
 extern void fb_dispatch_on_main_thread(dispatch_block_t block);
 extern void fb_dispatch_on_default_thread(dispatch_block_t block);
 
 NS_SWIFT_NAME(ViewHierarchy)
 @interface FBSDKViewHierarchy : NSObject
 
-+ (NSObject *)getParent:(NSObject *)obj;
-+ (NSArray<NSObject *> *)getChildren:(NSObject *)obj;
-+ (NSArray<NSObject *> *)getPath:(NSObject *)obj;
-+ (NSMutableDictionary<NSString *, id> *)getDetailAttributesOf:(NSObject *)obj;
++ (nullable NSObject *)getParent:(NSObject *)obj;
++ (nullable NSArray<NSObject *> *)getChildren:(NSObject *)obj;
++ (nullable NSArray<NSObject *> *)getPath:(NSObject *)obj;
++ (nullable NSMutableDictionary<NSString *, id> *)getDetailAttributesOf:(NSObject *)obj;
 
-+ (NSString *)getText:(NSObject *)obj;
-+ (NSString *)getHint:(NSObject *)obj;
-+ (NSIndexPath *)getIndexPath:(NSObject *)obj;
++ (nullable NSString *)getText:(NSObject *)obj;
++ (nullable NSString *)getHint:(NSObject *)obj;
++ (nullable NSIndexPath *)getIndexPath:(NSObject *)obj;
 + (NSUInteger)getClassBitmask:(NSObject *)obj;
-+ (UITableView *)getParentTableView:(UIView *)cell;
-+ (UICollectionView *)getParentCollectionView:(UIView *)cell;
++ (nullable UITableView *)getParentTableView:(UIView *)cell;
++ (nullable UICollectionView *)getParentCollectionView:(UIView *)cell;
 + (NSInteger)getTag:(NSObject *)obj;
-+ (NSNumber *)getViewReactTag:(UIView *)view;
++ (nullable NSNumber *)getViewReactTag:(UIView *)view;
 
-+ (NSDictionary<NSString *, id> *)recursiveCaptureTreeWithCurrentNode:(NSObject *)currentNode
++ (nullable NSDictionary<NSString *, id> *)recursiveCaptureTreeWithCurrentNode:(NSObject *)currentNode
                                                            targetNode:(NSObject *)targetNode
                                                         objAddressSet:(NSMutableSet *)objAddressSet;
 
 + (BOOL)isUserInputView:(NSObject *)obj;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif
