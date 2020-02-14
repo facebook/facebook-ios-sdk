@@ -24,7 +24,7 @@
 static NSString *const kServiceTypeStringFriendFinder = @"friendfinder";
 static NSString *const kServiceTypeStringMediaAsset = @"media_asset";
 
-NSString *FBSDKGamingServiceTypeString(FBSDKGamingServiceType type)
+static NSString *FBSDKGamingServiceTypeString(FBSDKGamingServiceType type)
 {
   switch (type) {
     case FBSDKGamingServiceTypeFriendFinder:
@@ -35,7 +35,7 @@ NSString *FBSDKGamingServiceTypeString(FBSDKGamingServiceType type)
   }
 }
 
-NSURL* FBSDKGamingServicesUrl(FBSDKGamingServiceType serviceType, NSString *argument)
+static NSURL* FBSDKGamingServicesUrl(FBSDKGamingServiceType serviceType, NSString *argument)
 {
   return
   [NSURL URLWithString:
@@ -139,6 +139,12 @@ NSURL* FBSDKGamingServicesUrl(FBSDKGamingServiceType serviceType, NSString *argu
     [self completeSuccessfully];
   }
 }
+
+- (BOOL)isAuthenticationURL:(NSURL *)url
+{
+  return false;
+}
+
 
 #pragma mark - Helpers
 

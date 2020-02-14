@@ -18,13 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
-#if SWIFT_PACKAGE
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKGamingServiceCompletionHandler.h"
-#else
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#import <FBSDKGamingServicesKit/FBSDKGamingServiceCompletionHandler.h>
-#endif
 
 typedef NS_ENUM(NSUInteger, FBSDKGamingServiceType) {
   FBSDKGamingServiceTypeFriendFinder,
