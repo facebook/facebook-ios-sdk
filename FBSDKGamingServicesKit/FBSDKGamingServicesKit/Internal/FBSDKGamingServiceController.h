@@ -19,7 +19,7 @@
 #import <Foundation/Foundation.h>
 
 #import "FBSDKCoreKit+Internal.h"
-#import "FBSDKGamingServiceCompletionHandler.h"
+#import "../FBSDKGamingServiceCompletionHandler.h"
 
 typedef NS_ENUM(NSUInteger, FBSDKGamingServiceType) {
   FBSDKGamingServiceTypeFriendFinder,

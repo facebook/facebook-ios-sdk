@@ -28,6 +28,8 @@ NS_SWIFT_NAME(GamingImageUploaderConfiguration)
 @property (nonatomic, strong, readonly, nullable) NSString *caption;
 @property (nonatomic, assign, readonly) BOOL shouldLaunchMediaDialog;
 
+- (instancetype _Nonnull )init NS_SWIFT_UNAVAILABLE("Should not create instances of this class");
+
 /**
  A model for Gaming image upload content to be shared.
 

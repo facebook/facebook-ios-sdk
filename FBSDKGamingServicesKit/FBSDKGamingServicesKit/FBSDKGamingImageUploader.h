@@ -18,16 +18,18 @@
 
 #import <Foundation/Foundation.h>
 
-#if SWIFT_PACKAGE
-#import "FBSDKGamingServiceCompletionHandler.h"
-#else
+#if defined FBSDKCOCOAPODS || defined BUCK
 #import <FBSDKGamingServicesKit/FBSDKGamingServiceCompletionHandler.h>
+#else
+#import "FBSDKGamingServiceCompletionHandler.h"
 #endif
 
 @class FBSDKGamingImageUploaderConfiguration;
 
 NS_SWIFT_NAME(GamingImageUploader)
 @interface FBSDKGamingImageUploader : NSObject
+
+- (instancetype _Nonnull )init NS_SWIFT_UNAVAILABLE("Should not create instances of this class");
 
 /**
  Runs an upload to a users Gaming Media Library with the given configuration

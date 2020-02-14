@@ -19,7 +19,6 @@
 #import "FBSDKGamingServiceController.h"
 
 #import "FBSDKCoreKit+Internal.h"
-#import "FBSDKGamingServiceCompletionHandler.h"
 
 static NSString *const kServiceTypeStringFriendFinder = @"friendfinder";
 static NSString *const kServiceTypeStringMediaAsset = @"media_asset";

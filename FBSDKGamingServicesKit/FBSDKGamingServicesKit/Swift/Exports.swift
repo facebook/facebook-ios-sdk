@@ -1,4 +1,4 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+// Copyright (c) 2016-present, Facebook, Inc. All rights reserved.
 //
 // You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
 // copy, modify, and distribute this software in source code or binary form for use
@@ -16,26 +16,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-
-#if defined FBSDKCOCOAPODS || defined BUCK
-#import <FBSDKGamingServicesKit/FBSDKGamingServiceCompletionHandler.h>
-#else
-#import "FBSDKGamingServiceCompletionHandler.h"
-#endif
-
-NS_SWIFT_NAME(FriendFinderDialog)
-@interface FBSDKFriendFinderDialog : NSObject
-
-- (instancetype _Nonnull )init NS_SWIFT_UNAVAILABLE("Should not create instances of this class");
-
-/**
- Opens the Friend Finder dialog inside the Facebook app if it's installed, otherwise
- mobile web will be opened.
-
- @param completionHandler a callback that is fired once the user returns to the
-  caller app or an error ocurrs
- */
-+ (void)launchFriendFinderDialogWithCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler;
-
-@end
+// Need to treat ObjC as separate dependency for SPM because it does not
+// support mixed Swift and ObjC sources. In order to expose the dependent
+// interface we need to pass through the import of the `FBSDKCoreKitObjC`
+// target defined in Package.swift.
+// See: https://forums.swift.org/t/16648/2 for more details
+//
+@_exported import FacebookCore
+@_exported import FBSDKGamingServicesKit

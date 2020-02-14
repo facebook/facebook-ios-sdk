@@ -40,6 +40,10 @@ let package = Package(
             name: "FacebookShare",
             targets: ["FacebookShare"]
         ),
+        .library(
+            name: "FacebookGamingServices",
+            targets: ["FacebookGamingServices"]
+        ),
     ],
     dependencies: [],
     targets: [
@@ -115,6 +119,21 @@ let package = Package(
             name: "FacebookShare",
             dependencies: ["FacebookCore", "FBSDKShareKit"],
             path: "FBSDKShareKit/FBSDKShareKit/Swift"
+        ),
+        .target(
+            name: "FBSDKGamingServicesKit",
+            dependencies: ["FBSDKCoreKit"],
+            path: "FBSDKGamingServicesKit/FBSDKGamingServicesKit",
+            exclude: ["Swift"],
+            cSettings: [
+                .headerSearchPath("Internal"),
+                .headerSearchPath("../../FBSDKCoreKit/FBSDKCoreKit/Internal"),
+            ]
+        ),
+        .target(
+            name: "FacebookGamingServices",
+            dependencies: ["FacebookCore", "FBSDKGamingServicesKit"],
+            path: "FBSDKGamingServicesKit/FBSDKGamingServicesKit/Swift"
         ),
     ]
 )

@@ -1,0 +1,1 @@
+../FBSDKGamingImageUploaderConfiguration.h
