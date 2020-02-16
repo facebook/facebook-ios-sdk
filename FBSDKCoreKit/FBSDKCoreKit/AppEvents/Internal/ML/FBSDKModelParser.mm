@@ -21,17 +21,10 @@
 #if !TARGET_OS_TV
 
 #import "FBSDKModelParser.h"
+#import "FBSDKModelConstants.h"
 using mat::MTensor;
 using std::string;
 using std::unordered_map;
-
-static NSDictionary<NSString *, NSString *> *const KEYS_MAPPING = @{@"embedding.weight": @"embed.weight",
-                                                                    @"dense1.weight": @"fc1.weight",
-                                                                    @"dense2.weight": @"fc2.weight",
-                                                                    @"dense3.weight": @"fc3.weight",
-                                                                    @"dense1.bias": @"fc1.bias",
-                                                                    @"dense2.bias": @"fc2.bias",
-                                                                    @"dense3.bias": @"fc3.bias"};
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -98,6 +91,56 @@ NS_ASSUME_NONNULL_BEGIN
   } catch (const std::exception &e) {}
 
   return weights;
+}
+
++ (bool)validateWeights:(std::unordered_map<std::string, mat::MTensor>)weights forTask:(FBSDKOnDeviceMLTask)task {
+  NSMutableDictionary<NSString *, NSArray *> *weightsInfoDict = [[NSMutableDictionary alloc] init];
+  [weightsInfoDict addEntriesFromDictionary:SharedWeightsInfo];
+  switch (task) {
+    case FBSDKOnDeviceMLTaskAddressDetect:
+      [weightsInfoDict addEntriesFromDictionary:AddressDetectSpec];
+      break;
+    case FBSDKOnDeviceMLTaskAppEventPred:
+      [weightsInfoDict addEntriesFromDictionary:AppEventPredSpec];
+      break;
+  }
+
+  return [self _checkWeights:weights withExpectedInfo:weightsInfoDict];
+}
+
++ (bool)validateMTMLWeights:(std::unordered_map<std::string, mat::MTensor>)weights {
+    NSMutableDictionary<NSString *, NSArray *> *weightsInfoDict = [[NSMutableDictionary alloc] init];
+  [weightsInfoDict addEntriesFromDictionary:SharedWeightsInfo];
+  [weightsInfoDict addEntriesFromDictionary:MTMLSpec];
+  return [self _checkWeights:weights withExpectedInfo:weightsInfoDict];
+}
+
++ (bool)_checkWeights:(std::unordered_map<std::string, mat::MTensor>)weights
+     withExpectedInfo:(NSDictionary<NSString *, NSArray *> *)weightsInfoDict {
+  if (weightsInfoDict.count != weights.size()) {
+    return false;
+  }
+  try {
+    for (NSString *key in weightsInfoDict) {
+      if (weights.count(std::string([key UTF8String])) == 0) {
+        return false;
+      }
+      mat::MTensor tensor = weights[std::string([key UTF8String])];
+      const std::vector<int64_t>& actualSize = tensor.sizes();
+      NSArray *expectedSize = weightsInfoDict[key];
+      if (actualSize.size() != expectedSize.count) {
+        return false;
+      }
+      for (int i = 0; i < expectedSize.count; i++) {
+        if((int)actualSize[i] != (int)[expectedSize[i] intValue]) {
+          return false;
+        }
+      }
+    }
+  } catch (const std::exception &e) {
+    return false;
+  }
+  return true;
 }
 
 @end
