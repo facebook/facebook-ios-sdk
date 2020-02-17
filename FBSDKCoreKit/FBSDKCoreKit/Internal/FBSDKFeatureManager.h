@@ -56,7 +56,9 @@ typedef NS_ENUM(NSUInteger, FBSDKFeature)
   FBSDKFeatureCrashReport = 0x00020100,
   FBSDKFeatureCrashShield = 0x00020101,
   FBSDKFeatureErrorReport = 0x00020200,
-
+  /** On Device ML */
+  FBSDKFeatureOnDeviceML = 0x00030000,
+  FBSDKFeatureOnDeviceMLMTML = 0x00030100,
 
   // Features in LoginKit
   /** Essential of LoginKit */
