@@ -213,18 +213,20 @@ namespace mat1 {
         return a;
     }
 
-    static float* predictOnText(const char *texts, std::unordered_map<std::string, mat::MTensor>& weights, float *df) {
+    static float* predict(std::string task, const char *texts, std::unordered_map<std::string, mat::MTensor>& weights, float *df) {
         int *x;
         float *embed_x;
-        float *dense1_x;
-        float *dense2_x;
-        float *dense3_x;
         float *c1;
         float *c2;
         float *c3;
         float *ca;
         float *cb;
         float *cc;
+        float *dense1_x;
+        float *dense2_x;
+        float *final_layer_dense_x;
+        std::string final_layer_weight_key = task + ".weight";
+        std::string final_layer_bias_key = task + ".bias";
 
         mat::MTensor& embed_t = weights.at("embed.weight");
         mat::MTensor& conv1w_t = weights.at("convs.0.weight"); // (32, 64, 2)
@@ -237,8 +239,8 @@ namespace mat1 {
         mat::MTensor& fc1b_t = weights.at("fc1.bias");  // 128
         mat::MTensor& fc2w_t = weights.at("fc2.weight"); // (64, 128)
         mat::MTensor& fc2b_t = weights.at("fc2.bias"); // 64
-        mat::MTensor& fc3w_t = weights.at("fc3.weight"); // (2, 64) or (4, 64)
-        mat::MTensor& fc3b_t = weights.at("fc3.bias"); // 2 or 4
+        mat::MTensor& final_layer_weight_t = weights.at(final_layer_weight_key); // (2, 64) or (4, 64)
+        mat::MTensor& final_layer_bias_t = weights.at(final_layer_bias_key); // 2 or 4
 
         float *embed_weight = embed_t.data<float>();
         float *convs_0_weight = transpose3D(conv1w_t.data<float>(), (int)conv1w_t.size(0), (int)conv1w_t.size(1), (int)conv1w_t.size(2)); // (2, 64, 32)
@@ -249,10 +251,12 @@ namespace mat1 {
         float *convs_2_bias = conv3b_t.data<float>();
         float *fc1_weight = transpose2D(fc1w_t.data<float>(), (int)fc1w_t.size(0), (int)fc1w_t.size(1));
         float *fc2_weight = transpose2D(fc2w_t.data<float>(), (int)fc2w_t.size(0), (int)fc2w_t.size(1));
-        float *fc3_weight = transpose2D(fc3w_t.data<float>(), (int)fc3w_t.size(0), (int)fc3w_t.size(1));
+        float *final_layer_weight = transpose2D(final_layer_weight_t.data<float>(),
+                                                (int)final_layer_weight_t.size(0),
+                                                (int)final_layer_weight_t.size(1));
         float *fc1_bias = fc1b_t.data<float>();
         float *fc2_bias = fc2b_t.data<float>();
-        float *fc3_bias = fc3b_t.data<float>();
+        float *final_layer_bias = final_layer_bias_t.data<float>();
 
         // vectorize text
         x = vectorize(texts, (int)strlen(texts), SEQ_LEN);
@@ -300,10 +304,19 @@ namespace mat1 {
         dense2_x = dense(dense1_x, fc2_weight, fc2_bias, 1, (int)fc2w_t.size(1), (int)fc2w_t.size(0));
         relu(dense2_x, (int)fc2b_t.size(0));
         free(dense1_x);
-        dense3_x = dense(dense2_x, fc3_weight, fc3_bias, 1, (int)fc3w_t.size(1), (int)fc3w_t.size(0));
+        final_layer_dense_x = dense(dense2_x,
+                                    final_layer_weight,
+                                    final_layer_bias,
+                                    1,
+                                    (int)final_layer_weight_t.size(1),
+                                    (int)final_layer_weight_t.size(0));
         free(dense2_x);
-        softmax(dense3_x, (int)fc3b_t.size(0));
-        return dense3_x;
+        softmax(final_layer_dense_x, (int)final_layer_bias_t.size(0));
+        return final_layer_dense_x;
+    }
+
+    static float* predictOnText(const char *texts, std::unordered_map<std::string, mat::MTensor>& weights, float *df) {
+        return predict("fc3", texts, weights, df);
     }
 }
 
