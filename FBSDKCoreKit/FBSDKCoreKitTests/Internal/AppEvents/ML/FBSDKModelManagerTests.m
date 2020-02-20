@@ -29,6 +29,7 @@
 @end
 
 @implementation FBSDKModelManagerTests {
+  id _mockFeatureManager;
 }
 
 - (void)setUp {
@@ -46,11 +47,12 @@
       handler(nil, [self _mockResult], nil);
     }
   });
+
+  _mockFeatureManager = OCMClassMock([FBSDKFeatureManager class]);
 }
 
 - (void)testFeatureMTMLEnabled {
-  id mockFeatureManager = OCMClassMock([FBSDKFeatureManager class]);
-  OCMStub([mockFeatureManager checkFeature:FBSDKFeatureMTML completionBlock:OCMOCK_ANY]).andDo(^(NSInvocation *invocation){
+  OCMStub([_mockFeatureManager checkFeature:FBSDKFeatureMTML completionBlock:OCMOCK_ANY]).andDo(^(NSInvocation *invocation){
     FBSDKFeatureManagerBlock block;
     [invocation getArgument:&block atIndex:3];
     if (block) {
@@ -60,8 +62,23 @@
 
   [FBSDKModelManager enable];
 
-  OCMVerify([mockFeatureManager checkFeature:FBSDKFeatureSuggestedEvents completionBlock:OCMOCK_ANY]);
-  OCMVerify([mockFeatureManager checkFeature:FBSDKFeaturePIIFiltering completionBlock:OCMOCK_ANY]);
+  OCMVerify([_mockFeatureManager checkFeature:FBSDKFeatureSuggestedEvents completionBlock:OCMOCK_ANY]);
+  OCMVerify([_mockFeatureManager checkFeature:FBSDKFeaturePIIFiltering completionBlock:OCMOCK_ANY]);
+}
+
+- (void)testFeatureMTMLDisabled {
+  OCMStub([_mockFeatureManager checkFeature:FBSDKFeatureMTML completionBlock:OCMOCK_ANY]).andDo(^(NSInvocation *invocation){
+    FBSDKFeatureManagerBlock block;
+    [invocation getArgument:&block atIndex:3];
+    if (block) {
+      block(false);
+    }
+  });
+
+  [FBSDKModelManager enable];
+
+  OCMVerify([_mockFeatureManager checkFeature:FBSDKFeatureSuggestedEvents completionBlock:OCMOCK_ANY]);
+  OCMVerify([_mockFeatureManager checkFeature:FBSDKFeaturePIIFiltering completionBlock:OCMOCK_ANY]);
 }
 
 - (NSDictionary<NSString *, NSArray *> *)_mockResult
