@@ -1096,7 +1096,10 @@ static dispatch_once_t *onceTokenPointer;
 #if !defined BUCK && !TARGET_OS_TV
     [FBSDKFeatureManager checkFeature:FBSDKFeaturePrivacyProtection completionBlock:^(BOOL enabled) {
       if (enabled) {
-        [FBSDKModelManager enable];
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+          [FBSDKModelManager enable];
+        });
       }
     }];
 #endif

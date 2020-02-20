@@ -58,46 +58,43 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)enable
 {
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    NSString *languageCode = [[NSLocale currentLocale] objectForKey:NSLocaleLanguageCode];
-    // If the languageCode could not be fetched successfully, it's regarded as "en" by default.
-    if (languageCode && ![languageCode isEqualToString:@"en"]) {
+  NSString *languageCode = [[NSLocale currentLocale] objectForKey:NSLocaleLanguageCode];
+  // If the languageCode could not be fetched successfully, it's regarded as "en" by default.
+  if (languageCode && ![languageCode isEqualToString:@"en"]) {
+    return;
+  }
+
+  NSString *dirPath = [NSTemporaryDirectory() stringByAppendingPathComponent:FBSDK_ML_MODEL_PATH];
+  if (![[NSFileManager defaultManager] fileExistsAtPath:dirPath]) {
+    [[NSFileManager defaultManager] createDirectoryAtPath:dirPath withIntermediateDirectories:NO attributes:NULL error:NULL];
+  }
+  _directoryPath = dirPath;
+
+  // fetch api
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
+                                initWithGraphPath:[NSString stringWithFormat:@"%@/model_asset", [FBSDKSettings appID]]];
+
+  [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+    if (error) {
       return;
     }
-
-    NSString *dirPath = [NSTemporaryDirectory() stringByAppendingPathComponent:FBSDK_ML_MODEL_PATH];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:dirPath]) {
-      [[NSFileManager defaultManager] createDirectoryAtPath:dirPath withIntermediateDirectories:NO attributes:NULL error:NULL];
+    NSDictionary<NSString *, id> *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
+    NSDictionary<NSString *, id> *modelInfo = [self _convertToDictionary:resultDictionary[MODEL_DATA_KEY]];
+    if (!modelInfo) {
+      return;
     }
-    _directoryPath = dirPath;
+    // update cache
+    [[NSUserDefaults standardUserDefaults] setObject:modelInfo forKey:MODEL_INFO_KEY];
 
-    // fetch api
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
-                                  initWithGraphPath:[NSString stringWithFormat:@"%@/model_asset", [FBSDKSettings appID]]];
-
-    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-      if (error) {
-        return;
+    [FBSDKFeatureManager checkFeature:FBSDKFeatureMTML completionBlock:^(BOOL enabled) {
+      if (enabled) {
+        [self _checkFeaturesAndExecuteForMTML];
+      } else {
+        [self _checkFeaturesAndExecute];
       }
-      NSDictionary<NSString *, id> *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
-      NSDictionary<NSString *, id> *modelInfo = [self _convertToDictionary:resultDictionary[MODEL_DATA_KEY]];
-      if (!modelInfo) {
-        return;
-      }
-      // update cache
-      [[NSUserDefaults standardUserDefaults] setObject:modelInfo forKey:MODEL_INFO_KEY];
-
-      [FBSDKFeatureManager checkFeature:FBSDKFeatureMTML completionBlock:^(BOOL enabled) {
-        if (enabled) {
-          [self _checkFeaturesAndExecuteForMTML];
-        } else {
-          [self _checkFeaturesAndExecute];
-        }
-      }];
-
     }];
-  });
+
+  }];
 }
 
 + (nullable NSDictionary *)getRulesForKey:(NSString *)useCaseKey
