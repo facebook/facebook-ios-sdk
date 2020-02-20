@@ -46,9 +46,9 @@ static std::vector<float> _denseFeature;
   _denseFeature = dense_feature;
 }
 
-+ (void)loadWeights
++ (void)loadWeightsForKey:(NSString *)useCaseKey
 {
-  NSString *path = [FBSDKModelManager getWeightsPath:DATA_DETECTION_ADDRESS_KEY];
+  NSString *path = [FBSDKModelManager getWeightsPath:useCaseKey];
   if (!path) {
     return;
   }
