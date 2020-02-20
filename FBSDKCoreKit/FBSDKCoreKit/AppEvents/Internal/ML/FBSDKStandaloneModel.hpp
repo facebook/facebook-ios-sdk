@@ -144,7 +144,7 @@ namespace mat {
         std::shared_ptr<void> storage_;
     };
 
-    static MTensor mempty(const std::vector<int64_t>& sizes) {
+    static inline MTensor mempty(const std::vector<int64_t>& sizes) {
         return MTensor(sizes);
     }
 } // namespace mat
