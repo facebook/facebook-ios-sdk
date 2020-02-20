@@ -22,14 +22,18 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef void (^FBSDKDownloadCompletionBlock)(BOOL success);
 
 @interface FBSDKModelManager : NSObject
 
 + (void)enable;
 + (nullable NSDictionary *)getRules;
-+ (nullable NSString *)getWeightsPath:(NSString *_Nonnull)useCaseKey;
++ (nullable NSString *)getWeightsPath:(NSString *)useCaseKey;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif
