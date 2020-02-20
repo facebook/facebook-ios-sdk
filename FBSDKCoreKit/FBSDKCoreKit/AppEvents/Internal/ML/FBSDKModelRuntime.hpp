@@ -24,7 +24,6 @@
 #include <math.h>
 #include <stdint.h>
 #include <unordered_map>
-#include <unordered_set>
 
 #import <Accelerate/Accelerate.h>
 
