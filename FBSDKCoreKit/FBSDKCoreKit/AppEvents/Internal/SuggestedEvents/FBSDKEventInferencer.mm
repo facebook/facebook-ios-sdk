@@ -42,9 +42,9 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
 
 @implementation FBSDKEventInferencer : NSObject
 
-+ (void)loadWeights
++ (void)loadWeightsForKey:(NSString *)useCaseKey
 {
-  NSString *path = [FBSDKModelManager getWeightsPath:SUGGEST_EVENT_KEY];
+  NSString *path = [FBSDKModelManager getWeightsPath:useCaseKey];
   if (!path) {
     return;
   }

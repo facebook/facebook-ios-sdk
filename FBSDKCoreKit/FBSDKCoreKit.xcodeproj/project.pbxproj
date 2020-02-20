@@ -883,6 +883,7 @@
 		E493253023F9235C0000B63A /* FBSDKModelConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = E493252E23F9235C0000B63A /* FBSDKModelConstants.h */; };
 		E493253123F9235C0000B63A /* FBSDKModelConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = E493252E23F9235C0000B63A /* FBSDKModelConstants.h */; };
 		E493253223F9235C0000B63A /* FBSDKModelConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = E493252E23F9235C0000B63A /* FBSDKModelConstants.h */; };
+		E493254223FD06640000B63A /* FBSDKModelManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E493254123FD06640000B63A /* FBSDKModelManagerTests.m */; };
 		E4C2B97A23867327002335A4 /* FBSDKModelRuntimeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4C2B97923867327002335A4 /* FBSDKModelRuntimeTests.mm */; };
 		F462DBF023B94C0F00FFCECA /* FBSDKCrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 894C0B071A702194009137EF /* FBSDKCrypto.h */; };
 		F462DBF123B94C1000FFCECA /* FBSDKCrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 894C0B071A702194009137EF /* FBSDKCrypto.h */; };
@@ -1872,6 +1873,7 @@
 		E4416C0023F61902009CCBFA /* FBSDKModelParser.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = FBSDKModelParser.mm; sourceTree = "<group>"; };
 		E493252C23F7C60E0000B63A /* FBSDKModelParserTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = FBSDKModelParserTests.mm; sourceTree = "<group>"; };
 		E493252E23F9235C0000B63A /* FBSDKModelConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKModelConstants.h; sourceTree = "<group>"; };
+		E493254123FD06640000B63A /* FBSDKModelManagerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKModelManagerTests.m; sourceTree = "<group>"; };
 		E4C2B97923867327002335A4 /* FBSDKModelRuntimeTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = FBSDKModelRuntimeTests.mm; sourceTree = "<group>"; };
 		F483F414233AC13000703DE3 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKCoreKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F487DBB9231EBCD2008416A9 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKCoreKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2806,6 +2808,7 @@
 			isa = PBXGroup;
 			children = (
 				E493252C23F7C60E0000B63A /* FBSDKModelParserTests.mm */,
+				E493254123FD06640000B63A /* FBSDKModelManagerTests.m */,
 			);
 			path = ML;
 			sourceTree = "<group>";
@@ -4486,6 +4489,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E493254223FD06640000B63A /* FBSDKModelManagerTests.m in Sources */,
 				9DF18BCB1A9F2517000F6748 /* FBSDKErrorConfigurationTests.m in Sources */,
 				9D18A8E91A95495D00A41042 /* FBSDKAppEventsUtilityTests.m in Sources */,
 				7E55573C1A8D834B00344F86 /* FBSDKAppLinkResolverTests.m in Sources */,
