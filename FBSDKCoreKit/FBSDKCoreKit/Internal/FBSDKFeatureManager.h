@@ -50,13 +50,13 @@ typedef NS_ENUM(NSUInteger, FBSDKFeature)
   FBSDKFeaturePrivacyProtection = 0x00010400,
   FBSDKFeatureSuggestedEvents = 0x00010401,
   FBSDKFeaturePIIFiltering = 0x00010402,
+  FBSDKFeatureMTML = 0x00010403,
   FBSDKFeatureEventDeactivation = 0x00010500,
   /** Instrument */
   FBSDKFeatureInstrument = 0x00020000,
   FBSDKFeatureCrashReport = 0x00020100,
   FBSDKFeatureCrashShield = 0x00020101,
   FBSDKFeatureErrorReport = 0x00020200,
-
 
   // Features in LoginKit
   /** Essential of LoginKit */
