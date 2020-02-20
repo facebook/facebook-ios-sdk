@@ -26,6 +26,7 @@
 
 #import "FBSDKFeatureExtractor.h"
 #import "FBSDKModelManager.h"
+#import "FBSDKModelParser.h"
 #import "FBSDKModelRuntime.hpp"
 #import "FBSDKModelUtility.h"
 #import "FBSDKViewHierarchyMacros.h"
@@ -66,7 +67,7 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
   if (!latestData) {
     return;
   }
-  std::unordered_map<std::string, mat::MTensor> weights = [self loadWeights:latestData];
+  std::unordered_map<std::string, mat::MTensor> weights = [FBSDKModelParser parseWeightsData:latestData];
   if ([self validateWeights:weights]) {
     _weights = weights;
   }
@@ -98,64 +99,6 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
     return false;
   }
   return true;
-}
-
-+ (std::unordered_map<std::string, mat::MTensor>)loadWeights:(NSData *)weightsData{
-  std::unordered_map<std::string,  mat::MTensor> weights;
-  try {
-    const void *data = weightsData.bytes;
-    NSUInteger totalLength =  weightsData.length;
-
-    int totalFloats = 0;
-    if (weightsData.length < 4) {
-      // Make sure data length is valid
-      return weights;
-    }
-
-    int length;
-    memcpy(&length, data, 4);
-    if (length + 4 > totalLength) {
-      // Make sure data length is valid
-      return weights;
-    }
-
-    char *json = (char *)data + 4;
-    NSDictionary<NSString *, id> *info = [NSJSONSerialization JSONObjectWithData:[NSData dataWithBytes:json length:length]
-                                                                         options:0
-                                                                           error:nil];
-    NSArray<NSString *> *keys = [[info allKeys] sortedArrayUsingComparator:^NSComparisonResult(NSString *key1, NSString *key2) {
-      return [key1 compare:key2];
-    }];
-
-    float *floats = (float *)(json + length);
-    for (NSString *key in keys) {
-      std::string s_name([key UTF8String]);
-
-      std::vector<int64_t> v_shape;
-      NSArray<NSString *> *shape = [info objectForKey:key];
-      int count = 1;
-      for (NSNumber *_s in shape) {
-        int i = [_s intValue];
-        v_shape.push_back(i);
-        count *= i;
-      }
-
-      totalFloats += count;
-
-      if ((4 + length + totalFloats * 4) > totalLength) {
-        // Make sure data length is valid
-        break;
-      }
-      mat::MTensor tensor = mat::mempty(v_shape);
-      float *tensor_data = tensor.data<float>();
-      memcpy(tensor_data, floats, sizeof(float) * count);
-      floats += count;
-
-      weights[s_name] = tensor;
-    }
-  } catch(const std::exception &e) {}
-
-  return weights;
 }
 
 + (NSDictionary<NSString *, NSString *> *)predict:(NSString *)buttonText

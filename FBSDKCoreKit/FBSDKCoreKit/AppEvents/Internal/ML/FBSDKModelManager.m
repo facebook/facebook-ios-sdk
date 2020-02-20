@@ -93,6 +93,7 @@ static NSMutableDictionary<NSString *, id> *_modelInfo;
           }];
         }
       }];
+
       [FBSDKFeatureManager checkFeature:FBSDKFeaturePIIFiltering completionBlock:^(BOOL enabled) {
         if (enabled) {
           [self getModelAndRules:ADDRESS_FILTERING_KEY handler:^(BOOL success){
