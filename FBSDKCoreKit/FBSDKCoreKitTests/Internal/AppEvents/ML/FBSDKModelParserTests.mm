@@ -20,10 +20,12 @@
 
 #import "FBSDKMOdelConstants.h"
 #import "FBSDKModelParser.h"
-using mat::MTensor;
+
 using std::string;
 using std::unordered_map;
 using std::vector;
+using mat::mempty;
+using mat::MTensor;
 
 @interface FBSDKModelParserTests : XCTestCase
 {

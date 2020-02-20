@@ -33,12 +33,23 @@
 
 #include<stdexcept>
 
+using std::exception;
+using std::fill;
+using std::string;
+using std::unordered_map;
+using std::vector;
+using mat::mempty;
+using mat::MTensor;
+using mat1::predictOnText;
+
 static NSString *const MODEL_INFO_KEY= @"com.facebook.sdk:FBSDKModelInfo";
 static NSString *const THRESHOLDS_KEY = @"thresholds";
 static NSString *const SUGGESTED_EVENT[4] = {@"fb_mobile_add_to_cart", @"fb_mobile_complete_registration", @"other", @"fb_mobile_purchase"};
 static NSDictionary<NSString *, NSString *> *const DEFAULT_PREDICTION = @{SUGGEST_EVENT_KEY: SUGGESTED_EVENTS_OTHER};
 
-static std::unordered_map<std::string, mat::MTensor> _weights;
+static unordered_map<string, MTensor> _weights;
+
+NS_ASSUME_NONNULL_BEGIN
 
 @implementation FBSDKEventInferencer : NSObject
 
@@ -54,7 +65,7 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
   if (!latestData) {
     return;
   }
-  std::unordered_map<std::string, mat::MTensor> weights = [FBSDKModelParser parseWeightsData:latestData];
+  unordered_map<string, MTensor> weights = [FBSDKModelParser parseWeightsData:latestData];
   if ([FBSDKModelParser validateWeights:weights forTask:FBSDKMTMLTaskAppEventPred]) {
     _weights = weights;
   }
@@ -79,10 +90,10 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
     }
 
     // Get dense tensor
-    std::vector<int64_t> dense_tensor_shape;
+    vector<int64_t> dense_tensor_shape;
     dense_tensor_shape.push_back(1);
     dense_tensor_shape.push_back(30);
-    mat::MTensor dense_tensor = mat::mempty(dense_tensor_shape);
+    MTensor dense_tensor = mempty(dense_tensor_shape);
     float *dense_tensor_data = dense_tensor.data<float>();
     float *dense_data = [FBSDKFeatureExtractor getDenseFeatures:viewTree];
     if (!dense_data) {
@@ -100,7 +111,7 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
 
     memcpy(dense_tensor_data, dense_data, sizeof(float) * 30);
     free(dense_data);
-    float *res = mat1::predictOnText(bytes, _weights, dense_tensor_data);
+    float *res = predictOnText(bytes, _weights, dense_tensor_data);
     NSMutableDictionary<NSString *, id> *modelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
     if (!modelInfo) {
       return DEFAULT_PREDICTION;
@@ -120,10 +131,12 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
         return result;
       }
     }
-  } catch (const std::exception &e) {}
+  } catch (const exception &e) {}
   return DEFAULT_PREDICTION;
 }
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

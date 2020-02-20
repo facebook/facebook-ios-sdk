@@ -30,19 +30,29 @@
 
 #include<stdexcept>
 
+using std::exception;
+using std::fill;
+using std::string;
+using std::unordered_map;
+using std::vector;
+using mat::MTensor;
+using mat1::predictOnText;
+
 static NSString *const MODEL_INFO_KEY= @"com.facebook.sdk:FBSDKModelInfo";
 static NSString *const THRESHOLDS_KEY = @"thresholds";
 static NSString *const DATA_DETECTION_ADDRESS_KEY = @"DATA_DETECTION_ADDRESS";
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation FBSDKAddressInferencer : NSObject
 
-static std::unordered_map<std::string, mat::MTensor> _weights;
-static std::vector<float> _denseFeature;
+static unordered_map<string, MTensor> _weights;
+static vector<float> _denseFeature;
 
 + (void)initializeDenseFeature
 {
-  std::vector<float> dense_feature(30);
-  std::fill(dense_feature.begin(), dense_feature.end(), 0);
+  vector<float> dense_feature(30);
+  fill(dense_feature.begin(), dense_feature.end(), 0);
   _denseFeature = dense_feature;
 }
 
@@ -58,7 +68,7 @@ static std::vector<float> _denseFeature;
   if (!latestData) {
     return;
   }
-  std::unordered_map<std::string, mat::MTensor> weights = [FBSDKModelParser parseWeightsData:latestData];
+  unordered_map<string, MTensor> weights = [FBSDKModelParser parseWeightsData:latestData];
   if ([FBSDKModelParser validateWeights:weights forTask:FBSDKMTMLTaskAddressDetect]) {
     _weights = weights;
   }
@@ -87,16 +97,18 @@ static std::vector<float> _denseFeature;
   NSMutableArray *thresholds = [addressModelInfo objectForKey:THRESHOLDS_KEY];
   float threshold = [thresholds[0] floatValue];
   try {
-    predictedRaw = mat1::predictOnText(bytes, _weights, &_denseFeature[0]);
+    predictedRaw = predictOnText(bytes, _weights, &_denseFeature[0]);
     if (!predictedRaw[1]) {
       return false;
     }
     return predictedRaw[1] >= threshold;
-  } catch (const std::exception &e) {
+  } catch (const exception &e) {
     return false;
   }
 }
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

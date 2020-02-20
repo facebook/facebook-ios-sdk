@@ -22,9 +22,13 @@
 
 #import "FBSDKModelParser.h"
 #import "FBSDKModelConstants.h"
-using mat::MTensor;
+
+using std::exception;
 using std::string;
 using std::unordered_map;
+using std::vector;
+using mat::mempty;
+using mat::MTensor;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -64,9 +68,9 @@ NS_ASSUME_NONNULL_BEGIN
       if (mapping) {
         finalKey = mapping;
       }
-      std::string s_name([finalKey UTF8String]);
+      string s_name([finalKey UTF8String]);
 
-      std::vector<int64_t> v_shape;
+      vector<int64_t> v_shape;
       NSArray<NSString *> *shape = [info objectForKey:key];
       int count = 1;
       for (NSNumber *_s in shape) {
@@ -81,19 +85,19 @@ NS_ASSUME_NONNULL_BEGIN
         // Make sure data length is valid
         break;
       }
-      MTensor tensor = mat::mempty(v_shape);
+      MTensor tensor = mempty(v_shape);
       float *tensor_data = tensor.data<float>();
       memcpy(tensor_data, floats, sizeof(float) * count);
       floats += count;
 
       weights[s_name] = tensor;
     }
-  } catch (const std::exception &e) {}
+  } catch (const exception &e) {}
 
   return weights;
 }
 
-+ (bool)validateWeights:(std::unordered_map<std::string, mat::MTensor>)weights forTask:(FBSDKMTMLTask)task {
++ (bool)validateWeights:(unordered_map<string, MTensor>)weights forTask:(FBSDKMTMLTask)task {
   NSMutableDictionary<NSString *, NSArray *> *weightsInfoDict = [[NSMutableDictionary alloc] init];
   [weightsInfoDict addEntriesFromDictionary:SharedWeightsInfo];
   switch (task) {
@@ -108,25 +112,25 @@ NS_ASSUME_NONNULL_BEGIN
   return [self _checkWeights:weights withExpectedInfo:weightsInfoDict];
 }
 
-+ (bool)validateMTMLWeights:(std::unordered_map<std::string, mat::MTensor>)weights {
++ (bool)validateMTMLWeights:(unordered_map<string, MTensor>)weights {
     NSMutableDictionary<NSString *, NSArray *> *weightsInfoDict = [[NSMutableDictionary alloc] init];
   [weightsInfoDict addEntriesFromDictionary:SharedWeightsInfo];
   [weightsInfoDict addEntriesFromDictionary:MTMLSpec];
   return [self _checkWeights:weights withExpectedInfo:weightsInfoDict];
 }
 
-+ (bool)_checkWeights:(std::unordered_map<std::string, mat::MTensor>)weights
++ (bool)_checkWeights:(unordered_map<string, MTensor>)weights
      withExpectedInfo:(NSDictionary<NSString *, NSArray *> *)weightsInfoDict {
   if (weightsInfoDict.count != weights.size()) {
     return false;
   }
   try {
     for (NSString *key in weightsInfoDict) {
-      if (weights.count(std::string([key UTF8String])) == 0) {
+      if (weights.count(string([key UTF8String])) == 0) {
         return false;
       }
-      mat::MTensor tensor = weights[std::string([key UTF8String])];
-      const std::vector<int64_t>& actualSize = tensor.sizes();
+      MTensor tensor = weights[string([key UTF8String])];
+      const vector<int64_t>& actualSize = tensor.sizes();
       NSArray *expectedSize = weightsInfoDict[key];
       if (actualSize.size() != expectedSize.count) {
         return false;
@@ -137,7 +141,7 @@ NS_ASSUME_NONNULL_BEGIN
         }
       }
     }
-  } catch (const std::exception &e) {
+  } catch (const exception &e) {
     return false;
   }
   return true;
