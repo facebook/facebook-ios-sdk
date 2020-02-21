@@ -103,10 +103,16 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
          annotation:(id)annotation
 {
   id<FBSDKURLOpening> pendingURLOpen = _pendingURLOpen;
-  BOOL canOpenURL =   [pendingURLOpen canOpenURL:url
-                                  forApplication:application
-                               sourceApplication:sourceApplication
-                                      annotation:annotation];
+
+  if ([pendingURLOpen respondsToSelector:@selector(shouldStopPropagationOfURL:)]
+      && [pendingURLOpen shouldStopPropagationOfURL:url]) {
+    return YES;
+  }
+
+  BOOL canOpenURL = [pendingURLOpen canOpenURL:url
+                                forApplication:application
+                             sourceApplication:sourceApplication
+                                    annotation:annotation];
 
   void (^completePendingOpenURLBlock)(void) = ^{
     self->_pendingURLOpen = nil;
