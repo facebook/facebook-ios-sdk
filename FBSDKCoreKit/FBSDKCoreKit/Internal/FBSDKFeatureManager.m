@@ -93,6 +93,7 @@ static NSString *const FBSDKFeatureManagerPrefix = @"com.facebook.sdk:FBSDKFeatu
     case FBSDKFeaturePrivacyProtection: featureName = @"PrivacyProtection"; break;
     case FBSDKFeatureSuggestedEvents: featureName = @"SuggestedEvents"; break;
     case FBSDKFeaturePIIFiltering: featureName = @"PIIFiltering"; break;
+    case FBSDKFeatureMTML: featureName = @"MTML"; break;
     case FBSDKFeatureEventDeactivation: featureName = @"EventDeactivation"; break;
     case FBSDKFeatureInstrument: featureName = @"Instrument"; break;
     case FBSDKFeatureCrashReport: featureName = @"CrashReport"; break;
@@ -121,8 +122,14 @@ static NSString *const FBSDKFeatureManagerPrefix = @"com.facebook.sdk:FBSDKFeatu
     case FBSDKFeaturePrivacyProtection:
     case FBSDKFeatureSuggestedEvents:
     case FBSDKFeaturePIIFiltering:
+    case FBSDKFeatureMTML:
       return NO;
-    default: return YES;
+    case FBSDKFeatureLogin:
+    case FBDSDKFeatureShare:
+    case FBSDKFeatureCore:
+    case FBSDKFeatureAppEvents:
+    case FBSDKFeatureCodelessEvents:
+      return YES;
   }
 }
 
