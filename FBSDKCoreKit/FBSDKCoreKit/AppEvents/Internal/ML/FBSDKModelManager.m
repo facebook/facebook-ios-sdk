@@ -48,7 +48,11 @@ static NSString *const ADDRESS_FILTERING_KEY = @"DATA_DETECTION_ADDRESS";
 static NSString *_directoryPath;
 static NSMutableDictionary<NSString *, id> *_modelInfo;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation FBSDKModelManager
+
+#pragma mark - Public methods
 
 + (void)enable
 {
@@ -108,6 +112,39 @@ static NSMutableDictionary<NSString *, id> *_modelInfo;
     }];
   });
 }
+
++ (nullable NSDictionary *)getRules
+{
+  NSDictionary<NSString *, id> *cachedModelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
+  if (!cachedModelInfo) {
+    return nil;
+  }
+  NSDictionary<NSString *, id> *model = [cachedModelInfo objectForKey:SUGGEST_EVENT_KEY];
+  if (model && model[VERSION_ID_KEY]) {
+    NSString *filePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.rules", SUGGEST_EVENT_KEY, model[VERSION_ID_KEY]]];
+    if (filePath) {
+      NSData *ruelsData = [NSData dataWithContentsOfFile:filePath options:NSDataReadingMappedIfSafe error:nil];
+      NSDictionary *rules = [NSJSONSerialization JSONObjectWithData:ruelsData options:0 error:nil];
+      return rules;
+    }
+  }
+  return nil;
+}
+
++ (nullable NSString *)getWeightsPath:(NSString *)useCaseKey
+{
+  NSDictionary<NSString *, id> *cachedModelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
+  if (!cachedModelInfo || !_directoryPath) {
+    return nil;
+  }
+  NSDictionary<NSString *, id> *model = [cachedModelInfo objectForKey:useCaseKey];
+  if (model && model[VERSION_ID_KEY]) {
+    return [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.weights", useCaseKey, model[VERSION_ID_KEY]]];
+  }
+  return nil;
+}
+
+#pragma mark - Private methods
 
 + (void)getModelAndRules:(NSString *)useCaseKey
                  handler:(FBSDKDownloadCompletionBlock)handler
@@ -169,8 +206,8 @@ static NSMutableDictionary<NSString *, id> *_modelInfo;
 
 + (void)download:(NSString *)urlString
         filePath:(NSString *)filePath
-           queue:(dispatch_queue_t)queue
-           group:(dispatch_group_t)group
+          queue:(dispatch_queue_t)queue
+          group:(dispatch_group_t)group
 {
   if (!filePath || [[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
     return;
@@ -198,37 +235,8 @@ static NSMutableDictionary<NSString *, id> *_modelInfo;
   return modelInfo;
 }
 
-+ (nullable NSDictionary *)getRules
-{
-  NSDictionary<NSString *, id> *cachedModelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
-  if (!cachedModelInfo) {
-    return nil;
-  }
-  NSDictionary<NSString *, id> *model = [cachedModelInfo objectForKey:SUGGEST_EVENT_KEY];
-  if (model && model[VERSION_ID_KEY]) {
-    NSString *filePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.rules", SUGGEST_EVENT_KEY, model[VERSION_ID_KEY]]];
-    if (filePath) {
-      NSData *ruelsData = [NSData dataWithContentsOfFile:filePath];
-      NSDictionary *rules = [NSJSONSerialization JSONObjectWithData:ruelsData options:0 error:nil];
-      return rules;
-    }
-  }
-  return nil;
-}
-
-+ (nullable NSString *)getWeightsPath:(NSString *_Nonnull)useCaseKey
-{
-  NSDictionary<NSString *, id> *cachedModelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
-  if (!cachedModelInfo || !_directoryPath) {
-    return nil;
-  }
-  NSDictionary<NSString *, id> *model = [cachedModelInfo objectForKey:useCaseKey];
-  if (model && model[VERSION_ID_KEY]) {
-    return [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.weights", useCaseKey, model[VERSION_ID_KEY]]];
-  }
-  return nil;
-}
-
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

@@ -24,7 +24,11 @@
 
 static NSString *const FBSDKFeatureManagerPrefix = @"com.facebook.sdk:FBSDKFeatureManager.FBSDKFeature";
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation FBSDKFeatureManager
+
+#pragma mark - Public methods
 
 + (void)checkFeature:(FBSDKFeature)feature
      completionBlock:(FBSDKFeatureManagerBlock)completionBlock
@@ -42,6 +46,13 @@ static NSString *const FBSDKFeatureManagerPrefix = @"com.facebook.sdk:FBSDKFeatu
   }];
 }
 
++ (void)disableFeature:(NSString *)featureName
+{
+  [[NSUserDefaults standardUserDefaults] setObject:[FBSDKSettings sdkVersion] forKey:[FBSDKFeatureManagerPrefix stringByAppendingString:featureName]];
+}
+
+#pragma mark - Private methods
+
 + (BOOL)isEnabled:(FBSDKFeature)feature
 {
   if (FBSDKFeatureCore == feature) {
@@ -54,11 +65,6 @@ static NSString *const FBSDKFeatureManagerPrefix = @"com.facebook.sdk:FBSDKFeatu
   } else {
     return [FBSDKFeatureManager isEnabled:parentFeature] && [self checkGK:feature];
   }
-}
-
-+ (void)disableFeature:(NSString *)featureName
-{
-  [[NSUserDefaults standardUserDefaults] setObject:[FBSDKSettings sdkVersion] forKey:[FBSDKFeatureManagerPrefix stringByAppendingString:featureName]];
 }
 
 + (FBSDKFeature)getParentFeature:(FBSDKFeature)feature
@@ -134,3 +140,5 @@ static NSString *const FBSDKFeatureManagerPrefix = @"com.facebook.sdk:FBSDKFeatu
 }
 
 @end
+
+NS_ASSUME_NONNULL_END
