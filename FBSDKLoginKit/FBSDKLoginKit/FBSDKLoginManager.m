@@ -553,6 +553,13 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
   return [url.path hasSuffix:FBSDKOauthPath];
 }
 
+- (BOOL)shouldStopPropagationOfURL:(NSURL *)url
+{
+  return
+  [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", [FBSDKSettings appID]]]
+  && [url.host isEqualToString:@"no-op"];
+}
+
 @end
 
 #endif
