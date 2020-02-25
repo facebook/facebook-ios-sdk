@@ -192,7 +192,8 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
     for (UIWindow *window in windows) {
       NSDictionary<NSString *, id> *tree = [FBSDKViewHierarchy recursiveCaptureTreeWithCurrentNode:window
                                                                                         targetNode:uiResponder
-                                                                                     objAddressSet:objAddressSet];
+                                                                                     objAddressSet:objAddressSet
+                                                                                              hash:NO];
       if (tree) {
         if (window.isKeyWindow) {
           [trees insertObject:tree atIndex:0];

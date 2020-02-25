@@ -499,23 +499,31 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
 }
 
 + (nullable NSDictionary<NSString *, id> *)recursiveCaptureTreeWithCurrentNode:(NSObject *)currentNode
-                                                           targetNode:(NSObject *)targetNode
-                                                        objAddressSet:(NSMutableSet *)objAddressSet
+                                                                    targetNode:(nullable NSObject *)targetNode
+                                                                 objAddressSet:(nullable NSMutableSet *)objAddressSet
+                                                                          hash:(BOOL)hash
 {
-  if (!currentNode || [objAddressSet containsObject: currentNode]) {
+  if (!currentNode) {
     return nil;
   }
 
-  [objAddressSet addObject:currentNode];
+  if (objAddressSet) {
+    if ([objAddressSet containsObject: currentNode]) {
+      return nil;
+    }
+    [objAddressSet addObject:currentNode];
+  }
+
   NSMutableDictionary<NSString *, id> *result = [FBSDKViewHierarchy getDetailAttributesOf:currentNode
-                                                                                 withHash:NO];
+                                                                                 withHash:hash];
 
   NSArray<NSObject *> *children = [FBSDKViewHierarchy getChildren:currentNode];
   NSMutableArray<NSDictionary<NSString *, id> *> *childrenTrees = [NSMutableArray array];
   for (NSObject *child in children) {
     NSDictionary<NSString *, id> *objTree = [self recursiveCaptureTreeWithCurrentNode:child
                                                                            targetNode:targetNode
-                                                                        objAddressSet:objAddressSet];
+                                                                        objAddressSet:objAddressSet
+                                                                                 hash:hash];
     if (objTree != nil) {
       [childrenTrees addObject:objTree];
     }
@@ -524,7 +532,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
   if (childrenTrees.count > 0) {
     [result setObject:[childrenTrees copy] forKey:VIEW_HIERARCHY_CHILD_VIEWS_KEY];
   }
-  if (currentNode == targetNode) {
+  if (targetNode && currentNode == targetNode) {
     [result setObject:[NSNumber numberWithBool:YES] forKey:VIEW_HIERARCHY_IS_INTERACTED_KEY];
   }
   return [result copy];
