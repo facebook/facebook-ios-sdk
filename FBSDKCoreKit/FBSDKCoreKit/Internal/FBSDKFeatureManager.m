@@ -110,6 +110,7 @@ NS_ASSUME_NONNULL_BEGIN
 
     case FBDSDKFeatureShare: featureName = @"ShareKit"; break;
 
+    case FBDSDKFeatureGamingServices: featureName = @"GamingServicesKit"; break;
   }
 
   return featureName;
@@ -135,6 +136,7 @@ NS_ASSUME_NONNULL_BEGIN
     case FBSDKFeatureCore:
     case FBSDKFeatureAppEvents:
     case FBSDKFeatureCodelessEvents:
+    case FBDSDKFeatureGamingServices:
       return YES;
   }
 }

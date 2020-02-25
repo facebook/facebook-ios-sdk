@@ -51,6 +51,7 @@ main() {
     CORE_KIT="FBSDKCoreKit"
     LOGIN_KIT="FBSDKLoginKit"
     SHARE_KIT="FBSDKShareKit"
+    GAMING_SERVICES_KIT="FBSDKGamingServicesKit"
 
     SDK_BASE_KITS=(
       "$CORE_KIT"
@@ -60,6 +61,7 @@ main() {
 
     SDK_KITS=(
       "${SDK_BASE_KITS[@]}"
+      "$GAMING_SERVICES_KIT"
       "FBSDKMarketingKit"
       "FBSDKTVOSKit"
       "AccountKit"
@@ -89,6 +91,7 @@ main() {
       "FBSDKCoreKit.podspec"
       "FBSDKLoginKit.podspec"
       "FBSDKShareKit.podspec"
+      "FBSDKGamingServicesKit.podspec"
       "FBSDKTVOSKit.podspec"
     )
 
@@ -101,6 +104,7 @@ main() {
       "FacebookCore"
       "FacebookLogin"
       "FacebookShare"
+      "FacebookGamingServices"
     )
 
     if [ -f "$PWD/internal/scripts/internal_globals.sh" ]; then SDK_INTERNAL=1; else SDK_INTERNAL=0; fi
