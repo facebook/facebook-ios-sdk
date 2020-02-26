@@ -23,14 +23,13 @@
 #import <FBSDKGamingServicesKit/FBSDKGamingServicesKit.h>
 
 #import "FBSDKCoreKit+Internal.h"
+#import "FBSDKGamingServicesKitTestUtility.h"
 
 @interface FBSDKFriendFinderDialogTests : XCTestCase
 @end
 
 @implementation FBSDKFriendFinderDialogTests
 {
-  id _negativeURLCallback;
-
   id _mockToken;
   id _mockApp;
 }
@@ -38,8 +37,6 @@
 - (void)setUp
 {
   [super setUp];
-
-  _negativeURLCallback = [OCMArg invokeBlockWithArgs:@(false), nil];
 
   _mockToken = OCMClassMock([FBSDKAccessToken class]);
   [FBSDKAccessToken setCurrentAccessToken:_mockToken];
@@ -65,7 +62,10 @@
 - (void)testServiceIsCalledCorrectly
 {
   OCMStub([_mockToken appID]).andReturn(@"123");
-  OCMStub([_mockApp openURL:[OCMArg any] options:[OCMArg any] completionHandler:_negativeURLCallback]);
+  OCMStub([_mockApp
+           openURL:[OCMArg any]
+           options:[OCMArg any]
+           completionHandler:([OCMArg invokeBlockWithArgs:@(false), nil])]);
 
   id expectation = [self expectationWithDescription:@"callback"];
 
@@ -84,7 +84,10 @@
 
 - (void)testFailuresReturnAnError
 {
-  OCMStub([_mockApp openURL:[OCMArg any] options:[OCMArg any] completionHandler:_negativeURLCallback]);
+  OCMStub([_mockApp
+           openURL:[OCMArg any]
+           options:[OCMArg any]
+           completionHandler:([OCMArg invokeBlockWithArgs:@(false), nil])]);
 
   id expectation = [self expectationWithDescription:@"callback"];
   [FBSDKFriendFinderDialog
@@ -103,7 +106,7 @@
   OCMStub([settings appID]).andReturn(@"123");
 
   __block id<FBSDKURLOpening> delegate;
-  [self captureURLDelegateFromBridgeAPI:^(id<FBSDKURLOpening> obj) {
+  [FBSDKGamingServicesKitTestUtility captureURLDelegateFromBridgeAPI:^(id<FBSDKURLOpening> obj) {
     delegate = obj;
   }];
 
@@ -122,7 +125,7 @@
 - (void)testHandlingOfUserManuallyReturningToOriginalApp
 {
   __block id<FBSDKURLOpening> delegate;
-  [self captureURLDelegateFromBridgeAPI:^(id<FBSDKURLOpening> obj) {
+  [FBSDKGamingServicesKitTestUtility captureURLDelegateFromBridgeAPI:^(id<FBSDKURLOpening> obj) {
     delegate = obj;
   }];
 
@@ -136,19 +139,6 @@
   [delegate applicationDidBecomeActive:_mockApp];
 
   XCTAssertTrue(actioned);
-}
-
-#pragma mark - Helpers
-
-- (void)captureURLDelegateFromBridgeAPI:(void (^)(id<FBSDKURLOpening>))captureHandler
-{
-  id mock = OCMClassMock([FBSDKBridgeAPI class]);
-  OCMStub([mock sharedInstance]).andReturn(mock);
-
-  OCMStub([mock openURL:[OCMArg any] sender:[OCMArg checkWithBlock:^BOOL(id obj) {
-    captureHandler(obj);
-    return true;
-  }] handler:[OCMArg any]]);
 }
 
 @end
