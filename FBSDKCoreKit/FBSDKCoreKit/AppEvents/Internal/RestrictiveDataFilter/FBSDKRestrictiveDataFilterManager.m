@@ -22,6 +22,8 @@
 #import "FBSDKTypeUtility.h"
 
 static NSString *const RESTRICTIVE_PARAM_KEY = @"restrictive_param";
+static NSString *const PROCESS_EVENT_NAME_KEY = @"process_event_name";
+static NSString *const REPLACEMENT_STRING = @"_removed_";
 
 @interface FBSDKRestrictiveEventFilter : NSObject
 
@@ -57,6 +59,7 @@ static NSString *const RESTRICTIVE_PARAM_KEY = @"restrictive_param";
 static BOOL isRestrictiveEventFilterEnabled = NO;
 
 static NSMutableArray<FBSDKRestrictiveEventFilter *>  *_params;
+static NSMutableSet<NSString *> *_restrictedEvents;
 
 + (void)updateFilters:(nullable NSDictionary<NSString *, id> *)restrictiveParams
 {
@@ -64,20 +67,28 @@ static NSMutableArray<FBSDKRestrictiveEventFilter *>  *_params;
     return;
   }
   if (restrictiveParams.count > 0) {
-    [_params removeAllObjects];
-    NSMutableArray<FBSDKRestrictiveEventFilter *> *eventFilterArray = [NSMutableArray array];
-    for (NSString *eventName in restrictiveParams.allKeys) {
-      NSDictionary<NSString *, id> *eventInfo = restrictiveParams[eventName];
-      if (!eventInfo) {
-        return;
-      }
-      if (eventInfo[RESTRICTIVE_PARAM_KEY]) {
-        FBSDKRestrictiveEventFilter *restrictiveEventFilter = [[FBSDKRestrictiveEventFilter alloc] initWithEventName:eventName
-                                                                                                   restrictiveParams:eventInfo[RESTRICTIVE_PARAM_KEY]];
-        [eventFilterArray addObject:restrictiveEventFilter];
-      }
-    }
-    _params = eventFilterArray;
+    @synchronized (self) {
+       [_params removeAllObjects];
+       [_restrictedEvents removeAllObjects];
+       NSMutableArray<FBSDKRestrictiveEventFilter *> *eventFilterArray = [NSMutableArray array];
+       NSMutableSet<NSString *> *restrictedEventSet = [NSMutableSet set];
+       for (NSString *eventName in restrictiveParams.allKeys) {
+         NSDictionary<NSString *, id> *eventInfo = restrictiveParams[eventName];
+         if (!eventInfo) {
+           return;
+         }
+         if (eventInfo[RESTRICTIVE_PARAM_KEY]) {
+           FBSDKRestrictiveEventFilter *restrictiveEventFilter = [[FBSDKRestrictiveEventFilter alloc] initWithEventName:eventName
+                                                                                                      restrictiveParams:eventInfo[RESTRICTIVE_PARAM_KEY]];
+           [eventFilterArray addObject:restrictiveEventFilter];
+         }
+         if (restrictiveParams[eventName][PROCESS_EVENT_NAME_KEY]) {
+           [restrictedEventSet addObject:eventName];
+         }
+       }
+       _params = eventFilterArray;
+       _restrictedEvents = restrictedEventSet;
+     }
   }
 }
 
@@ -128,6 +139,19 @@ static NSMutableArray<FBSDKRestrictiveEventFilter *>  *_params;
   return nil;
 }
 
++ (void)processEvents:(NSMutableArray<NSDictionary<NSString *, id> *> *)events
+{
+  if (!isRestrictiveEventFilterEnabled) {
+    return;
+  }
+
+  for (NSDictionary<NSString *, NSDictionary<NSString *, id> *> *event in events) {
+   if ([FBSDKRestrictiveDataFilterManager isRestrictedEvent:event[@"event"][@"_eventName"]]) {
+      [event[@"event"] setValue:REPLACEMENT_STRING forKey:@"_eventName"];
+    }
+  }
+}
+
 + (void)enable
 {
   isRestrictiveEventFilterEnabled = YES;
@@ -141,6 +165,14 @@ static NSMutableArray<FBSDKRestrictiveEventFilter *>  *_params;
   NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:nil];
   NSUInteger matches = [regex numberOfMatchesInString:text options:0 range:NSMakeRange(0, text.length)];
   return matches > 0;
+}
+
+
++ (BOOL)isRestrictedEvent:(NSString *)eventName
+{
+  @synchronized (self) {
+    return [_restrictedEvents containsObject:eventName];
+  }
 }
 
 @end
