@@ -16,23 +16,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if defined FBSDKCOCOAPODS || defined BUCK
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-#import <FBSDKGamingServicesKit/FBSDKFriendFinderDialog.h>
-#import <FBSDKGamingServicesKit/FBSDKGamingImageUploader.h>
-#import <FBSDKGamingServicesKit/FBSDKGamingImageUploaderConfiguration.h>
-#import <FBSDKGamingServicesKit/FBSDKGamingServiceCompletionHandler.h>
-#import <FBSDKGamingServicesKit/FBSDKGamingVideoUploader.h>
-#import <FBSDKGamingServicesKit/FBSDKGamingVideoUploaderConfiguration.h>
+NS_ASSUME_NONNULL_BEGIN
 
-#else
+NS_SWIFT_NAME(GamingVideoUploaderConfiguration)
+@interface FBSDKGamingVideoUploaderConfiguration : NSObject
 
-#import "FBSDKFriendFinderDialog.h"
-#import "FBSDKGamingImageUploader.h"
-#import "FBSDKGamingImageUploaderConfiguration.h"
-#import "FBSDKGamingServiceCompletionHandler.h"
-#import "FBSDKGamingVideoUploader.h"
-#import "FBSDKGamingVideoUploaderConfiguration.h"
+@property (nonatomic, strong, readonly, nonnull) NSURL *videoURL;
+@property (nonatomic, strong, readonly, nullable) NSString *caption;
 
-#endif
+- (instancetype)initWithVideoURL:(NSURL * _Nonnull)videoURL
+                         caption:(NSString * _Nullable)caption;
 
+@end
+
+
+NS_ASSUME_NONNULL_END
