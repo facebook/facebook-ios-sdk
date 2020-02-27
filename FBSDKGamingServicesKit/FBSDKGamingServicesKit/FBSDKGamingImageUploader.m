@@ -49,7 +49,7 @@
   [[[FBSDKGraphRequest alloc]
     initWithGraphPath:@"me/photos"
     parameters:@{
-      @"caption": configuration.caption,
+      @"caption": configuration.caption ?: @"",
       @"picture": UIImagePNGRepresentation(configuration.image)
     }
     HTTPMethod:FBSDKHTTPMethodPOST]
