@@ -126,7 +126,7 @@
   NSNumber *result = [FBSDKAppEventsUtility
                       getNumberValue:@"Price: 1\u202F234,56; Buy 1 get 2!"];
   NSString *str = [NSString stringWithFormat:@"%.2f", result.floatValue];
-  XCTAssertTrue([str isEqualToString:@"1234.56"]);
+  XCTAssertEqualObjects(str, @"1234.56");
 }
 
 - (void)testGetNumberValueWithLocaleIT
@@ -137,7 +137,7 @@
   NSNumber *result = [FBSDKAppEventsUtility
                       getNumberValue:@"Price: 1.234,56; Buy 1 get 2!"];
   NSString *str = [NSString stringWithFormat:@"%.2f", result.floatValue];
-  XCTAssertTrue([str isEqualToString:@"1234.56"]);
+  XCTAssertEqualObjects(str, @"1234.56");
 }
 
 - (void)testIsSensitiveUserData
