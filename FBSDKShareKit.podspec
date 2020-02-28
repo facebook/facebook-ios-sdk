@@ -25,8 +25,8 @@ Pod::Spec.new do |s|
                      :tag => "v#{s.version}"
                     }
 
-  s.ios.weak_frameworks = 'Accounts', 'AudioToolbox', 'CoreGraphics', 'CoreLocation', 'Foundation', 'QuartzCore', 'Security', 'Social', 'UIKit'
-  s.tvos.weak_frameworks = 'AudioToolbox', 'CoreGraphics', 'CoreLocation', 'Foundation', 'QuartzCore', 'Security', 'UIKit'
+  s.ios.weak_frameworks = 'Accounts', 'AudioToolbox', 'CoreGraphics', 'Foundation', 'QuartzCore', 'Security', 'Social', 'UIKit'
+  s.tvos.weak_frameworks = 'AudioToolbox', 'CoreGraphics', 'Foundation', 'QuartzCore', 'Security', 'UIKit'
 
   s.requires_arc = true
 
