@@ -21,8 +21,8 @@
 @implementation FBSDKGamingImageUploaderConfiguration
 
 - (instancetype)initWithImage:(UIImage * _Nonnull)image
-                caption:(NSString * _Nullable)caption
-shouldLaunchMediaDialog:(BOOL)shouldLaunchMediaDialog
+                      caption:(NSString * _Nullable)caption
+      shouldLaunchMediaDialog:(BOOL)shouldLaunchMediaDialog
 {
   if (self = [super init]) {
     _image = image;

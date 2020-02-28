@@ -16,23 +16,28 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import <Foundation/Foundation.h>
+
 #if defined FBSDKCOCOAPODS || defined BUCK
-
-#import <FBSDKGamingServicesKit/FBSDKFriendFinderDialog.h>
-#import <FBSDKGamingServicesKit/FBSDKGamingImageUploader.h>
-#import <FBSDKGamingServicesKit/FBSDKGamingImageUploaderConfiguration.h>
 #import <FBSDKGamingServicesKit/FBSDKGamingServiceCompletionHandler.h>
-#import <FBSDKGamingServicesKit/FBSDKGamingVideoUploader.h>
-#import <FBSDKGamingServicesKit/FBSDKGamingVideoUploaderConfiguration.h>
-
 #else
-
-#import "FBSDKFriendFinderDialog.h"
-#import "FBSDKGamingImageUploader.h"
-#import "FBSDKGamingImageUploaderConfiguration.h"
 #import "FBSDKGamingServiceCompletionHandler.h"
-#import "FBSDKGamingVideoUploader.h"
-#import "FBSDKGamingVideoUploaderConfiguration.h"
-
 #endif
 
+@class FBSDKGamingVideoUploaderConfiguration;
+
+NS_SWIFT_NAME(GamingVideoUploader)
+@interface FBSDKGamingVideoUploader : NSObject
+
+- (instancetype _Nonnull )init NS_SWIFT_UNAVAILABLE("Should not create instances of this class");
+
+/**
+Runs an upload to a users Gaming Media Library with the given configuration
+
+@param configuration model object contain the content that will be uploaded
+@param completionHandler a callback that is fired when the upload completes.
+*/
++ (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration * _Nonnull)configuration
+                andCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler;
+
+@end

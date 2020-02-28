@@ -128,6 +128,7 @@ let package = Package(
             cSettings: [
                 .headerSearchPath("Internal"),
                 .headerSearchPath("../../FBSDKCoreKit/FBSDKCoreKit/Internal"),
+                .headerSearchPath("../../FBSDKShareKit/FBSDKShareKit/Internal"),
             ]
         ),
         .target(
