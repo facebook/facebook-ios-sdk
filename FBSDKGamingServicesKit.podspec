@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
                      :tag => "v#{s.version}"
                     }
 
-  s.weak_frameworks = 'Accounts', 'CoreLocation', 'Social', 'Security', 'Foundation'
+  s.weak_frameworks = 'Accounts', 'Social', 'Security', 'Foundation'
 
   s.requires_arc = true
   s.prefix_header_contents = '#define FBSDKCOCOAPODS'
