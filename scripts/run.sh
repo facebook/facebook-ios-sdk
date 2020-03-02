@@ -320,7 +320,18 @@ build_sdk() {
   }
 
   build_spm_integration() {
+
+    local top_level_dir=$PWD
+
     cd "$SDK_DIR"/samples/SmoketestSPM
+
+    echo "REPO URL: file://$top_level_dir"
+
+    rm -rf /Users/travis/Library/Developer/Xcode/DerivedData/*
+
+    /usr/libexec/PlistBuddy \
+      -c "set :objects:F4CEA53E23C29C9E0086EB16:repositoryURL file://$top_level_dir" \
+      SmoketestSPM.xcodeproj/project.pbxproj
 
     /usr/libexec/PlistBuddy \
       -c "delete :objects:F4CEA53E23C29C9E0086EB16:requirement:branch" \
@@ -336,6 +347,7 @@ build_sdk() {
 
     xcodebuild build -scheme SmoketestSPM \
       -sdk iphonesimulator \
+      -clonedSourcePackagesDirPath ./tmp \
       -verbose
   }
 

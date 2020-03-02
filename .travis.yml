@@ -13,6 +13,7 @@ branches:
     - master
     - 4.x-branch
     - /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
+    - fix-spm-integration
 
 stages:
   - name: test
@@ -24,108 +25,108 @@ stages:
 
 jobs:
   include:
-    - stage: test
-      name: Xcode - iOS 12.2
-      osx_image: xcode10.2
-      env:
-        - XCODE_SDK=iphonesimulator12.2
-        - XCODE_SCHEME=BuildAllKits
-    - stage: test
-      name: Xcode - tvOS 12.2
-      osx_image: xcode10.2
-      env:
-        - XCODE_SDK=appletvsimulator12.2
-        - XCODE_SCHEME=BuildAllKits_TV
-    - stage: test
-      name: Xcode - iOS 11.4
-      osx_image: xcode9.4
-      env:
-        - XCODE_SDK=iphonesimulator11.4
-        - XCODE_SCHEME=BuildAllKits
-    - stage: test
-      name: Swift - Xcode 10.3
-      osx_image: xcode10.3
-      env:
-        - XCODE_SDK=iphonesimulator12.4
-        - XCODE_SCHEME=BuildAllSwiftKits
-    - stage: test
-      name: Carthage - Xcode 10.2
-      osx_image: xcode10.2
-    - stage: test
-      name: Pod Lint - Xcode 10.3
-      osx_image: xcode10.3
-      script: sh scripts/run.sh lint cocoapods
-    - stage: test
-      name: Pod Lint Static - Xcode 10.3
-      osx_image: xcode10.3
-      script: sh scripts/run.sh lint cocoapods --use-libraries
-    - stage: test
-      name: Swift Lint
-      osx_image: xcode10.3
-      script: sh scripts/run.sh lint swift
-    # - stage: tag
-    #   name: Tag Version
+    # - stage: test
+    #   name: Xcode - iOS 12.2
     #   osx_image: xcode10.2
-    #   script: sh scripts/run.sh tag-current-version --push
-    - stage: test
-      name: Verify Swift Package Headers
-      script: sh scripts/run.sh verify-spm-headers
+    #   env:
+    #     - XCODE_SDK=iphonesimulator12.2
+    #     - XCODE_SCHEME=BuildAllKits
+    # - stage: test
+    #   name: Xcode - tvOS 12.2
+    #   osx_image: xcode10.2
+    #   env:
+    #     - XCODE_SDK=appletvsimulator12.2
+    #     - XCODE_SCHEME=BuildAllKits_TV
+    # - stage: test
+    #   name: Xcode - iOS 11.4
+    #   osx_image: xcode9.4
+    #   env:
+    #     - XCODE_SDK=iphonesimulator11.4
+    #     - XCODE_SCHEME=BuildAllKits
+    # - stage: test
+    #   name: Swift - Xcode 10.3
+    #   osx_image: xcode10.3
+    #   env:
+    #     - XCODE_SDK=iphonesimulator12.4
+    #     - XCODE_SCHEME=BuildAllSwiftKits
+    # - stage: test
+    #   name: Carthage - Xcode 10.2
+    #   osx_image: xcode10.2
+    # - stage: test
+    #   name: Pod Lint - Xcode 10.3
+    #   osx_image: xcode10.3
+    #   script: sh scripts/run.sh lint cocoapods
+    # - stage: test
+    #   name: Pod Lint Static - Xcode 10.3
+    #   osx_image: xcode10.3
+    #   script: sh scripts/run.sh lint cocoapods --use-libraries
+    # - stage: test
+    #   name: Swift Lint
+    #   osx_image: xcode10.3
+    #   script: sh scripts/run.sh lint swift
+    # # - stage: tag
+    # #   name: Tag Version
+    # #   osx_image: xcode10.2
+    # #   script: sh scripts/run.sh tag-current-version --push
+    # - stage: test
+    #   name: Verify Swift Package Headers
+    #   script: sh scripts/run.sh verify-spm-headers
     # TODO: This test still has value but currently is too flaky to include on every run
     # need to figure out how to make it less flaky. Might just need to wait for improvements
     # or support from the Travis side of things.
-    # - stage: test
-    #   name: Swift Package Integration Test
-    #   osx_image: xcode11.2
-    #   script: sh scripts/run.sh build spm-integration
     - stage: test
-      name: Build Swift Packages
+      name: Swift Package Integration Test
       osx_image: xcode11.2
-      script: sh scripts/run.sh build spm
-    - stage: release
-      name: GitHub Release
-      osx_image: xcode10.1
-      script: sh scripts/run.sh release github
-      deploy:
-        provider: releases
-        skip_cleanup: true
-        api_key: $GITHUB_ACCESS_TOKEN
-        file: build/Release/*
-        file_glob: true
-        name: Facebook SDK $TRAVIS_TAG
-        body: Consult Changelog $TRAVIS_TAG
-        on:
-          all_branches: true
-          tags: true
-    - stage: release
-      name: GitHub Release Swift
-      osx_image: xcode10.3
-      script: sh scripts/run.sh release github swift
-      deploy:
-        provider: releases
-        skip_cleanup: true
-        api_key: $GITHUB_ACCESS_TOKEN
-        file: build/Release/*
-        file_glob: true
-        name: Facebook SDK $TRAVIS_TAG
-        body: Consult Changelog $TRAVIS_TAG
-        on:
-          all_branches: true
-          tags: true
-    - stage: release
-      name: Publish Cocoapods
-      osx_image: xcode10.3
-      script: sh scripts/run.sh release cocoapods
+      script: sh scripts/run.sh build spm-integration
+    # - stage: test
+    #   name: Build Swift Packages
+    #   osx_image: xcode11.2
+    #   script: sh scripts/run.sh build spm
+#     - stage: release
+#       name: GitHub Release
+#       osx_image: xcode10.1
+#       script: sh scripts/run.sh release github
+#       deploy:
+#         provider: releases
+#         skip_cleanup: true
+#         api_key: $GITHUB_ACCESS_TOKEN
+#         file: build/Release/*
+#         file_glob: true
+#         name: Facebook SDK $TRAVIS_TAG
+#         body: Consult Changelog $TRAVIS_TAG
+#         on:
+#           all_branches: true
+#           tags: true
+#     - stage: release
+#       name: GitHub Release Swift
+#       osx_image: xcode10.3
+#       script: sh scripts/run.sh release github swift
+#       deploy:
+#         provider: releases
+#         skip_cleanup: true
+#         api_key: $GITHUB_ACCESS_TOKEN
+#         file: build/Release/*
+#         file_glob: true
+#         name: Facebook SDK $TRAVIS_TAG
+#         body: Consult Changelog $TRAVIS_TAG
+#         on:
+#           all_branches: true
+#           tags: true
+#     - stage: release
+#       name: Publish Cocoapods
+#       osx_image: xcode10.3
+#       script: sh scripts/run.sh release cocoapods
 
 script: sh scripts/travis/script.sh
 
-notifications: # set notification options
-  email:
-    on_success: change
-    on_failure: always
-    recipients:
-      - joesusnick@fb.com
-      - tianqibt@fb.com
-      - kylinchang@fb.com
+# notifications: # set notification options
+#   email:
+#     on_success: change
+#     on_failure: always
+#     recipients:
+#       - joesusnick@fb.com
+#       - tianqibt@fb.com
+#       - kylinchang@fb.com
   # Enable webhooks later
   # webhooks:
   # on_failure: always
