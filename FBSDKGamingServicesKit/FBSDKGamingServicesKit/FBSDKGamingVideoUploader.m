@@ -93,8 +93,17 @@ static FBSDKGamingVideoUploader *executingUploader = nil;
 - (void)safeCompleteWithResult:(BOOL)result
                       andError:(NSError *)error
 {
+  NSError *finalError = error;
+
+  if (result == false && error == nil)  {
+    finalError =
+    [FBSDKError
+     errorWithCode:FBSDKErrorUnknown
+     message:@"Video upload was unsuccessful, but no error was thrown."];
+  }
+
   if (_completionHandler != nil) {
-    _completionHandler(result, error);
+    _completionHandler(result, finalError);
   }
   executingUploader = nil;
 }
