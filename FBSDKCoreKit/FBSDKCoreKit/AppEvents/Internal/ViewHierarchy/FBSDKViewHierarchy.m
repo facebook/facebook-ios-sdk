@@ -352,6 +352,10 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
     NSMutableArray *titles = [NSMutableArray array];
 
     for (NSInteger i = 0; i < sections; i++) {
+      NSInteger numberOfRow = [picker numberOfRowsInComponent:i];
+      if (numberOfRow <= 0) {
+        continue;
+      }
       NSInteger row = [picker selectedRowInComponent:i];
       NSString *title;
       if ([picker.delegate
