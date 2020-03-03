@@ -320,34 +320,34 @@ build_sdk() {
   }
 
   build_spm_integration() {
+    echo "Updating git config"
+    git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
 
-    local top_level_dir=$PWD
+    echo "Setting remote origin"
+    git remote set-url origin https://x-access-token:"${GITHUB_ACCESS_TOKEN}"@github.com/facebook/facebook-ios-sdk.git
+
+    echo "Fetching remote branches"
+    git fetch
+
+    echo "Checking out tmp branch"
+    git checkout tmp
+
+    echo "Merge commit: $TRAVIS_COMMIT"
+    REVISION=$(git rev-parse HEAD)
+    echo "Top commit on tmp branch: $REVISION"
+
+    echo "Force pushing merge commit to tmp branch"
+    git push --force origin "$TRAVIS_COMMIT":tmp
 
     cd "$SDK_DIR"/samples/SmoketestSPM
 
-    echo "REPO URL: file://$top_level_dir"
-
-    rm -rf /Users/travis/Library/Developer/Xcode/DerivedData/*
-
+    # Updates project file to point to tmp branch for fetching package source code
     /usr/libexec/PlistBuddy \
-      -c "set :objects:F4CEA53E23C29C9E0086EB16:repositoryURL file://$top_level_dir" \
-      SmoketestSPM.xcodeproj/project.pbxproj
-
-    /usr/libexec/PlistBuddy \
-      -c "delete :objects:F4CEA53E23C29C9E0086EB16:requirement:branch" \
-      SmoketestSPM.xcodeproj/project.pbxproj
-
-    /usr/libexec/PlistBuddy \
-      -c "add :objects:F4CEA53E23C29C9E0086EB16:requirement:revision string $TRAVIS_COMMIT" \
-      SmoketestSPM.xcodeproj/project.pbxproj
-
-    /usr/libexec/PlistBuddy \
-      -c "set :objects:F4CEA53E23C29C9E0086EB16:requirement:kind revision" \
-      SmoketestSPM.xcodeproj/project.pbxproj
+        -c "set :objects:F4CEA53E23C29C9E0086EB16:requirement:branch tmp" \
+        SmoketestSPM.xcodeproj/project.pbxproj
 
     xcodebuild build -scheme SmoketestSPM \
       -sdk iphonesimulator \
-      -clonedSourcePackagesDirPath ./tmp \
       -verbose
   }
 

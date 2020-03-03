@@ -35,7 +35,7 @@ struct VerifyFacebookLogin {
         _ = LoginResult.cancelled
 
         // Verifies Swift only initializer
-        _ = LoginManager(loginBehavior: .browser, defaultAudience: .everyone)
+        _ = LoginManager(defaultAudience: .everyone)
 
         // Verifies ObjC initializer
         _ = LoginManager()
