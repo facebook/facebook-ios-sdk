@@ -64,14 +64,12 @@ main() {
       "$GAMING_SERVICES_KIT"
       "FBSDKMarketingKit"
       "FBSDKTVOSKit"
-      "AccountKit"
     )
 
     SDK_VERSION_FILES=(
       "Configurations/Version.xcconfig"
       "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h"
       "FBSDKCoreKit/FBSDKCoreKit/Basics/Instrument/FBSDKCrashHandler.m"
-      "AccountKit/AccountKit/Internal/AKFConstants.m"
     )
 
     SDK_GRAPH_API_VERSION_FILES=(
@@ -85,7 +83,6 @@ main() {
 
     SDK_POD_SPECS=("${SDK_KITS[@]}" "$SDK_FRAMEWORK_NAME")
     SDK_POD_SPECS=("${SDK_POD_SPECS[@]/%/.podspec}")
-    SDK_POD_SPECS[6]="AccountKit/${SDK_POD_SPECS[6]}"
 
     SDK_LINT_POD_SPECS=(
       "FBSDKCoreKit.podspec"
