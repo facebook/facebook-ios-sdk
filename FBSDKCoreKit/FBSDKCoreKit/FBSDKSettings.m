@@ -78,9 +78,7 @@ static NSString *const autoLogAppEventsEnabledNotSetWarning =
   "Learn more: https://developers.facebook.com/docs/app-events/getting-started-app-events-ios#disable-auto-events.";
 static NSString *const advertiserIDCollectionEnabledNotSetWarning =
   @"<Warning>: You haven't set a value for FacebookAdvertiserIDCollectionEnabled. Set the flag to TRUE if "
-  "you want to collect Advertiser ID for better advertising and analytics results. To request user consent "
-  "before collecting data, set the flag value to FALSE, then change to TRUE once user consent is received. "
-  "Learn more: https://developers.facebook.com/docs/app-events/getting-started-app-events-ios#disable-auto-events.";
+  "you want to collect Advertiser ID for better advertising and analytics results.";
 static NSString *const advertiserIDCollectionEnabledFalseWarning =
   @"<Warning>: The value for FacebookAdvertiserIDCollectionEnabled is currently set to FALSE so you're sending app "
   "events without collecting Advertiser ID. This can affect the quality of your advertising and analytics results.";
