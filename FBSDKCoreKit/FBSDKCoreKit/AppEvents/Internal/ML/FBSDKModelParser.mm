@@ -94,27 +94,19 @@ NS_ASSUME_NONNULL_BEGIN
   return weights;
 }
 
-+ (bool)validateWeights:(std::unordered_map<std::string, mat::MTensor>)weights forTask:(FBSDKMTMLTask)task
++ (bool)validateWeights:(std::unordered_map<std::string, mat::MTensor>)weights forKey:(NSString *)key
 {
   NSMutableDictionary<NSString *, NSArray *> *weightsInfoDict = [[NSMutableDictionary alloc] init];
   [weightsInfoDict addEntriesFromDictionary:[self getSharedWeightsInfo]];
-  switch (task) {
-    case FBSDKMTMLTaskAddressDetect:
-      [weightsInfoDict addEntriesFromDictionary:[self getAddressDetectSpec]];
-      break;
-    case FBSDKMTMLTaskAppEventPred:
-      [weightsInfoDict addEntriesFromDictionary:[self getAppEventPredSpec]];
-      break;
+  if ([key hasPrefix:@"MTML"]) {
+    [weightsInfoDict addEntriesFromDictionary:[self getMTMLSpec]];
   }
-
-  return [self checkWeights:weights withExpectedInfo:weightsInfoDict];
-}
-
-+ (bool)validateMTMLWeights:(std::unordered_map<std::string, mat::MTensor>)weights
-{
-    NSMutableDictionary<NSString *, NSArray *> *weightsInfoDict = [[NSMutableDictionary alloc] init];
-  [weightsInfoDict addEntriesFromDictionary:[self getSharedWeightsInfo]];
-  [weightsInfoDict addEntriesFromDictionary:[self getMTMLSpec]];
+  if ([key isEqualToString:@"DATA_DETECTION_ADDRESS"]) {
+    [weightsInfoDict addEntriesFromDictionary:[self getAddressDetectSpec]];
+  }
+  if ([key isEqualToString:@"SUGGEST_EVENT"]) {
+    [weightsInfoDict addEntriesFromDictionary:[self getAppEventPredSpec]];
+  }
   return [self checkWeights:weights withExpectedInfo:weightsInfoDict];
 }
 

@@ -45,7 +45,7 @@ static NSString *const VERSION_ID_KEY = @"version_id";
 static NSString *const MODEL_DATA_KEY = @"data";
 static NSString *const ADDRESS_FILTERING_KEY = @"DATA_DETECTION_ADDRESS";
 
-static NSString *const MTMLPrefixKey = @"MTML";
+static NSString *const MTMLKey = @"MTML";
 static NSString *const MTMLTaskAppEventPredKey = @"MTML_APP_EVENT_PRED";
 static NSString *const MTMLTaskAddressDetectKey = @"MTML_ADDRESS_DETECT";
 
@@ -73,6 +73,7 @@ NS_ASSUME_NONNULL_BEGIN
       [[NSFileManager defaultManager] createDirectoryAtPath:dirPath withIntermediateDirectories:NO attributes:NULL error:NULL];
     }
     _directoryPath = dirPath;
+    _modelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
 
     // fetch api
     FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
@@ -103,15 +104,11 @@ NS_ASSUME_NONNULL_BEGIN
   });
 }
 
-+ (nullable NSDictionary *)getRulesForKey:(NSString *)useCaseKey
++ (nullable NSDictionary *)getRulesForKey:(NSString *)useCase
 {
-  NSDictionary<NSString *, id> *cachedModelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
-  if (!cachedModelInfo) {
-    return nil;
-  }
-  NSDictionary<NSString *, id> *model = [cachedModelInfo objectForKey:useCaseKey];
+  NSDictionary<NSString *, id> *model = [_modelInfo objectForKey:useCase];
   if (model && model[VERSION_ID_KEY]) {
-    NSString *filePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.rules", useCaseKey, model[VERSION_ID_KEY]]];
+    NSString *filePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.rules", useCase, model[VERSION_ID_KEY]]];
     if (filePath) {
       NSData *ruelsData = [NSData dataWithContentsOfFile:filePath options:NSDataReadingMappedIfSafe error:nil];
       NSDictionary *rules = [NSJSONSerialization JSONObjectWithData:ruelsData options:0 error:nil];
@@ -121,15 +118,20 @@ NS_ASSUME_NONNULL_BEGIN
   return nil;
 }
 
-+ (nullable NSString *)getWeightsPath:(NSString *)useCaseKey
++ (nullable NSData *)getWeightsForKey:(NSString *)useCase
 {
-  NSDictionary<NSString *, id> *cachedModelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
-  if (!cachedModelInfo || !_directoryPath) {
+  if (!_modelInfo || !_directoryPath) {
     return nil;
   }
-  NSDictionary<NSString *, id> *model = [cachedModelInfo objectForKey:useCaseKey];
+  NSDictionary<NSString *, id> *model = [_modelInfo objectForKey:useCase];
   if (model && model[VERSION_ID_KEY]) {
-    return [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.weights", useCaseKey, model[VERSION_ID_KEY]]];
+    NSString *path = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.weights", useCase, model[VERSION_ID_KEY]]];
+    if (!path) {
+      return nil;
+    }
+    return [NSData dataWithContentsOfFile:path
+                                  options:NSDataReadingMappedIfSafe
+                                    error:nil];
   }
   return nil;
 }
@@ -142,14 +144,14 @@ NS_ASSUME_NONNULL_BEGIN
   NSNumber *mtmlVersionId = 0;
   for (NSString *useCase in _modelInfo) {
     NSDictionary<NSString *, id> *model = _modelInfo[useCase];
-    if ([useCase hasPrefix:MTMLPrefixKey]) {
+    if ([useCase hasPrefix:MTMLKey]) {
       mtmlAssetUri = model[ASSET_URI_KEY];
       mtmlVersionId = model[VERSION_ID_KEY];
     }
   }
   if (mtmlAssetUri && [mtmlVersionId compare:[NSNumber numberWithInt:0]] > 0) {
-    _modelInfo[MTMLPrefixKey] = @{
-      USE_CASE_KEY: MTMLPrefixKey,
+    _modelInfo[MTMLKey] = @{
+      USE_CASE_KEY: MTMLKey,
       ASSET_URI_KEY: mtmlAssetUri,
       VERSION_ID_KEY: mtmlVersionId,
     };
@@ -158,10 +160,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)checkFeaturesAndExecuteForMTML
 {
-  [self getModelAndRules:MTMLPrefixKey onSuccess:^() {
+  [self getModelAndRules:MTMLKey onSuccess:^() {
     if ([FBSDKFeatureManager isEnabled:FBSDKFeatureSuggestedEvents]) {
       [self getModelAndRules:MTMLTaskAppEventPredKey onSuccess:^() {
-        [FBSDKEventInferencer loadWeightsForKey:MTMLPrefixKey];
+        [FBSDKEventInferencer loadWeightsForKey:MTMLKey];
         [FBSDKFeatureExtractor loadRulesForKey:MTMLTaskAppEventPredKey];
         [FBSDKSuggestedEventsIndexer enable];
       }];
@@ -169,7 +171,7 @@ NS_ASSUME_NONNULL_BEGIN
 
     if ([FBSDKFeatureManager isEnabled:FBSDKFeaturePIIFiltering]) {
       [self getModelAndRules:MTMLTaskAddressDetectKey onSuccess:^() {
-        [FBSDKAddressInferencer loadWeightsForKey:MTMLPrefixKey];
+        [FBSDKAddressInferencer loadWeightsForKey:MTMLKey];
         [FBSDKAddressInferencer initializeDenseFeature];
         [FBSDKAddressFilterManager enable];
       }];
@@ -222,9 +224,9 @@ NS_ASSUME_NONNULL_BEGIN
   NSString *assetFilePath;
   if (assetUrlString.length > 0) {
     NSString *fileName = useCaseKey;
-    if ([useCaseKey hasPrefix:MTMLPrefixKey]) {
+    if ([useCaseKey hasPrefix:MTMLKey]) {
       // all mtml tasks share the same weights file
-      fileName = MTMLPrefixKey;
+      fileName = MTMLKey;
     }
     assetFilePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.weights", fileName, model[VERSION_ID_KEY]]];
     if ([[NSFileManager defaultManager] fileExistsAtPath:assetFilePath] == false) {

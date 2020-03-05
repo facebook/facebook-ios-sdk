@@ -38,24 +38,20 @@ static NSString *const THRESHOLDS_KEY = @"thresholds";
 static NSString *const SUGGESTED_EVENT[4] = {@"fb_mobile_add_to_cart", @"fb_mobile_complete_registration", @"other", @"fb_mobile_purchase"};
 static NSDictionary<NSString *, NSString *> *const DEFAULT_PREDICTION = @{SUGGEST_EVENT_KEY: SUGGESTED_EVENTS_OTHER};
 
+static NSString *_useCase;
 static std::unordered_map<std::string, mat::MTensor> _weights;
 
 @implementation FBSDKEventInferencer : NSObject
 
-+ (void)loadWeightsForKey:(NSString *)useCaseKey
++ (void)loadWeightsForKey:(NSString *)useCase
 {
-  NSString *path = [FBSDKModelManager getWeightsPath:useCaseKey];
-  if (!path) {
+  NSData *data = [FBSDKModelManager getWeightsForKey:useCase];
+  if (!data) {
     return;
   }
-  NSData *latestData = [NSData dataWithContentsOfFile:path
-                                              options:NSDataReadingMappedIfSafe
-                                                error:nil];
-  if (!latestData) {
-    return;
-  }
-  std::unordered_map<std::string, mat::MTensor> weights = [FBSDKModelParser parseWeightsData:latestData];
-  if ([FBSDKModelParser validateWeights:weights forTask:FBSDKMTMLTaskAppEventPred]) {
+  std::unordered_map<std::string, mat::MTensor> weights = [FBSDKModelParser parseWeightsData:data];
+  if ([FBSDKModelParser validateWeights:weights forKey:useCase]) {
+    _useCase = useCase;
     _weights = weights;
   }
 }
@@ -100,7 +96,11 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
 
     memcpy(dense_tensor_data, dense_data, sizeof(float) * 30);
     free(dense_data);
-    float *res = mat1::predictOnText(bytes, _weights, dense_tensor_data);
+    NSString *key = _useCase;
+    if ([key isEqualToString:@"MTML"]) {
+      key = @"MTML_APP_EVENT_PRED";
+    }
+    float *res = mat1::predictOnText(std::string([key UTF8String]), bytes, _weights, dense_tensor_data);
     NSMutableDictionary<NSString *, id> *modelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
     if (!modelInfo) {
       return DEFAULT_PREDICTION;

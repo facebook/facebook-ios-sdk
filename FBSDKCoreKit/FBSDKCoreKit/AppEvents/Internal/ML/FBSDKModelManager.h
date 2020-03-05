@@ -29,8 +29,8 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
 @interface FBSDKModelManager : NSObject
 
 + (void)enable;
-+ (nullable NSDictionary *)getRulesForKey:(NSString *)useCaseKey;
-+ (nullable NSString *)getWeightsPath:(NSString *)useCaseKey;
++ (nullable NSDictionary *)getRulesForKey:(NSString *)useCase;
++ (nullable NSData *)getWeightsForKey:(NSString *)useCase;
 
 @end
 

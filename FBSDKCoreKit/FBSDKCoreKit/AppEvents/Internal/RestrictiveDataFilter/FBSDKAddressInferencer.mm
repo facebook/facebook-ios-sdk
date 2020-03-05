@@ -36,6 +36,7 @@ static NSString *const DATA_DETECTION_ADDRESS_KEY = @"DATA_DETECTION_ADDRESS";
 
 @implementation FBSDKAddressInferencer : NSObject
 
+static NSString *_useCase;
 static std::unordered_map<std::string, mat::MTensor> _weights;
 static std::vector<float> _denseFeature;
 
@@ -46,20 +47,15 @@ static std::vector<float> _denseFeature;
   _denseFeature = dense_feature;
 }
 
-+ (void)loadWeightsForKey:(NSString *)useCaseKey
++ (void)loadWeightsForKey:(NSString *)useCase
 {
-  NSString *path = [FBSDKModelManager getWeightsPath:useCaseKey];
-  if (!path) {
+  NSData *data = [FBSDKModelManager getWeightsForKey:useCase];
+  if (!data) {
     return;
   }
-  NSData *latestData = [NSData dataWithContentsOfFile:path
-                                              options:NSDataReadingMappedIfSafe
-                                                error:nil];
-  if (!latestData) {
-    return;
-  }
-  std::unordered_map<std::string, mat::MTensor> weights = [FBSDKModelParser parseWeightsData:latestData];
-  if ([FBSDKModelParser validateWeights:weights forTask:FBSDKMTMLTaskAddressDetect]) {
+  std::unordered_map<std::string, mat::MTensor> weights = [FBSDKModelParser parseWeightsData:data];
+  if ([FBSDKModelParser validateWeights:weights forKey:useCase]) {
+    _useCase = useCase;
     _weights = weights;
   }
 }
@@ -87,7 +83,11 @@ static std::vector<float> _denseFeature;
   NSMutableArray *thresholds = [addressModelInfo objectForKey:THRESHOLDS_KEY];
   float threshold = [thresholds[0] floatValue];
   try {
-    predictedRaw = mat1::predictOnText(bytes, _weights, &_denseFeature[0]);
+    NSString *key = _useCase;
+    if ([key isEqualToString:@"MTML"]) {
+      key = @"MTML_ADDRESS_DETECT";
+    }
+    predictedRaw = mat1::predictOnText(std::string([key UTF8String]), bytes, _weights, &_denseFeature[0]);
     if (!predictedRaw[1]) {
       return false;
     }

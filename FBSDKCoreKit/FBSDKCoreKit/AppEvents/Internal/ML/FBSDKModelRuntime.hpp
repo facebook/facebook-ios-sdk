@@ -314,7 +314,13 @@ namespace mat1 {
         return final_layer_dense_x;
     }
 
-    static float* predictOnText(const char *texts, std::unordered_map<std::string, mat::MTensor>& weights, float *df) {
+    static float* predictOnText(std::string key, const char *texts, std::unordered_map<std::string, mat::MTensor>& weights, float *df) {
+        // switch to MTML key if needed
+        if (key.compare("MTML_APP_EVENT_PRED") == 0) {
+            return predict("app_event_pred", texts, weights, df);
+        } else if (key.compare("MTML_ADDRESS_DETECT") == 0) {
+            return predict("address_detect", texts, weights, df);
+        }
         return predict("fc3", texts, weights, df);
     }
 }

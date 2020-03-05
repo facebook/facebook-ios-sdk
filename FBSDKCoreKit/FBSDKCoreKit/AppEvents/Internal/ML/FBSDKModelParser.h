@@ -26,16 +26,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSUInteger, FBSDKMTMLTask) {
-    FBSDKMTMLTaskAddressDetect,
-    FBSDKMTMLTaskAppEventPred
-};
-
 @interface FBSDKModelParser : NSObject
 
 + (std::unordered_map<std::string, mat::MTensor>)parseWeightsData:(NSData *)weightsData;
-+ (bool)validateWeights:(std::unordered_map<std::string, mat::MTensor>)weights forTask:(FBSDKMTMLTask)task;
-+ (bool)validateMTMLWeights:(std::unordered_map<std::string, mat::MTensor>)weights;
++ (bool)validateWeights:(std::unordered_map<std::string, mat::MTensor>)weights forKey:(NSString *)key;
 
 @end
 
