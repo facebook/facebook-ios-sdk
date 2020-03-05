@@ -332,16 +332,12 @@ build_sdk() {
     echo "Checking out tmp branch"
     git checkout tmp
 
-    echo "Merge commit: $TRAVIS_COMMIT"
-    REVISION=$(git rev-parse HEAD)
-    echo "Top commit on tmp branch: $REVISION"
-
     echo "Force pushing merge commit to tmp branch"
     git push --force origin "$TRAVIS_COMMIT":tmp
 
     cd "$SDK_DIR"/samples/SmoketestSPM
 
-    # Updates project file to point to tmp branch for fetching package source code
+    echo "Updating project file to point to tmp branch for fetching package source code"
     /usr/libexec/PlistBuddy \
         -c "set :objects:F4CEA53E23C29C9E0086EB16:requirement:branch tmp" \
         SmoketestSPM.xcodeproj/project.pbxproj
