@@ -18,12 +18,20 @@
 
 #import <XCTest/XCTest.h>
 
-#import "FBSDKMOdelConstants.h"
 #import "FBSDKModelParser.h"
 using mat::MTensor;
 using std::string;
 using std::unordered_map;
 using std::vector;
+
+@interface FBSDKModelParser ()
+
++ (NSDictionary<NSString *, NSArray *> *)getSharedWeightsInfo;
++ (NSDictionary<NSString *, NSArray *> *)getMTMLSpec;
++ (NSDictionary<NSString *, NSArray *> *)getAddressDetectSpec;
++ (NSDictionary<NSString *, NSArray *> *)getAppEventPredSpec;
+
+@end
 
 @interface FBSDKModelParserTests : XCTestCase
 {
@@ -42,8 +50,8 @@ using std::vector;
 }
 
 - (void)testValidWeightsForAddressDetect {
-  [_mockWeightsInfoDict addEntriesFromDictionary:SharedWeightsInfo];
-  [_mockWeightsInfoDict addEntriesFromDictionary:AddressDetectSpec];
+  [_mockWeightsInfoDict addEntriesFromDictionary:[FBSDKModelParser getSharedWeightsInfo]];
+  [_mockWeightsInfoDict addEntriesFromDictionary:[FBSDKModelParser getAddressDetectSpec]];
 
   bool validatedRes = [FBSDKModelParser validateWeights:[self _mockWeightsWithRefDict:_mockWeightsInfoDict]
                                                 forTask:FBSDKMTMLTaskAddressDetect];
@@ -52,7 +60,7 @@ using std::vector;
 }
 
 - (void)testWeightsForAddressDetectWithMissingInfo {
-  [_mockWeightsInfoDict addEntriesFromDictionary:AddressDetectSpec];
+  [_mockWeightsInfoDict addEntriesFromDictionary:[FBSDKModelParser getAddressDetectSpec]];
 
   bool validatedRes = [FBSDKModelParser validateWeights:[self _mockWeightsWithRefDict:_mockWeightsInfoDict]
                                                 forTask:FBSDKMTMLTaskAddressDetect];
@@ -61,8 +69,8 @@ using std::vector;
 }
 
 - (void)testWeightsForAddressDetectWithWrongInfo {
-  [_mockWeightsInfoDict addEntriesFromDictionary:SharedWeightsInfo];
-  [_mockWeightsInfoDict addEntriesFromDictionary:AppEventPredSpec];
+  [_mockWeightsInfoDict addEntriesFromDictionary:[FBSDKModelParser getSharedWeightsInfo]];
+  [_mockWeightsInfoDict addEntriesFromDictionary:[FBSDKModelParser getAppEventPredSpec]];
 
   bool validatedRes = [FBSDKModelParser validateWeights:[self _mockWeightsWithRefDict:_mockWeightsInfoDict]
                                                 forTask:FBSDKMTMLTaskAddressDetect];
@@ -71,8 +79,8 @@ using std::vector;
 }
 
 - (void)testValidWeightsForAppEventPred {
-  [_mockWeightsInfoDict addEntriesFromDictionary:SharedWeightsInfo];
-  [_mockWeightsInfoDict addEntriesFromDictionary:AppEventPredSpec];
+  [_mockWeightsInfoDict addEntriesFromDictionary:[FBSDKModelParser getSharedWeightsInfo]];
+  [_mockWeightsInfoDict addEntriesFromDictionary:[FBSDKModelParser getAppEventPredSpec]];
 
   bool validatedRes = [FBSDKModelParser validateWeights:[self _mockWeightsWithRefDict:_mockWeightsInfoDict]
                                                 forTask:FBSDKMTMLTaskAppEventPred];
@@ -81,7 +89,7 @@ using std::vector;
 }
 
 - (void)testWeightsForAppEventPredWithMissingInfo {
-  [_mockWeightsInfoDict addEntriesFromDictionary:SharedWeightsInfo];
+  [_mockWeightsInfoDict addEntriesFromDictionary:[FBSDKModelParser getSharedWeightsInfo]];
 
   bool validatedRes = [FBSDKModelParser validateWeights:[self _mockWeightsWithRefDict:_mockWeightsInfoDict]
                                                 forTask:FBSDKMTMLTaskAppEventPred];
@@ -90,8 +98,8 @@ using std::vector;
 }
 
 - (void)testWeightsForAppEventPredWithWrongInfo {
-  [_mockWeightsInfoDict addEntriesFromDictionary:SharedWeightsInfo];
-  [_mockWeightsInfoDict addEntriesFromDictionary:MTMLSpec];
+  [_mockWeightsInfoDict addEntriesFromDictionary:[FBSDKModelParser getSharedWeightsInfo]];
+  [_mockWeightsInfoDict addEntriesFromDictionary:[FBSDKModelParser getMTMLSpec]];
 
   bool validatedRes = [FBSDKModelParser validateWeights:[self _mockWeightsWithRefDict:_mockWeightsInfoDict]
                                                 forTask:FBSDKMTMLTaskAppEventPred];
@@ -100,23 +108,23 @@ using std::vector;
 }
 
 - (void)testValidMTMLWeights {
-  [_mockWeightsInfoDict addEntriesFromDictionary:SharedWeightsInfo];
-  [_mockWeightsInfoDict addEntriesFromDictionary:MTMLSpec];
+  [_mockWeightsInfoDict addEntriesFromDictionary:[FBSDKModelParser getSharedWeightsInfo]];
+  [_mockWeightsInfoDict addEntriesFromDictionary:[FBSDKModelParser getMTMLSpec]];
 
   bool validatedRes = [FBSDKModelParser validateMTMLWeights:[self _mockWeightsWithRefDict:_mockWeightsInfoDict]];
   XCTAssertTrue(validatedRes);
 }
 
 - (void)testMTMLWeightsWithMissingInfo {
-  [_mockWeightsInfoDict addEntriesFromDictionary:SharedWeightsInfo];
-  [_mockWeightsInfoDict addEntriesFromDictionary:AppEventPredSpec];
+  [_mockWeightsInfoDict addEntriesFromDictionary:[FBSDKModelParser getSharedWeightsInfo]];
+  [_mockWeightsInfoDict addEntriesFromDictionary:[FBSDKModelParser getAppEventPredSpec]];
 
   bool validatedRes = [FBSDKModelParser validateMTMLWeights:[self _mockWeightsWithRefDict:_mockWeightsInfoDict]];
   XCTAssertFalse(validatedRes);
 }
 
 - (void)testMTMLWeightsWithWrongInfo {
-  [_mockWeightsInfoDict addEntriesFromDictionary:SharedWeightsInfo];
+  [_mockWeightsInfoDict addEntriesFromDictionary:[FBSDKModelParser getSharedWeightsInfo]];
 
   bool validatedRes = [FBSDKModelParser validateMTMLWeights:[self _mockWeightsWithRefDict:_mockWeightsInfoDict]];
   XCTAssertFalse(validatedRes);

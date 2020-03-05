@@ -880,11 +880,6 @@
 		E4416C1723F61918009CCBFA /* FBSDKModelParser.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4416C0023F61902009CCBFA /* FBSDKModelParser.mm */; };
 		E4416C1823F61919009CCBFA /* FBSDKModelParser.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4416C0023F61902009CCBFA /* FBSDKModelParser.mm */; };
 		E493252D23F7C60E0000B63A /* FBSDKModelParserTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = E493252C23F7C60E0000B63A /* FBSDKModelParserTests.mm */; };
-		E493252F23F9235C0000B63A /* FBSDKModelConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = E493252E23F9235C0000B63A /* FBSDKModelConstants.h */; };
-		E493253023F9235C0000B63A /* FBSDKModelConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = E493252E23F9235C0000B63A /* FBSDKModelConstants.h */; };
-		E493253123F9235C0000B63A /* FBSDKModelConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = E493252E23F9235C0000B63A /* FBSDKModelConstants.h */; };
-		E493253223F9235C0000B63A /* FBSDKModelConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = E493252E23F9235C0000B63A /* FBSDKModelConstants.h */; };
-		E493254223FD06640000B63A /* FBSDKModelManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E493254123FD06640000B63A /* FBSDKModelManagerTests.m */; };
 		E4C2B97A23867327002335A4 /* FBSDKModelRuntimeTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = E4C2B97923867327002335A4 /* FBSDKModelRuntimeTests.mm */; };
 		F462DBF023B94C0F00FFCECA /* FBSDKCrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 894C0B071A702194009137EF /* FBSDKCrypto.h */; };
 		F462DBF123B94C1000FFCECA /* FBSDKCrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 894C0B071A702194009137EF /* FBSDKCrypto.h */; };
@@ -1867,8 +1862,6 @@
 		E4416BFF23F61902009CCBFA /* FBSDKModelParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKModelParser.h; sourceTree = "<group>"; };
 		E4416C0023F61902009CCBFA /* FBSDKModelParser.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = FBSDKModelParser.mm; sourceTree = "<group>"; };
 		E493252C23F7C60E0000B63A /* FBSDKModelParserTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = FBSDKModelParserTests.mm; sourceTree = "<group>"; };
-		E493252E23F9235C0000B63A /* FBSDKModelConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKModelConstants.h; sourceTree = "<group>"; };
-		E493254123FD06640000B63A /* FBSDKModelManagerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKModelManagerTests.m; sourceTree = "<group>"; };
 		E4C2B97923867327002335A4 /* FBSDKModelRuntimeTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = FBSDKModelRuntimeTests.mm; sourceTree = "<group>"; };
 		F483F414233AC13000703DE3 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKCoreKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F487DBB9231EBCD2008416A9 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKCoreKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2104,7 +2097,6 @@
 				FDAF4A8C2395D21700711C4C /* FBSDKModelUtility.m */,
 				E4416BFF23F61902009CCBFA /* FBSDKModelParser.h */,
 				E4416C0023F61902009CCBFA /* FBSDKModelParser.mm */,
-				E493252E23F9235C0000B63A /* FBSDKModelConstants.h */,
 			);
 			path = ML;
 			sourceTree = "<group>";
@@ -2811,7 +2803,6 @@
 			isa = PBXGroup;
 			children = (
 				E493252C23F7C60E0000B63A /* FBSDKModelParserTests.mm */,
-				E493254123FD06640000B63A /* FBSDKModelManagerTests.m */,
 			);
 			path = ML;
 			sourceTree = "<group>";
@@ -3048,7 +3039,6 @@
 				81B71D831D19C87400933E93 /* FBSDKDynamicFrameworkLoader.h in Headers */,
 				81B71D841D19C87400933E93 /* FBSDKKeychainStoreViaBundleID.h in Headers */,
 				81B71D851D19C87400933E93 /* FBSDKApplicationDelegate+Internal.h in Headers */,
-				E493253023F9235C0000B63A /* FBSDKModelConstants.h in Headers */,
 				81B71D861D19C87400933E93 /* FBSDKBridgeAPIRequest+Private.h in Headers */,
 				81B71D871D19C87400933E93 /* FBSDKGraphRequestConnection+Internal.h in Headers */,
 				81B71D881D19C87400933E93 /* FBSDKButton+Subclass.h in Headers */,
@@ -3186,7 +3176,6 @@
 				894C0ACE1A6F0D3F009137EF /* FBSDKApplicationDelegate+Internal.h in Headers */,
 				89D4AE861A7FFEFC00DB8C72 /* FBSDKBridgeAPIRequest+Private.h in Headers */,
 				9D69FC4F1AA66BBF0068EC76 /* FBSDKGraphRequestConnection+Internal.h in Headers */,
-				E493252F23F9235C0000B63A /* FBSDKModelConstants.h in Headers */,
 				52963A8C215992F400C7B252 /* FBSDKAppLink.h in Headers */,
 				891687FE1AB38D2300F55364 /* FBSDKButton+Subclass.h in Headers */,
 				9D30290A1A65C4420086B9ED /* FBSDKAccessToken.h in Headers */,
@@ -3402,7 +3391,6 @@
 				F483F3B7233AC13000703DE3 /* FBSDKMaleSilhouetteIcon.h in Headers */,
 				F483F3B8233AC13000703DE3 /* FBSDKCrashHandler.h in Headers */,
 				F483F3B9233AC13000703DE3 /* FBSDKCrashObserver.h in Headers */,
-				E493253223F9235C0000B63A /* FBSDKModelConstants.h in Headers */,
 				F483F3BA233AC13000703DE3 /* FBSDKMutableCopying.h in Headers */,
 				F483F3BB233AC13000703DE3 /* FBSDKTypeUtility.h in Headers */,
 				F483F3BC233AC13000703DE3 /* FBSDKSwizzler.h in Headers */,
@@ -3541,7 +3529,6 @@
 				F487DB5E231EBCD2008416A9 /* FBSDKMaleSilhouetteIcon.h in Headers */,
 				5D9A705423261D6900BF9783 /* FBSDKCrashHandler.h in Headers */,
 				5D9A709C2326EB5C00BF9783 /* FBSDKCrashObserver.h in Headers */,
-				E493253123F9235C0000B63A /* FBSDKModelConstants.h in Headers */,
 				F487DB5F231EBCD2008416A9 /* FBSDKMutableCopying.h in Headers */,
 				F487DB60231EBCD2008416A9 /* FBSDKTypeUtility.h in Headers */,
 				F487DB61231EBCD2008416A9 /* FBSDKSwizzler.h in Headers */,
@@ -4485,7 +4472,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E493254223FD06640000B63A /* FBSDKModelManagerTests.m in Sources */,
 				9DF18BCB1A9F2517000F6748 /* FBSDKErrorConfigurationTests.m in Sources */,
 				9D18A8E91A95495D00A41042 /* FBSDKAppEventsUtilityTests.m in Sources */,
 				7E55573C1A8D834B00344F86 /* FBSDKAppLinkResolverTests.m in Sources */,

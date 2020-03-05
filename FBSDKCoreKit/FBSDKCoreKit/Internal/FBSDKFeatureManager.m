@@ -46,13 +46,6 @@ NS_ASSUME_NONNULL_BEGIN
   }];
 }
 
-+ (void)disableFeature:(NSString *)featureName
-{
-  [[NSUserDefaults standardUserDefaults] setObject:[FBSDKSettings sdkVersion] forKey:[FBSDKFeatureManagerPrefix stringByAppendingString:featureName]];
-}
-
-#pragma mark - Private methods
-
 + (BOOL)isEnabled:(FBSDKFeature)feature
 {
   if (FBSDKFeatureCore == feature) {
@@ -66,6 +59,13 @@ NS_ASSUME_NONNULL_BEGIN
     return [FBSDKFeatureManager isEnabled:parentFeature] && [self checkGK:feature];
   }
 }
+
++ (void)disableFeature:(NSString *)featureName
+{
+  [[NSUserDefaults standardUserDefaults] setObject:[FBSDKSettings sdkVersion] forKey:[FBSDKFeatureManagerPrefix stringByAppendingString:featureName]];
+}
+
+#pragma mark - Private methods
 
 + (FBSDKFeature)getParentFeature:(FBSDKFeature)feature
 {
