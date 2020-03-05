@@ -24,7 +24,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^FBSDKDownloadCompletionBlock)(BOOL success);
+typedef void (^FBSDKDownloadCompletionBlock)(void);
 
 @interface FBSDKModelManager : NSObject
 

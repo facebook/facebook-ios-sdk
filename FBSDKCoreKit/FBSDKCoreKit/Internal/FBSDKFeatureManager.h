@@ -78,6 +78,7 @@ typedef void (^FBSDKFeatureManagerBlock)(BOOL enabled);
 
 + (void)checkFeature:(FBSDKFeature)feature
      completionBlock:(FBSDKFeatureManagerBlock)completionBlock;
++ (BOOL)isEnabled:(FBSDKFeature)feature;
 + (void)disableFeature:(NSString *)featureName;
 
 @end

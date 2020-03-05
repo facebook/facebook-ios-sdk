@@ -45,9 +45,9 @@ static NSString *const VERSION_ID_KEY = @"version_id";
 static NSString *const MODEL_DATA_KEY = @"data";
 static NSString *const ADDRESS_FILTERING_KEY = @"DATA_DETECTION_ADDRESS";
 
-static NSString *const MTMLPrefixKey = @"mtml";
-static NSString *const MTMLTaskAppEventPredKey = @"mtml_app_event_pred";
-static NSString *const MTMLTaskAddressDetectKey = @"mtml_address_detect";
+static NSString *const MTMLPrefixKey = @"MTML";
+static NSString *const MTMLTaskAppEventPredKey = @"MTML_APP_EVENT_PRED";
+static NSString *const MTMLTaskAddressDetectKey = @"MTML_ADDRESS_DETECT";
 
 static NSString *_directoryPath;
 static NSMutableDictionary<NSString *, id> *_modelInfo;
@@ -88,7 +88,9 @@ NS_ASSUME_NONNULL_BEGIN
         return;
       }
       // update cache
-      [[NSUserDefaults standardUserDefaults] setObject:modelInfo forKey:MODEL_INFO_KEY];
+      _modelInfo = [modelInfo mutableCopy];
+      [self processMTML];
+      [[NSUserDefaults standardUserDefaults] setObject:_modelInfo forKey:MODEL_INFO_KEY];
 
       [FBSDKFeatureManager checkFeature:FBSDKFeatureMTML completionBlock:^(BOOL enabled) {
         if (enabled) {
@@ -134,28 +136,42 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Private methods
 
++ (void)processMTML
+{
+  NSString *mtmlAssetUri = nil;
+  NSNumber *mtmlVersionId = 0;
+  for (NSString *useCase in _modelInfo) {
+    NSDictionary<NSString *, id> *model = _modelInfo[useCase];
+    if ([useCase hasPrefix:MTMLPrefixKey]) {
+      mtmlAssetUri = model[ASSET_URI_KEY];
+      mtmlVersionId = model[VERSION_ID_KEY];
+    }
+  }
+  if (mtmlAssetUri && [mtmlVersionId compare:[NSNumber numberWithInt:0]] > 0) {
+    _modelInfo[MTMLPrefixKey] = @{
+      USE_CASE_KEY: MTMLPrefixKey,
+      ASSET_URI_KEY: mtmlAssetUri,
+      VERSION_ID_KEY: mtmlVersionId,
+    };
+  }
+}
+
 + (void)checkFeaturesAndExecuteForMTML
 {
-  [FBSDKFeatureManager checkFeature:FBSDKFeatureSuggestedEvents completionBlock:^(BOOL enabled) {
-    if (enabled) {
-      [self getModelAndRules:MTMLTaskAppEventPredKey handler:^(BOOL success) {
-        if (success) {
-          [FBSDKEventInferencer loadWeightsForKey:MTMLPrefixKey];
-          [FBSDKFeatureExtractor loadRulesForKey:MTMLTaskAppEventPredKey];
-          [FBSDKSuggestedEventsIndexer enable];
-        }
+  [self getModelAndRules:MTMLPrefixKey onSuccess:^() {
+    if ([FBSDKFeatureManager isEnabled:FBSDKFeatureSuggestedEvents]) {
+      [self getModelAndRules:MTMLTaskAppEventPredKey onSuccess:^() {
+        [FBSDKEventInferencer loadWeightsForKey:MTMLPrefixKey];
+        [FBSDKFeatureExtractor loadRulesForKey:MTMLTaskAppEventPredKey];
+        [FBSDKSuggestedEventsIndexer enable];
       }];
     }
-  }];
 
-  [FBSDKFeatureManager checkFeature:FBSDKFeaturePIIFiltering completionBlock:^(BOOL enabled) {
-    if (enabled) {
-      [self getModelAndRules:MTMLTaskAddressDetectKey handler:^(BOOL success) {
-        if (success) {
-          [FBSDKAddressInferencer loadWeightsForKey:MTMLPrefixKey];
-          [FBSDKAddressInferencer initializeDenseFeature];
-          [FBSDKAddressFilterManager enable];
-        }
+    if ([FBSDKFeatureManager isEnabled:FBSDKFeaturePIIFiltering]) {
+      [self getModelAndRules:MTMLTaskAddressDetectKey onSuccess:^() {
+        [FBSDKAddressInferencer loadWeightsForKey:MTMLPrefixKey];
+        [FBSDKAddressInferencer initializeDenseFeature];
+        [FBSDKAddressFilterManager enable];
       }];
     }
   }];
@@ -163,50 +179,32 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)checkFeaturesAndExecute
 {
-  [FBSDKFeatureManager checkFeature:FBSDKFeatureSuggestedEvents completionBlock:^(BOOL enabled) {
-    if (enabled) {
-      [self getModelAndRules:SUGGEST_EVENT_KEY handler:^(BOOL success){
-        if (success) {
-          [FBSDKEventInferencer loadWeightsForKey:SUGGEST_EVENT_KEY];
-          [FBSDKFeatureExtractor loadRulesForKey:SUGGEST_EVENT_KEY];
-          [FBSDKSuggestedEventsIndexer enable];
-        }
-      }];
-    }
-  }];
+  if ([FBSDKFeatureManager isEnabled:FBSDKFeatureSuggestedEvents]) {
+    [self getModelAndRules:SUGGEST_EVENT_KEY onSuccess:^() {
+      [FBSDKEventInferencer loadWeightsForKey:SUGGEST_EVENT_KEY];
+      [FBSDKFeatureExtractor loadRulesForKey:SUGGEST_EVENT_KEY];
+      [FBSDKSuggestedEventsIndexer enable];
+    }];
+  }
 
-  [FBSDKFeatureManager checkFeature:FBSDKFeaturePIIFiltering completionBlock:^(BOOL enabled) {
-    if (enabled) {
-      [self getModelAndRules:ADDRESS_FILTERING_KEY handler:^(BOOL success){
-        if (success) {
-          [FBSDKAddressInferencer loadWeightsForKey:ADDRESS_FILTERING_KEY];
-          [FBSDKAddressInferencer initializeDenseFeature];
-          [FBSDKAddressFilterManager enable];
-        }
-      }];
-    }
-  }];
+  if ([FBSDKFeatureManager isEnabled:FBSDKFeaturePIIFiltering]) {
+    [self getModelAndRules:ADDRESS_FILTERING_KEY onSuccess:^() {
+      [FBSDKAddressInferencer loadWeightsForKey:ADDRESS_FILTERING_KEY];
+      [FBSDKAddressInferencer initializeDenseFeature];
+      [FBSDKAddressFilterManager enable];
+    }];
+  }
 }
 
 + (void)getModelAndRules:(NSString *)useCaseKey
-                 handler:(FBSDKDownloadCompletionBlock)handler
+               onSuccess:(FBSDKDownloadCompletionBlock)handler
 {
   dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
   dispatch_group_t group = dispatch_group_create();
-  _modelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
-  if (!_modelInfo || !_directoryPath) {
-    if (handler) {
-      handler(NO);
-      return;
-    }
-  }
-  NSDictionary<NSString *, id> *model = [_modelInfo objectForKey:useCaseKey];
 
-  if (!model) {
-    if (handler) {
-      handler(NO);
+  NSDictionary<NSString *, id> *model = [_modelInfo objectForKey:useCaseKey];
+  if (!model || !_directoryPath) {
       return;
-    }
   }
 
   // clear old model files
@@ -245,10 +243,8 @@ NS_ASSUME_NONNULL_BEGIN
   dispatch_group_notify(group, dispatch_get_main_queue(), ^{
     if (handler) {
       if ([[NSFileManager defaultManager] fileExistsAtPath:assetFilePath] && (!rulesUrlString || (rulesUrlString && [[NSFileManager defaultManager] fileExistsAtPath:rulesFilePath]))) {
-          handler(YES);
-          return;
+          handler();
       }
-      handler(NO);
     }
   });
 }
