@@ -1,9 +1,6 @@
 [submodule "Carthage/Checkouts/OHHTTPStubs"]
   path = Carthage/Checkouts/OHHTTPStubs
   url = https://github.com/AliSoftware/OHHTTPStubs.git
-[submodule "Carthage/Checkouts/Tweaks"]
-  path = Carthage/Checkouts/Tweaks
-  url = https://github.com/facebook/Tweaks.git
 [submodule "Carthage/Checkouts/ocmock"]
   path = Carthage/Checkouts/ocmock
   url = https://github.com/erikdoe/ocmock.git
