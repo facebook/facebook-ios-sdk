@@ -70,13 +70,10 @@ jobs:
     - stage: test
       name: Verify Swift Package Headers
       script: sh scripts/run.sh verify-spm-headers
-    # TODO: This test still has value but currently is too flaky to include on every run
-    # need to figure out how to make it less flaky. Might just need to wait for improvements
-    # or support from the Travis side of things.
-    # - stage: test
-    #   name: Swift Package Integration Test
-    #   osx_image: xcode11.2
-    #   script: sh scripts/run.sh build spm-integration
+    - stage: test
+      name: Swift Package Integration Test
+      osx_image: xcode11.2
+      script: sh scripts/run.sh build spm-integration
     - stage: test
       name: Build Swift Packages
       osx_image: xcode11.2
