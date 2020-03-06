@@ -41,6 +41,7 @@
 @end
 
 static NSMapTable *swizzles;
+static dispatch_queue_t swizzleQueue;
 
 static FBSDKSwizzle* fb_findSwizzle(id self, SEL _cmd){
   Method aMethod = class_getInstanceMethod([self class], _cmd);
@@ -139,6 +140,7 @@ static void (*fb_swizzledMethods[MAX_ARGS - MIN_ARGS + 1])() = {fb_swizzledMetho
                                                  NSPointerFunctionsOpaquePersonality)
                                    valueOptions:(NSPointerFunctionsStrongMemory |
                                                  NSPointerFunctionsObjectPointerPersonality)];
+  swizzleQueue = dispatch_queue_create("com.facebook.swizzler", DISPATCH_QUEUE_SERIAL);
   [FBSDKSwizzler resolveConflict];
 }
 
@@ -193,58 +195,60 @@ static void (*fb_swizzledMethods[MAX_ARGS - MIN_ARGS + 1])() = {fb_swizzledMetho
 
 + (void)swizzleSelector:(SEL)aSelector onClass:(Class)aClass withBlock:(swizzleBlock)aBlock named:(NSString *)aName
 {
-  Method aMethod = class_getInstanceMethod(aClass, aSelector);
-  if (aMethod) {
-    uint numArgs = method_getNumberOfArguments(aMethod);
-    if (numArgs >= MIN_ARGS && numArgs <= MAX_ARGS) {
+  dispatch_async(swizzleQueue, ^{
+    Method aMethod = class_getInstanceMethod(aClass, aSelector);
+    if (aMethod) {
+      uint numArgs = method_getNumberOfArguments(aMethod);
+      if (numArgs >= MIN_ARGS && numArgs <= MAX_ARGS) {
 
-      BOOL isLocal = [FBSDKSwizzler isLocallyDefinedMethod:aMethod onClass:aClass];
-      IMP swizzledMethod = (IMP)fb_swizzledMethods[numArgs - 2];
-      // Check whether the first parameter is integer
-      if (4 == numArgs) {
-        char *type = method_copyArgumentType(aMethod, 2);
-        NSString *firstType = [NSString stringWithCString:type encoding:NSUTF8StringEncoding];
-        NSString *integerTypes = @"islq";
-        if ([integerTypes containsString:firstType.lowercaseString]) {
-        swizzledMethod = (IMP)fb_swizzleMethod_4_io;
+        BOOL isLocal = [FBSDKSwizzler isLocallyDefinedMethod:aMethod onClass:aClass];
+        IMP swizzledMethod = (IMP)fb_swizzledMethods[numArgs - 2];
+        // Check whether the first parameter is integer
+        if (4 == numArgs) {
+          char *type = method_copyArgumentType(aMethod, 2);
+          NSString *firstType = [NSString stringWithCString:type encoding:NSUTF8StringEncoding];
+          NSString *integerTypes = @"islq";
+          if ([integerTypes containsString:firstType.lowercaseString]) {
+          swizzledMethod = (IMP)fb_swizzleMethod_4_io;
+          }
+          free(type);
         }
-        free(type);
-      }
 
-      FBSDKSwizzle *swizzle = [FBSDKSwizzler swizzleForMethod:aMethod];
+        FBSDKSwizzle *swizzle = [FBSDKSwizzler swizzleForMethod:aMethod];
 
-      if (isLocal) {
-        if (!swizzle) {
-          IMP originalMethod = method_getImplementation(aMethod);
+        if (isLocal) {
+          if (!swizzle) {
+            IMP originalMethod = method_getImplementation(aMethod);
 
-          // Replace the local implementation of this method with the swizzled one
-          method_setImplementation(aMethod,swizzledMethod);
+            // Replace the local implementation of this method with the swizzled one
+            method_setImplementation(aMethod,swizzledMethod);
 
-          // Create and add the swizzle
-          swizzle = [[FBSDKSwizzle alloc] initWithBlock:aBlock named:aName forClass:aClass selector:aSelector originalMethod:originalMethod withNumArgs:numArgs];
-          [FBSDKSwizzler setSwizzle:swizzle forMethod:aMethod];
+            // Create and add the swizzle
+            swizzle = [[FBSDKSwizzle alloc] initWithBlock:aBlock named:aName forClass:aClass selector:aSelector originalMethod:originalMethod withNumArgs:numArgs];
+            [FBSDKSwizzler setSwizzle:swizzle forMethod:aMethod];
 
+          } else {
+            [swizzle.blocks setObject:aBlock forKey:aName];
+          }
         } else {
-          [swizzle.blocks setObject:aBlock forKey:aName];
-        }
-      } else {
-        IMP originalMethod = swizzle ? swizzle.originalMethod : method_getImplementation(aMethod);
+          IMP originalMethod = swizzle ? swizzle.originalMethod : method_getImplementation(aMethod);
 
-        // Add the swizzle as a new local method on the class.
-        if (!class_addMethod(aClass, aSelector, swizzledMethod, method_getTypeEncoding(aMethod))) {
-          return;
-        }
-        // Now re-get the Method, it should be the one we just added.
-        Method newMethod = class_getInstanceMethod(aClass, aSelector);
-        if (aMethod == newMethod) {
-          return;
-        }
+          // Add the swizzle as a new local method on the class.
+          if (!class_addMethod(aClass, aSelector, swizzledMethod, method_getTypeEncoding(aMethod))) {
+            return;
+          }
+          // Now re-get the Method, it should be the one we just added.
+          Method newMethod = class_getInstanceMethod(aClass, aSelector);
+          if (aMethod == newMethod) {
+            return;
+          }
 
-        FBSDKSwizzle *newSwizzle = [[FBSDKSwizzle alloc] initWithBlock:aBlock named:aName forClass:aClass selector:aSelector originalMethod:originalMethod withNumArgs:numArgs];
-        [FBSDKSwizzler setSwizzle:newSwizzle forMethod:newMethod];
+          FBSDKSwizzle *newSwizzle = [[FBSDKSwizzle alloc] initWithBlock:aBlock named:aName forClass:aClass selector:aSelector originalMethod:originalMethod withNumArgs:numArgs];
+          [FBSDKSwizzler setSwizzle:newSwizzle forMethod:newMethod];
+        }
       }
     }
-  }
+  });
 }
 
 + (void)unswizzleSelector:(SEL)aSelector onClass:(Class)aClass
