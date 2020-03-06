@@ -646,7 +646,10 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
   if ([obj isKindOfClass:[UIView class]]) {
     return ((UIView *)obj).tag;
   } else if ([obj isKindOfClass:[UIViewController class]]) {
-    return ((UIViewController *)obj).view.tag;
+    UIViewController *vc = (UIViewController *)obj;
+    if (vc.isViewLoaded) {
+      return ((UIViewController *)obj).view.tag;
+    }
   }
 
   return 0;
