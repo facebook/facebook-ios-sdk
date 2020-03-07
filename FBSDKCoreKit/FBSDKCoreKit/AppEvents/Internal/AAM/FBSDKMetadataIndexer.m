@@ -227,7 +227,21 @@ static dispatch_queue_t serialQueue;
     || [self checkMetadataLabels:labels matchRuleK:rule[FIELD_K]];
     BOOL isRuleVMatched = [rule[FIELD_V] isEqualToString:@""] || [self checkMetadataText:text matchRuleV:rule[FIELD_V]];
     if (isRuleKMatched && isRuleVMatched) {
-      [FBSDKMetadataIndexer checkAndAppendData:text forKey:key];
+      if ([key isEqualToString:@"r6"]) {
+        NSString *prunedText = [text componentsSeparatedByString:@"-"][0];
+        [FBSDKMetadataIndexer checkAndAppendData:prunedText forKey:key];
+      } else {
+        [FBSDKMetadataIndexer checkAndAppendData:text forKey:key];
+      }
+      break;
+    }
+
+    if ([key isEqualToString:@"r2"]) {
+      NSString *prunedText = [[text componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"+- ()."]] componentsJoinedByString:@""];
+      if ([self checkMetadataText:prunedText matchRuleV:rule[FIELD_V]]) {
+        [FBSDKMetadataIndexer checkAndAppendData:prunedText forKey:key];
+        break;
+      }
     }
   }
 }
@@ -284,12 +298,7 @@ static dispatch_queue_t serialQueue;
     NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:ruleV
                                                                       options:NSRegularExpressionCaseInsensitive
                                                                         error:nil];
-    NSUInteger matches = [regex numberOfMatchesInString:text options:0 range:NSMakeRange(0, text.length)];
-
-    NSString *prunedText = [[text componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"+- ()."]] componentsJoinedByString:@""];
-    NSUInteger prunedMatches = [regex numberOfMatchesInString:prunedText options:0 range:NSMakeRange(0, prunedText.length)];
-
-    return matches > 0 || prunedMatches > 0;
+    return [regex numberOfMatchesInString:text options:0 range:NSMakeRange(0, text.length)] == 1;
   }
   return NO;
 }
