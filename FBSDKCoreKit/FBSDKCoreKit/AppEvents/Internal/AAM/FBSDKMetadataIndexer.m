@@ -38,10 +38,6 @@ static NSString * const FIELD_K                                 = @"k";
 static NSString * const FIELD_V                                 = @"v";
 static NSString * const FIELD_K_DELIMITER                       = @",";
 
-FBSDKAppEventUserDataType FBSDKAppEventRule1                    = @"r1";
-FBSDKAppEventUserDataType FBSDKAppEventRule2                    = @"r2";
-
-static NSArray<FBSDKAppEventUserDataType> *FBSDKMetadataIndexerKeys;
 static NSMutableDictionary<NSString *, NSDictionary<NSString *, NSString *> *> *_rules;
 static NSMutableDictionary<NSString *, NSMutableArray<NSString *> *> *_store;
 static dispatch_queue_t serialQueue;
@@ -50,7 +46,7 @@ static dispatch_queue_t serialQueue;
 
 + (void)initialize
 {
-  FBSDKMetadataIndexerKeys = @[FBSDKAppEventRule1, FBSDKAppEventRule2];
+  _rules = [[NSMutableDictionary alloc] init];
   serialQueue = dispatch_queue_create("com.facebook.appevents.MetadataIndexer", DISPATCH_QUEUE_SERIAL);
 }
 
@@ -78,8 +74,8 @@ static dispatch_queue_t serialQueue;
     [FBSDKMetadataIndexer initStore];
 
     BOOL isEnabled = NO;
-    for (NSString *key in FBSDKMetadataIndexerKeys) {
-      BOOL isRuleEnabled = (nil != [_rules objectForKey:key]);
+    for (NSString *key in _rules) {
+      BOOL isRuleEnabled = (nil != _rules[key]);
       if (isRuleEnabled) {
         isEnabled = YES;
       }
@@ -98,14 +94,14 @@ static dispatch_queue_t serialQueue;
 + (void)initStore
 {
   _store = [[NSMutableDictionary alloc] init];
-  for (NSString *key in FBSDKMetadataIndexerKeys) {
+  for (NSString *key in _rules) {
     NSString *data = [FBSDKUserDataStore getHashedDataForType:key];
     if (data.length > 0) {
       _store[key] = [NSMutableArray arrayWithArray:[data componentsSeparatedByString:FIELD_K_DELIMITER]];
     }
   }
 
-  for (NSString *key in FBSDKMetadataIndexerKeys) {
+  for (NSString *key in _rules) {
     if (!_store[key]) {
       _store[key] = [[NSMutableArray alloc] init];
     }
@@ -114,13 +110,9 @@ static dispatch_queue_t serialQueue;
 
 + (void)constructRules:(NSDictionary<NSString *, id> * _Nullable)rules
 {
-  if (!_rules) {
-    _rules = [[NSMutableDictionary alloc] init];
-  }
-
   for (NSString *key in rules) {
     NSDictionary<NSString *, NSString *> *value = [FBSDKTypeUtility dictionaryValue:rules[key]];
-    if (value && value[FIELD_K].length > 0 && value[FIELD_V].length > 0) {
+    if (value[FIELD_K].length > 0 && value[FIELD_V]) {
       _rules[key] = value;
     }
   }
@@ -233,7 +225,7 @@ static dispatch_queue_t serialQueue;
     NSDictionary<NSString *, NSString *> *rule = _rules[key];
     BOOL isRuleKMatched = [self checkMetadataHint:placeholder matchRuleK:rule[FIELD_K]]
     || [self checkMetadataLabels:labels matchRuleK:rule[FIELD_K]];
-    BOOL isRuleVMatched = [self checkMetadataText:text matchRuleV:rule[FIELD_V]];
+    BOOL isRuleVMatched = [rule[FIELD_V] isEqualToString:@""] || [self checkMetadataText:text matchRuleV:rule[FIELD_V]];
     if (isRuleKMatched && isRuleVMatched) {
       [FBSDKMetadataIndexer checkAndAppendData:text forKey:key];
     }
@@ -255,7 +247,7 @@ static dispatch_queue_t serialQueue;
       [_store[key] removeObjectAtIndex:0];
     }
     [_store[key] addObject:hashData];
-    [FBSDKUserDataStore setHashData:[_store[key] componentsJoinedByString:@","]
+    [FBSDKUserDataStore setHashData:[_store[key] componentsJoinedByString:FIELD_K_DELIMITER]
                             forType:key];
   });
 }
@@ -275,7 +267,7 @@ static dispatch_queue_t serialQueue;
                matchRuleK:(NSString *)ruleK
 {
   if (hint.length > 0 && ruleK) {
-    NSArray<NSString *> *items = [ruleK componentsSeparatedByString:@","];
+    NSArray<NSString *> *items = [ruleK componentsSeparatedByString:FIELD_K_DELIMITER];
     for (NSString *item in items) {
       if ([hint containsString:item]) {
         return YES;
