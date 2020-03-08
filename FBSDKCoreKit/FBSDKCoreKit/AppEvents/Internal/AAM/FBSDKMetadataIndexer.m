@@ -129,8 +129,8 @@ static dispatch_queue_t serialQueue;
       NSArray<NSString *> *labels = [self getLabelsOfView:view];
       UIKeyboardType keyboardType = [self getKeyboardType:view];
       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
-        [self getMetadataWithText:[self normalizedValue:text]
-                      placeholder:[self normalizeField:placeholder]
+        [self getMetadataWithText:text
+                      placeholder:placeholder
                            labels:labels
                   secureTextEntry:secureTextEntry
                         inputType:keyboardType];
@@ -213,8 +213,9 @@ static dispatch_queue_t serialQueue;
             secureTextEntry:(BOOL)secureTextEntry
                   inputType:(UIKeyboardType)inputType
 {
-  if (secureTextEntry ||
-      [placeholder containsString:@"password"] ||
+  text = [self normalizedValue:text];
+  placeholder = [self normalizeField:placeholder];
+  if (secureTextEntry || [placeholder containsString:@"password"] ||
       text.length == 0 ||
       text.length > FBSDKMetadataIndexerMaxTextLength ||
       placeholder.length >= FBSDKMetadataIndexerMaxIndicatorLength) {

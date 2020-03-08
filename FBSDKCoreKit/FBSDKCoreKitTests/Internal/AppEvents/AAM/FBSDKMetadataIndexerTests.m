@@ -162,7 +162,7 @@
 {
   NSString *text = @"test@fb.com";
   [FBSDKMetadataIndexer getMetadataWithText:text
-                                placeholder:@"enteryouremail"
+                                placeholder:@"Enter your Email"
                                      labels:nil
                             secureTextEntry:NO
                                   inputType:UIKeyboardTypeEmailAddress];
@@ -175,7 +175,7 @@
 {
   NSString *text = @"1112223333";
   [FBSDKMetadataIndexer getMetadataWithText:text
-                                placeholder:@"enteryourphonenumber"
+                                placeholder:@"Enter your Phone Number"
                                      labels:nil
                             secureTextEntry:NO
                                   inputType:UIKeyboardTypePhonePad];
@@ -188,7 +188,7 @@
 {
   NSString *text = @"dfjald1314";
   [FBSDKMetadataIndexer getMetadataWithText:text
-                                placeholder:@"enteryourpassword"
+                                placeholder:@"Enter your Pass-word"
                                      labels:nil
                             secureTextEntry:YES
                                   inputType:UIKeyboardTypeDefault];
@@ -201,7 +201,7 @@
 {
   NSString *text = @"test";
   [FBSDKMetadataIndexer getMetadataWithText:text
-                                placeholder:@"enteryouremail"
+                                placeholder:@"Enter your Email"
                                      labels:nil
                             secureTextEntry:NO
                                   inputType:UIKeyboardTypeEmailAddress];
@@ -214,7 +214,7 @@
 {
   NSString *text = @"test@fb.com";
   [FBSDKMetadataIndexer getMetadataWithText:text
-                                placeholder:@"enteryour"
+                                placeholder:@"Enter your"
                                      labels:nil
                             secureTextEntry:NO
                                   inputType:UIKeyboardTypeEmailAddress];
@@ -227,7 +227,7 @@
 {
   NSString *text = @"+1(222)-333-444";
   [FBSDKMetadataIndexer getMetadataWithText:text
-                                placeholder:@"enteryourphonenumber"
+                                placeholder:@"Enter your Phone Number"
                                      labels:nil
                             secureTextEntry:NO
                                   inputType:UIKeyboardTypePhonePad];
@@ -239,12 +239,13 @@
 - (void)testGetMetadataWithInvalidPhoneNumber
 {
   [FBSDKMetadataIndexer getMetadataWithText:@"1234"
-                                placeholder:@"enteryourphonenumber"
+                                placeholder:@"Enter your Phone Number"
                                      labels:nil
                             secureTextEntry:NO
                                   inputType:UIKeyboardTypePhonePad];
+
   [FBSDKMetadataIndexer getMetadataWithText:@"1234567891011121314"
-                                placeholder:@"enteryourphonenumber"
+                                placeholder:@"Mobile Number"
                                      labels:nil
                             secureTextEntry:NO
                                   inputType:UIKeyboardTypePhonePad];
@@ -256,7 +257,7 @@
 {
   NSString *text = @"1112223333";
   [FBSDKMetadataIndexer getMetadataWithText:text
-                                placeholder:@"enteryour"
+                                placeholder:@"Enter your"
                                      labels:nil
                             secureTextEntry:NO
                                   inputType:UIKeyboardTypePhonePad];
@@ -269,7 +270,7 @@
 {
   NSString *text = @"facebook";
   [FBSDKMetadataIndexer getMetadataWithText:text
-                                placeholder:@"enteryourname"
+                                placeholder:@"Enter your Name"
                                      labels:nil
                             secureTextEntry:NO
                                   inputType:UIKeyboardTypeAlphabet];
@@ -282,7 +283,7 @@
 {
   NSString *text = @"";
   [FBSDKMetadataIndexer getMetadataWithText:text
-                                placeholder:@"enteryouremail"
+                                placeholder:@"Enter your Email"
                                      labels:nil
                             secureTextEntry:NO
                                   inputType:UIKeyboardTypeEmailAddress];
@@ -295,7 +296,7 @@
 {
   NSString *text = [NSString stringWithFormat:@"%@%@", [@"" stringByPaddingToLength:1000 withString: @"a" startingAtIndex:0], @"@fb.com"];
   [FBSDKMetadataIndexer getMetadataWithText:text
-                                placeholder:@"enteryouremail"
+                                placeholder:@"Enter your Email"
                                      labels:nil
                             secureTextEntry:NO
                                   inputType:UIKeyboardTypeEmailAddress];
@@ -357,14 +358,14 @@
 // test for getting meta with city
 - (void)testGetMetadataWithValidCity
 {
-  NSString *text = @"menlopark";
+  NSString *text = @"Menlo Park";
   NSString *indicator = @"city";
   [FBSDKMetadataIndexer getMetadataWithText:text
                                 placeholder:indicator
                                      labels:nil
                             secureTextEntry:NO
                                   inputType:UIKeyboardTypeDefault];
-  OCMVerify([_mockMetadataIndexer checkAndAppendData:text forKey:@"r4"]);
+  OCMVerify([_mockMetadataIndexer checkAndAppendData:@"menlo park" forKey:@"r4"]);
 }
 
 - (void)testGetMetadataWithInvalidCity
@@ -382,7 +383,7 @@
 
 - (void)testGetMetadataWithInvalidCityIndicator
 {
-  NSString *text = @"menlopark";
+  NSString *text = @"Menlo Park";
   NSString *indicator = @"test";
   [FBSDKMetadataIndexer getMetadataWithText:text
                                 placeholder:indicator
@@ -395,14 +396,14 @@
 // test for getting meta with state
 - (void)testGetMetadataWithValidState
 {
-  NSString *text = @"ca";
+  NSString *text = @"CA";
   NSString *indicator = @"province";
   [FBSDKMetadataIndexer getMetadataWithText:text
                                 placeholder:indicator
                                      labels:nil
                             secureTextEntry:NO
                                   inputType:UIKeyboardTypeDefault];
-  OCMVerify([_mockMetadataIndexer checkAndAppendData:text forKey:@"r5"]);
+  OCMVerify([_mockMetadataIndexer checkAndAppendData:@"ca" forKey:@"r5"]);
 }
 
 - (void)testGetMetadataWithInvalidState
@@ -420,7 +421,7 @@
 
 - (void)testGetMetadataWithInvalidStateIndicator
 {
-  NSString *text = @"ca";
+  NSString *text = @"CA";
   NSString *indicator = @"test";
   [FBSDKMetadataIndexer getMetadataWithText:text
                                 placeholder:indicator
@@ -485,14 +486,14 @@
 // test for getting meta with first name
 - (void)testGetMetadataWithValidFn
 {
-  NSString *text = @"david";
+  NSString *text = @"David";
   NSString *indicator = @"fn";
   [FBSDKMetadataIndexer getMetadataWithText:text
                                 placeholder:indicator
                                      labels:nil
                             secureTextEntry:NO
                                   inputType:UIKeyboardTypeDefault];
-  OCMVerify([_mockMetadataIndexer checkAndAppendData:text forKey:@"r7"]);
+  OCMVerify([_mockMetadataIndexer checkAndAppendData:@"david" forKey:@"r7"]);
 }
 
 - (void)testGetMetadataWithInvalidFn
@@ -510,7 +511,7 @@
 
 - (void)testGetMetadataWithInvalidFnIndicator
 {
-  NSString *text = @"david";
+  NSString *text = @"David";
   NSString *indicator = @"test";
   [FBSDKMetadataIndexer getMetadataWithText:text
                                 placeholder:indicator
@@ -523,14 +524,14 @@
 // test for getting meta with last name
 - (void)testGetMetadataWithValidLn
 {
-  NSString *text = @"taylor";
+  NSString *text = @"Taylor";
   NSString *indicator = @"ln";
   [FBSDKMetadataIndexer getMetadataWithText:text
                                 placeholder:indicator
                                      labels:nil
                             secureTextEntry:NO
                                   inputType:UIKeyboardTypeDefault];
-  OCMVerify([_mockMetadataIndexer checkAndAppendData:text forKey:@"r8"]);
+  OCMVerify([_mockMetadataIndexer checkAndAppendData:@"taylor" forKey:@"r8"]);
 }
 
 - (void)testGetMetadataWithInvalidLn
@@ -548,7 +549,7 @@
 
 - (void)testGetMetadataWithInvalidLnIndicator
 {
-  NSString *text = @"taylor";
+  NSString *text = @"Taylor";
   NSString *indicator = @"test";
   [FBSDKMetadataIndexer getMetadataWithText:text
                                 placeholder:indicator
