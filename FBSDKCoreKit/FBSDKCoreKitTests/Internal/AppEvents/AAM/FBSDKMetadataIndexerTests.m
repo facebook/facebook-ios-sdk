@@ -456,6 +456,7 @@
                                   inputType:UIKeyboardTypePhonePad];
   OCMVerify([_mockMetadataIndexer checkAndAppendData:@"94025" forKey:@"r6"]);
   OCMReject([_mockMetadataIndexer checkAndAppendData:text forKey:@"r6"]);
+  OCMReject([_mockMetadataIndexer checkAndAppendData:@"940251234" forKey:@"r2"]);
 }
 
 - (void)testGetMetadataWithInvalidZip

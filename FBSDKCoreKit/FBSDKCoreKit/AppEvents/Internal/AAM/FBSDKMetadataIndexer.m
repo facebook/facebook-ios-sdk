@@ -226,8 +226,12 @@ static dispatch_queue_t serialQueue;
     NSDictionary<NSString *, NSString *> *rule = _rules[key];
     BOOL isRuleKMatched = [self checkMetadataHint:placeholder matchRuleK:rule[FIELD_K]]
     || [self checkMetadataLabels:labels matchRuleK:rule[FIELD_K]];
+    if (!isRuleKMatched) {
+      continue;
+    }
+
     BOOL isRuleVMatched = [rule[FIELD_V] isEqualToString:@""] || [self checkMetadataText:text matchRuleV:rule[FIELD_V]];
-    if (isRuleKMatched && isRuleVMatched) {
+    if (isRuleVMatched) {
       if ([key isEqualToString:@"r6"]) {
         NSString *prunedText = [text componentsSeparatedByString:@"-"][0];
         [FBSDKMetadataIndexer checkAndAppendData:prunedText forKey:key];
