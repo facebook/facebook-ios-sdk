@@ -7,7 +7,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v6.0.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v6.2.0...HEAD)
+
+## 6.2.0
+
+## Added
+
+- Support for Gaming Video Uploads
+- Allow Gaming Image Uploader to accept a callback
+- [Messenger Sharing](https://developers.facebook.com/docs/messenger-platform/changelog/#20200304)
+
+[2020-03-09](https://github.com/facebook/facebook-ios-sdk/releases/tag/v6.2.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v6.0.0...v6.2.0)
 
 ## 6.0.0
 
