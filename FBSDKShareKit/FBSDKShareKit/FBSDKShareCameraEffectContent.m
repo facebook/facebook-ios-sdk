@@ -102,7 +102,11 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
         texturesDataDict[key] = imageData;
       }
     }];
-    effectTexturesData = [NSKeyedArchiver archivedDataWithRootObject:texturesDataDict];
+    #if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_11_0
+      effectTexturesData = [NSKeyedArchiver archivedDataWithRootObject:texturesDataDict requiringSecureCoding:YES error:NULL];
+    #else
+      effectTexturesData = [NSKeyedArchiver archivedDataWithRootObject:texturesDataDict];
+    #endif
   }
   [FBSDKBasicUtility dictionary:updatedParameters
                       setObject:effectTexturesData
