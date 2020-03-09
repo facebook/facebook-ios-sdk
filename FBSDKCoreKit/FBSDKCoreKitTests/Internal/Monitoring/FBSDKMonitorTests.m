@@ -20,25 +20,57 @@
 
 #import "FBSDKCoreKit+Internal.h"
 #import "TestMonitorEntry.h"
+#import "FBSDKFeatureManager.h"
 
-@interface FBSDKMonitorEntryTests : XCTestCase
+@interface FBSDKMonitor (Testing)
+
++ (void)disable;
++ (void)flush;
+
 @end
 
-@implementation FBSDKMonitorEntryTests
+@interface FBSDKMonitorTests : XCTestCase
 
-- (void)testAppID {
-  [FBSDKSettings setAppID:@"abc123"];
-  FBSDKMonitorEntry *entry = [TestMonitorEntry testEntry];
-  XCTAssertEqual(entry.appID, @"abc123",
-                 @"A monitor entry's appID should be gleaned from settings");
+@end
+
+@implementation FBSDKMonitorTests
+
+- (void)tearDown
+{
+  [super tearDown];
+
+  [FBSDKMonitor flush];
+  [FBSDKMonitor disable];
 }
 
-- (void)testEncoding {
-  [FBSDKSettings setAppID:@"abc123"];
-  FBSDKMonitorEntry *entry = [TestMonitorEntry testEntry];
+- (void)testRecordingWhenDisabled {
+  [FBSDKMonitor record:[TestMonitorEntry testEntry]];
 
-  NSData *data = [NSKeyedArchiver archivedDataWithRootObject:entry];
-  XCTAssertNotNil(data, @"Monitor entries should be encodable to data");
+  XCTAssertEqual(FBSDKMonitor.entries.count, 0,
+                 @"Should not record entries before monitor is enabled");
+}
+
+- (void)testEnabling
+{
+  [FBSDKMonitor enable];
+
+  FBSDKMonitorEntry *entry = [TestMonitorEntry testEntry];
+  [FBSDKMonitor record:entry];
+
+  XCTAssertEqualObjects(FBSDKMonitor.entries, @[entry],
+                        @"Should record entries when monitor is enabled");
+}
+
+- (void)testFlushing
+{
+  [FBSDKMonitor enable];
+  FBSDKMonitorEntry *entry = [TestMonitorEntry testEntry];
+  [FBSDKMonitor record:entry];
+
+  [FBSDKMonitor flush];
+
+  XCTAssertEqual(FBSDKMonitor.entries.count, 0,
+                 @"Flushing should clear all entries");
 }
 
 @end

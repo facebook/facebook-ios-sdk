@@ -17,22 +17,43 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
+#import "FBSDKMonitorEntry.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- A base class for creating monitor entries. Not advisable to use this class directly.
- Instead create a subclass that is specific to the information you'd like to capture.
- For example a PerformanceMonitorEntry subclass may have additional fields for
- capturing an event with a name, and start / end times.
-*/
-@interface FBSDKMonitorEntry : NSObject<NSCoding>
+ The shared implementation for 'Monitoring' types to call into.
+ For example if you want to record performance metrics you should
+ add a PerformanceMonitoring class and call `[PerformanceMonitor record:metric]`.
+ Internally the `record:` method should invoke the shared instance of this
+ monitor class.
 
-@property (nonatomic, copy) NSString * appID;
+ Important: Should not be called directly.
+ */
+@interface FBSDKMonitor : NSObject
 
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
+// TODO: Add a store and a networker for storing logs locally and uploading to a remote endpoint
+// @property (nonatomic, weak, readonly) FBSDKMonitorStore *store;
+// @property (nonatomic, weak) FBSDKMonitorNetworker *networker;
+
+/**
+ Stores entry in local memory until a limit is reached or a flush is forced.
+ Will only record entries if the monitor is enabled.
+
+ Important: Should not be called directly.
+ */
++ (void)record:(FBSDKMonitorEntry *)entry;
+
+/**
+ Enable entries to be recorded.
+ */
++ (void)enable;
+
+// Exposing entries property for unit testing purposes
+// will remove from interface once there are more observable side
+// effects to test against. ie. once networker or store is implemented
++ (NSArray<FBSDKMonitorEntry *> *)entries;
 
 @end
-
+ 
 NS_ASSUME_NONNULL_END

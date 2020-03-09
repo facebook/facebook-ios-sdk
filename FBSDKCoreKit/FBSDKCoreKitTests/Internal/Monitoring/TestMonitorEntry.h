@@ -16,29 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <XCTest/XCTest.h>
+#import "FBSDKMonitorEntry.h"
 
-#import "FBSDKCoreKit+Internal.h"
-#import "TestMonitorEntry.h"
+NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKMonitorEntryTests : XCTestCase
-@end
+@interface TestMonitorEntry : FBSDKMonitorEntry
 
-@implementation FBSDKMonitorEntryTests
-
-- (void)testAppID {
-  [FBSDKSettings setAppID:@"abc123"];
-  FBSDKMonitorEntry *entry = [TestMonitorEntry testEntry];
-  XCTAssertEqual(entry.appID, @"abc123",
-                 @"A monitor entry's appID should be gleaned from settings");
-}
-
-- (void)testEncoding {
-  [FBSDKSettings setAppID:@"abc123"];
-  FBSDKMonitorEntry *entry = [TestMonitorEntry testEntry];
-
-  NSData *data = [NSKeyedArchiver archivedDataWithRootObject:entry];
-  XCTAssertNotNil(data, @"Monitor entries should be encodable to data");
-}
++ (instancetype)testEntry;
 
 @end
+
+NS_ASSUME_NONNULL_END
