@@ -183,6 +183,19 @@
   OCMVerify([_mockMetadataIndexer checkAndAppendData:text forKey:@"r2"]);
 }
 
+// test for geting metadata with valid phone number or zipcode with labels
+- (void)testGetMetadataWithPhoneNumberWithLabels
+{
+  NSString *text = @"11122";
+  [FBSDKMetadataIndexer getMetadataWithText:text
+                                placeholder:@""
+                                     labels:@[@"phone", @"zipcode"]
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypePhonePad];
+  OCMVerify([_mockMetadataIndexer checkAndAppendData:text forKey:@"r2"]);
+  OCMVerify([_mockMetadataIndexer checkAndAppendData:text forKey:@"r6"]);
+}
+
 // test for geting metadata with secure text
 - (void)testGetMetadataWithSecureText
 {
@@ -328,7 +341,7 @@
                                      labels:nil
                             secureTextEntry:NO
                                   inputType:UIKeyboardTypeDefault];
-  OCMVerify([_mockMetadataIndexer checkAndAppendData:text forKey:@"r3"]);
+  OCMVerify([_mockMetadataIndexer checkAndAppendData:@"m" forKey:@"r3"]);
 }
 
 - (void)testGetMetadataWithInvalidGender
@@ -365,7 +378,7 @@
                                      labels:nil
                             secureTextEntry:NO
                                   inputType:UIKeyboardTypeDefault];
-  OCMVerify([_mockMetadataIndexer checkAndAppendData:@"menlo park" forKey:@"r4"]);
+  OCMVerify([_mockMetadataIndexer checkAndAppendData:@"menlopark" forKey:@"r4"]);
 }
 
 - (void)testGetMetadataWithInvalidCity
@@ -444,19 +457,18 @@
   OCMVerify([_mockMetadataIndexer checkAndAppendData:text forKey:@"r6"]);
 }
 
-// test for getting metadata with valid zipcode containing -
+// test for getting metadata with valid zipcode containing "-" (will also be regarded as phone number)
 - (void)testGetMetadataWithValidZipWithPunctuations
 {
   NSString *text = @"94025-1234";
-  NSString *indicator = @"zcode";
   [FBSDKMetadataIndexer getMetadataWithText:text
-                                placeholder:indicator
-                                     labels:nil
+                                placeholder:@""
+                                     labels:@[@"zcode", @"phone"]
                             secureTextEntry:NO
                                   inputType:UIKeyboardTypePhonePad];
   OCMVerify([_mockMetadataIndexer checkAndAppendData:@"94025" forKey:@"r6"]);
+  OCMVerify([_mockMetadataIndexer checkAndAppendData:@"940251234" forKey:@"r2"]);
   OCMReject([_mockMetadataIndexer checkAndAppendData:text forKey:@"r6"]);
-  OCMReject([_mockMetadataIndexer checkAndAppendData:@"940251234" forKey:@"r2"]);
 }
 
 - (void)testGetMetadataWithInvalidZip
@@ -558,6 +570,21 @@
                             secureTextEntry:NO
                                   inputType:UIKeyboardTypeDefault];
   OCMReject([_mockMetadataIndexer checkAndAppendData:[OCMArg any] forKey:@"r8"]);
+}
+
+// test for getting meta with first name with labels (will also be regarded as last name, state, city
+- (void)testGetMetadataWithFirstNameWithLabels
+{
+  NSString *text = @"Taylor";
+  [FBSDKMetadataIndexer getMetadataWithText:text
+                                placeholder:@""
+                                     labels:@[@"fn", @"ln", @"state", @"city"]
+                            secureTextEntry:NO
+                                  inputType:UIKeyboardTypeDefault];
+  OCMVerify([_mockMetadataIndexer checkAndAppendData:@"taylor" forKey:@"r4"]);
+  OCMVerify([_mockMetadataIndexer checkAndAppendData:@"taylor" forKey:@"r5"]);
+  OCMVerify([_mockMetadataIndexer checkAndAppendData:@"taylor" forKey:@"r7"]);
+  OCMVerify([_mockMetadataIndexer checkAndAppendData:@"taylor" forKey:@"r8"]);
 }
 
 @end

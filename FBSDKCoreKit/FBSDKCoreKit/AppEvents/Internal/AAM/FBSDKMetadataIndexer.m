@@ -213,7 +213,7 @@ static dispatch_queue_t serialQueue;
             secureTextEntry:(BOOL)secureTextEntry
                   inputType:(UIKeyboardType)inputType
 {
-  text = [self normalizedValue:text];
+  text = [self normalizeValue:text];
   placeholder = [self normalizeField:placeholder];
   if (secureTextEntry || [placeholder containsString:@"password"] ||
       text.length == 0 ||
@@ -230,23 +230,15 @@ static dispatch_queue_t serialQueue;
       continue;
     }
 
-    BOOL isRuleVMatched = [rule[FIELD_V] isEqualToString:@""] || [self checkMetadataText:text matchRuleV:rule[FIELD_V]];
-    if (isRuleVMatched) {
-      if ([key isEqualToString:@"r6"]) {
-        NSString *prunedText = [text componentsSeparatedByString:@"-"][0];
-        [FBSDKMetadataIndexer checkAndAppendData:prunedText forKey:key];
-      } else {
-        [FBSDKMetadataIndexer checkAndAppendData:text forKey:key];
-      }
-      break;
-    }
-
+    NSString *preProcessedText = text;
     if ([key isEqualToString:@"r2"]) {
-      NSString *prunedText = [[text componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"+- ()."]] componentsJoinedByString:@""];
-      if ([self checkMetadataText:prunedText matchRuleV:rule[FIELD_V]]) {
-        [FBSDKMetadataIndexer checkAndAppendData:prunedText forKey:key];
-        break;
-      }
+      preProcessedText = [[text componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"+- ()."]] componentsJoinedByString:@""];
+    }
+    BOOL isRuleVMatched = [rule[FIELD_V] isEqualToString:@""] || [self checkMetadataText:preProcessedText matchRuleV:rule[FIELD_V]];
+    if (isRuleVMatched) {
+      NSString *prunedText = [self pruneValue:preProcessedText forKey:key];
+      [FBSDKMetadataIndexer checkAndAppendData:prunedText forKey:key];
+      continue;
     }
   }
 }
@@ -322,12 +314,31 @@ static dispatch_queue_t serialQueue;
                                     withTemplate:@""].lowercaseString;
 }
 
-+ (NSString *)normalizedValue:(NSString *)value
++ (NSString *)normalizeValue:(NSString *)value
 {
   if (!value) {
     return nil;
   }
   return [value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].lowercaseString;
+}
+
++ (NSString *)pruneValue:(NSString *)value forKey:(NSString *)key
+{
+  if (value.length == 0) {
+    return @"";
+  }
+  if ([key isEqualToString:@"r3"]) {
+    if ([value hasPrefix:@"m"] || [value hasPrefix:@"b"] || [value hasPrefix:@"ge"]) {
+      value = @"m";
+    } else {
+      value = @"f";
+    }
+  } else if ([key isEqualToString:@"r4"] || [key isEqualToString:@"r5"]) {
+    value = [[value componentsSeparatedByCharactersInSet:[[NSCharacterSet letterCharacterSet] invertedSet]] componentsJoinedByString:@""];
+  } else if ([key isEqualToString:@"r6"]) {
+    value = [value componentsSeparatedByString:@"-"][0];
+  }
+  return value;
 }
 
 @end
