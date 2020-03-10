@@ -138,8 +138,13 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
     }
   }
 
-  _webDialog.parameters = parameters;
-  [_webDialog show];
+  if (@available(iOS 9, *)) {
+    [self _launchDialogViaBridgeAPIWithParameters:parameters];
+  } else {
+    _webDialog.parameters = parameters;
+    [_webDialog show];
+  }
+
   [FBSDKInternalUtility registerTransientObject:self];
   return YES;
 }
@@ -168,6 +173,82 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   if (_webDialog != webDialog) {
     return;
   }
+
+  [self _didCompleteWithResults:results];
+}
+
+- (void)webDialog:(FBSDKWebDialog *)webDialog didFailWithError:(NSError *)error
+{
+  if (_webDialog != webDialog) {
+    return;
+  }
+
+  [self _didFailWithError:error];
+}
+
+- (void)webDialogDidCancel:(FBSDKWebDialog *)webDialog
+{
+  if (_webDialog != webDialog) {
+    return;
+  }
+
+  [self _didCancel];
+}
+
+#pragma mark - FBSDKBridgeAPI
+
+- (BOOL)_launchDialogViaBridgeAPIWithParameters:(NSDictionary *)parameters
+{
+  UIViewController *topMostViewController = [FBSDKInternalUtility topMostViewController];
+  if (!topMostViewController) {
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                       formatString:@"There are no valid ViewController to present FBSDKWebDialog", nil];
+    [self _handleCompletionWithDialogResults:nil error:nil];
+    return NO;
+  }
+
+  FBSDKBridgeAPIRequest *request =
+  [FBSDKBridgeAPIRequest
+   bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
+   scheme:@"https"
+   methodName:FBSDK_APP_REQUEST_METHOD_NAME
+   methodVersion:nil
+   parameters:parameters
+   userInfo:nil];
+
+  [FBSDKInternalUtility registerTransientObject:self];
+
+  __weak typeof(self) weakSelf = self;
+  [[FBSDKBridgeAPI sharedInstance]
+   openBridgeAPIRequest:request
+   useSafariViewController:true
+   fromViewController:topMostViewController
+   completionBlock:^(FBSDKBridgeAPIResponse *response) {
+    [weakSelf _handleBridgeAPIResponse:response];
+  }];
+
+  return YES;
+}
+
+- (void)_handleBridgeAPIResponse:(FBSDKBridgeAPIResponse *)response
+{
+  if (response.cancelled) {
+    [self _didCancel];
+    return;
+  }
+
+  if (response.error) {
+    [self _didFailWithError:response.error];
+    return;
+  }
+
+  [self _didCompleteWithResults:response.responseParameters];
+}
+
+#pragma mark - Response Handling
+
+- (void)_didCompleteWithResults:(NSDictionary *)results
+{
   if (_dialogIsFrictionless && results) {
     [_recipientCache updateWithResults:results];
   }
@@ -197,21 +278,15 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   [FBSDKInternalUtility unregisterTransientObject:self];
 }
 
-- (void)webDialog:(FBSDKWebDialog *)webDialog didFailWithError:(NSError *)error
+- (void)_didFailWithError:(NSError *)error
 {
-  if (_webDialog != webDialog) {
-    return;
-  }
   [self _cleanUp];
   [self _handleCompletionWithDialogResults:nil error:error];
   [FBSDKInternalUtility unregisterTransientObject:self];
 }
 
-- (void)webDialogDidCancel:(FBSDKWebDialog *)webDialog
+- (void)_didCancel
 {
-  if (_webDialog != webDialog) {
-    return;
-  }
   [self _cleanUp];
   [_delegate gameRequestDialogDidCancel:self];
   [FBSDKInternalUtility unregisterTransientObject:self];
