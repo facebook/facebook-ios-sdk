@@ -242,7 +242,7 @@
 		F4F7CA3523F499600030A346 /* FBSDKCoreKit+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "FBSDKCoreKit+Internal.h"; path = "../../../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h"; sourceTree = "<group>"; };
 		F4F7CA3D23F49C110030A346 /* FBSDKCoreKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSDKCoreKit.xcodeproj; path = ../FBSDKCoreKit/FBSDKCoreKit.xcodeproj; sourceTree = "<group>"; };
 		F4F7CA6823F49D1B0030A346 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
-		F4F7CA9923F49D6F0030A346 /* FBSDKGamingServicesKit-Dynamic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "FBSDKGamingServicesKit-Dynamic.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F4F7CA9923F49D6F0030A346 /* FBSDKGamingServicesKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKGamingServicesKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4F7CA9A23F49D6F0030A346 /* FBSDKGamingServicesKit copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "FBSDKGamingServicesKit copy-Info.plist"; path = "/Users/joesusnick/fbsource/fbobjc/ios-sdk/FBSDKGamingServicesKit/FBSDKGamingServicesKit copy-Info.plist"; sourceTree = "<absolute>"; };
 		F4F7CAA123F4A1390030A346 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -275,7 +275,7 @@
 				F4F7C9E123F48F2C0030A346 /* FBSDKGamingServicesKitTests */,
 				F4F7CA1823F4902B0030A346 /* FBSDKGamingServicesKit.framework */,
 				F4F7CA3223F498ED0030A346 /* Frameworks */,
-				F4F7CA9923F49D6F0030A346 /* FBSDKGamingServicesKit-Dynamic.framework */,
+				F4F7CA9923F49D6F0030A346 /* FBSDKGamingServicesKit.framework */,
 				F4F7CA9A23F49D6F0030A346 /* FBSDKGamingServicesKit copy-Info.plist */,
 			);
 			sourceTree = "<group>";
@@ -477,7 +477,7 @@
 			);
 			name = "FBSDKGamingServicesKit-Dynamic";
 			productName = FBSDKGamingServicesKit;
-			productReference = F4F7CA9923F49D6F0030A346 /* FBSDKGamingServicesKit-Dynamic.framework */;
+			productReference = F4F7CA9923F49D6F0030A346 /* FBSDKGamingServicesKit.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -936,7 +936,7 @@
 				);
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.FBSDKGamingServicesKit;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = FBSDKGamingServicesKit;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -960,7 +960,7 @@
 				);
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.FBSDKGamingServicesKit;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = FBSDKGamingServicesKit;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
