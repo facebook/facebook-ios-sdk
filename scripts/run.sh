@@ -581,6 +581,10 @@ release_sdk() {
 
       pod trunk push --allow-warnings "$spec" "$@"
 
+      # Super naive attempt to beat the race condition of published pods
+      # not being available as dependencies fast enough to be used by other pods.
+      sleep 60
+
       set -e
     done
   }
