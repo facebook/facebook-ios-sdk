@@ -96,6 +96,18 @@ setJSONStringForObject:(id)object
       }
     }];
     object = dictionary;
+  } else if ([object conformsToProtocol:@protocol(FBSDKDictionaryRepresentable)] &&
+             [object respondsToSelector:@selector(dictionaryRepresentation)]) {
+    NSMutableDictionary<NSString *, id> *dictionary = [NSMutableDictionary dictionaryWithDictionary:[object dictionaryRepresentation]];
+    [(NSDictionary<id, id> *)dictionary enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *dictionaryStop) {
+      [self dictionary:dictionary
+             setObject:[self _convertObjectToJSONObject:obj invalidObjectHandler:invalidObjectHandler stop:&stop]
+                forKey:[FBSDKTypeUtility stringValue:key]];
+      if (stop) {
+        *dictionaryStop = YES;
+      }
+    }];
+    object = dictionary;
   } else if ([object isKindOfClass:[NSArray class]]) {
     NSMutableArray<id> *array = [[NSMutableArray alloc] init];
     for (id obj in (NSArray *)object) {

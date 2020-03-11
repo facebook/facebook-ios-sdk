@@ -19,6 +19,7 @@
 
 #import "FBSDKBasicUtility.h"
 #import "FBSDKCoreKit.h"
+#import "TestDictionaryRepresentable.h"
 
 @interface FBSDKBasicUtilityTests : XCTestCase
 @end
@@ -40,6 +41,29 @@
   XCTAssertNil(error);
   XCTAssertEqualObjects([decoded allKeys], @[@"url"]);
   XCTAssertEqualObjects(decoded[@"url"], URLString);
+}
+
+- (void)testJSONStringForDictionaryRepresentable
+{
+  TestDictionaryRepresentable *object = [TestDictionaryRepresentable new];
+  NSString *expected = @"{\"foo\":\"bar\"}";
+  NSString *actual = [FBSDKBasicUtility JSONStringForObject:object error:nil invalidObjectHandler:nil];
+
+  XCTAssertEqualObjects(expected, actual,
+                        @"Should be able to provide a JSON string representation of a dictionary representable object");
+}
+
+- (void)testJSONStringForDictionaryRepresentables
+{
+  NSArray<TestDictionaryRepresentable *> *objects = @[
+    [TestDictionaryRepresentable new],
+    [TestDictionaryRepresentable new],
+  ];
+  NSString *expected = @"[{\"foo\":\"bar\"},{\"foo\":\"bar\"}]";
+  NSString *actual = [FBSDKBasicUtility JSONStringForObject:objects error:nil invalidObjectHandler:nil];
+
+  XCTAssertEqualObjects(expected, actual,
+                        @"Should be able to provide a JSON string representation of an array of dictionary representable objects");
 }
 
 - (void)testConvertRequestValue

@@ -25,4 +25,50 @@
   return [[self alloc] init];
 }
 
++ (instancetype)testEntryWithName:(NSString *)name
+{
+  TestMonitorEntry *entry = [TestMonitorEntry testEntry];
+  entry.name = name;
+
+  return entry;
+}
+
+- (BOOL)isEqualToTestMonitorEntry:(TestMonitorEntry *)entry
+{
+  BOOL appIDsMatch = YES;
+  BOOL namesMatch = YES;
+
+  if (self.appID && entry.appID) {
+    appIDsMatch = [self.appID isEqualToString:entry.appID];
+  }
+
+  if (self.name && entry.name) {
+    namesMatch = [self.name isEqualToString:entry.name];
+  }
+  return appIDsMatch && namesMatch;
+}
+
+- (BOOL)isEqual:(id)other
+{
+  if (other == self) {
+    return YES;
+  }
+
+  if (![other isKindOfClass:[FBSDKMonitorEntry class]]) {
+    return NO;
+  }
+
+  return [self isEqualToTestMonitorEntry:other];
+}
+
+- (NSUInteger)hash
+{
+  return [self.appID hash] ^ [self.name hash];
+}
+
+- (NSDictionary *)toJSONDictionary
+{
+  return @{@"foo":@"bar"};
+}
+
 @end

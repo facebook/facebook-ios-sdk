@@ -21,6 +21,16 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ Describes any object that can provide a dictionary representation of itself
+ Objects that conform to this can be safely used by `JSONStringForObject`
+ */
+@protocol FBSDKDictionaryRepresentable <NSObject>
+
+- (NSDictionary *)dictionaryRepresentation;
+
+@end
+
+/**
  Describes the callback for appLinkFromURLInBackground.
  @param object the FBSDKAppLink representing the deferred App Link
  @param stop the error during the request, if any

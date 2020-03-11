@@ -16,17 +16,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKMonitorEntry.h"
+#import "TestDictionaryRepresentable.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@implementation TestDictionaryRepresentable
 
-@interface TestMonitorEntry : FBSDKMonitorEntry
-
-@property (nonatomic, copy) NSString *name;
-
-+ (instancetype)testEntry;
-+ (instancetype)testEntryWithName:(NSString *)name;
+- (nonnull NSDictionary *)dictionaryRepresentation {
+  return @{@"foo": @"bar"};
+}
 
 @end
-
-NS_ASSUME_NONNULL_END
