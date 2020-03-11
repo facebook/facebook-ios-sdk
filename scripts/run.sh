@@ -142,6 +142,11 @@ setup_sdk() {
   } >>"$SDK_DIR"/Configurations/TestAppIdAndSecret.xcconfig
 }
 
+# Micro-optimization to removes testing tools in checkouts directory so they aren't built
+slim_carthage() {
+  rm -rf Carthage/Checkouts
+}
+
 # Bump Version
 bump_version() {
   local new_version=${1:-}
@@ -302,6 +307,8 @@ build_sdk() {
   }
 
   build_carthage() {
+    slim_carthage
+
     carthage build --no-skip-current
 
     if [ "${1:-}" == "--archive" ]; then
@@ -459,6 +466,8 @@ release_sdk() {
     }
 
     release_swift_dynamic() {
+      slim_carthage
+
       carthage build --no-skip-current
       carthage archive --output build/Release/
       # This is a little unintuitive. Carthage outputs are based on module name instead of
@@ -491,6 +500,8 @@ release_sdk() {
 
     # Release frameworks in dynamic (mostly for Carthage)
     release_dynamic() {
+      slim_carthage
+
       carthage build --no-skip-current
       carthage archive --output build/Release/
       mv build/Release/FBSDKCoreKit.framework.zip build/Release/FacebookSDK_Dynamic.framework.zip
