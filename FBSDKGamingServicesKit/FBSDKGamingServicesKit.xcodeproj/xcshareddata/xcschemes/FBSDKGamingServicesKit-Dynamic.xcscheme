@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F4F7CA6A23F49D6F0030A346"
-               BuildableName = "FBSDKGamingServicesKit-Dynamic.framework"
+               BuildableName = "FBSDKGamingServicesKit.framework"
                BlueprintName = "FBSDKGamingServicesKit-Dynamic"
                ReferencedContainer = "container:FBSDKGamingServicesKit.xcodeproj">
             </BuildableReference>
@@ -29,8 +29,6 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -46,13 +44,11 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F4F7CA6A23F49D6F0030A346"
-            BuildableName = "FBSDKGamingServicesKit-Dynamic.framework"
+            BuildableName = "FBSDKGamingServicesKit.framework"
             BlueprintName = "FBSDKGamingServicesKit-Dynamic"
             ReferencedContainer = "container:FBSDKGamingServicesKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -64,7 +60,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F4F7CA6A23F49D6F0030A346"
-            BuildableName = "FBSDKGamingServicesKit-Dynamic.framework"
+            BuildableName = "FBSDKGamingServicesKit.framework"
             BlueprintName = "FBSDKGamingServicesKit-Dynamic"
             ReferencedContainer = "container:FBSDKGamingServicesKit.xcodeproj">
          </BuildableReference>
