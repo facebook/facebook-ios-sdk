@@ -16,45 +16,54 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKMonitorEntry.h"
+#import "FBSDKMonitorStore.h"
 
-#import "FBSDKSettings+Internal.h"
+@interface FBSDKMonitorStore ()
 
-static NSString * const FBSDKAppIdKey = @"appID";
+@property (nonatomic) BOOL skipDiskCheck;
 
-@implementation FBSDKMonitorEntry
+@end
 
-- (instancetype)init
+@implementation FBSDKMonitorStore
+
+- (instancetype)initWithFilename:(NSString *)filename
 {
-  if (self = [super init]) {
-    // Base class FBSDKMonitorEntry should not be directly initialized
-    if ([self isMemberOfClass:[FBSDKMonitorEntry class]]) {
-      return nil;
-    }
-  }
+  if ((self = [super init])) {
 
+    NSURL *temporaryDirectory = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
+    _filePath = [temporaryDirectory URLByAppendingPathComponent:filename];
+    _skipDiskCheck = YES;
+  }
   return self;
 }
 
-+ (NSString *)appID
+- (void)clear
 {
-  return [FBSDKSettings appID];
+  [[NSFileManager defaultManager] removeItemAtURL:self.filePath
+                                            error:nil];
+  self.skipDiskCheck = YES;
 }
 
-- (NSDictionary *)dictionaryRepresentation
+- (void)persist:(NSArray<FBSDKMonitorEntry *> *)entries
 {
-  if ([FBSDKMonitorEntry appID]) {
-    return @{FBSDKAppIdKey: [FBSDKMonitorEntry appID]};
+  if (!entries.count) {
+    return;
   }
 
-  return @{};
+  [NSKeyedArchiver archiveRootObject:entries toFile:self.filePath.path];
+  self.skipDiskCheck = NO;
 }
 
-- (void)encodeWithCoder:(nonnull NSCoder *)encoder {}
+- (NSArray<FBSDKMonitorEntry *> *)retrieveEntries {
+  NSMutableArray *items = [NSMutableArray array];
 
-- (nullable instancetype)initWithCoder:(nonnull NSCoder *)decoder
-{
-  return self;
+  if (!self.skipDiskCheck) {
+    items = [NSKeyedUnarchiver unarchiveObjectWithFile:self.filePath.path];
+
+    [self clear];
+  }
+ 
+  return [items copy];
 }
 
 @end

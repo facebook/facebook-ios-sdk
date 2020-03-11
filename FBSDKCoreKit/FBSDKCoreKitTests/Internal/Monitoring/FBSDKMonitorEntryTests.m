@@ -36,7 +36,9 @@
 {
   [FBSDKSettings setAppID:@"abc123"];
   FBSDKMonitorEntry *entry = [TestMonitorEntry testEntry];
-  XCTAssertEqualObjects(entry.appID, @"abc123",
+  NSDictionary *dict = [entry dictionaryRepresentation];
+
+  XCTAssertEqualObjects([dict objectForKey:@"appID"], @"abc123",
                  @"A monitor entry's appID should be gleaned from settings");
 }
 

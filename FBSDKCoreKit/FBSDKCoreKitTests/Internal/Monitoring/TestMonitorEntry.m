@@ -22,7 +22,10 @@
 
 + (instancetype)testEntry
 {
-  return [[self alloc] init];
+  TestMonitorEntry *entry = [[self alloc] init];
+  entry.name = @"testEntry";
+
+  return entry;
 }
 
 + (instancetype)testEntryWithName:(NSString *)name
@@ -33,19 +36,40 @@
   return entry;
 }
 
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+  [super encodeWithCoder:encoder];
+
+  [encoder encodeObject:self.name forKey:@"name"];
+}
+
+- (instancetype)initWithCoder:(NSCoder *)decoder
+{
+  if (self = [super initWithCoder:decoder]) {
+    NSString *name = [decoder decodeObjectOfClass:[NSString class] forKey:@"name"];
+    self.name = name;
+  }
+
+  return self;
+}
+
+- (NSDictionary *)dictionaryRepresentation
+{
+  NSDictionary *dict = [super dictionaryRepresentation];
+  NSMutableDictionary *tmp = [NSMutableDictionary dictionaryWithDictionary:dict];
+
+  [tmp setObject:self.name forKey:@"name"];
+
+  return tmp;
+}
+
 - (BOOL)isEqualToTestMonitorEntry:(TestMonitorEntry *)entry
 {
-  BOOL appIDsMatch = YES;
-  BOOL namesMatch = YES;
-
-  if (self.appID && entry.appID) {
-    appIDsMatch = [self.appID isEqualToString:entry.appID];
-  }
-
   if (self.name && entry.name) {
-    namesMatch = [self.name isEqualToString:entry.name];
+    return [self.name isEqualToString:entry.name];
   }
-  return appIDsMatch && namesMatch;
+
+  return NO;
 }
 
 - (BOOL)isEqual:(id)other
@@ -63,12 +87,8 @@
 
 - (NSUInteger)hash
 {
-  return [self.appID hash] ^ [self.name hash];
+  return [self.name hash];
 }
 
-- (NSDictionary *)toJSONDictionary
-{
-  return @{@"foo":@"bar"};
-}
 
 @end
