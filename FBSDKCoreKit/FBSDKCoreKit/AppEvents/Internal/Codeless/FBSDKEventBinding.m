@@ -77,7 +77,7 @@
                                            pathType:component.pathType
                                          sourceView:sourceView];
     }
-    if (text) {
+    if (text.length > 0) {
       if ([component.name isEqualToString:PARAMETER_NAME_PRICE]) {
         NSNumber *value = [FBSDKAppEventsUtility getNumberValue:text];
         params[component.name] = value;

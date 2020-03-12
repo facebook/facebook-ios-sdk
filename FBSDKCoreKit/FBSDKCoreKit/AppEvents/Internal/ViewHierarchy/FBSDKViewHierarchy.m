@@ -232,7 +232,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
 
   if (![FBSDKViewHierarchy isUserInputView:obj]) {
     NSString *text = [FBSDKViewHierarchy getText:obj];
-    if (text) {
+    if (text.length > 0) {
       componentInfo[CODELESS_MAPPING_TEXT_KEY] = text;
     }
   } else {
@@ -241,7 +241,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
   }
 
   NSString *hint = [FBSDKViewHierarchy getHint:obj];
-  if (hint) {
+  if (hint.length > 0) {
     componentInfo[CODELESS_MAPPING_HINT_KEY] = hint;
   }
 
@@ -336,7 +336,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
   return indexPath;
 }
 
-+ (nullable NSString *)getText:(NSObject *)obj
++ (NSString *)getText:(NSObject *)obj
 {
   NSString *text = nil;
 
@@ -392,7 +392,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
     text = attributedText.string;
   }
 
-  return text.length > 0 ? text : nil;
+  return text.length > 0 ? text : @"";
 }
 
 + (nullable NSDictionary<NSString *, id> *)getTextStyle:(NSObject *)obj
@@ -424,7 +424,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
   return nil;
 }
 
-+ (nullable NSString *)getHint:(NSObject *)obj
++ (NSString *)getHint:(NSObject *)obj
 {
   NSString *hint = nil;
 
@@ -437,7 +437,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
     }
   }
 
-  return hint.length > 0 ? hint : nil;
+  return hint.length > 0 ? hint : @"";
 }
 
 + (NSUInteger)getClassBitmask:(NSObject *)obj
@@ -499,7 +499,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
   }
 
   NSString *text = [FBSDKViewHierarchy getText:obj];
-  return text && [FBSDKAppEventsUtility isSensitiveUserData:text];
+  return text.length > 0 && [FBSDKAppEventsUtility isSensitiveUserData:text];
 }
 
 + (nullable NSDictionary<NSString *, id> *)recursiveCaptureTreeWithCurrentNode:(NSObject *)currentNode

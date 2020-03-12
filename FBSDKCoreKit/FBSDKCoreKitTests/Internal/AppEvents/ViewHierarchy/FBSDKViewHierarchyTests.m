@@ -25,7 +25,11 @@
 #import "FBSDKViewHierarchy.h"
 
 @interface FBSDKViewHierarchyTests : XCTestCase {
-    UIScrollView *scrollview;
+  UIScrollView *scrollview;
+  UILabel *label;
+  UITextField *textField;
+  UITextView *textView;
+  UIButton *btn;
 }
 @end
 
@@ -35,19 +39,20 @@
 {
   scrollview = [[UIScrollView alloc] init];
 
-  UILabel *label = [[UILabel alloc] init];
+  label = [[UILabel alloc] init];
   label.text = @"I am a label";
   [scrollview addSubview:label];
 
-  UITextField *textField = [[UITextField alloc] init];
+  textField = [[UITextField alloc] init];
   textField.text = @"I am a text field";
+  textField.placeholder = @"text field placeholder";
   [scrollview addSubview:textField];
 
-  UITextView *textView = [[UITextView alloc] init];
+  textView = [[UITextView alloc] init];
   textView.text = @"I am a text view";
   [scrollview addSubview:textView];
 
-  UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 5, 20)];
+  btn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 5, 20)];
   [btn setTitle:@"I am a button" forState:UIControlStateNormal];
   [scrollview addSubview:btn];
 }
@@ -64,6 +69,32 @@
   XCTAssertEqualObjects(tree[@"childviews"][1][@"classname"], @"UITextField");
   XCTAssertEqualObjects(tree[@"childviews"][2][@"classname"], @"UITextView");
   XCTAssertEqualObjects(tree[@"childviews"][3][@"classname"], @"UIButton");
+}
+
+- (void)testGetText
+{
+  XCTAssertEqualObjects([FBSDKViewHierarchy getText:label], @"I am a label");
+  XCTAssertEqualObjects([FBSDKViewHierarchy getText:textField], @"I am a text field");
+  XCTAssertEqualObjects([FBSDKViewHierarchy getText:textView], @"I am a text view");
+  XCTAssertEqualObjects([FBSDKViewHierarchy getText:btn], @"I am a button");
+
+  // test for no text
+  XCTAssertEqualObjects([FBSDKViewHierarchy getText:scrollview], @"");
+}
+
+- (void)testGetHint
+{
+  XCTAssertEqualObjects([FBSDKViewHierarchy getHint:textField], @"text field placeholder");
+
+  // test for no hint
+  XCTAssertEqualObjects([FBSDKViewHierarchy getHint:label], @"");
+
+  // test for getting hint for UINavigationController
+  UINavigationController *NC = [[UINavigationController alloc] init];
+  XCTAssertEqualObjects([FBSDKViewHierarchy getHint:NC], @"");
+  UIViewController *VC = [[UIViewController alloc] init];
+  [NC addChildViewController:VC];
+  XCTAssertEqualObjects([FBSDKViewHierarchy getHint:NC], @"UIViewController");
 }
 
 @end

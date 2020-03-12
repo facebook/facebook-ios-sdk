@@ -58,8 +58,8 @@ NS_SWIFT_NAME(ViewHierarchy)
 + (nullable NSArray<NSObject *> *)getPath:(NSObject *)obj;
 + (nullable NSMutableDictionary<NSString *, id> *)getDetailAttributesOf:(NSObject *)obj;
 
-+ (nullable NSString *)getText:(NSObject *)obj;
-+ (nullable NSString *)getHint:(NSObject *)obj;
++ (NSString *)getText:(NSObject *)obj;
++ (NSString *)getHint:(NSObject *)obj;
 + (nullable NSIndexPath *)getIndexPath:(NSObject *)obj;
 + (NSUInteger)getClassBitmask:(NSObject *)obj;
 + (nullable UITableView *)getParentTableView:(UIView *)cell;
