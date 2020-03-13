@@ -86,6 +86,10 @@
 {
   XCTAssertEqualObjects([FBSDKViewHierarchy getHint:textField], @"text field placeholder");
 
+  // test for getting hint for UITextField with inside labels ("text field placeholder" + " I am a label")
+  [textField addSubview:label];
+  XCTAssertEqualObjects([FBSDKViewHierarchy getHint:textField], @"text field placeholder I am a label");
+
   // test for no hint
   XCTAssertEqualObjects([FBSDKViewHierarchy getHint:label], @"");
 

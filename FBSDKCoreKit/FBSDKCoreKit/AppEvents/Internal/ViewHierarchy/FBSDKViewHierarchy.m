@@ -392,7 +392,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
     text = attributedText.string;
   }
 
-  return text.length > 0 ? text : @"";
+  return text ?: @"";
 }
 
 + (nullable NSDictionary<NSString *, id> *)getTextStyle:(NSObject *)obj
@@ -429,7 +429,9 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
   NSString *hint = nil;
 
   if ([obj isKindOfClass:[UITextField class]]) {
-    hint = ((UITextField *)obj).placeholder;
+    UITextField *textField = (UITextField *)obj;
+    hint = textField.placeholder ?: @"";
+    hint = [hint stringByAppendingString:[self recursiveGetLabelsFromView:textField]];
   } else if ([obj isKindOfClass:[UINavigationController class]]) {
     UIViewController *top = ((UINavigationController *)obj).topViewController;
     if (top) {
@@ -437,7 +439,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
     }
   }
 
-  return hint.length > 0 ? hint : @"";
+  return hint ?: @"";
 }
 
 + (NSUInteger)getClassBitmask:(NSObject *)obj
@@ -680,6 +682,18 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
            CODELESS_VIEW_TREE_OFFSET_Y_KEY: @((int)offset.y),
            CODELESS_VIEW_TREE_VISIBILITY_KEY: view.isHidden ? @4 : @0
            };
+}
+
++ (NSString *)recursiveGetLabelsFromView:(UIView *)view
+{
+  NSString *str = @"";
+  for (UIView *subview in view.subviews) {
+    str = [str stringByAppendingString:[self recursiveGetLabelsFromView:subview]];
+  }
+  if ([view isKindOfClass:[UILabel class]] && ((UILabel *)view).text.length > 0) {
+    str = [str stringByAppendingFormat:@" %@", ((UILabel *)view).text];
+  }
+  return str;
 }
 
 @end
