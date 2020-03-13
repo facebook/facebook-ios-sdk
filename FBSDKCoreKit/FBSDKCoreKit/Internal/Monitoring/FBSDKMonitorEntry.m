@@ -18,9 +18,21 @@
 
 #import "FBSDKMonitorEntry.h"
 
+#import <sys/utsname.h>
+
 #import "FBSDKSettings+Internal.h"
 
 static NSString * const FBSDKAppIdKey = @"appID";
+static NSString * const FBSDKOsVersionKey = @"device_os_version";
+static NSString * const FBSDKDeviceModelKey = @"device_model";
+
+@interface FBSDKMonitorEntry ()
+
+@property (nonatomic, readonly) NSString *appID;
+@property (nonatomic, readonly) NSString *systemVersion;
+@property (nonatomic, readonly) NSString *deviceModel;
+
+@end
 
 @implementation FBSDKMonitorEntry
 
@@ -31,29 +43,53 @@ static NSString * const FBSDKAppIdKey = @"appID";
     if ([self isMemberOfClass:[FBSDKMonitorEntry class]]) {
       return nil;
     }
+
+    _appID = [FBSDKSettings appID];
+    _systemVersion = [[UIDevice currentDevice] systemVersion];
+    _deviceModel = [FBSDKMonitorEntry deviceModel];
   }
 
   return self;
 }
 
-+ (NSString *)appID
-{
-  return [FBSDKSettings appID];
-}
-
 - (NSDictionary *)dictionaryRepresentation
 {
-  if ([FBSDKMonitorEntry appID]) {
-    return @{FBSDKAppIdKey: [FBSDKMonitorEntry appID]};
+  NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+
+  if (self.appID) {
+    [dictionary setObject:self.appID forKey:FBSDKAppIdKey];
   }
 
-  return @{};
+  [dictionary setObject:UIDevice.currentDevice.systemVersion forKey:FBSDKOsVersionKey];
+  [dictionary setObject:[FBSDKMonitorEntry deviceModel] forKey:FBSDKDeviceModelKey];
+
+  return dictionary;
 }
 
-- (void)encodeWithCoder:(nonnull NSCoder *)encoder {}
++ (NSString * _Nonnull)deviceModel
+{
+  struct utsname systemInfo;
+  uname(&systemInfo);
+
+  return [NSString stringWithCString:systemInfo.machine
+                            encoding:NSUTF8StringEncoding];
+}
+
+- (void)encodeWithCoder:(nonnull NSCoder *)encoder {
+  if (self.appID) {
+    [encoder encodeObject:self.appID forKey:FBSDKAppIdKey];
+  }
+
+  [encoder encodeObject:UIDevice.currentDevice.systemVersion forKey:FBSDKOsVersionKey];
+  [encoder encodeObject:[FBSDKMonitorEntry deviceModel] forKey:FBSDKDeviceModelKey];
+}
 
 - (nullable instancetype)initWithCoder:(nonnull NSCoder *)decoder
 {
+  _appID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKAppIdKey];
+  _systemVersion = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKOsVersionKey];
+  _deviceModel = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKDeviceModelKey];
+
   return self;
 }
 

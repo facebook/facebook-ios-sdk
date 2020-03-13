@@ -46,8 +46,7 @@
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if (self = [super initWithCoder:decoder]) {
-    NSString *name = [decoder decodeObjectOfClass:[NSString class] forKey:@"name"];
-    self.name = name;
+    self.name = [decoder decodeObjectOfClass:[NSString class] forKey:@"name"];
   }
 
   return self;

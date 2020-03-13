@@ -19,7 +19,6 @@
 
 #import "FBSDKBasicUtility.h"
 #import "FBSDKCoreKit.h"
-#import "TestDictionaryRepresentable.h"
 
 @interface FBSDKBasicUtilityTests : XCTestCase
 @end
