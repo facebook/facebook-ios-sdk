@@ -19,8 +19,8 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKCoreKit+Internal.h"
-#import "TestMonitorEntry.h"
 #import "FBSDKFeatureManager.h"
+#import "TestMonitorEntry.h"
 
 @interface FBSDKMonitor (Testing)
 

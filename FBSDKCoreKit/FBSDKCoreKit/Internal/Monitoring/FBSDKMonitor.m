@@ -18,14 +18,14 @@
 
 #import "FBSDKMonitor.h"
 
-#import "FBSDKFeatureManager.h"
 #import "FBSDKCoreKit+Internal.h"
+#import "FBSDKFeatureManager.h"
 
 @interface FBSDKMonitor ()
 
 @property (nonatomic) NSMutableArray<FBSDKMonitorEntry *> *entries;
 
-+ (FBSDKMonitor *)shared;
++ (FBSDKMonitor *)sharedInstance;
 - (void)record:(FBSDKMonitorEntry *)entry;
 
 @end
@@ -43,16 +43,16 @@ static BOOL isMonitoringEnabled = NO;
   return self;
 }
 
-+ (FBSDKMonitor *)shared
++ (FBSDKMonitor *)sharedInstance
 {
-  static FBSDKMonitor *sharedInstance = nil;
+  static FBSDKMonitor *_sharedInstance = nil;
 
   static dispatch_once_t predicate;
   dispatch_once(&predicate, ^{
-    sharedInstance = [self new];
+    _sharedInstance = [self new];
   });
 
-  return sharedInstance;
+  return _sharedInstance;
 }
 
 + (void)enable
@@ -67,12 +67,12 @@ static BOOL isMonitoringEnabled = NO;
 
 + (void)flush
 {
-  self.shared.entries = [NSMutableArray array];
+  self.sharedInstance.entries = [NSMutableArray array];
 }
 
 + (void)record:(FBSDKMonitorEntry *)entry
 {
-  [FBSDKMonitor.shared record:entry];
+  [FBSDKMonitor.sharedInstance record:entry];
 }
 
 - (void)record:(FBSDKMonitorEntry *)entry
@@ -89,7 +89,7 @@ static BOOL isMonitoringEnabled = NO;
 
 + (NSArray<NSString *> *)entries
 {
-  return [self.shared.entries copy];
+  return [self.sharedInstance.entries copy];
 }
 
 @end

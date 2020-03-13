@@ -17,6 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
+
 #import "FBSDKMonitorEntry.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -55,5 +56,5 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSArray<FBSDKMonitorEntry *> *)entries;
 
 @end
- 
+
 NS_ASSUME_NONNULL_END
