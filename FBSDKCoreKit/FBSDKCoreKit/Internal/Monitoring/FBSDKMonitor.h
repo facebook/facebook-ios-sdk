@@ -50,11 +50,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (void)enable;
 
-// Exposing entries property for unit testing purposes
-// will remove from interface once there are more observable side
-// effects to test against. ie. once networker or store is implemented
-+ (NSArray<FBSDKMonitorEntry *> *)entries;
-
 @end
 
 NS_ASSUME_NONNULL_END

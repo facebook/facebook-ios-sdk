@@ -24,6 +24,7 @@
 
 @interface FBSDKMonitor (Testing)
 
++ (NSMutableArray<FBSDKMonitorEntry *> *)entries;
 + (void)disable;
 + (void)flush;
 

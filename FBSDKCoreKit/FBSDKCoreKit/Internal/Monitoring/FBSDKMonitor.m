@@ -23,36 +23,27 @@
 
 @interface FBSDKMonitor ()
 
-@property (nonatomic) NSMutableArray<FBSDKMonitorEntry *> *entries;
-
-+ (FBSDKMonitor *)sharedInstance;
-- (void)record:(FBSDKMonitorEntry *)entry;
+@property (class, nonatomic, readonly) NSMutableArray<FBSDKMonitorEntry *> *entries;
 
 @end
 
 @implementation FBSDKMonitor
 
 static BOOL isMonitoringEnabled = NO;
+static NSMutableArray<FBSDKMonitorEntry *> *_entries = nil;
 
-- (instancetype)init
++ (NSMutableArray<FBSDKMonitorEntry *> *)entries
 {
-  self = [super init];
-  if (self) {
-    self.entries = [NSMutableArray array];
+  if (!_entries) {
+    _entries = [NSMutableArray array];
   }
-  return self;
+
+  return _entries;
 }
 
-+ (FBSDKMonitor *)sharedInstance
++ (void)setEntries:(NSMutableArray<FBSDKMonitorEntry *> *)entries
 {
-  static FBSDKMonitor *_sharedInstance = nil;
-
-  static dispatch_once_t predicate;
-  dispatch_once(&predicate, ^{
-    _sharedInstance = [self new];
-  });
-
-  return _sharedInstance;
+  _entries = entries;
 }
 
 + (void)enable
@@ -67,29 +58,18 @@ static BOOL isMonitoringEnabled = NO;
 
 + (void)flush
 {
-  self.sharedInstance.entries = [NSMutableArray array];
+  self.entries = [NSMutableArray array];
 }
 
 + (void)record:(FBSDKMonitorEntry *)entry
-{
-  [FBSDKMonitor.sharedInstance record:entry];
-}
-
-- (void)record:(FBSDKMonitorEntry *)entry
 {
   // need to dispatch to the background immediately
   // encode and store entry in local entries array
   // do logic to see if needs to flush
   // potentially invoke networker
-
-  if (isMonitoringEnabled) {
+  if (self.entries && isMonitoringEnabled) {
     [self.entries addObject:entry];
   }
-}
-
-+ (NSArray<NSString *> *)entries
-{
-  return [self.sharedInstance.entries copy];
 }
 
 @end
