@@ -26,14 +26,22 @@
 
 @implementation FBSDKMonitorEntryTests
 
-- (void)testAppID {
+- (void)testDirectInitialization
+{
+  XCTAssertNil([[FBSDKMonitorEntry alloc] init],
+               @"Should not be able to directly initialize the base class for monitor entries");
+}
+
+- (void)testAppID
+{
   [FBSDKSettings setAppID:@"abc123"];
   FBSDKMonitorEntry *entry = [TestMonitorEntry testEntry];
-  XCTAssertEqual(entry.appID, @"abc123",
+  XCTAssertEqualObjects(entry.appID, @"abc123",
                  @"A monitor entry's appID should be gleaned from settings");
 }
 
-- (void)testEncoding {
+- (void)testEncoding
+{
   [FBSDKSettings setAppID:@"abc123"];
   FBSDKMonitorEntry *entry = [TestMonitorEntry testEntry];
 

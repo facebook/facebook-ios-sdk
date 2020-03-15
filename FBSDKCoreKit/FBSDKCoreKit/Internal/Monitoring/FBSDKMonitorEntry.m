@@ -22,6 +22,18 @@
 
 @implementation FBSDKMonitorEntry
 
+- (instancetype)init
+{
+  if (self = [super init]) {
+    // Base class FBSDKMonitorEntry should not be directly initialized
+    if ([self isMemberOfClass:[FBSDKMonitorEntry class]]) {
+      return nil;
+    }
+  }
+
+  return self;
+}
+
 - (NSString *)appID
 {
   return [FBSDKSettings appID];
