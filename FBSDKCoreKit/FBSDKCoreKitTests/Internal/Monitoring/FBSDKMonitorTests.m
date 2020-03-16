@@ -19,34 +19,59 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKCoreKit+Internal.h"
+#import "FBSDKFeatureManager.h"
 #import "TestMonitorEntry.h"
 
-@interface FBSDKMonitorEntryTests : XCTestCase
+@interface FBSDKMonitor (Testing)
+
++ (NSMutableArray<FBSDKMonitorEntry *> *)entries;
++ (void)disable;
++ (void)flush;
+
 @end
 
-@implementation FBSDKMonitorEntryTests
+@interface FBSDKMonitorTests : XCTestCase
 
-- (void)testDirectInitialization
+@end
+
+@implementation FBSDKMonitorTests
+
+- (void)tearDown
 {
-  XCTAssertNil([[FBSDKMonitorEntry alloc] init],
-               @"Should not be able to directly initialize the base class for monitor entries");
+  [super tearDown];
+
+  [FBSDKMonitor flush];
+  [FBSDKMonitor disable];
 }
 
-- (void)testAppID
-{
-  [FBSDKSettings setAppID:@"abc123"];
-  FBSDKMonitorEntry *entry = [TestMonitorEntry testEntry];
-  XCTAssertEqualObjects(entry.appID, @"abc123",
-                 @"A monitor entry's appID should be gleaned from settings");
+- (void)testRecordingWhenDisabled {
+  [FBSDKMonitor record:[TestMonitorEntry testEntry]];
+
+  XCTAssertEqual(FBSDKMonitor.entries.count, 0,
+                 @"Should not record entries before monitor is enabled");
 }
 
-- (void)testEncoding
+- (void)testEnabling
 {
-  [FBSDKSettings setAppID:@"abc123"];
-  FBSDKMonitorEntry *entry = [TestMonitorEntry testEntry];
+  [FBSDKMonitor enable];
 
-  NSData *data = [NSKeyedArchiver archivedDataWithRootObject:entry];
-  XCTAssertNotNil(data, @"Monitor entries should be encodable to data");
+  FBSDKMonitorEntry *entry = [TestMonitorEntry testEntry];
+  [FBSDKMonitor record:entry];
+
+  XCTAssertEqualObjects(FBSDKMonitor.entries, @[entry],
+                        @"Should record entries when monitor is enabled");
+}
+
+- (void)testFlushing
+{
+  [FBSDKMonitor enable];
+  FBSDKMonitorEntry *entry = [TestMonitorEntry testEntry];
+  [FBSDKMonitor record:entry];
+
+  [FBSDKMonitor flush];
+
+  XCTAssertEqual(FBSDKMonitor.entries.count, 0,
+                 @"Flushing should clear all entries");
 }
 
 @end

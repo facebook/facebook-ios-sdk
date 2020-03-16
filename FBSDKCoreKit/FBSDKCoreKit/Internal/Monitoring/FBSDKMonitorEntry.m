@@ -17,9 +17,22 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "FBSDKMonitorEntry.h"
+
 #import "FBSDKSettings+Internal.h"
 
 @implementation FBSDKMonitorEntry
+
+- (instancetype)init
+{
+  if (self = [super init]) {
+    // Base class FBSDKMonitorEntry should not be directly initialized
+    if ([self isMemberOfClass:[FBSDKMonitorEntry class]]) {
+      return nil;
+    }
+  }
+
+  return self;
+}
 
 - (NSString *)appID
 {

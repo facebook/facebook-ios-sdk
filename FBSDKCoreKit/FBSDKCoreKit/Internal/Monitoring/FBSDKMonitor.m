@@ -16,22 +16,60 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#import "FBSDKMonitor.h"
 
-NS_ASSUME_NONNULL_BEGIN
+#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKFeatureManager.h"
 
-/**
- A base class for creating monitor entries. Not advisable to use this class directly.
- Instead create a subclass that is specific to the information you'd like to capture.
- For example a PerformanceMonitorEntry subclass may have additional fields for
- capturing an event with a name, and start / end times.
-*/
-@interface FBSDKMonitorEntry : NSObject<NSCoding>
+@interface FBSDKMonitor ()
 
-@property (nonatomic, copy) NSString * appID;
-
-+ (instancetype)new NS_UNAVAILABLE;
+@property (class, nonatomic, readonly) NSMutableArray<FBSDKMonitorEntry *> *entries;
 
 @end
 
-NS_ASSUME_NONNULL_END
+@implementation FBSDKMonitor
+
+static BOOL isMonitoringEnabled = NO;
+static NSMutableArray<FBSDKMonitorEntry *> *_entries = nil;
+
++ (NSMutableArray<FBSDKMonitorEntry *> *)entries
+{
+  if (!_entries) {
+    _entries = [NSMutableArray array];
+  }
+
+  return _entries;
+}
+
++ (void)setEntries:(NSMutableArray<FBSDKMonitorEntry *> *)entries
+{
+  _entries = entries;
+}
+
++ (void)enable
+{
+  isMonitoringEnabled = YES;
+}
+
++ (void)disable
+{
+  isMonitoringEnabled = NO;
+}
+
++ (void)flush
+{
+  self.entries = [NSMutableArray array];
+}
+
++ (void)record:(FBSDKMonitorEntry *)entry
+{
+  // need to dispatch to the background immediately
+  // encode and store entry in local entries array
+  // do logic to see if needs to flush
+  // potentially invoke networker
+  if (self.entries && isMonitoringEnabled) {
+    [self.entries addObject:entry];
+  }
+}
+
+@end

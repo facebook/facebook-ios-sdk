@@ -124,6 +124,12 @@ static UIApplicationState _applicationState;
     }
   }];
 
+  [FBSDKFeatureManager checkFeature:FBSDKFeatureMonitoring completionBlock:^(BOOL enabled) {
+    if (enabled && FBSDKSettings.isAutoLogAppEventsEnabled) {
+      [FBSDKMonitor enable];
+    }
+  }];
+
 #if !TARGET_OS_TV
   // Register Listener for App Link measurement events
   [FBSDKMeasurementEventListener defaultListener];
