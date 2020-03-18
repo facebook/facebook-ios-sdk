@@ -37,18 +37,18 @@
 const int CONV_BLOCKS[3][3] = {{32, 2, SEQ_LEN - 1}, {32, 3, SEQ_LEN - 2}, {32, 5, SEQ_LEN - 4}};
 
 namespace mat1 {
-    static void relu(float *data, int len) {
+    static void relu(float *data, const int len) {
         float min = 0;
         float max = FLT_MAX;
         vDSP_vclip(data, 1, &min, &max, data, 1, len);
     }
 
-    static void concatenate(float *dst, float *a, float *b, int a_len, int b_len) {
+    static void concatenate(float *dst, const float *a, const float *b, const int a_len, const int b_len) {
         memcpy(dst, a, a_len * sizeof(float));
         memcpy(dst + a_len, b, b_len * sizeof(float));
     }
 
-    static void softmax(float *data, int n) {
+    static void softmax(float *data, const int n) {
         int i = 0;
         float max = FLT_MIN;
         float sum = 0;
@@ -72,7 +72,7 @@ namespace mat1 {
         }
     }
 
-    static float* embedding(int *a, float *b, int n_examples, int seq_length, int embedding_size) {
+    static float* embedding(const int *a, const float *b, const int n_examples, const int seq_length, const int embedding_size) {
         int i,j,k,val;
         float* res = (float *)malloc(sizeof(float) * (n_examples * seq_length * embedding_size));
         for (i = 0; i < n_examples; i++) {
@@ -92,7 +92,7 @@ namespace mat1 {
         c shape: out_vector_size
         return shape: n_examples, out_vector_size
      */
-    static float* dense(float *a, float *b, float *c, int n_examples, int in_vector_size, int out_vector_size) {
+    static float* dense(const float *a, const float *b, const float *c, const int n_examples, const int in_vector_size, const int out_vector_size) {
         int i,j;
         float *m_res = (float *)malloc(sizeof(float) * (n_examples * out_vector_size));
         vDSP_mmul(a, 1, b, 1, m_res, 1, n_examples, out_vector_size, in_vector_size);
@@ -109,7 +109,7 @@ namespace mat1 {
         w shape: kernel_size, input_size, output_size
         return shape: n_examples, seq_len - kernel_size + 1, output_size
      */
-    static float* conv1D(float *x, float *w, int n_examples, int seq_len, int input_size, int kernel_size, int output_size) {
+    static float* conv1D(const float *x, const float *w, const int n_examples, const int seq_len, const int input_size, const int kernel_size, const int output_size) {
         int n, o, i, k, m;
         float sum;
         float *res = (float *)malloc(sizeof(float) * (n_examples * (seq_len - kernel_size + 1) * output_size));
@@ -139,7 +139,7 @@ namespace mat1 {
        input shape: n_examples, len, n_channel
        return shape: n_examples, len - pool_size + 1, n_channel
     */
-    static float* maxPool1D(float *input, int n_examples, int input_len, int n_channel, int pool_size) {
+    static float* maxPool1D(const float *input, const int n_examples, const int input_len, const int n_channel, const int pool_size) {
         int res_len = input_len - pool_size + 1;
         float* res = (float *)calloc(n_examples * res_len * n_channel, sizeof(float));
 
@@ -161,7 +161,7 @@ namespace mat1 {
         return res;
     }
 
-    static int* vectorize(const char *texts, int str_len, int max_len) {
+    static int* vectorize(const char *texts, const int str_len, const int max_len) {
         int *res = (int *)malloc(sizeof(int) * max_len);
         for (int i = 0; i < max_len; i++) {
             if (i < str_len){
@@ -177,7 +177,7 @@ namespace mat1 {
        input shape: m, n
        return shape: n, m
     */
-    static float* transpose2D(float *input, int m, int n) {
+    static float* transpose2D(const float *input, const int m, const int n) {
         float *transposed = (float *)malloc(sizeof(float) * m * n);
         for (int i = 0; i < m; i++){
             for (int j = 0; j < n; j++) {
@@ -191,7 +191,7 @@ namespace mat1 {
        input shape: m, n, p
        return shape: p, n, m
     */
-    static float* transpose3D(float *input, int64_t m, int n, int p) {
+    static float* transpose3D(const float *input, const int64_t m, const int n, const int p) {
         float *transposed = (float *)malloc((size_t)(sizeof(float) * m * n * p));
         for (int i = 0; i < m; i++){
             for (int j = 0; j < n; j++) {
@@ -203,7 +203,7 @@ namespace mat1 {
         return transposed;
     }
 
-    static float* add(float *a, float *b, int m, int n, int p) {
+    static float* add(float *a, const float *b, const int m, const int n, const int p) {
         for(int i = 0; i < m * n; i++){
             for(int j = 0; j < p; j++){
                 a[i * p + j] += b[j];
@@ -212,7 +212,7 @@ namespace mat1 {
         return a;
     }
 
-    static float* predict(std::string task, const char *texts, std::unordered_map<std::string, mat::MTensor>& weights, float *df) {
+    static float* predict(const std::string task, const char *texts, const std::unordered_map<std::string, mat::MTensor>& weights, const float *df) {
         int *x;
         float *embed_x;
         float *c1;
@@ -227,35 +227,35 @@ namespace mat1 {
         std::string final_layer_weight_key = task + ".weight";
         std::string final_layer_bias_key = task + ".bias";
 
-        mat::MTensor& embed_t = weights.at("embed.weight");
-        mat::MTensor& conv1w_t = weights.at("convs.0.weight"); // (32, 64, 2)
-        mat::MTensor& conv2w_t = weights.at("convs.1.weight");
-        mat::MTensor& conv3w_t = weights.at("convs.2.weight");
-        mat::MTensor& conv1b_t = weights.at("convs.0.bias");
-        mat::MTensor& conv2b_t = weights.at("convs.1.bias");
-        mat::MTensor& conv3b_t = weights.at("convs.2.bias");
-        mat::MTensor& fc1w_t = weights.at("fc1.weight"); // (128, 126)
-        mat::MTensor& fc1b_t = weights.at("fc1.bias");  // 128
-        mat::MTensor& fc2w_t = weights.at("fc2.weight"); // (64, 128)
-        mat::MTensor& fc2b_t = weights.at("fc2.bias"); // 64
-        mat::MTensor& final_layer_weight_t = weights.at(final_layer_weight_key); // (2, 64) or (4, 64)
-        mat::MTensor& final_layer_bias_t = weights.at(final_layer_bias_key); // 2 or 4
+        const mat::MTensor& embed_t = weights.at("embed.weight");
+        const mat::MTensor& conv1w_t = weights.at("convs.0.weight"); // (32, 64, 2)
+        const mat::MTensor& conv2w_t = weights.at("convs.1.weight");
+        const mat::MTensor& conv3w_t = weights.at("convs.2.weight");
+        const mat::MTensor& conv1b_t = weights.at("convs.0.bias");
+        const mat::MTensor& conv2b_t = weights.at("convs.1.bias");
+        const mat::MTensor& conv3b_t = weights.at("convs.2.bias");
+        const mat::MTensor& fc1w_t = weights.at("fc1.weight"); // (128, 126)
+        const mat::MTensor& fc1b_t = weights.at("fc1.bias");  // 128
+        const mat::MTensor& fc2w_t = weights.at("fc2.weight"); // (64, 128)
+        const mat::MTensor& fc2b_t = weights.at("fc2.bias"); // 64
+        const mat::MTensor& final_layer_weight_t = weights.at(final_layer_weight_key); // (2, 64) or (4, 64)
+        const mat::MTensor& final_layer_bias_t = weights.at(final_layer_bias_key); // 2 or 4
 
-        float *embed_weight = embed_t.data<float>();
-        float *convs_0_weight = transpose3D(conv1w_t.data<float>(), (int)conv1w_t.size(0), (int)conv1w_t.size(1), (int)conv1w_t.size(2)); // (2, 64, 32)
-        float *convs_1_weight = transpose3D(conv2w_t.data<float>(), (int)conv2w_t.size(0), (int)conv2w_t.size(1), (int)conv2w_t.size(2));
-        float *convs_2_weight = transpose3D(conv3w_t.data<float>(), (int)conv3w_t.size(0), (int)conv3w_t.size(1), (int)conv3w_t.size(2));
-        float *convs_0_bias = conv1b_t.data<float>();
-        float *convs_1_bias = conv2b_t.data<float>();
-        float *convs_2_bias = conv3b_t.data<float>();
-        float *fc1_weight = transpose2D(fc1w_t.data<float>(), (int)fc1w_t.size(0), (int)fc1w_t.size(1));
-        float *fc2_weight = transpose2D(fc2w_t.data<float>(), (int)fc2w_t.size(0), (int)fc2w_t.size(1));
-        float *final_layer_weight = transpose2D(final_layer_weight_t.data<float>(),
+        const float *embed_weight = embed_t.data<float>();
+        const float *convs_0_weight = transpose3D(conv1w_t.data<float>(), (int)conv1w_t.size(0), (int)conv1w_t.size(1), (int)conv1w_t.size(2)); // (2, 64, 32)
+        const float *convs_1_weight = transpose3D(conv2w_t.data<float>(), (int)conv2w_t.size(0), (int)conv2w_t.size(1), (int)conv2w_t.size(2));
+        const float *convs_2_weight = transpose3D(conv3w_t.data<float>(), (int)conv3w_t.size(0), (int)conv3w_t.size(1), (int)conv3w_t.size(2));
+        const float *convs_0_bias = conv1b_t.data<float>();
+        const float *convs_1_bias = conv2b_t.data<float>();
+        const float *convs_2_bias = conv3b_t.data<float>();
+        const float *fc1_weight = transpose2D(fc1w_t.data<float>(), (int)fc1w_t.size(0), (int)fc1w_t.size(1));
+        const float *fc2_weight = transpose2D(fc2w_t.data<float>(), (int)fc2w_t.size(0), (int)fc2w_t.size(1));
+        const float *final_layer_weight = transpose2D(final_layer_weight_t.data<float>(),
                                                 (int)final_layer_weight_t.size(0),
                                                 (int)final_layer_weight_t.size(1));
-        float *fc1_bias = fc1b_t.data<float>();
-        float *fc2_bias = fc2b_t.data<float>();
-        float *final_layer_bias = final_layer_bias_t.data<float>();
+        const float *fc1_bias = fc1b_t.data<float>();
+        const float *fc2_bias = fc2b_t.data<float>();
+        const float *final_layer_bias = final_layer_bias_t.data<float>();
 
         // vectorize text
         x = vectorize(texts, (int)strlen(texts), SEQ_LEN);
@@ -265,7 +265,7 @@ namespace mat1 {
         free(x);
 
         // conv1D
-        c1 = conv1D(embed_x, convs_0_weight, 1, SEQ_LEN, EMBEDDING_SIZE, (int)conv1w_t.size(2), (int)conv1w_t.size(0)); // (1, 127, 32) CONV_BLOCKS[0][1], CONV_BLOCKS[0][0]
+        c1 = conv1D(embed_x, convs_0_weight, 1, SEQ_LEN, EMBEDDING_SIZE, (int)conv1w_t.size(2), (int)conv1w_t.size(0)); // (1, 127, 32)
         c2 = conv1D(embed_x, convs_1_weight, 1, SEQ_LEN, EMBEDDING_SIZE, (int)conv2w_t.size(2), (int)conv2w_t.size(0)); // (1, 126, 32)
         c3 = conv1D(embed_x, convs_2_weight, 1, SEQ_LEN, EMBEDDING_SIZE, (int)conv3w_t.size(2), (int)conv3w_t.size(0)); // (1, 124, 32)
         free(embed_x);
@@ -314,7 +314,7 @@ namespace mat1 {
         return final_layer_dense_x;
     }
 
-    static float* predictOnText(std::string key, const char *texts, std::unordered_map<std::string, mat::MTensor>& weights, float *df) {
+    static float* predictOnText(const std::string key, const char *texts, const std::unordered_map<std::string, mat::MTensor>& weights, const float *df) {
         // switch to MTML key if needed
         if (key.compare("MTML_APP_EVENT_PRED") == 0) {
             return predict("app_event_pred", texts, weights, df);

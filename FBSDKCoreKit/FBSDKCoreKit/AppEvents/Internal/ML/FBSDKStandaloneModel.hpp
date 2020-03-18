@@ -116,7 +116,7 @@ namespace mat {
             storage_ = std::shared_ptr<void>(MAllocateMemory(nbytes), MCheckPtr);
         }
 
-        int64_t size(int dim) {
+        int64_t size(int dim) const {
             return sizes_[dim];
         }
 
@@ -129,7 +129,7 @@ namespace mat {
         }
 
         template <typename T>
-        T* data() {
+        T* data() const {
             return static_cast<T*>(storage_.get());
         }
 
