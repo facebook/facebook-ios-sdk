@@ -34,8 +34,6 @@
 #define EMBEDDING_SIZE 64
 #define DENSE_FEATURE_LEN 30
 
-const int CONV_BLOCKS[3][3] = {{32, 2, SEQ_LEN - 1}, {32, 3, SEQ_LEN - 2}, {32, 5, SEQ_LEN - 4}};
-
 namespace mat1 {
     static void relu(float *data, const int len) {
         float min = 0;
@@ -87,10 +85,10 @@ namespace mat1 {
     }
 
     /*
-        a shape: n_examples, in_vector_size
-        b shape: n_examples, out_vector_size
-        c shape: out_vector_size
-        return shape: n_examples, out_vector_size
+     a shape: n_examples, in_vector_size
+     b shape: n_examples, out_vector_size
+     c shape: out_vector_size
+     return shape: n_examples, out_vector_size
      */
     static float* dense(const float *a, const float *b, const float *c, const int n_examples, const int in_vector_size, const int out_vector_size) {
         int i,j;
@@ -105,9 +103,9 @@ namespace mat1 {
     }
 
     /*
-        x shape: n_examples, seq_len, input_size
-        w shape: kernel_size, input_size, output_size
-        return shape: n_examples, seq_len - kernel_size + 1, output_size
+     x shape: n_examples, seq_len, input_size
+     w shape: kernel_size, input_size, output_size
+     return shape: n_examples, seq_len - kernel_size + 1, output_size
      */
     static float* conv1D(const float *x, const float *w, const int n_examples, const int seq_len, const int input_size, const int kernel_size, const int output_size) {
         int n, o, i, k, m;
@@ -121,8 +119,8 @@ namespace mat1 {
                     sum = 0;
                     for (m = 0; m < kernel_size; m++) {
                         for (k = 0; k < input_size; k++) {
-                          temp_x[m * input_size + k] = x[n * (seq_len * input_size) + (m + i) * input_size + k];
-                          temp_w[m * input_size + k] = w[(m * input_size + k) * output_size + o];
+                            temp_x[m * input_size + k] = x[n * (seq_len * input_size) + (m + i) * input_size + k];
+                            temp_w[m * input_size + k] = w[(m * input_size + k) * output_size + o];
                         }
                     }
                     vDSP_dotpr(temp_x, 1, temp_w, 1, &sum, kernel_size * input_size);
@@ -136,27 +134,27 @@ namespace mat1 {
     }
 
     /*
-       input shape: n_examples, len, n_channel
-       return shape: n_examples, len - pool_size + 1, n_channel
-    */
+     input shape: n_examples, len, n_channel
+     return shape: n_examples, len - pool_size + 1, n_channel
+     */
     static float* maxPool1D(const float *input, const int n_examples, const int input_len, const int n_channel, const int pool_size) {
         int res_len = input_len - pool_size + 1;
         float* res = (float *)calloc(n_examples * res_len * n_channel, sizeof(float));
 
         for (int n = 0; n < n_examples; n++) {
-          for (int c = 0; c < n_channel; c++) {
-            for (int i  = 0; i < res_len; i++) {
-              for (int r = i; r < i + pool_size; r++) {
-                int res_pos = n * (n_channel * res_len) + i * n_channel + c;
-                int input_pos = n * (n_channel * input_len) + r * n_channel + c;
-                if (r == i) {
-                  res[res_pos] = input[input_pos];
-                } else {
-                  res[res_pos] = fmax(res[res_pos], input[input_pos]);
+            for (int c = 0; c < n_channel; c++) {
+                for (int i  = 0; i < res_len; i++) {
+                    for (int r = i; r < i + pool_size; r++) {
+                        int res_pos = n * (n_channel * res_len) + i * n_channel + c;
+                        int input_pos = n * (n_channel * input_len) + r * n_channel + c;
+                        if (r == i) {
+                            res[res_pos] = input[input_pos];
+                        } else {
+                            res[res_pos] = fmax(res[res_pos], input[input_pos]);
+                        }
+                    }
                 }
-              }
             }
-          }
         }
         return res;
     }
@@ -174,9 +172,9 @@ namespace mat1 {
     }
 
     /*
-       input shape: m, n
-       return shape: n, m
-    */
+     input shape: m, n
+     return shape: n, m
+     */
     static float* transpose2D(const float *input, const int m, const int n) {
         float *transposed = (float *)malloc(sizeof(float) * m * n);
         for (int i = 0; i < m; i++){
@@ -188,9 +186,9 @@ namespace mat1 {
     }
 
     /*
-       input shape: m, n, p
-       return shape: p, n, m
-    */
+     input shape: m, n, p
+     return shape: p, n, m
+     */
     static float* transpose3D(const float *input, const int64_t m, const int n, const int p) {
         float *transposed = (float *)malloc((size_t)(sizeof(float) * m * n * p));
         for (int i = 0; i < m; i++){
@@ -215,25 +213,21 @@ namespace mat1 {
     static float* predict(const std::string task, const char *texts, const std::unordered_map<std::string, mat::MTensor>& weights, const float *df) {
         int *x;
         float *embed_x;
-        float *c1;
-        float *c2;
-        float *c3;
-        float *ca;
-        float *cb;
-        float *cc;
-        float *dense1_x;
-        float *dense2_x;
+        float *c0, *c1, *c2;
+        int c0_shape, c1_shape, c2_shape;
+        float *ca, *cb, *cc;
+        float *dense1_x, *dense2_x;
         float *final_layer_dense_x;
         std::string final_layer_weight_key = task + ".weight";
         std::string final_layer_bias_key = task + ".bias";
 
         const mat::MTensor& embed_t = weights.at("embed.weight");
-        const mat::MTensor& conv1w_t = weights.at("convs.0.weight"); // (32, 64, 2)
-        const mat::MTensor& conv2w_t = weights.at("convs.1.weight");
-        const mat::MTensor& conv3w_t = weights.at("convs.2.weight");
-        const mat::MTensor& conv1b_t = weights.at("convs.0.bias");
-        const mat::MTensor& conv2b_t = weights.at("convs.1.bias");
-        const mat::MTensor& conv3b_t = weights.at("convs.2.bias");
+        const mat::MTensor& conv0w_t = weights.at("convs.0.weight"); // (32, 64, 2)
+        const mat::MTensor& conv1w_t = weights.at("convs.1.weight");
+        const mat::MTensor& conv2w_t = weights.at("convs.2.weight");
+        const mat::MTensor& conv0b_t = weights.at("convs.0.bias");
+        const mat::MTensor& conv1b_t = weights.at("convs.1.bias");
+        const mat::MTensor& conv2b_t = weights.at("convs.2.bias");
         const mat::MTensor& fc1w_t = weights.at("fc1.weight"); // (128, 126)
         const mat::MTensor& fc1b_t = weights.at("fc1.bias");  // 128
         const mat::MTensor& fc2w_t = weights.at("fc2.weight"); // (64, 128)
@@ -242,17 +236,17 @@ namespace mat1 {
         const mat::MTensor& final_layer_bias_t = weights.at(final_layer_bias_key); // 2 or 4
 
         const float *embed_weight = embed_t.data<float>();
-        const float *convs_0_weight = transpose3D(conv1w_t.data<float>(), (int)conv1w_t.size(0), (int)conv1w_t.size(1), (int)conv1w_t.size(2)); // (2, 64, 32)
-        const float *convs_1_weight = transpose3D(conv2w_t.data<float>(), (int)conv2w_t.size(0), (int)conv2w_t.size(1), (int)conv2w_t.size(2));
-        const float *convs_2_weight = transpose3D(conv3w_t.data<float>(), (int)conv3w_t.size(0), (int)conv3w_t.size(1), (int)conv3w_t.size(2));
-        const float *convs_0_bias = conv1b_t.data<float>();
-        const float *convs_1_bias = conv2b_t.data<float>();
-        const float *convs_2_bias = conv3b_t.data<float>();
+        const float *convs_0_weight = transpose3D(conv0w_t.data<float>(), (int)conv0w_t.size(0), (int)conv0w_t.size(1), (int)conv0w_t.size(2)); // (2, 64, 32)
+        const float *convs_1_weight = transpose3D(conv1w_t.data<float>(), (int)conv1w_t.size(0), (int)conv1w_t.size(1), (int)conv1w_t.size(2));
+        const float *convs_2_weight = transpose3D(conv2w_t.data<float>(), (int)conv2w_t.size(0), (int)conv2w_t.size(1), (int)conv2w_t.size(2));
+        const float *convs_0_bias = conv0b_t.data<float>();
+        const float *convs_1_bias = conv1b_t.data<float>();
+        const float *convs_2_bias = conv2b_t.data<float>();
         const float *fc1_weight = transpose2D(fc1w_t.data<float>(), (int)fc1w_t.size(0), (int)fc1w_t.size(1));
         const float *fc2_weight = transpose2D(fc2w_t.data<float>(), (int)fc2w_t.size(0), (int)fc2w_t.size(1));
         const float *final_layer_weight = transpose2D(final_layer_weight_t.data<float>(),
-                                                (int)final_layer_weight_t.size(0),
-                                                (int)final_layer_weight_t.size(1));
+                                                      (int)final_layer_weight_t.size(0),
+                                                      (int)final_layer_weight_t.size(1));
         const float *fc1_bias = fc1b_t.data<float>();
         const float *fc2_bias = fc2b_t.data<float>();
         const float *final_layer_bias = final_layer_bias_t.data<float>();
@@ -265,33 +259,38 @@ namespace mat1 {
         free(x);
 
         // conv1D
-        c1 = conv1D(embed_x, convs_0_weight, 1, SEQ_LEN, EMBEDDING_SIZE, (int)conv1w_t.size(2), (int)conv1w_t.size(0)); // (1, 127, 32)
-        c2 = conv1D(embed_x, convs_1_weight, 1, SEQ_LEN, EMBEDDING_SIZE, (int)conv2w_t.size(2), (int)conv2w_t.size(0)); // (1, 126, 32)
-        c3 = conv1D(embed_x, convs_2_weight, 1, SEQ_LEN, EMBEDDING_SIZE, (int)conv3w_t.size(2), (int)conv3w_t.size(0)); // (1, 124, 32)
+        c0 = conv1D(embed_x, convs_0_weight, 1, SEQ_LEN, EMBEDDING_SIZE, (int)conv0w_t.size(2), (int)conv0w_t.size(0)); // (1, 127, 32)
+        c1 = conv1D(embed_x, convs_1_weight, 1, SEQ_LEN, EMBEDDING_SIZE, (int)conv1w_t.size(2), (int)conv1w_t.size(0)); // (1, 126, 32)
+        c2 = conv1D(embed_x, convs_2_weight, 1, SEQ_LEN, EMBEDDING_SIZE, (int)conv2w_t.size(2), (int)conv2w_t.size(0)); // (1, 124, 32)
         free(embed_x);
 
+        // shape
+        c0_shape = (int)(SEQ_LEN - conv0w_t.size(2) + 1);
+        c1_shape = (int)(SEQ_LEN - conv1w_t.size(2) + 1);
+        c2_shape = (int)(SEQ_LEN - conv2w_t.size(2) + 1);
+
         // add bias
-        add(c1, convs_0_bias, 1, (int)(SEQ_LEN - conv1w_t.size(2) + 1), (int)conv1w_t.size(0));
-        add(c2, convs_1_bias, 1, (int)(SEQ_LEN - conv2w_t.size(2) + 1), (int)conv2w_t.size(0));
-        add(c3, convs_2_bias, 1, (int)(SEQ_LEN - conv3w_t.size(2) + 1), (int)conv3w_t.size(0));
+        add(c0, convs_0_bias, 1, c0_shape, (int)conv0w_t.size(0));
+        add(c1, convs_1_bias, 1, c1_shape, (int)conv1w_t.size(0));
+        add(c2, convs_2_bias, 1, c2_shape, (int)conv2w_t.size(0));
 
         // relu
-        relu(c1, (int)(SEQ_LEN - conv1w_t.size(2) + 1) * (int)conv1w_t.size(0));
-        relu(c2, (int)(SEQ_LEN - conv2w_t.size(2) + 1) * (int)conv2w_t.size(0));
-        relu(c3, (int)(SEQ_LEN - conv3w_t.size(2) + 1) * (int)conv3w_t.size(0));
+        relu(c0, c0_shape * (int)conv0w_t.size(0));
+        relu(c1, c1_shape * (int)conv1w_t.size(0));
+        relu(c2, c2_shape * (int)conv2w_t.size(0));
 
         // max pooling
-        ca = maxPool1D(c1, 1, (int)(SEQ_LEN - conv1w_t.size(2) + 1), (int)conv1w_t.size(0), (int)(SEQ_LEN - conv1w_t.size(2) + 1)); // (1, 1, 32)
-        cb = maxPool1D(c2, 1, (int)(SEQ_LEN - conv2w_t.size(2) + 1), (int)conv2w_t.size(0), (int)(SEQ_LEN - conv2w_t.size(2) + 1)); // (1, 1, 32)
-        cc = maxPool1D(c3, 1, (int)(SEQ_LEN - conv3w_t.size(2) + 1), (int)conv3w_t.size(0), (int)(SEQ_LEN - conv3w_t.size(2) + 1)); // (1, 1, 32)
+        ca = maxPool1D(c0, 1, c0_shape, (int)conv0w_t.size(0), c0_shape); // (1, 1, 32)
+        cb = maxPool1D(c1, 1, c1_shape, (int)conv1w_t.size(0), c1_shape); // (1, 1, 32)
+        cc = maxPool1D(c2, 1, c2_shape, (int)conv2w_t.size(0), c2_shape); // (1, 1, 32)
+        free(c0);
         free(c1);
         free(c2);
-        free(c3);
 
         // concatenate
-        float *concat = (float *)malloc((size_t)(sizeof(float) * (conv1w_t.size(0) + conv2w_t.size(0) + conv3w_t.size(0) + 30)));
-        concatenate(concat, ca, cb, (int)conv1w_t.size(0), (int)conv2w_t.size(0));
-        concatenate(concat + conv1w_t.size(0) + conv2w_t.size(0), cc, df, (int)conv3w_t.size(0), 30);
+        float *concat = (float *)malloc((size_t)(sizeof(float) * (conv0w_t.size(0) + conv1w_t.size(0) + conv2w_t.size(0) + 30)));
+        concatenate(concat, ca, cb, (int)conv0w_t.size(0), (int)conv1w_t.size(0));
+        concatenate(concat + conv0w_t.size(0) + conv1w_t.size(0), cc, df, (int)conv2w_t.size(0), 30);
         free(ca);
         free(cb);
         free(cc);
