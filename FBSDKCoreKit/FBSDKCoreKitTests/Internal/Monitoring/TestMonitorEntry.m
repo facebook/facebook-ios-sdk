@@ -22,7 +22,73 @@
 
 + (instancetype)testEntry
 {
-  return [[self alloc] init];
+  TestMonitorEntry *entry = [[self alloc] init];
+  entry.name = @"testEntry";
+
+  return entry;
 }
+
++ (instancetype)testEntryWithName:(NSString *)name
+{
+  TestMonitorEntry *entry = [TestMonitorEntry testEntry];
+  entry.name = name;
+
+  return entry;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+  [super encodeWithCoder:encoder];
+
+  [encoder encodeObject:self.name forKey:@"name"];
+}
+
+- (instancetype)initWithCoder:(NSCoder *)decoder
+{
+  if (self = [super initWithCoder:decoder]) {
+    NSString *name = [decoder decodeObjectOfClass:[NSString class] forKey:@"name"];
+    self.name = name;
+  }
+
+  return self;
+}
+
+- (NSDictionary *)dictionaryRepresentation
+{
+  NSDictionary *dict = [super dictionaryRepresentation];
+  NSMutableDictionary *tmp = [NSMutableDictionary dictionaryWithDictionary:dict];
+
+  [tmp setObject:self.name forKey:@"name"];
+
+  return tmp;
+}
+
+- (BOOL)isEqualToTestMonitorEntry:(TestMonitorEntry *)entry
+{
+  if (self.name && entry.name) {
+    return [self.name isEqualToString:entry.name];
+  }
+
+  return NO;
+}
+
+- (BOOL)isEqual:(id)other
+{
+  if (other == self) {
+    return YES;
+  }
+
+  if (![other isKindOfClass:[FBSDKMonitorEntry class]]) {
+    return NO;
+  }
+
+  return [self isEqualToTestMonitorEntry:other];
+}
+
+- (NSUInteger)hash
+{
+  return [self.name hash];
+}
+
 
 @end

@@ -16,45 +16,38 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKMonitorEntry.h"
+#import <Foundation/Foundation.h>
 
-#import "FBSDKSettings+Internal.h"
+#import "FBSDKCoreKit+Internal.h"
 
-static NSString * const FBSDKAppIdKey = @"appID";
+NS_ASSUME_NONNULL_BEGIN
 
-@implementation FBSDKMonitorEntry
+@interface FBSDKMonitorStore : NSObject
 
-- (instancetype)init
-{
-  if (self = [super init]) {
-    // Base class FBSDKMonitorEntry should not be directly initialized
-    if ([self isMemberOfClass:[FBSDKMonitorEntry class]]) {
-      return nil;
-    }
-  }
+@property (nonatomic, weak) NSURL *filePath;
 
-  return self;
-}
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+- (instancetype)initWithFilename:(NSString *)filename NS_DESIGNATED_INITIALIZER;
 
-+ (NSString *)appID
-{
-  return [FBSDKSettings appID];
-}
+/**
+ Persists an array of NSCoding and DictionaryRepresentable objects to temporary file storage.
 
-- (NSDictionary *)dictionaryRepresentation
-{
-  if ([FBSDKMonitorEntry appID]) {
-    return @{FBSDKAppIdKey: [FBSDKMonitorEntry appID]};
-  }
+ - Important: Persisting always clears the underlying storage.
+ If you do not want to overwrite what is on disk, call `retrieveEntries`
+ prior to calling this method.
+ */
+- (void)persist:(NSArray<FBSDKMonitorEntry *> *)entries;
 
-  return @{};
-}
+/**
+ Retrieves any stored entries from temporary file storage.
 
-- (void)encodeWithCoder:(nonnull NSCoder *)encoder {}
-
-- (nullable instancetype)initWithCoder:(nonnull NSCoder *)decoder
-{
-  return self;
-}
+ - Important: Retrieving entry data clears the underlying storage.
+ If you need to persist the data after retrieving you must call `persist` again
+ with the retrieved entries.
+ */
+- (NSArray<FBSDKMonitorEntry *> *)retrieveEntries;
 
 @end
+
+NS_ASSUME_NONNULL_END

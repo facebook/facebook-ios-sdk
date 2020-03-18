@@ -18,7 +18,18 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKBasicUtility.h"
+
 NS_ASSUME_NONNULL_BEGIN
+
+/**
+ Describes any object that can provide a dictionary representation of itself
+ */
+@protocol FBSDKDictionaryRepresentable <NSObject>
+
+- (NSDictionary *)dictionaryRepresentation;
+
+@end
 
 /**
  A base class for creating monitor entries. Not advisable to use this class directly.
@@ -26,9 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
  For example a PerformanceMonitorEntry subclass may have additional fields for
  capturing an event with a name, and start / end times.
 */
-@interface FBSDKMonitorEntry : NSObject<NSCoding>
-
-@property (nonatomic, copy) NSString * appID;
+@interface FBSDKMonitorEntry : NSObject<NSCoding, FBSDKDictionaryRepresentable>
 
 + (instancetype)new NS_UNAVAILABLE;
 

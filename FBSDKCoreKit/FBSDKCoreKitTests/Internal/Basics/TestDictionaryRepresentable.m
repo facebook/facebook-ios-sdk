@@ -16,45 +16,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKMonitorEntry.h"
+#import "TestDictionaryRepresentable.h"
 
-#import "FBSDKSettings+Internal.h"
+@implementation TestDictionaryRepresentable
 
-static NSString * const FBSDKAppIdKey = @"appID";
-
-@implementation FBSDKMonitorEntry
-
-- (instancetype)init
-{
-  if (self = [super init]) {
-    // Base class FBSDKMonitorEntry should not be directly initialized
-    if ([self isMemberOfClass:[FBSDKMonitorEntry class]]) {
-      return nil;
-    }
-  }
-
-  return self;
-}
-
-+ (NSString *)appID
-{
-  return [FBSDKSettings appID];
-}
-
-- (NSDictionary *)dictionaryRepresentation
-{
-  if ([FBSDKMonitorEntry appID]) {
-    return @{FBSDKAppIdKey: [FBSDKMonitorEntry appID]};
-  }
-
-  return @{};
-}
-
-- (void)encodeWithCoder:(nonnull NSCoder *)encoder {}
-
-- (nullable instancetype)initWithCoder:(nonnull NSCoder *)decoder
-{
-  return self;
+- (nonnull NSDictionary *)dictionaryRepresentation {
+  return @{@"foo": @"bar"};
 }
 
 @end
