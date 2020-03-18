@@ -74,33 +74,25 @@
 - (void)testParamsDictionary
 {
   NSDictionary *dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
-                                                                implicitEventsOnly:NO
                                                          shouldAccessAdvertisingID:YES];
   XCTAssertEqualObjects(@"event", dict[@"event"]);
   XCTAssertNotNil(dict[@"advertiser_id"]);
   XCTAssertEqualObjects(@"1", dict[@"application_tracking_enabled"]);
   XCTAssertEqualObjects(@"test-user-id", dict[@"app_user_id"]);
-}
-
-
-- (void)testParamsDictionary2
-{
-  [FBSDKSettings setLimitEventAndDataUsage:NO];
-  NSDictionary *dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
-                                                                implicitEventsOnly:YES
-                                                         shouldAccessAdvertisingID:YES];
-  XCTAssertEqualObjects(@"event", dict[@"event"]);
-  XCTAssertNil(dict[@"advertiser_id"]);
-  XCTAssertEqualObjects(@"1", dict[@"application_tracking_enabled"]);
 
   [FBSDKSettings setLimitEventAndDataUsage:YES];
   dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event2"
-                                                  implicitEventsOnly:NO
                                            shouldAccessAdvertisingID:NO];
   XCTAssertEqualObjects(@"event2", dict[@"event"]);
   XCTAssertNil(dict[@"advertiser_id"]);
   XCTAssertEqualObjects(@"0", dict[@"application_tracking_enabled"]);
+
   [FBSDKSettings setLimitEventAndDataUsage:NO];
+  dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
+                                           shouldAccessAdvertisingID:YES];
+  XCTAssertEqualObjects(@"event", dict[@"event"]);
+  XCTAssertNotNil(dict[@"advertiser_id"]);
+  XCTAssertEqualObjects(@"1", dict[@"application_tracking_enabled"]);
 }
 
 - (void)testLogImplicitEventsExists

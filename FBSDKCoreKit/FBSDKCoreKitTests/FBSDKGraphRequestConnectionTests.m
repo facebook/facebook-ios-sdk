@@ -669,7 +669,6 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
 //                                         headers:nil];
 //  }];
 //  NSMutableDictionary<NSString *, id> *params = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:_mockMobileAppInstallEventName
-//                                                                                         implicitEventsOnly:NO
 //                                                                                  shouldAccessAdvertisingID:YES];
 //  [[[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/activities", @"mockAppID"]
 //                                     parameters:params

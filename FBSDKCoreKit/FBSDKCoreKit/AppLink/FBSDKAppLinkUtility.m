@@ -45,7 +45,6 @@ static NSString *const FBSDKDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
   // before we make this call.
   NSMutableDictionary *deferredAppLinkParameters =
   [FBSDKAppEventsUtility activityParametersDictionaryForEvent:FBSDKDeferredAppLinkEvent
-                                           implicitEventsOnly:NO
                                     shouldAccessAdvertisingID:YES];
 
   FBSDKGraphRequest *deferredAppLinkRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/activities", appID, nil]
