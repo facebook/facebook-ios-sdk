@@ -16,78 +16,51 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TestMonitorEntry.h"
+#import "FBSDKMethodUsageMonitorEntry.h"
 
-@implementation TestMonitorEntry
+static NSString * const FBSDKMethodUsageNameKey = @"event_name";
+static NSString * const FBSDKMethodUsageParametersKey = @"parameters";
 
-+ (instancetype)testEntry
+@implementation FBSDKMethodUsageMonitorEntry {
+  SEL _method;
+}
+
++ (instancetype)entryWithMethod:(SEL)method
 {
-  TestMonitorEntry *entry = [[self alloc] init];
-  entry.name = @"testEntry";
+  FBSDKMethodUsageMonitorEntry *entry = [[self alloc] init];
+  if (entry) {
+    entry->_method = method;
+  }
 
   return entry;
 }
 
-+ (instancetype)testEntryWithName:(NSString *)name
+- (instancetype)initWithCoder:(NSCoder *)decoder
 {
-  TestMonitorEntry *entry = [TestMonitorEntry testEntry];
-  entry.name = name;
+  if (self = [super initWithCoder:decoder]) {
+    NSString *methodName = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKMethodUsageNameKey];
+    _method = NSSelectorFromString(methodName);
+  }
 
-  return entry;
+  return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)encoder
 {
   [super encodeWithCoder:encoder];
 
-  [encoder encodeObject:self.name forKey:@"name"];
-}
-
-- (instancetype)initWithCoder:(NSCoder *)decoder
-{
-  if (self = [super initWithCoder:decoder]) {
-    self.name = [decoder decodeObjectOfClass:[NSString class] forKey:@"name"];
-  }
-
-  return self;
+  NSString *methodName = NSStringFromSelector(_method);
+  [encoder encodeObject:methodName forKey:FBSDKMethodUsageNameKey];
 }
 
 - (NSDictionary *)dictionaryRepresentation
 {
-  NSDictionary *dict = [super dictionaryRepresentation];
-  NSMutableDictionary *tmp = [NSMutableDictionary dictionaryWithDictionary:dict];
+  NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:
+                                     [super dictionaryRepresentation]];
 
-  [tmp setObject:self.name forKey:@"name"];
+  [dictionary setObject:NSStringFromSelector(_method) forKey:FBSDKMethodUsageNameKey];
 
-  return tmp;
+  return dictionary;
 }
-
-- (BOOL)isEqualToTestMonitorEntry:(TestMonitorEntry *)entry
-{
-  if (self.name && entry.name) {
-    return [self.name isEqualToString:entry.name];
-  }
-
-  return NO;
-}
-
-- (BOOL)isEqual:(id)other
-{
-  if (other == self) {
-    return YES;
-  }
-
-  if (![other isKindOfClass:[FBSDKMonitorEntry class]]) {
-    return NO;
-  }
-
-  return [self isEqualToTestMonitorEntry:other];
-}
-
-- (NSUInteger)hash
-{
-  return [self.name hash];
-}
-
 
 @end

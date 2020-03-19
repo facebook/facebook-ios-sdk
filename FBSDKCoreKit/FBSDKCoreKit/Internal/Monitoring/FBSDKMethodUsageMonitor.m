@@ -16,12 +16,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TestDictionaryRepresentable.h"
+#import "FBSDKMethodUsageMonitor.h"
 
-@implementation TestDictionaryRepresentable
+#import "FBSDKMethodUsageMonitorEntry.h"
+#import "FBSDKMonitor.h"
 
-- (nonnull NSDictionary *)dictionaryRepresentation {
-  return @{@"foo": @"bar"};
+@implementation FBSDKMethodUsageMonitor
+
++ (void)record:(SEL)method
+{
+  FBSDKMethodUsageMonitorEntry *entry = [FBSDKMethodUsageMonitorEntry entryWithMethod:method];
+  [FBSDKMonitor record:entry];
 }
 
 @end

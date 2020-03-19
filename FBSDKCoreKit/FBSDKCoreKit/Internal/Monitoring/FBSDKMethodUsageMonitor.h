@@ -21,23 +21,14 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- Describes any object that can provide a dictionary representation of itself
+ Used for tracking method usage.
+
+ To use: pass a selector with the method you want to track.
+ This is essentially a name-spaced pass-through to `FBSDKMonitor`.
  */
-@protocol FBSDKDictionaryRepresentable <NSObject>
+@interface FBSDKMethodUsageMonitor : NSObject
 
-- (NSDictionary *)dictionaryRepresentation;
-
-@end
-
-/**
- A base class for creating monitor entries. Not advisable to use this class directly.
- Instead create a subclass that is specific to the information you'd like to capture.
- For example a PerformanceMonitorEntry subclass may have additional fields for
- capturing an event with a name, and start / end times.
-*/
-@interface FBSDKMonitorEntry : NSObject<NSCoding, FBSDKDictionaryRepresentable>
-
-+ (instancetype)new NS_UNAVAILABLE;
++ (void)record:(SEL)method;
 
 @end
 

@@ -16,29 +16,49 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#import <XCTest/XCTest.h>
 
-NS_ASSUME_NONNULL_BEGIN
+#import <OCMock/OCMock.h>
 
-/**
- Describes any object that can provide a dictionary representation of itself
- */
-@protocol FBSDKDictionaryRepresentable <NSObject>
+#import "FBSDKCoreKit+Internal.h"
 
-- (NSDictionary *)dictionaryRepresentation;
+@interface FBSDKMonitor (Testing)
 
-@end
+@property (class, nonatomic, readonly) NSMutableArray<FBSDKMonitorEntry *> *entries;
 
-/**
- A base class for creating monitor entries. Not advisable to use this class directly.
- Instead create a subclass that is specific to the information you'd like to capture.
- For example a PerformanceMonitorEntry subclass may have additional fields for
- capturing an event with a name, and start / end times.
-*/
-@interface FBSDKMonitorEntry : NSObject<NSCoding, FBSDKDictionaryRepresentable>
-
-+ (instancetype)new NS_UNAVAILABLE;
++ (void)disable;
++ (void)flush;
 
 @end
 
-NS_ASSUME_NONNULL_END
+@interface FBSDKMethodUsageMonitorTests : XCTestCase
+@end
+
+@implementation FBSDKMethodUsageMonitorTests
+
+- (void)setUp
+{
+  [super setUp];
+
+  [FBSDKMonitor enable];
+}
+
+- (void)tearDown
+{
+  [super tearDown];
+
+  [FBSDKMonitor flush];
+  [FBSDKMonitor disable];
+}
+
+- (void)testRecordingMethodUsage
+{
+  [FBSDKMethodUsageMonitor record:@selector(viewDidLoad)];
+
+  FBSDKMethodUsageMonitorEntry *entry = (FBSDKMethodUsageMonitorEntry *) FBSDKMonitor.entries.firstObject;
+
+  XCTAssertEqualObjects(entry.dictionaryRepresentation[@"event_name"], NSStringFromSelector(@selector(viewDidLoad)),
+                        @"Entry should contain the captured method name");
+}
+
+@end
