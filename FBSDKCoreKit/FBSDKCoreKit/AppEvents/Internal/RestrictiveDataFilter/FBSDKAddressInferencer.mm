@@ -27,12 +27,9 @@
 #import "FBSDKModelRuntime.hpp"
 #import "FBSDKModelUtility.h"
 #import "FBSDKStandaloneModel.hpp"
+#import "FBSDKMLMacros.h"
 
 #include<stdexcept>
-
-static NSString *const MODEL_INFO_KEY= @"com.facebook.sdk:FBSDKModelInfo";
-static NSString *const THRESHOLDS_KEY = @"thresholds";
-static NSString *const DATA_DETECTION_ADDRESS_KEY = @"DATA_DETECTION_ADDRESS";
 
 @implementation FBSDKAddressInferencer : NSObject
 
@@ -49,14 +46,19 @@ static std::vector<float> _denseFeature;
 
 + (void)loadWeightsForKey:(NSString *)useCase
 {
-  NSData *data = [FBSDKModelManager getWeightsForKey:useCase];
-  if (!data) {
-    return;
-  }
-  std::unordered_map<std::string, mat::MTensor> weights = [FBSDKModelParser parseWeightsData:data];
-  if ([FBSDKModelParser validateWeights:weights forKey:useCase]) {
-    _useCase = useCase;
-    _weights = weights;
+  @synchronized (self) {
+    if (_useCase) {
+      return;
+    }
+    NSData *data = [FBSDKModelManager getWeightsForKey:useCase];
+    if (!data) {
+      return;
+    }
+    std::unordered_map<std::string, mat::MTensor> weights = [FBSDKModelParser parseWeightsData:data];
+    if ([FBSDKModelParser validateWeights:weights forKey:useCase]) {
+      _useCase = useCase;
+      _weights = weights;
+    }
   }
 }
 
@@ -76,17 +78,19 @@ static std::vector<float> _denseFeature;
   if (!modelInfo) {
     return false;
   }
-  NSDictionary<NSString *, id> * addressModelInfo = [modelInfo objectForKey:DATA_DETECTION_ADDRESS_KEY];
+
+  NSString *key = _useCase;
+  if ([key isEqualToString:@"MTML"]) {
+    key = @"MTML_ADDRESS_DETECT";
+  }
+
+  NSDictionary<NSString *, id> * addressModelInfo = [modelInfo objectForKey:key];
   if (!addressModelInfo) {
     return false;
   }
   NSMutableArray *thresholds = [addressModelInfo objectForKey:THRESHOLDS_KEY];
   float threshold = [thresholds[0] floatValue];
   try {
-    NSString *key = _useCase;
-    if ([key isEqualToString:@"MTML"]) {
-      key = @"MTML_ADDRESS_DETECT";
-    }
     predictedRaw = mat1::predictOnText(std::string([key UTF8String]), bytes, _weights, &_denseFeature[0]);
     if (!predictedRaw[1]) {
       return false;

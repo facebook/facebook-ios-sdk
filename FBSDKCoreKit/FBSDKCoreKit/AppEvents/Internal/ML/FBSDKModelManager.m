@@ -32,22 +32,7 @@
 #import "FBSDKSettings.h"
 #import "FBSDKSuggestedEventsIndexer.h"
 #import "FBSDKTypeUtility.h"
-#import "FBSDKViewHierarchyMacros.h"
-
-#define FBSDK_ML_MODEL_PATH @"models"
-
-static NSString *const MODEL_INFO_KEY= @"com.facebook.sdk:FBSDKModelInfo";
-static NSString *const ASSET_URI_KEY = @"asset_uri";
-static NSString *const RULES_URI_KEY = @"rules_uri";
-static NSString *const THRESHOLDS_KEY = @"thresholds";
-static NSString *const USE_CASE_KEY = @"use_case";
-static NSString *const VERSION_ID_KEY = @"version_id";
-static NSString *const MODEL_DATA_KEY = @"data";
-static NSString *const ADDRESS_FILTERING_KEY = @"DATA_DETECTION_ADDRESS";
-
-static NSString *const MTMLKey = @"MTML";
-static NSString *const MTMLTaskAppEventPredKey = @"MTML_APP_EVENT_PRED";
-static NSString *const MTMLTaskAddressDetectKey = @"MTML_ADDRESS_DETECT";
+#import "FBSDKMLMacros.h"
 
 static NSString *_directoryPath;
 static NSMutableDictionary<NSString *, id> *_modelInfo;

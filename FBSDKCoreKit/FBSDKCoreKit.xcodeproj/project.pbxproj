@@ -1886,6 +1886,7 @@
 		BF1C64E524039AD50052C580 /* FBSDKViewHierarchyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKViewHierarchyTests.m; sourceTree = "<group>"; };
 		BF247C802374E1B100A522C0 /* FBSDKSuggestedEventsIndexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKSuggestedEventsIndexer.h; sourceTree = "<group>"; };
 		BF247C812374E1B200A522C0 /* FBSDKSuggestedEventsIndexer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKSuggestedEventsIndexer.m; sourceTree = "<group>"; };
+		BFA7301B2422CE6400455C47 /* FBSDKMLMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKMLMacros.h; sourceTree = "<group>"; };
 		BFC02435237B6A9900A596EE /* FBSDKEventInferencer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; path = FBSDKEventInferencer.h; sourceTree = "<group>"; };
 		BFC02443237B6A9900A596EE /* FBSDKFeatureExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKFeatureExtractor.h; sourceTree = "<group>"; };
 		BFC02444237B6A9900A596EE /* FBSDKFeatureExtractor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKFeatureExtractor.m; sourceTree = "<group>"; };
@@ -2175,6 +2176,7 @@
 		5DBC72C2237378F800A9D859 /* ML */ = {
 			isa = PBXGroup;
 			children = (
+				BFA7301B2422CE6400455C47 /* FBSDKMLMacros.h */,
 				5DBC72D02373792A00A9D859 /* FBSDKModelManager.h */,
 				5DBC72D72373795600A9D859 /* FBSDKModelManager.m */,
 				FD9E154C23777AC900A005EC /* FBSDKModelRuntime.hpp */,

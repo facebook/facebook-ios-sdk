@@ -24,19 +24,25 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKAppEvents+Internal.h"
 #import "FBSDKFeatureExtractor.h"
 #import "FBSDKModelManager.h"
 #import "FBSDKModelParser.h"
 #import "FBSDKModelRuntime.hpp"
 #import "FBSDKModelUtility.h"
-#import "FBSDKViewHierarchyMacros.h"
+#import "FBSDKMLMacros.h"
 
 #include<stdexcept>
 
-static NSString *const MODEL_INFO_KEY= @"com.facebook.sdk:FBSDKModelInfo";
-static NSString *const THRESHOLDS_KEY = @"thresholds";
-static NSString *const SUGGESTED_EVENT[4] = {@"fb_mobile_add_to_cart", @"fb_mobile_complete_registration", @"other", @"fb_mobile_purchase"};
-static NSDictionary<NSString *, NSString *> *const DEFAULT_PREDICTION = @{SUGGEST_EVENT_KEY: SUGGESTED_EVENTS_OTHER};
+extern FBSDKAppEventName FBSDKAppEventNameCompletedRegistration;
+extern FBSDKAppEventName FBSDKAppEventNameAddedToCart;
+extern FBSDKAppEventName FBSDKAppEventNamePurchased;
+
+static NSDictionary<NSString *, NSArray<NSString *> *> *const SUGGESTED_EVENT = @{
+  SUGGEST_EVENT_KEY: @[FBSDKAppEventNameAddedToCart, FBSDKAppEventNameCompletedRegistration, SUGGESTED_EVENT_OTHER, FBSDKAppEventNamePurchased],
+  MTMLKey: @[FBSDKAppEventNameAddedToCart, FBSDKAppEventNameCompletedRegistration, SUGGESTED_EVENT_OTHER, FBSDKAppEventNamePurchased],
+};
+static NSDictionary<NSString *, NSString *> *const DEFAULT_PREDICTION = @{SUGGEST_EVENT_KEY: SUGGESTED_EVENT_OTHER};
 
 static NSString *_useCase;
 static std::unordered_map<std::string, mat::MTensor> _weights;
@@ -45,14 +51,19 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
 
 + (void)loadWeightsForKey:(NSString *)useCase
 {
-  NSData *data = [FBSDKModelManager getWeightsForKey:useCase];
-  if (!data) {
-    return;
-  }
-  std::unordered_map<std::string, mat::MTensor> weights = [FBSDKModelParser parseWeightsData:data];
-  if ([FBSDKModelParser validateWeights:weights forKey:useCase]) {
-    _useCase = useCase;
-    _weights = weights;
+  @synchronized (self) {
+    if (_useCase) {
+      return;
+    }
+    NSData *data = [FBSDKModelManager getWeightsForKey:useCase];
+    if (!data) {
+      return;
+    }
+    std::unordered_map<std::string, mat::MTensor> weights = [FBSDKModelParser parseWeightsData:data];
+    if ([FBSDKModelParser validateWeights:weights forKey:useCase]) {
+      _useCase = useCase;
+      _weights = weights;
+    }
   }
 }
 
@@ -60,7 +71,7 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
                                          viewTree:(NSMutableDictionary *)viewTree
                                           withLog:(BOOL)isPrint
 {
-  if (buttonText.length == 0 || _weights.size() == 0) {
+  if (buttonText.length == 0 || _useCase.length == 0 || _weights.size() == 0) {
     return DEFAULT_PREDICTION;
   }
   try {
@@ -96,27 +107,29 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
 
     memcpy(dense_tensor_data, dense_data, sizeof(float) * 30);
     free(dense_data);
+
     NSString *key = _useCase;
     if ([key isEqualToString:@"MTML"]) {
       key = @"MTML_APP_EVENT_PRED";
     }
-    float *res = mat1::predictOnText(std::string([key UTF8String]), bytes, _weights, dense_tensor_data);
+
     NSMutableDictionary<NSString *, id> *modelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
     if (!modelInfo) {
       return DEFAULT_PREDICTION;
     }
-    NSDictionary<NSString *, id> * suggestedEventModelInfo = [modelInfo objectForKey:SUGGEST_EVENT_KEY];
+    NSDictionary<NSString *, id> * suggestedEventModelInfo = [modelInfo objectForKey:key];
     if (!suggestedEventModelInfo) {
       return DEFAULT_PREDICTION;
     }
     NSMutableArray *thresholds = [suggestedEventModelInfo objectForKey:THRESHOLDS_KEY];
-    if (thresholds.count < 4) {
+    if (thresholds.count < SUGGESTED_EVENT[_useCase].count) {
       return DEFAULT_PREDICTION;
     }
 
+    float *res = mat1::predictOnText(std::string([key UTF8String]), bytes, _weights, dense_tensor_data);
     for (int i = 0; i < thresholds.count; i++){
       if ((float)res[i] >= (float)[thresholds[i] floatValue]) {
-        [result setObject:SUGGESTED_EVENT[i] forKey:SUGGEST_EVENT_KEY];
+        [result setObject:SUGGESTED_EVENT[_useCase][i] forKey:SUGGEST_EVENT_KEY];
         return result;
       }
     }
