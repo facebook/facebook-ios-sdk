@@ -16,14 +16,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKMonitor.h"
-
 #import "FBSDKCoreKit+Internal.h"
-#import "FBSDKFeatureManager.h"
 
 @interface FBSDKMonitor ()
 
-@property (class, nonatomic, readonly) NSMutableArray<FBSDKMonitorEntry *> *entries;
+@property (class, nonatomic, copy, readonly) NSMutableArray<FBSDKMonitorEntry *> *entries;
 
 @end
 
@@ -58,6 +55,7 @@ static NSMutableArray<FBSDKMonitorEntry *> *_entries = nil;
 
 + (void)flush
 {
+  [FBSDKMonitorNetworker sendEntries:self.entries];
   self.entries = [NSMutableArray array];
 }
 

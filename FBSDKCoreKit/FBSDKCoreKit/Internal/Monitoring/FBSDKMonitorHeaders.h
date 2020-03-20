@@ -16,39 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#ifndef FBSDKMonitorHeaders_h
+#define FBSDKMonitorHeaders_h
 
-#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKMethodUsageMonitor.h"
+#import "FBSDKMethodUsageMonitorEntry.h"
+#import "FBSDKMonitor.h"
+#import "FBSDKMonitorEntry.h"
+#import "FBSDKMonitorNetworker.h"
+#import "FBSDKMonitorStore.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
-/**
- The shared implementation for 'Monitoring' types to call into.
- For example if you want to record performance metrics you should
- add a PerformanceMonitoring class and call `[PerformanceMonitor record:metric]`.
- Internally the `record:` method should invoke the shared instance of this
- monitor class.
-
- Important: Should not be called directly.
- */
-@interface FBSDKMonitor : NSObject
-
-// TODO: Add a store and a networker for storing logs locally and uploading to a remote endpoint
-// @property (nonatomic, weak, readonly) FBSDKMonitorStore *store;
-
-/**
- Stores entry in local memory until a limit is reached or a flush is forced.
- Will only record entries if the monitor is enabled.
-
- Important: Should not be called directly.
- */
-+ (void)record:(FBSDKMonitorEntry *)entry;
-
-/**
- Enable entries to be recorded.
- */
-+ (void)enable;
-
-@end
-
-NS_ASSUME_NONNULL_END
+#endif /* FBSDKMonitorHeaders_h */

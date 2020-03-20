@@ -18,36 +18,13 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKMonitorEntry.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- The shared implementation for 'Monitoring' types to call into.
- For example if you want to record performance metrics you should
- add a PerformanceMonitoring class and call `[PerformanceMonitor record:metric]`.
- Internally the `record:` method should invoke the shared instance of this
- monitor class.
+@interface FBSDKMonitorNetworker : NSObject
 
- Important: Should not be called directly.
- */
-@interface FBSDKMonitor : NSObject
-
-// TODO: Add a store and a networker for storing logs locally and uploading to a remote endpoint
-// @property (nonatomic, weak, readonly) FBSDKMonitorStore *store;
-
-/**
- Stores entry in local memory until a limit is reached or a flush is forced.
- Will only record entries if the monitor is enabled.
-
- Important: Should not be called directly.
- */
-+ (void)record:(FBSDKMonitorEntry *)entry;
-
-/**
- Enable entries to be recorded.
- */
-+ (void)enable;
++ (void)sendEntries:(NSArray<FBSDKMonitorEntry *> *)entries;
 
 @end
 

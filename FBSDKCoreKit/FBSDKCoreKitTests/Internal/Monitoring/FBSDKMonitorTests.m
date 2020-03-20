@@ -18,11 +18,14 @@
 
 #import <XCTest/XCTest.h>
 
+#import <OCMock/OCMock.h>
+
 #import "FBSDKCoreKit+Internal.h"
-#import "FBSDKFeatureManager.h"
 #import "TestMonitorEntry.h"
 
 @interface FBSDKMonitor (Testing)
+
+@property (class, nonatomic) Class graphRequestClass;
 
 + (NSMutableArray<FBSDKMonitorEntry *> *)entries;
 + (void)disable;
@@ -32,9 +35,19 @@
 
 @interface FBSDKMonitorTests : XCTestCase
 
+@property (nonatomic) FBSDKMonitorEntry *entry;
+
 @end
 
 @implementation FBSDKMonitorTests
+
+- (void)setUp
+{
+  [super setUp];
+
+  [FBSDKSettings setAppID:@"fbabc123"];
+  self.entry = [TestMonitorEntry testEntry];
+}
 
 - (void)tearDown
 {
@@ -45,7 +58,7 @@
 }
 
 - (void)testRecordingWhenDisabled {
-  [FBSDKMonitor record:[TestMonitorEntry testEntry]];
+  [FBSDKMonitor record:self.entry];
 
   XCTAssertEqual(FBSDKMonitor.entries.count, 0,
                  @"Should not record entries before monitor is enabled");
@@ -55,23 +68,41 @@
 {
   [FBSDKMonitor enable];
 
-  FBSDKMonitorEntry *entry = [TestMonitorEntry testEntry];
-  [FBSDKMonitor record:entry];
+  [FBSDKMonitor record:self.entry];
 
-  XCTAssertEqualObjects(FBSDKMonitor.entries, @[entry],
+  XCTAssertEqualObjects(FBSDKMonitor.entries, @[self.entry],
                         @"Should record entries when monitor is enabled");
 }
 
 - (void)testFlushing
 {
   [FBSDKMonitor enable];
-  FBSDKMonitorEntry *entry = [TestMonitorEntry testEntry];
-  [FBSDKMonitor record:entry];
+  [FBSDKMonitor record:self.entry];
 
   [FBSDKMonitor flush];
 
   XCTAssertEqual(FBSDKMonitor.entries.count, 0,
                  @"Flushing should clear all entries");
+}
+
+- (void)testFlushingInvokesNetworker
+{
+  FBSDKMonitorEntry *entry2 = [TestMonitorEntry testEntryWithName:@"entry2"];
+  NSArray<FBSDKMonitorEntry *> *expectedEntries = @[self.entry, entry2];
+
+  id networkerMock = OCMClassMock([FBSDKMonitorNetworker class]);
+
+  [FBSDKMonitor enable];
+  [FBSDKMonitor record:self.entry];
+  [FBSDKMonitor record:entry2];
+  [FBSDKMonitor flush];
+
+  OCMVerify(ClassMethod([networkerMock sendEntries:[OCMArg checkWithBlock:^BOOL(id obj) {
+    XCTAssertEqualObjects(obj, expectedEntries);
+    return YES;
+  }]]));
+
+  [networkerMock stopMocking];
 }
 
 @end

@@ -22,12 +22,10 @@
 
 #import "FBSDKCoreKit+Internal.h"
 
-static NSString * const FBSDKAppIdKey = @"appID";
 static NSString * const FBSDKOsVersionKey = @"device_os_version";
 static NSString * const FBSDKDeviceModelKey = @"device_model";
 
 @implementation FBSDKMonitorEntry {
-  NSString * _appID;
   NSString * _systemVersion;
   NSString * _deviceModel;
 }
@@ -40,7 +38,6 @@ static NSString * const FBSDKDeviceModelKey = @"device_model";
       return nil;
     }
 
-    _appID = [[FBSDKSettings appID] copy];
     _systemVersion = [[UIDevice currentDevice] systemVersion];
     _deviceModel = [FBSDKMonitorEntry deviceModel];
   }
@@ -52,7 +49,6 @@ static NSString * const FBSDKDeviceModelKey = @"device_model";
 {
   NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
 
-  [FBSDKBasicUtility dictionary:dictionary setObject:_appID forKey:FBSDKAppIdKey];
   [FBSDKBasicUtility dictionary:dictionary setObject:_systemVersion forKey:FBSDKOsVersionKey];
   [FBSDKBasicUtility dictionary:dictionary setObject:_deviceModel forKey:FBSDKDeviceModelKey];
 
@@ -69,10 +65,6 @@ static NSString * const FBSDKDeviceModelKey = @"device_model";
 }
 
 - (void)encodeWithCoder:(nonnull NSCoder *)encoder {
-  if (_appID) {
-    [encoder encodeObject:_appID forKey:FBSDKAppIdKey];
-  }
-
   if (_systemVersion) {
     [encoder encodeObject:_systemVersion forKey:FBSDKOsVersionKey];
   }
@@ -84,7 +76,6 @@ static NSString * const FBSDKDeviceModelKey = @"device_model";
 
 - (nullable instancetype)initWithCoder:(nonnull NSCoder *)decoder
 {
-  _appID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKAppIdKey];
   _systemVersion = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKOsVersionKey];
   _deviceModel = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKDeviceModelKey];
 

@@ -58,8 +58,6 @@
   self.entry = [TestMonitorEntry testEntry];
   NSDictionary *dict = [self.entry dictionaryRepresentation];
 
-  XCTAssertEqualObjects([dict objectForKey:@"appID"], @"abc123",
-                        @"A monitor entry's appID should be gleaned from settings");
   XCTAssertEqualObjects([dict objectForKey:@"device_os_version"], @"foo",
                         @"An entry should store the current device's os version");
   XCTAssertEqualObjects([dict objectForKey:@"device_model"], [FBSDKMonitorEntryTests deviceModel],
@@ -73,8 +71,6 @@
 
   [self.entry encodeWithCoder:coder];
 
-  XCTAssertEqualObjects(coder.encodedObject[@"appID"], @"abc123",
-                        @"A monitor entry's appID should be gleaned from settings");
   XCTAssertEqualObjects(coder.encodedObject[@"device_os_version"], UIDevice.currentDevice.systemVersion,
                         @"An entry should store the current device's os version");
   XCTAssertEqualObjects(coder.encodedObject[@"device_model"], [FBSDKMonitorEntryTests deviceModel],
@@ -86,8 +82,6 @@
   TestCoder *coder = [TestCoder new];
   self.entry = [[FBSDKMonitorEntry alloc] initWithCoder:coder];
 
-  XCTAssertEqualObjects(coder.decodedObject[@"appID"], [NSString class],
-                        @"Initializing from a decoder should attempt to decode a String for the app id key");
   XCTAssertEqualObjects(coder.decodedObject[@"device_os_version"], [NSString class],
                         @"Initializing from a decoder should attempt to decode a String for the system version key");
   XCTAssertEqualObjects(coder.decodedObject[@"device_model"], [NSString class],

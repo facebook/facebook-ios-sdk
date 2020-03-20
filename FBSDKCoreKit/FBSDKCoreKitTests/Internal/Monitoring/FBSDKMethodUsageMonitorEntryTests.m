@@ -48,8 +48,8 @@
 
   NSDictionary *actual = [entry dictionaryRepresentation];
 
-  XCTAssertEqualObjects([actual objectForKey:@"appID"], @"abc123",
-                        @"Should include the superclass' dictionary representation");
+  XCTAssertNotNil([actual objectForKey:@"device_model"],
+                  @"Should include the superclass' dictionary representation");
   XCTAssertEqualObjects([actual objectForKey:@"event_name"], @"viewDidLoad",
                         @"Should use the name of the method as the event name");
 }
@@ -62,8 +62,8 @@
 
   [entry encodeWithCoder:coder];
 
-  XCTAssertEqualObjects(coder.encodedObject[@"appID"], @"abc123",
-                        @"Should include the superclass' encoding");
+  XCTAssertNotNil(coder.encodedObject[@"device_model"],
+                  @"Should include the superclass' encoding");
   XCTAssertEqualObjects(coder.encodedObject[@"event_name"], @"viewDidLoad",
                         @"Should use the name of the method as the event name for encoding");
 }
@@ -74,7 +74,7 @@
 
   entry = [[FBSDKMethodUsageMonitorEntry alloc] initWithCoder:coder];
 
-  XCTAssertEqualObjects(coder.decodedObject[@"appID"], [NSString class],
+  XCTAssertEqualObjects(coder.decodedObject[@"device_model"], [NSString class],
                         @"Initializing from a decoder should include the superclass' decoding");
   XCTAssertEqualObjects(coder.decodedObject[@"event_name"], [NSString class],
                         @"Initializing from a decoder should attempt to decode a String for the event name key");
