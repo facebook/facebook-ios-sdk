@@ -31,7 +31,7 @@
 
 #define SEQ_LEN 128
 #define ALPHABET_SIZE 256
-#define EMBEDDING_SIZE 64
+#define EMBEDDING_SIZE 32
 #define DENSE_FEATURE_LEN 30
 
 namespace mat1 {
@@ -255,34 +255,34 @@ namespace mat1 {
         x = vectorize(texts, (int)strlen(texts), SEQ_LEN);
 
         // embedding
-        embed_x = embedding(x, embed_weight, 1, SEQ_LEN, EMBEDDING_SIZE); // (1, 128, 64)
+        embed_x = embedding(x, embed_weight, 1, SEQ_LEN, EMBEDDING_SIZE); // (1, 128, 32)
         free(x);
 
-        // conv1D
-        c0 = conv1D(embed_x, convs_0_weight, 1, SEQ_LEN, EMBEDDING_SIZE, (int)conv0w_t.size(2), (int)conv0w_t.size(0)); // (1, 127, 32)
-        c1 = conv1D(embed_x, convs_1_weight, 1, SEQ_LEN, EMBEDDING_SIZE, (int)conv1w_t.size(2), (int)conv1w_t.size(0)); // (1, 126, 32)
-        c2 = conv1D(embed_x, convs_2_weight, 1, SEQ_LEN, EMBEDDING_SIZE, (int)conv2w_t.size(2), (int)conv2w_t.size(0)); // (1, 124, 32)
+        // conv0
+        c0 = conv1D(embed_x, convs_0_weight, 1, SEQ_LEN, EMBEDDING_SIZE, (int)conv0w_t.size(2), (int)conv0w_t.size(0)); // (1, 126, 32)
+        c0_shape = (int)(SEQ_LEN - conv0w_t.size(2) + 1);
+        add(c0, convs_0_bias, 1, c0_shape, (int)conv0w_t.size(0));
+        relu(c0, c0_shape * (int)conv0w_t.size(0));
         free(embed_x);
 
-        // shape
-        c0_shape = (int)(SEQ_LEN - conv0w_t.size(2) + 1);
-        c1_shape = (int)(SEQ_LEN - conv1w_t.size(2) + 1);
-        c2_shape = (int)(SEQ_LEN - conv2w_t.size(2) + 1);
-
-        // add bias
-        add(c0, convs_0_bias, 1, c0_shape, (int)conv0w_t.size(0));
+        // conv1
+        c1 = conv1D(c0, convs_1_weight, 1, c0_shape, (int)conv0w_t.size(0), (int)conv1w_t.size(2), (int)conv1w_t.size(0)); // (1, 124, 64)
+        c1_shape = (int)(c0_shape - conv1w_t.size(2) + 1);
         add(c1, convs_1_bias, 1, c1_shape, (int)conv1w_t.size(0));
-        add(c2, convs_2_bias, 1, c2_shape, (int)conv2w_t.size(0));
-
-        // relu
-        relu(c0, c0_shape * (int)conv0w_t.size(0));
         relu(c1, c1_shape * (int)conv1w_t.size(0));
+        c1 = maxPool1D(c1, 1, c1_shape, (int)conv1w_t.size(0), 2); // (1, 123, 64)
+        c1_shape = c1_shape - 1;
+
+        // conv2
+        c2 = conv1D(c1, convs_2_weight, 1, c1_shape, (int)conv1w_t.size(0), (int)conv2w_t.size(2), (int)conv2w_t.size(0)); // (1, 121, 64)
+        c2_shape = (int)(c1_shape - conv2w_t.size(2) + 1);
+        add(c2, convs_2_bias, 1, c2_shape, (int)conv2w_t.size(0));
         relu(c2, c2_shape * (int)conv2w_t.size(0));
 
         // max pooling
         ca = maxPool1D(c0, 1, c0_shape, (int)conv0w_t.size(0), c0_shape); // (1, 1, 32)
-        cb = maxPool1D(c1, 1, c1_shape, (int)conv1w_t.size(0), c1_shape); // (1, 1, 32)
-        cc = maxPool1D(c2, 1, c2_shape, (int)conv2w_t.size(0), c2_shape); // (1, 1, 32)
+        cb = maxPool1D(c1, 1, c1_shape, (int)conv1w_t.size(0), c1_shape); // (1, 1, 64)
+        cc = maxPool1D(c2, 1, c2_shape, (int)conv2w_t.size(0), c2_shape); // (1, 1, 64)
         free(c0);
         free(c1);
         free(c2);

@@ -37,10 +37,11 @@
 extern FBSDKAppEventName FBSDKAppEventNameCompletedRegistration;
 extern FBSDKAppEventName FBSDKAppEventNameAddedToCart;
 extern FBSDKAppEventName FBSDKAppEventNamePurchased;
+extern FBSDKAppEventName FBSDKAppEventNameInitiatedCheckout;
 
 static NSDictionary<NSString *, NSArray<NSString *> *> *const SUGGESTED_EVENT = @{
   SUGGEST_EVENT_KEY: @[FBSDKAppEventNameAddedToCart, FBSDKAppEventNameCompletedRegistration, SUGGESTED_EVENT_OTHER, FBSDKAppEventNamePurchased],
-  MTMLKey: @[FBSDKAppEventNameAddedToCart, FBSDKAppEventNameCompletedRegistration, SUGGESTED_EVENT_OTHER, FBSDKAppEventNamePurchased],
+  MTMLKey: @[SUGGESTED_EVENT_OTHER, FBSDKAppEventNameCompletedRegistration, FBSDKAppEventNameAddedToCart, FBSDKAppEventNamePurchased, FBSDKAppEventNameInitiatedCheckout],
 };
 static NSDictionary<NSString *, NSString *> *const DEFAULT_PREDICTION = @{SUGGEST_EVENT_KEY: SUGGESTED_EVENT_OTHER};
 

@@ -27,7 +27,7 @@ using std::vector;
 @interface FBSDKModelParser ()
 
 + (NSDictionary<NSString *, NSArray *> *)getSharedWeightsInfo;
-+ (NSDictionary<NSString *, NSArray *> *)getMTMLSpec;
++ (NSDictionary<NSString *, NSArray *> *)getMTMLWeightsInfo;
 + (NSDictionary<NSString *, NSArray *> *)getAddressDetectSpec;
 + (NSDictionary<NSString *, NSArray *> *)getAppEventPredSpec;
 
@@ -98,8 +98,7 @@ using std::vector;
 }
 
 - (void)testWeightsForAppEventPredWithWrongInfo {
-  [_mockWeightsInfoDict addEntriesFromDictionary:[FBSDKModelParser getSharedWeightsInfo]];
-  [_mockWeightsInfoDict addEntriesFromDictionary:[FBSDKModelParser getMTMLSpec]];
+  [_mockWeightsInfoDict addEntriesFromDictionary:[FBSDKModelParser getMTMLWeightsInfo]];
 
   bool validatedRes = [FBSDKModelParser validateWeights:[self _mockWeightsWithRefDict:_mockWeightsInfoDict]
                                                  forKey:@"SUGGEST_EVENT"];

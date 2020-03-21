@@ -97,15 +97,16 @@ NS_ASSUME_NONNULL_BEGIN
 + (bool)validateWeights:(std::unordered_map<std::string, mat::MTensor>)weights forKey:(NSString *)key
 {
   NSMutableDictionary<NSString *, NSArray *> *weightsInfoDict = [[NSMutableDictionary alloc] init];
-  [weightsInfoDict addEntriesFromDictionary:[self getSharedWeightsInfo]];
   if ([key hasPrefix:@"MTML"]) {
-    [weightsInfoDict addEntriesFromDictionary:[self getMTMLSpec]];
-  }
-  if ([key isEqualToString:@"DATA_DETECTION_ADDRESS"]) {
-    [weightsInfoDict addEntriesFromDictionary:[self getAddressDetectSpec]];
-  }
-  if ([key isEqualToString:@"SUGGEST_EVENT"]) {
-    [weightsInfoDict addEntriesFromDictionary:[self getAppEventPredSpec]];
+    [weightsInfoDict addEntriesFromDictionary:[self getMTMLWeightsInfo]];
+  } else {
+    [weightsInfoDict addEntriesFromDictionary:[self getSharedWeightsInfo]];
+    if ([key isEqualToString:@"DATA_DETECTION_ADDRESS"]) {
+      [weightsInfoDict addEntriesFromDictionary:[self getAddressDetectSpec]];
+    }
+    if ([key isEqualToString:@"SUGGEST_EVENT"]) {
+      [weightsInfoDict addEntriesFromDictionary:[self getAppEventPredSpec]];
+    }
   }
   return [self checkWeights:weights withExpectedInfo:weightsInfoDict];
 }
@@ -140,13 +141,24 @@ NS_ASSUME_NONNULL_BEGIN
     @"fc2.bias": @[@(64)]};
 }
 
-+ (NSDictionary<NSString *, NSArray *> *)getMTMLSpec
++ (NSDictionary<NSString *, NSArray *> *)getMTMLWeightsInfo
 {
   return @{
+    @"embed.weight" : @[@(256), @(32)],
+    @"convs.0.weight" : @[@(32), @(32), @(3)],
+    @"convs.0.bias" : @[@(32)],
+    @"convs.1.weight" : @[@(64), @(32), @(3)],
+    @"convs.1.bias" : @[@(64)],
+    @"convs.2.weight" : @[@(64), @(64), @(3)],
+    @"convs.2.bias" : @[@(64)],
+    @"fc1.weight": @[@(128), @(190)],
+    @"fc1.bias": @[@(128)],
+    @"fc2.weight": @[@(64), @(128)],
+    @"fc2.bias": @[@(64)],
     @"address_detect.weight": @[@(2), @(64)],
     @"address_detect.bias": @[@(2)],
-    @"app_event_pred.weight": @[@(4), @(64)],
-    @"app_event_pred.bias": @[@(4)]};
+    @"app_event_pred.weight": @[@(5), @(64)],
+    @"app_event_pred.bias": @[@(5)]};
 }
 
 + (NSDictionary<NSString *, NSArray *> *)getAddressDetectSpec
