@@ -826,6 +826,11 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
  */
 + (void)updateUserProperties:(NSDictionary<NSString *, id> *)properties handler:(nullable FBSDKGraphRequestBlock)handler;
 
+/*
+ Returns generated anonymous id that persisted with current install of the app
+ */
++ (NSString *)anonymousID;
+
 #if !TARGET_OS_TV
 /*
   Intended to be used as part of a hybrid webapp.

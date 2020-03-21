@@ -830,6 +830,11 @@ static NSString *g_overrideAppID = nil;
   [request startWithCompletionHandler:handler];
 }
 
++ (NSString *)anonymousID
+{
+  return [FBSDKBasicUtility anonymousID];
+}
+
 #if !TARGET_OS_TV
 + (void)augmentHybridWKWebView:(WKWebView *)webView {
   // Ensure we can instantiate WebKit before trying this
