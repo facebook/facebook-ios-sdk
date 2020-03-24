@@ -16,24 +16,31 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import <sys/utsname.h>
+
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKMonitorNetworker.h"
+
+static NSString * const FBSDKAppIdentifierKey = @"id";
+static NSString * const FBSDKBundleIdentifierKey = @"unique_application_identifier";
+static NSString * const FBSDKDeviceModelKey = @"device_model";
+static NSString * const FBSDKMonitoringsKey = @"monitorings";
+static NSString * const FBSDKOsVersionKey = @"device_os_version";
+
 
 @interface FBSDKMonitorNetworker ()
 @end
 
 @implementation FBSDKMonitorNetworker
 
-+ (void)sendEntries:(NSArray<FBSDKMonitorEntry *> *)entries
++ (void)sendEntries:(NSArray<id<FBSDKMonitorEntry>> *)entries
 {
-  NSString *appID = [FBSDKSettings appID];
+  NSDictionary *postBody = [self postBodyWithEntries:entries];
 
-  if (appID) {
-    NSString *path = [NSString stringWithFormat:@"%@/monitorings", appID];
-
-    NSDictionary *payload = @{@"monitorings": [self JSONStringForEntries:entries] ?: @"[]"};
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:path
-                                                                   parameters:payload
+  // don't make request without a post body
+  if (postBody) {
+    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"/monitorings"
+                                                                   parameters:postBody
                                                                   tokenString:nil
                                                                    HTTPMethod:FBSDKHTTPMethodPOST
                                                                         flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
@@ -42,17 +49,44 @@
   }
 }
 
-+ (nullable NSString *)JSONStringForEntries:(NSArray<FBSDKMonitorEntry *> *)entries
++ (NSDictionary<NSString *, id> *)postBodyWithEntries:(NSArray<id<FBSDKMonitorEntry>> *)entries
+{
+  NSString *appID = [FBSDKSettings appID];
+
+  if (!appID) {
+    return nil;
+  }
+
+  NSMutableDictionary *payload = [NSMutableDictionary dictionary];
+  [FBSDKBasicUtility dictionary:payload setObject:[self JSONStringForEntries:entries] ?: @[] forKey:FBSDKMonitoringsKey];
+  [FBSDKBasicUtility dictionary:payload setObject:appID forKey:FBSDKAppIdentifierKey];
+  [FBSDKBasicUtility dictionary:payload setObject:[self deviceModel] forKey:FBSDKDeviceModelKey];
+  [FBSDKBasicUtility dictionary:payload setObject:NSBundle.mainBundle.bundleIdentifier forKey:FBSDKBundleIdentifierKey];
+  [FBSDKBasicUtility dictionary:payload setObject:UIDevice.currentDevice.systemVersion forKey:FBSDKOsVersionKey];
+
+  return payload;
+}
+
++ (nullable NSString *)JSONStringForEntries:(NSArray<id<FBSDKMonitorEntry>> *)entries
 {
   NSMutableArray *jsonEntries = [NSMutableArray array];
 
-  for (FBSDKMonitorEntry *entry in entries) {
+  for (id<FBSDKMonitorEntry> entry in entries) {
     [jsonEntries addObject:entry.dictionaryRepresentation];
   }
 
   return [FBSDKBasicUtility JSONStringForObject:jsonEntries
                                           error:NULL
                            invalidObjectHandler:NULL];
+}
+
++ (NSString * _Nonnull)deviceModel
+{
+  struct utsname systemInfo;
+  uname(&systemInfo);
+
+  return [NSString stringWithCString:systemInfo.machine
+                            encoding:NSUTF8StringEncoding];
 }
 
 @end

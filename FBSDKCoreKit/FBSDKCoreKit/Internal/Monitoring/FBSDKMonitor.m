@@ -20,16 +20,16 @@
 
 @interface FBSDKMonitor ()
 
-@property (class, nonatomic, copy, readonly) NSMutableArray<FBSDKMonitorEntry *> *entries;
+@property (class, nonatomic, copy, readonly) NSMutableArray<id<FBSDKMonitorEntry>> *entries;
 
 @end
 
 @implementation FBSDKMonitor
 
 static BOOL isMonitoringEnabled = NO;
-static NSMutableArray<FBSDKMonitorEntry *> *_entries = nil;
+static NSMutableArray<id<FBSDKMonitorEntry>> *_entries = nil;
 
-+ (NSMutableArray<FBSDKMonitorEntry *> *)entries
++ (NSMutableArray<id<FBSDKMonitorEntry>> *)entries
 {
   if (!_entries) {
     _entries = [NSMutableArray array];
@@ -38,7 +38,7 @@ static NSMutableArray<FBSDKMonitorEntry *> *_entries = nil;
   return _entries;
 }
 
-+ (void)setEntries:(NSMutableArray<FBSDKMonitorEntry *> *)entries
++ (void)setEntries:(NSMutableArray<id<FBSDKMonitorEntry>> *)entries
 {
   _entries = entries;
 }
@@ -59,7 +59,7 @@ static NSMutableArray<FBSDKMonitorEntry *> *_entries = nil;
   self.entries = [NSMutableArray array];
 }
 
-+ (void)record:(FBSDKMonitorEntry *)entry
++ (void)record:(id<FBSDKMonitorEntry>)entry
 {
   // need to dispatch to the background immediately
   // encode and store entry in local entries array

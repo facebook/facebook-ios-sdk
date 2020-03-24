@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
  If you do not want to overwrite what is on disk, call `retrieveEntries`
  prior to calling this method.
  */
-- (void)persist:(NSArray<FBSDKMonitorEntry *> *)entries;
+- (void)persist:(NSArray<id<FBSDKMonitorEntry>> *)entries;
 
 /**
  Retrieves any stored entries from temporary file storage.
@@ -46,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
  If you need to persist the data after retrieving you must call `persist` again
  with the retrieved entries.
  */
-- (NSArray<FBSDKMonitorEntry *> *)retrieveEntries;
+- (NSArray<id<FBSDKMonitorEntry>> *)retrieveEntries;
 
 @end
 

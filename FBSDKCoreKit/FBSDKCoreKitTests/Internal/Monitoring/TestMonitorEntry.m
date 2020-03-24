@@ -38,24 +38,19 @@
 
 - (void)encodeWithCoder:(NSCoder *)encoder
 {
-  [super encodeWithCoder:encoder];
-
   [encoder encodeObject:self.name forKey:@"name"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
-  if (self = [super initWithCoder:decoder]) {
-    self.name = [decoder decodeObjectOfClass:[NSString class] forKey:@"name"];
-  }
+  self.name = [decoder decodeObjectOfClass:[NSString class] forKey:@"name"];
 
   return self;
 }
 
 - (NSDictionary *)dictionaryRepresentation
 {
-  NSDictionary *dict = [super dictionaryRepresentation];
-  NSMutableDictionary *tmp = [NSMutableDictionary dictionaryWithDictionary:dict];
+  NSMutableDictionary *tmp = [NSMutableDictionary dictionary];
 
   [tmp setObject:self.name forKey:@"name"];
 
@@ -77,7 +72,7 @@
     return YES;
   }
 
-  if (![other isKindOfClass:[FBSDKMonitorEntry class]]) {
+  if (![other conformsToProtocol:@protocol(FBSDKMonitorEntry)]) {
     return NO;
   }
 

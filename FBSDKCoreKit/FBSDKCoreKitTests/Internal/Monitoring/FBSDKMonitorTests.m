@@ -27,7 +27,7 @@
 
 @property (class, nonatomic) Class graphRequestClass;
 
-+ (NSMutableArray<FBSDKMonitorEntry *> *)entries;
++ (NSMutableArray<id<FBSDKMonitorEntry>> *)entries;
 + (void)disable;
 + (void)flush;
 
@@ -35,7 +35,7 @@
 
 @interface FBSDKMonitorTests : XCTestCase
 
-@property (nonatomic) FBSDKMonitorEntry *entry;
+@property (nonatomic) id<FBSDKMonitorEntry> entry;
 
 @end
 
@@ -87,8 +87,8 @@
 
 - (void)testFlushingInvokesNetworker
 {
-  FBSDKMonitorEntry *entry2 = [TestMonitorEntry testEntryWithName:@"entry2"];
-  NSArray<FBSDKMonitorEntry *> *expectedEntries = @[self.entry, entry2];
+  id<FBSDKMonitorEntry> entry2 = [TestMonitorEntry testEntryWithName:@"entry2"];
+  NSArray<id<FBSDKMonitorEntry>> *expectedEntries = @[self.entry, entry2];
 
   id networkerMock = OCMClassMock([FBSDKMonitorNetworker class]);
 

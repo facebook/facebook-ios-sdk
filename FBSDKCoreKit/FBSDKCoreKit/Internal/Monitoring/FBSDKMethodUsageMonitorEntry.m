@@ -37,30 +37,21 @@ static NSString * const FBSDKMethodUsageParametersKey = @"parameters";
 
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
-  if (self = [super initWithCoder:decoder]) {
-    NSString *methodName = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKMethodUsageNameKey];
-    _method = NSSelectorFromString(methodName);
-  }
+  NSString *methodName = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKMethodUsageNameKey];
+  _method = NSSelectorFromString(methodName);
 
   return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)encoder
 {
-  [super encodeWithCoder:encoder];
-
   NSString *methodName = NSStringFromSelector(_method);
   [encoder encodeObject:methodName forKey:FBSDKMethodUsageNameKey];
 }
 
 - (NSDictionary *)dictionaryRepresentation
 {
-  NSMutableDictionary *dictionary = [NSMutableDictionary dictionaryWithDictionary:
-                                     [super dictionaryRepresentation]];
-
-  [dictionary setObject:NSStringFromSelector(_method) forKey:FBSDKMethodUsageNameKey];
-
-  return dictionary;
+  return @{FBSDKMethodUsageNameKey: NSStringFromSelector(_method)};
 }
 
 @end

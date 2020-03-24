@@ -32,7 +32,7 @@
 
 @property (nonatomic, copy) NSString *filename;
 @property (nonatomic) FBSDKMonitorStore *store;
-@property (nonatomic) FBSDKMonitorEntry *entry;
+@property (nonatomic) id<FBSDKMonitorEntry> entry;
 
 @end
 
@@ -71,7 +71,7 @@
 
 - (void)testPersistingEntries
 {
-  NSArray<FBSDKMonitorEntry *> *expectedEntries = @[self.entry];
+  NSArray<id<FBSDKMonitorEntry>> *expectedEntries = @[self.entry];
 
   [self.store persist:@[self.entry]];
 
@@ -104,7 +104,7 @@
 - (void)testPersistingUniqueEntriesWithEmptyStore
 {
   TestMonitorEntry *entry2 = [TestMonitorEntry testEntryWithName:@"entry2"];
-  NSArray<FBSDKMonitorEntry *> *entries = @[self.entry, entry2];
+  NSArray<id<FBSDKMonitorEntry>> *entries = @[self.entry, entry2];
 
   [self.store persist:entries];
 
@@ -115,7 +115,7 @@
 - (void)testPersistingUniqueEntriesWithNonEmptyStore
 {
   TestMonitorEntry *entry2 = [TestMonitorEntry testEntryWithName:@"entry2"];
-  NSArray<FBSDKMonitorEntry *> *entries = @[self.entry, entry2];
+  NSArray<id<FBSDKMonitorEntry>> *entries = @[self.entry, entry2];
 
   [self.store persist:@[self.entry]];
   [self.store persist:entries];
@@ -126,7 +126,7 @@
 
 - (void)testRetrievingWithoutPersistedEntries
 {
-  NSArray<FBSDKMonitorEntry *> *retrievedEntries = [self.store retrieveEntries];
+  NSArray<id<FBSDKMonitorEntry>> *retrievedEntries = [self.store retrieveEntries];
 
   XCTAssertEqualObjects(retrievedEntries, @[],
                         @"Retrieving entries should return an empty array when no items are persisted");
@@ -137,7 +137,7 @@
   [self.store persist:@[self.entry]];
   [self.store retrieveEntries];
 
-  NSArray<FBSDKMonitorEntry *> *retrieved = [self entriesFromDisk];
+  NSArray<id<FBSDKMonitorEntry>> *retrieved = [self entriesFromDisk];
 
   XCTAssertNil(retrieved,
                @"Retrieving should clear existing entries");
@@ -148,7 +148,7 @@
 
   [self.store clear];
 
-  NSArray<FBSDKMonitorEntry *> *retrieved = [self entriesFromDisk];
+  NSArray<id<FBSDKMonitorEntry>> *retrieved = [self entriesFromDisk];
 
   XCTAssertNil(retrieved,
                @"A cleared store should be empty");
@@ -156,7 +156,7 @@
 
 // MARK: - Helpers
 
-- (NSArray<FBSDKMonitorEntry *> *)entriesFromDisk
+- (NSArray<id<FBSDKMonitorEntry>> *)entriesFromDisk
 {
   NSURL *temporaryDirectory = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
   NSURL *file = [temporaryDirectory URLByAppendingPathComponent:self.filename];

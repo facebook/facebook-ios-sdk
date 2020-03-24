@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKMonitorNetworker : NSObject
 
-+ (void)sendEntries:(NSArray<FBSDKMonitorEntry *> *)entries;
++ (void)sendEntries:(NSArray<id<FBSDKMonitorEntry>> *)entries;
 
 @end
 

@@ -30,12 +30,13 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 /**
- A base class for creating monitor entries. Not advisable to use this class directly.
- Instead create a subclass that is specific to the information you'd like to capture.
- For example a PerformanceMonitorEntry subclass may have additional fields for
- capturing an event with a name, and start / end times.
+ Describes monitor entries.
+
+ Usage: Conform a new type of entry that is specific to the information you'd like to capture.
+ For example a PerformanceMonitorEntry will conform to this so that it is Codable and can be
+ easily represented as a dictionary to aid with JSON serialization.
 */
-@interface FBSDKMonitorEntry : NSObject<NSCoding, FBSDKDictionaryRepresentable>
+@protocol FBSDKMonitorEntry <NSObject, NSCoding, FBSDKDictionaryRepresentable>
 
 + (instancetype)new NS_UNAVAILABLE;
 

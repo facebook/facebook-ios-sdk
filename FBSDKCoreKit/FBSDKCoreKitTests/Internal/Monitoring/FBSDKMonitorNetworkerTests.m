@@ -16,6 +16,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import <sys/utsname.h>
+
 #import <XCTest/XCTest.h>
 
 #import <OCMock/OCMock.h>
@@ -25,7 +27,7 @@
 
 @interface FBSDKMonitorNetworkerTests : XCTestCase
 
-@property (nonatomic) FBSDKMonitorEntry *entry;
+@property (nonatomic) id<FBSDKMonitorEntry> entry;
 
 @end
 
@@ -68,19 +70,22 @@
 
 - (void)testSendingEntriesCreatesGraphRequest
 {
-  FBSDKMonitorEntry *entry2 = [TestMonitorEntry testEntry];
-  NSArray<FBSDKMonitorEntry *> *entries = @[self.entry, entry2];
-  NSString *expectedPath = [NSString stringWithFormat:@"%@/monitorings", [FBSDKSettings appID]];
+  id<FBSDKMonitorEntry> entry2 = [TestMonitorEntry testEntry];
+  NSArray<id<FBSDKMonitorEntry>> *entries = @[self.entry, entry2];
 
   OCMStub([graphRequestMock alloc]).andReturn(graphRequestMock);
 
   BOOL (^verifyPath)(id) = ^BOOL(id path) {
-    XCTAssertEqualObjects(path, expectedPath,
-                          @"Graph path should incorporate the appID");
+    XCTAssertEqualObjects(path, @"/monitorings",
+                          @"Graph path should be a known string well known");
     return YES;
   };
 
   BOOL (^verifyParameters)(id) = ^BOOL(id parameters) {
+    [self assertAppIdInParameters:parameters];
+    [self assertDeviceModelInParameters:parameters];
+    [self assertOSVersionInParameters:parameters];
+    [self assertBundleIdInParameters:parameters];
     [self assertParameters:parameters includeEntries:entries];
     return YES;
   };
@@ -116,7 +121,31 @@
 
 // MARK: - Helpers
 
-- (void)assertParameters:(NSDictionary *)parameters includeEntries:(NSArray<FBSDKMonitorEntry *> *)entries
+- (void)assertBundleIdInParameters:(NSDictionary *)parameters
+{
+  XCTAssertEqualObjects(parameters[@"unique_application_identifier"], NSBundle.mainBundle.bundleIdentifier,
+                        @"A monitor POST body should include the main bundle identifier.");
+}
+
+- (void)assertOSVersionInParameters:(NSDictionary *)parameters
+{
+  XCTAssertEqualObjects(parameters[@"device_os_version"], UIDevice.currentDevice.systemVersion,
+                        @"A monitor POST body should include the current device's os version.");
+}
+
+- (void)assertAppIdInParameters:(NSDictionary *)parameters
+{
+  XCTAssertEqualObjects(parameters[@"id"], [FBSDKSettings appID],
+                        @"A monitor POST body should include the current facebook app identifier.");
+}
+
+- (void)assertDeviceModelInParameters:(NSDictionary *)parameters
+{
+  XCTAssertEqualObjects(parameters[@"device_model"], [self.class deviceModel],
+                        @"A monitor POST body should include the current device model.");
+}
+
+- (void)assertParameters:(NSDictionary *)parameters includeEntries:(NSArray<id<FBSDKMonitorEntry>> *)entries
 {
   // Networker should send the array of provided entries as a UTF8 encoded JSON string keyed under 'monitorings'
   NSString *capturedEntriesJSON = parameters[@"monitorings"];
@@ -125,6 +154,15 @@
   for (int i = 0; i < capturedEntryDictionaries.count; i++) {
     XCTAssertTrue([capturedEntryDictionaries[i] isEqualToDictionary:entries[i].dictionaryRepresentation]);
   }
+}
+
++ (NSString *)deviceModel
+{
+  struct utsname systemInfo;
+  uname(&systemInfo);
+
+  return [NSString stringWithCString:systemInfo.machine
+                            encoding:NSUTF8StringEncoding];
 }
 
 @end

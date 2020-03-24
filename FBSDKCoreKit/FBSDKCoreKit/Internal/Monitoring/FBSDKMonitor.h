@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  Important: Should not be called directly.
  */
-+ (void)record:(FBSDKMonitorEntry *)entry;
++ (void)record:(_Nonnull id<FBSDKMonitorEntry>)entry;
 
 /**
  Enable entries to be recorded.

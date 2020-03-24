@@ -44,7 +44,7 @@
   self.skipDiskCheck = YES;
 }
 
-- (void)persist:(NSArray<FBSDKMonitorEntry *> *)entries
+- (void)persist:(NSArray<id<FBSDKMonitorEntry>> *)entries
 {
   if (!entries.count) {
     return;
@@ -54,7 +54,7 @@
   self.skipDiskCheck = NO;
 }
 
-- (NSArray<FBSDKMonitorEntry *> *)retrieveEntries {
+- (NSArray<id<FBSDKMonitorEntry>> *)retrieveEntries {
   NSMutableArray *items = [NSMutableArray array];
 
   if (!self.skipDiskCheck) {

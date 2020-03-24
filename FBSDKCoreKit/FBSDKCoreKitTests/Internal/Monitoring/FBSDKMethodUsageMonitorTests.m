@@ -24,7 +24,7 @@
 
 @interface FBSDKMonitor (Testing)
 
-@property (class, nonatomic, readonly) NSMutableArray<FBSDKMonitorEntry *> *entries;
+@property (class, nonatomic, readonly) NSMutableArray<id<FBSDKMonitorEntry>> *entries;
 
 + (void)disable;
 + (void)flush;
