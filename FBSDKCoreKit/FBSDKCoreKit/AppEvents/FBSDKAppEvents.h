@@ -454,6 +454,11 @@ NS_SWIFT_NAME(AppEvents)
 @property (class, nonatomic, copy, nullable) NSString *userID;
 
 /*
+  Returns generated anonymous id that persisted with current install of the app
+*/
+@property (class, nonatomic, readonly) NSString *anonymousID;
+
+/*
  * Basic event logging
  */
 
@@ -825,11 +830,6 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
  @param handler the optional completion handler
  */
 + (void)updateUserProperties:(NSDictionary<NSString *, id> *)properties handler:(nullable FBSDKGraphRequestBlock)handler;
-
-/*
- Returns generated anonymous id that persisted with current install of the app
- */
-+ (NSString *)anonymousID;
 
 #if !TARGET_OS_TV
 /*
