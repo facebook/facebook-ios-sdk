@@ -39,12 +39,15 @@
 
 @end
 
-@implementation FBSDKMonitorTests
+@implementation FBSDKMonitorTests {
+  int flushLimit;
+}
 
 - (void)setUp
 {
   [super setUp];
 
+  flushLimit = 100;
   [FBSDKSettings setAppID:@"fbabc123"];
   self.entry = [TestMonitorEntry testEntry];
 }
@@ -90,7 +93,7 @@
   id<FBSDKMonitorEntry> entry2 = [TestMonitorEntry testEntryWithName:@"entry2"];
   NSArray<id<FBSDKMonitorEntry>> *expectedEntries = @[self.entry, entry2];
 
-  id networkerMock = OCMClassMock([FBSDKMonitorNetworker class]);
+  id networkerMock = OCMStrictClassMock([FBSDKMonitorNetworker class]);
 
   [FBSDKMonitor enable];
   [FBSDKMonitor record:self.entry];
@@ -103,6 +106,67 @@
   }]]));
 
   [networkerMock stopMocking];
+}
+
+- (void)testRecordingAtOneBelowFlushLimit
+{
+  [FBSDKMonitor enable];
+  NSMutableArray<id<FBSDKMonitorEntry>> *expectedEntries = [NSMutableArray array];
+
+  // Should not invoke networker if the threshold is not met
+  id networkerMock = OCMStrictClassMock([FBSDKMonitorNetworker class]);
+  OCMReject(ClassMethod([networkerMock sendEntries:[OCMArg any]]));
+
+  for (int i = 0; i < flushLimit - 1; i++) {
+    [expectedEntries addObject:[TestMonitorEntry testEntry]];
+    [FBSDKMonitor record:[TestMonitorEntry testEntry]];
+  }
+
+  XCTAssertEqual(expectedEntries.count, flushLimit - 1,
+                 @"Sanity check failed");
+
+  [networkerMock stopMocking];
+}
+
+- (void)testRecordingAtFlushLimit
+{
+  [FBSDKMonitor enable];
+  NSMutableArray<id<FBSDKMonitorEntry>> *expectedEntries = [NSMutableArray array];
+
+  id networkerMock = OCMStrictClassMock([FBSDKMonitorNetworker class]);
+
+  for (int i = 0; i < flushLimit; i++) {
+    [expectedEntries addObject:[TestMonitorEntry testEntry]];
+    [FBSDKMonitor record:[TestMonitorEntry testEntry]];
+  }
+
+  XCTAssertEqual(expectedEntries.count, flushLimit,
+                 @"Sanity check failed");
+
+  OCMVerify(ClassMethod([networkerMock sendEntries:[OCMArg checkWithBlock:^BOOL(id obj) {
+    XCTAssertEqual([obj count], expectedEntries.count,
+                   @"Should send the correct number of entries when the flush limit is reached");
+    return YES;
+  }]]));
+
+  [networkerMock stopMocking];
+}
+
+- (void)testRecordingPastFlushLimit
+{
+  [FBSDKMonitor enable];
+
+  for (int i = 0; i < flushLimit; i++) {
+    [FBSDKMonitor record:[TestMonitorEntry testEntry]];
+  }
+
+  XCTAssertEqual(FBSDKMonitor.entries.count, 0,
+                 @"Should flush entries after reaching threshold");
+
+  [FBSDKMonitor record:self.entry];
+
+  XCTAssertEqual(FBSDKMonitor.entries.count, 1,
+                 @"Should continue to record entries after surpassing the flush limit");
 }
 
 @end

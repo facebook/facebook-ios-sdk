@@ -18,6 +18,8 @@
 
 #import "FBSDKCoreKit+Internal.h"
 
+static const int FBSDKMonitorLogThreshold = 100;
+
 @interface FBSDKMonitor ()
 
 @property (class, nonatomic, copy, readonly) NSMutableArray<id<FBSDKMonitorEntry>> *entries;
@@ -61,12 +63,14 @@ static NSMutableArray<id<FBSDKMonitorEntry>> *_entries = nil;
 
 + (void)record:(id<FBSDKMonitorEntry>)entry
 {
-  // need to dispatch to the background immediately
-  // encode and store entry in local entries array
-  // do logic to see if needs to flush
-  // potentially invoke networker
-  if (self.entries && isMonitoringEnabled) {
-    [self.entries addObject:entry];
+  if (self.entries) {
+    if (isMonitoringEnabled) {
+      [self.entries addObject:entry];
+
+      if (self.entries.count >= FBSDKMonitorLogThreshold) {
+        [self flush];
+      }
+    }
   }
 }
 
