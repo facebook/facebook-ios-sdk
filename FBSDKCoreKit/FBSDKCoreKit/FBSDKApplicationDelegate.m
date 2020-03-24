@@ -126,7 +126,9 @@ static UIApplicationState _applicationState;
 
   [FBSDKFeatureManager checkFeature:FBSDKFeatureMonitoring completionBlock:^(BOOL enabled) {
     if (enabled && FBSDKSettings.isAutoLogAppEventsEnabled) {
+#ifndef DEBUG
       [FBSDKMonitor enable];
+#endif
     }
   }];
 
