@@ -21,6 +21,7 @@
 #import <OCMock/OCMock.h>
 
 #import "FBSDKCoreKit+Internal.h"
+#import "FakeMonitorStore.h"
 #import "TestMonitorEntry.h"
 
 @interface FBSDKMonitor (Testing)
@@ -28,6 +29,7 @@
 @property (class, nonatomic) Class graphRequestClass;
 
 + (NSMutableArray<id<FBSDKMonitorEntry>> *)entries;
++ (void)setStore:(FBSDKMonitorStore *)store;
 + (void)disable;
 + (void)flush;
 
@@ -36,11 +38,13 @@
 @interface FBSDKMonitorTests : XCTestCase
 
 @property (nonatomic) id<FBSDKMonitorEntry> entry;
+@property (nonatomic) FakeMonitorStore *store;
 
 @end
 
 @implementation FBSDKMonitorTests {
   int flushLimit;
+  id networkerMock;
 }
 
 - (void)setUp
@@ -48,16 +52,21 @@
   [super setUp];
 
   flushLimit = 100;
-  [FBSDKSettings setAppID:@"fbabc123"];
+  [FBSDKSettings setAppID:@"abc123"];
   self.entry = [TestMonitorEntry testEntry];
+  self.store = [[FakeMonitorStore alloc] initWithFilename:@"foo"];
+  [FBSDKMonitor setStore:self.store];
+  networkerMock = OCMClassMock([FBSDKMonitorNetworker class]);
 }
 
 - (void)tearDown
 {
   [super tearDown];
 
+  [networkerMock stopMocking];
   [FBSDKMonitor flush];
   [FBSDKMonitor disable];
+  [FBSDKMonitor setStore:nil];
 }
 
 - (void)testRecordingWhenDisabled {
@@ -77,6 +86,34 @@
                         @"Should record entries when monitor is enabled");
 }
 
+- (void)testDisabling
+{
+  NSArray *entries = @[self.entry];
+  [FBSDKMonitor enable];
+  [FBSDKMonitor record:self.entry];
+  [self.store persist:entries];
+  self.store.persistWasCalled = false;
+
+  // Should not invoke networker if monitor is disabled
+  id notificationCenterMock = OCMClassMock([NSNotificationCenter class]);
+  OCMStub([notificationCenterMock defaultCenter]).andReturn(notificationCenterMock);
+
+  OCMReject([networkerMock sendEntries:entries]);
+
+  [FBSDKMonitor disable];
+
+  XCTAssertTrue(self.store.clearWasCalled,
+                @"Disabling monitoring should clear the persistent store");
+  XCTAssertEqual(FBSDKMonitor.entries.count,  0,
+                 @"Disabling monitoring should clear the locally stored entries");
+
+  OCMVerify([notificationCenterMock removeObserver:[FBSDKMonitor class]]);
+
+  [notificationCenterMock stopMocking];
+}
+
+// MARK: - Flushing Tests
+
 - (void)testFlushing
 {
   [FBSDKMonitor enable];
@@ -93,8 +130,6 @@
   id<FBSDKMonitorEntry> entry2 = [TestMonitorEntry testEntryWithName:@"entry2"];
   NSArray<id<FBSDKMonitorEntry>> *expectedEntries = @[self.entry, entry2];
 
-  id networkerMock = OCMStrictClassMock([FBSDKMonitorNetworker class]);
-
   [FBSDKMonitor enable];
   [FBSDKMonitor record:self.entry];
   [FBSDKMonitor record:entry2];
@@ -104,8 +139,6 @@
     XCTAssertEqualObjects(obj, expectedEntries);
     return YES;
   }]]));
-
-  [networkerMock stopMocking];
 }
 
 - (void)testRecordingAtOneBelowFlushLimit
@@ -114,7 +147,6 @@
   NSMutableArray<id<FBSDKMonitorEntry>> *expectedEntries = [NSMutableArray array];
 
   // Should not invoke networker if the threshold is not met
-  id networkerMock = OCMStrictClassMock([FBSDKMonitorNetworker class]);
   OCMReject(ClassMethod([networkerMock sendEntries:[OCMArg any]]));
 
   for (int i = 0; i < flushLimit - 1; i++) {
@@ -124,16 +156,12 @@
 
   XCTAssertEqual(expectedEntries.count, flushLimit - 1,
                  @"Sanity check failed");
-
-  [networkerMock stopMocking];
 }
 
 - (void)testRecordingAtFlushLimit
 {
   [FBSDKMonitor enable];
   NSMutableArray<id<FBSDKMonitorEntry>> *expectedEntries = [NSMutableArray array];
-
-  id networkerMock = OCMStrictClassMock([FBSDKMonitorNetworker class]);
 
   for (int i = 0; i < flushLimit; i++) {
     [expectedEntries addObject:[TestMonitorEntry testEntry]];
@@ -148,8 +176,6 @@
                    @"Should send the correct number of entries when the flush limit is reached");
     return YES;
   }]]));
-
-  [networkerMock stopMocking];
 }
 
 - (void)testRecordingPastFlushLimit
@@ -167,6 +193,177 @@
 
   XCTAssertEqual(FBSDKMonitor.entries.count, 1,
                  @"Should continue to record entries after surpassing the flush limit");
+}
+
+// MARK: - Lifecycle Tests
+
+- (void)testBackgroundingWhenEnabledWithNoLocalEntries
+{
+  [FBSDKMonitor enable];
+
+  [NSNotificationCenter.defaultCenter
+   postNotificationName:UIApplicationWillResignActiveNotification object: nil];
+
+  XCTAssertFalse(self.store.persistWasCalled,
+                 @"Should not attempt to persist empty list of entries on backgrounding");
+}
+
+- (void)testBackgroundingWhenEnabledWithLocalEntries
+{
+  [FBSDKMonitor enable];
+  [FBSDKMonitor record:self.entry];
+
+  [NSNotificationCenter.defaultCenter
+   postNotificationName:UIApplicationWillResignActiveNotification object: nil];
+
+  XCTAssertTrue(self.store.persistWasCalled,
+                @"Should persist entries on backgrounding");
+}
+
+- (void)testBackgroundingWhenDisabled
+{
+  [FBSDKMonitor record:self.entry];
+
+  [NSNotificationCenter.defaultCenter
+   postNotificationName:UIApplicationWillResignActiveNotification object: nil];
+
+  XCTAssertFalse(self.store.persistWasCalled,
+                 @"Should not persist entries on backgrounding if the monitor is disabled");
+}
+
+- (void)testTerminatingWhenEnabledWithNoLocalEntries
+{
+  [FBSDKMonitor enable];
+
+  [NSNotificationCenter.defaultCenter
+   postNotificationName:UIApplicationWillTerminateNotification object: nil];
+
+  XCTAssertFalse(self.store.persistWasCalled,
+                 @"Should not attempt to persist empty list of entries on termination");
+}
+
+- (void)testTerminatingWhenEnabledWithLocalEntries
+{
+  [FBSDKMonitor enable];
+  [FBSDKMonitor record:self.entry];
+
+  [NSNotificationCenter.defaultCenter
+   postNotificationName:UIApplicationWillTerminateNotification object: nil];
+
+  XCTAssertTrue(self.store.persistWasCalled,
+                @"Should persist entries on termination");
+}
+
+- (void)testTerminatingWhenDisabled
+{
+  // Technically this should do nothing but keeping it to catch bugs
+  // if implementation details change
+  [FBSDKMonitor record:self.entry];
+
+  [NSNotificationCenter.defaultCenter
+   postNotificationName:UIApplicationWillTerminateNotification object: nil];
+
+  XCTAssertFalse(self.store.persistWasCalled,
+                 @"Should not persist entries on backgrounding if the monitor is disabled");
+}
+
+- (void)testForegroundingWhenEnabledWithNoLocalEntriesNoPersistedEntries
+{
+  // Should not invoke networker if no entries are retrieved
+  OCMReject(ClassMethod([networkerMock sendEntries:[OCMArg any]]));
+
+  [FBSDKMonitor enable];
+
+  [NSNotificationCenter.defaultCenter
+   postNotificationName:UIApplicationDidBecomeActiveNotification object:nil];
+
+  XCTAssertTrue(self.store.retrieveEntriesWasCalled,
+                @"Should attempt to retrieve entries on foregrounding");
+  XCTAssertEqual(FBSDKMonitor.entries.count, 0,
+                 @"Should set entries to the retrieved empty array");
+}
+
+- (void)testForegroundingWhenEnabledWithLocalEntriesNoPersistedEntries
+{
+  NSArray<id<FBSDKMonitorEntry>> *entries = @[self.entry];
+  [FBSDKMonitor enable];
+  [FBSDKMonitor record:self.entry];
+
+  [NSNotificationCenter.defaultCenter
+   postNotificationName:UIApplicationDidBecomeActiveNotification object:nil];
+
+  // Should invoke networker for locally persisted entry
+  OCMVerify(ClassMethod([networkerMock sendEntries:[OCMArg checkWithBlock:^BOOL(id obj) {
+    XCTAssertEqualObjects(obj, entries,
+                          @"Should send the local entries upon foregrounding");
+    XCTAssertEqual(FBSDKMonitor.entries.count, 0,
+                   @"Should clear local entries after sending them");
+    return YES;
+  }]]));
+}
+
+- (void)testForegroundingWhenEnabledWithNoLocalEntriesAndPersistedEntries
+{
+  NSArray<id<FBSDKMonitorEntry>> *entries = @[self.entry];
+  [FBSDKMonitor enable];
+
+  // seed store so that there's something to retrieve
+  [self.store persist:entries];
+
+  [NSNotificationCenter.defaultCenter
+   postNotificationName:UIApplicationDidBecomeActiveNotification object:nil];
+
+  // Should invoke networker if entries are retrieved
+  OCMVerify(ClassMethod([networkerMock sendEntries:[OCMArg checkWithBlock:^BOOL(id obj) {
+    XCTAssertEqualObjects(obj, entries,
+                          @"Should send the retrieved entries upon foregrounding");
+    XCTAssertEqual(FBSDKMonitor.entries.count, 0,
+                   @"Should not persist retrieved entries on foregrounding");
+    return YES;
+  }]]));
+}
+
+- (void)testForegroundingWhenEnabledWithLocalEntriesAndPersistedEntries
+{
+  NSArray<id<FBSDKMonitorEntry>> *expectedEntries = @[self.entry, self.entry];
+  [FBSDKMonitor enable];
+  [FBSDKMonitor record:self.entry];
+
+  // seed store so that there's something to retrieve
+  [self.store persist:@[self.entry]];
+
+  [NSNotificationCenter.defaultCenter
+   postNotificationName:UIApplicationDidBecomeActiveNotification object:nil];
+
+  // Should invoke networker if entries are retrieved
+  OCMVerify(ClassMethod([networkerMock sendEntries:[OCMArg checkWithBlock:^BOOL(id obj) {
+    XCTAssertEqualObjects(obj, expectedEntries,
+                          @"Should send the local and retrieved entries upon foregrounding");
+    XCTAssertEqual(FBSDKMonitor.entries.count, 0,
+                   @"Should not persist retrieved entries on foregrounding");
+    return YES;
+  }]]));
+}
+
+- (void)testForegroundingWhenDisabledWithNoEntries
+{
+  // Should not invoke networker if monitor is disabled
+  OCMReject(ClassMethod([networkerMock sendEntries:[OCMArg any]]));
+
+  [NSNotificationCenter.defaultCenter
+   postNotificationName:UIApplicationDidBecomeActiveNotification object:nil];
+}
+
+- (void)testForegroundingWhenDisabledWithEntries
+{
+  // Should not invoke networker if monitor is disabled
+  OCMReject(ClassMethod([networkerMock sendEntries:[OCMArg any]]));
+
+  // seed store so that there's something to fetch
+  [self.store persist:@[self.entry]];
+
+  [NSNotificationCenter.defaultCenter
+   postNotificationName:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 @end

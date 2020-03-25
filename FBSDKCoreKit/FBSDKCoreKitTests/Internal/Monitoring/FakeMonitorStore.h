@@ -22,36 +22,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKMonitorStore : NSObject
+@interface FakeMonitorStore : FBSDKMonitorStore
 
-@property (nonatomic, weak) NSURL *filePath;
-
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
-- (instancetype)initWithFilename:(NSString *)filename NS_DESIGNATED_INITIALIZER;
-
-/**
- Persists an array of NSCoding and DictionaryRepresentable objects to temporary file storage.
-
- - Important: Persisting always clears the underlying storage.
- If you do not want to overwrite what is on disk, call `retrieveEntries`
- prior to calling this method.
- */
-- (void)persist:(NSArray<id<FBSDKMonitorEntry>> *)entries;
-
-/**
- Retrieves any stored entries from temporary file storage.
-
- - Important: Retrieving entry data clears the underlying storage.
- If you need to persist the data after retrieving you must call `persist` again
- with the retrieved entries.
- */
-- (NSArray<id<FBSDKMonitorEntry>> *)retrieveEntries;
-
-/**
- Clears any entries from temporary file storage
- */
-- (void)clear;
+@property (nonatomic) BOOL clearWasCalled;
+@property (nonatomic) BOOL retrieveEntriesWasCalled;
+@property (nonatomic) BOOL persistWasCalled;
+@property (nonatomic, copy) NSArray<id<FBSDKMonitorEntry>> *capturedPersistedEntries;
 
 @end
 

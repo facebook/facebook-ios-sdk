@@ -33,9 +33,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FBSDKMonitor : NSObject
 
-// TODO: Add a store and a networker for storing logs locally and uploading to a remote endpoint
-// @property (nonatomic, weak, readonly) FBSDKMonitorStore *store;
-
 /**
  Stores entry in local memory until a limit is reached or a flush is forced.
  Will only record entries if the monitor is enabled.

@@ -23,6 +23,7 @@ static const int FBSDKMonitorLogThreshold = 100;
 @interface FBSDKMonitor ()
 
 @property (class, nonatomic, copy, readonly) NSMutableArray<id<FBSDKMonitorEntry>> *entries;
+@property (class, nonatomic) FBSDKMonitorStore *store;
 
 @end
 
@@ -30,6 +31,30 @@ static const int FBSDKMonitorLogThreshold = 100;
 
 static BOOL isMonitoringEnabled = NO;
 static NSMutableArray<id<FBSDKMonitorEntry>> *_entries = nil;
+static FBSDKMonitorStore *_store;
+
+#pragma mark - Public Methods
+
++ (void)enable
+{
+  isMonitoringEnabled = YES;
+  [self registerNotifications];
+}
+
++ (void)record:(id<FBSDKMonitorEntry>)entry
+{
+  if (self.entries) {
+    if (isMonitoringEnabled) {
+      [self.entries addObject:entry];
+
+      if (self.entries.count >= FBSDKMonitorLogThreshold) {
+        [self flush];
+      }
+    }
+  }
+}
+
+#pragma mark - Private Methods
 
 + (NSMutableArray<id<FBSDKMonitorEntry>> *)entries
 {
@@ -45,33 +70,85 @@ static NSMutableArray<id<FBSDKMonitorEntry>> *_entries = nil;
   _entries = entries;
 }
 
-+ (void)enable
++ (FBSDKMonitorStore *)store
 {
-  isMonitoringEnabled = YES;
+  if (!_store) {
+    NSString *filename = [NSString stringWithFormat:@"%@_", NSBundle.mainBundle.bundleIdentifier];
+    _store = [[FBSDKMonitorStore alloc] initWithFilename:filename];
+  }
+
+  return _store;
+}
+
++ (void)setStore:(FBSDKMonitorStore *)store
+{
+  _store = store;
+}
+
++ (void)registerNotifications
+{
+  [[NSNotificationCenter defaultCenter]
+   addObserver:[self class]
+   selector:@selector(applicationMovingFromActiveStateOrTerminating)
+   name:UIApplicationWillResignActiveNotification
+   object:NULL];
+
+  [[NSNotificationCenter defaultCenter]
+   addObserver:[self class]
+   selector:@selector(applicationMovingFromActiveStateOrTerminating)
+   name:UIApplicationWillTerminateNotification
+   object:NULL];
+
+  [[NSNotificationCenter defaultCenter]
+   addObserver:[self class]
+   selector:@selector(applicationDidBecomeActive)
+   name:UIApplicationDidBecomeActiveNotification
+   object:NULL];
+}
+
++ (void)unregisterNotifications
+{
+  [[NSNotificationCenter defaultCenter] removeObserver: [self class]];
+}
+
++ (void)applicationDidBecomeActive
+{
+  // fetch entries from store and send them to server
+  if (self.entries && self.store) {
+    [self.entries addObjectsFromArray:[self.store retrieveEntries] ?: @[]];
+
+    if (self.entries.count > 0) {
+      [self flush];
+    }
+  }
+}
+
++ (void)applicationMovingFromActiveStateOrTerminating
+{
+  // save entries to store
+  if ((self.entries && self.entries.count > 0) && self.store) {
+    [self.store persist:self.entries];
+  }
 }
 
 + (void)disable
 {
   isMonitoringEnabled = NO;
+
+  [self clearEntries];
+  [self.store clear];
+  [self unregisterNotifications];
 }
 
 + (void)flush
 {
-  [FBSDKMonitorNetworker sendEntries:self.entries];
-  self.entries = [NSMutableArray array];
+  [FBSDKMonitorNetworker sendEntries:[self.entries copy]];
+  [self clearEntries];
 }
 
-+ (void)record:(id<FBSDKMonitorEntry>)entry
++ (void)clearEntries
 {
-  if (self.entries) {
-    if (isMonitoringEnabled) {
-      [self.entries addObject:entry];
-
-      if (self.entries.count >= FBSDKMonitorLogThreshold) {
-        [self flush];
-      }
-    }
-  }
+  [self.entries removeAllObjects];
 }
 
 @end
