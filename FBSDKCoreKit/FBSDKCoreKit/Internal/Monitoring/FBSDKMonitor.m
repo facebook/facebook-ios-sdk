@@ -19,6 +19,8 @@
 #import "FBSDKCoreKit+Internal.h"
 
 static const int FBSDKMonitorLogThreshold = 100;
+static const double FBSDKMonitorLogFlushIntervalInSeconds = 15;
+static const double FBSDKMonitorLogFlushTimerTolerance = FBSDKMonitorLogFlushIntervalInSeconds / 3;
 
 @interface FBSDKMonitor ()
 
@@ -32,6 +34,7 @@ static const int FBSDKMonitorLogThreshold = 100;
 static BOOL isMonitoringEnabled = NO;
 static NSMutableArray<id<FBSDKMonitorEntry>> *_entries = nil;
 static FBSDKMonitorStore *_store;
+static NSTimer *_flushTimer;
 
 #pragma mark - Public Methods
 
@@ -39,6 +42,7 @@ static FBSDKMonitorStore *_store;
 {
   isMonitoringEnabled = YES;
   [self registerNotifications];
+  [self startFlushTimer];
 }
 
 + (void)record:(id<FBSDKMonitorEntry>)entry
@@ -131,6 +135,33 @@ static FBSDKMonitorStore *_store;
   }
 }
 
++ (void)startFlushTimer
+{
+  if (_flushTimer) {
+    [_flushTimer invalidate];
+    _flushTimer = nil;
+  }
+
+  _flushTimer = [NSTimer scheduledTimerWithTimeInterval:FBSDKMonitorLogFlushIntervalInSeconds
+                                                 target:self.class
+                                               selector:@selector(flush)
+                                               userInfo:nil
+                                                repeats:YES];
+
+  // The timing of this is relatively unimportant as regards precision and a higher tolerance
+  // allows the os run more efficiently and save power. They recommend 10 percent of the interval
+  // but we're so generous we're gonna give 30 percent!
+  _flushTimer.tolerance = FBSDKMonitorLogFlushTimerTolerance;
+}
+
++ (void)stopFlushTimer
+{
+  if (_flushTimer) {
+    [_flushTimer invalidate];
+    _flushTimer = nil;
+  }
+}
+
 + (void)disable
 {
   isMonitoringEnabled = NO;
@@ -138,12 +169,15 @@ static FBSDKMonitorStore *_store;
   [self clearEntries];
   [self.store clear];
   [self unregisterNotifications];
+  [self stopFlushTimer];
 }
 
 + (void)flush
 {
-  [FBSDKMonitorNetworker sendEntries:[self.entries copy]];
-  [self clearEntries];
+  if (self.entries.count > 0) {
+    [FBSDKMonitorNetworker sendEntries:[self.entries copy]];
+    [self clearEntries];
+  }
 }
 
 + (void)clearEntries

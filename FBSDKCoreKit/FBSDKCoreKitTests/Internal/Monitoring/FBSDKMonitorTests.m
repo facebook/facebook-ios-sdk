@@ -26,8 +26,6 @@
 
 @interface FBSDKMonitor (Testing)
 
-@property (class, nonatomic) Class graphRequestClass;
-
 + (NSMutableArray<id<FBSDKMonitorEntry>> *)entries;
 + (void)setStore:(FBSDKMonitorStore *)store;
 + (void)disable;
@@ -125,7 +123,14 @@
                  @"Flushing should clear all entries");
 }
 
-- (void)testFlushingInvokesNetworker
+- (void)testFlushingWithoutEntries
+{
+  OCMReject(ClassMethod([networkerMock sendEntries:[OCMArg any]]));
+
+  [FBSDKMonitor flush];
+}
+
+- (void)testFlushingWithEntries
 {
   id<FBSDKMonitorEntry> entry2 = [TestMonitorEntry testEntryWithName:@"entry2"];
   NSArray<id<FBSDKMonitorEntry>> *expectedEntries = @[self.entry, entry2];
@@ -193,6 +198,51 @@
 
   XCTAssertEqual(FBSDKMonitor.entries.count, 1,
                  @"Should continue to record entries after surpassing the flush limit");
+}
+
+- (void)testEnablingStartsFlushTimer
+{
+  id timerMock = OCMClassMock([NSTimer class]);
+
+  [FBSDKMonitor enable];
+  [FBSDKMonitor record:self.entry];
+
+  OCMVerify(ClassMethod([timerMock scheduledTimerWithTimeInterval:15.0
+                                                           target:[FBSDKMonitor class]
+                                                         selector:@selector(flush)
+                                                         userInfo:nil
+                                                          repeats:YES]));
+  [timerMock stopMocking];
+}
+
+- (void)testDuplicateEnablingInvalidatesFlushTimer {
+  id timerMock = OCMClassMock([NSTimer class]);
+
+  OCMStub(ClassMethod([timerMock scheduledTimerWithTimeInterval:15.0
+                                                         target:[FBSDKMonitor class]
+                                                       selector:@selector(flush)
+                                                       userInfo:nil
+                                                        repeats:YES])).andReturn(timerMock);
+  [FBSDKMonitor enable];
+  [FBSDKMonitor enable];
+
+  OCMVerify([timerMock invalidate]);
+}
+
+- (void)testDisablingInvalidatesFlushTimer
+{
+  id timerMock = OCMClassMock([NSTimer class]);
+
+  OCMStub(ClassMethod([timerMock scheduledTimerWithTimeInterval:15.0
+                                                         target:[FBSDKMonitor class]
+                                                       selector:@selector(flush)
+                                                       userInfo:nil
+                                                        repeats:YES])).andReturn(timerMock);
+
+  [FBSDKMonitor enable];
+  [FBSDKMonitor disable];
+
+  OCMVerify([timerMock invalidate]);
 }
 
 // MARK: - Lifecycle Tests
