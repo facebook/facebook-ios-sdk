@@ -7,7 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v6.2.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v6.3.0...HEAD)
+
+## 6.3.0
+
+## Added
+
+- Support new event type for suggested events
+
+[2020-03-25](https://github.com/facebook/facebook-ios-sdk/releases/tag/v6.3.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v6.2.0...v6.3.0)
 
 ## 6.2.0
 
