@@ -384,7 +384,7 @@ lint_sdk() {
         dependent_spec="--include-podspecs=FBSDK{Core,Share,Login}Kit.podspec"
       fi
 
-      if [ "$spec" == FBSDKGamingServicesKit ]; then
+      if [ "$spec" == FBSDKGamingServicesKit.podspec ]; then
         dependent_spec="--include-podspecs=FBSDK{Core,Share}Kit.podspec"
       fi
 
