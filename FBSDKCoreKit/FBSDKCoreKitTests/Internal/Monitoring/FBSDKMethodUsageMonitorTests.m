@@ -53,11 +53,13 @@
 
 - (void)testRecordingMethodUsage
 {
-  [FBSDKMethodUsageMonitor record:@selector(viewDidLoad)];
+  NSString *expectedName = [NSString stringWithFormat:@"%@::%@", NSStringFromClass(self.class), NSStringFromSelector(_cmd)];
+
+  [FBSDKMethodUsageMonitor recordMethod:_cmd inClass:self.class];
 
   FBSDKMethodUsageMonitorEntry *entry = (FBSDKMethodUsageMonitorEntry *) FBSDKMonitor.entries.firstObject;
 
-  XCTAssertEqualObjects(entry.dictionaryRepresentation[@"event_name"], NSStringFromSelector(@selector(viewDidLoad)),
+  XCTAssertEqualObjects(entry.dictionaryRepresentation[@"event_name"], expectedName,
                         @"Entry should contain the captured method name");
 }
 

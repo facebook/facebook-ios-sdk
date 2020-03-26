@@ -30,11 +30,13 @@
 
 - (void)testCreatingEntryWithMethodName
 {
-  entry = [FBSDKMethodUsageMonitorEntry entryWithMethod:@selector(viewDidLoad)];
+  NSString *expectedName = [NSString stringWithFormat:@"%@::%@", self.class, NSStringFromSelector(_cmd)];
+
+  entry = [FBSDKMethodUsageMonitorEntry entryFromClass:self.class withMethod:_cmd];
 
   NSDictionary *actual = [entry dictionaryRepresentation];
 
-  XCTAssertEqualObjects([actual objectForKey:@"event_name"], @"viewDidLoad",
+  XCTAssertEqualObjects([actual objectForKey:@"event_name"], expectedName,
                         @"Should use the name of the method as the event name");
 }
 
@@ -42,12 +44,14 @@
 {
   TestCoder *coder = [TestCoder new];
 
-  entry = [FBSDKMethodUsageMonitorEntry entryWithMethod:@selector(viewDidLoad)];
+  entry = [FBSDKMethodUsageMonitorEntry entryFromClass:self.class withMethod:_cmd];
 
   [entry encodeWithCoder:coder];
 
-  XCTAssertEqualObjects(coder.encodedObject[@"event_name"], @"viewDidLoad",
+  XCTAssertEqualObjects(coder.encodedObject[@"event_name"], NSStringFromSelector(_cmd),
                         @"Should use the name of the method as the event name for encoding");
+  XCTAssertEqualObjects(coder.encodedObject[@"method_usage_class"], NSStringFromClass(self.class),
+                        @"Should use the name of the class as the class name for encoding");
 }
 
 - (void)testDecodingEntryWithMethodName
@@ -58,6 +62,8 @@
 
   XCTAssertEqualObjects(coder.decodedObject[@"event_name"], [NSString class],
                         @"Initializing from a decoder should attempt to decode a String for the event name key");
+  XCTAssertEqualObjects(coder.decodedObject[@"method_usage_class"], [NSString class],
+                        @"Initializing from a decoder should attempt to decode a String for the defining class key");
 }
 
 @end

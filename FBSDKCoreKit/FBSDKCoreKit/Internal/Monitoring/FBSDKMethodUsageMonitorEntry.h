@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKMethodUsageMonitorEntry : NSObject<FBSDKMonitorEntry>
 
 + (instancetype)new NS_UNAVAILABLE;
-+ (instancetype)entryWithMethod:(SEL)method;
++ (instancetype)entryFromClass:(Class)clazz withMethod:(SEL)method;
 
 @end
 
