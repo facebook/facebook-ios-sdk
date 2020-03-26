@@ -28,20 +28,6 @@
   FBSDKMethodUsageMonitorEntry *entry;
 }
 
-- (void)setUp
-{
-  [super setUp];
-
-  [FBSDKSettings setAppID:@"abc123"];
-}
-
-- (void)tearDown
-{
-  [super tearDown];
-
-  [FBSDKSettings setAppID:nil];
-}
-
 - (void)testCreatingEntryWithMethodName
 {
   entry = [FBSDKMethodUsageMonitorEntry entryWithMethod:@selector(viewDidLoad)];

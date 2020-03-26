@@ -16,41 +16,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKMethodUsageMonitorEntry.h"
+#import "FBSDKMonitorEntry.h"
 
-static NSString * const FBSDKMethodUsageNameKey = @"event_name";
+NS_ASSUME_NONNULL_BEGIN
 
-@implementation FBSDKMethodUsageMonitorEntry {
-  SEL _method;
-}
+/**
+ Defines a monitor entry type to track performance metrics.
+ This should not be called directly. Instead use the
+ `FBSDKPerformanceMonitor` to record metrics with their start times
+ and durations. That will create and persist an entry.
+ */
+@interface FBSDKPerformanceMonitorEntry : NSObject<FBSDKMonitorEntry>
 
-+ (instancetype)entryWithMethod:(SEL)method
-{
-  FBSDKMethodUsageMonitorEntry *entry = [[self alloc] init];
-  if (entry) {
-    entry->_method = method;
-  }
-
-  return entry;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)decoder
-{
-  NSString *methodName = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKMethodUsageNameKey];
-  _method = NSSelectorFromString(methodName);
-
-  return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)encoder
-{
-  NSString *methodName = NSStringFromSelector(_method);
-  [encoder encodeObject:methodName forKey:FBSDKMethodUsageNameKey];
-}
-
-- (NSDictionary *)dictionaryRepresentation
-{
-  return @{FBSDKMethodUsageNameKey: NSStringFromSelector(_method)};
-}
++ (instancetype)new NS_UNAVAILABLE;
++ (instancetype)entryWithName:(NSString *)name startTime:(NSDate *)startTime endTime:(NSDate *)endTime;
 
 @end
+
+NS_ASSUME_NONNULL_END

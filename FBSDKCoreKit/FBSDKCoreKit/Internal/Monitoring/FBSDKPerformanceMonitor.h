@@ -16,41 +16,23 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKMethodUsageMonitorEntry.h"
+#import <Foundation/Foundation.h>
 
-static NSString * const FBSDKMethodUsageNameKey = @"event_name";
+NS_ASSUME_NONNULL_BEGIN
 
-@implementation FBSDKMethodUsageMonitorEntry {
-  SEL _method;
-}
+/**
+ Used for capturing performance metrics.
 
-+ (instancetype)entryWithMethod:(SEL)method
-{
-  FBSDKMethodUsageMonitorEntry *entry = [[self alloc] init];
-  if (entry) {
-    entry->_method = method;
-  }
+ To use: Create a Date object marking the start time of what you want to capture.
+ When you call `record:startTime:` the time spent will be the time of
+ recording minus the start time.
 
-  return entry;
-}
+ - Note: This is essentially a name-spaced pass-through to `FBSDKMonitor`.
+ */
+@interface FBSDKPerformanceMonitor : NSObject
 
-- (instancetype)initWithCoder:(NSCoder *)decoder
-{
-  NSString *methodName = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKMethodUsageNameKey];
-  _method = NSSelectorFromString(methodName);
-
-  return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)encoder
-{
-  NSString *methodName = NSStringFromSelector(_method);
-  [encoder encodeObject:methodName forKey:FBSDKMethodUsageNameKey];
-}
-
-- (NSDictionary *)dictionaryRepresentation
-{
-  return @{FBSDKMethodUsageNameKey: NSStringFromSelector(_method)};
-}
++ (void)record:(NSString *)name startTime:(NSDate *)startTime;
 
 @end
+
+NS_ASSUME_NONNULL_END

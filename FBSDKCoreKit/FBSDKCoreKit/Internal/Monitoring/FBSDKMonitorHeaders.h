@@ -25,5 +25,7 @@
 #import "FBSDKMonitorEntry.h"
 #import "FBSDKMonitorNetworker.h"
 #import "FBSDKMonitorStore.h"
+#import "FBSDKPerformanceMonitor.h"
+#import "FBSDKPerformanceMonitorEntry.h"
 
 #endif /* FBSDKMonitorHeaders_h */

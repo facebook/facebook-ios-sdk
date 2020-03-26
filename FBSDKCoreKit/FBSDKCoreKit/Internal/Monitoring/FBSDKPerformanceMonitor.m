@@ -15,42 +15,19 @@
 // COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#import "FBSDKPerformanceMonitor.h"
+#import "FBSDKMonitorHeaders.h"
 
-#import "FBSDKMethodUsageMonitorEntry.h"
+@implementation FBSDKPerformanceMonitor
 
-static NSString * const FBSDKMethodUsageNameKey = @"event_name";
-
-@implementation FBSDKMethodUsageMonitorEntry {
-  SEL _method;
-}
-
-+ (instancetype)entryWithMethod:(SEL)method
++ (void)record:(NSString *)name startTime:(NSDate *)startTime
 {
-  FBSDKMethodUsageMonitorEntry *entry = [[self alloc] init];
+  FBSDKPerformanceMonitorEntry *entry = [FBSDKPerformanceMonitorEntry entryWithName:name
+                                                                          startTime:startTime
+                                                                            endTime:[NSDate date]];
   if (entry) {
-    entry->_method = method;
+    [FBSDKMonitor record:entry];
   }
-
-  return entry;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)decoder
-{
-  NSString *methodName = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKMethodUsageNameKey];
-  _method = NSSelectorFromString(methodName);
-
-  return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)encoder
-{
-  NSString *methodName = NSStringFromSelector(_method);
-  [encoder encodeObject:methodName forKey:FBSDKMethodUsageNameKey];
-}
-
-- (NSDictionary *)dictionaryRepresentation
-{
-  return @{FBSDKMethodUsageNameKey: NSStringFromSelector(_method)};
 }
 
 @end
