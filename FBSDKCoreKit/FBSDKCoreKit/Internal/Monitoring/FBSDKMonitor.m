@@ -40,6 +40,10 @@ static NSTimer *_flushTimer;
 
 + (void)enable
 {
+  if (isMonitoringEnabled) {
+    return;
+  }
+
   isMonitoringEnabled = YES;
   [self registerNotifications];
   [self startFlushTimer];
@@ -164,6 +168,10 @@ static NSTimer *_flushTimer;
 
 + (void)disable
 {
+  if (!isMonitoringEnabled) {
+    return;
+  }
+
   isMonitoringEnabled = NO;
 
   [self clearEntries];

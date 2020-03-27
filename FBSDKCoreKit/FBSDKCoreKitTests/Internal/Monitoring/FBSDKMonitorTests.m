@@ -30,6 +30,7 @@
 + (void)setStore:(FBSDKMonitorStore *)store;
 + (void)disable;
 + (void)flush;
++ (void)applicationMovingFromActiveStateOrTerminating;
 
 @end
 
@@ -43,6 +44,8 @@
 @implementation FBSDKMonitorTests {
   int flushLimit;
   id networkerMock;
+  id notificationCenterMock;
+  id timerMock;
 }
 
 - (void)setUp
@@ -55,6 +58,8 @@
   self.store = [[FakeMonitorStore alloc] initWithFilename:@"foo"];
   [FBSDKMonitor setStore:self.store];
   networkerMock = OCMClassMock([FBSDKMonitorNetworker class]);
+  notificationCenterMock = OCMClassMock([NSNotificationCenter class]);
+  timerMock = OCMClassMock([NSTimer class]);
 }
 
 - (void)tearDown
@@ -62,6 +67,8 @@
   [super tearDown];
 
   [networkerMock stopMocking];
+  [notificationCenterMock stopMocking];
+  [timerMock stopMocking];
   [FBSDKMonitor flush];
   [FBSDKMonitor disable];
   [FBSDKMonitor setStore:nil];
@@ -84,6 +91,27 @@
                         @"Should record entries when monitor is enabled");
 }
 
+- (void)testEnablingWhenEnabled
+{
+  OCMStub([notificationCenterMock defaultCenter]).andReturn(notificationCenterMock);
+
+  [FBSDKMonitor enable];
+
+  // Should register for notifications
+  OCMVerify([notificationCenterMock addObserver:[FBSDKMonitor class]
+                                       selector:@selector(applicationMovingFromActiveStateOrTerminating)
+                                           name:[OCMArg any]
+                                         object:NULL]);
+
+  // Should not re-register for notifications if still enabled
+  OCMReject([notificationCenterMock addObserver:[FBSDKMonitor class]
+                                       selector:@selector(applicationMovingFromActiveStateOrTerminating)
+                                           name:[OCMArg any]
+                                         object:NULL]);
+
+  [FBSDKMonitor enable];
+}
+
 - (void)testDisabling
 {
   NSArray *entries = @[self.entry];
@@ -93,7 +121,6 @@
   self.store.persistWasCalled = false;
 
   // Should not invoke networker if monitor is disabled
-  id notificationCenterMock = OCMClassMock([NSNotificationCenter class]);
   OCMStub([notificationCenterMock defaultCenter]).andReturn(notificationCenterMock);
 
   OCMReject([networkerMock sendEntries:entries]);
@@ -106,8 +133,48 @@
                  @"Disabling monitoring should clear the locally stored entries");
 
   OCMVerify([notificationCenterMock removeObserver:[FBSDKMonitor class]]);
+}
 
-  [notificationCenterMock stopMocking];
+- (void)testDisablingUnregistersNotifications
+{
+  [FBSDKMonitor enable];
+
+  // Should not invoke networker if monitor is disabled
+  OCMStub([notificationCenterMock defaultCenter]).andReturn(notificationCenterMock);
+
+  [FBSDKMonitor disable];
+
+  // Should unregister for notifications when disabling
+  OCMVerify([notificationCenterMock removeObserver: [FBSDKMonitor class]]);
+}
+
+- (void)testDisablingWhenDisabled
+{
+  // Should not invoke networker if monitor is disabled
+  OCMStub([notificationCenterMock defaultCenter]).andReturn(notificationCenterMock);
+
+  // Should not unregister for notifications if already disabled
+  OCMReject([notificationCenterMock removeObserver: [FBSDKMonitor class]]);
+
+  [FBSDKMonitor disable];
+}
+
+- (void)testReDisabling
+{
+  [FBSDKMonitor enable];
+
+  // Should not invoke networker if monitor is disabled
+  OCMStub([notificationCenterMock defaultCenter]).andReturn(notificationCenterMock);
+
+  [FBSDKMonitor disable];
+
+  // Should unregister for notifications when disabling
+  OCMVerify([notificationCenterMock removeObserver: [FBSDKMonitor class]]);
+
+  // Should not unregister for notifications if already disabled
+  OCMReject([notificationCenterMock removeObserver: [FBSDKMonitor class]]);
+
+  [FBSDKMonitor disable];
 }
 
 // MARK: - Flushing Tests
@@ -202,8 +269,6 @@
 
 - (void)testEnablingStartsFlushTimer
 {
-  id timerMock = OCMClassMock([NSTimer class]);
-
   [FBSDKMonitor enable];
   [FBSDKMonitor record:self.entry];
 
@@ -215,24 +280,8 @@
   [timerMock stopMocking];
 }
 
-- (void)testDuplicateEnablingInvalidatesFlushTimer {
-  id timerMock = OCMClassMock([NSTimer class]);
-
-  OCMStub(ClassMethod([timerMock scheduledTimerWithTimeInterval:15.0
-                                                         target:[FBSDKMonitor class]
-                                                       selector:@selector(flush)
-                                                       userInfo:nil
-                                                        repeats:YES])).andReturn(timerMock);
-  [FBSDKMonitor enable];
-  [FBSDKMonitor enable];
-
-  OCMVerify([timerMock invalidate]);
-}
-
 - (void)testDisablingInvalidatesFlushTimer
 {
-  id timerMock = OCMClassMock([NSTimer class]);
-
   OCMStub(ClassMethod([timerMock scheduledTimerWithTimeInterval:15.0
                                                          target:[FBSDKMonitor class]
                                                        selector:@selector(flush)
