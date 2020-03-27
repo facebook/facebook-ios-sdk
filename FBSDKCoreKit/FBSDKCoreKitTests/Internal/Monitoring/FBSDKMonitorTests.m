@@ -43,6 +43,7 @@
 
 @implementation FBSDKMonitorTests {
   int flushLimit;
+  double flushInterval;
   id networkerMock;
   id notificationCenterMock;
   id timerMock;
@@ -53,6 +54,7 @@
   [super setUp];
 
   flushLimit = 100;
+  flushInterval = 60;
   [FBSDKSettings setAppID:@"abc123"];
   self.entry = [TestMonitorEntry testEntry];
   self.store = [[FakeMonitorStore alloc] initWithFilename:@"foo"];
@@ -272,7 +274,7 @@
   [FBSDKMonitor enable];
   [FBSDKMonitor record:self.entry];
 
-  OCMVerify(ClassMethod([timerMock scheduledTimerWithTimeInterval:15.0
+  OCMVerify(ClassMethod([timerMock scheduledTimerWithTimeInterval:flushInterval
                                                            target:[FBSDKMonitor class]
                                                          selector:@selector(flush)
                                                          userInfo:nil
@@ -282,7 +284,7 @@
 
 - (void)testDisablingInvalidatesFlushTimer
 {
-  OCMStub(ClassMethod([timerMock scheduledTimerWithTimeInterval:15.0
+  OCMStub(ClassMethod([timerMock scheduledTimerWithTimeInterval:flushInterval
                                                          target:[FBSDKMonitor class]
                                                        selector:@selector(flush)
                                                        userInfo:nil

@@ -19,7 +19,7 @@
 #import "FBSDKCoreKit+Internal.h"
 
 static const int FBSDKMonitorLogThreshold = 100;
-static const double FBSDKMonitorLogFlushIntervalInSeconds = 15;
+static const double FBSDKMonitorLogFlushIntervalInSeconds = 60;
 static const double FBSDKMonitorLogFlushTimerTolerance = FBSDKMonitorLogFlushIntervalInSeconds / 3;
 
 @interface FBSDKMonitor ()
