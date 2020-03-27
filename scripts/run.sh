@@ -577,15 +577,14 @@ release_sdk() {
         continue
       fi
 
-      set +e
-
-      pod trunk push --allow-warnings "$spec" "$@"
+      pod trunk push --allow-warnings "$spec" "$@" || echo "Failed to push $spec"; exit 1;
 
       # Super naive attempt to beat the race condition of published pods
       # not being available as dependencies fast enough to be used by other pods.
-      sleep 60
+      sleep 180
 
-      set -e
+      # Update the repo with the newly pushed pod
+      pod repo update
     done
   }
 
