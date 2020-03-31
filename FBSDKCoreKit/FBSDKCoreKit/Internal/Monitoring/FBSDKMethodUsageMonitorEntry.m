@@ -24,6 +24,7 @@ static NSString * const FBSDKMethodUsageClassKey = @"method_usage_class";
 @implementation FBSDKMethodUsageMonitorEntry {
   SEL _method;
   Class _class;
+  NSString *_name;
 }
 
 + (instancetype)entryFromClass:(Class)clazz withMethod:(SEL)method
@@ -57,11 +58,15 @@ static NSString * const FBSDKMethodUsageClassKey = @"method_usage_class";
   [encoder encodeObject:className forKey:FBSDKMethodUsageClassKey];
 }
 
-- (NSDictionary *)dictionaryRepresentation
+- (NSString *)name
 {
   NSString *name = [NSString stringWithFormat:@"%@::%@", NSStringFromClass(_class), NSStringFromSelector(_method)];
+  return [name copy];
+}
 
-  return @{FBSDKMethodUsageNameKey: name};
+- (NSDictionary *)dictionaryRepresentation
+{
+  return @{FBSDKMethodUsageNameKey: [self name]};
 }
 
 @end

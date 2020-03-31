@@ -68,6 +68,16 @@
                         @"Should capture the difference between the start and end-time of the metric");
 }
 
+- (void)testEntryName
+{
+  entry = [FBSDKPerformanceMonitorEntry entryWithName:@"Foo"
+                                            startTime:[NSDate date]
+                                              endTime:[[NSDate date] dateByAddingTimeInterval:1]];
+
+  XCTAssertEqualObjects(entry.name, @"Foo",
+                        @"The entry name should be easily accessible");
+}
+
 - (void)testEncodingEntry
 {
   TestCoder *coder = [TestCoder new];

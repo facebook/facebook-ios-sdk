@@ -34,10 +34,8 @@
 
   entry = [FBSDKMethodUsageMonitorEntry entryFromClass:self.class withMethod:_cmd];
 
-  NSDictionary *actual = [entry dictionaryRepresentation];
-
-  XCTAssertEqualObjects([actual objectForKey:@"event_name"], expectedName,
-                        @"Should use the name of the method as the event name");
+  XCTAssertEqualObjects(entry.name, expectedName,
+                        @"Should use the name of the class and method as the entry name");
 }
 
 - (void)testEncodingEntryWithMethodName
