@@ -46,7 +46,7 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *const SUGGESTED_EVENT = 
 static NSDictionary<NSString *, NSString *> *const DEFAULT_PREDICTION = @{SUGGEST_EVENT_KEY: SUGGESTED_EVENT_OTHER};
 
 static NSString *_useCase;
-static std::unordered_map<std::string, mat::MTensor> _weights;
+static std::unordered_map<std::string, facebook::MTensor> _weights;
 
 @implementation FBSDKEventInferencer : NSObject
 
@@ -60,7 +60,7 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
     if (!data) {
       return;
     }
-    std::unordered_map<std::string, mat::MTensor> weights = [FBSDKModelParser parseWeightsData:data];
+    std::unordered_map<std::string, facebook::MTensor> weights = [FBSDKModelParser parseWeightsData:data];
     if ([FBSDKModelParser validateWeights:weights forKey:useCase]) {
       _useCase = useCase;
       _weights = weights;
@@ -90,7 +90,7 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
     std::vector<int64_t> dense_tensor_shape;
     dense_tensor_shape.push_back(1);
     dense_tensor_shape.push_back(30);
-    mat::MTensor dense_tensor = mat::mempty(dense_tensor_shape);
+    facebook::MTensor dense_tensor = facebook::mempty(dense_tensor_shape);
     float *dense_tensor_data = dense_tensor.data<float>();
     float *dense_data = [FBSDKFeatureExtractor getDenseFeatures:viewTree];
     if (!dense_data) {
@@ -127,7 +127,7 @@ static std::unordered_map<std::string, mat::MTensor> _weights;
       return DEFAULT_PREDICTION;
     }
 
-    float *res = mat1::predictOnText(std::string([key UTF8String]), bytes, _weights, dense_tensor_data);
+    float *res = facebook::predictOnText(std::string([key UTF8String]), bytes, _weights, dense_tensor_data);
     for (int i = 0; i < thresholds.count; i++){
       if ((float)res[i] >= (float)[thresholds[i] floatValue]) {
         [result setObject:SUGGESTED_EVENT[_useCase][i] forKey:SUGGEST_EVENT_KEY];

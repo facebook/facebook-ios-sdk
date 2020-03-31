@@ -34,7 +34,7 @@
 
 // minimal aten implementation
 #define MAT_ALWAYS_INLINE inline __attribute__((always_inline))
-namespace mat {
+namespace facebook {
 
     template <typename T, size_t N>
     class MTensorAccessor {

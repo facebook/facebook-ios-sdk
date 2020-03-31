@@ -27,7 +27,7 @@
 
 #import <Accelerate/Accelerate.h>
 
-#include "FBSDKStandaloneModel.hpp"
+#include "FBSDKTensor.hpp"
 
 #define SEQ_LEN 128
 #define ALPHABET_SIZE 256
@@ -35,7 +35,7 @@
 #define NON_MTML_EMBEDDING_SIZE 64
 #define DENSE_FEATURE_LEN 30
 
-namespace mat1 {
+namespace facebook {
     static void relu(float *data, const int len) {
         float min = 0;
         float max = FLT_MAX;
@@ -211,7 +211,7 @@ namespace mat1 {
         return a;
     }
 
-    static float* predictOnMTML(const std::string task, const char *texts, const std::unordered_map<std::string, mat::MTensor>& weights, const float *df) {
+    static float* predictOnMTML(const std::string task, const char *texts, const std::unordered_map<std::string, MTensor>& weights, const float *df) {
         int *x;
         float *embed_x;
         float *c0, *c1, *c2;
@@ -222,19 +222,19 @@ namespace mat1 {
         std::string final_layer_weight_key = task + ".weight";
         std::string final_layer_bias_key = task + ".bias";
 
-        const mat::MTensor& embed_t = weights.at("embed.weight");
-        const mat::MTensor& conv0w_t = weights.at("convs.0.weight");
-        const mat::MTensor& conv1w_t = weights.at("convs.1.weight");
-        const mat::MTensor& conv2w_t = weights.at("convs.2.weight");
-        const mat::MTensor& conv0b_t = weights.at("convs.0.bias");
-        const mat::MTensor& conv1b_t = weights.at("convs.1.bias");
-        const mat::MTensor& conv2b_t = weights.at("convs.2.bias");
-        const mat::MTensor& fc1w_t = weights.at("fc1.weight"); // (128, 190)
-        const mat::MTensor& fc1b_t = weights.at("fc1.bias"); // 128
-        const mat::MTensor& fc2w_t = weights.at("fc2.weight"); // (64, 128)
-        const mat::MTensor& fc2b_t = weights.at("fc2.bias"); // 64
-        const mat::MTensor& final_layer_weight_t = weights.at(final_layer_weight_key); // (2, 64) or (5, 64)
-        const mat::MTensor& final_layer_bias_t = weights.at(final_layer_bias_key); // 2 or 5
+        const MTensor& embed_t = weights.at("embed.weight");
+        const MTensor& conv0w_t = weights.at("convs.0.weight");
+        const MTensor& conv1w_t = weights.at("convs.1.weight");
+        const MTensor& conv2w_t = weights.at("convs.2.weight");
+        const MTensor& conv0b_t = weights.at("convs.0.bias");
+        const MTensor& conv1b_t = weights.at("convs.1.bias");
+        const MTensor& conv2b_t = weights.at("convs.2.bias");
+        const MTensor& fc1w_t = weights.at("fc1.weight"); // (128, 190)
+        const MTensor& fc1b_t = weights.at("fc1.bias"); // 128
+        const MTensor& fc2w_t = weights.at("fc2.weight"); // (64, 128)
+        const MTensor& fc2b_t = weights.at("fc2.bias"); // 64
+        const MTensor& final_layer_weight_t = weights.at(final_layer_weight_key); // (2, 64) or (5, 64)
+        const MTensor& final_layer_bias_t = weights.at(final_layer_bias_key); // 2 or 5
 
         const float *embed_weight = embed_t.data<float>();
         const float *convs_0_weight = transpose3D(conv0w_t.data<float>(), (int)conv0w_t.size(0), (int)conv0w_t.size(1), (int)conv0w_t.size(2));
@@ -314,7 +314,7 @@ namespace mat1 {
         return final_layer_dense_x;
     }
 
-    static float* predictOnNonMTML(const std::string task, const char *texts, const std::unordered_map<std::string, mat::MTensor>& weights, const float *df) {
+    static float* predictOnNonMTML(const std::string task, const char *texts, const std::unordered_map<std::string, MTensor>& weights, const float *df) {
         int *x;
         float *embed_x;
         float *c0, *c1, *c2;
@@ -325,19 +325,19 @@ namespace mat1 {
         std::string final_layer_weight_key = task + ".weight";
         std::string final_layer_bias_key = task + ".bias";
 
-        const mat::MTensor& embed_t = weights.at("embed.weight");
-        const mat::MTensor& conv0w_t = weights.at("convs.0.weight");
-        const mat::MTensor& conv1w_t = weights.at("convs.1.weight");
-        const mat::MTensor& conv2w_t = weights.at("convs.2.weight");
-        const mat::MTensor& conv0b_t = weights.at("convs.0.bias");
-        const mat::MTensor& conv1b_t = weights.at("convs.1.bias");
-        const mat::MTensor& conv2b_t = weights.at("convs.2.bias");
-        const mat::MTensor& fc1w_t = weights.at("fc1.weight"); // (128, 126)
-        const mat::MTensor& fc1b_t = weights.at("fc1.bias"); // 128
-        const mat::MTensor& fc2w_t = weights.at("fc2.weight"); // (64, 128)
-        const mat::MTensor& fc2b_t = weights.at("fc2.bias"); // 64
-        const mat::MTensor& final_layer_weight_t = weights.at(final_layer_weight_key); // (2, 64) or (4, 64)
-        const mat::MTensor& final_layer_bias_t = weights.at(final_layer_bias_key); // 2 or 4
+        const MTensor& embed_t = weights.at("embed.weight");
+        const MTensor& conv0w_t = weights.at("convs.0.weight");
+        const MTensor& conv1w_t = weights.at("convs.1.weight");
+        const MTensor& conv2w_t = weights.at("convs.2.weight");
+        const MTensor& conv0b_t = weights.at("convs.0.bias");
+        const MTensor& conv1b_t = weights.at("convs.1.bias");
+        const MTensor& conv2b_t = weights.at("convs.2.bias");
+        const MTensor& fc1w_t = weights.at("fc1.weight"); // (128, 126)
+        const MTensor& fc1b_t = weights.at("fc1.bias"); // 128
+        const MTensor& fc2w_t = weights.at("fc2.weight"); // (64, 128)
+        const MTensor& fc2b_t = weights.at("fc2.bias"); // 64
+        const MTensor& final_layer_weight_t = weights.at(final_layer_weight_key); // (2, 64) or (4, 64)
+        const MTensor& final_layer_bias_t = weights.at(final_layer_bias_key); // 2 or 4
 
         const float *embed_weight = embed_t.data<float>();
         const float *convs_0_weight = transpose3D(conv0w_t.data<float>(), (int)conv0w_t.size(0), (int)conv0w_t.size(1), (int)conv0w_t.size(2));
@@ -417,7 +417,7 @@ namespace mat1 {
         return final_layer_dense_x;
     }
 
-    static float* predictOnText(const std::string key, const char *texts, const std::unordered_map<std::string, mat::MTensor>& weights, const float *df) {
+    static float* predictOnText(const std::string key, const char *texts, const std::unordered_map<std::string, MTensor>& weights, const float *df) {
         // switch to MTML key if needed
         if (key.compare("MTML_APP_EVENT_PRED") == 0) {
             return predictOnMTML("app_event_pred", texts, weights, df);

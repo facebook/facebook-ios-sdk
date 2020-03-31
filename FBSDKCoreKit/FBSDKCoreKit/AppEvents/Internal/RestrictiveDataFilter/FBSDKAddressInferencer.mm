@@ -26,15 +26,15 @@
 #import "FBSDKModelParser.h"
 #import "FBSDKModelRuntime.hpp"
 #import "FBSDKModelUtility.h"
-#import "FBSDKStandaloneModel.hpp"
 #import "FBSDKMLMacros.h"
+#import "FBSDKTensor.hpp"
 
 #include<stdexcept>
 
 @implementation FBSDKAddressInferencer : NSObject
 
 static NSString *_useCase;
-static std::unordered_map<std::string, mat::MTensor> _weights;
+static std::unordered_map<std::string, facebook::MTensor> _weights;
 static std::vector<float> _denseFeature;
 
 + (void)initializeDenseFeature
@@ -54,7 +54,7 @@ static std::vector<float> _denseFeature;
     if (!data) {
       return;
     }
-    std::unordered_map<std::string, mat::MTensor> weights = [FBSDKModelParser parseWeightsData:data];
+    std::unordered_map<std::string, facebook::MTensor> weights = [FBSDKModelParser parseWeightsData:data];
     if ([FBSDKModelParser validateWeights:weights forKey:useCase]) {
       _useCase = useCase;
       _weights = weights;
@@ -91,7 +91,7 @@ static std::vector<float> _denseFeature;
   NSMutableArray *thresholds = [addressModelInfo objectForKey:THRESHOLDS_KEY];
   float threshold = [thresholds[0] floatValue];
   try {
-    predictedRaw = mat1::predictOnText(std::string([key UTF8String]), bytes, _weights, &_denseFeature[0]);
+    predictedRaw = facebook::predictOnText(std::string([key UTF8String]), bytes, _weights, &_denseFeature[0]);
     if (!predictedRaw[1]) {
       return false;
     }

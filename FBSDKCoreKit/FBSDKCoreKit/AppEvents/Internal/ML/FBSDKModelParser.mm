@@ -21,7 +21,7 @@
 #if !TARGET_OS_TV
 
 #import "FBSDKModelParser.h"
-using mat::MTensor;
+using facebook::MTensor;
 using std::string;
 using std::unordered_map;
 
@@ -82,7 +82,7 @@ NS_ASSUME_NONNULL_BEGIN
         // Make sure data length is valid
         break;
       }
-      MTensor tensor = mat::mempty(v_shape);
+      MTensor tensor = facebook::mempty(v_shape);
       float *tensor_data = tensor.data<float>();
       memcpy(tensor_data, floats, sizeof(float) * count);
       floats += count;
@@ -94,7 +94,7 @@ NS_ASSUME_NONNULL_BEGIN
   return weights;
 }
 
-+ (bool)validateWeights:(std::unordered_map<std::string, mat::MTensor>)weights forKey:(NSString *)key
++ (bool)validateWeights:(std::unordered_map<std::string, facebook::MTensor>)weights forKey:(NSString *)key
 {
   NSMutableDictionary<NSString *, NSArray *> *weightsInfoDict = [[NSMutableDictionary alloc] init];
   if ([key hasPrefix:@"MTML"]) {
@@ -175,7 +175,7 @@ NS_ASSUME_NONNULL_BEGIN
     @"fc3.bias": @[@(4)]};
 }
 
-+ (bool)checkWeights:(std::unordered_map<std::string, mat::MTensor>)weights
++ (bool)checkWeights:(std::unordered_map<std::string, facebook::MTensor>)weights
     withExpectedInfo:(NSDictionary<NSString *, NSArray *> *)weightsInfoDict
 {
   if (weightsInfoDict.count != weights.size()) {
@@ -186,7 +186,7 @@ NS_ASSUME_NONNULL_BEGIN
       if (weights.count(std::string([key UTF8String])) == 0) {
         return false;
       }
-      mat::MTensor tensor = weights[std::string([key UTF8String])];
+      facebook::MTensor tensor = weights[std::string([key UTF8String])];
       const std::vector<int64_t>& actualSize = tensor.sizes();
       NSArray *expectedSize = weightsInfoDict[key];
       if (actualSize.size() != expectedSize.count) {

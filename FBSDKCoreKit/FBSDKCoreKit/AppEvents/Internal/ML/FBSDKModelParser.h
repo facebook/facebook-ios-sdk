@@ -22,14 +22,14 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKStandaloneModel.hpp"
+#import "FBSDKTensor.hpp"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKModelParser : NSObject
 
-+ (std::unordered_map<std::string, mat::MTensor>)parseWeightsData:(NSData *)weightsData;
-+ (bool)validateWeights:(std::unordered_map<std::string, mat::MTensor>)weights forKey:(NSString *)key;
++ (std::unordered_map<std::string, facebook::MTensor>)parseWeightsData:(NSData *)weightsData;
++ (bool)validateWeights:(std::unordered_map<std::string, facebook::MTensor>)weights forKey:(NSString *)key;
 
 @end
 

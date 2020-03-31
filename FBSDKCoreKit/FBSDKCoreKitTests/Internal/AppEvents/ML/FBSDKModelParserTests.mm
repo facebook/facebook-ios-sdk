@@ -19,7 +19,7 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKModelParser.h"
-using mat::MTensor;
+using facebook::MTensor;
 using std::string;
 using std::unordered_map;
 using std::vector;
@@ -114,7 +114,7 @@ using std::vector;
     for (NSNumber *val in values) {
       shape.push_back(val.intValue);
     }
-    MTensor tensor = mat::mempty(shape);
+    MTensor tensor = facebook::mempty(shape);
     weights[string([key UTF8String])] = tensor;
   }
 
