@@ -36,44 +36,6 @@
 #define MAT_ALWAYS_INLINE inline __attribute__((always_inline))
 namespace facebook {
 
-    template <typename T, size_t N>
-    class MTensorAccessor {
-    public:
-        MAT_ALWAYS_INLINE
-        MTensorAccessor(T* data, const int64_t* sizes, const int64_t* strides)
-        : data_(data), sizes_(sizes), strides_(strides) {}
-
-        MAT_ALWAYS_INLINE MTensorAccessor<T, N - 1> operator[](int64_t i) {
-            return MTensorAccessor<T, N - 1>(
-                                             this->data_ + this->strides_[0] * i,
-                                             this->sizes_ + 1,
-                                             this->strides_ + 1);
-        }
-        T* data_;
-    private:
-        const int64_t* sizes_;
-        const int64_t* strides_;
-    };
-
-    template <typename T>
-    class MTensorAccessor<T, 1> {
-    public:
-        MAT_ALWAYS_INLINE
-        MTensorAccessor(T* data, const int64_t* sizes, const int64_t* strides)
-        : data_(data), sizes_(sizes), strides_(strides) {}
-
-        MAT_ALWAYS_INLINE T& operator[](int64_t i) {
-            // assume stride==1 in innermost dimension.
-            // DCHECK_EQ(strides_[0], 1);
-            return this->data_[i];
-        }
-        T* data_;
-        
-    private:
-        const int64_t* sizes_;
-        const int64_t* strides_;
-    };
-
     static void* MAllocateMemory(size_t nbytes) {
         void* ptr = nullptr;
         assert(nbytes > 0);
@@ -88,12 +50,8 @@ namespace facebook {
     }
 
     static void MFreeMemory(void* ptr) {
-        free(ptr);
-    }
-
-    static void MCheckPtr(void* ptr) {
       if (ptr) {
-          MFreeMemory(ptr);
+        free(ptr);
       }
     }
 
@@ -108,45 +66,43 @@ namespace facebook {
             }
             strides_ = strides;
             sizes_ = sizes;
-            // assume float32 storage.
-            size_t nbytes = sizeof(float);
+            capacity_ = 1;
             for (auto size : sizes) {
-                nbytes *= size;
+                capacity_ *= size;
             }
-            storage_ = std::shared_ptr<void>(MAllocateMemory(nbytes), MCheckPtr);
+            storage_ = std::shared_ptr<void>(MAllocateMemory(capacity_ * sizeof(float)), MFreeMemory);
         }
 
-        int64_t size(int dim) const {
+        MAT_ALWAYS_INLINE int64_t count() const {
+            return capacity_;
+        }
+
+        MAT_ALWAYS_INLINE int64_t size(int dim) const {
             return sizes_[dim];
         }
 
-        const std::vector<int64_t>& sizes() const {
+        MAT_ALWAYS_INLINE const std::vector<int64_t>& sizes() const {
             return sizes_;
         }
 
-        const std::vector<int64_t>& strides() const {
+        MAT_ALWAYS_INLINE const std::vector<int64_t>& strides() const {
             return strides_;
         }
 
-        template <typename T>
-        T* data() const {
-            return static_cast<T*>(storage_.get());
+        MAT_ALWAYS_INLINE const float* data() const {
+            return (const float*)(storage_.get());
         }
 
-        template <typename T, size_t N>
-        MTensorAccessor<T, N> accessor() {
-            return MTensorAccessor<T, N>(data<T>(), sizes().data(), strides().data());
+        MAT_ALWAYS_INLINE float* mutable_data() {
+            return static_cast<float*>(storage_.get());
         }
 
     private:
+        int64_t capacity_;
         std::vector<int64_t> sizes_;
         std::vector<int64_t> strides_;
         std::shared_ptr<void> storage_;
     };
-
-    static inline MTensor mempty(const std::vector<int64_t>& sizes) {
-        return MTensor(sizes);
-    }
-} // namespace mat
+}
 
 #endif

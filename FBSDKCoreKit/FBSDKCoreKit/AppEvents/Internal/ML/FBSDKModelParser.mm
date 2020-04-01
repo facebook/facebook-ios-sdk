@@ -21,17 +21,14 @@
 #if !TARGET_OS_TV
 
 #import "FBSDKModelParser.h"
-using facebook::MTensor;
-using std::string;
-using std::unordered_map;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation FBSDKModelParser
 
-+ (unordered_map<string, MTensor>)parseWeightsData:(NSData *)weightsData
++ (std::unordered_map<std::string, facebook::MTensor>)parseWeightsData:(NSData *)weightsData
 {
-  unordered_map<string,  MTensor> weights;
+  std::unordered_map<std::string, facebook::MTensor> weights;
 
   const void *data = weightsData.bytes;
   NSUInteger totalLength =  weightsData.length;
@@ -82,9 +79,8 @@ NS_ASSUME_NONNULL_BEGIN
         // Make sure data length is valid
         break;
       }
-      MTensor tensor = facebook::mempty(v_shape);
-      float *tensor_data = tensor.data<float>();
-      memcpy(tensor_data, floats, sizeof(float) * count);
+      facebook::MTensor tensor(v_shape);
+      memcpy(tensor.mutable_data(), floats, sizeof(float) * count);
       floats += count;
 
       weights[s_name] = tensor;

@@ -114,7 +114,7 @@ using std::vector;
     for (NSNumber *val in values) {
       shape.push_back(val.intValue);
     }
-    MTensor tensor = facebook::mempty(shape);
+    MTensor tensor(shape);
     weights[string([key UTF8String])] = tensor;
   }
 

@@ -236,21 +236,21 @@ namespace facebook {
         const MTensor& final_layer_weight_t = weights.at(final_layer_weight_key); // (2, 64) or (5, 64)
         const MTensor& final_layer_bias_t = weights.at(final_layer_bias_key); // 2 or 5
 
-        const float *embed_weight = embed_t.data<float>();
-        const float *convs_0_weight = transpose3D(conv0w_t.data<float>(), (int)conv0w_t.size(0), (int)conv0w_t.size(1), (int)conv0w_t.size(2));
-        const float *convs_1_weight = transpose3D(conv1w_t.data<float>(), (int)conv1w_t.size(0), (int)conv1w_t.size(1), (int)conv1w_t.size(2));
-        const float *convs_2_weight = transpose3D(conv2w_t.data<float>(), (int)conv2w_t.size(0), (int)conv2w_t.size(1), (int)conv2w_t.size(2));
-        const float *convs_0_bias = conv0b_t.data<float>();
-        const float *convs_1_bias = conv1b_t.data<float>();
-        const float *convs_2_bias = conv2b_t.data<float>();
-        const float *fc1_weight = transpose2D(fc1w_t.data<float>(), (int)fc1w_t.size(0), (int)fc1w_t.size(1));
-        const float *fc2_weight = transpose2D(fc2w_t.data<float>(), (int)fc2w_t.size(0), (int)fc2w_t.size(1));
-        const float *final_layer_weight = transpose2D(final_layer_weight_t.data<float>(),
+        const float *embed_weight = embed_t.data();
+        const float *convs_0_weight = transpose3D(conv0w_t.data(), (int)conv0w_t.size(0), (int)conv0w_t.size(1), (int)conv0w_t.size(2));
+        const float *convs_1_weight = transpose3D(conv1w_t.data(), (int)conv1w_t.size(0), (int)conv1w_t.size(1), (int)conv1w_t.size(2));
+        const float *convs_2_weight = transpose3D(conv2w_t.data(), (int)conv2w_t.size(0), (int)conv2w_t.size(1), (int)conv2w_t.size(2));
+        const float *convs_0_bias = conv0b_t.data();
+        const float *convs_1_bias = conv1b_t.data();
+        const float *convs_2_bias = conv2b_t.data();
+        const float *fc1_weight = transpose2D(fc1w_t.data(), (int)fc1w_t.size(0), (int)fc1w_t.size(1));
+        const float *fc2_weight = transpose2D(fc2w_t.data(), (int)fc2w_t.size(0), (int)fc2w_t.size(1));
+        const float *final_layer_weight = transpose2D(final_layer_weight_t.data(),
                                                       (int)final_layer_weight_t.size(0),
                                                       (int)final_layer_weight_t.size(1));
-        const float *fc1_bias = fc1b_t.data<float>();
-        const float *fc2_bias = fc2b_t.data<float>();
-        const float *final_layer_bias = final_layer_bias_t.data<float>();
+        const float *fc1_bias = fc1b_t.data();
+        const float *fc2_bias = fc2b_t.data();
+        const float *final_layer_bias = final_layer_bias_t.data();
 
         // vectorize text
         x = vectorize(texts, (int)strlen(texts), SEQ_LEN);
@@ -339,21 +339,21 @@ namespace facebook {
         const MTensor& final_layer_weight_t = weights.at(final_layer_weight_key); // (2, 64) or (4, 64)
         const MTensor& final_layer_bias_t = weights.at(final_layer_bias_key); // 2 or 4
 
-        const float *embed_weight = embed_t.data<float>();
-        const float *convs_0_weight = transpose3D(conv0w_t.data<float>(), (int)conv0w_t.size(0), (int)conv0w_t.size(1), (int)conv0w_t.size(2));
-        const float *convs_1_weight = transpose3D(conv1w_t.data<float>(), (int)conv1w_t.size(0), (int)conv1w_t.size(1), (int)conv1w_t.size(2));
-        const float *convs_2_weight = transpose3D(conv2w_t.data<float>(), (int)conv2w_t.size(0), (int)conv2w_t.size(1), (int)conv2w_t.size(2));
-        const float *convs_0_bias = conv0b_t.data<float>();
-        const float *convs_1_bias = conv1b_t.data<float>();
-        const float *convs_2_bias = conv2b_t.data<float>();
-        const float *fc1_weight = transpose2D(fc1w_t.data<float>(), (int)fc1w_t.size(0), (int)fc1w_t.size(1));
-        const float *fc2_weight = transpose2D(fc2w_t.data<float>(), (int)fc2w_t.size(0), (int)fc2w_t.size(1));
-        const float *final_layer_weight = transpose2D(final_layer_weight_t.data<float>(),
+        const float *embed_weight = embed_t.data();
+        const float *convs_0_weight = transpose3D(conv0w_t.data(), (int)conv0w_t.size(0), (int)conv0w_t.size(1), (int)conv0w_t.size(2));
+        const float *convs_1_weight = transpose3D(conv1w_t.data(), (int)conv1w_t.size(0), (int)conv1w_t.size(1), (int)conv1w_t.size(2));
+        const float *convs_2_weight = transpose3D(conv2w_t.data(), (int)conv2w_t.size(0), (int)conv2w_t.size(1), (int)conv2w_t.size(2));
+        const float *convs_0_bias = conv0b_t.data();
+        const float *convs_1_bias = conv1b_t.data();
+        const float *convs_2_bias = conv2b_t.data();
+        const float *fc1_weight = transpose2D(fc1w_t.data(), (int)fc1w_t.size(0), (int)fc1w_t.size(1));
+        const float *fc2_weight = transpose2D(fc2w_t.data(), (int)fc2w_t.size(0), (int)fc2w_t.size(1));
+        const float *final_layer_weight = transpose2D(final_layer_weight_t.data(),
                                                       (int)final_layer_weight_t.size(0),
                                                       (int)final_layer_weight_t.size(1));
-        const float *fc1_bias = fc1b_t.data<float>();
-        const float *fc2_bias = fc2b_t.data<float>();
-        const float *final_layer_bias = final_layer_bias_t.data<float>();
+        const float *fc1_bias = fc1b_t.data();
+        const float *fc2_bias = fc2b_t.data();
+        const float *final_layer_bias = final_layer_bias_t.data();
 
         // vectorize text
         x = vectorize(texts, (int)strlen(texts), SEQ_LEN);

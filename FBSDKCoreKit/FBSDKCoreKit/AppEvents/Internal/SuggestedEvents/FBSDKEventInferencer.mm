@@ -90,8 +90,8 @@ static std::unordered_map<std::string, facebook::MTensor> _weights;
     std::vector<int64_t> dense_tensor_shape;
     dense_tensor_shape.push_back(1);
     dense_tensor_shape.push_back(30);
-    facebook::MTensor dense_tensor = facebook::mempty(dense_tensor_shape);
-    float *dense_tensor_data = dense_tensor.data<float>();
+    facebook::MTensor dense_tensor(dense_tensor_shape);
+    float *dense_tensor_data = dense_tensor.mutable_data();
     float *dense_data = [FBSDKFeatureExtractor getDenseFeatures:viewTree];
     if (!dense_data) {
       return DEFAULT_PREDICTION;
