@@ -753,6 +753,8 @@
 		BF1C64E624039AD50052C580 /* FBSDKViewHierarchyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BF1C64E524039AD50052C580 /* FBSDKViewHierarchyTests.m */; };
 		BF247C822374E1B200A522C0 /* FBSDKSuggestedEventsIndexer.h in Headers */ = {isa = PBXBuildFile; fileRef = BF247C802374E1B100A522C0 /* FBSDKSuggestedEventsIndexer.h */; };
 		BF247C832374E1B200A522C0 /* FBSDKSuggestedEventsIndexer.m in Sources */ = {isa = PBXBuildFile; fileRef = BF247C812374E1B200A522C0 /* FBSDKSuggestedEventsIndexer.m */; };
+		BF5D97C3242EC2D10096D7AA /* FBSDKFeatureExtractorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BF5D97C2242EC2D10096D7AA /* FBSDKFeatureExtractorTests.m */; };
+		BF5D97E72432D8650096D7AA /* FBSDKTextClassifyRules.json in Resources */ = {isa = PBXBuildFile; fileRef = BF5D97C42432B0890096D7AA /* FBSDKTextClassifyRules.json */; };
 		BFC02446237B6A9A00A596EE /* FBSDKEventInferencer.h in Headers */ = {isa = PBXBuildFile; fileRef = BFC02435237B6A9900A596EE /* FBSDKEventInferencer.h */; };
 		BFC02447237B6A9A00A596EE /* FBSDKFeatureExtractor.h in Headers */ = {isa = PBXBuildFile; fileRef = BFC02443237B6A9900A596EE /* FBSDKFeatureExtractor.h */; };
 		BFC02448237B6A9A00A596EE /* FBSDKFeatureExtractor.m in Sources */ = {isa = PBXBuildFile; fileRef = BFC02444237B6A9900A596EE /* FBSDKFeatureExtractor.m */; };
@@ -1645,13 +1647,6 @@
 			remoteGlobalIDString = 81B71CFC1D19C87400933E93;
 			remoteInfo = "FBSDKCoreKit-Dynamic";
 		};
-		F4A06334242276690093C02A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9D99470F1A9531B5003375EC /* OCMock.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8DE97CA022B43EE60098C63F;
-			remoteInfo = "OCMock watchOS";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -1926,6 +1921,8 @@
 		BF1C64E524039AD50052C580 /* FBSDKViewHierarchyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKViewHierarchyTests.m; sourceTree = "<group>"; };
 		BF247C802374E1B100A522C0 /* FBSDKSuggestedEventsIndexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKSuggestedEventsIndexer.h; sourceTree = "<group>"; };
 		BF247C812374E1B200A522C0 /* FBSDKSuggestedEventsIndexer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKSuggestedEventsIndexer.m; sourceTree = "<group>"; };
+		BF5D97C2242EC2D10096D7AA /* FBSDKFeatureExtractorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKFeatureExtractorTests.m; sourceTree = "<group>"; };
+		BF5D97C42432B0890096D7AA /* FBSDKTextClassifyRules.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = FBSDKTextClassifyRules.json; sourceTree = "<group>"; };
 		BFA7301B2422CE6400455C47 /* FBSDKMLMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKMLMacros.h; sourceTree = "<group>"; };
 		BFC02435237B6A9900A596EE /* FBSDKEventInferencer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; path = FBSDKEventInferencer.h; sourceTree = "<group>"; };
 		BFC02443237B6A9900A596EE /* FBSDKFeatureExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKFeatureExtractor.h; sourceTree = "<group>"; };
@@ -2587,6 +2584,7 @@
 			children = (
 				BF1C64E2240399180052C580 /* ViewHierarchy */,
 				E493252B23F7C51D0000B63A /* ML */,
+				BF5D97B4242EC2890096D7AA /* SuggestedEvent */,
 				5DAB023A23A1B9FC005495FB /* EventDeactivation */,
 				F952EA4D2339412C00B20652 /* AAM */,
 				C51121C720A27EF50041DC94 /* Codeless */,
@@ -2772,7 +2770,6 @@
 				9D9947291A9531B5003375EC /* OCMockLibTests.xctest */,
 				52279E562150732600F31455 /* OCMock.framework */,
 				52279E582150732600F31455 /* OCMock.framework */,
-				F4A06335242276690093C02A /* OCMock.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2796,6 +2793,15 @@
 				BFC02445237B6A9A00A596EE /* FBSDKEventInferencer.mm */,
 			);
 			path = SuggestedEvents;
+			sourceTree = "<group>";
+		};
+		BF5D97B4242EC2890096D7AA /* SuggestedEvent */ = {
+			isa = PBXGroup;
+			children = (
+				BF5D97C42432B0890096D7AA /* FBSDKTextClassifyRules.json */,
+				BF5D97C2242EC2D10096D7AA /* FBSDKFeatureExtractorTests.m */,
+			);
+			path = SuggestedEvent;
 			sourceTree = "<group>";
 		};
 		BFC6A2192387227800395451 /* ViewHierarchy */ = {
@@ -4232,13 +4238,6 @@
 			remoteRef = ADEA17811B7ECA1A0070EDC0 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		F4A06335242276690093C02A /* OCMock.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = OCMock.framework;
-			remoteRef = F4A06334242276690093C02A /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -4267,6 +4266,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF5D97E72432D8650096D7AA /* FBSDKTextClassifyRules.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4740,6 +4740,7 @@
 				5D2165E122264453004952D8 /* FBSDKAppEventsTests.m in Sources */,
 				9D18A8DB1A95405A00A41042 /* FBSDKAppEventsStateTests.m in Sources */,
 				E4C2B97A23867327002335A4 /* FBSDKModelRuntimeTests.mm in Sources */,
+				BF5D97C3242EC2D10096D7AA /* FBSDKFeatureExtractorTests.m in Sources */,
 				5DAB023C23A1BA17005495FB /* FBSDKEventDeactivationTests.m in Sources */,
 				7E253D831A8EB76500CCCFE7 /* FBSDKCoreKitTestUtility.m in Sources */,
 				5D59BFFD23A705010008CA5A /* FBSDKCrashHandlerTests.m in Sources */,
