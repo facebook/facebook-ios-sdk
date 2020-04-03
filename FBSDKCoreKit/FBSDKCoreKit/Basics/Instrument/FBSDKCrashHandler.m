@@ -22,6 +22,8 @@
 
 #import <UIKit/UIKit.h>
 
+#include <signal.h>
+
 #import "FBSDKLibAnalyzer.h"
 
 #define FBSDK_MAX_CRASH_LOGS 5
@@ -49,6 +51,8 @@ NSString *const kFBSDKMappingTableIdentifier = @"mapping_table_identifier";
 static NSHashTable<id<FBSDKCrashObserving>> *_observers;
 static NSArray<NSDictionary<NSString *, id> *> *_processedCrashLogs;
 static BOOL _isTurnedOff;
+
+void FBSDKSignalHandler(int signal);
 
 # pragma mark - Class Methods
 
@@ -114,6 +118,7 @@ static BOOL _isTurnedOff;
   static dispatch_once_t onceToken = 0;
   dispatch_once(&onceToken, ^{
     [FBSDKCrashHandler installExceptionsHandler];
+    [FBSDKCrashHandler installSignalHandler];
     _processedCrashLogs = [self getProcessedCrashLogs];
   });
   if (![_observers containsObject:observer]) {
@@ -157,6 +162,33 @@ static void FBSDKExceptionHandler(NSException *exception)
   if (previousExceptionHandler) {
     previousExceptionHandler(exception);
   }
+}
+
++ (void)installSignalHandler
+{
+  signal(SIGBUS, FBSDKSignalHandler);
+  signal(SIGFPE, FBSDKSignalHandler);
+  signal(SIGILL, FBSDKSignalHandler);
+  signal(SIGPIPE, FBSDKSignalHandler);
+  signal(SIGSEGV, FBSDKSignalHandler);
+  signal(SIGSYS, FBSDKSignalHandler);
+}
+
+void FBSDKSignalHandler(int sig)
+{
+  NSMutableArray<NSString *> *callStack = [[NSThread callStackSymbols] mutableCopy];
+  if (callStack) {
+    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)];
+    if (callStack.count > 2 && [callStack objectsAtIndexes:indexSet]) {
+      [callStack removeObjectsAtIndexes:indexSet];
+    }
+  }
+  [FBSDKCrashHandler saveSignal:sig withCallStack:callStack];
+
+  // reset to default handler
+  signal(sig, SIG_DFL);
+  // re-signal to default handler
+  raise(sig);
 }
 
 #pragma mark - Storage
