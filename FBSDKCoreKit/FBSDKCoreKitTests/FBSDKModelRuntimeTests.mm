@@ -260,8 +260,7 @@
 }
 
 - (void)testTranspose3D {
-    float* res;
-    float input[2][3][4] = {
+    float input_data[2][3][4] = {
         {
             {0, 1, 2, 3},
             {4, 5, 6, 7},
@@ -273,7 +272,7 @@
             {20, 21, 22, 23},
         },
     };
-    float expected[4][3][2] = {
+    float expected_data[4][3][2] = {
         {
             {0, 12},
             {4, 16},
@@ -295,14 +294,11 @@
             {11, 23},
         },
     };
-    res = facebook::transpose3D(**input, 2, 3, 4);
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 3; j++) {
-            for (int k = 0; k < 2; k++) {
-                XCTAssertEqualWithAccuracy(expected[i][j][k], res[2 * 3 * i + 2 * j + k], 0.01);
-            }
-        }
-    }
+    facebook::MTensor input({2, 3, 4});
+    facebook::MTensor expected({4, 3, 2});
+    memcpy(input.mutable_data(), **input_data, input.count() * sizeof(float));
+    memcpy(expected.mutable_data(), **expected_data, expected.count() * sizeof(float));
+    [self AssertEqual:expected input:facebook::transpose3D(input)];
 }
 
 - (void)testTranspose2D {
@@ -443,6 +439,19 @@
             XCTAssertEqualWithAccuracy(expected[i][0][j], res[4 * i + j], 0.01);
         }
     }
+}
+
+- (void)AssertEqual:(const facebook::MTensor&)expected
+              input:(const facebook::MTensor&)input
+{
+  const std::vector<int64_t>& expected_sizes = expected.sizes();
+  const std::vector<int64_t>& input_sizes = input.sizes();
+  XCTAssertEqual(expected_sizes, input_sizes);
+  const float *expected_data = expected.data();
+  const float *input_data = input.data();
+  for (int i = 0; i < expected.count(); i++) {
+    XCTAssertEqualWithAccuracy(expected_data[i], input_data[i], 0.01);
+  }
 }
 
 @end

@@ -191,16 +191,22 @@ static float* transpose2D(const float *input, const int m, const int n) {
  input shape: m, n, p
  return shape: p, n, m
  */
-static float* transpose3D(const float *input, const int64_t m, const int n, const int p) {
-  float *transposed = (float *)malloc((size_t)(sizeof(float) * m * n * p));
+static MTensor transpose3D(const MTensor& x) {
+  int64_t m = x.size(0);
+  int64_t n = x.size(1);
+  int64_t p = x.size(2);
+  MTensor y({p, n, m});
+
+  float *y_data = y.mutable_data();
+  const float *x_data = x.data();
   for (int i = 0; i < m; i++){
     for (int j = 0; j < n; j++) {
       for (int k = 0; k < p; k++) {
-        transposed[k * m * n + j * m + i] = input[i * n * p + j * p + k];
+        y_data[k * m * n + j * m + i] = x_data[i * n * p + j * p + k];
       }
     }
   }
-  return transposed;
+  return y;
 }
 
 static float* add(float *a, const float *b, const int m, const int n, const int p) {
@@ -238,9 +244,9 @@ static float* predictOnMTML(const std::string task, const char *texts, const std
   const MTensor& final_layer_bias_t = weights.at(final_layer_bias_key); // 2 or 5
 
   const float *embed_weight = embed_t.data();
-  const float *convs_0_weight = transpose3D(conv0w_t.data(), (int)conv0w_t.size(0), (int)conv0w_t.size(1), (int)conv0w_t.size(2));
-  const float *convs_1_weight = transpose3D(conv1w_t.data(), (int)conv1w_t.size(0), (int)conv1w_t.size(1), (int)conv1w_t.size(2));
-  const float *convs_2_weight = transpose3D(conv2w_t.data(), (int)conv2w_t.size(0), (int)conv2w_t.size(1), (int)conv2w_t.size(2));
+  const MTensor& convs_0_weight = transpose3D(conv0w_t);
+  const MTensor& convs_1_weight = transpose3D(conv1w_t);
+  const MTensor& convs_2_weight = transpose3D(conv2w_t);
   const float *convs_0_bias = conv0b_t.data();
   const float *convs_1_bias = conv1b_t.data();
   const float *convs_2_bias = conv2b_t.data();
@@ -261,14 +267,14 @@ static float* predictOnMTML(const std::string task, const char *texts, const std
   free(x);
 
   // conv0
-  c0 = conv1D(embed_x, convs_0_weight, 1, SEQ_LEN, MTML_EMBEDDING_SIZE, (int)conv0w_t.size(2), (int)conv0w_t.size(0)); // (1, 126, 32)
+  c0 = conv1D(embed_x, convs_0_weight.data(), 1, SEQ_LEN, MTML_EMBEDDING_SIZE, (int)conv0w_t.size(2), (int)conv0w_t.size(0)); // (1, 126, 32)
   c0_shape = (int)(SEQ_LEN - conv0w_t.size(2) + 1);
   add(c0, convs_0_bias, 1, c0_shape, (int)conv0w_t.size(0));
   relu(c0, c0_shape * (int)conv0w_t.size(0));
   free(embed_x);
 
   // conv1
-  c1 = conv1D(c0, convs_1_weight, 1, c0_shape, (int)conv0w_t.size(0), (int)conv1w_t.size(2), (int)conv1w_t.size(0)); // (1, 124, 64)
+  c1 = conv1D(c0, convs_1_weight.data(), 1, c0_shape, (int)conv0w_t.size(0), (int)conv1w_t.size(2), (int)conv1w_t.size(0)); // (1, 124, 64)
   c1_shape = (int)(c0_shape - conv1w_t.size(2) + 1);
   add(c1, convs_1_bias, 1, c1_shape, (int)conv1w_t.size(0));
   relu(c1, c1_shape * (int)conv1w_t.size(0));
@@ -276,7 +282,7 @@ static float* predictOnMTML(const std::string task, const char *texts, const std
   c1_shape = c1_shape - 1;
 
   // conv2
-  c2 = conv1D(c1, convs_2_weight, 1, c1_shape, (int)conv1w_t.size(0), (int)conv2w_t.size(2), (int)conv2w_t.size(0)); // (1, 121, 64)
+  c2 = conv1D(c1, convs_2_weight.data(), 1, c1_shape, (int)conv1w_t.size(0), (int)conv2w_t.size(2), (int)conv2w_t.size(0)); // (1, 121, 64)
   c2_shape = (int)(c1_shape - conv2w_t.size(2) + 1);
   add(c2, convs_2_bias, 1, c2_shape, (int)conv2w_t.size(0));
   relu(c2, c2_shape * (int)conv2w_t.size(0));
