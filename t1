@@ -1,0 +1,2654 @@
+travis_fold:start:worker_info
+[0K[33;1mWorker information[0m
+hostname: 3ec9b11b-c802-4ca9-b23f-bc29163ad001@1.worker-org-6bc68c5dcd-fqf42.macstadium-prod-2
+version: v6.2.0 https://github.com/travis-ci/worker/tree/5e5476e01646095f48eec13196fdb3faf8f5cbf7
+instance: e7e55662-a217-4311-9d23-d20b638e7d46 travis-ci-macos10.13-xcode10.1-19-1573522075 (via amqp)
+startup: 1m8.388051104s
+travis_fold:end:worker_info
+[0Ktravis_time:start:00202678
+[0Ktravis_time:end:00202678:start=1585250437855184000,finish=1585250438519843000,duration=664659000,event=no_world_writable_dirs
+[0Ktravis_time:start:0b6076ea
+[0Ktravis_time:end:0b6076ea:start=1585250438529836000,finish=1585250438541289000,duration=11453000,event=setup_filter
+[0Ktravis_time:start:1e961f2c
+[0Ktravis_time:end:1e961f2c:start=1585250438554787000,finish=1585250438561496000,duration=6709000,event=check_unsupported
+[0Ktravis_time:start:04d17d2c
+[0Ktravis_fold:start:system_info
+[0K[33;1mBuild system information[0m
+
+Build language: objective-c
+
+Build id: 667386234
+
+Job id: 667386235
+
+Runtime kernel version: 17.7.0
+
+travis-build version: 6c0f7380c
+
+[34m[1mBuild image provisioning date and time[0m
+
+Tue Nov 12 16:09:45 GMT 2019
+
+[34m[1mOperating System Details[0m
+
+ProductName:	Mac OS X
+
+ProductVersion:	10.13.6
+
+BuildVersion:	17G65
+
+[34m[1mGit version[0m
+
+git version 2.24.0
+
+[34m[1mbash version[0m
+
+GNU bash, version 3.2.57(1)-release (x86_64-apple-darwin17)
+
+Copyright (C) 2007 Free Software Foundation, Inc.
+
+[34m[1mGCC version[0m
+
+Apple LLVM version 10.0.0 (clang-1000.11.45.5)
+
+Target: x86_64-apple-darwin17.7.0
+
+Thread model: posix
+
+InstalledDir: /Applications/Xcode-10.1.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+
+[34m[1mLLVM version[0m
+
+Apple LLVM version 10.0.0 (clang-1000.11.45.5)
+
+Target: x86_64-apple-darwin17.7.0
+
+Thread model: posix
+
+InstalledDir: /Applications/Xcode-10.1.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+
+[34m[1mPre-installed Ruby versions[0m
+
+ruby-2.6.3
+
+[34m[1mPre-installed Node.js versions[0m
+
+v10.17.0
+
+v12.13.0
+
+v13.0.1
+
+v4.9.1
+
+v6.17.1
+
+v8.16.2
+
+[34m[1mmvn -version[0m
+
+Apache Maven 3.6.2 (40f52333136460af0dc0d7232c0dc0bcf0d9e117; 2019-08-27T15:06:16Z)
+
+Maven home: /usr/local/Cellar/maven/3.6.2/libexec
+
+Java version: 13.0.1, vendor: Oracle Corporation, runtime: /Library/Java/JavaVirtualMachines/openjdk-13.0.1.jdk/Contents/Home
+
+Default locale: en_US, platform encoding: UTF-8
+
+OS name: "mac os x", version: "10.13.6", arch: "x86_64", family: "mac"
+
+travis_fold:end:system_info
+[0K
+
+travis_time:end:04d17d2c:start=1585250438570856000,finish=1585250438589421000,duration=18565000,event=show_system_info
+[0Ktravis_time:start:34141fe3
+[0Ktravis_time:end:34141fe3:start=1585250438597069000,finish=1585250438606929000,duration=9860000,event=rm_riak_source
+[0Ktravis_time:start:0f45dbc0
+[0Ktravis_time:end:0f45dbc0:start=1585250438616110000,finish=1585250438622891000,duration=6781000,event=fix_rwky_redis
+[0Ktravis_time:start:005b6458
+[0Ktravis_time:end:005b6458:start=1585250438630709000,finish=1585250439080549000,duration=449840000,event=wait_for_network
+[0Ktravis_time:start:0958e964
+[0Ktravis_time:end:0958e964:start=1585250439090345000,finish=1585250439097888000,duration=7543000,event=update_apt_keys
+[0Ktravis_time:start:023c2439
+[0Ktravis_time:end:023c2439:start=1585250439111222000,finish=1585250439120865000,duration=9643000,event=fix_hhvm_source
+[0Ktravis_time:start:1374ebb0
+[0Ktravis_time:end:1374ebb0:start=1585250439133937000,finish=1585250439144683000,duration=10746000,event=update_mongo_arch
+[0Ktravis_time:start:00ad16d8
+[0Ktravis_time:end:00ad16d8:start=1585250439163316000,finish=1585250439181488000,duration=18172000,event=fix_sudo_enabled_trusty
+[0Ktravis_time:start:02fa26da
+[0Ktravis_time:end:02fa26da:start=1585250439203451000,finish=1585250439215455000,duration=12004000,event=update_glibc
+[0Ktravis_time:start:2b3b57a8
+[0Ktravis_time:end:2b3b57a8:start=1585250439236744000,finish=1585250439306972000,duration=70228000,event=clean_up_path
+[0Ktravis_time:start:0f8a98c8
+[0Ktravis_time:end:0f8a98c8:start=1585250439317359000,finish=1585250439372508000,duration=55149000,event=fix_resolv_conf
+[0Ktravis_time:start:1955147d
+[0Ktravis_time:end:1955147d:start=1585250439382699000,finish=1585250439442410000,duration=59711000,event=fix_etc_hosts
+[0Ktravis_time:start:00fa3f22
+[0Ktravis_time:end:00fa3f22:start=1585250439453748000,finish=1585250439460874000,duration=7126000,event=fix_mvn_settings_xml
+[0Ktravis_time:start:059dfd2d
+[0Ktravis_time:end:059dfd2d:start=1585250439470728000,finish=1585250439526111000,duration=55383000,event=no_ipv6_localhost
+[0Ktravis_time:start:0f683670
+[0Ktravis_time:end:0f683670:start=1585250439538201000,finish=1585250439545483000,duration=7282000,event=fix_etc_mavenrc
+[0Ktravis_time:start:13975280
+[0Ktravis_time:end:13975280:start=1585250439555049000,finish=1585250439837459000,duration=282410000,event=fix_wwdr_certificate
+[0Ktravis_time:start:28aa1bac
+[0Ktravis_time:end:28aa1bac:start=1585250439847836000,finish=1585250440023024000,duration=175188000,event=put_localhost_first
+[0Ktravis_time:start:1caf7dbb
+[0Ktravis_time:end:1caf7dbb:start=1585250440032980000,finish=1585250440039986000,duration=7006000,event=home_paths
+[0Ktravis_time:start:03fbe800
+[0Ktravis_time:end:03fbe800:start=1585250440049719000,finish=1585250440068854000,duration=19135000,event=disable_initramfs
+[0Ktravis_time:start:0a14b167
+[0Ktravis_time:end:0a14b167:start=1585250440082289000,finish=1585250440109061000,duration=26772000,event=disable_ssh_roaming
+[0Ktravis_time:start:1283ec02
+[0Ktravis_time:end:1283ec02:start=1585250440118653000,finish=1585250440125742000,duration=7089000,event=debug_tools
+[0Ktravis_time:start:00fc925b
+[0K
+
+travis_time:end:00fc925b:start=1585250440135221000,finish=1585250444829858000,duration=4694637000,event=uninstall_oclint
+[0Ktravis_time:start:003daae0
+[0Ktravis_time:end:003daae0:start=1585250444840302000,finish=1585250446049089000,duration=1208787000,event=rvm_use
+[0Ktravis_time:start:0805ddfc
+[0Ktravis_time:end:0805ddfc:start=1585250446060892000,finish=1585250446112967000,duration=52075000,event=rm_etc_boto_cfg
+[0Ktravis_time:start:098aa546
+[0Ktravis_time:end:098aa546:start=1585250446122789000,finish=1585250446131508000,duration=8719000,event=rm_oraclejdk8_symlink
+[0Ktravis_time:start:1613ce67
+[0Ktravis_time:end:1613ce67:start=1585250446141753000,finish=1585250446155079000,duration=13326000,event=enable_i386
+[0Ktravis_time:start:025d200e
+[0Ktravis_time:end:025d200e:start=1585250446166752000,finish=1585250446177724000,duration=10972000,event=update_rubygems
+[0Ktravis_time:start:064889fb
+[0Ktravis_time:end:064889fb:start=1585250446190316000,finish=1585250446204324000,duration=14008000,event=ensure_path_components
+[0Ktravis_time:start:0d8e45e2
+[0Ktravis_time:end:0d8e45e2:start=1585250446218867000,finish=1585250446229979000,duration=11112000,event=redefine_curl
+[0Ktravis_time:start:069472d7
+[0Ktravis_time:end:069472d7:start=1585250446246934000,finish=1585250446397938000,duration=151004000,event=nonblock_pipe
+[0Ktravis_time:start:02409a1c
+[0Ktravis_time:end:02409a1c:start=1585250446410235000,finish=1585250446423039000,duration=12804000,event=apt_get_update
+[0Ktravis_time:start:267808fb
+[0Ktravis_time:end:267808fb:start=1585250446433677000,finish=1585250446440342000,duration=6665000,event=deprecate_xcode_64
+[0Ktravis_time:start:085b272c
+[0Ktravis_time:end:085b272c:start=1585250446450813000,finish=1585250446460942000,duration=10129000,event=update_heroku
+[0Ktravis_time:start:0dc5c080
+[0Ktravis_time:end:0dc5c080:start=1585250446471129000,finish=1585250446477881000,duration=6752000,event=shell_session_update
+[0Ktravis_time:start:0007b675
+[0Ktravis_time:end:0007b675:start=1585250446488361000,finish=1585250446496002000,duration=7641000,event=maven_central_mirror
+[0Ktravis_time:start:19b8ca68
+[0Ktravis_time:end:19b8ca68:start=1585250446507335000,finish=1585250446514579000,duration=7244000,event=maven_https
+[0Ktravis_time:start:02c81656
+[0Ktravis_time:end:02c81656:start=1585250446525539000,finish=1585250446532523000,duration=6984000,event=fix_ps4
+[0Ktravis_time:start:29531a9c
+[0K
+
+travis_fold:start:git.checkout
+[0Ktravis_time:start:079d05e9
+[0K$ git clone --depth=50 --branch=v6.3.0 https://github.com/facebook/facebook-ios-sdk.git facebook/facebook-ios-sdk
+
+Cloning into 'facebook/facebook-ios-sdk'...
+
+Note: switching to '5033e483f9b4c2e97344ac6a4044106de7f90585'.
+
+
+
+You are in 'detached HEAD' state. You can look around, make experimental
+
+changes and commit them, and you can discard any commits you make in this
+
+state without impacting any branches by switching back to a branch.
+
+
+
+If you want to create a new branch to retain commits you create, you may
+
+do so (now or later) by using -c with the switch command. Example:
+
+
+
+  git switch -c <new-branch-name>
+
+
+
+Or undo this operation with:
+
+
+
+  git switch -
+
+
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+
+
+travis_time:end:079d05e9:start=1585250446554517000,finish=1585250448040125000,duration=1485608000,event=checkout
+[0K$ cd facebook/facebook-ios-sdk
+
+$ git checkout -qf v6.3.0
+
+travis_fold:end:git.checkout
+[0K
+
+travis_fold:start:git.submodule
+[0Ktravis_time:start:20f55194
+[0K$ git submodule update --init --recursive
+
+travis_time:end:20f55194:start=1585250448145972000,finish=1585250448368944000,duration=222972000,event=checkout
+[0Ktravis_fold:end:git.submodule
+[0Ktravis_time:end:20f55194:start=1585250448145972000,finish=1585250448381532000,duration=235560000,event=checkout
+[0Ktravis_time:start:11a945b4
+[0K
+
+[33;1mSetting environment variables from repository settings[0m
+
+$ export encrypted_a594b09e5746_key=[secure]
+
+$ export encrypted_a594b09e5746_iv=[secure]
+
+$ export COCOAPODS_TRUNK_TOKEN=[secure]
+
+
+
+[33;1mSetting environment variables from .travis.yml[0m
+
+$ export api_key=[secure]
+
+$ export XCODE_WORKSPACE=FacebookSDK.xcworkspace
+
+$ export GITHUB_ACCESS_TOKEN=$api_key
+
+
+
+travis_time:end:11a945b4:start=1585250448396459000,finish=1585250448418117000,duration=21658000,event=env
+[0K[33;1mDisabling Homebrew auto update. If your Homebrew package requires Homebrew DB be up to date, please run `brew update` explicitly.[0m
+
+$ export HOMEBREW_NO_AUTO_UPDATE=1
+
+travis_fold:start:rvm
+[0Ktravis_time:start:0193afd4
+[0K$ rvm use default
+
+Using /Users/travis/.rvm/gems/ruby-2.6.3
+
+travis_time:end:0193afd4:start=1585250448438409000,finish=1585250450505339000,duration=2066930000,event=setup
+[0Ktravis_fold:end:rvm
+[0K
+
+$ export BUNDLE_GEMFILE=$PWD/Gemfile
+
+$ ruby --version
+
+ruby 2.6.3p62 (2019-04-16 revision 67580) [x86_64-darwin17]
+
+$ rvm --version
+
+rvm 1.29.8 (latest) by Michal Papis, Piotr Kuczynski, Wayne E. Seguin [https://rvm.io]
+
+$ bundle --version
+
+Bundler version 1.17.2
+
+travis_fold:start:announce
+[0K$ xcodebuild -version -sdk
+
+iPhoneOS12.1.sdk - iOS 12.1 (iphoneos12.1)
+
+SDKVersion: 12.1
+
+Path: /Applications/Xcode-10.1.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.1.sdk
+
+PlatformVersion: 12.1
+
+PlatformPath: /Applications/Xcode-10.1.app/Contents/Developer/Platforms/iPhoneOS.platform
+
+BuildID: 6F0BDB7C-D34C-11E8-B4D5-64D77DC3894B
+
+ProductBuildVersion: 16B91
+
+ProductCopyright: 1983-2018 Apple Inc.
+
+ProductName: iPhone OS
+
+ProductVersion: 12.1
+
+
+
+iPhoneSimulator12.1.sdk - Simulator - iOS 12.1 (iphonesimulator12.1)
+
+SDKVersion: 12.1
+
+Path: /Applications/Xcode-10.1.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator12.1.sdk
+
+PlatformVersion: 12.1
+
+PlatformPath: /Applications/Xcode-10.1.app/Contents/Developer/Platforms/iPhoneSimulator.platform
+
+BuildID: 6F0BDB7C-D34C-11E8-B4D5-64D77DC3894B
+
+ProductBuildVersion: 16B91
+
+ProductCopyright: 1983-2018 Apple Inc.
+
+ProductName: iPhone OS
+
+ProductVersion: 12.1
+
+
+
+MacOSX10.14.sdk - macOS 10.14 (macosx10.14)
+
+SDKVersion: 10.14
+
+Path: /Applications/Xcode-10.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk
+
+PlatformVersion: 1.1
+
+PlatformPath: /Applications/Xcode-10.1.app/Contents/Developer/Platforms/MacOSX.platform
+
+ProductBuildVersion: 18B71
+
+ProductCopyright: 1983-2018 Apple Inc.
+
+ProductName: Mac OS X
+
+ProductUserVisibleVersion: 10.14.1
+
+ProductVersion: 10.14.1
+
+
+
+AppleTVOS12.1.sdk - tvOS 12.1 (appletvos12.1)
+
+SDKVersion: 12.1
+
+Path: /Applications/Xcode-10.1.app/Contents/Developer/Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.1.sdk
+
+PlatformVersion: 12.1
+
+PlatformPath: /Applications/Xcode-10.1.app/Contents/Developer/Platforms/AppleTVOS.platform
+
+BuildID: 82CCE69C-D0F4-11E8-93D5-A908D0A55C45
+
+ProductBuildVersion: 16J602
+
+ProductCopyright: 1983-2018 Apple Inc.
+
+ProductName: Apple TVOS
+
+ProductVersion: 12.1
+
+
+
+AppleTVSimulator12.1.sdk - Simulator - tvOS 12.1 (appletvsimulator12.1)
+
+SDKVersion: 12.1
+
+Path: /Applications/Xcode-10.1.app/Contents/Developer/Platforms/AppleTVSimulator.platform/Developer/SDKs/AppleTVSimulator12.1.sdk
+
+PlatformVersion: 12.1
+
+PlatformPath: /Applications/Xcode-10.1.app/Contents/Developer/Platforms/AppleTVSimulator.platform
+
+BuildID: 82CCE69C-D0F4-11E8-93D5-A908D0A55C45
+
+ProductBuildVersion: 16J602
+
+ProductCopyright: 1983-2018 Apple Inc.
+
+ProductName: Apple TVOS
+
+ProductVersion: 12.1
+
+
+
+WatchOS5.1.sdk - watchOS 5.1 (watchos5.1)
+
+SDKVersion: 5.1
+
+Path: /Applications/Xcode-10.1.app/Contents/Developer/Platforms/WatchOS.platform/Developer/SDKs/WatchOS5.1.sdk
+
+PlatformVersion: 5.1
+
+PlatformPath: /Applications/Xcode-10.1.app/Contents/Developer/Platforms/WatchOS.platform
+
+BuildID: 0EA5384C-D355-11E8-9BF8-A40624452C56
+
+ProductBuildVersion: 16R591
+
+ProductCopyright: 1983-2018 Apple Inc.
+
+ProductName: Watch OS
+
+ProductVersion: 5.1
+
+
+
+WatchSimulator5.1.sdk - Simulator - watchOS 5.1 (watchsimulator5.1)
+
+SDKVersion: 5.1
+
+Path: /Applications/Xcode-10.1.app/Contents/Developer/Platforms/WatchSimulator.platform/Developer/SDKs/WatchSimulator5.1.sdk
+
+PlatformVersion: 5.1
+
+PlatformPath: /Applications/Xcode-10.1.app/Contents/Developer/Platforms/WatchSimulator.platform
+
+BuildID: 0EA5384C-D355-11E8-9BF8-A40624452C56
+
+ProductBuildVersion: 16R591
+
+ProductCopyright: 1983-2018 Apple Inc.
+
+ProductName: Watch OS
+
+ProductVersion: 5.1
+
+
+
+Xcode 10.1
+
+Build version 10B61
+
+$ xcrun simctl list
+
+== Device Types ==
+
+iPhone 4s (com.apple.CoreSimulator.SimDeviceType.iPhone-4s)
+
+iPhone 5 (com.apple.CoreSimulator.SimDeviceType.iPhone-5)
+
+iPhone 5s (com.apple.CoreSimulator.SimDeviceType.iPhone-5s)
+
+iPhone 6 (com.apple.CoreSimulator.SimDeviceType.iPhone-6)
+
+iPhone 6 Plus (com.apple.CoreSimulator.SimDeviceType.iPhone-6-Plus)
+
+iPhone 6s (com.apple.CoreSimulator.SimDeviceType.iPhone-6s)
+
+iPhone 6s Plus (com.apple.CoreSimulator.SimDeviceType.iPhone-6s-Plus)
+
+iPhone 7 (com.apple.CoreSimulator.SimDeviceType.iPhone-7)
+
+iPhone 7 Plus (com.apple.CoreSimulator.SimDeviceType.iPhone-7-Plus)
+
+iPhone 8 (com.apple.CoreSimulator.SimDeviceType.iPhone-8)
+
+iPhone 8 Plus (com.apple.CoreSimulator.SimDeviceType.iPhone-8-Plus)
+
+iPhone SE (com.apple.CoreSimulator.SimDeviceType.iPhone-SE)
+
+iPhone X (com.apple.CoreSimulator.SimDeviceType.iPhone-X)
+
+iPhone Xs (com.apple.CoreSimulator.SimDeviceType.iPhone-XS)
+
+iPhone Xs Max (com.apple.CoreSimulator.SimDeviceType.iPhone-XS-Max)
+
+iPhone XÊ€ (com.apple.CoreSimulator.SimDeviceType.iPhone-XR)
+
+iPad 2 (com.apple.CoreSimulator.SimDeviceType.iPad-2)
+
+iPad Retina (com.apple.CoreSimulator.SimDeviceType.iPad-Retina)
+
+iPad Air (com.apple.CoreSimulator.SimDeviceType.iPad-Air)
+
+iPad Air 2 (com.apple.CoreSimulator.SimDeviceType.iPad-Air-2)
+
+iPad (5th generation) (com.apple.CoreSimulator.SimDeviceType.iPad--5th-generation-)
+
+iPad Pro (9.7-inch) (com.apple.CoreSimulator.SimDeviceType.iPad-Pro--9-7-inch-)
+
+iPad Pro (12.9-inch) (com.apple.CoreSimulator.SimDeviceType.iPad-Pro)
+
+iPad Pro (12.9-inch) (2nd generation) (com.apple.CoreSimulator.SimDeviceType.iPad-Pro--12-9-inch---2nd-generation-)
+
+iPad Pro (10.5-inch) (com.apple.CoreSimulator.SimDeviceType.iPad-Pro--10-5-inch-)
+
+iPad (6th generation) (com.apple.CoreSimulator.SimDeviceType.iPad--6th-generation-)
+
+iPad Pro (11-inch) (com.apple.CoreSimulator.SimDeviceType.iPad-Pro--11-inch-)
+
+iPad Pro (12.9-inch) (3rd generation) (com.apple.CoreSimulator.SimDeviceType.iPad-Pro--12-9-inch---3rd-generation-)
+
+Apple TV (com.apple.CoreSimulator.SimDeviceType.Apple-TV-1080p)
+
+Apple TV 4K (com.apple.CoreSimulator.SimDeviceType.Apple-TV-4K-4K)
+
+Apple TV 4K (at 1080p) (com.apple.CoreSimulator.SimDeviceType.Apple-TV-4K-1080p)
+
+Apple Watch - 38mm (com.apple.CoreSimulator.SimDeviceType.Apple-Watch-38mm)
+
+Apple Watch - 42mm (com.apple.CoreSimulator.SimDeviceType.Apple-Watch-42mm)
+
+Apple Watch Series 2 - 38mm (com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-2-38mm)
+
+Apple Watch Series 2 - 42mm (com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-2-42mm)
+
+Apple Watch Series 3 - 38mm (com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-3-38mm)
+
+Apple Watch Series 3 - 42mm (com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-3-42mm)
+
+Apple Watch Series 4 - 40mm (com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-4-40mm)
+
+Apple Watch Series 4 - 44mm (com.apple.CoreSimulator.SimDeviceType.Apple-Watch-Series-4-44mm)
+
+== Runtimes ==
+
+iOS 8.1 (8.1 - 12B411) - com.apple.CoreSimulator.SimRuntime.iOS-8-1 
+
+iOS 8.2 (8.2 - 12D508) - com.apple.CoreSimulator.SimRuntime.iOS-8-2 
+
+iOS 8.3 (8.3 - 12F70) - com.apple.CoreSimulator.SimRuntime.iOS-8-3 
+
+iOS 8.4 (8.4 - 12H141) - com.apple.CoreSimulator.SimRuntime.iOS-8-4 
+
+iOS 9.0 (9.0 - 13A344) - com.apple.CoreSimulator.SimRuntime.iOS-9-0 
+
+iOS 9.1 (9.1 - 13B143) - com.apple.CoreSimulator.SimRuntime.iOS-9-1 
+
+iOS 9.2 (9.2 - 13C75) - com.apple.CoreSimulator.SimRuntime.iOS-9-2 
+
+iOS 9.3 (9.3 - 13E233) - com.apple.CoreSimulator.SimRuntime.iOS-9-3 
+
+iOS 10.0 (10.0 - 14A345) - com.apple.CoreSimulator.SimRuntime.iOS-10-0 
+
+iOS 10.1 (10.1 - 14B72) - com.apple.CoreSimulator.SimRuntime.iOS-10-1 
+
+iOS 10.2 (10.2 - 14C89) - com.apple.CoreSimulator.SimRuntime.iOS-10-2 
+
+iOS 10.3 (10.3.1 - 14E8301) - com.apple.CoreSimulator.SimRuntime.iOS-10-3 
+
+iOS 11.0 (11.0.1 - 15A8401) - com.apple.CoreSimulator.SimRuntime.iOS-11-0 
+
+iOS 11.1 (11.1 - 15B87) - com.apple.CoreSimulator.SimRuntime.iOS-11-1 
+
+iOS 11.2 (11.2 - 15C107) - com.apple.CoreSimulator.SimRuntime.iOS-11-2 
+
+iOS 11.3 (11.3 - 15E217) - com.apple.CoreSimulator.SimRuntime.iOS-11-3 
+
+iOS 11.4 (11.4 - 15F79) - com.apple.CoreSimulator.SimRuntime.iOS-11-4 
+
+iOS 12.0 (12.0 - 16A366) - com.apple.CoreSimulator.SimRuntime.iOS-12-0 
+
+iOS 12.1 (12.1 - 16B91) - com.apple.CoreSimulator.SimRuntime.iOS-12-1 
+
+tvOS 9.0 (9.0 - 13T395) - com.apple.CoreSimulator.SimRuntime.tvOS-9-0 
+
+tvOS 9.1 (9.1 - 13U85) - com.apple.CoreSimulator.SimRuntime.tvOS-9-1 
+
+tvOS 9.2 (9.2 - 13Y234) - com.apple.CoreSimulator.SimRuntime.tvOS-9-2 
+
+tvOS 10.0 (10.0 - 14T328) - com.apple.CoreSimulator.SimRuntime.tvOS-10-0 
+
+tvOS 10.1 (10.1 - 14U591) - com.apple.CoreSimulator.SimRuntime.tvOS-10-1 
+
+tvOS 10.2 (10.2 - 14W260) - com.apple.CoreSimulator.SimRuntime.tvOS-10-2 
+
+tvOS 11.0 (11.0 - 15J380) - com.apple.CoreSimulator.SimRuntime.tvOS-11-0 
+
+tvOS 11.1 (11.1 - 15J580) - com.apple.CoreSimulator.SimRuntime.tvOS-11-1 
+
+tvOS 11.2 (11.2 - 15K104) - com.apple.CoreSimulator.SimRuntime.tvOS-11-2 
+
+tvOS 11.3 (11.3 - 15L211) - com.apple.CoreSimulator.SimRuntime.tvOS-11-3 
+
+tvOS 11.4 (11.4 - 15L576) - com.apple.CoreSimulator.SimRuntime.tvOS-11-4 
+
+tvOS 12.0 (12.0 - 16J364) - com.apple.CoreSimulator.SimRuntime.tvOS-12-0 
+
+tvOS 12.1 (12.1 - 16J602) - com.apple.CoreSimulator.SimRuntime.tvOS-12-1 
+
+watchOS 2.0 (2.0 - 13S343) - com.apple.CoreSimulator.SimRuntime.watchOS-2-0 
+
+watchOS 2.1 (2.1 - 13S661) - com.apple.CoreSimulator.SimRuntime.watchOS-2-1 
+
+watchOS 2.2 (2.2 - 13V144) - com.apple.CoreSimulator.SimRuntime.watchOS-2-2 
+
+watchOS 3.1 (3.1 - 14S471a) - com.apple.CoreSimulator.SimRuntime.watchOS-3-1 
+
+watchOS 3.2 (3.2 - 14V243) - com.apple.CoreSimulator.SimRuntime.watchOS-3-2 
+
+watchOS 4.0 (4.0 - 15R372) - com.apple.CoreSimulator.SimRuntime.watchOS-4-0 
+
+watchOS 4.1 (4.1 - 15R844) - com.apple.CoreSimulator.SimRuntime.watchOS-4-1 
+
+watchOS 4.2 (4.2 - 15S100) - com.apple.CoreSimulator.SimRuntime.watchOS-4-2 
+
+watchOS 5.0 (5.0 - 16R363) - com.apple.CoreSimulator.SimRuntime.watchOS-5-0 
+
+watchOS 5.1 (5.1 - 16R591) - com.apple.CoreSimulator.SimRuntime.watchOS-5-1 
+
+== Devices ==
+
+-- iOS 8.1 --
+
+    iPhone 4s (8438780B-09B4-4A95-9CC7-046D5F2713BF) (Shutdown) 
+
+    iPhone 5 (FDD167F8-8586-4A1F-ABD9-3284634325C0) (Shutdown) 
+
+    iPhone 5s (18A2C74A-2A47-46CF-B750-7AF030726E21) (Shutdown) 
+
+    iPhone 6 (88177439-9DF5-4AB2-A0DD-D9CECCE4F549) (Shutdown) 
+
+    iPhone 6 Plus (8AC58E4B-F47E-4A9E-8F31-5898BFFF7BCD) (Shutdown) 
+
+    iPad 2 (B5371A43-E3DE-4E1C-AC74-D866D8849044) (Shutdown) 
+
+    iPad Retina (BA268005-F0DE-4132-AF8F-EB490174746E) (Shutdown) 
+
+    iPad Air (427E7C15-FEA9-4E96-8E5A-F5BD8DA4A918) (Shutdown) 
+
+-- iOS 8.2 --
+
+    iPhone 4s (C03329B0-292D-4577-9497-35B396455701) (Shutdown) 
+
+    iPhone 5 (F5D64CFF-105A-4D9F-9A8E-B57E47ECCB47) (Shutdown) 
+
+    iPhone 5s (5FD4485C-0D04-4F73-917F-C646B9A13FEF) (Shutdown) 
+
+    iPhone 6 (FCDAAB04-640F-481E-B7A7-BBC3436CF7D0) (Shutdown) 
+
+    iPhone 6 Plus (05D0BB10-409C-4EE1-AF1B-EC2891188D71) (Shutdown) 
+
+    iPad 2 (0C86D990-7750-4FB8-8CDC-B6CF9C88ED88) (Shutdown) 
+
+    iPad Retina (CDB6380A-F116-44CB-8DFA-BB9332E175D6) (Shutdown) 
+
+    iPad Air (8D4CDF70-39F7-4094-9C96-4E6697C6A0BE) (Shutdown) 
+
+-- iOS 8.3 --
+
+    iPhone 4s (DAAC0423-EE28-4F47-905F-295911217BA8) (Shutdown) 
+
+    iPhone 5 (C791E2C0-07C6-4F8D-90C6-C3A64C8D7ABF) (Shutdown) 
+
+    iPhone 5s (97866A9F-9A01-4BE6-96A1-09D1397DF8A1) (Shutdown) 
+
+    iPhone 6 (DDC7AC8E-95C3-4E1B-892B-024FC5219ED7) (Shutdown) 
+
+    iPhone 6 Plus (C75C7C87-1D9B-4415-BE8E-0F0D7D7DA063) (Shutdown) 
+
+    iPad 2 (34262C67-F03B-4FAF-A835-D6A4131621DF) (Shutdown) 
+
+    iPad Retina (161750EC-B962-4F79-B2FF-C1E1B52E6223) (Shutdown) 
+
+    iPad Air (7988BDCA-527A-4CFB-941D-AC0DDB23B315) (Shutdown) 
+
+-- iOS 8.4 --
+
+    iPhone 4s (F7B051EF-CE8B-483B-9B38-2E0E9ADFB93D) (Shutdown) 
+
+    iPhone 5 (3622D63B-6DB3-4559-B808-BE35A773E580) (Shutdown) 
+
+    iPhone 5s (48B9A861-CCD4-4CB6-B133-90BEBD427802) (Shutdown) 
+
+    iPhone 6 (621B7199-EA45-441A-B055-78CA8375FBF5) (Shutdown) 
+
+    iPhone 6 Plus (AB114105-2AEF-4A4B-A7A0-C1188227D705) (Shutdown) 
+
+    iPad 2 (E85CA546-E4D1-407A-BED4-91AC043EFF81) (Shutdown) 
+
+    iPad Retina (1F0DAA84-374A-4529-9B72-F496FA76651F) (Shutdown) 
+
+    iPad Air (5FE5DE74-0F29-4ACA-8B5D-8E337F2F0247) (Shutdown) 
+
+-- iOS 9.0 --
+
+    iPhone 4s (F6532405-4DC5-49E4-B44C-45696BA1FD41) (Shutdown) 
+
+    iPhone 5 (9A6B287E-5910-4AEC-9A8E-5B6A87013219) (Shutdown) 
+
+    iPhone 5s (490C4907-0F67-4EBF-BB4E-71B3BE497487) (Shutdown) 
+
+    iPhone 6 (D6332DB8-373C-465E-BBB2-DD651987E76A) (Shutdown) 
+
+    iPhone 6 Plus (A5D7784F-F4E0-42E3-A75C-284936BA75D9) (Shutdown) 
+
+    iPhone 6s (0F5CBA2D-5C77-4F16-B7E7-DA82D9BB662B) (Shutdown) 
+
+    iPhone 6s Plus (91683A93-CCB2-4632-8ADF-96FE05B21DE0) (Shutdown) 
+
+    iPad 2 (BDAF42B7-FAD0-44AE-9552-4CE23F29A4A1) (Shutdown) 
+
+    iPad Retina (8CAA29F4-BD3B-4C0A-BEA9-BFB07C45018C) (Shutdown) 
+
+    iPad Air (36C30225-F4A5-47A8-AD64-6B02B1E46863) (Shutdown) 
+
+    iPad Air 2 (6BBFD284-8CF5-4423-AF73-6BDFBBF8AF0D) (Shutdown) 
+
+-- iOS 9.1 --
+
+    iPhone 4s (111FD485-B402-4BB4-9C1F-85F9879E70ED) (Shutdown) 
+
+    iPhone 5 (FC8F696C-7954-43FB-979F-DF94BE5937A1) (Shutdown) 
+
+    iPhone 5s (B49962AA-7B23-458F-A496-C09B05AEC79E) (Shutdown) 
+
+    iPhone 6 (5B86B492-1FDF-4A6D-B185-D99E5604C683) (Shutdown) 
+
+    iPhone 6 Plus (0D3E8086-519E-4D3A-81A5-85BB9457B176) (Shutdown) 
+
+    iPhone 6s (A26940B9-4C82-4B1E-A53A-41CC9DDD71C5) (Shutdown) 
+
+    iPhone 6s Plus (60C9C6A0-91DA-4C45-B20E-0512C13E12AD) (Shutdown) 
+
+    iPad 2 (0B6C0FC3-8651-41CC-90C1-EF425A28B83B) (Shutdown) 
+
+    iPad Retina (7B85083D-60D7-4E7F-AA96-9A1FC5AC9C2A) (Shutdown) 
+
+    iPad Air (B7569762-F791-4488-8D45-835A9F09AD8C) (Shutdown) 
+
+    iPad Air 2 (5022D924-812A-41FF-9FA1-6BEC721E8714) (Shutdown) 
+
+    iPad Pro (7C071ACA-5484-460F-9DB9-72A4AFA5D2E8) (Shutdown) 
+
+-- iOS 9.2 --
+
+    iPhone 4s (CF5FBE9C-012F-4B8E-8294-CE9208263D18) (Shutdown) 
+
+    iPhone 5 (BAB4A208-A4CC-4DC2-A7ED-55EDA88CCF0D) (Shutdown) 
+
+    iPhone 5s (CD51296A-5B00-4825-A054-11EB4C647C74) (Shutdown) 
+
+    iPhone 6 (A67FDF6E-A067-469C-BFF3-4B431403F515) (Shutdown) 
+
+    iPhone 6 Plus (BA29E67B-CCDA-4C3E-9580-04931E71455C) (Shutdown) 
+
+    iPhone 6s (2064D58C-9963-45D5-BDFA-06037609CF3D) (Shutdown) 
+
+    iPhone 6s Plus (5577753A-7F3E-41FC-A8DD-FE16C03D07B4) (Shutdown) 
+
+    iPad 2 (F07CB9AB-2E4F-484B-8577-2D5605610B83) (Shutdown) 
+
+    iPad Retina (EBF6181C-755F-4860-AE6F-10261D44F8E4) (Shutdown) 
+
+    iPad Air (CC5B9CCC-79CE-42E1-8797-E7A18A038FB7) (Shutdown) 
+
+    iPad Air 2 (4C503975-9F51-4CEA-A399-7F215FDE407F) (Shutdown) 
+
+    iPad Pro (13089D76-855B-4C2D-B0FD-EE942E1F75C6) (Shutdown) 
+
+-- iOS 9.3 --
+
+    iPhone 4s (20AB69BA-2CD9-4F62-A9CA-33C5F8271961) (Shutdown) 
+
+    iPhone 5 (A564B3CD-403A-4F9C-A07D-7C42A98843F9) (Shutdown) 
+
+    iPhone 5s (CEF0847D-7066-4CBF-8D21-91201F5519D1) (Shutdown) 
+
+    iPhone 6 (761B476A-9E04-457B-B364-0DD1D349628C) (Shutdown) 
+
+    iPhone 6 Plus (BA60DE1F-8497-4B8B-AE25-C5C0B5152499) (Shutdown) 
+
+    iPhone 6s (CBA5A2EE-E91C-4686-8A4E-858CE187AC5B) (Shutdown) 
+
+    iPhone 6s Plus (4771FC15-8EFB-4458-9154-E6208C9BEC6E) (Shutdown) 
+
+    iPad 2 (640159DD-0A16-4470-98C2-BEA5C5EACF86) (Shutdown) 
+
+    iPad Retina (9CD49375-A38E-4740-928F-B28BE69A0484) (Shutdown) 
+
+    iPad Air (0BDF3396-A873-48E0-AD22-B9AAFB4F4E9E) (Shutdown) 
+
+    iPad Air 2 (2DC8D9AF-DAAB-434B-8DA7-30F41CF5BDEC) (Shutdown) 
+
+    iPad Pro (5AB74B21-8F35-48E6-BE1A-942ABAC99C10) (Shutdown) 
+
+-- iOS 10.0 --
+
+    iPhone 5 (775B1F08-0796-414E-8A5E-D9217E445850) (Shutdown) 
+
+    iPhone 5s (9C002CC9-6252-4133-AF22-EC093E7B9F3B) (Shutdown) 
+
+    iPhone 6 (4C024375-4DA1-4BCE-A878-36ABA42CA0C3) (Shutdown) 
+
+    iPhone 6 Plus (E77072F2-5702-43C4-9E3F-FBD5AF40E5B8) (Shutdown) 
+
+    iPhone 6s (C825E7F0-8C57-4E23-9541-39D7A08CB409) (Shutdown) 
+
+    iPhone 6s Plus (A261C818-E20E-4B25-9F46-7ABD06F05E5A) (Shutdown) 
+
+    iPhone SE (663BAB41-16F7-4DB8-921F-6EEBFA10B50E) (Shutdown) 
+
+    iPad Air (4F6780F3-5F53-49D0-8AA0-6EE7BC6C7DD0) (Shutdown) 
+
+    iPad Air 2 (92D43D24-3076-4268-BDC0-DA2797CFFDEB) (Shutdown) 
+
+    iPad Pro (9.7 inch) (82ACD91B-F2FA-40D5-A271-51842DB98099) (Shutdown) 
+
+    iPad Pro (12.9 inch) (3567B7A8-A63C-463D-A293-FC29F310E20E) (Shutdown) 
+
+-- iOS 10.1 --
+
+    iPhone 5 (0F470843-86BA-4D25-B1F9-C3B422A34DB5) (Shutdown) 
+
+    iPhone 5s (F53ABC53-9542-4C33-9320-85C4AB1429A2) (Shutdown) 
+
+    iPhone 6 (4CCDFD1D-E9B0-45AC-8C85-2AC0F644AD71) (Shutdown) 
+
+    iPhone 6 Plus (DB349104-B809-456C-8A4B-175072C385C5) (Shutdown) 
+
+    iPhone 6s (F2F61780-CAAB-4E00-9672-A6976ABB2C48) (Shutdown) 
+
+    iPhone 6s Plus (8DCA733B-71EA-4C63-97E5-DC7B351929B2) (Shutdown) 
+
+    iPhone 7 (FBEEEE9E-55F4-40A9-BC10-280B70626A52) (Shutdown) 
+
+    iPhone 7 Plus (3F0644F8-7998-47C5-BC20-9C4C140AB149) (Shutdown) 
+
+    iPhone SE (9BBF370A-4719-480B-84E9-71763B91263C) (Shutdown) 
+
+    iPad Air (6095EC44-5959-4AEA-B8F3-80710D4FAE37) (Shutdown) 
+
+    iPad Air 2 (A27E3391-26A9-44B8-9439-A379E351F101) (Shutdown) 
+
+    iPad Pro (9.7 inch) (45E9847B-2C75-4895-8943-4268DF644C10) (Shutdown) 
+
+    iPad Pro (12.9 inch) (934A9197-52E8-45B4-8149-3F40DE917EB6) (Shutdown) 
+
+-- iOS 10.2 --
+
+    iPhone 5 (11C3C59E-C709-49B0-A3A9-9189EE82CA9B) (Shutdown) 
+
+    iPhone 5s (AB3DAED9-19C9-4C8A-A715-4005B1501727) (Shutdown) 
+
+    iPhone 6 (96208B07-BEE5-469F-A399-94412AB1C311) (Shutdown) 
+
+    iPhone 6 Plus (7FB00E5A-FB1F-4986-B902-9AEFE780207E) (Shutdown) 
+
+    iPhone 6s (5B96A9A8-334C-4821-A99F-8478D7C4FEC5) (Shutdown) 
+
+    iPhone 6s Plus (178413D4-0CAB-495B-A71B-8B85C5EE337E) (Shutdown) 
+
+    iPhone 7 (9C570056-0333-46F2-A7B1-36B9CF435570) (Shutdown) 
+
+    iPhone 7 Plus (8784E581-D670-45A4-8BA5-03C7FC84AA90) (Shutdown) 
+
+    iPhone SE (4F3805F5-106A-40B6-9D53-0130F37E4A6B) (Shutdown) 
+
+    iPad Air (23F5D9EA-57F6-498E-9062-1087B8E9CDB9) (Shutdown) 
+
+    iPad Air 2 (79C1EE8B-2717-466A-B345-8541E00C0C75) (Shutdown) 
+
+    iPad Pro (9.7 inch) (ABAA7923-DD5D-4C6E-97BA-6FEB5284E98B) (Shutdown) 
+
+    iPad Pro (12.9 inch) (26E472E2-C658-4B3F-8E30-74B4F93C991A) (Shutdown) 
+
+-- iOS 10.3 --
+
+    iPhone 5 (5094AF89-DFEC-4B82-833C-2E26A818BA2A) (Shutdown) 
+
+    iPhone 5s (C15172E2-AB5A-4928-8306-4A1F7F09B707) (Shutdown) 
+
+    iPhone 6 (963D403B-37A1-4957-9B35-F10FE8064837) (Shutdown) 
+
+    iPhone 6 Plus (4C8035EA-67EE-4013-B25C-65BADE031777) (Shutdown) 
+
+    iPhone 6s (D2F5CC6E-7A50-477A-903E-8024D1C58E64) (Shutdown) 
+
+    iPhone 6s Plus (C365E54A-A8CF-45E3-A367-D45CCC66E501) (Shutdown) 
+
+    iPhone 7 (36AA5CE9-DA43-4D03-BBFA-DA0CC5DD54D6) (Shutdown) 
+
+    iPhone 7 Plus (66384C82-787A-47FE-BE4E-6FBD37C95AA0) (Shutdown) 
+
+    iPhone SE (E6DB99F4-93DB-4A7C-A7BC-24479E4AD726) (Shutdown) 
+
+    iPad Air (5D18350F-854B-4935-BA10-FB04F75CA0BD) (Shutdown) 
+
+    iPad Air 2 (E9F132F9-4C7B-4936-B21F-3407F08D6D54) (Shutdown) 
+
+    iPad (5th generation) (208807D7-D4EA-4333-9CAC-E4C51C98389F) (Shutdown) 
+
+    iPad Pro (9.7 inch) (0D23403A-DE80-40CC-96FF-87357EA314B5) (Shutdown) 
+
+    iPad Pro (12.9 inch) (95D8BC8E-B27D-4E65-8831-699C1CCE337A) (Shutdown) 
+
+    iPad Pro (12.9-inch) (2nd generation) (E6C41758-B476-4402-96D1-878BFDD33991) (Shutdown) 
+
+    iPad Pro (10.5-inch) (F718002E-1B60-4EFE-8D22-6B8B2E680AA1) (Shutdown) 
+
+-- iOS 11.0 --
+
+    iPhone 5s (C1FA95D0-A47A-441F-86CF-67E63F6A2164) (Shutdown) 
+
+    iPhone 6 (F91345D3-64A7-4483-B7E1-0513B86FE54C) (Shutdown) 
+
+    iPhone 6 Plus (AC512771-2935-4188-B462-2978EB6ED484) (Shutdown) 
+
+    iPhone 6s (BABAA5B3-4600-4784-B7AD-A0E5EAD702A9) (Shutdown) 
+
+    iPhone 6s Plus (F6EBAB89-768B-496D-A04F-E7C865AF52A4) (Shutdown) 
+
+    iPhone 7 (7556D0A8-544F-4393-A185-C2B813A8FC56) (Shutdown) 
+
+    iPhone 7 Plus (8B67662B-4B7B-44C8-B94D-68EAE9D93F96) (Shutdown) 
+
+    iPhone 8 (EB6D15EB-B205-4E3F-9FA5-DEF2DB918D80) (Shutdown) 
+
+    iPhone 8 Plus (3AECA06A-E41A-40B3-B494-B38207C2CF57) (Shutdown) 
+
+    iPhone SE (D2207AED-55FD-4BEB-A75C-A7CB0FB9EC7D) (Shutdown) 
+
+    iPhone X (2AC62909-76B7-4C40-A0AB-A35E0096F2BB) (Shutdown) 
+
+    iPad Air (D7D50869-C10F-4E3D-8C49-0C288EB98900) (Shutdown) 
+
+    iPad Air 2 (EA88EBEF-158B-44D8-A335-97875640C376) (Shutdown) 
+
+    iPad (5th generation) (7C34F7D9-B684-4276-8C1E-2D4D246198C4) (Shutdown) 
+
+    iPad Pro (9.7-inch) (FE483D68-A40E-4433-B2A8-F65D8335639B) (Shutdown) 
+
+    iPad Pro (12.9-inch) (BCC6F274-274F-47BF-B469-86AAC337D923) (Shutdown) 
+
+    iPad Pro (12.9-inch) (2nd generation) (9E690468-D32A-4BCE-8408-B400D49FE5B7) (Shutdown) 
+
+    iPad Pro (10.5-inch) (85B9B9CC-B1E6-4F64-9F63-B3E3572602DC) (Shutdown) 
+
+-- iOS 11.1 --
+
+    iPhone 5s (D548A464-796B-44E2-B6E1-769E8BFB575C) (Shutdown) 
+
+    iPhone 6 (205646B8-DC7B-4954-BC5B-27B24F9FD036) (Shutdown) 
+
+    iPhone 6 Plus (206DFA19-06D8-4E40-A38E-3CC60D6E4AA9) (Shutdown) 
+
+    iPhone 6s (47C008EC-F7BD-401A-AA0E-4A616B52D4AA) (Shutdown) 
+
+    iPhone 6s Plus (81C3275F-80F3-4A46-9BCC-3CBC9DBC1A03) (Shutdown) 
+
+    iPhone 7 (6A438C9E-A3A2-4EFD-9707-7A348FF8D86E) (Shutdown) 
+
+    iPhone 7 Plus (FAD04386-2A46-42BF-875C-F2182DD2F19E) (Shutdown) 
+
+    iPhone 8 (FFB3D6A0-606D-49F6-B0B6-216DC246428F) (Shutdown) 
+
+    iPhone 8 Plus (12160AB4-CC22-4A1F-A358-513ABC368078) (Shutdown) 
+
+    iPhone SE (9B4A6148-96BB-4E46-9A17-E9D79CD2003B) (Shutdown) 
+
+    iPhone X (3DBF764E-425B-4EF3-AE3F-5F217C35A884) (Shutdown) 
+
+    iPad Air (3EC3BD18-9086-4F74-A4D0-CEFF9BF91973) (Shutdown) 
+
+    iPad Air 2 (F7DE15C6-901A-4935-AE2E-1084F6BA5087) (Shutdown) 
+
+    iPad (5th generation) (FB13D401-DA49-4B04-9F1F-75E6F487CCB1) (Shutdown) 
+
+    iPad Pro (9.7-inch) (449DB32E-7738-4A68-B3C6-88DC63AE3924) (Shutdown) 
+
+    iPad Pro (12.9-inch) (B64D8D16-E2C5-4B9B-A3B2-9A8FE8A50AB1) (Shutdown) 
+
+    iPad Pro (12.9-inch) (2nd generation) (18EEE599-3BE5-4C68-9724-BD44F030D689) (Shutdown) 
+
+    iPad Pro (10.5-inch) (22CE348D-5540-459A-8FCF-97823D95BDA0) (Shutdown) 
+
+-- iOS 11.2 --
+
+    iPhone 5s (FC7BE501-88A3-4F64-B8D6-D67A76D191BF) (Shutdown) 
+
+    iPhone 6 (FC0D12B4-B59A-48DB-80EE-742741C5F981) (Shutdown) 
+
+    iPhone 6 Plus (96C141C8-4D89-4D01-BC83-2105CB6DDBE2) (Shutdown) 
+
+    iPhone 6s (839A3A6C-A150-456C-AEB9-05146A2ADBC2) (Shutdown) 
+
+    iPhone 6s Plus (BAB1531D-0F94-4357-A528-926EA7DC4313) (Shutdown) 
+
+    iPhone 7 (F66E49C2-F604-4227-B970-17BCB4871625) (Shutdown) 
+
+    iPhone 7 Plus (0D228B3D-FD5A-43F6-ABF0-4E9FE44BA9BE) (Shutdown) 
+
+    iPhone 8 (75CE04C0-D947-4E31-9493-F42A207235D1) (Shutdown) 
+
+    iPhone 8 Plus (56F21ACB-363B-4091-BEC3-74F2369A9DE7) (Shutdown) 
+
+    iPhone SE (88EC26EF-0306-4B1A-89D4-8B4C81D3179C) (Shutdown) 
+
+    iPhone X (9187CC52-7495-4DB2-AB5C-E0CDEE21F116) (Shutdown) 
+
+    iPad Air (C656AA14-A0FE-47CF-B1C1-0F017012FAD3) (Shutdown) 
+
+    iPad Air 2 (1AE9E106-F826-4719-8DE5-2502F07D41A9) (Shutdown) 
+
+    iPad (5th generation) (120AF6BE-94E0-4A77-9C2C-5827C240E13C) (Shutdown) 
+
+    iPad Pro (9.7-inch) (37F67AC0-459B-4BD2-AD5F-474EE2B5ADD7) (Shutdown) 
+
+    iPad Pro (12.9-inch) (705E0D92-BFE8-41DF-9556-70A70C03BB3C) (Shutdown) 
+
+    iPad Pro (12.9-inch) (2nd generation) (7AA0D222-C7BC-4155-A014-103FEEA6D278) (Shutdown) 
+
+    iPad Pro (10.5-inch) (05F8CA22-224F-4589-B9B9-E8D168C8F5E7) (Shutdown) 
+
+-- iOS 11.3 --
+
+    iPhone 5s (0387A5D0-C97C-4182-944C-E75333959FCD) (Shutdown) 
+
+    iPhone 6 (0D559D25-F633-49D6-BF26-3F55E52B8048) (Shutdown) 
+
+    iPhone 6 Plus (AC53D0A5-DD3A-49AA-ACF0-B3D1D3CF7ABA) (Shutdown) 
+
+    iPhone 6s (E5B42FD6-F55B-4179-8E0F-E4691CBCE4D8) (Shutdown) 
+
+    iPhone 6s Plus (13D169F9-C9BD-423D-B789-6FBFC78CB883) (Shutdown) 
+
+    iPhone 7 (60002CF1-3477-46DE-A056-0F8E9255942A) (Shutdown) 
+
+    iPhone 7 Plus (78E63FF3-5194-4F65-A7FB-334F66B5DC7B) (Shutdown) 
+
+    iPhone 8 (512B7A09-5BD2-4754-8BA9-799B810973D5) (Shutdown) 
+
+    iPhone 8 Plus (7FC821E0-842E-4A15-935B-FAFC54E3B596) (Shutdown) 
+
+    iPhone SE (D3D695A4-BA40-4233-97C8-F62289708BD9) (Shutdown) 
+
+    iPhone X (197262E0-BD9B-4223-A214-7A65EDE5410D) (Shutdown) 
+
+    iPad Air (9B303D6F-8C81-44FD-AECD-3E31295AE295) (Shutdown) 
+
+    iPad Air 2 (84326843-D41F-4BBE-B53D-9157B00502FF) (Shutdown) 
+
+    iPad (5th generation) (C2782E4B-D791-464C-B827-2BC6C4C912B3) (Shutdown) 
+
+    iPad Pro (9.7-inch) (E8E83911-F85C-4ECD-B985-D7DDCF0C080F) (Shutdown) 
+
+    iPad Pro (12.9-inch) (77A684A7-F428-40AB-927B-66CDBE28BE2D) (Shutdown) 
+
+    iPad Pro (12.9-inch) (2nd generation) (F5E19D99-30F2-48E0-B121-278F1ECDBD7B) (Shutdown) 
+
+    iPad Pro (10.5-inch) (1A348CA3-6298-4120-ABAC-D239830A6862) (Shutdown) 
+
+-- iOS 11.4 --
+
+    iPhone 5s (06C65DFB-5DE4-4201-8C1F-5D8319235EB8) (Shutdown) 
+
+    iPhone 6 (7CA190D7-A874-4ABF-B762-76EBFECA7AAD) (Shutdown) 
+
+    iPhone 6 Plus (BC5A103D-001D-46B9-891E-D577D90C7E8C) (Shutdown) 
+
+    iPhone 6s (1B0C75F8-DC14-4446-9301-4980E299796E) (Shutdown) 
+
+    iPhone 6s Plus (D942FA8C-8430-44A8-A744-2FA51E0C1D64) (Shutdown) 
+
+    iPhone 7 (ED30DCDE-5148-4C06-99AD-9F31842E201C) (Shutdown) 
+
+    iPhone 7 Plus (CD94AC94-F878-4961-9E65-BD4B79C2D5D0) (Shutdown) 
+
+    iPhone 8 (485A5F33-E19F-498C-8EF9-3B53D9BAEF6D) (Shutdown) 
+
+    iPhone 8 Plus (5FE3B2DC-8CD6-4623-A7AF-5BF0C8F7FC8F) (Shutdown) 
+
+    iPhone SE (10E34C85-3BFA-4417-924B-92266EB14F57) (Shutdown) 
+
+    iPhone X (B959F816-F445-43B7-80B6-E33C35D49451) (Shutdown) 
+
+    iPad Air (EAF5B074-A0C1-49FB-BB08-E34008882B84) (Shutdown) 
+
+    iPad Air 2 (8036EE5B-B765-4D9D-BD7F-FB3643C7F42B) (Shutdown) 
+
+    iPad (5th generation) (8D604BBE-7022-4D92-9EDB-43E064C701D5) (Shutdown) 
+
+    iPad Pro (9.7-inch) (F56270BC-C6EB-4F77-A0AE-7453628E99F0) (Shutdown) 
+
+    iPad Pro (12.9-inch) (04147ACB-6622-45AB-9248-DCF9B48F3786) (Shutdown) 
+
+    iPad Pro (12.9-inch) (2nd generation) (C5E7BF01-95A9-49E2-9503-F5A488DB8D01) (Shutdown) 
+
+    iPad Pro (10.5-inch) (7AFF47D4-D615-42E8-955D-692295843916) (Shutdown) 
+
+-- iOS 12.0 --
+
+    iPhone 5s (D9274496-EBB5-4952-BCA8-7961D30A3F78) (Shutdown) 
+
+    iPhone 6 (2FD2AE86-E392-413F-9C7C-2AE9A60F9E8D) (Shutdown) 
+
+    iPhone 6 Plus (6C686739-1F39-4540-9592-A00B75375906) (Shutdown) 
+
+    iPhone 6s (AB49CB55-451A-4DEE-81A1-898946CBC7D5) (Shutdown) 
+
+    iPhone 6s Plus (BBD3C74E-8BE6-4949-8474-5A6F2FA077D4) (Shutdown) 
+
+    iPhone 7 (4B5E2D94-9919-43CC-A5D1-F1A459197094) (Shutdown) 
+
+    iPhone 7 Plus (2D7EE453-016D-4715-B36B-6F8A0FA51C17) (Shutdown) 
+
+    iPhone 8 (556B35E4-16EB-439D-9B65-6F20AE0098F2) (Shutdown) 
+
+    iPhone 8 Plus (2FA8CE55-DD54-4A45-8943-0D617397A93C) (Shutdown) 
+
+    iPhone SE (BF661E06-49F5-45A7-BB91-B53F24CBAC3F) (Shutdown) 
+
+    iPhone X (BFEB29A1-48D8-4E5B-BD2D-2BBDEE78A8C6) (Shutdown) 
+
+    iPhone XS (DBB7EE3C-DC3B-4F60-8AE3-7FA0D7A6FAB3) (Shutdown) 
+
+    iPhone XS Max (C8CFCEFD-F2FE-4DA2-BE08-AB4D2B76C5AD) (Shutdown) 
+
+    iPhone XR (D4145181-BF19-4ABF-8BA8-BA2F8D9372E0) (Shutdown) 
+
+    iPad Air (DD7C869B-1EBB-4D08-849C-C0A9934A236B) (Shutdown) 
+
+    iPad Air 2 (C765DB29-D5E0-412A-9542-8298F0BF1569) (Shutdown) 
+
+    iPad (5th generation) (4E375549-583C-4E6A-968B-F15BD0B116E5) (Shutdown) 
+
+    iPad Pro (9.7-inch) (3EF0614F-00F3-43EA-92F6-D6F0CB0435C4) (Shutdown) 
+
+    iPad Pro (12.9-inch) (BDB58EAC-C353-47DB-8582-EC3FCC198F6C) (Shutdown) 
+
+    iPad Pro (12.9-inch) (2nd generation) (A79D4104-887D-403C-A3AF-E5DAC6384D81) (Shutdown) 
+
+    iPad Pro (10.5-inch) (60FBD1BB-9FDE-4A36-9DBD-BD95F8AC4F9D) (Shutdown) 
+
+    iPad (6th generation) (E7F36519-3E0D-4F0B-BC5E-8E4F03706736) (Shutdown) 
+
+-- iOS 12.1 --
+
+    iPhone 5s (3FB85C4A-7087-4D59-9232-6701F3900CE6) (Shutdown) 
+
+    iPhone 6 (31FCE7F5-2EF6-4FA8-9EFB-27AF87905AF5) (Shutdown) 
+
+    iPhone 6 Plus (153DB399-CE87-4667-8C3A-3A3BD38427A2) (Shutdown) 
+
+    iPhone 6s (BC4599CF-73E2-4523-8491-B0803F3E026B) (Shutdown) 
+
+    iPhone 6s Plus (09D08634-12B8-4500-A079-98ECD377C839) (Shutdown) 
+
+    iPhone 7 (0A9034D5-14FA-4903-9693-39B36E8207DF) (Shutdown) 
+
+    iPhone 7 Plus (7E15625F-57CA-4B6A-8DF8-5151287F320E) (Shutdown) 
+
+    iPhone 8 (D33EC96B-812E-456D-BB43-3EB6A35CF090) (Shutdown) 
+
+    iPhone 8 Plus (4EE37089-FF14-461F-95DF-5C1E335D7E18) (Shutdown) 
+
+    iPhone SE (3095489F-BB47-4C89-A977-4D8F0BB280FC) (Shutdown) 
+
+    iPhone X (CBFDFE0A-19EE-486E-BB49-F7C921A3647F) (Shutdown) 
+
+    iPhone XS (2B5E6E99-EA54-4E36-A447-0FB03A1A7751) (Shutdown) 
+
+    iPhone XS Max (883ED9A9-7E03-4072-8E8F-FD5941304987) (Shutdown) 
+
+    iPhone XR (9CD01318-7D72-40CB-BDA8-AA199BE988BC) (Shutdown) 
+
+    iPad Air (A0FF4B0E-BB2B-475B-8BB1-437588FDAA1D) (Shutdown) 
+
+    iPad Air 2 (867F426E-9845-480A-AAA0-F1B4263DDE3C) (Shutdown) 
+
+    iPad (5th generation) (21BA98BD-A8B9-423C-92BD-A79B9EB90624) (Shutdown) 
+
+    iPad Pro (9.7-inch) (88DD7F07-67FF-4F27-A905-F4331AB4D808) (Shutdown) 
+
+    iPad Pro (12.9-inch) (F446EC38-5C15-4F3B-A48E-2E7D88356072) (Shutdown) 
+
+    iPad Pro (12.9-inch) (2nd generation) (45DAAADC-2A92-45D2-B25B-8A849F5599AE) (Shutdown) 
+
+    iPad Pro (10.5-inch) (731D055E-DE08-456F-80BC-0F5BF3C1D5DA) (Shutdown) 
+
+    iPad (6th generation) (47263323-F5B9-4F28-99AD-13362EBFC188) (Shutdown) 
+
+    iPad Pro (11-inch) (9217635B-CAB2-4C8E-BAE3-F450D9546E47) (Shutdown) 
+
+    iPad Pro (12.9-inch) (3rd generation) (BD43AD3E-D902-40E1-8F52-0712C3C7A324) (Shutdown) 
+
+-- tvOS 9.0 --
+
+    Apple TV 1080p (C8867272-982A-42B8-B19C-9D1B41116F31) (Shutdown) 
+
+-- tvOS 9.1 --
+
+    Apple TV 1080p (02D17686-3E40-4432-8A7F-167E0B09245C) (Shutdown) 
+
+-- tvOS 9.2 --
+
+    Apple TV 1080p (50F3C990-7CFA-4EA7-94C4-989D464E904A) (Shutdown) 
+
+-- tvOS 10.0 --
+
+    Apple TV 1080p (8656335C-13A9-486C-BD10-8861479D2DE1) (Shutdown) 
+
+-- tvOS 10.1 --
+
+    Apple TV 1080p (CB3E52AA-0BD3-43B9-8218-B1CC99091E51) (Shutdown) 
+
+-- tvOS 10.2 --
+
+    Apple TV 1080p (AA6AB5F6-8B7A-41D2-8E47-C8FBC79BE983) (Shutdown) 
+
+-- tvOS 11.0 --
+
+    Apple TV (1F506374-9634-470C-B02B-604A35DD7FF0) (Shutdown) 
+
+    Apple TV 4K (A2771C33-6B2C-465D-B1F9-6DAE4839193F) (Shutdown) 
+
+    Apple TV 4K (at 1080p) (68909609-D018-41BD-8799-67D611E68FDE) (Shutdown) 
+
+-- tvOS 11.1 --
+
+    Apple TV (E74B989F-D701-4285-98AD-6451D7CFDCD4) (Shutdown) 
+
+    Apple TV 4K (D9018163-0E8A-4F99-BC71-6F2209400279) (Shutdown) 
+
+    Apple TV 4K (at 1080p) (08AD56B7-6F40-4732-BE07-896590F2376C) (Shutdown) 
+
+-- tvOS 11.2 --
+
+    Apple TV (9B45DCE0-BEA0-4C8D-ADF2-6B655D7A0B11) (Shutdown) 
+
+    Apple TV 4K (385F9DC3-BE4F-4132-955D-926AC80A9D1E) (Shutdown) 
+
+    Apple TV 4K (at 1080p) (7FC0147F-0227-4986-BF07-06DAEB76A749) (Shutdown) 
+
+-- tvOS 11.3 --
+
+    Apple TV (61C063A0-61B8-41F2-88BC-355445D7B44A) (Shutdown) 
+
+    Apple TV 4K (AD527009-CB4D-4D3A-86D0-2368B39E2F00) (Shutdown) 
+
+    Apple TV 4K (at 1080p) (34AF679F-4476-46CE-B868-DFB7105D90A2) (Shutdown) 
+
+-- tvOS 11.4 --
+
+    Apple TV (C2B9A0EB-32A9-450C-8847-4CB95C7AFC62) (Shutdown) 
+
+    Apple TV 4K (3238A8AD-CBC7-40D7-984F-EA5F105D1D0B) (Shutdown) 
+
+    Apple TV 4K (at 1080p) (ADB5FFBC-AFB2-43F8-99B2-F9FF4AF4F7B0) (Shutdown) 
+
+-- tvOS 12.0 --
+
+    Apple TV (F6CDFE39-8EE8-4E61-9553-A02F40194494) (Shutdown) 
+
+    Apple TV 4K (1115CFC6-7033-4C6F-B6B6-C35F1F4FEBE7) (Shutdown) 
+
+    Apple TV 4K (at 1080p) (70255BCE-9BE1-4755-B8AC-3853AE610AA0) (Shutdown) 
+
+-- tvOS 12.1 --
+
+    Apple TV (2DDBE392-5E5D-470E-834C-787EE79BF2A4) (Shutdown) 
+
+    Apple TV 4K (666B6FEF-9AD5-4183-98B9-7DDC0C853450) (Shutdown) 
+
+    Apple TV 4K (at 1080p) (6CE09652-14A6-4891-8A84-C3BB58F194CB) (Shutdown) 
+
+-- watchOS 2.0 --
+
+    Apple Watch - 38mm (0F38C287-1047-4C3F-9AD6-D6E5DC2E4838) (Shutdown) 
+
+    Apple Watch - 42mm (6EB453E8-CFDF-429C-A59A-3F4CFBCE2734) (Shutdown) 
+
+-- watchOS 2.1 --
+
+    Apple Watch - 38mm (60EDA6CD-9FCE-408E-8B0F-6652C14AA415) (Shutdown) 
+
+    Apple Watch - 42mm (4EEB52E2-B6AB-48AD-922C-9A4375A5FF59) (Shutdown) 
+
+-- watchOS 2.2 --
+
+    Apple Watch - 38mm (77DF5FEC-1839-452C-BD89-53FFE4823591) (Shutdown) 
+
+    Apple Watch - 42mm (563D91D2-D2BD-477A-9B40-FBE61783872D) (Shutdown) 
+
+-- watchOS 3.1 --
+
+    Apple Watch - 38mm (BFE884E0-794F-403E-8049-23CF2D97255E) (Shutdown) 
+
+    Apple Watch - 42mm (177CF811-5F59-48C0-BB26-C0B8DA6DD4F9) (Shutdown) 
+
+    Apple Watch Series 2 - 38mm (8EB6C91A-CF7A-44D0-BEA2-B0F4F25384CD) (Shutdown) 
+
+    Apple Watch Series 2 - 42mm (52C94389-8786-41EE-B2D0-1ADC64D8FD82) (Shutdown) 
+
+-- watchOS 3.2 --
+
+    Apple Watch - 38mm (FA7A9CA3-1970-4600-ABF8-E2A1CCA05394) (Shutdown) 
+
+    Apple Watch - 42mm (78453E84-8EF9-443D-AEDA-D84110932C47) (Shutdown) 
+
+    Apple Watch Series 2 - 38mm (28500001-580D-4CE2-9171-FEA6A474F4CC) (Shutdown) 
+
+    Apple Watch Series 2 - 42mm (28E635D3-8460-4B10-AC01-7862CD5A52E6) (Shutdown) 
+
+-- watchOS 4.0 --
+
+    Apple Watch - 38mm (C2D1B1B2-F330-4367-88FF-B373D6A07D41) (Shutdown) 
+
+    Apple Watch - 42mm (48B65CD8-A276-4BA7-8C09-743D41EB3A3D) (Shutdown) 
+
+    Apple Watch Series 2 - 38mm (5C407830-8150-451D-9B0F-02DFA98BCBE1) (Shutdown) 
+
+    Apple Watch Series 2 - 42mm (FC2C4DC9-85FD-40DB-AF21-5AF199F7B58F) (Shutdown) 
+
+    Apple Watch Series 3 - 38mm (A1F03A5F-75A7-4F81-96AA-17A33D41860F) (Shutdown) 
+
+    Apple Watch Series 3 - 42mm (289E1F6B-F9BA-4AA9-90E8-96F6ECEB74CB) (Shutdown) 
+
+-- watchOS 4.1 --
+
+    Apple Watch - 38mm (41300F70-1530-4BEC-9EBB-4013CAA2CD39) (Shutdown) 
+
+    Apple Watch - 42mm (16BA206C-4C96-4CF3-83FD-033C1E35A470) (Shutdown) 
+
+    Apple Watch Series 2 - 38mm (04F59F6C-A0F5-43DF-AA76-C141E7552E89) (Shutdown) 
+
+    Apple Watch Series 2 - 42mm (ED405977-E2AB-4C1F-B2FE-5B21506F0472) (Shutdown) 
+
+    Apple Watch Series 3 - 38mm (A9604B2F-FC76-4B01-857D-33D2006293C8) (Shutdown) 
+
+    Apple Watch Series 3 - 42mm (838F53DB-20F0-4513-8D79-8479E5336144) (Shutdown) 
+
+-- watchOS 4.2 --
+
+    Apple Watch - 38mm (64AA46F9-320A-42FE-8C04-D441E0EC7D9D) (Shutdown) 
+
+    Apple Watch - 42mm (2DDA91E0-0C55-4037-A447-DFA6FD71C4EF) (Shutdown) 
+
+    Apple Watch Series 2 - 38mm (3494D400-E361-4329-9460-84446FDEE83F) (Shutdown) 
+
+    Apple Watch Series 2 - 42mm (D441A396-39A0-440F-8A38-B2134504003E) (Shutdown) 
+
+    Apple Watch Series 3 - 38mm (C1AAAFD3-00A1-4947-85C6-1EE80E606DDE) (Shutdown) 
+
+    Apple Watch Series 3 - 42mm (5E9CA93A-026A-4BF1-879D-9DD3D2BD5AAC) (Shutdown) 
+
+-- watchOS 5.0 --
+
+    Apple Watch Series 2 - 38mm (509E053B-0701-4562-9C31-5E5476E89E36) (Shutdown) 
+
+    Apple Watch Series 2 - 42mm (C991A5F2-00EA-483E-A583-340E1DF21EB4) (Shutdown) 
+
+    Apple Watch Series 3 - 38mm (606F0640-2122-44D3-9B8C-BF6D9B6049F4) (Shutdown) 
+
+    Apple Watch Series 3 - 42mm (3934524C-7E6D-47D6-999D-9453831E3319) (Shutdown) 
+
+    Apple Watch Series 4 - 40mm (C9202EDE-2D6B-47EB-97BE-3E35A3A4AF4C) (Shutdown) 
+
+    Apple Watch Series 4 - 44mm (C4D99F28-FB3A-4886-9E00-204D6A1F70B3) (Shutdown) 
+
+-- watchOS 5.1 --
+
+    Apple Watch Series 2 - 38mm (68381532-7F4E-435E-88D5-6F70DD77F4F7) (Shutdown) 
+
+    Apple Watch Series 2 - 42mm (9F968B6F-7C5A-429A-AC5F-6257CF79CD14) (Shutdown) 
+
+    Apple Watch Series 3 - 38mm (0C5AF25F-6672-4A17-AA6C-F72BF18672CB) (Shutdown) 
+
+    Apple Watch Series 3 - 42mm (49847A34-97AE-4D52-B822-C51DC629EBA1) (Shutdown) 
+
+    Apple Watch Series 4 - 40mm (B2528431-8B45-4AB5-9B2B-21F959040043) (Shutdown) 
+
+    Apple Watch Series 4 - 44mm (07D70BBF-2826-49B9-B2D4-B5B4AD936507) (Shutdown) 
+
+== Device Pairs ==
+
+81422103-02DA-48A0-A434-E08712CA183B (active, disconnected)
+
+    Watch: Apple Watch Series 4 - 40mm (B2528431-8B45-4AB5-9B2B-21F959040043) (Shutdown)
+
+    Phone: iPhone XS (2B5E6E99-EA54-4E36-A447-0FB03A1A7751) (Shutdown)
+
+204EF59D-B866-4383-920B-27F19A5611C1 (active, disconnected)
+
+    Watch: Apple Watch Series 4 - 44mm (07D70BBF-2826-49B9-B2D4-B5B4AD936507) (Shutdown)
+
+    Phone: iPhone XS Max (883ED9A9-7E03-4072-8E8F-FD5941304987) (Shutdown)
+
+travis_fold:end:announce
+[0Ktravis_fold:start:install.bundler
+[0Ktravis_time:start:0153dca2
+[0K$ bundle install --jobs=3 --retry=3 --deployment
+
+Warning: the running version of Bundler (1.17.2) is older than the version that created the lockfile (1.17.3). We suggest you upgrade to the latest version of Bundler by running `gem install bundler`.
+
+Fetching gem metadata from https://rubygems.org/..............
+
+Fetching CFPropertyList 3.0.2
+
+Fetching concurrent-ruby 1.1.5
+
+Installing CFPropertyList 3.0.2
+
+Installing concurrent-ruby 1.1.5
+
+Fetching minitest 5.14.0
+
+Installing minitest 5.14.0
+
+Fetching thread_safe 0.3.6
+
+Installing thread_safe 0.3.6
+
+Fetching httpclient 2.8.3
+
+Installing httpclient 2.8.3
+
+Fetching json 2.3.0
+
+Installing json 2.3.0 with native extensions
+
+Fetching atomos 0.1.3
+
+Installing atomos 0.1.3
+
+Using bundler 1.17.2
+
+Fetching claide 1.0.3
+
+Installing claide 1.0.3
+
+Fetching fuzzy_match 2.0.4
+
+Installing fuzzy_match 2.0.4
+
+Fetching nap 1.1.0
+
+Installing nap 1.1.0
+
+Fetching cocoapods-deintegrate 1.0.4
+
+Installing cocoapods-deintegrate 1.0.4
+
+Fetching cocoapods-downloader 1.3.0
+
+Installing cocoapods-downloader 1.3.0
+
+Fetching cocoapods-search 1.0.0
+
+Installing cocoapods-search 1.0.0
+
+Fetching cocoapods-stats 1.1.0
+
+Installing cocoapods-stats 1.1.0
+
+Fetching netrc 0.11.0
+
+Installing netrc 0.11.0
+
+Fetching cocoapods-try 1.1.0
+
+Installing cocoapods-try 1.1.0
+
+Fetching colored2 3.1.2
+
+Installing colored2 3.1.2
+
+Fetching escape 0.0.4
+
+Installing escape 0.0.4
+
+Fetching fourflusher 2.3.1
+
+Installing fourflusher 2.3.1
+
+Fetching gh_inspector 1.1.3
+
+Installing gh_inspector 1.1.3
+
+Fetching molinillo 0.6.6
+
+Installing molinillo 0.6.6
+
+Fetching ruby-macho 1.4.0
+
+Installing ruby-macho 1.4.0
+
+Fetching nanaimo 0.2.6
+
+Installing nanaimo 0.2.6
+
+Fetching ffi 1.12.1
+
+Installing ffi 1.12.1 with native extensions
+
+Fetching mustache 1.1.1
+
+Installing mustache 1.1.1
+
+Fetching open4 1.3.4
+
+Installing open4 1.3.4
+
+Fetching redcarpet 3.5.0
+
+Installing redcarpet 3.5.0 with native extensions
+
+Fetching rouge 3.15.0
+
+Installing rouge 3.15.0
+
+Fetching sqlite3 1.4.2
+
+Installing sqlite3 1.4.2 with native extensions
+
+Fetching liferaft 0.0.6
+
+Installing liferaft 0.0.6
+
+Fetching tzinfo 1.2.6
+
+Installing tzinfo 1.2.6
+
+Fetching i18n 0.9.5
+
+Installing i18n 0.9.5
+
+Fetching cocoapods-plugins 1.0.0
+
+Installing cocoapods-plugins 1.0.0
+
+Fetching cocoapods-trunk 1.4.1
+
+Installing cocoapods-trunk 1.4.1
+
+Fetching xcodeproj 1.14.0
+
+Installing xcodeproj 1.14.0
+
+Fetching sassc 2.2.1
+
+Installing sassc 2.2.1 with native extensions
+
+Fetching algoliasearch 1.27.1
+
+Installing algoliasearch 1.27.1
+
+Fetching xcinvoke 0.3.0
+
+Installing xcinvoke 0.3.0
+
+Fetching activesupport 4.2.11.1
+
+Installing activesupport 4.2.11.1
+
+Fetching cocoapods-core 1.8.4
+
+Installing cocoapods-core 1.8.4
+
+Fetching cocoapods 1.8.4
+
+Installing cocoapods 1.8.4
+
+Fetching jazzy 0.13.1
+
+Installing jazzy 0.13.1
+
+Bundle complete! 2 Gemfile dependencies, 43 gems now installed.
+
+Bundled gems are installed into `./vendor/bundle`
+
+travis_time:end:0153dca2:start=1585250455465558000,finish=1585250708326185000,duration=252860627000,event=install
+[0Ktravis_fold:end:install.bundler
+[0K
+
+travis_time:start:2c0759f4
+[0K$ sh scripts/run.sh release github
+
+*** xcodebuild output can be found in /var/folders/nz/vv4_9tw56nv9k3tkvyszvwg80000gn/T/carthage-xcodebuild.b91eBI.log
+
+*** Cloning ocmock
+
+*** Cloning OHHTTPStubs
+
+*** Building scheme "FBSDKCoreKit_TV-Dynamic" in FacebookSDK.xcworkspace
+
+*** Building scheme "FBSDKCoreKit-Dynamic" in FacebookSDK.xcworkspace
+
+*** Building scheme "FBSDKGamingServicesKit" in FacebookSDK.xcworkspace
+
+*** Building scheme "FBSDKGamingServicesKit-Dynamic" in FacebookSDK.xcworkspace
+
+*** Building scheme "FBSDKLoginKit_TV-Dynamic" in FacebookSDK.xcworkspace
+
+*** Building scheme "FBSDKLoginKit-Dynamic" in FacebookSDK.xcworkspace
+
+*** Building scheme "FBSDKShareKit_TV-Dynamic" in FacebookSDK.xcworkspace
+
+*** Building scheme "FBSDKShareKit-Dynamic" in FacebookSDK.xcworkspace
+
+*** Building scheme "FBSDKTVOSKit_TV-Dynamic" in FacebookSDK.xcworkspace
+
+*** Found Carthage/Build/iOS/FBSDKCoreKit.framework
+
+*** Found Carthage/Build/iOS/FBSDKCoreKit.framework.dSYM
+
+*** Found Carthage/Build/iOS/FBSDKGamingServicesKit.framework
+
+*** Found Carthage/Build/iOS/FBSDKGamingServicesKit.framework.dSYM
+
+*** Found Carthage/Build/iOS/FBSDKLoginKit.framework
+
+*** Found Carthage/Build/iOS/FBSDKLoginKit.framework.dSYM
+
+*** Found Carthage/Build/iOS/FBSDKShareKit.framework
+
+*** Found Carthage/Build/iOS/FBSDKShareKit.framework.dSYM
+
+*** Found Carthage/Build/tvOS/FBSDKCoreKit.framework
+
+*** Found Carthage/Build/tvOS/FBSDKCoreKit.framework.dSYM
+
+*** Found Carthage/Build/tvOS/FBSDKLoginKit.framework
+
+*** Found Carthage/Build/tvOS/FBSDKLoginKit.framework.dSYM
+
+*** Found Carthage/Build/tvOS/FBSDKShareKit.framework
+
+*** Found Carthage/Build/tvOS/FBSDKShareKit.framework.dSYM
+
+*** Found Carthage/Build/tvOS/FBSDKTVOSKit.framework
+
+*** Found Carthage/Build/tvOS/FBSDKTVOSKit.framework.dSYM
+
+*** Found Carthage/Build/iOS/59603BC5-EEB3-3D9A-A78D-662B4DF950C7.bcsymbolmap
+
+*** Found Carthage/Build/iOS/14E91D77-FC5D-3B90-8140-A0856FAAECEE.bcsymbolmap
+
+*** Found Carthage/Build/iOS/2880E1D2-AE94-35E0-984A-2E5321B3B056.bcsymbolmap
+
+*** Found Carthage/Build/iOS/B59116FF-94B9-397B-A45C-C34ECB424F8D.bcsymbolmap
+
+*** Found Carthage/Build/iOS/582EAC1B-1023-34CE-B8B7-21F502303D57.bcsymbolmap
+
+*** Found Carthage/Build/iOS/8CBA34F6-3221-3970-A084-B26A38AB86BA.bcsymbolmap
+
+*** Found Carthage/Build/iOS/821D187C-A175-30EF-95EF-1475B3A1A190.bcsymbolmap
+
+*** Found Carthage/Build/iOS/3914D431-BFC8-3273-8F69-B045D838C9C9.bcsymbolmap
+
+*** Found Carthage/Build/iOS/B5050166-3A67-3B4F-A31C-FDB08FFB267E.bcsymbolmap
+
+*** Found Carthage/Build/iOS/79163888-C797-3711-BDAF-B6E0FB7C9A35.bcsymbolmap
+
+*** Found Carthage/Build/iOS/B0A1E689-C886-3CB3-828B-3016CAAFB256.bcsymbolmap
+
+*** Found Carthage/Build/iOS/7A2D62CA-81AD-3DF6-B4ED-90499A219676.bcsymbolmap
+
+*** Found Carthage/Build/iOS/89F4D619-B58E-3CC2-9139-9F8B8D6DBD88.bcsymbolmap
+
+*** Found Carthage/Build/iOS/B9254E9C-218A-36BD-9DD0-7301294D8016.bcsymbolmap
+
+*** Found Carthage/Build/iOS/7B8B913E-E38B-3F4E-B612-CEE83EE4A4D7.bcsymbolmap
+
+*** Found Carthage/Build/iOS/73DC65F8-845B-3821-AFE6-10CC679CA989.bcsymbolmap
+
+*** Found Carthage/Build/tvOS/BAC1A789-15EC-3B9A-80BF-207A2DC4612D.bcsymbolmap
+
+*** Found Carthage/Build/tvOS/20050D5B-F22C-3081-9DAC-AEDCB950E895.bcsymbolmap
+
+*** Found Carthage/Build/tvOS/10B3E193-6339-316D-831F-8839710DC01B.bcsymbolmap
+
+*** Found Carthage/Build/tvOS/0D8CC7A0-57C1-36F8-A4BD-A4F2D9BEE2B8.bcsymbolmap
+
+*** Found Carthage/Build/tvOS/AD7241B2-3FFD-332F-BC2F-A0079AF4B3F7.bcsymbolmap
+
+*** Found Carthage/Build/tvOS/28B563F1-2D0B-3519-9D23-7C85A4EB8074.bcsymbolmap
+
+*** Found Carthage/Build/tvOS/36269DCF-CE55-3CF6-B314-7EF77371E3CA.bcsymbolmap
+
+*** Found Carthage/Build/tvOS/4CA704C5-492C-3097-9333-CC38C6F10EF1.bcsymbolmap
+
+*** Created build/Release/FBSDKCoreKit.framework.zip
+
+  adding: FBSDKCoreKit.framework/ (stored 0%)
+
+  adding: FBSDKCoreKit.framework/FBSDKCoreKit (deflated 61%)
+
+  adding: FBSDKCoreKit.framework/Headers/ (stored 0%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKAccessToken.h (deflated 73%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKAppEvents.h (deflated 77%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKApplicationDelegate.h (deflated 68%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKAppLink.h (deflated 53%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKAppLinkNavigation.h (deflated 63%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKAppLinkResolver.h (deflated 49%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKAppLinkResolving.h (deflated 46%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKAppLinkReturnToRefererController.h (deflated 61%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKAppLinkReturnToRefererView.h (deflated 57%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKAppLinkTarget.h (deflated 48%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKAppLinkUtility.h (deflated 50%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKButton.h (deflated 40%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKConstants.h (deflated 74%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKCopying.h (deflated 42%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKCoreKit.h (deflated 67%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKGraphErrorRecoveryProcessor.h (deflated 59%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKGraphRequest.h (deflated 67%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKGraphRequestConnection.h (deflated 68%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKGraphRequestDataAttachment.h (deflated 51%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKMeasurementEvent.h (deflated 61%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKMutableCopying.h (deflated 44%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKProfile.h (deflated 63%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKProfilePictureView.h (deflated 53%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKSettings.h (deflated 66%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKTestUsersManager.h (deflated 59%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKURL.h (deflated 60%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKUtility.h (deflated 55%)
+
+  adding: FBSDKCoreKit.framework/Headers/FBSDKWebViewAppLinkResolver.h (deflated 44%)
+
+  adding: FBSDKCoreKit.framework/Info.plist (deflated 29%)
+
+  adding: FBSDKCoreKit.framework/Modules/ (stored 0%)
+
+  adding: FBSDKCoreKit.framework/Modules/module.modulemap (deflated 25%)
+
+  adding: FBSDKGamingServicesKit.framework/ (stored 0%)
+
+  adding: FBSDKGamingServicesKit.framework/Application.xcconfig (deflated 41%)
+
+  adding: FBSDKGamingServicesKit.framework/ApplicationTests.xcconfig (deflated 40%)
+
+  adding: FBSDKGamingServicesKit.framework/Common.xcconfig (deflated 43%)
+
+  adding: FBSDKGamingServicesKit.framework/Debug.xcconfig (deflated 39%)
+
+  adding: FBSDKGamingServicesKit.framework/DynamicFramework.xcconfig (deflated 43%)
+
+  adding: FBSDKGamingServicesKit.framework/FacebookSDK-Application.xcconfig (deflated 41%)
+
+  adding: FBSDKGamingServicesKit.framework/FacebookSDK-ApplicationTests.xcconfig (deflated 40%)
+
+  adding: FBSDKGamingServicesKit.framework/FacebookSDK-DynamicFramework.xcconfig (deflated 43%)
+
+  adding: FBSDKGamingServicesKit.framework/FacebookSDK-Library.xcconfig (deflated 40%)
+
+  adding: FBSDKGamingServicesKit.framework/FacebookSDK-LogicTests.xcconfig (deflated 39%)
+
+  adding: FBSDKGamingServicesKit.framework/FacebookSDK-Project-Debug.xcconfig (deflated 40%)
+
+  adding: FBSDKGamingServicesKit.framework/FacebookSDK-Project-Release.xcconfig (deflated 39%)
+
+  adding: FBSDKGamingServicesKit.framework/FacebookSDK-Project-TVOS-Debug.xcconfig (deflated 39%)
+
+  adding: FBSDKGamingServicesKit.framework/FacebookSDK-Project-TVOS-Release.xcconfig (deflated 39%)
+
+  adding: FBSDKGamingServicesKit.framework/FacebookSDK-Project-TVOS.xcconfig (deflated 42%)
+
+  adding: FBSDKGamingServicesKit.framework/FacebookSDK-Project.xcconfig (deflated 51%)
+
+  adding: FBSDKGamingServicesKit.framework/FBSDKGamingServicesKit (deflated 74%)
+
+  adding: FBSDKGamingServicesKit.framework/FBSDKGamingServicesKit-Dynamic.xcconfig (deflated 45%)
+
+  adding: FBSDKGamingServicesKit.framework/FBSDKGamingServicesKit.xcconfig (deflated 45%)
+
+  adding: FBSDKGamingServicesKit.framework/Headers/ (stored 0%)
+
+  adding: FBSDKGamingServicesKit.framework/Headers/FBSDKFriendFinderDialog.h (deflated 45%)
+
+  adding: FBSDKGamingServicesKit.framework/Headers/FBSDKGamingImageUploader.h (deflated 48%)
+
+  adding: FBSDKGamingServicesKit.framework/Headers/FBSDKGamingServiceCompletionHandler.h (deflated 40%)
+
+  adding: FBSDKGamingServicesKit.framework/Headers/FBSDKGamingServicesKit.h (deflated 55%)
+
+  adding: FBSDKGamingServicesKit.framework/Info.plist (deflated 30%)
+
+  adding: FBSDKGamingServicesKit.framework/iOS.xcconfig (deflated 47%)
+
+  adding: FBSDKGamingServicesKit.framework/LogicTests.xcconfig (deflated 39%)
+
+  adding: FBSDKGamingServicesKit.framework/Modules/ (stored 0%)
+
+  adding: FBSDKGamingServicesKit.framework/Modules/module.modulemap (deflated 26%)
+
+  adding: FBSDKGamingServicesKit.framework/Release.xcconfig (deflated 39%)
+
+  adding: FBSDKGamingServicesKit.framework/StaticFramework.xcconfig (deflated 39%)
+
+  adding: FBSDKGamingServicesKit.framework/tvOS.xcconfig (deflated 41%)
+
+  adding: FBSDKGamingServicesKit.framework/Version.xcconfig (deflated 40%)
+
+  adding: FBSDKGamingServicesKit.framework/Warnings.xcconfig (deflated 50%)
+
+  adding: FBSDKLoginKit.framework/ (stored 0%)
+
+  adding: FBSDKLoginKit.framework/FBSDKLoginKit (deflated 59%)
+
+  adding: FBSDKLoginKit.framework/Headers/ (stored 0%)
+
+  adding: FBSDKLoginKit.framework/Headers/FBSDKCoreKitImport.h (deflated 44%)
+
+  adding: FBSDKLoginKit.framework/Headers/FBSDKDeviceLoginCodeInfo.h (deflated 49%)
+
+  adding: FBSDKLoginKit.framework/Headers/FBSDKDeviceLoginManager.h (deflated 58%)
+
+  adding: FBSDKLoginKit.framework/Headers/FBSDKDeviceLoginManagerResult.h (deflated 45%)
+
+  adding: FBSDKLoginKit.framework/Headers/FBSDKLoginButton.h (deflated 56%)
+
+  adding: FBSDKLoginKit.framework/Headers/FBSDKLoginConstants.h (deflated 58%)
+
+  adding: FBSDKLoginKit.framework/Headers/FBSDKLoginKit.h (deflated 47%)
+
+  adding: FBSDKLoginKit.framework/Headers/FBSDKLoginManager.h (deflated 63%)
+
+  adding: FBSDKLoginKit.framework/Headers/FBSDKLoginManagerLoginResult.h (deflated 57%)
+
+  adding: FBSDKLoginKit.framework/Headers/FBSDKLoginTooltipView.h (deflated 54%)
+
+  adding: FBSDKLoginKit.framework/Headers/FBSDKTooltipView.h (deflated 58%)
+
+  adding: FBSDKLoginKit.framework/Info.plist (deflated 29%)
+
+  adding: FBSDKLoginKit.framework/Modules/ (stored 0%)
+
+  adding: FBSDKLoginKit.framework/Modules/module.modulemap (deflated 26%)
+
+  adding: FBSDKShareKit.framework/ (stored 0%)
+
+  adding: FBSDKShareKit.framework/FBSDKShareKit (deflated 61%)
+
+  adding: FBSDKShareKit.framework/Headers/ (stored 0%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKAppGroupContent.h (deflated 53%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKAppInviteContent.h (deflated 55%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKCameraEffectArguments.h (deflated 54%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKCameraEffectTextures.h (deflated 47%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKCoreKitImport.h (deflated 44%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKGameRequestContent.h (deflated 60%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKGameRequestDialog.h (deflated 62%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKHashtag.h (deflated 49%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKLikeObjectType.h (deflated 48%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKLiking.h (deflated 47%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKMessageDialog.h (deflated 54%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKSendButton.h (deflated 43%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKShareButton.h (deflated 43%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKShareCameraEffectContent.h (deflated 51%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKShareConstants.h (deflated 53%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKShareDialog.h (deflated 58%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKShareDialogMode.h (deflated 54%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKShareKit.h (deflated 54%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKShareLinkContent.h (deflated 45%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKShareMediaContent.h (deflated 48%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKSharePhoto.h (deflated 60%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKSharePhotoContent.h (deflated 46%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKShareVideo.h (deflated 65%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKShareVideoContent.h (deflated 47%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKSharing.h (deflated 58%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKSharingButton.h (deflated 43%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKSharingContent.h (deflated 56%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKSharingScheme.h (deflated 42%)
+
+  adding: FBSDKShareKit.framework/Headers/FBSDKSharingValidation.h (deflated 48%)
+
+  adding: FBSDKShareKit.framework/Info.plist (deflated 29%)
+
+  adding: FBSDKShareKit.framework/Modules/ (stored 0%)
+
+  adding: FBSDKShareKit.framework/Modules/module.modulemap (deflated 26%)
+
+  adding: tv/FBSDKCoreKit.framework/ (stored 0%)
+
+  adding: tv/FBSDKCoreKit.framework/FBSDKCoreKit (deflated 61%)
+
+  adding: tv/FBSDKCoreKit.framework/Headers/ (stored 0%)
+
+  adding: tv/FBSDKCoreKit.framework/Headers/FBSDKAccessToken.h (deflated 73%)
+
+  adding: tv/FBSDKCoreKit.framework/Headers/FBSDKAppEvents.h (deflated 77%)
+
+  adding: tv/FBSDKCoreKit.framework/Headers/FBSDKApplicationDelegate.h (deflated 68%)
+
+  adding: tv/FBSDKCoreKit.framework/Headers/FBSDKButton.h (deflated 40%)
+
+  adding: tv/FBSDKCoreKit.framework/Headers/FBSDKConstants.h (deflated 74%)
+
+  adding: tv/FBSDKCoreKit.framework/Headers/FBSDKCopying.h (deflated 42%)
+
+  adding: tv/FBSDKCoreKit.framework/Headers/FBSDKCoreKit.h (deflated 67%)
+
+  adding: tv/FBSDKCoreKit.framework/Headers/FBSDKDeviceButton.h (deflated 42%)
+
+  adding: tv/FBSDKCoreKit.framework/Headers/FBSDKDeviceViewControllerBase.h (deflated 42%)
+
+  adding: tv/FBSDKCoreKit.framework/Headers/FBSDKGraphRequest.h (deflated 67%)
+
+  adding: tv/FBSDKCoreKit.framework/Headers/FBSDKGraphRequestConnection.h (deflated 68%)
+
+  adding: tv/FBSDKCoreKit.framework/Headers/FBSDKGraphRequestDataAttachment.h (deflated 51%)
+
+  adding: tv/FBSDKCoreKit.framework/Headers/FBSDKSettings.h (deflated 66%)
+
+  adding: tv/FBSDKCoreKit.framework/Headers/FBSDKTestUsersManager.h (deflated 59%)
+
+  adding: tv/FBSDKCoreKit.framework/Headers/FBSDKUtility.h (deflated 55%)
+
+  adding: tv/FBSDKCoreKit.framework/Info.plist (deflated 30%)
+
+  adding: tv/FBSDKCoreKit.framework/Modules/ (stored 0%)
+
+  adding: tv/FBSDKCoreKit.framework/Modules/module.modulemap (deflated 25%)
+
+  adding: tv/FBSDKLoginKit.framework/ (stored 0%)
+
+  adding: tv/FBSDKLoginKit.framework/FBSDKLoginKit (deflated 61%)
+
+  adding: tv/FBSDKLoginKit.framework/Headers/ (stored 0%)
+
+  adding: tv/FBSDKLoginKit.framework/Headers/FBSDKCoreKitImport.h (deflated 44%)
+
+  adding: tv/FBSDKLoginKit.framework/Headers/FBSDKDeviceLoginCodeInfo.h (deflated 49%)
+
+  adding: tv/FBSDKLoginKit.framework/Headers/FBSDKDeviceLoginManager.h (deflated 58%)
+
+  adding: tv/FBSDKLoginKit.framework/Headers/FBSDKDeviceLoginManagerResult.h (deflated 45%)
+
+  adding: tv/FBSDKLoginKit.framework/Headers/FBSDKLoginConstants.h (deflated 58%)
+
+  adding: tv/FBSDKLoginKit.framework/Headers/FBSDKLoginKit.h (deflated 47%)
+
+  adding: tv/FBSDKLoginKit.framework/Info.plist (deflated 29%)
+
+  adding: tv/FBSDKLoginKit.framework/Modules/ (stored 0%)
+
+  adding: tv/FBSDKLoginKit.framework/Modules/module.modulemap (deflated 26%)
+
+  adding: tv/FBSDKShareKit.framework/ (stored 0%)
+
+  adding: tv/FBSDKShareKit.framework/FBSDKShareKit (deflated 61%)
+
+  adding: tv/FBSDKShareKit.framework/Headers/ (stored 0%)
+
+  adding: tv/FBSDKShareKit.framework/Headers/FBSDKCoreKitImport.h (deflated 44%)
+
+  adding: tv/FBSDKShareKit.framework/Headers/FBSDKDeviceShareButton.h (deflated 42%)
+
+  adding: tv/FBSDKShareKit.framework/Headers/FBSDKDeviceShareViewController.h (deflated 55%)
+
+  adding: tv/FBSDKShareKit.framework/Headers/FBSDKHashtag.h (deflated 49%)
+
+  adding: tv/FBSDKShareKit.framework/Headers/FBSDKShareConstants.h (deflated 53%)
+
+  adding: tv/FBSDKShareKit.framework/Headers/FBSDKShareKit.h (deflated 54%)
+
+  adding: tv/FBSDKShareKit.framework/Headers/FBSDKShareLinkContent.h (deflated 45%)
+
+  adding: tv/FBSDKShareKit.framework/Headers/FBSDKShareMediaContent.h (deflated 48%)
+
+  adding: tv/FBSDKShareKit.framework/Headers/FBSDKSharePhoto.h (deflated 60%)
+
+  adding: tv/FBSDKShareKit.framework/Headers/FBSDKSharePhotoContent.h (deflated 46%)
+
+  adding: tv/FBSDKShareKit.framework/Headers/FBSDKShareVideo.h (deflated 65%)
+
+  adding: tv/FBSDKShareKit.framework/Headers/FBSDKShareVideoContent.h (deflated 47%)
+
+  adding: tv/FBSDKShareKit.framework/Headers/FBSDKSharing.h (deflated 58%)
+
+  adding: tv/FBSDKShareKit.framework/Headers/FBSDKSharingContent.h (deflated 56%)
+
+  adding: tv/FBSDKShareKit.framework/Headers/FBSDKSharingValidation.h (deflated 48%)
+
+  adding: tv/FBSDKShareKit.framework/Info.plist (deflated 29%)
+
+  adding: tv/FBSDKShareKit.framework/Modules/ (stored 0%)
+
+  adding: tv/FBSDKShareKit.framework/Modules/module.modulemap (deflated 26%)
+
+  adding: tv/FBSDKTVOSKit.framework/ (stored 0%)
+
+  adding: tv/FBSDKTVOSKit.framework/FBSDKTVOSKit (deflated 62%)
+
+  adding: tv/FBSDKTVOSKit.framework/Headers/ (stored 0%)
+
+  adding: tv/FBSDKTVOSKit.framework/Headers/FBSDKDeviceLoginButton.h (deflated 55%)
+
+  adding: tv/FBSDKTVOSKit.framework/Headers/FBSDKDeviceLoginViewController.h (deflated 57%)
+
+  adding: tv/FBSDKTVOSKit.framework/Headers/FBSDKJS.h (deflated 61%)
+
+  adding: tv/FBSDKTVOSKit.framework/Headers/FBSDKTVInterfaceFactory.h (deflated 50%)
+
+  adding: tv/FBSDKTVOSKit.framework/Headers/FBSDKTVLoginButtonElement.h (deflated 45%)
+
+  adding: tv/FBSDKTVOSKit.framework/Headers/FBSDKTVLoginViewControllerElement.h (deflated 47%)
+
+  adding: tv/FBSDKTVOSKit.framework/Headers/FBSDKTVOSConstants.h (deflated 52%)
+
+  adding: tv/FBSDKTVOSKit.framework/Headers/FBSDKTVOSKit.h (deflated 50%)
+
+  adding: tv/FBSDKTVOSKit.framework/Headers/FBSDKTVShareButtonElement.h (deflated 43%)
+
+  adding: tv/FBSDKTVOSKit.framework/Info.plist (deflated 30%)
+
+  adding: tv/FBSDKTVOSKit.framework/Modules/ (stored 0%)
+
+  adding: tv/FBSDKTVOSKit.framework/Modules/module.modulemap (deflated 21%)
+
+  adding: FBSDKCoreKit/ (stored 0%)
+
+  adding: FBSDKCoreKit/iOS/ (stored 0%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/ (stored 0%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/FBSDKCoreKit (deflated 61%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/ (stored 0%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKAccessToken.h (deflated 73%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKAppEvents.h (deflated 77%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKApplicationDelegate.h (deflated 68%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKAppLink.h (deflated 53%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKAppLinkNavigation.h (deflated 63%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKAppLinkResolver.h (deflated 49%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKAppLinkResolving.h (deflated 46%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKAppLinkReturnToRefererController.h (deflated 61%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKAppLinkReturnToRefererView.h (deflated 57%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKAppLinkTarget.h (deflated 48%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKAppLinkUtility.h (deflated 50%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKButton.h (deflated 40%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKConstants.h (deflated 74%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKCopying.h (deflated 42%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKCoreKit.h (deflated 67%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKGraphErrorRecoveryProcessor.h (deflated 59%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKGraphRequest.h (deflated 67%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKGraphRequestConnection.h (deflated 68%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKGraphRequestDataAttachment.h (deflated 51%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKMeasurementEvent.h (deflated 61%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKMutableCopying.h (deflated 44%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKProfile.h (deflated 63%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKProfilePictureView.h (deflated 53%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKSettings.h (deflated 66%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKTestUsersManager.h (deflated 59%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKURL.h (deflated 60%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKUtility.h (deflated 55%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Headers/FBSDKWebViewAppLinkResolver.h (deflated 44%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Info.plist (deflated 29%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Modules/ (stored 0%)
+
+  adding: FBSDKCoreKit/iOS/FBSDKCoreKit.framework/Modules/module.modulemap (deflated 25%)
+
+  adding: FBSDKCoreKit/tvOS/ (stored 0%)
+
+  adding: FBSDKCoreKit/tvOS/FBSDKCoreKit.framework/ (stored 0%)
+
+  adding: FBSDKCoreKit/tvOS/FBSDKCoreKit.framework/FBSDKCoreKit (deflated 61%)
+
+  adding: FBSDKCoreKit/tvOS/FBSDKCoreKit.framework/Headers/ (stored 0%)
+
+  adding: FBSDKCoreKit/tvOS/FBSDKCoreKit.framework/Headers/FBSDKAccessToken.h (deflated 73%)
+
+  adding: FBSDKCoreKit/tvOS/FBSDKCoreKit.framework/Headers/FBSDKAppEvents.h (deflated 77%)
+
+  adding: FBSDKCoreKit/tvOS/FBSDKCoreKit.framework/Headers/FBSDKApplicationDelegate.h (deflated 68%)
+
+  adding: FBSDKCoreKit/tvOS/FBSDKCoreKit.framework/Headers/FBSDKButton.h (deflated 40%)
+
+  adding: FBSDKCoreKit/tvOS/FBSDKCoreKit.framework/Headers/FBSDKConstants.h (deflated 74%)
+
+  adding: FBSDKCoreKit/tvOS/FBSDKCoreKit.framework/Headers/FBSDKCopying.h (deflated 42%)
+
+  adding: FBSDKCoreKit/tvOS/FBSDKCoreKit.framework/Headers/FBSDKCoreKit.h (deflated 67%)
+
+  adding: FBSDKCoreKit/tvOS/FBSDKCoreKit.framework/Headers/FBSDKDeviceButton.h (deflated 42%)
+
+  adding: FBSDKCoreKit/tvOS/FBSDKCoreKit.framework/Headers/FBSDKDeviceViewControllerBase.h (deflated 42%)
+
+  adding: FBSDKCoreKit/tvOS/FBSDKCoreKit.framework/Headers/FBSDKGraphRequest.h (deflated 67%)
+
+  adding: FBSDKCoreKit/tvOS/FBSDKCoreKit.framework/Headers/FBSDKGraphRequestConnection.h (deflated 68%)
+
+  adding: FBSDKCoreKit/tvOS/FBSDKCoreKit.framework/Headers/FBSDKGraphRequestDataAttachment.h (deflated 51%)
+
+  adding: FBSDKCoreKit/tvOS/FBSDKCoreKit.framework/Headers/FBSDKSettings.h (deflated 66%)
+
+  adding: FBSDKCoreKit/tvOS/FBSDKCoreKit.framework/Headers/FBSDKTestUsersManager.h (deflated 59%)
+
+  adding: FBSDKCoreKit/tvOS/FBSDKCoreKit.framework/Headers/FBSDKUtility.h (deflated 55%)
+
+  adding: FBSDKCoreKit/tvOS/FBSDKCoreKit.framework/Info.plist (deflated 30%)
+
+  adding: FBSDKCoreKit/tvOS/FBSDKCoreKit.framework/Modules/ (stored 0%)
+
+  adding: FBSDKCoreKit/tvOS/FBSDKCoreKit.framework/Modules/module.modulemap (deflated 25%)
+
+  adding: FBSDKLoginKit/ (stored 0%)
+
+  adding: FBSDKLoginKit/iOS/ (stored 0%)
+
+  adding: FBSDKLoginKit/iOS/FBSDKLoginKit.framework/ (stored 0%)
+
+  adding: FBSDKLoginKit/iOS/FBSDKLoginKit.framework/FBSDKLoginKit (deflated 59%)
+
+  adding: FBSDKLoginKit/iOS/FBSDKLoginKit.framework/Headers/ (stored 0%)
+
+  adding: FBSDKLoginKit/iOS/FBSDKLoginKit.framework/Headers/FBSDKCoreKitImport.h (deflated 44%)
+
+  adding: FBSDKLoginKit/iOS/FBSDKLoginKit.framework/Headers/FBSDKDeviceLoginCodeInfo.h (deflated 49%)
+
+  adding: FBSDKLoginKit/iOS/FBSDKLoginKit.framework/Headers/FBSDKDeviceLoginManager.h (deflated 58%)
+
+  adding: FBSDKLoginKit/iOS/FBSDKLoginKit.framework/Headers/FBSDKDeviceLoginManagerResult.h (deflated 45%)
+
+  adding: FBSDKLoginKit/iOS/FBSDKLoginKit.framework/Headers/FBSDKLoginButton.h (deflated 56%)
+
+  adding: FBSDKLoginKit/iOS/FBSDKLoginKit.framework/Headers/FBSDKLoginConstants.h (deflated 58%)
+
+  adding: FBSDKLoginKit/iOS/FBSDKLoginKit.framework/Headers/FBSDKLoginKit.h (deflated 47%)
+
+  adding: FBSDKLoginKit/iOS/FBSDKLoginKit.framework/Headers/FBSDKLoginManager.h (deflated 63%)
+
+  adding: FBSDKLoginKit/iOS/FBSDKLoginKit.framework/Headers/FBSDKLoginManagerLoginResult.h (deflated 57%)
+
+  adding: FBSDKLoginKit/iOS/FBSDKLoginKit.framework/Headers/FBSDKLoginTooltipView.h (deflated 54%)
+
+  adding: FBSDKLoginKit/iOS/FBSDKLoginKit.framework/Headers/FBSDKTooltipView.h (deflated 58%)
+
+  adding: FBSDKLoginKit/iOS/FBSDKLoginKit.framework/Info.plist (deflated 29%)
+
+  adding: FBSDKLoginKit/iOS/FBSDKLoginKit.framework/Modules/ (stored 0%)
+
+  adding: FBSDKLoginKit/iOS/FBSDKLoginKit.framework/Modules/module.modulemap (deflated 26%)
+
+  adding: FBSDKLoginKit/tvOS/ (stored 0%)
+
+  adding: FBSDKLoginKit/tvOS/FBSDKLoginKit.framework/ (stored 0%)
+
+  adding: FBSDKLoginKit/tvOS/FBSDKLoginKit.framework/FBSDKLoginKit (deflated 61%)
+
+  adding: FBSDKLoginKit/tvOS/FBSDKLoginKit.framework/Headers/ (stored 0%)
+
+  adding: FBSDKLoginKit/tvOS/FBSDKLoginKit.framework/Headers/FBSDKCoreKitImport.h (deflated 44%)
+
+  adding: FBSDKLoginKit/tvOS/FBSDKLoginKit.framework/Headers/FBSDKDeviceLoginCodeInfo.h (deflated 49%)
+
+  adding: FBSDKLoginKit/tvOS/FBSDKLoginKit.framework/Headers/FBSDKDeviceLoginManager.h (deflated 58%)
+
+  adding: FBSDKLoginKit/tvOS/FBSDKLoginKit.framework/Headers/FBSDKDeviceLoginManagerResult.h (deflated 45%)
+
+  adding: FBSDKLoginKit/tvOS/FBSDKLoginKit.framework/Headers/FBSDKLoginConstants.h (deflated 58%)
+
+  adding: FBSDKLoginKit/tvOS/FBSDKLoginKit.framework/Headers/FBSDKLoginKit.h (deflated 47%)
+
+  adding: FBSDKLoginKit/tvOS/FBSDKLoginKit.framework/Info.plist (deflated 29%)
+
+  adding: FBSDKLoginKit/tvOS/FBSDKLoginKit.framework/Modules/ (stored 0%)
+
+  adding: FBSDKLoginKit/tvOS/FBSDKLoginKit.framework/Modules/module.modulemap (deflated 26%)
+
+  adding: FBSDKShareKit/ (stored 0%)
+
+  adding: FBSDKShareKit/iOS/ (stored 0%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/ (stored 0%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/FBSDKShareKit (deflated 61%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/ (stored 0%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKAppGroupContent.h (deflated 53%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKAppInviteContent.h (deflated 55%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKCameraEffectArguments.h (deflated 54%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKCameraEffectTextures.h (deflated 47%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKCoreKitImport.h (deflated 44%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKGameRequestContent.h (deflated 60%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKGameRequestDialog.h (deflated 62%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKHashtag.h (deflated 49%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKLikeObjectType.h (deflated 48%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKLiking.h (deflated 47%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKMessageDialog.h (deflated 54%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKSendButton.h (deflated 43%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKShareButton.h (deflated 43%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKShareCameraEffectContent.h (deflated 51%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKShareConstants.h (deflated 53%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKShareDialog.h (deflated 58%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKShareDialogMode.h (deflated 54%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKShareKit.h (deflated 54%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKShareLinkContent.h (deflated 45%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKShareMediaContent.h (deflated 48%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKSharePhoto.h (deflated 60%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKSharePhotoContent.h (deflated 46%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKShareVideo.h (deflated 65%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKShareVideoContent.h (deflated 47%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKSharing.h (deflated 58%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKSharingButton.h (deflated 43%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKSharingContent.h (deflated 56%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKSharingScheme.h (deflated 42%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Headers/FBSDKSharingValidation.h (deflated 48%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Info.plist (deflated 29%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Modules/ (stored 0%)
+
+  adding: FBSDKShareKit/iOS/FBSDKShareKit.framework/Modules/module.modulemap (deflated 26%)
+
+  adding: FBSDKShareKit/tvOS/ (stored 0%)
+
+  adding: FBSDKShareKit/tvOS/FBSDKShareKit.framework/ (stored 0%)
+
+  adding: FBSDKShareKit/tvOS/FBSDKShareKit.framework/FBSDKShareKit (deflated 61%)
+
+  adding: FBSDKShareKit/tvOS/FBSDKShareKit.framework/Headers/ (stored 0%)
+
+  adding: FBSDKShareKit/tvOS/FBSDKShareKit.framework/Headers/FBSDKCoreKitImport.h (deflated 44%)
+
+  adding: FBSDKShareKit/tvOS/FBSDKShareKit.framework/Headers/FBSDKDeviceShareButton.h (deflated 42%)
+
+  adding: FBSDKShareKit/tvOS/FBSDKShareKit.framework/Headers/FBSDKDeviceShareViewController.h (deflated 55%)
+
+  adding: FBSDKShareKit/tvOS/FBSDKShareKit.framework/Headers/FBSDKHashtag.h (deflated 49%)
+
+  adding: FBSDKShareKit/tvOS/FBSDKShareKit.framework/Headers/FBSDKShareConstants.h (deflated 53%)
+
+  adding: FBSDKShareKit/tvOS/FBSDKShareKit.framework/Headers/FBSDKShareKit.h (deflated 54%)
+
+  adding: FBSDKShareKit/tvOS/FBSDKShareKit.framework/Headers/FBSDKShareLinkContent.h (deflated 45%)
+
+  adding: FBSDKShareKit/tvOS/FBSDKShareKit.framework/Headers/FBSDKShareMediaContent.h (deflated 48%)
+
+  adding: FBSDKShareKit/tvOS/FBSDKShareKit.framework/Headers/FBSDKSharePhoto.h (deflated 60%)
+
+  adding: FBSDKShareKit/tvOS/FBSDKShareKit.framework/Headers/FBSDKSharePhotoContent.h (deflated 46%)
+
+  adding: FBSDKShareKit/tvOS/FBSDKShareKit.framework/Headers/FBSDKShareVideo.h (deflated 65%)
+
+  adding: FBSDKShareKit/tvOS/FBSDKShareKit.framework/Headers/FBSDKShareVideoContent.h (deflated 47%)
+
+  adding: FBSDKShareKit/tvOS/FBSDKShareKit.framework/Headers/FBSDKSharing.h (deflated 58%)
+
+  adding: FBSDKShareKit/tvOS/FBSDKShareKit.framework/Headers/FBSDKSharingContent.h (deflated 56%)
+
+  adding: FBSDKShareKit/tvOS/FBSDKShareKit.framework/Headers/FBSDKSharingValidation.h (deflated 48%)
+
+  adding: FBSDKShareKit/tvOS/FBSDKShareKit.framework/Info.plist (deflated 29%)
+
+  adding: FBSDKShareKit/tvOS/FBSDKShareKit.framework/Modules/ (stored 0%)
+
+  adding: FBSDKShareKit/tvOS/FBSDKShareKit.framework/Modules/module.modulemap (deflated 26%)
+
+  adding: FBSDKGamingServicesKit/ (stored 0%)
+
+  adding: FBSDKGamingServicesKit/iOS/ (stored 0%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/ (stored 0%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/Application.xcconfig (deflated 41%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/ApplicationTests.xcconfig (deflated 40%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/Common.xcconfig (deflated 43%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/Debug.xcconfig (deflated 39%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/DynamicFramework.xcconfig (deflated 43%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/FacebookSDK-Application.xcconfig (deflated 41%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/FacebookSDK-ApplicationTests.xcconfig (deflated 40%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/FacebookSDK-DynamicFramework.xcconfig (deflated 43%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/FacebookSDK-Library.xcconfig (deflated 40%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/FacebookSDK-LogicTests.xcconfig (deflated 39%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/FacebookSDK-Project-Debug.xcconfig (deflated 40%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/FacebookSDK-Project-Release.xcconfig (deflated 39%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/FacebookSDK-Project-TVOS-Debug.xcconfig (deflated 39%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/FacebookSDK-Project-TVOS-Release.xcconfig (deflated 39%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/FacebookSDK-Project-TVOS.xcconfig (deflated 42%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/FacebookSDK-Project.xcconfig (deflated 51%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/FBSDKGamingServicesKit (deflated 74%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/FBSDKGamingServicesKit-Dynamic.xcconfig (deflated 45%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/FBSDKGamingServicesKit.xcconfig (deflated 45%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/Headers/ (stored 0%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/Headers/FBSDKFriendFinderDialog.h (deflated 45%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/Headers/FBSDKGamingImageUploader.h (deflated 48%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/Headers/FBSDKGamingServiceCompletionHandler.h (deflated 40%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/Headers/FBSDKGamingServicesKit.h (deflated 55%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/Info.plist (deflated 30%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/iOS.xcconfig (deflated 47%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/LogicTests.xcconfig (deflated 39%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/Modules/ (stored 0%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/Modules/module.modulemap (deflated 26%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/Release.xcconfig (deflated 39%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/StaticFramework.xcconfig (deflated 39%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/tvOS.xcconfig (deflated 41%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/Version.xcconfig (deflated 40%)
+
+  adding: FBSDKGamingServicesKit/iOS/FBSDKGamingServicesKit.framework/Warnings.xcconfig (deflated 50%)
+
+  adding: FBSDKTVOSKit/ (stored 0%)
+
+  adding: FBSDKTVOSKit/tvOS/ (stored 0%)
+
+  adding: FBSDKTVOSKit/tvOS/FBSDKTVOSKit.framework/ (stored 0%)
+
+  adding: FBSDKTVOSKit/tvOS/FBSDKTVOSKit.framework/FBSDKTVOSKit (deflated 62%)
+
+  adding: FBSDKTVOSKit/tvOS/FBSDKTVOSKit.framework/Headers/ (stored 0%)
+
+  adding: FBSDKTVOSKit/tvOS/FBSDKTVOSKit.framework/Headers/FBSDKDeviceLoginButton.h (deflated 55%)
+
+  adding: FBSDKTVOSKit/tvOS/FBSDKTVOSKit.framework/Headers/FBSDKDeviceLoginViewController.h (deflated 57%)
+
+  adding: FBSDKTVOSKit/tvOS/FBSDKTVOSKit.framework/Headers/FBSDKJS.h (deflated 61%)
+
+  adding: FBSDKTVOSKit/tvOS/FBSDKTVOSKit.framework/Headers/FBSDKTVInterfaceFactory.h (deflated 50%)
+
+  adding: FBSDKTVOSKit/tvOS/FBSDKTVOSKit.framework/Headers/FBSDKTVLoginButtonElement.h (deflated 45%)
+
+  adding: FBSDKTVOSKit/tvOS/FBSDKTVOSKit.framework/Headers/FBSDKTVLoginViewControllerElement.h (deflated 47%)
+
+  adding: FBSDKTVOSKit/tvOS/FBSDKTVOSKit.framework/Headers/FBSDKTVOSConstants.h (deflated 52%)
+
+  adding: FBSDKTVOSKit/tvOS/FBSDKTVOSKit.framework/Headers/FBSDKTVOSKit.h (deflated 50%)
+
+  adding: FBSDKTVOSKit/tvOS/FBSDKTVOSKit.framework/Headers/FBSDKTVShareButtonElement.h (deflated 43%)
+
+  adding: FBSDKTVOSKit/tvOS/FBSDKTVOSKit.framework/Info.plist (deflated 30%)
+
+  adding: FBSDKTVOSKit/tvOS/FBSDKTVOSKit.framework/Modules/ (stored 0%)
+
+  adding: FBSDKTVOSKit/tvOS/FBSDKTVOSKit.framework/Modules/module.modulemap (deflated 21%)
+
+  adding: FBSDKCoreKit_Basics/ (stored 0%)
+
+  adding: FBSDKCoreKit_Basics/iOS/ (stored 0%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/ (stored 0%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/FBSDKCoreKit (deflated 56%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/ (stored 0%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKAccessToken.h (deflated 73%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKAppEvents.h (deflated 77%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKApplicationDelegate.h (deflated 68%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKAppLink.h (deflated 53%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKAppLinkNavigation.h (deflated 63%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKAppLinkResolver.h (deflated 49%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKAppLinkResolving.h (deflated 46%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKAppLinkReturnToRefererController.h (deflated 61%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKAppLinkReturnToRefererView.h (deflated 57%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKAppLinkTarget.h (deflated 48%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKAppLinkUtility.h (deflated 50%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKButton.h (deflated 40%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKConstants.h (deflated 74%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKCopying.h (deflated 42%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKCoreKit.h (deflated 67%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKGraphErrorRecoveryProcessor.h (deflated 59%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKGraphRequest.h (deflated 67%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKGraphRequestConnection.h (deflated 68%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKGraphRequestDataAttachment.h (deflated 51%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKMeasurementEvent.h (deflated 61%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKMutableCopying.h (deflated 44%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKProfile.h (deflated 63%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKProfilePictureView.h (deflated 53%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKSettings.h (deflated 66%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKTestUsersManager.h (deflated 59%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKURL.h (deflated 60%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKUtility.h (deflated 55%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Headers/FBSDKWebViewAppLinkResolver.h (deflated 44%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Info.plist (deflated 29%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Modules/ (stored 0%)
+
+  adding: FBSDKCoreKit_Basics/iOS/FBSDKCoreKit.framework/Modules/module.modulemap (deflated 18%)
+
+  adding: FBSDKCoreKit_Basics/tvOS/ (stored 0%)
+
+  adding: FBSDKCoreKit_Basics/tvOS/FBSDKCoreKit.framework/ (stored 0%)
+
+  adding: FBSDKCoreKit_Basics/tvOS/FBSDKCoreKit.framework/FBSDKCoreKit (deflated 58%)
+
+  adding: FBSDKCoreKit_Basics/tvOS/FBSDKCoreKit.framework/Headers/ (stored 0%)
+
+  adding: FBSDKCoreKit_Basics/tvOS/FBSDKCoreKit.framework/Headers/FBSDKAccessToken.h (deflated 73%)
+
+  adding: FBSDKCoreKit_Basics/tvOS/FBSDKCoreKit.framework/Headers/FBSDKAppEvents.h (deflated 77%)
+
+  adding: FBSDKCoreKit_Basics/tvOS/FBSDKCoreKit.framework/Headers/FBSDKApplicationDelegate.h (deflated 68%)
+
+  adding: FBSDKCoreKit_Basics/tvOS/FBSDKCoreKit.framework/Headers/FBSDKButton.h (deflated 40%)
+
+  adding: FBSDKCoreKit_Basics/tvOS/FBSDKCoreKit.framework/Headers/FBSDKConstants.h (deflated 74%)
+
+  adding: FBSDKCoreKit_Basics/tvOS/FBSDKCoreKit.framework/Headers/FBSDKCopying.h (deflated 42%)
+
+  adding: FBSDKCoreKit_Basics/tvOS/FBSDKCoreKit.framework/Headers/FBSDKCoreKit.h (deflated 67%)
+
+  adding: FBSDKCoreKit_Basics/tvOS/FBSDKCoreKit.framework/Headers/FBSDKDeviceButton.h (deflated 42%)
+
+  adding: FBSDKCoreKit_Basics/tvOS/FBSDKCoreKit.framework/Headers/FBSDKDeviceViewControllerBase.h (deflated 42%)
+
+  adding: FBSDKCoreKit_Basics/tvOS/FBSDKCoreKit.framework/Headers/FBSDKGraphRequest.h (deflated 67%)
+
+  adding: FBSDKCoreKit_Basics/tvOS/FBSDKCoreKit.framework/Headers/FBSDKGraphRequestConnection.h (deflated 68%)
+
+  adding: FBSDKCoreKit_Basics/tvOS/FBSDKCoreKit.framework/Headers/FBSDKGraphRequestDataAttachment.h (deflated 51%)
+
+  adding: FBSDKCoreKit_Basics/tvOS/FBSDKCoreKit.framework/Headers/FBSDKSettings.h (deflated 66%)
+
+  adding: FBSDKCoreKit_Basics/tvOS/FBSDKCoreKit.framework/Headers/FBSDKTestUsersManager.h (deflated 59%)
+
+  adding: FBSDKCoreKit_Basics/tvOS/FBSDKCoreKit.framework/Headers/FBSDKUtility.h (deflated 55%)
+
+  adding: FBSDKCoreKit_Basics/tvOS/FBSDKCoreKit.framework/Info.plist (deflated 30%)
+
+  adding: FBSDKCoreKit_Basics/tvOS/FBSDKCoreKit.framework/Modules/ (stored 0%)
+
+  adding: FBSDKCoreKit_Basics/tvOS/FBSDKCoreKit.framework/Modules/module.modulemap (deflated 18%)
+
+travis_time:end:2c0759f4:start=1585250708337538000,finish=1585252394938823000,duration=1686601285000,event=script
+[0K[32;1mThe command "sh scripts/run.sh release github" exited with 0.[0m
+
+
+
+travis_fold:start:dpl_0
+[0Ktravis_time:start:24ecdcf3
+[0K$ rvm $(travis_internal_ruby) --fuzzy do ruby -S gem install dpl
+
+Warning, new version of rvm available '1.29.10', you are using older version '1.29.8'.
+
+You can disable this warning with:    echo rvm_autoupdate_flag=0 >> ~/.rvmrc
+
+You can enable  auto-update  with:    echo rvm_autoupdate_flag=2 >> ~/.rvmrc
+
+Successfully installed dpl-1.10.15
+
+1 gem installed
+
+travis_time:end:24ecdcf3:start=1585252397935615000,finish=1585252401934391000,duration=3998776000,event=after_success
+[0Ktravis_fold:end:dpl_0
+[0Ktravis_time:start:12d991fa
+[0Ktravis_fold:start:dpl.1
+[33mInstalling deploy dependencies[0m
+
+Successfully installed faraday-0.15.4
+
+Successfully installed sawyer-0.8.2
+
+Successfully installed octokit-4.6.2
+
+Successfully installed dpl-releases-1.10.15
+
+4 gems installed
+
+
+
+travis_fold:end:dpl.1
+Logged in as 
+
+Deploying to repo: facebook/facebook-ios-sdk
+
+Current tag is: v6.3.0
+
+Setting target_commitish to 5033e483f9b4c2e97344ac6a4044106de7f90585
+
+travis_fold:start:dpl.2
+[33mPreparing deploy[0m
+
+
+
+travis_fold:end:dpl.2
+travis_fold:start:dpl.3
+[33mDeploying application[0m
+
+
+
+travis_fold:end:dpl.3
+travis_time:end:12d991fa:start=1585252401953581000,finish=1585252422674161000,duration=20720580000,event=after_success
+[0K
+
+Done. Your build exited with 0.
