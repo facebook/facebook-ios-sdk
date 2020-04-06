@@ -177,14 +177,19 @@ static int* vectorize(const char *texts, const int str_len, const int max_len) {
  input shape: m, n
  return shape: n, m
  */
-static float* transpose2D(const float *input, const int m, const int n) {
-  float *transposed = (float *)malloc(sizeof(float) * m * n);
+static MTensor transpose2D(const MTensor& x) {
+  int64_t m = x.size(0);
+  int64_t n = x.size(1);
+  MTensor y({n, m});
+
+  float *y_data = y.mutable_data();
+  const float *x_data = x.data();
   for (int i = 0; i < m; i++){
     for (int j = 0; j < n; j++) {
-      transposed[j * m + i] = input[i * n + j];
+      y_data[j * m + i] = x_data[i * n + j];
     }
   }
-  return transposed;
+  return y;
 }
 
 /*
@@ -250,11 +255,9 @@ static float* predictOnMTML(const std::string task, const char *texts, const std
   const float *convs_0_bias = conv0b_t.data();
   const float *convs_1_bias = conv1b_t.data();
   const float *convs_2_bias = conv2b_t.data();
-  const float *fc1_weight = transpose2D(fc1w_t.data(), (int)fc1w_t.size(0), (int)fc1w_t.size(1));
-  const float *fc2_weight = transpose2D(fc2w_t.data(), (int)fc2w_t.size(0), (int)fc2w_t.size(1));
-  const float *final_layer_weight = transpose2D(final_layer_weight_t.data(),
-                                                (int)final_layer_weight_t.size(0),
-                                                (int)final_layer_weight_t.size(1));
+  const MTensor& fc1_weight = transpose2D(fc1w_t);
+  const MTensor& fc2_weight = transpose2D(fc2w_t);
+  const MTensor& final_layer_weight = transpose2D(final_layer_weight_t);
   const float *fc1_bias = fc1b_t.data();
   const float *fc2_bias = fc2b_t.data();
   const float *final_layer_bias = final_layer_bias_t.data();
@@ -304,14 +307,14 @@ static float* predictOnMTML(const std::string task, const char *texts, const std
   free(cc);
 
   // dense + relu
-  dense1_x = dense(concat, fc1_weight, fc1_bias, 1, (int)fc1w_t.size(1), (int)fc1w_t.size(0));
+  dense1_x = dense(concat, fc1_weight.data(), fc1_bias, 1, (int)fc1w_t.size(1), (int)fc1w_t.size(0));
   free(concat);
   relu(dense1_x, (int)fc1b_t.size(0));
-  dense2_x = dense(dense1_x, fc2_weight, fc2_bias, 1, (int)fc2w_t.size(1), (int)fc2w_t.size(0));
+  dense2_x = dense(dense1_x, fc2_weight.data(), fc2_bias, 1, (int)fc2w_t.size(1), (int)fc2w_t.size(0));
   relu(dense2_x, (int)fc2b_t.size(0));
   free(dense1_x);
   final_layer_dense_x = dense(dense2_x,
-                              final_layer_weight,
+                              final_layer_weight.data(),
                               final_layer_bias,
                               1,
                               (int)final_layer_weight_t.size(1),

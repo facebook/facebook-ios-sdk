@@ -302,24 +302,22 @@
 }
 
 - (void)testTranspose2D {
-    float* res;
-    float input[3][4]= {
+    float input_data[3][4]= {
         {0, 1, 2, 3},
         {4, 5, 6, 7},
         {8, 9, 10, 11},
     };
-    float expected[4][3] = {
+    float expected_data[4][3] = {
         {0, 4, 8},
         {1, 5, 9},
         {2, 6, 10},
         {3, 7, 11},
     };
-    res = facebook::transpose2D(*input, 3, 4);
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 3; j++) {
-            XCTAssertEqualWithAccuracy(expected[i][j], res[i * 3 + j], 0.01);
-        }
-    }
+    facebook::MTensor input({3, 4});
+    facebook::MTensor expected({4, 3});
+    memcpy(input.mutable_data(), *input_data, input.count() * sizeof(float));
+    memcpy(expected.mutable_data(), *expected_data, expected.count() * sizeof(float));
+    [self AssertEqual:expected input:facebook::transpose2D(input)];
 }
 
 - (void)testAdd {
