@@ -19,7 +19,7 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKModelParser.h"
-using facebook::MTensor;
+using fbsdk::MTensor;
 using std::string;
 using std::unordered_map;
 using std::vector;

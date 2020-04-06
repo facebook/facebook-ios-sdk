@@ -2704,7 +2704,6 @@
 				9D2697571A5DF40700143BFC /* Supporting Files */,
 				2A3DA4151CB4C0F600339BD4 /* FBSDKAppLinkUtilityTests.m */,
 				5D2165F12229C6A3004952D8 /* FBSDKGraphRequestTests.m */,
-				E4C2B97923867327002335A4 /* FBSDKModelRuntimeTests.mm */,
 			);
 			path = FBSDKCoreKitTests;
 			sourceTree = "<group>";
@@ -2950,6 +2949,7 @@
 			isa = PBXGroup;
 			children = (
 				E493252C23F7C60E0000B63A /* FBSDKModelParserTests.mm */,
+				E4C2B97923867327002335A4 /* FBSDKModelRuntimeTests.mm */,
 			);
 			path = ML;
 			sourceTree = "<group>";

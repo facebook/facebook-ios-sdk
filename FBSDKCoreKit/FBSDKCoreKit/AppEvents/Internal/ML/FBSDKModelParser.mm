@@ -27,9 +27,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation FBSDKModelParser
 
-+ (std::unordered_map<std::string, facebook::MTensor>)parseWeightsData:(NSData *)weightsData
++ (std::unordered_map<std::string, fbsdk::MTensor>)parseWeightsData:(NSData *)weightsData
 {
-  std::unordered_map<std::string, facebook::MTensor> weights;
+  std::unordered_map<std::string, fbsdk::MTensor> weights;
 
   const void *data = weightsData.bytes;
   NSUInteger totalLength =  weightsData.length;
@@ -80,7 +80,7 @@ NS_ASSUME_NONNULL_BEGIN
         // Make sure data length is valid
         break;
       }
-      facebook::MTensor tensor(v_shape);
+      fbsdk::MTensor tensor(v_shape);
       memcpy(tensor.mutable_data(), floats, sizeof(float) * count);
       floats += count;
 
@@ -91,7 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
   return weights;
 }
 
-+ (bool)validateWeights:(std::unordered_map<std::string, facebook::MTensor>)weights forKey:(NSString *)key
++ (bool)validateWeights:(std::unordered_map<std::string, fbsdk::MTensor>)weights forKey:(NSString *)key
 {
   NSMutableDictionary<NSString *, NSArray *> *weightsInfoDict = [[NSMutableDictionary alloc] init];
   if ([key hasPrefix:MTMLKey]) {
@@ -134,7 +134,7 @@ NS_ASSUME_NONNULL_BEGIN
     @"app_event_pred.bias": @[@(5)]};
 }
 
-+ (bool)checkWeights:(std::unordered_map<std::string, facebook::MTensor>)weights
++ (bool)checkWeights:(std::unordered_map<std::string, fbsdk::MTensor>)weights
     withExpectedInfo:(NSDictionary<NSString *, NSArray *> *)weightsInfoDict
 {
   if (weightsInfoDict.count != weights.size()) {
@@ -145,7 +145,7 @@ NS_ASSUME_NONNULL_BEGIN
       if (weights.count(std::string([key UTF8String])) == 0) {
         return false;
       }
-      facebook::MTensor tensor = weights[std::string([key UTF8String])];
+      fbsdk::MTensor tensor = weights[std::string([key UTF8String])];
       const std::vector<int64_t>& actualSize = tensor.sizes();
       NSArray *expectedSize = weightsInfoDict[key];
       if (actualSize.size() != expectedSize.count) {

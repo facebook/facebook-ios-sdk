@@ -35,7 +35,7 @@
 #define NON_MTML_EMBEDDING_SIZE 64
 #define DENSE_FEATURE_LEN 30
 
-namespace facebook {
+namespace fbsdk {
 
 static void relu(float *data, const int len) {
   float min = 0;

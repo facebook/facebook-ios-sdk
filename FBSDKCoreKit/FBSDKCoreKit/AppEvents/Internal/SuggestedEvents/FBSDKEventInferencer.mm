@@ -40,7 +40,7 @@ extern FBSDKAppEventName FBSDKAppEventNamePurchased;
 extern FBSDKAppEventName FBSDKAppEventNameInitiatedCheckout;
 
 static NSString *_useCase;
-static std::unordered_map<std::string, facebook::MTensor> _weights;
+static std::unordered_map<std::string, fbsdk::MTensor> _weights;
 
 @implementation FBSDKEventInferencer : NSObject
 
@@ -54,7 +54,7 @@ static std::unordered_map<std::string, facebook::MTensor> _weights;
     if (!data) {
       return;
     }
-    std::unordered_map<std::string, facebook::MTensor> weights = [FBSDKModelParser parseWeightsData:data];
+    std::unordered_map<std::string, fbsdk::MTensor> weights = [FBSDKModelParser parseWeightsData:data];
     if ([FBSDKModelParser validateWeights:weights forKey:useCase]) {
       _useCase = useCase;
       _weights = weights;
@@ -82,7 +82,7 @@ static std::unordered_map<std::string, facebook::MTensor> _weights;
     }
 
     // Get dense tensor
-    facebook::MTensor dense_tensor({1, 30});
+    fbsdk::MTensor dense_tensor({1, 30});
     float *dense_tensor_data = dense_tensor.mutable_data();
     float *dense_data = [FBSDKFeatureExtractor getDenseFeatures:viewTree];
     if (!dense_data) {
@@ -106,7 +106,7 @@ static std::unordered_map<std::string, facebook::MTensor> _weights;
       return defaultPrediction;
     }
 
-    float *res = facebook::predictOnMTML("app_event_pred", bytes, _weights, dense_tensor_data);
+    float *res = fbsdk::predictOnMTML("app_event_pred", bytes, _weights, dense_tensor_data);
     for (int i = 0; i < thresholds.count; i++){
       if ((float)res[i] >= (float)[thresholds[i] floatValue]) {
         result[SUGGEST_EVENT_KEY] = eventMapping[i];

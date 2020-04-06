@@ -33,7 +33,7 @@
 - (void)testReLU {
     float a[] = {-1, -2, 1, 2};
     XCTAssert(a[0] < 0);
-    facebook::relu(a, 4);
+    fbsdk::relu(a, 4);
     XCTAssert(a[0] == 0);
 }
 
@@ -42,7 +42,7 @@
     float b[] = {3, 4, 5};
     float c[] = {1, 2, 3, 4, 5};
     float *concat = (float *)malloc((size_t)(sizeof(float) * 5));
-    facebook::concatenate(concat, a, b, 2, 3);
+    fbsdk::concatenate(concat, a, b, 2, 3);
     for (int i = 0; i < 5; i++) {
         XCTAssertEqual(concat[i], c[i]);
     }
@@ -51,7 +51,7 @@
 - (void)testSoftMax {
     float a[2] = {1, 1};
     float b[2] = {0.5, 0.5};
-    facebook::softmax(a, 2);
+    fbsdk::softmax(a, 2);
     for (int i = 0; i < 2; i++) {
       XCTAssertEqualWithAccuracy(a[i], b[i], 0.01);
     }
@@ -81,7 +81,7 @@
             {0, 0, 1},
         },
     };
-    res = facebook::embedding(*a, *b, 2, 2, 3);
+    res = fbsdk::embedding(*a, *b, 2, 2, 3);
     for (i = 0; i < 2; i++) {
         for (j = 0; j < 2; j++) {
             for (k = 0; k < 3; k++) {
@@ -98,7 +98,7 @@
     float b[3][2] = {{0, 1}, {1, 0},{-1, 1}};
     float c[2] = {100, 200};
     float e[2][2] = {{99, 204}, {99, 210}};
-    arr = facebook::dense(*a, *b, c, 2, 3, 2);
+    arr = fbsdk::dense(*a, *b, c, 2, 3, 2);
     for (i = 0; i < 2; i++) {
         for (j = 0; j < 2; j++) {
             XCTAssertEqualWithAccuracy(arr[i*2+j], e[i][j], 0.01);
@@ -112,7 +112,7 @@
     float b[2][3] = {{0, 3, -1}, {1, 0, -2}};
     float c[3] = {100, 200, 5};
     float e[1][3] = {{102, 203, 0}};
-    arr = facebook::dense(*a, *b, c, 1, 2, 3);
+    arr = fbsdk::dense(*a, *b, c, 1, 2, 3);
     for (int i = 0; i < 3; i++) {
         XCTAssertEqualWithAccuracy(arr[i], e[0][i], 0.01);
     }
@@ -157,7 +157,7 @@
         {{102, -66}},
         {{66, 30}},
     };
-    res = facebook::conv1D(**a, **b, 4, 2, 3, 2, 2);
+    res = fbsdk::conv1D(**a, **b, 4, 2, 3, 2, 2);
     for (i = 0; i < 4; i++) {
         for (j = 0; j < 2; j++) {
             XCTAssertEqualWithAccuracy(c[i][0][j], res[2 * i + j], 0.01);
@@ -201,7 +201,7 @@
             {47, 123, 208, 196},
         }
     };
-    res = facebook::conv1D(**a, **b, 1, 5, 3, 3, 4);
+    res = fbsdk::conv1D(**a, **b, 1, 5, 3, 3, 4);
     for (i = 0; i < 1; i++) {
         for (j = 0; j < 4; j++) {
             XCTAssertEqualWithAccuracy(c[i][0][j], res[4 * i + j], 0.01);
@@ -231,7 +231,7 @@
         },
     };
     float c[1][1][2] = {{{5, -5}}};
-    res = facebook::conv1D(**a, **b, 1, 2, 3, 2, 2);
+    res = fbsdk::conv1D(**a, **b, 1, 2, 3, 2, 2);
     for (i = 0; i < 1; i++) {
         for (j = 0; j < 2; j++) {
             XCTAssertEqualWithAccuracy(c[i][0][j], res[2 * i + j], 0.01);
@@ -243,7 +243,7 @@
     int* res;
     char strs[] = {"0123456"};
     int e[] = {48, 49, 50, 51, 52, 53, 54, 0, 0, 0};
-    res = facebook::vectorize(strs, 7, 10);
+    res = fbsdk::vectorize(strs, 7, 10);
     for (int i = 0; i < 7; i++) {
         XCTAssertEqualWithAccuracy(res[i], e[i], 0.01);
     }
@@ -253,7 +253,7 @@
     int* res;
     char strs[] = {"0123456"};
     int e[] = {48, 49, 50};
-    res = facebook::vectorize(strs, 7, 3);
+    res = fbsdk::vectorize(strs, 7, 3);
     for (int i = 0; i < 3; i++) {
         XCTAssertEqualWithAccuracy(res[i], e[i], 0.01);
     }
@@ -294,11 +294,11 @@
             {11, 23},
         },
     };
-    facebook::MTensor input({2, 3, 4});
-    facebook::MTensor expected({4, 3, 2});
+    fbsdk::MTensor input({2, 3, 4});
+    fbsdk::MTensor expected({4, 3, 2});
     memcpy(input.mutable_data(), **input_data, input.count() * sizeof(float));
     memcpy(expected.mutable_data(), **expected_data, expected.count() * sizeof(float));
-    [self AssertEqual:expected input:facebook::transpose3D(input)];
+    [self AssertEqual:expected input:fbsdk::transpose3D(input)];
 }
 
 - (void)testTranspose2D {
@@ -313,11 +313,11 @@
         {2, 6, 10},
         {3, 7, 11},
     };
-    facebook::MTensor input({3, 4});
-    facebook::MTensor expected({4, 3});
+    fbsdk::MTensor input({3, 4});
+    fbsdk::MTensor expected({4, 3});
     memcpy(input.mutable_data(), *input_data, input.count() * sizeof(float));
     memcpy(expected.mutable_data(), *expected_data, expected.count() * sizeof(float));
-    [self AssertEqual:expected input:facebook::transpose2D(input)];
+    [self AssertEqual:expected input:fbsdk::transpose2D(input)];
 }
 
 - (void)testAdd {
@@ -346,7 +346,7 @@
             {10, 23},
         },
     };
-  facebook::add(**input, b, 2, 3, 2);
+  fbsdk::add(**input, b, 2, 3, 2);
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < 3; j++) {
             for (int k = 0; k < 2; k++) {
@@ -373,7 +373,7 @@
         {{4, 2, 6}},
         {{7, 11, 12}},
     };
-    res = facebook::maxPool1D(**input, 2, 2, 3, 2);
+    res = fbsdk::maxPool1D(**input, 2, 2, 3, 2);
     for (i = 0; i < 2; i++) {
         for (j = 0; j < 3; j++) {
             XCTAssertEqualWithAccuracy(expected[i][0][j], res[3 * i + j], 0.01);
@@ -398,7 +398,7 @@
         {{-1, -2, -3}},
         {{-7, -8, -9}},
     };
-    res = facebook::maxPool1D(**input, 2, 2, 3, 2);
+    res = fbsdk::maxPool1D(**input, 2, 2, 3, 2);
     for (i = 0; i < 2; i++) {
         for (j = 0; j < 3; j++) {
             XCTAssertEqualWithAccuracy(expected[i][0][j], res[3 * i + j], 0.01);
@@ -431,7 +431,7 @@
         {{4, 5, 6, 9}},
         {{4, 5, 6, 7}},
     };
-    res = facebook::maxPool1D(**input, 3, 3, 4, 3);
+    res = fbsdk::maxPool1D(**input, 3, 3, 4, 3);
     for (i = 0; i < 3; i++) {
         for (j = 0; j < 4; j++) {
             XCTAssertEqualWithAccuracy(expected[i][0][j], res[4 * i + j], 0.01);
@@ -439,8 +439,8 @@
     }
 }
 
-- (void)AssertEqual:(const facebook::MTensor&)expected
-              input:(const facebook::MTensor&)input
+- (void)AssertEqual:(const fbsdk::MTensor&)expected
+              input:(const fbsdk::MTensor&)input
 {
   const std::vector<int64_t>& expected_sizes = expected.sizes();
   const std::vector<int64_t>& input_sizes = input.sizes();
