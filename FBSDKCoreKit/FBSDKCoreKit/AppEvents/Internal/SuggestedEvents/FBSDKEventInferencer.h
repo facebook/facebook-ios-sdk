@@ -28,8 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)loadWeightsForKey:(NSString *)useCase;
 + (NSDictionary<NSString *, NSString *> *)predict:(NSString *)buttonText
-                                         viewTree:(NSMutableDictionary<NSString *, id> *)viewTree
-                                          withLog:(BOOL)isPrint;
+                                         viewTree:(NSMutableDictionary<NSString *, id> *)viewTree;
 
 @end
 

@@ -20,6 +20,7 @@
 
 #if !TARGET_OS_TV
 
+#import "FBSDKMLMacros.h"
 #import "FBSDKModelParser.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -93,16 +94,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (bool)validateWeights:(std::unordered_map<std::string, facebook::MTensor>)weights forKey:(NSString *)key
 {
   NSMutableDictionary<NSString *, NSArray *> *weightsInfoDict = [[NSMutableDictionary alloc] init];
-  if ([key hasPrefix:@"MTML"]) {
+  if ([key hasPrefix:MTMLKey]) {
     [weightsInfoDict addEntriesFromDictionary:[self getMTMLWeightsInfo]];
-  } else {
-    [weightsInfoDict addEntriesFromDictionary:[self getSharedWeightsInfo]];
-    if ([key isEqualToString:@"DATA_DETECTION_ADDRESS"]) {
-      [weightsInfoDict addEntriesFromDictionary:[self getAddressDetectSpec]];
-    }
-    if ([key isEqualToString:@"SUGGEST_EVENT"]) {
-      [weightsInfoDict addEntriesFromDictionary:[self getAppEventPredSpec]];
-    }
   }
   return [self checkWeights:weights withExpectedInfo:weightsInfoDict];
 }
@@ -119,22 +112,6 @@ NS_ASSUME_NONNULL_BEGIN
     @"dense1.bias": @"fc1.bias",
     @"dense2.bias": @"fc2.bias",
     @"dense3.bias": @"fc3.bias"};
-}
-
-+ (NSDictionary<NSString *, NSArray *> *)getSharedWeightsInfo
-{
-  return @{
-    @"embed.weight" : @[@(256), @(64)],
-    @"convs.0.weight" : @[@(32), @(64), @(2)],
-    @"convs.0.bias" : @[@(32)],
-    @"convs.1.weight" : @[@(32), @(64), @(3)],
-    @"convs.1.bias" : @[@(32)],
-    @"convs.2.weight" : @[@(32), @(64), @(5)],
-    @"convs.2.bias" : @[@(32)],
-    @"fc1.weight": @[@(128), @(126)],
-    @"fc1.bias": @[@(128)],
-    @"fc2.weight": @[@(64), @(128)],
-    @"fc2.bias": @[@(64)]};
 }
 
 + (NSDictionary<NSString *, NSArray *> *)getMTMLWeightsInfo
@@ -155,20 +132,6 @@ NS_ASSUME_NONNULL_BEGIN
     @"address_detect.bias": @[@(2)],
     @"app_event_pred.weight": @[@(5), @(64)],
     @"app_event_pred.bias": @[@(5)]};
-}
-
-+ (NSDictionary<NSString *, NSArray *> *)getAddressDetectSpec
-{
-  return @{
-    @"fc3.weight": @[@(2), @(64)],
-    @"fc3.bias": @[@(2)]};
-}
-
-+ (NSDictionary<NSString *, NSArray *> *)getAppEventPredSpec
-{
-  return @{
-    @"fc3.weight": @[@(4), @(64)],
-    @"fc3.bias": @[@(4)]};
 }
 
 + (bool)checkWeights:(std::unordered_map<std::string, facebook::MTensor>)weights

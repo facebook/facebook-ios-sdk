@@ -31,6 +31,7 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
 + (void)enable;
 + (nullable NSDictionary *)getRulesForKey:(NSString *)useCase;
 + (nullable NSData *)getWeightsForKey:(NSString *)useCase;
++ (nullable NSArray *)getThresholdsForKey:(NSString *)useCase;
 
 @end
 

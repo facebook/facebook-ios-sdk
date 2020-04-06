@@ -215,7 +215,7 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
     viewTree[VIEW_HIERARCHY_SCREEN_NAME_KEY] = screenName ?: @"";
 
     fb_dispatch_on_default_thread(^{
-      NSDictionary<NSString *, NSString *> *result = [FBSDKEventInferencer predict:text viewTree:[viewTree mutableCopy] withLog:YES];
+      NSDictionary<NSString *, NSString *> *result = [FBSDKEventInferencer predict:text viewTree:[viewTree mutableCopy]];
       NSString *event = result[SUGGEST_EVENT_KEY];
       if (!event || [event isEqualToString:SUGGESTED_EVENT_OTHER]) {
         return;

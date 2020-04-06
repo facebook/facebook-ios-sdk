@@ -73,29 +73,13 @@ static std::vector<float> _denseFeature;
   if ((int)strlen(bytes) == 0) {
     return false;
   }
-  float *predictedRaw;
-  NSMutableDictionary<NSString *, id> *modelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
-  if (!modelInfo) {
+  NSArray *thresholds = [FBSDKModelManager getThresholdsForKey:_useCase];
+  if (thresholds.count != 1) {
     return false;
   }
-
-  NSString *key = _useCase;
-  if ([key isEqualToString:@"MTML"]) {
-    key = @"MTML_ADDRESS_DETECT";
-  }
-
-  NSDictionary<NSString *, id> * addressModelInfo = [modelInfo objectForKey:key];
-  if (!addressModelInfo) {
-    return false;
-  }
-  NSMutableArray *thresholds = [addressModelInfo objectForKey:THRESHOLDS_KEY];
-  float threshold = [thresholds[0] floatValue];
   try {
-    predictedRaw = facebook::predictOnText(std::string([key UTF8String]), bytes, _weights, &_denseFeature[0]);
-    if (!predictedRaw[1]) {
-      return false;
-    }
-    return predictedRaw[1] >= threshold;
+    float* res = facebook::predictOnMTML("address_detect", bytes, _weights, &_denseFeature[0]);
+    return res[1] >= [thresholds[0] floatValue];
   } catch (const std::exception &e) {
     return false;
   }
