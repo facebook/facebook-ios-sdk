@@ -57,8 +57,8 @@ static void MFreeMemory(void* ptr) {
 
 class MTensor {
 public:
-  MTensor(){};
-  MTensor(const std::vector<int64_t>& sizes) {
+  MTensor(): storage_(nullptr), sizes_(), strides_(), capacity_(0){};
+  explicit MTensor(const std::vector<int64_t>& sizes) {
     auto strides = std::vector<int64_t>(sizes.size());
     strides[strides.size() - 1] = 1;
     for (auto i = static_cast<int32_t>(strides.size()) - 2; i >= 0; --i) {
@@ -95,6 +95,18 @@ public:
 
   MAT_ALWAYS_INLINE float* mutable_data() {
     return static_cast<float*>(storage_.get());
+  }
+
+  MAT_ALWAYS_INLINE void Reshape(const std::vector<int64_t>& sizes) {
+    int64_t count = 1;
+    for (int i = 0; i < sizes.size(); i++) {
+      count *= sizes[i];
+    }
+    if (count > capacity_) {
+      capacity_ = count;
+      storage_.reset(MAllocateMemory(capacity_ * sizeof(float)), MFreeMemory);
+    }
+    sizes_ = sizes;
   }
 
 private:
