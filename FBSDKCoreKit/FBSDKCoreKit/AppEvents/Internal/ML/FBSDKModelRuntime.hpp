@@ -72,18 +72,32 @@ static void softmax(float *data, const int n) {
   }
 }
 
-static float* embedding(const int *a, const float *b, const int n_examples, const int seq_length, const int embedding_size) {
-  int i,j,k,val;
-  float* res = (float *)malloc(sizeof(float) * (n_examples * seq_length * embedding_size));
-  for (i = 0; i < n_examples; i++) {
-    for (j = 0; j < seq_length; j++) {
-      val = a[i * seq_length + j];
-      for (k = 0; k < embedding_size; k++) {
-        res[(embedding_size * seq_length) * i + embedding_size * j + k] = b[val * embedding_size + k];
-      }
+static std::vector<int> vectorize(const char *texts, const int seq_length) {
+  int str_len = (int)strlen(texts);
+  std::vector<int> vec(seq_length, 0);
+  for (int i = 0; i < seq_length; i++) {
+    if (i < str_len){
+      vec[i] = static_cast<unsigned char>(texts[i]);
     }
   }
-  return res;
+  return vec;
+}
+
+static MTensor embedding(const char *texts, const int seq_length, const MTensor& w) {
+  // TODO: T65152708 support batch prediction
+  const std::vector<int>& vec = vectorize(texts, seq_length);
+  int64_t n_examples = 1;
+  int64_t embedding_size = w.size(1);
+  MTensor y({n_examples, seq_length, embedding_size});
+  const float* w_data = w.data();
+  float *y_data = y.mutable_data();
+  for (int i = 0; i < n_examples; i++) {
+    for (int j = 0; j < seq_length; j++) {
+      memcpy(y_data, w_data + vec[i * seq_length + j] * embedding_size, embedding_size * sizeof(float));
+      y_data += embedding_size;
+    }
+  }
+  return y;
 }
 
 /*
@@ -161,18 +175,6 @@ static float* maxPool1D(const float *input, const int n_examples, const int inpu
   return res;
 }
 
-static int* vectorize(const char *texts, const int str_len, const int max_len) {
-  int *res = (int *)malloc(sizeof(int) * max_len);
-  for (int i = 0; i < max_len; i++) {
-    if (i < str_len){
-      res[i] = static_cast<unsigned char>(texts[i]);
-    } else {
-      res[i] = 0;
-    }
-  }
-  return res;
-}
-
 /*
  input shape: m, n
  return shape: n, m
@@ -224,8 +226,6 @@ static float* add(float *a, const float *b, const int m, const int n, const int 
 }
 
 static float* predictOnMTML(const std::string task, const char *texts, const std::unordered_map<std::string, MTensor>& weights, const float *df) {
-  int *x;
-  float *embed_x;
   float *c0, *c1, *c2;
   int c0_shape, c1_shape, c2_shape;
   float *ca, *cb, *cc;
@@ -248,7 +248,6 @@ static float* predictOnMTML(const std::string task, const char *texts, const std
   const MTensor& final_layer_weight_t = weights.at(final_layer_weight_key); // (2, 64) or (5, 64)
   const MTensor& final_layer_bias_t = weights.at(final_layer_bias_key); // 2 or 5
 
-  const float *embed_weight = embed_t.data();
   const MTensor& convs_0_weight = transpose3D(conv0w_t);
   const MTensor& convs_1_weight = transpose3D(conv1w_t);
   const MTensor& convs_2_weight = transpose3D(conv2w_t);
@@ -262,19 +261,14 @@ static float* predictOnMTML(const std::string task, const char *texts, const std
   const float *fc2_bias = fc2b_t.data();
   const float *final_layer_bias = final_layer_bias_t.data();
 
-  // vectorize text
-  x = vectorize(texts, (int)strlen(texts), SEQ_LEN);
-
   // embedding
-  embed_x = embedding(x, embed_weight, 1, SEQ_LEN, MTML_EMBEDDING_SIZE); // (1, 128, 32)
-  free(x);
+  const MTensor& embed_x = embedding(texts, SEQ_LEN, embed_t);
 
   // conv0
-  c0 = conv1D(embed_x, convs_0_weight.data(), 1, SEQ_LEN, MTML_EMBEDDING_SIZE, (int)conv0w_t.size(2), (int)conv0w_t.size(0)); // (1, 126, 32)
+  c0 = conv1D(embed_x.data(), convs_0_weight.data(), 1, SEQ_LEN, MTML_EMBEDDING_SIZE, (int)conv0w_t.size(2), (int)conv0w_t.size(0)); // (1, 126, 32)
   c0_shape = (int)(SEQ_LEN - conv0w_t.size(2) + 1);
   add(c0, convs_0_bias, 1, c0_shape, (int)conv0w_t.size(0));
   relu(c0, c0_shape * (int)conv0w_t.size(0));
-  free(embed_x);
 
   // conv1
   c1 = conv1D(c0, convs_1_weight.data(), 1, c0_shape, (int)conv0w_t.size(0), (int)conv1w_t.size(2), (int)conv1w_t.size(0)); // (1, 124, 64)

@@ -58,37 +58,23 @@
 }
 
 - (void)testEmbedding {
-  int i,j,k;
-  float* res;
-
-  int a[2][2] = {
-    {0, 1},
-    {1, 2},
-  };
-  float b[3][3] = {
+  char text[] = {"\1\2"};
+  float embeddings_data[3][3] = {
     {1, 0, 0},
     {0, 1, 0},
     {0, 0, 1},
   };
-  float c[2][2][3] = {
-    {
-      {1, 0, 0},
-      {0, 1, 0}
-
-    },
+  float expected_data[1][2][3] = {
     {
       {0, 1, 0},
       {0, 0, 1},
     },
   };
-  res = fbsdk::embedding(*a, *b, 2, 2, 3);
-  for (i = 0; i < 2; i++) {
-    for (j = 0; j < 2; j++) {
-      for (k = 0; k < 3; k++) {
-        XCTAssertEqualWithAccuracy(c[i][j][k], res[2 * 3 * i + 3 * j + k], 0.01);
-      }
-    }
-  }
+  fbsdk::MTensor embeddings({3, 3});
+  memcpy(embeddings.mutable_data(), *embeddings_data, embeddings.count() * sizeof(float));
+  fbsdk::MTensor expected({1, 2, 3});
+  memcpy(expected.mutable_data(), **expected_data, expected.count() * sizeof(float));
+  [self AssertEqual:expected input:fbsdk::embedding(text, 2, embeddings)];
 }
 
 - (void)testDenseExample1 {
@@ -240,23 +226,17 @@
 }
 
 - (void)testTextVectorizationLessThanMaxLen {
-  int* res;
   char strs[] = {"0123456"};
-  int e[] = {48, 49, 50, 51, 52, 53, 54, 0, 0, 0};
-  res = fbsdk::vectorize(strs, 7, 10);
-  for (int i = 0; i < 7; i++) {
-    XCTAssertEqualWithAccuracy(res[i], e[i], 0.01);
-  }
+  const std::vector<int> expected{48, 49, 50, 51, 52, 53, 54, 0, 0, 0};
+  const std::vector<int>& res = fbsdk::vectorize(strs, 10);
+  XCTAssertEqual(expected, res);
 }
 
 - (void)testTextVectorizationLargerThanMaxLen {
-  int* res;
   char strs[] = {"0123456"};
-  int e[] = {48, 49, 50};
-  res = fbsdk::vectorize(strs, 7, 3);
-  for (int i = 0; i < 3; i++) {
-    XCTAssertEqualWithAccuracy(res[i], e[i], 0.01);
-  }
+  const std::vector<int> expected{48, 49, 50};
+  const std::vector<int>& res = fbsdk::vectorize(strs, 3);
+  XCTAssertEqual(expected, res);
 }
 
 - (void)testTranspose3D {
