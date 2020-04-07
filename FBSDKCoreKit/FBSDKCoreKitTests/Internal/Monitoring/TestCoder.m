@@ -35,11 +35,57 @@
   self.encodedObject[key] = object;
 }
 
+- (void)encodeBool:(BOOL)value forKey:(NSString *)key
+{
+  NSNumber *converted = [NSNumber numberWithBool:value];
+  self.encodedObject[key] = converted;
+}
+
+- (void)encodeDouble:(double)value forKey:(NSString *)key
+{
+  NSNumber *converted = [NSNumber numberWithDouble:value];
+  self.encodedObject[key] = converted;
+}
+
+- (void)encodeInteger:(NSInteger)value forKey:(NSString *)key
+{
+  NSNumber *converted = [NSNumber numberWithInteger:value];
+  self.encodedObject[key] = converted;
+}
+
 - (id)decodeObjectOfClass:(Class)aClass forKey:(NSString *)key
 {
   self.decodedObject[key] = aClass;
 
   return key;
+}
+
+- (id)decodeObjectOfClasses:(NSSet<Class> *)classes forKey:(NSString *)key
+{
+  self.decodedObject[key] = classes;
+
+  return key;
+}
+
+- (BOOL)decodeBoolForKey:(NSString *)key
+{
+  self.decodedObject[key] = @"decodeBoolForKey";
+
+  return YES;
+}
+
+- (double)decodeDoubleForKey:(NSString *)key
+{
+  self.decodedObject[key] = @"decodeDoubleForKey";
+
+  return 1;
+}
+
+- (NSInteger)decodeIntegerForKey:(NSString *)key
+{
+  self.decodedObject[key] = @"decodeIntegerForKey";
+
+  return 1;
 }
 
 @end

@@ -21,6 +21,9 @@
 
 #import "FBSDKInternalUtility.h"
 
+// one minute
+#define DEFAULT_SESSION_TIMEOUT_INTERVAL 60
+
 #define FBSDK_SERVER_CONFIGURATION_ADVERTISING_ID_ENABLED_KEY @"advertisingIDEnabled"
 #define FBSDK_SERVER_CONFIGURATION_APP_ID_KEY @"appID"
 #define FBSDK_SERVER_CONFIGURATION_APP_NAME_KEY @"appName"
@@ -119,7 +122,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
     _dialogFlows = [dialogFlows copy];
     _timestamp = [timestamp copy];
     _errorConfiguration = [errorConfiguration copy];
-    _sessionTimoutInterval = sessionTimeoutInterval;
+    _sessionTimoutInterval = sessionTimeoutInterval ?: DEFAULT_SESSION_TIMEOUT_INTERVAL;
     _defaults = defaults;
     _loggingToken = loggingToken;
     _smartLoginOptions = smartLoginOptions;
@@ -133,6 +136,57 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
     _version = FBSDKServerConfigurationVersion;
   }
   return self;
+}
+
++ (FBSDKServerConfiguration *)defaultServerConfigurationForAppID:(NSString *)appID
+{
+  // Use a default configuration while we do not have a configuration back from the server. This allows us to set
+  // the default values for any of the dialog sets or anything else in a centralized location while we are waiting for
+  // the server to respond.
+  static FBSDKServerConfiguration *_defaultServerConfiguration = nil;
+  if (![_defaultServerConfiguration.appID isEqualToString:appID]) {
+    // Bypass the native dialog flow for iOS 9+, as it produces a series of additional confirmation dialogs that lead to
+    // extra friction that is not desirable.
+      NSOperatingSystemVersion iOS9Version = { .majorVersion = 9, .minorVersion = 0, .patchVersion = 0 };
+    BOOL useNativeFlow = ![FBSDKInternalUtility isOSRunTimeVersionAtLeast:iOS9Version];
+    // Also enable SFSafariViewController by default.
+    NSDictionary *dialogFlows = @{
+                                  FBSDKDialogConfigurationNameDefault: @{
+                                      FBSDKDialogConfigurationFeatureUseNativeFlow: @(useNativeFlow),
+                                      FBSDKDialogConfigurationFeatureUseSafariViewController: @YES,
+                                      },
+                                  FBSDKDialogConfigurationNameMessage: @{
+                                      FBSDKDialogConfigurationFeatureUseNativeFlow: @YES,
+                                      },
+                                  };
+    _defaultServerConfiguration = [[FBSDKServerConfiguration alloc] initWithAppID:appID
+                                                                          appName:nil
+                                                              loginTooltipEnabled:NO
+                                                                 loginTooltipText:nil
+                                                                 defaultShareMode:nil
+                                                             advertisingIDEnabled:NO
+                                                           implicitLoggingEnabled:NO
+                                                   implicitPurchaseLoggingEnabled:NO
+                                                            codelessEventsEnabled:NO
+                                                         uninstallTrackingEnabled:NO
+                                                             dialogConfigurations:nil
+                                                                      dialogFlows:dialogFlows
+                                                                        timestamp:nil
+                                                               errorConfiguration:nil
+                                                           sessionTimeoutInterval:DEFAULT_SESSION_TIMEOUT_INTERVAL
+                                                                         defaults:YES
+                                                                     loggingToken:nil
+                                                                smartLoginOptions:FBSDKServerConfigurationSmartLoginOptionsUnknown
+                                                        smartLoginBookmarkIconURL:nil
+                                                            smartLoginMenuIconURL:nil
+                                                                    updateMessage:nil
+                                                                    eventBindings:nil
+                                                                restrictiveParams:nil
+                                                                         AAMRules:nil
+                                                           suggestedEventsSetting:nil
+                                   ];
+  }
+  return _defaultServerConfiguration;
 }
 
 #pragma mark - Public Methods
@@ -283,6 +337,17 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
 - (id)copyWithZone:(NSZone *)zone
 {
   return self;
+}
+
+// Private accessors for unit tests
+- (NSDictionary *)dialogConfigurations
+{
+  return _dialogConfigurations;
+}
+
+- (NSDictionary *)dialogFlows
+{
+  return _dialogFlows;
 }
 
 @end
