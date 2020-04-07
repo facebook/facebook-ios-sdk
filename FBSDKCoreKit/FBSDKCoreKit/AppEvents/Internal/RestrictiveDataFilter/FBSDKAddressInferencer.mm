@@ -34,7 +34,7 @@
 @implementation FBSDKAddressInferencer : NSObject
 
 static NSString *_useCase;
-static std::unordered_map<std::string, facebook::MTensor> _weights;
+static std::unordered_map<std::string, fbsdk::MTensor> _weights;
 static std::vector<float> _denseFeature;
 
 + (void)initializeDenseFeature
@@ -54,7 +54,7 @@ static std::vector<float> _denseFeature;
     if (!data) {
       return;
     }
-    std::unordered_map<std::string, facebook::MTensor> weights = [FBSDKModelParser parseWeightsData:data];
+    std::unordered_map<std::string, fbsdk::MTensor> weights = [FBSDKModelParser parseWeightsData:data];
     if ([FBSDKModelParser validateWeights:weights forKey:useCase]) {
       _useCase = useCase;
       _weights = weights;
@@ -78,7 +78,7 @@ static std::vector<float> _denseFeature;
     return false;
   }
   try {
-    float* res = facebook::predictOnMTML("address_detect", bytes, _weights, &_denseFeature[0]);
+    float* res = fbsdk::predictOnMTML("address_detect", bytes, _weights, &_denseFeature[0]);
     return res[1] >= [thresholds[0] floatValue];
   } catch (const std::exception &e) {
     return false;

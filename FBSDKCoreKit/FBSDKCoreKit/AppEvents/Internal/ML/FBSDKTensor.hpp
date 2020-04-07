@@ -34,7 +34,7 @@
 
 // minimal aten implementation
 #define MAT_ALWAYS_INLINE inline __attribute__((always_inline))
-namespace facebook {
+namespace fbsdk {
 
 static void* MAllocateMemory(size_t nbytes) {
   void* ptr = nullptr;
