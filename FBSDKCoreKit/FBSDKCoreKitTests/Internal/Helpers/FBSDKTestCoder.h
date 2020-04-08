@@ -16,30 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TestCoder.h"
+#import <Foundation/Foundation.h>
 
-@implementation TestCoder
+NS_ASSUME_NONNULL_BEGIN
 
-- (instancetype)init
-{
-  if (self = [super init]) {
-    _encodedObject = [NSMutableDictionary dictionary];
-    _decodedObject = [NSMutableDictionary dictionary];
-  }
+@interface FBSDKTestCoder : NSCoder
 
-  return self;
-}
-
-- (void)encodeObject:(id)object forKey:(NSString *)key
-{
-  self.encodedObject[key] = object;
-}
-
-- (id)decodeObjectOfClass:(Class)aClass forKey:(NSString *)key
-{
-  self.decodedObject[key] = aClass;
-
-  return key;
-}
+@property (nonatomic) NSMutableDictionary<NSString *, id> *encodedObject;
+@property (nonatomic) NSMutableDictionary<NSString *, id> *decodedObject;
 
 @end
+
+NS_ASSUME_NONNULL_END

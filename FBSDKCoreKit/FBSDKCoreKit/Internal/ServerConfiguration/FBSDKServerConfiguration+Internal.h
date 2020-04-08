@@ -17,9 +17,16 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
+#import "FBSDKServerConfiguration.h"
 
 FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationNameDefault;
 FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationNameSharing;
 
 FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationFeatureUseNativeFlow;
 FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationFeatureUseSafariViewController;
+
+@interface FBSDKServerConfiguration (Internal)
+
++ (FBSDKServerConfiguration *)defaultServerConfigurationForAppID:(NSString *)appID;
+
+@end
