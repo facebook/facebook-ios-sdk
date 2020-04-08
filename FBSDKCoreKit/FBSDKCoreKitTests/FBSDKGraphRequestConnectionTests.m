@@ -101,14 +101,22 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
 
 #pragma mark - Tests
 
-- (void)testClientToken
+- (void)_testClientToken
 {
+  // if it's a batch request the body will be zipped so make sure we don't do that
+  id mockUtility  = [OCMockObject niceMockForClass:[FBSDKBasicUtility class]];
+  [[[mockUtility stub] andReturn:nil] gzip:[OCMArg any]];
+
   XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
   [FBSDKAccessToken setCurrentAccessToken:nil];
   [FBSDKSettings setClientToken:@"clienttoken"];
   [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+    // If it's a batch request, the token will be in the body. If it's a single request it will be in the url
+    // we should check that it's in one or the other.
+    NSString *url = request.URL.absoluteString;
     NSString *body = [[NSString alloc] initWithData:request.OHHTTPStubs_HTTPBody encoding:NSUTF8StringEncoding];
-    XCTAssertFalse([body rangeOfString:@"access_token"].location == NSNotFound);
+    u_long tokenLength  = ([body rangeOfString:@"access_token"].length + [url rangeOfString:@"access_token"].length);
+    XCTAssertTrue(tokenLength > 0);
     return YES;
   } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
     NSData *data =  [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463, \"type\":\"OAuthException\"}}" dataUsingEncoding:NSUTF8StringEncoding];

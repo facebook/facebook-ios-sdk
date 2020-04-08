@@ -48,8 +48,10 @@
 
 - (void)tearDown
 {
-  // Put teardown code here. This method is called after the invocation of each test method in the class.
   [super tearDown];
+
+  [_mockNSLocale stopMocking];
+  [_mockAppEventsUtility stopMocking];
 }
 
 - (void)testLogNotification
@@ -112,11 +114,10 @@
 
 - (void)testGetNumberValueWithLocaleFR
 {
-  OCMStub([_mockNSLocale currentLocale]).
-  _andReturn(OCMOCK_VALUE([NSLocale localeWithLocaleIdentifier:@"fr"]));
+  OCMStub(ClassMethod([_mockNSLocale currentLocale])).andReturn([NSLocale localeWithLocaleIdentifier:@"fr"]);
 
   NSNumber *result = [FBSDKAppEventsUtility
-                      getNumberValue:@"Price: 1\u202F234,56; Buy 1 get 2!"];
+                      getNumberValue:@"Price: 1\u00a0234,56; Buy 1 get 2!"];
   NSString *str = [NSString stringWithFormat:@"%.2f", result.floatValue];
   XCTAssertEqualObjects(str, @"1234.56");
 }
