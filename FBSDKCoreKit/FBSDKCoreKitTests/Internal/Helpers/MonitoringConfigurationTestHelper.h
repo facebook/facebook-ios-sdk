@@ -16,17 +16,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ifndef FBSDKMonitorHeaders_h
-#define FBSDKMonitorHeaders_h
+#import <Foundation/Foundation.h>
 
-#import "FBSDKMethodUsageMonitor.h"
-#import "FBSDKMethodUsageMonitorEntry.h"
-#import "FBSDKMonitor.h"
-#import "FBSDKMonitoringConfiguration.h"
-#import "FBSDKMonitorEntry.h"
-#import "FBSDKMonitorNetworker.h"
-#import "FBSDKMonitorStore.h"
-#import "FBSDKPerformanceMonitor.h"
-#import "FBSDKPerformanceMonitorEntry.h"
+NS_ASSUME_NONNULL_BEGIN
 
-#endif /* FBSDKMonitorHeaders_h */
+@interface MonitoringConfigurationTestHelper : NSObject
+
+/// Bundles key value pairs in the same format they're returned from the graph:
+/// ex:
+/// {
+///   "sample_rates": [
+///       {
+///         "key": "foo",
+///         "value": 1
+///       }
+///   ]
+/// }
++ (NSDictionary *)sampleRatesWithEntryPairs:(NSDictionary<NSString *, id> *)pairs;
+
+@end
+
+NS_ASSUME_NONNULL_END
