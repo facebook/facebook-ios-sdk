@@ -16,17 +16,22 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ifndef FBSDKMonitorHeaders_h
-#define FBSDKMonitorHeaders_h
+#import <Foundation/Foundation.h>
 
-#import "FBSDKMethodUsageMonitor.h"
-#import "FBSDKMethodUsageMonitorEntry.h"
-#import "FBSDKMonitor.h"
-#import "FBSDKMonitoringConfiguration.h"
 #import "FBSDKMonitorEntry.h"
-#import "FBSDKMonitorNetworker.h"
-#import "FBSDKMonitorStore.h"
-#import "FBSDKPerformanceMonitor.h"
-#import "FBSDKPerformanceMonitorEntry.h"
 
-#endif /* FBSDKMonitorHeaders_h */
+NS_ASSUME_NONNULL_BEGIN
+
+@interface FBSDKMonitoringConfiguration : NSObject<NSCoding>
+
+@property (nonatomic, readonly) int defaultSamplingRate;
+
++ (instancetype)new NS_UNAVAILABLE;
++ (instancetype)initWithDictionary:(NSDictionary *)dictionary;
++ (FBSDKMonitoringConfiguration *)defaultConfiguration;
+
+- (int)sampleRateForEntry:(id<FBSDKMonitorEntry>)entry;
+
+@end
+
+NS_ASSUME_NONNULL_END
