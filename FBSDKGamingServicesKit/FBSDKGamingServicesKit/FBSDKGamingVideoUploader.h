@@ -17,6 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
+#import <AvailabilityMacros.h>
 
 #if defined FBSDKCOCOAPODS || defined BUCK
 #import <FBSDKGamingServicesKit/FBSDKGamingServiceCompletionHandler.h>
@@ -36,9 +37,21 @@ Runs an upload to a users Gaming Media Library with the given configuration
 
 @param configuration model object contain the content that will be uploaded
 @param completionHandler a callback that is fired when the upload completes.
+
+@deprecated - This method is deprecated. Please use uploadVideoWithConfiguration:andResultCompletionHandler: instead.
 */
 + (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration * _Nonnull)configuration
-                andCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler;
+                andCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
+DEPRECATED_MSG_ATTRIBUTE("Please use uploadVideoWithConfiguration:andResultCompletionHandler: instead");
+
+/**
+Runs an upload to a users Gaming Media Library with the given configuration
+
+@param configuration model object contain the content that will be uploaded
+@param completionHandler a callback that is fired when the upload completes.
+*/
++ (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration * _Nonnull)configuration
+          andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler;
 
 /**
 Runs an upload to a users Gaming Media Library with the given configuration
@@ -49,7 +62,7 @@ Runs an upload to a users Gaming Media Library with the given configuration
  bytes are transferred to Facebook.
 */
 + (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration * _Nonnull)configuration
-                   completionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
+                   completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
                   andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler;
 
 @end
