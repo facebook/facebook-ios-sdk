@@ -31,17 +31,21 @@
                 andCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
 {
   if ([FBSDKAccessToken currentAccessToken] == nil) {
-    completionHandler(false, [FBSDKError
-                              errorWithCode:FBSDKErrorAccessTokenRequired
-                              message:@"A valid access token is required to upload Images"]);
+    completionHandler(false,
+                      [FBSDKError
+                       errorWithCode:FBSDKErrorAccessTokenRequired
+                       message:@"A valid access token is required to upload Images"],
+                      nil);
 
     return;
   }
 
   if (configuration.image == nil) {
-    completionHandler(false, [FBSDKError
-                              errorWithCode:FBSDKErrorInvalidArgument
-                              message:@"Attempting to upload a nil image"]);
+    completionHandler(false,
+                      [FBSDKError
+                       errorWithCode:FBSDKErrorInvalidArgument
+                       message:@"Attempting to upload a nil image"],
+                      nil);
 
     return;
   }
@@ -55,22 +59,25 @@
     HTTPMethod:FBSDKHTTPMethodPOST]
    startWithCompletionHandler:^(FBSDKGraphRequestConnection * _Nullable connection, id  _Nullable result, NSError * _Nullable error) {
     if (error || !result) {
-      completionHandler(false, [FBSDKError
+      completionHandler(false,
+                        [FBSDKError
                                 errorWithCode:FBSDKErrorGraphRequestGraphAPI
                                 message:@"Image upload failed"
-                                underlyingError:error]);
+                                underlyingError:error],
+                        nil);
       return;
     }
 
     if (!configuration.shouldLaunchMediaDialog) {
-      completionHandler(true, nil);
+      completionHandler(true, nil, result);
       return;
     }
 
     FBSDKGamingServiceController *const controller =
     [[FBSDKGamingServiceController alloc]
      initWithServiceType:FBSDKGamingServiceTypeMediaAsset
-     completionHandler:completionHandler];
+     completionHandler:completionHandler
+     pendingResult:result];
 
     [controller callWithArgument:result[@"id"]];
   }];
