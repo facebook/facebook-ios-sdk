@@ -33,21 +33,26 @@ static FBSDKGamingVideoUploader *executingUploader = nil;
 
 @implementation FBSDKGamingVideoUploader
 
+
 + (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration * _Nonnull)configuration
                 andCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
 {
   if ([FBSDKAccessToken currentAccessToken] == nil) {
-    completionHandler(false, [FBSDKError
-                              errorWithCode:FBSDKErrorAccessTokenRequired
-                              message:@"A valid access token is required to upload Images"]);
+    completionHandler(false,
+                      [FBSDKError
+                       errorWithCode:FBSDKErrorAccessTokenRequired
+                       message:@"A valid access token is required to upload Images"],
+                      nil);
 
     return;
   }
 
   if (configuration.videoURL == nil) {
-    completionHandler(false, [FBSDKError
-                              errorWithCode:FBSDKErrorInvalidArgument
-                              message:@"Attempting to upload a nil videoURL"]);
+    completionHandler(false,
+                      [FBSDKError
+                       errorWithCode:FBSDKErrorInvalidArgument
+                       message:@"Attempting to upload a nil videoURL"],
+                      nil);
 
     return;
   }
@@ -58,9 +63,11 @@ static FBSDKGamingVideoUploader *executingUploader = nil;
    error:nil];
 
   if ((unsigned long)[fileHandle seekToEndOfFile] == 0) {
-    completionHandler(false, [FBSDKError
-                              errorWithCode:FBSDKErrorInvalidArgument
-                              message:@"Attempting to upload an empty video file"]);
+    completionHandler(false,
+                      [FBSDKError
+                       errorWithCode:FBSDKErrorInvalidArgument
+                       message:@"Attempting to upload an empty video file"],
+                      nil);
 
     return;
   }
@@ -90,12 +97,14 @@ static FBSDKGamingVideoUploader *executingUploader = nil;
   return self;
 }
 
-- (void)safeCompleteWithResult:(BOOL)result
-                      andError:(NSError *)error
+- (void)safeCompleteWithSuccess:(BOOL)success
+                          error:(NSError *)error
+                         result:(id)result
+
 {
   NSError *finalError = error;
 
-  if (result == false && error == nil)  {
+  if (success == false && error == nil)  {
     finalError =
     [FBSDKError
      errorWithCode:FBSDKErrorUnknown
@@ -103,7 +112,7 @@ static FBSDKGamingVideoUploader *executingUploader = nil;
   }
 
   if (_completionHandler != nil) {
-    _completionHandler(result, finalError);
+    _completionHandler(success, finalError, result);
   }
   executingUploader = nil;
 }
@@ -127,16 +136,18 @@ static FBSDKGamingVideoUploader *executingUploader = nil;
 didCompleteWithResults:(NSDictionary<NSString *, id> *)results
 {
   [self
-   safeCompleteWithResult:[results[@"success"] boolValue]
-   andError:nil];
+   safeCompleteWithSuccess:[results[@"success"] boolValue]
+   error:nil
+   result:@{@"video_id": results[@"video_id"] ?: @""}];
 }
 
 - (void)videoUploader:(FBSDKVideoUploader *)videoUploader
      didFailWithError:(NSError *)error
 {
   [self
-   safeCompleteWithResult:true
-   andError:error];
+   safeCompleteWithSuccess:false
+   error:error
+   result:nil];
 }
 
 @end
