@@ -22,12 +22,19 @@
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKEventBinding.h"
-#import "../Helpers/FBSDKTestCoder.h"
+#import "FBSDKTestCoder.h"
+#import "FBSDKMonitoringConfigurationTestHelper.h"
 
 @interface FBSDKServerConfiguration (Testing)
 
 - (NSDictionary *)dialogConfigurations;
 - (NSDictionary *)dialogFlows;
+
+@end
+
+@interface FBSDKMonitoringConfiguration (Testing)
+
+- (NSDictionary<NSString *, NSNumber *> *)sampleRates;
 
 @end
 
@@ -37,6 +44,9 @@
 @implementation FBSDKServerConfigurationTests {
   FBSDKServerConfiguration *config;
 }
+
+typedef FBSDKServerConfigurationFixtures Fixtures;
+typedef FBSDKMonitoringConfigurationTestHelper MonitoringConfiguration;
 
 - (void)setUp
 {
@@ -51,8 +61,6 @@
 
   config = nil;
 }
-
-typedef FBSDKServerConfigurationFixtures Fixtures;
 
 - (void)testUsingDefaults
 {
@@ -495,10 +503,30 @@ typedef FBSDKServerConfigurationFixtures Fixtures;
                         "Should set the exact suggested events setting it was created with");
 }
 
+- (void)testCreatingWithoutMonitoringConfiguration
+{
+  XCTAssertEqualObjects(config.monitoringConfiguration.sampleRates,
+                        FBSDKMonitoringConfiguration.defaultConfiguration.sampleRates,
+                        @"Should use the default monitoring configuration if none is provided");
+}
+
+- (void)testCreatingWithMonitoringConfiguration
+{
+  NSDictionary *sampleRates = [MonitoringConfiguration sampleRatesWithEntryPairs: @{ @"foo": @1 }];
+  FBSDKMonitoringConfiguration *monitoringConfiguration = [FBSDKMonitoringConfiguration initWithDictionary:sampleRates];
+
+  config = [Fixtures configWithDictionary:@{@"monitoringConfiguration": monitoringConfiguration}];
+
+  XCTAssertEqualObjects(config.monitoringConfiguration, monitoringConfiguration,
+                        "Should set the exact monitoring configuration it was created with");
+}
+
 - (void)testEncoding
 {
   FBSDKTestCoder *coder = [FBSDKTestCoder new];
   FBSDKErrorConfiguration *errorConfig = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
+  NSDictionary *sampleRates = [MonitoringConfiguration sampleRatesWithEntryPairs: @{ @"foo": @1 }];
+  FBSDKMonitoringConfiguration *monitoringConfiguration = [FBSDKMonitoringConfiguration initWithDictionary:sampleRates];
 
   config = [Fixtures configWithDictionary:@{
     @"appID": @"appID",
@@ -525,6 +553,7 @@ typedef FBSDKServerConfigurationFixtures Fixtures;
     @"restrictiveParams": @{ @"restrictiveParams": @"foo" },
     @"AAMRules": @{ @"AAMRules": @"foo" },
     @"suggestedEventsSetting": @{ @"suggestedEventsSetting": @"foo" },
+    @"monitoringConfiguration": monitoringConfiguration
   }];
 
   [config encodeWithCoder:coder];
@@ -554,6 +583,7 @@ typedef FBSDKServerConfigurationFixtures Fixtures;
   XCTAssertEqualObjects(coder.encodedObject[@"restrictiveParams"], config.restrictiveParams);
   XCTAssertEqualObjects(coder.encodedObject[@"AAMRules"], config.AAMRules);
   XCTAssertEqualObjects(coder.encodedObject[@"suggestedEventsSetting"], config.suggestedEventsSetting);
+  XCTAssertEqualObjects(coder.encodedObject[@"monitoringConfiguration"], config.monitoringConfiguration);
 }
 
 - (void)testDecoding
@@ -600,6 +630,7 @@ typedef FBSDKServerConfigurationFixtures Fixtures;
   XCTAssertEqualObjects(decoder.decodedObject[@"restrictiveParams"], NSDictionary.class);
   XCTAssertEqualObjects(decoder.decodedObject[@"AAMRules"], NSDictionary.class);
   XCTAssertEqualObjects(decoder.decodedObject[@"suggestedEventsSetting"], NSDictionary.class);
+  XCTAssertEqualObjects(decoder.decodedObject[@"monitoringConfiguration"], FBSDKMonitoringConfiguration.class);
 }
 
 - (void)testRetrievingInvalidDialogConfigurationForDialogName
