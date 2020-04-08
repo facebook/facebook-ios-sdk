@@ -40,4 +40,16 @@ Runs an upload to a users Gaming Media Library with the given configuration
 + (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration * _Nonnull)configuration
                 andCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler;
 
+/**
+Runs an upload to a users Gaming Media Library with the given configuration
+
+@param configuration model object contain the content that will be uploaded
+@param completionHandler a callback that is fired when the upload completes.
+@param progressHandler an optional callback that is fired multiple times as
+ bytes are transferred to Facebook.
+*/
++ (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration * _Nonnull)configuration
+                   completionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
+                  andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler;
+
 @end

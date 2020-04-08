@@ -151,6 +151,8 @@
            options:[OCMArg any]
            completionHandler:([OCMArg invokeBlockWithArgs:@(false), nil])]);
 
+  // This will cause an lint warning, ignore it, this is an external sdk test
+  // @lint-ignore FBOBJCDISCOURAGEDFUNCTION
   id expectation = [self expectationWithDescription:@"callback"];
 
   [FBSDKGamingImageUploader
@@ -234,10 +236,18 @@
 
 - (void)stubGraphRequestWithResult:(id)result error:(NSError *)error
 {
-  id mock = OCMClassMock([FBSDKGraphRequest class]);
-  OCMStub([mock alloc]).andReturn(mock);
-  OCMStub([mock initWithGraphPath:[OCMArg any] parameters:[OCMArg any] HTTPMethod:[OCMArg any]]).andReturn(mock);
-  OCMStub([mock startWithCompletionHandler:[OCMArg checkWithBlock:^BOOL(id obj) {
+  id mockRequest = OCMClassMock([FBSDKGraphRequest class]);
+  OCMStub([mockRequest alloc]).andReturn(mockRequest);
+  OCMStub([mockRequest initWithGraphPath:[OCMArg any] parameters:[OCMArg any] HTTPMethod:[OCMArg any]]).andReturn(mockRequest);
+
+  __block id delegate;
+  id mockConnection = OCMClassMock([FBSDKGraphRequestConnection class]);
+  OCMStub([mockConnection alloc]).andReturn(mockConnection);
+  OCMStub([mockConnection setDelegate:[OCMArg checkWithBlock:^BOOL(id obj) {
+    delegate = obj;
+    return true;
+  }]]);
+  OCMStub([mockConnection addRequest:[OCMArg isEqual:mockRequest] completionHandler:[OCMArg checkWithBlock:^BOOL(id obj) {
     ((FBSDKGraphRequestBlock) obj)(nil, result, error);
     return true;
   }]]);
