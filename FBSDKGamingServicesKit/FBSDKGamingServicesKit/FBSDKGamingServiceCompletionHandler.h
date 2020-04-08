@@ -18,5 +18,12 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void (^FBSDKGamingServiceCompletionHandler)(BOOL success, NSError * _Nullable error)
+/**
+ Main completion handling of any Gaming Service (Friend Finder, Image/Video Upload).
+
+ @param success whether the call to the service was considered a success.
+ @param error the error that occured during the service call, if any.
+ @param result the result that was returned by the service, if any.
+ */
+typedef void (^FBSDKGamingServiceCompletionHandler)(BOOL success, NSError * _Nullable error, id _Nullable result)
 NS_SWIFT_NAME(GamingServiceCompletionHandler);
