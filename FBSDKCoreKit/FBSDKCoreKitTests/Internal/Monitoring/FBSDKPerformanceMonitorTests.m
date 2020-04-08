@@ -68,7 +68,7 @@
                         @"Entry should contain the event name");
   XCTAssertEqualObjects(entry.dictionaryRepresentation[@"time_start"], expectedStartTime,
                         @"Entry should contain the start time of the metric");
-  XCTAssertEqualWithAccuracy([entry.dictionaryRepresentation[@"time_spent"] doubleValue], [@1 doubleValue], 0.00009,
+  XCTAssertEqualWithAccuracy([entry.dictionaryRepresentation[@"time_spent"] doubleValue], [@1 doubleValue], 0.1,
                         @"Entry should contain the difference between the start and end-time of the metric");
 }
 

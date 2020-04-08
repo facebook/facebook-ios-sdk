@@ -18,12 +18,14 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKServerConfiguration+Internal.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TestCoder : NSCoder
+@interface FBSDKServerConfigurationFixtures : NSObject
 
-@property (nonatomic) NSMutableDictionary<NSString *, id> *encodedObject;
-@property (nonatomic) NSMutableDictionary<NSString *, id> *decodedObject;
++ (FBSDKServerConfiguration *)defaultConfig;
++ (FBSDKServerConfiguration *)configWithDictionary:(NSDictionary *)dict;
 
 @end
 

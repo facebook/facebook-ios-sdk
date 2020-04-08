@@ -19,7 +19,7 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKCoreKit+Internal.h"
-#import "TestCoder.h"
+#import "FBSDKTestCoder.h"
 
 @interface FBSDKMethodUsageMonitorEntryTests : XCTestCase
 @end
@@ -40,7 +40,7 @@
 
 - (void)testEncodingEntryWithMethodName
 {
-  TestCoder *coder = [TestCoder new];
+  FBSDKTestCoder *coder = [FBSDKTestCoder new];
 
   entry = [FBSDKMethodUsageMonitorEntry entryFromClass:self.class withMethod:_cmd];
 
@@ -54,7 +54,7 @@
 
 - (void)testDecodingEntryWithMethodName
 {
-  TestCoder *coder = [TestCoder new];
+  FBSDKTestCoder *coder = [FBSDKTestCoder new];
 
   entry = [[FBSDKMethodUsageMonitorEntry alloc] initWithCoder:coder];
 
