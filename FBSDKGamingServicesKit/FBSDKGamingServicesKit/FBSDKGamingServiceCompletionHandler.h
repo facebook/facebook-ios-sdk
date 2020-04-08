@@ -27,3 +27,6 @@
  */
 typedef void (^FBSDKGamingServiceCompletionHandler)(BOOL success, NSError * _Nullable error, id _Nullable result)
 NS_SWIFT_NAME(GamingServiceCompletionHandler);
+
+typedef void (^FBSDKGamingServiceProgressHandler)(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend)
+NS_SWIFT_NAME(GamingServiceProgressHandler);

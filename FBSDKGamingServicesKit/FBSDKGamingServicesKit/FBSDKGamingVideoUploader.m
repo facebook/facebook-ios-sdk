@@ -22,12 +22,13 @@
 #import "FBSDKGamingVideoUploaderConfiguration.h"
 #import "FBSDKVideoUploader.h"
 
-static FBSDKGamingVideoUploader *executingUploader = nil;
-
 @interface FBSDKGamingVideoUploader() <FBSDKVideoUploaderDelegate>
 {
   NSFileHandle *_fileHandle;
   FBSDKGamingServiceCompletionHandler _completionHandler;
+  FBSDKGamingServiceProgressHandler _progressHandler;
+  NSUInteger _totalBytesSent;
+  NSUInteger _totalBytesExpectedToSend;
 }
 @end
 
@@ -36,6 +37,17 @@ static FBSDKGamingVideoUploader *executingUploader = nil;
 
 + (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration * _Nonnull)configuration
                 andCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
+{
+  return
+  [self
+   uploadVideoWithConfiguration:configuration
+   completionHandler:completionHandler
+   andProgressHandler:nil];
+}
+
++ (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration * _Nonnull)configuration
+                   completionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
+                  andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
 {
   if ([FBSDKAccessToken currentAccessToken] == nil) {
     completionHandler(false,
@@ -72,27 +84,38 @@ static FBSDKGamingVideoUploader *executingUploader = nil;
     return;
   }
 
-  executingUploader =
+
+  const NSUInteger fileSize = (unsigned long)[fileHandle seekToEndOfFile];
+
+  FBSDKGamingVideoUploader *const uploader =
   [[FBSDKGamingVideoUploader alloc]
    initWithFileHandle:fileHandle
-   completionHandler:completionHandler];
+   totalBytesToSend:fileSize
+   completionHandler:completionHandler
+   progressHandler:progressHandler];
+
+  [FBSDKInternalUtility registerTransientObject:uploader];
 
   FBSDKVideoUploader *const videoUploader =
   [[FBSDKVideoUploader alloc]
    initWithVideoName:[configuration.videoURL lastPathComponent]
-   videoSize:(unsigned long)[fileHandle seekToEndOfFile]
+   videoSize:fileSize
    parameters:@{}
-   delegate:executingUploader];
+   delegate:uploader];
 
   [videoUploader start];
 }
 
 - (instancetype)initWithFileHandle:(NSFileHandle *)fileHandle
+                  totalBytesToSend:(NSUInteger)totalBytes
                  completionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
+                   progressHandler:(FBSDKGamingServiceProgressHandler _Nonnull)progressHandler
 {
   if (self = [super init]) {
     _fileHandle = fileHandle;
+    _totalBytesExpectedToSend = totalBytes;
     _completionHandler = completionHandler;
+    _progressHandler = progressHandler;
   }
   return self;
 }
@@ -114,7 +137,20 @@ static FBSDKGamingVideoUploader *executingUploader = nil;
   if (_completionHandler != nil) {
     _completionHandler(success, finalError, result);
   }
-  executingUploader = nil;
+
+  [FBSDKInternalUtility unregisterTransientObject:self];
+}
+
+- (void)safeProgressWithTotalBytesSent:(NSUInteger)totalBytesSent
+{
+  if (!_progressHandler) {
+    return;
+  }
+
+  const NSUInteger bytesSent = totalBytesSent - _totalBytesSent;
+  _totalBytesSent = totalBytesSent;
+
+  _progressHandler(bytesSent, _totalBytesSent, _totalBytesExpectedToSend);
 }
 
 #pragma mark - FBSDKVideoUploaderDelegate
@@ -129,12 +165,17 @@ static FBSDKGamingVideoUploader *executingUploader = nil;
   if (videoChunkData == nil || videoChunkData.length != chunkSize) {
     return nil;
   }
+
+  [self safeProgressWithTotalBytesSent:startOffset];
+
   return videoChunkData;
 }
 
 - (void)videoUploader:(FBSDKVideoUploader *)videoUploader
 didCompleteWithResults:(NSDictionary<NSString *, id> *)results
 {
+  [self safeProgressWithTotalBytesSent:_totalBytesExpectedToSend];
+
   [self
    safeCompleteWithSuccess:[results[@"success"] boolValue]
    error:nil

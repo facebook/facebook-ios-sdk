@@ -22,13 +22,28 @@
 #import "FBSDKGamingImageUploaderConfiguration.h"
 #import "FBSDKGamingServiceController.h"
 
-@interface FBSDKGamingImageUploader ()
+@interface FBSDKGamingImageUploader () <FBSDKGraphRequestConnectionDelegate>
+{
+  FBSDKGamingServiceProgressHandler _progressHandler;
+}
+
 @end
 
 @implementation FBSDKGamingImageUploader
 
 + (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration * _Nonnull)configuration
                 andCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
+{
+  return
+  [self
+   uploadImageWithConfiguration:configuration
+   completionHandler:completionHandler
+   andProgressHandler:nil];
+}
+
++ (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration * _Nonnull)configuration
+                   completionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
+                  andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
 {
   if ([FBSDKAccessToken currentAccessToken] == nil) {
     completionHandler(false,
@@ -50,20 +65,34 @@
     return;
   }
 
-  [[[FBSDKGraphRequest alloc]
+  FBSDKGraphRequestConnection *const connection =
+  [[FBSDKGraphRequestConnection alloc] init];
+
+  FBSDKGamingImageUploader *const uploader =
+  [[FBSDKGamingImageUploader alloc]
+   initWithProgressHandler:progressHandler];
+
+  connection.delegate = uploader;
+  [FBSDKInternalUtility registerTransientObject:connection.delegate];
+
+  [connection
+   addRequest:
+   [[FBSDKGraphRequest alloc]
     initWithGraphPath:@"me/photos"
     parameters:@{
       @"caption": configuration.caption ?: @"",
       @"picture": UIImagePNGRepresentation(configuration.image)
     }
     HTTPMethod:FBSDKHTTPMethodPOST]
-   startWithCompletionHandler:^(FBSDKGraphRequestConnection * _Nullable connection, id  _Nullable result, NSError * _Nullable error) {
+   completionHandler:^(FBSDKGraphRequestConnection * _Nullable connection, id  _Nullable result, NSError * _Nullable error) {
+    [FBSDKInternalUtility unregisterTransientObject:connection.delegate];
+
     if (error || !result) {
       completionHandler(false,
                         [FBSDKError
-                                errorWithCode:FBSDKErrorGraphRequestGraphAPI
-                                message:@"Image upload failed"
-                                underlyingError:error],
+                         errorWithCode:FBSDKErrorGraphRequestGraphAPI
+                         message:@"Image upload failed"
+                         underlyingError:error],
                         nil);
       return;
     }
@@ -81,6 +110,30 @@
 
     [controller callWithArgument:result[@"id"]];
   }];
+
+  [connection start];
+}
+
+- (instancetype)initWithProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
+{
+  if (self = [super init]) {
+    _progressHandler = progressHandler;
+  }
+  return self;
+}
+
+#pragma mark - FBSDKGraphRequestConnectionDelegate
+
+- (void)requestConnection:(FBSDKGraphRequestConnection *)connection
+          didSendBodyData:(NSInteger)bytesWritten
+        totalBytesWritten:(NSInteger)totalBytesWritten
+totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite
+{
+  if (!_progressHandler) {
+    return;
+  }
+
+  _progressHandler(bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
 }
 
 @end
