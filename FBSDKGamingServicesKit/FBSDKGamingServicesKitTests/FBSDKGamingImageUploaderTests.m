@@ -222,6 +222,39 @@
   XCTAssertTrue(actioned);
 }
 
+- (void)testUploadProgress
+{
+  __block id<FBSDKGraphRequestConnectionDelegate> delegate;
+  __block FBSDKGraphRequestBlock completion;
+  id mockConnection = [self stubGraphRequestWithDelegateCapture:^(id<FBSDKGraphRequestConnectionDelegate> obj) {
+    delegate = obj;
+  } andCompletionCapture:^(FBSDKGraphRequestBlock obj) {
+    completion = obj;
+  }];
+
+  __block BOOL completionActioned = false;
+  __block BOOL progressActioned = false;
+  [FBSDKGamingImageUploader
+   uploadImageWithConfiguration:_mockConfig
+   completionHandler:^(BOOL success, NSError * _Nullable error, id  _Nullable result) {
+    XCTAssert(success);
+    XCTAssertEqual(result[@"id"], @"foo");
+    completionActioned = true;
+  }
+   andProgressHandler:^(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
+    XCTAssertEqual(bytesSent, 123);
+    XCTAssertEqual(totalBytesSent, 456);
+    XCTAssertEqual(totalBytesExpectedToSend, 789);
+    progressActioned = true;
+  }];
+
+  [delegate requestConnection:mockConnection didSendBodyData:123 totalBytesWritten:456 totalBytesExpectedToWrite:789];
+  XCTAssertTrue(progressActioned);
+
+  completion(mockConnection, @{@"id": @"foo"}, nil);
+  XCTAssertTrue(completionActioned);
+}
+
 #pragma mark - Helpers
 
 - (UIImage *)testUIImage
@@ -232,6 +265,27 @@
   UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
   UIGraphicsEndImageContext();
   return image;
+}
+
+- (id)stubGraphRequestWithDelegateCapture:(void (^)(id<FBSDKGraphRequestConnectionDelegate>))delegateCaptureHandler
+                     andCompletionCapture:(void (^)(FBSDKGraphRequestBlock))completionCaptureHandler
+{
+  id mockRequest = OCMClassMock([FBSDKGraphRequest class]);
+  OCMStub([mockRequest alloc]).andReturn(mockRequest);
+  OCMStub([mockRequest initWithGraphPath:[OCMArg any] parameters:[OCMArg any] HTTPMethod:[OCMArg any]]).andReturn(mockRequest);
+
+  id mockConnection = OCMClassMock([FBSDKGraphRequestConnection class]);
+  OCMStub([mockConnection alloc]).andReturn(mockConnection);
+  OCMStub([mockConnection setDelegate:[OCMArg checkWithBlock:^BOOL(id obj) {
+    delegateCaptureHandler(obj);
+    return true;
+  }]]);
+  OCMStub([mockConnection addRequest:[OCMArg isEqual:mockRequest] completionHandler:[OCMArg checkWithBlock:^BOOL(id obj) {
+    completionCaptureHandler(obj);
+    return true;
+  }]]);
+
+  return mockConnection;
 }
 
 - (void)stubGraphRequestWithResult:(id)result error:(NSError *)error
