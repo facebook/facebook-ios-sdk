@@ -326,31 +326,18 @@ build_sdk() {
   }
 
   build_spm_integration() {
-    echo "Updating git config"
-    git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
-
-    echo "Setting remote origin"
-    git remote set-url origin https://x-access-token:"${GITHUB_ACCESS_TOKEN}"@github.com/facebook/facebook-ios-sdk.git
-
-    echo "Fetching remote branches"
-    git fetch
-
-    echo "Checking out tmp branch"
-    git checkout tmp
-
-    echo "Force pushing merge commit to tmp branch"
-    git push --force origin "$TRAVIS_COMMIT":tmp
-
     cd "$SDK_DIR"/samples/SmoketestSPM
 
-    echo "Updating project file to point to tmp branch for fetching package source code"
+    echo "Updating project file to point to merge commit at: refs/pull/$TRAVIS_PULL_REQUEST/merge"
     /usr/libexec/PlistBuddy \
-        -c "set :objects:F4CEA53E23C29C9E0086EB16:requirement:branch tmp" \
+        -c "set :objects:F4CEA53E23C29C9E0086EB16:requirement:branch refs/pull/$TRAVIS_PULL_REQUEST/merge" \
         SmoketestSPM.xcodeproj/project.pbxproj
 
+    # Redirecting to /dev/null because we only care about errors here and the full output drowns Travis
+    # The echo before building the scheme should be enough to keep travis from timing out for lack of
+    # visible output
     xcodebuild build -scheme SmoketestSPM \
-      -sdk iphonesimulator \
-      -verbose
+      -sdk iphonesimulator > /dev/null
   }
 
   local build_type=${1:-}
