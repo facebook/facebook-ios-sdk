@@ -311,11 +311,17 @@ build_sdk() {
 
   build_spm() {
     for scheme in "${SWIFT_PACKAGE_SCHEMES[@]}"; do
+
+    echo "Building Swift Package - $scheme"
+
+    # Redirecting to /dev/null because we only care about errors here and the full output drowns Travis
+    # The echo before building the scheme should be enough to keep travis from timing out for lack of
+    # visible output
     xcodebuild clean build \
       -workspace .swiftpm/xcode/package.xcworkspace \
       -scheme "$scheme" \
       -sdk iphonesimulator \
-      OTHER_SWIFT_FLAGS="-D SWIFT_PACKAGE"
+      OTHER_SWIFT_FLAGS="-D SWIFT_PACKAGE" > /dev/null
     done
   }
 
