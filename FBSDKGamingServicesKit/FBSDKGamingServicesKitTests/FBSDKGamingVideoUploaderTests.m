@@ -175,13 +175,85 @@
   XCTAssertTrue(actioned);
 }
 
+- (void)testVideoUploaderProgress
+{
+  __block id<FBSDKVideoUploaderDelegate> delegate;
+  id mockUploader = [self mockVideoUploaderWithDelegateCapture:^(id<FBSDKVideoUploaderDelegate> obj) {
+    delegate = obj;
+  }];
+
+  __block BOOL actionedFirst = false;
+  __block void (^ProgressCheck)(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) =
+  ^void(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
+    XCTAssertEqual(bytesSent, 0);
+    XCTAssertEqual(totalBytesSent, 0);
+    XCTAssertEqual(totalBytesExpectedToSend, 999);
+    actionedFirst = true;
+  };
+
+  [FBSDKGamingVideoUploader
+   uploadVideoWithConfiguration:_mockConfig
+   completionHandler:^(BOOL success, NSError * _Nullable error, id  _Nullable result) {}
+   andProgressHandler:^(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
+    ProgressCheck(bytesSent, totalBytesSent, totalBytesExpectedToSend);
+  }];
+
+  // Send some bytes
+  [delegate
+   videoChunkDataForVideoUploader:mockUploader
+   startOffset:0
+   endOffset:500];
+
+  __block BOOL actionedSecond = false;
+  ProgressCheck =
+  ^void(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
+    XCTAssertEqual(bytesSent, 500);
+    XCTAssertEqual(totalBytesSent, 500);
+    XCTAssertEqual(totalBytesExpectedToSend, 999);
+    actionedSecond = true;
+  };
+
+  // Send some more bytes
+  [delegate
+  videoChunkDataForVideoUploader:mockUploader
+  startOffset:500
+  endOffset:999];
+
+  __block BOOL actionedThird = false;
+  ProgressCheck =
+   ^void(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
+     XCTAssertEqual(bytesSent, 499);
+     XCTAssertEqual(totalBytesSent, 999);
+     XCTAssertEqual(totalBytesExpectedToSend, 999);
+     actionedThird = true;
+   };
+
+  // Finish upload
+  [delegate
+   videoUploader:mockUploader
+   didCompleteWithResults:@{
+     @"success": @(true)
+   }];
+
+  XCTAssertTrue(actionedFirst);
+  XCTAssertTrue(actionedSecond);
+  XCTAssertTrue(actionedThird);
+}
+
 #pragma mark - Helpers
 
 - (id)mockVideoUploaderWithDelegateCapture:(void (^)(id<FBSDKVideoUploaderDelegate>))captureHandler
 {
+  id mockDataChunkOne = OCMClassMock([NSData class]);
+  OCMStub([mockDataChunkOne length]).andReturn(500);
+  id mockDataChunkTwo = OCMClassMock([NSData class]);
+  OCMStub([mockDataChunkTwo length]).andReturn(499);
+
   id mockFileHandle = OCMClassMock([NSFileHandle class]);
   OCMStub([mockFileHandle fileHandleForReadingFromURL:[OCMArg any] error:nil]).andReturn(mockFileHandle);
   OCMStub([mockFileHandle seekToEndOfFile]).andReturn(999);
+  OCMStub([mockFileHandle readDataOfLength:500]).andReturn(mockDataChunkOne);
+  OCMStub([mockFileHandle readDataOfLength:499]).andReturn(mockDataChunkTwo);
 
   id mockVideoUploader = OCMClassMock([FBSDKVideoUploader class]);
   OCMStub([mockVideoUploader alloc]).andReturn(mockVideoUploader);
