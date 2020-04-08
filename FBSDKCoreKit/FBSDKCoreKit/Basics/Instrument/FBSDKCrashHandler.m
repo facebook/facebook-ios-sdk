@@ -73,16 +73,17 @@ void FBSDKSignalHandler(int signal);
   NSArray<id<FBSDKCrashObserving>> *observers = [_observers copy];
   for (id<FBSDKCrashObserving> observer in observers) {
     if (observer && [observer respondsToSelector:@selector(didReceiveCrashLogs:)]) {
-      NSArray<NSDictionary<NSString *, id> *> *filteredCrashLogs = [self filterCrashLogs:observer.prefixes];
+      NSArray<NSDictionary<NSString *, id> *> *filteredCrashLogs = [self filterCrashLogs:observer.prefixes processedCrashLogs:_processedCrashLogs];
       [observer didReceiveCrashLogs:filteredCrashLogs];
     }
   }
 }
 
 + (NSArray<NSDictionary<NSString *, id> *> *)filterCrashLogs:(NSArray<NSString *> *)prefixList
+                                          processedCrashLogs:(NSArray<NSDictionary<NSString *, id> *> *)processedCrashLogs
 {
   NSMutableArray<NSDictionary<NSString *, id> *> *crashLogs = [NSMutableArray array];
-  for (NSDictionary<NSString *, id> *crashLog in _processedCrashLogs) {
+  for (NSDictionary<NSString *, id> *crashLog in processedCrashLogs) {
     NSArray<NSString *> *callstack = crashLog[kFBSDKCallstack];
     if ([self callstack:callstack containsPrefix:prefixList]) {
       [crashLogs addObject:crashLog];

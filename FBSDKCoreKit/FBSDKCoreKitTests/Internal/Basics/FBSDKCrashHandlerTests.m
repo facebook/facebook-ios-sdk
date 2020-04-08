@@ -31,6 +31,8 @@
 + (NSString *)getPathToLibDataFile:(NSString *)identifier;
 + (BOOL)callstack:(NSArray<NSString *> *)callstack
    containsPrefix:(NSArray<NSString *> *)prefixList;
++ (NSArray<NSDictionary<NSString *, id> *> *)filterCrashLogs:(NSArray<NSString *> *)prefixList
+                                          processedCrashLogs:(NSArray<NSDictionary<NSString *, id> *> *)processedCrashLogs;
 
 @end
 
@@ -117,6 +119,56 @@
     @"(12 DEV METHODS)",
   ];
   XCTAssertFalse([FBSDKCrashHandler callstack:callStack2 containsPrefix:prefixList]);
+}
+
+- (void)testFilterCrashLogs
+{
+  NSArray *filteredCrashLogs = [FBSDKCrashHandler filterCrashLogs:@[@"FBSDK", @"_FBSDK"] processedCrashLogs:[self mockProcessedCrashLogs]];
+
+  XCTAssertEqual(1, filteredCrashLogs.count);
+
+  NSDictionary<NSString *, id> *crashLog = filteredCrashLogs[0];
+
+  XCTAssertEqual(crashLog[@"app_version"], @"4.16(4)");
+  XCTAssertEqual(crashLog[@"callstack"][0], @"(2 DEV METHODS)");
+  XCTAssertEqual(crashLog[@"callstack"][1], @"-[FBSDKWebViewAppLinkResolver appLinkFromALData:destination:]+2110632");
+  XCTAssertEqual(crashLog[@"callstack"][2], @"-[FBSDKWebViewAppLinkResolver appLinkFromALData:destination:]+10540");
+  XCTAssertEqual(crashLog[@"callstack"][3], @"(14 DEV METHODS)");
+  XCTAssertEqual(crashLog[@"reason"], @"InvalidOperationException");
+  XCTAssertEqual(crashLog[@"timestamp"], @"1585764970");
+  XCTAssertEqual(crashLog[@"device_model"], @"iPhone7,2");
+  XCTAssertEqual(crashLog[@"device_os_version"], @"12.4.1");
+}
+
+- (NSArray<NSDictionary<NSString *, id> *> *)mockProcessedCrashLogs
+{
+  NSDictionary<NSString *, id> *crashLog1 = @{
+    @"app_version" :  @"4.16(4)",
+    @"callstack" :  @[
+       @"(2 DEV METHODS)",
+       @"-[FBSDKWebViewAppLinkResolver appLinkFromALData:destination:]+2110632",
+       @"-[FBSDKWebViewAppLinkResolver appLinkFromALData:destination:]+10540",
+       @"(14 DEV METHODS)",
+     ],
+    @"reason" : @"InvalidOperationException",
+    @"timestamp" : @"1585764970",
+    @"device_model" : @"iPhone7,2",
+    @"device_os_version" : @"12.4.1",
+  };
+
+  NSDictionary<NSString *, id> *crashLog2 = @{
+    @"app_version" :  @"1.173.0(2)",
+    @"callstack" :  @[
+       @"(3 DEV METHODS)",
+       @"-[SettingsItemViewController imageWithImage:destination:]+2110632",
+       @"(6 DEV METHODS)",
+     ],
+    @"reason" : @"NSInvalidArgumentException",
+    @"timestamp" : @"1585764970",
+    @"device_model" : @"iPad4,1",
+    @"device_os_version" : @"12.4.5",
+  };
+  return @[crashLog1, crashLog2];
 }
 
 @end
