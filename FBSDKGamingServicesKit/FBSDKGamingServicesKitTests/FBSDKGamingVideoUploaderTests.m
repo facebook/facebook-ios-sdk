@@ -66,7 +66,7 @@
   __block BOOL actioned = false;
   [FBSDKGamingVideoUploader
    uploadVideoWithConfiguration:_mockConfig
-   andCompletionHandler:^(BOOL success, NSError * _Nullable error) {
+   andCompletionHandler:^(BOOL success, NSError * _Nullable error, id result) {
     XCTAssert(error.code == FBSDKErrorAccessTokenRequired, "Expected error requiring a valid access token");
     actioned = true;
   }];
@@ -81,7 +81,7 @@
   __block BOOL actioned = false;
   [FBSDKGamingVideoUploader
    uploadVideoWithConfiguration:nilVideoConfig
-   andCompletionHandler:^(BOOL success, NSError * _Nullable error) {
+   andCompletionHandler:^(BOOL success, NSError * _Nullable error, id result) {
     XCTAssert(error.code == FBSDKErrorInvalidArgument, "Expected error requiring a non nil video url");
     actioned = true;
   }];
@@ -97,7 +97,7 @@
   __block BOOL actioned = false;
   [FBSDKGamingVideoUploader
    uploadVideoWithConfiguration:badVideoConfig
-   andCompletionHandler:^(BOOL success, NSError * _Nullable error) {
+   andCompletionHandler:^(BOOL success, NSError * _Nullable error, id result) {
     XCTAssert(error.code == FBSDKErrorInvalidArgument, "Expected error requiring a non nil video url");
     actioned = true;
   }];
@@ -117,7 +117,7 @@
   __block BOOL actioned = false;
   [FBSDKGamingVideoUploader
    uploadVideoWithConfiguration:_mockConfig
-   andCompletionHandler:^(BOOL success, NSError * _Nullable error) {
+   andCompletionHandler:^(BOOL success, NSError * _Nullable error, id result) {
     XCTAssert(error.code == expectedError.code);
     actioned = true;
   }];
@@ -137,7 +137,7 @@
   __block BOOL actioned = false;
   [FBSDKGamingVideoUploader
    uploadVideoWithConfiguration:_mockConfig
-   andCompletionHandler:^(BOOL success, NSError * _Nullable error) {
+   andCompletionHandler:^(BOOL success, NSError * _Nullable error, id result) {
     XCTAssert(error.code == FBSDKErrorUnknown);
     actioned = true;
   }];
@@ -161,7 +161,7 @@
   __block BOOL actioned = false;
   [FBSDKGamingVideoUploader
    uploadVideoWithConfiguration:_mockConfig
-   andCompletionHandler:^(BOOL success, NSError * _Nullable error) {
+   andCompletionHandler:^(BOOL success, NSError * _Nullable error, id result) {
     XCTAssertTrue(success);
     actioned = true;
   }];
