@@ -105,9 +105,7 @@
 }
 
 - (void)testConv1DExample1 {
-  int i,j;
-  float* res;
-  float a[4][2][3] = {
+  float input_data[4][2][3] = {
     {
       {1, 2, 3},
       {4, 5, 6},
@@ -125,7 +123,7 @@
       {4, 5, 6},
     },
   };
-  float b[2][3][2] = {
+  float conv_data[2][3][2] = {
     {
       {-1, 3},
       {5, -7},
@@ -137,24 +135,23 @@
       {10, -10},
     },
   };
-  float c[4][1][2] = {
+  float expected_data[4][1][2] = {
     {{80, 12}},
     {{-4, 36}},
     {{102, -66}},
     {{66, 30}},
   };
-  res = fbsdk::conv1D(**a, **b, 4, 2, 3, 2, 2);
-  for (i = 0; i < 4; i++) {
-    for (j = 0; j < 2; j++) {
-      XCTAssertEqualWithAccuracy(c[i][0][j], res[2 * i + j], 0.01);
-    }
-  }
+  fbsdk::MTensor input({4, 2, 3});
+  fbsdk::MTensor conv({2, 3, 2});
+  fbsdk::MTensor expected({4, 1, 2});
+  memcpy(input.mutable_data(), **input_data, input.count() * sizeof(float));
+  memcpy(conv.mutable_data(), **conv_data, conv.count() * sizeof(float));
+  memcpy(expected.mutable_data(), **expected_data, expected.count() * sizeof(float));
+  [self AssertEqual:expected input:fbsdk::conv1D(input, conv)];
 }
 
 - (void)testConv1DExample2 {
-  int i,j;
-  float* res;
-  float a[1][5][3] = {
+  float input_data[1][5][3] = {
     {
       {1, 2, 3},
       {4, 5, 6},
@@ -163,7 +160,7 @@
       {5, 3, 0},
     },
   };
-  float b[3][3][4] = {
+  float conv_data[3][3][4] = {
     {
       {-1, 3, 0, 1},
       {5, -7, 5, 7},
@@ -180,31 +177,30 @@
       {9, 10, 5, 6},
     }
   };
-  float c[1][3][4] = {
+  float expected_data[1][3][4] = {
     {
       {168, 122, 263, 232},
       {133, 111, 291, 253},
       {47, 123, 208, 196},
     }
   };
-  res = fbsdk::conv1D(**a, **b, 1, 5, 3, 3, 4);
-  for (i = 0; i < 1; i++) {
-    for (j = 0; j < 4; j++) {
-      XCTAssertEqualWithAccuracy(c[i][0][j], res[4 * i + j], 0.01);
-    }
-  }
+  fbsdk::MTensor input({1, 5, 3});
+  fbsdk::MTensor conv({3, 3, 4});
+  fbsdk::MTensor expected({1, 3, 4});
+  memcpy(input.mutable_data(), **input_data, input.count() * sizeof(float));
+  memcpy(conv.mutable_data(), **conv_data, conv.count() * sizeof(float));
+  memcpy(expected.mutable_data(), **expected_data, expected.count() * sizeof(float));
+  [self AssertEqual:expected input:fbsdk::conv1D(input, conv)];
 }
 
 - (void)testConv1DExample3 {
-  int i,j;
-  float* res;
-  float a[2][2][3] = {
+  float input_data[1][2][3] = {
     {
       {-1, -1, -1},
       {0, 0, 0},
     },
   };
-  float b[2][3][2] = {
+  float conv_data[2][3][2] = {
     {
       {-1, 3},
       {5, -7},
@@ -216,13 +212,14 @@
       {10, -10},
     },
   };
-  float c[1][1][2] = {{{5, -5}}};
-  res = fbsdk::conv1D(**a, **b, 1, 2, 3, 2, 2);
-  for (i = 0; i < 1; i++) {
-    for (j = 0; j < 2; j++) {
-      XCTAssertEqualWithAccuracy(c[i][0][j], res[2 * i + j], 0.01);
-    }
-  }
+  float expected_data[1][1][2] = {{{5, -5}}};
+  fbsdk::MTensor input({1, 2, 3});
+  fbsdk::MTensor conv({2, 3, 2});
+  fbsdk::MTensor expected({1, 1, 2});
+  memcpy(input.mutable_data(), **input_data, input.count() * sizeof(float));
+  memcpy(conv.mutable_data(), **conv_data, conv.count() * sizeof(float));
+  memcpy(expected.mutable_data(), **expected_data, expected.count() * sizeof(float));
+  [self AssertEqual:expected input:fbsdk::conv1D(input, conv)];
 }
 
 - (void)testTextVectorizationLessThanMaxLen {
@@ -337,9 +334,7 @@
 }
 
 - (void)testMaxPool1DExample1 {
-  int i,j;
-  float* res;
-  float input[2][2][3] = {
+  float input_data[2][2][3] = {
     {
       {-1, 2, 3},
       {4, -5, 6},
@@ -349,22 +344,19 @@
       {-10, 11, 12},
     },
   };
-  float expected[2][1][3] = {
+  float expected_data[2][1][3] = {
     {{4, 2, 6}},
     {{7, 11, 12}},
   };
-  res = fbsdk::maxPool1D(**input, 2, 2, 3, 2);
-  for (i = 0; i < 2; i++) {
-    for (j = 0; j < 3; j++) {
-      XCTAssertEqualWithAccuracy(expected[i][0][j], res[3 * i + j], 0.01);
-    }
-  }
+  fbsdk::MTensor input({2, 2, 3});
+  fbsdk::MTensor expected({2, 1, 3});
+  memcpy(input.mutable_data(), **input_data, input.count() * sizeof(float));
+  memcpy(expected.mutable_data(), **expected_data, expected.count() * sizeof(float));
+  [self AssertEqual:expected input:fbsdk::maxPool1D(input, 2)];
 }
 
 - (void)testMaxPool1DExample2 {
-  int i,j;
-  float* res;
-  float input[2][2][3] = {
+  float input_data[2][2][3] = {
     {
       {-1, -2, -3},
       {-4, -5, -6},
@@ -374,22 +366,19 @@
       {-10, -11, -12},
     },
   };
-  float expected[2][1][3] = {
+  float expected_data[2][1][3] = {
     {{-1, -2, -3}},
     {{-7, -8, -9}},
   };
-  res = fbsdk::maxPool1D(**input, 2, 2, 3, 2);
-  for (i = 0; i < 2; i++) {
-    for (j = 0; j < 3; j++) {
-      XCTAssertEqualWithAccuracy(expected[i][0][j], res[3 * i + j], 0.01);
-    }
-  }
+  fbsdk::MTensor input({2, 2, 3});
+  fbsdk::MTensor expected({2, 1, 3});
+  memcpy(input.mutable_data(), **input_data, input.count() * sizeof(float));
+  memcpy(expected.mutable_data(), **expected_data, expected.count() * sizeof(float));
+  [self AssertEqual:expected input:fbsdk::maxPool1D(input, 2)];
 }
 
 - (void)testMaxPool1DExample3 {
-  int i,j;
-  float* res;
-  float input[3][3][4] = {
+  float input_data[3][3][4] = {
     {
       {-1, -2, -3, 3},
       {-4, -5, -6, 9},
@@ -406,17 +395,16 @@
       {4, 5, 6, 7},
     },
   };
-  float expected[3][1][4] = {
+  float expected_data[3][1][4] = {
     {{4, 5, 6, 9}},
     {{4, 5, 6, 9}},
     {{4, 5, 6, 7}},
   };
-  res = fbsdk::maxPool1D(**input, 3, 3, 4, 3);
-  for (i = 0; i < 3; i++) {
-    for (j = 0; j < 4; j++) {
-      XCTAssertEqualWithAccuracy(expected[i][0][j], res[4 * i + j], 0.01);
-    }
-  }
+  fbsdk::MTensor input({3, 3, 4});
+  fbsdk::MTensor expected({3, 1, 4});
+  memcpy(input.mutable_data(), **input_data, input.count() * sizeof(float));
+  memcpy(expected.mutable_data(), **expected_data, expected.count() * sizeof(float));
+  [self AssertEqual:expected input:fbsdk::maxPool1D(input, 3)];
 }
 
 - (void)AssertEqual:(const fbsdk::MTensor&)expected

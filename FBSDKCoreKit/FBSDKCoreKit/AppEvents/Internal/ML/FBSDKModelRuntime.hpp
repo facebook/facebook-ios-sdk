@@ -123,56 +123,62 @@ static float* dense(const float *a, const float *b, const float *c, const int n_
  w shape: kernel_size, input_size, output_size
  return shape: n_examples, seq_len - kernel_size + 1, output_size
  */
-static float* conv1D(const float *x, const float *w, const int n_examples, const int seq_len, const int input_size, const int kernel_size, const int output_size) {
-  int n, o, i, k, m;
+static MTensor conv1D(const MTensor& x, const MTensor& w) {
+  int64_t n_examples = x.size(0);
+  int64_t seq_len = x.size(1);
+  int64_t input_size = x.size(2);
+  int64_t kernel_size = w.size(0);
+  int64_t output_size = w.size(2);
+  MTensor y({n_examples, seq_len - kernel_size + 1, output_size});
+  MTensor temp_x({kernel_size, input_size});
+  MTensor temp_w({kernel_size, input_size});
+  const float *x_data = x.data();
+  const float *w_data = w.data();
+  float *y_data = y.mutable_data();
+  float *temp_x_data = temp_x.mutable_data();
+  float *temp_w_data = temp_w.mutable_data();
   float sum;
-  float *res = (float *)malloc(sizeof(float) * (n_examples * (seq_len - kernel_size + 1) * output_size));
-  float *temp_x = (float *)malloc(sizeof(float) * (kernel_size * input_size));
-  float *temp_w = (float *)malloc(sizeof(float) * (kernel_size * input_size));
-  for (n = 0; n < n_examples; n++){
-    for (o = 0; o < output_size; o++){
-      for (i = 0; i < seq_len - kernel_size + 1; i++) {
-        sum = 0;
-        for (m = 0; m < kernel_size; m++) {
-          for (k = 0; k < input_size; k++) {
-            temp_x[m * input_size + k] = x[n * (seq_len * input_size) + (m + i) * input_size + k];
-            temp_w[m * input_size + k] = w[(m * input_size + k) * output_size + o];
+  for (int n = 0; n < n_examples; n++){
+    for (int o = 0; o < output_size; o++){
+      for (int i = 0; i < seq_len - kernel_size + 1; i++) {
+        for (int m = 0; m < kernel_size; m++) {
+          for (int k = 0; k < input_size; k++) {
+            temp_x_data[m * input_size + k] = x_data[n * (seq_len * input_size) + (m + i) * input_size + k];
+            temp_w_data[m * input_size + k] = w_data[(m * input_size + k) * output_size + o];
           }
         }
-        vDSP_dotpr(temp_x, 1, temp_w, 1, &sum, kernel_size * input_size);
-        res[(n * (output_size * (seq_len - kernel_size + 1)) + i * output_size + o)] = sum;
+        vDSP_dotpr(temp_x_data, 1, temp_w_data, 1, &sum, kernel_size * input_size);
+        y_data[(n * (output_size * (seq_len - kernel_size + 1)) + i * output_size + o)] = sum;
       }
     }
   }
-  free(temp_x);
-  free(temp_w);
-  return res;
+  return y;
 }
 
 /*
  input shape: n_examples, len, n_channel
  return shape: n_examples, len - pool_size + 1, n_channel
  */
-static float* maxPool1D(const float *input, const int n_examples, const int input_len, const int n_channel, const int pool_size) {
-  int res_len = input_len - pool_size + 1;
-  float* res = (float *)calloc(n_examples * res_len * n_channel, sizeof(float));
-
+static MTensor maxPool1D(const MTensor& x, const int pool_size) {
+  int64_t n_examples = x.size(0);
+  int64_t input_len = x.size(1);
+  int64_t n_channel = x.size(2);
+  int64_t output_len = input_len - pool_size + 1;
+  MTensor y({n_examples, output_len, n_channel});
+  const float *x_data = x.data();
+  float *y_data = y.mutable_data();
   for (int n = 0; n < n_examples; n++) {
     for (int c = 0; c < n_channel; c++) {
-      for (int i  = 0; i < res_len; i++) {
+      for (int i  = 0; i < output_len; i++) {
+        float this_max = -FLT_MAX;
         for (int r = i; r < i + pool_size; r++) {
-          int res_pos = n * (n_channel * res_len) + i * n_channel + c;
-          int input_pos = n * (n_channel * input_len) + r * n_channel + c;
-          if (r == i) {
-            res[res_pos] = input[input_pos];
-          } else {
-            res[res_pos] = fmax(res[res_pos], input[input_pos]);
-          }
+          this_max = fmax(this_max, x_data[n * (n_channel * input_len) + r * n_channel + c]);
         }
+        y_data[n * (n_channel * output_len) + i * n_channel + c] = this_max;
       }
     }
   }
-  return res;
+  return y;
 }
 
 /*
@@ -226,9 +232,7 @@ static float* add(float *a, const float *b, const int m, const int n, const int 
 }
 
 static float* predictOnMTML(const std::string task, const char *texts, const std::unordered_map<std::string, MTensor>& weights, const float *df) {
-  float *c0, *c1, *c2;
   int c0_shape, c1_shape, c2_shape;
-  float *ca, *cb, *cc;
   float *dense1_x, *dense2_x;
   float *final_layer_dense_x;
   std::string final_layer_weight_key = task + ".weight";
@@ -265,40 +269,34 @@ static float* predictOnMTML(const std::string task, const char *texts, const std
   const MTensor& embed_x = embedding(texts, SEQ_LEN, embed_t);
 
   // conv0
-  c0 = conv1D(embed_x.data(), convs_0_weight.data(), 1, SEQ_LEN, MTML_EMBEDDING_SIZE, (int)conv0w_t.size(2), (int)conv0w_t.size(0)); // (1, 126, 32)
+  MTensor c0 = conv1D(embed_x, convs_0_weight); // (1, 126, 32)
   c0_shape = (int)(SEQ_LEN - conv0w_t.size(2) + 1);
-  add(c0, convs_0_bias, 1, c0_shape, (int)conv0w_t.size(0));
-  relu(c0, c0_shape * (int)conv0w_t.size(0));
+  add(c0.mutable_data(), convs_0_bias, 1, c0_shape, (int)conv0w_t.size(0));
+  relu(c0.mutable_data(), c0_shape * (int)conv0w_t.size(0));
 
   // conv1
-  c1 = conv1D(c0, convs_1_weight.data(), 1, c0_shape, (int)conv0w_t.size(0), (int)conv1w_t.size(2), (int)conv1w_t.size(0)); // (1, 124, 64)
+  MTensor c1 = conv1D(c0, convs_1_weight); // (1, 124, 64)
   c1_shape = (int)(c0_shape - conv1w_t.size(2) + 1);
-  add(c1, convs_1_bias, 1, c1_shape, (int)conv1w_t.size(0));
-  relu(c1, c1_shape * (int)conv1w_t.size(0));
-  c1 = maxPool1D(c1, 1, c1_shape, (int)conv1w_t.size(0), 2); // (1, 123, 64)
+  add(c1.mutable_data(), convs_1_bias, 1, c1_shape, (int)conv1w_t.size(0));
+  relu(c1.mutable_data(), c1_shape * (int)conv1w_t.size(0));
+  c1 = maxPool1D(c1, 2); // (1, 123, 64)
   c1_shape = c1_shape - 1;
 
   // conv2
-  c2 = conv1D(c1, convs_2_weight.data(), 1, c1_shape, (int)conv1w_t.size(0), (int)conv2w_t.size(2), (int)conv2w_t.size(0)); // (1, 121, 64)
+  MTensor c2 = conv1D(c1, convs_2_weight); // (1, 121, 64)
   c2_shape = (int)(c1_shape - conv2w_t.size(2) + 1);
-  add(c2, convs_2_bias, 1, c2_shape, (int)conv2w_t.size(0));
-  relu(c2, c2_shape * (int)conv2w_t.size(0));
+  add(c2.mutable_data(), convs_2_bias, 1, c2_shape, (int)conv2w_t.size(0));
+  relu(c2.mutable_data(), c2_shape * (int)conv2w_t.size(0));
 
   // max pooling
-  ca = maxPool1D(c0, 1, c0_shape, (int)conv0w_t.size(0), c0_shape);
-  cb = maxPool1D(c1, 1, c1_shape, (int)conv1w_t.size(0), c1_shape);
-  cc = maxPool1D(c2, 1, c2_shape, (int)conv2w_t.size(0), c2_shape);
-  free(c0);
-  free(c1);
-  free(c2);
+  MTensor ca = maxPool1D(c0, c0_shape);
+  MTensor cb = maxPool1D(c1, c1_shape);
+  MTensor cc = maxPool1D(c2, c2_shape);
 
   // concatenate
   float *concat = (float *)malloc((size_t)(sizeof(float) * (conv0w_t.size(0) + conv1w_t.size(0) + conv2w_t.size(0) + 30)));
-  concatenate(concat, ca, cb, (int)conv0w_t.size(0), (int)conv1w_t.size(0));
-  concatenate(concat + conv0w_t.size(0) + conv1w_t.size(0), cc, df, (int)conv2w_t.size(0), 30);
-  free(ca);
-  free(cb);
-  free(cc);
+  concatenate(concat, ca.data(), cb.data(), (int)conv0w_t.size(0), (int)conv1w_t.size(0));
+  concatenate(concat + conv0w_t.size(0) + conv1w_t.size(0), cc.data(), df, (int)conv2w_t.size(0), 30);
 
   // dense + relu
   dense1_x = dense(concat, fc1_weight.data(), fc1_bias, 1, (int)fc1w_t.size(1), (int)fc1w_t.size(0));
