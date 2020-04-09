@@ -381,6 +381,21 @@
 
 #pragma clang diagnostic pop
 - (void)updateBindings:(NSArray *)bindings {
+  if (eventBindings.count > 0 && eventBindings.count == bindings.count) {
+    // Check whether event bindings are the same
+    BOOL isSame = YES;
+    for (int i = 0; i < eventBindings.count; i++) {
+      if (![eventBindings[i] isEqualToBinding:bindings[i]]) {
+        isSame = NO;
+        break;
+      }
+    }
+
+    if (isSame) {
+      return;
+    }
+  }
+
   eventBindings = bindings;
   [reactBindings removeAllObjects];
   if (!isStarted) {
