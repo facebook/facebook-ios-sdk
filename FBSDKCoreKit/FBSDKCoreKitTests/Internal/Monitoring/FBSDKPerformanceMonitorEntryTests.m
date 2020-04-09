@@ -19,7 +19,7 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKCoreKit+Internal.h"
-#import "TestCoder.h"
+#import "FBSDKTestCoder.h"
 
 @interface FBSDKPerformanceMonitorEntryTests : XCTestCase
 
@@ -80,7 +80,7 @@
 
 - (void)testEncodingEntry
 {
-  TestCoder *coder = [TestCoder new];
+  FBSDKTestCoder *coder = [FBSDKTestCoder new];
   NSDate *startTime = [NSDate date];
 
   entry = [FBSDKPerformanceMonitorEntry entryWithName:@"Foo"
@@ -99,7 +99,7 @@
 
 - (void)testDecodingEntry
 {
-  TestCoder *coder = [TestCoder new];
+  FBSDKTestCoder *coder = [FBSDKTestCoder new];
 
   entry = [[FBSDKPerformanceMonitorEntry alloc] initWithCoder:coder];
 

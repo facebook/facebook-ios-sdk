@@ -34,9 +34,6 @@
 #import "FBSDKSettings.h"
 #import "FBSDKTypeUtility.h"
 
-// one minute
-#define DEFAULT_SESSION_TIMEOUT_INTERVAL 60
-
 #define FBSDK_SERVER_CONFIGURATION_USER_DEFAULTS_KEY @"com.facebook.sdk:serverConfiguration%@"
 
 #define FBSDK_SERVER_CONFIGURATION_APP_EVENTS_FEATURES_FIELD @"app_events_feature_bitmask"
@@ -58,6 +55,7 @@
 #define FBSDK_SERVER_CONFIGURATION_RESTRICTIVE_PARAMS_FIELD @"restrictive_data_filter_params"
 #define FBSDK_SERVER_CONFIGURATION_AAM_RULES_FIELD @"aam_rules"
 #define FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING_FIELD @"suggested_events_setting"
+#define FBSDK_SERVER_CONFIGURATION_MONITORING_CONFIG_FIELD @"monitoring_config"
 
 @implementation FBSDKServerConfigurationManager
 
@@ -107,7 +105,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
     [self loadServerConfigurationWithCompletionBlock:nil];
 
     // use whatever configuration we have or the default
-    return _serverConfiguration ?: [self _defaultServerConfigurationForAppID:appID];
+    return _serverConfiguration ?: [FBSDKServerConfiguration defaultServerConfigurationForAppID:appID];
   }
 }
 
@@ -200,7 +198,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   NSDictionary *dialogFlows = [FBSDKTypeUtility dictionaryValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_DIALOG_FLOWS_FIELD]];
   FBSDKErrorConfiguration *errorConfiguration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
   [errorConfiguration parseArray:resultDictionary[FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGURATION_FIELD]];
-  NSTimeInterval sessionTimeoutInterval = [FBSDKTypeUtility timeIntervalValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_SESSION_TIMEOUT_FIELD]] ?: DEFAULT_SESSION_TIMEOUT_INTERVAL;
+  NSTimeInterval sessionTimeoutInterval = [FBSDKTypeUtility timeIntervalValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_SESSION_TIMEOUT_FIELD]];
   NSString *loggingToken = [FBSDKTypeUtility stringValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_LOGGIN_TOKEN_FIELD]];
   FBSDKServerConfigurationSmartLoginOptions smartLoginOptions = [FBSDKTypeUtility integerValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_OPTIONS_FIELD]];
   NSURL *smartLoginBookmarkIconURL = [FBSDKTypeUtility URLValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_BOOKMARK_ICON_URL_FIELD]];
@@ -234,8 +232,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                                                     eventBindings:eventBindings
                                                                                 restrictiveParams:restrictiveParams
                                                                                          AAMRules:AAMRules
-                                                                           suggestedEventsSetting:suggestedEventsSetting
-                                                   ];
+                                                                           suggestedEventsSetting:suggestedEventsSetting];
   if (restrictiveParams) {
     [FBSDKRestrictiveDataFilterManager updateFilters:restrictiveParams];
     [FBSDKEventDeactivationManager updateDeactivatedEvents:restrictiveParams];
@@ -281,7 +278,8 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                       FBSDK_SERVER_CONFIGURATION_LOGGIN_TOKEN_FIELD,
                       FBSDK_SERVER_CONFIGURATION_RESTRICTIVE_PARAMS_FIELD,
                       FBSDK_SERVER_CONFIGURATION_AAM_RULES_FIELD,
-                      FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING_FIELD
+                      FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING_FIELD,
+                      FBSDK_SERVER_CONFIGURATION_MONITORING_CONFIG_FIELD
 #if !TARGET_OS_TV
                       ,FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS_FIELD
 #endif
@@ -305,57 +303,6 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
 }
 
 #pragma mark - Helper Class Methods
-
-+ (FBSDKServerConfiguration *)_defaultServerConfigurationForAppID:(NSString *)appID
-{
-  // Use a default configuration while we do not have a configuration back from the server. This allows us to set
-  // the default values for any of the dialog sets or anything else in a centralized location while we are waiting for
-  // the server to respond.
-  static FBSDKServerConfiguration *_defaultServerConfiguration = nil;
-  if (![_defaultServerConfiguration.appID isEqualToString:appID]) {
-    // Bypass the native dialog flow for iOS 9+, as it produces a series of additional confirmation dialogs that lead to
-    // extra friction that is not desirable.
-    NSOperatingSystemVersion iOS9Version = { .majorVersion = 9, .minorVersion = 0, .patchVersion = 0 };
-    BOOL useNativeFlow = ![FBSDKInternalUtility isOSRunTimeVersionAtLeast:iOS9Version];
-    // Also enable SFSafariViewController by default.
-    NSDictionary *dialogFlows = @{
-                                  FBSDKDialogConfigurationNameDefault: @{
-                                      FBSDKDialogConfigurationFeatureUseNativeFlow: @(useNativeFlow),
-                                      FBSDKDialogConfigurationFeatureUseSafariViewController: @YES,
-                                      },
-                                  FBSDKDialogConfigurationNameMessage: @{
-                                      FBSDKDialogConfigurationFeatureUseNativeFlow: @YES,
-                                      },
-                                  };
-    _defaultServerConfiguration = [[FBSDKServerConfiguration alloc] initWithAppID:appID
-                                                                          appName:nil
-                                                              loginTooltipEnabled:NO
-                                                                 loginTooltipText:nil
-                                                                 defaultShareMode:nil
-                                                             advertisingIDEnabled:NO
-                                                           implicitLoggingEnabled:NO
-                                                   implicitPurchaseLoggingEnabled:NO
-                                                            codelessEventsEnabled:NO
-                                                         uninstallTrackingEnabled:NO
-                                                             dialogConfigurations:nil
-                                                                      dialogFlows:dialogFlows
-                                                                        timestamp:nil
-                                                               errorConfiguration:nil
-                                                           sessionTimeoutInterval:DEFAULT_SESSION_TIMEOUT_INTERVAL
-                                                                         defaults:YES
-                                                                     loggingToken:nil
-                                                                smartLoginOptions:FBSDKServerConfigurationSmartLoginOptionsUnknown
-                                                        smartLoginBookmarkIconURL:nil
-                                                            smartLoginMenuIconURL:nil
-                                                                    updateMessage:nil
-                                                                    eventBindings:nil
-                                                                restrictiveParams:nil
-                                                                         AAMRules:nil
-                                                           suggestedEventsSetting:nil
-                                   ];
-  }
-  return _defaultServerConfiguration;
-}
 
 + (void)_didProcessConfigurationFromNetwork:(FBSDKServerConfiguration *)serverConfiguration
                                       appID:(NSString *)appID
