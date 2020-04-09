@@ -59,6 +59,23 @@
   return self;
 }
 
+- (BOOL)isEqualToPath:(FBSDKCodelessPathComponent *)path
+{
+  NSString *current = [NSString stringWithFormat:@"%@|%@|%@|%@|%d|%d|%d|%d|%d",
+                       _className ?: @"",
+                       _text ?: @"",
+                       _hint ?: @"",
+                       _desc ?: @"",
+                       _index, _section, _row, _tag, _matchBitmask];
+  NSString *compared = [NSString stringWithFormat:@"%@|%@|%@|%@|%d|%d|%d|%d|%d",
+                        path.className ?: @"",
+                        path.text ?: @"",
+                        path.hint ?: @"",
+                        path.desc ?: @"",
+                        path.index, path.section, path.row, path.tag, path.matchBitmask];
+  return [current isEqualToString:compared];
+}
+
 @end
 
 #endif

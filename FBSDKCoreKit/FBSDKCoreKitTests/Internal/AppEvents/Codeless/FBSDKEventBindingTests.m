@@ -107,7 +107,12 @@
   component = binding.parameters[1];
   NSString *action = [FBSDKEventBinding findParameterOfPath:component.path pathType:component.pathType sourceView:btnConfirm];
   XCTAssertEqual(action, @"Confirm");
+}
 
+- (void)testEventBindingEquation {
+  NSArray *bindings = [FBSDKEventBindingManager parseArray:[FBSDKSampleEventBinding getSampleDictionary][@"event_bindings"]];
+  XCTAssertTrue([bindings[0] isEqualToBinding:bindings[0]]);
+  XCTAssertFalse([bindings[0] isEqualToBinding:bindings[1]]);
 }
 
 @end
