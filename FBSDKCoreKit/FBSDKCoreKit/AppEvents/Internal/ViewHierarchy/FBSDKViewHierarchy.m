@@ -225,7 +225,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
   return [NSArray arrayWithArray:path];
 }
 
-+ (NSDictionary<NSString *, id> *)getAttributesOf:(NSObject *)obj parent:(NSObject *)parent
++ (NSDictionary<NSString *, id> *)getAttributesOf:(NSObject *)obj parent:(NSObject * _Nullable)parent
 {
   NSMutableDictionary *componentInfo = [NSMutableDictionary dictionary];
   componentInfo[CODELESS_MAPPING_CLASS_NAME_KEY] = NSStringFromClass([obj class]);
