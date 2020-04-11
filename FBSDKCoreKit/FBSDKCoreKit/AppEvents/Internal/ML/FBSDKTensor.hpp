@@ -70,7 +70,7 @@ public:
     for (auto size : sizes) {
       capacity_ *= size;
     }
-    storage_ = std::shared_ptr<void>(MAllocateMemory(capacity_ * sizeof(float)), MFreeMemory);
+    storage_ = std::shared_ptr<void>(MAllocateMemory((size_t)capacity_ * sizeof(float)), MFreeMemory);
   }
 
   MAT_ALWAYS_INLINE int64_t count() const {
@@ -104,7 +104,7 @@ public:
     }
     if (count > capacity_) {
       capacity_ = count;
-      storage_.reset(MAllocateMemory(capacity_ * sizeof(float)), MFreeMemory);
+      storage_.reset(MAllocateMemory((size_t)capacity_ * sizeof(float)), MFreeMemory);
     }
     sizes_ = sizes;
   }
