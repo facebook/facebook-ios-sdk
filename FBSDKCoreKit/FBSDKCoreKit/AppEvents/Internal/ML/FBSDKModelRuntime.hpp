@@ -93,7 +93,7 @@ static MTensor embedding(const char *texts, const int seq_length, const MTensor&
   float *y_data = y.mutable_data();
   for (int i = 0; i < n_examples; i++) {
     for (int j = 0; j < seq_length; j++) {
-      memcpy(y_data, w_data + vec[i * seq_length + j] * embedding_size, embedding_size * sizeof(float));
+      memcpy(y_data, w_data + vec[i * seq_length + j] * embedding_size, (size_t)(embedding_size * sizeof(float)));
       y_data += embedding_size;
     }
   }
@@ -147,7 +147,7 @@ static MTensor conv1D(const MTensor& x, const MTensor& w) {
             temp_w_data[m * input_size + k] = w_data[(m * input_size + k) * output_size + o];
           }
         }
-        vDSP_dotpr(temp_x_data, 1, temp_w_data, 1, &sum, kernel_size * input_size);
+        vDSP_dotpr(temp_x_data, 1, temp_w_data, 1, &sum, (size_t)(kernel_size * input_size));
         y_data[(n * (output_size * (seq_len - kernel_size + 1)) + i * output_size + o)] = sum;
       }
     }
