@@ -136,5 +136,6 @@ let package = Package(
             dependencies: ["FacebookCore", "FBSDKGamingServicesKit"],
             path: "FBSDKGamingServicesKit/FBSDKGamingServicesKit/Swift"
         ),
-    ]
+    ],
+    cxxLanguageStandard: CXXLanguageStandard.cxx11
 )
