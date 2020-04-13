@@ -474,8 +474,8 @@
 - (void)AssertEqual:(const fbsdk::MTensor&)expected
               input:(const fbsdk::MTensor&)input
 {
-  const std::vector<int64_t>& expected_sizes = expected.sizes();
-  const std::vector<int64_t>& input_sizes = input.sizes();
+  const std::vector<int>& expected_sizes = expected.sizes();
+  const std::vector<int>& input_sizes = input.sizes();
   XCTAssertEqual(expected_sizes, input_sizes);
   const float *expected_data = expected.data();
   const float *input_data = input.data();
