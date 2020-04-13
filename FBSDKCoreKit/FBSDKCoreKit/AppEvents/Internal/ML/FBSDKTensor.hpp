@@ -58,34 +58,34 @@ static void MFreeMemory(void* ptr) {
 class MTensor {
 public:
   MTensor(): storage_(nullptr), sizes_(), strides_(), capacity_(0){};
-  explicit MTensor(const std::vector<int64_t>& sizes) {
-    auto strides = std::vector<int64_t>(sizes.size());
+  explicit MTensor(const std::vector<int>& sizes) {
+    std::vector<int> strides = std::vector<int>(sizes.size());
     strides[strides.size() - 1] = 1;
-    for (auto i = static_cast<int32_t>(strides.size()) - 2; i >= 0; --i) {
+    for (int i = static_cast<int32_t>(strides.size()) - 2; i >= 0; --i) {
       strides[i] = strides[i + 1] * sizes[i + 1];
     }
     strides_ = strides;
     sizes_ = sizes;
     capacity_ = 1;
-    for (auto size : sizes) {
+    for (int size : sizes) {
       capacity_ *= size;
     }
     storage_ = std::shared_ptr<void>(MAllocateMemory((size_t)capacity_ * sizeof(float)), MFreeMemory);
   }
 
-  MAT_ALWAYS_INLINE int64_t count() const {
+  MAT_ALWAYS_INLINE int count() const {
     return capacity_;
   }
 
-  MAT_ALWAYS_INLINE int64_t size(int dim) const {
+  MAT_ALWAYS_INLINE int size(int dim) const {
     return sizes_[dim];
   }
 
-  MAT_ALWAYS_INLINE const std::vector<int64_t>& sizes() const {
+  MAT_ALWAYS_INLINE const std::vector<int>& sizes() const {
     return sizes_;
   }
 
-  MAT_ALWAYS_INLINE const std::vector<int64_t>& strides() const {
+  MAT_ALWAYS_INLINE const std::vector<int>& strides() const {
     return strides_;
   }
 
@@ -97,8 +97,8 @@ public:
     return static_cast<float*>(storage_.get());
   }
 
-  MAT_ALWAYS_INLINE void Reshape(const std::vector<int64_t>& sizes) {
-    int64_t count = 1;
+  MAT_ALWAYS_INLINE void Reshape(const std::vector<int>& sizes) {
+    int count = 1;
     for (int i = 0; i < sizes.size(); i++) {
       count *= sizes[i];
     }
@@ -110,9 +110,9 @@ public:
   }
 
 private:
-  int64_t capacity_;
-  std::vector<int64_t> sizes_;
-  std::vector<int64_t> strides_;
+  int capacity_;
+  std::vector<int> sizes_;
+  std::vector<int> strides_;
   std::shared_ptr<void> storage_;
 };
 

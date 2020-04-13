@@ -45,12 +45,12 @@ static void relu(MTensor& x) {
 }
 
 static void flatten(MTensor& x, int start_dim) {
-  const std::vector<int64_t>& shape = x.sizes();
-  std::vector<int64_t> new_shape;
+  const std::vector<int>& shape = x.sizes();
+  std::vector<int> new_shape;
   for (int i = 0; i < start_dim; i++) {
     new_shape.push_back(shape[i]);
   }
-  int64_t count = 1;
+  int count = 1;
   for (int i = start_dim; i < shape.size(); i++) {
     count *= shape[i];
   }
@@ -59,8 +59,8 @@ static void flatten(MTensor& x, int start_dim) {
 }
 
 static MTensor concatenate(std::vector<MTensor *>& tensors) {
-  int64_t n_examples = tensors[0]->size(0);
-  int64_t count = 0;
+  int n_examples = tensors[0]->size(0);
+  int count = 0;
   for (int i = 0; i < tensors.size(); i++) {
     count += tensors[i]->size(1);
   }
@@ -78,8 +78,8 @@ static MTensor concatenate(std::vector<MTensor *>& tensors) {
 }
 
 static void softmax(MTensor& x) {
-  int n_examples = (int)x.size(0);
-  int n_channel = (int)x.size(1);
+  int n_examples = x.size(0);
+  int n_channel = x.size(1);
   float *x_data = x.mutable_data();
   float max;
   float sum;
@@ -108,8 +108,8 @@ static std::vector<int> vectorize(const char *texts, const int seq_length) {
 static MTensor embedding(const char *texts, const int seq_length, const MTensor& w) {
   // TODO: T65152708 support batch prediction
   const std::vector<int>& vec = vectorize(texts, seq_length);
-  int64_t n_examples = 1;
-  int64_t embedding_size = w.size(1);
+  int n_examples = 1;
+  int embedding_size = w.size(1);
   MTensor y({n_examples, seq_length, embedding_size});
   const float* w_data = w.data();
   float *y_data = y.mutable_data();
@@ -129,9 +129,9 @@ static MTensor embedding(const char *texts, const int seq_length, const MTensor&
  return shape: n_examples, out_vector_size
  */
 static MTensor dense(const MTensor& x, const MTensor& w, const MTensor& b) {
-  int64_t n_examples = x.size(0);
-  int64_t in_vector_size = x.size(1);
-  int64_t out_vector_size = w.size(1);
+  int n_examples = x.size(0);
+  int in_vector_size = x.size(1);
+  int out_vector_size = w.size(1);
   MTensor y({n_examples, out_vector_size});
   float *y_data = y.mutable_data();
   const float *b_data = b.data();
@@ -148,11 +148,11 @@ static MTensor dense(const MTensor& x, const MTensor& w, const MTensor& b) {
  return shape: n_examples, seq_len - kernel_size + 1, output_size
  */
 static MTensor conv1D(const MTensor& x, const MTensor& w) {
-  int64_t n_examples = x.size(0);
-  int64_t seq_len = x.size(1);
-  int64_t input_size = x.size(2);
-  int64_t kernel_size = w.size(0);
-  int64_t output_size = w.size(2);
+  int n_examples = x.size(0);
+  int seq_len = x.size(1);
+  int input_size = x.size(2);
+  int kernel_size = w.size(0);
+  int output_size = w.size(2);
   MTensor y({n_examples, seq_len - kernel_size + 1, output_size});
   MTensor temp_x({kernel_size, input_size});
   MTensor temp_w({kernel_size, input_size});
@@ -184,10 +184,10 @@ static MTensor conv1D(const MTensor& x, const MTensor& w) {
  return shape: n_examples, len - pool_size + 1, n_channel
  */
 static MTensor maxPool1D(const MTensor& x, const int pool_size) {
-  int64_t n_examples = x.size(0);
-  int64_t input_len = x.size(1);
-  int64_t n_channel = x.size(2);
-  int64_t output_len = input_len - pool_size + 1;
+  int n_examples = x.size(0);
+  int input_len = x.size(1);
+  int n_channel = x.size(2);
+  int output_len = input_len - pool_size + 1;
   MTensor y({n_examples, output_len, n_channel});
   const float *x_data = x.data();
   float *y_data = y.mutable_data();
@@ -210,10 +210,9 @@ static MTensor maxPool1D(const MTensor& x, const int pool_size) {
  return shape: n, m
  */
 static MTensor transpose2D(const MTensor& x) {
-  int64_t m = x.size(0);
-  int64_t n = x.size(1);
+  int m = x.size(0);
+  int n = x.size(1);
   MTensor y({n, m});
-
   float *y_data = y.mutable_data();
   const float *x_data = x.data();
   for (int i = 0; i < m; i++){
@@ -229,11 +228,10 @@ static MTensor transpose2D(const MTensor& x) {
  return shape: p, n, m
  */
 static MTensor transpose3D(const MTensor& x) {
-  int64_t m = x.size(0);
-  int64_t n = x.size(1);
-  int64_t p = x.size(2);
+  int m = x.size(0);
+  int n = x.size(1);
+  int p = x.size(2);
   MTensor y({p, n, m});
-
   float *y_data = y.mutable_data();
   const float *x_data = x.data();
   for (int i = 0; i < m; i++){
@@ -247,9 +245,9 @@ static MTensor transpose3D(const MTensor& x) {
 }
 
 static void addmv(MTensor& y, const MTensor& x) {
-  int64_t m = y.size(0);
-  int64_t n = y.size(1);
-  int64_t p = y.size(2);
+  int m = y.size(0);
+  int n = y.size(1);
+  int p = y.size(2);
   float *y_data = y.mutable_data();
   const float *x_data = x.data();
   for (int i = 0; i < p; i++) {
@@ -260,7 +258,6 @@ static void addmv(MTensor& y, const MTensor& x) {
 static MTensor predictOnMTML(const std::string task, const char *texts, const std::unordered_map<std::string, MTensor>& weights, const float *df) {
   MTensor dense_tensor({1, DENSE_FEATURE_LEN});
   memcpy(dense_tensor.mutable_data(), df, DENSE_FEATURE_LEN * sizeof(float));
-  int c0_shape, c1_shape, c2_shape;
   std::string final_layer_weight_key = task + ".weight";
   std::string final_layer_bias_key = task + ".bias";
 
@@ -290,28 +287,24 @@ static MTensor predictOnMTML(const std::string task, const char *texts, const st
 
   // conv0
   MTensor c0 = conv1D(embed_x, convs_0_weight); // (1, 126, 32)
-  c0_shape = (int)(SEQ_LEN - conv0w_t.size(2) + 1);
   addmv(c0, conv0b_t);
   relu(c0);
 
   // conv1
   MTensor c1 = conv1D(c0, convs_1_weight); // (1, 124, 64)
-  c1_shape = (int)(c0_shape - conv1w_t.size(2) + 1);
   addmv(c1, conv1b_t);
   relu(c1);
   c1 = maxPool1D(c1, 2); // (1, 123, 64)
-  c1_shape = c1_shape - 1;
 
   // conv2
   MTensor c2 = conv1D(c1, convs_2_weight); // (1, 121, 64)
-  c2_shape = (int)(c1_shape - conv2w_t.size(2) + 1);
   addmv(c2, conv2b_t);
   relu(c2);
 
   // max pooling
-  MTensor ca = maxPool1D(c0, c0_shape);
-  MTensor cb = maxPool1D(c1, c1_shape);
-  MTensor cc = maxPool1D(c2, c2_shape);
+  MTensor ca = maxPool1D(c0, c0.size(1));
+  MTensor cb = maxPool1D(c1, c1.size(1));
+  MTensor cc = maxPool1D(c2, c2.size(1));
 
   // concatenate
   flatten(ca, 1);

@@ -78,7 +78,7 @@ using std::vector;
   unordered_map<string,  MTensor> weights;
   for (NSString* key in dict) {
     NSArray<NSNumber *> *values = dict[key];
-    vector<int64_t> shape;
+    vector<int> shape;
     for (NSNumber *val in values) {
       shape.push_back(val.intValue);
     }

@@ -65,7 +65,7 @@ NS_ASSUME_NONNULL_BEGIN
       }
       std::string s_name([finalKey UTF8String]);
 
-      std::vector<int64_t> v_shape;
+      std::vector<int> v_shape;
       NSArray<NSString *> *shape = [info objectForKey:key];
       int count = 1;
       for (NSNumber *_s in shape) {
@@ -146,7 +146,7 @@ NS_ASSUME_NONNULL_BEGIN
         return false;
       }
       fbsdk::MTensor tensor = weights[std::string([key UTF8String])];
-      const std::vector<int64_t>& actualSize = tensor.sizes();
+      const std::vector<int>& actualSize = tensor.sizes();
       NSArray *expectedSize = weightsInfoDict[key];
       if (actualSize.size() != expectedSize.count) {
         return false;
