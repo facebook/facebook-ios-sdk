@@ -37,10 +37,11 @@
 
 namespace fbsdk {
 
-static void relu(float *data, const int len) {
+static void relu(MTensor& x) {
   float min = 0;
   float max = FLT_MAX;
-  vDSP_vclip(data, 1, &min, &max, data, 1, len);
+  float *x_data = x.mutable_data();
+  vDSP_vclip(x_data, 1, &min, &max, x_data, 1, x.count());
 }
 
 static void flatten(MTensor& x, int start_dim) {
@@ -76,27 +77,20 @@ static MTensor concatenate(std::vector<MTensor *>& tensors) {
   return y;
 }
 
-static void softmax(float *data, const int n) {
-  int i = 0;
-  float max = FLT_MIN;
-  float sum = 0;
-
-  for (i = 0; i < n; i++) {
-    if (data[i] > max) {
-      max = data[i];
-    }
-  }
-
-  for (i = 0; i < n; i++){
-    data[i] = expf(data[i] - max);
-  }
-
-  for (i = 0; i < n; i++){
-    sum += data[i];
-  }
-
-  for (i = 0; i < n; i++){
-    data[i] = data[i] / sum;
+static void softmax(MTensor& x) {
+  int n_examples = (int)x.size(0);
+  int n_channel = (int)x.size(1);
+  float *x_data = x.mutable_data();
+  float max;
+  float sum;
+  for (int n = 0; n < n_examples; n++) {
+    vDSP_maxv(x_data, 1, &max, n_channel);
+    max = -max;
+    vDSP_vsadd(x_data, 1, &max, x_data, 1, n_channel);
+    vvexpf(x_data, x_data, &n_channel);
+    vDSP_sve(x_data, 1, &sum, n_channel);
+    vDSP_vsdiv(x_data, 1, &sum, x_data, 1, n_channel);
+    x_data += n_channel;
   }
 }
 
@@ -298,13 +292,13 @@ static MTensor predictOnMTML(const std::string task, const char *texts, const st
   MTensor c0 = conv1D(embed_x, convs_0_weight); // (1, 126, 32)
   c0_shape = (int)(SEQ_LEN - conv0w_t.size(2) + 1);
   addmv(c0, conv0b_t);
-  relu(c0.mutable_data(), c0_shape * (int)conv0w_t.size(0));
+  relu(c0);
 
   // conv1
   MTensor c1 = conv1D(c0, convs_1_weight); // (1, 124, 64)
   c1_shape = (int)(c0_shape - conv1w_t.size(2) + 1);
   addmv(c1, conv1b_t);
-  relu(c1.mutable_data(), c1_shape * (int)conv1w_t.size(0));
+  relu(c1);
   c1 = maxPool1D(c1, 2); // (1, 123, 64)
   c1_shape = c1_shape - 1;
 
@@ -312,7 +306,7 @@ static MTensor predictOnMTML(const std::string task, const char *texts, const st
   MTensor c2 = conv1D(c1, convs_2_weight); // (1, 121, 64)
   c2_shape = (int)(c1_shape - conv2w_t.size(2) + 1);
   addmv(c2, conv2b_t);
-  relu(c2.mutable_data(), c2_shape * (int)conv2w_t.size(0));
+  relu(c2);
 
   // max pooling
   MTensor ca = maxPool1D(c0, c0_shape);
@@ -328,11 +322,11 @@ static MTensor predictOnMTML(const std::string task, const char *texts, const st
 
   // dense + relu
   MTensor dense1_x = dense(concat, fc1_weight, fc1b_t);
-  relu(dense1_x.mutable_data(), (int)fc1b_t.size(0));
+  relu(dense1_x);
   MTensor dense2_x = dense(dense1_x, fc2_weight, fc2b_t);
-  relu(dense2_x.mutable_data(), (int)fc2b_t.size(0));
+  relu(dense2_x);
   MTensor final_layer_dense_x = dense(dense2_x, final_layer_weight, final_layer_bias_t);
-  softmax(final_layer_dense_x.mutable_data(), (int)final_layer_bias_t.size(0));
+  softmax(final_layer_dense_x);
   return final_layer_dense_x;
 }
 }

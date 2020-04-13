@@ -31,10 +31,20 @@
 @implementation FBSDKModelRuntimeTests
 
 - (void)testReLU {
-  float a[] = {-1, -2, 1, 2};
-  XCTAssert(a[0] < 0);
-  fbsdk::relu(a, 4);
-  XCTAssert(a[0] == 0);
+  float input_data[2][4] = {
+    {-1, -2, 1, 2},
+    {1, -0.2, 3.1, -0.5},
+  };
+  float expected_data[2][4] = {
+    {0, 0, 1, 2},
+    {1, 0, 3.1, 0},
+  };
+  fbsdk::MTensor input({2, 4});
+  fbsdk::MTensor expected({2, 4});
+  memcpy(input.mutable_data(), *input_data, input.count() * sizeof(float));
+  memcpy(expected.mutable_data(), *expected_data, expected.count() * sizeof(float));
+  fbsdk::relu(input);
+  [self AssertEqual:expected input:input];
 }
 
 - (void)testFlatten {
@@ -90,12 +100,20 @@
 }
 
 - (void)testSoftMax {
-  float a[2] = {1, 1};
-  float b[2] = {0.5, 0.5};
-  fbsdk::softmax(a, 2);
-  for (int i = 0; i < 2; i++) {
-    XCTAssertEqualWithAccuracy(a[i], b[i], 0.01);
-  }
+  float input_data[2][2] = {
+    {1, 1},
+    {1, 3},
+  };
+  float expected_data[2][2] = {
+    {0.5, 0.5},
+    {0.119, 0.881},
+  };
+  fbsdk::MTensor input({2, 2});
+  fbsdk::MTensor expected({2, 2});
+  memcpy(input.mutable_data(), *input_data, input.count() * sizeof(float));
+  memcpy(expected.mutable_data(), *expected_data, expected.count() * sizeof(float));
+  fbsdk::softmax(input);
+  [self AssertEqual:expected input:input];
 }
 
 - (void)testEmbedding {
