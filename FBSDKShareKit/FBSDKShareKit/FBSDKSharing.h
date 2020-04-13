@@ -109,7 +109,7 @@ NS_SWIFT_NAME(SharingDelegate)
  @param sharer The FBSDKSharing that completed.
  @param error The error.
  */
-- (void)sharer:(id<FBSDKSharing>)sharer didFailWithError:(NSError *)error;
+- (void)sharer:(id<FBSDKSharing>)sharer didFailWithError:(NSError * _Nullable)error;
 
 /**
   Sent to the delegate when the sharer is cancelled.

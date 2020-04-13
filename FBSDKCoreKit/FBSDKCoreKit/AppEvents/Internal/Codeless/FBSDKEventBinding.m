@@ -110,7 +110,14 @@ pathComponent:(FBSDKCodelessPathComponent *)component
   }
 
   if (component.index >= 0) {
-    NSObject *parent = [FBSDKViewHierarchy getParent:view];
+    NSObject *parent;
+
+    if (view) {
+      parent = [FBSDKViewHierarchy getParent:view];
+    } else {
+      parent = nil;
+    }
+
     if (parent) {
       NSArray *children = [FBSDKViewHierarchy getChildren:[FBSDKViewHierarchy getParent:view]];
       NSUInteger index = [children indexOfObject:view];
@@ -125,7 +132,14 @@ pathComponent:(FBSDKCodelessPathComponent *)component
   }
 
   if ((component.matchBitmask & FBSDKCodelessMatchBitmaskFieldText) > 0) {
-    NSString *text = [FBSDKViewHierarchy getText:view];
+    NSString *text;
+
+    if (view) {
+      text = [FBSDKViewHierarchy getText:view];
+    } else {
+      text = nil;
+    }
+
     BOOL match = ((text.length == 0 && component.text.length == 0)
                   || [text isEqualToString:component.text]);
     if (!match) {
@@ -139,8 +153,15 @@ pathComponent:(FBSDKCodelessPathComponent *)component
     return NO;
   }
 
+  NSString *hint;
+
+  if (view) {
+    hint = [FBSDKViewHierarchy getHint:view];
+  } else {
+    hint = nil;
+  }
+
   if ((component.matchBitmask & FBSDKCodelessMatchBitmaskFieldHint) > 0) {
-    NSString *hint = [FBSDKViewHierarchy getHint:view];
     BOOL match = ((hint.length == 0 && component.hint.length == 0)
                   || [hint isEqualToString:component.hint]);
     if (!match) {
