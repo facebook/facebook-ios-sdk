@@ -297,8 +297,8 @@
   [self AssertEqual:expected input:fbsdk::transpose2D(input)];
 }
 
-- (void)testAdd {
-  float input[2][3][2] = {
+- (void)testAddmv {
+  float input_data[2][3][2] = {
     {
       {0, 12},
       {4, 16},
@@ -310,8 +310,8 @@
       {9, 21},
     },
   };
-  float b[2] = {1, 2};
-  float result[2][3][2] = {
+  float bias_data[2] = {1, 2};
+  float expected_data[2][3][2] = {
     {
       {1, 14},
       {5, 18},
@@ -323,14 +323,14 @@
       {10, 23},
     },
   };
-  fbsdk::add(**input, b, 2, 3, 2);
-  for (int i = 0; i < 2; i++) {
-    for (int j = 0; j < 3; j++) {
-      for (int k = 0; k < 2; k++) {
-        XCTAssertEqualWithAccuracy(input[i][j][k], result[i][j][k], 0.01);
-      }
-    }
-  }
+  fbsdk::MTensor input({2, 3, 2});
+  fbsdk::MTensor bias({2});
+  fbsdk::MTensor expected({2, 3, 2});
+  memcpy(input.mutable_data(), **input_data, input.count() * sizeof(float));
+  memcpy(bias.mutable_data(), bias_data, bias.count() * sizeof(float));
+  memcpy(expected.mutable_data(), **expected_data, expected.count() * sizeof(float));
+  fbsdk::addmv(input, bias);
+  [self AssertEqual:expected input:input];
 }
 
 - (void)testMaxPool1DExample1 {

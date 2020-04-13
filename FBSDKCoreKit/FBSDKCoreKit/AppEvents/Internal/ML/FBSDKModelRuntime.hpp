@@ -222,13 +222,15 @@ static MTensor transpose3D(const MTensor& x) {
   return y;
 }
 
-static float* add(float *a, const float *b, const int m, const int n, const int p) {
-  for(int i = 0; i < m * n; i++){
-    for(int j = 0; j < p; j++){
-      a[i * p + j] += b[j];
-    }
+static void addmv(MTensor& y, const MTensor& x) {
+  int64_t m = y.size(0);
+  int64_t n = y.size(1);
+  int64_t p = y.size(2);
+  float *y_data = y.mutable_data();
+  const float *x_data = x.data();
+  for (int i = 0; i < p; i++) {
+    vDSP_vsadd(y_data + i, p, x_data + i, y_data + i, p, m * n);
   }
-  return a;
 }
 
 static float* predictOnMTML(const std::string task, const char *texts, const std::unordered_map<std::string, MTensor>& weights, const float *df) {
@@ -255,9 +257,6 @@ static float* predictOnMTML(const std::string task, const char *texts, const std
   const MTensor& convs_0_weight = transpose3D(conv0w_t);
   const MTensor& convs_1_weight = transpose3D(conv1w_t);
   const MTensor& convs_2_weight = transpose3D(conv2w_t);
-  const float *convs_0_bias = conv0b_t.data();
-  const float *convs_1_bias = conv1b_t.data();
-  const float *convs_2_bias = conv2b_t.data();
   const MTensor& fc1_weight = transpose2D(fc1w_t);
   const MTensor& fc2_weight = transpose2D(fc2w_t);
   const MTensor& final_layer_weight = transpose2D(final_layer_weight_t);
@@ -271,13 +270,13 @@ static float* predictOnMTML(const std::string task, const char *texts, const std
   // conv0
   MTensor c0 = conv1D(embed_x, convs_0_weight); // (1, 126, 32)
   c0_shape = (int)(SEQ_LEN - conv0w_t.size(2) + 1);
-  add(c0.mutable_data(), convs_0_bias, 1, c0_shape, (int)conv0w_t.size(0));
+  addmv(c0, conv0b_t);
   relu(c0.mutable_data(), c0_shape * (int)conv0w_t.size(0));
 
   // conv1
   MTensor c1 = conv1D(c0, convs_1_weight); // (1, 124, 64)
   c1_shape = (int)(c0_shape - conv1w_t.size(2) + 1);
-  add(c1.mutable_data(), convs_1_bias, 1, c1_shape, (int)conv1w_t.size(0));
+  addmv(c1, conv1b_t);
   relu(c1.mutable_data(), c1_shape * (int)conv1w_t.size(0));
   c1 = maxPool1D(c1, 2); // (1, 123, 64)
   c1_shape = c1_shape - 1;
@@ -285,7 +284,7 @@ static float* predictOnMTML(const std::string task, const char *texts, const std
   // conv2
   MTensor c2 = conv1D(c1, convs_2_weight); // (1, 121, 64)
   c2_shape = (int)(c1_shape - conv2w_t.size(2) + 1);
-  add(c2.mutable_data(), convs_2_bias, 1, c2_shape, (int)conv2w_t.size(0));
+  addmv(c2, conv2b_t);
   relu(c2.mutable_data(), c2_shape * (int)conv2w_t.size(0));
 
   // max pooling
