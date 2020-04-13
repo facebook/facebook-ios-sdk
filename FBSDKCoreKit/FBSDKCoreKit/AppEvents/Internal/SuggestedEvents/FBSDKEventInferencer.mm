@@ -106,9 +106,10 @@ static std::unordered_map<std::string, fbsdk::MTensor> _weights;
       return defaultPrediction;
     }
 
-    float *res = fbsdk::predictOnMTML("app_event_pred", bytes, _weights, dense_tensor_data);
-    for (int i = 0; i < thresholds.count; i++){
-      if ((float)res[i] >= (float)[thresholds[i] floatValue]) {
+    const fbsdk::MTensor& res = fbsdk::predictOnMTML("app_event_pred", bytes, _weights, dense_tensor_data);
+    const float *res_data = res.data();
+    for (int i = 0; i < thresholds.count; i++) {
+      if ((float)res_data[i] >= (float)[thresholds[i] floatValue]) {
         result[SUGGEST_EVENT_KEY] = eventMapping[i];
         return result;
       }

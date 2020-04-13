@@ -43,9 +43,37 @@ static void relu(float *data, const int len) {
   vDSP_vclip(data, 1, &min, &max, data, 1, len);
 }
 
-static void concatenate(float *dst, const float *a, const float *b, const int a_len, const int b_len) {
-  memcpy(dst, a, a_len * sizeof(float));
-  memcpy(dst + a_len, b, b_len * sizeof(float));
+static void flatten(MTensor& x, int start_dim) {
+  const std::vector<int64_t>& shape = x.sizes();
+  std::vector<int64_t> new_shape;
+  for (int i = 0; i < start_dim; i++) {
+    new_shape.push_back(shape[i]);
+  }
+  int64_t count = 1;
+  for (int i = start_dim; i < shape.size(); i++) {
+    count *= shape[i];
+  }
+  new_shape.push_back(count);
+  x.Reshape(new_shape);
+}
+
+static MTensor concatenate(std::vector<MTensor *>& tensors) {
+  int64_t n_examples = tensors[0]->size(0);
+  int64_t count = 0;
+  for (int i = 0; i < tensors.size(); i++) {
+    count += tensors[i]->size(1);
+  }
+  MTensor y({n_examples, count});
+  float *y_data = y.mutable_data();
+  for (int i = 0; i < tensors.size(); i++) {
+    int this_count = (int)tensors[i]->size(1);
+    const float *this_data = tensors[i]->data();
+    for (int n = 0; n < n_examples; n++) {
+      memcpy(y_data + n * count, this_data + n * this_count, this_count * sizeof(float));
+    }
+    y_data += this_count;
+  }
+  return y;
 }
 
 static void softmax(float *data, const int n) {
@@ -101,21 +129,23 @@ static MTensor embedding(const char *texts, const int seq_length, const MTensor&
 }
 
 /*
- a shape: n_examples, in_vector_size
- b shape: n_examples, out_vector_size
- c shape: out_vector_size
+ x shape: n_examples, in_vector_size
+ w shape: in_vector_size, out_vector_size
+ b shape: out_vector_size
  return shape: n_examples, out_vector_size
  */
-static float* dense(const float *a, const float *b, const float *c, const int n_examples, const int in_vector_size, const int out_vector_size) {
-  int i,j;
-  float *m_res = (float *)malloc(sizeof(float) * (n_examples * out_vector_size));
-  vDSP_mmul(a, 1, b, 1, m_res, 1, n_examples, out_vector_size, in_vector_size);
-  for (i = 0; i < n_examples; i++) {
-    for (j = 0; j < out_vector_size; j++) {
-      m_res[i * out_vector_size + j] += c[j];
-    }
+static MTensor dense(const MTensor& x, const MTensor& w, const MTensor& b) {
+  int64_t n_examples = x.size(0);
+  int64_t in_vector_size = x.size(1);
+  int64_t out_vector_size = w.size(1);
+  MTensor y({n_examples, out_vector_size});
+  float *y_data = y.mutable_data();
+  const float *b_data = b.data();
+  vDSP_mmul(x.data(), 1, w.data(), 1, y_data, 1, n_examples, out_vector_size, in_vector_size);
+  for (int i = 0; i < out_vector_size; i++) {
+    vDSP_vsadd(y_data + i, out_vector_size, b_data + i, y_data + i, out_vector_size, n_examples);
   }
-  return m_res;
+  return y;
 }
 
 /*
@@ -233,10 +263,10 @@ static void addmv(MTensor& y, const MTensor& x) {
   }
 }
 
-static float* predictOnMTML(const std::string task, const char *texts, const std::unordered_map<std::string, MTensor>& weights, const float *df) {
+static MTensor predictOnMTML(const std::string task, const char *texts, const std::unordered_map<std::string, MTensor>& weights, const float *df) {
+  MTensor dense_tensor({1, DENSE_FEATURE_LEN});
+  memcpy(dense_tensor.mutable_data(), df, DENSE_FEATURE_LEN * sizeof(float));
   int c0_shape, c1_shape, c2_shape;
-  float *dense1_x, *dense2_x;
-  float *final_layer_dense_x;
   std::string final_layer_weight_key = task + ".weight";
   std::string final_layer_bias_key = task + ".bias";
 
@@ -260,9 +290,6 @@ static float* predictOnMTML(const std::string task, const char *texts, const std
   const MTensor& fc1_weight = transpose2D(fc1w_t);
   const MTensor& fc2_weight = transpose2D(fc2w_t);
   const MTensor& final_layer_weight = transpose2D(final_layer_weight_t);
-  const float *fc1_bias = fc1b_t.data();
-  const float *fc2_bias = fc2b_t.data();
-  const float *final_layer_bias = final_layer_bias_t.data();
 
   // embedding
   const MTensor& embed_x = embedding(texts, SEQ_LEN, embed_t);
@@ -293,25 +320,19 @@ static float* predictOnMTML(const std::string task, const char *texts, const std
   MTensor cc = maxPool1D(c2, c2_shape);
 
   // concatenate
-  float *concat = (float *)malloc((size_t)(sizeof(float) * (conv0w_t.size(0) + conv1w_t.size(0) + conv2w_t.size(0) + 30)));
-  concatenate(concat, ca.data(), cb.data(), (int)conv0w_t.size(0), (int)conv1w_t.size(0));
-  concatenate(concat + conv0w_t.size(0) + conv1w_t.size(0), cc.data(), df, (int)conv2w_t.size(0), 30);
+  flatten(ca, 1);
+  flatten(cb, 1);
+  flatten(cc, 1);
+  std::vector<MTensor *> concat_tensors { &ca, &cb, &cc, &dense_tensor };
+  const MTensor& concat = concatenate(concat_tensors);
 
   // dense + relu
-  dense1_x = dense(concat, fc1_weight.data(), fc1_bias, 1, (int)fc1w_t.size(1), (int)fc1w_t.size(0));
-  free(concat);
-  relu(dense1_x, (int)fc1b_t.size(0));
-  dense2_x = dense(dense1_x, fc2_weight.data(), fc2_bias, 1, (int)fc2w_t.size(1), (int)fc2w_t.size(0));
-  relu(dense2_x, (int)fc2b_t.size(0));
-  free(dense1_x);
-  final_layer_dense_x = dense(dense2_x,
-                              final_layer_weight.data(),
-                              final_layer_bias,
-                              1,
-                              (int)final_layer_weight_t.size(1),
-                              (int)final_layer_weight_t.size(0));
-  free(dense2_x);
-  softmax(final_layer_dense_x, (int)final_layer_bias_t.size(0));
+  MTensor dense1_x = dense(concat, fc1_weight, fc1b_t);
+  relu(dense1_x.mutable_data(), (int)fc1b_t.size(0));
+  MTensor dense2_x = dense(dense1_x, fc2_weight, fc2b_t);
+  relu(dense2_x.mutable_data(), (int)fc2b_t.size(0));
+  MTensor final_layer_dense_x = dense(dense2_x, final_layer_weight, final_layer_bias_t);
+  softmax(final_layer_dense_x.mutable_data(), (int)final_layer_bias_t.size(0));
   return final_layer_dense_x;
 }
 }

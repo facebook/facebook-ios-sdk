@@ -37,15 +37,56 @@
   XCTAssert(a[0] == 0);
 }
 
+- (void)testFlatten {
+  float input_data[2][2][5] = {
+    {
+      {1, 2, 3, 4, 5},
+      {1, 2, 3, 4, 5},
+    },
+    {
+      {3, 4, 6, 7, 8},
+      {6, 7, 8, 9, 10},
+    },
+  };
+  float expected_data[2][10] = {
+    {1, 2, 3, 4, 5, 1, 2, 3, 4, 5},
+    {3, 4, 6, 7, 8, 6, 7, 8, 9, 10},
+  };
+  fbsdk::MTensor input({2, 2, 5});
+  fbsdk::MTensor expected({2, 10});
+  memcpy(input.mutable_data(), **input_data, input.count() * sizeof(float));
+  memcpy(expected.mutable_data(), *expected_data, expected.count() * sizeof(float));
+  fbsdk::flatten(input, 1);
+  [self AssertEqual:expected input:input];
+}
+
 - (void)testConcatenate {
-  float a[] = {1, 2};
-  float b[] = {3, 4, 5};
-  float c[] = {1, 2, 3, 4, 5};
-  float *concat = (float *)malloc((size_t)(sizeof(float) * 5));
-  fbsdk::concatenate(concat, a, b, 2, 3);
-  for (int i = 0; i < 5; i++) {
-    XCTAssertEqual(concat[i], c[i]);
-  }
+  float tensor1_data[2][2] = {
+    {1, 2},
+    {3, 4},
+  };
+  float tensor2_data[2][3] = {
+    {3, 4, 5},
+    {6, 7, 8},
+  };
+  float tensor3_data[2][5] = {
+    {1, 2, 3, 4, 5},
+    {6, 7, 8, 9, 10},
+  };
+  float expected_data[2][10] = {
+    {1, 2, 3, 4, 5, 1, 2, 3, 4, 5},
+    {3, 4, 6, 7, 8, 6, 7, 8, 9, 10},
+  };
+  fbsdk::MTensor tensor1({2, 2});
+  fbsdk::MTensor tensor2({2, 3});
+  fbsdk::MTensor tensor3({2, 5});
+  fbsdk::MTensor expected({2, 10});
+  memcpy(tensor1.mutable_data(), *tensor1_data, tensor1.count() * sizeof(float));
+  memcpy(tensor2.mutable_data(), *tensor2_data, tensor2.count() * sizeof(float));
+  memcpy(tensor3.mutable_data(), *tensor3_data, tensor3.count() * sizeof(float));
+  memcpy(expected.mutable_data(), *expected_data, expected.count() * sizeof(float));
+  std::vector<fbsdk::MTensor *> concat_tensors{&tensor1, &tensor2, &tensor3};
+  [self AssertEqual:expected input:fbsdk::concatenate(concat_tensors)];
 }
 
 - (void)testSoftMax {
@@ -78,30 +119,35 @@
 }
 
 - (void)testDenseExample1 {
-  int i,j;
-  float *arr;
-  float a[2][3] = {{1, 2, 3}, {4, 5, 6}};
-  float b[3][2] = {{0, 1}, {1, 0},{-1, 1}};
-  float c[2] = {100, 200};
-  float e[2][2] = {{99, 204}, {99, 210}};
-  arr = fbsdk::dense(*a, *b, c, 2, 3, 2);
-  for (i = 0; i < 2; i++) {
-    for (j = 0; j < 2; j++) {
-      XCTAssertEqualWithAccuracy(arr[i*2+j], e[i][j], 0.01);
-    }
-  }
+  float input_data[2][3] = {{1, 2, 3}, {4, 5, 6}};
+  float weight_data[3][2] = {{0, 1}, {1, 0},{-1, 1}};
+  float bias_data[2] = {100, 200};
+  float expected_data[2][2] = {{99, 204}, {99, 210}};
+  fbsdk::MTensor input({2, 3});
+  fbsdk::MTensor weight({3, 2});
+  fbsdk::MTensor bias({2});
+  fbsdk::MTensor expected({2, 2});
+  memcpy(input.mutable_data(), *input_data, input.count() * sizeof(float));
+  memcpy(weight.mutable_data(), *weight_data, weight.count() * sizeof(float));
+  memcpy(bias.mutable_data(), bias_data, bias.count() * sizeof(float));
+  memcpy(expected.mutable_data(), *expected_data, expected.count() * sizeof(float));
+  [self AssertEqual:expected input:fbsdk::dense(input, weight, bias)];
 }
 
 - (void)testDenseExample2 {
-  float *arr;
-  float a[1][2] = {{1, 2}};
-  float b[2][3] = {{0, 3, -1}, {1, 0, -2}};
-  float c[3] = {100, 200, 5};
-  float e[1][3] = {{102, 203, 0}};
-  arr = fbsdk::dense(*a, *b, c, 1, 2, 3);
-  for (int i = 0; i < 3; i++) {
-    XCTAssertEqualWithAccuracy(arr[i], e[0][i], 0.01);
-  }
+  float input_data[1][2] = {{1, 2}};
+  float weight_data[2][3] = {{0, 3, -1}, {1, 0, -2}};
+  float bias_data[3] = {100, 200, 5};
+  float expected_data[1][3] = {{102, 203, 0}};
+  fbsdk::MTensor input({1, 2});
+  fbsdk::MTensor weight({2, 3});
+  fbsdk::MTensor bias({3});
+  fbsdk::MTensor expected({1, 3});
+  memcpy(input.mutable_data(), *input_data, input.count() * sizeof(float));
+  memcpy(weight.mutable_data(), *weight_data, weight.count() * sizeof(float));
+  memcpy(bias.mutable_data(), bias_data, bias.count() * sizeof(float));
+  memcpy(expected.mutable_data(), *expected_data, expected.count() * sizeof(float));
+  [self AssertEqual:expected input:fbsdk::dense(input, weight, bias)];
 }
 
 - (void)testConv1DExample1 {

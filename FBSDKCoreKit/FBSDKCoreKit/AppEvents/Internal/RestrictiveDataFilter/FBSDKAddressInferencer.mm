@@ -78,8 +78,9 @@ static std::vector<float> _denseFeature;
     return false;
   }
   try {
-    float* res = fbsdk::predictOnMTML("address_detect", bytes, _weights, &_denseFeature[0]);
-    return res[1] >= [thresholds[0] floatValue];
+    const fbsdk::MTensor& res = fbsdk::predictOnMTML("address_detect", bytes, _weights, &_denseFeature[0]);
+    const float *res_data = res.data();
+    return res_data[1] >= [thresholds[0] floatValue];
   } catch (const std::exception &e) {
     return false;
   }
