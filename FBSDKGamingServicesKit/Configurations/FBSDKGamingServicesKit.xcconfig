@@ -19,11 +19,4 @@
 #include "Shared/Platform/iOS.xcconfig"
 #include "Shared/Target/StaticFramework.xcconfig"
 #include "Shared/Version.xcconfig"
-
-PRODUCT_NAME = FBSDKGamingServicesKit
-PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBSDKGamingServicesKit
-
-CURRENT_PROJECT_VERSION = $(FBSDK_PROJECT_VERSION)
-
-INFOPLIST_FILE = $(SRCROOT)/FBSDKGamingServicesKit/Info.plist
-MODULEMAP_FILE = $(SRCROOT)/FBSDKGamingServicesKit/FBSDKGamingServicesKit.modulemap
+#include "FBSDKGamingServicesKit-Common.xcconfig"

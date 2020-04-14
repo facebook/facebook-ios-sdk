@@ -69,8 +69,13 @@
   if (!recipientIDArray && [recipients isKindOfClass:[NSString class]]) {
     recipientIDArray = [recipients componentsSeparatedByString:@","];
   }
-  NSSet *recipientIDs = [[NSSet alloc] initWithArray:recipientIDArray];
-  return [recipientIDs isSubsetOfSet:_recipientIDs];
+  if (recipientIDArray) {
+    NSSet *recipientIDs = [[NSSet alloc]
+                           initWithArray:recipientIDArray];
+    return [recipientIDs isSubsetOfSet:_recipientIDs];
+  } else {
+    return NO;
+  }
 }
 
 - (void)updateWithResults:(NSDictionary *)results
