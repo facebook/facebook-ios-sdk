@@ -42,4 +42,18 @@ NS_SWIFT_NAME(GamingImageUploader)
 + (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration * _Nonnull)configuration
                 andCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler;
 
+/**
+Runs an upload to a users Gaming Media Library with the given configuration
+
+@param configuration model object contain the content that will be uploaded
+@param completionHandler a callback that is fired dependent on the configuration.
+ Fired when the upload completes or when the users returns to the caller app
+ after the media dialog is shown.
+@param progressHandler an optional callback that is fired multiple times as
+ bytes are transferred to Facebook.
+*/
++ (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration * _Nonnull)configuration
+                   completionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
+                  andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler;
+
 @end
