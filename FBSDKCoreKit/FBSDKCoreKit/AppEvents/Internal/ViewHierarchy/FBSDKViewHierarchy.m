@@ -150,7 +150,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
   return children;
 }
 
-+ (nullable NSObject *)getParent:(NSObject *)obj
++ (nullable NSObject *)getParent:(nullable NSObject *)obj
 {
   if ([obj isKindOfClass:[UIView class]]) {
     UIView *superview = ((UIView *)obj).superview;
@@ -336,7 +336,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
   return indexPath;
 }
 
-+ (NSString *)getText:(NSObject *)obj
++ (NSString *)getText:(nullable NSObject *)obj
 {
   NSString *text = nil;
 
@@ -424,7 +424,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
   return nil;
 }
 
-+ (NSString *)getHint:(NSObject *)obj
++ (NSString *)getHint:(nullable NSObject *)obj
 {
   NSString *hint = nil;
 

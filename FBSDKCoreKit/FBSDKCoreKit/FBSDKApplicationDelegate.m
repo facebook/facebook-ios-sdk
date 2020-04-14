@@ -414,7 +414,7 @@ static UIApplicationState _applicationState;
 
   // Additional check to see if the consuming application perhaps was
   // originally an objc project but is now using Swift
-  if (!params[swiftUsageKey]) {
+  if (!params[swiftUsageKey].boolValue) {
     double delayInSeconds = 1.0;
     dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(delay, dispatch_get_main_queue(), ^{
