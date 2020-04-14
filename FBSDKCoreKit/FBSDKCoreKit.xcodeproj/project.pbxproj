@@ -2170,7 +2170,7 @@
 			path = EventDeactivation;
 			sourceTree = "<group>";
 		};
-		5D9031C0233AAC5D0001450C /* RestrictiveDataFilter */ = {
+		5D9031C0233AAC5D0001450C /* Integrity */ = {
 			isa = PBXGroup;
 			children = (
 				5D411318229F27DD002FF65A /* FBSDKRestrictiveDataFilterManager.m */,
@@ -2180,7 +2180,7 @@
 				5D81B410238739B100B02B2E /* FBSDKAddressFilterManager.h */,
 				5D81B422238739E600B02B2E /* FBSDKAddressFilterManager.m */,
 			);
-			path = RestrictiveDataFilter;
+			path = Integrity;
 			sourceTree = "<group>";
 		};
 		5DAB023A23A1B9FC005495FB /* EventDeactivation */ = {
@@ -2854,7 +2854,7 @@
 				5D6DF1542398E24800AC2D6C /* EventDeactivation */,
 				BFC6A2192387227800395451 /* ViewHierarchy */,
 				5DBC72C2237378F800A9D859 /* ML */,
-				5D9031C0233AAC5D0001450C /* RestrictiveDataFilter */,
+				5D9031C0233AAC5D0001450C /* Integrity */,
 				F952EA442339403900B20652 /* AAM */,
 				BF247C642374C73F00A522C0 /* SuggestedEvents */,
 				C5696F1D209BBC35009C931F /* Codeless */,
