@@ -326,11 +326,24 @@ build_sdk() {
   }
 
   build_spm_integration() {
+    set +u # Don't fail on undefined variables
+
+    local branch
+
+    if [ -n "$TRAVIS_PULL_REQUEST" ]; then
+      branch="refs/pull/$TRAVIS_PULL_REQUEST/merge";
+    elif [ -n "$TRAVIS_BRANCH" ]; then
+      branch="$TRAVIS_BRANCH";
+    else
+      branch="master"
+    fi
+    echo "Using travis branch: $branch"
+
     cd "$SDK_DIR"/samples/SmoketestSPM
 
-    echo "Updating project file to point to merge commit at: refs/pull/$TRAVIS_PULL_REQUEST/merge"
+    echo "Updating project file to point to merge commit at: $branch"
     /usr/libexec/PlistBuddy \
-        -c "set :objects:F4CEA53E23C29C9E0086EB16:requirement:branch refs/pull/$TRAVIS_PULL_REQUEST/merge" \
+        -c "set :objects:F4CEA53E23C29C9E0086EB16:requirement:branch $branch" \
         SmoketestSPM.xcodeproj/project.pbxproj
 
     # Redirecting to /dev/null because we only care about errors here and the full output drowns Travis
@@ -338,6 +351,8 @@ build_sdk() {
     # visible output
     xcodebuild build -scheme SmoketestSPM \
       -sdk iphonesimulator > /dev/null
+
+    set -u # Resume failing on undefined variables
   }
 
   local build_type=${1:-}
