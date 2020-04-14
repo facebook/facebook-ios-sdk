@@ -332,7 +332,7 @@
                            text:buttonTextString
                            hint:buttonHintString];
   XCTAssertEqualObjects([buttonTextString copy], @"");
-  XCTAssertEqualObjects([buttonHintString copy], @"confirm order ");
+  XCTAssertEqualObjects([buttonHintString copy], @"confirm order");
 }
 
 - (void)testFoundIndicators

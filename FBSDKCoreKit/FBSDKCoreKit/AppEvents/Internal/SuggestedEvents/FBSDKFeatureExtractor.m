@@ -296,15 +296,10 @@ void sum(float *val0, float *val1) {
   NSString *hint = [node[VIEW_HIERARCHY_HINT_KEY] lowercaseString];
 
   if (text.length > 0) {
-    [buttonTextString appendFormat:@"%@ ", text];
+    [buttonTextString appendString: text];
   }
   if (hint.length > 0) {
-    [buttonHintString appendFormat:@"%@ ", hint];
-  }
-
-  NSMutableArray<NSMutableDictionary<NSString *, id> *> *childviews = node[VIEW_HIERARCHY_CHILD_VIEWS_KEY];
-  for (NSMutableDictionary<NSString *, id> *child in childviews) {
-    [self update:child text:buttonTextString hint:buttonHintString];
+    [buttonHintString appendString: hint];
   }
 }
 
