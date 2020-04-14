@@ -51,7 +51,7 @@
 
   __block BOOL actioned = false;
   [FBSDKFriendFinderDialog
-   launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError * _Nullable error) {
+   launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError * _Nullable error, id result) {
     XCTAssert(error.code == FBSDKErrorAccessTokenRequired, "Expected error requiring a valid access token");
     actioned = true;
   }];
@@ -70,7 +70,7 @@
   id expectation = [self expectationWithDescription:@"callback"];
 
   [FBSDKFriendFinderDialog
-   launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError * _Nullable error) {
+   launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError * _Nullable error, id result) {
     [expectation fulfill];
   }];
 
@@ -91,7 +91,7 @@
 
   id expectation = [self expectationWithDescription:@"callback"];
   [FBSDKFriendFinderDialog
-   launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError * _Nullable error) {
+   launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError * _Nullable error, id result) {
     XCTAssertFalse(success);
     XCTAssert(error.code == FBSDKErrorBridgeAPIInterruption);
     [expectation fulfill];
@@ -112,7 +112,7 @@
 
   __block BOOL actioned = false;
   [FBSDKFriendFinderDialog
-   launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError * _Nullable error) {
+   launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError * _Nullable error, id result) {
     XCTAssertTrue(success);
     actioned = true;
   }];
@@ -131,7 +131,7 @@
 
   __block BOOL actioned = false;
   [FBSDKFriendFinderDialog
-   launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError * _Nullable error) {
+   launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError * _Nullable error, id result) {
     XCTAssertTrue(success);
     actioned = true;
   }];
