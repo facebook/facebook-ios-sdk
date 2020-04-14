@@ -25,7 +25,7 @@
 @interface FBSDKGamingVideoUploader() <FBSDKVideoUploaderDelegate>
 {
   NSFileHandle *_fileHandle;
-  FBSDKGamingServiceCompletionHandler _completionHandler;
+  FBSDKGamingServiceResultCompletionHandler _completionHandler;
   FBSDKGamingServiceProgressHandler _progressHandler;
   NSUInteger _totalBytesSent;
   NSUInteger _totalBytesExpectedToSend;
@@ -41,30 +41,44 @@
   return
   [self
    uploadVideoWithConfiguration:configuration
+   completionHandler:^(BOOL success, id _Nullable result, NSError * _Nullable error) {
+    if (completionHandler) {
+      completionHandler(success, error);
+    }
+  }
+   andProgressHandler:nil];
+}
+
++ (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration * _Nonnull)configuration
+          andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
+{
+  return
+  [self
+   uploadVideoWithConfiguration:configuration
    completionHandler:completionHandler
    andProgressHandler:nil];
 }
 
 + (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration * _Nonnull)configuration
-                   completionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
+                   completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
                   andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
 {
   if ([FBSDKAccessToken currentAccessToken] == nil) {
     completionHandler(false,
+                      nil,
                       [FBSDKError
                        errorWithCode:FBSDKErrorAccessTokenRequired
-                       message:@"A valid access token is required to upload Images"],
-                      nil);
+                       message:@"A valid access token is required to upload Images"]);
 
     return;
   }
 
   if (configuration.videoURL == nil) {
     completionHandler(false,
+                      nil,
                       [FBSDKError
                        errorWithCode:FBSDKErrorInvalidArgument
-                       message:@"Attempting to upload a nil videoURL"],
-                      nil);
+                       message:@"Attempting to upload a nil videoURL"]);
 
     return;
   }
@@ -76,10 +90,10 @@
 
   if ((unsigned long)[fileHandle seekToEndOfFile] == 0) {
     completionHandler(false,
+                      nil,
                       [FBSDKError
                        errorWithCode:FBSDKErrorInvalidArgument
-                       message:@"Attempting to upload an empty video file"],
-                      nil);
+                       message:@"Attempting to upload an empty video file"]);
 
     return;
   }
@@ -108,7 +122,7 @@
 
 - (instancetype)initWithFileHandle:(NSFileHandle *)fileHandle
                   totalBytesToSend:(NSUInteger)totalBytes
-                 completionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
+                 completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
                    progressHandler:(FBSDKGamingServiceProgressHandler _Nonnull)progressHandler
 {
   if (self = [super init]) {
@@ -135,7 +149,7 @@
   }
 
   if (_completionHandler != nil) {
-    _completionHandler(success, finalError, result);
+    _completionHandler(success, result, finalError);
   }
 
   [FBSDKInternalUtility unregisterTransientObject:self];

@@ -29,7 +29,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGamingServiceType) {
 @interface FBSDKGamingServiceController : NSObject <FBSDKURLOpening>
 
 - (instancetype)initWithServiceType:(FBSDKGamingServiceType)serviceType
-                  completionHandler:(FBSDKGamingServiceCompletionHandler)completionHandler
+                  completionHandler:(FBSDKGamingServiceResultCompletionHandler)completionHandler
                       pendingResult:(id)pendingResult;
 
 - (void)callWithArgument:(NSString *)argument;

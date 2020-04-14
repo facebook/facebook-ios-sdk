@@ -32,8 +32,7 @@
     completionHandler(false,
                       [FBSDKError
                        errorWithCode:FBSDKErrorAccessTokenRequired
-                       message:@"A valid access token is required to launch the Friend Finder"],
-                      nil);
+                       message:@"A valid access token is required to launch the Friend Finder"]);
 
     return;
   }
@@ -41,7 +40,11 @@
   FBSDKGamingServiceController *const controller =
   [[FBSDKGamingServiceController alloc]
    initWithServiceType:FBSDKGamingServiceTypeFriendFinder
-   completionHandler:completionHandler
+   completionHandler:^(BOOL success, id  _Nullable result, NSError * _Nullable error) {
+    if (completionHandler) {
+      completionHandler(success, error);
+    }
+  }
    pendingResult:nil];
 
   [controller callWithArgument:FBSDKAccessToken.currentAccessToken.appID];

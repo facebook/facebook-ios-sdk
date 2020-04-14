@@ -72,7 +72,7 @@
   __block BOOL actioned = false;
   [FBSDKGamingImageUploader
    uploadImageWithConfiguration:_mockConfig
-   andCompletionHandler:^(BOOL success, NSError * _Nullable error, id result) {
+   andResultCompletionHandler:^(BOOL success, id result, NSError * _Nullable error) {
     XCTAssert(error.code == FBSDKErrorAccessTokenRequired, "Expected error requiring a valid access token");
     actioned = true;
   }];
@@ -87,7 +87,7 @@
   __block BOOL actioned = false;
   [FBSDKGamingImageUploader
    uploadImageWithConfiguration:nilImageConfig
-   andCompletionHandler:^(BOOL success, NSError * _Nullable error, id result) {
+   andResultCompletionHandler:^(BOOL success, id result, NSError * _Nullable error) {
     XCTAssert(error.code == FBSDKErrorInvalidArgument, "Expected error requiring a non nil image");
     actioned = true;
   }];
@@ -102,7 +102,7 @@
   __block BOOL actioned = false;
   [FBSDKGamingImageUploader
    uploadImageWithConfiguration:_mockConfig
-   andCompletionHandler:^(BOOL success, NSError * _Nullable error, id result) {
+   andResultCompletionHandler:^(BOOL success, id result, NSError * _Nullable error) {
     XCTAssert(error.code == FBSDKErrorGraphRequestGraphAPI, "Expected error from Graph API");
     actioned = true;
   }];
@@ -117,7 +117,7 @@
   __block BOOL actioned = false;
   [FBSDKGamingImageUploader
    uploadImageWithConfiguration:_mockConfig
-   andCompletionHandler:^(BOOL success, NSError * _Nullable error, id result) {
+   andResultCompletionHandler:^(BOOL success, id result, NSError * _Nullable error) {
     XCTAssertTrue(success);
     XCTAssertNil(error);
     actioned = true;
@@ -134,7 +134,7 @@
   __block BOOL actioned = false;
   [FBSDKGamingImageUploader
    uploadImageWithConfiguration:_mockConfig
-   andCompletionHandler:^(BOOL success, NSError * _Nullable error, id result) {
+   andResultCompletionHandler:^(BOOL success, id result, NSError * _Nullable error) {
     actioned = true;
   }];
 
@@ -157,7 +157,7 @@
 
   [FBSDKGamingImageUploader
    uploadImageWithConfiguration:_mockConfig
-   andCompletionHandler:^(BOOL success, NSError * _Nullable error, id result) {
+   andResultCompletionHandler:^(BOOL success, id result, NSError * _Nullable error) {
     [expectation fulfill];
   }];
 
@@ -185,7 +185,7 @@
   __block BOOL actioned = false;
   [FBSDKGamingImageUploader
    uploadImageWithConfiguration:_mockConfig
-   andCompletionHandler:^(BOOL success, NSError * _Nullable error, id result) {
+   andResultCompletionHandler:^(BOOL success, id result, NSError * _Nullable error) {
     XCTAssertTrue(success);
     actioned = true;
   }];
@@ -212,7 +212,7 @@
   __block BOOL actioned = false;
   [FBSDKGamingImageUploader
    uploadImageWithConfiguration:_mockConfig
-   andCompletionHandler:^(BOOL success, NSError * _Nullable error, id result) {
+   andResultCompletionHandler:^(BOOL success, id result, NSError * _Nullable error) {
     XCTAssertTrue(success);
     actioned = true;
   }];
@@ -236,7 +236,7 @@
   __block BOOL progressActioned = false;
   [FBSDKGamingImageUploader
    uploadImageWithConfiguration:_mockConfig
-   completionHandler:^(BOOL success, NSError * _Nullable error, id  _Nullable result) {
+   completionHandler:^(BOOL success, id result, NSError * _Nullable error) {
     XCTAssert(success);
     XCTAssertEqual(result[@"id"], @"foo");
     completionActioned = true;

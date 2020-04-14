@@ -49,12 +49,12 @@ static NSURL* FBSDKGamingServicesUrl(FBSDKGamingServiceType serviceType, NSStrin
 @implementation FBSDKGamingServiceController
 {
   FBSDKGamingServiceType _serviceType;
-  FBSDKGamingServiceCompletionHandler _completionHandler;
+  FBSDKGamingServiceResultCompletionHandler _completionHandler;
   id _pendingResult;
 }
 
 - (instancetype)initWithServiceType:(FBSDKGamingServiceType)serviceType
-                  completionHandler:(FBSDKGamingServiceCompletionHandler)completionHandler
+                  completionHandler:(FBSDKGamingServiceResultCompletionHandler)completionHandler
                       pendingResult:(id)pendingResult
 {
   if (self = [super init]) {
@@ -86,17 +86,17 @@ static NSURL* FBSDKGamingServicesUrl(FBSDKGamingServiceType serviceType, NSStrin
 
   if (error) {
     _completionHandler(false,
+                       nil,
                        [FBSDKError
-                        errorWithCode:FBSDKErrorBridgeAPIInterruption
-                        message:@"Error occured while interacting with Gaming Services"
-                        underlyingError:error],
-                       nil);
+                       errorWithCode:FBSDKErrorBridgeAPIInterruption
+                       message:@"Error occured while interacting with Gaming Services"
+                       underlyingError:error]);
   } else {
     _completionHandler(false,
+                       nil,
                        [FBSDKError
                         errorWithCode:FBSDKErrorBridgeAPIInterruption
-                        message:@"An Unknown error occured while interacting with Gaming Services"],
-                       nil);
+                        message:@"An Unknown error occured while interacting with Gaming Services"]);
   }
 
   _completionHandler = nil;
@@ -104,7 +104,7 @@ static NSURL* FBSDKGamingServicesUrl(FBSDKGamingServiceType serviceType, NSStrin
 
 - (void)completeSuccessfully
 {
-  _completionHandler(true, nil, _pendingResult);
+  _completionHandler(true, _pendingResult, nil);
   _completionHandler = nil;
 }
 

@@ -37,30 +37,44 @@
   return
   [self
    uploadImageWithConfiguration:configuration
+   completionHandler:^(BOOL success, id _Nullable result, NSError * _Nullable error) {
+    if (completionHandler) {
+      completionHandler(success, error);
+    }
+  }
+   andProgressHandler:nil];
+}
+
++ (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration * _Nonnull)configuration
+          andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
+{
+  return
+  [self
+   uploadImageWithConfiguration:configuration
    completionHandler:completionHandler
    andProgressHandler:nil];
 }
 
 + (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration * _Nonnull)configuration
-                   completionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
+                   completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
                   andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
 {
   if ([FBSDKAccessToken currentAccessToken] == nil) {
     completionHandler(false,
+                      nil,
                       [FBSDKError
                        errorWithCode:FBSDKErrorAccessTokenRequired
-                       message:@"A valid access token is required to upload Images"],
-                      nil);
+                       message:@"A valid access token is required to upload Images"]);
 
     return;
   }
 
   if (configuration.image == nil) {
     completionHandler(false,
+                      nil,
                       [FBSDKError
                        errorWithCode:FBSDKErrorInvalidArgument
-                       message:@"Attempting to upload a nil image"],
-                      nil);
+                       message:@"Attempting to upload a nil image"]);
 
     return;
   }
@@ -89,16 +103,16 @@
 
     if (error || !result) {
       completionHandler(false,
+                        nil,
                         [FBSDKError
                          errorWithCode:FBSDKErrorGraphRequestGraphAPI
                          message:@"Image upload failed"
-                         underlyingError:error],
-                        nil);
+                         underlyingError:error]);
       return;
     }
 
     if (!configuration.shouldLaunchMediaDialog) {
-      completionHandler(true, nil, result);
+      completionHandler(true, result, nil);
       return;
     }
 
