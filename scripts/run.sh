@@ -579,21 +579,30 @@ release_sdk() {
 
   # Release Cocoapods
   release_cocoapods() {
-    for spec in "${SDK_POD_SPECS[@]}"; do
-      if [ ! -f "$spec" ]; then
-        echo "*** ERROR: unable to release $spec"
-        continue
-      fi
+    pod trunk push --allow-warnings "FBSDKGamingServicesKit.podspec"
+    pod trunk push --allow-warnings "FBSDKTVOSKit.podspec"
 
-      pod trunk push --allow-warnings "$spec" "$@" || { echo "Failed to push $spec"; exit 1; }
 
-      # Super naive attempt to beat the race condition of published pods
-      # not being available as dependencies fast enough to be used by other pods.
-      sleep 180
+    sleep 360
+    pod repo update
 
-      # Update the repo with the newly pushed pod
-      pod repo update
-    done
+    pod trunk push --allow-warnings "FacebookSDK.podspec"
+
+    # for spec in "${SDK_POD_SPECS[@]}"; do
+    #   if [ ! -f "$spec" ]; then
+    #     echo "*** ERROR: unable to release $spec"
+    #     continue
+    #   fi
+
+    #   pod trunk push --allow-warnings "$spec" "$@" || { echo "Failed to push $spec"; exit 1; }
+
+    #   # Super naive attempt to beat the race condition of published pods
+    #   # not being available as dependencies fast enough to be used by other pods.
+    #   # sleep 180
+
+    #   # Update the repo with the newly pushed pod
+    #   # pod repo update
+    # done
   }
 
   release_docs() {
