@@ -296,7 +296,9 @@ NSString *const kFBSDKShareVideoURLKey = @"videoURL";
                                               videoURL = [NSURL URLWithString:assetPath];
                                               dispatch_semaphore_signal(semaphore);
                                             }];
+#ifndef __clang_analyzer__
   dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, 500 * NSEC_PER_MSEC));
+#endif // not __clang_analyzer__
   return videoURL;
 }
 
