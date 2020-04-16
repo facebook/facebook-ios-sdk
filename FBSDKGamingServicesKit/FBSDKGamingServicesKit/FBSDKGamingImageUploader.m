@@ -31,6 +31,11 @@
 
 @implementation FBSDKGamingImageUploader
 
+- (instancetype)init
+{
+  return [super init];
+}
+
 + (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration * _Nonnull)configuration
                 andCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
 {

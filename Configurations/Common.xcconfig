@@ -16,6 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#include "Analyzer.xcconfig"
 #include "Warnings.xcconfig"
 
 // Disable legacy-compatible header searching
@@ -30,7 +31,11 @@ CLANG_ENABLE_MODULE_DEBUGGING = NO
 
 // Build Options
 CLANG_ENABLE_OBJC_ARC = YES
+CLANG_ENABLE_OBJC_WEAK = YES
 GCC_VERSION = com.apple.compilers.llvm.clang.1_0
+
+// Whether to run the static analyzer during builds
+RUN_CLANG_STATIC_ANALYZER = YES
 
 // Whether to strip out code that isn't called from anywhere
 DEAD_CODE_STRIPPING = NO
@@ -50,3 +55,6 @@ GCC_DYNAMIC_NO_PIC = NO
 GCC_INLINES_ARE_PRIVATE_EXTERN = YES
 GCC_NO_COMMON_BLOCKS = YES
 GCC_SYMBOLS_PRIVATE_EXTERN = NO
+
+// MTL
+MTL_FAST_MATH = YES

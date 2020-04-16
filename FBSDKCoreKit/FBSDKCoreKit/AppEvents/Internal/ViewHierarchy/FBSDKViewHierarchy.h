@@ -53,13 +53,13 @@ extern void fb_dispatch_on_default_thread(dispatch_block_t block);
 NS_SWIFT_NAME(ViewHierarchy)
 @interface FBSDKViewHierarchy : NSObject
 
-+ (nullable NSObject *)getParent:(NSObject *)obj;
++ (nullable NSObject *)getParent:(nullable NSObject *)obj;
 + (nullable NSArray<NSObject *> *)getChildren:(NSObject *)obj;
 + (nullable NSArray<NSObject *> *)getPath:(NSObject *)obj;
 + (nullable NSMutableDictionary<NSString *, id> *)getDetailAttributesOf:(NSObject *)obj;
 
-+ (NSString *)getText:(NSObject *)obj;
-+ (NSString *)getHint:(NSObject *)obj;
++ (NSString *)getText:(nullable NSObject *)obj;
++ (NSString *)getHint:(nullable NSObject *)obj;
 + (nullable NSIndexPath *)getIndexPath:(NSObject *)obj;
 + (NSUInteger)getClassBitmask:(NSObject *)obj;
 + (nullable UITableView *)getParentTableView:(UIView *)cell;

@@ -1754,7 +1754,6 @@
 		814AC8891D1B552600D61E6C /* iOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = iOS.xcconfig; sourceTree = "<group>"; };
 		814AC88A1D1B552600D61E6C /* tvOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = tvOS.xcconfig; sourceTree = "<group>"; };
 		814AC88C1D1B552600D61E6C /* Application.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Application.xcconfig; sourceTree = "<group>"; };
-		814AC88D1D1B552600D61E6C /* ApplicationTests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = ApplicationTests.xcconfig; sourceTree = "<group>"; };
 		814AC88E1D1B552600D61E6C /* DynamicFramework.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = DynamicFramework.xcconfig; sourceTree = "<group>"; };
 		814AC88F1D1B552600D61E6C /* LogicTests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = LogicTests.xcconfig; sourceTree = "<group>"; };
 		814AC8901D1B552600D61E6C /* StaticFramework.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = StaticFramework.xcconfig; sourceTree = "<group>"; };
@@ -2036,6 +2035,7 @@
 		F4D8D8DB2422887600C28384 /* FBSDKMonitorNetworker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKMonitorNetworker.m; sourceTree = "<group>"; };
 		F4D8D8F9242293ED00C28384 /* FBSDKMonitorNetworkerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKMonitorNetworkerTests.m; sourceTree = "<group>"; };
 		F4D8D8FB2422B88B00C28384 /* FBSDKMonitorHeaders.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKMonitorHeaders.h; sourceTree = "<group>"; };
+		F4E1EB9F2444E0AB006FB48E /* Analyzer.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Analyzer.xcconfig; path = ../../../Configurations/Analyzer.xcconfig; sourceTree = "<group>"; };
 		F4E50152243648A100C99262 /* FBSDKServerConfigurationFixtures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKServerConfigurationFixtures.h; sourceTree = "<group>"; };
 		F4E50153243648A100C99262 /* FBSDKServerConfigurationFixtures.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKServerConfigurationFixtures.m; sourceTree = "<group>"; };
 		F4E50154243648A100C99262 /* FBSDKServerConfigurationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKServerConfigurationTests.m; sourceTree = "<group>"; };
@@ -2328,7 +2328,6 @@
 				814AC88C1D1B552600D61E6C /* Application.xcconfig */,
 				814AC88E1D1B552600D61E6C /* DynamicFramework.xcconfig */,
 				814AC8901D1B552600D61E6C /* StaticFramework.xcconfig */,
-				814AC88D1D1B552600D61E6C /* ApplicationTests.xcconfig */,
 				814AC88F1D1B552600D61E6C /* LogicTests.xcconfig */,
 			);
 			name = Target;
@@ -2351,11 +2350,9 @@
 		81A4A6041D19BE0400D5BF66 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				814AC8851D1B552600D61E6C /* Configuration */,
-				814AC8881D1B552600D61E6C /* Platform */,
-				814AC88B1D1B552600D61E6C /* Target */,
+				F4E1EB9F2444E0AB006FB48E /* Analyzer.xcconfig */,
 				814AC8921D1B56E600D61E6C /* Common.xcconfig */,
-				814AC8911D1B552600D61E6C /* Warnings.xcconfig */,
+				814AC8851D1B552600D61E6C /* Configuration */,
 				81A4A6051D19BE0400D5BF66 /* FacebookSDK-Application.xcconfig */,
 				81A4A6061D19BE0400D5BF66 /* FacebookSDK-ApplicationTests.xcconfig */,
 				81A4A6071D19BE0400D5BF66 /* FacebookSDK-DynamicFramework.xcconfig */,
@@ -2367,6 +2364,9 @@
 				81A4A60D1D19BE0400D5BF66 /* FacebookSDK-Project-TVOS-Release.xcconfig */,
 				81A4A60E1D19BE0400D5BF66 /* FacebookSDK-Project-TVOS.xcconfig */,
 				81A4A60F1D19BE0400D5BF66 /* FacebookSDK-Project.xcconfig */,
+				814AC8881D1B552600D61E6C /* Platform */,
+				814AC88B1D1B552600D61E6C /* Target */,
+				814AC8911D1B552600D61E6C /* Warnings.xcconfig */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -5301,17 +5301,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 814AC8861D1B552600D61E6C /* Debug.xcconfig */;
 			buildSettings = {
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 			};
 			name = Debug;
 		};
@@ -5319,17 +5308,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 814AC8871D1B552600D61E6C /* Release.xcconfig */;
 			buildSettings = {
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 			};
 			name = Release;
 		};

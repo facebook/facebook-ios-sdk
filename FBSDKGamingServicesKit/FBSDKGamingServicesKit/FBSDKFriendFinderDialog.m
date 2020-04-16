@@ -26,6 +26,11 @@
 
 @implementation FBSDKFriendFinderDialog
 
+- (instancetype)init
+{
+  return [super init];
+}
+
 + (void)launchFriendFinderDialogWithCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
 {
   if ([FBSDKAccessToken currentAccessToken] == nil) {

@@ -16,25 +16,19 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKGamingImageUploaderConfiguration.h"
+PRODUCT_NAME = FBSDKGamingServicesKit
+PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBSDKGamingServicesKit
 
-@implementation FBSDKGamingImageUploaderConfiguration
+CURRENT_PROJECT_VERSION = $(FBSDK_PROJECT_VERSION)
 
-- (instancetype)init
-{
-  return [super init];
-}
+INFOPLIST_FILE = FBSDKGamingServicesKit/Info.plist
 
-- (instancetype)initWithImage:(UIImage * _Nonnull)image
-                      caption:(NSString * _Nullable)caption
-      shouldLaunchMediaDialog:(BOOL)shouldLaunchMediaDialog
-{
-  if (self = [super init]) {
-    _image = image;
-    _caption = caption;
-    _shouldLaunchMediaDialog = shouldLaunchMediaDialog;
-  }
-  return self;
-}
+MODULEMAP_FILE = $(SRCROOT)/FBSDKGamingServicesKit/FBSDKGamingServicesKit.modulemap
 
-@end
+SDKROOT = iphoneos
+
+GCC_C_LANGUAGE_STANDARD = gnu11
+
+CLANG_CXX_LANGUAGE_STANDARD = "gnu++14"
+
+SKIP_INSTALL = YES
