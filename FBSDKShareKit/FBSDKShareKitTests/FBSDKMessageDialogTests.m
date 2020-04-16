@@ -91,7 +91,21 @@
   XCTAssertNil(error,
                @"A successful validation should not populate the error reference that was passed to it");
 
+  dialog.shareContent = [FBSDKShareModelTestUtility photoContentWithImages];
+  error = nil;
+  XCTAssertTrue([dialog validateWithError:&error],
+                @"Known valid content should pass validation without issue if this test fails then the criteria for the fixture may no longer be valid");
+  XCTAssertNil(error,
+               @"A successful validation should not populate the error reference that was passed to it");
+
   dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
+  error = nil;
+  XCTAssertTrue([dialog validateWithError:&error],
+                @"Known valid content should pass validation without issue if this test fails then the criteria for the fixture may no longer be valid");
+  XCTAssertNil(error,
+               @"A successful validation should not populate the error reference that was passed to it");
+
+  dialog.shareContent = [FBSDKShareModelTestUtility cameraEffectContent];
   error = nil;
   XCTAssertFalse([dialog validateWithError:&error],
                  @"Should not successfully validate share content that is known to be missing content");
