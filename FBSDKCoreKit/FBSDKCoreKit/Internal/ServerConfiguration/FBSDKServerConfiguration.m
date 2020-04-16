@@ -18,7 +18,7 @@
 
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfiguration+Internal.h"
-
+#import "FBSDKMonitoringConfiguration.h"
 #import "FBSDKInternalUtility.h"
 
 // one minute
