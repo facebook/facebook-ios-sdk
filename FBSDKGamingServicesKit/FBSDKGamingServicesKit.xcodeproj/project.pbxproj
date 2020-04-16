@@ -503,6 +503,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = F4F7C9A023F48ED80030A346;
 			productRefGroup = F4F7C9A023F48ED80030A346;
