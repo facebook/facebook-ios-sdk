@@ -26,7 +26,6 @@
 
 #import "FBSDKDialogConfiguration.h"
 #import "FBSDKErrorConfiguration.h"
-#import "FBSDKMonitoringConfiguration.h"
 
 // login kit
 FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationNameLogin;
@@ -47,6 +46,8 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationSmartLoginOptions)
   FBSDKServerConfigurationSmartLoginOptionsEnabled = 1 << 0,
   FBSDKServerConfigurationSmartLoginOptionsRequireConfirmation  = 1 << 1,
 };
+
+@class FBSDKMonitoringConfiguration;
 
 NS_SWIFT_NAME(ServerConfiguration)
 @interface FBSDKServerConfiguration : NSObject <FBSDKCopying, NSSecureCoding>
