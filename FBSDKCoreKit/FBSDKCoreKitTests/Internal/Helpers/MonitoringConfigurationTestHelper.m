@@ -16,17 +16,28 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ifndef FBSDKMonitorHeaders_h
-#define FBSDKMonitorHeaders_h
+#import "MonitoringConfigurationTestHelper.h"
 
-#import "FBSDKMethodUsageMonitor.h"
-#import "FBSDKMethodUsageMonitorEntry.h"
-#import "FBSDKMonitor.h"
-#import "FBSDKMonitoringConfiguration.h"
-#import "FBSDKMonitorEntry.h"
-#import "FBSDKMonitorNetworker.h"
-#import "FBSDKMonitorStore.h"
-#import "FBSDKPerformanceMonitor.h"
-#import "FBSDKPerformanceMonitorEntry.h"
+@implementation MonitoringConfigurationTestHelper
 
-#endif /* FBSDKMonitorHeaders_h */
++ (NSDictionary *)sampleRatesWithEntryPairs:(NSDictionary<NSString *, id> *)pairs
+{
+  NSMutableArray *sampleRateDicts = [NSMutableArray array];
+
+  NSMutableDictionary *tmp = [NSMutableDictionary dictionary];
+  [pairs enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, id _Nonnull obj, BOOL * _Nonnull stop) {
+    [sampleRateDicts addObject: [self sampleRateWithEntryName:key rate:obj]];
+  }];
+
+  [tmp setObject:sampleRateDicts forKey:@"sample_rates"];
+  return tmp;
+}
+
++ (NSDictionary<NSString *, id> *)sampleRateWithEntryName:(NSString *)name rate:(NSNumber *)rate
+{
+  NSMutableDictionary *tmp = [NSMutableDictionary dictionaryWithObject:name forKey:@"key"];
+  [tmp setObject:rate forKey:@"value"];
+  return tmp;
+}
+
+@end
