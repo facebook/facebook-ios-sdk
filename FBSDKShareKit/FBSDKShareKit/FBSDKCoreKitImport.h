@@ -16,15 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Importing FBSDKCoreKit is tricky due to build variants so putting it here allows us
-// to share that logic in one place.
+// Importing FBSDKCoreKit is tricky due to build variants.
+// SPM require that it is imported as <FBSDKCoreKit.h> while CocoaPods,
+// Carthage, Buck, and xcodebuild require <FBSDKCoreKit/FBSDKCoreKit.h>
+// This file is not exposed via SPM so should work for everything else
 
-#if defined BUCK
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-#elif defined __cplusplus
+#if SWIFT_PACKAGE
 #import <FBSDKCoreKit.h>
-#elif defined FBSDKCOCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #else
-@import FBSDKCoreKit;
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #endif
