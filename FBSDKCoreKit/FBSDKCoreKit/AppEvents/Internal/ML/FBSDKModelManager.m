@@ -65,24 +65,17 @@ NS_ASSUME_NONNULL_BEGIN
                                   initWithGraphPath:[NSString stringWithFormat:@"%@/model_asset", [FBSDKSettings appID]]];
 
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-      if (error) {
-        return;
-      }
-      NSDictionary<NSString *, id> *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
-      NSDictionary<NSString *, id> *modelInfo = [self convertToDictionary:resultDictionary[MODEL_DATA_KEY]];
-      if (!modelInfo) {
-        return;
-      }
-      // update cache
-      _modelInfo = [modelInfo mutableCopy];
-      [self processMTML];
-      [[NSUserDefaults standardUserDefaults] setObject:_modelInfo forKey:MODEL_INFO_KEY];
-
-      [FBSDKFeatureManager checkFeature:FBSDKFeatureMTML completionBlock:^(BOOL enabled) {
-        if (enabled) {
-          [self checkFeaturesAndExecuteForMTML];
+      if (!error) {
+        NSDictionary<NSString *, id> *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
+        NSDictionary<NSString *, id> *modelInfo = [self convertToDictionary:resultDictionary[MODEL_DATA_KEY]];
+        if (modelInfo) {
+          // update cache
+          _modelInfo = [modelInfo mutableCopy];
+          [self processMTML];
+          [[NSUserDefaults standardUserDefaults] setObject:_modelInfo forKey:MODEL_INFO_KEY];
         }
-      }];
+      }
+      [self checkFeaturesAndExecuteForMTML];
     }];
   });
 }
@@ -139,19 +132,20 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)processMTML
 {
   NSString *mtmlAssetUri = nil;
-  NSNumber *mtmlVersionId = 0;
+  long mtmlVersionId = 0;
   for (NSString *useCase in _modelInfo) {
     NSDictionary<NSString *, id> *model = _modelInfo[useCase];
     if ([useCase hasPrefix:MTMLKey]) {
       mtmlAssetUri = model[ASSET_URI_KEY];
-      mtmlVersionId = model[VERSION_ID_KEY];
+      long thisVersionId = [model[VERSION_ID_KEY] longValue];
+      mtmlVersionId = thisVersionId > mtmlVersionId ? thisVersionId : mtmlVersionId;
     }
   }
-  if (mtmlAssetUri && [mtmlVersionId compare:[NSNumber numberWithInt:0]] > 0) {
+  if (mtmlAssetUri && mtmlVersionId > 0) {
     _modelInfo[MTMLKey] = @{
       USE_CASE_KEY: MTMLKey,
       ASSET_URI_KEY: mtmlAssetUri,
-      VERSION_ID_KEY: mtmlVersionId,
+      VERSION_ID_KEY: [NSNumber numberWithLong:mtmlVersionId],
     };
   }
 }
@@ -188,46 +182,52 @@ NS_ASSUME_NONNULL_BEGIN
       return;
   }
 
-  // clear old model files
-  NSArray<NSString *> *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_directoryPath error:nil];
-  NSString *prefixWithVersion = [NSString stringWithFormat:@"%@_%@", useCaseKey, model[VERSION_ID_KEY]];
-
-  for (NSString *file in files) {
-    if ([file hasPrefix:useCaseKey] && ![file hasPrefix:prefixWithVersion]) {
-      [[NSFileManager defaultManager] removeItemAtPath:[_directoryPath stringByAppendingPathComponent:file] error:nil];
-    }
-  }
-
+  NSFileManager *fileManager = [NSFileManager defaultManager];
   // download model asset only if not exist before
   NSString *assetUrlString = [model objectForKey:ASSET_URI_KEY];
   NSString *assetFilePath;
   if (assetUrlString.length > 0) {
+    [self clearCacheForModel:model suffix:@".weights"];
     NSString *fileName = useCaseKey;
     if ([useCaseKey hasPrefix:MTMLKey]) {
       // all mtml tasks share the same weights file
       fileName = MTMLKey;
     }
     assetFilePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.weights", fileName, model[VERSION_ID_KEY]]];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:assetFilePath] == false) {
-      [self download:assetUrlString filePath:assetFilePath queue:queue group:group];
-    }
+    [self download:assetUrlString filePath:assetFilePath queue:queue group:group];
   }
 
   // download rules
   NSString *rulesUrlString = [model objectForKey:RULES_URI_KEY];
-  NSString *rulesFilePath;
+  NSString *rulesFilePath = nil;
   // rules are optional and rulesUrlString may be empty
   if (rulesUrlString.length > 0) {
+    [self clearCacheForModel:model suffix:@".rules"];
     rulesFilePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.rules", useCaseKey, model[VERSION_ID_KEY]]];
     [self download:rulesUrlString filePath:rulesFilePath queue:queue group:group];
   }
   dispatch_group_notify(group, dispatch_get_main_queue(), ^{
     if (handler) {
-      if ([[NSFileManager defaultManager] fileExistsAtPath:assetFilePath] && (!rulesUrlString || (rulesUrlString && [[NSFileManager defaultManager] fileExistsAtPath:rulesFilePath]))) {
+      if ([fileManager fileExistsAtPath:assetFilePath] && (!rulesFilePath || [fileManager fileExistsAtPath:rulesFilePath])) {
           handler();
       }
     }
   });
+}
+
++ (void)clearCacheForModel:(NSDictionary<NSString *, id> *)model
+                    suffix:(NSString *)suffix
+{
+  NSFileManager *fileManager = [NSFileManager defaultManager];
+  NSString *useCase = model[USE_CASE_KEY];
+  NSString *version = model[VERSION_ID_KEY];
+  NSArray<NSString *> *files = [fileManager contentsOfDirectoryAtPath:_directoryPath error:nil];
+  NSString *prefixWithVersion = [NSString stringWithFormat:@"%@_%@", useCase, version];
+  for (NSString *file in files) {
+    if ([file hasSuffix:suffix] && [file hasPrefix:useCase] && ![file hasPrefix:prefixWithVersion]) {
+      [fileManager removeItemAtPath:[_directoryPath stringByAppendingPathComponent:file] error:nil];
+    }
+  }
 }
 
 + (void)download:(NSString *)urlString
