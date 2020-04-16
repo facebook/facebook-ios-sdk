@@ -49,6 +49,7 @@
 #define FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING @"suggestedEventsSetting"
 #define FBSDK_SERVER_CONFIGURATION_VERSION_KEY @"version"
 #define FBSDK_SERVER_CONFIGURATION_TRACK_UNINSTALL_ENABLED_KEY @"trackAppUninstallEnabled"
+#define FBSDK_SERVER_CONFIGURATION_MONITORING_CONFIGURATION_KEY @"monitoringConfiguration"
 
 #pragma mark - Dialog Names
 
@@ -106,6 +107,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
             restrictiveParams:(NSDictionary<NSString *, id> *)restrictiveParams
                      AAMRules:(NSDictionary<NSString *, id> *)AAMRules
        suggestedEventsSetting:(NSDictionary<NSString *,id> *)suggestedEventsSetting
+      monitoringConfiguration:(FBSDKMonitoringConfiguration *)monitoringConfiguration
 {
   if ((self = [super init])) {
     _appID = [appID copy];
@@ -134,6 +136,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
     _AAMRules = AAMRules;
     _suggestedEventsSetting = suggestedEventsSetting;
     _version = FBSDKServerConfigurationVersion;
+    _monitoringConfiguration = monitoringConfiguration;
   }
   return self;
 }
@@ -184,6 +187,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
                                                                 restrictiveParams:nil
                                                                          AAMRules:nil
                                                            suggestedEventsSetting:nil
+                                                          monitoringConfiguration:FBSDKMonitoringConfiguration.defaultConfiguration
                                    ];
   }
   return _defaultServerConfiguration;
@@ -270,6 +274,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
   NSDictionary<NSString *, id> *AAMRules = [decoder decodeObjectOfClass:[NSDictionary class] forKey:FBSDK_SERVER_CONFIGURATION_AAM_RULES];
   NSDictionary<NSString *, id> *suggestedEventsSetting = [decoder decodeObjectOfClass:[NSDictionary class] forKey:FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING];
   NSInteger version = [decoder decodeIntegerForKey:FBSDK_SERVER_CONFIGURATION_VERSION_KEY];
+  FBSDKMonitoringConfiguration *monitoringConfiguration = [decoder decodeObjectOfClass:FBSDKMonitoringConfiguration.class forKey:FBSDK_SERVER_CONFIGURATION_MONITORING_CONFIGURATION_KEY];
   FBSDKServerConfiguration *configuration = [self initWithAppID:appID
                                                         appName:appName
                                             loginTooltipEnabled:loginTooltipEnabled
@@ -295,6 +300,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
                                               restrictiveParams:restrictiveParams
                                                        AAMRules:AAMRules
                                          suggestedEventsSetting:suggestedEventsSetting
+                                        monitoringConfiguration:monitoringConfiguration
                                              ];
   configuration->_version = version;
   return configuration;
@@ -330,6 +336,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
   [encoder encodeObject:_AAMRules forKey:FBSDK_SERVER_CONFIGURATION_AAM_RULES];
   [encoder encodeObject:_suggestedEventsSetting forKey:FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING];
   [encoder encodeInteger:_version forKey:FBSDK_SERVER_CONFIGURATION_VERSION_KEY];
+  [encoder encodeObject:_monitoringConfiguration forKey:FBSDK_SERVER_CONFIGURATION_MONITORING_CONFIGURATION_KEY];
 }
 
 #pragma mark - NSCopying

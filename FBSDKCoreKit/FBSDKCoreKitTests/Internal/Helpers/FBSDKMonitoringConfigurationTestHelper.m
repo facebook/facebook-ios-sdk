@@ -16,24 +16,28 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#import "FBSDKMonitoringConfigurationTestHelper.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@implementation FBSDKMonitoringConfigurationTestHelper
 
-@interface MonitoringConfigurationTestHelper : NSObject
++ (NSDictionary *)sampleRatesWithEntryPairs:(NSDictionary<NSString *, id> *)pairs
+{
+  NSMutableArray *sampleRateDicts = [NSMutableArray array];
 
-/// Bundles key value pairs in the same format they're returned from the graph:
-/// ex:
-/// {
-///   "sample_rates": [
-///       {
-///         "key": "foo",
-///         "value": 1
-///       }
-///   ]
-/// }
-+ (NSDictionary *)sampleRatesWithEntryPairs:(NSDictionary<NSString *, id> *)pairs;
+  NSMutableDictionary *tmp = [NSMutableDictionary dictionary];
+  [pairs enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, id _Nonnull obj, BOOL * _Nonnull stop) {
+    [sampleRateDicts addObject: [self sampleRateWithEntryName:key rate:obj]];
+  }];
+
+  [tmp setObject:sampleRateDicts forKey:@"sample_rates"];
+  return tmp;
+}
+
++ (NSDictionary<NSString *, id> *)sampleRateWithEntryName:(NSString *)name rate:(NSNumber *)rate
+{
+  NSMutableDictionary *tmp = [NSMutableDictionary dictionaryWithObject:name forKey:@"key"];
+  [tmp setObject:rate forKey:@"value"];
+  return tmp;
+}
 
 @end
-
-NS_ASSUME_NONNULL_END

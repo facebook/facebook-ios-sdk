@@ -22,7 +22,7 @@
 
 #import "FBSDKTestCoder.h"
 #import "TestMonitorEntry.h"
-#import "MonitoringConfigurationTestHelper.h"
+#import "FBSDKMonitoringConfigurationTestHelper.h"
 
 @interface FBSDKMonitoringConfiguration (Testing)
 
@@ -37,6 +37,8 @@
 @end
 
 @implementation FBSDKMonitoringConfigurationTests
+
+typedef FBSDKMonitoringConfigurationTestHelper MonitoringConfiguration;
 
 - (void)testDefaultMonitoringConfiguration
 {
@@ -60,7 +62,7 @@
 
 - (void)testCreatingWithEmptySamplingRates
 {
-  NSDictionary *dict = [MonitoringConfigurationTestHelper sampleRatesWithEntryPairs:@{}];
+  NSDictionary *dict = [MonitoringConfiguration sampleRatesWithEntryPairs:@{}];
 
   self.config = [FBSDKMonitoringConfiguration fromDictionary:dict];
 
@@ -77,7 +79,7 @@
     @"foo": @1
   };
 
-  NSDictionary *dict = [MonitoringConfigurationTestHelper sampleRatesWithEntryPairs:@{ @"foo": @1 }];
+  NSDictionary *dict = [MonitoringConfiguration sampleRatesWithEntryPairs:@{ @"foo": @1 }];
 
   self.config = [FBSDKMonitoringConfiguration fromDictionary:dict];
 
@@ -89,7 +91,7 @@
 
 - (void)testCreatingWithValidDefaultSamplingRate
 {
-  NSDictionary *dict = [MonitoringConfigurationTestHelper sampleRatesWithEntryPairs:@{ @"default": @100 }];
+  NSDictionary *dict = [MonitoringConfiguration sampleRatesWithEntryPairs:@{ @"default": @100 }];
 
   self.config = [FBSDKMonitoringConfiguration fromDictionary:dict];
 
@@ -99,7 +101,7 @@
 
 - (void)testCreatingWithOnlyInvalidSamplingRates
 {
-  NSDictionary *dict = [MonitoringConfigurationTestHelper sampleRatesWithEntryPairs:@{
+  NSDictionary *dict = [MonitoringConfiguration sampleRatesWithEntryPairs:@{
     @"default": @-1,
     @"foo": @"bar"
   }];
@@ -114,7 +116,7 @@
 
 - (void)testCreatingWihSomeInvalidSampleRates
 {
-  NSDictionary *dict = [MonitoringConfigurationTestHelper sampleRatesWithEntryPairs:@{
+  NSDictionary *dict = [MonitoringConfiguration sampleRatesWithEntryPairs:@{
     @"default": @-1,
     @"foo": @50
   }];
@@ -128,7 +130,7 @@
 
 - (void)testGettingSampleRate
 {
-  NSDictionary *dict = [MonitoringConfigurationTestHelper sampleRatesWithEntryPairs:@{ @"foo": @50 }];
+  NSDictionary *dict = [MonitoringConfiguration sampleRatesWithEntryPairs:@{ @"foo": @50 }];
 
   self.config = [FBSDKMonitoringConfiguration fromDictionary:dict];
 
@@ -140,7 +142,7 @@
 {
   FBSDKTestCoder *coder = [FBSDKTestCoder new];
   NSDictionary *expectedSampleRates = @{@"foo": @50};
-  NSDictionary *dict = [MonitoringConfigurationTestHelper sampleRatesWithEntryPairs:@{ @"foo": @50 }];
+  NSDictionary *dict = [MonitoringConfiguration sampleRatesWithEntryPairs:@{ @"foo": @50 }];
 
   self.config = [FBSDKMonitoringConfiguration fromDictionary:dict];
 
@@ -154,7 +156,7 @@
 {
   FBSDKTestCoder *decoder = [FBSDKTestCoder new];
 
-  NSDictionary *dict = [MonitoringConfigurationTestHelper sampleRatesWithEntryPairs:@{ @"foo": @50 }];
+  NSDictionary *dict = [MonitoringConfiguration sampleRatesWithEntryPairs:@{ @"foo": @50 }];
 
   self.config = [FBSDKMonitoringConfiguration fromDictionary:dict];
 

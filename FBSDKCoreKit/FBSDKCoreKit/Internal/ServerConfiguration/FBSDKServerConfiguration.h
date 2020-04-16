@@ -26,6 +26,7 @@
 
 #import "FBSDKDialogConfiguration.h"
 #import "FBSDKErrorConfiguration.h"
+#import "FBSDKMonitoringConfiguration.h"
 
 // login kit
 FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationNameLogin;
@@ -78,6 +79,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
             restrictiveParams:(NSDictionary<NSString *, id> *)restrictiveParams
                      AAMRules:(NSDictionary<NSString *, id> *)AAMRules
        suggestedEventsSetting:(NSDictionary<NSString *, id> *)suggestedEventsSetting
+      monitoringConfiguration:(FBSDKMonitoringConfiguration *)monitoringConfiguration
 NS_DESIGNATED_INITIALIZER;
 
 @property (nonatomic, assign, readonly, getter=isAdvertisingIDEnabled) BOOL advertisingIDEnabled;
@@ -103,6 +105,7 @@ NS_DESIGNATED_INITIALIZER;
 @property (nonatomic, copy, readonly) NSDictionary<NSString *, id> *restrictiveParams;
 @property (nonatomic, copy, readonly) NSDictionary<NSString *, id> *AAMRules;
 @property (nonatomic, copy, readonly) NSDictionary<NSString *, id> *suggestedEventsSetting;
+@property (nonatomic, copy, readonly) FBSDKMonitoringConfiguration *monitoringConfiguration;
 @property (nonatomic, readonly) NSInteger version;
 
 - (FBSDKDialogConfiguration *)dialogConfigurationForDialogName:(NSString *)dialogName;
