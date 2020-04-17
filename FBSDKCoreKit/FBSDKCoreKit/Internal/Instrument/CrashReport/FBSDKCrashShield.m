@@ -58,8 +58,8 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
           @"FBSDKEventInferencer",
       ],
       @"PIIFiltering" : @[
-          @"FBSDKAddressFilterManager",
-          @"FBSDKAddressInferencer",
+          @"FBSDKIntegrityManager",
+          @"FBSDKIntegrityInferencer",
       ],
       @"EventDeactivation" : @[
           @"FBSDKEventDeactivationManager",

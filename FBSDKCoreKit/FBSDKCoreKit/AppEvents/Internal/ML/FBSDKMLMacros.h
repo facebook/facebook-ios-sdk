@@ -31,14 +31,11 @@
 
 #define MTMLKey                                 @"MTML"
 #define MTMLTaskAppEventPredKey                 @"MTML_APP_EVENT_PRED"
-#define MTMLTaskAddressDetectKey                 @"MTML_ADDRESS_DETECT"
+#define MTMLTaskIntegrityDetectKey              @"MTML_INTEGRITY_DETECT"
 
 //  keys for Suggested Event
 #define SUGGEST_EVENT_KEY                       @"SUGGEST_EVENT"
 #define DENSE_FEATURE_KEY                       @"DENSE_FEATURE"
 #define SUGGESTED_EVENT_OTHER                   @"other"
-
-//  keys for Restrictive Data Filter
-#define ADDRESS_FILTERING_KEY                   @"DATA_DETECTION_ADDRESS"
 
 #endif /* FBSDKMLMacros_h */

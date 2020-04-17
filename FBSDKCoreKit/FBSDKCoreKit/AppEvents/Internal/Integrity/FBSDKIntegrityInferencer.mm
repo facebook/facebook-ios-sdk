@@ -20,7 +20,7 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKAddressInferencer.h"
+#import "FBSDKIntegrityInferencer.h"
 
 #import "FBSDKModelManager.h"
 #import "FBSDKModelParser.h"
@@ -31,7 +31,11 @@
 
 #include<stdexcept>
 
-@implementation FBSDKAddressInferencer : NSObject
+@implementation FBSDKIntegrityInferencer : NSObject
+
+static NSString *const INTEGRITY_NONE = @"none";
+static NSString *const INTEGRITY_ADDRESS = @"address";
+static NSString *const INTEGRITY_HEALTH = @"health";
 
 static NSString *_useCase;
 static std::unordered_map<std::string, fbsdk::MTensor> _weights;
@@ -67,23 +71,38 @@ static std::vector<float> _denseFeature;
   if (!param || _weights.size() == 0 || _denseFeature.size() == 0) {
     return false;
   }
-
+  NSArray<NSString *> *integrityMapping = [self getIntegrityMapping];
   NSString *text = [FBSDKModelUtility normalizeText:param];
   const char *bytes = [text UTF8String];
   if ((int)strlen(bytes) == 0) {
     return false;
   }
   NSArray *thresholds = [FBSDKModelManager getThresholdsForKey:_useCase];
-  if (thresholds.count != 1) {
+  if (thresholds.count != integrityMapping.count) {
     return false;
   }
   try {
-    const fbsdk::MTensor& res = fbsdk::predictOnMTML("address_detect", bytes, _weights, &_denseFeature[0]);
+    const fbsdk::MTensor& res = fbsdk::predictOnMTML("integrity_detect", bytes, _weights, &_denseFeature[0]);
     const float *res_data = res.data();
-    return res_data[1] >= [thresholds[0] floatValue];
+    NSString *integrityType = INTEGRITY_NONE;
+    for (int i = 0; i < thresholds.count; i++) {
+      if ((float)res_data[i] >= (float)[thresholds[i] floatValue]) {
+        integrityType = integrityMapping[i];
+        break;
+      }
+    }
+    if (![integrityType isEqualToString:INTEGRITY_NONE]) {
+      return true;
+    }
   } catch (const std::exception &e) {
     return false;
   }
+  return false;
+}
+
++ (NSArray<NSString *> *)getIntegrityMapping
+{
+  return @[INTEGRITY_NONE, INTEGRITY_ADDRESS, INTEGRITY_HEALTH];
 }
 
 @end

@@ -128,8 +128,8 @@ NS_ASSUME_NONNULL_BEGIN
     @"fc1.bias": @[@(128)],
     @"fc2.weight": @[@(64), @(128)],
     @"fc2.bias": @[@(64)],
-    @"address_detect.weight": @[@(2), @(64)],
-    @"address_detect.bias": @[@(2)],
+    @"integrity_detect.weight": @[@(3), @(64)],
+    @"integrity_detect.bias": @[@(3)],
     @"app_event_pred.weight": @[@(5), @(64)],
     @"app_event_pred.bias": @[@(5)]};
 }

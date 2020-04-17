@@ -20,28 +20,28 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKAddressFilterManager.h"
+#import "FBSDKIntegrityManager.h"
 
-#import "FBSDKAddressInferencer.h"
+#import "FBSDKIntegrityInferencer.h"
 #import "FBSDKBasicUtility.h"
 #import "FBSDKGateKeeperManager.h"
 #import "FBSDKSettings.h"
 #import "FBSDKTypeUtility.h"
 
-static BOOL isAddressFilterEnabled = NO;
+static BOOL isIntegrityEnabled = NO;
 static BOOL isSampleEnabled = NO;
 
-@implementation FBSDKAddressFilterManager
+@implementation FBSDKIntegrityManager
 
 + (void)enable
 {
-  isAddressFilterEnabled = YES;
+  isIntegrityEnabled = YES;
   isSampleEnabled = [FBSDKGateKeeperManager boolForKey:@"FBSDKFeatureAddressDetectionSample" defaultValue:false];
 }
 
 + (nullable NSDictionary<NSString *, id> *)processParameters:(nullable NSDictionary<NSString *, id> *)parameters
 {
-  if (!isAddressFilterEnabled || parameters.count == 0) {
+  if (!isIntegrityEnabled || parameters.count == 0) {
     return parameters;
   }
   NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionaryWithDictionary:parameters];
@@ -49,7 +49,7 @@ static BOOL isSampleEnabled = NO;
 
   for (NSString *key in [parameters keyEnumerator]) {
     NSString *valueString =[FBSDKTypeUtility stringValue:parameters[key]];
-    BOOL shouldFilter = [FBSDKAddressInferencer shouldFilterParam:valueString];
+    BOOL shouldFilter = [FBSDKIntegrityInferencer shouldFilterParam:valueString];
     if (shouldFilter) {
       [addressParams setObject:isSampleEnabled ? valueString : @"" forKey:key];
       [params removeObjectForKey:key];

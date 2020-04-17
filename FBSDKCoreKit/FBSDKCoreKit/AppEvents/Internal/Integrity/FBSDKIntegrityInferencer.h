@@ -22,11 +22,16 @@
 
 #import <Foundation/Foundation.h>
 
-@interface FBSDKAddressFilterManager : NSObject
+NS_ASSUME_NONNULL_BEGIN
 
-+ (void)enable;
-+ (nullable NSDictionary<NSString *, id> *)processParameters:(nullable NSDictionary<NSString *, id> *)parameters;
+@interface FBSDKIntegrityInferencer : NSObject
+
++ (void)initializeDenseFeature;
++ (void)loadWeightsForKey:(NSString *)useCase;
++ (BOOL)shouldFilterParam:(nullable NSString *)param;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

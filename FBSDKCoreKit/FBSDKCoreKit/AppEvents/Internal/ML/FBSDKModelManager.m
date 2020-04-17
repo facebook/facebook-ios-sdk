@@ -22,8 +22,8 @@
 
 #import "FBSDKModelManager.h"
 
-#import "FBSDKAddressFilterManager.h"
-#import "FBSDKAddressInferencer.h"
+#import "FBSDKIntegrityManager.h"
+#import "FBSDKIntegrityInferencer.h"
 #import "FBSDKEventInferencer.h"
 #import "FBSDKFeatureExtractor.h"
 #import "FBSDKFeatureManager.h"
@@ -162,10 +162,10 @@ NS_ASSUME_NONNULL_BEGIN
     }
 
     if ([FBSDKFeatureManager isEnabled:FBSDKFeaturePIIFiltering]) {
-      [self getModelAndRules:MTMLTaskAddressDetectKey onSuccess:^() {
-        [FBSDKAddressInferencer loadWeightsForKey:MTMLTaskAddressDetectKey];
-        [FBSDKAddressInferencer initializeDenseFeature];
-        [FBSDKAddressFilterManager enable];
+      [self getModelAndRules:MTMLTaskIntegrityDetectKey onSuccess:^() {
+        [FBSDKIntegrityInferencer loadWeightsForKey:MTMLTaskIntegrityDetectKey];
+        [FBSDKIntegrityInferencer initializeDenseFeature];
+        [FBSDKIntegrityManager enable];
       }];
     }
   }];
