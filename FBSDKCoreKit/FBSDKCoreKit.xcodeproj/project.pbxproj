@@ -573,7 +573,7 @@
 		89FB8C421A8425C4003CAE60 /* FBSDKWebDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 89FB8C401A8425C4003CAE60 /* FBSDKWebDialog.m */; };
 		89FB8C4A1A842A8A003CAE60 /* FBSDKWebDialogView.h in Headers */ = {isa = PBXBuildFile; fileRef = 89FB8C481A842A8A003CAE60 /* FBSDKWebDialogView.h */; };
 		89FB8C4B1A842A8A003CAE60 /* FBSDKWebDialogView.m in Sources */ = {isa = PBXBuildFile; fileRef = 89FB8C491A842A8A003CAE60 /* FBSDKWebDialogView.m */; };
-		9894BFFB1B73D8B300FBA6DB /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9894BFFA1B73D8B300FBA6DB /* SafariServices.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		9894BFFB1B73D8B300FBA6DB /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9894BFFA1B73D8B300FBA6DB /* SafariServices.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		9D0BC14F1A8D236200BE8BA4 /* FBSDKPaymentObserver.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D0BC14A1A8D236200BE8BA4 /* FBSDKPaymentObserver.h */; };
 		9D0BC1501A8D236200BE8BA4 /* FBSDKPaymentObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D0BC14B1A8D236200BE8BA4 /* FBSDKPaymentObserver.m */; };
 		9D0BC1511A8D236200BE8BA4 /* FBSDKTimeSpentData.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D0BC14C1A8D236200BE8BA4 /* FBSDKTimeSpentData.h */; };
@@ -780,7 +780,7 @@
 		BFC0245C237B6BA000A596EE /* FBSDKFeatureExtractor.h in Headers */ = {isa = PBXBuildFile; fileRef = BFC02443237B6A9900A596EE /* FBSDKFeatureExtractor.h */; };
 		BFC0245D237B6BA200A596EE /* FBSDKFeatureExtractor.h in Headers */ = {isa = PBXBuildFile; fileRef = BFC02443237B6A9900A596EE /* FBSDKFeatureExtractor.h */; };
 		BFC0245E237B6BA200A596EE /* FBSDKFeatureExtractor.h in Headers */ = {isa = PBXBuildFile; fileRef = BFC02443237B6A9900A596EE /* FBSDKFeatureExtractor.h */; };
-		C4513901202CBF1F0063275D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4513900202CBF1F0063275D /* WebKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		C4513901202CBF1F0063275D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4513900202CBF1F0063275D /* WebKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		C4FC99D9202CD5590038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = C4FC99D7202CD5590038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.h */; };
 		C4FC99DA202CD5590038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = C4FC99D8202CD5590038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.m */; };
 		C4FC99F1202CD56D0038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = C4FC99D7202CD5590038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.h */; };
@@ -4133,7 +4133,7 @@
 		9D26973E1A5DF40700143BFC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1140;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					9D2697461A5DF40700143BFC = {
@@ -4156,11 +4156,11 @@
 			};
 			buildConfigurationList = 9D2697411A5DF40700143BFC /* Build configuration list for PBXProject "FBSDKCoreKit" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
+				Base,
 			);
 			mainGroup = 9D26973D1A5DF40700143BFC;
 			productRefGroup = 9D2697481A5DF40700143BFC /* Products */;
@@ -5293,6 +5293,18 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 814AC8871D1B552600D61E6C /* Release.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
 			};
 			name = Release;
 		};

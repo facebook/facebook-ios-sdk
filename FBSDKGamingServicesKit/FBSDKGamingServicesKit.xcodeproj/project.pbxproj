@@ -22,6 +22,9 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		F4234605244A2A5B006C9836 /* FBSDKGamingServicesKit-Common.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F4A54C8A244619630063015F /* FBSDKGamingServicesKit-Common.xcconfig */; };
+		F4234613244A2D2D006C9836 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4F7CA5123F49C110030A346 /* FBSDKCoreKit.framework */; };
+		F4234614244A2D2D006C9836 /* FBSDKCoreKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F4F7CA5123F49C110030A346 /* FBSDKCoreKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F4A54C8B244619630063015F /* FBSDKGamingServicesKit-Common.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = F4A54C8A244619630063015F /* FBSDKGamingServicesKit-Common.xcconfig */; };
 		F4F7C9E323F48F2C0030A346 /* FBSDKGamingImageUploaderConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F7C9B623F48F2C0030A346 /* FBSDKGamingImageUploaderConfiguration.m */; };
 		F4F7C9E423F48F2C0030A346 /* FBSDKGamingServiceCompletionHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = F4F7C9B723F48F2C0030A346 /* FBSDKGamingServiceCompletionHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -198,6 +201,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		F4234615244A2D2E006C9836 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				F4234614244A2D2D006C9836 /* FBSDKCoreKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		F4A54C8A244619630063015F /* FBSDKGamingServicesKit-Common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBSDKGamingServicesKit-Common.xcconfig"; sourceTree = "<group>"; };
 		F4F7C9B623F48F2C0030A346 /* FBSDKGamingImageUploaderConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKGamingImageUploaderConfiguration.m; sourceTree = "<group>"; };
@@ -260,6 +277,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F4F7CAA323F4A1470030A346 /* UIKit.framework in Frameworks */,
+				F4234613244A2D2D006C9836 /* FBSDKCoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -468,6 +486,7 @@
 				F4F7CA7523F49D6F0030A346 /* Sources */,
 				F4F7CA7A23F49D6F0030A346 /* Frameworks */,
 				F4F7CA7C23F49D6F0030A346 /* Resources */,
+				F4234615244A2D2E006C9836 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -502,6 +521,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = F4F7C9A023F48ED80030A346;
 			productRefGroup = F4F7C9A023F48ED80030A346;
@@ -656,6 +676,7 @@
 				F4F7CA8C23F49D6F0030A346 /* FacebookSDK-Project-TVOS.xcconfig in Resources */,
 				F4F7CA8D23F49D6F0030A346 /* FacebookSDK-Project-TVOS-Release.xcconfig in Resources */,
 				F4F7CA8E23F49D6F0030A346 /* Release.xcconfig in Resources */,
+				F4234605244A2A5B006C9836 /* FBSDKGamingServicesKit-Common.xcconfig in Resources */,
 				F4F7CA9023F49D6F0030A346 /* FacebookSDK-DynamicFramework.xcconfig in Resources */,
 				F4F7CA9123F49D6F0030A346 /* StaticFramework.xcconfig in Resources */,
 				F4F7CA9223F49D6F0030A346 /* FBSDKGamingServicesKit.xcconfig in Resources */,
