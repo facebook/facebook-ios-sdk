@@ -76,6 +76,7 @@ let package = Package(
                 .headerSearchPath("Internal/Instrument"),
                 .headerSearchPath("Internal/Instrument/CrashReport"),
                 .headerSearchPath("Internal/Instrument/ErrorReport"),
+                .headerSearchPath("Internal/Monitoring"),
                 .headerSearchPath("Internal/Network"),
                 .headerSearchPath("Internal/ServerConfiguration"),
                 .headerSearchPath("Internal/TokenCaching"),

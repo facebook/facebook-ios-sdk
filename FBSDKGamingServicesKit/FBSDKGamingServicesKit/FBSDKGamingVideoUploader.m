@@ -34,6 +34,10 @@
 
 @implementation FBSDKGamingVideoUploader
 
+- (instancetype)init
+{
+  return [super init];
+}
 
 + (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration * _Nonnull)configuration
                 andCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
