@@ -98,7 +98,7 @@ NS_ASSUME_NONNULL_BEGIN
     case FBSDKFeatureAAM: featureName = @"AAM"; break;
     case FBSDKFeaturePrivacyProtection: featureName = @"PrivacyProtection"; break;
     case FBSDKFeatureSuggestedEvents: featureName = @"SuggestedEvents"; break;
-    case FBSDKFeaturePIIFiltering: featureName = @"PIIFiltering"; break;
+    case FBSDKFeatureIntelligentIntegrity: featureName = @"IntelligentIntegrity"; break;
     case FBSDKFeatureEventDeactivation: featureName = @"EventDeactivation"; break;
     case FBSDKFeatureInstrument: featureName = @"Instrument"; break;
     case FBSDKFeatureCrashReport: featureName = @"CrashReport"; break;
@@ -128,7 +128,7 @@ NS_ASSUME_NONNULL_BEGIN
     case FBSDKFeatureAAM:
     case FBSDKFeaturePrivacyProtection:
     case FBSDKFeatureSuggestedEvents:
-    case FBSDKFeaturePIIFiltering:
+    case FBSDKFeatureIntelligentIntegrity:
     case FBSDKFeatureMonitoring:
       return NO;
     case FBSDKFeatureLogin:

@@ -161,7 +161,7 @@ NS_ASSUME_NONNULL_BEGIN
       }];
     }
 
-    if ([FBSDKFeatureManager isEnabled:FBSDKFeaturePIIFiltering]) {
+    if ([FBSDKFeatureManager isEnabled:FBSDKFeatureIntelligentIntegrity]) {
       [self getModelAndRules:MTMLTaskIntegrityDetectKey onSuccess:^() {
         [FBSDKIntegrityInferencer loadWeightsForKey:MTMLTaskIntegrityDetectKey];
         [FBSDKIntegrityInferencer initializeDenseFeature];

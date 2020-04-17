@@ -49,7 +49,7 @@ typedef NS_ENUM(NSUInteger, FBSDKFeature)
   FBSDKFeatureAAM = 0x00010300,
   FBSDKFeaturePrivacyProtection = 0x00010400,
   FBSDKFeatureSuggestedEvents = 0x00010401,
-  FBSDKFeaturePIIFiltering = 0x00010402,
+  FBSDKFeatureIntelligentIntegrity = 0x00010402,
   FBSDKFeatureEventDeactivation = 0x00010500,
   /** Instrument */
   FBSDKFeatureInstrument = 0x00020000,
