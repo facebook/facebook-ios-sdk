@@ -1157,7 +1157,7 @@ static dispatch_once_t *onceTokenPointer;
   parameters = [FBSDKEventDeactivationManager processParameters:parameters eventName:eventName];
 
 #if !defined BUCK && !TARGET_OS_TV
-  // Filter out address data
+  // Filter out restrictive data with on-device ML
   parameters = [FBSDKIntegrityManager processParameters:parameters];
 #endif
   // Filter out restrictive keys

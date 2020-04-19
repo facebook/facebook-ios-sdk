@@ -147,6 +147,7 @@
 		5D4361162321C30400254DF7 /* FBSDKCrashObserving.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4361142321C30400254DF7 /* FBSDKCrashObserving.h */; };
 		5D4361172321C30400254DF7 /* FBSDKCrashObserving.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4361142321C30400254DF7 /* FBSDKCrashObserving.h */; };
 		5D4361182321C30400254DF7 /* FBSDKCrashObserving.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D4361142321C30400254DF7 /* FBSDKCrashObserving.h */; };
+		5D497702244A3E6A00BD45C6 /* FBSDKIntegrityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D497701244A3E6A00BD45C6 /* FBSDKIntegrityTests.m */; };
 		5D59BFFD23A705010008CA5A /* FBSDKCrashHandlerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D59BFFC23A705010008CA5A /* FBSDKCrashHandlerTests.m */; };
 		5D59BFFF23A7505D0008CA5A /* FBSDKLibAnalyzerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D59BFFE23A7505D0008CA5A /* FBSDKLibAnalyzerTests.m */; };
 		5D68D7D822BAEEF60063A3E2 /* FBSDKTimeSpentDataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D68D7D722BAEEF60063A3E2 /* FBSDKTimeSpentDataTests.m */; };
@@ -941,7 +942,6 @@
 		F4210E37241B00790061F56D /* FBSDKMethodUsageMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = F4210E2D241B00790061F56D /* FBSDKMethodUsageMonitor.m */; };
 		F4210E38241B00790061F56D /* FBSDKMethodUsageMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = F4210E2D241B00790061F56D /* FBSDKMethodUsageMonitor.m */; };
 		F4210E39241B00790061F56D /* FBSDKMethodUsageMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = F4210E2D241B00790061F56D /* FBSDKMethodUsageMonitor.m */; };
-		F42F19F8243F9CFF00A5D553 /* MonitoringConfigurationTestHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F42F19F7243F9CFF00A5D553 /* MonitoringConfigurationTestHelper.m */; };
 		F43960D02425513100C1868F /* FakeMonitorStore.m in Sources */ = {isa = PBXBuildFile; fileRef = F43960CF2425513100C1868F /* FakeMonitorStore.m */; };
 		F462DBF023B94C0F00FFCECA /* FBSDKCrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 894C0B071A702194009137EF /* FBSDKCrypto.h */; };
 		F462DBF123B94C1000FFCECA /* FBSDKCrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 894C0B071A702194009137EF /* FBSDKCrypto.h */; };
@@ -1538,6 +1538,13 @@
 			remoteGlobalIDString = 817EB1621BD765130047E85A;
 			remoteInfo = "OCMock tvOS";
 		};
+		5D4976E1244A3CB900BD45C6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D99470F1A9531B5003375EC /* OCMock.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DE97CA022B43EE60098C63F;
+			remoteInfo = "OCMock watchOS";
+		};
 		7E55574B1A8E89A800344F86 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7E55573F1A8E89A800344F86 /* OHHTTPStubs.xcodeproj */;
@@ -1704,6 +1711,7 @@
 		5D4360DA23219F7900254DF7 /* FBSDKCrashObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKCrashObserver.h; sourceTree = "<group>"; };
 		5D4360DF23219F8E00254DF7 /* FBSDKCrashObserver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKCrashObserver.m; sourceTree = "<group>"; };
 		5D4361142321C30400254DF7 /* FBSDKCrashObserving.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKCrashObserving.h; sourceTree = "<group>"; };
+		5D497701244A3E6A00BD45C6 /* FBSDKIntegrityTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKIntegrityTests.m; sourceTree = "<group>"; };
 		5D59BFFC23A705010008CA5A /* FBSDKCrashHandlerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKCrashHandlerTests.m; sourceTree = "<group>"; };
 		5D59BFFE23A7505D0008CA5A /* FBSDKLibAnalyzerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKLibAnalyzerTests.m; sourceTree = "<group>"; };
 		5D68D7D722BAEEF60063A3E2 /* FBSDKTimeSpentDataTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKTimeSpentDataTests.m; sourceTree = "<group>"; };
@@ -1997,8 +2005,6 @@
 		F4210E1D241AFF740061F56D /* FBSDKMethodUsageMonitorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKMethodUsageMonitorTests.m; sourceTree = "<group>"; };
 		F4210E2C241B00790061F56D /* FBSDKMethodUsageMonitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKMethodUsageMonitor.h; sourceTree = "<group>"; };
 		F4210E2D241B00790061F56D /* FBSDKMethodUsageMonitor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKMethodUsageMonitor.m; sourceTree = "<group>"; };
-		F42F19E8243F9CFF00A5D553 /* MonitoringConfigurationTestHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MonitoringConfigurationTestHelper.h; sourceTree = "<group>"; };
-		F42F19F7243F9CFF00A5D553 /* MonitoringConfigurationTestHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MonitoringConfigurationTestHelper.m; sourceTree = "<group>"; };
 		F43960CE2425513100C1868F /* FakeMonitorStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FakeMonitorStore.h; sourceTree = "<group>"; };
 		F43960CF2425513100C1868F /* FakeMonitorStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FakeMonitorStore.m; sourceTree = "<group>"; };
 		F46C4847243E34C600D03401 /* FBSDKMonitoringConfigurationTestHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBSDKMonitoringConfigurationTestHelper.h; path = FBSDKCoreKitTests/Internal/Helpers/FBSDKMonitoringConfigurationTestHelper.h; sourceTree = SOURCE_ROOT; };
@@ -2174,6 +2180,14 @@
 				5D4361142321C30400254DF7 /* FBSDKCrashObserving.h */,
 			);
 			path = Instrument;
+			sourceTree = "<group>";
+		};
+		5D497700244A3E5700BD45C6 /* Integrity */ = {
+			isa = PBXGroup;
+			children = (
+				5D497701244A3E6A00BD45C6 /* FBSDKIntegrityTests.m */,
+			);
+			path = Integrity;
 			sourceTree = "<group>";
 		};
 		5D6DF1542398E24800AC2D6C /* EventDeactivation */ = {
@@ -2611,6 +2625,7 @@
 		9D18A8D91A95403F00A41042 /* AppEvents */ = {
 			isa = PBXGroup;
 			children = (
+				5D497700244A3E5700BD45C6 /* Integrity */,
 				BF1C64E2240399180052C580 /* ViewHierarchy */,
 				E493252B23F7C51D0000B63A /* ML */,
 				BF5D97B4242EC2890096D7AA /* SuggestedEvent */,
@@ -2798,6 +2813,7 @@
 				9D9947291A9531B5003375EC /* OCMockLibTests.xctest */,
 				52279E562150732600F31455 /* OCMock.framework */,
 				52279E582150732600F31455 /* OCMock.framework */,
+				5D4976E2244A3CB900BD45C6 /* OCMock.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4211,6 +4227,13 @@
 			remoteRef = 52279E572150732600F31455 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		5D4976E2244A3CB900BD45C6 /* OCMock.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OCMock.framework;
+			remoteRef = 5D4976E1244A3CB900BD45C6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		7E55574C1A8E89A800344F86 /* libOHHTTPStubs.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -4818,6 +4841,7 @@
 				7E253D811A8EAEF500CCCFE7 /* FBSDKInternalUtilityTests.m in Sources */,
 				C5F6EC861FA24FAF009EB258 /* FBSDKPaymentObserverTests.m in Sources */,
 				F48A6AED24170D29002C6CA1 /* TestMonitorEntry.m in Sources */,
+				5D497702244A3E6A00BD45C6 /* FBSDKIntegrityTests.m in Sources */,
 				F4210E1E241AFF740061F56D /* FBSDKMethodUsageMonitorTests.m in Sources */,
 				5D936D6622A48CA600E86921 /* FBSDKRestrictiveDataFilterTests.m in Sources */,
 				5DAB01F123A1831A005495FB /* FBSDKCrashObserverTests.m in Sources */,

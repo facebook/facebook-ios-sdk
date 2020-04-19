@@ -45,21 +45,21 @@ static BOOL isSampleEnabled = NO;
     return parameters;
   }
   NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionaryWithDictionary:parameters];
-  NSMutableDictionary<NSString *, id> *addressParams = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *restrictiveParams = [NSMutableDictionary dictionary];
 
   for (NSString *key in [parameters keyEnumerator]) {
     NSString *valueString =[FBSDKTypeUtility stringValue:parameters[key]];
-    BOOL shouldFilter = [FBSDKIntegrityInferencer shouldFilterParam:valueString];
+    BOOL shouldFilter = [FBSDKIntegrityInferencer shouldFilterParam:key] || [FBSDKIntegrityInferencer shouldFilterParam:valueString];
     if (shouldFilter) {
-      [addressParams setObject:isSampleEnabled ? valueString : @"" forKey:key];
+      [restrictiveParams setObject:isSampleEnabled ? valueString : @"" forKey:key];
       [params removeObjectForKey:key];
     }
   }
-  if ([addressParams count] > 0) {
-    NSString *addressParamsJSONString = [FBSDKBasicUtility JSONStringForObject:addressParams
-                                                                            error:NULL
-                                                             invalidObjectHandler:NULL];
-    [FBSDKBasicUtility dictionary:params setObject:addressParamsJSONString forKey:@"_onDeviceParams"];
+  if ([restrictiveParams count] > 0) {
+    NSString *restrictiveParamsJSONString = [FBSDKBasicUtility JSONStringForObject:restrictiveParams
+                                                                             error:NULL
+                                                              invalidObjectHandler:NULL];
+    [FBSDKBasicUtility dictionary:params setObject:restrictiveParamsJSONString forKey:@"_onDeviceParams"];
   }
   return [params copy];
 }
