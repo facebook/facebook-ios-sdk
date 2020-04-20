@@ -76,6 +76,22 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
+  // Handle the case where the app is backgrounded while the "ExampleApp wants to use facebook.com to Sign In" alert is still open
+  // Call the completion handler with a Cancel
+  if (@available(iOS 11.0, *)) {
+    if (!_active && (_authenticationSession != nil)) {
+      [_authenticationSession cancel];
+      _authenticationSession = nil;
+      NSString *errorDomain;
+      if (@available(iOS 12.0, *)) {
+        errorDomain = @"com.apple.AuthenticationServices.WebAuthenticationSession";
+      } else {
+        errorDomain = @"com.apple.SafariServices.Authentication";
+      }
+      NSError *error = [FBSDKError errorWithDomain:errorDomain code:1 message:nil];
+      _authenticationSessionCompletionHandler(nil, error);
+    }
+  }
   //  _expectingBackground can be YES if the caller started doing work (like login)
   // within the app delegate's lifecycle like openURL, in which case there
   // might have been a "didBecomeActive" event pending that we want to ignore.
@@ -364,8 +380,9 @@ didFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *
   _authenticationSessionCompletionHandler = ^ (NSURL *aURL, NSError *error) {
     FBSDKBridgeAPI *strongSelf = weakSelf;
     strongSelf->_isRequestingSFAuthenticationSession = NO;
-    handler(error == nil, error);
-    if (error == nil) {
+    BOOL didSucceed = (error == nil && aURL != nil);
+    handler(didSucceed, error);
+    if (didSucceed) {
       [strongSelf application:[UIApplication sharedApplication] openURL:aURL sourceApplication:@"com.apple" annotation:nil];
     }
     strongSelf->_authenticationSession = nil;
