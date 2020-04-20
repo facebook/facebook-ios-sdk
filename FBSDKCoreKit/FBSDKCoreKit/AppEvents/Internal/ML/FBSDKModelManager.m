@@ -60,9 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
     _directoryPath = dirPath;
     _modelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
     NSDate *timestamp = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_REQUEST_TIMESTAMP_KEY];
-    if (![_modelInfo count] || [self isValidTimestamp:timestamp]) {
-      [self checkFeaturesAndExecuteForMTML];
-    } else {
+    if ([_modelInfo count] == 0 || ![FBSDKFeatureManager isEnabled:FBSDKFeatureModelRequest] || ![self isValidTimestamp:timestamp]) {
       // fetch api
       FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
                                     initWithGraphPath:[NSString stringWithFormat:@"%@/model_asset", [FBSDKSettings appID]]];
@@ -81,6 +79,8 @@ NS_ASSUME_NONNULL_BEGIN
         }
         [self checkFeaturesAndExecuteForMTML];
       }];
+    } else {
+      [self checkFeaturesAndExecuteForMTML];
     }
   });
 }
