@@ -36,7 +36,7 @@ static BOOL isSampleEnabled = NO;
 + (void)enable
 {
   isIntegrityEnabled = YES;
-  isSampleEnabled = [FBSDKGateKeeperManager boolForKey:@"FBSDKFeatureAddressDetectionSample" defaultValue:false];
+  isSampleEnabled = [FBSDKGateKeeperManager boolForKey:@"FBSDKFeatureIntegritySample" defaultValue:false];
 }
 
 + (nullable NSDictionary<NSString *, id> *)processParameters:(nullable NSDictionary<NSString *, id> *)parameters
