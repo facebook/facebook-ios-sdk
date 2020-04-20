@@ -20,6 +20,9 @@
 #define FBSDKMLMacros_h
 
 //  keys for ML
+#define MODEL_REQUEST_INTERVAL                  (60 * 60 * 24 * 3)
+#define MODEL_REQUEST_TIMESTAMP_KEY             @"com.facebook.sdk:FBSDKModelRequestTimestamp"
+
 #define FBSDK_ML_MODEL_PATH                     @"models"
 #define MODEL_INFO_KEY                          @"com.facebook.sdk:FBSDKModelInfo"
 #define ASSET_URI_KEY                           @"asset_uri"

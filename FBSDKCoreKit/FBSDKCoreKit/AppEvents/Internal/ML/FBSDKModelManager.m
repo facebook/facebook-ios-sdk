@@ -59,24 +59,29 @@ NS_ASSUME_NONNULL_BEGIN
     }
     _directoryPath = dirPath;
     _modelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
-
-    // fetch api
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
-                                  initWithGraphPath:[NSString stringWithFormat:@"%@/model_asset", [FBSDKSettings appID]]];
-
-    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-      if (!error) {
-        NSDictionary<NSString *, id> *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
-        NSDictionary<NSString *, id> *modelInfo = [self convertToDictionary:resultDictionary[MODEL_DATA_KEY]];
-        if (modelInfo) {
-          // update cache
-          _modelInfo = [modelInfo mutableCopy];
-          [self processMTML];
-          [[NSUserDefaults standardUserDefaults] setObject:_modelInfo forKey:MODEL_INFO_KEY];
-        }
-      }
+    NSDate *timestamp = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_REQUEST_TIMESTAMP_KEY];
+    if (![_modelInfo count] || [self isValidTimestamp:timestamp]) {
       [self checkFeaturesAndExecuteForMTML];
-    }];
+    } else {
+      // fetch api
+      FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
+                                    initWithGraphPath:[NSString stringWithFormat:@"%@/model_asset", [FBSDKSettings appID]]];
+
+      [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+        if (!error) {
+          NSDictionary<NSString *, id> *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
+          NSDictionary<NSString *, id> *modelInfo = [self convertToDictionary:resultDictionary[MODEL_DATA_KEY]];
+          if (modelInfo) {
+            _modelInfo = [modelInfo mutableCopy];
+            [self processMTML];
+            // update cache for model info and timestamp
+            [[NSUserDefaults standardUserDefaults] setObject:_modelInfo forKey:MODEL_INFO_KEY];
+            [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:MODEL_REQUEST_TIMESTAMP_KEY];
+          }
+        }
+        [self checkFeaturesAndExecuteForMTML];
+      }];
+    }
   });
 }
 
@@ -128,6 +133,14 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 #pragma mark - Private methods
+
++ (BOOL)isValidTimestamp:(NSDate *)timestamp
+{
+  if (!timestamp) {
+    return NO;
+  }
+  return ([[NSDate date] timeIntervalSinceDate:timestamp] < MODEL_REQUEST_INTERVAL);
+}
 
 + (void)processMTML
 {
