@@ -10,17 +10,24 @@ env:
 
 branches:
   only:
-    - master
-    - 4.x-branch
-    - /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
+    - fix-cocoapods-release-ci
+    # - master
+    # - 4.x-branch
+    # - /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
 
 stages:
-  - name: test
-    if: '! tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/'
+  # - name: test
+    # if: '! tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/'
   # - name: tag
   #   if: '! tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/'
   - name: release
     if: tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
+  - name: release cocoapods 1/3
+    # if: tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
+  - name: release cocoapods 2/3
+    # if: tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
+  - name: release cocoapods 3/3
+    # if: tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
 
 jobs:
   include:
@@ -108,10 +115,18 @@ jobs:
         on:
           all_branches: true
           tags: true
-    - stage: release
-      name: Publish Cocoapods
+    - stage: release cocoapods 1/3
+      name: Release Top Level Cocoapods
       osx_image: xcode10.3
-      script: sh scripts/run.sh release cocoapods
+      script: sh scripts/run.sh release cocoapods FBSDKCoreKit
+    - stage: release cocoapods 2/3
+      name: Release Dependent Cocoapods
+      osx_image: xcode10.3
+      script: sh scripts/run.sh release cocoapods FBSDKLoginKit FBSDKShareKit
+    - stage: release cocoapods 3/3
+      name: Release Dependent Cocoapods
+      osx_image: xcode10.3
+      script: sh scripts/run.sh release cocoapods FBSDKGamingServicesKit FBSDKTVOSKit
 
 script: sh scripts/travis/script.sh
 

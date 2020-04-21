@@ -79,11 +79,6 @@ main() {
 
     SDK_MAIN_VERSION_FILE="FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h"
 
-    SDK_FRAMEWORK_NAME="FacebookSDK"
-
-    SDK_POD_SPECS=("${SDK_KITS[@]}" "$SDK_FRAMEWORK_NAME")
-    SDK_POD_SPECS=("${SDK_POD_SPECS[@]/%/.podspec}")
-
     SDK_LINT_POD_SPECS=(
       "FBSDKCoreKit.podspec"
       "FBSDKLoginKit.podspec"
@@ -579,20 +574,13 @@ release_sdk() {
 
   # Release Cocoapods
   release_cocoapods() {
-    for spec in "${SDK_POD_SPECS[@]}"; do
-      if [ ! -f "$spec" ]; then
+    for spec in "$@"; do
+      if [ ! -f "$spec".podspec ]; then
         echo "*** ERROR: unable to release $spec"
         continue
       fi
 
-      pod trunk push --allow-warnings "$spec" "$@" || { echo "Failed to push $spec"; exit 1; }
-
-      # Super naive attempt to beat the race condition of published pods
-      # not being available as dependencies fast enough to be used by other pods.
-      sleep 180
-
-      # Update the repo with the newly pushed pod
-      pod repo update
+      echo "pod trunk push --allow-warnings $spec.podspec"  || { echo "Failed to push $spec"; exit 1; }
     done
   }
 

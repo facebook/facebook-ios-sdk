@@ -28,7 +28,6 @@ Pod::Spec.new do |s|
   s.pod_target_xcconfig = {'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) FBSDKCOCOAPODS=1' }
 
   s.dependency 'FBSDKCoreKit', "~> #{s.version}"
-  # We have a compile time depend on FBSDKShareKit
   s.dependency 'FBSDKShareKit', "~> #{s.version}"
   s.dependency 'FBSDKLoginKit', "~> #{s.version}"
 end
