@@ -79,6 +79,11 @@ main() {
 
     SDK_MAIN_VERSION_FILE="FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h"
 
+    SDK_FRAMEWORK_NAME="FacebookSDK"
+
+    SDK_POD_SPECS=("${SDK_KITS[@]}" "$SDK_FRAMEWORK_NAME")
+    SDK_POD_SPECS=("${SDK_POD_SPECS[@]/%/.podspec}")
+
     SDK_LINT_POD_SPECS=(
       "FBSDKCoreKit.podspec"
       "FBSDKLoginKit.podspec"
@@ -580,7 +585,7 @@ release_sdk() {
         continue
       fi
 
-      echo "pod trunk push --allow-warnings $spec.podspec"  || { echo "Failed to push $spec"; exit 1; }
+      pod trunk push --allow-warnings "$spec".podspec || { echo "Failed to push $spec"; exit 1; }
     done
   }
 
