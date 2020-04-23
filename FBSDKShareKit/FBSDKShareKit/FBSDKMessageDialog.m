@@ -209,18 +209,20 @@
   NSMutableDictionary * parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:FBSDKAppEventsDialogOutcomeValue_Failed, FBSDKAppEventParameterDialogOutcome, nil];
   if (error) {
     parameters[FBSDKAppEventParameterDialogErrorMessage] = [NSString stringWithFormat:@"%@", error];
-  }
 
-  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKEventMessengerShareDialogResult
-                        parameters:parameters
-                isImplicitlyLogged:YES
-                       accessToken:[FBSDKAccessToken currentAccessToken]];
+    [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKEventMessengerShareDialogResult
+                          parameters:parameters
+                  isImplicitlyLogged:YES
+                         accessToken:[FBSDKAccessToken currentAccessToken]];
 
-  if (!_delegate) {
+    if (!_delegate) {
+      return;
+    }
+
+    [_delegate sharer:self didFailWithError:error];
+  } else {
     return;
   }
-
-  [_delegate sharer:self didFailWithError:error];
 }
 
 - (void)_logDialogShow
