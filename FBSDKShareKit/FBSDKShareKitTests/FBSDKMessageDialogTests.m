@@ -27,6 +27,7 @@
 #endif
 
 #import "FBSDKMessageDialog.h"
+#import "FakeSharingDelegate.h"
 
 #import <XCTest/XCTest.h>
 
@@ -42,12 +43,10 @@
 - (void)_mockApplicationForURL:(NSURL *)URL canOpen:(BOOL)canOpen usingBlock:(void(^)(void))block
 {
   if (block != NULL) {
-    id applicationMock = [OCMockObject mockForClass:[UIApplication class]];
-    [[[applicationMock stub] andReturnValue:@(canOpen)] canOpenURL:URL];
-    id applicationClassMock = [OCMockObject mockForClass:[UIApplication class]];
-    [[[[applicationClassMock stub] classMethod] andReturn:applicationMock] sharedApplication];
+    id applicationMock = OCMClassMock(UIApplication.class);
+    OCMStub([applicationMock canOpenURL:URL]).andReturn(canOpen);
+    OCMStub([applicationMock sharedApplication]).andReturn(applicationMock);
     block();
-    [applicationClassMock stopMocking];
     [applicationMock stopMocking];
   }
 }
@@ -111,6 +110,65 @@
                  @"Should not successfully validate share content that is known to be missing content");
   XCTAssertNotNil(error,
                   @"A failed validation should populate the error reference that was passed to it");
+}
+
+- (void)testShowInvokesDelegateWhenCannotShow
+{
+  [self _mockApplicationForURL:OCMOCK_ANY canOpen:NO usingBlock:^{
+    FBSDKMessageDialog *dialog = [[FBSDKMessageDialog alloc] init];
+    FakeSharingDelegate *delegate = [FakeSharingDelegate new];
+    dialog.delegate = delegate;
+
+    [dialog show];
+
+    XCTAssertEqualObjects(delegate.capturedError.domain, FBSDKShareErrorDomain,
+                          "Failure to show a message dialog should present an error with the expected domain.");
+    XCTAssertEqual(delegate.capturedError.code, FBSDKShareErrorDialogNotAvailable,
+                   "Failure to show a message dialog should present an error with the expected code.");
+    XCTAssertEqualObjects(delegate.capturedError.userInfo[FBSDKErrorDeveloperMessageKey],
+                          @"Message dialog is not available.",
+                          "Failure to show a message dialog should present an error with the expected message.");
+  }];
+}
+
+- (void)testShowInvokesDelegateWhenMissingContent
+{
+  [self _mockApplicationForURL:OCMOCK_ANY canOpen:YES usingBlock:^{
+    FBSDKMessageDialog *dialog = [[FBSDKMessageDialog alloc] init];
+    FakeSharingDelegate *delegate = [FakeSharingDelegate new];
+    dialog.delegate = delegate;
+
+    [dialog show];
+
+    XCTAssertEqualObjects(delegate.capturedError.domain, FBSDKShareErrorDomain,
+                          "Failure to show a message dialog should present an error with the expected domain.");
+    XCTAssertEqual(delegate.capturedError.code, FBSDKErrorInvalidArgument,
+                   "Failure to show a message dialog should present an error with the expected code.");
+    XCTAssertEqualObjects(delegate.capturedError.userInfo[FBSDKErrorDeveloperMessageKey],
+                          @"Value for shareContent is required.",
+                          "Failure to show a message dialog should present an error with the expected message.");
+  }];
+}
+
+- (void)testShowInvokesDelegateWhenCannotValidate
+{
+  [self _mockApplicationForURL:OCMOCK_ANY canOpen:YES usingBlock:^{
+    FBSDKMessageDialog *dialog = [[FBSDKMessageDialog alloc] init];
+    // Using invalid share content to force validation failure
+    dialog.shareContent = [FBSDKShareModelTestUtility cameraEffectContent];
+    FakeSharingDelegate *delegate = [FakeSharingDelegate new];
+    dialog.delegate = delegate;
+
+    [dialog show];
+
+    XCTAssertEqualObjects(delegate.capturedError.domain, FBSDKShareErrorDomain,
+                          "Failure to show a message dialog should present an error with the expected domain.");
+    XCTAssertEqual(delegate.capturedError.code, FBSDKErrorInvalidArgument,
+                   "Failure to show a message dialog should present an error with the expected code.");
+    XCTAssertEqualObjects(delegate.capturedError.userInfo[FBSDKErrorDeveloperMessageKey],
+                          @"Message dialog does not support FBSDKShareCameraEffectContent.",
+                          "Failure to show a message dialog should present an error with the expected message.");
+  }];
 }
 
 @end
