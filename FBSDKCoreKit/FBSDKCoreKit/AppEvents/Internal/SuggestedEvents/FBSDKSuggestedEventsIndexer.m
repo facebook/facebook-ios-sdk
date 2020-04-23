@@ -29,8 +29,10 @@
 #import <UIKit/UIKit.h>
 
 #import "FBSDKCoreKit+Internal.h"
-#import "FBSDKEventInferencer.h"
+#import "FBSDKFeatureExtractor.h"
 #import "FBSDKMLMacros.h"
+#import "FBSDKModelManager.h"
+#import "FBSDKModelUtility.h"
 
 NSString * const OptInEvents = @"production_events";
 NSString * const UnconfirmedEvents = @"eligible_for_prediction_events";
@@ -215,8 +217,10 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
     viewTree[VIEW_HIERARCHY_SCREEN_NAME_KEY] = screenName ?: @"";
 
     fb_dispatch_on_default_thread(^{
-      NSDictionary<NSString *, NSString *> *result = [FBSDKEventInferencer predict:text viewTree:[viewTree mutableCopy]];
-      NSString *event = result[SUGGEST_EVENT_KEY];
+      NSMutableDictionary<NSString *, id> *viewTreeCopy = [viewTree mutableCopy];
+      float *denseData = [FBSDKFeatureExtractor getDenseFeatures:viewTree];
+      NSString *textFeature = [FBSDKModelUtility normalizeText:[FBSDKFeatureExtractor getTextFeature:text withScreenName:viewTreeCopy[@"screenname"]]];
+      NSString *event = [FBSDKModelManager processSuggestedEvents:textFeature denseData:denseData];
       if (!event || [event isEqualToString:SUGGESTED_EVENT_OTHER]) {
         return;
       }
@@ -227,13 +231,24 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
                       }];
       } else if ([_unconfirmedEvents containsObject:event]) {
         // Only send back not confirmed events to advertisers
-        [self logSuggestedEvent:event withText:text withDenseFeature:result[DENSE_FEATURE_KEY] ?: @""];
+        [self logSuggestedEvent:event withText:text withDenseFeature:[self getDenseFeaure:denseData] ?: @""];
       }
+      free(denseData);
     });
   });
 }
 
 #pragma mark - Helper Methods
+
++ (NSString *)getDenseFeaure:(float *)denseData
+{
+  // Get dense feature string
+  NSMutableArray *denseDataArray = [NSMutableArray array];
+  for (int i = 0; i < 30; i++) {
+    [denseDataArray addObject:[NSNumber numberWithFloat: denseData[i]]];
+  }
+  return [denseDataArray componentsJoinedByString:@","];
+}
 
 + (NSString *)getTextFromContentView:(UIView *)contentView
 {

@@ -22,8 +22,8 @@
 
 #import "FBSDKModelManager.h"
 
+#import "FBSDKAppEvents+Internal.h"
 #import "FBSDKIntegrityManager.h"
-#import "FBSDKEventInferencer.h"
 #import "FBSDKFeatureExtractor.h"
 #import "FBSDKFeatureManager.h"
 #import "FBSDKGraphRequest.h"
@@ -39,6 +39,11 @@
 static NSString *const INTEGRITY_NONE = @"none";
 static NSString *const INTEGRITY_ADDRESS = @"address";
 static NSString *const INTEGRITY_HEALTH = @"health";
+
+extern FBSDKAppEventName FBSDKAppEventNameCompletedRegistration;
+extern FBSDKAppEventName FBSDKAppEventNameAddedToCart;
+extern FBSDKAppEventName FBSDKAppEventNamePurchased;
+extern FBSDKAppEventName FBSDKAppEventNameInitiatedCheckout;
 
 static NSString *_directoryPath;
 static NSMutableDictionary<NSString *, id> *_modelInfo;
@@ -168,6 +173,34 @@ NS_ASSUME_NONNULL_BEGIN
   return ![integrityType isEqualToString:INTEGRITY_NONE];
 }
 
+#pragma mark - SuggestedEvents Inferencer method
+
++ (NSString *)processSuggestedEvents:(NSString *)textFeature denseData:(nullable float *)denseData
+{
+  NSArray<NSString *> *eventMapping = [FBSDKModelManager getSuggestedEventsMapping];
+  if (textFeature.length == 0 || _MTMLWeights.size() == 0 || !denseData) {
+    return SUGGESTED_EVENT_OTHER;
+  }
+  const char *bytes = [textFeature UTF8String];
+  if ((int)strlen(bytes) == 0) {
+    return SUGGESTED_EVENT_OTHER;
+  }
+
+  NSArray *thresholds = [FBSDKModelManager getThresholdsForKey:MTMLTaskAppEventPredKey];
+  if (thresholds.count != eventMapping.count) {
+    return SUGGESTED_EVENT_OTHER;
+  }
+
+  const fbsdk::MTensor& res = fbsdk::predictOnMTML("app_event_pred", bytes, _MTMLWeights, denseData);
+  const float *res_data = res.data();
+  for (int i = 0; i < thresholds.count; i++) {
+    if ((float)res_data[i] >= (float)[thresholds[i] floatValue]) {
+      return eventMapping[i];
+    }
+  }
+  return SUGGESTED_EVENT_OTHER;
+}
+
 #pragma mark - Private methods
 
 + (BOOL)isValidTimestamp:(NSDate *)timestamp
@@ -210,7 +243,6 @@ NS_ASSUME_NONNULL_BEGIN
 
     if ([FBSDKFeatureManager isEnabled:FBSDKFeatureSuggestedEvents]) {
       [self getModelAndRules:MTMLTaskAppEventPredKey onSuccess:^() {
-        [FBSDKEventInferencer loadWeightsForKey:MTMLTaskAppEventPredKey];
         [FBSDKFeatureExtractor loadRulesForKey:MTMLTaskAppEventPredKey];
         [FBSDKSuggestedEventsIndexer enable];
       }];
@@ -318,6 +350,17 @@ NS_ASSUME_NONNULL_BEGIN
 {
   return @[INTEGRITY_NONE, INTEGRITY_ADDRESS, INTEGRITY_HEALTH];
 }
+
++ (NSArray<NSString *> *)getSuggestedEventsMapping
+{
+  return
+  @[SUGGESTED_EVENT_OTHER,
+  FBSDKAppEventNameCompletedRegistration,
+  FBSDKAppEventNameAddedToCart,
+  FBSDKAppEventNamePurchased,
+  FBSDKAppEventNameInitiatedCheckout];
+}
+
 
 @end
 
