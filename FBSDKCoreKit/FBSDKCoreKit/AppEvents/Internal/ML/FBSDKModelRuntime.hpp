@@ -30,9 +30,6 @@
 #include "FBSDKTensor.hpp"
 
 #define SEQ_LEN 128
-#define ALPHABET_SIZE 256
-#define MTML_EMBEDDING_SIZE 32
-#define NON_MTML_EMBEDDING_SIZE 64
 #define DENSE_FEATURE_LEN 30
 
 namespace fbsdk {
