@@ -579,20 +579,13 @@ release_sdk() {
 
   # Release Cocoapods
   release_cocoapods() {
-    for spec in "${SDK_POD_SPECS[@]}"; do
-      if [ ! -f "$spec" ]; then
+    for spec in "$@"; do
+      if [ ! -f "$spec".podspec ]; then
         echo "*** ERROR: unable to release $spec"
         continue
       fi
 
-      pod trunk push --allow-warnings "$spec" "$@" || { echo "Failed to push $spec"; exit 1; }
-
-      # Super naive attempt to beat the race condition of published pods
-      # not being available as dependencies fast enough to be used by other pods.
-      sleep 180
-
-      # Update the repo with the newly pushed pod
-      pod repo update
+      pod trunk push --allow-warnings "$spec".podspec || { echo "Failed to push $spec"; exit 1; }
     done
   }
 
