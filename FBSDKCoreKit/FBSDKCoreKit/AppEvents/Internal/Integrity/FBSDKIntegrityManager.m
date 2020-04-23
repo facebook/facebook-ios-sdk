@@ -22,9 +22,9 @@
 
 #import "FBSDKIntegrityManager.h"
 
-#import "FBSDKIntegrityInferencer.h"
 #import "FBSDKBasicUtility.h"
 #import "FBSDKGateKeeperManager.h"
+#import "FBSDKModelManager.h"
 #import "FBSDKSettings.h"
 #import "FBSDKTypeUtility.h"
 
@@ -49,7 +49,7 @@ static BOOL isSampleEnabled = NO;
 
   for (NSString *key in [parameters keyEnumerator]) {
     NSString *valueString =[FBSDKTypeUtility stringValue:parameters[key]];
-    BOOL shouldFilter = [FBSDKIntegrityInferencer shouldFilterParam:key] || [FBSDKIntegrityInferencer shouldFilterParam:valueString];
+    BOOL shouldFilter = [FBSDKModelManager processIntegrity:key] || [FBSDKModelManager processIntegrity:valueString];
     if (shouldFilter) {
       [restrictiveParams setObject:isSampleEnabled ? valueString : @"" forKey:key];
       [params removeObjectForKey:key];

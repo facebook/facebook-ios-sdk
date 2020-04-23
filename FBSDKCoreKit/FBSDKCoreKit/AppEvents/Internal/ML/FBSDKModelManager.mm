@@ -23,7 +23,6 @@
 #import "FBSDKModelManager.h"
 
 #import "FBSDKIntegrityManager.h"
-#import "FBSDKIntegrityInferencer.h"
 #import "FBSDKEventInferencer.h"
 #import "FBSDKFeatureExtractor.h"
 #import "FBSDKFeatureManager.h"
@@ -33,9 +32,17 @@
 #import "FBSDKSuggestedEventsIndexer.h"
 #import "FBSDKTypeUtility.h"
 #import "FBSDKMLMacros.h"
+#import "FBSDKModelParser.h"
+#import "FBSDKModelRuntime.hpp"
+#import "FBSDKModelUtility.h"
+
+static NSString *const INTEGRITY_NONE = @"none";
+static NSString *const INTEGRITY_ADDRESS = @"address";
+static NSString *const INTEGRITY_HEALTH = @"health";
 
 static NSString *_directoryPath;
 static NSMutableDictionary<NSString *, id> *_modelInfo;
+static std::unordered_map<std::string, fbsdk::MTensor> _MTMLWeights;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -132,6 +139,35 @@ NS_ASSUME_NONNULL_BEGIN
   return modelInfo[THRESHOLDS_KEY];
 }
 
+#pragma mark - Integrity Inferencer method
+
++ (BOOL)processIntegrity:(nullable NSString *)param
+{
+  if (param.length == 0 || _MTMLWeights.size() == 0) {
+    return false;
+  }
+  NSArray<NSString *> *integrityMapping = [self getIntegrityMapping];
+  NSString *text = [FBSDKModelUtility normalizeText:param];
+  const char *bytes = [text UTF8String];
+  if ((int)strlen(bytes) == 0) {
+    return false;
+  }
+  NSArray *thresholds = [FBSDKModelManager getThresholdsForKey:MTMLTaskIntegrityDetectKey];
+  if (thresholds.count != integrityMapping.count) {
+    return false;
+  }
+  const fbsdk::MTensor& res = fbsdk::predictOnMTML("integrity_detect", bytes, _MTMLWeights, nullptr);
+  const float *res_data = res.data();
+  NSString *integrityType = INTEGRITY_NONE;
+  for (int i = 0; i < thresholds.count; i++) {
+    if ((float)res_data[i] >= (float)[thresholds[i] floatValue]) {
+      integrityType = integrityMapping[i];
+      break;
+    }
+  }
+  return ![integrityType isEqualToString:INTEGRITY_NONE];
+}
+
 #pragma mark - Private methods
 
 + (BOOL)isValidTimestamp:(NSDate *)timestamp
@@ -166,6 +202,12 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)checkFeaturesAndExecuteForMTML
 {
   [self getModelAndRules:MTMLKey onSuccess:^() {
+    NSData *data = [FBSDKModelManager getWeightsForKey:MTMLKey];
+    _MTMLWeights = [FBSDKModelParser parseWeightsData:data];
+    if (![FBSDKModelParser validateWeights:_MTMLWeights forKey:MTMLKey]) {
+      return;
+    }
+
     if ([FBSDKFeatureManager isEnabled:FBSDKFeatureSuggestedEvents]) {
       [self getModelAndRules:MTMLTaskAppEventPredKey onSuccess:^() {
         [FBSDKEventInferencer loadWeightsForKey:MTMLTaskAppEventPredKey];
@@ -176,8 +218,6 @@ NS_ASSUME_NONNULL_BEGIN
 
     if ([FBSDKFeatureManager isEnabled:FBSDKFeatureIntelligentIntegrity]) {
       [self getModelAndRules:MTMLTaskIntegrityDetectKey onSuccess:^() {
-        [FBSDKIntegrityInferencer loadWeightsForKey:MTMLTaskIntegrityDetectKey];
-        [FBSDKIntegrityInferencer initializeDenseFeature];
         [FBSDKIntegrityManager enable];
       }];
     }
@@ -272,6 +312,11 @@ NS_ASSUME_NONNULL_BEGIN
     }
   }
   return modelInfo;
+}
+
++ (NSArray<NSString *> *)getIntegrityMapping
+{
+  return @[INTEGRITY_NONE, INTEGRITY_ADDRESS, INTEGRITY_HEALTH];
 }
 
 @end

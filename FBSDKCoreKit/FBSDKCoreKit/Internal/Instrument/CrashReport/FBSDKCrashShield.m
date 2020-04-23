@@ -59,7 +59,6 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
       ],
       @"IntelligentIntegrity" : @[
           @"FBSDKIntegrityManager",
-          @"FBSDKIntegrityInferencer",
       ],
       @"EventDeactivation" : @[
           @"FBSDKEventDeactivationManager",

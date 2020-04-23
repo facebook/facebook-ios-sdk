@@ -21,11 +21,11 @@
 #import <OCMock/OCMock.h>
 
 #import "FBSDKIntegrityManager.h"
-#import "FBSDKIntegrityInferencer.h"
+#import "FBSDKModelManager.h"
 
 @interface FBSDKIntegrityTests : XCTestCase
 {
-  id _mockIntegrityInferencer;
+  id _mockModelManager;
 }
 
 @end
@@ -36,17 +36,17 @@
 {
   [super setUp];
   [FBSDKIntegrityManager enable];
-  _mockIntegrityInferencer = OCMClassMock([FBSDKIntegrityInferencer class]);
+  _mockModelManager = OCMClassMock([FBSDKModelManager class]);
 }
 
-- (void)testProcessParameters
+- (void)testProcessParameters1
 {
   NSDictionary *parameters = @{
     @"address" : @"2301 N Highland Ave, Los Angeles, CA 90068",
     @"period_starts" : @"2020-02-03",
   };
 
-  OCMStub([_mockIntegrityInferencer shouldFilterParam:[OCMArg any]]).andReturn(YES);
+  OCMStub([_mockModelManager processIntegrity:[OCMArg any]]).andReturn(YES);
   NSDictionary *processed = [FBSDKIntegrityManager processParameters:parameters];
 
   XCTAssertNil(processed[@"address"]);
@@ -60,7 +60,7 @@
     @"_valueToSum" : @1,
     @"_session_id" :@"12345",
   };
-  OCMStub([_mockIntegrityInferencer shouldFilterParam:[OCMArg any]]).andReturn(NO);
+  OCMStub([_mockModelManager processIntegrity:[OCMArg any]]).andReturn(NO);
   NSDictionary *processed = [FBSDKIntegrityManager processParameters:parameters];
 
   XCTAssertNotNil(processed[@"_valueToSum"]);
