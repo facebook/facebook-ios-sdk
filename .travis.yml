@@ -31,43 +31,31 @@ stages:
 jobs:
   include:
     - stage: test
-      name: Xcode - iOS 12.2
-      osx_image: xcode10.2
+      name: Xcode - iOS 13
+      osx_image: xcode11
       env:
-        - XCODE_SDK=iphonesimulator12.2
+        - XCODE_SDK=iphonesimulator13.0
         - XCODE_SCHEME=BuildAllKits
     - stage: test
-      name: Xcode - tvOS 12.2
-      osx_image: xcode10.2
+      name: Xcode - tvOS 13
+      osx_image: xcode11
       env:
-        - XCODE_SDK=appletvsimulator12.2
+        - XCODE_SDK=appletvsimulator13.0
         - XCODE_SCHEME=BuildAllKits_TV
     - stage: test
-      name: Xcode - iOS 11.4
-      osx_image: xcode9.4
-      env:
-        - XCODE_SDK=iphonesimulator11.4
-        - XCODE_SCHEME=BuildAllKits
+      name: Carthage
+      osx_image: xcode11
     - stage: test
-      name: Swift - Xcode 10.3
-      osx_image: xcode10.3
-      env:
-        - XCODE_SDK=iphonesimulator12.4
-        - XCODE_SCHEME=BuildAllSwiftKits
-    - stage: test
-      name: Carthage - Xcode 10.2
-      osx_image: xcode10.2
-    - stage: test
-      name: Pod Lint - Xcode 10.3
-      osx_image: xcode10.3
+      name: Pod Lint
+      osx_image: xcode11
       script: sh scripts/run.sh lint cocoapods
     - stage: test
-      name: Pod Lint Static - Xcode 10.3
-      osx_image: xcode10.3
+      name: Pod Lint Static
+      osx_image: xcode11
       script: sh scripts/run.sh lint cocoapods --use-libraries
     - stage: test
       name: Swift Lint
-      osx_image: xcode10.3
+      osx_image: xcode11
       script: sh scripts/run.sh lint swift
     - stage: test
       name: Verify Swift Package Headers
@@ -82,23 +70,8 @@ jobs:
       script: sh scripts/run.sh build spm
     - stage: release
       name: GitHub Release
-      osx_image: xcode10.1
+      osx_image: xcode11
       script: sh scripts/run.sh release github
-      deploy:
-        provider: releases
-        skip_cleanup: true
-        api_key: $GITHUB_ACCESS_TOKEN
-        file: build/Release/*
-        file_glob: true
-        name: Facebook SDK $TRAVIS_TAG
-        body: Consult Changelog $TRAVIS_TAG
-        on:
-          all_branches: true
-          tags: true
-    - stage: release
-      name: GitHub Release Swift
-      osx_image: xcode10.3
-      script: sh scripts/run.sh release github swift
       deploy:
         provider: releases
         skip_cleanup: true
@@ -112,15 +85,15 @@ jobs:
           tags: true
     - stage: release cocoapods 1/3
       name: Release Top Level Cocoapods
-      osx_image: xcode10.3
+      osx_image: xcode11
       script: sh scripts/run.sh release cocoapods FBSDKCoreKit
     - stage: release cocoapods 2/3
       name: Release Dependent Cocoapods
-      osx_image: xcode10.3
+      osx_image: xcode11
       script: sh scripts/run.sh release cocoapods FBSDKLoginKit FBSDKShareKit
     - stage: release cocoapods 3/3
       name: Release Dependent Cocoapods
-      osx_image: xcode10.3
+      osx_image: xcode11
       script: sh scripts/run.sh release cocoapods FBSDKGamingServicesKit FBSDKTVOSKit
     - stage: verify release
       osx_image: xcode 11.3

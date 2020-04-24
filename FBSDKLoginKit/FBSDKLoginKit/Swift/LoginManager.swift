@@ -30,7 +30,7 @@ public typealias LoginResultBlock = (LoginResult) -> Void
 @available(tvOS, unavailable)
 public enum LoginResult {
   /// User succesfully logged in. Contains granted, declined permissions and access token.
-  case success(granted: Set<Permission>, declined: Set<Permission>, token: AccessToken)
+  case success(granted: Set<Permission>, declined: Set<Permission>, token: FBSDKCoreKit.AccessToken)
   /// Login attempt was cancelled by the user.
   case cancelled
   /// Login attempt failed.
