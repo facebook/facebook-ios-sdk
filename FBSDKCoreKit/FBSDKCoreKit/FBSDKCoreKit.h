@@ -92,5 +92,5 @@
 
 #endif
 
-#define FBSDK_VERSION_STRING @"6.5.0"
+#define FBSDK_VERSION_STRING @"6.5.1"
 #define FBSDK_TARGET_PLATFORM_VERSION @"v6.0"

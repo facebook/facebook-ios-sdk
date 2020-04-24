@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'FBSDKTVOSKit'
-  s.version      = '6.5.0'
+  s.version      = '6.5.1'
   s.summary      = 'Official Facebook SDK for tvOS to access Facebook Platform with features like Login and Graph API.'
 
   s.description  = <<-DESC
