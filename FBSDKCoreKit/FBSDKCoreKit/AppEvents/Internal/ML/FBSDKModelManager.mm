@@ -32,6 +32,7 @@
 #import "FBSDKSuggestedEventsIndexer.h"
 #import "FBSDKTypeUtility.h"
 #import "FBSDKMLMacros.h"
+#import "FBSDKModelCacheManager.h"
 #import "FBSDKModelParser.h"
 #import "FBSDKModelRuntime.hpp"
 #import "FBSDKModelUtility.h"
@@ -161,14 +162,19 @@ NS_ASSUME_NONNULL_BEGIN
   if (thresholds.count != integrityMapping.count) {
     return false;
   }
-  const fbsdk::MTensor& res = fbsdk::predictOnMTML("integrity_detect", bytes, _MTMLWeights, nullptr);
-  const float *res_data = res.data();
-  NSString *integrityType = INTEGRITY_NONE;
-  for (int i = 0; i < thresholds.count; i++) {
-    if ((float)res_data[i] >= (float)[thresholds[i] floatValue]) {
-      integrityType = integrityMapping[i];
-      break;
+
+  NSString *integrityType = [FBSDKModelCacheManager getPredictionWithText:text usecase:MTMLTaskIntegrityDetectKey dense:nullptr];
+  if (!integrityType) {
+    const fbsdk::MTensor& res = fbsdk::predictOnMTML("integrity_detect", bytes, _MTMLWeights, nullptr);
+    const float *res_data = res.data();
+    integrityType = INTEGRITY_NONE;
+    for (int i = 0; i < thresholds.count; i++) {
+      if ((float)res_data[i] >= (float)[thresholds[i] floatValue]) {
+        integrityType = integrityMapping[i];
+        break;
+      }
     }
+    [FBSDKModelCacheManager addPrediction:integrityType usecase:MTMLTaskIntegrityDetectKey text:text dense:nullptr];
   }
   return ![integrityType isEqualToString:INTEGRITY_NONE];
 }
@@ -191,14 +197,20 @@ NS_ASSUME_NONNULL_BEGIN
     return SUGGESTED_EVENT_OTHER;
   }
 
-  const fbsdk::MTensor& res = fbsdk::predictOnMTML("app_event_pred", bytes, _MTMLWeights, denseData);
-  const float *res_data = res.data();
-  for (int i = 0; i < thresholds.count; i++) {
-    if ((float)res_data[i] >= (float)[thresholds[i] floatValue]) {
-      return eventMapping[i];
+  NSString *eventPred = [FBSDKModelCacheManager getPredictionWithText:textFeature usecase:MTMLTaskAppEventPredKey dense:denseData];
+  if (!eventPred) {
+    const fbsdk::MTensor& res = fbsdk::predictOnMTML("app_event_pred", bytes, _MTMLWeights, denseData);
+    const float *res_data = res.data();
+    eventPred = SUGGESTED_EVENT_OTHER;
+    for (int i = 0; i < thresholds.count; i++) {
+      if ((float)res_data[i] >= (float)[thresholds[i] floatValue]) {
+        eventPred = eventMapping[i];
+        break;
+      }
     }
+    [FBSDKModelCacheManager addPrediction:eventPred usecase:MTMLTaskAppEventPredKey text:textFeature dense:denseData];
   }
-  return SUGGESTED_EVENT_OTHER;
+  return eventPred;
 }
 
 #pragma mark - Private methods
@@ -265,6 +277,11 @@ NS_ASSUME_NONNULL_BEGIN
   NSDictionary<NSString *, id> *model = [_modelInfo objectForKey:useCaseKey];
   if (!model || !_directoryPath) {
       return;
+  }
+
+  // load prediction cache except "MTML"
+  if (![useCaseKey isEqualToString:MTMLKey]) {
+    [FBSDKModelCacheManager loadCacheWithUsecase:useCaseKey version:[NSString stringWithFormat:@"%@", model[VERSION_ID_KEY]]];
   }
 
   NSFileManager *fileManager = [NSFileManager defaultManager];

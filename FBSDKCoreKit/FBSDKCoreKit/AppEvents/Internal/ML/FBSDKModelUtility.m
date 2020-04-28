@@ -23,6 +23,7 @@
 #import <Foundation/Foundation.h>
 
 #import "FBSDKModelUtility.h"
+#import "FBSDKMLMacros.h"
 
 @implementation FBSDKModelUtility : NSObject
 
@@ -31,6 +32,18 @@
   NSMutableArray *tokens = [[text componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] mutableCopy];
   [tokens removeObject:@""];
   return [tokens componentsJoinedByString: @" "];
+}
+
++ (NSString *)getDenseFeatureString:(float *)denseData
+{
+  if (!denseData) {
+    return @"";
+  }
+  NSMutableArray *denseDataArray = [NSMutableArray array];
+  for (int i = 0; i < 30; i++) {
+    [denseDataArray addObject:[NSNumber numberWithFloat: denseData[i]]];
+  }
+  return [denseDataArray componentsJoinedByString:@","];
 }
 
 @end

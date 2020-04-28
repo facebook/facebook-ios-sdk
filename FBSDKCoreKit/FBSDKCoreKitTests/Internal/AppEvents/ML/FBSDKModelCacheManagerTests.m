@@ -16,17 +16,34 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+#import <XCTest/XCTest.h>
 
-#if !TARGET_OS_TV
+#import "FBSDKModelCacheManager.h"
 
-#import <Foundation/Foundation.h>
-
-@interface FBSDKModelUtility : NSObject
-
-+ (NSString *)normalizeText:(NSString *)text;
-+ (NSString *)getDenseFeatureString:(float *)dense;
+@interface FBSDKModelCacheManagerTests : XCTestCase
 
 @end
 
-#endif
+@implementation FBSDKModelCacheManagerTests
+
+- (void)setUp {
+  [FBSDKModelCacheManager loadCacheWithUsecase:@"TEST" version:@"0"];
+}
+
+- (void)testCache {
+  [FBSDKModelCacheManager addPrediction:@"test_prediction"
+                                usecase:@"TEST"
+                                   text:@"text"
+                                  dense:nil];
+
+  NSString *res;
+  res = [FBSDKModelCacheManager getPredictionWithText:@"text" usecase:@"TEST" dense:nil];
+  XCTAssertEqual(@"test_prediction", res);
+  res = [FBSDKModelCacheManager getPredictionWithText:@"text" usecase:@"UNKNOWN" dense:nil];
+  XCTAssertNil(res);
+  float dense[] = {0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4};
+  res = [FBSDKModelCacheManager getPredictionWithText:@"text" usecase:@"TEST" dense:dense];
+  XCTAssertNil(res);
+}
+
+@end

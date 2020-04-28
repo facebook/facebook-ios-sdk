@@ -16,17 +16,23 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
-#if !TARGET_OS_TV
-
 #import <Foundation/Foundation.h>
 
-@interface FBSDKModelUtility : NSObject
+NS_ASSUME_NONNULL_BEGIN
 
-+ (NSString *)normalizeText:(NSString *)text;
-+ (NSString *)getDenseFeatureString:(float *)dense;
+NS_SWIFT_NAME(ModelCacheManager)
+@interface FBSDKModelCacheManager : NSObject
+
++ (void)loadCacheWithUsecase:(NSString *)usecase
+                     version:(NSString *)version;
++ (void)addPrediction:(NSString *)prediction
+              usecase:(NSString *)usecase
+                 text:(NSString *)text
+                dense:(nullable float *)dense;
++ (nullable NSString *)getPredictionWithText:(NSString *)text
+                                     usecase:(NSString *)usecase
+                                       dense:(nullable float *)dense;
 
 @end
 
-#endif
+NS_ASSUME_NONNULL_END

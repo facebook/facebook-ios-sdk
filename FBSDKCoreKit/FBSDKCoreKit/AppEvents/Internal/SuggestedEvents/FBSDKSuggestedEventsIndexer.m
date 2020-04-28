@@ -231,7 +231,7 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
                       }];
       } else if ([_unconfirmedEvents containsObject:event]) {
         // Only send back not confirmed events to advertisers
-        [self logSuggestedEvent:event withText:text withDenseFeature:[self getDenseFeaure:denseData] ?: @""];
+        [self logSuggestedEvent:event withText:text withDenseFeature:[FBSDKModelUtility getDenseFeatureString:denseData] ?: @""];
       }
       free(denseData);
     });
@@ -239,16 +239,6 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
 }
 
 #pragma mark - Helper Methods
-
-+ (NSString *)getDenseFeaure:(float *)denseData
-{
-  // Get dense feature string
-  NSMutableArray *denseDataArray = [NSMutableArray array];
-  for (int i = 0; i < 30; i++) {
-    [denseDataArray addObject:[NSNumber numberWithFloat: denseData[i]]];
-  }
-  return [denseDataArray componentsJoinedByString:@","];
-}
 
 + (NSString *)getTextFromContentView:(UIView *)contentView
 {
