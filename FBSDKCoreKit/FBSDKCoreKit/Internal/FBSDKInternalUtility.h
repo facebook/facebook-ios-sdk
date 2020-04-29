@@ -283,6 +283,11 @@ NS_SWIFT_NAME(InternalUtility)
 + (nullable UIViewController *)topMostViewController;
 
 /**
+  returns interface orientation for the key window.
+ */
++ (UIInterfaceOrientation)statusBarOrientation;
+
+/**
   Converts NSData to a hexadecimal UTF8 String.
  */
 + (nullable NSString *)hexadecimalStringFromData:(NSData *)data;

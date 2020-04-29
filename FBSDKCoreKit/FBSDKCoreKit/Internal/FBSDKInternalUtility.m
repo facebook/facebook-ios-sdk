@@ -556,6 +556,17 @@ static NSMapTable *_transientObjects;
   return topController;
 }
 
++ (UIInterfaceOrientation)statusBarOrientation
+{
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+  if (@available(iOS 13.0, *)) {
+    return [self findWindow].windowScene.interfaceOrientation;
+  }
+#else
+  return UIApplication.sharedApplication.statusBarOrientation;
+#endif
+}
+
 + (NSString *)hexadecimalStringFromData:(NSData *)data
 {
   NSUInteger dataLength = data.length;
