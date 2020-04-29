@@ -43,6 +43,13 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift)
 
 @implementation FBSDKInternalUtility
 
+static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix) {
+  return
+  [[FBSDKAccessToken currentAccessToken] respondsToSelector:@selector(graphDomain)] &&
+  [[FBSDKAccessToken currentAccessToken].graphDomain isEqualToString:@"gaming"] &&
+  ([hostPrefix isEqualToString:@"graph."] || [hostPrefix isEqualToString:@"graph-video."]);
+}
+
 #pragma mark - Class Methods
 
 + (NSString *)appURLScheme
@@ -144,8 +151,7 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift)
   }
 
   NSString *host =
-  ([hostPrefix isEqualToString:@"graph."] || [hostPrefix isEqualToString:@"graph-video."]) &&
-  [[FBSDKAccessToken currentAccessToken].graphDomain isEqualToString:@"gaming"]
+  ShouldOverrideHostWithGamingDomain(hostPrefix)
   ? @"fb.gg"
   : @"facebook.com";
 
