@@ -99,6 +99,7 @@ let package = Package(
             cSettings: [
                 .headerSearchPath("Internal"),
                 .headerSearchPath("../../FBSDKCoreKit/FBSDKCoreKit/Internal"),
+                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS], configuration: nil)),
             ]
         ),
         .target(
@@ -114,6 +115,7 @@ let package = Package(
             cSettings: [
                 .headerSearchPath("Internal"),
                 .headerSearchPath("../../FBSDKCoreKit/FBSDKCoreKit/Internal"),
+                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS], configuration: nil)),
             ]
         ),
         .target(
