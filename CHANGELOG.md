@@ -12,7 +12,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 v7.0 will drop support for Xcode versions below 11. This is in line with [Apple's plans](https://developer.apple.com/news/?id=03262020b) to disallow submission of Apps that do not include the iOS 13 SDK.
 This means that from v7.0 on, all SDK kits will be built using Xcode 11 and Swift 5.1.
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v6.5.1...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v6.5.2...HEAD)
+
+## 6.5.2
+
+- Various bug fixes
+
+[2020-04-29](https://github.com/facebook/facebook-ios-sdk/releases/tag/v6.5.2) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v6.5.1...v6.5.2)
 
 ## 6.5.1
 
