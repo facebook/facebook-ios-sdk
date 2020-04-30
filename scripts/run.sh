@@ -652,6 +652,11 @@ release_sdk() {
 # Check Release Status
 check_release_status() {
   local version_to_check=${1:-}
+
+  if [ -z "$version_to_check" ]; then
+    version_to_check=$SDK_CURRENT_VERSION
+  fi
+
   local release_success=0
 
   if ! is_valid_semver "$version_to_check"; then
@@ -669,6 +674,13 @@ check_release_status() {
   for spec in "${SDK_POD_SPECS[@]}"; do
     if [ ! -f "$spec" ]; then
       echo "*** ERROR: unable to release $spec"
+      continue
+    fi
+
+    # Exclude aggregate pod FacebookSDK.
+    # We release it separately from the CI process
+    # because it contains proprietary MarketingKit source code
+    if [ "$spec"  == "$SDK_FRAMEWORK_NAME.podspec" ]; then
       continue
     fi
 
