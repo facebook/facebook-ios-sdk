@@ -25,6 +25,8 @@ stages:
     if: tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
   - name: release cocoapods 3/3
     if: tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
+  - name: verify release
+    if: tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
 
 jobs:
   include:
@@ -120,6 +122,9 @@ jobs:
       name: Release Dependent Cocoapods
       osx_image: xcode10.3
       script: sh scripts/run.sh release cocoapods FBSDKGamingServicesKit FBSDKTVOSKit
+    - stage: verify release
+      osx_image: xcode 11.3
+      script: sh scripts/run.sh check-release-status
 
 script: sh scripts/travis/script.sh
 
