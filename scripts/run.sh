@@ -281,26 +281,6 @@ build_sdk() {
       -configuration Debug > /dev/null
   }
 
-  # Builds all Swift dynamic frameworks.
-  # Stores the output in the top level build directory
-  # This should be combined with the build_carthage function
-  # once we drop support for Xcode 10.2
-  build_swift() {
-    mkdir -p Temp
-    xcodebuild clean build \
-      -workspace "${1:-}" \
-      -sdk "${2:-}" \
-      -scheme BuildAllSwiftKits \
-      -configuration Debug \
-      -derivedDataPath Temp
-
-    for kit in "${SDK_BASE_KITS[@]}"; do
-      mv Temp/Build/Products/Debug-iphonesimulator/"$kit".framework build
-    done
-
-    rm -rf Temp
-  }
-
   build_carthage() {
     carthage build --no-skip-current
 
@@ -362,7 +342,6 @@ build_sdk() {
   "carthage") build_carthage "$@" ;;
   "spm") build_spm "$@" ;;
   "spm-integration") build_spm_integration ;;
-  "swift") build_swift "$@" ;;
   "xcode") build_xcode_workspace "$@" ;;
   *) echo "Unsupported Build: $build_type" ;;
   esac
@@ -453,50 +432,6 @@ release_sdk() {
     mkdir -p build/Release
     rm -rf build/Release/*
 
-    # Warning: This function will move the Swift schemes and not clean up after itself.
-    # This is intended to be run in CI on container jobs so this is not an issue.
-    # If running locally you will need to clean the directory after running.
-    include_swift_schemes() {
-      for kit in "${SDK_KITS[@]}"; do
-        rm "$kit/$kit".xcodeproj/xcshareddata/xcschemes/* || continue
-      done
-
-      for kit in "${SDK_BASE_KITS[@]}"; do
-        mv "$kit/$kit/Swift/"*.xcscheme "$kit/$kit.xcodeproj/xcshareddata/xcschemes/"
-      done
-    }
-
-    release_swift_dynamic() {
-      carthage build --no-skip-current
-      carthage archive --output build/Release/
-      # This is a little unintuitive. Carthage outputs are based on module name instead of
-      # target/scheme name. So FBSDKCoreKit.framework.zip IS actually the Swift enabled kits.
-      mv build/Release/FBSDKCoreKit.framework.zip build/Release/SwiftDynamic.zip
-    }
-
-    release_swift_static() {
-      mkdir -p Temp
-
-      for kit in "${SDK_BASE_KITS[@]}"; do
-        # Redirecting to /dev/null because we only care about errors here and the full output drowns Travis
-        xcodebuild build \
-        -workspace FacebookSDK.xcworkspace \
-        -scheme "$kit"Swift \
-        -configuration Release \
-        -derivedDataPath Temp > /dev/null
-
-        mv Temp/Build/Products/Release-iphoneos/"$kit".framework build/Release
-
-        cd build/Release || exit
-        zip -r -m "$kit"-Swift.zip "$kit".framework
-        cd ..
-
-        cd ..
-      done
-
-      rm -rf Temp
-    }
-
     # Release frameworks in dynamic (mostly for Carthage)
     release_dynamic() {
       carthage build --no-skip-current
@@ -566,15 +501,8 @@ release_sdk() {
       release_basics
     }
 
-    # TODO: Remove conditional when we drop support for Xcode 10.2
-    if [ "${1:-}" == "swift" ]; then
-      include_swift_schemes
-      release_swift_dynamic
-      release_swift_static
-    else
-      release_dynamic
-      release_static
-    fi
+    release_dynamic
+    release_static
   }
 
   # Release Cocoapods

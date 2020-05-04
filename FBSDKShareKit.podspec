@@ -39,15 +39,9 @@ Pod::Spec.new do |s|
   s.subspec 'Share' do |ss|
     ss.dependency 'FBSDKCoreKit', "~> #{s.version}"
 
-    ss.exclude_files = 'FBSDKShareKit/FBSDKShareKit/include/**/*'
+    ss.exclude_files = 'FBSDKShareKit/FBSDKShareKit/include/**/*',
+                       'FBSDKShareKit/FBSDKShareKit/Swift/Exports.swift'
     ss.public_header_files = 'FBSDKShareKit/FBSDKShareKit/*.{h}'
-    ss.source_files = 'FBSDKShareKit/FBSDKShareKit/**/*.{h,m}'
-  end
-
-  s.subspec 'Swift' do |ss|
-    ss.dependency 'FBSDKCoreKit/Swift', "~> #{s.version}"
-    ss.dependency 'FBSDKShareKit/Share'
-    ss.source_files   = 'FBSDKShareKit/FBSDKShareKit/Swift/*.{swift}'
-    ss.exclude_files = 'FBSDKShareKit/FBSDKShareKit/Swift/Exports.swift'
+    ss.source_files = 'FBSDKShareKit/FBSDKShareKit/**/*.{h,m,swift}'
   end
 end

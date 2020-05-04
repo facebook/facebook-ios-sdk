@@ -57,8 +57,9 @@ Pod::Spec.new do |s|
     ss.dependency 'FBSDKCoreKit/Basics'
     ss.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/Basics/*',
                        'FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.{h,m}',
-                       'FBSDKCoreKit/FBSDKCoreKit/include/**/*'
-    ss.source_files = 'FBSDKCoreKit/FBSDKCoreKit/**/*.{h,hpp,m,mm}'
+                       'FBSDKCoreKit/FBSDKCoreKit/include/**/*',
+                       'FBSDKCoreKit/FBSDKCoreKit/Swift/Exports.swift'
+    ss.source_files = 'FBSDKCoreKit/FBSDKCoreKit/**/*.{h,hpp,m,mm,swift}'
     ss.public_header_files = 'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.h',
                              'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/**/*.h',
                              'FBSDKCoreKit/FBSDKCoreKit/*.h',
@@ -69,11 +70,5 @@ Pod::Spec.new do |s|
                               'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/**/*.h'
     ss.resources = 'FacebookSDKStrings.bundle'
     ss.library = 'c++', 'stdc++'
-  end
-
-  s.subspec 'Swift' do |ss|
-    ss.dependency 'FBSDKCoreKit/Core'
-    ss.source_files = 'FBSDKCoreKit/FBSDKCoreKit/Swift/*.{h,m,swift}'
-    ss.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/Swift/Exports.swift'
   end
 end
