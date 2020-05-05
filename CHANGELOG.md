@@ -9,10 +9,31 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Important
 
-v7.0 will drop support for Xcode versions below 11. This is in line with [Apple's plans](https://developer.apple.com/news/?id=03262020b) to disallow submission of Apps that do not include the iOS 13 SDK.
-This means that from v7.0 on, all SDK kits will be built using Xcode 11 and Swift 5.1.
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v7.0.0...HEAD)
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v6.5.2...HEAD)
+## 7.0.0
+
+## Changed
+
+- Using version 7.0 of the Facebook Graph API
+- Dropping support for Xcode versions below 11. This is in line with [Apple's plans](https://developer.apple.com/news/?id=03262020b) to disallow submission of Apps that do not include the iOS 13 SDK.
+This means that from v7.0 on, all SDK kits will be built using Xcode 11 and Swift 5.1.
+- Include the enhanced Swift interfaces
+
+This primarily matters for how you include CocoaPods
+
+| Distribution Channel  | Old way                              | New Way              |
+| :---                  | :---                                 | :---                 |
+| CocoaPods             | `pod 'FBSDKCoreKit/Swift'`           | `pod 'FBSDKCoreKit'` |
+| Swift Package Manager | No change                            | No change            |
+| Carthage              | No change                            | No change            |
+
+## Deprecated
+
+- FBSDKMarketingKit
+
+[2020-05-05](https://github.com/facebook/facebook-ios-sdk/releases/tag/v7.0.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v6.5.2...v7.0.0)
 
 ## 6.5.2
 

@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'FBSDKLoginKit'
-  s.version      = '6.5.2'
+  s.version      = '7.0.0'
   s.summary      = 'Official Facebook SDK for iOS to access Facebook Platform with features like Login, Share and Message Dialog, App Links, and Graph API'
 
   s.description  = <<-DESC

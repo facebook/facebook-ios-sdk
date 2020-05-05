@@ -30,17 +30,11 @@ For projects that include Swift, use `FacebookCore`, `FacebookLogin`, and `Faceb
 
 ### CocoaPods
 
-1. If you explicitly **DO NOT** want to include Swift files, add the following to your `Podfile`:
+1. Add the following to your `Podfile`:
 
         pod 'FBSDKCoreKit'
         pod 'FBSDKLoginKit'
         pod 'FBSDKShareKit'
-
-   If you would like to use versions of the pods that include Swift, add the following to your `Podfile`:
-
-        pod 'FBSDKCoreKit/Swift'
-        pod 'FBSDKLoginKit/Swift'
-        pod 'FBSDKShareKit/Swift'
 
 2. Test your install by adding `import FBSDKCoreKit` to your `AppDelegate`
 3. Check-out the tutorials available online at: <https://developers.facebook.com/docs/ios/getting-started>
