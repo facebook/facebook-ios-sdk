@@ -441,7 +441,10 @@ release_sdk() {
 
     # Release frameworks in static
     release_static() {
+      echo "Releasing static frameworks"
       release_basics() {
+
+        echo "Building scheme: BuildCoreKitBasics"
         # Redirecting to /dev/null because we only care about errors here and the full output drowns Travis
         xcodebuild build \
          -workspace FacebookSDK.xcworkspace \
@@ -462,12 +465,14 @@ release_sdk() {
         cd ..
       }
 
+      echo "Building scheme: BuildAllKits"
       # Redirecting to /dev/null because we only care about errors here and the full output drowns Travis
       xcodebuild build \
        -workspace FacebookSDK.xcworkspace \
        -scheme BuildAllKits \
        -configuration Release > /dev/null
 
+      echo "Building scheme: BuildAllKits_TV"
       # Redirecting to /dev/null because we only care about errors here and the full output drowns Travis
       xcodebuild build \
        -workspace FacebookSDK.xcworkspace \
