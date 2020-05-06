@@ -4105,6 +4105,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6021D19BE0400D5BF66 /* FBSDKCoreKit-Dynamic.xcconfig */;
 			buildSettings = {
+				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Debug;
 		};
@@ -4112,6 +4113,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6021D19BE0400D5BF66 /* FBSDKCoreKit-Dynamic.xcconfig */;
 			buildSettings = {
+				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Release;
 		};
@@ -4147,6 +4149,7 @@
 			buildSettings = {
 				CLANG_WARN_STRICT_PROTOTYPES = NO;
 				"FB_BITCODE_FLAG[sdk=iphoneos11.0]" = "-fembed-bitcode";
+				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Debug;
 		};
@@ -4156,6 +4159,7 @@
 			buildSettings = {
 				CLANG_WARN_STRICT_PROTOTYPES = NO;
 				"FB_BITCODE_FLAG[sdk=iphoneos11.0]" = "-fembed-bitcode";
+				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Release;
 		};
@@ -4167,6 +4171,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
@@ -4180,6 +4185,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -4188,6 +4194,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6031D19BE0400D5BF66 /* FBSDKCoreKit.xcconfig */;
 			buildSettings = {
+				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Debug;
 		};
@@ -4195,6 +4202,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6031D19BE0400D5BF66 /* FBSDKCoreKit.xcconfig */;
 			buildSettings = {
+				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Release;
 		};
@@ -4231,6 +4239,7 @@
 			baseConfigurationReference = 81A4A6031D19BE0400D5BF66 /* FBSDKCoreKit.xcconfig */;
 			buildSettings = {
 				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/Basics/FBSDKCoreKit.modulemap";
+				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Debug;
 		};
@@ -4239,6 +4248,7 @@
 			baseConfigurationReference = 81A4A6031D19BE0400D5BF66 /* FBSDKCoreKit.xcconfig */;
 			buildSettings = {
 				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/Basics/FBSDKCoreKit.modulemap";
+				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Release;
 		};
@@ -4263,6 +4273,7 @@
 			baseConfigurationReference = 81A4A6021D19BE0400D5BF66 /* FBSDKCoreKit-Dynamic.xcconfig */;
 			buildSettings = {
 				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/Basics/FBSDKCoreKit.modulemap";
+				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Debug;
 		};
@@ -4271,6 +4282,7 @@
 			baseConfigurationReference = 81A4A6021D19BE0400D5BF66 /* FBSDKCoreKit-Dynamic.xcconfig */;
 			buildSettings = {
 				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/Basics/FBSDKCoreKit.modulemap";
+				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Release;
 		};
@@ -4295,6 +4307,7 @@
 			baseConfigurationReference = 81A4A6031D19BE0400D5BF66 /* FBSDKCoreKit.xcconfig */;
 			buildSettings = {
 				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/Basics/FBSDKCoreKit.modulemap";
+				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Debug;
 		};
@@ -4303,6 +4316,7 @@
 			baseConfigurationReference = 81A4A6031D19BE0400D5BF66 /* FBSDKCoreKit.xcconfig */;
 			buildSettings = {
 				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/Basics/FBSDKCoreKit.modulemap";
+				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Release;
 		};
