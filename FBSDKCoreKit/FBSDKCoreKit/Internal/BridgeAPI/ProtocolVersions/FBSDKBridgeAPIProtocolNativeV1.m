@@ -277,6 +277,8 @@ static const struct
   return [NSError errorWithDomain:domain code:code userInfo:userInfo];
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (NSString *)_JSONStringForObject:(id)object enablePasteboard:(BOOL)enablePasteboard error:(NSError **)errorRef
 {
   __block BOOL didAddToPasteboard = NO;
@@ -321,6 +323,7 @@ static const struct
     return invalidObject;
   }];
 }
+#pragma clang diagnostic pop
 
 + (void)clearData:(NSData *)data fromPasteboardOnApplicationDidBecomeActive:(UIPasteboard *)pasteboard
 {

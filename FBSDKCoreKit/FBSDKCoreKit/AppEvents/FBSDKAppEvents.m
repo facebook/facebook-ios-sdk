@@ -1110,6 +1110,8 @@ static dispatch_once_t *onceTokenPointer;
   }];
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)instanceLogEvent:(FBSDKAppEventName)eventName
               valueToSum:(NSNumber *)valueToSum
               parameters:(NSDictionary *)parameters
@@ -1229,6 +1231,7 @@ static dispatch_once_t *onceTokenPointer;
     }
   }
 }
+#pragma clang diagnostic pop
 
 // this fetches persisted event states.
 // for those matching the currently tracked events, add it.
