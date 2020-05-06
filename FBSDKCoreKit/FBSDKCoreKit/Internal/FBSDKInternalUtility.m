@@ -497,7 +497,10 @@ static NSMapTable *_transientObjects;
 
 + (UIWindow *)findWindow
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   UIWindow *topWindow = [UIApplication sharedApplication].keyWindow;
+#pragma clang diagnostic pop
   if (topWindow == nil || topWindow.windowLevel < UIWindowLevelNormal) {
     for (UIWindow *window in [UIApplication sharedApplication].windows) {
       if (window.windowLevel >= topWindow.windowLevel && !window.isHidden) {

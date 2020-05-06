@@ -109,6 +109,8 @@ static id<FBSDKAppLinkResolving> defaultResolver;
 }
 
 - (FBSDKAppLinkNavigationType)navigate:(NSError **)error {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     NSURL *openedURL = nil;
     NSError *encodingError = nil;
     FBSDKAppLinkNavigationType retType = FBSDKAppLinkNavigationTypeFailure;
@@ -141,7 +143,8 @@ static id<FBSDKAppLinkResolving> defaultResolver;
             openedURL = appLinkBrowserURL;
         }
     }
-
+#pragma clang diagnostic pop
+  
     [self postAppLinkNavigateEventNotificationWithTargetURL:openedURL
                                                       error:error ? *error : nil
                                                        type:retType];

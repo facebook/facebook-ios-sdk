@@ -170,10 +170,13 @@ static NSString *const kAppLinksKey = @"app_links";
   }];
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (instancetype)resolver
 {
   return [[self alloc] initWithUserInterfaceIdiom:UI_USER_INTERFACE_IDIOM()];
 }
+#pragma clang diagnostic pop
 
 @end
 

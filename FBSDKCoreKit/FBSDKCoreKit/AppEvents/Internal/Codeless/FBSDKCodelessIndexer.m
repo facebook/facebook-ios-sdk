@@ -62,6 +62,8 @@ static NSString *_lastTreeHash;
 #endif
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 // DO NOT call this function, it is only called once in the load function
 + (void)loadCodelessSettingWithCompletionBlock:(FBSDKCodelessSettingLoadBlock)completionBlock
 {
@@ -117,6 +119,7 @@ static NSString *_lastTreeHash;
     }
   }];
 }
+#pragma clang diagnostic pop
 
 + (FBSDKGraphRequest *)requestToLoadCodelessSetup:(NSString *)appID
 {

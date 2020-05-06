@@ -264,6 +264,8 @@ static FBSDKProfile *g_currentProfile;
 
 @implementation FBSDKProfile(Internal)
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (void)cacheProfile:(FBSDKProfile *)profile
 {
   NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
@@ -289,6 +291,7 @@ static FBSDKProfile *g_currentProfile;
   }
   return nil;
 }
+#pragma clang diagnostic pop
 
 @end
 

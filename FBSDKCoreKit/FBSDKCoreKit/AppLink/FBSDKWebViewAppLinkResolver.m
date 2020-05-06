@@ -264,8 +264,10 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
     NSMutableArray<FBSDKAppLinkTarget *> *linkTargets = [NSMutableArray array];
 
     NSArray *platformData = nil;
-
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     const UIUserInterfaceIdiom idiom = UI_USER_INTERFACE_IDIOM();
+#pragma clang diagnostic pop
     if (idiom == UIUserInterfaceIdiomPad) {
         platformData = @[ appLinkDict[FBSDKWebViewAppLinkResolverIPadKey] ?: @{},
                           appLinkDict[FBSDKWebViewAppLinkResolverIOSKey] ?: @{} ];

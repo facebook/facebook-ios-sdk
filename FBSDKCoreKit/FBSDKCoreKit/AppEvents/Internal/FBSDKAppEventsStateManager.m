@@ -40,6 +40,8 @@ static BOOL g_canSkipDiskCheck = NO;
   g_canSkipDiskCheck = YES;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (void)persistAppEventsData:(FBSDKAppEventsState *)appEventsState
 {
   [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
@@ -69,6 +71,7 @@ static BOOL g_canSkipDiskCheck = NO;
   }
   return eventsStates;
 }
+#pragma clang diagnostic pop
 
 #pragma mark - Private Helpers
 

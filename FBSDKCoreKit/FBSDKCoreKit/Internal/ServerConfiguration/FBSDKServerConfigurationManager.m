@@ -109,6 +109,8 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   }
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (void)loadServerConfigurationWithCompletionBlock:(FBSDKServerConfigurationBlock)completionBlock
 {
   void (^loadBlock)(void) = nil;
@@ -172,6 +174,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   // Fetch app gatekeepers
   [FBSDKGateKeeperManager loadGateKeepers:nil];
 }
+#pragma clang diagnostic pop
 
 #pragma mark - Internal Class Methods
 
@@ -347,7 +350,10 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *defaultsKey = [NSString stringWithFormat:FBSDK_SERVER_CONFIGURATION_USER_DEFAULTS_KEY, appID];
     if (serverConfiguration) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
       NSData *data = [NSKeyedArchiver archivedDataWithRootObject:serverConfiguration];
+#pragma clang diagnostic pop
       [defaults setObject:data forKey:defaultsKey];
     }
 

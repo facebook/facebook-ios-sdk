@@ -43,7 +43,8 @@
                                             error:nil];
   self.skipDiskCheck = YES;
 }
-
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)persist:(NSArray<id<FBSDKMonitorEntry>> *)entries
 {
   if (!entries.count) {
@@ -65,5 +66,6 @@
  
   return [items copy];
 }
+#pragma clang diagnostic pop
 
 @end

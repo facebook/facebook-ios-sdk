@@ -148,6 +148,8 @@ static const CGFloat FBSDKCloseButtonHeight = 12.0;
     return size;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (CGFloat)statusBarHeight {
     UIApplication *application = [UIApplication sharedApplication];
 
@@ -168,6 +170,7 @@ static const CGFloat FBSDKCloseButtonHeight = 12.0;
 
     return 0;
 }
+#pragma clang diagnostic pop
 
 #pragma mark - Public API
 
