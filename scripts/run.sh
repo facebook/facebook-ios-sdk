@@ -273,12 +273,11 @@ tag_current_version() {
 # Build
 build_sdk() {
   build_xcode_workspace() {
-    # Redirecting to /dev/null because we only care about errors here and the full output drowns Travis
     xcodebuild build \
       -workspace "${1:-}" \
       -sdk "${2:-}" \
       -scheme "${3:-}" \
-      -configuration Debug > /dev/null
+      -configuration Debug | xcpretty
   }
 
   build_carthage() {
@@ -294,14 +293,11 @@ build_sdk() {
 
     echo "Building Swift Package - $scheme"
 
-    # Redirecting to /dev/null because we only care about errors here and the full output drowns Travis
-    # The echo before building the scheme should be enough to keep travis from timing out for lack of
-    # visible output
     xcodebuild clean build \
       -workspace .swiftpm/xcode/package.xcworkspace \
       -scheme "$scheme" \
       -sdk iphonesimulator \
-      OTHER_SWIFT_FLAGS="-D SWIFT_PACKAGE" > /dev/null
+      OTHER_SWIFT_FLAGS="-D SWIFT_PACKAGE" | xcpretty
     done
   }
 
@@ -326,11 +322,8 @@ build_sdk() {
         -c "set :objects:F4CEA53E23C29C9E0086EB16:requirement:branch $branch" \
         SmoketestSPM.xcodeproj/project.pbxproj
 
-    # Redirecting to /dev/null because we only care about errors here and the full output drowns Travis
-    # The echo before building the scheme should be enough to keep travis from timing out for lack of
-    # visible output
     xcodebuild build -scheme SmoketestSPM \
-      -sdk iphonesimulator > /dev/null
+      -sdk iphonesimulator | xcpretty
 
     set -u # Resume failing on undefined variables
   }
@@ -442,11 +435,11 @@ release_sdk() {
     # Release frameworks in static
     release_static() {
       release_basics() {
-        # Redirecting to /dev/null because we only care about errors here and the full output drowns Travis
         xcodebuild build \
          -workspace FacebookSDK.xcworkspace \
          -scheme BuildCoreKitBasics \
-         -configuration Release > /dev/null
+         -configuration Release \
+         SUPPORTS_MACCATALYST=NO | xcpretty
 
         kit="FBSDKCoreKit_Basics"
         cd build || exit
@@ -462,17 +455,17 @@ release_sdk() {
         cd ..
       }
 
-      # Redirecting to /dev/null because we only care about errors here and the full output drowns Travis
       xcodebuild build \
        -workspace FacebookSDK.xcworkspace \
        -scheme BuildAllKits \
-       -configuration Release > /dev/null
+       -configuration Release \
+       SUPPORTS_MACCATALYST=NO | xcpretty
 
-      # Redirecting to /dev/null because we only care about errors here and the full output drowns Travis
       xcodebuild build \
        -workspace FacebookSDK.xcworkspace \
        -scheme BuildAllKits_TV \
-       -configuration Release > /dev/null
+       -configuration Release \
+       SUPPORTS_MACCATALYST=NO | xcpretty
 
       cd build || exit
       zip -r FacebookSDK_static.zip ./*.framework ./*/*.framework
@@ -501,8 +494,14 @@ release_sdk() {
       release_basics
     }
 
-    release_dynamic
-    release_static
+    local release_type=${1:-}
+    if [ -n "$release_type" ]; then shift; fi
+
+    case "$release_type" in
+    "static") release_static "$@" ;;
+    "dynamic") release_dynamic "$@" ;;
+    *) release_dynamic && release_static ;;
+    esac
   }
 
   # Release Cocoapods

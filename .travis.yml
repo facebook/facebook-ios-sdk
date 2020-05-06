@@ -43,6 +43,10 @@ jobs:
         - XCODE_SDK=appletvsimulator13.0
         - XCODE_SCHEME=BuildAllKits_TV
     - stage: test
+      name: Xcode - Release Config
+      osx_image: xcode11
+      script: sh scripts/run.sh release github static
+    - stage: test
       name: Carthage
       osx_image: xcode11
     - stage: test
