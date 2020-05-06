@@ -65,17 +65,17 @@ jobs:
       name: GitHub Release
       osx_image: xcode11
       script: sh scripts/run.sh release github
-      deploy:
-        provider: releases
-        skip_cleanup: true
-        api_key: $GITHUB_ACCESS_TOKEN
-        file: build/Release/*
-        file_glob: true
-        name: Facebook SDK $TRAVIS_TAG
-        body: Consult Changelog $TRAVIS_TAG
-        on:
-          all_branches: true
-          tags: true
+      # deploy:
+      #   provider: releases
+      #   skip_cleanup: true
+      #   api_key: $GITHUB_ACCESS_TOKEN
+      #   file: build/Release/*
+      #   file_glob: true
+      #   name: Facebook SDK $TRAVIS_TAG
+      #   body: Consult Changelog $TRAVIS_TAG
+      #   on:
+      #     all_branches: true
+      #     tags: true
     - stage: release cocoapods 1/3
       name: Release Top Level Cocoapods
       osx_image: xcode11

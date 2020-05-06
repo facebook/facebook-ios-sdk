@@ -432,8 +432,9 @@ release_sdk() {
     mkdir -p build/Release
     rm -rf build/Release/*
 
-    # Release frameworks in dynamic (mostly for Carthage)
+    # # Release frameworks in dynamic (mostly for Carthage)
     release_dynamic() {
+      echo "Releasing dynamic frameworks"
       carthage build --no-skip-current
       carthage archive --output build/Release/
       mv build/Release/FBSDKCoreKit.framework.zip build/Release/FacebookSDK_Dynamic.framework.zip
@@ -449,7 +450,8 @@ release_sdk() {
         xcodebuild build \
          -workspace FacebookSDK.xcworkspace \
          -scheme BuildCoreKitBasics \
-         -configuration Release > /dev/null
+         -configuration Release \
+         -destination generic/platform=iOS > /dev/null
 
         kit="FBSDKCoreKit_Basics"
         cd build || exit
@@ -470,14 +472,16 @@ release_sdk() {
       xcodebuild build \
        -workspace FacebookSDK.xcworkspace \
        -scheme BuildAllKits \
-       -configuration Release > /dev/null
+       -configuration Release \
+       -destination generic/platform=iOS > /dev/null
 
       echo "Building scheme: BuildAllKits_TV"
       # Redirecting to /dev/null because we only care about errors here and the full output drowns Travis
       xcodebuild build \
        -workspace FacebookSDK.xcworkspace \
        -scheme BuildAllKits_TV \
-       -configuration Release > /dev/null
+       -configuration Release \
+       -destination generic/platform=tvOS > /dev/null
 
       cd build || exit
       zip -r FacebookSDK_static.zip ./*.framework ./*/*.framework

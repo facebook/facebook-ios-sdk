@@ -171,20 +171,6 @@
 			remoteGlobalIDString = C5C4B4EA2276BA8D00CA3706;
 			remoteInfo = "FBSDKCoreKit_Basics_TV-Dynamic";
 		};
-		F4F7CA6223F49C110030A346 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F4F7CA3D23F49C110030A346 /* FBSDKCoreKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F487DBB9231EBCD2008416A9;
-			remoteInfo = FBSDKCoreKitSwift;
-		};
-		F4F7CA6423F49C110030A346 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F4F7CA3D23F49C110030A346 /* FBSDKCoreKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F483F414233AC13000703DE3;
-			remoteInfo = "FBSDKCoreKitSwift-Dynamic";
-		};
 		F4F7CA6623F49C1A0030A346 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F4F7CA3D23F49C110030A346 /* FBSDKCoreKit.xcodeproj */;
@@ -419,8 +405,6 @@
 				F4F7CA5D23F49C110030A346 /* FBSDKCoreKit.framework */,
 				F4F7CA5F23F49C110030A346 /* FBSDKCoreKit.framework */,
 				F4F7CA6123F49C110030A346 /* FBSDKCoreKit.framework */,
-				F4F7CA6323F49C110030A346 /* FBSDKCoreKit.framework */,
-				F4F7CA6523F49C110030A346 /* FBSDKCoreKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -605,20 +589,6 @@
 			remoteRef = F4F7CA6023F49C110030A346 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		F4F7CA6323F49C110030A346 /* FBSDKCoreKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKCoreKit.framework;
-			remoteRef = F4F7CA6223F49C110030A346 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F4F7CA6523F49C110030A346 /* FBSDKCoreKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKCoreKit.framework;
-			remoteRef = F4F7CA6423F49C110030A346 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -794,6 +764,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Debug;
 		};
@@ -806,6 +777,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Release;
 		};
@@ -815,6 +787,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Debug;
 		};
@@ -824,6 +797,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Release;
 		};
