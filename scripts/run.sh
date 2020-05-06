@@ -435,9 +435,9 @@ release_sdk() {
     # # Release frameworks in dynamic (mostly for Carthage)
     release_dynamic() {
       echo "Releasing dynamic frameworks"
-      carthage build --no-skip-current
-      carthage archive --output build/Release/
-      mv build/Release/FBSDKCoreKit.framework.zip build/Release/FacebookSDK_Dynamic.framework.zip
+      # carthage build --no-skip-current
+      # carthage archive --output build/Release/
+      # mv build/Release/FBSDKCoreKit.framework.zip build/Release/FacebookSDK_Dynamic.framework.zip
     }
 
     # Release frameworks in static

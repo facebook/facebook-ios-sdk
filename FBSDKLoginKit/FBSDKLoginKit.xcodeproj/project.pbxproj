@@ -1163,7 +1163,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81B71EAB1D1A277300933E93 /* FBSDKLoginKit-Dynamic.xcconfig */;
 			buildSettings = {
-				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Debug;
 		};
@@ -1171,7 +1170,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81B71EAB1D1A277300933E93 /* FBSDKLoginKit-Dynamic.xcconfig */;
 			buildSettings = {
-				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Release;
 		};
@@ -1205,7 +1203,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81B71EAC1D1A277300933E93 /* FBSDKLoginKit.xcconfig */;
 			buildSettings = {
-				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Debug;
 		};
@@ -1213,7 +1210,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81B71EAC1D1A277300933E93 /* FBSDKLoginKit.xcconfig */;
 			buildSettings = {
-				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Release;
 		};
@@ -1237,7 +1233,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81B71EAC1D1A277300933E93 /* FBSDKLoginKit.xcconfig */;
 			buildSettings = {
-				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Debug;
 		};
@@ -1245,7 +1240,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81B71EAC1D1A277300933E93 /* FBSDKLoginKit.xcconfig */;
 			buildSettings = {
-				SUPPORTS_MACCATALYST = NO;
 			};
 			name = Release;
 		};

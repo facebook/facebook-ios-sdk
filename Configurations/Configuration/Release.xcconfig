@@ -36,7 +36,3 @@ ENABLE_TESTABILITY = YES
 
 // MTL
 MTL_ENABLE_DEBUG_INFO = NO
-
-// Catalyst : TODO - remove this when Travis CI supports MacOS 10.15
-SUPPORTS_MACCATALYST = NO
-SDKROOT = iphoneos
