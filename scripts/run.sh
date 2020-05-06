@@ -446,7 +446,9 @@ release_sdk() {
         xcodebuild build \
          -workspace FacebookSDK.xcworkspace \
          -scheme BuildCoreKitBasics \
-         -configuration Release > /dev/null
+         -configuration Release \
+         SUPPORTS_MACCATALYST=NO \
+         > /dev/null
 
         kit="FBSDKCoreKit_Basics"
         cd build || exit
@@ -466,13 +468,17 @@ release_sdk() {
       xcodebuild build \
        -workspace FacebookSDK.xcworkspace \
        -scheme BuildAllKits \
-       -configuration Release > /dev/null
+       -configuration Release \
+       SUPPORTS_MACCATALYST=NO \
+       > /dev/null
 
       # Redirecting to /dev/null because we only care about errors here and the full output drowns Travis
       xcodebuild build \
        -workspace FacebookSDK.xcworkspace \
        -scheme BuildAllKits_TV \
-       -configuration Release > /dev/null
+       -configuration Release \
+       SUPPORTS_MACCATALYST=NO \
+       > /dev/null
 
       cd build || exit
       zip -r FacebookSDK_static.zip ./*.framework ./*/*.framework
@@ -501,8 +507,14 @@ release_sdk() {
       release_basics
     }
 
-    release_dynamic
-    release_static
+    local release_type=${1:-}
+    if [ -n "$release_type" ]; then shift; fi
+
+    case "$release_type" in
+    "static") release_static "$@" ;;
+    "dynamic") release_dynamic "$@" ;;
+    *) release_dynamic && release_static ;;
+    esac
   }
 
   # Release Cocoapods
