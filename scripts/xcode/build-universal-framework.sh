@@ -31,11 +31,25 @@ rm -rf "${UNIVERSAL_BUILD_FOLDER}/${PROJECT_NAME}.framework"
 TARGET=${TARGET_NAME%-Universal}
 
 # Step 1. Build Device and Simulator versions
-xcodebuild -target "${TARGET}" ONLY_ACTIVE_ARCH=NO -configuration "${CONFIGURATION}" -sdk iphoneos BUILD_DIR="${BUILD_DIR}" BUILD_ROOT="${BUILD_ROOT}"
-xcodebuild -target "${TARGET}" ONLY_ACTIVE_ARCH=NO -configuration "${CONFIGURATION}" -sdk iphonesimulator BUILD_DIR="${BUILD_DIR}" BUILD_ROOT="${BUILD_ROOT}"
+xcodebuild -target "${TARGET}" \
+ ONLY_ACTIVE_ARCH=NO -configuration \
+ "${CONFIGURATION}" \
+ -sdk iphoneos BUILD_DIR="${BUILD_DIR}" \
+ BUILD_ROOT="${BUILD_ROOT}" \
+ BUILD_LIBRARY_FOR_DISTRIBUTION=YES
+xcodebuild -target "${TARGET}" \
+ONLY_ACTIVE_ARCH=NO \
+-configuration "${CONFIGURATION}" \
+-sdk iphonesimulator \
+BUILD_DIR="${BUILD_DIR}" \
+BUILD_ROOT="${BUILD_ROOT}" \
+BUILD_LIBRARY_FOR_DISTRIBUTION=YES
 
 # Step 2. Copy the framework structure to the universal folder
 cp -R "${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework" "${UNIVERSAL_BUILD_FOLDER}/"
+
+# Step 2a. Copy the swiftmodule files to the universal folder
+rsync -a "${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}.framework/Modules/${PROJECT_NAME}.swiftmodule/" "${UNIVERSAL_BUILD_FOLDER}/${PROJECT_NAME}.framework/Modules/${PROJECT_NAME}.swiftmodule"
 
 # Step 3. Create universal binary file using lipo and place the combined executable in the copied framework directory
 lipo -create -output "${UNIVERSAL_BUILD_FOLDER}/${PROJECT_NAME}.framework/${PROJECT_NAME}" "${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}.framework/${PROJECT_NAME}" "${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework/${PROJECT_NAME}"
