@@ -1290,7 +1290,7 @@ static dispatch_once_t *onceTokenPointer;
   [self fetchServerConfiguration:^(void) {
     NSString *receipt_data = appEventsState.extractReceiptData;
     NSString *encodedEvents = [appEventsState JSONStringForEvents:self->_serverConfiguration.implicitLoggingEnabled];
-    if (!encodedEvents) {
+    if (!encodedEvents || appEventsState.events.count == 0) {
       [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
                              logEntry:@"FBSDKAppEvents: Flushing skipped - no events after removing implicitly logged ones.\n"];
       return;
