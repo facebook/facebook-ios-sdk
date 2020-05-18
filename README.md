@@ -22,7 +22,7 @@ NOTE: By default, the Facebook SDK for iOS is installed in ~/Documents/FacebookS
 3. Check-out the tutorials available online at: <https://developers.facebook.com/docs/ios/getting-started>
 4. Start coding! Visit <https://developers.facebook.com/docs/ios> for tutorials and reference documentation.
 
-**Note:**
+**Note for Swift Package Manager Users:**
 
 If you explicitly **DO NOT** want to include Swift, import `FBSDKCoreKit` `FBSDKLoginKit` and `FBSDKShareKit`
 
