@@ -62,6 +62,7 @@ main() {
     SDK_KITS=(
       "${SDK_BASE_KITS[@]}"
       "$GAMING_SERVICES_KIT"
+      "FBSDKMarketingKit"
       "FBSDKTVOSKit"
     )
 

@@ -26,6 +26,7 @@ kit = ARGV[0]
 CORE_KIT = 'FBSDKCoreKit'
 LOGIN_KIT = 'FBSDKLoginKit'
 SHARE_KIT = 'FBSDKShareKit'
+MARKETING_KIT = 'FBSDKMarketingKit'
 
 def generateSourceKittenOutputForSwift(kit)
   swiftKit = "#{kit}Swift"
@@ -41,6 +42,10 @@ def generateSourceKittenOutputForSwift(kit)
   system "bundle exec sourcekitten doc -- -workspace FacebookSDK.xcworkspace -scheme #{swiftKit} > tmpSwift"
 end
 
+def prefixFor(kit)
+  kit == MARKETING_KIT ? "internal/" : ""
+end
+
 def scriptsDirectory
   File.dirname(__FILE__)
 end
@@ -50,7 +55,7 @@ def parentDirectory
 end
 
 def headerFileFor(kit)
-  header_file = "#{parentDirectory}/#{kit}/#{kit}/#{kit}.h"
+  header_file = "#{parentDirectory}/#{prefixFor(kit)}#{kit}/#{kit}/#{kit}.h"
 
   if !File.exist?(header_file)
     abort "*** ERROR: unable to document #{kit}. Missing header at #{header_file}"

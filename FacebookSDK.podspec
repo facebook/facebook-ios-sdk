@@ -29,7 +29,7 @@ Pod::Spec.new do |s|
 
   s.requires_arc = true
 
-  s.default_subspecs = 'CoreKit'
+  s.default_subspecs = 'CoreKit', 'MarketingKit'
 
   s.subspec 'CoreKit' do |ss|
     ss.dependency 'FBSDKCoreKit', "~> #{s.version}"
@@ -47,5 +47,10 @@ Pod::Spec.new do |s|
     ss.dependency 'FacebookSDK/ShareKit'
     ss.dependency 'FacebookSDK/LoginKit'
     ss.dependency 'FBSDKTVOSKit', "~> #{s.version}"
+  end
+  s.subspec 'MarketingKit' do |ss|
+    ss.platform = :ios
+    ss.dependency 'FacebookSDK/CoreKit'
+    ss.dependency 'FBSDKMarketingKit', "~> #{s.version}"
   end
 end
