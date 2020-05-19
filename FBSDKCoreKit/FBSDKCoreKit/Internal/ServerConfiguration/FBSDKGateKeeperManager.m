@@ -25,7 +25,6 @@
 
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKGraphRequest+Internal.h"
-#import "FBSDKGraphRequest.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKSettings.h"
 #import "FBSDKTypeUtility.h"
@@ -127,7 +126,8 @@ static BOOL _requeryFinishedForAppStart;
                                                                  parameters:parameters
                                                                 tokenString:nil
                                                                  HTTPMethod:nil
-                                                                      flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
+                                                                      flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery
+                                                            sdkInternalName:@"FBSDKGateKeeperManager"];
   return request;
 }
 

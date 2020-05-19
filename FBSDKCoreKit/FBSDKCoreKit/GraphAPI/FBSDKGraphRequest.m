@@ -38,7 +38,9 @@ FBSDKHTTPMethod FBSDKHTTPMethodDELETE = @"DELETE";
 @property (nonatomic, copy, readwrite) FBSDKHTTPMethod HTTPMethod;
 @end
 
-@implementation FBSDKGraphRequest
+@implementation FBSDKGraphRequest {
+    NSString *_sdkInternalName;
+}
 
 @synthesize HTTPMethod;
 
@@ -47,8 +49,23 @@ FBSDKHTTPMethod FBSDKHTTPMethodDELETE = @"DELETE";
 }
 
 - (instancetype)initWithGraphPath:(NSString *)graphPath
+                  sdkInternalName:(NSString *)sdkInternalName {
+  return [self initWithGraphPath:graphPath parameters:@{}
+                 sdkInternalName:sdkInternalName];
+}
+
+- (instancetype)initWithGraphPath:(NSString *)graphPath
                        HTTPMethod:(FBSDKHTTPMethod)method {
   return [self initWithGraphPath:graphPath parameters:@{} HTTPMethod:method];
+}
+
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       HTTPMethod:(FBSDKHTTPMethod)method
+                  sdkInternalName:(NSString *)sdkInternalName {
+  return [self initWithGraphPath:graphPath
+                      parameters:@{}
+                      HTTPMethod:method
+                 sdkInternalName:sdkInternalName];
 }
 
 - (instancetype)initWithGraphPath:(NSString *)graphPath
@@ -56,6 +73,15 @@ FBSDKHTTPMethod FBSDKHTTPMethodDELETE = @"DELETE";
   return [self initWithGraphPath:graphPath
                       parameters:parameters
                            flags:FBSDKGraphRequestFlagNone];
+}
+
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(NSDictionary *)parameters
+                  sdkInternalName:(NSString *)sdkInternalName {
+  return [self initWithGraphPath:graphPath
+                      parameters:parameters
+                           flags:FBSDKGraphRequestFlagNone
+                 sdkInternalName:sdkInternalName];
 }
 
 - (instancetype)initWithGraphPath:(NSString *)graphPath
@@ -70,12 +96,41 @@ FBSDKHTTPMethod FBSDKHTTPMethodDELETE = @"DELETE";
 
 - (instancetype)initWithGraphPath:(NSString *)graphPath
                        parameters:(NSDictionary *)parameters
+                       HTTPMethod:(FBSDKHTTPMethod)method
+                  sdkInternalName:(NSString *)sdkInternalName {
+  if (self = [self initWithGraphPath:graphPath
+                           parameters:parameters
+                          tokenString:[FBSDKAccessToken currentAccessToken].tokenString
+                              version:nil
+                           HTTPMethod:method]) {
+    _sdkInternalName = sdkInternalName;
+  }
+  return self;
+}
+
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(NSDictionary *)parameters
                             flags:(FBSDKGraphRequestFlags)flags {
   return [self initWithGraphPath:graphPath
                       parameters:parameters
                      tokenString:[FBSDKAccessToken currentAccessToken].tokenString
                       HTTPMethod:FBSDKHTTPMethodGET
                            flags:flags];
+}
+
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(NSDictionary *)parameters
+                            flags:(FBSDKGraphRequestFlags)flags
+                  sdkInternalName:(NSString *)sdkInternalName {
+  if (self = [self initWithGraphPath:graphPath
+                           parameters:parameters
+                          tokenString:[FBSDKAccessToken currentAccessToken].tokenString
+                              version:[FBSDKSettings graphAPIVersion]
+                           HTTPMethod:FBSDKHTTPMethodGET]) {
+    _sdkInternalName = sdkInternalName;
+    self.flags |= flags;
+  }
+  return self;
 }
 
 - (instancetype)initWithGraphPath:(NSString *)graphPath
@@ -89,6 +144,39 @@ FBSDKHTTPMethod FBSDKHTTPMethodDELETE = @"DELETE";
                               version:[FBSDKSettings graphAPIVersion]
                            HTTPMethod:method])) {
     self.flags |= flags;
+  }
+  return self;
+}
+
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(NSDictionary *)parameters
+                      tokenString:(NSString *)tokenString
+                       HTTPMethod:(FBSDKHTTPMethod)method
+                            flags:(FBSDKGraphRequestFlags)flags
+                  sdkInternalName:(NSString *)sdkInternalName {
+  if (self = [self initWithGraphPath:graphPath
+                           parameters:parameters
+                          tokenString:tokenString
+                              version:[FBSDKSettings graphAPIVersion]
+                           HTTPMethod:method]) {
+    _sdkInternalName = sdkInternalName;
+    self.flags |= flags;
+  }
+  return self;
+}
+
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(NSDictionary<NSString *, id> *)parameters
+                      tokenString:(nullable NSString *)tokenString
+                          version:(nullable NSString *)version
+                       HTTPMethod:(FBSDKHTTPMethod)method
+                  sdkInternalName:(NSString *)sdkInternalName {
+  if (self = [self initWithGraphPath:graphPath
+                           parameters:parameters
+                          tokenString:tokenString
+                              version:version
+                           HTTPMethod:method]) {
+    _sdkInternalName = sdkInternalName;
   }
   return self;
 }
@@ -203,6 +291,10 @@ FBSDKHTTPMethod FBSDKHTTPMethodDELETE = @"DELETE";
   [connection addRequest:self completionHandler:handler];
   [connection start];
   return connection;
+}
+
+- (NSString *)sdkInternalName {
+    return _sdkInternalName;
 }
 
 #pragma mark - Debugging helpers

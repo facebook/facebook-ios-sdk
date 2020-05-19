@@ -24,6 +24,8 @@
 #import <FBSDKCoreKit/FBSDKGraphRequest.h>
 #endif
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_OPTIONS(NSUInteger, FBSDKGraphRequestFlags)
 {
   FBSDKGraphRequestFlagNone = 0,
@@ -35,15 +37,42 @@ typedef NS_OPTIONS(NSUInteger, FBSDKGraphRequestFlags)
   FBSDKGraphRequestFlagDisableErrorRecovery = 1 << 3,
 };
 @interface FBSDKGraphRequest (Internal)
-
 - (instancetype)initWithGraphPath:(NSString *)graphPath
-                       parameters:(NSDictionary *)parameters
+                  sdkInternalName:(NSString *)sdkInternalName;
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       HTTPMethod:(nullable FBSDKHTTPMethod)method
+                  sdkInternalName:(NSString *)sdkInternalName;
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(nullable NSDictionary<NSString *, id> *)parameters
+                  sdkInternalName:(NSString *)sdkInternalName;
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(nullable NSDictionary<NSString *, id> *)parameters
+                       HTTPMethod:(nullable FBSDKHTTPMethod)method
+                  sdkInternalName:(NSString *)sdkInternalName;
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(nullable NSDictionary *)parameters
+                      tokenString:(nullable NSString *)tokenString
+                       HTTPMethod:(nullable FBSDKHTTPMethod)method
+                            flags:(FBSDKGraphRequestFlags)flags
+                  sdkInternalName:(NSString *)sdkInternalName;
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(nullable NSDictionary *)parameters
                             flags:(FBSDKGraphRequestFlags)flags;
 - (instancetype)initWithGraphPath:(NSString *)graphPath
-                       parameters:(NSDictionary *)parameters
-                      tokenString:(NSString *)tokenString
-                       HTTPMethod:(NSString *)HTTPMethod
+                       parameters:(nullable NSDictionary *)parameters
+                            flags:(FBSDKGraphRequestFlags)flags
+                  sdkInternalName:(NSString *)sdkInternalName;
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(nullable NSDictionary *)parameters
+                      tokenString:(nullable NSString *)tokenString
+                       HTTPMethod:(nullable NSString *)HTTPMethod
                             flags:(FBSDKGraphRequestFlags)flags;
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(NSDictionary<NSString *, id> *)parameters
+                      tokenString:(nullable NSString *)tokenString
+                          version:(nullable NSString *)version
+                       HTTPMethod:(nullable FBSDKHTTPMethod)method
+                  sdkInternalName:(NSString *)sdkInternalName;
 // Generally, requests automatically issued by the SDK
 // should not invalidate the token and should disableErrorRecovery
 // so that we don't cause a sudden change in token state or trigger recovery
@@ -52,6 +81,8 @@ typedef NS_OPTIONS(NSUInteger, FBSDKGraphRequestFlags)
 @property (nonatomic, readonly, getter=isGraphErrorRecoveryDisabled) BOOL graphErrorRecoveryDisabled;
 @property (nonatomic, readonly) BOOL hasAttachments;
 
+- (NSString *)sdkInternalName;
+
 + (BOOL)isAttachment:(id)item;
 + (NSString *)serializeURL:(NSString *)baseUrl
                     params:(NSDictionary *)params
@@ -59,3 +90,5 @@ typedef NS_OPTIONS(NSUInteger, FBSDKGraphRequestFlags)
                   forBatch:(BOOL)forBatch;
 
 @end
+
+NS_ASSUME_NONNULL_END

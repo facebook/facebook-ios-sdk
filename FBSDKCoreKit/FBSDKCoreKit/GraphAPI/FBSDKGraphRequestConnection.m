@@ -485,10 +485,24 @@ NSURLSessionDataDelegate
                 addFormData:NO
                      logger:attachmentLogger];
 
+    NSMutableArray *friendlyNames = [NSMutableArray array];
+    for (FBSDKGraphRequestMetadata *metadata in requests) {
+        NSString *friendlyName = metadata.request.sdkInternalName;
+        if (!friendlyName) {
+            // Use empty string to make the number of friendly names match the number of requests in the batch.
+            friendlyName = @"";
+        }
+        [friendlyNames addObject: friendlyName];
+    }
+    NSMutableDictionary *queryParameters = [[NSMutableDictionary alloc] init];
+    if ([friendlyNames count] > 0) {
+      [FBSDKBasicUtility dictionary:queryParameters setObject:[friendlyNames componentsJoinedByString:@","] forKey:@"friendly_names"];
+    }
+
     NSURL *url = [FBSDKInternalUtility
                   facebookURLWithHostPrefix:kGraphURLPrefix
                   path:@""
-                  queryParameters:@{}
+                  queryParameters:queryParameters
                   defaultVersion:_overrideVersionPart
                   error:NULL];
 
@@ -530,6 +544,9 @@ NSURLSessionDataDelegate
   params[@"format"] = @"json";
   params[@"sdk"] = kSDK;
   params[@"include_headers"] = @"false";
+  if (request.sdkInternalName) {
+    params[@"friendly_names"] = request.sdkInternalName;
+  }
 
   request.parameters = params;
 
