@@ -78,9 +78,9 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
   dispatch_once(&onceToken, ^{
 
     // swizzle UIButton
-    [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:[UIButton class] withBlock:^(UIButton *button) {
-      if (button.window) {
-        [button addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchDown];
+    [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:[UIControl class] withBlock:^(UIControl *control) {
+      if (control.window && [control isKindOfClass:[UIButton class]]) {
+        [((UIButton *)control) addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchDown];
       }
     } named:@"suggested_events"];
 
