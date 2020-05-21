@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(TypeUtility)
 @interface FBSDKTypeUtility : NSObject
 
@@ -25,16 +27,16 @@ NS_SWIFT_NAME(TypeUtility)
 + (instancetype)new NS_UNAVAILABLE;
 
 /// Returns an NSArray if the provided object is an NSArray, otherwise returns nil.
-+ (NSArray *)arrayValue:(id)object;
++ (nullable NSArray *)arrayValue:(id)object;
 
 /// Returns a BOOL if the provided object is a BOOL, otherwise returns nil.
 + (BOOL)boolValue:(id)object;
 
 /// Returns an NSDictionary if the provided object is an NSDictionary, otherwise returns nil.
-+ (NSDictionary *)dictionaryValue:(id)object;
++ (nullable NSDictionary *)dictionaryValue:(id)object;
 
 /// Returns an object for a given key in the provided dictionary if it matches the stated type
-+ (id) dictionary:(NSDictionary *)dictionary objectForKey:(NSString *)key ofType:(Class)type;
++ (nullable id) dictionary:(NSDictionary *)dictionary objectForKey:(NSString *)key ofType:(Class)type;
 
 /// Checks if an object is a valid dictionary type before enumerating its keys and objects
 + (void)dictionary:(NSDictionary *)dictionary enumerateKeysAndObjectsUsingBlock:(void (NS_NOESCAPE ^)(id key, id obj, BOOL *stop))block;
@@ -46,10 +48,10 @@ NS_SWIFT_NAME(TypeUtility)
 + (NSNumber *)numberValue:(id)object;
 
 /// Returns the provided object if it is non-null
-+ (id)objectValue:(id)object;
++ (nullable id)objectValue:(id)object;
 
 /// Returns an NSString if the provided object is an NSString, otherwise returns nil.
-+ (NSString *)stringValue:(id)object;
++ (nullable NSString *)stringValue:(id)object;
 
 /// Returns an NSTimeInterval if the provided object is an NSTimeInterval, otherwise returns nil.
 + (NSTimeInterval)timeIntervalValue:(id)object;
@@ -58,6 +60,43 @@ NS_SWIFT_NAME(TypeUtility)
 + (NSUInteger)unsignedIntegerValue:(id)object;
 
 /// Returns an NSURL if the provided object is an NSURL, otherwise returns nil.
-+ (NSURL *)URLValue:(id)object;
++ (nullable NSURL *)URLValue:(id)object;
+
+/*
+ Lightweight wrapper around Foundation's isValidJSONObject:
+
+ Returns YES if the given object can be converted to JSON data, NO otherwise.
+ Calling this method or attempting a conversion are the definitive ways to tell if a given object can be converted to JSON data.
+ */
++ (BOOL)isValidJSONObject:(id)obj;
+
+/*
+ Lightweight safety wrapper around Foundation's NSJSONSerialization:dataWithJSONObject:options:error:
+
+ Generate JSON data from a Foundation object.
+ If the object will not produce valid JSON then null is returned.
+ Setting the NSJSONWritingPrettyPrinted option will generate JSON with whitespace designed to make the output more readable.
+ If that option is not set, the most compact possible JSON will be generated.
+ If an error occurs, the error parameter will be set and the return value will be nil.
+ The resulting data is a encoded in UTF-8.
+ */
++ (nullable NSData *)dataWithJSONObject:(id)obj options:(NSJSONWritingOptions)opt error:(NSError **)error;
+
+/*
+ Lightweight safety wrapper around Foundation's NSJSONSerialization:JSONObjectWithData:options:error:
+
+ Create a Foundation object from JSON data.
+ Set the NSJSONReadingAllowFragments option if the parser should allow top-level objects that are not an NSArray or NSDictionary.
+ Setting the NSJSONReadingMutableContainers option will make the parser generate mutable NSArrays and NSDictionaries.
+ Setting the NSJSONReadingMutableLeaves option will make the parser generate mutable NSString objects.
+ If an error occurs during the parse, then the error parameter will be set and the result will be nil.
+ The data must be in one of the 5 supported encodings listed in the JSON specification: UTF-8, UTF-16LE, UTF-16BE, UTF-32LE, UTF-32BE.
+ The data may or may not have a BOM.
+ The most efficient encoding to use for parsing is UTF-8, so if you have a choice in encoding the data passed to this method, use UTF-8.
+ */
++ (nullable id)JSONObjectWithData:(NSData *)data options:(NSJSONReadingOptions)opt error:(NSError **)error;
+
 
 @end
+
+NS_ASSUME_NONNULL_END
