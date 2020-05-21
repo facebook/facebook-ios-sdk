@@ -1862,17 +1862,17 @@ typedef FBSDKMonitoringConfigurationTestHelper MonitoringConfiguration;
                         defaultValue:(NSNumber *)defaultValue
 {
   NSMutableDictionary *dialogFlows = [NSMutableDictionary dictionary];
-  if (featureValue) {
+  if (featureValue != nil) {
     dialogFlows[name] = @{
       flowKey: featureValue
     };
   }
-  if (sharingValue) {
+  if (sharingValue != nil) {
     dialogFlows[@"sharing"] = @{
       flowKey: sharingValue
     };
   }
-  if (defaultValue) {
+  if (defaultValue != nil) {
     dialogFlows[@"default"] = @{
       flowKey: defaultValue
     };

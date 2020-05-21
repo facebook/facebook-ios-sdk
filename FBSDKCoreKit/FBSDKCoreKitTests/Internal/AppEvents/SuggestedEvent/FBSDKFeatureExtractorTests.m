@@ -23,6 +23,7 @@
 #import "FBSDKFeatureExtractor.h"
 #import "FBSDKModelManager.h"
 #import "FBSDKViewHierarchyMacros.h"
+#import "FBSDKCoreKitTests-Swift.h"
 
 @interface FBSDKFeatureExtractor ()
 + (BOOL)pruneTree:(NSMutableDictionary *)node
@@ -258,6 +259,14 @@
   XCTAssertEqualObjects([denseFeatureArray componentsJoinedByString:@","], @"0,0,0,5,0,0,0,0,0,0,0,0,0,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0");
 }
 
+- (void)testGetDenseFeatureParsing
+{
+  for (int i = 0; i < 1000; i++) {
+    NSDictionary *viewHierarchy = [_viewHierarchy copy];
+    [FBSDKFeatureExtractor getDenseFeatures:[Fuzzer randomizeWithJson:viewHierarchy]];
+  }
+}
+
 - (void)testGetTextFeature
 {
   // Lowercase all text
@@ -349,6 +358,13 @@
 {
   XCTAssertEqual([FBSDKFeatureExtractor regextMatch:@"(?i)(sign in)|login|signIn" text:@"click to sign in"], 1.0);
   XCTAssertEqual([FBSDKFeatureExtractor regextMatch:@"(?i)(sign in)|login|signIn" text:@"click to sign up"], 0.0);
+}
+
+- (void)testLoadRulesForKey
+{
+  for (int i = 0; i < 1000; i++) {
+    [FBSDKFeatureExtractor loadRulesForKey:Fuzzer.random];
+  }
 }
 
 @end

@@ -22,6 +22,7 @@
 #import "FBSDKEventBinding.h"
 #import "FBSDKEventBindingManager.h"
 #import "FBSDKSampleEventBinding.h"
+#import "FBSDKCoreKitTests-Swift.h"
 
 @interface FBSDKEventBindingTests : XCTestCase {
   UIWindow *window;
@@ -113,6 +114,14 @@
   NSArray *bindings = [FBSDKEventBindingManager parseArray:[FBSDKSampleEventBinding getSampleDictionary][@"event_bindings"]];
   XCTAssertTrue([bindings[0] isEqualToBinding:bindings[0]]);
   XCTAssertFalse([bindings[0] isEqualToBinding:bindings[1]]);
+}
+
+- (void)testParsing
+{
+  for (int i = 0; i < 1000; i++) {
+    NSDictionary *sampleData = [FBSDKSampleEventBinding getSampleDictionary];
+    [FBSDKEventBindingManager parseArray: @[[Fuzzer randomizeWithJson:sampleData]]];
+  }
 }
 
 @end

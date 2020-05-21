@@ -66,6 +66,7 @@ static NSMutableSet<NSString *> *_restrictedEvents;
   if (!isRestrictiveEventFilterEnabled) {
     return;
   }
+  restrictiveParams = [FBSDKTypeUtility dictionaryValue:restrictiveParams];
   if (restrictiveParams.count > 0) {
     @synchronized (self) {
        [_params removeAllObjects];

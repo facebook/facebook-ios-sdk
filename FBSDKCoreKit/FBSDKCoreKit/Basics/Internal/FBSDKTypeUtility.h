@@ -24,14 +24,40 @@ NS_SWIFT_NAME(TypeUtility)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
+/// Returns an NSArray if the provided object is an NSArray, otherwise returns nil.
 + (NSArray *)arrayValue:(id)object;
+
+/// Returns a BOOL if the provided object is a BOOL, otherwise returns nil.
 + (BOOL)boolValue:(id)object;
+
+/// Returns an NSDictionary if the provided object is an NSDictionary, otherwise returns nil.
 + (NSDictionary *)dictionaryValue:(id)object;
+
+/// Returns an object for a given key in the provided dictionary if it matches the stated type
++ (id) dictionary:(NSDictionary *)dictionary objectForKey:(NSString *)key ofType:(Class)type;
+
+/// Checks if an object is a valid dictionary type before enumerating its keys and objects
++ (void)dictionary:(NSDictionary *)dictionary enumerateKeysAndObjectsUsingBlock:(void (NS_NOESCAPE ^)(id key, id obj, BOOL *stop))block;
+
+/// Returns an NSInteger if the provided object is an NSInteger, otherwise returns nil.
 + (NSInteger)integerValue:(id)object;
+
+/// Returns an NSNumber if the provided object is an NSNumber, otherwise returns nil.
++ (NSNumber *)numberValue:(id)object;
+
+/// Returns the provided object if it is non-null
 + (id)objectValue:(id)object;
+
+/// Returns an NSString if the provided object is an NSString, otherwise returns nil.
 + (NSString *)stringValue:(id)object;
+
+/// Returns an NSTimeInterval if the provided object is an NSTimeInterval, otherwise returns nil.
 + (NSTimeInterval)timeIntervalValue:(id)object;
+
+/// Returns an NSUInteger if the provided object is an NSUInteger, otherwise returns nil.
 + (NSUInteger)unsignedIntegerValue:(id)object;
+
+/// Returns an NSURL if the provided object is an NSURL, otherwise returns nil.
 + (NSURL *)URLValue:(id)object;
 
 @end

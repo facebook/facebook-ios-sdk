@@ -97,13 +97,13 @@ static NSString *const kErrorCategoryLogin = @"login";
   return configuration;
 }
 
-- (void)parseArray:(NSArray *)array
+- (void)parseArray:(NSArray<NSDictionary*> *)array
 {
-  for (NSDictionary *dictionary in array) {
-    [dictionary enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
+  for (NSDictionary *dictionary in [FBSDKTypeUtility arrayValue:array]) {
+    [FBSDKTypeUtility dictionary:dictionary enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
       FBSDKGraphRequestError category;
-      NSString *action = dictionary[@"name"];
-      if ([action isEqualToString:kErrorCategoryOther]) {
+      NSString *action = [FBSDKTypeUtility stringValue:dictionary[@"name"]];
+      if ( [action isEqualToString:kErrorCategoryOther]) {
         category = FBSDKGraphRequestErrorOther;
       } else if ([action isEqualToString:kErrorCategoryTransient]) {
         category = FBSDKGraphRequestErrorTransient;
@@ -112,8 +112,19 @@ static NSString *const kErrorCategoryLogin = @"login";
       }
       NSString *suggestion = dictionary[@"recovery_message"];
       NSArray *options = dictionary[@"recovery_options"];
-      for (NSDictionary *codeSubcodesDictionary in dictionary[@"items"]) {
-        NSString *code = [codeSubcodesDictionary[@"code"] stringValue];
+
+      NSArray *validItems = [FBSDKTypeUtility dictionary:dictionary objectForKey:@"items" ofType:NSArray.class];
+      for (NSDictionary *codeSubcodesDictionary in validItems) {
+        NSDictionary *validCodeSubcodesDictionary = [FBSDKTypeUtility dictionaryValue:codeSubcodesDictionary];
+        if (!validCodeSubcodesDictionary) {
+          continue;
+        }
+
+        NSNumber *numericCode = [FBSDKTypeUtility dictionary:validCodeSubcodesDictionary objectForKey:@"code" ofType:NSNumber.class];
+        NSString *code = numericCode.stringValue;
+        if (!code) {
+          return;
+        }
 
         NSMutableDictionary *currentSubcodes = self->_configurationDictionary[code];
         if (!currentSubcodes) {
@@ -121,10 +132,14 @@ static NSString *const kErrorCategoryLogin = @"login";
           self->_configurationDictionary[code] = currentSubcodes;
         }
 
-        NSArray *subcodes = codeSubcodesDictionary[@"subcodes"];
-        if (subcodes.count > 0) {
-          for (NSNumber *subcodeNumber in subcodes) {
-            currentSubcodes[subcodeNumber.stringValue] = [[FBSDKErrorRecoveryConfiguration alloc]
+        NSArray *validSubcodes = [FBSDKTypeUtility dictionary:validCodeSubcodesDictionary objectForKey:@"subcodes" ofType:NSArray.class];
+        if (validSubcodes.count > 0) {
+          for (NSNumber *subcodeNumber in validSubcodes) {
+            NSNumber *validSubcodeNumber = [FBSDKTypeUtility numberValue:subcodeNumber];
+            if (validSubcodeNumber == nil) {
+              continue;
+            }
+            currentSubcodes[validSubcodeNumber.stringValue] = [[FBSDKErrorRecoveryConfiguration alloc]
                                                           initWithRecoveryDescription:suggestion
                                                           optionDescriptions:options
                                                           category:category

@@ -45,6 +45,30 @@
   return (NSDictionary *)[self _objectValue:object ofClass:[NSDictionary class]];
 }
 
++ (id)dictionary:(NSDictionary *)dictionary objectForKey:(NSString *)key ofType:(Class)type
+{
+  id potentialValue = [[self dictionaryValue:dictionary] objectForKey:key];
+
+  if ([potentialValue isKindOfClass:type]) {
+    return potentialValue;
+  } else {
+    return nil;
+  }
+}
+
++ (void)dictionary:(NSDictionary *)dictionary enumerateKeysAndObjectsUsingBlock:(void (NS_NOESCAPE ^)(id key, id obj, BOOL *stop))block
+{
+  NSDictionary *validDictionary = [self dictionaryValue:dictionary];
+  if (validDictionary) {
+    [validDictionary enumerateKeysAndObjectsUsingBlock:block];
+  }
+}
+
++ (NSNumber *)numberValue:(id)object
+{
+  return [self _objectValue:object ofClass:NSNumber.class];
+}
+
 + (NSInteger)integerValue:(id)object
 {
   if ([object isKindOfClass:[NSNumber class]]) {

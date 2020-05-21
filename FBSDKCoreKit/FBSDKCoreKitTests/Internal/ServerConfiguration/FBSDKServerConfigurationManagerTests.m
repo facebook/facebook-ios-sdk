@@ -16,21 +16,31 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#import <XCTest/XCTest.h>
 
-#import "FBSDKServerConfiguration+Internal.h"
+#import <OCMock/OCMock.h>
+#import <OHHTTPStubs/OHHTTPStubs.h>
 
-NS_ASSUME_NONNULL_BEGIN
+#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKCoreKitTests-Swift.h"
 
-@interface FBSDKServerConfigurationFixtures : NSObject
+@interface FBSDKServerConfigurationManager (Testing)
 
-/// A default configuration with valid inputs. This is the same default configuration used in production code
-+ (FBSDKServerConfiguration *)defaultConfig;
-
-/// A default configuration with custom values passed by dictionary.
-/// To use: Include a dictionary with the keys and values you want to override on the default configuration
-+ (FBSDKServerConfiguration *)configWithDictionary:(NSDictionary *)dict;
++ (void)processLoadRequestResponse:(id)result error:(NSError *)error appID:(NSString *)appID;
 
 @end
 
-NS_ASSUME_NONNULL_END
+@interface FBSDKServerConfigurationManagerTests : XCTestCase
+
+@end
+
+@implementation FBSDKServerConfigurationManagerTests
+
+- (void)testParsingResponses
+{
+  for (int i = 0; i < 1000; i++) {
+    [FBSDKServerConfigurationManager processLoadRequestResponse:RawServerConfigurationResponseFixtures.random error:nil appID:nil];
+  }
+}
+
+@end

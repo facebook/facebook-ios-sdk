@@ -17,6 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "FBSDKEventDeactivationManager.h"
+#import "FBSDKTypeUtility.h"
 
 static NSString *const DEPRECATED_PARAM_KEY = @"deprecated_param";
 static NSString *const DEPRECATED_EVENT_KEY = @"is_deprecated_event";
@@ -61,6 +62,7 @@ static NSMutableArray<FBSDKDeactivatedEvent *>  *_eventsWithDeactivatedParams;
 
 + (void)updateDeactivatedEvents:(nullable NSDictionary<NSString *, id> *)events
 {
+  events = [FBSDKTypeUtility dictionaryValue:events];
   if (!isEventDeactivationEnabled || events.count == 0) {
     return;
   }
@@ -69,7 +71,7 @@ static NSMutableArray<FBSDKDeactivatedEvent *>  *_eventsWithDeactivatedParams;
   NSMutableArray<FBSDKDeactivatedEvent *> *deactivatedParamsArray = [NSMutableArray array];
   NSMutableSet<NSString *> *deactivatedEventSet = [NSMutableSet set];
   for (NSString *eventName in events.allKeys) {
-    NSDictionary<NSString *, id> *eventInfo = events[eventName];
+    NSDictionary<NSString *, id> *eventInfo = [FBSDKTypeUtility dictionary:events objectForKey:eventName ofType:NSDictionary.class];
     if (!eventInfo) {
       return;
     }

@@ -131,7 +131,7 @@ setJSONStringForObject:(id)object
 
 + (id)objectForJSONString:(NSString *)string error:(NSError *__autoreleasing *)errorRef
 {
-  NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+  NSData *data = [[FBSDKTypeUtility stringValue:string] dataUsingEncoding:NSUTF8StringEncoding];
   if (!data) {
     if (errorRef != NULL) {
       *errorRef = nil;

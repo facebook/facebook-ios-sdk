@@ -51,14 +51,18 @@ typedef NSDictionary<NSString *, NSNumber *> SampleRates;
 {
   if (self = [super init]) {
     NSMutableDictionary *sampleRates = [NSMutableDictionary dictionary];
-    NSArray<RemoteSampleRates *> *remoteSampleRates = dictionary[sampleRatesKey];
+    NSArray<RemoteSampleRates *> *remoteSampleRates = [FBSDKTypeUtility dictionary:dictionary
+                                                                      objectForKey:sampleRatesKey
+                                                                            ofType:NSArray.class];
+    if (!remoteSampleRates) {
+      return self;
+    }
 
     for (RemoteSampleRates *ratePair in remoteSampleRates) {
-      NSString *key = ratePair[sampleRateNameKey];
-      NSNumber *value = ratePair[sampleRateValueKey];
+      NSString *key = [FBSDKTypeUtility dictionary:ratePair objectForKey:sampleRateNameKey ofType:NSString.class];
+      NSNumber *value = [FBSDKTypeUtility dictionary:ratePair objectForKey:sampleRateValueKey ofType:NSNumber.class];
 
-      if ([value isKindOfClass:[NSNumber class]] &&
-          value.intValue > 0) {
+      if (value.intValue > 0) {
         [FBSDKBasicUtility dictionary:sampleRates setObject:value forKey:key];
       }
     }
