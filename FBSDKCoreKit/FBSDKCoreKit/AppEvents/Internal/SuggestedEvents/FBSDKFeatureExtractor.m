@@ -135,10 +135,12 @@ void sum(float *val0, float *val1);
 
   NSMutableArray<NSMutableDictionary<NSString *, id> *> *childviews = [node objectForKey:VIEW_HIERARCHY_CHILD_VIEWS_KEY];
   for (NSMutableDictionary<NSString *, id> *child in childviews) {
-    isChildInteracted = [[FBSDKTypeUtility dictionary:child
-                                         objectForKey:VIEW_HIERARCHY_IS_INTERACTED_KEY
-                                               ofType:NSNumber.class] boolValue];
-    isDescendantInteracted = isChildInteracted;
+    if ([[FBSDKTypeUtility dictionary:child
+                         objectForKey:VIEW_HIERARCHY_IS_INTERACTED_KEY
+                               ofType:NSNumber.class] boolValue]) {
+      isChildInteracted = YES;
+      isDescendantInteracted = YES;
+    }
   }
 
   if (isChildInteracted) {
