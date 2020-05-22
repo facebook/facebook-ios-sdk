@@ -1095,9 +1095,6 @@ static dispatch_once_t *onceTokenPointer;
         [FBSDKMetadataIndexer enable];
       }
     }];
-#endif
-
-#if !defined BUCK && !TARGET_OS_TV
     [FBSDKFeatureManager checkFeature:FBSDKFeaturePrivacyProtection completionBlock:^(BOOL enabled) {
       if (enabled) {
         [FBSDKModelManager enable];
@@ -1158,7 +1155,7 @@ static dispatch_once_t *onceTokenPointer;
   // Filter out deactivated params
   parameters = [FBSDKEventDeactivationManager processParameters:parameters eventName:eventName];
 
-#if !defined BUCK && !TARGET_OS_TV
+#if !TARGET_OS_TV
   // Filter out restrictive data with on-device ML
   parameters = [FBSDKIntegrityManager processParameters:parameters];
 #endif
