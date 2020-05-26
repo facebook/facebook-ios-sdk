@@ -55,7 +55,11 @@
 {
   FBSDKHashtag *hashtag = [FBSDKHashtag hashtagWithString:@"#Encoded"];
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:hashtag];
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_11_0
+  FBSDKHashtag *unarchivedHashtag = [NSKeyedUnarchiver unarchivedObjectOfClass:[FBSDKHashtag class] fromData:data error:nil];
+#else
   FBSDKHashtag *unarchivedHashtag = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+#endif
   XCTAssertEqualObjects(hashtag, unarchivedHashtag);
 }
 

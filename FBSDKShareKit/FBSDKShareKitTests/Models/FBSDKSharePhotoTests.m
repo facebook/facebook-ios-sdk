@@ -80,7 +80,11 @@
 {
   FBSDKSharePhoto *photo = [FBSDKShareModelTestUtility photoWithImageURL];
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:photo];
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_11_0
+  FBSDKSharePhoto *unarchivedPhoto = [NSKeyedUnarchiver unarchivedObjectOfClass:[FBSDKSharePhoto class] fromData:data error:nil];
+#else
   FBSDKSharePhoto *unarchivedPhoto = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+#endif
   XCTAssertEqualObjects(unarchivedPhoto, photo);
 }
 

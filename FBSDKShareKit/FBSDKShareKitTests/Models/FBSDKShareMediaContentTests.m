@@ -44,7 +44,11 @@
 {
   FBSDKShareVideo *content = (FBSDKShareVideo *) [FBSDKShareModelTestUtility mediaContent].media.firstObject;
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:content];
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_11_0
+  FBSDKShareVideo *unarchivedContent = [NSKeyedUnarchiver unarchivedObjectOfClass:[FBSDKShareVideo class] fromData:data error:nil];
+#else
   FBSDKShareVideo *unarchivedContent = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+#endif
   XCTAssertEqualObjects(unarchivedContent, content);
 }
 
