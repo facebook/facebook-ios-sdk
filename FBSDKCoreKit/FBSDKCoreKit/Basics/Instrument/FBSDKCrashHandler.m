@@ -25,6 +25,7 @@
 #include <signal.h>
 
 #import "FBSDKLibAnalyzer.h"
+#import "FBSDKTypeUtility.h"
 
 #define FBSDK_MAX_CRASH_LOGS 5
 #define FBSDK_CRASH_PATH_NAME @"instrument"
@@ -231,7 +232,7 @@ void FBSDKSignalHandler(int sig)
     if (!data) {
       continue;
     }
-    NSDictionary<NSString *, id> *methodMapping  = [NSJSONSerialization JSONObjectWithData:data
+    NSDictionary<NSString *, id> *methodMapping  = [FBSDKTypeUtility JSONObjectWithData:data
                                                                                    options:kNilOptions
                                                                                      error:nil];
     NSArray<NSString *> *symbolicatedCallstack = [FBSDKLibAnalyzer symbolicateCallstack:callstack methodMapping:methodMapping];
@@ -258,7 +259,7 @@ void FBSDKSignalHandler(int sig)
     if (!data) {
       continue;
     }
-    NSDictionary<NSString *, id>* crashLog = [NSJSONSerialization JSONObjectWithData:data
+    NSDictionary<NSString *, id>* crashLog = [FBSDKTypeUtility JSONObjectWithData:data
                                                                              options:kNilOptions
                                                                                error:nil];
     if (crashLog) {
@@ -317,7 +318,7 @@ void FBSDKSignalHandler(int sig)
 
   [completeCrashLog setObject:[UIDevice currentDevice].systemVersion forKey:kFBSDKDeviceOSVersion];
 
-  NSData *data = [NSJSONSerialization dataWithJSONObject:completeCrashLog options:0 error:nil];
+  NSData *data = [FBSDKTypeUtility dataWithJSONObject:completeCrashLog options:0 error:nil];
 
   [data writeToFile:[self getPathToCrashFile:currentTimestamp]
          atomically:YES];
@@ -332,7 +333,7 @@ void FBSDKSignalHandler(int sig)
   NSDictionary<NSString *, NSString *> *methodMapping = [FBSDKLibAnalyzer getMethodsTable:observer.prefixes
                                                                                frameworks:observer.frameworks];
   if (methodMapping.count > 0){
-    NSData *data = [NSJSONSerialization dataWithJSONObject:methodMapping options:0 error:nil];
+    NSData *data = [FBSDKTypeUtility dataWithJSONObject:methodMapping options:0 error:nil];
     [data writeToFile:[self getPathToLibDataFile:mappingTableIdentifier]
                     atomically:YES];
   }
