@@ -22,6 +22,7 @@
 
 #import "FBSDKMLMacros.h"
 #import "FBSDKModelParser.h"
+#import "FBSDKTypeUtility.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -50,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
     }
 
     char *json = (char *)data + 4;
-    NSDictionary<NSString *, id> *info = [NSJSONSerialization JSONObjectWithData:[NSData dataWithBytes:json length:length]
+    NSDictionary<NSString *, id> *info = [FBSDKTypeUtility JSONObjectWithData:[NSData dataWithBytes:json length:length]
                                                                          options:0
                                                                            error:nil];
     NSArray<NSString *> *keys = [[info allKeys] sortedArrayUsingComparator:^NSComparisonResult(NSString *key1, NSString *key2) {

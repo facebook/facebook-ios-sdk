@@ -24,6 +24,7 @@
 #import "FBSDKModelManager.h"
 #import "FBSDKViewHierarchyMacros.h"
 #import "FBSDKCoreKitTests-Swift.h"
+#import "FBSDKTypeUtility.h"
 
 @interface FBSDKFeatureExtractor ()
 + (BOOL)pruneTree:(NSMutableDictionary *)node
@@ -66,7 +67,7 @@
   NSBundle *bundle = [NSBundle bundleForClass:[self class]];
   NSString *filepath = [bundle pathForResource:@"FBSDKTextClassifyRules" ofType:@"json"];
   if (filepath.length > 0) {
-    _rules = [NSJSONSerialization JSONObjectWithData:[[NSData alloc] initWithContentsOfFile:filepath] options:0 error:nil];;
+    _rules = [FBSDKTypeUtility JSONObjectWithData:[[NSData alloc] initWithContentsOfFile:filepath] options:0 error:nil];;
   }
 
   id _mockModelManager = OCMClassMock([FBSDKModelManager class]);
@@ -287,7 +288,7 @@
     return;
   }
 
-  NSString *viewTreeString = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:[_viewHierarchy[VIEW_HIERARCHY_VIEW_KEY] mutableCopy]
+  NSString *viewTreeString = [[NSString alloc] initWithData:[FBSDKTypeUtility dataWithJSONObject:[_viewHierarchy[VIEW_HIERARCHY_VIEW_KEY] mutableCopy]
                                                                                             options:0
                                                                                               error:nil]
                                                    encoding:NSUTF8StringEncoding];

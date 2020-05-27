@@ -22,6 +22,7 @@
 #import "FBSDKGraphRequestConnection.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
+#import "FBSDKTypeUtility.h"
 
 #define FBSDK_MAX_ERROR_REPORT_LOGS 1000
 
@@ -55,7 +56,7 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
   if ([errorReports count] == 0) {
     return [self clearErrorInfo];
   }
-  NSData *jsonData = [NSJSONSerialization dataWithJSONObject:errorReports options:0 error:nil];
+  NSData *jsonData = [FBSDKTypeUtility dataWithJSONObject:errorReports options:0 error:nil];
   if (!jsonData){
     return;
   }
@@ -102,7 +103,7 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
                                             options:NSDataReadingMappedIfSafe
                                               error:nil];
       if (data) {
-        NSDictionary<NSString *, id> *errorReport =  [NSJSONSerialization JSONObjectWithData:data
+        NSDictionary<NSString *, id> *errorReport =  [FBSDKTypeUtility JSONObjectWithData:data
                                                                                      options:0
                                                                                        error:nil];
         if (errorReport) {
@@ -129,7 +130,7 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
 + (void)saveErrorInfoToDisk:(NSDictionary<NSString *, id> *)errorInfo
 {
   if (errorInfo.count > 0) {
-    NSData *data = [NSJSONSerialization dataWithJSONObject:errorInfo options:0 error:nil];
+    NSData *data = [FBSDKTypeUtility dataWithJSONObject:errorInfo options:0 error:nil];
     [data writeToFile:[self pathToErrorInfoFile]
            atomically:YES];
   }

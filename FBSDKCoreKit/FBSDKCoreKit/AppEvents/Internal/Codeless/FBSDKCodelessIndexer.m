@@ -347,7 +347,7 @@ static NSString *_lastTreeHash;
   treeInfo[@"screenshot"] = screenshot ?: @"";
 
   NSString *tree = nil;
-  data = [NSJSONSerialization dataWithJSONObject:treeInfo options:0 error:nil];
+  data = [FBSDKTypeUtility dataWithJSONObject:treeInfo options:0 error:nil];
   if (data) {
     tree = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
   }

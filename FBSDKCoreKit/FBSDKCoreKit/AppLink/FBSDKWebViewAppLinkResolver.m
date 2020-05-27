@@ -27,6 +27,7 @@
 
 #import "FBSDKAppLink.h"
 #import "FBSDKAppLinkTarget.h"
+#import "FBSDKTypeUtility.h"
 
 /**
  Describes the callback for appLinkFromURLInBackground.
@@ -250,7 +251,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
               NSString *jsonString = [evaluateResult isKindOfClass:[NSString class]] ? evaluateResult : nil;
               error = nil;
               NSArray<NSDictionary<NSString *, id> *> *arr =
-              [NSJSONSerialization JSONObjectWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]
+              [FBSDKTypeUtility JSONObjectWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]
                                               options:0
                                                 error:&error];
               handler([self parseALData:arr]);

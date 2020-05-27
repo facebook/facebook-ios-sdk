@@ -35,6 +35,7 @@
 #import "FBSDKModelParser.h"
 #import "FBSDKModelRuntime.hpp"
 #import "FBSDKModelUtility.h"
+#import "FBSDKTypeUtility.h"
 
 static NSString *const INTEGRITY_NONE = @"none";
 static NSString *const INTEGRITY_ADDRESS = @"address";
@@ -104,7 +105,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSString *filePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.rules", useCase, model[VERSION_ID_KEY]]];
     if (filePath) {
       NSData *ruelsData = [NSData dataWithContentsOfFile:filePath options:NSDataReadingMappedIfSafe error:nil];
-      NSDictionary *rules = [NSJSONSerialization JSONObjectWithData:ruelsData options:0 error:nil];
+      NSDictionary *rules = [FBSDKTypeUtility JSONObjectWithData:ruelsData options:0 error:nil];
       return rules;
     }
   }

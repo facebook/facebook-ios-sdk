@@ -256,7 +256,7 @@ static NSString *const _mockUserID = @"mockUserID";
                                                                @"ln":[FBSDKUtility SHA256Hash:mockLastName],
                                                                @"ph":[FBSDKUtility SHA256Hash:mockPhone],
   };
-  NSData *jsonData = [NSJSONSerialization dataWithJSONObject:expectedHashedDict
+  NSData *jsonData = [FBSDKTypeUtility dataWithJSONObject:expectedHashedDict
                                                      options:0
                                                        error:nil];
   NSString *expectedUserData = [[NSString alloc] initWithData:jsonData

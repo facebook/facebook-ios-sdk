@@ -89,7 +89,7 @@
 - (void)testJSONObjectWithDataWithValidData
 {
   for (id object in validJSONObjects) {
-    NSData *data = [NSJSONSerialization dataWithJSONObject:object options:NSJSONWritingPrettyPrinted error:nil];
+    NSData *data = [FBSDKTypeUtility dataWithJSONObject:object options:NSJSONWritingPrettyPrinted error:nil];
 
     XCTAssertEqualObjects([FBSDKTypeUtility JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil], object,
                           "Should be able to create objects from valid serialized JSON data");

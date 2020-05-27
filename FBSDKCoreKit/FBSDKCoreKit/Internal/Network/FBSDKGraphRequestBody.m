@@ -120,7 +120,7 @@
   if (_json) {
     NSData *jsonData;
     if (_json.allKeys.count > 0) {
-      jsonData = [NSJSONSerialization dataWithJSONObject:_json options:0 error:nil];
+      jsonData = [FBSDKTypeUtility dataWithJSONObject:_json options:0 error:nil];
     } else {
       jsonData = [NSData data];
     }

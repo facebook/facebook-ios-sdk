@@ -26,6 +26,7 @@
 #import "FBSDKAppLink_Internal.h"
 #import "FBSDKMeasurementEvent_Internal.h"
 #import "FBSDKSettings.h"
+#import "FBSDKTypeUtility.h"
 #import "FBSDKWebViewAppLinkResolver.h"
 
 FOUNDATION_EXPORT NSString *const FBSDKAppLinkDataParameterName;
@@ -86,7 +87,7 @@ static id<FBSDKAppLinkResolving> defaultResolver;
 
     // JSON-ify the applink data
     NSError *jsonError = nil;
-    NSData *jsonBlob = [NSJSONSerialization dataWithJSONObject:appLinkData options:0 error:&jsonError];
+    NSData *jsonBlob = [FBSDKTypeUtility dataWithJSONObject:appLinkData options:0 error:&jsonError];
     if (!jsonError) {
         NSString *jsonString = [[NSString alloc] initWithData:jsonBlob encoding:NSUTF8StringEncoding];
         NSString *encoded = [self stringByEscapingQueryString:jsonString];

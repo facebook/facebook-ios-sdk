@@ -22,6 +22,7 @@
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequestConnection.h"
 #import "FBSDKSettings.h"
+#import "FBSDKTypeUtility.h"
 
 @implementation FBSDKCrashShield
 
@@ -85,7 +86,7 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
     NSDictionary<NSString *, id> *disabledFeatureLog = @{@"feature_names":[disabledFeatues allObjects],
                                                          @"timestamp":[NSString stringWithFormat:@"%.0lf", [[NSDate date] timeIntervalSince1970]],
     };
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:disabledFeatureLog options:0 error:nil];
+    NSData *jsonData = [FBSDKTypeUtility dataWithJSONObject:disabledFeatureLog options:0 error:nil];
     if (jsonData) {
       NSString *disabledFeatureReport = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
       if (disabledFeatureReport) {

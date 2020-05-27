@@ -568,7 +568,7 @@ expectedPreJSONtext:(NSString *)expectedPreJSONText
     } else {
       preJSONText = [text substringToIndex:JSONDelimiterRange.location];
       NSString *jsonText = [text substringFromIndex:JSONDelimiterRange.location+1];
-      json = [NSJSONSerialization JSONObjectWithData:[jsonText dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
+      json = [FBSDKTypeUtility JSONObjectWithData:[jsonText dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
     }
     return ((expectedPreJSONText == nil && preJSONText == nil) || [expectedPreJSONText isEqualToString:preJSONText]) &&
            ((expectedJSON == nil && json == nil) || [expectedJSON isEqual:json]);

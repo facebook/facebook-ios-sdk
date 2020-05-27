@@ -39,9 +39,9 @@ static NSString *const FBSDK_BASICUTILITY_ANONYMOUSID_KEY = @"anon_id";
                             error:(NSError *__autoreleasing *)errorRef
              invalidObjectHandler:(FBSDKInvalidObjectHandler)invalidObjectHandler
 {
-  if (invalidObjectHandler || ![NSJSONSerialization isValidJSONObject:object]) {
+  if (invalidObjectHandler || ![FBSDKTypeUtility isValidJSONObject:object]) {
     object = [self _convertObjectToJSONObject:object invalidObjectHandler:invalidObjectHandler stop:NULL];
-    if (![NSJSONSerialization isValidJSONObject:object]) {
+    if (![FBSDKTypeUtility isValidJSONObject:object]) {
       if (errorRef != NULL) {
         Class FBSDKErrorClass = NSClassFromString(@"FBSDKError");
         if ([FBSDKErrorClass respondsToSelector:@selector(invalidArgumentErrorWithName:value:message:)]) {
@@ -53,7 +53,7 @@ static NSString *const FBSDK_BASICUTILITY_ANONYMOUSID_KEY = @"anon_id";
       return nil;
     }
   }
-  NSData *data = [NSJSONSerialization dataWithJSONObject:object options:0 error:errorRef];
+  NSData *data = [FBSDKTypeUtility dataWithJSONObject:object options:0 error:errorRef];
   if (!data) {
     return nil;
   }
@@ -138,7 +138,7 @@ setJSONStringForObject:(id)object
     }
     return nil;
   }
-  return [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:errorRef];
+  return [FBSDKTypeUtility JSONObjectWithData:data options:NSJSONReadingAllowFragments error:errorRef];
 }
 
 + (NSString *)queryStringWithDictionary:(NSDictionary<id, id> *)dictionary

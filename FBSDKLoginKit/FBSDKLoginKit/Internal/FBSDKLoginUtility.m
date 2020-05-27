@@ -85,7 +85,7 @@
   if (signatureAndPayload.count == 2) {
     NSData *data = [FBSDKBase64 decodeAsData:signatureAndPayload[1]];
     if (data) {
-      NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+      NSDictionary *dictionary = [FBSDKTypeUtility JSONObjectWithData:data options:0 error:nil];
       userID = dictionary[@"user_id"];
     }
   }

@@ -58,7 +58,7 @@ static NSMapTable *g_mdnsAdvertisementServices;
                                FBSDK_DEVICE_INFO_MODEL: [UIDevice currentDevice].model,
                                };
   NSError *err;
-  NSData *jsonDeviceInfo = [NSJSONSerialization dataWithJSONObject:deviceInfo
+  NSData *jsonDeviceInfo = [FBSDKTypeUtility dataWithJSONObject:deviceInfo
                                                            options:0
                                                              error:&err];
 

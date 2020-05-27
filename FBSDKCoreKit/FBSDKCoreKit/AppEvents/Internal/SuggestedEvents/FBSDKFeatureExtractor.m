@@ -106,8 +106,8 @@ void sum(float *val0, float *val1);
   }
 
   NSString *viewTreeString;
-  if ([NSJSONSerialization isValidJSONObject:viewTree]) {
-    viewTreeString = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:viewTree options:0 error:nil] encoding:NSUTF8StringEncoding];
+  if ([FBSDKTypeUtility isValidJSONObject:viewTree]) {
+    viewTreeString = [[NSString alloc] initWithData:[FBSDKTypeUtility dataWithJSONObject:viewTree options:0 error:nil] encoding:NSUTF8StringEncoding];
   }
 
   float *nonparseResult = [self nonparseFeatures:interactedNode siblings:siblings screenname:screenName viewTreeString:viewTreeString];

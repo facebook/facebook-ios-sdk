@@ -22,6 +22,7 @@
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
 #import "FBSDKUtility.h"
+#import "FBSDKTypeUtility.h"
 
 static NSString *const  FBSDKUserDataKey  = @"com.facebook.appevents.UserDataStore.userData";
 
@@ -35,7 +36,7 @@ static dispatch_queue_t serialQueue;
   serialQueue = dispatch_queue_create("com.facebook.appevents.UserDataStore", DISPATCH_QUEUE_SERIAL);
   NSString *userData = [[NSUserDefaults standardUserDefaults] stringForKey:FBSDKUserDataKey];
   if (userData) {
-    hashedUserData = (NSMutableDictionary<NSString *, NSString *> *)[NSJSONSerialization JSONObjectWithData:[userData dataUsingEncoding:NSUTF8StringEncoding]
+    hashedUserData = (NSMutableDictionary<NSString *, NSString *> *)[FBSDKTypeUtility JSONObjectWithData:[userData dataUsingEncoding:NSUTF8StringEncoding]
                                                                                                     options:NSJSONReadingMutableContainers
                                                                                                       error:nil];
   }
@@ -141,7 +142,7 @@ static dispatch_queue_t serialQueue;
 + (NSString *)stringByHashedData:(id)hashedData
 {
   NSError *error;
-  NSData *jsonData = [NSJSONSerialization dataWithJSONObject:hashedData
+  NSData *jsonData = [FBSDKTypeUtility dataWithJSONObject:hashedData
                                                      options:0
                                                        error:&error];
   if (jsonData) {

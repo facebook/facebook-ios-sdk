@@ -876,11 +876,11 @@ static NSString *g_overrideAppID = nil;
   // Send event bindings to Unity only Unity is initialized
   if ([FBSDKAppEvents singleton]->_isUnityInit
       && [FBSDKAppEvents singleton]->_serverConfiguration
-      && [NSJSONSerialization isValidJSONObject:[FBSDKAppEvents singleton]->_serverConfiguration.eventBindings]
+      && [FBSDKTypeUtility isValidJSONObject:[FBSDKAppEvents singleton]->_serverConfiguration.eventBindings]
       ) {
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[FBSDKAppEvents singleton]->_serverConfiguration.eventBindings ?: @""
-                                                       options:0
-                                                         error:nil];
+    NSData *jsonData = [FBSDKTypeUtility dataWithJSONObject:[FBSDKAppEvents singleton]->_serverConfiguration.eventBindings ?: @""
+                                                    options:0
+                                                      error:nil];
     NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     Class classFBUnityUtility = objc_lookUpClass(FBUnityUtilityClassName);
     SEL updateBindingSelector = NSSelectorFromString(FBUnityUtilityUpdateBindingsSelector);
@@ -1310,9 +1310,9 @@ static dispatch_once_t *onceTokenPointer;
 
     NSString *loggingEntry = nil;
     if ([FBSDKSettings.loggingBehaviors containsObject:FBSDKLoggingBehaviorAppEvents]) {
-      NSData *prettyJSONData = [NSJSONSerialization dataWithJSONObject:appEventsState.events
-                                                               options:NSJSONWritingPrettyPrinted
-                                                                 error:NULL];
+      NSData *prettyJSONData = [FBSDKTypeUtility dataWithJSONObject:appEventsState.events
+                                                            options:NSJSONWritingPrettyPrinted
+                                                              error:NULL];
       NSString *prettyPrintedJsonEvents = [[NSString alloc] initWithData:prettyJSONData
                                                                 encoding:NSUTF8StringEncoding];
       // Remove this param -- just an encoding of the events which we pretty print later.

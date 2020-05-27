@@ -50,7 +50,7 @@ NSString *const AutoAppLinkFlagKey = @"is_auto_applink";
         // Try to parse the JSON
         NSError *error = nil;
         NSDictionary<NSString *, id> *applinkData =
-         [NSJSONSerialization JSONObjectWithData:[appLinkDataString dataUsingEncoding:NSUTF8StringEncoding]
+         [FBSDKTypeUtility JSONObjectWithData:[appLinkDataString dataUsingEncoding:NSUTF8StringEncoding]
                                          options:0
                                            error:&error];
         if (!error && [applinkData isKindOfClass:[NSDictionary class]]) {

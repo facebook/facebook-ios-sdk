@@ -29,6 +29,7 @@
 #endif
 
 #import "FBSDKAppEvents+Internal.h"
+#import "FBSDKTypeUtility.h"
 
 NSString *const FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey = @"_fb_pixel_referral_id";
 
@@ -45,7 +46,7 @@ NSString *const FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey = @"_fb_pix
       NSMutableDictionary <NSString *, id> *params = nil;
       NSError *jsonParseError = nil;
       if ([stringedParams isKindOfClass:[NSString class]]) {
-        params = [NSJSONSerialization JSONObjectWithData:[stringedParams dataUsingEncoding:NSUTF8StringEncoding]
+        params = [FBSDKTypeUtility JSONObjectWithData:[stringedParams dataUsingEncoding:NSUTF8StringEncoding]
                                                                                     options:NSJSONReadingMutableContainers
                                                                                       error:&jsonParseError
                   ];
