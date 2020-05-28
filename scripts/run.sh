@@ -122,6 +122,7 @@ main() {
   "tag-current-version") tag_current_version "$@" ;;
   "lint") lint_sdk "$@" ;;
   "verify-spm-headers") verify_spm_headers "$@" ;;
+  "verify-xcode-integration") verify_xcode_integration "$@" ;;
   "--help" | "help") echo "Check main() for supported commands" ;;
   esac
 }
@@ -654,6 +655,12 @@ does_version_exist() {
   fi
 
   false
+}
+
+# Builds the test app locally to ensure all frameworks still compile
+verify_xcode_integration() {
+  echo "Verifying the TextXcodeIntegration App builds"
+  xcodebuild clean build -quiet -sdk iphonesimulator -workspace ../internal/testing/TestXcodeIntegration/TestXcodeIntegration.xcworkspace/ -scheme TestXcodeIntegration
 }
 
 verify_spm_headers() {
