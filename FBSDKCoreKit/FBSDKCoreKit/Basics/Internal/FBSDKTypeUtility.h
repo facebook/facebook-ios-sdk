@@ -30,11 +30,27 @@ NS_SWIFT_NAME(TypeUtility)
 + (nullable NSArray *)arrayValue:(id)object;
 
 /**
+ Return an object at a given index if the index is valid, otherwise return nil
+ @param array The array to retrieve the object from.
+ @param index The index to retrieve the object from.
+ */
++ (nullable id)array:(NSArray *)array objectAtIndex:(NSUInteger)index;
+
+/**
  Adds an object to an array if it is not nil.
  @param array The array to add the object to.
  @param object The object to add to the array.
  */
 + (void)array:(NSMutableArray *)array addObject:(nullable id)object;
+
+/**
+ Adds an object to an array at a given index if the object is not nil and the index is available.
+ Will override objects if  they exist.
+ @param array The array to add the object to.
+ @param object The object to add to the array.
+ @param index The index to try and insert the object into
+ */
++ (void)array:(NSMutableArray *)array addObject:(nullable id)object atIndex:(NSUInteger)index;
 
 /// Returns a BOOL if the provided object is a BOOL, otherwise returns nil.
 + (BOOL)boolValue:(id)object;
@@ -43,7 +59,7 @@ NS_SWIFT_NAME(TypeUtility)
 + (nullable NSDictionary *)dictionaryValue:(id)object;
 
 /// Returns an object for a given key in the provided dictionary if it matches the stated type
-+ (nullable id) dictionary:(NSDictionary *)dictionary objectForKey:(NSString *)key ofType:(Class)type;
++ (nullable id)dictionary:(NSDictionary *)dictionary objectForKey:(NSString *)key ofType:(Class)type;
 
 /**
  Sets an object for a key in a dictionary if it is not nil.

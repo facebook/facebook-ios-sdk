@@ -27,10 +27,29 @@
   return (NSArray *)[self _objectValue:object ofClass:[NSArray class]];
 }
 
++ (nullable id)array:(NSArray *)array objectAtIndex:(NSUInteger)index
+{
+  if ([self arrayValue:array] && index < array.count) {
+    return [array objectAtIndex:index];
+  }
+
+  return nil;
+}
+
 + (void)array:(NSMutableArray *)array addObject:(id)object
 {
-  if (object) {
+  if (object && [array isKindOfClass:NSMutableArray.class]) {
     [array addObject:object];
+  }
+}
+
++ (void)array:(NSMutableArray *)array addObject:(nullable id)object atIndex:(NSUInteger)index {
+  if (object && [array isKindOfClass:NSMutableArray.class]) {
+    if (index < array.count) {
+      [array insertObject:object atIndex:index];
+    } else if (index == array.count) {
+      [array addObject:object];
+    }
   }
 }
 
