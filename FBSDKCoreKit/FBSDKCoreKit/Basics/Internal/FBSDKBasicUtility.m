@@ -16,10 +16,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKBasicUtility.h"
-
 #import <zlib.h>
 
+#import "FBSDKBasicUtility.h"
 #import "FBSDKTypeUtility.h"
 
 #define kChunkSize 1024
@@ -72,7 +71,7 @@ setJSONStringForObject:(id)object
   if (!JSONString) {
     return NO;
   }
-  [self dictionary:dictionary setObject:JSONString forKey:key];
+  [FBSDKTypeUtility dictionary:dictionary setObject:JSONString forKey:key];
   return YES;
 }
 
@@ -88,7 +87,7 @@ setJSONStringForObject:(id)object
   } else if ([object isKindOfClass:[NSDictionary class]]) {
     NSMutableDictionary<NSString *, id> *dictionary = [[NSMutableDictionary alloc] init];
     [(NSDictionary<id, id> *)object enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *dictionaryStop) {
-      [self dictionary:dictionary
+      [FBSDKTypeUtility dictionary:dictionary
              setObject:[self _convertObjectToJSONObject:obj invalidObjectHandler:invalidObjectHandler stop:&stop]
                 forKey:[FBSDKTypeUtility stringValue:key]];
       if (stop) {
@@ -100,7 +99,7 @@ setJSONStringForObject:(id)object
     NSMutableArray<id> *array = [[NSMutableArray alloc] init];
     for (id obj in (NSArray *)object) {
       id convertedObj = [self _convertObjectToJSONObject:obj invalidObjectHandler:invalidObjectHandler stop:&stop];
-      [self array:array addObject:convertedObj];
+      [FBSDKTypeUtility array:array addObject:convertedObj];
       if (stop) {
         break;
       }
@@ -113,20 +112,6 @@ setJSONStringForObject:(id)object
     *stopRef = stop;
   }
   return object;
-}
-
-+ (void)dictionary:(NSMutableDictionary<NSString *, id> *)dictionary setObject:(id)object forKey:(id<NSCopying>)key
-{
-  if (object && key) {
-    dictionary[key] = object;
-  }
-}
-
-+ (void)array:(NSMutableArray *)array addObject:(id)object
-{
-  if (object) {
-    [array addObject:object];
-  }
 }
 
 + (id)objectForJSONString:(NSString *)string error:(NSError *__autoreleasing *)errorRef

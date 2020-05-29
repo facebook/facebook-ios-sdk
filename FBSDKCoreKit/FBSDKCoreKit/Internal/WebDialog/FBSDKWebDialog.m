@@ -223,8 +223,8 @@ static FBSDKWebDialog *g_currentDialog = nil;
   parameters[@"display"] = @"touch";
   parameters[@"sdk"] = [NSString stringWithFormat:@"ios-%@", [FBSDKSettings sdkVersion]];
   parameters[@"redirect_uri"] = @"fbconnect://success";
-  [FBSDKBasicUtility dictionary:parameters setObject:[FBSDKSettings appID] forKey:@"app_id"];
-  [FBSDKBasicUtility dictionary:parameters
+  [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKSettings appID] forKey:@"app_id"];
+  [FBSDKTypeUtility dictionary:parameters
                       setObject:[FBSDKAccessToken currentAccessToken].tokenString
                          forKey:@"access_token"];
   [parameters addEntriesFromDictionary:self.parameters];

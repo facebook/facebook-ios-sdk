@@ -131,7 +131,7 @@ static NSMutableSet<NSString *> *_restrictedEvents;
       NSString *restrictedParamsJSONString = [FBSDKBasicUtility JSONStringForObject:restrictedParams
                                                                               error:NULL
                                                                invalidObjectHandler:NULL];
-      [FBSDKBasicUtility dictionary:params setObject:restrictedParamsJSONString forKey:@"_restrictedParams"];
+      [FBSDKTypeUtility dictionary:params setObject:restrictedParamsJSONString forKey:@"_restrictedParams"];
     }
 
     return [params copy];

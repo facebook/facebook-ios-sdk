@@ -536,8 +536,8 @@ static NSString *const _mockUserID = @"mockUserID";
   id mockLogger = [OCMockObject niceMockForClass:[FBSDKLogger class]];
   [[mockLogger expect] singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                                  logEntry:@"Missing [FBSDKAppEvents userID] for [FBSDKAppEvents updateUserProperties:]"];
-  id mockBasicUtility = [OCMockObject niceMockForClass:[FBSDKBasicUtility class]];
-  [[mockBasicUtility reject] dictionary:[OCMArg any] setObject:[FBSDKAppEvents userID] forKey:@"user_unique_id"];
+  id mockTypeUtility = [OCMockObject niceMockForClass:[FBSDKTypeUtility class]];
+  [[mockTypeUtility reject] dictionary:[OCMArg any] setObject:[FBSDKAppEvents userID] forKey:@"user_unique_id"];
 
   [FBSDKAppEvents updateUserProperties:@{
     @"favorite_color" : @"blue",

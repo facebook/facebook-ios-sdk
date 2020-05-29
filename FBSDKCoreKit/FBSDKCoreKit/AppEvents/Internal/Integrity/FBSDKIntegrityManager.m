@@ -59,7 +59,7 @@ static BOOL isSampleEnabled = NO;
     NSString *restrictiveParamsJSONString = [FBSDKBasicUtility JSONStringForObject:restrictiveParams
                                                                              error:NULL
                                                               invalidObjectHandler:NULL];
-    [FBSDKBasicUtility dictionary:params setObject:restrictiveParamsJSONString forKey:@"_onDeviceParams"];
+    [FBSDKTypeUtility dictionary:params setObject:restrictiveParamsJSONString forKey:@"_onDeviceParams"];
   }
   return [params copy];
 }

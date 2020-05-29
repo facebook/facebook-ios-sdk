@@ -27,6 +27,13 @@
   return (NSArray *)[self _objectValue:object ofClass:[NSArray class]];
 }
 
++ (void)array:(NSMutableArray *)array addObject:(id)object
+{
+  if (object) {
+    [array addObject:object];
+  }
+}
+
 + (BOOL)boolValue:(id)object
 {
   if ([object isKindOfClass:[NSNumber class]]) {
@@ -53,6 +60,13 @@
     return potentialValue;
   } else {
     return nil;
+  }
+}
+
++ (void)dictionary:(NSMutableDictionary<NSString *, id> *)dictionary setObject:(id)object forKey:(id<NSCopying>)key
+{
+  if (object && key) {
+    dictionary[key] = object;
   }
 }
 

@@ -48,7 +48,7 @@
 
 - (void)addLoggingExtra:(id)object forKey:(id<NSCopying>)key
 {
-  [FBSDKBasicUtility dictionary:_mutableLoggingExtras setObject:object forKey:key];
+  [FBSDKTypeUtility dictionary:_mutableLoggingExtras setObject:object forKey:key];
 }
 
 - (NSDictionary *)loggingExtras

@@ -63,7 +63,7 @@ typedef NSDictionary<NSString *, NSNumber *> SampleRates;
       NSNumber *value = [FBSDKTypeUtility dictionary:ratePair objectForKey:sampleRateValueKey ofType:NSNumber.class];
 
       if (value.intValue > 0) {
-        [FBSDKBasicUtility dictionary:sampleRates setObject:value forKey:key];
+        [FBSDKTypeUtility dictionary:sampleRates setObject:value forKey:key];
       }
     }
 

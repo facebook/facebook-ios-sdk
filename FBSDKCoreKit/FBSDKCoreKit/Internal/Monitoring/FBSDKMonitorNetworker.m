@@ -58,11 +58,11 @@ static NSString * const FBSDKOsVersionKey = @"device_os_version";
   }
 
   NSMutableDictionary *payload = [NSMutableDictionary dictionary];
-  [FBSDKBasicUtility dictionary:payload setObject:[self JSONStringForEntries:entries] ?: @[] forKey:FBSDKMonitoringsKey];
-  [FBSDKBasicUtility dictionary:payload setObject:appID forKey:FBSDKAppIdentifierKey];
-  [FBSDKBasicUtility dictionary:payload setObject:[self deviceModel] forKey:FBSDKDeviceModelKey];
-  [FBSDKBasicUtility dictionary:payload setObject:NSBundle.mainBundle.bundleIdentifier forKey:FBSDKBundleIdentifierKey];
-  [FBSDKBasicUtility dictionary:payload setObject:UIDevice.currentDevice.systemVersion forKey:FBSDKOsVersionKey];
+  [FBSDKTypeUtility dictionary:payload setObject:[self JSONStringForEntries:entries] ?: @[] forKey:FBSDKMonitoringsKey];
+  [FBSDKTypeUtility dictionary:payload setObject:appID forKey:FBSDKAppIdentifierKey];
+  [FBSDKTypeUtility dictionary:payload setObject:[self deviceModel] forKey:FBSDKDeviceModelKey];
+  [FBSDKTypeUtility dictionary:payload setObject:NSBundle.mainBundle.bundleIdentifier forKey:FBSDKBundleIdentifierKey];
+  [FBSDKTypeUtility dictionary:payload setObject:UIDevice.currentDevice.systemVersion forKey:FBSDKOsVersionKey];
 
   return payload;
 }

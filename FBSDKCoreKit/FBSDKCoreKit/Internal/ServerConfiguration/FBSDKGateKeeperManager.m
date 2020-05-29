@@ -93,7 +93,7 @@ static BOOL _requeryFinishedForAppStart;
         completionBlock(nil);
       }
     } else {
-      [FBSDKBasicUtility array:_completionBlocks addObject:completionBlock];
+      [FBSDKTypeUtility array:_completionBlocks addObject:completionBlock];
       if (!_loadingGateKeepers) {
         _loadingGateKeepers = YES;
         FBSDKGraphRequest *request = [[self class] requestToLoadGateKeepers];

@@ -45,16 +45,6 @@ NS_SWIFT_NAME(InvalidObjectHandler);
 /**
  Sets an object for a key in a dictionary if it is not nil.
  @param dictionary The dictionary to set the value for.
- @param object The value to set.
- @param key The key to set the value for.
- */
-+ (void)dictionary:(NSMutableDictionary<NSString *, id> *)dictionary
-         setObject:(nullable id)object
-            forKey:(nullable id<NSCopying>)key;
-
-/**
- Sets an object for a key in a dictionary if it is not nil.
- @param dictionary The dictionary to set the value for.
  @param object The value to set after serializing to JSON.
  @param key The key to set the value for.
  @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
@@ -64,13 +54,6 @@ NS_SWIFT_NAME(InvalidObjectHandler);
 setJSONStringForObject:(id)object
             forKey:(id<NSCopying>)key
              error:(NSError *__autoreleasing *)errorRef;
-
-/**
- Adds an object to an array if it is not nil.
- @param array The array to add the object to.
- @param object The object to add to the array.
- */
-+ (void)array:(NSMutableArray *)array addObject:(nullable id)object;
 
 /**
  Converts a JSON string into an object

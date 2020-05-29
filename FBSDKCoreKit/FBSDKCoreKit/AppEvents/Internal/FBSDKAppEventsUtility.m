@@ -51,7 +51,7 @@
 
   if (shouldAccessAdvertisingID) {
     NSString *advertiserID = [[self class] advertiserID];
-    [FBSDKBasicUtility dictionary:parameters setObject:advertiserID forKey:@"advertiser_id"];
+    [FBSDKTypeUtility dictionary:parameters setObject:advertiserID forKey:@"advertiser_id"];
   }
 
   parameters[FBSDK_APPEVENTSUTILITY_ANONYMOUSID_KEY] = [FBSDKBasicUtility anonymousID];

@@ -216,8 +216,8 @@
                                                                                                                    @"last name" : @"7"
                                                                                                                    }];
   NSMutableDictionary<NSString *, id> *paramsDict = [NSMutableDictionary dictionary];;
-  [FBSDKBasicUtility dictionary:paramsDict setObject:restrictiveParams forKey:@"restrictive_param"];
-  [FBSDKBasicUtility dictionary:params setObject:paramsDict forKey:eventName];
+  [FBSDKTypeUtility dictionary:paramsDict setObject:restrictiveParams forKey:@"restrictive_param"];
+  [FBSDKTypeUtility dictionary:params setObject:paramsDict forKey:eventName];
 
   [FBSDKRestrictiveDataFilterManager updateFilters:params];
 

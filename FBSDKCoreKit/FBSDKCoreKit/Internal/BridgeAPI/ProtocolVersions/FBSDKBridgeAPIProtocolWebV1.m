@@ -55,7 +55,7 @@
                                                        path:methodName
                                             queryParameters:redirectQueryParameters
                                                       error:NULL];
-  [FBSDKBasicUtility dictionary:queryParameters setObject:redirectURL forKey:@"redirect_uri"];
+  [FBSDKTypeUtility dictionary:queryParameters setObject:redirectURL forKey:@"redirect_uri"];
   [queryParameters addEntriesFromDictionary:parameters];
   return [FBSDKInternalUtility facebookURLWithHostPrefix:@"m"
                                                     path:[@"/dialog/" stringByAppendingString:methodName]

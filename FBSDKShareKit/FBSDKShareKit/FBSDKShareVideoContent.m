@@ -82,33 +82,33 @@
   if (_video.videoAsset) {
     if (bridgeOptions & FBSDKShareBridgeOptionsVideoAsset) {
       // bridge the PHAsset.localIdentifier
-      [FBSDKBasicUtility dictionary:videoParameters
+      [FBSDKTypeUtility dictionary:videoParameters
                           setObject:_video.videoAsset.localIdentifier
                              forKey:@"assetIdentifier"];
     } else {
       // bridge the legacy "assets-library" URL from AVAsset
-      [FBSDKBasicUtility dictionary:videoParameters
+      [FBSDKTypeUtility dictionary:videoParameters
                           setObject:_video.videoAsset.videoURL
                              forKey:@"assetURL"];
     }
   } else if (_video.data) {
     if (bridgeOptions & FBSDKShareBridgeOptionsVideoData) {
       // bridge the data
-      [FBSDKBasicUtility dictionary:videoParameters
+      [FBSDKTypeUtility dictionary:videoParameters
                           setObject:_video.data
                              forKey:@"data"];
     }
   } else if (_video.videoURL) {
     if ([_video.videoURL.scheme.lowercaseString isEqualToString:@"assets-library"]) {
       // bridge the legacy "assets-library" URL
-      [FBSDKBasicUtility dictionary:videoParameters
+      [FBSDKTypeUtility dictionary:videoParameters
                           setObject:_video.videoURL
                              forKey:@"assetURL"];
     } else if (_video.videoURL.isFileURL) {
       if (bridgeOptions & FBSDKShareBridgeOptionsVideoData) {
         // load the contents of the file and bridge the data
         NSData *data = [NSData dataWithContentsOfURL:_video.videoURL options:NSDataReadingMappedIfSafe error:NULL];
-        [FBSDKBasicUtility dictionary:videoParameters
+        [FBSDKTypeUtility dictionary:videoParameters
                             setObject:data
                                forKey:@"data"];
       }
@@ -116,12 +116,12 @@
   }
 
   if (_video.previewPhoto) {
-    [FBSDKBasicUtility dictionary:videoParameters
+    [FBSDKTypeUtility dictionary:videoParameters
                         setObject:[FBSDKShareUtility convertPhoto:_video.previewPhoto]
                            forKey:@"previewPhoto"];
   }
 
-  [FBSDKBasicUtility dictionary:updatedParameters
+  [FBSDKTypeUtility dictionary:updatedParameters
                       setObject:videoParameters
                          forKey:@"video"];
 

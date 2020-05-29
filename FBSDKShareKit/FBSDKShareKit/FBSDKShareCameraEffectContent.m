@@ -75,7 +75,7 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
                                   bridgeOptions:(FBSDKShareBridgeOptions)bridgeOptions
 {
   NSMutableDictionary<NSString *, id> *updatedParameters = [NSMutableDictionary dictionaryWithDictionary:existingParameters];
-  [FBSDKBasicUtility dictionary:updatedParameters
+  [FBSDKTypeUtility dictionary:updatedParameters
                       setObject:_effectID
                          forKey:@"effect_id"];
 
@@ -85,7 +85,7 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
                                                            error:NULL
                                             invalidObjectHandler:NULL];
   }
-  [FBSDKBasicUtility dictionary:updatedParameters
+  [FBSDKTypeUtility dictionary:updatedParameters
                       setObject:effectArgumentsJSON
                          forKey:@"effect_arguments"];
 
@@ -108,7 +108,7 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
       effectTexturesData = [NSKeyedArchiver archivedDataWithRootObject:texturesDataDict];
     #endif
   }
-  [FBSDKBasicUtility dictionary:updatedParameters
+  [FBSDKTypeUtility dictionary:updatedParameters
                       setObject:effectTexturesData
                          forKey:@"effect_textures"];
 

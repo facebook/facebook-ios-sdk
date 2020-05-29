@@ -118,7 +118,7 @@
     }
   }
   if (images.count > 0) {
-    [FBSDKBasicUtility dictionary:updatedParameters
+    [FBSDKTypeUtility dictionary:updatedParameters
                         setObject:images
                            forKey:@"photos"];
   }

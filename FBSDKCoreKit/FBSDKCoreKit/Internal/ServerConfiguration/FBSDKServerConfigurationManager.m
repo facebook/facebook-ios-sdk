@@ -147,7 +147,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
       loadBlock = [self _wrapperBlockForLoadBlock:completionBlock];
     } else {
       // hold onto the completion block
-      [FBSDKBasicUtility array:_completionBlocks addObject:[completionBlock copy]];
+      [FBSDKTypeUtility array:_completionBlocks addObject:[completionBlock copy]];
 
       // check if we are already loading
       if (!_loadingServerConfiguration) {

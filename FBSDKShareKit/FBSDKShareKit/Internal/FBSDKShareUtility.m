@@ -78,15 +78,15 @@
     FBSDKShareLinkContent *const linkContent = (FBSDKShareLinkContent *)content;
     if (linkContent.contentURL != nil) {
       parameters = [NSMutableDictionary new];
-      [FBSDKBasicUtility dictionary:parameters setObject:linkContent.contentURL.absoluteString forKey:@"href"];
-      [FBSDKBasicUtility dictionary:parameters setObject:linkContent.quote forKey:@"quote"];
+      [FBSDKTypeUtility dictionary:parameters setObject:linkContent.contentURL.absoluteString forKey:@"href"];
+      [FBSDKTypeUtility dictionary:parameters setObject:linkContent.quote forKey:@"quote"];
     }
   }
 
   if (parameters) {
-    [FBSDKBasicUtility dictionary:parameters setObject:[self hashtagStringFromHashtag:content.hashtag] forKey:@"hashtag"];
-    [FBSDKBasicUtility dictionary:parameters setObject:content.placeID forKey:@"place"];
-    [FBSDKBasicUtility dictionary:parameters setObject:[FBSDKShareUtility buildWebShareTags:content.peopleIDs] forKey:@"tags"];
+    [FBSDKTypeUtility dictionary:parameters setObject:[self hashtagStringFromHashtag:content.hashtag] forKey:@"hashtag"];
+    [FBSDKTypeUtility dictionary:parameters setObject:content.placeID forKey:@"place"];
+    [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKShareUtility buildWebShareTags:content.peopleIDs] forKey:@"tags"];
   }
   if (methodNameRef != NULL) {
     *methodNameRef = methodName;
@@ -128,10 +128,10 @@
     NSString *const stagedURIJSONString = [FBSDKBasicUtility JSONStringForObject:stagedURIs
                                                                            error:nil
                                                             invalidObjectHandler:NULL];
-    [FBSDKBasicUtility dictionary:parameters
+    [FBSDKTypeUtility dictionary:parameters
                         setObject:stagedURIJSONString
                            forKey:@"media"];
-    [FBSDKBasicUtility dictionary:parameters setObject:[FBSDKShareUtility buildWebShareTags:content.peopleIDs] forKey:@"tags"];
+    [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKShareUtility buildWebShareTags:content.peopleIDs] forKey:@"tags"];
     if (completion != NULL) {
       completion(YES, methodName, [parameters copy]);
     }
@@ -147,12 +147,12 @@
   if ([content isKindOfClass:[FBSDKShareLinkContent class]]) {
     FBSDKShareLinkContent *linkContent = (FBSDKShareLinkContent *)content;
     parameters = [[NSMutableDictionary alloc] init];
-    [FBSDKBasicUtility dictionary:parameters setObject:linkContent.contentURL forKey:@"link"];
-    [FBSDKBasicUtility dictionary:parameters setObject:linkContent.quote forKey:@"quote"];
-    [FBSDKBasicUtility dictionary:parameters setObject:[self hashtagStringFromHashtag:linkContent.hashtag] forKey:@"hashtag"];
-    [FBSDKBasicUtility dictionary:parameters setObject:content.placeID forKey:@"place"];
-    [FBSDKBasicUtility dictionary:parameters setObject:[FBSDKShareUtility buildWebShareTags:content.peopleIDs] forKey:@"tags"];
-    [FBSDKBasicUtility dictionary:parameters setObject:linkContent.ref forKey:@"ref"];
+    [FBSDKTypeUtility dictionary:parameters setObject:linkContent.contentURL forKey:@"link"];
+    [FBSDKTypeUtility dictionary:parameters setObject:linkContent.quote forKey:@"quote"];
+    [FBSDKTypeUtility dictionary:parameters setObject:[self hashtagStringFromHashtag:linkContent.hashtag] forKey:@"hashtag"];
+    [FBSDKTypeUtility dictionary:parameters setObject:content.placeID forKey:@"place"];
+    [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKShareUtility buildWebShareTags:content.peopleIDs] forKey:@"tags"];
+    [FBSDKTypeUtility dictionary:parameters setObject:linkContent.ref forKey:@"ref"];
   }
   return [parameters copy];
 }
@@ -201,15 +201,15 @@
     // This was changed to support a single hashtag; however, the mobile app still expects to receive an array.
     // When hashtag support was added to web dialogs, a single hashtag was passed as a string.
     if (bridgeOptions & FBSDKShareBridgeOptionsWebHashtag) {
-      [FBSDKBasicUtility dictionary:parameters setObject:hashtagString forKey:@"hashtag"];
+      [FBSDKTypeUtility dictionary:parameters setObject:hashtagString forKey:@"hashtag"];
     } else {
-      [FBSDKBasicUtility dictionary:parameters setObject:@[hashtagString] forKey:@"hashtags"];
+      [FBSDKTypeUtility dictionary:parameters setObject:@[hashtagString] forKey:@"hashtags"];
     }
   }
-  [FBSDKBasicUtility dictionary:parameters setObject:shareContent.shareUUID forKey:@"shareUUID"];
-  [FBSDKBasicUtility dictionary:parameters setObject:shareContent.peopleIDs forKey:@"tags"];
-  [FBSDKBasicUtility dictionary:parameters setObject:shareContent.placeID forKey:@"place"];
-  [FBSDKBasicUtility dictionary:parameters setObject:shareContent.ref forKey:@"ref"];
+  [FBSDKTypeUtility dictionary:parameters setObject:shareContent.shareUUID forKey:@"shareUUID"];
+  [FBSDKTypeUtility dictionary:parameters setObject:shareContent.peopleIDs forKey:@"tags"];
+  [FBSDKTypeUtility dictionary:parameters setObject:shareContent.placeID forKey:@"place"];
+  [FBSDKTypeUtility dictionary:parameters setObject:shareContent.ref forKey:@"ref"];
 
   parameters[@"dataFailuresFatal"] = @(shouldFailOnDataError);
 
@@ -311,7 +311,7 @@
   } else if ([object isKindOfClass:[NSArray class]]) {
     NSMutableArray *array = [[NSMutableArray alloc] init];
     for (id item in (NSArray *)object) {
-      [FBSDKBasicUtility array:array addObject:[self _convertObject:item]];
+      [FBSDKTypeUtility array:array addObject:[self _convertObject:item]];
     }
     object = array;
   }
@@ -325,9 +325,9 @@
   }
   NSMutableDictionary<NSString *, id> *dictionary = [[NSMutableDictionary alloc] init];
   dictionary[@"user_generated"] = @(photo.userGenerated);
-  [FBSDKBasicUtility dictionary:dictionary setObject:photo.caption forKey:@"caption"];
+  [FBSDKTypeUtility dictionary:dictionary setObject:photo.caption forKey:@"caption"];
 
-  [FBSDKBasicUtility dictionary:dictionary setObject:photo.image ?: photo.imageURL.absoluteString forKey:@"url"];
+  [FBSDKTypeUtility dictionary:dictionary setObject:photo.image ?: photo.imageURL.absoluteString forKey:@"url"];
   return dictionary;
 }
 

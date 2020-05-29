@@ -24,6 +24,7 @@
 
 #include <signal.h>
 
+#import "FBSDKBasicUtility.h"
 #import "FBSDKLibAnalyzer.h"
 #import "FBSDKTypeUtility.h"
 

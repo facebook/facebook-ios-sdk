@@ -29,6 +29,13 @@ NS_SWIFT_NAME(TypeUtility)
 /// Returns an NSArray if the provided object is an NSArray, otherwise returns nil.
 + (nullable NSArray *)arrayValue:(id)object;
 
+/**
+ Adds an object to an array if it is not nil.
+ @param array The array to add the object to.
+ @param object The object to add to the array.
+ */
++ (void)array:(NSMutableArray *)array addObject:(nullable id)object;
+
 /// Returns a BOOL if the provided object is a BOOL, otherwise returns nil.
 + (BOOL)boolValue:(id)object;
 
@@ -37,6 +44,16 @@ NS_SWIFT_NAME(TypeUtility)
 
 /// Returns an object for a given key in the provided dictionary if it matches the stated type
 + (nullable id) dictionary:(NSDictionary *)dictionary objectForKey:(NSString *)key ofType:(Class)type;
+
+/**
+ Sets an object for a key in a dictionary if it is not nil.
+ @param dictionary The dictionary to set the value for.
+ @param object The value to set.
+ @param key The key to set the value for.
+ */
++ (void)dictionary:(NSMutableDictionary<NSString *, id> *)dictionary
+         setObject:(nullable id)object
+            forKey:(nullable id<NSCopying>)key;
 
 /// Checks if an object is a valid dictionary type before enumerating its keys and objects
 + (void)dictionary:(NSDictionary *)dictionary enumerateKeysAndObjectsUsingBlock:(void (NS_NOESCAPE ^)(id key, id obj, BOOL *stop))block;

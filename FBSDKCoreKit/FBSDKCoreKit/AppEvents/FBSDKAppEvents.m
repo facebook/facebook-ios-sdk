@@ -797,9 +797,9 @@ static NSString *g_overrideAppID = nil;
     return;
   }
   NSMutableDictionary *dataDictionary = [NSMutableDictionary dictionaryWithCapacity:3];
-  [FBSDKBasicUtility dictionary:dataDictionary setObject:[FBSDKAppEvents userID] forKey:@"user_unique_id"];
-  [FBSDKBasicUtility dictionary:dataDictionary setObject:[FBSDKAppEventsUtility advertiserID] forKey:@"advertiser_id"];
-  [FBSDKBasicUtility dictionary:dataDictionary setObject:properties forKey:@"custom_data"];
+  [FBSDKTypeUtility dictionary:dataDictionary setObject:[FBSDKAppEvents userID] forKey:@"user_unique_id"];
+  [FBSDKTypeUtility dictionary:dataDictionary setObject:[FBSDKAppEventsUtility advertiserID] forKey:@"advertiser_id"];
+  [FBSDKTypeUtility dictionary:dataDictionary setObject:properties forKey:@"custom_data"];
 
   NSError *error;
   __block NSError *invalidObjectError;
@@ -1168,7 +1168,7 @@ static dispatch_once_t *onceTokenPointer;
   if (!eventDictionary[FBSDKAppEventParameterLogTime]) {
     eventDictionary[FBSDKAppEventParameterLogTime] = @([FBSDKAppEventsUtility unixTimeNow]);
   }
-  [FBSDKBasicUtility dictionary:eventDictionary setObject:valueToSum forKey:@"_valueToSum"];
+  [FBSDKTypeUtility dictionary:eventDictionary setObject:valueToSum forKey:@"_valueToSum"];
   if (isImplicitlyLogged) {
     eventDictionary[FBSDKAppEventParameterImplicitlyLogged] = @"1";
   }
