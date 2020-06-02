@@ -64,12 +64,12 @@ public class Fuzzer: NSObject {
     ["": [1, 2, 3]],
     ["Foo": true],
     ["Foo": ["Bar": "Baz"]],
-    ["Foo": ["a", 1, [:]]],
+    ["Foo": ["a", 1, [:]]]
   ]
 
   @objc
   public class var random: Any {
-    return values.randomElement() ?? values[0]
+    values.randomElement() ?? values[0]
   }
 
   /// Randomizes the values of a JSON object
@@ -91,7 +91,7 @@ public class Fuzzer: NSObject {
   private class func randomizeInPlace(array: inout [Any]) -> [Any] {
     var array = array
 
-    array.enumerated().forEach { (enumeration) in
+    array.enumerated().forEach { enumeration in
       if var dictionary = enumeration.element as? [String: Any] {
         array[enumeration.offset] = Bool.random() ? dictionary : randomizeInPlace(json: &dictionary)
       } else if let subarray = enumeration.element as? [Any] {

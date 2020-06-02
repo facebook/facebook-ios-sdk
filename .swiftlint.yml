@@ -47,6 +47,7 @@ disabled_rules:
   - no_extension_access_modifier
   - number_separator
   - prefixed_toplevel_constant
+  - statement_position
   - switch_case_on_newline
   # TODO: All below to move to Opt In
   - discouraged_optional_boolean
@@ -149,7 +150,6 @@ opt_in_rules:
   - single_test_class
   - sorted_first_last
   - sorted_imports
-  - statement_position
   - strict_fileprivate
   - superfluous_disable_command
   - switch_case_alignment

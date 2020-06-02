@@ -26,21 +26,21 @@ public extension AccessToken {
    Returns the known granted permissions.
    */
   var permissions: Set<Permission> {
-    return Set(__permissions.map { Permission(stringLiteral: $0) })
+    Set(__permissions.map { Permission(stringLiteral: $0) })
   }
 
   /**
    Returns the known declined permissions.
    */
   var declinedPermissions: Set<Permission> {
-    return Set(__declinedPermissions.map { Permission(stringLiteral: $0) })
+    Set(__declinedPermissions.map { Permission(stringLiteral: $0) })
   }
 
   /**
    Returns the known expired permissions.
    */
   var expiredPermissions: Set<Permission> {
-    return Set(__expiredPermissions.map { Permission(stringLiteral: $0) })
+    Set(__expiredPermissions.map { Permission(stringLiteral: $0) })
   }
 
   /**
@@ -48,6 +48,6 @@ public extension AccessToken {
    - parameter permission: The permission to check
    */
   func hasGranted(_ permission: Permission) -> Bool {
-    return hasGranted(permission: permission.name)
+    hasGranted(permission: permission.name)
   }
 }
