@@ -51,19 +51,6 @@ GCC_C_LANGUAGE_STANDARD = gnu99
 CLANG_CXX_LANGUAGE_STANDARD = c++11
 CLANG_CXX_LIBRARY = libc++
 
-// Bitcode Support
-// We manually set the clang flags to embed-bitcode so we don't need the ENABLE_BITCODE
-// env which applies for Archive builds.
-ENABLE_BITCODE = NO
-FB_BITCODE_FLAG = $()
-// Only specify bitcode for iphoneos. Specifying iphonesimulator breaks Xcode6
-FB_BITCODE_FLAG[sdk=iphoneos9.*] = -fembed-bitcode
-FB_BITCODE_FLAG[sdk=iphoneos10.*] = -fembed-bitcode
-FB_BITCODE_FLAG[sdk=iphoneos11.*] = -fembed-bitcode
-FB_BITCODE_FLAG[sdk=iphoneos12.*] = -fembed-bitcode
-FB_BITCODE_FLAG[sdk=iphoneos13.*] = -fembed-bitcode
-OTHER_CFLAGS = $(inherited) $(FB_BITCODE_FLAG)
-
 // Warnings
 CLANG_WARN__DUPLICATE_METHOD_MATCH = YES
 CLANG_WARN_BOOL_CONVERSION = YES

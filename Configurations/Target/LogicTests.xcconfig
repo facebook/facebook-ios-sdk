@@ -26,4 +26,4 @@ WRAPPER_EXTENSION = xctest
 
 // Linking
 OTHER_LDFLAGS = -all_load -lc++
-ENABLE_BITCODE = NO
+ENABLE_BITCODE = YES
