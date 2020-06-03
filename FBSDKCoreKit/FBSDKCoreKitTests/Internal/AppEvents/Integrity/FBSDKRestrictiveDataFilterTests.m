@@ -126,11 +126,19 @@
   XCTAssertTrue([FBSDKRestrictiveDataFilterManager isMatchedWithPattern:pattern text:text2]);
   XCTAssertTrue([FBSDKRestrictiveDataFilterManager isMatchedWithPattern:pattern text:text3]);
 
-  NSString *text4 = @"last name";
-  NSString *text5 = @"middle name";
+  NSString *text4 = @"lastname";
+  NSString *text5 = @"last_name";
+  NSString *text6 = @"last name";
+  NSString *text7 = @"middlename";
+  NSString *text8 = @"middle_name";
+  NSString *text9 = @"middle name";
 
   XCTAssertFalse([FBSDKRestrictiveDataFilterManager isMatchedWithPattern:pattern text:text4]);
   XCTAssertFalse([FBSDKRestrictiveDataFilterManager isMatchedWithPattern:pattern text:text5]);
+  XCTAssertFalse([FBSDKRestrictiveDataFilterManager isMatchedWithPattern:pattern text:text6]);
+  XCTAssertFalse([FBSDKRestrictiveDataFilterManager isMatchedWithPattern:pattern text:text7]);
+  XCTAssertFalse([FBSDKRestrictiveDataFilterManager isMatchedWithPattern:pattern text:text8]);
+  XCTAssertFalse([FBSDKRestrictiveDataFilterManager isMatchedWithPattern:pattern text:text9]);
 }
 
 - (void)testIsMatchedWithPatternLastName
@@ -144,11 +152,19 @@
   XCTAssertTrue([FBSDKRestrictiveDataFilterManager isMatchedWithPattern:pattern text:text2]);
   XCTAssertTrue([FBSDKRestrictiveDataFilterManager isMatchedWithPattern:pattern text:text3]);
 
-  NSString *text4 = @"first name";
-  NSString *text5 = @"middle name";
+  NSString *text4 = @"firstname";
+  NSString *text5 = @"first_name";
+  NSString *text6 = @"first name";
+  NSString *text7 = @"middlename";
+  NSString *text8 = @"middle_name";
+  NSString *text9 = @"middle name";
 
   XCTAssertFalse([FBSDKRestrictiveDataFilterManager isMatchedWithPattern:pattern text:text4]);
   XCTAssertFalse([FBSDKRestrictiveDataFilterManager isMatchedWithPattern:pattern text:text5]);
+  XCTAssertFalse([FBSDKRestrictiveDataFilterManager isMatchedWithPattern:pattern text:text6]);
+  XCTAssertFalse([FBSDKRestrictiveDataFilterManager isMatchedWithPattern:pattern text:text7]);
+  XCTAssertFalse([FBSDKRestrictiveDataFilterManager isMatchedWithPattern:pattern text:text8]);
+  XCTAssertFalse([FBSDKRestrictiveDataFilterManager isMatchedWithPattern:pattern text:text9]);
 }
 
 - (void)testIsMatchedWithPatternDateOfBirth
@@ -223,7 +239,7 @@
                                                                                                                    @"first name" : @"6",
                                                                                                                    @"last name" : @"7"
                                                                                                                    }];
-  NSMutableDictionary<NSString *, id> *paramsDict = [NSMutableDictionary dictionary];;
+  NSMutableDictionary<NSString *, id> *paramsDict = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:paramsDict setObject:restrictiveParams forKey:@"restrictive_param"];
   [FBSDKTypeUtility dictionary:params setObject:paramsDict forKey:eventName];
 
