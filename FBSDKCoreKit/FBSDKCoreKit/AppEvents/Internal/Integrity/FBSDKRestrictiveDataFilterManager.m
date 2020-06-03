@@ -76,7 +76,7 @@ static NSMutableSet<NSString *> *_restrictedEvents;
        for (NSString *eventName in restrictiveParams.allKeys) {
          NSDictionary<NSString *, id> *eventInfo = restrictiveParams[eventName];
          if (!eventInfo) {
-           return;
+           continue;
          }
          if (eventInfo[RESTRICTIVE_PARAM_KEY]) {
            FBSDKRestrictiveEventFilter *restrictiveEventFilter = [[FBSDKRestrictiveEventFilter alloc] initWithEventName:eventName

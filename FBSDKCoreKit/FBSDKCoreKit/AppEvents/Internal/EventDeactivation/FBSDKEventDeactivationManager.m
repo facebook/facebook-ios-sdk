@@ -73,7 +73,7 @@ static NSMutableArray<FBSDKDeactivatedEvent *>  *_eventsWithDeactivatedParams;
   for (NSString *eventName in events.allKeys) {
     NSDictionary<NSString *, id> *eventInfo = [FBSDKTypeUtility dictionary:events objectForKey:eventName ofType:NSDictionary.class];
     if (!eventInfo) {
-      return;
+      continue;
     }
     if (eventInfo[DEPRECATED_EVENT_KEY]) {
       [deactivatedEventSet addObject:eventName];
