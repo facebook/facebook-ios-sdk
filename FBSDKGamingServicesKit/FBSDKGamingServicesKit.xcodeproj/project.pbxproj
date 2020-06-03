@@ -489,6 +489,7 @@
 			buildConfigurationList = F4F7C9B223F48ED80030A346 /* Build configuration list for PBXNativeTarget "FBSDKGamingServicesKit" */;
 			buildPhases = (
 				F4F7C9A523F48ED80030A346 /* Headers */,
+				F464F8E92487133900D27034 /* Run Swiftlint */,
 				F4F7C9A623F48ED80030A346 /* Sources */,
 				F4F7C9A723F48ED80030A346 /* Frameworks */,
 				F4F7C9A823F48ED80030A346 /* Resources */,
@@ -691,6 +692,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		F464F8E92487133900D27034 /* Run Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Swiftlint";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint --config ../.swiftlint.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
 		F4F7CA2723F497270030A346 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

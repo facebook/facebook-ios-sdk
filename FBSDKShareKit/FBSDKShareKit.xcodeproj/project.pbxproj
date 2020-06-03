@@ -1137,6 +1137,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9D46C6061A11E5D800A0DDB6 /* Build configuration list for PBXNativeTarget "FBSDKShareKit" */;
 			buildPhases = (
+				F464F8DF2487131300D27034 /* Run Swiftlint */,
 				9D46C5EB1A11E5D800A0DDB6 /* Sources */,
 				9D46C5EC1A11E5D800A0DDB6 /* Frameworks */,
 				9D46C5ED1A11E5D800A0DDB6 /* Headers */,
@@ -1364,6 +1365,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "../scripts/xcode/build-universal-framework.sh\n";
+		};
+		F464F8DF2487131300D27034 /* Run Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Swiftlint";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint --config ../.swiftlint.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

@@ -3140,6 +3140,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9D26975D1A5DF40700143BFC /* Build configuration list for PBXNativeTarget "FBSDKCoreKit" */;
 			buildPhases = (
+				F464F8C6248709D000D27034 /* Run Swiftlint */,
 				9D2697421A5DF40700143BFC /* Sources */,
 				9D2697431A5DF40700143BFC /* Frameworks */,
 				9D2697441A5DF40700143BFC /* Headers */,
@@ -3554,6 +3555,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "../scripts/xcode/build-universal-tvos-framework.sh\n";
+		};
+		F464F8C6248709D000D27034 /* Run Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Swiftlint";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint --config ../.swiftlint.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

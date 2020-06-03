@@ -5,9 +5,6 @@ excluded:
   - samples
 
 cyclomatic_complexity: 11
-explicit_type_interface:
-  excluded:
-    - local
 file_header:
   required_pattern: |
     \/\/ Copyright \(c\) \d{4}-present, Facebook, Inc\. All rights reserved\.
@@ -39,11 +36,13 @@ private_outlet:
   allow_private_set: true
 
 disabled_rules:
+  - attributes
   - conditional_returns_on_newline
   - discouraged_object_literal
   - explicit_acl
   - explicit_enum_raw_value
   - explicit_top_level_acl
+  - explicit_type_interface
   - no_extension_access_modifier
   - number_separator
   - prefixed_toplevel_constant
@@ -57,7 +56,6 @@ disabled_rules:
 
 opt_in_rules:
   - array_init
-  - attributes
   - block_based_kvo
   - class_delegate_protocol
   - closing_brace
@@ -81,7 +79,6 @@ opt_in_rules:
   - empty_parentheses_with_trailing_closure
   - empty_xctest_method
   - explicit_init
-  - explicit_type_interface
   - extension_access_modifier
   - fallthrough
   - fatal_error_message

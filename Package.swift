@@ -43,7 +43,7 @@ let package = Package(
         .library(
             name: "FacebookGamingServices",
             targets: ["FacebookGamingServices"]
-        ),
+        )
     ],
     dependencies: [],
     targets: [
@@ -80,10 +80,10 @@ let package = Package(
                 .headerSearchPath("Internal/Network"),
                 .headerSearchPath("Internal/ServerConfiguration"),
                 .headerSearchPath("Internal/TokenCaching"),
-                .headerSearchPath("Internal/UI"),
+                .headerSearchPath("Internal/UI")
             ],
             linkerSettings: [
-                .linkedFramework("Accelerate"),
+                .linkedFramework("Accelerate")
             ]
         ),
         .target(
@@ -99,7 +99,7 @@ let package = Package(
             cSettings: [
                 .headerSearchPath("Internal"),
                 .headerSearchPath("../../FBSDKCoreKit/FBSDKCoreKit/Internal"),
-                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS], configuration: nil)),
+                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS], configuration: nil))
             ]
         ),
         .target(
@@ -115,7 +115,7 @@ let package = Package(
             cSettings: [
                 .headerSearchPath("Internal"),
                 .headerSearchPath("../../FBSDKCoreKit/FBSDKCoreKit/Internal"),
-                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS], configuration: nil)),
+                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS], configuration: nil))
             ]
         ),
         .target(
@@ -131,14 +131,14 @@ let package = Package(
             cSettings: [
                 .headerSearchPath("Internal"),
                 .headerSearchPath("../../FBSDKCoreKit/FBSDKCoreKit/Internal"),
-                .headerSearchPath("../../FBSDKShareKit/FBSDKShareKit/Internal"),
+                .headerSearchPath("../../FBSDKShareKit/FBSDKShareKit/Internal")
             ]
         ),
         .target(
             name: "FacebookGamingServices",
             dependencies: ["FacebookCore", "FBSDKGamingServicesKit"],
             path: "FBSDKGamingServicesKit/FBSDKGamingServicesKit/Swift"
-        ),
+        )
     ],
     cxxLanguageStandard: CXXLanguageStandard.cxx11
 )
