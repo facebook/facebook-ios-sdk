@@ -23,10 +23,13 @@
 #import "FBSDKAppEvents.h"
 #import "FBSDKAppEventsState.h"
 #import "FBSDKInternalUtility.h"
+#import "FBSDKServerConfiguration.h"
+#import "FBSDKServerConfigurationManager.h"
 #import "FBSDKRestrictiveDataFilterManager.h"
 
 @interface FBSDKRestrictiveDataFilterManager ()
 
++ (void)updateFilters:(nullable NSDictionary<NSString *, id> *)restrictiveParams;
 + (NSString *)getMatchedDataTypeWithEventName:(NSString *)eventName
                                      paramKey:(NSString *)paramKey;
 + (BOOL)isDeprecatedEvent:(NSString *)eventName;
@@ -179,7 +182,12 @@
   NSString *testEventName = @"restrictive_event_name";
   NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionaryWithDictionary: @{ testEventName : @{@"restrictive_param" :@{@"dob" : @4}}}];
 
-  [FBSDKRestrictiveDataFilterManager updateFilters:params];
+  id mockServerConfiguration = OCMClassMock([FBSDKServerConfiguration class]);
+  OCMStub([mockServerConfiguration restrictiveParams]).andReturn(params);
+  id mockServerConfigurationManager = OCMClassMock([FBSDKServerConfigurationManager class]);
+  OCMStub([mockServerConfigurationManager cachedServerConfiguration]).andReturn(mockServerConfiguration);
+
+  [FBSDKRestrictiveDataFilterManager enable];
 
   id mockAppStates = [OCMockObject niceMockForClass:[FBSDKAppEventsState class]];
   OCMStub([mockAppStates alloc]).andReturn(mockAppStates);

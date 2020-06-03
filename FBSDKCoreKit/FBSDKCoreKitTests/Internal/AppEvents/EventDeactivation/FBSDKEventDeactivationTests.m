@@ -20,6 +20,8 @@
 
 #import <OCMock/OCMock.h>
 
+#import "FBSDKServerConfigurationManager.h"
+#import "FBSDKRestrictiveDataFilterManager.h"
 #import "FBSDKEventDeactivationManager.h"
 
 @interface FBSDKEventDeactivationTests : XCTestCase
@@ -38,7 +40,13 @@
     @"fb_mobile_catalog_update" : @{ @"restrictive_param" : @{@"first_name" : @"6"}},
     @"manual_initiated_checkout" : @{ @"deprecated_param" : @[@"deprecated_3"]},
   };
-  [FBSDKEventDeactivationManager updateDeactivatedEvents:events];
+
+  id mockServerConfiguration = OCMClassMock([FBSDKServerConfiguration class]);
+  OCMStub([mockServerConfiguration restrictiveParams]).andReturn(events);
+  id mockServerConfigurationManager = OCMClassMock([FBSDKServerConfigurationManager class]);
+  OCMStub([mockServerConfigurationManager cachedServerConfiguration]).andReturn(mockServerConfiguration);
+
+  [FBSDKEventDeactivationManager enable];
   NSDictionary<NSString *, id> *parameters = @{@"_ui" : @"UITabBarController",
                                                @"_logTime" : @1576109848,
                                                @"_session_id" : @"30AF582C-0225-40A4-B3EE-2A571AB926F3",

@@ -21,14 +21,12 @@
 #import <objc/runtime.h>
 
 #import "FBSDKAppEventsUtility.h"
-#import "FBSDKEventDeactivationManager.h"
 #import "FBSDKGateKeeperManager.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKImageDownloader.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
-#import "FBSDKRestrictiveDataFilterManager.h"
 #import "FBSDKServerConfiguration+Internal.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKSettings.h"
@@ -238,10 +236,6 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                                                          AAMRules:AAMRules
                                                                            suggestedEventsSetting:suggestedEventsSetting
                                                                           monitoringConfiguration:monitoringConfiguration];
-  if (restrictiveParams) {
-    [FBSDKRestrictiveDataFilterManager updateFilters:restrictiveParams];
-    [FBSDKEventDeactivationManager updateDeactivatedEvents:restrictiveParams];
-  }
 #if TARGET_OS_TV
   // don't download icons more than once a day.
   static const NSTimeInterval kSmartLoginIconsTTL = 60 * 60 * 24;
