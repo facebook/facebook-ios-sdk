@@ -37,6 +37,7 @@ xcodebuild -target "${TARGET}" \
   -sdk appletvos \
   BUILD_DIR="${BUILD_DIR}" \
   BUILD_ROOT="${BUILD_ROOT}" \
+  BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
   clean build
 
 xcodebuild -target "${TARGET}" \
@@ -45,6 +46,7 @@ xcodebuild -target "${TARGET}" \
   -sdk appletvsimulator \
   BUILD_DIR="${BUILD_DIR}" \
   BUILD_ROOT="${BUILD_ROOT}" \
+  BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
   clean build
 
 # Step 2. Copy the framework structure to the universal folder
