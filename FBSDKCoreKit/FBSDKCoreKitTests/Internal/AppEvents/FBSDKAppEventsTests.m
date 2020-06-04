@@ -251,17 +251,14 @@ static NSString *const _mockUserID = @"mockUserID";
                            zip:nil
                        country:nil];
 
-  NSDictionary<NSString *, NSString *> *expectedHashedDict = @{@"em":[FBSDKUtility SHA256Hash:mockEmail],
-                                                               @"fn":[FBSDKUtility SHA256Hash:mockFirstName],
-                                                               @"ln":[FBSDKUtility SHA256Hash:mockLastName],
-                                                               @"ph":[FBSDKUtility SHA256Hash:mockPhone],
+  NSDictionary<NSString *, NSString *> *expectedUserData = @{@"em":[FBSDKUtility SHA256Hash:mockEmail],
+                                                             @"fn":[FBSDKUtility SHA256Hash:mockFirstName],
+                                                             @"ln":[FBSDKUtility SHA256Hash:mockLastName],
+                                                             @"ph":[FBSDKUtility SHA256Hash:mockPhone],
   };
-  NSData *jsonData = [FBSDKTypeUtility dataWithJSONObject:expectedHashedDict
-                                                     options:0
-                                                       error:nil];
-  NSString *expectedUserData = [[NSString alloc] initWithData:jsonData
-                                                     encoding:NSUTF8StringEncoding];
-  NSString *userData = [FBSDKAppEvents getUserData];
+  NSDictionary<NSString *, NSString *> *userData = (NSDictionary<NSString *, NSString *> *)[FBSDKTypeUtility JSONObjectWithData:[[FBSDKAppEvents getUserData] dataUsingEncoding:NSUTF8StringEncoding]
+                                                                                                                        options:NSJSONReadingMutableContainers
+                                                                                                                          error:nil];
   XCTAssertEqualObjects(userData, expectedUserData);
 
   [FBSDKAppEvents clearUserData];

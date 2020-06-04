@@ -24,9 +24,13 @@
 #import "FBSDKUtility.h"
 #import "FBSDKTypeUtility.h"
 
-static NSString *const  FBSDKUserDataKey  = @"com.facebook.appevents.UserDataStore.userData";
+static NSString *const FBSDKUserDataKey  = @"com.facebook.appevents.UserDataStore.userData";
+static NSString *const FBSDKInternalUserDataKey  = @"com.facebook.appevents.UserDataStore.internalUserData";
 
 static NSMutableDictionary<NSString *, NSString *> *hashedUserData;
+static NSMutableDictionary<NSString *, NSString *> *internalHashedUserData;
+static NSMutableSet<NSString *> *enabledRules;
+
 static dispatch_queue_t serialQueue;
 
 @implementation FBSDKUserDataStore
@@ -34,15 +38,9 @@ static dispatch_queue_t serialQueue;
 + (void)initialize
 {
   serialQueue = dispatch_queue_create("com.facebook.appevents.UserDataStore", DISPATCH_QUEUE_SERIAL);
-  NSString *userData = [[NSUserDefaults standardUserDefaults] stringForKey:FBSDKUserDataKey];
-  if (userData) {
-    hashedUserData = (NSMutableDictionary<NSString *, NSString *> *)[FBSDKTypeUtility JSONObjectWithData:[userData dataUsingEncoding:NSUTF8StringEncoding]
-                                                                                                    options:NSJSONReadingMutableContainers
-                                                                                                      error:nil];
-  }
-  if (!hashedUserData) {
-    hashedUserData = [[NSMutableDictionary alloc] init];
-  }
+  hashedUserData = [FBSDKUserDataStore initializeUserData:FBSDKUserDataKey];
+  internalHashedUserData = [FBSDKUserDataStore initializeUserData:FBSDKInternalUserDataKey];
+  enabledRules = [[NSMutableSet alloc] init];
 }
 
 + (void)setAndHashUserEmail:(nullable NSString *)email
@@ -116,6 +114,27 @@ static dispatch_queue_t serialQueue;
   });
 }
 
++ (void)setInternalHashData:(nullable NSString *)hashData
+                    forType:(FBSDKAppEventUserDataType)type
+{
+  dispatch_async(serialQueue, ^{
+    if (!hashData) {
+      [internalHashedUserData removeObjectForKey:type];
+    } else {
+      internalHashedUserData[type] = hashData;
+    }
+    [[NSUserDefaults standardUserDefaults] setObject:[FBSDKUserDataStore stringByHashedData:internalHashedUserData]
+                                              forKey:FBSDKInternalUserDataKey];
+  });
+}
+
++ (void)setEnabledRules:(NSArray<NSString *> *)rules
+{
+  if (rules.count > 0) {
+    [enabledRules addObjectsFromArray:rules];
+  }
+}
+
 + (void)clearDataForType:(FBSDKAppEventUserDataType)type
 {
   [FBSDKUserDataStore setAndHashData:nil forType:type];
@@ -125,18 +144,42 @@ static dispatch_queue_t serialQueue;
 {
   __block NSString *hashedUserDataString;
   dispatch_sync(serialQueue, ^{
-    hashedUserDataString = [FBSDKUserDataStore stringByHashedData:hashedUserData];
+    NSMutableDictionary<NSString *, NSString *> *hashedUD = [[NSMutableDictionary alloc] init];
+    [hashedUD addEntriesFromDictionary:hashedUserData];
+    for (NSString *key in enabledRules) {
+      if (internalHashedUserData[key]) {
+        hashedUD[key] = internalHashedUserData[key];
+      }
+    }
+    hashedUserDataString = [FBSDKUserDataStore stringByHashedData:hashedUD];
   });
   return hashedUserDataString;
 }
 
-+ (NSString *)getHashedDataForType:(FBSDKAppEventUserDataType)type
++ (NSString *)getInternalHashedDataForType:(FBSDKAppEventUserDataType)type
 {
   __block NSString *hashedData;
   dispatch_sync(serialQueue, ^{
-    hashedData = [hashedUserData objectForKey:type];
+    hashedData = [internalHashedUserData objectForKey:type];
   });
   return hashedData;
+}
+
+#pragma mark - Helper Methods
+
++ (NSMutableDictionary<NSString *, NSString *> *)initializeUserData:(NSString *)userDataKey
+{
+  NSString *userData = [[NSUserDefaults standardUserDefaults] stringForKey:userDataKey];
+  NSMutableDictionary<NSString *, NSString *> *hashedUD = nil;
+  if (userData) {
+    hashedUD = (NSMutableDictionary<NSString *, NSString *> *)[FBSDKTypeUtility JSONObjectWithData:[userData dataUsingEncoding:NSUTF8StringEncoding]
+                                                                                           options:NSJSONReadingMutableContainers
+                                                                                             error:nil];
+  }
+  if (!hashedUD) {
+    hashedUD = [[NSMutableDictionary alloc] init];
+  }
+  return hashedUD;
 }
 
 + (NSString *)stringByHashedData:(id)hashedData

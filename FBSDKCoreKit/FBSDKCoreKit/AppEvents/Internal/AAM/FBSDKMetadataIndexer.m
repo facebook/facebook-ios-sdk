@@ -55,12 +55,11 @@ static dispatch_queue_t serialQueue;
   if (FBSDKAdvertisingTrackingAllowed != [FBSDKAppEventsUtility advertisingTrackingStatus]) {
     return;
   }
-  [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
-    if (error) {
-      return;
-    }
-    [FBSDKMetadataIndexer setupWithRules:serverConfiguration.AAMRules];
-  }];
+
+  NSDictionary<NSString *, id> *AAMRules = [FBSDKServerConfigurationManager cachedServerConfiguration].AAMRules;
+  if (AAMRules) {
+    [FBSDKMetadataIndexer setupWithRules:AAMRules];
+  }
 }
 
 + (void)setupWithRules:(NSDictionary<NSString *, id> * _Nullable)rules
@@ -75,17 +74,14 @@ static dispatch_queue_t serialQueue;
 
     BOOL isEnabled = NO;
     for (NSString *key in _rules) {
-      BOOL isRuleEnabled = (nil != _rules[key]);
-      if (isRuleEnabled) {
+      if (_rules[key]) {
         isEnabled = YES;
-      }
-      if (!isRuleEnabled) {
-        [_store removeObjectForKey:key];
-        [FBSDKUserDataStore setHashData:nil forType:key];
+        break;
       }
     }
 
     if (isEnabled) {
+      [FBSDKUserDataStore setEnabledRules:_rules.allKeys];
       [FBSDKMetadataIndexer setupMetadataIndexing];
     }
   });
@@ -95,7 +91,7 @@ static dispatch_queue_t serialQueue;
 {
   _store = [[NSMutableDictionary alloc] init];
   for (NSString *key in _rules) {
-    NSString *data = [FBSDKUserDataStore getHashedDataForType:key];
+    NSString *data = [FBSDKUserDataStore getInternalHashedDataForType:key];
     if (data.length > 0) {
       _store[key] = [NSMutableArray arrayWithArray:[data componentsSeparatedByString:FIELD_K_DELIMITER]];
     }
@@ -258,8 +254,8 @@ static dispatch_queue_t serialQueue;
       [_store[key] removeObjectAtIndex:0];
     }
     [_store[key] addObject:hashData];
-    [FBSDKUserDataStore setHashData:[_store[key] componentsJoinedByString:FIELD_K_DELIMITER]
-                            forType:key];
+    [FBSDKUserDataStore setInternalHashData:[_store[key] componentsJoinedByString:FIELD_K_DELIMITER]
+                                    forType:key];
   });
 }
 

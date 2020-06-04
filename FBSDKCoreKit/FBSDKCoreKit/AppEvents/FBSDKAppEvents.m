@@ -1091,7 +1091,6 @@ static dispatch_once_t *onceTokenPointer;
     }];
     [FBSDKFeatureManager checkFeature:FBSDKFeatureAAM completionBlock:^(BOOL enabled) {
       if (enabled) {
-        // Enable AAM
         [FBSDKMetadataIndexer enable];
       }
     }];
