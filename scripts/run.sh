@@ -438,8 +438,7 @@ release_sdk() {
         xcodebuild build \
          -workspace FacebookSDK.xcworkspace \
          -scheme BuildCoreKitBasics \
-         -configuration Release \
-         SUPPORTS_MACCATALYST=NO | xcpretty
+         -configuration Release | xcpretty
 
         kit="FBSDKCoreKit_Basics"
         cd build || exit
@@ -458,14 +457,12 @@ release_sdk() {
       xcodebuild build \
        -workspace FacebookSDK.xcworkspace \
        -scheme BuildAllKits \
-       -configuration Release \
-       SUPPORTS_MACCATALYST=NO | xcpretty
+       -configuration Release | xcpretty
 
       xcodebuild build \
        -workspace FacebookSDK.xcworkspace \
        -scheme BuildAllKits_TV \
-       -configuration Release \
-       SUPPORTS_MACCATALYST=NO | xcpretty
+       -configuration Release | xcpretty
 
       cd build || exit
       zip -r FacebookSDK_static.zip ./*.framework ./*/*.framework
