@@ -31,8 +31,19 @@ rm -rf "${UNIVERSAL_BUILD_FOLDER}/${PROJECT_NAME}.framework"
 TARGET=${TARGET_NAME%-Universal}
 
 # Step 1. Build Device and Simulator versions
-xcodebuild -target "${TARGET}" ONLY_ACTIVE_ARCH=NO -configuration "${CONFIGURATION}" -sdk iphoneos BUILD_DIR="${BUILD_DIR}" BUILD_ROOT="${BUILD_ROOT}"
-xcodebuild -target "${TARGET}" ONLY_ACTIVE_ARCH=NO -configuration "${CONFIGURATION}" -sdk iphonesimulator BUILD_DIR="${BUILD_DIR}" BUILD_ROOT="${BUILD_ROOT}"
+xcodebuild -target "${TARGET}" \
+  ONLY_ACTIVE_ARCH=NO \
+  -configuration "${CONFIGURATION}" \
+  -sdk iphoneos \
+  BUILD_DIR="${BUILD_DIR}" \
+  BUILD_ROOT="${BUILD_ROOT}"
+
+xcodebuild -target "${TARGET}" \
+  ONLY_ACTIVE_ARCH=NO \
+  -configuration "${CONFIGURATION}" \
+  -sdk iphonesimulator \
+  BUILD_DIR="${BUILD_DIR}" \
+  BUILD_ROOT="${BUILD_ROOT}"
 
 # Step 2. Copy the framework structure to the universal folder
 cp -R "${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework" "${UNIVERSAL_BUILD_FOLDER}/"
