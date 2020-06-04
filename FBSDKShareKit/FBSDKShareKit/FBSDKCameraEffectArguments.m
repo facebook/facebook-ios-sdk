@@ -132,7 +132,7 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
   [FBSDKCameraEffectArguments assertKey:key];
   if (value) {
     [FBSDKCameraEffectArguments assertValue:value];
-    _arguments[key] = value;
+    [FBSDKTypeUtility dictionary:_arguments setObject:value forKey:key];
   } else {
     [_arguments removeObjectForKey:key];
   }

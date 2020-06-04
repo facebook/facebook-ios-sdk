@@ -95,7 +95,7 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
     // the existing API protocol only allows one value to be put into the pasteboard.
     NSDictionary<NSString *, UIImage *> *texturesDict = [_effectTextures allTextures];
     NSMutableDictionary<NSString *, NSData *> *texturesDataDict = [NSMutableDictionary dictionaryWithCapacity:texturesDict.count];
-    [texturesDict enumerateKeysAndObjectsUsingBlock:^(NSString *key, UIImage *img, BOOL *stop) {
+    [FBSDKTypeUtility dictionary:texturesDict enumerateKeysAndObjectsUsingBlock:^(NSString *key, UIImage *img, BOOL *stop) {
       // Convert UIImages to NSData, because UIImage is not archivable.
       NSData *imageData = UIImagePNGRepresentation(img);
       if (imageData) {

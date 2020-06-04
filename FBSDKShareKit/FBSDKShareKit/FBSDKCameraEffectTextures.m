@@ -119,7 +119,7 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
 - (void)_setValue:(id)value forKey:(NSString *)key
 {
   if (value) {
-    _textures[key] = value;
+    [FBSDKTypeUtility dictionary:_textures setObject:value forKey:key];
   } else {
     [_textures removeObjectForKey:key];
   }

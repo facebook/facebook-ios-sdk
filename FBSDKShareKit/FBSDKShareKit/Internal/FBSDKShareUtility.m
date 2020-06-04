@@ -211,7 +211,7 @@
   [FBSDKTypeUtility dictionary:parameters setObject:shareContent.placeID forKey:@"place"];
   [FBSDKTypeUtility dictionary:parameters setObject:shareContent.ref forKey:@"ref"];
 
-  parameters[@"dataFailuresFatal"] = @(shouldFailOnDataError);
+  [FBSDKTypeUtility dictionary:parameters setObject:@(shouldFailOnDataError) forKey:@"dataFailuresFatal"];
 
   // media/destination-specific content parameters
   if ([shareContent respondsToSelector:@selector(addParameters:bridgeOptions:)]) {
@@ -324,7 +324,7 @@
     return nil;
   }
   NSMutableDictionary<NSString *, id> *dictionary = [[NSMutableDictionary alloc] init];
-  dictionary[@"user_generated"] = @(photo.userGenerated);
+  [FBSDKTypeUtility dictionary:dictionary setObject:@(photo.userGenerated) forKey:@"user_generated"];
   [FBSDKTypeUtility dictionary:dictionary setObject:photo.caption forKey:@"caption"];
 
   [FBSDKTypeUtility dictionary:dictionary setObject:photo.image ?: photo.imageURL.absoluteString forKey:@"url"];
@@ -348,7 +348,7 @@
       [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
         NSString *photoStagedURI = result[@"uri"];
         if (photoStagedURI != nil) {
-          [stagedURIs addObject:photoStagedURI];
+          [FBSDKTypeUtility array:stagedURIs addObject:photoStagedURI];
           dispatch_group_leave(group);
         }
       }];

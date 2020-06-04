@@ -263,14 +263,14 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
     while (true) {
       NSString *key = [NSString stringWithFormat:@"to[%d]", counter++];
       if (results[key]) {
-        [toArray addObject:results[key]];
+        [FBSDKTypeUtility array:toArray addObject:results[key]];
       } else {
         break;
       }
     }
     if (toArray.count) {
       NSMutableDictionary *mutableResults = [results mutableCopy];
-      mutableResults[@"to"] = toArray;
+      [FBSDKTypeUtility dictionary:mutableResults setObject:toArray forKey:@"to"];
       results = mutableResults;
     }
   }
