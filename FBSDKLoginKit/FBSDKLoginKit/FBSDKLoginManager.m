@@ -326,19 +326,19 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
   [FBSDKInternalUtility validateURLSchemes];
 
   NSMutableDictionary *loginParams = [NSMutableDictionary dictionary];
-  loginParams[@"client_id"] = [FBSDKSettings appID];
-  loginParams[@"response_type"] = @"token_or_nonce,signed_request,graph_domain";
-  loginParams[@"redirect_uri"] = @"fbconnect://success";
-  loginParams[@"display"] = @"touch";
-  loginParams[@"sdk"] = @"ios";
-  loginParams[@"return_scopes"] = @"true";
+  [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKSettings appID] forKey:@"client_id"];
+  [FBSDKTypeUtility dictionary:loginParams setObject:@"token_or_nonce,signed_request,graph_domain" forKey:@"response_type"];
+  [FBSDKTypeUtility dictionary:loginParams setObject:@"fbconnect://success" forKey:@"redirect_uri"];
+  [FBSDKTypeUtility dictionary:loginParams setObject:@"touch" forKey:@"display"];
+  [FBSDKTypeUtility dictionary:loginParams setObject:@"ios" forKey:@"sdk"];
+  [FBSDKTypeUtility dictionary:loginParams setObject:@"true" forKey:@"return_scopes"];
   loginParams[@"sdk_version"] = FBSDK_VERSION_STRING;
-  loginParams[@"fbapp_pres"] = @([FBSDKInternalUtility isFacebookAppInstalled]);
-  loginParams[@"auth_type"] = self.authType;
-  loginParams[@"logging_token"] = serverConfiguration.loggingToken;
+  [FBSDKTypeUtility dictionary:loginParams setObject:@([FBSDKInternalUtility isFacebookAppInstalled]) forKey:@"fbapp_pres"];
+  [FBSDKTypeUtility dictionary:loginParams setObject:self.authType forKey:@"auth_type"];
+  [FBSDKTypeUtility dictionary:loginParams setObject:serverConfiguration.loggingToken forKey:@"logging_token"];
   long long cbtInMilliseconds = round(1000 * [NSDate date].timeIntervalSince1970);
-  loginParams[@"cbt"] = @(cbtInMilliseconds);
-  loginParams[@"ies"] = [FBSDKSettings isAutoLogAppEventsEnabled] ? @1 : @0;
+  [FBSDKTypeUtility dictionary:loginParams setObject:@(cbtInMilliseconds) forKey:@"cbt"];
+  [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKSettings isAutoLogAppEventsEnabled] ? @1 : @0 forKey:@"ies"];
 
   [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKSettings appURLSchemeSuffix] forKey:@"local_client_id"];
   [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKLoginUtility stringForAudience:self.defaultAudience] forKey:@"default_audience"];
@@ -346,7 +346,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 
   NSString *expectedChallenge = [FBSDKLoginManager stringForChallenge];
   NSDictionary *state = @{@"challenge": [FBSDKUtility URLEncode:expectedChallenge]};
-  loginParams[@"state"] = [FBSDKBasicUtility JSONStringForObject:state error:NULL invalidObjectHandler:nil];
+  [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKBasicUtility JSONStringForObject:state error:NULL invalidObjectHandler:nil] forKey:@"state"];
 
   [self storeExpectedChallenge:expectedChallenge];
 

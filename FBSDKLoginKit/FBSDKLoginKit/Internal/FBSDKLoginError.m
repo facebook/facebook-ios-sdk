@@ -135,7 +135,7 @@ typedef NS_ERROR_ENUM(FBSDKLoginErrorDomain, FBSDKLoginErrorSubcode)
       [FBSDKTypeUtility dictionary:userInfo setObject:parameters[@"error_reason"] forKey:FBSDKErrorDeveloperMessageKey];
     }
 
-    userInfo[FBSDKGraphRequestErrorKey] = @(FBSDKGraphRequestErrorOther);
+    [FBSDKTypeUtility dictionary:userInfo setObject:@(FBSDKGraphRequestErrorOther) forKey:FBSDKGraphRequestErrorKey];
 
     error = [NSError errorWithDomain:FBSDKErrorDomain
                                 code:FBSDKErrorGraphRequestGraphAPI

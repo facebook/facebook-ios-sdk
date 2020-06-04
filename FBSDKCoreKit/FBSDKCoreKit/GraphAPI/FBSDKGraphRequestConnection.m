@@ -317,8 +317,8 @@ NSURLSessionDataDelegate
       NSString *name = [NSString stringWithFormat:@"%@%lu",
                         kBatchFileNamePrefix,
                         (unsigned long)attachments.count];
-      [attachmentNames addObject:name];
-      attachments[name] = value;
+      [FBSDKTypeUtility array:attachmentNames addObject:name];
+      [FBSDKTypeUtility dictionary:attachments setObject:value forKey:name];
     }
   }];
 

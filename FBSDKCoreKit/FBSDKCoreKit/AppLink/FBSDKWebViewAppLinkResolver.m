@@ -226,7 +226,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
             NSMutableArray<NSMutableDictionary<NSString *, id> *> *children = root[[FBSDKTypeUtility array:nameComponents objectAtIndex:i]];
             if (!children) {
                 children = [NSMutableArray array];
-                [FBSDKTypeUtility dictionary:root setObject:children forKey:nameComponents[i]];
+                [FBSDKTypeUtility dictionary:root setObject:children forKey:[FBSDKTypeUtility array:nameComponents objectAtIndex:i]];
             }
             NSMutableDictionary<NSString *, id> *child = children.lastObject;
             if (!child || i == nameComponents.count - 1) {
