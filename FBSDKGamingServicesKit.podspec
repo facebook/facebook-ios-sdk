@@ -18,6 +18,8 @@ Pod::Spec.new do |s|
   s.platform     = :ios
   s.ios.deployment_target = '8.0'
 
+  s.swift_version = '5.0'
+
   s.source       = { :git => 'https://github.com/facebook/facebook-ios-sdk.git',
                      :tag => "v#{s.version}"
                     }
