@@ -86,27 +86,27 @@ NSString *const AutoAppLinkFlagKey = @"is_auto_applink";
                 NSString *const EVENT_YES_VAL = @"1";
                 NSString *const EVENT_NO_VAL = @"0";
                 NSMutableDictionary<NSString *, id> *logData = [[NSMutableDictionary alloc] init];
-                logData[@"version"] = version;
+                [FBSDKTypeUtility dictionary:logData setObject:version forKey:@"version"];
                 if (refererURLString) {
-                    logData[@"refererURL"] = refererURLString;
+                    [FBSDKTypeUtility dictionary:logData setObject:refererURLString forKey:@"refererURL"];
                 }
                 if (refererAppName) {
-                    logData[@"refererAppName"] = refererAppName;
+                    [FBSDKTypeUtility dictionary:logData setObject:refererAppName forKey:@"refererAppName"];
                 }
                 if (sourceApplication) {
-                    logData[@"sourceApplication"] = sourceApplication;
+                    [FBSDKTypeUtility dictionary:logData setObject:sourceApplication forKey:@"sourceApplication"];
                 }
                 if (_targetURL.absoluteString) {
-                    logData[@"targetURL"] = _targetURL.absoluteString;
+                    [FBSDKTypeUtility dictionary:logData setObject:_targetURL.absoluteString forKey:@"targetURL"];
                 }
                 if (_inputURL.absoluteString) {
-                    logData[@"inputURL"] = _inputURL.absoluteString;
+                    [FBSDKTypeUtility dictionary:logData setObject:_inputURL.absoluteString forKey:@"inputURL"];
                 }
                 if (_inputURL.scheme) {
-                    logData[@"inputURLScheme"] = _inputURL.scheme;
+                    [FBSDKTypeUtility dictionary:logData setObject:_inputURL.scheme forKey:@"inputURLScheme"];
                 }
-                logData[@"forRenderBackToReferrerBar"] = forRenderBackToReferrerBar ? EVENT_YES_VAL : EVENT_NO_VAL;
-                logData[@"forOpenUrl"] = forOpenURLEvent ? EVENT_YES_VAL : EVENT_NO_VAL;
+                [FBSDKTypeUtility dictionary:logData setObject:forRenderBackToReferrerBar ? EVENT_YES_VAL : EVENT_NO_VAL forKey:@"forRenderBackToReferrerBar"];
+                [FBSDKTypeUtility dictionary:logData setObject:forOpenURLEvent ? EVENT_YES_VAL : EVENT_NO_VAL forKey:@"forOpenUrl"];
                 [FBSDKMeasurementEvent postNotificationForEventName:FBSDKAppLinkParseEventName args:logData];
                 if (forOpenURLEvent) {
                     [FBSDKMeasurementEvent postNotificationForEventName:FBSDKAppLinkNavigateInEventName args:logData];
@@ -150,11 +150,11 @@ NSString *const AutoAppLinkFlagKey = @"is_auto_applink";
         NSRange equalsLocation = [component rangeOfString:@"="];
         if (equalsLocation.location == NSNotFound) {
             // There's no equals, so associate the key with NSNull
-            parameters[[FBSDKBasicUtility URLDecode:component]] = [NSNull null];
+            [FBSDKTypeUtility dictionary:parameters setObject:[NSNull null] forKey:[FBSDKBasicUtility URLDecode:component]];
         } else {
             NSString *key = [FBSDKBasicUtility URLDecode:[component substringToIndex:equalsLocation.location]];
             NSString *value = [FBSDKBasicUtility URLDecode:[component substringFromIndex:equalsLocation.location + 1]];
-            parameters[key] = value;
+            [FBSDKTypeUtility dictionary:parameters setObject:value forKey:key];
         }
     }
     return [NSDictionary dictionaryWithDictionary:parameters];

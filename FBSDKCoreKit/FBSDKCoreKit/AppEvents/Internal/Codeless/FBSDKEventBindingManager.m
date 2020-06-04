@@ -91,7 +91,7 @@
 
   for (NSDictionary *json in array) {
     FBSDKEventBinding *binding = [[FBSDKEventBinding alloc] initWithJSON:json];
-    [result addObject:binding];
+    [FBSDKTypeUtility array:result addObject:binding];
   }
 
   return [result copy];
@@ -104,7 +104,7 @@
     NSMutableArray *bindings = [NSMutableArray array];
     for (NSDictionary *d in eventBindingsDict) {
       FBSDKEventBinding *e = [[FBSDKEventBinding alloc] initWithJSON:d];
-      [bindings addObject:e];
+      [FBSDKTypeUtility array:bindings addObject:e];
     }
     eventBindings = [bindings copy];
   }
@@ -299,7 +299,7 @@
               if (view) {
                 NSNumber *reactTag = [FBSDKViewHierarchy getViewReactTag:view];
                 if (reactTag != nil) {
-                  self->reactBindings[reactTag] = binding;
+                  [FBSDKTypeUtility dictionary:self->reactBindings setObject:binding forKey:reactTag];
                 }
               }
             });
@@ -385,7 +385,7 @@
     // Check whether event bindings are the same
     BOOL isSame = YES;
     for (int i = 0; i < eventBindings.count; i++) {
-      if (![eventBindings[i] isEqualToBinding:bindings[i]]) {
+      if (![[FBSDKTypeUtility array:eventBindings objectAtIndex:i] isEqualToBinding:[FBSDKTypeUtility array:bindings objectAtIndex:i]]) {
         isSame = NO;
         break;
       }

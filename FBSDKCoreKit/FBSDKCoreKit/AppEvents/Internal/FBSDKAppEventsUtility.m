@@ -42,7 +42,7 @@
 + (NSMutableDictionary *)activityParametersDictionaryForEvent:(NSString *)eventCategory
                                     shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID {
   NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-  parameters[@"event"] = eventCategory;
+  [FBSDKTypeUtility dictionary:parameters setObject:eventCategory forKey:@"event"];
 
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_7_0
   NSString *attributionID = [[self class] attributionID];  // Only present on iOS 6 and below.
@@ -54,26 +54,26 @@
     [FBSDKTypeUtility dictionary:parameters setObject:advertiserID forKey:@"advertiser_id"];
   }
 
-  parameters[FBSDK_APPEVENTSUTILITY_ANONYMOUSID_KEY] = [FBSDKBasicUtility anonymousID];
+  [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKBasicUtility anonymousID] forKey:FBSDK_APPEVENTSUTILITY_ANONYMOUSID_KEY];
 
   FBSDKAdvertisingTrackingStatus advertisingTrackingStatus = [[self class] advertisingTrackingStatus];
   if (advertisingTrackingStatus != FBSDKAdvertisingTrackingUnspecified) {
     BOOL allowed = (advertisingTrackingStatus == FBSDKAdvertisingTrackingAllowed);
-    parameters[@"advertiser_tracking_enabled"] = @(allowed).stringValue;
+    [FBSDKTypeUtility dictionary:parameters setObject:@(allowed).stringValue forKey:@"advertiser_tracking_enabled"];
   }
   if (advertisingTrackingStatus == FBSDKAdvertisingTrackingAllowed) {
     NSString *userData = [FBSDKAppEvents getUserData];
     if (userData){
-      parameters[@"ud"] = userData;
+      [FBSDKTypeUtility dictionary:parameters setObject:userData forKey:@"ud"];
     }
   }
 
-  parameters[@"application_tracking_enabled"] = @(!FBSDKSettings.limitEventAndDataUsage).stringValue;
-  parameters[@"advertiser_id_collection_enabled"] = @(FBSDKSettings.advertiserIDCollectionEnabled).stringValue;
+  [FBSDKTypeUtility dictionary:parameters setObject:@(!FBSDKSettings.limitEventAndDataUsage).stringValue forKey:@"application_tracking_enabled"];
+  [FBSDKTypeUtility dictionary:parameters setObject:@(FBSDKSettings.advertiserIDCollectionEnabled).stringValue forKey:@"advertiser_id_collection_enabled"];
 
   NSString *userID = [FBSDKAppEvents userID];
   if (userID) {
-    parameters[@"app_user_id"] = userID;
+    [FBSDKTypeUtility dictionary:parameters setObject:userID forKey:@"app_user_id"];
   }
 
   [FBSDKAppEventsDeviceInfo extendDictionaryWithDeviceInfo:parameters];
@@ -93,7 +93,7 @@
   });
 
   if (urlSchemes.count > 0) {
-    parameters[@"url_schemes"] = [FBSDKBasicUtility JSONStringForObject:urlSchemes error:NULL invalidObjectHandler:NULL];
+    [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKBasicUtility JSONStringForObject:urlSchemes error:NULL invalidObjectHandler:NULL] forKey:@"url_schemes"];
   }
 
   return parameters;

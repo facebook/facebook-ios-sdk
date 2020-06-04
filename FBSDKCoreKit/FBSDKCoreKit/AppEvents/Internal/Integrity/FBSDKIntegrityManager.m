@@ -51,7 +51,7 @@ static BOOL isSampleEnabled = NO;
     NSString *valueString =[FBSDKTypeUtility stringValue:parameters[key]];
     BOOL shouldFilter = [FBSDKModelManager processIntegrity:key] || [FBSDKModelManager processIntegrity:valueString];
     if (shouldFilter) {
-      [restrictiveParams setObject:isSampleEnabled ? valueString : @"" forKey:key];
+      [FBSDKTypeUtility dictionary:restrictiveParams setObject:isSampleEnabled ? valueString : @"" forKey:key];
       [params removeObjectForKey:key];
     }
   }

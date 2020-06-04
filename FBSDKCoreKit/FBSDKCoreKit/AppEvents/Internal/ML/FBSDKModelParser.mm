@@ -63,14 +63,14 @@ NS_ASSUME_NONNULL_BEGIN
     NSDictionary<NSString *, NSString *> *keysMapping = [self getKeysMapping];
     for (NSString *key in keys) {
       NSString *finalKey = key;
-      NSString *mapping = [keysMapping objectForKey:key];
+      NSString *mapping = [FBSDKTypeUtility dictionary:keysMapping objectForKey:key ofType:NSObject.class];
       if (mapping) {
         finalKey = mapping;
       }
       std::string s_name([finalKey UTF8String]);
 
       std::vector<int> v_shape;
-      NSArray<NSString *> *shape = [info objectForKey:key];
+      NSArray<NSString *> *shape = [FBSDKTypeUtility dictionary:info objectForKey:key ofType:NSObject.class];
       int count = 1;
       for (NSNumber *_s in shape) {
         int i = [_s intValue];
@@ -156,7 +156,7 @@ NS_ASSUME_NONNULL_BEGIN
         return false;
       }
       for (int i = 0; i < expectedSize.count; i++) {
-        if((int)actualSize[i] != (int)[expectedSize[i] intValue]) {
+        if((int)actualSize[i] != (int)[[FBSDKTypeUtility array:expectedSize objectAtIndex:i] intValue]) {
           return false;
         }
       }

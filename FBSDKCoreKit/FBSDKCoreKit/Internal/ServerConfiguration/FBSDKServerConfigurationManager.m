@@ -353,7 +353,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
 
     // wrap the completion blocks
     for (FBSDKServerConfigurationBlock completionBlock in _completionBlocks) {
-      [completionBlocks addObject:[self _wrapperBlockForLoadBlock:completionBlock]];
+      [FBSDKTypeUtility array:completionBlocks addObject:[self _wrapperBlockForLoadBlock:completionBlock]];
     }
     [_completionBlocks removeAllObjects];
     _loadingServerConfiguration = NO;
@@ -376,9 +376,9 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
       if (name.length) {
         NSURL *URL = [FBSDKTypeUtility URLValue:dialogConfigurationDictionary[@"url"]];
         NSArray *appVersions = [FBSDKTypeUtility arrayValue:dialogConfigurationDictionary[@"versions"]];
-        dialogConfigurations[name] = [[FBSDKDialogConfiguration alloc] initWithName:name
+        [FBSDKTypeUtility dictionary:dialogConfigurations setObject:[[FBSDKDialogConfiguration alloc] initWithName:name
                                                                                 URL:URL
-                                                                        appVersions:appVersions];
+                                                                        appVersions:appVersions] forKey:name];
       }
     }
   }

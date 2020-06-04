@@ -72,7 +72,7 @@ static NSString * const FBSDKOsVersionKey = @"device_os_version";
   NSMutableArray *jsonEntries = [NSMutableArray array];
 
   for (id<FBSDKMonitorEntry> entry in entries) {
-    [jsonEntries addObject:entry.dictionaryRepresentation];
+    [FBSDKTypeUtility array:jsonEntries addObject:entry.dictionaryRepresentation];
   }
 
   return [FBSDKBasicUtility JSONStringForObject:jsonEntries

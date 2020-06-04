@@ -86,7 +86,7 @@ setJSONStringForObject:(id)object
     object = ((NSURL *)object).absoluteString;
   } else if ([object isKindOfClass:[NSDictionary class]]) {
     NSMutableDictionary<NSString *, id> *dictionary = [[NSMutableDictionary alloc] init];
-    [(NSDictionary<id, id> *)object enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *dictionaryStop) {
+    [FBSDKTypeUtility dictionary:(NSDictionary<id, id> *)object enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *dictionaryStop) {
       [FBSDKTypeUtility dictionary:dictionary
              setObject:[self _convertObjectToJSONObject:obj invalidObjectHandler:invalidObjectHandler stop:&stop]
                 forKey:[FBSDKTypeUtility stringValue:key]];
@@ -215,7 +215,7 @@ setJSONStringForObject:(id)object
     key = [self URLDecode:key];
     value = [self URLDecode:value];
     if (key && value) {
-      result[key] = value;
+      [FBSDKTypeUtility dictionary:result setObject:value forKey:key];
     }
   }
   return result;
@@ -308,7 +308,7 @@ setJSONStringForObject:(id)object
 {
   NSSearchPathDirectory directory = NSLibraryDirectory;
   NSArray<NSString *> *paths = NSSearchPathForDirectoriesInDomains(directory, NSUserDomainMask, YES);
-  NSString *docDirectory = paths[0];
+  NSString *docDirectory = [FBSDKTypeUtility array:paths objectAtIndex:0];
   return [docDirectory stringByAppendingPathComponent:filename];
 }
 

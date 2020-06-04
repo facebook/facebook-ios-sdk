@@ -53,7 +53,7 @@ static NSTimer *_flushTimer;
 {
   if (self.entries) {
     if (isMonitoringEnabled) {
-      [self.entries addObject:entry];
+      [FBSDKTypeUtility array:self.entries addObject:entry];
 
       if (self.entries.count >= FBSDKMonitorLogThreshold) {
         [self flush];

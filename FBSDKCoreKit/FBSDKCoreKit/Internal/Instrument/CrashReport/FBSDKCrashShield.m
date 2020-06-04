@@ -106,7 +106,7 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
   for (NSString *entry in callstack) {
     NSString *className = [self getClassName:entry];
     for (NSString *featureName in featureNames) {
-      NSArray<NSString *> *classArray = [_featureMapping objectForKey:featureName];
+      NSArray<NSString *> *classArray = [FBSDKTypeUtility dictionary:_featureMapping objectForKey:featureName ofType:NSObject.class];
       if (className && [classArray containsObject:className]) {
         return featureName;
       }
@@ -121,8 +121,8 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
   NSString *className = nil;
   // parse class name only from an entry in format "-[className functionName]+offset"
   // or "+[className functionName]+offset"
-  if (items.count > 0 && ([items[0] hasPrefix:@"+["] || [items[0] hasPrefix:@"-["])) {
-    className = [items[0] substringFromIndex:2];
+  if (items.count > 0 && ([[FBSDKTypeUtility array:items objectAtIndex:0] hasPrefix:@"+["] || [[FBSDKTypeUtility array:items objectAtIndex:0] hasPrefix:@"-["])) {
+    className = [[FBSDKTypeUtility array:items objectAtIndex:0] substringFromIndex:2];
   }
   return className;
 }

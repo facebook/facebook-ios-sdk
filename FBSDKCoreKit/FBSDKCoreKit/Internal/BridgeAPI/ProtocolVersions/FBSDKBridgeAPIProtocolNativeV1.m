@@ -247,7 +247,7 @@ static const struct
   if (!files.count) {
     return nil;
   }
-  return [UIImage imageNamed:files[0]];
+  return [UIImage imageNamed:[FBSDKTypeUtility array:files objectAtIndex:0]];
 }
 
 - (NSDictionary *)_bridgeParametersWithActionID:(NSString *)actionID error:(NSError *__autoreleasing *)errorRef
@@ -295,14 +295,14 @@ static const struct
       NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
       if (didAddToPasteboard || !enablePasteboard || !self->_pasteboard || (data.length < self->_dataLengthThreshold)) {
         dictionary[FBSDKBridgeAPIProtocolNativeV1DataKeys.isBase64] = @YES;
-        dictionary[FBSDKBridgeAPIProtocolNativeV1DataKeys.tag] = dataTag;
+        [FBSDKTypeUtility dictionary:dictionary setObject:dataTag forKey:FBSDKBridgeAPIProtocolNativeV1DataKeys.tag];
         [FBSDKTypeUtility dictionary:dictionary
                             setObject:[FBSDKBase64 encodeData:data]
                                forKey:FBSDKBridgeAPIProtocolNativeV1DataKeys.value];
       } else {
         dictionary[FBSDKBridgeAPIProtocolNativeV1DataKeys.isPasteboard] = @YES;
-        dictionary[FBSDKBridgeAPIProtocolNativeV1DataKeys.tag] = dataTag;
-        dictionary[FBSDKBridgeAPIProtocolNativeV1DataKeys.value] = self->_pasteboard.name;
+        [FBSDKTypeUtility dictionary:dictionary setObject:dataTag forKey:FBSDKBridgeAPIProtocolNativeV1DataKeys.tag];
+        [FBSDKTypeUtility dictionary:dictionary setObject:self->_pasteboard.name forKey:FBSDKBridgeAPIProtocolNativeV1DataKeys.value];
         [self->_pasteboard setData:data forPasteboardType:FBSDKBridgeAPIProtocolNativeV1DataPasteboardKey];
         // this version of the protocol only supports a single item on the pasteboard, so if when we add an item, make
         // sure we don't add another item

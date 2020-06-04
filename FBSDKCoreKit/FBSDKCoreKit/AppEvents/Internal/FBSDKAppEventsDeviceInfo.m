@@ -75,7 +75,7 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024;  // bytes
 
 + (void)extendDictionaryWithDeviceInfo:(NSMutableDictionary *)dictionary
 {
-  dictionary[@"extinfo"] = [[self sharedDeviceInfo] encodedDeviceInfo];
+  [FBSDKTypeUtility dictionary:dictionary setObject:[[self sharedDeviceInfo] encodedDeviceInfo] forKey:@"extinfo"];
 }
 
 #pragma mark - Internal Methods

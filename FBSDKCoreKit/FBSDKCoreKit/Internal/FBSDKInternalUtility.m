@@ -276,13 +276,13 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix) {
       switch (components.count) {
         default:
         case 3:
-          operatingSystemVersion.patchVersion = [components[2] integerValue];
+          operatingSystemVersion.patchVersion = [[FBSDKTypeUtility array:components objectAtIndex:2] integerValue];
           // fall through
         case 2:
-          operatingSystemVersion.minorVersion = [components[1] integerValue];
+          operatingSystemVersion.minorVersion = [[FBSDKTypeUtility array:components objectAtIndex:1] integerValue];
           // fall through
         case 1:
-          operatingSystemVersion.majorVersion = [components[0] integerValue];
+          operatingSystemVersion.majorVersion = [[FBSDKTypeUtility array:components objectAtIndex:0] integerValue];
           break;
         case 0:
           operatingSystemVersion.majorVersion = ([self isUIKitLinkTimeVersionAtLeast:FBSDKUIKitVersion_7_0] ? 7 : 6);

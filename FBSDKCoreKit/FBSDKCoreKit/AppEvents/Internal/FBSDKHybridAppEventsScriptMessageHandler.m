@@ -61,7 +61,7 @@ NSString *const FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey = @"_fb_pix
         params = [[NSMutableDictionary alloc] initWithObjectsAndKeys:pixelID, FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey, nil];
       }
       else {
-        params[FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey] = pixelID;
+        [FBSDKTypeUtility dictionary:params setObject:pixelID forKey:FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey];
       }
       [FBSDKAppEvents logInternalEvent:event
                             parameters:params

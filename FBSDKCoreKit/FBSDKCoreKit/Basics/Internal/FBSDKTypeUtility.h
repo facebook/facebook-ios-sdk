@@ -67,7 +67,7 @@ NS_SWIFT_NAME(TypeUtility)
  @param object The value to set.
  @param key The key to set the value for.
  */
-+ (void)dictionary:(NSMutableDictionary<NSString *, id> *)dictionary
++ (void)dictionary:(NSMutableDictionary *)dictionary
          setObject:(nullable id)object
             forKey:(nullable id<NSCopying>)key;
 

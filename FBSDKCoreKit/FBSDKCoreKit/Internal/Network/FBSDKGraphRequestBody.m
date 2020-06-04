@@ -73,7 +73,7 @@
     [self appendUTF8:value];
   }];
   if (key && value) {
-    _json[key] = value;
+    [FBSDKTypeUtility dictionary:_json setObject:value forKey:key];
   }
   [logger appendFormat:@"\n    %@:\t%@", key, (NSString *)value];
 }
@@ -136,12 +136,12 @@
           contentBlock:(FBSDKCodeBlock)contentBlock
 {
   NSMutableArray *disposition = [[NSMutableArray alloc] init];
-  [disposition addObject:@"Content-Disposition: form-data"];
+  [FBSDKTypeUtility array:disposition addObject:@"Content-Disposition: form-data"];
   if (key) {
-    [disposition addObject:[[NSString alloc] initWithFormat:@"name=\"%@\"", key]];
+    [FBSDKTypeUtility array:disposition addObject:[[NSString alloc] initWithFormat:@"name=\"%@\"", key]];
   }
   if (filename) {
-    [disposition addObject:[[NSString alloc] initWithFormat:@"filename=\"%@\"", filename]];
+    [FBSDKTypeUtility array:disposition addObject:[[NSString alloc] initWithFormat:@"filename=\"%@\"", filename]];
   }
   [self appendUTF8:[[NSString alloc] initWithFormat:@"%@%@", [disposition componentsJoinedByString:@"; "], kNewline]];
   if (contentType) {

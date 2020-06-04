@@ -86,7 +86,7 @@ static NSMutableArray<FBSDKDeactivatedEvent *>  *_eventsWithDeactivatedParams;
     if (eventInfo[DEPRECATED_PARAM_KEY]) {
       FBSDKDeactivatedEvent *eventWithDeactivatedParams = [[FBSDKDeactivatedEvent alloc] initWithEventName:eventName
                                                                                          deactivatedParams:[NSSet setWithArray:eventInfo[DEPRECATED_PARAM_KEY]]];
-      [deactivatedParamsArray addObject:eventWithDeactivatedParams];
+      [FBSDKTypeUtility array:deactivatedParamsArray addObject:eventWithDeactivatedParams];
     }
   }
   _deactivatedEvents = deactivatedEventSet;

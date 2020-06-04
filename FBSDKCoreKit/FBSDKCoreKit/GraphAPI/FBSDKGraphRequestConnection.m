@@ -184,7 +184,7 @@ NSURLSessionDataDelegate
                                                                          completionHandler:handler
                                                                            batchParameters:batchParameters];
 
-  [self.requests addObject:metadata];
+  [FBSDKTypeUtility array:self.requests addObject:metadata];
 }
 
 - (void)cancel
@@ -301,18 +301,18 @@ NSURLSessionDataDelegate
   if (batchToken) {
     NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary
                                                    dictionaryWithDictionary:metadata.request.parameters];
-    params[kAccessTokenKey] = batchToken;
+    [FBSDKTypeUtility dictionary:params setObject:batchToken forKey:kAccessTokenKey];
     metadata.request.parameters = params;
     [self registerTokenToOmitFromLog:batchToken];
   }
 
   NSString *urlString = [self urlStringForSingleRequest:metadata.request forBatch:YES];
-  requestElement[kBatchRelativeURLKey] = urlString;
-  requestElement[kBatchMethodKey] = metadata.request.HTTPMethod;
+  [FBSDKTypeUtility dictionary:requestElement setObject:urlString forKey:kBatchRelativeURLKey];
+  [FBSDKTypeUtility dictionary:requestElement setObject:metadata.request.HTTPMethod forKey:kBatchMethodKey];
 
   NSMutableArray *attachmentNames = [NSMutableArray array];
 
-  [metadata.request.parameters enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
+  [FBSDKTypeUtility dictionary:metadata.request.parameters enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
     if ([FBSDKGraphRequest isAttachment:value]) {
       NSString *name = [NSString stringWithFormat:@"%@%lu",
                         kBatchFileNamePrefix,
@@ -323,10 +323,10 @@ NSURLSessionDataDelegate
   }];
 
   if (attachmentNames.count) {
-    requestElement[kBatchAttachmentKey] = [attachmentNames componentsJoinedByString:@","];
+    [FBSDKTypeUtility dictionary:requestElement setObject:[attachmentNames componentsJoinedByString:@","] forKey:kBatchAttachmentKey];
   }
 
-  [batch addObject:requestElement];
+  [FBSDKTypeUtility array:batch addObject:requestElement];
 }
 
 - (void)appendAttachments:(NSDictionary *)attachments
@@ -334,7 +334,7 @@ NSURLSessionDataDelegate
               addFormData:(BOOL)addFormData
                    logger:(FBSDKLogger *)logger
 {
-  [attachments enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
+  [FBSDKTypeUtility dictionary:attachments enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
     value = [FBSDKBasicUtility convertRequestValue:value];
     if ([value isKindOfClass:[NSString class]]) {
       if (addFormData) {
@@ -445,7 +445,7 @@ NSURLSessionDataDelegate
   [self _validateFieldsParamForGetRequests:requests];
 
   if (requests.count == 1) {
-    FBSDKGraphRequestMetadata *metadata = requests[0];
+    FBSDKGraphRequestMetadata *metadata = [FBSDKTypeUtility array:requests objectAtIndex:0];
     NSURL *url = [NSURL URLWithString:[self urlStringForSingleRequest:metadata.request forBatch:NO]];
     request = [NSMutableURLRequest requestWithURL:url
                                       cachePolicy:NSURLRequestUseProtocolCachePolicy
@@ -527,9 +527,9 @@ NSURLSessionDataDelegate
 - (NSString *)urlStringForSingleRequest:(FBSDKGraphRequest *)request forBatch:(BOOL)forBatch
 {
   NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionaryWithDictionary:request.parameters];
-  params[@"format"] = @"json";
-  params[@"sdk"] = kSDK;
-  params[@"include_headers"] = @"false";
+  [FBSDKTypeUtility dictionary:params setObject:@"json" forKey:@"format"];
+  [FBSDKTypeUtility dictionary:params setObject:kSDK forKey:@"sdk"];
+  [FBSDKTypeUtility dictionary:params setObject:@"false" forKey:@"include_headers"];
 
   request.parameters = params;
 
@@ -677,7 +677,7 @@ NSURLSessionDataDelegate
   } else if (self.requests.count == 1) {
     // response is the entry, so put it in a dictionary under "body" and add
     // that to array of responses.
-    [results addObject:@{
+    [FBSDKTypeUtility array:results addObject:@{
                          @"code":@(statusCode),
                          @"body":response
                          }];
@@ -688,13 +688,13 @@ NSURLSessionDataDelegate
       // Don't let errors parsing one response stop us from parsing another.
       NSError *batchResultError = nil;
       if (![item isKindOfClass:[NSDictionary class]]) {
-        [results addObject:item];
+        [FBSDKTypeUtility array:results addObject:item];
       } else {
         NSMutableDictionary *result = [((NSDictionary *)item) mutableCopy];
         if (result[@"body"]) {
-          result[@"body"] = [self parseJSONOrOtherwise:result[@"body"] error:&batchResultError];
+          [FBSDKTypeUtility dictionary:result setObject:[self parseJSONOrOtherwise:result[@"body"] error:&batchResultError] forKey:@"body"];
         }
-        [results addObject:result];
+        [FBSDKTypeUtility array:results addObject:result];
       }
       if (batchResultError) {
         // We'll report back the last error we saw.
@@ -712,7 +712,7 @@ NSURLSessionDataDelegate
                              };
 
     for (NSUInteger resultIndex = 0, resultCount = self.requests.count; resultIndex < resultCount; ++resultIndex) {
-      [results addObject:result];
+      [FBSDKTypeUtility array:results addObject:result];
     }
   } else if (error != NULL) {
     *error = [self errorWithCode:FBSDKErrorGraphRequestProtocolMismatch
@@ -765,7 +765,7 @@ NSURLSessionDataDelegate
 #endif
 
   [self.requests enumerateObjectsUsingBlock:^(FBSDKGraphRequestMetadata *metadata, NSUInteger i, BOOL *stop) {
-    id result = networkError ? nil : results[i];
+    id result = networkError ? nil : [FBSDKTypeUtility array:results objectAtIndex:i];
     NSError *resultError = networkError ?: [self errorFromResult:result request:metadata.request];
 
     id body = nil;
@@ -891,7 +891,7 @@ NSURLSessionDataDelegate
                                                                 subcode:[userInfo[FBSDKGraphRequestErrorGraphErrorSubcodeKey] stringValue]
                                                                 request:request];
       if ([errorDictionary[@"is_transient"] boolValue]) {
-        userInfo[FBSDKGraphRequestErrorKey] = @(FBSDKGraphRequestErrorTransient);
+        [FBSDKTypeUtility dictionary:userInfo setObject:@(FBSDKGraphRequestErrorTransient) forKey:FBSDKGraphRequestErrorKey];
       } else {
         [FBSDKTypeUtility dictionary:userInfo setObject:@(recoveryConfiguration.errorCategory) forKey:FBSDKGraphRequestErrorKey];
       }
@@ -916,18 +916,18 @@ NSURLSessionDataDelegate
                 innerError:(NSError *)innerError
                    message:(NSString *)message {
   NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
-  userInfo[FBSDKGraphRequestErrorHTTPStatusCodeKey] = @(statusCode);
+  [FBSDKTypeUtility dictionary:userInfo setObject:@(statusCode) forKey:FBSDKGraphRequestErrorHTTPStatusCodeKey];
 
   if (response) {
-    userInfo[FBSDKGraphRequestErrorParsedJSONResponseKey] = response;
+    [FBSDKTypeUtility dictionary:userInfo setObject:response forKey:FBSDKGraphRequestErrorParsedJSONResponseKey];
   }
 
   if (innerError) {
-    userInfo[FBSDKGraphRequestErrorParsedJSONResponseKey] = innerError;
+    [FBSDKTypeUtility dictionary:userInfo setObject:innerError forKey:FBSDKGraphRequestErrorParsedJSONResponseKey];
   }
 
   if (message) {
-    userInfo[FBSDKErrorDeveloperMessageKey] = message;
+    [FBSDKTypeUtility dictionary:userInfo setObject:message forKey:FBSDKErrorDeveloperMessageKey];
   }
 
   NSError *error = [[NSError alloc]

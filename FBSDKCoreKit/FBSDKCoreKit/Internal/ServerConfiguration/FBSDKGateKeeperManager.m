@@ -159,7 +159,7 @@ static BOOL _requeryFinishedForAppStart;
           NSString *key = [FBSDKTypeUtility stringValue:entry[@"key"]];
           id value = entry[@"value"];
           if (entry != nil && key != nil && value != nil) {
-            gateKeeper[key] = value;
+            [FBSDKTypeUtility dictionary:gateKeeper setObject:value forKey:key];
           }
         }
         _gateKeepers = [gateKeeper copy];

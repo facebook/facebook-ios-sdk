@@ -362,11 +362,11 @@ static UIApplicationState _applicationState;
   NSInteger bitmask = 0;
   NSInteger bit = 0;
   NSMutableDictionary<NSString *, NSNumber *> *params = NSMutableDictionary.new;
-  params[@"core_lib_included"] = @1;
+  [FBSDKTypeUtility dictionary:params setObject:@1 forKey:@"core_lib_included"];
   for (NSString *className in metaInfo.allKeys) {
-    NSString *keyName = [metaInfo objectForKey:className];
+    NSString *keyName = [FBSDKTypeUtility dictionary:metaInfo objectForKey:className ofType:NSObject.class];
     if (objc_lookUpClass([className UTF8String])) {
-      params[keyName] = @1;
+      [FBSDKTypeUtility dictionary:params setObject:@1 forKey:keyName];
       bitmask |=  1 << bit;
     }
     bit++;
@@ -391,7 +391,7 @@ static UIApplicationState _applicationState;
     NSMutableDictionary<NSString *, NSString *> *params = [[NSMutableDictionary alloc] init];
     if (![FBSDKAppLinkUtility isMatchURLScheme:[NSString stringWithFormat:@"fb%@", [FBSDKSettings appID]]]) {
       NSString *warning = @"You haven't set the Auto App Link URL scheme: fb<YOUR APP ID>";
-      params[@"SchemeWarning"] = warning;
+      [FBSDKTypeUtility dictionary:params setObject:warning forKey:@"SchemeWarning"];
       NSLog(@"%@", warning);
     }
     [FBSDKAppEvents logInternalEvent:@"fb_auto_applink" parameters:params isImplicitlyLogged:YES];

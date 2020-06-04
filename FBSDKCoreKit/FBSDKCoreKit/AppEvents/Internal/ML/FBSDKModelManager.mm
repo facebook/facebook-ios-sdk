@@ -100,7 +100,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (nullable NSDictionary *)getRulesForKey:(NSString *)useCase
 {
-  NSDictionary<NSString *, id> *model = [_modelInfo objectForKey:useCase];
+  NSDictionary<NSString *, id> *model = [FBSDKTypeUtility dictionary:_modelInfo objectForKey:useCase ofType:NSObject.class];
   if (model && model[VERSION_ID_KEY]) {
     NSString *filePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.rules", useCase, model[VERSION_ID_KEY]]];
     if (filePath) {
@@ -120,7 +120,7 @@ NS_ASSUME_NONNULL_BEGIN
   if ([useCase hasPrefix:MTMLKey]) {
     useCase = MTMLKey;
   }
-  NSDictionary<NSString *, id> *model = [_modelInfo objectForKey:useCase];
+  NSDictionary<NSString *, id> *model = [FBSDKTypeUtility dictionary:_modelInfo objectForKey:useCase ofType:NSObject.class];
   if (model && model[VERSION_ID_KEY]) {
     NSString *path = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.weights", useCase, model[VERSION_ID_KEY]]];
     if (!path) {
@@ -166,8 +166,8 @@ NS_ASSUME_NONNULL_BEGIN
   const float *res_data = res.data();
   NSString *integrityType = INTEGRITY_NONE;
   for (int i = 0; i < thresholds.count; i++) {
-    if ((float)res_data[i] >= (float)[thresholds[i] floatValue]) {
-      integrityType = integrityMapping[i];
+    if ((float)res_data[i] >= (float)[[FBSDKTypeUtility array:thresholds objectAtIndex:i] floatValue]) {
+      integrityType = [FBSDKTypeUtility array:integrityMapping objectAtIndex:i];
       break;
     }
   }
@@ -195,8 +195,8 @@ NS_ASSUME_NONNULL_BEGIN
   const fbsdk::MTensor& res = fbsdk::predictOnMTML("app_event_pred", bytes, _MTMLWeights, denseData);
   const float *res_data = res.data();
   for (int i = 0; i < thresholds.count; i++) {
-    if ((float)res_data[i] >= (float)[thresholds[i] floatValue]) {
-      return eventMapping[i];
+    if ((float)res_data[i] >= (float)[[FBSDKTypeUtility array:thresholds objectAtIndex:i] floatValue]) {
+      return [FBSDKTypeUtility array:eventMapping objectAtIndex:i];
     }
   }
   return SUGGESTED_EVENT_OTHER;
@@ -225,11 +225,11 @@ NS_ASSUME_NONNULL_BEGIN
     }
   }
   if (mtmlAssetUri && mtmlVersionId > 0) {
-    _modelInfo[MTMLKey] = @{
+    [FBSDKTypeUtility dictionary:_modelInfo setObject:@{
       USE_CASE_KEY: MTMLKey,
       ASSET_URI_KEY: mtmlAssetUri,
       VERSION_ID_KEY: [NSNumber numberWithLong:mtmlVersionId],
-    };
+    } forKey:MTMLKey];
   }
 }
 
@@ -263,14 +263,14 @@ NS_ASSUME_NONNULL_BEGIN
   dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
   dispatch_group_t group = dispatch_group_create();
 
-  NSDictionary<NSString *, id> *model = [_modelInfo objectForKey:useCaseKey];
+  NSDictionary<NSString *, id> *model = [FBSDKTypeUtility dictionary:_modelInfo objectForKey:useCaseKey ofType:NSObject.class];
   if (!model || !_directoryPath) {
       return;
   }
 
   NSFileManager *fileManager = [NSFileManager defaultManager];
   // download model asset only if not exist before
-  NSString *assetUrlString = [model objectForKey:ASSET_URI_KEY];
+  NSString *assetUrlString = [FBSDKTypeUtility dictionary:model objectForKey:ASSET_URI_KEY ofType:NSObject.class];
   NSString *assetFilePath;
   if (assetUrlString.length > 0) {
     [self clearCacheForModel:model suffix:@".weights"];
@@ -284,7 +284,7 @@ NS_ASSUME_NONNULL_BEGIN
   }
 
   // download rules
-  NSString *rulesUrlString = [model objectForKey:RULES_URI_KEY];
+  NSString *rulesUrlString = [FBSDKTypeUtility dictionary:model objectForKey:RULES_URI_KEY ofType:NSObject.class];
   NSString *rulesFilePath = nil;
   // rules are optional and rulesUrlString may be empty
   if (rulesUrlString.length > 0) {

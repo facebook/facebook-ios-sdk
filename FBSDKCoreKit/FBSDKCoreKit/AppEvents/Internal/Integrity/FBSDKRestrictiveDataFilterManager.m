@@ -79,7 +79,7 @@ static NSMutableSet<NSString *> *_restrictedEvents;
          if (eventInfo[RESTRICTIVE_PARAM_KEY]) {
            FBSDKRestrictiveEventFilter *restrictiveEventFilter = [[FBSDKRestrictiveEventFilter alloc] initWithEventName:eventName
                                                                                                       restrictiveParams:eventInfo[RESTRICTIVE_PARAM_KEY]];
-           [eventFilterArray addObject:restrictiveEventFilter];
+           [FBSDKTypeUtility array:eventFilterArray addObject:restrictiveEventFilter];
          }
          if (restrictiveParams[eventName][PROCESS_EVENT_NAME_KEY]) {
            [restrictedEventSet addObject:eventName];
@@ -120,7 +120,7 @@ static NSMutableSet<NSString *> *_restrictedEvents;
       NSString *type = [FBSDKRestrictiveDataFilterManager getMatchedDataTypeWithEventName:eventName
                                                                                  paramKey:key];
       if (type) {
-        [restrictedParams setObject:type forKey:key];
+        [FBSDKTypeUtility dictionary:restrictedParams setObject:type forKey:key];
         [params removeObjectForKey:key];
       }
     }

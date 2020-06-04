@@ -82,7 +82,7 @@
   }
 }
 
-+ (void)dictionary:(NSMutableDictionary<NSString *, id> *)dictionary setObject:(id)object forKey:(id<NSCopying>)key
++ (void)dictionary:(NSMutableDictionary *)dictionary setObject:(id)object forKey:(id<NSCopying>)key
 {
   if (object && key) {
     dictionary[key] = object;

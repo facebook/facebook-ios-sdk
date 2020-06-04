@@ -201,7 +201,7 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
         if (window.isKeyWindow) {
           [trees insertObject:tree atIndex:0];
         } else {
-          [trees addObject:tree];
+          [FBSDKTypeUtility array:trees addObject:tree];
         }
       }
     }
@@ -213,8 +213,8 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
       screenName = NSStringFromClass([topMostViewController class]);
     }
 
-    viewTree[VIEW_HIERARCHY_VIEW_KEY] = trees;
-    viewTree[VIEW_HIERARCHY_SCREEN_NAME_KEY] = screenName ?: @"";
+    [FBSDKTypeUtility dictionary:viewTree setObject:trees forKey:VIEW_HIERARCHY_VIEW_KEY];
+    [FBSDKTypeUtility dictionary:viewTree setObject:screenName ?: @"" forKey:VIEW_HIERARCHY_SCREEN_NAME_KEY];
 
     fb_dispatch_on_default_thread(^{
       NSMutableDictionary<NSString *, id> *viewTreeCopy = [viewTree mutableCopy];
@@ -245,7 +245,7 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
   // Get dense feature string
   NSMutableArray *denseDataArray = [NSMutableArray array];
   for (int i = 0; i < 30; i++) {
-    [denseDataArray addObject:[NSNumber numberWithFloat: denseData[i]]];
+    [FBSDKTypeUtility array:denseDataArray addObject:[NSNumber numberWithFloat: denseData[i]]];
   }
   return [denseDataArray componentsJoinedByString:@","];
 }
@@ -256,7 +256,7 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
   for (UIView *subView in [contentView subviews]) {
     NSString *label = [FBSDKViewHierarchy getText:subView];
     if (label.length > 0) {
-      [textArray addObject:label];
+      [FBSDKTypeUtility array:textArray addObject:label];
     }
   }
   return [textArray componentsJoinedByString:@" "];

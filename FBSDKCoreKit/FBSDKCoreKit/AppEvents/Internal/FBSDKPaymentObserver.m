@@ -195,7 +195,7 @@ static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_a
   self.productRequest = [[fbsdkdfl_SKProductsRequestClass() alloc] initWithProductIdentifiers:productIdentifiers];
   self.productRequest.delegate = self;
   @synchronized(g_pendingRequestors) {
-    [g_pendingRequestors addObject:self];
+    [FBSDKTypeUtility array:g_pendingRequestors addObject:self];
   }
   [self.productRequest start];
 }
@@ -265,7 +265,7 @@ static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_a
                                                  FBSDKAppEventParameterNameDescription: [self getTruncatedString:product.localizedDescription],
                                                  }];
     if (transactionID) {
-      eventParameters[FBSDKAppEventParameterNameTransactionID] = transactionID;
+      [FBSDKTypeUtility dictionary:eventParameters setObject:transactionID forKey:FBSDKAppEventParameterNameTransactionID];
     }
   }
 
@@ -274,22 +274,22 @@ static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_a
   if (@available(iOS 11.2, *)) {
     if ([self isSubscription:product]) {
       // subs inapp
-      eventParameters[FBSDKAppEventParameterNameSubscriptionPeriod] = [self durationOfSubscriptionPeriod:product.subscriptionPeriod];
-      eventParameters[FBSDKAppEventParameterNameInAppPurchaseType] = @"subs";
-      eventParameters[FBSDKAppEventParameterNameIsStartTrial] = [self isStartTrial:transaction ofProduct:product] ? @"1" : @"0";
+      [FBSDKTypeUtility dictionary:eventParameters setObject:[self durationOfSubscriptionPeriod:product.subscriptionPeriod] forKey:FBSDKAppEventParameterNameSubscriptionPeriod];
+      [FBSDKTypeUtility dictionary:eventParameters setObject:@"subs" forKey:FBSDKAppEventParameterNameInAppPurchaseType];
+      [FBSDKTypeUtility dictionary:eventParameters setObject:[self isStartTrial:transaction ofProduct:product] ? @"1" : @"0" forKey:FBSDKAppEventParameterNameIsStartTrial];
       // trial information for subs
       SKProductDiscount *discount = product.introductoryPrice;
       if (discount) {
         if (discount.paymentMode == SKProductDiscountPaymentModeFreeTrial) {
-          eventParameters[FBSDKAppEventParameterNameHasFreeTrial] = @"1";
+          [FBSDKTypeUtility dictionary:eventParameters setObject:@"1" forKey:FBSDKAppEventParameterNameHasFreeTrial];
         } else {
-          eventParameters[FBSDKAppEventParameterNameHasFreeTrial] = @"0";
+          [FBSDKTypeUtility dictionary:eventParameters setObject:@"0" forKey:FBSDKAppEventParameterNameHasFreeTrial];
         }
-        eventParameters[FBSDKAppEventParameterNameTrialPeriod] = [self durationOfSubscriptionPeriod:discount.subscriptionPeriod];
-        eventParameters[FBSDKAppEventParameterNameTrialPrice] = discount.price;
+        [FBSDKTypeUtility dictionary:eventParameters setObject:[self durationOfSubscriptionPeriod:discount.subscriptionPeriod] forKey:FBSDKAppEventParameterNameTrialPeriod];
+        [FBSDKTypeUtility dictionary:eventParameters setObject:discount.price forKey:FBSDKAppEventParameterNameTrialPrice];
       }
     } else {
-      eventParameters[FBSDKAppEventParameterNameInAppPurchaseType] = @"inapp";
+      [FBSDKTypeUtility dictionary:eventParameters setObject:@"inapp" forKey:FBSDKAppEventParameterNameInAppPurchaseType];
     }
   }
 #endif
@@ -415,7 +415,7 @@ static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_a
   }
   SKProduct *product = nil;
   if (products.count) {
-    product = products[0];
+    product = [FBSDKTypeUtility array:products objectAtIndex:0];
   }
   [self logTransactionEvent:product];
 }
@@ -520,11 +520,11 @@ static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_a
     NSData* receipt = [self fetchDeviceReceipt];
     if (receipt) {
       NSString *base64encodedReceipt = [receipt base64EncodedStringWithOptions:0];
-      eventParameters[@"receipt_data"] = base64encodedReceipt;
+      [FBSDKTypeUtility dictionary:eventParameters setObject:base64encodedReceipt forKey:@"receipt_data"];
     }
   }
 
-  eventParameters[FBSDKAppEventParameterImplicitlyLoggedPurchase] = @"1";
+  [FBSDKTypeUtility dictionary:eventParameters setObject:@"1" forKey:FBSDKAppEventParameterImplicitlyLoggedPurchase];
   [FBSDKAppEvents logEvent:eventName
                 valueToSum:valueToSum
                 parameters:eventParameters];

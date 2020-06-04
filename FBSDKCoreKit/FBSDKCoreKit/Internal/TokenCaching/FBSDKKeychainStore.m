@@ -21,6 +21,7 @@
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
+#import "FBSDKTypeUtility.h"
 
 @implementation FBSDKKeychainStore
 
@@ -154,9 +155,9 @@
 - (NSMutableDictionary *)queryForKey:(NSString *)key
 {
   NSMutableDictionary *query = [NSMutableDictionary dictionary];
-  [query setObject:[FBSDKDynamicFrameworkLoader loadkSecClassGenericPassword] forKey:[FBSDKDynamicFrameworkLoader loadkSecClass]];
-  [query setObject:_service forKey:[FBSDKDynamicFrameworkLoader loadkSecAttrService]];
-  [query setObject:key forKey:[FBSDKDynamicFrameworkLoader loadkSecAttrAccount]];
+  [FBSDKTypeUtility dictionary:query setObject:[FBSDKDynamicFrameworkLoader loadkSecClassGenericPassword] forKey:[FBSDKDynamicFrameworkLoader loadkSecClass]];
+  [FBSDKTypeUtility dictionary:query setObject:_service forKey:[FBSDKDynamicFrameworkLoader loadkSecAttrService]];
+  [FBSDKTypeUtility dictionary:query setObject:key forKey:[FBSDKDynamicFrameworkLoader loadkSecAttrAccount]];
 #if !TARGET_IPHONE_SIMULATOR
   if (_accessGroup) {
     [query setObject:_accessGroup forKey:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessGroup]];

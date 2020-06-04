@@ -129,7 +129,7 @@ static NSString *const kErrorCategoryLogin = @"login";
         NSMutableDictionary *currentSubcodes = self->_configurationDictionary[code];
         if (!currentSubcodes) {
           currentSubcodes = [NSMutableDictionary dictionary];
-          self->_configurationDictionary[code] = currentSubcodes;
+          [FBSDKTypeUtility dictionary:self->_configurationDictionary setObject:currentSubcodes forKey:code];
         }
 
         NSArray *validSubcodes = [FBSDKTypeUtility dictionary:validCodeSubcodesDictionary objectForKey:@"subcodes" ofType:NSArray.class];
@@ -139,18 +139,18 @@ static NSString *const kErrorCategoryLogin = @"login";
             if (validSubcodeNumber == nil) {
               continue;
             }
-            currentSubcodes[validSubcodeNumber.stringValue] = [[FBSDKErrorRecoveryConfiguration alloc]
+            [FBSDKTypeUtility dictionary:currentSubcodes setObject:[[FBSDKErrorRecoveryConfiguration alloc]
                                                           initWithRecoveryDescription:suggestion
                                                           optionDescriptions:options
                                                           category:category
-                                                          recoveryActionName:action];
+                                                          recoveryActionName:action] forKey:validSubcodeNumber.stringValue];
           }
         } else {
-          currentSubcodes[@"*"] = [[FBSDKErrorRecoveryConfiguration alloc]
+          [FBSDKTypeUtility dictionary:currentSubcodes setObject:[[FBSDKErrorRecoveryConfiguration alloc]
                                    initWithRecoveryDescription:suggestion
                                    optionDescriptions:options
                                    category:category
-                                   recoveryActionName:action];
+                                   recoveryActionName:action] forKey:@"*"];
         }
       }
     }];

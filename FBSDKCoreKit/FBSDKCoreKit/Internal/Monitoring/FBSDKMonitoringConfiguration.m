@@ -75,7 +75,7 @@ typedef NSDictionary<NSString *, NSNumber *> SampleRates;
 
 - (int)sampleRateForEntry:(nonnull id<FBSDKMonitorEntry>)entry
 {
-  return [_sampleRates objectForKey:entry.name].intValue ?: self.defaultSamplingRate;
+  return [[FBSDKTypeUtility dictionary:_sampleRates objectForKey:entry.name ofType:NSObject.class] intValue] ?: self.defaultSamplingRate;
 }
 
 - (void)encodeWithCoder:(nonnull NSCoder *)encoder {

@@ -274,7 +274,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
                                     FBSDKAppEventParameterNameSessionID : _sessionID ?: @"",
                                     } mutableCopy];
   if (_lastSuspendTime) {
-    params[FBSDKAppEventParameterLogTime] = @(_lastSuspendTime);
+    [FBSDKTypeUtility dictionary:params setObject:@(_lastSuspendTime) forKey:FBSDKAppEventParameterLogTime];
   }
   return [params copy];
 }

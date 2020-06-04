@@ -99,7 +99,7 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
   if (fileNames.count > 0){
     fileNames = [fileNames subarrayWithRange:NSMakeRange(0, MIN(fileNames.count, FBSDK_MAX_ERROR_REPORT_LOGS))];
     for (NSUInteger i = 0; i < fileNames.count; i++) {
-      NSData *data = [NSData dataWithContentsOfFile:[directoryPath stringByAppendingPathComponent:fileNames[i]]
+      NSData *data = [NSData dataWithContentsOfFile:[directoryPath stringByAppendingPathComponent:[FBSDKTypeUtility array:fileNames objectAtIndex:i]]
                                             options:NSDataReadingMappedIfSafe
                                               error:nil];
       if (data) {
@@ -107,7 +107,7 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
                                                                                      options:0
                                                                                        error:nil];
         if (errorReport) {
-          [errorReportArr addObject:errorReport];
+          [FBSDKTypeUtility array:errorReportArr addObject:errorReport];
         }
       }
     }
@@ -119,8 +119,8 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
 {
   NSArray<NSString *> *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directoryPath error:nil];
   for (NSUInteger i = 0; i < files.count; i++) {
-    if ([files[i] hasPrefix:@"error_report"]) {
-      [[NSFileManager defaultManager] removeItemAtPath:[directoryPath stringByAppendingPathComponent:files[i]] error:nil];
+    if ([[FBSDKTypeUtility array:files objectAtIndex:i] hasPrefix:@"error_report"]) {
+      [[NSFileManager defaultManager] removeItemAtPath:[directoryPath stringByAppendingPathComponent:[FBSDKTypeUtility array:files objectAtIndex:i]] error:nil];
     }
   }
 }

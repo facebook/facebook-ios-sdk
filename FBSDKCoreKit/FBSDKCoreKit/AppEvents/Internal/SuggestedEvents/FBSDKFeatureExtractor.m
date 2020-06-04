@@ -79,7 +79,7 @@ void sum(float *val0, float *val1);
               withScreenName:(NSString *)screenName
 {
   // use "|" and "," to separate different text based on the rule of how text processed during training
-  NSString *appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleNameKey];
+  NSString *appName = [FBSDKTypeUtility dictionary:[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleNameKey ofType:NSObject.class];
   return [[NSString stringWithFormat:@"%@ | %@, %@", appName, screenName, text] lowercaseString];
 }
 
@@ -94,13 +94,13 @@ void sum(float *val0, float *val1);
   NSString *screenName = viewHierarchy[VIEW_HIERARCHY_SCREEN_NAME_KEY];
   NSMutableArray<NSMutableDictionary<NSString *, id> *> *siblings = [NSMutableArray array];
 
-  [self pruneTree:[viewTree[0] mutableCopy] siblings:siblings];
+  [self pruneTree:[[FBSDKTypeUtility array:viewTree objectAtIndex:0] mutableCopy] siblings:siblings];
 
-  float *result =  [self parseFeatures:viewTree[0]];
+  float *result =  [self parseFeatures:[FBSDKTypeUtility array:viewTree objectAtIndex:0]];
 
   NSMutableDictionary<NSString *, id> *interactedNode;
   for (NSMutableDictionary<NSString *, id> *node in siblings) {
-    if ([[node objectForKey:VIEW_HIERARCHY_IS_INTERACTED_KEY] boolValue]) {
+    if ([[FBSDKTypeUtility dictionary:node objectForKey:VIEW_HIERARCHY_IS_INTERACTED_KEY ofType:NSObject.class] boolValue]) {
       interactedNode = node;
     }
   }
@@ -133,7 +133,7 @@ void sum(float *val0, float *val1);
   BOOL isChildInteracted = NO;
   BOOL isDescendantInteracted = NO;
 
-  NSMutableArray<NSMutableDictionary<NSString *, id> *> *childviews = [node objectForKey:VIEW_HIERARCHY_CHILD_VIEWS_KEY];
+  NSMutableArray<NSMutableDictionary<NSString *, id> *> *childviews = [FBSDKTypeUtility dictionary:node objectForKey:VIEW_HIERARCHY_CHILD_VIEWS_KEY ofType:NSObject.class];
   for (NSMutableDictionary<NSString *, id> *child in childviews) {
     if ([[FBSDKTypeUtility dictionary:child
                          objectForKey:VIEW_HIERARCHY_IS_INTERACTED_KEY
@@ -150,10 +150,10 @@ void sum(float *val0, float *val1);
       NSMutableDictionary<NSString *, id> *child = [c mutableCopy];
       if ([self pruneTree:child siblings:siblings]) {
         isDescendantInteracted = YES;
-        [newChildren addObject:child];
+        [FBSDKTypeUtility array:newChildren addObject:child];
       }
     }
-    node[VIEW_HIERARCHY_CHILD_VIEWS_KEY] = newChildren;
+    [FBSDKTypeUtility dictionary:node setObject:newChildren forKey:VIEW_HIERARCHY_CHILD_VIEWS_KEY];
   }
 
   return isDescendantInteracted;
@@ -283,7 +283,7 @@ void sum(float *val0, float *val1);
   NSMutableArray<NSMutableDictionary<NSString *, id> *> *childviews = node[VIEW_HIERARCHY_CHILD_VIEWS_KEY];
 
   for (int i = 0; i < childviews.count; i++) {
-    sum(densefeat, [self parseFeatures:childviews[i]]);
+    sum(densefeat, [self parseFeatures:[FBSDKTypeUtility array:childviews objectAtIndex:i]]);
   }
 
   return densefeat;

@@ -56,34 +56,34 @@ static dispatch_queue_t serialQueue;
 {
   NSMutableDictionary *ud = [[NSMutableDictionary alloc] init];
   if (email) {
-    ud[FBSDKAppEventEmail] = [FBSDKUserDataStore encryptData:email type:FBSDKAppEventEmail];
+    [FBSDKTypeUtility dictionary:ud setObject:[FBSDKUserDataStore encryptData:email type:FBSDKAppEventEmail] forKey:FBSDKAppEventEmail];
   }
   if (firstName) {
-    ud[FBSDKAppEventFirstName] = [FBSDKUserDataStore encryptData:firstName type:FBSDKAppEventFirstName];
+    [FBSDKTypeUtility dictionary:ud setObject:[FBSDKUserDataStore encryptData:firstName type:FBSDKAppEventFirstName] forKey:FBSDKAppEventFirstName];
   }
   if (lastName) {
-    ud[FBSDKAppEventLastName] = [FBSDKUserDataStore encryptData:lastName type:FBSDKAppEventLastName];
+    [FBSDKTypeUtility dictionary:ud setObject:[FBSDKUserDataStore encryptData:lastName type:FBSDKAppEventLastName] forKey:FBSDKAppEventLastName];
   }
   if (phone) {
-    ud[FBSDKAppEventPhone] = [FBSDKUserDataStore encryptData:phone type:FBSDKAppEventPhone];
+    [FBSDKTypeUtility dictionary:ud setObject:[FBSDKUserDataStore encryptData:phone type:FBSDKAppEventPhone] forKey:FBSDKAppEventPhone];
   }
   if (dateOfBirth) {
-    ud[FBSDKAppEventDateOfBirth] = [FBSDKUserDataStore encryptData:dateOfBirth type:FBSDKAppEventDateOfBirth];
+    [FBSDKTypeUtility dictionary:ud setObject:[FBSDKUserDataStore encryptData:dateOfBirth type:FBSDKAppEventDateOfBirth] forKey:FBSDKAppEventDateOfBirth];
   }
   if (gender) {
-    ud[FBSDKAppEventGender] = [FBSDKUserDataStore encryptData:gender type:FBSDKAppEventGender];
+    [FBSDKTypeUtility dictionary:ud setObject:[FBSDKUserDataStore encryptData:gender type:FBSDKAppEventGender] forKey:FBSDKAppEventGender];
   }
   if (city) {
-    ud[FBSDKAppEventCity] = [FBSDKUserDataStore encryptData:city type:FBSDKAppEventCity];
+    [FBSDKTypeUtility dictionary:ud setObject:[FBSDKUserDataStore encryptData:city type:FBSDKAppEventCity] forKey:FBSDKAppEventCity];
   }
   if (state) {
-    ud[FBSDKAppEventState] = [FBSDKUserDataStore encryptData:state type:FBSDKAppEventState];
+    [FBSDKTypeUtility dictionary:ud setObject:[FBSDKUserDataStore encryptData:state type:FBSDKAppEventState] forKey:FBSDKAppEventState];
   }
   if (zip) {
-    ud[FBSDKAppEventZip] = [FBSDKUserDataStore encryptData:zip type:FBSDKAppEventZip];
+    [FBSDKTypeUtility dictionary:ud setObject:[FBSDKUserDataStore encryptData:zip type:FBSDKAppEventZip] forKey:FBSDKAppEventZip];
   }
   if (country) {
-    ud[FBSDKAppEventCountry] = [FBSDKUserDataStore encryptData:country type:FBSDKAppEventCountry];
+    [FBSDKTypeUtility dictionary:ud setObject:[FBSDKUserDataStore encryptData:country type:FBSDKAppEventCountry] forKey:FBSDKAppEventCountry];
   }
 
   dispatch_async(serialQueue, ^{
@@ -107,7 +107,7 @@ static dispatch_queue_t serialQueue;
     if (!hashData) {
       [hashedUserData removeObjectForKey:type];
     } else {
-      hashedUserData[type] = hashData;
+      [FBSDKTypeUtility dictionary:hashedUserData setObject:hashData forKey:type];
     }
     [[NSUserDefaults standardUserDefaults] setObject:[FBSDKUserDataStore stringByHashedData:hashedUserData]
                                               forKey:FBSDKUserDataKey];
@@ -160,7 +160,7 @@ static dispatch_queue_t serialQueue;
 {
   __block NSString *hashedData;
   dispatch_sync(serialQueue, ^{
-    hashedData = [internalHashedUserData objectForKey:type];
+    hashedData = [FBSDKTypeUtility dictionary:internalHashedUserData objectForKey:type ofType:NSObject.class];
   });
   return hashedData;
 }

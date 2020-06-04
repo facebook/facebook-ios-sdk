@@ -24,6 +24,7 @@
 
 #import "FBSDKCodelessPathComponent.h"
 #import "FBSDKViewHierarchyMacros.h"
+#import "FBSDKTypeUtility.h"
 
 @implementation FBSDKCodelessParameterComponent
 
@@ -37,7 +38,7 @@
     NSMutableArray *mut = [NSMutableArray array];
     for (NSDictionary *info in ary) {
       FBSDKCodelessPathComponent *component = [[FBSDKCodelessPathComponent alloc] initWithJSON:info];
-      [mut addObject:component];
+      [FBSDKTypeUtility array:mut addObject:component];
     }
     _path = [mut copy];
   }
@@ -65,7 +66,7 @@
   }
 
   for (int i = 0; i < _path.count; i++) {
-    if (![_path[i] isEqualToPath:parameter.path[i]]) {
+    if (![[FBSDKTypeUtility array:_path objectAtIndex:i] isEqualToPath:[FBSDKTypeUtility array:parameter.path objectAtIndex:i]]) {
       return NO;
     }
   }
