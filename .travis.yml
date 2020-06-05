@@ -72,36 +72,38 @@ jobs:
       name: Build Swift Packages
       osx_image: xcode11.4
       script: sh scripts/run.sh build spm
-    - stage: test
+    - stage: release
       name: GitHub Release Dynamic
       osx_image: xcode11.4
       script: sh scripts/run.sh release github dynamic
-      # deploy:
-      #   provider: releases
-      #   skip_cleanup: true
-      #   api_key: $GITHUB_ACCESS_TOKEN
-      #   file: build/Release/*
-      #   file_glob: true
-      #   name: Facebook SDK $TRAVIS_TAG
-      #   body: Consult Changelog $TRAVIS_TAG
-      #   on:
-      #     all_branches: true
-      #     tags: true
-    - stage: test
+      deploy:
+        provider: releases
+        skip_cleanup: true
+        api_key: $GITHUB_ACCESS_TOKEN
+        file: build/Release/*
+        file_glob: true
+        name: Facebook SDK $TRAVIS_TAG
+        body: Consult Changelog $TRAVIS_TAG
+        draft: true
+        on:
+          all_branches: true
+          tags: true
+    - stage: release
       name: GitHub Release Static
       osx_image: xcode11.4
       script: sh scripts/run.sh release github static
-      # deploy:
-      #   provider: releases
-      #   skip_cleanup: true
-      #   api_key: $GITHUB_ACCESS_TOKEN
-      #   file: build/Release/*
-      #   file_glob: true
-      #   name: Facebook SDK $TRAVIS_TAG
-      #   body: Consult Changelog $TRAVIS_TAG
-      #   on:
-      #     all_branches: true
-      #     tags: true
+      deploy:
+        provider: releases
+        skip_cleanup: true
+        api_key: $GITHUB_ACCESS_TOKEN
+        file: build/Release/*
+        file_glob: true
+        name: Facebook SDK $TRAVIS_TAG
+        body: Consult Changelog $TRAVIS_TAG
+        draft: true
+        on:
+          all_branches: true
+          tags: true
     - stage: release cocoapods 1/3
       name: Release Top Level Cocoapods
       osx_image: xcode11.4
