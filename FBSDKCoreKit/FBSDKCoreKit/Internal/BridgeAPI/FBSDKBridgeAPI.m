@@ -76,10 +76,17 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-  // Handle the case where the app is backgrounded while the "ExampleApp wants to use facebook.com to Sign In" alert is still open
-  // Call the completion handler with a Cancel
   if (@available(iOS 11.0, *)) {
-    if (!_active && (_authenticationSession != nil)) {
+    if (_active && _authenticationSession) {
+      // applicationDidBecomeActive: is called after tapping Continue or Cancel in the "{app name} wants to use facebook.com to Sign In" alert.
+      // authenticationSession will be nil when it's Cancel.
+      _isRequestingSFAuthenticationSession = YES;
+    } else if (_active && !_authenticationSession) {
+      // In theory, this should be done whenever authenticationSession is set to nil, but just in case.
+      _isRequestingSFAuthenticationSession = NO;
+    } else if (!_active && !_isRequestingSFAuthenticationSession && _authenticationSession) {
+      // Handle the case where the app is backgrounded while the "ExampleApp wants to use facebook.com to Sign In" alert is still open
+      // Call the completion handler with a Cancel
       [_authenticationSession cancel];
       _authenticationSession = nil;
       NSString *errorDomain;
@@ -108,7 +115,6 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-  _isRequestingSFAuthenticationSession = NO;
   _active = NO;
   _expectingBackground = NO;
 }
@@ -372,7 +378,6 @@ didFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *
         [_authenticationSession setPresentationContextProvider:self];
       }
     }
-    _isRequestingSFAuthenticationSession = YES;
     [_authenticationSession start];
   }
 }
