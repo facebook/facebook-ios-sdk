@@ -9,7 +9,36 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Important
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v7.0.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v7.0.1...HEAD)
+
+## 7.0.1
+
+## Added
+- Added additional unit tests for FBSDKRestrictiveDataFilterManager
+- Added integration test for building with xcodebuild
+- Added safer implementation of `NSJSONSerialization` methods to `FBSDKTypeUtility` and changed callsites
+- Added 'fuzz' testing class to test our network response parsing won't crash from bad/unexpected values
+
+## Fixed
+
+- Issue #1401
+- Issue #1380
+- Previously, we could not remove AAM data if we opt out some rules. Now, we align with Android AAM and add an internalUserData to save AAM data. And we only send back the data of enabled AAM rules.
+- Fix a bug where we were not updating Event Deactivation or Restrictive Data Filtering if the `enable()` function was called after the `update()` function
+- Restrictive data filtering bug where updating filters would exit early on an empty eventInfo parameter.
+- Enabling bitcode by default; we used to disable bitcode globally and enable it for certain versions of iphoneos due to Xcode 6 issue, given we've dropped the support for Xcode 6, it's cleaner to enable bitcode by default.
+
+## Changed
+- Now using `FBSDKTypeUtility` to provide type safety for Dictionaries and Arrays
+- Updates code so that `NSKeyedUnarchiver` method calls will continue to work no matter what the iOS deployment target is set to.
+- Skips sending back app events when there are no encoded events.
+
+## Deprecated
+
+- MarketingKit
+
+[2020-06-08](https://github.com/facebook/facebook-ios-sdk/releases/tag/v7.0.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v7.0.0...v7.0.1)
 
 ## 7.0.0
 
