@@ -249,7 +249,14 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 
 - (void)_didCompleteWithResults:(NSDictionary *)results
 {
-  if (_dialogIsFrictionless && results) {
+  if (!results) {
+    NSError *error = [NSError errorWithDomain:FBSDKShareErrorDomain
+                                         code:FBSDKShareErrorUnknown
+                                     userInfo:nil];
+    return [self _handleCompletionWithDialogResults:nil error:error];
+  }
+
+  if (_dialogIsFrictionless) {
     [_recipientCache updateWithResults:results];
   }
   [self _cleanUp];
