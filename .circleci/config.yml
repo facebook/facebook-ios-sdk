@@ -1,0 +1,349 @@
+version: 2.1
+
+executors:
+  xcode:
+    macos:
+      xcode: 11.5.0
+
+useMacOS: &useMacOS
+  executor: xcode
+
+tagFilters: &onlyRunOnTags
+  filters:
+    branches:
+      ignore: /.*/
+    tags:
+      only: /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
+
+requiresSetup: &requiresSetup
+  requires:
+    - setup
+
+branchFilters: &onlyRunOnBranches
+  filters:
+    branches:
+      only:
+        - master
+        - circle-ci
+    tags:
+      ignore: /.*/
+
+commands:
+  setup:
+    description: Runs before each job and checks out the source code
+    steps:
+      - checkout
+      - install_gems
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  install_gems:
+    description: Installs ruby gems in the Gemfile
+    steps:
+      - run:
+          name: Set Ruby Version
+          command: echo 'chruby ruby-2.7' >> ~/.bash_profile
+      - restore_cache:
+          key: 1-gems-{{ checksum "Gemfile.lock" }}
+      - run: bundle check || bundle install --path vendor/bundle
+      - save_cache:
+          key: 1-gems-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+      - run: bundle
+
+  build_carthage:
+    description: Builds all schemes using Carthage
+    steps:
+      - attach_workspace:
+          at: .
+      - run: carthage build --no-skip-current
+
+  build_for_release:
+    description: Builds libraries for release
+    steps:
+      - attach_workspace:
+          at: .
+      - run: sh scripts/run.sh release github
+      - persist_to_workspace:
+          root: .
+          paths:
+            - build/Release
+
+  build_swift_packages:
+    description: Builds Swift Packages using xcodebuild
+    steps:
+      - attach_workspace:
+          at: .
+      - run: sh scripts/run.sh build spm
+
+  build_xcode:
+    description: Runs xcodebuild for the FacebookSDK workspace with a given scheme, and configuration
+    parameters:
+      scheme:
+        type: string
+      configuration:
+        default: Debug
+        type: string
+    steps:
+      - attach_workspace:
+          at: .
+      - run: |
+          xcodebuild build \
+            -workspace FacebookSDK.xcworkspace \
+            -scheme << parameters.scheme >> \
+            -configuration << parameters.configuration >>
+
+  build_xcode_debug:
+    description: Builds the Debug configuration for all schemes using xcodebuild
+    steps:
+      - build_xcode:
+          scheme: BuildCoreKitBasics
+      - build_xcode:
+          scheme: BuildAllKits
+      - build_xcode:
+          scheme: BuildAllKits_TV
+
+  build_xcode_release:
+    description: Builds the Release configuration for all schemes using xcodebuild
+    steps:
+      - build_xcode:
+          scheme: BuildCoreKitBasics
+          configuration: Release
+      - build_xcode:
+          scheme: BuildAllKits
+          configuration: Release
+      - build_xcode:
+          scheme: BuildAllKits_TV
+          configuration: Release
+
+  integrate_spm:
+    description: Builds a project that includes the Swift Packages
+    steps:
+      - attach_workspace:
+          at: .
+      - run: sh scripts/run.sh build spm-integration
+
+  lint_cocoapods:
+    description: Lints CocoaPods using `pod lib lint` command
+    parameters:
+      arguments:
+        default: ''
+        type: string
+    steps:
+      - attach_workspace:
+          at: .
+      - run: sh scripts/run.sh lint cocoapods << parameters.arguments >>
+
+  lint_swift:
+    description: Lints using Swiftlint
+    steps:
+      - attach_workspace:
+          at: .
+      - run: |
+          # brew install swiftlint
+          sh scripts/run.sh lint swift
+
+  publish_aggregate_cocoapod:
+    description: Pushes aggregate pod FacebookSDK to trunk
+    steps:
+      - attach_workspace:
+          at: .
+      - run: sh scripts/run.sh release cocoapods FacebookSDK
+
+  publish_base_cocoapods:
+    description: Pushes Core to trunk
+    steps:
+      - attach_workspace:
+          at: .
+      - run: sh scripts/run.sh release cocoapods FBSDKCoreKit
+
+  publish_dependent_cocoapods:
+    description: Pushes Login and Share to trunk
+    steps:
+      - attach_workspace:
+          at: .
+      - run: sh scripts/run.sh release cocoapods FBSDKLoginKit FBSDKShareKit
+
+  publish_top_level_cocoapods:
+    description: Pushes GamingServices and tvOS to trunk
+    steps:
+      - attach_workspace:
+          at: .
+      - run: sh scripts/run.sh release cocoapods FBSDKGamingServicesKit FBSDKTVOSKit
+
+  publish_to_github:
+    description: Creates a draft for a release on github
+    steps:
+      - attach_workspace:
+          at: .
+      - run: |
+          STRIPPED_VERSION_NUMBER=${CIRCLE_TAG//.}
+          STRIPPED_VERSION_NUMBER=${STRIPPED_VERSION_NUMBER//v}
+
+          ghr \
+            --token ${GITHUB_ACCESS_TOKEN} \
+            --username ${CIRCLE_PROJECT_USERNAME} \
+            --repository ${CIRCLE_PROJECT_REPONAME}  \
+            --commitish ${CIRCLE_SHA1} \
+            --name "Facebook SDK ${CIRCLE_TAG}" \
+            --body "Consult [Changelog](https://github.com/facebook/facebook-ios-sdk/blob/master/CHANGELOG.md#${STRIPPED_VERSION_NUMBER})" \
+            --draft \
+            ${CIRCLE_TAG} \
+            build/Release
+
+  verify_release:
+    description: Verifies that the release workflow published artifacts successfully
+    steps:
+      - attach_workspace:
+          at: .
+      - run: sh scripts/run.sh check-release-status
+
+  verify_spm_headers:
+    description: Verifies that all public headers are available when using Swift Package Manager
+    steps:
+      - attach_workspace:
+          at: .
+      - run: sh scripts/run.sh verify-spm-headers
+
+  verify_xcode_integration:
+    description: Verifies that an xcode project that includes the SDK can build without error
+    steps:
+      - attach_workspace:
+          at: .
+      - run: sh scripts/run.sh verify_xcode_integration
+
+jobs:
+  setup:
+    <<: *useMacOS
+    steps:
+      - setup
+  build-for-release:
+    <<: *useMacOS
+    steps:
+      - build_for_release
+  build-swift-packages:
+    <<: *useMacOS
+    steps:
+      - build_swift_packages
+  build-xcode-debug:
+    <<: *useMacOS
+    steps:
+      - build_xcode_debug
+  build-xcode-release:
+    <<: *useMacOS
+    steps:
+      - build_xcode_release
+  build-carthage:
+    <<: *useMacOS
+    steps:
+      - build_carthage
+  integrate-spm:
+    <<: *useMacOS
+    steps:
+      - integrate_spm
+  lint-cocoapods:
+    <<: *useMacOS
+    steps:
+      - lint_cocoapods
+  lint-cocoapods-static:
+    <<: *useMacOS
+    steps:
+      - lint_cocoapods:
+          arguments: --use-libraries
+  lint-swift:
+    <<: *useMacOS
+    steps:
+      - lint_swift
+  publish-aggregate-cocoapod:
+    <<: *useMacOS
+    steps:
+      - publish_aggregate_cocoapod
+  publish-base-cocoapods:
+    <<: *useMacOS
+    steps:
+      - publish_base_cocoapods
+  publish-dependent-cocoapods:
+    <<: *useMacOS
+    steps:
+      - publish_dependent_cocoapods
+  publish-top-level-cocoapods:
+    <<: *useMacOS
+    steps:
+      - publish_top_level_cocoapods
+  publish-to-github:
+    docker:
+      - image: cibuilds/github:0.13
+    steps:
+      - publish_to_github
+  verify-release:
+    <<: *useMacOS
+    steps:
+      - verify_release
+  verify-spm-headers:
+    <<: *useMacOS
+    steps:
+      - verify_spm_headers
+  verify-xcode-integration:
+    <<: *useMacOS
+    steps:
+      - verify_xcode_integration
+
+workflows:
+  test:
+    jobs:
+      - setup:
+          <<: *onlyRunOnBranches
+      - build-swift-packages:
+          <<: *requiresSetup
+      - build-xcode-debug:
+          <<: *requiresSetup
+      - build-xcode-release:
+          <<: *requiresSetup
+      - build-carthage:
+          <<: *requiresSetup
+      - integrate-spm:
+          <<: *requiresSetup
+      - lint-cocoapods:
+          <<: *requiresSetup
+      - lint-cocoapods-static:
+          <<: *requiresSetup
+      - lint-swift:
+          <<: *requiresSetup
+      - verify-spm-headers:
+          <<: *requiresSetup
+      - verify-xcode-integration:
+          <<: *requiresSetup
+  release:
+    jobs:
+      - setup:
+          <<: *onlyRunOnTags
+      - build-for-release:
+          <<: *onlyRunOnTags
+          <<: *requiresSetup
+      - publish-to-github:
+          <<: *onlyRunOnTags
+          requires:
+            - build-for-release
+      - publish-base-cocoapods:
+          <<: *onlyRunOnTags
+          <<: *requiresSetup
+      - publish-dependent-cocoapods:
+          <<: *onlyRunOnTags
+          requires:
+            - publish-base-cocoapods
+      - publish-top-level-cocoapods:
+          <<: *onlyRunOnTags
+          requires:
+            - publish-dependent-cocoapods
+      - publish-aggregate-cocoapod:
+          <<: *onlyRunOnTags
+          requires:
+            - publish-top-level-cocoapods
+      - verify-release:
+          <<: *onlyRunOnTags
+          requires:
+            - publish-aggregate-cocoapod
+            - publish-to-github
