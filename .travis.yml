@@ -115,7 +115,7 @@ jobs:
     - stage: release cocoapods 3/3
       name: Release Dependent Cocoapods
       osx_image: xcode11.4
-      script: sh scripts/run.sh release cocoapods FBSDKGamingServicesKit FBSDKTVOSKit
+      script: sh scripts/run.sh release cocoapods FBSDKGamingServicesKit FBSDKTVOSKit FacebookSDK
     - stage: verify release
       osx_image: xcode11.4
       script: sh scripts/run.sh check-release-status
