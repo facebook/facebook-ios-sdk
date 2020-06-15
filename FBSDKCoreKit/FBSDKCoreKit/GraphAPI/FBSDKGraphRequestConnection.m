@@ -592,7 +592,7 @@ NSURLSessionDataDelegate
              @"Expected NSHTTPURLResponse, got %@",
              response);
 
-    NSInteger statusCode = _urlResponse.statusCode;
+NSInteger statusCode = _urlResponse.statusCode;
 
     if (!error && [response.MIMEType hasPrefix:@"image"]) {
       error = [FBSDKError errorWithCode:FBSDKErrorGraphRequestNonTextMimeTypeReturned
