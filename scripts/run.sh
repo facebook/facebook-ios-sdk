@@ -43,6 +43,12 @@ fi
 # Main
 main() {
   if [ -z "${SDK_SCRIPTS_DIR:-}" ]; then
+
+    # Dirty trick to avoid having to install core utils on CircleCI
+    realpath() {
+      [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+    }
+
     # Set global variables
 
     SDK_SCRIPTS_DIR=$(realpath "$(dirname "${BASH_SOURCE[0]}")")
@@ -306,14 +312,15 @@ build_sdk() {
 
     local branch
 
-    if [ -n "$TRAVIS_PULL_REQUEST" ] && [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
-      branch="refs/pull/$TRAVIS_PULL_REQUEST/merge";
-    elif [ -n "$TRAVIS_BRANCH" ]; then
-      branch="$TRAVIS_BRANCH";
+    if [ -n "$CIRCLE_PULL_REQUEST" ] && [ "$CIRCLE_PULL_REQUEST" != "false" ]; then
+      PR_NUMBER="${CIRCLE_PULL_REQUEST//[!0-9]/}"
+      branch="refs/pull/$PR_NUMBER/merge";
+    elif [ -n "$CIRCLE_BRANCH" ]; then
+      branch="$CIRCLE_BRANCH";
     else
       branch="master"
     fi
-    echo "Using travis branch: $branch"
+    echo "Using branch: $branch"
 
     cd "$SDK_DIR"/samples/SmoketestSPM
 
@@ -527,40 +534,6 @@ release_sdk() {
     done
   }
 
-  # Generate External Docs Changelog
-  release_external_changelog() {
-    echo "Releasing Changelog"
-
-    local current_version_underscore=${SDK_CURRENT_VERSION//./_}
-    local current_date
-    current_date=$(date +%Y-%m-%d)
-    local external_changelog="## $SDK_CURRENT_VERSION - $current_date {#$current_version_underscore}"
-    local start_logging=0
-    local tfile
-    tfile=$(mktemp)
-
-    while IFS= read -r line; do
-      case "$line" in
-      "## $SDK_CURRENT_VERSION")
-        start_logging=1
-        ;;
-      "## "*)
-        if [[ $start_logging == 1 ]]; then
-          start_logging=0
-        fi
-        ;;
-      *)
-        if [[ $start_logging == 1 ]]; then
-          external_changelog=$external_changelog"\n"$line
-        fi
-        ;;
-      esac
-    done <"CHANGELOG.md"
-
-    echo "$external_changelog" >"$tfile"
-    api_update_guide_doc "$tfile"
-  }
-
   local release_type=${1:-}
   if [ -n "$release_type" ]; then shift; fi
 
@@ -568,7 +541,6 @@ release_sdk() {
   "github") release_github "$@" ;;
   "cocoapods") release_cocoapods "$@" ;;
   "docs" | "documentation") release_docs "$@" ;;
-  "changelog") release_external_changelog "$@" ;;
   *) echo "Unsupported Release: $release_type" ;;
   esac
 }
