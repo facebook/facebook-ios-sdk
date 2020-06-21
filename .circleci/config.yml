@@ -8,25 +8,16 @@ executors:
 useMacOS: &useMacOS
   executor: xcode
 
+requiresSetup: &requiresSetup
+  requires:
+    - setup
+
 tagFilters: &onlyRunOnTags
   filters:
     branches:
       ignore: /.*/
     tags:
       only: /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
-
-requiresSetup: &requiresSetup
-  requires:
-    - setup
-
-branchFilters: &onlyRunOnBranches
-  filters:
-    branches:
-      only:
-        - master
-        - circle-ci
-    tags:
-      ignore: /.*/
 
 commands:
   setup:
@@ -294,8 +285,7 @@ jobs:
 workflows:
   test:
     jobs:
-      - setup:
-          <<: *onlyRunOnBranches
+      - setup
       - build-swift-packages:
           <<: *requiresSetup
       - build-xcode-debug:
