@@ -9,7 +9,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Important
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v7.0.1...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v7.1.0...HEAD)
+
+## 7.1.0
+
+## Added
+
+- Introduce DataProcessingOptions
+
+### Deprecated
+
+- Remove UserProperties API
+
+[2020-06-23](https://github.com/facebook/facebook-ios-sdk/releases/tag/v7.1.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v7.0.1...v7.1.0)
 
 ## 7.0.1
 
