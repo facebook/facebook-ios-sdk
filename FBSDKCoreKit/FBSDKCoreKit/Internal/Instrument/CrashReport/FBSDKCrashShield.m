@@ -22,6 +22,7 @@
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequestConnection.h"
 #import "FBSDKSettings.h"
+#import "FBSDKSettings+Internal.h"
 #import "FBSDKTypeUtility.h"
 
 @implementation FBSDKCrashShield
@@ -81,6 +82,9 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
         [disabledFeatues addObject:featureName];
         continue;
       }
+  }
+  if ([FBSDKSettings isDataProcessingRestricted]) {
+    return;
   }
   if (disabledFeatues.count > 0) {
     NSDictionary<NSString *, id> *disabledFeatureLog = @{@"feature_names":[disabledFeatues allObjects],

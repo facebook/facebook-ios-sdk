@@ -36,6 +36,8 @@
 
 + (nullable NSDictionary<NSString *, id> *)dataProcessingOptions;
 
++ (BOOL)isDataProcessingRestricted;
+
 @property (class, nonatomic, copy, readonly, nullable) NSString *graphAPIDebugParamValue;
 
 // used by Unity.

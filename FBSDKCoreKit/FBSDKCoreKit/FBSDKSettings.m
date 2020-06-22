@@ -348,6 +348,19 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookCodelessDebugLo
   return g_dataProcessingOptions;
 }
 
++ (BOOL)isDataProcessingRestricted
+{
+  NSArray<NSString *> *options = [FBSDKTypeUtility dictionary:[FBSDKSettings dataProcessingOptions]
+                                                 objectForKey:DATA_PROCESSING_OPTIONS
+                                                       ofType:NSArray.class];
+  for (NSString *option in options) {
+    if ([@"ldu" isEqualToString:[[FBSDKTypeUtility stringValue:option] lowercaseString]]) {
+      return YES;
+    }
+  }
+  return NO;
+}
+
 + (void)_logWarnings
 {
   NSBundle *mainBundle = [NSBundle mainBundle];

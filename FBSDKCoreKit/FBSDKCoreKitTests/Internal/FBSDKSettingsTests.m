@@ -22,6 +22,7 @@
 
 #import "FBSDKCoreKit.h"
 #import "FBSDKSettings.h"
+#import "FBSDKSettings+Internal.h"
 
 @interface FBSDKSettings ()
 + (NSString *)userAgentSuffix;
@@ -87,6 +88,15 @@
   XCTAssertFalse([FBSDKSettings shouldLimitEventAndDataUsage]);
 }
 
+- (void)testSetDataProecssingOptions
+{
+  [FBSDKSettings setDataProcessingOptions:@[@"LDU"] country:1 state:1000];
+  NSDictionary<NSString *, id> *dataProcessingOptions = [FBSDKSettings dataProcessingOptions];
+  NSSet *actualSet = [NSSet setWithArray:dataProcessingOptions[DATA_PROCESSING_OPTIONS]];
+  NSSet *expectedSet = [NSSet setWithArray:@[@"LDU"]];
+  XCTAssertTrue([expectedSet isEqualToSet:actualSet]);
+}
+
 - (void)testLoggingBehaviors
 {
   NSSet<FBSDKLoggingBehavior> *mockLoggingBehaviors =
@@ -121,6 +131,18 @@
 
   [FBSDKSettings setGraphAPIVersion:nil];
   XCTAssertEqualObjects(FBSDK_TARGET_PLATFORM_VERSION, [FBSDKSettings graphAPIVersion]);
+}
+
+- (void)testIsDataProcessingRestricted
+{
+  [FBSDKSettings setDataProcessingOptions:@[@"LDU"]];
+  XCTAssertTrue([FBSDKSettings isDataProcessingRestricted]);
+  [FBSDKSettings setDataProcessingOptions:@[]];
+  XCTAssertFalse([FBSDKSettings isDataProcessingRestricted]);
+  [FBSDKSettings setDataProcessingOptions:@[@"ldu"]];
+  XCTAssertTrue([FBSDKSettings isDataProcessingRestricted]);
+  [FBSDKSettings setDataProcessingOptions:nil];
+  XCTAssertFalse([FBSDKSettings isDataProcessingRestricted]);
 }
 
 @end

@@ -22,6 +22,7 @@
 #import "FBSDKGraphRequestConnection.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
+#import "FBSDKSettings+Internal.h"
 #import "FBSDKTypeUtility.h"
 
 #define FBSDK_MAX_ERROR_REPORT_LOGS 1000
@@ -52,6 +53,9 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
 
 + (void)uploadError
 {
+  if ([FBSDKSettings isDataProcessingRestricted]) {
+    return;
+  }
   NSArray<NSDictionary<NSString *, id> *> *errorReports = [self loadErrorReports];
   if ([errorReports count] == 0) {
     return [self clearErrorInfo];
