@@ -783,51 +783,8 @@ static NSString *g_overrideAppID = nil;
   [FBSDKUserDataStore clearDataForType:type];
 }
 
-
 + (void)updateUserProperties:(NSDictionary<NSString *, id> *)properties handler:(FBSDKGraphRequestBlock)handler
 {
-  NSString *userID = [[self class] userID];
-
-  if (userID.length == 0) {
-    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:@"Missing [FBSDKAppEvents userID] for [FBSDKAppEvents updateUserProperties:]"];
-    NSError *error = [FBSDKError requiredArgumentErrorWithName:@"userID" message:@"Missing [FBSDKAppEvents userID] for [FBSDKAppEvents updateUserProperties:]"];
-    if (handler) {
-      handler(nil, nil, error);
-    }
-    return;
-  }
-  NSMutableDictionary *dataDictionary = [NSMutableDictionary dictionaryWithCapacity:3];
-  [FBSDKTypeUtility dictionary:dataDictionary setObject:[FBSDKAppEvents userID] forKey:@"user_unique_id"];
-  [FBSDKTypeUtility dictionary:dataDictionary setObject:[FBSDKAppEventsUtility advertiserID] forKey:@"advertiser_id"];
-  [FBSDKTypeUtility dictionary:dataDictionary setObject:properties forKey:@"custom_data"];
-
-  NSError *error;
-  __block NSError *invalidObjectError;
-  NSString *dataJSONString = [FBSDKBasicUtility JSONStringForObject:@[dataDictionary] error:&error invalidObjectHandler:^id(id object, BOOL *stop) {
-    *stop = YES;
-    invalidObjectError = [FBSDKError unknownErrorWithMessage:@"The values in the properties dictionary must be NSStrings or NSNumbers"];
-    return nil;
-  }];
-  if (!error) {
-    error = invalidObjectError;
-  }
-  if (error) {
-    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:@"Failed to serialize properties for [FBSDKAppEvents updateUserProperties:]"];
-    if (handler) {
-      handler(nil, nil, error);
-    }
-    return;
-  }
-  NSDictionary *params = @{ @"data" : dataJSONString };
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/user_properties", [[self singleton] appID]]
-                                                                 parameters:params
-                                                                tokenString:[FBSDKAccessToken currentAccessToken].tokenString
-                                                                 HTTPMethod:FBSDKHTTPMethodPOST
-                                                                      flags:FBSDKGraphRequestFlagDisableErrorRecovery |
-                                FBSDKGraphRequestFlagDoNotInvalidateTokenOnError |
-                                FBSDKGraphRequestFlagSkipClientToken
-                                ];
-  [request startWithCompletionHandler:handler];
 }
 
 + (NSString *)anonymousID

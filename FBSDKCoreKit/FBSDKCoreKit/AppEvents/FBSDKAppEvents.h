@@ -829,7 +829,7 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
  @param properties the custom user properties
  @param handler the optional completion handler
  */
-+ (void)updateUserProperties:(NSDictionary<NSString *, id> *)properties handler:(nullable FBSDKGraphRequestBlock)handler;
++ (void)updateUserProperties:(NSDictionary<NSString *, id> *)properties handler:(nullable FBSDKGraphRequestBlock)handler __attribute__((deprecated("updateUserProperties is deprecated")));
 
 #if !TARGET_OS_TV
 /*

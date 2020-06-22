@@ -124,6 +124,7 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)tearDown
 {
+  [FBSDKAppEvents resetSingleton];
   [_partialMockAppEvents stopMocking];
   [_mockAppStates stopMocking];
   [OHHTTPStubs removeAllStubs];
@@ -499,52 +500,6 @@ static NSString *const _mockUserID = @"mockUserID";
     XCTAssertNil(error);
   }];
   XCTAssertEqual(0, activiesEndpointCalledCountDisabled, @"No Graph Request is sent");
-}
-
-#pragma mark  Tests for update user properties
-
-- (void)testGraphRequestWhenUpdateUserProperties
-{
-  [FBSDKAppEvents setUserID:_mockUserID];
-  NSString *urlString = [NSString stringWithFormat:@"%@/user_properties", _mockAppID];
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-    XCTAssertNotNil(request);
-    XCTAssertTrue([request.URL.absoluteString rangeOfString:urlString].location != NSNotFound);
-    return NO;
-  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    return [OHHTTPStubsResponse responseWithData:[NSData data]
-                                      statusCode:200
-                                         headers:nil];
-  }];
-
-  [FBSDKAppEvents updateUserProperties:@{
-    @"favorite_color" : @"blue",
-    @"created" : [NSDate date].description,
-    @"email" : @"someemail@email.com",
-    @"some_id" : @"Custom:1",
-    @"validated" : @YES,
-  }
-                               handler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}];
-}
-
-- (void)testUpdateUserPropertiesWithEmptyUserID
-{
-  [FBSDKAppEvents setUserID:@""];
-  id mockLogger = [OCMockObject niceMockForClass:[FBSDKLogger class]];
-  [[mockLogger expect] singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                                 logEntry:@"Missing [FBSDKAppEvents userID] for [FBSDKAppEvents updateUserProperties:]"];
-  id mockTypeUtility = [OCMockObject niceMockForClass:[FBSDKTypeUtility class]];
-  [[mockTypeUtility reject] dictionary:[OCMArg any] setObject:[FBSDKAppEvents userID] forKey:@"user_unique_id"];
-
-  [FBSDKAppEvents updateUserProperties:@{
-    @"favorite_color" : @"blue",
-    @"created" : [NSDate date].description,
-    @"email" : @"someemail@email.com",
-    @"some_id" : @"Custom:1",
-    @"validated" : @YES,
-  }
-                               handler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}];
-  [mockLogger verify];
 }
 
 #pragma mark  Tests for log event
