@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
                    DESC
 
   s.homepage     = 'https://developers.facebook.com/docs/ios/'
-  s.license      = { :type => 'Facebook Platform License', :file => 'LICENSE' }
+  s.license      = { type: 'Facebook Platform License', file: 'LICENSE' }
   s.author       = 'Facebook'
 
   s.platform     = :ios
@@ -20,13 +20,15 @@ Pod::Spec.new do |s|
 
   s.swift_version = '5.0'
 
-  s.source       = { :git => 'https://github.com/facebook/facebook-ios-sdk.git',
-                     :tag => "v#{s.version}"
-                    }
+  s.source       = {
+    git: 'https://github.com/facebook/facebook-ios-sdk.git',
+    tag: "v#{s.version}"
+  }
 
   s.weak_frameworks = 'Accounts', 'Social', 'Security', 'Foundation'
 
   s.requires_arc = true
+  s.pod_target_xcconfig = { 'DEFINES_MODULE': 'YES' }
   s.prefix_header_contents = '#define FBSDKCOCOAPODS'
 
   s.source_files   = 'FBSDKGamingServicesKit/FBSDKGamingServicesKit/**/*.{h,m}'

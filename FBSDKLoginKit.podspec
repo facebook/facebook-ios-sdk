@@ -14,16 +14,20 @@ Pod::Spec.new do |s|
                    DESC
 
   s.homepage     = 'https://developers.facebook.com/docs/ios/'
-  s.license      = { :type => 'Facebook Platform License', :file => 'LICENSE' }
+  s.license      = {
+    type: 'Facebook Platform License',
+    file: 'LICENSE'
+  }
   s.author       = 'Facebook'
 
   s.platform     = :ios, :tvos
   s.ios.deployment_target = '8.0'
   s.tvos.deployment_target = '10.0'
 
-  s.source       = { :git => 'https://github.com/facebook/facebook-ios-sdk.git',
-                     :tag => "v#{s.version}"
-                    }
+  s.source       = {
+    git: 'https://github.com/facebook/facebook-ios-sdk.git',
+    tag: "v#{s.version}"
+  }
 
   s.ios.weak_frameworks = 'Accounts', 'Social', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
   s.tvos.weak_frameworks = 'AudioToolbox', 'CoreGraphics', 'Foundation', 'QuartzCore', 'Security', 'UIKit'

@@ -13,19 +13,26 @@ Pod::Spec.new do |s|
                    DESC
 
   s.homepage     = 'https://developers.facebook.com/docs/tvos'
-  s.license      = { :type => 'Facebook Platform License', :file => 'LICENSE' }
+  s.license      = {
+    type: 'Facebook Platform License',
+    file: 'LICENSE'
+  }
   s.author       = 'Facebook'
 
   s.platform     = :tvos
   s.tvos.deployment_target = '10.0'
 
-  s.source       = { :git => 'https://github.com/facebook/facebook-ios-sdk.git',
-                     :tag => "v#{s.version}" }
+  s.source       = {
+    git: 'https://github.com/facebook/facebook-ios-sdk.git',
+    tag: "v#{s.version}"
+  }
 
   s.source_files   = 'FBSDKTVOSKit/FBSDKTVOSKit/**/*.{h,m}'
   s.public_header_files = 'FBSDKTVOSKit/FBSDKTVOSKit/*.h'
   s.header_dir = 'FBSDKTVOSKit'
-  s.pod_target_xcconfig = {'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) FBSDKCOCOAPODS=1' }
+  s.pod_target_xcconfig = {
+    'GCC_PREPROCESSOR_DEFINITIONS': '$(inherited) FBSDKCOCOAPODS=1'
+  }
 
   s.dependency 'FBSDKCoreKit', "~> #{s.version}"
   s.dependency 'FBSDKShareKit', "~> #{s.version}"
