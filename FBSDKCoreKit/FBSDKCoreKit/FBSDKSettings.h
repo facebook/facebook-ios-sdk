@@ -188,6 +188,24 @@ NS_REFINED_FOR_SWIFT;
 @property (class, nonatomic, copy, null_resettable) NSString *graphAPIVersion;
 
 /**
+Set the data processing options.
+
+@param options list of options
+*/
++ (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options;
+
+/**
+Set the data processing options.
+
+@param options list of the options
+@param country code of the country
+@param state code of the state
+*/
++ (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
+                         country:(int)country
+                           state:(int)state;
+
+/**
  Enable a particular Facebook SDK logging behavior.
 
  @param loggingBehavior The LoggingBehavior to enable. This should be a string defined as a constant with FBSDKLoggingBehavior*.
