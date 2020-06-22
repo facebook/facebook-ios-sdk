@@ -14,16 +14,17 @@ Pod::Spec.new do |s|
                    DESC
 
   s.homepage     = 'https://developers.facebook.com/docs/ios/'
-  s.license      = { :type => 'Facebook Platform License', :file => 'LICENSE' }
+  s.license      = { type: 'Facebook Platform License', file: 'LICENSE' }
   s.author       = 'Facebook'
 
   s.platform     = :ios, :tvos
   s.ios.deployment_target = '8.0'
   s.tvos.deployment_target = '10.0'
 
-  s.source       = { :git => 'https://github.com/facebook/facebook-ios-sdk.git',
-                     :tag => "v#{s.version}"
-                    }
+  s.source       = {
+    git: 'https://github.com/facebook/facebook-ios-sdk.git',
+    tag: "v#{s.version}"
+  }
 
   s.ios.weak_frameworks = 'Accelerate', 'Accounts', 'Social', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
   s.tvos.weak_frameworks = 'CoreLocation', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
@@ -38,8 +39,11 @@ Pod::Spec.new do |s|
 
   s.default_subspecs = 'Core', 'Basics'
   s.swift_version = '5.0'
-  s.pod_target_xcconfig = {'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) FBSDKCOCOAPODS=1' }
-  s.user_target_xcconfig = {'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) FBSDKCOCOAPODS=1' }
+  s.pod_target_xcconfig = {
+    'GCC_PREPROCESSOR_DEFINITIONS': '$(inherited) FBSDKCOCOAPODS=1',
+    'DEFINES_MODULE': 'YES'
+  }
+  s.user_target_xcconfig = {'GCC_PREPROCESSOR_DEFINITIONS': '$(inherited) FBSDKCOCOAPODS=1' }
   s.library = 'c++', 'stdc++'
 
   s.subspec 'Basics' do |ss|
