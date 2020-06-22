@@ -223,6 +223,8 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookCodelessDebugLo
   [FBSDKSettings setDataProcessingOptions:options country:0 state:0];
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
                          country:(int)country
                            state:(int)state
@@ -239,6 +241,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookCodelessDebugLo
                                               forKey:FBSDKSettingsDataProcessingOptions];
   }
 }
+#pragma clang diagnostic pop
 
 + (void)setLoggingBehaviors:(NSSet<FBSDKLoggingBehavior> *)loggingBehaviors
 {
@@ -334,6 +337,8 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookCodelessDebugLo
   return defaultValue;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (NSDictionary<NSString *, id> *)dataProcessingOptions
 {
   if (!g_dataProcessingOptions) {
@@ -347,6 +352,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookCodelessDebugLo
   }
   return g_dataProcessingOptions;
 }
+#pragma clang diagnostic pop
 
 + (BOOL)isDataProcessingRestricted
 {
