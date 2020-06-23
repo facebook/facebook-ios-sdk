@@ -133,15 +133,14 @@ commands:
     steps:
       - attach_workspace:
           at: .
-      - run: |
-          # brew install swiftlint
-          sh scripts/run.sh lint swift
+      - run: sh scripts/run.sh lint swift
 
   publish_aggregate_cocoapod:
     description: Pushes aggregate pod FacebookSDK to trunk
     steps:
       - attach_workspace:
           at: .
+      - run: pod repo update
       - run: sh scripts/run.sh release cocoapods FacebookSDK
 
   publish_base_cocoapods:
@@ -156,6 +155,7 @@ commands:
     steps:
       - attach_workspace:
           at: .
+      - run: pod repo update
       - run: sh scripts/run.sh release cocoapods FBSDKLoginKit FBSDKShareKit
 
   publish_top_level_cocoapods:
@@ -163,6 +163,7 @@ commands:
     steps:
       - attach_workspace:
           at: .
+      - run: pod repo update
       - run: sh scripts/run.sh release cocoapods FBSDKGamingServicesKit FBSDKTVOSKit
 
   publish_to_github:
