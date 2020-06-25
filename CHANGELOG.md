@@ -9,7 +9,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Important
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v7.1.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v7.1.1...HEAD)
+
+## 7.1.1
+
+## Fixed
+
+- Fix data processing options issue
+
+[2020-06-25](https://github.com/facebook/facebook-ios-sdk/releases/tag/v7.1.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v7.1.0...v7.1.1)
 
 ## 7.1.0
 
