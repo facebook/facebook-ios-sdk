@@ -83,18 +83,26 @@
   XCTAssertEqualObjects(@"test-user-id", dict[@"app_user_id"]);
 
   [FBSDKSettings setLimitEventAndDataUsage:YES];
+  [FBSDKSettings setDataProcessingOptions:@[@"LDU"] country:100 state:1];
   dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event2"
                                            shouldAccessAdvertisingID:NO];
   XCTAssertEqualObjects(@"event2", dict[@"event"]);
   XCTAssertNil(dict[@"advertiser_id"]);
   XCTAssertEqualObjects(@"0", dict[@"application_tracking_enabled"]);
+  XCTAssertEqualObjects(@"[\"LDU\"]", dict[@"data_processing_options"]);
+  XCTAssertTrue([(NSNumber *)dict[@"data_processing_options_country"] isEqualToNumber:[NSNumber numberWithInt:100]]);
+  XCTAssertTrue([(NSNumber *)dict[@"data_processing_options_state"] isEqualToNumber:[NSNumber numberWithInt:1]]);
 
   [FBSDKSettings setLimitEventAndDataUsage:NO];
+  [FBSDKSettings setDataProcessingOptions:@[]];
   dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
                                            shouldAccessAdvertisingID:YES];
   XCTAssertEqualObjects(@"event", dict[@"event"]);
   XCTAssertNotNil(dict[@"advertiser_id"]);
   XCTAssertEqualObjects(@"1", dict[@"application_tracking_enabled"]);
+  XCTAssertEqualObjects(@"[]", dict[@"data_processing_options"]);
+  XCTAssertTrue([(NSNumber *)dict[@"data_processing_options_country"] isEqualToNumber:[NSNumber numberWithInt:0]]);
+  XCTAssertTrue([(NSNumber *)dict[@"data_processing_options_state"] isEqualToNumber:[NSNumber numberWithInt:0]]);
 }
 
 - (void)testLogImplicitEventsExists

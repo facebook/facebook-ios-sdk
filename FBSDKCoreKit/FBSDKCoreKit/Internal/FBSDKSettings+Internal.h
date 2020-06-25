@@ -24,7 +24,7 @@
 
 #define DATA_PROCESSING_OPTIONS         @"data_processing_options"
 #define DATA_PROCESSING_OPTIONS_COUNTRY @"data_processing_options_country"
-#define DATA_PROCESSING_OPTIONS_STATE   @"data_processing_option_state"
+#define DATA_PROCESSING_OPTIONS_STATE   @"data_processing_options_state"
 
 @protocol FBSDKAccessTokenCaching;
 
