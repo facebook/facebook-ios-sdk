@@ -79,9 +79,13 @@
 
   NSDictionary<NSString *, id> *dataProcessingOptions = [FBSDKSettings dataProcessingOptions];
   if (dataProcessingOptions) {
-    [FBSDKTypeUtility dictionary:parameters
-                       setObject:dataProcessingOptions[DATA_PROCESSING_OPTIONS]
-                          forKey:DATA_PROCESSING_OPTIONS];
+    NSArray<NSString *> *options = (NSArray<NSString *> *)dataProcessingOptions[DATA_PROCESSING_OPTIONS];
+    if (options && [options isKindOfClass:NSArray.class]) {
+      NSString *optionsString = [FBSDKBasicUtility JSONStringForObject:options error:nil invalidObjectHandler:nil];
+      [FBSDKTypeUtility dictionary:parameters
+                         setObject:optionsString
+                            forKey:DATA_PROCESSING_OPTIONS];
+    }
     [FBSDKTypeUtility dictionary:parameters
                        setObject:dataProcessingOptions[DATA_PROCESSING_OPTIONS_COUNTRY]
                           forKey:DATA_PROCESSING_OPTIONS_COUNTRY];
