@@ -68,7 +68,7 @@ NS_ASSUME_NONNULL_BEGIN
 
     NSString *dirPath = [NSTemporaryDirectory() stringByAppendingPathComponent:FBSDK_ML_MODEL_PATH];
     if (![[NSFileManager defaultManager] fileExistsAtPath:dirPath]) {
-      [[NSFileManager defaultManager] createDirectoryAtPath:dirPath withIntermediateDirectories:NO attributes:NULL error:NULL];
+      [[NSFileManager defaultManager] createDirectoryAtPath:dirPath withIntermediateDirectories:YES attributes:NULL error:NULL];
     }
     _directoryPath = dirPath;
     _modelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
