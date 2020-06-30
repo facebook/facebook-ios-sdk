@@ -133,6 +133,7 @@ commands:
     steps:
       - attach_workspace:
           at: .
+      - run: brew install swiftlint
       - run: sh scripts/run.sh lint swift
 
   publish_aggregate_cocoapod:
