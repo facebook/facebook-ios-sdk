@@ -19,6 +19,7 @@
 
 require "json"
 require "FileUtils"
+require 'pathname'
 
 kit = ARGV[0]
 
@@ -26,88 +27,77 @@ kit = ARGV[0]
 CORE_KIT = 'FBSDKCoreKit'
 LOGIN_KIT = 'FBSDKLoginKit'
 SHARE_KIT = 'FBSDKShareKit'
+GAMING_SERVICES_KIT = 'FBSDKGamingServicesKit'
 
-def generateSourceKittenOutputForSwift(kit)
-  swiftKit = "#{kit}Swift"
-
-  File.delete("tmpSwift") if File.exist?("tmpSwift")
-
-  # Moves the scheme back to the shareddata directory where it can be found by the xcodebuild tool
-  # keeping it there from the beginning breaks Carthage when building on Xcode 10.2
-  # The scheme can be moved permanently and this line deleted when we drop support for Xcode 10.2
-  #
-  FileUtils.mv("#{kit}/#{kit}/Swift/#{swiftKit}.xcscheme", "#{kit}/#{kit}.xcodeproj/xcshareddata/xcschemes/")
-
-  system "bundle exec sourcekitten doc -- -workspace FacebookSDK.xcworkspace -scheme #{swiftKit} > tmpSwift"
+def base_path
+  Pathname.getwd
 end
 
-def scriptsDirectory
-  File.dirname(__FILE__)
+def path_name(kit)
+  base_path  + "#{kit}"
 end
 
-def parentDirectory
-  File.dirname(scriptsDirectory)
-end
+def headerPathFor(kit)
+  header_path = base_path + "#{kit}/#{kit}/#{kit}.h"
 
-def headerFileFor(kit)
-  header_file = "#{parentDirectory}/#{kit}/#{kit}/#{kit}.h"
-
-  if !File.exist?(header_file)
-    abort "*** ERROR: unable to document #{kit}. Missing header at #{header_file}"
+  if !header_path.exist?
+    abort "*** ERROR: unable to document #{kit}. Missing header at #{header_path.to_s}"
   end
 
-  return header_file
+  return header_path
+end
+
+def rec_path(path)
+  path.children.collect do |child|
+    if child.directory?
+      rec_path(child) + [child]
+    end
+  end.select { |x| x }.flatten(1)
+end
+
+def sdk_version
+  "$(grep -Eo 'FBSDK_VERSION_STRING @\".*\"' \"FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h\" | awk -F'\"' '{print $2}')"
 end
 
 def generateSourceKittenOutputForObjC(kit)
-  header_file = headerFileFor(kit)
+  arguments = [
+    'doc', '--objc', headerPathFor(kit).to_s, '--', '-x',
+    'objective-c', '-isysroot',
+    `xcrun --show-sdk-path --sdk iphonesimulator`.chomp,
+    '-I', path_name(kit),
+    '-fmodules'
+  ]
 
-  # hacky fix because of https://github.com/realm/jazzy/issues/667:
-  FileUtils.cp_r(
-    "#{parentDirectory}/FBSDKCoreKit/FBSDKCoreKit/AppEvents/.",
-    "#{parentDirectory}/FBSDKCoreKit/FBSDKCoreKit"
-  )
-  FileUtils.cp_r(
-    "#{parentDirectory}/FBSDKCoreKit/FBSDKCoreKit/AppLink/.",
-    "#{parentDirectory}/FBSDKCoreKit/FBSDKCoreKit"
-  )
-  FileUtils.cp_r(
-    "#{parentDirectory}/FBSDKCoreKit/FBSDKCoreKit/GraphAPI/.",
-    "#{parentDirectory}/FBSDKCoreKit/FBSDKCoreKit"
-  )
-
-  # This is a little weird. We need to include paths to the FBSDKCoreKit headers in order for sourcekitten to
-  # include the symbols in the output for FBSDKLoginKit and FBSDKShareKit
-  # However, if you include the header path in the command for FBSDKCoreKit itself
-  # then it won't include Swift definitions. Hence the need to have a separate commend for FBSDKCoreKit.
-  #
-  if kit == CORE_KIT
-    system "bundle exec sourcekitten doc --objc #{header_file} \
-      -- -x objective-c  -isysroot $(xcrun --show-sdk-path --sdk iphonesimulator) \
-      -I #{parentDirectory}/#{kit} > tmpObjC"
-  else
-    system "bundle exec sourcekitten doc --objc #{header_file} \
-    -- -x objective-c  -isysroot $(xcrun --show-sdk-path --sdk iphonesimulator) \
-    -I #{parentDirectory}/FBSDKCoreKit \
-    -I #{parentDirectory}/#{kit} > tmpObjC"
+  rec_path(path_name(kit)).collect do |child|
+    if child.directory?
+      arguments += ['-I', child.to_s]
+    end
   end
+
+  arguments += ['-I', base_path.join('FBSDKCoreKit').to_s]
+  system "sourcekitten #{arguments.join(' ')} > tmpObjC"
+end
+
+def generateSourceKittenOutputForSwift(kit)
+  File.delete("tmpSwift") if File.exist?("tmpSwift")
+  system "sourcekitten doc -- -workspace FacebookSDK.xcworkspace -scheme #{kit} > tmpSwift"
 end
 
 def combineSourceKittenOutputFor(kit)
-  puts "Generating source kitten output for #{kit}"
-
-  swiftSourceKittenOutput = File.open "tmpSwift"
-  swiftSourceKittenJSON = JSON.load swiftSourceKittenOutput
-
-  objCSourceKittenOutput = File.open "tmpObjC"
-  objCSourceKittenJSON = JSON.load objCSourceKittenOutput
-
   puts "Generating documentation for #{kit}"
 
+  if File.exist?('tmpSwift')
+    sourcefiles = 'tmpSwift,tmpObjC'
+  else
+    sourcefiles = 'tmpObjC'
+  end
+
   system "bundle exec jazzy \
-    --config #{parentDirectory}/.jazzy.yaml \
+    --config #{base_path + '.jazzy.yaml'} \
     --output docs/#{kit} \
-    --sourcekitten-sourcefile tmpSwift,tmpObjC"
+    --module #{kit} \
+    --module-version \"#{sdk_version}\" \
+    --sourcekitten-sourcefile #{sourcefiles}"
 end
 
 case kit
@@ -115,14 +105,9 @@ when /#{CORE_KIT}|#{LOGIN_KIT}|#{SHARE_KIT}/
   generateSourceKittenOutputForSwift(kit)
   generateSourceKittenOutputForObjC(kit)
   combineSourceKittenOutputFor(kit)
-
 else
-  header_file = headerFileFor(kit)
-
-  system "bundle exec jazzy \
-    --framework-root #{prefixFor(kit)}#{kit} \
-    --output docs/#{kit} \
-    --umbrella-header #{header_file}"
+  generateSourceKittenOutputForObjC(kit)
+  combineSourceKittenOutputFor(kit)
 end
 
 File.delete("tmpSwift") if File.exist?("tmpSwift")
