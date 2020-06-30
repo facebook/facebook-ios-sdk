@@ -33,9 +33,12 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)checkFeature:(FBSDKFeature)feature
      completionBlock:(FBSDKFeatureManagerBlock)completionBlock
 {
-  // check locally first
+  // check if the feature is locally disabled by Crash Shield first
   NSString *version = [[NSUserDefaults standardUserDefaults] valueForKey:[FBSDKFeatureManagerPrefix stringByAppendingString:[self featureName:feature]]];
   if (version && [version isEqualToString:[FBSDKSettings sdkVersion]]) {
+    if (completionBlock) {
+      completionBlock(false);
+    }
     return;
   }
   // check gk
