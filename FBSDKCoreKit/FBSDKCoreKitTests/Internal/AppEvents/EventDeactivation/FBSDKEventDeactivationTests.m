@@ -31,11 +31,6 @@
 
 - (void)setUp
 {
-  [FBSDKEventDeactivationManager enable];
-}
-
-- (void)testProcessParameters
-{
   NSDictionary<NSString *, id> *events = @{
     @"fb_mobile_catalog_update" : @{ @"restrictive_param" : @{@"first_name" : @"6"}},
     @"manual_initiated_checkout" : @{ @"deprecated_param" : @[@"deprecated_3"]},
@@ -47,6 +42,10 @@
   OCMStub([mockServerConfigurationManager cachedServerConfiguration]).andReturn(mockServerConfiguration);
 
   [FBSDKEventDeactivationManager enable];
+}
+
+- (void)testProcessParameters
+{
   NSDictionary<NSString *, id> *parameters = @{@"_ui" : @"UITabBarController",
                                                @"_logTime" : @1576109848,
                                                @"_session_id" : @"30AF582C-0225-40A4-B3EE-2A571AB926F3",

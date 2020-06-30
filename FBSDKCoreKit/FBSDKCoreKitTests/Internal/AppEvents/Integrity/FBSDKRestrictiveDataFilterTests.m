@@ -47,6 +47,26 @@
 - (void)setUp
 {
   [super setUp];
+
+  NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionaryWithDictionary: @{
+    @"test_event_name" : @{
+        @"restrictive_param" : @{
+            @"first name" : @"6",
+            @"last name" : @"7"
+        }
+    },
+    @"restrictive_event_name" : @{
+        @"restrictive_param" : @{
+            @"dob" : @4
+        }
+    }
+  }];
+
+  id mockServerConfiguration = OCMClassMock([FBSDKServerConfiguration class]);
+  OCMStub([mockServerConfiguration restrictiveParams]).andReturn(params);
+  id mockServerConfigurationManager = OCMClassMock([FBSDKServerConfigurationManager class]);
+  OCMStub([mockServerConfigurationManager cachedServerConfiguration]).andReturn(mockServerConfiguration);
+
   [FBSDKRestrictiveDataFilterManager enable];
 }
 
@@ -196,15 +216,6 @@
 - (void)testFilterByParams
 {
   NSString *testEventName = @"restrictive_event_name";
-  NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionaryWithDictionary: @{ testEventName : @{@"restrictive_param" :@{@"dob" : @4}}}];
-
-  id mockServerConfiguration = OCMClassMock([FBSDKServerConfiguration class]);
-  OCMStub([mockServerConfiguration restrictiveParams]).andReturn(params);
-  id mockServerConfigurationManager = OCMClassMock([FBSDKServerConfigurationManager class]);
-  OCMStub([mockServerConfigurationManager cachedServerConfiguration]).andReturn(mockServerConfiguration);
-
-  [FBSDKRestrictiveDataFilterManager enable];
-
   id mockAppStates = [OCMockObject niceMockForClass:[FBSDKAppEventsState class]];
   OCMStub([mockAppStates alloc]).andReturn(mockAppStates);
   OCMStub([mockAppStates initWithToken:[OCMArg any] appID:[OCMArg any]]).andReturn(mockAppStates);
@@ -232,23 +243,11 @@
 
 - (void)testGetMatchedDataTypeByParam
 {
-  NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionary];
-  NSString *eventName = @"test_event_name";
-
-  NSMutableDictionary<NSString *, NSString *> *restrictiveParams = [NSMutableDictionary dictionaryWithDictionary: @{
-                                                                                                                   @"first name" : @"6",
-                                                                                                                   @"last name" : @"7"
-                                                                                                                   }];
-  NSMutableDictionary<NSString *, id> *paramsDict = [NSMutableDictionary dictionary];
-  [FBSDKTypeUtility dictionary:paramsDict setObject:restrictiveParams forKey:@"restrictive_param"];
-  [FBSDKTypeUtility dictionary:params setObject:paramsDict forKey:eventName];
-
-  [FBSDKRestrictiveDataFilterManager updateFilters:params];
-
-  NSString *type1 = [FBSDKRestrictiveDataFilterManager getMatchedDataTypeWithEventName:eventName paramKey:@"first name"];
+  NSString *testEventName = @"test_event_name";
+  NSString *type1 = [FBSDKRestrictiveDataFilterManager getMatchedDataTypeWithEventName:testEventName paramKey:@"first name"];
   XCTAssertEqualObjects(type1, @"6");
 
-  NSString *type2= [FBSDKRestrictiveDataFilterManager getMatchedDataTypeWithEventName:eventName paramKey:@"reservation number"];
+  NSString *type2= [FBSDKRestrictiveDataFilterManager getMatchedDataTypeWithEventName:testEventName paramKey:@"reservation number"];
   XCTAssertNil(type2);
 }
 

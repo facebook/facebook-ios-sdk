@@ -153,11 +153,14 @@ static NSMutableSet<NSString *> *_restrictedEvents;
 
 + (void)enable
 {
-  NSDictionary<NSString *, id> *restrictiveParams = [FBSDKServerConfigurationManager cachedServerConfiguration].restrictiveParams;
-  if (restrictiveParams) {
-    [FBSDKRestrictiveDataFilterManager updateFilters:restrictiveParams];
-    isRestrictiveEventFilterEnabled = YES;
-  }
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    NSDictionary<NSString *, id> *restrictiveParams = [FBSDKServerConfigurationManager cachedServerConfiguration].restrictiveParams;
+    if (restrictiveParams) {
+      [FBSDKRestrictiveDataFilterManager updateFilters:restrictiveParams];
+      isRestrictiveEventFilterEnabled = YES;
+    }
+  });
 }
 
 #pragma mark Helper functions

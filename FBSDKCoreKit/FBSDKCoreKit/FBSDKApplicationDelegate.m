@@ -112,18 +112,6 @@ static UIApplicationState _applicationState;
     }
   }];
 
-  [FBSDKFeatureManager checkFeature:FBSDKFeatureRestrictiveDataFiltering completionBlock:^(BOOL enabled) {
-    if (enabled) {
-      [FBSDKRestrictiveDataFilterManager enable];
-    }
-  }];
-
-  [FBSDKFeatureManager checkFeature:FBSDKFeatureEventDeactivation completionBlock:^(BOOL enabled) {
-    if (enabled) {
-      [FBSDKEventDeactivationManager enable];
-    }
-  }];
-
   [FBSDKFeatureManager checkFeature:FBSDKFeatureMonitoring completionBlock:^(BOOL enabled) {
     if (enabled && FBSDKSettings.isAutoLogAppEventsEnabled) {
 #ifndef DEBUG

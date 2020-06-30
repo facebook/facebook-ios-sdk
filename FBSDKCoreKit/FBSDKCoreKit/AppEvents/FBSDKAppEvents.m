@@ -1040,6 +1040,16 @@ static dispatch_once_t *onceTokenPointer;
     } else {
       [FBSDKPaymentObserver stopObservingTransactions];
     }
+    [FBSDKFeatureManager checkFeature:FBSDKFeatureRestrictiveDataFiltering completionBlock:^(BOOL enabled) {
+      if (enabled) {
+        [FBSDKRestrictiveDataFilterManager enable];
+      }
+    }];
+    [FBSDKFeatureManager checkFeature:FBSDKFeatureEventDeactivation completionBlock:^(BOOL enabled) {
+      if (enabled) {
+        [FBSDKEventDeactivationManager enable];
+      }
+    }];
 #if !TARGET_OS_TV
     [FBSDKFeatureManager checkFeature:FBSDKFeatureCodelessEvents completionBlock:^(BOOL enabled) {
       if (enabled) {

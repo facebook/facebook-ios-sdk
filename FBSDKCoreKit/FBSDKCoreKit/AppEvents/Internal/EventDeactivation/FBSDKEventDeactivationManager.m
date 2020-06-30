@@ -58,11 +58,14 @@ static NSMutableArray<FBSDKDeactivatedEvent *>  *_eventsWithDeactivatedParams;
 
 + (void)enable
 {
-  NSDictionary<NSString *, id> *restrictiveParams = [FBSDKServerConfigurationManager cachedServerConfiguration].restrictiveParams;
-  if (restrictiveParams) {
-    [FBSDKEventDeactivationManager updateDeactivatedEvents:restrictiveParams];
-    isEventDeactivationEnabled = YES;
-  }
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    NSDictionary<NSString *, id> *restrictiveParams = [FBSDKServerConfigurationManager cachedServerConfiguration].restrictiveParams;
+    if (restrictiveParams) {
+      [FBSDKEventDeactivationManager updateDeactivatedEvents:restrictiveParams];
+      isEventDeactivationEnabled = YES;
+    }
+  });
 }
 
 + (void)updateDeactivatedEvents:(nullable NSDictionary<NSString *, id> *)events
