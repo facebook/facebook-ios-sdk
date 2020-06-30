@@ -629,7 +629,11 @@ does_version_exist() {
 # Builds the test app locally to ensure all frameworks still compile
 verify_xcode_integration() {
   echo "Verifying the TextXcodeIntegration App builds"
-  xcodebuild clean build -quiet -sdk iphonesimulator -workspace ../internal/testing/TestXcodeIntegration/TestXcodeIntegration.xcworkspace/ -scheme TestXcodeIntegration
+  xcodebuild clean build \
+    -quiet \
+    -sdk iphonesimulator \
+    -workspace testing/TestXcodeIntegration/TestXcodeIntegration.xcworkspace/ \
+    -scheme TestXcodeIntegration
 }
 
 verify_spm_headers() {

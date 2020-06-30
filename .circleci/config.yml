@@ -215,7 +215,7 @@ commands:
     steps:
       - attach_workspace:
           at: .
-      - run: sh scripts/run.sh verify_xcode_integration
+      - run: sh scripts/run.sh verify-xcode-integration
 
 jobs:
   setup:
