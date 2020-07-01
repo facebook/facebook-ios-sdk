@@ -16,16 +16,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
-
 #import <OCMock/OCMock.h>
-
+#import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
 #import <FBSDKCoreKit/FBSDKAppEvents.h>
 #import <FBSDKCoreKit/FBSDKSettings.h>
 
 #import "FBSDKAppEventsUtility.h"
+#import "FBSDKTypeUtility.h"
+#import "FBSDKUtility.h"
 
 @interface FBSDKAppEventsUtilityTests : XCTestCase
 
@@ -81,6 +81,40 @@
   XCTAssertNotNil(dict[@"advertiser_id"]);
   XCTAssertEqualObjects(@"1", dict[@"application_tracking_enabled"]);
   XCTAssertEqualObjects(@"test-user-id", dict[@"app_user_id"]);
+  XCTAssertEqualObjects(@"{}", dict[@"ud"]);
+
+  NSString *testEmail = @"apptest@fb.com";
+  NSString *testFirstName = @"test_fn";
+  NSString *testLastName = @"test_ln";
+  NSString *testPhone = @"123";
+  NSString *testGender = @"m";
+  NSString *testCity = @"menlopark";
+  NSString *testState = @"test_s";
+  [FBSDKAppEvents setUserData:testEmail forType:FBSDKAppEventEmail];
+  [FBSDKAppEvents setUserData:testFirstName forType:FBSDKAppEventFirstName];
+  [FBSDKAppEvents setUserData:testLastName forType:FBSDKAppEventLastName];
+  [FBSDKAppEvents setUserData:testPhone forType:FBSDKAppEventPhone];
+  [FBSDKAppEvents setUserData:testGender forType:FBSDKAppEventGender];
+  [FBSDKAppEvents setUserData:testCity forType:FBSDKAppEventCity];
+  [FBSDKAppEvents setUserData:testState forType:FBSDKAppEventState];
+  dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
+                                           shouldAccessAdvertisingID:YES];
+  XCTAssertEqualObjects(@"event", dict[@"event"]);
+  XCTAssertNotNil(dict[@"advertiser_id"]);
+  XCTAssertEqualObjects(@"1", dict[@"application_tracking_enabled"]);
+  XCTAssertEqualObjects(@"test-user-id", dict[@"app_user_id"]);
+  NSDictionary<NSString *, NSString *> *expectedUserDataDict = @{@"em" : [FBSDKUtility SHA256Hash:testEmail],
+                                                                 @"fn" : [FBSDKUtility SHA256Hash:testFirstName],
+                                                                 @"ln" : [FBSDKUtility SHA256Hash:testLastName],
+                                                                 @"ph" : [FBSDKUtility SHA256Hash:testPhone],
+                                                                 @"ge" : [FBSDKUtility SHA256Hash:testGender],
+                                                                 @"ct" : [FBSDKUtility SHA256Hash:testCity],
+                                                                 @"st" : [FBSDKUtility SHA256Hash:testState]};
+  NSDictionary<NSString *, NSString *> *actualUserDataDict = (NSDictionary<NSString *, NSString *> *)[FBSDKTypeUtility JSONObjectWithData:[dict[@"ud"] dataUsingEncoding:NSUTF8StringEncoding]
+                                                                                                    options: NSJSONReadingMutableContainers
+                                                                                                    error: nil];
+  XCTAssertEqualObjects(actualUserDataDict, expectedUserDataDict);
+  [FBSDKAppEvents clearUserData];
 
   [FBSDKSettings setLimitEventAndDataUsage:YES];
   [FBSDKSettings setDataProcessingOptions:@[@"LDU"] country:100 state:1];
@@ -103,6 +137,14 @@
   XCTAssertEqualObjects(@"[]", dict[@"data_processing_options"]);
   XCTAssertTrue([(NSNumber *)dict[@"data_processing_options_country"] isEqualToNumber:[NSNumber numberWithInt:0]]);
   XCTAssertTrue([(NSNumber *)dict[@"data_processing_options_state"] isEqualToNumber:[NSNumber numberWithInt:0]]);
+
+  [FBSDKAppEvents clearUserID];
+  dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
+                                           shouldAccessAdvertisingID:YES];
+  XCTAssertEqualObjects(@"event", dict[@"event"]);
+  XCTAssertNotNil(dict[@"advertiser_id"]);
+  XCTAssertEqualObjects(@"1", dict[@"application_tracking_enabled"]);
+  XCTAssertNil(dict[@"app_user_id"]);
 }
 
 - (void)testLogImplicitEventsExists
@@ -130,6 +172,7 @@
   NSString *str = [NSString stringWithFormat:@"%.2f", result.floatValue];
   XCTAssertEqualObjects(str, @"1234.56");
 }
+
 #endif
 
 - (void)testGetNumberValueWithLocaleIT
