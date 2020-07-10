@@ -183,6 +183,11 @@
   @catch (NSException *exception) {
      NSLog(@"FBSDKJSONSerialization - dataWithJSONObject:options:error failed: %@", exception.reason);
   }
+  
+  if ([data isEqual:[NSNull null]]) {
+     return nil;
+  }
+  
   return data;
 }
 
@@ -199,6 +204,11 @@
   @catch (NSException *exception) {
      NSLog(@"FBSDKJSONSerialization - JSONObjectWithData:options:error failed: %@", exception.reason);
   }
+  
+  if ([object isEqual:[NSNull null]]) {
+    return nil;
+  }
+  
   return object;
 }
 
