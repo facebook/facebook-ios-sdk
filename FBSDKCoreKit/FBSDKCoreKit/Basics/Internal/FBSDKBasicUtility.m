@@ -123,7 +123,8 @@ setJSONStringForObject:(id)object
     }
     return nil;
   }
-  return [FBSDKTypeUtility JSONObjectWithData:data options:NSJSONReadingAllowFragments error:errorRef];
+  id result = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:errorRef];
+  return result == [NSNull null] ? nil : result;
 }
 
 + (NSString *)queryStringWithDictionary:(NSDictionary<id, id> *)dictionary
