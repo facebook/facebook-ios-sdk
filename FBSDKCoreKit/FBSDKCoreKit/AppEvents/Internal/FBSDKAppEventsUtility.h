@@ -45,7 +45,6 @@ NS_SWIFT_NAME(AppEventsUtility)
 
 @property (class, nonatomic, copy, readonly) NSString *advertiserID;
 @property (class, nonatomic, assign, readonly) FBSDKAdvertisingTrackingStatus advertisingTrackingStatus;
-@property (class, nonatomic, strong, readonly) NSString *attributionID;
 @property (class, nonatomic, assign, readonly) long unixTimeNow;
 @property (class, nonatomic, assign, readonly) BOOL isDebugBuild;
 

@@ -1418,14 +1418,9 @@ static dispatch_once_t *onceTokenPointer;
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:accessToken];
   NSString *udid = nil;
   if (!accessToken) {
-    // We don't have a logged in user, so we need some form of udid representation.  Prefer advertiser ID if
-    // available, and back off to attribution ID if not.  Note that this function only makes sense to be
-    // called in the context of advertising.
+    // We don't have a logged in user, so we need some form of udid representation. Prefer advertiser ID if
+    // available. Note that this function only makes sense to be called in the context of advertising.
     udid = [FBSDKAppEventsUtility advertiserID];
-    if (!udid) {
-      udid = [FBSDKAppEventsUtility attributionID];
-    }
-
     if (!udid) {
       // No udid, and no user token.  No point in making the request.
       return nil;

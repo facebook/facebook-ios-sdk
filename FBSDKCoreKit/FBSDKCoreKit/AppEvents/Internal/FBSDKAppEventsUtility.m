@@ -45,11 +45,6 @@
   NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:parameters setObject:eventCategory forKey:@"event"];
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_7_0
-  NSString *attributionID = [[self class] attributionID];  // Only present on iOS 6 and below.
-  [FBSDKBasicUtility dictionary:parameters setObject:attributionID forKey:@"attribution"];
-#endif
-
   if (shouldAccessAdvertisingID) {
     NSString *advertiserID = [[self class] advertiserID];
     [FBSDKTypeUtility dictionary:parameters setObject:advertiserID forKey:@"advertiser_id"];
@@ -151,15 +146,6 @@
   });
 
   return status;
-}
-
-+ (NSString *)attributionID
-{
-#if TARGET_OS_TV
-  return nil;
-#else
-  return [UIPasteboard pasteboardWithName:@"fb_app_attribution" create:NO].string;
-#endif
 }
 
 #pragma mark - Internal, for testing
