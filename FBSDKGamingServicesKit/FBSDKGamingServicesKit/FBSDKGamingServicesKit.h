@@ -24,6 +24,7 @@
 #import <FBSDKGamingServicesKit/FBSDKGamingServiceCompletionHandler.h>
 #import <FBSDKGamingServicesKit/FBSDKGamingVideoUploader.h>
 #import <FBSDKGamingServicesKit/FBSDKGamingVideoUploaderConfiguration.h>
+#import <FBSDKGamingServicesKit/FBSDKGamingGroupIntegration.h>
 
 #else
 
@@ -33,6 +34,7 @@
 #import "FBSDKGamingServiceCompletionHandler.h"
 #import "FBSDKGamingVideoUploader.h"
 #import "FBSDKGamingVideoUploaderConfiguration.h"
+#import "FBSDKGamingGroupIntegration.h"
 
 #endif
 

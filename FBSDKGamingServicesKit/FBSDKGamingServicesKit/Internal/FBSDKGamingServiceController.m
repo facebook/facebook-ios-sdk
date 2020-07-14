@@ -22,6 +22,8 @@
 
 static NSString *const kServiceTypeStringFriendFinder = @"friendfinder";
 static NSString *const kServiceTypeStringMediaAsset = @"media_asset";
+static NSString *const kServiceTypeStringCommunity = @"community";
+
 
 static NSString *FBSDKGamingServiceTypeString(FBSDKGamingServiceType type)
 {
@@ -31,6 +33,9 @@ static NSString *FBSDKGamingServiceTypeString(FBSDKGamingServiceType type)
 
     case FBSDKGamingServiceTypeMediaAsset:
       return kServiceTypeStringMediaAsset;
+
+    case FBSDKGamingServiceTypeCommunity:
+      return kServiceTypeStringCommunity;
   }
 }
 

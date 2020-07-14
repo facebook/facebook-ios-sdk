@@ -18,28 +18,15 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKCoreKit+Internal.h"
-#import <FBSDKGamingServiceCompletionHandler.h>
+#if defined FBSDKCOCOAPODS || defined BUCK
+#import <FBSDKGamingServicesKit/FBSDKGamingServiceCompletionHandler.h>
+#else
+#import "FBSDKGamingServiceCompletionHandler.h"
+#endif
 
-typedef NS_ENUM(NSUInteger, FBSDKGamingServiceType) {
-  FBSDKGamingServiceTypeFriendFinder,
-  FBSDKGamingServiceTypeMediaAsset,
-  FBSDKGamingServiceTypeCommunity,
-};
+NS_SWIFT_NAME(GamingGroupIntegration)
+@interface FBSDKGamingGroupIntegration : NSObject
 
-@interface FBSDKGamingServiceController : NSObject <FBSDKURLOpening>
-
-/**
-Used to link to gaming services on Facebook.
-
-@param completionHandler a callback that is fired once the user returns to the
- caller app or an error ocurrs
-@param pendingResult an optional object that will be passed to the completion handler as 'result'
-*/
-- (instancetype)initWithServiceType:(FBSDKGamingServiceType)serviceType
-                  completionHandler:(FBSDKGamingServiceResultCompletionHandler)completionHandler
-                      pendingResult:(id)pendingResult;
-
-- (void)callWithArgument:(NSString *)argument;
++ (void)openGroupPageWithCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler;
 
 @end
