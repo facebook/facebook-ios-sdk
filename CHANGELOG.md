@@ -35,6 +35,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## 7.0.1
 
+🚨🚨🚨Attention! 🚨🚨🚨
+
+This release fixes the ability to parse bad server configuration data. Please upgrade to at least this version to help avoid major outtages such as [#1374](https://github.com/facebook/facebook-ios-sdk/issues/1374) and [#1427](https://github.com/facebook/facebook-ios-sdk/issues/1427)
+
 ## Added
 - Added additional unit tests for FBSDKRestrictiveDataFilterManager
 - Added integration test for building with xcodebuild
