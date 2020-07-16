@@ -32,7 +32,6 @@
 + (void)updateFilters:(nullable NSDictionary<NSString *, id> *)restrictiveParams;
 + (NSString *)getMatchedDataTypeWithEventName:(NSString *)eventName
                                      paramKey:(NSString *)paramKey;
-+ (BOOL)isDeprecatedEvent:(NSString *)eventName;
 
 @end
 
