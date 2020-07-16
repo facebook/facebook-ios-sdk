@@ -24,9 +24,6 @@
 #import "FBSDKTypeUtility.h"
 #import "FBSDKServerConfigurationManager.h"
 
-static NSString *const RESTRICTIVE_PARAM_KEY = @"restrictive_param";
-static NSString *const PROCESS_EVENT_NAME_KEY = @"process_event_name";
-
 @interface FBSDKRestrictiveEventFilter : NSObject
 
 @property (nonatomic, readonly, copy) NSString *eventName;
@@ -67,6 +64,9 @@ static NSMutableSet<NSString *> *_restrictedEvents;
 
 + (void)updateFilters:(nullable NSDictionary<NSString *, id> *)restrictiveParams
 {
+  static NSString *const RESTRICTIVE_PARAM_KEY = @"restrictive_param";
+  static NSString *const PROCESS_EVENT_NAME_KEY = @"process_event_name";
+
   restrictiveParams = [FBSDKTypeUtility dictionaryValue:restrictiveParams];
   if (restrictiveParams.count > 0) {
     @synchronized (self) {
