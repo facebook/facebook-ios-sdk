@@ -24,7 +24,6 @@
 
 static NSString *const RESTRICTIVE_PARAM_KEY = @"restrictive_param";
 static NSString *const PROCESS_EVENT_NAME_KEY = @"process_event_name";
-static NSString *const REPLACEMENT_STRING = @"_removed_";
 
 @interface FBSDKRestrictiveEventFilter : NSObject
 
@@ -143,6 +142,8 @@ static NSMutableSet<NSString *> *_restrictedEvents;
   if (!isRestrictiveEventFilterEnabled) {
     return;
   }
+
+  static NSString *const REPLACEMENT_STRING = @"_removed_";
 
   for (NSDictionary<NSString *, NSDictionary<NSString *, id> *> *event in events) {
    if ([FBSDKRestrictiveDataFilterManager isRestrictedEvent:event[@"event"][@"_eventName"]]) {

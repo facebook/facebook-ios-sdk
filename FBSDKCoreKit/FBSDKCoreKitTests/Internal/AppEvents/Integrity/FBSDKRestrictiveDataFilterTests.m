@@ -104,5 +104,31 @@
   XCTAssertNil(type2);
 }
 
+- (void)testProcessEventCanHandleAnEmptyArray
+{
+  NSMutableArray *a = nil;
+  XCTAssertNoThrow([FBSDKRestrictiveDataFilterManager processEvents:a]);
+}
+
+- (void)testProcessEventCanHandleMissingKeys
+{
+  NSDictionary<NSString *, NSDictionary<NSString *, id> *> *event = @{
+    @"some_event": @{}
+  };
+  XCTAssertNoThrow([FBSDKRestrictiveDataFilterManager processEvents:@[event]]);
+}
+
+- (void)testProcessEventDoesntReplaceEventNameIfNotRestricted
+{
+  NSDictionary<NSString *, NSDictionary<NSString *, id> *> *event = @{
+    @"event": @{
+        @"_eventName": [NSNull null],
+    }
+  };
+  [FBSDKRestrictiveDataFilterManager processEvents:@[event]];
+
+  // It's not restricted, it shouldn't change.
+  XCTAssertEqual(event[@"event"][@"_eventName"], [NSNull null]);
+}
 
 @end
