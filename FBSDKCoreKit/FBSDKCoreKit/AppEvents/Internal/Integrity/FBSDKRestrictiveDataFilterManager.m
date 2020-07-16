@@ -46,8 +46,8 @@ static NSString *const REPLACEMENT_STRING = @"_removed_";
 {
   self = [super init];
   if (self) {
-    _eventName = eventName;
-    _restrictiveParams = restrictiveParams;
+    _eventName = [eventName copy];
+    _restrictiveParams = [restrictiveParams copy];
   }
 
   return self;
@@ -164,15 +164,6 @@ static NSMutableSet<NSString *> *_restrictedEvents;
 }
 
 #pragma mark Helper functions
-
-+ (BOOL)isMatchedWithPattern:(NSString *)pattern
-                        text:(NSString *)text
-{
-  NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:nil];
-  NSUInteger matches = [regex numberOfMatchesInString:text options:0 range:NSMakeRange(0, text.length)];
-  return matches > 0;
-}
-
 
 + (BOOL)isRestrictedEvent:(NSString *)eventName
 {
