@@ -16,6 +16,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import <atomic>
+
 #import "FBSDKRestrictiveDataFilterManager.h"
 
 #import "FBSDKBasicUtility.h"
@@ -56,7 +58,9 @@ static NSString *const PROCESS_EVENT_NAME_KEY = @"process_event_name";
 
 @implementation FBSDKRestrictiveDataFilterManager
 
-static BOOL isRestrictiveEventFilterEnabled = NO;
+namespace {
+  std::atomic<BOOL> g_isRestrictiveEventFilterEnabled;
+}
 
 static NSMutableArray<FBSDKRestrictiveEventFilter *>  *_params;
 static NSMutableSet<NSString *> *_restrictedEvents;
@@ -108,7 +112,7 @@ static NSMutableSet<NSString *> *_restrictedEvents;
 + (NSDictionary<NSString *,id> *)processParameters:(NSDictionary<NSString *,id> *)parameters
                                          eventName:(NSString *)eventName
 {
-  if (!isRestrictiveEventFilterEnabled) {
+  if (!g_isRestrictiveEventFilterEnabled) {
     return parameters;
   }
   if (parameters) {
@@ -139,7 +143,7 @@ static NSMutableSet<NSString *> *_restrictedEvents;
 
 + (void)processEvents:(NSMutableArray<NSDictionary<NSString *, id> *> *)events
 {
-  if (!isRestrictiveEventFilterEnabled) {
+  if (!g_isRestrictiveEventFilterEnabled) {
     return;
   }
 
@@ -159,7 +163,7 @@ static NSMutableSet<NSString *> *_restrictedEvents;
     NSDictionary<NSString *, id> *restrictiveParams = [FBSDKServerConfigurationManager cachedServerConfiguration].restrictiveParams;
     if (restrictiveParams) {
       [FBSDKRestrictiveDataFilterManager updateFilters:restrictiveParams];
-      isRestrictiveEventFilterEnabled = YES;
+      g_isRestrictiveEventFilterEnabled = YES;
     }
   });
 }
