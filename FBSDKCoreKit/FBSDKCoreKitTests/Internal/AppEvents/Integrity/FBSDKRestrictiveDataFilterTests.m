@@ -115,7 +115,10 @@
   NSDictionary<NSString *, NSDictionary<NSString *, id> *> *event = @{
     @"some_event": @{}
   };
-  XCTAssertNoThrow([FBSDKRestrictiveDataFilterManager processEvents:@[event]]);
+  NSMutableArray *eventArray = [[NSMutableArray alloc] initWithObjects:event, nil];
+
+  XCTAssertNoThrow([FBSDKRestrictiveDataFilterManager processEvents:eventArray],
+                   "Data filter manager should be able to process events with missing keys");
 }
 
 - (void)testProcessEventDoesntReplaceEventNameIfNotRestricted
@@ -125,10 +128,12 @@
         @"_eventName": [NSNull null],
     }
   };
-  [FBSDKRestrictiveDataFilterManager processEvents:@[event]];
+  NSMutableArray *eventArray = [[NSMutableArray alloc] initWithObjects:event, nil];
 
-  // It's not restricted, it shouldn't change.
-  XCTAssertEqual(event[@"event"][@"_eventName"], [NSNull null]);
+  [FBSDKRestrictiveDataFilterManager processEvents:eventArray];
+
+  XCTAssertEqual(event[@"event"][@"_eventName"], [NSNull null],
+                 "Non-restricted event names should not be replaced");
 }
 
 @end
