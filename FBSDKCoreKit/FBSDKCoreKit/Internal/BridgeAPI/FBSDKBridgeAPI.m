@@ -24,6 +24,22 @@
 
 #import "FBSDKCoreKit+Internal.h"
 
+/**
+ Specifies state of FBSDKAuthenticationSession (SFAuthenticationSession (iOS 11) and ASWebAuthenticationSession (iOS 12+))
+ */
+typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
+  /** There is no active authentication session*/
+  FBSDKAuthenticationSessionNone,
+  /** The authentication session has started*/
+  FBSDKAuthenticationSessionStarted,
+  /** System dialog ("app wants to use facebook.com  to sign in")  to access facebook.com was presented to the user*/
+  FBSDKAuthenticationSessionShowAlert,
+  /** Web browser with log in to authentication was presented to the user*/
+  FBSDKAuthenticationSessionShowWebBrowser,
+  /** Authentication session was canceled by system. It happens when app goes to background while alert requesting access to facebook.com is presented*/
+  FBSDKAuthenticationSessionCanceledBySystem,
+};
+
 typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackURL, NSError *_Nullable error);
 
 @protocol FBSDKAuthenticationSession <NSObject>
@@ -53,10 +69,10 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
   FBSDKAuthenticationCompletionHandler _authenticationSessionCompletionHandler NS_AVAILABLE_IOS(11_0);
 
   BOOL _expectingBackground;
-  BOOL _isRequestingSFAuthenticationSession;
   UIViewController *_safariViewController;
   BOOL _isDismissingSafariViewController;
   BOOL _isAppLaunched;
+  FBSDKAuthenticationSession _authenticationSessionState;
 }
 
 + (void)load
@@ -74,19 +90,18 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
   return _sharedInstance;
 }
 
+- (void)applicationWillResignActive:(UIApplication *)application
+{
+  [self updateAuthStateIfSystemAlertToUseWebAuthFlowPresented];
+}
+
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
+  BOOL isRequestingWebAuthenticationSession = NO;
   if (@available(iOS 11.0, *)) {
-    if (_active && _authenticationSession) {
-      // applicationDidBecomeActive: is called after tapping Continue or Cancel in the "{app name} wants to use facebook.com to Sign In" alert.
-      // authenticationSession will be nil when it's Cancel.
-      _isRequestingSFAuthenticationSession = YES;
-    } else if (_active && !_authenticationSession) {
-      // In theory, this should be done whenever authenticationSession is set to nil, but just in case.
-      _isRequestingSFAuthenticationSession = NO;
-    } else if (!_active && !_isRequestingSFAuthenticationSession && _authenticationSession) {
-      // Handle the case where the app is backgrounded while the "ExampleApp wants to use facebook.com to Sign In" alert is still open
-      // Call the completion handler with a Cancel
+    if (_authenticationSession && _authenticationSessionState == FBSDKAuthenticationSessionShowAlert) {
+      _authenticationSessionState = FBSDKAuthenticationSessionShowWebBrowser;
+    } else if (_authenticationSession && _authenticationSessionState == FBSDKAuthenticationSessionCanceledBySystem) {
       [_authenticationSession cancel];
       _authenticationSession = nil;
       NSString *errorDomain;
@@ -97,12 +112,13 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
       }
       NSError *error = [FBSDKError errorWithDomain:errorDomain code:1 message:nil];
       _authenticationSessionCompletionHandler(nil, error);
+      isRequestingWebAuthenticationSession = [self isRequestingWebAuthenticationSession];
     }
   }
   //  _expectingBackground can be YES if the caller started doing work (like login)
   // within the app delegate's lifecycle like openURL, in which case there
   // might have been a "didBecomeActive" event pending that we want to ignore.
-  BOOL notExpectingBackground = !_expectingBackground && !_safariViewController && !_isDismissingSafariViewController && !_isRequestingSFAuthenticationSession;
+  BOOL notExpectingBackground = !_expectingBackground && !_safariViewController && !_isDismissingSafariViewController && !isRequestingWebAuthenticationSession;
   if (notExpectingBackground) {
     _active = YES;
 
@@ -117,6 +133,7 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 {
   _active = NO;
   _expectingBackground = NO;
+  [self updateAuthStateIfSystemCancelAuthSession];
 }
 
 - (BOOL)application:(UIApplication *)application
@@ -210,6 +227,30 @@ didFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *
 }
 
 #pragma mark - Internal Methods
+
+- (void)updateAuthStateIfSystemAlertToUseWebAuthFlowPresented
+{
+  if (@available(iOS 11.0, *)) {
+    if (_authenticationSession && _authenticationSessionState == FBSDKAuthenticationSessionStarted) {
+      _authenticationSessionState = FBSDKAuthenticationSessionShowAlert;
+    }
+  }
+}
+
+- (void)updateAuthStateIfSystemCancelAuthSession
+{
+  if (@available(iOS 11.0, *)) {
+    if (_authenticationSession && _authenticationSessionState == FBSDKAuthenticationSessionShowAlert) {
+      _authenticationSessionState = FBSDKAuthenticationSessionCanceledBySystem;
+    }
+  }
+}
+
+- (BOOL)isRequestingWebAuthenticationSession
+{
+  return !(_authenticationSessionState == FBSDKAuthenticationSessionNone
+           || _authenticationSessionState == FBSDKAuthenticationSessionCanceledBySystem);
+}
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -378,6 +419,7 @@ didFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *
         [_authenticationSession setPresentationContextProvider:self];
       }
     }
+    _authenticationSessionState = FBSDKAuthenticationSessionStarted;
     [_authenticationSession start];
   }
 }
@@ -387,7 +429,6 @@ didFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *
   __weak FBSDKBridgeAPI *weakSelf = self;
   _authenticationSessionCompletionHandler = ^ (NSURL *aURL, NSError *error) {
     FBSDKBridgeAPI *strongSelf = weakSelf;
-    strongSelf->_isRequestingSFAuthenticationSession = NO;
     BOOL didSucceed = (error == nil && aURL != nil);
     handler(didSucceed, error);
     if (didSucceed) {
@@ -395,6 +436,7 @@ didFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *
     }
     strongSelf->_authenticationSession = nil;
     strongSelf->_authenticationSessionCompletionHandler = nil;
+    strongSelf->_authenticationSessionState = FBSDKAuthenticationSessionNone;
   };
 }
 
