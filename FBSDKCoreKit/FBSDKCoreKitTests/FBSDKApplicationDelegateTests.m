@@ -42,6 +42,7 @@ static id g_mockNSBundle;
 
 - (void)_logSDKInitialize;
 - (void)applicationDidBecomeActive:(NSNotification *)notification;
+- (void)applicationWillResignActive:(NSNotification *)notification;
 
 @end
 
@@ -108,4 +109,20 @@ static id g_mockNSBundle;
   id notification = OCMClassMock([NSNotification class]);
   [_delegate applicationDidBecomeActive:notification];
 }
+
+-(void)testAppNotifyObserversWhenAppWillResignActive {
+
+  id observer = OCMStrictProtocolMock(@protocol(FBSDKApplicationObserving));
+  [_delegate addObserver:observer];
+
+  NSNotification *notification = OCMClassMock([NSNotification class]);
+  id application = OCMClassMock([UIApplication class]);
+  [OCMStub([notification object]) andReturn:application];
+  OCMExpect([observer applicationWillResignActive:application]);
+
+  [_delegate applicationWillResignActive:notification];
+
+  OCMVerify([observer applicationWillResignActive:application]);
+}
+
 @end

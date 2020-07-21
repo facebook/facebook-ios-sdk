@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @optional
 - (void)applicationDidBecomeActive:(nullable UIApplication *)application;
+- (void)applicationWillResignActive:(nullable UIApplication *)application;
 - (void)applicationDidEnterBackground:(nullable UIApplication *)application;
 - (BOOL)application:(UIApplication *)application
 didFinishLaunchingWithOptions:(nullable NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;

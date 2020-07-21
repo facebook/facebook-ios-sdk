@@ -101,6 +101,7 @@ static UIApplicationState _applicationState;
   NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
   [defaultCenter addObserver:delegate selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
   [defaultCenter addObserver:delegate selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+  [defaultCenter addObserver:delegate selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
 
   [[FBSDKAppEvents singleton] registerNotifications];
 
@@ -266,6 +267,17 @@ static UIApplicationState _applicationState;
   for (id<FBSDKApplicationObserving> observer in observers) {
     if ([observer respondsToSelector:@selector(applicationDidBecomeActive:)]) {
       [observer applicationDidBecomeActive:notification.object];
+    }
+  }
+}
+
+- (void)applicationWillResignActive:(NSNotification *)notification
+{
+  _applicationState = UIApplicationStateInactive;
+  NSArray<id<FBSDKApplicationObserving>> *observers = [_applicationObservers copy];
+  for (id<FBSDKApplicationObserving> observer in observers) {
+    if ([observer respondsToSelector:@selector(applicationWillResignActive:)]) {
+      [observer applicationWillResignActive:notification.object];
     }
   }
 }
