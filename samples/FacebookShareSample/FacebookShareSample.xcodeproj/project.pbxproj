@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F45CD1D124C754C100C84BF7 /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = F45CD1D024C754C100C84BF7 /* FacebookShare */; };
 		F46A5FA523E1ED3200948850 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46A5FA423E1ED3200948850 /* AppDelegate.swift */; };
 		F46A5FA723E1ED3200948850 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46A5FA623E1ED3200948850 /* SceneDelegate.swift */; };
 		F46A5FA923E1ED3200948850 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46A5FA823E1ED3200948850 /* ShareViewController.swift */; };
 		F46A5FAC23E1ED3200948850 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F46A5FAA23E1ED3200948850 /* Main.storyboard */; };
 		F46A5FAE23E1ED3300948850 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F46A5FAD23E1ED3300948850 /* Assets.xcassets */; };
 		F46A5FB123E1ED3300948850 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F46A5FAF23E1ED3300948850 /* LaunchScreen.storyboard */; };
-		F46A5FC823E1F3B800948850 /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = F46A5FC723E1F3B800948850 /* FacebookShare */; };
 		F46A5FCA23E20C5300948850 /* ShareViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46A5FC923E20C5300948850 /* ShareViewControllerExtensions.swift */; };
 /* End PBXBuildFile section */
 
@@ -28,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F45CD1CE24C754AB00C84BF7 /* facebook-ios-sdk */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "facebook-ios-sdk"; path = ../..; sourceTree = "<group>"; };
 		F46A5FA123E1ED3200948850 /* FacebookShareSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FacebookShareSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F46A5FA423E1ED3200948850 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F46A5FA623E1ED3200948850 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -45,7 +46,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F46A5FC823E1F3B800948850 /* FacebookShare in Frameworks */,
+				F45CD1D124C754C100C84BF7 /* FacebookShare in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,11 +60,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F45CD1CF24C754C100C84BF7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		F46A5F9823E1ED3200948850 = {
 			isa = PBXGroup;
 			children = (
+				F45CD1CE24C754AB00C84BF7 /* facebook-ios-sdk */,
 				F46A5FA323E1ED3200948850 /* FacebookShareSample */,
 				F46A5FA223E1ED3200948850 /* Products */,
+				F45CD1CF24C754C100C84BF7 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -108,7 +118,7 @@
 			);
 			name = FacebookShareSample;
 			packageProductDependencies = (
-				F46A5FC723E1F3B800948850 /* FacebookShare */,
+				F45CD1D024C754C100C84BF7 /* FacebookShare */,
 			);
 			productName = FacebookShareSample;
 			productReference = F46A5FA123E1ED3200948850 /* FacebookShareSample.app */;
@@ -161,7 +171,6 @@
 			);
 			mainGroup = F46A5F9823E1ED3200948850;
 			packageReferences = (
-				F46A5FC623E1F3B800948850 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
 			);
 			productRefGroup = F46A5FA223E1ED3200948850 /* Products */;
 			projectDirPath = "";
@@ -466,21 +475,9 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		F46A5FC623E1F3B800948850 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/facebook/facebook-ios-sdk";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.0.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
 /* Begin XCSwiftPackageProductDependency section */
-		F46A5FC723E1F3B800948850 /* FacebookShare */ = {
+		F45CD1D024C754C100C84BF7 /* FacebookShare */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = F46A5FC623E1F3B800948850 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
 			productName = FacebookShare;
 		};
 /* End XCSwiftPackageProductDependency section */
