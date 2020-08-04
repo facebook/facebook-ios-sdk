@@ -115,7 +115,6 @@
 + (NSString *)advertiserID
 {
   return nil;
-
 }
 
 + (FBSDKAdvertisingTrackingStatus)advertisingTrackingStatus
