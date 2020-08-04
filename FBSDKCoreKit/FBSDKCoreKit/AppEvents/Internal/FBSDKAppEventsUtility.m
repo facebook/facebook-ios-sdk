@@ -119,21 +119,7 @@
 
 + (FBSDKAdvertisingTrackingStatus)advertisingTrackingStatus
 {
-  static dispatch_once_t fetchAdvertisingTrackingStatusOnce;
-  static FBSDKAdvertisingTrackingStatus status;
-
-  dispatch_once(&fetchAdvertisingTrackingStatusOnce, ^{
-    status = FBSDKAdvertisingTrackingUnspecified;
-    Class ASIdentifierManagerClass = fbsdkdfl_ASIdentifierManagerClass();
-    if ([ASIdentifierManagerClass class]) {
-      ASIdentifierManager *manager = [ASIdentifierManagerClass sharedManager];
-      if (manager) {
-        status = manager.advertisingTrackingEnabled ? FBSDKAdvertisingTrackingAllowed : FBSDKAdvertisingTrackingDisallowed;
-      }
-    }
-  });
-
-  return status;
+  return FBSDKAdvertisingTrackingDisallowed;
 }
 
 #pragma mark - Internal, for testing
