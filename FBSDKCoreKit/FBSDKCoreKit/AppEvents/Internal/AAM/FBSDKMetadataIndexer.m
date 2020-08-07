@@ -52,14 +52,7 @@ static dispatch_queue_t serialQueue;
 
 + (void)enable
 {
-  if (FBSDKAdvertisingTrackingAllowed != [FBSDKAppEventsUtility advertisingTrackingStatus]) {
-    return;
-  }
-
-  NSDictionary<NSString *, id> *AAMRules = [FBSDKServerConfigurationManager cachedServerConfiguration].AAMRules;
-  if (AAMRules) {
-    [FBSDKMetadataIndexer setupWithRules:AAMRules];
-  }
+ return;
 }
 
 + (void)setupWithRules:(NSDictionary<NSString *, id> * _Nullable)rules

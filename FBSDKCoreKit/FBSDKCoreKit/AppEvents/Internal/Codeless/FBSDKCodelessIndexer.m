@@ -123,22 +123,7 @@ static NSString *_lastTreeHash;
 
 + (FBSDKGraphRequest *)requestToLoadCodelessSetup:(NSString *)appID
 {
-  NSString *advertiserID = [FBSDKAppEventsUtility advertiserID];
-  if (!advertiserID) {
-    return nil;
-  }
-
-  NSDictionary<NSString *, NSString *> *parameters = @{
-                                                       @"fields": CODELESS_SETUP_ENABLED_FIELD,
-                                                       @"advertiser_id": advertiserID
-                                                       };
-
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:appID
-                                                                 parameters:parameters
-                                                                tokenString:nil
-                                                                 HTTPMethod:nil
-                                                                      flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
-  return request;
+  return nil;
 }
 
 + (BOOL)_codelessSetupTimestampIsValid:(NSDate *)timestamp
@@ -208,7 +193,6 @@ static NSString *_lastTreeHash;
   struct utsname systemInfo;
   uname(&systemInfo);
   NSString *machine = @(systemInfo.machine);
-  NSString *advertiserID = [FBSDKAppEventsUtility advertiserID] ?: @"";
   machine = machine ?: @"";
   NSString *debugStatus = [FBSDKAppEventsUtility isDebugBuild] ? @"1" : @"0";
 #if TARGET_IPHONE_SIMULATOR
@@ -225,7 +209,7 @@ static NSString *_lastTreeHash;
   }
 
   NSString *extinfo = [FBSDKBasicUtility JSONStringForObject:@[machine,
-                                                               advertiserID,
+                                                               @"",
                                                                debugStatus,
                                                                isSimulator,
                                                                localeString]

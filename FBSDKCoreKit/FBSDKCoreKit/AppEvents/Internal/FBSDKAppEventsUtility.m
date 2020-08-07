@@ -45,11 +45,6 @@
   NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:parameters setObject:eventCategory forKey:@"event"];
 
-  if (shouldAccessAdvertisingID) {
-    NSString *advertiserID = [[self class] advertiserID];
-    [FBSDKTypeUtility dictionary:parameters setObject:advertiserID forKey:@"advertiser_id"];
-  }
-
   [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKBasicUtility anonymousID] forKey:FBSDK_APPEVENTSUTILITY_ANONYMOUSID_KEY];
 
   FBSDKAdvertisingTrackingStatus advertisingTrackingStatus = [[self class] advertisingTrackingStatus];
@@ -65,7 +60,6 @@
   }
 
   [FBSDKTypeUtility dictionary:parameters setObject:@(!FBSDKSettings.limitEventAndDataUsage).stringValue forKey:@"application_tracking_enabled"];
-  [FBSDKTypeUtility dictionary:parameters setObject:@(FBSDKSettings.advertiserIDCollectionEnabled).stringValue forKey:@"advertiser_id_collection_enabled"];
 
   NSString *userID = [FBSDKAppEvents userID];
   if (userID) {
@@ -110,11 +104,6 @@
   }
 
   return parameters;
-}
-
-+ (NSString *)advertiserID
-{
-  return nil;
 }
 
 + (FBSDKAdvertisingTrackingStatus)advertisingTrackingStatus

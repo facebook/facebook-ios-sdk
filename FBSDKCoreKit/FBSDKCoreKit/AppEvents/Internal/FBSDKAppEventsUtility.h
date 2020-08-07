@@ -43,7 +43,6 @@ NS_SWIFT_NAME(AppEventsUtility)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-@property (class, nonatomic, copy, readonly) NSString *advertiserID;
 @property (class, nonatomic, assign, readonly) FBSDKAdvertisingTrackingStatus advertisingTrackingStatus;
 @property (class, nonatomic, assign, readonly) long unixTimeNow;
 @property (class, nonatomic, assign, readonly) BOOL isDebugBuild;
