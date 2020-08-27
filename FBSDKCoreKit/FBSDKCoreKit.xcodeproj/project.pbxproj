@@ -236,7 +236,6 @@
 		7E5557371A8D833100344F86 /* FBSDKAppLinkResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E5557351A8D833100344F86 /* FBSDKAppLinkResolver.m */; };
 		7E5557381A8D833100344F86 /* FBSDKAppLinkResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E5557361A8D833100344F86 /* FBSDKAppLinkResolver.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7E55573C1A8D834B00344F86 /* FBSDKAppLinkResolverTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E55573A1A8D834B00344F86 /* FBSDKAppLinkResolverTests.m */; };
-		7E55576C1A8EAC7D00344F86 /* libOHHTTPStubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E55574C1A8E89A800344F86 /* libOHHTTPStubs.a */; };
 		7EB63D9F1A9BE730003A7AED /* FBSDKMeasurementEventListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EB63D9D1A9BE730003A7AED /* FBSDKMeasurementEventListener.m */; };
 		7EB63DA01A9BE730003A7AED /* FBSDKMeasurementEventListener.h in Headers */ = {isa = PBXBuildFile; fileRef = 7EB63D9E1A9BE730003A7AED /* FBSDKMeasurementEventListener.h */; };
 		8131FB461D261DED000350FF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 893F44A11A644512001DB0B6 /* CoreGraphics.framework */; };
@@ -727,6 +726,7 @@
 		9DF2A4001A70572B00DFB2FD /* FBSDKGraphRequestMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF2A3FE1A70572B00DFB2FD /* FBSDKGraphRequestMetadata.m */; };
 		ADEA17731B7ECA1A0070EDC0 /* FBSDKMonotonicTime.h in Headers */ = {isa = PBXBuildFile; fileRef = ADEA17711B7ECA1A0070EDC0 /* FBSDKMonotonicTime.h */; };
 		ADEA17741B7ECA1A0070EDC0 /* FBSDKMonotonicTime.m in Sources */ = {isa = PBXBuildFile; fileRef = ADEA17721B7ECA1A0070EDC0 /* FBSDKMonotonicTime.m */; };
+		BA839E5024F85AB700EA8CFC /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA839E4F24F85AB700EA8CFC /* OHHTTPStubs.framework */; };
 		BF1C64E624039AD50052C580 /* FBSDKViewHierarchyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BF1C64E524039AD50052C580 /* FBSDKViewHierarchyTests.m */; };
 		BF247C822374E1B200A522C0 /* FBSDKSuggestedEventsIndexer.h in Headers */ = {isa = PBXBuildFile; fileRef = BF247C802374E1B100A522C0 /* FBSDKSuggestedEventsIndexer.h */; };
 		BF247C832374E1B200A522C0 /* FBSDKSuggestedEventsIndexer.m in Sources */ = {isa = PBXBuildFile; fileRef = BF247C812374E1B200A522C0 /* FBSDKSuggestedEventsIndexer.m */; };
@@ -1443,6 +1443,7 @@
 		9DF2A3FE1A70572B00DFB2FD /* FBSDKGraphRequestMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKGraphRequestMetadata.m; sourceTree = "<group>"; };
 		ADEA17711B7ECA1A0070EDC0 /* FBSDKMonotonicTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKMonotonicTime.h; sourceTree = "<group>"; };
 		ADEA17721B7ECA1A0070EDC0 /* FBSDKMonotonicTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKMonotonicTime.m; sourceTree = "<group>"; };
+		BA839E4F24F85AB700EA8CFC /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OHHTTPStubs.framework; path = ../Carthage/Build/iOS/OHHTTPStubs.framework; sourceTree = "<group>"; };
 		BF1C64E524039AD50052C580 /* FBSDKViewHierarchyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKViewHierarchyTests.m; sourceTree = "<group>"; };
 		BF247C802374E1B100A522C0 /* FBSDKSuggestedEventsIndexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKSuggestedEventsIndexer.h; sourceTree = "<group>"; };
 		BF247C812374E1B200A522C0 /* FBSDKSuggestedEventsIndexer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKSuggestedEventsIndexer.m; sourceTree = "<group>"; };
@@ -1605,8 +1606,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				FDB2B4F32398D73D00AE087E /* Accelerate.framework in Frameworks */,
-				7E55576C1A8EAC7D00344F86 /* libOHHTTPStubs.a in Frameworks */,
 				9DAD87761A8AA75700FFA324 /* libOCMock.a in Frameworks */,
+				BA839E5024F85AB700EA8CFC /* OHHTTPStubs.framework in Frameworks */,
 				9DEE5C8C1A67199700D750E1 /* Foundation.framework in Frameworks */,
 				9DEE5C8B1A67199000D750E1 /* XCTest.framework in Frameworks */,
 				893F44A21A644512001DB0B6 /* CoreGraphics.framework in Frameworks */,
@@ -1924,6 +1925,7 @@
 		893F44A31A644536001DB0B6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				BA839E4F24F85AB700EA8CFC /* OHHTTPStubs.framework */,
 				F9A80C9D237D02860019D7E0 /* Accelerate.framework */,
 				C52C02DF2315039400F30E2A /* WebKit.framework */,
 				F9FFE01C2252D665007B2346 /* libz.tbd */,
