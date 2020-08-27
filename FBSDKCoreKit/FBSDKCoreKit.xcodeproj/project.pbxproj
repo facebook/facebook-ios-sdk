@@ -4200,6 +4200,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 814AC8861D1B552600D61E6C /* Debug.xcconfig */;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 			};
 			name = Debug;
 		};
@@ -4218,6 +4219,7 @@
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				SWIFT_COMPILATION_MODE = wholemodule;
 			};
 			name = Release;
@@ -4271,6 +4273,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6031D19BE0400D5BF66 /* FBSDKCoreKit.xcconfig */;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 			};
 			name = Debug;
 		};
@@ -4278,6 +4281,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6031D19BE0400D5BF66 /* FBSDKCoreKit.xcconfig */;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 			};
 			name = Release;
 		};
