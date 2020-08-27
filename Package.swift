@@ -24,7 +24,7 @@ import PackageDescription
 let package = Package(
     name: "Facebook",
     platforms: [
-        .iOS(.v8),
+        .iOS(.v9),
         .tvOS(.v10)
     ],
     products: [

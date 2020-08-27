@@ -4184,6 +4184,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6021D19BE0400D5BF66 /* FBSDKCoreKit-Dynamic.xcconfig */;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 			};
 			name = Debug;
 		};
@@ -4191,6 +4192,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6021D19BE0400D5BF66 /* FBSDKCoreKit-Dynamic.xcconfig */;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 			};
 			name = Release;
 		};
@@ -4226,6 +4228,7 @@
 			buildSettings = {
 				CLANG_WARN_STRICT_PROTOTYPES = NO;
 				"FB_BITCODE_FLAG[sdk=iphoneos11.0]" = "-fembed-bitcode";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 			};
 			name = Debug;
 		};
@@ -4235,6 +4238,7 @@
 			buildSettings = {
 				CLANG_WARN_STRICT_PROTOTYPES = NO;
 				"FB_BITCODE_FLAG[sdk=iphoneos11.0]" = "-fembed-bitcode";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 			};
 			name = Release;
 		};
@@ -4309,6 +4313,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6031D19BE0400D5BF66 /* FBSDKCoreKit.xcconfig */;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/Basics/FBSDKCoreKit.modulemap";
 			};
 			name = Debug;
@@ -4317,6 +4322,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6031D19BE0400D5BF66 /* FBSDKCoreKit.xcconfig */;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/Basics/FBSDKCoreKit.modulemap";
 			};
 			name = Release;
@@ -4341,6 +4347,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6021D19BE0400D5BF66 /* FBSDKCoreKit-Dynamic.xcconfig */;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/Basics/FBSDKCoreKit.modulemap";
 			};
 			name = Debug;
@@ -4349,6 +4356,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6021D19BE0400D5BF66 /* FBSDKCoreKit-Dynamic.xcconfig */;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/Basics/FBSDKCoreKit.modulemap";
 			};
 			name = Release;
