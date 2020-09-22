@@ -20,11 +20,11 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKCloseIcon.h"
+ #import "FBSDKCloseIcon.h"
 
 @implementation FBSDKCloseIcon
 
-#pragma mark - Public API
+ #pragma mark - Public API
 
 - (UIImage *)imageWithSize:(CGSize)size
 {
@@ -40,11 +40,11 @@
   // shadow
   rect = CGRectIntegral(CGRectInset(rect, step, step));
   NSArray *colors = @[
-                      (__bridge id)[UIColor colorWithWhite:0.0 alpha:0.7].CGColor,
-                      (__bridge id)[UIColor colorWithWhite:0.0 alpha:0.3].CGColor,
-                      (__bridge id)[UIColor colorWithWhite:0.0 alpha:0.1].CGColor,
-                      (__bridge id)[UIColor colorWithWhite:0.0 alpha:0.0].CGColor,
-                      ];
+    (__bridge id)[UIColor colorWithWhite:0.0 alpha:0.7].CGColor,
+    (__bridge id)[UIColor colorWithWhite:0.0 alpha:0.3].CGColor,
+    (__bridge id)[UIColor colorWithWhite:0.0 alpha:0.1].CGColor,
+    (__bridge id)[UIColor colorWithWhite:0.0 alpha:0.0].CGColor,
+  ];
   CGFloat locations[4] = {
     0.70,
     0.80,

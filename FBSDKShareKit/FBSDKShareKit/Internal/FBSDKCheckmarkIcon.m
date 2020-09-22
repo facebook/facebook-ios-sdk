@@ -20,7 +20,7 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKCheckmarkIcon.h"
+ #import "FBSDKCheckmarkIcon.h"
 
 @implementation FBSDKCheckmarkIcon
 

@@ -20,6 +20,6 @@
 
 @interface RPSRootViewController : UIViewController
 
-@property (nonatomic, strong)UITabBarController *tabBarController;
+@property (nonatomic, strong) UITabBarController *tabBarController;
 
 @end

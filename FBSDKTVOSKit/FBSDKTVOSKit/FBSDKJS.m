@@ -22,7 +22,8 @@
 
 @implementation FBSDKJS
 
-+ (NSString *)accessTokenString {
++ (NSString *)accessTokenString
+{
   return [FBSDKAccessToken currentAccessToken].tokenString;
 }
 

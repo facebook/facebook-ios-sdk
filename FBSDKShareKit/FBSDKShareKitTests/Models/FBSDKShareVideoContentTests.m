@@ -20,7 +20,7 @@
 #import <XCTest/XCTest.h>
 
 #ifdef BUCK
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #else
 @import FBSDKCoreKit;
 #endif
@@ -96,8 +96,11 @@
   XCTAssertFalse([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
   XCTAssertEqual(error.code, FBSDKErrorInvalidArgument);
-  XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"video",
-                        @"Attempting to validate video share content with a missing url should return a general video error");
+  XCTAssertEqualObjects(
+    error.userInfo[FBSDKErrorArgumentNameKey],
+    @"video",
+    @"Attempting to validate video share content with a missing url should return a general video error"
+  );
 }
 
 - (void)testValidationWithInvalidVideoURL
@@ -110,8 +113,11 @@
   XCTAssertFalse([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
   XCTAssertEqual(error.code, FBSDKErrorInvalidArgument);
-  XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"videoURL",
-                       @"Attempting to validate video share content with an empty url should return a video url specific error");
+  XCTAssertEqualObjects(
+    error.userInfo[FBSDKErrorArgumentNameKey],
+    @"videoURL",
+    @"Attempting to validate video share content with an empty url should return a video url specific error"
+  );
 }
 
 - (void)testValidationWithNonVideoURL
@@ -124,8 +130,11 @@
   XCTAssertFalse([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
   XCTAssertEqual(error.code, FBSDKErrorInvalidArgument);
-  XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"videoURL",
-                        @"Attempting to validate video share content with a non-video url should return a video url specific error");
+  XCTAssertEqualObjects(
+    error.userInfo[FBSDKErrorArgumentNameKey],
+    @"videoURL",
+    @"Attempting to validate video share content with a non-video url should return a video url specific error"
+  );
 }
 
 - (void)testValidationWithNetworkVideoURL
@@ -149,10 +158,13 @@
   content.video = video;
   XCTAssertNotNil(content);
   NSError *error;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:content bridgeOptions: FBSDKShareBridgeOptionsDefault error:&error]);
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertEqual(error.code, FBSDKErrorInvalidArgument);
-  XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"videoURL",
-                        @"Attempting to validate video share content with a valid file url should return a video url specific error when there is no specified bridge option to handle video data");
+  XCTAssertEqualObjects(
+    error.userInfo[FBSDKErrorArgumentNameKey],
+    @"videoURL",
+    @"Attempting to validate video share content with a valid file url should return a video url specific error when there is no specified bridge option to handle video data"
+  );
 }
 
 - (void)testValidationWithValidFileVideoURLWhenBridgeOptionIsVideoData
@@ -164,7 +176,7 @@
   content.video = video;
   XCTAssertNotNil(content);
   NSError *error;
-  XCTAssertTrue([FBSDKShareUtility validateShareContent:content bridgeOptions: FBSDKShareBridgeOptionsVideoData error:&error]);
+  XCTAssertTrue([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsVideoData error:&error]);
   XCTAssertNil(error);
 }
 

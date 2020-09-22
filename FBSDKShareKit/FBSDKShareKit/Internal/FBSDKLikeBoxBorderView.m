@@ -20,22 +20,22 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKLikeBoxBorderView.h"
+ #import "FBSDKLikeBoxBorderView.h"
 
-#ifdef FBSDKCOCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
-#import "FBSDKCoreKit+Internal.h"
-#endif
+ #ifdef FBSDKCOCOAPODS
+  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+ #else
+  #import "FBSDKCoreKit+Internal.h"
+ #endif
 
-#define FBSDK_LIKE_BOX_BORDER_CARET_WIDTH 6.0
-#define FBSDK_LIKE_BOX_BORDER_CARET_HEIGHT 3.0
-#define FBSDK_LIKE_BOX_BORDER_CARET_PADDING 3.0
-#define FBSDK_LIKE_BOX_BORDER_CONTENT_PADDING 4.0
+ #define FBSDK_LIKE_BOX_BORDER_CARET_WIDTH 6.0
+ #define FBSDK_LIKE_BOX_BORDER_CARET_HEIGHT 3.0
+ #define FBSDK_LIKE_BOX_BORDER_CARET_PADDING 3.0
+ #define FBSDK_LIKE_BOX_BORDER_CONTENT_PADDING 4.0
 
 @implementation FBSDKLikeBoxBorderView
 
-#pragma mark - Object Lifecycle
+ #pragma mark - Object Lifecycle
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -53,7 +53,7 @@
   return self;
 }
 
-#pragma mark - Properties
+ #pragma mark - Properties
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor
 {
@@ -93,10 +93,12 @@
 - (UIEdgeInsets)contentInsets
 {
   UIEdgeInsets borderInsets = [self _borderInsets];
-  return UIEdgeInsetsMake(borderInsets.top + FBSDK_LIKE_BOX_BORDER_CONTENT_PADDING,
-                          borderInsets.left + FBSDK_LIKE_BOX_BORDER_CONTENT_PADDING,
-                          borderInsets.bottom + FBSDK_LIKE_BOX_BORDER_CONTENT_PADDING,
-                          borderInsets.right + FBSDK_LIKE_BOX_BORDER_CONTENT_PADDING);
+  return UIEdgeInsetsMake(
+    borderInsets.top + FBSDK_LIKE_BOX_BORDER_CONTENT_PADDING,
+    borderInsets.left + FBSDK_LIKE_BOX_BORDER_CONTENT_PADDING,
+    borderInsets.bottom + FBSDK_LIKE_BOX_BORDER_CONTENT_PADDING,
+    borderInsets.right + FBSDK_LIKE_BOX_BORDER_CONTENT_PADDING
+  );
 }
 
 - (void)setContentView:(UIView *)contentView
@@ -126,7 +128,7 @@
   }
 }
 
-#pragma mark - Layout
+ #pragma mark - Layout
 
 - (CGSize)intrinsicContentSize
 {
@@ -149,7 +151,7 @@
   return size;
 }
 
-#pragma mark - Drawing
+ #pragma mark - Drawing
 
 - (void)drawRect:(CGRect)rect
 {
@@ -210,12 +212,18 @@
   switch (self.caretPosition) {
     case FBSDKLikeBoxCaretPositionTop:
       CGContextMoveToPoint(context, topRightArc[end].x, topRightArc[end].y);
-      caretPoints[0] = CGPointMake(FBSDKPointsForScreenPixels(floorf, contentScaleFactor, CGRectGetMidX(borderFrame) + (FBSDK_LIKE_BOX_BORDER_CARET_WIDTH / 2)),
-                                   CGRectGetMinY(borderFrame));
-      caretPoints[1] = CGPointMake(FBSDKPointsForScreenPixels(floorf, contentScaleFactor, CGRectGetMidX(borderFrame)),
-                                   CGRectGetMinY(borderFrame) - FBSDK_LIKE_BOX_BORDER_CARET_HEIGHT);
-      caretPoints[2] = CGPointMake(FBSDKPointsForScreenPixels(floorf, contentScaleFactor, CGRectGetMidX(borderFrame) - (FBSDK_LIKE_BOX_BORDER_CARET_WIDTH / 2)),
-                                   CGRectGetMinY(borderFrame));
+      caretPoints[0] = CGPointMake(
+        FBSDKPointsForScreenPixels(floorf, contentScaleFactor, CGRectGetMidX(borderFrame) + (FBSDK_LIKE_BOX_BORDER_CARET_WIDTH / 2)),
+        CGRectGetMinY(borderFrame)
+      );
+      caretPoints[1] = CGPointMake(
+        FBSDKPointsForScreenPixels(floorf, contentScaleFactor, CGRectGetMidX(borderFrame)),
+        CGRectGetMinY(borderFrame) - FBSDK_LIKE_BOX_BORDER_CARET_HEIGHT
+      );
+      caretPoints[2] = CGPointMake(
+        FBSDKPointsForScreenPixels(floorf, contentScaleFactor, CGRectGetMidX(borderFrame) - (FBSDK_LIKE_BOX_BORDER_CARET_WIDTH / 2)),
+        CGRectGetMinY(borderFrame)
+      );
       CGContextAddLines(context, caretPoints, sizeof(caretPoints) / sizeof(caretPoints[0]));
       CGContextAddArcToPoint(context, topLeftArc[tangent].x, topLeftArc[tangent].y, topLeftArc[end].x, topLeftArc[end].y, borderCornerRadius);
       CGContextAddLineToPoint(context, bottomLeftArc[start].x, bottomLeftArc[start].y);
@@ -227,12 +235,18 @@
       break;
     case FBSDKLikeBoxCaretPositionLeft:
       CGContextMoveToPoint(context, topLeftArc[end].x, topLeftArc[end].y);
-      caretPoints[0] = CGPointMake(CGRectGetMinX(borderFrame),
-                                   FBSDKPointsForScreenPixels(floorf, contentScaleFactor, CGRectGetMidY(borderFrame) - (FBSDK_LIKE_BOX_BORDER_CARET_WIDTH / 2)));
-      caretPoints[1] = CGPointMake(CGRectGetMinX(borderFrame) - FBSDK_LIKE_BOX_BORDER_CARET_HEIGHT,
-                                   FBSDKPointsForScreenPixels(floorf, contentScaleFactor, CGRectGetMidY(borderFrame)));
-      caretPoints[2] = CGPointMake(CGRectGetMinX(borderFrame),
-                                   FBSDKPointsForScreenPixels(floorf, contentScaleFactor, CGRectGetMidY(borderFrame) + (FBSDK_LIKE_BOX_BORDER_CARET_WIDTH / 2)));
+      caretPoints[0] = CGPointMake(
+        CGRectGetMinX(borderFrame),
+        FBSDKPointsForScreenPixels(floorf, contentScaleFactor, CGRectGetMidY(borderFrame) - (FBSDK_LIKE_BOX_BORDER_CARET_WIDTH / 2))
+      );
+      caretPoints[1] = CGPointMake(
+        CGRectGetMinX(borderFrame) - FBSDK_LIKE_BOX_BORDER_CARET_HEIGHT,
+        FBSDKPointsForScreenPixels(floorf, contentScaleFactor, CGRectGetMidY(borderFrame))
+      );
+      caretPoints[2] = CGPointMake(
+        CGRectGetMinX(borderFrame),
+        FBSDKPointsForScreenPixels(floorf, contentScaleFactor, CGRectGetMidY(borderFrame) + (FBSDK_LIKE_BOX_BORDER_CARET_WIDTH / 2))
+      );
       CGContextAddLines(context, caretPoints, sizeof(caretPoints) / sizeof(caretPoints[0]));
       CGContextAddArcToPoint(context, bottomLeftArc[tangent].x, bottomLeftArc[tangent].y, bottomLeftArc[end].x, bottomLeftArc[end].y, borderCornerRadius);
       CGContextAddLineToPoint(context, bottomRightArc[start].x, bottomRightArc[start].y);
@@ -244,12 +258,18 @@
       break;
     case FBSDKLikeBoxCaretPositionBottom:
       CGContextMoveToPoint(context, bottomLeftArc[end].x, bottomLeftArc[end].y);
-      caretPoints[0] = CGPointMake(FBSDKPointsForScreenPixels(floorf, contentScaleFactor, CGRectGetMidX(borderFrame) - (FBSDK_LIKE_BOX_BORDER_CARET_WIDTH / 2)),
-                                   CGRectGetMaxY(borderFrame));
-      caretPoints[1] = CGPointMake(FBSDKPointsForScreenPixels(floorf, contentScaleFactor, CGRectGetMidX(borderFrame)),
-                                   CGRectGetMaxY(borderFrame) + FBSDK_LIKE_BOX_BORDER_CARET_HEIGHT);
-      caretPoints[2] = CGPointMake(FBSDKPointsForScreenPixels(floorf, contentScaleFactor, CGRectGetMidX(borderFrame) + (FBSDK_LIKE_BOX_BORDER_CARET_WIDTH / 2)),
-                                   CGRectGetMaxY(borderFrame));
+      caretPoints[0] = CGPointMake(
+        FBSDKPointsForScreenPixels(floorf, contentScaleFactor, CGRectGetMidX(borderFrame) - (FBSDK_LIKE_BOX_BORDER_CARET_WIDTH / 2)),
+        CGRectGetMaxY(borderFrame)
+      );
+      caretPoints[1] = CGPointMake(
+        FBSDKPointsForScreenPixels(floorf, contentScaleFactor, CGRectGetMidX(borderFrame)),
+        CGRectGetMaxY(borderFrame) + FBSDK_LIKE_BOX_BORDER_CARET_HEIGHT
+      );
+      caretPoints[2] = CGPointMake(
+        FBSDKPointsForScreenPixels(floorf, contentScaleFactor, CGRectGetMidX(borderFrame) + (FBSDK_LIKE_BOX_BORDER_CARET_WIDTH / 2)),
+        CGRectGetMaxY(borderFrame)
+      );
       CGContextAddLines(context, caretPoints, sizeof(caretPoints) / sizeof(caretPoints[0]));
       CGContextAddArcToPoint(context, bottomRightArc[tangent].x, bottomRightArc[tangent].y, bottomRightArc[end].x, bottomRightArc[end].y, borderCornerRadius);
       CGContextAddLineToPoint(context, topRightArc[start].x, topRightArc[start].y);
@@ -261,12 +281,18 @@
       break;
     case FBSDKLikeBoxCaretPositionRight:
       CGContextMoveToPoint(context, bottomRightArc[end].x, bottomRightArc[end].y);
-      caretPoints[0] = CGPointMake(CGRectGetMaxX(borderFrame),
-                                   FBSDKPointsForScreenPixels(floorf, contentScaleFactor, CGRectGetMidY(borderFrame) + (FBSDK_LIKE_BOX_BORDER_CARET_WIDTH / 2)));
-      caretPoints[1] = CGPointMake(CGRectGetMaxX(borderFrame) + FBSDK_LIKE_BOX_BORDER_CARET_HEIGHT,
-                                   FBSDKPointsForScreenPixels(floorf, contentScaleFactor, CGRectGetMidY(borderFrame)));
-      caretPoints[2] = CGPointMake(CGRectGetMaxX(borderFrame),
-                                   FBSDKPointsForScreenPixels(floorf, contentScaleFactor, CGRectGetMidY(borderFrame) - (FBSDK_LIKE_BOX_BORDER_CARET_WIDTH / 2)));
+      caretPoints[0] = CGPointMake(
+        CGRectGetMaxX(borderFrame),
+        FBSDKPointsForScreenPixels(floorf, contentScaleFactor, CGRectGetMidY(borderFrame) + (FBSDK_LIKE_BOX_BORDER_CARET_WIDTH / 2))
+      );
+      caretPoints[1] = CGPointMake(
+        CGRectGetMaxX(borderFrame) + FBSDK_LIKE_BOX_BORDER_CARET_HEIGHT,
+        FBSDKPointsForScreenPixels(floorf, contentScaleFactor, CGRectGetMidY(borderFrame))
+      );
+      caretPoints[2] = CGPointMake(
+        CGRectGetMaxX(borderFrame),
+        FBSDKPointsForScreenPixels(floorf, contentScaleFactor, CGRectGetMidY(borderFrame) - (FBSDK_LIKE_BOX_BORDER_CARET_WIDTH / 2))
+      );
       CGContextAddLines(context, caretPoints, sizeof(caretPoints) / sizeof(caretPoints[0]));
       CGContextAddArcToPoint(context, topRightArc[tangent].x, topRightArc[tangent].y, topRightArc[end].x, topRightArc[end].y, borderCornerRadius);
       CGContextAddLineToPoint(context, topLeftArc[start].x, topLeftArc[start].y);
@@ -285,7 +311,7 @@
   CGContextRestoreGState(context);
 }
 
-#pragma mark - Helper Methods
+ #pragma mark - Helper Methods
 
 - (UIEdgeInsets)_borderInsets
 {
@@ -296,19 +322,19 @@
 
   // adjust the insets for the caret position
   switch (self.caretPosition) {
-    case FBSDKLikeBoxCaretPositionTop:{
+    case FBSDKLikeBoxCaretPositionTop: {
       borderInsets.top += FBSDK_LIKE_BOX_BORDER_CARET_HEIGHT + FBSDK_LIKE_BOX_BORDER_CARET_PADDING;
       break;
     }
-    case FBSDKLikeBoxCaretPositionLeft:{
+    case FBSDKLikeBoxCaretPositionLeft: {
       borderInsets.left += FBSDK_LIKE_BOX_BORDER_CARET_HEIGHT + FBSDK_LIKE_BOX_BORDER_CARET_PADDING;
       break;
     }
-    case FBSDKLikeBoxCaretPositionBottom:{
+    case FBSDKLikeBoxCaretPositionBottom: {
       borderInsets.bottom += FBSDK_LIKE_BOX_BORDER_CARET_HEIGHT + FBSDK_LIKE_BOX_BORDER_CARET_PADDING;
       break;
     }
-    case FBSDKLikeBoxCaretPositionRight:{
+    case FBSDKLikeBoxCaretPositionRight: {
       borderInsets.right += FBSDK_LIKE_BOX_BORDER_CARET_HEIGHT + FBSDK_LIKE_BOX_BORDER_CARET_PADDING;
       break;
     }

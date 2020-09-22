@@ -16,11 +16,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <sys/utsname.h>
-
+#import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
-#import <OCMock/OCMock.h>
+#import <sys/utsname.h>
 
 #import "FBSDKCoreKit+Internal.h"
 #import "TestMonitorEntry.h"
@@ -31,7 +30,8 @@
 
 @end
 
-@implementation FBSDKMonitorNetworkerTests {
+@implementation FBSDKMonitorNetworkerTests
+{
   id graphRequestMock;
 }
 
@@ -59,11 +59,13 @@
 
   OCMStub([graphRequestMock alloc]).andReturn(graphRequestMock);
 
-  OCMReject([graphRequestMock initWithGraphPath:[OCMArg any]
-                                     parameters:[OCMArg any]
-                                    tokenString:nil
-                                     HTTPMethod:[OCMArg any]
-                                          flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery]);
+  OCMReject(
+    [graphRequestMock initWithGraphPath:[OCMArg any]
+                             parameters:[OCMArg any]
+                            tokenString:nil
+                             HTTPMethod:[OCMArg any]
+                                  flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery]
+  );
 
   [FBSDKMonitorNetworker sendEntries:@[self.entry]];
 }
@@ -75,13 +77,16 @@
 
   OCMStub([graphRequestMock alloc]).andReturn(graphRequestMock);
 
-  BOOL (^verifyPath)(id) = ^BOOL(id path) {
-    XCTAssertEqualObjects(path, @"/monitorings",
-                          @"Graph path should be a known string well known");
+  BOOL (^verifyPath)(id) = ^BOOL (id path) {
+    XCTAssertEqualObjects(
+      path,
+      @"/monitorings",
+      @"Graph path should be a known string well known"
+    );
     return YES;
   };
 
-  BOOL (^verifyParameters)(id) = ^BOOL(id parameters) {
+  BOOL (^verifyParameters)(id) = ^BOOL (id parameters) {
     [self assertAppIdInParameters:parameters];
     [self assertDeviceModelInParameters:parameters];
     [self assertOSVersionInParameters:parameters];
@@ -90,29 +95,36 @@
     return YES;
   };
 
-  BOOL (^verifyHTTPMethod)(id) = ^BOOL(id method) {
-    XCTAssertEqualObjects(method, FBSDKHTTPMethodPOST,
-                          @"Networker should use POST when sending entries");
+  BOOL (^verifyHTTPMethod)(id) = ^BOOL (id method) {
+    XCTAssertEqualObjects(
+      method,
+      FBSDKHTTPMethodPOST,
+      @"Networker should use POST when sending entries"
+    );
     return YES;
   };
 
   [FBSDKMonitorNetworker sendEntries:entries];
 
-  OCMVerify([graphRequestMock initWithGraphPath:[OCMArg checkWithBlock:verifyPath]
-                                     parameters:[OCMArg checkWithBlock:verifyParameters]
-                                    tokenString:[OCMArg isNil]
-                                     HTTPMethod:[OCMArg checkWithBlock:verifyHTTPMethod]
-                                          flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery]);
+  OCMVerify(
+    [graphRequestMock initWithGraphPath:[OCMArg checkWithBlock:verifyPath]
+                             parameters:[OCMArg checkWithBlock:verifyParameters]
+                            tokenString:[OCMArg isNil]
+                             HTTPMethod:[OCMArg checkWithBlock:verifyHTTPMethod]
+                                  flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery]
+  );
 }
 
 - (void)testSendingEntriesStartsGraphRequest
 {
   OCMStub([graphRequestMock alloc]).andReturn(graphRequestMock);
-  OCMStub([graphRequestMock initWithGraphPath:[OCMArg any]
-                                     parameters:[OCMArg any]
-                                    tokenString:nil
-                                     HTTPMethod:[OCMArg any]
-                                          flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery]).andReturn(graphRequestMock);
+  OCMStub(
+    [graphRequestMock initWithGraphPath:[OCMArg any]
+                             parameters:[OCMArg any]
+                            tokenString:nil
+                             HTTPMethod:[OCMArg any]
+                                  flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery]
+  ).andReturn(graphRequestMock);
 
   [FBSDKMonitorNetworker sendEntries:@[[TestMonitorEntry testEntry]]];
 
@@ -123,33 +135,45 @@
 
 - (void)assertBundleIdInParameters:(NSDictionary *)parameters
 {
-  XCTAssertEqualObjects(parameters[@"unique_application_identifier"], NSBundle.mainBundle.bundleIdentifier,
-                        @"A monitor POST body should include the main bundle identifier.");
+  XCTAssertEqualObjects(
+    parameters[@"unique_application_identifier"],
+    NSBundle.mainBundle.bundleIdentifier,
+    @"A monitor POST body should include the main bundle identifier."
+  );
 }
 
 - (void)assertOSVersionInParameters:(NSDictionary *)parameters
 {
-  XCTAssertEqualObjects(parameters[@"device_os_version"], UIDevice.currentDevice.systemVersion,
-                        @"A monitor POST body should include the current device's os version.");
+  XCTAssertEqualObjects(
+    parameters[@"device_os_version"],
+    UIDevice.currentDevice.systemVersion,
+    @"A monitor POST body should include the current device's os version."
+  );
 }
 
 - (void)assertAppIdInParameters:(NSDictionary *)parameters
 {
-  XCTAssertEqualObjects(parameters[@"id"], [FBSDKSettings appID],
-                        @"A monitor POST body should include the current facebook app identifier.");
+  XCTAssertEqualObjects(
+    parameters[@"id"],
+    [FBSDKSettings appID],
+    @"A monitor POST body should include the current facebook app identifier."
+  );
 }
 
 - (void)assertDeviceModelInParameters:(NSDictionary *)parameters
 {
-  XCTAssertEqualObjects(parameters[@"device_model"], [self.class deviceModel],
-                        @"A monitor POST body should include the current device model.");
+  XCTAssertEqualObjects(
+    parameters[@"device_model"],
+    [self.class deviceModel],
+    @"A monitor POST body should include the current device model."
+  );
 }
 
 - (void)assertParameters:(NSDictionary *)parameters includeEntries:(NSArray<id<FBSDKMonitorEntry>> *)entries
 {
   // Networker should send the array of provided entries as a UTF8 encoded JSON string keyed under 'monitorings'
   NSString *capturedEntriesJSON = parameters[@"monitorings"];
-  NSArray *capturedEntryDictionaries =  [FBSDKBasicUtility objectForJSONString:capturedEntriesJSON error:nil];
+  NSArray *capturedEntryDictionaries = [FBSDKBasicUtility objectForJSONString:capturedEntriesJSON error:nil];
 
   for (int i = 0; i < capturedEntryDictionaries.count; i++) {
     XCTAssertTrue([capturedEntryDictionaries[i] isEqualToDictionary:entries[i].dictionaryRepresentation]);

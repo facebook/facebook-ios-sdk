@@ -20,9 +20,9 @@
 
 #if !TARGET_OS_TV
 
-#import <XCTest/XCTest.h>
+ #import <XCTest/XCTest.h>
 
-#include "FBSDKModelRuntime.hpp"
+ #include "FBSDKModelRuntime.hpp"
 
 @interface FBSDKModelRuntimeTests : XCTestCase
 
@@ -30,7 +30,8 @@
 
 @implementation FBSDKModelRuntimeTests
 
-- (void)testReLU {
+- (void)testReLU
+{
   float input_data[2][4] = {
     {-1, -2, 1, 2},
     {1, -0.2, 3.1, -0.5},
@@ -47,7 +48,8 @@
   [self AssertEqual:expected input:input];
 }
 
-- (void)testFlatten {
+- (void)testFlatten
+{
   float input_data[2][2][5] = {
     {
       {1, 2, 3, 4, 5},
@@ -70,7 +72,8 @@
   [self AssertEqual:expected input:input];
 }
 
-- (void)testConcatenate {
+- (void)testConcatenate
+{
   float tensor1_data[2][2] = {
     {1, 2},
     {3, 4},
@@ -99,7 +102,8 @@
   [self AssertEqual:expected input:fbsdk::concatenate(concat_tensors)];
 }
 
-- (void)testSoftMax {
+- (void)testSoftMax
+{
   float input_data[2][2] = {
     {1, 1},
     {1, 3},
@@ -116,7 +120,8 @@
   [self AssertEqual:expected input:input];
 }
 
-- (void)testEmbedding {
+- (void)testEmbedding
+{
   char text[] = {"\1\2"};
   float embeddings_data[3][3] = {
     {1, 0, 0},
@@ -136,9 +141,10 @@
   [self AssertEqual:expected input:fbsdk::embedding(text, 2, embeddings)];
 }
 
-- (void)testDenseExample1 {
+- (void)testDenseExample1
+{
   float input_data[2][3] = {{1, 2, 3}, {4, 5, 6}};
-  float weight_data[3][2] = {{0, 1}, {1, 0},{-1, 1}};
+  float weight_data[3][2] = {{0, 1}, {1, 0}, {-1, 1}};
   float bias_data[2] = {100, 200};
   float expected_data[2][2] = {{99, 204}, {99, 210}};
   fbsdk::MTensor input({2, 3});
@@ -152,7 +158,8 @@
   [self AssertEqual:expected input:fbsdk::dense(input, weight, bias)];
 }
 
-- (void)testDenseExample2 {
+- (void)testDenseExample2
+{
   float input_data[1][2] = {{1, 2}};
   float weight_data[2][3] = {{0, 3, -1}, {1, 0, -2}};
   float bias_data[3] = {100, 200, 5};
@@ -168,7 +175,8 @@
   [self AssertEqual:expected input:fbsdk::dense(input, weight, bias)];
 }
 
-- (void)testConv1DExample1 {
+- (void)testConv1DExample1
+{
   float input_data[4][2][3] = {
     {
       {1, 2, 3},
@@ -214,7 +222,8 @@
   [self AssertEqual:expected input:fbsdk::conv1D(input, conv)];
 }
 
-- (void)testConv1DExample2 {
+- (void)testConv1DExample2
+{
   float input_data[1][5][3] = {
     {
       {1, 2, 3},
@@ -257,7 +266,8 @@
   [self AssertEqual:expected input:fbsdk::conv1D(input, conv)];
 }
 
-- (void)testConv1DExample3 {
+- (void)testConv1DExample3
+{
   float input_data[1][2][3] = {
     {
       {-1, -1, -1},
@@ -286,21 +296,24 @@
   [self AssertEqual:expected input:fbsdk::conv1D(input, conv)];
 }
 
-- (void)testTextVectorizationLessThanMaxLen {
+- (void)testTextVectorizationLessThanMaxLen
+{
   char strs[] = {"0123456"};
   const std::vector<int> expected{48, 49, 50, 51, 52, 53, 54, 0, 0, 0};
-  const std::vector<int>& res = fbsdk::vectorize(strs, 10);
+  const std::vector<int> &res = fbsdk::vectorize(strs, 10);
   XCTAssertEqual(expected, res);
 }
 
-- (void)testTextVectorizationLargerThanMaxLen {
+- (void)testTextVectorizationLargerThanMaxLen
+{
   char strs[] = {"0123456"};
   const std::vector<int> expected{48, 49, 50};
-  const std::vector<int>& res = fbsdk::vectorize(strs, 3);
+  const std::vector<int> &res = fbsdk::vectorize(strs, 3);
   XCTAssertEqual(expected, res);
 }
 
-- (void)testTranspose3D {
+- (void)testTranspose3D
+{
   float input_data[2][3][4] = {
     {
       {0, 1, 2, 3},
@@ -342,8 +355,9 @@
   [self AssertEqual:expected input:fbsdk::transpose3D(input)];
 }
 
-- (void)testTranspose2D {
-  float input_data[3][4]= {
+- (void)testTranspose2D
+{
+  float input_data[3][4] = {
     {0, 1, 2, 3},
     {4, 5, 6, 7},
     {8, 9, 10, 11},
@@ -361,7 +375,8 @@
   [self AssertEqual:expected input:fbsdk::transpose2D(input)];
 }
 
-- (void)testAddmv {
+- (void)testAddmv
+{
   float input_data[2][3][2] = {
     {
       {0, 12},
@@ -397,7 +412,8 @@
   [self AssertEqual:expected input:input];
 }
 
-- (void)testMaxPool1DExample1 {
+- (void)testMaxPool1DExample1
+{
   float input_data[2][2][3] = {
     {
       {-1, 2, 3},
@@ -419,7 +435,8 @@
   [self AssertEqual:expected input:fbsdk::maxPool1D(input, 2)];
 }
 
-- (void)testMaxPool1DExample2 {
+- (void)testMaxPool1DExample2
+{
   float input_data[2][2][3] = {
     {
       {-1, -2, -3},
@@ -441,7 +458,8 @@
   [self AssertEqual:expected input:fbsdk::maxPool1D(input, 2)];
 }
 
-- (void)testMaxPool1DExample3 {
+- (void)testMaxPool1DExample3
+{
   float input_data[3][3][4] = {
     {
       {-1, -2, -3, 3},
@@ -471,11 +489,11 @@
   [self AssertEqual:expected input:fbsdk::maxPool1D(input, 3)];
 }
 
-- (void)AssertEqual:(const fbsdk::MTensor&)expected
-              input:(const fbsdk::MTensor&)input
+- (void)AssertEqual:(const fbsdk::MTensor &)expected
+              input:(const fbsdk::MTensor &)input
 {
-  const std::vector<int>& expected_sizes = expected.sizes();
-  const std::vector<int>& input_sizes = input.sizes();
+  const std::vector<int> &expected_sizes = expected.sizes();
+  const std::vector<int> &input_sizes = input.sizes();
   XCTAssertEqual(expected_sizes, input_sizes);
   const float *expected_data = expected.data();
   const float *input_data = input.data();

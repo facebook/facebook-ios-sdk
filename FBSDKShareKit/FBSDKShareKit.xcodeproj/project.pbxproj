@@ -267,6 +267,10 @@
 		F46FA683245362880060C902 /* Enums+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46FA682245362880060C902 /* Enums+Extensions.swift */; };
 		F46FA684245362880060C902 /* Enums+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46FA682245362880060C902 /* Enums+Extensions.swift */; };
 		F4D7A84724520A6700A12EE5 /* FakeSharingDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F4D7A84624520A6700A12EE5 /* FakeSharingDelegate.m */; };
+		F4DC050F251947590073B380 /* FBSDKCoreKitInternalImport.h in Headers */ = {isa = PBXBuildFile; fileRef = F4DC05072519457C0073B380 /* FBSDKCoreKitInternalImport.h */; };
+		F4DC05172519475A0073B380 /* FBSDKCoreKitInternalImport.h in Headers */ = {isa = PBXBuildFile; fileRef = F4DC05072519457C0073B380 /* FBSDKCoreKitInternalImport.h */; };
+		F4DC05182519475C0073B380 /* FBSDKCoreKitInternalImport.h in Headers */ = {isa = PBXBuildFile; fileRef = F4DC05072519457C0073B380 /* FBSDKCoreKitInternalImport.h */; };
+		F4DC05202519475C0073B380 /* FBSDKCoreKitInternalImport.h in Headers */ = {isa = PBXBuildFile; fileRef = F4DC05072519457C0073B380 /* FBSDKCoreKitInternalImport.h */; };
 		F4E7517223EA18C20061BBFC /* FBSDKMessageDialogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F4E7516823EA18C10061BBFC /* FBSDKMessageDialogTests.m */; };
 		F4E7517D23EA19010061BBFC /* FBSDKSendButton.m in Sources */ = {isa = PBXBuildFile; fileRef = F4E7517423EA19000061BBFC /* FBSDKSendButton.m */; };
 		F4E7517E23EA19010061BBFC /* FBSDKSendButton.m in Sources */ = {isa = PBXBuildFile; fileRef = F4E7517423EA19000061BBFC /* FBSDKSendButton.m */; };
@@ -397,7 +401,7 @@
 			remoteGlobalIDString = 81A07EDF1D1A2E6A0041A29C;
 			remoteInfo = "FBSDKShareKit-Dynamic";
 		};
-		F410D0582370CD66005B9318 /* PBXContainerItemProxy */ = {
+		F4DE319D24D9F9EC00297C18 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8118B6341D0A49B500962084 /* FBSDKCoreKit.xcodeproj */;
 			proxyType = 1;
@@ -546,6 +550,7 @@
 		F46FA682245362880060C902 /* Enums+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Enums+Extensions.swift"; path = "Swift/Enums+Extensions.swift"; sourceTree = "<group>"; };
 		F4D7A84524520A6700A12EE5 /* FakeSharingDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FakeSharingDelegate.h; sourceTree = "<group>"; };
 		F4D7A84624520A6700A12EE5 /* FakeSharingDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FakeSharingDelegate.m; sourceTree = "<group>"; };
+		F4DC05072519457C0073B380 /* FBSDKCoreKitInternalImport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKCoreKitInternalImport.h; sourceTree = "<group>"; };
 		F4E7516823EA18C10061BBFC /* FBSDKMessageDialogTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKMessageDialogTests.m; sourceTree = "<group>"; };
 		F4E7517323EA19000061BBFC /* FBSDKMessageDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKMessageDialog.h; sourceTree = "<group>"; };
 		F4E7517423EA19000061BBFC /* FBSDKSendButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKSendButton.m; sourceTree = "<group>"; };
@@ -748,6 +753,7 @@
 		8937747A1A3A5F5B00BE2807 /* Internal */ = {
 			isa = PBXGroup;
 			children = (
+				F4DC05072519457C0073B380 /* FBSDKCoreKitInternalImport.h */,
 				F4E7518F23EA1A130061BBFC /* FBSDKMessengerIcon.h */,
 				F4E7519023EA1A130061BBFC /* FBSDKMessengerIcon.m */,
 				A4F33E731E677A8600747AFD /* FBSDKCameraEffectArguments+Internal.h */,
@@ -924,6 +930,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8144D9031D261D2900C8E4AC /* FBSDKSharePhoto.h in Headers */,
+				F4DC05202519475C0073B380 /* FBSDKCoreKitInternalImport.h in Headers */,
 				8144D9041D261D2900C8E4AC /* FBSDKSharePhotoContent.h in Headers */,
 				8144D9051D261D2900C8E4AC /* FBSDKShareUtility.h in Headers */,
 				F462DBFC23B9526300FFCECA /* FBSDKCoreKit+Internal.h in Headers */,
@@ -985,6 +992,7 @@
 				B3D17FEF212CD045000D28D6 /* FBSDKSharingValidation.h in Headers */,
 				81A07F331D1A2E6A0041A29C /* FBSDKShareKit.h in Headers */,
 				81A07F351D1A2E6A0041A29C /* FBSDKGameRequestFrictionlessRecipientCache.h in Headers */,
+				F4DC05172519475A0073B380 /* FBSDKCoreKitInternalImport.h in Headers */,
 				81A07F361D1A2E6A0041A29C /* FBSDKHashtag.h in Headers */,
 				81A07F371D1A2E6A0041A29C /* FBSDKSharePhotoContent.h in Headers */,
 				B331E21B2208C94800F3E4EE /* FBSDKShareExtension.h in Headers */,
@@ -1001,6 +1009,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9D2D99A71BC453DB00929E76 /* FBSDKSharePhoto.h in Headers */,
+				F4DC05182519475C0073B380 /* FBSDKCoreKitInternalImport.h in Headers */,
 				9D2D99B51BC4544600929E76 /* FBSDKSharePhotoContent.h in Headers */,
 				9D2D99A91BC453E700929E76 /* FBSDKShareUtility.h in Headers */,
 				F462DBF223B9526200FFCECA /* FBSDKCoreKit+Internal.h in Headers */,
@@ -1062,6 +1071,7 @@
 				890414A81A6EB7F900617215 /* FBSDKSharingButton.h in Headers */,
 				9D46C5F61A11E5D800A0DDB6 /* FBSDKShareKit.h in Headers */,
 				89F203A11AAA0DF80053499E /* FBSDKGameRequestFrictionlessRecipientCache.h in Headers */,
+				F4DC050F251947590073B380 /* FBSDKCoreKitInternalImport.h in Headers */,
 				D5158B5C1C5FD492003E32EE /* FBSDKHashtag.h in Headers */,
 				89FC9C6F1A3FA1E00001910E /* FBSDKSharePhotoContent.h in Headers */,
 				B331E21A2208C94800F3E4EE /* FBSDKShareExtension.h in Headers */,
@@ -1164,7 +1174,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				F410D0592370CD66005B9318 /* PBXTargetDependency */,
+				F4DE319E24D9F9EC00297C18 /* PBXTargetDependency */,
 				F410D0572370CD62005B9318 /* PBXTargetDependency */,
 			);
 			name = FBSDKShareKitTests;
@@ -1566,10 +1576,10 @@
 			target = 81A07EDF1D1A2E6A0041A29C /* FBSDKShareKit-Dynamic */;
 			targetProxy = F410D0562370CD62005B9318 /* PBXContainerItemProxy */;
 		};
-		F410D0592370CD66005B9318 /* PBXTargetDependency */ = {
+		F4DE319E24D9F9EC00297C18 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "FBSDKCoreKit-Dynamic";
-			targetProxy = F410D0582370CD66005B9318 /* PBXContainerItemProxy */;
+			targetProxy = F4DE319D24D9F9EC00297C18 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

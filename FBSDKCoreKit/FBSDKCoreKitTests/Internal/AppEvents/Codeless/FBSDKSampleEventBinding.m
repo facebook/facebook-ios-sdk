@@ -19,122 +19,123 @@
 #import "FBSDKSampleEventBinding.h"
 
 @implementation FBSDKSampleEventBinding
-+(NSDictionary*)getSampleDictionary
++ (NSDictionary *)getSampleDictionary
 {
   return @{
-             @"event_bindings": @[
-                                @{
-                                  @"event_name": @"Quantity Changed",
-                                  @"event_type": @"click",
-                                  @"app_version": @"1.2",
-                                  @"path": @[
-                                           @{
-                                             @"class_name":@"UIWindow",
-                                           },
-                                           @{
-                                             @"class_name":@"UITabBarController",
-                                             },
-                                           @{
-                                             @"class_name":@"UINavigationController",
-                                           },
-                                           @{
-                                             @"class_name":@"UIViewController",
-                                           },
-                                           @{
-                                             @"class_name":@"UIStackView",
-                                           },
-                                           @{
-                                             @"class_name":@"UIStackView",
-                                           },
-                                           @{
-                                             @"class_name":@"UIStepper",
-                                           }
-                                           ]
-                                },
-                                @{
-                                  @"event_name": @"Add To Cart",
-                                  @"event_type": @"click",
-                                  @"app_version": @"1.2",
-                                  @"path": @[
-                                      @{
-                                        @"class_name":@"UIViewController",
-                                        },
-                                      @{
-                                        @"class_name":@"UIStackView",
-                                        },
-                                      @{
-                                        @"class_name":@"UIButton",
-                                        @"text": @"Buy"
-                                        }
-                                      ],
-                                  @"parameters": @[
-                                      @{
-                                        @"parameter_name": @"price",
-                                        @"path_type": @"relative",
-                                        @"path": @[
-                                            @{
-                                              @"class_name": @"..",
-                                              },
-                                            @{
-                                              @"class_name": @"UILabel",
-                                              @"index": @2,
-                                              },
-                                            ]
-                                        }
-                                      ]
-                                  },
-                                @{
-                                  @"event_name": @"Purchase",
-                                  @"event_type": @"click",
-                                  @"app_version": @"1.2",
-                                  @"path": @[
-                                      @{
-                                        @"class_name":@"UIWindow",
-                                        },
-                                      @{
-                                        @"class_name":@"UITabBarController",
-                                        },
-                                      @{
-                                        @"class_name":@"UINavigationController",
-                                        },
-                                      @{
-                                        @"class_name":@"UIViewController",
-                                        },
-                                      @{
-                                        @"class_name":@"UIStackView",
-                                        },
-                                      @{
-                                        @"class_name": @"UIButton",
-                                        @"text": @"Confirm"
-                                        },
-                                      ],
-                                  @"parameters": @[
-                                      @{
-                                        @"parameter_name":@"price",
-                                        @"path_type": @"relative",
-                                        @"path": @[
-                                            @{
-                                              @"class_name":@"..",
-                                              },
-                                            @{
-                                              @"class_name":@"UIStackView",
-                                              },
-                                            @{
-                                              @"class_name":@"UILabel",
-                                              @"index": @0,
-                                              }
-                                            ]
-                                        },
-                                      @{
-                                        @"parameter_name": @"action",
-                                        @"path_type": @"relative",
-                                        @"path": @[
-                                            @{@"class_name": @"."}
-                                            ],
-                                        },
-                                      ]
-                                  }
-                                ],
-             };
+    @"event_bindings" : @[
+      @{
+        @"event_name" : @"Quantity Changed",
+        @"event_type" : @"click",
+        @"app_version" : @"1.2",
+        @"path" : @[
+          @{
+            @"class_name" : @"UIWindow",
+          },
+          @{
+            @"class_name" : @"UITabBarController",
+          },
+          @{
+            @"class_name" : @"UINavigationController",
+          },
+          @{
+            @"class_name" : @"UIViewController",
+          },
+          @{
+            @"class_name" : @"UIStackView",
+          },
+          @{
+            @"class_name" : @"UIStackView",
+          },
+          @{
+            @"class_name" : @"UIStepper",
+          }
+        ]
+      },
+      @{
+        @"event_name" : @"Add To Cart",
+        @"event_type" : @"click",
+        @"app_version" : @"1.2",
+        @"path" : @[
+          @{
+            @"class_name" : @"UIViewController",
+          },
+          @{
+            @"class_name" : @"UIStackView",
+          },
+          @{
+            @"class_name" : @"UIButton",
+            @"text" : @"Buy"
+          }
+        ],
+        @"parameters" : @[
+          @{
+            @"parameter_name" : @"price",
+            @"path_type" : @"relative",
+            @"path" : @[
+              @{
+                @"class_name" : @"..",
+              },
+              @{
+                @"class_name" : @"UILabel",
+                @"index" : @2,
+              },
+            ]
+          }
+        ]
+      },
+      @{
+        @"event_name" : @"Purchase",
+        @"event_type" : @"click",
+        @"app_version" : @"1.2",
+        @"path" : @[
+          @{
+            @"class_name" : @"UIWindow",
+          },
+          @{
+            @"class_name" : @"UITabBarController",
+          },
+          @{
+            @"class_name" : @"UINavigationController",
+          },
+          @{
+            @"class_name" : @"UIViewController",
+          },
+          @{
+            @"class_name" : @"UIStackView",
+          },
+          @{
+            @"class_name" : @"UIButton",
+            @"text" : @"Confirm"
+          },
+        ],
+        @"parameters" : @[
+          @{
+            @"parameter_name" : @"price",
+            @"path_type" : @"relative",
+            @"path" : @[
+              @{
+                @"class_name" : @"..",
+              },
+              @{
+                @"class_name" : @"UIStackView",
+              },
+              @{
+                @"class_name" : @"UILabel",
+                @"index" : @0,
+              }
+            ]
+          },
+          @{
+            @"parameter_name" : @"action",
+            @"path_type" : @"relative",
+            @"path" : @[
+              @{@"class_name" : @"."}
+            ],
+          },
+        ]
+      }
+    ],
+  };
 }
+
 @end

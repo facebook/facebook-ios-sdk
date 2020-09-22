@@ -19,36 +19,36 @@
 #import "FBSDKShareDialogMode.h"
 
 #ifdef FBSDKCOCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+ #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
 #else
-#import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKCoreKit+Internal.h"
 #endif
 
 NSString *NSStringFromFBSDKShareDialogMode(FBSDKShareDialogMode dialogMode)
 {
   switch (dialogMode) {
-    case FBSDKShareDialogModeAutomatic:{
+    case FBSDKShareDialogModeAutomatic: {
       return FBSDKAppEventsDialogShareModeAutomatic;
     }
-    case FBSDKShareDialogModeBrowser:{
+    case FBSDKShareDialogModeBrowser: {
       return FBSDKAppEventsDialogShareModeBrowser;
     }
-    case FBSDKShareDialogModeNative:{
+    case FBSDKShareDialogModeNative: {
       return FBSDKAppEventsDialogShareModeNative;
     }
-    case FBSDKShareDialogModeShareSheet:{
+    case FBSDKShareDialogModeShareSheet: {
       return FBSDKAppEventsDialogShareModeShareSheet;
     }
-    case FBSDKShareDialogModeWeb:{
+    case FBSDKShareDialogModeWeb: {
       return FBSDKAppEventsDialogShareModeWeb;
     }
     case FBSDKShareDialogModeFeedBrowser: {
       return FBSDKAppEventsDialogShareModeFeedBrowser;
     }
-    case FBSDKShareDialogModeFeedWeb:{
+    case FBSDKShareDialogModeFeedWeb: {
       return FBSDKAppEventsDialogShareModeFeedWeb;
     }
-    default:{
+    default: {
       return FBSDKAppEventsDialogShareModeUnknown;
     }
   }

@@ -43,7 +43,7 @@
   [self dispatchEventWithName:@"onFacebookLoginViewControllerError"
                     canBubble:YES
                   cancellable:YES
-                    extraInfo: @{ @"error": error }
+                    extraInfo:@{ @"error" : error }
                    completion:NULL];
 }
 

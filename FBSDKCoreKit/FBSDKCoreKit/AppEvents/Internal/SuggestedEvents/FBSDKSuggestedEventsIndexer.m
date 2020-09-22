@@ -20,22 +20,22 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKSuggestedEventsIndexer.h"
+ #import "FBSDKSuggestedEventsIndexer.h"
 
-#import <objc/runtime.h>
-#import <sys/sysctl.h>
-#import <sys/utsname.h>
+ #import <UIKit/UIKit.h>
 
-#import <UIKit/UIKit.h>
+ #import <objc/runtime.h>
+ #import <sys/sysctl.h>
+ #import <sys/utsname.h>
 
-#import "FBSDKCoreKit+Internal.h"
-#import "FBSDKFeatureExtractor.h"
-#import "FBSDKMLMacros.h"
-#import "FBSDKModelManager.h"
-#import "FBSDKModelUtility.h"
+ #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKFeatureExtractor.h"
+ #import "FBSDKMLMacros.h"
+ #import "FBSDKModelManager.h"
+ #import "FBSDKModelUtility.h"
 
-NSString * const OptInEvents = @"production_events";
-NSString * const UnconfirmedEvents = @"eligible_for_prediction_events";
+NSString *const OptInEvents = @"production_events";
+NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
 
 static NSMutableSet<NSString *> *_optInEvents;
 static NSMutableSet<NSString *> *_unconfirmedEvents;
@@ -76,15 +76,14 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
 
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-
     // swizzle UIButton
     [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:[UIControl class] withBlock:^(UIControl *control) {
-      if (control.window && [control isKindOfClass:[UIButton class]]) {
-        [((UIButton *)control) addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchDown];
-      }
-    } named:@"suggested_events"];
+                                                                                          if (control.window && [control isKindOfClass:[UIButton class]]) {
+                                                                                            [((UIButton *)control) addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchDown];
+                                                                                          }
+                                                                                        } named:@"suggested_events"];
 
-    //  UITableView
+    // UITableView
     void (^tableViewBlock)(UITableView *tableView,
                            SEL cmd,
                            id<UITableViewDelegate> delegate) =
@@ -96,7 +95,7 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
                          withBlock:tableViewBlock
                              named:@"suggested_events"];
 
-    //  UICollectionView
+    // UICollectionView
     void (^collectionViewBlock)(UICollectionView *collectionView,
                                 SEL cmd,
                                 id<UICollectionViewDelegate> delegate) =
@@ -114,20 +113,21 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
   });
 }
 
-+ (void)rematchBindings {
++ (void)rematchBindings
+{
   NSArray *windows = [UIApplication sharedApplication].windows;
   for (UIWindow *window in windows) {
     [self matchSubviewsIn:window];
   }
 }
 
-+ (void)matchSubviewsIn:(UIView *)view {
++ (void)matchSubviewsIn:(UIView *)view
+{
   if (!view) {
     return;
   }
 
   for (UIView *subview in view.subviews) {
-
     if ([subview isKindOfClass:[UITableView class]]) {
       UITableView *tableView = (UITableView *)subview;
       [self handleView:tableView withDelegate:tableView.delegate];
@@ -183,7 +183,7 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
 
 + (void)predictEventWithUIResponder:(UIResponder *)uiResponder text:(NSString *)text
 {
-  if (text.length > 100 || text.length == 0 || [FBSDKAppEventsUtility isSensitiveUserData: text]) {
+  if (text.length > 100 || text.length == 0 || [FBSDKAppEventsUtility isSensitiveUserData:text]) {
     return;
   }
 
@@ -226,9 +226,8 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
       }
       if ([_optInEvents containsObject:event]) {
         [FBSDKAppEvents logEvent:event
-                      parameters:@{@"_is_suggested_event": @"1",
-                                   @"_button_text": text
-                      }];
+                      parameters:@{@"_is_suggested_event" : @"1",
+                                   @"_button_text" : text}];
       } else if ([_unconfirmedEvents containsObject:event]) {
         // Only send back not confirmed events to advertisers
         [self logSuggestedEvent:event withText:text withDenseFeature:[self getDenseFeaure:denseData] ?: @""];
@@ -238,14 +237,14 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
   });
 }
 
-#pragma mark - Helper Methods
+ #pragma mark - Helper Methods
 
 + (NSString *)getDenseFeaure:(float *)denseData
 {
   // Get dense feature string
   NSMutableArray *denseDataArray = [NSMutableArray array];
   for (int i = 0; i < 30; i++) {
-    [FBSDKTypeUtility array:denseDataArray addObject:[NSNumber numberWithFloat: denseData[i]]];
+    [FBSDKTypeUtility array:denseDataArray addObject:[NSNumber numberWithFloat:denseData[i]]];
   }
   return [denseDataArray componentsJoinedByString:@","];
 }
@@ -264,9 +263,8 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
 
 + (void)logSuggestedEvent:(NSString *)event withText:(NSString *)text withDenseFeature:(NSString *)denseFeature
 {
-  NSString *metadata = [FBSDKBasicUtility JSONStringForObject:@{@"button_text": text,
-                                                                @"dense": denseFeature,
-                                                                }
+  NSString *metadata = [FBSDKBasicUtility JSONStringForObject:@{@"button_text" : text,
+                                                                @"dense" : denseFeature, }
                                                         error:nil
                                          invalidObjectHandler:nil];
   if (!metadata) {
@@ -275,9 +273,8 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
 
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
                                 initWithGraphPath:[NSString stringWithFormat:@"%@/suggested_events", [FBSDKSettings appID]]
-                                parameters: @{@"event_name": event,
-                                              @"metadata": metadata,
-                                              }
+                                parameters:@{@"event_name" : event,
+                                             @"metadata" : metadata, }
                                 HTTPMethod:FBSDKHTTPMethodPOST];
   [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}];
   return;

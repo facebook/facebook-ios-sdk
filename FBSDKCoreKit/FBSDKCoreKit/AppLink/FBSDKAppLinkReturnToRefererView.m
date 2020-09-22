@@ -20,11 +20,11 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKAppLinkReturnToRefererView.h"
+ #import "FBSDKAppLinkReturnToRefererView.h"
 
-#import "FBSDKAppLink.h"
-#import "FBSDKAppLinkTarget.h"
-#import "FBSDKInternalUtility.h"
+ #import "FBSDKAppLink.h"
+ #import "FBSDKAppLinkTarget.h"
+ #import "FBSDKInternalUtility.h"
 
 static const CGFloat FBSDKMarginX = 8.5f;
 static const CGFloat FBSDKMarginY = 8.5f;
@@ -43,232 +43,258 @@ static const CGFloat FBSDKCloseButtonHeight = 12.0;
 
 @end
 
-@implementation FBSDKAppLinkReturnToRefererView {
-    BOOL _explicitlyHidden;
+@implementation FBSDKAppLinkReturnToRefererView
+{
+  BOOL _explicitlyHidden;
 }
 
-#pragma mark - Initialization
+ #pragma mark - Initialization
 
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self commonInit];
-        [self sizeToFit];
-    }
-    return self;
+- (instancetype)initWithFrame:(CGRect)frame
+{
+  self = [super initWithFrame:frame];
+  if (self) {
+    [self commonInit];
+    [self sizeToFit];
+  }
+  return self;
 }
 
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        [self commonInit];
-    }
-    return self;
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+  self = [super initWithCoder:aDecoder];
+  if (self) {
+    [self commonInit];
+  }
+  return self;
 }
 
-- (void)commonInit {
-    // Initialization code
-    _includeStatusBarInSize = FBSDKIncludeStatusBarInSizeAlways;
+- (void)commonInit
+{
+  // Initialization code
+  _includeStatusBarInSize = FBSDKIncludeStatusBarInSizeAlways;
 
-    // iOS 7 system blue color
-    self.backgroundColor = [UIColor colorWithRed:0.0f green:122.0f / 255.0f blue:1.0f alpha:1.0f];
-    self.textColor = [UIColor whiteColor];
-    self.clipsToBounds = YES;
+  // iOS 7 system blue color
+  self.backgroundColor = [UIColor colorWithRed:0.0f green:122.0f / 255.0f blue:1.0f alpha:1.0f];
+  self.textColor = [UIColor whiteColor];
+  self.clipsToBounds = YES;
 
-    [self initViews];
+  [self initViews];
 }
 
-- (void)initViews {
-    if (!_labelView && !_closeButton) {
-        _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _closeButton.backgroundColor = [UIColor clearColor];
-        _closeButton.userInteractionEnabled = YES;
-        _closeButton.clipsToBounds = YES;
-        _closeButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
-        _closeButton.contentMode = UIViewContentModeCenter;
-        [_closeButton addTarget:self action:@selector(closeButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+- (void)initViews
+{
+  if (!_labelView && !_closeButton) {
+    _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _closeButton.backgroundColor = [UIColor clearColor];
+    _closeButton.userInteractionEnabled = YES;
+    _closeButton.clipsToBounds = YES;
+    _closeButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
+    _closeButton.contentMode = UIViewContentModeCenter;
+    [_closeButton addTarget:self action:@selector(closeButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 
-        [self addSubview:_closeButton];
+    [self addSubview:_closeButton];
 
-        _labelView = [[UILabel alloc] initWithFrame:CGRectZero];
-        _labelView.font = [UIFont systemFontOfSize:[UIFont smallSystemFontSize]];
-        _labelView.textColor = [UIColor whiteColor];
-        _labelView.backgroundColor = [UIColor clearColor];
-        _labelView.textAlignment = NSTextAlignmentCenter;
-        _labelView.clipsToBounds = YES;
-        [self updateLabelText];
-        [self addSubview:_labelView];
-
-        _insideTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapInside:)];
-        _labelView.userInteractionEnabled = YES;
-        [_labelView addGestureRecognizer:_insideTapGestureRecognizer];
-
-        [self updateColors];
-    }
-}
-
-#pragma mark - Layout
-
-- (CGSize)intrinsicContentSize {
-    CGSize size = self.bounds.size;
-    if (_closed || !self.hasRefererData) {
-        size.height = 0.0;
-    } else {
-        CGSize labelSize = [_labelView sizeThatFits:size];
-        size = CGSizeMake(size.width, labelSize.height + 2 * FBSDKMarginY + self.statusBarHeight);
-    }
-    return size;
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-
-    CGRect bounds = self.bounds;
-
-    _labelView.preferredMaxLayoutWidth = _labelView.bounds.size.width;
-    CGSize labelSize = [_labelView sizeThatFits:bounds.size];
-    _labelView.frame = CGRectMake(FBSDKMarginX,
-                                  CGRectGetMaxY(bounds) - labelSize.height - 1.5f * FBSDKMarginY,
-                                  CGRectGetMaxX(bounds) - FBSDKCloseButtonWidth - 3 * FBSDKMarginX,
-                                  labelSize.height + FBSDKMarginY);
-
-    _closeButton.frame = CGRectMake(CGRectGetMaxX(bounds) - FBSDKCloseButtonWidth - 2 * FBSDKMarginX,
-                                    _labelView.center.y - FBSDKCloseButtonHeight / 2.0f - FBSDKMarginY,
-                                    FBSDKCloseButtonWidth + 2 * FBSDKMarginX,
-                                    FBSDKCloseButtonHeight + 2 * FBSDKMarginY);
-}
-
-- (CGSize)sizeThatFits:(CGSize)size {
-    if (_closed || !self.hasRefererData) {
-        size = CGSizeMake(size.width, 0.0);
-    } else {
-        CGSize labelSize = [_labelView sizeThatFits:size];
-        size = CGSizeMake(size.width, labelSize.height + 2 * FBSDKMarginY + self.statusBarHeight);
-    }
-    return size;
-}
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-- (CGFloat)statusBarHeight {
-    UIApplication *application = [UIApplication sharedApplication];
-
-    BOOL include;
-    switch (_includeStatusBarInSize) {
-        case FBSDKIncludeStatusBarInSizeAlways:
-            include = YES;
-            break;
-        case FBSDKIncludeStatusBarInSizeNever:
-            include = NO;
-            break;
-    }
-    if (include && !application.statusBarHidden) {
-        BOOL landscape = UIInterfaceOrientationIsLandscape(FBSDKInternalUtility.statusBarOrientation);
-        CGRect statusBarFrame = application.statusBarFrame;
-        return landscape ? CGRectGetWidth(statusBarFrame) : CGRectGetHeight(statusBarFrame);
-    }
-
-    return 0;
-}
-#pragma clang diagnostic pop
-
-#pragma mark - Public API
-
-- (void)setIncludeStatusBarInSize:(FBSDKIncludeStatusBarInSize)includeStatusBarInSize {
-    _includeStatusBarInSize = includeStatusBarInSize;
-    [self setNeedsLayout];
-    [self invalidateIntrinsicContentSize];
-}
-
-- (void)setTextColor:(UIColor *)textColor {
-    _textColor = textColor;
-    [self updateColors];
-}
-
-- (void)setRefererAppLink:(FBSDKAppLink *)refererAppLink {
-    _refererAppLink = refererAppLink;
+    _labelView = [[UILabel alloc] initWithFrame:CGRectZero];
+    _labelView.font = [UIFont systemFontOfSize:[UIFont smallSystemFontSize]];
+    _labelView.textColor = [UIColor whiteColor];
+    _labelView.backgroundColor = [UIColor clearColor];
+    _labelView.textAlignment = NSTextAlignmentCenter;
+    _labelView.clipsToBounds = YES;
     [self updateLabelText];
+    [self addSubview:_labelView];
+
+    _insideTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTapInside:)];
+    _labelView.userInteractionEnabled = YES;
+    [_labelView addGestureRecognizer:_insideTapGestureRecognizer];
+
+    [self updateColors];
+  }
+}
+
+ #pragma mark - Layout
+
+- (CGSize)intrinsicContentSize
+{
+  CGSize size = self.bounds.size;
+  if (_closed || !self.hasRefererData) {
+    size.height = 0.0;
+  } else {
+    CGSize labelSize = [_labelView sizeThatFits:size];
+    size = CGSizeMake(size.width, labelSize.height + 2 * FBSDKMarginY + self.statusBarHeight);
+  }
+  return size;
+}
+
+- (void)layoutSubviews
+{
+  [super layoutSubviews];
+
+  CGRect bounds = self.bounds;
+
+  _labelView.preferredMaxLayoutWidth = _labelView.bounds.size.width;
+  CGSize labelSize = [_labelView sizeThatFits:bounds.size];
+  _labelView.frame = CGRectMake(
+    FBSDKMarginX,
+    CGRectGetMaxY(bounds) - labelSize.height - 1.5f * FBSDKMarginY,
+    CGRectGetMaxX(bounds) - FBSDKCloseButtonWidth - 3 * FBSDKMarginX,
+    labelSize.height + FBSDKMarginY
+  );
+
+  _closeButton.frame = CGRectMake(
+    CGRectGetMaxX(bounds) - FBSDKCloseButtonWidth - 2 * FBSDKMarginX,
+    _labelView.center.y - FBSDKCloseButtonHeight / 2.0f - FBSDKMarginY,
+    FBSDKCloseButtonWidth + 2 * FBSDKMarginX,
+    FBSDKCloseButtonHeight + 2 * FBSDKMarginY
+  );
+}
+
+- (CGSize)sizeThatFits:(CGSize)size
+{
+  if (_closed || !self.hasRefererData) {
+    size = CGSizeMake(size.width, 0.0);
+  } else {
+    CGSize labelSize = [_labelView sizeThatFits:size];
+    size = CGSizeMake(size.width, labelSize.height + 2 * FBSDKMarginY + self.statusBarHeight);
+  }
+  return size;
+}
+
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+- (CGFloat)statusBarHeight
+{
+  UIApplication *application = [UIApplication sharedApplication];
+
+  BOOL include;
+  switch (_includeStatusBarInSize) {
+    case FBSDKIncludeStatusBarInSizeAlways:
+      include = YES;
+      break;
+    case FBSDKIncludeStatusBarInSizeNever:
+      include = NO;
+      break;
+  }
+  if (include && !application.statusBarHidden) {
+    BOOL landscape = UIInterfaceOrientationIsLandscape(FBSDKInternalUtility.statusBarOrientation);
+    CGRect statusBarFrame = application.statusBarFrame;
+    return landscape ? CGRectGetWidth(statusBarFrame) : CGRectGetHeight(statusBarFrame);
+  }
+
+  return 0;
+}
+
+ #pragma clang diagnostic pop
+
+ #pragma mark - Public API
+
+- (void)setIncludeStatusBarInSize:(FBSDKIncludeStatusBarInSize)includeStatusBarInSize
+{
+  _includeStatusBarInSize = includeStatusBarInSize;
+  [self setNeedsLayout];
+  [self invalidateIntrinsicContentSize];
+}
+
+- (void)setTextColor:(UIColor *)textColor
+{
+  _textColor = textColor;
+  [self updateColors];
+}
+
+- (void)setRefererAppLink:(FBSDKAppLink *)refererAppLink
+{
+  _refererAppLink = refererAppLink;
+  [self updateLabelText];
+  [self updateHidden];
+  [self invalidateIntrinsicContentSize];
+}
+
+- (void)setClosed:(BOOL)closed
+{
+  if (_closed != closed) {
+    _closed = closed;
     [self updateHidden];
     [self invalidateIntrinsicContentSize];
+  }
 }
 
-- (void)setClosed:(BOOL)closed {
-    if (_closed != closed) {
-        _closed = closed;
-        [self updateHidden];
-        [self invalidateIntrinsicContentSize];
-    }
+- (void)setHidden:(BOOL)hidden
+{
+  _explicitlyHidden = hidden;
+  [self updateHidden];
 }
 
-- (void)setHidden:(BOOL)hidden {
-    _explicitlyHidden = hidden;
-    [self updateHidden];
+ #pragma mark - Private
+
+- (void)updateLabelText
+{
+  NSString *appName = (_refererAppLink && [FBSDKTypeUtility array:_refererAppLink.targets objectAtIndex:0]) ? [[FBSDKTypeUtility array:_refererAppLink.targets objectAtIndex:0] appName] : nil;
+  _labelView.text = [self localizedLabelForReferer:appName];
 }
 
-#pragma mark - Private
+- (void)updateColors
+{
+  UIImage *closeButtonImage = [self drawCloseButtonImageWithColor:_textColor];
 
-- (void)updateLabelText {
-    NSString *appName = (_refererAppLink && [FBSDKTypeUtility array:_refererAppLink.targets objectAtIndex:0]) ? [[FBSDKTypeUtility array:_refererAppLink.targets objectAtIndex:0] appName] : nil;
-    _labelView.text = [self localizedLabelForReferer:appName];
+  _labelView.textColor = _textColor;
+  [_closeButton setImage:closeButtonImage forState:UIControlStateNormal];
 }
 
-- (void)updateColors {
-    UIImage *closeButtonImage = [self drawCloseButtonImageWithColor:_textColor];
+- (UIImage *)drawCloseButtonImageWithColor:(UIColor *)color
+{
+  UIGraphicsBeginImageContextWithOptions(CGSizeMake(FBSDKCloseButtonWidth, FBSDKCloseButtonHeight), NO, 0.0f);
 
-    _labelView.textColor = _textColor;
-    [_closeButton setImage:closeButtonImage forState:UIControlStateNormal];
+  CGContextRef context = UIGraphicsGetCurrentContext();
+
+  CGContextSetStrokeColorWithColor(context, color.CGColor);
+  CGContextSetFillColorWithColor(context, color.CGColor);
+
+  CGContextSetLineWidth(context, 1.25f);
+
+  CGFloat inset = 0.5f;
+
+  CGContextMoveToPoint(context, inset, inset);
+  CGContextAddLineToPoint(context, FBSDKCloseButtonWidth - inset, FBSDKCloseButtonHeight - inset);
+  CGContextStrokePath(context);
+
+  CGContextMoveToPoint(context, FBSDKCloseButtonWidth - inset, inset);
+  CGContextAddLineToPoint(context, inset, FBSDKCloseButtonHeight - inset);
+  CGContextStrokePath(context);
+
+  UIImage *result = UIGraphicsGetImageFromCurrentImageContext();
+  UIGraphicsEndImageContext();
+
+  return result;
 }
 
-- (UIImage *)drawCloseButtonImageWithColor:(UIColor *)color {
+- (NSString *)localizedLabelForReferer:(NSString *)refererName
+{
+  if (!refererName) {
+    return nil;
+  }
 
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(FBSDKCloseButtonWidth, FBSDKCloseButtonHeight), NO, 0.0f);
-
-    CGContextRef context = UIGraphicsGetCurrentContext();
-
-    CGContextSetStrokeColorWithColor(context, color.CGColor);
-    CGContextSetFillColorWithColor(context, color.CGColor);
-
-    CGContextSetLineWidth(context, 1.25f);
-
-    CGFloat inset = 0.5f;
-
-    CGContextMoveToPoint(context, inset, inset);
-    CGContextAddLineToPoint(context, FBSDKCloseButtonWidth - inset, FBSDKCloseButtonHeight - inset);
-    CGContextStrokePath(context);
-
-    CGContextMoveToPoint(context, FBSDKCloseButtonWidth - inset, inset);
-    CGContextAddLineToPoint(context, inset, FBSDKCloseButtonHeight - inset);
-    CGContextStrokePath(context);
-
-    UIImage *result = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-
-    return result;
+  NSString *format = NSLocalizedString(@"Touch to return to %1$@", @"Format for the string to return to a calling app.");
+  return [NSString stringWithFormat:format, refererName];
 }
 
-- (NSString *)localizedLabelForReferer:(NSString *)refererName {
-    if (!refererName) {
-        return nil;
-    }
-
-    NSString *format = NSLocalizedString(@"Touch to return to %1$@", @"Format for the string to return to a calling app.");
-    return [NSString stringWithFormat:format, refererName];
+- (BOOL)hasRefererData
+{
+  return _refererAppLink && [FBSDKTypeUtility array:_refererAppLink.targets objectAtIndex:0];
 }
 
-- (BOOL)hasRefererData {
-    return _refererAppLink && [FBSDKTypeUtility array:_refererAppLink.targets objectAtIndex:0];
+- (void)closeButtonTapped:(id)sender
+{
+  [_delegate returnToRefererViewDidTapInsideCloseButton:self];
 }
 
-- (void)closeButtonTapped:(id)sender {
-    [_delegate returnToRefererViewDidTapInsideCloseButton:self];
+- (void)onTapInside:(UIGestureRecognizer *)sender
+{
+  [_delegate returnToRefererViewDidTapInsideLink:self link:_refererAppLink];
 }
 
-- (void)onTapInside:(UIGestureRecognizer *)sender {
-    [_delegate returnToRefererViewDidTapInsideLink:self link:_refererAppLink];
-}
-
-- (void)updateHidden {
-    super.hidden = _explicitlyHidden || _closed || !self.hasRefererData;
+- (void)updateHidden
+{
+  super.hidden = _explicitlyHidden || _closed || !self.hasRefererData;
 }
 
 @end

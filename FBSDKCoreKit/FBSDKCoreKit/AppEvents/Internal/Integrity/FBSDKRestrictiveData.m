@@ -20,7 +20,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKTypeUtility.h"
+#import "FBSDKInternalUtility.h"
 
 #define RESTRICTIVE_PARAM @"restrictive_param"
 #define DEPRECATED_PARAM @"deprecated_param"

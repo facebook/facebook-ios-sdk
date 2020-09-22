@@ -21,9 +21,9 @@
 #import <Photos/Photos.h>
 
 #ifdef FBSDKCOCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+ #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
 #else
-#import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKCoreKit+Internal.h"
 #endif
 #import "FBSDKShareConstants.h"
 
@@ -111,12 +111,12 @@ NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
 
 - (BOOL)isEqualToSharePhoto:(FBSDKSharePhoto *)photo
 {
-  return (photo &&
-          (_userGenerated == photo.userGenerated) &&
-          [FBSDKInternalUtility object:_image isEqualToObject:photo.image] &&
-          [FBSDKInternalUtility object:_imageURL isEqualToObject:photo.imageURL] &&
-          [FBSDKInternalUtility object:_photoAsset isEqualToObject:photo.photoAsset] &&
-          [FBSDKInternalUtility object:_caption isEqualToObject:photo.caption]);
+  return (photo
+    && (_userGenerated == photo.userGenerated)
+    && [FBSDKInternalUtility object:_image isEqualToObject:photo.image]
+    && [FBSDKInternalUtility object:_imageURL isEqualToObject:photo.imageURL]
+    && [FBSDKInternalUtility object:_photoAsset isEqualToObject:photo.photoAsset]
+    && [FBSDKInternalUtility object:_caption isEqualToObject:photo.caption]);
 }
 
 #pragma mark - FBSDKSharingValidation

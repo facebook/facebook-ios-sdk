@@ -16,10 +16,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import <OCMock/OCMock.h>
 #import <StoreKit/StoreKit.h>
 #import <XCTest/XCTest.h>
-
-#import <OCMock/OCMock.h>
 
 #import "FBSDKPaymentObserver.h"
 
@@ -37,7 +36,8 @@
 
 @implementation FBSDKPaymentObserverTests
 
-- (void)testPaymentObserverAddRemove {
+- (void)testPaymentObserverAddRemove
+{
   FBSDKPaymentObserver *observer = [FBSDKPaymentObserver singleton];
 
   BOOL isObserving = [[observer valueForKeyPath:@"_observingTransactions"] boolValue];
@@ -65,6 +65,5 @@
   [partialMockObserver paymentQueue:mockQueue updatedTransactions:transactions];
   [partialMockObserver verify];
 }
-
 
 @end

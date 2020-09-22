@@ -17,6 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 NSString *builtInOpenGraphObjects[3] = {
-                                        @"672839339475385",      // rock
-                                        @"296430467206197",      // paper
-                                        @"524651207660361"};     // scissors
+  @"672839339475385", // rock
+  @"296430467206197", // paper
+  @"524651207660361"
+}; // scissors

@@ -26,6 +26,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+DEVICE_SHARING_DEPRECATED
 NS_SWIFT_NAME(FBDeviceShareButton)
 @interface FBSDKDeviceShareButton : FBSDKDeviceButton
 

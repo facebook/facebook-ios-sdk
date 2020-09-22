@@ -22,8 +22,8 @@
 #import <sys/utsname.h>
 
 #if !TARGET_OS_TV
-#import <CoreTelephony/CTCarrier.h>
-#import <CoreTelephony/CTTelephonyNetworkInfo.h>
+ #import <CoreTelephony/CTCarrier.h>
+ #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #endif
 
 #import <Foundation/Foundation.h>
@@ -36,10 +36,10 @@
 
 #define FB_ARRAY_COUNT(x) sizeof(x) / sizeof(x[0])
 
-static const u_int FB_GROUP1_RECHECK_DURATION    = 30 * 60;  // seconds
+static const u_int FB_GROUP1_RECHECK_DURATION = 30 * 60; // seconds
 
 // Apple reports storage in binary gigabytes (1024^3) in their About menus, etc.
-static const u_int FB_GIGABYTE = 1024 * 1024 * 1024;  // bytes
+static const u_int FB_GIGABYTE = 1024 * 1024 * 1024; // bytes
 
 @implementation FBSDKAppEventsDeviceInfo
 {
@@ -106,10 +106,9 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024;  // bytes
 
 - (NSString *)encodedDeviceInfo
 {
-  @synchronized (self) {
-
+  @synchronized(self) {
     BOOL isGroup1Expired = [self _isGroup1Expired];
-    BOOL isEncodingExpired = isGroup1Expired;  // Can || other groups in if we add them
+    BOOL isEncodingExpired = isGroup1Expired; // Can || other groups in if we add them
 
     // As long as group1 hasn't expired, we can just return the last generated value
     if (_encodedDeviceInfo && !isEncodingExpired) {
@@ -131,7 +130,7 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024;  // bytes
 
 - (void)setEncodedDeviceInfo:(NSString *)encodedDeviceInfo
 {
-  @synchronized (self) {
+  @synchronized(self) {
     if (![_encodedDeviceInfo isEqualToString:encodedDeviceInfo]) {
       _encodedDeviceInfo = [encodedDeviceInfo copy];
     }
@@ -211,23 +210,23 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024;  // bytes
   NSString *densityString = _density ? [NSString stringWithFormat:@"%.02f", _density] : @"";
 
   NSArray *arr = @[
-                   @"i2", // version - starts with 'i' for iOS, we'll use 'a' for Android
-                   _bundleIdentifier ?: @"",
-                   _longVersion ?: @"",
-                   _shortVersion ?: @"",
-                   _sysVersion ?: @"",
-                   _machine ?: @"",
-                   _language ?: @"",
-                   _timeZoneAbbrev ?: @"",
-                   _carrierName ?: @"",
-                   _width ? @((unsigned long)_width) : @"",
-                   _height ? @((unsigned long)_height) : @"",
-                   densityString,
-                   @(_coreCount) ?: @"",
-                   @(_totalDiskSpaceGB) ?: @"",
-                   @(_remainingDiskSpaceGB) ?: @"",
-                   _timeZoneName ?: @""
-                   ];
+    @"i2", // version - starts with 'i' for iOS, we'll use 'a' for Android
+    _bundleIdentifier ?: @"",
+    _longVersion ?: @"",
+    _shortVersion ?: @"",
+    _sysVersion ?: @"",
+    _machine ?: @"",
+    _language ?: @"",
+    _timeZoneAbbrev ?: @"",
+    _carrierName ?: @"",
+    _width ? @((unsigned long)_width) : @"",
+    _height ? @((unsigned long)_height) : @"",
+    densityString,
+    @(_coreCount) ?: @"",
+    @(_totalDiskSpaceGB) ?: @"",
+    @(_remainingDiskSpaceGB) ?: @"",
+    _timeZoneName ?: @""
+  ];
 
   return [FBSDKBasicUtility JSONStringForObject:arr error:NULL invalidObjectHandler:NULL];
 }
@@ -277,6 +276,7 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024;  // bytes
   return carrier.carrierName ?: @"NoCarrier";
 #endif
 }
+
 #pragma clang diagnostic pop
 
 @end

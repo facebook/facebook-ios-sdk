@@ -29,7 +29,6 @@
 - (instancetype)initWithFilename:(NSString *)filename
 {
   if ((self = [super init])) {
-
     NSURL *temporaryDirectory = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
     _filePath = [temporaryDirectory URLByAppendingPathComponent:filename];
     _skipDiskCheck = YES;
@@ -43,6 +42,7 @@
                                             error:nil];
   self.skipDiskCheck = YES;
 }
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)persist:(NSArray<id<FBSDKMonitorEntry>> *)entries
@@ -55,7 +55,8 @@
   self.skipDiskCheck = NO;
 }
 
-- (NSArray<id<FBSDKMonitorEntry>> *)retrieveEntries {
+- (NSArray<id<FBSDKMonitorEntry>> *)retrieveEntries
+{
   NSMutableArray *items = [NSMutableArray array];
 
   if (!self.skipDiskCheck) {
@@ -63,9 +64,10 @@
 
     [self clear];
   }
- 
+
   return [items copy];
 }
+
 #pragma clang diagnostic pop
 
 @end

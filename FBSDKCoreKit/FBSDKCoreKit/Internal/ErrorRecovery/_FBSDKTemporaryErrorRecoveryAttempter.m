@@ -22,7 +22,11 @@
 
 - (void)attemptRecoveryFromError:(NSError *)error optionIndex:(NSUInteger)recoveryOptionIndex delegate:(id)delegate didRecoverSelector:(SEL)didRecoverSelector contextInfo:(void *)contextInfo
 {
-  [super completeRecovery:YES delegate:delegate didRecoverSelector:didRecoverSelector contextInfo:contextInfo];
+  @try {
+    [super completeRecovery:YES delegate:delegate didRecoverSelector:didRecoverSelector contextInfo:contextInfo];
+  } @catch (NSException *exception) {
+    NSLog(@"Fail to complete error recovery. Exception reason: %@", exception.reason);
+  }
 }
 
 @end

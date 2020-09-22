@@ -20,7 +20,7 @@
 
 #import "FBSDKAccessToken.h"
 #import "FBSDKAppEvents+Internal.h"
-#import "FBSDKTypeUtility.h"
+#import "FBSDKInternalUtility.h"
 
 @implementation FBSDKViewImpressionTracker
 {

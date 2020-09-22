@@ -20,18 +20,18 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKGraphErrorRecoveryProcessor.h"
+ #import "FBSDKGraphErrorRecoveryProcessor.h"
 
-#import "FBSDKCoreKit+Internal.h"
-#import "FBSDKErrorRecoveryAttempter.h"
+ #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKErrorRecoveryAttempter.h"
 
-@interface FBSDKGraphErrorRecoveryProcessor()
+@interface FBSDKGraphErrorRecoveryProcessor ()
 {
   FBSDKErrorRecoveryAttempter *_recoveryAttempter;
   NSError *_error;
 }
 
-@property (nonatomic, strong, nullable) id<FBSDKGraphErrorRecoveryProcessorDelegate>delegate;
+@property (nullable, nonatomic, strong) id<FBSDKGraphErrorRecoveryProcessorDelegate> delegate;
 
 @end
 
@@ -48,17 +48,17 @@
 
   FBSDKGraphRequestError errorCategory = [error.userInfo[FBSDKGraphRequestErrorKey] unsignedIntegerValue];
   switch (errorCategory) {
-    case FBSDKGraphRequestErrorTransient :
+    case FBSDKGraphRequestErrorTransient:
       [self.delegate processorDidAttemptRecovery:self didRecover:YES error:nil];
       self.delegate = nil;
       return YES;
-    case FBSDKGraphRequestErrorRecoverable :
+    case FBSDKGraphRequestErrorRecoverable:
       if ([request.tokenString isEqualToString:[FBSDKAccessToken currentAccessToken].tokenString]) {
         _recoveryAttempter = error.recoveryAttempter;
 
         // Set up a block to do the typical recovery work so that we can chain it for ios auth special cases.
         // the block returns YES if recovery UI is started (meaning we wait for the alertviewdelegate to resume control flow).
-        BOOL (^standardRecoveryWork)(void) = ^BOOL{
+        BOOL (^standardRecoveryWork)(void) = ^BOOL {
           NSArray *recoveryOptionsTitles = error.userInfo[NSLocalizedRecoveryOptionsErrorKey];
           if (recoveryOptionsTitles.count > 0 && self->_recoveryAttempter) {
             NSString *recoverySuggestion = error.userInfo[NSLocalizedRecoverySuggestionErrorKey];
@@ -74,16 +74,20 @@
         return standardRecoveryWork();
       }
       return NO;
-    case FBSDKGraphRequestErrorOther :
+    case FBSDKGraphRequestErrorOther:
       if ([request.tokenString isEqualToString:[FBSDKAccessToken currentAccessToken].tokenString]) {
         NSString *message = error.userInfo[FBSDKErrorLocalizedDescriptionKey];
         NSString *title = error.userInfo[FBSDKErrorLocalizedTitleKey];
         if (message) {
           dispatch_async(dispatch_get_main_queue(), ^{
             NSString *localizedOK =
-            NSLocalizedStringWithDefaultValue(@"ErrorRecovery.Alert.OK", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
-                                              @"OK",
-                                              @"The title of the label to dismiss the alert when presenting user facing error messages");
+            NSLocalizedStringWithDefaultValue(
+              @"ErrorRecovery.Alert.OK",
+              @"FacebookSDK",
+              [FBSDKInternalUtility bundleForStrings],
+              @"OK",
+              @"The title of the label to dismiss the alert when presenting user facing error messages"
+            );
             [self displayAlertWithTitle:title message:message cancelButtonTitle:localizedOK];
           });
         }
@@ -93,7 +97,7 @@
   return NO;
 }
 
-#pragma mark - UIAlertController support
+ #pragma mark - UIAlertController support
 
 - (void)displayAlertWithRecoverySuggestion:(NSString *)recoverySuggestion recoveryOptionsTitles:(NSArray<NSString *> *)recoveryOptionsTitles
 {
@@ -104,7 +108,7 @@
     NSString *title = [FBSDKTypeUtility array:recoveryOptionsTitles objectAtIndex:i];
     UIAlertAction *option = [UIAlertAction actionWithTitle:title
                                                      style:UIAlertActionStyleDefault
-                                                   handler:^(UIAlertAction * _Nonnull action) {
+                                                   handler:^(UIAlertAction *_Nonnull action) {
                                                      [self->_recoveryAttempter attemptRecoveryFromError:self->_error
                                                                                             optionIndex:i
                                                                                                delegate:self
@@ -126,7 +130,7 @@
                                                                     preferredStyle:UIAlertControllerStyleAlert];
   UIAlertAction *OKAction = [UIAlertAction actionWithTitle:localizedOK
                                                      style:UIAlertActionStyleCancel
-                                                   handler:^(UIAlertAction * _Nonnull action) {
+                                                   handler:^(UIAlertAction *_Nonnull action) {
                                                      [self->_recoveryAttempter attemptRecoveryFromError:self->_error
                                                                                             optionIndex:0
                                                                                                delegate:self
@@ -140,7 +144,7 @@
                                     completion:nil];
 }
 
-#pragma mark - FBSDKErrorRecoveryAttempting "delegate"
+ #pragma mark - FBSDKErrorRecoveryAttempting "delegate"
 
 - (void)didPresentErrorWithRecovery:(BOOL)didRecover contextInfo:(void *)contextInfo
 {

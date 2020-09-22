@@ -19,15 +19,14 @@
 #import <UIKit/UIKit.h>
 
 #ifdef BUCK
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #else
 @import FBSDKCoreKit;
 #endif
 
-#import "FBSDKShareLinkContent.h"
-
 #import <XCTest/XCTest.h>
 
+#import "FBSDKShareLinkContent.h"
 #import "FBSDKShareModelTestUtility.h"
 #import "FBSDKShareUtility.h"
 
@@ -68,19 +67,21 @@
 {
   FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
   NSArray *array = @[
-                     @"one",
-                     @2,
-                     @"three",
-                     ];
+    @"one",
+    @2,
+    @"three",
+  ];
   XCTAssertThrowsSpecificNamed([content setPeopleIDs:array], NSException, NSInvalidArgumentException);
 }
 
 - (void)testValidationWithValidContent
 {
   NSError *error;
-  XCTAssertTrue([FBSDKShareUtility validateShareContent:[FBSDKShareModelTestUtility linkContent]
-                                          bridgeOptions:FBSDKShareBridgeOptionsDefault
-                                                  error:&error]);
+  XCTAssertTrue(
+    [FBSDKShareUtility validateShareContent:[FBSDKShareModelTestUtility linkContent]
+                              bridgeOptions:FBSDKShareBridgeOptionsDefault
+                                      error:&error]
+  );
   XCTAssertNil(error);
 }
 

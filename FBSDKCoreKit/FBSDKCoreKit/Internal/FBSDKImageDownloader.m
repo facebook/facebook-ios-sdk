@@ -21,7 +21,8 @@
 static NSString *const kImageDirectory = @"fbsdkimages";
 static NSString *const kCachedResponseUserInfoKeyTimestamp = @"timestamp";
 
-@implementation FBSDKImageDownloader {
+@implementation FBSDKImageDownloader
+{
   NSURLCache *_urlCache;
 }
 
@@ -38,15 +39,15 @@ static NSString *const kCachedResponseUserInfoKeyTimestamp = @"timestamp";
 - (instancetype)init
 {
   if ((self = [super init])) {
-#if TARGET_OS_MACCATALYST
-    _urlCache = [[NSURLCache alloc] initWithMemoryCapacity:1024*1024*8
-                                              diskCapacity:1024*1024*100
+  #if TARGET_OS_MACCATALYST
+    _urlCache = [[NSURLCache alloc] initWithMemoryCapacity:1024 * 1024 * 8
+                                              diskCapacity:1024 * 1024 * 100
                                               directoryURL:[NSURL URLWithString:kImageDirectory]];
-#else
-    _urlCache = [[NSURLCache alloc] initWithMemoryCapacity:1024*1024*8
-                                              diskCapacity:1024*1024*100
+  #else
+    _urlCache = [[NSURLCache alloc] initWithMemoryCapacity:1024 * 1024 * 8
+                                              diskCapacity:1024 * 1024 * 100
                                                   diskPath:kImageDirectory];
-#endif
+  #endif
   }
   return self;
 }
@@ -65,7 +66,7 @@ static NSString *const kCachedResponseUserInfoKeyTimestamp = @"timestamp";
   NSDate *modificationDate = cachedResponse.userInfo[kCachedResponseUserInfoKeyTimestamp];
   BOOL isExpired = ([[modificationDate dateByAddingTimeInterval:ttl] compare:[NSDate date]] == NSOrderedAscending);
 
-  void (^completionWrapper)(NSCachedURLResponse *) = ^(NSCachedURLResponse *responseData){
+  void (^completionWrapper)(NSCachedURLResponse *) = ^(NSCachedURLResponse *responseData) {
     if (completion != NULL) {
       UIImage *image = [UIImage imageWithData:responseData.data];
       completion(image);
@@ -77,10 +78,10 @@ static NSString *const kCachedResponseUserInfoKeyTimestamp = @"timestamp";
     NSURLSessionDataTask *task = [session dataTaskWithRequest:request
                                             completionHandler:
                                   ^(NSData *data, NSURLResponse *response, NSError *error) {
-                                    if ([response isKindOfClass:[NSHTTPURLResponse class]] &&
-                                        ((NSHTTPURLResponse *)response).statusCode == 200 &&
-                                        error == nil &&
-                                        data != nil) {
+                                    if ([response isKindOfClass:[NSHTTPURLResponse class]]
+                                        && ((NSHTTPURLResponse *)response).statusCode == 200
+                                        && error == nil
+                                        && data != nil) {
                                       NSCachedURLResponse *responseToCache =
                                       [[NSCachedURLResponse alloc] initWithResponse:response
                                                                                data:data

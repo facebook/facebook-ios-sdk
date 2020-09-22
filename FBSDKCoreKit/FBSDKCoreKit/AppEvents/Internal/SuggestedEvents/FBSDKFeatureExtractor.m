@@ -20,19 +20,20 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKFeatureExtractor.h"
+ #import "FBSDKFeatureExtractor.h"
 
-#import "FBSDKCoreKit+Internal.h"
-#import "FBSDKModelManager.h"
+ #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKModelManager.h"
 
-#define REGEX_CR_PASSWORD_FIELD @"password"
-#define REGEX_CR_HAS_CONFIRM_PASSWORD_FIELD @"(?i)(confirm.*password)|(password.*(confirmation|confirm)|confirmation)"
-#define REGEX_CR_HAS_LOG_IN_KEYWORDS @"(?i)(sign in)|login|signIn"
-#define REGEX_CR_HAS_SIGN_ON_KEYWORDS @"(?i)(sign.*(up|now)|registration|" \
-@"register|(create|apply).*(profile|account)|open.*account|" \
-@"account.*(open|creation|application)|enroll|join.*now)"
-#define REGEX_ADD_TO_CART_BUTTON_TEXT @"(?i)add to(\\s|\\Z)|update(\\s|\\Z)|cart"
-#define REGEX_ADD_TO_CART_PAGE_TITLE @"(?i)add to(\\s|\\Z)|update(\\s|\\Z)|cart|shop|buy"
+ #define REGEX_CR_PASSWORD_FIELD @"password"
+ #define REGEX_CR_HAS_CONFIRM_PASSWORD_FIELD @"(?i)(confirm.*password)|(password.*(confirmation|confirm)|confirmation)"
+ #define REGEX_CR_HAS_LOG_IN_KEYWORDS @"(?i)(sign in)|login|signIn"
+ #define REGEX_CR_HAS_SIGN_ON_KEYWORDS \
+  @"(?i)(sign.*(up|now)|registration|" \
+  @"register|(create|apply).*(profile|account)|open.*account|" \
+  @"account.*(open|creation|application)|enroll|join.*now)"
+ #define REGEX_ADD_TO_CART_BUTTON_TEXT @"(?i)add to(\\s|\\Z)|update(\\s|\\Z)|cart"
+ #define REGEX_ADD_TO_CART_PAGE_TITLE @"(?i)add to(\\s|\\Z)|update(\\s|\\Z)|cart|shop|buy"
 
 static NSDictionary *_languageInfo;
 static NSDictionary *_eventInfo;
@@ -46,28 +47,28 @@ void sum(float *val0, float *val1);
 + (void)initialize
 {
   _languageInfo = @{
-                    @"ENGLISH" : @"1",
-                    @"GERMAN" : @"2",
-                    @"SPANISH" : @"3",
-                    @"JAPANESE" : @"4"
-                    };
+    @"ENGLISH" : @"1",
+    @"GERMAN" : @"2",
+    @"SPANISH" : @"3",
+    @"JAPANESE" : @"4"
+  };
   _eventInfo = @{
-                 @"VIEW_CONTENT" : @"0",
-                 @"SEARCH" : @"1",
-                 @"ADD_TO_CART" : @"2",
-                 @"ADD_TO_WISHLIST" : @"3",
-                 @"INITIATE_CHECKOUT" : @"4",
-                 @"ADD_PAYMENT_INFO" : @"5",
-                 @"PURCHASE" : @"6",
-                 @"LEAD" : @"7",
-                 @"COMPLETE_REGISTRATION" : @"8"
-                 };
+    @"VIEW_CONTENT" : @"0",
+    @"SEARCH" : @"1",
+    @"ADD_TO_CART" : @"2",
+    @"ADD_TO_WISHLIST" : @"3",
+    @"INITIATE_CHECKOUT" : @"4",
+    @"ADD_PAYMENT_INFO" : @"5",
+    @"PURCHASE" : @"6",
+    @"LEAD" : @"7",
+    @"COMPLETE_REGISTRATION" : @"8"
+  };
   _textTypeInfo = @{
-                    @"BUTTON_TEXT": @"1",
-                    @"PAGE_TITLE": @"2",
-                    @"RESOLVED_DOCUMENT_LINK": @"3",
-                    @"BUTTON_ID": @"4"
-                    };
+    @"BUTTON_TEXT" : @"1",
+    @"PAGE_TITLE" : @"2",
+    @"RESOLVED_DOCUMENT_LINK" : @"3",
+    @"BUTTON_ID" : @"4"
+  };
 }
 
 + (void)loadRulesForKey:(NSString *)useCaseKey
@@ -96,7 +97,7 @@ void sum(float *val0, float *val1);
 
   [self pruneTree:[[FBSDKTypeUtility array:viewTree objectAtIndex:0] mutableCopy] siblings:siblings];
 
-  float *result =  [self parseFeatures:[FBSDKTypeUtility array:viewTree objectAtIndex:0]];
+  float *result = [self parseFeatures:[FBSDKTypeUtility array:viewTree objectAtIndex:0]];
 
   NSMutableDictionary<NSString *, id> *interactedNode;
   for (NSMutableDictionary<NSString *, id> *node in siblings) {
@@ -117,7 +118,7 @@ void sum(float *val0, float *val1);
   return result;
 }
 
-#pragma mark - Helper functions
+ #pragma mark - Helper functions
 + (BOOL)pruneTree:(NSMutableDictionary *)node siblings:(NSMutableArray *)siblings
 {
   // If it's interacted, don't prune away the children and just return.
@@ -164,11 +165,11 @@ void sum(float *val0, float *val1);
                  screenname:(NSString *)screenname
              viewTreeString:(NSString *)viewTreeString
 {
-  float *densefeat =  (float *)calloc(30, sizeof(float));
+  float *densefeat = (float *)calloc(30, sizeof(float));
 
   densefeat[3] = MAX((float)siblings.count - 1, 0);
 
-  densefeat[9] = [siblings filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id  _Nullable evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
+  densefeat[9] = [siblings filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL (id _Nullable evaluatedObject, NSDictionary<NSString *, id> *_Nullable bindings) {
     return [self isButton:evaluatedObject];
   }]].count;
   if ([self isButton:node]) {
@@ -219,7 +220,7 @@ void sum(float *val0, float *val1);
 
 + (float *)parseFeatures:(NSMutableDictionary *)node
 {
-  float *densefeat =  (float *)calloc(30, sizeof(float));
+  float *densefeat = (float *)calloc(30, sizeof(float));
 
   NSString *validText = [FBSDKTypeUtility stringValue:node[VIEW_HIERARCHY_TEXT_KEY]];
   NSString *validHint = [FBSDKTypeUtility stringValue:node[VIEW_HIERARCHY_HINT_KEY]];
@@ -289,7 +290,8 @@ void sum(float *val0, float *val1);
   return densefeat;
 }
 
-void sum(float *val0, float *val1) {
+void sum(float *val0, float *val1)
+{
   for (int i = 0; i < 30; i++) {
     val0[i] += val1[i];
   }
@@ -308,11 +310,11 @@ void sum(float *val0, float *val1) {
           hint:(NSMutableString *)buttonHintString
 {
   NSString *text = [[FBSDKTypeUtility dictionary:node
-                                         objectForKey:VIEW_HIERARCHY_TEXT_KEY
-                                               ofType:NSString.class] lowercaseString];
+                                    objectForKey:VIEW_HIERARCHY_TEXT_KEY
+                                          ofType:NSString.class] lowercaseString];
   NSString *hint = [[FBSDKTypeUtility dictionary:node
-                                         objectForKey:VIEW_HIERARCHY_HINT_KEY
-                                               ofType:NSString.class] lowercaseString];
+                                    objectForKey:VIEW_HIERARCHY_HINT_KEY
+                                          ofType:NSString.class] lowercaseString];
   if (text.length > 0) {
     [buttonTextString appendFormat:@"%@ ", text];
   }

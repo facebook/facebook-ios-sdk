@@ -20,13 +20,13 @@
 
 #if TARGET_OS_TV
 
-#import <Foundation/Foundation.h>
+ #import <Foundation/Foundation.h>
 
-#if SWIFT_PACKAGE
-#import "FBSDKDeviceButton.h"
-#else
-#import <FBSDKCoreKit/FBSDKDeviceButton.h>
-#endif
+ #if SWIFT_PACKAGE
+  #import "FBSDKDeviceButton.h"
+ #else
+  #import <FBSDKCoreKit/FBSDKDeviceButton.h>
+ #endif
 
 @interface FBSDKDeviceButton ()
 

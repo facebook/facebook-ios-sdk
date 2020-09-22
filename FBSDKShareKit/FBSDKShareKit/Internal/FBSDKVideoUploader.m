@@ -20,14 +20,15 @@
 
 #import <Foundation/Foundation.h>
 
-#ifdef FBSDKCOCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#import "FBSDKCoreKitInternalImport.h"
+
+#if defined FBSDK_SWIFT_PACKAGE
+ #import <FBSDKShareKit.h>
 #else
-#import "FBSDKCoreKit+Internal.h"
+ #import <FBSDKShareKit/FBSDKShareKit.h>
 #endif
 
 #import "FBSDKShareDefines.h"
-#import "FBSDKShareConstants.h"
 
 static NSString *const FBSDKVideoUploaderDefaultGraphNode = @"me";
 static NSString *const FBSDKVideoUploaderEdge = @"videos";
@@ -58,16 +59,15 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
 
 - (void)start
 {
-    _graphPath = [self _graphPathWithSuffix:FBSDKVideoUploaderEdge, nil];
-    [self _postStartRequest];
+  _graphPath = [self _graphPathWithSuffix:FBSDKVideoUploaderEdge, nil];
+  [self _postStartRequest];
 }
 
 #pragma Helper Method
 
 - (void)_postStartRequest
 {
-  FBSDKGraphRequestBlock startRequestCompletionHandler = ^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
-  {
+  FBSDKGraphRequestBlock startRequestCompletionHandler = ^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     if (error) {
       [self.delegate videoUploader:self didFailWithError:error];
       return;
@@ -99,9 +99,9 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
   }
   [[[FBSDKGraphRequest alloc] initWithGraphPath:_graphPath
                                      parameters:@{
-                                                  FBSDK_SHARE_VIDEO_UPLOAD_PHASE: FBSDK_SHARE_VIDEO_UPLOAD_PHASE_START,
-                                                  FBSDK_SHARE_VIDEO_SIZE: [NSString stringWithFormat:@"%tu", _videoSize],
-                                                }
+      FBSDK_SHARE_VIDEO_UPLOAD_PHASE : FBSDK_SHARE_VIDEO_UPLOAD_PHASE_START,
+      FBSDK_SHARE_VIDEO_SIZE : [NSString stringWithFormat:@"%tu", _videoSize],
+    }
                                      HTTPMethod:@"POST"] startWithCompletionHandler:startRequestCompletionHandler];
 }
 
@@ -128,9 +128,9 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
          [FBSDKError errorWithDomain:FBSDKShareErrorDomain
                                 code:FBSDKShareErrorUnknown
                              message:[NSString
-                                     stringWithFormat:@"Fail to get video chunk with start offset: %lu, end offset : %lu.",
-                                     (unsigned long)startOffset,
-                                     (unsigned long)endOffset]]];
+                                      stringWithFormat:@"Fail to get video chunk with start offset: %lu, end offset : %lu.",
+                                      (unsigned long)startOffset,
+                                      (unsigned long)endOffset]]];
         return;
       }
       dispatch_async(dispatch_get_main_queue(), ^{
@@ -139,11 +139,11 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
                                                                                                     contentType:@""];
         FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:self->_graphPath
                                                                        parameters:@{
-                                                                                    FBSDK_SHARE_VIDEO_UPLOAD_PHASE: FBSDK_SHARE_VIDEO_UPLOAD_PHASE_TRANSFER,
-                                                                                    FBSDK_SHARE_VIDEO_START_OFFSET: offsetDictionary[FBSDK_SHARE_VIDEO_START_OFFSET],
-                                                                                    FBSDK_SHARE_VIDEO_UPLOAD_SESSION_ID: self->_uploadSessionID,
-                                                                                    FBSDK_SHARE_VIDEO_FILE_CHUNK: dataAttachment,
-                                                                                    }
+                                        FBSDK_SHARE_VIDEO_UPLOAD_PHASE : FBSDK_SHARE_VIDEO_UPLOAD_PHASE_TRANSFER,
+                                        FBSDK_SHARE_VIDEO_START_OFFSET : offsetDictionary[FBSDK_SHARE_VIDEO_START_OFFSET],
+                                        FBSDK_SHARE_VIDEO_UPLOAD_SESSION_ID : self->_uploadSessionID,
+                                        FBSDK_SHARE_VIDEO_FILE_CHUNK : dataAttachment,
+                                      }
                                                                        HTTPMethod:@"POST"];
         [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *innerError) {
           if (innerError) {
@@ -166,7 +166,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
   NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
   [FBSDKTypeUtility dictionary:parameters
                      setObject:FBSDK_SHARE_VIDEO_UPLOAD_PHASE_FINISH
-                        forKey: FBSDK_SHARE_VIDEO_UPLOAD_PHASE];
+                        forKey:FBSDK_SHARE_VIDEO_UPLOAD_PHASE];
   [FBSDKTypeUtility dictionary:parameters
                      setObject:_uploadSessionID
                         forKey:FBSDK_SHARE_VIDEO_UPLOAD_SESSION_ID];
@@ -174,24 +174,24 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
   [[[FBSDKGraphRequest alloc] initWithGraphPath:_graphPath
                                      parameters:parameters
                                      HTTPMethod:@"POST"] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-    if (error) {
-      [self.delegate videoUploader:self didFailWithError:error];
-    } else {
-      result = [FBSDKTypeUtility dictionaryValue:result];
-      if (result[FBSDK_SHARE_VIDEO_UPLOAD_SUCCESS] == nil) {
-        [self.delegate videoUploader:self didFailWithError:
-         [FBSDKError errorWithDomain:FBSDKShareErrorDomain
-                                code:FBSDKShareErrorUnknown
-                             message:@"Failed to finish uploading."]];
-        return;
-      }
-      NSMutableDictionary *shareResult = [[NSMutableDictionary alloc] init];
-      [FBSDKTypeUtility dictionary:shareResult setObject:result[FBSDK_SHARE_VIDEO_UPLOAD_SUCCESS] forKey:FBSDK_SHARE_VIDEO_UPLOAD_SUCCESS];
-      [FBSDKTypeUtility dictionary:shareResult setObject:FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_POST forKey:FBSDK_SHARE_RESULT_COMPLETION_GESTURE_KEY];
-      [FBSDKTypeUtility dictionary:shareResult setObject:self->_videoID forKey:FBSDK_SHARE_VIDEO_ID];
-      [self.delegate videoUploader:self didCompleteWithResults:shareResult];
-    }
-  }];
+                                       if (error) {
+                                         [self.delegate videoUploader:self didFailWithError:error];
+                                       } else {
+                                         result = [FBSDKTypeUtility dictionaryValue:result];
+                                         if (result[FBSDK_SHARE_VIDEO_UPLOAD_SUCCESS] == nil) {
+                                           [self.delegate videoUploader:self didFailWithError:
+                                            [FBSDKError errorWithDomain:FBSDKShareErrorDomain
+                                                                   code:FBSDKShareErrorUnknown
+                                                                message:@"Failed to finish uploading."]];
+                                           return;
+                                         }
+                                         NSMutableDictionary *shareResult = [[NSMutableDictionary alloc] init];
+                                         [FBSDKTypeUtility dictionary:shareResult setObject:result[FBSDK_SHARE_VIDEO_UPLOAD_SUCCESS] forKey:FBSDK_SHARE_VIDEO_UPLOAD_SUCCESS];
+                                         [FBSDKTypeUtility dictionary:shareResult setObject:FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_POST forKey:FBSDK_SHARE_RESULT_COMPLETION_GESTURE_KEY];
+                                         [FBSDKTypeUtility dictionary:shareResult setObject:self->_videoID forKey:FBSDK_SHARE_VIDEO_ID];
+                                         [self.delegate videoUploader:self didCompleteWithResults:shareResult];
+                                       }
+                                     }];
 }
 
 - (NSDictionary *)_extractOffsetsFromResultDictionary:(id)result

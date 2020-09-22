@@ -20,14 +20,14 @@
 
 @implementation Coffee
 
-- (instancetype)initWithName:(NSString*)name desc:(NSString*)desc price:(float)price
+- (instancetype)initWithName:(NSString *)name desc:(NSString *)desc price:(float)price
 {
-    if ((self = [super init])) {
-        _name = [name copy];
-        _desc = [desc copy];
-        _price = price;
-    }
-    return self;
+  if ((self = [super init])) {
+    _name = [name copy];
+    _desc = [desc copy];
+    _price = price;
+  }
+  return self;
 }
 
 @end

@@ -25,8 +25,8 @@
   NSMutableArray *sampleRateDicts = [NSMutableArray array];
 
   NSMutableDictionary *tmp = [NSMutableDictionary dictionary];
-  [pairs enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, id _Nonnull obj, BOOL * _Nonnull stop) {
-    [sampleRateDicts addObject: [self sampleRateWithEntryName:key rate:obj]];
+  [pairs enumerateKeysAndObjectsUsingBlock:^(NSString *_Nonnull key, id _Nonnull obj, BOOL *_Nonnull stop) {
+    [sampleRateDicts addObject:[self sampleRateWithEntryName:key rate:obj]];
   }];
 
   [tmp setObject:sampleRateDicts forKey:@"sample_rates"];

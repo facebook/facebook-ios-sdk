@@ -20,30 +20,30 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKGameRequestContent.h"
+ #import "FBSDKGameRequestContent.h"
 
-#ifdef FBSDKCOCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
-#import "FBSDKCoreKit+Internal.h"
-#endif
-#import "FBSDKShareConstants.h"
-#import "FBSDKShareUtility.h"
+ #ifdef FBSDKCOCOAPODS
+  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+ #else
+  #import "FBSDKCoreKit+Internal.h"
+ #endif
+ #import "FBSDKShareConstants.h"
+ #import "FBSDKShareUtility.h"
 
-#define FBSDK_APP_REQUEST_CONTENT_TO_KEY @"to"
-#define FBSDK_APP_REQUEST_CONTENT_MESSAGE_KEY @"message"
-#define FBSDK_APP_REQUEST_CONTENT_ACTION_TYPE_KEY @"actionType"
-#define FBSDK_APP_REQUEST_CONTENT_OBJECT_ID_KEY @"objectID"
-#define FBSDK_APP_REQUEST_CONTENT_FILTERS_KEY @"filters"
-#define FBSDK_APP_REQUEST_CONTENT_SUGGESTIONS_KEY @"suggestions"
-#define FBSDK_APP_REQUEST_CONTENT_DATA_KEY @"data"
-#define FBSDK_APP_REQUEST_CONTENT_TITLE_KEY @"title"
+ #define FBSDK_APP_REQUEST_CONTENT_TO_KEY @"to"
+ #define FBSDK_APP_REQUEST_CONTENT_MESSAGE_KEY @"message"
+ #define FBSDK_APP_REQUEST_CONTENT_ACTION_TYPE_KEY @"actionType"
+ #define FBSDK_APP_REQUEST_CONTENT_OBJECT_ID_KEY @"objectID"
+ #define FBSDK_APP_REQUEST_CONTENT_FILTERS_KEY @"filters"
+ #define FBSDK_APP_REQUEST_CONTENT_SUGGESTIONS_KEY @"suggestions"
+ #define FBSDK_APP_REQUEST_CONTENT_DATA_KEY @"data"
+ #define FBSDK_APP_REQUEST_CONTENT_TITLE_KEY @"title"
 
 @implementation FBSDKGameRequestContent
 
-#pragma mark - Properties
+ #pragma mark - Properties
 
--(void)setRecipients:(NSArray *)recipients
+- (void)setRecipients:(NSArray *)recipients
 {
   [FBSDKShareUtility assertCollection:recipients ofClass:[NSString class] name:@"recipients"];
   if (![_recipients isEqual:recipients]) {
@@ -79,7 +79,7 @@
   self.recipients = to;
 }
 
-#pragma mark - FBSDKSharingValidation
+ #pragma mark - FBSDKSharingValidation
 
 - (BOOL)validateWithOptions:(FBSDKShareBridgeOptions)bridgeOptions error:(NSError *__autoreleasing *)errorRef
 {
@@ -155,15 +155,15 @@
                                                        @(FBSDKGameRequestActionTypeAskFor),
                                                        @(FBSDKGameRequestActionTypeTurn)]
                                                error:errorRef]
-    && [FBSDKShareUtility validateArgumentWithName:@"filters"
-                                             value:_filters
-                                              isIn:@[@(FBSDKGameRequestFilterNone),
-                                                     @(FBSDKGameRequestFilterAppUsers),
-                                                     @(FBSDKGameRequestFilterAppNonUsers)]
-                                             error:errorRef];
+  && [FBSDKShareUtility validateArgumentWithName:@"filters"
+                                           value:_filters
+                                            isIn:@[@(FBSDKGameRequestFilterNone),
+                                                   @(FBSDKGameRequestFilterAppUsers),
+                                                   @(FBSDKGameRequestFilterAppNonUsers)]
+                                           error:errorRef];
 }
 
-#pragma mark - Equality
+ #pragma mark - Equality
 
 - (NSUInteger)hash
 {
@@ -193,18 +193,18 @@
 
 - (BOOL)isEqualToGameRequestContent:(FBSDKGameRequestContent *)content
 {
-  return (content &&
-          _actionType == content.actionType &&
-          _filters == content.filters &&
-          [FBSDKInternalUtility object:_data isEqualToObject:content.data] &&
-          [FBSDKInternalUtility object:_message isEqualToObject:content.message] &&
-          [FBSDKInternalUtility object:_objectID isEqualToObject:content.objectID] &&
-          [FBSDKInternalUtility object:_recipientSuggestions isEqualToObject:content.recipientSuggestions] &&
-          [FBSDKInternalUtility object:_title isEqualToObject:content.title] &&
-          [FBSDKInternalUtility object:_recipients isEqualToObject:content.recipients]);
+  return (content
+    && _actionType == content.actionType
+    && _filters == content.filters
+    && [FBSDKInternalUtility object:_data isEqualToObject:content.data]
+    && [FBSDKInternalUtility object:_message isEqualToObject:content.message]
+    && [FBSDKInternalUtility object:_objectID isEqualToObject:content.objectID]
+    && [FBSDKInternalUtility object:_recipientSuggestions isEqualToObject:content.recipientSuggestions]
+    && [FBSDKInternalUtility object:_title isEqualToObject:content.title]
+    && [FBSDKInternalUtility object:_recipients isEqualToObject:content.recipients]);
 }
 
-#pragma mark - NSCoding
+ #pragma mark - NSCoding
 
 + (BOOL)supportsSecureCoding
 {
@@ -238,7 +238,7 @@
   [encoder encodeObject:_recipients forKey:FBSDK_APP_REQUEST_CONTENT_TO_KEY];
 }
 
-#pragma mark - NSCopying
+ #pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone
 {

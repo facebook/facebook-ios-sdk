@@ -16,9 +16,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <XCTest/XCTest.h>
-
 #import <OCMock/OCMock.h>
+#import <XCTest/XCTest.h>
 
 #import "FBSDKIntegrityManager.h"
 #import "FBSDKModelManager.h"
@@ -41,9 +40,10 @@
 
 - (void)testProcessParameters1
 {
+  // Parameter contains restrictive data
   NSDictionary *parameters = @{
-    @"address" : @"2301 N Highland Ave, Los Angeles, CA 90068",
-    @"period_starts" : @"2020-02-03",
+    @"address" : @"2301 N Highland Ave, Los Angeles, CA 90068", // address
+    @"period_starts" : @"2020-02-03", // health
   };
 
   OCMStub([_mockModelManager processIntegrity:[OCMArg any]]).andReturn(YES);
@@ -52,18 +52,22 @@
   XCTAssertNil(processed[@"address"]);
   XCTAssertNil(processed[@"period_starts"]);
   XCTAssertNotNil(processed[@"_onDeviceParams"]);
+  XCTAssertTrue([processed[@"_onDeviceParams"] containsString:@"address"]);
+  XCTAssertTrue([processed[@"_onDeviceParams"] containsString:@"period_starts"]);
 }
 
 - (void)testProcessParameters2
 {
+  // Parameter does not contain any restrictive data
   NSDictionary *parameters = @{
     @"_valueToSum" : @1,
-    @"_session_id" :@"12345",
+    @"_session_id" : @"12345",
   };
   OCMStub([_mockModelManager processIntegrity:[OCMArg any]]).andReturn(NO);
   NSDictionary *processed = [FBSDKIntegrityManager processParameters:parameters];
 
   XCTAssertNotNil(processed[@"_valueToSum"]);
+  XCTAssertNotNil(processed[@"_session_id"]);
   XCTAssertNil(processed[@"_onDeviceParams"]);
 }
 

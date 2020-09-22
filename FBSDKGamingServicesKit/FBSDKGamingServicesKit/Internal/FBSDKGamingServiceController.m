@@ -18,12 +18,11 @@
 
 #import "FBSDKGamingServiceController.h"
 
-#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKCoreKitInternalImport.h"
 
 static NSString *const kServiceTypeStringFriendFinder = @"friendfinder";
 static NSString *const kServiceTypeStringMediaAsset = @"media_asset";
 static NSString *const kServiceTypeStringCommunity = @"community";
-
 
 static NSString *FBSDKGamingServiceTypeString(FBSDKGamingServiceType type)
 {
@@ -39,7 +38,7 @@ static NSString *FBSDKGamingServiceTypeString(FBSDKGamingServiceType type)
   }
 }
 
-static NSURL* FBSDKGamingServicesUrl(FBSDKGamingServiceType serviceType, NSString *argument)
+static NSURL *FBSDKGamingServicesUrl(FBSDKGamingServiceType serviceType, NSString *argument)
 {
   return
   [NSURL URLWithString:
@@ -49,7 +48,6 @@ static NSURL* FBSDKGamingServicesUrl(FBSDKGamingServiceType serviceType, NSStrin
     FBSDKGamingServiceTypeString(serviceType),
     argument]];
 }
-
 
 @implementation FBSDKGamingServiceController
 {
@@ -76,11 +74,11 @@ static NSURL* FBSDKGamingServicesUrl(FBSDKGamingServiceType serviceType, NSStrin
   [[FBSDKBridgeAPI sharedInstance]
    openURL:FBSDKGamingServicesUrl(_serviceType, argument)
    sender:weakSelf
-   handler:^(BOOL success, NSError * _Nullable error) {
-    if (!success) {
-      [weakSelf handleBridgeAPIError:error];
-    }
-  }];
+   handler:^(BOOL success, NSError *_Nullable error) {
+     if (!success) {
+       [weakSelf handleBridgeAPIError:error];
+     }
+   }];
 }
 
 - (void)handleBridgeAPIError:(NSError *)error
@@ -90,18 +88,22 @@ static NSURL* FBSDKGamingServicesUrl(FBSDKGamingServiceType serviceType, NSStrin
   }
 
   if (error) {
-    _completionHandler(false,
-                       nil,
-                       [FBSDKError
-                       errorWithCode:FBSDKErrorBridgeAPIInterruption
-                       message:@"Error occured while interacting with Gaming Services"
-                       underlyingError:error]);
+    _completionHandler(
+      false,
+      nil,
+      [FBSDKError
+       errorWithCode:FBSDKErrorBridgeAPIInterruption
+       message:@"Error occured while interacting with Gaming Services"
+       underlyingError:error]
+    );
   } else {
-    _completionHandler(false,
-                       nil,
-                       [FBSDKError
-                        errorWithCode:FBSDKErrorBridgeAPIInterruption
-                        message:@"An Unknown error occured while interacting with Gaming Services"]);
+    _completionHandler(
+      false,
+      nil,
+      [FBSDKError
+       errorWithCode:FBSDKErrorBridgeAPIInterruption
+       message:@"An Unknown error occured while interacting with Gaming Services"]
+    );
   }
 
   _completionHandler = nil;
@@ -133,10 +135,10 @@ static NSURL* FBSDKGamingServicesUrl(FBSDKGamingServiceType serviceType, NSStrin
   return isGamingUrl;
 }
 
-- (BOOL)canOpenURL:(NSURL *)url
-    forApplication:(UIApplication *)application
- sourceApplication:(NSString *)sourceApplication
-        annotation:(id)annotation
+- (BOOL) canOpenURL:(NSURL *)url
+     forApplication:(UIApplication *)application
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation
 {
   return
   [self
@@ -156,15 +158,14 @@ static NSURL* FBSDKGamingServicesUrl(FBSDKGamingServiceType serviceType, NSStrin
   return false;
 }
 
-
 #pragma mark - Helpers
 
 - (BOOL)isValidCallbackURL:(NSURL *)url forService:(NSString *)service
 {
   // verify the URL is intended as a callback for the SDK's friend finder
   return
-  [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", [FBSDKSettings appID]]] &&
-  [url.host isEqualToString:service];
+  [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", [FBSDKSettings appID]]]
+  && [url.host isEqualToString:service];
 }
 
 @end

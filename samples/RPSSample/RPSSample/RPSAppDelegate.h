@@ -28,8 +28,8 @@
 
 @interface RPSAppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate>
 
-@property (strong, nonatomic) UIWindow *window;
-//@property (strong, nonatomic) UITabBarController *tabBarController;
-@property (strong, nonatomic) UINavigationController *navigationController;
+@property (nonatomic, strong) UIWindow *window;
+// @property (strong, nonatomic) UITabBarController *tabBarController;
+@property (nonatomic, strong) UINavigationController *navigationController;
 
 @end

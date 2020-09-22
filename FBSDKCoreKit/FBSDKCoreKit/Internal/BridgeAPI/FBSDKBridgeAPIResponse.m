@@ -20,25 +20,24 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKBridgeAPIResponse.h"
+ #import "FBSDKBridgeAPIResponse.h"
 
-#import "FBSDKBridgeAPIProtocol.h"
-#import "FBSDKBridgeAPIProtocolType.h"
-#import "FBSDKBridgeAPIRequest+Private.h"
-#import "FBSDKInternalUtility.h"
-#import "FBSDKTypeUtility.h"
+ #import "FBSDKBridgeAPIProtocol.h"
+ #import "FBSDKBridgeAPIProtocolType.h"
+ #import "FBSDKBridgeAPIRequest+Private.h"
+ #import "FBSDKInternalUtility.h"
 
 @interface FBSDKBridgeAPIResponse ()
 - (instancetype)initWithRequest:(FBSDKBridgeAPIRequest *)request
              responseParameters:(NSDictionary *)responseParameters
                       cancelled:(BOOL)cancelled
                           error:(NSError *)error
-NS_DESIGNATED_INITIALIZER;
+  NS_DESIGNATED_INITIALIZER;
 @end
 
 @implementation FBSDKBridgeAPIResponse
 
-#pragma mark - Class Methods
+ #pragma mark - Class Methods
 
 + (instancetype)bridgeAPIResponseWithRequest:(FBSDKBridgeAPIRequest *)request error:(NSError *)error
 {
@@ -59,13 +58,13 @@ NS_DESIGNATED_INITIALIZER;
     // https://forums.developer.apple.com/thread/119118
   } else {
     switch (protocolType) {
-      case FBSDKBridgeAPIProtocolTypeNative:{
+      case FBSDKBridgeAPIProtocolTypeNative: {
         if (![FBSDKInternalUtility isFacebookBundleIdentifier:sourceApplication]) {
           return nil;
         }
         break;
       }
-      case FBSDKBridgeAPIProtocolTypeWeb:{
+      case FBSDKBridgeAPIProtocolTypeWeb: {
         if (![FBSDKInternalUtility isSafariBundleIdentifier:sourceApplication]) {
           return nil;
         }
@@ -104,7 +103,7 @@ NS_DESIGNATED_INITIALIZER;
                                  error:nil];
 }
 
-#pragma mark - Object Lifecycle
+ #pragma mark - Object Lifecycle
 
 - (instancetype)initWithRequest:(FBSDKBridgeAPIRequest *)request
              responseParameters:(NSDictionary *)responseParameters
@@ -120,7 +119,7 @@ NS_DESIGNATED_INITIALIZER;
   return self;
 }
 
-#pragma mark - NSCopying
+ #pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone
 {

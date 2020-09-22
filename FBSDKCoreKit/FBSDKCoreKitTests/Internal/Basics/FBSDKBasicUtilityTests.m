@@ -17,8 +17,8 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #import <XCTest/XCTest.h>
 
-#import "FBSDKBasicUtility.h"
 #import "FBSDKCoreKit.h"
+#import "FBSDKInternalUtility.h"
 
 @interface FBSDKBasicUtilityTests : XCTestCase
 @end
@@ -30,8 +30,8 @@
   NSString *URLString = @"https://www.facebook.com";
   NSURL *URL = [NSURL URLWithString:URLString];
   NSDictionary<NSString *, id> *dictionary = @{
-                                               @"url": URL,
-                                               };
+    @"url" : URL,
+  };
   NSError *error;
   NSString *JSONString = [FBSDKBasicUtility JSONStringForObject:dictionary error:&error invalidObjectHandler:NULL];
   XCTAssertNil(error);
@@ -49,7 +49,7 @@
   XCTAssertTrue([result1 isKindOfClass:[NSString class]]);
   XCTAssertEqualObjects(result1, @"1");
 
-  NSURL *value2= [NSURL URLWithString:@"https://test"];
+  NSURL *value2 = [NSURL URLWithString:@"https://test"];
   id result2 = [FBSDKBasicUtility convertRequestValue:value2];
   XCTAssertTrue([result2 isKindOfClass:[NSString class]]);
   XCTAssertEqualObjects(result2, @"https://test");
@@ -64,10 +64,10 @@
   NSURL *URL = [NSURL URLWithString:@"http://example.com/path/to/page.html?key1&key2=value2&key3=value+3%20%3D%20foo#fragment=go"];
   NSDictionary<NSString *, NSString *> *dictionary = [FBSDKBasicUtility dictionaryWithQueryString:URL.query];
   NSDictionary<NSString *, NSString *> *expectedDictionary = @{
-                                                               @"key1": @"",
-                                                               @"key2": @"value2",
-                                                               @"key3": @"value 3 = foo",
-                                                               };
+    @"key1" : @"",
+    @"key2" : @"value2",
+    @"key3" : @"value 3 = foo",
+  };
   XCTAssertEqualObjects(dictionary, expectedDictionary);
   NSString *queryString = [FBSDKBasicUtility queryStringWithDictionary:dictionary error:NULL invalidObjectHandler:NULL];
   NSString *expectedQueryString = @"key1=&key2=value2&key3=value%203%20%3D%20foo";

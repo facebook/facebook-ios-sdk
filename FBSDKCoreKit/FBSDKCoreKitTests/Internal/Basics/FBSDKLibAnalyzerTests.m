@@ -16,11 +16,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
-#import <OCMock/OCMock.h>
-
-#import "FBSDKLibAnalyzer.h"
+#import "FBSDKCoreKit+Internal.h"
 
 @interface FBSDKLibAnalyzer ()
 
@@ -65,7 +64,6 @@
   callstackEntry = @"0 CoreFoundation 0000000104cbd02e __exceptionPreprocess + 350";
   NSString *result2 = [FBSDKLibAnalyzer getAddress:callstackEntry];
   XCTAssertNil(result2);
-
 }
 
 @end

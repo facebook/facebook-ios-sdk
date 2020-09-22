@@ -16,13 +16,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
-#import <OCMock/OCMock.h>
-
-#import "FBSDKServerConfigurationManager.h"
-#import "FBSDKRestrictiveDataFilterManager.h"
 #import "FBSDKEventDeactivationManager.h"
+#import "FBSDKRestrictiveDataFilterManager.h"
+#import "FBSDKServerConfigurationManager.h"
 
 @interface FBSDKEventDeactivationTests : XCTestCase
 @end
@@ -50,8 +49,7 @@
                                                @"_logTime" : @1576109848,
                                                @"_session_id" : @"30AF582C-0225-40A4-B3EE-2A571AB926F3",
                                                @"fb_mobile_launch_source" : @"Unclassified",
-                                               @"deprecated_3" : @"test",
-  };
+                                               @"deprecated_3" : @"test", };
   NSDictionary<NSString *, id> *result = [FBSDKEventDeactivationManager processParameters:parameters eventName:@"manual_initiated_checkout"];
   XCTAssertNil(result[@"deprecated_3"]);
   XCTAssertNotNil(result[@"_ui"]);
@@ -61,4 +59,3 @@
 }
 
 @end
-

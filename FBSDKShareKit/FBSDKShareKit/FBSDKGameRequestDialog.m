@@ -20,16 +20,16 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKGameRequestDialog.h"
+ #import "FBSDKGameRequestDialog.h"
 
-#ifdef FBSDKCOCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
-#import "FBSDKCoreKit+Internal.h"
-#endif
-#import "FBSDKGameRequestFrictionlessRecipientCache.h"
-#import "FBSDKShareConstants.h"
-#import "FBSDKShareUtility.h"
+ #ifdef FBSDKCOCOAPODS
+  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+ #else
+  #import "FBSDKCoreKit+Internal.h"
+ #endif
+ #import "FBSDKGameRequestFrictionlessRecipientCache.h"
+ #import "FBSDKShareConstants.h"
+ #import "FBSDKShareUtility.h"
 
 @interface FBSDKGameRequestDialog () <FBSDKWebDialogDelegate>
 @end
@@ -40,9 +40,9 @@
   FBSDKWebDialog *_webDialog;
 }
 
-#define FBSDK_APP_REQUEST_METHOD_NAME @"apprequests"
+ #define FBSDK_APP_REQUEST_METHOD_NAME @"apprequests"
 
-#pragma mark - Class Methods
+ #pragma mark - Class Methods
 
 static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 
@@ -68,7 +68,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   return dialog;
 }
 
-#pragma mark - Object Lifecycle
+ #pragma mark - Object Lifecycle
 
 - (instancetype)init
 {
@@ -85,7 +85,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   _webDialog.delegate = nil;
 }
 
-#pragma mark - Public Methods
+ #pragma mark - Public Methods
 
 - (BOOL)canShow
 {
@@ -166,7 +166,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   return NO;
 }
 
-#pragma mark - FBSDKWebDialogDelegate
+ #pragma mark - FBSDKWebDialogDelegate
 
 - (void)webDialog:(FBSDKWebDialog *)webDialog didCompleteWithResults:(NSDictionary *)results
 {
@@ -195,7 +195,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   [self _didCancel];
 }
 
-#pragma mark - FBSDKBridgeAPI
+ #pragma mark - FBSDKBridgeAPI
 
 - (BOOL)_launchDialogViaBridgeAPIWithParameters:(NSDictionary *)parameters
 {
@@ -224,8 +224,8 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
    useSafariViewController:false
    fromViewController:topMostViewController
    completionBlock:^(FBSDKBridgeAPIResponse *response) {
-    [weakSelf _handleBridgeAPIResponse:response];
-  }];
+     [weakSelf _handleBridgeAPIResponse:response];
+   }];
 
   return YES;
 }
@@ -245,7 +245,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   [self _didCompleteWithResults:response.responseParameters];
 }
 
-#pragma mark - Response Handling
+ #pragma mark - Response Handling
 
 - (void)_didCompleteWithResults:(NSDictionary *)results
 {
@@ -262,7 +262,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   [self _cleanUp];
 
   NSError *error = [FBSDKError errorWithCode:[FBSDKTypeUtility unsignedIntegerValue:results[@"error_code"]]
-                                    message:[FBSDKTypeUtility stringValue:results[@"error_message"]]];
+                                     message:[FBSDKTypeUtility stringValue:results[@"error_message"]]];
   if (!error.code) {
     // reformat "to[x]" keys into an array.
     int counter = 0;
@@ -299,7 +299,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   [FBSDKInternalUtility unregisterTransientObject:self];
 }
 
-#pragma mark - Helper Methods
+ #pragma mark - Helper Methods
 
 - (void)_cleanUp
 {
@@ -312,41 +312,40 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
     return;
   }
   switch (error.code) {
-    case 0:{
+    case 0: {
       [_delegate gameRequestDialog:self didCompleteWithResults:results];
       break;
     }
-    case 4201:{
+    case 4201: {
       [_delegate gameRequestDialogDidCancel:self];
       break;
     }
-    default:{
+    default: {
       [_delegate gameRequestDialog:self didFailWithError:error];
       break;
     }
   }
   if (error) {
     return;
-  } else {
-  }
+  } else {}
 }
 
 - (NSString *)_actionTypeNameForActionType:(FBSDKGameRequestActionType)actionType
 {
   switch (actionType) {
-    case FBSDKGameRequestActionTypeNone:{
+    case FBSDKGameRequestActionTypeNone: {
       return nil;
     }
-    case FBSDKGameRequestActionTypeSend:{
+    case FBSDKGameRequestActionTypeSend: {
       return @"send";
     }
-    case FBSDKGameRequestActionTypeAskFor:{
+    case FBSDKGameRequestActionTypeAskFor: {
       return @"askfor";
     }
-    case FBSDKGameRequestActionTypeTurn:{
+    case FBSDKGameRequestActionTypeTurn: {
       return @"turn";
     }
-    default:{
+    default: {
       return nil;
     }
   }
@@ -355,16 +354,16 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 - (NSString *)_filtersNameForFilters:(FBSDKGameRequestFilter)filters
 {
   switch (filters) {
-    case FBSDKGameRequestFilterNone:{
+    case FBSDKGameRequestFilterNone: {
       return nil;
     }
-    case FBSDKGameRequestFilterAppUsers:{
+    case FBSDKGameRequestFilterAppUsers: {
       return @"app_users";
     }
-    case FBSDKGameRequestFilterAppNonUsers:{
+    case FBSDKGameRequestFilterAppNonUsers: {
       return @"app_non_users";
     }
-    default:{
+    default: {
       return nil;
     }
   }

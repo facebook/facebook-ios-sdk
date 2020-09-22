@@ -20,29 +20,32 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKLoginManagerLoginResult+Internal.h"
+ #import "FBSDKLoginManagerLoginResult+Internal.h"
 
-#ifdef FBSDKCOCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
-#import "FBSDKCoreKit+Internal.h"
-#endif
+ #ifdef FBSDKCOCOAPODS
+  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+ #else
+  #import "FBSDKCoreKit+Internal.h"
+ #endif
 
-@implementation FBSDKLoginManagerLoginResult {
+@implementation FBSDKLoginManagerLoginResult
+{
   NSMutableDictionary *_mutableLoggingExtras;
 }
 
 - (instancetype)initWithToken:(FBSDKAccessToken *)token
                   isCancelled:(BOOL)isCancelled
            grantedPermissions:(NSSet *)grantedPermissions
-          declinedPermissions:(NSSet *)declinedPermissions {
+          declinedPermissions:(NSSet *)declinedPermissions
+{
   if ((self = [super init])) {
     _mutableLoggingExtras = [NSMutableDictionary dictionary];
     _token = token ? [token copy] : nil;
     _isCancelled = isCancelled;
     _grantedPermissions = [grantedPermissions copy];
     _declinedPermissions = [declinedPermissions copy];
-  };
+  }
+  ;
   return self;
 }
 

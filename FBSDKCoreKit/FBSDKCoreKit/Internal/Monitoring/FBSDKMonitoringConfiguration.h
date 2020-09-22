@@ -22,7 +22,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKMonitoringConfiguration : NSObject<NSCoding>
+@interface FBSDKMonitoringConfiguration : NSObject <NSCoding>
 
 @property (nonatomic, readonly) int defaultSamplingRate;
 

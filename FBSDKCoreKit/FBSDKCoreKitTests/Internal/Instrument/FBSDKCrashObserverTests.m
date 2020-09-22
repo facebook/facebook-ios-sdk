@@ -16,11 +16,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
-#import <OCMock/OCMock.h>
-
-#import "FBSDKCrashHandler.h"
 #import "FBSDKCrashObserver.h"
 #import "FBSDKFeatureManager.h"
 
@@ -61,7 +59,7 @@
 {
   NSArray<NSString *> *callstack = @[@"(4 DEV METHODS)",
                                      @"+[FBSDKCodelessIndexer crash]+84",
-                                     @"(22 DEV METHODS)"] ;
+                                     @"(22 DEV METHODS)"];
   NSArray<NSDictionary<NSString *, id> *> *crashLogs = @[@{
                                                            @"callstack" : callstack,
                                                            @"reason" : @"NSInternalInconsistencyException",
@@ -71,9 +69,8 @@
                                                            @"device_model" : @"iPad5,3",
                                                            @"device_os" : @"ios",
                                                            @"device_os_version" : @"13.1.3",
-                                                           }];
+  }];
   return crashLogs;
 }
 
 @end
-

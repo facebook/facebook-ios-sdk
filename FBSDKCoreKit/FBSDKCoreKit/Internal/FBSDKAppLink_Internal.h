@@ -20,7 +20,7 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKAppLink.h"
+ #import "FBSDKAppLink.h"
 
 FOUNDATION_EXPORT NSString *const FBSDKAppLinkDataParameterName;
 FOUNDATION_EXPORT NSString *const FBSDKAppLinkTargetKeyName;
@@ -39,7 +39,7 @@ FOUNDATION_EXPORT NSString *const FBSDKAppLinkRefererUrl;
                     isBackToReferrer:(BOOL)isBackToReferrer;
 
 /** return if this AppLink is to go back to referrer. */
-@property (nonatomic, assign, readonly, getter=isBackToReferrer) BOOL backToReferrer;
+@property (nonatomic, readonly, getter = isBackToReferrer, assign) BOOL backToReferrer;
 
 @end
 

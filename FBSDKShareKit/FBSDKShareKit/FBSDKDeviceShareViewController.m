@@ -20,22 +20,24 @@
 
 #if TARGET_OS_TV
 
-#import "FBSDKDeviceShareViewController.h"
+ #import "FBSDKDeviceShareViewController.h"
 
-#ifdef FBSDKCOCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
-#import "FBSDKCoreKit+Internal.h"
-#endif
-#import "FBSDKShareLinkContent.h"
-#import "FBSDKShareUtility.h"
+ #ifdef FBSDKCOCOAPODS
+  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+ #else
+  #import "FBSDKCoreKit+Internal.h"
+ #endif
+ #import "FBSDKShareLinkContent.h"
+ #import "FBSDKShareUtility.h"
 
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FBSDKDeviceShareViewController
+ #pragma clang diagnostic pop
 
 - (instancetype)initWithShareContent:(id<FBSDKSharingContent>)shareContent
 {
-  if ((self = [super initWithNibName:nil bundle:nil]))
-  {
+  if ((self = [super initWithNibName:nil bundle:nil])) {
     _shareContent = shareContent;
   }
   return self;
@@ -92,13 +94,14 @@
     }
     self.deviceDialogView.confirmationCode = code;
     __weak typeof(self) weakSelf = self;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(expires * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-      [weakSelf _dismissWithError:nil];
-    });
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(expires * NSEC_PER_SEC)),
+      dispatch_get_main_queue(), ^{
+        [weakSelf _dismissWithError:nil];
+      });
   }];
 }
 
-#pragma mark - Private impl
+ #pragma mark - Private impl
 
 - (void)_dismissWithError:(NSError *)error
 {
@@ -140,6 +143,7 @@
   }
   return nil;
 }
+
 @end
 
 #endif

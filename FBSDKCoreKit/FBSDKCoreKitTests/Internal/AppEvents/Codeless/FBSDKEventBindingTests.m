@@ -19,12 +19,13 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKCodelessParameterComponent.h"
+#import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKEventBinding.h"
 #import "FBSDKEventBindingManager.h"
 #import "FBSDKSampleEventBinding.h"
-#import "FBSDKCoreKitTests-Swift.h"
 
-@interface FBSDKEventBindingTests : XCTestCase {
+@interface FBSDKEventBindingTests : XCTestCase
+{
   UIWindow *window;
   FBSDKEventBindingManager *eventBindingManager;
   UIButton *btnBuy;
@@ -34,7 +35,7 @@
 
 @end
 
-@interface FBSDKEventBinding(Testing)
+@interface FBSDKEventBinding (Testing)
 
 + (NSString *)findParameterOfPath:(NSArray *)path
                          pathType:(NSString *)pathType
@@ -44,7 +45,8 @@
 
 @implementation FBSDKEventBindingTests
 
-- (void)setUp {
+- (void)setUp
+{
   [super setUp];
 
   if (@available(iOS 9.0, *)) {
@@ -84,12 +86,14 @@
   }
 }
 
-- (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    [super tearDown];
+- (void)tearDown
+{
+  // Put teardown code here. This method is called after the invocation of each test method in the class.
+  [super tearDown];
 }
 
-- (void)testMatching {
+- (void)testMatching
+{
   NSArray *bindings = [FBSDKEventBindingManager parseArray:[FBSDKSampleEventBinding getSampleDictionary][@"event_bindings"]];
   FBSDKEventBinding *binding = bindings[0];
   XCTAssertTrue([FBSDKEventBinding isViewMatchPath:stepper path:binding.path]);
@@ -97,7 +101,7 @@
   binding = bindings[1];
   FBSDKCodelessParameterComponent *component = binding.parameters[0];
   XCTAssertTrue([FBSDKEventBinding isViewMatchPath:btnBuy path:binding.path]);
-  NSString *price = [FBSDKEventBinding findParameterOfPath:component.path  pathType:component.pathType sourceView:btnBuy];
+  NSString *price = [FBSDKEventBinding findParameterOfPath:component.path pathType:component.pathType sourceView:btnBuy];
   XCTAssertEqual(price, @"$2.0");
 
   binding = bindings[2];
@@ -110,7 +114,8 @@
   XCTAssertEqual(action, @"Confirm");
 }
 
-- (void)testEventBindingEquation {
+- (void)testEventBindingEquation
+{
   NSArray *bindings = [FBSDKEventBindingManager parseArray:[FBSDKSampleEventBinding getSampleDictionary][@"event_bindings"]];
   XCTAssertTrue([bindings[0] isEqualToBinding:bindings[0]]);
   XCTAssertFalse([bindings[0] isEqualToBinding:bindings[1]]);
@@ -120,7 +125,7 @@
 {
   for (int i = 0; i < 1000; i++) {
     NSDictionary *sampleData = [FBSDKSampleEventBinding getSampleDictionary];
-    [FBSDKEventBindingManager parseArray: @[[Fuzzer randomizeWithJson:sampleData]]];
+    [FBSDKEventBindingManager parseArray:@[[Fuzzer randomizeWithJson:sampleData]]];
   }
 }
 

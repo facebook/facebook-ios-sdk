@@ -20,21 +20,22 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKViewHierarchy.h"
+ #import "FBSDKViewHierarchy.h"
 
-#import <objc/runtime.h>
+ #import <QuartzCore/QuartzCore.h>
 
-#import <QuartzCore/QuartzCore.h>
+ #import <objc/runtime.h>
 
-#import "FBSDKCodelessPathComponent.h"
-#import "FBSDKCoreKit+Internal.h"
-#import "FBSDKViewHierarchyMacros.h"
+ #import "FBSDKCodelessPathComponent.h"
+ #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKViewHierarchyMacros.h"
 
-#define MAX_VIEW_HIERARCHY_LEVEL 35
+ #define MAX_VIEW_HIERARCHY_LEVEL 35
 
 NS_ASSUME_NONNULL_BEGIN
 
-void fb_dispatch_on_main_thread(dispatch_block_t block) {
+void fb_dispatch_on_main_thread(dispatch_block_t block)
+{
   if (block != nil) {
     if ([NSThread isMainThread]) {
       block();
@@ -44,15 +45,18 @@ void fb_dispatch_on_main_thread(dispatch_block_t block) {
   }
 }
 
-void fb_dispatch_on_default_thread(dispatch_block_t block) {
+void fb_dispatch_on_default_thread(dispatch_block_t block)
+{
   if (block != nil) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block);
   }
 }
 
+id getVariableFromInstance(NSObject *instance, NSString *variableName);
+
 @implementation FBSDKViewHierarchy
 
-+ (nullable NSArray*)getChildren:(NSObject*)obj
++ (nullable NSArray *)getChildren:(NSObject *)obj
 {
   if ([obj isKindOfClass:[UIControl class]]) {
     return nil;
@@ -89,9 +93,9 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
       }
     }
   } else if ([obj isKindOfClass:[UINavigationController class]]) {
-    UIViewController *vc = ((UINavigationController*)obj).visibleViewController;
-    UIViewController *tc = ((UINavigationController*)obj).topViewController;
-    NSArray *nextChildren = [FBSDKViewHierarchy getChildren:((UIViewController*)obj).view];
+    UIViewController *vc = ((UINavigationController *)obj).visibleViewController;
+    UIViewController *tc = ((UINavigationController *)obj).topViewController;
+    NSArray *nextChildren = [FBSDKViewHierarchy getChildren:((UIViewController *)obj).view];
     for (NSObject *child in nextChildren) {
       if (tc && [self isView:child superViewOfView:tc.view]) {
         [FBSDKTypeUtility array:children addObject:tc];
@@ -115,7 +119,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
     }
   } else if ([obj isKindOfClass:[UITabBarController class]]) {
     UIViewController *vc = ((UITabBarController *)obj).selectedViewController;
-    NSArray *nextChildren = [FBSDKViewHierarchy getChildren:((UIViewController*)obj).view];
+    NSArray *nextChildren = [FBSDKViewHierarchy getChildren:((UIViewController *)obj).view];
     for (NSObject *child in nextChildren) {
       if (vc && [self isView:child superViewOfView:vc.view]) {
         [FBSDKTypeUtility array:children addObject:vc];
@@ -162,8 +166,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
     if (superview && superview != obj) {
       return superview;
     }
-  }
-  else if ([obj isKindOfClass:[UIViewController class]]) {
+  } else if ([obj isKindOfClass:[UIViewController class]]) {
     UIViewController *vc = (UIViewController *)obj;
     UIViewController *parentVC = vc.parentViewController;
     UIViewController *presentingVC = vc.presentingViewController;
@@ -219,13 +222,13 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
   NSDictionary *componentInfo = [FBSDKViewHierarchy getAttributesOf:obj parent:parent];
 
   FBSDKCodelessPathComponent *pathComponent = [[FBSDKCodelessPathComponent alloc]
-                                        initWithJSON:componentInfo];
+                                               initWithJSON:componentInfo];
   [FBSDKTypeUtility array:path addObject:pathComponent];
 
   return [NSArray arrayWithArray:path];
 }
 
-+ (NSDictionary<NSString *, id> *)getAttributesOf:(NSObject *)obj parent:(NSObject * _Nullable)parent
++ (NSDictionary<NSString *, id> *)getAttributesOf:(NSObject *)obj parent:(NSObject *_Nullable)parent
 {
   NSMutableDictionary *componentInfo = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:componentInfo setObject:NSStringFromClass([obj class]) forKey:CODELESS_MAPPING_CLASS_NAME_KEY];
@@ -336,15 +339,33 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
   return indexPath;
 }
 
+// This method only works for ObjC objects (whether statically typed or id)
+id getVariableFromInstance(NSObject *instance, NSString *variableName)
+{
+  if (instance == nil || variableName.length == 0) {
+    return nil;
+  }
+
+  Ivar ivar = class_getInstanceVariable([instance class], variableName.UTF8String);
+  if (ivar != NULL) {
+    const char *encoding = ivar_getTypeEncoding(ivar);
+    if (encoding != NULL && encoding[0] == '@') {
+      return object_getIvar(instance, ivar);
+    }
+  }
+
+  return nil;
+}
+
 + (NSString *)getText:(nullable NSObject *)obj
 {
   NSString *text = nil;
 
   if ([obj isKindOfClass:[UIButton class]]) {
     text = ((UIButton *)obj).currentTitle;
-  } else if ([obj isKindOfClass:[UITextView class]] ||
-             [obj isKindOfClass:[UITextField class]] ||
-             [obj isKindOfClass:[UILabel class]]) {
+  } else if ([obj isKindOfClass:[UITextView class]]
+             || [obj isKindOfClass:[UITextField class]]
+             || [obj isKindOfClass:[UILabel class]]) {
     text = ((UILabel *)obj).text;
   } else if ([obj isKindOfClass:[UIPickerView class]]) {
     UIPickerView *picker = (UIPickerView *)obj;
@@ -377,19 +398,19 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
     }
   } else if ([obj isKindOfClass:[UIDatePicker class]]) {
     UIDatePicker *picker = (UIDatePicker *)obj;
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    NSDateFormatter *const formatter = [NSDateFormatter new];
     formatter.dateFormat = @"yyyy-MM-dd HH:mm:ssZ";
     text = [formatter stringFromDate:picker.date];
   } else if ([obj isKindOfClass:objc_lookUpClass("RCTTextView")]) {
-    NSTextStorage *textStorage = [FBSDKAppEventsUtility getVariable:@"_textStorage"
-                                                       fromInstance:obj];
+    NSTextStorage *const textStorage = FBSDK_CAST_TO_CLASS_OR_NIL(getVariableFromInstance(obj, @"_textStorage"), NSTextStorage);
     if (textStorage) {
-      text = textStorage.string;
+      text = [textStorage string];
     }
   } else if ([obj isKindOfClass:objc_lookUpClass("RCTBaseTextInputView")]) {
-    NSAttributedString *attributedText = [FBSDKAppEventsUtility getVariable:@"attributedText"
-                                                               fromInstance:obj];
-    text = attributedText.string;
+    NSAttributedString *const attributedText = FBSDK_CAST_TO_CLASS_OR_NIL(getVariableFromInstance(obj, @"attributedText"), NSAttributedString);
+    if (attributedText) {
+      text = [attributedText string];
+    }
   }
 
   return text ?: @"";
@@ -415,10 +436,10 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
     CGFloat fontSize = font.pointSize;
 
     return @{
-             CODELESS_VIEW_TREE_TEXT_IS_BOLD_KEY: @(isBold),
-             CODELESS_VIEW_TREE_TEXT_IS_ITALIC_KEY: @(isItalic),
-             CODELESS_VIEW_TREE_TEXT_SIZE_KEY: @(fontSize)
-             };
+      CODELESS_VIEW_TREE_TEXT_IS_BOLD_KEY : @(isBold),
+      CODELESS_VIEW_TREE_TEXT_IS_ITALIC_KEY : @(isItalic),
+      CODELESS_VIEW_TREE_TEXT_SIZE_KEY : @(fontSize)
+    };
   }
 
   return nil;
@@ -453,7 +474,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
         bitmask |= FBCodelessClassBitmaskUIButton;
       } else if ([obj isKindOfClass:[UISwitch class]]) {
         bitmask |= FBCodelessClassBitmaskSwitch;
-      }else if ([obj isKindOfClass:[UIDatePicker class]]) {
+      } else if ([obj isKindOfClass:[UIDatePicker class]]) {
         bitmask |= FBCodelessClassBitmaskPicker;
       }
     } else if ([obj isKindOfClass:[UITableViewCell class]]) {
@@ -514,7 +535,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
   }
 
   if (objAddressSet) {
-    if ([objAddressSet containsObject: currentNode]) {
+    if ([objAddressSet containsObject:currentNode]) {
       return nil;
     }
     [objAddressSet addObject:currentNode];
@@ -544,8 +565,8 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
   return [result copy];
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wundeclared-selector"
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wundeclared-selector"
 + (BOOL)isRCTButton:(UIView *)view
 {
   if (view == nil) {
@@ -553,10 +574,10 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
   }
 
   Class classRCTView = objc_lookUpClass(ReactNativeClassRCTView);
-  if (classRCTView && [view isKindOfClass:classRCTView] &&
-      [view respondsToSelector:@selector(reactTagAtPoint:)] &&
-      [view respondsToSelector:@selector(reactTag)] &&
-      view.userInteractionEnabled) {
+  if (classRCTView && [view isKindOfClass:classRCTView]
+      && [view respondsToSelector:@selector(reactTagAtPoint:)]
+      && [view respondsToSelector:@selector(reactTag)]
+      && view.userInteractionEnabled) {
     // We check all its subviews locations and the view is clickable if there exists one that mathces reactTagAtPoint
     for (UIView *subview in view.subviews) {
       if (subview && ![subview isKindOfClass:classRCTView]) {
@@ -584,7 +605,8 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
 
   return nil;
 }
-#pragma clang diagnostic pop
+
+ #pragma clang diagnostic pop
 
 + (BOOL)isView:(NSObject *)obj1 superViewOfView:(UIView *)obj2
 {
@@ -670,18 +692,19 @@ void fb_dispatch_on_default_thread(dispatch_block_t block) {
   CGRect frame = view.frame;
   CGPoint offset = CGPointZero;
 
-  if ([view isKindOfClass:[UIScrollView class]])
+  if ([view isKindOfClass:[UIScrollView class]]) {
     offset = ((UIScrollView *)view).contentOffset;
+  }
 
   return @{
-           CODELESS_VIEW_TREE_TOP_KEY: @((int)frame.origin.y),
-           CODELESS_VIEW_TREE_LEFT_KEY: @((int)frame.origin.x),
-           CODELESS_VIEW_TREE_WIDTH_KEY: @((int)frame.size.width),
-           CODELESS_VIEW_TREE_HEIGHT_KEY: @((int)frame.size.height),
-           CODELESS_VIEW_TREE_OFFSET_X_KEY: @((int)offset.x),
-           CODELESS_VIEW_TREE_OFFSET_Y_KEY: @((int)offset.y),
-           CODELESS_VIEW_TREE_VISIBILITY_KEY: view.isHidden ? @4 : @0
-           };
+    CODELESS_VIEW_TREE_TOP_KEY : @((int)frame.origin.y),
+    CODELESS_VIEW_TREE_LEFT_KEY : @((int)frame.origin.x),
+    CODELESS_VIEW_TREE_WIDTH_KEY : @((int)frame.size.width),
+    CODELESS_VIEW_TREE_HEIGHT_KEY : @((int)frame.size.height),
+    CODELESS_VIEW_TREE_OFFSET_X_KEY : @((int)offset.x),
+    CODELESS_VIEW_TREE_OFFSET_Y_KEY : @((int)offset.y),
+    CODELESS_VIEW_TREE_VISIBILITY_KEY : view.isHidden ? @4 : @0
+  };
 }
 
 + (NSString *)recursiveGetLabelsFromView:(UIView *)view

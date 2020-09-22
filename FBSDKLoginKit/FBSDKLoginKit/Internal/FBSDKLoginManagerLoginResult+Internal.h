@@ -20,11 +20,11 @@
 
 #if !TARGET_OS_TV
 
-#import <Foundation/Foundation.h>
+ #import <Foundation/Foundation.h>
 
-#import "FBSDKLoginManagerLoginResult.h"
+ #import "FBSDKLoginManagerLoginResult.h"
 
-@interface FBSDKLoginManagerLoginResult()
+@interface FBSDKLoginManagerLoginResult ()
 
 @property (nonatomic, readonly) NSDictionary *loggingExtras;
 
@@ -32,7 +32,7 @@
 @property (nonatomic, assign) BOOL isSkipped;
 
 // adds additional logging entry to extras - only sent as part of `endLoginWithResult:`
--(void)addLoggingExtra:(id)object forKey:(id<NSCopying>)key;
+- (void)addLoggingExtra:(id)object forKey:(id<NSCopying>)key;
 @end
 
 #endif

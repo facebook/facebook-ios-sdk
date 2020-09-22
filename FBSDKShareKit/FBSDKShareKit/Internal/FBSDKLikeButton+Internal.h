@@ -20,12 +20,12 @@
 
 #if !TARGET_OS_TV
 
-#import <Foundation/Foundation.h>
+ #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+ #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
 
-#import "FBSDKLikeActionController.h"
-#import "FBSDKLikeButton.h"
+ #import "FBSDKLikeActionController.h"
+ #import "FBSDKLikeButton.h"
 
 @interface FBSDKLikeButton () <FBSDKButtonImpressionTracking>
 

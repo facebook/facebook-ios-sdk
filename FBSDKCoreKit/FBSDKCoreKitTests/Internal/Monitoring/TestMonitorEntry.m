@@ -84,5 +84,4 @@
   return [self.name hash];
 }
 
-
 @end

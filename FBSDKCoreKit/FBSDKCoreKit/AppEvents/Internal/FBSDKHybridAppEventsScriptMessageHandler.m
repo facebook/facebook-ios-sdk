@@ -20,16 +20,16 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKHybridAppEventsScriptMessageHandler.h"
+ #import "FBSDKHybridAppEventsScriptMessageHandler.h"
 
-#if SWIFT_PACKAGE
-#import "FBSDKAppEvents.h"
-#else
-#import <FBSDKCoreKit/FBSDKAppEvents.h>
-#endif
+ #if SWIFT_PACKAGE
+  #import "FBSDKAppEvents.h"
+ #else
+  #import <FBSDKCoreKit/FBSDKAppEvents.h>
+ #endif
 
-#import "FBSDKAppEvents+Internal.h"
-#import "FBSDKTypeUtility.h"
+ #import "FBSDKAppEvents+Internal.h"
+ #import "FBSDKInternalUtility.h"
 
 NSString *const FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey = @"_fb_pixel_referral_id";
 
@@ -37,19 +37,19 @@ NSString *const FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey = @"_fb_pix
 
 @implementation FBSDKHybridAppEventsScriptMessageHandler
 
-- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
-
+- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message
+{
   if ([message.name isEqualToString:FBSDKAppEventsWKWebViewMessagesHandlerKey]) {
     NSString *event = message.body[FBSDKAppEventsWKWebViewMessagesEventKey];
     if (event.length > 0) {
       NSString *stringedParams = message.body[FBSDKAppEventsWKWebViewMessagesParamsKey];
-      NSMutableDictionary <NSString *, id> *params = nil;
+      NSMutableDictionary<NSString *, id> *params = nil;
       NSError *jsonParseError = nil;
       if ([stringedParams isKindOfClass:[NSString class]]) {
         params = [FBSDKTypeUtility JSONObjectWithData:[stringedParams dataUsingEncoding:NSUTF8StringEncoding]
-                                                                                    options:NSJSONReadingMutableContainers
-                                                                                      error:&jsonParseError
-                  ];
+                                              options:NSJSONReadingMutableContainers
+                                                error:&jsonParseError
+        ];
       }
       NSString *pixelID = message.body[FBSDKAppEventsWKWebViewMessagesPixelIDKey];
       if (pixelID == nil) {
@@ -59,8 +59,7 @@ NSString *const FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey = @"_fb_pix
       if (jsonParseError != nil || ![params isKindOfClass:[NSDictionary class]] || params == nil) {
         [FBSDKAppEventsUtility logAndNotify:@"Could not find parameters for your Pixel request. Check your webview Pixel configuration."];
         params = [[NSMutableDictionary alloc] initWithObjectsAndKeys:pixelID, FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey, nil];
-      }
-      else {
+      } else {
         [FBSDKTypeUtility dictionary:params setObject:pixelID forKey:FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey];
       }
       [FBSDKAppEvents logInternalEvent:event

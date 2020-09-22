@@ -24,7 +24,7 @@ import PackageDescription
 let package = Package(
     name: "Facebook",
     platforms: [
-        .iOS(.v8),
+        .iOS(.v9),
         .tvOS(.v10)
     ],
     products: [
@@ -48,8 +48,11 @@ let package = Package(
     dependencies: [],
     targets: [
         .target(
+            name: "FBSDKCoreKit_Basics"
+        ),
+        .target(
             name: "FBSDKCoreKit",
-            dependencies: [],
+            dependencies: ["FBSDKCoreKit_Basics"],
             path: "FBSDKCoreKit/FBSDKCoreKit",
             exclude: ["Swift"],
             cSettings: [
@@ -63,8 +66,6 @@ let package = Package(
                 .headerSearchPath("AppEvents/Internal/SuggestedEvents"),
                 .headerSearchPath("AppLink"),
                 .headerSearchPath("AppLink/Internal"),
-                .headerSearchPath("Basics/Instrument"),
-                .headerSearchPath("Basics/Internal"),
                 .headerSearchPath("GraphAPI"),
                 .headerSearchPath("Internal"),
                 .headerSearchPath("Internal/Base64"),
@@ -131,7 +132,8 @@ let package = Package(
             cSettings: [
                 .headerSearchPath("Internal"),
                 .headerSearchPath("../../FBSDKCoreKit/FBSDKCoreKit/Internal"),
-                .headerSearchPath("../../FBSDKShareKit/FBSDKShareKit/Internal")
+                .headerSearchPath("../../FBSDKShareKit/FBSDKShareKit/Internal"),
+                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS], configuration: nil))
             ]
         ),
         .target(

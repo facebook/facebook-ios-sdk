@@ -20,26 +20,26 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKEventBindingManager.h"
+ #import "FBSDKEventBindingManager.h"
 
-#import <objc/runtime.h>
+ #import <UIKit/UIKit.h>
 
-#import <UIKit/UIKit.h>
+ #import <objc/runtime.h>
 
-#import "FBSDKCodelessPathComponent.h"
-#import "FBSDKEventBinding.h"
-#import "FBSDKSwizzler.h"
-#import "FBSDKTypeUtility.h"
-#import "FBSDKViewHierarchy.h"
-#import "FBSDKViewHierarchyMacros.h"
+ #import "FBSDKCodelessPathComponent.h"
+ #import "FBSDKEventBinding.h"
+ #import "FBSDKInternalUtility.h"
+ #import "FBSDKSwizzler.h"
+ #import "FBSDKViewHierarchy.h"
+ #import "FBSDKViewHierarchyMacros.h"
 
-#define ReactNativeTargetKey          @"target"
-#define ReactNativeTouchEndEventName  @"touchEnd"
+ #define ReactNativeTargetKey          @"target"
+ #define ReactNativeTouchEndEventName  @"touchEnd"
 
-#define ReactNativeClassRCTTextView   "RCTTextView"
-#define ReactNativeClassRCTImageView  "RCTImageVIew"
-#define ReactNativeClassRCTTouchEvent "RCTTouchEvent"
-#define ReactNativeClassRCTTouchHandler "RCTTouchHandler"
+ #define ReactNativeClassRCTTextView   "RCTTextView"
+ #define ReactNativeClassRCTImageView  "RCTImageVIew"
+ #define ReactNativeClassRCTTouchEvent "RCTTouchEvent"
+ #define ReactNativeClassRCTTouchHandler "RCTTouchHandler"
 
 @interface FBSDKEventBindingManager ()
 {
@@ -53,7 +53,8 @@
 
 @implementation FBSDKEventBindingManager
 
-- (id)init {
+- (id)init
+{
   self = [super init];
   if (self) {
     isStarted = NO;
@@ -86,7 +87,8 @@
   return self;
 }
 
-+ (NSArray *)parseArray:(NSArray *)array {
++ (NSArray *)parseArray:(NSArray *)array
+{
   NSMutableArray *result = [NSMutableArray array];
 
   for (NSDictionary *json in array) {
@@ -97,7 +99,7 @@
   return [result copy];
 }
 
-- (FBSDKEventBindingManager*)initWithJSON:(NSDictionary*)dict
+- (FBSDKEventBindingManager *)initWithJSON:(NSDictionary *)dict
 {
   if ((self = [super init])) {
     NSArray *eventBindingsDict = [FBSDKTypeUtility arrayValue:dict[@"event_bindings"]];
@@ -111,8 +113,8 @@
   return self;
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wundeclared-selector"
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wundeclared-selector"
 - (void)start
 {
   if (isStarted) {
@@ -140,7 +142,7 @@
     Class classRCTImageView = objc_lookUpClass(ReactNativeClassRCTImageView);
     Class classRCTTouchHandler = objc_lookUpClass(ReactNativeClassRCTTouchHandler);
 
-    //  All react-native views would be added tp RCTRootView, so no need to check didMoveToWindow
+    // All react-native views would be added tp RCTRootView, so no need to check didMoveToWindow
     [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow)
                            onClass:classRCTView
                          withBlock:blockToWindow
@@ -155,38 +157,37 @@
                              named:@"match_react_native"];
 
     // RCTTouchHandler handles with touch events, like touchEnd and uses RCTEventDispather to dispatch events, so we can check _updateAndDispatchTouches to fire events
-    [FBSDKSwizzler swizzleSelector:@selector(_updateAndDispatchTouches:eventName:) onClass:classRCTTouchHandler withBlock:^(id touchHandler, SEL command, id touches, id eventName){
-      if ([touches isKindOfClass:[NSSet class]] && [eventName isKindOfClass:[NSString class]]) {
-        @try {
-          NSString *reactEventName = (NSString *)eventName;
-          NSSet<UITouch *> *reactTouches = (NSSet<UITouch *> *)touches;
-          if ([reactEventName isEqualToString:ReactNativeTouchEndEventName]) {
-            for (UITouch *touch in reactTouches) {
-              UIView *targetView = ((UITouch *)touch).view.superview;
-              NSNumber *reactTag = nil;
-              // Find the closest React-managed touchable view like RCTTouchHandler
-              while(targetView) {
-                reactTag = [FBSDKViewHierarchy getViewReactTag:targetView];
-                if (reactTag != nil && targetView.userInteractionEnabled) {
-                  break;
-                }
-                targetView = targetView.superview;
-              }
-              FBSDKEventBinding *eventBinding = self->reactBindings[reactTag];
-              if (reactTag != nil && eventBinding != nil) {
-                [eventBinding trackEvent:nil];
-              }
-            }
-          }
-        }
-        @catch(NSException *exception) {
-          //  Catch exception here to prevent LytroKit from crashing app
-        }
-      }
-    } named:@"dispatch_rn_event"];
+    [FBSDKSwizzler swizzleSelector:@selector(_updateAndDispatchTouches:eventName:) onClass:classRCTTouchHandler withBlock:^(id touchHandler, SEL command, id touches, id eventName) {
+                                                                                                                  if ([touches isKindOfClass:[NSSet class]] && [eventName isKindOfClass:[NSString class]]) {
+                                                                                                                    @try {
+                                                                                                                      NSString *reactEventName = (NSString *)eventName;
+                                                                                                                      NSSet<UITouch *> *reactTouches = (NSSet<UITouch *> *)touches;
+                                                                                                                      if ([reactEventName isEqualToString:ReactNativeTouchEndEventName]) {
+                                                                                                                        for (UITouch *touch in reactTouches) {
+                                                                                                                          UIView *targetView = ((UITouch *)touch).view.superview;
+                                                                                                                          NSNumber *reactTag = nil;
+                                                                                                                          // Find the closest React-managed touchable view like RCTTouchHandler
+                                                                                                                          while (targetView) {
+                                                                                                                            reactTag = [FBSDKViewHierarchy getViewReactTag:targetView];
+                                                                                                                            if (reactTag != nil && targetView.userInteractionEnabled) {
+                                                                                                                              break;
+                                                                                                                            }
+                                                                                                                            targetView = targetView.superview;
+                                                                                                                          }
+                                                                                                                          FBSDKEventBinding *eventBinding = self->reactBindings[reactTag];
+                                                                                                                          if (reactTag != nil && eventBinding != nil) {
+                                                                                                                            [eventBinding trackEvent:nil];
+                                                                                                                          }
+                                                                                                                        }
+                                                                                                                      }
+                                                                                                                    } @catch (NSException *exception) {
+                                                                                                                      // Catch exception here to prevent LytroKit from crashing app
+                                                                                                                    }
+                                                                                                                  }
+                                                                                                                } named:@"dispatch_rn_event"];
   }
 
-  //  UITableView
+  // UITableView
   void (^tableViewBlock)(UITableView *tableView,
                          SEL cmd,
                          id<UITableViewDelegate> delegate) =
@@ -201,7 +202,7 @@
                          onClass:[UITableView class]
                        withBlock:tableViewBlock
                            named:@"match_table_view"];
-  //  UICollectionView
+  // UICollectionView
   void (^collectionViewBlock)(UICollectionView *collectionView,
                               SEL cmd,
                               id<UICollectionViewDelegate> delegate) =
@@ -218,7 +219,8 @@
                            named:@"handle_collection_view"];
 }
 
-- (void)rematchBindings {
+- (void)rematchBindings
+{
   if (0 == eventBindings.count) {
     return;
   }
@@ -229,7 +231,8 @@
   }
 }
 
-- (void)matchSubviewsIn:(UIView *)view {
+- (void)matchSubviewsIn:(UIView *)view
+{
   if (!view) {
     return;
   }
@@ -266,7 +269,8 @@
 }
 
 // check if the view is matched to any event
-- (void)matchView:(UIView *)view delegate:(id)delegate {
+- (void)matchView:(UIView *)view delegate:(id)delegate
+{
   if (0 == eventBindings.count) {
     return;
   }
@@ -361,7 +365,7 @@
                 for (FBSDKEventBinding *binding in bindings) {
                   FBSDKCodelessPathComponent *component = binding.path.lastObject;
                   if ((component.section == -1 || component.section == indexPath.section)
-                      && (component.row ==  -1 || component.row == indexPath.row)) {
+                      && (component.row == -1 || component.row == indexPath.row)) {
                     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
                     [binding trackEvent:cell];
                   }
@@ -379,8 +383,9 @@
   });
 }
 
-#pragma clang diagnostic pop
-- (void)updateBindings:(NSArray *)bindings {
+ #pragma clang diagnostic pop
+- (void)updateBindings:(NSArray *)bindings
+{
   if (eventBindings.count > 0 && eventBindings.count == bindings.count) {
     // Check whether event bindings are the same
     BOOL isSame = YES;

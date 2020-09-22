@@ -20,26 +20,26 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKGameRequestFrictionlessRecipientCache.h"
+ #import "FBSDKGameRequestFrictionlessRecipientCache.h"
 
-#if defined BUCK || defined FBSDKCOCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-#else
+ #if defined BUCK || defined FBSDKCOCOAPODS
+  #import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #else
 @import FBSDKCoreKit;
-#endif
+ #endif
 
-#ifdef FBSDKCOCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
-#import "FBSDKCoreKit+Internal.h"
-#endif
+ #ifdef FBSDKCOCOAPODS
+  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+ #else
+  #import "FBSDKCoreKit+Internal.h"
+ #endif
 
 @implementation FBSDKGameRequestFrictionlessRecipientCache
 {
   NSSet *_recipientIDs;
 }
 
-#pragma mark - Object Lifecycle
+ #pragma mark - Object Lifecycle
 
 - (instancetype)init
 {
@@ -58,7 +58,7 @@
   [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-#pragma mark - Public API
+ #pragma mark - Public API
 
 - (BOOL)recipientsAreFrictionless:(id)recipients
 {
@@ -85,7 +85,7 @@
   }
 }
 
-#pragma mark - Helper Methods
+ #pragma mark - Helper Methods
 
 - (void)_accessTokenDidChangeNotification:(NSNotification *)notification
 {
@@ -103,9 +103,9 @@
     return;
   }
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/apprequestformerrecipients"
-                                                                 parameters:@{@"fields":@""}
-                                                                      flags:(FBSDKGraphRequestFlagDoNotInvalidateTokenOnError |
-                                                                             FBSDKGraphRequestFlagDisableErrorRecovery)];
+                                                                 parameters:@{@"fields" : @""}
+                                                                      flags:(FBSDKGraphRequestFlagDoNotInvalidateTokenOnError
+                                                                        | FBSDKGraphRequestFlagDisableErrorRecovery)];
   [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     if (!error) {
       NSArray *items = [FBSDKTypeUtility arrayValue:result[@"data"]];

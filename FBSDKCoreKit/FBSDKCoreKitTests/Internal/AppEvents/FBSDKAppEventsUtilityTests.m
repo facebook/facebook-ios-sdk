@@ -20,12 +20,9 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
-#import <FBSDKCoreKit/FBSDKAppEvents.h>
-#import <FBSDKCoreKit/FBSDKSettings.h>
+#import "FBSDKCoreKit+Internal.h"
 
-#import "FBSDKAppEventsUtility.h"
-#import "FBSDKTypeUtility.h"
-#import "FBSDKUtility.h"
+static NSString *const FBSDKSettingsInstallTimestamp = @"com.facebook.sdk:FBSDKSettingsInstallTimestamp";
 
 @interface FBSDKAppEventsUtilityTests : XCTestCase
 
@@ -41,7 +38,6 @@
 {
   [super setUp];
   _mockAppEventsUtility = OCMClassMock([FBSDKAppEventsUtility class]);
-  OCMStub([_mockAppEventsUtility advertiserID]).andReturn([NSUUID UUID].UUIDString);
   [FBSDKAppEvents setUserID:@"test-user-id"];
   _mockNSLocale = OCMClassMock([NSLocale class]);
 }
@@ -75,6 +71,11 @@
 
 - (void)testParamsDictionary
 {
+  OCMStub([_mockAppEventsUtility advertiserID]).andReturn([NSUUID UUID].UUIDString);
+  id mockFBSDKSettings = OCMClassMock([FBSDKSettings class]);
+  OCMStub([mockFBSDKSettings isAdvertiserTrackingEnabled]).andReturn(YES);
+
+  OCMStub([_mockAppEventsUtility advertiserID]).andReturn([NSUUID UUID].UUIDString);
   NSDictionary *dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
                                                          shouldAccessAdvertisingID:YES];
   XCTAssertEqualObjects(@"event", dict[@"event"]);
@@ -186,6 +187,53 @@
   XCTAssertEqualObjects(str, @"1234.56");
 }
 
+- (void)testGetAdvertiserIDOniOS14WithCollectionEnabled
+{
+  id mockFBSDKSettings = OCMClassMock([FBSDKSettings class]);
+  OCMStub([mockFBSDKSettings isAdvertiserIDCollectionEnabled]).andReturn(YES);
+
+  id mockAppEventsConfiguration = OCMClassMock([FBSDKAppEventsConfiguration class]);
+  OCMStub([mockAppEventsConfiguration advertiserIDCollectionEnabled]).andReturn(YES);
+  id mockAppEventsConfigurationManager = OCMClassMock([FBSDKAppEventsConfigurationManager class]);
+  OCMStub([mockAppEventsConfigurationManager cachedAppEventsConfiguration]).andReturn(mockAppEventsConfiguration);
+
+  if (@available(iOS 14.0, *)) {
+    XCTAssertNotNil([FBSDKAppEventsUtility advertiserID]);
+  }
+}
+
+- (void)testGetAdvertiserIDOniOS14WithCollectionDisabled
+{
+  id mockFBSDKSettings = OCMClassMock([FBSDKSettings class]);
+  OCMStub([mockFBSDKSettings isAdvertiserIDCollectionEnabled]).andReturn(YES);
+
+  id mockAppEventsConfiguration = OCMClassMock([FBSDKAppEventsConfiguration class]);
+  OCMStub([mockAppEventsConfiguration advertiserIDCollectionEnabled]).andReturn(NO);
+  id mockAppEventsConfigurationManager = OCMClassMock([FBSDKAppEventsConfigurationManager class]);
+  OCMStub([mockAppEventsConfigurationManager cachedAppEventsConfiguration]).andReturn(mockAppEventsConfiguration);
+
+  if (@available(iOS 14.0, *)) {
+    XCTAssertNil([FBSDKAppEventsUtility advertiserID]);
+  }
+}
+
+- (void)testShouldDropAppEvent
+{
+  id mockFBSDKSettings = OCMClassMock([FBSDKSettings class]);
+  OCMStub([mockFBSDKSettings getAdvertisingTrackingStatus]).andReturn(FBSDKAdvertisingTrackingDisallowed);
+
+  id mockAppEventsConfiguration = OCMClassMock([FBSDKAppEventsConfiguration class]);
+  OCMStub([mockAppEventsConfiguration eventCollectionEnabled]).andReturn(NO);
+  id mockAppEventsConfigurationManager = OCMClassMock([FBSDKAppEventsConfigurationManager class]);
+  OCMStub([mockAppEventsConfigurationManager cachedAppEventsConfiguration]).andReturn(mockAppEventsConfiguration);
+
+  if (@available(iOS 14.0, *)) {
+    XCTAssertTrue([FBSDKAppEventsUtility shouldDropAppEvent]);
+  } else {
+    XCTAssertFalse([FBSDKAppEventsUtility shouldDropAppEvent]);
+  }
+}
+
 - (void)testIsSensitiveUserData
 {
   NSString *text = @"test@sample.com";
@@ -227,6 +275,38 @@
 
   NSString *result6 = [FBSDKAppEventsUtility flushReasonToString:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
   XCTAssertEqualObjects(@"EagerlyFlushingEvent", result6);
+}
+
+- (void)testGetStandardEvents
+{
+  NSArray<NSString *> *standardEvents = @[
+    @"fb_mobile_complete_registration",
+    @"fb_mobile_content_view",
+    @"fb_mobile_search",
+    @"fb_mobile_rate",
+    @"fb_mobile_tutorial_completion",
+    @"fb_mobile_add_to_cart",
+    @"fb_mobile_add_to_wishlist",
+    @"fb_mobile_initiated_checkout",
+    @"fb_mobile_add_payment_info",
+    @"fb_mobile_purchase",
+    @"fb_mobile_level_achieved",
+    @"fb_mobile_achievement_unlocked",
+    @"fb_mobile_spent_credits",
+    @"Contact",
+    @"CustomizeProduct",
+    @"Donate",
+    @"FindLocation",
+    @"Schedule",
+    @"StartTrial",
+    @"SubmitApplication",
+    @"Subscribe",
+    @"AdImpression",
+    @"AdClick",
+  ];
+  for (NSString *event in standardEvents) {
+    XCTAssertTrue([FBSDKAppEventsUtility isStandardEvent:event]);
+  }
 }
 
 @end

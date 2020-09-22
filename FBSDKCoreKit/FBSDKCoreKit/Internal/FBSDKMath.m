@@ -117,7 +117,7 @@
 {
   value = (~value) + (value << 18); // key = (key << 18) - key - 1;
   value ^= (value >> 31);
-  value *= 21;                      // key = (key + (key << 2)) + (key << 4);
+  value *= 21; // key = (key + (key << 2)) + (key << 4);
   value ^= (value >> 11);
   value += (value << 6);
   value ^= (value >> 22);
@@ -128,18 +128,18 @@
 {
   NSUInteger hash = (NSUInteger)value;
 #if !TARGET_RT_64_BIT
-  hash = ~hash + (hash << 15);  // key = (key << 15) - key - 1;
+  hash = ~hash + (hash << 15); // key = (key << 15) - key - 1;
   hash ^= (hash >> 12);
   hash += (hash << 2);
   hash ^= (hash >> 4);
-  hash *= 2057;                 // key = (key + (key << 3)) + (key << 11);
+  hash *= 2057; // key = (key + (key << 3)) + (key << 11);
   hash ^= (hash >> 16);
 #else
-  hash += ~hash + (hash << 21);               // key = (key << 21) - key - 1;
+  hash += ~hash + (hash << 21); // key = (key << 21) - key - 1;
   hash ^= (hash >> 24);
   hash = (hash + (hash << 3)) + (hash << 8);
   hash ^= (hash >> 14);
-  hash = (hash + (hash << 2)) + (hash << 4);  // key * 21
+  hash = (hash + (hash << 2)) + (hash << 4); // key * 21
   hash ^= (hash >> 28);
   hash += (hash << 31);
 #endif

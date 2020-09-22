@@ -20,13 +20,12 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKIntegrityManager.h"
+ #import "FBSDKIntegrityManager.h"
 
-#import "FBSDKBasicUtility.h"
-#import "FBSDKGateKeeperManager.h"
-#import "FBSDKModelManager.h"
-#import "FBSDKSettings.h"
-#import "FBSDKTypeUtility.h"
+ #import "FBSDKGateKeeperManager.h"
+ #import "FBSDKInternalUtility.h"
+ #import "FBSDKModelManager.h"
+ #import "FBSDKSettings.h"
 
 static BOOL isIntegrityEnabled = NO;
 static BOOL isSampleEnabled = NO;
@@ -48,7 +47,7 @@ static BOOL isSampleEnabled = NO;
   NSMutableDictionary<NSString *, id> *restrictiveParams = [NSMutableDictionary dictionary];
 
   for (NSString *key in [parameters keyEnumerator]) {
-    NSString *valueString =[FBSDKTypeUtility stringValue:parameters[key]];
+    NSString *valueString = [FBSDKTypeUtility stringValue:parameters[key]];
     BOOL shouldFilter = [FBSDKModelManager processIntegrity:key] || [FBSDKModelManager processIntegrity:valueString];
     if (shouldFilter) {
       [FBSDKTypeUtility dictionary:restrictiveParams setObject:isSampleEnabled ? valueString : @"" forKey:key];

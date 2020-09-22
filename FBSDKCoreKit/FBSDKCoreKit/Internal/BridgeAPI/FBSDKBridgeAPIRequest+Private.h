@@ -20,8 +20,8 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKBridgeAPIProtocol.h"
-#import "FBSDKBridgeAPIRequest.h"
+ #import "FBSDKBridgeAPIProtocol.h"
+ #import "FBSDKBridgeAPIRequest.h"
 
 @interface FBSDKBridgeAPIRequest ()
 
@@ -32,9 +32,9 @@
                    methodVersion:(NSString *)methodVersion
                       parameters:(NSDictionary *)parameters
                         userInfo:(NSDictionary *)userInfo
-NS_DESIGNATED_INITIALIZER;
+  NS_DESIGNATED_INITIALIZER;
 
-@property (nonatomic, strong, readonly) id<FBSDKBridgeAPIProtocol> protocol;
+@property (nonatomic, readonly, strong) id<FBSDKBridgeAPIProtocol> protocol;
 
 @end
 

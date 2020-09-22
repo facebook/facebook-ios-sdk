@@ -20,7 +20,7 @@
 
 #if !TARGET_OS_TV
 
-#import <Foundation/Foundation.h>
+ #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -35,9 +35,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKAudioResourceLoader (Subclass)
 
-@property (class, nonatomic, copy, nullable, readonly) NSString *name;
-@property (class, nonatomic, copy, nullable, readonly) NSData *data;
-@property (class, nonatomic, assign, readonly) NSUInteger version;
+@property (class, nullable, nonatomic, readonly, copy) NSString *name;
+@property (class, nullable, nonatomic, readonly, copy) NSData *data;
+@property (class, nonatomic, readonly, assign) NSUInteger version;
 
 @end
 

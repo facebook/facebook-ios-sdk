@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
   s.author       = 'Facebook'
 
   s.platform     = :ios, :tvos
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '9.0'
   s.tvos.deployment_target = '10.0'
 
   s.source       = {
@@ -26,14 +26,14 @@ Pod::Spec.new do |s|
     tag: "v#{s.version}"
   }
 
-  s.ios.weak_frameworks = 'Accelerate', 'Accounts', 'Social', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
+  s.ios.weak_frameworks = 'Accelerate', 'Accounts', 'Social', 'Security', 'StoreKit', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
   s.tvos.weak_frameworks = 'CoreLocation', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
 
   # This excludes `FBSDKCoreKit/FBSDKCoreKit/Internal_NoARC/` folder, as that folder includes only `no-arc` files.
   s.requires_arc = ['FBSDKCoreKit/FBSDKCoreKit/*',
                     'FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*',
                     'FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*',
-                    'FBSDKCoreKit/FBSDKCoreKit/Basics/**/*',
+                    'Sources/FBSDKCoreKit_Basics/**/*',
                     'FBSDKCoreKit/FBSDKCoreKit/GraphAPI/*',
                     'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*']
 
@@ -47,20 +47,13 @@ Pod::Spec.new do |s|
   s.library = 'c++', 'stdc++'
 
   s.subspec 'Basics' do |ss|
-    ss.source_files = 'FBSDKCoreKit/FBSDKCoreKit/Basics/*.{h,m}',
-                      'FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.{h,m}'
-    ss.public_header_files = 'FBSDKCoreKit/FBSDKCoreKit/Basics/Internal/**/*.h',
-                             'FBSDKCoreKit/FBSDKCoreKit/Basics/Instrument/**/*.h',
-                             'FBSDKCoreKit/FBSDKCoreKit/Basics/*.h'
-    ss.private_header_files = 'FBSDKCoreKit/FBSDKCoreKit/Basics/Internal/**/*.h',
-                              'FBSDKCoreKit/FBSDKCoreKit/Basics/Instrument/**/*.h'
+    ss.source_files = 'Sources/FBSDKCoreKit_Basics/**/*.{h,m}'
     ss.library = 'z'
   end
 
   s.subspec 'Core' do |ss|
     ss.dependency 'FBSDKCoreKit/Basics'
-    ss.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/Basics/*',
-                       'FBSDKCoreKit/FBSDKCoreKit/Basics/**/*.{h,m}',
+    ss.exclude_files = 'Sources/FBSDKCoreKit_Basics/**/*',
                        'FBSDKCoreKit/FBSDKCoreKit/include/**/*',
                        'FBSDKCoreKit/FBSDKCoreKit/Swift/Exports.swift'
     ss.source_files = 'FBSDKCoreKit/FBSDKCoreKit/**/*.{h,hpp,m,mm,swift}'

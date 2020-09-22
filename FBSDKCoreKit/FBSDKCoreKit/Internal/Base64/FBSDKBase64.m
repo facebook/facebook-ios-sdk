@@ -67,7 +67,7 @@ static FBSDKBase64 *_encoder;
   int needPadding = string.length % 4;
   if (needPadding > 0) {
     needPadding = 4 - needPadding;
-    string = [string stringByPaddingToLength:string.length+needPadding withString:@"=" startingAtIndex:0];
+    string = [string stringByPaddingToLength:string.length + needPadding withString:@"=" startingAtIndex:0];
   }
 
   return [[NSData alloc] initWithBase64EncodedString:string options:NSDataBase64DecodingIgnoreUnknownCharacters];

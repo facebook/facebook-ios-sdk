@@ -24,7 +24,7 @@ static const double FBSDKMonitorLogFlushTimerTolerance = FBSDKMonitorLogFlushInt
 
 @interface FBSDKMonitor ()
 
-@property (class, nonatomic, copy, readonly) NSMutableArray<id<FBSDKMonitorEntry>> *entries;
+@property (class, nonatomic, readonly, copy) NSMutableArray<id<FBSDKMonitorEntry>> *entries;
 @property (class, nonatomic) FBSDKMonitorStore *store;
 
 @end
@@ -116,7 +116,7 @@ static NSTimer *_flushTimer;
 
 + (void)unregisterNotifications
 {
-  [[NSNotificationCenter defaultCenter] removeObserver: [self class]];
+  [[NSNotificationCenter defaultCenter] removeObserver:[self class]];
 }
 
 + (void)applicationDidBecomeActive

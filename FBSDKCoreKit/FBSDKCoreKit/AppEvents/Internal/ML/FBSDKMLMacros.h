@@ -19,7 +19,7 @@
 #ifndef FBSDKMLMacros_h
 #define FBSDKMLMacros_h
 
-//  keys for ML
+// keys for ML
 #define MODEL_REQUEST_INTERVAL                  (60 * 60 * 24 * 3)
 #define MODEL_REQUEST_TIMESTAMP_KEY             @"com.facebook.sdk:FBSDKModelRequestTimestamp"
 
@@ -36,7 +36,7 @@
 #define MTMLTaskAppEventPredKey                 @"MTML_APP_EVENT_PRED"
 #define MTMLTaskIntegrityDetectKey              @"MTML_INTEGRITY_DETECT"
 
-//  keys for Suggested Event
+// keys for Suggested Event
 #define SUGGEST_EVENT_KEY                       @"SUGGEST_EVENT"
 #define DENSE_FEATURE_KEY                       @"DENSE_FEATURE"
 #define SUGGESTED_EVENT_OTHER                   @"other"

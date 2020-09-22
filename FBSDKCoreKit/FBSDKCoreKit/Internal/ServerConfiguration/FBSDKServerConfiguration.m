@@ -18,8 +18,9 @@
 
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfiguration+Internal.h"
-#import "FBSDKMonitoringConfiguration.h"
+
 #import "FBSDKInternalUtility.h"
+#import "FBSDKMonitoringConfiguration.h"
 
 // one minute
 #define DEFAULT_SESSION_TIMEOUT_INTERVAL 60
@@ -82,32 +83,32 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
 
 #pragma mark - Object Lifecycle
 
-- (instancetype)initWithAppID:(NSString *)appID
-                      appName:(NSString *)appName
-          loginTooltipEnabled:(BOOL)loginTooltipEnabled
-             loginTooltipText:(NSString *)loginTooltipText
-             defaultShareMode:(NSString*)defaultShareMode
-         advertisingIDEnabled:(BOOL)advertisingIDEnabled
-       implicitLoggingEnabled:(BOOL)implicitLoggingEnabled
-implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
-        codelessEventsEnabled:(BOOL)codelessEventsEnabled
-     uninstallTrackingEnabled:(BOOL)uninstallTrackingEnabled
-         dialogConfigurations:(NSDictionary *)dialogConfigurations
-                  dialogFlows:(NSDictionary *)dialogFlows
-                    timestamp:(NSDate *)timestamp
-           errorConfiguration:(FBSDKErrorConfiguration *)errorConfiguration
-       sessionTimeoutInterval:(NSTimeInterval) sessionTimeoutInterval
-                     defaults:(BOOL)defaults
-                 loggingToken:(NSString *)loggingToken
-            smartLoginOptions:(FBSDKServerConfigurationSmartLoginOptions)smartLoginOptions
-    smartLoginBookmarkIconURL:(NSURL *)smartLoginBookmarkIconURL
-        smartLoginMenuIconURL:(NSURL *)smartLoginMenuIconURL
-                updateMessage:(NSString *)updateMessage
-                eventBindings:(NSArray *)eventBindings
-            restrictiveParams:(NSDictionary<NSString *, id> *)restrictiveParams
-                     AAMRules:(NSDictionary<NSString *, id> *)AAMRules
-       suggestedEventsSetting:(NSDictionary<NSString *,id> *)suggestedEventsSetting
-      monitoringConfiguration:(FBSDKMonitoringConfiguration *)monitoringConfiguration
+- (instancetype)   initWithAppID:(NSString *)appID
+                         appName:(NSString *)appName
+             loginTooltipEnabled:(BOOL)loginTooltipEnabled
+                loginTooltipText:(NSString *)loginTooltipText
+                defaultShareMode:(NSString *)defaultShareMode
+            advertisingIDEnabled:(BOOL)advertisingIDEnabled
+          implicitLoggingEnabled:(BOOL)implicitLoggingEnabled
+  implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
+           codelessEventsEnabled:(BOOL)codelessEventsEnabled
+        uninstallTrackingEnabled:(BOOL)uninstallTrackingEnabled
+            dialogConfigurations:(NSDictionary *)dialogConfigurations
+                     dialogFlows:(NSDictionary *)dialogFlows
+                       timestamp:(NSDate *)timestamp
+              errorConfiguration:(FBSDKErrorConfiguration *)errorConfiguration
+          sessionTimeoutInterval:(NSTimeInterval)sessionTimeoutInterval
+                        defaults:(BOOL)defaults
+                    loggingToken:(NSString *)loggingToken
+               smartLoginOptions:(FBSDKServerConfigurationSmartLoginOptions)smartLoginOptions
+       smartLoginBookmarkIconURL:(NSURL *)smartLoginBookmarkIconURL
+           smartLoginMenuIconURL:(NSURL *)smartLoginMenuIconURL
+                   updateMessage:(NSString *)updateMessage
+                   eventBindings:(NSArray *)eventBindings
+               restrictiveParams:(NSDictionary<NSString *, id> *)restrictiveParams
+                        AAMRules:(NSDictionary<NSString *, id> *)AAMRules
+          suggestedEventsSetting:(NSDictionary<NSString *, id> *)suggestedEventsSetting
+         monitoringConfiguration:(FBSDKMonitoringConfiguration *)monitoringConfiguration
 {
   if ((self = [super init])) {
     _appID = [appID copy];
@@ -150,18 +151,18 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
   if (![_defaultServerConfiguration.appID isEqualToString:appID]) {
     // Bypass the native dialog flow for iOS 9+, as it produces a series of additional confirmation dialogs that lead to
     // extra friction that is not desirable.
-      NSOperatingSystemVersion iOS9Version = { .majorVersion = 9, .minorVersion = 0, .patchVersion = 0 };
+    NSOperatingSystemVersion iOS9Version = { .majorVersion = 9, .minorVersion = 0, .patchVersion = 0 };
     BOOL useNativeFlow = ![FBSDKInternalUtility isOSRunTimeVersionAtLeast:iOS9Version];
     // Also enable SFSafariViewController by default.
     NSDictionary *dialogFlows = @{
-                                  FBSDKDialogConfigurationNameDefault: @{
-                                      FBSDKDialogConfigurationFeatureUseNativeFlow: @(useNativeFlow),
-                                      FBSDKDialogConfigurationFeatureUseSafariViewController: @YES,
-                                      },
-                                  FBSDKDialogConfigurationNameMessage: @{
-                                      FBSDKDialogConfigurationFeatureUseNativeFlow: @YES,
-                                      },
-                                  };
+      FBSDKDialogConfigurationNameDefault : @{
+        FBSDKDialogConfigurationFeatureUseNativeFlow : @(useNativeFlow),
+        FBSDKDialogConfigurationFeatureUseSafariViewController : @YES,
+      },
+      FBSDKDialogConfigurationNameMessage : @{
+        FBSDKDialogConfigurationFeatureUseNativeFlow : @YES,
+      },
+    };
     _defaultServerConfiguration = [[FBSDKServerConfiguration alloc] initWithAppID:appID
                                                                           appName:nil
                                                               loginTooltipEnabled:NO
@@ -188,7 +189,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
                                                                          AAMRules:nil
                                                            suggestedEventsSetting:nil
                                                           monitoringConfiguration:FBSDKMonitoringConfiguration.defaultConfiguration
-                                   ];
+    ];
   }
   return _defaultServerConfiguration;
 }
@@ -215,12 +216,12 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
 - (BOOL)_useFeatureWithKey:(NSString *)key dialogName:(NSString *)dialogName
 {
   if ([dialogName isEqualToString:FBSDKDialogConfigurationNameLogin]) {
-    return ((NSNumber *)(_dialogFlows[dialogName][key] ?:
-                         _dialogFlows[FBSDKDialogConfigurationNameDefault][key])).boolValue;
+    return ((NSNumber *)(_dialogFlows[dialogName][key]
+      ?: _dialogFlows[FBSDKDialogConfigurationNameDefault][key])).boolValue;
   } else {
-    return ((NSNumber *)(_dialogFlows[dialogName][key] ?:
-                         _dialogFlows[FBSDKDialogConfigurationNameSharing][key] ?:
-                         _dialogFlows[FBSDKDialogConfigurationNameDefault][key])).boolValue;
+    return ((NSNumber *)(_dialogFlows[dialogName][key]
+      ?: _dialogFlows[FBSDKDialogConfigurationNameSharing][key]
+        ?: _dialogFlows[FBSDKDialogConfigurationNameDefault][key])).boolValue;
   }
 }
 
@@ -231,7 +232,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
   return YES;
 }
 
-- (id)initWithCoder:(NSCoder *)decoder
+- (instancetype)initWithCoder:(NSCoder *)decoder
 {
   NSString *appID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SERVER_CONFIGURATION_APP_ID_KEY];
   NSString *appName = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SERVER_CONFIGURATION_APP_NAME_KEY];
@@ -276,32 +277,32 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
   NSInteger version = [decoder decodeIntegerForKey:FBSDK_SERVER_CONFIGURATION_VERSION_KEY];
   FBSDKMonitoringConfiguration *monitoringConfiguration = [decoder decodeObjectOfClass:FBSDKMonitoringConfiguration.class forKey:FBSDK_SERVER_CONFIGURATION_MONITORING_CONFIGURATION_KEY];
   FBSDKServerConfiguration *configuration = [self initWithAppID:appID
-                                                        appName:appName
-                                            loginTooltipEnabled:loginTooltipEnabled
-                                               loginTooltipText:loginTooltipText
-                                               defaultShareMode:defaultShareMode
-                                           advertisingIDEnabled:advertisingIDEnabled
-                                         implicitLoggingEnabled:implicitLoggingEnabled
-                                 implicitPurchaseLoggingEnabled:implicitPurchaseLoggingEnabled
-                                          codelessEventsEnabled:codelessEventsEnabled
-                                       uninstallTrackingEnabled:uninstallTrackingEnabled
-                                           dialogConfigurations:dialogConfigurations
-                                                    dialogFlows:dialogFlows
-                                                      timestamp:timestamp
-                                             errorConfiguration:errorConfiguration
-                                         sessionTimeoutInterval:sessionTimeoutInterval
-                                                       defaults:NO
-                                                   loggingToken:loggingToken
-                                              smartLoginOptions:smartLoginOptions
-                                      smartLoginBookmarkIconURL:smartLoginBookmarkIconURL
-                                          smartLoginMenuIconURL:smartLoginMenuIconURL
-                                                  updateMessage:updateMessage
-                                                  eventBindings:eventBindings
-                                              restrictiveParams:restrictiveParams
-                                                       AAMRules:AAMRules
-                                         suggestedEventsSetting:suggestedEventsSetting
-                                        monitoringConfiguration:monitoringConfiguration
-                                             ];
+                                                                    appName:appName
+                                                        loginTooltipEnabled:loginTooltipEnabled
+                                                           loginTooltipText:loginTooltipText
+                                                           defaultShareMode:defaultShareMode
+                                                       advertisingIDEnabled:advertisingIDEnabled
+                                                     implicitLoggingEnabled:implicitLoggingEnabled
+                                             implicitPurchaseLoggingEnabled:implicitPurchaseLoggingEnabled
+                                                      codelessEventsEnabled:codelessEventsEnabled
+                                                   uninstallTrackingEnabled:uninstallTrackingEnabled
+                                                       dialogConfigurations:dialogConfigurations
+                                                                dialogFlows:dialogFlows
+                                                                  timestamp:timestamp
+                                                         errorConfiguration:errorConfiguration
+                                                     sessionTimeoutInterval:sessionTimeoutInterval
+                                                                   defaults:NO
+                                                               loggingToken:loggingToken
+                                                          smartLoginOptions:smartLoginOptions
+                                                  smartLoginBookmarkIconURL:smartLoginBookmarkIconURL
+                                                      smartLoginMenuIconURL:smartLoginMenuIconURL
+                                                              updateMessage:updateMessage
+                                                              eventBindings:eventBindings
+                                                          restrictiveParams:restrictiveParams
+                                                                   AAMRules:AAMRules
+                                                     suggestedEventsSetting:suggestedEventsSetting
+                                                    monitoringConfiguration:monitoringConfiguration
+  ];
   configuration->_version = version;
   return configuration;
 }
@@ -341,7 +342,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
 
 #pragma mark - NSCopying
 
-- (id)copyWithZone:(NSZone *)zone
+- (instancetype)copyWithZone:(NSZone *)zone
 {
   return self;
 }

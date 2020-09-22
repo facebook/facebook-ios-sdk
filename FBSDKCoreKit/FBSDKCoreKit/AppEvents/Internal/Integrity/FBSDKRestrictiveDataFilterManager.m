@@ -18,8 +18,7 @@
 
 #import "FBSDKRestrictiveDataFilterManager.h"
 
-#import "FBSDKBasicUtility.h"
-#import "FBSDKTypeUtility.h"
+#import "FBSDKInternalUtility.h"
 #import "FBSDKServerConfigurationManager.h"
 
 @interface FBSDKRestrictiveEventFilter : NSObject
@@ -30,15 +29,15 @@
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
--(instancetype)initWithEventName:(NSString *)eventName
-               restrictiveParams:(NSDictionary<NSString *, id> *)restrictiveParams;
+- (instancetype)initWithEventName:(NSString *)eventName
+                restrictiveParams:(NSDictionary<NSString *, id> *)restrictiveParams;
 
 @end
 
 @implementation FBSDKRestrictiveEventFilter
 
--(instancetype)initWithEventName:(NSString *)eventName
-               restrictiveParams:(NSDictionary<NSString *, id> *)restrictiveParams
+- (instancetype)initWithEventName:(NSString *)eventName
+                restrictiveParams:(NSDictionary<NSString *, id> *)restrictiveParams
 {
   self = [super init];
   if (self) {
@@ -54,43 +53,43 @@
 @implementation FBSDKRestrictiveDataFilterManager
 
 static BOOL g_isRestrictiveEventFilterEnabled;
-static NSMutableArray<FBSDKRestrictiveEventFilter *>  *_params;
+static NSMutableArray<FBSDKRestrictiveEventFilter *> *_params;
 static NSMutableSet<NSString *> *_restrictedEvents;
 
-+ (void)updateFilters:(nullable NSDictionary<NSString *, id> *)restrictiveParams
++ (void)_updateFilters:(nullable NSDictionary<NSString *, id> *)restrictiveParams
 {
   static NSString *const RESTRICTIVE_PARAM_KEY = @"restrictive_param";
   static NSString *const PROCESS_EVENT_NAME_KEY = @"process_event_name";
 
   restrictiveParams = [FBSDKTypeUtility dictionaryValue:restrictiveParams];
   if (restrictiveParams.count > 0) {
-    @synchronized (self) {
-       [_params removeAllObjects];
-       [_restrictedEvents removeAllObjects];
-       NSMutableArray<FBSDKRestrictiveEventFilter *> *eventFilterArray = [NSMutableArray array];
-       NSMutableSet<NSString *> *restrictedEventSet = [NSMutableSet set];
-       for (NSString *eventName in restrictiveParams.allKeys) {
-         NSDictionary<NSString *, id> *eventInfo = restrictiveParams[eventName];
-         if (!eventInfo) {
-           continue;
-         }
-         if (eventInfo[RESTRICTIVE_PARAM_KEY]) {
-           FBSDKRestrictiveEventFilter *restrictiveEventFilter = [[FBSDKRestrictiveEventFilter alloc] initWithEventName:eventName
-                                                                                                      restrictiveParams:eventInfo[RESTRICTIVE_PARAM_KEY]];
-           [FBSDKTypeUtility array:eventFilterArray addObject:restrictiveEventFilter];
-         }
-         if (restrictiveParams[eventName][PROCESS_EVENT_NAME_KEY]) {
-           [restrictedEventSet addObject:eventName];
-         }
-       }
-       _params = eventFilterArray;
-       _restrictedEvents = restrictedEventSet;
-     }
+    @synchronized(self) {
+      [_params removeAllObjects];
+      [_restrictedEvents removeAllObjects];
+      NSMutableArray<FBSDKRestrictiveEventFilter *> *eventFilterArray = [NSMutableArray array];
+      NSMutableSet<NSString *> *restrictedEventSet = [NSMutableSet set];
+      for (NSString *eventName in restrictiveParams.allKeys) {
+        NSDictionary<NSString *, id> *eventInfo = restrictiveParams[eventName];
+        if (!eventInfo) {
+          continue;
+        }
+        if (eventInfo[RESTRICTIVE_PARAM_KEY]) {
+          FBSDKRestrictiveEventFilter *restrictiveEventFilter = [[FBSDKRestrictiveEventFilter alloc] initWithEventName:eventName
+                                                                                                     restrictiveParams:eventInfo[RESTRICTIVE_PARAM_KEY]];
+          [FBSDKTypeUtility array:eventFilterArray addObject:restrictiveEventFilter];
+        }
+        if (restrictiveParams[eventName][PROCESS_EVENT_NAME_KEY]) {
+          [restrictedEventSet addObject:eventName];
+        }
+      }
+      _params = eventFilterArray;
+      _restrictedEvents = restrictedEventSet;
+    }
   }
 }
 
-+ (nullable NSString *)getMatchedDataTypeWithEventName:(NSString *)eventName
-                                              paramKey:(NSString *)paramKey
++ (nullable NSString *)_getMatchedDataTypeWithEventName:(NSString *)eventName
+                                               paramKey:(NSString *)paramKey
 {
   // match by params in custom events with event name
   for (FBSDKRestrictiveEventFilter *filter in _params) {
@@ -104,70 +103,78 @@ static NSMutableSet<NSString *> *_restrictedEvents;
   return nil;
 }
 
-+ (NSDictionary<NSString *,id> *)processParameters:(NSDictionary<NSString *,id> *)parameters
-                                         eventName:(NSString *)eventName
++ (NSDictionary<NSString *, id> *)processParameters:(NSDictionary<NSString *, id> *)parameters
+                                          eventName:(NSString *)eventName
 {
   if (!g_isRestrictiveEventFilterEnabled) {
     return parameters;
   }
   if (parameters) {
-    NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionaryWithDictionary:parameters];
-    NSMutableDictionary<NSString *, NSString *> *restrictedParams = [NSMutableDictionary dictionary];
+    @try {
+      NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionaryWithDictionary:parameters];
+      NSMutableDictionary<NSString *, NSString *> *restrictedParams = [NSMutableDictionary dictionary];
 
-    for (NSString *key in [parameters keyEnumerator]) {
-      NSString *type = [FBSDKRestrictiveDataFilterManager getMatchedDataTypeWithEventName:eventName
-                                                                                 paramKey:key];
-      if (type) {
-        [FBSDKTypeUtility dictionary:restrictedParams setObject:type forKey:key];
-        [params removeObjectForKey:key];
+      for (NSString *key in [parameters keyEnumerator]) {
+        NSString *type = [FBSDKRestrictiveDataFilterManager _getMatchedDataTypeWithEventName:eventName
+                                                                                    paramKey:key];
+        if (type) {
+          [FBSDKTypeUtility dictionary:restrictedParams setObject:type forKey:key];
+          [params removeObjectForKey:key];
+        }
       }
-    }
 
-    if ([[restrictedParams allKeys] count] > 0) {
-      NSString *restrictedParamsJSONString = [FBSDKBasicUtility JSONStringForObject:restrictedParams
-                                                                              error:NULL
-                                                               invalidObjectHandler:NULL];
-      [FBSDKTypeUtility dictionary:params setObject:restrictedParamsJSONString forKey:@"_restrictedParams"];
-    }
+      if ([[restrictedParams allKeys] count] > 0) {
+        NSString *restrictedParamsJSONString = [FBSDKBasicUtility JSONStringForObject:restrictedParams
+                                                                                error:NULL
+                                                                 invalidObjectHandler:NULL];
+        [FBSDKTypeUtility dictionary:params setObject:restrictedParamsJSONString forKey:@"_restrictedParams"];
+      }
 
-    return [params copy];
+      return [params copy];
+    } @catch (NSException *exception) {
+      return parameters;
+    }
   }
 
   return nil;
 }
 
-+ (void)processEvents:(NSMutableArray<NSDictionary<NSString *, id> *> *)events
++ (void)processEvents:(NSMutableArray<NSMutableDictionary<NSString *, id> *> *)events
 {
-  if (!g_isRestrictiveEventFilterEnabled) {
-    return;
-  }
-
-  static NSString *const REPLACEMENT_STRING = @"_removed_";
-
-  for (NSDictionary<NSString *, NSDictionary<NSString *, id> *> *event in events) {
-   if ([FBSDKRestrictiveDataFilterManager isRestrictedEvent:event[@"event"][@"_eventName"]]) {
-      [event[@"event"] setValue:REPLACEMENT_STRING forKey:@"_eventName"];
+  @try {
+    if (!g_isRestrictiveEventFilterEnabled) {
+      return;
     }
-  }
+
+    static NSString *const REPLACEMENT_STRING = @"_removed_";
+
+    for (NSDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *event in events) {
+      if ([FBSDKRestrictiveDataFilterManager _isRestrictedEvent:event[@"event"][@"_eventName"]]) {
+        [FBSDKTypeUtility dictionary:event[@"event"] setObject:REPLACEMENT_STRING forKey:@"_eventName"];
+      }
+    }
+  } @catch (NSException *exception) {}
 }
 
 + (void)enable
 {
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    NSDictionary<NSString *, id> *restrictiveParams = [FBSDKServerConfigurationManager cachedServerConfiguration].restrictiveParams;
-    if (restrictiveParams) {
-      [FBSDKRestrictiveDataFilterManager updateFilters:restrictiveParams];
-      g_isRestrictiveEventFilterEnabled = YES;
-    }
-  });
+  @try {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+      NSDictionary<NSString *, id> *restrictiveParams = [FBSDKServerConfigurationManager cachedServerConfiguration].restrictiveParams;
+      if (restrictiveParams) {
+        [FBSDKRestrictiveDataFilterManager _updateFilters:restrictiveParams];
+        g_isRestrictiveEventFilterEnabled = YES;
+      }
+    });
+  } @catch (NSException *exception) {}
 }
 
 #pragma mark Helper functions
 
-+ (BOOL)isRestrictedEvent:(NSString *)eventName
++ (BOOL)_isRestrictedEvent:(NSString *)eventName
 {
-  @synchronized (self) {
+  @synchronized(self) {
     return [_restrictedEvents containsObject:eventName];
   }
 }

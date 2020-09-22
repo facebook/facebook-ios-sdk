@@ -20,19 +20,19 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKAppLinkResolver.h"
+ #import "FBSDKAppLinkResolver.h"
 
-#import <UIKit/UIKit.h>
+ #import <UIKit/UIKit.h>
 
-#import "FBSDKAccessToken.h"
-#import "FBSDKAppLink.h"
-#import "FBSDKAppLinkTarget.h"
-#import "FBSDKGraphRequest+Internal.h"
-#import "FBSDKGraphRequestConnection.h"
-#import "FBSDKInternalUtility.h"
-#import "FBSDKLogger.h"
-#import "FBSDKSettings+Internal.h"
-#import "FBSDKUtility.h"
+ #import "FBSDKAccessToken.h"
+ #import "FBSDKAppLink.h"
+ #import "FBSDKAppLinkTarget.h"
+ #import "FBSDKGraphRequest+Internal.h"
+ #import "FBSDKGraphRequestConnection.h"
+ #import "FBSDKInternalUtility.h"
+ #import "FBSDKLogger.h"
+ #import "FBSDKSettings+Internal.h"
+ #import "FBSDKUtility.h"
 
 static NSString *const kURLKey = @"url";
 static NSString *const kIOSAppStoreIdKey = @"app_store_id";
@@ -54,8 +54,7 @@ static NSString *const kAppLinksKey = @"app_links";
 
 + (void)initialize
 {
-  if (self == [FBSDKAppLinkResolver class]) {
-  }
+  if (self == [FBSDKAppLinkResolver class]) {}
 }
 
 - (instancetype)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom
@@ -69,7 +68,7 @@ static NSString *const kAppLinksKey = @"app_links";
 
 - (void)appLinkFromURL:(NSURL *)url handler:(FBSDKAppLinkBlock)handler
 {
-  [self appLinksFromURLs:@[url] handler:^(NSDictionary<NSURL *, FBSDKAppLink *> *urls, NSError * _Nullable error) {
+  [self appLinksFromURLs:@[url] handler:^(NSDictionary<NSURL *, FBSDKAppLink *> *urls, NSError *_Nullable error) {
     handler(urls[url], error);
   }];
 }
@@ -84,16 +83,16 @@ static NSString *const kAppLinksKey = @"app_links";
   NSMutableArray<NSURL *> *toFind = [NSMutableArray array];
   NSMutableArray<NSString *> *toFindStrings = [NSMutableArray array];
 
-  @synchronized (self.cachedFBSDKAppLinks) {
+  @synchronized(self.cachedFBSDKAppLinks) {
     for (NSURL *url in urls) {
       if (self.cachedFBSDKAppLinks[url]) {
         [FBSDKTypeUtility dictionary:appLinks setObject:self.cachedFBSDKAppLinks[url] forKey:url];
       } else {
         [FBSDKTypeUtility array:toFind addObject:url];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Wdeprecated-declarations"
         NSString *toFindString = [url.absoluteString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-#pragma clang diagnostic pop
+        #pragma clang diagnostic pop
         if (toFindString) {
           [FBSDKTypeUtility array:toFindStrings addObject:toFindString];
         }
@@ -145,8 +144,8 @@ static NSString *const kAppLinksKey = @"app_links";
       NSMutableArray<FBSDKAppLinkTarget *> *targets = [NSMutableArray arrayWithCapacity:rawTargets.count];
       for (id rawTarget in rawTargets) {
         [FBSDKTypeUtility array:targets addObject:[FBSDKAppLinkTarget appLinkTargetWithURL:[NSURL URLWithString:rawTarget[kURLKey]]
-                                                         appStoreId:rawTarget[kIOSAppStoreIdKey]
-                                                            appName:rawTarget[kIOSAppNameKey]]];
+                                                                                appStoreId:rawTarget[kIOSAppStoreIdKey]
+                                                                                   appName:rawTarget[kIOSAppNameKey]]];
       }
 
       id webTarget = nestedObject[kWebKey];
@@ -161,7 +160,7 @@ static NSString *const kAppLinksKey = @"app_links";
       FBSDKAppLink *link = [FBSDKAppLink appLinkWithSourceURL:url
                                                       targets:targets
                                                        webURL:fallbackUrl];
-      @synchronized (self.cachedFBSDKAppLinks) {
+      @synchronized(self.cachedFBSDKAppLinks) {
         [FBSDKTypeUtility dictionary:self.cachedFBSDKAppLinks setObject:link forKey:url];
       }
       [FBSDKTypeUtility dictionary:appLinks setObject:link forKey:url];
@@ -170,13 +169,14 @@ static NSString *const kAppLinksKey = @"app_links";
   }];
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (instancetype)resolver
 {
   return [[self alloc] initWithUserInterfaceIdiom:UI_USER_INTERFACE_IDIOM()];
 }
-#pragma clang diagnostic pop
+
+ #pragma clang diagnostic pop
 
 @end
 

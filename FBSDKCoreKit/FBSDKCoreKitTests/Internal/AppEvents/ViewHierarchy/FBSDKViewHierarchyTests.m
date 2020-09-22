@@ -16,21 +16,38 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <XCTest/XCTest.h>
-
 #import <OCMock/OCMock.h>
+#import <XCTest/XCTest.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKViewHierarchy.h"
 
-@interface FBSDKViewHierarchyTests : XCTestCase {
+@interface FBSDKViewHierarchyTests : XCTestCase
+{
   UIScrollView *scrollview;
   UILabel *label;
   UITextField *textField;
   UITextView *textView;
   UIButton *btn;
 }
+@end
+
+id getVariableFromInstance(NSObject *instance, NSString *variableName);
+
+@interface TestObj : NSObject @end
+@implementation TestObj
+{
+  NSString *_a;
+}
+- (instancetype)init
+{
+  if (self = [super init]) {
+    _a = @"BLAH";
+  }
+  return self;
+}
+
 @end
 
 @implementation FBSDKViewHierarchyTests
@@ -99,6 +116,19 @@
   UIViewController *VC = [[UIViewController alloc] init];
   [NC addChildViewController:VC];
   XCTAssertEqualObjects([FBSDKViewHierarchy getHint:NC], @"UIViewController");
+}
+
+- (void)testGetInstanceVariable
+{
+  // empty args should cause no-op.
+  XCTAssertNil(getVariableFromInstance(nil, @"anything prop"));
+  XCTAssertNil(getVariableFromInstance([NSObject new], nil));
+
+  // If there is no ivar, should return nil.
+  XCTAssertNil(getVariableFromInstance([NSObject new], @"some_made_up_property_123456"));
+
+  // this should work.
+  XCTAssertEqualObjects(getVariableFromInstance([TestObj new], @"_a"), @"BLAH");
 }
 
 @end

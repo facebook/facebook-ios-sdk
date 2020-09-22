@@ -20,27 +20,27 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKMessageDialog.h"
+ #import "FBSDKMessageDialog.h"
 
-#ifdef FBSDKCOCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
-#import "FBSDKCoreKit+Internal.h"
-#endif
-#import "FBSDKShareCameraEffectContent.h"
-#import "FBSDKShareConstants.h"
-#import "FBSDKShareDefines.h"
-#import "FBSDKShareUtility.h"
-#import "FBSDKShareVideoContent.h"
+ #ifdef FBSDKCOCOAPODS
+  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+ #else
+  #import "FBSDKCoreKit+Internal.h"
+ #endif
+ #import "FBSDKShareCameraEffectContent.h"
+ #import "FBSDKShareConstants.h"
+ #import "FBSDKShareDefines.h"
+ #import "FBSDKShareUtility.h"
+ #import "FBSDKShareVideoContent.h"
 
-#define FBSDK_MESSAGE_DIALOG_APP_SCHEME @"fb-messenger-share-api"
+ #define FBSDK_MESSAGE_DIALOG_APP_SCHEME @"fb-messenger-share-api"
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-implementations"
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FBSDKMessageDialog
-#pragma clang diagnostic pop
+ #pragma clang diagnostic pop
 
-#pragma mark - Class Methods
+ #pragma mark - Class Methods
 
 + (void)initialize
 {
@@ -66,13 +66,13 @@
   return dialog;
 }
 
-#pragma mark - Properties
+ #pragma mark - Properties
 
 @synthesize delegate = _delegate;
 @synthesize shareContent = _shareContent;
 @synthesize shouldFailOnDataError = _shouldFailOnDataError;
 
-#pragma mark - Public Methods
+ #pragma mark - Public Methods
 
 - (BOOL)canShow
 {
@@ -98,9 +98,9 @@
   NSDictionary *parameters = [FBSDKShareUtility parametersForShareContent:shareContent
                                                             bridgeOptions:FBSDKShareBridgeOptionsDefault
                                                     shouldFailOnDataError:self.shouldFailOnDataError];
-  NSString *methodName = ([shareContent isKindOfClass:NSClassFromString(@"FBSDKShareOpenGraphContent")] ?
-                          FBSDK_SHARE_OPEN_GRAPH_METHOD_NAME :
-                          FBSDK_SHARE_METHOD_NAME);
+  NSString *methodName = ([shareContent isKindOfClass:NSClassFromString(@"FBSDKShareOpenGraphContent")]
+    ? FBSDK_SHARE_OPEN_GRAPH_METHOD_NAME
+    : FBSDK_SHARE_METHOD_NAME);
   FBSDKBridgeAPIRequest *request;
   request = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeNative
                                                              scheme:FBSDK_MESSAGE_DIALOG_APP_SCHEME
@@ -115,9 +115,9 @@
     [FBSDKInternalUtility unregisterTransientObject:self];
   };
   [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:request
-                                          useSafariViewController:useSafariViewController
-                                               fromViewController:nil
-                                                  completionBlock:completionBlock];
+                                useSafariViewController:useSafariViewController
+                                     fromViewController:nil
+                                        completionBlock:completionBlock];
 
   [self _logDialogShow];
   [FBSDKInternalUtility registerTransientObject:self];
@@ -127,13 +127,12 @@
 - (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef
 {
   if (self.shareContent) {
-    if ([self.shareContent isKindOfClass:[FBSDKShareLinkContent class]] ||
-        [self.shareContent isKindOfClass:[FBSDKSharePhotoContent class]] ||
-        [self.shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
-    } else {
+    if ([self.shareContent isKindOfClass:[FBSDKShareLinkContent class]]
+        || [self.shareContent isKindOfClass:[FBSDKSharePhotoContent class]]
+        || [self.shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {} else {
       if (errorRef != NULL) {
         NSString *message = [NSString stringWithFormat:@"Message dialog does not support %@.",
-                                                       NSStringFromClass(self.shareContent.class)];
+                             NSStringFromClass(self.shareContent.class)];
         *errorRef = [FBSDKError requiredArgumentErrorWithDomain:FBSDKShareErrorDomain
                                                            name:@"shareContent"
                                                         message:message];
@@ -146,7 +145,7 @@
                                            error:errorRef];
 }
 
-#pragma mark - Helper Methods
+ #pragma mark - Helper Methods
 
 - (BOOL)_canShowNative
 {
@@ -158,8 +157,8 @@
 - (void)_handleCompletionWithDialogResults:(NSDictionary *)results response:(FBSDKBridgeAPIResponse *)response
 {
   NSString *completionGesture = results[FBSDK_SHARE_RESULT_COMPLETION_GESTURE_KEY];
-  if ([completionGesture isEqualToString:FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_CANCEL] ||
-      response.isCancelled) {
+  if ([completionGesture isEqualToString:FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_CANCEL]
+      || response.isCancelled) {
     [self _invokeDelegateDidCancel];
   } else if (response.error) {
     [self _invokeDelegateDidFailWithError:response.error];
@@ -170,9 +169,9 @@
 
 - (void)_invokeDelegateDidCancel
 {
-  NSDictionary * parameters =@{
-                               FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Cancelled,
-                               };
+  NSDictionary *parameters = @{
+    FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Cancelled,
+  };
 
   [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKEventMessengerShareDialogResult
                         parameters:parameters
@@ -188,9 +187,9 @@
 
 - (void)_invokeDelegateDidCompleteWithResults:(NSDictionary *)results
 {
-  NSDictionary * parameters =@{
-                               FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Completed,
-                               };
+  NSDictionary *parameters = @{
+    FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Completed,
+  };
 
   [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKEventMessengerShareDialogResult
                         parameters:parameters
@@ -206,7 +205,7 @@
 
 - (void)_invokeDelegateDidFailWithError:(NSError *)error
 {
-  NSMutableDictionary * parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:FBSDKAppEventsDialogOutcomeValue_Failed, FBSDKAppEventParameterDialogOutcome, nil];
+  NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:FBSDKAppEventsDialogOutcomeValue_Failed, FBSDKAppEventParameterDialogOutcome, nil];
   if (error) {
     [FBSDKTypeUtility dictionary:parameters setObject:[NSString stringWithFormat:@"%@", error] forKey:FBSDKAppEventParameterDialogErrorMessage];
 

@@ -20,7 +20,7 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKTriStateBOOL.h"
+ #import "FBSDKTriStateBOOL.h"
 
 FBSDKTriStateBOOL FBSDKTriStateBOOLFromBOOL(BOOL value)
 {
@@ -29,9 +29,9 @@ FBSDKTriStateBOOL FBSDKTriStateBOOLFromBOOL(BOOL value)
 
 FBSDKTriStateBOOL FBSDKTriStateBOOLFromNSNumber(NSNumber *value)
 {
-  return ([value isKindOfClass:[NSNumber class]] ?
-          FBSDKTriStateBOOLFromBOOL(value.boolValue) :
-          FBSDKTriStateBOOLValueUnknown);
+  return ([value isKindOfClass:[NSNumber class]]
+    ? FBSDKTriStateBOOLFromBOOL(value.boolValue)
+    : FBSDKTriStateBOOLValueUnknown);
 }
 
 BOOL BOOLFromFBSDKTriStateBOOL(FBSDKTriStateBOOL value, BOOL defaultValue)

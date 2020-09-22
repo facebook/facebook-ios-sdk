@@ -20,11 +20,11 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKProfile.h"
+ #import "FBSDKProfile.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKProfile(Internal)
+@interface FBSDKProfile (Internal)
 
 + (void)cacheProfile:(nullable FBSDKProfile *)profile;
 + (nullable FBSDKProfile *)fetchCachedProfile;

@@ -20,7 +20,7 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKMaleSilhouetteIcon.h"
+ #import "FBSDKMaleSilhouetteIcon.h"
 
 @implementation FBSDKMaleSilhouetteIcon
 

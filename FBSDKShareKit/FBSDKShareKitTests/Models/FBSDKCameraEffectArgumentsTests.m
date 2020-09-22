@@ -20,7 +20,7 @@
 #import <XCTest/XCTest.h>
 
 #ifdef BUCK
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #else
 @import FBSDKCoreKit;
 #endif
@@ -45,9 +45,9 @@
   FBSDKCameraEffectArguments *arguments = [FBSDKShareModelTestUtility cameraEffectArguments];
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:arguments];
 #if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_11_0
-    FBSDKCameraEffectArguments *unarchivedArguments = [NSKeyedUnarchiver unarchivedObjectOfClass:[FBSDKCameraEffectArguments class] fromData:data error:nil];
+  FBSDKCameraEffectArguments *unarchivedArguments = [NSKeyedUnarchiver unarchivedObjectOfClass:[FBSDKCameraEffectArguments class] fromData:data error:nil];
 #else
-    FBSDKCameraEffectArguments *unarchivedArguments = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+  FBSDKCameraEffectArguments *unarchivedArguments = [NSKeyedUnarchiver unarchiveObjectWithData:data];
 #endif
   XCTAssertEqualObjects(unarchivedArguments, arguments);
 }
@@ -59,8 +59,8 @@
   // Supported types
   [arguments setString:@"1234" forKey:@"string"];
   XCTAssertEqualObjects([arguments stringForKey:@"string"], @"1234");
-  [arguments setArray:@[@"a",@"b",@"c"] forKey:@"string_array"];
-  XCTAssertEqualObjects([arguments arrayForKey:@"string_array"], (@[@"a",@"b",@"c"]));
+  [arguments setArray:@[@"a", @"b", @"c"] forKey:@"string_array"];
+  XCTAssertEqualObjects([arguments arrayForKey:@"string_array"], (@[@"a", @"b", @"c"]));
   [arguments setArray:@[] forKey:@"empty_array"];
   XCTAssertEqualObjects([arguments arrayForKey:@"empty_array"], @[]);
   [arguments setString:nil forKey:@"nil_string"];

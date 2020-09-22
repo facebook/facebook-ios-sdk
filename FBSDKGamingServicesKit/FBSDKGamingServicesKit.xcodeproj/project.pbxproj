@@ -39,6 +39,17 @@
 		9FC20034247D8D170016A053 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FC2001D247D83400016A053 /* FBSDKShareKit.framework */; };
 		F4234613244A2D2D006C9836 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4F7CA5123F49C110030A346 /* FBSDKCoreKit.framework */; };
 		F4234614244A2D2D006C9836 /* FBSDKCoreKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F4F7CA5123F49C110030A346 /* FBSDKCoreKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F46A224524D9F14D005878A8 /* FBSDKGamingServicesKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4F7CA1823F4902B0030A346 /* FBSDKGamingServicesKit.framework */; };
+		F46A225024D9F184005878A8 /* FBSDKGamingServicesKitTestUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = F46A224B24D9F184005878A8 /* FBSDKGamingServicesKitTestUtility.m */; };
+		F4DC057F2519499A0073B380 /* FBSDKCoreKitInternalImport.h in Headers */ = {isa = PBXBuildFile; fileRef = F4DC056E2519498C0073B380 /* FBSDKCoreKitInternalImport.h */; };
+		F4DC05832519499B0073B380 /* FBSDKCoreKitInternalImport.h in Headers */ = {isa = PBXBuildFile; fileRef = F4DC056E2519498C0073B380 /* FBSDKCoreKitInternalImport.h */; };
+		F4DE318124D9F4A700297C18 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4DE318024D9F4A700297C18 /* XCTest.framework */; };
+		F4DE31A324D9FA5A00297C18 /* FBSDKFriendFinderDialogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F46A224D24D9F184005878A8 /* FBSDKFriendFinderDialogTests.m */; };
+		F4DE31A424D9FA6400297C18 /* FBSDKGamingImageUploaderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F46A224E24D9F184005878A8 /* FBSDKGamingImageUploaderTests.m */; };
+		F4DE31A524D9FA6F00297C18 /* FBSDKGamingVideoUploaderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F46A224F24D9F184005878A8 /* FBSDKGamingVideoUploaderTests.m */; };
+		F4DE31AD24D9FD6100297C18 /* FBSDKVideoUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = F4DE31AC24D9FD6000297C18 /* FBSDKVideoUploader.m */; };
+		F4DE31AE24D9FD6100297C18 /* FBSDKVideoUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = F4DE31AC24D9FD6000297C18 /* FBSDKVideoUploader.m */; };
+		F4DE31D024DA0DD400297C18 /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4DE31CF24DA0DD400297C18 /* OCMock.framework */; };
 		F4F7C9E323F48F2C0030A346 /* FBSDKGamingImageUploaderConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F7C9B623F48F2C0030A346 /* FBSDKGamingImageUploaderConfiguration.m */; };
 		F4F7C9E423F48F2C0030A346 /* FBSDKGamingServiceCompletionHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = F4F7C9B723F48F2C0030A346 /* FBSDKGamingServiceCompletionHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4F7C9E523F48F2C0030A346 /* FBSDKFriendFinderDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F7C9B823F48F2C0030A346 /* FBSDKFriendFinderDialog.m */; };
@@ -114,6 +125,27 @@
 			proxyType = 1;
 			remoteGlobalIDString = 81A07EDF1D1A2E6A0041A29C;
 			remoteInfo = "FBSDKShareKit-Dynamic";
+		};
+		F46A225424D9F1C7005878A8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4F7C9A123F48ED80030A346 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F4F7CA6A23F49D6F0030A346;
+			remoteInfo = "FBSDKGamingServicesKit-Dynamic";
+		};
+		F4DE319F24D9F9FC00297C18 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9FC20012247D83400016A053 /* FBSDKShareKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 81A07EDF1D1A2E6A0041A29C;
+			remoteInfo = "FBSDKShareKit-Dynamic";
+		};
+		F4DE31A124D9FA0100297C18 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4F7CA3D23F49C110030A346 /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 81B71CFC1D19C87400933E93;
+			remoteInfo = "FBSDKCoreKit-Dynamic";
 		};
 		F4F7CA2823F497410030A346 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -224,7 +256,18 @@
 		9FC2000D247D82A00016A053 /* FBSDKGamingVideoUploaderConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKGamingVideoUploaderConfiguration.h; sourceTree = "<group>"; };
 		9FC20012247D83400016A053 /* FBSDKShareKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSDKShareKit.xcodeproj; path = ../FBSDKShareKit/FBSDKShareKit.xcodeproj; sourceTree = "<group>"; };
 		9FC2002C247D8ACF0016A053 /* FBSDKVideoUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBSDKVideoUploader.h; path = ../../../FBSDKShareKit/FBSDKShareKit/Internal/FBSDKVideoUploader.h; sourceTree = "<group>"; };
+		F46A224024D9F14D005878A8 /* FBSDKGamingServicesKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FBSDKGamingServicesKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F46A224424D9F14D005878A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F46A224B24D9F184005878A8 /* FBSDKGamingServicesKitTestUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKGamingServicesKitTestUtility.m; sourceTree = "<group>"; };
+		F46A224C24D9F184005878A8 /* FBSDKGamingServicesKitTestUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKGamingServicesKitTestUtility.h; sourceTree = "<group>"; };
+		F46A224D24D9F184005878A8 /* FBSDKFriendFinderDialogTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKFriendFinderDialogTests.m; sourceTree = "<group>"; };
+		F46A224E24D9F184005878A8 /* FBSDKGamingImageUploaderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKGamingImageUploaderTests.m; sourceTree = "<group>"; };
+		F46A224F24D9F184005878A8 /* FBSDKGamingVideoUploaderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKGamingVideoUploaderTests.m; sourceTree = "<group>"; };
 		F4A54C8A244619630063015F /* FBSDKGamingServicesKit-Common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBSDKGamingServicesKit-Common.xcconfig"; sourceTree = "<group>"; };
+		F4DC056E2519498C0073B380 /* FBSDKCoreKitInternalImport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKCoreKitInternalImport.h; sourceTree = "<group>"; };
+		F4DE318024D9F4A700297C18 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		F4DE31AC24D9FD6000297C18 /* FBSDKVideoUploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBSDKVideoUploader.m; path = ../../../FBSDKShareKit/FBSDKShareKit/Internal/FBSDKVideoUploader.m; sourceTree = "<group>"; };
+		F4DE31CF24DA0DD400297C18 /* OCMock.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OCMock.framework; path = ../Carthage/Build/iOS/OCMock.framework; sourceTree = "<group>"; };
 		F4F7C9B623F48F2C0030A346 /* FBSDKGamingImageUploaderConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKGamingImageUploaderConfiguration.m; sourceTree = "<group>"; };
 		F4F7C9B723F48F2C0030A346 /* FBSDKGamingServiceCompletionHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKGamingServiceCompletionHandler.h; sourceTree = "<group>"; };
 		F4F7C9B823F48F2C0030A346 /* FBSDKFriendFinderDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKFriendFinderDialog.m; sourceTree = "<group>"; };
@@ -261,7 +304,6 @@
 		F4F7C9DE23F48F2C0030A346 /* FacebookSDK-Project-TVOS-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "FacebookSDK-Project-TVOS-Debug.xcconfig"; sourceTree = "<group>"; };
 		F4F7C9DF23F48F2C0030A346 /* FBSDKGamingServicesKit.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = FBSDKGamingServicesKit.xcconfig; sourceTree = "<group>"; };
 		F4F7C9E023F48F2C0030A346 /* FBSDKGamingServicesKit-Dynamic.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "FBSDKGamingServicesKit-Dynamic.xcconfig"; sourceTree = "<group>"; };
-		F4F7C9E223F48F2C0030A346 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F4F7CA1823F4902B0030A346 /* FBSDKGamingServicesKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKGamingServicesKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4F7CA3523F499600030A346 /* FBSDKCoreKit+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "FBSDKCoreKit+Internal.h"; path = "../../../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h"; sourceTree = "<group>"; };
 		F4F7CA3D23F49C110030A346 /* FBSDKCoreKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSDKCoreKit.xcodeproj; path = ../FBSDKCoreKit/FBSDKCoreKit.xcodeproj; sourceTree = "<group>"; };
@@ -272,6 +314,16 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		F46A223D24D9F14D005878A8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4DE318124D9F4A700297C18 /* XCTest.framework in Frameworks */,
+				F4DE31D024DA0DD400297C18 /* OCMock.framework in Frameworks */,
+				F46A224524D9F14D005878A8 /* FBSDKGamingServicesKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F4F7C9A723F48ED80030A346 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -305,16 +357,30 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		F46A224124D9F14D005878A8 /* FBSDKGamingServicesKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				F46A224D24D9F184005878A8 /* FBSDKFriendFinderDialogTests.m */,
+				F46A224E24D9F184005878A8 /* FBSDKGamingImageUploaderTests.m */,
+				F46A224C24D9F184005878A8 /* FBSDKGamingServicesKitTestUtility.h */,
+				F46A224B24D9F184005878A8 /* FBSDKGamingServicesKitTestUtility.m */,
+				F46A224F24D9F184005878A8 /* FBSDKGamingVideoUploaderTests.m */,
+				F46A224424D9F14D005878A8 /* Info.plist */,
+			);
+			path = FBSDKGamingServicesKitTests;
+			sourceTree = "<group>";
+		};
 		F4F7C9A023F48ED80030A346 = {
 			isa = PBXGroup;
 			children = (
 				F4F7C9C323F48F2C0030A346 /* Configurations */,
 				F4F7C9B523F48F2C0030A346 /* FBSDKGamingServicesKit */,
-				F4F7C9E123F48F2C0030A346 /* FBSDKGamingServicesKitTests */,
 				F4F7CA1823F4902B0030A346 /* FBSDKGamingServicesKit.framework */,
+				F46A224124D9F14D005878A8 /* FBSDKGamingServicesKitTests */,
 				F4F7CA3223F498ED0030A346 /* Frameworks */,
 				F4F7CA9923F49D6F0030A346 /* FBSDKGamingServicesKit.framework */,
 				F4F7CA9A23F49D6F0030A346 /* FBSDKGamingServicesKit copy-Info.plist */,
+				F46A224024D9F14D005878A8 /* FBSDKGamingServicesKitTests.xctest */,
 			);
 			sourceTree = "<group>";
 		};
@@ -345,8 +411,10 @@
 		F4F7C9B923F48F2C0030A346 /* Internal */ = {
 			isa = PBXGroup;
 			children = (
+				F4DE31AC24D9FD6000297C18 /* FBSDKVideoUploader.m */,
 				9FC2002C247D8ACF0016A053 /* FBSDKVideoUploader.h */,
 				F4F7CA3523F499600030A346 /* FBSDKCoreKit+Internal.h */,
+				F4DC056E2519498C0073B380 /* FBSDKCoreKitInternalImport.h */,
 				F4F7C9BA23F48F2C0030A346 /* FBSDKGamingServiceController.m */,
 				F4F7C9BB23F48F2C0030A346 /* FBSDKGamingServiceController.h */,
 			);
@@ -417,21 +485,15 @@
 			path = Platform;
 			sourceTree = "<group>";
 		};
-		F4F7C9E123F48F2C0030A346 /* FBSDKGamingServicesKitTests */ = {
-			isa = PBXGroup;
-			children = (
-				F4F7C9E223F48F2C0030A346 /* Info.plist */,
-			);
-			path = FBSDKGamingServicesKitTests;
-			sourceTree = "<group>";
-		};
 		F4F7CA3223F498ED0030A346 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				9FC20012247D83400016A053 /* FBSDKShareKit.xcodeproj */,
-				F4F7CAA123F4A1390030A346 /* UIKit.framework */,
+				F4DE31CF24DA0DD400297C18 /* OCMock.framework */,
 				F4F7CA6823F49D1B0030A346 /* Accelerate.framework */,
 				F4F7CA3D23F49C110030A346 /* FBSDKCoreKit.xcodeproj */,
+				9FC20012247D83400016A053 /* FBSDKShareKit.xcodeproj */,
+				F4F7CAA123F4A1390030A346 /* UIKit.framework */,
+				F4DE318024D9F4A700297C18 /* XCTest.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -468,6 +530,7 @@
 				F4F7C9EA23F48F2C0030A346 /* FBSDKFriendFinderDialog.h in Headers */,
 				F4F7C9E423F48F2C0030A346 /* FBSDKGamingServiceCompletionHandler.h in Headers */,
 				F4F7C9E823F48F2C0030A346 /* FBSDKGamingImageUploader.h in Headers */,
+				F4DC057F2519499A0073B380 /* FBSDKCoreKitInternalImport.h in Headers */,
 				F4F7C9EB23F48F2C0030A346 /* FBSDKGamingServicesKit.h in Headers */,
 				F4F7CA3623F499600030A346 /* FBSDKCoreKit+Internal.h in Headers */,
 			);
@@ -486,6 +549,7 @@
 				F4F7CA7123F49D6F0030A346 /* FBSDKGamingServiceCompletionHandler.h in Headers */,
 				F4F7CA7223F49D6F0030A346 /* FBSDKGamingImageUploader.h in Headers */,
 				F4F7CA7323F49D6F0030A346 /* FBSDKGamingServicesKit.h in Headers */,
+				F4DC05832519499B0073B380 /* FBSDKCoreKitInternalImport.h in Headers */,
 				F4F7CA7423F49D6F0030A346 /* FBSDKCoreKit+Internal.h in Headers */,
 				9FC2002E247D8ACF0016A053 /* FBSDKVideoUploader.h in Headers */,
 			);
@@ -494,6 +558,26 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		F46A223F24D9F14D005878A8 /* FBSDKGamingServicesKitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F46A224824D9F14D005878A8 /* Build configuration list for PBXNativeTarget "FBSDKGamingServicesKitTests" */;
+			buildPhases = (
+				F46A223C24D9F14D005878A8 /* Sources */,
+				F46A223D24D9F14D005878A8 /* Frameworks */,
+				F46A223E24D9F14D005878A8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F4DE31A224D9FA0100297C18 /* PBXTargetDependency */,
+				F4DE31A024D9F9FC00297C18 /* PBXTargetDependency */,
+				F46A225524D9F1C7005878A8 /* PBXTargetDependency */,
+			);
+			name = FBSDKGamingServicesKitTests;
+			productName = FBSDKGamingServicesKitTests;
+			productReference = F46A224024D9F14D005878A8 /* FBSDKGamingServicesKitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		F4F7C9A923F48ED80030A346 /* FBSDKGamingServicesKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F4F7C9B223F48ED80030A346 /* Build configuration list for PBXNativeTarget "FBSDKGamingServicesKit" */;
@@ -542,9 +626,13 @@
 		F4F7C9A123F48ED80030A346 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1160;
 				LastUpgradeCheck = 1140;
 				ORGANIZATIONNAME = facebook;
 				TargetAttributes = {
+					F46A223F24D9F14D005878A8 = {
+						CreatedOnToolsVersion = 11.6;
+					};
 					F4F7C9A923F48ED80030A346 = {
 						CreatedOnToolsVersion = 10.1;
 					};
@@ -579,6 +667,7 @@
 				F4F7C9A923F48ED80030A346 /* FBSDKGamingServicesKit */,
 				F4F7CA6A23F49D6F0030A346 /* FBSDKGamingServicesKit-Dynamic */,
 				F4F7CA2323F497200030A346 /* FBSDKGamingServicesKit-Universal */,
+				F46A223F24D9F14D005878A8 /* FBSDKGamingServicesKitTests */,
 			);
 		};
 /* End PBXProject section */
@@ -685,6 +774,13 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
+		F46A223E24D9F14D005878A8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F4F7C9A823F48ED80030A346 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -741,6 +837,17 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		F46A223C24D9F14D005878A8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4DE31A324D9FA5A00297C18 /* FBSDKFriendFinderDialogTests.m in Sources */,
+				F4DE31A524D9FA6F00297C18 /* FBSDKGamingVideoUploaderTests.m in Sources */,
+				F46A225024D9F184005878A8 /* FBSDKGamingServicesKitTestUtility.m in Sources */,
+				F4DE31A424D9FA6400297C18 /* FBSDKGamingImageUploaderTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F4F7C9A623F48ED80030A346 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -749,6 +856,7 @@
 				F4F7C9ED23F48F2C0030A346 /* FBSDKGamingImageUploader.m in Sources */,
 				9FC2000E247D82A00016A053 /* FBSDKGamingVideoUploaderConfiguration.m in Sources */,
 				F4F7C9E323F48F2C0030A346 /* FBSDKGamingImageUploaderConfiguration.m in Sources */,
+				F4DE31AD24D9FD6100297C18 /* FBSDKVideoUploader.m in Sources */,
 				9FB51BA024B8BD4700059B77 /* FBSDKGamingGroupIntegration.m in Sources */,
 				F4F7C9E623F48F2C0030A346 /* FBSDKGamingServiceController.m in Sources */,
 				9FC2000F247D82A00016A053 /* FBSDKGamingVideoUploader.m in Sources */,
@@ -763,6 +871,7 @@
 				9FC2002B247D83FF0016A053 /* FBSDKGamingVideoUploaderConfiguration.m in Sources */,
 				F4F7CA7623F49D6F0030A346 /* FBSDKFriendFinderDialog.m in Sources */,
 				F4F7CA7723F49D6F0030A346 /* FBSDKGamingImageUploader.m in Sources */,
+				F4DE31AE24D9FD6100297C18 /* FBSDKVideoUploader.m in Sources */,
 				9FB51BA324B8BD6100059B77 /* FBSDKGamingGroupIntegration.m in Sources */,
 				F4F7CA7823F49D6F0030A346 /* FBSDKGamingImageUploaderConfiguration.m in Sources */,
 				F4F7CA7923F49D6F0030A346 /* FBSDKGamingServiceController.m in Sources */,
@@ -782,6 +891,21 @@
 			name = "FBSDKShareKit-Dynamic";
 			targetProxy = 9FC20028247D834D0016A053 /* PBXContainerItemProxy */;
 		};
+		F46A225524D9F1C7005878A8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F4F7CA6A23F49D6F0030A346 /* FBSDKGamingServicesKit-Dynamic */;
+			targetProxy = F46A225424D9F1C7005878A8 /* PBXContainerItemProxy */;
+		};
+		F4DE31A024D9F9FC00297C18 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "FBSDKShareKit-Dynamic";
+			targetProxy = F4DE319F24D9F9FC00297C18 /* PBXContainerItemProxy */;
+		};
+		F4DE31A224D9FA0100297C18 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "FBSDKCoreKit-Dynamic";
+			targetProxy = F4DE31A124D9FA0100297C18 /* PBXContainerItemProxy */;
+		};
 		F4F7CA2923F497410030A346 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = F4F7C9A923F48ED80030A346 /* FBSDKGamingServicesKit */;
@@ -800,6 +924,136 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		F46A224924D9F14D005878A8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = FBSDKGamingServicesKitTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.FBSDKGamingServicesKitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F46A224A24D9F14D005878A8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = FBSDKGamingServicesKitTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.FBSDKGamingServicesKitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		F4F7C9B023F48ED80030A346 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F4F7C9C623F48F2C0030A346 /* Debug.xcconfig */;
@@ -913,6 +1167,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		F46A224824D9F14D005878A8 /* Build configuration list for PBXNativeTarget "FBSDKGamingServicesKitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F46A224924D9F14D005878A8 /* Debug */,
+				F46A224A24D9F14D005878A8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		F4F7C9A423F48ED80030A346 /* Build configuration list for PBXProject "FBSDKGamingServicesKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

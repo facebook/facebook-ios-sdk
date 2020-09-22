@@ -20,15 +20,18 @@
 
 @implementation FakeSharingDelegate
 
-- (void)sharer:(nonnull id<FBSDKSharing>)sharer didCompleteWithResults:(nonnull NSDictionary<NSString *,id> *)results {
+- (void)sharer:(nonnull id<FBSDKSharing>)sharer didCompleteWithResults:(nonnull NSDictionary<NSString *, id> *)results
+{
   self.capturedResults = results;
 }
 
-- (void)sharer:(nonnull id<FBSDKSharing>)sharer didFailWithError:(nonnull NSError *)error {
+- (void)sharer:(nonnull id<FBSDKSharing>)sharer didFailWithError:(nonnull NSError *)error
+{
   self.capturedError = error;
 }
 
-- (void)sharerDidCancel:(nonnull id<FBSDKSharing>)sharer {
+- (void)sharerDidCancel:(nonnull id<FBSDKSharing>)sharer
+{
   self.didCancel = true;
 }
 

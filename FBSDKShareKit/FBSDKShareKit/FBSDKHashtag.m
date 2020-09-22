@@ -19,9 +19,9 @@
 #import "FBSDKHashtag.h"
 
 #ifdef FBSDKCOCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+ #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
 #else
-#import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKCoreKit+Internal.h"
 #endif
 
 #define FBSDK_HASHTAG_STRING_KEY @"hashtag"
@@ -66,8 +66,8 @@ static NSRegularExpression *HashtagRegularExpression()
   NSRange fullString = NSMakeRange(0, _stringRepresentation.length);
   NSRegularExpression *hashtagRegularExpression = HashtagRegularExpression();
   NSUInteger numberOfMatches = [hashtagRegularExpression numberOfMatchesInString:_stringRepresentation
-                                                                                        options:0
-                                                                                          range:fullString];
+                                                                         options:0
+                                                                           range:fullString];
   return numberOfMatches > 0;
 }
 
@@ -91,8 +91,8 @@ static NSRegularExpression *HashtagRegularExpression()
 
 - (BOOL)isEqualToHashtag:(FBSDKHashtag *)hashtag
 {
-  return (hashtag &&
-          [FBSDKInternalUtility object:_stringRepresentation isEqualToObject:hashtag.stringRepresentation]);
+  return (hashtag
+    && [FBSDKInternalUtility object:_stringRepresentation isEqualToObject:hashtag.stringRepresentation]);
 }
 
 #pragma mark - NSCoding

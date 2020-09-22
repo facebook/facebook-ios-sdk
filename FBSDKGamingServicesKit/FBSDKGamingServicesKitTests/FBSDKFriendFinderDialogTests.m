@@ -16,9 +16,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <XCTest/XCTest.h>
-
 #import <OCMock/OCMock.h>
+#import <XCTest/XCTest.h>
 
 #import <FBSDKGamingServicesKit/FBSDKGamingServicesKit.h>
 
@@ -51,10 +50,10 @@
 
   __block BOOL actioned = false;
   [FBSDKFriendFinderDialog
-   launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError * _Nullable error) {
-    XCTAssert(error.code == FBSDKErrorAccessTokenRequired, "Expected error requiring a valid access token");
-    actioned = true;
-  }];
+   launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError *_Nullable error) {
+     XCTAssert(error.code == FBSDKErrorAccessTokenRequired, "Expected error requiring a valid access token");
+     actioned = true;
+   }];
 
   XCTAssertTrue(actioned);
 }
@@ -62,21 +61,23 @@
 - (void)testServiceIsCalledCorrectly
 {
   OCMStub([_mockToken appID]).andReturn(@"123");
-  OCMStub([_mockApp
-           openURL:[OCMArg any]
-           options:[OCMArg any]
-           completionHandler:([OCMArg invokeBlockWithArgs:@(false), nil])]);
+  OCMStub(
+    [_mockApp
+     openURL:[OCMArg any]
+     options:[OCMArg any]
+     completionHandler:([OCMArg invokeBlockWithArgs:@(false), nil])]
+  );
 
   id expectation = [self expectationWithDescription:@"callback"];
 
   [FBSDKFriendFinderDialog
-   launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError * _Nullable error) {
-    [expectation fulfill];
-  }];
+   launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError *_Nullable error) {
+     [expectation fulfill];
+   }];
 
   [self waitForExpectationsWithTimeout:1 handler:nil];
 
-  id urlCheck = [OCMArg checkWithBlock:^BOOL(id obj) {
+  id urlCheck = [OCMArg checkWithBlock:^BOOL (id obj) {
     return [[(NSURL *)obj absoluteString] isEqualToString:@"https://fb.gg/me/friendfinder/123"];
   }];
   OCMVerify([_mockApp openURL:urlCheck options:[OCMArg any] completionHandler:[OCMArg any]]);
@@ -84,18 +85,20 @@
 
 - (void)testFailuresReturnAnError
 {
-  OCMStub([_mockApp
-           openURL:[OCMArg any]
-           options:[OCMArg any]
-           completionHandler:([OCMArg invokeBlockWithArgs:@(false), nil])]);
+  OCMStub(
+    [_mockApp
+     openURL:[OCMArg any]
+     options:[OCMArg any]
+     completionHandler:([OCMArg invokeBlockWithArgs:@(false), nil])]
+  );
 
   id expectation = [self expectationWithDescription:@"callback"];
   [FBSDKFriendFinderDialog
-   launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError * _Nullable error) {
-    XCTAssertFalse(success);
-    XCTAssert(error.code == FBSDKErrorBridgeAPIInterruption);
-    [expectation fulfill];
-  }];
+   launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError *_Nullable error) {
+     XCTAssertFalse(success);
+     XCTAssert(error.code == FBSDKErrorBridgeAPIInterruption);
+     [expectation fulfill];
+   }];
 
   [self waitForExpectationsWithTimeout:1 handler:nil];
 }
@@ -112,10 +115,10 @@
 
   __block BOOL actioned = false;
   [FBSDKFriendFinderDialog
-   launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError * _Nullable error) {
-    XCTAssertTrue(success);
-    actioned = true;
-  }];
+   launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError *_Nullable error) {
+     XCTAssertTrue(success);
+     actioned = true;
+   }];
 
   [delegate application:_mockApp openURL:[NSURL URLWithString:@"fb123://friendfinder"] sourceApplication:@"foo" annotation:nil];
 
@@ -131,10 +134,10 @@
 
   __block BOOL actioned = false;
   [FBSDKFriendFinderDialog
-   launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError * _Nullable error) {
-    XCTAssertTrue(success);
-    actioned = true;
-  }];
+   launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError *_Nullable error) {
+     XCTAssertTrue(success);
+     actioned = true;
+   }];
 
   [delegate applicationDidBecomeActive:_mockApp];
 

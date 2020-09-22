@@ -21,17 +21,18 @@
 #import <FBSDKLoginKit/FBSDKDeviceLoginManager.h>
 
 #ifdef FBSDKCOCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+ #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
 #else
-#import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKCoreKit+Internal.h"
 #endif
 
-@interface FBSDKDeviceLoginViewController() <
+@interface FBSDKDeviceLoginViewController () <
   FBSDKDeviceLoginManagerDelegate
 >
 @end
 
-@implementation FBSDKDeviceLoginViewController {
+@implementation FBSDKDeviceLoginViewController
+{
   FBSDKDeviceLoginManager *_loginManager;
   BOOL _isRetry;
 }
@@ -70,9 +71,9 @@
   self.delegate = nil;
 
   FBSDKAccessToken *token = result.accessToken;
-  BOOL requireConfirm = (([FBSDKServerConfigurationManager cachedServerConfiguration].smartLoginOptions & FBSDKServerConfigurationSmartLoginOptionsRequireConfirmation) &&
-                         (token != nil) &&
-                         !_isRetry);
+  BOOL requireConfirm = (([FBSDKServerConfigurationManager cachedServerConfiguration].smartLoginOptions & FBSDKServerConfigurationSmartLoginOptionsRequireConfirmation)
+    && (token != nil)
+    && !_isRetry);
   if (requireConfirm) {
     FBSDKGraphRequest *graphRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me"
                                                                         parameters:@{ @"fields" : @"name" }
@@ -87,16 +88,24 @@
       });
     }];
   } else if ([self isNetworkError:error]) {
-    NSString *networkErrorMessage = NSLocalizedStringWithDefaultValue(@"LoginError.SystemAccount.Network", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
-                                                                      @"Unable to connect to Facebook. Check your network connection and try again.",
-                                                                      @"The user facing error message when the Accounts framework encounters a network error.");
+    NSString *networkErrorMessage = NSLocalizedStringWithDefaultValue(
+      @"LoginError.SystemAccount.Network",
+      @"FacebookSDK",
+      [FBSDKInternalUtility bundleForStrings],
+      @"Unable to connect to Facebook. Check your network connection and try again.",
+      @"The user facing error message when the Accounts framework encounters a network error."
+    );
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:networkErrorMessage preferredStyle:UIAlertControllerStyleAlert];
-    NSString *localizedOK = NSLocalizedStringWithDefaultValue(@"ErrorRecovery.Alert.OK", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
-                                                              @"OK",
-                                                              @"The title of the label to dismiss the alert when presenting user facing error messages");
+    NSString *localizedOK = NSLocalizedStringWithDefaultValue(
+      @"ErrorRecovery.Alert.OK",
+      @"FacebookSDK",
+      [FBSDKInternalUtility bundleForStrings],
+      @"OK",
+      @"The title of the label to dismiss the alert when presenting user facing error messages"
+    );
     UIAlertAction *okAction = [UIAlertAction actionWithTitle:localizedOK
                                                        style:UIAlertActionStyleCancel
-                                                     handler:^(UIAlertAction * _Nonnull action) {
+                                                     handler:^(UIAlertAction *_Nonnull action) {
                                                        [self dismissViewControllerAnimated:YES completion:^{
                                                          [delegate deviceLoginViewController:self didFailWithError:error];
                                                        }];
@@ -141,7 +150,7 @@
 #pragma mark - Private impl
 
 - (void)_notifySuccessForDelegate:(id<FBSDKDeviceLoginViewControllerDelegate>)delegate
-  token:(FBSDKAccessToken *)token
+                            token:(FBSDKAccessToken *)token
 {
   [FBSDKAccessToken setCurrentAccessToken:token];
   [delegate deviceLoginViewControllerDidFinish:self];
@@ -152,30 +161,42 @@
                                    name:(NSString *)name
 {
   NSString *title =
-  NSLocalizedStringWithDefaultValue(@"SmartLogin.ConfirmationTitle", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
-                                    @"Confirm Login",
-                                    @"The title for the alert when smart login requires confirmation");
+  NSLocalizedStringWithDefaultValue(
+    @"SmartLogin.ConfirmationTitle",
+    @"FacebookSDK",
+    [FBSDKInternalUtility bundleForStrings],
+    @"Confirm Login",
+    @"The title for the alert when smart login requires confirmation"
+  );
   NSString *cancelTitle =
-  NSLocalizedStringWithDefaultValue(@"SmartLogin.NotYou", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
-                                    @"Not you?",
-                                    @"The cancel label for the alert when smart login requires confirmation");
+  NSLocalizedStringWithDefaultValue(
+    @"SmartLogin.NotYou",
+    @"FacebookSDK",
+    [FBSDKInternalUtility bundleForStrings],
+    @"Not you?",
+    @"The cancel label for the alert when smart login requires confirmation"
+  );
   NSString *continueTitleFormatString =
-  NSLocalizedStringWithDefaultValue(@"SmartLogin.Continue", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
-                                    @"Continue as %@",
-                                    @"The format string to continue as <name> for the alert when smart login requires confirmation");
+  NSLocalizedStringWithDefaultValue(
+    @"SmartLogin.Continue",
+    @"FacebookSDK",
+    [FBSDKInternalUtility bundleForStrings],
+    @"Continue as %@",
+    @"The format string to continue as <name> for the alert when smart login requires confirmation"
+  );
   NSString *continueTitle = [NSString stringWithFormat:continueTitleFormatString, name];
   UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
                                                                            message:title preferredStyle:UIAlertControllerStyleActionSheet];
   [alertController addAction:[UIAlertAction actionWithTitle:continueTitle
                                                       style:UIAlertActionStyleDestructive
-                                                    handler:^(UIAlertAction * _Nonnull action) {
+                                                    handler:^(UIAlertAction *_Nonnull action) {
                                                       [self dismissViewControllerAnimated:YES completion:^{
                                                         [self _notifySuccessForDelegate:delegate token:token];
                                                       }];
                                                     }]];
   [alertController addAction:[UIAlertAction actionWithTitle:cancelTitle
                                                       style:UIAlertActionStyleCancel
-                                                    handler:^(UIAlertAction * _Nonnull action) {
+                                                    handler:^(UIAlertAction *_Nonnull action) {
                                                       self->_isRetry = YES;
                                                       FBSDKDeviceDialogView *view = [[FBSDKDeviceDialogView alloc] initWithFrame:self.view.frame];
                                                       view.delegate = self;
@@ -185,20 +206,19 @@
                                                       // reconnect delegate before since now
                                                       // we are not dismissing.
                                                       self.delegate = delegate;
-
                                                     }]];
   [self presentViewController:alertController animated:YES completion:NULL];
 }
 
 - (void)_initializeLoginManager
 {
-  //clear any existing login manager
+  // clear any existing login manager
   _loginManager.delegate = nil;
   [_loginManager cancel];
   _loginManager = nil;
 
-  BOOL enableSmartLogin = (!_isRetry &&
-                           ([FBSDKServerConfigurationManager cachedServerConfiguration].smartLoginOptions & FBSDKServerConfigurationSmartLoginOptionsEnabled));
+  BOOL enableSmartLogin = (!_isRetry
+    && ([FBSDKServerConfigurationManager cachedServerConfiguration].smartLoginOptions & FBSDKServerConfigurationSmartLoginOptionsEnabled));
   _loginManager = [[FBSDKDeviceLoginManager alloc] initWithPermissions:_permissions
                                                       enableSmartLogin:enableSmartLogin];
   _loginManager.delegate = self;

@@ -20,7 +20,7 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKMessengerIcon.h"
+ #import "FBSDKMessengerIcon.h"
 
 @implementation FBSDKMessengerIcon
 

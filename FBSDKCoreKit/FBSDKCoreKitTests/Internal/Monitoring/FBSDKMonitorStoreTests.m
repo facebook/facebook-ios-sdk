@@ -16,8 +16,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
+#import <XCTest/XCTest.h>
 
 #import "FBSDKCoreKit+Internal.h"
 #import "TestMonitorEntry.h"
@@ -57,16 +57,22 @@
   NSURL *temporaryDirectory = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
   NSURL *file = [temporaryDirectory URLByAppendingPathComponent:self.filename];
 
-  XCTAssertEqualObjects(self.store.filePath, file,
-                        @"Should store entries in the temporary directory");
+  XCTAssertEqualObjects(
+    self.store.filePath,
+    file,
+    @"Should store entries in the temporary directory"
+  );
 }
 
 - (void)testPersistingEmptyEntries
 {
   [self.store persist:@[]];
 
-  XCTAssertEqualObjects([self.store retrieveEntries], @[],
-                        @"Should persist an empty list of entries");
+  XCTAssertEqualObjects(
+    [self.store retrieveEntries],
+    @[],
+    @"Should persist an empty list of entries"
+  );
 }
 
 - (void)testPersistingEntries
@@ -75,18 +81,25 @@
 
   [self.store persist:@[self.entry]];
 
-  XCTAssertEqualObjects([self entriesFromDisk], expectedEntries,
-                        @"Should persist entries correctly");
+  XCTAssertEqualObjects(
+    [self entriesFromDisk],
+    expectedEntries,
+    @"Should persist entries correctly"
+  );
 }
 
-- (void)testPersistingDuplicateEntriesWithEmptyStore {
+- (void)testPersistingDuplicateEntriesWithEmptyStore
+{
   TestMonitorEntry *entry2 = [TestMonitorEntry testEntry];
   NSArray *entries = @[self.entry, entry2];
 
   [self.store persist:entries];
 
-  XCTAssertEqualObjects([self entriesFromDisk], entries,
-                        @"Should allow persisting duplicate entries");
+  XCTAssertEqualObjects(
+    [self entriesFromDisk],
+    entries,
+    @"Should allow persisting duplicate entries"
+  );
 }
 
 - (void)testPersistingDuplicateEntriesWithNonEmptyStore
@@ -97,8 +110,11 @@
   [self.store persist:@[self.entry]];
   [self.store persist:entries];
 
-  XCTAssertEqualObjects([self entriesFromDisk], entries,
-                        @"Should overwrite any existing stored entries when persisting");
+  XCTAssertEqualObjects(
+    [self entriesFromDisk],
+    entries,
+    @"Should overwrite any existing stored entries when persisting"
+  );
 }
 
 - (void)testPersistingUniqueEntriesWithEmptyStore
@@ -108,8 +124,11 @@
 
   [self.store persist:entries];
 
-  XCTAssertEqualObjects([self entriesFromDisk], entries,
-                        @"Should allow persisting unique entries");
+  XCTAssertEqualObjects(
+    [self entriesFromDisk],
+    entries,
+    @"Should allow persisting unique entries"
+  );
 }
 
 - (void)testPersistingUniqueEntriesWithNonEmptyStore
@@ -120,16 +139,22 @@
   [self.store persist:@[self.entry]];
   [self.store persist:entries];
 
-  XCTAssertEqualObjects([self entriesFromDisk], entries,
-                        @"Should allow persisting unique entries");
+  XCTAssertEqualObjects(
+    [self entriesFromDisk],
+    entries,
+    @"Should allow persisting unique entries"
+  );
 }
 
 - (void)testRetrievingWithoutPersistedEntries
 {
   NSArray<id<FBSDKMonitorEntry>> *retrievedEntries = [self.store retrieveEntries];
 
-  XCTAssertEqualObjects(retrievedEntries, @[],
-                        @"Retrieving entries should return an empty array when no items are persisted");
+  XCTAssertEqualObjects(
+    retrievedEntries,
+    @[],
+    @"Retrieving entries should return an empty array when no items are persisted"
+  );
 }
 
 - (void)testRetrievingClearsStore
@@ -139,19 +164,24 @@
 
   NSArray<id<FBSDKMonitorEntry>> *retrieved = [self entriesFromDisk];
 
-  XCTAssertNil(retrieved,
-               @"Retrieving should clear existing entries");
+  XCTAssertNil(
+    retrieved,
+    @"Retrieving should clear existing entries"
+  );
 }
 
-- (void)testClearingStore {
+- (void)testClearingStore
+{
   [self.store persist:@[self.entry]];
 
   [self.store clear];
 
   NSArray<id<FBSDKMonitorEntry>> *retrieved = [self entriesFromDisk];
 
-  XCTAssertNil(retrieved,
-               @"A cleared store should be empty");
+  XCTAssertNil(
+    retrieved,
+    @"A cleared store should be empty"
+  );
 }
 
 // MARK: - Helpers

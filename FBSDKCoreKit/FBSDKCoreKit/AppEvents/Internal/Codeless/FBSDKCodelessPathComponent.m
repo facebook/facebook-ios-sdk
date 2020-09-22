@@ -20,19 +20,19 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKCodelessPathComponent.h"
+ #import "FBSDKCodelessPathComponent.h"
 
-#import "FBSDKViewHierarchyMacros.h"
+ #import "FBSDKViewHierarchyMacros.h"
 
 @implementation FBSDKCodelessPathComponent
 
-- (instancetype)initWithJSON:(NSDictionary *)dict {
+- (instancetype)initWithJSON:(NSDictionary *)dict
+{
   if (self = [super init]) {
     _className = [dict[CODELESS_MAPPING_CLASS_NAME_KEY] copy];
     _text = [dict[CODELESS_MAPPING_TEXT_KEY] copy];
     _hint = [dict[CODELESS_MAPPING_HINT_KEY] copy];
     _desc = [dict[CODELESS_MAPPING_DESC_KEY] copy];
-
 
     if (dict[CODELESS_MAPPING_INDEX_KEY]) {
       _index = [dict[CODELESS_MAPPING_INDEX_KEY] intValue];

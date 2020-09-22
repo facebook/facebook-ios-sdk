@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
   A delegate for `FBSDKDeviceShareViewController`
  */
+DEVICE_SHARING_DEPRECATED
 NS_SWIFT_NAME(DeviceShareViewControllerDelegate)
 @protocol FBSDKDeviceShareViewControllerDelegate <NSObject>
 
@@ -64,6 +65,7 @@ NS_SWIFT_NAME(DeviceShareViewControllerDelegate)
                     animated:YES
                   completion:NULL];
  */
+DEVICE_SHARING_DEPRECATED
 NS_SWIFT_NAME(FBDeviceShareViewController)
 @interface FBSDKDeviceShareViewController : FBSDKDeviceViewControllerBase
 

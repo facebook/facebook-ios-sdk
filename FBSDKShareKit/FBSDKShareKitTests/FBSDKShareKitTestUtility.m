@@ -18,12 +18,11 @@
 
 #import "FBSDKShareKitTestUtility.h"
 
-#import <objc/runtime.h>
-
 #import <MessageUI/MessageUI.h>
+#import <OCMock/OCMock.h>
 #import <Social/Social.h>
 
-#import <OCMock/OCMock.h>
+#import <objc/runtime.h>
 
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKShareDialog.h"

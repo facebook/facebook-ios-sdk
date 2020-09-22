@@ -17,10 +17,12 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if SWIFT_PACKAGE
-#import "FBSDKSettings.h"
+ #import "FBSDKSettings.h"
 #else
-#import <FBSDKCoreKit/FBSDKSettings.h>
+ #import <FBSDKCoreKit/FBSDKSettings.h>
 #endif
+
+#import "FBSDKCoreKit+Internal.h"
 
 #define DATA_PROCESSING_OPTIONS         @"data_processing_options"
 #define DATA_PROCESSING_OPTIONS_COUNTRY @"data_processing_options_country"
@@ -28,19 +30,35 @@
 
 @protocol FBSDKAccessTokenCaching;
 
-@interface FBSDKSettings(Internal)
+@interface FBSDKSettings (Internal)
 
 + (nullable NSObject<FBSDKAccessTokenCaching> *)accessTokenCache;
 
 + (void)setAccessTokenCache:(nullable NSObject<FBSDKAccessTokenCaching> *)accessTokenCache;
 
++ (FBSDKAdvertisingTrackingStatus)getAdvertisingTrackingStatus;
+
++ (void)setAdvertiserTrackingStatus:(FBSDKAdvertisingTrackingStatus)status;
+
 + (nullable NSDictionary<NSString *, id> *)dataProcessingOptions;
 
 + (BOOL)isDataProcessingRestricted;
 
-@property (class, nonatomic, copy, readonly, nullable) NSString *graphAPIDebugParamValue;
++ (void)recordInstall;
+
++ (void)recordSetAdvertiserTrackingEnabled;
+
++ (BOOL)isEventDelayTimerExpired;
+
++ (BOOL)isSetATETimeExceedsInstallTime;
+
++ (NSDate *_Nullable)getInstallTimestamp;
+
++ (NSDate *_Nullable)getSetAdvertiserTrackingEnabledTimestamp;
+
+@property (class, nullable, nonatomic, readonly, copy) NSString *graphAPIDebugParamValue;
 
 // used by Unity.
-@property (class, nonatomic, copy, nullable) NSString *userAgentSuffix;
+@property (class, nullable, nonatomic, copy) NSString *userAgentSuffix;
 
 @end

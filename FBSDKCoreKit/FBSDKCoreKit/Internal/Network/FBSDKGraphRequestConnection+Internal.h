@@ -19,14 +19,21 @@
 @class FBSDKURLSession;
 
 #if SWIFT_PACKAGE
-#import "FBSDKGraphRequestConnection.h"
+ #import "FBSDKGraphRequestConnection.h"
 #else
-#import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
+ #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
 #endif
 
-@interface FBSDKGraphRequestConnection(Internal)
+@interface FBSDKGraphRequestConnection (Internal)
 
 @property (nonatomic, readonly) NSMutableArray *requests;
 @property (nonatomic, strong) FBSDKURLSession *session;
+
+/**
+ Get the graph request url for a single graph request
+ @param request The Graph Request we need the url for
+ @param forBatch whether the request is a batch request.
+ */
+- (NSString *)urlStringForSingleRequest:(FBSDKGraphRequest *)request forBatch:(BOOL)forBatch;
 
 @end

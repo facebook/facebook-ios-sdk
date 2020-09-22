@@ -16,9 +16,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <XCTest/XCTest.h>
-
 #import <OCMock/OCMock.h>
+#import <XCTest/XCTest.h>
 
 #import <FBSDKGamingServicesKit/FBSDKGamingServicesKit.h>
 
@@ -72,10 +71,10 @@
   __block BOOL actioned = false;
   [FBSDKGamingImageUploader
    uploadImageWithConfiguration:_mockConfig
-   andResultCompletionHandler:^(BOOL success, id result, NSError * _Nullable error) {
-    XCTAssert(error.code == FBSDKErrorAccessTokenRequired, "Expected error requiring a valid access token");
-    actioned = true;
-  }];
+   andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
+     XCTAssert(error.code == FBSDKErrorAccessTokenRequired, "Expected error requiring a valid access token");
+     actioned = true;
+   }];
 
   XCTAssertTrue(actioned);
 }
@@ -87,10 +86,10 @@
   __block BOOL actioned = false;
   [FBSDKGamingImageUploader
    uploadImageWithConfiguration:nilImageConfig
-   andResultCompletionHandler:^(BOOL success, id result, NSError * _Nullable error) {
-    XCTAssert(error.code == FBSDKErrorInvalidArgument, "Expected error requiring a non nil image");
-    actioned = true;
-  }];
+   andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
+     XCTAssert(error.code == FBSDKErrorInvalidArgument, "Expected error requiring a non nil image");
+     actioned = true;
+   }];
 
   XCTAssertTrue(actioned);
 }
@@ -102,54 +101,56 @@
   __block BOOL actioned = false;
   [FBSDKGamingImageUploader
    uploadImageWithConfiguration:_mockConfig
-   andResultCompletionHandler:^(BOOL success, id result, NSError * _Nullable error) {
-    XCTAssert(error.code == FBSDKErrorGraphRequestGraphAPI, "Expected error from Graph API");
-    actioned = true;
-  }];
+   andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
+     XCTAssert(error.code == FBSDKErrorGraphRequestGraphAPI, "Expected error from Graph API");
+     actioned = true;
+   }];
 
   XCTAssertTrue(actioned);
 }
 
 - (void)testGraphResponsesTriggerCompletionIfDialogNotRequested
 {
-  [self stubGraphRequestWithResult:@{@"id": @"123"} error:nil];
+  [self stubGraphRequestWithResult:@{@"id" : @"123"} error:nil];
 
   __block BOOL actioned = false;
   [FBSDKGamingImageUploader
    uploadImageWithConfiguration:_mockConfig
-   andResultCompletionHandler:^(BOOL success, id result, NSError * _Nullable error) {
-    XCTAssertTrue(success);
-    XCTAssertNil(error);
-    actioned = true;
-  }];
+   andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
+     XCTAssertTrue(success);
+     XCTAssertNil(error);
+     actioned = true;
+   }];
 
   XCTAssertTrue(actioned);
 }
 
 - (void)testGraphResponsesDoNotTriggerCompletionIfDialogIsRequested
 {
-  [self stubGraphRequestWithResult:@{@"id": @"123"} error:nil];
+  [self stubGraphRequestWithResult:@{@"id" : @"123"} error:nil];
   OCMStub([_mockConfig shouldLaunchMediaDialog]).andReturn(true);
 
   __block BOOL actioned = false;
   [FBSDKGamingImageUploader
    uploadImageWithConfiguration:_mockConfig
-   andResultCompletionHandler:^(BOOL success, id result, NSError * _Nullable error) {
-    actioned = true;
-  }];
+   andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
+     actioned = true;
+   }];
 
   XCTAssertFalse(actioned, "Callback should not have been called because there was more work to do");
 }
 
 - (void)testGraphResponsesTriggerDialogIfDialogIsRequested
 {
-  [self stubGraphRequestWithResult:@{@"id": @"111"} error:nil];
+  [self stubGraphRequestWithResult:@{@"id" : @"111"} error:nil];
   OCMStub([_mockConfig shouldLaunchMediaDialog]).andReturn(true);
 
-  OCMStub([_mockApp
-           openURL:[OCMArg any]
-           options:[OCMArg any]
-           completionHandler:([OCMArg invokeBlockWithArgs:@(false), nil])]);
+  OCMStub(
+    [_mockApp
+     openURL:[OCMArg any]
+     options:[OCMArg any]
+     completionHandler:([OCMArg invokeBlockWithArgs:@(false), nil])]
+  );
 
   // This will cause an lint warning, ignore it, this is an external sdk test
   // @lint-ignore FBOBJCDISCOURAGEDFUNCTION
@@ -157,13 +158,13 @@
 
   [FBSDKGamingImageUploader
    uploadImageWithConfiguration:_mockConfig
-   andResultCompletionHandler:^(BOOL success, id result, NSError * _Nullable error) {
-    [expectation fulfill];
-  }];
+   andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
+     [expectation fulfill];
+   }];
 
   [self waitForExpectationsWithTimeout:1 handler:nil];
 
-  id urlCheck = [OCMArg checkWithBlock:^BOOL(id obj) {
+  id urlCheck = [OCMArg checkWithBlock:^BOOL (id obj) {
     return [[(NSURL *)obj absoluteString] isEqualToString:@"https://fb.gg/me/media_asset/111"];
   }];
   OCMVerify([_mockApp openURL:urlCheck options:[OCMArg any] completionHandler:[OCMArg any]]);
@@ -174,7 +175,7 @@
   id settings = OCMClassMock([FBSDKSettings class]);
   OCMStub([settings appID]).andReturn(@"123");
 
-  [self stubGraphRequestWithResult:@{@"id": @"111"} error:nil];
+  [self stubGraphRequestWithResult:@{@"id" : @"111"} error:nil];
   OCMStub([_mockConfig shouldLaunchMediaDialog]).andReturn(true);
 
   __block id<FBSDKURLOpening> delegate;
@@ -185,10 +186,10 @@
   __block BOOL actioned = false;
   [FBSDKGamingImageUploader
    uploadImageWithConfiguration:_mockConfig
-   andResultCompletionHandler:^(BOOL success, id result, NSError * _Nullable error) {
-    XCTAssertTrue(success);
-    actioned = true;
-  }];
+   andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
+     XCTAssertTrue(success);
+     actioned = true;
+   }];
 
   [delegate
    application:_mockApp
@@ -201,7 +202,7 @@
 
 - (void)testDialogCompletionOnApplicationBecameActive
 {
-  [self stubGraphRequestWithResult:@{@"id": @"111"} error:nil];
+  [self stubGraphRequestWithResult:@{@"id" : @"111"} error:nil];
   OCMStub([_mockConfig shouldLaunchMediaDialog]).andReturn(true);
 
   __block id<FBSDKURLOpening> delegate;
@@ -212,10 +213,10 @@
   __block BOOL actioned = false;
   [FBSDKGamingImageUploader
    uploadImageWithConfiguration:_mockConfig
-   andResultCompletionHandler:^(BOOL success, id result, NSError * _Nullable error) {
-    XCTAssertTrue(success);
-    actioned = true;
-  }];
+   andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
+     XCTAssertTrue(success);
+     actioned = true;
+   }];
 
   [delegate applicationDidBecomeActive:_mockApp];
 
@@ -227,31 +228,31 @@
   __block id<FBSDKGraphRequestConnectionDelegate> delegate;
   __block FBSDKGraphRequestBlock completion;
   id mockConnection = [self stubGraphRequestWithDelegateCapture:^(id<FBSDKGraphRequestConnectionDelegate> obj) {
-    delegate = obj;
-  } andCompletionCapture:^(FBSDKGraphRequestBlock obj) {
-    completion = obj;
-  }];
+                              delegate = obj;
+                            } andCompletionCapture:^(FBSDKGraphRequestBlock obj) {
+                              completion = obj;
+                            }];
 
   __block BOOL completionActioned = false;
   __block BOOL progressActioned = false;
   [FBSDKGamingImageUploader
    uploadImageWithConfiguration:_mockConfig
-   completionHandler:^(BOOL success, id result, NSError * _Nullable error) {
-    XCTAssert(success);
-    XCTAssertEqual(result[@"id"], @"foo");
-    completionActioned = true;
-  }
+   completionHandler:^(BOOL success, id result, NSError *_Nullable error) {
+     XCTAssert(success);
+     XCTAssertEqual(result[@"id"], @"foo");
+     completionActioned = true;
+   }
    andProgressHandler:^(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
-    XCTAssertEqual(bytesSent, 123);
-    XCTAssertEqual(totalBytesSent, 456);
-    XCTAssertEqual(totalBytesExpectedToSend, 789);
-    progressActioned = true;
-  }];
+     XCTAssertEqual(bytesSent, 123);
+     XCTAssertEqual(totalBytesSent, 456);
+     XCTAssertEqual(totalBytesExpectedToSend, 789);
+     progressActioned = true;
+   }];
 
   [delegate requestConnection:mockConnection didSendBodyData:123 totalBytesWritten:456 totalBytesExpectedToWrite:789];
   XCTAssertTrue(progressActioned);
 
-  completion(mockConnection, @{@"id": @"foo"}, nil);
+  completion(mockConnection, @{@"id" : @"foo"}, nil);
   XCTAssertTrue(completionActioned);
 }
 
@@ -276,14 +277,18 @@
 
   id mockConnection = OCMClassMock([FBSDKGraphRequestConnection class]);
   OCMStub([mockConnection alloc]).andReturn(mockConnection);
-  OCMStub([mockConnection setDelegate:[OCMArg checkWithBlock:^BOOL(id obj) {
-    delegateCaptureHandler(obj);
-    return true;
-  }]]);
-  OCMStub([mockConnection addRequest:[OCMArg isEqual:mockRequest] completionHandler:[OCMArg checkWithBlock:^BOOL(id obj) {
-    completionCaptureHandler(obj);
-    return true;
-  }]]);
+  OCMStub(
+    [mockConnection setDelegate:[OCMArg checkWithBlock:^BOOL (id obj) {
+      delegateCaptureHandler(obj);
+      return true;
+    }]]
+  );
+  OCMStub(
+    [mockConnection addRequest:[OCMArg isEqual:mockRequest] completionHandler:[OCMArg checkWithBlock:^BOOL (id obj) {
+      completionCaptureHandler(obj);
+      return true;
+    }]]
+  );
 
   return mockConnection;
 }
@@ -297,14 +302,18 @@
   __block id delegate;
   id mockConnection = OCMClassMock([FBSDKGraphRequestConnection class]);
   OCMStub([mockConnection alloc]).andReturn(mockConnection);
-  OCMStub([mockConnection setDelegate:[OCMArg checkWithBlock:^BOOL(id obj) {
-    delegate = obj;
-    return true;
-  }]]);
-  OCMStub([mockConnection addRequest:[OCMArg isEqual:mockRequest] completionHandler:[OCMArg checkWithBlock:^BOOL(id obj) {
-    ((FBSDKGraphRequestBlock) obj)(nil, result, error);
-    return true;
-  }]]);
+  OCMStub(
+    [mockConnection setDelegate:[OCMArg checkWithBlock:^BOOL (id obj) {
+      delegate = obj;
+      return true;
+    }]]
+  );
+  OCMStub(
+    [mockConnection addRequest:[OCMArg isEqual:mockRequest] completionHandler:[OCMArg checkWithBlock:^BOOL (id obj) {
+      ((FBSDKGraphRequestBlock) obj)(nil, result, error);
+      return true;
+    }]]
+  );
 }
 
 @end

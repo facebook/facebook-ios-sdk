@@ -20,24 +20,24 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKLikeDialog.h"
+ #import "FBSDKLikeDialog.h"
 
-#ifdef FBSDKCOCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
-#import "FBSDKCoreKit+Internal.h"
-#endif
-#import "FBSDKShareConstants.h"
-#import "FBSDKShareDefines.h"
+ #ifdef FBSDKCOCOAPODS
+  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+ #else
+  #import "FBSDKCoreKit+Internal.h"
+ #endif
+ #import "FBSDKShareConstants.h"
+ #import "FBSDKShareDefines.h"
 
 @implementation FBSDKLikeDialog
 
-#define FBSDK_LIKE_METHOD_MIN_VERSION @"20140410"
-#define FBSDK_LIKE_METHOD_NAME @"like"
-#define FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_LIKE @"like"
-#define FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_UNLIKE @"unlike"
+ #define FBSDK_LIKE_METHOD_MIN_VERSION @"20140410"
+ #define FBSDK_LIKE_METHOD_NAME @"like"
+ #define FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_LIKE @"like"
+ #define FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_UNLIKE @"unlike"
 
-#pragma mark - Class Methods
+ #pragma mark - Class Methods
 
 + (void)initialize
 {
@@ -58,7 +58,7 @@
   return dialog;
 }
 
-#pragma mark - Public Methods
+ #pragma mark - Public Methods
 
 - (BOOL)canLike
 {
@@ -83,14 +83,14 @@
   NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
   [FBSDKTypeUtility dictionary:parameters setObject:self.objectID forKey:@"object_id"];
   [FBSDKTypeUtility dictionary:parameters
-                      setObject:NSStringFromFBSDKLikeObjectType(self.objectType)
-                         forKey:@"object_type"];
-  FBSDKBridgeAPIRequest * webRequest = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
-                                                                                        scheme:FBSDK_SHARE_JS_DIALOG_SCHEME
-                                                                                    methodName:FBSDK_LIKE_METHOD_NAME
-                                                                                 methodVersion:nil
-                                                                                    parameters:parameters
-                                                                                      userInfo:nil];
+                     setObject:NSStringFromFBSDKLikeObjectType(self.objectType)
+                        forKey:@"object_type"];
+  FBSDKBridgeAPIRequest *webRequest = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
+                                                                                       scheme:FBSDK_SHARE_JS_DIALOG_SCHEME
+                                                                                   methodName:FBSDK_LIKE_METHOD_NAME
+                                                                                methodVersion:nil
+                                                                                   parameters:parameters
+                                                                                     userInfo:nil];
   FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
     [self _handleCompletionWithDialogResults:response.responseParameters error:response.error];
   };
@@ -107,22 +107,22 @@
     void (^networkCompletionBlock)(FBSDKBridgeAPIResponse *) = ^(FBSDKBridgeAPIResponse *response) {
       if (response.error.code == FBSDKErrorAppVersionUnsupported) {
         [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:webRequest
-                                                useSafariViewController:useSafariViewController
-                                                     fromViewController:self.fromViewController
-                                                        completionBlock:completionBlock];
+                                      useSafariViewController:useSafariViewController
+                                           fromViewController:self.fromViewController
+                                              completionBlock:completionBlock];
       } else {
         completionBlock(response);
       }
     };
     [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:nativeRequest
-                                            useSafariViewController:useSafariViewController
-                                                 fromViewController:self.fromViewController
-                                                    completionBlock:networkCompletionBlock];
+                                  useSafariViewController:useSafariViewController
+                                       fromViewController:self.fromViewController
+                                          completionBlock:networkCompletionBlock];
   } else {
     [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:webRequest
-                                            useSafariViewController:useSafariViewController
-                                                 fromViewController:self.fromViewController
-                                                    completionBlock:completionBlock];
+                                  useSafariViewController:useSafariViewController
+                                       fromViewController:self.fromViewController
+                                          completionBlock:completionBlock];
   }
 
   return YES;
@@ -144,7 +144,7 @@
   return YES;
 }
 
-#pragma mark - Helper Methods
+ #pragma mark - Helper Methods
 
 - (BOOL)_canLikeNative
 {

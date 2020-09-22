@@ -20,8 +20,8 @@
 
 #import "FBSDKCoreKit+Internal.h"
 
-static int const FBSDKTokenRefreshThresholdSeconds = 24 * 60 * 60;  // day
-static int const FBSDKTokenRefreshRetrySeconds = 60 * 60;           // hour
+static int const FBSDKTokenRefreshThresholdSeconds = 24 * 60 * 60; // day
+static int const FBSDKTokenRefreshRetrySeconds = 60 * 60; // hour
 
 @implementation FBSDKGraphRequestPiggybackManager
 
@@ -30,8 +30,8 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60;           // hour
   if ([FBSDKSettings appID].length > 0) {
     BOOL safeForPiggyback = YES;
     for (FBSDKGraphRequestMetadata *metadata in connection.requests) {
-      if (![metadata.request.version isEqualToString:[FBSDKSettings graphAPIVersion]] ||
-          metadata.request.hasAttachments) {
+      if (![metadata.request.version isEqualToString:[FBSDKSettings graphAPIVersion]]
+          || metadata.request.hasAttachments) {
         safeForPiggyback = NO;
         break;
       }
@@ -59,25 +59,25 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60;           // hour
       FBSDKAccessToken *currentToken = [FBSDKAccessToken currentAccessToken];
       NSDate *expirationDate = currentToken.expirationDate;
       if (expirationDateNumber != nil) {
-        expirationDate = (expirationDateNumber.doubleValue > 0 ?
-                          [NSDate dateWithTimeIntervalSince1970:expirationDateNumber.doubleValue] :
-                          [NSDate distantFuture]);
+        expirationDate = (expirationDateNumber.doubleValue > 0
+          ? [NSDate dateWithTimeIntervalSince1970:expirationDateNumber.doubleValue]
+          : [NSDate distantFuture]);
       }
       NSDate *dataExpirationDate = currentToken.dataAccessExpirationDate;
       if (dataAccessExpirationDateNumber != nil) {
-            dataExpirationDate = (dataAccessExpirationDateNumber.doubleValue > 0 ?
-                              [NSDate dateWithTimeIntervalSince1970:dataAccessExpirationDateNumber.doubleValue] :
-                              [NSDate distantFuture]);
+        dataExpirationDate = (dataAccessExpirationDateNumber.doubleValue > 0
+          ? [NSDate dateWithTimeIntervalSince1970:dataAccessExpirationDateNumber.doubleValue]
+          : [NSDate distantFuture]);
       }
       FBSDKAccessToken *refreshedToken = [[FBSDKAccessToken alloc] initWithTokenString:tokenString ?: currentToken.tokenString
                                                                            permissions:(permissions ?: currentToken.permissions).allObjects
                                                                    declinedPermissions:(declinedPermissions ?: currentToken.declinedPermissions).allObjects
-                                                                   expiredPermissions:(expiredPermissions ?: currentToken.expiredPermissions).allObjects
+                                                                    expiredPermissions:(expiredPermissions ?: currentToken.expiredPermissions).allObjects
                                                                                  appID:currentToken.appID
                                                                                 userID:currentToken.userID
                                                                         expirationDate:expirationDate
                                                                            refreshDate:[NSDate date]
-                                                                           dataAccessExpirationDate:dataExpirationDate
+                                                              dataAccessExpirationDate:dataExpirationDate
                                                                            graphDomain:graphDomain ?: currentToken.graphDomain];
       if (expectedToken == currentToken) {
         [FBSDKAccessToken setCurrentAccessToken:refreshedToken];
@@ -85,11 +85,10 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60;           // hour
     }
   };
   FBSDKGraphRequest *extendRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"oauth/access_token"
-                                                                 parameters:@{@"grant_type" : @"fb_extend_sso_token",
-                                                                              @"fields": @"",
-                                                                              @"client_id": expectedToken.appID
-                                                                              }
-                                                                      flags:FBSDKGraphRequestFlagDisableErrorRecovery];
+                                                                       parameters:@{@"grant_type" : @"fb_extend_sso_token",
+                                                                                    @"fields" : @"",
+                                                                                    @"client_id" : expectedToken.appID}
+                                                                            flags:FBSDKGraphRequestFlagDisableErrorRecovery];
 
   [connection addRequest:extendRequest completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id result, NSError *error) {
     tokenString = result[@"access_token"];
@@ -99,8 +98,8 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60;           // hour
     expectingCallbackComplete();
   }];
   FBSDKGraphRequest *permissionsRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/permissions"
-                                                                 parameters:@{@"fields": @""}
-                                                                      flags:FBSDKGraphRequestFlagDisableErrorRecovery];
+                                                                            parameters:@{@"fields" : @""}
+                                                                                 flags:FBSDKGraphRequestFlagDisableErrorRecovery];
 
   [connection addRequest:permissionsRequest completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id result, NSError *error) {
     if (!error) {
@@ -133,9 +132,9 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60;           // hour
 
   NSDate *now = [NSDate date];
   NSDate *tokenRefreshDate = [FBSDKAccessToken currentAccessToken].refreshDate;
-  if (tokenRefreshDate &&
-      [now timeIntervalSinceDate:lastRefreshTry] > FBSDKTokenRefreshRetrySeconds &&
-      [now timeIntervalSinceDate:tokenRefreshDate] > FBSDKTokenRefreshThresholdSeconds) {
+  if (tokenRefreshDate
+      && [now timeIntervalSinceDate:lastRefreshTry] > FBSDKTokenRefreshRetrySeconds
+      && [now timeIntervalSinceDate:tokenRefreshDate] > FBSDKTokenRefreshThresholdSeconds) {
     [self addRefreshPiggyback:connection permissionHandler:NULL];
     lastRefreshTry = [NSDate date];
   }

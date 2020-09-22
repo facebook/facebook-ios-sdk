@@ -29,24 +29,24 @@ NSString *NSStringFromFBSDKAppGroupPrivacy(AppGroupPrivacy privacy)
 
 #else
 
-#ifdef FBSDKCOCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
-#import "FBSDKCoreKit+Internal.h"
-#endif
-#import "FBSDKShareUtility.h"
+ #ifdef FBSDKCOCOAPODS
+  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+ #else
+  #import "FBSDKCoreKit+Internal.h"
+ #endif
+ #import "FBSDKShareUtility.h"
 
-#define FBSDK_APP_GROUP_CONTENT_GROUP_DESCRIPTION_KEY @"groupDescription"
-#define FBSDK_APP_GROUP_CONTENT_NAME_KEY @"name"
-#define FBSDK_APP_GROUP_CONTENT_PRIVACY_KEY @"privacy"
+ #define FBSDK_APP_GROUP_CONTENT_GROUP_DESCRIPTION_KEY @"groupDescription"
+ #define FBSDK_APP_GROUP_CONTENT_NAME_KEY @"name"
+ #define FBSDK_APP_GROUP_CONTENT_PRIVACY_KEY @"privacy"
 
 NSString *NSStringFromFBSDKAppGroupPrivacy(FBSDKAppGroupPrivacy privacy)
 {
   switch (privacy) {
-    case FBSDKAppGroupPrivacyClosed:{
+    case FBSDKAppGroupPrivacyClosed: {
       return @"closed";
     }
-    case FBSDKAppGroupPrivacyOpen:{
+    case FBSDKAppGroupPrivacyOpen: {
       return @"open";
     }
   }
@@ -54,7 +54,7 @@ NSString *NSStringFromFBSDKAppGroupPrivacy(FBSDKAppGroupPrivacy privacy)
 
 @implementation FBSDKAppGroupContent
 
-#pragma mark - Equality
+ #pragma mark - Equality
 
 - (NSUInteger)hash
 {
@@ -79,13 +79,13 @@ NSString *NSStringFromFBSDKAppGroupPrivacy(FBSDKAppGroupPrivacy privacy)
 
 - (BOOL)isEqualToAppGroupContent:(FBSDKAppGroupContent *)content
 {
-  return (content &&
-          (_privacy == content.privacy) &&
-          [FBSDKInternalUtility object:_name isEqualToObject:content.name] &&
-          [FBSDKInternalUtility object:_groupDescription isEqualToObject:content.groupDescription]);
+  return (content
+    && (_privacy == content.privacy)
+    && [FBSDKInternalUtility object:_name isEqualToObject:content.name]
+    && [FBSDKInternalUtility object:_groupDescription isEqualToObject:content.groupDescription]);
 }
 
-#pragma mark - NSCoding
+ #pragma mark - NSCoding
 
 + (BOOL)supportsSecureCoding
 {
@@ -110,7 +110,7 @@ NSString *NSStringFromFBSDKAppGroupPrivacy(FBSDKAppGroupPrivacy privacy)
   [encoder encodeInteger:_privacy forKey:FBSDK_APP_GROUP_CONTENT_PRIVACY_KEY];
 }
 
-#pragma mark - NSCopying
+ #pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone
 {

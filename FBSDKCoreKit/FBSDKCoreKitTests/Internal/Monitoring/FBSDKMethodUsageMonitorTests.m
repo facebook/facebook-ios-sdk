@@ -16,9 +16,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <XCTest/XCTest.h>
-
 #import <OCMock/OCMock.h>
+#import <XCTest/XCTest.h>
 
 #import "FBSDKCoreKit+Internal.h"
 
@@ -59,8 +58,11 @@
 
   FBSDKMethodUsageMonitorEntry *entry = (FBSDKMethodUsageMonitorEntry *) FBSDKMonitor.entries.firstObject;
 
-  XCTAssertEqualObjects(entry.dictionaryRepresentation[@"event_name"], expectedName,
-                        @"Entry should contain the captured method name");
+  XCTAssertEqualObjects(
+    entry.dictionaryRepresentation[@"event_name"],
+    expectedName,
+    @"Entry should contain the captured method name"
+  );
 }
 
 @end

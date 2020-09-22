@@ -17,7 +17,6 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
-
 #import <XCTest/XCTest.h>
 
 #import "FBSDKBase64.h"
@@ -39,14 +38,14 @@
 - (void)testRFC4648TestVectors
 {
   [self runTests:@{
-                   @"": @"",
-                   @"f": @"Zg==",
-                   @"fo": @"Zm8=",
-                   @"foo": @"Zm9v",
-                   @"foob": @"Zm9vYg==",
-                   @"fooba": @"Zm9vYmE=",
-                   @"foobar": @"Zm9vYmFy",
-                   }];
+     @"" : @"",
+     @"f" : @"Zg==",
+     @"fo" : @"Zm8=",
+     @"foo" : @"Zm9v",
+     @"foob" : @"Zm9vYg==",
+     @"fooba" : @"Zm9vYmE=",
+     @"foobar" : @"Zm9vYmFy",
+   }];
 }
 
 - (void)testDecodeVariations
@@ -60,10 +59,10 @@
 - (void)testEncodeDecode
 {
   [self runTests:@{
-                   @"Hello World": @"SGVsbG8gV29ybGQ=",
-                   @"ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!%^&*(){}[]": @"QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVoxMjM0NTY3ODkwISVeJiooKXt9W10=",
-                   @"\n\t Line with control characters\r\n": @"CgkgTGluZSB3aXRoIGNvbnRyb2wgY2hhcmFjdGVycw0K",
-                   }];
+     @"Hello World" : @"SGVsbG8gV29ybGQ=",
+     @"ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!%^&*(){}[]" : @"QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVoxMjM0NTY3ODkwISVeJiooKXt9W10=",
+     @"\n\t Line with control characters\r\n" : @"CgkgTGluZSB3aXRoIGNvbnRyb2wgY2hhcmFjdGVycw0K",
+   }];
 }
 
 @end

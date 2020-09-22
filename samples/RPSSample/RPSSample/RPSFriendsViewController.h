@@ -20,11 +20,11 @@
 
 @interface RPSFriendsViewController : UIViewController
 
-@property (weak, nonatomic) IBOutlet UITextView *activityTextView;
+@property (nonatomic, weak) IBOutlet UITextView *activityTextView;
 
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (nonatomic, weak) IBOutlet UITableView *tableView;
 
-@property (weak, nonatomic) IBOutlet UIButton *challengeButton;
+@property (nonatomic, weak) IBOutlet UIButton *challengeButton;
 
 - (IBAction)tapChallengeFriends:(id)sender;
 

@@ -89,7 +89,8 @@ NS_SWIFT_NAME(jpegCompressionQuality);
  Controls sdk auto initailization.
  If not explicitly set, the default is true
  */
-@property (class, nonatomic, assign, getter=isAutoInitEnabled) BOOL autoInitEnabled;
+@property (class, nonatomic, assign, getter=isAutoInitEnabled) BOOL autoInitEnabled
+DEPRECATED_MSG_ATTRIBUTE("Auto-initialization will be removed in the next major version release.");
 
 /**
  Controls the auto logging of basic app events, such as activateApp and deactivateApp.
@@ -104,7 +105,7 @@ NS_SWIFT_NAME(jpegCompressionQuality);
 @property (class, nonatomic, assign, getter=isCodelessDebugLogEnabled) BOOL codelessDebugLogEnabled;
 
 /**
- Controls the fb_codeless_debug logging event
+ Controls the access to IDFA
  If not explicitly set, the default is true
  */
 @property (class, nonatomic, assign, getter=isAdvertiserIDCollectionEnabled) BOOL advertiserIDCollectionEnabled;
@@ -186,6 +187,20 @@ NS_REFINED_FOR_SWIFT;
  Defaults to `FBSDK_TARGET_PLATFORM_VERSION`.
 */
 @property (class, nonatomic, copy, null_resettable) NSString *graphAPIVersion;
+
+/**
+ The value of the flag advertiser_tracking_enabled that controls the advertiser tracking status of the data sent to Facebook
+ If not explicitly set in iOS14 or above, the default is false in iOS14 or above.
+ */
++ (BOOL)isAdvertiserTrackingEnabled;
+
+/**
+Set the advertiser_tracking_enabled flag. It only works in iOS14 and above.
+ 
+@param advertiserTrackingEnabled the value of the flag
+@return Whether the the value is set successfully. It will always return NO in iOS 13 and below.
+ */
++ (BOOL)setAdvertiserTrackingEnabled:(BOOL)advertiserTrackingEnabled;
 
 /**
 Set the data processing options.

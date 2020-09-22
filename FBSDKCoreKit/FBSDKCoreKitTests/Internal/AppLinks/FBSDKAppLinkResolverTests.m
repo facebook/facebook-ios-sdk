@@ -16,9 +16,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <XCTest/XCTest.h>
-
 #import <OCMock/OCMock.h>
+#import <XCTest/XCTest.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <OHHTTPStubs/OHHTTPStubs.h>
@@ -84,30 +83,30 @@ typedef _Nullable id (^StringURLBlock)(NSString *urlString);
   StringURLBlock matchingKey = ^id (NSString *urlString) {
     for (NSString *substring in requestsAndResponses.allKeys) {
       // The first @"" always matches
-      if (substring.length == 0 ||
-          [urlString rangeOfString:substring].location != NSNotFound) {
+      if (substring.length == 0
+          || [urlString rangeOfString:substring].location != NSNotFound) {
         return substring;
       }
     }
     return nil;
   };
 
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-    if (callback) {
-      callback(request);
-    }
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
+                 if (callback) {
+                   callback(request);
+                 }
 
-    return matchingKey(request.URL.absoluteString) != nil;
-  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    id result = requestsAndResponses[matchingKey(request.URL.absoluteString)];
-    NSData *data = [[FBSDKBasicUtility JSONStringForObject:result
-                                                     error:NULL
-                                      invalidObjectHandler:NULL] dataUsingEncoding:NSUTF8StringEncoding];
+                 return matchingKey(request.URL.absoluteString) != nil;
+               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+                 id result = requestsAndResponses[matchingKey(request.URL.absoluteString)];
+                 NSData *data = [[FBSDKBasicUtility JSONStringForObject:result
+                                                                  error:NULL
+                                                   invalidObjectHandler:NULL] dataUsingEncoding:NSUTF8StringEncoding];
 
-    return [OHHTTPStubsResponse responseWithData:data
-                                      statusCode:statusCode
-                                         headers:nil];
-  }];
+                 return [OHHTTPStubsResponse responseWithData:data
+                                                   statusCode:statusCode
+                                                      headers:nil];
+               }];
 }
 
 #pragma mark - test cases

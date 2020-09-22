@@ -18,14 +18,15 @@
 
 #import "FBSDKPerformanceMonitorEntry.h"
 
-#import "FBSDKTypeUtility.h"
+#import "FBSDKInternalUtility.h"
 
-static NSString * const FBSDKPerformanceNameKey = @"event_name";
-static NSString * const FBSDKPerformanceStartTimeKey = @"time_start";
-static NSString * const FBSDKPerformanceEndTimeKey = @"time_end";
-static NSString * const FBSDKPerformanceTimeSpentKey = @"time_spent";
+static NSString *const FBSDKPerformanceNameKey = @"event_name";
+static NSString *const FBSDKPerformanceStartTimeKey = @"time_start";
+static NSString *const FBSDKPerformanceEndTimeKey = @"time_end";
+static NSString *const FBSDKPerformanceTimeSpentKey = @"time_spent";
 
-@implementation FBSDKPerformanceMonitorEntry {
+@implementation FBSDKPerformanceMonitorEntry
+{
   NSString *_name;
   NSDate *_startTime;
   NSDate *_endTime;
@@ -52,7 +53,8 @@ static NSString * const FBSDKPerformanceTimeSpentKey = @"time_spent";
   return [_name copy];
 }
 
-- (void)encodeWithCoder:(nonnull NSCoder *)encoder {
+- (void)encodeWithCoder:(nonnull NSCoder *)encoder
+{
   if (_name && _startTime && _endTime) {
     [encoder encodeObject:_name forKey:FBSDKPerformanceNameKey];
     [encoder encodeObject:_startTime forKey:FBSDKPerformanceStartTimeKey];
@@ -60,7 +62,8 @@ static NSString * const FBSDKPerformanceTimeSpentKey = @"time_spent";
   }
 }
 
-- (nullable instancetype)initWithCoder:(nonnull NSCoder *)decoder {
+- (nullable instancetype)initWithCoder:(nonnull NSCoder *)decoder
+{
   _name = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKPerformanceNameKey];
   _startTime = [decoder decodeObjectOfClass:[NSDate class] forKey:FBSDKPerformanceStartTimeKey];
   _endTime = [decoder decodeObjectOfClass:[NSDate class] forKey:FBSDKPerformanceEndTimeKey];
@@ -72,9 +75,10 @@ static NSString * const FBSDKPerformanceTimeSpentKey = @"time_spent";
   return nil;
 }
 
-- (nonnull NSDictionary *)dictionaryRepresentation {
+- (nonnull NSDictionary *)dictionaryRepresentation
+{
   NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-  
+
   [FBSDKTypeUtility dictionary:dict setObject:_name
                         forKey:FBSDKPerformanceNameKey];
   [FBSDKTypeUtility dictionary:dict

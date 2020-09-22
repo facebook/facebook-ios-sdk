@@ -19,9 +19,9 @@
 #import "FBSDKShareLinkContent.h"
 
 #ifdef FBSDKCOCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+ #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
 #else
-#import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKCoreKit+Internal.h"
 #endif
 #import "FBSDKHashtag.h"
 #import "FBSDKShareUtility.h"
@@ -125,15 +125,15 @@
 
 - (BOOL)isEqualToShareLinkContent:(FBSDKShareLinkContent *)content
 {
-  return (content &&
-          [FBSDKInternalUtility object:_contentURL isEqualToObject:content.contentURL] &&
-          [FBSDKInternalUtility object:_hashtag isEqualToObject:content.hashtag] &&
-          [FBSDKInternalUtility object:_peopleIDs isEqualToObject:content.peopleIDs] &&
-          [FBSDKInternalUtility object:_placeID isEqualToObject:content.placeID] &&
-          [FBSDKInternalUtility object:_ref isEqualToObject:content.ref] &&
-          [FBSDKInternalUtility object:_pageID isEqualToObject:content.pageID] &&
-          [FBSDKInternalUtility object:_shareUUID isEqualToObject:content.shareUUID]) &&
-          [FBSDKInternalUtility object:_quote isEqualToObject:content.quote];
+  return (content
+    && [FBSDKInternalUtility object:_contentURL isEqualToObject:content.contentURL]
+    && [FBSDKInternalUtility object:_hashtag isEqualToObject:content.hashtag]
+    && [FBSDKInternalUtility object:_peopleIDs isEqualToObject:content.peopleIDs]
+    && [FBSDKInternalUtility object:_placeID isEqualToObject:content.placeID]
+    && [FBSDKInternalUtility object:_ref isEqualToObject:content.ref]
+    && [FBSDKInternalUtility object:_pageID isEqualToObject:content.pageID]
+    && [FBSDKInternalUtility object:_shareUUID isEqualToObject:content.shareUUID])
+  && [FBSDKInternalUtility object:_quote isEqualToObject:content.quote];
 }
 
 #pragma mark - NSCoding

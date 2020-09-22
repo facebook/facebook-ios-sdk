@@ -20,7 +20,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TestMonitorEntry : NSObject<FBSDKMonitorEntry>
+@interface TestMonitorEntry : NSObject <FBSDKMonitorEntry>
 
 @property (nonatomic, copy) NSString *name;
 

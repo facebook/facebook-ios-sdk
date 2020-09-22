@@ -19,10 +19,9 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKMonitoringConfiguration.h"
-
+#import "FBSDKMonitoringConfigurationTestHelper.h"
 #import "FBSDKTestCoder.h"
 #import "TestMonitorEntry.h"
-#import "FBSDKMonitoringConfigurationTestHelper.h"
 
 @interface FBSDKMonitoringConfiguration (Testing)
 
@@ -44,20 +43,32 @@ typedef FBSDKMonitoringConfigurationTestHelper MonitoringConfiguration;
 {
   self.config = FBSDKMonitoringConfiguration.defaultConfiguration;
 
-  XCTAssertEqual(self.config.defaultSamplingRate, 0,
-                 @"Default sampling rate should be zero if unspecified");
-  XCTAssertEqual(self.config.sampleRates.count, 0,
-                 @"A config should not have any sample rates by default");
+  XCTAssertEqual(
+    self.config.defaultSamplingRate,
+    0,
+    @"Default sampling rate should be zero if unspecified"
+  );
+  XCTAssertEqual(
+    self.config.sampleRates.count,
+    0,
+    @"A config should not have any sample rates by default"
+  );
 }
 
 - (void)testCreatingWithMissingSamplingRates
 {
   self.config = [FBSDKMonitoringConfiguration fromDictionary:@{}];
 
-  XCTAssertEqual(self.config.defaultSamplingRate, 0,
-                 @"Default sampling rate should be zero if unspecified");
-  XCTAssertEqual(self.config.sampleRates.count, 0,
-                 @"A config should not have any sample rates by default");
+  XCTAssertEqual(
+    self.config.defaultSamplingRate,
+    0,
+    @"Default sampling rate should be zero if unspecified"
+  );
+  XCTAssertEqual(
+    self.config.sampleRates.count,
+    0,
+    @"A config should not have any sample rates by default"
+  );
 }
 
 - (void)testCreatingWithEmptySamplingRates
@@ -66,104 +77,133 @@ typedef FBSDKMonitoringConfigurationTestHelper MonitoringConfiguration;
 
   self.config = [FBSDKMonitoringConfiguration fromDictionary:dict];
 
-  XCTAssertEqual(self.config.defaultSamplingRate, 0,
-                 @"Default sampling rate should be zero if missing from the sampling rates");
-  XCTAssertEqual(self.config.sampleRates.count, 0,
-                 @"A config should not have any sample rates by default");
+  XCTAssertEqual(
+    self.config.defaultSamplingRate,
+    0,
+    @"Default sampling rate should be zero if missing from the sampling rates"
+  );
+  XCTAssertEqual(
+    self.config.sampleRates.count,
+    0,
+    @"A config should not have any sample rates by default"
+  );
 }
-
 
 - (void)testCreatingWithMissingDefaultSamplingRate
 {
   NSDictionary *expectedSampleRates = @{
-    @"foo": @1
+    @"foo" : @1
   };
 
-  NSDictionary *dict = [MonitoringConfiguration sampleRatesWithEntryPairs:@{ @"foo": @1 }];
+  NSDictionary *dict = [MonitoringConfiguration sampleRatesWithEntryPairs:@{ @"foo" : @1 }];
 
   self.config = [FBSDKMonitoringConfiguration fromDictionary:dict];
 
-  XCTAssertEqual(self.config.defaultSamplingRate, 0,
-                 @"Default sampling rate should be zero if missing from the sampling rates");
-  XCTAssertTrue([self.config.sampleRates isEqualToDictionary:expectedSampleRates],
-                @"A config should set sample rates correctly based on the input rates");
+  XCTAssertEqual(
+    self.config.defaultSamplingRate,
+    0,
+    @"Default sampling rate should be zero if missing from the sampling rates"
+  );
+  XCTAssertTrue(
+    [self.config.sampleRates isEqualToDictionary:expectedSampleRates],
+    @"A config should set sample rates correctly based on the input rates"
+  );
 }
 
 - (void)testCreatingWithValidDefaultSamplingRate
 {
-  NSDictionary *dict = [MonitoringConfiguration sampleRatesWithEntryPairs:@{ @"default": @100 }];
+  NSDictionary *dict = [MonitoringConfiguration sampleRatesWithEntryPairs:@{ @"default" : @100 }];
 
   self.config = [FBSDKMonitoringConfiguration fromDictionary:dict];
 
-  XCTAssertEqual(self.config.defaultSamplingRate, 100,
-                 @"Default sampling rate should be gleaned from the initializing dictionary");
+  XCTAssertEqual(
+    self.config.defaultSamplingRate,
+    100,
+    @"Default sampling rate should be gleaned from the initializing dictionary"
+  );
 }
 
 - (void)testCreatingWithOnlyInvalidSamplingRates
 {
   NSDictionary *dict = [MonitoringConfiguration sampleRatesWithEntryPairs:@{
-    @"default": @-1,
-    @"foo": @"bar"
-  }];
+                          @"default" : @-1,
+                          @"foo" : @"bar"
+                        }];
 
   self.config = [FBSDKMonitoringConfiguration fromDictionary:dict];
 
-  XCTAssertEqual(self.config.defaultSamplingRate, 0,
-                 @"Default sampling rate should be zero if no valid default is given");
-  XCTAssertTrue([self.config.sampleRates isEqualToDictionary:@{}],
-                @"Should not store invalid sample rates");
+  XCTAssertEqual(
+    self.config.defaultSamplingRate,
+    0,
+    @"Default sampling rate should be zero if no valid default is given"
+  );
+  XCTAssertTrue(
+    [self.config.sampleRates isEqualToDictionary:@{}],
+    @"Should not store invalid sample rates"
+  );
 }
 
 - (void)testCreatingWihSomeInvalidSampleRates
 {
   NSDictionary *dict = [MonitoringConfiguration sampleRatesWithEntryPairs:@{
-    @"default": @-1,
-    @"foo": @50
-  }];
+                          @"default" : @-1,
+                          @"foo" : @50
+                        }];
 
   self.config = [FBSDKMonitoringConfiguration fromDictionary:dict];
 
-  XCTAssertEqual(self.config.defaultSamplingRate, 0,
-                 @"Default sampling rate should be gleaned from the initializing dictionary");
-
+  XCTAssertEqual(
+    self.config.defaultSamplingRate,
+    0,
+    @"Default sampling rate should be gleaned from the initializing dictionary"
+  );
 }
 
 - (void)testGettingSampleRate
 {
-  NSDictionary *dict = [MonitoringConfiguration sampleRatesWithEntryPairs:@{ @"foo": @50 }];
+  NSDictionary *dict = [MonitoringConfiguration sampleRatesWithEntryPairs:@{ @"foo" : @50 }];
 
   self.config = [FBSDKMonitoringConfiguration fromDictionary:dict];
 
-  XCTAssertEqual([self.config sampleRateForEntry: [TestMonitorEntry testEntryWithName:@"foo"]], 50,
-                 @"Should retrieve the sample rate for the entry with the matching name");
+  XCTAssertEqual(
+    [self.config sampleRateForEntry:[TestMonitorEntry testEntryWithName:@"foo"]],
+    50,
+    @"Should retrieve the sample rate for the entry with the matching name"
+  );
 }
 
 - (void)testEncoding
 {
   FBSDKTestCoder *coder = [FBSDKTestCoder new];
-  NSDictionary *expectedSampleRates = @{@"foo": @50};
-  NSDictionary *dict = [MonitoringConfiguration sampleRatesWithEntryPairs:@{ @"foo": @50 }];
+  NSDictionary *expectedSampleRates = @{@"foo" : @50};
+  NSDictionary *dict = [MonitoringConfiguration sampleRatesWithEntryPairs:@{ @"foo" : @50 }];
 
   self.config = [FBSDKMonitoringConfiguration fromDictionary:dict];
 
   [self.config encodeWithCoder:coder];
 
-  XCTAssertEqualObjects(coder.encodedObject[@"sample_rates"], expectedSampleRates,
-                        @"Should encode the sample rates");
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"sample_rates"],
+    expectedSampleRates,
+    @"Should encode the sample rates"
+  );
 }
 
 - (void)testDecoding
 {
   FBSDKTestCoder *decoder = [FBSDKTestCoder new];
 
-  NSDictionary *dict = [MonitoringConfiguration sampleRatesWithEntryPairs:@{ @"foo": @50 }];
+  NSDictionary *dict = [MonitoringConfiguration sampleRatesWithEntryPairs:@{ @"foo" : @50 }];
 
   self.config = [FBSDKMonitoringConfiguration fromDictionary:dict];
 
   self.config = [self.config initWithCoder:decoder];
 
-  XCTAssertEqualObjects(decoder.decodedObject[@"sample_rates"], [NSDictionary class],
-                        @"Should attempt to decode a dictionary of sample rates when initializing from a decoder");
+  XCTAssertEqualObjects(
+    decoder.decodedObject[@"sample_rates"],
+    [NSDictionary class],
+    @"Should attempt to decode a dictionary of sample rates when initializing from a decoder"
+  );
 }
 
 #pragma mark Helpers

@@ -20,10 +20,10 @@
 
 #if TARGET_OS_TV
 
-#import "FBSDKDeviceDialogView.h"
+ #import "FBSDKDeviceDialogView.h"
 
-#import "FBSDKCoreKit+Internal.h"
-#import "FBSDKDeviceUtilities.h"
+ #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKDeviceUtilities.h"
 
 @implementation FBSDKDeviceDialogView
 {
@@ -41,7 +41,7 @@
   return self;
 }
 
-#pragma mark - Properties
+ #pragma mark - Properties
 
 - (void)setConfirmationCode:(NSString *)confirmationCode
 {
@@ -61,7 +61,7 @@
   }
 }
 
-#pragma mark - Helpers
+ #pragma mark - Helpers
 
 - (void)buildView
 {
@@ -76,7 +76,7 @@
   const CGFloat kLogoMargin = 30;
   const CGFloat kInstructionTextHorizontalMargin = 151;
   const CGFloat kConfirmationCodeFontSize = 108;
-  const CGFloat kFontColorValue = 119.0/255.0;
+  const CGFloat kFontColorValue = 119.0 / 255.0;
   const CGFloat kInstructionFontSize = 36;
   const CGFloat kQRCodeMargin = 50;
   const CGFloat kQRCodeSize = 200;
@@ -96,7 +96,7 @@
   // build the header container view (which will contain the logo and code).
   UIView *dialogHeaderView = [[UIView alloc] init];
   dialogHeaderView.translatesAutoresizingMaskIntoConstraints = NO;
-  dialogHeaderView.backgroundColor = [UIColor colorWithRed:226.0/255.0 green:231.0/255.0 blue:235.0/255.0 alpha:0.85];
+  dialogHeaderView.backgroundColor = [UIColor colorWithRed:226.0 / 255.0 green:231.0 / 255.0 blue:235.0 / 255.0 alpha:0.85];
   [dialogView addSubview:dialogHeaderView];
   [dialogHeaderView.leadingAnchor constraintEqualToAnchor:dialogView.leadingAnchor].active = YES;
   [dialogHeaderView.trailingAnchor constraintEqualToAnchor:dialogView.trailingAnchor].active = YES;
@@ -105,7 +105,7 @@
 
   // build the logo.
   CGSize imageSize = CGSizeMake(kLogoSize, kLogoSize);
-  FBSDKLogo *logoHelper =[[FBSDKLogo alloc] initWithColor:[UIColor colorWithRed:66.0/255.0 green:103.0/255.0 blue:178.0/255.0 alpha:1]];
+  FBSDKLogo *logoHelper = [[FBSDKLogo alloc] initWithColor:[UIColor colorWithRed:66.0 / 255.0 green:103.0 / 255.0 blue:178.0 / 255.0 alpha:1]];
   UIImage *image = [logoHelper imageWithSize:imageSize];
   image = [image resizableImageWithCapInsets:UIEdgeInsetsZero resizingMode:UIImageResizingModeStretch];
   UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
@@ -150,16 +150,18 @@
   [_qrImageView.leadingAnchor constraintEqualToAnchor:dialogView.leadingAnchor
                                              constant:kQRCodeMargin].active = YES;
   [_qrImageView.trailingAnchor constraintEqualToAnchor:_qrImageView.leadingAnchor
-                                            constant:kQRCodeSize].active = YES;
+                                              constant:kQRCodeSize].active = YES;
 
   // build the instructions UILabel
   UILabel *instructionLabel = [[UILabel alloc] init];
   instructionLabel.translatesAutoresizingMaskIntoConstraints = NO;
-  NSString *localizedFormatString = NSLocalizedStringWithDefaultValue(@"DeviceLogin.LogInPrompt",
-                                                                      @"FacebookSDK",
-                                                                      [FBSDKInternalUtility bundleForStrings],
-                                                                      @"Visit %@ and enter your code.",
-                                                                      @"The format string for device login instructions");
+  NSString *localizedFormatString = NSLocalizedStringWithDefaultValue(
+    @"DeviceLogin.LogInPrompt",
+    @"FacebookSDK",
+    [FBSDKInternalUtility bundleForStrings],
+    @"Visit %@ and enter your code.",
+    @"The format string for device login instructions"
+  );
   NSString *const deviceLoginURLString = @"facebook.com/device";
   NSString *instructionString = [NSString localizedStringWithFormat:localizedFormatString, deviceLoginURLString];
   NSMutableParagraphStyle *instructionLabelParagraphStyle = [[NSMutableParagraphStyle alloc] init];
@@ -200,11 +202,13 @@
   UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
   button.layer.cornerRadius = 4.0;
   button.translatesAutoresizingMaskIntoConstraints = NO;
-  [button setTitle:NSLocalizedStringWithDefaultValue(@"LoginButton.CancelLogout",
-                                                     @"FacebookSDK",
-                                                     [FBSDKInternalUtility bundleForStrings],
-                                                     @"Cancel",
-                                                     @"The label for the FBSDKLoginButton action sheet to cancel logging out")
+  [button setTitle:NSLocalizedStringWithDefaultValue(
+    @"LoginButton.CancelLogout",
+    @"FacebookSDK",
+    [FBSDKInternalUtility bundleForStrings],
+    @"Cancel",
+    @"The label for the FBSDKLoginButton action sheet to cancel logging out"
+  )
           forState:UIControlStateNormal];
   button.titleLabel.font = instructionLabel.font;
   [buttonContainerView addSubview:button];

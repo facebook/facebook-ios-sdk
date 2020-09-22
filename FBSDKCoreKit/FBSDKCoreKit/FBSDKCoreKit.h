@@ -18,77 +18,83 @@
 
 #import <UIKit/UIKit.h>
 
+#if TARGET_OS_TV
+ #ifndef DEVICE_SHARING_DEPRECATED
+  #define DEVICE_SHARING_DEPRECATED DEPRECATED_MSG_ATTRIBUTE("Sharing from devices will no longer work as of Nov 2nd 2020")
+ #endif
+#endif
+
 #ifdef BUCK
 
-#import <FBSDKCoreKit/FBSDKAccessToken.h>
-#import <FBSDKCoreKit/FBSDKAppEvents.h>
-#import <FBSDKCoreKit/FBSDKApplicationDelegate.h>
-#import <FBSDKCoreKit/FBSDKButton.h>
-#import <FBSDKCoreKit/FBSDKConstants.h>
-#import <FBSDKCoreKit/FBSDKCopying.h>
-#import <FBSDKCoreKit/FBSDKGraphRequest.h>
-#import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
-#import <FBSDKCoreKit/FBSDKGraphRequestDataAttachment.h>
-#import <FBSDKCoreKit/FBSDKSettings.h>
-#import <FBSDKCoreKit/FBSDKTestUsersManager.h>
-#import <FBSDKCoreKit/FBSDKUtility.h>
+ #import <FBSDKCoreKit/FBSDKAccessToken.h>
+ #import <FBSDKCoreKit/FBSDKAppEvents.h>
+ #import <FBSDKCoreKit/FBSDKApplicationDelegate.h>
+ #import <FBSDKCoreKit/FBSDKButton.h>
+ #import <FBSDKCoreKit/FBSDKConstants.h>
+ #import <FBSDKCoreKit/FBSDKCopying.h>
+ #import <FBSDKCoreKit/FBSDKGraphRequest.h>
+ #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
+ #import <FBSDKCoreKit/FBSDKGraphRequestDataAttachment.h>
+ #import <FBSDKCoreKit/FBSDKSettings.h>
+ #import <FBSDKCoreKit/FBSDKTestUsersManager.h>
+ #import <FBSDKCoreKit/FBSDKUtility.h>
 
-#if !TARGET_OS_TV
-#import <FBSDKCoreKit/FBSDKAppLink.h>
-#import <FBSDKCoreKit/FBSDKAppLinkNavigation.h>
-#import <FBSDKCoreKit/FBSDKAppLinkResolver.h>
-#import <FBSDKCoreKit/FBSDKAppLinkResolving.h>
-#import <FBSDKCoreKit/FBSDKAppLinkReturnToRefererController.h>
-#import <FBSDKCoreKit/FBSDKAppLinkReturnToRefererView.h>
-#import <FBSDKCoreKit/FBSDKAppLinkTarget.h>
-#import <FBSDKCoreKit/FBSDKAppLinkUtility.h>
-#import <FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.h>
-#import <FBSDKCoreKit/FBSDKMeasurementEvent.h>
-#import <FBSDKCoreKit/FBSDKMutableCopying.h>
-#import <FBSDKCoreKit/FBSDKProfile.h>
-#import <FBSDKCoreKit/FBSDKProfilePictureView.h>
-#import <FBSDKCoreKit/FBSDKURL.h>
-#import <FBSDKCoreKit/FBSDKWebViewAppLinkResolver.h>
+ #if !TARGET_OS_TV
+  #import <FBSDKCoreKit/FBSDKAppLink.h>
+  #import <FBSDKCoreKit/FBSDKAppLinkNavigation.h>
+  #import <FBSDKCoreKit/FBSDKAppLinkResolver.h>
+  #import <FBSDKCoreKit/FBSDKAppLinkResolving.h>
+  #import <FBSDKCoreKit/FBSDKAppLinkReturnToRefererController.h>
+  #import <FBSDKCoreKit/FBSDKAppLinkReturnToRefererView.h>
+  #import <FBSDKCoreKit/FBSDKAppLinkTarget.h>
+  #import <FBSDKCoreKit/FBSDKAppLinkUtility.h>
+  #import <FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.h>
+  #import <FBSDKCoreKit/FBSDKMeasurementEvent.h>
+  #import <FBSDKCoreKit/FBSDKMutableCopying.h>
+  #import <FBSDKCoreKit/FBSDKProfile.h>
+  #import <FBSDKCoreKit/FBSDKProfilePictureView.h>
+  #import <FBSDKCoreKit/FBSDKURL.h>
+  #import <FBSDKCoreKit/FBSDKWebViewAppLinkResolver.h>
+ #else
+  #import <FBSDKCoreKit/FBSDKDeviceButton.h>
+  #import <FBSDKCoreKit/FBSDKDeviceViewControllerBase.h>
+ #endif
+
 #else
-#import <FBSDKCoreKit/FBSDKDeviceButton.h>
-#import <FBSDKCoreKit/FBSDKDeviceViewControllerBase.h>
-#endif
 
-#else
+ #import "FBSDKAccessToken.h"
+ #import "FBSDKAppEvents.h"
+ #import "FBSDKApplicationDelegate.h"
+ #import "FBSDKButton.h"
+ #import "FBSDKConstants.h"
+ #import "FBSDKCopying.h"
+ #import "FBSDKGraphRequest.h"
+ #import "FBSDKGraphRequestConnection.h"
+ #import "FBSDKGraphRequestDataAttachment.h"
+ #import "FBSDKSettings.h"
+ #import "FBSDKTestUsersManager.h"
+ #import "FBSDKUtility.h"
 
-#import "FBSDKAccessToken.h"
-#import "FBSDKAppEvents.h"
-#import "FBSDKApplicationDelegate.h"
-#import "FBSDKButton.h"
-#import "FBSDKConstants.h"
-#import "FBSDKCopying.h"
-#import "FBSDKGraphRequest.h"
-#import "FBSDKGraphRequestConnection.h"
-#import "FBSDKGraphRequestDataAttachment.h"
-#import "FBSDKSettings.h"
-#import "FBSDKTestUsersManager.h"
-#import "FBSDKUtility.h"
-
-#if !TARGET_OS_TV
-#import "FBSDKAppLink.h"
-#import "FBSDKAppLinkNavigation.h"
-#import "FBSDKAppLinkResolver.h"
-#import "FBSDKAppLinkResolving.h"
-#import "FBSDKAppLinkReturnToRefererController.h"
-#import "FBSDKAppLinkReturnToRefererView.h"
-#import "FBSDKAppLinkTarget.h"
-#import "FBSDKAppLinkUtility.h"
-#import "FBSDKGraphErrorRecoveryProcessor.h"
-#import "FBSDKMeasurementEvent.h"
-#import "FBSDKMutableCopying.h"
-#import "FBSDKProfile.h"
-#import "FBSDKProfilePictureView.h"
-#import "FBSDKURL.h"
-#import "FBSDKWebViewAppLinkResolver.h"
-#else
-#import "FBSDKDeviceButton.h"
-#import "FBSDKDeviceViewControllerBase.h"
-#endif
+ #if !TARGET_OS_TV
+  #import "FBSDKAppLink.h"
+  #import "FBSDKAppLinkNavigation.h"
+  #import "FBSDKAppLinkResolver.h"
+  #import "FBSDKAppLinkResolving.h"
+  #import "FBSDKAppLinkReturnToRefererController.h"
+  #import "FBSDKAppLinkReturnToRefererView.h"
+  #import "FBSDKAppLinkTarget.h"
+  #import "FBSDKAppLinkUtility.h"
+  #import "FBSDKGraphErrorRecoveryProcessor.h"
+  #import "FBSDKMeasurementEvent.h"
+  #import "FBSDKMutableCopying.h"
+  #import "FBSDKProfile.h"
+  #import "FBSDKProfilePictureView.h"
+  #import "FBSDKURL.h"
+  #import "FBSDKWebViewAppLinkResolver.h"
+ #else
+  #import "FBSDKDeviceButton.h"
+  #import "FBSDKDeviceViewControllerBase.h"
+ #endif
 
 #endif
 

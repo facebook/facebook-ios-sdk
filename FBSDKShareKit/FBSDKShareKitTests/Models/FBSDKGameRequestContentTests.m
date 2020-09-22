@@ -19,7 +19,7 @@
 #import <XCTest/XCTest.h>
 
 #ifdef BUCK
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #else
 @import FBSDKCoreKit;
 #endif
@@ -58,7 +58,7 @@
   NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
   [unarchiver setRequiresSecureCoding:YES];
   FBSDKGameRequestContent *unarchivedObject = [unarchiver decodeObjectOfClass:[FBSDKGameRequestContent class]
-                                                                      forKey:NSKeyedArchiveRootObjectKey];
+                                                                       forKey:NSKeyedArchiveRootObjectKey];
   XCTAssertEqualObjects(unarchivedObject, content);
 }
 

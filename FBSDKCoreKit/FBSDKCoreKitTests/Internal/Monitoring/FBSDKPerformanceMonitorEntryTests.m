@@ -25,7 +25,8 @@
 
 @end
 
-@implementation FBSDKPerformanceMonitorEntryTests {
+@implementation FBSDKPerformanceMonitorEntryTests
+{
   FBSDKPerformanceMonitorEntry *entry;
 }
 
@@ -60,12 +61,21 @@
 
   NSDictionary *actual = [entry dictionaryRepresentation];
 
-  XCTAssertEqualObjects(actual[@"event_name"], @"Foo",
-                        @"Should use the entry name as the event name");
-  XCTAssertEqualObjects(actual[@"time_start"], expectedStartTime,
-                        @"Should use unix time for the start time of the metric");
-  XCTAssertEqualObjects(actual[@"time_spent"], @1,
-                        @"Should capture the difference between the start and end-time of the metric");
+  XCTAssertEqualObjects(
+    actual[@"event_name"],
+    @"Foo",
+    @"Should use the entry name as the event name"
+  );
+  XCTAssertEqualObjects(
+    actual[@"time_start"],
+    expectedStartTime,
+    @"Should use unix time for the start time of the metric"
+  );
+  XCTAssertEqualObjects(
+    actual[@"time_spent"],
+    @1,
+    @"Should capture the difference between the start and end-time of the metric"
+  );
 }
 
 - (void)testEntryName
@@ -74,8 +84,11 @@
                                             startTime:[NSDate date]
                                               endTime:[[NSDate date] dateByAddingTimeInterval:1]];
 
-  XCTAssertEqualObjects(entry.name, @"Foo",
-                        @"The entry name should be easily accessible");
+  XCTAssertEqualObjects(
+    entry.name,
+    @"Foo",
+    @"The entry name should be easily accessible"
+  );
 }
 
 - (void)testEncodingEntry
@@ -89,12 +102,21 @@
 
   [entry encodeWithCoder:coder];
 
-  XCTAssertEqualObjects(coder.encodedObject[@"event_name"], @"Foo",
-                        @"Should use the entry name as the event name for encoding");
-  XCTAssertEqualObjects(coder.encodedObject[@"time_start"], startTime,
-                        @"Should use unix time for encoding the start time of the metric");
-  XCTAssertEqualObjects(coder.encodedObject[@"time_end"], [startTime dateByAddingTimeInterval:1],
-                        @"Should encode the difference between the start and end-time of the metric");
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"event_name"],
+    @"Foo",
+    @"Should use the entry name as the event name for encoding"
+  );
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"time_start"],
+    startTime,
+    @"Should use unix time for encoding the start time of the metric"
+  );
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"time_end"],
+    [startTime dateByAddingTimeInterval:1],
+    @"Should encode the difference between the start and end-time of the metric"
+  );
 }
 
 - (void)testDecodingEntry
@@ -103,12 +125,21 @@
 
   entry = [[FBSDKPerformanceMonitorEntry alloc] initWithCoder:coder];
 
-  XCTAssertEqualObjects(coder.decodedObject[@"event_name"], [NSString class],
-                        @"Initializing from a decoder should attempt to decode a String for the event name key");
-  XCTAssertEqualObjects(coder.decodedObject[@"time_start"], [NSDate class],
-                        @"Initializing from a decoder should attempt to decode a number for the time start key");
-  XCTAssertEqualObjects(coder.decodedObject[@"time_end"], [NSDate class],
-                        @"Initializing from a decoder should attempt to decode a number for the time spent key");
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"event_name"],
+    [NSString class],
+    @"Initializing from a decoder should attempt to decode a String for the event name key"
+  );
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"time_start"],
+    [NSDate class],
+    @"Initializing from a decoder should attempt to decode a number for the time start key"
+  );
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"time_end"],
+    [NSDate class],
+    @"Initializing from a decoder should attempt to decode a number for the time spent key"
+  );
 }
 
 @end

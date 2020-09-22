@@ -20,23 +20,23 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKMetadataIndexer.h"
+ #import "FBSDKMetadataIndexer.h"
 
-#import <objc/runtime.h>
-#import <sys/sysctl.h>
-#import <sys/utsname.h>
+ #import <UIKit/UIKit.h>
 
-#import <UIKit/UIKit.h>
+ #import <objc/runtime.h>
+ #import <sys/sysctl.h>
+ #import <sys/utsname.h>
 
-#import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKCoreKit+Internal.h"
 
-static const int FBSDKMetadataIndexerMaxTextLength              = 100;
-static const int FBSDKMetadataIndexerMaxIndicatorLength         = 100;
-static const int FBSDKMetadataIndexerMaxValue                   = 5;
+static const int FBSDKMetadataIndexerMaxTextLength = 100;
+static const int FBSDKMetadataIndexerMaxIndicatorLength = 100;
+static const int FBSDKMetadataIndexerMaxValue = 5;
 
-static NSString * const FIELD_K                                 = @"k";
-static NSString * const FIELD_V                                 = @"v";
-static NSString * const FIELD_K_DELIMITER                       = @",";
+static NSString *const FIELD_K = @"k";
+static NSString *const FIELD_V = @"v";
+static NSString *const FIELD_K_DELIMITER = @",";
 
 static NSMutableDictionary<NSString *, NSDictionary<NSString *, NSString *> *> *_rules;
 static NSMutableDictionary<NSString *, NSMutableArray<NSString *> *> *_store;
@@ -52,17 +52,21 @@ static dispatch_queue_t serialQueue;
 
 + (void)enable
 {
-  if (FBSDKAdvertisingTrackingAllowed != [FBSDKAppEventsUtility advertisingTrackingStatus]) {
-    return;
-  }
+  @try {
+    if (FBSDKAdvertisingTrackingAllowed != [FBSDKAppEventsUtility advertisingTrackingStatus]) {
+      return;
+    }
 
-  NSDictionary<NSString *, id> *AAMRules = [FBSDKServerConfigurationManager cachedServerConfiguration].AAMRules;
-  if (AAMRules) {
-    [FBSDKMetadataIndexer setupWithRules:AAMRules];
+    NSDictionary<NSString *, id> *AAMRules = [FBSDKServerConfigurationManager cachedServerConfiguration].AAMRules;
+    if (AAMRules) {
+      [FBSDKMetadataIndexer setupWithRules:AAMRules];
+    }
+  } @catch (NSException *exception) {
+    NSLog(@"Fail to enable Automatic Advanced Matching, exception reason: %@", exception.reason);
   }
 }
 
-+ (void)setupWithRules:(NSDictionary<NSString *, id> * _Nullable)rules
++ (void)setupWithRules:(NSDictionary<NSString *, id> *_Nullable)rules
 {
   if (0 == rules.count) {
     return;
@@ -104,7 +108,7 @@ static dispatch_queue_t serialQueue;
   }
 }
 
-+ (void)constructRules:(NSDictionary<NSString *, id> * _Nullable)rules
++ (void)constructRules:(NSDictionary<NSString *, id> *_Nullable)rules
 {
   for (NSString *key in rules) {
     NSDictionary<NSString *, NSString *> *value = [FBSDKTypeUtility dictionaryValue:rules[key]];
@@ -211,10 +215,10 @@ static dispatch_queue_t serialQueue;
 {
   text = [self normalizeValue:text];
   placeholder = [self normalizeField:placeholder];
-  if (secureTextEntry || [placeholder containsString:@"password"] ||
-      text.length == 0 ||
-      text.length > FBSDKMetadataIndexerMaxTextLength ||
-      placeholder.length >= FBSDKMetadataIndexerMaxIndicatorLength) {
+  if (secureTextEntry || [placeholder containsString:@"password"]
+      || text.length == 0
+      || text.length > FBSDKMetadataIndexerMaxTextLength
+      || placeholder.length >= FBSDKMetadataIndexerMaxIndicatorLength) {
     return;
   }
 
@@ -239,7 +243,7 @@ static dispatch_queue_t serialQueue;
   }
 }
 
-#pragma mark - Helper Methods
+ #pragma mark - Helper Methods
 
 + (void)checkAndAppendData:(NSString *)data
                     forKey:(NSString *)key

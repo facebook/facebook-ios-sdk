@@ -18,7 +18,7 @@
 
 #import "FBSDKGamingGroupIntegration.h"
 
-#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKCoreKitInternalImport.h"
 #import "FBSDKGamingServiceController.h"
 
 @implementation FBSDKGamingGroupIntegration
@@ -28,11 +28,11 @@
   FBSDKGamingServiceController *const controller =
   [[FBSDKGamingServiceController alloc]
    initWithServiceType:FBSDKGamingServiceTypeCommunity
-   completionHandler:^(BOOL success, id  _Nullable result, NSError * _Nullable error) {
-    if (completionHandler) {
-      completionHandler(success, error);
-    }
-  }
+   completionHandler:^(BOOL success, id _Nullable result, NSError *_Nullable error) {
+     if (completionHandler) {
+       completionHandler(success, error);
+     }
+   }
    pendingResult:nil];
 
   [controller callWithArgument:FBSDKSettings.appID];

@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
   s.author       = 'Facebook'
 
   s.platform     = :ios, :tvos
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '9.0'
   s.tvos.deployment_target = '10.0'
 
   s.source       = {
@@ -45,7 +45,8 @@ Pod::Spec.new do |s|
 
     ss.exclude_files = 'FBSDKShareKit/FBSDKShareKit/include/**/*',
                        'FBSDKShareKit/FBSDKShareKit/Swift/Exports.swift'
-    ss.public_header_files = 'FBSDKShareKit/FBSDKShareKit/*.{h}'
+    ss.public_header_files = 'FBSDKShareKit/FBSDKShareKit/*.{h}',
+                             'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKVideoUploader.h'
     ss.source_files = 'FBSDKShareKit/FBSDKShareKit/**/*.{h,m,swift}'
   end
 end

@@ -80,14 +80,15 @@ static NSString *const kFBSDKAccessTokenEncodedKey = @"tokenEncoded";
   }
   NSData *tokenData = [NSKeyedArchiver archivedDataWithRootObject:token];
   NSDictionary<NSString *, id> *dict = @{
-                                         kFBSDKAccessTokenUUIDKey : uuid,
-                                         kFBSDKAccessTokenEncodedKey : tokenData
-                                         };
+    kFBSDKAccessTokenUUIDKey : uuid,
+    kFBSDKAccessTokenEncodedKey : tokenData
+  };
 
   [_keychainStore setDictionary:dict
                          forKey:kFBSDKAccessTokenKeychainKey
                   accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
 }
+
 #pragma clang diagnostic pop
 
 - (void)clearCache
@@ -99,4 +100,5 @@ static NSString *const kFBSDKAccessTokenEncodedKey = @"tokenEncoded";
   [defaults removeObjectForKey:kFBSDKAccessTokenUserDefaultsKey];
   [defaults synchronize];
 }
+
 @end

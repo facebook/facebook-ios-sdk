@@ -38,15 +38,18 @@ using std::vector;
 
 @implementation FBSDKModelParserTests
 
-- (void)setUp {
+- (void)setUp
+{
   _mockWeightsInfoDict = [[NSMutableDictionary alloc] init];
 }
 
-- (void)tearDown {
+- (void)tearDown
+{
   [_mockWeightsInfoDict removeAllObjects];
 }
 
-- (void)testValidWeightsForMTML {
+- (void)testValidWeightsForMTML
+{
   [_mockWeightsInfoDict addEntriesFromDictionary:[FBSDKModelParser getMTMLWeightsInfo]];
 
   bool validatedRes = [FBSDKModelParser validateWeights:[self _mockWeightsWithRefDict:_mockWeightsInfoDict]
@@ -55,7 +58,8 @@ using std::vector;
   XCTAssertTrue(validatedRes);
 }
 
-- (void)testWeightsForMissingInfo {
+- (void)testWeightsForMissingInfo
+{
   [_mockWeightsInfoDict removeAllObjects];
 
   bool validatedRes = [FBSDKModelParser validateWeights:[self _mockWeightsWithRefDict:_mockWeightsInfoDict]
@@ -64,7 +68,8 @@ using std::vector;
   XCTAssertFalse(validatedRes);
 }
 
-- (void)testWeightsForWrongInfo {
+- (void)testWeightsForWrongInfo
+{
   [_mockWeightsInfoDict addEntriesFromDictionary:[FBSDKModelParser getMTMLWeightsInfo]];
   [_mockWeightsInfoDict addEntriesFromDictionary:@{@"embed.weight" : @[@(1), @(1)]}];
 
@@ -74,9 +79,10 @@ using std::vector;
   XCTAssertFalse(validatedRes);
 }
 
-- (unordered_map<string, MTensor>)_mockWeightsWithRefDict:(NSDictionary<NSString *, NSArray *> *)dict {
-  unordered_map<string,  MTensor> weights;
-  for (NSString* key in dict) {
+- (unordered_map<string, MTensor>)_mockWeightsWithRefDict:(NSDictionary<NSString *, NSArray *> *)dict
+{
+  unordered_map<string, MTensor> weights;
+  for (NSString *key in dict) {
     NSArray<NSNumber *> *values = dict[key];
     vector<int> shape;
     for (NSNumber *val in values) {

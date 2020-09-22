@@ -22,7 +22,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FakeSharingDelegate : NSObject<FBSDKSharingDelegate>
+@interface FakeSharingDelegate : NSObject <FBSDKSharingDelegate>
 
 @property (nonatomic) NSDictionary<NSString *, id> *capturedResults;
 @property (nonatomic) NSError *capturedError;

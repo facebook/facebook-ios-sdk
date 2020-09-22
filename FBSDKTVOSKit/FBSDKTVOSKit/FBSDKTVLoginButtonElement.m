@@ -30,14 +30,16 @@
                     extraInfo:nil
                    completion:NULL];
 }
+
 - (void)deviceLoginButton:(FBSDKDeviceLoginButton *)button didFailWithError:(NSError *)error
 {
   [self dispatchEventWithName:@"onFacebookLoginError"
                     canBubble:YES
                   cancellable:YES
-                    extraInfo: @{ @"error": error }
+                    extraInfo:@{ @"error" : error }
                    completion:NULL];
 }
+
 - (void)deviceLoginButtonDidLogIn:(FBSDKDeviceLoginButton *)button
 {
   [self dispatchEventWithName:@"onFacebookLogin"
@@ -46,6 +48,7 @@
                     extraInfo:nil
                    completion:NULL];
 }
+
 - (void)deviceLoginButtonDidLogOut:(FBSDKDeviceLoginButton *)button
 {
   [self dispatchEventWithName:@"onFacebookLogout"
@@ -54,4 +57,5 @@
                     extraInfo:nil
                    completion:NULL];
 }
+
 @end

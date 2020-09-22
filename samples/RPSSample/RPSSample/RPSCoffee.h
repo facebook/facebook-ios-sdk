@@ -24,6 +24,6 @@
 @property (nonatomic, copy) NSString *desc;
 @property (nonatomic, assign) float price;
 
-- (instancetype)initWithName:(NSString*)name desc:(NSString*)desc price:(float)price;
+- (instancetype)initWithName:(NSString *)name desc:(NSString *)desc price:(float)price;
 
 @end

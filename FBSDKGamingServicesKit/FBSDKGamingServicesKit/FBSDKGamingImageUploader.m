@@ -18,7 +18,7 @@
 
 #import "FBSDKGamingImageUploader.h"
 
-#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKCoreKitInternalImport.h"
 #import "FBSDKGamingImageUploaderConfiguration.h"
 #import "FBSDKGamingServiceController.h"
 
@@ -36,21 +36,21 @@
   return [super init];
 }
 
-+ (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration * _Nonnull)configuration
++ (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration *_Nonnull)configuration
                 andCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
 {
   return
   [self
    uploadImageWithConfiguration:configuration
-   completionHandler:^(BOOL success, id _Nullable result, NSError * _Nullable error) {
-    if (completionHandler) {
-      completionHandler(success, error);
-    }
-  }
+   completionHandler:^(BOOL success, id _Nullable result, NSError *_Nullable error) {
+     if (completionHandler) {
+       completionHandler(success, error);
+     }
+   }
    andProgressHandler:nil];
 }
 
-+ (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration * _Nonnull)configuration
++ (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration *_Nonnull)configuration
           andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
 {
   return
@@ -60,26 +60,30 @@
    andProgressHandler:nil];
 }
 
-+ (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration * _Nonnull)configuration
++ (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration *_Nonnull)configuration
                    completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
                   andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
 {
   if ([FBSDKAccessToken currentAccessToken] == nil) {
-    completionHandler(false,
-                      nil,
-                      [FBSDKError
-                       errorWithCode:FBSDKErrorAccessTokenRequired
-                       message:@"A valid access token is required to upload Images"]);
+    completionHandler(
+      false,
+      nil,
+      [FBSDKError
+       errorWithCode:FBSDKErrorAccessTokenRequired
+       message:@"A valid access token is required to upload Images"]
+    );
 
     return;
   }
 
   if (configuration.image == nil) {
-    completionHandler(false,
-                      nil,
-                      [FBSDKError
-                       errorWithCode:FBSDKErrorInvalidArgument
-                       message:@"Attempting to upload a nil image"]);
+    completionHandler(
+      false,
+      nil,
+      [FBSDKError
+       errorWithCode:FBSDKErrorInvalidArgument
+       message:@"Attempting to upload a nil image"]
+    );
 
     return;
   }
@@ -99,36 +103,38 @@
    [[FBSDKGraphRequest alloc]
     initWithGraphPath:@"me/photos"
     parameters:@{
-      @"caption": configuration.caption ?: @"",
-      @"picture": UIImagePNGRepresentation(configuration.image)
+      @"caption" : configuration.caption ?: @"",
+      @"picture" : UIImagePNGRepresentation(configuration.image)
     }
     HTTPMethod:FBSDKHTTPMethodPOST]
-   completionHandler:^(FBSDKGraphRequestConnection * _Nullable graphConnection, id  _Nullable result, NSError * _Nullable error) {
-    [FBSDKInternalUtility unregisterTransientObject:graphConnection.delegate];
+   completionHandler:^(FBSDKGraphRequestConnection *_Nullable graphConnection, id _Nullable result, NSError *_Nullable error) {
+     [FBSDKInternalUtility unregisterTransientObject:graphConnection.delegate];
 
-    if (error || !result) {
-      completionHandler(false,
-                        nil,
-                        [FBSDKError
-                         errorWithCode:FBSDKErrorGraphRequestGraphAPI
-                         message:@"Image upload failed"
-                         underlyingError:error]);
-      return;
-    }
+     if (error || !result) {
+       completionHandler(
+         false,
+         nil,
+         [FBSDKError
+          errorWithCode:FBSDKErrorGraphRequestGraphAPI
+          message:@"Image upload failed"
+          underlyingError:error]
+       );
+       return;
+     }
 
-    if (!configuration.shouldLaunchMediaDialog) {
-      completionHandler(true, result, nil);
-      return;
-    }
+     if (!configuration.shouldLaunchMediaDialog) {
+       completionHandler(true, result, nil);
+       return;
+     }
 
-    FBSDKGamingServiceController *const controller =
-    [[FBSDKGamingServiceController alloc]
-     initWithServiceType:FBSDKGamingServiceTypeMediaAsset
-     completionHandler:completionHandler
-     pendingResult:result];
+     FBSDKGamingServiceController *const controller =
+     [[FBSDKGamingServiceController alloc]
+      initWithServiceType:FBSDKGamingServiceTypeMediaAsset
+      completionHandler:completionHandler
+      pendingResult:result];
 
-    [controller callWithArgument:result[@"id"]];
-  }];
+     [controller callWithArgument:result[@"id"]];
+   }];
 
   [connection start];
 }
@@ -143,10 +149,10 @@
 
 #pragma mark - FBSDKGraphRequestConnectionDelegate
 
-- (void)requestConnection:(FBSDKGraphRequestConnection *)connection
-          didSendBodyData:(NSInteger)bytesWritten
-        totalBytesWritten:(NSInteger)totalBytesWritten
-totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite
+- (void)  requestConnection:(FBSDKGraphRequestConnection *)connection
+            didSendBodyData:(NSInteger)bytesWritten
+          totalBytesWritten:(NSInteger)totalBytesWritten
+  totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite
 {
   if (!_progressHandler) {
     return;

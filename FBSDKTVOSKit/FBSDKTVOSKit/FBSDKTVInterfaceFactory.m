@@ -19,13 +19,12 @@
 #import "FBSDKTVInterfaceFactory.h"
 
 #import <FBSDKShareKit/FBSDKShareKit.h>
-
 #import <TVMLKit/TVElementFactory.h>
 
 #ifdef FBSDKCOCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+ #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
 #else
-#import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKCoreKit+Internal.h"
 #endif
 #import "FBSDKDeviceLoginButton.h"
 #import "FBSDKTVLoginButtonElement.h"
@@ -56,7 +55,8 @@ static Class FBSDKDynamicallyLoadShareKitClassFromString(NSString *className)
   return clazz;
 }
 
-@implementation FBSDKTVInterfaceFactory {
+@implementation FBSDKTVInterfaceFactory
+{
   id<TVInterfaceCreating> _interfaceCreator;
 }
 
@@ -85,7 +85,10 @@ static Class FBSDKDynamicallyLoadShareKitClassFromString(NSString *className)
     button.redirectURL = [NSURL URLWithString:element.attributes[@"redirectURL"]];
     return button;
   } else if ([element isKindOfClass:[FBSDKTVShareButtonElement class]]) {
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     FBSDKDeviceShareButton *button = [[FBSDKDynamicallyLoadShareKitClassFromString(@"FBSDKDeviceShareButton") alloc] initWithFrame:CGRectZero];
+    #pragma clang diagnostic pop
     id<FBSDKSharingContent> content = nil;
     if (element.attributes[@"href"]) {
       content = [[FBSDKDynamicallyLoadShareKitClassFromString(@"FBSDKShareLinkContent") alloc] init];
@@ -101,7 +104,6 @@ static Class FBSDKDynamicallyLoadShareKitClassFromString(NSString *className)
                                      reason:message
                                    userInfo:nil];
     }
-
   }
   if ([_interfaceCreator respondsToSelector:@selector(viewForElement:existingView:)]) {
     return [_interfaceCreator viewForElement:element existingView:existingView];

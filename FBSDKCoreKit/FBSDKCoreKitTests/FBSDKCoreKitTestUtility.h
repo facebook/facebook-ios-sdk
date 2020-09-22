@@ -18,6 +18,17 @@
 
 #import <Foundation/Foundation.h>
 
+/// OCMock helper for testing methods with non-object args.
+#define OCMStubIgnoringNonObjectArgs(invocation) \
+  ({ \
+  _OCMSilenceWarnings( \
+  [OCMMacroState beginStubMacro]; \
+  [[[OCMMacroState globalState] recorder] ignoringNonObjectArgs]; \
+  invocation; \
+  [OCMMacroState endStubMacro]; \
+  ); \
+})
+
 @interface FBSDKCoreKitTestUtility : NSObject
 
 /**

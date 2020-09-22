@@ -18,14 +18,15 @@
 
 #import <XCTest/XCTest.h>
 
-#import "FBSDKErrorConfiguration.h"
 #import "FBSDKCoreKitTests-Swift.h"
+#import "FBSDKErrorConfiguration.h"
 
 @interface FBSDKErrorConfigurationTests : XCTestCase
 
 @end
 
-@implementation FBSDKErrorConfigurationTests {
+@implementation FBSDKErrorConfigurationTests
+{
   NSArray *rawErrorCodeConfiguration;
 }
 
@@ -35,13 +36,11 @@
 
   rawErrorCodeConfiguration = @[
     @{ @"name" : @"other",
-       @"items" : @[ @{ @"code" : @190, @"subcodes": @[ @459 ] } ],
-    },
+       @"items" : @[@{ @"code" : @190, @"subcodes" : @[@459] }], },
     @{ @"name" : @"login",
-       @"items" : @[ @{ @"code" : @1, @"subcodes": @[ @12312 ] } ],
+       @"items" : @[@{ @"code" : @1, @"subcodes" : @[@12312] }],
        @"recovery_message" : @"somemessage",
-       @"recovery_options" : @[ @"Yes", @"No thanks" ]
-    },
+       @"recovery_options" : @[@"Yes", @"No thanks"]},
   ];
 }
 
@@ -81,16 +80,13 @@
 - (void)testParsingRandomName
 {
   for (int i = 0; i < 1000; i++) {
-
     NSArray *array = @[
       @{ @"name" : Fuzzer.random,
-         @"items" : @[ @{ @"code" : @190, @"subcodes": @[ @459 ] } ],
-      },
+         @"items" : @[@{ @"code" : @190, @"subcodes" : @[@459] }], },
       @{ @"name" : @"login",
-         @"items" : @[ @{ @"code" : @1, @"subcodes": @[ @12312 ] } ],
+         @"items" : @[@{ @"code" : @1, @"subcodes" : @[@12312] }],
          @"recovery_message" : @"somemessage",
-         @"recovery_options" : @[ @"Yes", @"No thanks" ]
-      },
+         @"recovery_options" : @[@"Yes", @"No thanks"]},
     ];
 
     FBSDKErrorConfiguration *configuration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
@@ -103,13 +99,11 @@
   for (int i = 0; i < 1000; i++) {
     NSArray *array = @[
       @{ @"name" : @"other",
-         @"items" : @[ @{ @"code" : @190, @"subcodes": @[ Fuzzer.random ] } ],
-      },
+         @"items" : @[@{ @"code" : @190, @"subcodes" : @[Fuzzer.random] }], },
       @{ @"name" : @"login",
-         @"items" : @[ @{ @"code" : @1, @"subcodes": @[ Fuzzer.random ] } ],
+         @"items" : @[@{ @"code" : @1, @"subcodes" : @[Fuzzer.random] }],
          @"recovery_message" : @"somemessage",
-         @"recovery_options" : @[ @"Yes", @"No thanks" ]
-      },
+         @"recovery_options" : @[@"Yes", @"No thanks"]},
     ];
 
     FBSDKErrorConfiguration *configuration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
@@ -121,14 +115,12 @@
 {
   for (int i = 0; i < 1000; i++) {
     NSArray *array = @[
-    @{ @"name" : @"other",
-       @"items" : @[ @{ @"code" : Fuzzer.random, @"subcodes": @[ @459 ] } ],
-       },
-    @{ @"name" : @"login",
-       @"items" : @[ @{ @"code" : Fuzzer.random, @"subcodes": @[ @12312 ] } ],
-       @"recovery_message" : @"somemessage",
-       @"recovery_options" : @[ @"Yes", @"No thanks" ]
-       },
+      @{ @"name" : @"other",
+         @"items" : @[@{ @"code" : Fuzzer.random, @"subcodes" : @[@459] }], },
+      @{ @"name" : @"login",
+         @"items" : @[@{ @"code" : Fuzzer.random, @"subcodes" : @[@12312] }],
+         @"recovery_message" : @"somemessage",
+         @"recovery_options" : @[@"Yes", @"No thanks"]},
     ];
 
     FBSDKErrorConfiguration *configuration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
@@ -141,13 +133,11 @@
   for (int i = 0; i < 1000; i++) {
     NSArray *array = @[
       @{ @"name" : @"other",
-         @"items" : @[ Fuzzer.random ],
-      },
+         @"items" : @[Fuzzer.random], },
       @{ @"name" : @"login",
-         @"items" : @[ Fuzzer.random ],
+         @"items" : @[Fuzzer.random],
          @"recovery_message" : @"somemessage",
-         @"recovery_options" : @[ @"Yes", @"No thanks" ]
-      },
+         @"recovery_options" : @[@"Yes", @"No thanks"]},
     ];
 
     FBSDKErrorConfiguration *configuration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
@@ -160,13 +150,11 @@
   for (int i = 0; i < 1000; i++) {
     NSArray *array = @[
       @{ @"name" : @"other",
-         @"items" : Fuzzer.random,
-      },
+         @"items" : Fuzzer.random, },
       @{ @"name" : @"login",
          @"items" : Fuzzer.random,
          @"recovery_message" : @"somemessage",
-         @"recovery_options" : @[ @"Yes", @"No thanks" ]
-      },
+         @"recovery_options" : @[@"Yes", @"No thanks"]},
     ];
 
     FBSDKErrorConfiguration *configuration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
@@ -179,13 +167,11 @@
   for (int i = 0; i < 1000; i++) {
     NSArray *array = @[
       @{ @"name" : @"other",
-         @"items" : @[ @{ @"code" : @190, @"subcodes": @[ @459 ] } ],
-      },
+         @"items" : @[@{ @"code" : @190, @"subcodes" : @[@459] }], },
       @{ @"name" : @"login",
-         @"items" : @[ @{ @"code" : @1, @"subcodes": @[ @12312 ] } ],
+         @"items" : @[@{ @"code" : @1, @"subcodes" : @[@12312] }],
          @"recovery_message" : Fuzzer.random,
-         @"recovery_options" : @[ @"Yes", @"No thanks" ]
-      },
+         @"recovery_options" : @[@"Yes", @"No thanks"]},
     ];
 
     FBSDKErrorConfiguration *configuration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
@@ -198,13 +184,11 @@
   for (int i = 0; i < 1000; i++) {
     NSArray *array = @[
       @{ @"name" : @"other",
-         @"items" : @[ @{ @"code" : @190, @"subcodes": @[ @459 ] } ],
-      },
+         @"items" : @[@{ @"code" : @190, @"subcodes" : @[@459] }], },
       @{ @"name" : @"login",
-         @"items" : @[ @{ @"code" : @1, @"subcodes": @[ @12312 ] } ],
+         @"items" : @[@{ @"code" : @1, @"subcodes" : @[@12312] }],
          @"recovery_message" : @"somemessage",
-         @"recovery_options" : @[ Fuzzer.random, Fuzzer.random ]
-      },
+         @"recovery_options" : @[Fuzzer.random, Fuzzer.random]},
     ];
 
     FBSDKErrorConfiguration *configuration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
@@ -217,13 +201,11 @@
   for (int i = 0; i < 1000; i++) {
     NSArray *array = @[
       @{ @"name" : @"other",
-         @"items" : @[ @{ @"code" : @190, @"subcodes": @[ @459 ] } ],
-      },
+         @"items" : @[@{ @"code" : @190, @"subcodes" : @[@459] }], },
       @{ @"name" : @"login",
-         @"items" : @[ @{ @"code" : @1, @"subcodes": @[ @12312 ] } ],
+         @"items" : @[@{ @"code" : @1, @"subcodes" : @[@12312] }],
          @"recovery_message" : @"somemessage",
-         @"recovery_options" : Fuzzer.random
-      },
+         @"recovery_options" : Fuzzer.random},
     ];
 
     FBSDKErrorConfiguration *configuration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
@@ -236,12 +218,10 @@
   for (int i = 0; i < 1000; i++) {
     NSArray *array = @[
       @{ @"name" : @"other",
-         @"items" : @[ @{ @"code" : @190, @"subcodes": @[ @459 ] } ],
-      },
+         @"items" : @[@{ @"code" : @190, @"subcodes" : @[@459] }], },
       @{ @"name" : @"login",
-         @"items" : @[ @{ @"code" : @1, @"subcodes": @[ @12312 ] } ],
-         @"recovery_message" : @"somemessage",
-      },
+         @"items" : @[@{ @"code" : @1, @"subcodes" : @[@12312] }],
+         @"recovery_message" : @"somemessage", },
     ];
 
     FBSDKErrorConfiguration *configuration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
@@ -254,12 +234,10 @@
   for (int i = 0; i < 1000; i++) {
     NSArray *array = @[
       @{ @"name" : @"other",
-         @"items" : @[ @{ @"code" : @190, @"subcodes": @[ @459 ] } ],
-      },
+         @"items" : @[@{ @"code" : @190, @"subcodes" : @[@459] }], },
       @{ @"name" : @"login",
-         @"items" : @[ @{ @"code" : @1, @"subcodes": @[ @12312 ] } ],
-         @"recovery_options" : @[ @"Yes", @"No thanks" ]
-      },
+         @"items" : @[@{ @"code" : @1, @"subcodes" : @[@12312] }],
+         @"recovery_options" : @[@"Yes", @"No thanks"]},
     ];
 
     FBSDKErrorConfiguration *configuration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
@@ -276,6 +254,5 @@
     [configuration parseArray:array];
   }
 }
-
 
 @end

@@ -21,9 +21,9 @@
 #import <Photos/Photos.h>
 
 #ifdef FBSDKCOCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+ #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
 #else
-#import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKCoreKit+Internal.h"
 #endif
 #import "FBSDKHashtag.h"
 #import "FBSDKSharePhoto.h"
@@ -119,8 +119,8 @@
   }
   if (images.count > 0) {
     [FBSDKTypeUtility dictionary:updatedParameters
-                        setObject:images
-                           forKey:@"photos"];
+                       setObject:images
+                          forKey:@"photos"];
   }
 
   return updatedParameters;
@@ -171,15 +171,15 @@
 
 - (BOOL)isEqualToSharePhotoContent:(FBSDKSharePhotoContent *)content
 {
-  return (content &&
-          [FBSDKInternalUtility object:_contentURL isEqualToObject:content.contentURL] &&
-          [FBSDKInternalUtility object:_hashtag isEqualToObject:content.hashtag] &&
-          [FBSDKInternalUtility object:_peopleIDs isEqualToObject:content.peopleIDs] &&
-          [FBSDKInternalUtility object:_photos isEqualToObject:content.photos] &&
-          [FBSDKInternalUtility object:_placeID isEqualToObject:content.placeID] &&
-          [FBSDKInternalUtility object:_ref isEqualToObject:content.ref] &&
-          [FBSDKInternalUtility object:_shareUUID isEqualToObject:content.shareUUID] &&
-          [FBSDKInternalUtility object:_pageID isEqualToObject:content.pageID]);
+  return (content
+    && [FBSDKInternalUtility object:_contentURL isEqualToObject:content.contentURL]
+    && [FBSDKInternalUtility object:_hashtag isEqualToObject:content.hashtag]
+    && [FBSDKInternalUtility object:_peopleIDs isEqualToObject:content.peopleIDs]
+    && [FBSDKInternalUtility object:_photos isEqualToObject:content.photos]
+    && [FBSDKInternalUtility object:_placeID isEqualToObject:content.placeID]
+    && [FBSDKInternalUtility object:_ref isEqualToObject:content.ref]
+    && [FBSDKInternalUtility object:_shareUUID isEqualToObject:content.shareUUID]
+    && [FBSDKInternalUtility object:_pageID isEqualToObject:content.pageID]);
 }
 
 #pragma mark - NSCoding

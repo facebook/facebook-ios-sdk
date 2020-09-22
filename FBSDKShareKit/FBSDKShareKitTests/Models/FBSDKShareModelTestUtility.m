@@ -150,33 +150,33 @@
 + (NSArray<FBSDKSharePhoto *> *)photos
 {
   return @[
-           [FBSDKSharePhoto photoWithImageURL:[NSURL URLWithString:@"https://fbstatic-a.akamaihd.net/rsrc.php/v2/yC/r/YRwxe7CPWSs.png"]
-                                userGenerated:NO],
-           [FBSDKSharePhoto photoWithImageURL:[NSURL URLWithString:@"https://fbstatic-a.akamaihd.net/rsrc.php/v2/yS/r/9f82O0jy9RH.png"]
-                                userGenerated:NO],
-           [FBSDKSharePhoto photoWithImageURL:[NSURL URLWithString:@"https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-xaf1/t39.2178-6/10173500_1398474223767412_616498772_n.png"]
-                                userGenerated:YES],
-           ];
+    [FBSDKSharePhoto photoWithImageURL:[NSURL URLWithString:@"https://fbstatic-a.akamaihd.net/rsrc.php/v2/yC/r/YRwxe7CPWSs.png"]
+                         userGenerated:NO],
+    [FBSDKSharePhoto photoWithImageURL:[NSURL URLWithString:@"https://fbstatic-a.akamaihd.net/rsrc.php/v2/yS/r/9f82O0jy9RH.png"]
+                         userGenerated:NO],
+    [FBSDKSharePhoto photoWithImageURL:[NSURL URLWithString:@"https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-xaf1/t39.2178-6/10173500_1398474223767412_616498772_n.png"]
+                         userGenerated:YES],
+  ];
 }
 
 + (NSArray<FBSDKSharePhoto *> *)photosWithFileUrls
 {
   return @[
-           [FBSDKShareModelTestUtility photoWithFileURL],
-           ];
+    [FBSDKShareModelTestUtility photoWithFileURL],
+  ];
 }
 
 + (NSArray<FBSDKSharePhoto *> *)photosWithImages
 {
-   // equality checks are pointer equality for UIImage, so just return the same instance each time
+  // equality checks are pointer equality for UIImage, so just return the same instance each time
   static NSArray *_photos = nil;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     _photos = @[
-                [FBSDKSharePhoto photoWithImage:[self _generateImage] userGenerated:YES],
-                [FBSDKSharePhoto photoWithImage:[self _generateImage] userGenerated:YES],
-                [FBSDKSharePhoto photoWithImage:[self _generateImage] userGenerated:YES],
-                ];
+      [FBSDKSharePhoto photoWithImage:[self _generateImage] userGenerated:YES],
+      [FBSDKSharePhoto photoWithImage:[self _generateImage] userGenerated:YES],
+      [FBSDKSharePhoto photoWithImage:[self _generateImage] userGenerated:YES],
+    ];
   });
   return _photos;
 }

@@ -20,7 +20,7 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKAppLinkTarget.h"
+ #import "FBSDKAppLinkTarget.h"
 
 @interface FBSDKAppLinkTarget ()
 
@@ -34,12 +34,13 @@
 
 + (instancetype)appLinkTargetWithURL:(NSURL *)url
                           appStoreId:(NSString *)appStoreId
-                             appName:(NSString *)appName {
-    FBSDKAppLinkTarget *target = [[self alloc] init];
-    target.URL = url;
-    target.appStoreId = appStoreId;
-    target.appName = appName;
-    return target;
+                             appName:(NSString *)appName
+{
+  FBSDKAppLinkTarget *target = [[self alloc] init];
+  target.URL = url;
+  target.appStoreId = appStoreId;
+  target.appName = appName;
+  return target;
 }
 
 @end

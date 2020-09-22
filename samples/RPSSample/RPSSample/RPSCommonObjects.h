@@ -17,11 +17,16 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 typedef enum {
-    RPSCallNone = -1, RPSCallRock = 0, RPSCallPaper = 1, RPSCallScissors = 2 // enum is also used to index arrays
+  RPSCallNone = -1,
+  RPSCallRock = 0,
+  RPSCallPaper = 1,
+  RPSCallScissors = 2, // enum is also used to index arrays
 } RPSCall;
 
 typedef enum {
-    RPSResultWin = 0, RPSResultLoss = 1, RPSResultTie = 2
+  RPSResultWin = 0,
+  RPSResultLoss = 1,
+  RPSResultTie = 2,
 } RPSResult;
 
 extern NSString *builtInOpenGraphObjects[3];

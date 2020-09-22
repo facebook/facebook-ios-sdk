@@ -20,18 +20,18 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKColor.h"
+ #import "FBSDKColor.h"
 
 static const CGFloat kFBRGBMax = 255.0;
 
 UIColor *FBSDKUIColorWithRGBA(uint8_t r, uint8_t g, uint8_t b, CGFloat a)
 {
-    return [UIColor colorWithRed:(r / kFBRGBMax) green:(g / kFBRGBMax) blue:(b / kFBRGBMax) alpha:a];
+  return [UIColor colorWithRed:(r / kFBRGBMax) green:(g / kFBRGBMax) blue:(b / kFBRGBMax) alpha:a];
 }
 
 UIColor *FBSDKUIColorWithRGB(uint8_t r, uint8_t g, uint8_t b)
 {
-    return FBSDKUIColorWithRGBA(r, g, b, 1.0);
+  return FBSDKUIColorWithRGBA(r, g, b, 1.0);
 }
 
 #endif

@@ -20,17 +20,17 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKShareCameraEffectContent.h"
+ #import "FBSDKShareCameraEffectContent.h"
 
-#import "FBSDKCameraEffectArguments+Internal.h"
-#import "FBSDKCameraEffectTextures+Internal.h"
-#ifdef FBSDKCOCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
-#import "FBSDKCoreKit+Internal.h"
-#endif
-#import "FBSDKHashtag.h"
-#import "FBSDKShareUtility.h"
+ #import "FBSDKCameraEffectArguments+Internal.h"
+ #import "FBSDKCameraEffectTextures+Internal.h"
+ #ifdef FBSDKCOCOAPODS
+  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+ #else
+  #import "FBSDKCoreKit+Internal.h"
+ #endif
+ #import "FBSDKHashtag.h"
+ #import "FBSDKShareUtility.h"
 
 static NSString *const kFBSDKShareCameraEffectContentEffectIDKey = @"effectID";
 static NSString *const kFBSDKShareCameraEffectContentEffectArgumentsKey = @"effectArguments";
@@ -45,7 +45,7 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
 
 @implementation FBSDKShareCameraEffectContent
 
-#pragma mark - Properties
+ #pragma mark - Properties
 
 @synthesize effectID = _effectID;
 @synthesize effectArguments = _effectArguments;
@@ -58,7 +58,7 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
 @synthesize pageID = _pageID;
 @synthesize shareUUID = _shareUUID;
 
-#pragma mark - Initializer
+ #pragma mark - Initializer
 
 - (instancetype)init
 {
@@ -69,15 +69,15 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
   return self;
 }
 
-#pragma mark - FBSDKSharingContent
+ #pragma mark - FBSDKSharingContent
 
 - (NSDictionary<NSString *, id> *)addParameters:(NSDictionary<NSString *, id> *)existingParameters
                                   bridgeOptions:(FBSDKShareBridgeOptions)bridgeOptions
 {
   NSMutableDictionary<NSString *, id> *updatedParameters = [NSMutableDictionary dictionaryWithDictionary:existingParameters];
   [FBSDKTypeUtility dictionary:updatedParameters
-                      setObject:_effectID
-                         forKey:@"effect_id"];
+                     setObject:_effectID
+                        forKey:@"effect_id"];
 
   NSString *effectArgumentsJSON;
   if (_effectArguments) {
@@ -86,8 +86,8 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
                                             invalidObjectHandler:NULL];
   }
   [FBSDKTypeUtility dictionary:updatedParameters
-                      setObject:effectArgumentsJSON
-                         forKey:@"effect_arguments"];
+                     setObject:effectArgumentsJSON
+                        forKey:@"effect_arguments"];
 
   NSData *effectTexturesData;
   if (_effectTextures) {
@@ -102,20 +102,20 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
         texturesDataDict[key] = imageData;
       }
     }];
-    #if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_11_0
-      effectTexturesData = [NSKeyedArchiver archivedDataWithRootObject:texturesDataDict requiringSecureCoding:YES error:NULL];
-    #else
-      effectTexturesData = [NSKeyedArchiver archivedDataWithRootObject:texturesDataDict];
-    #endif
+  #if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_11_0
+    effectTexturesData = [NSKeyedArchiver archivedDataWithRootObject:texturesDataDict requiringSecureCoding:YES error:NULL];
+  #else
+    effectTexturesData = [NSKeyedArchiver archivedDataWithRootObject:texturesDataDict];
+  #endif
   }
   [FBSDKTypeUtility dictionary:updatedParameters
-                      setObject:effectTexturesData
-                         forKey:@"effect_textures"];
+                     setObject:effectTexturesData
+                        forKey:@"effect_textures"];
 
   return updatedParameters;
 }
 
-#pragma mark - FBSDKSharingScheme
+ #pragma mark - FBSDKSharingScheme
 
 - (NSString *)schemeForMode:(FBSDKShareDialogMode)mode
 {
@@ -128,12 +128,12 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
   return nil;
 }
 
-#pragma mark - FBSDKSharingValidation
+ #pragma mark - FBSDKSharingValidation
 
 - (BOOL)validateWithOptions:(FBSDKShareBridgeOptions)bridgeOptions error:(NSError *__autoreleasing *)errorRef
 {
   if (_effectID.length > 0) {
-    NSCharacterSet* nonDigitCharacters = [NSCharacterSet decimalDigitCharacterSet].invertedSet;
+    NSCharacterSet *nonDigitCharacters = [NSCharacterSet decimalDigitCharacterSet].invertedSet;
     if ([_effectID rangeOfCharacterFromSet:nonDigitCharacters].location != NSNotFound) {
       if (errorRef != NULL) {
         *errorRef = [FBSDKError invalidArgumentErrorWithName:@"effectID"
@@ -147,7 +147,7 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
   return YES;
 }
 
-#pragma mark - Equality
+ #pragma mark - Equality
 
 - (NSUInteger)hash
 {
@@ -179,20 +179,20 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
 
 - (BOOL)isEqualToShareCameraEffectContent:(FBSDKShareCameraEffectContent *)content
 {
-  return (content &&
-          [FBSDKInternalUtility object:_effectID isEqualToObject:content.effectID] &&
-          [FBSDKInternalUtility object:_effectArguments isEqualToObject:content.effectArguments] &&
-          [FBSDKInternalUtility object:_effectTextures isEqualToObject:content.effectTextures] &&
-          [FBSDKInternalUtility object:_contentURL isEqualToObject:content.contentURL] &&
-          [FBSDKInternalUtility object:_hashtag isEqualToObject:content.hashtag] &&
-          [FBSDKInternalUtility object:_peopleIDs isEqualToObject:content.peopleIDs] &&
-          [FBSDKInternalUtility object:_placeID isEqualToObject:content.placeID] &&
-          [FBSDKInternalUtility object:_ref isEqualToObject:content.ref] &&
-          [FBSDKInternalUtility object:_shareUUID isEqualToObject:content.shareUUID] &&
-          [FBSDKInternalUtility object:_pageID isEqualToObject:content.pageID]);
+  return (content
+    && [FBSDKInternalUtility object:_effectID isEqualToObject:content.effectID]
+    && [FBSDKInternalUtility object:_effectArguments isEqualToObject:content.effectArguments]
+    && [FBSDKInternalUtility object:_effectTextures isEqualToObject:content.effectTextures]
+    && [FBSDKInternalUtility object:_contentURL isEqualToObject:content.contentURL]
+    && [FBSDKInternalUtility object:_hashtag isEqualToObject:content.hashtag]
+    && [FBSDKInternalUtility object:_peopleIDs isEqualToObject:content.peopleIDs]
+    && [FBSDKInternalUtility object:_placeID isEqualToObject:content.placeID]
+    && [FBSDKInternalUtility object:_ref isEqualToObject:content.ref]
+    && [FBSDKInternalUtility object:_shareUUID isEqualToObject:content.shareUUID]
+    && [FBSDKInternalUtility object:_pageID isEqualToObject:content.pageID]);
 }
 
-#pragma mark - NSCoding
+ #pragma mark - NSCoding
 
 + (BOOL)supportsSecureCoding
 {
@@ -230,7 +230,7 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
   [encoder encodeObject:_shareUUID forKey:kFBSDKShareCameraEffectContentUUIDKey];
 }
 
-#pragma mark - NSCopying
+ #pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone
 {

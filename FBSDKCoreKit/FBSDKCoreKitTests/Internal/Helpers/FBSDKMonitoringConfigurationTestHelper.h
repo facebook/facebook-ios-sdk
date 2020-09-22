@@ -25,12 +25,12 @@ NS_ASSUME_NONNULL_BEGIN
 /// Bundles key value pairs in the same format they're returned from the graph:
 /// ex:
 /// {
-///   "sample_rates": [
-///       {
-///         "key": "foo",
-///         "value": 1
-///       }
-///   ]
+/// "sample_rates": [
+/// {
+/// "key": "foo",
+/// "value": 1
+/// }
+/// ]
 /// }
 + (NSDictionary *)sampleRatesWithEntryPairs:(NSDictionary<NSString *, id> *)pairs;
 

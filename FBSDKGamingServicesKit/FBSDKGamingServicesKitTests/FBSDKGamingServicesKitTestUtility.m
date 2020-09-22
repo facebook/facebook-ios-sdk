@@ -29,10 +29,12 @@
   id mock = OCMClassMock([FBSDKBridgeAPI class]);
   OCMStub([mock sharedInstance]).andReturn(mock);
 
-  OCMStub([mock openURL:[OCMArg any] sender:[OCMArg checkWithBlock:^BOOL(id obj) {
-    captureHandler(obj);
-    return true;
-  }] handler:[OCMArg any]]);
+  OCMStub(
+    [mock openURL:[OCMArg any] sender:[OCMArg checkWithBlock:^BOOL (id obj) {
+      captureHandler(obj);
+      return true;
+    }] handler:[OCMArg any]]
+  );
 }
 
 @end

@@ -16,9 +16,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <XCTest/XCTest.h>
-
 #import <OCMock/OCMock.h>
+#import <XCTest/XCTest.h>
 
 #import "FBSDKAppLinkUtility.h"
 
@@ -41,4 +40,5 @@
   XCTAssertNotNil(promoCode);
   XCTAssertEqualObjects(promoCode, @"PROMOWORKS");
 }
+
 @end

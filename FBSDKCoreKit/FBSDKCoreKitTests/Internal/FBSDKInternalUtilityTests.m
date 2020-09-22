@@ -17,7 +17,6 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <UIKit/UIKit.h>
-
 #import <XCTest/XCTest.h>
 
 #import "FBSDKCoreKit.h"
@@ -69,10 +68,12 @@
 
   URLString = [FBSDKInternalUtility facebookURLWithHostPrefix:@"m"
                                                          path:@"dialog/share"
-                                              queryParameters:@{ @"key": @"value" }
+                                              queryParameters:@{ @"key" : @"value" }
                                                         error:NULL].absoluteString;
-  XCTAssertEqualObjects(URLString,
-                        @"https://m.facebook.com/" FBSDK_TARGET_PLATFORM_VERSION @"/dialog/share?key=value");
+  XCTAssertEqualObjects(
+    URLString,
+    @"https://m.facebook.com/" FBSDK_TARGET_PLATFORM_VERSION @"/dialog/share?key=value"
+  );
 
   URLString = [FBSDKInternalUtility facebookURLWithHostPrefix:@"m"
                                                          path:@"/v1.0/dialog/share"
@@ -129,7 +130,6 @@
                                                defaultVersion:@""
                                                         error:NULL].absoluteString;
   XCTAssertEqualObjects(URLString, @"https://m.facebook.com/" FBSDK_TARGET_PLATFORM_VERSION @"/dialog/share");
-
 }
 
 @end

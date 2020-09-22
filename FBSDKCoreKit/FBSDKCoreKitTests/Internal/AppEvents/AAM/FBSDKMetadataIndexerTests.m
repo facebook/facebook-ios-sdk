@@ -16,9 +16,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <XCTest/XCTest.h>
-
 #import <OCMock/OCMock.h>
+#import <XCTest/XCTest.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
@@ -42,7 +41,8 @@
 + (void)checkAndAppendData:(NSString *)data forKey:(NSString *)key;
 @end
 
-@interface FBSDKMetadataIndexerTests : XCTestCase {
+@interface FBSDKMetadataIndexerTests : XCTestCase
+{
   id _mockMetadataIndexer;
   UITextField *_emailField;
   UITextView *_emailView;
@@ -60,39 +60,39 @@
   _mockMetadataIndexer = OCMClassMock([FBSDKMetadataIndexer class]);
   [FBSDKMetadataIndexer initStore];
   [FBSDKMetadataIndexer constructRules:@{
-    @"r1": @{
-        @"k": @"email,e-mail,em,electronicmail",
-        @"v": @"^([A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,})$",
-    },
-    @"r2": @{
-        @"k": @"phone,mobile,contact",
-        @"v": @"^([0-9]{5,15})$",
-    },
-    @"r3": @{
-        @"k": @"gender,gen,sex",
-        @"v": @"^(male|boy|man|female|girl|woman)$",
-    },
-    @"r4": @{
-        @"k": @"city",
-        @"v": @"",
-    },
-    @"r5": @{
-        @"k": @"state,province",
-        @"v": @"",
-    },
-    @"r6": @{
-        @"k": @"zip,zcode,pincode,pcode,postalcode,postcode",
-        @"v": @"(^\\d{5}$)|(^\\d{9}$)|(^\\d{5}-\\d{4}$)",
-    },
-    @"r7": @{
-        @"k": @"firstname,first name,fn,fname,givenname,forename",
-        @"v": @"",
-    },
-    @"r8": @{
-        @"k": @"lastname,last name,ln,lname,surname,sname,familyname",
-        @"v": @"",
-    },
-  }];
+     @"r1" : @{
+       @"k" : @"email,e-mail,em,electronicmail",
+       @"v" : @"^([A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,})$",
+     },
+     @"r2" : @{
+       @"k" : @"phone,mobile,contact",
+       @"v" : @"^([0-9]{5,15})$",
+     },
+     @"r3" : @{
+       @"k" : @"gender,gen,sex",
+       @"v" : @"^(male|boy|man|female|girl|woman)$",
+     },
+     @"r4" : @{
+       @"k" : @"city",
+       @"v" : @"",
+     },
+     @"r5" : @{
+       @"k" : @"state,province",
+       @"v" : @"",
+     },
+     @"r6" : @{
+       @"k" : @"zip,zcode,pincode,pcode,postalcode,postcode",
+       @"v" : @"(^\\d{5}$)|(^\\d{9}$)|(^\\d{5}-\\d{4}$)",
+     },
+     @"r7" : @{
+       @"k" : @"firstname,first name,fn,fname,givenname,forename",
+       @"v" : @"",
+     },
+     @"r8" : @{
+       @"k" : @"lastname,last name,ln,lname,surname,sname,familyname",
+       @"v" : @"",
+     },
+   }];
 
   _emailField = [[UITextField alloc] init];
   _emailField.placeholder = @"Enter your email";
@@ -122,20 +122,26 @@
 - (void)testCheckSecureTextEntryOfTextField
 {
   // without secure text
-  XCTAssertFalse([FBSDKMetadataIndexer checkSecureTextEntry:_emailField],
-                 @"test for UITextField without secure text");
+  XCTAssertFalse(
+    [FBSDKMetadataIndexer checkSecureTextEntry:_emailField],
+    @"test for UITextField without secure text"
+  );
 
   // with secure text
-  XCTAssertTrue([FBSDKMetadataIndexer checkSecureTextEntry:_pwdField],
-                @"test for UITextField with secure text");
+  XCTAssertTrue(
+    [FBSDKMetadataIndexer checkSecureTextEntry:_pwdField],
+    @"test for UITextField with secure text"
+  );
 }
 
 // test for geting secure text entry in UITextView
 - (void)testCheckSecureTextEntryOfTextView
 {
   // without secure text
-  XCTAssertFalse([FBSDKMetadataIndexer checkSecureTextEntry:_emailView],
-                 @"test for UITextView without secure text");
+  XCTAssertFalse(
+    [FBSDKMetadataIndexer checkSecureTextEntry:_emailView],
+    @"test for UITextView without secure text"
+  );
 
   // with secure text
   XCTAssertTrue([FBSDKMetadataIndexer checkSecureTextEntry:_pwdView], @"test for UITextView with secure text");
@@ -144,17 +150,21 @@
 // test for geting keyboard type from UITextField
 - (void)testGetKeyboardTypeOfTextField
 {
-  XCTAssertEqual(_emailField.keyboardType,
-                 [FBSDKMetadataIndexer getKeyboardType:_emailField],
-                 @"test for geting keyboard type from UITextField");
+  XCTAssertEqual(
+    _emailField.keyboardType,
+    [FBSDKMetadataIndexer getKeyboardType:_emailField],
+    @"test for geting keyboard type from UITextField"
+  );
 }
 
 // test for geting keyboard type from UITextView
 - (void)testGetKeyboardTypeOfTextView
 {
-  XCTAssertEqual(_emailView.keyboardType,
-                 [FBSDKMetadataIndexer getKeyboardType:_emailView],
-                 @"test for geting keyboard type from UITextView");
+  XCTAssertEqual(
+    _emailView.keyboardType,
+    [FBSDKMetadataIndexer getKeyboardType:_emailView],
+    @"test for geting keyboard type from UITextView"
+  );
 }
 
 // test for geting metadata with valid email
@@ -307,7 +317,7 @@
 // test for geting metadata with too long text
 - (void)testGetMetadataWithTooLongText
 {
-  NSString *text = [NSString stringWithFormat:@"%@%@", [@"" stringByPaddingToLength:1000 withString: @"a" startingAtIndex:0], @"@fb.com"];
+  NSString *text = [NSString stringWithFormat:@"%@%@", [@"" stringByPaddingToLength:1000 withString:@"a" startingAtIndex:0], @"@fb.com"];
   [FBSDKMetadataIndexer getMetadataWithText:text
                                 placeholder:@"Enter your Email"
                                      labels:nil
@@ -321,7 +331,7 @@
 - (void)testGetMetadataWithTooLongPlaceholder
 {
   NSString *text = @"test@fb.com";
-  NSString *indicator = [NSString stringWithFormat:@"%@", [@"" stringByPaddingToLength:1000 withString: @"enter your email " startingAtIndex:0]];
+  NSString *indicator = [NSString stringWithFormat:@"%@", [@"" stringByPaddingToLength:1000 withString:@"enter your email " startingAtIndex:0]];
   [FBSDKMetadataIndexer getMetadataWithText:text
                                 placeholder:indicator
                                      labels:nil

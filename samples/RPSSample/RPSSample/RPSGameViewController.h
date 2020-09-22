@@ -20,24 +20,24 @@
 
 @interface RPSGameViewController : UIViewController
 
-@property (unsafe_unretained, nonatomic) IBOutlet UILabel  *rockLabel;
-@property (unsafe_unretained, nonatomic) IBOutlet UILabel  *paperLabel;
-@property (unsafe_unretained, nonatomic) IBOutlet UILabel  *scissorsLabel;
+@property (nonatomic, unsafe_unretained) IBOutlet UILabel *rockLabel;
+@property (nonatomic, unsafe_unretained) IBOutlet UILabel *paperLabel;
+@property (nonatomic, unsafe_unretained) IBOutlet UILabel *scissorsLabel;
 
-@property (unsafe_unretained, nonatomic) IBOutlet UILabel  *shootLabel;
+@property (nonatomic, unsafe_unretained) IBOutlet UILabel *shootLabel;
 
-@property (unsafe_unretained, nonatomic) IBOutlet UIImageView *playerHand;
-@property (unsafe_unretained, nonatomic) IBOutlet UIImageView *computerHand;
+@property (nonatomic, unsafe_unretained) IBOutlet UIImageView *playerHand;
+@property (nonatomic, unsafe_unretained) IBOutlet UIImageView *computerHand;
 
-@property (unsafe_unretained, nonatomic) IBOutlet UIButton *rockButton;
-@property (unsafe_unretained, nonatomic) IBOutlet UIButton *paperButton;
-@property (unsafe_unretained, nonatomic) IBOutlet UIButton *scissorsButton;
+@property (nonatomic, unsafe_unretained) IBOutlet UIButton *rockButton;
+@property (nonatomic, unsafe_unretained) IBOutlet UIButton *paperButton;
+@property (nonatomic, unsafe_unretained) IBOutlet UIButton *scissorsButton;
 
-@property (unsafe_unretained, nonatomic) IBOutlet UIButton *againButton;
-@property (unsafe_unretained, nonatomic) IBOutlet UIButton *facebookButton;
+@property (nonatomic, unsafe_unretained) IBOutlet UIButton *againButton;
+@property (nonatomic, unsafe_unretained) IBOutlet UIButton *facebookButton;
 
-@property (unsafe_unretained, nonatomic) IBOutlet UILabel  *resultLabel;
-@property (unsafe_unretained, nonatomic) IBOutlet UILabel  *scoreLabel;
+@property (nonatomic, unsafe_unretained) IBOutlet UILabel *resultLabel;
+@property (nonatomic, unsafe_unretained) IBOutlet UILabel *scoreLabel;
 
 - (IBAction)clickRPSButton:(id)sender;
 - (IBAction)clickAgainButton:(id)sender;

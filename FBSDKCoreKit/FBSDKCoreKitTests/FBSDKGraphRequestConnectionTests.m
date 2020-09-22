@@ -16,30 +16,26 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import <OCMock/OCMock.h>
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-
-#import <OCMock/OCMock.h>
 
 #import <OHHTTPStubs/NSURLRequest+HTTPBodyTesting.h>
 #import <OHHTTPStubs/OHHTTPStubs.h>
 
 #import "FBSDKCoreKit.h"
 #import "FBSDKCoreKitTestUtility.h"
+#import "FBSDKFeatureManager.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestPiggybackManager.h"
 #import "FBSDKSettings+Internal.h"
+#import "FBSDKTestCase.h"
 
-@interface FBSDKGraphRequestConnectionTests : XCTestCase <FBSDKGraphRequestConnectionDelegate> {
-  id _settingsMock;
-}
+@interface FBSDKGraphRequestConnectionTests : FBSDKTestCase <FBSDKGraphRequestConnectionDelegate>
+
 @property (nonatomic, copy) void (^requestConnectionStartingCallback)(FBSDKGraphRequestConnection *connection);
 @property (nonatomic, copy) void (^requestConnectionCallback)(FBSDKGraphRequestConnection *connection, NSError *error);
 @end
-
-static id g_mockNSBundle;
-
-static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
 
 @implementation FBSDKGraphRequestConnectionTests
 
@@ -47,24 +43,25 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
 
 - (void)setUp
 {
-  [FBSDKSettings setAppID:@"appid"];
-  [FBSDKApplicationDelegate initializeSDK:nil];
-  g_mockNSBundle = [FBSDKCoreKitTestUtility mainBundleMock];
-  _settingsMock = OCMStrictClassMock([FBSDKSettings class]);
+  [super setUp];
+
+  [self stubAppID:self.appID];
+  [self stubCheckingFeatures];
+  [self stubIsSDKInitialized:YES];
+  [self stubLoadingGateKeepers];
+  [self stubFetchingCachedServerConfiguration];
 }
 
 - (void)tearDown
 {
+  [super tearDown];
+
   [OHHTTPStubs removeAllStubs];
-  [g_mockNSBundle stopMocking];
-  g_mockNSBundle = nil;
-  [_settingsMock stopMocking];
-  _settingsMock = nil;
 }
 
 #pragma mark - Helpers
 
-//to prevent piggybacking of server config fetching
+// to prevent piggybacking of server config fetching
 + (id)mockCachedServerConfiguration
 {
   id mockPiggybackManager = [OCMockObject niceMockForClass:[FBSDKGraphRequestPiggybackManager class]];
@@ -73,7 +70,6 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
 }
 
 #pragma mark - FBSDKGraphRequestConnectionDelegate
-
 
 - (void)requestConnection:(FBSDKGraphRequestConnection *)connection didFailWithError:(NSError *)error
 {
@@ -101,31 +97,31 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
 
 #pragma mark - Tests
 
-- (void)_testClientToken
+- (void)testClientToken
 {
   // if it's a batch request the body will be zipped so make sure we don't do that
-  id mockUtility  = [OCMockObject niceMockForClass:[FBSDKBasicUtility class]];
+  id mockUtility = [OCMockObject niceMockForClass:[FBSDKBasicUtility class]];
   [[[mockUtility stub] andReturn:nil] gzip:[OCMArg any]];
 
   XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
   [FBSDKAccessToken setCurrentAccessToken:nil];
   [FBSDKSettings setClientToken:@"clienttoken"];
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-    // If it's a batch request, the token will be in the body. If it's a single request it will be in the url
-    // we should check that it's in one or the other.
-    NSString *url = request.URL.absoluteString;
-    NSString *body = [[NSString alloc] initWithData:request.OHHTTPStubs_HTTPBody encoding:NSUTF8StringEncoding];
-    u_long tokenLength  = ([body rangeOfString:@"access_token"].length + [url rangeOfString:@"access_token"].length);
-    XCTAssertTrue(tokenLength > 0);
-    return YES;
-  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    NSData *data =  [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463, \"type\":\"OAuthException\"}}" dataUsingEncoding:NSUTF8StringEncoding];
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
+                 // If it's a batch request, the token will be in the body. If it's a single request it will be in the url
+                 // we should check that it's in one or the other.
+                 NSString *url = request.URL.absoluteString;
+                 NSString *body = [[NSString alloc] initWithData:request.OHHTTPStubs_HTTPBody encoding:NSUTF8StringEncoding];
+                 u_long tokenLength = ([body rangeOfString:@"access_token"].length + [url rangeOfString:@"access_token"].length);
+                 XCTAssertTrue(tokenLength > 0);
+                 return YES;
+               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+                 NSData *data = [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463, \"type\":\"OAuthException\"}}" dataUsingEncoding:NSUTF8StringEncoding];
 
-    return [OHHTTPStubsResponse responseWithData:data
-                                      statusCode:400
-                                         headers:nil];
-  }];
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+                 return [OHHTTPStubsResponse responseWithData:data
+                                                   statusCode:400
+                                                      headers:nil];
+               }];
+  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     // make sure there is no recovery info for client token failures.
     XCTAssertNil(error.localizedRecoverySuggestion);
     [exp fulfill];
@@ -141,17 +137,17 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
   XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
   [FBSDKAccessToken setCurrentAccessToken:nil];
   [FBSDKSettings setClientToken:@"clienttoken"];
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-    XCTAssertTrue([[request.URL absoluteString] rangeOfString:@"access_token"].location == NSNotFound);
-    return YES;
-  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    NSData *data =  [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
+                 XCTAssertTrue([[request.URL absoluteString] rangeOfString:@"access_token"].location == NSNotFound);
+                 return YES;
+               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+                 NSData *data = [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
 
-    return [OHHTTPStubsResponse responseWithData:data
-                                      statusCode:400
-                                         headers:nil];
-  }];
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""} flags:FBSDKGraphRequestFlagSkipClientToken]
+                 return [OHHTTPStubsResponse responseWithData:data
+                                                   statusCode:400
+                                                      headers:nil];
+               }];
+  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""} flags:FBSDKGraphRequestFlagSkipClientToken]
    startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
      [exp fulfill];
    }];
@@ -165,24 +161,24 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
 {
   id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
   // stub out a batch response that returns /me.id twice
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-    return YES;
-  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    NSString *meResponse = [@"{ \"id\":\"userid\"}" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
-    NSString *responseString = [NSString stringWithFormat:@"[ {\"code\":200,\"body\": \"%@\" }, {\"code\":200,\"body\": \"%@\" } ]", meResponse, meResponse];
-    NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
-    return [OHHTTPStubsResponse responseWithData:data
-                                      statusCode:200
-                                         headers:nil];
-  }];
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
+                 return YES;
+               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+                 NSString *meResponse = [@"{ \"id\":\"userid\"}" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+                 NSString *responseString = [NSString stringWithFormat:@"[ {\"code\":200,\"body\": \"%@\" }, {\"code\":200,\"body\": \"%@\" } ]", meResponse, meResponse];
+                 NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
+                 return [OHHTTPStubsResponse responseWithData:data
+                                                   statusCode:200
+                                                      headers:nil];
+               }];
   FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
   __block int actualCallbacksCount = 0;
   XCTestExpectation *expectation = [self expectationWithDescription:@"expected to receive delegate completion"];
-  [connection addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""}]
+  [connection addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
        completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {
          XCTAssertEqual(1, actualCallbacksCount++, @"this should have been the second callback");
        }];
-  [connection addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""}]
+  [connection addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
        completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {
          XCTAssertEqual(2, actualCallbacksCount++, @"this should have been the third callback");
        }];
@@ -206,23 +202,23 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
 - (void)testNonErrorEmptyDictionaryOrNullResponse
 {
   id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-    return YES;
-  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    NSString *responseString = [NSString stringWithFormat:@"[ {\"code\":200,\"body\": null }, {\"code\":200,\"body\": {} } ]"];
-    NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
-    return [OHHTTPStubsResponse responseWithData:data
-                                      statusCode:200
-                                         headers:nil];
-  }];
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
+                 return YES;
+               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+                 NSString *responseString = [NSString stringWithFormat:@"[ {\"code\":200,\"body\": null }, {\"code\":200,\"body\": {} } ]"];
+                 NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
+                 return [OHHTTPStubsResponse responseWithData:data
+                                                   statusCode:200
+                                                      headers:nil];
+               }];
   FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
   __block int actualCallbacksCount = 0;
   XCTestExpectation *expectation = [self expectationWithDescription:@"expected not to crash on null or empty dict responses"];
-  [connection addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""}]
+  [connection addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
        completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {
          XCTAssertEqual(1, actualCallbacksCount++, @"this should have been the second callback");
        }];
-  [connection addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""}]
+  [connection addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
        completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {
          XCTAssertEqual(2, actualCallbacksCount++, @"this should have been the third callback");
        }];
@@ -246,15 +242,15 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
 - (void)testConnectionDelegateWithNetworkError
 {
   id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-    return YES;
-  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    // stub a response indicating a disconnected network
-    return [OHHTTPStubsResponse responseWithError:[NSError errorWithDomain:@"NSURLErrorDomain" code:-1009 userInfo:nil]];
-  }];
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
+                 return YES;
+               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+                 // stub a response indicating a disconnected network
+                 return [OHHTTPStubsResponse responseWithError:[NSError errorWithDomain:@"NSURLErrorDomain" code:-1009 userInfo:nil]];
+               }];
   FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
   XCTestExpectation *expectation = [self expectationWithDescription:@"expected to receive network error"];
-  [connection addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""}]
+  [connection addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
        completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {}];
   self.requestConnectionCallback = ^(FBSDKGraphRequestConnection *conn, NSError *error) {
     NSCAssert(error != nil, @"didFinishLoading shouldn't have been called");
@@ -275,23 +271,23 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
   id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
   [FBSDKAccessToken setCurrentAccessToken:nil];
   // use stubs because test tokens are not refreshable.
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-    return YES;
-  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    NSString *meResponse = [@"{ \"id\":\"userid\"}" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
-    NSString *refreshResponse = [[NSString stringWithFormat:@"{ \"access_token\":\"123\", \"expires_at\":%.0f }", [NSDate dateWithTimeIntervalSinceNow:60].timeIntervalSince1970] stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
-    NSString *permissionsResponse = [@"{ \"data\": [ { \"permission\" : \"public_profile\", \"status\" : \"granted\" },  { \"permission\" : \"email\", \"status\" : \"granted\" },  { \"permission\" : \"user_friends\", \"status\" : \"declined\" } ] }" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
-    NSString *responseString = [NSString stringWithFormat:@"[ {\"code\":200,\"body\": \"%@\" },"
-                                @"{\"code\":200,\"body\": \"%@\" },"
-                                @"{\"code\":200,\"body\": \"%@\" } ]",
-                                meResponse,
-                                refreshResponse,
-                                permissionsResponse];
-    NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
-    return [OHHTTPStubsResponse responseWithData:data
-                                      statusCode:200
-                                         headers:nil];
-  }];
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
+                 return YES;
+               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+                 NSString *meResponse = [@"{ \"id\":\"userid\"}" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+                 NSString *refreshResponse = [[NSString stringWithFormat:@"{ \"access_token\":\"123\", \"expires_at\":%.0f }", [NSDate dateWithTimeIntervalSinceNow:60].timeIntervalSince1970] stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+                 NSString *permissionsResponse = [@"{ \"data\": [ { \"permission\" : \"public_profile\", \"status\" : \"granted\" },  { \"permission\" : \"email\", \"status\" : \"granted\" },  { \"permission\" : \"user_friends\", \"status\" : \"declined\" } ] }" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+                 NSString *responseString = [NSString stringWithFormat:@"[ {\"code\":200,\"body\": \"%@\" },"
+                                             @"{\"code\":200,\"body\": \"%@\" },"
+                                             @"{\"code\":200,\"body\": \"%@\" } ]",
+                                             meResponse,
+                                             refreshResponse,
+                                             permissionsResponse];
+                 NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
+                 return [OHHTTPStubsResponse responseWithData:data
+                                                   statusCode:200
+                                                      headers:nil];
+               }];
   FBSDKAccessToken *tokenThatNeedsRefresh = [[FBSDKAccessToken alloc]
                                              initWithTokenString:@"token"
                                              permissions:@[]
@@ -303,7 +299,7 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
                                              refreshDate:[NSDate distantPast]
                                              dataAccessExpirationDate:[NSDate distantPast]];
   [FBSDKAccessToken setCurrentAccessToken:tokenThatNeedsRefresh];
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""}];
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}];
   XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
   [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     XCTAssertEqualObjects(tokenThatNeedsRefresh.userID, result[@"id"]);
@@ -337,19 +333,19 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
                                       refreshDate:[NSDate date]
                                       dataAccessExpirationDate:[NSDate distantPast]];
   [FBSDKAccessToken setCurrentAccessToken:tokenNoRefresh];
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""}];
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}];
   XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *r) {
-    // assert the path of r is "me"; since piggyback would go to root batch endpoint.
-    XCTAssertTrue([r.URL.path hasSuffix:@"me"]);
-    return YES;
-  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *r) {
-    NSString *responseString = @"{ \"id\" : \"userid\"}";
-    NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
-    return [OHHTTPStubsResponse responseWithData:data
-                                      statusCode:200
-                                         headers:nil];
-  }];
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *r) {
+                 // assert the path of r is "me"; since piggyback would go to root batch endpoint.
+                 XCTAssertTrue([r.URL.path hasSuffix:@"me"]);
+                 return YES;
+               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *r) {
+                 NSString *responseString = @"{ \"id\" : \"userid\"}";
+                 NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
+                 return [OHHTTPStubsResponse responseWithData:data
+                                                   statusCode:200
+                                                      headers:nil];
+               }];
   [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     XCTAssertEqualObjects(tokenNoRefresh.userID, result[@"id"]);
     [exp fulfill];
@@ -368,7 +364,7 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
   __block int tokenChangeCount = 0;
   [self expectationForNotification:FBSDKAccessTokenDidChangeNotification
                             object:nil
-                           handler:^BOOL(NSNotification *notification) {
+                           handler:^BOOL (NSNotification *notification) {
                              if (++tokenChangeCount == 2) {
                                XCTAssertNil(notification.userInfo[FBSDKAccessTokenChangeNewKey]);
                                XCTAssertNotNil(notification.userInfo[FBSDKAccessTokenChangeOldKey]);
@@ -379,23 +375,23 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
   FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                     permissions:@[@"public_profile"]
                                                             declinedPermissions:@[]
-                                                            expiredPermissions:@[]
+                                                             expiredPermissions:@[]
                                                                           appID:@"appid"
                                                                          userID:@"userid"
                                                                  expirationDate:nil
                                                                     refreshDate:nil
                                                        dataAccessExpirationDate:nil];
   [FBSDKAccessToken setCurrentAccessToken:accessToken];
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-    return YES;
-  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    NSData *data =  [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
+                 return YES;
+               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+                 NSData *data = [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
 
-    return [OHHTTPStubsResponse responseWithData:data
-                                      statusCode:400
-                                         headers:nil];
-  }];
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""}]
+                 return [OHHTTPStubsResponse responseWithData:data
+                                                   statusCode:400
+                                                      headers:nil];
+               }];
+  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
    startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
      XCTAssertNil(result);
      XCTAssertEqualObjects(@"Token is broke", error.userInfo[FBSDKErrorDeveloperMessageKey]);
@@ -415,7 +411,7 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
   XCTestExpectation *expectation = [self expectationWithDescription:@"completed request"];
   [self expectationForNotification:FBSDKAccessTokenDidChangeNotification
                             object:nil
-                           handler:^BOOL(NSNotification *notification) {
+                           handler:^BOOL (NSNotification *notification) {
                              XCTAssertNotNil(notification.userInfo[FBSDKAccessTokenChangeNewKey]);
                              return YES;
                            }];
@@ -430,17 +426,17 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
                                                        dataAccessExpirationDate:nil];
 
   [FBSDKAccessToken setCurrentAccessToken:accessToken];
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-    return YES;
-  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    NSData *data =  [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
+                 return YES;
+               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+                 NSData *data = [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
 
-    return [OHHTTPStubsResponse responseWithData:data
-                                      statusCode:400
-                                         headers:nil];
-  }];
+                 return [OHHTTPStubsResponse responseWithData:data
+                                                   statusCode:400
+                                                      headers:nil];
+               }];
   [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me"
-                                     parameters:@{@"fields":@""}
+                                     parameters:@{@"fields" : @""}
                                     tokenString:@"notCurrentToken"
                                         version:nil
                                      HTTPMethod:@""]
@@ -463,7 +459,7 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
   XCTestExpectation *expectation = [self expectationWithDescription:@"completed request"];
   [self expectationForNotification:FBSDKAccessTokenDidChangeNotification
                             object:nil
-                           handler:^BOOL(NSNotification *notification) {
+                           handler:^BOOL (NSNotification *notification) {
                              XCTAssertNotNil(notification.userInfo[FBSDKAccessTokenChangeNewKey]);
                              return YES;
                            }];
@@ -478,16 +474,16 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
                                                        dataAccessExpirationDate:nil];
 
   [FBSDKAccessToken setCurrentAccessToken:accessToken];
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-    return YES;
-  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    NSData *data =  [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
+                 return YES;
+               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+                 NSData *data = [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
 
-    return [OHHTTPStubsResponse responseWithData:data
-                                      statusCode:400
-                                         headers:nil];
-  }];
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""} flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError]
+                 return [OHHTTPStubsResponse responseWithData:data
+                                                   statusCode:400
+                                                      headers:nil];
+               }];
+  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""} flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError]
    startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
      XCTAssertNil(result);
      XCTAssertEqualObjects(@"Token is broke", error.userInfo[FBSDKErrorDeveloperMessageKey]);
@@ -504,40 +500,40 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
 - (void)testUserAgentSuffix
 {
   // Disable compressing network request
-  id mockUtility  = [OCMockObject niceMockForClass:[FBSDKBasicUtility class]];
+  id mockUtility = [OCMockObject niceMockForClass:[FBSDKBasicUtility class]];
   [[[mockUtility stub] andReturn:nil] gzip:[OCMArg any]];
   XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
   XCTestExpectation *exp2 = [self expectationWithDescription:@"completed request 2"];
 
   [FBSDKAccessToken setCurrentAccessToken:nil];
   [FBSDKSettings setUserAgentSuffix:@"UnitTest.1.0.0"];
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-    NSString *actualUserAgent = [request valueForHTTPHeaderField:@"User-Agent"];
-    NSString *body = [[NSString alloc] initWithData:request.OHHTTPStubs_HTTPBody encoding:NSUTF8StringEncoding];
-    if ([body containsString:@"with_suffix"] || [body containsString:@"without_suffix"]) {
-      BOOL expectUserAgentSuffix = [body containsString:@"fields=with_suffix"];
-      if (expectUserAgentSuffix) {
-        XCTAssertTrue([actualUserAgent hasSuffix:@"/UnitTest.1.0.0"], @"unexpected user agent %@", actualUserAgent);
-      } else {
-        XCTAssertFalse([actualUserAgent hasSuffix:@"/UnitTest.1.0.0"], @"unexpected user agent %@", actualUserAgent);
-      }
-    }
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
+                 NSString *actualUserAgent = [request valueForHTTPHeaderField:@"User-Agent"];
+                 NSString *body = [[NSString alloc] initWithData:request.OHHTTPStubs_HTTPBody encoding:NSUTF8StringEncoding];
+                 if ([body containsString:@"with_suffix"] || [body containsString:@"without_suffix"]) {
+                   BOOL expectUserAgentSuffix = [body containsString:@"fields=with_suffix"];
+                   if (expectUserAgentSuffix) {
+                     XCTAssertTrue([actualUserAgent hasSuffix:@"/UnitTest.1.0.0"], @"unexpected user agent %@", actualUserAgent);
+                   } else {
+                     XCTAssertFalse([actualUserAgent hasSuffix:@"/UnitTest.1.0.0"], @"unexpected user agent %@", actualUserAgent);
+                   }
+                 }
 
-    return YES;
-  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    NSData *data =  [@"{\"error\": {\"message\": \"Missing oktne\",\"code\": 190, \"type\":\"OAuthException\"}}" dataUsingEncoding:NSUTF8StringEncoding];
+                 return YES;
+               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+                 NSData *data = [@"{\"error\": {\"message\": \"Missing oktne\",\"code\": 190, \"type\":\"OAuthException\"}}" dataUsingEncoding:NSUTF8StringEncoding];
 
-    return [OHHTTPStubsResponse responseWithData:data
-                                      statusCode:400
-                                         headers:nil];
-  }];
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@"with_suffix"}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+                 return [OHHTTPStubsResponse responseWithData:data
+                                                   statusCode:400
+                                                      headers:nil];
+               }];
+  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @"with_suffix"}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     [exp fulfill];
   }];
 
   [FBSDKSettings setUserAgentSuffix:nil];
   // issue a second request o verify clearing out of user agent suffix, passing a field=name to uniquely identify the request.
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@"without_suffix"}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @"without_suffix"}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     [exp2 fulfill];
   }];
 
@@ -553,14 +549,14 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
 
   [FBSDKAccessToken setCurrentAccessToken:nil];
   [FBSDKSettings setClientToken:@"clienttoken"];
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-    return YES;
-  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-      NSData *data =  [@"{\"error\": \"a-non-dictionary\"}" dataUsingEncoding:NSUTF8StringEncoding];
-      return [OHHTTPStubsResponse responseWithData:data
-                                        statusCode:200
-                                          headers:nil];
-  }];
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
+                 return YES;
+               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+                 NSData *data = [@"{\"error\": \"a-non-dictionary\"}" dataUsingEncoding:NSUTF8StringEncoding];
+                 return [OHHTTPStubsResponse responseWithData:data
+                                                   statusCode:200
+                                                      headers:nil];
+               }];
 
   // adding fresh token to avoid piggybacking a token refresh
   FBSDKAccessToken *tokenNoRefresh = [[FBSDKAccessToken alloc]
@@ -575,7 +571,7 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
                                       dataAccessExpirationDate:[NSDate distantPast]];
   [FBSDKAccessToken setCurrentAccessToken:tokenNoRefresh];
 
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     // should not crash when receiving something other than a dictionary within the response.
     [exp fulfill];
   }];
@@ -593,21 +589,21 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
   id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
   __block int requestCount = 0;
   XCTestExpectation *expectation = [self expectationWithDescription:@"completed request"];
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-    return YES;
-  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    XCTAssertLessThanOrEqual(++requestCount, 2);
-    NSString *responseJSON = (requestCount == 1 ?
-                              @"{\"error\": {\"message\": \"Server is busy\",\"code\": 1,\"error_subcode\": 463}}"
-                              : @"{\"error\": {\"message\": \"Server is busy\",\"code\": 2,\"error_subcode\": 463}}" );
-    NSData *data =  [responseJSON dataUsingEncoding:NSUTF8StringEncoding];
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
+                 return YES;
+               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+                 XCTAssertLessThanOrEqual(++requestCount, 2);
+                 NSString *responseJSON = (requestCount == 1
+                   ? @"{\"error\": {\"message\": \"Server is busy\",\"code\": 1,\"error_subcode\": 463}}"
+                   : @"{\"error\": {\"message\": \"Server is busy\",\"code\": 2,\"error_subcode\": 463}}");
+                 NSData *data = [responseJSON dataUsingEncoding:NSUTF8StringEncoding];
 
-    return [OHHTTPStubsResponse responseWithData:data
-                                      statusCode:400
-                                         headers:nil];
-  }];
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-    //verify we get the second error instance.
+                 return [OHHTTPStubsResponse responseWithData:data
+                                                   statusCode:400
+                                                      headers:nil];
+               }];
+  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+    // verify we get the second error instance.
     XCTAssertEqual(2, [error.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] integerValue]);
     [expectation fulfill];
   }];
@@ -626,24 +622,24 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
 
   __block int requestCount = 0;
   XCTestExpectation *expectation = [self expectationWithDescription:@"completed request"];
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-    return YES;
-  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    XCTAssertLessThanOrEqual(++requestCount, 1);
-    NSString *responseJSON = (requestCount == 1 ?
-                              @"{\"error\": {\"message\": \"Server is busy\",\"code\": 1,\"error_subcode\": 463}}"
-                              : @"{\"error\": {\"message\": \"Server is busy\",\"code\": 2,\"error_subcode\": 463}}" );
-    NSData *data = [responseJSON dataUsingEncoding:NSUTF8StringEncoding];
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
+                 return YES;
+               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+                 XCTAssertLessThanOrEqual(++requestCount, 1);
+                 NSString *responseJSON = (requestCount == 1
+                   ? @"{\"error\": {\"message\": \"Server is busy\",\"code\": 1,\"error_subcode\": 463}}"
+                   : @"{\"error\": {\"message\": \"Server is busy\",\"code\": 2,\"error_subcode\": 463}}");
+                 NSData *data = [responseJSON dataUsingEncoding:NSUTF8StringEncoding];
 
-    return [OHHTTPStubsResponse responseWithData:data
-                                      statusCode:400
-                                         headers:nil];
-  }];
+                 return [OHHTTPStubsResponse responseWithData:data
+                                                   statusCode:400
+                                                      headers:nil];
+               }];
 
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""}];
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}];
 
   [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-    //verify we don't get the second error instance.
+    // verify we don't get the second error instance.
     XCTAssertEqual(1, [error.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] integerValue]);
     [expectation fulfill];
   }];
@@ -655,41 +651,5 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
   FBSDKSettings.graphErrorRecoveryEnabled = NO;
   [mockPiggybackManager stopMocking];
 }
-
-//- (void)testGraphRequestWithIDFATrackingEnabled
-//{
-//  id mockUtility  = [OCMockObject niceMockForClass:[FBSDKBasicUtility class]];
-//  [[[mockUtility stub] andReturn:nil] gzip:[OCMArg any]];
-//  [OCMStub(ClassMethod([_settingsMock isAdvertiserIDCollectionEnabled])) andReturnValue: OCMOCK_VALUE(YES)];
-//
-//  XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
-//
-//  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-//    NSString *body = [[NSString alloc] initWithData:request.OHHTTPStubs_HTTPBody encoding:NSUTF8StringEncoding];
-//    XCTAssertTrue([body containsString:_mockMobileAppInstallEventName]);
-//    XCTAssertTrue([body containsString:@"advertiser_tracking_enabled"]);
-//    XCTAssertTrue([body containsString:@"application_tracking_enabled"]);
-//    XCTAssertTrue([body containsString:@"advertiser_id"]);
-//    return NO;
-//  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-//    return [OHHTTPStubsResponse responseWithData:[NSData data]
-//                                      statusCode:200
-//                                         headers:nil];
-//  }];
-//  NSMutableDictionary<NSString *, id> *params = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:_mockMobileAppInstallEventName
-//                                                                                  shouldAccessAdvertisingID:YES];
-//  [[[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/activities", @"mockAppID"]
-//                                     parameters:params
-//                                    tokenString:nil
-//                                     HTTPMethod:FBSDKHTTPMethodPOST
-//                                          flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-//    [exp fulfill];
-//  }];
-//
-//  [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
-//    XCTAssertNil(error);
-//  }];
-//  [mockUtility stopMocking];
-//}
 
 @end

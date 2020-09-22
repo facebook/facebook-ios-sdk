@@ -16,9 +16,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <XCTest/XCTest.h>
-
 #import <OCMock/OCMock.h>
+#import <XCTest/XCTest.h>
 
 #import "FBSDKCrashShield.h"
 #import "FBSDKFeatureManager.h"
@@ -137,7 +136,7 @@
                                                            @"device_model" : @"iPad5,3",
                                                            @"device_os" : @"ios",
                                                            @"device_os_version" : @"13.1.3",
-                                                           }];
+  }];
   return crashLogs;
 }
 

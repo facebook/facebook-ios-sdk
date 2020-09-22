@@ -18,11 +18,11 @@
 
 #import "FBSDKDynamicFrameworkLoader.h"
 
-#import <dlfcn.h>
-
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <Security/Security.h>
 #import <StoreKit/StoreKit.h>
+
+#import <dlfcn.h>
 
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
@@ -31,11 +31,10 @@ static NSString *const g_frameworkPathTemplate = @"/System/Library/Frameworks/%@
 
 #pragma mark - Library and Symbol Loading
 
-struct FBSDKDFLLoadSymbolContext
-{
+struct FBSDKDFLLoadSymbolContext {
   void *(*library)(void); // function to retrieve the library handle (it's a function instead of void * so it can be staticlly bound)
-  const char *name;       // name of the symbol to retrieve
-  void **address;         // [out] address of the symbol in the process address space
+  const char *name; // name of the symbol to retrieve
+  void **address; // [out] address of the symbol in the process address space
 };
 
 // Retrieves the handle for a library for framework. The paths for each are constructed
@@ -60,18 +59,18 @@ static void *fbsdkdfl_load_framework_once(NSString *framework)
 
 // Implements the callback for dispatch_once() that loads the handle for specified framework name
 #define _fbsdkdfl_load_framework_once_impl_(FRAMEWORK) \
-  static void fbsdkdfl_load_##FRAMEWORK##_once(void *context) { \
+  static void fbsdkdfl_load_ ## FRAMEWORK ## _once(void *context) { \
     *(void **)context = fbsdkdfl_load_framework_once(@#FRAMEWORK); \
   }
 
 // Implements the framework/library retrieval function for the given name.
 // It calls the loading function once and caches the handle in a local static variable
 #define _fbsdkdfl_handle_get_impl_(LIBRARY) \
-  static void *fbsdkdfl_handle_get_##LIBRARY(void) { \
-    static void *LIBRARY##_handle; \
-    static dispatch_once_t LIBRARY##_once; \
-    dispatch_once_f(&LIBRARY##_once, &LIBRARY##_handle, &fbsdkdfl_load_##LIBRARY##_once); \
-    return LIBRARY##_handle;\
+  static void *fbsdkdfl_handle_get_ ## LIBRARY(void) { \
+    static void *LIBRARY ## _handle; \
+    static dispatch_once_t LIBRARY ## _once; \
+    dispatch_once_f(&LIBRARY ## _once, &LIBRARY ## _handle, &fbsdkdfl_load_ ## LIBRARY ## _once); \
+    return LIBRARY ## _handle; \
   }
 
 // Callback from dispatch_once() to load a specific symbol
@@ -84,13 +83,13 @@ static void fbsdkdfl_load_symbol_once(void *context)
 // The boilerplate code for loading a symbol from a given library once and caching it in a static local
 #define _fbsdkdfl_symbol_get(LIBRARY, PREFIX, SYMBOL, TYPE, VARIABLE_NAME) \
   static TYPE VARIABLE_NAME; \
-  static dispatch_once_t SYMBOL##_once; \
-  static struct FBSDKDFLLoadSymbolContext ctx = { .library = &fbsdkdfl_handle_get_##LIBRARY, .name = PREFIX #SYMBOL, .address = (void *)&VARIABLE_NAME }; \
-  dispatch_once_f(&SYMBOL##_once, &ctx, &fbsdkdfl_load_symbol_once)
+  static dispatch_once_t SYMBOL ## _once; \
+  static struct FBSDKDFLLoadSymbolContext ctx = { .library = &fbsdkdfl_handle_get_ ## LIBRARY, .name = PREFIX #SYMBOL, .address = (void *)&VARIABLE_NAME }; \
+  dispatch_once_f(&SYMBOL ## _once, &ctx, &fbsdkdfl_load_symbol_once)
 
 #define _fbsdkdfl_symbol_get_c(LIBRARY, SYMBOL) _fbsdkdfl_symbol_get(LIBRARY, "OBJC_CLASS_$_", SYMBOL, Class, c) // convenience symbol retrieval macro for getting an Objective-C class symbol and storing it in the local static c
-#define _fbsdkdfl_symbol_get_f(LIBRARY, SYMBOL) _fbsdkdfl_symbol_get(LIBRARY, "", SYMBOL, SYMBOL##_type, f)      // convenience symbol retrieval macro for getting a function pointer and storing it in the local static f
-#define _fbsdkdfl_symbol_get_k(LIBRARY, SYMBOL, TYPE) _fbsdkdfl_symbol_get(LIBRARY, "", SYMBOL, TYPE, k)         // convenience symbol retrieval macro for getting a pointer to a named variable and storing it in the local static k
+#define _fbsdkdfl_symbol_get_f(LIBRARY, SYMBOL) _fbsdkdfl_symbol_get(LIBRARY, "", SYMBOL, SYMBOL ## _type, f) // convenience symbol retrieval macro for getting a function pointer and storing it in the local static f
+#define _fbsdkdfl_symbol_get_k(LIBRARY, SYMBOL, TYPE) _fbsdkdfl_symbol_get(LIBRARY, "", SYMBOL, TYPE, k) // convenience symbol retrieval macro for getting a pointer to a named variable and storing it in the local static k
 
 // convenience macro for verifying a pointer to a named variable was successfully loaded and returns the value
 #define _fbsdkdfl_return_k(FRAMEWORK, SYMBOL) \
@@ -473,8 +472,8 @@ _fbsdkdfl_handle_get_impl_(CoreTelephony)
 
 Class fbsdkdfl_CTTelephonyNetworkInfoClass(void)
 {
-    _fbsdkdfl_CoreTelephonyLibrary_get_c(CTTelephonyNetworkInfo);
-    return c;
+  _fbsdkdfl_CoreTelephonyLibrary_get_c(CTTelephonyNetworkInfo);
+  return c;
 }
 
 #pragma mark - CoreImage
@@ -484,7 +483,6 @@ _fbsdkdfl_handle_get_impl_(CoreImage)
 
 #define _fbsdkdfl_CoreImage_get_c(SYMBOL) _fbsdkdfl_symbol_get_c(CoreImage, SYMBOL);
 #define _fbsdkdfl_CoreImage_get_and_return_NSString(SYMBOL) _fbsdkdfl_get_and_return_NSString(CoreImage, SYMBOL)
-
 
 Class fbsdkdfl_CIImageClass(void)
 {
@@ -541,8 +539,8 @@ _fbsdkdfl_handle_get_impl_(MobileCoreServices)
 #define _fbsdkdfl_MobileCoreServices_get_k(SYMBOL) _fbsdkdfl_symbol_get_k(MobileCoreServices, SYMBOL, CFStringRef *)
 
 #define _fbsdkdfl_MobileCoreServices_get_and_return_k(SYMBOL) \
-_fbsdkdfl_MobileCoreServices_get_k(SYMBOL); \
-_fbsdkdfl_return_k(MobileCoreServices, SYMBOL)
+  _fbsdkdfl_MobileCoreServices_get_k(SYMBOL); \
+  _fbsdkdfl_return_k(MobileCoreServices, SYMBOL)
 
 #define _fbsdkdfl_MobileCoreServices_get_f(SYMBOL) _fbsdkdfl_symbol_get_f(MobileCoreServices, SYMBOL)
 

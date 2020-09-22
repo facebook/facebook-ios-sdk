@@ -17,12 +17,10 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
-
 #import <OCMock/OCMock.h>
+#import <XCTest/XCTest.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-
-#import <XCTest/XCTest.h>
 
 #import "FBSDKBridgeAPIProtocolNativeV1.h"
 #import "FBSDKCoreKit+Internal.h"
@@ -52,9 +50,9 @@
 - (void)testRequestURL
 {
   NSDictionary *parameters = @{
-                               @"api_key_1": @"value1",
-                               @"api_key_2": @"value2",
-                               };
+    @"api_key_1" : @"value1",
+    @"api_key_2" : @"value2",
+  };
   NSError *error;
   NSURL *requestURL = [self.protocol requestURLWithActionID:self.actionID
                                                      scheme:self.scheme
@@ -77,17 +75,21 @@
   BOOL cancelled = YES;
   NSError *error;
 
-  XCTAssertNil([self.protocol responseParametersForActionID:self.actionID
-                                            queryParameters:nil
-                                                  cancelled:&cancelled
-                                                      error:&error]);
+  XCTAssertNil(
+    [self.protocol responseParametersForActionID:self.actionID
+                                 queryParameters:nil
+                                       cancelled:&cancelled
+                                           error:&error]
+  );
   XCTAssertFalse(cancelled);
   XCTAssertNil(error);
 
-  XCTAssertNil([self.protocol responseParametersForActionID:self.actionID
-                                            queryParameters:@{}
-                                                  cancelled:&cancelled
-                                                      error:&error]);
+  XCTAssertNil(
+    [self.protocol responseParametersForActionID:self.actionID
+                                 queryParameters:@{}
+                                       cancelled:&cancelled
+                                           error:&error]
+  );
   XCTAssertFalse(cancelled);
   XCTAssertNil(error);
 }
@@ -98,16 +100,19 @@
   NSError *error;
 
   NSDictionary *queryParameters = @{
-                                    @"bridge_args": @{
-                                        @"action_id": self.actionID,
-                                        },
-                                    @"method_results": @{},
-                                    };
+    @"bridge_args" : @{
+      @"action_id" : self.actionID,
+    },
+    @"method_results" : @{},
+  };
   queryParameters = [self _encodeQueryParameters:queryParameters];
-  XCTAssertEqualObjects([self.protocol responseParametersForActionID:self.actionID
-                                                     queryParameters:queryParameters
-                                                           cancelled:&cancelled
-                                                               error:&error], @{});
+  XCTAssertEqualObjects(
+    [self.protocol responseParametersForActionID:self.actionID
+                                 queryParameters:queryParameters
+                                       cancelled:&cancelled
+                                           error:&error],
+    @{}
+  );
   XCTAssertFalse(cancelled);
   XCTAssertNil(error);
 }
@@ -118,24 +123,27 @@
   NSError *error;
 
   NSDictionary *responseParameters = @{
-                                       @"result_key_1": @1,
-                                       @"result_key_2": @"two",
-                                       @"result_key_3": @{
-                                           @"result_key_4": @4,
-                                           @"result_key_5": @"five",
-                                           },
-                                       };
+    @"result_key_1" : @1,
+    @"result_key_2" : @"two",
+    @"result_key_3" : @{
+      @"result_key_4" : @4,
+      @"result_key_5" : @"five",
+    },
+  };
   NSDictionary *queryParameters = @{
-                                    @"bridge_args": @{
-                                        @"action_id": self.actionID,
-                                        },
-                                    @"method_results": responseParameters,
-                                    };
+    @"bridge_args" : @{
+      @"action_id" : self.actionID,
+    },
+    @"method_results" : responseParameters,
+  };
   queryParameters = [self _encodeQueryParameters:queryParameters];
-  XCTAssertEqualObjects([self.protocol responseParametersForActionID:self.actionID
-                                                     queryParameters:queryParameters
-                                                           cancelled:&cancelled
-                                                               error:&error], responseParameters);
+  XCTAssertEqualObjects(
+    [self.protocol responseParametersForActionID:self.actionID
+                                 queryParameters:queryParameters
+                                       cancelled:&cancelled
+                                           error:&error],
+    responseParameters
+  );
   XCTAssertFalse(cancelled);
   XCTAssertNil(error);
 }
@@ -146,24 +154,26 @@
   NSError *error;
 
   NSDictionary *responseParameters = @{
-                                       @"result_key_1": @1,
-                                       @"result_key_2": @"two",
-                                       @"result_key_3": @{
-                                           @"result_key_4": @4,
-                                           @"result_key_5": @"five",
-                                           },
-                                       };
+    @"result_key_1" : @1,
+    @"result_key_2" : @"two",
+    @"result_key_3" : @{
+      @"result_key_4" : @4,
+      @"result_key_5" : @"five",
+    },
+  };
   NSDictionary *queryParameters = @{
-                                    @"bridge_args": @{
-                                        @"action_id": [NSUUID UUID].UUIDString,
-                                        },
-                                    @"method_results": responseParameters,
-                                    };
+    @"bridge_args" : @{
+      @"action_id" : [NSUUID UUID].UUIDString,
+    },
+    @"method_results" : responseParameters,
+  };
   queryParameters = [self _encodeQueryParameters:queryParameters];
-  XCTAssertNil([self.protocol responseParametersForActionID:self.actionID
-                                            queryParameters:queryParameters
-                                                  cancelled:&cancelled
-                                                      error:&error]);
+  XCTAssertNil(
+    [self.protocol responseParametersForActionID:self.actionID
+                                 queryParameters:queryParameters
+                                       cancelled:&cancelled
+                                           error:&error]
+  );
   XCTAssertFalse(cancelled);
   XCTAssertNil(error);
 }
@@ -175,17 +185,19 @@
 
   NSString *bridgeArgs = @"this is an invalid bridge_args value";
   NSDictionary *queryParameters = @{
-                                    @"bridge_args": bridgeArgs,
-                                    @"method_results": @{
-                                        @"result_key_1": @1,
-                                        @"result_key_2": @"two",
-                                        },
-                                    };
+    @"bridge_args" : bridgeArgs,
+    @"method_results" : @{
+      @"result_key_1" : @1,
+      @"result_key_2" : @"two",
+    },
+  };
   queryParameters = [self _encodeQueryParameters:queryParameters];
-  XCTAssertNil([self.protocol responseParametersForActionID:self.actionID
-                                            queryParameters:queryParameters
-                                                  cancelled:&cancelled
-                                                      error:&error]);
+  XCTAssertNil(
+    [self.protocol responseParametersForActionID:self.actionID
+                                 queryParameters:queryParameters
+                                       cancelled:&cancelled
+                                           error:&error]
+  );
   XCTAssertFalse(cancelled);
   XCTAssertNotNil(error);
   XCTAssertEqual(error.code, FBSDKErrorInvalidArgument);
@@ -203,16 +215,18 @@
 
   NSString *methodResults = @"this is an invalid method_results value";
   NSDictionary *queryParameters = @{
-                                    @"bridge_args": @{
-                                        @"action_id": self.actionID,
-                                        },
-                                    @"method_results": methodResults,
-                                    };
+    @"bridge_args" : @{
+      @"action_id" : self.actionID,
+    },
+    @"method_results" : methodResults,
+  };
   queryParameters = [self _encodeQueryParameters:queryParameters];
-  XCTAssertNil([self.protocol responseParametersForActionID:self.actionID
-                                            queryParameters:queryParameters
-                                                  cancelled:&cancelled
-                                                      error:&error]);
+  XCTAssertNil(
+    [self.protocol responseParametersForActionID:self.actionID
+                                 queryParameters:queryParameters
+                                       cancelled:&cancelled
+                                           error:&error]
+  );
   XCTAssertFalse(cancelled);
   XCTAssertNotNil(error);
   XCTAssertEqual(error.code, FBSDKErrorInvalidArgument);
@@ -231,28 +245,30 @@
   NSInteger code = 42;
   NSString *domain = @"my custom error domain";
   NSDictionary *userInfo = @{
-                             @"key_1": @1,
-                             @"key_2": @"two",
-                             };
+    @"key_1" : @1,
+    @"key_2" : @"two",
+  };
   NSDictionary *queryParameters = @{
-                                    @"bridge_args": @{
-                                        @"action_id": self.actionID,
-                                        @"error": @{
-                                            @"code": @(code),
-                                            @"domain": domain,
-                                            @"user_info": userInfo,
-                                            },
-                                        },
-                                    @"method_results": @{
-                                        @"result_key_1": @1,
-                                        @"result_key_2": @"two",
-                                        },
-                                    };
+    @"bridge_args" : @{
+      @"action_id" : self.actionID,
+      @"error" : @{
+        @"code" : @(code),
+        @"domain" : domain,
+        @"user_info" : userInfo,
+      },
+    },
+    @"method_results" : @{
+      @"result_key_1" : @1,
+      @"result_key_2" : @"two",
+    },
+  };
   queryParameters = [self _encodeQueryParameters:queryParameters];
-  XCTAssertNil([self.protocol responseParametersForActionID:self.actionID
-                                            queryParameters:queryParameters
-                                                  cancelled:&cancelled
-                                                      error:&error]);
+  XCTAssertNil(
+    [self.protocol responseParametersForActionID:self.actionID
+                                 queryParameters:queryParameters
+                                       cancelled:&cancelled
+                                           error:&error]
+  );
   XCTAssertFalse(cancelled);
   XCTAssertNotNil(error);
   XCTAssertEqual(error.code, code);
@@ -266,18 +282,20 @@
   NSError *error;
 
   NSDictionary *queryParameters = @{
-                                    @"bridge_args": @{
-                                        @"action_id": self.actionID,
-                                        },
-                                    @"method_results": @{
-                                        @"completionGesture": @"cancel",
-                                        },
-                                    };
+    @"bridge_args" : @{
+      @"action_id" : self.actionID,
+    },
+    @"method_results" : @{
+      @"completionGesture" : @"cancel",
+    },
+  };
   queryParameters = [self _encodeQueryParameters:queryParameters];
-  XCTAssertNotNil([self.protocol responseParametersForActionID:self.actionID
-                                               queryParameters:queryParameters
-                                                     cancelled:&cancelled
-                                                         error:&error]);
+  XCTAssertNotNil(
+    [self.protocol responseParametersForActionID:self.actionID
+                                 queryParameters:queryParameters
+                                       cancelled:&cancelled
+                                           error:&error]
+  );
   XCTAssertTrue(cancelled);
   XCTAssertNil(error);
 }
@@ -289,10 +307,10 @@
                                                                                    dataLengthThreshold:NSUIntegerMax
                                                                                         includeAppIcon:NO];
   NSDictionary *parameters = @{
-                               @"api_key_1": @"value1",
-                               @"api_key_2": @"value2",
-                               @"data": [self _testData],
-                               };
+    @"api_key_1" : @"value1",
+    @"api_key_2" : @"value2",
+    @"data" : [self _testData],
+  };
   NSError *error;
   NSURL *requestURL = [protocol requestURLWithActionID:self.actionID
                                                 scheme:self.scheme
@@ -322,10 +340,10 @@
                                                                                    dataLengthThreshold:NSUIntegerMax
                                                                                         includeAppIcon:NO];
   NSDictionary *parameters = @{
-                               @"api_key_1": @"value1",
-                               @"api_key_2": @"value2",
-                               @"image": [self _testImage],
-                               };
+    @"api_key_1" : @"value1",
+    @"api_key_2" : @"value2",
+    @"image" : [self _testImage],
+  };
   NSError *error;
   NSURL *requestURL = [protocol requestURLWithActionID:self.actionID
                                                 scheme:self.scheme
@@ -360,10 +378,10 @@
                                                                                    dataLengthThreshold:0
                                                                                         includeAppIcon:NO];
   NSDictionary *parameters = @{
-                               @"api_key_1": @"value1",
-                               @"api_key_2": @"value2",
-                               @"data": data,
-                               };
+    @"api_key_1" : @"value1",
+    @"api_key_2" : @"value2",
+    @"data" : data,
+  };
   NSError *error;
   NSURL *requestURL = [protocol requestURLWithActionID:self.actionID
                                                 scheme:self.scheme
@@ -398,10 +416,10 @@
                                                                                    dataLengthThreshold:0
                                                                                         includeAppIcon:NO];
   NSDictionary *parameters = @{
-                               @"api_key_1": @"value1",
-                               @"api_key_2": @"value2",
-                               @"image": image,
-                               };
+    @"api_key_1" : @"value1",
+    @"api_key_2" : @"value2",
+    @"image" : image,
+  };
   NSError *error;
   NSURL *requestURL = [protocol requestURLWithActionID:self.actionID
                                                 scheme:self.scheme
@@ -444,10 +462,10 @@
 - (NSDictionary *)_testDataContainerWithPasteboardName:(NSString *)pasteboardName tag:(NSString *)tag
 {
   return @{
-           @"isPasteboard": @YES,
-           @"tag": tag,
-           @"fbAppBridgeType_jsonReadyValue": pasteboardName,
-           };
+    @"isPasteboard" : @YES,
+    @"tag" : tag,
+    @"fbAppBridgeType_jsonReadyValue" : pasteboardName,
+  };
 }
 
 - (NSDictionary *)_testDataSerialized:(NSData *)data
@@ -459,10 +477,10 @@
 {
   NSString *string = [FBSDKBase64 encodeData:data];
   return @{
-           @"isBase64": @YES,
-           @"tag": tag,
-           @"fbAppBridgeType_jsonReadyValue": string,
-           };
+    @"isBase64" : @YES,
+    @"tag" : tag,
+    @"fbAppBridgeType_jsonReadyValue" : string,
+  };
 }
 
 - (NSData *)_testDataWithImage:(UIImage *)image

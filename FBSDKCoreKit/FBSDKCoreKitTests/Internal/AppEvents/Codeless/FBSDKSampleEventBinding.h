@@ -19,5 +19,5 @@
 #import <Foundation/Foundation.h>
 
 @interface FBSDKSampleEventBinding : NSObject
-+(NSDictionary*)getSampleDictionary;
++ (NSDictionary *)getSampleDictionary;
 @end

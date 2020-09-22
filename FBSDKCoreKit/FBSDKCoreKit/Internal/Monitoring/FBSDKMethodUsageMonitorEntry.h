@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
  `FBSDKMethodUsageMonitor` to record methods. That will
  create and persist an entry.
  */
-@interface FBSDKMethodUsageMonitorEntry : NSObject<FBSDKMonitorEntry>
+@interface FBSDKMethodUsageMonitorEntry : NSObject <FBSDKMonitorEntry>
 
 + (instancetype)new NS_UNAVAILABLE;
 + (instancetype)entryFromClass:(Class)clazz withMethod:(SEL)method;

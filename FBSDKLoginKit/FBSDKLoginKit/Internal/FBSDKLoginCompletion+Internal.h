@@ -20,7 +20,7 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKLoginCompletion.h"
+ #import "FBSDKLoginCompletion.h"
 
 @interface FBSDKLoginCompletionParameters ()
 
@@ -42,6 +42,14 @@
 @property (nonatomic, copy) NSString *challenge;
 
 @property (nonatomic, copy) NSString *graphDomain;
+
+@end
+
+@interface FBSDKLoginURLCompleter ()
+
+@property (nonatomic, strong) FBSDKLoginCompletionParameters *parameters;
+
+- (void)exchangeNonceForTokenWithHandler:(FBSDKLoginCompletionParametersBlock)handler;
 
 @end
 

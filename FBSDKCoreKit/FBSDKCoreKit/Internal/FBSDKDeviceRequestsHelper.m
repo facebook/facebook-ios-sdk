@@ -18,9 +18,9 @@
 
 #import "FBSDKDeviceRequestsHelper.h"
 
-#import <sys/utsname.h>
-
 #import <UIKit/UIKit.h>
+
+#import <sys/utsname.h>
 
 #import "FBSDKCoreKit+Internal.h"
 
@@ -28,9 +28,9 @@
 #define FBSDK_DEVICE_INFO_MODEL @"model"
 #define FBSDK_HEADER @"fbsdk"
 #if !TARGET_OS_TV
-#define FBSDK_FLAVOR @"ios"
+ #define FBSDK_FLAVOR @"ios"
 #else
-#define FBSDK_FLAVOR @"tvos"
+ #define FBSDK_FLAVOR @"tvos"
 #endif
 #define FBSDK_SERVICE_TYPE @"_fb._tcp."
 
@@ -40,7 +40,8 @@ static NSMapTable *g_mdnsAdvertisementServices;
 
 #pragma mark - Class Methods
 
-+ (void)initialize {
++ (void)initialize
+{
   // We use weak to strong in order to retain the advertisement services
   // without having to pass them back to the delegate that started them
   // Note that in case the delegate is destroyed before it had a chance to
@@ -54,37 +55,37 @@ static NSMapTable *g_mdnsAdvertisementServices;
   struct utsname systemInfo;
   uname(&systemInfo);
   NSDictionary<NSString *, NSString *> *deviceInfo = @{
-                               FBSDK_DEVICE_INFO_DEVICE: @(systemInfo.machine),
-                               FBSDK_DEVICE_INFO_MODEL: [UIDevice currentDevice].model,
-                               };
+    FBSDK_DEVICE_INFO_DEVICE : @(systemInfo.machine),
+    FBSDK_DEVICE_INFO_MODEL : [UIDevice currentDevice].model,
+  };
   NSError *err;
   NSData *jsonDeviceInfo = [FBSDKTypeUtility dataWithJSONObject:deviceInfo
-                                                           options:0
-                                                             error:&err];
+                                                        options:0
+                                                          error:&err];
 
   return [[NSString alloc] initWithData:jsonDeviceInfo encoding:NSUTF8StringEncoding];
 }
 
 + (BOOL)startAdvertisementService:(NSString *)loginCode withDelegate:(id<NSNetServiceDelegate>)delegate
 {
-   static NSString *sdkVersion = nil;
+  static NSString *sdkVersion = nil;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-     // Dots in the version will mess up the bonjour DNS record parsing
+    // Dots in the version will mess up the bonjour DNS record parsing
     sdkVersion = [[FBSDKSettings sdkVersion] stringByReplacingOccurrencesOfString:@"." withString:@"|"];
-    if (sdkVersion.length > 10 ||
-        ![[NSCharacterSet decimalDigitCharacterSet] characterIsMember:[sdkVersion characterAtIndex:0]]) {
+    if (sdkVersion.length > 10
+        || ![[NSCharacterSet decimalDigitCharacterSet] characterIsMember:[sdkVersion characterAtIndex:0]]) {
       sdkVersion = @"dev";
     }
   });
   NSString *serviceName = [NSString stringWithFormat:@"%@_%@_%@",
-                                                     FBSDK_HEADER,
-                                                     [NSString stringWithFormat:@"%@-%@",
-                                                                                FBSDK_FLAVOR,
-                                                                                sdkVersion
-                                                     ],
-                                                     loginCode
-                          ];
+                           FBSDK_HEADER,
+                           [NSString stringWithFormat:@"%@-%@",
+                            FBSDK_FLAVOR,
+                            sdkVersion
+                           ],
+                           loginCode
+  ];
   if (serviceName.length > 60) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:@"serviceName exceeded 60 characters"];
   }

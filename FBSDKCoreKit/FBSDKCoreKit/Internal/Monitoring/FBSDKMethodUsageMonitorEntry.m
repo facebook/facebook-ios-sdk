@@ -18,10 +18,11 @@
 
 #import "FBSDKMethodUsageMonitorEntry.h"
 
-static NSString * const FBSDKMethodUsageNameKey = @"event_name";
-static NSString * const FBSDKMethodUsageClassKey = @"method_usage_class";
+static NSString *const FBSDKMethodUsageNameKey = @"event_name";
+static NSString *const FBSDKMethodUsageClassKey = @"method_usage_class";
 
-@implementation FBSDKMethodUsageMonitorEntry {
+@implementation FBSDKMethodUsageMonitorEntry
+{
   SEL _method;
   Class _class;
   NSString *_name;
@@ -66,7 +67,7 @@ static NSString * const FBSDKMethodUsageClassKey = @"method_usage_class";
 
 - (NSDictionary *)dictionaryRepresentation
 {
-  return @{FBSDKMethodUsageNameKey: [self name]};
+  return @{FBSDKMethodUsageNameKey : [self name]};
 }
 
 @end

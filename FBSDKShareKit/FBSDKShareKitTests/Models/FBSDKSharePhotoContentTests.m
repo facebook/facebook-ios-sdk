@@ -20,7 +20,7 @@
 #import <XCTest/XCTest.h>
 
 #ifdef BUCK
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #else
 @import FBSDKCoreKit;
 #endif
@@ -65,9 +65,9 @@
 {
   FBSDKSharePhotoContent *content = [[FBSDKSharePhotoContent alloc] init];
   NSArray *photos = @[
-                      [FBSDKShareModelTestUtility photoWithImageURL],
-                      [FBSDKShareModelTestUtility photoImageURL],
-                      ];
+    [FBSDKShareModelTestUtility photoWithImageURL],
+    [FBSDKShareModelTestUtility photoImageURL],
+  ];
   XCTAssertThrowsSpecificNamed([content setPhotos:photos], NSException, NSInvalidArgumentException);
 }
 

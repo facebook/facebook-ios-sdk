@@ -16,9 +16,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <XCTest/XCTest.h>
-
 #import <OCMock/OCMock.h>
+#import <XCTest/XCTest.h>
 
 #import <FBSDKGamingServicesKit/FBSDKGamingServicesKit.h>
 
@@ -66,10 +65,10 @@
   __block BOOL actioned = false;
   [FBSDKGamingVideoUploader
    uploadVideoWithConfiguration:_mockConfig
-   andResultCompletionHandler:^(BOOL success, id result, NSError * _Nullable error) {
-    XCTAssert(error.code == FBSDKErrorAccessTokenRequired, "Expected error requiring a valid access token");
-    actioned = true;
-  }];
+   andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
+     XCTAssert(error.code == FBSDKErrorAccessTokenRequired, "Expected error requiring a valid access token");
+     actioned = true;
+   }];
 
   XCTAssertTrue(actioned);
 }
@@ -81,10 +80,10 @@
   __block BOOL actioned = false;
   [FBSDKGamingVideoUploader
    uploadVideoWithConfiguration:nilVideoConfig
-   andResultCompletionHandler:^(BOOL success, id result, NSError * _Nullable error) {
-    XCTAssert(error.code == FBSDKErrorInvalidArgument, "Expected error requiring a non nil video url");
-    actioned = true;
-  }];
+   andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
+     XCTAssert(error.code == FBSDKErrorInvalidArgument, "Expected error requiring a non nil video url");
+     actioned = true;
+   }];
 
   XCTAssertTrue(actioned);
 }
@@ -97,10 +96,10 @@
   __block BOOL actioned = false;
   [FBSDKGamingVideoUploader
    uploadVideoWithConfiguration:badVideoConfig
-   andResultCompletionHandler:^(BOOL success, id result, NSError * _Nullable error) {
-    XCTAssert(error.code == FBSDKErrorInvalidArgument, "Expected error requiring a non nil video url");
-    actioned = true;
-  }];
+   andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
+     XCTAssert(error.code == FBSDKErrorInvalidArgument, "Expected error requiring a non nil video url");
+     actioned = true;
+   }];
 
   XCTAssertTrue(actioned);
 }
@@ -117,10 +116,10 @@
   __block BOOL actioned = false;
   [FBSDKGamingVideoUploader
    uploadVideoWithConfiguration:_mockConfig
-   andResultCompletionHandler:^(BOOL success, id result, NSError * _Nullable error) {
-    XCTAssert(error.code == expectedError.code);
-    actioned = true;
-  }];
+   andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
+     XCTAssert(error.code == expectedError.code);
+     actioned = true;
+   }];
 
   [delegate videoUploader:mockUploader didFailWithError:expectedError];
 
@@ -137,15 +136,15 @@
   __block BOOL actioned = false;
   [FBSDKGamingVideoUploader
    uploadVideoWithConfiguration:_mockConfig
-   andResultCompletionHandler:^(BOOL success, id result, NSError * _Nullable error) {
-    XCTAssert(error.code == FBSDKErrorUnknown);
-    actioned = true;
-  }];
+   andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
+     XCTAssert(error.code == FBSDKErrorUnknown);
+     actioned = true;
+   }];
 
   [delegate
    videoUploader:mockUploader
    didCompleteWithResults:@{
-     @"success": @(false)
+     @"success" : @(false)
    }];
 
   XCTAssertTrue(actioned);
@@ -161,15 +160,15 @@
   __block BOOL actioned = false;
   [FBSDKGamingVideoUploader
    uploadVideoWithConfiguration:_mockConfig
-   andResultCompletionHandler:^(BOOL success, id result, NSError * _Nullable error) {
-    XCTAssertTrue(success);
-    actioned = true;
-  }];
+   andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
+     XCTAssertTrue(success);
+     actioned = true;
+   }];
 
   [delegate
    videoUploader:mockUploader
    didCompleteWithResults:@{
-     @"success": @(true)
+     @"success" : @(true)
    }];
 
   XCTAssertTrue(actioned);
@@ -184,7 +183,7 @@
 
   __block BOOL actionedFirst = false;
   __block void (^ProgressCheck)(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) =
-  ^void(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
+  ^void (int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
     XCTAssertEqual(bytesSent, 0);
     XCTAssertEqual(totalBytesSent, 0);
     XCTAssertEqual(totalBytesExpectedToSend, 999);
@@ -193,10 +192,10 @@
 
   [FBSDKGamingVideoUploader
    uploadVideoWithConfiguration:_mockConfig
-   completionHandler:^(BOOL success, id result, NSError * _Nullable error) {}
+   completionHandler:^(BOOL success, id result, NSError *_Nullable error) {}
    andProgressHandler:^(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
-    ProgressCheck(bytesSent, totalBytesSent, totalBytesExpectedToSend);
-  }];
+     ProgressCheck(bytesSent, totalBytesSent, totalBytesExpectedToSend);
+   }];
 
   // Send some bytes
   [delegate
@@ -206,7 +205,7 @@
 
   __block BOOL actionedSecond = false;
   ProgressCheck =
-  ^void(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
+  ^void (int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
     XCTAssertEqual(bytesSent, 500);
     XCTAssertEqual(totalBytesSent, 500);
     XCTAssertEqual(totalBytesExpectedToSend, 999);
@@ -215,24 +214,24 @@
 
   // Send some more bytes
   [delegate
-  videoChunkDataForVideoUploader:mockUploader
-  startOffset:500
-  endOffset:999];
+   videoChunkDataForVideoUploader:mockUploader
+   startOffset:500
+   endOffset:999];
 
   __block BOOL actionedThird = false;
   ProgressCheck =
-   ^void(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
-     XCTAssertEqual(bytesSent, 499);
-     XCTAssertEqual(totalBytesSent, 999);
-     XCTAssertEqual(totalBytesExpectedToSend, 999);
-     actionedThird = true;
-   };
+  ^void (int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
+    XCTAssertEqual(bytesSent, 499);
+    XCTAssertEqual(totalBytesSent, 999);
+    XCTAssertEqual(totalBytesExpectedToSend, 999);
+    actionedThird = true;
+  };
 
   // Finish upload
   [delegate
    videoUploader:mockUploader
    didCompleteWithResults:@{
-     @"success": @(true)
+     @"success" : @(true)
    }];
 
   XCTAssertTrue(actionedFirst);
@@ -258,10 +257,12 @@
   id mockVideoUploader = OCMClassMock([FBSDKVideoUploader class]);
   OCMStub([mockVideoUploader alloc]).andReturn(mockVideoUploader);
 
-  OCMStub([mockVideoUploader initWithVideoName:[OCMArg any] videoSize:999 parameters:[OCMArg any] delegate:[OCMArg checkWithBlock:^BOOL(id obj) {
-    captureHandler(obj);
-    return true;
-  }]])
+  OCMStub(
+    [mockVideoUploader initWithVideoName:[OCMArg any] videoSize:999 parameters:[OCMArg any] delegate:[OCMArg checkWithBlock:^BOOL (id obj) {
+      captureHandler(obj);
+      return true;
+    }]]
+  )
   .andReturn(mockVideoUploader);
 
   return mockVideoUploader;

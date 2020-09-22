@@ -40,6 +40,18 @@ typedef NS_ENUM(NSUInteger, FBSDKProfilePictureMode)
     The original picture's aspect ratio will be used for the source image in the view.
    */
   FBSDKProfilePictureModeNormal,
+  /**
+    The original picture's aspect ratio will be used for the source image in the view.
+   */
+  FBSDKProfilePictureModeAlbum,
+  /**
+    The original picture's aspect ratio will be used for the source image in the view.
+   */
+  FBSDKProfilePictureModeSmall,
+  /**
+    The original picture's aspect ratio will be used for the source image in the view.
+   */
+  FBSDKProfilePictureModeLarge,
 } NS_SWIFT_NAME(Profile.PictureMode);
 
 /**
