@@ -293,6 +293,7 @@
   OCMStub([_partialDelegateMock applicationDidBecomeActive:UIApplication.sharedApplication]);
   [self stubCheckingFeatures];
   [self stubDefaultMeasurementEventListenerWith:[FBSDKMeasurementEventListener new]];
+  [self stubCachedProfileWith:nil];
   OCMStub([self.timeSpentDataClassMock setSourceApplication:OCMArg.any openURL:OCMArg.any]);
   OCMStub([self.timeSpentDataClassMock registerAutoResetSourceApplication]);
   OCMStub([self.internalUtilityClassMock validateFacebookReservedURLSchemes]);

@@ -36,6 +36,7 @@
 #import "FBSDKSettings.h"
 #import "FBSDKTestCase.h"
 #import "FBSDKUtility.h"
+#import "SampleAccessToken.h"
 #import "UserDefaultsSpy.h"
 
 static NSString *const _mockAppID = @"mockAppID";
@@ -101,7 +102,6 @@ static NSString *const _mockUserID = @"mockUserID";
   NSDictionary<NSString *, id> *_mockPayload;
   double _mockPurchaseAmount;
   NSString *_mockCurrency;
-  id _mockAppEventsUtility;
 }
 @end
 
@@ -121,15 +121,17 @@ static NSString *const _mockUserID = @"mockUserID";
   [FBSDKAppEvents setLoggingOverrideAppID:_mockAppID];
 
   self.appEventsMock = OCMPartialMock([FBSDKAppEvents singleton]);
-  // Mock FBSDKAppEventsUtility
-  _mockAppEventsUtility = OCMClassMock([FBSDKAppEventsUtility class]);
-  OCMStub([_mockAppEventsUtility shouldDropAppEvent]).andReturn(NO);
-  OCMStub([_mockAppEventsUtility advertisingTrackingStatus]).andReturn(FBSDKAdvertisingTrackingAllowed);
+
+  // Mock FBSDKAppEventsUtility methods
+  [self stubAppEventsUtilityShouldDropAppEventWith:NO];
 }
 
 - (void)tearDown
 {
+  [super tearDown];
+
   [OHHTTPStubs removeAllStubs];
+  [FBSDKAppEvents resetSingleton];
 }
 
 - (void)testLogPurchaseFlush
@@ -408,34 +410,121 @@ static NSString *const _mockUserID = @"mockUserID";
   OCMVerifyAll(self.appEventsMock);
 }
 
-- (void)testRequestForCustomAudienceThirdPartyIDWithAccessToken
+- (void)testRequestForCustomAudienceThirdPartyIDWithTrackingDisallowed
 {
-  id mockAccessToken = [OCMockObject niceMockForClass:[FBSDKAccessToken class]];
-  NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:mockAccessToken];
-  NSString *graphPath = [NSString stringWithFormat:@"%@/custom_audience_third_party_id", _mockAppID];
-  FBSDKGraphRequest *expectedRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
-                                                                         parameters:@{}
-                                                                        tokenString:tokenString
-                                                                         HTTPMethod:nil
-                                                                              flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
+  [self stubUserDefaultsWith:[UserDefaultsSpy new]];
+  [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingDisallowed];
 
-  // without access token
-  [[_mockAppEventsUtility expect] advertiserID];
+  XCTAssertNil(
+    [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:SampleAccessToken.validToken],
+    "Should not create a request for third party id if tracking is disallowed even if there is a current access token"
+  );
+  XCTAssertNil(
+    [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:nil],
+    "Should not create a request for third party id if tracking is disallowed"
+  );
+}
+
+- (void)testRequestForCustomAudienceThirdPartyIDWithLimitedEventAndDataUsage
+{
+  [self stubSettingsShouldLimitEventAndDataUsageWith:YES];
+  [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingAllowed];
+
+  XCTAssertNil(
+    [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:SampleAccessToken.validToken],
+    "Should not create a request for third party id if event and data usage is limited even if there is a current access token"
+  );
+  XCTAssertNil(
+    [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:nil],
+    "Should not create a request for third party id if event and data usage is limited"
+  );
+}
+
+- (void)testRequestForCustomAudienceThirdPartyIDWithoutAccessTokenWithoutAdvertiserID
+{
+  [self stubSettingsShouldLimitEventAndDataUsageWith:NO];
+  [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingAllowed];
+  [self stubAppEventsUtilityAdvertiserIDWith:nil];
+
+  XCTAssertNil(
+    [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:nil],
+    "Should not create a request for third party id if there is no access token or advertiser id"
+  );
+}
+
+- (void)testRequestForCustomAudienceThirdPartyIDWithoutAccessTokenWithAdvertiserID
+{
+  NSString *advertiserID = @"abc123";
+  [self stubSettingsShouldLimitEventAndDataUsageWith:NO];
+  [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingAllowed];
+  [self stubAppEventsUtilityAdvertiserIDWith:advertiserID];
 
   FBSDKGraphRequest *request = [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:nil];
+  XCTAssertEqualObjects(
+    request.parameters,
+    @{ @"udid" : advertiserID },
+    "Should include the udid in the request when there is no access token available"
+  );
+}
 
-  [_mockAppEventsUtility verify];
+- (void)testRequestForCustomAudienceThirdPartyIDWithAccessTokenWithoutAdvertiserID
+{
+  FBSDKAccessToken *token = SampleAccessToken.validToken;
+  [self stubSettingsShouldLimitEventAndDataUsageWith:NO];
+  [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingAllowed];
+  [self stubAppEventsUtilityAdvertiserIDWith:nil];
+  [self stubAppEventsUtilityTokenStringToUseForTokenWith:token.tokenString];
 
-  XCTAssertNil(request);
+  FBSDKGraphRequest *request = [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:token];
+  XCTAssertEqualObjects(
+    request.tokenString,
+    token.tokenString,
+    "Should include the access token in the request when there is one available"
+  );
+  XCTAssertNil(
+    request.parameters[@"udid"],
+    "Should not include the udid in the request when there is none available"
+  );
+}
 
-  // with access token
-  [[_mockAppEventsUtility reject] advertiserID];
+- (void)testRequestForCustomAudienceThirdPartyIDWithAccessTokenWithAdvertiserID
+{
+  NSString *expectedGraphPath = [NSString stringWithFormat:@"%@/custom_audience_third_party_id", _mockAppID];
 
-  request = [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:mockAccessToken];
+  FBSDKAccessToken *token = SampleAccessToken.validToken;
+  NSString *advertiserID = @"abc123";
 
-  XCTAssertEqualObjects(expectedRequest.graphPath, request.graphPath);
-  XCTAssertEqualObjects(expectedRequest.HTTPMethod, request.HTTPMethod);
-  XCTAssertEqualObjects(expectedRequest.parameters, expectedRequest.parameters);
+  [self stubSettingsShouldLimitEventAndDataUsageWith:NO];
+  [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingAllowed];
+  [self stubAppEventsUtilityTokenStringToUseForTokenWith:token.tokenString];
+  [self stubAppEventsUtilityAdvertiserIDWith:advertiserID];
+
+  FBSDKGraphRequest *request = [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:token];
+
+  XCTAssertEqualObjects(
+    request.tokenString,
+    token.tokenString,
+    "Should include the access token in the request when there is one available"
+  );
+  XCTAssertNil(
+    request.parameters[@"udid"],
+    "Should not include the udid in the request when there is an access token available"
+  );
+  XCTAssertEqualObjects(
+    request.graphPath,
+    expectedGraphPath,
+    "Should use the expected graph path for the request"
+  );
+  XCTAssertEqual(
+    request.HTTPMethod,
+    FBSDKHTTPMethodGET,
+    "Should use the expected http method for the request"
+  );
+  XCTAssertEqual(
+    request.flags,
+    FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery,
+    "Should use the expected flags for the request"
+  );
 }
 
 - (void)testPublishInstall
@@ -453,6 +542,7 @@ static NSString *const _mockUserID = @"mockUserID";
 {
   [self stubAppID:@"mockAppID"];
   [self stubUserDefaultsWith:[UserDefaultsSpy new]];
+  [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingAllowed];
 
   id graphRequestMock = OCMClassMock([FBSDKGraphRequest class]);
   OCMStub([graphRequestMock alloc]).andReturn(graphRequestMock);
@@ -467,6 +557,9 @@ static NSString *const _mockUserID = @"mockUserID";
   [self.appEventsMock publishATE];
 
   OCMVerify([graphRequestMock startWithCompletionHandler:[OCMArg any]]);
+
+  [graphRequestMock stopMocking];
+  graphRequestMock = nil;
 }
 
 - (void)testPublishATEWithPingLessThan24Hours
@@ -475,6 +568,7 @@ static NSString *const _mockUserID = @"mockUserID";
   UserDefaultsSpy *userDefault = [UserDefaultsSpy new];
   [userDefault setObject:[NSDate dateWithTimeIntervalSinceNow:-12 * 60 * 60] forKey:[NSString stringWithFormat:@"com.facebook.sdk:lastATEPing%@", @"mockAppID"]];
   [self stubUserDefaultsWith:userDefault];
+  [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingAllowed];
 
   id graphRequestMock = OCMClassMock([FBSDKGraphRequest class]);
   OCMStub([graphRequestMock alloc]).andReturn(graphRequestMock);
@@ -489,19 +583,22 @@ static NSString *const _mockUserID = @"mockUserID";
   [self.appEventsMock publishATE];
 
   OCMReject([graphRequestMock startWithCompletionHandler:[OCMArg any]]);
+
+  [graphRequestMock stopMocking];
+  graphRequestMock = nil;
 }
 
 - (void)testPublishATEWithVerifyingParams
 {
   [self stubAppID:@"mockAppID"];
   [self stubUserDefaultsWith:[UserDefaultsSpy new]];
+  [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingAllowed];
 
-  id mockFBSDKAppEventsUtility = OCMClassMock([FBSDKAppEventsUtility class]);
   [self.appEventsMock publishATE];
 
   OCMReject(
-    [mockFBSDKAppEventsUtility activityParametersDictionaryForEvent:[OCMArg any]
-                                          shouldAccessAdvertisingID:[OCMArg any]]
+    [self.appEventsUtilityClassMock activityParametersDictionaryForEvent:[OCMArg any]
+                                               shouldAccessAdvertisingID:[OCMArg any]]
   );
 }
 
@@ -524,6 +621,9 @@ static NSString *const _mockUserID = @"mockUserID";
                            accessToken:nil];
 
   [self.appEventStatesMock verify];
+
+  [mockGateKeeperManager stopMocking];
+  mockGateKeeperManager = nil;
 }
 
 - (void)testAppEventsKillSwitchEnabled
@@ -541,6 +641,9 @@ static NSString *const _mockUserID = @"mockUserID";
                             parameters:nil
                     isImplicitlyLogged:NO
                            accessToken:nil];
+
+  [mockGateKeeperManager stopMocking];
+  mockGateKeeperManager = nil;
 }
 
 - (void)testGraphRequestBannedWithAutoInitDisabled
@@ -649,12 +752,14 @@ static NSString *const _mockUserID = @"mockUserID";
   ).andForwardToRealObject();
   [FBSDKAppEvents logInternalEvent:_mockEventName parameters:@{} isImplicitlyLogged:NO accessToken:mockAccessToken];
   OCMVerifyAll(self.appEventsMock);
+
+  [mockAccessToken stopMocking];
+  mockAccessToken = nil;
 }
 
 - (void)testInstanceLogEventWhenAutoLogAppEventsDisabled
 {
-  id mockSetting = OCMClassMock([FBSDKSettings class]);
-  OCMStub([mockSetting isAutoLogAppEventsEnabled]).andReturn(NO);
+  [self stubIsAutoLogAppEventsEnabled:NO];
   OCMReject(
     [self.appEventsMock instanceLogEvent:_mockEventName
                               valueToSum:@(_mockPurchaseAmount)
@@ -668,8 +773,7 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testInstanceLogEventWhenAutoLogAppEventsEnabled
 {
-  id mockSetting = OCMClassMock([FBSDKSettings class]);
-  OCMStub([mockSetting isAutoLogAppEventsEnabled]).andReturn(YES);
+  [self stubIsAutoLogAppEventsEnabled:YES];
   OCMExpect(
     [self.appEventsMock instanceLogEvent:_mockEventName
                               valueToSum:@(_mockPurchaseAmount)

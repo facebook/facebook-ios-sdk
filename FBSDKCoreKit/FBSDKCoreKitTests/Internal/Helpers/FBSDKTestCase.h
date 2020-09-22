@@ -63,6 +63,9 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for mocking `FBSDKAppEventState` between tests
 @property (nullable, assign) id appEventStatesMock;
 
+/// Used for sharing a `FBSDKAppEventsUtility` class  mock between tests
+@property (nullable, nonatomic, assign) id appEventsUtilityClassMock;
+
 /// Used for sharing an `FBSDKApplicationDelegate` class mock between tests
 @property (nullable, assign) id fbApplicationDelegateClassMock;
 
@@ -101,9 +104,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 
 /// Used for sharing a `FBSDKInternalUtility` class mock between tests
 @property (nullable, nonatomic, assign) id internalUtilityClassMock;
-
-/// Used for sharing a `FBSDKAppEventsUtility` class  mock between tests
-@property (nullable, nonatomic, assign) id appEventsUtilityClassMock;
 
 /// Used for sharing a `FBSDKSKAdNetworkReporter` class mock between tests
 @property (nullable, nonatomic, assign) id adNetworkReporterClassMock;
@@ -180,6 +180,18 @@ Also, to get a better understanding of mocking, please read the documentation at
 
 /// Stubs `FBSDKSKAdNetworkReporter._loadConfigurationWithBlock`
 - (void)stubLoadingAdNetworkReporterConfiguration;
+
+/// Stubs `FBSDKAppEventsUtility.shouldDropAppEvent` with the provided value
+- (void)stubAppEventsUtilityShouldDropAppEventWith:(BOOL)shouldDropEvent;
+
+/// Stubs `FBSDKSettings.shouldLimitEventAndDataUsage` with the provided value
+- (void)stubSettingsShouldLimitEventAndDataUsageWith:(BOOL)shouldLimit;
+
+/// Stubs `FBSDKAppEventsUtility.advertiserID` with the provided value
+- (void)stubAppEventsUtilityAdvertiserIDWith:(nullable NSString *)identifier;
+
+/// Stubs `FBSDKAppEventsUtility.tokenStringToUseFor:` and returns the provided string
+- (void)stubAppEventsUtilityTokenStringToUseForTokenWith:(NSString *)tokenString;
 
 @end
 

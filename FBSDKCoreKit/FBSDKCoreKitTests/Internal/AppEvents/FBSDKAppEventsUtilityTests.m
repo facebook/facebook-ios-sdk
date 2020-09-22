@@ -198,7 +198,10 @@ static NSString *const FBSDKSettingsInstallTimestamp = @"com.facebook.sdk:FBSDKS
   OCMStub([mockAppEventsConfigurationManager cachedAppEventsConfiguration]).andReturn(mockAppEventsConfiguration);
 
   if (@available(iOS 14.0, *)) {
-    XCTAssertNotNil([FBSDKAppEventsUtility advertiserID]);
+    XCTAssertNotNil(
+      [FBSDKAppEventsUtility advertiserID],
+      "Advertiser id should not be nil when collection is enabled"
+    );
   }
 }
 

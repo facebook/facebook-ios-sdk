@@ -60,6 +60,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self setUpSettingsMock];
   [self setUpServerConfigurationManagerMock];
   [self setUpAppEventsMock];
+  [self setUpAppEventsUtilityMock];
   [self setUpFBApplicationDelegateMock];
   [self setUpGateKeeperManagerMock];
   [self setUpFeatureManagerMock];
@@ -71,7 +72,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self setUpMeasurementEventListenerMock];
   [self setUpTimeSpendDataMock];
   [self setUpInternalUtilityMock];
-  [self setUpAppEventsUtilityMock];
   [self setUpAdNetworkReporterMock];
 }
 
@@ -84,6 +84,9 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   [_appEventStatesMock stopMocking];
   _appEventStatesMock = nil;
+
+  [_appEventsUtilityClassMock stopMocking];
+  _appEventsUtilityClassMock = nil;
 
   [_fbApplicationDelegateClassMock stopMocking];
   _fbApplicationDelegateClassMock = nil;
@@ -127,9 +130,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [_internalUtilityClassMock stopMocking];
   _internalUtilityClassMock = nil;
 
-  [_appEventsUtilityClassMock stopMocking];
-  _appEventsUtilityClassMock = nil;
-
   [_adNetworkReporterClassMock stopMocking];
   _adNetworkReporterClassMock = nil;
 }
@@ -166,6 +166,11 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   _appEventStatesMock = OCMClassMock([FBSDKAppEventsState class]);
   OCMStub([_appEventStatesMock alloc]).andReturn(_appEventStatesMock);
   OCMStub([_appEventStatesMock initWithToken:[OCMArg any] appID:[OCMArg any]]).andReturn(_appEventStatesMock);
+}
+
+- (void)setUpAppEventsUtilityMock
+{
+  _appEventsUtilityClassMock = OCMStrictClassMock(FBSDKAppEventsUtility.class);
 }
 
 - (void)setUpNSBundleMock
@@ -213,11 +218,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)setUpInternalUtilityMock
 {
   self.internalUtilityClassMock = OCMStrictClassMock(FBSDKInternalUtility.class);
-}
-
-- (void)setUpAppEventsUtilityMock
-{
-  self.appEventsUtilityClassMock = OCMClassMock(FBSDKAppEventsUtility.class);
 }
 
 - (void)setUpAdNetworkReporterMock
@@ -343,6 +343,11 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   OCMStub(ClassMethod([_settingsClassMock clientToken])).andReturn(token);
 }
 
+- (void)stubAppEventsUtilityShouldDropAppEventWith:(BOOL)shouldDropEvent
+{
+  OCMStub(ClassMethod([_appEventsUtilityClassMock shouldDropAppEvent])).andReturn(shouldDropEvent);
+}
+
 - (void)stubAdvertisingTrackingStatusWith:(FBSDKAdvertisingTrackingStatus)trackingStatus
 {
   OCMStub(ClassMethod([_appEventsUtilityClassMock advertisingTrackingStatus])).andReturn(trackingStatus);
@@ -351,6 +356,21 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)stubLoadingAdNetworkReporterConfiguration
 {
   OCMStub(ClassMethod([_adNetworkReporterClassMock _loadConfigurationWithBlock:OCMArg.any]));
+}
+
+- (void)stubSettingsShouldLimitEventAndDataUsageWith:(BOOL)shouldLimit
+{
+  OCMStub(ClassMethod([_settingsClassMock shouldLimitEventAndDataUsage])).andReturn(shouldLimit);
+}
+
+- (void)stubAppEventsUtilityAdvertiserIDWith:(nullable NSString *)identifier
+{
+  OCMStub(ClassMethod([_appEventsUtilityClassMock advertiserID])).andReturn(identifier);
+}
+
+- (void)stubAppEventsUtilityTokenStringToUseForTokenWith:(NSString *)tokenString
+{
+  OCMStub(ClassMethod([_appEventsUtilityClassMock tokenStringToUseFor:OCMArg.any])).andReturn(tokenString);
 }
 
 @end
