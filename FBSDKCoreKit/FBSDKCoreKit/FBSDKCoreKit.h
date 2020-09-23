@@ -98,5 +98,5 @@
 
 #endif
 
-#define FBSDK_VERSION_STRING @"7.1.1"
+#define FBSDK_VERSION_STRING @"8.0.0"
 #define FBSDK_TARGET_PLATFORM_VERSION @"v8.0"

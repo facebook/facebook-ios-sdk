@@ -74,7 +74,7 @@ main() {
     SDK_VERSION_FILES=(
       "Configurations/Version.xcconfig"
       "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h"
-      "FBSDKCoreKit/FBSDKCoreKit/Basics/Instrument/FBSDKCrashHandler.m"
+      "Sources/FBSDKCoreKit_Basics/FBSDKCrashHandler.m"
     )
 
     SDK_GRAPH_API_VERSION_FILES=(

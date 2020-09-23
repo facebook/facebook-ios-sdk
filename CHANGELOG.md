@@ -9,7 +9,34 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Important
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v7.1.1...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v8.0.0...HEAD)
+
+## 8.0.0
+
+## Added
+- Added timestamp for install event in iOS 14
+- Added method `setAdvertiserTrackingEnabled` to overwrite the `advertiser_tracking_enabled` flag
+- Added `SKAdNetwork` support for installs
+- Added `SKAdNetwork` support for conversion value in iOS 14
+- Added `FBSDKReferralManager` for integrating with the web referral dialog
+- Added method `loginWithURL` to `FBSDKLoginManager` for supporting deep link authentication
+- Added E2E tests for all in-market versions of the SDK that run on server changes to avoid regressions
+
+## Changed
+- Event handling in iOS 14: will drop events if `setAdvertiserTrackingEnabled` is called with `false` in iOS 14
+- `FBSDKProfile - imageURLForPictureMode:size:` - User profile images will only be available when an access or client token is available
+
+## Deprecated
+- `FBSDKSettings - isAutoInitEnabled` - Auto-initialization flag. Will be removed in the next major release. Future versions of the SDK will not utilize the `+ load` method to automatically initialize the SDK.
+
+## Fixed / Patched
+- #1444 - Update crash handling to use sigaction in signal handler and respect SIG_IGN
+- #1447 - Login form automatically closing when SDK is not initialized on startup
+- #1478 - Minimum iOS deployment target is now 9.0
+- #1485 - StoreKit is now added as a weak framework for CocoaPods
+
+[2020-09-22](https://github.com/facebook/facebook-ios-sdk/releases/tag/v8.0.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v7.1.1...v8.0.0)
 
 ## 7.1.1
 
