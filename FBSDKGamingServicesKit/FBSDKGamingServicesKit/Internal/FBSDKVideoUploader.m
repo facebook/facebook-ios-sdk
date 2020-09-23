@@ -22,13 +22,29 @@
 
 #import "FBSDKCoreKitInternalImport.h"
 
-#if defined FBSDK_SWIFT_PACKAGE
- #import <FBSDKShareKit.h>
-#else
- #import <FBSDKShareKit/FBSDKShareKit.h>
-#endif
+#define FBSDK_GAMING_RESULT_COMPLETION_GESTURE_KEY @"completionGesture"
+#define FBSDK_GAMING_RESULT_COMPLETION_GESTURE_VALUE_POST @"post"
+#define FBSDK_GAMING_VIDEO_END_OFFSET @"end_offset"
+#define FBSDK_GAMING_VIDEO_FILE_CHUNK @"video_file_chunk"
+#define FBSDK_GAMING_VIDEO_ID @"video_id"
+#define FBSDK_GAMING_VIDEO_SIZE @"file_size"
+#define FBSDK_GAMING_VIDEO_START_OFFSET @"start_offset"
+#define FBSDK_GAMING_VIDEO_UPLOAD_PHASE @"upload_phase"
+#define FBSDK_GAMING_VIDEO_UPLOAD_PHASE_FINISH @"finish"
+#define FBSDK_GAMING_VIDEO_UPLOAD_PHASE_START @"start"
+#define FBSDK_GAMING_VIDEO_UPLOAD_PHASE_TRANSFER @"transfer"
+#define FBSDK_GAMING_VIDEO_UPLOAD_SESSION_ID @"upload_session_id"
+#define FBSDK_GAMING_VIDEO_UPLOAD_SUCCESS @"success"
 
-#import "FBSDKShareDefines.h"
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+
+static NSErrorDomain const FBSDKGamingVideoUploadErrorDomain = @"com.facebook.sdk.gaming.videoupload";
+
+#else
+
+static NSString *const FBSDKGamingVideoUploadErrorDomain = @"com.facebook.sdk.gaming.videoupload";
+
+#endif
 
 static NSString *const FBSDKVideoUploaderDefaultGraphNode = @"me";
 static NSString *const FBSDKVideoUploaderEdge = @"videos";
@@ -73,13 +89,13 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
       return;
     } else {
       result = [FBSDKTypeUtility dictionaryValue:result];
-      NSNumber *uploadSessionID = [self.numberFormatter numberFromString:result[FBSDK_SHARE_VIDEO_UPLOAD_SESSION_ID]];
-      NSNumber *videoID = [self.numberFormatter numberFromString:result[FBSDK_SHARE_VIDEO_ID]];
+      NSNumber *uploadSessionID = [self.numberFormatter numberFromString:result[FBSDK_GAMING_VIDEO_UPLOAD_SESSION_ID]];
+      NSNumber *videoID = [self.numberFormatter numberFromString:result[FBSDK_GAMING_VIDEO_ID]];
       NSDictionary *offsetDictionary = [self _extractOffsetsFromResultDictionary:result];
       if (uploadSessionID == nil || videoID == nil) {
         [self.delegate videoUploader:self didFailWithError:
-         [FBSDKError errorWithDomain:FBSDKShareErrorDomain
-                                code:FBSDKShareErrorUnknown
+         [FBSDKError errorWithDomain:FBSDKGamingVideoUploadErrorDomain
+                                code:0
                              message:@"Failed to get valid upload_session_id or video_id."]];
         return;
       } else if (offsetDictionary == nil) {
@@ -92,15 +108,15 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
   };
   if (_videoSize == 0) {
     [self.delegate videoUploader:self didFailWithError:
-     [FBSDKError errorWithDomain:FBSDKShareErrorDomain
-                            code:FBSDKShareErrorUnknown
+     [FBSDKError errorWithDomain:FBSDKGamingVideoUploadErrorDomain
+                            code:0
                          message:[NSString stringWithFormat:@"Invalid video size: %lu", (unsigned long)_videoSize]]];
     return;
   }
   [[[FBSDKGraphRequest alloc] initWithGraphPath:_graphPath
                                      parameters:@{
-      FBSDK_SHARE_VIDEO_UPLOAD_PHASE : FBSDK_SHARE_VIDEO_UPLOAD_PHASE_START,
-      FBSDK_SHARE_VIDEO_SIZE : [NSString stringWithFormat:@"%tu", _videoSize],
+      FBSDK_GAMING_VIDEO_UPLOAD_PHASE : FBSDK_GAMING_VIDEO_UPLOAD_PHASE_START,
+      FBSDK_GAMING_VIDEO_SIZE : [NSString stringWithFormat:@"%tu", _videoSize],
     }
                                      HTTPMethod:@"POST"] startWithCompletionHandler:startRequestCompletionHandler];
 }
@@ -114,8 +130,8 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
   } else {
     dataQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
   }
-  NSUInteger startOffset = [offsetDictionary[FBSDK_SHARE_VIDEO_START_OFFSET] unsignedIntegerValue];
-  NSUInteger endOffset = [offsetDictionary[FBSDK_SHARE_VIDEO_END_OFFSET] unsignedIntegerValue];
+  NSUInteger startOffset = [offsetDictionary[FBSDK_GAMING_VIDEO_START_OFFSET] unsignedIntegerValue];
+  NSUInteger endOffset = [offsetDictionary[FBSDK_GAMING_VIDEO_END_OFFSET] unsignedIntegerValue];
   if (startOffset == endOffset) {
     [self _postFinishRequest];
     return;
@@ -125,8 +141,8 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
       NSData *data = [self.delegate videoChunkDataForVideoUploader:self startOffset:startOffset endOffset:endOffset];
       if (data == nil || data.length != chunkSize) {
         [self.delegate videoUploader:self didFailWithError:
-         [FBSDKError errorWithDomain:FBSDKShareErrorDomain
-                                code:FBSDKShareErrorUnknown
+         [FBSDKError errorWithDomain:FBSDKGamingVideoUploadErrorDomain
+                                code:0
                              message:[NSString
                                       stringWithFormat:@"Fail to get video chunk with start offset: %lu, end offset : %lu.",
                                       (unsigned long)startOffset,
@@ -139,10 +155,10 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
                                                                                                     contentType:@""];
         FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:self->_graphPath
                                                                        parameters:@{
-                                        FBSDK_SHARE_VIDEO_UPLOAD_PHASE : FBSDK_SHARE_VIDEO_UPLOAD_PHASE_TRANSFER,
-                                        FBSDK_SHARE_VIDEO_START_OFFSET : offsetDictionary[FBSDK_SHARE_VIDEO_START_OFFSET],
-                                        FBSDK_SHARE_VIDEO_UPLOAD_SESSION_ID : self->_uploadSessionID,
-                                        FBSDK_SHARE_VIDEO_FILE_CHUNK : dataAttachment,
+                                        FBSDK_GAMING_VIDEO_UPLOAD_PHASE : FBSDK_GAMING_VIDEO_UPLOAD_PHASE_TRANSFER,
+                                        FBSDK_GAMING_VIDEO_START_OFFSET : offsetDictionary[FBSDK_GAMING_VIDEO_START_OFFSET],
+                                        FBSDK_GAMING_VIDEO_UPLOAD_SESSION_ID : self->_uploadSessionID,
+                                        FBSDK_GAMING_VIDEO_FILE_CHUNK : dataAttachment,
                                       }
                                                                        HTTPMethod:@"POST"];
         [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *innerError) {
@@ -163,13 +179,13 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
 
 - (void)_postFinishRequest
 {
-  NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
+  NSMutableDictionary *parameters = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:parameters
-                     setObject:FBSDK_SHARE_VIDEO_UPLOAD_PHASE_FINISH
-                        forKey:FBSDK_SHARE_VIDEO_UPLOAD_PHASE];
+                     setObject:FBSDK_GAMING_VIDEO_UPLOAD_PHASE_FINISH
+                        forKey:FBSDK_GAMING_VIDEO_UPLOAD_PHASE];
   [FBSDKTypeUtility dictionary:parameters
                      setObject:_uploadSessionID
-                        forKey:FBSDK_SHARE_VIDEO_UPLOAD_SESSION_ID];
+                        forKey:FBSDK_GAMING_VIDEO_UPLOAD_SESSION_ID];
   [parameters addEntriesFromDictionary:self.parameters];
   [[[FBSDKGraphRequest alloc] initWithGraphPath:_graphPath
                                      parameters:parameters
@@ -178,17 +194,17 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
                                          [self.delegate videoUploader:self didFailWithError:error];
                                        } else {
                                          result = [FBSDKTypeUtility dictionaryValue:result];
-                                         if (result[FBSDK_SHARE_VIDEO_UPLOAD_SUCCESS] == nil) {
+                                         if (result[FBSDK_GAMING_VIDEO_UPLOAD_SUCCESS] == nil) {
                                            [self.delegate videoUploader:self didFailWithError:
-                                            [FBSDKError errorWithDomain:FBSDKShareErrorDomain
-                                                                   code:FBSDKShareErrorUnknown
+                                            [FBSDKError errorWithDomain:FBSDKGamingVideoUploadErrorDomain
+                                                                   code:0
                                                                 message:@"Failed to finish uploading."]];
                                            return;
                                          }
-                                         NSMutableDictionary *shareResult = [[NSMutableDictionary alloc] init];
-                                         [FBSDKTypeUtility dictionary:shareResult setObject:result[FBSDK_SHARE_VIDEO_UPLOAD_SUCCESS] forKey:FBSDK_SHARE_VIDEO_UPLOAD_SUCCESS];
-                                         [FBSDKTypeUtility dictionary:shareResult setObject:FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_POST forKey:FBSDK_SHARE_RESULT_COMPLETION_GESTURE_KEY];
-                                         [FBSDKTypeUtility dictionary:shareResult setObject:self->_videoID forKey:FBSDK_SHARE_VIDEO_ID];
+                                         NSMutableDictionary *shareResult = [NSMutableDictionary new];
+                                         [FBSDKTypeUtility dictionary:shareResult setObject:result[FBSDK_GAMING_VIDEO_UPLOAD_SUCCESS] forKey:FBSDK_GAMING_VIDEO_UPLOAD_SUCCESS];
+                                         [FBSDKTypeUtility dictionary:shareResult setObject:FBSDK_GAMING_RESULT_COMPLETION_GESTURE_VALUE_POST forKey:FBSDK_GAMING_RESULT_COMPLETION_GESTURE_KEY];
+                                         [FBSDKTypeUtility dictionary:shareResult setObject:self->_videoID forKey:FBSDK_GAMING_VIDEO_ID];
                                          [self.delegate videoUploader:self didCompleteWithResults:shareResult];
                                        }
                                      }];
@@ -197,33 +213,33 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
 - (NSDictionary *)_extractOffsetsFromResultDictionary:(id)result
 {
   result = [FBSDKTypeUtility dictionaryValue:result];
-  NSNumber *startNum = [self.numberFormatter numberFromString:result[FBSDK_SHARE_VIDEO_START_OFFSET]];
-  NSNumber *endNum = [self.numberFormatter numberFromString:result[FBSDK_SHARE_VIDEO_END_OFFSET]];
+  NSNumber *startNum = [self.numberFormatter numberFromString:result[FBSDK_GAMING_VIDEO_START_OFFSET]];
+  NSNumber *endNum = [self.numberFormatter numberFromString:result[FBSDK_GAMING_VIDEO_END_OFFSET]];
   if (startNum == nil || endNum == nil) {
     [self.delegate videoUploader:self didFailWithError:
-     [FBSDKError errorWithDomain:FBSDKShareErrorDomain
-                            code:FBSDKShareErrorUnknown
+     [FBSDKError errorWithDomain:FBSDKGamingVideoUploadErrorDomain
+                            code:0
                          message:@"Fail to get valid start_offset or end_offset."]];
     return nil;
   }
   if ([startNum compare:endNum] == NSOrderedDescending) {
     [self.delegate videoUploader:self didFailWithError:
-     [FBSDKError errorWithDomain:FBSDKShareErrorDomain
-                            code:FBSDKShareErrorUnknown
+     [FBSDKError errorWithDomain:FBSDKGamingVideoUploadErrorDomain
+                            code:0
                          message:@"Invalid offset: start_offset is greater than end_offset."]];
     return nil;
   }
 
-  NSMutableDictionary *shareResults = [[NSMutableDictionary alloc] init];
-  [FBSDKTypeUtility dictionary:shareResults setObject:startNum forKey:FBSDK_SHARE_VIDEO_START_OFFSET];
-  [FBSDKTypeUtility dictionary:shareResults setObject:endNum forKey:FBSDK_SHARE_VIDEO_END_OFFSET];
+  NSMutableDictionary *shareResults = [NSMutableDictionary new];
+  [FBSDKTypeUtility dictionary:shareResults setObject:startNum forKey:FBSDK_GAMING_VIDEO_START_OFFSET];
+  [FBSDKTypeUtility dictionary:shareResults setObject:endNum forKey:FBSDK_GAMING_VIDEO_END_OFFSET];
   return shareResults;
 }
 
 - (NSNumberFormatter *)numberFormatter
 {
   if (!_numberFormatter) {
-    _numberFormatter = [[NSNumberFormatter alloc] init];
+    _numberFormatter = [NSNumberFormatter new];
     _numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
   }
   return _numberFormatter;
