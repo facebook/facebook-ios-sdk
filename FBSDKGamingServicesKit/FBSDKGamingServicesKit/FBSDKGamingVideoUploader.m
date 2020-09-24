@@ -19,14 +19,8 @@
 #import "FBSDKGamingVideoUploader.h"
 
 #import "FBSDKCoreKitInternalImport.h"
-
-#if defined FBSDKCOCOAPODS
- #import <FBSDKShareKit/FBSDKVideoUploader.h>
-#else
- #import "FBSDKVideoUploader.h"
-#endif
-
 #import "FBSDKGamingVideoUploaderConfiguration.h"
+#import "FBSDKVideoUploader.h"
 
 @interface FBSDKGamingVideoUploader () <FBSDKVideoUploaderDelegate>
 {
