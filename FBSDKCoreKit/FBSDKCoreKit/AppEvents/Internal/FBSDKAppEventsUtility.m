@@ -166,25 +166,6 @@ static NSArray<NSString *> *standardEvents;
   return result;
 }
 
-+ (FBSDKAdvertisingTrackingStatus)advertisingTrackingStatus
-{
-  static dispatch_once_t fetchAdvertisingTrackingStatusOnce;
-  static FBSDKAdvertisingTrackingStatus status;
-
-  dispatch_once(&fetchAdvertisingTrackingStatusOnce, ^{
-    status = FBSDKAdvertisingTrackingUnspecified;
-    Class ASIdentifierManagerClass = fbsdkdfl_ASIdentifierManagerClass();
-    if ([ASIdentifierManagerClass class]) {
-      ASIdentifierManager *manager = [ASIdentifierManagerClass sharedManager];
-      if (manager) {
-        status = manager.advertisingTrackingEnabled ? FBSDKAdvertisingTrackingAllowed : FBSDKAdvertisingTrackingDisallowed;
-      }
-    }
-  });
-
-  return status;
-}
-
 + (BOOL)isStandardEvent:(nullable NSString *)event
 {
   if (!event) {

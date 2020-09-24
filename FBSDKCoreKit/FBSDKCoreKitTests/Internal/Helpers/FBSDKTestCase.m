@@ -350,7 +350,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
 - (void)stubAdvertisingTrackingStatusWith:(FBSDKAdvertisingTrackingStatus)trackingStatus
 {
-  OCMStub(ClassMethod([_appEventsUtilityClassMock advertisingTrackingStatus])).andReturn(trackingStatus);
+  OCMStub(ClassMethod([_settingsClassMock getAdvertisingTrackingStatus])).andReturn(trackingStatus);
 }
 
 - (void)stubLoadingAdNetworkReporterConfiguration
