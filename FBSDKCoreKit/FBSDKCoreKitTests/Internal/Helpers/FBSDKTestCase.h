@@ -175,7 +175,7 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Stubs `FBSDKSettings.clientToken` with the provided token string
 - (void)stubClientTokenWith:(nullable NSString *)token;
 
-/// Stubs `FBSDKAppEventsUtility.advertisingTrackingStatus` with the provided value
+/// Stubs `FBSDKSettings.getAdvertisingTrackingStatus` with the provided value
 - (void)stubAdvertisingTrackingStatusWith:(FBSDKAdvertisingTrackingStatus)trackingStatus;
 
 /// Stubs `FBSDKSKAdNetworkReporter._loadConfigurationWithBlock`

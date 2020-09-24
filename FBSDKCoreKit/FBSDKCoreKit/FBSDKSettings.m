@@ -18,6 +18,8 @@
 
 #import "FBSDKSettings+Internal.h"
 
+#import <AdSupport/AdSupport.h>
+
 #import "FBSDKAccessTokenCache.h"
 #import "FBSDKAccessTokenExpirer.h"
 #import "FBSDKAppEvents+Internal.h"
@@ -223,7 +225,21 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
     }
     return g_advertiserTrackingStatus.unsignedIntegerValue;
   } else {
-    return [FBSDKAppEventsUtility advertisingTrackingStatus];
+    static dispatch_once_t fetchAdvertisingTrackingStatusOnce;
+    static FBSDKAdvertisingTrackingStatus status;
+
+    dispatch_once(&fetchAdvertisingTrackingStatusOnce, ^{
+      status = FBSDKAdvertisingTrackingUnspecified;
+      Class ASIdentifierManagerClass = fbsdkdfl_ASIdentifierManagerClass();
+      if ([ASIdentifierManagerClass class]) {
+        ASIdentifierManager *manager = [ASIdentifierManagerClass sharedManager];
+        if (manager) {
+          status = manager.advertisingTrackingEnabled ? FBSDKAdvertisingTrackingAllowed : FBSDKAdvertisingTrackingDisallowed;
+        }
+      }
+    });
+
+    return status;
   }
 }
 

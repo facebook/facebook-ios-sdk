@@ -74,7 +74,6 @@ static NSString *const whiteSpaceToken = @"   ";
   userDefaultsSpy = [UserDefaultsSpy new];
   [self stubUserDefaultsWith:userDefaultsSpy];
   [self stubLoggingIfUserSettingsChanged];
-  [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingAllowed];
 }
 
 - (void)tearDown
