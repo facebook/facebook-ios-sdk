@@ -34,6 +34,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - #1447 - Login form automatically closing when SDK is not initialized on startup
 - #1478 - Minimum iOS deployment target is now 9.0
 - #1485 - StoreKit is now added as a weak framework for CocoaPods
+- Bug fix for Advanced Matching, which was not working on iOS 14
 
 [2020-09-22](https://github.com/facebook/facebook-ios-sdk/releases/tag/v8.0.0) |
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v7.1.1...v8.0.0)
