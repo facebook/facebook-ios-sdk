@@ -53,7 +53,7 @@ static dispatch_queue_t serialQueue;
 + (void)enable
 {
   @try {
-    if (FBSDKAdvertisingTrackingAllowed != [FBSDKSettings getAdvertisingTrackingStatus]) {
+    if ([FBSDKAppEventsUtility shouldDropAppEvent]) {
       return;
     }
 
