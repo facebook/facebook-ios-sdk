@@ -86,8 +86,10 @@ static NSArray<NSString *> *standardEvents;
 
   [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKBasicUtility anonymousID] forKey:FBSDK_APPEVENTSUTILITY_ANONYMOUSID_KEY];
 
-  BOOL advertiserTrackingEnabled = [FBSDKSettings isAdvertiserTrackingEnabled];
-  [FBSDKTypeUtility dictionary:parameters setObject:@(advertiserTrackingEnabled).stringValue forKey:@"advertiser_tracking_enabled"];
+  FBSDKAdvertisingTrackingStatus advertisingTrackingStatus = [FBSDKSettings getAdvertisingTrackingStatus];
+  if (advertisingTrackingStatus != FBSDKAdvertisingTrackingUnspecified) {
+    [FBSDKTypeUtility dictionary:parameters setObject:@([FBSDKSettings isAdvertiserTrackingEnabled]).stringValue forKey:@"advertiser_tracking_enabled"];
+  }
 
   NSString *userData = [FBSDKAppEvents getUserData];
   if (userData) {
