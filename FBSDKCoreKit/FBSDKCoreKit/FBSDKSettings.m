@@ -225,21 +225,8 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
     }
     return g_advertiserTrackingStatus.unsignedIntegerValue;
   } else {
-    static dispatch_once_t fetchAdvertisingTrackingStatusOnce;
-    static FBSDKAdvertisingTrackingStatus status;
-
-    dispatch_once(&fetchAdvertisingTrackingStatusOnce, ^{
-      status = FBSDKAdvertisingTrackingUnspecified;
-      Class ASIdentifierManagerClass = fbsdkdfl_ASIdentifierManagerClass();
-      if ([ASIdentifierManagerClass class]) {
-        ASIdentifierManager *manager = [ASIdentifierManagerClass sharedManager];
-        if (manager) {
-          status = manager.advertisingTrackingEnabled ? FBSDKAdvertisingTrackingAllowed : FBSDKAdvertisingTrackingDisallowed;
-        }
-      }
-    });
-
-    return status;
+    // @lint-ignore CLANGTIDY
+    return ASIdentifierManager.sharedManager.advertisingTrackingEnabled ? FBSDKAdvertisingTrackingAllowed : FBSDKAdvertisingTrackingDisallowed;
   }
 }
 
