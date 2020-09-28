@@ -102,4 +102,15 @@
   return self;
 }
 
+#pragma mark - Testability
+
+#if DEBUG
+
+- (void)setDefaultATEStatus:(FBSDKAdvertisingTrackingStatus)status
+{
+  _defaultATEStatus = status;
+}
+
+#endif
+
 @end
