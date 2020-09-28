@@ -1018,6 +1018,8 @@
 		F9A06DD42510FB0F007E6386 /* FBSDKAppEventsConfigurationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A06DCE2510FB0F007E6386 /* FBSDKAppEventsConfigurationManager.m */; };
 		F9A06DD52510FB0F007E6386 /* FBSDKAppEventsConfigurationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A06DCE2510FB0F007E6386 /* FBSDKAppEventsConfigurationManager.m */; };
 		F9A06DD62510FB0F007E6386 /* FBSDKAppEventsConfigurationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F9A06DCE2510FB0F007E6386 /* FBSDKAppEventsConfigurationManager.m */; };
+		F9A18071252150610062E634 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9A18062252150610062E634 /* AdSupport.framework */; };
+		F9A180732521506C0062E634 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9A180722521506C0062E634 /* AdSupport.framework */; };
 		F9A80C9E237D02860019D7E0 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9A80C9D237D02860019D7E0 /* Accelerate.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F9CBE51124E085CD0097B442 /* FBSDKSKAdNetworkReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = F9CBE50F24E085CD0097B442 /* FBSDKSKAdNetworkReporter.h */; };
 		F9CBE51224E085CD0097B442 /* FBSDKSKAdNetworkReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F9CBE51024E085CD0097B442 /* FBSDKSKAdNetworkReporter.m */; };
@@ -1638,6 +1640,8 @@
 		F9A06DB62510FAD3007E6386 /* FBSDKAppEventsConfiguration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppEventsConfiguration.m; sourceTree = "<group>"; };
 		F9A06DCD2510FB0F007E6386 /* FBSDKAppEventsConfigurationManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKAppEventsConfigurationManager.h; sourceTree = "<group>"; };
 		F9A06DCE2510FB0F007E6386 /* FBSDKAppEventsConfigurationManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppEventsConfigurationManager.m; sourceTree = "<group>"; };
+		F9A18062252150610062E634 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS14.0.sdk/System/Library/Frameworks/AdSupport.framework; sourceTree = DEVELOPER_DIR; };
+		F9A180722521506C0062E634 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		F9A80C9D237D02860019D7E0 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		F9CBE50F24E085CD0097B442 /* FBSDKSKAdNetworkReporter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKSKAdNetworkReporter.h; sourceTree = "<group>"; };
 		F9CBE51024E085CD0097B442 /* FBSDKSKAdNetworkReporter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKSKAdNetworkReporter.m; sourceTree = "<group>"; };
@@ -1662,6 +1666,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F9FFE01F2252D66E007B2346 /* libz.tbd in Frameworks */,
+				F9A18071252150610062E634 /* AdSupport.framework in Frameworks */,
 				4AF47D131F424A8700A57A67 /* CoreImage.framework in Frameworks */,
 				8131FB461D261DED000350FF /* CoreGraphics.framework in Frameworks */,
 				8131FB4A1D261E06000350FF /* UIKit.framework in Frameworks */,
@@ -1673,6 +1678,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F9A80C9E237D02860019D7E0 /* Accelerate.framework in Frameworks */,
+				F9A180732521506C0062E634 /* AdSupport.framework in Frameworks */,
 				C52C02ED2315039400F30E2A /* WebKit.framework in Frameworks */,
 				F9FFE01D2252D666007B2346 /* libz.tbd in Frameworks */,
 				F96ADE7A21E6ABB400F6043F /* StoreKit.framework in Frameworks */,
@@ -1997,6 +2003,8 @@
 		893F44A31A644536001DB0B6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F9A18062252150610062E634 /* AdSupport.framework */,
+				F9A180722521506C0062E634 /* AdSupport.framework */,
 				F9A80C9D237D02860019D7E0 /* Accelerate.framework */,
 				C52C02DF2315039400F30E2A /* WebKit.framework */,
 				F9FFE01C2252D665007B2346 /* libz.tbd */,
