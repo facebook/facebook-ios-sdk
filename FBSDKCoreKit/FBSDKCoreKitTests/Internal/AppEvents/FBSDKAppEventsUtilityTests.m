@@ -291,6 +291,30 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   }
 }
 
+- (void)testDropAppEvent
+{
+  id mockAppEventsState = OCMClassMock([FBSDKAppEventsState class]);
+  OCMStub([mockAppEventsState alloc]).andReturn(mockAppEventsState);
+  OCMStub([mockAppEventsState initWithToken:OCMArg.any appID:OCMArg.any]).andReturn(mockAppEventsState);
+  [FBSDKSettings setAppID:@"123"];
+
+  OCMStub([_mockAppEventsUtility shouldDropAppEvent]).andReturn(YES);
+  [FBSDKAppEvents logEvent:@"event"];
+  OCMReject([mockAppEventsState addEvent:OCMArg.any isImplicit:NO]);
+}
+
+- (void)testSendAppEvent
+{
+  id mockAppEventsState = OCMClassMock([FBSDKAppEventsState class]);
+  OCMStub([mockAppEventsState alloc]).andReturn(mockAppEventsState);
+  OCMStub([mockAppEventsState initWithToken:OCMArg.any appID:OCMArg.any]).andReturn(mockAppEventsState);
+  [FBSDKSettings setAppID:@"123"];
+
+  OCMStub([_mockAppEventsUtility shouldDropAppEvent]).andReturn(NO);
+  [FBSDKAppEvents logEvent:@"event"];
+  OCMVerify([mockAppEventsState addEvent:OCMArg.any isImplicit:NO]);
+}
+
 - (void)testIsSensitiveUserData
 {
   NSString *text = @"test@sample.com";

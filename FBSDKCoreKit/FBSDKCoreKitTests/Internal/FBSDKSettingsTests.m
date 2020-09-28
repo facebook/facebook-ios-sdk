@@ -1153,14 +1153,14 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingFacebookAdvertiserTrackingStatus
 {
-  [FBSDKSettings setAdvertiserTrackingStatus:FBSDKAdvertisingTrackingAllowed];
-
   if (@available(iOS 14.0, *)) {
+    XCTAssertTrue([FBSDKSettings setAdvertiserTrackingEnabled:YES]);
     XCTAssertTrue(
       [FBSDKSettings getAdvertisingTrackingStatus] == FBSDKAdvertisingTrackingAllowed,
       "Should use the explicitly set property"
     );
   } else {
+    XCTAssertFalse([FBSDKSettings setAdvertiserTrackingEnabled:YES]);
     XCTAssertNil(
       userDefaultsSpy.capturedValues[@"FacebookAdvertiserTrackingStatus"],
       "Should be no-op in iOS13 and below"
