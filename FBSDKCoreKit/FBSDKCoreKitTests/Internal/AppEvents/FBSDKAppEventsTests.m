@@ -33,6 +33,7 @@
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
+#import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKSettings.h"
 #import "FBSDKTestCase.h"
 #import "FBSDKUtility.h"
@@ -112,6 +113,7 @@ static NSString *const _mockUserID = @"mockUserID";
   [super setUp];
 
   [self stubLoadingAdNetworkReporterConfiguration];
+  [self stubServerConfigurationFetchingWithConfiguration:FBSDKServerConfigurationFixtures.defaultConfig error:nil];
 
   _mockEventName = @"fb_mock_event";
   _mockPayload = @{@"fb_push_payload" : @{@"campaign" : @"testCampaign"}};
