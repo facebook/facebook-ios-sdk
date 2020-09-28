@@ -16,6 +16,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+// @lint-ignore-every CLANGTIDY
+#import <AdSupport/AdSupport.h>
 #import <OCMock/OCMock.h>
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
@@ -23,6 +25,15 @@
 #import "FBSDKCoreKit+Internal.h"
 
 static NSString *const FBSDKSettingsInstallTimestamp = @"com.facebook.sdk:FBSDKSettingsInstallTimestamp";
+static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.sdk:FBSDKSettingsAdvertisingTrackingStatus";
+
+@interface FBSDKSettings ()
++ (void)resetAdvertiserTrackingStatusCache;
+@end
+
+@interface FBSDKAppEventsConfiguration ()
+- (void)setDefaultATEStatus:(FBSDKAdvertisingTrackingStatus)status;
+@end
 
 @interface FBSDKAppEventsUtilityTests : XCTestCase
 
@@ -196,6 +207,9 @@ static NSString *const FBSDKSettingsInstallTimestamp = @"com.facebook.sdk:FBSDKS
   OCMStub([mockAppEventsConfiguration advertiserIDCollectionEnabled]).andReturn(YES);
   id mockAppEventsConfigurationManager = OCMClassMock([FBSDKAppEventsConfigurationManager class]);
   OCMStub([mockAppEventsConfigurationManager cachedAppEventsConfiguration]).andReturn(mockAppEventsConfiguration);
+  id mockASIdentifierManager = OCMClassMock([ASIdentifierManager class]);
+  OCMStub([mockASIdentifierManager advertisingIdentifier]).andReturn([NSUUID UUID]);
+  OCMStub([mockASIdentifierManager sharedManager]).andReturn(mockASIdentifierManager);
 
   if (@available(iOS 14.0, *)) {
     XCTAssertNotNil(
@@ -214,6 +228,10 @@ static NSString *const FBSDKSettingsInstallTimestamp = @"com.facebook.sdk:FBSDKS
   OCMStub([mockAppEventsConfiguration advertiserIDCollectionEnabled]).andReturn(NO);
   id mockAppEventsConfigurationManager = OCMClassMock([FBSDKAppEventsConfigurationManager class]);
   OCMStub([mockAppEventsConfigurationManager cachedAppEventsConfiguration]).andReturn(mockAppEventsConfiguration);
+  OCMStub([mockAppEventsConfigurationManager cachedAppEventsConfiguration]).andReturn(mockAppEventsConfiguration);
+  id mockASIdentifierManager = OCMClassMock([ASIdentifierManager class]);
+  OCMStub([mockASIdentifierManager advertisingIdentifier]).andReturn([NSUUID UUID]);
+  OCMStub([mockASIdentifierManager sharedManager]).andReturn(mockASIdentifierManager);
 
   if (@available(iOS 14.0, *)) {
     XCTAssertNil([FBSDKAppEventsUtility advertiserID]);
@@ -234,6 +252,42 @@ static NSString *const FBSDKSettingsInstallTimestamp = @"com.facebook.sdk:FBSDKS
     XCTAssertTrue([FBSDKAppEventsUtility shouldDropAppEvent]);
   } else {
     XCTAssertFalse([FBSDKAppEventsUtility shouldDropAppEvent]);
+  }
+}
+
+- (void)testAdvertiserTrackingEnabledInAppEventPayload
+{
+  FBSDKAppEventsConfiguration *configuration = [[FBSDKAppEventsConfiguration alloc] initWithJSON:@{}];
+  id mockAppEventsConfigurationManager = OCMClassMock([FBSDKAppEventsConfigurationManager class]);
+  OCMStub([mockAppEventsConfigurationManager cachedAppEventsConfiguration]).andReturn(configuration);
+  NSArray<NSNumber *> *statusList = @[@(FBSDKAdvertisingTrackingAllowed), @(FBSDKAdvertisingTrackingDisallowed), @(FBSDKAdvertisingTrackingUnspecified)];
+  for (NSNumber *defaultATEStatus in statusList) {
+    [configuration setDefaultATEStatus:defaultATEStatus.unsignedIntegerValue];
+    for (NSNumber *status in statusList) {
+      [FBSDKSettings resetAdvertiserTrackingStatusCache];
+      [[NSUserDefaults standardUserDefaults] removeObjectForKey:FBSDKSettingsAdvertisingTrackingStatus];
+      if ([status unsignedIntegerValue] != FBSDKAdvertisingTrackingUnspecified) {
+        [FBSDKSettings setAdvertiserTrackingStatus:[status unsignedIntegerValue]];
+      }
+      NSDictionary *dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
+                                                             shouldAccessAdvertisingID:YES];
+      if (@available(iOS 14.0, *)) {
+        // If status is unspecified, ATE will be defaultATEStatus
+        if ([status unsignedIntegerValue] == FBSDKAdvertisingTrackingUnspecified) {
+          if ([defaultATEStatus unsignedIntegerValue] == FBSDKAdvertisingTrackingUnspecified) {
+            XCTAssertNil(dict[@"advertiser_tracking_enabled"], @"advertiser_tracking_enabled should not be attached to event payload if ATE is unspecified");
+          } else {
+            BOOL advertiserTrackingEnabled = defaultATEStatus.unsignedIntegerValue == FBSDKAdvertisingTrackingAllowed;
+            XCTAssertTrue([@(advertiserTrackingEnabled).stringValue isEqualToString:[FBSDKTypeUtility dictionary:dict objectForKey:@"advertiser_tracking_enabled" ofType:NSString.class]], @"advertiser_tracking_enabled should be default value when ATE is not set");
+          }
+        } else {
+          BOOL advertiserTrackingEnabled = status.unsignedIntegerValue == FBSDKAdvertisingTrackingAllowed;
+          XCTAssertTrue([@(advertiserTrackingEnabled).stringValue isEqualToString:[FBSDKTypeUtility dictionary:dict objectForKey:@"advertiser_tracking_enabled" ofType:NSString.class]], @"advertiser_tracking_enabled should be equal to ATE explicitly setted via setAdvertiserTrackingStatus");
+        }
+      } else {
+        XCTAssertNotNil(dict[@"advertiser_tracking_enabled"]);
+      }
+    }
   }
 }
 
