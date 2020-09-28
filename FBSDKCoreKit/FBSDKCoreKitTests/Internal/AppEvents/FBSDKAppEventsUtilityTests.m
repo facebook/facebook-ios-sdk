@@ -23,6 +23,7 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKCoreKit+Internal.h"
+#import "FBSDKTestCase.h"
 
 static NSString *const FBSDKSettingsInstallTimestamp = @"com.facebook.sdk:FBSDKSettingsInstallTimestamp";
 static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.sdk:FBSDKSettingsAdvertisingTrackingStatus";
@@ -35,7 +36,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 - (void)setDefaultATEStatus:(FBSDKAdvertisingTrackingStatus)status;
 @end
 
-@interface FBSDKAppEventsUtilityTests : XCTestCase
+@interface FBSDKAppEventsUtilityTests : FBSDKTestCase
 
 @end
 
@@ -48,6 +49,9 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 - (void)setUp
 {
   [super setUp];
+
+  [self stubServerConfigurationFetchingWithConfiguration:[FBSDKServerConfiguration defaultServerConfigurationForAppID:nil] error:nil];
+
   _mockAppEventsUtility = OCMClassMock([FBSDKAppEventsUtility class]);
   [FBSDKAppEvents setUserID:@"test-user-id"];
   _mockNSLocale = OCMClassMock([NSLocale class]);

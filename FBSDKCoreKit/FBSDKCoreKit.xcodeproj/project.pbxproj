@@ -2698,6 +2698,8 @@
 				F496E61124E6049A006231A2 /* AppDelegateObserverFake.m */,
 				F4ED90D924EDDC610048D283 /* NotificationCenterSpy.h */,
 				F4ED90DA24EDDC610048D283 /* NotificationCenterSpy.m */,
+				F4E50152243648A100C99262 /* FBSDKServerConfigurationFixtures.h */,
+				F4E50153243648A100C99262 /* FBSDKServerConfigurationFixtures.m */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -2705,8 +2707,6 @@
 		F4E50151243648A100C99262 /* ServerConfiguration */ = {
 			isa = PBXGroup;
 			children = (
-				F4E50152243648A100C99262 /* FBSDKServerConfigurationFixtures.h */,
-				F4E50153243648A100C99262 /* FBSDKServerConfigurationFixtures.m */,
 				F4E50154243648A100C99262 /* FBSDKServerConfigurationTests.m */,
 				F428430A246B427700CD4393 /* FBSDKServerConfigurationManagerTests.m */,
 				F40B24B1247324BB0059351C /* RawServerConfigurationResponseFixtures.swift */,

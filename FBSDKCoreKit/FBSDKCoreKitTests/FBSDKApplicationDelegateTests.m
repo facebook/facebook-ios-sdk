@@ -24,6 +24,7 @@
 #import "AppDelegateObserverFake.h"
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitTestUtility.h"
+#import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKTestCase.h"
 #import "SampleAccessToken.h"
 #import "UserDefaultsSpy.h"
@@ -84,6 +85,8 @@
 
   [self stubAppEventsSingletonWith:self.appEventsMock];
   [self stubLoadingAdNetworkReporterConfiguration];
+
+  [self stubServerConfigurationFetchingWithConfiguration:FBSDKServerConfigurationFixtures.defaultConfig error:nil];
 }
 
 - (void)tearDown
