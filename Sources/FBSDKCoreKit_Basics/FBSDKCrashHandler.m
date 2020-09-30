@@ -48,7 +48,6 @@ static struct sigaction *previousSignalHandlers = NULL;
 static void installSignalsHandler(void);
 static void uninstallSignalsHandler(void);
 static void FBSDKSignalHandler(int signal, siginfo_t *signalInfo, void *userContext);
-static int signalIndex(int signal);
 
 static NSUncaughtExceptionHandler *previousExceptionHandler = NULL;
 static NSString *mappingTableIdentifier = NULL;
@@ -211,8 +210,9 @@ static void uninstallSignalsHandler()
   }
 }
 
-static void FBSDKSignalHandler(int signal, siginfo_t *signalInfo, void *userContext)
+static void FBSDKSignalHandler(int sig, siginfo_t *signalInfo, void *userContext)
 {
+  uninstallSignalsHandler();
   NSMutableArray<NSString *> *callStack = [[NSThread callStackSymbols] mutableCopy];
   if (callStack) {
     NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)];
@@ -220,27 +220,7 @@ static void FBSDKSignalHandler(int signal, siginfo_t *signalInfo, void *userCont
       [callStack removeObjectsAtIndexes:indexSet];
     }
   }
-  [FBSDKCrashHandler saveSignal:signal withCallStack:callStack];
-
-  int index = signalIndex(signal);
-  if (index > 0) {
-    if (previousSignalHandlers[index].sa_handler != SIG_IGN) {
-      void (*previousSignalHandler)(int, siginfo_t *, void *) = previousSignalHandlers[index].sa_sigaction;
-      if (previousSignalHandler != NULL) {
-        previousSignalHandler(signal, signalInfo, userContext);
-      }
-    }
-  }
-}
-
-static int signalIndex(int signal)
-{
-  for (int i = 0; i < fatalSignalsCount; i++) {
-    if (signal == fatalSignals[i]) {
-      return i;
-    }
-  }
-  return -1;
+  [FBSDKCrashHandler saveSignal:sig withCallStack:callStack];
 }
 
 #pragma mark - Storage
