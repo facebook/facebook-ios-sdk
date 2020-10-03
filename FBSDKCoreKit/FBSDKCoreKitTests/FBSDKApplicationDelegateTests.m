@@ -172,7 +172,7 @@
   _delegate.isAppLaunched = YES;
 
   XCTAssertFalse(
-    [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil],
+    [_delegate applicationDidFinishLaunchingWithOptions:nil],
     "Should return false if the application is already launched"
   );
   // TODO: check that side effects do not occur
@@ -184,7 +184,7 @@
   FakeAccessTokenCache *cache = [[FakeAccessTokenCache alloc] initWithToken:expected];
   [self stubAccessTokenCacheWith:cache];
 
-  [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
+  [_delegate applicationDidFinishLaunchingWithOptions:nil];
 
   // Should set the current access token to the cached access token when it exists
   OCMVerify(ClassMethod([self.accessTokenClassMock setCurrentAccessToken:expected]));
@@ -194,7 +194,7 @@
 {
   [self stubAccessTokenCacheWith:[[FakeAccessTokenCache alloc] initWithToken:nil]];
 
-  [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
+  [_delegate applicationDidFinishLaunchingWithOptions:nil];
 
   // Should set the current access token to nil access token when there isn't a cached token
   OCMVerify(ClassMethod([self.accessTokenClassMock setCurrentAccessToken:nil]));
@@ -202,7 +202,7 @@
 
 - (void)testDidFinishLaunchingLoadsServerConfiguration
 {
-  [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
+  [_delegate applicationDidFinishLaunchingWithOptions:nil];
 
   // Should load the server configuration on finishing launching
   OCMVerify(ClassMethod([self.serverConfigurationManagerClassMock loadServerConfigurationWithCompletionBlock:nil]));
@@ -212,7 +212,7 @@
 {
   [self stubIsAutoLogAppEventsEnabled:YES];
 
-  [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
+  [_delegate applicationDidFinishLaunchingWithOptions:nil];
 
   // Should log initialization when auto log app events is enabled
   OCMVerify([_partialDelegateMock _logSDKInitialize]);
@@ -225,14 +225,14 @@
 
   [self stubIsAutoLogAppEventsEnabled:NO];
 
-  [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
+  [_delegate applicationDidFinishLaunchingWithOptions:nil];
 }
 
 - (void)testDidFinishLaunchingSetsProfileWithCache
 {
   [self stubCachedProfileWith:_profile];
 
-  [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
+  [_delegate applicationDidFinishLaunchingWithOptions:nil];
 
   // Should set the current profile to the value fetched from the cache
   OCMVerify([self.profileClassMock setCurrentProfile:_profile]);
@@ -242,7 +242,7 @@
 {
   [self stubCachedProfileWith:nil];
 
-  [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
+  [_delegate applicationDidFinishLaunchingWithOptions:nil];
 
   // Should set the current profile to nil when the cache is empty
   OCMVerify([self.profileClassMock setCurrentProfile:nil]);
@@ -256,7 +256,7 @@
   [_delegate addObserver:observer1];
   [_delegate addObserver:observer2];
 
-  BOOL notifiedObservers = [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
+  BOOL notifiedObservers = [_delegate applicationDidFinishLaunchingWithOptions:nil];
 
   XCTAssertEqual(
     observer1.didFinishLaunchingCallCount,
@@ -273,7 +273,7 @@
 
 - (void)testDidFinishLaunchingWithoutObservers
 {
-  BOOL notifiedObservers = [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
+  BOOL notifiedObservers = [_delegate applicationDidFinishLaunchingWithOptions:nil];
 
   XCTAssertFalse(notifiedObservers, "Should indicate if no observers were notified");
 }
@@ -309,8 +309,7 @@
   XCTAssertEqualObjects(observer.capturedLaunchOptions, @{}, "Observers should not be passed the modified launch arguments.");
   // Should Modify the launch arguments when didFinishLaunching is invoked from the `initializeSDK` method
   OCMVerify(
-    [_partialDelegateMock application:UIApplication.sharedApplication
-        didFinishLaunchingWithOptions:@{@"_calledFromAutoInitSDK" : @YES}]
+    [_partialDelegateMock applicationDidFinishLaunchingWithOptions:@{@"_calledFromAutoInitSDK" : @YES}]
   );
 }
 
@@ -319,8 +318,7 @@
   NSDictionary *launchOptions = @{@"foo" : @"bar"};
   ApplicationDelegateObserverFake *observer = [ApplicationDelegateObserverFake new];
   [_delegate addObserver:observer];
-  [FBSDKApplicationDelegate.sharedInstance application:UIApplication.sharedApplication
-                         didFinishLaunchingWithOptions:launchOptions];
+  [FBSDKApplicationDelegate.sharedInstance applicationDidFinishLaunchingWithOptions:launchOptions];
 
   XCTAssertEqualObjects(observer.capturedLaunchOptions, @{@"foo" : @"bar"}, "Observers should not be passed modified launch arguments.");
   OCMVerify(
@@ -362,11 +360,11 @@
   NSNotification *notification = OCMClassMock([NSNotification class]);
   id application = OCMClassMock([UIApplication class]);
   [OCMStub([notification object]) andReturn:application];
-  OCMExpect([observer applicationWillResignActive:application]);
+  OCMExpect([observer applicationWillResignActive]);
 
   [_delegate applicationWillResignActive:notification];
 
-  OCMVerify([observer applicationWillResignActive:application]);
+  OCMVerify([observer applicationWillResignActive]);
 }
 
 @end

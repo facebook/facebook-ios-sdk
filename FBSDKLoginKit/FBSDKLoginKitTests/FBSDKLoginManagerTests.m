@@ -104,7 +104,7 @@ static NSString *const kFakeChallenge = @"a =bcdef";
     [expectation fulfill];
   }];
 
-  XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+  XCTAssertTrue([target openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
   [self waitForExpectationsWithTimeout:3 handler:^(NSError *error) {
     XCTAssertNil(error);
@@ -112,7 +112,7 @@ static NSString *const kFakeChallenge = @"a =bcdef";
 
   // now test a cancel and make sure the current token is not touched.
   url = [self authorizeURLWithParameters:@"error=access_denied&error_code=200&error_description=Permissions+error&error_reason=user_denied#_=_" joinedBy:@"?"];
-  XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+  XCTAssertTrue([target openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
   FBSDKAccessToken *actualTokenAfterCancel = [FBSDKAccessToken currentAccessToken];
   XCTAssertEqualObjects(tokenAfterAuth, actualTokenAfterCancel);
 }
@@ -123,7 +123,7 @@ static NSString *const kFakeChallenge = @"a =bcdef";
   [FBSDKAccessToken setCurrentAccessToken:nil];
   NSURL *url = [self authorizeURLWithFragment:@"granted_scopes=public_profile&denied_scopes=&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949"];
   FBSDKLoginManager *target = [self loginManagerExpectingChallenge];
-  XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+  XCTAssertTrue([target openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
   FBSDKAccessToken *actualToken = [FBSDKAccessToken currentAccessToken];
   XCTAssertTrue([actualToken.userID isEqualToString:@"123"], @"failed to parse userID");
   XCTAssertTrue([actualToken.permissions isEqualToSet:[NSSet setWithObject:@"public_profile"]], @"unexpected permissions");
@@ -150,7 +150,7 @@ static NSString *const kFakeChallenge = @"a =bcdef";
   FBSDKLoginManager *target = [self loginManagerExpectingChallenge];
   [target setRequestedPermissions:[NSSet setWithObject:@"user_friends"]];
   [target setHandler:handler];
-  XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+  XCTAssertTrue([target openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
   [self waitForExpectationsWithTimeout:3 handler:^(NSError *error) {
     XCTAssertNil(error);
   }];
@@ -186,7 +186,7 @@ static NSString *const kFakeChallenge = @"a =bcdef";
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wnonnull"
 
-  XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+  XCTAssertTrue([target openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
   #pragma clang diagnostic pop
 
@@ -223,7 +223,7 @@ static NSString *const kFakeChallenge = @"a =bcdef";
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wnonnull"
 
-  XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+  XCTAssertTrue([target openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
   #pragma clang diagnostic pop
 
@@ -244,7 +244,7 @@ static NSString *const kFakeChallenge = @"a =bcdef";
     [expectation fulfill];
   }];
 
-  XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+  XCTAssertTrue([target openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
   [self waitForExpectationsWithTimeout:3 handler:^(NSError *error) {
     XCTAssertNil(error);
@@ -264,7 +264,7 @@ static NSString *const kFakeChallenge = @"a =bcdef";
     [expectation fulfill];
   }];
 
-  XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+  XCTAssertTrue([target openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
   [self waitForExpectationsWithTimeout:3 handler:^(NSError *error) {
     XCTAssertNil(error);

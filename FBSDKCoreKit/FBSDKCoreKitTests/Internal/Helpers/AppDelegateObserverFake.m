@@ -29,7 +29,7 @@
   return self;
 }
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions
+- (BOOL)applicationDidFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions
 {
   _didFinishLaunchingCallCount++;
   _capturedLaunchOptions = launchOptions;

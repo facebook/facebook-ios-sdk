@@ -123,7 +123,7 @@ static NSString *const _mockChallenge = @"mockChallenge";
   };
 
   [_manager startReferralWithCompletionHandler:completionHandler];
-  XCTAssertTrue([_manager application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+  XCTAssertTrue([_manager openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
   [self waitForExpectationsWithTimeout:1 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);
@@ -174,7 +174,7 @@ static NSString *const _mockChallenge = @"mockChallenge";
 
   [_manager startReferralWithCompletionHandler:completionHandler];
   [_manager handleOpenURLComplete:YES error:nil];
-  XCTAssertFalse([_manager application:nil openURL:fakeURL sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+  XCTAssertFalse([_manager openURL:fakeURL sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
   [self waitForExpectationsWithTimeout:1 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);
@@ -245,7 +245,7 @@ static NSString *const _mockChallenge = @"mockChallenge";
   };
 
   [_manager startReferralWithCompletionHandler:completionHandler];
-  XCTAssertTrue([_manager application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+  XCTAssertTrue([_manager openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
   [self waitForExpectationsWithTimeout:1 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);
@@ -272,7 +272,7 @@ static NSString *const _mockChallenge = @"mockChallenge";
   };
 
   [_manager startReferralWithCompletionHandler:completionHandler];
-  XCTAssertTrue([_manager application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+  XCTAssertTrue([_manager openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
   [self waitForExpectationsWithTimeout:1 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);
@@ -301,7 +301,7 @@ static NSString *const _mockChallenge = @"mockChallenge";
   };
 
   [_manager startReferralWithCompletionHandler:completionHandler];
-  XCTAssertTrue([_manager application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+  XCTAssertTrue([_manager openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
   [self waitForExpectationsWithTimeout:1 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);

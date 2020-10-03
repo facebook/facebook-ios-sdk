@@ -175,12 +175,11 @@ static int const FBClientStateChallengeLength = 20;
 
  #pragma mark - FBSDKURLOpening
 
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+- (BOOL)openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
   BOOL isFacebookURL = [self canOpenURL:url
-                           forApplication:application
-                        sourceApplication:sourceApplication
-                               annotation:annotation];
+                      sourceApplication:sourceApplication
+                             annotation:annotation];
 
   if (isFacebookURL) {
     NSError *error;
@@ -216,17 +215,16 @@ static int const FBClientStateChallengeLength = 20;
   return isFacebookURL;
 }
 
-- (BOOL) canOpenURL:(NSURL *)url
-     forApplication:(UIApplication *)application
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation
+- (BOOL)canOpenURL:(NSURL *)url
+ sourceApplication:(NSString *)sourceApplication
+        annotation:(id)annotation
 {
   // verify the URL is intended as a callback for the SDK's referral request
   return [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", FBSDKSettings.appID]]
   && [url.host isEqualToString:@"authorize"];
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application
+- (void)applicationDidBecomeActive
 {
   // Do nothing since currently we don't switch to external app
 }

@@ -112,12 +112,12 @@ static UIApplicationState _applicationState;
 
   NSMutableDictionary *modifiedLaunchOptions = [NSMutableDictionary dictionaryWithDictionary:launchOptions];
   [FBSDKTypeUtility dictionary:modifiedLaunchOptions setObject:@YES forKey:FBSDKAutoInitLaunchArgument];
-  [delegate application:[UIApplication sharedApplication] didFinishLaunchingWithOptions:modifiedLaunchOptions];
+  [delegate applicationDidFinishLaunchingWithOptions:modifiedLaunchOptions];
 
   // In case of sdk autoInit enabled sdk expects one appDidBecomeActive notification after app launch and has some logic to ignore it.
   // if sdk autoInit disabled app won't receive appDidBecomeActive on app launch and will ignore the first one it gets instead of handling it.
   // Send first applicationDidBecomeActive notification manually
-  if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+  if (UIApplication.sharedApplication.applicationState == UIApplicationStateActive) {
     [delegate applicationDidBecomeActive:nil];
   }
 
@@ -179,13 +179,18 @@ static UIApplicationState _applicationState;
 #if __IPHONE_OS_VERSION_MAX_ALLOWED> __IPHONE_9_0
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
-            options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+    [self openURL:url options:options];
+}
+
+- (BOOL)openURL:(NSURL *)url
+        options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options
 {
   if (@available(iOS 9.0, *)) {
-    return [self application:application
-                      openURL:url
-            sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
-                   annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
+    return [self openURL:url
+       sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+              annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
   }
 
   return NO;
@@ -195,8 +200,15 @@ static UIApplicationState _applicationState;
 
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation
+  sourceApplication:(nullable NSString *)sourceApplication
+         annotation:(nullable id)annotation
+{
+    [self openURL:url sourceApplication:sourceApplication annotation:annotation];
+}
+
+- (BOOL)  openURL:(NSURL *)url
+sourceApplication:(NSString *)sourceApplication
+       annotation:(id)annotation
 {
   if (sourceApplication != nil && ![sourceApplication isKindOfClass:[NSString class]]) {
     @throw [NSException exceptionWithName:NSInvalidArgumentException
@@ -208,11 +220,10 @@ static UIApplicationState _applicationState;
   BOOL handled = NO;
   NSArray<id<FBSDKApplicationObserving>> *observers = [_applicationObservers allObjects];
   for (id<FBSDKApplicationObserving> observer in observers) {
-    if ([observer respondsToSelector:@selector(application:openURL:sourceApplication:annotation:)]) {
-      if ([observer application:application
-                        openURL:url
-              sourceApplication:sourceApplication
-                     annotation:annotation]) {
+    if ([observer respondsToSelector:@selector(openURL:sourceApplication:annotation:)]) {
+      if ([observer openURL:url
+          sourceApplication:sourceApplication
+                 annotation:annotation]) {
         handled = YES;
       }
     }
@@ -227,7 +238,12 @@ static UIApplicationState _applicationState;
   return NO;
 }
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey,id> *)launchOptions
+{
+    [self applicationDidFinishLaunchingWithOptions:launchOptions];
+}
+
+- (BOOL)applicationDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   if ([[FBSDKTypeUtility dictionary:launchOptions objectForKey:FBSDKAutoInitLaunchArgument ofType:NSNumber.class] boolValue]) {
     // Clean the flag out of launch options
@@ -264,8 +280,8 @@ static UIApplicationState _applicationState;
   NSArray<id<FBSDKApplicationObserving>> *observers = [_applicationObservers allObjects];
   BOOL handled = NO;
   for (id<FBSDKApplicationObserving> observer in observers) {
-    if ([observer respondsToSelector:@selector(application:didFinishLaunchingWithOptions:)]) {
-      if ([observer application:application didFinishLaunchingWithOptions:launchOptions]) {
+    if ([observer respondsToSelector:@selector(applicationDidFinishLaunchingWithOptions:)]) {
+      if ([observer applicationDidFinishLaunchingWithOptions:launchOptions]) {
         handled = YES;
       }
     }
@@ -279,8 +295,8 @@ static UIApplicationState _applicationState;
   _applicationState = UIApplicationStateBackground;
   NSArray<id<FBSDKApplicationObserving>> *observers = [_applicationObservers allObjects];
   for (id<FBSDKApplicationObserving> observer in observers) {
-    if ([observer respondsToSelector:@selector(applicationDidEnterBackground:)]) {
-      [observer applicationDidEnterBackground:notification.object];
+    if ([observer respondsToSelector:@selector(applicationDidEnterBackground)]) {
+      [observer applicationDidEnterBackground];
     }
   }
 }
@@ -298,8 +314,8 @@ static UIApplicationState _applicationState;
 
   NSArray<id<FBSDKApplicationObserving>> *observers = [_applicationObservers copy];
   for (id<FBSDKApplicationObserving> observer in observers) {
-    if ([observer respondsToSelector:@selector(applicationDidBecomeActive:)]) {
-      [observer applicationDidBecomeActive:notification.object];
+    if ([observer respondsToSelector:@selector(applicationDidBecomeActive)]) {
+      [observer applicationDidBecomeActive];
     }
   }
 }
@@ -309,8 +325,8 @@ static UIApplicationState _applicationState;
   _applicationState = UIApplicationStateInactive;
   NSArray<id<FBSDKApplicationObserving>> *const observers = [_applicationObservers copy];
   for (id<FBSDKApplicationObserving> observer in observers) {
-    if ([observer respondsToSelector:@selector(applicationWillResignActive:)]) {
-      [observer applicationWillResignActive:notification.object];
+    if ([observer respondsToSelector:@selector(applicationWillResignActive)]) {
+      [observer applicationWillResignActive];
     }
   }
 }

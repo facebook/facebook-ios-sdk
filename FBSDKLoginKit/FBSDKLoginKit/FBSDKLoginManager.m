@@ -536,9 +536,9 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 }
 
  #pragma mark - FBSDKURLOpening
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+- (BOOL)openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
-  BOOL isFacebookURL = [self canOpenURL:url forApplication:application sourceApplication:sourceApplication annotation:annotation];
+  BOOL isFacebookURL = [self canOpenURL:url sourceApplication:sourceApplication annotation:annotation];
 
   if (!isFacebookURL && [self isPerformingLogin]) {
     [self handleImplicitCancelOfLogIn];
@@ -561,17 +561,16 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   return isFacebookURL;
 }
 
-- (BOOL) canOpenURL:(NSURL *)url
-     forApplication:(UIApplication *)application
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation
+- (BOOL)canOpenURL:(NSURL *)url
+ sourceApplication:(NSString *)sourceApplication
+        annotation:(id)annotation
 {
   // verify the URL is intended as a callback for the SDK's log in
   return [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", [FBSDKSettings appID]]]
   && [url.host isEqualToString:@"authorize"];
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application
+- (void)applicationDidBecomeActive
 {
   if ([self isPerformingLogin]) {
     [self handleImplicitCancelOfLogIn];

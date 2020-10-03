@@ -120,7 +120,7 @@
      actioned = true;
    }];
 
-  [delegate application:_mockApp openURL:[NSURL URLWithString:@"fb123://friendfinder"] sourceApplication:@"foo" annotation:nil];
+  [delegate openURL:[NSURL URLWithString:@"fb123://friendfinder"] sourceApplication:@"foo" annotation:nil];
 
   XCTAssertTrue(actioned);
 }
@@ -139,7 +139,7 @@
      actioned = true;
    }];
 
-  [delegate applicationDidBecomeActive:_mockApp];
+  [delegate applicationDidBecomeActive];
 
   XCTAssertTrue(actioned);
 }

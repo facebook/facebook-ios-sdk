@@ -116,15 +116,13 @@ static NSURL *FBSDKGamingServicesUrl(FBSDKGamingServiceType serviceType, NSStrin
 }
 
 #pragma mark - FBSDKURLOpening
-- (BOOL)application:(UIApplication *)application
-            openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation
+- (BOOL)  openURL:(NSURL *)url
+sourceApplication:(NSString *)sourceApplication
+       annotation:(id)annotation
 {
   const BOOL isGamingUrl =
   [self
    canOpenURL:url
-   forApplication:application
    sourceApplication:sourceApplication
    annotation:annotation];
 
@@ -135,10 +133,9 @@ static NSURL *FBSDKGamingServicesUrl(FBSDKGamingServiceType serviceType, NSStrin
   return isGamingUrl;
 }
 
-- (BOOL) canOpenURL:(NSURL *)url
-     forApplication:(UIApplication *)application
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation
+- (BOOL)canOpenURL:(NSURL *)url
+ sourceApplication:(NSString *)sourceApplication
+        annotation:(id)annotation
 {
   return
   [self
@@ -146,7 +143,7 @@ static NSURL *FBSDKGamingServicesUrl(FBSDKGamingServiceType serviceType, NSStrin
    forService:FBSDKGamingServiceTypeString(_serviceType)];
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application
+- (void)applicationDidBecomeActive
 {
   if (_completionHandler) {
     [self completeSuccessfully];

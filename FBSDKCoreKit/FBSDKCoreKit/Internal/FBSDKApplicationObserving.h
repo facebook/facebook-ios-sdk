@@ -23,16 +23,14 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FBSDKApplicationObserving <NSObject>
 
 @optional
-- (void)applicationDidBecomeActive:(nullable UIApplication *)application;
-- (void)applicationWillResignActive:(nullable UIApplication *)application;
-- (void)applicationDidEnterBackground:(nullable UIApplication *)application;
-- (BOOL)            application:(UIApplication *)application
-  didFinishLaunchingWithOptions:(nullable NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
+- (void)applicationDidBecomeActive;
+- (void)applicationWillResignActive;
+- (void)applicationDidEnterBackground;
+- (BOOL)applicationDidFinishLaunchingWithOptions:(nullable NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
 
-- (BOOL)application:(UIApplication *)application
-            openURL:(NSURL *)url
-  sourceApplication:(nullable NSString *)sourceApplication
-         annotation:(nullable id)annotation;
+- (BOOL)  openURL:(NSURL *)url
+sourceApplication:(nullable NSString *)sourceApplication
+       annotation:(nullable id)annotation;
 
 @end
 

@@ -44,6 +44,8 @@ NS_SWIFT_NAME(ApplicationDelegate)
 NS_SWIFT_NAME(shared);
 
 /**
+ DEPRECATED - Replace with `openURL:sourceApplication:annotation`
+
   Call this method from the [UIApplicationDelegate application:openURL:sourceApplication:annotation:] method
  of the AppDelegate for your app. It should be invoked for the proper processing of responses during interaction
  with the native Facebook app or Safari as part of SSO authorization flow or Facebook dialogs.
@@ -61,10 +63,31 @@ NS_SWIFT_NAME(shared);
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
   sourceApplication:(nullable NSString *)sourceApplication
-         annotation:(nullable id)annotation;
+         annotation:(nullable id)annotation
+DEPRECATED_MSG_ATTRIBUTE("The application parameter is unused. Replace with `openURL:sourceApplication:annotation:`");
+
+/**
+  Call this method from the [UIApplicationDelegate application:openURL:sourceApplication:annotation:] method
+ of the AppDelegate for your app. It should be invoked for the proper processing of responses during interaction
+ with the native Facebook app or Safari as part of SSO authorization flow or Facebook dialogs.
+
+ @param url The URL as passed to [UIApplicationDelegate application:openURL:sourceApplication:annotation:].
+
+ @param sourceApplication The sourceApplication as passed to [UIApplicationDelegate application:openURL:sourceApplication:annotation:].
+
+ @param annotation The annotation as passed to [UIApplicationDelegate application:openURL:sourceApplication:annotation:].
+
+ @return YES if the url was intended for the Facebook SDK, NO if not.
+ */
+- (BOOL)openURL:(NSURL *)url
+sourceApplication:(nullable NSString *)sourceApplication
+     annotation:(nullable id)annotation;
+
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_9_0
 /**
+ DEPRECATED: - Replace with `openURL:options:`
+
   Call this method from the [UIApplicationDelegate application:openURL:options:] method
  of the AppDelegate for your app. It should be invoked for the proper processing of responses during interaction
  with the native Facebook app or Safari as part of SSO authorization flow or Facebook dialogs.
@@ -79,10 +102,26 @@ NS_SWIFT_NAME(shared);
  */
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
-            options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options;
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options
+DEPRECATED_MSG_ATTRIBUTE("The application parameter is unused. Replace with `openURL:options:`");
+/**
+  Call this method from the [UIApplicationDelegate application:openURL:options:] method
+ of the AppDelegate for your app. It should be invoked for the proper processing of responses during interaction
+ with the native Facebook app or Safari as part of SSO authorization flow or Facebook dialogs.
+
+ @param url The URL as passed to [UIApplicationDelegate application:openURL:options:].
+
+ @param options The options dictionary as passed to [UIApplicationDelegate application:openURL:options:].
+
+ @return YES if the url was intended for the Facebook SDK, NO if not.
+ */
+- (BOOL)openURL:(NSURL *)url
+        options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options;
 #endif
 
 /**
+ DEPRECATED: - Replace with `applicationDidFinishLaunching`
+
   Call this method from the [UIApplicationDelegate application:didFinishLaunchingWithOptions:] method
  of the AppDelegate for your app. It should be invoked for the proper use of the Facebook SDK.
  As part of SDK initialization basic auto logging of app events will occur, this can be
@@ -95,7 +134,20 @@ controlled via 'FacebookAutoLogAppEventsEnabled' key in the project info plist f
  @return YES if the url was intended for the Facebook SDK, NO if not.
  */
 - (BOOL)application:(UIApplication *)application
-didFinishLaunchingWithOptions:(nullable NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
+didFinishLaunchingWithOptions:(nullable NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions
+DEPRECATED_MSG_ATTRIBUTE("The application parameter is unused. Replace with `applicationDidFinishLaunchingWithOptions:`");
+
+/**
+  Call this method from the [UIApplicationDelegate application:didFinishLaunchingWithOptions:] method
+ of the AppDelegate for your app. It should be invoked for the proper use of the Facebook SDK.
+ As part of SDK initialization basic auto logging of app events will occur, this can be
+controlled via 'FacebookAutoLogAppEventsEnabled' key in the project info plist file.
+
+ @param launchOptions The launchOptions as passed to [UIApplicationDelegate application:didFinishLaunchingWithOptions:].
+
+ @return YES if the url was intended for the Facebook SDK, NO if not.
+ */
+- (BOOL)applicationDidFinishLaunchingWithOptions:(nullable NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
 
 /**
   Call this method to manually initialize SDK.

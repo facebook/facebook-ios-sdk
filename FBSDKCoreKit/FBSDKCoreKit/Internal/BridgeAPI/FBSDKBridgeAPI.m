@@ -91,12 +91,12 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
   return _sharedInstance;
 }
 
-- (void)applicationWillResignActive:(UIApplication *)application
+- (void)applicationWillResignActive
 {
   [self _updateAuthStateIfSystemAlertToUseWebAuthFlowPresented];
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application
+- (void)applicationDidBecomeActive
 {
   BOOL isRequestingWebAuthenticationSession = NO;
   if (@available(iOS 11.0, *)) {
@@ -123,24 +123,23 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
   if (notExpectingBackground) {
     _active = YES;
 
-    [_pendingURLOpen applicationDidBecomeActive:application];
+    [_pendingURLOpen applicationDidBecomeActive];
     [self _cancelBridgeRequest];
 
     [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKApplicationDidBecomeActiveNotification object:self];
   }
 }
 
-- (void)applicationDidEnterBackground:(UIApplication *)application
+- (void)applicationDidEnterBackground
 {
   _active = NO;
   _expectingBackground = NO;
   [self _updateAuthStateIfSystemCancelAuthSession];
 }
 
-- (BOOL)application:(UIApplication *)application
-            openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation
+- (BOOL)  openURL:(NSURL *)url
+sourceApplication:(NSString *)sourceApplication
+       annotation:(id)annotation
 {
   id<FBSDKURLOpening> pendingURLOpen = _pendingURLOpen;
 
@@ -150,16 +149,14 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
   }
 
   BOOL canOpenURL = [pendingURLOpen canOpenURL:url
-                                forApplication:application
                              sourceApplication:sourceApplication
                                     annotation:annotation];
 
   void (^completePendingOpenURLBlock)(void) = ^{
     self->_pendingURLOpen = nil;
-    [pendingURLOpen application:application
-                        openURL:url
-              sourceApplication:sourceApplication
-                     annotation:annotation];
+    [pendingURLOpen openURL:url
+          sourceApplication:sourceApplication
+                 annotation:annotation];
     self->_isDismissingSafariViewController = NO;
   };
   // if they completed a SFVC flow, dismiss it.
@@ -205,8 +202,7 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
   return NO;
 }
 
-- (BOOL)            application:(UIApplication *)application
-  didFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions
+- (BOOL)applicationDidFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions
 {
   NSURL *launchedURL = launchOptions[UIApplicationLaunchOptionsURLKey];
   NSString *sourceApplication = launchOptions[UIApplicationLaunchOptionsSourceApplicationKey];
@@ -217,10 +213,9 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
     if (loginManagerClass) {
       id annotation = launchOptions[UIApplicationLaunchOptionsAnnotationKey];
       id<FBSDKURLOpening> loginManager = [[loginManagerClass alloc] init];
-      return [loginManager application:application
-                               openURL:launchedURL
-                     sourceApplication:sourceApplication
-                            annotation:annotation];
+      return [loginManager openURL:launchedURL
+                 sourceApplication:sourceApplication
+                        annotation:annotation];
     }
   }
 
@@ -432,7 +427,7 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
     BOOL didSucceed = (error == nil && aURL != nil);
     handler(didSucceed, error);
     if (didSucceed) {
-      [strongSelf application:[UIApplication sharedApplication] openURL:aURL sourceApplication:@"com.apple" annotation:nil];
+      [strongSelf openURL:aURL sourceApplication:@"com.apple" annotation:nil];
     }
     strongSelf->_authenticationSession = nil;
     strongSelf->_authenticationSessionCompletionHandler = nil;
@@ -450,10 +445,9 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 
     _pendingURLOpen = nil;
 
-    [pendingURLOpen application:nil
-                        openURL:nil
-              sourceApplication:nil
-                     annotation:nil];
+    [pendingURLOpen openURL:nil
+          sourceApplication:nil
+                 annotation:nil];
   }
   [self _cancelBridgeRequest];
   _safariViewController = nil;

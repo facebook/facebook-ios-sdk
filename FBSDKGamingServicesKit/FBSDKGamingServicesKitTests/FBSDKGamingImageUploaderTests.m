@@ -192,7 +192,6 @@
    }];
 
   [delegate
-   application:_mockApp
    openURL:[NSURL URLWithString:@"fb123://media_asset"]
    sourceApplication:@""
    annotation:nil];
@@ -218,7 +217,7 @@
      actioned = true;
    }];
 
-  [delegate applicationDidBecomeActive:_mockApp];
+  [delegate applicationDidBecomeActive];
 
   XCTAssertTrue(actioned);
 }
