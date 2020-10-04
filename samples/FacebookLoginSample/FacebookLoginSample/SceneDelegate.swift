@@ -29,9 +29,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             fatalError("Open url called without a context. This should never happen.")
         }
 
-        ApplicationDelegate.shared.application(
-            UIApplication.shared,
-            open: context.url,
+        ApplicationDelegate.shared.open(
+            context.url,
             sourceApplication: nil,
             annotation: nil
         )

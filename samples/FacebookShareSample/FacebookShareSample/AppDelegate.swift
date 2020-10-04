@@ -26,10 +26,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        ApplicationDelegate.shared.application(
-            application,
-            didFinishLaunchingWithOptions: launchOptions
-        )
+        ApplicationDelegate.shared.applicationDidFinishLaunching(options: launchOptions)
+
         return true
     }
 
@@ -39,9 +37,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         sourceApplication: String?,
         annotation: Any
     ) -> Bool {
-
-        return ApplicationDelegate.shared.application(
-            application, open: url,
+        ApplicationDelegate.shared.open(
+            url,
             sourceApplication: sourceApplication,
             annotation: annotation
         )
@@ -52,11 +49,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         open url: URL,
         options: [UIApplication.OpenURLOptionsKey : Any] = [:]
     ) -> Bool {
-        return ApplicationDelegate.shared.application(
-            app,
-            open: url,
-            options: options
-        )
+        ApplicationDelegate.shared.open(url, options: options)
     }
 
 }

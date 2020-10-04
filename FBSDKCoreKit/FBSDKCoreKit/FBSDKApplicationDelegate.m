@@ -181,7 +181,7 @@ static UIApplicationState _applicationState;
             openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
-    [self openURL:url options:options];
+    return [self openURL:url options:options];
 }
 
 - (BOOL)openURL:(NSURL *)url
@@ -203,7 +203,7 @@ static UIApplicationState _applicationState;
   sourceApplication:(nullable NSString *)sourceApplication
          annotation:(nullable id)annotation
 {
-    [self openURL:url sourceApplication:sourceApplication annotation:annotation];
+    return [self openURL:url sourceApplication:sourceApplication annotation:annotation];
 }
 
 - (BOOL)  openURL:(NSURL *)url
@@ -240,7 +240,7 @@ sourceApplication:(NSString *)sourceApplication
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey,id> *)launchOptions
 {
-    [self applicationDidFinishLaunchingWithOptions:launchOptions];
+    return [self applicationDidFinishLaunchingWithOptions:launchOptions];
 }
 
 - (BOOL)applicationDidFinishLaunchingWithOptions:(NSDictionary *)launchOptions
