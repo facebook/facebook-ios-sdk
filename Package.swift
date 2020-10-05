@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.3
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 // Copyright (c) 2016-present, Facebook, Inc. All rights reserved.
@@ -23,6 +23,7 @@ import PackageDescription
 
 let package = Package(
     name: "Facebook",
+    defaultLocalization: "en",
     platforms: [
         .iOS(.v9),
         .tvOS(.v10)
