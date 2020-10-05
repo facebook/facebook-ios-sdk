@@ -48,6 +48,8 @@ NS_SWIFT_NAME(LoginManagerLogger)
 - (void)willAttemptAppSwitchingBehavior;
 
 - (void)logNativeAppDialogResult:(BOOL)result dialogDuration:(NSTimeInterval)dialogDuration;
+
+- (void)addSingleLoggingExtra:(id)extra forKey:(NSString *)key;
 @end
 
 #endif

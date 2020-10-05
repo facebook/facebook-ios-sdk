@@ -193,6 +193,11 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
   }
 }
 
+- (void)addSingleLoggingExtra:(id)extra forKey:(NSString *)key
+{
+  [FBSDKTypeUtility dictionary:_extras setObject:extra forKey:key];
+}
+
  #pragma mark - Private
 
 - (NSString *)clientStateForAuthMethod:(NSString *)authMethod andExistingState:(NSDictionary *)existingState
