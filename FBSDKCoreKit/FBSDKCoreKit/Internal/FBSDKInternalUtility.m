@@ -89,17 +89,10 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
   static NSBundle *bundle;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    NSString *spmStringsBundlePath = [[NSBundle bundleForClass:[FBSDKApplicationDelegate class]]
-                                      pathForResource:@"Facebook_FBSDKCoreKit_Basics"
-                                      ofType:@"bundle"];
-    bundle = [NSBundle bundleWithPath:spmStringsBundlePath];
-    if (!bundle) {
-      NSString *stringsBundlePath = [[NSBundle bundleForClass:[FBSDKApplicationDelegate class]]
-                                     pathForResource:@"FacebookSDKStrings"
-                                     ofType:@"bundle"];
-
-      bundle = [NSBundle bundleWithPath:stringsBundlePath] ?: [NSBundle mainBundle];
-    }
+    NSString *stringsBundlePath = [[NSBundle bundleForClass:[FBSDKApplicationDelegate class]]
+                                   pathForResource:@"FacebookSDKStrings"
+                                   ofType:@"bundle"];
+    bundle = [NSBundle bundleWithPath:stringsBundlePath] ?: [NSBundle mainBundle];
   });
   return bundle;
 }
