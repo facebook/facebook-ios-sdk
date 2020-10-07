@@ -9,7 +9,7 @@ labels: bug
 - [ ] I've updated to the latest released version of the SDK
 - [ ] I've searched for existing [GitHub issues](https://github.com/facebook/facebook-ios-sdk/issues)
 - [ ] I've looked for existing answers on [Stack Overflow](https://facebook.stackoverflow.com), the [Facebook Developer Community Forum](https://developers.facebook.com/community/) and the [Facebook Developers Group](https://www.facebook.com/groups/fbdevelopers)
-- [ ] I've read the [Code of Conduct](CODE_OF_CONDUCT.md)
+- [ ] I've read the [Code of Conduct](https://github.com/facebook/facebook-ios-sdk/blob/master/CODE_OF_CONDUCT.md)
 - [ ] This issue is not security related and can safely be disclosed publicly on GitHub
 
 ## Environment
