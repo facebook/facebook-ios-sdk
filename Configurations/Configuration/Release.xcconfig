@@ -39,4 +39,6 @@ MTL_ENABLE_DEBUG_INFO = NO
 
 // Excluding arm64 in Release builds for simulator allows creation of x86_64 slice
 // when building with Xcode12. May need to revisit this as Apple Silicon gains adoption.
+// Also see: https://github.com/Carthage/Carthage/issues/3019
 EXCLUDED_ARCHS[sdk=iphonesimulator*] = arm64
+EXCLUDED_ARCHS[sdk=appletvsimulator*] = arm64

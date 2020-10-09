@@ -72,7 +72,6 @@
 		F4F7CA7723F49D6F0030A346 /* FBSDKGamingImageUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F7C9C223F48F2C0030A346 /* FBSDKGamingImageUploader.m */; };
 		F4F7CA7823F49D6F0030A346 /* FBSDKGamingImageUploaderConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F7C9B623F48F2C0030A346 /* FBSDKGamingImageUploaderConfiguration.m */; };
 		F4F7CA7923F49D6F0030A346 /* FBSDKGamingServiceController.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F7C9BA23F48F2C0030A346 /* FBSDKGamingServiceController.m */; };
-		F4F7CAA223F4A1390030A346 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4F7CAA123F4A1390030A346 /* UIKit.framework */; };
 		F4F7CAA323F4A1470030A346 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4F7CAA123F4A1390030A346 /* UIKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -328,7 +327,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F4F7CAA223F4A1390030A346 /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
