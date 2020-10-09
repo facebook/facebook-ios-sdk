@@ -196,6 +196,17 @@ static NSArray<NSString *> *standardEvents;
   );
 }
 
++ (void)ensureNotOnMainThread:(NSString *)methodName className:(NSString *)className
+{
+  FBSDKConditionalLog(
+    [NSThread isMainThread] == NO,
+    FBSDKLoggingBehaviorDeveloperErrors,
+    @"*** <%@, %@> is called on main thread. This can lead to errors.",
+    methodName,
+    className
+  );
+}
+
 + (NSString *)flushReasonToString:(FBSDKAppEventsFlushReason)flushReason
 {
   NSString *result = @"Unknown";

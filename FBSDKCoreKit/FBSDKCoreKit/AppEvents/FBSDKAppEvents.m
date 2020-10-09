@@ -965,8 +965,8 @@ static dispatch_once_t *onceTokenPointer;
     FBSDKAppEventsState *copy = [_appEventsState copy];
     _appEventsState = [[FBSDKAppEventsState alloc] initWithToken:copy.tokenString
                                                            appID:copy.appID];
-    dispatch_async(dispatch_get_main_queue(), ^{
-      [self flushOnMainQueue:copy forReason:flushReason];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+      [self flushOnBackgroundQueueWithDefaultPriority:copy forReason:flushReason];
     });
   }
 }
@@ -1316,8 +1316,8 @@ static dispatch_once_t *onceTokenPointer;
       if (self.flushBehavior == FBSDKAppEventsFlushBehaviorExplicitOnly) {
         [FBSDKAppEventsStateManager persistAppEventsData:saved];
       } else {
-        dispatch_async(dispatch_get_main_queue(), ^{
-          [self flushOnMainQueue:saved forReason:FBSDKAppEventsFlushReasonPersistedEvents];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+          [self flushOnBackgroundQueueWithDefaultPriority:saved forReason:FBSDKAppEventsFlushReasonPersistedEvents];
         });
       }
     }
@@ -1331,15 +1331,15 @@ static dispatch_once_t *onceTokenPointer;
   }
 }
 
-- (void)flushOnMainQueue:(FBSDKAppEventsState *)appEventsState
-               forReason:(FBSDKAppEventsFlushReason)reason
+- (void)flushOnBackgroundQueueWithDefaultPriority:(FBSDKAppEventsState *)appEventsState
+                                        forReason:(FBSDKAppEventsFlushReason)reason
 {
   if (appEventsState.events.count == 0) {
     return;
   }
 
   if (appEventsState.appID.length == 0) {
-    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:@"Missing [FBSDKAppEvents appEventsState.appID] for [FBSDKAppEvents flushOnMainQueue:]"];
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:@"Missing [FBSDKAppEvents appEventsState.appID] for [FBSDKAppEvents flushOnBackgroundQueueWithDefaultPriority:]"];
     return;
   }
 
@@ -1347,7 +1347,7 @@ static dispatch_once_t *onceTokenPointer;
     return;
   }
 
-  [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
+  [FBSDKAppEventsUtility ensureNotOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
 
   [self fetchServerConfiguration:^(void) {
     NSString *receipt_data = appEventsState.extractReceiptData;
@@ -1399,9 +1399,11 @@ static dispatch_once_t *onceTokenPointer;
                                                                         flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
 
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-      [self handleActivitiesPostCompletion:error
-                              loggingEntry:loggingEntry
-                            appEventsState:(FBSDKAppEventsState *)appEventsState];
+      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self handleActivitiesPostCompletion:error
+                                loggingEntry:loggingEntry
+                              appEventsState:(FBSDKAppEventsState *)appEventsState];
+      });
     }];
   }];
 }
@@ -1416,7 +1418,7 @@ static dispatch_once_t *onceTokenPointer;
     FlushResultNoConnectivity,
   };
 
-  [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
+  [FBSDKAppEventsUtility ensureNotOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
 
   FBSDKAppEventsFlushResult flushResult = FlushResultSuccess;
   if (error) {
