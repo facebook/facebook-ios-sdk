@@ -67,6 +67,9 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing a `FBSDKAppEventsUtility` class  mock between tests
 @property (nullable, nonatomic, assign) id appEventsUtilityClassMock;
 
+/// Used for sharing an `FBSDKAppLinkResolverRequestBuilder` class mock between tests
+@property (nullable, assign) id appLinkResolverRequestBuilderMock;
+
 /// Used for sharing an `FBSDKApplicationDelegate` class mock between tests
 @property (nullable, assign) id fbApplicationDelegateClassMock;
 
@@ -75,6 +78,9 @@ Also, to get a better understanding of mocking, please read the documentation at
 
 /// Used for sharing an `FBSDKGatekeeperManager` class mock between tests
 @property (nullable, assign) id gatekeeperManagerClassMock;
+
+/// Used for sharing an `FBSDKGraphRequest` class mock between tests
+@property (nullable, assign) id graphRequestMock;
 
 /// Used for sharing an `NSBundle` class mock between tests
 @property (nullable, assign) id nsBundleClassMock;
@@ -198,6 +204,12 @@ Also, to get a better understanding of mocking, please read the documentation at
 
 /// Stubs `FBSDKAppEventsUtility.tokenStringToUseFor:` and returns the provided string
 - (void)stubAppEventsUtilityTokenStringToUseForTokenWith:(NSString *)tokenString;
+
+/// Stubs `FBSDKGraphRequest.startWithCompletionHandler:` and returns the provided result, error and connection
+- (void)stubGraphRequestWithResult:(id)result error:(nullable NSError *)error connection:(nullable FBSDKGraphRequestConnection *)connection;
+
+/// Stubs `FBSDKGraphRequest.startWithCompletionHandler:` and returns the provided result, error and connection
+- (void)stubAppLinkResolverRequestBuilderWithIdiomSpecificField:(nullable NSString *)field;
 
 @end
 

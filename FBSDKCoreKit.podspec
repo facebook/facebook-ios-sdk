@@ -62,6 +62,7 @@ Pod::Spec.new do |s|
                              'FBSDKCoreKit/FBSDKCoreKit/*.h',
                              'FBSDKCoreKit/FBSDKCoreKit/AppEvents/*.h',
                              'FBSDKCoreKit/FBSDKCoreKit/AppLink/*.h',
+                             'FBSDKCoreKit/FBSDKCoreKit/AppLink/Resolver/*.h',
                              'FBSDKCoreKit/FBSDKCoreKit/GraphAPI/*.h'
     ss.private_header_files = 'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.h',
                               'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/**/*.h'

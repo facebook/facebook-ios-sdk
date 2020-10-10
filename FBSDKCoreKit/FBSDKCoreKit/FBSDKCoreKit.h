@@ -43,6 +43,7 @@
   #import <FBSDKCoreKit/FBSDKAppLink.h>
   #import <FBSDKCoreKit/FBSDKAppLinkNavigation.h>
   #import <FBSDKCoreKit/FBSDKAppLinkResolver.h>
+  #import <FBSDKCoreKit/FBSDKAppLinkResolverRequestBuilder.h>
   #import <FBSDKCoreKit/FBSDKAppLinkResolving.h>
   #import <FBSDKCoreKit/FBSDKAppLinkReturnToRefererController.h>
   #import <FBSDKCoreKit/FBSDKAppLinkReturnToRefererView.h>
@@ -79,6 +80,7 @@
   #import "FBSDKAppLink.h"
   #import "FBSDKAppLinkNavigation.h"
   #import "FBSDKAppLinkResolver.h"
+  #import "FBSDKAppLinkResolverRequestBuilder.h"
   #import "FBSDKAppLinkResolving.h"
   #import "FBSDKAppLinkReturnToRefererController.h"
   #import "FBSDKAppLinkReturnToRefererView.h"

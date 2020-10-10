@@ -20,19 +20,15 @@
 #import <XCTest/XCTest.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <OHHTTPStubs/OHHTTPStubs.h>
 
 #import "FBSDKAppLinkResolver.h"
-#import "FBSDKCoreKitTestUtility.h"
-#import "FBSDKInternalUtility.h"
-#import "FBSDKSettings.h"
+#import "FBSDKTestCase.h"
 
 static NSString *const kAppLinkURLString = @"http://example.com/1234567890";
 static NSString *const kAppLinkURL2String = @"http://example.com/0987654321";
 static NSString *const kAppLinksKey = @"app_links";
-
-typedef void (^HTTPStubCallback)(NSURLRequest *request);
-typedef _Nullable id (^StringURLBlock)(NSString *urlString);
+static NSString *const kIphoneKey = @"iphone";
+static NSString *const kIpadKey = @"ipad";
 
 @interface NSURL (FBSDKAppLinkResolverTests)
 
@@ -43,147 +39,87 @@ typedef _Nullable id (^StringURLBlock)(NSString *urlString);
 @interface FBSDKAppLinkResolver (FBSDKAppLinkResolverTests)
 
 - (instancetype)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom;
+- (instancetype)initWithRequestBuilder:(FBSDKAppLinkResolverRequestBuilder *)builder;
+- (instancetype)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom andRequestBuilder:(FBSDKAppLinkResolverRequestBuilder *)builder;
 
 @end
 
-@interface FBSDKAppLinkResolverTests : XCTestCase
+@interface FBSDKAppLinkResolverTests : FBSDKTestCase
 @end
 
 @implementation FBSDKAppLinkResolverTests
+
+#pragma mark - Mock requests
+
+- (void)mockAppLinkRequestWithResult:(id)result
 {
-  id _mockNSBundle;
+  [self mockAppLinkRequestWithResult:result error:nil idiomSpecificField:kIphoneKey];
 }
 
-#pragma mark - HTTP stubbing helpers
-
-- (void)stubAllResponsesWithResult:(id)result
+- (void)mockAppLinkRequestWithError
 {
-  [self stubAllResponsesWithResult:result statusCode:200];
+  [self mockAppLinkRequestWithResult:@{@"error" : @{}}
+                               error:[[NSError alloc]
+                                      initWithDomain:FBSDKErrorDomain
+                                      code:-1
+                                      userInfo:nil]
+                  idiomSpecificField:kIphoneKey];
 }
 
-- (void)stubAllResponsesWithResult:(id)result
-                        statusCode:(int)statusCode
+- (void)mockAppLinkRequestWithResult:(id)result idiomSpecificField:(NSString *)field
 {
-  [self stubAllResponsesWithResult:result statusCode:statusCode callback:nil];
+  [self mockAppLinkRequestWithResult:result error:nil idiomSpecificField:field];
 }
 
-- (void)stubAllResponsesWithResult:(id)result
-                        statusCode:(int)statusCode
-                          callback:(HTTPStubCallback)callback
+- (void)mockAppLinkRequestWithResult:(id)result error:(NSError *)error idiomSpecificField:(NSString *)field
 {
-  return [self stubMatchingRequestsWithResponses:@{@"" : result}
-                                      statusCode:statusCode
-                                        callback:callback];
+  [self mockAppLinkRequestWithResult:result error:error idiomSpecificField:field andDo:nil];
 }
 
-- (void)stubMatchingRequestsWithResponses:(NSDictionary<NSString *, id> *)requestsAndResponses
-                               statusCode:(int)statusCode
-                                 callback:(HTTPStubCallback)callback
+- (void)mockAppLinkRequestWithResult:(id)result error:(NSError *)error idiomSpecificField:(NSString *)field andDo:(void (^_Nullable)(NSInvocation *))block
 {
-  StringURLBlock matchingKey = ^id (NSString *urlString) {
-    for (NSString *substring in requestsAndResponses.allKeys) {
-      // The first @"" always matches
-      if (substring.length == 0
-          || [urlString rangeOfString:substring].location != NSNotFound) {
-        return substring;
-      }
-    }
-    return nil;
-  };
+  [self stubGraphRequestWithResult:result error:error connection:nil];
+  [self stubAppLinkResolverRequestBuilderWithIdiomSpecificField:field];
 
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
-                 if (callback) {
-                   callback(request);
-                 }
-
-                 return matchingKey(request.URL.absoluteString) != nil;
-               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-                 id result = requestsAndResponses[matchingKey(request.URL.absoluteString)];
-                 NSData *data = [[FBSDKBasicUtility JSONStringForObject:result
-                                                                  error:NULL
-                                                   invalidObjectHandler:NULL] dataUsingEncoding:NSUTF8StringEncoding];
-
-                 return [OHHTTPStubsResponse responseWithData:data
-                                                   statusCode:statusCode
-                                                      headers:nil];
-               }];
+  OCMStub([self.appLinkResolverRequestBuilderMock requestForURLs:[OCMArg any]]).andReturn(self.graphRequestMock).andDo(block);
 }
 
 #pragma mark - test cases
 
-- (void)setUp
-{
-  _mockNSBundle = [FBSDKCoreKitTestUtility mainBundleMock];
-}
-
-/*
-- (void)testAsksForPhoneDataOnPhone
-{
-  XCTestExpectation *expectation = [self expectationWithDescription:@"asksForPhoneDataOnPhone"];
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
-
-  __block BOOL askedForPhone = NO;
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-    NSDictionary<NSString *, NSString *> *queryParameters =
-     [FBSDKInternalUtility dictionaryFromFBURL:request.URL];
-    askedForPhone = [queryParameters[@"fields"] rangeOfString:@"iphone"].location != NSNotFound;
-    return YES;
-  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    return [OHHTTPStubsResponse responseWithData:[NSData data]
-                                      statusCode:200
-                                         headers:nil];
-  }];
-
-  FBSDKAppLinkResolver *resolver = [[FBSDKAppLinkResolver alloc] initWithUserInterfaceIdiom:UIUserInterfaceIdiomPhone];
-  [resolver
-   appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable appLink, NSError * _Nullable error) {
-     XCTAssertTrue(askedForPhone);
-     [expectation fulfill];
-  }];
-
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
-    XCTAssertNil(error);
-  }];
-  [FBSDKSettings setClientToken:nil];
-}
-*/
-
-/*
 - (void)testUsesPhoneDataOnPhone
 {
   XCTestExpectation *expectation = [self expectationWithDescription:@"usesPhoneDataOnPhone"];
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
+  [self stubClientTokenWith:@"clienttoken"];
 
-  [self stubAllResponsesWithResult:@{
-                                     kAppLinkURLString : @{
-                                       kAppLinksKey: @{
-                                         @"iphone": @[
-                                           @{
-                                             @"app_name": @"Example",
-                                             @"app_store_id": @"456",
-                                             @"url": @"example://things/1234567890"
-                                           }
-                                         ],
-                                         @"ios": @[
-                                           @{
-                                             @"app_name": @"Example",
-                                             @"app_store_id": @"123",
-                                             @"url": @"example://things/1234567890"
-                                           }
-                                         ],
-                                       },
-                                       @"id": kAppLinkURLString
-                                     }
-                                   }];
+  id result = @{
+    kAppLinkURLString : @{
+      kAppLinksKey : @{
+        kIphoneKey : @[
+          @{
+            @"app_name" : @"Example",
+            @"app_store_id" : @"456",
+            @"url" : @"example://things/1234567890"
+          }
+        ],
+        @"ios" : @[
+          @{
+            @"app_name" : @"Example",
+            @"app_store_id" : @"123",
+            @"url" : @"example://things/1234567890"
+          }
+        ],
+      },
+      @"id" : kAppLinkURLString
+    }
+  };
 
-  FBSDKAppLinkResolver *resolver = [[FBSDKAppLinkResolver alloc] initWithUserInterfaceIdiom:UIUserInterfaceIdiomPhone];
+  [self mockAppLinkRequestWithResult:result idiomSpecificField:kIphoneKey];
+
+  FBSDKAppLinkResolver *resolver = [[FBSDKAppLinkResolver alloc] initWithUserInterfaceIdiom:UIUserInterfaceIdiomPhone andRequestBuilder:self.appLinkResolverRequestBuilderMock];
+
   [resolver
    appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable link, NSError * _Nullable error) {
-
+   handler:^(FBSDKAppLink *_Nullable link, NSError *_Nullable error) {
      XCTAssertNotNil(link);
      XCTAssertEqual(link.sourceURL.absoluteString, kAppLinkURLString);
      XCTAssertEqualObjects([link.targets[0] appStoreId], @"456");
@@ -192,82 +128,45 @@ typedef _Nullable id (^StringURLBlock)(NSString *urlString);
      [expectation fulfill];
    }];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
+  [self waitForExpectationsWithTimeout:2 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);
   }];
-  [FBSDKSettings setClientToken:nil];
 }
-*/
 
-/*
-- (void)testAsksForPadDataOnPad
-{
-  XCTestExpectation *expectation = [self expectationWithDescription:@"asksForPadDataOnPad"];
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
-
-  __block BOOL askedForPad = NO;
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-    NSDictionary<NSString *, NSString *> *queryParameters =
-     [FBSDKInternalUtility dictionaryFromFBURL:request.URL];
-    // do an "OR" because we only need to verify we asked for it once (in cases where unrelated network requests
-    // were resetting the flag incorrectly back to NO).
-    askedForPad |= [queryParameters[@"fields"] rangeOfString:@"ipad"].location != NSNotFound;
-    return YES;
-  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    return [OHHTTPStubsResponse responseWithData:[NSData data]
-                                      statusCode:200
-                                         headers:nil];
-  }];
-
-  FBSDKAppLinkResolver *resolver = [[FBSDKAppLinkResolver alloc] initWithUserInterfaceIdiom:UIUserInterfaceIdiomPad];
-  [resolver
-   appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable link, NSError * _Nullable error) {
-     XCTAssertTrue(askedForPad);
-     [expectation fulfill];
-   }];
-
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
-    XCTAssertNil(error);
-  }];
-  [FBSDKSettings setClientToken:nil];
-}
-*/
-
-/*
 - (void)testUsesPadDataOnPad
 {
   XCTestExpectation *expectation = [self expectationWithDescription:@"usesPadDataOnPad"];
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
+  [self stubClientTokenWith:@"clienttoken"];
 
-  [self stubAllResponsesWithResult:@{
-                                     kAppLinkURLString : @{
-                                       kAppLinksKey: @{
-                                         @"ipad": @[
-                                           @{
-                                             @"app_name": @"Example",
-                                             @"app_store_id": @"456",
-                                             @"url": @"example://things/1234567890"
-                                           }
-                                         ],
-                                         @"ios": @[
-                                           @{
-                                             @"app_name": @"Example",
-                                             @"app_store_id": @"123",
-                                             @"url": @"example://things/1234567890"
-                                           }
-                                         ],
-                                       },
-                                       @"id": kAppLinkURLString
-                                     }
-                                   }];
+  id result = @{
+    kAppLinkURLString : @{
+      kAppLinksKey : @{
+        @"ipad" : @[
+          @{
+            @"app_name" : @"Example",
+            @"app_store_id" : @"456",
+            @"url" : @"example://things/1234567890"
+          }
+        ],
+        @"ios" : @[
+          @{
+            @"app_name" : @"Example",
+            @"app_store_id" : @"123",
+            @"url" : @"example://things/1234567890"
+          }
+        ],
+      },
+      @"id" : kAppLinkURLString
+    }
+  };
 
-  FBSDKAppLinkResolver *resolver = [[FBSDKAppLinkResolver alloc] initWithUserInterfaceIdiom:UIUserInterfaceIdiomPad];
+  [self mockAppLinkRequestWithResult:result idiomSpecificField:kIpadKey];
+
+  FBSDKAppLinkResolver *resolver = [[FBSDKAppLinkResolver alloc] initWithUserInterfaceIdiom:UIUserInterfaceIdiomPad andRequestBuilder:self.appLinkResolverRequestBuilderMock];
+
   [resolver
    appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable link, NSError * _Nullable error) {
+   handler:^(FBSDKAppLink *_Nullable link, NSError *_Nullable error) {
      XCTAssertNotNil(link);
      XCTAssertEqual(link.sourceURL.absoluteString, kAppLinkURLString);
      XCTAssertEqualObjects([link.targets[0] appStoreId], @"456");
@@ -276,76 +175,73 @@ typedef _Nullable id (^StringURLBlock)(NSString *urlString);
      [expectation fulfill];
    }];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
+  [self waitForExpectationsWithTimeout:2 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);
   }];
-  [FBSDKSettings setClientToken:nil];
 }
-
 
 - (void)testIgnoresAndroidData
 {
   XCTestExpectation *expectation = [self expectationWithDescription:@"ignoresAndroidData"];
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
+  [self stubClientTokenWith:@"clienttoken"];
 
   // We are not asking for it, but just make sure we ignore any non-iOS-platform data we get, to be safe.
-  [self stubAllResponsesWithResult:@{
-                                     kAppLinkURLString : @{
-                                       kAppLinksKey: @{
-                                         @"android": @[
-                                           @{
-                                             @"app_name": @"Example",
-                                             @"package": @"com.example.app",
-                                             @"url": @"example://things/1234567890"
-                                           }
-                                         ],
-                                         @"ios": @[
-                                           @{
-                                             @"app_name": @"Example",
-                                             @"app_store_id": @"123",
-                                             @"url": @"example://things/1234567890"
-                                           }
-                                         ],
-                                       },
-                                       @"id": kAppLinkURLString
-                                     }
-                                   }];
+  id result = @{
+    kAppLinkURLString : @{
+      kAppLinksKey : @{
+        @"android" : @[
+          @{
+            @"app_name" : @"Example",
+            @"package" : @"com.example.app",
+            @"url" : @"example://things/1234567890"
+          }
+        ],
+        @"ios" : @[
+          @{
+            @"app_name" : @"Example",
+            @"app_store_id" : @"123",
+            @"url" : @"example://things/1234567890"
+          }
+        ],
+      },
+      @"id" : kAppLinkURLString
+    }
+  };
 
-  FBSDKAppLinkResolver *resolver = [FBSDKAppLinkResolver resolver];
+  [self mockAppLinkRequestWithResult:result];
+  FBSDKAppLinkResolver *resolver = [[FBSDKAppLinkResolver alloc] initWithRequestBuilder:self.appLinkResolverRequestBuilderMock];
+
   [resolver
    appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable link, NSError * _Nullable error) {
+   handler:^(FBSDKAppLink *_Nullable link, NSError *_Nullable error) {
      XCTAssertNotNil(link);
      XCTAssertEqualObjects([link.targets[0] appStoreId], @"123");
 
      [expectation fulfill];
    }];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
+  [self waitForExpectationsWithTimeout:2 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);
   }];
-  [FBSDKSettings setClientToken:nil];
 }
-*/
 
-/*
 - (void)testHandlesNoTargets
 {
   XCTestExpectation *expectation = [self expectationWithDescription:@"handlesNoTargets"];
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
+  [self stubClientTokenWith:@"clienttoken"];
 
-  [self stubAllResponsesWithResult:@{
-                                     kAppLinkURLString : @{
-                                       @"id": kAppLinkURLString
-                                     }
-                                   }];
+  id result = @{
+    kAppLinkURLString : @{
+      @"id" : kAppLinkURLString
+    }
+  };
 
-  FBSDKAppLinkResolver *resolver = [FBSDKAppLinkResolver resolver];
+  [self mockAppLinkRequestWithResult:result];
+  FBSDKAppLinkResolver *resolver = [[FBSDKAppLinkResolver alloc] initWithRequestBuilder:self.appLinkResolverRequestBuilderMock];
+
   [resolver
    appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable link, NSError * _Nullable error) {
+   handler:^(FBSDKAppLink *_Nullable link, NSError *_Nullable error) {
      XCTAssertNotNil(link);
      XCTAssertEqual(link.sourceURL.absoluteString, kAppLinkURLString);
      XCTAssertEqual(link.targets.count, 0);
@@ -353,33 +249,31 @@ typedef _Nullable id (^StringURLBlock)(NSString *urlString);
      [expectation fulfill];
    }];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
+  [self waitForExpectationsWithTimeout:2 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);
   }];
-  [FBSDKSettings setClientToken:nil];
 }
-*/
 
-/*
 - (void)testHandlesMultipleURLs
 {
   XCTestExpectation *expectation = [self expectationWithDescription:@"handlesMultipleURLs"];
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
+  [self stubClientTokenWith:@"clienttoken"];
 
-  [self stubAllResponsesWithResult:@{
-                                     kAppLinkURLString : @{
-                                       @"id": kAppLinkURLString
-                                     },
-                                     kAppLinkURL2String : @{
-                                       @"id": kAppLinkURL2String
-                                     }
-                                   }];
+  id result = @{
+    kAppLinkURLString : @{
+      @"id" : kAppLinkURLString
+    },
+    kAppLinkURL2String : @{
+      @"id" : kAppLinkURL2String
+    }
+  };
 
-  FBSDKAppLinkResolver *resolver = [FBSDKAppLinkResolver resolver];
+  [self mockAppLinkRequestWithResult:result];
+  FBSDKAppLinkResolver *resolver = [[FBSDKAppLinkResolver alloc] initWithRequestBuilder:self.appLinkResolverRequestBuilderMock];
+
   [resolver
    appLinksFromURLs:@[[NSURL URLWithString:kAppLinkURLString], [NSURL URLWithString:kAppLinkURL2String]]
-   handler:^(NSDictionary<NSURL *,FBSDKAppLink *> * _Nonnull links, NSError * _Nullable error) {
+   handler:^(NSDictionary<NSURL *, FBSDKAppLink *> *_Nonnull links, NSError *_Nullable error) {
      XCTAssertNotNil(links);
      XCTAssertEqual(links.count, 2);
      XCTAssertEqual([links[[NSURL URLWithString:kAppLinkURLString]] sourceURL].absoluteString, kAppLinkURLString);
@@ -388,311 +282,204 @@ typedef _Nullable id (^StringURLBlock)(NSString *urlString);
      [expectation fulfill];
    }];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
+  [self waitForExpectationsWithTimeout:2 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);
   }];
-  [FBSDKSettings setClientToken:nil];
 }
-*/
 
-/*
 - (void)testSetsFallbackIfNotSpecified
 {
   XCTestExpectation *expectation = [self expectationWithDescription:@"setsFallbackIfNotSpecified"];
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
+  [self stubClientTokenWith:@"clienttoken"];
 
-  [self stubAllResponsesWithResult:@{
-                                     kAppLinkURLString : @{
-                                       @"id": kAppLinkURLString
-                                     }
-                                   }];
+  id result = @{
+    kAppLinkURLString : @{
+      @"id" : kAppLinkURLString
+    }
+  };
 
-  FBSDKAppLinkResolver *resolver = [FBSDKAppLinkResolver resolver];
+  [self mockAppLinkRequestWithResult:result];
+  FBSDKAppLinkResolver *resolver = [[FBSDKAppLinkResolver alloc] initWithRequestBuilder:self.appLinkResolverRequestBuilderMock];
+
   [resolver
    appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable link, NSError * _Nullable error) {
+   handler:^(FBSDKAppLink *_Nullable link, NSError *_Nullable error) {
      XCTAssertNotNil(link);
      XCTAssertEqual(link.webURL.absoluteString, kAppLinkURLString);
 
      [expectation fulfill];
    }];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
+  [self waitForExpectationsWithTimeout:2 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);
   }];
-  [FBSDKSettings setClientToken:nil];
 }
-*/
 
-/*
 - (void)testSetsFallbackIfSpecified
 {
   XCTestExpectation *expectation = [self expectationWithDescription:@"setsFallbackIfSpecified"];
+  [self stubClientTokenWith:@"clienttoken"];
 
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
+  id result = @{
+    kAppLinkURLString : @{
+      kAppLinksKey : @{
+        @"web" : @{
+          @"url" : @"http://www.example.com/somethingelse",
+          @"should_fallback" : @"true"
+        }
+      },
+      @"id" : kAppLinkURLString
+    }
+  };
 
-  [self stubAllResponsesWithResult:@{
-                                     kAppLinkURLString : @{
-                                       kAppLinksKey : @{
-                                         @"web": @{
-                                           @"url" : @"http://www.example.com/somethingelse",
-                                           @"should_fallback": @"true"
-                                         }
-                                       },
-                                       @"id": kAppLinkURLString
-                                     }
-                                   }];
+  [self mockAppLinkRequestWithResult:result];
+  FBSDKAppLinkResolver *resolver = [[FBSDKAppLinkResolver alloc] initWithRequestBuilder:self.appLinkResolverRequestBuilderMock];
 
-  FBSDKAppLinkResolver *resolver = [FBSDKAppLinkResolver resolver];
   [resolver
    appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable link, NSError * _Nullable error) {
+   handler:^(FBSDKAppLink *_Nullable link, NSError *_Nullable error) {
      XCTAssertNotNil(link);
      XCTAssertEqualObjects(link.webURL.absoluteString, @"http://www.example.com/somethingelse");
 
      [expectation fulfill];
    }];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
+  [self waitForExpectationsWithTimeout:2 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);
   }];
-  [FBSDKSettings setClientToken:nil];
 }
-*/
 
-/*
 - (void)testUsesSourceAsFallbackIfSpecified
 {
   XCTestExpectation *expectation = [self expectationWithDescription:@"usesSourceAsFallbackIfSpecified"];
+  [self stubClientTokenWith:@"clienttoken"];
 
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
+  id result = @{
+    kAppLinkURLString : @{
+      kAppLinksKey : @{
+        @"web" : @{
+          @"should_fallback" : @"true"
+        }
+      },
+      @"id" : kAppLinkURLString,
+    }
+  };
 
-  [self stubAllResponsesWithResult:@{
-                                     kAppLinkURLString : @{
-                                       kAppLinksKey: @{
-                                         @"web": @{
-                                           @"should_fallback": @"true"
-                                         }
-                                       },
-                                       @"id": kAppLinkURLString,
-                                     }
-                                   }];
+  [self mockAppLinkRequestWithResult:result];
+  FBSDKAppLinkResolver *resolver = [[FBSDKAppLinkResolver alloc] initWithRequestBuilder:self.appLinkResolverRequestBuilderMock];
 
-  FBSDKAppLinkResolver *resolver = [FBSDKAppLinkResolver resolver];
   [resolver
    appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable link, NSError * _Nullable error) {
+   handler:^(FBSDKAppLink *_Nullable link, NSError *_Nullable error) {
      XCTAssertNotNil(link);
      XCTAssertEqual(link.webURL.absoluteString, kAppLinkURLString);
 
      [expectation fulfill];
    }];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
+  [self waitForExpectationsWithTimeout:2 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);
   }];
-  [FBSDKSettings setClientToken:nil];
 }
-*/
 
-/*
 - (void)testSetsNoFallbackIfSpecified
 {
   XCTestExpectation *expectation = [self expectationWithDescription:@"setsNoFallbackIfSpecified"];
+  [self stubClientTokenWith:@"clienttoken"];
 
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
+  id result = @{
+    kAppLinkURLString : @{
+      kAppLinksKey : @{
+        @"web" : @{
+          @"url" : @"http://www.example.com/somethingelse",
+          @"should_fallback" : @"false"
+        }
+      },
+      @"id" : kAppLinkURLString
+    }
+  };
 
-  [self stubAllResponsesWithResult:@{
-                                     kAppLinkURLString : @{
-                                       kAppLinksKey : @{
-                                         @"web": @{
-                                           @"url" : @"http://www.example.com/somethingelse",
-                                           @"should_fallback": @"false"
-                                         }
-                                       },
-                                       @"id": kAppLinkURLString
-                                     }
-                                   }];
+  [self mockAppLinkRequestWithResult:result];
+  FBSDKAppLinkResolver *resolver = [[FBSDKAppLinkResolver alloc] initWithRequestBuilder:self.appLinkResolverRequestBuilderMock];
 
-  FBSDKAppLinkResolver *resolver = [FBSDKAppLinkResolver resolver];
   [resolver
    appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable link, NSError * _Nullable error) {
+   handler:^(FBSDKAppLink *_Nullable link, NSError *_Nullable error) {
      XCTAssertNotNil(link);
      XCTAssertNil(link.webURL.absoluteString);
 
      [expectation fulfill];
    }];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
+  [self waitForExpectationsWithTimeout:2 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);
   }];
-  [FBSDKSettings setClientToken:nil];
 }
-*/
 
-/*
 - (void)testHandlesError
 {
   XCTestExpectation *expectation = [self expectationWithDescription:@"handlesError"];
+  [self stubClientTokenWith:@"clienttoken"];
 
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
+  [self mockAppLinkRequestWithError];
+  FBSDKAppLinkResolver *resolver = [[FBSDKAppLinkResolver alloc] initWithRequestBuilder:self.appLinkResolverRequestBuilderMock];
 
-  // We are not asking for it, but just make sure we ignore any non-iOS-platform data we get, to be safe.
-  [self stubAllResponsesWithResult:@{
-                                     @"error" : @{}
-                                   }
-                        statusCode:404];
-
-  FBSDKAppLinkResolver *resolver = [FBSDKAppLinkResolver resolver];
   [resolver
    appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable link, NSError * _Nullable error) {
+   handler:^(FBSDKAppLink *_Nullable link, NSError *_Nullable error) {
      XCTAssertNil(link);
      XCTAssertNotNil(error);
      [expectation fulfill];
    }];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
+  [self waitForExpectationsWithTimeout:2 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);
   }];
-  [FBSDKSettings setClientToken:nil];
 }
-*/
 
-/*
 - (void)testResultsAreCachedAndCacheIsUsed
 {
   XCTestExpectation *expectation = [self expectationWithDescription:@"handlesCache"];
+  [self stubClientTokenWith:@"clienttoken"];
 
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
+  id result = @{
+    kAppLinkURLString : @{
+      kAppLinksKey : @{
+        @"iphone" : @[
+          @{
+            @"app_name" : @"Example",
+            @"app_store_id" : @"456",
+            @"url" : @"example://things/1234567890"
+          }
+        ],
+      },
+      @"id" : kAppLinkURLString
+    }
+  };
 
-  __block NSUInteger callCount = 0;
+  // We can change the approach and do OCMVerify(exactly(1), [_mockRequestBuilder requestForURLs]);
+  // in the inner block of the double call instead of using this counter.
+  __block int callCount = 0;
+  [self mockAppLinkRequestWithResult:result error:nil idiomSpecificField:kIphoneKey andDo:^(NSInvocation *invocation) {
+    callCount++;
+  }];
 
-  [self stubAllResponsesWithResult:@{
-                                     kAppLinkURLString : @{
-                                       kAppLinksKey : @{
-                                         @"iphone": @[
-                                           @{
-                                             @"app_name": @"Example",
-                                             @"app_store_id": @"456",
-                                             @"url": @"example://things/1234567890"
-                                           }
-                                         ],
-                                       },
-                                       @"id": kAppLinkURLString
-                                     }
-                                   }
-                        statusCode:200
-                          callback:^(NSURLRequest *request) {
-                            ++callCount;
-                          }];
+  FBSDKAppLinkResolver *resolver = [[FBSDKAppLinkResolver alloc] initWithRequestBuilder:self.appLinkResolverRequestBuilderMock];
 
-  FBSDKAppLinkResolver *resolver = [FBSDKAppLinkResolver resolver];
   [resolver
    appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable link1, NSError * _Nullable error1) {
-     // Note: callCount is not necessarily 1, as the callback may be called multiple times during processing of the request.
-     NSUInteger expectedCallCount = callCount;
-
+   handler:^(FBSDKAppLink *_Nullable link1, NSError *_Nullable error1) {
      [resolver
       appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-      handler:^(FBSDKAppLink * _Nullable link2, NSError * _Nullable error2) {
-        XCTAssertEqual(callCount, expectedCallCount);
+      handler:^(FBSDKAppLink *_Nullable link2, NSError *_Nullable error2) {
+        XCTAssertEqual(callCount, 1);
         [expectation fulfill];
       }];
    }];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
+  [self waitForExpectationsWithTimeout:2 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);
   }];
-  [FBSDKSettings setClientToken:nil];
 }
-*/
-
-/*
-- (void)testMixOfCachedAndUncached
-{
-  XCTestExpectation *expectation = [self expectationWithDescription:@"mixOfCachedAndUncached"];
-
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
-
-  __block NSMutableDictionary<NSString *, NSNumber *> *callCounts =
-   [NSMutableDictionary dictionary];
-
-  [self stubMatchingRequestsWithResponses:@{
-                                            @"1234567890" : @{
-                                              kAppLinkURLString : @{
-                                                kAppLinksKey : @{
-                                                  @"iphone": @[
-                                                    @{
-                                                      @"app_name": @"Example",
-                                                      @"app_store_id": @"456",
-                                                      @"url": @"example://things/1234567890"
-                                                    }
-                                                  ],
-                                                },
-                                                @"id": kAppLinkURLString
-                                              }
-                                            },
-                                            @"0987654321" : @{
-                                              kAppLinkURL2String : @{
-                                                kAppLinksKey : @{
-                                                  @"iphone": @[
-                                                    @{
-                                                      @"app_name": @"Example",
-                                                      @"app_store_id": @"456",
-                                                      @"url": @"example://things/1234567890"
-                                                    }
-                                                  ],
-                                                },
-                                                @"id": kAppLinkURL2String
-                                              }
-                                            }
-                                          }
-                               statusCode:200
-                                 callback:^(NSURLRequest *request) {
-                                   NSUInteger callCount = callCounts[request.URL.absoluteString].unsignedIntegerValue;
-                                   ++callCount;
-                                   callCounts[request.URL.absoluteString] = @(callCount);
-                                 }];
-
-  FBSDKAppLinkResolver *resolver = [FBSDKAppLinkResolver resolver];
-
-  // Prime the cache with kAppLinkURL
-  [resolver
-   appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable appLink, NSError * _Nullable error1) {
-     XCTAssertEqual(callCounts.count, 1);
-
-     // Note: callCount is not necessarily 1, as the callback may be called multiple times during processing of the request.
-     NSString *firstCallKey = callCounts.allKeys[0];
-     NSUInteger expectedCallCount = callCounts[firstCallKey].unsignedIntegerValue;
-
-     // Now request them both; we expect the call count for kAppLinkURL to be unchanged.
-     [resolver
-      appLinksFromURLs:@[[NSURL URLWithString:kAppLinkURLString], [NSURL URLWithString:kAppLinkURL2String]]
-      handler:^(NSDictionary<NSURL *,FBSDKAppLink *> * _Nonnull links, NSError * _Nullable error2) {
-        XCTAssertEqual(callCounts.count, 2);
-        XCTAssertEqual([callCounts[firstCallKey] unsignedIntegerValue], expectedCallCount);
-
-        XCTAssertEqual(links.count, 2);
-        [expectation fulfill];
-     }];
-   }];
-
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
-    XCTAssertNil(error);
-  }];
-  [FBSDKSettings setClientToken:nil];
-}
-*/
 
 @end

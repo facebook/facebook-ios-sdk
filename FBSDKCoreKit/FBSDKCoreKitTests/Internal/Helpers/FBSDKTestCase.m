@@ -73,6 +73,8 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self setUpTimeSpendDataMock];
   [self setUpInternalUtilityMock];
   [self setUpAdNetworkReporterMock];
+  [self setUpAppLinkResolverRequestBuilderMock];
+  [self setUpGraphRequestMock];
 }
 
 - (void)tearDown
@@ -132,6 +134,12 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   [_adNetworkReporterClassMock stopMocking];
   _adNetworkReporterClassMock = nil;
+
+  [_appLinkResolverRequestBuilderMock stopMocking];
+  _appLinkResolverRequestBuilderMock = nil;
+
+  [_graphRequestMock stopMocking];
+  _graphRequestMock = nil;
 }
 
 - (void)setUpSettingsMock
@@ -223,6 +231,16 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)setUpAdNetworkReporterMock
 {
   self.adNetworkReporterClassMock = OCMClassMock(FBSDKSKAdNetworkReporter.class);
+}
+
+- (void)setUpAppLinkResolverRequestBuilderMock
+{
+  _appLinkResolverRequestBuilderMock = OCMStrictClassMock(FBSDKAppLinkResolverRequestBuilder.class);
+}
+
+- (void)setUpGraphRequestMock
+{
+  _graphRequestMock = OCMStrictClassMock(FBSDKGraphRequest.class);
 }
 
 #pragma mark - Public Methods
@@ -381,6 +399,25 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
     completion(configuration, error);
   });
   OCMStub(ClassMethod([_serverConfigurationManagerClassMock loadServerConfigurationWithCompletionBlock:OCMArg.isNil]));
+}
+
+- (void)stubGraphRequestWithResult:(id)result error:(nullable NSError *)error connection:(nullable FBSDKGraphRequestConnection *)connection
+{
+  OCMStub([_graphRequestMock startWithCompletionHandler:([OCMArg invokeBlockWithArgs:[self nsNullIfNil:connection], [self nsNullIfNil:result], [self nsNullIfNil:error], nil])]);
+}
+
+- (void)stubAppLinkResolverRequestBuilderWithIdiomSpecificField:(nullable NSString *)field
+{
+  OCMStub([_appLinkResolverRequestBuilderMock getIdiomSpecificField]).andReturn(field);
+}
+
+- (id)nsNullIfNil:(id)nilValue
+{
+  id converted = nilValue;
+  if (!nilValue) {
+    converted = [NSNull null];
+  }
+  return converted;
 }
 
 @end

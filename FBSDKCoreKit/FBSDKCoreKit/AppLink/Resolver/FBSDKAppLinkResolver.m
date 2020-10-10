@@ -26,6 +26,7 @@
 
  #import "FBSDKAccessToken.h"
  #import "FBSDKAppLink.h"
+ #import "FBSDKAppLinkResolverRequestBuilder.h"
  #import "FBSDKAppLinkTarget.h"
  #import "FBSDKGraphRequest+Internal.h"
  #import "FBSDKGraphRequestConnection.h"
@@ -48,6 +49,7 @@ static NSString *const kAppLinksKey = @"app_links";
 
 @property (nonatomic, strong) NSMutableDictionary<NSURL *, FBSDKAppLink *> *cachedFBSDKAppLinks;
 @property (nonatomic, assign) UIUserInterfaceIdiom userInterfaceIdiom;
+@property (nonatomic, strong) FBSDKAppLinkResolverRequestBuilder *requestBuilder;
 @end
 
 @implementation FBSDKAppLinkResolver
@@ -62,6 +64,27 @@ static NSString *const kAppLinksKey = @"app_links";
   if (self = [super init]) {
     self.cachedFBSDKAppLinks = [NSMutableDictionary dictionary];
     self.userInterfaceIdiom = userInterfaceIdiom;
+    self.requestBuilder = [FBSDKAppLinkResolverRequestBuilder new];
+  }
+  return self;
+}
+
+- (instancetype)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom andRequestBuilder:(FBSDKAppLinkResolverRequestBuilder *)builder
+{
+  if (self = [super init]) {
+    self.cachedFBSDKAppLinks = [NSMutableDictionary dictionary];
+    self.userInterfaceIdiom = userInterfaceIdiom;
+    self.requestBuilder = builder;
+  }
+  return self;
+}
+
+- (instancetype)initWithRequestBuilder:(FBSDKAppLinkResolverRequestBuilder *)builder
+{
+  if (self = [super init]) {
+    self.cachedFBSDKAppLinks = [NSMutableDictionary dictionary];
+    self.userInterfaceIdiom = UI_USER_INTERFACE_IDIOM();
+    self.requestBuilder = builder;
   }
   return self;
 }
@@ -79,9 +102,9 @@ static NSString *const kAppLinksKey = @"app_links";
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                            logEntry:@"A user access token or clientToken is required to use FBAppLinkResolver"];
   }
+
   NSMutableDictionary<NSURL *, FBSDKAppLink *> *appLinks = [NSMutableDictionary dictionary];
   NSMutableArray<NSURL *> *toFind = [NSMutableArray array];
-  NSMutableArray<NSString *> *toFindStrings = [NSMutableArray array];
 
   @synchronized(self.cachedFBSDKAppLinks) {
     for (NSURL *url in urls) {
@@ -89,84 +112,66 @@ static NSString *const kAppLinksKey = @"app_links";
         [FBSDKTypeUtility dictionary:appLinks setObject:self.cachedFBSDKAppLinks[url] forKey:url];
       } else {
         [FBSDKTypeUtility array:toFind addObject:url];
-        #pragma clang diagnostic push
-        #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        NSString *toFindString = [url.absoluteString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        #pragma clang diagnostic pop
-        if (toFindString) {
-          [FBSDKTypeUtility array:toFindStrings addObject:toFindString];
-        }
       }
     }
   }
   if (toFind.count == 0) {
     // All of the URLs have already been found.
-    handler(_cachedFBSDKAppLinks, nil);
+    handler(appLinks, nil);
+    return;
   }
-  NSMutableArray<NSString *> *fields = [NSMutableArray arrayWithObject:kIOSKey];
 
-  NSString *idiomSpecificField = nil;
-
-  switch (self.userInterfaceIdiom) {
-    case UIUserInterfaceIdiomPad:
-      idiomSpecificField = kIPadKey;
-      break;
-    case UIUserInterfaceIdiomPhone:
-      idiomSpecificField = kIPhoneKey;
-      break;
-    default:
-      break;
-  }
-  if (idiomSpecificField) {
-    [FBSDKTypeUtility array:fields addObject:idiomSpecificField];
-  }
-  NSString *path = [NSString stringWithFormat:@"?fields=%@.fields(%@)&ids=%@",
-                    kAppLinksKey,
-                    [fields componentsJoinedByString:@","],
-                    [toFindStrings componentsJoinedByString:@","]];
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:path
-                                                                 parameters:nil
-                                                                      flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
+  FBSDKGraphRequest *request = [self.requestBuilder requestForURLs:urls];
 
   [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     if (error) {
       handler(@{}, error);
       return;
     }
+
     for (NSURL *url in toFind) {
-      id nestedObject = result[url.absoluteString][kAppLinksKey];
-      NSMutableArray *rawTargets = [NSMutableArray array];
-      if (idiomSpecificField) {
-        [rawTargets addObjectsFromArray:nestedObject[idiomSpecificField]];
-      }
-      [rawTargets addObjectsFromArray:nestedObject[kIOSKey]];
+      FBSDKAppLink *link = [self buildAppLinkForURL:url inResults:result];
 
-      NSMutableArray<FBSDKAppLinkTarget *> *targets = [NSMutableArray arrayWithCapacity:rawTargets.count];
-      for (id rawTarget in rawTargets) {
-        [FBSDKTypeUtility array:targets addObject:[FBSDKAppLinkTarget appLinkTargetWithURL:[NSURL URLWithString:rawTarget[kURLKey]]
-                                                                                appStoreId:rawTarget[kIOSAppStoreIdKey]
-                                                                                   appName:rawTarget[kIOSAppNameKey]]];
-      }
-
-      id webTarget = nestedObject[kWebKey];
-      NSString *webFallbackString = webTarget[kURLKey];
-      NSURL *fallbackUrl = webFallbackString ? [NSURL URLWithString:webFallbackString] : url;
-
-      NSNumber *shouldFallback = webTarget[kShouldFallbackKey];
-      if (shouldFallback != nil && !shouldFallback.boolValue) {
-        fallbackUrl = nil;
-      }
-
-      FBSDKAppLink *link = [FBSDKAppLink appLinkWithSourceURL:url
-                                                      targets:targets
-                                                       webURL:fallbackUrl];
       @synchronized(self.cachedFBSDKAppLinks) {
         [FBSDKTypeUtility dictionary:self.cachedFBSDKAppLinks setObject:link forKey:url];
       }
+
       [FBSDKTypeUtility dictionary:appLinks setObject:link forKey:url];
     }
     handler(appLinks, nil);
   }];
+}
+
+- (FBSDKAppLink *)buildAppLinkForURL:(NSURL *)url inResults:(id)result
+{
+  NSString *idiomSpecificField = [self.requestBuilder getIdiomSpecificField];
+
+  id nestedObject = result[url.absoluteString][kAppLinksKey];
+  NSMutableArray *rawTargets = [NSMutableArray array];
+  if (idiomSpecificField) {
+    [rawTargets addObjectsFromArray:nestedObject[idiomSpecificField]];
+  }
+  [rawTargets addObjectsFromArray:nestedObject[kIOSKey]];
+
+  NSMutableArray<FBSDKAppLinkTarget *> *targets = [NSMutableArray arrayWithCapacity:rawTargets.count];
+  for (id rawTarget in rawTargets) {
+    [FBSDKTypeUtility array:targets addObject:[FBSDKAppLinkTarget appLinkTargetWithURL:[NSURL URLWithString:rawTarget[kURLKey]]
+                                                                            appStoreId:rawTarget[kIOSAppStoreIdKey]
+                                                                               appName:rawTarget[kIOSAppNameKey]]];
+  }
+
+  id webTarget = nestedObject[kWebKey];
+  NSString *webFallbackString = webTarget[kURLKey];
+  NSURL *fallbackUrl = webFallbackString ? [NSURL URLWithString:webFallbackString] : url;
+
+  NSNumber *shouldFallback = webTarget[kShouldFallbackKey];
+  if (shouldFallback != nil && !shouldFallback.boolValue) {
+    fallbackUrl = nil;
+  }
+
+  return [FBSDKAppLink appLinkWithSourceURL:url
+                                    targets:targets
+                                     webURL:fallbackUrl];
 }
 
  #pragma clang diagnostic push

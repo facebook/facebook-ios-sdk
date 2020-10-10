@@ -1,1 +1,1 @@
-../AppLink/FBSDKAppLinkResolver.h
+../AppLink/Resolver/FBSDKAppLinkResolver.h
