@@ -1749,6 +1749,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		45540D47252717BD008E853E /* Resolver */ = {
+			isa = PBXGroup;
+			children = (
+				7E5557361A8D833100344F86 /* FBSDKAppLinkResolver.h */,
+				7E5557351A8D833100344F86 /* FBSDKAppLinkResolver.m */,
+				52963A69215992F100C7B252 /* FBSDKAppLinkResolving.h */,
+			);
+			path = Resolver;
+			sourceTree = "<group>";
+		};
 		5D497700244A3E5700BD45C6 /* Integrity */ = {
 			isa = PBXGroup;
 			children = (
@@ -2483,12 +2493,10 @@
 		C5188F1C223857D700F4D8BC /* AppLink */ = {
 			isa = PBXGroup;
 			children = (
+				45540D47252717BD008E853E /* Resolver */,
 				C5188F1D223857D700F4D8BC /* Internal */,
 				52963A70215992F200C7B252 /* FBSDKAppLink.h */,
 				52963A6C215992F100C7B252 /* FBSDKAppLink.m */,
-				7E5557361A8D833100344F86 /* FBSDKAppLinkResolver.h */,
-				7E5557351A8D833100344F86 /* FBSDKAppLinkResolver.m */,
-				52963A69215992F100C7B252 /* FBSDKAppLinkResolving.h */,
 				52963A6E215992F200C7B252 /* FBSDKAppLinkReturnToRefererController.h */,
 				52963A71215992F200C7B252 /* FBSDKAppLinkReturnToRefererController.m */,
 				52963A73215992F300C7B252 /* FBSDKAppLinkReturnToRefererView.h */,
