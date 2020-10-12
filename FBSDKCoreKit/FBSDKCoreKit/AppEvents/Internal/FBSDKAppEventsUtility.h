@@ -51,7 +51,6 @@ NS_SWIFT_NAME(AppEventsUtility)
                                     shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID;
 
 + (void)ensureOnMainThread:(NSString *)methodName className:(NSString *)className;
-+ (void)ensureNotOnMainThread:(NSString *)methodName className:(NSString *)className;
 + (NSString *)flushReasonToString:(FBSDKAppEventsFlushReason)flushReason;
 + (void)logAndNotify:(NSString *)msg allowLogAsDeveloperError:(BOOL)allowLogAsDeveloperError;
 + (void)logAndNotify:(NSString *)msg;
