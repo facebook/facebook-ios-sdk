@@ -116,7 +116,7 @@
   [super layoutSubviews];
 
   CGRect bounds = self.bounds;
-  if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+  if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad) {
     CGFloat horizontalInset = CGRectGetWidth(bounds) * 0.2;
     CGFloat verticalInset = CGRectGetHeight(bounds) * 0.2;
     UIEdgeInsets iPadInsets = UIEdgeInsetsMake(verticalInset, horizontalInset, verticalInset, horizontalInset);
