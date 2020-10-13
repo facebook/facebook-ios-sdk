@@ -50,7 +50,7 @@ static NSString *const kAppLinksKey = @"app_links";
 - (instancetype)init
 {
   if ((self = [super init])) {
-    _userInterfaceIdiom = UI_USER_INTERFACE_IDIOM();
+    _userInterfaceIdiom = UIDevice.currentDevice.userInterfaceIdiom;
   }
 
   return self;

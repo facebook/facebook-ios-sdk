@@ -83,7 +83,7 @@ static NSString *const kAppLinksKey = @"app_links";
 {
   if (self = [super init]) {
     self.cachedFBSDKAppLinks = [NSMutableDictionary dictionary];
-    self.userInterfaceIdiom = UI_USER_INTERFACE_IDIOM();
+    self.userInterfaceIdiom = UIDevice.currentDevice.userInterfaceIdiom;
     self.requestBuilder = builder;
   }
   return self;
@@ -178,7 +178,7 @@ static NSString *const kAppLinksKey = @"app_links";
  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (instancetype)resolver
 {
-  return [[self alloc] initWithUserInterfaceIdiom:UI_USER_INTERFACE_IDIOM()];
+  return [[self alloc] initWithUserInterfaceIdiom:UIDevice.currentDevice.userInterfaceIdiom];
 }
 
  #pragma clang diagnostic pop
