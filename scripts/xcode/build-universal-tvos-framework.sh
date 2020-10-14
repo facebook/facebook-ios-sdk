@@ -21,6 +21,10 @@
 # Main Script
 # --------------
 
+# shellcheck disable=SC1091
+# shellcheck source=exclude-architectures.sh
+. "${SOURCE_ROOT}/../scripts/exclude-architectures.sh"
+
 UNIVERSAL_TV_BUILD_FOLDER=../build/tv/
 
 # make the output directory and delete the framework directory

@@ -287,10 +287,10 @@ build_sdk() {
   }
 
   build_carthage() {
-    carthage build --no-skip-current
+    CARTHAGE_BIN_PATH=$( which carthage ) sh scripts/carthage.sh build --no-skip-current
 
     if [ "${1:-}" == "--archive" ]; then
-      carthage archive --output Carthage/Release/
+      CARTHAGE_BIN_PATH=$( which carthage ) sh scripts/carthage.sh archive --output Carthage/Release/
     fi
   }
 
@@ -434,8 +434,9 @@ release_sdk() {
 
     # Release frameworks in dynamic (mostly for Carthage)
     release_dynamic() {
-      carthage build --no-skip-current
-      carthage archive --output build/Release/
+
+      CARTHAGE_BIN_PATH=$( which carthage ) sh scripts/carthage.sh build --no-skip-current
+      CARTHAGE_BIN_PATH=$( which carthage ) sh scripts/carthage.sh archive --output build/Release/
       mv build/Release/FBSDKCoreKit.framework.zip build/Release/FacebookSDK_Dynamic.framework.zip
     }
 
