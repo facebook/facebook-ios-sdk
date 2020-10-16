@@ -612,8 +612,8 @@
 				8118B63F1D0A49B500962084 /* FBSDKCoreKitTests.xctest */,
 				8118B6411D0A49B500962084 /* FBSDKCoreKit.framework */,
 				819043EF1D261A7900B2E437 /* FBSDKCoreKit.framework */,
-				C57538C52292B6D5007C2EFF /* FBSDKCoreKit.framework */,
-				C57538C72292B6D5007C2EFF /* FBSDKCoreKit.framework */,
+				C57538C52292B6D5007C2EFF /* FBSDKCoreKit_Basics.framework */,
+				C57538C72292B6D5007C2EFF /* FBSDKCoreKit_Basics.framework */,
 				C57538C92292B6D5007C2EFF /* FBSDKCoreKit.framework */,
 				C57538CB2292B6D5007C2EFF /* FBSDKCoreKit.framework */,
 			);
@@ -1262,17 +1262,17 @@
 			remoteRef = 819043EE1D261A7900B2E437 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C57538C52292B6D5007C2EFF /* FBSDKCoreKit.framework */ = {
+		C57538C52292B6D5007C2EFF /* FBSDKCoreKit_Basics.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = FBSDKCoreKit.framework;
+			path = FBSDKCoreKit_Basics.framework;
 			remoteRef = C57538C42292B6D5007C2EFF /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C57538C72292B6D5007C2EFF /* FBSDKCoreKit.framework */ = {
+		C57538C72292B6D5007C2EFF /* FBSDKCoreKit_Basics.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = FBSDKCoreKit.framework;
+			path = FBSDKCoreKit_Basics.framework;
 			remoteRef = C57538C62292B6D5007C2EFF /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};

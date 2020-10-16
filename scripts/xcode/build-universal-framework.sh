@@ -30,6 +30,7 @@ UNIVERSAL_BUILD_FOLDER=../build/
 # make the output directory and delete the framework directory
 mkdir -p "${UNIVERSAL_BUILD_FOLDER}"
 rm -rf "${UNIVERSAL_BUILD_FOLDER}/${PROJECT_NAME}.framework"
+rm -rf "${UNIVERSAL_BUILD_FOLDER}/${PRODUCT_NAME}.framework"
 
 # get target by removing '-Universal' from $TARGET_NAME
 TARGET=${TARGET_NAME%-Universal}
@@ -52,19 +53,19 @@ xcodebuild -target "${TARGET}" \
   BUILD_LIBRARY_FOR_DISTRIBUTION=YES
 
 # Step 2. Copy the framework structure to the universal folder
-cp -R "${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework" "${UNIVERSAL_BUILD_FOLDER}/"
+cp -R "${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PRODUCT_NAME}.framework" "${UNIVERSAL_BUILD_FOLDER}/"
 
 # Step 3. Copy the swiftmodule files created during the simulator build
-rsync -a "${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}.framework/Modules/${PROJECT_NAME}.swiftmodule/" \
-  "${UNIVERSAL_BUILD_FOLDER}/${PROJECT_NAME}.framework/Modules/${PROJECT_NAME}.swiftmodule" || true
+rsync -a "${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PRODUCT_NAME}.framework/Modules/${PRODUCT_NAME}.swiftmodule/" \
+  "${UNIVERSAL_BUILD_FOLDER}/${PRODUCT_NAME}.framework/Modules/${PRODUCT_NAME}.swiftmodule" || true
 
 # Step 4. Create universal binary file using lipo and place the combined executable in the copied framework directory
-lipo -create -output "${UNIVERSAL_BUILD_FOLDER}/${PROJECT_NAME}.framework/${PROJECT_NAME}" "${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PROJECT_NAME}.framework/${PROJECT_NAME}" "${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework/${PROJECT_NAME}"
+lipo -create -output "${UNIVERSAL_BUILD_FOLDER}/${PRODUCT_NAME}.framework/${PRODUCT_NAME}" "${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${PRODUCT_NAME}.framework/${PRODUCT_NAME}" "${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PRODUCT_NAME}.framework/${PRODUCT_NAME}"
 
 # Step 5. Copy strings bundle if exists
-STRINGS_INPUT_FOLDER="${PROJECT_NAME}Strings.bundle"
+STRINGS_INPUT_FOLDER="${PRODUCT_NAME}Strings.bundle"
 if [ -d "${STRINGS_INPUT_FOLDER}" ]; then
-  STRINGS_OUTPUT_FOLDER="${UNIVERSAL_BUILD_FOLDER}/${PROJECT_NAME}Strings.bundle"
+  STRINGS_OUTPUT_FOLDER="${UNIVERSAL_BUILD_FOLDER}/${PRODUCT_NAME}Strings.bundle"
   rm -rf "${STRINGS_OUTPUT_FOLDER}"
   cp -R "${STRINGS_INPUT_FOLDER}" "${STRINGS_OUTPUT_FOLDER}"
 fi
