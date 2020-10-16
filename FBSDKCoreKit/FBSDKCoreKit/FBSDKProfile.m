@@ -22,8 +22,6 @@
 
  #import "FBSDKProfile+Internal.h"
 
- #import "FBSDKCoreKit+Internal.h"
-
  #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 
 NSNotificationName const FBSDKProfileDidChangeNotification = @"com.facebook.sdk.FBSDKProfile.FBSDKProfileDidChangeNotification";;
@@ -231,48 +229,6 @@ static FBSDKProfile *g_currentProfile;
 
  #pragma mark - Private
 
-+ (void)loadProfileWithToken:(FBSDKAccessToken *)token completion:(FBSDKProfileBlock)completion
-{
-  static FBSDKGraphRequestConnection *executingRequestConnection = nil;
-
-  BOOL isStale = [[NSDate date] timeIntervalSinceDate:g_currentProfile.refreshDate] > FBSDKPROFILE_STALE_IN_SECONDS;
-  if (token
-      && (isStale || ![g_currentProfile.userID isEqualToString:token.userID])) {
-    FBSDKProfile *expectedCurrentProfile = g_currentProfile;
-
-    NSString *graphPath = @"me?fields=id,first_name,middle_name,last_name,name,link";
-    [executingRequestConnection cancel];
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
-                                                                   parameters:nil
-                                                                        flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
-    executingRequestConnection = [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-      if (expectedCurrentProfile != g_currentProfile) {
-        // current profile has already changed since request was started. Let's not overwrite.
-        if (completion != NULL) {
-          completion(nil, nil);
-        }
-        return;
-      }
-      FBSDKProfile *profile = nil;
-      if (!error) {
-        profile = [[FBSDKProfile alloc] initWithUserID:result[@"id"]
-                                             firstName:result[@"first_name"]
-                                            middleName:result[@"middle_name"]
-                                              lastName:result[@"last_name"]
-                                                  name:result[@"name"]
-                                               linkURL:[NSURL URLWithString:result[@"link"]]
-                                           refreshDate:[NSDate date]];
-      }
-      [[self class] setCurrentProfile:profile];
-      if (completion != NULL) {
-        completion(profile, error);
-      }
-    }];
-  } else if (completion != NULL) {
-    completion(g_currentProfile, nil);
-  }
-}
-
 + (void)observeChangeAccessTokenChange:(NSNotification *)notification
 {
   FBSDKAccessToken *token = notification.userInfo[FBSDKAccessTokenChangeNewKey];
@@ -309,6 +265,56 @@ static FBSDKProfile *g_currentProfile;
     }
   }
   return nil;
+}
+
++ (void)loadProfileWithToken:(FBSDKAccessToken *)token completion:(FBSDKProfileBlock)completion
+{
+  NSString *graphPath = @"me?fields=id,first_name,middle_name,last_name,name,link";
+
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
+                                                                 parameters:nil
+                                                                      flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
+  [[self class] loadProfileWithToken:token completion:completion graphRequest:request];
+}
+
++ (void)loadProfileWithToken:(FBSDKAccessToken *)token
+                  completion:(FBSDKProfileBlock)completion
+                graphRequest:(FBSDKGraphRequest *)request
+{
+  static FBSDKGraphRequestConnection *executingRequestConnection = nil;
+
+  BOOL isStale = [[NSDate date] timeIntervalSinceDate:g_currentProfile.refreshDate] > FBSDKPROFILE_STALE_IN_SECONDS;
+  if (token
+      && (isStale || ![g_currentProfile.userID isEqualToString:token.userID])) {
+    FBSDKProfile *expectedCurrentProfile = g_currentProfile;
+
+    [executingRequestConnection cancel];
+    executingRequestConnection = [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+      if (expectedCurrentProfile != g_currentProfile) {
+        // current profile has already changed since request was started. Let's not overwrite.
+        if (completion != NULL) {
+          completion(nil, nil);
+        }
+        return;
+      }
+      FBSDKProfile *profile = nil;
+      if (!error) {
+        profile = [[FBSDKProfile alloc] initWithUserID:result[@"id"]
+                                             firstName:result[@"first_name"]
+                                            middleName:result[@"middle_name"]
+                                              lastName:result[@"last_name"]
+                                                  name:result[@"name"]
+                                               linkURL:[NSURL URLWithString:result[@"link"]]
+                                           refreshDate:[NSDate date]];
+      }
+      [[self class] setCurrentProfile:profile];
+      if (completion != NULL) {
+        completion(profile, error);
+      }
+    }];
+  } else if (completion != NULL) {
+    completion(g_currentProfile, nil);
+  }
 }
 
  #pragma clang diagnostic pop
