@@ -92,40 +92,7 @@ static FBSDKProfile *g_currentProfile;
 
 - (NSURL *)imageURLForPictureMode:(FBSDKProfilePictureMode)mode size:(CGSize)size
 {
-  NSString *const accessTokenKey = @"access_token";
-  NSString *const pictureModeKey = @"type";
-  NSString *const widthKey = @"width";
-  NSString *const heightKey = @"height";
-
-  NSString *type;
-  switch (mode) {
-    case FBSDKProfilePictureModeNormal: type = @"normal"; break;
-    case FBSDKProfilePictureModeSquare: type = @"square"; break;
-    case FBSDKProfilePictureModeSmall: type = @"small"; break;
-    case FBSDKProfilePictureModeAlbum: type = @"album"; break;
-    case FBSDKProfilePictureModeLarge: type = @"large"; break;
-    default: type = @"normal";
-  }
-
-  NSMutableDictionary *queryParameters = [NSMutableDictionary dictionary];
-  [FBSDKTypeUtility dictionary:queryParameters setObject:type forKey:pictureModeKey];
-  [FBSDKTypeUtility dictionary:queryParameters setObject:@(roundf(size.width)) forKey:widthKey];
-  [FBSDKTypeUtility dictionary:queryParameters setObject:@(roundf(size.height)) forKey:heightKey];
-
-  if (FBSDKAccessToken.currentAccessToken) {
-    [FBSDKTypeUtility dictionary:queryParameters setObject:FBSDKAccessToken.currentAccessToken.tokenString forKey:accessTokenKey];
-  } else if (FBSDKSettings.clientToken) {
-    [FBSDKTypeUtility dictionary:queryParameters setObject:FBSDKSettings.clientToken forKey:accessTokenKey];
-  } else {
-    NSLog(@"As of Graph API v8.0, profile images may not be retrieved without an access token. This can be the current access token from logging in with Facebook or it can be set via the plist or in code. Providing neither will cause this call to return a silhouette image.");
-  }
-
-  NSString *path = [NSString stringWithFormat:@"%@/picture", _userID];
-
-  return [FBSDKInternalUtility facebookURLWithHostPrefix:@"graph"
-                                                    path:path
-                                         queryParameters:queryParameters
-                                                   error:NULL];
+  return [FBSDKProfile imageURLForProfileID:_userID PictureMode:mode size:size];
 }
 
 + (void)enableUpdatesOnAccessTokenChange:(BOOL)enable
@@ -265,6 +232,46 @@ static FBSDKProfile *g_currentProfile;
     }
   }
   return nil;
+}
+
++ (NSURL *)imageURLForProfileID:(NSString *)profileId
+                    PictureMode:(FBSDKProfilePictureMode)mode
+                           size:(CGSize)size
+{
+  NSString *const accessTokenKey = @"access_token";
+  NSString *const pictureModeKey = @"type";
+  NSString *const widthKey = @"width";
+  NSString *const heightKey = @"height";
+
+  NSString *type;
+  switch (mode) {
+    case FBSDKProfilePictureModeNormal: type = @"normal"; break;
+    case FBSDKProfilePictureModeSquare: type = @"square"; break;
+    case FBSDKProfilePictureModeSmall: type = @"small"; break;
+    case FBSDKProfilePictureModeAlbum: type = @"album"; break;
+    case FBSDKProfilePictureModeLarge: type = @"large"; break;
+    default: type = @"normal";
+  }
+
+  NSMutableDictionary *queryParameters = [NSMutableDictionary dictionary];
+  [FBSDKTypeUtility dictionary:queryParameters setObject:type forKey:pictureModeKey];
+  [FBSDKTypeUtility dictionary:queryParameters setObject:@(roundf(size.width)) forKey:widthKey];
+  [FBSDKTypeUtility dictionary:queryParameters setObject:@(roundf(size.height)) forKey:heightKey];
+
+  if (FBSDKAccessToken.currentAccessToken) {
+    [FBSDKTypeUtility dictionary:queryParameters setObject:FBSDKAccessToken.currentAccessToken.tokenString forKey:accessTokenKey];
+  } else if (FBSDKSettings.clientToken) {
+    [FBSDKTypeUtility dictionary:queryParameters setObject:FBSDKSettings.clientToken forKey:accessTokenKey];
+  } else {
+    NSLog(@"As of Graph API v8.0, profile images may not be retrieved without an access token. This can be the current access token from logging in with Facebook or it can be set via the plist or in code. Providing neither will cause this call to return a silhouette image.");
+  }
+
+  NSString *path = [NSString stringWithFormat:@"%@/picture", profileId];
+
+  return [FBSDKInternalUtility facebookURLWithHostPrefix:@"graph"
+                                                    path:path
+                                         queryParameters:queryParameters
+                                                   error:NULL];
 }
 
 + (void)loadProfileWithToken:(FBSDKAccessToken *)token completion:(FBSDKProfileBlock)completion

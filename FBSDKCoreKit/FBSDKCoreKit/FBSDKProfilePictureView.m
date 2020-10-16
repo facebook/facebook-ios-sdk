@@ -26,6 +26,7 @@
  #import "FBSDKInternalUtility.h"
  #import "FBSDKMaleSilhouetteIcon.h"
  #import "FBSDKMath.h"
+ #import "FBSDKProfile+Internal.h"
  #import "FBSDKUtility.h"
 
 @interface FBSDKProfilePictureViewState : NSObject
@@ -302,6 +303,15 @@
   return size;
 }
 
+- (NSURL *)_getProfileImageUrl:(FBSDKProfilePictureViewState *)state
+{
+  // If there's an existing profile, use that profile's image url handler
+  if (FBSDKProfile.currentProfile != nil) {
+    return [FBSDKProfile.currentProfile imageURLForPictureMode:self.pictureMode size:state.size];
+  }
+  return [FBSDKProfile imageURLForProfileID:state.profileID PictureMode:self.pictureMode size:state.size];
+}
+
 - (void)_needsImageUpdate
 {
   _needsImageUpdate = NO;
@@ -334,15 +344,9 @@
     return;
   }
 
-  NSString *path = [[NSString alloc] initWithFormat:@"/%@/picture", [FBSDKUtility URLEncode:state.profileID]];
-  CGSize size = state.size;
-  NSMutableDictionary<NSString *, id> *parameters = [[NSMutableDictionary alloc] init];
-  [FBSDKTypeUtility dictionary:parameters setObject:@(size.width) forKey:@"width"];
-  [FBSDKTypeUtility dictionary:parameters setObject:@(size.height) forKey:@"height"];
-  [FBSDKTypeUtility dictionary:parameters setObject:accessToken.tokenString forKey:@"access_token"];
-  NSURL *imageURL = [FBSDKInternalUtility facebookURLWithHostPrefix:@"graph" path:path queryParameters:parameters error:NULL];
-
   __weak FBSDKProfilePictureView *weakSelf = self;
+
+  NSURL *imageURL = [self _getProfileImageUrl:state];
 
   NSURLRequest *request = [[NSURLRequest alloc] initWithURL:imageURL];
   NSURLSession *session = [NSURLSession sharedSession];
