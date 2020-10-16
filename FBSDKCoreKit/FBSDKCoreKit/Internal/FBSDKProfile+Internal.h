@@ -25,6 +25,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void (^FBSDKParseProfileBlock)(id result, FBSDKProfile *_Nonnull *_Nullable profileRef);
+
 @interface FBSDKProfile (Internal)
 
 + (void)cacheProfile:(nullable FBSDKProfile *)profile;
@@ -32,7 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)loadProfileWithToken:(FBSDKAccessToken *)token
                   completion:(FBSDKProfileBlock)completion
-                graphRequest:(FBSDKGraphRequest *)request;
+                graphRequest:(FBSDKGraphRequest *)request
+                  parseBlock:(FBSDKParseProfileBlock)parseBlock;
 
 + (void)loadProfileWithToken:(FBSDKAccessToken *)token completion:(_Nullable FBSDKProfileBlock)completion;
 

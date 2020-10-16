@@ -47,6 +47,9 @@
 
 @interface FBSDKProfile (Testing)
 + (void)resetCurrentProfileCache;
++ (void)loadProfileWithToken:(FBSDKAccessToken *)token
+                  completion:(FBSDKProfileBlock)completion
+                graphRequest:(FBSDKGraphRequest *)request;
 @end
 
 @interface FBSDKProfileTests : FBSDKTestCase
@@ -404,6 +407,65 @@ NSString *const heightKey = @"height";
                                            XCTAssertTrue([profile.name isEqualToString:SampleUserProfile.valid.name]);
                                            XCTAssertTrue([profile.userID isEqualToString:SampleUserProfile.valid.userID]);
                                          } graphRequest:self.graphRequestMock];
+}
+
+- (void)testProfileParseBlockInvokedOnSuccessfulGraphRequest
+{
+  id result = @{};
+  [self stubGraphRequestWithResult:result error:nil connection:nil];
+
+  __block BOOL parseBlockInvoked = false;
+
+  [FBSDKProfile loadProfileWithToken:SampleAccessToken.validToken completion:nil graphRequest:self.graphRequestMock parseBlock:^void (id result, FBSDKProfile **profileRef) {
+    parseBlockInvoked = true;
+  }];
+  XCTAssertTrue(parseBlockInvoked);
+}
+
+- (void)testProfileParseBlockShouldHaveNonNullPointer
+{
+  id result = @{};
+  [self stubGraphRequestWithResult:result error:nil connection:nil];
+
+  [FBSDKProfile loadProfileWithToken:SampleAccessToken.validToken completion:nil graphRequest:self.graphRequestMock parseBlock:^void (id result, FBSDKProfile **profileRef) {
+    XCTAssertTrue(profileRef != NULL);
+  }];
+}
+
+- (void)testProfileParseBlockReturnsNilIfResultIsEmpty
+{
+  id result = @{};
+  [self stubGraphRequestWithResult:result error:nil connection:nil];
+
+  [FBSDKProfile loadProfileWithToken:SampleAccessToken.validToken completion:nil graphRequest:self.graphRequestMock];
+  XCTAssertNil(FBSDKProfile.currentProfile);
+}
+
+- (void)testProfileParseBlockReturnsNilIfResultHasNoId
+{
+  id result = @{ @"first_name" : @"firstname",
+                 @"middle_name" : @"middlename",
+                 @"last_name" : @"lastname",
+                 @"name" : @"name"};
+  [self stubGraphRequestWithResult:result error:nil connection:nil];
+
+  [FBSDKProfile loadProfileWithToken:SampleAccessToken.validToken completion:nil graphRequest:self.graphRequestMock];
+  XCTAssertNil(FBSDKProfile.currentProfile);
+}
+
+- (void)testProfileParseBlockReturnsNilIfResultHasEmptyId
+{
+  id result = @{
+    @"id" : @"",
+    @"first_name" : @"firstname",
+    @"middle_name" : @"middlename",
+    @"last_name" : @"lastname",
+    @"name" : @"name"
+  };
+  [self stubGraphRequestWithResult:result error:nil connection:nil];
+
+  [FBSDKProfile loadProfileWithToken:SampleAccessToken.validToken completion:nil graphRequest:self.graphRequestMock];
+  XCTAssertNil(FBSDKProfile.currentProfile);
 }
 
 @end

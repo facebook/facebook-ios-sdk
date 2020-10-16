@@ -281,6 +281,30 @@ static FBSDKProfile *g_currentProfile;
                   completion:(FBSDKProfileBlock)completion
                 graphRequest:(FBSDKGraphRequest *)request
 {
+  FBSDKParseProfileBlock parseBlock = ^void (id result, FBSDKProfile **profileRef) {
+    if (profileRef == NULL
+        || result == nil
+        || result[@"id"] == nil
+        || ((NSString *) result[@"id"]).length == 0) {
+      return;
+    }
+    FBSDKProfile *profile = [[FBSDKProfile alloc] initWithUserID:result[@"id"]
+                                                       firstName:result[@"first_name"]
+                                                      middleName:result[@"middle_name"]
+                                                        lastName:result[@"last_name"]
+                                                            name:result[@"name"]
+                                                         linkURL:[NSURL URLWithString:result[@"link"]]
+                                                     refreshDate:[NSDate date]];
+    *profileRef = [profile copy];
+  };
+  [[self class] loadProfileWithToken:token completion:completion graphRequest:request parseBlock:parseBlock];
+}
+
++ (void)loadProfileWithToken:(FBSDKAccessToken *)token
+                  completion:(FBSDKProfileBlock)completion
+                graphRequest:(FBSDKGraphRequest *)request
+                  parseBlock:(FBSDKParseProfileBlock)parseBlock;
+{
   static FBSDKGraphRequestConnection *executingRequestConnection = nil;
 
   BOOL isStale = [[NSDate date] timeIntervalSinceDate:g_currentProfile.refreshDate] > FBSDKPROFILE_STALE_IN_SECONDS;
@@ -299,13 +323,7 @@ static FBSDKProfile *g_currentProfile;
       }
       FBSDKProfile *profile = nil;
       if (!error) {
-        profile = [[FBSDKProfile alloc] initWithUserID:result[@"id"]
-                                             firstName:result[@"first_name"]
-                                            middleName:result[@"middle_name"]
-                                              lastName:result[@"last_name"]
-                                                  name:result[@"name"]
-                                               linkURL:[NSURL URLWithString:result[@"link"]]
-                                           refreshDate:[NSDate date]];
+        parseBlock(result, &profile);
       }
       [[self class] setCurrentProfile:profile];
       if (completion != NULL) {
