@@ -149,14 +149,10 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
   // the server to respond.
   static FBSDKServerConfiguration *_defaultServerConfiguration = nil;
   if (![_defaultServerConfiguration.appID isEqualToString:appID]) {
-    // Bypass the native dialog flow for iOS 9+, as it produces a series of additional confirmation dialogs that lead to
-    // extra friction that is not desirable.
-    NSOperatingSystemVersion iOS9Version = { .majorVersion = 9, .minorVersion = 0, .patchVersion = 0 };
-    BOOL useNativeFlow = ![FBSDKInternalUtility isOSRunTimeVersionAtLeast:iOS9Version];
-    // Also enable SFSafariViewController by default.
+    // Enable SFSafariViewController by default.
     NSDictionary *dialogFlows = @{
       FBSDKDialogConfigurationNameDefault : @{
-        FBSDKDialogConfigurationFeatureUseNativeFlow : @(useNativeFlow),
+        FBSDKDialogConfigurationFeatureUseNativeFlow : @NO,
         FBSDKDialogConfigurationFeatureUseSafariViewController : @YES,
       },
       FBSDKDialogConfigurationNameMessage : @{

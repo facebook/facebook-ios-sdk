@@ -181,12 +181,10 @@ static UIApplicationState _applicationState;
             openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options
 {
-  if (@available(iOS 9.0, *)) {
-    return [self application:application
-                      openURL:url
-            sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
-                   annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
-  }
+  return [self application:application
+                    openURL:url
+          sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+                 annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
 
   return NO;
 }

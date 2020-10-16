@@ -138,12 +138,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
     }
   }
 
-  if (@available(iOS 9, *)) {
-    [self _launchDialogViaBridgeAPIWithParameters:parameters];
-  } else {
-    _webDialog.parameters = parameters;
-    [_webDialog show];
-  }
+  [self _launchDialogViaBridgeAPIWithParameters:parameters];
 
   [FBSDKInternalUtility registerTransientObject:self];
   return YES;

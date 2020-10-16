@@ -188,17 +188,10 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
       };
       webView.navigationDelegate = listener;
       webView.hidden = YES;
-      if (@available(iOS 9.0, *)) {
-        [webView loadData:responseData
-                 MIMEType:response.MIMEType
-    characterEncodingName:response.textEncodingName
-                  baseURL:response.URL];
-      } else {
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-        [request setValue:FBSDKWebViewAppLinkResolverMetaTagPrefix forHTTPHeaderField:FBSDKWebViewAppLinkResolverPreferHeader];
-        [webView loadRequest:request];
-      }
-
+      [webView loadData:responseData
+               MIMEType:response.MIMEType
+  characterEncodingName:response.textEncodingName
+                baseURL:response.URL];
       UIWindow *window = [UIApplication sharedApplication].windows.firstObject;
       [window addSubview:webView];
     }];
