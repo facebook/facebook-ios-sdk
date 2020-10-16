@@ -29,6 +29,10 @@ let package = Package(
     ],
     products: [
         .library(
+            name: "FBSDKCoreKit_Basics",
+            targets: ["FBSDKCoreKit_Basics"]
+        ),
+        .library(
             name: "FacebookCore",
             targets: ["FacebookCore"]
         ),
@@ -48,7 +52,8 @@ let package = Package(
     dependencies: [],
     targets: [
         .target(
-            name: "FBSDKCoreKit_Basics"
+            name: "FBSDKCoreKit_Basics",
+            path: "Sources/FBSDKCoreKit_Basics"
         ),
         .target(
             name: "FBSDKCoreKit",
@@ -81,7 +86,8 @@ let package = Package(
                 .headerSearchPath("Internal/Network"),
                 .headerSearchPath("Internal/ServerConfiguration"),
                 .headerSearchPath("Internal/TokenCaching"),
-                .headerSearchPath("Internal/UI")
+                .headerSearchPath("Internal/UI"),
+                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS], configuration: nil))
             ],
             linkerSettings: [
                 .linkedFramework("Accelerate")
@@ -90,7 +96,10 @@ let package = Package(
         .target(
             name: "FacebookCore",
             dependencies: ["FBSDKCoreKit"],
-            path: "FBSDKCoreKit/FBSDKCoreKit/Swift"
+            path: "FBSDKCoreKit/FBSDKCoreKit/Swift",
+            cSettings: [
+                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS], configuration: nil))
+            ]
         ),
         .target(
             name: "FBSDKLoginKit",
