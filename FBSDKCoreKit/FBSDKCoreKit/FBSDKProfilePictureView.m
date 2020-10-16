@@ -21,6 +21,7 @@
 #if !TARGET_OS_TV
 
  #import "FBSDKProfilePictureView.h"
+ #import "FBSDKProfilePictureView+Internal.h"
 
  #import "FBSDKAccessToken.h"
  #import "FBSDKInternalUtility.h"
@@ -119,7 +120,7 @@
 - (instancetype)initWithFrame:(CGRect)frame
 {
   if ((self = [super initWithFrame:frame])) {
-    [self _configureProfilePictureView];
+    [self configureProfilePictureView];
   }
   return self;
 }
@@ -127,7 +128,7 @@
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [super initWithCoder:decoder])) {
-    [self _configureProfilePictureView];
+    [self configureProfilePictureView];
   }
   return self;
 }
@@ -224,18 +225,9 @@
   });
 }
 
- #pragma mark - Helper Methods
+ #pragma mark - Internal Methods
 
-- (void)_accessTokenDidChangeNotification:(NSNotification *)notification
-{
-  if (![_profileID isEqualToString:@"me"] || !notification.userInfo[FBSDKAccessTokenDidChangeUserIDKey]) {
-    return;
-  }
-  _lastState = nil;
-  [self setNeedsImageUpdate];
-}
-
-- (void)_configureProfilePictureView
+- (void)configureProfilePictureView
 {
   _imageView = [[UIImageView alloc] initWithFrame:self.bounds];
   _imageView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
@@ -250,6 +242,17 @@
                                                name:FBSDKAccessTokenDidChangeNotification
                                              object:nil];
 
+  [self setNeedsImageUpdate];
+}
+
+ #pragma mark - Helper Methods
+
+- (void)_accessTokenDidChangeNotification:(NSNotification *)notification
+{
+  if (![_profileID isEqualToString:@"me"] || !notification.userInfo[FBSDKAccessTokenDidChangeUserIDKey]) {
+    return;
+  }
+  _lastState = nil;
   [self setNeedsImageUpdate];
 }
 
