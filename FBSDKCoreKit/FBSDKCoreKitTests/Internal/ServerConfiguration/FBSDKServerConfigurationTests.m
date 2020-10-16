@@ -503,13 +503,8 @@ typedef FBSDKMonitoringConfigurationTestHelper MonitoringConfiguration;
   );
 }
 
-- (void)testCreatingWithoutDialogFlowsBelowIosVersion9
+- (void)testCreatingWithoutDialogFlows
 {
-  NSOperatingSystemVersion iOS9Version = { .majorVersion = 9, .minorVersion = 0, .patchVersion = 0 };
-
-  id internalUtilityMock = OCMClassMock([FBSDKInternalUtility class]);
-  OCMStub([internalUtilityMock isOSRunTimeVersionAtLeast:iOS9Version]).andReturn(YES);
-
   // Need to recreate with a new appID to invalidate cache of default configuration
   config = [FBSDKServerConfiguration defaultServerConfigurationForAppID:self.name];
 
@@ -523,30 +518,11 @@ typedef FBSDKMonitoringConfigurationTestHelper MonitoringConfiguration;
     },
   };
 
-  XCTAssertEqualObjects(config.dialogFlows, expectedDefaultDialogFlows);
-}
-
-- (void)testCreatingWithoutDialogFlowsAboveIosVersion9
-{
-  NSOperatingSystemVersion iOS9Version = { .majorVersion = 9, .minorVersion = 0, .patchVersion = 0 };
-
-  id internalUtilityMock = OCMClassMock([FBSDKInternalUtility class]);
-  OCMStub([internalUtilityMock isOSRunTimeVersionAtLeast:iOS9Version]).andReturn(NO);
-
-  // Need to recreate with a new appID to invalidate cache of default configuration
-  config = [FBSDKServerConfiguration defaultServerConfigurationForAppID:self.name];
-
-  NSDictionary *expectedDefaultDialogFlows = @{
-    FBSDKDialogConfigurationNameDefault : @{
-      FBSDKDialogConfigurationFeatureUseNativeFlow : @YES,
-      FBSDKDialogConfigurationFeatureUseSafariViewController : @YES,
-    },
-    FBSDKDialogConfigurationNameMessage : @{
-      FBSDKDialogConfigurationFeatureUseNativeFlow : @YES,
-    },
-  };
-
-  XCTAssertEqualObjects(config.dialogFlows, expectedDefaultDialogFlows);
+  XCTAssertEqualObjects(
+    config.dialogFlows,
+    expectedDefaultDialogFlows,
+    "Should use the expected default dialog flow"
+  );
 }
 
 - (void)testCreatingWithDialogFlows
