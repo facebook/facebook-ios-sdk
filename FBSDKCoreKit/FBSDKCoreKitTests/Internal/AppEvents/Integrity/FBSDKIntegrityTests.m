@@ -21,12 +21,9 @@
 
 #import "FBSDKIntegrityManager.h"
 #import "FBSDKModelManager.h"
+#import "FBSDKTestCase.h"
 
-@interface FBSDKIntegrityTests : XCTestCase
-{
-  id _mockModelManager;
-}
-
+@interface FBSDKIntegrityTests : FBSDKTestCase
 @end
 
 @implementation FBSDKIntegrityTests
@@ -35,7 +32,6 @@
 {
   [super setUp];
   [FBSDKIntegrityManager enable];
-  _mockModelManager = OCMClassMock([FBSDKModelManager class]);
 }
 
 - (void)testProcessParameters1
@@ -46,7 +42,7 @@
     @"period_starts" : @"2020-02-03", // health
   };
 
-  OCMStub([_mockModelManager processIntegrity:[OCMArg any]]).andReturn(YES);
+  OCMStub([self.modelManagerClassMock processIntegrity:[OCMArg any]]).andReturn(YES);
   NSDictionary *processed = [FBSDKIntegrityManager processParameters:parameters];
 
   XCTAssertNil(processed[@"address"]);
@@ -63,7 +59,7 @@
     @"_valueToSum" : @1,
     @"_session_id" : @"12345",
   };
-  OCMStub([_mockModelManager processIntegrity:[OCMArg any]]).andReturn(NO);
+  OCMStub([self.modelManagerClassMock processIntegrity:[OCMArg any]]).andReturn(NO);
   NSDictionary *processed = [FBSDKIntegrityManager processParameters:parameters];
 
   XCTAssertNotNil(processed[@"_valueToSum"]);

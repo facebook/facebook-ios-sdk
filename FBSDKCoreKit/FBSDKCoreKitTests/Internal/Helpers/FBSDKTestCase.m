@@ -31,6 +31,7 @@
 #import "FBSDKCoreKitTestUtility.h"
 #import "FBSDKFeatureManager.h"
 #import "FBSDKKeychainStore.h"
+#import "FBSDKModelManager.h"
 #import "FBSDKSKAdNetworkReporter.h"
 #import "FBSDKSettings.h"
 #import "FBSDKTimeSpentData.h"
@@ -75,6 +76,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self setUpAdNetworkReporterMock];
   [self setUpAppLinkResolverRequestBuilderMock];
   [self setUpGraphRequestMock];
+  [self setUpModelManagerClassMock];
 }
 
 - (void)tearDown
@@ -140,6 +142,9 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   [_graphRequestMock stopMocking];
   _graphRequestMock = nil;
+  
+  [_modelManagerClassMock stopMocking];
+  _modelManagerClassMock = nil;
 }
 
 - (void)setUpSettingsMock
@@ -241,6 +246,11 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)setUpGraphRequestMock
 {
   _graphRequestMock = OCMStrictClassMock(FBSDKGraphRequest.class);
+}
+
+- (void)setUpModelManagerClassMock
+{
+  self.modelManagerClassMock = OCMClassMock(FBSDKModelManager.class);
 }
 
 #pragma mark - Public Methods

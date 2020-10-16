@@ -115,6 +115,9 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing a `FBSDKSKAdNetworkReporter` class mock between tests
 @property (nullable, nonatomic, assign) id adNetworkReporterClassMock;
 
+/// Used for sharing a `FBSDKModelManager` class mock between tests
+@property (nullable, nonatomic, assign) id modelManagerClassMock;
+
 /// Stubs `FBSDKSettings.appID` and return the provided value
 - (void)stubAppID:(nullable NSString *)appID;
 
