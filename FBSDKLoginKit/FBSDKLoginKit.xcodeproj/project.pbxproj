@@ -106,7 +106,6 @@
 		818EB43C1D1A283100252851 /* FBSDKLoginManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D03E81F1A72D7E700207493 /* FBSDKLoginManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8199F1061D1A2B30007AA5AD /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 893774A91A3B80FD00BE2807 /* CoreGraphics.framework */; };
 		8199F1081D1A2B34007AA5AD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 893774AB1A3B810100BE2807 /* UIKit.framework */; };
-		81A07EAB1D1A2B560041A29C /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8118B6811D0A5B9400962084 /* FBSDKCoreKit.framework */; };
 		893774AA1A3B80FD00BE2807 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 893774A91A3B80FD00BE2807 /* CoreGraphics.framework */; };
 		893774AC1A3B810100BE2807 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 893774AB1A3B810100BE2807 /* UIKit.framework */; };
 		9D03E8211A72D7E700207493 /* FBSDKLoginManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D03E81F1A72D7E700207493 /* FBSDKLoginManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -148,6 +147,8 @@
 		C6CE2BC424EB73CF00CF2EB6 /* FBSDKReferralManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C6CE2BBE24EB72F200CF2EB6 /* FBSDKReferralManager.m */; };
 		C6DB850724F87F7B0004DB85 /* FBSDKReferralCodeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C6DB850624F87F7B0004DB85 /* FBSDKReferralCodeTests.m */; };
 		C6E63D2D24F822620015FC7C /* FBSDKReferralManagerLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = C6E63D2C24F822620015FC7C /* FBSDKReferralManagerLogger.m */; };
+		F4583AA0252E6C220051E280 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8118B6811D0A5B9400962084 /* FBSDKCoreKit.framework */; };
+		F4583AA7252E6DC70051E280 /* FBSDKCoreKit_Basics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E309CAC228F2581007B532E /* FBSDKCoreKit_Basics.framework */; };
 		F462DC0E23B958E000FFCECA /* FBSDKLoginKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D9DB8DE1A114E500086167B /* FBSDKLoginKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F462DC0F23B958E100FFCECA /* FBSDKLoginKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D9DB8DE1A114E500086167B /* FBSDKLoginKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F462DC1023B95BA600FFCECA /* FBSDKLoginButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D65ACA61A803FF200E375C2 /* FBSDKLoginButton.h */; };
@@ -405,8 +406,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81A07EAB1D1A2B560041A29C /* FBSDKCoreKit.framework in Frameworks */,
+				F4583AA7252E6DC70051E280 /* FBSDKCoreKit_Basics.framework in Frameworks */,
 				8199F1081D1A2B34007AA5AD /* UIKit.framework in Frameworks */,
+				F4583AA0252E6C220051E280 /* FBSDKCoreKit.framework in Frameworks */,
 				8199F1061D1A2B30007AA5AD /* CoreGraphics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -443,8 +445,8 @@
 				8118B6831D0A5B9400962084 /* FBSDKCoreKitTests.xctest */,
 				8118B6851D0A5B9400962084 /* FBSDKCoreKit.framework */,
 				812E0D1B1D23840500291B71 /* FBSDKCoreKit.framework */,
-				5E309CAC228F2581007B532E /* FBSDKCoreKit.framework */,
-				5E309CAE228F2581007B532E /* FBSDKCoreKit.framework */,
+				5E309CAC228F2581007B532E /* FBSDKCoreKit_Basics.framework */,
+				5E309CAE228F2581007B532E /* FBSDKCoreKit_Basics.framework */,
 				5E309CB0228F2581007B532E /* FBSDKCoreKit.framework */,
 				5E309CB2228F2581007B532E /* FBSDKCoreKit.framework */,
 			);
@@ -904,17 +906,17 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		5E309CAC228F2581007B532E /* FBSDKCoreKit.framework */ = {
+		5E309CAC228F2581007B532E /* FBSDKCoreKit_Basics.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = FBSDKCoreKit.framework;
+			path = FBSDKCoreKit_Basics.framework;
 			remoteRef = 5E309CAB228F2581007B532E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		5E309CAE228F2581007B532E /* FBSDKCoreKit.framework */ = {
+		5E309CAE228F2581007B532E /* FBSDKCoreKit_Basics.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = FBSDKCoreKit.framework;
+			path = FBSDKCoreKit_Basics.framework;
 			remoteRef = 5E309CAD228F2581007B532E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};

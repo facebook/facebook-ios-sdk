@@ -24,9 +24,9 @@
  #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #endif
 
-#if defined FBSDKCOCOAPODS
- #import <FBSDKCoreKit/FBSDKCoreKit_Basics.h>
-#elif defined BUCK
+#if defined FBSDKCOCOAPODS || FBSDK_SWIFT_PACKAGE
+ #import "FBSDKCoreKit_Basics.h"
+#else
  #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #endif
 
@@ -131,7 +131,6 @@
   #import "Device/FBSDKSmartDeviceDialogView.h"
  #endif
 
- #import "../../../Sources/FBSDKCoreKit_Basics/include/FBSDKCoreKit_Basics.h"
  #import "../AppEvents/Internal/FBSDKAppEvents+Internal.h"
  #import "../AppEvents/Internal/FBSDKAppEventsConfiguration.h"
  #import "../AppEvents/Internal/FBSDKAppEventsConfigurationManager.h"
