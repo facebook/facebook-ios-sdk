@@ -43,7 +43,11 @@ Pod::Spec.new do |s|
     'GCC_PREPROCESSOR_DEFINITIONS': '$(inherited) FBSDKCOCOAPODS=1',
     'DEFINES_MODULE': 'YES'
   }
-  s.user_target_xcconfig = {'GCC_PREPROCESSOR_DEFINITIONS': '$(inherited) FBSDKCOCOAPODS=1' }
+  s.user_target_xcconfig = {
+    'GCC_PREPROCESSOR_DEFINITIONS': '$(inherited) FBSDKCOCOAPODS=1',
+    'LIBRARY_SEARCH_PATHS': "$(inherited) ${DT_TOOLCHAIN_DIR}/usr/lib/swift/${PLATFORM_NAME}",
+    'OTHER_LDFLAGS': "$(inherited) -Xlinker -add_ast_path -L /usr/lib/swift"
+  }
   s.library = 'c++', 'stdc++'
 
   s.subspec 'Basics' do |ss|
