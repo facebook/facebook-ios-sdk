@@ -27,6 +27,7 @@ typedef NSString *const FBSDKGateKeeperKey NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAM
 typedef void (^FBSDKGKManagerBlock)(NSError * _Nullable error)
 NS_SWIFT_NAME(GKManagerBlock);
 
+NS_SWIFT_NAME(GateKeeperManager)
 @interface FBSDKGateKeeperManager : NSObject
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
