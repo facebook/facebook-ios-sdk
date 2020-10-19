@@ -262,27 +262,6 @@ static FBSDKWebDialog *g_currentDialog = nil;
   return YES;
 }
 
-- (CGAffineTransform)_transformForOrientation
-{
-  // iOS 8 simply adjusts the application frame to adapt to the current orientation and deprecated the concept of
-  // interface orientations
-  if ([FBSDKInternalUtility shouldManuallyAdjustOrientation]) {
-    switch (FBSDKInternalUtility.statusBarOrientation) {
-      case UIInterfaceOrientationLandscapeLeft:
-        return CGAffineTransformMakeRotation(M_PI * 1.5);
-      case UIInterfaceOrientationLandscapeRight:
-        return CGAffineTransformMakeRotation(M_PI / 2);
-      case UIInterfaceOrientationPortraitUpsideDown:
-        return CGAffineTransformMakeRotation(-M_PI);
-      case UIInterfaceOrientationPortrait:
-      case UIInterfaceOrientationUnknown:
-        // don't adjust the orientation
-        break;
-    }
-  }
-  return CGAffineTransformIdentity;
-}
-
 - (CGRect)_applicationFrameForOrientation
 {
   CGRect applicationFrame = _dialogView.window.screen.bounds;
@@ -305,19 +284,7 @@ static FBSDKWebDialog *g_currentDialog = nil;
   applicationFrame.size.width -= insets.left + insets.right;
   applicationFrame.size.height -= insets.top + insets.bottom;
 
-  if ([FBSDKInternalUtility shouldManuallyAdjustOrientation]) {
-    switch (FBSDKInternalUtility.statusBarOrientation) {
-      case UIInterfaceOrientationLandscapeLeft:
-      case UIInterfaceOrientationLandscapeRight:
-        return CGRectMake(0, 0, CGRectGetHeight(applicationFrame), CGRectGetWidth(applicationFrame));
-      case UIInterfaceOrientationPortraitUpsideDown:
-      case UIInterfaceOrientationPortrait:
-      case UIInterfaceOrientationUnknown:
-        return applicationFrame;
-    }
-  } else {
-    return applicationFrame;
-  }
+  return applicationFrame;
 }
 
 - (void)_updateViewsWithScale:(CGFloat)scale
@@ -325,15 +292,13 @@ static FBSDKWebDialog *g_currentDialog = nil;
             animationDuration:(CFTimeInterval)animationDuration
                    completion:(FBSDKBoolBlock)completion
 {
-  CGAffineTransform transform;
+  CGAffineTransform transform = _dialogView.transform;
   CGRect applicationFrame = [self _applicationFrameForOrientation];
   if (scale == 1.0) {
-    transform = _dialogView.transform;
     _dialogView.transform = CGAffineTransformIdentity;
     _dialogView.frame = applicationFrame;
     _dialogView.transform = transform;
   }
-  transform = CGAffineTransformScale([self _transformForOrientation], scale, scale);
   void (^updateBlock)(void) = ^{
     self->_dialogView.transform = transform;
     self->_dialogView.center = CGPointMake(

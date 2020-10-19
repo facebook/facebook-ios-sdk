@@ -212,28 +212,6 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
     || [bundleIdentifier isEqualToString:@"com.apple.SafariViewService"]);
 }
 
-+ (BOOL)isUIKitLinkTimeVersionAtLeast:(FBSDKUIKitVersion)version
-{
-  static int32_t linkTimeMajorVersion;
-  static dispatch_once_t getVersionOnce;
-  dispatch_once(&getVersionOnce, ^{
-    int32_t linkTimeVersion = NSVersionOfLinkTimeLibrary("UIKit");
-    linkTimeMajorVersion = [self getMajorVersionFromFullLibraryVersion:linkTimeVersion];
-  });
-  return (version <= linkTimeMajorVersion);
-}
-
-+ (BOOL)isUIKitRunTimeVersionAtLeast:(FBSDKUIKitVersion)version
-{
-  static int32_t runTimeMajorVersion;
-  static dispatch_once_t getVersionOnce;
-  dispatch_once(&getVersionOnce, ^{
-    int32_t runTimeVersion = NSVersionOfRunTimeLibrary("UIKit");
-    runTimeMajorVersion = [self getMajorVersionFromFullLibraryVersion:runTimeVersion];
-  });
-  return (version <= runTimeMajorVersion);
-}
-
 + (int32_t)getMajorVersionFromFullLibraryVersion:(int32_t)version
 {
   // Negative values returned by NSVersionOfRunTimeLibrary/NSVersionOfLinkTimeLibrary
@@ -282,19 +260,10 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
         case 1:
           operatingSystemVersion.majorVersion = [[FBSDKTypeUtility array:components objectAtIndex:0] integerValue];
           break;
-        case 0:
-          operatingSystemVersion.majorVersion = ([self isUIKitLinkTimeVersionAtLeast:FBSDKUIKitVersion_7_0] ? 7 : 6);
-          break;
       }
     }
   });
   return operatingSystemVersion;
-}
-
-+ (BOOL)shouldManuallyAdjustOrientation
-{
-  return (![self isUIKitLinkTimeVersionAtLeast:FBSDKUIKitVersion_8_0]
-    || ![self isUIKitRunTimeVersionAtLeast:FBSDKUIKitVersion_8_0]);
 }
 
 + (NSURL *)URLWithScheme:(NSString *)scheme
