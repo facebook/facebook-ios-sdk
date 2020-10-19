@@ -38,6 +38,40 @@
  #import "FBSDKLikeActionControllerCache.h"
  #import "FBSDKLikeDialog.h"
 
+typedef NS_ENUM(NSInteger, FBSDKTriStateBOOL) {
+  FBSDKTriStateBOOLValueUnknown = -1,
+  FBSDKTriStateBOOLValueNO = 0,
+  FBSDKTriStateBOOLValueYES = 1,
+};
+
+FOUNDATION_EXPORT FBSDKTriStateBOOL FBSDKTriStateBOOLFromBOOL(BOOL value);
+FOUNDATION_EXPORT FBSDKTriStateBOOL FBSDKTriStateBOOLFromNSNumber(NSNumber *value);
+FOUNDATION_EXPORT BOOL BOOLFromFBSDKTriStateBOOL(FBSDKTriStateBOOL value, BOOL defaultValue);
+
+FBSDKTriStateBOOL FBSDKTriStateBOOLFromBOOL(BOOL value)
+{
+  return value ? FBSDKTriStateBOOLValueYES : FBSDKTriStateBOOLValueNO;
+}
+
+FBSDKTriStateBOOL FBSDKTriStateBOOLFromNSNumber(NSNumber *value)
+{
+  return ([value isKindOfClass:[NSNumber class]]
+    ? FBSDKTriStateBOOLFromBOOL(value.boolValue)
+    : FBSDKTriStateBOOLValueUnknown);
+}
+
+BOOL BOOLFromFBSDKTriStateBOOL(FBSDKTriStateBOOL value, BOOL defaultValue)
+{
+  switch (value) {
+    case FBSDKTriStateBOOLValueYES:
+      return YES;
+    case FBSDKTriStateBOOLValueNO:
+      return NO;
+    case FBSDKTriStateBOOLValueUnknown:
+      return defaultValue;
+  }
+}
+
  #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 
 NSNotificationName const FBSDKLikeActionControllerDidDisableNotification = @"FBSDKLikeActionControllerDidDisableNotification";
