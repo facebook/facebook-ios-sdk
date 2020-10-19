@@ -142,7 +142,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   [_graphRequestMock stopMocking];
   _graphRequestMock = nil;
-  
+
   [_modelManagerClassMock stopMocking];
   _modelManagerClassMock = nil;
 }
