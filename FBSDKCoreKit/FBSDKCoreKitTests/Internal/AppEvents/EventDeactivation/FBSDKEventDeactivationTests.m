@@ -21,24 +21,25 @@
 
 #import "FBSDKEventDeactivationManager.h"
 #import "FBSDKRestrictiveDataFilterManager.h"
-#import "FBSDKServerConfigurationManager.h"
+#import "FBSDKServerConfigurationFixtures.h"
+#import "FBSDKTestCase.h"
 
-@interface FBSDKEventDeactivationTests : XCTestCase
+@interface FBSDKEventDeactivationTests : FBSDKTestCase
 @end
 
 @implementation FBSDKEventDeactivationTests
 
 - (void)setUp
 {
+  [super setUp];
+
   NSDictionary<NSString *, id> *events = @{
     @"fb_mobile_catalog_update" : @{ @"restrictive_param" : @{@"first_name" : @"6"}},
     @"manual_initiated_checkout" : @{ @"deprecated_param" : @[@"deprecated_3"]},
   };
 
-  id mockServerConfiguration = OCMClassMock([FBSDKServerConfiguration class]);
-  OCMStub([mockServerConfiguration restrictiveParams]).andReturn(events);
-  id mockServerConfigurationManager = OCMClassMock([FBSDKServerConfigurationManager class]);
-  OCMStub([mockServerConfigurationManager cachedServerConfiguration]).andReturn(mockServerConfiguration);
+  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationFixtures configWithDictionary:@{@"restrictiveParams" : events}];
+  [self stubCachedServerConfigurationWithServerConfiguration:serverConfiguration];
 
   [FBSDKEventDeactivationManager enable];
 }
