@@ -348,13 +348,13 @@ NSString *const heightKey = @"height";
   NSString *graphPath = @"me?fields=id,first_name,middle_name,last_name,name,link";
   __block BOOL graphRequestMethodInvoked = false;
   OCMStub([profileMock loadProfileWithToken:OCMOCK_ANY completion:OCMOCK_ANY graphRequest:OCMOCK_ANY]).andDo(^(NSInvocation *invocation) {
-    __unsafe_unretained FBSDKGraphRequest *req = [FBSDKGraphRequest alloc];
+    __unsafe_unretained FBSDKGraphRequest *req;
     [invocation getArgument:&req atIndex:4];
     graphRequestMethodInvoked = true;
     XCTAssertTrue([[req graphPath] isEqualToString:graphPath]);
   });
   OCMStub([profileMock loadProfileWithToken:OCMOCK_ANY completion:OCMOCK_ANY]).andForwardToRealObject();
-  [FBSDKProfile loadProfileWithToken:nil completion:nil];
+  [FBSDKProfile loadProfileWithToken:SampleAccessToken.validToken completion:nil];
   XCTAssertTrue(graphRequestMethodInvoked);
 }
 
@@ -416,9 +416,12 @@ NSString *const heightKey = @"height";
 
   __block BOOL parseBlockInvoked = false;
 
-  [FBSDKProfile loadProfileWithToken:SampleAccessToken.validToken completion:nil graphRequest:self.graphRequestMock parseBlock:^void (id result, FBSDKProfile **profileRef) {
-    parseBlockInvoked = true;
-  }];
+  [FBSDKProfile loadProfileWithToken:SampleAccessToken.validToken
+                          completion:^void (FBSDKProfile *profile, NSError *error) {}
+                        graphRequest:self.graphRequestMock
+                          parseBlock:^void (id parseResult, FBSDKProfile **profileRef) {
+                            parseBlockInvoked = true;
+                          }];
   XCTAssertTrue(parseBlockInvoked);
 }
 
@@ -427,9 +430,12 @@ NSString *const heightKey = @"height";
   id result = @{};
   [self stubGraphRequestWithResult:result error:nil connection:nil];
 
-  [FBSDKProfile loadProfileWithToken:SampleAccessToken.validToken completion:nil graphRequest:self.graphRequestMock parseBlock:^void (id result, FBSDKProfile **profileRef) {
-    XCTAssertTrue(profileRef != NULL);
-  }];
+  [FBSDKProfile loadProfileWithToken:SampleAccessToken.validToken
+                          completion:^void (FBSDKProfile *profile, NSError *error) {}
+                        graphRequest:self.graphRequestMock
+                          parseBlock:^void (id parseResult, FBSDKProfile **profileRef) {
+                            XCTAssertTrue(profileRef != NULL);
+                          }];
 }
 
 - (void)testProfileParseBlockReturnsNilIfResultIsEmpty

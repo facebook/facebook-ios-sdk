@@ -52,7 +52,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
   }
 }
 
-id getVariableFromInstance(NSObject *instance, NSString *variableName);
+_Nullable id getVariableFromInstance(NSObject *instance, NSString *variableName);
 
 @implementation FBSDKViewHierarchy
 

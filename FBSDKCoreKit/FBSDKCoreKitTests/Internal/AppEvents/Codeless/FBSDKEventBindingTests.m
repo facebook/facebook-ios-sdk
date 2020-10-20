@@ -65,19 +65,19 @@
   [firstStackView addSubview:secondStackView];
 
   btnBuy = [UIButton buttonWithType:UIButtonTypeCustom];
-  [btnBuy setTitle:@"Buy" forState:UIControlStateNormal];
+  [btnBuy setTitle:NSLocalizedString(@"Buy", nil) forState:UIControlStateNormal];
   [firstStackView addSubview:btnBuy];
 
   UILabel *lblPrice = [[UILabel alloc] init];
-  lblPrice.text = @"$2.0";
+  lblPrice.text = NSLocalizedString(@"$2.0", nil);
   [firstStackView addSubview:lblPrice];
 
   btnConfirm = [UIButton buttonWithType:UIButtonTypeCustom];
-  [btnConfirm setTitle:@"Confirm" forState:UIControlStateNormal];
+  [btnConfirm setTitle:NSLocalizedString(@"Confirm", nil) forState:UIControlStateNormal];
   [firstStackView addSubview:btnConfirm];
 
   lblPrice = [[UILabel alloc] init];
-  lblPrice.text = @"$3.0";
+  lblPrice.text = NSLocalizedString(@"$3.0", nil);
   [secondStackView addSubview:lblPrice];
 
   stepper = [[UIStepper alloc] init];

@@ -71,7 +71,7 @@ setJSONStringForObject:(id)object
  @param invalidObjectHandler Handles objects that are invalid, returning a replacement value or nil to ignore.
  @return Query string representation of the parameters.
  */
-+ (NSString *)queryStringWithDictionary:(NSDictionary<NSString *, id> *)dictionary
++ (nullable NSString *)queryStringWithDictionary:(NSDictionary<NSString *, id> *)dictionary
                                   error:(NSError *__autoreleasing *)errorRef
                    invalidObjectHandler:(nullable FBSDKInvalidObjectHandler)invalidObjectHandler;
 

@@ -57,20 +57,20 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName);
   scrollview = [[UIScrollView alloc] init];
 
   label = [[UILabel alloc] init];
-  label.text = @"I am a label";
+  label.text = NSLocalizedString(@"I am a label", nil);
   [scrollview addSubview:label];
 
   textField = [[UITextField alloc] init];
-  textField.text = @"I am a text field";
-  textField.placeholder = @"text field placeholder";
+  textField.text = NSLocalizedString(@"I am a text field", nil);
+  textField.placeholder = NSLocalizedString(@"text field placeholder", nil);
   [scrollview addSubview:textField];
 
   textView = [[UITextView alloc] init];
-  textView.text = @"I am a text view";
+  textView.text = NSLocalizedString(@"I am a text view", nil);
   [scrollview addSubview:textView];
 
   btn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 5, 20)];
-  [btn setTitle:@"I am a button" forState:UIControlStateNormal];
+  [btn setTitle:NSLocalizedString(@"I am a button", nil) forState:UIControlStateNormal];
   [scrollview addSubview:btn];
 }
 
