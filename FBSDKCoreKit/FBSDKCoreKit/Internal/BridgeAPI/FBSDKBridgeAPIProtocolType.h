@@ -20,12 +20,11 @@
 
 #if !TARGET_OS_TV
 
-#import <Foundation/Foundation.h>
+ #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSUInteger, FBSDKBridgeAPIProtocolType)
-{
+typedef NS_ENUM(NSUInteger, FBSDKBridgeAPIProtocolType) {
   FBSDKBridgeAPIProtocolTypeNative,
   FBSDKBridgeAPIProtocolTypeWeb,
-} NS_SWIFT_NAME(BridgeAPIProtocol.Type);
+};
 
 #endif
