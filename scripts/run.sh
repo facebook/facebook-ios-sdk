@@ -522,6 +522,8 @@ release_sdk() {
 
   release_docs() {
     for kit in "${SDK_KITS[@]}"; do
+      rm -rf "$kit/build" || true
+
       ruby "$SDK_SCRIPTS_DIR"/genDocs.rb "$kit"
 
       # Zip the result so it can be uploaded easily
