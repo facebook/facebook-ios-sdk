@@ -128,9 +128,9 @@ static NSString *const FBSDK_BASICUTILITY_ANONYMOUSID_KEY = @"anon_id";
   return [FBSDKTypeUtility JSONObjectWithData:data options:NSJSONReadingAllowFragments error:errorRef];
 }
 
-+ (NSString *)queryStringWithDictionary:(NSDictionary<id, id> *)dictionary
-                                  error:(NSError *__autoreleasing *)errorRef
-                   invalidObjectHandler:(FBSDKInvalidObjectHandler)invalidObjectHandler
++ (nullable NSString *)queryStringWithDictionary:(NSDictionary<id, id> *)dictionary
+                                           error:(NSError *__autoreleasing *)errorRef
+                            invalidObjectHandler:(FBSDKInvalidObjectHandler)invalidObjectHandler
 {
   NSMutableString *queryString = [[NSMutableString alloc] init];
   __block BOOL hasParameters = NO;

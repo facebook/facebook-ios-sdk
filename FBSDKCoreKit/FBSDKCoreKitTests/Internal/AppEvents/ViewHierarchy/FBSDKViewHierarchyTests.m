@@ -121,11 +121,11 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName);
 - (void)testGetInstanceVariable
 {
   // empty args should cause no-op.
-  XCTAssertNil(getVariableFromInstance(nil, @"anything prop"));
-  XCTAssertNil(getVariableFromInstance([NSObject new], nil));
+  XCTAssertEqualObjects(getVariableFromInstance(nil, @"anything prop"), NSNull.null);
+  XCTAssertEqualObjects(getVariableFromInstance([NSObject new], nil), NSNull.null);
 
   // If there is no ivar, should return nil.
-  XCTAssertNil(getVariableFromInstance([NSObject new], @"some_made_up_property_123456"));
+  XCTAssertEqualObjects(getVariableFromInstance([NSObject new], @"some_made_up_property_123456"), NSNull.null);
 
   // this should work.
   XCTAssertEqualObjects(getVariableFromInstance([TestObj new], @"_a"), @"BLAH");
