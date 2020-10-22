@@ -273,8 +273,10 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
 
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
                                 initWithGraphPath:[NSString stringWithFormat:@"%@/suggested_events", [FBSDKSettings appID]]
-                                parameters:@{@"event_name" : event,
-                                             @"metadata" : metadata, }
+                                parameters:@{
+                                  @"event_name" : event,
+                                  @"metadata" : metadata,
+                                }
                                 HTTPMethod:FBSDKHTTPMethodPOST];
   [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}];
   return;

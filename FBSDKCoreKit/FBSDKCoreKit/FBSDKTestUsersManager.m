@@ -199,7 +199,7 @@ static NSMutableDictionary<NSString *, FBSDKTestUsersManager *> *gInstancesDicti
 - (void)removeTestAccount:(NSString *)userId completionHandler:(FBSDKErrorBlock)handler
 {
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:userId
-                                                                 parameters:@{}
+                                                                 parameters:@{@"fields" : @""}
                                                                 tokenString:self.appAccessToken
                                                                     version:nil
                                                                  HTTPMethod:@"DELETE"];
@@ -284,7 +284,7 @@ static NSMutableDictionary<NSString *, FBSDKTestUsersManager *> *gInstancesDicti
           self->_accounts[userId][kAccountsDictionaryTokenKey] = token;
           expectedTestAccounts++;
           [permissionConnection addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@?fields=permissions", userId]
-                                                                             parameters:@{}
+                                                                             parameters:@{@"fields" : @""}
                                                                             tokenString:self.appAccessToken
                                                                                 version:nil
                                                                              HTTPMethod:FBSDKHTTPMethodGET]

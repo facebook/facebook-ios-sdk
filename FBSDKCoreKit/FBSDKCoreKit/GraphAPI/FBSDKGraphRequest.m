@@ -44,13 +44,17 @@ FBSDKHTTPMethod FBSDKHTTPMethodDELETE = @"DELETE";
 
 - (instancetype)initWithGraphPath:(NSString *)graphPath
 {
-  return [self initWithGraphPath:graphPath parameters:@{}];
+  return [self initWithGraphPath:graphPath parameters:@{@"fields" : @""}];
 }
 
 - (instancetype)initWithGraphPath:(NSString *)graphPath
                        HTTPMethod:(FBSDKHTTPMethod)method
 {
-  return [self initWithGraphPath:graphPath parameters:@{} HTTPMethod:method];
+  if (method == FBSDKHTTPMethodGET) {
+    return [self initWithGraphPath:graphPath parameters:@{@"fields" : @""} HTTPMethod:method];
+  } else {
+    return [self initWithGraphPath:graphPath parameters:@{} HTTPMethod:method];
+  }
 }
 
 - (instancetype)initWithGraphPath:(NSString *)graphPath
