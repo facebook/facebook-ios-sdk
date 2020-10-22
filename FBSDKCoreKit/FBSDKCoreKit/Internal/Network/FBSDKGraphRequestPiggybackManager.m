@@ -30,8 +30,7 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60; // hour
   if ([FBSDKSettings appID].length > 0) {
     BOOL safeForPiggyback = YES;
     for (FBSDKGraphRequestMetadata *metadata in connection.requests) {
-      if (![metadata.request.version isEqualToString:[FBSDKSettings graphAPIVersion]]
-          || metadata.request.hasAttachments) {
+      if (![self _safeForPiggyback:metadata.request]) {
         safeForPiggyback = NO;
         break;
       }
@@ -133,8 +132,8 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60; // hour
   NSDate *now = [NSDate date];
   NSDate *tokenRefreshDate = [FBSDKAccessToken currentAccessToken].refreshDate;
   if (tokenRefreshDate
-      && [now timeIntervalSinceDate:lastRefreshTry] > FBSDKTokenRefreshRetrySeconds
-      && [now timeIntervalSinceDate:tokenRefreshDate] > FBSDKTokenRefreshThresholdSeconds) {
+      && [now timeIntervalSinceDate:lastRefreshTry] > [self _tokenRefreshRetryInSeconds]
+      && [now timeIntervalSinceDate:tokenRefreshDate] > [self _tokenRefreshThresholdInSeconds]) {
     [self addRefreshPiggyback:connection permissionHandler:NULL];
     lastRefreshTry = [NSDate date];
   }
@@ -153,6 +152,22 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60; // hour
        completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {
          [FBSDKServerConfigurationManager processLoadRequestResponse:result error:error appID:appID];
        }];
+}
+
++ (BOOL)_safeForPiggyback:(FBSDKGraphRequest *)request
+{
+  return [request.version isEqualToString:[FBSDKSettings graphAPIVersion]]
+  && !request.hasAttachments;
+}
+
++ (int)_tokenRefreshThresholdInSeconds
+{
+  return FBSDKTokenRefreshThresholdSeconds;
+}
+
++ (int)_tokenRefreshRetryInSeconds
+{
+  return FBSDKTokenRefreshRetrySeconds;
 }
 
 @end

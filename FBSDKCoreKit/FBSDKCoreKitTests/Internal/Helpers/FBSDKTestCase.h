@@ -118,6 +118,9 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing a `FBSDKModelManager` class mock between tests
 @property (nullable, nonatomic, assign) id modelManagerClassMock;
 
+/// Used for sharing a `FBSDKGraphRequestPiggybackManager` class mock between tests
+@property (nullable, nonatomic, assign) id graphRequestPiggybackManagerMock;
+
 /// Stubs `FBSDKSettings.appID` and return the provided value
 - (void)stubAppID:(nullable NSString *)appID;
 
