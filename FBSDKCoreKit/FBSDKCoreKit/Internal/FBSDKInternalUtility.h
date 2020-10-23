@@ -28,15 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 #define FBSDK_CANOPENURL_MSQRD_PLAYER @"msqrdplayer"
 #define FBSDK_CANOPENURL_SHARE_EXTENSION @"fbshareextension"
 
-typedef NS_ENUM(int32_t, FBSDKUIKitVersion)
-{
-  FBSDKUIKitVersion_6_0 = 0x0944,
-  FBSDKUIKitVersion_6_1 = 0x094C,
-  FBSDKUIKitVersion_7_0 = 0x0B57,
-  FBSDKUIKitVersion_7_1 = 0x0B77,
-  FBSDKUIKitVersion_8_0 = 0x0CF6,
-} NS_SWIFT_NAME(FBUIKit.Version);
-
 /**
  Describes the callback for appLinkFromURLInBackground.
  @param object the FBSDKAppLink representing the deferred App Link
@@ -79,19 +70,6 @@ NS_SWIFT_NAME(InternalUtility)
  The version of the operating system on which the process is executing.
  */
 @property (class, nonatomic, assign, readonly) NSOperatingSystemVersion operatingSystemVersion;
-
-/**
- Tests whether the orientation should be manually adjusted for views outside of the root view controller.
-
- With the legacy layout the developer must worry about device orientation when working with views outside of
- the window's root view controller and apply the correct rotation transform and/or swap a view's width and height
- values.  If the application was linked with UIKit on iOS 7 or earlier or the application is running on iOS 7 or earlier
- then we need to use the legacy layout code.  Otherwise if the application was linked with UIKit on iOS 8 or later and
- the application is running on iOS 8 or later, UIKit handles all of the rotation complexity and the origin is always in
- the top-left and no rotation transform is necessary.
- @return YES if if the orientation must be manually adjusted, otherwise NO.
- */
-@property (class, nonatomic, assign, readonly) BOOL shouldManuallyAdjustOrientation;
 
 /*
  Checks if the app is Unity.
@@ -173,20 +151,6 @@ NS_SWIFT_NAME(InternalUtility)
  @return YES if the bundle identifier refers to the Safari app, otherwise NO.
  */
 + (BOOL)isSafariBundleIdentifier:(NSString *)bundleIdentifier;
-
-/**
-  Tests whether the UIKit version that the current app was linked to is at least the specified version.
- @param version The version to test against.
- @return YES if the linked UIKit version is greater than or equal to the specified version, otherwise NO.
- */
-+ (BOOL)isUIKitLinkTimeVersionAtLeast:(FBSDKUIKitVersion)version;
-
-/**
-  Tests whether the UIKit version in the runtime is at least the specified version.
- @param version The version to test against.
- @return YES if the runtime UIKit version is greater than or equal to the specified version, otherwise NO.
- */
-+ (BOOL)isUIKitRunTimeVersionAtLeast:(FBSDKUIKitVersion)version;
 
 /**
   Checks equality between 2 objects.
