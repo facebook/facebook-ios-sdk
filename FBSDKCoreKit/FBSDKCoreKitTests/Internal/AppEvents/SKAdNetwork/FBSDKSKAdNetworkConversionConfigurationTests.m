@@ -24,7 +24,11 @@
  #import "FBSDKSKAdNetworkConversionConfiguration.h"
  #import "FBSDKSKAdNetworkRule.h"
  #import "FBSDKTestCase.h"
- #import "FBSDKTypeUtility.h"
+ #if defined FBSDKCOCOAPODS || FBSDK_SWIFT_PACKAGE
+  #import "FBSDKCoreKit_Basics.h"
+ #else
+  #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+ #endif
 
 @interface FBSDKSKAdNetworkConversionConfiguration ()
 
