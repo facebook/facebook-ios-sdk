@@ -85,8 +85,7 @@ static BOOL _isTurnedOff;
 
 + (void)sendCrashLogs
 {
-  NSArray<id<FBSDKCrashObserving>> *observers = [_observers copy];
-  for (id<FBSDKCrashObserving> observer in observers) {
+  for (id<FBSDKCrashObserving> observer in _observers) {
     if (observer && [observer respondsToSelector:@selector(didReceiveCrashLogs:)]) {
       NSArray<NSDictionary<NSString *, id> *> *filteredCrashLogs = [self filterCrashLogs:observer.prefixes processedCrashLogs:_processedCrashLogs];
       [observer didReceiveCrashLogs:filteredCrashLogs];
@@ -138,22 +137,26 @@ static BOOL _isTurnedOff;
     installSignalsHandler();
     _processedCrashLogs = [self getProcessedCrashLogs];
   });
-  if (![_observers containsObject:observer]) {
-    [_observers addObject:observer];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void) {
-      [self generateMethodMapping:observer];
-    });
-    [self sendCrashLogs];
+  @synchronized(_observers) {
+    if (![_observers containsObject:observer]) {
+      [_observers addObject:observer];
+      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void) {
+        [self generateMethodMapping:observer];
+      });
+      [self sendCrashLogs];
+    }
   }
 }
 
 + (void)removeObserver:(id<FBSDKCrashObserving>)observer
 {
-  if ([_observers containsObject:observer]) {
-    [_observers removeObject:observer];
-    if (_observers.count == 0) {
-      [FBSDKCrashHandler uninstallExceptionsHandler];
-      uninstallSignalsHandler();
+  @synchronized(_observers) {
+    if ([_observers containsObject:observer]) {
+      [_observers removeObject:observer];
+      if (_observers.count == 0) {
+        [FBSDKCrashHandler uninstallExceptionsHandler];
+        uninstallSignalsHandler();
+      }
     }
   }
 }
