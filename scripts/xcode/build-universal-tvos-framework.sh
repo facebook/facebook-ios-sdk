@@ -30,7 +30,6 @@ UNIVERSAL_TV_BUILD_FOLDER=../build/tv/
 # make the output directory and delete the framework directory
 mkdir -p "${UNIVERSAL_TV_BUILD_FOLDER}"
 rm -rf "${UNIVERSAL_TV_BUILD_FOLDER}/${PROJECT_NAME}.framework"
-rm -rf "${UNIVERSAL_TV_BUILD_FOLDER}/${PRODUCT_NAME}.framework"
 
 # get target by removing '-Universal' from $TARGET_NAME
 TARGET=${TARGET_NAME%-Universal}
@@ -55,9 +54,9 @@ xcodebuild -target "${TARGET}" \
   clean build
 
 # Step 2. Copy the framework structure to the universal folder
-cp -R "${BUILD_DIR}/${CONFIGURATION}-appletvos/${PRODUCT_NAME}.framework" "${UNIVERSAL_TV_BUILD_FOLDER}/"
+cp -R "${BUILD_DIR}/${CONFIGURATION}-appletvos/${PROJECT_NAME}.framework" "${UNIVERSAL_TV_BUILD_FOLDER}/"
 
 # Step 3. Create universal binary file using lipo and place the combined executable in the copied framework directory
-lipo -create -output "${UNIVERSAL_TV_BUILD_FOLDER}/${PRODUCT_NAME}.framework/${PRODUCT_NAME}" \
-  "${BUILD_DIR}/${CONFIGURATION}-appletvsimulator/${PRODUCT_NAME}.framework/${PRODUCT_NAME}" \
-  "${BUILD_DIR}/${CONFIGURATION}-appletvos/${PRODUCT_NAME}.framework/${PRODUCT_NAME}"
+lipo -create -output "${UNIVERSAL_TV_BUILD_FOLDER}/${PROJECT_NAME}.framework/${PROJECT_NAME}" \
+  "${BUILD_DIR}/${CONFIGURATION}-appletvsimulator/${PROJECT_NAME}.framework/${PROJECT_NAME}" \
+  "${BUILD_DIR}/${CONFIGURATION}-appletvos/${PROJECT_NAME}.framework/${PROJECT_NAME}"
