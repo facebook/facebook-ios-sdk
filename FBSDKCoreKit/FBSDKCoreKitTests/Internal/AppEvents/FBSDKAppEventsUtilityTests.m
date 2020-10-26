@@ -178,7 +178,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   XCTAssertTrue([str isEqualToString:@"1234.56"]);
 }
 
-#if BUCK
+#ifdef BUCK
 - (void)testGetNumberValueWithLocaleFR
 {
   OCMStub(ClassMethod([_mockNSLocale currentLocale])).andReturn([NSLocale localeWithLocaleIdentifier:@"fr"]);
