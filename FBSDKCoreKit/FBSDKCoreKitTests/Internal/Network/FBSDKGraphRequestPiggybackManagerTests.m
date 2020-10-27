@@ -21,6 +21,7 @@
 
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKGraphRequestPiggybackManager.h"
+#import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKTestCase.h"
 #import "SampleAccessToken.h"
 
@@ -754,12 +755,147 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   OCMVerify(ClassMethod([self.graphRequestPiggybackManagerMock _setLastRefreshTry:OCMArg.any]));
 }
 
+// MARK: - Server Configuration Piggyback
+
+- (void)testAddingServerConfigurationPiggybackWithDefaultConfigurationExpiredCache
+{
+  FBSDKServerConfiguration *config = [FBSDKServerConfigurationFixtures configWithDictionary:@{
+                                        @"defaults" : @YES,
+                                        @"timestamp" : self.twoDaysAgo
+                                      }];
+  [self stubCachedServerConfigurationWithServerConfiguration:config];
+  [self stubAppID:config.appID];
+
+  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
+  [Manager addServerConfigurationPiggyback:connection];
+  FBSDKGraphRequestMetadata *requestMetadata = connection.requests.firstObject;
+  FBSDKGraphRequest *expectedServerConfigurationRequest = [FBSDKServerConfigurationManager requestToLoadServerConfiguration:nil];
+
+  [self validateServerConfigurationRequest:requestMetadata.request isEqualTo:expectedServerConfigurationRequest];
+}
+
+- (void)testAddingServerConfigurationPiggybackWithDefaultConfigurationNonExpiredCache
+{
+  FBSDKServerConfiguration *config = [FBSDKServerConfigurationFixtures configWithDictionary:@{
+                                        @"defaults" : @YES,
+                                        @"timestamp" : NSDate.date
+                                      }];
+  [self stubCachedServerConfigurationWithServerConfiguration:config];
+
+  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
+  [Manager addServerConfigurationPiggyback:connection];
+
+  XCTAssertEqual(
+    connection.requests.count,
+    1,
+    "Should add a server configuration request for a default config with a non-expired cache"
+  );
+}
+
+- (void)testAddingServerConfigurationPiggybackWithCustomConfigurationExpiredCache
+{
+  FBSDKServerConfiguration *config = [FBSDKServerConfigurationFixtures configWithDictionary:@{
+                                        @"defaults" : @YES,
+                                        @"timestamp" : self.twoDaysAgo
+                                      }];
+  [self stubCachedServerConfigurationWithServerConfiguration:config];
+
+  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
+  [Manager addServerConfigurationPiggyback:connection];
+
+  XCTAssertEqual(
+    connection.requests.count,
+    1,
+    "Should add a server configuration request for a default config with an expired cached"
+  );
+}
+
+- (void)testAddingServerConfigurationPiggybackWithCustomConfigurationNonExpiredCache
+{
+  FBSDKServerConfiguration *config = [FBSDKServerConfigurationFixtures configWithDictionary:@{
+                                        @"defaults" : @NO,
+                                        @"timestamp" : NSDate.date
+                                      }];
+  [self stubCachedServerConfigurationWithServerConfiguration:config];
+
+  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
+  [Manager addServerConfigurationPiggyback:connection];
+
+  XCTAssertEqual(
+    connection.requests.count,
+    0,
+    "Should not add a server configuration request for a custom configuration with a non-expired cache"
+  );
+}
+
+- (void)testAddingServerConfigurationPiggybackWithCustomConfigurationMissingTimeout
+{
+  // Esoterica - the default timeout is nil in the default configuration
+  FBSDKServerConfiguration *config = [FBSDKServerConfigurationFixtures configWithDictionary:@{
+                                        @"defaults" : @NO
+                                      }];
+  [self stubCachedServerConfigurationWithServerConfiguration:config];
+
+  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
+  [Manager addServerConfigurationPiggyback:connection];
+
+  XCTAssertEqual(
+    connection.requests.count,
+    1,
+    "Should add a server configuration request for a custom configuration with a missing cache timeout"
+  );
+}
+
+- (void)testAddingServerConfigurationPiggybackWithDefaultConfigurationMissingTimeout
+{
+  // Esoterica - the default timeout is nil in the default configuration
+  FBSDKServerConfiguration *config = [FBSDKServerConfigurationFixtures configWithDictionary:@{
+                                        @"defaults" : @YES
+                                      }];
+  [self stubCachedServerConfigurationWithServerConfiguration:config];
+
+  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
+  [Manager addServerConfigurationPiggyback:connection];
+
+  XCTAssertEqual(
+    connection.requests.count,
+    1,
+    "Should add a server configuration request for a default configuration with a missing cache timeout"
+  );
+}
+
 // MARK: - Helpers
+
+- (NSDate *)twoDaysAgo
+{
+  int twoDaysInSeconds = 60 * 60 * 48;
+  return [NSDate dateWithTimeIntervalSinceNow:-twoDaysInSeconds];
+}
 
 - (FBSDKAccessToken *)twoDayOldToken
 {
-  int twoDaysInSeconds = 60 * 60 * 48;
-  return [SampleAccessToken validWithRefreshDate:[NSDate dateWithTimeIntervalSinceNow:-twoDaysInSeconds]];
+  return [SampleAccessToken validWithRefreshDate:self.twoDaysAgo];
+}
+
+- (void)validateServerConfigurationRequest:(FBSDKGraphRequest *)request isEqualTo:(FBSDKGraphRequest *)expectedRequest
+{
+  XCTAssertNotNil(request, "Adding a server configuration piggyback should add a request to fetch the server configuration");
+
+  XCTAssertEqualObjects(
+    request.graphPath,
+    expectedRequest.graphPath,
+    "Should add a request with the expected graph path for fetching a server configuration"
+  );
+  XCTAssertEqualObjects(
+    request.parameters,
+    expectedRequest.parameters,
+    "Should add a request with the correct parameters for fetching a server configuration"
+  );
+  XCTAssertEqual(
+    request.flags,
+    expectedRequest.flags,
+    "Should add a request with the correct flags for fetching a server configuration"
+  );
 }
 
 - (void)validateRefreshedToken:(FBSDKAccessToken *)token
