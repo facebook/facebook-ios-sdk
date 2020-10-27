@@ -109,11 +109,15 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
                    declinedPermissions:(NSMutableSet *)declinedPermissions
                     expiredPermissions:(NSMutableSet *)expiredPermissions
 {
-  NSArray *resultData = responseObject[@"data"];
+  NSArray *resultData = [FBSDKTypeUtility dictionary:responseObject objectForKey:@"data" ofType:NSArray.class];
   if (resultData.count > 0) {
     for (NSDictionary *permissionsDictionary in resultData) {
-      NSString *permissionName = permissionsDictionary[@"permission"];
-      NSString *status = permissionsDictionary[@"status"];
+      NSString *permissionName = [FBSDKTypeUtility dictionary:permissionsDictionary objectForKey:@"permission" ofType:NSString.class];
+      NSString *status = [FBSDKTypeUtility dictionary:permissionsDictionary objectForKey:@"status" ofType:NSString.class];
+
+      if (!permissionName || !status) {
+        continue;
+      }
 
       if ([status isEqualToString:@"granted"]) {
         [grantedPermissions addObject:permissionName];

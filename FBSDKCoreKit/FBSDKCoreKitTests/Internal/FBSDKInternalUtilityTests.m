@@ -20,6 +20,7 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKCoreKit.h"
+#import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKInternalUtility.h"
 
 @interface FBSDKInternalUtilityTests : XCTestCase
@@ -130,6 +131,86 @@
                                                defaultVersion:@""
                                                         error:NULL].absoluteString;
   XCTAssertEqualObjects(URLString, @"https://m.facebook.com/" FBSDK_TARGET_PLATFORM_VERSION @"/dialog/share");
+}
+
+- (void)testParsingPermissionsWithFuzzyValues
+{
+  NSMutableSet *grantedPermissions = [NSMutableSet set];
+  NSMutableSet *declinedPermissions = [NSMutableSet set];
+  NSMutableSet *expiredPermissions = [NSMutableSet set];
+
+  // A lack of a runtime crash is considered a success here.
+  for (int i = 0; i < 1000; i++) {
+    [FBSDKInternalUtility extractPermissionsFromResponse:SampleRawRemotePermissionList.randomValues
+                                      grantedPermissions:grantedPermissions
+                                     declinedPermissions:declinedPermissions
+                                      expiredPermissions:expiredPermissions];
+  }
+}
+
+- (void)testExtractingPermissionsFromResponseWithInvalidTopLevelKey
+{
+  NSMutableSet *grantedPermissions = [NSMutableSet set];
+  NSMutableSet *declinedPermissions = [NSMutableSet set];
+  NSMutableSet *expiredPermissions = [NSMutableSet set];
+
+  [FBSDKInternalUtility extractPermissionsFromResponse:SampleRawRemotePermissionList.missingTopLevelKey
+                                    grantedPermissions:grantedPermissions
+                                   declinedPermissions:declinedPermissions
+                                    expiredPermissions:expiredPermissions];
+  XCTAssertEqual(grantedPermissions.count, 0, "Should not add granted permissions if top level key is missing");
+  XCTAssertEqual(declinedPermissions.count, 0, "Should not add declined permissions if top level key is missing");
+  XCTAssertEqual(expiredPermissions.count, 0, "Should not add expired permissions if top level key is missing");
+}
+
+- (void)testExtractingPermissionsFromResponseWithMissingPermissions
+{
+  NSMutableSet *grantedPermissions = [NSMutableSet set];
+  NSMutableSet *declinedPermissions = [NSMutableSet set];
+  NSMutableSet *expiredPermissions = [NSMutableSet set];
+
+  [FBSDKInternalUtility extractPermissionsFromResponse:SampleRawRemotePermissionList.missingPermissions
+                                    grantedPermissions:grantedPermissions
+                                   declinedPermissions:declinedPermissions
+                                    expiredPermissions:expiredPermissions];
+  XCTAssertEqual(grantedPermissions.count, 0, "Should not add missing granted permissions");
+  XCTAssertEqual(declinedPermissions.count, 0, "Should not add missing declined permissions");
+  XCTAssertEqual(expiredPermissions.count, 0, "Should not add missing expired permissions");
+}
+
+- (void)testExtractingPermissionsFromResponseWithMissingStatus
+{
+  NSMutableSet *grantedPermissions = [NSMutableSet set];
+  NSMutableSet *declinedPermissions = [NSMutableSet set];
+  NSMutableSet *expiredPermissions = [NSMutableSet set];
+
+  [FBSDKInternalUtility extractPermissionsFromResponse:SampleRawRemotePermissionList.missingStatus
+                                    grantedPermissions:grantedPermissions
+                                   declinedPermissions:declinedPermissions
+                                    expiredPermissions:expiredPermissions];
+  XCTAssertEqual(grantedPermissions.count, 0, "Should not add a permission with a missing status");
+  XCTAssertEqual(declinedPermissions.count, 0, "Should not add a permission with a missing status");
+  XCTAssertEqual(expiredPermissions.count, 0, "Should not add a permission with a missing status");
+}
+
+- (void)testExtractingPermissionsFromResponseWithValidPermissions
+{
+  NSMutableSet *grantedPermissions = [NSMutableSet set];
+  NSMutableSet *declinedPermissions = [NSMutableSet set];
+  NSMutableSet *expiredPermissions = [NSMutableSet set];
+
+  [FBSDKInternalUtility extractPermissionsFromResponse:SampleRawRemotePermissionList.validAllStatuses
+                                    grantedPermissions:grantedPermissions
+                                   declinedPermissions:declinedPermissions
+                                    expiredPermissions:expiredPermissions];
+  XCTAssertEqual(grantedPermissions.count, 1, "Should add granted permissions when available");
+  XCTAssertTrue([grantedPermissions containsObject:@"email"], "Should add the correct permission to granted permissions");
+
+  XCTAssertEqual(declinedPermissions.count, 1, "Should add declined permissions when available");
+  XCTAssertTrue([declinedPermissions containsObject:@"birthday"], "Should add the correct permission to declined permissions");
+
+  XCTAssertEqual(expiredPermissions.count, 1, "Should add expired permissions when available");
+  XCTAssertTrue([expiredPermissions containsObject:@"first_name"], "Should add the correct permission to expired permissions");
 }
 
 @end

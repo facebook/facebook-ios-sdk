@@ -960,6 +960,7 @@
 		F4EB317F2540955500736B67 /* FBSDKGraphRequestPiggybackManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F4EB317E2540955500736B67 /* FBSDKGraphRequestPiggybackManagerTests.m */; };
 		F4EB31BB2540A1B800736B67 /* SampleGraphRequestConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EB31BA2540A1B800736B67 /* SampleGraphRequestConnection.swift */; };
 		F4EB31D32540A35800736B67 /* SampleGraphRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EB31D22540A35800736B67 /* SampleGraphRequest.swift */; };
+		F4EB33CE2542323500736B67 /* SampleRawRemotePermissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EB33CD2542323500736B67 /* SampleRawRemotePermissions.swift */; };
 		F4ED90DB24EDDC610048D283 /* NotificationCenterSpy.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ED90DA24EDDC610048D283 /* NotificationCenterSpy.m */; };
 		F4F98C5324CB820A00F0D6EC /* FBSDKSafeCast.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F98C4A24CB820A00F0D6EC /* FBSDKSafeCast.m */; };
 		F4F98C5424CB820A00F0D6EC /* FBSDKSafeCast.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F98C4A24CB820A00F0D6EC /* FBSDKSafeCast.m */; };
@@ -1620,6 +1621,7 @@
 		F4EB317E2540955500736B67 /* FBSDKGraphRequestPiggybackManagerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKGraphRequestPiggybackManagerTests.m; sourceTree = "<group>"; };
 		F4EB31BA2540A1B800736B67 /* SampleGraphRequestConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleGraphRequestConnection.swift; sourceTree = "<group>"; };
 		F4EB31D22540A35800736B67 /* SampleGraphRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleGraphRequest.swift; sourceTree = "<group>"; };
+		F4EB33CD2542323500736B67 /* SampleRawRemotePermissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleRawRemotePermissions.swift; sourceTree = "<group>"; };
 		F4ED90D924EDDC610048D283 /* NotificationCenterSpy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationCenterSpy.h; sourceTree = "<group>"; };
 		F4ED90DA24EDDC610048D283 /* NotificationCenterSpy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationCenterSpy.m; sourceTree = "<group>"; };
 		F4F98BB324CB77F400F0D6EC /* FBSDKSafeCast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBSDKSafeCast.h; path = ../../../FBSDKCoreKit_Basics/Sources/FBSDKSafeCast.h; sourceTree = "<group>"; };
@@ -2723,6 +2725,7 @@
 				F4E50153243648A100C99262 /* FBSDKServerConfigurationFixtures.m */,
 				F4EB31D22540A35800736B67 /* SampleGraphRequest.swift */,
 				F4EB31BA2540A1B800736B67 /* SampleGraphRequestConnection.swift */,
+				F4EB33CD2542323500736B67 /* SampleRawRemotePermissions.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -4205,6 +4208,7 @@
 				F40B24B2247324BB0059351C /* RawServerConfigurationResponseFixtures.swift in Sources */,
 				F46C4857243E34C600D03401 /* FBSDKMonitoringConfigurationTestHelper.m in Sources */,
 				F4EB31D32540A35800736B67 /* SampleGraphRequest.swift in Sources */,
+				F4EB33CE2542323500736B67 /* SampleRawRemotePermissions.swift in Sources */,
 				5DBB0447227FEF700009E0A6 /* FBSDKBasicUtilityTests.m in Sources */,
 				F952EA4F2339432100B20652 /* FBSDKMetadataIndexerTests.m in Sources */,
 				5DB612A823593AB600150851 /* FBSDKCrashShieldTests.m in Sources */,
