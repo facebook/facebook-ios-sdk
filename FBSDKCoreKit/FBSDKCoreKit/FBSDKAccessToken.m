@@ -286,4 +286,15 @@ static FBSDKAccessToken *g_currentAccessToken;
   [encoder encodeObject:self.graphDomain forKey:FBSDK_ACCESSTOKEN_GRAPH_DOMAIN_KEY];
 }
 
+#pragma mark - Testability
+
+#if DEBUG
+
++ (void)resetCurrentAccessTokenCache
+{
+  g_currentAccessToken = nil;
+}
+
+#endif
+
 @end

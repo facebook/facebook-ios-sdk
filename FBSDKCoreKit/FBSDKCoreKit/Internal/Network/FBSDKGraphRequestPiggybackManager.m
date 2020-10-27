@@ -90,10 +90,10 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60; // hour
                                                                             flags:FBSDKGraphRequestFlagDisableErrorRecovery];
 
   [connection addRequest:extendRequest completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id result, NSError *error) {
-    tokenString = result[@"access_token"];
-    expirationDateNumber = result[@"expires_at"];
-    dataAccessExpirationDateNumber = result[@"data_access_expiration_time"];
-    graphDomain = result[@"graph_domain"];
+    tokenString = [FBSDKTypeUtility dictionary:result objectForKey:@"access_token" ofType:NSString.class];
+    expirationDateNumber = [FBSDKTypeUtility dictionary:result objectForKey:@"expires_at" ofType:NSNumber.class];
+    dataAccessExpirationDateNumber = [FBSDKTypeUtility dictionary:result objectForKey:@"data_access_expiration_time" ofType:NSNumber.class];
+    graphDomain = [FBSDKTypeUtility dictionary:result objectForKey:@"graph_domain" ofType:NSString.class];
     expectingCallbackComplete();
   }];
   FBSDKGraphRequest *permissionsRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/permissions"
