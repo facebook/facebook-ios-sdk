@@ -25,6 +25,8 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60; // hour
 
 @implementation FBSDKGraphRequestPiggybackManager
 
+static NSDate *_lastRefreshTry = nil;
+
 + (void)addPiggybackRequests:(FBSDKGraphRequestConnection *)connection
 {
   if ([FBSDKSettings appID].length > 0) {
@@ -123,19 +125,13 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60; // hour
   // don't piggy back more than once an hour as a cheap way of
   // retrying in cases of errors and preventing duplicate refreshes.
   // obviously this is not foolproof but is simple and sufficient.
-  static NSDate *lastRefreshTry;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    lastRefreshTry = [NSDate distantPast];
-  });
-
   NSDate *now = [NSDate date];
   NSDate *tokenRefreshDate = [FBSDKAccessToken currentAccessToken].refreshDate;
   if (tokenRefreshDate
-      && [now timeIntervalSinceDate:lastRefreshTry] > [self _tokenRefreshRetryInSeconds]
+      && [now timeIntervalSinceDate:[self _lastRefreshTry]] > [self _tokenRefreshRetryInSeconds]
       && [now timeIntervalSinceDate:tokenRefreshDate] > [self _tokenRefreshThresholdInSeconds]) {
     [self addRefreshPiggyback:connection permissionHandler:NULL];
-    lastRefreshTry = [NSDate date];
+    [self _setLastRefreshTry:[NSDate date]];
   }
 }
 
@@ -168,6 +164,19 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60; // hour
 + (int)_tokenRefreshRetryInSeconds
 {
   return FBSDKTokenRefreshRetrySeconds;
+}
+
++ (NSDate *)_lastRefreshTry
+{
+  if (!_lastRefreshTry) {
+    _lastRefreshTry = [NSDate distantPast];
+  }
+  return _lastRefreshTry;
+}
+
++ (void)_setLastRefreshTry:(NSDate *)date
+{
+  _lastRefreshTry = date;
 }
 
 @end

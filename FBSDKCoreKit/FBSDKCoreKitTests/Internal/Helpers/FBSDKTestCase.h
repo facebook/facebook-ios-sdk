@@ -217,6 +217,9 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Stubs `FBSDKGraphRequest.startWithCompletionHandler:` and returns the provided result, error and connection
 - (void)stubAppLinkResolverRequestBuilderWithIdiomSpecificField:(nullable NSString *)field;
 
+/// Stubs `FBSDKGraphRequestPiggybackManager._lastRefreshTry` and returns the provided `NSDate`
+- (void)stubGraphRequestPiggybackManagerLastRefreshTryWith:(NSDate *)date;
+
 @end
 
 NS_ASSUME_NONNULL_END

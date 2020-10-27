@@ -41,6 +41,10 @@
 + (FBSDKAppEvents *)singleton;
 @end
 
+@interface FBSDKGraphRequestPiggybackManager (Testing)
++ (NSDate *)_lastRefreshTry;
+@end
+
 @interface FBSDKSettings (Testing)
 + (void)_logIfSDKSettingsChanged;
 @end
@@ -430,6 +434,13 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 {
   OCMStub([_appLinkResolverRequestBuilderMock getIdiomSpecificField]).andReturn(field);
 }
+
+- (void)stubGraphRequestPiggybackManagerLastRefreshTryWith:(NSDate *)date
+{
+  OCMStub(ClassMethod([_graphRequestPiggybackManagerMock _lastRefreshTry])).andReturn(date);
+}
+
+// MARK: - Helpers
 
 - (id)nsNullIfNil:(id)nilValue
 {

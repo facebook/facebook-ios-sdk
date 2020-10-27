@@ -33,6 +33,7 @@
 + (int)_tokenRefreshThresholdInSeconds;
 + (int)_tokenRefreshRetryInSeconds;
 + (BOOL)_safeForPiggyback:(FBSDKGraphRequest *)request;
++ (void)_setLastRefreshTry:(NSDate *)date;
 
 @end
 
@@ -669,7 +670,97 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [self waitForExpectations:@[expectation] timeout:1];
 }
 
+// MARK: - Refreshing if Stale
+
+- (void)testRefreshIfStaleWithoutAccessToken
+{
+  [self stubCurrentAccessTokenWith:nil];
+
+  // Shouldn't add the refresh if there's no access token
+  OCMReject(ClassMethod([self.graphRequestPiggybackManagerMock addRefreshPiggyback:OCMArg.any permissionHandler:NULL]));
+
+  [Manager addRefreshPiggybackIfStale:SampleGraphRequestConnection.empty];
+}
+
+- (void)testRefreshIfStaleWithAccessTokenWithoutRefreshDate
+{
+  [self stubCurrentAccessTokenWith:SampleAccessToken.validToken];
+
+  // Should not add the refresh if the access token is missing a refresh date
+  OCMReject(ClassMethod([self.graphRequestPiggybackManagerMock addRefreshPiggyback:OCMArg.any permissionHandler:NULL]));
+
+  [Manager addRefreshPiggybackIfStale:SampleGraphRequestConnection.empty];
+}
+
+// | Last refresh try > an hour ago | Token refresh date > a day ago | should refresh |
+// | true                           | true                           | true           |
+- (void)testRefreshIfStaleWithOldRefreshWithOldTokenRefresh
+{
+  [self stubGraphRequestPiggybackManagerLastRefreshTryWith:NSDate.distantPast];
+  [self stubCurrentAccessTokenWith:self.twoDayOldToken];
+
+  [Manager addRefreshPiggybackIfStale:SampleGraphRequestConnection.empty];
+
+  OCMVerify(ClassMethod([self.graphRequestPiggybackManagerMock addRefreshPiggyback:OCMArg.any permissionHandler:NULL]));
+}
+
+// | Last refresh try > an hour ago | Token refresh date > a day ago | should refresh |
+// | true                           | false                          | false          |
+- (void)testRefreshIfStaleWithOldLastRefreshWithRecentTokenRefresh
+{
+  [self stubGraphRequestPiggybackManagerLastRefreshTryWith:NSDate.distantPast];
+  [self stubCurrentAccessTokenWith:SampleAccessToken.validToken];
+
+  OCMReject(ClassMethod([self.graphRequestPiggybackManagerMock addRefreshPiggyback:OCMArg.any permissionHandler:NULL]));
+
+  [Manager addRefreshPiggybackIfStale:SampleGraphRequestConnection.empty];
+}
+
+// | Last refresh try > an hour ago | Token refresh date > a day ago | should refresh |
+// | false                          | false                          | false          |
+- (void)testRefreshIfStaleWithRecentLastRefreshWithRecentTokenRefresh
+{
+  // Used for manipulating the initial value of the method scoped constant `lastRefreshTry`
+  [self stubGraphRequestPiggybackManagerLastRefreshTryWith:NSDate.distantFuture];
+
+  OCMReject(ClassMethod([self.graphRequestPiggybackManagerMock addRefreshPiggyback:OCMArg.any permissionHandler:NULL]));
+
+  [Manager addRefreshPiggybackIfStale:SampleGraphRequestConnection.empty];
+}
+
+// | Last refresh try > an hour ago | Token refresh date > a day ago | should refresh |
+// | false                          | true                           | false          |
+- (void)testRefreshIfStaleWithRecentLastRefreshOldTokenRefresh
+{
+  // Used for manipulating the initial value of the method scoped constant `lastRefreshTry`
+  [self stubGraphRequestPiggybackManagerLastRefreshTryWith:NSDate.distantFuture];
+  [self stubCurrentAccessTokenWith:self.twoDayOldToken];
+
+  OCMReject(ClassMethod([self.graphRequestPiggybackManagerMock addRefreshPiggyback:OCMArg.any permissionHandler:NULL]));
+
+  [Manager addRefreshPiggybackIfStale:SampleGraphRequestConnection.empty];
+}
+
+- (void)testRefreshIfStaleSideEffects
+{
+  // Used for manipulating the initial value of the method scoped constant `lastRefreshTry`
+  [self stubGraphRequestPiggybackManagerLastRefreshTryWith:NSDate.distantPast];
+  [self stubCurrentAccessTokenWith:self.twoDayOldToken];
+
+  [Manager addRefreshPiggybackIfStale:SampleGraphRequestConnection.empty];
+
+  OCMVerify(ClassMethod([self.graphRequestPiggybackManagerMock addRefreshPiggyback:OCMArg.any permissionHandler:NULL]));
+  // Should update last refresh try
+  OCMVerify(ClassMethod([self.graphRequestPiggybackManagerMock _setLastRefreshTry:OCMArg.any]));
+}
+
 // MARK: - Helpers
+
+- (FBSDKAccessToken *)twoDayOldToken
+{
+  int twoDaysInSeconds = 60 * 60 * 48;
+  return [SampleAccessToken validWithRefreshDate:[NSDate dateWithTimeIntervalSinceNow:-twoDaysInSeconds]];
+}
 
 - (void)validateRefreshedToken:(FBSDKAccessToken *)token
 {

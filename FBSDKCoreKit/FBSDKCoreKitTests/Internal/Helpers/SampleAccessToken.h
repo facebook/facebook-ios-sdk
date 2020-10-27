@@ -28,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (FBSDKAccessToken *)validTokenWithPermissions:(NSArray *)permissions
                             declinedPermissions:(NSArray *)declinedPermissions
                              expiredPermissions:(NSArray *)expiredPermissions;
++ (FBSDKAccessToken *)validWithRefreshDate:(NSDate *)date;
+
 @end
 
 NS_ASSUME_NONNULL_END
