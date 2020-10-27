@@ -19,11 +19,7 @@
 #import <Foundation/Foundation.h>
 #import <XCTest/XCTest.h>
 
-#if defined FBSDKCOCOAPODS || FBSDK_SWIFT_PACKAGE
- #import "FBSDKCoreKit_Basics.h"
-#else
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
-#endif
+#import "FBSDKJSONValue.h"
 
 @interface FBSDKJSONValueTests : XCTestCase
 @end

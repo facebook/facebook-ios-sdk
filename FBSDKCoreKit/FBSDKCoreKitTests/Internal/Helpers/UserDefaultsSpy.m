@@ -18,11 +18,7 @@
 
 #import "UserDefaultsSpy.h"
 
-#if defined FBSDKCOCOAPODS || FBSDK_SWIFT_PACKAGE
- #import "FBSDKCoreKit_Basics.h"
-#else
- #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
-#endif
+#import "FBSDKTypeUtility.h"
 
 @implementation UserDefaultsSpy
 
