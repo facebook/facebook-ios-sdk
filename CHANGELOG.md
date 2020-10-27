@@ -9,7 +9,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Important
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v8.0.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v8.1.0...HEAD)
+
+## 8.1.0
+
+### Added
+- Introduced `AppLinkResolverRequestBuilder` for use in cleaning up and adding tests around `AppLinkResolver`
+
+### Changed
+- Removed version checks for iOS 9 since it’s the default version now.
+- Refactored `AppLinkResolver` to use a request builder
+- Refactored and added tests around `FBSDKProfile` and `FBSDKProfilePictureView`
+- Updated `FBSDKSettings` to use `ADIdentifierManager` for tracking status
+- Removes usages of deprecated `UI_USER_INTERFACE_IDIOM()`
+
+### Fixed
+- Issues with Swift names causing warnings - #1522
+- Fixes bugs related to crash handling - #1444
+- Fixes Carthage distribution to include the correct binary slices when building on Xcode12 - #1484
+- Fixes duplicate symbol for `FBSDKVideoUploader` bug #1512
+- GET requests now default to having a 'fields' parameter to avoid warnings about missing fields #1403
+- Fixes Multithreading issue related to crash reporting - #1550
+
+[2020-10-23](https://github.com/facebook/facebook-ios-sdk/releases/tag/v8.1.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v8.0.0...v8.1.0)
 
 ## 8.0.0
 
