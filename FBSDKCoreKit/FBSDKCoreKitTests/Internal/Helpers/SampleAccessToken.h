@@ -25,7 +25,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SampleAccessToken : NSObject
 
 + (FBSDKAccessToken *)validToken;
-
++ (FBSDKAccessToken *)validTokenWithPermissions:(NSArray *)permissions
+                            declinedPermissions:(NSArray *)declinedPermissions
+                             expiredPermissions:(NSArray *)expiredPermissions;
 @end
 
 NS_ASSUME_NONNULL_END

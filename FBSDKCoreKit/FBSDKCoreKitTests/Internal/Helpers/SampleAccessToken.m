@@ -33,4 +33,19 @@
                               dataAccessExpirationDate:nil];
 }
 
++ (FBSDKAccessToken *)validTokenWithPermissions:(NSArray *)permissions
+                            declinedPermissions:(NSArray *)declinedPermissions
+                             expiredPermissions:(NSArray *)expiredPermissions
+{
+  return [[FBSDKAccessToken alloc] initWithTokenString:@"123"
+                                           permissions:permissions
+                                   declinedPermissions:declinedPermissions
+                                    expiredPermissions:expiredPermissions
+                                                 appID:@"123"
+                                                userID:@"user123"
+                                        expirationDate:nil
+                                           refreshDate:nil
+                              dataAccessExpirationDate:nil];
+}
+
 @end

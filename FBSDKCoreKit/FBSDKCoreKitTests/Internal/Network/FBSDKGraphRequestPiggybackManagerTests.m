@@ -425,6 +425,250 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   }
 }
 
+// MARK: - Adding Permissions Refresh Piggyback
+
+- (void)testAddsPermissionsRefreshRequest
+{
+  [self stubAppID:@"abc123"];
+  [self stubCurrentAccessTokenWith:SampleAccessToken.validToken];
+  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
+
+  [Manager addRefreshPiggyback:connection permissionHandler:nil];
+
+  FBSDKGraphRequestMetadata *metadata = connection.requests.lastObject;
+  FBSDKGraphRequest *request = metadata.request;
+  XCTAssertNotNil(request, "Adding a refresh piggyback to a connection should add a request for refreshing permissions");
+
+  XCTAssertEqualObjects(
+    request.graphPath,
+    @"me/permissions",
+    "Should add a request with the correct graph path for refreshing permissions"
+  );
+
+  NSDictionary *expectedParameters = @{@"fields" : @""};
+  XCTAssertTrue(
+    [request.parameters isEqualToDictionary:expectedParameters],
+    "Should add a request with the correct parameters for refreshing permissions"
+  );
+  XCTAssertEqual(
+    request.flags,
+    FBSDKGraphRequestFlagDisableErrorRecovery,
+    "Should add a request with the correct flags for refreshing permissions"
+  );
+}
+
+- (void)testCompletingPermissionsRefreshRequestWithEmptyResults
+{
+  FBSDKAccessToken *token = [SampleAccessToken validTokenWithPermissions:@[@"email"]
+                                                     declinedPermissions:@[@"publish"]
+                                                      expiredPermissions:@[@"friends"]];
+
+  [self completePermissionsRefreshForAccessToken:token results:nil];
+
+  // Refreshed token clears permissions when there is no error
+  OCMVerify(
+    ClassMethod(
+      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
+        [self validateRefreshedToken:obj
+             withExpectedPermissions:@[]
+         expectedDeclinedPermissions:@[]
+          expectedExpiredPermissions:@[]
+        ];
+        return true;
+      }]]
+    )
+  );
+}
+
+- (void)testCompletingPermissionsRefreshRequestWithEmptyResultsWithError
+{
+  FBSDKAccessToken *token = [SampleAccessToken validTokenWithPermissions:@[@"email"]
+                                                     declinedPermissions:@[@"publish"]
+                                                      expiredPermissions:@[@"friends"]];
+
+  [self completePermissionsRefreshForAccessToken:token results:nil error:[NSError new]];
+
+  // Refreshed token uses permissions from current access token when there is an error on permissions refresh
+  OCMVerify(
+    ClassMethod(
+      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
+        [self validateRefreshedToken:obj
+             withExpectedPermissions:token.permissions.allObjects
+         expectedDeclinedPermissions:token.declinedPermissions.allObjects
+          expectedExpiredPermissions:token.expiredPermissions.allObjects
+        ];
+        return true;
+      }]]
+    )
+  );
+}
+
+- (void)testCompletingPermissionsRefreshRequestWithNewGrantedPermissions
+{
+  FBSDKAccessToken *token = [SampleAccessToken validTokenWithPermissions:@[@"email"]
+                                                     declinedPermissions:@[@"publish"]
+                                                      expiredPermissions:@[@"friends"]];
+
+  NSDictionary *results = [SampleRawRemotePermissionList withGranted:@[@"foo"] declined:@[] expired:@[]];
+
+  [self completePermissionsRefreshForAccessToken:token results:results];
+
+  // Refreshed token clears unspecified permissions when there are newly specified permissions in the response
+  OCMVerify(
+    ClassMethod(
+      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
+        [self validateRefreshedToken:obj
+             withExpectedPermissions:@[@"foo"]
+         expectedDeclinedPermissions:@[]
+          expectedExpiredPermissions:@[]
+        ];
+        return true;
+      }]]
+    )
+  );
+}
+
+- (void)testCompletingPermissionsRefreshRequestWithNewDeclinedPermissions
+{
+  FBSDKAccessToken *token = [SampleAccessToken validTokenWithPermissions:@[@"email"]
+                                                     declinedPermissions:@[@"publish"]
+                                                      expiredPermissions:@[@"friends"]];
+
+  NSDictionary *results = [SampleRawRemotePermissionList withGranted:@[] declined:@[@"foo"] expired:@[]];
+
+  [self completePermissionsRefreshForAccessToken:token results:results];
+
+  // Refreshed token clears unspecified permissions when there are newly specified permissions in the response
+  OCMVerify(
+    ClassMethod(
+      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
+        [self validateRefreshedToken:obj
+             withExpectedPermissions:@[]
+         expectedDeclinedPermissions:@[@"foo"]
+          expectedExpiredPermissions:@[]
+        ];
+        return true;
+      }]]
+    )
+  );
+}
+
+- (void)testCompletingPermissionsRefreshRequestWithNewExpiredPermissions
+{
+  FBSDKAccessToken *token = [SampleAccessToken validTokenWithPermissions:@[@"email"]
+                                                     declinedPermissions:@[@"publish"]
+                                                      expiredPermissions:@[@"friends"]];
+  [self stubCurrentAccessTokenWith:token];
+
+  NSDictionary *results = [SampleRawRemotePermissionList withGranted:@[] declined:@[] expired:@[@"foo"]];
+
+  [self completePermissionsRefreshForAccessToken:SampleAccessToken.validToken results:results];
+
+  // Refreshed token clears unspecified permissions when there are newly specified permissions in the response
+  OCMVerify(
+    ClassMethod(
+      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
+        [self validateRefreshedToken:obj
+             withExpectedPermissions:@[]
+         expectedDeclinedPermissions:@[]
+          expectedExpiredPermissions:@[@"foo"]
+        ];
+        return true;
+      }]]
+    )
+  );
+}
+
+- (void)testCompletingPermissionsRefreshRequestWithNewPermissions
+{
+  FBSDKAccessToken *token = [SampleAccessToken validTokenWithPermissions:@[@"email"]
+                                                     declinedPermissions:@[@"publish"]
+                                                      expiredPermissions:@[@"friends"]];
+
+  NSDictionary *results = [SampleRawRemotePermissionList withGranted:@[@"foo"]
+                                                            declined:@[@"bar"]
+                                                             expired:@[@"baz"]];
+
+  [self completePermissionsRefreshForAccessToken:token results:results];
+
+  // Refreshed token clears unspecified permissions when there are newly specified permissions in the response
+  OCMVerify(
+    ClassMethod(
+      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
+        [self validateRefreshedToken:obj
+             withExpectedPermissions:@[@"foo"]
+         expectedDeclinedPermissions:@[@"bar"]
+          expectedExpiredPermissions:@[@"baz"]
+        ];
+        return true;
+      }]]
+    )
+  );
+}
+
+- (void)testCompletingPermissionsRefreshRequestWithPermissionsHandlerWithoutError
+{
+  XCTestExpectation *expectation = [[XCTestExpectation alloc] initWithDescription:self.name];
+  FBSDKAccessToken *expectedToken = [SampleAccessToken validTokenWithPermissions:@[@"email"]
+                                                             declinedPermissions:@[@"publish"]
+                                                              expiredPermissions:@[@"friends"]];
+  [self stubCurrentAccessTokenWith:expectedToken];
+
+  NSDictionary *results = [SampleRawRemotePermissionList withGranted:@[@"foo"]
+                                                            declined:@[@"bar"]
+                                                             expired:@[@"baz"]];
+
+  [self completePermissionsRefreshForAccessToken:SampleAccessToken.validToken
+                                         results:results
+                               permissionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+                                 XCTAssertEqualObjects(
+                                   result,
+                                   results,
+                                   "Should pass the raw results to the provided permissions handler"
+                                 );
+                                 XCTAssertNil(
+                                   error,
+                                   "Should invoke the permissions handler regardless of error state"
+                                 );
+                                 [expectation fulfill];
+                               }];
+
+  [self waitForExpectations:@[expectation] timeout:1];
+}
+
+- (void)testCompletingPermissionsRefreshRequestWithPermissionsHandlerWithError
+{
+  XCTestExpectation *expectation = [[XCTestExpectation alloc] initWithDescription:self.name];
+  FBSDKAccessToken *expectedToken = [SampleAccessToken validTokenWithPermissions:@[@"email"]
+                                                             declinedPermissions:@[@"publish"]
+                                                              expiredPermissions:@[@"friends"]];
+  [self stubCurrentAccessTokenWith:expectedToken];
+
+  NSDictionary *results = [SampleRawRemotePermissionList withGranted:@[@"foo"]
+                                                            declined:@[@"bar"]
+                                                             expired:@[@"baz"]];
+  NSError *expectedError = [NSError new];
+
+  [self completePermissionsRefreshForAccessToken:SampleAccessToken.validToken
+                                         results:results
+                                           error:expectedError
+                               permissionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+                                 XCTAssertEqualObjects(
+                                   result,
+                                   results,
+                                   "Should pass the raw results to the provided permissions handler"
+                                 );
+                                 XCTAssertEqualObjects(
+                                   error,
+                                   expectedError,
+                                   "Should pass the error through to the permissions handler"
+                                 );
+                                 [expectation fulfill];
+                               }];
+
+  [self waitForExpectations:@[expectation] timeout:1];
+}
+
 // MARK: - Helpers
 
 - (void)validateRefreshedToken:(FBSDKAccessToken *)token
@@ -434,7 +678,10 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
            expectedRefreshDate:[NSDate date]
         expectedExpirationDate:NSDate.distantFuture
     expectedDataExpirationDate:NSDate.distantFuture
-           expectedGraphDomain:SampleAccessToken.validToken.graphDomain];
+           expectedGraphDomain:SampleAccessToken.validToken.graphDomain
+           expectedPermissions:[NSArray array]
+   expectedDeclinedPermissions:[NSArray array]
+    expectedExpiredPermissions:[NSArray array]];
 }
 
 - (void)validateRefreshedToken:(FBSDKAccessToken *)token
@@ -445,7 +692,10 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
            expectedRefreshDate:[NSDate date]
         expectedExpirationDate:NSDate.distantFuture
     expectedDataExpirationDate:NSDate.distantFuture
-           expectedGraphDomain:SampleAccessToken.validToken.graphDomain];
+           expectedGraphDomain:SampleAccessToken.validToken.graphDomain
+           expectedPermissions:[NSArray array]
+   expectedDeclinedPermissions:[NSArray array]
+    expectedExpiredPermissions:[NSArray array]];
 }
 
 - (void)validateRefreshedToken:(FBSDKAccessToken *)token
@@ -456,7 +706,10 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
            expectedRefreshDate:[NSDate date]
         expectedExpirationDate:expectedExpirationDate
     expectedDataExpirationDate:NSDate.distantFuture
-           expectedGraphDomain:SampleAccessToken.validToken.graphDomain];
+           expectedGraphDomain:SampleAccessToken.validToken.graphDomain
+           expectedPermissions:[NSArray array]
+   expectedDeclinedPermissions:[NSArray array]
+    expectedExpiredPermissions:[NSArray array]];
 }
 
 - (void)validateRefreshedToken:(FBSDKAccessToken *)token
@@ -467,7 +720,10 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
            expectedRefreshDate:[NSDate date]
         expectedExpirationDate:NSDate.distantFuture
     expectedDataExpirationDate:expectedDataExpirationDate
-           expectedGraphDomain:SampleAccessToken.validToken.graphDomain];
+           expectedGraphDomain:SampleAccessToken.validToken.graphDomain
+           expectedPermissions:[NSArray array]
+   expectedDeclinedPermissions:[NSArray array]
+    expectedExpiredPermissions:[NSArray array]];
 }
 
 - (void)validateRefreshedToken:(FBSDKAccessToken *)token
@@ -478,7 +734,26 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
            expectedRefreshDate:[NSDate date]
         expectedExpirationDate:NSDate.distantFuture
     expectedDataExpirationDate:NSDate.distantFuture
-           expectedGraphDomain:expectedGraphDomain];
+           expectedGraphDomain:expectedGraphDomain
+           expectedPermissions:[NSArray array]
+   expectedDeclinedPermissions:[NSArray array]
+    expectedExpiredPermissions:[NSArray array]];
+}
+
+- (void)validateRefreshedToken:(FBSDKAccessToken *)token
+       withExpectedPermissions:(NSArray *)expectedPermissions
+   expectedDeclinedPermissions:(NSArray *)expectedDeclinedPermissions
+    expectedExpiredPermissions:(NSArray *)expectedExpiredPermissions
+{
+  [self validateRefreshedToken:token
+       withExpectedTokenString:SampleAccessToken.validToken.tokenString
+           expectedRefreshDate:[NSDate date]
+        expectedExpirationDate:NSDate.distantFuture
+    expectedDataExpirationDate:NSDate.distantFuture
+           expectedGraphDomain:SampleAccessToken.validToken.graphDomain
+           expectedPermissions:expectedPermissions
+   expectedDeclinedPermissions:expectedDeclinedPermissions
+    expectedExpiredPermissions:expectedExpiredPermissions];
 }
 
 - (void)validateRefreshedToken:(FBSDKAccessToken *)token
@@ -487,12 +762,18 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
         expectedExpirationDate:(NSDate *)expectedExpirationDate
     expectedDataExpirationDate:(NSDate *)expectedDataExpirationDate
            expectedGraphDomain:(NSString *)expectedGraphDomain
+           expectedPermissions:(NSArray *)expectedPermissions
+   expectedDeclinedPermissions:(NSArray *)expectedDeclinedPermissions
+    expectedExpiredPermissions:(NSArray *)expectedExpiredPermissions
 {
   XCTAssertEqualObjects(token.tokenString, expectedTokenString, "A refreshed token should have the expected token string");
   XCTAssertEqualWithAccuracy(token.refreshDate.timeIntervalSince1970, expectedRefreshDate.timeIntervalSince1970, 1, "A refreshed token should have the expected refresh date");
   XCTAssertEqualObjects(token.expirationDate, expectedExpirationDate, "A refreshed token should have the expected expiration date");
   XCTAssertEqualObjects(token.dataAccessExpirationDate, expectedDataExpirationDate, "A refreshed token should have the expected data access expiration date");
   XCTAssertEqualObjects(token.graphDomain, expectedGraphDomain, "A refreshed token should have the expected graph domain");
+  XCTAssertEqualObjects(token.permissions.allObjects, expectedPermissions, "A refreshed token should have the expected permissions");
+  XCTAssertEqualObjects(token.declinedPermissions.allObjects, expectedDeclinedPermissions, "A refreshed token should have the expected declined permissions");
+  XCTAssertEqualObjects(token.expiredPermissions.allObjects, expectedExpiredPermissions, "A refreshed token should have the expected expired permissions");
 }
 
 - (void)completeTokenRefreshForAccessToken:(FBSDKAccessToken *)token results:(NSDictionary *)results
@@ -510,6 +791,44 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   // We can get around this for now by invoking the handler twice.
   metadata.completionHandler(connection, @{}, nil);
   metadata.completionHandler(connection, results, nil);
+}
+
+- (void)completePermissionsRefreshForAccessToken:(FBSDKAccessToken *)token
+                                         results:(NSDictionary *)results
+{
+  [self completePermissionsRefreshForAccessToken:token results:results error:nil];
+}
+
+- (void)completePermissionsRefreshForAccessToken:(FBSDKAccessToken *)token
+                                         results:(NSDictionary *)results
+                                           error:(NSError *)error
+{
+  [self completePermissionsRefreshForAccessToken:token results:results error:error permissionHandler:nil];
+}
+
+- (void)completePermissionsRefreshForAccessToken:(FBSDKAccessToken *)token
+                                         results:(NSDictionary *)results
+                               permissionHandler:(FBSDKGraphRequestBlock)permissionHandler
+{
+  [self completePermissionsRefreshForAccessToken:token results:results error:nil permissionHandler:permissionHandler];
+}
+
+- (void)completePermissionsRefreshForAccessToken:(FBSDKAccessToken *)token
+                                         results:(NSDictionary *)results
+                                           error:(NSError *)error
+                               permissionHandler:(FBSDKGraphRequestBlock)permissionHandler
+{
+  [self stubAppID:token.appID];
+  [self stubCurrentAccessTokenWith:token];
+  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
+
+  [Manager addRefreshPiggyback:connection permissionHandler:permissionHandler];
+
+  FBSDKGraphRequestMetadata *tokenRefreshRequestMetadata = connection.requests.firstObject;
+  FBSDKGraphRequestMetadata *permissionsRequestMetadata = connection.requests.lastObject;
+
+  tokenRefreshRequestMetadata.completionHandler(connection, nil, nil);
+  permissionsRequestMetadata.completionHandler(connection, results, error);
 }
 
 @end
