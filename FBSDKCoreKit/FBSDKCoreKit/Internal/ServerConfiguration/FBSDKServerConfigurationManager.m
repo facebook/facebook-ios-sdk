@@ -62,8 +62,11 @@ static FBSDKServerConfiguration *_serverConfiguration;
 static NSError *_serverConfigurationError;
 static NSDate *_serverConfigurationErrorTimestamp;
 static const NSTimeInterval kTimeout = 4.0;
-static BOOL _printedUpdateMessage;
 static BOOL _requeryFinishedForAppStart;
+
+#if DEBUG
+static BOOL _printedUpdateMessage;
+#endif
 
 typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
 {
@@ -341,10 +344,6 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
         [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational logEntry:updateMessage];
       }
     #endif
-
-      if (!_printedUpdateMessage) {
-        _printedUpdateMessage = _printedUpdateMessage;
-      }
     }
 
     // update the cached copy in NSUserDefaults

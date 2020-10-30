@@ -59,7 +59,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
   NSUInteger _videoSize;
 }
 
-#pragma Public Method
+#pragma mark Public Method
 - (instancetype)initWithVideoName:(NSString *)videoName videoSize:(NSUInteger)videoSize parameters:(NSDictionary *)parameters delegate:(id<FBSDKVideoUploaderDelegate>)delegate
 {
   self = [super init];
@@ -79,7 +79,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
   [self _postStartRequest];
 }
 
-#pragma Helper Method
+#pragma mark Helper Method
 
 - (void)_postStartRequest
 {

@@ -468,7 +468,7 @@ static UIApplicationState _applicationState;
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   return [FBSDKSettings isAutoInitEnabled] || g_isSDKInitialized;
-  #pragma clange diagnostic pop
+  #pragma clang diagnostic pop
 }
 
 // MARK: - Testability
