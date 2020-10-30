@@ -26,23 +26,8 @@
 #import "SampleAccessToken.h"
 #import "SampleUserProfile.h"
 
-@interface FBSDKSettings ()
-+ (NSString *)userAgentSuffix;
-+ (void)setUserAgentSuffix:(NSString *)suffix;
-+ (void)resetLoggingBehaviorsCache;
-+ (void)resetFacebookAppIDCache;
-+ (void)resetFacebookUrlSchemeSuffixCache;
+@interface FBSDKSettings (Testing)
 + (void)resetFacebookClientTokenCache;
-+ (void)resetFacebookDisplayNameCache;
-+ (void)resetFacebookDomainPartCache;
-+ (void)resetFacebookJpegCompressionQualityCache;
-+ (void)resetFacebookAutoInitEnabledCache;
-+ (void)resetFacebookInstrumentEnabledCache;
-+ (void)resetFacebookAutoLogAppEventsEnabledCache;
-+ (void)resetFacebookAdvertiserIDCollectionEnabledCache;
-+ (void)resetUserAgentSuffixCache;
-+ (void)resetFacebookCodelessDebugLogEnabledCache;
-+ (void)resetDataProcessingOptionsCache;
 @end
 
 @interface FBSDKProfile (Testing)
