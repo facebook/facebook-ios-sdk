@@ -20,6 +20,7 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKCoreKit+Internal.h"
+#import "FBSDKTestCase.h"
 #import "FakeMonitorStore.h"
 #import "TestMonitorEntry.h"
 
@@ -33,7 +34,7 @@
 
 @end
 
-@interface FBSDKMonitorTests : XCTestCase
+@interface FBSDKMonitorTests : FBSDKTestCase
 
 @property (nonatomic) id<FBSDKMonitorEntry> entry;
 @property (nonatomic) FakeMonitorStore *store;
@@ -62,18 +63,20 @@
   networkerMock = OCMClassMock([FBSDKMonitorNetworker class]);
   notificationCenterMock = OCMClassMock([NSNotificationCenter class]);
   timerMock = OCMClassMock([NSTimer class]);
+
+  [self stubAllocatingGraphRequestConnection];
 }
 
 - (void)tearDown
 {
-  [super tearDown];
-
   [networkerMock stopMocking];
   [notificationCenterMock stopMocking];
   [timerMock stopMocking];
   [FBSDKMonitor flush];
   [FBSDKMonitor disable];
   [FBSDKMonitor setStore:nil];
+
+  [super tearDown];
 }
 
 - (void)testRecordingWhenDisabled

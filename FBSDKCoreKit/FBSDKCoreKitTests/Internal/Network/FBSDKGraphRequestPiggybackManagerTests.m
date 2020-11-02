@@ -136,6 +136,8 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testAddingRequestsForConnectionWithSafeRequests
 {
   [self stubAppID:@"abc123"];
+  [self stubFetchingCachedServerConfiguration];
+
   FBSDKGraphRequestConnection *connection = [SampleGraphRequestConnection withRequests:@[SampleGraphRequest.valid]];
 
   [Manager addPiggybackRequests:connection];
@@ -147,6 +149,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testAddingRequestsForConnectionWithUnsafeRequests
 {
   [self stubAppID:@"abc123"];
+  [self stubFetchingCachedServerConfiguration];
   FBSDKGraphRequestConnection *connection = [SampleGraphRequestConnection withRequests:@[SampleGraphRequest.withAttachment]];
 
   OCMReject(ClassMethod([self.graphRequestPiggybackManagerMock addRefreshPiggybackIfStale:connection]));
@@ -158,6 +161,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testAddingRequestsForConnectionWithSafeAndUnsafeRequests
 {
   [self stubAppID:@"abc123"];
+  [self stubFetchingCachedServerConfiguration];
   FBSDKGraphRequestConnection *connection = [SampleGraphRequestConnection withRequests:@[
     SampleGraphRequest.valid,
     SampleGraphRequest.withAttachment
@@ -417,7 +421,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
 - (void)testCompletingTokenExtensionRequestWithFuzzyValues
 {
-  for (int i = 0; i < 1000; i++) {
+  for (int i = 0; i < 100; i++) {
     [self completeTokenRefreshForAccessToken:SampleAccessToken.validToken results:@{
        @"access_token" : [Fuzzer random],
        @"expires_at" : [Fuzzer random],

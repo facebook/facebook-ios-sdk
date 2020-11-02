@@ -121,6 +121,9 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing a `FBSDKGraphRequestPiggybackManager` class mock between tests
 @property (nullable, nonatomic, assign) id graphRequestPiggybackManagerMock;
 
+/// Used for sharing a `FBSDKGraphRequestConnection` class mock between tests
+@property (nullable, nonatomic, assign) id graphRequestConnectionClassMock;
+
 /// Stubs `FBSDKSettings.appID` and return the provided value
 - (void)stubAppID:(nullable NSString *)appID;
 
@@ -219,6 +222,13 @@ Also, to get a better understanding of mocking, please read the documentation at
 
 /// Stubs `FBSDKGraphRequestPiggybackManager._lastRefreshTry` and returns the provided `NSDate`
 - (void)stubGraphRequestPiggybackManagerLastRefreshTryWith:(NSDate *)date;
+
+/// Disables creation of graph request connections so that they cannot be started.
+/// This is the nuclear option. It should be removed as soon as possible so that we can test important things
+/// like whether or not a given method actually started a graph request.
+/// This should be used only as needed as a stopgap to keep tests
+/// from hitting the network while proper mocks are being written.
+- (void)stubAllocatingGraphRequestConnection;
 
 @end
 

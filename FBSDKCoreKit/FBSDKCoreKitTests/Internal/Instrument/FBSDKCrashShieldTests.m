@@ -21,6 +21,7 @@
 
 #import "FBSDKCrashShield.h"
 #import "FBSDKFeatureManager.h"
+#import "FBSDKTestCase.h"
 
 @interface FBSDKCrashShield ()
 
@@ -29,10 +30,18 @@
 
 @end
 
-@interface FBSDKCrashShieldTests : XCTestCase
+@interface FBSDKCrashShieldTests : FBSDKTestCase
 @end
 
 @implementation FBSDKCrashShieldTests
+
+- (void)setUp
+{
+  [super setUp];
+
+  // This should be removed when these tests are updated to check the actual requests that are created
+  [self stubAllocatingGraphRequestConnection];
+}
 
 - (void)testGetFeature
 {

@@ -55,6 +55,9 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   _mockAppEventsUtility = OCMClassMock([FBSDKAppEventsUtility class]);
   [FBSDKAppEvents setUserID:@"test-user-id"];
   _mockNSLocale = OCMClassMock([NSLocale class]);
+
+  // This should be removed when these tests are updated to check the actual requests that are created
+  [self stubAllocatingGraphRequestConnection];
 }
 
 - (void)tearDown

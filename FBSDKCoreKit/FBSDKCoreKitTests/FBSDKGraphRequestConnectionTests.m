@@ -104,8 +104,8 @@
   [[[mockUtility stub] andReturn:nil] gzip:[OCMArg any]];
 
   XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
+  [self stubCurrentAccessTokenWith:nil];
+  [self stubClientTokenWith:@"clienttoken"];
   [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
                  // If it's a batch request, the token will be in the body. If it's a single request it will be in the url
                  // we should check that it's in one or the other.

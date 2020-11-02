@@ -20,6 +20,7 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKCoreKit+Internal.h"
+#import "FBSDKTestCase.h"
 
 @interface FBSDKMonitor (Testing)
 
@@ -30,7 +31,7 @@
 
 @end
 
-@interface FBSDKMethodUsageMonitorTests : XCTestCase
+@interface FBSDKMethodUsageMonitorTests : FBSDKTestCase
 @end
 
 @implementation FBSDKMethodUsageMonitorTests
@@ -39,15 +40,18 @@
 {
   [super setUp];
 
+  // This should be removed when these tests are updated to check the actual requests that are created
+  [self stubAllocatingGraphRequestConnection];
+
   [FBSDKMonitor enable];
 }
 
 - (void)tearDown
 {
-  [super tearDown];
-
   [FBSDKMonitor flush];
   [FBSDKMonitor disable];
+
+  [super tearDown];
 }
 
 - (void)testRecordingMethodUsage

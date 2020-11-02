@@ -21,6 +21,7 @@
 
 #import "FBSDKCrashObserver.h"
 #import "FBSDKFeatureManager.h"
+#import "FBSDKTestCase.h"
 
 @interface FBSDKCrashObserver ()
 
@@ -28,10 +29,18 @@
 
 @end
 
-@interface FBSDKCrashObserverTests : XCTestCase
+@interface FBSDKCrashObserverTests : FBSDKTestCase
 @end
 
 @implementation FBSDKCrashObserverTests
+
+- (void)setUp
+{
+  [super setUp];
+
+  // This should be removed when these tests are updated to check the actual requests that are created
+  [self stubAllocatingGraphRequestConnection];
+}
 
 - (void)testDidReceiveCrashLogs
 {

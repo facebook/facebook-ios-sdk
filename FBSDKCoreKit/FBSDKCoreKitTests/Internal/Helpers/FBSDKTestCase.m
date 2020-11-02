@@ -83,6 +83,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self setUpGraphRequestMock];
   [self setUpModelManagerClassMock];
   [self setUpGraphRequestPiggybackManagerMock];
+  [self setUpGraphRequestConnectionClassMock];
 }
 
 - (void)tearDown
@@ -154,6 +155,9 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   [_graphRequestPiggybackManagerMock stopMocking];
   _graphRequestPiggybackManagerMock = nil;
+
+  [_graphRequestConnectionClassMock stopMocking];
+  _graphRequestConnectionClassMock = nil;
 }
 
 - (void)setUpSettingsMock
@@ -265,6 +269,11 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)setUpGraphRequestPiggybackManagerMock
 {
   self.graphRequestPiggybackManagerMock = OCMClassMock(FBSDKGraphRequestPiggybackManager.class);
+}
+
+- (void)setUpGraphRequestConnectionClassMock
+{
+  self.graphRequestConnectionClassMock = OCMClassMock(FBSDKGraphRequestConnection.class);
 }
 
 #pragma mark - Public Methods
@@ -438,6 +447,11 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)stubGraphRequestPiggybackManagerLastRefreshTryWith:(NSDate *)date
 {
   OCMStub(ClassMethod([_graphRequestPiggybackManagerMock _lastRefreshTry])).andReturn(date);
+}
+
+- (void)stubAllocatingGraphRequestConnection
+{
+  OCMStub(ClassMethod([_graphRequestConnectionClassMock alloc]));
 }
 
 // MARK: - Helpers
