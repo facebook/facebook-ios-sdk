@@ -17,9 +17,10 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import Foundation
+
 @testable import FBSDKCoreKit
 
-@objc public class SampleGraphRequest : NSObject {
+@objc public class SampleGraphRequest: NSObject {
 
   @objc public static let valid = create()
   @objc public static var withOutdatedVersionWithAttachment = create(

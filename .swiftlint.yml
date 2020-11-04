@@ -34,6 +34,8 @@ nesting:
   type_level: 2
 private_outlet:
   allow_private_set: true
+type_name:
+  excluded: [RawAppEventsConfigurationResponseFixtures]
 
 disabled_rules:
   - attributes
@@ -55,6 +57,7 @@ disabled_rules:
   - discouraged_optional_collection
   - function_default_parameter_at_end
   - todo
+  - trailing_comma
 
 opt_in_rules:
   - array_init
@@ -153,7 +156,6 @@ opt_in_rules:
   - switch_case_alignment
   - syntactic_sugar
   - trailing_closure
-  - trailing_comma
   - trailing_newline
   - trailing_semicolon
   - trailing_whitespace
