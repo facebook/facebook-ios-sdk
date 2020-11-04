@@ -19,8 +19,6 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
-#include <signal.h>
-
 #import "FBSDKCrashObserver.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKSettings.h"
@@ -36,7 +34,6 @@
    containsPrefix:(NSArray<NSString *> *)prefixList;
 + (NSArray<NSDictionary<NSString *, id> *> *)filterCrashLogs:(NSArray<NSString *> *)prefixList
                                           processedCrashLogs:(NSArray<NSDictionary<NSString *, id> *> *)processedCrashLogs;
-+ (void)saveSignal:(int)signal withCallStack:(NSArray<NSString *> *)callStack;
 + (void)saveCrashLog:(NSDictionary<NSString *, id> *)crashLog;
 
 @end
@@ -52,18 +49,6 @@
 
   // This should be removed when these tests are updated to check the actual requests that are created
   [self stubAllocatingGraphRequestConnection];
-}
-
-- (void)testSaveSignal
-{
-  NSArray<NSString *> *callStack = @[@"(2 DEV METHODS)",
-                                     @"-[FBSDKAccessToken getPermissions]+2321432",
-                                     @"-[FBSDKAccessToken getPermissions]+2324084",
-                                     @"(14 DEV METHODS)", ];
-  id handlerMock = [OCMockObject niceMockForClass:[FBSDKCrashHandler class]];
-  [[handlerMock expect] saveCrashLog:[OCMArg any]];
-  [FBSDKCrashHandler saveSignal:11 withCallStack:callStack]; // SIGSEGV
-  [handlerMock verify];
 }
 
 - (void)testGetFBSDKVersion
