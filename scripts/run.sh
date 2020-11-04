@@ -442,7 +442,7 @@ release_sdk() {
     # Release frameworks in static
     release_static() {
       release_basics() {
-        xcodebuild build \
+        xcodebuild clean build \
          -workspace FacebookSDK.xcworkspace \
          -scheme BuildCoreKitBasics \
          -configuration Release | xcpretty
@@ -461,12 +461,12 @@ release_sdk() {
         cd ..
       }
 
-      xcodebuild build \
+      xcodebuild clean build \
        -workspace FacebookSDK.xcworkspace \
        -scheme BuildAllKits \
        -configuration Release | xcpretty
 
-      xcodebuild build \
+      xcodebuild clean build \
        -workspace FacebookSDK.xcworkspace \
        -scheme BuildAllKits_TV \
        -configuration Release | xcpretty
