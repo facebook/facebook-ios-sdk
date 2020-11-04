@@ -82,7 +82,7 @@ commands:
       - attach_workspace:
           at: .
       - run: |
-          xcodebuild build \
+          xcodebuild clean build \
             -workspace FacebookSDK.xcworkspace \
             -scheme << parameters.scheme >> \
             -configuration << parameters.configuration >>
