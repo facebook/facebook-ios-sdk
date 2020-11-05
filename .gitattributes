@@ -1,2 +1,1 @@
 *.strings diff=localizablestrings
-*.pbxproj binary merge=union
