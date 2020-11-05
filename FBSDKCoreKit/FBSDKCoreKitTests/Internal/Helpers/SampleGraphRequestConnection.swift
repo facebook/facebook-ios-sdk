@@ -17,9 +17,10 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import Foundation
+
 @testable import FBSDKCoreKit
 
-@objc public class SampleGraphRequestConnection : NSObject {
+@objc public class SampleGraphRequestConnection: NSObject {
 
   @objc public static var empty: GraphRequestConnection {
     GraphRequestConnection()

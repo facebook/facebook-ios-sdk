@@ -19,7 +19,7 @@
 import Foundation
 
 @objc
-public class SampleRawRemotePermissionList : NSObject {
+public class SampleRawRemotePermissionList: NSObject {
 
   @objc
   public static var missingPermissions: [String: Any] {
@@ -118,9 +118,7 @@ public class SampleRawRemotePermissionList : NSObject {
 
 }
 
-@objc public class SampleRawRemotePermission : NSObject {
+@objc public class SampleRawRemotePermission: NSObject {
 
   @objc public static let missingTopLevelKey: [String: Any] = [:]
-
-
 }
