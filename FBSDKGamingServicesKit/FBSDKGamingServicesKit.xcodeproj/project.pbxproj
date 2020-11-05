@@ -308,7 +308,6 @@
 		F4F7CA3D23F49C110030A346 /* FBSDKCoreKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSDKCoreKit.xcodeproj; path = ../FBSDKCoreKit/FBSDKCoreKit.xcodeproj; sourceTree = "<group>"; };
 		F4F7CA6823F49D1B0030A346 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		F4F7CA9923F49D6F0030A346 /* FBSDKGamingServicesKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKGamingServicesKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F4F7CA9A23F49D6F0030A346 /* FBSDKGamingServicesKit copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "FBSDKGamingServicesKit copy-Info.plist"; path = "/Users/joesusnick/fbsource/fbobjc/ios-sdk/FBSDKGamingServicesKit/FBSDKGamingServicesKit copy-Info.plist"; sourceTree = "<absolute>"; };
 		F4F7CAA123F4A1390030A346 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -377,7 +376,6 @@
 				F46A224124D9F14D005878A8 /* FBSDKGamingServicesKitTests */,
 				F4F7CA3223F498ED0030A346 /* Frameworks */,
 				F4F7CA9923F49D6F0030A346 /* FBSDKGamingServicesKit.framework */,
-				F4F7CA9A23F49D6F0030A346 /* FBSDKGamingServicesKit copy-Info.plist */,
 				F46A224024D9F14D005878A8 /* FBSDKGamingServicesKitTests.xctest */,
 			);
 			sourceTree = "<group>";
