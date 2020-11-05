@@ -42,6 +42,8 @@ typedef void (^FBSDKParseProfileBlock)(id result, FBSDKProfile *_Nonnull *_Nulla
 
 + (void)loadProfileWithToken:(FBSDKAccessToken *)token completion:(_Nullable FBSDKProfileBlock)completion;
 
++ (void)observeChangeAccessTokenChange:(NSNotification *)notification;
+
 @end
 
 NS_ASSUME_NONNULL_END

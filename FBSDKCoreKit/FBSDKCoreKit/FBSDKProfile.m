@@ -194,14 +194,6 @@ static FBSDKProfile *g_currentProfile;
   [encoder encodeObject:self.refreshDate forKey:FBSDKPROFILE_REFRESHDATE_KEY];
 }
 
- #pragma mark - Private
-
-+ (void)observeChangeAccessTokenChange:(NSNotification *)notification
-{
-  FBSDKAccessToken *token = notification.userInfo[FBSDKAccessTokenChangeNewKey];
-  [self loadProfileWithToken:token completion:NULL];
-}
-
 @end
 
 @implementation FBSDKProfile (Internal)
@@ -340,6 +332,12 @@ static FBSDKProfile *g_currentProfile;
   } else if (completion != NULL) {
     completion(g_currentProfile, nil);
   }
+}
+
++ (void)observeChangeAccessTokenChange:(NSNotification *)notification
+{
+  FBSDKAccessToken *token = notification.userInfo[FBSDKAccessTokenChangeNewKey];
+  [self loadProfileWithToken:token completion:NULL];
 }
 
  #pragma clang diagnostic pop
