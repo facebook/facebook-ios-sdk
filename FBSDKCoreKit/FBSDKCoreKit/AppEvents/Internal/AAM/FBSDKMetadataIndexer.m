@@ -30,6 +30,16 @@
 
  #import "FBSDKCoreKit+Internal.h"
 
+@interface FBSDKUserDataStore (Internal)
+
++ (void)setInternalHashData:(nullable NSString *)hashData
+                    forType:(FBSDKAppEventUserDataType)type;
++ (void)setEnabledRules:(NSArray<NSString *> *)rules;
+
++ (nullable NSString *)getInternalHashedDataForType:(FBSDKAppEventUserDataType)type;
+
+@end
+
 static const int FBSDKMetadataIndexerMaxTextLength = 100;
 static const int FBSDKMetadataIndexerMaxIndicatorLength = 100;
 static const int FBSDKMetadataIndexerMaxValue = 5;

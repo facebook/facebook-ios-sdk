@@ -753,32 +753,23 @@ static NSString *g_overrideAppID = nil;
 
 + (NSString *)getUserData
 {
-  return [FBSDKUserDataStore getHashedData];
+  return [FBSDKUserDataStore getUserData];
 }
 
 + (void)clearUserData
 {
-  [FBSDKUserDataStore setAndHashUserEmail:nil
-                                firstName:nil
-                                 lastName:nil
-                                    phone:nil
-                              dateOfBirth:nil
-                                   gender:nil
-                                     city:nil
-                                    state:nil
-                                      zip:nil
-                                  country:nil];
+  [FBSDKUserDataStore clearUserData];
 }
 
 + (void)setUserData:(nullable NSString *)data
             forType:(FBSDKAppEventUserDataType)type
 {
-  [FBSDKUserDataStore setAndHashData:data forType:type];
+  [FBSDKUserDataStore setUserData:data forType:type];
 }
 
 + (void)clearUserDataForType:(FBSDKAppEventUserDataType)type
 {
-  [FBSDKUserDataStore clearDataForType:type];
+  [FBSDKUserDataStore clearUserDataForType:type];
 }
 
 + (void)updateUserProperties:(NSDictionary<NSString *, id> *)properties handler:(FBSDKGraphRequestBlock)handler

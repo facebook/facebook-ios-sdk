@@ -17,6 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "FBSDKUserDataStore.h"
+#import "FBSDKUserDataStore+Internal.h"
 
 #import "FBSDKBasicUtility.h"
 #import "FBSDKTypeUtility.h"
@@ -105,8 +106,8 @@ FBSDKAppEventUserDataType FBSDKAppEventCountry = @"country";
   });
 }
 
-+ (void)setAndHashData:(nullable NSString *)data
-               forType:(FBSDKAppEventUserDataType)type
++ (void)setUserData:(nullable NSString *)data
+            forType:(FBSDKAppEventUserDataType)type
 {
   [FBSDKUserDataStore setHashData:[FBSDKUserDataStore encryptData:data type:type]
                           forType:type];
@@ -147,9 +148,14 @@ FBSDKAppEventUserDataType FBSDKAppEventCountry = @"country";
   }
 }
 
-+ (void)clearDataForType:(FBSDKAppEventUserDataType)type
++ (void)clearUserDataForType:(FBSDKAppEventUserDataType)type
 {
-  [FBSDKUserDataStore setAndHashData:nil forType:type];
+  [FBSDKUserDataStore setUserData:nil forType:type];
+}
+
++ (NSString *)getUserData
+{
+  return [FBSDKUserDataStore getHashedData];
 }
 
 + (NSString *)getHashedData
@@ -166,6 +172,20 @@ FBSDKAppEventUserDataType FBSDKAppEventCountry = @"country";
     hashedUserDataString = [FBSDKUserDataStore stringByHashedData:hashedUD];
   });
   return hashedUserDataString;
+}
+
++ (void)clearUserData
+{
+  [FBSDKUserDataStore setAndHashUserEmail:nil
+                                firstName:nil
+                                 lastName:nil
+                                    phone:nil
+                              dateOfBirth:nil
+                                   gender:nil
+                                     city:nil
+                                    state:nil
+                                      zip:nil
+                                  country:nil];
 }
 
 + (NSString *)getInternalHashedDataForType:(FBSDKAppEventUserDataType)type
