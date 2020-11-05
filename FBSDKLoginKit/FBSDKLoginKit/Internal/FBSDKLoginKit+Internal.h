@@ -16,8 +16,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "../FBSDKLoginKit.h"
 #import "FBSDKLoginCompletion+Internal.h"
 #import "FBSDKLoginError.h"
 #import "FBSDKLoginManager+Internal.h"
+#import "FBSDKLoginManagerLogger.h"
 #import "FBSDKLoginUtility.h"

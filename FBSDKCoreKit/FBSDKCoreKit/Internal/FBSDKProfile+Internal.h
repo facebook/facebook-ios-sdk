@@ -21,7 +21,6 @@
 #if !TARGET_OS_TV
 
  #import "FBSDKCoreKit+Internal.h"
- #import "FBSDKProfile.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

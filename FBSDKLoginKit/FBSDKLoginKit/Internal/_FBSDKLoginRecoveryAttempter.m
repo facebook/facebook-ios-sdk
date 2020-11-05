@@ -23,6 +23,7 @@
  #import "_FBSDKLoginRecoveryAttempter.h"
 
  #import "FBSDKLoginKit+Internal.h"
+ #import "FBSDKLoginManagerLoginResult+Internal.h"
 
 @implementation _FBSDKLoginRecoveryAttempter
 
