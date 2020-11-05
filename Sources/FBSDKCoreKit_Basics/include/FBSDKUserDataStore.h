@@ -57,24 +57,61 @@ FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventCountry;
 NS_SWIFT_NAME(UserDataStore)
 @interface FBSDKUserDataStore : NSObject
 
-+ (void)setAndHashUserEmail:(nullable NSString *)email
-                  firstName:(nullable NSString *)firstName
-                   lastName:(nullable NSString *)lastName
-                      phone:(nullable NSString *)phone
-                dateOfBirth:(nullable NSString *)dateOfBirth
-                     gender:(nullable NSString *)gender
-                       city:(nullable NSString *)city
-                      state:(nullable NSString *)state
-                        zip:(nullable NSString *)zip
-                    country:(nullable NSString *)country;
-+ (void)setAndHashData:(nullable NSString *)data
-               forType:(FBSDKAppEventUserDataType)type;
-+ (void)setInternalHashData:(nullable NSString *)hashData
-                    forType:(FBSDKAppEventUserDataType)type;
-+ (void)setEnabledRules:(NSArray<NSString *> *)rules;
-+ (nullable NSString *)getHashedData;
-+ (nullable NSString *)getInternalHashedDataForType:(FBSDKAppEventUserDataType)type;
-+ (void)clearDataForType:(FBSDKAppEventUserDataType)type;
+/*
+  Sets custom user data to associate with all app events. All user data are hashed
+  and used to match Facebook user from this instance of an application.
+
+  The user data will be persisted between application instances.
+
+ @param email user's email
+ @param firstName user's first name
+ @param lastName user's last name
+ @param phone user's phone
+ @param dateOfBirth user's date of birth
+ @param gender user's gender
+ @param city user's city
+ @param state user's state
+ @param zip user's zip
+ @param country user's country
+ */
++ (void)setUserEmail:(nullable NSString *)email
+           firstName:(nullable NSString *)firstName
+            lastName:(nullable NSString *)lastName
+               phone:(nullable NSString *)phone
+         dateOfBirth:(nullable NSString *)dateOfBirth
+              gender:(nullable NSString *)gender
+                city:(nullable NSString *)city
+               state:(nullable NSString *)state
+                 zip:(nullable NSString *)zip
+             country:(nullable NSString *)country
+NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:state:zip:country:));
+
+/*
+  Returns the set user data else nil
+*/
++ (nullable NSString *)getUserData;
+
+/*
+  Clears the current user data
+*/
++ (void)clearUserData;
+
+/*
+ Sets custom user data to associate with all app events. All user data are hashed
+ and used to match Facebook user from this instance of an application.
+
+ The user data will be persisted between application instances.
+
+ @param data  data
+ @param type  data type, e.g. FBSDKAppEventEmail, FBSDKAppEventPhone
+ */
++ (void)setUserData:(nullable NSString *)data
+            forType:(FBSDKAppEventUserDataType)type;
+
+/*
+ Clears the current user data of certain type
+ */
++ (void)clearUserDataForType:(FBSDKAppEventUserDataType)type;
 
 @end
 
