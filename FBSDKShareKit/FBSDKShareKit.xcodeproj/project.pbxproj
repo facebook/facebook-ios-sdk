@@ -537,7 +537,7 @@
 		EA3D469E1AA6835900D0C7D5 /* FBSDKAppInviteContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppInviteContent.m; sourceTree = "<group>"; };
 		EA6CCE931AA7855D00F1EC35 /* FBSDKAppInviteContentTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppInviteContentTests.m; sourceTree = "<group>"; };
 		EAC370A21AAE3A9C000F0F04 /* FBSDKGameRequestContentTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKGameRequestContentTests.m; sourceTree = "<group>"; };
-		F46FA682245362880060C902 /* Enums+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Enums+Extensions.swift"; path = "Swift/Enums+Extensions.swift"; sourceTree = "<group>"; };
+		F46FA682245362880060C902 /* Enums+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Enums+Extensions.swift"; sourceTree = "<group>"; };
 		F4D7A84524520A6700A12EE5 /* FakeSharingDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FakeSharingDelegate.h; sourceTree = "<group>"; };
 		F4D7A84624520A6700A12EE5 /* FakeSharingDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FakeSharingDelegate.m; sourceTree = "<group>"; };
 		F4DC05072519457C0073B380 /* FBSDKCoreKitInternalImport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKCoreKitInternalImport.h; sourceTree = "<group>"; };
@@ -907,7 +907,7 @@
 			children = (
 				F46FA682245362880060C902 /* Enums+Extensions.swift */,
 			);
-			name = Swift;
+			path = Swift;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -1206,7 +1206,7 @@
 		40853B9324C8C43300A7CB16 /* FBSDKJSONValueTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKJSONValueTests.m; sourceTree = "<group>"; };
 		45540D8F25271A4B008E853E /* FBSDKAppLinkResolverRequestBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKAppLinkResolverRequestBuilder.h; sourceTree = "<group>"; };
 		45540D9025271A4B008E853E /* FBSDKAppLinkResolverRequestBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppLinkResolverRequestBuilder.m; sourceTree = "<group>"; };
-		45540DB025271A88008E853E /* FBSDKAppLinkResolverRequestBuilderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBSDKAppLinkResolverRequestBuilderTests.m; path = AppLinks/FBSDKAppLinkResolverRequestBuilderTests.m; sourceTree = "<group>"; };
+		45540DB025271A88008E853E /* FBSDKAppLinkResolverRequestBuilderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppLinkResolverRequestBuilderTests.m; sourceTree = "<group>"; };
 		4AF47CF11F42468D00A57A67 /* FBSDKDeviceUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKDeviceUtilities.m; sourceTree = "<group>"; };
 		4AF47CF21F42468D00A57A67 /* FBSDKDeviceUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKDeviceUtilities.h; sourceTree = "<group>"; };
 		4AF47CFE1F424A8700A57A67 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS11.0.sdk/System/Library/Frameworks/CoreImage.framework; sourceTree = DEVELOPER_DIR; };
@@ -1268,7 +1268,7 @@
 		7E3091791AA907E0004E91D5 /* FBSDKAppLinkUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppLinkUtility.m; sourceTree = "<group>"; };
 		7E5557351A8D833100344F86 /* FBSDKAppLinkResolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppLinkResolver.m; sourceTree = "<group>"; };
 		7E5557361A8D833100344F86 /* FBSDKAppLinkResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKAppLinkResolver.h; sourceTree = "<group>"; };
-		7E55573A1A8D834B00344F86 /* FBSDKAppLinkResolverTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBSDKAppLinkResolverTests.m; path = AppLinks/FBSDKAppLinkResolverTests.m; sourceTree = "<group>"; };
+		7E55573A1A8D834B00344F86 /* FBSDKAppLinkResolverTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppLinkResolverTests.m; sourceTree = "<group>"; };
 		7E55573F1A8E89A800344F86 /* OHHTTPStubs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OHHTTPStubs.xcodeproj; path = ../Carthage/Checkouts/OHHTTPStubs/OHHTTPStubs/OHHTTPStubs.xcodeproj; sourceTree = "<group>"; };
 		7EB63D9D1A9BE730003A7AED /* FBSDKMeasurementEventListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKMeasurementEventListener.m; sourceTree = "<group>"; };
 		7EB63D9E1A9BE730003A7AED /* FBSDKMeasurementEventListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKMeasurementEventListener.h; sourceTree = "<group>"; };
@@ -1849,7 +1849,7 @@
 				7E55573A1A8D834B00344F86 /* FBSDKAppLinkResolverTests.m */,
 				45540DB025271A88008E853E /* FBSDKAppLinkResolverRequestBuilderTests.m */,
 			);
-			name = AppLinks;
+			path = AppLinks;
 			sourceTree = "<group>";
 		};
 		7E5557401A8E89A800344F86 /* Products */ = {
