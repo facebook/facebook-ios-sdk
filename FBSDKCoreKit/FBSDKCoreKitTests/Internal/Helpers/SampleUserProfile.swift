@@ -16,16 +16,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+import FBSDKCoreKit
 
-#import "FBSDKProfile.h"
-
-NS_ASSUME_NONNULL_BEGIN
-
-@interface SampleUserProfile : NSObject
-
-+ (FBSDKProfile *)valid;
-
-@end
-
-NS_ASSUME_NONNULL_END
+@objc public class SampleUserProfile: NSObject {
+  @objc public static var valid: Profile {
+    return Profile(
+      userID: "123",
+      firstName: "John",
+      middleName: "K",
+      lastName: "Smith",
+      name: "John Smith",
+      linkURL: URL(string: "http://www.example.com"),
+      refreshDate: .distantFuture
+    )
+  }
+}

@@ -20,11 +20,11 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKCoreKit.h"
+#import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKProfile.h"
 #import "FBSDKProfile+Internal.h"
 #import "FBSDKTestCase.h"
 #import "SampleAccessToken.h"
-#import "SampleUserProfile.h"
 
 @interface FBSDKSettings (Testing)
 + (void)resetFacebookClientTokenCache;
