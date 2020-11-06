@@ -129,8 +129,8 @@ static NSMutableDictionary<NSString *, NSString *> *_methodMapping;
   free(methods);
 }
 
-+ (NSArray<NSString *> *)symbolicateCallstack:(NSArray<NSString *> *)callstack
-                                methodMapping:(NSDictionary<NSString *, id> *)methodMapping
++ (nullable NSArray<NSString *> *)symbolicateCallstack:(NSArray<NSString *> *)callstack
+                                         methodMapping:(NSDictionary<NSString *, id> *)methodMapping
 {
   if (!callstack || !methodMapping) {
     return nil;
@@ -145,6 +145,9 @@ static NSMutableDictionary<NSString *, NSString *> *_methodMapping;
 
   for (NSUInteger i = 0; i < callstack.count; i++) {
     NSString *rawAddress = [self getAddress:[FBSDKTypeUtility array:callstack objectAtIndex:i]];
+    if (rawAddress.length < 10) {
+      continue;
+    }
     NSString *addressString = [NSString stringWithFormat:@"0x%@", [rawAddress substringWithRange:NSMakeRange(rawAddress.length - 10, 10)]];
     NSString *methodAddress = [self searchMethod:addressString sortedAllAddress:sortedAllAddress];
 
@@ -168,12 +171,14 @@ static NSMutableDictionary<NSString *, NSString *> *_methodMapping;
   return containsFBSDKFunction ? symbolicatedCallstack : nil;
 }
 
-+ (NSString *)getAddress:(NSString *)callstackEntry
++ (nullable NSString *)getAddress:(nullable NSString *)callstackEntry
 {
-  NSArray<NSString *> *components = [callstackEntry componentsSeparatedByString:@" "];
-  for (NSString *component in components) {
-    if ([component containsString:@"0x"]) {
-      return component;
+  if ([callstackEntry isKindOfClass:[NSString class]]) {
+    NSArray<NSString *> *components = [callstackEntry componentsSeparatedByString:@" "];
+    for (NSString *component in components) {
+      if ([component containsString:@"0x"]) {
+        return component;
+      }
     }
   }
   return nil;
@@ -182,9 +187,6 @@ static NSMutableDictionary<NSString *, NSString *> *_methodMapping;
 + (NSString *)getOffset:(NSString *)firstString
            secondString:(NSString *)secondString
 {
-  if (!firstString || !secondString) {
-    return nil;
-  }
   unsigned long long first = 0, second = 0;
   NSScanner *scanner = [NSScanner scannerWithString:firstString];
   [scanner scanHexLongLong:&first];
@@ -196,8 +198,8 @@ static NSMutableDictionary<NSString *, NSString *> *_methodMapping;
   return [NSString stringWithFormat:@"+%llu", difference];
 }
 
-+ (NSString *)searchMethod:(NSString *)address
-          sortedAllAddress:(NSArray<NSString *> *)sortedAllAddress
++ (nullable NSString *)searchMethod:(NSString *)address
+                   sortedAllAddress:(NSArray<NSString *> *)sortedAllAddress
 {
   if (0 == sortedAllAddress.count) {
     return nil;
