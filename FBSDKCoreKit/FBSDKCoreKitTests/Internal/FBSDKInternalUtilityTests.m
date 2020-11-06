@@ -140,7 +140,7 @@
   NSMutableSet *expiredPermissions = [NSMutableSet set];
 
   // A lack of a runtime crash is considered a success here.
-  for (int i = 0; i < 1000; i++) {
+  for (int i = 0; i < 100; i++) {
     [FBSDKInternalUtility extractPermissionsFromResponse:SampleRawRemotePermissionList.randomValues
                                       grantedPermissions:grantedPermissions
                                      declinedPermissions:declinedPermissions

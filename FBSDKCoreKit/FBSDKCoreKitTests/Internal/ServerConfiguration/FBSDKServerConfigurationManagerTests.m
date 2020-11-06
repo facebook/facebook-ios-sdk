@@ -38,7 +38,7 @@
 
 - (void)testParsingResponses
 {
-  for (int i = 0; i < 1000; i++) {
+  for (int i = 0; i < 100; i++) {
     [FBSDKServerConfigurationManager processLoadRequestResponse:RawServerConfigurationResponseFixtures.random error:nil appID:nil];
   }
 }
