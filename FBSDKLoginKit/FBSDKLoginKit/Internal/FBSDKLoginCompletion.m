@@ -217,24 +217,6 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   _parameters.error = [NSError fbErrorFromReturnURLParameters:parameters];
 }
 
-- (void)attemptBrowserLogIn:(FBSDKLoginManager *)loginManager
-{
-  if (_observer != nil) {
-    [[NSNotificationCenter defaultCenter] removeObserver:_observer];
-    _observer = nil;
-  }
-
-  if ([FBSDKBridgeAPI sharedInstance].isActive) {
-    [loginManager logIn];
-  } else {
-    // The application is active but due to notification ordering the FBSDKApplicationDelegate
-    // doesn't know it yet. Wait one more turn of the run loop.
-    dispatch_async(dispatch_get_main_queue(), ^{
-      [self attemptBrowserLogIn:loginManager];
-    });
-  }
-}
-
 - (void)exchangeNonceForTokenWithHandler:(FBSDKLoginCompletionParametersBlock)handler
 {
   if (!handler) {
