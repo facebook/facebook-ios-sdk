@@ -151,6 +151,16 @@
                ReferencedContainer = "container:FBSDKShareKit/FBSDKShareKit.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "F46A223F24D9F14D005878A8"
+               BuildableName = "FBSDKGamingServicesKitTests.xctest"
+               BlueprintName = "FBSDKGamingServicesKitTests"
+               ReferencedContainer = "container:FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
