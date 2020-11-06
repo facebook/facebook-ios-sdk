@@ -124,6 +124,12 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing a `FBSDKGraphRequestConnection` class mock between tests
 @property (nullable, nonatomic, assign) id graphRequestConnectionClassMock;
 
+/// Used for sharing a `FBSDKCrashShield` class mock between tests
+@property (nullable, nonatomic, assign) id crashShieldClassMock;
+
+/// Used for sharing a `NSDate` class mock between tests
+@property (nullable, nonatomic, assign) id nsDateClassMock;
+
 /// Stubs `FBSDKSettings.appID` and return the provided value
 - (void)stubAppID:(nullable NSString *)appID;
 
@@ -229,6 +235,18 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// This should be used only as needed as a stopgap to keep tests
 /// from hitting the network while proper mocks are being written.
 - (void)stubAllocatingGraphRequestConnection;
+
+/// Stubs `FBSDKFeatureManager.disableFeature:` for the provided feature
+- (void)stubDisableFeature:(NSString *)feature;
+
+/// Stubs `FBSDKSettings.isDataProcessingRestricted` and returns the provided value
+- (void)stubIsDataProcessingRestricted:(BOOL)isRestricted;
+
+/// Stubs `NSDate`'s `date` method to return the shared date mock
+- (void)stubDate;
+
+/// Stubs `NSDate`'s `timeIntervalSince1970` method and returns the provided time interval
+- (void)stubTimeIntervalSince1970WithTimeInterval:(NSTimeInterval)interval;
 
 @end
 

@@ -29,6 +29,7 @@
 #import "FBSDKApplicationDelegate+Internal.h"
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitTestUtility.h"
+#import "FBSDKCrashShield.h"
 #import "FBSDKFeatureManager.h"
 #import "FBSDKGraphRequestPiggybackManager.h"
 #import "FBSDKKeychainStore.h"
@@ -84,6 +85,8 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self setUpModelManagerClassMock];
   [self setUpGraphRequestPiggybackManagerMock];
   [self setUpGraphRequestConnectionClassMock];
+  [self setUpCrashShieldClassMock];
+  [self setUpNSDateClassMock];
 }
 
 - (void)tearDown
@@ -158,6 +161,12 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   [_graphRequestConnectionClassMock stopMocking];
   _graphRequestConnectionClassMock = nil;
+
+  [_crashShieldClassMock stopMocking];
+  _crashShieldClassMock = nil;
+
+  [_nsDateClassMock stopMocking];
+  _nsDateClassMock = nil;
 }
 
 - (void)setUpSettingsMock
@@ -274,6 +283,16 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)setUpGraphRequestConnectionClassMock
 {
   self.graphRequestConnectionClassMock = OCMClassMock(FBSDKGraphRequestConnection.class);
+}
+
+- (void)setUpCrashShieldClassMock
+{
+  self.crashShieldClassMock = OCMClassMock(FBSDKCrashShield.class);
+}
+
+- (void)setUpNSDateClassMock
+{
+  self.nsDateClassMock = OCMClassMock(NSDate.class);
 }
 
 #pragma mark - Public Methods
@@ -452,6 +471,26 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)stubAllocatingGraphRequestConnection
 {
   OCMStub(ClassMethod([_graphRequestConnectionClassMock alloc]));
+}
+
+- (void)stubDisableFeature:(NSString *)feature
+{
+  OCMStub(ClassMethod([_featureManagerClassMock disableFeature:feature]));
+}
+
+- (void)stubIsDataProcessingRestricted:(BOOL)isRestricted
+{
+  OCMStub(ClassMethod([_settingsClassMock isDataProcessingRestricted])).andReturn(isRestricted);
+}
+
+- (void)stubDate
+{
+  OCMStub([_nsDateClassMock date]).andReturn(_nsDateClassMock);
+}
+
+- (void)stubTimeIntervalSince1970WithTimeInterval:(NSTimeInterval)interval
+{
+  OCMStub([_nsDateClassMock timeIntervalSince1970]).andReturn(interval);
 }
 
 // MARK: - Helpers
