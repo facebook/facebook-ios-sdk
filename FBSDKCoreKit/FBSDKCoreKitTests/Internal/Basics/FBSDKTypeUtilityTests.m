@@ -66,7 +66,7 @@
 - (void)testIsValidJSONWithRandomValues
 {
   // Should not crash for any given value
-  for (int i = 0; i < 1000; i++) {
+  for (int i = 0; i < 100; i++) {
     [FBSDKTypeUtility isValidJSONObject:Fuzzer.random];
   }
 }

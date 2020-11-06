@@ -79,7 +79,7 @@
 
 - (void)testParsingRandomName
 {
-  for (int i = 0; i < 1000; i++) {
+  for (int i = 0; i < 100; i++) {
     NSArray *array = @[
       @{ @"name" : Fuzzer.random,
          @"items" : @[@{ @"code" : @190, @"subcodes" : @[@459] }], },
@@ -96,7 +96,7 @@
 
 - (void)testParsingRandomSubcodes
 {
-  for (int i = 0; i < 1000; i++) {
+  for (int i = 0; i < 100; i++) {
     NSArray *array = @[
       @{ @"name" : @"other",
          @"items" : @[@{ @"code" : @190, @"subcodes" : @[Fuzzer.random] }], },
@@ -113,7 +113,7 @@
 
 - (void)testParsingRandomCodes
 {
-  for (int i = 0; i < 1000; i++) {
+  for (int i = 0; i < 100; i++) {
     NSArray *array = @[
       @{ @"name" : @"other",
          @"items" : @[@{ @"code" : Fuzzer.random, @"subcodes" : @[@459] }], },
@@ -130,7 +130,7 @@
 
 - (void)testParsingRandomItemDictionaries
 {
-  for (int i = 0; i < 1000; i++) {
+  for (int i = 0; i < 100; i++) {
     NSArray *array = @[
       @{ @"name" : @"other",
          @"items" : @[Fuzzer.random], },
@@ -147,7 +147,7 @@
 
 - (void)testParsingRandomItems
 {
-  for (int i = 0; i < 1000; i++) {
+  for (int i = 0; i < 100; i++) {
     NSArray *array = @[
       @{ @"name" : @"other",
          @"items" : Fuzzer.random, },
@@ -164,7 +164,7 @@
 
 - (void)testParsingRandomRecoveryMessage
 {
-  for (int i = 0; i < 1000; i++) {
+  for (int i = 0; i < 100; i++) {
     NSArray *array = @[
       @{ @"name" : @"other",
          @"items" : @[@{ @"code" : @190, @"subcodes" : @[@459] }], },
@@ -181,7 +181,7 @@
 
 - (void)testParsingRandomRecoveryOptionsArray
 {
-  for (int i = 0; i < 1000; i++) {
+  for (int i = 0; i < 100; i++) {
     NSArray *array = @[
       @{ @"name" : @"other",
          @"items" : @[@{ @"code" : @190, @"subcodes" : @[@459] }], },
@@ -198,7 +198,7 @@
 
 - (void)testParsingRandomRecoveryOptions
 {
-  for (int i = 0; i < 1000; i++) {
+  for (int i = 0; i < 100; i++) {
     NSArray *array = @[
       @{ @"name" : @"other",
          @"items" : @[@{ @"code" : @190, @"subcodes" : @[@459] }], },
@@ -215,7 +215,7 @@
 
 - (void)testParsingRecoveryMessageWithoutOptions
 {
-  for (int i = 0; i < 1000; i++) {
+  for (int i = 0; i < 100; i++) {
     NSArray *array = @[
       @{ @"name" : @"other",
          @"items" : @[@{ @"code" : @190, @"subcodes" : @[@459] }], },
@@ -231,7 +231,7 @@
 
 - (void)testParsingRecoveryOptionsWithoutMessage
 {
-  for (int i = 0; i < 1000; i++) {
+  for (int i = 0; i < 100; i++) {
     NSArray *array = @[
       @{ @"name" : @"other",
          @"items" : @[@{ @"code" : @190, @"subcodes" : @[@459] }], },
@@ -247,7 +247,7 @@
 
 - (void)testParsingRandomEntries
 {
-  for (int i = 0; i < 1000; i++) {
+  for (int i = 0; i < 100; i++) {
     NSArray *array = [Fuzzer randomizeWithJson:rawErrorCodeConfiguration];
 
     FBSDKErrorConfiguration *configuration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];

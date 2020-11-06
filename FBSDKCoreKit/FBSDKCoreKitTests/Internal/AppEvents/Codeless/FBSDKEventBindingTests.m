@@ -121,7 +121,7 @@
 
 - (void)testParsing
 {
-  for (int i = 0; i < 1000; i++) {
+  for (int i = 0; i < 100; i++) {
     NSDictionary *sampleData = [FBSDKSampleEventBinding getSampleDictionary];
     [FBSDKEventBindingManager parseArray:@[[Fuzzer randomizeWithJson:sampleData]]];
   }
