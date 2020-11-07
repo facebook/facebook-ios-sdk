@@ -17,3 +17,6 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+
+#import "FBSDKTestCase.h"
+#import "FakeBundle.h"
