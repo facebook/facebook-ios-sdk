@@ -16,17 +16,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+import Foundation
 
-NS_ASSUME_NONNULL_BEGIN
+@objcMembers
+public class SampleAppEvents: NSObject {
 
-@interface SampleAppEvents : NSObject
+  public static var validEvent: [String: String] {
+    return ["_eventName": "event1"]
+  }
 
-@property (class, readonly, copy) NSDictionary *invalidEvent;
-@property (class, readonly, copy) NSDictionary *validEvent;
-
-+ (NSDictionary *)validEventWithName:(NSString *)name;
-
-@end
-
-NS_ASSUME_NONNULL_END
+  public static func validEvent(withName name: String) -> [String: String] {
+    return ["_eventName": name]
+  }
+}
