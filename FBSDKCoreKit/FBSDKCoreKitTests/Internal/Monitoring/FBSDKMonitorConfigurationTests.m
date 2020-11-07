@@ -18,8 +18,8 @@
 
 #import <XCTest/XCTest.h>
 
+#import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKMonitoringConfiguration.h"
-#import "FBSDKMonitoringConfigurationTestHelper.h"
 #import "FBSDKTestCoder.h"
 #import "TestMonitorEntry.h"
 
