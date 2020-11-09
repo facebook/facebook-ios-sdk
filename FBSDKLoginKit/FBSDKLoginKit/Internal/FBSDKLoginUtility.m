@@ -63,7 +63,7 @@
       return nil;
     }
   }
-  NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:[FBSDKInternalUtility dictionaryFromFBURL:url]];
+  NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:[FBSDKInternalUtility parametersFromFBURL:url]];
 
   NSString *userID = [[self class] userIDFromSignedRequest:params[@"signed_request"]];
   if (userID) {

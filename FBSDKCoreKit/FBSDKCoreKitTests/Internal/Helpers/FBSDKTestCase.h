@@ -130,6 +130,9 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing a `NSDate` class mock between tests
 @property (nullable, nonatomic, assign) id nsDateClassMock;
 
+/// Used for sharing a `UIApplication.sharedApplication` mock between tests
+@property (nullable, nonatomic, assign) id sharedApplicationMock;
+
 /// Stubs `FBSDKSettings.appID` and return the provided value
 - (void)stubAppID:(nullable NSString *)appID;
 
@@ -247,6 +250,18 @@ Also, to get a better understanding of mocking, please read the documentation at
 
 /// Stubs `NSDate`'s `timeIntervalSince1970` method and returns the provided time interval
 - (void)stubTimeIntervalSince1970WithTimeInterval:(NSTimeInterval)interval;
+
+/// Stubs `FBSDKSettings.facebookDomainPart` with the provided value
+- (void)stubFacebookDomainPartWith:(NSString *)domainPart;
+
+/// Stubs `UIApplication.sharedApplication`'s `canOpenURL:` method with the value
+- (void)stubCanOpenURLWith:(BOOL)canOpenURL;
+
+/// Stubs `FBSDKSettings.appURLSchemeSuffix` and return the provided value
+- (void)stubAppUrlSchemeSuffixWith:(nullable NSString *)suffix;
+
+/// Resets cached properties in `FBSDKSettings`
+- (void)resetCachedSettings;
 
 @end
 

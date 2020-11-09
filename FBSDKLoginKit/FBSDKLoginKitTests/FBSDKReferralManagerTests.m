@@ -76,7 +76,7 @@ static NSString *const _mockChallenge = @"mockChallenge";
 
   XCTAssertTrue([url.path hasSuffix:@"dialog/share_referral"]);
 
-  NSDictionary *params = [FBSDKInternalUtility dictionaryFromFBURL:url];
+  NSDictionary *params = [FBSDKInternalUtility parametersFromFBURL:url];
   NSString *appID = params[@"app_id"];
   NSString *redirectURI = params[@"redirect_uri"];
   NSString *challenge = params[@"state"];

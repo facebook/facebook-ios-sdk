@@ -48,6 +48,21 @@
 
 @interface FBSDKSettings (Testing)
 + (void)_logIfSDKSettingsChanged;
++ (void)resetLoggingBehaviorsCache;
++ (void)resetFacebookAppIDCache;
++ (void)resetFacebookUrlSchemeSuffixCache;
++ (void)resetFacebookClientTokenCache;
++ (void)resetFacebookDisplayNameCache;
++ (void)resetFacebookDomainPartCache;
++ (void)resetFacebookJpegCompressionQualityCache;
++ (void)resetFacebookAutoInitEnabledCache;
++ (void)resetFacebookInstrumentEnabledCache;
++ (void)resetFacebookAutoLogAppEventsEnabledCache;
++ (void)resetFacebookAdvertiserIDCollectionEnabledCache;
++ (void)resetAdvertiserTrackingStatusCache;
++ (void)resetUserAgentSuffixCache;
++ (void)resetFacebookCodelessDebugLogEnabledCache;
++ (void)resetDataProcessingOptionsCache;
 @end
 
 typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
@@ -87,6 +102,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self setUpGraphRequestConnectionClassMock];
   [self setUpCrashShieldClassMock];
   [self setUpNSDateClassMock];
+  [self setUpSharedApplicationMock];
 }
 
 - (void)tearDown
@@ -167,6 +183,9 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   [_nsDateClassMock stopMocking];
   _nsDateClassMock = nil;
+
+  [_sharedApplicationMock stopMocking];
+  _sharedApplicationMock = nil;
 }
 
 - (void)setUpSettingsMock
@@ -237,7 +256,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
 - (void)setUpNSNotificationCenterMock
 {
-  self.nsNotificationCenterClassMock = OCMStrictClassMock(NSNotificationCenter.class);
+  self.nsNotificationCenterClassMock = OCMClassMock(NSNotificationCenter.class);
 }
 
 - (void)setUpMeasurementEventListenerMock
@@ -293,6 +312,12 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)setUpNSDateClassMock
 {
   self.nsDateClassMock = OCMClassMock(NSDate.class);
+}
+
+- (void)setUpSharedApplicationMock
+{
+  self.sharedApplicationMock = OCMClassMock(UIApplication.class);
+  OCMStub(ClassMethod([_sharedApplicationMock sharedApplication])).andReturn(_sharedApplicationMock);
 }
 
 #pragma mark - Public Methods
@@ -493,7 +518,41 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   OCMStub([_nsDateClassMock timeIntervalSince1970]).andReturn(interval);
 }
 
+- (void)stubFacebookDomainPartWith:(NSString *)domainPart
+{
+  OCMStub(ClassMethod([_settingsClassMock facebookDomainPart])).andReturn(domainPart);
+}
+
+- (void)stubCanOpenURLWith:(BOOL)canOpenURL
+{
+  OCMStub([_sharedApplicationMock canOpenURL:OCMArg.any]).andReturn(canOpenURL);
+}
+
+- (void)stubAppUrlSchemeSuffixWith:(NSString *)suffix
+{
+  OCMStub(ClassMethod([_settingsClassMock appURLSchemeSuffix])).andReturn(suffix);
+}
+
 // MARK: - Helpers
+
+- (void)resetCachedSettings
+{
+  [FBSDKSettings resetLoggingBehaviorsCache];
+  [FBSDKSettings resetFacebookAppIDCache];
+  [FBSDKSettings resetFacebookUrlSchemeSuffixCache];
+  [FBSDKSettings resetFacebookClientTokenCache];
+  [FBSDKSettings resetFacebookDisplayNameCache];
+  [FBSDKSettings resetFacebookDomainPartCache];
+  [FBSDKSettings resetFacebookJpegCompressionQualityCache];
+  [FBSDKSettings resetFacebookAutoInitEnabledCache];
+  [FBSDKSettings resetFacebookInstrumentEnabledCache];
+  [FBSDKSettings resetFacebookAutoLogAppEventsEnabledCache];
+  [FBSDKSettings resetFacebookAdvertiserIDCollectionEnabledCache];
+  [FBSDKSettings resetAdvertiserTrackingStatusCache];
+  [FBSDKSettings resetUserAgentSuffixCache];
+  [FBSDKSettings resetFacebookCodelessDebugLogEnabledCache];
+  [FBSDKSettings resetDataProcessingOptionsCache];
+}
 
 - (id)nsNullIfNil:(id)nilValue
 {

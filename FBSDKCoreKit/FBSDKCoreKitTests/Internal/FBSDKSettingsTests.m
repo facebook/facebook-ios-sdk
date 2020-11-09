@@ -31,21 +31,6 @@
 @interface FBSDKSettings ()
 + (NSString *)userAgentSuffix;
 + (void)setUserAgentSuffix:(NSString *)suffix;
-+ (void)resetLoggingBehaviorsCache;
-+ (void)resetFacebookAppIDCache;
-+ (void)resetFacebookUrlSchemeSuffixCache;
-+ (void)resetFacebookClientTokenCache;
-+ (void)resetFacebookDisplayNameCache;
-+ (void)resetFacebookDomainPartCache;
-+ (void)resetFacebookJpegCompressionQualityCache;
-+ (void)resetFacebookAutoInitEnabledCache;
-+ (void)resetFacebookInstrumentEnabledCache;
-+ (void)resetFacebookAutoLogAppEventsEnabledCache;
-+ (void)resetFacebookAdvertiserIDCollectionEnabledCache;
-+ (void)resetAdvertiserTrackingStatusCache;
-+ (void)resetUserAgentSuffixCache;
-+ (void)resetFacebookCodelessDebugLogEnabledCache;
-+ (void)resetDataProcessingOptionsCache;
 @end
 
 @interface FBSDKSettingsTests : FBSDKTestCase
@@ -68,7 +53,7 @@ static NSString *const whiteSpaceToken = @"   ";
 {
   [super setUp];
 
-  [self resetSettingsCaches];
+  [self resetCachedSettings];
 
   // Reset user defaults spy
   userDefaultsSpy = [UserDefaultsSpy new];
@@ -80,26 +65,7 @@ static NSString *const whiteSpaceToken = @"   ";
 {
   [super tearDown];
 
-  [self resetSettingsCaches];
-}
-
-- (void)resetSettingsCaches
-{
-  [FBSDKSettings resetLoggingBehaviorsCache];
-  [FBSDKSettings resetFacebookAppIDCache];
-  [FBSDKSettings resetFacebookUrlSchemeSuffixCache];
-  [FBSDKSettings resetFacebookClientTokenCache];
-  [FBSDKSettings resetFacebookDisplayNameCache];
-  [FBSDKSettings resetFacebookDomainPartCache];
-  [FBSDKSettings resetFacebookJpegCompressionQualityCache];
-  [FBSDKSettings resetFacebookAutoInitEnabledCache];
-  [FBSDKSettings resetFacebookInstrumentEnabledCache];
-  [FBSDKSettings resetFacebookAutoLogAppEventsEnabledCache];
-  [FBSDKSettings resetFacebookAdvertiserIDCollectionEnabledCache];
-  [FBSDKSettings resetAdvertiserTrackingStatusCache];
-  [FBSDKSettings resetUserAgentSuffixCache];
-  [FBSDKSettings resetFacebookCodelessDebugLogEnabledCache];
-  [FBSDKSettings resetDataProcessingOptionsCache];
+  [self resetCachedSettings];
 }
 
 - (void)testDefaultGraphAPIVersion
@@ -1532,7 +1498,7 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.dataProcessingOptions = @[];
 
   // Reset internal storage
-  [FBSDKSettings resetDataProcessingOptionsCache];
+  [self resetCachedSettings];
 
   XCTAssertNotNil(
     FBSDKSettings.dataProcessingOptions,

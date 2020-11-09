@@ -94,7 +94,7 @@ NS_SWIFT_NAME(InternalUtility)
  @param url The FB url.
  @return A dictionary with the key/value pairs.
  */
-+ (NSDictionary *)dictionaryFromFBURL:(NSURL *)url;
++ (NSDictionary *)parametersFromFBURL:(NSURL *)url;
 
 /**
   Constructs a Facebook URL.
