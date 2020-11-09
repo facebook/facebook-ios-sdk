@@ -111,15 +111,6 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9D2697701A5DF56700143BFC"
-            BuildableName = "FBSDKCoreKit-Universal"
-            BlueprintName = "FBSDKCoreKit-Universal"
-            ReferencedContainer = "container:FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <Testables>
          <TestableReference
             skipped = "NO">
