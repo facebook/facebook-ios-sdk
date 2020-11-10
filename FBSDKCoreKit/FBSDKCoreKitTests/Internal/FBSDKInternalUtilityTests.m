@@ -24,10 +24,16 @@
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKTestCase.h"
+#import "FakeBundle.h"
 
 @interface FBSDKInternalUtility (Testing)
 
 + (BOOL)_canOpenURLScheme:(NSString *)scheme;
++ (void)resetQuerySchemesCache;
++ (void)resetDidCheckRegisteredCanOpenUrlSchemes;
++ (void)resetIsFacebookAppInstalledCache;
++ (void)resetDidCheckIfMessengerAppInstalledCache;
++ (void)resetDidCheckIfMSQRDAppInstalledCache;
 
 @end
 
@@ -45,6 +51,11 @@
 
   [self resetCachedSettings];
 
+  [FBSDKInternalUtility resetQuerySchemesCache];
+  [FBSDKInternalUtility resetIsFacebookAppInstalledCache];
+  [FBSDKInternalUtility resetDidCheckIfMessengerAppInstalledCache];
+  [FBSDKInternalUtility resetDidCheckIfMSQRDAppInstalledCache];
+  [FBSDKInternalUtility resetDidCheckRegisteredCanOpenUrlSchemes];
   [FBSDKInternalUtility deleteFacebookCookies];
 }
 
@@ -422,7 +433,7 @@
   [self stubAppID:self.appID];
   [self stubAppUrlSchemeSuffixWith:@"foo"];
 
-  NSURL *url = [FBSDKInternalUtility appURLWithHost:@"" path:self.validPath queryParameters:self.validParameters error:nil];
+  NSURL *url = [FBSDKInternalUtility appURLWithHost:@"" path:validPath queryParameters:self.validParameters error:nil];
 
   XCTAssertNil(url.host, "Should not set an empty host.");
 }
@@ -432,7 +443,7 @@
   [self stubAppID:self.appID];
   [self stubAppUrlSchemeSuffixWith:@"foo"];
 
-  NSURL *url = [FBSDKInternalUtility appURLWithHost:@"facebook" path:self.validPath queryParameters:self.validParameters error:nil];
+  NSURL *url = [FBSDKInternalUtility appURLWithHost:@"facebook" path:validPath queryParameters:self.validParameters error:nil];
 
   XCTAssertEqualObjects(url.host, @"facebook", "Should set the expected host.");
 }
@@ -601,6 +612,269 @@
   );
 }
 
+// MARK: - App Installation
+
+- (void)testIsRegisteredCanOpenURLSchemeWithMissingScheme
+{
+  NSArray *querySchemes = @[];
+  id bundle = [FakeBundle bundleWithDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
+  [self stubMainBundleWith:bundle];
+
+  XCTAssertFalse(
+    [FBSDKInternalUtility isRegisteredCanOpenURLScheme:self.name],
+    "Should not be consider a scheme to be registered if it's missing from the application query schemes"
+  );
+}
+
+- (void)testIsRegisteredCanOpenURLSchemeWithScheme
+{
+  NSArray *querySchemes = @[self.name];
+  id bundle = [FakeBundle bundleWithDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
+  [self stubMainBundleWith:bundle];
+
+  XCTAssertTrue(
+    [FBSDKInternalUtility isRegisteredCanOpenURLScheme:self.name],
+    "Should consider a scheme to be registered if it exists in the application query schemes"
+  );
+}
+
+- (void)testIsRegisteredCanOpenURLSchemeCache
+{
+  NSArray *querySchemes = @[self.name];
+  id bundle = [FakeBundle bundleWithDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
+  [self stubMainBundleWith:bundle];
+
+  XCTAssertTrue([FBSDKInternalUtility isRegisteredCanOpenURLScheme:self.name], "Sanity check");
+
+  [bundle setInfoDictionary:@{}];
+
+  XCTAssertTrue([FBSDKInternalUtility isRegisteredCanOpenURLScheme:self.name], "Should return the cached value of the main bundle and not the updated values");
+}
+
+- (void)testFacebookAppInstalledMissingQuerySchemes
+{
+  id bundle = [FakeBundle bundleWithDictionary:@{}];
+  [self stubMainBundleWith:bundle];
+
+  [FBSDKInternalUtility isFacebookAppInstalled];
+
+  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:facebookUrlSchemeMissingMessage]);
+}
+
+- (void)testFacebookAppInstalledEmptyQuerySchemes
+{
+  NSArray *querySchemes = @[];
+  id bundle = [FakeBundle bundleWithDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
+  [self stubMainBundleWith:bundle];
+
+  [FBSDKInternalUtility isFacebookAppInstalled];
+
+  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:facebookUrlSchemeMissingMessage]);
+}
+
+- (void)testFacebookAppInstalledMissingQueryScheme
+{
+  NSArray *querySchemes = @[@"Foo"];
+  id bundle = [FakeBundle bundleWithDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
+  [self stubMainBundleWith:bundle];
+
+  [FBSDKInternalUtility isFacebookAppInstalled];
+
+  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:facebookUrlSchemeMissingMessage]);
+}
+
+- (void)testFacebookAppInstalledValidQueryScheme
+{
+  NSArray *querySchemes = @[@"fbauth2"];
+  id bundle = [FakeBundle bundleWithDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
+  [self stubMainBundleWith:bundle];
+
+  OCMReject([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:OCMArg.any]);
+
+  [FBSDKInternalUtility isFacebookAppInstalled];
+}
+
+- (void)testFacebookAppInstalledCache
+{
+  id bundle = [FakeBundle bundleWithDictionary:@{}];
+  [self stubMainBundleWith:bundle];
+
+  [FBSDKInternalUtility isFacebookAppInstalled];
+
+  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:facebookUrlSchemeMissingMessage]);
+  OCMReject([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:OCMArg.any]);
+
+  [FBSDKInternalUtility isFacebookAppInstalled];
+}
+
+- (void)testMessengerAppInstalledMissingQuerySchemes
+{
+  id bundle = [FakeBundle bundleWithDictionary:@{}];
+  [self stubMainBundleWith:bundle];
+
+  [FBSDKInternalUtility isMessengerAppInstalled];
+
+  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:messengerUrlSchemeMissingMessage]);
+}
+
+- (void)testMessengerAppInstalledEmptyQuerySchemes
+{
+  NSArray *querySchemes = @[];
+  id bundle = [FakeBundle bundleWithDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
+  [self stubMainBundleWith:bundle];
+
+  [FBSDKInternalUtility isMessengerAppInstalled];
+
+  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:messengerUrlSchemeMissingMessage]);
+}
+
+- (void)testMessengerAppInstalledMissingQueryScheme
+{
+  NSArray *querySchemes = @[@"Foo"];
+  id bundle = [FakeBundle bundleWithDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
+  [self stubMainBundleWith:bundle];
+
+  [FBSDKInternalUtility isMessengerAppInstalled];
+
+  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:messengerUrlSchemeMissingMessage]);
+}
+
+- (void)testMessengerAppInstalledValidQueryScheme
+{
+  NSArray *querySchemes = @[@"fb-messenger-share-api"];
+  id bundle = [FakeBundle bundleWithDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
+  [self stubMainBundleWith:bundle];
+
+  OCMReject([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:OCMArg.any]);
+
+  [FBSDKInternalUtility isMessengerAppInstalled];
+}
+
+- (void)testMessengerAppInstalledCache
+{
+  id bundle = [FakeBundle bundleWithDictionary:@{}];
+  [self stubMainBundleWith:bundle];
+
+  [FBSDKInternalUtility isMessengerAppInstalled];
+
+  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:messengerUrlSchemeMissingMessage]);
+  OCMReject([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:OCMArg.any]);
+
+  [FBSDKInternalUtility isMessengerAppInstalled];
+}
+
+- (void)testMSQRDPlayerAppInstalledMissingQuerySchemes
+{
+  id bundle = [FakeBundle bundleWithDictionary:@{}];
+  [self stubMainBundleWith:bundle];
+
+  [FBSDKInternalUtility isMSQRDPlayerAppInstalled];
+
+  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:msqrdPlayerUrlSchemeMissingMessage]);
+}
+
+- (void)testMSQRDPlayerAppInstalledEmptyQuerySchemes
+{
+  NSArray *querySchemes = @[];
+  id bundle = [FakeBundle bundleWithDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
+  [self stubMainBundleWith:bundle];
+
+  [FBSDKInternalUtility isMSQRDPlayerAppInstalled];
+
+  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:msqrdPlayerUrlSchemeMissingMessage]);
+}
+
+- (void)testMSQRDPlayerAppInstalledMissingQueryScheme
+{
+  NSArray *querySchemes = @[@"Foo"];
+  id bundle = [FakeBundle bundleWithDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
+  [self stubMainBundleWith:bundle];
+
+  [FBSDKInternalUtility isMSQRDPlayerAppInstalled];
+
+  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:msqrdPlayerUrlSchemeMissingMessage]);
+}
+
+- (void)testMSQRDPlayerAppInstalledValidQueryScheme
+{
+  NSArray *querySchemes = @[@"msqrdplayer"];
+  id bundle = [FakeBundle bundleWithDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
+  [self stubMainBundleWith:bundle];
+
+  OCMReject([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:OCMArg.any]);
+
+  [FBSDKInternalUtility isMSQRDPlayerAppInstalled];
+}
+
+- (void)testMSQRDPlayerAppInstalledCache
+{
+  id bundle = [FakeBundle bundleWithDictionary:@{}];
+  [self stubMainBundleWith:bundle];
+
+  [FBSDKInternalUtility isMSQRDPlayerAppInstalled];
+
+  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:msqrdPlayerUrlSchemeMissingMessage]);
+  OCMReject([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:OCMArg.any]);
+
+  [FBSDKInternalUtility isMSQRDPlayerAppInstalled];
+}
+
+// MARK: - Random Utility Methods
+
+- (void)testIsBrowserURLWithNonBrowserURL
+{
+  NSArray *urls = @[
+    [NSURL URLWithString:@"file://foo"],
+    [NSURL URLWithString:@"example://bar"]
+  ];
+
+  for (NSURL *url in urls) {
+    XCTAssertFalse([FBSDKInternalUtility isBrowserURL:url], "%@ should not be considered a browser url", url.absoluteString);
+  }
+}
+
+- (void)testIsBrowserURLWithBrowserURL
+{
+  NSArray *urls = @[
+    [NSURL URLWithString:@"HTTPS://example.com"],
+    [NSURL URLWithString:@"HTTP://example.com"],
+    [NSURL URLWithString:@"https://example.com"],
+    [NSURL URLWithString:@"http://example.com"],
+  ];
+
+  for (NSURL *url in urls) {
+    XCTAssertTrue([FBSDKInternalUtility isBrowserURL:url], "%@ should be considered a browser url", url.absoluteString);
+  }
+}
+
+- (void)testIsFacebookBundleIdentifierWithInvalidIdentifiers
+{
+  NSArray *identifiers = @[
+    @"",
+    @"foo",
+    @"com.foo.bar",
+    @"com.facebook"
+  ];
+
+  for (NSString *identifier in identifiers) {
+    XCTAssertFalse([FBSDKInternalUtility isFacebookBundleIdentifier:identifier], "%@ should not be considered a facebook bundle indentifier", identifier);
+  }
+}
+
+- (void)testIsFacebookBundleIdentifierWithValidIdentifiers
+{
+  NSArray *identifiers = @[
+    @"com.facebook.",
+    @"com.facebook.foo",
+    @".com.facebook.",
+    @".com.facebook.foo"
+  ];
+
+  for (NSString *identifier in identifiers) {
+    XCTAssertTrue([FBSDKInternalUtility isFacebookBundleIdentifier:identifier], "%@ should be considered a facebook bundle indentifier", identifier);
+  }
+}
+
 // MARK: - Helpers
 
 - (NSURL *)dialogUrl
@@ -634,14 +908,14 @@
   return [self cookieForUrl:url name:@"MyCookie"];
 }
 
-- (NSString *)validPath
-{
-  return @"example";
-}
-
 - (NSDictionary *)validParameters
 {
   return @{@"foo" : @"bar"};
 }
+
+NSString *const validPath = @"example";
+NSString *const facebookUrlSchemeMissingMessage = @"fbauth2 is missing from your Info.plist under LSApplicationQueriesSchemes and is required.";
+NSString *const messengerUrlSchemeMissingMessage = @"fb-messenger-share-api is missing from your Info.plist under LSApplicationQueriesSchemes and is required.";
+NSString *const msqrdPlayerUrlSchemeMissingMessage = @"msqrdplayer is missing from your Info.plist under LSApplicationQueriesSchemes and is required.";
 
 @end

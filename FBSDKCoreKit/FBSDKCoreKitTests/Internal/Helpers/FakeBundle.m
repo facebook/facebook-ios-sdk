@@ -39,6 +39,16 @@
   return [[FakeBundle alloc] initWithDictionary:dictionary];
 }
 
+- (NSDictionary *)infoDictionary
+{
+  return [_dictionary copy];
+}
+
+- (void)setInfoDictionary:(NSDictionary *)newValue
+{
+  _dictionary = newValue;
+}
+
 - (id)objectForInfoDictionaryKey:(NSString *)key
 {
   if (!_capturedKeys) {

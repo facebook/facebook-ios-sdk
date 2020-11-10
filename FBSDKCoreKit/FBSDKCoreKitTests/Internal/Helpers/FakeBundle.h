@@ -26,6 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)bundleWithDictionary:(NSDictionary *)dictionary;
 
+/// Overrides the current value set for the `infoDictionary` property with the new value
+- (void)setInfoDictionary:(NSDictionary *)newValue;
+
 @end
 
 NS_ASSUME_NONNULL_END

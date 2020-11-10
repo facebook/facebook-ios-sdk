@@ -40,6 +40,13 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift) {
 
 @implementation FBSDKInternalUtility
 
+// These are stored at the class level so that they can be reset in unit tests
+static dispatch_once_t *fetchApplicationQuerySchemesToken;
+static dispatch_once_t *checkIfFacebookAppInstalledToken;
+static dispatch_once_t *checkIfMessengerAppInstalledToken;
+static dispatch_once_t *checkIfMSQRDPlayerAppInstalledToken;
+static dispatch_once_t *checkRegisteredCanOpenUrlSchemesToken;
+
 static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 {
   return
@@ -372,8 +379,9 @@ static NSMapTable *_transientObjects;
 
 + (BOOL)isFacebookAppInstalled
 {
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
+  static dispatch_once_t once_token;
+  checkIfFacebookAppInstalledToken = &once_token;
+  dispatch_once(&once_token, ^{
     [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
   });
   return [self _canOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
@@ -381,8 +389,9 @@ static NSMapTable *_transientObjects;
 
 + (BOOL)isMessengerAppInstalled
 {
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
+  static dispatch_once_t once_token;
+  checkIfMessengerAppInstalledToken = &once_token;
+  dispatch_once(&once_token, ^{
     [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_MESSENGER];
   });
   return [self _canOpenURLScheme:FBSDK_CANOPENURL_MESSENGER];
@@ -390,8 +399,9 @@ static NSMapTable *_transientObjects;
 
 + (BOOL)isMSQRDPlayerAppInstalled
 {
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
+  static dispatch_once_t once_token;
+  checkIfMSQRDPlayerAppInstalledToken = &once_token;
+  dispatch_once(&once_token, ^{
     [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_MSQRD_PLAYER];
   });
   return [self _canOpenURLScheme:FBSDK_CANOPENURL_MSQRD_PLAYER];
@@ -593,10 +603,11 @@ static NSMapTable *_transientObjects;
 
 + (void)checkRegisteredCanOpenURLScheme:(NSString *)urlScheme
 {
-  static dispatch_once_t initCheckedSchemesOnce;
   static NSMutableSet *checkedSchemes = nil;
 
-  dispatch_once(&initCheckedSchemesOnce, ^{
+  static dispatch_once_t once_token;
+  checkRegisteredCanOpenUrlSchemesToken = &once_token;
+  dispatch_once(&once_token, ^{
     checkedSchemes = [NSMutableSet set];
   });
 
@@ -616,10 +627,11 @@ static NSMapTable *_transientObjects;
 
 + (BOOL)isRegisteredCanOpenURLScheme:(NSString *)urlScheme
 {
-  static dispatch_once_t fetchBundleOnce;
   static NSArray *schemes = nil;
 
-  dispatch_once(&fetchBundleOnce, ^{
+  static dispatch_once_t once_token;
+  fetchApplicationQuerySchemesToken = &once_token;
+  dispatch_once(&once_token, ^{
     schemes = [[NSBundle mainBundle].infoDictionary valueForKey:@"LSApplicationQueriesSchemes"];
   });
 
@@ -643,5 +655,46 @@ static NSMapTable *_transientObjects;
   }
   return NO;
 }
+
+#pragma mark - Testability
+
+#if DEBUG
+
++ (void)resetQuerySchemesCache
+{
+  if (fetchApplicationQuerySchemesToken) {
+    *fetchApplicationQuerySchemesToken = 0;
+  }
+}
+
++ (void)resetDidCheckRegisteredCanOpenUrlSchemes
+{
+  if (checkRegisteredCanOpenUrlSchemesToken) {
+    *checkRegisteredCanOpenUrlSchemesToken = 0;
+  }
+}
+
++ (void)resetIsFacebookAppInstalledCache
+{
+  if (checkIfFacebookAppInstalledToken) {
+    *checkIfFacebookAppInstalledToken = 0;
+  }
+}
+
++ (void)resetDidCheckIfMessengerAppInstalledCache
+{
+  if (checkIfMessengerAppInstalledToken) {
+    *checkIfMessengerAppInstalledToken = 0;
+  }
+}
+
++ (void)resetDidCheckIfMSQRDAppInstalledCache
+{
+  if (checkIfMSQRDPlayerAppInstalledToken) {
+    *checkIfMSQRDPlayerAppInstalledToken = 0;
+  }
+}
+
+#endif
 
 @end

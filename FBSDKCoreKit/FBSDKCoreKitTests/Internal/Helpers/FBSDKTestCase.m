@@ -103,6 +103,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self setUpCrashShieldClassMock];
   [self setUpNSDateClassMock];
   [self setUpSharedApplicationMock];
+  [self setUpLoggerClassMock];
 }
 
 - (void)tearDown
@@ -186,6 +187,9 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   [_sharedApplicationMock stopMocking];
   _sharedApplicationMock = nil;
+
+  [_loggerClassMock stopMocking];
+  _loggerClassMock = nil;
 }
 
 - (void)setUpSettingsMock
@@ -318,6 +322,11 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 {
   self.sharedApplicationMock = OCMClassMock(UIApplication.class);
   OCMStub(ClassMethod([_sharedApplicationMock sharedApplication])).andReturn(_sharedApplicationMock);
+}
+
+- (void)setUpLoggerClassMock
+{
+  self.loggerClassMock = OCMClassMock(FBSDKLogger.class);
 }
 
 #pragma mark - Public Methods
