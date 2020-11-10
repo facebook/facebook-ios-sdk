@@ -907,7 +907,7 @@
 		F492C0A224E1F5F600BA21F7 /* KeychainStoreSpy.m in Sources */ = {isa = PBXBuildFile; fileRef = F492C0A024E1F5F600BA21F7 /* KeychainStoreSpy.m */; };
 		F492C0A324E1F5F600BA21F7 /* UserDefaultsSpy.m in Sources */ = {isa = PBXBuildFile; fileRef = F492C0A124E1F5F600BA21F7 /* UserDefaultsSpy.m */; };
 		F496E58F24E49DBC006231A2 /* SampleAppEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = F496E58E24E49DBC006231A2 /* SampleAppEvents.swift */; };
-		F496E5FE24E5D0D5006231A2 /* FakeAccessTokenCache.m in Sources */ = {isa = PBXBuildFile; fileRef = F496E5FD24E5D0D5006231A2 /* FakeAccessTokenCache.m */; };
+		F496E5FE24E5D0D5006231A2 /* FakeAccessTokenCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = F496E5FD24E5D0D5006231A2 /* FakeAccessTokenCache.swift */; };
 		F496E60F24E5D195006231A2 /* SampleAccessToken.m in Sources */ = {isa = PBXBuildFile; fileRef = F496E60E24E5D195006231A2 /* SampleAccessToken.m */; };
 		F496E61224E6049A006231A2 /* AppDelegateObserverFake.m in Sources */ = {isa = PBXBuildFile; fileRef = F496E61124E6049A006231A2 /* AppDelegateObserverFake.m */; };
 		F4A52AED242A7D12005F65CE /* FBSDKPerformanceMonitorEntryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A52AEC242A7D12005F65CE /* FBSDKPerformanceMonitorEntryTests.m */; };
@@ -1557,8 +1557,7 @@
 		F492C0A024E1F5F600BA21F7 /* KeychainStoreSpy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainStoreSpy.m; sourceTree = "<group>"; };
 		F492C0A124E1F5F600BA21F7 /* UserDefaultsSpy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsSpy.m; sourceTree = "<group>"; };
 		F496E58E24E49DBC006231A2 /* SampleAppEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SampleAppEvents.swift; path = FBSDKCoreKitTests/Internal/Helpers/SampleAppEvents.swift; sourceTree = SOURCE_ROOT; };
-		F496E5FC24E5D0D5006231A2 /* FakeAccessTokenCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FakeAccessTokenCache.h; sourceTree = "<group>"; };
-		F496E5FD24E5D0D5006231A2 /* FakeAccessTokenCache.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FakeAccessTokenCache.m; sourceTree = "<group>"; };
+		F496E5FD24E5D0D5006231A2 /* FakeAccessTokenCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeAccessTokenCache.swift; sourceTree = "<group>"; };
 		F496E60D24E5D195006231A2 /* SampleAccessToken.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SampleAccessToken.h; sourceTree = "<group>"; };
 		F496E60E24E5D195006231A2 /* SampleAccessToken.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SampleAccessToken.m; sourceTree = "<group>"; };
 		F496E61024E6049A006231A2 /* AppDelegateObserverFake.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegateObserverFake.h; sourceTree = "<group>"; };
@@ -2657,8 +2656,7 @@
 				F40B24C124732DD90059351C /* Fuzzer.swift */,
 				F4DE31F424DB695100297C18 /* FBSDKTestCase.h */,
 				F4DE31F524DB695100297C18 /* FBSDKTestCase.m */,
-				F496E5FC24E5D0D5006231A2 /* FakeAccessTokenCache.h */,
-				F496E5FD24E5D0D5006231A2 /* FakeAccessTokenCache.m */,
+				F496E5FD24E5D0D5006231A2 /* FakeAccessTokenCache.swift */,
 				F496E60D24E5D195006231A2 /* SampleAccessToken.h */,
 				F496E60E24E5D195006231A2 /* SampleAccessToken.m */,
 				F496E61024E6049A006231A2 /* AppDelegateObserverFake.h */,
@@ -4149,7 +4147,7 @@
 				F952EA4F2339432100B20652 /* FBSDKMetadataIndexerTests.m in Sources */,
 				5DB612A823593AB600150851 /* FBSDKCrashShieldTests.m in Sources */,
 				E493252D23F7C60E0000B63A /* FBSDKModelParserTests.mm in Sources */,
-				F496E5FE24E5D0D5006231A2 /* FakeAccessTokenCache.m in Sources */,
+				F496E5FE24E5D0D5006231A2 /* FakeAccessTokenCache.swift in Sources */,
 				F492C0A224E1F5F600BA21F7 /* KeychainStoreSpy.m in Sources */,
 				5D68D7D822BAEEF60063A3E2 /* FBSDKTimeSpentDataTests.m in Sources */,
 				9D3AF4661A9ED47900EEF724 /* FBSDKGraphRequestConnectionTests.m in Sources */,
