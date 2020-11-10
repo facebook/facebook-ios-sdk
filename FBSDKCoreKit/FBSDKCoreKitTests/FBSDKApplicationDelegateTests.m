@@ -24,6 +24,7 @@
 #import "AppDelegateObserverFake.h"
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitTestUtility.h"
+#import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKTestCase.h"
 #import "SampleAccessToken.h"

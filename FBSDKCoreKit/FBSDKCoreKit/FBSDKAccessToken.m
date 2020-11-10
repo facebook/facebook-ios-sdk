@@ -133,7 +133,7 @@ static FBSDKAccessToken *g_currentAccessToken;
   [FBSDKAccessToken setCurrentAccessToken:token shouldDispatchNotif:YES];
 }
 
-+ (void)setCurrentAccessToken:(FBSDKAccessToken *)token
++ (void)setCurrentAccessToken:(nullable FBSDKAccessToken *)token
           shouldDispatchNotif:(BOOL)shouldDispatchNotif
 {
   if (token != g_currentAccessToken) {

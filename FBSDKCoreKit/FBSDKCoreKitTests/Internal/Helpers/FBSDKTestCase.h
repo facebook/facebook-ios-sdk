@@ -28,7 +28,8 @@
 #import "FBSDKProfile+Internal.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationManager.h"
-#import "FakeAccessTokenCache.h"
+
+@class FakeAccessTokenCache;
 
 NS_ASSUME_NONNULL_BEGIN
 
