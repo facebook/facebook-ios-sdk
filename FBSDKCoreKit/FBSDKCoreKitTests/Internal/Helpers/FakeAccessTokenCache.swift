@@ -16,34 +16,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FakeAccessTokenCache.h"
+import FBSDKCoreKit
 
-@implementation FakeAccessTokenCache
-{
-  FBSDKAccessToken *_accessToken;
-}
+@objcMembers
+public class FakeAccessTokenCache: NSObject, AccessTokenCaching {
+  public var accessToken: AccessToken?
 
-- (instancetype)initWithToken:(FBSDKAccessToken *__nullable)token
-{
-  if ((self = [super init])) {
-    _accessToken = token;
+  public init(token: AccessToken?) {
+    accessToken = token
   }
-  return self;
-}
 
-- (FBSDKAccessToken *)accessToken
-{
-  return _accessToken;
+  public func clearCache() {
+    // noop for now
+  }
 }
-
-- (void)setAccessToken:(FBSDKAccessToken *)token
-{
-  _accessToken = token;
-}
-
-- (void)clearCache
-{
-  // noop for now
-}
-
-@end
