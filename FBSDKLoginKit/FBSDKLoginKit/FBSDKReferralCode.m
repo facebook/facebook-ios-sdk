@@ -26,7 +26,7 @@
 
 @implementation FBSDKReferralCode
 
-+ (instancetype)initWithString:(NSString *)string
++ (nullable instancetype)initWithString:(NSString *)string
 {
   if (string.length == 0) {
     return nil;

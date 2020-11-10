@@ -43,7 +43,7 @@ NS_SWIFT_NAME(ReferralCode)
  A code is valid if it is non-empty and contains only alphanumeric characters.
  @param string the raw string referral code
 */
-+ (instancetype)initWithString:(NSString *)string;
++ (nullable instancetype)initWithString:(NSString *)string;
 
 @end
 
