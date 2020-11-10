@@ -23,7 +23,6 @@
 #import "FBSDKGraphRequestPiggybackManager.h"
 #import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKTestCase.h"
-#import "SampleAccessToken.h"
 
 @interface FBSDKAccessToken (Testing)
 + (void)resetCurrentAccessTokenCache;

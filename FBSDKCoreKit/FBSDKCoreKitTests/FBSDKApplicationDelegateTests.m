@@ -27,7 +27,6 @@
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKTestCase.h"
-#import "SampleAccessToken.h"
 #import "UserDefaultsSpy.h"
 
 @interface FBSDKApplicationDelegate (Testing)

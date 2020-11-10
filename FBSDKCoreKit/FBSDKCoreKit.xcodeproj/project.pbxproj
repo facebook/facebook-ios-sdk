@@ -908,7 +908,7 @@
 		F492C0A324E1F5F600BA21F7 /* UserDefaultsSpy.m in Sources */ = {isa = PBXBuildFile; fileRef = F492C0A124E1F5F600BA21F7 /* UserDefaultsSpy.m */; };
 		F496E58F24E49DBC006231A2 /* SampleAppEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = F496E58E24E49DBC006231A2 /* SampleAppEvents.swift */; };
 		F496E5FE24E5D0D5006231A2 /* FakeAccessTokenCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = F496E5FD24E5D0D5006231A2 /* FakeAccessTokenCache.swift */; };
-		F496E60F24E5D195006231A2 /* SampleAccessToken.m in Sources */ = {isa = PBXBuildFile; fileRef = F496E60E24E5D195006231A2 /* SampleAccessToken.m */; };
+		F496E60F24E5D195006231A2 /* SampleAccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = F496E60E24E5D195006231A2 /* SampleAccessToken.swift */; };
 		F496E61224E6049A006231A2 /* AppDelegateObserverFake.m in Sources */ = {isa = PBXBuildFile; fileRef = F496E61124E6049A006231A2 /* AppDelegateObserverFake.m */; };
 		F4A52AED242A7D12005F65CE /* FBSDKPerformanceMonitorEntryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A52AEC242A7D12005F65CE /* FBSDKPerformanceMonitorEntryTests.m */; };
 		F4A52AFE242A80F4005F65CE /* FBSDKPerformanceMonitorEntry.h in Headers */ = {isa = PBXBuildFile; fileRef = F4A52AFC242A80F4005F65CE /* FBSDKPerformanceMonitorEntry.h */; };
@@ -1558,8 +1558,7 @@
 		F492C0A124E1F5F600BA21F7 /* UserDefaultsSpy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsSpy.m; sourceTree = "<group>"; };
 		F496E58E24E49DBC006231A2 /* SampleAppEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SampleAppEvents.swift; path = FBSDKCoreKitTests/Internal/Helpers/SampleAppEvents.swift; sourceTree = SOURCE_ROOT; };
 		F496E5FD24E5D0D5006231A2 /* FakeAccessTokenCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeAccessTokenCache.swift; sourceTree = "<group>"; };
-		F496E60D24E5D195006231A2 /* SampleAccessToken.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SampleAccessToken.h; sourceTree = "<group>"; };
-		F496E60E24E5D195006231A2 /* SampleAccessToken.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SampleAccessToken.m; sourceTree = "<group>"; };
+		F496E60E24E5D195006231A2 /* SampleAccessToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAccessToken.swift; sourceTree = "<group>"; };
 		F496E61024E6049A006231A2 /* AppDelegateObserverFake.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegateObserverFake.h; sourceTree = "<group>"; };
 		F496E61124E6049A006231A2 /* AppDelegateObserverFake.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegateObserverFake.m; sourceTree = "<group>"; };
 		F4A11B4824E36E5200D4C010 /* FBSDKTypeUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKTypeUtility.h; sourceTree = "<group>"; };
@@ -2657,8 +2656,7 @@
 				F4DE31F424DB695100297C18 /* FBSDKTestCase.h */,
 				F4DE31F524DB695100297C18 /* FBSDKTestCase.m */,
 				F496E5FD24E5D0D5006231A2 /* FakeAccessTokenCache.swift */,
-				F496E60D24E5D195006231A2 /* SampleAccessToken.h */,
-				F496E60E24E5D195006231A2 /* SampleAccessToken.m */,
+				F496E60E24E5D195006231A2 /* SampleAccessToken.swift */,
 				F496E61024E6049A006231A2 /* AppDelegateObserverFake.h */,
 				F496E61124E6049A006231A2 /* AppDelegateObserverFake.m */,
 				F4ED90D924EDDC610048D283 /* NotificationCenterSpy.h */,
@@ -4112,7 +4110,7 @@
 				F43960D02425513100C1868F /* FakeMonitorStore.m in Sources */,
 				894C0B3A1A702EBE009137EF /* FBSDKBridgeAPIProtocolNativeV1Tests.m in Sources */,
 				F4E50156243648A100C99262 /* FBSDKServerConfigurationTests.m in Sources */,
-				F496E60F24E5D195006231A2 /* SampleAccessToken.m in Sources */,
+				F496E60F24E5D195006231A2 /* SampleAccessToken.swift in Sources */,
 				2A3DA4161CB4C0F600339BD4 /* FBSDKAppLinkUtilityTests.swift in Sources */,
 				F4DE31F624DB695100297C18 /* FBSDKTestCase.m in Sources */,
 				5D2165F22229C6A3004952D8 /* FBSDKGraphRequestTests.m in Sources */,
