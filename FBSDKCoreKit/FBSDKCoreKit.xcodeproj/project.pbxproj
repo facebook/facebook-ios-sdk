@@ -906,7 +906,7 @@
 		F48A6AED24170D29002C6CA1 /* TestMonitorEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = F48A6AEC24170D29002C6CA1 /* TestMonitorEntry.m */; };
 		F492C0A224E1F5F600BA21F7 /* KeychainStoreSpy.m in Sources */ = {isa = PBXBuildFile; fileRef = F492C0A024E1F5F600BA21F7 /* KeychainStoreSpy.m */; };
 		F492C0A324E1F5F600BA21F7 /* UserDefaultsSpy.m in Sources */ = {isa = PBXBuildFile; fileRef = F492C0A124E1F5F600BA21F7 /* UserDefaultsSpy.m */; };
-		F496E58F24E49DBC006231A2 /* SampleAppEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F496E58E24E49DBC006231A2 /* SampleAppEvents.m */; };
+		F496E58F24E49DBC006231A2 /* SampleAppEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = F496E58E24E49DBC006231A2 /* SampleAppEvents.swift */; };
 		F496E5FE24E5D0D5006231A2 /* FakeAccessTokenCache.m in Sources */ = {isa = PBXBuildFile; fileRef = F496E5FD24E5D0D5006231A2 /* FakeAccessTokenCache.m */; };
 		F496E60F24E5D195006231A2 /* SampleAccessToken.m in Sources */ = {isa = PBXBuildFile; fileRef = F496E60E24E5D195006231A2 /* SampleAccessToken.m */; };
 		F496E61224E6049A006231A2 /* AppDelegateObserverFake.m in Sources */ = {isa = PBXBuildFile; fileRef = F496E61124E6049A006231A2 /* AppDelegateObserverFake.m */; };
@@ -1556,8 +1556,7 @@
 		F492C09F24E1F5F600BA21F7 /* UserDefaultsSpy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaultsSpy.h; sourceTree = "<group>"; };
 		F492C0A024E1F5F600BA21F7 /* KeychainStoreSpy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainStoreSpy.m; sourceTree = "<group>"; };
 		F492C0A124E1F5F600BA21F7 /* UserDefaultsSpy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsSpy.m; sourceTree = "<group>"; };
-		F496E58D24E49DBC006231A2 /* SampleAppEvents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SampleAppEvents.h; path = FBSDKCoreKitTests/Internal/Helpers/SampleAppEvents.h; sourceTree = SOURCE_ROOT; };
-		F496E58E24E49DBC006231A2 /* SampleAppEvents.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = SampleAppEvents.m; path = FBSDKCoreKitTests/Internal/Helpers/SampleAppEvents.m; sourceTree = SOURCE_ROOT; };
+		F496E58E24E49DBC006231A2 /* SampleAppEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SampleAppEvents.swift; path = FBSDKCoreKitTests/Internal/Helpers/SampleAppEvents.swift; sourceTree = SOURCE_ROOT; };
 		F496E5FC24E5D0D5006231A2 /* FakeAccessTokenCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FakeAccessTokenCache.h; sourceTree = "<group>"; };
 		F496E5FD24E5D0D5006231A2 /* FakeAccessTokenCache.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FakeAccessTokenCache.m; sourceTree = "<group>"; };
 		F496E60D24E5D195006231A2 /* SampleAccessToken.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SampleAccessToken.h; sourceTree = "<group>"; };
@@ -2645,8 +2644,7 @@
 		F4CD7CDA243E2CF7004C27F1 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				F496E58D24E49DBC006231A2 /* SampleAppEvents.h */,
-				F496E58E24E49DBC006231A2 /* SampleAppEvents.m */,
+				F496E58E24E49DBC006231A2 /* SampleAppEvents.swift */,
 				F492C09024E1F5F600BA21F7 /* KeychainStoreSpy.h */,
 				F492C0A024E1F5F600BA21F7 /* KeychainStoreSpy.m */,
 				F492C09F24E1F5F600BA21F7 /* UserDefaultsSpy.h */,
@@ -4097,7 +4095,7 @@
 				F47E560D24E1EA8D001497C9 /* FakeBundle.m in Sources */,
 				7E55573C1A8D834B00344F86 /* FBSDKAppLinkResolverTests.m in Sources */,
 				5D2165E122264453004952D8 /* FBSDKAppEventsTests.m in Sources */,
-				F496E58F24E49DBC006231A2 /* SampleAppEvents.m in Sources */,
+				F496E58F24E49DBC006231A2 /* SampleAppEvents.swift in Sources */,
 				9D18A8DB1A95405A00A41042 /* FBSDKAppEventsStateTests.m in Sources */,
 				F4ED90DB24EDDC610048D283 /* NotificationCenterSpy.m in Sources */,
 				F93680E3249D490600446E35 /* FBSDKSettingsTests.m in Sources */,
