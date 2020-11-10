@@ -28,6 +28,7 @@
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKApplicationDelegate.h"
 #import "FBSDKConstants.h"
+#import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKGateKeeperManager.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequest+Internal.h"
@@ -37,7 +38,6 @@
 #import "FBSDKSettings.h"
 #import "FBSDKTestCase.h"
 #import "FBSDKUtility.h"
-#import "SampleAccessToken.h"
 #import "UserDefaultsSpy.h"
 
 static NSString *const _mockAppID = @"mockAppID";

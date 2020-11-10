@@ -24,7 +24,6 @@
 #import "FBSDKProfile.h"
 #import "FBSDKProfile+Internal.h"
 #import "FBSDKTestCase.h"
-#import "SampleAccessToken.h"
 
 @interface FBSDKSettings (Testing)
 + (void)resetFacebookClientTokenCache;
