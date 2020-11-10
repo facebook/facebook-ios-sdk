@@ -336,7 +336,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   // iOS 11 returns NO for `isAvailableForServiceType` but it will still work
   NSString *facebookServiceType = fbsdkdfl_SLServiceTypeFacebook();
   NSOperatingSystemVersion iOS11Version = { .majorVersion = 11, .minorVersion = 0, .patchVersion = 0 };
-  if (![FBSDKInternalUtility isOSRunTimeVersionAtLeast:iOS11Version] && ![composeViewControllerClass isAvailableForServiceType:facebookServiceType]) {
+  if (![NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:iOS11Version] && ![composeViewControllerClass isAvailableForServiceType:facebookServiceType]) {
     return NO;
   }
   return YES;
@@ -344,10 +344,6 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
 
 - (BOOL)_canAttributeThroughShareSheet
 {
-  NSOperatingSystemVersion iOS8Version = { .majorVersion = 8, .minorVersion = 0, .patchVersion = 0 };
-  if (![FBSDKInternalUtility isOSRunTimeVersionAtLeast:iOS8Version]) {
-    return NO;
-  }
   FBSDKShareDialogValidateAPISchemeRegisteredForCanOpenUrl();
   NSString *scheme = FBSDK_CANOPENURL_FBAPI;
   NSString *minimumVersion = FBSDK_SHARE_METHOD_ATTRIBUTED_SHARE_SHEET_MIN_VERSION;
@@ -360,10 +356,6 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
 
 - (BOOL)_canUseFBShareSheet
 {
-  NSOperatingSystemVersion iOS8Version = { .majorVersion = 8, .minorVersion = 0, .patchVersion = 0 };
-  if (![FBSDKInternalUtility isOSRunTimeVersionAtLeast:iOS8Version]) {
-    return NO;
-  }
   FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanOpenUrl();
   NSURLComponents *components = [[NSURLComponents alloc] init];
   components.scheme = FBSDK_CANOPENURL_SHARE_EXTENSION;
@@ -383,10 +375,6 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
 
 - (BOOL)_supportsShareSheetMinimumVersion:(NSString *)minimumVersion
 {
-  NSOperatingSystemVersion iOS8Version = { .majorVersion = 8, .minorVersion = 0, .patchVersion = 0 };
-  if (![FBSDKInternalUtility isOSRunTimeVersionAtLeast:iOS8Version]) {
-    return NO;
-  }
   FBSDKShareDialogValidateAPISchemeRegisteredForCanOpenUrl();
   NSString *scheme = FBSDK_CANOPENURL_FBAPI;
   NSURLComponents *components = [[NSURLComponents alloc] init];

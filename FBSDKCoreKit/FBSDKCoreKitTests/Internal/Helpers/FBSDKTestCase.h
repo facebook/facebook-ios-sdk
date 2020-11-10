@@ -266,6 +266,9 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Resets cached properties in `FBSDKSettings`
 - (void)resetCachedSettings;
 
+/// Stubs `FBSDKSettings.userAgentSuffix` and returns the provided value
+- (void)stubUserAgentSuffixWith:(nullable NSString *)suffix;
+
 @end
 
 NS_ASSUME_NONNULL_END

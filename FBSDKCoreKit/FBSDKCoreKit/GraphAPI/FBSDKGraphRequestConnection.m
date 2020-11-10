@@ -1033,7 +1033,7 @@ static NSError *_Nullable errorFromResult(id untypedParam, FBSDKGraphRequest *re
   @try {
     if ([error.domain isEqualToString:NSURLErrorDomain] && error.code == kCFURLErrorSecureConnectionFailed) {
       NSOperatingSystemVersion iOS9Version = { .majorVersion = 9, .minorVersion = 0, .patchVersion = 0 };
-      if ([FBSDKInternalUtility isOSRunTimeVersionAtLeast:iOS9Version]) {
+      if ([NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:iOS9Version]) {
         [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                                logEntry:@"WARNING: FBSDK secure network request failed. Please verify you have configured your "
          "app for Application Transport Security compatibility described at https://developers.facebook.com/docs/ios/ios9"];

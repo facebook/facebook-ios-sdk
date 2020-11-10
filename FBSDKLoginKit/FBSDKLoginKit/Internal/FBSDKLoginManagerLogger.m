@@ -186,7 +186,7 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
 - (void)logNativeAppDialogResult:(BOOL)result dialogDuration:(NSTimeInterval)dialogDuration
 {
   NSOperatingSystemVersion iOS10Version = { .majorVersion = 10, .minorVersion = 0, .patchVersion = 0 };
-  if ([FBSDKInternalUtility isOSRunTimeVersionAtLeast:iOS10Version]) {
+  if ([NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:iOS10Version]) {
     [FBSDKTypeUtility dictionary:_extras setObject:@(dialogDuration) forKey:@"native_app_login_dialog_duration"];
     [FBSDKTypeUtility dictionary:_extras setObject:@(result) forKey:@"native_app_login_dialog_result"];
     [self logEvent:FBSDKAppEventNameFBSessionFASLoginDialogResult params:[self _parametersForNewEvent]];

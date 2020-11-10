@@ -34,6 +34,8 @@
 + (void)resetIsFacebookAppInstalledCache;
 + (void)resetDidCheckIfMessengerAppInstalledCache;
 + (void)resetDidCheckIfMSQRDAppInstalledCache;
++ (void)resetDidCheckOperatingSystemVersion;
++ (void)resetFetchingUrlSchemes;
 
 @end
 
@@ -56,6 +58,8 @@
   [FBSDKInternalUtility resetDidCheckIfMessengerAppInstalledCache];
   [FBSDKInternalUtility resetDidCheckIfMSQRDAppInstalledCache];
   [FBSDKInternalUtility resetDidCheckRegisteredCanOpenUrlSchemes];
+  [FBSDKInternalUtility resetDidCheckOperatingSystemVersion];
+  [FBSDKInternalUtility resetFetchingUrlSchemes];
   [FBSDKInternalUtility deleteFacebookCookies];
 }
 
@@ -875,6 +879,299 @@
   }
 }
 
+- (void)testNonSafariBundleIdentifiers
+{
+  NSArray *identifiers = @[
+    @"",
+    @" ",
+    @"com.foo"
+  ];
+
+  for (NSString *identifier in identifiers) {
+    XCTAssertFalse(
+      [FBSDKInternalUtility isSafariBundleIdentifier:identifier],
+      "%@ should not be considered a safari bundle identifier",
+      identifier
+    );
+  }
+}
+
+- (void)testSafariBundleIdentifiers
+{
+  NSArray *identifiers = @[
+    @"com.apple.mobilesafari",
+    @"com.apple.SafariViewService",
+  ];
+
+  for (NSString *identifier in identifiers) {
+    XCTAssertTrue(
+      [FBSDKInternalUtility isSafariBundleIdentifier:identifier],
+      "%@ should be considered a safari bundle identifier",
+      identifier
+    );
+  }
+}
+
+- (void)testValidatingAppID
+{
+  [self stubAppID:nil];
+
+  XCTAssertThrows([FBSDKInternalUtility validateAppID]);
+}
+
+- (void)testValidateClientAccessTokenWithoutClientTokenWithoutAppID
+{
+  [self stubAppID:nil];
+  [self stubClientTokenWith:nil];
+
+  XCTAssertThrows([FBSDKInternalUtility validateRequiredClientAccessToken]);
+}
+
+- (void)testValidateClientAccessTokenWithClientTokenWithoutAppID
+{
+  [self stubAppID:nil];
+  [self stubClientTokenWith:@"client123"];
+
+  XCTAssertEqualObjects(
+    [FBSDKInternalUtility validateRequiredClientAccessToken],
+    @"(null)|client123",
+    "A valid client-access token should include the app identifier and the client token"
+  );
+}
+
+- (void)testValidateClientAccessTokenWithClientTokenWithAppID
+{
+  [self stubAppID:self.appID];
+  [self stubClientTokenWith:@"client123"];
+
+  XCTAssertEqualObjects(
+    [FBSDKInternalUtility validateRequiredClientAccessToken],
+    @"appid|client123",
+    "A valid client-access token should include the app identifier and the client token"
+  );
+}
+
+- (void)testValidateClientAccessTokenWithoutClientTokenWithAppID
+{
+  [self stubAppID:self.appID];
+  [self stubClientTokenWith:nil];
+
+  XCTAssertThrows([FBSDKInternalUtility validateRequiredClientAccessToken]);
+}
+
+- (void)testIsRegisteredUrlSchemeWithRegisteredScheme
+{
+  FakeBundle *bundle = [self bundleWithRegisteredUrlSchemes:@[@"com.foo.bar"]];
+  [self stubMainBundleWith:bundle];
+
+  XCTAssertTrue([FBSDKInternalUtility isRegisteredURLScheme:@"com.foo.bar"], "Schemes in the bundle should be considered registered");
+}
+
+- (void)testIsRegisteredUrlSchemeWithoutRegisteredScheme
+{
+  FakeBundle *bundle = [self bundleWithRegisteredUrlSchemes:@[@"com.foo.bar"]];
+  [self stubMainBundleWith:bundle];
+
+  XCTAssertFalse([FBSDKInternalUtility isRegisteredURLScheme:@"com.facebook"], "Schemes absent from the bundle should not be considered registered");
+}
+
+- (void)testIsRegisteredUrlSchemeCaching
+{
+  // Should fetch bundle
+  [FBSDKInternalUtility isRegisteredURLScheme:@"com.facebook"];
+
+  OCMVerify(ClassMethod([self.nsBundleClassMock mainBundle]));
+  OCMReject(ClassMethod([self.nsBundleClassMock mainBundle]));
+
+  // Should not fetch bundle
+  [FBSDKInternalUtility isRegisteredURLScheme:@"com.facebook"];
+}
+
+- (void)testValidatingUrlSchemesWithoutAppID
+{
+  [self stubAppID:nil];
+
+  XCTAssertThrows(
+    [FBSDKInternalUtility validateURLSchemes],
+    "Cannot validate url schemes without an app identifier"
+  );
+}
+
+- (void)testValidatingUrlSchemesWithAppIdMatchingBundleEntry
+{
+  [self stubAppID:self.appID];
+  [self stubAppUrlSchemeSuffixWith:nil];
+
+  FakeBundle *bundle = [self bundleWithRegisteredUrlSchemes:@[@"fbappid"]];
+  [self stubMainBundleWith:bundle];
+
+  XCTAssertNoThrow(
+    [FBSDKInternalUtility validateURLSchemes],
+    "The registered app url scheme must match the app id and url scheme suffix prepended with 'fb'"
+  );
+}
+
+- (void)testValidatingUrlSchemesWithNonAppIdMatchingBundleEntry
+{
+  [self stubAppID:self.appID];
+  [self stubAppUrlSchemeSuffixWith:nil];
+
+  FakeBundle *bundle = [self bundleWithRegisteredUrlSchemes:@[@"fb123"]];
+  [self stubMainBundleWith:bundle];
+
+  XCTAssertThrows(
+    [FBSDKInternalUtility validateURLSchemes],
+    "The registered app url scheme must match the app id and url scheme suffix prepended with 'fb'"
+  );
+}
+
+// We can't loop through these because of how stubbing works.
+- (void)testValidatingFacebookUrlSchemes_auth
+{
+  FakeBundle *bundle = [self bundleWithRegisteredUrlSchemes:@[@"fbauth2"]];
+  [self stubMainBundleWith:bundle];
+  XCTAssertThrows([FBSDKInternalUtility validateFacebookReservedURLSchemes], "Should throw an error if fbauth2 is present in the bundle url schemes");
+}
+
+// We can't loop through these because of how stubbing works.
+- (void)testValidatingFacebookUrlSchemes_api
+{
+  FakeBundle *bundle = [self bundleWithRegisteredUrlSchemes:@[@"fbapi"]];
+  [self stubMainBundleWith:bundle];
+  XCTAssertThrows([FBSDKInternalUtility validateFacebookReservedURLSchemes], "Should throw an error if fbapi is present in the bundle url schemes");
+}
+
+// We can't loop through these because of how stubbing works.
+- (void)testValidatingFacebookUrlSchemes_messenger
+{
+  FakeBundle *bundle = [self bundleWithRegisteredUrlSchemes:@[@"fb-messenger-share-api"]];
+  [self stubMainBundleWith:bundle];
+  XCTAssertThrows([FBSDKInternalUtility validateFacebookReservedURLSchemes], "Should throw an error if fb-messenger-share-api is present in the bundle url schemes");
+}
+
+// We can't loop through these because of how stubbing works.
+- (void)testValidatingFacebookUrlSchemes_shareextension
+{
+  FakeBundle *bundle = [self bundleWithRegisteredUrlSchemes:@[@"fbshareextension"]];
+  [self stubMainBundleWith:bundle];
+  XCTAssertThrows([FBSDKInternalUtility validateFacebookReservedURLSchemes], "Should throw an error if fbshareextension is present in the bundle url schemes");
+}
+
+- (void)testIsPublishPermission
+{
+  NSArray *publishPermissions = @[
+    @"publish",
+    @"publishSomething",
+    @"manage",
+    @"manageSomething",
+    @"ads_management",
+    @"create_event",
+    @"rsvp_event"
+  ];
+  for (NSString *permission in publishPermissions) {
+    XCTAssertTrue([FBSDKInternalUtility isPublishPermission:permission]);
+  }
+
+  NSArray *nonPublishPermissions = @[
+    @"",
+    @"email",
+    @"_publish"
+  ];
+  for (NSString *permission in nonPublishPermissions) {
+    XCTAssertFalse([FBSDKInternalUtility isPublishPermission:permission]);
+  }
+}
+
+- (void)testIsUnityWithMissingSuffix
+{
+  [self stubUserAgentSuffixWith:nil];
+  XCTAssertFalse([FBSDKInternalUtility isUnity], "User agent should determine whether an app is Unity");
+}
+
+- (void)testIsUnityWithNonUnitySuffix
+{
+  [self stubUserAgentSuffixWith:@"Foo"];
+  XCTAssertFalse([FBSDKInternalUtility isUnity], "User agent should determine whether an app is Unity");
+}
+
+- (void)testIsUnityWithUnitySuffix
+{
+  [self stubUserAgentSuffixWith:@"__Unity__"];
+  XCTAssertTrue([FBSDKInternalUtility isUnity], "User agent should determine whether an app is Unity");
+}
+
+- (void)testHexadecimalStringFromData
+{
+  XCTAssertNil([FBSDKInternalUtility hexadecimalStringFromData:NSData.data]);
+
+  NSString *foo = @"foo";
+  NSData *stringData = [foo dataUsingEncoding:NSUTF8StringEncoding];
+  NSString *expected = @"666f6f";
+
+  XCTAssertEqualObjects([FBSDKInternalUtility hexadecimalStringFromData:stringData], expected);
+}
+
+- (void)testObjectIsEqualToObject
+{
+  id obj1 = @"foo";
+  id obj2 = @"foo";
+  id obj3 = @"bar";
+
+  XCTAssertTrue([FBSDKInternalUtility object:obj1 isEqualToObject:obj1]);
+  XCTAssertTrue([FBSDKInternalUtility object:obj1 isEqualToObject:obj2]);
+  XCTAssertFalse([FBSDKInternalUtility object:obj1 isEqualToObject:obj3]);
+
+  obj1 = nil;
+  XCTAssertFalse([FBSDKInternalUtility object:obj1 isEqualToObject:obj2]);
+  XCTAssertFalse([FBSDKInternalUtility object:obj2 isEqualToObject:obj1]);
+}
+
+- (void)testCreatingUrlWithUnknownError // InvalidQueryString
+{
+  NSError *error = [NSError errorWithDomain:@"test" code:1 userInfo:nil];
+
+  [FBSDKInternalUtility URLWithScheme:@"https" host:@"example" path:@"/foo" queryParameters:@{@"a date" : NSDate.date} error:&error];
+
+  XCTAssertEqualObjects(
+    error.domain,
+    @"com.facebook.sdk.core",
+    "Creating a url with an error reference should repopulate the error domain correctly"
+  );
+  XCTAssertEqual(
+    error.code,
+    3,
+    "Creating a url with an error reference should repopulate the error code correctly"
+  );
+  XCTAssertEqualObjects(
+    [error.userInfo objectForKey:FBSDKErrorDeveloperMessageKey],
+    @"Unknown error building URL.",
+    "Creating a url with an error reference should repopulate the error message correctly"
+  );
+}
+
+- (void)testCreatingUrlWithInvalidQueryString
+{
+  NSError *error = [NSError errorWithDomain:@"test" code:1 userInfo:nil];
+
+  [FBSDKInternalUtility URLWithScheme:@"https" host:@"example" path:@"/foo" queryParameters:@{@[] : @"foo"} error:&error];
+
+  XCTAssertEqualObjects(
+    error.domain,
+    @"com.facebook.sdk.core",
+    "Creating a url with invalid parameters should repopulate the error domain correctly"
+  );
+  XCTAssertEqual(
+    error.code,
+    2,
+    "Creating a url with invalid parameters should repopulate the error code correctly"
+  );
+
+  XCTAssertTrue(
+    [[error.userInfo objectForKey:FBSDKErrorDeveloperMessageKey] hasPrefix:@"Invalid value for queryParameters:"],
+    "Creating a url with invalid parameters should repopulate the error message correctly"
+  );
+}
+
 // MARK: - Helpers
 
 - (NSURL *)dialogUrl
@@ -917,5 +1214,14 @@ NSString *const validPath = @"example";
 NSString *const facebookUrlSchemeMissingMessage = @"fbauth2 is missing from your Info.plist under LSApplicationQueriesSchemes and is required.";
 NSString *const messengerUrlSchemeMissingMessage = @"fb-messenger-share-api is missing from your Info.plist under LSApplicationQueriesSchemes and is required.";
 NSString *const msqrdPlayerUrlSchemeMissingMessage = @"msqrdplayer is missing from your Info.plist under LSApplicationQueriesSchemes and is required.";
+
+- (FakeBundle *)bundleWithRegisteredUrlSchemes:(NSArray<NSString *> *)schemes
+{
+  return [FakeBundle bundleWithDictionary:@{
+            @"CFBundleURLTypes" : @[
+              @{ @"CFBundleURLSchemes" : schemes }
+            ]
+          }];
+}
 
 @end

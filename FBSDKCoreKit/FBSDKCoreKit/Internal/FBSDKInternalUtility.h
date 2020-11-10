@@ -139,13 +139,6 @@ NS_SWIFT_NAME(InternalUtility)
 + (BOOL)isFacebookBundleIdentifier:(NSString *)bundleIdentifier;
 
 /**
-  Tests whether the operating system is at least the specified version.
- @param version The version to test against.
- @return YES if the operating system is greater than or equal to the specified version, otherwise NO.
- */
-+ (BOOL)isOSRunTimeVersionAtLeast:(NSOperatingSystemVersion)version;
-
-/**
   Tests whether the supplied bundle identifier references the Safari app.
  @param bundleIdentifier The bundle identifier to test.
  @return YES if the bundle identifier refers to the Safari app, otherwise NO.

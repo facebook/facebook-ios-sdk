@@ -46,6 +46,8 @@ static dispatch_once_t *checkIfFacebookAppInstalledToken;
 static dispatch_once_t *checkIfMessengerAppInstalledToken;
 static dispatch_once_t *checkIfMSQRDPlayerAppInstalledToken;
 static dispatch_once_t *checkRegisteredCanOpenUrlSchemesToken;
+static dispatch_once_t *checkOperatingSystemVersionToken;
+static dispatch_once_t *fetchUrlSchemesToken;
 
 static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 {
@@ -212,28 +214,10 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
     || [bundleIdentifier hasPrefix:@".com.facebook."]);
 }
 
-+ (BOOL)isOSRunTimeVersionAtLeast:(NSOperatingSystemVersion)version
-{
-  return ([self _compareOperatingSystemVersion:[self operatingSystemVersion] toVersion:version] != NSOrderedAscending);
-}
-
 + (BOOL)isSafariBundleIdentifier:(NSString *)bundleIdentifier
 {
   return ([bundleIdentifier isEqualToString:@"com.apple.mobilesafari"]
     || [bundleIdentifier isEqualToString:@"com.apple.SafariViewService"]);
-}
-
-+ (int32_t)getMajorVersionFromFullLibraryVersion:(int32_t)version
-{
-  // Negative values returned by NSVersionOfRunTimeLibrary/NSVersionOfLinkTimeLibrary
-  // are still valid version numbers, as long as it's not -1.
-  // After bitshift by 16, the negatives become valid positive major version number.
-  // We ran into this first time with iOS 12.
-  if (version != -1) {
-    return ((version & FBSDKInternalUtilityMajorVersionMask) >> FBSDKInternalUtilityMajorVersionShift);
-  } else {
-    return 0;
-  }
 }
 
 + (BOOL)object:(id)object isEqualToObject:(id)other
@@ -254,25 +238,10 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
     .minorVersion = 0,
     .patchVersion = 0,
   };
-  static dispatch_once_t getVersionOnce;
-  dispatch_once(&getVersionOnce, ^{
-    if ([NSProcessInfo instancesRespondToSelector:@selector(operatingSystemVersion)]) {
-      operatingSystemVersion = [NSProcessInfo processInfo].operatingSystemVersion;
-    } else {
-      NSArray *components = [[UIDevice currentDevice].systemVersion componentsSeparatedByString:@"."];
-      switch (components.count) {
-        default:
-        case 3:
-          operatingSystemVersion.patchVersion = [[FBSDKTypeUtility array:components objectAtIndex:2] integerValue];
-        // fall through
-        case 2:
-          operatingSystemVersion.minorVersion = [[FBSDKTypeUtility array:components objectAtIndex:1] integerValue];
-        // fall through
-        case 1:
-          operatingSystemVersion.majorVersion = [[FBSDKTypeUtility array:components objectAtIndex:0] integerValue];
-          break;
-      }
-    }
+  static dispatch_once_t once_token;
+  checkOperatingSystemVersionToken = &once_token;
+  dispatch_once(&once_token, ^{
+    operatingSystemVersion = [NSProcessInfo processInfo].operatingSystemVersion;
   });
   return operatingSystemVersion;
 }
@@ -290,9 +259,12 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
   NSString *queryString = nil;
   if (queryParameters.count) {
     NSError *queryStringError;
-    queryString = [@"?" stringByAppendingString:[FBSDKBasicUtility queryStringWithDictionary:queryParameters
-                                                                                       error:&queryStringError
-                                                                        invalidObjectHandler:NULL]];
+    NSString *queryStringFromParams = [FBSDKBasicUtility queryStringWithDictionary:queryParameters
+                                                                             error:&queryStringError
+                                                              invalidObjectHandler:NULL];
+    if (queryStringFromParams) {
+      queryString = [@"?" stringByAppendingString:queryStringFromParams];
+    }
     if (!queryString) {
       if (errorRef != NULL) {
         *errorRef = [FBSDKError invalidArgumentErrorWithName:@"queryParameters"
@@ -408,26 +380,6 @@ static NSMapTable *_transientObjects;
 }
 
 #pragma mark - Helper Methods
-
-+ (NSComparisonResult)_compareOperatingSystemVersion:(NSOperatingSystemVersion)version1
-                                           toVersion:(NSOperatingSystemVersion)version2
-{
-  if (version1.majorVersion < version2.majorVersion) {
-    return NSOrderedAscending;
-  } else if (version1.majorVersion > version2.majorVersion) {
-    return NSOrderedDescending;
-  } else if (version1.minorVersion < version2.minorVersion) {
-    return NSOrderedAscending;
-  } else if (version1.minorVersion > version2.minorVersion) {
-    return NSOrderedDescending;
-  } else if (version1.patchVersion < version2.patchVersion) {
-    return NSOrderedAscending;
-  } else if (version1.patchVersion > version2.patchVersion) {
-    return NSOrderedDescending;
-  } else {
-    return NSOrderedSame;
-  }
-}
 
 + (BOOL)_canOpenURLScheme:(NSString *)scheme
 {
@@ -586,10 +538,11 @@ static NSMapTable *_transientObjects;
 
 + (BOOL)isRegisteredURLScheme:(NSString *)urlScheme
 {
-  static dispatch_once_t fetchBundleOnce;
   static NSArray *urlTypes = nil;
 
-  dispatch_once(&fetchBundleOnce, ^{
+  static dispatch_once_t once_token;
+  fetchUrlSchemesToken = &once_token;
+  dispatch_once(&once_token, ^{
     urlTypes = [[NSBundle mainBundle].infoDictionary valueForKey:@"CFBundleURLTypes"];
   });
   for (NSDictionary *urlType in urlTypes) {
@@ -692,6 +645,20 @@ static NSMapTable *_transientObjects;
 {
   if (checkIfMSQRDPlayerAppInstalledToken) {
     *checkIfMSQRDPlayerAppInstalledToken = 0;
+  }
+}
+
++ (void)resetDidCheckOperatingSystemVersion
+{
+  if (checkOperatingSystemVersionToken) {
+    *checkOperatingSystemVersionToken = 0;
+  }
+}
+
++ (void)resetFetchingUrlSchemes
+{
+  if (fetchUrlSchemesToken) {
+    *fetchUrlSchemesToken = 0;
   }
 }
 

@@ -125,7 +125,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
 {
   dispatch_queue_t dataQueue;
   NSOperatingSystemVersion iOS8Version = { .majorVersion = 8, .minorVersion = 0, .patchVersion = 0 };
-  if ([FBSDKInternalUtility isOSRunTimeVersionAtLeast:iOS8Version]) {
+  if ([NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:iOS8Version]) {
     dataQueue = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0);
   } else {
     dataQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);

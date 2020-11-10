@@ -428,7 +428,6 @@
   NSDictionary *expectedJSON = @{@"app_id" : @"appID", @"hashtags" : @[@"#hashtag"], @"quotes" : @[@"a quote"]};
   [self _showDialog:dialog
                  appID:@"appID"
-   shareSheetAvailable:YES
    expectedPreJSONtext:@"fb-app-id:appID #hashtag"
           expectedJSON:expectedJSON];
 }
@@ -510,18 +509,6 @@
 
 #pragma mark - FullyCompatible Validation
 
-- (void)testThatInitialTextIsSetCorrectlyWhenShareExtensionIsNOTAvailable
-{
-  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
-  FBSDKShareLinkContent *content = [FBSDKShareModelTestUtility linkContentWithoutQuote];
-  content.hashtag = [FBSDKHashtag hashtagWithString:@"#hashtag"];
-  dialog.shareContent = content;
-  [self _showDialog:dialog
-                 appID:@"appID"
-   shareSheetAvailable:NO
-   expectedPreJSONtext:@"#hashtag" expectedJSON:nil];
-}
-
 - (void)testThatValidateWithErrorReturnsNOForLinkQuoteIfAValidShareExtensionVersionIsNotAvailable
 {
   [self _testValidateShareContent:[FBSDKShareModelTestUtility linkContent]
@@ -580,9 +567,7 @@
   [[[mockApplication stub] andReturnValue:@YES] canOpenURL:[OCMArg checkWithBlock:^BOOL (NSURL *url) {
     return ![url.absoluteString isEqualToString:nonSupportedScheme];
   }]];
-  NSOperatingSystemVersion iOS8Version = { .majorVersion = 8, .minorVersion = 0, .patchVersion = 0 };
   id mockInternalUtility = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
-  [[[mockInternalUtility stub] andReturnValue:@YES] isOSRunTimeVersionAtLeast:iOS8Version];
   id mockSLController = [OCMockObject niceMockForClass:[fbsdkdfl_SLComposeViewControllerClass() class]];
   [[[mockSLController stub] andReturn:mockSLController] composeViewControllerForServiceType:OCMOCK_ANY];
   [[[mockSLController stub] andReturnValue:@YES] isAvailableForServiceType:OCMOCK_ANY];
@@ -609,16 +594,13 @@
 
 - (void)  _showDialog:(FBSDKShareDialog *)dialog
                 appID:(NSString *)appID
-  shareSheetAvailable:(BOOL)shareSheetAvailable
   expectedPreJSONtext:(NSString *)expectedPreJSONText
          expectedJSON:(NSDictionary *)expectedJSON
 {
   id mockApplication = [OCMockObject niceMockForClass:[UIApplication class]];
   [[[mockApplication stub] andReturn:mockApplication] sharedApplication];
   [[[mockApplication stub] andReturnValue:@YES] canOpenURL:OCMOCK_ANY];
-  NSOperatingSystemVersion iOS8Version = { .majorVersion = 8, .minorVersion = 0, .patchVersion = 0 };
   id mockInternalUtility = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
-  [[[mockInternalUtility stub] andReturnValue:@(shareSheetAvailable)] isOSRunTimeVersionAtLeast:iOS8Version];
   id settingsClassMock = [OCMockObject niceMockForClass:[FBSDKSettings class]];
   [[[settingsClassMock stub] andReturn:appID] appID];
   id mockSLController = [OCMockObject niceMockForClass:[fbsdkdfl_SLComposeViewControllerClass() class]];
