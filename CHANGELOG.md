@@ -9,7 +9,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Important
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v8.1.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v8.2.0...HEAD)
+
+## 8.2.0
+
+### Changed
+- Remove SignalHandler to avoid hiding root cause of crashes caused by fatal signals.
+- Expose functions in `FBSDKUserDataStore` as public for apps using [Audience Network SDK](https://developers.facebook.com/docs/audience-network) only to use advanced matching.
+
+[2020-11-10](https://github.com/facebook/facebook-ios-sdk/releases/tag/v8.2.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v8.1.0...v8.2.0)
 
 ## 8.1.0
 
