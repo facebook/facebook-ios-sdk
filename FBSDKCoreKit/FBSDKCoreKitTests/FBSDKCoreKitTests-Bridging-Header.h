@@ -18,5 +18,7 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#import "FBSDKEventDeactivationManager.h"
+#import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKTestCase.h"
 #import "FakeBundle.h"
