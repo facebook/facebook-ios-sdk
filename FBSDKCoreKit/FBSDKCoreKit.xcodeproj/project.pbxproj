@@ -488,7 +488,7 @@
 		899C3D031A8C1ED200EA8658 /* FBSDKMaleSilhouetteIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 899C3D011A8C1ED200EA8658 /* FBSDKMaleSilhouetteIcon.m */; };
 		89C8B1991A8D7A15009B07F5 /* FBSDKUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 89C8B1971A8D7A15009B07F5 /* FBSDKUtility.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		89C8B19A1A8D7A15009B07F5 /* FBSDKUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 89C8B1981A8D7A15009B07F5 /* FBSDKUtility.m */; };
-		89C8B19C1A8D7A27009B07F5 /* FBSDKUtilityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 89C8B19B1A8D7A27009B07F5 /* FBSDKUtilityTests.m */; };
+		89C8B19C1A8D7A27009B07F5 /* FBSDKUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C8B19B1A8D7A27009B07F5 /* FBSDKUtilityTests.swift */; };
 		89D05AA91AA1134000609300 /* FBSDKAudioResourceLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 89D05AA71AA1134000609300 /* FBSDKAudioResourceLoader.h */; };
 		89D05AAA1AA1134000609300 /* FBSDKAudioResourceLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 89D05AA81AA1134000609300 /* FBSDKAudioResourceLoader.m */; };
 		89D4AE861A7FFEFC00DB8C72 /* FBSDKBridgeAPIRequest+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 89D4AE851A7FFEFC00DB8C72 /* FBSDKBridgeAPIRequest+Private.h */; };
@@ -1360,7 +1360,7 @@
 		899C3D011A8C1ED200EA8658 /* FBSDKMaleSilhouetteIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKMaleSilhouetteIcon.m; sourceTree = "<group>"; };
 		89C8B1971A8D7A15009B07F5 /* FBSDKUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKUtility.h; sourceTree = "<group>"; };
 		89C8B1981A8D7A15009B07F5 /* FBSDKUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKUtility.m; sourceTree = "<group>"; };
-		89C8B19B1A8D7A27009B07F5 /* FBSDKUtilityTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKUtilityTests.m; sourceTree = "<group>"; };
+		89C8B19B1A8D7A27009B07F5 /* FBSDKUtilityTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBSDKUtilityTests.swift; sourceTree = "<group>"; };
 		89D05AA71AA1134000609300 /* FBSDKAudioResourceLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKAudioResourceLoader.h; sourceTree = "<group>"; };
 		89D05AA81AA1134000609300 /* FBSDKAudioResourceLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKAudioResourceLoader.m; sourceTree = "<group>"; };
 		89D4AE851A7FFEFC00DB8C72 /* FBSDKBridgeAPIRequest+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBSDKBridgeAPIRequest+Private.h"; sourceTree = "<group>"; };
@@ -2316,7 +2316,7 @@
 				C511229F20A4BCEB0041DC94 /* FBSDKApplicationDelegateTests.m */,
 				9D3AF4651A9ED47900EEF724 /* FBSDKGraphRequestConnectionTests.m */,
 				F93680D4249D490600446E35 /* FBSDKSettingsTests.m */,
-				89C8B19B1A8D7A27009B07F5 /* FBSDKUtilityTests.m */,
+				89C8B19B1A8D7A27009B07F5 /* FBSDKUtilityTests.swift */,
 				893F44A41A644552001DB0B6 /* Internal */,
 				9D2697571A5DF40700143BFC /* Supporting Files */,
 				2A3DA4151CB4C0F600339BD4 /* FBSDKAppLinkUtilityTests.swift */,
@@ -4144,7 +4144,7 @@
 				F4181B342416EC06006DB452 /* FBSDKMonitorTests.m in Sources */,
 				5C49DF9E2554C9ED00E0FD91 /* SampleUserProfile.swift in Sources */,
 				F4BF22A0241954B400BFB494 /* FBSDKMonitorStoreTests.m in Sources */,
-				89C8B19C1A8D7A27009B07F5 /* FBSDKUtilityTests.m in Sources */,
+				89C8B19C1A8D7A27009B07F5 /* FBSDKUtilityTests.swift in Sources */,
 				F41979282475A20E003007CC /* FBSDKTypeUtilityTests.m in Sources */,
 				C51121CC20A27EF50041DC94 /* FBSDKSampleEventBinding.m in Sources */,
 				F916581524F6BAB200BB759A /* FBSDKSKAdNetworkConversionConfigurationTests.m in Sources */,
