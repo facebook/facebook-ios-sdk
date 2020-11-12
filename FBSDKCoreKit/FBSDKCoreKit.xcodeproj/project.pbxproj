@@ -466,7 +466,7 @@
 		894C0B111A7021F8009137EF /* FBSDKBase64.h in Headers */ = {isa = PBXBuildFile; fileRef = 894C0B0F1A7021F8009137EF /* FBSDKBase64.h */; };
 		894C0B121A7021F8009137EF /* FBSDKBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 894C0B101A7021F8009137EF /* FBSDKBase64.m */; };
 		894C0B3A1A702EBE009137EF /* FBSDKBridgeAPIProtocolNativeV1Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 894C0B391A702EBE009137EF /* FBSDKBridgeAPIProtocolNativeV1Tests.m */; };
-		894C0B4A1A70524F009137EF /* FBSDKBase64Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 894C0B491A70524F009137EF /* FBSDKBase64Tests.m */; };
+		894C0B4A1A70524F009137EF /* FBSDKBase64Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894C0B491A70524F009137EF /* FBSDKBase64Tests.swift */; };
 		894C0B611A7150AC009137EF /* FBSDKError.h in Headers */ = {isa = PBXBuildFile; fileRef = 894C0B5F1A7150AC009137EF /* FBSDKError.h */; };
 		894C0B621A7150AC009137EF /* FBSDKError.m in Sources */ = {isa = PBXBuildFile; fileRef = 894C0B601A7150AC009137EF /* FBSDKError.m */; };
 		894C0B681A7150CC009137EF /* FBSDKConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 894C0B661A7150CC009137EF /* FBSDKConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1338,7 +1338,7 @@
 		894C0B0F1A7021F8009137EF /* FBSDKBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKBase64.h; sourceTree = "<group>"; };
 		894C0B101A7021F8009137EF /* FBSDKBase64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKBase64.m; sourceTree = "<group>"; };
 		894C0B391A702EBE009137EF /* FBSDKBridgeAPIProtocolNativeV1Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKBridgeAPIProtocolNativeV1Tests.m; sourceTree = "<group>"; };
-		894C0B491A70524F009137EF /* FBSDKBase64Tests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKBase64Tests.m; sourceTree = "<group>"; };
+		894C0B491A70524F009137EF /* FBSDKBase64Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBSDKBase64Tests.swift; sourceTree = "<group>"; };
 		894C0B5F1A7150AC009137EF /* FBSDKError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKError.h; sourceTree = "<group>"; };
 		894C0B601A7150AC009137EF /* FBSDKError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKError.m; sourceTree = "<group>"; };
 		894C0B661A7150CC009137EF /* FBSDKConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKConstants.h; sourceTree = "<group>"; };
@@ -2114,7 +2114,7 @@
 		894C0B481A705244009137EF /* Base64 */ = {
 			isa = PBXGroup;
 			children = (
-				894C0B491A70524F009137EF /* FBSDKBase64Tests.m */,
+				894C0B491A70524F009137EF /* FBSDKBase64Tests.swift */,
 			);
 			name = Base64;
 			path = FBSDKCoreKitTests/Internal/Base64;
@@ -4115,7 +4115,7 @@
 				C77C07A62486BAC600345460 /* FBSDKRestrictiveDataFilterTests.m in Sources */,
 				F4E50155243648A100C99262 /* FBSDKServerConfigurationFixtures.m in Sources */,
 				F4D8D8FA242293ED00C28384 /* FBSDKMonitorNetworkerTests.m in Sources */,
-				894C0B4A1A70524F009137EF /* FBSDKBase64Tests.m in Sources */,
+				894C0B4A1A70524F009137EF /* FBSDKBase64Tests.swift in Sources */,
 				F420D1852433B73E00D4FA82 /* FBSDKMonitorConfigurationTests.m in Sources */,
 				F43960D02425513100C1868F /* FakeMonitorStore.m in Sources */,
 				894C0B3A1A702EBE009137EF /* FBSDKBridgeAPIProtocolNativeV1Tests.m in Sources */,
