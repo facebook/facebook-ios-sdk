@@ -907,7 +907,7 @@
 		F4713D7D2375DA8200748692 /* FBSDKSuggestedEventsIndexer.m in Sources */ = {isa = PBXBuildFile; fileRef = BF247C812374E1B200A522C0 /* FBSDKSuggestedEventsIndexer.m */; };
 		F47E560D24E1EA8D001497C9 /* FakeBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = F47E55FB24E1EA8D001497C9 /* FakeBundle.m */; };
 		F48A6AED24170D29002C6CA1 /* TestMonitorEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = F48A6AEC24170D29002C6CA1 /* TestMonitorEntry.m */; };
-		F492C0A224E1F5F600BA21F7 /* KeychainStoreSpy.m in Sources */ = {isa = PBXBuildFile; fileRef = F492C0A024E1F5F600BA21F7 /* KeychainStoreSpy.m */; };
+		F492C0A224E1F5F600BA21F7 /* KeychainStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F492C0A024E1F5F600BA21F7 /* KeychainStoreSpy.swift */; };
 		F492C0A324E1F5F600BA21F7 /* UserDefaultsSpy.m in Sources */ = {isa = PBXBuildFile; fileRef = F492C0A124E1F5F600BA21F7 /* UserDefaultsSpy.m */; };
 		F496E58F24E49DBC006231A2 /* SampleAppEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = F496E58E24E49DBC006231A2 /* SampleAppEvents.swift */; };
 		F496E5FE24E5D0D5006231A2 /* FakeAccessTokenCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = F496E5FD24E5D0D5006231A2 /* FakeAccessTokenCache.swift */; };
@@ -1560,9 +1560,8 @@
 		F487DBD9231EC293008416A9 /* AccessToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessToken.swift; sourceTree = "<group>"; };
 		F48A6AEB24170D29002C6CA1 /* TestMonitorEntry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestMonitorEntry.h; sourceTree = "<group>"; };
 		F48A6AEC24170D29002C6CA1 /* TestMonitorEntry.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestMonitorEntry.m; sourceTree = "<group>"; };
-		F492C09024E1F5F600BA21F7 /* KeychainStoreSpy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainStoreSpy.h; sourceTree = "<group>"; };
 		F492C09F24E1F5F600BA21F7 /* UserDefaultsSpy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDefaultsSpy.h; sourceTree = "<group>"; };
-		F492C0A024E1F5F600BA21F7 /* KeychainStoreSpy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainStoreSpy.m; sourceTree = "<group>"; };
+		F492C0A024E1F5F600BA21F7 /* KeychainStoreSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainStoreSpy.swift; sourceTree = "<group>"; };
 		F492C0A124E1F5F600BA21F7 /* UserDefaultsSpy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsSpy.m; sourceTree = "<group>"; };
 		F496E58E24E49DBC006231A2 /* SampleAppEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SampleAppEvents.swift; path = FBSDKCoreKitTests/Internal/Helpers/SampleAppEvents.swift; sourceTree = SOURCE_ROOT; };
 		F496E5FD24E5D0D5006231A2 /* FakeAccessTokenCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeAccessTokenCache.swift; sourceTree = "<group>"; };
@@ -2652,8 +2651,7 @@
 			children = (
 				F402AFE4255B4D1C00473083 /* FBSDKBridgeAPI+Testing.h */,
 				F496E58E24E49DBC006231A2 /* SampleAppEvents.swift */,
-				F492C09024E1F5F600BA21F7 /* KeychainStoreSpy.h */,
-				F492C0A024E1F5F600BA21F7 /* KeychainStoreSpy.m */,
+				F492C0A024E1F5F600BA21F7 /* KeychainStoreSpy.swift */,
 				F492C09F24E1F5F600BA21F7 /* UserDefaultsSpy.h */,
 				F492C0A124E1F5F600BA21F7 /* UserDefaultsSpy.m */,
 				F47E560C24E1EA8D001497C9 /* FakeBundle.h */,
@@ -4159,7 +4157,7 @@
 				5DB612A823593AB600150851 /* FBSDKCrashShieldTests.m in Sources */,
 				E493252D23F7C60E0000B63A /* FBSDKModelParserTests.mm in Sources */,
 				F496E5FE24E5D0D5006231A2 /* FakeAccessTokenCache.swift in Sources */,
-				F492C0A224E1F5F600BA21F7 /* KeychainStoreSpy.m in Sources */,
+				F492C0A224E1F5F600BA21F7 /* KeychainStoreSpy.swift in Sources */,
 				5D68D7D822BAEEF60063A3E2 /* FBSDKTimeSpentDataTests.m in Sources */,
 				9D3AF4661A9ED47900EEF724 /* FBSDKGraphRequestConnectionTests.m in Sources */,
 				BF1C64E624039AD50052C580 /* FBSDKViewHierarchyTests.m in Sources */,

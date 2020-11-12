@@ -16,12 +16,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKKeychainStore.h"
+@objcMembers
+class KeychainStoreSpy: KeychainStore {
 
-NS_ASSUME_NONNULL_BEGIN
+  override func setData(_ value: Data, forKey key: String, accessibility: CFTypeRef) -> Bool {
+    // Right now just return true. Later will add actual spying
+    return true
+  }
 
-@interface KeychainStoreSpy : FBSDKKeychainStore
+  override func setDictionary(_ value: [AnyHashable: Any], forKey key: String, accessibility: CFTypeRef) -> Bool {
+    // Right now just return true. Later will add actual spying
+    return true
+  }
 
-@end
-
-NS_ASSUME_NONNULL_END
+  override func setString(_ value: String, forKey key: String, accessibility: CFTypeRef) -> Bool {
+    // Right now just return true. Later will add actual spying
+    return true
+  }
+}

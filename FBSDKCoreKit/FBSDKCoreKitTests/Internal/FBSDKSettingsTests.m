@@ -25,7 +25,6 @@
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKTestCase.h"
 #import "FakeBundle.h"
-#import "KeychainStoreSpy.h"
 #import "UserDefaultsSpy.h"
 
 @interface FBSDKSettings ()
