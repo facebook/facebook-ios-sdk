@@ -19,8 +19,6 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
-#import "NotificationCenterSpy.h"
-
 #import "AppDelegateObserverFake.h"
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitTestUtility.h"

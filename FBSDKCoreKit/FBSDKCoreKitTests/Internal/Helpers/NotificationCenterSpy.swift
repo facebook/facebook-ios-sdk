@@ -16,13 +16,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "NotificationCenterSpy.h"
+import Foundation
 
-@implementation NotificationCenterSpy
-
-- (void)addObserver:(id)observer selector:(SEL)aSelector name:(NSNotificationName)aName object:(id)anObject
-{
-  // TODO: capture values
+class NotificationCenterSpy: NotificationCenter {
+  override func addObserver(_ observer: Any, selector: Selector, name: NSNotification.Name?, object: Any?) {
+    // TODO: capture values
+  }
 }
-
-@end

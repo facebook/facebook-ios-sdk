@@ -959,7 +959,7 @@
 		F4EB31BB2540A1B800736B67 /* SampleGraphRequestConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EB31BA2540A1B800736B67 /* SampleGraphRequestConnection.swift */; };
 		F4EB31D32540A35800736B67 /* SampleGraphRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EB31D22540A35800736B67 /* SampleGraphRequest.swift */; };
 		F4EB33CE2542323500736B67 /* SampleRawRemotePermissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EB33CD2542323500736B67 /* SampleRawRemotePermissions.swift */; };
-		F4ED90DB24EDDC610048D283 /* NotificationCenterSpy.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ED90DA24EDDC610048D283 /* NotificationCenterSpy.m */; };
+		F4ED90DB24EDDC610048D283 /* NotificationCenterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ED90DA24EDDC610048D283 /* NotificationCenterSpy.swift */; };
 		F4F98C5324CB820A00F0D6EC /* FBSDKSafeCast.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F98C4A24CB820A00F0D6EC /* FBSDKSafeCast.m */; };
 		F4F98C5424CB820A00F0D6EC /* FBSDKSafeCast.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F98C4A24CB820A00F0D6EC /* FBSDKSafeCast.m */; };
 		F4F98C5524CB820A00F0D6EC /* FBSDKSafeCast.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F98C4A24CB820A00F0D6EC /* FBSDKSafeCast.m */; };
@@ -1605,8 +1605,7 @@
 		F4EB31BA2540A1B800736B67 /* SampleGraphRequestConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleGraphRequestConnection.swift; sourceTree = "<group>"; };
 		F4EB31D22540A35800736B67 /* SampleGraphRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleGraphRequest.swift; sourceTree = "<group>"; };
 		F4EB33CD2542323500736B67 /* SampleRawRemotePermissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleRawRemotePermissions.swift; sourceTree = "<group>"; };
-		F4ED90D924EDDC610048D283 /* NotificationCenterSpy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationCenterSpy.h; sourceTree = "<group>"; };
-		F4ED90DA24EDDC610048D283 /* NotificationCenterSpy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationCenterSpy.m; sourceTree = "<group>"; };
+		F4ED90DA24EDDC610048D283 /* NotificationCenterSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenterSpy.swift; sourceTree = "<group>"; };
 		F4F98C4A24CB820A00F0D6EC /* FBSDKSafeCast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKSafeCast.m; sourceTree = "<group>"; };
 		F4FE997D24D906B9008879A4 /* FBSDKJSONValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKJSONValue.m; sourceTree = "<group>"; };
 		F916581424F6BAB200BB759A /* FBSDKSKAdNetworkConversionConfigurationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKSKAdNetworkConversionConfigurationTests.m; sourceTree = "<group>"; };
@@ -2669,8 +2668,7 @@
 				F496E60E24E5D195006231A2 /* SampleAccessToken.swift */,
 				F496E61024E6049A006231A2 /* AppDelegateObserverFake.h */,
 				F496E61124E6049A006231A2 /* AppDelegateObserverFake.m */,
-				F4ED90D924EDDC610048D283 /* NotificationCenterSpy.h */,
-				F4ED90DA24EDDC610048D283 /* NotificationCenterSpy.m */,
+				F4ED90DA24EDDC610048D283 /* NotificationCenterSpy.swift */,
 				F4E50152243648A100C99262 /* FBSDKServerConfigurationFixtures.h */,
 				F4E50153243648A100C99262 /* FBSDKServerConfigurationFixtures.m */,
 				F4EB31D22540A35800736B67 /* SampleGraphRequest.swift */,
@@ -4106,7 +4104,7 @@
 				5D2165E122264453004952D8 /* FBSDKAppEventsTests.m in Sources */,
 				F496E58F24E49DBC006231A2 /* SampleAppEvents.swift in Sources */,
 				9D18A8DB1A95405A00A41042 /* FBSDKAppEventsStateTests.m in Sources */,
-				F4ED90DB24EDDC610048D283 /* NotificationCenterSpy.m in Sources */,
+				F4ED90DB24EDDC610048D283 /* NotificationCenterSpy.swift in Sources */,
 				F93680E3249D490600446E35 /* FBSDKSettingsTests.m in Sources */,
 				E4C2B97A23867327002335A4 /* FBSDKModelRuntimeTests.mm in Sources */,
 				F496E61224E6049A006231A2 /* AppDelegateObserverFake.m in Sources */,
