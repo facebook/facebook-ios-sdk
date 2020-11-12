@@ -559,6 +559,21 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
   _authenticationSessionCompletionHandler = handler;
 }
 
+- (void)setActive:(BOOL)isActive
+{
+  _active = isActive;
+}
+
+- (BOOL)expectingBackground
+{
+  return _expectingBackground;
+}
+
+- (void)setExpectingBackground:(BOOL)isExpectingBackground
+{
+  _expectingBackground = isExpectingBackground;
+}
+
  #endif
 
 @end

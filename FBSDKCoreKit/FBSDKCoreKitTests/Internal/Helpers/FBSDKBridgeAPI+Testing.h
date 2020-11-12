@@ -54,13 +54,19 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 
 - (id<FBSDKAuthenticationSession>)authenticationSession;
 - (FBSDKAuthenticationSession)authenticationSessionState;
+- (BOOL)expectingBackground;
 
 - (void)applicationWillResignActive:(UIApplication *)application;
 - (void)applicationDidBecomeActive:(UIApplication *)application;
+- (void)applicationDidEnterBackground:(UIApplication *)application;
+- (BOOL)            application:(UIApplication *)application
+  didFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
 
 - (void)setAuthenticationSession:(id<FBSDKAuthenticationSession>)session;
 - (void)setAuthenticationSessionState:(FBSDKAuthenticationSession)state;
 - (void)setAuthenticationSessionCompletionHandler:(FBSDKAuthenticationCompletionHandler)handler;
+- (void)setActive:(BOOL)isActive;
+- (void)setExpectingBackground:(BOOL)isExpectingBackground;
 
 @end
 
