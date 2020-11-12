@@ -112,7 +112,9 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
         errorDomain = @"com.apple.SafariServices.Authentication";
       }
       NSError *error = [FBSDKError errorWithDomain:errorDomain code:1 message:nil];
-      _authenticationSessionCompletionHandler(nil, error);
+      if (_authenticationSessionCompletionHandler) {
+        _authenticationSessionCompletionHandler(nil, error);
+      }
       isRequestingWebAuthenticationSession = [self _isRequestingWebAuthenticationSession];
     }
   }
@@ -529,6 +531,35 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
   return UIApplication.sharedApplication.keyWindow;
 }
  #pragma clang diagnostic pop
+
+ #if DEBUG
+
+- (id<FBSDKAuthenticationSession>)authenticationSession
+{
+  return _authenticationSession;
+}
+
+- (void)setAuthenticationSession:(id<FBSDKAuthenticationSession>)session
+{
+  _authenticationSession = session;
+}
+
+- (FBSDKAuthenticationSession)authenticationSessionState
+{
+  return _authenticationSessionState;
+}
+
+- (void)setAuthenticationSessionState:(FBSDKAuthenticationSession)state
+{
+  _authenticationSessionState = state;
+}
+
+- (void)setAuthenticationSessionCompletionHandler:(FBSDKAuthenticationCompletionHandler)handler
+{
+  _authenticationSessionCompletionHandler = handler;
+}
+
+ #endif
 
 @end
 

@@ -16,10 +16,39 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+import Foundation
 
-#import "FBSDKEventDeactivationManager.h"
-#import "FBSDKServerConfigurationFixtures.h"
-#import "FBSDKBridgeAPI+Testing.h"
-#import "FBSDKTestCase.h"
-#import "FakeBundle.h"
+@objcMembers
+public class AuthenticationSessionSpy: NSObject, AuthenticationSessionHandling {
+
+  public var capturedUrl: URL
+  public var capturedCallbackUrlScheme: String?
+  public var capturedCompletionHandler: FBSDKAuthenticationCompletionHandler?
+  public var startCallCount = 0
+  public var cancelCallCount = 0
+
+  public static var makeDefaultSpy: AuthenticationSessionSpy {
+    guard let url = URL(string: "http://example.com") else { fatalError("Url creation failed") }
+
+    return AuthenticationSessionSpy(url: url, callbackURLScheme: nil) { _, _ in }
+  }
+
+  public required init(
+    url: URL,
+    callbackURLScheme: String?,
+    completionHandler: @escaping FBSDKAuthenticationCompletionHandler
+  ) {
+    capturedUrl = url
+    capturedCallbackUrlScheme = callbackURLScheme
+    capturedCompletionHandler = completionHandler
+  }
+
+  public func start() -> Bool {
+    startCallCount += 1
+    return true
+  }
+
+  public func cancel() {
+    cancelCallCount += 1
+  }
+}
