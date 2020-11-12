@@ -31,6 +31,13 @@
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKTestCase.h"
 
+@interface FBSDKGraphRequestConnection (Testing)
+
+- (NSMutableURLRequest *)requestWithBatch:(NSArray *)requests
+                                  timeout:(NSTimeInterval)timeout;
+
+@end
+
 @interface FBSDKGraphRequestConnectionTests : FBSDKTestCase <FBSDKGraphRequestConnectionDelegate>
 
 @property (nonatomic, copy) void (^requestConnectionStartingCallback)(FBSDKGraphRequestConnection *connection);
@@ -579,6 +586,40 @@
     XCTAssertNil(error);
   }];
   [mockPiggybackManager stopMocking];
+}
+
+- (void)testRequestWithBatchConstructionWithSingleGetRequest
+{
+  FBSDKGraphRequest *singleRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @"with_suffix"}];
+  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
+  [connection addRequest:singleRequest completionHandler:^(FBSDKGraphRequestConnection *_Nullable connection, id _Nullable result, NSError *_Nullable error) {}];
+  NSURLRequest *request = [connection requestWithBatch:connection.requests timeout:0];
+
+  NSURLComponents *urlComponents = [NSURLComponents componentsWithString:request.URL.absoluteString];
+  XCTAssertEqualObjects(urlComponents.host, @"graph.facebook.com");
+  XCTAssertTrue([urlComponents.path containsString:@"me"]);
+  XCTAssertEqualObjects(request.HTTPMethod, @"GET");
+  XCTAssertTrue(request.HTTPBody.length == 0);
+  XCTAssertEqualObjects([request valueForHTTPHeaderField:@"Content-Type"], @"application/json");
+}
+
+- (void)testRequestWithBatchConstructionWithSinglePostRequest
+{
+  NSDictionary *parameters = @{
+    @"first_key" : @"first_value",
+  };
+  FBSDKGraphRequest *singleRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"activities" parameters:parameters HTTPMethod:FBSDKHTTPMethodPOST];
+  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
+  [connection addRequest:singleRequest completionHandler:^(FBSDKGraphRequestConnection *_Nullable connection, id _Nullable result, NSError *_Nullable error) {}];
+  NSURLRequest *request = [connection requestWithBatch:connection.requests timeout:0];
+
+  NSURLComponents *urlComponents = [NSURLComponents componentsWithString:request.URL.absoluteString];
+  XCTAssertEqualObjects(urlComponents.host, @"graph.facebook.com");
+  XCTAssertTrue([urlComponents.path containsString:@"activities"]);
+  XCTAssertEqualObjects(request.HTTPMethod, @"POST");
+  XCTAssertTrue(request.HTTPBody.length > 0);
+  XCTAssertEqualObjects([request valueForHTTPHeaderField:@"Content-Encoding"], @"gzip");
+  XCTAssertEqualObjects([request valueForHTTPHeaderField:@"Content-Type"], @"application/json");
 }
 
 #pragma mark - Error recovery.

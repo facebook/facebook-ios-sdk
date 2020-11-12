@@ -497,10 +497,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
     request.HTTPMethod = @"POST";
   }
 
-  NSData *compressedData;
-  if ([request.HTTPMethod isEqualToString:@"POST"] && (compressedData = [body compressedData])) {
-    request.HTTPBody = compressedData;
-    [request setValue:@"gzip" forHTTPHeaderField:@"Content-Encoding"];
+  if ([request.HTTPMethod isEqualToString:@"POST"]) {
+    [self addBody:body toPostRequest:request];
   } else {
     request.HTTPBody = body.data;
   }
@@ -511,6 +509,17 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [self logRequest:request bodyLength:(request.HTTPBody.length / 1024) bodyLogger:bodyLogger attachmentLogger:attachmentLogger];
 
   return request;
+}
+
+- (void)addBody:(FBSDKGraphRequestBody *)body toPostRequest:(NSMutableURLRequest *)request
+{
+  NSData *compressedData;
+  if ((compressedData = [body compressedData])) {
+    request.HTTPBody = compressedData;
+    [request setValue:@"gzip" forHTTPHeaderField:@"Content-Encoding"];
+  } else {
+    request.HTTPBody = body.data;
+  }
 }
 
 //

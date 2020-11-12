@@ -16,6 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+@class FBSDKGraphRequestBody;
 @class FBSDKURLSession;
 
 #if SWIFT_PACKAGE
@@ -35,5 +36,12 @@
  @param forBatch whether the request is a batch request.
  */
 - (NSString *)urlStringForSingleRequest:(FBSDKGraphRequest *)request forBatch:(BOOL)forBatch;
+
+/**
+ Add the specified body as the HTTPBody of the specified request.
+ @param body The FBSDKGraphRequestBody to attach to the request.
+ @param request The NSURLRequest to attach the body to.
+ */
+- (void)addBody:(FBSDKGraphRequestBody *)body toPostRequest:(NSMutableURLRequest *)request;
 
 @end
