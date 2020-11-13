@@ -28,6 +28,7 @@
   #import <FBSDKCoreKit/FBSDKCoreKit.h>
  #endif
 
+ #import "FBSDKIDToken.h"
  #import "FBSDKLoginConstants.h"
  #import "FBSDKLoginError.h"
  #import "FBSDKLoginManager+Internal.h"
@@ -125,13 +126,17 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   if ((self = [super init]) != nil) {
     _parameters = [[FBSDKLoginCompletionParameters alloc] init];
 
-    _parameters.accessTokenString = parameters[@"access_token"];
-    _parameters.nonceString = parameters[@"nonce"];
+    FBSDKIDToken *idToken = [[FBSDKIDToken alloc] initWithTokenString:parameters[@"id_token"]];
 
-    if (_parameters.accessTokenString.length > 0 || _parameters.nonceString.length > 0) {
+    if ([parameters[@"access_token"] length] > 0
+        || [parameters[@"nonce"] length] > 0
+        || idToken) {
       [self setParametersWithDictionary:parameters appID:appID];
+
+      if (idToken) {
+        [self setParametersWithIDToken:idToken];
+      }
     } else {
-      _parameters.accessTokenString = nil;
       [self setErrorWithDictionary:parameters];
     }
   }
@@ -161,6 +166,9 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
 
   NSString *signedRequest = parameters[@"signed_request"];
   NSString *userID = parameters[@"user_id"];
+
+  _parameters.accessTokenString = parameters[@"access_token"];
+  _parameters.nonceString = parameters[@"nonce"];
 
   // check the string length so that we assign an empty set rather than a set with an empty string
   _parameters.permissions = (grantedPermissionsString.length > 0)
@@ -267,6 +275,15 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
                                                           }];
 
   [connection start];
+}
+
+- (void)setParametersWithIDToken:(FBSDKIDToken *)idToken
+{
+  if (!idToken || !idToken.claims) {
+    return;
+  }
+
+  // TODO(T78739549): populate parameters with data from claims
 }
 
 @end
