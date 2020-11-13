@@ -837,7 +837,7 @@
 		F4210E36241B00790061F56D /* FBSDKMethodUsageMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = F4210E2D241B00790061F56D /* FBSDKMethodUsageMonitor.m */; };
 		F4210E37241B00790061F56D /* FBSDKMethodUsageMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = F4210E2D241B00790061F56D /* FBSDKMethodUsageMonitor.m */; };
 		F428430B246B427700CD4393 /* FBSDKServerConfigurationManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F428430A246B427700CD4393 /* FBSDKServerConfigurationManagerTests.m */; };
-		F43960D02425513100C1868F /* FakeMonitorStore.m in Sources */ = {isa = PBXBuildFile; fileRef = F43960CF2425513100C1868F /* FakeMonitorStore.m */; };
+		F43960D02425513100C1868F /* FakeMonitorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43960CF2425513100C1868F /* FakeMonitorStore.swift */; };
 		F462DBF023B94C0F00FFCECA /* FBSDKCrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 894C0B071A702194009137EF /* FBSDKCrypto.h */; };
 		F462DBF123B94C1000FFCECA /* FBSDKCrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 894C0B071A702194009137EF /* FBSDKCrypto.h */; };
 		F462DBFD23B9569000FFCECA /* FBSDKAccessTokenCaching.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D32A83B1A69941A000A936D /* FBSDKAccessTokenCaching.h */; };
@@ -1544,8 +1544,7 @@
 		F4210E2C241B00790061F56D /* FBSDKMethodUsageMonitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKMethodUsageMonitor.h; sourceTree = "<group>"; };
 		F4210E2D241B00790061F56D /* FBSDKMethodUsageMonitor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKMethodUsageMonitor.m; sourceTree = "<group>"; };
 		F428430A246B427700CD4393 /* FBSDKServerConfigurationManagerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKServerConfigurationManagerTests.m; sourceTree = "<group>"; };
-		F43960CE2425513100C1868F /* FakeMonitorStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FakeMonitorStore.h; sourceTree = "<group>"; };
-		F43960CF2425513100C1868F /* FakeMonitorStore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FakeMonitorStore.m; sourceTree = "<group>"; };
+		F43960CF2425513100C1868F /* FakeMonitorStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeMonitorStore.swift; sourceTree = "<group>"; };
 		F468B29C24C2456F00979F8D /* FBSDKRestrictiveData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKRestrictiveData.h; sourceTree = "<group>"; };
 		F468B29D24C2456F00979F8D /* FBSDKRestrictiveData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKRestrictiveData.m; sourceTree = "<group>"; };
 		F468B2E024C25AB500979F8D /* FBSDKTypeUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKTypeUtility.m; sourceTree = "<group>"; };
@@ -2593,8 +2592,7 @@
 				F4181B332416EC06006DB452 /* FBSDKMonitorTests.m */,
 				F48A6AEB24170D29002C6CA1 /* TestMonitorEntry.h */,
 				F48A6AEC24170D29002C6CA1 /* TestMonitorEntry.m */,
-				F43960CE2425513100C1868F /* FakeMonitorStore.h */,
-				F43960CF2425513100C1868F /* FakeMonitorStore.m */,
+				F43960CF2425513100C1868F /* FakeMonitorStore.swift */,
 				F4A52AEC242A7D12005F65CE /* FBSDKPerformanceMonitorEntryTests.m */,
 				F4A52B0A242A99C8005F65CE /* FBSDKPerformanceMonitorTests.m */,
 				F420D1842433B73E00D4FA82 /* FBSDKMonitorConfigurationTests.m */,
@@ -4121,7 +4119,7 @@
 				F4D8D8FA242293ED00C28384 /* FBSDKMonitorNetworkerTests.m in Sources */,
 				894C0B4A1A70524F009137EF /* FBSDKBase64Tests.swift in Sources */,
 				F420D1852433B73E00D4FA82 /* FBSDKMonitorConfigurationTests.m in Sources */,
-				F43960D02425513100C1868F /* FakeMonitorStore.m in Sources */,
+				F43960D02425513100C1868F /* FakeMonitorStore.swift in Sources */,
 				894C0B3A1A702EBE009137EF /* FBSDKBridgeAPIProtocolNativeV1Tests.m in Sources */,
 				F4E50156243648A100C99262 /* FBSDKServerConfigurationTests.m in Sources */,
 				F496E60F24E5D195006231A2 /* SampleAccessToken.swift in Sources */,

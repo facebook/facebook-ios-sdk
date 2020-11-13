@@ -20,8 +20,8 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKCoreKit+Internal.h"
+#import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKTestCase.h"
-#import "FakeMonitorStore.h"
 #import "TestMonitorEntry.h"
 
 @interface FBSDKMonitor (Testing)

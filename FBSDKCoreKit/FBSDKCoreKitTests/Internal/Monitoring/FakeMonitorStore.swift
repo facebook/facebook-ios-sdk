@@ -16,19 +16,30 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+@objcMembers
+public class FakeMonitorStore: FBSDKMonitorStore {
 
-#import "FBSDKCoreKit+Internal.h"
+  public var clearWasCalled = false
+  public var retrieveEntriesWasCalled = false
+  public var persistWasCalled = false
+  public var capturedPersistedEntries: [FBSDKMonitorEntry] = []
 
-NS_ASSUME_NONNULL_BEGIN
+  override public func persist(_ entries: [FBSDKMonitorEntry]) {
+    super.persist(entries)
 
-@interface FakeMonitorStore : FBSDKMonitorStore
+    persistWasCalled = true
+    capturedPersistedEntries = entries
+  }
 
-@property (nonatomic) BOOL clearWasCalled;
-@property (nonatomic) BOOL retrieveEntriesWasCalled;
-@property (nonatomic) BOOL persistWasCalled;
-@property (nonatomic, copy) NSArray<id<FBSDKMonitorEntry>> *capturedPersistedEntries;
+  override public func retrieveEntries() -> [FBSDKMonitorEntry] {
+    retrieveEntriesWasCalled = true
 
-@end
+    return super.retrieveEntries()
+  }
 
-NS_ASSUME_NONNULL_END
+  override public func clear() {
+    super.clear()
+
+    clearWasCalled = true
+  }
+}
