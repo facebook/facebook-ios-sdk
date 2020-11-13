@@ -322,28 +322,6 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   OCMVerify([mockAppEventsState addEvent:OCMArg.any isImplicit:NO]);
 }
 
-- (void)testIsSensitiveUserData
-{
-  NSString *text = @"test@sample.com";
-  XCTAssertTrue([FBSDKAppEventsUtility isSensitiveUserData:text]);
-
-  text = @"4716 5255 0221 9085";
-  XCTAssertTrue([FBSDKAppEventsUtility isSensitiveUserData:text]);
-
-  text = @"4716525502219085";
-  XCTAssertTrue([FBSDKAppEventsUtility isSensitiveUserData:text]);
-
-  text = @"4716525502219086";
-  XCTAssertFalse([FBSDKAppEventsUtility isSensitiveUserData:text]);
-
-  text = @"";
-  XCTAssertFalse([FBSDKAppEventsUtility isSensitiveUserData:text]);
-
-  // number of digits less than 9 will not be considered as credit card number
-  text = @"4716525";
-  XCTAssertFalse([FBSDKAppEventsUtility isSensitiveUserData:text]);
-}
-
 - (void)testFlushReasonToString
 {
   NSString *result1 = [FBSDKAppEventsUtility flushReasonToString:FBSDKAppEventsFlushReasonExplicit];

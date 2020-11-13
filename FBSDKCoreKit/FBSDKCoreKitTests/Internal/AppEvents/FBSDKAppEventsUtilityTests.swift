@@ -16,14 +16,28 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+import Foundation
 
-#import "FBSDKBridgeAPI+Testing.h"
-#import "FBSDKEventDeactivationManager.h"
-#import "FBSDKServerConfigurationFixtures.h"
-#import "FBSDKTestCase.h"
-#import "FakeBundle.h"
+extension FBSDKAppEventsUtilityTests {
 
-// Interfaces for Swift extensions on Objective-C Test classes
-@interface FBSDKAppEventsUtilityTests : FBSDKTestCase
-@end
+  func testIsSensitiveUserData() {
+    var text = "test@sample.com"
+    XCTAssertTrue(AppEventsUtility.isSensitiveUserData(text))
+
+    text = "4716 5255 0221 9085"
+    XCTAssertTrue(AppEventsUtility.isSensitiveUserData(text))
+
+    text = "4716525502219085"
+    XCTAssertTrue(AppEventsUtility.isSensitiveUserData(text))
+
+    text = "4716525502219086"
+    XCTAssertFalse(AppEventsUtility.isSensitiveUserData(text))
+
+    text = ""
+    XCTAssertFalse(AppEventsUtility.isSensitiveUserData(text))
+
+    // number of digits less than 9 will not be considered as credit card number
+    text = "4716525"
+    XCTAssertFalse(AppEventsUtility.isSensitiveUserData(text))
+  }
+}
