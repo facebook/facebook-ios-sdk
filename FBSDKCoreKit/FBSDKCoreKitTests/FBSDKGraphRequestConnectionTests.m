@@ -592,7 +592,7 @@
 {
   FBSDKGraphRequest *singleRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @"with_suffix"}];
   FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
-  [connection addRequest:singleRequest completionHandler:^(FBSDKGraphRequestConnection *_Nullable connection, id _Nullable result, NSError *_Nullable error) {}];
+  [connection addRequest:singleRequest completionHandler:^(FBSDKGraphRequestConnection *_Nullable _connection, id _Nullable result, NSError *_Nullable error) {}];
   NSURLRequest *request = [connection requestWithBatch:connection.requests timeout:0];
 
   NSURLComponents *urlComponents = [NSURLComponents componentsWithString:request.URL.absoluteString];
@@ -610,7 +610,7 @@
   };
   FBSDKGraphRequest *singleRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"activities" parameters:parameters HTTPMethod:FBSDKHTTPMethodPOST];
   FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
-  [connection addRequest:singleRequest completionHandler:^(FBSDKGraphRequestConnection *_Nullable connection, id _Nullable result, NSError *_Nullable error) {}];
+  [connection addRequest:singleRequest completionHandler:^(FBSDKGraphRequestConnection *_Nullable _connection, id _Nullable result, NSError *_Nullable error) {}];
   NSURLRequest *request = [connection requestWithBatch:connection.requests timeout:0];
 
   NSURLComponents *urlComponents = [NSURLComponents componentsWithString:request.URL.absoluteString];
