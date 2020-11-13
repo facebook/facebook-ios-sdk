@@ -16,17 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+@objcMembers
+public class ApplicationDelegateObserverFake: NSObject, FBSDKApplicationObserving {
+  public private(set) var didFinishLaunchingCallCount = 0
+  public private(set) var capturedLaunchOptions: [UIApplication.LaunchOptionsKey: Any]?
 
-#import "FBSDKApplicationObserving.h"
-
-NS_ASSUME_NONNULL_BEGIN
-
-@interface ApplicationDelegateObserverFake : NSObject <FBSDKApplicationObserving>
-
-@property (readonly, assign) int didFinishLaunchingCallCount;
-@property (nullable, readonly, copy) NSDictionary *capturedLaunchOptions;
-
-@end
-
-NS_ASSUME_NONNULL_END
+  public func application(_ application: UIApplication,
+                          didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+    didFinishLaunchingCallCount += 1
+    capturedLaunchOptions = launchOptions
+    return true
+  }
+}

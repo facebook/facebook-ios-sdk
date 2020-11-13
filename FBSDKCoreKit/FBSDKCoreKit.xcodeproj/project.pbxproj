@@ -913,7 +913,7 @@
 		F496E58F24E49DBC006231A2 /* SampleAppEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = F496E58E24E49DBC006231A2 /* SampleAppEvents.swift */; };
 		F496E5FE24E5D0D5006231A2 /* FakeAccessTokenCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = F496E5FD24E5D0D5006231A2 /* FakeAccessTokenCache.swift */; };
 		F496E60F24E5D195006231A2 /* SampleAccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = F496E60E24E5D195006231A2 /* SampleAccessToken.swift */; };
-		F496E61224E6049A006231A2 /* AppDelegateObserverFake.m in Sources */ = {isa = PBXBuildFile; fileRef = F496E61124E6049A006231A2 /* AppDelegateObserverFake.m */; };
+		F496E61224E6049A006231A2 /* AppDelegateObserverFake.swift in Sources */ = {isa = PBXBuildFile; fileRef = F496E61124E6049A006231A2 /* AppDelegateObserverFake.swift */; };
 		F4A52AED242A7D12005F65CE /* FBSDKPerformanceMonitorEntryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A52AEC242A7D12005F65CE /* FBSDKPerformanceMonitorEntryTests.m */; };
 		F4A52AFE242A80F4005F65CE /* FBSDKPerformanceMonitorEntry.h in Headers */ = {isa = PBXBuildFile; fileRef = F4A52AFC242A80F4005F65CE /* FBSDKPerformanceMonitorEntry.h */; };
 		F4A52AFF242A80F4005F65CE /* FBSDKPerformanceMonitorEntry.h in Headers */ = {isa = PBXBuildFile; fileRef = F4A52AFC242A80F4005F65CE /* FBSDKPerformanceMonitorEntry.h */; };
@@ -1567,8 +1567,7 @@
 		F496E58E24E49DBC006231A2 /* SampleAppEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SampleAppEvents.swift; path = FBSDKCoreKitTests/Internal/Helpers/SampleAppEvents.swift; sourceTree = SOURCE_ROOT; };
 		F496E5FD24E5D0D5006231A2 /* FakeAccessTokenCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeAccessTokenCache.swift; sourceTree = "<group>"; };
 		F496E60E24E5D195006231A2 /* SampleAccessToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAccessToken.swift; sourceTree = "<group>"; };
-		F496E61024E6049A006231A2 /* AppDelegateObserverFake.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegateObserverFake.h; sourceTree = "<group>"; };
-		F496E61124E6049A006231A2 /* AppDelegateObserverFake.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegateObserverFake.m; sourceTree = "<group>"; };
+		F496E61124E6049A006231A2 /* AppDelegateObserverFake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateObserverFake.swift; sourceTree = "<group>"; };
 		F4A11B4824E36E5200D4C010 /* FBSDKTypeUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKTypeUtility.h; sourceTree = "<group>"; };
 		F4A11B4924E36E5200D4C010 /* FBSDKURLSessionTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKURLSessionTask.h; sourceTree = "<group>"; };
 		F4A11B4A24E36E5200D4C010 /* FBSDKSafeCast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKSafeCast.h; sourceTree = "<group>"; };
@@ -2665,8 +2664,7 @@
 				F4DE31F524DB695100297C18 /* FBSDKTestCase.m */,
 				F496E5FD24E5D0D5006231A2 /* FakeAccessTokenCache.swift */,
 				F496E60E24E5D195006231A2 /* SampleAccessToken.swift */,
-				F496E61024E6049A006231A2 /* AppDelegateObserverFake.h */,
-				F496E61124E6049A006231A2 /* AppDelegateObserverFake.m */,
+				F496E61124E6049A006231A2 /* AppDelegateObserverFake.swift */,
 				F4ED90DA24EDDC610048D283 /* NotificationCenterSpy.swift */,
 				F4E50152243648A100C99262 /* FBSDKServerConfigurationFixtures.h */,
 				F4E50153243648A100C99262 /* FBSDKServerConfigurationFixtures.m */,
@@ -4107,7 +4105,7 @@
 				F4ED90DB24EDDC610048D283 /* NotificationCenterSpy.swift in Sources */,
 				F93680E3249D490600446E35 /* FBSDKSettingsTests.m in Sources */,
 				E4C2B97A23867327002335A4 /* FBSDKModelRuntimeTests.mm in Sources */,
-				F496E61224E6049A006231A2 /* AppDelegateObserverFake.m in Sources */,
+				F496E61224E6049A006231A2 /* AppDelegateObserverFake.swift in Sources */,
 				BF5D97C3242EC2D10096D7AA /* FBSDKFeatureExtractorTests.m in Sources */,
 				5DAB023C23A1BA17005495FB /* FBSDKEventDeactivationTests.swift in Sources */,
 				7E253D831A8EB76500CCCFE7 /* FBSDKCoreKitTestUtility.m in Sources */,
