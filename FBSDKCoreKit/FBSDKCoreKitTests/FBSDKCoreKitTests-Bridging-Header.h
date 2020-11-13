@@ -18,8 +18,8 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#import "FBSDKBridgeAPI+Testing.h"
 #import "FBSDKEventDeactivationManager.h"
 #import "FBSDKServerConfigurationFixtures.h"
-#import "FBSDKBridgeAPI+Testing.h"
 #import "FBSDKTestCase.h"
 #import "FakeBundle.h"
