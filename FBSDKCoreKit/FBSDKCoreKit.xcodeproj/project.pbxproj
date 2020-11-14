@@ -792,6 +792,7 @@
 		F402AFC8255B49A500473083 /* FBSDKBridgeAPITests.m in Sources */ = {isa = PBXBuildFile; fileRef = F402AFC7255B49A500473083 /* FBSDKBridgeAPITests.m */; };
 		F402AFF3255B4EE400473083 /* AuthenticationSessionSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F402AFF2255B4EE400473083 /* AuthenticationSessionSpy.swift */; };
 		F402B062255C645600473083 /* FakeLoginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F402B061255C645600473083 /* FakeLoginManager.m */; };
+		F402B071255C740C00473083 /* ViewControllerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F402B070255C740C00473083 /* ViewControllerSpy.swift */; };
 		F40B24B2247324BB0059351C /* RawServerConfigurationResponseFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40B24B1247324BB0059351C /* RawServerConfigurationResponseFixtures.swift */; };
 		F40B24C224732DD90059351C /* Fuzzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40B24C124732DD90059351C /* Fuzzer.swift */; };
 		F40F6551241A974400B10EAA /* FBSDKMethodUsageMonitorEntryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F40F6550241A974400B10EAA /* FBSDKMethodUsageMonitorEntryTests.m */; };
@@ -803,6 +804,7 @@
 		F40F6568241A99E000B10EAA /* FBSDKMethodUsageMonitorEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = F40F6560241A99E000B10EAA /* FBSDKMethodUsageMonitorEntry.m */; };
 		F40F6569241A99E000B10EAA /* FBSDKMethodUsageMonitorEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = F40F6560241A99E000B10EAA /* FBSDKMethodUsageMonitorEntry.m */; };
 		F40F656A241A99E000B10EAA /* FBSDKMethodUsageMonitorEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = F40F6560241A99E000B10EAA /* FBSDKMethodUsageMonitorEntry.m */; };
+		F41200D0255F45FE009E323F /* FBSDKBridgeAPI+OpenUrlTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F41200CF255F45FE009E323F /* FBSDKBridgeAPI+OpenUrlTests.m */; };
 		F413883E24C76F3B001BC075 /* FBSDKSafeCastTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F413883D24C76F3B001BC075 /* FBSDKSafeCastTests.m */; };
 		F4181B342416EC06006DB452 /* FBSDKMonitorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F4181B332416EC06006DB452 /* FBSDKMonitorTests.m */; };
 		F41979282475A20E003007CC /* FBSDKTypeUtilityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F41979272475A20E003007CC /* FBSDKTypeUtilityTests.m */; };
@@ -1526,11 +1528,14 @@
 		F402AFF2255B4EE400473083 /* AuthenticationSessionSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationSessionSpy.swift; sourceTree = "<group>"; };
 		F402B060255C645600473083 /* FakeLoginManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FakeLoginManager.h; sourceTree = "<group>"; };
 		F402B061255C645600473083 /* FakeLoginManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FakeLoginManager.m; sourceTree = "<group>"; };
+		F402B070255C740C00473083 /* ViewControllerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerSpy.swift; sourceTree = "<group>"; };
 		F40B24B1247324BB0059351C /* RawServerConfigurationResponseFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawServerConfigurationResponseFixtures.swift; sourceTree = "<group>"; };
 		F40B24C124732DD90059351C /* Fuzzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fuzzer.swift; sourceTree = "<group>"; };
 		F40F6550241A974400B10EAA /* FBSDKMethodUsageMonitorEntryTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKMethodUsageMonitorEntryTests.m; sourceTree = "<group>"; };
 		F40F655F241A99E000B10EAA /* FBSDKMethodUsageMonitorEntry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKMethodUsageMonitorEntry.h; sourceTree = "<group>"; };
 		F40F6560241A99E000B10EAA /* FBSDKMethodUsageMonitorEntry.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKMethodUsageMonitorEntry.m; sourceTree = "<group>"; };
+		F41200CF255F45FE009E323F /* FBSDKBridgeAPI+OpenUrlTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "FBSDKBridgeAPI+OpenUrlTests.m"; sourceTree = "<group>"; };
+		F41200EC255F4775009E323F /* FBSDKBridgeAPITests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKBridgeAPITests.h; sourceTree = "<group>"; };
 		F413883D24C76F3B001BC075 /* FBSDKSafeCastTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = FBSDKSafeCastTests.m; path = Internal/Basics/FBSDKSafeCastTests.m; sourceTree = "<group>"; };
 		F4181B332416EC06006DB452 /* FBSDKMonitorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKMonitorTests.m; sourceTree = "<group>"; };
 		F41979272475A20E003007CC /* FBSDKTypeUtilityTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKTypeUtilityTests.m; sourceTree = "<group>"; };
@@ -2099,6 +2104,8 @@
 			children = (
 				894C0B351A702DDD009137EF /* ProtocolVersions */,
 				F402AFC7255B49A500473083 /* FBSDKBridgeAPITests.m */,
+				F41200CF255F45FE009E323F /* FBSDKBridgeAPI+OpenUrlTests.m */,
+				F41200EC255F4775009E323F /* FBSDKBridgeAPITests.h */,
 			);
 			path = BridgeAPI;
 			sourceTree = "<group>";
@@ -2673,6 +2680,7 @@
 				F4EB33CD2542323500736B67 /* SampleRawRemotePermissions.swift */,
 				5C49DF8F2554C9ED00E0FD91 /* SampleUserProfile.swift */,
 				F402AFF2255B4EE400473083 /* AuthenticationSessionSpy.swift */,
+				F402B070255C740C00473083 /* ViewControllerSpy.swift */,
 				F402B060255C645600473083 /* FakeLoginManager.h */,
 				F402B061255C645600473083 /* FakeLoginManager.m */,
 			);
@@ -4124,6 +4132,7 @@
 				2A3DA4161CB4C0F600339BD4 /* FBSDKAppLinkUtilityTests.swift in Sources */,
 				F4DE31F624DB695100297C18 /* FBSDKTestCase.m in Sources */,
 				5D2165F22229C6A3004952D8 /* FBSDKGraphRequestTests.m in Sources */,
+				F402B071255C740C00473083 /* ViewControllerSpy.swift in Sources */,
 				F931C07024F960D00088AD5F /* FBSDKSKAdNetworkRuleTests.m in Sources */,
 				7E253D811A8EAEF500CCCFE7 /* FBSDKInternalUtilityTests.m in Sources */,
 				C5F6EC861FA24FAF009EB258 /* FBSDKPaymentObserverTests.m in Sources */,
@@ -4148,6 +4157,7 @@
 				5D59BFFF23A7505D0008CA5A /* FBSDKLibAnalyzerTests.m in Sources */,
 				F4EB317F2540955500736B67 /* FBSDKGraphRequestPiggybackManagerTests.m in Sources */,
 				F40B24B2247324BB0059351C /* RawServerConfigurationResponseFixtures.swift in Sources */,
+				F41200D0255F45FE009E323F /* FBSDKBridgeAPI+OpenUrlTests.m in Sources */,
 				F46C4857243E34C600D03401 /* FBSDKMonitoringConfigurationTestHelper.swift in Sources */,
 				F4EB31D32540A35800736B67 /* SampleGraphRequest.swift in Sources */,
 				F402B062255C645600473083 /* FakeLoginManager.m in Sources */,

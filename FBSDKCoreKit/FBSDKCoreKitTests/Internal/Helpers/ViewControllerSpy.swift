@@ -16,31 +16,27 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+import UIKit
 
-#import "FBSDKURLOpening.h"
+@objcMembers
+public class ViewControllerSpy: UIViewController {
 
-NS_ASSUME_NONNULL_BEGIN
+  public var capturedDismissCompletion: (() -> Void)?
+  public var dismissWasCalled = false
+  private lazy var presenting = {
+    ViewControllerSpy.makeDefaultSpy()
+  }()
 
-/// Duplicate minimal interface for `FBSDKLoginManager` that can fulfill the `FBSDKBridgeAPI`'s runtime requirement.
-/// Used in the `FBSDKBridgeAPITests` as a spy since it will be discovered by the real class and used instead of the actual
-/// `FBSDKLoginManager`.
-@interface FBSDKLoginManager : NSObject <FBSDKURLOpening>
+  public override var presentingViewController: UIViewController? {
+    return presenting
+  }
 
-@property (class, nullable, copy) NSURL *capturedOpenUrl;
-@property (class, nullable, copy) NSString *capturedSourceApplication;
-@property (class, nullable, copy) NSString *capturedAnnotation;
-@property (class) BOOL stubbedOpenUrlSuccess;
-@property (nullable, copy) NSURL *capturedCanOpenUrl;
-@property (nullable, copy) NSString *capturedCanOpenSourceApplication;
-@property (nullable, copy) NSString *capturedCanOpenAnnotation;
-@property BOOL stubbedCanOpenUrl;
+  public override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+    dismissWasCalled = true
+    capturedDismissCompletion = completion
+  }
 
-+ (void)resetTestEvidence;
-
-- (void)stubShouldStopPropagationOfURL:(NSURL *)url withValue:(BOOL)shouldStop;
-- (BOOL)shouldStopPropagationOfURL:(NSURL *)url;
-
-@end
-
-NS_ASSUME_NONNULL_END
+  public static func makeDefaultSpy() -> ViewControllerSpy {
+    return ViewControllerSpy()
+  }
+}

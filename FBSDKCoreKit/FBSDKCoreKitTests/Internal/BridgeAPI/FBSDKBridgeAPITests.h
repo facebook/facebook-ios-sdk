@@ -16,31 +16,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import <Foundation/Foundation.h>
+#import <OCMock/OCMock.h>
+#import <UIKit/UIKit.h>
+#import <XCTest/XCTest.h>
+
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#import "FBSDKURLOpening.h"
+#import "FBSDKBridgeAPI+Testing.h"
+#import "FBSDKCoreKitTests-Swift.h"
+#import "FBSDKTestCase.h"
+#import "FakeLoginManager.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@interface FBSDKBridgeAPITests : FBSDKTestCase
 
-/// Duplicate minimal interface for `FBSDKLoginManager` that can fulfill the `FBSDKBridgeAPI`'s runtime requirement.
-/// Used in the `FBSDKBridgeAPITests` as a spy since it will be discovered by the real class and used instead of the actual
-/// `FBSDKLoginManager`.
-@interface FBSDKLoginManager : NSObject <FBSDKURLOpening>
+@property FBSDKBridgeAPI *api;
+@property (readonly) NSURL *sampleUrl;
 
-@property (class, nullable, copy) NSURL *capturedOpenUrl;
-@property (class, nullable, copy) NSString *capturedSourceApplication;
-@property (class, nullable, copy) NSString *capturedAnnotation;
-@property (class) BOOL stubbedOpenUrlSuccess;
-@property (nullable, copy) NSURL *capturedCanOpenUrl;
-@property (nullable, copy) NSString *capturedCanOpenSourceApplication;
-@property (nullable, copy) NSString *capturedCanOpenAnnotation;
-@property BOOL stubbedCanOpenUrl;
-
-+ (void)resetTestEvidence;
-
-- (void)stubShouldStopPropagationOfURL:(NSURL *)url withValue:(BOOL)shouldStop;
-- (BOOL)shouldStopPropagationOfURL:(NSURL *)url;
+extern NSString *const sampleSource;
+extern NSString *const sampleAnnotation;
 
 @end
-
-NS_ASSUME_NONNULL_END

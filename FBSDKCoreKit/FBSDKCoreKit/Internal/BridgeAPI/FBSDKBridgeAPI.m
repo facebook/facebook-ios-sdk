@@ -188,8 +188,10 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
                                  initWithDomain:FBSDKErrorDomain
                                  code:FBSDKErrorBridgeAPIInterruption
                                  userInfo:@{FBSDKErrorLocalizedDescriptionKey : errorMessage}];
-          _authenticationSessionCompletionHandler(url, loginError);
-          _authenticationSessionCompletionHandler = nil;
+          if (_authenticationSessionCompletionHandler) {
+            _authenticationSessionCompletionHandler(url, loginError);
+            _authenticationSessionCompletionHandler = nil;
+          }
         }
       }
     }
@@ -532,6 +534,8 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 }
  #pragma clang diagnostic pop
 
+ #pragma mark - Testability
+
  #if DEBUG
 
 - (id<FBSDKAuthenticationSession>)authenticationSession
@@ -554,6 +558,11 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
   _authenticationSessionState = state;
 }
 
+- (FBSDKAuthenticationCompletionHandler)authenticationSessionCompletionHandler
+{
+  return _authenticationSessionCompletionHandler;
+}
+
 - (void)setAuthenticationSessionCompletionHandler:(FBSDKAuthenticationCompletionHandler)handler
 {
   _authenticationSessionCompletionHandler = handler;
@@ -572,6 +581,56 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 - (void)setExpectingBackground:(BOOL)isExpectingBackground
 {
   _expectingBackground = isExpectingBackground;
+}
+
+- (id<FBSDKURLOpening>)pendingUrlOpen
+{
+  return _pendingURLOpen;
+}
+
+- (void)setPendingUrlOpen:(id<FBSDKURLOpening>)opening
+{
+  _pendingURLOpen = opening;
+}
+
+- (UIViewController *)safariViewController
+{
+  return _safariViewController;
+}
+
+- (void)setSafariViewController:(nullable UIViewController *)controller
+{
+  _safariViewController = controller;
+}
+
+- (BOOL)isDismissingSafariViewController
+{
+  return _isDismissingSafariViewController;
+}
+
+- (void)setIsDismissingSafariViewController:(BOOL)isDismissing
+{
+  _isDismissingSafariViewController = isDismissing;
+}
+
+- (FBSDKBridgeAPIRequest *)pendingRequest
+{
+  return _pendingRequest;
+}
+
+- (void)setPendingRequest:(FBSDKBridgeAPIRequest *)newValue
+{
+  _pendingRequest = newValue;
+}
+
+- (FBSDKBridgeAPIResponseBlock)pendingRequestCompletionBlock
+{
+  return _pendingRequestCompletionBlock;
+}
+
+- (void)setPendingRequestCompletionBlock:(FBSDKBridgeAPIResponseBlock)newValue
+{
+  _pendingRequestCompletionBlock = newValue;
 }
 
  #endif

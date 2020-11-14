@@ -16,23 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-#import <OCMock/OCMock.h>
-#import <UIKit/UIKit.h>
-#import <XCTest/XCTest.h>
-
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-
-#import "FBSDKBridgeAPI+Testing.h"
-#import "FBSDKCoreKitTests-Swift.h"
-#import "FBSDKTestCase.h"
-#import "FakeLoginManager.h"
-
-@interface FBSDKBridgeAPITests : FBSDKTestCase
-
-@property FBSDKBridgeAPI *api;
-
-@end
+#import "FBSDKBridgeAPITests.h"
 
 @implementation FBSDKBridgeAPITests
 
@@ -277,7 +261,7 @@
 
 - (void)testDidFinishLaunchingWithLaunchedUrlWithoutSourceApplication
 {
-  NSDictionary *options = @{ UIApplicationLaunchOptionsURLKey : [NSURL URLWithString:@"http://example.com"] };
+  NSDictionary *options = @{ UIApplicationLaunchOptionsURLKey : self.sampleUrl };
   XCTAssertFalse(
     [self.api application:UIApplication.sharedApplication didFinishLaunchingWithOptions:options],
     "Should not consider it a successful launch if there is no source application"
@@ -286,13 +270,10 @@
 
 - (void)testDidFinishLaunchingWithLaunchedUrlWithSourceApplication
 {
-  NSURL *url = [NSURL URLWithString:@"http://example.com"];
-  NSString *source = @"com.example";
-  NSString *annotation = @"foo";
   NSDictionary *options = @{
-    UIApplicationLaunchOptionsURLKey : url,
-    UIApplicationLaunchOptionsSourceApplicationKey : source,
-    UIApplicationLaunchOptionsAnnotationKey : annotation
+    UIApplicationLaunchOptionsURLKey : self.sampleUrl,
+    UIApplicationLaunchOptionsSourceApplicationKey : sampleSource,
+    UIApplicationLaunchOptionsAnnotationKey : sampleAnnotation
   };
 
   FBSDKLoginManager.stubbedOpenUrlSuccess = YES;
@@ -302,9 +283,22 @@
     "Should return the success value determined by the login manager's open url method"
   );
 
-  XCTAssertEqualObjects(FBSDKLoginManager.capturedOpenUrl, url, "Should pass the launch url to the login manager");
-  XCTAssertEqualObjects(FBSDKLoginManager.capturedSourceApplication, source, "Should pass the source application to the login manager");
-  XCTAssertEqualObjects(FBSDKLoginManager.capturedAnnotation, annotation, "Should pass the annotation to the login manager");
+  XCTAssertEqualObjects(FBSDKLoginManager.capturedOpenUrl, self.sampleUrl, "Should pass the launch url to the login manager");
+  XCTAssertEqualObjects(FBSDKLoginManager.capturedSourceApplication, sampleSource, "Should pass the source application to the login manager");
+  XCTAssertEqualObjects(FBSDKLoginManager.capturedAnnotation, sampleAnnotation, "Should pass the annotation to the login manager");
 }
+
+- (NSURL *)sampleUrl
+{
+  return [NSURL URLWithString:@"http://example.com"];
+}
+
+static inline NSString *StringFromBool(BOOL value)
+{
+  return value ? @"YES" : @"NO";
+}
+
+NSString *const sampleSource = @"com.example";
+NSString *const sampleAnnotation = @"foo";
 
 @end

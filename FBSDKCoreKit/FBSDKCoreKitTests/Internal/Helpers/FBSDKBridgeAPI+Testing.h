@@ -54,7 +54,13 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 
 - (id<FBSDKAuthenticationSession>)authenticationSession;
 - (FBSDKAuthenticationSession)authenticationSessionState;
+- (FBSDKAuthenticationCompletionHandler)authenticationSessionCompletionHandler;
 - (BOOL)expectingBackground;
+- (id<FBSDKURLOpening>)pendingUrlOpen;
+- (UIViewController *)safariViewController;
+- (BOOL)isDismissingSafariViewController;
+- (FBSDKBridgeAPIRequest *)pendingRequest;
+- (FBSDKBridgeAPIResponseBlock)pendingRequestCompletionBlock;
 
 - (void)applicationWillResignActive:(UIApplication *)application;
 - (void)applicationDidBecomeActive:(UIApplication *)application;
@@ -62,11 +68,23 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 - (BOOL)            application:(UIApplication *)application
   didFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
 
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(nullable NSString *)sourceApplication
+         annotation:(nullable id)annotation;
+
 - (void)setAuthenticationSession:(id<FBSDKAuthenticationSession>)session;
 - (void)setAuthenticationSessionState:(FBSDKAuthenticationSession)state;
-- (void)setAuthenticationSessionCompletionHandler:(FBSDKAuthenticationCompletionHandler)handler;
+- (void)setAuthenticationSessionCompletionHandler:(nullable FBSDKAuthenticationCompletionHandler)handler;
 - (void)setActive:(BOOL)isActive;
 - (void)setExpectingBackground:(BOOL)isExpectingBackground;
+- (void)setPendingUrlOpen:(id<FBSDKURLOpening>)opening;
+- (void)setSafariViewController:(nullable UIViewController *)controller;
+- (void)setIsDismissingSafariViewController:(BOOL)isDismissing;
+- (void)setPendingRequest:(FBSDKBridgeAPIRequest *)newValue;
+- (void)setPendingRequestCompletionBlock:(FBSDKBridgeAPIResponseBlock)newValue;
+
+- (BOOL)_handleBridgeAPIResponseURL:(NSURL *)responseURL sourceApplication:(NSString *)sourceApplication;
 
 @end
 

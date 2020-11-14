@@ -19,6 +19,9 @@
 #import "FakeLoginManager.h"
 
 @implementation FBSDKLoginManager
+{
+  NSMutableDictionary *_urlPropagationMap;
+}
 
 static NSURL *_capturedOpenUrl;
 static NSString *_capturedSourceApplication;
@@ -49,6 +52,25 @@ static BOOL _stubbedOpenUrlSuccess;
   FBSDKLoginManager.stubbedOpenUrlSuccess = NO;
 }
 
+- (void)stubShouldStopPropagationOfURL:(NSURL *)url withValue:(BOOL)shouldStop
+{
+  if (!_urlPropagationMap) {
+    _urlPropagationMap = [NSMutableDictionary dictionary];
+  }
+  [_urlPropagationMap setObject:@(shouldStop) forKey:url.absoluteString];
+}
+
+- (BOOL)shouldStopPropagationOfURL:(NSURL *)url
+{
+  if (!_urlPropagationMap) {
+    return NO;
+  }
+
+  return [[_urlPropagationMap objectForKey:url.absoluteString] boolValue];
+}
+
+// MARK: - FBSDKURLOpening
+
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
   FBSDKLoginManager.capturedOpenUrl = url;
@@ -62,7 +84,11 @@ static BOOL _stubbedOpenUrlSuccess;
 
 - (BOOL)canOpenURL:(NSURL *)url forApplication:(UIApplication *)application sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
-  return NO;
+  _capturedCanOpenUrl = url;
+  _capturedCanOpenSourceApplication = sourceApplication;
+  _capturedCanOpenAnnotation = annotation;
+
+  return _stubbedCanOpenUrl;
 }
 
 - (BOOL)isAuthenticationURL:(NSURL *)url
