@@ -16,31 +16,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <OCMock/OCMock.h>
-#import <XCTest/XCTest.h>
+import XCTest
 
-#import <OHHTTPStubs/OHHTTPStubs.h>
-
-#import "FBSDKCoreKit+Internal.h"
-#import "FBSDKCoreKitTests-Swift.h"
-
-@interface FBSDKServerConfigurationManager (Testing)
-
-+ (void)processLoadRequestResponse:(id)result error:(NSError *)error appID:(NSString *)appID;
-
-@end
-
-@interface FBSDKServerConfigurationManagerTests : XCTestCase
-
-@end
-
-@implementation FBSDKServerConfigurationManagerTests
-
-- (void)testParsingResponses
-{
-  for (int i = 0; i < 100; i++) {
-    [FBSDKServerConfigurationManager processLoadRequestResponse:RawServerConfigurationResponseFixtures.random error:nil appID:nil];
+class FBSDKServerConfigurationManagerTests: XCTestCase {
+  func testParsingResponses() {
+    for _ in 0..<100 {
+      ServerConfigurationManager.processLoadRequestResponse(RawServerConfigurationResponseFixtures.random, error: nil, appID: nil)
+    }
   }
 }
-
-@end
