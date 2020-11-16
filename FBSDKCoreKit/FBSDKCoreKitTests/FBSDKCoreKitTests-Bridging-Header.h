@@ -20,6 +20,7 @@
 
 #import "FBSDKBridgeAPI+Testing.h"
 #import "FBSDKEventDeactivationManager.h"
+#import "FBSDKSKAdNetworkEvent.h"
 #import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKTestCase.h"
 #import "FakeBundle.h"
