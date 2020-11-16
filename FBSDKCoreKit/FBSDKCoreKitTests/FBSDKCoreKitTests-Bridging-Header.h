@@ -18,6 +18,7 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#import "FBSDKAppEventsConfigurationFixtures.h"
 #import "FBSDKBridgeAPI+Testing.h"
 #import "FBSDKEventDeactivationManager.h"
 #import "FBSDKSKAdNetworkEvent.h"
