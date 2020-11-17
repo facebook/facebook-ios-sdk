@@ -29,3 +29,8 @@
 // Interfaces for Swift extensions on Objective-C Test classes
 @interface FBSDKAppEventsUtilityTests : FBSDKTestCase
 @end
+
+// Categories needed to expose private methods to Swift
+@interface FBSDKAppEventsConfigurationManager (Testing)
++ (void)_processResponse:(id)response error:(NSError *)error;
+@end
