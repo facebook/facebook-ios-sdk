@@ -22,6 +22,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackURL, NSError *_Nullable error);
+typedef void (^FBSDKBridgeAPIRequestCompletionBlock)(BOOL, NSError *);
 
 NS_SWIFT_NAME(AuthenticationSessionHandling)
 @protocol FBSDKAuthenticationSession <NSObject>
@@ -85,7 +86,8 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 - (void)setPendingRequestCompletionBlock:(FBSDKBridgeAPIResponseBlock)newValue;
 
 - (BOOL)_handleBridgeAPIResponseURL:(NSURL *)responseURL sourceApplication:(NSString *)sourceApplication;
-
+- (FBSDKBridgeAPIRequestCompletionBlock)_bridgeAPIRequestCompletionBlockWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
+                                                                               completion:(FBSDKBridgeAPIResponseBlock)completionBlock;
 @end
 
 NS_ASSUME_NONNULL_END

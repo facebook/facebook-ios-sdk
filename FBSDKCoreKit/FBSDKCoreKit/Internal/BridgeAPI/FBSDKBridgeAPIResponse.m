@@ -28,7 +28,7 @@
  #import "FBSDKInternalUtility.h"
 
 @interface FBSDKBridgeAPIResponse ()
-- (instancetype)initWithRequest:(FBSDKBridgeAPIRequest *)request
+- (instancetype)initWithRequest:(id<FBSDKBridgeAPIRequestProtocol>)request
              responseParameters:(NSDictionary *)responseParameters
                       cancelled:(BOOL)cancelled
                           error:(NSError *)error
@@ -39,7 +39,7 @@
 
  #pragma mark - Class Methods
 
-+ (instancetype)bridgeAPIResponseWithRequest:(FBSDKBridgeAPIRequest *)request error:(NSError *)error
++ (instancetype)bridgeAPIResponseWithRequest:(id<FBSDKBridgeAPIRequestProtocol>)request error:(NSError *)error
 {
   return [[self alloc] initWithRequest:request
                     responseParameters:nil
@@ -47,7 +47,7 @@
                                  error:error];
 }
 
-+ (instancetype)bridgeAPIResponseWithRequest:(FBSDKBridgeAPIRequest *)request
++ (instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
                                  responseURL:(NSURL *)responseURL
                            sourceApplication:(NSString *)sourceApplication
                                        error:(NSError *__autoreleasing *)errorRef
@@ -95,7 +95,7 @@
                                  error:error];
 }
 
-+ (instancetype)bridgeAPIResponseCancelledWithRequest:(FBSDKBridgeAPIRequest *)request
++ (instancetype)bridgeAPIResponseCancelledWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
 {
   return [[self alloc] initWithRequest:request
                     responseParameters:nil
@@ -105,7 +105,7 @@
 
  #pragma mark - Object Lifecycle
 
-- (instancetype)initWithRequest:(FBSDKBridgeAPIRequest *)request
+- (instancetype)initWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
              responseParameters:(NSDictionary *)responseParameters
                       cancelled:(BOOL)cancelled
                           error:(NSError *)error

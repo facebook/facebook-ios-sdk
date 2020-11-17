@@ -36,16 +36,16 @@ NS_SWIFT_NAME(BridgeAPIResponse)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-+ (instancetype)bridgeAPIResponseWithRequest:(FBSDKBridgeAPIRequest *)request error:(NSError *)error;
-+ (instancetype)bridgeAPIResponseWithRequest:(FBSDKBridgeAPIRequest *)request
++ (instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request error:(NSError *)error;
++ (instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
                                  responseURL:(NSURL *)responseURL
                            sourceApplication:(NSString *)sourceApplication
                                        error:(NSError *__autoreleasing *)errorRef;
-+ (instancetype)bridgeAPIResponseCancelledWithRequest:(FBSDKBridgeAPIRequest *)request;
++ (instancetype)bridgeAPIResponseCancelledWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request;
 
 @property (nonatomic, assign, readonly, getter=isCancelled) BOOL cancelled;
 @property (nonatomic, copy, readonly) NSError *error;
-@property (nonatomic, copy, readonly) FBSDKBridgeAPIRequest *request;
+@property (nonatomic, copy, readonly) NSObject<FBSDKBridgeAPIRequestProtocol> *request;
 @property (nonatomic, copy, readonly) NSDictionary *responseParameters;
 
 @end

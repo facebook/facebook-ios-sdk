@@ -23,6 +23,15 @@ public class ViewControllerSpy: UIViewController {
 
   public var capturedDismissCompletion: (() -> Void)?
   public var dismissWasCalled = false
+  public var capturedPresentViewController: UIViewController?
+  public var capturedPresentViewControllerAnimated: Bool?
+  public var capturedPresentViewControllerCompletion: (() -> Void)?
+
+  // Overriding with no implementation to stub the property
+  public override var transitionCoordinator: UIViewControllerTransitionCoordinator? {
+    return nil
+  }
+
   private lazy var presenting = {
     ViewControllerSpy.makeDefaultSpy()
   }()
@@ -38,5 +47,15 @@ public class ViewControllerSpy: UIViewController {
 
   public static func makeDefaultSpy() -> ViewControllerSpy {
     return ViewControllerSpy()
+  }
+
+  // Overriding with no implementation to stub the method
+  public override func present(
+    _ viewControllerToPresent: UIViewController,
+    animated: Bool,
+    completion: (() -> Void)? = nil) {
+    capturedPresentViewController = viewControllerToPresent
+    capturedPresentViewControllerAnimated = animated
+    capturedPresentViewControllerCompletion = completion
   }
 }

@@ -16,26 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+import XCTest
 
-#if !TARGET_OS_TV
+class FBSDKBridgeAPIRequestTests: FBSDKTestCase {
 
- #import "FBSDKBridgeAPIProtocol.h"
- #import "FBSDKBridgeAPIRequest.h"
+  func testDefaultProtocolConformance() {
+    let request: Any = BridgeAPIRequest(protocolType: .web, scheme: "https", methodName: nil, methodVersion: nil, parameters: [:], userInfo: [:]) as Any
+    let conformedRequest = request as? FBSDKBridgeAPIRequestProtocol
 
-@interface FBSDKBridgeAPIRequest ()
-
-- (instancetype)initWithProtocol:(id<FBSDKBridgeAPIProtocol>)protocol
-                    protocolType:(FBSDKBridgeAPIProtocolType)protocolType
-                          scheme:(NSString *)scheme
-                      methodName:(NSString *)methodName
-                   methodVersion:(NSString *)methodVersion
-                      parameters:(NSDictionary *)parameters
-                        userInfo:(NSDictionary *)userInfo
-  NS_DESIGNATED_INITIALIZER;
-
-@property (nonatomic, readwrite, strong) id<FBSDKBridgeAPIProtocol> protocol;
-
-@end
-
-#endif
+    XCTAssertNotNil(conformedRequest, "BridgeAPIRequest should conform to the expected protocol")
+  }
+}

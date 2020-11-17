@@ -16,26 +16,37 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+@objcMembers
+public class FakeBridgeApiRequest: NSObject, FBSDKBridgeAPIRequestProtocol {
+  public var actionID: String?
+  public var methodName: String?
+  public var protocolType: FBSDKBridgeAPIProtocolType
+  public var `protocol`: BridgeAPIProtocol?
+  public var scheme: String?
 
-#if !TARGET_OS_TV
+  let url: URL?
 
- #import "FBSDKBridgeAPIProtocol.h"
- #import "FBSDKBridgeAPIRequest.h"
+  init(url: URL?, protocolType: FBSDKBridgeAPIProtocolType = .native, scheme: String? = nil) {
+    self.url = url
+    self.protocolType = protocolType
+    self.scheme = scheme
+  }
 
-@interface FBSDKBridgeAPIRequest ()
+  public func copy(with zone: NSZone? = nil) -> Any {
+    return self
+  }
 
-- (instancetype)initWithProtocol:(id<FBSDKBridgeAPIProtocol>)protocol
-                    protocolType:(FBSDKBridgeAPIProtocolType)protocolType
-                          scheme:(NSString *)scheme
-                      methodName:(NSString *)methodName
-                   methodVersion:(NSString *)methodVersion
-                      parameters:(NSDictionary *)parameters
-                        userInfo:(NSDictionary *)userInfo
-  NS_DESIGNATED_INITIALIZER;
+  public func requestURL() throws -> URL {
+    guard let url = url else {
+      throw FakeBridgeApiRequestError(domain: "tests", code: 0, userInfo: [:])
+    }
+    return url
+  }
 
-@property (nonatomic, readwrite, strong) id<FBSDKBridgeAPIProtocol> protocol;
+  public static func request(withURL url: URL?) -> FakeBridgeApiRequest {
+    return FakeBridgeApiRequest(url: url)
+  }
+}
 
-@end
-
-#endif
+@objc
+public class FakeBridgeApiRequestError: NSError {}

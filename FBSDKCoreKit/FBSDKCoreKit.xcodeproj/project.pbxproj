@@ -793,6 +793,9 @@
 		F402AFF3255B4EE400473083 /* AuthenticationSessionSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F402AFF2255B4EE400473083 /* AuthenticationSessionSpy.swift */; };
 		F402B062255C645600473083 /* FakeLoginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F402B061255C645600473083 /* FakeLoginManager.m */; };
 		F402B071255C740C00473083 /* ViewControllerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F402B070255C740C00473083 /* ViewControllerSpy.swift */; };
+		F408C6C02563091900372D61 /* FBSDKBridgeAPIOpenBridgeRequestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F408C6BF2563091900372D61 /* FBSDKBridgeAPIOpenBridgeRequestTests.m */; };
+		F408C6E9256309A500372D61 /* FakeBridgeApiRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F408C6E8256309A500372D61 /* FakeBridgeApiRequest.swift */; };
+		F408C712256320F300372D61 /* FBSDKBridgeAPIRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F408C711256320F300372D61 /* FBSDKBridgeAPIRequestTests.swift */; };
 		F40B24B2247324BB0059351C /* RawServerConfigurationResponseFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40B24B1247324BB0059351C /* RawServerConfigurationResponseFixtures.swift */; };
 		F40B24C224732DD90059351C /* Fuzzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40B24C124732DD90059351C /* Fuzzer.swift */; };
 		F40F6551241A974400B10EAA /* FBSDKMethodUsageMonitorEntryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F40F6550241A974400B10EAA /* FBSDKMethodUsageMonitorEntryTests.m */; };
@@ -1529,6 +1532,9 @@
 		F402B060255C645600473083 /* FakeLoginManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FakeLoginManager.h; sourceTree = "<group>"; };
 		F402B061255C645600473083 /* FakeLoginManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FakeLoginManager.m; sourceTree = "<group>"; };
 		F402B070255C740C00473083 /* ViewControllerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerSpy.swift; sourceTree = "<group>"; };
+		F408C6BF2563091900372D61 /* FBSDKBridgeAPIOpenBridgeRequestTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKBridgeAPIOpenBridgeRequestTests.m; sourceTree = "<group>"; };
+		F408C6E8256309A500372D61 /* FakeBridgeApiRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeBridgeApiRequest.swift; sourceTree = "<group>"; };
+		F408C711256320F300372D61 /* FBSDKBridgeAPIRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBSDKBridgeAPIRequestTests.swift; sourceTree = "<group>"; };
 		F40B24B1247324BB0059351C /* RawServerConfigurationResponseFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawServerConfigurationResponseFixtures.swift; sourceTree = "<group>"; };
 		F40B24C124732DD90059351C /* Fuzzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fuzzer.swift; sourceTree = "<group>"; };
 		F40F6550241A974400B10EAA /* FBSDKMethodUsageMonitorEntryTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKMethodUsageMonitorEntryTests.m; sourceTree = "<group>"; };
@@ -2103,9 +2109,12 @@
 			isa = PBXGroup;
 			children = (
 				894C0B351A702DDD009137EF /* ProtocolVersions */,
+				F41200EC255F4775009E323F /* FBSDKBridgeAPITests.h */,
 				F402AFC7255B49A500473083 /* FBSDKBridgeAPITests.m */,
 				F41200CF255F45FE009E323F /* FBSDKBridgeAPI+ApplicationOpenUrlTests.m */,
-				F41200EC255F4775009E323F /* FBSDKBridgeAPITests.h */,
+				F408C6BF2563091900372D61 /* FBSDKBridgeAPIOpenBridgeRequestTests.m */,
+				F402AFE4255B4D1C00473083 /* FBSDKBridgeAPI+Testing.h */,
+				F408C711256320F300372D61 /* FBSDKBridgeAPIRequestTests.swift */,
 			);
 			path = BridgeAPI;
 			sourceTree = "<group>";
@@ -2656,7 +2665,6 @@
 		F4CD7CDA243E2CF7004C27F1 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				F402AFE4255B4D1C00473083 /* FBSDKBridgeAPI+Testing.h */,
 				F496E58E24E49DBC006231A2 /* SampleAppEvents.swift */,
 				F492C0A024E1F5F600BA21F7 /* KeychainStoreSpy.swift */,
 				F492C09F24E1F5F600BA21F7 /* UserDefaultsSpy.h */,
@@ -2683,6 +2691,7 @@
 				F402B070255C740C00473083 /* ViewControllerSpy.swift */,
 				F402B060255C645600473083 /* FakeLoginManager.h */,
 				F402B061255C645600473083 /* FakeLoginManager.m */,
+				F408C6E8256309A500372D61 /* FakeBridgeApiRequest.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -4143,9 +4152,11 @@
 				F9CEF1EB24F769F900EB0C3D /* FBSDKSKAdNetworkReporterTests.m in Sources */,
 				F98D1D73251297A900276B68 /* FBSDKAppEventsConfigurationManagerTests.m in Sources */,
 				45540DB125271A88008E853E /* FBSDKAppLinkResolverRequestBuilderTests.m in Sources */,
+				F408C712256320F300372D61 /* FBSDKBridgeAPIRequestTests.swift in Sources */,
 				5DAB01F123A1831A005495FB /* FBSDKCrashObserverTests.m in Sources */,
 				F40B24C224732DD90059351C /* Fuzzer.swift in Sources */,
 				40853B9424C8C43300A7CB16 /* FBSDKJSONValueTests.m in Sources */,
+				F408C6E9256309A500372D61 /* FakeBridgeApiRequest.swift in Sources */,
 				F4181B342416EC06006DB452 /* FBSDKMonitorTests.m in Sources */,
 				5C49DF9E2554C9ED00E0FD91 /* SampleUserProfile.swift in Sources */,
 				F4BF22A0241954B400BFB494 /* FBSDKMonitorStoreTests.m in Sources */,
@@ -4178,6 +4189,7 @@
 				F943113424FB2E67002441F1 /* FBSDKSKAdNetworkEventTests.swift in Sources */,
 				F98D1D64251295E900276B68 /* RawAppEventsConfigurationResponseFixtures.swift in Sources */,
 				F402AFF3255B4EE400473083 /* AuthenticationSessionSpy.swift in Sources */,
+				F408C6C02563091900372D61 /* FBSDKBridgeAPIOpenBridgeRequestTests.m in Sources */,
 				F98D1D3825124FAE00276B68 /* FBSDKAppEventsConfigurationFixtures.m in Sources */,
 				F40F6551241A974400B10EAA /* FBSDKMethodUsageMonitorEntryTests.m in Sources */,
 			);

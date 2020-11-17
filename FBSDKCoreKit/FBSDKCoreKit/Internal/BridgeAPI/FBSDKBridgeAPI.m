@@ -41,6 +41,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 };
 
 typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackURL, NSError *_Nullable error);
+typedef void (^FBSDKBridgeAPIRequestCompletionBlock)(BOOL, NSError *);
 
 @protocol FBSDKAuthenticationSession <NSObject>
 
@@ -63,7 +64,7 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 
 @implementation FBSDKBridgeAPI
 {
-  FBSDKBridgeAPIRequest *_pendingRequest;
+  NSObject<FBSDKBridgeAPIRequestProtocol> *_pendingRequest;
   FBSDKBridgeAPIResponseBlock _pendingRequestCompletionBlock;
   id<FBSDKURLOpening> _pendingURLOpen;
   id<FBSDKAuthenticationSession> _authenticationSession NS_AVAILABLE_IOS(11_0);
@@ -279,7 +280,7 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 
  #pragma clang diagnostic pop
 
-- (void)openBridgeAPIRequest:(FBSDKBridgeAPIRequest *)request
+- (void)openBridgeAPIRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
      useSafariViewController:(BOOL)useSafariViewController
           fromViewController:(UIViewController *)fromViewController
              completionBlock:(FBSDKBridgeAPIResponseBlock)completionBlock
@@ -296,7 +297,19 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
   }
   _pendingRequest = request;
   _pendingRequestCompletionBlock = [completionBlock copy];
-  void (^handler)(BOOL, NSError *) = ^(BOOL openedURL, NSError *anError) {
+  FBSDKBridgeAPIRequestCompletionBlock handler = [self _bridgeAPIRequestCompletionBlockWithRequest:request
+                                                                                        completion:completionBlock];
+  if (useSafariViewController) {
+    [self openURLWithSafariViewController:requestURL sender:nil fromViewController:fromViewController handler:handler];
+  } else {
+    [self openURL:requestURL sender:nil handler:handler];
+  }
+}
+
+- (FBSDKBridgeAPIRequestCompletionBlock)_bridgeAPIRequestCompletionBlockWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
+                                                                         completion:(FBSDKBridgeAPIResponseBlock)completionBlock
+{
+  return ^(BOOL openedURL, NSError *anError) {
     if (!openedURL) {
       self->_pendingRequest = nil;
       self->_pendingRequestCompletionBlock = nil;
@@ -314,11 +327,6 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
       return;
     }
   };
-  if (useSafariViewController) {
-    [self openURLWithSafariViewController:requestURL sender:nil fromViewController:fromViewController handler:handler];
-  } else {
-    [self openURL:requestURL sender:nil handler:handler];
-  }
 }
 
 - (void)openURLWithSafariViewController:(NSURL *)url
@@ -469,7 +477,7 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 
 - (BOOL)_handleBridgeAPIResponseURL:(NSURL *)responseURL sourceApplication:(NSString *)sourceApplication
 {
-  FBSDKBridgeAPIRequest *request = _pendingRequest;
+  NSObject<FBSDKBridgeAPIRequestProtocol> *request = _pendingRequest;
   FBSDKBridgeAPIResponseBlock completionBlock = _pendingRequestCompletionBlock;
   _pendingRequest = nil;
   _pendingRequestCompletionBlock = NULL;
@@ -602,12 +610,12 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
   _isDismissingSafariViewController = isDismissing;
 }
 
-- (FBSDKBridgeAPIRequest *)pendingRequest
+- (NSObject<FBSDKBridgeAPIRequestProtocol> *)pendingRequest
 {
   return _pendingRequest;
 }
 
-- (void)setPendingRequest:(FBSDKBridgeAPIRequest *)newValue
+- (void)setPendingRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)newValue
 {
   _pendingRequest = newValue;
 }
