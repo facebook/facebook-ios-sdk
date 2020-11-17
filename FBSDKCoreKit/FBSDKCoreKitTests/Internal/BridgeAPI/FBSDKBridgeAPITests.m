@@ -397,11 +397,122 @@
   [self waitForExpectationsWithTimeout:1 handler:nil];
 }
 
+// MARK: - Request completion block
+
+- (void)testRequestCompletionBlockCalledWithSuccess
+{
+  FakeBridgeApiRequest *request = [FakeBridgeApiRequest requestWithURL:self.sampleUrl];
+  FBSDKBridgeAPIResponseBlock responseBlock = ^void (FBSDKBridgeAPIResponse *response) {
+    XCTFail("Should not call the response block when the request completion is called with success");
+  };
+  self.api.pendingRequest = request;
+  self.api.pendingRequestCompletionBlock = ^(FBSDKBridgeAPIResponse *response) {};
+
+  FBSDKSuccessBlock completion = [self.api _bridgeAPIRequestCompletionBlockWithRequest:request
+                                                                            completion:responseBlock];
+  // With Error
+  completion(true, self.sampleError);
+  [self assertPendingPropertiesNotCleared];
+
+  // Without Error
+  completion(true, nil);
+  [self assertPendingPropertiesNotCleared];
+}
+
+- (void)testRequestCompletionBlockWithNonHttpRequestCalledWithoutSuccess
+{
+  FakeBridgeApiRequest *request = [FakeBridgeApiRequest requestWithURL:self.sampleUrl scheme:@"file"];
+  FBSDKBridgeAPIResponseBlock responseBlock = ^void (FBSDKBridgeAPIResponse *response) {
+    XCTAssertEqualObjects(response.request, request, "The response should contain the original request");
+    XCTAssertEqual(
+      response.error.code,
+      FBSDKErrorAppVersionUnsupported,
+      "The response should contain the expected error code"
+    );
+    XCTAssertEqualObjects(
+      response.error.userInfo[FBSDKErrorDeveloperMessageKey],
+      @"the app switch failed because the destination app is out of date",
+      "The response should contain the expected error message"
+    );
+  };
+  self.api.pendingRequest = request;
+  self.api.pendingRequestCompletionBlock = ^(FBSDKBridgeAPIResponse *response) {};
+
+  FBSDKSuccessBlock completion = [self.api _bridgeAPIRequestCompletionBlockWithRequest:request
+                                                                            completion:responseBlock];
+  // With Error
+  completion(false, self.sampleError);
+  [self assertPendingPropertiesCleared];
+
+  // Without Error
+  completion(false, nil);
+  [self assertPendingPropertiesCleared];
+}
+
+- (void)testRequestCompletionBlockWithHttpRequestCalledWithoutSuccess
+{
+  FakeBridgeApiRequest *request = [FakeBridgeApiRequest requestWithURL:self.sampleUrl scheme:@"https"];
+  FBSDKBridgeAPIResponseBlock responseBlock = ^void (FBSDKBridgeAPIResponse *response) {
+    XCTAssertEqualObjects(response.request, request, "The response should contain the original request");
+    XCTAssertEqual(
+      response.error.code,
+      FBSDKErrorBrowserUnavailable,
+      "The response should contain the expected error code"
+    );
+    XCTAssertEqualObjects(
+      response.error.userInfo[FBSDKErrorDeveloperMessageKey],
+      @"the app switch failed because the browser is unavailable",
+      "The response should contain the expected error message"
+    );
+  };
+  self.api.pendingRequest = request;
+  self.api.pendingRequestCompletionBlock = ^(FBSDKBridgeAPIResponse *response) {};
+
+  FBSDKSuccessBlock completion = [self.api _bridgeAPIRequestCompletionBlockWithRequest:request
+                                                                            completion:responseBlock];
+  // With Error
+  completion(false, self.sampleError);
+  [self assertPendingPropertiesCleared];
+
+  // Without Error
+  completion(false, nil);
+  [self assertPendingPropertiesCleared];
+}
+
 // MARK: - Helpers
+
+- (void)assertPendingPropertiesCleared
+{
+  XCTAssertNil(
+    self.api.pendingRequest,
+    "Should clear the pending request"
+  );
+  XCTAssertNil(
+    self.api.pendingRequestCompletionBlock,
+    "Should clear the pending request completion block"
+  );
+}
+
+- (void)assertPendingPropertiesNotCleared
+{
+  XCTAssertNotNil(
+    self.api.pendingRequest,
+    "Should not clear the pending request"
+  );
+  XCTAssertNotNil(
+    self.api.pendingRequestCompletionBlock,
+    "Should not clear the pending request completion block"
+  );
+}
 
 - (NSURL *)sampleUrl
 {
   return [NSURL URLWithString:@"http://example.com"];
+}
+
+- (NSError *)sampleError
+{
+  return [NSError errorWithDomain:self.name code:0 userInfo:nil];
 }
 
 static inline NSString *StringFromBool(BOOL value)

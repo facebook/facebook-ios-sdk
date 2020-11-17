@@ -22,7 +22,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackURL, NSError *_Nullable error);
-typedef void (^FBSDKBridgeAPIRequestCompletionBlock)(BOOL, NSError *);
 
 NS_SWIFT_NAME(AuthenticationSessionHandling)
 @protocol FBSDKAuthenticationSession <NSObject>
@@ -60,7 +59,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 - (id<FBSDKURLOpening>)pendingUrlOpen;
 - (UIViewController *)safariViewController;
 - (BOOL)isDismissingSafariViewController;
-- (FBSDKBridgeAPIRequest *)pendingRequest;
+- (NSObject<FBSDKBridgeAPIRequestProtocol> *)pendingRequest;
 - (FBSDKBridgeAPIResponseBlock)pendingRequestCompletionBlock;
 
 - (void)applicationWillResignActive:(UIApplication *)application;
@@ -82,11 +81,11 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 - (void)setPendingUrlOpen:(id<FBSDKURLOpening>)opening;
 - (void)setSafariViewController:(nullable UIViewController *)controller;
 - (void)setIsDismissingSafariViewController:(BOOL)isDismissing;
-- (void)setPendingRequest:(FBSDKBridgeAPIRequest *)newValue;
+- (void)setPendingRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)newValue;
 - (void)setPendingRequestCompletionBlock:(FBSDKBridgeAPIResponseBlock)newValue;
 
 - (BOOL)_handleBridgeAPIResponseURL:(NSURL *)responseURL sourceApplication:(NSString *)sourceApplication;
-- (FBSDKBridgeAPIRequestCompletionBlock)_bridgeAPIRequestCompletionBlockWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
+- (FBSDKSuccessBlock)_bridgeAPIRequestCompletionBlockWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
                                                                                completion:(FBSDKBridgeAPIResponseBlock)completionBlock;
 @end
 

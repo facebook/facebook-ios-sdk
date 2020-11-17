@@ -44,7 +44,7 @@
 
   OCMStub(
     [_partialMock _bridgeAPIRequestCompletionBlockWithRequest:OCMArg.any
-                                                         completion:OCMArg.any]
+                                                   completion:OCMArg.any]
   );
   OCMStub(
     [_partialMock openURLWithSafariViewController:OCMArg.any
@@ -80,7 +80,7 @@
   XCTAssertEqualObjects(self.api.pendingRequestCompletionBlock, self.uninvokedCompletionHandler);
   OCMVerify(
     [_partialMock _bridgeAPIRequestCompletionBlockWithRequest:request
-                                                         completion:self.uninvokedCompletionHandler]
+                                                   completion:self.uninvokedCompletionHandler]
   );
   OCMVerify(
     [_partialMock openURLWithSafariViewController:self.sampleUrl
@@ -102,7 +102,7 @@
   XCTAssertEqualObjects(self.api.pendingRequestCompletionBlock, self.uninvokedCompletionHandler);
   OCMVerify(
     [_partialMock _bridgeAPIRequestCompletionBlockWithRequest:request
-                                                         completion:self.uninvokedCompletionHandler]
+                                                   completion:self.uninvokedCompletionHandler]
   );
   OCMVerify(
     [_partialMock openURLWithSafariViewController:self.sampleUrl
@@ -125,7 +125,7 @@
   XCTAssertEqualObjects(self.api.pendingRequestCompletionBlock, self.uninvokedCompletionHandler);
   OCMVerify(
     [_partialMock _bridgeAPIRequestCompletionBlockWithRequest:request
-                                                         completion:self.uninvokedCompletionHandler]
+                                                   completion:self.uninvokedCompletionHandler]
   );
   OCMVerify([_partialMock openURL:self.sampleUrl sender:nil handler:OCMArg.any]);
 }
@@ -142,7 +142,7 @@
   XCTAssertEqualObjects(self.api.pendingRequestCompletionBlock, self.uninvokedCompletionHandler);
   OCMVerify(
     [_partialMock _bridgeAPIRequestCompletionBlockWithRequest:request
-                                                         completion:self.uninvokedCompletionHandler]
+                                                   completion:self.uninvokedCompletionHandler]
   );
   OCMVerify([_partialMock openURL:self.sampleUrl sender:nil handler:OCMArg.any]);
 }
@@ -235,21 +235,6 @@
               fromViewController:nil
                  completionBlock:completionHandler];
   [self assertPendingPropertiesNotSet];
-}
-
-- (void)testOpeningBridgeRequestWithInsecureRequestUrl
-{
-  NSURL *expectedUrl = [NSURL URLWithString:@"file:///foo"];
-  FakeBridgeApiRequest *request = [FakeBridgeApiRequest requestWithURL:expectedUrl];
-  [self.api openBridgeAPIRequest:request
-         useSafariViewController:NO
-              fromViewController:nil
-                 completionBlock:self.uninvokedCompletionHandler];
-
-  XCTAssertEqualObjects(self.api.pendingRequest, request);
-  XCTAssertEqualObjects(self.api.pendingRequestCompletionBlock, self.uninvokedCompletionHandler);
-  OCMVerify([_partialMock _bridgeAPIRequestCompletionBlockWithRequest:request completion:self.uninvokedCompletionHandler]);
-  OCMVerify([_partialMock openURL:expectedUrl sender:nil handler:OCMArg.any]);
 }
 
 // MARK: - Helpers

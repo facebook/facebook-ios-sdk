@@ -46,6 +46,10 @@ public class FakeBridgeApiRequest: NSObject, FBSDKBridgeAPIRequestProtocol {
   public static func request(withURL url: URL?) -> FakeBridgeApiRequest {
     return FakeBridgeApiRequest(url: url)
   }
+
+  public static func request(withURL url: URL, scheme: String) -> FakeBridgeApiRequest {
+    return FakeBridgeApiRequest(url: url, scheme: scheme)
+  }
 }
 
 @objc

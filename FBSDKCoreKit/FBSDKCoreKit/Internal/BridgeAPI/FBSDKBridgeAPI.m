@@ -41,7 +41,6 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 };
 
 typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackURL, NSError *_Nullable error);
-typedef void (^FBSDKBridgeAPIRequestCompletionBlock)(BOOL, NSError *);
 
 @protocol FBSDKAuthenticationSession <NSObject>
 
@@ -297,8 +296,8 @@ typedef void (^FBSDKBridgeAPIRequestCompletionBlock)(BOOL, NSError *);
   }
   _pendingRequest = request;
   _pendingRequestCompletionBlock = [completionBlock copy];
-  FBSDKBridgeAPIRequestCompletionBlock handler = [self _bridgeAPIRequestCompletionBlockWithRequest:request
-                                                                                        completion:completionBlock];
+  FBSDKSuccessBlock handler = [self _bridgeAPIRequestCompletionBlockWithRequest:request
+                                                                     completion:completionBlock];
   if (useSafariViewController) {
     [self openURLWithSafariViewController:requestURL sender:nil fromViewController:fromViewController handler:handler];
   } else {
@@ -306,8 +305,8 @@ typedef void (^FBSDKBridgeAPIRequestCompletionBlock)(BOOL, NSError *);
   }
 }
 
-- (FBSDKBridgeAPIRequestCompletionBlock)_bridgeAPIRequestCompletionBlockWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
-                                                                         completion:(FBSDKBridgeAPIResponseBlock)completionBlock
+- (FBSDKSuccessBlock)_bridgeAPIRequestCompletionBlockWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
+                                                      completion:(FBSDKBridgeAPIResponseBlock)completionBlock
 {
   return ^(BOOL openedURL, NSError *anError) {
     if (!openedURL) {
