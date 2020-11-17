@@ -70,9 +70,10 @@ NSString *const heightKey = @"height";
 
 - (void)tearDown
 {
-  [super tearDown];
-
   [self resetCaches];
+  _profile = nil;
+
+  [super tearDown];
 }
 
 - (void)resetCaches
