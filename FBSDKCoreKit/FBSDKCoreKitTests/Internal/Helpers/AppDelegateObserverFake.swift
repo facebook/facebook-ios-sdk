@@ -21,8 +21,10 @@ public class ApplicationDelegateObserverFake: NSObject, FBSDKApplicationObservin
   public private(set) var didFinishLaunchingCallCount = 0
   public private(set) var capturedLaunchOptions: [UIApplication.LaunchOptionsKey: Any]?
 
-  public func application(_ application: UIApplication,
-                          didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+  public func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+  ) -> Bool {
     didFinishLaunchingCallCount += 1
     capturedLaunchOptions = launchOptions
     return true

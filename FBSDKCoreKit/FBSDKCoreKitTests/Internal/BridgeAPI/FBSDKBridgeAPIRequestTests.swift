@@ -21,7 +21,14 @@ import XCTest
 class FBSDKBridgeAPIRequestTests: FBSDKTestCase {
 
   func testDefaultProtocolConformance() {
-    let request: Any = BridgeAPIRequest(protocolType: .web, scheme: "https", methodName: nil, methodVersion: nil, parameters: [:], userInfo: [:]) as Any
+    let request: Any = BridgeAPIRequest(
+      protocolType: .web,
+      scheme: "https",
+      methodName: nil,
+      methodVersion: nil,
+      parameters: [:],
+      userInfo: [:]
+    ) as Any
     let conformedRequest = request as? FBSDKBridgeAPIRequestProtocol
 
     XCTAssertNotNil(conformedRequest, "BridgeAPIRequest should conform to the expected protocol")

@@ -37,6 +37,10 @@ private_outlet:
 type_name:
   excluded: [RawAppEventsConfigurationResponseFixtures]
 
+# Xcode fixits insert these as "public override" vs "override public" so overriding Swiftlint's defaullt of "override, acl, ..." to "acl, override, ..."
+modifier_order:
+  preferred_modifier_order: [acl, override, setterACL, dynamic, mutators, lazy, final, required, convenience, typeMethods, owned]
+
 disabled_rules:
   - attributes
   - conditional_returns_on_newline

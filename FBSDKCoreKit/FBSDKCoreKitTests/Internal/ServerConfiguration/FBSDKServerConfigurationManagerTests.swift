@@ -21,7 +21,11 @@ import XCTest
 class FBSDKServerConfigurationManagerTests: XCTestCase {
   func testParsingResponses() {
     for _ in 0..<100 {
-      ServerConfigurationManager.processLoadRequestResponse(RawServerConfigurationResponseFixtures.random, error: nil, appID: nil)
+      ServerConfigurationManager.processLoadRequestResponse(
+        RawServerConfigurationResponseFixtures.random,
+        error: nil,
+        appID: nil
+      )
     }
   }
 }

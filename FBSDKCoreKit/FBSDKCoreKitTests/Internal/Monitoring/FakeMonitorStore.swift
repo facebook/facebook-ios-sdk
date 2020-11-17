@@ -24,20 +24,20 @@ public class FakeMonitorStore: FBSDKMonitorStore {
   public var persistWasCalled = false
   public var capturedPersistedEntries: [FBSDKMonitorEntry] = []
 
-  override public func persist(_ entries: [FBSDKMonitorEntry]) {
+  public override func persist(_ entries: [FBSDKMonitorEntry]) {
     super.persist(entries)
 
     persistWasCalled = true
     capturedPersistedEntries = entries
   }
 
-  override public func retrieveEntries() -> [FBSDKMonitorEntry] {
+  public override func retrieveEntries() -> [FBSDKMonitorEntry] {
     retrieveEntriesWasCalled = true
 
     return super.retrieveEntries()
   }
 
-  override public func clear() {
+  public override func clear() {
     super.clear()
 
     clearWasCalled = true
