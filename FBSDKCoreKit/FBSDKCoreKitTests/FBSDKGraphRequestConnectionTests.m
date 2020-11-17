@@ -104,7 +104,7 @@
 
 #pragma mark - Tests
 
-- (void)testClientToken
+- (void)_testClientToken
 {
   // if it's a batch request the body will be zipped so make sure we don't do that
   id mockUtility = [OCMockObject niceMockForClass:[FBSDKBasicUtility class]];
