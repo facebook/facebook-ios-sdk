@@ -288,6 +288,117 @@
   XCTAssertEqualObjects(FBSDKLoginManager.capturedAnnotation, sampleAnnotation, "Should pass the annotation to the login manager");
 }
 
+// MARK: - Open Url
+
+- (void)testOpenUrlWithMissingSender
+{
+  [self.api openURL:self.sampleUrl
+             sender:nil
+            handler:^(BOOL _success, NSError *_Nullable error) {}];
+
+  XCTAssertTrue(self.api.expectingBackground, "Should set expecting background to true when opening a URL");
+  XCTAssertNil(self.api.pendingUrlOpen, "Should not set the pending url opener if there is no sender");
+}
+
+- (void)testOpenUrlWithSender
+{
+  FBSDKLoginManager *urlOpener = [FBSDKLoginManager new];
+  [self.api openURL:self.sampleUrl
+             sender:urlOpener
+            handler:^(BOOL _success, NSError *_Nullable error) {}];
+
+  XCTAssertTrue(self.api.expectingBackground, "Should set expecting background to true when opening a URL");
+  XCTAssertEqual(self.api.pendingUrlOpen, urlOpener, "Should set the pending url opener to the sender");
+}
+
+- (void)testOpenUrlWithVersionBelow10WhenApplicationOpens
+{
+  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
+
+  BOOL applicationOpensSuccessfully = YES;
+  [self stubIsOperatingSystemVersionAtLeast:iOS10Version with:NO];
+  [self stubOpenURLWith:applicationOpensSuccessfully];
+
+  [self.api openURL:self.sampleUrl sender:nil handler:^(BOOL _success, NSError *_Nullable error) {
+    XCTAssertEqual(
+      _success,
+      applicationOpensSuccessfully,
+      "Should call the completion handler with the expected value"
+    );
+    XCTAssertNil(error, "Should not call the completion handler with an error");
+    [expectation fulfill];
+  }];
+
+  [self waitForExpectationsWithTimeout:1 handler:nil];
+}
+
+- (void)testOpenUrlWithVersionBelow10WhenApplicationDoesNotOpen
+{
+  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
+
+  BOOL applicationOpensSuccessfully = NO;
+  [self stubIsOperatingSystemVersionAtLeast:iOS10Version with:NO];
+  [self stubOpenURLWith:applicationOpensSuccessfully];
+
+  [self.api openURL:self.sampleUrl sender:nil handler:^(BOOL _success, NSError *_Nullable error) {
+    XCTAssertEqual(
+      _success,
+      applicationOpensSuccessfully,
+      "Should call the completion handler with the expected value"
+    );
+    XCTAssertNil(error, "Should not call the completion handler with an error");
+    [expectation fulfill];
+  }];
+
+  [self waitForExpectationsWithTimeout:1 handler:nil];
+}
+
+- (void)testOpenUrlWhenApplicationOpens
+{
+  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
+
+  BOOL applicationOpensSuccessfully = YES;
+  [self stubIsOperatingSystemVersionAtLeast:iOS10Version with:YES];
+  [self stubOpenUrlOptionsCompletionHandlerWithPerformCompletion:YES
+                                               completionSuccess:applicationOpensSuccessfully];
+
+  [self.api openURL:self.sampleUrl sender:nil handler:^(BOOL _success, NSError *_Nullable error) {
+    XCTAssertEqual(
+      _success,
+      applicationOpensSuccessfully,
+      "Should call the completion handler with the expected value"
+    );
+    XCTAssertNil(error, "Should not call the completion handler with an error");
+    [expectation fulfill];
+  }];
+
+  [self waitForExpectationsWithTimeout:1 handler:nil];
+}
+
+- (void)testOpenUrlWhenApplicationDoesNotOpen
+{
+  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
+
+  BOOL applicationOpensSuccessfully = NO;
+  [self stubIsOperatingSystemVersionAtLeast:iOS10Version with:YES];
+  [self stubOpenUrlOptionsCompletionHandlerWithPerformCompletion:YES
+                                               completionSuccess:applicationOpensSuccessfully];
+
+  [self.api openURL:self.sampleUrl sender:nil handler:^(BOOL _success, NSError *_Nullable error) {
+    XCTAssertEqual(
+      _success,
+      applicationOpensSuccessfully,
+      "Should call the completion handler with the expected value"
+    );
+    XCTAssertNil(error, "Should not call the completion handler with an error");
+    [expectation fulfill];
+  }];
+
+  [self waitForExpectationsWithTimeout:1 handler:nil];
+}
+
+// MARK: - Helpers
+
 - (NSURL *)sampleUrl
 {
   return [NSURL URLWithString:@"http://example.com"];
@@ -300,5 +411,6 @@ static inline NSString *StringFromBool(BOOL value)
 
 NSString *const sampleSource = @"com.example";
 NSString *const sampleAnnotation = @"foo";
+NSOperatingSystemVersion const iOS10Version = { .majorVersion = 10, .minorVersion = 0, .patchVersion = 0 };
 
 @end

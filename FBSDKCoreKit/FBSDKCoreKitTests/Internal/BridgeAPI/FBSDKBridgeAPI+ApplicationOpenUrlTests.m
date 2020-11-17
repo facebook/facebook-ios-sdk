@@ -18,7 +18,7 @@
 
 #import "FBSDKBridgeAPITests.h"
 
-@implementation FBSDKBridgeAPITests (OpenURLTests)
+@implementation FBSDKBridgeAPITests (ApplicationOpenURLTests)
 
 // MARK: - Url Opening
 

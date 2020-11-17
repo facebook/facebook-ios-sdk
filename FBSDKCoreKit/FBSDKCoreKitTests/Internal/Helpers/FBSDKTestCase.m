@@ -104,6 +104,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self setUpNSDateClassMock];
   [self setUpSharedApplicationMock];
   [self setUpLoggerClassMock];
+  [self setUpProcessInfoMock];
 }
 
 - (void)tearDown
@@ -190,6 +191,9 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   [_loggerClassMock stopMocking];
   _loggerClassMock = nil;
+
+  [_processInfoMock stopMocking];
+  _processInfoMock = nil;
 }
 
 - (void)setUpSettingsMock
@@ -327,6 +331,12 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)setUpLoggerClassMock
 {
   self.loggerClassMock = OCMClassMock(FBSDKLogger.class);
+}
+
+- (void)setUpProcessInfoMock
+{
+  self.processInfoMock = OCMClassMock(NSProcessInfo.class);
+  OCMStub(ClassMethod([_processInfoMock processInfo])).andReturn(_processInfoMock);
 }
 
 #pragma mark - Public Methods
@@ -537,6 +547,21 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   OCMStub([_sharedApplicationMock canOpenURL:OCMArg.any]).andReturn(canOpenURL);
 }
 
+- (void)stubOpenURLWith:(BOOL)openURL
+{
+  OCMStub([_sharedApplicationMock openURL:OCMArg.any]).andReturn(openURL);
+}
+
+- (void)stubOpenUrlOptionsCompletionHandlerWithPerformCompletion:(BOOL)performCompletion
+                                               completionSuccess:(BOOL)completionSuccess
+{
+  if (performCompletion) {
+    OCMStub([_sharedApplicationMock openURL:OCMArg.any options:OCMArg.any completionHandler:([OCMArg invokeBlockWithArgs:@(completionSuccess), nil])]);
+  } else {
+    OCMStub([_sharedApplicationMock openURL:OCMArg.any options:OCMArg.any completionHandler:OCMArg.any]);
+  }
+}
+
 - (void)stubAppUrlSchemeSuffixWith:(NSString *)suffix
 {
   OCMStub(ClassMethod([_settingsClassMock appURLSchemeSuffix])).andReturn(suffix);
@@ -545,6 +570,11 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)stubUserAgentSuffixWith:(nullable NSString *)suffix
 {
   OCMStub(ClassMethod([self.settingsClassMock userAgentSuffix])).andReturn(suffix);
+}
+
+- (void)stubIsOperatingSystemVersionAtLeast:(NSOperatingSystemVersion)version with:(BOOL)returnValue
+{
+  OCMStub([self.processInfoMock isOperatingSystemAtLeastVersion:version]).andReturn(returnValue);
 }
 
 // MARK: - Helpers

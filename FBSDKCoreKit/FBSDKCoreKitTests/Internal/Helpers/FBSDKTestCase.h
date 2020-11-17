@@ -137,6 +137,9 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing a `FBSDKLogger` class mock between tests
 @property (nullable, nonatomic, assign) id loggerClassMock;
 
+/// Used for sharing an `NSProcessInfo.processInfo` mock between tests
+@property (nullable, nonatomic, assign) id processInfoMock;
+
 /// Stubs `FBSDKSettings.appID` and return the provided value
 - (void)stubAppID:(nullable NSString *)appID;
 
@@ -258,8 +261,19 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Stubs `FBSDKSettings.facebookDomainPart` with the provided value
 - (void)stubFacebookDomainPartWith:(NSString *)domainPart;
 
-/// Stubs `UIApplication.sharedApplication`'s `canOpenURL:` method with the value
+/// Stubs `UIApplication.sharedApplication`'s `canOpenURL:` method and returns the provided value
 - (void)stubCanOpenURLWith:(BOOL)canOpenURL;
+
+/// Stubs `UIApplication.sharedApplication`'s `openURL:` method and returns the provided value
+- (void)stubOpenURLWith:(BOOL)openURL;
+
+/// Stubs `UIApplication.sharedApplication`'s `openURL:options:completionHandler:` method
+///
+/// - Parameters:
+/// - performCompletion: Whether to invoke the completion handler
+/// - completionSuccess: The value to pass for the success parameter of the completion handler
+- (void)stubOpenUrlOptionsCompletionHandlerWithPerformCompletion:(BOOL)performCompletion
+                                               completionSuccess:(BOOL)completionSuccess;
 
 /// Stubs `FBSDKSettings.appURLSchemeSuffix` and return the provided value
 - (void)stubAppUrlSchemeSuffixWith:(nullable NSString *)suffix;
@@ -269,6 +283,9 @@ Also, to get a better understanding of mocking, please read the documentation at
 
 /// Stubs `FBSDKSettings.userAgentSuffix` and returns the provided value
 - (void)stubUserAgentSuffixWith:(nullable NSString *)suffix;
+
+/// Stubs `NSProcessInfo`'s `isOperatingSystemVersionAtLeast:` and returns the provided value
+- (void)stubIsOperatingSystemVersionAtLeast:(NSOperatingSystemVersion)version with:(BOOL)returnValue;
 
 @end
 

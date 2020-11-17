@@ -270,20 +270,9 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
           handler(success, nil);
         }];
       }
-    } else {
-      BOOL opened = [[UIApplication sharedApplication] openURL:url];
-
-      if ([url.scheme hasPrefix:@"http"] && !opened) {
-        NSOperatingSystemVersion iOS8Version = { .majorVersion = 8, .minorVersion = 0, .patchVersion = 0 };
-        if (![NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:iOS8Version]) {
-          // Safari openURL calls can wrongly return NO on iOS 7 so manually overwrite that case to YES.
-          // Otherwise we would rather trust in the actual result of openURL
-          opened = YES;
-        }
-      }
-      if (handler) {
-        handler(opened, nil);
-      }
+    } else if (handler) {
+      BOOL opened = [UIApplication.sharedApplication openURL:url];
+      handler(opened, nil);
     }
   });
 }
