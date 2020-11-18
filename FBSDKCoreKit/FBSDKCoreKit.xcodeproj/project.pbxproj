@@ -699,7 +699,7 @@
 		C4FC99F1202CD56D0038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = C4FC99D7202CD5590038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.h */; };
 		C4FC99F2202CD56D0038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = C4FC99D8202CD5590038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.m */; };
 		C51121CB20A27EF50041DC94 /* FBSDKEventBindingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C51121C920A27EF50041DC94 /* FBSDKEventBindingTests.m */; };
-		C51121CC20A27EF50041DC94 /* FBSDKSampleEventBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = C51121CA20A27EF50041DC94 /* FBSDKSampleEventBinding.m */; };
+		C51121CC20A27EF50041DC94 /* FBSDKSampleEventBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51121CA20A27EF50041DC94 /* FBSDKSampleEventBinding.swift */; };
 		C51122A020A4BCEB0041DC94 /* FBSDKApplicationDelegateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C511229F20A4BCEB0041DC94 /* FBSDKApplicationDelegateTests.m */; };
 		C5188DF9222F388400F4D8BC /* FBSDKApplicationObserving.h in Headers */ = {isa = PBXBuildFile; fileRef = C5188DF8222F388400F4D8BC /* FBSDKApplicationObserving.h */; };
 		C5188DFA222F388400F4D8BC /* FBSDKApplicationObserving.h in Headers */ = {isa = PBXBuildFile; fileRef = C5188DF8222F388400F4D8BC /* FBSDKApplicationObserving.h */; };
@@ -1488,9 +1488,8 @@
 		C4513900202CBF1F0063275D /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.2.sdk/System/Library/Frameworks/WebKit.framework; sourceTree = DEVELOPER_DIR; };
 		C4FC99D7202CD5590038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKHybridAppEventsScriptMessageHandler.h; sourceTree = "<group>"; };
 		C4FC99D8202CD5590038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKHybridAppEventsScriptMessageHandler.m; sourceTree = "<group>"; };
-		C51121C820A27EF50041DC94 /* FBSDKSampleEventBinding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKSampleEventBinding.h; sourceTree = "<group>"; };
 		C51121C920A27EF50041DC94 /* FBSDKEventBindingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKEventBindingTests.m; sourceTree = "<group>"; };
-		C51121CA20A27EF50041DC94 /* FBSDKSampleEventBinding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKSampleEventBinding.m; sourceTree = "<group>"; };
+		C51121CA20A27EF50041DC94 /* FBSDKSampleEventBinding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBSDKSampleEventBinding.swift; sourceTree = "<group>"; };
 		C511229F20A4BCEB0041DC94 /* FBSDKApplicationDelegateTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKApplicationDelegateTests.m; sourceTree = "<group>"; };
 		C5188DF8222F388400F4D8BC /* FBSDKApplicationObserving.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKApplicationObserving.h; sourceTree = "<group>"; };
 		C5188E312231C4B500F4D8BC /* FBSDKBridgeAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKBridgeAPI.h; sourceTree = "<group>"; };
@@ -2448,8 +2447,7 @@
 		C51121C720A27EF50041DC94 /* Codeless */ = {
 			isa = PBXGroup;
 			children = (
-				C51121C820A27EF50041DC94 /* FBSDKSampleEventBinding.h */,
-				C51121CA20A27EF50041DC94 /* FBSDKSampleEventBinding.m */,
+				C51121CA20A27EF50041DC94 /* FBSDKSampleEventBinding.swift */,
 				C51121C920A27EF50041DC94 /* FBSDKEventBindingTests.m */,
 			);
 			path = Codeless;
@@ -4162,7 +4160,7 @@
 				F4BF22A0241954B400BFB494 /* FBSDKMonitorStoreTests.m in Sources */,
 				89C8B19C1A8D7A27009B07F5 /* FBSDKUtilityTests.swift in Sources */,
 				F41979282475A20E003007CC /* FBSDKTypeUtilityTests.m in Sources */,
-				C51121CC20A27EF50041DC94 /* FBSDKSampleEventBinding.m in Sources */,
+				C51121CC20A27EF50041DC94 /* FBSDKSampleEventBinding.swift in Sources */,
 				F916581524F6BAB200BB759A /* FBSDKSKAdNetworkConversionConfigurationTests.m in Sources */,
 				F4A826B724EC6FAD00EB2CD4 /* FBSDKProfileTests.m in Sources */,
 				5D59BFFF23A7505D0008CA5A /* FBSDKLibAnalyzerTests.m in Sources */,

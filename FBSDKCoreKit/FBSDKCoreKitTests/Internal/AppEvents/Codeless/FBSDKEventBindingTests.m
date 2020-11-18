@@ -22,7 +22,6 @@
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKEventBinding.h"
 #import "FBSDKEventBindingManager.h"
-#import "FBSDKSampleEventBinding.h"
 
 @interface FBSDKEventBindingTests : XCTestCase
 {
