@@ -106,7 +106,7 @@
 
   [FBSDKMonitorNetworker sendEntries:entries];
 
-  OCMVerify(
+  OCMVerifyAll(
     [graphRequestMock initWithGraphPath:[OCMArg checkWithBlock:verifyPath]
                              parameters:[OCMArg checkWithBlock:verifyParameters]
                             tokenString:[OCMArg isNil]

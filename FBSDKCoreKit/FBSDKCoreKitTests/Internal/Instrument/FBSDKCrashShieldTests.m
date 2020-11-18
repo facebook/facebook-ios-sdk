@@ -222,7 +222,7 @@
   NSDictionary *expectedParameters = @{
     @"crash_shield" : [self encodedCoreKitFeatureDataWithTimestamp:@"10"]
   };
-  OCMVerify(
+  OCMVerifyAll(
     [self.graphRequestMock initWithGraphPath:expectedPath
                                   parameters:expectedParameters
                                   HTTPMethod:FBSDKHTTPMethodPOST]
