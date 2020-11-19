@@ -29,7 +29,9 @@
 #import "FBSDKApplicationDelegate+Internal.h"
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitTestUtility.h"
+#import "FBSDKCrashObserver.h"
 #import "FBSDKCrashShield.h"
+#import "FBSDKErrorReport.h"
 #import "FBSDKFeatureManager.h"
 #import "FBSDKGraphRequestPiggybackManager.h"
 #import "FBSDKInternalUtility.h"
@@ -108,6 +110,8 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self setUpProcessInfoMock];
   [self setUpTransitionCoordinatorMock];
   [self setUpBridgeApiClassMock];
+  [self setUpCrashObserverClassMock];
+  [self setUpErrorReportClassMock];
 }
 
 - (void)tearDown
@@ -203,6 +207,12 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   [_bridgeApiResponseClassMock stopMocking];
   _bridgeApiResponseClassMock = nil;
+
+  [_crashObserverClassMock stopMocking];
+  _crashObserverClassMock = nil;
+
+  [_errorReportClassMock stopMocking];
+  _errorReportClassMock = nil;
 }
 
 - (void)setUpSettingsMock
@@ -357,6 +367,16 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)setUpBridgeApiClassMock
 {
   _bridgeApiResponseClassMock = OCMClassMock(FBSDKBridgeAPIResponse.class);
+}
+
+- (void)setUpCrashObserverClassMock
+{
+  _crashObserverClassMock = OCMClassMock(FBSDKCrashObserver.class);
+}
+
+- (void)setUpErrorReportClassMock
+{
+  _errorReportClassMock = OCMClassMock(FBSDKErrorReport.class);
 }
 
 #pragma mark - Public Methods
