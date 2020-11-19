@@ -24,12 +24,15 @@ public class ViewControllerSpy: UIViewController {
   public var capturedDismissCompletion: (() -> Void)?
   public var dismissWasCalled = false
   public var capturedPresentViewController: UIViewController?
-  public var capturedPresentViewControllerAnimated: Bool?
+  public var capturedPresentViewControllerAnimated = false
   public var capturedPresentViewControllerCompletion: (() -> Void)?
+
+  /// Used for providing a value to return for the readonly `transitionCoordinator` property
+  public var stubbedTransitionCoordinator: UIViewControllerTransitionCoordinator? = nil
 
   // Overriding with no implementation to stub the property
   public override var transitionCoordinator: UIViewControllerTransitionCoordinator? {
-    return nil
+    return stubbedTransitionCoordinator
   }
 
   private lazy var presenting = {

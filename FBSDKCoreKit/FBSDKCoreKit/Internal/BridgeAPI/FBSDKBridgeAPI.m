@@ -333,6 +333,19 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
                      fromViewController:(UIViewController *)fromViewController
                                 handler:(FBSDKSuccessBlock)handler
 {
+  [self _openURLWithSafariViewController:url
+                                  sender:sender
+                      fromViewController:fromViewController
+                                 handler:handler
+                           dylibResolver:FBSDKDynamicFrameworkLoader.shared];
+}
+
+- (void)_openURLWithSafariViewController:(NSURL *)url
+                                  sender:(id<FBSDKURLOpening>)sender
+                      fromViewController:(UIViewController *)fromViewController
+                                 handler:(FBSDKSuccessBlock)handler
+                           dylibResolver:(id<FBSDKDynamicFrameworkResolving>)dylibResolver
+{
   if (![url.scheme hasPrefix:@"http"]) {
     [self openURL:url sender:sender handler:handler];
     return;
@@ -352,7 +365,7 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
   // trying to dynamically load SFSafariViewController class
   // so for the cases when it is available we can send users through Safari View Controller flow
   // in cases it is not available regular flow will be selected
-  Class SFSafariViewControllerClass = fbsdkdfl_SFSafariViewControllerClass();
+  Class SFSafariViewControllerClass = dylibResolver.safariViewControllerClass;
 
   if (SFSafariViewControllerClass) {
     UIViewController *parent = fromViewController ?: [FBSDKInternalUtility topMostViewController];

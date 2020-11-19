@@ -16,31 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-
-#import "FBSDKURLOpening.h"
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// Duplicate minimal interface for `FBSDKLoginManager` that can fulfill the `FBSDKBridgeAPI`'s runtime requirement.
-/// Used in the `FBSDKBridgeAPITests` as a spy since it will be discovered by the real class and used instead of the actual
-/// `FBSDKLoginManager`.
-@interface FBSDKLoginManager : NSObject <FBSDKURLOpening>
+/// Used for defining behavior of types that provide classes for types that
+/// exist in dynamically loaded frameworks.
+@protocol FBSDKDynamicFrameworkResolving <NSObject>
 
-@property (class, nullable, copy) NSURL *capturedOpenUrl;
-@property (class, nullable, copy) NSString *capturedSourceApplication;
-@property (class, nullable, copy) NSString *capturedAnnotation;
-@property (class) BOOL stubbedOpenUrlSuccess;
-@property (nullable, copy) NSURL *capturedCanOpenUrl;
-@property (nullable, copy) NSString *capturedCanOpenSourceApplication;
-@property (nullable, copy) NSString *capturedCanOpenAnnotation;
-@property BOOL stubbedCanOpenUrl;
-@property BOOL stubbedIsAuthenticationUrl;
-
-+ (void)resetTestEvidence;
-
-- (void)stubShouldStopPropagationOfURL:(NSURL *)url withValue:(BOOL)shouldStop;
-- (BOOL)shouldStopPropagationOfURL:(NSURL *)url;
+- (nullable Class)safariViewControllerClass;
 
 @end
 

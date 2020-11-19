@@ -93,7 +93,7 @@ static BOOL _stubbedOpenUrlSuccess;
 
 - (BOOL)isAuthenticationURL:(NSURL *)url
 {
-  return NO;
+  return _stubbedIsAuthenticationUrl;
 }
 
 @end

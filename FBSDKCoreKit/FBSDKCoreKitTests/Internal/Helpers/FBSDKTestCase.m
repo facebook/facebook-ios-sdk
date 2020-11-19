@@ -105,6 +105,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self setUpSharedApplicationMock];
   [self setUpLoggerClassMock];
   [self setUpProcessInfoMock];
+  [self setUpTransitionCoordinatorMock];
 }
 
 - (void)tearDown
@@ -194,6 +195,9 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   [_processInfoMock stopMocking];
   _processInfoMock = nil;
+
+  [_transitionCoordinatorMock stopMocking];
+  _transitionCoordinatorMock = nil;
 }
 
 - (void)setUpSettingsMock
@@ -337,6 +341,12 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 {
   self.processInfoMock = OCMClassMock(NSProcessInfo.class);
   OCMStub(ClassMethod([_processInfoMock processInfo])).andReturn(_processInfoMock);
+}
+
+- (void)setUpTransitionCoordinatorMock
+{
+  self.transitionCoordinatorMock = [OCMockObject
+                                    mockForProtocol:@protocol(UIViewControllerTransitionCoordinator)];
 }
 
 #pragma mark - Public Methods

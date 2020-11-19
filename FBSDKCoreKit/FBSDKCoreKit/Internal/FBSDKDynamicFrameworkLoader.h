@@ -20,6 +20,8 @@
 #import <Foundation/Foundation.h>
 #import <QuartzCore/QuartzCore.h>
 
+#import "FBSDKDynamicFrameworkResolving.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Security APIs
@@ -141,10 +143,13 @@ FOUNDATION_EXPORT Class fbsdkdfl_WKUserScriptClass(void);
  As new types are needed, they should be added and strongly typed.
  */
 NS_SWIFT_NAME(DynamicFrameworkLoader)
-@interface FBSDKDynamicFrameworkLoader : NSObject
+@interface FBSDKDynamicFrameworkLoader : NSObject<FBSDKDynamicFrameworkResolving>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
+
+// A shared instance to access dynamically loaded types from
++ (instancetype)shared;
 
 #pragma mark - Security Constants
 

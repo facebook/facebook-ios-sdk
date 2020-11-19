@@ -111,6 +111,21 @@ _fbsdkdfl_handle_get_impl_(Security)
 
 @implementation FBSDKDynamicFrameworkLoader
 
++ (FBSDKDynamicFrameworkLoader *)shared
+{
+  static dispatch_once_t onceToken;
+  static FBSDKDynamicFrameworkLoader *shared = nil;
+  dispatch_once(&onceToken, ^{
+    shared = [[self alloc] init];
+  });
+  return shared;
+}
+
+- (Class)safariViewControllerClass
+{
+  return fbsdkdfl_SFSafariViewControllerClass();
+}
+
 #define _fbsdkdfl_Security_get_k(SYMBOL) _fbsdkdfl_symbol_get_k(Security, SYMBOL, CFTypeRef *)
 
 #define _fbsdkdfl_Security_get_and_return_k(SYMBOL) \
