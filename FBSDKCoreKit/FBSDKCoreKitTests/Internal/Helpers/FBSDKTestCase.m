@@ -32,6 +32,7 @@
 #import "FBSDKCrashShield.h"
 #import "FBSDKFeatureManager.h"
 #import "FBSDKGraphRequestPiggybackManager.h"
+#import "FBSDKInternalUtility.h"
 #import "FBSDKKeychainStore.h"
 #import "FBSDKModelManager.h"
 #import "FBSDKSKAdNetworkReporter.h"
@@ -106,6 +107,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self setUpLoggerClassMock];
   [self setUpProcessInfoMock];
   [self setUpTransitionCoordinatorMock];
+  [self setUpBridgeApiClassMock];
 }
 
 - (void)tearDown
@@ -198,6 +200,9 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   [_transitionCoordinatorMock stopMocking];
   _transitionCoordinatorMock = nil;
+
+  [_bridgeApiResponseClassMock stopMocking];
+  _bridgeApiResponseClassMock = nil;
 }
 
 - (void)setUpSettingsMock
@@ -347,6 +352,11 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 {
   self.transitionCoordinatorMock = [OCMockObject
                                     mockForProtocol:@protocol(UIViewControllerTransitionCoordinator)];
+}
+
+- (void)setUpBridgeApiClassMock
+{
+  _bridgeApiResponseClassMock = OCMClassMock(FBSDKBridgeAPIResponse.class);
 }
 
 #pragma mark - Public Methods
@@ -585,6 +595,11 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)stubIsOperatingSystemVersionAtLeast:(NSOperatingSystemVersion)version with:(BOOL)returnValue
 {
   OCMStub([self.processInfoMock isOperatingSystemAtLeastVersion:version]).andReturn(returnValue);
+}
+
+- (void)stubAppUrlSchemeWith:(nullable NSString *)scheme
+{
+  OCMStub([self.internalUtilityClassMock appURLScheme]).andReturn(scheme);
 }
 
 // MARK: - Helpers

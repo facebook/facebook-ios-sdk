@@ -27,10 +27,16 @@ NS_ASSUME_NONNULL_BEGIN
 /// `FBSDKLoginManager`.
 @interface FBSDKLoginManager : NSObject <FBSDKURLOpening>
 
+// The reason some of these properties are static is that there are cases where we dynamically
+// check for the existence of the login manager at runtime. Since we don't have a handle to the
+// instance we can make sure the properties are set on the type so that we can examine them there
+// ultimately this is a pattern we need to get away from but this allows it to be tested while
+// we refactor.
 @property (class, nullable, copy) NSURL *capturedOpenUrl;
 @property (class, nullable, copy) NSString *capturedSourceApplication;
 @property (class, nullable, copy) NSString *capturedAnnotation;
 @property (class) BOOL stubbedOpenUrlSuccess;
+@property BOOL openUrlWasCalled;
 @property (nullable, copy) NSURL *capturedCanOpenUrl;
 @property (nullable, copy) NSString *capturedCanOpenSourceApplication;
 @property (nullable, copy) NSString *capturedCanOpenAnnotation;

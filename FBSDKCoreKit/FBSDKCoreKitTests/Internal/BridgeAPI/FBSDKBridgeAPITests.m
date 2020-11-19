@@ -127,8 +127,8 @@
 
 - (void)testUpdatingShowAlertStateForDidBecomeActive
 {
-  AuthenticationSessionSpy *spy = AuthenticationSessionSpy.makeDefaultSpy;
-  self.api.authenticationSession = spy;
+  AuthenticationSessionSpy *authSessionSpy = AuthenticationSessionSpy.makeDefaultSpy;
+  self.api.authenticationSession = authSessionSpy;
   self.api.authenticationSessionState = FBSDKAuthenticationSessionShowAlert;
 
   [self.api applicationDidBecomeActive:UIApplication.sharedApplication];
@@ -138,14 +138,14 @@
     FBSDKAuthenticationSessionShowWebBrowser,
     "Becoming active when the state is 'showAlert' should set the state to be 'showWebBrowser'"
   );
-  XCTAssertEqual(spy.cancelCallCount, 0, "Becoming active when the state is 'showAlert' should not cancel the session");
+  XCTAssertEqual(authSessionSpy.cancelCallCount, 0, "Becoming active when the state is 'showAlert' should not cancel the session");
   XCTAssertNotNil(self.api.authenticationSession, "Becoming active when the state is 'showAlert' should not destroy the session");
 }
 
 - (void)testUpdatingCancelledBySystemStateForDidBecomeActive
 {
-  AuthenticationSessionSpy *spy = AuthenticationSessionSpy.makeDefaultSpy;
-  self.api.authenticationSession = spy;
+  AuthenticationSessionSpy *authSessionSpy = AuthenticationSessionSpy.makeDefaultSpy;
+  self.api.authenticationSession = authSessionSpy;
   self.api.authenticationSessionState = FBSDKAuthenticationSessionCanceledBySystem;
 
   [self.api applicationDidBecomeActive:UIApplication.sharedApplication];
@@ -159,13 +159,13 @@
     self.api.authenticationSession,
     "Becoming active when the state is 'canceledBySystem' should destroy the session"
   );
-  XCTAssertEqual(spy.cancelCallCount, 1, "Becoming active when the state is 'canceledBySystem' should cancel the session");
+  XCTAssertEqual(authSessionSpy.cancelCallCount, 1, "Becoming active when the state is 'canceledBySystem' should cancel the session");
 }
 
 - (void)testCompletingWithCancelledBySystemStateForDidBecomeActive
 {
-  AuthenticationSessionSpy *spy = AuthenticationSessionSpy.makeDefaultSpy;
-  self.api.authenticationSession = spy;
+  AuthenticationSessionSpy *authSessionSpy = AuthenticationSessionSpy.makeDefaultSpy;
+  self.api.authenticationSession = authSessionSpy;
   self.api.authenticationSessionState = FBSDKAuthenticationSessionCanceledBySystem;
   self.api.authenticationSessionCompletionHandler = ^(NSURL *callbackURL, NSError *error) {
     XCTAssertNil(callbackURL, "A completion triggered by becoming active in a canceled state should not have a callback URL");
@@ -482,6 +482,194 @@
   [self assertPendingPropertiesCleared];
 }
 
+// MARK: - Safari View Controller Delegate Methods
+
+- (void)testSafariVcDidFinishWithPendingUrlOpener
+{
+  FBSDKLoginManager *urlOpener = [FBSDKLoginManager new];
+  self.api.pendingUrlOpen = urlOpener;
+  self.api.safariViewController = ViewControllerSpy.makeDefaultSpy;
+
+  // Funny enough there's no check that the safari view controller from the delegate
+  // is the same instance stored in the safariViewController property
+  [self.api safariViewControllerDidFinish:self.api.safariViewController];
+
+  XCTAssertNil(self.api.pendingUrlOpen, "Should remove the reference to the pending url opener");
+  XCTAssertNil(
+    self.api.safariViewController,
+    "Should remove the reference to the safari view controller when the delegate method is called"
+  );
+
+  OCMVerify([_partialMock _cancelBridgeRequest]);
+  XCTAssertTrue(urlOpener.openUrlWasCalled, "Should ask the opener to open a url (even though there is not one provided");
+  XCTAssertNil(FBSDKLoginManager.capturedOpenUrl, "The url opener should be called with nil arguments");
+  XCTAssertNil(FBSDKLoginManager.capturedSourceApplication, "The url opener should be called with nil arguments");
+  XCTAssertNil(FBSDKLoginManager.capturedAnnotation, "The url opener should be called with nil arguments");
+}
+
+- (void)testSafariVcDidFinishWithoutPendingUrlOpener
+{
+  self.api.safariViewController = ViewControllerSpy.makeDefaultSpy;
+
+  // Funny enough there's no check that the safari view controller from the delegate
+  // is the same instance stored in the safariViewController property
+  [self.api safariViewControllerDidFinish:self.api.safariViewController];
+
+  XCTAssertNil(self.api.pendingUrlOpen, "Should remove the reference to the pending url opener");
+  XCTAssertNil(
+    self.api.safariViewController,
+    "Should remove the reference to the safari view controller when the delegate method is called"
+  );
+
+  OCMVerify([_partialMock _cancelBridgeRequest]);
+  XCTAssertNil(FBSDKLoginManager.capturedOpenUrl, "The url opener should not be called");
+  XCTAssertNil(FBSDKLoginManager.capturedSourceApplication, "The url opener should not be called");
+  XCTAssertNil(FBSDKLoginManager.capturedAnnotation, "The url opener should not be called");
+}
+
+// MARK: - ContainerViewController Delegate Methods
+
+- (void)testViewControllerDidDisappearWithSafariViewController
+{
+  UIViewController *viewControllerSpy = ViewControllerSpy.makeDefaultSpy;
+  self.api.safariViewController = viewControllerSpy;
+  FBSDKContainerViewController *container = [FBSDKContainerViewController new];
+
+  [self.api viewControllerDidDisappear:container animated:NO];
+
+  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:@"**ERROR**:\n The SFSafariViewController's parent view controller was dismissed.\nThis can happen if you are triggering login from a UIAlertController. Instead, make sure your top most view controller will not be prematurely dismissed."]);
+  OCMVerify([_partialMock safariViewControllerDidFinish:viewControllerSpy]);
+}
+
+- (void)testViewControllerDidDisappearWithoutSafariViewController
+{
+  FBSDKContainerViewController *container = [FBSDKContainerViewController new];
+
+  OCMReject([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:OCMArg.any]);
+  OCMReject([_partialMock safariViewControllerDidFinish:OCMArg.any]);
+
+  [self.api viewControllerDidDisappear:container animated:NO];
+}
+
+// MARK: - Bridge Response Url Handling
+
+- (void)testHandlingBridgeResponseWithInvalidScheme
+{
+  [self stubBridgeApiResponseWithUrlCreation];
+  [self stubAppUrlSchemeWith:@"foo"];
+
+  BOOL result = [self.api _handleBridgeAPIResponseURL:self.sampleUrl sourceApplication:@""];
+
+  XCTAssertFalse(result, "Should not successfully handle bridge api response url with an invalid url scheme");
+  [self assertPendingPropertiesCleared];
+}
+
+- (void)testHandlingBridgeResponseWithInvalidHost
+{
+  [self stubBridgeApiResponseWithUrlCreation];
+  [self stubAppUrlSchemeWith:self.sampleUrl.scheme];
+
+  BOOL result = [self.api _handleBridgeAPIResponseURL:self.sampleUrl sourceApplication:@""];
+
+  XCTAssertFalse(result, "Should not successfully handle bridge api response url with an invalid url host");
+  [self assertPendingPropertiesCleared];
+}
+
+- (void)testHandlingBridgeResponseWithMissingRequest
+{
+  [self stubBridgeApiResponseWithUrlCreation];
+  [self stubAppUrlSchemeWith:self.validBridgeResponseUrl.scheme];
+
+  BOOL result = [self.api _handleBridgeAPIResponseURL:self.validBridgeResponseUrl sourceApplication:@""];
+
+  XCTAssertFalse(result, "Should not successfully handle bridge api response url with a missing request");
+  [self assertPendingPropertiesCleared];
+}
+
+- (void)testHandlingBridgeResponseWithMissingCompletionBlock
+{
+  [self stubBridgeApiResponseWithUrlCreation];
+  [self stubAppUrlSchemeWith:self.validBridgeResponseUrl.scheme];
+  self.api.pendingRequest = [FakeBridgeApiRequest requestWithURL:self.sampleUrl];
+
+  BOOL result = [self.api _handleBridgeAPIResponseURL:self.validBridgeResponseUrl sourceApplication:@""];
+
+  XCTAssertTrue(result, "Should successfully handle bridge api response url with a missing completion block");
+  [self assertPendingPropertiesCleared];
+}
+
+- (void)testHandlingBridgeResponseWithBridgeResponse
+{
+  FBSDKBridgeAPIResponse *response = (FBSDKBridgeAPIResponse *)NSObject.new;
+  OCMStub(
+    ClassMethod(
+      [self.bridgeApiResponseClassMock bridgeAPIResponseWithRequest:OCMArg.any
+                                                        responseURL:OCMArg.any
+                                                  sourceApplication:OCMArg.any
+                                                              error:[OCMArg setTo:nil]]
+    )
+  )
+  .andReturn(response);
+
+  [self stubAppUrlSchemeWith:self.validBridgeResponseUrl.scheme];
+  self.api.pendingRequest = [FakeBridgeApiRequest requestWithURL:self.sampleUrl];
+  self.api.pendingRequestCompletionBlock = ^(FBSDKBridgeAPIResponse *_response) {
+    XCTAssertEqualObjects(_response, response, "Should invoke the completion with the expected bridge api response");
+  };
+  BOOL result = [self.api _handleBridgeAPIResponseURL:self.validBridgeResponseUrl sourceApplication:@""];
+
+  XCTAssertTrue(result, "Should successfully handle creation of a bridge api response");
+  [self assertPendingPropertiesCleared];
+}
+
+- (void)testHandlingBridgeResponseWithBridgeError
+{
+  FBSDKBridgeAPIResponse *response = (FBSDKBridgeAPIResponse *)NSObject.new;
+
+  // First attempt to create response populates error and returns nil response.
+  OCMStub(
+    ClassMethod(
+      [self.bridgeApiResponseClassMock bridgeAPIResponseWithRequest:OCMArg.any
+                                                        responseURL:OCMArg.any
+                                                  sourceApplication:OCMArg.any
+                                                              error:[OCMArg setTo:self.sampleError]]
+    )
+  );
+
+  // Second (different) attempt to create response takes error and returns response
+  OCMStub(ClassMethod([self.bridgeApiResponseClassMock bridgeAPIResponseWithRequest:OCMArg.any error:self.sampleError]))
+  .andReturn(response);
+
+  [self stubAppUrlSchemeWith:self.validBridgeResponseUrl.scheme];
+  self.api.pendingRequest = [FakeBridgeApiRequest requestWithURL:self.sampleUrl];
+  self.api.pendingRequestCompletionBlock = ^(FBSDKBridgeAPIResponse *_response) {
+    XCTAssertEqualObjects(_response, response, "Should invoke the completion with the expected bridge api response");
+  };
+  BOOL result = [self.api _handleBridgeAPIResponseURL:self.validBridgeResponseUrl sourceApplication:@""];
+
+  XCTAssertTrue(result, "Should retry creation of a bridge api response if the first attempt has an error");
+  [self assertPendingPropertiesCleared];
+}
+
+- (void)testHandlingBridgeResponseWithMissingResponseMissingError
+{
+  // First attempt to create response returns nil
+  [self stubBridgeApiResponseWithUrlCreation];
+
+  // Second (different) attempt to create response returns nil
+  OCMStub(ClassMethod([self.bridgeApiResponseClassMock bridgeAPIResponseWithRequest:OCMArg.any error:OCMArg.any]));
+
+  [self stubAppUrlSchemeWith:self.validBridgeResponseUrl.scheme];
+  self.api.pendingRequest = [FakeBridgeApiRequest requestWithURL:self.sampleUrl];
+  self.api.pendingRequestCompletionBlock = ^(FBSDKBridgeAPIResponse *response) {
+    XCTFail("Should not invoke pending completion handler");
+  };
+  BOOL result = [self.api _handleBridgeAPIResponseURL:self.validBridgeResponseUrl sourceApplication:@""];
+
+  XCTAssertFalse(result, "Should return false when a bridge response cannot be created");
+  [self assertPendingPropertiesCleared];
+}
+
 // MARK: - Helpers
 
 - (void)assertPendingPropertiesCleared
@@ -508,6 +696,19 @@
   );
 }
 
+/// Stubs `FBSDKBridgeAPI`'s  `bridgeAPIResponseWithRequest:responseURL:sourceApplication:error:` to keep it from being called
+- (void)stubBridgeApiResponseWithUrlCreation
+{
+  OCMStub(
+    ClassMethod(
+      [self.bridgeApiResponseClassMock bridgeAPIResponseWithRequest:OCMArg.any
+                                                        responseURL:OCMArg.any
+                                                  sourceApplication:OCMArg.any
+                                                              error:[OCMArg setTo:nil]]
+    )
+  );
+}
+
 - (NSURL *)sampleUrl
 {
   return [NSURL URLWithString:@"http://example.com"];
@@ -521,6 +722,11 @@
 static inline NSString *StringFromBool(BOOL value)
 {
   return value ? @"YES" : @"NO";
+}
+
+- (NSURL *)validBridgeResponseUrl
+{
+  return [NSURL URLWithString:@"http://bridge"];
 }
 
 NSString *const sampleSource = @"com.example";

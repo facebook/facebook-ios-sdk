@@ -73,6 +73,7 @@ static BOOL _stubbedOpenUrlSuccess;
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
+  _openUrlWasCalled = YES;
   FBSDKLoginManager.capturedOpenUrl = url;
   FBSDKLoginManager.capturedSourceApplication = sourceApplication;
   FBSDKLoginManager.capturedAnnotation = annotation;

@@ -18,6 +18,7 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "FBSDKBridgeAPI.h"
+#import "FBSDKContainerViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -87,6 +88,11 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 - (BOOL)_handleBridgeAPIResponseURL:(NSURL *)responseURL sourceApplication:(NSString *)sourceApplication;
 - (FBSDKSuccessBlock)_bridgeAPIRequestCompletionBlockWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
                                                                                completion:(FBSDKBridgeAPIResponseBlock)completionBlock;
+- (void)_cancelBridgeRequest;
+
+- (void)safariViewControllerDidFinish:(UIViewController *)safariViewController;
+- (void)viewControllerDidDisappear:(FBSDKContainerViewController *)viewController animated:(BOOL)animated;
+
 @end
 
 NS_ASSUME_NONNULL_END
