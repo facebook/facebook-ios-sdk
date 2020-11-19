@@ -20,8 +20,9 @@
 
 #import "FBSDKInternalUtility.h"
 #import "FBSDKRestrictiveData.h"
+#import "FBSDKTestCase.h"
 
-@interface FBSDKRestrictiveDataTests : XCTestCase
+@interface FBSDKRestrictiveDataTests : FBSDKTestCase
 
 @end
 

@@ -24,11 +24,17 @@
 #import "FBSDKInternalUtility.h"
 #import "FBSDKRestrictiveDataFilterManager.h"
 #import "FBSDKServerConfiguration.h"
+#import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKServerConfigurationManager.h"
+#import "FBSDKTestCase.h"
 
 typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 @interface FBSDKSKAdNetworkReporter (Testing)
 + (void)_loadConfigurationWithBlock:(FBSDKSKAdNetworkReporterBlock)block;
+@end
+
+@interface FBSDKAppEvents (Testing)
+@property (nonatomic, assign) BOOL disableTimer;
 @end
 
 @interface FBSDKRestrictiveDataFilterManager ()
@@ -38,7 +44,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
 @end
 
-@interface FBSDKRestrictiveDataFilterTests : XCTestCase
+@interface FBSDKRestrictiveDataFilterTests : FBSDKTestCase
 @end
 
 @implementation FBSDKRestrictiveDataFilterTests
@@ -61,13 +67,16 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
                                                    }
                                                  }];
 
-  id mockServerConfiguration = OCMClassMock([FBSDKServerConfiguration class]);
-  OCMStub([mockServerConfiguration restrictiveParams]).andReturn(params);
-  id mockServerConfigurationManager = OCMClassMock([FBSDKServerConfigurationManager class]);
-  OCMStub([mockServerConfigurationManager cachedServerConfiguration]).andReturn(mockServerConfiguration);
+  FBSDKServerConfiguration *config = [FBSDKServerConfigurationFixtures configWithDictionary:@{ @"restrictiveParams" : params }];
+  [self stubCachedServerConfigurationWithServerConfiguration:config];
+  [self stubServerConfigurationFetchingWithConfiguration:config
+                                                   error:nil];
+  [self stubAllocatingGraphRequestConnection];
+  [self stubLoadingAdNetworkReporterConfiguration];
 
-  id mockAdNetworkReporter = OCMClassMock(FBSDKSKAdNetworkReporter.class);
-  OCMStub([mockAdNetworkReporter _loadConfigurationWithBlock:OCMArg.any]);
+  FBSDKAppEvents *appEvents = FBSDKAppEvents.singleton;
+  appEvents.disableTimer = YES;
+  [self stubAppEventsSingletonWith:appEvents];
 
   [FBSDKRestrictiveDataFilterManager enable];
 }
@@ -75,31 +84,27 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)testFilterByParams
 {
   NSString *testEventName = @"restrictive_event_name";
-  id mockAppStates = [OCMockObject niceMockForClass:[FBSDKAppEventsState class]];
-  OCMStub([mockAppStates alloc]).andReturn(mockAppStates);
-  OCMStub([mockAppStates initWithToken:[OCMArg any] appID:[OCMArg any]]).andReturn(mockAppStates);
-  id mockAppEventsUtility = [OCMockObject niceMockForClass:[FBSDKAppEventsUtility class]];
-  OCMStub([mockAppEventsUtility shouldDropAppEvent]).andReturn(NO);
+  OCMStub([self.appEventsUtilityClassMock shouldDropAppEvent]).andReturn(NO);
 
   // filtered by param key
-  [[mockAppStates expect] addEvent:[OCMArg checkWithBlock:^(id value) {
+  [[self.appEventStatesMock expect] addEvent:[OCMArg checkWithBlock:^(id value) {
     XCTAssertEqualObjects(value[@"_eventName"], testEventName);
     XCTAssertNil(value[@"dob"]);
     XCTAssertEqualObjects(value[@"_restrictedParams"], @"{\"dob\":\"4\"}");
     return YES;
   }] isImplicit:NO];
   [FBSDKAppEvents logEvent:testEventName parameters:@{@"dob" : @"06-29-2019"}];
-  [mockAppStates verify];
+  [self.appEventStatesMock verify];
 
   // should not be filtered
-  [[mockAppStates expect] addEvent:[OCMArg checkWithBlock:^(id value) {
+  [[self.appEventStatesMock expect] addEvent:[OCMArg checkWithBlock:^(id value) {
     XCTAssertEqualObjects(value[@"_eventName"], testEventName);
     XCTAssertEqualObjects(value[@"test_key"], @66666);
     XCTAssertNil(value[@"_restrictedParams"]);
     return YES;
   }] isImplicit:NO];
   [FBSDKAppEvents logEvent:testEventName parameters:@{@"test_key" : @66666}];
-  [mockAppStates verify];
+  [self.appEventStatesMock verify];
 }
 
 - (void)testGetMatchedDataTypeByParam
