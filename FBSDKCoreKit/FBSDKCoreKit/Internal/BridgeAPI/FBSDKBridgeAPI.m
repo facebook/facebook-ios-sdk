@@ -437,7 +437,7 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
   }
 }
 
-- (void)setSessionCompletionHandlerFromHandler:(void (^)(BOOL, NSError *))handler
+- (void)setSessionCompletionHandlerFromHandler:(FBSDKSuccessBlock)handler
 {
   __weak FBSDKBridgeAPI *weakSelf = self;
   _authenticationSessionCompletionHandler = ^(NSURL *aURL, NSError *error) {

@@ -843,7 +843,7 @@
   self.api.pendingRequestCompletionBlock = ^(FBSDKBridgeAPIResponse *response) {
     XCTFail("Should not invoke the pending request completion block");
   };
-  id mock = [self stubHandleBridgeApiResponseAndReturn:canHandleBridgeApiResponse];
+  [self stubHandleBridgeApiResponseAndReturn:canHandleBridgeApiResponse];
 
   BOOL returnValue = [self.api application:UIApplication.sharedApplication
                                    openURL:self.sampleUrl
@@ -930,18 +930,12 @@
     expectedIsDismissingSafariVc,
     "Should set isDismissingSafariViewController to the expected value"
   );
-
-  [mock stopMocking];
-  mock = nil;
 }
 
 /// Stubs `FBSDKBridgeAPI`'s `_handleBridgeAPIResponseURL:sourceApplication:` method to return the provided value
-/// @returns (id) the partial mock for bridge api so that it can be canceled.
-- (id)stubHandleBridgeApiResponseAndReturn:(BOOL)value
+- (void)stubHandleBridgeApiResponseAndReturn:(BOOL)value
 {
-  id mock = OCMPartialMock(self.api);
-  OCMStub([mock _handleBridgeAPIResponseURL:OCMArg.any sourceApplication:OCMArg.any]).andReturn(value);
-  return mock;
+  OCMStub([self.partialMock _handleBridgeAPIResponseURL:OCMArg.any sourceApplication:OCMArg.any]).andReturn(value);
 }
 
 - (FBSDKBridgeAPIRequest *)sampleBridgeApiRequest

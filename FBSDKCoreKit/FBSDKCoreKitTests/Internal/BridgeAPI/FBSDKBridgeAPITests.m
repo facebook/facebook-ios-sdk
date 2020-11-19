@@ -26,11 +26,14 @@
 
   [FBSDKLoginManager resetTestEvidence];
   _api = [FBSDKBridgeAPI new];
+  _partialMock = OCMPartialMock(_api);
 }
 
 - (void)tearDown
 {
   _api = nil;
+  [_partialMock stopMocking];
+  _partialMock = nil;
   [FBSDKLoginManager resetTestEvidence];
 
   [super tearDown];

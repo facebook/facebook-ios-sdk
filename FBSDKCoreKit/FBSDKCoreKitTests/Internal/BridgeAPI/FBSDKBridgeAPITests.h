@@ -31,6 +31,7 @@
 @interface FBSDKBridgeAPITests : FBSDKTestCase
 
 @property FBSDKBridgeAPI *api;
+@property id partialMock;
 @property (readonly) NSURL *sampleUrl;
 
 extern NSString *const sampleSource;
