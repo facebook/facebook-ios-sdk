@@ -136,4 +136,29 @@ class FBSDKDrawableTests: FBSDKTestCase {
       "Should create the expected image"
     )
   }
+
+  // MARK: Close Icon
+
+  func testCloseIcon() {
+    guard let image = FBCloseIcon().image(
+      with: size,
+      primaryColor: .red,
+      secondaryColor: .green,
+      scale: 2.0
+    ) else {
+      return XCTFail("Should be able to create an image with a valid size")
+    }
+
+    let storedImage = UIImage(
+      named: "closeIcon.png",
+      in: Bundle(for: FBSDKTestCase.self),
+      compatibleWith: nil
+    )
+
+    XCTAssertEqual(
+      image.pngData(),
+      storedImage?.pngData(),
+      "Should create the expected image"
+    )
+  }
 }

@@ -28,7 +28,17 @@
 
 - (UIImage *)imageWithSize:(CGSize)size
 {
-  CGFloat scale = [UIScreen mainScreen].scale;
+  return [self imageWithSize:size
+                primaryColor:UIColor.whiteColor
+              secondaryColor:UIColor.blackColor
+                       scale:UIScreen.mainScreen.scale];
+}
+
+- (UIImage *)imageWithSize:(CGSize)size
+              primaryColor:(UIColor *)primaryColor
+            secondaryColor:(UIColor *)secondaryColor
+                     scale:(CGFloat)scale
+{
   UIGraphicsBeginImageContextWithOptions(size, NO, scale);
   CGContextRef context = UIGraphicsGetCurrentContext();
 
@@ -60,12 +70,12 @@
 
   // outer circle
   rect = CGRectIntegral(CGRectInset(rect, step, step));
-  [[UIColor whiteColor] setFill];
+  [primaryColor setFill];
   CGContextFillEllipseInRect(context, rect);
 
   // inner circle
   rect = CGRectIntegral(CGRectInset(rect, step, step));
-  [[UIColor blackColor] setFill];
+  [secondaryColor setFill];
   CGContextFillEllipseInRect(context, rect);
 
   // cross
@@ -73,7 +83,7 @@
   CGFloat lineWidth = step * 5 / 4;
   rect.origin.y = CGRectGetMidY(rect) - lineWidth / 2;
   rect.size.height = lineWidth;
-  [[UIColor whiteColor] setFill];
+  [primaryColor setFill];
   CGContextTranslateCTM(context, size.width / 2, size.height / 2);
   CGContextRotateCTM(context, M_PI_4);
   CGContextTranslateCTM(context, -size.width / 2, -size.height / 2);

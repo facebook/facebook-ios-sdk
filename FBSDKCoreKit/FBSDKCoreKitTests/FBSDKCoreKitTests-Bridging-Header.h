@@ -20,6 +20,7 @@
 
 #import "FBSDKAppEventsConfigurationFixtures.h"
 #import "FBSDKBridgeAPI+Testing.h"
+#import "FBSDKCloseIcon.h"
 #import "FBSDKEventDeactivationManager.h"
 #import "FBSDKSKAdNetworkEvent.h"
 #import "FBSDKServerConfigurationFixtures.h"
@@ -33,4 +34,11 @@
 // Categories needed to expose private methods to Swift
 @interface FBSDKAppEventsConfigurationManager (Testing)
 + (void)_processResponse:(id)response error:(NSError *)error;
+@end
+
+@interface FBSDKCloseIcon (Testing)
+- (UIImage *)imageWithSize:(CGSize)size
+              primaryColor:(UIColor *)primaryColor
+            secondaryColor:(UIColor *)secondaryColor
+                     scale:(CGFloat)scale;
 @end
