@@ -67,6 +67,11 @@
 
  #pragma mark - Helpers
 
+- (UIColor *)_logoColor
+{
+  return [UIColor colorWithRed:66.0 / 255.0 green:103.0 / 255.0 blue:178.0 / 255.0 alpha:1];
+}
+
 - (void)_buildView
 {
   // This is a "static" view with just a cancel button so add all the constraints here
@@ -107,8 +112,8 @@
 
   // build the logo.
   CGSize imageSize = CGSizeMake(kLogoSize, kLogoSize);
-  FBSDKLogo *logoHelper = [[FBSDKLogo alloc] initWithColor:[UIColor colorWithRed:66.0 / 255.0 green:103.0 / 255.0 blue:178.0 / 255.0 alpha:1]];
-  UIImage *image = [logoHelper imageWithSize:imageSize];
+  FBSDKLogo *logoHelper = [FBSDKLogo new];
+  UIImage *image = [logoHelper imageWithSize:imageSize color:self._logoColor];
   image = [image resizableImageWithCapInsets:UIEdgeInsetsZero resizingMode:UIImageResizingModeStretch];
   UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
   imageView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -131,7 +136,7 @@
   // build the confirmation code (which replaces the spinner when the code is available).
   _confirmationCodeLabel = [[UILabel alloc] init];
   _confirmationCodeLabel.translatesAutoresizingMaskIntoConstraints = NO;
-  _confirmationCodeLabel.textColor = logoHelper.color;
+  _confirmationCodeLabel.textColor = self._logoColor;
   _confirmationCodeLabel.font = [UIFont systemFontOfSize:kConfirmationCodeFontSize weight:UIFontWeightLight];
   _confirmationCodeLabel.textAlignment = NSTextAlignmentCenter;
   [_confirmationCodeLabel sizeToFit];

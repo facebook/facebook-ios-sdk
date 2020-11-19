@@ -24,8 +24,8 @@
  #import "FBSDKProfilePictureView+Internal.h"
 
  #import "FBSDKAccessToken.h"
+ #import "FBSDKHumanSilhouetteIcon.h"
  #import "FBSDKInternalUtility.h"
- #import "FBSDKMaleSilhouetteIcon.h"
  #import "FBSDKMath.h"
  #import "FBSDKProfile+Internal.h"
  #import "FBSDKUtility.h"
@@ -369,7 +369,8 @@
   _hasProfileImage = NO;
 
   dispatch_async(dispatch_get_main_queue(), ^{
-    self->_imageView.image = [[[FBSDKMaleSilhouetteIcon alloc] initWithColor:fillColor] imageWithSize:self->_imageView.bounds.size];
+    self->_imageView.image = [[FBSDKHumanSilhouetteIcon new] imageWithSize:self->_imageView.bounds.size
+                                                                     color:fillColor];
   });
 }
 

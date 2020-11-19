@@ -24,8 +24,8 @@
 
 #import "FBSDKIcon.h"
 
-NS_SWIFT_NAME(FBMaleSilhouetteIcon)
-@interface FBSDKMaleSilhouetteIcon : FBSDKIcon
+NS_SWIFT_NAME(HumanSilhouetteIcon)
+@interface FBSDKHumanSilhouetteIcon : FBSDKIcon
 
 @end
 

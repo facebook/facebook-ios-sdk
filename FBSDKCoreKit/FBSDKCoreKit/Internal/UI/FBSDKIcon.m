@@ -20,34 +20,33 @@
 
 @implementation FBSDKIcon
 
-#pragma mark - Object Lifecycle
-
-- (instancetype)initWithColor:(UIColor *)color
-{
-  if ((self = [super init])) {
-    _color = [color copy];
-  }
-  return self;
-}
-
-- (instancetype)init
-{
-  return [self initWithColor:[UIColor whiteColor]];
-}
-
 #pragma mark - Public API
 
 - (UIImage *)imageWithSize:(CGSize)size
 {
+  return [self imageWithSize:size scale:UIScreen.mainScreen.scale color:UIColor.whiteColor];
+}
+
+- (UIImage *)imageWithSize:(CGSize)size scale:(CGFloat)scale
+{
+  return [self imageWithSize:size scale:scale color:UIColor.whiteColor];
+}
+
+- (UIImage *)imageWithSize:(CGSize)size color:(UIColor *)color
+{
+  return [self imageWithSize:size scale:UIScreen.mainScreen.scale color:color];
+}
+
+- (UIImage *)imageWithSize:(CGSize)size scale:(CGFloat)scale color:(UIColor *)color
+{
   if ((size.width == 0) || (size.height == 0)) {
     return nil;
   }
-  CGFloat scale = [UIScreen mainScreen].scale;
   UIGraphicsBeginImageContextWithOptions(size, NO, scale);
   CGContextRef context = UIGraphicsGetCurrentContext();
   CGPathRef path = [self pathWithSize:size];
   CGContextAddPath(context, path);
-  CGContextSetFillColorWithColor(context, self.color.CGColor);
+  CGContextSetFillColorWithColor(context, color.CGColor);
   CGContextFillPath(context);
   UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
   UIGraphicsEndImageContext();

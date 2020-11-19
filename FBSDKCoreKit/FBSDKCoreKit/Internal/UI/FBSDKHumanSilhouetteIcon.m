@@ -20,9 +20,9 @@
 
 #if !TARGET_OS_TV
 
- #import "FBSDKMaleSilhouetteIcon.h"
+ #import "FBSDKHumanSilhouetteIcon.h"
 
-@implementation FBSDKMaleSilhouetteIcon
+@implementation FBSDKHumanSilhouetteIcon
 
 - (CGPathRef)pathWithSize:(CGSize)size
 {
