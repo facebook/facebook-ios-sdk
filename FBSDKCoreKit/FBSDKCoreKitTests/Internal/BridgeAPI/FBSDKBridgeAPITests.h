@@ -33,6 +33,7 @@
 @property FBSDKBridgeAPI *api;
 @property id partialMock;
 @property (readonly) NSURL *sampleUrl;
+@property (readonly) NSError *sampleError;
 
 extern NSString *const sampleSource;
 extern NSString *const sampleAnnotation;

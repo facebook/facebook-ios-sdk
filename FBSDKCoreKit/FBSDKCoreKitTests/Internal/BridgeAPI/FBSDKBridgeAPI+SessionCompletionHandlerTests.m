@@ -160,14 +160,4 @@
   XCTAssertEqual(self.api.authenticationSessionState, FBSDKAuthenticationSessionNone);
 }
 
-- (NSURL *)sampleUrl
-{
-  return [NSURL URLWithString:@"http://example.com"];
-}
-
-- (NSError *)sampleError
-{
-  return [NSError errorWithDomain:self.name code:0 userInfo:nil];
-}
-
 @end
