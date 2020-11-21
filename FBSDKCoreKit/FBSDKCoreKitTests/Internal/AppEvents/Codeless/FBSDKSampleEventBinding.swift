@@ -18,7 +18,7 @@
 
 @objcMembers
 class FBSDKSampleEventBinding: NSObject {
-  class func getSampleDictionary() -> [String: Any] { // swiftlint:ignore:this function_body_length
+  class func getSampleDictionary() -> [String: Any] { // swiftlint:disable:this function_body_length
     return [
       "event_bindings": [
         [

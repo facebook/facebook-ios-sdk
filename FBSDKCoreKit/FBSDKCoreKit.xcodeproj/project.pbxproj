@@ -998,7 +998,7 @@
 		F916581724F6BB5100BB759A /* FBSDKSKAdNetworkConversionConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = F9DE56B924F61B090009CD69 /* FBSDKSKAdNetworkConversionConfiguration.m */; };
 		F91BA4DD216D6CF200CDDFE0 /* FBSDKCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = 894C0B081A702194009137EF /* FBSDKCrypto.m */; };
 		F91BA4F4216D6CF300CDDFE0 /* FBSDKCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = 894C0B081A702194009137EF /* FBSDKCrypto.m */; };
-		F931C07024F960D00088AD5F /* FBSDKSKAdNetworkRuleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F931C06F24F960D00088AD5F /* FBSDKSKAdNetworkRuleTests.m */; };
+		F931C07024F960D00088AD5F /* FBSDKSKAdNetworkRuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F931C06F24F960D00088AD5F /* FBSDKSKAdNetworkRuleTests.swift */; };
 		F93680E3249D490600446E35 /* FBSDKSettingsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F93680D4249D490600446E35 /* FBSDKSettingsTests.m */; };
 		F94310F424F8D608002441F1 /* FBSDKSKAdNetworkRule.h in Headers */ = {isa = PBXBuildFile; fileRef = F94310F224F8D608002441F1 /* FBSDKSKAdNetworkRule.h */; };
 		F94310F524F8D608002441F1 /* FBSDKSKAdNetworkRule.m in Sources */ = {isa = PBXBuildFile; fileRef = F94310F324F8D608002441F1 /* FBSDKSKAdNetworkRule.m */; };
@@ -1637,7 +1637,7 @@
 		F4F98C4A24CB820A00F0D6EC /* FBSDKSafeCast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKSafeCast.m; sourceTree = "<group>"; };
 		F4FE997D24D906B9008879A4 /* FBSDKJSONValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKJSONValue.m; sourceTree = "<group>"; };
 		F916581424F6BAB200BB759A /* FBSDKSKAdNetworkConversionConfigurationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKSKAdNetworkConversionConfigurationTests.m; sourceTree = "<group>"; };
-		F931C06F24F960D00088AD5F /* FBSDKSKAdNetworkRuleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKSKAdNetworkRuleTests.m; sourceTree = "<group>"; };
+		F931C06F24F960D00088AD5F /* FBSDKSKAdNetworkRuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBSDKSKAdNetworkRuleTests.swift; sourceTree = "<group>"; };
 		F93680D4249D490600446E35 /* FBSDKSettingsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBSDKSettingsTests.m; path = Internal/FBSDKSettingsTests.m; sourceTree = "<group>"; };
 		F94310F224F8D608002441F1 /* FBSDKSKAdNetworkRule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKSKAdNetworkRule.h; sourceTree = "<group>"; };
 		F94310F324F8D608002441F1 /* FBSDKSKAdNetworkRule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKSKAdNetworkRule.m; sourceTree = "<group>"; };
@@ -2752,7 +2752,7 @@
 			children = (
 				F916581424F6BAB200BB759A /* FBSDKSKAdNetworkConversionConfigurationTests.m */,
 				F9CEF1EA24F769F900EB0C3D /* FBSDKSKAdNetworkReporterTests.m */,
-				F931C06F24F960D00088AD5F /* FBSDKSKAdNetworkRuleTests.m */,
+				F931C06F24F960D00088AD5F /* FBSDKSKAdNetworkRuleTests.swift */,
 				F943113324FB2E67002441F1 /* FBSDKSKAdNetworkEventTests.swift */,
 			);
 			path = SKAdNetwork;
@@ -4181,7 +4181,7 @@
 				F4DE31F624DB695100297C18 /* FBSDKTestCase.m in Sources */,
 				5D2165F22229C6A3004952D8 /* FBSDKGraphRequestTests.m in Sources */,
 				F402B071255C740C00473083 /* ViewControllerSpy.swift in Sources */,
-				F931C07024F960D00088AD5F /* FBSDKSKAdNetworkRuleTests.m in Sources */,
+				F931C07024F960D00088AD5F /* FBSDKSKAdNetworkRuleTests.swift in Sources */,
 				7E253D811A8EAEF500CCCFE7 /* FBSDKInternalUtilityTests.m in Sources */,
 				C5F6EC861FA24FAF009EB258 /* FBSDKPaymentObserverTests.m in Sources */,
 				F48A6AED24170D29002C6CA1 /* TestMonitorEntry.m in Sources */,

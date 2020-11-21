@@ -23,6 +23,7 @@
 #import "FBSDKCloseIcon.h"
 #import "FBSDKEventDeactivationManager.h"
 #import "FBSDKSKAdNetworkEvent.h"
+#import "FBSDKSKAdNetworkRule.h"
 #import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKTestCase.h"
 #import "FakeBundle.h"
