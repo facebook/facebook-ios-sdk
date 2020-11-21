@@ -327,37 +327,73 @@ NSString *const heightKey = @"height";
   );
 }
 
-- (void)testCorrectGraphPathForFBProfileLoad
+// MARK: - Profile Loading
+
+- (void)testGraphPathForProfileLoadWithLinkPermission
 {
   id profileMock = OCMClassMock([FBSDKProfile class]);
+  FBSDKAccessToken *token = [SampleAccessToken validTokenWithPermissions:@[@"user_link"]];
   NSString *graphPath = @"me?fields=id,first_name,middle_name,last_name,name,link";
   __block BOOL graphRequestMethodInvoked = false;
   OCMStub([profileMock loadProfileWithToken:OCMOCK_ANY completion:OCMOCK_ANY graphRequest:OCMOCK_ANY]).andDo(^(NSInvocation *invocation) {
-    __unsafe_unretained FBSDKGraphRequest *req;
-    [invocation getArgument:&req atIndex:4];
+    __unsafe_unretained FBSDKGraphRequest *request;
+    [invocation getArgument:&request atIndex:4];
     graphRequestMethodInvoked = true;
-    XCTAssertTrue([[req graphPath] isEqualToString:graphPath]);
+    XCTAssertEqualObjects(request.graphPath, graphPath);
+  });
+  OCMStub([profileMock loadProfileWithToken:OCMOCK_ANY completion:OCMOCK_ANY]).andForwardToRealObject();
+  [FBSDKProfile loadProfileWithToken:token completion:nil];
+  XCTAssertTrue(graphRequestMethodInvoked);
+}
+
+- (void)testGraphPathForProfileLoadWithoutLinkPermission
+{
+  id profileMock = OCMClassMock([FBSDKProfile class]);
+  NSString *graphPath = @"me?fields=id,first_name,middle_name,last_name,name";
+  __block BOOL graphRequestMethodInvoked = false;
+  OCMStub([profileMock loadProfileWithToken:OCMOCK_ANY completion:OCMOCK_ANY graphRequest:OCMOCK_ANY]).andDo(^(NSInvocation *invocation) {
+    __unsafe_unretained FBSDKGraphRequest *request;
+    [invocation getArgument:&request atIndex:4];
+    graphRequestMethodInvoked = true;
+    XCTAssertEqualObjects(request.graphPath, graphPath);
   });
   OCMStub([profileMock loadProfileWithToken:OCMOCK_ANY completion:OCMOCK_ANY]).andForwardToRealObject();
   [FBSDKProfile loadProfileWithToken:SampleAccessToken.validToken completion:nil];
   XCTAssertTrue(graphRequestMethodInvoked);
 }
 
-- (void)testActualProfileLoaded
+- (void)testLoadingProfile
 {
   id result = @{ @"id" : SampleUserProfile.valid.userID,
                  @"first_name" : SampleUserProfile.valid.firstName,
                  @"middle_name" : SampleUserProfile.valid.middleName,
                  @"last_name" : SampleUserProfile.valid.lastName,
-                 @"name" : SampleUserProfile.valid.name};
+                 @"name" : SampleUserProfile.valid.name,
+                 @"link" : SampleUserProfile.valid.linkURL};
   [self stubGraphRequestWithResult:result error:nil connection:nil];
 
   [FBSDKProfile loadProfileWithToken:SampleAccessToken.validToken completion:^(FBSDKProfile *_Nullable profile, NSError *_Nullable error) {
-                                                                    XCTAssertTrue([profile.firstName isEqualToString:SampleUserProfile.valid.firstName]);
-                                                                    XCTAssertTrue([profile.middleName isEqualToString:SampleUserProfile.valid.middleName]);
-                                                                    XCTAssertTrue([profile.lastName isEqualToString:SampleUserProfile.valid.lastName]);
-                                                                    XCTAssertTrue([profile.name isEqualToString:SampleUserProfile.valid.name]);
-                                                                    XCTAssertTrue([profile.userID isEqualToString:SampleUserProfile.valid.userID]);
+                                                                    XCTAssertEqualObjects(profile.firstName, SampleUserProfile.valid.firstName);
+                                                                    XCTAssertEqualObjects(profile.middleName, SampleUserProfile.valid.middleName);
+                                                                    XCTAssertEqualObjects(profile.lastName, SampleUserProfile.valid.lastName);
+                                                                    XCTAssertEqualObjects(profile.name, SampleUserProfile.valid.name);
+                                                                    XCTAssertEqualObjects(profile.userID, SampleUserProfile.valid.userID);
+                                                                    XCTAssertEqualObjects(profile.linkURL, SampleUserProfile.valid.linkURL);
+                                                                  } graphRequest:self.graphRequestMock];
+}
+
+- (void)testLoadingProfileWithInvalidLink
+{
+  id result = @{ @"id" : SampleUserProfile.valid.userID,
+                 @"first_name" : SampleUserProfile.valid.firstName,
+                 @"middle_name" : SampleUserProfile.valid.middleName,
+                 @"last_name" : SampleUserProfile.valid.lastName,
+                 @"name" : SampleUserProfile.valid.name,
+                 @"link" : @"   "};
+  [self stubGraphRequestWithResult:result error:nil connection:nil];
+
+  [FBSDKProfile loadProfileWithToken:SampleAccessToken.validToken completion:^(FBSDKProfile *_Nullable profile, NSError *_Nullable error) {
+                                                                    XCTAssertNil(profile.linkURL);
                                                                   } graphRequest:self.graphRequestMock];
 }
 
@@ -386,11 +422,12 @@ NSString *const heightKey = @"height";
   [self stubGraphRequestWithResult:result error:nil connection:nil];
 
   [FBSDKProfile loadProfileWithToken:nil completion:^(FBSDKProfile *_Nullable profile, NSError *_Nullable error) {
-                                           XCTAssertTrue([profile.firstName isEqualToString:SampleUserProfile.valid.firstName]);
-                                           XCTAssertTrue([profile.middleName isEqualToString:SampleUserProfile.valid.middleName]);
-                                           XCTAssertTrue([profile.lastName isEqualToString:SampleUserProfile.valid.lastName]);
-                                           XCTAssertTrue([profile.name isEqualToString:SampleUserProfile.valid.name]);
-                                           XCTAssertTrue([profile.userID isEqualToString:SampleUserProfile.valid.userID]);
+                                           XCTAssertEqualObjects(profile.firstName, SampleUserProfile.valid.firstName);
+                                           XCTAssertEqualObjects(profile.middleName, SampleUserProfile.valid.middleName);
+                                           XCTAssertEqualObjects(profile.lastName, SampleUserProfile.valid.lastName);
+                                           XCTAssertEqualObjects(profile.name, SampleUserProfile.valid.name);
+                                           XCTAssertEqualObjects(profile.userID, SampleUserProfile.valid.userID);
+                                           XCTAssertEqualObjects(profile.linkURL, SampleUserProfile.valid.linkURL);
                                          } graphRequest:self.graphRequestMock];
 }
 

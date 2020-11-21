@@ -47,10 +47,24 @@ public class SampleAccessToken: NSObject {
     )
   }
 
+  public static func validToken(withPermissions permissions: [String]) -> AccessToken {
+    return AccessToken(
+      tokenString: "123",
+      permissions: permissions,
+      declinedPermissions: [],
+      expiredPermissions: [],
+      appID: "123",
+      userID: "user123",
+      expirationDate: nil,
+      refreshDate: nil,
+      dataAccessExpirationDate: nil
+    )
+  }
+
   public static func validToken(
     withPermissions permissions: [String],
-    declinedPermissions: [String],
-    expiredPermissions: [String]
+    declinedPermissions: [String] = [],
+    expiredPermissions: [String] = []
   ) -> AccessToken {
     return AccessToken(
       tokenString: "123",

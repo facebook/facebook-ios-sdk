@@ -268,7 +268,10 @@ static FBSDKProfile *g_currentProfile;
 
 + (void)loadProfileWithToken:(FBSDKAccessToken *)token completion:(FBSDKProfileBlock)completion
 {
-  NSString *graphPath = @"me?fields=id,first_name,middle_name,last_name,name,link";
+  NSString *graphPath = @"me?fields=id,first_name,middle_name,last_name,name";
+  if ([token.permissions containsObject:@"user_link"]) {
+    graphPath = [graphPath stringByAppendingString:@",link"];
+  }
 
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
                                                                  parameters:nil
@@ -287,12 +290,15 @@ static FBSDKProfile *g_currentProfile;
         || ((NSString *) result[@"id"]).length == 0) {
       return;
     }
+    NSString *urlString = [FBSDKTypeUtility stringValue:result[@"link"]];
+    NSURL *linkUrl = [FBSDKTypeUtility URLValue:[NSURL URLWithString:urlString]];
+
     FBSDKProfile *profile = [[FBSDKProfile alloc] initWithUserID:result[@"id"]
                                                        firstName:result[@"first_name"]
                                                       middleName:result[@"middle_name"]
                                                         lastName:result[@"last_name"]
                                                             name:result[@"name"]
-                                                         linkURL:[NSURL URLWithString:result[@"link"]]
+                                                         linkURL:linkUrl
                                                      refreshDate:[NSDate date]];
     *profileRef = [profile copy];
   };

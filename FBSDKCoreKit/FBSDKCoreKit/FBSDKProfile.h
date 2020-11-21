@@ -145,6 +145,8 @@ NS_SWIFT_NAME(current);
 /**
   A URL to the user's profile.
 
+  IMPORTANT: This field will only be populated if your user has granted your application the 'user_link' permission
+
  Consider using `FBSDKAppLinkResolver` to resolve this
  to an app link to link directly to the user's profile in the Facebook app.
  */
