@@ -18,35 +18,49 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKLoginConfiguration.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  Represent an ID Token used for OpenID connect (OIDC) protocal
 */
-NS_SWIFT_NAME(IDToken)
-@interface FBSDKIDToken : NSObject
+NS_SWIFT_NAME(AuthenticationToken)
+@interface FBSDKAuthenticationToken : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
 /**
- The decoded header of the ID token
+  The "global" authentication token that represents the currently logged in user.
+
+ The `currentAuthenticationToken` represents the authentication token of the
+ current user and can be used by a client to verify an authentication attempt.
  */
-@property (nonatomic, copy, readonly) NSDictionary *header;
+@property (class, nonatomic, copy, nullable) FBSDKAuthenticationToken *currentAuthenticationToken;
 
 /**
- The decoded claims of the ID token
+ The raw token string from the authentication response
  */
-@property (nonatomic, copy, readonly) NSDictionary *claims;
+@property (nonatomic, copy, readonly) NSString *tokenString;
 
 /**
- The signature of the ID token
+ The nonce from the decoded authentication response
  */
-@property (nonatomic, copy, readonly) NSString *signature;
+@property (nonatomic, copy, readonly) NSString *nonce;
+
+/**
+ The beta login experience preference used for the login attempt that resulted in the creation of the token
+ */
+@property (nonatomic, readonly) FBSDKBetaLoginExperience betaLoginExperience;
 
 /**
  Initializes a new instance if the ID token is valid. Otherwise returns nil.
  An ID Token is verified based of the OpenID connect standard.
- @param idTokenString the raw ID token string
+ @param tokenString the raw ID token string
 */
-- (instancetype)initWithTokenString:(NSString *)idTokenString;
+- (instancetype)initWithTokenString:(NSString *)tokenString;
 
 @end
+
+NS_ASSUME_NONNULL_END

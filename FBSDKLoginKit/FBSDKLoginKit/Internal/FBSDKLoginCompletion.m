@@ -28,7 +28,7 @@
   #import <FBSDKCoreKit/FBSDKCoreKit.h>
  #endif
 
- #import "FBSDKIDToken.h"
+ #import "FBSDKAuthenticationToken.h"
  #import "FBSDKLoginConstants.h"
  #import "FBSDKLoginError.h"
  #import "FBSDKLoginManager+Internal.h"
@@ -126,7 +126,7 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   if ((self = [super init]) != nil) {
     _parameters = [[FBSDKLoginCompletionParameters alloc] init];
 
-    FBSDKIDToken *idToken = [[FBSDKIDToken alloc] initWithTokenString:parameters[@"id_token"]];
+    FBSDKAuthenticationToken *idToken = [[FBSDKAuthenticationToken alloc] initWithTokenString:parameters[@"id_token"]];
 
     if ([parameters[@"access_token"] length] > 0
         || [parameters[@"nonce"] length] > 0
@@ -277,9 +277,9 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   [connection start];
 }
 
-- (void)setParametersWithIDToken:(FBSDKIDToken *)idToken
+- (void)setParametersWithIDToken:(FBSDKAuthenticationToken *)idToken
 {
-  if (!idToken || !idToken.claims) {
+  if (!idToken) {
     return;
   }
 
