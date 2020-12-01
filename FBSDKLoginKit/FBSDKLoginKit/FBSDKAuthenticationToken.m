@@ -44,6 +44,7 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
 {
   NSString *_cert;
   NSDictionary *_claims;
+  NSDictionary *_header;
   NSString *_signature;
 }
 
@@ -71,6 +72,11 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
     }
 
     _claims = [FBSDKAuthenticationToken validatedClaimsWithEncodedString:encodedClaims nonce:nonce];
+    _header = [FBSDKAuthenticationToken validatedHeaderWithEncodedString:encodedHeader];
+
+    if (!_claims || !_header) {
+      return nil;
+    }
   }
 
   return self;
@@ -109,6 +115,21 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
       if (isFacebook && audMatched && !isExpired && issuedRecently && nonceMatched && userIDValid) {
         return claims;
       }
+    }
+  }
+
+  return nil;
+}
+
++ (NSDictionary *)validatedHeaderWithEncodedString:(NSString *)encodedHeader
+{
+  NSError *error;
+  NSData *headerData = [FBSDKBase64 decodeAsData:encodedHeader];
+
+  if (headerData) {
+    NSDictionary *header = [FBSDKTypeUtility JSONObjectWithData:headerData options:0 error:&error];
+    if (!error && [header[@"alg"] isKindOfClass:[NSString class]] && [header[@"alg"] isEqualToString:@"RS256"]) {
+      return header;
     }
   }
 

@@ -41,6 +41,7 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
 @interface FBSDKAuthenticationToken (Testing)
 
 + (NSDictionary *)validatedClaimsWithEncodedString:(NSString *)encodedClaims nonce:(NSString *)nonce;
++ (NSDictionary *)validatedHeaderWithEncodedString:(NSString *)encodedHeader;
 
 + (instancetype)emptyInstance;
 
@@ -63,6 +64,7 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
 @implementation FBSDKAuthenticationTokenTests
 {
   NSDictionary *_claims;
+  NSDictionary *_header;
 }
 
 - (void)setUp
@@ -81,6 +83,11 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
     @"name" : @"Test User",
     @"email" : @"email@email.com",
     @"picture" : @"https://www.facebook.com/some_picture",
+  };
+
+  _header = @{
+    @"alg" : @"RS256",
+    @"typ" : @"JWT"
   };
 }
 
@@ -158,6 +165,53 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
 {
   FBSDKAuthenticationToken *token = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"invalid_id_token" nonce:@"123456789"];
   XCTAssertNil(token);
+}
+
+- (void)testDecodeValidHeaderShouldSucceed
+{
+  NSData *headerData = [FBSDKTypeUtility dataWithJSONObject:_header options:0 error:nil];
+  NSString *encodedHeader = [self base64URLEncodeData:headerData];
+
+  NSDictionary *header = [FBSDKAuthenticationToken validatedHeaderWithEncodedString:encodedHeader];
+  XCTAssertEqualObjects(header, _header);
+}
+
+- (void)testDecodeInvalidFormatHeaderShouldFail
+{
+  NSData *headerData = [@"invalid_header" dataUsingEncoding:NSUTF8StringEncoding];
+  NSString *encodedHeader = [self base64URLEncodeData:headerData];
+
+  XCTAssertNil([FBSDKAuthenticationToken validatedHeaderWithEncodedString:encodedHeader]);
+}
+
+- (void)testDecodeInvalidHeaderShouldFail
+{
+  NSMutableDictionary *invalidHeader = [_header mutableCopy];
+  [FBSDKTypeUtility dictionary:invalidHeader setObject:@"wrong algorithm" forKey:@"alg"];
+  NSData *invalidHeaderData = [FBSDKTypeUtility dataWithJSONObject:invalidHeader options:0 error:nil];
+  NSString *encodedHeader = [self base64URLEncodeData:invalidHeaderData];
+
+  XCTAssertNil([FBSDKAuthenticationToken validatedHeaderWithEncodedString:encodedHeader]);
+}
+
+- (void)testDecodeEmptyHeader
+{
+  NSDictionary *header = @{};
+  NSData *headerData = [FBSDKTypeUtility dataWithJSONObject:header options:0 error:nil];
+  NSString *encodedHeader = [self base64URLEncodeData:headerData];
+
+  XCTAssertNil([FBSDKAuthenticationToken validatedHeaderWithEncodedString:encodedHeader]);
+}
+
+- (void)testDecodeRandomHeader
+{
+  for (int i = 0; i < 100; i++) {
+    NSDictionary *randomizedHeader = [self randomizeDictionary:_header];
+    NSData *headerData = [FBSDKTypeUtility dataWithJSONObject:randomizedHeader options:0 error:nil];
+    NSString *encodedHeader = [self base64URLEncodeData:headerData];
+
+    [FBSDKAuthenticationToken validatedHeaderWithEncodedString:encodedHeader];
+  }
 }
 
 - (void)testVerifyValidSignatureShouldSucceed
