@@ -219,7 +219,7 @@ static NSString *const kFakeChallenge = @"a =bcdef";
     XCTAssertNotNil(result.token);
   }] validateReauthentication:[OCMArg any] withResult:[OCMArg any]];
 
-  [target setRequestedPermissions:nil];
+  [(FBSDKLoginManager *)target setRequestedPermissions:nil];
 
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wnonnull"

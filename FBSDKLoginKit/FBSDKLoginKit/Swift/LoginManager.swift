@@ -79,30 +79,98 @@ public extension LoginManager {
   /**
    Logs the user in or authorizes additional permissions.
 
-   Use this method when asking for read permissions. You should only ask for permissions when they
-   are needed and explain the value to the user. You can inspect the `declinedPermissions` in the result to also
+   Use this method when asking for permissions. You should only ask for permissions when they
+   are needed and the value should be explained to the user. You can inspect the result's `declinedPermissions` to also
    provide more information to the user if they decline permissions.
 
-   This method will present UI the user. You typically should check if `AccessToken.current` already
-   contains the permissions you need before asking to reduce unnecessary app switching.
+   This method will present a UI to the user. To reduce unnecessary app switching, you should typically check if
+   `AccessToken.current` already contains the permissions you need. If it does, you probably
+   do not need to call this method.
+
+   You can only perform one login call at a time. Calling a login method before the completion handler is called
+   on a previous login will result in an error.
 
    - parameter permissions: Array of read permissions. Default: `[.PublicProfile]`
    - parameter viewController: Optional view controller to present from. Default: topmost view controller.
    - parameter completion: Optional callback.
    */
-  func logIn(permissions: [Permission] = [.publicProfile],
-             viewController: UIViewController? = nil,
-             completion: LoginResultBlock? = nil) {
+  func logIn(
+    permissions: [Permission] = [.publicProfile],
+    viewController: UIViewController? = nil,
+    completion: LoginResultBlock? = nil
+  ) {
     self.logIn(permissions: permissions.map { $0.name }, from: viewController, handler: sdkCompletion(completion))
   }
 
-  private func sdkCompletion(_ completion: LoginResultBlock?) -> LoginManagerLoginResultBlock? {
-    guard let completion = completion else {
-      return nil
-    }
-    return { (result: LoginManagerLoginResult?, error: Error?) in
+  /**
+   Logs the user in or authorizes additional permissions.
+
+   Use this method when asking for permissions. You should only ask for permissions when they
+   are needed and the value should be explained to the user. You can inspect the result's `declinedPermissions` to also
+   provide more information to the user if they decline permissions.
+
+   This method will present a UI to the user. To reduce unnecessary app switching, you should typically check if
+   `AccessToken.current` already contains the permissions you need. If it does, you probably
+   do not need to call this method.
+
+   You can only perform one login call at a time. Calling a login method before the completion handler is called
+   on a previous login will result in an error.
+
+   - parameter viewController: Optional view controller to present from. Default: topmost view controller.
+   - parameter configuration the login configuration to use.
+   - parameter completion: Optional callback.
+   */
+  func logIn(
+    viewController: UIViewController? = nil,
+    configuration: LoginConfiguration,
+    completion: @escaping LoginResultBlock
+  ) {
+    let _completion = { (result: LoginManagerLoginResult?, error: Error?) in
       let result = LoginResult(result: result, error: error)
       completion(result)
+    }
+    self.logIn(from: viewController, configuration: configuration, completion: _completion)
+  }
+
+  /**
+   Logs the user in or authorizes additional permissions.
+
+   Use this method when asking for permissions. You should only ask for permissions when they
+   are needed and the value should be explained to the user. You can inspect the result's `declinedPermissions` to also
+   provide more information to the user if they decline permissions.
+
+   This method will present a UI to the user. To reduce unnecessary app switching, you should typically check if
+   `AccessToken.current` already contains the permissions you need. If it does, you probably
+   do not need to call this method.
+
+   You can only perform one login call at a time. Calling a login method before the completion handler is called
+   on a previous login will result in an error.
+   
+   - parameter configuration the login configuration to use.
+   - parameter completion: Optional callback.
+   */
+  func logIn(
+    configuration: LoginConfiguration,
+    completion: @escaping LoginResultBlock
+  ) {
+    let _completion = { (result: LoginManagerLoginResult?, error: Error?) in
+      let result = LoginResult(result: result, error: error)
+      completion(result)
+    }
+    self.logIn(from: nil, configuration: configuration, completion: _completion)
+  }
+
+  private func sdkCompletion(_ completion: LoginResultBlock?) -> LoginManagerLoginResultBlock? {
+    guard let original = completion else {
+      return nil
+    }
+    return convertedResultHandler(original)
+  }
+
+  private func convertedResultHandler(_ original: @escaping LoginResultBlock) -> LoginManagerLoginResultBlock {
+    return { (result: LoginManagerLoginResult?, error: Error?) in
+      let result = LoginResult(result: result, error: error)
+      original(result)
     }
   }
 }

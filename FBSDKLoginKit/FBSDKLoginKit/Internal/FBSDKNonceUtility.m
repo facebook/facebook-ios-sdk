@@ -16,20 +16,19 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+#import "FBSDKNonceUtility.h"
 
-#import "FBSDKCoreKitImport.h"
-#import "FBSDKDeviceLoginCodeInfo.h"
-#import "FBSDKDeviceLoginManager.h"
-#import "FBSDKDeviceLoginManagerResult.h"
-#import "FBSDKLoginConstants.h"
+#import "FBSDKCoreKit+Internal.h"
 
-#if !TARGET_OS_TV
- #import "FBSDKLoginButton.h"
- #import "FBSDKLoginConfiguration.h"
- #import "FBSDKLoginManager.h"
- #import "FBSDKLoginManagerLoginResult.h"
- #import "FBSDKLoginTooltipView.h"
- #import "FBSDKReferralManager.h"
- #import "FBSDKReferralManagerResult.h"
-#endif
+@implementation FBSDKNonceUtility
+
++ (BOOL)isValidNonce:(NSString *)nonce
+{
+  NSString *string = [FBSDKTypeUtility stringValue:nonce];
+  NSRange whiteSpaceRange = [string rangeOfCharacterFromSet:[NSCharacterSet whitespaceCharacterSet]];
+  BOOL containsWhitespace = (whiteSpaceRange.location != NSNotFound);
+
+  return (([string length] > 0) && !containsWhitespace);
+}
+
+@end

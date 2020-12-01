@@ -16,20 +16,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-#import "FBSDKCoreKitImport.h"
-#import "FBSDKDeviceLoginCodeInfo.h"
-#import "FBSDKDeviceLoginManager.h"
-#import "FBSDKDeviceLoginManagerResult.h"
-#import "FBSDKLoginConstants.h"
+NS_ASSUME_NONNULL_BEGIN
 
-#if !TARGET_OS_TV
- #import "FBSDKLoginButton.h"
- #import "FBSDKLoginConfiguration.h"
- #import "FBSDKLoginManager.h"
- #import "FBSDKLoginManagerLoginResult.h"
- #import "FBSDKLoginTooltipView.h"
- #import "FBSDKReferralManager.h"
- #import "FBSDKReferralManagerResult.h"
-#endif
+NS_SWIFT_NAME(Nonce)
+@interface FBSDKNonceUtility: NSObject
+
+/**
+   Checks if a string represents a valid nonce.
+ */
++ (BOOL)isValidNonce:(NSString *)nonce;
+
++ (instancetype)new NS_UNAVAILABLE;
+- (instancetype)init NS_UNAVAILABLE;
+
+@end
+
+NS_ASSUME_NONNULL_END

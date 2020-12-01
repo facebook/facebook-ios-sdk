@@ -16,20 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+#import <FBSDKLoginKit/FBSDKLoginKit.h>
 
-#import "FBSDKCoreKitImport.h"
-#import "FBSDKDeviceLoginCodeInfo.h"
-#import "FBSDKDeviceLoginManager.h"
-#import "FBSDKDeviceLoginManagerResult.h"
-#import "FBSDKLoginConstants.h"
-
-#if !TARGET_OS_TV
- #import "FBSDKLoginButton.h"
- #import "FBSDKLoginConfiguration.h"
- #import "FBSDKLoginManager.h"
- #import "FBSDKLoginManagerLoginResult.h"
- #import "FBSDKLoginTooltipView.h"
- #import "FBSDKReferralManager.h"
- #import "FBSDKReferralManagerResult.h"
-#endif
+#import "FBSDKLoginConfiguration.h"
+#import "FBSDKNonceUtility.h"

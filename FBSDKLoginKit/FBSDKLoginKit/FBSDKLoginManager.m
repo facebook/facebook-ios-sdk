@@ -82,16 +82,26 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   return self;
 }
 
-- (void)logInWithPermissions:(NSArray<NSString *> *)permissions
-          fromViewController:(UIViewController *)fromViewController
-                     handler:(FBSDKLoginManagerLoginResultBlock)handler
+- (void)logInFromViewController:(UIViewController *)viewController
+                  configuration:(FBSDKLoginConfiguration *)configuration
+                     completion:(FBSDKLoginManagerLoginResultBlock)completion
 {
   if (![self validateLoginStartState]) {
     return;
   }
-  self.fromViewController = fromViewController;
-  NSSet<NSString *> *permissionSet = [NSSet setWithArray:permissions];
-  [self logInWithPermissions:permissionSet handler:handler];
+  self.fromViewController = viewController;
+  [self logInWithPermissions:configuration.requestedPermissions handler:completion];
+}
+
+- (void)logInWithPermissions:(NSArray<NSString *> *)permissions
+          fromViewController:(UIViewController *)viewController
+                     handler:(FBSDKLoginManagerLoginResultBlock)handler
+{
+  FBSDKLoginConfiguration *config = [[FBSDKLoginConfiguration alloc] initWithPermissions:permissions
+                                                                     betaLoginExperience:FBSDKBetaLoginExperienceEnabled];
+  [self logInFromViewController:viewController
+                  configuration:config
+                     completion:handler];
 }
 
 - (void)reauthorizeDataAccess:(UIViewController *)fromViewController handler:(FBSDKLoginManagerLoginResultBlock)handler

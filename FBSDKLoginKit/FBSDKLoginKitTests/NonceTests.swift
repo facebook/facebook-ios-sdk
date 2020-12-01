@@ -16,20 +16,34 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+import XCTest
 
-#import "FBSDKCoreKitImport.h"
-#import "FBSDKDeviceLoginCodeInfo.h"
-#import "FBSDKDeviceLoginManager.h"
-#import "FBSDKDeviceLoginManagerResult.h"
-#import "FBSDKLoginConstants.h"
+class NonceTests: XCTestCase {
 
-#if !TARGET_OS_TV
- #import "FBSDKLoginButton.h"
- #import "FBSDKLoginConfiguration.h"
- #import "FBSDKLoginManager.h"
- #import "FBSDKLoginManagerLoginResult.h"
- #import "FBSDKLoginTooltipView.h"
- #import "FBSDKReferralManager.h"
- #import "FBSDKReferralManagerResult.h"
-#endif
+  func testInvalidNonces() {
+    [
+      "",
+      "foo bar"
+    ].forEach { nonce in
+      XCTAssertFalse(
+        Nonce.isValidNonce(nonce),
+        "Should not consider: \(nonce) to be a valid nonce"
+      )
+    }
+  }
+
+  func testValidNonces() {
+    [
+      "123",
+      "foo",
+      "asdfasdfasdfasdfasdfasdfasdf"
+    ].forEach { nonce in
+      XCTAssertTrue(
+        Nonce.isValidNonce(nonce),
+        "Should consider: \(nonce) to be a valid nonce"
+      )
+    }
+  }
+
+
+}
