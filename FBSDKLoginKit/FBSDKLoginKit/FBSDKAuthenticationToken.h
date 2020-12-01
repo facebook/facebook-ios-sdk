@@ -23,7 +23,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- Represent an ID Token used for OpenID connect (OIDC) protocal
+ Represent an AuthenticationToken used for a login attempt
 */
 NS_SWIFT_NAME(AuthenticationToken)
 @interface FBSDKAuthenticationToken : NSObject
@@ -55,11 +55,13 @@ NS_SWIFT_NAME(AuthenticationToken)
 @property (nonatomic, readonly) FBSDKBetaLoginExperience betaLoginExperience;
 
 /**
- Initializes a new instance if the ID token is valid. Otherwise returns nil.
- An ID Token is verified based of the OpenID connect standard.
+ Initializes a new instance if the token represented by the token string is valid. Otherwise returns nil.
+ An `AuthenticationToken` is verified based of the OpenID Connect Protocol.
  @param tokenString the raw ID token string
+ @param nonce the nonce string used to associate a client session with the token
 */
-- (instancetype)initWithTokenString:(NSString *)tokenString;
+- (instancetype)initWithTokenString:(NSString *)tokenString
+                              nonce:(NSString *)nonce;
 
 @end
 

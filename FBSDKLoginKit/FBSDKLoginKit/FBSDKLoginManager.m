@@ -46,6 +46,7 @@
 
 static int const FBClientStateChallengeLength = 20;
 static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
+static NSString *const FBSDKOIDCExpectedNonceKey = @"expected_login_nonce";
 static NSString *const FBSDKOauthPath = @"/dialog/oauth";
 static NSString *const SFVCCanceledLogin = @"com.apple.SafariServices.Authentication";
 static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebAuthenticationSession";
@@ -323,6 +324,11 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   return [_keychainStore stringForKey:FBSDKExpectedChallengeKey];
 }
 
+- (NSString *)loadExpectedNonce
+{
+  return [_keychainStore stringForKey:FBSDKOIDCExpectedNonceKey];
+}
+
 - (NSDictionary *)logInParametersWithPermissions:(NSSet *)permissions serverConfiguration:(FBSDKServerConfiguration *)serverConfiguration
 {
   [FBSDKInternalUtility validateURLSchemes];
@@ -556,7 +562,9 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 
   if (isFacebookURL) {
     NSDictionary *urlParameters = [FBSDKLoginUtility queryParamsFromLoginURL:url];
-    id<FBSDKLoginCompleting> completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:urlParameters appID:[FBSDKSettings appID]];
+    id<FBSDKLoginCompleting> completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:urlParameters
+                                                                                         appID:[FBSDKSettings appID]
+                                                                                         nonce:[self loadExpectedNonce]];
 
     if (_logger == nil) {
       _logger = [FBSDKLoginManagerLogger loggerFromParameters:urlParameters];

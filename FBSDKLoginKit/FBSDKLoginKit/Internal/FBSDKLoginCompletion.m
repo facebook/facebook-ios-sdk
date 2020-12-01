@@ -121,12 +121,20 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   BOOL _performExplicitFallback;
 }
 
-- (instancetype)initWithURLParameters:(NSDictionary *)parameters appID:(NSString *)appID
+- (instancetype)initWithURLParameters:(NSDictionary *)parameters
+                                appID:(NSString *)appID
+{
+  return [self initWithURLParameters:parameters appID:appID nonce:nil];
+}
+
+- (instancetype)initWithURLParameters:(NSDictionary *)parameters
+                                appID:(NSString *)appID
+                                nonce:(NSString *)nonce
 {
   if ((self = [super init]) != nil) {
     _parameters = [[FBSDKLoginCompletionParameters alloc] init];
 
-    FBSDKAuthenticationToken *idToken = [[FBSDKAuthenticationToken alloc] initWithTokenString:parameters[@"id_token"]];
+    FBSDKAuthenticationToken *idToken = [[FBSDKAuthenticationToken alloc] initWithTokenString:parameters[@"id_token"] nonce:nonce];
 
     if ([parameters[@"access_token"] length] > 0
         || [parameters[@"nonce"] length] > 0

@@ -89,7 +89,8 @@ NS_SWIFT_NAME(LoginURLCompleter)
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
-- (instancetype)initWithURLParameters:(NSDictionary *)parameters appID:(NSString *)appID NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithURLParameters:(NSDictionary *)parameters appID:(NSString *)appID;
+- (instancetype)initWithURLParameters:(NSDictionary *)parameters appID:(NSString *)appID nonce:(NSString *)nonce NS_DESIGNATED_INITIALIZER;
 
 @end
 

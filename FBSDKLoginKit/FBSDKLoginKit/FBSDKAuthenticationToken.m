@@ -38,6 +38,8 @@
 
 static FBSDKAuthenticationToken *g_currentAuthenticationToken;
 
+static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
+
 @implementation FBSDKAuthenticationToken
 {
   NSString *_cert;
@@ -46,8 +48,9 @@ static FBSDKAuthenticationToken *g_currentAuthenticationToken;
 }
 
 - (instancetype)initWithTokenString:(NSString *)tokenString
+                              nonce:(NSString *)nonce
 {
-  if (!tokenString || tokenString.length == 0) {
+  if (!tokenString || tokenString.length == 0 || !nonce || nonce.length == 0) {
     return nil;
   }
 
@@ -67,7 +70,7 @@ static FBSDKAuthenticationToken *g_currentAuthenticationToken;
       return nil;
     }
 
-    [self setClaimsWithEncodedString:encodedClaims];
+    _claims = [FBSDKAuthenticationToken validatedClaimsWithEncodedString:encodedClaims nonce:nonce];
   }
 
   return self;
@@ -85,19 +88,31 @@ static FBSDKAuthenticationToken *g_currentAuthenticationToken;
   }
 }
 
-- (void)setClaimsWithEncodedString:(NSString *)encodedClaims
++ (NSDictionary *)validatedClaimsWithEncodedString:(NSString *)encodedClaims nonce:(NSString *)nonce
 {
   NSError *error;
   NSData *claimsData = [FBSDKBase64 decodeAsData:encodedClaims];
 
   if (claimsData) {
-    NSDictionary *decodedClaims = [FBSDKTypeUtility JSONObjectWithData:claimsData options:0 error:&error];
+    NSDictionary *claims = [FBSDKTypeUtility JSONObjectWithData:claimsData options:0 error:&error];
     if (!error) {
-      // TODO(T78739428): verify claims
+      long currentTime = [[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]] longValue];
 
-      _claims = decodedClaims;
+      // verify claims
+      BOOL isFacebook = [claims[@"iss"] isKindOfClass:[NSString class]] && [[[NSURL URLWithString:claims[@"iss"]] host] isEqualToString:@"facebook.com"];
+      BOOL audMatched = [claims[@"aud"] isKindOfClass:[NSString class]] && [claims[@"aud"] isEqualToString:[FBSDKSettings appID]];
+      BOOL isExpired = [claims[@"exp"] isKindOfClass:[NSNumber class]] && [(NSNumber *)claims[@"exp"] longValue] <= currentTime;
+      BOOL issuedRecently = [claims[@"iat"] isKindOfClass:[NSNumber class]] && [(NSNumber *)claims[@"iat"] longValue] >= currentTime - MaxTimeSinceTokenIssued;
+      BOOL nonceMatched = [claims[@"nonce"] isKindOfClass:[NSString class]] && [claims[@"nonce"] isEqualToString:nonce];
+      BOOL userIDValid = [claims[@"sub"] isKindOfClass:[NSString class]] && [claims[@"sub"] length] > 0;
+
+      if (isFacebook && audMatched && !isExpired && issuedRecently && nonceMatched && userIDValid) {
+        return claims;
+      }
     }
   }
+
+  return nil;
 }
 
 - (BOOL)verifySignature:(NSString *)signature
