@@ -29,6 +29,7 @@
  #endif
 
  #import "FBSDKLoginTooltipView.h"
+ #import "FBSDKNonceUtility.h"
 
 static const CGFloat kFBLogoSize = 16.0;
 static const CGFloat kFBLogoLeftMargin = 6.0;
@@ -74,6 +75,15 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
     return [UIFont systemFontOfSize:size weight:UIFontWeightSemibold];
   } else {
     return [UIFont boldSystemFontOfSize:size];
+  }
+}
+
+- (void)setNonce:(NSString *)nonce
+{
+  if ([FBSDKNonceUtility isValidNonce:nonce]) {
+    _nonce = nonce;
+  } else {
+    _nonce = nil;
   }
 }
 
@@ -278,6 +288,13 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
         [self.delegate loginButton:self didCompleteWithResult:result error:error];
       }
     };
+
+    FBSDKLoginConfiguration *loginConfig = [[FBSDKLoginConfiguration alloc] initWithPermissions:self.permissions
+                                                                            betaLoginExperience:self.betaLoginExperience
+                                                                                          nonce:self.nonce];
+    [_loginManager logInFromViewController:[FBSDKInternalUtility viewControllerForView:self]
+                             configuration:loginConfig
+                                completion:handler];
 
     [_loginManager logInWithPermissions:self.permissions
                      fromViewController:[FBSDKInternalUtility viewControllerForView:self]

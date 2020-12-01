@@ -98,6 +98,15 @@ NS_SWIFT_NAME(FBLoginButton)
   Gets or sets the desired tooltip color style.
  */
 @property (assign, nonatomic) FBSDKTooltipColorStyle tooltipColorStyle;
+/**
+  Gets or sets the desired beta login experience to use for login attempts. Defaults to `.enabled`
+ */
+@property (assign, nonatomic) FBSDKBetaLoginExperience betaLoginExperience;
+/**
+  Gets or sets an optional nonce to use for login attempts. A valid nonce must be a non-empty string without whitespace.
+ An invalid nonce will not be set. Instead, default unique nonces will be used for login attempts.
+ */
+@property (assign, nonatomic, nullable) NSString *nonce;
 
 @end
 

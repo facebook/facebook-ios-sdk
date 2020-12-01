@@ -20,6 +20,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// The login experience style to use for a login attempt
 typedef NS_ENUM(NSUInteger, FBSDKBetaLoginExperience)
 {
   FBSDKBetaLoginExperienceEnabled,
