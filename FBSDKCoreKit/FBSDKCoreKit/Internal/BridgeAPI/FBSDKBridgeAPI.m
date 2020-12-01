@@ -40,8 +40,6 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   FBSDKAuthenticationSessionCanceledBySystem,
 };
 
-typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackURL, NSError *_Nullable error);
-
 @protocol FBSDKAuthenticationSession <NSObject>
 
 - (instancetype)initWithURL:(NSURL *)URL callbackURLScheme:(nullable NSString *)callbackURLScheme completionHandler:(FBSDKAuthenticationCompletionHandler)completionHandler;
@@ -451,6 +449,11 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
     strongSelf->_authenticationSessionCompletionHandler = nil;
     strongSelf->_authenticationSessionState = FBSDKAuthenticationSessionNone;
   };
+}
+
+- (FBSDKAuthenticationCompletionHandler)sessionCompletionHandler
+{
+  return _authenticationSessionCompletionHandler;
 }
 
  #pragma mark -- SFSafariViewControllerDelegate
