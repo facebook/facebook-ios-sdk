@@ -58,7 +58,7 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginButtonTooltipBehavior)
 /**
   A button that initiates a log in or log out flow upon tapping.
 
- `FBSDKLoginButton` works with `[FBSDKAccessToken currentAccessToken]` to
+ `FBSDKLoginButton` works with `FBSDKProfile.currentProfile` to
   determine what to display, and automatically starts authentication when tapped (i.e.,
   you do not need to manually subscribe action targets).
 

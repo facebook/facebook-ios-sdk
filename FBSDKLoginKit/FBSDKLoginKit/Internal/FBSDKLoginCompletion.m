@@ -298,8 +298,24 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
     return nil;
   }
 
-  // TODO: populate profile from claims
-  return [FBSDKProfile currentProfile];
+  NSDictionary *claims = token.claims;
+  if (![claims[@"sub"] isKindOfClass:NSString.class]) {
+    return nil;
+  }
+
+  NSString *name = [claims[@"name"] isKindOfClass:NSString.class] ? claims[@"name"] : nil;
+  NSString *email = [claims[@"email"] isKindOfClass:NSString.class] ? claims[@"email"] : nil;
+  NSURL *imageURL = [claims[@"picture"] isKindOfClass:NSString.class] ? [NSURL URLWithString:claims[@"picture"]] : nil;
+
+  return [[FBSDKProfile alloc]initWithUserID:claims[@"sub"]
+                                   firstName:nil
+                                  middleName:nil
+                                    lastName:nil
+                                        name:name
+                                     linkURL:nil
+                                 refreshDate:nil
+                                    imageURL:imageURL
+                                       email:email];
 }
 
 @end

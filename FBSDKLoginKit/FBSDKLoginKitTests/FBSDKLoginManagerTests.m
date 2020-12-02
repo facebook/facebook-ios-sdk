@@ -60,9 +60,11 @@ static NSString *const kFakeNonce = @"fedcb =a";
 
 - (void)setUp
 {
+  [super setUp];
   _mockNSBundle = [FBSDKLoginUtilityTests mainBundleMock];
   [FBSDKSettings setAppID:kFakeAppID];
   [FBSDKAuthenticationToken setCurrentAuthenticationToken:nil];
+  [FBSDKProfile setCurrentProfile:nil];
 }
 
 - (NSURL *)authorizeURLWithParameters:(NSString *)parameters joinedBy:(NSString *)joinChar
@@ -328,10 +330,18 @@ static NSString *const kFakeNonce = @"fedcb =a";
   [target setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
     // TODO: Verify that the expected profile is set.
     // XCTAssertFalse(result.isCancelled);
+
     FBSDKAuthenticationToken *authToken = FBSDKAuthenticationToken.currentAuthenticationToken;
     XCTAssertNotNil(authToken, @"An Authentication token should be created after successful login");
     XCTAssertEqualObjects(authToken.tokenString, tokenString, @"A raw authentication token string should be stored");
     XCTAssertEqualObjects(authToken.nonce, kFakeNonce, @"The nonce claims in the authentication token should be stored");
+
+    FBSDKProfile *profile = [FBSDKProfile currentProfile];
+    XCTAssertNotNil(profile, @"user profile should be updated");
+    XCTAssertEqualObjects(profile.name, expectedClaims[@"name"], @"failed to parse user name");
+    XCTAssertEqualObjects(profile.userID, expectedClaims[@"sub"], @"failed to parse userID");
+    XCTAssertEqualObjects(profile.imageURL.absoluteString, expectedClaims[@"picture"], @"failed to parse user profile picture");
+
     [expectation fulfill];
   }];
 

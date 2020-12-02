@@ -216,7 +216,7 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 - (void)_buttonPressed:(id)sender
 {
   [self logTapEventWithEventName:FBSDKAppEventNameFBSDKLoginButtonDidTap parameters:self.analyticsParameters];
-  if (FBSDKAccessToken.isCurrentAccessTokenActive) {
+  if (FBSDKAccessToken.isCurrentAccessTokenActive || FBSDKProfile.currentProfile) {
     NSString *title = nil;
 
     if (_userName) {
