@@ -44,6 +44,8 @@ static FBSDKProfile *g_currentProfile;
  #define FBSDKPROFILE_NAME_KEY @"name"
  #define FBSDKPROFILE_LINKURL_KEY @"linkURL"
  #define FBSDKPROFILE_REFRESHDATE_KEY @"refreshDate"
+ #define FBSDKPROFILE_IMAGEURL_KEY @"imageURL"
+ #define FBSDKPROFILE_EMAIL_KEY @"email"
 
 // Once a day
  #define FBSDKPROFILE_STALE_IN_SECONDS (60 * 60 * 24)
@@ -58,6 +60,27 @@ static FBSDKProfile *g_currentProfile;
                        linkURL:(NSURL *)linkURL
                    refreshDate:(NSDate *)refreshDate
 {
+  return [self initWithUserID:userID
+                    firstName:firstName
+                   middleName:middleName
+                     lastName:lastName
+                         name:name
+                      linkURL:linkURL
+                  refreshDate:refreshDate
+                     imageURL:nil
+                        email:nil];
+}
+
+- (instancetype)initWithUserID:(NSString *)userID
+                     firstName:(NSString *)firstName
+                    middleName:(NSString *)middleName
+                      lastName:(NSString *)lastName
+                          name:(NSString *)name
+                       linkURL:(NSURL *)linkURL
+                   refreshDate:(NSDate *)refreshDate
+                      imageURL:(NSURL *)imageURL
+                         email:(NSString *)email
+{
   if ((self = [super init])) {
     _userID = [userID copy];
     _firstName = [firstName copy];
@@ -66,6 +89,8 @@ static FBSDKProfile *g_currentProfile;
     _name = [name copy];
     _linkURL = [linkURL copy];
     _refreshDate = [refreshDate copy] ?: [NSDate date];
+    _imageURL = [imageURL copy];
+    _email = [email copy];
   }
   return self;
 }
@@ -131,7 +156,9 @@ static FBSDKProfile *g_currentProfile;
     self.lastName.hash,
     self.name.hash,
     self.linkURL.hash,
-    self.refreshDate.hash
+    self.refreshDate.hash,
+    self.imageURL.hash,
+    self.email.hash,
   };
   return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
 }
@@ -155,7 +182,9 @@ static FBSDKProfile *g_currentProfile;
     && [_lastName isEqualToString:profile.lastName]
     && [_name isEqualToString:profile.name]
     && [_linkURL isEqual:profile.linkURL]
-    && [_refreshDate isEqualToDate:profile.refreshDate]);
+    && [_refreshDate isEqualToDate:profile.refreshDate])
+  && [_imageURL isEqual:profile.imageURL]
+  && [_email isEqualToString:profile.email];
 }
 
  #pragma mark NSCoding
@@ -174,13 +203,17 @@ static FBSDKProfile *g_currentProfile;
   NSString *name = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKPROFILE_NAME_KEY];
   NSURL *linkURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDKPROFILE_LINKURL_KEY];
   NSDate *refreshDate = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDKPROFILE_REFRESHDATE_KEY];
+  NSURL *imageURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDKPROFILE_IMAGEURL_KEY];
+  NSString *email = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKPROFILE_EMAIL_KEY];
   return [self initWithUserID:userID
                     firstName:firstName
                    middleName:middleName
                      lastName:lastName
                          name:name
                       linkURL:linkURL
-                  refreshDate:refreshDate];
+                  refreshDate:refreshDate
+                     imageURL:imageURL
+                        email:email];
 }
 
 - (void)encodeWithCoder:(NSCoder *)encoder
@@ -192,6 +225,8 @@ static FBSDKProfile *g_currentProfile;
   [encoder encodeObject:self.name forKey:FBSDKPROFILE_NAME_KEY];
   [encoder encodeObject:self.linkURL forKey:FBSDKPROFILE_LINKURL_KEY];
   [encoder encodeObject:self.refreshDate forKey:FBSDKPROFILE_REFRESHDATE_KEY];
+  [encoder encodeObject:self.imageURL forKey:FBSDKPROFILE_IMAGEURL_KEY];
+  [encoder encodeObject:self.email forKey:FBSDKPROFILE_EMAIL_KEY];
 }
 
 @end
@@ -273,6 +308,10 @@ static FBSDKProfile *g_currentProfile;
     graphPath = [graphPath stringByAppendingString:@",link"];
   }
 
+  if ([token.permissions containsObject:@"email"]) {
+    graphPath = [graphPath stringByAppendingString:@",email"];
+  }
+
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
                                                                  parameters:nil
                                                                       flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
@@ -299,7 +338,9 @@ static FBSDKProfile *g_currentProfile;
                                                         lastName:result[@"last_name"]
                                                             name:result[@"name"]
                                                          linkURL:linkUrl
-                                                     refreshDate:[NSDate date]];
+                                                     refreshDate:[NSDate date]
+                                                        imageURL:nil
+                                                           email:result[@"email"]];
     *profileRef = [profile copy];
   };
   [[self class] loadProfileWithToken:token completion:completion graphRequest:request parseBlock:parseBlock];

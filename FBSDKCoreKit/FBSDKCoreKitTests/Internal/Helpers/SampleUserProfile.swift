@@ -27,7 +27,9 @@ import FBSDKCoreKit
       lastName: "Smith",
       name: "John Smith",
       linkURL: URL(string: "http://www.example.com"),
-      refreshDate: .distantFuture
+      refreshDate: .distantFuture,
+      imageURL: URL(string: "http://www.example.com/image.jpg"),
+      email: "example@example.com"
     )
   }
 }
