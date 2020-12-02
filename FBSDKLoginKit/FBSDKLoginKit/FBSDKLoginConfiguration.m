@@ -20,15 +20,15 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKLoginConfiguration.h"
+ #import "FBSDKLoginConfiguration.h"
 
-#import "FBSDKNonceUtility.h"
+ #import "FBSDKNonceUtility.h"
 
-#ifdef FBSDKCOCOAPODS
- #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
- #import "FBSDKCoreKit+Internal.h"
-#endif
+ #ifdef FBSDKCOCOAPODS
+  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+ #else
+  #import "FBSDKCoreKit+Internal.h"
+ #endif
 
 @implementation FBSDKLoginConfiguration
 
