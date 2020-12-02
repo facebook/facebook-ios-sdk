@@ -39,6 +39,8 @@ static NSString *const kFakeNonce = @"fedcb =a";
 
 - (NSString *)loadExpectedNonce;
 
+- (void)storeExpectedNonce:(NSString *)nonceExpected keychainStore:(FBSDKKeychainStore *)keychainStore;
+
 @end
 
 @interface FBSDKAuthenticationToken (Testing)
@@ -60,6 +62,7 @@ static NSString *const kFakeNonce = @"fedcb =a";
 {
   _mockNSBundle = [FBSDKLoginUtilityTests mainBundleMock];
   [FBSDKSettings setAppID:kFakeAppID];
+  [FBSDKAuthenticationToken setCurrentAuthenticationToken:nil];
 }
 
 - (NSURL *)authorizeURLWithParameters:(NSString *)parameters joinedBy:(NSString *)joinChar
@@ -296,7 +299,6 @@ static NSString *const kFakeNonce = @"fedcb =a";
 - (void)testOpenURLAuthWithIDToken
 {
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
-  [FBSDKAccessToken setCurrentAccessToken:nil];
   FBSDKLoginManager *target = [self loginManagerExpectingChallengeAndNonce];
   [FBSDKAuthenticationToken setSkipSignatureVerification:YES];
 
@@ -327,9 +329,9 @@ static NSString *const kFakeNonce = @"fedcb =a";
     // TODO: Verify that the expected profile is set.
     // XCTAssertFalse(result.isCancelled);
     FBSDKAuthenticationToken *authToken = FBSDKAuthenticationToken.currentAuthenticationToken;
-    XCTAssertNotNil(authToken);
-    XCTAssertEqualObjects(authToken.tokenString, tokenString);
-    XCTAssertEqualObjects(authToken.nonce, kFakeNonce);
+    XCTAssertNotNil(authToken, @"An Authentication token should be created after successful login");
+    XCTAssertEqualObjects(authToken.tokenString, tokenString, @"A raw authentication token string should be stored");
+    XCTAssertEqualObjects(authToken.nonce, kFakeNonce, @"The nonce claims in the authentication token should be stored");
     [expectation fulfill];
   }];
 
@@ -415,19 +417,21 @@ static NSString *const kFakeNonce = @"fedcb =a";
   XCTAssertEqual(loginCount, 1);
 }
 
-- (void)testLoginParams
+- (void)testBetaLoginExperienceEnabledLoginParams
 {
   id FBSDKInternalUtilityMock = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
   [[[FBSDKInternalUtilityMock stub] andDo:^(NSInvocation *invocation) {
     // Nothing
   }] validateURLSchemes];
-  FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
-  NSDictionary *params = [loginManager logInParametersWithPermissions:[NSSet setWithArray:@[@"public_profile", @"email"]] serverConfiguration:nil];
+  FBSDKLoginManager *loginManager = [FBSDKLoginManager new];
+  FBSDKLoginConfiguration *config = [[FBSDKLoginConfiguration alloc] initWithPermissions:@[@"public_profile", @"email"] betaLoginExperience:FBSDKBetaLoginExperienceEnabled];
+
+  NSDictionary *params = [loginManager logInParametersWithConfiguration:config serverConfiguration:nil];
   long long cbt = [params[@"cbt"] longLongValue];
   long long currentMilliseconds = round(1000 * [NSDate date].timeIntervalSince1970);
   XCTAssertEqualWithAccuracy(cbt, currentMilliseconds, 500);
   XCTAssertEqualObjects(params[@"client_id"], @"7391628439");
-  XCTAssertEqualObjects(params[@"response_type"], @"token_or_nonce,signed_request,graph_domain");
+  XCTAssertEqualObjects(params[@"response_type"], @"id_token,token_or_nonce,signed_request,graph_domain");
   XCTAssertEqualObjects(params[@"redirect_uri"], @"fbconnect://success");
   XCTAssertEqualObjects(params[@"display"], @"touch");
   XCTAssertEqualObjects(params[@"sdk"], @"ios");
@@ -435,6 +439,34 @@ static NSString *const kFakeNonce = @"fedcb =a";
   XCTAssertEqual(params[@"auth_type"], FBSDKLoginAuthTypeRerequest);
   XCTAssertEqualObjects(params[@"fbapp_pres"], @0);
   XCTAssertEqualObjects(params[@"ies"], [FBSDKSettings isAutoLogAppEventsEnabled] ? @1 : @0);
+  XCTAssertEqualObjects(params[@"scope"], @"public_profile,email,openid");
+  XCTAssertNotNil(params[@"nonce"]);
+}
+
+- (void)testBetaLoginExperienceRestrictedLoginParams
+{
+  id FBSDKInternalUtilityMock = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
+  [[[FBSDKInternalUtilityMock stub] andDo:^(NSInvocation *invocation) {
+    // Nothing
+  }] validateURLSchemes];
+  FBSDKLoginManager *loginManager = [FBSDKLoginManager new];
+  FBSDKLoginConfiguration *config = [[FBSDKLoginConfiguration alloc] initWithPermissions:@[@"public_profile", @"email"] betaLoginExperience:FBSDKBetaLoginExperienceRestricted nonce:@"some_nonce"];
+
+  NSDictionary *params = [loginManager logInParametersWithConfiguration:config serverConfiguration:nil];
+  long long cbt = [params[@"cbt"] longLongValue];
+  long long currentMilliseconds = round(1000 * [NSDate date].timeIntervalSince1970);
+  XCTAssertEqualWithAccuracy(cbt, currentMilliseconds, 500);
+  XCTAssertEqualObjects(params[@"client_id"], @"7391628439");
+  XCTAssertEqualObjects(params[@"response_type"], @"id_token");
+  XCTAssertEqualObjects(params[@"redirect_uri"], @"fbconnect://success");
+  XCTAssertEqualObjects(params[@"display"], @"touch");
+  XCTAssertEqualObjects(params[@"sdk"], @"ios");
+  XCTAssertEqualObjects(params[@"return_scopes"], @"true");
+  XCTAssertEqual(params[@"auth_type"], FBSDKLoginAuthTypeRerequest);
+  XCTAssertEqualObjects(params[@"fbapp_pres"], @0);
+  XCTAssertEqualObjects(params[@"ies"], [FBSDKSettings isAutoLogAppEventsEnabled] ? @1 : @0);
+  XCTAssertEqualObjects(params[@"scope"], @"public_profile,email,openid");
+  XCTAssertEqualObjects(params[@"nonce"], @"some_nonce");
 }
 
 - (void)testlogInParametersFromURL
@@ -504,6 +536,16 @@ static NSString *const kFakeNonce = @"fedcb =a";
   OCMVerify(ClassMethod([accessTokenClassMock setCurrentAccessToken:nil]));
   OCMVerify(ClassMethod([authenticationTokenClassMock setCurrentAuthenticationToken:nil]));
   OCMVerify(ClassMethod([profileClassMock setCurrentProfile:nil]));
+}
+
+- (void)testStoreExpectedNonce
+{
+  FBSDKKeychainStore *keychainStore = [[FBSDKKeychainStore alloc] initWithService:self.name accessGroup:nil];
+  FBSDKLoginManager *loginManager = [FBSDKLoginManager new];
+
+  [loginManager storeExpectedNonce:@"some_nonce" keychainStore:keychainStore];
+
+  XCTAssertEqualObjects([keychainStore stringForKey:@"expected_login_nonce"], @"some_nonce");
 }
 
 @end

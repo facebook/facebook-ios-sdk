@@ -46,7 +46,7 @@
 
 static int const FBClientStateChallengeLength = 20;
 static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
-static NSString *const FBSDKOIDCExpectedNonceKey = @"expected_login_nonce";
+static NSString *const FBSDKExpectedNonceKey = @"expected_login_nonce";
 static NSString *const FBSDKOauthPath = @"/dialog/oauth";
 static NSString *const SFVCCanceledLogin = @"com.apple.SafariServices.Authentication";
 static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebAuthenticationSession";
@@ -61,6 +61,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   FBSDKLoginManagerLogger *_logger;
   FBSDKLoginManagerState _state;
   FBSDKKeychainStore *_keychainStore;
+  FBSDKLoginConfiguration *_configuration;
   BOOL _usedSFAuthSession;
 }
 
@@ -91,6 +92,8 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
     return;
   }
   self.fromViewController = viewController;
+  _configuration = configuration;
+
   [self logInWithPermissions:configuration.requestedPermissions handler:completion];
 }
 
@@ -327,16 +330,16 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 
 - (NSString *)loadExpectedNonce
 {
-  return [_keychainStore stringForKey:FBSDKOIDCExpectedNonceKey];
+  return [_keychainStore stringForKey:FBSDKExpectedNonceKey];
 }
 
-- (NSDictionary *)logInParametersWithPermissions:(NSSet *)permissions serverConfiguration:(FBSDKServerConfiguration *)serverConfiguration
+- (NSDictionary *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration
+                               serverConfiguration:(FBSDKServerConfiguration *)serverConfiguration
 {
   [FBSDKInternalUtility validateURLSchemes];
 
   NSMutableDictionary *loginParams = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKSettings appID] forKey:@"client_id"];
-  [FBSDKTypeUtility dictionary:loginParams setObject:@"token_or_nonce,signed_request,graph_domain" forKey:@"response_type"];
   [FBSDKTypeUtility dictionary:loginParams setObject:@"fbconnect://success" forKey:@"redirect_uri"];
   [FBSDKTypeUtility dictionary:loginParams setObject:@"touch" forKey:@"display"];
   [FBSDKTypeUtility dictionary:loginParams setObject:@"ios" forKey:@"sdk"];
@@ -348,16 +351,27 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   long long cbtInMilliseconds = round(1000 * [NSDate date].timeIntervalSince1970);
   [FBSDKTypeUtility dictionary:loginParams setObject:@(cbtInMilliseconds) forKey:@"cbt"];
   [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKSettings isAutoLogAppEventsEnabled] ? @1 : @0 forKey:@"ies"];
-
   [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKSettings appURLSchemeSuffix] forKey:@"local_client_id"];
   [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKLoginUtility stringForAudience:self.defaultAudience] forKey:@"default_audience"];
+
+  NSSet *permissions = [configuration.requestedPermissions setByAddingObject:@"openid"];
   [FBSDKTypeUtility dictionary:loginParams setObject:[permissions.allObjects componentsJoinedByString:@","] forKey:@"scope"];
 
   NSString *expectedChallenge = [FBSDKLoginManager stringForChallenge];
   NSDictionary *state = @{@"challenge" : [FBSDKUtility URLEncode:expectedChallenge]};
   [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKBasicUtility JSONStringForObject:state error:NULL invalidObjectHandler:nil] forKey:@"state"];
-
   [self storeExpectedChallenge:expectedChallenge];
+
+  NSString *responseType;
+  if (configuration.betaLoginExperience == FBSDKBetaLoginExperienceRestricted) {
+    responseType = @"id_token";
+  } else {
+    responseType = @"id_token,token_or_nonce,signed_request,graph_domain";
+  }
+  [FBSDKTypeUtility dictionary:loginParams setObject:responseType forKey:@"response_type"];
+
+  [FBSDKTypeUtility dictionary:loginParams setObject:configuration.nonce forKey:@"nonce"];
+  [self storeExpectedNonce:configuration.nonce keychainStore:_keychainStore];
 
   return loginParams;
 }
@@ -419,6 +433,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   _handler = [handler copy];
   // Don't need to pass permissions for data reauthorization.
   _requestedPermissions = [NSSet set];
+  _configuration = [FBSDKLoginConfiguration init];
   self.authType = FBSDKLoginAuthTypeReauthorize;
   [_logger startSessionForLoginManager:self];
   [self logIn];
@@ -427,7 +442,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 - (void)logIn
 {
   FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager cachedServerConfiguration];
-  NSDictionary *loginParams = [self logInParametersWithPermissions:_requestedPermissions serverConfiguration:serverConfiguration];
+  NSDictionary *loginParams = [self logInParametersWithConfiguration:_configuration serverConfiguration:serverConfiguration];
   self->_usedSFAuthSession = NO;
 
   void (^completion)(BOOL, NSError *) = ^void (BOOL didPerformLogIn, NSError *error) {
@@ -455,6 +470,13 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   [_keychainStore setString:challengeExpected
                      forKey:FBSDKExpectedChallengeKey
               accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
+}
+
+- (void)storeExpectedNonce:(NSString *)nonceExpected keychainStore:(FBSDKKeychainStore *)keychainStore
+{
+  [keychainStore setString:nonceExpected
+                    forKey:FBSDKExpectedNonceKey
+             accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
 }
 
 + (NSString *)stringForChallenge
