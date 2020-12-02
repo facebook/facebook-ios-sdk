@@ -22,6 +22,7 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#import "FBSDKAuthenticationToken.h"
 #import "FBSDKLoginManager.h"
 #import "FBSDKLoginManager+Internal.h"
 #import "FBSDKLoginManagerLoginResult.h"
@@ -31,9 +32,19 @@ static NSString *const kFakeAppID = @"7391628439";
 
 static NSString *const kFakeChallenge = @"a =bcdef";
 
+static NSString *const kFakeNonce = @"fedcb =a";
+
 @interface FBSDKLoginManager (Testing)
 
 - (NSDictionary *)logInParametersFromURL:(NSURL *)url;
+
+- (NSString *)loadExpectedNonce;
+
+@end
+
+@interface FBSDKAuthenticationToken (Testing)
+
++ (void)setSkipSignatureVerification:(BOOL)value;
 
 @end
 
@@ -79,6 +90,17 @@ static NSString *const kFakeChallenge = @"a =bcdef";
   id partialMock = (FBSDKLoginManager *)[OCMockObject partialMockForObject:loginManager];
 
   [[[partialMock stub] andReturn:kFakeChallenge] loadExpectedChallenge];
+
+  return (FBSDKLoginManager *)partialMock;
+}
+
+- (FBSDKLoginManager *)loginManagerExpectingChallengeAndNonce
+{
+  FBSDKLoginManager *loginManager = [FBSDKLoginManager new];
+  id partialMock = [OCMockObject partialMockForObject:loginManager];
+
+  OCMStub([partialMock loadExpectedChallenge]).andReturn(kFakeChallenge);
+  OCMStub([partialMock loadExpectedNonce]).andReturn(kFakeNonce);
 
   return (FBSDKLoginManager *)partialMock;
 }
@@ -262,6 +284,74 @@ static NSString *const kFakeChallenge = @"a =bcdef";
   [target setRequestedPermissions:[NSSet setWithObjects:@"email", @"user_friends", nil]];
   [target setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
     XCTAssertNotNil(error);
+    [expectation fulfill];
+  }];
+
+  XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+
+  [self waitForExpectationsWithTimeout:3 handler:^(NSError *error) {
+    XCTAssertNil(error);
+  }];
+}
+
+- (void)testOpenURLAuthWithIDToken
+{
+  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
+  [FBSDKAccessToken setCurrentAccessToken:nil];
+  FBSDKLoginManager *target = [self loginManagerExpectingChallengeAndNonce];
+  [FBSDKAuthenticationToken setSkipSignatureVerification:YES];
+
+  long currentTime = [[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]] longValue];
+  NSDictionary *expectedClaims = @{
+    @"iss" : @"https://facebook.com/dialog/oauth",
+    @"aud" : kFakeAppID,
+    @"nonce" : kFakeNonce,
+    @"exp" : @(currentTime + 60 * 60 * 48), // 2 days later
+    @"iat" : @(currentTime - 60), // 1 min ago
+    @"sub" : @"1234",
+    @"name" : @"Test User",
+    @"picture" : @"https://www.facebook.com/some_picture",
+  };
+  NSData *expectedClaimsData = [FBSDKTypeUtility dataWithJSONObject:expectedClaims options:0 error:nil];
+  NSString *encodedClaims = [FBSDKBase64 encodeData:expectedClaimsData];
+  NSDictionary *expectedHeader = @{
+    @"alg" : @"RS256",
+    @"typ" : @"JWT"
+  };
+  NSData *expectedHeaderData = [FBSDKTypeUtility dataWithJSONObject:expectedHeader options:0 error:nil];
+  NSString *encodedHeader = [FBSDKBase64 encodeData:expectedHeaderData];
+
+  NSString *fragment = [NSString stringWithFormat:@"id_token=%@.%@.%@", encodedHeader, encodedClaims, @"signature"];
+  NSURL *url = [self authorizeURLWithFragment:fragment challenge:kFakeChallenge];
+
+  __block FBSDKProfile *tokenAfterAuth;
+  [target setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    // TODO: Verify that the expected profile is set.
+    // XCTAssertFalse(result.isCancelled);
+    tokenAfterAuth = [FBSDKProfile currentProfile];
+    // XCTAssertEqualObjects(tokenAfterAuth, result.token);
+    [expectation fulfill];
+  }];
+
+  XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+
+  [self waitForExpectationsWithTimeout:3 handler:^(NSError *error) {
+    XCTAssertNil(error);
+  }];
+
+  [FBSDKAuthenticationToken setSkipSignatureVerification:NO];
+}
+
+- (void)testOpenURLAuthWithInvalidIDToken
+{
+  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
+  [FBSDKAccessToken setCurrentAccessToken:nil];
+  FBSDKLoginManager *target = [self loginManagerExpectingChallengeAndNonce];
+  NSURL *url = [self authorizeURLWithFragment:@"id_token=invalid_token" challenge:kFakeChallenge];
+
+  [target setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    XCTAssertNotNil(error);
+    XCTAssertNil([FBSDKAccessToken currentAccessToken]);
     [expectation fulfill];
   }];
 

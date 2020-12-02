@@ -29,6 +29,7 @@
  #endif
 
  #import "FBSDKAuthenticationToken.h"
+ #import "FBSDKAuthenticationToken+Internal.h"
  #import "FBSDKLoginConstants.h"
  #import "FBSDKLoginError.h"
  #import "FBSDKLoginManager+Internal.h"
@@ -134,15 +135,15 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   if ((self = [super init]) != nil) {
     _parameters = [[FBSDKLoginCompletionParameters alloc] init];
 
-    FBSDKAuthenticationToken *idToken = [[FBSDKAuthenticationToken alloc] initWithTokenString:parameters[@"id_token"] nonce:nonce];
+    FBSDKAuthenticationToken *token = [[FBSDKAuthenticationToken alloc] initWithTokenString:parameters[@"id_token"] nonce:nonce];
 
     if ([parameters[@"access_token"] length] > 0
         || [parameters[@"nonce"] length] > 0
-        || idToken) {
+        || token) {
       [self setParametersWithDictionary:parameters appID:appID];
 
-      if (idToken) {
-        [self setParametersWithIDToken:idToken];
+      if (token) {
+        FBSDKProfile.currentProfile = [FBSDKLoginURLCompleter createProfileWithToken:token];
       }
     } else {
       [self setErrorWithDictionary:parameters];
@@ -285,13 +286,15 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   [connection start];
 }
 
-- (void)setParametersWithIDToken:(FBSDKAuthenticationToken *)idToken
+/// Returns a `FBSDKProfile` from an `AuthenticationToken` if it can extract the minimum necessary information
++ (FBSDKProfile *)createProfileWithToken:(FBSDKAuthenticationToken *)token
 {
-  if (!idToken) {
-    return;
+  if (!token || !token.claims) {
+    return nil;
   }
 
-  // TODO(T78739549): populate parameters with data from claims
+  // TODO: populate profile from claims
+  return [FBSDKProfile currentProfile];
 }
 
 @end

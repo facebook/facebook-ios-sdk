@@ -414,6 +414,7 @@
 		F4AA32812574448C005EDF04 /* LoginConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginConfiguration.swift; sourceTree = "<group>"; };
 		F4EC46022575A0CC00D2F47B /* FBSDKNonceUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKNonceUtility.h; sourceTree = "<group>"; };
 		F4EC46032575A0CC00D2F47B /* FBSDKNonceUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKNonceUtility.m; sourceTree = "<group>"; };
+		F4EC48252576C04000D2F47B /* FBSDKAuthenticationToken+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKAuthenticationToken+Internal.h"; sourceTree = "<group>"; };
 		F4ECC66F23EE2094005DBF05 /* FBSDKCoreKitImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKCoreKitImport.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -570,6 +571,7 @@
 		9D03E8271A72DCA700207493 /* Internal */ = {
 			isa = PBXGroup;
 			children = (
+				F4EC48252576C04000D2F47B /* FBSDKAuthenticationToken+Internal.h */,
 				C6CE2BC124EB732C00CF2EB6 /* FBSDKReferralManager+Internal.h */,
 				0B9DBEFD207C04FF00662776 /* FBSDKDeviceLoginCodeInfo+Internal.h */,
 				0B9DBEF7207C04FF00662776 /* FBSDKDeviceLoginManagerResult+Internal.h */,

@@ -140,6 +140,13 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
                  header:(NSString *)header
                  claims:(NSString *)claims
 {
+#if DEBUG
+  // skip signature checking for tests
+  if (_skipSignatureVerification) {
+    return YES;
+  }
+#endif
+
   NSData *signatureData = [FBSDKBase64 decodeAsData:[FBSDKAuthenticationToken base64FromBase64Url:signature]];
   NSString *signedString = [NSString stringWithFormat:@"%@.%@", header, claims];
   NSData *signedData = [signedString dataUsingEncoding:NSASCIIStringEncoding];
@@ -209,6 +216,13 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
 #pragma mark - Test methods
 
 #if DEBUG
+
+static BOOL _skipSignatureVerification;
+
++ (void)setSkipSignatureVerification:(BOOL)value
+{
+  _skipSignatureVerification = value;
+}
 
 + (instancetype)emptyInstance
 {
