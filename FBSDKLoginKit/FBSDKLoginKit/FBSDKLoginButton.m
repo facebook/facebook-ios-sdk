@@ -289,16 +289,18 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
       }
     };
 
-    FBSDKLoginConfiguration *loginConfig = [[FBSDKLoginConfiguration alloc] initWithPermissions:self.permissions
-                                                                            betaLoginExperience:self.betaLoginExperience
-                                                                                          nonce:self.nonce];
+    FBSDKLoginConfiguration *loginConfig;
+    if (self.nonce) {
+      loginConfig = [[FBSDKLoginConfiguration alloc] initWithPermissions:self.permissions
+                                                     betaLoginExperience:self.betaLoginExperience
+                                                                   nonce:self.nonce];
+    } else {
+      loginConfig = [[FBSDKLoginConfiguration alloc] initWithPermissions:self.permissions
+                                                     betaLoginExperience:self.betaLoginExperience];
+    }
     [_loginManager logInFromViewController:[FBSDKInternalUtility viewControllerForView:self]
                              configuration:loginConfig
                                 completion:handler];
-
-    [_loginManager logInWithPermissions:self.permissions
-                     fromViewController:[FBSDKInternalUtility viewControllerForView:self]
-                                handler:handler];
   }
 }
 
