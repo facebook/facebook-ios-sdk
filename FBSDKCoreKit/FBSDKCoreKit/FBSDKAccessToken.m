@@ -153,7 +153,7 @@ static FBSDKAccessToken *g_currentAccessToken;
       [FBSDKInternalUtility deleteFacebookCookies];
     }
 
-    [FBSDKSettings accessTokenCache].accessToken = token;
+    [FBSDKSettings tokenCache].accessToken = token;
     if (shouldDispatchNotif) {
       [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKAccessTokenDidChangeNotification
                                                           object:[self class]

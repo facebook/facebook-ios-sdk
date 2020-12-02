@@ -20,13 +20,13 @@
 
 #import <AdSupport/AdSupport.h>
 
-#import "FBSDKAccessTokenCache.h"
 #import "FBSDKAccessTokenExpirer.h"
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKAppEventsConfiguration.h"
 #import "FBSDKAppEventsConfigurationManager.h"
 #import "FBSDKCoreKit.h"
 #import "FBSDKInternalUtility.h"
+#import "FBSDKTokenCache.h"
 
 #define FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(TYPE, PLIST_KEY, GETTER, SETTER, DEFAULT_VALUE, ENABLE_CACHE) \
   static TYPE *g_ ## PLIST_KEY = nil; \
@@ -63,7 +63,7 @@ FBSDKLoggingBehavior FBSDKLoggingBehaviorGraphAPIDebugWarning = @"graph_api_debu
 FBSDKLoggingBehavior FBSDKLoggingBehaviorGraphAPIDebugInfo = @"graph_api_debug_info";
 FBSDKLoggingBehavior FBSDKLoggingBehaviorNetworkRequests = @"network_requests";
 
-static NSObject<FBSDKAccessTokenCaching> *g_tokenCache;
+static NSObject<FBSDKTokenCaching> *g_tokenCache;
 static NSMutableSet<FBSDKLoggingBehavior> *g_loggingBehaviors;
 static NSString *const FBSDKSettingsLimitEventAndDataUsage = @"com.facebook.sdk:FBSDKSettingsLimitEventAndDataUsage";
 static NSString *const FBSDKSettingsBitmask = @"com.facebook.sdk:FBSDKSettingsBitmask";
@@ -99,7 +99,7 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
 + (void)initialize
 {
   if (self == [FBSDKSettings class]) {
-    g_tokenCache = [[FBSDKAccessTokenCache alloc] init];
+    g_tokenCache = [FBSDKTokenCache new];
     g_accessTokenExpirer = [[FBSDKAccessTokenExpirer alloc] init];
 
     [FBSDKSettings _logWarnings];
@@ -329,12 +329,12 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 #pragma mark - Internal
 
-+ (NSObject<FBSDKAccessTokenCaching> *)accessTokenCache
++ (NSObject<FBSDKTokenCaching> *)tokenCache
 {
   return g_tokenCache;
 }
 
-+ (void)setAccessTokenCache:(NSObject<FBSDKAccessTokenCaching> *)cache
++ (void)setTokenCache:(NSObject<FBSDKTokenCaching> *)cache
 {
   if (g_tokenCache != cache) {
     g_tokenCache = cache;

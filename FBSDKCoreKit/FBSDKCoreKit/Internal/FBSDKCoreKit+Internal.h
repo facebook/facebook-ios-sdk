@@ -62,8 +62,6 @@
  #endif
 
  #import "FBSDKAccessToken+Internal.h"
- #import "FBSDKAccessTokenCache.h"
- #import "FBSDKAccessTokenCaching.h"
  #import "FBSDKAppEvents+Internal.h"
  #import "FBSDKAppEventsConfiguration.h"
  #import "FBSDKAppEventsConfigurationManager.h"
@@ -104,6 +102,8 @@
  #import "FBSDKSettings+Internal.h"
  #import "FBSDKSwizzler.h"
  #import "FBSDKTimeSpentData.h"
+ #import "FBSDKTokenCache.h"
+ #import "FBSDKTokenCaching.h"
 
 #else
 
@@ -171,10 +171,10 @@
  #import "ServerConfiguration/FBSDKServerConfiguration+Internal.h"
  #import "ServerConfiguration/FBSDKServerConfigurationManager.h"
  #import "ServerConfiguration/FBSDKServerConfigurationManager+Internal.h"
- #import "TokenCaching/FBSDKAccessTokenCache.h"
- #import "TokenCaching/FBSDKAccessTokenCaching.h"
  #import "TokenCaching/FBSDKKeychainStore.h"
  #import "TokenCaching/FBSDKKeychainStoreViaBundleID.h"
+ #import "TokenCaching/FBSDKTokenCache.h"
+ #import "TokenCaching/FBSDKTokenCaching.h"
  #import "UI/FBSDKButton+Subclass.h"
  #import "UI/FBSDKIcon.h"
  #import "UI/FBSDKLogo.h"

@@ -16,20 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-#import "FBSDKCoreKitImport.h"
-#import "FBSDKDeviceLoginCodeInfo.h"
-#import "FBSDKDeviceLoginManager.h"
-#import "FBSDKDeviceLoginManagerResult.h"
-#import "FBSDKLoginConfiguration.h"
-#import "FBSDKLoginConstants.h"
+@class FBSDKAccessToken;
+@class FBSDKAuthenticationToken;
 
-#if !TARGET_OS_TV
- #import "FBSDKLoginButton.h"
- #import "FBSDKLoginManager.h"
- #import "FBSDKLoginManagerLoginResult.h"
- #import "FBSDKLoginTooltipView.h"
- #import "FBSDKReferralManager.h"
- #import "FBSDKReferralManagerResult.h"
-#endif
+NS_SWIFT_NAME(TokenCaching)
+@protocol FBSDKTokenCaching<NSObject>
+
+@property (nonatomic, copy) FBSDKAccessToken *accessToken;
+@property (nonatomic, copy) FBSDKAuthenticationToken *authenticationToken;
+
+@end

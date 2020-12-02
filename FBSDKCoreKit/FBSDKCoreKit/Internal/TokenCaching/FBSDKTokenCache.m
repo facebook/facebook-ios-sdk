@@ -16,7 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKAccessTokenCache.h"
+#import "FBSDKTokenCache.h"
 
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKInternalUtility.h"
@@ -24,10 +24,14 @@
 
 static NSString *const kFBSDKAccessTokenUserDefaultsKey = @"com.facebook.sdk.v4.FBSDKAccessTokenInformationKey";
 static NSString *const kFBSDKAccessTokenKeychainKey = @"com.facebook.sdk.v4.FBSDKAccessTokenInformationKeychainKey";
-static NSString *const kFBSDKAccessTokenUUIDKey = @"tokenUUID";
-static NSString *const kFBSDKAccessTokenEncodedKey = @"tokenEncoded";
 
-@implementation FBSDKAccessTokenCache
+static NSString *const kFBSDKAuthenticationTokenUserDefaultsKey = @"com.facebook.sdk.v9.FBSDKAuthenticationTokenInformationKey";
+static NSString *const kFBSDKAuthenticationTokenKeychainKey = @"com.facebook.sdk.v9.FBSDKAuthenticationTokenInformationKeychainKey";
+
+static NSString *const kFBSDKTokenUUIDKey = @"tokenUUID";
+static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
+
+@implementation FBSDKTokenCache
 {
   FBSDKKeychainStore *_keychainStore;
 }
@@ -43,32 +47,33 @@ static NSString *const kFBSDKAccessTokenEncodedKey = @"tokenEncoded";
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 - (FBSDKAccessToken *)accessToken
 {
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   NSString *uuid = [defaults objectForKey:kFBSDKAccessTokenUserDefaultsKey];
 
   NSDictionary<NSString *, id> *dict = [_keychainStore dictionaryForKey:kFBSDKAccessTokenKeychainKey];
-  if ([dict[kFBSDKAccessTokenUUIDKey] isKindOfClass:[NSString class]]) {
+  if ([dict[kFBSDKTokenUUIDKey] isKindOfClass:[NSString class]]) {
     // there is a bug while running on simulator that the uuid stored in dict can be NSData,
     // do a type check to make sure it is NSString
-    if ([dict[kFBSDKAccessTokenUUIDKey] isEqualToString:uuid]) {
-      id tokenData = dict[kFBSDKAccessTokenEncodedKey];
+    if ([dict[kFBSDKTokenUUIDKey] isEqualToString:uuid]) {
+      id tokenData = dict[kFBSDKTokenEncodedKey];
       if ([tokenData isKindOfClass:[NSData class]]) {
         return [NSKeyedUnarchiver unarchiveObjectWithData:tokenData];
       }
     }
   }
   // if the uuid doesn't match (including if there is no uuid in defaults which means uninstalled case)
-  // clear the keychain and return nil.
-  [self clearCache];
+  // clear the access token cache and return nil.
+  [self clearAccessTokenCache];
   return nil;
 }
 
 - (void)setAccessToken:(FBSDKAccessToken *)token
 {
   if (!token) {
-    [self clearCache];
+    [self clearAccessTokenCache];
     return;
   }
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -76,12 +81,11 @@ static NSString *const kFBSDKAccessTokenEncodedKey = @"tokenEncoded";
   if (!uuid) {
     uuid = [NSUUID UUID].UUIDString;
     [defaults setObject:uuid forKey:kFBSDKAccessTokenUserDefaultsKey];
-    [defaults synchronize];
   }
   NSData *tokenData = [NSKeyedArchiver archivedDataWithRootObject:token];
   NSDictionary<NSString *, id> *dict = @{
-    kFBSDKAccessTokenUUIDKey : uuid,
-    kFBSDKAccessTokenEncodedKey : tokenData
+    kFBSDKTokenUUIDKey : uuid,
+    kFBSDKTokenEncodedKey : tokenData
   };
 
   [_keychainStore setDictionary:dict
@@ -89,9 +93,64 @@ static NSString *const kFBSDKAccessTokenEncodedKey = @"tokenEncoded";
                   accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
 }
 
+- (FBSDKAuthenticationToken *)authenticationToken
+{
+  NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
+  NSString *uuid = [defaults objectForKey:kFBSDKAuthenticationTokenUserDefaultsKey];
+
+  NSDictionary<NSString *, id> *dict = [_keychainStore dictionaryForKey:kFBSDKAuthenticationTokenKeychainKey];
+  if ([dict[kFBSDKTokenUUIDKey] isKindOfClass:[NSString class]]) {
+    // there is a bug while running on simulator that the uuid stored in dict can be NSData,
+    // do a type check to make sure it is NSString
+    if ([dict[kFBSDKTokenUUIDKey] isEqualToString:uuid]) {
+      id tokenData = dict[kFBSDKTokenEncodedKey];
+      if ([tokenData isKindOfClass:[NSData class]]) {
+        return [NSKeyedUnarchiver unarchiveObjectWithData:tokenData];
+      }
+    }
+  }
+  // if the uuid doesn't match (including if there is no uuid in defaults which means uninstalled case)
+  // clear the authentication token cache and return nil.
+  [self clearAuthenticationTokenCache];
+  return nil;
+}
+
+- (void)setAuthenticationToken:(FBSDKAuthenticationToken *)token
+{
+  if (!token) {
+    [self clearAuthenticationTokenCache];
+    return;
+  }
+  NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
+  NSString *uuid = [defaults objectForKey:kFBSDKAuthenticationTokenUserDefaultsKey];
+  if (!uuid) {
+    uuid = NSUUID.UUID.UUIDString;
+    [defaults setObject:uuid forKey:kFBSDKAuthenticationTokenUserDefaultsKey];
+  }
+  NSData *tokenData = [NSKeyedArchiver archivedDataWithRootObject:token];
+  NSDictionary<NSString *, id> *dict = @{
+    kFBSDKTokenUUIDKey : uuid,
+    kFBSDKTokenEncodedKey : tokenData
+  };
+
+  [_keychainStore setDictionary:dict
+                         forKey:kFBSDKAuthenticationTokenKeychainKey
+                  accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
+}
+
 #pragma clang diagnostic pop
 
-- (void)clearCache
+- (void)clearAuthenticationTokenCache
+{
+  [_keychainStore setDictionary:nil
+                         forKey:kFBSDKAuthenticationTokenKeychainKey
+                  accessibility:NULL];
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  [defaults removeObjectForKey:kFBSDKAuthenticationTokenUserDefaultsKey];
+  [defaults synchronize];
+}
+
+- (void)clearAccessTokenCache
 {
   [_keychainStore setDictionary:nil
                          forKey:kFBSDKAccessTokenKeychainKey

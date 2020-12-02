@@ -38,6 +38,9 @@
 
 static FBSDKAuthenticationToken *g_currentAuthenticationToken;
 
+NSString *const FBSDKAuthenticationTokenTokenStringCodingKey = @"FBSDKAuthenticationTokenTokenStringCodingKey";
+NSString *const FBSDKAuthenticationTokenNonceCodingKey = @"FBSDKAuthenticationTokenNonceCodingKey";
+
 static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
 
 @implementation FBSDKAuthenticationToken
@@ -55,28 +58,52 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
     return nil;
   }
 
+  NSString *signature;
+  NSDictionary *claims;
+  NSDictionary *header;
+
   NSArray *segments = [tokenString componentsSeparatedByString:@"."];
   if (segments.count != 3) {
     return nil;
   }
 
-  if (self = [super init]) {
-    NSString *encodedHeader = [FBSDKTypeUtility array:segments objectAtIndex:0];
-    NSString *encodedClaims = [FBSDKTypeUtility array:segments objectAtIndex:1];
-    _signature = [FBSDKTypeUtility array:segments objectAtIndex:2];
+  NSString *encodedHeader = [FBSDKTypeUtility array:segments objectAtIndex:0];
+  NSString *encodedClaims = [FBSDKTypeUtility array:segments objectAtIndex:1];
+  signature = [FBSDKTypeUtility array:segments objectAtIndex:2];
 
-    if (![self verifySignature:_signature
-                        header:encodedHeader
-                        claims:encodedClaims]) {
-      return nil;
-    }
+  if (![self verifySignature:signature
+                      header:encodedHeader
+                      claims:encodedClaims]) {
+    return nil;
+  }
 
-    _claims = [FBSDKAuthenticationToken validatedClaimsWithEncodedString:encodedClaims nonce:nonce];
-    _header = [FBSDKAuthenticationToken validatedHeaderWithEncodedString:encodedHeader];
+  claims = [FBSDKAuthenticationToken validatedClaimsWithEncodedString:encodedClaims nonce:nonce];
+  header = [FBSDKAuthenticationToken validatedHeaderWithEncodedString:encodedHeader];
 
-    if (!_claims || !_header) {
-      return nil;
-    }
+  if (!claims || !header) {
+    return nil;
+  }
+
+  return [self initWithTokenString:tokenString
+                             nonce:nonce
+                         signature:signature
+                            claims:claims
+                            header:header];
+}
+
+/// Do not call directly. Does not validate any of the data.
+- (instancetype)initWithTokenString:(NSString *)tokenString
+                              nonce:(NSString *)nonce
+                          signature:(NSString *)signature
+                             claims:(NSDictionary *)claims
+                             header:(NSDictionary *)header
+{
+  if ((self = [super init])) {
+    _tokenString = tokenString;
+    _nonce = nonce;
+    _signature = signature;
+    _claims = claims;
+    _header = header;
   }
 
   return self;
@@ -91,13 +118,14 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
 {
   if (token != g_currentAuthenticationToken) {
     g_currentAuthenticationToken = token;
+    [[self tokenCache] setAuthenticationToken:token];
   }
 }
 
 + (NSDictionary *)validatedClaimsWithEncodedString:(NSString *)encodedClaims nonce:(NSString *)nonce
 {
   NSError *error;
-  NSData *claimsData = [FBSDKBase64 decodeAsData:encodedClaims];
+  NSData *claimsData = [FBSDKBase64 decodeAsData:[FBSDKAuthenticationToken base64FromBase64Url:encodedClaims]];
 
   if (claimsData) {
     NSDictionary *claims = [FBSDKTypeUtility JSONObjectWithData:claimsData options:0 error:&error];
@@ -124,7 +152,7 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
 + (NSDictionary *)validatedHeaderWithEncodedString:(NSString *)encodedHeader
 {
   NSError *error;
-  NSData *headerData = [FBSDKBase64 decodeAsData:encodedHeader];
+  NSData *headerData = [FBSDKBase64 decodeAsData:[FBSDKAuthenticationToken base64FromBase64Url:encodedHeader]];
 
   if (headerData) {
     NSDictionary *header = [FBSDKTypeUtility JSONObjectWithData:headerData options:0 error:&error];
@@ -213,9 +241,44 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
   return base64;
 }
 
+#pragma mark Storage
+
++ (id<FBSDKTokenCaching>)tokenCache
+{
+  return FBSDKSettings.tokenCache;
+}
+
++ (BOOL)supportsSecureCoding
+{
+  return YES;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)decoder
+{
+  NSString *tokenString = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKAuthenticationTokenTokenStringCodingKey];
+  NSString *nonce = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKAuthenticationTokenNonceCodingKey];
+
+  return [self initWithTokenString:tokenString
+                             nonce:nonce
+                         signature:nil
+                            claims:nil
+                            header:nil];
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+  [encoder encodeObject:self.tokenString forKey:FBSDKAuthenticationTokenTokenStringCodingKey];
+  [encoder encodeObject:self.nonce forKey:FBSDKAuthenticationTokenNonceCodingKey];
+}
+
 #pragma mark - Test methods
 
 #if DEBUG
+
++ (void)resetCurrentAuthenticationTokenCache
+{
+  g_currentAuthenticationToken = nil;
+}
 
 static BOOL _skipSignatureVerification;
 

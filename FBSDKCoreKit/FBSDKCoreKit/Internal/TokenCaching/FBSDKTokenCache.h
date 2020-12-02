@@ -24,9 +24,9 @@
 #import <FBSDKCoreKit/FBSDKAccessToken.h>
 #endif
 
-#import "FBSDKAccessTokenCaching.h"
+#import "FBSDKTokenCaching.h"
 
-NS_SWIFT_NAME(AccessTokenCache)
-@interface FBSDKAccessTokenCache : NSObject<FBSDKAccessTokenCaching>
+NS_SWIFT_NAME(TokenCache)
+@interface FBSDKTokenCache : NSObject<FBSDKTokenCaching>
 
 @end

@@ -43,3 +43,11 @@
             secondaryColor:(UIColor *)secondaryColor
                      scale:(CGFloat)scale;
 @end
+
+@interface FBSDKAuthenticationToken (Testing)
+- (instancetype)initWithTokenString:(NSString *)tokenString
+                              nonce:(NSString *)nonce
+                          signature:(NSString *)signature
+                             claims:(NSDictionary *)claims
+                             header:(NSDictionary *)header;
+@end

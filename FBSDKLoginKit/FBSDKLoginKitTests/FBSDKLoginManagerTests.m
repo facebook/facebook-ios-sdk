@@ -22,7 +22,6 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#import "FBSDKAuthenticationToken.h"
 #import "FBSDKLoginManager.h"
 #import "FBSDKLoginManager+Internal.h"
 #import "FBSDKLoginManagerLoginResult.h"
@@ -321,15 +320,16 @@ static NSString *const kFakeNonce = @"fedcb =a";
   NSData *expectedHeaderData = [FBSDKTypeUtility dataWithJSONObject:expectedHeader options:0 error:nil];
   NSString *encodedHeader = [FBSDKBase64 encodeData:expectedHeaderData];
 
-  NSString *fragment = [NSString stringWithFormat:@"id_token=%@.%@.%@", encodedHeader, encodedClaims, @"signature"];
-  NSURL *url = [self authorizeURLWithFragment:fragment challenge:kFakeChallenge];
+  NSString *tokenString = [NSString stringWithFormat:@"%@.%@.%@", encodedHeader, encodedClaims, @"signature"];
+  NSURL *url = [self authorizeURLWithFragment:[NSString stringWithFormat:@"id_token=%@", tokenString] challenge:kFakeChallenge];
 
-  __block FBSDKProfile *tokenAfterAuth;
   [target setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
     // TODO: Verify that the expected profile is set.
     // XCTAssertFalse(result.isCancelled);
-    tokenAfterAuth = [FBSDKProfile currentProfile];
-    // XCTAssertEqualObjects(tokenAfterAuth, result.token);
+    FBSDKAuthenticationToken *authToken = FBSDKAuthenticationToken.currentAuthenticationToken;
+    XCTAssertNotNil(authToken);
+    XCTAssertEqualObjects(authToken.tokenString, tokenString);
+    XCTAssertEqualObjects(authToken.nonce, kFakeNonce);
     [expectation fulfill];
   }];
 
@@ -490,6 +490,20 @@ static NSString *const kFakeNonce = @"fedcb =a";
   [self waitForExpectationsWithTimeout:1 handler:^(NSError *_Nullable error) {
     XCTAssertNil(error);
   }];
+}
+
+- (void)testLogout
+{
+  id accessTokenClassMock = OCMClassMock(FBSDKAccessToken.class);
+  id authenticationTokenClassMock = OCMClassMock(FBSDKAuthenticationToken.class);
+  id profileClassMock = OCMClassMock(FBSDKProfile.class);
+
+  FBSDKLoginManager *loginManager = [FBSDKLoginManager new];
+  [loginManager logOut];
+
+  OCMVerify(ClassMethod([accessTokenClassMock setCurrentAccessToken:nil]));
+  OCMVerify(ClassMethod([authenticationTokenClassMock setCurrentAuthenticationToken:nil]));
+  OCMVerify(ClassMethod([profileClassMock setCurrentProfile:nil]));
 }
 
 @end

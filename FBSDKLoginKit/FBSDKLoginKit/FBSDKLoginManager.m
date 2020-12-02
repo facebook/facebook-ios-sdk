@@ -117,6 +117,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 - (void)logOut
 {
   [FBSDKAccessToken setCurrentAccessToken:nil];
+  [FBSDKAuthenticationToken setCurrentAuthenticationToken:nil];
   [FBSDKProfile setCurrentProfile:nil];
 }
 

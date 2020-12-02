@@ -21,8 +21,10 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#import "FBSDKAuthenticationToken.h"
 #import "FBSDKCoreKit+Internal.h"
+#import "FBSDKCoreKitTests-Swift.h"
+#import "FBSDKTestCase.h"
+#import "FBSDKTestCoder.h"
 
 static NSString *const _certificate = @"MIIDgjCCAmoCCQDMso+U6N9AMjANBgkqhkiG9w0BAQsFADCBgjELMAkGA1UEBhMCVVMxCzAJBgNVBAgMAldBMRAwDgYDVQQHDAdTZWF0dGxlMREwDwYDVQQKDAhGYWNlYm9vazEMMAoGA1UECwwDRW5nMRIwEAYDVQQDDAlwYW5zeTA0MTkxHzAdBgkqhkiG9w0BCQEWEHBhbnN5MDQxOUBmYi5jb20wHhcNMjAxMTAzMDAzNTI1WhcNMzAxMTAxMDAzNTI1WjCBgjELMAkGA1UEBhMCVVMxCzAJBgNVBAgMAldBMRAwDgYDVQQHDAdTZWF0dGxlMREwDwYDVQQKDAhGYWNlYm9vazEMMAoGA1UECwwDRW5nMRIwEAYDVQQDDAlwYW5zeTA0MTkxHzAdBgkqhkiG9w0BCQEWEHBhbnN5MDQxOUBmYi5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQD0R8/zzuJ5SM+8KBgshg+sKARfm4Ad7Qv7Vi0L8xoXpReXxefDHF7jI9o6pLsp5OIEmnhRjTlbdT7APK1pZ8dHjOdod6xWSoQigUplYOqa5iuVx7IqD15PUhx6/LqcAtHFKDtKOPuIc8CqkmVUyGRMq2OxdCoiWix5z79pSDILmlRWsn4UOCpFU/Ix75YL/JD19IHgwgh4XCxDwUVhmpgG+jI5l9a3ZCBx7JwZAoJ/Z/OpVbguAlBnxIpi8Qk5VKdHzLHvkrdGXGFMzao6bReXX3KNrYrurAgd7fD2TAQo8EH5rgB7ewxtCIlHRoXJPSdVKpTPwx4c7Mfu2EMpx66pAgMBAAEwDQYJKoZIhvcNAQELBQADggEBAPKMCK6mlLIFxMvIa4lT3fYY+APPhMazHtiPJ+279dkhzGmugD3x+mWvd+OzdmWlW/bvZWLbG3UXA166FK8ZcYyuTYdhCxP3vRNqBWNC65qURnIYyUK2DT09WrvBWLZqhv/mJFfijnGqvkKA1k3rVtgCGNDEnezmC9uuO8P17y3+/RZY8dBfvd8lkdCyTCFnKHNyKAE83qnqAJwgbc7cv7IKwAYsDdr4u38GFayBdTzCatTVrQDTYZbJDJLx+BcvHw8pdhthsX7wpGbFH5++Y5G4hRF2vGenzLFIHthxFnpgiZO3VjloPB57awA4jmJY9DjsOZNhZT+RbnCO9AQlCZE=";
 
@@ -57,12 +59,13 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
 
 @end
 
-@interface FBSDKAuthenticationTokenTests : XCTestCase
+@interface FBSDKAuthenticationTokenTests : FBSDKTestCase
 
 @end
 
 @implementation FBSDKAuthenticationTokenTests
 {
+  FBSDKAuthenticationToken *_token;
   NSDictionary *_claims;
   NSDictionary *_header;
 }
@@ -70,7 +73,8 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
 - (void)setUp
 {
   [super setUp];
-  [FBSDKSettings setAppID:_mockAppID];
+
+  [self stubAppID:_mockAppID];
 
   long currentTime = [[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]] longValue];
   _claims = @{
@@ -89,6 +93,66 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
     @"alg" : @"RS256",
     @"typ" : @"JWT"
   };
+}
+
+- (void)testRetrievingCurrentToken
+{
+  FakeTokenCache *cache = [[FakeTokenCache alloc] initWithAccessToken:nil authenticationToken:nil];
+  _token = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"" nonce:@"" signature:@"" claims:@{} header:@{}];
+  id partialTokenMock = OCMPartialMock(_token);
+  OCMStub([partialTokenMock tokenCache]).andReturn(cache);
+
+  FBSDKAuthenticationToken.currentAuthenticationToken = _token;
+  XCTAssertEqualObjects(
+    cache.authenticationToken,
+    _token,
+    "Setting the global authentication token should invoke the cache"
+  );
+
+  [partialTokenMock stopMocking];
+  partialTokenMock = nil;
+}
+
+- (void)testEncoding
+{
+  NSString *expectedTokenString = @"expectedTokenString";
+  NSString *expectedNonce = @"expectedNonce";
+
+  FBSDKTestCoder *coder = [FBSDKTestCoder new];
+  _token = [[FBSDKAuthenticationToken alloc] initWithTokenString:expectedTokenString
+                                                           nonce:expectedNonce
+                                                       signature:@""
+                                                          claims:@{}
+                                                          header:@{}];
+  [_token encodeWithCoder:coder];
+
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"FBSDKAuthenticationTokenTokenStringCodingKey"],
+    expectedTokenString,
+    @"Should encode the expected token string"
+  );
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"FBSDKAuthenticationTokenNonceCodingKey"],
+    expectedNonce,
+    @"Should encode the expected nonce string"
+  );
+}
+
+- (void)testDecodingEntryWithMethodName
+{
+  FBSDKTestCoder *coder = [FBSDKTestCoder new];
+  _token = [[FBSDKAuthenticationToken alloc] initWithCoder:coder];
+
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"FBSDKAuthenticationTokenTokenStringCodingKey"],
+    [NSString class],
+    @"Initializing from a decoder should attempt to decode a String for the token string key"
+  );
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"FBSDKAuthenticationTokenNonceCodingKey"],
+    [NSString class],
+    @"Initializing from a decoder should attempt to decode a String for the nonce key"
+  );
 }
 
 - (void)testDecodeValidClaimsShouldSucceed
@@ -163,8 +227,8 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
 
 - (void)testCreateWithInvalidFormatTokenShouldFail
 {
-  FBSDKAuthenticationToken *token = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"invalid_id_token" nonce:@"123456789"];
-  XCTAssertNil(token);
+  _token = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"invalid_id_token" nonce:@"123456789"];
+  XCTAssertNil(_token);
 }
 
 - (void)testDecodeValidHeaderShouldSucceed
@@ -216,39 +280,39 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
 
 - (void)testVerifyValidSignatureShouldSucceed
 {
-  FBSDKAuthenticationToken *token = [FBSDKAuthenticationToken emptyInstance];
-  [token setCertificate:_certificate];
+  _token = [FBSDKAuthenticationToken emptyInstance];
+  [_token setCertificate:_certificate];
 
   XCTAssertTrue(
-    [token verifySignature:_signature
-                    header:_encodedHeader
-                    claims:_encodedClaims]
+    [_token verifySignature:_signature
+                     header:_encodedHeader
+                     claims:_encodedClaims]
   );
 }
 
 - (void)testVerifyInvalidSignatureShouldFail
 {
-  FBSDKAuthenticationToken *token = [FBSDKAuthenticationToken emptyInstance];
-  [token setCertificate:_certificate];
+  _token = [FBSDKAuthenticationToken emptyInstance];
+  [_token setCertificate:_certificate];
 
   NSString *invalidSignature = @"hH0uCpIx0BhjT_djfI52wPMp0sYuHAHYOes4GVasXykHsZAeuidFYshiCd8O-KpAo5m9jZWbXdaSN0JMbpBIJ9TwSk6e8bhX-N6BRKl3EZRby6SsZtK9J2X6mWomgMCfJZD54McLIdDQaTTtNsV1kgzm8iksywaT3f1GdicqlJPZn3m83xF3toSdfKdPoJJCpM7IidPru7gF8aZchkE1d-dUzZ9mV0CPfsl5lX4M64f470nm6PzyynAvyKwUBKO3v3x08V17NV8OkRAjtGPRhbs_d4B6ifEXS3piWUlxVm6w27nPbdmKeCqjV-WRfIJ6lOvumR2F26I1soEwtEWq9g";
 
   XCTAssertFalse(
-    [token verifySignature:invalidSignature
-                    header:_encodedHeader
-                    claims:_encodedClaims]
+    [_token verifySignature:invalidSignature
+                     header:_encodedHeader
+                     claims:_encodedClaims]
   );
 }
 
 - (void)testVerifySignatureWithInvalidCertificateShouldFail
 {
-  FBSDKAuthenticationToken *token = [FBSDKAuthenticationToken emptyInstance];
-  [token setCertificate:@"invalid_certification"];
+  _token = [FBSDKAuthenticationToken emptyInstance];
+  [_token setCertificate:@"invalid_certification"];
 
   XCTAssertFalse(
-    [token verifySignature:_signature
-                    header:_encodedHeader
-                    claims:_encodedClaims]
+    [_token verifySignature:_signature
+                     header:_encodedHeader
+                     claims:_encodedClaims]
   );
 }
 

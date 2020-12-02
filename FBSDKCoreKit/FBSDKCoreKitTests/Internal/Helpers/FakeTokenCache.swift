@@ -19,14 +19,15 @@
 import FBSDKCoreKit
 
 @objcMembers
-public class FakeAccessTokenCache: NSObject, AccessTokenCaching {
+public class FakeTokenCache: NSObject, TokenCaching {
   public var accessToken: AccessToken?
+  public var authenticationToken: AuthenticationToken?
 
-  public init(token: AccessToken?) {
-    accessToken = token
-  }
-
-  public func clearCache() {
-    // noop for now
+  public init(
+    accessToken: AccessToken?,
+    authenticationToken: AuthenticationToken?
+  ) {
+    self.accessToken = accessToken
+    self.authenticationToken = authenticationToken
   }
 }

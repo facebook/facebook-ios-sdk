@@ -29,7 +29,7 @@
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationManager.h"
 
-@class FakeAccessTokenCache;
+@class FakeTokenCache;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -55,6 +55,9 @@ Also, to get a better understanding of mocking, please read the documentation at
 
 /// Used for sharing an `FBSDKAccessToken` class mock between tests
 @property (nullable, assign) id accessTokenClassMock;
+
+/// Used for sharing an `FBSDKAuthenticationToken` class mock between tests
+@property (nullable, assign) id authenticationTokenClassMock;
 
 /// Used for sharing a common app identifier between tests. This is not a valid FB App ID
 @property (nullable, assign) NSString *appID;
@@ -194,8 +197,8 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Prevents logging on changes to Settings properties
 - (void)stubLoggingIfUserSettingsChanged;
 
-/// Stubs `FBSDKSettings.accessTokenCache`
-- (void)stubAccessTokenCacheWith:(FakeAccessTokenCache *)cache;
+/// Stubs `FBSDKSettings.tokenCache`
+- (void)stubTokenCacheWith:(FakeTokenCache *)cache;
 
 /// Stubs `FBSDKProfile.fetchCachedProfile`
 - (void)stubCachedProfileWith:(FBSDKProfile *__nullable)profile;
@@ -220,6 +223,9 @@ Also, to get a better understanding of mocking, please read the documentation at
 
 /// Stubs `FBSDKAccessToken.currentAccessToken` with the provided token
 - (void)stubCurrentAccessTokenWith:(nullable FBSDKAccessToken *)token;
+
+/// Stubs `FBSDKAuthenticationToken.currentAuthenticationToken` with the provided token
+- (void)stubCurrentAuthenticationTokenWith:(nullable FBSDKAuthenticationToken *)token;
 
 /// Stubs `FBSDKSettings.clientToken` with the provided token string
 - (void)stubClientTokenWith:(nullable NSString *)token;

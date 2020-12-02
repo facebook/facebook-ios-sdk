@@ -28,12 +28,16 @@
   #import <FBSDKCoreKit/FBSDKCoreKit.h>
  #endif
 
- #import "FBSDKAuthenticationToken.h"
- #import "FBSDKAuthenticationToken+Internal.h"
  #import "FBSDKLoginConstants.h"
  #import "FBSDKLoginError.h"
  #import "FBSDKLoginManager+Internal.h"
  #import "FBSDKLoginUtility.h"
+
+@interface FBSDKAuthenticationToken (ClaimsProviding)
+
+- (NSDictionary *)claims;
+
+@end
 
 static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *parameters, void (^completionBlock)(void))
 {
@@ -144,6 +148,7 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
 
       if (token) {
         FBSDKProfile.currentProfile = [FBSDKLoginURLCompleter createProfileWithToken:token];
+        [FBSDKAuthenticationToken setCurrentAuthenticationToken:token];
       }
     } else {
       [self setErrorWithDictionary:parameters];

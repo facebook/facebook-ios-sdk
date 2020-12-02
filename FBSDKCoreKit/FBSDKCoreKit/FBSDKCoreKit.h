@@ -29,6 +29,7 @@
  #import <FBSDKCoreKit/FBSDKAccessToken.h>
  #import <FBSDKCoreKit/FBSDKAppEvents.h>
  #import <FBSDKCoreKit/FBSDKApplicationDelegate.h>
+ #import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
  #import <FBSDKCoreKit/FBSDKButton.h>
  #import <FBSDKCoreKit/FBSDKConstants.h>
  #import <FBSDKCoreKit/FBSDKCopying.h>
@@ -66,6 +67,7 @@
  #import "FBSDKAccessToken.h"
  #import "FBSDKAppEvents.h"
  #import "FBSDKApplicationDelegate.h"
+ #import "FBSDKAuthenticationToken.h"
  #import "FBSDKButton.h"
  #import "FBSDKConstants.h"
  #import "FBSDKCopying.h"

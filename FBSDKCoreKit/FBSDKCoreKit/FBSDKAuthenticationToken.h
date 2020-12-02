@@ -18,15 +18,13 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKLoginConfiguration.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
 /**
  Represent an AuthenticationToken used for a login attempt
 */
 NS_SWIFT_NAME(AuthenticationToken)
-@interface FBSDKAuthenticationToken : NSObject
+@interface FBSDKAuthenticationToken : NSObject<NSSecureCoding>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -48,11 +46,6 @@ NS_SWIFT_NAME(AuthenticationToken)
  The nonce from the decoded authentication response
  */
 @property (nonatomic, copy, readonly) NSString *nonce;
-
-/**
- The beta login experience preference used for the login attempt that resulted in the creation of the token
- */
-@property (nonatomic, readonly) FBSDKBetaLoginExperience betaLoginExperience;
 
 /**
  Initializes a new instance if the token represented by the token string is valid. Otherwise returns nil.

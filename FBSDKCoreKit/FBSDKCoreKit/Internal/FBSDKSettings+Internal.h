@@ -28,13 +28,13 @@
 #define DATA_PROCESSING_OPTIONS_COUNTRY @"data_processing_options_country"
 #define DATA_PROCESSING_OPTIONS_STATE   @"data_processing_options_state"
 
-@protocol FBSDKAccessTokenCaching;
+@protocol FBSDKTokenCaching;
 
 @interface FBSDKSettings (Internal)
 
-+ (nullable NSObject<FBSDKAccessTokenCaching> *)accessTokenCache;
++ (nullable NSObject<FBSDKTokenCaching> *)tokenCache;
 
-+ (void)setAccessTokenCache:(nullable NSObject<FBSDKAccessTokenCaching> *)accessTokenCache;
++ (void)setTokenCache:(nullable NSObject<FBSDKTokenCaching> *)tokenCache;
 
 + (FBSDKAdvertisingTrackingStatus)getAdvertisingTrackingStatus;
 

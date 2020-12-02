@@ -247,8 +247,11 @@ static UIApplicationState _applicationState;
   }
 
   _isAppLaunched = YES;
-  FBSDKAccessToken *cachedToken = [FBSDKSettings accessTokenCache].accessToken;
+
+  // Retrieve cached tokens
+  FBSDKAccessToken *cachedToken = FBSDKSettings.tokenCache.accessToken;
   [FBSDKAccessToken setCurrentAccessToken:cachedToken];
+
   // fetch app settings
   [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:NULL];
 
@@ -258,6 +261,9 @@ static UIApplicationState _applicationState;
 #if !TARGET_OS_TV
   FBSDKProfile *cachedProfile = [FBSDKProfile fetchCachedProfile];
   [FBSDKProfile setCurrentProfile:cachedProfile];
+
+  FBSDKAuthenticationToken *cachedAuthToken = FBSDKSettings.tokenCache.authenticationToken;
+  [FBSDKAuthenticationToken setCurrentAuthenticationToken:cachedAuthToken];
 #endif
   NSArray<id<FBSDKApplicationObserving>> *observers = [_applicationObservers allObjects];
   BOOL handled = NO;

@@ -178,8 +178,9 @@
 - (void)testDidFinishLaunchingSetsCurrentAccessTokenWithCache
 {
   FBSDKAccessToken *expected = SampleAccessToken.validToken;
-  FakeAccessTokenCache *cache = [[FakeAccessTokenCache alloc] initWithToken:expected];
-  [self stubAccessTokenCacheWith:cache];
+  FakeTokenCache *cache = [[FakeTokenCache alloc] initWithAccessToken:expected
+                                                  authenticationToken:nil];
+  [self stubTokenCacheWith:cache];
 
   [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 
@@ -189,12 +190,36 @@
 
 - (void)testDidFinishLaunchingSetsCurrentAccessTokenWithoutCache
 {
-  [self stubAccessTokenCacheWith:[[FakeAccessTokenCache alloc] initWithToken:nil]];
+  [self stubTokenCacheWith:[[FakeTokenCache alloc] initWithAccessToken:nil authenticationToken:nil]];
 
   [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 
   // Should set the current access token to nil access token when there isn't a cached token
   OCMVerify(ClassMethod([self.accessTokenClassMock setCurrentAccessToken:nil]));
+}
+
+- (void)testDidFinishLaunchingSetsCurrentAuthenticationTokenWithCache
+{
+  FBSDKAuthenticationToken *expected = SampleAuthenticationToken.validToken;
+  FakeTokenCache *cache = [[FakeTokenCache alloc] initWithAccessToken:nil
+                                                  authenticationToken:expected];
+  [self stubTokenCacheWith:cache];
+
+  [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
+
+  // Should set the current authentication token to the cached access token when it exists
+  OCMVerify(ClassMethod([self.authenticationTokenClassMock setCurrentAuthenticationToken:expected]));
+}
+
+- (void)testDidFinishLaunchingSetsCurrentAuthenticationTokenWithoutCache
+{
+  FakeTokenCache *cache = [[FakeTokenCache alloc] initWithAccessToken:nil authenticationToken:nil];
+  [self stubTokenCacheWith:cache];
+
+  [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
+
+  // Should set the current authentication token to nil access token when there isn't a cached token
+  OCMVerify(ClassMethod([self.authenticationTokenClassMock setCurrentAuthenticationToken:nil]));
 }
 
 - (void)testDidFinishLaunchingLoadsServerConfiguration
