@@ -27,7 +27,8 @@ public extension LoginConfiguration {
    The only permissions allowed when the `betaLoginExperience` is `.restricted` are 'email' and 'public_profile'.
    Defaults to an empty `Permission` array.
    - parameter beta: Determines whether the login attempt should use the beta experience. Defaults to `.enabled`
-   - parameter nonce: An optional nonce to use for the login attempt. A valid nonce must be an alphanumeric string without whitespace.
+   - parameter nonce: An optional nonce to use for the login attempt.
+    A valid nonce must be an alphanumeric string without whitespace.
     Creation of the configuration will fail if the nonce is invalid. Defaults to a `UUID` string.
    */
   convenience init?(

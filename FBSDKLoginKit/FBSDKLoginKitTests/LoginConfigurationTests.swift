@@ -33,7 +33,7 @@ class LoginConfigurationTests: XCTestCase {
     XCTAssertEqual(
       config.betaLoginExperience,
       .enabled,
-    "Beta login experience should default to enabled when unspecified"
+      "Beta login experience should default to enabled when unspecified"
     )
     XCTAssertNotNil(
       config.nonce,
@@ -59,10 +59,11 @@ class LoginConfigurationTests: XCTestCase {
   }
 
   func testCreatingWithBetaLoginExperience() {
-    [
+    let preferences = [
       BetaLoginExperience.enabled,
       .restricted
-    ].forEach { preference in
+    ]
+    preferences.forEach { preference in
       let config = LoginConfiguration(betaLoginExperience: preference)
       XCTAssertEqual(
         config?.betaLoginExperience,
@@ -93,7 +94,7 @@ class LoginConfigurationTests: XCTestCase {
     )
     XCTAssertNil(
       configuration,
-      "Should not create a configuration with permissions that are disallowed based on the beta login experience preference"
+      "Should not create a configuration with permissions that are disallowed based on the beta login experience preference" // swiftlint:disable:this line_length
     )
 
     configuration = LoginConfiguration(
@@ -102,7 +103,7 @@ class LoginConfigurationTests: XCTestCase {
     )
     XCTAssertNotNil(
       configuration,
-      "Should create a configuration with permissions that are allowed based on the beta login experience preference"
+      "Should create a configuration with permissions that are allowed based on the beta login experience preference" // swiftlint:disable:this line_length
     )
   }
 }

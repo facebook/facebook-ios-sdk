@@ -125,11 +125,11 @@ public extension LoginManager {
     configuration: LoginConfiguration,
     completion: @escaping LoginResultBlock
   ) {
-    let _completion = { (result: LoginManagerLoginResult?, error: Error?) in
+    let legacyCompletion = { (result: LoginManagerLoginResult?, error: Error?) in
       let result = LoginResult(result: result, error: error)
       completion(result)
     }
-    self.logIn(from: viewController, configuration: configuration, completion: _completion)
+    self.__logIn(from: viewController, configuration: configuration, completion: legacyCompletion)
   }
 
   /**
@@ -145,7 +145,7 @@ public extension LoginManager {
 
    You can only perform one login call at a time. Calling a login method before the completion handler is called
    on a previous login will result in an error.
-   
+
    - parameter configuration the login configuration to use.
    - parameter completion: Optional callback.
    */
@@ -153,11 +153,11 @@ public extension LoginManager {
     configuration: LoginConfiguration,
     completion: @escaping LoginResultBlock
   ) {
-    let _completion = { (result: LoginManagerLoginResult?, error: Error?) in
+    let legacyCompletion = { (result: LoginManagerLoginResult?, error: Error?) in
       let result = LoginResult(result: result, error: error)
       completion(result)
     }
-    self.logIn(from: nil, configuration: configuration, completion: _completion)
+    self.__logIn(from: nil, configuration: configuration, completion: legacyCompletion)
   }
 
   private func sdkCompletion(_ completion: LoginResultBlock?) -> LoginManagerLoginResultBlock? {

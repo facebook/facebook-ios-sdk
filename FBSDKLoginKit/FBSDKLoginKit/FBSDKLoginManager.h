@@ -55,7 +55,7 @@ NS_SWIFT_NAME(logIn(permissions:from:handler:));
 - (void)logInFromViewController:(nullable UIViewController *)viewController
                   configuration:(FBSDKLoginConfiguration *)configuration
                      completion:(LoginManagerLoginResultBlock)completion
-NS_SWIFT_NAME(logIn(from:configuration:completion:));
+NS_REFINED_FOR_SWIFT;
 
 @end
 
@@ -174,7 +174,7 @@ NS_SWIFT_NAME(logIn(permissions:from:handler:));
 - (void)logInFromViewController:(nullable UIViewController *)viewController
                   configuration:(FBSDKLoginConfiguration *)configuration
                      completion:(FBSDKLoginManagerLoginResultBlock)completion
-NS_SWIFT_NAME(logIn(from:configuration:completion:));
+NS_REFINED_FOR_SWIFT;
 
 /**
  Logs the user in with the given deep link url. Will only log user in if the given url contains valid login data.
