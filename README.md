@@ -26,8 +26,7 @@ Please take a moment and [subscribe to releases](https://docs.github.com/en/ente
 **Note for Swift Package Manager Users:**
 
 If you explicitly **DO NOT** want to include Swift, import `FBSDKCoreKit` `FBSDKLoginKit` and `FBSDKShareKit`
-
-For projects that include Swift, use `FacebookCore`, `FacebookLogin`, and `FacebookShare`
+</br>For projects that include Swift, use `FacebookCore`, `FacebookLogin`, and `FacebookShare`
 
 ### CocoaPods
 
@@ -40,6 +39,16 @@ For projects that include Swift, use `FacebookCore`, `FacebookLogin`, and `Faceb
 2. Test your install by adding `import FBSDKCoreKit` to your `AppDelegate`
 3. Check-out the tutorials available online at: <https://developers.facebook.com/docs/ios/getting-started>
 4. Start coding! Visit <https://developers.facebook.com/docs/ios> for tutorials and reference documentation.
+
+## iOS 14 CHANGES
+
+### Data Disclosure
+
+Due to the release of iOS 14, tracking events that your app collects and sends to Facebook may require you to disclosed these data types in the App Store Connect questionnaire. It is your responsibility to ensure this is reflected in your application’s privacy policy. Visit our blogpost for information on affected Facebook SDKs, APIs, and products and the Apple App Store Privacy Details article to learn more about the data types you will need to disclose.
+
+link to FB blogpost https://developers.facebook.com/blog/post/2020/10/22/preparing-for-apple-app-store-data-disclosure-requirements/
+
+apple store details https://developer.apple.com/app-store/app-privacy-details/
 
 ## FEATURES
 
