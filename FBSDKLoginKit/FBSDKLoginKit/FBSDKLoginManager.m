@@ -354,7 +354,9 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKSettings appURLSchemeSuffix] forKey:@"local_client_id"];
   [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKLoginUtility stringForAudience:self.defaultAudience] forKey:@"default_audience"];
 
-  NSSet *permissions = [configuration.requestedPermissions setByAddingObject:@"openid"];
+  // TODO: Re-implement when server issue resolved - T80884847
+  // [configuration.requestedPermissions setByAddingObject:@"openid"];
+  NSSet *permissions = configuration.requestedPermissions;
   [FBSDKTypeUtility dictionary:loginParams setObject:[permissions.allObjects componentsJoinedByString:@","] forKey:@"scope"];
 
   NSString *expectedChallenge = [FBSDKLoginManager stringForChallenge];
@@ -366,7 +368,9 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   if (configuration.betaLoginExperience == FBSDKBetaLoginExperienceRestricted) {
     responseType = @"id_token";
   } else {
-    responseType = @"id_token,token_or_nonce,signed_request,graph_domain";
+    // TODO: Re-implement when server issue resolved - T80884847
+    // responseType = @"id_token,token_or_nonce,signed_request,graph_domain";
+    responseType = @"token_or_nonce,signed_request,graph_domain";
   }
   [FBSDKTypeUtility dictionary:loginParams setObject:responseType forKey:@"response_type"];
 

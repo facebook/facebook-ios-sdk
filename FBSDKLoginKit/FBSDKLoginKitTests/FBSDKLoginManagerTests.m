@@ -441,7 +441,9 @@ static NSString *const kFakeNonce = @"fedcb =a";
   long long currentMilliseconds = round(1000 * [NSDate date].timeIntervalSince1970);
   XCTAssertEqualWithAccuracy(cbt, currentMilliseconds, 500);
   XCTAssertEqualObjects(params[@"client_id"], @"7391628439");
-  XCTAssertEqualObjects(params[@"response_type"], @"id_token,token_or_nonce,signed_request,graph_domain");
+  // TODO: Re-implement when server issue resolved - T80884847
+  // XCTAssertEqualObjects(params[@"response_type"], @"id_token,token_or_nonce,signed_request,graph_domain");
+  XCTAssertEqualObjects(params[@"response_type"], @"token_or_nonce,signed_request,graph_domain");
   XCTAssertEqualObjects(params[@"redirect_uri"], @"fbconnect://success");
   XCTAssertEqualObjects(params[@"display"], @"touch");
   XCTAssertEqualObjects(params[@"sdk"], @"ios");
@@ -449,7 +451,9 @@ static NSString *const kFakeNonce = @"fedcb =a";
   XCTAssertEqual(params[@"auth_type"], FBSDKLoginAuthTypeRerequest);
   XCTAssertEqualObjects(params[@"fbapp_pres"], @0);
   XCTAssertEqualObjects(params[@"ies"], [FBSDKSettings isAutoLogAppEventsEnabled] ? @1 : @0);
-  XCTAssertEqualObjects(params[@"scope"], @"public_profile,email,openid");
+  // TODO: Re-implement when server issue resolved - T80884847
+  //  XCTAssertEqualObjects(params[@"scope"], @"public_profile,email,openid");
+  XCTAssertEqualObjects(params[@"scope"], @"public_profile,email");
   XCTAssertNotNil(params[@"nonce"]);
 }
 
@@ -475,7 +479,9 @@ static NSString *const kFakeNonce = @"fedcb =a";
   XCTAssertEqual(params[@"auth_type"], FBSDKLoginAuthTypeRerequest);
   XCTAssertEqualObjects(params[@"fbapp_pres"], @0);
   XCTAssertEqualObjects(params[@"ies"], [FBSDKSettings isAutoLogAppEventsEnabled] ? @1 : @0);
-  XCTAssertEqualObjects(params[@"scope"], @"public_profile,email,openid");
+  // TODO: Re-implement when server issue resolved - T80884847
+//  XCTAssertEqualObjects(params[@"scope"], @"public_profile,email,openid");
+    XCTAssertEqualObjects(params[@"scope"], @"public_profile,email");
   XCTAssertEqualObjects(params[@"nonce"], @"some_nonce");
 }
 
