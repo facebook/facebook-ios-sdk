@@ -199,7 +199,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   NSError *error = parameters.error;
 
   NSString *tokenString = parameters.accessTokenString;
-  BOOL cancelled = (tokenString == nil);
+  BOOL cancelled = ((tokenString == nil) && (FBSDKAuthenticationToken.currentAuthenticationToken == nil));
 
   BOOL challengePassed = YES;
   if (expectChallenge) {
