@@ -18,8 +18,43 @@
 
 import Foundation
 
+@objcMembers
 class NotificationCenterSpy: NotificationCenter {
-  override func addObserver(_ observer: Any, selector: Selector, name: NSNotification.Name?, object: Any?) {
+  var capturedRemovedObservers = [Any]()
+  var capturedPostNames = [NSNotification.Name]()
+  var capturedPostObjects = [Any]()
+  var capturedPostUserInfos = [[AnyHashable : Any]]()
+
+  // MARK: Posting
+
+  override func post(
+    name: NSNotification.Name,
+    object: Any?,
+    userInfo: [AnyHashable : Any]? = nil
+  ) {
+    self.capturedPostNames.append(name)
+    self.capturedPostObjects.append(object as Any)
+    self.capturedPostUserInfos.append(userInfo ?? [:])
+  }
+
+  // MARK: Observing
+  override func removeObserver(_ observer: Any) {
+    capturedRemovedObservers.append(observer)
+  }
+
+  override func addObserver(
+    _ observer: Any,
+    selector: Selector,
+    name: NSNotification.Name?,
+    object: Any?
+  ) {
     // TODO: capture values
+  }
+
+  func clearTestEvidence() {
+    capturedRemovedObservers = []
+    capturedPostNames = []
+    capturedPostObjects = []
+    capturedPostUserInfos = []
   }
 }

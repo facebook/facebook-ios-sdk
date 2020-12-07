@@ -41,6 +41,10 @@ static FBSDKAuthenticationToken *g_currentAuthenticationToken;
 NSString *const FBSDKAuthenticationTokenTokenStringCodingKey = @"FBSDKAuthenticationTokenTokenStringCodingKey";
 NSString *const FBSDKAuthenticationTokenNonceCodingKey = @"FBSDKAuthenticationTokenNonceCodingKey";
 
+NSNotificationName const FBSDKAuthenticationTokenDidChangeNotification = @"com.facebook.sdk.FBSDKAuthenticationTokenData.FBSDKAuthenticationTokenDidChangeNotification";
+NSString *const FBSDKAuthenticationTokenChangeNewKey = @"FBSDKAuthenticationTokenChangeNew";
+NSString *const FBSDKAuthenticationTokenChangeOldKey = @"FBSDKAuthenticationTokenChangeOld";
+
 static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
 
 @implementation FBSDKAuthenticationToken
@@ -117,8 +121,16 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
 + (void)setCurrentAuthenticationToken:(FBSDKAuthenticationToken *)token
 {
   if (token != g_currentAuthenticationToken) {
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+    [FBSDKTypeUtility dictionary:userInfo setObject:token forKey:FBSDKAuthenticationTokenChangeNewKey];
+    [FBSDKTypeUtility dictionary:userInfo setObject:g_currentAuthenticationToken forKey:FBSDKAuthenticationTokenChangeOldKey];
+
     g_currentAuthenticationToken = token;
     [[self tokenCache] setAuthenticationToken:token];
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKAuthenticationTokenDidChangeNotification
+                                                        object:[self class]
+                                                      userInfo:userInfo];
   }
 }
 

@@ -20,6 +20,48 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+
+/**
+  Notification indicating that the `currentAuthenticationToken` has changed.
+
+ the userInfo dictionary of the notification will contain keys
+ `FBSDKAuthenticationTokenChangeOldKey` and
+ `FBSDKAuthenticationTokenChangeNewKey`.
+ */
+FOUNDATION_EXPORT NSNotificationName const FBSDKAuthenticationTokenDidChangeNotification
+NS_SWIFT_NAME(AuthenticationTokenDidChange);
+
+#else
+
+/**
+  Notification indicating that the `currentAuthenticationToken` has changed.
+
+ the userInfo dictionary of the notification will contain keys
+ `FBSDKAuthenticationTokenChangeOldKey` and
+ `FBSDKAuthenticationTokenChangeNewKey`.
+ */
+FOUNDATION_EXPORT NSString *const FBSDKAuthenticationTokenDidChangeNotification
+NS_SWIFT_NAME(AuthenticationTokenDidChange);
+
+#endif
+
+/**
+ A key in the `AuthenticationTokenDidChange` notification's userInfo object for getting the old token.
+
+ If there was no old token, the key will not be present.
+ */
+FOUNDATION_EXPORT NSString *const FBSDKAuthenticationTokenChangeOldKey
+NS_SWIFT_NAME(AuthenticationTokenChangeOldKey);
+
+/**
+ A key in `AuthenticationTokenDidChange` notification's userInfo object for getting the new token.
+
+ If there is no new token, the key will not be present.
+ */
+FOUNDATION_EXPORT NSString *const FBSDKAuthenticationTokenChangeNewKey
+NS_SWIFT_NAME(AuthenticationTokenChangeNewKey);
+
 /**
  Represent an AuthenticationToken used for a login attempt
 */

@@ -44,7 +44,6 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
 
 + (NSDictionary *)validatedClaimsWithEncodedString:(NSString *)encodedClaims nonce:(NSString *)nonce;
 + (NSDictionary *)validatedHeaderWithEncodedString:(NSString *)encodedHeader;
-
 + (instancetype)emptyInstance;
 
 - (void)setCertificate:(NSString *)certificate;
@@ -68,6 +67,7 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
   FBSDKAuthenticationToken *_token;
   NSDictionary *_claims;
   NSDictionary *_header;
+  NotificationCenterSpy *_notificationCenterSpy;
 }
 
 - (void)setUp
@@ -93,7 +93,20 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
     @"alg" : @"RS256",
     @"typ" : @"JWT"
   };
+
+  _notificationCenterSpy = [NotificationCenterSpy new];
+  [self stubDefaultNotificationCenterWith:_notificationCenterSpy];
 }
+
+// MARK: - Creation
+
+- (void)testCreateWithInvalidFormatTokenShouldFail
+{
+  _token = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"invalid_id_token" nonce:@"123456789"];
+  XCTAssertNil(_token);
+}
+
+// MARK: - Persistence
 
 - (void)testRetrievingCurrentToken
 {
@@ -154,6 +167,8 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
     @"Initializing from a decoder should attempt to decode a String for the nonce key"
   );
 }
+
+// MARK: - Decoding Claims
 
 - (void)testDecodeValidClaimsShouldSucceed
 {
@@ -225,11 +240,7 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
   }
 }
 
-- (void)testCreateWithInvalidFormatTokenShouldFail
-{
-  _token = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"invalid_id_token" nonce:@"123456789"];
-  XCTAssertNil(_token);
-}
+// MARK: - Decoding Header
 
 - (void)testDecodeValidHeaderShouldSucceed
 {
@@ -278,6 +289,8 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
   }
 }
 
+// MARK: - Verifying Signature
+
 - (void)testVerifyValidSignatureShouldSucceed
 {
   _token = [FBSDKAuthenticationToken emptyInstance];
@@ -315,6 +328,85 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
                      claims:_encodedClaims]
   );
 }
+
+// MARK: - Notifications
+
+- (void)testPostsNotificationOnSettingInitial
+{
+  _token = [FBSDKAuthenticationToken emptyInstance];
+  FBSDKAuthenticationToken.currentAuthenticationToken = _token;
+
+  XCTAssertTrue(
+    [_notificationCenterSpy.capturedPostNames containsObject:FBSDKAuthenticationTokenDidChangeNotification],
+    "Should post a notification when the authentication token is initially set"
+  );
+  XCTAssertTrue(
+    [_notificationCenterSpy.capturedPostObjects containsObject:FBSDKAuthenticationToken.class],
+    "Notification should contain information about the object that posted it"
+  );
+  XCTAssertTrue(
+    [_notificationCenterSpy.capturedPostUserInfos containsObject:@{
+       FBSDKAuthenticationTokenChangeNewKey : _token
+     }],
+    "Notification should contain information about the change that occured"
+  );
+}
+
+- (void)testPostsNotificationOnSettingNew
+{
+  _token = [FBSDKAuthenticationToken emptyInstance];
+  FBSDKAuthenticationToken *token2 = [FBSDKAuthenticationToken emptyInstance];
+  FBSDKAuthenticationToken.currentAuthenticationToken = _token;
+
+  [_notificationCenterSpy clearTestEvidence];
+  FBSDKAuthenticationToken.currentAuthenticationToken = token2;
+
+  NSDictionary *expectedUserInfo = @{
+    FBSDKAuthenticationTokenChangeOldKey : _token,
+    FBSDKAuthenticationTokenChangeNewKey : token2
+  };
+
+  XCTAssertTrue(
+    [_notificationCenterSpy.capturedPostNames containsObject:FBSDKAuthenticationTokenDidChangeNotification],
+    "Should post a notification when the authentication token is changed"
+  );
+  XCTAssertTrue(
+    [_notificationCenterSpy.capturedPostObjects containsObject:FBSDKAuthenticationToken.class],
+    "Notification should contain information about the object that posted it"
+  );
+  XCTAssertTrue(
+    [_notificationCenterSpy.capturedPostUserInfos containsObject:expectedUserInfo],
+    "Notification should contain information about the change that occured"
+  );
+}
+
+- (void)testPostsNotificationOnSettingNil
+{
+  _token = [FBSDKAuthenticationToken emptyInstance];
+  FBSDKAuthenticationToken.currentAuthenticationToken = _token;
+
+  [_notificationCenterSpy clearTestEvidence];
+  FBSDKAuthenticationToken.currentAuthenticationToken = nil;
+
+  NSDictionary *expectedUserInfo = @{
+    FBSDKAuthenticationTokenChangeOldKey : _token
+  };
+
+  XCTAssertTrue(
+    [_notificationCenterSpy.capturedPostNames containsObject:FBSDKAuthenticationTokenDidChangeNotification],
+    "Should post a notification when the authentication token is removed"
+  );
+  XCTAssertTrue(
+    [_notificationCenterSpy.capturedPostObjects containsObject:FBSDKAuthenticationToken.class],
+    "Notification should contain information about the object that posted it"
+  );
+  XCTAssertTrue(
+    [_notificationCenterSpy.capturedPostUserInfos containsObject:expectedUserInfo],
+    "Notification should contain information about the change that occured"
+  );
+}
+
+// MARK: - Utilities
 
 - (void)testBase64FromBase64Url
 {
