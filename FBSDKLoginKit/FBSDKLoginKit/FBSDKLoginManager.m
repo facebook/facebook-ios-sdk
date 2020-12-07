@@ -590,8 +590,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   if (isFacebookURL) {
     NSDictionary *urlParameters = [FBSDKLoginUtility queryParamsFromLoginURL:url];
     id<FBSDKLoginCompleting> completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:urlParameters
-                                                                                         appID:[FBSDKSettings appID]
-                                                                                         nonce:[self loadExpectedNonce]];
+                                                                                         appID:[FBSDKSettings appID]];
 
     if (_logger == nil) {
       _logger = [FBSDKLoginManagerLogger loggerFromParameters:urlParameters];
@@ -599,8 +598,8 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 
     // any necessary strong reference is maintained by the FBSDKLoginURLCompleter handler
     [completer completeLoginWithHandler:^(FBSDKLoginCompletionParameters *parameters) {
-      [self completeAuthentication:parameters expectChallenge:YES];
-    }];
+                 [self completeAuthentication:parameters expectChallenge:YES];
+               } nonce:[self loadExpectedNonce]];
   }
 
   return isFacebookURL;

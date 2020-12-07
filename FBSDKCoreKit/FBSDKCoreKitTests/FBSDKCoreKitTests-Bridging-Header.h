@@ -47,7 +47,5 @@
 @interface FBSDKAuthenticationToken (Testing)
 - (instancetype)initWithTokenString:(NSString *)tokenString
                               nonce:(NSString *)nonce
-                          signature:(NSString *)signature
-                             claims:(NSDictionary *)claims
-                             header:(NSDictionary *)header;
+                             claims:(NSDictionary *)claims;
 @end

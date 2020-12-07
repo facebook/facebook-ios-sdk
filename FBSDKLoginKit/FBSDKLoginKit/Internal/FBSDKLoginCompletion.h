@@ -44,6 +44,7 @@ NS_SWIFT_NAME(LoginCompletionParameters)
 
 @property (nonatomic, copy, readonly) NSString *accessTokenString;
 @property (nonatomic, copy, readonly) NSString *nonceString;
+@property (nonatomic, copy, readonly) NSString *idTokenString;
 
 @property (nonatomic, copy, readonly) NSSet *permissions;
 @property (nonatomic, copy, readonly) NSSet *declinedPermissions;
@@ -71,6 +72,13 @@ NS_SWIFT_NAME(LoginCompleting)
  */
 - (void)completeLoginWithHandler:(FBSDKLoginCompletionParametersBlock)handler;
 
+/**
+  Invoke \p handler with the login parameters derived from the authentication result.
+ See the implementing class's documentation for whether it completes synchronously or asynchronously.
+ */
+- (void)completeLoginWithHandler:(FBSDKLoginCompletionParametersBlock)handler
+    nonce:(NSString *)nonce;
+
 @end
 
 #pragma mark - Completers
@@ -90,7 +98,6 @@ NS_SWIFT_NAME(LoginURLCompleter)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)initWithURLParameters:(NSDictionary *)parameters appID:(NSString *)appID;
-- (instancetype)initWithURLParameters:(NSDictionary *)parameters appID:(NSString *)appID nonce:(NSString *)nonce NS_DESIGNATED_INITIALIZER;
 
 @end
 

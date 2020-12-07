@@ -43,7 +43,7 @@ static NSString *const kFakeNonce = @"fedcb =a";
 
 @end
 
-@interface FBSDKAuthenticationToken (Testing)
+@interface FBSDKAuthenticationTokenFactory (Testing)
 
 + (void)setSkipSignatureVerification:(BOOL)value;
 
@@ -313,7 +313,7 @@ static NSString *const kFakeNonce = @"fedcb =a";
 {
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
   FBSDKLoginManager *target = _mockLoginManager;
-  [FBSDKAuthenticationToken setSkipSignatureVerification:YES];
+  [FBSDKAuthenticationTokenFactory setSkipSignatureVerification:YES];
 
   long currentTime = [[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]] longValue];
   NSDictionary *expectedClaims = @{
@@ -361,7 +361,7 @@ static NSString *const kFakeNonce = @"fedcb =a";
     XCTAssertNil(error);
   }];
 
-  [FBSDKAuthenticationToken setSkipSignatureVerification:NO];
+  [FBSDKAuthenticationTokenFactory setSkipSignatureVerification:NO];
 }
 
 - (void)testOpenURLAuthWithInvalidIDToken

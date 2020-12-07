@@ -164,8 +164,6 @@ typedef NS_ERROR_ENUM(FBSDKLoginErrorDomain, FBSDKLoginErrorSubcode)
     error = [NSError errorWithDomain:FBSDKErrorDomain
                                 code:FBSDKErrorGraphRequestGraphAPI
                             userInfo:userInfo];
-  } else if (parameters[@"id_token"]) {
-    error = [FBSDKError errorWithCode:FBSDKLoginErrorInvalidIDToken message:@"Invalid ID token from login response."];
   }
 
   return error;

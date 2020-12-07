@@ -89,15 +89,6 @@ NS_SWIFT_NAME(AuthenticationToken)
  */
 @property (nonatomic, copy, readonly) NSString *nonce;
 
-/**
- Initializes a new instance if the token represented by the token string is valid. Otherwise returns nil.
- An `AuthenticationToken` is verified based of the OpenID Connect Protocol.
- @param tokenString the raw ID token string
- @param nonce the nonce string used to associate a client session with the token
-*/
-- (instancetype)initWithTokenString:(NSString *)tokenString
-                              nonce:(NSString *)nonce;
-
 @end
 
 NS_ASSUME_NONNULL_END
