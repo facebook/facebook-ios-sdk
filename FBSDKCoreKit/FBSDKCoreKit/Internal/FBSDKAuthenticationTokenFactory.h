@@ -19,7 +19,7 @@
 #import <Foundation/Foundation.h>
 
 #if SWIFT_PACKAGE
- #import "FBSDKAuthenticationToken"
+ #import "FBSDKAuthenticationToken.h"
 #else
  #import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
 #endif
