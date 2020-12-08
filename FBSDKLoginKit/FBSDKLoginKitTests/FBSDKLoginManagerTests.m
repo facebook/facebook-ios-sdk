@@ -438,12 +438,8 @@ static NSString *const kFakeNonce = @"fedcb =a";
 
   NSDictionary *params = [_mockLoginManager logInParametersWithConfiguration:config serverConfiguration:nil];
   [self validateCommonLoginParameters:params];
-  // TODO: Re-implement when server issue resolved - T80884847
-  // XCTAssertEqualObjects(params[@"response_type"], @"id_token,token_or_nonce,signed_request,graph_domain");
-  XCTAssertEqualObjects(params[@"response_type"], @"token_or_nonce,signed_request,graph_domain");
-  // TODO: Re-implement when server issue resolved - T80884847
-  // XCTAssertEqualObjects(params[@"scope"], @"public_profile,email,openid");
-  XCTAssertEqualObjects(params[@"scope"], @"public_profile,email");
+  XCTAssertEqualObjects(params[@"response_type"], @"id_token,token_or_nonce,signed_request,graph_domain");
+  XCTAssertEqualObjects(params[@"scope"], @"public_profile,email,openid");
   XCTAssertNotNil(params[@"nonce"]);
 }
 
@@ -457,9 +453,7 @@ static NSString *const kFakeNonce = @"fedcb =a";
   NSDictionary *params = [_mockLoginManager logInParametersWithConfiguration:config serverConfiguration:nil];
   [self validateCommonLoginParameters:params];
   XCTAssertEqualObjects(params[@"response_type"], @"id_token");
-  // TODO: Re-implement when server issue resolved - T80884847
-  // XCTAssertEqualObjects(params[@"scope"], @"public_profile,email,openid");
-  XCTAssertEqualObjects(params[@"scope"], @"public_profile,email");
+  XCTAssertEqualObjects(params[@"scope"], @"public_profile,email,openid");
   XCTAssertEqualObjects(params[@"nonce"], @"some_nonce");
 }
 

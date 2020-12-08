@@ -83,12 +83,13 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
     return;
   }
 
-  if (![self verifySignature:signature
-                      header:encodedHeader
-                      claims:encodedClaims]) {
-    completion(nil);
-    return;
-  }
+  // TODO: Add back when signatures can be consistently verified - T81105008
+  // if (![self verifySignature:signature
+  // header:encodedHeader
+  // claims:encodedClaims]) {
+  // completion(nil);
+  // return;
+  // }
 
   FBSDKAuthenticationToken *token = [[FBSDKAuthenticationToken alloc]initWithTokenString:tokenString nonce:nonce claims:claims];
   completion(token);
