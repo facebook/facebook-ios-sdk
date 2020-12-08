@@ -600,6 +600,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
     [completer completeLoginWithHandler:^(FBSDKLoginCompletionParameters *parameters) {
                  [self completeAuthentication:parameters expectChallenge:YES];
                } nonce:[self loadExpectedNonce]];
+    [self storeExpectedNonce:nil keychainStore:_keychainStore];
   }
 
   return isFacebookURL;

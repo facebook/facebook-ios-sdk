@@ -529,8 +529,10 @@ static NSString *const kFakeNonce = @"fedcb =a";
   FBSDKKeychainStore *keychainStore = [[FBSDKKeychainStore alloc] initWithService:self.name accessGroup:nil];
 
   [_mockLoginManager storeExpectedNonce:@"some_nonce" keychainStore:keychainStore];
-
   XCTAssertEqualObjects([keychainStore stringForKey:@"expected_login_nonce"], @"some_nonce");
+
+  [_mockLoginManager storeExpectedNonce:nil keychainStore:keychainStore];
+  XCTAssertNil([keychainStore stringForKey:@"expected_login_nonce"]);
 }
 
 - (void)validateCommonLoginParameters:(NSDictionary *)params
