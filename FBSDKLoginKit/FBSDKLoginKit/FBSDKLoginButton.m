@@ -52,7 +52,7 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 
 - (void)dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
+  [self _unsubscribeFromNotifications];
 }
 
  #pragma mark - Properties
@@ -65,6 +65,12 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 - (void)setDefaultAudience:(FBSDKDefaultAudience)defaultAudience
 {
   _loginManager.defaultAudience = defaultAudience;
+}
+
+- (void)setBetaLoginExperience:(FBSDKBetaLoginExperience)betaLoginExperience
+{
+  _betaLoginExperience = betaLoginExperience;
+  [self _updateNotificationObservers];
 }
 
 - (UIFont *)defaultFont
@@ -84,6 +90,8 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
     _nonce = nonce;
   } else {
     _nonce = nil;
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                       formatString:@"Unable to set invalid nonce: %@ on FBSDKLoginButton", nonce];
   }
 }
 
@@ -195,28 +203,48 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
                                                    attribute:NSLayoutAttributeNotAnAttribute
                                                   multiplier:1
                                                     constant:kButtonHeight]];
-  [self _updateContent];
+  [self _initializeContent];
 
   [self addTarget:self action:@selector(_buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+
+  [self _updateNotificationObservers];
+}
+
+ #pragma mark - Helper Methods
+
+- (void)_unsubscribeFromNotifications
+{
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)_updateNotificationObservers
+{
+  [[NSNotificationCenter defaultCenter] addObserver:self
+                                           selector:@selector(_profileDidChangeNotification:)
+                                               name:FBSDKProfileDidChangeNotification
+                                             object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self
                                            selector:@selector(_accessTokenDidChangeNotification:)
                                                name:FBSDKAccessTokenDidChangeNotification
                                              object:nil];
 }
 
- #pragma mark - Helper Methods
-
 - (void)_accessTokenDidChangeNotification:(NSNotification *)notification
 {
   if (notification.userInfo[FBSDKAccessTokenDidChangeUserIDKey] || notification.userInfo[FBSDKAccessTokenDidExpireKey]) {
-    [self _updateContent];
+    [self _updateContentForAccessToken];
   }
+}
+
+- (void)_profileDidChangeNotification:(NSNotification *)notification
+{
+  [self _updateContentForUserProfile:FBSDKProfile.currentProfile];
 }
 
 - (void)_buttonPressed:(id)sender
 {
   [self logTapEventWithEventName:FBSDKAppEventNameFBSDKLoginButtonDidTap parameters:self.analyticsParameters];
-  if (FBSDKAccessToken.isCurrentAccessTokenActive || FBSDKProfile.currentProfile) {
+  if (self._isAuthenticated) {
     NSString *title = nil;
 
     if (_userName) {
@@ -289,18 +317,23 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
       }
     };
 
-    FBSDKLoginConfiguration *loginConfig;
-    if (self.nonce) {
-      loginConfig = [[FBSDKLoginConfiguration alloc] initWithPermissions:self.permissions
-                                                     betaLoginExperience:self.betaLoginExperience
-                                                                   nonce:self.nonce];
-    } else {
-      loginConfig = [[FBSDKLoginConfiguration alloc] initWithPermissions:self.permissions
-                                                     betaLoginExperience:self.betaLoginExperience];
-    }
+    FBSDKLoginConfiguration *loginConfig = [self loginConfiguration];
+
     [_loginManager logInFromViewController:[FBSDKInternalUtility viewControllerForView:self]
                              configuration:loginConfig
                                 completion:handler];
+  }
+}
+
+- (FBSDKLoginConfiguration *)loginConfiguration
+{
+  if (self.nonce) {
+    return [[FBSDKLoginConfiguration alloc] initWithPermissions:self.permissions
+                                            betaLoginExperience:self.betaLoginExperience
+                                                          nonce:self.nonce];
+  } else {
+    return [[FBSDKLoginConfiguration alloc] initWithPermissions:self.permissions
+                                            betaLoginExperience:self.betaLoginExperience];
   }
 }
 
@@ -339,7 +372,7 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 
 - (void)_showTooltipIfNeeded
 {
-  if ([FBSDKAccessToken currentAccessToken] || self.tooltipBehavior == FBSDKLoginButtonTooltipBehaviorDisable) {
+  if (self._isAuthenticated || self.tooltipBehavior == FBSDKLoginButtonTooltipBehaviorDisable) {
     return;
   } else {
     FBSDKLoginTooltipView *tooltipView = [[FBSDKLoginTooltipView alloc] init];
@@ -351,25 +384,84 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
   }
 }
 
-- (void)_updateContent
+// On initial setting of button state. We want to update the button's user
+// information using the most comprehensive available.
+// If access token is available use that.
+// If only profile is available, use that.
+- (void)_initializeContent
+{
+  FBSDKAccessToken *accessToken = FBSDKAccessToken.currentAccessToken;
+  FBSDKProfile *profile = FBSDKProfile.currentProfile;
+
+  if (accessToken) {
+    [self _updateContentForAccessToken];
+  } else if (profile) {
+    [self _updateContentForUserProfile:profile];
+  } else {
+    self.selected = NO;
+  }
+}
+
+- (void)_updateContentForAccessToken
 {
   BOOL accessTokenIsValid = FBSDKAccessToken.isCurrentAccessTokenActive;
   self.selected = accessTokenIsValid;
   if (accessTokenIsValid) {
-    if (![[FBSDKAccessToken currentAccessToken].userID isEqualToString:_userID]) {
-      FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me?fields=id,name"
-                                                                     parameters:nil
-                                                                          flags:FBSDKGraphRequestFlagDisableErrorRecovery];
-      [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-        NSString *userID = [FBSDKTypeUtility stringValue:result[@"id"]];
-        if (!error && [[FBSDKAccessToken currentAccessToken].userID isEqualToString:userID]) {
-          self->_userName = [FBSDKTypeUtility stringValue:result[@"name"]];
-          self->_userID = userID;
-        }
-      }];
+    if (![FBSDKAccessToken.currentAccessToken.userID isEqualToString:_userID]) {
+      [self _fetchAndSetContent];
     }
   }
 }
+
+- (void)_fetchAndSetContent
+{
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me?fields=id,name"
+                                                                 parameters:nil
+                                                                      flags:FBSDKGraphRequestFlagDisableErrorRecovery];
+  [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+    NSString *userID = [FBSDKTypeUtility stringValue:result[@"id"]];
+    if (!error && [FBSDKAccessToken.currentAccessToken.userID isEqualToString:userID]) {
+      self->_userName = [FBSDKTypeUtility stringValue:result[@"name"]];
+      self->_userID = userID;
+    }
+  }];
+}
+
+- (void)_updateContentForUserProfile:(FBSDKProfile *)profile
+{
+  self.selected = profile != nil;
+
+  if (profile && [self _userInformationDoesNotMatchProfile:profile]) {
+    _userName = profile.name;
+    _userID = profile.userID;
+  }
+}
+
+- (BOOL)_userInformationDoesNotMatchProfile:(FBSDKProfile *)profile
+{
+  return (profile.userID != _userID) || (profile.name != _userName);
+}
+
+- (BOOL)_isAuthenticated
+{
+  return (FBSDKAccessToken.currentAccessToken || FBSDKAuthenticationToken.currentAuthenticationToken);
+}
+
+// MARK: - Testability
+
+ #if DEBUG
+
+- (NSString *)userName
+{
+  return _userName;
+}
+
+- (NSString *)userID
+{
+  return _userID;
+}
+
+ #endif
 
 @end
 

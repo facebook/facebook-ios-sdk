@@ -20,3 +20,36 @@
 
 #import "FBSDKLoginConfiguration.h"
 #import "FBSDKNonceUtility.h"
+
+// Categories needed to expose private methods to Swift
+
+@interface FBSDKLoginButton (Testing)
+- (FBSDKLoginConfiguration *)loginConfiguration;
+- (BOOL)_isAuthenticated;
+- (void)_fetchAndSetContent;
+- (void)_initializeContent;
+- (void)_updateContentForAccessToken;
+- (void)_updateContentForUserProfile:(FBSDKProfile *)profile;
+- (void)_accessTokenDidChangeNotification:(NSNotification *)notification;
+- (void)_profileDidChangeNotification:(NSNotification *)notification;
+- (NSString *)userName;
+- (NSString *)userID;
+@end
+
+@interface FBSDKAccessToken (Testing)
++ (void)setCurrentAccessToken:(FBSDKAccessToken *)token
+          shouldDispatchNotif:(BOOL)shouldDispatchNotif;
+@end
+
+@interface FBSDKProfile (Testing)
++ (void)setCurrentProfile:(nullable FBSDKProfile *)profile
+   shouldPostNotification:(BOOL)shouldPostNotification;
+@end
+
+@interface FBSDKAuthenticationToken (Testing)
+- (instancetype)initWithTokenString:(NSString *)tokenString
+                              nonce:(NSString *)nonce
+                             claims:(NSDictionary *)claims;
++ (void)setCurrentAuthenticationToken:(FBSDKAuthenticationToken *)token
+               shouldPostNotification:(BOOL)shouldPostNotification;
+@end

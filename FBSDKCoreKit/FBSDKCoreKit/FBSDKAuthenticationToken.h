@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
  `FBSDKAuthenticationTokenChangeNewKey`.
  */
 FOUNDATION_EXPORT NSNotificationName const FBSDKAuthenticationTokenDidChangeNotification
-NS_SWIFT_NAME(AuthenticationTokenDidChange);
+NS_SWIFT_NAME(authenticationTokenDidChange);
 
 #else
 
@@ -42,7 +42,7 @@ NS_SWIFT_NAME(AuthenticationTokenDidChange);
  `FBSDKAuthenticationTokenChangeNewKey`.
  */
 FOUNDATION_EXPORT NSString *const FBSDKAuthenticationTokenDidChangeNotification
-NS_SWIFT_NAME(AuthenticationTokenDidChange);
+NS_SWIFT_NAME(authenticationTokenDidChange);
 
 #endif
 

@@ -65,6 +65,12 @@ NSString *const FBSDKAuthenticationTokenChangeOldKey = @"FBSDKAuthenticationToke
 
 + (void)setCurrentAuthenticationToken:(FBSDKAuthenticationToken *)token
 {
+  [self setCurrentAuthenticationToken:token shouldPostNotification:YES];
+}
+
++ (void)setCurrentAuthenticationToken:(FBSDKAuthenticationToken *)token
+               shouldPostNotification:(BOOL)shouldPostNotification
+{
   if (token != g_currentAuthenticationToken) {
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
     [FBSDKTypeUtility dictionary:userInfo setObject:token forKey:FBSDKAuthenticationTokenChangeNewKey];
@@ -73,9 +79,11 @@ NSString *const FBSDKAuthenticationTokenChangeOldKey = @"FBSDKAuthenticationToke
     g_currentAuthenticationToken = token;
     [[self tokenCache] setAuthenticationToken:token];
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKAuthenticationTokenDidChangeNotification
-                                                        object:[self class]
-                                                      userInfo:userInfo];
+    if (shouldPostNotification) {
+      [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKAuthenticationTokenDidChangeNotification
+                                                          object:[self class]
+                                                        userInfo:userInfo];
+    }
   }
 }
 

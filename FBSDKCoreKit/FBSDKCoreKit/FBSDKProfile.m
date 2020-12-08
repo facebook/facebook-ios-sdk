@@ -102,6 +102,12 @@ static FBSDKProfile *g_currentProfile;
 
 + (void)setCurrentProfile:(FBSDKProfile *)profile
 {
+  [self setCurrentProfile:profile shouldPostNotification:YES];
+}
+
++ (void)setCurrentProfile:(nullable FBSDKProfile *)profile
+   shouldPostNotification:(BOOL)shouldPostNotification
+{
   if (profile != g_currentProfile && ![profile isEqualToProfile:g_currentProfile]) {
     [[self class] cacheProfile:profile];
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
@@ -109,9 +115,12 @@ static FBSDKProfile *g_currentProfile;
     [FBSDKTypeUtility dictionary:userInfo setObject:profile forKey:FBSDKProfileChangeNewKey];
     [FBSDKTypeUtility dictionary:userInfo setObject:g_currentProfile forKey:FBSDKProfileChangeOldKey];
     g_currentProfile = profile;
-    [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKProfileDidChangeNotification
-                                                        object:[self class]
-                                                      userInfo:userInfo];
+
+    if (shouldPostNotification) {
+      [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKProfileDidChangeNotification
+                                                          object:[self class]
+                                                        userInfo:userInfo];
+    }
   }
 }
 
