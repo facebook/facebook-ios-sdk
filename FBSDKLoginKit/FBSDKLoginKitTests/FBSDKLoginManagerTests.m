@@ -22,6 +22,7 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#import "FBSDKLoginConstants.h"
 #import "FBSDKLoginManager.h"
 #import "FBSDKLoginManager+Internal.h"
 #import "FBSDKLoginManagerLoginResult.h"
@@ -527,6 +528,43 @@ static NSString *const kFakeNonce = @"fedcb =a";
 
   [_mockLoginManager storeExpectedNonce:nil keychainStore:keychainStore];
   XCTAssertNil([keychainStore stringForKey:@"expected_login_nonce"]);
+}
+
+- (void)testReauthorizingWithoutAccessToken
+{
+  [FBSDKAccessToken setCurrentAccessToken:nil shouldDispatchNotif:NO];
+
+  [_mockLoginManager reauthorizeDataAccess:[UIViewController new]
+                                   handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+                                     XCTAssertNil(result, "Should not have a result when reauthorizing without a current access token");
+                                     XCTAssertEqual(error.domain, FBSDKLoginErrorDomain);
+                                     XCTAssertEqual(error.code, FBSDKLoginErrorMissingAccessToken);
+                                   }];
+}
+
+- (void)testReauthorizingWithAccessToken
+{
+  [FBSDKAccessToken setCurrentAccessToken:self.sampleAccessToken shouldDispatchNotif:NO];
+  OCMStub([_mockLoginManager logIn]);
+
+  [_mockLoginManager reauthorizeDataAccess:[UIViewController new]
+                                   handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+                                     XCTFail("Should not actually reauthorize and call the handler in this test");
+                                   }];
+  OCMVerify([_mockLoginManager logIn]);
+}
+
+- (FBSDKAccessToken *)sampleAccessToken
+{
+  return [[FBSDKAccessToken alloc] initWithTokenString:self.name
+                                           permissions:@[]
+                                   declinedPermissions:@[]
+                                    expiredPermissions:@[]
+                                                 appID:@"abc123"
+                                                userID:@"userID"
+                                        expirationDate:nil
+                                           refreshDate:nil
+                              dataAccessExpirationDate:nil];
 }
 
 - (void)validateCommonLoginParameters:(NSDictionary *)params

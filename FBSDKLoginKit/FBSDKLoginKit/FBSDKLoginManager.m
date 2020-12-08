@@ -427,12 +427,19 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 
 - (void)reauthorizeDataAccess:(FBSDKLoginManagerLoginResultBlock)handler
 {
+  if (!FBSDKAccessToken.currentAccessToken) {
+    NSError *error = [NSError errorWithDomain:FBSDKLoginErrorDomain
+                                         code:FBSDKLoginErrorMissingAccessToken
+                                     userInfo:nil];
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:@"Must have an access token for which to reauthorize data access"];
+    handler(nil, error);
+    return;
+  }
   FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager cachedServerConfiguration];
   _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:serverConfiguration.loggingToken];
   _handler = [handler copy];
   // Don't need to pass permissions for data reauthorization.
   _requestedPermissions = [NSSet set];
-  _configuration = [FBSDKLoginConfiguration init];
   self.authType = FBSDKLoginAuthTypeReauthorize;
   [_logger startSessionForLoginManager:self];
   [self logIn];
