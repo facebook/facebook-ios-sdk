@@ -57,7 +57,7 @@
 - (void)testRetrievingCurrentToken
 {
   FakeTokenCache *cache = [[FakeTokenCache alloc] initWithAccessToken:nil authenticationToken:nil];
-  _token = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"" nonce:@"" claims:@[]];
+  _token = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"" nonce:@"" claims:@{}];
   id partialTokenMock = OCMPartialMock(_token);
   OCMStub([partialTokenMock tokenCache]).andReturn(cache);
 
@@ -108,83 +108,6 @@
     coder.decodedObject[@"FBSDKAuthenticationTokenNonceCodingKey"],
     [NSString class],
     @"Initializing from a decoder should attempt to decode a String for the nonce key"
-  );
-}
-
-// MARK: - Notifications
-
-- (void)testPostsNotificationOnSettingInitial
-{
-  _token = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"" nonce:@"" claims:@[]];;
-  FBSDKAuthenticationToken.currentAuthenticationToken = _token;
-
-  XCTAssertTrue(
-    [_notificationCenterSpy.capturedPostNames containsObject:FBSDKAuthenticationTokenDidChangeNotification],
-    "Should post a notification when the authentication token is initially set"
-  );
-  XCTAssertTrue(
-    [_notificationCenterSpy.capturedPostObjects containsObject:FBSDKAuthenticationToken.class],
-    "Notification should contain information about the object that posted it"
-  );
-  XCTAssertTrue(
-    [_notificationCenterSpy.capturedPostUserInfos containsObject:@{
-       FBSDKAuthenticationTokenChangeNewKey : _token
-     }],
-    "Notification should contain information about the change that occured"
-  );
-}
-
-- (void)testPostsNotificationOnSettingNew
-{
-  _token = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"" nonce:@"" claims:@[]];
-  FBSDKAuthenticationToken *token2 = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"" nonce:@"" claims:@[]];
-  FBSDKAuthenticationToken.currentAuthenticationToken = _token;
-
-  [_notificationCenterSpy clearTestEvidence];
-  FBSDKAuthenticationToken.currentAuthenticationToken = token2;
-
-  NSDictionary *expectedUserInfo = @{
-    FBSDKAuthenticationTokenChangeOldKey : _token,
-    FBSDKAuthenticationTokenChangeNewKey : token2
-  };
-
-  XCTAssertTrue(
-    [_notificationCenterSpy.capturedPostNames containsObject:FBSDKAuthenticationTokenDidChangeNotification],
-    "Should post a notification when the authentication token is changed"
-  );
-  XCTAssertTrue(
-    [_notificationCenterSpy.capturedPostObjects containsObject:FBSDKAuthenticationToken.class],
-    "Notification should contain information about the object that posted it"
-  );
-  XCTAssertTrue(
-    [_notificationCenterSpy.capturedPostUserInfos containsObject:expectedUserInfo],
-    "Notification should contain information about the change that occured"
-  );
-}
-
-- (void)testPostsNotificationOnSettingNil
-{
-  _token = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"" nonce:@"" claims:@[]];
-  FBSDKAuthenticationToken.currentAuthenticationToken = _token;
-
-  [_notificationCenterSpy clearTestEvidence];
-  FBSDKAuthenticationToken.currentAuthenticationToken = nil;
-
-  NSDictionary *expectedUserInfo = @{
-    FBSDKAuthenticationTokenChangeOldKey : _token
-  };
-
-  XCTAssertTrue(
-    [_notificationCenterSpy.capturedPostNames containsObject:FBSDKAuthenticationTokenDidChangeNotification],
-    "Should post a notification when the authentication token is removed"
-  );
-  XCTAssertTrue(
-    [_notificationCenterSpy.capturedPostObjects containsObject:FBSDKAuthenticationToken.class],
-    "Notification should contain information about the object that posted it"
-  );
-  XCTAssertTrue(
-    [_notificationCenterSpy.capturedPostUserInfos containsObject:expectedUserInfo],
-    "Notification should contain information about the change that occured"
   );
 }
 
