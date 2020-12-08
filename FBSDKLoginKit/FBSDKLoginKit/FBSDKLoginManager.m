@@ -229,25 +229,34 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
                             declinedPermissions:declinedPermissions];
 
       if (recentlyGrantedPermissions.count > 0) {
-        FBSDKAccessToken *token = [[FBSDKAccessToken alloc] initWithTokenString:tokenString
-                                                                    permissions:grantedPermissions.allObjects
-                                                            declinedPermissions:declinedPermissions.allObjects
-                                                             expiredPermissions:@[]
-                                                                          appID:parameters.appID
-                                                                         userID:parameters.userID
-                                                                 expirationDate:parameters.expirationDate
-                                                                    refreshDate:[NSDate date]
-                                                       dataAccessExpirationDate:parameters.dataAccessExpirationDate
-                                                                    graphDomain:parameters.graphDomain];
-        result = [[FBSDKLoginManagerLoginResult alloc] initWithToken:token
-                                                         isCancelled:NO
-                                                  grantedPermissions:recentlyGrantedPermissions
-                                                 declinedPermissions:recentlyDeclinedPermissions];
+        if (!tokenString) {
+          // If there is no token string then create a 'tokenless' result
+          // from the returned permissions
+          result = [[FBSDKLoginManagerLoginResult alloc] initWithToken:nil
+                                                           isCancelled:NO
+                                                    grantedPermissions:grantedPermissions
+                                                   declinedPermissions:declinedPermissions];
+        } else {
+          FBSDKAccessToken *token = [[FBSDKAccessToken alloc] initWithTokenString:tokenString
+                                                                      permissions:grantedPermissions.allObjects
+                                                              declinedPermissions:declinedPermissions.allObjects
+                                                               expiredPermissions:@[]
+                                                                            appID:parameters.appID
+                                                                           userID:parameters.userID
+                                                                   expirationDate:parameters.expirationDate
+                                                                      refreshDate:[NSDate date]
+                                                         dataAccessExpirationDate:parameters.dataAccessExpirationDate
+                                                                      graphDomain:parameters.graphDomain];
+          result = [[FBSDKLoginManagerLoginResult alloc] initWithToken:token
+                                                           isCancelled:NO
+                                                    grantedPermissions:recentlyGrantedPermissions
+                                                   declinedPermissions:recentlyDeclinedPermissions];
 
-        if ([FBSDKAccessToken currentAccessToken]) {
-          [self validateReauthentication:[FBSDKAccessToken currentAccessToken] withResult:result];
-          // in a reauth, short circuit and let the login handler be called when the validation finishes.
-          return;
+          if ([FBSDKAccessToken currentAccessToken]) {
+            [self validateReauthentication:[FBSDKAccessToken currentAccessToken] withResult:result];
+            // in a reauth, short circuit and let the login handler be called when the validation finishes.
+            return;
+          }
         }
       }
     }
