@@ -91,6 +91,12 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   if (![self validateLoginStartState]) {
     return;
   }
+  if (!configuration) {
+    NSError *error = [FBSDKError errorWithCode:FBSDKErrorInvalidArgument message:@"Attempting to login with a nil configuration"];
+    completion(nil, error);
+    return;
+  }
+
   self.fromViewController = viewController;
   _configuration = configuration;
 

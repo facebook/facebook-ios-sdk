@@ -431,6 +431,24 @@ static NSString *const kFakeNonce = @"fedcb =a";
   XCTAssertEqual(loginCount, 1);
 }
 
+- (void)testCallingLoginWithNilConfigurationShouldFail
+{
+  __block BOOL resultBlockInvoked = NO;
+  FBSDKLoginManagerLoginResultBlock completion = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    XCTAssertNil(result);
+    XCTAssertNotNil(error);
+    resultBlockInvoked = YES;
+  };
+
+  FBSDKLoginConfiguration *invalidConfig = [[FBSDKLoginConfiguration alloc] initWithPermissions:@[]
+                                                                            betaLoginExperience:FBSDKBetaLoginExperienceRestricted
+                                                                                          nonce:@" "];
+  XCTAssertNil(invalidConfig);
+
+  [_mockLoginManager logInFromViewController:nil configuration:invalidConfig completion:completion];
+  XCTAssertTrue(resultBlockInvoked, "Should invoke completion synchronously");
+}
+
 - (void)testBetaLoginExperienceEnabledLoginParams
 {
   FBSDKLoginConfiguration *config = [[FBSDKLoginConfiguration alloc]
