@@ -29,10 +29,9 @@
 #import "FBSDKLoginUtilityTests.h"
 
 static NSString *const kFakeAppID = @"7391628439";
-
 static NSString *const kFakeChallenge = @"a =bcdef";
-
 static NSString *const kFakeNonce = @"fedcb =a";
+static NSString *const kFakeJTI = @"a jti is just any string";
 
 @interface FBSDKLoginManager (Testing)
 
@@ -47,6 +46,12 @@ static NSString *const kFakeNonce = @"fedcb =a";
 @interface FBSDKAuthenticationTokenFactory (Testing)
 
 + (void)setSkipSignatureVerification:(BOOL)value;
+
+@end
+
+@interface FBSDKAuthenticationToken (Testing)
+
+- (NSString *)jti;
 
 @end
 
@@ -323,6 +328,7 @@ static NSString *const kFakeNonce = @"fedcb =a";
     @"nonce" : kFakeNonce,
     @"exp" : @(currentTime + 60 * 60 * 48), // 2 days later
     @"iat" : @(currentTime - 60), // 1 min ago
+    @"jti" : kFakeJTI,
     @"sub" : @"1234",
     @"name" : @"Test User",
     @"picture" : @"https://www.facebook.com/some_picture",
@@ -346,6 +352,7 @@ static NSString *const kFakeNonce = @"fedcb =a";
     XCTAssertNotNil(authToken, @"An Authentication token should be created after successful login");
     XCTAssertEqualObjects(authToken.tokenString, tokenString, @"A raw authentication token string should be stored");
     XCTAssertEqualObjects(authToken.nonce, kFakeNonce, @"The nonce claims in the authentication token should be stored");
+    XCTAssertEqualObjects(authToken.jti, kFakeJTI, @"The jit on the auth token should be derived from the claims");
 
     FBSDKProfile *profile = [FBSDKProfile currentProfile];
     XCTAssertNotNil(profile, @"user profile should be updated");

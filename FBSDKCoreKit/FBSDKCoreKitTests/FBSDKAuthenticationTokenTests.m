@@ -26,14 +26,6 @@
 #import "FBSDKTestCase.h"
 #import "FBSDKTestCoder.h"
 
-@interface FBSDKAuthenticationToken (Testing)
-
-- (instancetype)initWithTokenString:(NSString *)tokenString
-                              nonce:(NSString *)nonce
-                             claims:(NSDictionary *)claims;
-
-@end
-
 @interface FBSDKAuthenticationTokenTests : FBSDKTestCase
 
 @end
@@ -57,7 +49,7 @@
 - (void)testRetrievingCurrentToken
 {
   FakeTokenCache *cache = [[FakeTokenCache alloc] initWithAccessToken:nil authenticationToken:nil];
-  _token = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"" nonce:@"" claims:@{}];
+  _token = SampleAuthenticationToken.validToken;
   id partialTokenMock = OCMPartialMock(_token);
   OCMStub([partialTokenMock tokenCache]).andReturn(cache);
 
@@ -76,10 +68,13 @@
 {
   NSString *expectedTokenString = @"expectedTokenString";
   NSString *expectedNonce = @"expectedNonce";
+  NSString *expectedJTI = @"expectedJTI";
 
   FBSDKTestCoder *coder = [FBSDKTestCoder new];
   _token = [[FBSDKAuthenticationToken alloc] initWithTokenString:expectedTokenString
-                                                           nonce:expectedNonce claims:@{}];
+                                                           nonce:expectedNonce
+                                                          claims:@{}
+                                                             jti:expectedJTI];
   [_token encodeWithCoder:coder];
 
   XCTAssertEqualObjects(
@@ -91,6 +86,11 @@
     coder.encodedObject[@"FBSDKAuthenticationTokenNonceCodingKey"],
     expectedNonce,
     @"Should encode the expected nonce string"
+  );
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"FBSDKAuthenticationTokenJtiCodingKey"],
+    expectedJTI,
+    @"Should encode the expected JTI"
   );
 }
 
@@ -108,6 +108,11 @@
     coder.decodedObject[@"FBSDKAuthenticationTokenNonceCodingKey"],
     [NSString class],
     @"Initializing from a decoder should attempt to decode a String for the nonce key"
+  );
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"FBSDKAuthenticationTokenJtiCodingKey"],
+    [NSString class],
+    @"Initializing from a decoder should attempt to decode a String for the jti key"
   );
 }
 

@@ -38,6 +38,16 @@
                ReferencedContainer = "container:FBSDKLoginKit.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "9D2697511A5DF40700143BFC"
+               BuildableName = "FBSDKCoreKitTests.xctest"
+               BlueprintName = "FBSDKCoreKitTests"
+               ReferencedContainer = "container:../FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

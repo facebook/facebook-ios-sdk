@@ -36,20 +36,35 @@ static FBSDKAuthenticationToken *g_currentAuthenticationToken;
 
 NSString *const FBSDKAuthenticationTokenTokenStringCodingKey = @"FBSDKAuthenticationTokenTokenStringCodingKey";
 NSString *const FBSDKAuthenticationTokenNonceCodingKey = @"FBSDKAuthenticationTokenNonceCodingKey";
+NSString *const FBSDKAuthenticationTokenJtiCodingKey = @"FBSDKAuthenticationTokenJtiCodingKey";
 
 @implementation FBSDKAuthenticationToken
 {
   NSDictionary *_claims;
+  NSString *_jti;
 }
 
 - (instancetype)initWithTokenString:(NSString *)tokenString
                               nonce:(NSString *)nonce
                              claims:(NSDictionary *)claims
 {
+  self = [self initWithTokenString:tokenString
+                             nonce:nonce
+                            claims:claims
+                               jti:claims[@"jti"]];
+  return self;
+}
+
+- (instancetype)initWithTokenString:(NSString *)tokenString
+                              nonce:(NSString *)nonce
+                             claims:(NSDictionary *)claims
+                                jti:(NSString *)jti
+{
   if ((self = [super init])) {
     _tokenString = tokenString;
     _nonce = nonce;
     _claims = claims;
+    _jti = jti;
   }
   return self;
 }
@@ -73,6 +88,11 @@ NSString *const FBSDKAuthenticationTokenNonceCodingKey = @"FBSDKAuthenticationTo
   }
 }
 
+- (NSString *)jti
+{
+  return _jti;
+}
+
 #pragma mark Storage
 
 + (id<FBSDKTokenCaching>)tokenCache
@@ -89,16 +109,19 @@ NSString *const FBSDKAuthenticationTokenNonceCodingKey = @"FBSDKAuthenticationTo
 {
   NSString *tokenString = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKAuthenticationTokenTokenStringCodingKey];
   NSString *nonce = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKAuthenticationTokenNonceCodingKey];
+  NSString *jti = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKAuthenticationTokenJtiCodingKey];
 
   return [self initWithTokenString:tokenString
                              nonce:nonce
-                            claims:nil];
+                            claims:nil
+                               jti:jti];
 }
 
 - (void)encodeWithCoder:(NSCoder *)encoder
 {
   [encoder encodeObject:self.tokenString forKey:FBSDKAuthenticationTokenTokenStringCodingKey];
   [encoder encodeObject:self.nonce forKey:FBSDKAuthenticationTokenNonceCodingKey];
+  [encoder encodeObject:_jti forKey:FBSDKAuthenticationTokenJtiCodingKey];
 }
 
 #pragma mark - Test methods

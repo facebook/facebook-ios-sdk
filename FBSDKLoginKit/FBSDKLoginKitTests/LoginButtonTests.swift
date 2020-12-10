@@ -168,7 +168,7 @@ class LoginButtonTests: XCTestCase {
   }
 
   func testDeterminingAuthenticationWithoutAccessTokenWithAuthToken() {
-    let authToken = AuthenticationToken(tokenString: "abc", nonce: "123", claims: [:])
+    let authToken = AuthenticationToken(tokenString: "abc", nonce: "123", claims: [:], jti: "jti")
     AuthenticationToken.setCurrent(authToken, shouldPostNotification: false)
 
     XCTAssertTrue(

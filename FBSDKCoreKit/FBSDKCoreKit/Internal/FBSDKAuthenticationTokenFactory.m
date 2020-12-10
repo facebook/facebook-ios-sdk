@@ -91,7 +91,9 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
   // return;
   // }
 
-  FBSDKAuthenticationToken *token = [[FBSDKAuthenticationToken alloc]initWithTokenString:tokenString nonce:nonce claims:claims];
+  FBSDKAuthenticationToken *token = [[FBSDKAuthenticationToken alloc]initWithTokenString:tokenString
+                                                                                   nonce:nonce
+                                                                                  claims:claims];
   completion(token);
 }
 
@@ -112,8 +114,9 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
       BOOL issuedRecently = [claims[@"iat"] isKindOfClass:[NSNumber class]] && [(NSNumber *)claims[@"iat"] longValue] >= currentTime - MaxTimeSinceTokenIssued;
       BOOL nonceMatched = [claims[@"nonce"] isKindOfClass:[NSString class]] && [claims[@"nonce"] isEqualToString:nonce];
       BOOL userIDValid = [claims[@"sub"] isKindOfClass:[NSString class]] && [claims[@"sub"] length] > 0;
+      BOOL hasJTI = [claims[@"jti"] isKindOfClass:[NSString class]] && [claims[@"jti"] length] > 0;
 
-      if (isFacebook && audMatched && !isExpired && issuedRecently && nonceMatched && userIDValid) {
+      if (isFacebook && audMatched && !isExpired && issuedRecently && nonceMatched && userIDValid && hasJTI) {
         return claims;
       }
     }
