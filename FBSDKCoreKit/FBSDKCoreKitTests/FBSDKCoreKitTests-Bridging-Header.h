@@ -50,3 +50,35 @@
                              claims:(NSDictionary *)claims
                                 jti:(NSString *)jti;
 @end
+
+NS_SWIFT_NAME(FBProfilePictureViewState)
+@interface FBSDKProfilePictureViewState
+@end
+
+@interface FBSDKProfilePictureView (Testing)
+- (void)_accessTokenDidChangeNotification:(NSNotification *)notification;
+- (void)_profileDidChangeNotification:(NSNotification *)notification;
+- (void)_updateImageWithProfile;
+- (void)_updateImageWithAccessToken;
+- (void)_updateImage;
+- (void)_fetchAndSetImageWithURL:(NSURL *)imageURL state:(FBSDKProfilePictureViewState *)state;
+@end
+
+@interface FBSDKAccessToken (Testing)
++ (void)setCurrentAccessToken:(FBSDKAccessToken *)token
+        shouldDispatchNotif:(BOOL)shouldDispatchNotif;
+@end
+
+@interface FBSDKProfile (Testing)
++ (void)setCurrentProfile:(nullable FBSDKProfile *)profile
+ shouldPostNotification:(BOOL)shouldPostNotification;
+@end
+
+@interface FBSDKAuthenticationToken (Testing)
+- (instancetype)initWithTokenString:(NSString *)tokenString
+                              nonce:(NSString *)nonce
+                             claims:(NSDictionary *)claims
+                                jti:(NSString *)jti;
++ (void)setCurrentAuthenticationToken:(FBSDKAuthenticationToken *)token
+             shouldPostNotification:(BOOL)shouldPostNotification;
+@end

@@ -32,6 +32,20 @@ public class SampleAccessToken: NSObject {
       dataAccessExpirationDate: nil
     )
   }
+  
+  public static var expiredToken: AccessToken {
+    return AccessToken(
+      tokenString: "123",
+      permissions: [],
+      declinedPermissions: [],
+      expiredPermissions: [],
+      appID: "123",
+      userID: "user123",
+      expirationDate: .distantPast,
+      refreshDate: nil,
+      dataAccessExpirationDate: nil
+    )
+  }
 
   public static func valid(withRefreshDate date: Date?) -> AccessToken {
     return AccessToken(

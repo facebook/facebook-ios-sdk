@@ -785,6 +785,7 @@
 		C638153D257EA7CC00B7690F /* FBSDKAuthenticationTokenFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = C6A308BA257AD1FF003C52FD /* FBSDKAuthenticationTokenFactory.h */; };
 		C638158A257EA8F000B7690F /* FBSDKAuthenticationTokenFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = C6A308BB257AD1FF003C52FD /* FBSDKAuthenticationTokenFactory.m */; };
 		C6381628257EDF2100B7690F /* FBSDKAuthenticationTokenFactoryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C6381619257EDF2100B7690F /* FBSDKAuthenticationTokenFactoryTests.m */; };
+		C67BED2A257F1A6300D356C9 /* ProfilePictureViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C67BED29257F1A6300D356C9 /* ProfilePictureViewTests.swift */; };
 		C6A308BD257AD1FF003C52FD /* FBSDKAuthenticationTokenFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = C6A308BB257AD1FF003C52FD /* FBSDKAuthenticationTokenFactory.m */; };
 		C6A308D8257AD227003C52FD /* FBSDKAuthenticationTokenFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = C6A308BA257AD1FF003C52FD /* FBSDKAuthenticationTokenFactory.h */; };
 		C77C07A62486BAC600345460 /* FBSDKRestrictiveDataFilterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C77C07A52486BAC600345460 /* FBSDKRestrictiveDataFilterTests.m */; };
@@ -1545,6 +1546,7 @@
 		C5EAFA5D255283C100458DF5 /* FBSDKUserDataStore+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBSDKUserDataStore+Internal.h"; sourceTree = "<group>"; };
 		C5F6EC851FA24FAF009EB258 /* FBSDKPaymentObserverTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKPaymentObserverTests.m; sourceTree = "<group>"; };
 		C6381619257EDF2100B7690F /* FBSDKAuthenticationTokenFactoryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKAuthenticationTokenFactoryTests.m; sourceTree = "<group>"; };
+		C67BED29257F1A6300D356C9 /* ProfilePictureViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePictureViewTests.swift; sourceTree = "<group>"; };
 		C6A308BA257AD1FF003C52FD /* FBSDKAuthenticationTokenFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKAuthenticationTokenFactory.h; sourceTree = "<group>"; };
 		C6A308BB257AD1FF003C52FD /* FBSDKAuthenticationTokenFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKAuthenticationTokenFactory.m; sourceTree = "<group>"; };
 		C77C07A52486BAC600345460 /* FBSDKRestrictiveDataFilterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKRestrictiveDataFilterTests.m; sourceTree = "<group>"; };
@@ -2388,6 +2390,7 @@
 				9D2697571A5DF40700143BFC /* Supporting Files */,
 				2A3DA4151CB4C0F600339BD4 /* FBSDKAppLinkUtilityTests.swift */,
 				5D2165F12229C6A3004952D8 /* FBSDKGraphRequestTests.m */,
+				C67BED29257F1A6300D356C9 /* ProfilePictureViewTests.swift */,
 			);
 			path = FBSDKCoreKitTests;
 			sourceTree = "<group>";
@@ -4195,6 +4198,7 @@
 				7E55573C1A8D834B00344F86 /* FBSDKAppLinkResolverTests.m in Sources */,
 				5D2165E122264453004952D8 /* FBSDKAppEventsTests.m in Sources */,
 				F496E58F24E49DBC006231A2 /* SampleAppEvents.swift in Sources */,
+				C67BED2A257F1A6300D356C9 /* ProfilePictureViewTests.swift in Sources */,
 				F4D80C082566D469008CCAF0 /* FBSDKDrawableTests.swift in Sources */,
 				9D18A8DB1A95405A00A41042 /* FBSDKAppEventsStateTests.m in Sources */,
 				F4ED90DB24EDDC610048D283 /* NotificationCenterSpy.swift in Sources */,

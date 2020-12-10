@@ -25,7 +25,7 @@ public class SampleAuthenticationToken: NSObject {
       nonce: "fakeNonce",
       claims: [:],
       jti: "fakeJTI"
-    )
+    )! // swiftlint:disable:this force_unwrapping
   }
 
 }
