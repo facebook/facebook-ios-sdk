@@ -67,6 +67,9 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   id _mockAccessTokenClass;
   id _mockAuthenticationTokenClass;
   id _mockProfileClass;
+
+  NSDictionary *_claims;
+  NSDictionary *_header;
 }
 
 - (void)setUp
@@ -88,6 +91,25 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   _mockAccessTokenClass = OCMClassMock(FBSDKAccessToken.class);
   _mockAuthenticationTokenClass = OCMClassMock(FBSDKAuthenticationToken.class);
   _mockProfileClass = OCMClassMock(FBSDKProfile.class);
+
+  long currentTime = [[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]] longValue];
+  _claims = @{
+    @"iss" : @"https://facebook.com/dialog/oauth",
+    @"aud" : kFakeAppID,
+    @"nonce" : kFakeNonce,
+    @"exp" : @(currentTime + 60 * 60 * 48), // 2 days later
+    @"iat" : @(currentTime - 60), // 1 min ago
+    @"jti" : kFakeJTI,
+    @"sub" : @"1234",
+    @"name" : @"Test User",
+    @"email" : @"email@email.com",
+    @"picture" : @"https://www.facebook.com/some_picture",
+  };
+
+  _header = @{
+    @"alg" : @"RS256",
+    @"typ" : @"JWT"
+  };
 }
 
 - (void)tearDown
@@ -315,50 +337,28 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   }];
 }
 
-- (void)testOpenURLAuthWithIDToken
+- (void)testOpenURLAuthWithAuthenticationToken
 {
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
   FBSDKLoginManager *target = _mockLoginManager;
   [FBSDKAuthenticationTokenFactory setSkipSignatureVerification:YES];
 
-  long currentTime = [[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]] longValue];
-  NSDictionary *expectedClaims = @{
-    @"iss" : @"https://facebook.com/dialog/oauth",
-    @"aud" : kFakeAppID,
-    @"nonce" : kFakeNonce,
-    @"exp" : @(currentTime + 60 * 60 * 48), // 2 days later
-    @"iat" : @(currentTime - 60), // 1 min ago
-    @"jti" : kFakeJTI,
-    @"sub" : @"1234",
-    @"name" : @"Test User",
-    @"picture" : @"https://www.facebook.com/some_picture",
-  };
-  NSData *expectedClaimsData = [FBSDKTypeUtility dataWithJSONObject:expectedClaims options:0 error:nil];
-  NSString *encodedClaims = [FBSDKBase64 encodeData:expectedClaimsData];
-  NSDictionary *expectedHeader = @{
-    @"alg" : @"RS256",
-    @"typ" : @"JWT"
-  };
-  NSData *expectedHeaderData = [FBSDKTypeUtility dataWithJSONObject:expectedHeader options:0 error:nil];
-  NSString *encodedHeader = [FBSDKBase64 encodeData:expectedHeaderData];
+  NSData *claimsData = [FBSDKTypeUtility dataWithJSONObject:_claims options:0 error:nil];
+  NSString *encodedClaims = [FBSDKBase64 encodeData:claimsData];
+  NSData *headerData = [FBSDKTypeUtility dataWithJSONObject:_header options:0 error:nil];
+  NSString *encodedHeader = [FBSDKBase64 encodeData:headerData];
 
   NSString *tokenString = [NSString stringWithFormat:@"%@.%@.%@", encodedHeader, encodedClaims, @"signature"];
-  NSURL *url = [self authorizeURLWithFragment:[NSString stringWithFormat:@"id_token=%@", tokenString] challenge:kFakeChallenge];
+  NSURL *url = [self authorizeURLWithFragment:[NSString stringWithFormat:@"granted_scopes=public_profile,email&id_token=%@", tokenString] challenge:kFakeChallenge];
 
   [target setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-    // XCTAssertFalse(result.isCancelled);
+    XCTAssertFalse(result.isCancelled);
 
-    FBSDKAuthenticationToken *authToken = FBSDKAuthenticationToken.currentAuthenticationToken;
-    XCTAssertNotNil(authToken, @"An Authentication token should be created after successful login");
-    XCTAssertEqualObjects(authToken.tokenString, tokenString, @"A raw authentication token string should be stored");
-    XCTAssertEqualObjects(authToken.nonce, kFakeNonce, @"The nonce claims in the authentication token should be stored");
-    XCTAssertEqualObjects(authToken.jti, kFakeJTI, @"The jit on the auth token should be derived from the claims");
+    FBSDKAuthenticationToken *authToken = result.authenticationToken;
+    XCTAssertEqualObjects(authToken, FBSDKAuthenticationToken.currentAuthenticationToken);
+    [self validateAuthenticationToken:authToken expectedTokenString:tokenString];
 
-    FBSDKProfile *profile = [FBSDKProfile currentProfile];
-    XCTAssertNotNil(profile, @"user profile should be updated");
-    XCTAssertEqualObjects(profile.name, expectedClaims[@"name"], @"failed to parse user name");
-    XCTAssertEqualObjects(profile.userID, expectedClaims[@"sub"], @"failed to parse userID");
-    XCTAssertEqualObjects(profile.imageURL.absoluteString, expectedClaims[@"picture"], @"failed to parse user profile picture");
+    [self validateProfile:FBSDKProfile.currentProfile];
 
     [expectation fulfill];
   }];
@@ -372,9 +372,9 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   [FBSDKAuthenticationTokenFactory setSkipSignatureVerification:NO];
 }
 
-- (void)testOpenURLAuthWithInvalidIDToken
+- (void)testOpenURLAuthWithInvalidAuthenticationToken
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
+  __block BOOL resultBlockInvoked = NO;
   FBSDKLoginManager *target = _mockLoginManager;
   NSURL *url = [self authorizeURLWithFragment:@"id_token=invalid_token" challenge:kFakeChallenge];
 
@@ -383,6 +383,46 @@ static NSString *const kFakeJTI = @"a jti is just any string";
     OCMReject([self->_mockAccessTokenClass setCurrentAccessToken:OCMOCK_ANY]);
     OCMReject([self->_mockAuthenticationTokenClass setCurrentAuthenticationToken:OCMOCK_ANY]);
     OCMReject([self->_mockProfileClass setCurrentProfile:OCMOCK_ANY]);
+    resultBlockInvoked = YES;
+  }];
+
+  XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+  XCTAssertTrue(resultBlockInvoked, "Should invoke completion synchronously");
+}
+
+- (void)testOpenURLAuthWithAuthenticationTokenWithAccessToken
+{
+  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
+  FBSDKLoginManager *target = _mockLoginManager;
+  [FBSDKAuthenticationTokenFactory setSkipSignatureVerification:YES];
+
+  NSData *claimsData = [FBSDKTypeUtility dataWithJSONObject:_claims options:0 error:nil];
+  NSString *encodedClaims = [FBSDKBase64 encodeData:claimsData];
+  NSData *headerData = [FBSDKTypeUtility dataWithJSONObject:_header options:0 error:nil];
+  NSString *encodedHeader = [FBSDKBase64 encodeData:headerData];
+
+  NSString *tokenString = [NSString stringWithFormat:@"%@.%@.%@", encodedHeader, encodedClaims, @"signature"];
+  NSString *fragment = [@"granted_scopes=public_profile%2Cemail%2Cuser_friends&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949&id_token=" stringByAppendingString:tokenString];
+  NSURL *url = [self authorizeURLWithFragment:fragment challenge:kFakeChallenge];
+
+  [target setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    XCTAssertFalse(result.isCancelled);
+
+    FBSDKAuthenticationToken *authToken = result.authenticationToken;
+    XCTAssertEqualObjects(authToken, FBSDKAuthenticationToken.currentAuthenticationToken);
+    [self validateAuthenticationToken:authToken expectedTokenString:tokenString];
+
+    [self validateProfile:FBSDKProfile.currentProfile];
+
+    FBSDKAccessToken *accessToken = [FBSDKAccessToken currentAccessToken];
+    XCTAssertEqualObjects(accessToken, result.token);
+    XCTAssertEqualObjects(accessToken.userID, @"123", @"failed to parse userID");
+    NSSet *permissions = [NSSet setWithObjects:@"public_profile", @"email", @"user_friends", nil];
+    XCTAssertEqualObjects(accessToken.permissions, permissions, @"unexpected permissions");
+    XCTAssertEqualObjects(result.grantedPermissions, permissions, @"unexpected permissions");
+    XCTAssertFalse(accessToken.declinedPermissions.count, @"unexpected permissions");
+    XCTAssertFalse(result.declinedPermissions.count, @"unexpected permissions");
+
     [expectation fulfill];
   }];
 
@@ -391,6 +431,8 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   [self waitForExpectationsWithTimeout:3 handler:^(NSError *error) {
     XCTAssertNil(error);
   }];
+
+  [FBSDKAuthenticationTokenFactory setSkipSignatureVerification:NO];
 }
 
 - (void)testLoginManagerRetainsItselfForLoginMethod
@@ -606,6 +648,24 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   long long cbt = [params[@"cbt"] longLongValue];
   long long currentMilliseconds = round(1000 * [NSDate date].timeIntervalSince1970);
   XCTAssertEqualWithAccuracy(cbt, currentMilliseconds, 500);
+}
+
+- (void)validateAuthenticationToken:(FBSDKAuthenticationToken *)authToken
+                expectedTokenString:(NSString *)tokenString
+{
+  XCTAssertNotNil(authToken, @"An Authentication token should be created after successful login");
+  XCTAssertEqualObjects(authToken.tokenString, tokenString, @"A raw authentication token string should be stored");
+  XCTAssertEqualObjects(authToken.nonce, kFakeNonce, @"The nonce claims in the authentication token should be stored");
+  XCTAssertEqualObjects(authToken.jti, kFakeJTI, @"The jit on the auth token should be derived from the claims");
+}
+
+- (void)validateProfile:(FBSDKProfile *)profile
+{
+  XCTAssertNotNil(profile, @"user profile should be updated");
+  XCTAssertEqualObjects(profile.name, _claims[@"name"], @"failed to parse user name");
+  XCTAssertEqualObjects(profile.userID, _claims[@"sub"], @"failed to parse userID");
+  XCTAssertEqualObjects(profile.imageURL.absoluteString, _claims[@"picture"], @"failed to parse user profile picture");
+  XCTAssertEqualObjects(profile.email, _claims[@"email"], @"failed to parse user email");
 }
 
 @end

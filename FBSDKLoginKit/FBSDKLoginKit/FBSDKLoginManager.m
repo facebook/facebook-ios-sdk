@@ -144,6 +144,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 - (void)handleImplicitCancelOfLogIn
 {
   FBSDKLoginManagerLoginResult *result = [[FBSDKLoginManagerLoginResult alloc] initWithToken:nil
+                                                                         authenticationToken:nil
                                                                                  isCancelled:YES
                                                                           grantedPermissions:NSSet.set
                                                                          declinedPermissions:NSSet.set];
@@ -236,6 +237,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
           // If there is no token string then create a 'tokenless' result
           // from the returned permissions
           result = [[FBSDKLoginManagerLoginResult alloc] initWithToken:nil
+                                                   authenticationToken:parameters.authenticationToken
                                                            isCancelled:NO
                                                     grantedPermissions:grantedPermissions
                                                    declinedPermissions:declinedPermissions];
@@ -251,6 +253,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
                                                          dataAccessExpirationDate:parameters.dataAccessExpirationDate
                                                                       graphDomain:parameters.graphDomain];
           result = [[FBSDKLoginManagerLoginResult alloc] initWithToken:token
+                                                   authenticationToken:parameters.authenticationToken
                                                            isCancelled:NO
                                                     grantedPermissions:recentlyGrantedPermissions
                                                    declinedPermissions:recentlyDeclinedPermissions];
@@ -273,6 +276,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
       }
 
       result = [[FBSDKLoginManagerLoginResult alloc] initWithToken:nil
+                                               authenticationToken:nil
                                                        isCancelled:cancelled
                                                 grantedPermissions:NSSet.set
                                                declinedPermissions:declinedPermissions];

@@ -34,6 +34,7 @@
 }
 
 - (instancetype)initWithToken:(FBSDKAccessToken *)token
+          authenticationToken:(FBSDKAuthenticationToken *)authenticationToken
                   isCancelled:(BOOL)isCancelled
            grantedPermissions:(NSSet *)grantedPermissions
           declinedPermissions:(NSSet *)declinedPermissions
@@ -41,6 +42,7 @@
   if ((self = [super init])) {
     _mutableLoggingExtras = [NSMutableDictionary dictionary];
     _token = token ? [token copy] : nil;
+    _authenticationToken = authenticationToken;
     _isCancelled = isCancelled;
     _grantedPermissions = [grantedPermissions copy];
     _declinedPermissions = [declinedPermissions copy];
