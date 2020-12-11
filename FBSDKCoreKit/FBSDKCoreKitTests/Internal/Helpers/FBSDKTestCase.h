@@ -62,6 +62,9 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing a common app identifier between tests. This is not a valid FB App ID
 @property (nullable, assign) NSString *appID;
 
+/// Used during `-setUp` to determine the type of mock for `appEventsMock` (partial or nice), default is `NO`
+@property (assign) BOOL shouldAppEventsMockBePartial;
+
 /// Used for sharing an `FBSDKAppEvents` mock between tests
 @property (nullable, assign) id appEventsMock;
 
@@ -211,9 +214,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 
 /// Stubs `NSNotificationCenter.defaultCenter` and returns the provided notification center
 - (void)stubDefaultNotificationCenterWith:(NSNotificationCenter *)notificationCenter;
-
-/// Stubs `AppEvents.singleton` and return the provided app events instance
-- (void)stubAppEventsSingletonWith:(FBSDKAppEvents *)appEventsInstance;
 
 /// Stubs `MeasurementEventListener.defaultListener` and returns the provided listener.
 - (void)stubDefaultMeasurementEventListenerWith:(FBSDKMeasurementEventListener *)eventListener;

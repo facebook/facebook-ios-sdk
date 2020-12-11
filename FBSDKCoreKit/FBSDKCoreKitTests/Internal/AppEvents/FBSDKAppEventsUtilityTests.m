@@ -48,6 +48,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 
 - (void)setUp
 {
+  self.shouldAppEventsMockBePartial = YES;
+
   [super setUp];
 
   [self stubServerConfigurationFetchingWithConfiguration:[FBSDKServerConfiguration defaultServerConfigurationForAppID:nil] error:nil];

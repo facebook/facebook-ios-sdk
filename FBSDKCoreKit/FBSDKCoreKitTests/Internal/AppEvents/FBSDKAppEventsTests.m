@@ -110,6 +110,8 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)setUp
 {
+  self.shouldAppEventsMockBePartial = YES;
+
   [super setUp];
 
   [self stubLoadingAdNetworkReporterConfiguration];
@@ -121,8 +123,6 @@ static NSString *const _mockUserID = @"mockUserID";
   _mockCurrency = @"USD";
 
   [FBSDKAppEvents setLoggingOverrideAppID:_mockAppID];
-
-  self.appEventsMock = OCMPartialMock([FBSDKAppEvents singleton]);
 
   // Mock FBSDKAppEventsUtility methods
   [self stubAppEventsUtilityShouldDropAppEventWith:NO];
@@ -136,7 +136,11 @@ static NSString *const _mockUserID = @"mockUserID";
   [super tearDown];
 
   [OHHTTPStubs removeAllStubs];
-  [FBSDKAppEvents resetSingleton];
+}
+
+- (void)testAppEventsMockIsSingleton
+{
+  XCTAssertEqual(self.appEventsMock, [FBSDKAppEvents singleton]);
 }
 
 - (void)testLogPurchaseFlush

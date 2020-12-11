@@ -51,6 +51,8 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
 - (void)setUp
 {
+  self.shouldAppEventsMockBePartial = YES;
+
   [super setUp];
 
   NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionaryWithDictionary:@{
@@ -74,9 +76,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self stubAllocatingGraphRequestConnection];
   [self stubLoadingAdNetworkReporterConfiguration];
 
-  FBSDKAppEvents *appEvents = FBSDKAppEvents.singleton;
-  appEvents.disableTimer = YES;
-  [self stubAppEventsSingletonWith:appEvents];
+  [self.appEventsMock setDisableTimer:YES];
 
   [FBSDKRestrictiveDataFilterManager enable];
 }

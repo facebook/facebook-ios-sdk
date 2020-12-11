@@ -80,7 +80,6 @@
 
   [_delegate resetApplicationObserverCache];
 
-  [self stubAppEventsSingletonWith:self.appEventsMock];
   [self stubLoadingAdNetworkReporterConfiguration];
 
   [self stubServerConfigurationFetchingWithConfiguration:FBSDKServerConfigurationFixtures.defaultConfig error:nil];

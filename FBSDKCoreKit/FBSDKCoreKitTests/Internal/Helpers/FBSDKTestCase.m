@@ -246,7 +246,18 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
 - (void)setUpAppEventsMock
 {
-  _appEventsMock = OCMClassMock(FBSDKAppEvents.class);
+  if (self.shouldAppEventsMockBePartial) {
+    // Since the `init` method is marked unavailable but just as a measure to prevent creating multiple
+    // instances and enforce the singleton pattern, we will circumvent that by casting to a plain `NSObject`
+    // after `alloc` in order to call `init`.
+    _appEventsMock = OCMPartialMock([(NSObject *)[FBSDKAppEvents alloc] init]);
+  } else {
+    _appEventsMock = OCMClassMock([FBSDKAppEvents class]);
+  }
+
+  // Since numerous areas in FBSDK can end up calling `[FBSDKAppEvents singleton]`,
+  // we will stub the singleton accessor out for our mock instance.
+  OCMStub([_appEventsMock singleton]).andReturn(_appEventsMock);
 
   _appEventStatesMock = OCMClassMock([FBSDKAppEventsState class]);
   OCMStub([_appEventStatesMock alloc]).andReturn(_appEventStatesMock);
@@ -479,11 +490,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)stubDefaultNotificationCenterWith:(NSNotificationCenter *)notificationCenter
 {
   OCMStub(ClassMethod([_nsNotificationCenterClassMock defaultCenter])).andReturn(notificationCenter);
-}
-
-- (void)stubAppEventsSingletonWith:(FBSDKAppEvents *)appEventsInstance
-{
-  OCMStub([_appEventsMock singleton]).andReturn(appEventsInstance);
 }
 
 - (void)stubDefaultMeasurementEventListenerWith:(FBSDKMeasurementEventListener *)eventListener

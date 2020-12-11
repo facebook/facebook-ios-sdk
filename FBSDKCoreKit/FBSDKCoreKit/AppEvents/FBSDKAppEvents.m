@@ -920,23 +920,9 @@ static NSString *g_overrideAppID = nil;
                                    accessToken:accessToken];
 }
 
-#ifdef DEBUG
-static dispatch_once_t *onceTokenPointer;
-+ (void)resetSingleton
-{
-  if (onceTokenPointer) {
-    *onceTokenPointer = 0;
-  }
-}
-
-#endif
-
 + (FBSDKAppEvents *)singleton
 {
   static dispatch_once_t onceToken;
-#ifdef DEBUG
-  onceTokenPointer = &onceToken;
-#endif
   static FBSDKAppEvents *shared = nil;
   dispatch_once(&onceToken, ^{
     shared = [[self alloc] init];
