@@ -39,67 +39,6 @@
 
 @end
 
-static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *parameters, void (^completionBlock)(void))
-{
-  __block NSUInteger pendingCount = 1;
-  void (^didCompleteBlock)(void) = ^{
-    if (--pendingCount == 0) {
-      completionBlock();
-    }
-  };
-
-  NSString *tokenString = parameters.accessTokenString;
-  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
-
-  pendingCount++;
-  FBSDKGraphRequest *userIDRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me"
-                                                                       parameters:@{ @"fields" : @"id" }
-                                                                      tokenString:tokenString
-                                                                       HTTPMethod:nil
-                                                                            flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
-
-  [connection addRequest:userIDRequest completionHandler:^(FBSDKGraphRequestConnection *requestConnection,
-                                                           id result,
-                                                           NSError *error) {
-                                                             parameters.userID = result[@"id"];
-                                                             if (error) {
-                                                               parameters.error = error;
-                                                             }
-                                                             didCompleteBlock();
-                                                           }];
-
-  pendingCount++;
-  FBSDKGraphRequest *permissionsRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/permissions"
-                                                                            parameters:@{@"fields" : @""}
-                                                                           tokenString:tokenString
-                                                                            HTTPMethod:nil
-                                                                                 flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
-
-  [connection addRequest:permissionsRequest completionHandler:^(FBSDKGraphRequestConnection *requestConnection,
-                                                                id result,
-                                                                NSError *error) {
-                                                                  NSMutableSet *grantedPermissions = [NSMutableSet set];
-                                                                  NSMutableSet *declinedPermissions = [NSMutableSet set];
-                                                                  NSMutableSet *expiredPermissions = [NSMutableSet set];
-
-                                                                  [FBSDKInternalUtility extractPermissionsFromResponse:result
-                                                                                                    grantedPermissions:grantedPermissions
-                                                                                                   declinedPermissions:declinedPermissions
-                                                                                                    expiredPermissions:expiredPermissions];
-
-                                                                  parameters.permissions = [grantedPermissions copy];
-                                                                  parameters.declinedPermissions = [declinedPermissions copy];
-                                                                  parameters.expiredPermissions = [expiredPermissions copy];
-                                                                  if (error) {
-                                                                    parameters.error = error;
-                                                                  }
-                                                                  didCompleteBlock();
-                                                                }];
-
-  [connection start];
-  didCompleteBlock();
-}
-
 @implementation FBSDKLoginCompletionParameters
 
 - (instancetype)init
@@ -171,12 +110,6 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
     handler(_parameters);
   } else if (_parameters.authenticationTokenString && nonce) {
     [self fetchAndSetPropertiesForParameters:_parameters nonce:nonce handler:handler];
-    return;
-  } else if (_parameters.accessTokenString && !_parameters.userID) {
-    void (^handlerCopy)(FBSDKLoginCompletionParameters *) = [handler copy];
-    FBSDKLoginRequestMeAndPermissions(_parameters, ^{
-      handlerCopy(self->_parameters);
-    });
     return;
   } else {
     handler(_parameters);
