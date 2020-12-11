@@ -264,6 +264,7 @@ static UIApplicationState _applicationState;
 
   FBSDKAuthenticationToken *cachedAuthToken = FBSDKSettings.tokenCache.authenticationToken;
   [FBSDKAuthenticationToken setCurrentAuthenticationToken:cachedAuthToken];
+  [FBSDKAuthenticationStatusUtility checkAuthenticationStatus];
 #endif
   NSArray<id<FBSDKApplicationObserving>> *observers = [_applicationObservers allObjects];
   BOOL handled = NO;

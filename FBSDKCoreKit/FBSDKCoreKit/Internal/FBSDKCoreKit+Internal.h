@@ -36,6 +36,7 @@
 
  #if !TARGET_OS_TV
   #import "FBSDKAudioResourceLoader.h"
+  #import "FBSDKAuthenticationStatusUtility.h"
   #import "FBSDKBridgeAPI.h"
   #import "FBSDKBridgeAPI+Internal.h"
   #import "FBSDKCloseIcon.h"
@@ -70,6 +71,7 @@
  #import "FBSDKAppEventsUtility.h"
  #import "FBSDKApplicationDelegate+Internal.h"
  #import "FBSDKApplicationObserving.h"
+ #import "FBSDKAuthenticationStatusUtility.h"
  #import "FBSDKAuthenticationTokenFactory.h"
  #import "FBSDKBase64.h"
  #import "FBSDKButton+Subclass.h"
@@ -119,6 +121,7 @@
   #import "BridgeAPI/FBSDKBridgeAPI+Internal.h"
   #import "Cryptography/FBSDKCrypto.h"
   #import "FBSDKAudioResourceLoader.h"
+  #import "FBSDKAuthenticationStatusUtility.h"
   #import "FBSDKContainerViewController.h"
   #import "FBSDKMonotonicTime.h"
   #import "UI/FBSDKCloseIcon.h"

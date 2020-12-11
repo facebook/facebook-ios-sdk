@@ -1,3 +1,4 @@
+/* FBSDKAuthenticationTokenStatusChecker_h */
 // Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
 //
 // You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
@@ -18,15 +19,12 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKAuthenticationToken.h"
+@interface FBSDKAuthenticationStatusUtility : NSObject
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface FBSDKAuthenticationToken (Internal)
-
-- (NSDictionary *)claims;
-- (NSString *)jti;
+/**
+  Fetches the latest authentication status from server. This will invalidate
+  the current user session if the returned status is not authorized.
+ */
++ (void)checkAuthenticationStatus;
 
 @end
-
-NS_ASSUME_NONNULL_END
