@@ -24,9 +24,12 @@
 
 @interface FBSDKLoginCompletionParameters ()
 
+@property (nonatomic) FBSDKAuthenticationToken *authenticationToken;
+@property (nonatomic) FBSDKProfile *profile;
+
 @property (nonatomic, copy) NSString *accessTokenString;
 @property (nonatomic, copy) NSString *nonceString;
-@property (nonatomic, copy) NSString *idTokenString;
+@property (nonatomic, copy) NSString *authenticationTokenString;
 
 @property (nonatomic, copy) NSSet *permissions;
 @property (nonatomic, copy) NSSet *declinedPermissions;

@@ -132,9 +132,16 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   if ((self = [super init]) != nil) {
     _parameters = [[FBSDKLoginCompletionParameters alloc] init];
 
+    BOOL hasNonEmptyNonceString = [parameters[@"nonce"] length] > 0;
+    BOOL hasNonEmptyIdTokenString = [parameters[@"id_token"] length] > 0;
+
+    // TODO: T81282385 - Error if nonce and ID Token
+    // Nonce and id token are mutually exclusive parameters
+    // BOOL isInvalid = (hasNonEmptyNonceString && hasNonEmptyIdTokenString);
+
     if ([parameters[@"access_token"] length] > 0
-        || [parameters[@"nonce"] length] > 0
-        || [parameters[@"id_token"] length] > 0) {
+        || hasNonEmptyNonceString
+        || hasNonEmptyIdTokenString) {
       [self setParametersWithDictionary:parameters appID:appID];
     } else {
       [self setErrorWithDictionary:parameters];
@@ -148,23 +155,22 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   [self completeLoginWithHandler:handler nonce:nil];
 }
 
+/// Performs the work needed to populate the login completion parameters before they
+/// are used to determine login success, failure or cancellation.
 - (void)completeLoginWithHandler:(FBSDKLoginCompletionParametersBlock)handler
-                           nonce:(NSString *)nonce
+                           nonce:(nullable NSString *)nonce
 {
+  // If there is a nonceString then it means we logged in from the app.
   if (_parameters.nonceString) {
     [self exchangeNonceForTokenWithHandler:handler];
     return;
-  } else if (_parameters.idTokenString && nonce) {
-    FBSDKAuthenticationTokenBlock completion = ^(FBSDKAuthenticationToken *token) {
-      if (token) {
-        [FBSDKAuthenticationToken setCurrentAuthenticationToken:token];
-        FBSDKProfile.currentProfile = [FBSDKLoginURLCompleter createProfileWithToken:token];
-      } else {
-        self->_parameters.error = [FBSDKError errorWithCode:FBSDKLoginErrorInvalidIDToken message:@"Invalid ID token from login response."];
-      }
-      handler(self->_parameters);
-    };
-    [[FBSDKAuthenticationTokenFactory new] createTokenFromTokenString:_parameters.idTokenString nonce:nonce completion:completion];
+  } else if (_parameters.authenticationTokenString && !nonce) {
+    // If there is no nonce then somehow an auth token string was provided
+    // but the call did not originate from the sdk. This is not a valid state
+    _parameters.error = [FBSDKError errorWithCode:FBSDKLoginErrorUnknown message:@"Please try to login again"];
+    handler(_parameters);
+  } else if (_parameters.authenticationTokenString && nonce) {
+    [self fetchAndSetPropertiesForParameters:_parameters nonce:nonce handler:handler];
     return;
   } else if (_parameters.accessTokenString && !_parameters.userID) {
     void (^handlerCopy)(FBSDKLoginCompletionParameters *) = [handler copy];
@@ -172,9 +178,26 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
       handlerCopy(self->_parameters);
     });
     return;
+  } else {
+    handler(_parameters);
   }
+}
 
-  handler(_parameters);
+/// Sets authenticationToken and profile onto the provided parameters and calls the provided completion handler
+- (void)fetchAndSetPropertiesForParameters:(nonnull FBSDKLoginCompletionParameters *)parameters
+                                     nonce:(nonnull NSString *)nonce
+                                   handler:(FBSDKLoginCompletionParametersBlock)handler
+{
+  FBSDKAuthenticationTokenBlock completion = ^(FBSDKAuthenticationToken *token) {
+    if (token) {
+      parameters.authenticationToken = token;
+      parameters.profile = [FBSDKLoginURLCompleter createProfileWithToken:token];
+    } else {
+      parameters.error = [FBSDKError errorWithCode:FBSDKLoginErrorInvalidIDToken message:@"Invalid ID token from login response."];
+    }
+    handler(parameters);
+  };
+  [[FBSDKAuthenticationTokenFactory new] createTokenFromTokenString:_parameters.authenticationTokenString nonce:nonce completion:completion];
 }
 
 - (void)setParametersWithDictionary:(NSDictionary *)parameters appID:(NSString *)appID
@@ -187,7 +210,7 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
 
   _parameters.accessTokenString = parameters[@"access_token"];
   _parameters.nonceString = parameters[@"nonce"];
-  _parameters.idTokenString = parameters[@"id_token"];
+  _parameters.authenticationTokenString = parameters[@"id_token"];
 
   // check the string length so that we assign an empty set rather than a set with an empty string
   _parameters.permissions = (grantedPermissionsString.length > 0)

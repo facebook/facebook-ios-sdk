@@ -22,8 +22,12 @@
 
 #import <Foundation/Foundation.h>
 
-@class FBSDKLoginManager;
+@class FBSDKAuthenticationToken;
 @class FBSDKLoginCompletionParameters;
+@class FBSDKLoginManager;
+@class FBSDKProfile;
+
+NS_ASSUME_NONNULL_BEGIN
 
 /**
  Success Block
@@ -33,7 +37,7 @@ NS_SWIFT_NAME(LoginCompletionParametersBlock);
 
 /**
   Structured interface for accessing the parameters used to complete a log in request.
- If \c accessTokenString is non-<code>nil</code>, the authentication succeeded. If \c error is
+ If \c authenticationTokenString is non-<code>nil</code>, the authentication succeeded. If \c error is
  non-<code>nil</code> the request failed. If both are \c nil, the request was cancelled.
  */
 NS_SWIFT_NAME(LoginCompletionParameters)
@@ -42,9 +46,12 @@ NS_SWIFT_NAME(LoginCompletionParameters)
 - (instancetype)init NS_DESIGNATED_INITIALIZER;
 - (instancetype)initWithError:(NSError *)error;
 
+@property (nonatomic, readonly) FBSDKAuthenticationToken *authenticationToken;
+@property (nonatomic, readonly) FBSDKProfile *profile;
+
 @property (nonatomic, copy, readonly) NSString *accessTokenString;
 @property (nonatomic, copy, readonly) NSString *nonceString;
-@property (nonatomic, copy, readonly) NSString *idTokenString;
+@property (nonatomic, copy, readonly) NSString *authenticationTokenString;
 
 @property (nonatomic, copy, readonly) NSSet *permissions;
 @property (nonatomic, copy, readonly) NSSet *declinedPermissions;
@@ -77,7 +84,7 @@ NS_SWIFT_NAME(LoginCompleting)
  See the implementing class's documentation for whether it completes synchronously or asynchronously.
  */
 - (void)completeLoginWithHandler:(FBSDKLoginCompletionParametersBlock)handler
-    nonce:(NSString *)nonce;
+    nonce:(nullable NSString *)nonce;
 
 @end
 
@@ -100,5 +107,7 @@ NS_SWIFT_NAME(LoginURLCompleter)
 - (instancetype)initWithURLParameters:(NSDictionary *)parameters appID:(NSString *)appID;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

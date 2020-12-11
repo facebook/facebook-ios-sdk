@@ -207,22 +207,11 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   FBSDKLoginManagerLoginResult *result = nil;
   NSError *error = parameters.error;
 
-  NSString *tokenString = parameters.accessTokenString;
-  BOOL cancelled = ((tokenString == nil) && (FBSDKAuthenticationToken.currentAuthenticationToken == nil));
+  NSString *accessTokenString = parameters.accessTokenString;
+  BOOL cancelled = ((accessTokenString == nil) && (parameters.authenticationToken == nil));
 
-  BOOL challengePassed = YES;
-  if (expectChallenge) {
-    // Perform this check early so we be sure to clear expected challenge in all cases.
-    NSString *challengeReceived = parameters.challenge;
-    NSString *challengeExpected = [[self loadExpectedChallenge] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
-    if (![challengeExpected isEqualToString:challengeReceived]) {
-      challengePassed = NO;
-    }
-
-    // Don't overwrite an existing error, if any.
-    if (!error && !cancelled && !challengePassed) {
-      error = [NSError fbErrorForFailedLoginWithCode:FBSDKLoginErrorBadChallengeString];
-    }
+  if (expectChallenge && !cancelled && !error) {
+    error = [self _verifyChallengeWithCompletionParameters:parameters];
   }
 
   [self storeExpectedChallenge:nil];
@@ -232,13 +221,18 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
       NSSet *grantedPermissions = parameters.permissions;
       NSSet *declinedPermissions = parameters.declinedPermissions;
 
+      // Recent permissions are largely based on the existence of an access token
+      // without an access token the 'recent' permissions will match the
+      // intersect of the granted permissions and the requested permissions.
+      // This is important because we want to create a 'result' that accurately reflects
+      // the currently granted permissions even when there is no access token.
       [self determineRecentlyGrantedPermissions:&recentlyGrantedPermissions
                     recentlyDeclinedPermissions:&recentlyDeclinedPermissions
                            forGrantedPermission:grantedPermissions
                             declinedPermissions:declinedPermissions];
 
       if (recentlyGrantedPermissions.count > 0) {
-        if (!tokenString) {
+        if (!accessTokenString) {
           // If there is no token string then create a 'tokenless' result
           // from the returned permissions
           result = [[FBSDKLoginManagerLoginResult alloc] initWithToken:nil
@@ -246,7 +240,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
                                                     grantedPermissions:grantedPermissions
                                                    declinedPermissions:declinedPermissions];
         } else {
-          FBSDKAccessToken *token = [[FBSDKAccessToken alloc] initWithTokenString:tokenString
+          FBSDKAccessToken *token = [[FBSDKAccessToken alloc] initWithTokenString:accessTokenString
                                                                       permissions:grantedPermissions.allObjects
                                                               declinedPermissions:declinedPermissions.allObjects
                                                                expiredPermissions:@[]
@@ -285,11 +279,46 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
     }
   }
 
-  if (result.token) {
-    [FBSDKAccessToken setCurrentAccessToken:result.token];
-  }
+  [self _setGlobalPropertiesWithParameters:parameters result:result];
 
   [self invokeHandler:result error:error];
+}
+
+- (void)_setGlobalPropertiesWithParameters:(FBSDKLoginCompletionParameters *)parameters
+                                    result:(FBSDKLoginManagerLoginResult *)result
+{
+  BOOL hasNewAuthenticationToken = (parameters.authenticationToken != nil);
+  BOOL hasNewOrUpdatedAccessToken = (result.token != nil);
+
+  if (!hasNewAuthenticationToken && !hasNewOrUpdatedAccessToken) {
+    // Assume cancellation. Don't do anything
+  } else {
+    [self _setSharedAuthenticationToken:parameters.authenticationToken
+                            accessToken:result.token
+                                profile:parameters.profile];
+  }
+}
+
+/// Helper for setting global properties
+- (void)_setSharedAuthenticationToken:(FBSDKAuthenticationToken *_Nullable)authToken
+                          accessToken:(FBSDKAccessToken *_Nullable)accessToken
+                              profile:(FBSDKProfile *_Nullable)profile
+{
+  FBSDKAuthenticationToken.currentAuthenticationToken = authToken;
+  FBSDKAccessToken.currentAccessToken = accessToken;
+  FBSDKProfile.currentProfile = profile;
+}
+
+/// Returns an error if a stored challenge cannot be obtained from the completion parameters
+- (NSError *)_verifyChallengeWithCompletionParameters:(FBSDKLoginCompletionParameters *)parameters
+{
+  NSString *challengeReceived = parameters.challenge;
+  NSString *challengeExpected = [[self loadExpectedChallenge] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
+  if (![challengeExpected isEqualToString:challengeReceived]) {
+    return [NSError fbErrorForFailedLoginWithCode:FBSDKLoginErrorBadChallengeString];
+  } else {
+    return nil;
+  }
 }
 
 - (void)determineRecentlyGrantedPermissions:(NSSet **)recentlyGrantedPermissionsRef
