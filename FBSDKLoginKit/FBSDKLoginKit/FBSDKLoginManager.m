@@ -92,7 +92,10 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
     return;
   }
   if (!configuration) {
-    NSError *error = [FBSDKError errorWithCode:FBSDKErrorInvalidArgument message:@"Attempting to login with a nil configuration"];
+    NSString *failureMessage = @"Cannot login without a valid login configuration. Please make sure the `LoginConfiguration` provided is non-nil";
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                           logEntry:failureMessage];
+    NSError *error = [FBSDKError errorWithCode:FBSDKErrorInvalidArgument message:failureMessage];
     completion(nil, error);
     return;
   }
