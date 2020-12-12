@@ -415,6 +415,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   NSString *responseType;
   if (configuration.betaLoginExperience == FBSDKBetaLoginExperienceRestricted) {
     responseType = @"id_token";
+    [FBSDKTypeUtility dictionary:loginParams setObject:@"sentinel_test_value" forKey:@"tp"];
   } else {
     responseType = @"id_token,token_or_nonce,signed_request,graph_domain";
   }
