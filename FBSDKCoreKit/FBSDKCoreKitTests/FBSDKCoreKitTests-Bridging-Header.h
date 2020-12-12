@@ -28,27 +28,22 @@
 #import "FBSDKTestCase.h"
 #import "FakeBundle.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 // Interfaces for Swift extensions on Objective-C Test classes
 @interface FBSDKAppEventsUtilityTests : FBSDKTestCase
 @end
 
 // Categories needed to expose private methods to Swift
 @interface FBSDKAppEventsConfigurationManager (Testing)
-+ (void)_processResponse:(id)response error:(NSError *)error;
++ (void)_processResponse:(id)response error:(nullable NSError *)error;
 @end
 
 @interface FBSDKCloseIcon (Testing)
-- (UIImage *)imageWithSize:(CGSize)size
-              primaryColor:(UIColor *)primaryColor
-            secondaryColor:(UIColor *)secondaryColor
-                     scale:(CGFloat)scale;
-@end
-
-@interface FBSDKAuthenticationToken (Testing)
-- (instancetype)initWithTokenString:(NSString *)tokenString
-                              nonce:(NSString *)nonce
-                             claims:(NSDictionary *)claims
-                                jti:(NSString *)jti;
+- (nullable UIImage *)imageWithSize:(CGSize)size
+                       primaryColor:(UIColor *)primaryColor
+                     secondaryColor:(UIColor *)secondaryColor
+                              scale:(CGFloat)scale;
 @end
 
 NS_SWIFT_NAME(FBProfilePictureViewState)
@@ -65,20 +60,22 @@ NS_SWIFT_NAME(FBProfilePictureViewState)
 @end
 
 @interface FBSDKAccessToken (Testing)
-+ (void)setCurrentAccessToken:(FBSDKAccessToken *)token
-        shouldDispatchNotif:(BOOL)shouldDispatchNotif;
++ (void)setCurrentAccessToken:(nullable FBSDKAccessToken *)token
+          shouldDispatchNotif:(BOOL)shouldDispatchNotif;
 @end
 
 @interface FBSDKProfile (Testing)
 + (void)setCurrentProfile:(nullable FBSDKProfile *)profile
- shouldPostNotification:(BOOL)shouldPostNotification;
+   shouldPostNotification:(BOOL)shouldPostNotification;
 @end
 
 @interface FBSDKAuthenticationToken (Testing)
 - (instancetype)initWithTokenString:(NSString *)tokenString
                               nonce:(NSString *)nonce
-                             claims:(NSDictionary *)claims
+                             claims:(nullable NSDictionary *)claims
                                 jti:(NSString *)jti;
-+ (void)setCurrentAuthenticationToken:(FBSDKAuthenticationToken *)token
-             shouldPostNotification:(BOOL)shouldPostNotification;
++ (void)setCurrentAuthenticationToken:(nullable FBSDKAuthenticationToken *)token
+               shouldPostNotification:(BOOL)shouldPostNotification;
 @end
+
+NS_ASSUME_NONNULL_END

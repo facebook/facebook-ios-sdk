@@ -427,7 +427,7 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
   }];
 }
 
-- (void)_updateContentForUserProfile:(FBSDKProfile *)profile
+- (void)_updateContentForUserProfile:(nullable FBSDKProfile *)profile
 {
   self.selected = profile != nil;
 

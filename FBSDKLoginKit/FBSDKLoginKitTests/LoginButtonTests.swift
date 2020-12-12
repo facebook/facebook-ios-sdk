@@ -381,7 +381,7 @@ private class TestButton: FBLoginButton {
     super._updateContentForAccessToken()
   }
 
-  override func _updateContent(forUserProfile profile: Profile!) {
+  override func _updateContent(forUserProfile profile: Profile?) {
     updateContentForProfileCallCount += 1
 
     super._updateContent(forUserProfile: profile)

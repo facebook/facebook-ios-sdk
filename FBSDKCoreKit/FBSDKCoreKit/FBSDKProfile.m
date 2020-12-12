@@ -95,7 +95,7 @@ static FBSDKProfile *g_currentProfile;
   return self;
 }
 
-+ (FBSDKProfile *)currentProfile
++ (nullable FBSDKProfile *)currentProfile
 {
   return g_currentProfile;
 }

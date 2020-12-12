@@ -69,7 +69,7 @@ NSString *const FBSDKAuthenticationTokenJtiCodingKey = @"FBSDKAuthenticationToke
   return self;
 }
 
-+ (FBSDKAuthenticationToken *)currentAuthenticationToken
++ (nullable FBSDKAuthenticationToken *)currentAuthenticationToken
 {
   return g_currentAuthenticationToken;
 }

@@ -258,7 +258,7 @@ class TestView: FBProfilePictureView {
     super._updateImageWithProfile()
   }
 
-  override func _fetchAndSetImage(with url:URL?, state:FBProfilePictureViewState!) {
+  override func _fetchAndSetImage(with url:URL?, state:FBProfilePictureViewState) {
     fetchAndSetImageCount += 1
   }
 }
