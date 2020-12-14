@@ -88,6 +88,11 @@ NSString *const FBSDKAuthenticationTokenJtiCodingKey = @"FBSDKAuthenticationToke
   }
 }
 
+- (NSDictionary *)claims
+{
+  return _claims;
+}
+
 - (NSString *)jti
 {
   return _jti;
@@ -131,11 +136,6 @@ NSString *const FBSDKAuthenticationTokenJtiCodingKey = @"FBSDKAuthenticationToke
 + (void)resetCurrentAuthenticationTokenCache
 {
   g_currentAuthenticationToken = nil;
-}
-
-- (NSDictionary *)claims
-{
-  return _claims;
 }
 
 #endif
