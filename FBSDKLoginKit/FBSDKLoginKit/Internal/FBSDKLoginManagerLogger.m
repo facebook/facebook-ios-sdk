@@ -120,6 +120,7 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
 - (void)endSession
 {
   [self logEvent:FBSDKAppEventNameFBSessionAuthEnd result:_lastResult error:_lastError];
+  [FBSDKAppEvents flush];
 }
 
 - (void)startAuthMethod:(NSString *)authMethod
@@ -150,6 +151,16 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
   [_extras addEntriesFromDictionary:result.loggingExtras];
 
   [self logEvent:FBSDKAppEventNameFBSessionAuthMethodEnd result:resultString error:error];
+}
+
+- (void)postLoginHeartbeat
+{
+  [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(heartbestTimerDidFire) userInfo:nil repeats:NO];
+}
+
+- (void)heartbestTimerDidFire
+{
+  [self logEvent:FBSDKAppEventNameFBSessionAuthHeartbeat result:_lastResult error:_lastError];
 }
 
 - (NSDictionary *)parametersWithTimeStampAndClientState:(NSDictionary *)loginParams forAuthMethod:(NSString *)authMethod

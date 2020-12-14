@@ -44,6 +44,8 @@ NS_SWIFT_NAME(LoginManagerLogger)
 - (void)startAuthMethod:(NSString *)authMethod;
 - (void)endLoginWithResult:(FBSDKLoginManagerLoginResult *)result error:(NSError *)error;
 
+- (void)postLoginHeartbeat;
+
 - (NSDictionary *)parametersWithTimeStampAndClientState:(NSDictionary *)loginParams forAuthMethod:(NSString *)authMethod;
 - (void)willAttemptAppSwitchingBehavior;
 

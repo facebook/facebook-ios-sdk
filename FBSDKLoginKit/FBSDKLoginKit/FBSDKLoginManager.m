@@ -357,6 +357,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 {
   [_logger endLoginWithResult:result error:error];
   [_logger endSession];
+  [_logger postLoginHeartbeat];
   _logger = nil;
   _state = FBSDKLoginManagerStateIdle;
 

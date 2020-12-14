@@ -79,6 +79,9 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSessionAuthMethodStart;
 /** Use to log the end of the last tried auth method as part of an auth request */
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSessionAuthMethodEnd;
 
+/** Use to log the post-login heartbeat event after  the end of an auth request*/
+FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSessionAuthHeartbeat;
+
 /** Use to log the start of a referral request */
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBReferralStart;
 
