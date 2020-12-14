@@ -131,4 +131,20 @@
   XCTAssertNotNil(FBSDKProfile.currentProfile, @"Profile should not be cleared when no status returned");
 }
 
+- (void)testHandleFailedResponse
+{
+  NSURL *url = [NSURL URLWithString:@"m.facebook.com/platform/oidc/status/"];
+  NSDictionary *header = @{@"fb-s" : @"connected"};
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:url
+                                                            statusCode:401
+                                                           HTTPVersion:nil
+                                                          headerFields:header];
+
+  [FBSDKAuthenticationStatusUtility _handleResponse:response];
+
+  XCTAssertNotNil(FBSDKAuthenticationToken.currentAuthenticationToken, @"Authentication token should not be cleared when the request failed");
+  XCTAssertNotNil(FBSDKAccessToken.currentAccessToken, @"Access token should not be cleared when the request failed");
+  XCTAssertNotNil(FBSDKProfile.currentProfile, @"Profile should not be cleared when the request failed");
+}
+
 @end

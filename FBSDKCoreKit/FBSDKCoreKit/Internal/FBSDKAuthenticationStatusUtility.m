@@ -59,6 +59,11 @@ static NSString *const FBSDKOIDCStatusPath = @"/platform/oidc/status";
 + (void)_handleResponse:(NSURLResponse *)response
 {
   NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+
+  if (httpResponse.statusCode != 200) {
+    return;
+  }
+
   if ([httpResponse respondsToSelector:@selector(allHeaderFields)]) {
     NSDictionary *header = [httpResponse allHeaderFields];
     NSString *status = [FBSDKTypeUtility dictionary:header objectForKey:@"fb-s" ofType:NSString.class];
