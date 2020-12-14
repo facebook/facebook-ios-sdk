@@ -25,6 +25,7 @@
 #import "FBSDKSKAdNetworkEvent.h"
 #import "FBSDKSKAdNetworkRule.h"
 #import "FBSDKServerConfigurationFixtures.h"
+#import "FBSDKSessionProviding.h"
 #import "FBSDKTestCase.h"
 #import "FakeBundle.h"
 

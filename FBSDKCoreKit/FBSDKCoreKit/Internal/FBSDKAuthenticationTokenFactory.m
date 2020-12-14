@@ -34,7 +34,17 @@
 
 #import <CommonCrypto/CommonCrypto.h>
 
+#import "FBSDKSessionProviding.h"
+
 static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
+
+static NSString *const FBSDKDefaultDomain = @"facebook.com";
+static NSString *const FBSDKBeginCertificate = @"-----BEGIN CERTIFICATE-----";
+static NSString *const FBSDKEndCertificate = @"-----END CERTIFICATE-----";
+
+typedef void (^FBSDKPublicCertCompletionBlock)(SecCertificateRef cert);
+typedef void (^FBSDKPublicKeyCompletionBlock)(SecKeyRef key);
+typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 @interface FBSDKAuthenticationToken (FactoryInitializer)
 
@@ -50,13 +60,28 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
   NSDictionary *_claims;
   NSDictionary *_header;
   NSString *_signature;
+  id<FBSDKSessionProviding> _sessionProvider;
+}
+
+- (instancetype)init
+{
+  self = [self initWithSessionProvider:NSURLSession.sharedSession];
+  return self;
+}
+
+- (instancetype)initWithSessionProvider:(id<FBSDKSessionProviding>)sessionProvider
+{
+  if ((self = [super init])) {
+    _sessionProvider = sessionProvider;
+  }
+  return self;
 }
 
 - (void)createTokenFromTokenString:(NSString *_Nonnull)tokenString
                              nonce:(NSString *)nonce
                         completion:(FBSDKAuthenticationTokenBlock)completion
 {
-  if (!tokenString || tokenString.length == 0 || !nonce || nonce.length == 0) {
+  if (tokenString.length == 0 || nonce.length == 0) {
     completion(nil);
     return;
   }
@@ -76,25 +101,30 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
   signature = [FBSDKTypeUtility array:segments objectAtIndex:2];
 
   claims = [FBSDKAuthenticationTokenFactory validatedClaimsWithEncodedString:encodedClaims nonce:nonce];
-  header = [FBSDKAuthenticationTokenFactory validatedHeaderWithEncodedString:encodedHeader];
 
-  if (!claims || !header) {
+  // TODO: Make header a qualified object - T81294823
+  header = [FBSDKAuthenticationTokenFactory validatedHeaderWithEncodedString:encodedHeader];
+  NSString *certificateKey = [FBSDKTypeUtility dictionary:header
+                                             objectForKey:@"kid"
+                                                   ofType:NSString.class];
+
+  if (!claims || !header || !certificateKey) {
     completion(nil);
     return;
   }
 
-  // TODO: Add back when signatures can be consistently verified - T81105008
-  // if (![self verifySignature:signature
-  // header:encodedHeader
-  // claims:encodedClaims]) {
-  // completion(nil);
-  // return;
-  // }
-
-  FBSDKAuthenticationToken *token = [[FBSDKAuthenticationToken alloc]initWithTokenString:tokenString
-                                                                                   nonce:nonce
-                                                                                  claims:claims];
-  completion(token);
+  [self verifySignature:signature
+                 header:encodedHeader
+                 claims:encodedClaims
+         certificateKey:certificateKey
+             completion:^(BOOL success) {
+               if (success) {
+                 FBSDKAuthenticationToken *token = [[FBSDKAuthenticationToken alloc] initWithTokenString:tokenString nonce:nonce claims:claims];
+                 completion(token);
+               } else {
+                 completion(nil);
+               }
+             }];
 }
 
 + (NSDictionary *)validatedClaimsWithEncodedString:(NSString *)encodedClaims nonce:(NSString *)nonce
@@ -140,73 +170,120 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
   return nil;
 }
 
-- (BOOL)verifySignature:(NSString *)signature
+- (void)verifySignature:(NSString *)signature
                  header:(NSString *)header
                  claims:(NSString *)claims
+         certificateKey:(NSString *)certificateKey
+             completion:(FBSDKVerifySignatureCompletionBlock)completion
 {
 #if DEBUG
   // skip signature checking for tests
-  if (_skipSignatureVerification) {
-    return YES;
+  if (_skipSignatureVerification && completion) {
+    completion(YES);
   }
 #endif
 
-  NSData *signatureData = [FBSDKBase64 decodeAsData:[FBSDKAuthenticationTokenFactory base64FromBase64Url:signature]];
+  NSData *signatureData = [FBSDKBase64 decodeAsData:[FBSDKAuthenticationTokenFactory
+                                                     base64FromBase64Url:signature]];
   NSString *signedString = [NSString stringWithFormat:@"%@.%@", header, claims];
   NSData *signedData = [signedString dataUsingEncoding:NSASCIIStringEncoding];
-  SecKeyRef publicKey = [self getPublicKey];
+  [self getPublicKeyWithCertificateKey:certificateKey
+                            completion:^(SecKeyRef key) {
+                              if (key && signatureData && signedData) {
+                                size_t signatureBytesSize = SecKeyGetBlockSize(key);
+                                const void *signatureBytes = signatureData.bytes;
 
-  if (publicKey && signatureData && signedData) {
-    OSStatus status = -1;
+                                size_t digestSize = CC_SHA256_DIGEST_LENGTH;
+                                uint8_t digestBytes[digestSize];
+                                CC_SHA256(signedData.bytes, (CC_LONG)signedData.length, digestBytes);
 
-    size_t signatureBytesSize = SecKeyGetBlockSize(publicKey);
-    const void *signatureBytes = signatureData.bytes;
-
-    size_t digestSize = CC_SHA256_DIGEST_LENGTH;
-    uint8_t digestBytes[digestSize];
-    CC_SHA256(signedData.bytes, (CC_LONG)signedData.length, digestBytes);
-
-    status = SecKeyRawVerify(
-      publicKey,
-      kSecPaddingPKCS1SHA256,
-      digestBytes,
-      digestSize,
-      signatureBytes,
-      signatureBytesSize
-    );
-    return status == errSecSuccess;
-  }
-  return NO;
+                                OSStatus status = SecKeyRawVerify(
+                                  key,
+                                  kSecPaddingPKCS1SHA256,
+                                  digestBytes,
+                                  digestSize,
+                                  signatureBytes,
+                                  signatureBytesSize
+                                );
+                                fb_dispatch_on_main_thread(^{
+                                  completion(status == errSecSuccess);
+                                });
+                              } else {
+                                fb_dispatch_on_main_thread(^{
+                                  completion(NO);
+                                });
+                              }
+                            }];
 }
 
-- (NSString *)getCertificate
+- (void)getPublicKeyWithCertificateKey:(NSString *)certificateKey
+                            completion:(FBSDKPublicKeyCompletionBlock)completion
 {
-  // TODO(T79340096): replace with certificate retrieved from crypto keychain service
-  return _cert;
+  [self getCertificateWithKey:certificateKey
+                   completion:^(SecCertificateRef cert) {
+                     SecKeyRef publicKey = nil;
+
+                     if (cert) {
+                       SecPolicyRef policy = SecPolicyCreateBasicX509();
+                       OSStatus status = -1;
+                       SecTrustRef trust;
+
+                       status = SecTrustCreateWithCertificates(cert, policy, &trust);
+
+                       if (status == errSecSuccess && trust) {
+                         publicKey = SecTrustCopyPublicKey(trust);
+                       }
+
+                       CFRelease(policy);
+                       CFRelease(cert);
+                     }
+
+                     completion(publicKey);
+                   }];
 }
 
-- (SecKeyRef)getPublicKey
+- (void)getCertificateWithKey:(NSString *)certificateKey
+                   completion:(FBSDKPublicCertCompletionBlock)completion
 {
-  SecKeyRef publicKey = nil;
-  NSData *certData = [FBSDKBase64 decodeAsData:[self getCertificate]];
-  SecCertificateRef cert = SecCertificateCreateWithData(kCFAllocatorDefault, (__bridge CFDataRef)certData);
+  NSURLRequest *request = [NSURLRequest requestWithURL:[self _certificateEndpoint]];
+  [[_sessionProvider dataTaskWithRequest:request
+                       completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
+                         if (error || !data) {
+                           return completion(nil);
+                         }
 
-  if (cert) {
-    SecPolicyRef policy = SecPolicyCreateBasicX509();
-    OSStatus status = -1;
-    SecTrustRef trust;
+                         if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+                           NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                           if (httpResponse.statusCode != 200) {
+                             return completion(nil);
+                           }
+                         }
 
-    status = SecTrustCreateWithCertificates(cert, policy, &trust);
+                         SecCertificateRef result = NULL;
+                         NSDictionary *certs = [FBSDKTypeUtility JSONObjectWithData:data options:0 error:nil];
+                         NSString *certString = [FBSDKTypeUtility dictionary:certs objectForKey:certificateKey ofType:NSString.class];
+                         if (!certString) {
+                           return completion(nil);
+                         }
+                         certString = [certString stringByReplacingOccurrencesOfString:FBSDKBeginCertificate withString:@""];
+                         certString = [certString stringByReplacingOccurrencesOfString:FBSDKEndCertificate withString:@""];
+                         certString = [certString stringByReplacingOccurrencesOfString:@"\n" withString:@""];
 
-    if (status == errSecSuccess && trust) {
-      publicKey = SecTrustCopyPublicKey(trust);
-    }
+                         NSData *secCertificateData = [[NSData alloc] initWithBase64EncodedString:certString options:0];
+                         result = SecCertificateCreateWithData(kCFAllocatorDefault, (__bridge CFDataRef)secCertificateData);
+                         completion(result);
+                       }] resume];
+}
 
-    CFRelease(policy);
-    CFRelease(cert);
-  }
+- (NSURL *)_certificateEndpoint
+{
+  NSError *error;
+  NSURL *url = [FBSDKInternalUtility unversionedFacebookURLWithHostPrefix:@"m"
+                                                                     path:@"/.well-known/oauth/openid/certs/"
+                                                          queryParameters:@{}
+                                                                    error:&error];
 
-  return publicKey;
+  return url;
 }
 
 + (NSString *)base64FromBase64Url:(NSString *)base64Url

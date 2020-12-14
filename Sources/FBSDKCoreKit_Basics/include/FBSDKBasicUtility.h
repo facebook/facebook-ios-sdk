@@ -21,6 +21,18 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ Dispatches the specified block on the main thread.
+ @param block the block to dispatch
+ */
+extern void fb_dispatch_on_main_thread(dispatch_block_t block);
+
+/**
+ Dispatches the specified block on the default thread.
+ @param block the block to dispatch
+ */
+extern void fb_dispatch_on_default_thread(dispatch_block_t block);
+
+/**
  Describes the callback for appLinkFromURLInBackground.
  @param object the FBSDKAppLink representing the deferred App Link
  @param stop the error during the request, if any

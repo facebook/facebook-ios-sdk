@@ -28,6 +28,24 @@
 static NSString *const FBSDK_BASICUTILITY_ANONYMOUSIDFILENAME = @"com-facebook-sdk-PersistedAnonymousID.json";
 static NSString *const FBSDK_BASICUTILITY_ANONYMOUSID_KEY = @"anon_id";
 
+void fb_dispatch_on_main_thread(dispatch_block_t block)
+{
+  if (block != nil) {
+    if ([NSThread isMainThread]) {
+      block();
+    } else {
+      dispatch_async(dispatch_get_main_queue(), block);
+    }
+  }
+}
+
+void fb_dispatch_on_default_thread(dispatch_block_t block)
+{
+  if (block != nil) {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block);
+  }
+}
+
 @protocol BASIC_FBSDKError
 
 + (NSError *)invalidArgumentErrorWithName:(NSString *)name value:(id)value message:(NSString *)message;

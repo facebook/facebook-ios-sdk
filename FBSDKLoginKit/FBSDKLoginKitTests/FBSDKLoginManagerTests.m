@@ -108,7 +108,8 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
   _header = @{
     @"alg" : @"RS256",
-    @"typ" : @"JWT"
+    @"typ" : @"JWT",
+    @"kid" : @"abcd1234",
   };
 }
 

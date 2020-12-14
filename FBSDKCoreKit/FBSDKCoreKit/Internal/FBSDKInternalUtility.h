@@ -125,6 +125,19 @@ NS_SWIFT_NAME(InternalUtility)
                                error:(NSError *__autoreleasing *)errorRef;
 
 /**
+  Constructs a Facebook URL that doesn't need to specify an API version.
+ @param hostPrefix The prefix for the host, such as 'm', 'graph', etc.
+ @param path The path for the URL.  This may or may not include a version.
+ @param queryParameters The query parameters for the URL.  This will be converted into a query string.
+ @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
+ @return The Facebook URL.
+ */
++ (NSURL *)unversionedFacebookURLWithHostPrefix:(NSString *)hostPrefix
+                                           path:(NSString *)path
+                                queryParameters:(NSDictionary *)queryParameters
+                                          error:(NSError *__autoreleasing *)errorRef;
+
+/**
   Tests whether the supplied URL is a valid URL for opening in the browser.
  @param URL The URL to test.
  @return YES if the URL refers to an http or https resource, otherwise NO.
