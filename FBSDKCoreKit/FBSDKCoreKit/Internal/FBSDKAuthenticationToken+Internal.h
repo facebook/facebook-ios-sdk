@@ -18,7 +18,11 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKAuthenticationToken.h"
+#if SWIFT_PACKAGE
+ #import "FBSDKAuthenticationToken.h"
+#else
+ #import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
