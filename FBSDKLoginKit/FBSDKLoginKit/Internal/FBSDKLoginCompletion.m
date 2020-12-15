@@ -102,7 +102,6 @@
   // If there is a nonceString then it means we logged in from the app.
   if (_parameters.nonceString) {
     [self exchangeNonceForTokenWithHandler:handler];
-    return;
   } else if (_parameters.authenticationTokenString && !nonce) {
     // If there is no nonce then somehow an auth token string was provided
     // but the call did not originate from the sdk. This is not a valid state
@@ -110,7 +109,6 @@
     handler(_parameters);
   } else if (_parameters.authenticationTokenString && nonce) {
     [self fetchAndSetPropertiesForParameters:_parameters nonce:nonce handler:handler];
-    return;
   } else {
     handler(_parameters);
   }
