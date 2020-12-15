@@ -32,6 +32,8 @@
  #import "FBSDKCoreKit+Internal.h"
 #endif
 
+#import "FBSDKAuthenticationTokenClaims.h"
+
 static FBSDKAuthenticationToken *g_currentAuthenticationToken;
 
 NSString *const FBSDKAuthenticationTokenTokenStringCodingKey = @"FBSDKAuthenticationTokenTokenStringCodingKey";
@@ -40,24 +42,23 @@ NSString *const FBSDKAuthenticationTokenJtiCodingKey = @"FBSDKAuthenticationToke
 
 @implementation FBSDKAuthenticationToken
 {
-  NSDictionary *_claims;
+  FBSDKAuthenticationTokenClaims *_claims;
   NSString *_jti;
 }
 
 - (instancetype)initWithTokenString:(NSString *)tokenString
                               nonce:(NSString *)nonce
-                             claims:(NSDictionary *)claims
+                             claims:(nullable FBSDKAuthenticationTokenClaims *)claims
 {
-  self = [self initWithTokenString:tokenString
+  return [self initWithTokenString:tokenString
                              nonce:nonce
                             claims:claims
-                               jti:claims[@"jti"]];
-  return self;
+                               jti:claims.jti];
 }
 
 - (instancetype)initWithTokenString:(NSString *)tokenString
                               nonce:(NSString *)nonce
-                             claims:(NSDictionary *)claims
+                             claims:(nullable FBSDKAuthenticationTokenClaims *)claims
                                 jti:(NSString *)jti
 {
   if ((self = [super init])) {
@@ -88,14 +89,14 @@ NSString *const FBSDKAuthenticationTokenJtiCodingKey = @"FBSDKAuthenticationToke
   }
 }
 
-- (NSDictionary *)claims
-{
-  return _claims;
-}
-
 - (NSString *)jti
 {
   return _jti;
+}
+
+- (nullable FBSDKAuthenticationTokenClaims *)claims
+{
+  return _claims;
 }
 
 #pragma mark Storage
@@ -116,10 +117,7 @@ NSString *const FBSDKAuthenticationTokenJtiCodingKey = @"FBSDKAuthenticationToke
   NSString *nonce = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKAuthenticationTokenNonceCodingKey];
   NSString *jti = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKAuthenticationTokenJtiCodingKey];
 
-  return [self initWithTokenString:tokenString
-                             nonce:nonce
-                            claims:nil
-                               jti:jti];
+  return [self initWithTokenString:tokenString nonce:nonce claims:nil jti:jti];
 }
 
 - (void)encodeWithCoder:(NSCoder *)encoder

@@ -100,7 +100,7 @@ static FBSDKProfile *g_currentProfile;
   return g_currentProfile;
 }
 
-+ (void)setCurrentProfile:(FBSDKProfile *)profile
++ (void)setCurrentProfile:(nullable FBSDKProfile *)profile
 {
   [self setCurrentProfile:profile shouldPostNotification:YES];
 }

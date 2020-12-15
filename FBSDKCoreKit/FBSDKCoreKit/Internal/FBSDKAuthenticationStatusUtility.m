@@ -92,7 +92,10 @@ static NSString *const FBSDKOIDCStatusPath = @"/platform/oidc/status";
   }
 
   NSURL *requestURL = [FBSDKInternalUtility URLWithScheme:@"https"
-                                                     host:host path:FBSDKOIDCStatusPath queryParameters:params error:&urlError];
+                                                     host:host
+                                                     path:FBSDKOIDCStatusPath
+                                          queryParameters:params
+                                                    error:&urlError];
   return urlError == nil ? requestURL : nil;
 }
 

@@ -37,14 +37,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 // Categories needed to expose private methods to Swift
 @interface FBSDKAppEventsConfigurationManager (Testing)
+
 + (void)_processResponse:(id)response error:(nullable NSError *)error;
+
 @end
 
 @interface FBSDKCloseIcon (Testing)
+
 - (nullable UIImage *)imageWithSize:(CGSize)size
                        primaryColor:(UIColor *)primaryColor
                      secondaryColor:(UIColor *)secondaryColor
                               scale:(CGFloat)scale;
+
 @end
 
 NS_SWIFT_NAME(FBProfilePictureViewState)
@@ -52,31 +56,40 @@ NS_SWIFT_NAME(FBProfilePictureViewState)
 @end
 
 @interface FBSDKProfilePictureView (Testing)
+
 - (void)_accessTokenDidChangeNotification:(NSNotification *)notification;
 - (void)_profileDidChangeNotification:(NSNotification *)notification;
 - (void)_updateImageWithProfile;
 - (void)_updateImageWithAccessToken;
 - (void)_updateImage;
 - (void)_fetchAndSetImageWithURL:(NSURL *)imageURL state:(FBSDKProfilePictureViewState *)state;
+
 @end
 
 @interface FBSDKAccessToken (Testing)
+
 + (void)setCurrentAccessToken:(nullable FBSDKAccessToken *)token
           shouldDispatchNotif:(BOOL)shouldDispatchNotif;
+
 @end
 
 @interface FBSDKProfile (Testing)
+
 + (void)setCurrentProfile:(nullable FBSDKProfile *)profile
    shouldPostNotification:(BOOL)shouldPostNotification;
+
 @end
 
 @interface FBSDKAuthenticationToken (Testing)
+
 - (instancetype)initWithTokenString:(NSString *)tokenString
                               nonce:(NSString *)nonce
-                             claims:(nullable NSDictionary *)claims
+                             claims:(nullable FBSDKAuthenticationTokenClaims *)claims
                                 jti:(NSString *)jti;
+
 + (void)setCurrentAuthenticationToken:(nullable FBSDKAuthenticationToken *)token
                shouldPostNotification:(BOOL)shouldPostNotification;
+
 @end
 
 NS_ASSUME_NONNULL_END

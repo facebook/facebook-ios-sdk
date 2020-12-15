@@ -34,9 +34,8 @@
 
 #import <CommonCrypto/CommonCrypto.h>
 
+#import "FBSDKAuthenticationTokenClaims.h"
 #import "FBSDKSessionProviding.h"
-
-static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
 
 static NSString *const FBSDKDefaultDomain = @"facebook.com";
 static NSString *const FBSDKBeginCertificate = @"-----BEGIN CERTIFICATE-----";
@@ -50,7 +49,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 - (instancetype)initWithTokenString:(NSString *)tokenString
                               nonce:(NSString *)nonce
-                             claims:(NSDictionary *)claims;
+                             claims:(nullable FBSDKAuthenticationTokenClaims *)claims;
 
 @end
 
@@ -87,7 +86,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   }
 
   NSString *signature;
-  NSDictionary *claims;
+  FBSDKAuthenticationTokenClaims *claims;
   NSDictionary *header;
 
   NSArray *segments = [tokenString componentsSeparatedByString:@"."];
@@ -100,9 +99,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   NSString *encodedClaims = [FBSDKTypeUtility array:segments objectAtIndex:1];
   signature = [FBSDKTypeUtility array:segments objectAtIndex:2];
 
-  claims = [FBSDKAuthenticationTokenFactory validatedClaimsWithEncodedString:encodedClaims nonce:nonce];
-
-  // TODO: Make header a qualified object - T81294823
+  claims = [FBSDKAuthenticationTokenClaims validatedClaimsWithEncodedString:encodedClaims nonce:nonce];
   header = [FBSDKAuthenticationTokenFactory validatedHeaderWithEncodedString:encodedHeader];
   NSString *certificateKey = [FBSDKTypeUtility dictionary:header
                                              objectForKey:@"kid"
@@ -127,38 +124,10 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
              }];
 }
 
-+ (NSDictionary *)validatedClaimsWithEncodedString:(NSString *)encodedClaims nonce:(NSString *)nonce
-{
-  NSError *error;
-  NSData *claimsData = [FBSDKBase64 decodeAsData:[FBSDKAuthenticationTokenFactory base64FromBase64Url:encodedClaims]];
-
-  if (claimsData) {
-    NSDictionary *claims = [FBSDKTypeUtility JSONObjectWithData:claimsData options:0 error:&error];
-    if (!error) {
-      long currentTime = [[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]] longValue];
-
-      // verify claims
-      BOOL isFacebook = [claims[@"iss"] isKindOfClass:[NSString class]] && [[[NSURL URLWithString:claims[@"iss"]] host] isEqualToString:@"facebook.com"];
-      BOOL audMatched = [claims[@"aud"] isKindOfClass:[NSString class]] && [claims[@"aud"] isEqualToString:[FBSDKSettings appID]];
-      BOOL isExpired = [claims[@"exp"] isKindOfClass:[NSNumber class]] && [(NSNumber *)claims[@"exp"] longValue] <= currentTime;
-      BOOL issuedRecently = [claims[@"iat"] isKindOfClass:[NSNumber class]] && [(NSNumber *)claims[@"iat"] longValue] >= currentTime - MaxTimeSinceTokenIssued;
-      BOOL nonceMatched = [claims[@"nonce"] isKindOfClass:[NSString class]] && [claims[@"nonce"] isEqualToString:nonce];
-      BOOL userIDValid = [claims[@"sub"] isKindOfClass:[NSString class]] && [claims[@"sub"] length] > 0;
-      BOOL hasJTI = [claims[@"jti"] isKindOfClass:[NSString class]] && [claims[@"jti"] length] > 0;
-
-      if (isFacebook && audMatched && !isExpired && issuedRecently && nonceMatched && userIDValid && hasJTI) {
-        return claims;
-      }
-    }
-  }
-
-  return nil;
-}
-
 + (NSDictionary *)validatedHeaderWithEncodedString:(NSString *)encodedHeader
 {
   NSError *error;
-  NSData *headerData = [FBSDKBase64 decodeAsData:[FBSDKAuthenticationTokenFactory base64FromBase64Url:encodedHeader]];
+  NSData *headerData = [FBSDKBase64 decodeAsData:[FBSDKBase64 base64FromBase64Url:encodedHeader]];
 
   if (headerData) {
     NSDictionary *header = [FBSDKTypeUtility JSONObjectWithData:headerData options:0 error:&error];
@@ -183,8 +152,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   }
 #endif
 
-  NSData *signatureData = [FBSDKBase64 decodeAsData:[FBSDKAuthenticationTokenFactory
-                                                     base64FromBase64Url:signature]];
+  NSData *signatureData = [FBSDKBase64 decodeAsData:[FBSDKBase64 base64FromBase64Url:signature]];
   NSString *signedString = [NSString stringWithFormat:@"%@.%@", header, claims];
   NSData *signedData = [signedString dataUsingEncoding:NSASCIIStringEncoding];
   [self getPublicKeyWithCertificateKey:certificateKey
@@ -286,14 +254,6 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   return url;
 }
 
-+ (NSString *)base64FromBase64Url:(NSString *)base64Url
-{
-  NSString *base64 = [base64Url stringByReplacingOccurrencesOfString:@"-" withString:@"+"];
-  base64 = [base64 stringByReplacingOccurrencesOfString:@"_" withString:@"/"];
-
-  return base64;
-}
-
 #pragma mark - Test methods
 
 #if DEBUG
@@ -313,11 +273,6 @@ static BOOL _skipSignatureVerification;
 - (void)setCertificate:(NSString *)certificate
 {
   _cert = certificate;
-}
-
-- (NSDictionary *)claims
-{
-  return _claims;
 }
 
 #endif

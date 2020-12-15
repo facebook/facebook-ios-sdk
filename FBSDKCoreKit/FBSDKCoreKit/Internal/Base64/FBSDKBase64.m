@@ -53,6 +53,14 @@ static FBSDKBase64 *_encoder;
   return [_encoder encodeString:string];
 }
 
++ (NSString *)base64FromBase64Url:(NSString *)base64Url
+{
+  NSString *base64 = [base64Url stringByReplacingOccurrencesOfString:@"-" withString:@"+"];
+  base64 = [base64 stringByReplacingOccurrencesOfString:@"_" withString:@"/"];
+
+  return base64;
+}
+
 #pragma mark - Object Lifecycle
 
 #pragma mark - Implementation Methods

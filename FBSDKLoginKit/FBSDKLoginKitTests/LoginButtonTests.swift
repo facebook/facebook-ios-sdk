@@ -35,6 +35,10 @@ class LoginButtonTests: XCTestCase {
     )
   }
 
+  var sampleToken: AuthenticationToken {
+    return AuthenticationToken(tokenString: "abc", nonce: "123", claims: nil, jti: "jti")
+  }
+
   override func setUp() {
     super.setUp()
 
@@ -168,8 +172,7 @@ class LoginButtonTests: XCTestCase {
   }
 
   func testDeterminingAuthenticationWithoutAccessTokenWithAuthToken() {
-    let authToken = AuthenticationToken(tokenString: "abc", nonce: "123", claims: [:], jti: "jti")
-    AuthenticationToken.setCurrent(authToken, shouldPostNotification: false)
+    AuthenticationToken.setCurrent(sampleToken, shouldPostNotification: false)
 
     XCTAssertTrue(
       button._isAuthenticated(),

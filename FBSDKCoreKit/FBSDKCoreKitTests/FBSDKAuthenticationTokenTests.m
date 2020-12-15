@@ -73,7 +73,7 @@
   FBSDKTestCoder *coder = [FBSDKTestCoder new];
   _token = [[FBSDKAuthenticationToken alloc] initWithTokenString:expectedTokenString
                                                            nonce:expectedNonce
-                                                          claims:@{}
+                                                          claims:nil
                                                              jti:expectedJTI];
   [_token encodeWithCoder:coder];
 

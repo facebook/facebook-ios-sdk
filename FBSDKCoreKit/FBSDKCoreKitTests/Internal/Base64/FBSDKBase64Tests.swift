@@ -55,4 +55,10 @@ class FBSDKBase64Tests: XCTestCase {
     ]
     runTests(testsDict)
   }
+
+  func testBase64URLEncode() {
+    let urlString = "https://www.example.com/some-path-with-dashes-in-it/"
+    let encodedString = Base64.base64(fromBase64Url: urlString)
+    XCTAssertEqual(encodedString, "https://www.example.com/some+path+with+dashes+in+it/")
+  }
 }

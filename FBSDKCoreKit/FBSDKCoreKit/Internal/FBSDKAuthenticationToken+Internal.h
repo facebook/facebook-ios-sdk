@@ -24,11 +24,13 @@
  #import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
 #endif
 
+@class FBSDKAuthenticationTokenClaims;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKAuthenticationToken (Internal)
 
-- (NSDictionary *)claims;
+- (nullable FBSDKAuthenticationTokenClaims *)claims;
 - (NSString *)jti;
 
 @end

@@ -35,7 +35,7 @@
 
 @interface FBSDKAuthenticationToken (ClaimsProviding)
 
-- (NSDictionary *)claims;
+- (FBSDKAuthenticationTokenClaims *)claims;
 
 @end
 
@@ -122,7 +122,7 @@
   FBSDKAuthenticationTokenBlock completion = ^(FBSDKAuthenticationToken *token) {
     if (token) {
       parameters.authenticationToken = token;
-      parameters.profile = [FBSDKLoginURLCompleter createProfileWithToken:token];
+      parameters.profile = [FBSDKLoginURLCompleter profileWithClaims:token.claims];
     } else {
       parameters.error = [FBSDKError errorWithCode:FBSDKLoginErrorInvalidIDToken message:@"Invalid ID token from login response."];
     }
@@ -250,31 +250,26 @@
   [connection start];
 }
 
-/// Returns a `FBSDKProfile` from an `AuthenticationToken` if it can extract the minimum necessary information
-+ (FBSDKProfile *)createProfileWithToken:(FBSDKAuthenticationToken *)token
++ (nullable FBSDKProfile *)profileWithClaims:(FBSDKAuthenticationTokenClaims *)claims
 {
-  if (!token || !token.claims) {
+  if (claims.sub.length == 0) {
     return nil;
   }
 
-  NSDictionary *claims = token.claims;
-  if (![claims[@"sub"] isKindOfClass:NSString.class]) {
-    return nil;
+  NSURL *imageURL;
+  if (claims.picture) {
+    imageURL = [NSURL URLWithString:claims.picture];
   }
 
-  NSString *name = [claims[@"name"] isKindOfClass:NSString.class] ? claims[@"name"] : nil;
-  NSString *email = [claims[@"email"] isKindOfClass:NSString.class] ? claims[@"email"] : nil;
-  NSURL *imageURL = [claims[@"picture"] isKindOfClass:NSString.class] ? [NSURL URLWithString:claims[@"picture"]] : nil;
-
-  return [[FBSDKProfile alloc]initWithUserID:claims[@"sub"]
-                                   firstName:nil
-                                  middleName:nil
-                                    lastName:nil
-                                        name:name
-                                     linkURL:nil
-                                 refreshDate:nil
-                                    imageURL:imageURL
-                                       email:email];
+  return [[FBSDKProfile alloc] initWithUserID:claims.sub
+                                    firstName:nil
+                                   middleName:nil
+                                     lastName:nil
+                                         name:claims.name
+                                      linkURL:nil
+                                  refreshDate:nil
+                                     imageURL:imageURL
+                                        email:claims.email];
 }
 
 @end

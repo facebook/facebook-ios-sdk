@@ -22,6 +22,7 @@
 
 #import "FBSDKProfilePictureView.h"
 
+@class FBSDKAuthenticationTokenClaims;
 @class FBSDKProfile;
 
 NS_ASSUME_NONNULL_BEGIN
