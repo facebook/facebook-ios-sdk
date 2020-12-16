@@ -21,8 +21,13 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#import "FBSDKLoginManager.h"
-#import "FBSDKLoginManagerLogger.h"
+#ifdef BUCK
+ #import <FBSDKLoginKit+Internal/FBSDKLoginManagerLogger.h>
+ #import <FBSDKLoginKit/FBSDKLoginManager.h>
+#else
+ #import "FBSDKLoginManager.h"
+ #import "FBSDKLoginManagerLogger.h"
+#endif
 
 @interface FBSDKAppEvents (Testing)
 

@@ -19,8 +19,12 @@
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 
 #import "FBSDKCoreKit+Internal.h"
-#import "FBSDKLoginConfiguration.h"
-#import "FBSDKNonceUtility.h"
+
+#ifdef BUCK
+ #import <FBSDKLoginKit+Internal/FBSDKNonceUtility.h>
+#else
+ #import "FBSDKNonceUtility.h"
+#endif
 
 @class FBSDKAuthenticationTokenClaims;
 

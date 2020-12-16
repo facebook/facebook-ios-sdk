@@ -22,10 +22,18 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#import "FBSDKLoginConstants.h"
-#import "FBSDKLoginManager.h"
-#import "FBSDKLoginManager+Internal.h"
-#import "FBSDKLoginManagerLoginResult.h"
+#ifdef BUCK
+ #import <FBSDKLoginKit+Internal/FBSDKLoginManager+Internal.h>
+ #import <FBSDKLoginKit/FBSDKLoginConstants.h>
+ #import <FBSDKLoginKit/FBSDKLoginManager.h>
+ #import <FBSDKLoginKit/FBSDKLoginManagerLoginResult.h>
+#else
+ #import "FBSDKLoginConstants.h"
+ #import "FBSDKLoginManager.h"
+ #import "FBSDKLoginManager+Internal.h"
+ #import "FBSDKLoginManagerLoginResult.h"
+#endif
+
 #import "FBSDKLoginUtilityTests.h"
 
 static NSString *const kFakeAppID = @"7391628439";

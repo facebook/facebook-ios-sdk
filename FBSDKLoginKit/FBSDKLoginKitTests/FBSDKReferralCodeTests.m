@@ -18,7 +18,11 @@
 
 #import <XCTest/XCTest.h>
 
-#import "FBSDKReferralCode.h"
+#ifdef BUCK
+ #import <FBSDKLoginKit/FBSDKReferralCode.h>
+#else
+ #import "FBSDKReferralCode.h"
+#endif
 
 static NSString *const _validReferralCode1 = @"abcd";
 static NSString *const _validReferralCode2 = @"123";

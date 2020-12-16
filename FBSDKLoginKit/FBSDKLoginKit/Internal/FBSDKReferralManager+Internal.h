@@ -20,7 +20,11 @@
 
 #if !TARGET_OS_TV
 
- #import "FBSDKReferralManager.h"
+ #ifdef BUCK
+  #import <FBSDKLoginKit/FBSDKReferralManager.h>
+ #else
+  #import "FBSDKReferralManager.h"
+ #endif
 
  #ifdef FBSDKCOCOAPODS
   #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
