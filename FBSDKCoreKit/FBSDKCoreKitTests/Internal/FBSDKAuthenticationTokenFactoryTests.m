@@ -117,24 +117,22 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 // MARK: - Creation
 
-- (void)testCreateWithInvalidFormatTokenShouldFail
+- (void)testCreateWithInvalidFormatToken
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
+  __block BOOL wasCalled = NO;
   FBSDKAuthenticationTokenBlock completion = ^(FBSDKAuthenticationToken *token) {
     XCTAssertNil(token);
-    [expectation fulfill];
+    wasCalled = YES;
   };
 
   [[FBSDKAuthenticationTokenFactory new] createTokenFromTokenString:@"invalid_token" nonce:@"123456789" completion:completion];
 
-  [self waitForExpectationsWithTimeout:1 handler:^(NSError *_Nullable error) {
-    XCTAssertNil(error);
-  }];
+  XCTAssertTrue(wasCalled, @"Completion handler should be called syncronously");
 }
 
 // MARK: - Decoding Claims
 
-- (void)testDecodeValidClaimsShouldSucceed
+- (void)testDecodeValidClaims
 {
   NSData *claimsData = [FBSDKTypeUtility dataWithJSONObject:_claimsDict options:0 error:nil];
   NSString *encodedClaims = [self base64URLEncodeData:claimsData];
@@ -143,7 +141,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   XCTAssertEqualObjects(claims, _claims);
 }
 
-- (void)testDecodeInvalidFormatClaimsShouldFail
+- (void)testDecodeInvalidFormatClaims
 {
   NSData *claimsData = [@"invalid_claims" dataUsingEncoding:NSUTF8StringEncoding];
   NSString *encodedClaims = [self base64URLEncodeData:claimsData];
@@ -151,7 +149,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   XCTAssertNil([FBSDKAuthenticationTokenClaims validatedClaimsWithEncodedString:encodedClaims nonce:_mockNonce]);
 }
 
-- (void)testDecodeInvalidClaimsShouldFail
+- (void)testDecodeInvalidClaims
 {
   long currentTime = [[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]] longValue];
 
@@ -200,7 +198,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 - (void)testDecodeRandomClaims
 {
   for (int i = 0; i < 100; i++) {
-    NSDictionary *randomizedClaims = [self randomizeDictionary:_claimsDict];
+    NSDictionary *randomizedClaims = [Fuzzer randomizeWithJson:_claims];
     NSData *claimsData = [FBSDKTypeUtility dataWithJSONObject:randomizedClaims options:0 error:nil];
     NSString *encodedClaims = [self base64URLEncodeData:claimsData];
 
@@ -210,7 +208,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 // MARK: - Decoding Header
 
-- (void)testDecodeValidHeaderShouldSucceed
+- (void)testDecodeValidHeader
 {
   NSData *headerData = [FBSDKTypeUtility dataWithJSONObject:_header options:0 error:nil];
   NSString *encodedHeader = [self base64URLEncodeData:headerData];
@@ -219,7 +217,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   XCTAssertEqualObjects(header, _header);
 }
 
-- (void)testDecodeInvalidFormatHeaderShouldFail
+- (void)testDecodeInvalidFormatHeader
 {
   NSData *headerData = [@"invalid_header" dataUsingEncoding:NSUTF8StringEncoding];
   NSString *encodedHeader = [self base64URLEncodeData:headerData];
@@ -227,7 +225,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   XCTAssertNil([FBSDKAuthenticationTokenFactory validatedHeaderWithEncodedString:encodedHeader]);
 }
 
-- (void)testDecodeInvalidHeaderShouldFail
+- (void)testDecodeInvalidHeader
 {
   NSMutableDictionary *invalidHeader = [_header mutableCopy];
   [FBSDKTypeUtility dictionary:invalidHeader setObject:@"wrong algorithm" forKey:@"alg"];
@@ -244,6 +242,17 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   NSString *encodedHeader = [self base64URLEncodeData:headerData];
 
   XCTAssertNil([FBSDKAuthenticationTokenFactory validatedHeaderWithEncodedString:encodedHeader]);
+}
+
+- (void)testDecodeRandomHeader
+{
+  for (int i = 0; i < 100; i++) {
+    NSDictionary *randomizedHeader = [Fuzzer randomizeWithJson:_header];
+    NSData *headerData = [FBSDKTypeUtility dataWithJSONObject:randomizedHeader options:0 error:nil];
+    NSString *encodedHeader = [self base64URLEncodeData:headerData];
+
+    [FBSDKAuthenticationTokenFactory validatedHeaderWithEncodedString:encodedHeader];
+  }
 }
 
 // MARK: - Verifying Signature
@@ -406,7 +415,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   FBSDKAuthenticationTokenFactory *factory = [[FBSDKAuthenticationTokenFactory alloc] initWithSessionProvider:session];
 
   for (int i = 0; i < 100; i++) {
-    NSDictionary *randomizedCertificates = [self randomizeDictionary:self.validRawCertificateResponse];
+    NSDictionary *randomizedCertificates = [Fuzzer randomizeWithJson:self.validRawCertificateResponse];
     NSData *data = [FBSDKTypeUtility dataWithJSONObject:randomizedCertificates options:0 error:nil];
     session.data = data;
 
@@ -422,7 +431,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   }
 }
 
-// MARK: - Utilities
+// MARK: - Helpers
 
 - (void)assertDecodeClaimsFailWithInvalidEntry:(NSString *)key value:(id)value
 {
@@ -446,30 +455,6 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   base64URL = [base64URL stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
   return [base64URL stringByReplacingOccurrencesOfString:@"=" withString:@""];
 }
-
-- (NSDictionary *)randomizeDictionary:(NSDictionary *)dictionary
-{
-  NSArray *values = @[@YES, @NO, @1, @0, @-1, @INT32_MAX, @LONG_MAX, @MAXFLOAT, @"1", @"a", @"[ { \"something\": nonexistent } ]"];
-  NSMutableDictionary *randomized = [dictionary mutableCopy];
-  for (NSString *key in dictionary) {
-    int randOption = arc4random() % 3;
-    switch (randOption) {
-      case 0:
-        [randomized removeObjectForKey:key];
-        break;
-      case 1:
-        [FBSDKTypeUtility dictionary:randomized setObject:[FBSDKTypeUtility array:values objectAtIndex:arc4random() % values.count] forKey:key];
-        break;
-      case 2:
-      default:
-        break;
-    }
-  }
-
-  return randomized;
-}
-
-// MARK: - Helpers
 
 - (NSDictionary *)validRawCertificateResponse
 {

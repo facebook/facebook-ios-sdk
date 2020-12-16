@@ -120,6 +120,10 @@ public class Fuzzer: NSObject {
         if Bool.random() {
           json[key] = random
         }
+
+        else if Bool.random() {
+          json.removeValue(forKey: key)
+        }
       }
     }
 

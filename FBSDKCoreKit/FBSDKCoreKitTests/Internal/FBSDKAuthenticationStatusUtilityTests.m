@@ -147,4 +147,24 @@
   XCTAssertNotNil(FBSDKProfile.currentProfile, @"Profile should not be cleared when the request failed");
 }
 
+- (void)testHandleResponseWithFuzzyData
+{
+  NSURL *url = [NSURL URLWithString:@"m.facebook.com/platform/oidc/status/"];
+
+  for (int i = 0; i < 100; i++) {
+    // only strings allowed in HTTP header
+    NSDictionary *header = @{
+      @"fb-s" : [[Fuzzer random] description],
+      @"some_header_key" : [[Fuzzer random] description],
+    };
+
+    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:url
+                                                              statusCode:200
+                                                             HTTPVersion:nil
+                                                            headerFields:header];
+
+    [FBSDKAuthenticationStatusUtility _handleResponse:response];
+  }
+}
+
 @end
