@@ -270,12 +270,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Stubs `FBSDKSettings.isDataProcessingRestricted` and returns the provided value
 - (void)stubIsDataProcessingRestricted:(BOOL)isRestricted;
 
-/// Stubs `NSDate`'s `date` method to return the shared date mock
-- (void)stubDate;
-
-/// Stubs `NSDate`'s `timeIntervalSince1970` method and returns the provided time interval
-- (void)stubTimeIntervalSince1970WithTimeInterval:(NSTimeInterval)interval;
-
 /// Stubs `FBSDKSettings.facebookDomainPart` with the provided value
 - (void)stubFacebookDomainPartWith:(NSString *)domainPart;
 

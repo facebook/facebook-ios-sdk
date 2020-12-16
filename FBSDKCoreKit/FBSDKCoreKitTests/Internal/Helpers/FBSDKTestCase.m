@@ -587,16 +587,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   OCMStub(ClassMethod([_settingsClassMock isDataProcessingRestricted])).andReturn(isRestricted);
 }
 
-- (void)stubDate
-{
-  OCMStub([_nsDateClassMock date]).andReturn(_nsDateClassMock);
-}
-
-- (void)stubTimeIntervalSince1970WithTimeInterval:(NSTimeInterval)interval
-{
-  OCMStub([_nsDateClassMock timeIntervalSince1970]).andReturn(interval);
-}
-
 - (void)stubFacebookDomainPartWith:(NSString *)domainPart
 {
   OCMStub(ClassMethod([_settingsClassMock facebookDomainPart])).andReturn(domainPart);

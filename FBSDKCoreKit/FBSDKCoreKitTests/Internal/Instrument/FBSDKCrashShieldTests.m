@@ -208,24 +208,18 @@
   // Setup
   [self stubIsDataProcessingRestricted:NO];
   [self stubAppID:self.appID];
-  [self stubDate];
-  [self stubTimeIntervalSince1970WithTimeInterval:10];
-
-  [self addInitializerStubsToGraphRequestMock];
-  OCMExpect([self.graphRequestMock startWithCompletionHandler:nil]);
+  [self preventGraphRequest];
 
   // Act
   [FBSDKCrashShield analyze:self.coreKitCrashLogs];
 
   // Assert
   NSString *expectedPath = [NSString stringWithFormat:@"%@/instruments", self.appID];
-  NSDictionary *expectedParameters = @{
-    @"crash_shield" : [self encodedCoreKitFeatureDataWithTimestamp:@"10"]
-  };
-  OCMVerifyAll(
-    [self.graphRequestMock initWithGraphPath:expectedPath
-                                  parameters:expectedParameters
-                                  HTTPMethod:FBSDKHTTPMethodPOST]
+
+  OCMVerify(
+    (void)[self.graphRequestMock initWithGraphPath:expectedPath
+                                        parameters:OCMArg.any
+                                        HTTPMethod:FBSDKHTTPMethodPOST]
   );
   OCMVerify([self.graphRequestMock startWithCompletionHandler:nil]);
 }
@@ -234,10 +228,8 @@
 {
   [self stubIsDataProcessingRestricted:NO];
   [self stubAppID:self.appID];
-  [self stubDate];
-  [self stubTimeIntervalSince1970WithTimeInterval:10];
 
-  [self addInitializerStubsToGraphRequestMock];
+  [self preventGraphRequest];
 
   OCMReject(
     [self.graphRequestMock initWithGraphPath:OCMArg.any
@@ -250,16 +242,6 @@
 }
 
 // MARK: - Helpers
-
-- (void)addInitializerStubsToGraphRequestMock
-{
-  OCMStub(ClassMethod([self.graphRequestMock alloc])).andReturn(self.graphRequestMock);
-  OCMStub(
-    [self.graphRequestMock initWithGraphPath:OCMArg.any
-                                  parameters:OCMArg.any
-                                  HTTPMethod:FBSDKHTTPMethodPOST]
-  ).andReturn(self.graphRequestMock);
-}
 
 - (NSString *)encodedCoreKitFeatureDataWithTimestamp:(NSString *)timestamp
 {
