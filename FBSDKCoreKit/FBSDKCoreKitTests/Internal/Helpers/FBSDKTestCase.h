@@ -164,9 +164,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Stubs `FBSDKSettings.isSDKInitialized` and return the provided value
 - (void)stubIsSDKInitialized:(BOOL)initialized;
 
-/// Stubs `FBSDKSettings.isAutoInitEnabled` and return the provided value
-- (void)stubIsAutoInitEnabled:(BOOL)isEnabled;
-
 /// Stubs `FBSDKSettings.isAutoLogAppEventsEnabled` and return the provided value
 - (void)stubIsAutoLogAppEventsEnabled:(BOOL)isEnabled;
 

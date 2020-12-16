@@ -862,88 +862,6 @@ static NSString *const whiteSpaceToken = @"   ";
   );
 }
 
-// MARK: Auto Initialization Enabled
-
-- (void)testAutoInitializationEnabledFromPlist
-{
-  NSBundle *bundle = [FakeBundle bundleWithDictionary:@{@"FacebookAutoInitEnabled" : @NO}];
-  [self stubMainBundleWith:bundle];
-
-  XCTAssertFalse(
-    FBSDKSettings.isAutoInitEnabled,
-    "A developer should be able to set the value of auto initialization from the plist"
-  );
-}
-
-- (void)testAutoInitializationDefaultValue
-{
-  XCTAssertTrue(
-    FBSDKSettings.isAutoInitEnabled,
-    "Auto initialization should default to true when there is no plist value given"
-  );
-}
-
-- (void)testAutoInitializationInvalidPlistEntry
-{
-  NSBundle *bundle = [FakeBundle bundleWithDictionary:@{@"FacebookAutoInitEnabled" : emptyString}];
-  [self stubMainBundleWith:bundle];
-
-  XCTAssertFalse(
-    FBSDKSettings.isAutoInitEnabled,
-    "Auto initialization should default to true when there is an invalid plist value given but it does not"
-  );
-}
-
-- (void)testSettingAutoInitializationEnabled
-{
-  FBSDKSettings.autoInitEnabled = false;
-
-  XCTAssertNotNil(
-    userDefaultsSpy.capturedValues[@"FacebookAutoInitEnabled"],
-    "Should persist the value of a cachable property when setting it"
-  );
-  XCTAssertFalse(
-    FBSDKSettings.autoInitEnabled,
-    "Should use the explicitly set property"
-  );
-}
-
-- (void)testOverridingCachedAutoInitialization
-{
-  [self stubInitializeSDKWith:@{}];
-
-  FBSDKSettings.autoInitEnabled = true;
-  XCTAssertTrue(FBSDKSettings.isAutoInitEnabled);
-
-  NSBundle *bundle = [FakeBundle bundleWithDictionary:@{@"FacebookAutoInitEnabled" : @NO}];
-  [self stubMainBundleWith:bundle];
-
-  XCTAssertTrue(
-    FBSDKSettings.autoInitEnabled,
-    "Should favor cached properties over those set in the plist"
-  );
-}
-
-- (void)testAutoInitializationInternalStorage
-{
-  [self stubInitializeSDKWith:@{}];
-
-  FakeBundle *bundle = [FakeBundle bundleWithDictionary:@{}];
-  [self stubMainBundleWith:bundle];
-
-  FBSDKSettings.autoInitEnabled = @YES;
-
-  XCTAssertTrue(FBSDKSettings.autoInitEnabled, "sanity check");
-  XCTAssertNil(
-    userDefaultsSpy.capturedObjectRetrievalKey,
-    "Should not attempt to access the cache to retrieve objects that have a current value"
-  );
-  XCTAssertNil(
-    bundle.capturedKeys.lastObject,
-    "Should not attempt to access the plist to retrieve objects that have a current value"
-  );
-}
-
 // MARK: Auto Log App Events Enabled
 
 - (void)testAutoLogAppEventsEnabledFromPlist
@@ -994,7 +912,6 @@ static NSString *const whiteSpaceToken = @"   ";
 {
   [self stubInitializeSDKWith:@{}];
 
-  FBSDKSettings.autoInitEnabled = true;
   XCTAssertTrue(FBSDKSettings.isAutoLogAppEventsEnabled);
 
   NSBundle *bundle = [FakeBundle bundleWithDictionary:@{@"FacebookAutoLogAppEventsEnabled" : @NO}];
@@ -1237,24 +1154,24 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testInitialAccessForCachablePropertyWithNonEmptyCache
 {
   // Using false because it is not the default value for `isAutoInitializationEnabled`
-  userDefaultsSpy.capturedValues = @{ @"FacebookAutoInitEnabled" : @NO };
+  userDefaultsSpy.capturedValues = @{ @"FacebookAutoLogAppEventsEnabled" : @NO };
   [self stubUserDefaultsWith:userDefaultsSpy];
 
   FakeBundle *bundle = [FakeBundle bundleWithDictionary:@{}];
   [self stubMainBundleWith:bundle];
 
   XCTAssertFalse(
-    FBSDKSettings.isAutoInitEnabled,
+    FBSDKSettings.isAutoLogAppEventsEnabled,
     "Should retrieve an initial value for a cachable property when there is a non-empty cache"
   );
 
   XCTAssertEqualObjects(
     userDefaultsSpy.capturedObjectRetrievalKey,
-    @"FacebookAutoInitEnabled",
+    @"FacebookAutoLogAppEventsEnabled",
     "Should attempt to access the cache to retrieve the initial value for a cachable property"
   );
   XCTAssertFalse(
-    [bundle.capturedKeys containsObject:@"FacebookAutoInitEnabled"],
+    [bundle.capturedKeys containsObject:@"FacebookAutoLogAppEventsEnabled"],
     "Should not attempt to access the plist for cachable properties that have a value in the cache"
   );
 }
@@ -1262,22 +1179,22 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testInitialAccessForCachablePropertyWithEmptyCacheNonEmptyPlist
 {
   // Using false because it is not the default value for `isAutoInitializationEnabled`
-  FakeBundle *bundle = [FakeBundle bundleWithDictionary:@{@"FacebookAutoInitEnabled" : @NO}];
+  FakeBundle *bundle = [FakeBundle bundleWithDictionary:@{@"FacebookAutoLogAppEventsEnabled" : @NO}];
   [self stubMainBundleWith:bundle];
 
   XCTAssertFalse(
-    FBSDKSettings.isAutoInitEnabled,
+    FBSDKSettings.isAutoLogAppEventsEnabled,
     "Should retrieve an initial value from the property list"
   );
 
   XCTAssertEqualObjects(
     userDefaultsSpy.capturedObjectRetrievalKey,
-    @"FacebookAutoInitEnabled",
+    @"FacebookAutoLogAppEventsEnabled",
     "Should attempt to access the cache to retrieve the initial value for a cachable property"
   );
   XCTAssertEqualObjects(
     bundle.capturedKeys.lastObject,
-    @"FacebookAutoInitEnabled",
+    @"FacebookAutoLogAppEventsEnabled",
     "Should attempt to access the plist for cachable properties that have no value in the cache"
   );
 }
@@ -1288,18 +1205,18 @@ static NSString *const whiteSpaceToken = @"   ";
   [self stubMainBundleWith:bundle];
 
   XCTAssertTrue(
-    FBSDKSettings.isAutoInitEnabled,
+    FBSDKSettings.isAutoLogAppEventsEnabled,
     "Should use the default value for a property when there are no values in the cache or plist"
   );
 
   XCTAssertEqualObjects(
     userDefaultsSpy.capturedObjectRetrievalKey,
-    @"FacebookAutoInitEnabled",
+    @"FacebookAutoLogAppEventsEnabled",
     "Should attempt to access the cache to retrieve the initial value for a cachable property"
   );
   XCTAssertEqualObjects(
     bundle.capturedKeys.lastObject,
-    @"FacebookAutoInitEnabled",
+    @"FacebookAutoLogAppEventsEnabled",
     "Should attempt to access the plist for cachable properties that have no value in the cache"
   );
 }

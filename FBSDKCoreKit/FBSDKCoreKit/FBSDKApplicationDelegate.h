@@ -99,8 +99,6 @@ didFinishLaunchingWithOptions:(nullable NSDictionary<UIApplicationLaunchOptionsK
 
 /**
   Call this method to manually initialize SDK.
-  As we initialize SDK automatically, this should only be called when auto initialization is disabled, this can be
- controlled via 'FacebookAutoInitEnabled' key in the project info plist file.
 
  @param launchOptions The launchOptions as passed to [UIApplicationDelegate application:didFinishLaunchingWithOptions:].
  Could be nil if you don't call this function from [UIApplicationDelegate application:didFinishLaunchingWithOptions:].

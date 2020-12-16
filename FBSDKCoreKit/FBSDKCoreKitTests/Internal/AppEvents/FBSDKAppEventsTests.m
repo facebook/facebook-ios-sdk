@@ -655,38 +655,6 @@ static NSString *const _mockUserID = @"mockUserID";
   mockGateKeeperManager = nil;
 }
 
-- (void)testGraphRequestBannedWithAutoInitDisabled
-{
-  // test when autoInitEnabled is set to be NO
-  __block int activiesEndpointCalledCountDisabled = 0;
-  NSString *urlString = [NSString stringWithFormat:@"%@/activities", _mockAppID];
-  XCTestExpectation *expectation = [self expectationWithDescription:@"No Graph Request is sent"];
-
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
-                 XCTAssertNotNil(request);
-                 if ([request.URL.absoluteString rangeOfString:urlString].location != NSNotFound) {
-                   ++activiesEndpointCalledCountDisabled;
-                 }
-                 return NO;
-               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-                 return [OHHTTPStubsResponse responseWithData:[NSData data]
-                                                   statusCode:200
-                                                      headers:nil];
-               }];
-
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  [FBSDKSettings setAutoInitEnabled:NO];
-  #pragma clang diagnostic pop
-
-  [FBSDKAppEvents logPurchase:_mockPurchaseAmount currency:_mockCurrency];
-  [expectation fulfill];
-  [self waitForExpectationsWithTimeout:3 handler:^(NSError *error) {
-    XCTAssertNil(error);
-  }];
-  XCTAssertEqual(0, activiesEndpointCalledCountDisabled, @"No Graph Request is sent");
-}
-
 #pragma mark  Tests for log event
 
 - (void)testLogEventWithValueToSum
