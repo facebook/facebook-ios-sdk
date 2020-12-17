@@ -39,7 +39,8 @@
   NSSet *currentPermissions = [FBSDKAccessToken currentAccessToken].permissions;
   if (recoveryOptionIndex == 0 && currentPermissions.count > 0) {
     FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
-    [login logInWithPermissions:currentPermissions handler:^(FBSDKLoginManagerLoginResult *result, NSError *loginError) {
+    FBSDKLoginConfiguration *configuration = [[FBSDKLoginConfiguration alloc] initWithBetaLoginExperience:FBSDKBetaLoginExperienceEnabled];
+    [login logInWithPermissions:currentPermissions fromViewController:nil handler:^(FBSDKLoginManagerLoginResult *result, NSError *loginError) {
       // we can only consider a recovery successful if there are no declines
       // (note this could still set an updated currentAccessToken).
       handler(!loginError && !result.isCancelled && result.declinedPermissions.count == 0);
