@@ -132,6 +132,7 @@ NS_SWIFT_NAME(LoginManager)
 
 /**
  Logs the user in or authorizes additional permissions.
+
  @param permissions the optional array of permissions. Note this is converted to NSSet and is only
  an NSArray for the convenience of literal syntax.
  @param fromViewController the view controller to present from. If nil, the topmost view controller will be
@@ -141,12 +142,13 @@ NS_SWIFT_NAME(LoginManager)
  Use this method when asking for read permissions. You should only ask for permissions when they
  are needed and explain the value to the user. You can inspect the result.declinedPermissions to also
  provide more information to the user if they decline permissions.
-
- This method will present UI the user. You typically should check if `[FBSDKAccessToken currentAccessToken]`
+ You typically should check if `[FBSDKAccessToken currentAccessToken]`
  already contains the permissions you need before asking to reduce unnecessary app switching. For example,
  you could make that check at viewDidLoad.
- You can only do one login call at a time. Calling a login method before the completion handler is called
- on a previous login will return an error.
+
+ @warning You can only perform one login call at a time. Calling a login method before the completion handler is called
+ on a previous login attempt will result in an error.
+ @warning This method will present a UI to the user and thus should be called on the main thread.
  */
 - (void)logInWithPermissions:(NSArray<NSString *> *)permissions
           fromViewController:(nullable UIViewController *)fromViewController
@@ -163,13 +165,12 @@ NS_SWIFT_NAME(logIn(permissions:from:handler:));
  Use this method when asking for permissions. You should only ask for permissions when they
  are needed and the value should be explained to the user. You can inspect the result's `declinedPermissions` to also
  provide more information to the user if they decline permissions.
+ To reduce unnecessary app switching, you should typically check if `FBSDKAccessToken.currentAccessToken`
+ already contains the permissions you need. If it does, you probably do not need to call this method.
 
- This method will present a UI to the user. To reduce unnecessary app switching, you should typically check if
- `FBSDKAccessToken.currentAccessToken` already contains the permissions you need. If it does, you probably
- do not need to call this method.
-
- You can only perform one login call at a time. Calling a login method before the completion handler is called
- on a previous login will result in an error.
+ @warning You can only perform one login call at a time. Calling a login method before the completion handler is called
+ on a previous login attempt will result in an error.
+ @warning This method will present a UI to the user and thus should be called on the main thread.
  */
 - (void)logInFromViewController:(nullable UIViewController *)viewController
                   configuration:(FBSDKLoginConfiguration *)configuration
@@ -181,7 +182,10 @@ NS_REFINED_FOR_SWIFT;
  @param url the deep link url
  @param handler the callback.
 
- This method should be called with the url from the openURL method.
+This method will present a UI to the user and thus should be called on the main thread.
+This method should be called with the url from the openURL method.
+
+ @warning This method will present a UI to the user and thus should be called on the main thread.
  */
 - (void)logInWithURL:(NSURL *)url
              handler:(nullable FBSDKLoginManagerLoginResultBlock)handler
@@ -189,11 +193,9 @@ NS_SWIFT_NAME(logIn(url:handler:));
 
 /**
  Requests user's permission to reathorize application's data access, after it has expired due to inactivity.
-@param fromViewController the view controller to present from. If nil, the topmost view controller will be
-automatically determined as best as possible.
-@param handler the callback.
-
-@warning This method will reauthorize using a `LoginConfiguration` with `FBSDKBetaLoginExperience` set to enabled.
+ @param fromViewController the view controller to present from. If nil, the topmost view controller will be
+  automatically determined as best as possible.
+ @param handler the callback.
 
 Use this method when you need to reathorize your app's access to user data via Graph API, after such an access has expired.
 You should provide as much context to the user as possible as to why you need to reauthorize the access, the scope of
@@ -201,6 +203,7 @@ access being reathorized, and what added value your app provides when the access
 You can inspect the  result.declinedPermissions to also provide more information to the user if they decline permissions.
 This method will present UI the user. You typically should call this if `[FBSDKAccessToken isDataAccessExpired]` returns true.
 
+ @warning This method will reauthorize using a `LoginConfiguration` with `FBSDKBetaLoginExperience` set to enabled.
  */
 - (void)reauthorizeDataAccess:(UIViewController *)fromViewController
                       handler:(FBSDKLoginManagerLoginResultBlock)handler
@@ -209,7 +212,9 @@ NS_SWIFT_NAME(reauthorizeDataAccess(from:handler:));
 /**
   Logs the user out
 
- This calls [FBSDKAccessToken setCurrentAccessToken:nil] and [FBSDKProfile setCurrentProfile:nil].
+ This nils out the singleton instances of `FBSDKAccessToken` `FBSDKAuthenticationToken` and `FBSDKProfle`.
+
+ @note This is only a client side logout. It will not log the user out of their Facebook account.
  */
 - (void)logOut;
 
