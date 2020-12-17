@@ -67,9 +67,9 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
   _loginManager.defaultAudience = defaultAudience;
 }
 
-- (void)setBetaLoginExperience:(FBSDKBetaLoginExperience)betaLoginExperience
+- (void)setLoginTracking:(FBSDKLoginTracking)loginTracking
 {
-  _betaLoginExperience = betaLoginExperience;
+  _loginTracking = loginTracking;
   [self _updateNotificationObservers];
 }
 
@@ -329,11 +329,11 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 {
   if (self.nonce) {
     return [[FBSDKLoginConfiguration alloc] initWithPermissions:self.permissions
-                                            betaLoginExperience:self.betaLoginExperience
+                                                       tracking:self.loginTracking
                                                           nonce:self.nonce];
   } else {
     return [[FBSDKLoginConfiguration alloc] initWithPermissions:self.permissions
-                                            betaLoginExperience:self.betaLoginExperience];
+                                                       tracking:self.loginTracking];
   }
 }
 

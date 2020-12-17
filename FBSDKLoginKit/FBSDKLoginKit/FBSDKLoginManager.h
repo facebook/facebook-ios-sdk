@@ -194,8 +194,10 @@ NS_SWIFT_NAME(logIn(url:handler:));
 /**
  Requests user's permission to reathorize application's data access, after it has expired due to inactivity.
  @param fromViewController the view controller to present from. If nil, the topmost view controller will be
-  automatically determined as best as possible.
+ automatically determined as best as possible.
  @param handler the callback.
+
+ @warning This method will reauthorize using a `LoginConfiguration` with `FBSDKLoginTracking` set to `.enabled`.
 
 Use this method when you need to reathorize your app's access to user data via Graph API, after such an access has expired.
 You should provide as much context to the user as possible as to why you need to reauthorize the access, the scope of

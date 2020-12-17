@@ -111,7 +111,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
                      handler:(FBSDKLoginManagerLoginResultBlock)handler
 {
   FBSDKLoginConfiguration *config = [[FBSDKLoginConfiguration alloc] initWithPermissions:permissions
-                                                                     betaLoginExperience:FBSDKBetaLoginExperienceEnabled];
+                                                                                tracking:FBSDKLoginTrackingEnabled];
   [self logInFromViewController:viewController
                   configuration:config
                      completion:handler];
@@ -414,7 +414,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   [self storeExpectedChallenge:expectedChallenge];
 
   NSString *responseType;
-  if (configuration.betaLoginExperience == FBSDKBetaLoginExperienceRestricted) {
+  if (configuration.tracking == FBSDKLoginTrackingLimited) {
     responseType = @"id_token";
     [FBSDKTypeUtility dictionary:loginParams setObject:@"sentinel_test_value" forKey:@"tp"];
   } else {

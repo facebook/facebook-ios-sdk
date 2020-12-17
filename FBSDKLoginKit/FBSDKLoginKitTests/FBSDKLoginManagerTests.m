@@ -499,7 +499,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   };
 
   FBSDKLoginConfiguration *invalidConfig = [[FBSDKLoginConfiguration alloc] initWithPermissions:@[]
-                                                                            betaLoginExperience:FBSDKBetaLoginExperienceRestricted
+                                                                                       tracking:FBSDKLoginTrackingLimited
                                                                                           nonce:@" "];
   XCTAssertNil(invalidConfig);
 
@@ -507,11 +507,11 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertTrue(resultBlockInvoked, "Should invoke completion synchronously");
 }
 
-- (void)testBetaLoginExperienceEnabledLoginParams
+- (void)testLoginTrackingEnabledLoginParams
 {
   FBSDKLoginConfiguration *config = [[FBSDKLoginConfiguration alloc]
                                      initWithPermissions:@[@"public_profile", @"email"]
-                                     betaLoginExperience:FBSDKBetaLoginExperienceEnabled];
+                                     tracking:FBSDKLoginTrackingEnabled];
 
   NSDictionary *params = [_mockLoginManager logInParametersWithConfiguration:config serverConfiguration:nil];
   [self validateCommonLoginParameters:params];
@@ -521,11 +521,11 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertNil(params[@"tp"]);
 }
 
-- (void)testBetaLoginExperienceRestrictedLoginParams
+- (void)testLoginTrackingLimitedLoginParams
 {
   FBSDKLoginConfiguration *config = [[FBSDKLoginConfiguration alloc]
                                      initWithPermissions:@[@"public_profile", @"email"]
-                                     betaLoginExperience:FBSDKBetaLoginExperienceRestricted
+                                     tracking:FBSDKLoginTrackingLimited
                                      nonce:@"some_nonce"];
 
   NSDictionary *params = [_mockLoginManager logInParametersWithConfiguration:config serverConfiguration:nil];

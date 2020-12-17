@@ -31,9 +31,9 @@ class LoginConfigurationTests: XCTestCase {
       "A config should be created with default requested permissions"
     )
     XCTAssertEqual(
-      config.betaLoginExperience,
+      config.tracking,
       .enabled,
-      "Beta login experience should default to enabled when unspecified"
+      "Tracking should default to enabled when unspecified"
     )
     XCTAssertNotNil(
       config.nonce,
@@ -58,17 +58,17 @@ class LoginConfigurationTests: XCTestCase {
     )
   }
 
-  func testCreatingWithBetaLoginExperience() {
+  func testCreatingWithTracking() {
     let preferences = [
-      BetaLoginExperience.enabled,
-      .restricted
+      LoginTracking.enabled,
+      .limited
     ]
     preferences.forEach { preference in
-      let config = LoginConfiguration(betaLoginExperience: preference)
+      let config = LoginConfiguration(tracking: preference)
       XCTAssertEqual(
-        config?.betaLoginExperience,
+        config?.tracking,
         preference,
-        "Should create a configuration with the provided beta login experience preference"
+        "Should create a configuration with the provided tracking preference"
       )
     }
   }
@@ -80,30 +80,30 @@ class LoginConfigurationTests: XCTestCase {
     XCTAssertEqual(
       config?.requestedPermissions,
       Set(permissions.map { $0.name }),
-      "Should create a configuration with the provided beta login experience preference"
+      "Should create a configuration with the provided tracking preference"
     )
   }
 
-  func testCreatingWithPermissionsForRestrictedBetaLoginExperience() {
+  func testCreatingWithPermissionsForLimitedTracking() {
     let allowedPermissions = Set([Permission.email])
     let disallowedPermissions = Set([Permission.userBirthday, .userPosts])
 
     var configuration = LoginConfiguration(
       permissions: disallowedPermissions,
-      betaLoginExperience: .restricted
+      tracking: .limited
     )
     XCTAssertNil(
       configuration,
-      "Should not create a configuration with permissions that are disallowed based on the beta login experience preference" // swiftlint:disable:this line_length
+      "Should not create a configuration with permissions that are disallowed based on the tracking preference" // swiftlint:disable:this line_length
     )
 
     configuration = LoginConfiguration(
       permissions: allowedPermissions,
-      betaLoginExperience: .restricted
+      tracking: .limited
     )
     XCTAssertNotNil(
       configuration,
-      "Should create a configuration with permissions that are allowed based on the beta login experience preference" // swiftlint:disable:this line_length
+      "Should create a configuration with permissions that are allowed based on the tracking preference" // swiftlint:disable:this line_length
     )
   }
 }

@@ -32,22 +32,22 @@
 
 @implementation FBSDKLoginConfiguration
 
-- (nullable instancetype)initWithBetaLoginExperience:(FBSDKBetaLoginExperience)betaLoginExperience
+- (nullable instancetype)initWithTracking:(FBSDKLoginTracking)tracking
 {
   return [[FBSDKLoginConfiguration alloc] initWithPermissions:@[]
-                                          betaLoginExperience:betaLoginExperience];
+                                                     tracking:tracking];
 }
 
 - (nullable instancetype)initWithPermissions:(NSArray<NSString *> *)permissions
-                         betaLoginExperience:(FBSDKBetaLoginExperience)betaLoginExperience
+                                    tracking:(FBSDKLoginTracking)tracking
 {
   return [[FBSDKLoginConfiguration alloc] initWithPermissions:permissions
-                                          betaLoginExperience:betaLoginExperience
+                                                     tracking:tracking
                                                         nonce:NSUUID.UUID.UUIDString];
 }
 
 - (nullable instancetype)initWithPermissions:(NSArray<NSString *> *)permissions
-                         betaLoginExperience:(FBSDKBetaLoginExperience)betaLoginExperience
+                                    tracking:(FBSDKLoginTracking)tracking
                                        nonce:(NSString *)nonce
 {
   if (![FBSDKNonceUtility isValidNonce:nonce]) {
@@ -58,16 +58,16 @@
 
   NSSet<NSString *> *permissionsSet = [NSSet setWithArray:permissions];
   BOOL arePermissionsValid = [FBSDKLoginConfiguration _arePermissionsValid:permissionsSet
-                                              forBetaLoginExperienceStatus:betaLoginExperience];
+                                                     forTrackingPreference:tracking];
   if (!arePermissionsValid) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                       formatString:@"Invalid combination of permissions and beta experience preference provided to login configuration. The only permissions allowed when the `betaLoginExperince` is `.restricted` are 'email' and 'public_profile'. Returning nil."];
+                       formatString:@"Invalid combination of permissions and tracking preference provided to login configuration. The only permissions allowed when `tracking` is `.limited` are 'email' and 'public_profile'. Returning nil."];
     return nil;
   }
 
   if ((self = [super init])) {
     _requestedPermissions = permissionsSet;
-    _betaLoginExperience = betaLoginExperience;
+    _tracking = tracking;
     _nonce = nonce;
   }
 
@@ -78,17 +78,17 @@
 {
   if ((self = [super init])) {
     _requestedPermissions = [NSSet set];
-    _betaLoginExperience = FBSDKBetaLoginExperienceEnabled;
+    _tracking = FBSDKLoginTrackingEnabled;
     _nonce = NSUUID.UUID.UUIDString;
   }
 
   return self;
 }
 
-+ (BOOL)  _arePermissionsValid:(NSSet<NSString *> *)permissions
-  forBetaLoginExperienceStatus:(FBSDKBetaLoginExperience)betaLoginExperience
++ (BOOL)_arePermissionsValid:(NSSet<NSString *> *)permissions
+       forTrackingPreference:(FBSDKLoginTracking)tracking
 {
-  if (betaLoginExperience == FBSDKBetaLoginExperienceRestricted) {
+  if (tracking == FBSDKLoginTrackingLimited) {
     NSSet<NSString *> *validPermissions = [NSSet setWithArray:@[@"email", @"public_profile"]];
     NSSet *combined = [permissions setByAddingObjectsFromSet:validPermissions];
 
