@@ -1,0 +1,4 @@
+InheritParentConfig: true
+Checks: '
+-idfa-usage
+'
