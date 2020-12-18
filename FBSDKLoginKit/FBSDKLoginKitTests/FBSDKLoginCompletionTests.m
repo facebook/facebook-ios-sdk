@@ -25,6 +25,7 @@
 #else
  #import "FBSDKLoginCompletion+Internal.h"
 #endif
+#import "FBSDKLoginKitTests-Swift.h"
 
 static NSString *const _fakeAppID = @"1234567";
 static NSString *const _fakeChallence = @"some_challenge";
@@ -159,6 +160,14 @@ static NSString *const _fakeChallence = @"some_challenge";
   FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters appID:_fakeAppID];
 
   XCTAssertNotNil(completer.parameters.error);
+}
+
+- (void)testInitWithFuzzyParameters
+{
+  for (int i = 0; i < 100; i++) {
+    NSDictionary *parameters = [Fuzzer randomizeWithJson:_parameters];
+    FBSDKLoginURLCompleter *_completer __unused = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters appID:_fakeAppID];
+  }
 }
 
 // MARK: Helpers

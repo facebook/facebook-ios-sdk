@@ -132,23 +132,23 @@
 
 - (void)setParametersWithDictionary:(NSDictionary *)parameters appID:(NSString *)appID
 {
-  NSString *grantedPermissionsString = parameters[@"granted_scopes"];
-  NSString *declinedPermissionsString = parameters[@"denied_scopes"];
+  NSString *grantedPermissionsString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"granted_scopes" ofType:NSString.class];
+  NSString *declinedPermissionsString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"denied_scopes" ofType:NSString.class];
+  NSString *signedRequest = [FBSDKTypeUtility dictionary:parameters objectForKey:@"signed_request" ofType:NSString.class];
+  NSString *userID = [FBSDKTypeUtility dictionary:parameters objectForKey:@"user_id" ofType:NSString.class];
+  NSString *domain = [FBSDKTypeUtility dictionary:parameters objectForKey:@"graph_domain" ofType:NSString.class];
 
-  NSString *signedRequest = parameters[@"signed_request"];
-  NSString *userID = parameters[@"user_id"];
-
-  _parameters.accessTokenString = parameters[@"access_token"];
-  _parameters.nonceString = parameters[@"nonce"];
-  _parameters.authenticationTokenString = parameters[@"id_token"];
+  _parameters.accessTokenString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"access_token" ofType:NSString.class];
+  _parameters.nonceString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"nonce" ofType:NSString.class];
+  _parameters.authenticationTokenString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"id_token" ofType:NSString.class];
 
   // check the string length so that we assign an empty set rather than a set with an empty string
   _parameters.permissions = (grantedPermissionsString.length > 0)
   ? [NSSet setWithArray:[grantedPermissionsString componentsSeparatedByString:@","]]
-  : [NSSet set];
+  : NSSet.set;
   _parameters.declinedPermissions = (declinedPermissionsString.length > 0)
   ? [NSSet setWithArray:[declinedPermissionsString componentsSeparatedByString:@","]]
-  : [NSSet set];
+  : NSSet.set;
 
   _parameters.expiredPermissions = [NSSet set];
 
@@ -160,32 +160,18 @@
     _parameters.userID = userID;
   }
 
-  NSString *expirationDateString = parameters[@"expires"] ?: parameters[@"expires_at"];
-  NSDate *expirationDate = [NSDate distantFuture];
-  if (expirationDateString && expirationDateString.doubleValue > 0) {
-    expirationDate = [NSDate dateWithTimeIntervalSince1970:expirationDateString.doubleValue];
-  } else if (parameters[@"expires_in"] && [parameters[@"expires_in"] integerValue] > 0) {
-    expirationDate = [NSDate dateWithTimeIntervalSinceNow:[parameters[@"expires_in"] integerValue]];
+  if (domain.length > 0) {
+    _parameters.graphDomain = domain;
   }
-  _parameters.expirationDate = expirationDate;
 
-  NSDate *dataAccessExpirationDate = [NSDate distantFuture];
-  if (parameters[@"data_access_expiration_time"] && [parameters[@"data_access_expiration_time"] integerValue] > 0) {
-    dataAccessExpirationDate = [NSDate dateWithTimeIntervalSince1970:[parameters[@"data_access_expiration_time"] integerValue]];
-  }
-  _parameters.dataAccessExpirationDate = dataAccessExpirationDate;
-
-  NSError *error = nil;
-  NSDictionary<id, id> *state = [FBSDKBasicUtility objectForJSONString:parameters[@"state"] error:&error];
-  _parameters.challenge = [FBSDKUtility URLDecode:state[@"challenge"]];
-
-  NSString *domain = parameters[@"graph_domain"];
-  _parameters.graphDomain = [domain copy];
+  _parameters.expirationDate = [FBSDKLoginURLCompleter expirationDateFromParameters:parameters];
+  _parameters.dataAccessExpirationDate = [FBSDKLoginURLCompleter dataAccessExpirationDateFromParameters:parameters];
+  _parameters.challenge = [FBSDKLoginURLCompleter challengeFromParameters:parameters];
 }
 
 - (void)setErrorWithDictionary:(NSDictionary *)parameters
 {
-  NSString *legacyErrorReason = parameters[@"error"];
+  NSString *legacyErrorReason = [FBSDKTypeUtility dictionary:parameters objectForKey:@"error" ofType:NSString.class];
 
   if ([legacyErrorReason isEqualToString:@"service_disabled_use_browser"]
       || [legacyErrorReason isEqualToString:@"service_disabled"]) {
@@ -269,6 +255,56 @@
                                   refreshDate:nil
                                      imageURL:imageURL
                                         email:claims.email];
+}
+
++ (NSDate *)expirationDateFromParameters:(NSDictionary *)parameters
+{
+  NSString *expiresString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"expires" ofType:NSString.class];
+  NSString *expiresAtString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"expires_at" ofType:NSString.class];
+  NSString *expiresInString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"expires_in" ofType:NSString.class];
+  NSString *expirationDateString = expiresString ?: expiresAtString;
+
+  if (expirationDateString.doubleValue > 0) {
+    return [NSDate dateWithTimeIntervalSince1970:expirationDateString.doubleValue];
+  } else if (expiresInString.integerValue > 0) {
+    return [NSDate dateWithTimeIntervalSinceNow:expiresInString.integerValue];
+  } else {
+    return NSDate.distantFuture;
+  }
+}
+
++ (NSDate *)dataAccessExpirationDateFromParameters:(NSDictionary *)parameters
+{
+  NSString *dataAccessExpirationDateString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"data_access_expiration_time" ofType:NSString.class];
+  if (dataAccessExpirationDateString.integerValue > 0) {
+    return [NSDate dateWithTimeIntervalSince1970:dataAccessExpirationDateString.integerValue];
+  } else {
+    return NSDate.distantFuture;
+  }
+}
+
++ (NSString *)challengeFromParameters:(NSDictionary *)parameters
+{
+  NSString *stateString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"state" ofType:NSString.class];
+  if (stateString.length > 0) {
+    NSError *error = nil;
+    NSDictionary<id, id> *state = [FBSDKBasicUtility objectForJSONString:stateString error:&error];
+
+    if (!error) {
+      NSString *challenge = [FBSDKTypeUtility dictionary:state objectForKey:@"challenge" ofType:NSString.class];
+      if (challenge.length > 0) {
+        return [FBSDKUtility URLDecode:state[@"challenge"]];
+      }
+    }
+  }
+  return nil;
+}
+
+// MARK: Test Helpers
+
+- (FBSDKLoginCompletionParameters *)parameters
+{
+  return _parameters;
 }
 
 @end
