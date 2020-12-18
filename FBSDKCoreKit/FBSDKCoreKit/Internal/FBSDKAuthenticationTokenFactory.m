@@ -56,9 +56,6 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 @implementation FBSDKAuthenticationTokenFactory
 {
   NSString *_cert;
-  NSDictionary *_claims;
-  NSDictionary *_header;
-  NSString *_signature;
   id<FBSDKSessionProviding> _sessionProvider;
 }
 
@@ -87,7 +84,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
   NSString *signature;
   FBSDKAuthenticationTokenClaims *claims;
-  NSDictionary *header;
+  FBSDKAuthenticationTokenHeader *header;
 
   NSArray *segments = [tokenString componentsSeparatedByString:@"."];
   if (segments.count != 3) {
@@ -100,12 +97,9 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   signature = [FBSDKTypeUtility array:segments objectAtIndex:2];
 
   claims = [FBSDKAuthenticationTokenClaims validatedClaimsWithEncodedString:encodedClaims nonce:nonce];
-  header = [FBSDKAuthenticationTokenFactory validatedHeaderWithEncodedString:encodedHeader];
-  NSString *certificateKey = [FBSDKTypeUtility dictionary:header
-                                             objectForKey:@"kid"
-                                                   ofType:NSString.class];
+  header = [FBSDKAuthenticationTokenHeader validatedHeaderWithEncodedString:encodedHeader];
 
-  if (!claims || !header || !certificateKey) {
+  if (!claims || !header) {
     completion(nil);
     return;
   }
@@ -113,7 +107,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   [self verifySignature:signature
                  header:encodedHeader
                  claims:encodedClaims
-         certificateKey:certificateKey
+         certificateKey:header.kid
              completion:^(BOOL success) {
                if (success) {
                  FBSDKAuthenticationToken *token = [[FBSDKAuthenticationToken alloc] initWithTokenString:tokenString nonce:nonce claims:claims];
@@ -122,21 +116,6 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
                  completion(nil);
                }
              }];
-}
-
-+ (NSDictionary *)validatedHeaderWithEncodedString:(NSString *)encodedHeader
-{
-  NSError *error;
-  NSData *headerData = [FBSDKBase64 decodeAsData:[FBSDKBase64 base64FromBase64Url:encodedHeader]];
-
-  if (headerData) {
-    NSDictionary *header = [FBSDKTypeUtility JSONObjectWithData:headerData options:0 error:&error];
-    if (!error && [header[@"alg"] isKindOfClass:[NSString class]] && [header[@"alg"] isEqualToString:@"RS256"]) {
-      return header;
-    }
-  }
-
-  return nil;
 }
 
 - (void)verifySignature:(NSString *)signature
