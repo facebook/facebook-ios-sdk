@@ -18,7 +18,6 @@
 
 #import "FBSDKTVInterfaceFactory.h"
 
-#import <FBSDKShareKit/FBSDKShareKit.h>
 #import <TVMLKit/TVElementFactory.h>
 
 #ifdef FBSDKCOCOAPODS
@@ -29,31 +28,9 @@
 #import "FBSDKDeviceLoginButton.h"
 #import "FBSDKTVLoginButtonElement.h"
 #import "FBSDKTVLoginViewControllerElement.h"
-#import "FBSDKTVShareButtonElement.h"
 
 static NSString *const FBSDKLoginButtonTag = @"FBSDKLoginButton";
-static NSString *const FBSDKShareButtonTag = @"FBSDKShareButton";
 static NSString *const FBSDKLoginViewControllerTag = @"FBSDKLoginViewController";
-
-static Class FBSDKDynamicallyLoadShareKitClassFromString(NSString *className)
-{
-  static NSMutableDictionary *classes;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    classes = [NSMutableDictionary dictionary];
-  });
-  if (!classes[className]) {
-    classes[className] = NSClassFromString(className);
-  }
-  Class clazz = classes[className];
-  if (clazz == nil) {
-    NSString *message = [NSString stringWithFormat:@"Unable to load class %1$@. Did you link FBSDKShareKit.framework or add [%1$@ class] in your application delegate?", className];
-    @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:message
-                                 userInfo:nil];
-  }
-  return clazz;
-}
 
 @implementation FBSDKTVInterfaceFactory
 {
@@ -68,8 +45,6 @@ static Class FBSDKDynamicallyLoadShareKitClassFromString(NSString *className)
 
   [TVElementFactory registerViewElementClass:[FBSDKTVLoginButtonElement class] forElementName:FBSDKLoginButtonTag];
   [TVElementFactory registerViewElementClass:[FBSDKTVLoginViewControllerElement class] forElementName:FBSDKLoginViewControllerTag];
-  [TVElementFactory registerViewElementClass:[FBSDKTVShareButtonElement class] forElementName:FBSDKShareButtonTag];
-
   return self;
 }
 
@@ -84,26 +59,6 @@ static Class FBSDKDynamicallyLoadShareKitClassFromString(NSString *className)
     button.permissions = [self permissionsFromElement:element];
     button.redirectURL = [NSURL URLWithString:element.attributes[@"redirectURL"]];
     return button;
-  } else if ([element isKindOfClass:[FBSDKTVShareButtonElement class]]) {
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    FBSDKDeviceShareButton *button = [[FBSDKDynamicallyLoadShareKitClassFromString(@"FBSDKDeviceShareButton") alloc] initWithFrame:CGRectZero];
-    #pragma clang diagnostic pop
-    id<FBSDKSharingContent> content = nil;
-    if (element.attributes[@"href"]) {
-      content = [[FBSDKDynamicallyLoadShareKitClassFromString(@"FBSDKShareLinkContent") alloc] init];
-      content.contentURL = [NSURL URLWithString:element.attributes[@"href"]];
-    }
-
-    if (content) {
-      button.shareContent = content;
-      return button;
-    } else {
-      NSString *message = [NSString stringWithFormat:@"Invalid parameters for %@ (%@)", element.elementIdentifier, element.elementName];
-      @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                     reason:message
-                                   userInfo:nil];
-    }
   }
   if ([_interfaceCreator respondsToSelector:@selector(viewForElement:existingView:)]) {
     return [_interfaceCreator viewForElement:element existingView:existingView];

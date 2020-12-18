@@ -41,7 +41,4 @@
  #import "FBSDKShareCameraEffectContent.h"
  #import "FBSDKShareDialog.h"
  #import "FBSDKShareDialogMode.h"
-#else
- #import "FBSDKDeviceShareButton.h"
- #import "FBSDKDeviceShareViewController.h"
 #endif

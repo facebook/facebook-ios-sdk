@@ -37,7 +37,6 @@ NS_ASSUME_NONNULL_BEGIN
 
  * `<FBSDKLoginButton />` (see FBSDKTVLoginButtonElement.h for details)
  * `<FBSDKLoginViewController />` (see FBSDKTVLoginViewControllerElement.h for details)
- * `<FBSDKShareButton />` (see FBSDKTVShareButtonElement.h for details)
 
  */
 NS_SWIFT_NAME(TVInterfaceFactory)

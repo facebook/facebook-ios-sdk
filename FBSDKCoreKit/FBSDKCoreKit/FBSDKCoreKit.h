@@ -18,12 +18,6 @@
 
 #import <UIKit/UIKit.h>
 
-#if TARGET_OS_TV
- #ifndef DEVICE_SHARING_DEPRECATED
-  #define DEVICE_SHARING_DEPRECATED DEPRECATED_MSG_ATTRIBUTE("Sharing from devices will no longer work as of Nov 2nd 2020")
- #endif
-#endif
-
 #ifdef BUCK
 
  #import <FBSDKCoreKit/FBSDKAccessToken.h>
