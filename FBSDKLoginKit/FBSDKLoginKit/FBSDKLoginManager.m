@@ -426,13 +426,16 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   [self storeExpectedChallenge:expectedChallenge];
 
   NSString *responseType;
+  NSString *tp;
   if (configuration.tracking == FBSDKLoginTrackingLimited) {
     responseType = @"id_token";
-    [FBSDKTypeUtility dictionary:loginParams setObject:@"sentinel_test_value" forKey:@"tp"];
+    tp = @"ios_14_do_not_track";
   } else {
     responseType = @"id_token,token_or_nonce,signed_request,graph_domain";
+    tp = @"ios_14_can_track";
   }
   [FBSDKTypeUtility dictionary:loginParams setObject:responseType forKey:@"response_type"];
+  [FBSDKTypeUtility dictionary:loginParams setObject:tp forKey:@"tp"];
 
   [FBSDKTypeUtility dictionary:loginParams setObject:configuration.nonce forKey:@"nonce"];
   [self storeExpectedNonce:configuration.nonce keychainStore:_keychainStore];

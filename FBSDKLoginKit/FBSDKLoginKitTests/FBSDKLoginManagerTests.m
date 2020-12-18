@@ -520,7 +520,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertEqualObjects(params[@"response_type"], @"id_token,token_or_nonce,signed_request,graph_domain");
   XCTAssertEqualObjects(params[@"scope"], @"public_profile,email,openid");
   XCTAssertNotNil(params[@"nonce"]);
-  XCTAssertNil(params[@"tp"]);
+  XCTAssertEqualObjects(params[@"tp"], @"ios_14_can_track");
 }
 
 - (void)testLoginTrackingLimitedLoginParams
@@ -535,7 +535,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertEqualObjects(params[@"response_type"], @"id_token");
   XCTAssertEqualObjects(params[@"scope"], @"public_profile,email,openid");
   XCTAssertEqualObjects(params[@"nonce"], @"some_nonce");
-  XCTAssertEqualObjects(params[@"tp"], @"sentinel_test_value");
+  XCTAssertEqualObjects(params[@"tp"], @"ios_14_do_not_track");
 }
 
 - (void)testLoginParamsWithNilConfiguration
