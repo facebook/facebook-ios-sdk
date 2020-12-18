@@ -96,7 +96,9 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                            logEntry:failureMessage];
     NSError *error = [FBSDKError errorWithCode:FBSDKErrorInvalidArgument message:failureMessage];
-    completion(nil, error);
+
+    _handler = [completion copy];
+    [self invokeHandler:nil error:error];
     return;
   }
 
