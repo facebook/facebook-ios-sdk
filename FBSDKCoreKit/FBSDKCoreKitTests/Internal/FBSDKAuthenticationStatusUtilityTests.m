@@ -79,7 +79,7 @@
   XCTAssertEqualObjects(url.path, @"/platform/oidc/status");
 
   NSDictionary *params = [FBSDKInternalUtility parametersFromFBURL:url];
-  XCTAssertEqualObjects(params[@"jti"], FBSDKAuthenticationToken.currentAuthenticationToken.jti, @"Incorrent JTI parameter in request url");
+  XCTAssertEqualObjects(params[@"id_token"], FBSDKAuthenticationToken.currentAuthenticationToken.tokenString, @"Incorrect ID token parameter in request url");
 }
 
 // MARK: _handleResponse

@@ -77,11 +77,11 @@ static NSString *const FBSDKOIDCStatusPath = @"/platform/oidc/status";
 {
   FBSDKAuthenticationToken *token = FBSDKAuthenticationToken.currentAuthenticationToken;
 
-  if (!token || !token.jti) {
+  if (!token.tokenString) {
     return nil;
   }
 
-  NSDictionary *params = @{@"jti" : token.jti};
+  NSDictionary *params = @{@"id_token" : token.tokenString};
   NSError *urlError;
   NSString *host;
 
