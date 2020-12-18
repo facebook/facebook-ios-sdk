@@ -71,16 +71,15 @@
   if ((self = [super init]) != nil) {
     _parameters = [[FBSDKLoginCompletionParameters alloc] init];
 
-    BOOL hasNonEmptyNonceString = [parameters[@"nonce"] length] > 0;
-    BOOL hasNonEmptyIdTokenString = [parameters[@"id_token"] length] > 0;
+    BOOL hasNonEmptyNonceString = ((NSString *)[FBSDKTypeUtility dictionary:parameters objectForKey:@"nonce" ofType:NSString.class]).length > 0;
+    BOOL hasNonEmptyIdTokenString = ((NSString *)[FBSDKTypeUtility dictionary:parameters objectForKey:@"id_token" ofType:NSString.class]).length > 0;
+    BOOL hasNonEmptyAccessTokenString = ((NSString *)[FBSDKTypeUtility dictionary:parameters objectForKey:@"access_token" ofType:NSString.class]).length > 0;
 
-    // TODO: T81282385 - Error if nonce and ID Token
     // Nonce and id token are mutually exclusive parameters
-    // BOOL isInvalid = (hasNonEmptyNonceString && hasNonEmptyIdTokenString);
+    BOOL hasBothNonceAndIdToken = hasNonEmptyNonceString && hasNonEmptyIdTokenString;
+    BOOL hasEitherNonceOrIdToken = hasNonEmptyNonceString || hasNonEmptyIdTokenString;
 
-    if ([parameters[@"access_token"] length] > 0
-        || hasNonEmptyNonceString
-        || hasNonEmptyIdTokenString) {
+    if (hasNonEmptyAccessTokenString || (hasEitherNonceOrIdToken && !hasBothNonceAndIdToken)) {
       [self setParametersWithDictionary:parameters appID:appID];
     } else {
       [self setErrorWithDictionary:parameters];

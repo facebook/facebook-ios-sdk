@@ -141,6 +141,16 @@ static NSString *const _fakeChallence = @"some_challenge";
   [self verifyEmptyParameters:completer.parameters];
 }
 
+- (void)testInitWithBothIdTokenAndNonce
+{
+  NSMutableDictionary *parameters = _parameters.mutableCopy;
+  [parameters removeObjectsForKeys:@[@"access_token"]];
+
+  FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters appID:_fakeAppID];
+
+  XCTAssertNotNil(completer.parameters.error);
+}
+
 - (void)testInitWithError
 {
   NSMutableDictionary *parameters = _parameters.mutableCopy;
