@@ -204,8 +204,6 @@ You should provide as much context to the user as possible as to why you need to
 access being reathorized, and what added value your app provides when the access is reathorized.
 You can inspect the  result.declinedPermissions to also provide more information to the user if they decline permissions.
 This method will present UI the user. You typically should call this if `[FBSDKAccessToken isDataAccessExpired]` returns true.
-
- @warning This method will reauthorize using a `LoginConfiguration` with `FBSDKBetaLoginExperience` set to enabled.
  */
 - (void)reauthorizeDataAccess:(UIViewController *)fromViewController
                       handler:(FBSDKLoginManagerLoginResultBlock)handler

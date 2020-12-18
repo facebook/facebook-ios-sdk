@@ -390,6 +390,15 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 - (NSDictionary *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration
                                serverConfiguration:(FBSDKServerConfiguration *)serverConfiguration
 {
+  // Making sure configuration is not nil in case this method gets called
+  // internally without specifying a cofiguration.
+  if (!configuration) {
+    NSString *failureMessage = @"Unable to perform login.";
+    NSError *error = [FBSDKError errorWithCode:FBSDKErrorUnknown message:failureMessage];
+    [self invokeHandler:nil error:error];
+    return nil;
+  }
+
   [FBSDKInternalUtility validateURLSchemes];
 
   NSMutableDictionary *loginParams = [NSMutableDictionary dictionary];
@@ -407,6 +416,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKSettings isAutoLogAppEventsEnabled] ? @1 : @0 forKey:@"ies"];
   [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKSettings appURLSchemeSuffix] forKey:@"local_client_id"];
   [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKLoginUtility stringForAudience:self.defaultAudience] forKey:@"default_audience"];
+
   NSSet *permissions = [configuration.requestedPermissions setByAddingObject:@"openid"];
   [FBSDKTypeUtility dictionary:loginParams setObject:[permissions.allObjects componentsJoinedByString:@","] forKey:@"scope"];
 
@@ -495,6 +505,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   _handler = [handler copy];
   // Don't need to pass permissions for data reauthorization.
   _requestedPermissions = [NSSet set];
+  _configuration = [[FBSDKLoginConfiguration alloc] initWithTracking:FBSDKLoginTrackingEnabled];
   self.authType = FBSDKLoginAuthTypeReauthorize;
   [_logger startSessionForLoginManager:self];
   [self logIn];
@@ -580,6 +591,11 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 - (void)setRequestedPermissions:(NSSet *)requestedPermissions
 {
   _requestedPermissions = [requestedPermissions copy];
+}
+
+- (FBSDKLoginConfiguration *)configuration
+{
+  return _configuration;
 }
 
 // change bool to auth method string.

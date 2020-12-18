@@ -64,8 +64,6 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 
 - (void)completeAuthentication:(FBSDKLoginCompletionParameters *)parameters expectChallenge:(BOOL)expectChallenge;
 
-// available to internal types to trigger login without checking read/publish mixtures.
-- (void)logInWithPermissions:(NSSet *)permissions handler:(FBSDKLoginManagerLoginResultBlock)handler;
 - (void)logIn;
 
 // made available for testing only
@@ -78,8 +76,6 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 - (void)setHandler:(FBSDKLoginManagerLoginResultBlock)handler;
 // for testing only
 - (void)setRequestedPermissions:(NSSet *)requestedPermissions;
-// for testing only
-- (void)performBrowserLogInWithParameters:(NSDictionary *)loginParams handler:(FBSDKBrowserLoginSuccessBlock)handler;
 
 // available to internal modules
 - (void)handleImplicitCancelOfLogIn;
