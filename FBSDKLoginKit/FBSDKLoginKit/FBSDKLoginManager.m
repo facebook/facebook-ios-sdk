@@ -427,13 +427,18 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 
   NSString *responseType;
   NSString *tp;
-  if (configuration.tracking == FBSDKLoginTrackingLimited) {
-    responseType = @"id_token";
-    tp = @"ios_14_do_not_track";
-  } else {
-    responseType = @"id_token,token_or_nonce,signed_request,graph_domain";
-    tp = @"ios_14_can_track";
+
+  switch (configuration.tracking) {
+    case FBSDKLoginTrackingLimited:
+      responseType = @"id_token";
+      tp = @"ios_14_do_not_track";
+      break;
+    case FBSDKLoginTrackingEnabled:
+      responseType = @"id_token,token_or_nonce,signed_request,graph_domain";
+      tp = @"ios_14_can_track";
+      break;
   }
+
   [FBSDKTypeUtility dictionary:loginParams setObject:responseType forKey:@"response_type"];
   [FBSDKTypeUtility dictionary:loginParams setObject:tp forKey:@"tp"];
 

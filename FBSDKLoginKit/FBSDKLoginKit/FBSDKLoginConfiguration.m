@@ -88,14 +88,16 @@
 + (BOOL)_arePermissionsValid:(NSSet<NSString *> *)permissions
        forTrackingPreference:(FBSDKLoginTracking)tracking
 {
-  if (tracking == FBSDKLoginTrackingLimited) {
-    NSSet<NSString *> *validPermissions = [NSSet setWithArray:@[@"email", @"public_profile"]];
-    NSSet *combined = [permissions setByAddingObjectsFromSet:validPermissions];
+  switch (tracking) {
+    case FBSDKLoginTrackingLimited: {
+      NSSet<NSString *> *validPermissions = [NSSet setWithArray:@[@"email", @"public_profile"]];
+      NSSet *combined = [permissions setByAddingObjectsFromSet:validPermissions];
 
-    return (permissions.count == 0) || (combined.count <= validPermissions.count);
+      return (permissions.count == 0) || (combined.count <= validPermissions.count);
+    }
+    case FBSDKLoginTrackingEnabled:
+      return YES;
   }
-
-  return YES;
 }
 
 @end
