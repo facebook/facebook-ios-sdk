@@ -51,8 +51,6 @@ static NSHashTable<id<FBSDKCrashObserving>> *_observers;
 static NSArray<NSDictionary<NSString *, id> *> *_processedCrashLogs;
 static BOOL _isTurnedOff;
 
-# pragma mark - Class Methods
-
 + (void)initialize
 {
   NSString *dirPath = [NSTemporaryDirectory() stringByAppendingPathComponent:FBSDK_CRASH_PATH_NAME];
@@ -65,39 +63,11 @@ static BOOL _isTurnedOff;
   _observers = [[NSHashTable alloc] init];
 }
 
-+ (void)_sendCrashLogs
-{
-  for (id<FBSDKCrashObserving> observer in _observers) {
-    if (observer && [observer respondsToSelector:@selector(didReceiveCrashLogs:)]) {
-      NSArray<NSDictionary<NSString *, id> *> *filteredCrashLogs = [self _filterCrashLogs:observer.prefixes processedCrashLogs:_processedCrashLogs];
-      [observer didReceiveCrashLogs:filteredCrashLogs];
-    }
-  }
-}
+#pragma mark - Public API
 
-+ (NSArray<NSDictionary<NSString *, id> *> *)_filterCrashLogs:(NSArray<NSString *> *)prefixList
-                                           processedCrashLogs:(NSArray<NSDictionary<NSString *, id> *> *)processedCrashLogs
++ (NSString *)getFBSDKVersion
 {
-  NSMutableArray<NSDictionary<NSString *, id> *> *crashLogs = [NSMutableArray array];
-  for (NSDictionary<NSString *, id> *crashLog in processedCrashLogs) {
-    NSArray<NSString *> *callstack = crashLog[kFBSDKCallstack];
-    if ([self _callstack:callstack containsPrefix:prefixList]) {
-      [FBSDKTypeUtility array:crashLogs addObject:crashLog];
-    }
-  }
-  return crashLogs;
-}
-
-+ (BOOL)_callstack:(NSArray<NSString *> *)callstack
-    containsPrefix:(NSArray<NSString *> *)prefixList
-{
-  NSString *callStackString = [callstack componentsJoinedByString:@""];
-  for (NSString *prefix in prefixList) {
-    if ([callStackString containsString:prefix]) {
-      return YES;
-    }
-  }
-  return NO;
+  return FBSDK_VERSION_STRING;
 }
 
 + (void)disable
@@ -140,7 +110,19 @@ static BOOL _isTurnedOff;
   }
 }
 
-# pragma mark handler function
++ (void)clearCrashReportFiles
+{
+  NSArray<NSString *> *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directoryPath error:nil];
+
+  for (NSUInteger i = 0; i < files.count; i++) {
+    // remove all crash related files except for the current mapping table
+    if ([[FBSDKTypeUtility array:files objectAtIndex:i] hasPrefix:@"crash_"] && ![[FBSDKTypeUtility array:files objectAtIndex:i] containsString:mappingTableIdentifier]) {
+      [[NSFileManager defaultManager] removeItemAtPath:[directoryPath stringByAppendingPathComponent:[FBSDKTypeUtility array:files objectAtIndex:i]] error:nil];
+    }
+  }
+}
+
+# pragma mark - Handler
 
 + (void)_installExceptionsHandler
 {
@@ -166,7 +148,7 @@ static void FBSDKExceptionHandler(NSException *exception)
   }
 }
 
-#pragma mark - Storage
+#pragma mark - Storage & Process
 
 + (void)_saveException:(NSException *)exception
 {
@@ -236,18 +218,6 @@ static void FBSDKExceptionHandler(NSException *exception)
   return [NSData dataWithContentsOfFile:[directoryPath stringByAppendingPathComponent:fileName] options:NSDataReadingMappedIfSafe error:nil];
 }
 
-+ (void)clearCrashReportFiles
-{
-  NSArray<NSString *> *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directoryPath error:nil];
-
-  for (NSUInteger i = 0; i < files.count; i++) {
-    // remove all crash related files except for the current mapping table
-    if ([[FBSDKTypeUtility array:files objectAtIndex:i] hasPrefix:@"crash_"] && ![[FBSDKTypeUtility array:files objectAtIndex:i] containsString:mappingTableIdentifier]) {
-      [[NSFileManager defaultManager] removeItemAtPath:[directoryPath stringByAppendingPathComponent:[FBSDKTypeUtility array:files objectAtIndex:i]] error:nil];
-    }
-  }
-}
-
 + (NSArray<NSString *> *)_getCrashLogFileNames:(NSArray<NSString *> *)files
 {
   NSMutableArray<NSString *> *fileNames = [NSMutableArray array];
@@ -285,6 +255,43 @@ static void FBSDKExceptionHandler(NSException *exception)
   [data writeToFile:[self _getPathToCrashFile:currentTimestamp]
          atomically:YES];
 }
+
++ (void)_sendCrashLogs
+{
+  for (id<FBSDKCrashObserving> observer in _observers) {
+    if (observer && [observer respondsToSelector:@selector(didReceiveCrashLogs:)]) {
+      NSArray<NSDictionary<NSString *, id> *> *filteredCrashLogs = [self _filterCrashLogs:observer.prefixes processedCrashLogs:_processedCrashLogs];
+      [observer didReceiveCrashLogs:filteredCrashLogs];
+    }
+  }
+}
+
++ (NSArray<NSDictionary<NSString *, id> *> *)_filterCrashLogs:(NSArray<NSString *> *)prefixList
+                                           processedCrashLogs:(NSArray<NSDictionary<NSString *, id> *> *)processedCrashLogs
+{
+  NSMutableArray<NSDictionary<NSString *, id> *> *crashLogs = [NSMutableArray array];
+  for (NSDictionary<NSString *, id> *crashLog in processedCrashLogs) {
+    NSArray<NSString *> *callstack = crashLog[kFBSDKCallstack];
+    if ([self _callstack:callstack containsPrefix:prefixList]) {
+      [FBSDKTypeUtility array:crashLogs addObject:crashLog];
+    }
+  }
+  return crashLogs;
+}
+
++ (BOOL)_callstack:(NSArray<NSString *> *)callstack
+    containsPrefix:(NSArray<NSString *> *)prefixList
+{
+  NSString *callStackString = [callstack componentsJoinedByString:@""];
+  for (NSString *prefix in prefixList) {
+    if ([callStackString containsString:prefix]) {
+      return YES;
+    }
+  }
+  return NO;
+}
+
+#pragma mark - Method Mapping
 
 + (void)_generateMethodMapping:(id<FBSDKCrashObserving>)observer
 {
@@ -332,11 +339,6 @@ static void FBSDKExceptionHandler(NSException *exception)
 
   return [[NSFileManager defaultManager] fileExistsAtPath:[self _getPathToLibDataFile:identifier]];
 #endif
-}
-
-+ (NSString *)getFBSDKVersion
-{
-  return FBSDK_VERSION_STRING;
 }
 
 @end
