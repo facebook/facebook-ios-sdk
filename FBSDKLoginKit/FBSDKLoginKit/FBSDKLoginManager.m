@@ -135,13 +135,26 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   [FBSDKProfile setCurrentProfile:nil];
 }
 
- #pragma mark - Private
-
-- (void)raiseLoginException:(NSException *)exception
+- (void)logInWithURL:(NSURL *)url
+             handler:(nullable FBSDKLoginManagerLoginResultBlock)handler
 {
-  _state = FBSDKLoginManagerStateIdle;
-  [exception raise];
+  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager cachedServerConfiguration];
+  _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:serverConfiguration.loggingToken];
+  _handler = [handler copy];
+
+  [_logger startSessionForLoginManager:self];
+  [_logger startAuthMethod:FBSDKLoginManagerLoggerAuthMethod_Applink];
+
+  NSDictionary *params = [self logInParametersFromURL:url];
+  if (params) {
+    id<FBSDKLoginCompleting> completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:params appID:[FBSDKSettings appID]];
+    [completer completeLoginWithHandler:^(FBSDKLoginCompletionParameters *parameters) {
+      [self completeAuthentication:parameters expectChallenge:NO];
+    }];
+  }
 }
+
+ #pragma mark - Private
 
 - (void)handleImplicitCancelOfLogIn
 {
@@ -185,22 +198,6 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 - (BOOL)isPerformingLogin
 {
   return _state == FBSDKLoginManagerStatePerformingLogin;
-}
-
-- (void)assertPermissions:(NSArray *)permissions
-{
-  for (NSString *permission in permissions) {
-    if (![permission isKindOfClass:[NSString class]]) {
-      [self raiseLoginException:[NSException exceptionWithName:NSInvalidArgumentException
-                                                        reason:@"Permissions must be string values."
-                                                      userInfo:nil]];
-    }
-    if ([permission rangeOfString:@","].location != NSNotFound) {
-      [self raiseLoginException:[NSException exceptionWithName:NSInvalidArgumentException
-                                                        reason:@"Permissions should each be specified in separate string values in the array."
-                                                      userInfo:nil]];
-    }
-  }
 }
 
 - (void)completeAuthentication:(FBSDKLoginCompletionParameters *)parameters expectChallenge:(BOOL)expectChallenge
@@ -479,25 +476,6 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   return nil;
 }
 
-- (void)logInWithURL:(NSURL *)url
-             handler:(nullable FBSDKLoginManagerLoginResultBlock)handler
-{
-  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager cachedServerConfiguration];
-  _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:serverConfiguration.loggingToken];
-  _handler = [handler copy];
-
-  [_logger startSessionForLoginManager:self];
-  [_logger startAuthMethod:FBSDKLoginManagerLoggerAuthMethod_Applink];
-
-  NSDictionary *params = [self logInParametersFromURL:url];
-  if (params) {
-    id<FBSDKLoginCompleting> completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:params appID:[FBSDKSettings appID]];
-    [completer completeLoginWithHandler:^(FBSDKLoginCompletionParameters *parameters) {
-      [self completeAuthentication:parameters expectChallenge:NO];
-    }];
-  }
-}
-
 - (void)reauthorizeDataAccess:(FBSDKLoginManagerLoginResultBlock)handler
 {
   if (!FBSDKAccessToken.currentAccessToken) {
@@ -589,23 +567,6 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   }];
 }
 
- #pragma mark - Test Methods
-
-- (void)setHandler:(FBSDKLoginManagerLoginResultBlock)handler
-{
-  _handler = [handler copy];
-}
-
-- (void)setRequestedPermissions:(NSSet *)requestedPermissions
-{
-  _requestedPermissions = [requestedPermissions copy];
-}
-
-- (FBSDKLoginConfiguration *)configuration
-{
-  return _configuration;
-}
-
 // change bool to auth method string.
 - (void)performBrowserLogInWithParameters:(NSDictionary *)loginParams
                                   handler:(FBSDKBrowserLoginSuccessBlock)handler
@@ -657,6 +618,23 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
       handler(NO, error);
     }
   }
+}
+
+ #pragma mark - Test Methods
+
+- (void)setHandler:(FBSDKLoginManagerLoginResultBlock)handler
+{
+  _handler = [handler copy];
+}
+
+- (void)setRequestedPermissions:(NSSet *)requestedPermissions
+{
+  _requestedPermissions = [requestedPermissions copy];
+}
+
+- (FBSDKLoginConfiguration *)configuration
+{
+  return _configuration;
 }
 
  #pragma mark - FBSDKURLOpening
