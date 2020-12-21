@@ -26,15 +26,15 @@
 
 @interface FBSDKCrashHandler ()
 
-+ (void)uninstallExceptionsHandler;
-+ (NSArray<NSString *> *)getCrashLogFileNames:(NSArray<NSString *> *)files;
-+ (NSString *)getPathToCrashFile:(NSString *)timestamp;
-+ (NSString *)getPathToLibDataFile:(NSString *)identifier;
-+ (BOOL)callstack:(NSArray<NSString *> *)callstack
-   containsPrefix:(NSArray<NSString *> *)prefixList;
-+ (NSArray<NSDictionary<NSString *, id> *> *)filterCrashLogs:(NSArray<NSString *> *)prefixList
-                                          processedCrashLogs:(NSArray<NSDictionary<NSString *, id> *> *)processedCrashLogs;
-+ (void)saveCrashLog:(NSDictionary<NSString *, id> *)crashLog;
++ (void)_uninstallExceptionsHandler;
++ (NSArray<NSString *> *)_getCrashLogFileNames:(NSArray<NSString *> *)files;
++ (NSString *)_getPathToCrashFile:(NSString *)timestamp;
++ (NSString *)_getPathToLibDataFile:(NSString *)identifier;
++ (BOOL)_callstack:(NSArray<NSString *> *)callstack
+    containsPrefix:(NSArray<NSString *> *)prefixList;
++ (NSArray<NSDictionary<NSString *, id> *> *)_filterCrashLogs:(NSArray<NSString *> *)prefixList
+                                           processedCrashLogs:(NSArray<NSDictionary<NSString *, id> *> *)processedCrashLogs;
++ (void)_saveCrashLog:(NSDictionary<NSString *, id> *)crashLog;
 
 @end
 
@@ -67,7 +67,7 @@
                                  @"SUGGEST_EVENT_3.rules",
                                  @"crash.text",
   ];
-  NSArray<NSString *> *result1 = [FBSDKCrashHandler getCrashLogFileNames:files];
+  NSArray<NSString *> *result1 = [FBSDKCrashHandler _getCrashLogFileNames:files];
   XCTAssertTrue([result1 containsObject:@"crash_log_1576471375.json"]);
 
   XCTAssertFalse([result1 containsObject:@"crash_lib_data_05DEDC8AFC724E09A5E68190C492B92B.json"]);
@@ -77,7 +77,7 @@
   XCTAssertFalse([result1 containsObject:@"crash.text"]);
 
   files = [NSArray array];
-  NSArray<NSString *> *result2 = [FBSDKCrashHandler getCrashLogFileNames:files];
+  NSArray<NSString *> *result2 = [FBSDKCrashHandler _getCrashLogFileNames:files];
   XCTAssertTrue(result2.count == 0);
 }
 
@@ -85,7 +85,7 @@
 {
   NSString *timestampMock = @"test_timestamp";
   NSString *crashLogFileName = [NSString stringWithFormat:@"crash_log_%@.json", timestampMock];
-  NSString *pathToCrashFile = [FBSDKCrashHandler getPathToCrashFile:timestampMock];
+  NSString *pathToCrashFile = [FBSDKCrashHandler _getPathToCrashFile:timestampMock];
 
   XCTAssertTrue([pathToCrashFile hasSuffix:crashLogFileName]);
 }
@@ -94,7 +94,7 @@
 {
   NSString *identifierMock = @"test_identifier";
   NSString *libDataFileName = [NSString stringWithFormat:@"crash_lib_data_%@.json", identifierMock];
-  NSString *pathToLibDataFile = [FBSDKCrashHandler getPathToLibDataFile:identifierMock];
+  NSString *pathToLibDataFile = [FBSDKCrashHandler _getPathToLibDataFile:identifierMock];
 
   XCTAssertTrue([pathToLibDataFile hasSuffix:libDataFileName]);
 }
@@ -108,19 +108,19 @@
     @"-[FBSDKWebViewAppLinkResolver appLinkFromALData:destination:]+10540",
     @"(14 DEV METHODS)",
   ];
-  XCTAssertTrue([FBSDKCrashHandler callstack:callStack1 containsPrefix:prefixList]);
+  XCTAssertTrue([FBSDKCrashHandler _callstack:callStack1 containsPrefix:prefixList]);
 
   NSArray<NSString *> *callStack2 = @[
     @"(2 DEV METHODS)",
     @"-[FBAdPersistentCacheImpl storeAssetInMemory:forKey:expiration:]+14455428",
     @"(12 DEV METHODS)",
   ];
-  XCTAssertFalse([FBSDKCrashHandler callstack:callStack2 containsPrefix:prefixList]);
+  XCTAssertFalse([FBSDKCrashHandler _callstack:callStack2 containsPrefix:prefixList]);
 }
 
 - (void)testFilterCrashLogs
 {
-  NSArray *filteredCrashLogs = [FBSDKCrashHandler filterCrashLogs:@[@"FBSDK", @"_FBSDK"] processedCrashLogs:[self mockProcessedCrashLogs]];
+  NSArray *filteredCrashLogs = [FBSDKCrashHandler _filterCrashLogs:@[@"FBSDK", @"_FBSDK"] processedCrashLogs:[self mockProcessedCrashLogs]];
 
   XCTAssertEqual(1, filteredCrashLogs.count);
 
