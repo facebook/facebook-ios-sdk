@@ -82,7 +82,7 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
   NSMutableSet<NSString *> *disabledFeatues = [NSMutableSet set];
   for (NSDictionary<NSString *, id> *crashLog in crashLogs) {
     NSArray<NSString *> *callstack = crashLog[@"callstack"];
-    NSString *featureName = [self getFeature:callstack];
+    NSString *featureName = [self _getFeature:callstack];
     if (featureName) {
       [FBSDKFeatureManager disableFeature:featureName];
       [disabledFeatues addObject:featureName];
@@ -109,12 +109,14 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
   }
 }
 
-+ (nullable NSString *)getFeature:(NSArray<NSString *> *)callstack
+#pragma mark - Private Methods
+
++ (nullable NSString *)_getFeature:(NSArray<NSString *> *)callstack
 {
   NSArray<NSString *> *validCallstack = [FBSDKTypeUtility arrayValue:callstack];
   NSArray<NSString *> *featureNames = _featureMapping.allKeys;
   for (NSString *entry in validCallstack) {
-    NSString *className = [self getClassName:[FBSDKTypeUtility stringValue:entry]];
+    NSString *className = [self _getClassName:[FBSDKTypeUtility stringValue:entry]];
     for (NSString *featureName in featureNames) {
       NSArray<NSString *> *classArray = [FBSDKTypeUtility dictionary:_featureMapping objectForKey:featureName ofType:NSObject.class];
       if (className && [classArray containsObject:className]) {
@@ -125,7 +127,7 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
   return nil;
 }
 
-+ (nullable NSString *)getClassName:(NSString *)entry
++ (nullable NSString *)_getClassName:(NSString *)entry
 {
   NSString *validEntry = [FBSDKTypeUtility stringValue:entry];
   NSArray<NSString *> *items = [validEntry componentsSeparatedByString:@" "];
