@@ -21,8 +21,10 @@
 #import "FBSDKCoreKit+Internal.h"
 
 #ifdef BUCK
+ #import <FBSDKLoginKit+Internal/FBSDKGraphRequestConnectionProviding.h>
  #import <FBSDKLoginKit+Internal/FBSDKNonceUtility.h>
 #else
+ #import "FBSDKGraphRequestConnectionProviding.h"
  #import "FBSDKNonceUtility.h"
 #endif
 

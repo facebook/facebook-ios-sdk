@@ -28,6 +28,7 @@
   #import <FBSDKCoreKit/FBSDKCoreKit.h>
  #endif
 
+ #import "FBSDKGraphRequestConnectionProviding.h"
  #import "FBSDKLoginConstants.h"
  #import "FBSDKLoginError.h"
  #import "FBSDKLoginManager+Internal.h"
@@ -69,7 +70,7 @@
                                 appID:(NSString *)appID
 {
   if ((self = [super init]) != nil) {
-    _parameters = [[FBSDKLoginCompletionParameters alloc] init];
+    _parameters = [FBSDKLoginCompletionParameters new];
 
     BOOL hasNonEmptyNonceString = ((NSString *)[FBSDKTypeUtility dictionary:parameters objectForKey:@"nonce" ofType:NSString.class]).length > 0;
     BOOL hasNonEmptyIdTokenString = ((NSString *)[FBSDKTypeUtility dictionary:parameters objectForKey:@"id_token" ofType:NSString.class]).length > 0;
@@ -185,21 +186,26 @@
 
 - (void)exchangeNonceForTokenWithHandler:(FBSDKLoginCompletionParametersBlock)handler
 {
+  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
+  [self exchangeNonceForTokenWithGraphRequestConnectionProvider:connection handler:handler];
+}
+
+- (void)exchangeNonceForTokenWithGraphRequestConnectionProvider:(nonnull id<FBSDKGraphRequestConnectionProviding>)connection
+                                                        handler:(nonnull FBSDKLoginCompletionParametersBlock)handler
+{
   if (!handler) {
     return;
   }
 
   NSString *nonce = _parameters.nonceString ?: @"";
-  NSString *appID = [FBSDKSettings appID] ?: @"";
+  NSString *appID = _parameters.appID ?: @"";
 
   if (nonce.length == 0 || appID.length == 0) {
     _parameters.error = [FBSDKError errorWithCode:FBSDKErrorInvalidArgument message:@"Missing required parameters to exchange nonce for access token."];
-
     handler(_parameters);
     return;
   }
 
-  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
   FBSDKGraphRequest *tokenRequest = [[FBSDKGraphRequest alloc]
                                      initWithGraphPath:@"oauth/access_token"
                                      parameters:@{ @"grant_type" : @"fb_exchange_nonce",
@@ -211,22 +217,13 @@
   __block FBSDKLoginCompletionParameters *parameters = _parameters;
   [connection addRequest:tokenRequest completionHandler:^(FBSDKGraphRequestConnection *requestConnection,
                                                           id result,
-                                                          NSError *error) {
-                                                            if (!error) {
-                                                              parameters.accessTokenString = result[@"access_token"];
-                                                              NSDate *expirationDate = [NSDate distantFuture];
-                                                              if (result[@"expires_in"] && [result[@"expires_in"] integerValue] > 0) {
-                                                                expirationDate = [NSDate dateWithTimeIntervalSinceNow:[result[@"expires_in"] integerValue]];
-                                                              }
-                                                              parameters.expirationDate = expirationDate;
-
-                                                              NSDate *dataAccessExpirationDate = [NSDate distantFuture];
-                                                              if (result[@"data_access_expiration_time"] && [result[@"data_access_expiration_time"] integerValue] > 0) {
-                                                                dataAccessExpirationDate = [NSDate dateWithTimeIntervalSince1970:[result[@"data_access_expiration_time"] integerValue]];
-                                                              }
-                                                              parameters.dataAccessExpirationDate = dataAccessExpirationDate;
+                                                          NSError *graphRequestError) {
+                                                            if (!graphRequestError) {
+                                                              parameters.accessTokenString = [FBSDKTypeUtility dictionary:result objectForKey:@"access_token" ofType:NSString.class];
+                                                              parameters.expirationDate = [FBSDKLoginURLCompleter expirationDateFromParameters:result];
+                                                              parameters.dataAccessExpirationDate = [FBSDKLoginURLCompleter dataAccessExpirationDateFromParameters:result];
                                                             } else {
-                                                              parameters.error = error;
+                                                              parameters.error = graphRequestError;
                                                             }
 
                                                             handler(parameters);
@@ -293,7 +290,7 @@
     if (!error) {
       NSString *challenge = [FBSDKTypeUtility dictionary:state objectForKey:@"challenge" ofType:NSString.class];
       if (challenge.length > 0) {
-        return [FBSDKUtility URLDecode:state[@"challenge"]];
+        return [FBSDKUtility URLDecode:challenge];
       }
     }
   }

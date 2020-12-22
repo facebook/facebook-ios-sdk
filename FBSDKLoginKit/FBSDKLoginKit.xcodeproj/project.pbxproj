@@ -135,7 +135,6 @@
 		C6470B1024F44C0100E7AEF7 /* FBSDKReferralManagerResult.h in Headers */ = {isa = PBXBuildFile; fileRef = C68C1C6024F074FD005067E1 /* FBSDKReferralManagerResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C6470B2024F45A3A00E7AEF7 /* FBSDKReferralManagerResult.m in Sources */ = {isa = PBXBuildFile; fileRef = C68C1C6B24F07688005067E1 /* FBSDKReferralManagerResult.m */; };
 		C67DC40F25882264004D7E43 /* FBSDKLoginCompletionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C67DC40E25882263004D7E43 /* FBSDKLoginCompletionTests.m */; };
-		C67DC42D258851C3004D7E43 /* Fuzzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C67DC42C258851C3004D7E43 /* Fuzzer.swift */; };
 		C681486C24F866EA004EED1A /* FBSDKReferralCode.h in Headers */ = {isa = PBXBuildFile; fileRef = C681486124F866EA004EED1A /* FBSDKReferralCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C681486D24F866EA004EED1A /* FBSDKReferralCode.m in Sources */ = {isa = PBXBuildFile; fileRef = C681486B24F866EA004EED1A /* FBSDKReferralCode.m */; };
 		C681486E24F86712004EED1A /* FBSDKReferralCode.h in Headers */ = {isa = PBXBuildFile; fileRef = C681486124F866EA004EED1A /* FBSDKReferralCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -160,11 +159,15 @@
 		F4647492256B031600502449 /* FBSDKLoginConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = F464748F256B031600502449 /* FBSDKLoginConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4647493256B031600502449 /* FBSDKLoginConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = F464748F256B031600502449 /* FBSDKLoginConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F464749C256B048500502449 /* LoginConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F464749B256B048500502449 /* LoginConfigurationTests.swift */; };
+		F4665CC2258D684300981FDE /* Fuzzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4665CC0258D684300981FDE /* Fuzzer.swift */; };
+		F4665CC3258D684300981FDE /* SampleAccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4665CC1258D684300981FDE /* SampleAccessToken.swift */; };
+		F4665CD3258D687500981FDE /* FakeGraphRequestConnectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4665CD2258D687500981FDE /* FakeGraphRequestConnectionProvider.swift */; };
+		F4665D31258D699100981FDE /* FBSDKGraphRequestConnectionProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4665CAD258D66A800981FDE /* FBSDKGraphRequestConnectionProviding.h */; };
+		F4665D39258D699200981FDE /* FBSDKGraphRequestConnectionProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4665CAD258D66A800981FDE /* FBSDKGraphRequestConnectionProviding.h */; };
 		F46FA65A245347580060C902 /* FBLoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46FA659245347570060C902 /* FBLoginButton.swift */; };
 		F46FA65B245347580060C902 /* FBLoginButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46FA659245347570060C902 /* FBLoginButton.swift */; };
 		F46FA65D245347820060C902 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46FA65C245347820060C902 /* LoginManager.swift */; };
 		F46FA65E245347820060C902 /* LoginManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46FA65C245347820060C902 /* LoginManager.swift */; };
-		F46FE68B2579764F000F4F53 /* SampleAccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46FE68A2579764F000F4F53 /* SampleAccessToken.swift */; };
 		F47E5CDC25895C5F008CA03E /* FBSDKLoginManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D641F831A7B69160048F563 /* FBSDKLoginManagerTests.m */; };
 		F47FB46C2580646600922543 /* FBSDKLoginManagerLoggerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F47FB44E25805E7900922543 /* FBSDKLoginManagerLoggerTests.m */; };
 		F4AA32822574448C005EDF04 /* LoginConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AA32812574448C005EDF04 /* LoginConfiguration.swift */; };
@@ -390,7 +393,6 @@
 		9DEE5C931A671B5500D750E1 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		C632597224EDAF0F00D8F7E3 /* FBSDKReferralManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKReferralManagerTests.m; sourceTree = "<group>"; };
 		C67DC40E25882263004D7E43 /* FBSDKLoginCompletionTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKLoginCompletionTests.m; sourceTree = "<group>"; };
-		C67DC42C258851C3004D7E43 /* Fuzzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fuzzer.swift; sourceTree = "<group>"; };
 		C681486124F866EA004EED1A /* FBSDKReferralCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKReferralCode.h; sourceTree = "<group>"; };
 		C681486B24F866EA004EED1A /* FBSDKReferralCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKReferralCode.m; sourceTree = "<group>"; };
 		C68C1C6024F074FD005067E1 /* FBSDKReferralManagerResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKReferralManagerResult.h; sourceTree = "<group>"; };
@@ -407,9 +409,12 @@
 		F464748E256B031600502449 /* FBSDKLoginConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKLoginConfiguration.m; sourceTree = "<group>"; };
 		F464748F256B031600502449 /* FBSDKLoginConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKLoginConfiguration.h; sourceTree = "<group>"; };
 		F464749B256B048500502449 /* LoginConfigurationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginConfigurationTests.swift; sourceTree = "<group>"; };
+		F4665CAD258D66A800981FDE /* FBSDKGraphRequestConnectionProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKGraphRequestConnectionProviding.h; sourceTree = "<group>"; };
+		F4665CC0258D684300981FDE /* Fuzzer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Fuzzer.swift; sourceTree = "<group>"; };
+		F4665CC1258D684300981FDE /* SampleAccessToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleAccessToken.swift; sourceTree = "<group>"; };
+		F4665CD2258D687500981FDE /* FakeGraphRequestConnectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeGraphRequestConnectionProvider.swift; sourceTree = "<group>"; };
 		F46FA659245347570060C902 /* FBLoginButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBLoginButton.swift; sourceTree = "<group>"; };
 		F46FA65C245347820060C902 /* LoginManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginManager.swift; sourceTree = "<group>"; };
-		F46FE68A2579764F000F4F53 /* SampleAccessToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAccessToken.swift; sourceTree = "<group>"; };
 		F47FB44E25805E7900922543 /* FBSDKLoginManagerLoggerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKLoginManagerLoggerTests.m; sourceTree = "<group>"; };
 		F4AA32812574448C005EDF04 /* LoginConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginConfiguration.swift; sourceTree = "<group>"; };
 		F4EC46022575A0CC00D2F47B /* FBSDKNonceUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKNonceUtility.h; sourceTree = "<group>"; };
@@ -576,6 +581,7 @@
 				9D3AF4911A9EFEFB00EEF724 /* _FBSDKLoginRecoveryAttempter.h */,
 				9D3AF4921A9EFEFB00EEF724 /* _FBSDKLoginRecoveryAttempter.m */,
 				9DBC4C3B1A782E2000816FE8 /* FBSDKCoreKit+Internal.h */,
+				F4665CAD258D66A800981FDE /* FBSDKGraphRequestConnectionProviding.h */,
 				6B5D2DEC1A8EB1D200D3EF09 /* FBSDKLoginCompletion.h */,
 				6B5D2DED1A8EB1D200D3EF09 /* FBSDKLoginCompletion.m */,
 				6BAFD01F1A9531EA0096E4B5 /* FBSDKLoginCompletion+Internal.h */,
@@ -670,20 +676,19 @@
 		9D9DB8E81A114E500086167B /* FBSDKLoginKitTests */ = {
 			isa = PBXGroup;
 			children = (
-				F47FB44E25805E7900922543 /* FBSDKLoginManagerLoggerTests.m */,
+				C67DC40E25882263004D7E43 /* FBSDKLoginCompletionTests.m */,
 				F4647451256AD09000502449 /* FBSDKLoginKitTests-Bridging-Header.h */,
+				F47FB44E25805E7900922543 /* FBSDKLoginManagerLoggerTests.m */,
 				9D641F831A7B69160048F563 /* FBSDKLoginManagerTests.m */,
 				6B6276321A8C1BBF0030FEBD /* FBSDKLoginUtilityTests.h */,
 				6B6276331A8C1BBF0030FEBD /* FBSDKLoginUtilityTests.m */,
 				C6DB850624F87F7B0004DB85 /* FBSDKReferralCodeTests.m */,
 				C632597224EDAF0F00D8F7E3 /* FBSDKReferralManagerTests.m */,
+				F4665CBF258D684300981FDE /* Helpers */,
 				F40BFD55257852E5007B85AC /* LoginButtonTests.swift */,
 				F464749B256B048500502449 /* LoginConfigurationTests.swift */,
 				F4647478256AEF8E00502449 /* NonceTests.swift */,
 				9D9DB8E91A114E500086167B /* Supporting Files */,
-				F46FE68A2579764F000F4F53 /* SampleAccessToken.swift */,
-				C67DC40E25882263004D7E43 /* FBSDKLoginCompletionTests.m */,
-				C67DC42C258851C3004D7E43 /* Fuzzer.swift */,
 			);
 			path = FBSDKLoginKitTests;
 			sourceTree = "<group>";
@@ -694,6 +699,16 @@
 				9D9DB8EA1A114E500086167B /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F4665CBF258D684300981FDE /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				F4665CC0258D684300981FDE /* Fuzzer.swift */,
+				F4665CC1258D684300981FDE /* SampleAccessToken.swift */,
+				F4665CD2258D687500981FDE /* FakeGraphRequestConnectionProvider.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		F46FA66E24535E3F0060C902 /* Swift */ = {
@@ -749,6 +764,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4665D31258D699100981FDE /* FBSDKGraphRequestConnectionProviding.h in Headers */,
 				0B9DBF17207C051800662776 /* FBSDKDeviceLoginCodeInfo.h in Headers */,
 				0B9DBF11207C051800662776 /* FBSDKDeviceLoginManagerResult.h in Headers */,
 				0B9DBF0F207C051800662776 /* FBSDKDeviceLoginManager.h in Headers */,
@@ -781,6 +797,7 @@
 				0B9DBF16207C051800662776 /* FBSDKDeviceLoginCodeInfo.h in Headers */,
 				C68C1C6A24F074FD005067E1 /* FBSDKReferralManagerResult.h in Headers */,
 				0B9DBF10207C051800662776 /* FBSDKDeviceLoginManagerResult.h in Headers */,
+				F4665D39258D699200981FDE /* FBSDKGraphRequestConnectionProviding.h in Headers */,
 				0B9DBF0E207C051800662776 /* FBSDKDeviceLoginManager.h in Headers */,
 				9D3AF4931A9EFEFB00EEF724 /* _FBSDKLoginRecoveryAttempter.h in Headers */,
 				C6CE2BBF24EB72F200CF2EB6 /* FBSDKReferralManager.h in Headers */,
@@ -1198,16 +1215,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				F47E5CDC25895C5F008CA03E /* FBSDKLoginManagerTests.m in Sources */,
+				F4665CC2258D684300981FDE /* Fuzzer.swift in Sources */,
 				F464749C256B048500502449 /* LoginConfigurationTests.swift in Sources */,
-				C67DC42D258851C3004D7E43 /* Fuzzer.swift in Sources */,
 				F4647479256AEF8E00502449 /* NonceTests.swift in Sources */,
 				F47FB46C2580646600922543 /* FBSDKLoginManagerLoggerTests.m in Sources */,
 				C632597324EDAF0F00D8F7E3 /* FBSDKReferralManagerTests.m in Sources */,
 				C67DC40F25882264004D7E43 /* FBSDKLoginCompletionTests.m in Sources */,
+				F4665CC3258D684300981FDE /* SampleAccessToken.swift in Sources */,
+				F4665CD3258D687500981FDE /* FakeGraphRequestConnectionProvider.swift in Sources */,
 				C6DB850724F87F7B0004DB85 /* FBSDKReferralCodeTests.m in Sources */,
 				F40BFD56257852E5007B85AC /* LoginButtonTests.swift in Sources */,
 				6B6276341A8C1BBF0030FEBD /* FBSDKLoginUtilityTests.m in Sources */,
-				F46FE68B2579764F000F4F53 /* SampleAccessToken.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
