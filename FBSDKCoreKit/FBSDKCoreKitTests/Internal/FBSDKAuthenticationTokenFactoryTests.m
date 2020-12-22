@@ -258,12 +258,16 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 - (void)testDecodeInvalidHeader
 {
-  NSMutableDictionary *invalidHeader = [_headerDict mutableCopy];
-  [FBSDKTypeUtility dictionary:invalidHeader setObject:@"wrong algorithm" forKey:@"alg"];
-  NSData *invalidHeaderData = [FBSDKTypeUtility dataWithJSONObject:invalidHeader options:0 error:nil];
-  NSString *encodedHeader = [self base64URLEncodeData:invalidHeaderData];
+  [self assertDecodeHeaderFailWithInvalidEntry:@"alg" value:@"wrong_algorithm"];
+  [self assertDecodeHeaderFailWithInvalidEntry:@"alg" value:nil];
+  [self assertDecodeHeaderFailWithInvalidEntry:@"alg" value:@""];
 
-  XCTAssertNil([FBSDKAuthenticationTokenHeader validatedHeaderWithEncodedString:encodedHeader]);
+  [self assertDecodeHeaderFailWithInvalidEntry:@"typ" value:@"some_type"];
+  [self assertDecodeHeaderFailWithInvalidEntry:@"typ" value:nil];
+  [self assertDecodeHeaderFailWithInvalidEntry:@"typ" value:@""];
+
+  [self assertDecodeHeaderFailWithInvalidEntry:@"kid" value:nil];
+  [self assertDecodeHeaderFailWithInvalidEntry:@"kid" value:@""];
 }
 
 - (void)testDecodeEmptyHeader
@@ -477,6 +481,20 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   NSString *encodedClaims = [self base64URLEncodeData:claimsData];
 
   XCTAssertNil([FBSDKAuthenticationTokenClaims validatedClaimsWithEncodedString:encodedClaims nonce:_mockNonce]);
+}
+
+- (void)assertDecodeHeaderFailWithInvalidEntry:(NSString *)key value:(id)value
+{
+  NSMutableDictionary *invalidHeader = [_headerDict mutableCopy];
+  if (value) {
+    [FBSDKTypeUtility dictionary:invalidHeader setObject:value forKey:key];
+  } else {
+    [invalidHeader removeObjectForKey:key];
+  }
+  NSData *headerData = [FBSDKTypeUtility dataWithJSONObject:invalidHeader options:0 error:nil];
+  NSString *encodedHeader = [self base64URLEncodeData:headerData];
+
+  XCTAssertNil([FBSDKAuthenticationTokenHeader validatedHeaderWithEncodedString:encodedHeader]);
 }
 
 - (NSString *)base64URLEncodeData:(NSData *)data

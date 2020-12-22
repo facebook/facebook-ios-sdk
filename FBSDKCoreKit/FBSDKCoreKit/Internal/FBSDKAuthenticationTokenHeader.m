@@ -49,7 +49,7 @@
     NSString *alg = [FBSDKTypeUtility dictionary:header objectForKey:@"alg" ofType:NSString.class];
     NSString *typ = [FBSDKTypeUtility dictionary:header objectForKey:@"typ" ofType:NSString.class];
     NSString *kid = [FBSDKTypeUtility dictionary:header objectForKey:@"kid" ofType:NSString.class];
-    if (!error && alg.length > 0 && [alg isEqualToString:@"RS256"] && kid.length > 0) {
+    if (!error && [alg isEqualToString:@"RS256"] && [typ isEqualToString:@"JWT"] && kid.length > 0) {
       return [[FBSDKAuthenticationTokenHeader alloc] initWithAlg:alg typ:typ kid:kid];
     }
   }
