@@ -17,7 +17,12 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
+
+#if SWIFT_PACKAGE
+#import "FBSDKCoreKit.h"
+#else
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
