@@ -47,7 +47,49 @@ static NSMutableDictionary<NSString *, NSString *> *_methodMapping;
   }
 }
 
-#pragma mark - private methods
++ (nullable NSArray<NSString *> *)symbolicateCallstack:(NSArray<NSString *> *)callstack
+                                         methodMapping:(NSDictionary<NSString *, id> *)methodMapping
+{
+  if (!callstack || !methodMapping) {
+    return nil;
+  }
+  NSArray<NSString *> *sortedAllAddress = [methodMapping.allKeys sortedArrayUsingComparator:^NSComparisonResult (id _Nonnull obj1, id _Nonnull obj2) {
+    return [obj1 compare:obj2];
+  }];
+
+  BOOL containsFBSDKFunction = NO;
+  NSInteger nonSDKMethodCount = 0;
+  NSMutableArray<NSString *> *symbolicatedCallstack = [NSMutableArray array];
+
+  for (NSUInteger i = 0; i < callstack.count; i++) {
+    NSString *rawAddress = [self _getAddress:[FBSDKTypeUtility array:callstack objectAtIndex:i]];
+    if (rawAddress.length < 10) {
+      continue;
+    }
+    NSString *addressString = [NSString stringWithFormat:@"0x%@", [rawAddress substringWithRange:NSMakeRange(rawAddress.length - 10, 10)]];
+    NSString *methodAddress = [self _searchMethod:addressString sortedAllAddress:sortedAllAddress];
+
+    if (methodAddress) {
+      containsFBSDKFunction = YES;
+      nonSDKMethodCount == 0 ?: [FBSDKTypeUtility array:symbolicatedCallstack addObject:[NSString stringWithFormat:@"(%ld DEV METHODS)", (long)nonSDKMethodCount]];
+      nonSDKMethodCount = 0;
+      NSString *methodName = [FBSDKTypeUtility dictionary:methodMapping objectForKey:methodAddress ofType:NSObject.class];
+
+      // filter out cxx_destruct
+      if ([methodName containsString:@".cxx_destruct"]) {
+        return nil;
+      }
+      [FBSDKTypeUtility array:symbolicatedCallstack addObject:[NSString stringWithFormat:@"%@%@", methodName, [self _getOffset:addressString secondString:methodAddress]]];
+    } else {
+      nonSDKMethodCount++;
+    }
+  }
+  nonSDKMethodCount == 0 ?: [FBSDKTypeUtility array:symbolicatedCallstack addObject:[NSString stringWithFormat:@"(%ld DEV METHODS)", (long)nonSDKMethodCount]];
+
+  return containsFBSDKFunction ? symbolicatedCallstack : nil;
+}
+
+#pragma mark - Private Methods
 
 + (NSArray<NSString *> *)_getClassNames:(NSArray<NSString *> *)prefixes
                              frameworks:(NSArray<NSString *> *)frameworks
@@ -127,48 +169,6 @@ static NSMutableDictionary<NSString *, NSString *> *_methodMapping;
     }
   }
   free(methods);
-}
-
-+ (nullable NSArray<NSString *> *)symbolicateCallstack:(NSArray<NSString *> *)callstack
-                                         methodMapping:(NSDictionary<NSString *, id> *)methodMapping
-{
-  if (!callstack || !methodMapping) {
-    return nil;
-  }
-  NSArray<NSString *> *sortedAllAddress = [methodMapping.allKeys sortedArrayUsingComparator:^NSComparisonResult (id _Nonnull obj1, id _Nonnull obj2) {
-    return [obj1 compare:obj2];
-  }];
-
-  BOOL containsFBSDKFunction = NO;
-  NSInteger nonSDKMethodCount = 0;
-  NSMutableArray<NSString *> *symbolicatedCallstack = [NSMutableArray array];
-
-  for (NSUInteger i = 0; i < callstack.count; i++) {
-    NSString *rawAddress = [self _getAddress:[FBSDKTypeUtility array:callstack objectAtIndex:i]];
-    if (rawAddress.length < 10) {
-      continue;
-    }
-    NSString *addressString = [NSString stringWithFormat:@"0x%@", [rawAddress substringWithRange:NSMakeRange(rawAddress.length - 10, 10)]];
-    NSString *methodAddress = [self _searchMethod:addressString sortedAllAddress:sortedAllAddress];
-
-    if (methodAddress) {
-      containsFBSDKFunction = YES;
-      nonSDKMethodCount == 0 ?: [FBSDKTypeUtility array:symbolicatedCallstack addObject:[NSString stringWithFormat:@"(%ld DEV METHODS)", (long)nonSDKMethodCount]];
-      nonSDKMethodCount = 0;
-      NSString *methodName = [FBSDKTypeUtility dictionary:methodMapping objectForKey:methodAddress ofType:NSObject.class];
-
-      // filter out cxx_destruct
-      if ([methodName containsString:@".cxx_destruct"]) {
-        return nil;
-      }
-      [FBSDKTypeUtility array:symbolicatedCallstack addObject:[NSString stringWithFormat:@"%@%@", methodName, [self _getOffset:addressString secondString:methodAddress]]];
-    } else {
-      nonSDKMethodCount++;
-    }
-  }
-  nonSDKMethodCount == 0 ?: [FBSDKTypeUtility array:symbolicatedCallstack addObject:[NSString stringWithFormat:@"(%ld DEV METHODS)", (long)nonSDKMethodCount]];
-
-  return containsFBSDKFunction ? symbolicatedCallstack : nil;
 }
 
 + (nullable NSString *)_getAddress:(nullable NSString *)callstackEntry
