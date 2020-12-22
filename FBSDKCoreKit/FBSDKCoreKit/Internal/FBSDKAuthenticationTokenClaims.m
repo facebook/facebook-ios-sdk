@@ -77,7 +77,7 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
 
       NSNumber *expValue = [FBSDKTypeUtility numberValue:claimsDict[@"exp"]];
       long exp = [expValue doubleValue];
-      BOOL isExpired = expValue != nil && exp <= currentTime;
+      BOOL isExpired = expValue == nil || exp <= currentTime;
 
       NSNumber *iatValue = [FBSDKTypeUtility numberValue:claimsDict[@"iat"]];
       long iat = [iatValue doubleValue];

@@ -167,22 +167,42 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   // non facebook issuer
   [self assertDecodeClaimsFailWithInvalidEntry:@"iss"
                                          value:@"https://notfacebook.com"];
+  [self assertDecodeClaimsFailWithInvalidEntry:@"iss"
+                                         value:nil];
+  [self assertDecodeClaimsFailWithInvalidEntry:@"iss"
+                                         value:@""];
 
   // incorrect audience
   [self assertDecodeClaimsFailWithInvalidEntry:@"aud"
                                          value:@"wrong_app_id"];
+  [self assertDecodeClaimsFailWithInvalidEntry:@"aud"
+                                         value:nil];
+  [self assertDecodeClaimsFailWithInvalidEntry:@"aud"
+                                         value:@""];
 
   // expired
   [self assertDecodeClaimsFailWithInvalidEntry:@"exp"
                                          value:@(currentTime - 60 * 60)];
+  [self assertDecodeClaimsFailWithInvalidEntry:@"exp"
+                                         value:nil];
+  [self assertDecodeClaimsFailWithInvalidEntry:@"exp"
+                                         value:@""];
 
   // issued too long ago
   [self assertDecodeClaimsFailWithInvalidEntry:@"iat"
                                          value:@(currentTime - 60 * 60)];
+  [self assertDecodeClaimsFailWithInvalidEntry:@"iat"
+                                         value:nil];
+  [self assertDecodeClaimsFailWithInvalidEntry:@"iat"
+                                         value:@""];
 
   // incorrect nonce
   [self assertDecodeClaimsFailWithInvalidEntry:@"nonce"
                                          value:@"incorrect_nonce"];
+  [self assertDecodeClaimsFailWithInvalidEntry:@"nonce"
+                                         value:nil];
+  [self assertDecodeClaimsFailWithInvalidEntry:@"nonce"
+                                         value:@""];
 
   // invalid user ID
   [self assertDecodeClaimsFailWithInvalidEntry:@"sub"
