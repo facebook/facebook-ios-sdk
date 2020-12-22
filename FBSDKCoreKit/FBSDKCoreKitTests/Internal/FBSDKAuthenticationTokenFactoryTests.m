@@ -46,6 +46,8 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
          certificateKey:(NSString *)key
              completion:(FBSDKVerifySignatureCompletionBlock)completion;
 - (NSDictionary *)claims;
+- (NSURL *)_certificateEndpoint;
+
 @end
 
 @interface FBSDKAuthenticationTokenClaims (Testing)
@@ -291,6 +293,12 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 }
 
 // MARK: - Verifying Signature
+
+- (void)testCertificateEndpointURL
+{
+  NSURL *url = FBSDKAuthenticationTokenFactory.new._certificateEndpoint;
+  XCTAssertEqualObjects(url.absoluteString, @"https://m.facebook.com/.well-known/oauth/openid/certs/");
+}
 
 - (void)testVerifySignatureWithoutDataWithoutResponseWithoutError
 {

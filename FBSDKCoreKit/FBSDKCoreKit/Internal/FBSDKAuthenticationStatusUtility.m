@@ -28,7 +28,6 @@
 
 #import "FBSDKAuthenticationToken+Internal.h"
 
-static NSString *const FBSDKFacebookDomain = @"facebook.com";
 static NSString *const FBSDKOIDCStatusPath = @"/platform/oidc/status";
 
 @implementation FBSDKAuthenticationStatusUtility
@@ -82,21 +81,13 @@ static NSString *const FBSDKOIDCStatusPath = @"/platform/oidc/status";
   }
 
   NSDictionary *params = @{@"id_token" : token.tokenString};
-  NSError *urlError;
-  NSString *host;
+  NSError *error;
 
-  if (FBSDKSettings.facebookDomainPart.length > 0) {
-    host = [NSString stringWithFormat:@"m.%@.%@", FBSDKSettings.facebookDomainPart, FBSDKFacebookDomain];
-  } else {
-    host = [NSString stringWithFormat:@"m.%@", FBSDKFacebookDomain];
-  }
-
-  NSURL *requestURL = [FBSDKInternalUtility URLWithScheme:@"https"
-                                                     host:host
-                                                     path:FBSDKOIDCStatusPath
-                                          queryParameters:params
-                                                    error:&urlError];
-  return urlError == nil ? requestURL : nil;
+  NSURL *requestURL = [FBSDKInternalUtility unversionedFacebookURLWithHostPrefix:@"m"
+                                                                            path:FBSDKOIDCStatusPath
+                                                                 queryParameters:params
+                                                                           error:&error];
+  return error == nil ? requestURL : nil;
 }
 
 + (void)_invalidateCurrentSession
