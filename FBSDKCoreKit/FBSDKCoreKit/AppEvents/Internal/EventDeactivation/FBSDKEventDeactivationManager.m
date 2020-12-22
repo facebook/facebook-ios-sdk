@@ -71,34 +71,6 @@ static NSMutableArray<FBSDKDeactivatedEvent *> *_eventsWithDeactivatedParams;
   } @catch (NSException *exception) {}
 }
 
-+ (void)_updateDeactivatedEvents:(nullable NSDictionary<NSString *, id> *)events
-{
-  events = [FBSDKTypeUtility dictionaryValue:events];
-  if (events.count == 0) {
-    return;
-  }
-  [_deactivatedEvents removeAllObjects];
-  [_eventsWithDeactivatedParams removeAllObjects];
-  NSMutableArray<FBSDKDeactivatedEvent *> *deactivatedParamsArray = [NSMutableArray array];
-  NSMutableSet<NSString *> *deactivatedEventSet = [NSMutableSet set];
-  for (NSString *eventName in events.allKeys) {
-    NSDictionary<NSString *, id> *eventInfo = [FBSDKTypeUtility dictionary:events objectForKey:eventName ofType:NSDictionary.class];
-    if (!eventInfo) {
-      continue;
-    }
-    if (eventInfo[DEPRECATED_EVENT_KEY]) {
-      [deactivatedEventSet addObject:eventName];
-    }
-    if (eventInfo[DEPRECATED_PARAM_KEY]) {
-      FBSDKDeactivatedEvent *eventWithDeactivatedParams = [[FBSDKDeactivatedEvent alloc] initWithEventName:eventName
-                                                                                         deactivatedParams:[NSSet setWithArray:eventInfo[DEPRECATED_PARAM_KEY]]];
-      [FBSDKTypeUtility array:deactivatedParamsArray addObject:eventWithDeactivatedParams];
-    }
-  }
-  _deactivatedEvents = deactivatedEventSet;
-  _eventsWithDeactivatedParams = deactivatedParamsArray;
-}
-
 + (void)processEvents:(NSMutableArray<NSDictionary<NSString *, id> *> *)events
 {
   @try {
@@ -133,6 +105,36 @@ static NSMutableArray<FBSDKDeactivatedEvent *> *_eventsWithDeactivatedParams;
   } @catch (NSException *exception) {
     return parameters;
   }
+}
+
+#pragma mark - Private Method
+
++ (void)_updateDeactivatedEvents:(nullable NSDictionary<NSString *, id> *)events
+{
+  events = [FBSDKTypeUtility dictionaryValue:events];
+  if (events.count == 0) {
+    return;
+  }
+  [_deactivatedEvents removeAllObjects];
+  [_eventsWithDeactivatedParams removeAllObjects];
+  NSMutableArray<FBSDKDeactivatedEvent *> *deactivatedParamsArray = [NSMutableArray array];
+  NSMutableSet<NSString *> *deactivatedEventSet = [NSMutableSet set];
+  for (NSString *eventName in events.allKeys) {
+    NSDictionary<NSString *, id> *eventInfo = [FBSDKTypeUtility dictionary:events objectForKey:eventName ofType:NSDictionary.class];
+    if (!eventInfo) {
+      continue;
+    }
+    if (eventInfo[DEPRECATED_EVENT_KEY]) {
+      [deactivatedEventSet addObject:eventName];
+    }
+    if (eventInfo[DEPRECATED_PARAM_KEY]) {
+      FBSDKDeactivatedEvent *eventWithDeactivatedParams = [[FBSDKDeactivatedEvent alloc] initWithEventName:eventName
+                                                                                         deactivatedParams:[NSSet setWithArray:eventInfo[DEPRECATED_PARAM_KEY]]];
+      [FBSDKTypeUtility array:deactivatedParamsArray addObject:eventWithDeactivatedParams];
+    }
+  }
+  _deactivatedEvents = deactivatedEventSet;
+  _eventsWithDeactivatedParams = deactivatedParamsArray;
 }
 
 @end
