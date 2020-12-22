@@ -36,11 +36,41 @@ static NSString *const _fakeChallence = @"some_challenge";
 - (void)exchangeNonceForTokenWithGraphRequestConnectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connection
                                                         handler:(FBSDKLoginCompletionParametersBlock)handler;
 
+- (void)exchangeNonceForTokenWithHandler:(FBSDKLoginCompletionParametersBlock)handler;
+
+- (void)fetchAndSetPropertiesForParameters:(nonnull FBSDKLoginCompletionParameters *)parameters
+                                     nonce:(nonnull NSString *)nonce
+                                   handler:(FBSDKLoginCompletionParametersBlock)handler;
+
 @end
 
 @interface FBSDKLoginCompletionTests : XCTestCase
 {
   NSDictionary *_parameters;
+}
+
+@end
+
+@interface FBSDKTestLoginURLCompleter : FBSDKLoginURLCompleter
+
+@property int exchangeNonceCount;
+
+@property int fetchAndSetAuthTokenCount;
+
+@end
+
+@implementation FBSDKTestLoginURLCompleter
+
+- (void)exchangeNonceForTokenWithHandler:(FBSDKLoginCompletionParametersBlock)handler
+{
+  _exchangeNonceCount += 1;
+}
+
+- (void)fetchAndSetPropertiesForParameters:(nonnull FBSDKLoginCompletionParameters *)parameters
+                                     nonce:(nonnull NSString *)nonce
+                                   handler:(FBSDKLoginCompletionParametersBlock)handler
+{
+  _fetchAndSetAuthTokenCount += 1;
 }
 
 @end
@@ -76,8 +106,8 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (void)testInitWithAccessTokenWithIDToken
 {
-  NSMutableDictionary *parameters = _parameters.mutableCopy;
-  [parameters removeObjectsForKeys:@[@"nonce", @"error", @"error_message"]];
+  NSMutableDictionary *parameters = self.parametersWithIDtoken.mutableCopy;
+  [parameters addEntriesFromDictionary:self.parametersWithAccessToken];
 
   FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters appID:_fakeAppID];
 
@@ -86,8 +116,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (void)testInitWithAccessToken
 {
-  NSMutableDictionary *parameters = _parameters.mutableCopy;
-  [parameters removeObjectsForKeys:@[@"id_token", @"nonce", @"error", @"error_message"]];
+  NSDictionary *parameters = self.parametersWithAccessToken;
 
   FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters appID:_fakeAppID];
 
@@ -96,8 +125,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (void)testInitWithNonce
 {
-  NSMutableDictionary *parameters = _parameters.mutableCopy;
-  [parameters removeObjectsForKeys:@[@"id_token", @"access_token", @"error", @"error_message"]];
+  NSDictionary *parameters = self.parametersWithNonce;
 
   FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters appID:_fakeAppID];
 
@@ -106,8 +134,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (void)testInitWithIDToken
 {
-  NSMutableDictionary *parameters = _parameters.mutableCopy;
-  [parameters removeObjectsForKeys:@[@"access_token", @"expires", @"expires_at", @"expires_in", @"data_access_expiration_time", @"graph_domain", @"nonce", @"error", @"error_message"]];
+  NSDictionary *parameters = self.parametersWithIDtoken;
 
   FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters appID:_fakeAppID];
 
@@ -116,8 +143,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (void)testInitWithoutAccessTokenWithoutIDTokenWithoutNonce
 {
-  NSMutableDictionary *parameters = _parameters.mutableCopy;
-  [parameters removeObjectsForKeys:@[@"access_token", @"id_token", @"nonce", @"error", @"error_message"]];
+  NSDictionary *parameters = self.parametersWithoutAccessTokenWithoutIDTokenWithoutNonce;
 
   FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters appID:_fakeAppID];
 
@@ -126,11 +152,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (void)testInitWithEmptyAccessTokenWithEmptyIDTokenWithEmptyNonce
 {
-  NSMutableDictionary *parameters = _parameters.mutableCopy;
-  [parameters removeObjectsForKeys:@[@"error", @"error_message"]];
-  [parameters setValue:@"" forKey:@"access_token"];
-  [parameters setValue:@"" forKey:@"id_token"];
-  [parameters setValue:@"" forKey:@"nonce"];
+  NSDictionary *parameters = self.parametersWithEmptyAccessTokenWithEmptyIDTokenWithEmptyNonce;
 
   FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters appID:_fakeAppID];
 
@@ -144,10 +166,10 @@ static NSString *const _fakeChallence = @"some_challenge";
   [self verifyEmptyParameters:completer.parameters];
 }
 
-- (void)testInitWithBothIdTokenAndNonce
+- (void)testInitWithIDTokenAndNonce
 {
   NSMutableDictionary *parameters = _parameters.mutableCopy;
-  [parameters removeObjectsForKeys:@[@"access_token"]];
+  [parameters removeObjectForKey:@"access_token"];
 
   FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters appID:_fakeAppID];
 
@@ -156,8 +178,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (void)testInitWithError
 {
-  NSMutableDictionary *parameters = _parameters.mutableCopy;
-  [parameters removeObjectsForKeys:@[@"access_token", @"id_token", @"nonce"]];
+  NSDictionary *parameters = self.parametersWithError;
 
   FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters appID:_fakeAppID];
 
@@ -350,6 +371,84 @@ static NSString *const _fakeChallence = @"some_challenge";
   }
 }
 
+// MARK: Completion
+
+- (void)testCompleteWithNonce
+{
+  FBSDKTestLoginURLCompleter *completer = [[FBSDKTestLoginURLCompleter alloc] initWithURLParameters:self.parametersWithNonce appID:_fakeAppID];
+  FBSDKLoginCompletionParametersBlock handler = ^(FBSDKLoginCompletionParameters *parameters) {
+    // do nothing
+  };
+
+  [completer completeLoginWithHandler:handler];
+
+  XCTAssertNil(completer.parameters.error);
+  XCTAssertEqual(completer.exchangeNonceCount, 1);
+  XCTAssertEqual(completer.fetchAndSetAuthTokenCount, 0);
+}
+
+- (void)testCompleteWithAuthenticationTokenWithoutNonce
+{
+  FBSDKTestLoginURLCompleter *completer = [[FBSDKTestLoginURLCompleter alloc] initWithURLParameters:self.parametersWithIDtoken appID:_fakeAppID];
+  FBSDKLoginCompletionParametersBlock handler = ^(FBSDKLoginCompletionParameters *parameters) {
+    // do nothing
+  };
+
+  [completer completeLoginWithHandler:handler];
+
+  XCTAssertNotNil(completer.parameters.error);
+  XCTAssertEqual(completer.exchangeNonceCount, 0);
+  XCTAssertEqual(completer.fetchAndSetAuthTokenCount, 0);
+}
+
+- (void)testCompleteWithAuthenticationTokenWithNonce
+{
+  FBSDKTestLoginURLCompleter *completer = [[FBSDKTestLoginURLCompleter alloc] initWithURLParameters:self.parametersWithIDtoken appID:_fakeAppID];
+  FBSDKLoginCompletionParametersBlock handler = ^(FBSDKLoginCompletionParameters *parameters) {
+    // do nothing
+  };
+
+  [completer completeLoginWithHandler:handler nonce:@"some_nonce"];
+
+  XCTAssertNil(completer.parameters.error);
+  XCTAssertEqual(completer.exchangeNonceCount, 0);
+  XCTAssertEqual(completer.fetchAndSetAuthTokenCount, 1);
+}
+
+- (void)testCompleteWithAccessToken
+{
+  FBSDKTestLoginURLCompleter *completer = [[FBSDKTestLoginURLCompleter alloc] initWithURLParameters:self.parametersWithAccessToken appID:_fakeAppID];
+
+  __block BOOL wasCalled = NO;
+  FBSDKLoginCompletionParametersBlock handler = ^(FBSDKLoginCompletionParameters *parameters) {
+    wasCalled = YES;
+  };
+
+  [completer completeLoginWithHandler:handler nonce:@"some_nonce"];
+
+  XCTAssert(wasCalled, @"Handler should be invoked syncronously");
+  XCTAssertNil(completer.parameters.error);
+  XCTAssertEqual(completer.exchangeNonceCount, 0);
+  XCTAssertEqual(completer.fetchAndSetAuthTokenCount, 0);
+}
+
+- (void)testCompleteWithEmptyParameters
+{
+  FBSDKTestLoginURLCompleter *completer = [[FBSDKTestLoginURLCompleter alloc] initWithURLParameters:@{} appID:_fakeAppID];
+
+  __block BOOL wasCalled = NO;
+  FBSDKLoginCompletionParametersBlock handler = ^(FBSDKLoginCompletionParameters *parameters) {
+    wasCalled = YES;
+  };
+
+  [completer completeLoginWithHandler:handler nonce:@"some_nonce"];
+
+  XCTAssert(wasCalled, @"Handler should be invoked syncronously");
+  XCTAssertNil(completer.parameters.error);
+  XCTAssertEqual(completer.exchangeNonceCount, 0);
+  XCTAssertEqual(completer.fetchAndSetAuthTokenCount, 0);
+}
+
 // MARK: Helpers
 
 - (NSError *)sampleError
@@ -361,6 +460,51 @@ static NSString *const _fakeChallence = @"some_challenge";
 {
   NSMutableDictionary *parameters = _parameters.mutableCopy;
   [parameters removeObjectsForKeys:@[@"nonce"]];
+  return parameters;
+}
+
+- (NSDictionary *)parametersWithNonce
+{
+  NSMutableDictionary *parameters = _parameters.mutableCopy;
+  [parameters removeObjectsForKeys:@[@"id_token", @"access_token", @"error", @"error_message"]];
+  return parameters;
+}
+
+- (NSDictionary *)parametersWithAccessToken
+{
+  NSMutableDictionary *parameters = _parameters.mutableCopy;
+  [parameters removeObjectsForKeys:@[@"id_token", @"nonce", @"error", @"error_message"]];
+  return parameters;
+}
+
+- (NSDictionary *)parametersWithIDtoken
+{
+  NSMutableDictionary *parameters = _parameters.mutableCopy;
+  [parameters removeObjectsForKeys:@[@"access_token", @"nonce", @"error", @"error_message"]];
+  return parameters;
+}
+
+- (NSDictionary *)parametersWithoutAccessTokenWithoutIDTokenWithoutNonce
+{
+  NSMutableDictionary *parameters = _parameters.mutableCopy;
+  [parameters removeObjectsForKeys:@[@"id_token", @"access_token", @"nonce", @"error", @"error_message"]];
+  return parameters;
+}
+
+- (NSDictionary *)parametersWithEmptyAccessTokenWithEmptyIDTokenWithEmptyNonce
+{
+  NSMutableDictionary *parameters = _parameters.mutableCopy;
+  [parameters removeObjectsForKeys:@[@"error", @"error_message"]];
+  [parameters setValue:@"" forKey:@"access_token"];
+  [parameters setValue:@"" forKey:@"id_token"];
+  [parameters setValue:@"" forKey:@"nonce"];
+  return parameters;
+}
+
+- (NSDictionary *)parametersWithError
+{
+  NSMutableDictionary *parameters = _parameters.mutableCopy;
+  [parameters removeObjectsForKeys:@[@"id_token", @"access_token", @"nonce"]];
   return parameters;
 }
 
