@@ -61,7 +61,7 @@
                                                      forTrackingPreference:tracking];
   if (!arePermissionsValid) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                       formatString:@"Invalid combination of permissions and tracking preference provided to login configuration. The only permissions allowed when `tracking` is `.limited` are 'email' and 'public_profile'. Returning nil."];
+                       formatString:@"Invalid combination of permissions and tracking preference provided to login configuration. The only permissions allowed when `tracking` is `.limited` are 'email', 'public_profile', 'gaming_profile' and 'gaming_user_picture'. Returning nil."];
     return nil;
   }
 
@@ -90,7 +90,12 @@
 {
   switch (tracking) {
     case FBSDKLoginTrackingLimited: {
-      NSSet<NSString *> *validPermissions = [NSSet setWithArray:@[@"email", @"public_profile"]];
+      NSSet<NSString *> *validPermissions = [NSSet setWithArray:@[
+        @"email",
+        @"public_profile",
+        @"gaming_profile",
+        @"gaming_user_picture",
+                                             ]];
       NSSet *combined = [permissions setByAddingObjectsFromSet:validPermissions];
 
       return (permissions.count == 0) || (combined.count <= validPermissions.count);
