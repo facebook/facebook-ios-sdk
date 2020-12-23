@@ -168,8 +168,8 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (void)testInitWithIDTokenAndNonce
 {
-  NSMutableDictionary *parameters = _parameters.mutableCopy;
-  [parameters removeObjectForKey:@"access_token"];
+  NSMutableDictionary *parameters = self.parametersWithIDtoken.mutableCopy;
+  [parameters addEntriesFromDictionary:self.parametersWithNonce];
 
   FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters appID:_fakeAppID];
 

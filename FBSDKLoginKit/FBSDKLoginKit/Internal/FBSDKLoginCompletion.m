@@ -82,8 +82,15 @@
 
     if (hasNonEmptyAccessTokenString || (hasEitherNonceOrIdToken && !hasBothNonceAndIdToken)) {
       [self setParametersWithDictionary:parameters appID:appID];
-    } else {
+    } else if ([FBSDKTypeUtility dictionary:parameters objectForKey:@"error" ofType:NSString.class] || [FBSDKTypeUtility dictionary:parameters objectForKey:@"error_message" ofType:NSString.class]) {
       [self setErrorWithDictionary:parameters];
+    } else if (hasBothNonceAndIdToken) {
+      // If a nonce is present in the parameter we assume that
+      // user logged in by app switching.
+      // Currently OIDC is not supported for app switching. We
+      // will treat the login attempt as invalid if an ID token
+      // if returned together with nonce.
+      _parameters.error = [FBSDKError errorWithCode:FBSDKLoginErrorUnknown message:@"Invalid server response. Please try to login again"];
     }
   }
   return self;
