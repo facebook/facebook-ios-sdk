@@ -479,10 +479,11 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 - (void)reauthorizeDataAccess:(FBSDKLoginManagerLoginResultBlock)handler
 {
   if (!FBSDKAccessToken.currentAccessToken) {
-    NSError *error = [NSError errorWithDomain:FBSDKLoginErrorDomain
-                                         code:FBSDKLoginErrorMissingAccessToken
-                                     userInfo:nil];
-    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:@"Must have an access token for which to reauthorize data access"];
+    NSString *errorMessage = @"Must have an access token for which to reauthorize data access";
+    NSError *error = [FBSDKError errorWithDomain:FBSDKLoginErrorDomain
+                                            code:FBSDKLoginErrorMissingAccessToken
+                                         message:errorMessage];
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:errorMessage];
     handler(nil, error);
     return;
   }
