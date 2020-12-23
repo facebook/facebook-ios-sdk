@@ -47,6 +47,9 @@ static NSDate *_lastRefreshTry = nil;
 + (void)addRefreshPiggyback:(FBSDKGraphRequestConnection *)connection permissionHandler:(FBSDKGraphRequestBlock)permissionHandler
 {
   FBSDKAccessToken *expectedToken = [FBSDKAccessToken currentAccessToken];
+  if (!expectedToken) {
+    return;
+  }
   __block NSMutableSet *permissions = nil;
   __block NSMutableSet *declinedPermissions = nil;
   __block NSMutableSet *expiredPermissions = nil;

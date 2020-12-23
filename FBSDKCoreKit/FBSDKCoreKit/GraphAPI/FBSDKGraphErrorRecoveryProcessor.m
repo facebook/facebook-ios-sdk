@@ -53,7 +53,7 @@
       self.delegate = nil;
       return YES;
     case FBSDKGraphRequestErrorRecoverable:
-      if ([request.tokenString isEqualToString:[FBSDKAccessToken currentAccessToken].tokenString]) {
+      if (request.tokenString && [request.tokenString isEqualToString:[FBSDKAccessToken currentAccessToken].tokenString]) {
         _recoveryAttempter = error.recoveryAttempter;
 
         // Set up a block to do the typical recovery work so that we can chain it for ios auth special cases.
@@ -75,7 +75,7 @@
       }
       return NO;
     case FBSDKGraphRequestErrorOther:
-      if ([request.tokenString isEqualToString:[FBSDKAccessToken currentAccessToken].tokenString]) {
+      if (request.tokenString && [request.tokenString isEqualToString:[FBSDKAccessToken currentAccessToken].tokenString]) {
         NSString *message = error.userInfo[FBSDKErrorLocalizedDescriptionKey];
         NSString *title = error.userInfo[FBSDKErrorLocalizedTitleKey];
         if (message) {
