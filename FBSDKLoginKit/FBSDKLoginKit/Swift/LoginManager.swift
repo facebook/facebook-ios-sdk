@@ -30,7 +30,7 @@ public typealias LoginResultBlock = (LoginResult) -> Void
 @available(tvOS, unavailable)
 public enum LoginResult {
   /// User succesfully logged in. Contains granted, declined permissions and access token.
-  case success(granted: Set<Permission>, declined: Set<Permission>, token: FBSDKCoreKit.AccessToken)
+  case success(granted: Set<Permission>, declined: Set<Permission>, token: FBSDKCoreKit.AccessToken?)
   /// Login attempt was cancelled by the user.
   case cancelled
   /// Login attempt failed.
@@ -42,14 +42,14 @@ public enum LoginResult {
       return
     }
 
-    guard !result.isCancelled, let token = result.token else {
+    guard !result.isCancelled else {
       self = .cancelled
       return
     }
 
     let granted: Set<Permission> = Set(result.grantedPermissions.map { Permission(stringLiteral: $0) })
     let declined: Set<Permission> = Set(result.declinedPermissions.map { Permission(stringLiteral: $0) })
-    self = .success(granted: granted, declined: declined, token: token)
+    self = .success(granted: granted, declined: declined, token: result.token)
   }
 }
 
