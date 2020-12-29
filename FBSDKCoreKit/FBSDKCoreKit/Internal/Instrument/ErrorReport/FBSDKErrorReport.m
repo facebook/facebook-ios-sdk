@@ -36,7 +36,7 @@ NSString *const kFBSDKErrorCode = @"error_code";
 NSString *const kFBSDKErrorDomain = @"domain";
 NSString *const kFBSDKErrorTimestamp = @"timestamp";
 
-# pragma mark - Class Methods
+# pragma mark - Public Methods
 
 + (void)enable
 {
@@ -50,6 +50,20 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
   [self _uploadError];
   [FBSDKError enableErrorReport];
 }
+
++ (void)saveError:(NSInteger)errorCode
+      errorDomain:(NSErrorDomain)errorDomain
+          message:(nullable NSString *)message
+{
+  NSString *timestamp = [NSString stringWithFormat:@"%.0lf", [[NSDate date] timeIntervalSince1970]];
+  [self _saveErrorInfoToDisk:@{
+     kFBSDKErrorCode : @(errorCode),
+     kFBSDKErrorDomain : errorDomain,
+     kFBSDKErrorTimestamp : timestamp,
+   }];
+}
+
+#pragma mark - Private Methods
 
 + (void)_uploadError
 {
@@ -74,18 +88,6 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
       [self _clearErrorInfo];
     }
   }];
-}
-
-+ (void)saveError:(NSInteger)errorCode
-      errorDomain:(NSErrorDomain)errorDomain
-          message:(nullable NSString *)message
-{
-  NSString *timestamp = [NSString stringWithFormat:@"%.0lf", [[NSDate date] timeIntervalSince1970]];
-  [self _saveErrorInfoToDisk:@{
-     kFBSDKErrorCode : @(errorCode),
-     kFBSDKErrorDomain : errorDomain,
-     kFBSDKErrorTimestamp : timestamp,
-   }];
 }
 
 + (NSArray<NSDictionary<NSString *, id> *> *)_loadErrorReports
@@ -128,8 +130,6 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
     }
   }
 }
-
-#pragma mark - disk operations
 
 + (void)_saveErrorInfoToDisk:(NSDictionary<NSString *, id> *)errorInfo
 {
