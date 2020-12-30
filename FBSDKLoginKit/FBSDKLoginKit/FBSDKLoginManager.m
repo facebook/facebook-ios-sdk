@@ -42,6 +42,7 @@
  #import "FBSDKLoginError.h"
  #import "FBSDKLoginManagerLogger.h"
  #import "FBSDKLoginUtility.h"
+ #import "FBSDKPermission.h"
  #import "_FBSDKLoginRecoveryAttempter.h"
 
 static int const FBClientStateChallengeLength = 20;
@@ -104,6 +105,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 
   self.fromViewController = viewController;
   _configuration = configuration;
+  _requestedPermissions = configuration.requestedPermissions;
 
   [self logInWithPermissions:configuration.requestedPermissions handler:completion];
 }
@@ -202,83 +204,28 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 
 - (void)completeAuthentication:(FBSDKLoginCompletionParameters *)parameters expectChallenge:(BOOL)expectChallenge
 {
-  NSSet *recentlyGrantedPermissions = nil;
-  NSSet *recentlyDeclinedPermissions = nil;
   FBSDKLoginManagerLoginResult *result = nil;
-  NSError *error = parameters.error;
 
+  NSError *error = parameters.error;
   NSString *accessTokenString = parameters.accessTokenString;
   BOOL cancelled = ((accessTokenString == nil) && (parameters.authenticationToken == nil));
 
   if (expectChallenge && !cancelled && !error) {
     error = [self _verifyChallengeWithCompletionParameters:parameters];
   }
-
   [self storeExpectedChallenge:nil];
 
   if (!error) {
     if (!cancelled) {
-      NSSet *grantedPermissions = parameters.permissions;
-      NSSet *declinedPermissions = parameters.declinedPermissions;
+      result = [self successResultFromParameters:parameters];
 
-      // Recent permissions are largely based on the existence of an access token
-      // without an access token the 'recent' permissions will match the
-      // intersect of the granted permissions and the requested permissions.
-      // This is important because we want to create a 'result' that accurately reflects
-      // the currently granted permissions even when there is no access token.
-      [self determineRecentlyGrantedPermissions:&recentlyGrantedPermissions
-                    recentlyDeclinedPermissions:&recentlyDeclinedPermissions
-                           forGrantedPermission:grantedPermissions
-                            declinedPermissions:declinedPermissions];
-
-      if (recentlyGrantedPermissions.count > 0) {
-        if (!accessTokenString) {
-          // If there is no token string then create a 'tokenless' result
-          // from the returned permissions
-          result = [[FBSDKLoginManagerLoginResult alloc] initWithToken:nil
-                                                   authenticationToken:parameters.authenticationToken
-                                                           isCancelled:NO
-                                                    grantedPermissions:grantedPermissions
-                                                   declinedPermissions:declinedPermissions];
-        } else {
-          FBSDKAccessToken *token = [[FBSDKAccessToken alloc] initWithTokenString:accessTokenString
-                                                                      permissions:grantedPermissions.allObjects
-                                                              declinedPermissions:declinedPermissions.allObjects
-                                                               expiredPermissions:@[]
-                                                                            appID:parameters.appID
-                                                                           userID:parameters.userID
-                                                                   expirationDate:parameters.expirationDate
-                                                                      refreshDate:[NSDate date]
-                                                         dataAccessExpirationDate:parameters.dataAccessExpirationDate
-                                                                      graphDomain:parameters.graphDomain];
-          result = [[FBSDKLoginManagerLoginResult alloc] initWithToken:token
-                                                   authenticationToken:parameters.authenticationToken
-                                                           isCancelled:NO
-                                                    grantedPermissions:recentlyGrantedPermissions
-                                                   declinedPermissions:recentlyDeclinedPermissions];
-
-          if ([FBSDKAccessToken currentAccessToken]) {
-            [self validateReauthentication:[FBSDKAccessToken currentAccessToken] withResult:result];
-            // in a reauth, short circuit and let the login handler be called when the validation finishes.
-            return;
-          }
-        }
+      if (result.token && FBSDKAccessToken.currentAccessToken) {
+        [self validateReauthentication:FBSDKAccessToken.currentAccessToken withResult:result];
+        // in a reauth, short circuit and let the login handler be called when the validation finishes.
+        return;
       }
-    }
-
-    if (cancelled || recentlyGrantedPermissions.count == 0) {
-      NSSet *declinedPermissions = nil;
-      if ([FBSDKAccessToken currentAccessToken] != nil) {
-        // Always include the list of declined permissions from this login request
-        // if an access token is already cached by the SDK
-        declinedPermissions = recentlyDeclinedPermissions;
-      }
-
-      result = [[FBSDKLoginManagerLoginResult alloc] initWithToken:nil
-                                               authenticationToken:nil
-                                                       isCancelled:cancelled
-                                                grantedPermissions:NSSet.set
-                                               declinedPermissions:declinedPermissions];
+    } else {
+      result = [self cancelledResultFromParameters:parameters];
     }
   }
 
@@ -321,34 +268,6 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
     return [NSError fbErrorForFailedLoginWithCode:FBSDKLoginErrorBadChallengeString];
   } else {
     return nil;
-  }
-}
-
-- (void)determineRecentlyGrantedPermissions:(NSSet **)recentlyGrantedPermissionsRef
-                recentlyDeclinedPermissions:(NSSet **)recentlyDeclinedPermissionsRef
-                       forGrantedPermission:(NSSet *)grantedPermissions
-                        declinedPermissions:(NSSet *)declinedPermissions
-{
-  NSMutableSet *recentlyGrantedPermissions = [grantedPermissions mutableCopy];
-  NSSet *previouslyGrantedPermissions = ([FBSDKAccessToken currentAccessToken]
-    ? [FBSDKAccessToken currentAccessToken].permissions
-    : nil);
-  if (previouslyGrantedPermissions.count > 0) {
-    // If there were no requested permissions for this auth - treat all permissions as granted.
-    // Otherwise this is a reauth, so recentlyGranted should be a subset of what was requested.
-    if (_requestedPermissions.count != 0) {
-      [recentlyGrantedPermissions intersectSet:_requestedPermissions];
-    }
-  }
-
-  NSMutableSet *recentlyDeclinedPermissions = [_requestedPermissions mutableCopy];
-  [recentlyDeclinedPermissions intersectSet:declinedPermissions];
-
-  if (recentlyGrantedPermissionsRef != NULL) {
-    *recentlyGrantedPermissionsRef = [recentlyGrantedPermissions copy];
-  }
-  if (recentlyDeclinedPermissionsRef != NULL) {
-    *recentlyDeclinedPermissionsRef = [recentlyDeclinedPermissions copy];
   }
 }
 
@@ -414,7 +333,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKSettings appURLSchemeSuffix] forKey:@"local_client_id"];
   [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKLoginUtility stringForAudience:self.defaultAudience] forKey:@"default_audience"];
 
-  NSSet *permissions = [configuration.requestedPermissions setByAddingObject:@"openid"];
+  NSSet *permissions = [configuration.requestedPermissions setByAddingObject:[[FBSDKPermission alloc]initWithString:@"openid"]];
   [FBSDKTypeUtility dictionary:loginParams setObject:[permissions.allObjects componentsJoinedByString:@","] forKey:@"scope"];
 
   NSString *expectedChallenge = [FBSDKLoginManager stringForChallenge];
@@ -451,7 +370,6 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:serverConfiguration.loggingToken];
 
   _handler = [handler copy];
-  _requestedPermissions = permissions;
 
   [_logger startSessionForLoginManager:self];
 
@@ -621,6 +539,88 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   }
 }
 
+- (FBSDKLoginManagerLoginResult *)cancelledResultFromParameters:(FBSDKLoginCompletionParameters *)parameters
+{
+  NSSet *declinedPermissions = nil;
+  if (FBSDKAccessToken.currentAccessToken != nil) {
+    // Always include the list of declined permissions from this login request
+    // if an access token is already cached by the SDK
+    declinedPermissions = [FBSDKPermission rawPermissionsFromPermissions:parameters.declinedPermissions];
+  }
+
+  return [[FBSDKLoginManagerLoginResult alloc] initWithToken:nil
+                                         authenticationToken:nil
+                                                 isCancelled:YES
+                                          grantedPermissions:NSSet.set
+                                         declinedPermissions:declinedPermissions];
+}
+
+- (FBSDKLoginManagerLoginResult *)successResultFromParameters:(FBSDKLoginCompletionParameters *)parameters
+{
+  NSSet<FBSDKPermission *> *grantedPermissions = parameters.permissions;
+  NSSet<FBSDKPermission *> *declinedPermissions = parameters.declinedPermissions;
+
+  // Recent permissions are largely based on the existence of an access token
+  // without an access token the 'recent' permissions will match the
+  // intersect of the granted permissions and the requested permissions.
+  // This is important because we want to create a 'result' that accurately reflects
+  // the currently granted permissions even when there is no access token.
+  NSSet<FBSDKPermission *> *recentlyGrantedPermissions = [self recentlyGrantedPermissionsFromGrantedPermissions:grantedPermissions];
+  NSSet<FBSDKPermission *> *recentlyDeclinedPermissions = [self recentlyDeclinedPermissionsFromDeclinedPermissions:declinedPermissions];
+
+  if (recentlyGrantedPermissions.count > 0) {
+    NSSet<NSString *> *rawGrantedPermissions = [FBSDKPermission rawPermissionsFromPermissions:grantedPermissions];
+    NSSet<NSString *> *rawDeclinedPermissions = [FBSDKPermission rawPermissionsFromPermissions:declinedPermissions];
+    NSSet<NSString *> *rawRecentlyGrantedPermissions = [FBSDKPermission rawPermissionsFromPermissions:recentlyGrantedPermissions];
+    NSSet<NSString *> *rawRecentlyDeclinedPermissions = [FBSDKPermission rawPermissionsFromPermissions:recentlyDeclinedPermissions];
+
+    FBSDKAccessToken *token;
+    if (parameters.accessTokenString) {
+      token = [[FBSDKAccessToken alloc] initWithTokenString:parameters.accessTokenString
+                                                permissions:rawGrantedPermissions.allObjects
+                                        declinedPermissions:rawDeclinedPermissions.allObjects
+                                         expiredPermissions:@[]
+                                                      appID:parameters.appID
+                                                     userID:parameters.userID
+                                             expirationDate:parameters.expirationDate
+                                                refreshDate:[NSDate date]
+                                   dataAccessExpirationDate:parameters.dataAccessExpirationDate
+                                                graphDomain:parameters.graphDomain];
+    }
+
+    return [[FBSDKLoginManagerLoginResult alloc] initWithToken:token
+                                           authenticationToken:parameters.authenticationToken
+                                                   isCancelled:NO
+                                            grantedPermissions:rawRecentlyGrantedPermissions
+                                           declinedPermissions:rawRecentlyDeclinedPermissions];
+  } else {
+    return [self cancelledResultFromParameters:parameters];
+  }
+}
+
+ #pragma mark - Permissions Helpers
+
+- (NSSet<FBSDKPermission *> *)recentlyGrantedPermissionsFromGrantedPermissions:(NSSet<FBSDKPermission *> *)grantedPermissions
+{
+  NSMutableSet *recentlyGrantedPermissions = grantedPermissions.mutableCopy;
+  NSSet *previouslyGrantedPermissions = FBSDKAccessToken.currentAccessToken.permissions;
+
+  // If there were no requested permissions for this auth, or no previously granted permissions - treat all permissions as recently granted.
+  // Otherwise this is a reauth, so recentlyGranted should be a subset of what was requested.
+  if (previouslyGrantedPermissions.count > 0 && _requestedPermissions.count != 0) {
+    [recentlyGrantedPermissions intersectSet:_requestedPermissions];
+  }
+
+  return recentlyGrantedPermissions;
+}
+
+- (NSSet<FBSDKPermission *> *)recentlyDeclinedPermissionsFromDeclinedPermissions:(NSSet<FBSDKPermission *> *)declinedPermissions
+{
+  NSMutableSet *recentlyDeclinedPermissions = _requestedPermissions.mutableCopy;
+  [recentlyDeclinedPermissions intersectSet:declinedPermissions];
+  return recentlyDeclinedPermissions;
+}
+
  #pragma mark - Test Methods
 
 - (void)setHandler:(FBSDKLoginManagerLoginResultBlock)handler
@@ -628,9 +628,9 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   _handler = [handler copy];
 }
 
-- (void)setRequestedPermissions:(NSSet *)requestedPermissions
+- (void)setRequestedPermissions:(NSSet<NSString *> *)requestedPermissions
 {
-  _requestedPermissions = [requestedPermissions copy];
+  _requestedPermissions = [FBSDKPermission permissionsFromRawPermissions:requestedPermissions];
 }
 
 - (FBSDKLoginConfiguration *)configuration

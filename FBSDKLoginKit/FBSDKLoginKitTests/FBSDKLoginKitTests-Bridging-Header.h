@@ -23,9 +23,11 @@
 #ifdef BUCK
  #import <FBSDKLoginKit+Internal/FBSDKGraphRequestConnectionProviding.h>
  #import <FBSDKLoginKit+Internal/FBSDKNonceUtility.h>
+ #import <FBSDKLoginKit+Internal/FBSDKPermission.h>
 #else
  #import "FBSDKGraphRequestConnectionProviding.h"
  #import "FBSDKNonceUtility.h"
+ #import "FBSDKPermission.h"
 #endif
 
 @class FBSDKAuthenticationTokenClaims;

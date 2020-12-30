@@ -22,8 +22,10 @@
 
 #ifdef BUCK
  #import <FBSDKLoginKit+Internal/FBSDKLoginCompletion+Internal.h>
+ #import <FBSDKLoginKit+Internal/FBSDKPermission.h>
 #else
  #import "FBSDKLoginCompletion+Internal.h"
+ #import "FBSDKPermission.h"
 #endif
 #import "FBSDKLoginKitTests-Swift.h"
 
@@ -514,9 +516,9 @@ static NSString *const _fakeChallence = @"some_challenge";
   XCTAssertEqualObjects(parameters.authenticationTokenString, urlParameters[@"id_token"]);
   XCTAssertEqualObjects(parameters.appID, _fakeAppID);
   XCTAssertEqualObjects(parameters.challenge, _fakeChallence);
-  NSSet *permissions = [NSSet setWithArray:[urlParameters[@"granted_scopes"] componentsSeparatedByString:@","]];
+  NSSet *permissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:[urlParameters[@"granted_scopes"] componentsSeparatedByString:@","]]];
   XCTAssertEqualObjects(parameters.permissions, permissions);
-  NSSet *declinedPermissions = [NSSet setWithArray:[urlParameters[@"denied_scopes"] componentsSeparatedByString:@","]];
+  NSSet *declinedPermissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:[urlParameters[@"denied_scopes"] componentsSeparatedByString:@","]]];
   XCTAssertEqualObjects(parameters.declinedPermissions, declinedPermissions);
   XCTAssertEqualObjects(parameters.userID, urlParameters[@"user_id"]);
   XCTAssertEqualObjects(parameters.graphDomain, urlParameters[@"graph_domain"]);

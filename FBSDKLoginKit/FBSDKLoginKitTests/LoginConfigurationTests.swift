@@ -78,7 +78,7 @@ class LoginConfigurationTests: XCTestCase {
     let config = LoginConfiguration(permissions: permissions)
 
     XCTAssertEqual(
-      config?.requestedPermissions,
+      Set((config?.requestedPermissions.map { $0.value })!),
       Set(permissions.map { $0.name }),
       "Should create a configuration with the provided tracking preference"
     )

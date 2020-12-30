@@ -20,6 +20,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FBSDKPermission;
+
 /// The login tracking preference to use for a login attempt. For more information on the differences between
 /// `enabled` and `limited` see: https://developers.facebook.com/docs/facebook-login/ios/limited-login/
 typedef NS_ENUM(NSUInteger, FBSDKLoginTracking)
@@ -40,7 +42,7 @@ NS_SWIFT_NAME(LoginConfiguration)
 @property (nonatomic, readonly) FBSDKLoginTracking tracking;
 
 /// The requested permissions for the login attempt. Defaults to an empty set.
-@property (nonatomic, readonly, copy) NSSet<NSString *> *requestedPermissions;
+@property (nonatomic, readonly, copy) NSSet<FBSDKPermission *> *requestedPermissions;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

@@ -37,6 +37,7 @@
 @class FBSDKAccessToken;
 @class FBSDKLoginCompletionParameters;
 @class FBSDKLoginManagerLogger;
+@class FBSDKPermission;
 
 /**
  Success Block
@@ -54,7 +55,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 
 @interface FBSDKLoginManager () <FBSDKURLOpening>
 @property (nonatomic, weak) UIViewController *fromViewController;
-@property (nonatomic, readonly) NSSet *requestedPermissions;
+@property (nonatomic, readonly) NSSet<FBSDKPermission *> *requestedPermissions;
 @property (nonatomic, strong) FBSDKLoginManagerLogger *logger;
 @property (nonatomic) FBSDKLoginManagerState state;
 @property (nonatomic) BOOL usedSFAuthSession;

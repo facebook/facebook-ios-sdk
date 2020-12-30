@@ -26,6 +26,7 @@
 @class FBSDKAuthenticationTokenClaims;
 @class FBSDKLoginCompletionParameters;
 @class FBSDKLoginManager;
+@class FBSDKPermission;
 @class FBSDKProfile;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -54,9 +55,9 @@ NS_SWIFT_NAME(LoginCompletionParameters)
 @property (nullable, nonatomic, copy, readonly) NSString *nonceString;
 @property (nullable, nonatomic, copy, readonly) NSString *authenticationTokenString;
 
-@property (nullable, nonatomic, copy, readonly) NSSet *permissions;
-@property (nullable, nonatomic, copy, readonly) NSSet *declinedPermissions;
-@property (nullable, nonatomic, copy, readonly) NSSet *expiredPermissions;
+@property (nullable, nonatomic, copy, readonly) NSSet<FBSDKPermission *> *permissions;
+@property (nullable, nonatomic, copy, readonly) NSSet<FBSDKPermission *> *declinedPermissions;
+@property (nullable, nonatomic, copy, readonly) NSSet<FBSDKPermission *> *expiredPermissions;
 
 @property (nullable, nonatomic, copy, readonly) NSString *appID;
 @property (nullable, nonatomic, copy, readonly) NSString *userID;

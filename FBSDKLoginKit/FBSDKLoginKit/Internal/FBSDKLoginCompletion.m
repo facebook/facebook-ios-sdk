@@ -33,6 +33,7 @@
  #import "FBSDKLoginError.h"
  #import "FBSDKLoginManager+Internal.h"
  #import "FBSDKLoginUtility.h"
+ #import "FBSDKPermission.h"
 
 @interface FBSDKAuthenticationToken (ClaimsProviding)
 
@@ -152,13 +153,13 @@
 
   // check the string length so that we assign an empty set rather than a set with an empty string
   _parameters.permissions = (grantedPermissionsString.length > 0)
-  ? [NSSet setWithArray:[grantedPermissionsString componentsSeparatedByString:@","]]
+  ? [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:[grantedPermissionsString componentsSeparatedByString:@","]]]
   : NSSet.set;
   _parameters.declinedPermissions = (declinedPermissionsString.length > 0)
-  ? [NSSet setWithArray:[declinedPermissionsString componentsSeparatedByString:@","]]
+  ? [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:[declinedPermissionsString componentsSeparatedByString:@","]]]
   : NSSet.set;
 
-  _parameters.expiredPermissions = [NSSet set];
+  _parameters.expiredPermissions = NSSet.set;
 
   _parameters.appID = appID;
 
