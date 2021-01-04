@@ -22,11 +22,33 @@ import UIKit
 class LoginManagerViewController: LoginViewController {
 
     @IBOutlet private weak var loginButton: UIButton!
+    @IBOutlet private weak var useLimitedLoginSwitch: UISwitch!
+    @IBOutlet private weak var nonceTextField: UITextField!
 
-    var isLoggedIn: Bool {
-        guard let token = AccessToken.current else { return false }
-        
-        return !token.isExpired
+    private var trackingPreference: LoginTracking {
+        useLimitedLoginSwitch.isOn ? .limited : .enabled
+    }
+
+    private var nonce: String? {
+        nonceTextField.text
+    }
+
+    private let loginManager = LoginManager()
+
+    var configuration: LoginConfiguration? {
+        if let nonce = nonce, !nonce.isEmpty {
+            return LoginConfiguration(
+                permissions: [.publicProfile, .email],
+                tracking: trackingPreference,
+                nonce: nonce
+            )
+        }
+        else {
+            return LoginConfiguration(
+                permissions: [.publicProfile, .email],
+                tracking: trackingPreference
+            )
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -36,25 +58,34 @@ class LoginManagerViewController: LoginViewController {
     }
 
     @IBAction func toggleLoginState() {
-        let loginManager = LoginManager()
-
         guard !isLoggedIn else {
             loginManager.logOut()
             return updateLoginButton()
         }
 
-        loginManager.logIn(
-            permissions: [.publicProfile, .email],
-            viewController: self
-        ) { [unowned self] result in
+        invokeLoginMethod()
+    }
 
+    @IBAction func invokeLoginMethod() {
+        guard let validConfiguration = configuration else {
+            return presentAlert(
+                title: "Invalid Configuration",
+                message: "Please provide a valid login configuration"
+            )
+        }
+
+        loginManager.logIn(
+            viewController: self,
+            configuration: validConfiguration
+        ) { [unowned self] result in
             switch result {
+            case .cancelled:
+                self.presentAlert(
+                    title: "Cancelled",
+                    message: "Login attempt was cancelled"
+                )
             case .failed(let error):
                 self.presentAlert(for: error)
-            
-            case .cancelled:
-                self.presentAlert(title: "Cancelled", message: "Login attempt was cancelled")
-            
             case .success:
                 self.updateLoginButton()
                 self.showLoginDetails()
@@ -68,4 +99,5 @@ class LoginManagerViewController: LoginViewController {
             for: .normal
         )
     }
+
 }

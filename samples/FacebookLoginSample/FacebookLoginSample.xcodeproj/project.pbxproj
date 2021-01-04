@@ -9,13 +9,16 @@
 /* Begin PBXBuildFile section */
 		F431CBD923DB5AA700A243D4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F431CBD823DB5AA700A243D4 /* AppDelegate.swift */; };
 		F431CBDB23DB5AA700A243D4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F431CBDA23DB5AA700A243D4 /* SceneDelegate.swift */; };
-		F431CBDD23DB5AA700A243D4 /* LoginButtonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F431CBDC23DB5AA700A243D4 /* LoginButtonViewController.swift */; };
 		F431CBE023DB5AA700A243D4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F431CBDE23DB5AA700A243D4 /* Main.storyboard */; };
 		F431CBE223DB5AAA00A243D4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F431CBE123DB5AAA00A243D4 /* Assets.xcassets */; };
 		F431CBE523DB5AAA00A243D4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F431CBE323DB5AAA00A243D4 /* LaunchScreen.storyboard */; };
 		F45CD1D524C7552D00C84BF7 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = F45CD1D424C7552D00C84BF7 /* FacebookLogin */; };
+		F4747FB225780EA100B80853 /* LoginDetails.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4747FB125780EA100B80853 /* LoginDetails.storyboard */; };
+		F4747FB625780FDF00B80853 /* LoginButton.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4747FB525780FDF00B80853 /* LoginButton.storyboard */; };
+		F4747FB9257811AE00B80853 /* LoginManager.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4747FB8257811AE00B80853 /* LoginManager.storyboard */; };
 		F4D3AE8623DB60F7001BAF89 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D3AE8523DB60F7001BAF89 /* LoginViewController.swift */; };
-		F4F742FD23DB7A3500A823A9 /* LoginManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F742FC23DB7A3500A823A9 /* LoginManagerViewController.swift */; };
+		F4E0C0352593F1E8001720F9 /* LoginButtonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E0C0342593F1E8001720F9 /* LoginButtonViewController.swift */; };
+		F4E0C03A2593F254001720F9 /* LoginManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E0C0392593F254001720F9 /* LoginManagerViewController.swift */; };
 		F4F742FF23DB832F00A823A9 /* LoginDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F742FE23DB832F00A823A9 /* LoginDetailsViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -23,14 +26,17 @@
 		F431CBD523DB5AA700A243D4 /* FacebookLoginSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FacebookLoginSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F431CBD823DB5AA700A243D4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F431CBDA23DB5AA700A243D4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		F431CBDC23DB5AA700A243D4 /* LoginButtonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginButtonViewController.swift; sourceTree = "<group>"; };
 		F431CBDF23DB5AA700A243D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F431CBE123DB5AAA00A243D4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F431CBE423DB5AAA00A243D4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F431CBE623DB5AAA00A243D4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F45CD1D224C7552300C84BF7 /* facebook-ios-sdk */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "facebook-ios-sdk"; path = ../..; sourceTree = "<group>"; };
+		F4747FB125780EA100B80853 /* LoginDetails.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LoginDetails.storyboard; sourceTree = "<group>"; };
+		F4747FB525780FDF00B80853 /* LoginButton.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LoginButton.storyboard; sourceTree = "<group>"; };
+		F4747FB8257811AE00B80853 /* LoginManager.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LoginManager.storyboard; sourceTree = "<group>"; };
 		F4D3AE8523DB60F7001BAF89 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		F4F742FC23DB7A3500A823A9 /* LoginManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginManagerViewController.swift; sourceTree = "<group>"; };
+		F4E0C0342593F1E8001720F9 /* LoginButtonViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginButtonViewController.swift; sourceTree = "<group>"; };
+		F4E0C0392593F254001720F9 /* LoginManagerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginManagerViewController.swift; sourceTree = "<group>"; };
 		F4F742FE23DB832F00A823A9 /* LoginDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginDetailsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -70,13 +76,12 @@
 				F431CBD823DB5AA700A243D4 /* AppDelegate.swift */,
 				F431CBE123DB5AAA00A243D4 /* Assets.xcassets */,
 				F431CBE623DB5AAA00A243D4 /* Info.plist */,
-				F431CBE323DB5AAA00A243D4 /* LaunchScreen.storyboard */,
-				F431CBDC23DB5AA700A243D4 /* LoginButtonViewController.swift */,
-				F4F742FC23DB7A3500A823A9 /* LoginManagerViewController.swift */,
-				F431CBDE23DB5AA700A243D4 /* Main.storyboard */,
-				F431CBDA23DB5AA700A243D4 /* SceneDelegate.swift */,
-				F4D3AE8523DB60F7001BAF89 /* LoginViewController.swift */,
+				F4E0C0342593F1E8001720F9 /* LoginButtonViewController.swift */,
 				F4F742FE23DB832F00A823A9 /* LoginDetailsViewController.swift */,
+				F4E0C0392593F254001720F9 /* LoginManagerViewController.swift */,
+				F4D3AE8523DB60F7001BAF89 /* LoginViewController.swift */,
+				F431CBDA23DB5AA700A243D4 /* SceneDelegate.swift */,
+				F4747FAF25780E7B00B80853 /* Storyboards */,
 			);
 			path = FacebookLoginSample;
 			sourceTree = "<group>";
@@ -86,6 +91,18 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F4747FAF25780E7B00B80853 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				F431CBE323DB5AAA00A243D4 /* LaunchScreen.storyboard */,
+				F4747FB525780FDF00B80853 /* LoginButton.storyboard */,
+				F4747FB125780EA100B80853 /* LoginDetails.storyboard */,
+				F4747FB8257811AE00B80853 /* LoginManager.storyboard */,
+				F431CBDE23DB5AA700A243D4 /* Main.storyboard */,
+			);
+			path = Storyboards;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -151,8 +168,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4747FB625780FDF00B80853 /* LoginButton.storyboard in Resources */,
 				F431CBE523DB5AAA00A243D4 /* LaunchScreen.storyboard in Resources */,
+				F4747FB225780EA100B80853 /* LoginDetails.storyboard in Resources */,
 				F431CBE223DB5AAA00A243D4 /* Assets.xcassets in Resources */,
+				F4747FB9257811AE00B80853 /* LoginManager.storyboard in Resources */,
 				F431CBE023DB5AA700A243D4 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -164,11 +184,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F431CBDD23DB5AA700A243D4 /* LoginButtonViewController.swift in Sources */,
+				F4E0C03A2593F254001720F9 /* LoginManagerViewController.swift in Sources */,
 				F431CBD923DB5AA700A243D4 /* AppDelegate.swift in Sources */,
 				F4F742FF23DB832F00A823A9 /* LoginDetailsViewController.swift in Sources */,
 				F4D3AE8623DB60F7001BAF89 /* LoginViewController.swift in Sources */,
-				F4F742FD23DB7A3500A823A9 /* LoginManagerViewController.swift in Sources */,
+				F4E0C0352593F1E8001720F9 /* LoginButtonViewController.swift in Sources */,
 				F431CBDB23DB5AA700A243D4 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
