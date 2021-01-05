@@ -24,6 +24,7 @@
 
 #ifdef BUCK
  #import <FBSDKLoginKit+Internal/FBSDKLoginManager+Internal.h>
+ #import <FBSDKLoginKit+Internal/FBSDKPermission.h>
  #import <FBSDKLoginKit/FBSDKLoginConstants.h>
  #import <FBSDKLoginKit/FBSDKLoginManager.h>
  #import <FBSDKLoginKit/FBSDKLoginManagerLoginResult.h>
@@ -32,6 +33,7 @@
  #import "FBSDKLoginManager.h"
  #import "FBSDKLoginManager+Internal.h"
  #import "FBSDKLoginManagerLoginResult.h"
+ #import "FBSDKPermission.h"
 #endif
 
 #import "FBSDKLoginUtilityTests.h"
@@ -50,6 +52,10 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 - (void)storeExpectedNonce:(NSString *)nonceExpected keychainStore:(FBSDKKeychainStore *)keychainStore;
 
 - (FBSDKLoginConfiguration *)configuration;
+
+- (NSSet<FBSDKPermission *> *)recentlyGrantedPermissionsFromGrantedPermissions:(NSSet<FBSDKPermission *> *)grantedPermissions;
+
+- (NSSet<FBSDKPermission *> *)recentlyDeclinedPermissionsFromDeclinedPermissions:(NSSet<FBSDKPermission *> *)declinedPermissions;
 
 @end
 
@@ -143,26 +149,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   _mockProfileClass = nil;
 }
 
-- (NSURL *)authorizeURLWithParameters:(NSString *)parameters joinedBy:(NSString *)joinChar
-{
-  return [NSURL URLWithString:[NSString stringWithFormat:@"fb%@://authorize/%@%@", kFakeAppID, joinChar, parameters]];
-}
-
-- (NSURL *)authorizeURLWithFragment:(NSString *)fragment challenge:(NSString *)challenge
-{
-  challenge = [FBSDKUtility URLEncode:challenge];
-  fragment = [NSString stringWithFormat:@"%@%@state=%@",
-              fragment,
-              fragment.length > 0 ? @"&" : @"",
-              [FBSDKUtility URLEncode:[NSString stringWithFormat:@"{\"challenge\":\"%@\"}", challenge]]
-  ];
-  return [self authorizeURLWithParameters:fragment joinedBy:@"#"];
-}
-
-- (NSURL *)authorizeURLWithFragment:(NSString *)fragment
-{
-  return [self authorizeURLWithFragment:fragment challenge:kFakeChallenge];
-}
+// MARK: openURL Auth
 
 // verify basic case of first login and getting granted and declined permissions (is not classified as cancelled)
 - (void)testOpenURLAuth
@@ -182,6 +169,10 @@ static NSString *const kFakeJTI = @"a jti is just any string";
     NSSet *expectedDeclined = [NSSet setWithObjects:@"email", @"user_friends", nil];
     XCTAssertEqualObjects(tokenAfterAuth.declinedPermissions, expectedDeclined, @"unexpected permissions");
     XCTAssertEqualObjects(result.declinedPermissions, expectedDeclined, @"unexpected permissions");
+
+    OCMReject([self->_mockAuthenticationTokenClass setCurrentAuthenticationToken:OCMOCK_ANY]);
+    XCTAssertNil(result.authenticationToken);
+
     [expectation fulfill];
   }];
 
@@ -371,6 +362,9 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
     [self validateProfile:FBSDKProfile.currentProfile];
 
+    OCMReject([self->_mockAccessTokenClass setCurrentAccessToken:OCMOCK_ANY]);
+    XCTAssertNil(result.token);
+
     [expectation fulfill];
   }];
 
@@ -446,6 +440,8 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   [FBSDKAuthenticationTokenFactory setSkipSignatureVerification:NO];
 }
 
+// MARK: Login
+
 - (void)testLoginManagerRetainsItselfForLoginMethod
 {
   // Mock some methods to force an error callback.
@@ -509,6 +505,8 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertTrue(resultBlockInvoked, "Should invoke completion synchronously");
 }
 
+// MARK: Login Parameters
+
 - (void)testLoginTrackingEnabledLoginParams
 {
   FBSDKLoginConfiguration *config = [[FBSDKLoginConfiguration alloc]
@@ -554,7 +552,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssert(wasCalled);
 }
 
-- (void)testlogInParametersFromURL
+- (void)testLogInParametersFromURL
 {
   NSURL *url = [NSURL URLWithString:@"myapp://somelink/?al_applink_data=%7B%22target_url%22%3Anull%2C%22extras%22%3A%7B%22fb_login%22%3A%22%7B%5C%22granted_scopes%5C%22%3A%5C%22public_profile%5C%22%2C%5C%22denied_scopes%5C%22%3A%5C%22%5C%22%2C%5C%22signed_request%5C%22%3A%5C%22ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0%5C%22%2C%5C%22nonce%5C%22%3A%5C%22someNonce%5C%22%2C%5C%22data_access_expiration_time%5C%22%3A%5C%221607374566%5C%22%2C%5C%22expires_in%5C%22%3A%5C%225183401%5C%22%7D%22%7D%2C%22referer_app_link%22%3A%7B%22url%22%3A%22fb%3A%5C%2F%5C%2F%5C%2F%22%2C%22app_name%22%3A%22Facebook%22%7D%7D"];
 
@@ -565,6 +563,8 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertEqualObjects(params[@"granted_scopes"], @"public_profile");
   XCTAssertEqualObjects(params[@"denied_scopes"], @"");
 }
+
+// MARK: logInWithURL
 
 - (void)testLogInWithURLFailWithInvalidLoginData
 {
@@ -606,6 +606,8 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   }];
 }
 
+// MARK: Logout
+
 - (void)testLogout
 {
   [_mockLoginManager logOut];
@@ -614,6 +616,8 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   OCMVerify(ClassMethod([_mockAuthenticationTokenClass setCurrentAuthenticationToken:nil]));
   OCMVerify(ClassMethod([_mockProfileClass setCurrentProfile:nil]));
 }
+
+// MARK: Keychain Store
 
 - (void)testStoreExpectedNonce
 {
@@ -625,6 +629,8 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   [_mockLoginManager storeExpectedNonce:nil keychainStore:keychainStore];
   XCTAssertNil([keychainStore stringForKey:@"expected_login_nonce"]);
 }
+
+// MARK: Reauthorization
 
 - (void)testReauthorizingWithoutAccessToken
 {
@@ -655,10 +661,68 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   OCMVerify([manager logIn]);
 }
 
+// MARK: Permissions
+- (void)testRecentlyGrantedPermissionsWithoutPreviouslyGrantedOrRequestedPermissions
+{
+  NSSet *grantedPermissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:@[@"email", @"user_friends"]]];
+
+  NSSet *recentlyGrantedPermissions = [_mockLoginManager recentlyGrantedPermissionsFromGrantedPermissions:grantedPermissions];
+  XCTAssertEqualObjects(recentlyGrantedPermissions, grantedPermissions);
+}
+
+- (void)testRecentlyGrantedPermissionsWithPreviouslyGrantedPermissions
+{
+  NSSet *grantedPermissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:@[@"email", @"user_friends"]]];
+  [FBSDKAccessToken setCurrentAccessToken:self.sampleAccessToken shouldDispatchNotif:NO];
+
+  NSSet *recentlyGrantedPermissions = [_mockLoginManager recentlyGrantedPermissionsFromGrantedPermissions:grantedPermissions];
+  XCTAssertEqualObjects(recentlyGrantedPermissions, grantedPermissions);
+}
+
+- (void)testRecentlyGrantedPermissionsWithRequestedPermissions
+{
+  NSSet *grantedPermissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:@[@"email", @"user_friends"]]];
+  [_mockLoginManager setRequestedPermissions:[NSSet setWithArray:@[@"user_friends"]]];
+
+  NSSet *recentlyGrantedPermissions = [_mockLoginManager recentlyGrantedPermissionsFromGrantedPermissions:grantedPermissions];
+  XCTAssertEqualObjects(recentlyGrantedPermissions, grantedPermissions);
+}
+
+- (void)testRecentlyGrantedPermissionsWithPreviouslyGrantedAndRequestedPermissions
+{
+  NSSet *grantedPermissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:@[@"email", @"user_friends"]]];
+  [FBSDKAccessToken setCurrentAccessToken:self.sampleAccessToken shouldDispatchNotif:NO];
+  [_mockLoginManager setRequestedPermissions:[NSSet setWithArray:@[@"user_friends"]]];
+
+  NSSet *recentlyGrantedPermissions = [_mockLoginManager recentlyGrantedPermissionsFromGrantedPermissions:grantedPermissions];
+  NSSet *expectedPermisssions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:@[@"user_friends"]]];
+  XCTAssertEqualObjects(recentlyGrantedPermissions, expectedPermisssions);
+}
+
+- (void)testRecentlyDeclinedPermissionsWithoutRequestedPermissions
+{
+  NSSet *declinedPermissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:@[@"email", @"user_friends"]]];
+
+  NSSet *recentlyDeclinedPermissions = [_mockLoginManager recentlyDeclinedPermissionsFromDeclinedPermissions:declinedPermissions];
+  XCTAssertEqual(recentlyDeclinedPermissions.count, 0);
+}
+
+- (void)testRecentlyDeclinedPermissionsWithRequestedPermissions
+{
+  NSSet *declinedPermissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:@[@"email", @"user_friends"]]];
+  [_mockLoginManager setRequestedPermissions:[NSSet setWithArray:@[@"user_friends"]]];
+
+  NSSet *recentlyDeclinedPermissions = [_mockLoginManager recentlyDeclinedPermissionsFromDeclinedPermissions:declinedPermissions];
+  NSSet *expectedPermisssions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:@[@"user_friends"]]];
+  XCTAssertEqualObjects(recentlyDeclinedPermissions, expectedPermisssions);
+}
+
+// MARK: Helpers
+
 - (FBSDKAccessToken *)sampleAccessToken
 {
   return [[FBSDKAccessToken alloc] initWithTokenString:self.name
-                                           permissions:@[]
+                                           permissions:@[@"email"]
                                    declinedPermissions:@[]
                                     expiredPermissions:@[]
                                                  appID:@"abc123"
@@ -700,6 +764,27 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertEqualObjects(profile.userID, _claims[@"sub"], @"failed to parse userID");
   XCTAssertEqualObjects(profile.imageURL.absoluteString, _claims[@"picture"], @"failed to parse user profile picture");
   XCTAssertEqualObjects(profile.email, _claims[@"email"], @"failed to parse user email");
+}
+
+- (NSURL *)authorizeURLWithParameters:(NSString *)parameters joinedBy:(NSString *)joinChar
+{
+  return [NSURL URLWithString:[NSString stringWithFormat:@"fb%@://authorize/%@%@", kFakeAppID, joinChar, parameters]];
+}
+
+- (NSURL *)authorizeURLWithFragment:(NSString *)fragment challenge:(NSString *)challenge
+{
+  challenge = [FBSDKUtility URLEncode:challenge];
+  fragment = [NSString stringWithFormat:@"%@%@state=%@",
+              fragment,
+              fragment.length > 0 ? @"&" : @"",
+              [FBSDKUtility URLEncode:[NSString stringWithFormat:@"{\"challenge\":\"%@\"}", challenge]]
+  ];
+  return [self authorizeURLWithParameters:fragment joinedBy:@"#"];
+}
+
+- (NSURL *)authorizeURLWithFragment:(NSString *)fragment
+{
+  return [self authorizeURLWithFragment:fragment challenge:kFakeChallenge];
 }
 
 @end
