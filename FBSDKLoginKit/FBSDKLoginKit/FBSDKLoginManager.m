@@ -351,7 +351,6 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
       break;
     case FBSDKLoginTrackingEnabled:
       responseType = @"id_token,token_or_nonce,signed_request,graph_domain";
-      tp = @"ios_14_can_track";
       break;
   }
 

@@ -518,7 +518,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertEqualObjects(params[@"response_type"], @"id_token,token_or_nonce,signed_request,graph_domain");
   XCTAssertEqualObjects(params[@"scope"], @"public_profile,email,openid");
   XCTAssertNotNil(params[@"nonce"]);
-  XCTAssertEqualObjects(params[@"tp"], @"ios_14_can_track");
+  XCTAssertNil(params[@"tp"], "Regular login should not send a tracking parameter");
 }
 
 - (void)testLoginTrackingLimitedLoginParams
