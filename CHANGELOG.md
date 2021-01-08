@@ -9,7 +9,31 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Important
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v8.2.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.0.0...HEAD)
+
+## 9.0.0
+
+### Added
+
+- Swift Package Manager now supports Mac Catalyst
+- Limited Login. See the [docs](https://developers.facebook.com/docs/facebook-login/ios/limited-login/) for a general overview and implementation details.
+
+### Changed
+
+- The default Graph API version is updated to v9.0
+- The `linkURL` property of `FBSDKProfile` will only be populated if the user has granted the `user_link` permission.
+- FBSDKGamingServicesKit will no longer embed FBSDKCoreKit as a dependency. This may affect you if you are manually integrating pre-built binaries.
+
+### Removed
+
+- The `autoInitEnabled` option is removed from the SDK. From here on, developers are required to initialize the SDK explicitly with the `initializeSDK` method or implicitly by calling it in `applicationDidFinishLaunching`.
+
+### Fixed
+
+- Swift Package Manager Mac Catalyst support [#1577](https://github.com/facebook/facebook-ios-sdk/issues/1577)
+
+[2021-01-05](https://github.com/facebook/facebook-ios-sdk/releases/tag/v9.0.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v8.2.0...v9.0.0)
 
 ## 8.2.0
 
