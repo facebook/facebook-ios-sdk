@@ -903,6 +903,8 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
 - (void)validateRefreshedToken:(FBSDKAccessToken *)token
 {
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   [self validateRefreshedToken:token
        withExpectedTokenString:SampleAccessToken.validToken.tokenString
            expectedRefreshDate:[NSDate date]
@@ -912,11 +914,14 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
            expectedPermissions:[NSArray array]
    expectedDeclinedPermissions:[NSArray array]
     expectedExpiredPermissions:[NSArray array]];
+  #pragma clange diagnostic pop
 }
 
 - (void)validateRefreshedToken:(FBSDKAccessToken *)token
        withExpectedTokenString:(NSString *)expectedTokenString
 {
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   [self validateRefreshedToken:token
        withExpectedTokenString:expectedTokenString
            expectedRefreshDate:[NSDate date]
@@ -926,6 +931,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
            expectedPermissions:[NSArray array]
    expectedDeclinedPermissions:[NSArray array]
     expectedExpiredPermissions:[NSArray array]];
+  #pragma clange diagnostic pop
 }
 
 - (void)validateRefreshedToken:(FBSDKAccessToken *)token

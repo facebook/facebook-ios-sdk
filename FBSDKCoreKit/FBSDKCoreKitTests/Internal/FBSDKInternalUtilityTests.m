@@ -39,6 +39,15 @@
 
 @end
 
+@interface FBSDKAuthenticationToken (Testing)
+
+- (instancetype)initWithTokenString:(NSString *)tokenString
+                              nonce:(NSString *)nonce
+                             claims:(nullable FBSDKAuthenticationTokenClaims *)claims
+                        graphDomain:(NSString *)graphDomain;
+
+@end
+
 @interface FBSDKInternalUtilityTests : FBSDKTestCase
 @end
 
@@ -175,6 +184,28 @@
                                                defaultVersion:@""
                                                         error:NULL].absoluteString;
   XCTAssertEqualObjects(URLString, @"https://m.facebook.com/" FBSDK_TARGET_PLATFORM_VERSION @"/dialog/share");
+}
+
+- (void)testFacebookGamingURL
+{
+  [self stubFacebookDomainPartWith:@""];
+  FBSDKAuthenticationToken *authToken = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"token_string" nonce:@"nonce" claims:nil graphDomain:@"gaming"];
+  [FBSDKAuthenticationToken setCurrentAuthenticationToken:authToken];
+  NSString *URLString;
+
+  URLString = [FBSDKInternalUtility
+               facebookURLWithHostPrefix:@"graph"
+               path:@""
+               queryParameters:@{}
+               error:NULL].absoluteString;
+  XCTAssertEqualObjects(URLString, @"https://graph.fb.gg/" FBSDK_TARGET_PLATFORM_VERSION);
+
+  URLString = [FBSDKInternalUtility
+               facebookURLWithHostPrefix:@"graph-video"
+               path:@""
+               queryParameters:@{}
+               error:NULL].absoluteString;
+  XCTAssertEqualObjects(URLString, @"https://graph-video.fb.gg/" FBSDK_TARGET_PLATFORM_VERSION);
 }
 
 // MARK: - Extracting Permissions

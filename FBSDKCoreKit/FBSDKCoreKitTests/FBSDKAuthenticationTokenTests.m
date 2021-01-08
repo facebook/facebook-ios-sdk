@@ -26,6 +26,16 @@
 #import "FBSDKTestCase.h"
 #import "FBSDKTestCoder.h"
 
+@interface FBSDKAuthenticationToken (Testing)
+
+- (instancetype)initWithTokenString:(NSString *)tokenString
+                              nonce:(NSString *)nonce
+                             claims:(nullable FBSDKAuthenticationTokenClaims *)claims
+                                jti:(NSString *)jti
+                        graphDomain:(NSString *)graphDomain;
+
+@end
+
 @interface FBSDKAuthenticationTokenTests : FBSDKTestCase
 
 @end
@@ -69,12 +79,14 @@
   NSString *expectedTokenString = @"expectedTokenString";
   NSString *expectedNonce = @"expectedNonce";
   NSString *expectedJTI = @"expectedJTI";
+  NSString *expectedGraphDomain = @"expectedGraphDomain";
 
   FBSDKTestCoder *coder = [FBSDKTestCoder new];
   _token = [[FBSDKAuthenticationToken alloc] initWithTokenString:expectedTokenString
                                                            nonce:expectedNonce
                                                           claims:nil
-                                                             jti:expectedJTI];
+                                                             jti:expectedJTI
+                                                     graphDomain:expectedGraphDomain];
   [_token encodeWithCoder:coder];
 
   XCTAssertEqualObjects(
@@ -91,6 +103,11 @@
     coder.encodedObject[@"FBSDKAuthenticationTokenJtiCodingKey"],
     expectedJTI,
     @"Should encode the expected JTI"
+  );
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"FBSDKAuthenticationTokenGraphDomainCodingKey"],
+    expectedGraphDomain,
+    @"Should encode the expected graph domain"
   );
 }
 
@@ -113,6 +130,11 @@
     coder.decodedObject[@"FBSDKAuthenticationTokenJtiCodingKey"],
     [NSString class],
     @"Initializing from a decoder should attempt to decode a String for the jti key"
+  );
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"FBSDKAuthenticationTokenGraphDomainCodingKey"],
+    [NSString class],
+    @"Initializing from a decoder should attempt to decode a String for the graph domain key"
   );
 }
 

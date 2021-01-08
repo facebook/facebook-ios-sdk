@@ -346,7 +346,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 
   switch (configuration.tracking) {
     case FBSDKLoginTrackingLimited:
-      responseType = @"id_token";
+      responseType = @"id_token,graph_domain";
       tp = @"ios_14_do_not_track";
       break;
     case FBSDKLoginTrackingEnabled:
@@ -575,6 +575,8 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 
     FBSDKAccessToken *token;
     if (parameters.accessTokenString) {
+      #pragma clang diagnostic push
+      #pragma clang diagnostic ignored "-Wdeprecated-declarations"
       token = [[FBSDKAccessToken alloc] initWithTokenString:parameters.accessTokenString
                                                 permissions:rawGrantedPermissions.allObjects
                                         declinedPermissions:rawDeclinedPermissions.allObjects
@@ -585,6 +587,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
                                                 refreshDate:[NSDate date]
                                    dataAccessExpirationDate:parameters.dataAccessExpirationDate
                                                 graphDomain:parameters.graphDomain];
+      #pragma clange diagnostic pop
     }
 
     return [[FBSDKLoginManagerLoginResult alloc] initWithToken:token

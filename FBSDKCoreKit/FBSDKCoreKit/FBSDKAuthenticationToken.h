@@ -47,6 +47,11 @@ NS_SWIFT_NAME(AuthenticationToken)
  */
 @property (nonatomic, copy, readonly) NSString *nonce;
 
+/**
+  The graph domain where the user is authenticated.
+ */
+@property (nonatomic, copy, readonly) NSString *graphDomain;
+
 @end
 
 NS_ASSUME_NONNULL_END

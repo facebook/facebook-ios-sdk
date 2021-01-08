@@ -136,7 +136,10 @@
     }
     handler(parameters);
   };
-  [[FBSDKAuthenticationTokenFactory new] createTokenFromTokenString:_parameters.authenticationTokenString nonce:nonce completion:completion];
+  [[FBSDKAuthenticationTokenFactory new] createTokenFromTokenString:_parameters.authenticationTokenString
+                                                              nonce:nonce
+                                                        graphDomain:parameters.graphDomain
+                                                         completion:completion];
 }
 
 - (void)setParametersWithDictionary:(NSDictionary *)parameters appID:(NSString *)appID

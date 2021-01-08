@@ -48,7 +48,8 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 - (instancetype)initWithTokenString:(NSString *)tokenString
                               nonce:(NSString *)nonce
-                             claims:(nullable FBSDKAuthenticationTokenClaims *)claims;
+                             claims:(nullable FBSDKAuthenticationTokenClaims *)claims
+                        graphDomain:(NSString *)graphDomain;
 
 @end
 
@@ -73,7 +74,18 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 }
 
 - (void)createTokenFromTokenString:(NSString *_Nonnull)tokenString
-                             nonce:(NSString *)nonce
+                             nonce:(NSString *_Nonnull)nonce
+                        completion:(FBSDKAuthenticationTokenBlock)completion
+{
+  [self createTokenFromTokenString:tokenString
+                             nonce:nonce
+                       graphDomain:@"facebook"
+                        completion:completion];
+}
+
+- (void)createTokenFromTokenString:(NSString *_Nonnull)tokenString
+                             nonce:(NSString *_Nonnull)nonce
+                       graphDomain:(NSString *)graphDomain
                         completion:(FBSDKAuthenticationTokenBlock)completion
 {
   if (tokenString.length == 0 || nonce.length == 0) {
@@ -109,7 +121,10 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
          certificateKey:header.kid
              completion:^(BOOL success) {
                if (success) {
-                 FBSDKAuthenticationToken *token = [[FBSDKAuthenticationToken alloc] initWithTokenString:tokenString nonce:nonce claims:claims];
+                 FBSDKAuthenticationToken *token = [[FBSDKAuthenticationToken alloc] initWithTokenString:tokenString
+                                                                                                   nonce:nonce
+                                                                                                  claims:claims
+                                                                                             graphDomain:graphDomain];
                  completion(token);
                } else {
                  completion(nil);

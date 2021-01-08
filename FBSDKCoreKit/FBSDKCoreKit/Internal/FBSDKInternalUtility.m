@@ -51,9 +51,8 @@ static dispatch_once_t *fetchUrlSchemesToken;
 
 static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 {
-  return
-  [[FBSDKAccessToken currentAccessToken] respondsToSelector:@selector(graphDomain)]
-  && [[FBSDKAccessToken currentAccessToken].graphDomain isEqualToString:@"gaming"]
+  return [FBSDKAuthenticationToken.currentAuthenticationToken respondsToSelector:@selector(graphDomain)]
+  && [FBSDKAuthenticationToken.currentAuthenticationToken.graphDomain isEqualToString:@"gaming"]
   && ([hostPrefix isEqualToString:@"graph."] || [hostPrefix isEqualToString:@"graph-video."]);
 }
 

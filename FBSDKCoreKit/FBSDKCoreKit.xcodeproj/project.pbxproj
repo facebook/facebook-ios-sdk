@@ -794,6 +794,8 @@
 		C638158A257EA8F000B7690F /* FBSDKAuthenticationTokenFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = C6A308BB257AD1FF003C52FD /* FBSDKAuthenticationTokenFactory.m */; };
 		C6381628257EDF2100B7690F /* FBSDKAuthenticationTokenFactoryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C6381619257EDF2100B7690F /* FBSDKAuthenticationTokenFactoryTests.m */; };
 		C67BED2A257F1A6300D356C9 /* ProfilePictureViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C67BED29257F1A6300D356C9 /* ProfilePictureViewTests.swift */; };
+		C69FF20C25A8084C00C351BE /* FBSDKAuthenticationToken.m in Sources */ = {isa = PBXBuildFile; fileRef = F48AD2E32576FE050052C056 /* FBSDKAuthenticationToken.m */; };
+		C69FF22825A8084C00C351BE /* FBSDKAuthenticationToken.m in Sources */ = {isa = PBXBuildFile; fileRef = F48AD2E32576FE050052C056 /* FBSDKAuthenticationToken.m */; };
 		C6A308BD257AD1FF003C52FD /* FBSDKAuthenticationTokenFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = C6A308BB257AD1FF003C52FD /* FBSDKAuthenticationTokenFactory.m */; };
 		C6A308D8257AD227003C52FD /* FBSDKAuthenticationTokenFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = C6A308BA257AD1FF003C52FD /* FBSDKAuthenticationTokenFactory.h */; };
 		C6C5CBCC2581871B00AA3BB3 /* FBSDKAuthenticationStatusUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C6C5CBCA2581871B00AA3BB3 /* FBSDKAuthenticationStatusUtility.m */; };
@@ -3929,6 +3931,7 @@
 				F42004982416C30300AD7006 /* FBSDKMonitor.m in Sources */,
 				814AC7FC1D1B528900D61E6C /* FBSDKAccessToken.m in Sources */,
 				814AC7FD1D1B528900D61E6C /* FBSDKGraphRequestBody.m in Sources */,
+				C69FF22825A8084C00C351BE /* FBSDKAuthenticationToken.m in Sources */,
 				F468B34D24C25AB600979F8D /* FBSDKURLSession.m in Sources */,
 				C5C7B75122D84F64004A5A0C /* FBSDKFeatureManager.m in Sources */,
 				814AC7FE1D1B528900D61E6C /* FBSDKErrorConfiguration.m in Sources */,
@@ -4385,6 +4388,7 @@
 				F42004972416C30300AD7006 /* FBSDKMonitor.m in Sources */,
 				9D6DEEAA1BC236B9001A94ED /* FBSDKAccessToken.m in Sources */,
 				9DB0FAA11BC22CF9005EB8B1 /* FBSDKGraphRequestBody.m in Sources */,
+				C69FF20C25A8084C00C351BE /* FBSDKAuthenticationToken.m in Sources */,
 				F468B34C24C25AB600979F8D /* FBSDKURLSession.m in Sources */,
 				C5C7B75022D84F64004A5A0C /* FBSDKFeatureManager.m in Sources */,
 				9DB0FA9B1BC22BED005EB8B1 /* FBSDKErrorConfiguration.m in Sources */,

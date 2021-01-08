@@ -530,7 +530,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
   NSDictionary *params = [_mockLoginManager logInParametersWithConfiguration:config serverConfiguration:nil];
   [self validateCommonLoginParameters:params];
-  XCTAssertEqualObjects(params[@"response_type"], @"id_token");
+  XCTAssertEqualObjects(params[@"response_type"], @"id_token,graph_domain");
   XCTAssertEqualObjects(params[@"scope"], @"public_profile,email,openid");
   XCTAssertEqualObjects(params[@"nonce"], @"some_nonce");
   XCTAssertEqualObjects(params[@"tp"], @"ios_14_do_not_track");
