@@ -53,6 +53,10 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 @end
 
+@interface FBSDKAuthenticationTokenFactory () <NSURLSessionDelegate>
+
+@end
+
 @implementation FBSDKAuthenticationTokenFactory
 {
   NSString *_cert;
@@ -61,7 +65,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 - (instancetype)init
 {
-  self = [self initWithSessionProvider:NSURLSession.sharedSession];
+  self = [self initWithSessionProvider:[NSURLSession sessionWithConfiguration:NSURLSessionConfiguration.defaultSessionConfiguration delegate:self delegateQueue:nil]];
   return self;
 }
 
