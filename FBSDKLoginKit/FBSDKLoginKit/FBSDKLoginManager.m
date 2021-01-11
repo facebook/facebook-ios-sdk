@@ -141,7 +141,8 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
              handler:(nullable FBSDKLoginManagerLoginResultBlock)handler
 {
   FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager cachedServerConfiguration];
-  _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:serverConfiguration.loggingToken];
+  _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:serverConfiguration.loggingToken
+                                                         tracking:FBSDKLoginTrackingEnabled];
   _handler = [handler copy];
 
   [_logger startSessionForLoginManager:self];
@@ -366,8 +367,11 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 - (void)logInWithPermissions:(NSSet *)permissions handler:(FBSDKLoginManagerLoginResultBlock)handler
 {
   FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager cachedServerConfiguration];
-  _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:serverConfiguration.loggingToken];
 
+  if (_configuration) {
+    _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:serverConfiguration.loggingToken
+                                                           tracking:_configuration.tracking];
+  }
   _handler = [handler copy];
 
   [_logger startSessionForLoginManager:self];
@@ -405,11 +409,12 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
     return;
   }
   FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager cachedServerConfiguration];
-  _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:serverConfiguration.loggingToken];
   _handler = [handler copy];
   // Don't need to pass permissions for data reauthorization.
   _requestedPermissions = [NSSet set];
   _configuration = [[FBSDKLoginConfiguration alloc] initWithTracking:FBSDKLoginTrackingEnabled];
+  _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:serverConfiguration.loggingToken
+                                                         tracking:_configuration.tracking];
   self.authType = FBSDKLoginAuthTypeReauthorize;
   [_logger startSessionForLoginManager:self];
   [self logIn];
@@ -654,12 +659,12 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
     id<FBSDKLoginCompleting> completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:urlParameters
                                                                                          appID:[FBSDKSettings appID]];
 
-    if (_logger == nil) {
-      _logger = [FBSDKLoginManagerLogger loggerFromParameters:urlParameters];
-    }
-
     // any necessary strong reference is maintained by the FBSDKLoginURLCompleter handler
     [completer completeLoginWithHandler:^(FBSDKLoginCompletionParameters *parameters) {
+                 if ((self->_configuration) && (self->_logger == nil)) {
+                   self->_logger = [FBSDKLoginManagerLogger loggerFromParameters:urlParameters
+                                                                        tracking:self->_configuration.tracking];
+                 }
                  [self completeAuthentication:parameters expectChallenge:YES];
                } nonce:[self loadExpectedNonce]];
     [self storeExpectedNonce:nil keychainStore:_keychainStore];

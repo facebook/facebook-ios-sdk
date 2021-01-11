@@ -181,7 +181,6 @@ FBSDKAppEventName FBSDKAppEventNameFBReferralStart = @"fb_referral_start";
 FBSDKAppEventName FBSDKAppEventNameFBReferralEnd = @"fb_referral_end";
 
 FBSDKAppEventName FBSDKAppEventNameFBSDKLikeButtonImpression = @"fb_like_button_impression";
-FBSDKAppEventName FBSDKAppEventNameFBSDKLoginButtonImpression = @"fb_login_button_impression";
 FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonImpression = @"fb_send_button_impression";
 FBSDKAppEventName FBSDKAppEventNameFBSDKShareButtonImpression = @"fb_share_button_impression";
 FBSDKAppEventName FBSDKAppEventNameFBSDKLiveStreamingButtonImpression = @"fb_live_streaming_button_impression";

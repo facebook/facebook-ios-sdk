@@ -72,12 +72,13 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
 }
 
 + (FBSDKLoginManagerLogger *)loggerFromParameters:(NSDictionary *)parameters
+                                         tracking:(FBSDKLoginTracking)tracking
 {
   NSDictionary<id, id> *clientState = [FBSDKBasicUtility objectForJSONString:parameters[FBSDKLoginManagerLoggingClientStateKey] error:NULL];
 
   id isClientState = clientState[FBSDKLoginManagerLoggingClientStateIsClientState];
   if ([isClientState isKindOfClass:[NSNumber class]] && [isClientState boolValue]) {
-    FBSDKLoginManagerLogger *logger = [[self alloc] initWithLoggingToken:nil];
+    FBSDKLoginManagerLogger *logger = [[self alloc] initWithLoggingToken:nil tracking:tracking];
     if (logger != nil) {
       logger->_identifier = clientState[FBSDKLoginManagerLoggerParamIdentifierKey];
       logger->_authMethod = clientState[FBSDKLoginManagerLoggerParamAuthMethodKey];
@@ -89,7 +90,15 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
 }
 
 - (instancetype)initWithLoggingToken:(NSString *)loggingToken
+                            tracking:(FBSDKLoginTracking)tracking
 {
+  switch (tracking) {
+    case FBSDKLoginTrackingEnabled:
+      break;
+    case FBSDKLoginTrackingLimited:
+      return nil;
+  }
+
   if ((self = [super init]) != nil) {
     _identifier = [NSUUID UUID].UUIDString;
     _extras = [NSMutableDictionary dictionary];

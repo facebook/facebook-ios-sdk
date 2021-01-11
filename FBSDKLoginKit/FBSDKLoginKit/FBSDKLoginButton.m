@@ -37,9 +37,6 @@ static const CGFloat kButtonHeight = 28.0;
 static const CGFloat kRightMargin = 8.0;
 static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 
-@interface FBSDKLoginButton () <FBSDKButtonImpressionTracking>
-@end
-
 @implementation FBSDKLoginButton
 {
   BOOL _hasShownTooltipBubble;
@@ -161,23 +158,6 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
   return CGSizeMake(buttonWidth, kButtonHeight);
 }
 
- #pragma mark - FBSDKButtonImpressionTracking
-
-- (NSDictionary *)analyticsParameters
-{
-  return nil;
-}
-
-- (NSString *)impressionTrackingEventName
-{
-  return FBSDKAppEventNameFBSDKLoginButtonImpression;
-}
-
-- (NSString *)impressionTrackingIdentifier
-{
-  return @"login";
-}
-
  #pragma mark - FBSDKButton
 
 - (void)configureButton
@@ -243,7 +223,9 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 
 - (void)_buttonPressed:(id)sender
 {
-  [self logTapEventWithEventName:FBSDKAppEventNameFBSDKLoginButtonDidTap parameters:self.analyticsParameters];
+  if (self.loginTracking != FBSDKLoginTrackingLimited) {
+    [self logTapEventWithEventName:FBSDKAppEventNameFBSDKLoginButtonDidTap parameters:nil];
+  }
   if (self._isAuthenticated) {
     NSString *title = nil;
 

@@ -758,7 +758,7 @@
 		C57044D124E26678009637AD /* FBSDKUserDataStore.h in Headers */ = {isa = PBXBuildFile; fileRef = C57044CD24E26678009637AD /* FBSDKUserDataStore.h */; };
 		C57044D224E26678009637AD /* FBSDKUserDataStore.h in Headers */ = {isa = PBXBuildFile; fileRef = C57044CD24E26678009637AD /* FBSDKUserDataStore.h */; };
 		C57044D324E26678009637AD /* FBSDKUserDataStore.h in Headers */ = {isa = PBXBuildFile; fileRef = C57044CD24E26678009637AD /* FBSDKUserDataStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C57044D424E26678009637AD /* FBSDKUserDataStore.h in Headers */ = {isa = PBXBuildFile; fileRef = C57044CD24E26678009637AD /* FBSDKUserDataStore.h */; };
+		C57044D424E26678009637AD /* FBSDKUserDataStore.h in Headers */ = {isa = PBXBuildFile; fileRef = C57044CD24E26678009637AD /* FBSDKUserDataStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C57044D524E26678009637AD /* FBSDKUserDataStore.h in Headers */ = {isa = PBXBuildFile; fileRef = C57044CD24E26678009637AD /* FBSDKUserDataStore.h */; };
 		C57044D624E26678009637AD /* FBSDKUserDataStore.h in Headers */ = {isa = PBXBuildFile; fileRef = C57044CD24E26678009637AD /* FBSDKUserDataStore.h */; };
 		C57044D724E26678009637AD /* FBSDKUserDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = C57044CE24E26678009637AD /* FBSDKUserDataStore.m */; };

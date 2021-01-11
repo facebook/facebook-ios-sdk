@@ -30,12 +30,15 @@ FOUNDATION_EXPORT NSString *const FBSDKLoginManagerLoggerAuthMethod_Applink;
 
 NS_SWIFT_NAME(LoginManagerLogger)
 @interface FBSDKLoginManagerLogger : NSObject
-+ (FBSDKLoginManagerLogger *)loggerFromParameters:(NSDictionary *)parameters;
++ (FBSDKLoginManagerLogger *)loggerFromParameters:(NSDictionary *)parameters
+                                         tracking:(FBSDKLoginTracking)tracking;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-- (instancetype)initWithLoggingToken:(NSString *)loggingToken NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithLoggingToken:(NSString *)loggingToken
+                            tracking:(FBSDKLoginTracking)tracking
+NS_DESIGNATED_INITIALIZER;
 
 // this must not retain loginManager - only used to conveniently grab various properties to log.
 - (void)startSessionForLoginManager:(FBSDKLoginManager *)loginManager;

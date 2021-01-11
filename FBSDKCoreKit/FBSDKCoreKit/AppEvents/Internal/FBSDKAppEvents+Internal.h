@@ -164,7 +164,6 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsNativeLoginDialogEndTime;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsWebLoginE2E;
 
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLikeButtonImpression;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLoginButtonImpression;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKSendButtonImpression;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKShareButtonImpression;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLiveStreamingButtonImpression;
