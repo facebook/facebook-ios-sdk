@@ -500,7 +500,9 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   BOOL useSafariViewController = [configuration useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameLogin];
   NSString *authMethod = (useSafariViewController ? FBSDKLoginManagerLoggerAuthMethod_SFVC : FBSDKLoginManagerLoggerAuthMethod_Browser);
 
-  loginParams = [_logger parametersWithTimeStampAndClientState:loginParams forAuthMethod:authMethod];
+  [FBSDKLoginManagerLogger parametersWithTimeStampAndClientState:loginParams
+                                                   forAuthMethod:authMethod
+                                                          logger:_logger];
 
   NSURL *authURL = nil;
   NSError *error;

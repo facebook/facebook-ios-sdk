@@ -49,7 +49,9 @@ NS_DESIGNATED_INITIALIZER;
 
 - (void)postLoginHeartbeat;
 
-- (NSDictionary *)parametersWithTimeStampAndClientState:(NSDictionary *)loginParams forAuthMethod:(NSString *)authMethod;
++ (NSDictionary *)parametersWithTimeStampAndClientState:(NSDictionary *)loginParams
+                                          forAuthMethod:(NSString *)authMethod
+                                                 logger:(FBSDKLoginManagerLogger *)logger;
 - (void)willAttemptAppSwitchingBehavior;
 
 - (void)logNativeAppDialogResult:(BOOL)result dialogDuration:(NSTimeInterval)dialogDuration;
