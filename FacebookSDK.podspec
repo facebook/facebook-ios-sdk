@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '9.0'
   s.tvos.deployment_target = '10.0'
 
-  s.source       = { :git => 'https://github.com/facebook/facebook-ios-sdk.git',
+  s.source       = { :http => "https://github.com/facebook/facebook-ios-sdk/releases/download/v#{s.version}/XCFrameworks.zip",
                      :tag => "v#{s.version}" }
 
   s.ios.weak_frameworks = 'Accounts', 'Social', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox', 'WebKit'
@@ -32,20 +32,20 @@ Pod::Spec.new do |s|
   s.default_subspecs = 'CoreKit'
 
   s.subspec 'CoreKit' do |ss|
-    ss.dependency 'FBSDKCoreKit', "~> #{s.version}"
+    ss.vendored_framework = 'FBSDKCoreKit.xcframework'
   end
   s.subspec 'LoginKit' do |ss|
     ss.dependency 'FacebookSDK/CoreKit'
-    ss.dependency 'FBSDKLoginKit', "~> #{s.version}"
+    ss.vendored_framework = 'FBSDKLoginKit.xcframework'
   end
   s.subspec 'ShareKit' do |ss|
     ss.dependency 'FacebookSDK/CoreKit'
-    ss.dependency 'FBSDKShareKit', "~> #{s.version}"
+    ss.vendored_framework = 'FBSDKShareKit.xcframework'
   end
   s.subspec 'TVOSKit' do |ss|
     ss.platform = :tvos
     ss.dependency 'FacebookSDK/ShareKit'
     ss.dependency 'FacebookSDK/LoginKit'
-    ss.dependency 'FBSDKTVOSKit', "~> #{s.version}"
+    ss.vendored_framework = 'FBSDKTVOSKit.xcframework'
   end
 end
