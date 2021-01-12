@@ -57,7 +57,7 @@ class LoginDetailsViewController: UIViewController {
             ?? "Authentication Token Nonce Unavailable"
         nameLabel.text = profile?.name ?? Self.missingProfile
         userIdentifierLabel.text = profile?.userID ?? Self.missingProfile
-        emailLabel.text = profile?.email ?? Self.missingProfile
+        emailLabel.text = profile?.email ?? "Email unavailable"
     }
 
 }

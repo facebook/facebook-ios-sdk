@@ -223,10 +223,11 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 
 - (void)_buttonPressed:(id)sender
 {
-  if (self.loginTracking != FBSDKLoginTrackingLimited) {
-    [self logTapEventWithEventName:FBSDKAppEventNameFBSDKLoginButtonDidTap parameters:nil];
-  }
   if (self._isAuthenticated) {
+    if (self.loginTracking != FBSDKLoginTrackingLimited) {
+      [self logTapEventWithEventName:FBSDKAppEventNameFBSDKLoginButtonDidTap parameters:nil];
+    }
+
     NSString *title = nil;
 
     if (_userName) {
@@ -300,6 +301,10 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
     };
 
     FBSDKLoginConfiguration *loginConfig = [self loginConfiguration];
+
+    if (self.loginTracking == FBSDKLoginTrackingEnabled) {
+      [self logTapEventWithEventName:FBSDKAppEventNameFBSDKLoginButtonDidTap parameters:nil];
+    }
 
     [_loginManager logInFromViewController:[FBSDKInternalUtility viewControllerForView:self]
                              configuration:loginConfig
