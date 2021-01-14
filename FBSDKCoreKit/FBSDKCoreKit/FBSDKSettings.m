@@ -115,7 +115,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSString, FacebookClientToken, cl
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSString, FacebookDisplayName, displayName, setDisplayName, nil, NO);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSString, FacebookDomainPart, facebookDomainPart, setFacebookDomainPart, nil, NO);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookJpegCompressionQuality, _JPEGCompressionQualityNumber, _setJPEGCompressionQualityNumber, @0.9, NO);
-FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookAutoInitEnabled, _autoInitEnabled, _setAutoInitEnabled, @1, YES);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookInstrumentEnabled, _instrumentEnabled, _setInstrumentEnabled, @1, YES);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookAutoLogAppEventsEnabled, _autoLogAppEventsEnabled, _setAutoLogAppEventsEnabled, @1, YES);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookAdvertiserIDCollectionEnabled, _advertiserIDCollectionEnabled, _setAdvertiserIDCollectionEnabled, @1, YES);
@@ -146,19 +145,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 + (void)setJPEGCompressionQuality:(CGFloat)JPEGCompressionQuality
 {
   [self _setJPEGCompressionQualityNumber:@(JPEGCompressionQuality)];
-}
-
-+ (BOOL)isAutoInitEnabled
-{
-  return [self _autoInitEnabled].boolValue;
-}
-
-+ (void)setAutoInitEnabled:(BOOL)autoInitEnabled
-{
-  [self _setAutoInitEnabled:@(autoInitEnabled)];
-  if (autoInitEnabled) {
-    [FBSDKApplicationDelegate initializeSDK:nil];
-  }
 }
 
 + (BOOL)isInstrumentEnabled
@@ -435,11 +421,8 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 + (void)_logIfSDKSettingsChanged
 {
   NSInteger bitmask = 0;
-  NSInteger bit = 0;
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  bitmask |= ([FBSDKSettings isAutoInitEnabled] ? 1 : 0) << bit++;
-  #pragma clang diagnostic pop
+  // Starting at 1 to maintain the meaning of the bits since the autoInit flag was removed.
+  NSInteger bit = 1;
   bitmask |= ([FBSDKSettings isAutoLogAppEventsEnabled] ? 1 : 0) << bit++;
   bitmask |= ([FBSDKSettings isAdvertiserIDCollectionEnabled] ? 1 : 0) << bit++;
 
@@ -447,10 +430,9 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   if (previousBitmask != bitmask) {
     [[NSUserDefaults standardUserDefaults] setInteger:bitmask forKey:FBSDKSettingsBitmask];
 
-    NSArray<NSString *> *keys = @[@"FacebookAutoInitEnabled",
-                                  @"FacebookAutoLogAppEventsEnabled",
+    NSArray<NSString *> *keys = @[@"FacebookAutoLogAppEventsEnabled",
                                   @"FacebookAdvertiserIDCollectionEnabled"];
-    NSArray<NSNumber *> *defaultValues = @[@YES, @YES, @YES];
+    NSArray<NSNumber *> *defaultValues = @[@YES, @YES];
     NSInteger initialBitmask = 0;
     NSInteger usageBitmask = 0;
     for (int i = 0; i < keys.count; i++) {
@@ -574,11 +556,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 + (void)resetFacebookJpegCompressionQualityCache
 {
   g_FacebookJpegCompressionQuality = nil;
-}
-
-+ (void)resetFacebookAutoInitEnabledCache
-{
-  g_FacebookAutoInitEnabled = nil;
 }
 
 + (void)resetFacebookInstrumentEnabledCache

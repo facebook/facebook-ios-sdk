@@ -100,9 +100,6 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBDialogsWebLoginCompleted;
 /** Use to log the result of the App Switch OS AlertView. Only available on OS >= iOS10 */
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSessionFASLoginDialogResult;
 
-/** Use to log whether the app implements `applicationDidFinishLaunching:withOptions:` */
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameImplementsApplicationDidFinishLaunching;
-
 /** Use to log the live streaming events from sdk */
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLiveStreamingStart;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLiveStreamingStop;
@@ -167,7 +164,6 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsNativeLoginDialogEndTime;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsWebLoginE2E;
 
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLikeButtonImpression;
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLoginButtonImpression;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKSendButtonImpression;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKShareButtonImpression;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLiveStreamingButtonImpression;

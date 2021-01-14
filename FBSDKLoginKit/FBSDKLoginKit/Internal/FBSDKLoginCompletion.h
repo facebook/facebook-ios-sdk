@@ -26,6 +26,7 @@
 @class FBSDKAuthenticationTokenClaims;
 @class FBSDKLoginCompletionParameters;
 @class FBSDKLoginManager;
+@class FBSDKPermission;
 @class FBSDKProfile;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -47,28 +48,29 @@ NS_SWIFT_NAME(LoginCompletionParameters)
 - (instancetype)init NS_DESIGNATED_INITIALIZER;
 - (instancetype)initWithError:(NSError *)error;
 
-@property (nonatomic, readonly) FBSDKAuthenticationToken *authenticationToken;
-@property (nonatomic, readonly) FBSDKProfile *profile;
+@property (nullable, nonatomic, readonly) FBSDKAuthenticationToken *authenticationToken;
+@property (nullable, nonatomic, readonly) FBSDKProfile *profile;
 
-@property (nonatomic, copy, readonly) NSString *accessTokenString;
-@property (nonatomic, copy, readonly) NSString *nonceString;
-@property (nonatomic, copy, readonly) NSString *authenticationTokenString;
+@property (nullable, nonatomic, copy, readonly) NSString *accessTokenString;
+@property (nullable, nonatomic, copy, readonly) NSString *nonceString;
+@property (nullable, nonatomic, copy, readonly) NSString *authenticationTokenString;
 
-@property (nonatomic, copy, readonly) NSSet *permissions;
-@property (nonatomic, copy, readonly) NSSet *declinedPermissions;
-@property (nonatomic, copy, readonly) NSSet *expiredPermissions;
+@property (nullable, nonatomic, copy, readonly) NSSet<FBSDKPermission *> *permissions;
+@property (nullable, nonatomic, copy, readonly) NSSet<FBSDKPermission *> *declinedPermissions;
+@property (nullable, nonatomic, copy, readonly) NSSet<FBSDKPermission *> *expiredPermissions;
 
-@property (nonatomic, copy, readonly) NSString *appID;
-@property (nonatomic, copy, readonly) NSString *userID;
+@property (nullable, nonatomic, copy, readonly) NSString *appID;
+@property (nullable, nonatomic, copy, readonly) NSString *userID;
 
-@property (nonatomic, copy, readonly) NSError *error;
+@property (nullable, nonatomic, copy, readonly) NSError *error;
 
-@property (nonatomic, copy, readonly) NSDate *expirationDate;
-@property (nonatomic, copy, readonly) NSDate *dataAccessExpirationDate;
+@property (nullable, nonatomic, copy, readonly) NSDate *expirationDate;
+@property (nullable, nonatomic, copy, readonly) NSDate *dataAccessExpirationDate;
 
-@property (nonatomic, copy, readonly) NSString *challenge;
+@property (nullable, nonatomic, copy, readonly) NSString *challenge;
 
-@property (nonatomic, copy, readonly) NSString *graphDomain;
+@property (nullable, nonatomic, copy, readonly) NSString *graphDomain;
+
 @end
 
 NS_SWIFT_NAME(LoginCompleting)

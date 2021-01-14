@@ -47,6 +47,9 @@ static NSDate *_lastRefreshTry = nil;
 + (void)addRefreshPiggyback:(FBSDKGraphRequestConnection *)connection permissionHandler:(FBSDKGraphRequestBlock)permissionHandler
 {
   FBSDKAccessToken *expectedToken = [FBSDKAccessToken currentAccessToken];
+  if (!expectedToken) {
+    return;
+  }
   __block NSMutableSet *permissions = nil;
   __block NSMutableSet *declinedPermissions = nil;
   __block NSMutableSet *expiredPermissions = nil;
@@ -70,6 +73,9 @@ static NSDate *_lastRefreshTry = nil;
           ? [NSDate dateWithTimeIntervalSince1970:dataAccessExpirationDateNumber.doubleValue]
           : [NSDate distantFuture]);
       }
+
+      #pragma clang diagnostic push
+      #pragma clang diagnostic ignored "-Wdeprecated-declarations"
       FBSDKAccessToken *refreshedToken = [[FBSDKAccessToken alloc] initWithTokenString:tokenString ?: currentToken.tokenString
                                                                            permissions:(permissions ?: currentToken.permissions).allObjects
                                                                    declinedPermissions:(declinedPermissions ?: currentToken.declinedPermissions).allObjects
@@ -80,6 +86,8 @@ static NSDate *_lastRefreshTry = nil;
                                                                            refreshDate:[NSDate date]
                                                               dataAccessExpirationDate:dataExpirationDate
                                                                            graphDomain:graphDomain ?: currentToken.graphDomain];
+      #pragma clange diagnostic pop
+
       if (expectedToken == currentToken) {
         [FBSDKAccessToken setCurrentAccessToken:refreshedToken];
       }

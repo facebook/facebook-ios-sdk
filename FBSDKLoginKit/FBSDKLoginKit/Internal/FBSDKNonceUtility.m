@@ -18,7 +18,11 @@
 
 #import "FBSDKNonceUtility.h"
 
-#import "FBSDKCoreKit+Internal.h"
+#ifdef FBSDKCOCOAPODS
+ #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
+ #import "FBSDKCoreKit+Internal.h"
+#endif
 
 @implementation FBSDKNonceUtility
 

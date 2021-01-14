@@ -63,6 +63,7 @@ NS_SWIFT_NAME(FBProfilePictureViewState)
 - (void)_updateImageWithAccessToken;
 - (void)_updateImage;
 - (void)_fetchAndSetImageWithURL:(NSURL *)imageURL state:(FBSDKProfilePictureViewState *)state;
+- (nullable FBSDKProfilePictureViewState *)lastState;
 
 @end
 

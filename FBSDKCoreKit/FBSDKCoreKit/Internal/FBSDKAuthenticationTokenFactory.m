@@ -37,7 +37,6 @@
 #import "FBSDKAuthenticationTokenClaims.h"
 #import "FBSDKSessionProviding.h"
 
-static NSString *const FBSDKDefaultDomain = @"facebook.com";
 static NSString *const FBSDKBeginCertificate = @"-----BEGIN CERTIFICATE-----";
 static NSString *const FBSDKEndCertificate = @"-----END CERTIFICATE-----";
 
@@ -49,22 +48,24 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 - (instancetype)initWithTokenString:(NSString *)tokenString
                               nonce:(NSString *)nonce
-                             claims:(nullable FBSDKAuthenticationTokenClaims *)claims;
+                             claims:(nullable FBSDKAuthenticationTokenClaims *)claims
+                        graphDomain:(NSString *)graphDomain;
+
+@end
+
+@interface FBSDKAuthenticationTokenFactory () <NSURLSessionDelegate>
 
 @end
 
 @implementation FBSDKAuthenticationTokenFactory
 {
   NSString *_cert;
-  NSDictionary *_claims;
-  NSDictionary *_header;
-  NSString *_signature;
   id<FBSDKSessionProviding> _sessionProvider;
 }
 
 - (instancetype)init
 {
-  self = [self initWithSessionProvider:NSURLSession.sharedSession];
+  self = [self initWithSessionProvider:[NSURLSession sessionWithConfiguration:NSURLSessionConfiguration.defaultSessionConfiguration delegate:self delegateQueue:nil]];
   return self;
 }
 
@@ -77,7 +78,18 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 }
 
 - (void)createTokenFromTokenString:(NSString *_Nonnull)tokenString
-                             nonce:(NSString *)nonce
+                             nonce:(NSString *_Nonnull)nonce
+                        completion:(FBSDKAuthenticationTokenBlock)completion
+{
+  [self createTokenFromTokenString:tokenString
+                             nonce:nonce
+                       graphDomain:@"facebook"
+                        completion:completion];
+}
+
+- (void)createTokenFromTokenString:(NSString *_Nonnull)tokenString
+                             nonce:(NSString *_Nonnull)nonce
+                       graphDomain:(NSString *)graphDomain
                         completion:(FBSDKAuthenticationTokenBlock)completion
 {
   if (tokenString.length == 0 || nonce.length == 0) {
@@ -87,7 +99,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
   NSString *signature;
   FBSDKAuthenticationTokenClaims *claims;
-  NSDictionary *header;
+  FBSDKAuthenticationTokenHeader *header;
 
   NSArray *segments = [tokenString componentsSeparatedByString:@"."];
   if (segments.count != 3) {
@@ -100,12 +112,9 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   signature = [FBSDKTypeUtility array:segments objectAtIndex:2];
 
   claims = [FBSDKAuthenticationTokenClaims validatedClaimsWithEncodedString:encodedClaims nonce:nonce];
-  header = [FBSDKAuthenticationTokenFactory validatedHeaderWithEncodedString:encodedHeader];
-  NSString *certificateKey = [FBSDKTypeUtility dictionary:header
-                                             objectForKey:@"kid"
-                                                   ofType:NSString.class];
+  header = [FBSDKAuthenticationTokenHeader validatedHeaderWithEncodedString:encodedHeader];
 
-  if (!claims || !header || !certificateKey) {
+  if (!claims || !header) {
     completion(nil);
     return;
   }
@@ -113,30 +122,18 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   [self verifySignature:signature
                  header:encodedHeader
                  claims:encodedClaims
-         certificateKey:certificateKey
+         certificateKey:header.kid
              completion:^(BOOL success) {
                if (success) {
-                 FBSDKAuthenticationToken *token = [[FBSDKAuthenticationToken alloc] initWithTokenString:tokenString nonce:nonce claims:claims];
+                 FBSDKAuthenticationToken *token = [[FBSDKAuthenticationToken alloc] initWithTokenString:tokenString
+                                                                                                   nonce:nonce
+                                                                                                  claims:claims
+                                                                                             graphDomain:graphDomain];
                  completion(token);
                } else {
                  completion(nil);
                }
              }];
-}
-
-+ (NSDictionary *)validatedHeaderWithEncodedString:(NSString *)encodedHeader
-{
-  NSError *error;
-  NSData *headerData = [FBSDKBase64 decodeAsData:[FBSDKBase64 base64FromBase64Url:encodedHeader]];
-
-  if (headerData) {
-    NSDictionary *header = [FBSDKTypeUtility JSONObjectWithData:headerData options:0 error:&error];
-    if (!error && [header[@"alg"] isKindOfClass:[NSString class]] && [header[@"alg"] isEqualToString:@"RS256"]) {
-      return header;
-    }
-  }
-
-  return nil;
 }
 
 - (void)verifySignature:(NSString *)signature

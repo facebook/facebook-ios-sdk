@@ -16,28 +16,29 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKTVOSKit/FBSDKDeviceLoginButton.h>
+#import <Foundation/Foundation.h>
 
-#import <TVMLKit/TVViewElement.h>
+#if SWIFT_PACKAGE
+#import "FBSDKCoreKit.h"
+#else
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
-/*!
- @abstract Represents a <FBSDKShareButton /> tag in TVML. Requires FBSDKShareKit.framework to be linked.
- @discussion You should not need to use this class directly. Instead, make sure you
- initialize a `FBSDKTVInterfaceFactory` instance correctly.
+/// An internal protocol used to describe an object that can handle graph requests
+NS_SWIFT_NAME(GraphRequestConnectionProviding)
+@protocol FBSDKGraphRequestConnectionProviding <NSObject>
 
- The '<FBSDKShareButton />' tag must also have the following attributes to define
-  the share content:
- - `href` the url to share
+- (void)addRequest:(FBSDKGraphRequest *)request
+ completionHandler:(FBSDKGraphRequestBlock)handler;
+- (void)start;
 
- Examples:
- @code
- <FBSDKShareButton href="http://developers.facebook.com/docs/tvos/tvml" />
- */
-NS_SWIFT_NAME(FBTVShareButtonElement)
-@interface FBSDKTVShareButtonElement : TVViewElement
+@end
 
+// MARK: Default Protocol Conformances
+
+@interface FBSDKGraphRequestConnection (GraphRequestConnection) <FBSDKGraphRequestConnectionProviding>
 @end
 
 NS_ASSUME_NONNULL_END

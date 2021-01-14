@@ -198,6 +198,7 @@ class ProfilePictureView: XCTestCase {
       1,
       "Should try to fetch image for a profile that have an imageURL"
     )
+    XCTAssertNotNil(view.lastState(), "Should update state when profile has an imageURL");
   }
 
   func testUpdatinImageWithProfileWithoutImageURL() {
@@ -211,6 +212,7 @@ class ProfilePictureView: XCTestCase {
       0,
       "Should try to fetch image for a profile that does not have an imageURL"
     )
+    XCTAssertNil(view.lastState(), "Should not update state when profile does not have an imageURL")
   }
 
   func testUpdatingImageWithValidAccessToken() {
@@ -224,6 +226,7 @@ class ProfilePictureView: XCTestCase {
       1,
       "Should try to fetch image for a valid access token"
     )
+    XCTAssertNotNil(view.lastState(), "Should update state when access token is valid");
   }
 
   func testUpdatingImageWithInvalidAccessToken() {
@@ -237,13 +240,13 @@ class ProfilePictureView: XCTestCase {
       0,
       "Should not try to fetch image for an invalid access token"
     )
+    XCTAssertNil(view.lastState(), "Should not update state when access token is not valid")
   }
 }
 
 class TestView: FBProfilePictureView {
   var updateImageWithAccessTokenCount = 0
   var updateImageWithProfileCount = 0
-  var updateImageWithDataCount = 0
   var fetchAndSetImageCount = 0
 
   override func _updateImageWithAccessToken() {

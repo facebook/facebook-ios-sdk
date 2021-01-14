@@ -79,7 +79,7 @@
   XCTAssertEqualObjects(url.path, @"/platform/oidc/status");
 
   NSDictionary *params = [FBSDKInternalUtility parametersFromFBURL:url];
-  XCTAssertEqualObjects(params[@"jti"], FBSDKAuthenticationToken.currentAuthenticationToken.jti, @"Incorrent JTI parameter in request url");
+  XCTAssertEqualObjects(params[@"id_token"], FBSDKAuthenticationToken.currentAuthenticationToken.tokenString, @"Incorrect ID token parameter in request url");
 }
 
 // MARK: _handleResponse
@@ -145,6 +145,26 @@
   XCTAssertNotNil(FBSDKAuthenticationToken.currentAuthenticationToken, @"Authentication token should not be cleared when the request failed");
   XCTAssertNotNil(FBSDKAccessToken.currentAccessToken, @"Access token should not be cleared when the request failed");
   XCTAssertNotNil(FBSDKProfile.currentProfile, @"Profile should not be cleared when the request failed");
+}
+
+- (void)testHandleResponseWithFuzzyData
+{
+  NSURL *url = [NSURL URLWithString:@"m.facebook.com/platform/oidc/status/"];
+
+  for (int i = 0; i < 100; i++) {
+    // only strings allowed in HTTP header
+    NSDictionary *header = @{
+      @"fb-s" : [[Fuzzer random] description],
+      @"some_header_key" : [[Fuzzer random] description],
+    };
+
+    NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:url
+                                                              statusCode:200
+                                                             HTTPVersion:nil
+                                                            headerFields:header];
+
+    [FBSDKAuthenticationStatusUtility _handleResponse:response];
+  }
 }
 
 @end

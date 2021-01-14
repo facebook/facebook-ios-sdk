@@ -36,12 +36,23 @@
 - (NSMutableURLRequest *)requestWithBatch:(NSArray *)requests
                                   timeout:(NSTimeInterval)timeout;
 
+- (NSString *)accessTokenWithRequest:(FBSDKGraphRequest *)request;
+
 @end
 
 @interface FBSDKGraphRequestConnectionTests : FBSDKTestCase <FBSDKGraphRequestConnectionDelegate>
 
 @property (nonatomic, copy) void (^requestConnectionStartingCallback)(FBSDKGraphRequestConnection *connection);
 @property (nonatomic, copy) void (^requestConnectionCallback)(FBSDKGraphRequestConnection *connection, NSError *error);
+@end
+
+@interface FBSDKAuthenticationToken (Testing)
+
+- (instancetype)initWithTokenString:(NSString *)tokenString
+                              nonce:(NSString *)nonce
+                             claims:(nullable FBSDKAuthenticationTokenClaims *)claims
+                        graphDomain:(NSString *)graphDomain;
+
 @end
 
 @implementation FBSDKGraphRequestConnectionTests
@@ -620,6 +631,52 @@
   XCTAssertTrue(request.HTTPBody.length > 0);
   XCTAssertEqualObjects([request valueForHTTPHeaderField:@"Content-Encoding"], @"gzip");
   XCTAssertEqualObjects([request valueForHTTPHeaderField:@"Content-Type"], @"application/json");
+}
+
+#pragma mark - accessTokenWithRequest
+
+- (void)testAccessTokenWithRequest
+{
+  NSString *expectedToken = @"fake_token";
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""} tokenString:expectedToken HTTPMethod:FBSDKHTTPMethodGET flags:FBSDKGraphRequestFlagNone];
+  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
+
+  NSString *token = [connection accessTokenWithRequest:request];
+
+  XCTAssertEqualObjects(token, expectedToken);
+}
+
+- (void)testAccessTokenWithRequestWithFacebookClientToken
+{
+  NSString *clientToken = @"client_token";
+  [self stubClientTokenWith:clientToken];
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""} tokenString:nil HTTPMethod:FBSDKHTTPMethodGET flags:FBSDKGraphRequestFlagNone];
+  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
+
+  NSString *token = [connection accessTokenWithRequest:request];
+
+  NSString *expectedToken = [NSString stringWithFormat:@"%@|%@", self.appID, clientToken];
+  XCTAssertEqualObjects(token, expectedToken);
+
+  [self stubClientTokenWith:nil];
+}
+
+- (void)testAccessTokenWithRequestWithGamingClientToken
+{
+  NSString *clientToken = @"client_token";
+  [self stubClientTokenWith:clientToken];
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""} tokenString:nil HTTPMethod:FBSDKHTTPMethodGET flags:FBSDKGraphRequestFlagNone];
+  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
+  FBSDKAuthenticationToken *authToken = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"token_string" nonce:@"nonce" claims:nil graphDomain:@"gaming"];
+  [FBSDKAuthenticationToken setCurrentAuthenticationToken:authToken];
+
+  NSString *token = [connection accessTokenWithRequest:request];
+
+  NSString *expectedToken = [NSString stringWithFormat:@"GG|%@|%@", self.appID, clientToken];
+  XCTAssertEqualObjects(token, expectedToken);
+
+  [self stubClientTokenWith:nil];
+  [FBSDKAuthenticationToken setCurrentAuthenticationToken:nil];
 }
 
 #pragma mark - Error recovery.

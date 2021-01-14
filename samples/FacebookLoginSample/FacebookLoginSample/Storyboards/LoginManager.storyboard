@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="YYy-mo-YMK">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Login Manager Beta Example-->
+        <scene sceneID="p9a-jt-fBr">
+            <objects>
+                <viewController storyboardIdentifier="loginManagerBeta" id="YYy-mo-YMK" userLabel="Login Manager Beta Example" customClass="LoginManagerViewController" customModule="FacebookLoginSample" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="zXO-wU-lKo">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="23" translatesAutoresizingMaskIntoConstraints="NO" id="dnJ-1k-mIF">
+                                <rect key="frame" x="0.0" y="124" width="414" height="197"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9iB-kY-QL2">
+                                        <rect key="frame" x="174" y="0.0" width="66" height="33"/>
+                                        <color key="backgroundColor" systemColor="linkColor"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <inset key="contentEdgeInsets" minX="6" minY="6" maxX="6" maxY="6"/>
+                                        <state key="normal" title="Button"/>
+                                        <connections>
+                                            <action selector="toggleLoginState" destination="YYy-mo-YMK" eventType="touchUpInside" id="Eqq-Ys-jmF"/>
+                                        </connections>
+                                    </button>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="23" translatesAutoresizingMaskIntoConstraints="NO" id="saW-tA-X5H">
+                                        <rect key="frame" x="118" y="56" width="178.5" height="31"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Limit Tracking" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pHt-Ue-SNT">
+                                                <rect key="frame" x="0.0" y="0.0" width="106.5" height="31"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CcG-BC-dlS">
+                                                <rect key="frame" x="129.5" y="0.0" width="51" height="31"/>
+                                            </switch>
+                                        </subviews>
+                                    </stackView>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Provide an Optional Nonce" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Rru-4b-UYQ">
+                                        <rect key="frame" x="107" y="110" width="200" height="34"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1X2-iu-DBr">
+                                        <rect key="frame" x="138" y="167" width="138" height="30"/>
+                                        <state key="normal" title="Invoke login method"/>
+                                        <connections>
+                                            <action selector="invokeLoginMethod" destination="YYy-mo-YMK" eventType="touchUpInside" id="ZRU-pr-cRB"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="G7b-qH-cTG"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="G7b-qH-cTG" firstAttribute="trailing" secondItem="dnJ-1k-mIF" secondAttribute="trailing" id="8Jz-Fz-AZy"/>
+                            <constraint firstItem="dnJ-1k-mIF" firstAttribute="leading" secondItem="G7b-qH-cTG" secondAttribute="leading" id="LYq-hD-xaq"/>
+                            <constraint firstItem="G7b-qH-cTG" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="dnJ-1k-mIF" secondAttribute="bottom" id="oC2-Mb-Pk3"/>
+                            <constraint firstItem="dnJ-1k-mIF" firstAttribute="top" secondItem="G7b-qH-cTG" secondAttribute="top" constant="80" id="sTh-1g-ImU"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Login Manager Beta Example" id="PfH-4R-ddw"/>
+                    <connections>
+                        <outlet property="loginButton" destination="9iB-kY-QL2" id="86d-Gp-qd4"/>
+                        <outlet property="nonceTextField" destination="Rru-4b-UYQ" id="4E7-VJ-AGb"/>
+                        <outlet property="useLimitedLoginSwitch" destination="CcG-BC-dlS" id="BQe-1W-KuK"/>
+                        <segue destination="wmp-qg-ziF" kind="show" identifier="showLoginDetails" id="ee9-gf-x7M"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Jth-kW-0mg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1819" y="1097"/>
+        </scene>
+        <!--LoginDetails-->
+        <scene sceneID="pTs-2y-DcW">
+            <objects>
+                <viewControllerPlaceholder storyboardName="LoginDetails" id="wmp-qg-ziF" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="LfQ-Yp-RFd"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8DJ-Y4-f66" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2405" y="1097"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="linkColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

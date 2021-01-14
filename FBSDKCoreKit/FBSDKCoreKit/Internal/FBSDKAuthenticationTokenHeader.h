@@ -16,29 +16,27 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
-#if TARGET_OS_TV
-
-#import "FBSDKCoreKitImport.h"
-
-#import "FBSDKSharingContent.h"
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-DEVICE_SHARING_DEPRECATED
-NS_SWIFT_NAME(FBDeviceShareButton)
-@interface FBSDKDeviceShareButton : FBSDKDeviceButton
+@interface FBSDKAuthenticationTokenHeader : NSObject
+
+/// Value that represents the algorithm that was used to sign the JWT.
+@property (nonatomic, readonly, strong) NSString *alg;
+
+/// The type of the JWT.
+@property (nonatomic, readonly, strong) NSString *typ;
+
+/// Key identifier used in identifying the key to be used to verify the signature.
+@property (nonatomic, readonly, strong) NSString *kid;
 
 /**
-  The required content to share. The button is disabled until this is set.
-
- @see FBSDKDeviceShareViewController
+ Returns a new instance, when one can be created from the parameters given, otherwise `nil`.
+ @param encodedHeader Base64-encoded string of the header.
  */
-@property (nullable, nonatomic, strong) id<FBSDKSharingContent> shareContent;
++ (nullable FBSDKAuthenticationTokenHeader *)validatedHeaderWithEncodedString:(NSString *)encodedHeader;
 
 @end
 
 NS_ASSUME_NONNULL_END
-
-#endif

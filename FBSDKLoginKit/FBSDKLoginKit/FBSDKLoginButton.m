@@ -37,9 +37,6 @@ static const CGFloat kButtonHeight = 28.0;
 static const CGFloat kRightMargin = 8.0;
 static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 
-@interface FBSDKLoginButton () <FBSDKButtonImpressionTracking>
-@end
-
 @implementation FBSDKLoginButton
 {
   BOOL _hasShownTooltipBubble;
@@ -67,9 +64,9 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
   _loginManager.defaultAudience = defaultAudience;
 }
 
-- (void)setBetaLoginExperience:(FBSDKBetaLoginExperience)betaLoginExperience
+- (void)setLoginTracking:(FBSDKLoginTracking)loginTracking
 {
-  _betaLoginExperience = betaLoginExperience;
+  _loginTracking = loginTracking;
   [self _updateNotificationObservers];
 }
 
@@ -161,23 +158,6 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
   return CGSizeMake(buttonWidth, kButtonHeight);
 }
 
- #pragma mark - FBSDKButtonImpressionTracking
-
-- (NSDictionary *)analyticsParameters
-{
-  return nil;
-}
-
-- (NSString *)impressionTrackingEventName
-{
-  return FBSDKAppEventNameFBSDKLoginButtonImpression;
-}
-
-- (NSString *)impressionTrackingIdentifier
-{
-  return @"login";
-}
-
  #pragma mark - FBSDKButton
 
 - (void)configureButton
@@ -243,8 +223,11 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 
 - (void)_buttonPressed:(id)sender
 {
-  [self logTapEventWithEventName:FBSDKAppEventNameFBSDKLoginButtonDidTap parameters:self.analyticsParameters];
   if (self._isAuthenticated) {
+    if (self.loginTracking != FBSDKLoginTrackingLimited) {
+      [self logTapEventWithEventName:FBSDKAppEventNameFBSDKLoginButtonDidTap parameters:nil];
+    }
+
     NSString *title = nil;
 
     if (_userName) {
@@ -319,6 +302,10 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 
     FBSDKLoginConfiguration *loginConfig = [self loginConfiguration];
 
+    if (self.loginTracking == FBSDKLoginTrackingEnabled) {
+      [self logTapEventWithEventName:FBSDKAppEventNameFBSDKLoginButtonDidTap parameters:nil];
+    }
+
     [_loginManager logInFromViewController:[FBSDKInternalUtility viewControllerForView:self]
                              configuration:loginConfig
                                 completion:handler];
@@ -329,11 +316,11 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 {
   if (self.nonce) {
     return [[FBSDKLoginConfiguration alloc] initWithPermissions:self.permissions
-                                            betaLoginExperience:self.betaLoginExperience
+                                                       tracking:self.loginTracking
                                                           nonce:self.nonce];
   } else {
     return [[FBSDKLoginConfiguration alloc] initWithPermissions:self.permissions
-                                            betaLoginExperience:self.betaLoginExperience];
+                                                       tracking:self.loginTracking];
   }
 }
 

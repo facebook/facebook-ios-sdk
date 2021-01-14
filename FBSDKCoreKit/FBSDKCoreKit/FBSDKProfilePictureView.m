@@ -245,8 +245,6 @@
                                            selector:@selector(_profileDidChangeNotification:)
                                                name:FBSDKProfileDidChangeNotification
                                              object:nil];
-
-  [self setNeedsImageUpdate];
 }
 
  #pragma mark - Notifications
@@ -286,12 +284,12 @@
   if (![_lastState isValidForState:state]) {
     [self _setPlaceholderImage];
   }
-  _lastState = state;
 
   FBSDKProfile *profile = FBSDKProfile.currentProfile;
   if (![state.profileID isEqualToString:@"me"] || !profile.imageURL) {
     return;
   }
+  _lastState = state;
 
   [self _fetchAndSetImageWithURL:profile.imageURL state:state];
 }
@@ -448,6 +446,13 @@
     _placeholderImageIsValid = NO;
     [self setNeedsImageUpdate];
   }
+}
+
+ #pragma mark - Test Helpers
+
+- (FBSDKProfilePictureViewState *)lastState
+{
+  return _lastState;
 }
 
 @end

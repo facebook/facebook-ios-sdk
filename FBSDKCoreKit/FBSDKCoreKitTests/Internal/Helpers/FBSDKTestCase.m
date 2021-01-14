@@ -58,7 +58,6 @@
 + (void)resetFacebookDisplayNameCache;
 + (void)resetFacebookDomainPartCache;
 + (void)resetFacebookJpegCompressionQualityCache;
-+ (void)resetFacebookAutoInitEnabledCache;
 + (void)resetFacebookInstrumentEnabledCache;
 + (void)resetFacebookAutoLogAppEventsEnabledCache;
 + (void)resetFacebookAdvertiserIDCollectionEnabledCache;
@@ -457,14 +456,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   OCMStub(ClassMethod([_settingsClassMock tokenCache])).andReturn(cache);
 }
 
-- (void)stubIsAutoInitEnabled:(BOOL)isEnabled
-{
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  OCMStub(ClassMethod([_settingsClassMock isAutoInitEnabled])).andReturn(isEnabled);
-  #pragma clang diagnostic pop
-}
-
 - (void)stubIsAutoLogAppEventsEnabled:(BOOL)isEnabled
 {
   OCMStub(ClassMethod([_settingsClassMock isAutoLogAppEventsEnabled])).andReturn(isEnabled);
@@ -587,16 +578,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   OCMStub(ClassMethod([_settingsClassMock isDataProcessingRestricted])).andReturn(isRestricted);
 }
 
-- (void)stubDate
-{
-  OCMStub([_nsDateClassMock date]).andReturn(_nsDateClassMock);
-}
-
-- (void)stubTimeIntervalSince1970WithTimeInterval:(NSTimeInterval)interval
-{
-  OCMStub([_nsDateClassMock timeIntervalSince1970]).andReturn(interval);
-}
-
 - (void)stubFacebookDomainPartWith:(NSString *)domainPart
 {
   OCMStub(ClassMethod([_settingsClassMock facebookDomainPart])).andReturn(domainPart);
@@ -653,7 +634,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [FBSDKSettings resetFacebookDisplayNameCache];
   [FBSDKSettings resetFacebookDomainPartCache];
   [FBSDKSettings resetFacebookJpegCompressionQualityCache];
-  [FBSDKSettings resetFacebookAutoInitEnabledCache];
   [FBSDKSettings resetFacebookInstrumentEnabledCache];
   [FBSDKSettings resetFacebookAutoLogAppEventsEnabledCache];
   [FBSDKSettings resetFacebookAdvertiserIDCollectionEnabledCache];

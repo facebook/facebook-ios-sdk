@@ -21,3 +21,4 @@
 #import "FBSDKLoginManager+Internal.h"
 #import "FBSDKLoginManagerLogger.h"
 #import "FBSDKLoginUtility.h"
+#import "FBSDKPermission.h"

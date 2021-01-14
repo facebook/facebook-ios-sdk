@@ -20,14 +20,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// The login experience style to use for a login attempt
-typedef NS_ENUM(NSUInteger, FBSDKBetaLoginExperience)
-{
-  FBSDKBetaLoginExperienceEnabled,
-  FBSDKBetaLoginExperienceRestricted,
-} NS_SWIFT_NAME(BetaLoginExperience);
+@class FBSDKPermission;
 
-/// A configuration to use for modifying the default behavior of a login attempt.
+/// The login tracking preference to use for a login attempt. For more information on the differences between
+/// `enabled` and `limited` see: https://developers.facebook.com/docs/facebook-login/ios/limited-login/
+typedef NS_ENUM(NSUInteger, FBSDKLoginTracking)
+{
+  FBSDKLoginTrackingEnabled,
+  FBSDKLoginTrackingLimited,
+} NS_SWIFT_NAME(LoginTracking);
+
+/// A configuration to use for modifying the behavior of a login attempt.
 NS_SWIFT_NAME(LoginConfiguration)
 @interface FBSDKLoginConfiguration : NSObject
 
@@ -35,11 +38,11 @@ NS_SWIFT_NAME(LoginConfiguration)
 /// A unique nonce will be used if none is provided to the initializer.
 @property (nonatomic, readonly, copy) NSString *nonce;
 
-/// The beta login experience preference. Defaults to `.enabled`.
-@property (nonatomic, readonly) FBSDKBetaLoginExperience betaLoginExperience;
+/// The tracking  preference. Defaults to `.enabled`.
+@property (nonatomic, readonly) FBSDKLoginTracking tracking;
 
 /// The requested permissions for the login attempt. Defaults to an empty set.
-@property (nonatomic, readonly, copy) NSSet<NSString *> *requestedPermissions;
+@property (nonatomic, readonly, copy) NSSet<FBSDKPermission *> *requestedPermissions;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -47,14 +50,14 @@ NS_SWIFT_NAME(LoginConfiguration)
 /**
  Attempts to initialize a new configuration with the expected parameters.
 
- @param permissions the requested permissions for the login attempt. Permissions must be an array of strings that do not contain whitespace.
- The only permissions allowed when the `betaLoginExperience` is `.restricted` are 'email' and 'public_profile'.
- @param betaLoginExperience determines whether the login attempt should use the beta experience.
+ @param permissions the requested permissions for a login attempt. Permissions must be an array of strings that do not contain whitespace.
+ The only permissions allowed when the `loginTracking` is `.limited` are 'email', 'public_profile', 'gaming_profile' and 'gaming_user_picture'
+ @param tracking the tracking preference to use for a login attempt.
  @param nonce an optional nonce to use for the login attempt. A valid nonce must be a non-empty string without whitespace.
  Creation of the configuration will fail if the nonce is invalid.
  */
 - (nullable instancetype)initWithPermissions:(NSArray<NSString *> *)permissions
-                         betaLoginExperience:(FBSDKBetaLoginExperience)betaLoginExperience
+                         tracking:(FBSDKLoginTracking)tracking
                                        nonce:(NSString *)nonce
 NS_REFINED_FOR_SWIFT;
 
@@ -62,19 +65,19 @@ NS_REFINED_FOR_SWIFT;
  Attempts to initialize a new configuration with the expected parameters.
 
  @param permissions the requested permissions for the login attempt. Permissions must be an array of strings that do not contain whitespace.
-  The only permissions allowed when the `betaLoginExperience` is `.restricted` are 'email' and 'public_profile'.
- @param betaLoginExperience determines whether the login attempt should use the beta experience.
+  The only permissions allowed when the `loginTracking` is `.limited` are 'email', 'public_profile', 'gaming_profile' and 'gaming_user_picture'
+ @param tracking the tracking preference to use for a login attempt.
  */
 - (nullable instancetype)initWithPermissions:(NSArray<NSString *> *)permissions
-                         betaLoginExperience:(FBSDKBetaLoginExperience)betaLoginExperience
+                         tracking:(FBSDKLoginTracking)tracking
 NS_REFINED_FOR_SWIFT;
 
 /**
  Attempts to initialize a new configuration with the expected parameters.
 
- @param betaLoginExperience determines whether the login attempt should use the beta experience.
+ @param tracking the login tracking preference to use for a login attempt.
  */
-- (nullable instancetype)initWithBetaLoginExperience:(FBSDKBetaLoginExperience)betaLoginExperience
+- (nullable instancetype)initWithTracking:(FBSDKLoginTracking)tracking
 NS_REFINED_FOR_SWIFT;
 
 @end

@@ -156,18 +156,21 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
                                           grantedPermissions:permissions
                                          declinedPermissions:declinedPermissions
                                           expiredPermissions:expiredPermissions];
-        FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:tokenString
-                                                                          permissions:permissions.allObjects
-                                                                  declinedPermissions:declinedPermissions.allObjects
-                                                                   expiredPermissions:expiredPermissions.allObjects
-                                                                                appID:[FBSDKSettings appID]
-                                                                               userID:userID
-                                                                       expirationDate:expirationDate
-                                                                          refreshDate:nil
-                                                             dataAccessExpirationDate:dataAccessExpirationDate
-                                                                          graphDomain:nil];
-        FBSDKDeviceLoginManagerResult *result = [[FBSDKDeviceLoginManagerResult alloc] initWithToken:accessToken
-                                                                                         isCancelled:NO];
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        FBSDKAccessToken * accessToken = [[FBSDKAccessToken alloc] initWithTokenString:tokenString
+                                                                           permissions:permissions.allObjects
+                                                                   declinedPermissions:declinedPermissions.allObjects
+                                                                    expiredPermissions:expiredPermissions.allObjects
+                                                                                 appID:[FBSDKSettings appID]
+                                                                                userID:userID
+                                                                        expirationDate:expirationDate
+                                                                           refreshDate:nil
+                                                              dataAccessExpirationDate:dataAccessExpirationDate
+                                                                           graphDomain:nil];
+        #pragma clange diagnostic pop
+        FBSDKDeviceLoginManagerResult * result = [[FBSDKDeviceLoginManagerResult alloc] initWithToken:accessToken
+                                                                                          isCancelled:NO];
         [FBSDKAccessToken setCurrentAccessToken:accessToken];
         completeWithResult(result);
       }

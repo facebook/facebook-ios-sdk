@@ -26,8 +26,8 @@
 
 @interface FBSDKCrashShield (Testing)
 
-+ (nullable NSString *)getFeature:(NSArray<NSString *> *)callstack;
-+ (nullable NSString *)getClassName:(NSString *)entry;
++ (nullable NSString *)_getFeature:(NSArray<NSString *> *)callstack;
++ (nullable NSString *)_getClassName:(NSString *)entry;
 
 @end
 
@@ -45,28 +45,28 @@
                                       @"+[FBSDKMetadataIndexer crash]+84",
                                       @"(22 DEV METHODS)"];
 
-  NSString *featureName1 = [FBSDKCrashShield getFeature:callstack1];
+  NSString *featureName1 = [FBSDKCrashShield _getFeature:callstack1];
   XCTAssertTrue([featureName1 isEqualToString:@"AAM"]);
 
   NSArray<NSString *> *callstack2 = @[@"(4 DEV METHODS)",
                                       @"+[FBSDKCodelessIndexer crash]+84",
                                       @"(22 DEV METHODS)"];
 
-  NSString *featureName2 = [FBSDKCrashShield getFeature:callstack2];
+  NSString *featureName2 = [FBSDKCrashShield _getFeature:callstack2];
   XCTAssertTrue([featureName2 isEqualToString:@"CodelessEvents"]);
 
   NSArray<NSString *> *callstack3 = @[@"(4 DEV METHODS)",
                                       @"+[FBSDKRestrictiveDataFilterManager crash]+84",
                                       @"(22 DEV METHODS)"];
 
-  NSString *featureName3 = [FBSDKCrashShield getFeature:callstack3];
+  NSString *featureName3 = [FBSDKCrashShield _getFeature:callstack3];
   XCTAssertTrue([featureName3 isEqualToString:@"RestrictiveDataFiltering"]);
 
   NSArray<NSString *> *callstack4 = @[@"(4 DEV METHODS)",
                                       @"+[FBSDKErrorReport crash]+84",
                                       @"(22 DEV METHODS)"];
 
-  NSString *featureName4 = [FBSDKCrashShield getFeature:callstack4];
+  NSString *featureName4 = [FBSDKCrashShield _getFeature:callstack4];
   XCTAssertTrue([featureName4 isEqualToString:@"ErrorReport"]);
 
   // feature in other kit
@@ -74,7 +74,7 @@
                                       @"+[FBSDKVideoUploader crash]+84",
                                       @"(22 DEV METHODS)"];
 
-  NSString *featureName5 = [FBSDKCrashShield getFeature:callstack5];
+  NSString *featureName5 = [FBSDKCrashShield _getFeature:callstack5];
   XCTAssertNil(featureName5);
 }
 
@@ -84,14 +84,14 @@
                                      @"+[FBSDKVideoUploader crash]+84",
                                      @"(22 DEV METHODS)"];
   for (int i = 0; i < 100; i++) {
-    [FBSDKCrashShield getFeature:[Fuzzer randomizeWithJson:callstack]];
+    [FBSDKCrashShield _getFeature:[Fuzzer randomizeWithJson:callstack]];
   }
 }
 
 - (void)testParsingFeatureFromGarbage
 {
   for (int i = 0; i < 100; i++) {
-    [FBSDKCrashShield getFeature:Fuzzer.random];
+    [FBSDKCrashShield _getFeature:Fuzzer.random];
   }
 }
 
@@ -101,24 +101,24 @@
 {
   // class method
   NSString *entry1 = @"+[FBSDKRestrictiveDataFilterManager crash]+84";
-  NSString *className1 = [FBSDKCrashShield getClassName:entry1];
+  NSString *className1 = [FBSDKCrashShield _getClassName:entry1];
   XCTAssertTrue([className1 isEqualToString:@"FBSDKRestrictiveDataFilterManager"]);
 
   // instance method
   NSString *entry2 = @"-[FBSDKRestrictiveDataFilterManager crash]+84";
-  NSString *className2 = [FBSDKCrashShield getClassName:entry2];
+  NSString *className2 = [FBSDKCrashShield _getClassName:entry2];
   XCTAssertTrue([className2 isEqualToString:@"FBSDKRestrictiveDataFilterManager"]);
 
   // ineligible format
   NSString *entry3 = @"(6 DEV METHODS)";
-  NSString *className3 = [FBSDKCrashShield getClassName:entry3];
+  NSString *className3 = [FBSDKCrashShield _getClassName:entry3];
   XCTAssertNil(className3);
 }
 
 - (void)testParsingClassName
 {
   for (int i = 0; i < 100; i++) {
-    [FBSDKCrashShield getClassName:Fuzzer.random];
+    [FBSDKCrashShield _getClassName:Fuzzer.random];
   }
 }
 
@@ -133,7 +133,7 @@
 - (void)testAnalyzingInvalidCrashLogs
 {
   for (int i = 0; i < 100; i++) {
-    [FBSDKCrashShield getClassName:[Fuzzer randomizeWithJson:self.coreKitCrashLogs]];
+    [FBSDKCrashShield _getClassName:[Fuzzer randomizeWithJson:self.coreKitCrashLogs]];
   }
 }
 
@@ -208,24 +208,18 @@
   // Setup
   [self stubIsDataProcessingRestricted:NO];
   [self stubAppID:self.appID];
-  [self stubDate];
-  [self stubTimeIntervalSince1970WithTimeInterval:10];
-
-  [self addInitializerStubsToGraphRequestMock];
-  OCMExpect([self.graphRequestMock startWithCompletionHandler:nil]);
+  [self preventGraphRequest];
 
   // Act
   [FBSDKCrashShield analyze:self.coreKitCrashLogs];
 
   // Assert
   NSString *expectedPath = [NSString stringWithFormat:@"%@/instruments", self.appID];
-  NSDictionary *expectedParameters = @{
-    @"crash_shield" : [self encodedCoreKitFeatureDataWithTimestamp:@"10"]
-  };
-  OCMVerifyAll(
-    [self.graphRequestMock initWithGraphPath:expectedPath
-                                  parameters:expectedParameters
-                                  HTTPMethod:FBSDKHTTPMethodPOST]
+
+  OCMVerify(
+    (void)[self.graphRequestMock initWithGraphPath:expectedPath
+                                        parameters:OCMArg.any
+                                        HTTPMethod:FBSDKHTTPMethodPOST]
   );
   OCMVerify([self.graphRequestMock startWithCompletionHandler:nil]);
 }
@@ -234,10 +228,8 @@
 {
   [self stubIsDataProcessingRestricted:NO];
   [self stubAppID:self.appID];
-  [self stubDate];
-  [self stubTimeIntervalSince1970WithTimeInterval:10];
 
-  [self addInitializerStubsToGraphRequestMock];
+  [self preventGraphRequest];
 
   OCMReject(
     [self.graphRequestMock initWithGraphPath:OCMArg.any
@@ -250,16 +242,6 @@
 }
 
 // MARK: - Helpers
-
-- (void)addInitializerStubsToGraphRequestMock
-{
-  OCMStub(ClassMethod([self.graphRequestMock alloc])).andReturn(self.graphRequestMock);
-  OCMStub(
-    [self.graphRequestMock initWithGraphPath:OCMArg.any
-                                  parameters:OCMArg.any
-                                  HTTPMethod:FBSDKHTTPMethodPOST]
-  ).andReturn(self.graphRequestMock);
-}
 
 - (NSString *)encodedCoreKitFeatureDataWithTimestamp:(NSString *)timestamp
 {

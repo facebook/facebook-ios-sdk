@@ -37,6 +37,7 @@
 @class FBSDKAccessToken;
 @class FBSDKLoginCompletionParameters;
 @class FBSDKLoginManagerLogger;
+@class FBSDKPermission;
 
 /**
  Success Block
@@ -54,7 +55,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 
 @interface FBSDKLoginManager () <FBSDKURLOpening>
 @property (nonatomic, weak) UIViewController *fromViewController;
-@property (nonatomic, readonly) NSSet *requestedPermissions;
+@property (nonatomic, readonly) NSSet<FBSDKPermission *> *requestedPermissions;
 @property (nonatomic, strong) FBSDKLoginManagerLogger *logger;
 @property (nonatomic) FBSDKLoginManagerState state;
 @property (nonatomic) BOOL usedSFAuthSession;
@@ -64,8 +65,6 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 
 - (void)completeAuthentication:(FBSDKLoginCompletionParameters *)parameters expectChallenge:(BOOL)expectChallenge;
 
-// available to internal types to trigger login without checking read/publish mixtures.
-- (void)logInWithPermissions:(NSSet *)permissions handler:(FBSDKLoginManagerLoginResultBlock)handler;
 - (void)logIn;
 
 // made available for testing only
@@ -78,8 +77,6 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 - (void)setHandler:(FBSDKLoginManagerLoginResultBlock)handler;
 // for testing only
 - (void)setRequestedPermissions:(NSSet *)requestedPermissions;
-// for testing only
-- (void)performBrowserLogInWithParameters:(NSDictionary *)loginParams handler:(FBSDKBrowserLoginSuccessBlock)handler;
 
 // available to internal modules
 - (void)handleImplicitCancelOfLogIn;

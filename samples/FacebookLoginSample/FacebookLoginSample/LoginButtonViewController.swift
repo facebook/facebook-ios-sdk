@@ -22,16 +22,33 @@ import UIKit
 class LoginButtonViewController: LoginViewController {
 
     @IBOutlet private weak var loginButton: FBLoginButton!
+    @IBOutlet private weak var useLimitedLoginSwitch: UISwitch!
+    @IBOutlet private weak var nonceTextField: UITextField!
+
+    var loginTracking: LoginTracking {
+        useLimitedLoginSwitch.isOn ? .limited : .enabled
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        loginButton.loginTracking = loginTracking
         loginButton.delegate = self
     }
 
 }
 
 extension LoginButtonViewController: LoginButtonDelegate {
+
+    func loginButtonWillLogin(_ loginButton: FBLoginButton) -> Bool {
+        loginButton.loginTracking = loginTracking
+
+        if let nonce = nonceTextField?.text {
+            loginButton.nonce = nonce as NSString
+        }
+
+        return true
+    }
 
     func loginButton(
         _ loginButton: FBLoginButton,
@@ -43,11 +60,17 @@ extension LoginButtonViewController: LoginButtonDelegate {
         }
 
         guard let result = potentialResult else {
-            return presentAlert(title: "Invalid Result", message: "Login attempt failed")
+            return presentAlert(
+                title: "Invalid Result",
+                message: "Login attempt failed"
+            )
         }
-        
+
         guard !result.isCancelled else {
-            return presentAlert(title: "Cancelled", message: "Login attempt was cancelled")
+            return presentAlert(
+                title: "Cancelled",
+                message: "Login attempt was cancelled"
+            )
         }
 
         showLoginDetails()

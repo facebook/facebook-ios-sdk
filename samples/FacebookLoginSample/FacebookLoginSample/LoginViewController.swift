@@ -17,11 +17,16 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import UIKit
+import FacebookCore
 
 /**
  A base class to avoid polluting the UIViewController namespace
  */
 class LoginViewController: UIViewController {
+
+    var isLoggedIn: Bool {
+        return AccessToken.current != nil || AuthenticationToken.current != nil
+    }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)

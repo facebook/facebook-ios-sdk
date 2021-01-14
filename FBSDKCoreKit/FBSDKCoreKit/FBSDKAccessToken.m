@@ -189,6 +189,8 @@ static FBSDKAccessToken *g_currentAccessToken;
 
 - (NSUInteger)hash
 {
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   NSUInteger subhashes[] = {
     self.tokenString.hash,
     self.permissions.hash,
@@ -201,6 +203,8 @@ static FBSDKAccessToken *g_currentAccessToken;
     self.dataAccessExpirationDate.hash,
     self.graphDomain.hash
   };
+  #pragma clange diagnostic pop
+
   return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
 }
 
@@ -217,6 +221,8 @@ static FBSDKAccessToken *g_currentAccessToken;
 
 - (BOOL)isEqualToAccessToken:(FBSDKAccessToken *)token
 {
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   return (token
     && [FBSDKInternalUtility object:self.tokenString isEqualToObject:token.tokenString]
     && [FBSDKInternalUtility object:self.permissions isEqualToObject:token.permissions]
@@ -228,6 +234,7 @@ static FBSDKAccessToken *g_currentAccessToken;
     && [FBSDKInternalUtility object:self.expirationDate isEqualToObject:token.expirationDate]
     && [FBSDKInternalUtility object:self.dataAccessExpirationDate isEqualToObject:token.dataAccessExpirationDate]
     && [FBSDKInternalUtility object:self.graphDomain isEqualToObject:token.graphDomain]);
+  #pragma clange diagnostic pop
 }
 
 #pragma mark - NSCopying
@@ -283,7 +290,10 @@ static FBSDKAccessToken *g_currentAccessToken;
   [encoder encodeObject:self.expirationDate forKey:FBSDK_ACCESSTOKEN_EXPIRATIONDATE_KEY];
   [encoder encodeObject:self.refreshDate forKey:FBSDK_ACCESSTOKEN_REFRESHDATE_KEY];
   [encoder encodeObject:self.dataAccessExpirationDate forKey:FBSDK_ACCESSTOKEN_DATA_EXPIRATIONDATE_KEY];
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   [encoder encodeObject:self.graphDomain forKey:FBSDK_ACCESSTOKEN_GRAPH_DOMAIN_KEY];
+  #pragma clange diagnostic pop
 }
 
 #pragma mark - Testability

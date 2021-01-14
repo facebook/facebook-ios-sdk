@@ -34,12 +34,12 @@ static NSMutableDictionary<NSString *, NSString *> *_methodMapping;
 + (NSDictionary<NSString *, NSString *> *)getMethodsTable:(NSArray<NSString *> *)prefixes
                                                frameworks:(NSArray<NSString *> *)frameworks
 {
-  NSArray<NSString *> *allClasses = [self getClassNames:prefixes frameworks:frameworks];
+  NSArray<NSString *> *allClasses = [self _getClassNames:prefixes frameworks:frameworks];
   for (NSString *className in allClasses) {
     Class class = NSClassFromString(className);
     if (class) {
-      [self addClass:class isClassMethod:NO];
-      [self addClass:object_getClass(class) isClassMethod:YES];
+      [self _addClass:class isClassMethod:NO];
+      [self _addClass:object_getClass(class) isClassMethod:YES];
     }
   }
   @synchronized(_methodMapping) {
@@ -47,15 +47,57 @@ static NSMutableDictionary<NSString *, NSString *> *_methodMapping;
   }
 }
 
-#pragma mark - private methods
++ (nullable NSArray<NSString *> *)symbolicateCallstack:(NSArray<NSString *> *)callstack
+                                         methodMapping:(NSDictionary<NSString *, id> *)methodMapping
+{
+  if (!callstack || !methodMapping) {
+    return nil;
+  }
+  NSArray<NSString *> *sortedAllAddress = [methodMapping.allKeys sortedArrayUsingComparator:^NSComparisonResult (id _Nonnull obj1, id _Nonnull obj2) {
+    return [obj1 compare:obj2];
+  }];
 
-+ (NSArray<NSString *> *)getClassNames:(NSArray<NSString *> *)prefixes
-                            frameworks:(NSArray<NSString *> *)frameworks
+  BOOL containsFBSDKFunction = NO;
+  NSInteger nonSDKMethodCount = 0;
+  NSMutableArray<NSString *> *symbolicatedCallstack = [NSMutableArray array];
+
+  for (NSUInteger i = 0; i < callstack.count; i++) {
+    NSString *rawAddress = [self _getAddress:[FBSDKTypeUtility array:callstack objectAtIndex:i]];
+    if (rawAddress.length < 10) {
+      continue;
+    }
+    NSString *addressString = [NSString stringWithFormat:@"0x%@", [rawAddress substringWithRange:NSMakeRange(rawAddress.length - 10, 10)]];
+    NSString *methodAddress = [self _searchMethod:addressString sortedAllAddress:sortedAllAddress];
+
+    if (methodAddress) {
+      containsFBSDKFunction = YES;
+      nonSDKMethodCount == 0 ?: [FBSDKTypeUtility array:symbolicatedCallstack addObject:[NSString stringWithFormat:@"(%ld DEV METHODS)", (long)nonSDKMethodCount]];
+      nonSDKMethodCount = 0;
+      NSString *methodName = [FBSDKTypeUtility dictionary:methodMapping objectForKey:methodAddress ofType:NSObject.class];
+
+      // filter out cxx_destruct
+      if ([methodName containsString:@".cxx_destruct"]) {
+        return nil;
+      }
+      [FBSDKTypeUtility array:symbolicatedCallstack addObject:[NSString stringWithFormat:@"%@%@", methodName, [self _getOffset:addressString secondString:methodAddress]]];
+    } else {
+      nonSDKMethodCount++;
+    }
+  }
+  nonSDKMethodCount == 0 ?: [FBSDKTypeUtility array:symbolicatedCallstack addObject:[NSString stringWithFormat:@"(%ld DEV METHODS)", (long)nonSDKMethodCount]];
+
+  return containsFBSDKFunction ? symbolicatedCallstack : nil;
+}
+
+#pragma mark - Private Methods
+
++ (NSArray<NSString *> *)_getClassNames:(NSArray<NSString *> *)prefixes
+                             frameworks:(NSArray<NSString *> *)frameworks
 {
   NSMutableArray<NSString *> *classNames = [NSMutableArray new];
   // from main bundle
-  [classNames addObjectsFromArray:[self getClassesFrom:[[NSBundle mainBundle] executablePath]
-                                              prefixes:prefixes]];
+  [classNames addObjectsFromArray:[self _getClassesFrom:[[NSBundle mainBundle] executablePath]
+                                               prefixes:prefixes]];
   // from dynamic libraries
   if (frameworks.count > 0) {
     unsigned int count = 0;
@@ -64,8 +106,8 @@ static NSMutableDictionary<NSString *, NSString *> *_methodMapping;
       NSString *image = [NSString stringWithUTF8String:images[i]];
       for (NSString *framework in frameworks) {
         if ([image containsString:framework]) {
-          [classNames addObjectsFromArray:[self getClassesFrom:image
-                                                      prefixes:nil]];
+          [classNames addObjectsFromArray:[self _getClassesFrom:image
+                                                       prefixes:nil]];
         }
       }
     }
@@ -75,8 +117,8 @@ static NSMutableDictionary<NSString *, NSString *> *_methodMapping;
   return [classNames copy];
 }
 
-+ (NSArray<NSString *> *)getClassesFrom:(NSString *)image
-                               prefixes:(NSArray<NSString *> *)prefixes
++ (NSArray<NSString *> *)_getClassesFrom:(NSString *)image
+                                prefixes:(NSArray<NSString *> *)prefixes
 {
   NSMutableArray<NSString *> *classNames = [NSMutableArray array];
   unsigned int count = 0;
@@ -98,8 +140,8 @@ static NSMutableDictionary<NSString *, NSString *> *_methodMapping;
   return [classNames copy];
 }
 
-+ (void)addClass:(Class)class
-   isClassMethod:(BOOL)isClassMethod
++ (void)_addClass:(Class)class
+    isClassMethod:(BOOL)isClassMethod
 {
   unsigned int methodsCount = 0;
   Method *methods = class_copyMethodList(class, &methodsCount);
@@ -129,49 +171,7 @@ static NSMutableDictionary<NSString *, NSString *> *_methodMapping;
   free(methods);
 }
 
-+ (nullable NSArray<NSString *> *)symbolicateCallstack:(NSArray<NSString *> *)callstack
-                                         methodMapping:(NSDictionary<NSString *, id> *)methodMapping
-{
-  if (!callstack || !methodMapping) {
-    return nil;
-  }
-  NSArray<NSString *> *sortedAllAddress = [methodMapping.allKeys sortedArrayUsingComparator:^NSComparisonResult (id _Nonnull obj1, id _Nonnull obj2) {
-    return [obj1 compare:obj2];
-  }];
-
-  BOOL containsFBSDKFunction = NO;
-  NSInteger nonSDKMethodCount = 0;
-  NSMutableArray<NSString *> *symbolicatedCallstack = [NSMutableArray array];
-
-  for (NSUInteger i = 0; i < callstack.count; i++) {
-    NSString *rawAddress = [self getAddress:[FBSDKTypeUtility array:callstack objectAtIndex:i]];
-    if (rawAddress.length < 10) {
-      continue;
-    }
-    NSString *addressString = [NSString stringWithFormat:@"0x%@", [rawAddress substringWithRange:NSMakeRange(rawAddress.length - 10, 10)]];
-    NSString *methodAddress = [self searchMethod:addressString sortedAllAddress:sortedAllAddress];
-
-    if (methodAddress) {
-      containsFBSDKFunction = YES;
-      nonSDKMethodCount == 0 ?: [FBSDKTypeUtility array:symbolicatedCallstack addObject:[NSString stringWithFormat:@"(%ld DEV METHODS)", (long)nonSDKMethodCount]];
-      nonSDKMethodCount = 0;
-      NSString *methodName = [FBSDKTypeUtility dictionary:methodMapping objectForKey:methodAddress ofType:NSObject.class];
-
-      // filter out cxx_destruct
-      if ([methodName containsString:@".cxx_destruct"]) {
-        return nil;
-      }
-      [FBSDKTypeUtility array:symbolicatedCallstack addObject:[NSString stringWithFormat:@"%@%@", methodName, [self getOffset:addressString secondString:methodAddress]]];
-    } else {
-      nonSDKMethodCount++;
-    }
-  }
-  nonSDKMethodCount == 0 ?: [FBSDKTypeUtility array:symbolicatedCallstack addObject:[NSString stringWithFormat:@"(%ld DEV METHODS)", (long)nonSDKMethodCount]];
-
-  return containsFBSDKFunction ? symbolicatedCallstack : nil;
-}
-
-+ (nullable NSString *)getAddress:(nullable NSString *)callstackEntry
++ (nullable NSString *)_getAddress:(nullable NSString *)callstackEntry
 {
   if ([callstackEntry isKindOfClass:[NSString class]]) {
     NSArray<NSString *> *components = [callstackEntry componentsSeparatedByString:@" "];
@@ -184,8 +184,8 @@ static NSMutableDictionary<NSString *, NSString *> *_methodMapping;
   return nil;
 }
 
-+ (NSString *)getOffset:(NSString *)firstString
-           secondString:(NSString *)secondString
++ (NSString *)_getOffset:(NSString *)firstString
+            secondString:(NSString *)secondString
 {
   unsigned long long first = 0, second = 0;
   NSScanner *scanner = [NSScanner scannerWithString:firstString];
@@ -198,8 +198,8 @@ static NSMutableDictionary<NSString *, NSString *> *_methodMapping;
   return [NSString stringWithFormat:@"+%llu", difference];
 }
 
-+ (nullable NSString *)searchMethod:(NSString *)address
-                   sortedAllAddress:(NSArray<NSString *> *)sortedAllAddress
++ (nullable NSString *)_searchMethod:(NSString *)address
+                    sortedAllAddress:(NSArray<NSString *> *)sortedAllAddress
 {
   if (0 == sortedAllAddress.count) {
     return nil;

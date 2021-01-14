@@ -28,10 +28,12 @@
   #import <FBSDKCoreKit/FBSDKCoreKit.h>
  #endif
 
+ #import "FBSDKGraphRequestConnectionProviding.h"
  #import "FBSDKLoginConstants.h"
  #import "FBSDKLoginError.h"
  #import "FBSDKLoginManager+Internal.h"
  #import "FBSDKLoginUtility.h"
+ #import "FBSDKPermission.h"
 
 @interface FBSDKAuthenticationToken (ClaimsProviding)
 
@@ -69,21 +71,27 @@
                                 appID:(NSString *)appID
 {
   if ((self = [super init]) != nil) {
-    _parameters = [[FBSDKLoginCompletionParameters alloc] init];
+    _parameters = [FBSDKLoginCompletionParameters new];
 
-    BOOL hasNonEmptyNonceString = [parameters[@"nonce"] length] > 0;
-    BOOL hasNonEmptyIdTokenString = [parameters[@"id_token"] length] > 0;
+    BOOL hasNonEmptyNonceString = ((NSString *)[FBSDKTypeUtility dictionary:parameters objectForKey:@"nonce" ofType:NSString.class]).length > 0;
+    BOOL hasNonEmptyIdTokenString = ((NSString *)[FBSDKTypeUtility dictionary:parameters objectForKey:@"id_token" ofType:NSString.class]).length > 0;
+    BOOL hasNonEmptyAccessTokenString = ((NSString *)[FBSDKTypeUtility dictionary:parameters objectForKey:@"access_token" ofType:NSString.class]).length > 0;
 
-    // TODO: T81282385 - Error if nonce and ID Token
     // Nonce and id token are mutually exclusive parameters
-    // BOOL isInvalid = (hasNonEmptyNonceString && hasNonEmptyIdTokenString);
+    BOOL hasBothNonceAndIdToken = hasNonEmptyNonceString && hasNonEmptyIdTokenString;
+    BOOL hasEitherNonceOrIdToken = hasNonEmptyNonceString || hasNonEmptyIdTokenString;
 
-    if ([parameters[@"access_token"] length] > 0
-        || hasNonEmptyNonceString
-        || hasNonEmptyIdTokenString) {
+    if (hasNonEmptyAccessTokenString || (hasEitherNonceOrIdToken && !hasBothNonceAndIdToken)) {
       [self setParametersWithDictionary:parameters appID:appID];
-    } else {
+    } else if ([FBSDKTypeUtility dictionary:parameters objectForKey:@"error" ofType:NSString.class] || [FBSDKTypeUtility dictionary:parameters objectForKey:@"error_message" ofType:NSString.class]) {
       [self setErrorWithDictionary:parameters];
+    } else if (hasBothNonceAndIdToken) {
+      // If a nonce is present in the parameter we assume that
+      // user logged in by app switching.
+      // Currently OIDC is not supported for app switching. We
+      // will treat the login attempt as invalid if an ID token
+      // if returned together with nonce.
+      _parameters.error = [FBSDKError errorWithCode:FBSDKLoginErrorUnknown message:@"Invalid server response. Please try to login again"];
     }
   }
   return self;
@@ -128,30 +136,33 @@
     }
     handler(parameters);
   };
-  [[FBSDKAuthenticationTokenFactory new] createTokenFromTokenString:_parameters.authenticationTokenString nonce:nonce completion:completion];
+  [[FBSDKAuthenticationTokenFactory new] createTokenFromTokenString:_parameters.authenticationTokenString
+                                                              nonce:nonce
+                                                        graphDomain:parameters.graphDomain
+                                                         completion:completion];
 }
 
 - (void)setParametersWithDictionary:(NSDictionary *)parameters appID:(NSString *)appID
 {
-  NSString *grantedPermissionsString = parameters[@"granted_scopes"];
-  NSString *declinedPermissionsString = parameters[@"denied_scopes"];
+  NSString *grantedPermissionsString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"granted_scopes" ofType:NSString.class];
+  NSString *declinedPermissionsString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"denied_scopes" ofType:NSString.class];
+  NSString *signedRequest = [FBSDKTypeUtility dictionary:parameters objectForKey:@"signed_request" ofType:NSString.class];
+  NSString *userID = [FBSDKTypeUtility dictionary:parameters objectForKey:@"user_id" ofType:NSString.class];
+  NSString *domain = [FBSDKTypeUtility dictionary:parameters objectForKey:@"graph_domain" ofType:NSString.class];
 
-  NSString *signedRequest = parameters[@"signed_request"];
-  NSString *userID = parameters[@"user_id"];
-
-  _parameters.accessTokenString = parameters[@"access_token"];
-  _parameters.nonceString = parameters[@"nonce"];
-  _parameters.authenticationTokenString = parameters[@"id_token"];
+  _parameters.accessTokenString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"access_token" ofType:NSString.class];
+  _parameters.nonceString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"nonce" ofType:NSString.class];
+  _parameters.authenticationTokenString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"id_token" ofType:NSString.class];
 
   // check the string length so that we assign an empty set rather than a set with an empty string
   _parameters.permissions = (grantedPermissionsString.length > 0)
-  ? [NSSet setWithArray:[grantedPermissionsString componentsSeparatedByString:@","]]
-  : [NSSet set];
+  ? [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:[grantedPermissionsString componentsSeparatedByString:@","]]]
+  : NSSet.set;
   _parameters.declinedPermissions = (declinedPermissionsString.length > 0)
-  ? [NSSet setWithArray:[declinedPermissionsString componentsSeparatedByString:@","]]
-  : [NSSet set];
+  ? [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:[declinedPermissionsString componentsSeparatedByString:@","]]]
+  : NSSet.set;
 
-  _parameters.expiredPermissions = [NSSet set];
+  _parameters.expiredPermissions = NSSet.set;
 
   _parameters.appID = appID;
 
@@ -161,32 +172,18 @@
     _parameters.userID = userID;
   }
 
-  NSString *expirationDateString = parameters[@"expires"] ?: parameters[@"expires_at"];
-  NSDate *expirationDate = [NSDate distantFuture];
-  if (expirationDateString && expirationDateString.doubleValue > 0) {
-    expirationDate = [NSDate dateWithTimeIntervalSince1970:expirationDateString.doubleValue];
-  } else if (parameters[@"expires_in"] && [parameters[@"expires_in"] integerValue] > 0) {
-    expirationDate = [NSDate dateWithTimeIntervalSinceNow:[parameters[@"expires_in"] integerValue]];
+  if (domain.length > 0) {
+    _parameters.graphDomain = domain;
   }
-  _parameters.expirationDate = expirationDate;
 
-  NSDate *dataAccessExpirationDate = [NSDate distantFuture];
-  if (parameters[@"data_access_expiration_time"] && [parameters[@"data_access_expiration_time"] integerValue] > 0) {
-    dataAccessExpirationDate = [NSDate dateWithTimeIntervalSince1970:[parameters[@"data_access_expiration_time"] integerValue]];
-  }
-  _parameters.dataAccessExpirationDate = dataAccessExpirationDate;
-
-  NSError *error = nil;
-  NSDictionary<id, id> *state = [FBSDKBasicUtility objectForJSONString:parameters[@"state"] error:&error];
-  _parameters.challenge = [FBSDKUtility URLDecode:state[@"challenge"]];
-
-  NSString *domain = parameters[@"graph_domain"];
-  _parameters.graphDomain = [domain copy];
+  _parameters.expirationDate = [FBSDKLoginURLCompleter expirationDateFromParameters:parameters];
+  _parameters.dataAccessExpirationDate = [FBSDKLoginURLCompleter dataAccessExpirationDateFromParameters:parameters];
+  _parameters.challenge = [FBSDKLoginURLCompleter challengeFromParameters:parameters];
 }
 
 - (void)setErrorWithDictionary:(NSDictionary *)parameters
 {
-  NSString *legacyErrorReason = parameters[@"error"];
+  NSString *legacyErrorReason = [FBSDKTypeUtility dictionary:parameters objectForKey:@"error" ofType:NSString.class];
 
   if ([legacyErrorReason isEqualToString:@"service_disabled_use_browser"]
       || [legacyErrorReason isEqualToString:@"service_disabled"]) {
@@ -200,21 +197,26 @@
 
 - (void)exchangeNonceForTokenWithHandler:(FBSDKLoginCompletionParametersBlock)handler
 {
+  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
+  [self exchangeNonceForTokenWithGraphRequestConnectionProvider:connection handler:handler];
+}
+
+- (void)exchangeNonceForTokenWithGraphRequestConnectionProvider:(nonnull id<FBSDKGraphRequestConnectionProviding>)connection
+                                                        handler:(nonnull FBSDKLoginCompletionParametersBlock)handler
+{
   if (!handler) {
     return;
   }
 
   NSString *nonce = _parameters.nonceString ?: @"";
-  NSString *appID = [FBSDKSettings appID] ?: @"";
+  NSString *appID = _parameters.appID ?: @"";
 
   if (nonce.length == 0 || appID.length == 0) {
     _parameters.error = [FBSDKError errorWithCode:FBSDKErrorInvalidArgument message:@"Missing required parameters to exchange nonce for access token."];
-
     handler(_parameters);
     return;
   }
 
-  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
   FBSDKGraphRequest *tokenRequest = [[FBSDKGraphRequest alloc]
                                      initWithGraphPath:@"oauth/access_token"
                                      parameters:@{ @"grant_type" : @"fb_exchange_nonce",
@@ -226,22 +228,13 @@
   __block FBSDKLoginCompletionParameters *parameters = _parameters;
   [connection addRequest:tokenRequest completionHandler:^(FBSDKGraphRequestConnection *requestConnection,
                                                           id result,
-                                                          NSError *error) {
-                                                            if (!error) {
-                                                              parameters.accessTokenString = result[@"access_token"];
-                                                              NSDate *expirationDate = [NSDate distantFuture];
-                                                              if (result[@"expires_in"] && [result[@"expires_in"] integerValue] > 0) {
-                                                                expirationDate = [NSDate dateWithTimeIntervalSinceNow:[result[@"expires_in"] integerValue]];
-                                                              }
-                                                              parameters.expirationDate = expirationDate;
-
-                                                              NSDate *dataAccessExpirationDate = [NSDate distantFuture];
-                                                              if (result[@"data_access_expiration_time"] && [result[@"data_access_expiration_time"] integerValue] > 0) {
-                                                                dataAccessExpirationDate = [NSDate dateWithTimeIntervalSince1970:[result[@"data_access_expiration_time"] integerValue]];
-                                                              }
-                                                              parameters.dataAccessExpirationDate = dataAccessExpirationDate;
+                                                          NSError *graphRequestError) {
+                                                            if (!graphRequestError) {
+                                                              parameters.accessTokenString = [FBSDKTypeUtility dictionary:result objectForKey:@"access_token" ofType:NSString.class];
+                                                              parameters.expirationDate = [FBSDKLoginURLCompleter expirationDateFromParameters:result];
+                                                              parameters.dataAccessExpirationDate = [FBSDKLoginURLCompleter dataAccessExpirationDateFromParameters:result];
                                                             } else {
-                                                              parameters.error = error;
+                                                              parameters.error = graphRequestError;
                                                             }
 
                                                             handler(parameters);
@@ -270,6 +263,56 @@
                                   refreshDate:nil
                                      imageURL:imageURL
                                         email:claims.email];
+}
+
++ (NSDate *)expirationDateFromParameters:(NSDictionary *)parameters
+{
+  NSString *expiresString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"expires" ofType:NSString.class];
+  NSString *expiresAtString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"expires_at" ofType:NSString.class];
+  NSString *expiresInString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"expires_in" ofType:NSString.class];
+  NSString *expirationDateString = expiresString ?: expiresAtString;
+
+  if (expirationDateString.doubleValue > 0) {
+    return [NSDate dateWithTimeIntervalSince1970:expirationDateString.doubleValue];
+  } else if (expiresInString.integerValue > 0) {
+    return [NSDate dateWithTimeIntervalSinceNow:expiresInString.integerValue];
+  } else {
+    return NSDate.distantFuture;
+  }
+}
+
++ (NSDate *)dataAccessExpirationDateFromParameters:(NSDictionary *)parameters
+{
+  NSString *dataAccessExpirationDateString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"data_access_expiration_time" ofType:NSString.class];
+  if (dataAccessExpirationDateString.integerValue > 0) {
+    return [NSDate dateWithTimeIntervalSince1970:dataAccessExpirationDateString.integerValue];
+  } else {
+    return NSDate.distantFuture;
+  }
+}
+
++ (NSString *)challengeFromParameters:(NSDictionary *)parameters
+{
+  NSString *stateString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"state" ofType:NSString.class];
+  if (stateString.length > 0) {
+    NSError *error = nil;
+    NSDictionary<id, id> *state = [FBSDKBasicUtility objectForJSONString:stateString error:&error];
+
+    if (!error) {
+      NSString *challenge = [FBSDKTypeUtility dictionary:state objectForKey:@"challenge" ofType:NSString.class];
+      if (challenge.length > 0) {
+        return [FBSDKUtility URLDecode:challenge];
+      }
+    }
+  }
+  return nil;
+}
+
+// MARK: Test Helpers
+
+- (FBSDKLoginCompletionParameters *)parameters
+{
+  return _parameters;
 }
 
 @end

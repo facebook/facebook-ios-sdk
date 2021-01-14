@@ -149,14 +149,14 @@ typedef NS_ERROR_ENUM(FBSDKLoginErrorDomain, FBSDKLoginErrorSubcode)
   NSError *error = nil;
 
   NSMutableDictionary<NSString *, id> *userInfo = [[NSMutableDictionary alloc] init];
-  [FBSDKTypeUtility dictionary:userInfo setObject:parameters[@"error_message"] forKey:FBSDKErrorDeveloperMessageKey];
+  [FBSDKTypeUtility dictionary:userInfo setObject:[FBSDKTypeUtility dictionary:parameters objectForKey:@"error_message" ofType:NSString.class] forKey:FBSDKErrorDeveloperMessageKey];
 
   if (userInfo.count > 0) {
-    [FBSDKTypeUtility dictionary:userInfo setObject:parameters[@"error"] forKey:FBSDKErrorDeveloperMessageKey];
-    [FBSDKTypeUtility dictionary:userInfo setObject:parameters[@"error_code"] forKey:FBSDKGraphRequestErrorGraphErrorCodeKey];
+    [FBSDKTypeUtility dictionary:userInfo setObject:[FBSDKTypeUtility dictionary:parameters objectForKey:@"error" ofType:NSString.class] forKey:FBSDKErrorDeveloperMessageKey];
+    [FBSDKTypeUtility dictionary:userInfo setObject:[FBSDKTypeUtility dictionary:parameters objectForKey:@"error_code" ofType:NSString.class] forKey:FBSDKGraphRequestErrorGraphErrorCodeKey];
 
     if (!userInfo[FBSDKErrorDeveloperMessageKey]) {
-      [FBSDKTypeUtility dictionary:userInfo setObject:parameters[@"error_reason"] forKey:FBSDKErrorDeveloperMessageKey];
+      [FBSDKTypeUtility dictionary:userInfo setObject:[FBSDKTypeUtility dictionary:parameters objectForKey:@"error_reason" ofType:NSString.class] forKey:FBSDKErrorDeveloperMessageKey];
     }
 
     [FBSDKTypeUtility dictionary:userInfo setObject:@(FBSDKGraphRequestErrorOther) forKey:FBSDKGraphRequestErrorKey];
