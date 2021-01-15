@@ -11,12 +11,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.0.0...HEAD)
 
-## 9.0.0 - Unreleased
+## 9.0.0
+
+We have a number of exciting changes in this release!
+For more information on the v9 release please read our associated blog [post](https://developers.facebook.com/blog/post/2021/01/19/introducing-platform-sdk-v9)!
 
 ### Added
 
 - Swift Package Manager now supports Mac Catalyst
-- Limited Login. See the [docs](https://developers.facebook.com/docs/facebook-login/ios/limited-login/) for a general overview and implementation details.
+- Limited Login. Please read the blog [post](https://developers.facebook.com/blog/post/2021/01/19/facebook-login-updates-new-limited-data-mode) and [docs](https://developers.facebook.com/docs/facebook-login/ios/limited-login/) for a general overview and implementation details.
 
 ### Changed
 
