@@ -207,7 +207,10 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 {
   if (@available(iOS 14.0, *)) {
     if (g_advertiserTrackingStatus == nil) {
-      g_advertiserTrackingStatus = [[NSUserDefaults standardUserDefaults] objectForKey:FBSDKSettingsAdvertisingTrackingStatus] ?: @([FBSDKAppEventsConfigurationManager cachedAppEventsConfiguration].defaultATEStatus);
+      g_advertiserTrackingStatus = [[NSUserDefaults standardUserDefaults] objectForKey:FBSDKSettingsAdvertisingTrackingStatus];
+      if (g_advertiserTrackingStatus == nil) {
+        return [FBSDKAppEventsConfigurationManager cachedAppEventsConfiguration].defaultATEStatus;
+      }
     }
     return g_advertiserTrackingStatus.unsignedIntegerValue;
   } else {
