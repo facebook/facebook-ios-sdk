@@ -84,7 +84,7 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 - (void)setNonce:(NSString *)nonce
 {
   if ([FBSDKNonceUtility isValidNonce:nonce]) {
-    _nonce = nonce;
+    _nonce = [nonce copy];
   } else {
     _nonce = nil;
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
