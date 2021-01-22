@@ -21,7 +21,7 @@ import XCTest
 
 class LoginButtonTests: XCTestCase {
 
-  let validNonce: NSString = "abc123"
+  let validNonce: String = "abc123"
   var button: FBLoginButton! // swiftlint:disable:this force_unwrapping
   var sampleProfile: Profile {
     return Profile(
