@@ -21,7 +21,6 @@
 #import <objc/runtime.h>
 
 #import "FBSDKAppEventsUtility.h"
-#import "FBSDKGateKeeperManager.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKImageDownloader.h"
@@ -171,9 +170,6 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
     if (loadBlock) {
       loadBlock();
     }
-
-    // Fetch app gatekeepers
-    [FBSDKGateKeeperManager loadGateKeepers:nil];
   } @catch (NSException *exception) {}
 }
 
