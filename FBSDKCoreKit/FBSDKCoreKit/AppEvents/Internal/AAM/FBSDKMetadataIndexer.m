@@ -67,10 +67,13 @@ static dispatch_queue_t serialQueue;
       return;
     }
 
-    NSDictionary<NSString *, id> *AAMRules = [FBSDKServerConfigurationManager cachedServerConfiguration].AAMRules;
-    if (AAMRules) {
-      [FBSDKMetadataIndexer setupWithRules:AAMRules];
-    }
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+      NSDictionary<NSString *, id> *AAMRules = [FBSDKServerConfigurationManager cachedServerConfiguration].AAMRules;
+      if (AAMRules) {
+        [FBSDKMetadataIndexer setupWithRules:AAMRules];
+      }
+    });
   } @catch (NSException *exception) {
     NSLog(@"Fail to enable Automatic Advanced Matching, exception reason: %@", exception.reason);
   }

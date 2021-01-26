@@ -51,15 +51,19 @@ static NSString *_lastTreeHash;
   if (_isGestureSet) {
     return;
   }
-#if TARGET_OS_SIMULATOR
-  [self setupGesture];
-#else
-  [self loadCodelessSettingWithCompletionBlock:^(BOOL isCodelessSetupEnabled, NSError *error) {
-    if (isCodelessSetupEnabled) {
-      [self setupGesture];
-    }
-  }];
-#endif
+
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+  #if TARGET_OS_SIMULATOR
+    [self setupGesture];
+  #else
+    [self loadCodelessSettingWithCompletionBlock:^(BOOL isCodelessSetupEnabled, NSError *error) {
+      if (isCodelessSetupEnabled) {
+        [self setupGesture];
+      }
+    }];
+  #endif
+  });
 }
 
  #pragma clang diagnostic push
