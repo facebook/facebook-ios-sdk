@@ -94,13 +94,13 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
-  if (self.hasLoaded) {
-    self.didFinishLoad(webView);
-    decisionHandler(WKNavigationActionPolicyCancel);
-  }
-
-  self.hasLoaded = YES;
-  decisionHandler(WKNavigationActionPolicyAllow);
+    if (self.hasLoaded) {
+        self.didFinishLoad(webView);
+        decisionHandler(WKNavigationActionPolicyCancel);
+    } else {
+        self.hasLoaded = YES;
+        decisionHandler(WKNavigationActionPolicyAllow);
+    }
 }
 
 @end
