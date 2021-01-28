@@ -111,7 +111,6 @@ NS_ASSUME_NONNULL_BEGIN
     case FBSDKFeatureCrashReport: featureName = @"CrashReport"; break;
     case FBSDKFeatureCrashShield: featureName = @"CrashShield"; break;
     case FBSDKFeatureErrorReport: featureName = @"ErrorReport"; break;
-    case FBSDKFeatureMonitoring: featureName = @"Monitoring"; break;
     case FBSDKFeatureATELogging: featureName = @"ATELogging"; break;
 
     case FBSDKFeatureLogin: featureName = @"LoginKit"; break;
@@ -138,7 +137,6 @@ NS_ASSUME_NONNULL_BEGIN
     case FBSDKFeatureSuggestedEvents:
     case FBSDKFeatureIntelligentIntegrity:
     case FBSDKFeatureModelRequest:
-    case FBSDKFeatureMonitoring:
     case FBSDKFeatureATELogging:
     case FBSDKFeatureSKAdNetwork:
     case FBSDKFeatureSKAdNetworkConversionValue:

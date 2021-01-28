@@ -92,8 +92,7 @@
           eventBindings:dict[@"eventBindings"] ?: self.defaultConfig.eventBindings
           restrictiveParams:dict[@"restrictiveParams"] ?: self.defaultConfig.restrictiveParams
           AAMRules:dict[@"aamRules"] ?: self.defaultConfig.AAMRules
-          suggestedEventsSetting:dict[@"suggestedEventsSetting"] ?: self.defaultConfig.suggestedEventsSetting
-          monitoringConfiguration:dict[@"monitoringConfiguration"] ?: self.defaultConfig.monitoringConfiguration];
+          suggestedEventsSetting:dict[@"suggestedEventsSetting"] ?: self.defaultConfig.suggestedEventsSetting];
 }
 
 @end
