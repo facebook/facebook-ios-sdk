@@ -26,6 +26,7 @@ For more information on the v9 release please read our associated blog [post](ht
 - The default Graph API version is updated to v9.0
 - The `linkURL` property of `FBSDKProfile` will only be populated if the user has granted the `user_link` permission.
 - FBSDKGamingServicesKit will no longer embed FBSDKCoreKit as a dependency. This may affect you if you are manually integrating pre-built binaries.
+- The aggregate CocoaPod `FacebookSDK` now vendors XCFrameworks. Note: this may cause conflicts with other CocoaPods that have dependencies on the our libraries, ex: Audience Network. If you encounter a conflict it is easy to resolve by using one or more of the individual library pods instead of the aggregate pod.
 
 ### Removed
 
