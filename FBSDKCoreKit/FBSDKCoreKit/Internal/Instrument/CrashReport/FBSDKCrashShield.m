@@ -70,9 +70,6 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
         @"FBSDKSKAdNetworkRule",
         @"FBSDKSKAdNetworkEvent",
       ],
-      @"Monitoring" : @[
-        @"FBSDKMonitor",
-      ],
     };
   }
 }

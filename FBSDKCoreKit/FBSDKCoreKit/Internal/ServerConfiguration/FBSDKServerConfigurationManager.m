@@ -211,7 +211,6 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
     NSDictionary<NSString *, id> *restrictiveParams = [FBSDKBasicUtility objectForJSONString:resultDictionary[FBSDK_SERVER_CONFIGURATION_RESTRICTIVE_PARAMS_FIELD] error:nil];
     NSDictionary<NSString *, id> *AAMRules = [FBSDKBasicUtility objectForJSONString:resultDictionary[FBSDK_SERVER_CONFIGURATION_AAM_RULES_FIELD] error:nil];
     NSDictionary<NSString *, id> *suggestedEventsSetting = [FBSDKBasicUtility objectForJSONString:resultDictionary[FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING_FIELD] error:nil];
-    FBSDKMonitoringConfiguration *monitoringConfiguration = [FBSDKMonitoringConfiguration fromDictionary:resultDictionary[FBSDK_SERVER_CONFIGURATION_MONITORING_CONFIG_FIELD]];
     FBSDKServerConfiguration *serverConfiguration = [[FBSDKServerConfiguration alloc] initWithAppID:appID
                                                                                             appName:appName
                                                                                 loginTooltipEnabled:loginTooltipEnabled
@@ -236,8 +235,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                                                       eventBindings:eventBindings
                                                                                   restrictiveParams:restrictiveParams
                                                                                            AAMRules:AAMRules
-                                                                             suggestedEventsSetting:suggestedEventsSetting
-                                                                            monitoringConfiguration:monitoringConfiguration];
+                                                                             suggestedEventsSetting:suggestedEventsSetting];
   #if TARGET_OS_TV
     // don't download icons more than once a day.
     static const NSTimeInterval kSmartLoginIconsTTL = 60 * 60 * 24;
