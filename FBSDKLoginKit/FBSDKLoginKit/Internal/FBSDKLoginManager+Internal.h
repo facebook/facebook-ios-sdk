@@ -57,11 +57,12 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 @property (nonatomic, weak) UIViewController *fromViewController;
 @property (nonatomic, readonly) NSSet<FBSDKPermission *> *requestedPermissions;
 @property (nonatomic, strong) FBSDKLoginManagerLogger *logger;
+@property (nonatomic, strong) FBSDKLoginConfiguration *config;
 @property (nonatomic) FBSDKLoginManagerState state;
 @property (nonatomic) BOOL usedSFAuthSession;
 
-// for testing only
 @property (nonatomic, readonly, copy) NSString *loadExpectedChallenge;
+@property (nonatomic, readonly, copy) NSString *loadExpectedNonce;
 
 - (void)completeAuthentication:(FBSDKLoginCompletionParameters *)parameters expectChallenge:(BOOL)expectChallenge;
 
