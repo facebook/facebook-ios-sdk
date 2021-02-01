@@ -1066,6 +1066,85 @@ static NSString *const whiteSpaceToken = @"   ";
   }
 }
 
+// MARK: SKAdNetwork Report Enabled
+
+- (void)testFacebookSKAdNetworkReportEnabledFromPlist
+{
+  NSBundle *bundle = [FakeBundle bundleWithDictionary:@{@"FacebookSKAdNetworkReportEnabled" : @NO}];
+  [self stubMainBundleWith:bundle];
+
+  XCTAssertFalse(
+    FBSDKSettings.SKAdNetworkReportEnabled,
+    "A developer should be able to set the value of SKAdNetwork Report from the plist"
+  );
+}
+
+- (void)testFacebookSKAdNetworkReportEnabledDefaultValue
+{
+  XCTAssertTrue(
+    FBSDKSettings.SKAdNetworkReportEnabled,
+    "SKAdNetwork Report should default to true when there is no plist value given"
+  );
+}
+
+- (void)testFacebookSKAdNetworkReportEnabledInvalidPlistEntry
+{
+  NSBundle *bundle = [FakeBundle bundleWithDictionary:@{@"FacebookSKAdNetworkReportEnabled" : emptyString}];
+  [self stubMainBundleWith:bundle];
+
+  XCTAssertFalse(
+    FBSDKSettings.SKAdNetworkReportEnabled,
+    "SKAdNetwork Report should default to true when there is an invalid plist value given but it does not"
+  );
+}
+
+- (void)testSettingFacebookSKAdNetworkReportEnabled
+{
+  FBSDKSettings.SKAdNetworkReportEnabled = NO;
+
+  XCTAssertNotNil(
+    userDefaultsSpy.capturedValues[@"FacebookSKAdNetworkReportEnabled"],
+    "Should persist the value of a cachable property when setting it"
+  );
+  XCTAssertFalse(
+    FBSDKSettings.SKAdNetworkReportEnabled,
+    "Should use the explicitly set property"
+  );
+}
+
+- (void)testOverridingCachedFacebookSKAdNetworkReportEnabled
+{
+  [self stubInitializeSDKWith:@{}];
+
+  XCTAssertTrue(FBSDKSettings.SKAdNetworkReportEnabled);
+
+  NSBundle *bundle = [FakeBundle bundleWithDictionary:@{@"FacebookSKAdNetworkReportEnabled" : @NO}];
+  [self stubMainBundleWith:bundle];
+
+  XCTAssertTrue(
+    FBSDKSettings.SKAdNetworkReportEnabled,
+    "Should favor cached properties over those set in the plist"
+  );
+}
+
+- (void)testFacebookSKAdNetworkReportEnabledInternalStorage
+{
+  FakeBundle *bundle = [FakeBundle bundleWithDictionary:@{}];
+  [self stubMainBundleWith:bundle];
+
+  FBSDKSettings.SKAdNetworkReportEnabled = YES;
+
+  XCTAssertTrue(FBSDKSettings.SKAdNetworkReportEnabled, "sanity check");
+  XCTAssertNil(
+    userDefaultsSpy.capturedObjectRetrievalKey,
+    "Should not attempt to access the cache to retrieve objects that have a current value"
+  );
+  XCTAssertNil(
+    bundle.capturedKeys.lastObject,
+    "Should not attempt to access the plist to retrieve objects that have a current value"
+  );
+}
+
 // MARK: Codeless Debug Log Enabled
 
 - (void)testFacebookCodelessDebugLogEnabled

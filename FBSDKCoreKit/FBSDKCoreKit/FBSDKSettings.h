@@ -104,6 +104,12 @@ NS_SWIFT_NAME(jpegCompressionQuality);
 @property (class, nonatomic, assign, getter=isAdvertiserIDCollectionEnabled) BOOL advertiserIDCollectionEnabled;
 
 /**
+ Controls the SKAdNetwork report
+ If not explicitly set, the default is true
+ */
+@property (class, nonatomic, assign, getter=isSKAdNetworkReportEnabled) BOOL SKAdNetworkReportEnabled;
+
+/**
  Whether data such as that generated through FBSDKAppEvents and sent to Facebook
  should be restricted from being used for other than analytics and conversions.
  Defaults to NO. This value is stored on the device and persists across app launches.

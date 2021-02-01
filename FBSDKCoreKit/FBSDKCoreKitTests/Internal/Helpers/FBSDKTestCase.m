@@ -62,6 +62,7 @@
 + (void)resetFacebookAutoLogAppEventsEnabledCache;
 + (void)resetFacebookAdvertiserIDCollectionEnabledCache;
 + (void)resetAdvertiserTrackingStatusCache;
++ (void)resetFacebookSKAdNetworkReportEnabledCache;
 + (void)resetUserAgentSuffixCache;
 + (void)resetFacebookCodelessDebugLogEnabledCache;
 + (void)resetDataProcessingOptionsCache;
@@ -638,6 +639,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [FBSDKSettings resetFacebookAutoLogAppEventsEnabledCache];
   [FBSDKSettings resetFacebookAdvertiserIDCollectionEnabledCache];
   [FBSDKSettings resetAdvertiserTrackingStatusCache];
+  [FBSDKSettings resetFacebookSKAdNetworkReportEnabledCache];
   [FBSDKSettings resetUserAgentSuffixCache];
   [FBSDKSettings resetFacebookCodelessDebugLogEnabledCache];
   [FBSDKSettings resetDataProcessingOptionsCache];

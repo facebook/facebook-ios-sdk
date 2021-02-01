@@ -1116,16 +1116,18 @@ static NSString *g_overrideAppID = nil;
         }
       }];
       if (@available(iOS 11.3, *)) {
-        [FBSDKFeatureManager checkFeature:FBSDKFeatureSKAdNetwork completionBlock:^(BOOL SKAdNetworkEnabled) {
-          if (SKAdNetworkEnabled) {
-            [SKAdNetwork registerAppForAdNetworkAttribution];
-            [FBSDKFeatureManager checkFeature:FBSDKFeatureSKAdNetworkConversionValue completionBlock:^(BOOL SKAdNetworkConversionValueEnabled) {
-              if (SKAdNetworkConversionValueEnabled) {
-                [FBSDKSKAdNetworkReporter enable];
-              }
-            }];
-          }
-        }];
+        if (FBSDKSettings.SKAdNetworkReportEnabled) {
+          [FBSDKFeatureManager checkFeature:FBSDKFeatureSKAdNetwork completionBlock:^(BOOL SKAdNetworkEnabled) {
+            if (SKAdNetworkEnabled) {
+              [SKAdNetwork registerAppForAdNetworkAttribution];
+              [FBSDKFeatureManager checkFeature:FBSDKFeatureSKAdNetworkConversionValue completionBlock:^(BOOL SKAdNetworkConversionValueEnabled) {
+                if (SKAdNetworkConversionValueEnabled) {
+                  [FBSDKSKAdNetworkReporter enable];
+                }
+              }];
+            }
+          }];
+        }
       }
     #endif
       if (callback) {

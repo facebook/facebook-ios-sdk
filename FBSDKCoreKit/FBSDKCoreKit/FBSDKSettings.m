@@ -118,6 +118,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookJpegCompression
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookInstrumentEnabled, _instrumentEnabled, _setInstrumentEnabled, @1, YES);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookAutoLogAppEventsEnabled, _autoLogAppEventsEnabled, _setAutoLogAppEventsEnabled, @1, YES);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookAdvertiserIDCollectionEnabled, _advertiserIDCollectionEnabled, _setAdvertiserIDCollectionEnabled, @1, YES);
+FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookSKAdNetworkReportEnabled, _SKAdNetworkReportEnabled, _setSKAdNetworkReportEnabled, @1, YES);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   NSNumber,
   FacebookCodelessDebugLogEnabled,
@@ -223,6 +224,16 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 {
   g_advertiserTrackingStatus = @(status);
   [[NSUserDefaults standardUserDefaults] setObject:g_advertiserTrackingStatus forKey:FBSDKSettingsAdvertisingTrackingStatus];
+}
+
++ (BOOL)isSKAdNetworkReportEnabled
+{
+  return [self _SKAdNetworkReportEnabled].boolValue;
+}
+
++ (void)setSKAdNetworkReportEnabled:(BOOL)SKAdNetworkReportEnabled
+{
+  [self _setSKAdNetworkReportEnabled:@(SKAdNetworkReportEnabled)];
 }
 
 + (BOOL)shouldLimitEventAndDataUsage
@@ -579,6 +590,11 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 + (void)resetAdvertiserTrackingStatusCache
 {
   g_advertiserTrackingStatus = nil;
+}
+
++ (void)resetFacebookSKAdNetworkReportEnabledCache
+{
+  g_FacebookSKAdNetworkReportEnabled = nil;
 }
 
 + (void)resetUserAgentSuffixCache
