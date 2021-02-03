@@ -28,13 +28,15 @@
 #import "FBSDKServerConfigurationManager.h"
 #import "FBSDKTestCase.h"
 
+@interface FBSDKApplicationDelegate (Testing)
+
++ (void)setIsSdkInitialized:(BOOL)isInitialized;
+
+@end
+
 typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 @interface FBSDKSKAdNetworkReporter (Testing)
 + (void)_loadConfigurationWithBlock:(FBSDKSKAdNetworkReporterBlock)block;
-@end
-
-@interface FBSDKAppEvents (Testing)
-@property (nonatomic, assign) BOOL disableTimer;
 @end
 
 @interface FBSDKRestrictiveDataFilterManager ()
@@ -52,6 +54,11 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)setUp
 {
   self.shouldAppEventsMockBePartial = YES;
+
+  // Added sanity check to make sure network is not invoked. If another test case
+  // were to initialize the SDK then the partial mock would fetch configuration
+  // upon creation and result in a network call being made
+  [FBSDKApplicationDelegate setIsSdkInitialized:NO];
 
   [super setUp];
 
@@ -75,9 +82,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
                                                    error:nil];
   [self stubAllocatingGraphRequestConnection];
   [self stubLoadingAdNetworkReporterConfiguration];
-
-  [self.appEventsMock setDisableTimer:YES];
-
   [FBSDKRestrictiveDataFilterManager enable];
 }
 

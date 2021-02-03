@@ -442,6 +442,11 @@ static UIApplicationState _applicationState;
   _isAppLaunched = isLaunched;
 }
 
++ (void)setIsSdkInitialized:(BOOL)isInitialized
+{
+  g_isSDKInitialized = isInitialized;
+}
+
 - (NSHashTable<id<FBSDKApplicationObserving>> *)applicationObservers
 {
   return _applicationObservers;

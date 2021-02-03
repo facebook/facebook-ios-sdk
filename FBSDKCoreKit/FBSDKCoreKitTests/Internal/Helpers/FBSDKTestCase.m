@@ -42,6 +42,7 @@
 #import "FBSDKTimeSpentData.h"
 
 @interface FBSDKAppEvents (Testing)
+@property (nonatomic, assign) BOOL disableTimer;
 + (FBSDKAppEvents *)singleton;
 @end
 
@@ -258,6 +259,9 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   // Since numerous areas in FBSDK can end up calling `[FBSDKAppEvents singleton]`,
   // we will stub the singleton accessor out for our mock instance.
   OCMStub([_appEventsMock singleton]).andReturn(_appEventsMock);
+
+  // We almost never want to actually use the time to flush during a unit test.
+  FBSDKAppEvents.singleton.disableTimer = YES;
 
   _appEventStatesMock = OCMClassMock([FBSDKAppEventsState class]);
   OCMStub([_appEventStatesMock alloc]).andReturn(_appEventStatesMock);
