@@ -43,8 +43,8 @@ extension LoginButtonViewController: LoginButtonDelegate {
     func loginButtonWillLogin(_ loginButton: FBLoginButton) -> Bool {
         loginButton.loginTracking = loginTracking
 
-        if let nonce = nonceTextField?.text {
-            loginButton.nonce = nonce as NSString
+        if let nonce = nonceTextField?.text, !nonce.isEmpty {
+            loginButton.nonce = nonce
         }
 
         return true
