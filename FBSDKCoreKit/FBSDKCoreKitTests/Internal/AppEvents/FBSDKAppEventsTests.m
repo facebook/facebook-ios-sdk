@@ -357,14 +357,26 @@ static NSString *const _mockUserID = @"mockUserID";
   OCMVerifyAll(self.appEventsMock);
 }
 
-- (void)testActivateApp
+- (void)testActivateAppWithInitializedSDK
 {
+  [self stubIsSDKInitialized:YES];
+
   OCMExpect([self.appEventsMock publishInstall]);
   OCMExpect([self.appEventsMock fetchServerConfiguration:NULL]);
 
   [FBSDKAppEvents activateApp];
 
   OCMVerifyAll(self.appEventsMock);
+}
+
+- (void)testActivateAppWithoutInitializedSDK
+{
+  [self stubIsSDKInitialized:NO];
+
+  [FBSDKAppEvents activateApp];
+
+  OCMReject([self.appEventsMock publishInstall]);
+  OCMReject([self.appEventsMock fetchServerConfiguration:NULL]);
 }
 
 #pragma mark  Test for log push notification
