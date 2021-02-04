@@ -46,6 +46,10 @@
 + (FBSDKAppEvents *)singleton;
 @end
 
+@interface FBSDKAppEventsConfigurationManager (Testing)
++ (void)loadAppEventsConfigurationWithBlock:(FBSDKAppEventsConfigurationManagerBlock)block;
+@end
+
 @interface FBSDKGraphRequestPiggybackManager (Testing)
 + (NSDate *)_lastRefreshTry;
 @end
@@ -114,6 +118,8 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self setUpBridgeApiClassMock];
   [self setUpCrashObserverClassMock];
   [self setUpErrorReportClassMock];
+  [self setUpPasteboardClassMock];
+  [self setUpAppEventsConfigurationManagerClassMock];
 }
 
 - (void)tearDown
@@ -218,6 +224,12 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   [_errorReportClassMock stopMocking];
   _errorReportClassMock = nil;
+
+  [_pasteboardClassMock stopMocking];
+  _pasteboardClassMock = nil;
+
+  [_appEventsConfigurationManagerClassMock stopMocking];
+  _appEventsConfigurationManagerClassMock = nil;
 }
 
 - (void)setUpSettingsMock
@@ -401,6 +413,16 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)setUpErrorReportClassMock
 {
   _errorReportClassMock = OCMClassMock(FBSDKErrorReport.class);
+}
+
+- (void)setUpPasteboardClassMock
+{
+  _pasteboardClassMock = OCMClassMock(UIPasteboard.class);
+}
+
+- (void)setUpAppEventsConfigurationManagerClassMock
+{
+  _appEventsConfigurationManagerClassMock = OCMClassMock(FBSDKAppEventsConfigurationManager.class);
 }
 
 #pragma mark - Public Methods
@@ -626,6 +648,11 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)stubAppUrlSchemeWith:(nullable NSString *)scheme
 {
   OCMStub([self.internalUtilityClassMock appURLScheme]).andReturn(scheme);
+}
+
+- (void)stubLoadingAppEventsConfiguration
+{
+  OCMStub([self.appEventsConfigurationManagerClassMock loadAppEventsConfigurationWithBlock:OCMArg.any]);
 }
 
 // MARK: - Helpers

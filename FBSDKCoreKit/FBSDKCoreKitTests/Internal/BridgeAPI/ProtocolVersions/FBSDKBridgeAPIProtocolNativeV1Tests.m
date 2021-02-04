@@ -24,8 +24,9 @@
 
 #import "FBSDKBridgeAPIProtocolNativeV1.h"
 #import "FBSDKCoreKit+Internal.h"
+#import "FBSDKTestCase.h"
 
-@interface FBSDKBridgeAPIProtocolNativeV1Tests : XCTestCase
+@interface FBSDKBridgeAPIProtocolNativeV1Tests : FBSDKTestCase
 @property (nonatomic, copy) NSString *actionID;
 @property (nonatomic, copy) NSString *methodName;
 @property (nonatomic, copy) NSString *methodVersion;
@@ -368,13 +369,13 @@
 
 - (void)testRequestParametersWithDataPasteboard
 {
-  id pasteboard = [OCMockObject mockForClass:[UIPasteboard class]];
   NSString *pasteboardName = [NSUUID UUID].UUIDString;
   NSData *data = [self _testData];
-  [[[pasteboard stub] andReturn:pasteboardName] name];
-  [[pasteboard expect] setData:data forPasteboardType:@"com.facebook.Facebook.FBAppBridgeType"];
+
+  OCMStub([self.pasteboardClassMock name]).andReturn(pasteboardName);
+
   FBSDKBridgeAPIProtocolNativeV1 *protocol = [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:self.scheme
-                                                                                            pasteboard:pasteboard
+                                                                                            pasteboard:self.pasteboardClassMock
                                                                                    dataLengthThreshold:0
                                                                                         includeAppIcon:NO];
   NSDictionary *parameters = @{
@@ -390,7 +391,7 @@
                                             parameters:parameters
                                                  error:&error];
   XCTAssertNil(error);
-  [pasteboard verify];
+  OCMVerify([self.pasteboardClassMock setData:data forPasteboardType:@"com.facebook.Facebook.FBAppBridgeType"]);
   NSString *expectedPrefix = [[NSString alloc] initWithFormat:@"%@://dialog/%@?", self.scheme, self.methodName];
   XCTAssertTrue([[requestURL absoluteString] hasPrefix:expectedPrefix]);
   // Due to the non-deterministic order of Dictionary->JSON serialization, we cannot do string comparisons to verify.
@@ -405,14 +406,12 @@
 
 - (void)testRequestParametersWithImagePasteboard
 {
-  id pasteboard = [OCMockObject mockForClass:[UIPasteboard class]];
   NSString *pasteboardName = [NSUUID UUID].UUIDString;
   UIImage *image = [self _testImage];
   NSData *data = [self _testDataWithImage:image];
-  [[[pasteboard stub] andReturn:pasteboardName] name];
-  [[pasteboard expect] setData:data forPasteboardType:@"com.facebook.Facebook.FBAppBridgeType"];
+  OCMStub([self.pasteboardClassMock name]).andReturn(pasteboardName);
   FBSDKBridgeAPIProtocolNativeV1 *protocol = [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:self.scheme
-                                                                                            pasteboard:pasteboard
+                                                                                            pasteboard:self.pasteboardClassMock
                                                                                    dataLengthThreshold:0
                                                                                         includeAppIcon:NO];
   NSDictionary *parameters = @{
@@ -428,7 +427,7 @@
                                             parameters:parameters
                                                  error:&error];
   XCTAssertNil(error);
-  [pasteboard verify];
+  OCMVerify([self.pasteboardClassMock setData:data forPasteboardType:@"com.facebook.Facebook.FBAppBridgeType"]);
   NSString *expectedPrefix = [[NSString alloc] initWithFormat:@"%@://dialog/%@?", self.scheme, self.methodName];
   XCTAssertTrue([[requestURL absoluteString] hasPrefix:expectedPrefix]);
   // Due to the non-deterministic order of Dictionary->JSON serialization, we cannot do string comparisons to verify.
@@ -440,6 +439,8 @@
   NSDictionary<id, id> *methodArgs = [FBSDKBasicUtility objectForJSONString:queryParameters[@"method_args"] error:NULL];
   XCTAssertEqualObjects(methodArgs, expectedMethodArgs);
 }
+
+// MARK: - Helpers
 
 - (NSDictionary *)_encodeQueryParameters:(NSDictionary *)queryParameters
 {

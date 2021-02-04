@@ -27,6 +27,8 @@
   [FBSDKLoginManager resetTestEvidence];
   _api = [FBSDKBridgeAPI new];
   _partialMock = OCMPartialMock(_api);
+
+  [self stubLoadingAppEventsConfiguration];
 }
 
 - (void)tearDown

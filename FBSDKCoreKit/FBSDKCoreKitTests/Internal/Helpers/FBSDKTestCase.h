@@ -158,6 +158,12 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing a `FBSDKErrorReport` class mock between tests
 @property (nullable, nonatomic, assign) id errorReportClassMock;
 
+/// Used for sharing a `UIPasteboard` class mock between tests
+@property (nullable, nonatomic, assign) id pasteboardClassMock;
+
+/// Used for sharing a `FBSDKAppEventsConfigurationManager` class mock between tests
+@property (nullable, nonatomic, assign) id appEventsConfigurationManagerClassMock;
+
 /// Stubs `FBSDKSettings.appID` and return the provided value
 - (void)stubAppID:(nullable NSString *)appID;
 
@@ -298,6 +304,9 @@ Also, to get a better understanding of mocking, please read the documentation at
 
 /// Stubs `FBSDKInternalUtility`'s `appURLScheme` property to return the provided scheme
 - (void)stubAppUrlSchemeWith:(nullable NSString *)scheme;
+
+/// Stubs `FBSDKAppEventsConfigurationManager`'s `loadAppEventsConfigurationWithBlock` method
+- (void)stubLoadingAppEventsConfiguration;
 
 @end
 
