@@ -40,6 +40,7 @@
 #import "FBSDKSKAdNetworkReporter.h"
 #import "FBSDKSettings.h"
 #import "FBSDKTimeSpentData.h"
+#import "FBSDKUIUtility.h"
 
 @interface FBSDKAppEvents (Testing)
 @property (nonatomic, assign) BOOL disableTimer;
@@ -85,6 +86,12 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [super setUp];
 
   _appID = @"appid";
+
+  // Using timers with async unit tests is a recipe for unexpected behavior.
+  // We need to create the UtilityMock and stub the timer method before we do
+  // anything else since other partial mocks setup below this will create a timer
+  [self setUpUtilityClassMock];
+  [self stubStartGCDTimerWithInterval];
 
   [self setUpNSBundleMock];
   [self setUpSettingsMock];
@@ -230,6 +237,9 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   [_appEventsConfigurationManagerClassMock stopMocking];
   _appEventsConfigurationManagerClassMock = nil;
+
+  [_utilityClassMock stopMocking];
+  _utilityClassMock = nil;
 }
 
 - (void)setUpSettingsMock
@@ -271,9 +281,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   // Since numerous areas in FBSDK can end up calling `[FBSDKAppEvents singleton]`,
   // we will stub the singleton accessor out for our mock instance.
   OCMStub([_appEventsMock singleton]).andReturn(_appEventsMock);
-
-  // We almost never want to actually use the time to flush during a unit test.
-  FBSDKAppEvents.singleton.disableTimer = YES;
 
   _appEventStatesMock = OCMClassMock([FBSDKAppEventsState class]);
   OCMStub([_appEventStatesMock alloc]).andReturn(_appEventStatesMock);
@@ -423,6 +430,11 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)setUpAppEventsConfigurationManagerClassMock
 {
   _appEventsConfigurationManagerClassMock = OCMClassMock(FBSDKAppEventsConfigurationManager.class);
+}
+
+- (void)setUpUtilityClassMock
+{
+  _utilityClassMock = OCMClassMock(FBSDKUtility.class);
 }
 
 #pragma mark - Public Methods
@@ -653,6 +665,12 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)stubLoadingAppEventsConfiguration
 {
   OCMStub([self.appEventsConfigurationManagerClassMock loadAppEventsConfigurationWithBlock:OCMArg.any]);
+}
+
+- (void)stubStartGCDTimerWithInterval
+{
+  // Note: the '5' is arbitrary and ignored but needs to be there for compilation.
+  OCMStubIgnoringNonObjectArgs(ClassMethod([self.utilityClassMock startGCDTimerWithInterval:5 block:OCMArg.any]));
 }
 
 // MARK: - Helpers

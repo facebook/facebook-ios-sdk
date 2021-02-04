@@ -22,8 +22,9 @@
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKEventBinding.h"
 #import "FBSDKEventBindingManager.h"
+#import "FBSDKTestCase.h"
 
-@interface FBSDKEventBindingTests : XCTestCase
+@interface FBSDKEventBindingTests : FBSDKTestCase
 {
   UIWindow *window;
   FBSDKEventBindingManager *eventBindingManager;
@@ -81,12 +82,6 @@
 
   stepper = [[UIStepper alloc] init];
   [secondStackView addSubview:stepper];
-}
-
-- (void)tearDown
-{
-  // Put teardown code here. This method is called after the invocation of each test method in the class.
-  [super tearDown];
 }
 
 - (void)testMatching
