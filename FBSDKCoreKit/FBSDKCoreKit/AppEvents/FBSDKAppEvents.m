@@ -633,8 +633,10 @@ static NSString *g_overrideAppID = nil;
 + (void)activateApp
 {
   if (![FBSDKApplicationDelegate isSDKInitialized]) {
-    NSLog(@"<Warning> App events cannot be activated before the Facebook SDK is initialized. "
-    "Learn more: https://github.com/facebook/facebook-ios-sdk/blob/master/CHANGELOG.md#900");
+    NSLog(
+      @"<Warning> App events cannot be activated before the Facebook SDK is initialized. "
+      "Learn more: https://github.com/facebook/facebook-ios-sdk/blob/master/CHANGELOG.md#900"
+    );
     return;
   }
 
