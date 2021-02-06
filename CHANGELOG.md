@@ -9,7 +9,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Important
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.0.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.0.1...HEAD)
+
+## 9.0.1
+
+### Added
+
+- Add control support for the key FacebookSKAdNetworkReportEnabled in the info.plist
+- Add APIs to control SKAdNetwork Report
+
+### Fixed
+
+- Fix deadlock issue between SKAdNetwork Report and AAM/Codeless
+- Fix default ATE sync for the first app launch
+- Fix build error caused by LoginButton nonce property ([@kmcbride](https://github.com/kmcbride) in [#1616](https://github.com/facebook/facebook-ios-sdk/pull/1616))
+- Fix crash on FBSDKWebViewAppLinkResolverWebViewDelegate ([@Kry256](https://github.com/Kry256) in [#1624](https://github.com/facebook/facebook-ios-sdk/pull/1624))
+- Fix XCFrameworks build issue (#1628)
+- Fix deadlock when AppEvents ActivateApp is called without initializing the SDK (#1636)
+
+[2021-02-02](https://github.com/facebook/facebook-ios-sdk/releases/tag/v9.0.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.0.0...v9.0.1)
 
 ## 9.0.0
 

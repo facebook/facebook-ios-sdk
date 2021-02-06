@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'FBSDKGamingServicesKit'
-  s.version      = '9.0.0'
+  s.version      = '9.0.1'
   s.summary      = 'Official Facebook SDK for iOS to access Facebook Gaming Services'
 
   s.description  = <<-DESC
