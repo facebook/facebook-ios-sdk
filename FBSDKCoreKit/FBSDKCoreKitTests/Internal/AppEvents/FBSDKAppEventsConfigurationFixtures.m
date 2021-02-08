@@ -37,6 +37,16 @@
   return [FBSDKAppEventsConfiguration defaultConfiguration];
 }
 
++ (FBSDKAppEventsConfiguration *)configWithDefaultATEStatus:(BOOL)defaultATEStatus
+                              advertiserIDCollectionEnabled:(BOOL)advertiserIDCollectionEnabled
+                                     eventCollectionEnabled:(BOOL)eventCollectionEnabled
+{
+  return [[FBSDKAppEventsConfiguration alloc]
+          initWithDefaultATEStatus:defaultATEStatus
+          advertiserIDCollectionEnabled:advertiserIDCollectionEnabled
+          eventCollectionEnabled:eventCollectionEnabled];
+}
+
 + (FBSDKAppEventsConfiguration *)configWithDictionary:(NSDictionary *)dict
 {
   FBSDKAppEventsConfiguration *defaultConfig = [FBSDKAppEventsConfiguration defaultConfiguration];

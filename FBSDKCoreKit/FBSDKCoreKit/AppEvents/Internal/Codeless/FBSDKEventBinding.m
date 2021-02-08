@@ -23,7 +23,6 @@
  #import "FBSDKEventBinding.h"
 
  #import "FBSDKAppEvents.h"
- #import "FBSDKAppEventsUtility.h"
  #import "FBSDKCodelessParameterComponent.h"
  #import "FBSDKCodelessPathComponent.h"
  #import "FBSDKInternalUtility.h"
@@ -38,6 +37,23 @@
  #define PARAMETER_NAME_PRICE          @"_valueToSum"
 
 @implementation FBSDKEventBinding
+
+static id<FBSDKNumberParsing> _numberParser;
+
++ (id<FBSDKNumberParsing>)numberParser
+{
+  return _numberParser;
+}
+
++ (void)setNumberParser:(id<FBSDKNumberParsing>)numberParser
+{
+  _numberParser = numberParser;
+}
+
++ (void)initialize
+{
+  _numberParser = [[FBSDKAppEventsNumberParser alloc] initWithLocale:NSLocale.currentLocale];
+}
 
 - (FBSDKEventBinding *)initWithJSON:(NSDictionary *)dict
 {
@@ -80,7 +96,7 @@
     }
     if (text.length > 0) {
       if ([component.name isEqualToString:PARAMETER_NAME_PRICE]) {
-        NSNumber *value = [FBSDKAppEventsUtility getNumberValue:text];
+        NSNumber *value = [self.class.numberParser parseNumberFrom:text];
         [FBSDKTypeUtility dictionary:params setObject:value forKey:component.name];
       } else {
         [FBSDKTypeUtility dictionary:params setObject:text forKey:component.name];

@@ -84,6 +84,14 @@
   [secondStackView addSubview:stepper];
 }
 
+- (void)testDefaultNumberParser
+{
+  XCTAssertTrue(
+    [(NSObject *)FBSDKEventBinding.numberParser isMemberOfClass:FBSDKAppEventsNumberParser.class],
+    "The default number parser for an event binding should be an instance of FBSDKAppEventsNumberParser"
+  );
+}
+
 - (void)testMatching
 {
   NSArray *bindings = [FBSDKEventBindingManager parseArray:[FBSDKSampleEventBinding getSampleDictionary][@"event_bindings"]];

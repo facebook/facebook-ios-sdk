@@ -21,10 +21,12 @@
 #if !TARGET_OS_TV
 
 #import <UIKit/UIKit.h>
+#import "FBSDKAppEventsNumberParser.h"
 
 NS_SWIFT_NAME(EventBinding)
 @interface FBSDKEventBinding : NSObject
 
+@property (class, nonatomic) id<FBSDKNumberParsing> numberParser;
 @property (nonatomic, copy, readonly) NSString *eventName;
 @property (nonatomic, copy, readonly) NSString *eventType;
 @property (nonatomic, copy, readonly) NSString *appVersion;

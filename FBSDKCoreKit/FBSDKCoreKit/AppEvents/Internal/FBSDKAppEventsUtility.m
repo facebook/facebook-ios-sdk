@@ -338,38 +338,6 @@ static NSArray<NSString *> *standardEvents;
   return (time_t)round([date timeIntervalSince1970]);
 }
 
-+ (NSNumber *)getNumberValue:(NSString *)text
-{
-  NSNumber *value = @0;
-
-  NSLocale *locale = [NSLocale currentLocale];
-
-  NSString *ds = [locale objectForKey:NSLocaleDecimalSeparator] ?: @".";
-  NSString *gs = [locale objectForKey:NSLocaleGroupingSeparator] ?: @",";
-  NSString *separators = [ds stringByAppendingString:gs];
-
-  NSString *regex = [NSString stringWithFormat:@"[+-]?([0-9]+[%1$@]?)?[%1$@]?([0-9]+[%1$@]?)+", separators];
-  NSRegularExpression *re = [NSRegularExpression regularExpressionWithPattern:regex
-                                                                      options:0
-                                                                        error:nil];
-  NSTextCheckingResult *match = [re firstMatchInString:text
-                                               options:0
-                                                 range:NSMakeRange(0, text.length)];
-  if (match) {
-    NSString *validText = [text substringWithRange:match.range];
-    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-    formatter.locale = locale;
-    formatter.numberStyle = NSNumberFormatterDecimalStyle;
-
-    value = [formatter numberFromString:validText];
-    if (nil == value) {
-      value = @(validText.floatValue);
-    }
-  }
-
-  return value;
-}
-
 + (BOOL)isDebugBuild
 {
 #if TARGET_IPHONE_SIMULATOR

@@ -56,7 +56,6 @@ NS_SWIFT_NAME(AppEventsUtility)
 + (void)logAndNotify:(NSString *)msg;
 + (NSString *)tokenStringToUseFor:(FBSDKAccessToken *)token;
 + (BOOL)validateIdentifier:(NSString *)identifier;
-+ (NSNumber *)getNumberValue:(NSString *)text;
 + (BOOL)shouldDropAppEvent;
 + (BOOL)isSensitiveUserData:(NSString *)text;
 + (BOOL)isStandardEvent:(NSString *)event;

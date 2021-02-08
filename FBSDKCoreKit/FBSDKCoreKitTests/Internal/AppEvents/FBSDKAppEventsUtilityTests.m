@@ -23,6 +23,7 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKCoreKit+Internal.h"
+#import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKTestCase.h"
 
 static NSString *const FBSDKSettingsInstallTimestamp = @"com.facebook.sdk:FBSDKSettingsInstallTimestamp";
@@ -36,15 +37,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 - (void)setDefaultATEStatus:(FBSDKAdvertisingTrackingStatus)status;
 @end
 
-@interface FBSDKAppEventsUtilityTests : FBSDKTestCase
-
-@end
-
 @implementation FBSDKAppEventsUtilityTests
-{
-  id _mockAppEventsUtility;
-  id _mockNSLocale;
-}
 
 - (void)setUp
 {
@@ -54,20 +47,14 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 
   [self stubServerConfigurationFetchingWithConfiguration:[FBSDKServerConfiguration defaultServerConfigurationForAppID:nil] error:nil];
 
-  _mockAppEventsUtility = OCMClassMock([FBSDKAppEventsUtility class]);
   [FBSDKAppEvents setUserID:@"test-user-id"];
-  _mockNSLocale = OCMClassMock([NSLocale class]);
-
-  // This should be removed when these tests are updated to check the actual requests that are created
-  [self stubAllocatingGraphRequestConnection];
 }
 
 - (void)tearDown
 {
-  [super tearDown];
+  [self.appEventsUtilityClassMock stopMocking];
 
-  [_mockNSLocale stopMocking];
-  [_mockAppEventsUtility stopMocking];
+  [super tearDown];
 }
 
 - (void)testLogNotification
@@ -91,11 +78,9 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 
 - (void)testParamsDictionary
 {
-  OCMStub([_mockAppEventsUtility advertiserID]).andReturn([NSUUID UUID].UUIDString);
-  id mockFBSDKSettings = OCMClassMock([FBSDKSettings class]);
-  OCMStub([mockFBSDKSettings isAdvertiserTrackingEnabled]).andReturn(YES);
-
-  OCMStub([_mockAppEventsUtility advertiserID]).andReturn([NSUUID UUID].UUIDString);
+  [self stubAdvertiserIdentifierWithIdentifierString:NSUUID.UUID.UUIDString];
+  [self stubIsAdvertiserTrackingEnabledWith:YES];
+  [self stubAdvertiserIdentifierWithIdentifierString:NSUUID.UUID.UUIDString];
   NSDictionary *dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
                                                          shouldAccessAdvertisingID:YES];
   XCTAssertEqualObjects(@"event", dict[@"event"]);
@@ -175,50 +160,15 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   XCTAssertTrue([FBSDKAppEventsClass respondsToSelector:logEventSelector]);
 }
 
-- (void)testGetNumberValue
-{
-  NSNumber *result = [FBSDKAppEventsUtility
-                      getNumberValue:@"Price: $1,234.56; Buy 1 get 2!"];
-  NSString *str = [NSString stringWithFormat:@"%.2f", result.floatValue];
-  XCTAssertTrue([str isEqualToString:@"1234.56"]);
-}
-
-#ifdef BUCK
-- (void)testGetNumberValueWithLocaleFR
-{
-  OCMStub(ClassMethod([_mockNSLocale currentLocale])).andReturn([NSLocale localeWithLocaleIdentifier:@"fr"]);
-
-  NSNumber *result = [FBSDKAppEventsUtility
-                      getNumberValue:@"Price: 1\u202F234,56; Buy 1 get 2!"];
-  NSString *str = [NSString stringWithFormat:@"%.2f", result.floatValue];
-  XCTAssertEqualObjects(str, @"1234.56");
-}
-
-#endif
-
-- (void)testGetNumberValueWithLocaleIT
-{
-  OCMStub([_mockNSLocale currentLocale]).
-  _andReturn(OCMOCK_VALUE([NSLocale localeWithLocaleIdentifier:@"it"]));
-
-  NSNumber *result = [FBSDKAppEventsUtility
-                      getNumberValue:@"Price: 1.234,56; Buy 1 get 2!"];
-  NSString *str = [NSString stringWithFormat:@"%.2f", result.floatValue];
-  XCTAssertEqualObjects(str, @"1234.56");
-}
-
 - (void)testGetAdvertiserIDOniOS14WithCollectionEnabled
 {
-  id mockFBSDKSettings = OCMClassMock([FBSDKSettings class]);
-  OCMStub([mockFBSDKSettings isAdvertiserIDCollectionEnabled]).andReturn(YES);
-
-  id mockAppEventsConfiguration = OCMClassMock([FBSDKAppEventsConfiguration class]);
-  OCMStub([mockAppEventsConfiguration advertiserIDCollectionEnabled]).andReturn(YES);
-  id mockAppEventsConfigurationManager = OCMClassMock([FBSDKAppEventsConfigurationManager class]);
-  OCMStub([mockAppEventsConfigurationManager cachedAppEventsConfiguration]).andReturn(mockAppEventsConfiguration);
-  id mockASIdentifierManager = OCMClassMock([ASIdentifierManager class]);
-  OCMStub([mockASIdentifierManager advertisingIdentifier]).andReturn([NSUUID UUID]);
-  OCMStub([mockASIdentifierManager sharedManager]).andReturn(mockASIdentifierManager);
+  [self stubIsAdvertiserIDCollectionEnabledWith:YES];
+  FBSDKAppEventsConfiguration *configuration = [FBSDKAppEventsConfigurationFixtures configWithDefaultATEStatus:FBSDKAdvertisingTrackingUnspecified
+                                                                                 advertiserIDCollectionEnabled:YES
+                                                                                        eventCollectionEnabled:YES];
+  [self stubCachedAppEventsConfigurationWithConfiguration:configuration];
+  [self stubAdvertisingIdentifierWithIdentifier:NSUUID.UUID];
+  [self stubSharedAsIdentifierManagerWithAsIdentifierManager:self.asIdentifierManagerClassMock];
 
   if (@available(iOS 14.0, *)) {
     XCTAssertNotNil(
@@ -230,17 +180,14 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 
 - (void)testGetAdvertiserIDOniOS14WithCollectionDisabled
 {
-  id mockFBSDKSettings = OCMClassMock([FBSDKSettings class]);
-  OCMStub([mockFBSDKSettings isAdvertiserIDCollectionEnabled]).andReturn(YES);
+  [self stubIsAdvertiserTrackingEnabledWith:YES];
 
-  id mockAppEventsConfiguration = OCMClassMock([FBSDKAppEventsConfiguration class]);
-  OCMStub([mockAppEventsConfiguration advertiserIDCollectionEnabled]).andReturn(NO);
-  id mockAppEventsConfigurationManager = OCMClassMock([FBSDKAppEventsConfigurationManager class]);
-  OCMStub([mockAppEventsConfigurationManager cachedAppEventsConfiguration]).andReturn(mockAppEventsConfiguration);
-  OCMStub([mockAppEventsConfigurationManager cachedAppEventsConfiguration]).andReturn(mockAppEventsConfiguration);
-  id mockASIdentifierManager = OCMClassMock([ASIdentifierManager class]);
-  OCMStub([mockASIdentifierManager advertisingIdentifier]).andReturn([NSUUID UUID]);
-  OCMStub([mockASIdentifierManager sharedManager]).andReturn(mockASIdentifierManager);
+  FBSDKAppEventsConfiguration *configuration = [FBSDKAppEventsConfigurationFixtures configWithDefaultATEStatus:FBSDKAdvertisingTrackingUnspecified
+                                                                                 advertiserIDCollectionEnabled:NO
+                                                                                        eventCollectionEnabled:YES];
+  [self stubCachedAppEventsConfigurationWithConfiguration:configuration];
+  [self stubAdvertisingIdentifierWithIdentifier:NSUUID.UUID];
+  [self stubSharedAsIdentifierManagerWithAsIdentifierManager:self.asIdentifierManagerClassMock];
 
   if (@available(iOS 14.0, *)) {
     XCTAssertNil([FBSDKAppEventsUtility advertiserID]);
@@ -249,13 +196,12 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 
 - (void)testShouldDropAppEvent
 {
-  id mockFBSDKSettings = OCMClassMock([FBSDKSettings class]);
-  OCMStub([mockFBSDKSettings getAdvertisingTrackingStatus]).andReturn(FBSDKAdvertisingTrackingDisallowed);
+  [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingDisallowed];
 
-  id mockAppEventsConfiguration = OCMClassMock([FBSDKAppEventsConfiguration class]);
-  OCMStub([mockAppEventsConfiguration eventCollectionEnabled]).andReturn(NO);
-  id mockAppEventsConfigurationManager = OCMClassMock([FBSDKAppEventsConfigurationManager class]);
-  OCMStub([mockAppEventsConfigurationManager cachedAppEventsConfiguration]).andReturn(mockAppEventsConfiguration);
+  FBSDKAppEventsConfiguration *configuration = [FBSDKAppEventsConfigurationFixtures configWithDefaultATEStatus:FBSDKAdvertisingTrackingUnspecified
+                                                                                 advertiserIDCollectionEnabled:YES
+                                                                                        eventCollectionEnabled:NO];
+  [self stubCachedAppEventsConfigurationWithConfiguration:configuration];
 
   if (@available(iOS 14.0, *)) {
     XCTAssertTrue([FBSDKAppEventsUtility shouldDropAppEvent]);
@@ -267,8 +213,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 - (void)testAdvertiserTrackingEnabledInAppEventPayload
 {
   FBSDKAppEventsConfiguration *configuration = [[FBSDKAppEventsConfiguration alloc] initWithJSON:@{}];
-  id mockAppEventsConfigurationManager = OCMClassMock([FBSDKAppEventsConfigurationManager class]);
-  OCMStub([mockAppEventsConfigurationManager cachedAppEventsConfiguration]).andReturn(configuration);
+  [self stubCachedAppEventsConfigurationWithConfiguration:configuration];
+
   NSArray<NSNumber *> *statusList = @[@(FBSDKAdvertisingTrackingAllowed), @(FBSDKAdvertisingTrackingDisallowed), @(FBSDKAdvertisingTrackingUnspecified)];
   for (NSNumber *defaultATEStatus in statusList) {
     [configuration setDefaultATEStatus:defaultATEStatus.unsignedIntegerValue];
@@ -302,26 +248,20 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 
 - (void)testDropAppEvent
 {
-  id mockAppEventsState = OCMClassMock([FBSDKAppEventsState class]);
-  OCMStub([mockAppEventsState alloc]).andReturn(mockAppEventsState);
-  OCMStub([mockAppEventsState initWithToken:OCMArg.any appID:OCMArg.any]).andReturn(mockAppEventsState);
   [FBSDKSettings setAppID:@"123"];
 
-  OCMStub([_mockAppEventsUtility shouldDropAppEvent]).andReturn(YES);
+  [self stubAppEventsUtilityShouldDropAppEventWith:YES];
   [FBSDKAppEvents logEvent:@"event"];
-  OCMReject([mockAppEventsState addEvent:OCMArg.any isImplicit:NO]);
+  OCMReject([self.appEventStatesMock addEvent:OCMArg.any isImplicit:NO]);
 }
 
 - (void)testSendAppEvent
 {
-  id mockAppEventsState = OCMClassMock([FBSDKAppEventsState class]);
-  OCMStub([mockAppEventsState alloc]).andReturn(mockAppEventsState);
-  OCMStub([mockAppEventsState initWithToken:OCMArg.any appID:OCMArg.any]).andReturn(mockAppEventsState);
   [FBSDKSettings setAppID:@"123"];
 
-  OCMStub([_mockAppEventsUtility shouldDropAppEvent]).andReturn(NO);
+  [self stubAppEventsUtilityShouldDropAppEventWith:NO];
   [FBSDKAppEvents logEvent:@"event"];
-  OCMVerify([mockAppEventsState addEvent:OCMArg.any isImplicit:NO]);
+  OCMVerify([self.appEventStatesMock addEvent:OCMArg.any isImplicit:NO]);
 }
 
 - (void)testFlushReasonToString

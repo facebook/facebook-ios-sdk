@@ -223,6 +223,7 @@
 
 - (void)testDidFinishLaunchingLoadsServerConfiguration
 {
+  [self stubAllocatingGraphRequestConnection];
   [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 
   // Should load the server configuration on finishing launching

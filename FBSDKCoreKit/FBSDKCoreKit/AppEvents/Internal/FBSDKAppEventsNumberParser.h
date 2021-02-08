@@ -18,22 +18,19 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKAppEventsConfiguration.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKAppEventsConfigurationFixtures : NSObject
+@protocol FBSDKNumberParsing <NSObject>
 
-/// A default configuration with valid inputs. This is the same default configuration used in production code
-+ (FBSDKAppEventsConfiguration *)defaultConfig;
+- (NSNumber *)parseNumberFrom:(NSString *)string;
 
-/// A default configuration with custom values passed by dictionary.
-/// To use: Include a dictionary with the keys and values you want to override on the default configuration
-+ (FBSDKAppEventsConfiguration *)configWithDictionary:(NSDictionary *)dict;
+@end
 
-+ (FBSDKAppEventsConfiguration *)configWithDefaultATEStatus:(BOOL)defaultATEStatus
-                              advertiserIDCollectionEnabled:(BOOL)advertiserIDCollectionEnabled
-                                     eventCollectionEnabled:(BOOL)eventCollectionEnabled;
+@interface FBSDKAppEventsNumberParser : NSObject <FBSDKNumberParsing>
+
++ (instancetype)new NS_UNAVAILABLE;
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithLocale:(NSLocale *)locale;
 
 @end
 
