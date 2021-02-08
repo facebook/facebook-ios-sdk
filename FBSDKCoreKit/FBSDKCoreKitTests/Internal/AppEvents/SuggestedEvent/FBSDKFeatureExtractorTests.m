@@ -24,6 +24,8 @@
 #import "FBSDKInternalUtility.h"
 #import "FBSDKModelManager.h"
 #import "FBSDKViewHierarchyMacros.h"
+#import "FBSDKTestCase.h"
+#import "FBSDKViewHierarchyMacros.h"
 
 @interface FBSDKFeatureExtractor ()
 + (BOOL)pruneTree:(NSMutableDictionary *)node
@@ -50,7 +52,7 @@
 
 @end
 
-@interface FBSDKFeatureExtractorTests : XCTestCase
+@interface FBSDKFeatureExtractorTests : FBSDKTestCase
 {
   NSDictionary *_rules;
   NSDictionary *_viewHierarchy;
@@ -63,6 +65,8 @@
 
 - (void)setUp
 {
+  [super setUp];
+
   // load rules for classifying view text
   NSBundle *bundle = [NSBundle bundleForClass:[self class]];
   NSString *filepath = [bundle pathForResource:@"FBSDKTextClassifyRules" ofType:@"json"];
@@ -70,8 +74,7 @@
     _rules = [FBSDKTypeUtility JSONObjectWithData:[[NSData alloc] initWithContentsOfFile:filepath] options:0 error:nil];;
   }
 
-  id _mockModelManager = OCMClassMock([FBSDKModelManager class]);
-  OCMStub([_mockModelManager getRulesForKey:[OCMArg any]]).andReturn(_rules);
+  OCMStub([self.modelManagerClassMock getRulesForKey:OCMArg.any]).andReturn(_rules);
   [FBSDKFeatureExtractor loadRulesForKey:@"MTML"];
 
   _viewHierarchy = @{
