@@ -67,7 +67,7 @@
   [self stubCheckingFeatures];
   [self stubIsSDKInitialized:YES];
   [self stubLoadingGateKeepers];
-  [self stubFetchingCachedServerConfiguration];
+  [self stubAddingServerConfigurationPiggyback];
 }
 
 - (void)tearDown
@@ -75,16 +75,6 @@
   [super tearDown];
 
   [OHHTTPStubs removeAllStubs];
-}
-
-#pragma mark - Helpers
-
-// to prevent piggybacking of server config fetching
-+ (id)mockCachedServerConfiguration
-{
-  id mockPiggybackManager = [OCMockObject niceMockForClass:[FBSDKGraphRequestPiggybackManager class]];
-  [[mockPiggybackManager stub] addServerConfigurationPiggyback:OCMOCK_ANY];
-  return mockPiggybackManager;
 }
 
 #pragma mark - FBSDKGraphRequestConnectionDelegate
@@ -177,7 +167,6 @@
 
 - (void)testConnectionDelegate
 {
-  id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
   // stub out a batch response that returns /me.id twice
   [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
                  return YES;
@@ -213,13 +202,10 @@
   [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
     XCTAssertNil(error);
   }];
-
-  [mockPiggybackManager stopMocking];
 }
 
 - (void)testNonErrorEmptyDictionaryOrNullResponse
 {
-  id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
   [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
                  return YES;
                } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
@@ -253,13 +239,10 @@
   [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
     XCTAssertNil(error);
   }];
-
-  [mockPiggybackManager stopMocking];
 }
 
 - (void)testConnectionDelegateWithNetworkError
 {
-  id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
   [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
                  return YES;
                } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
@@ -280,13 +263,11 @@
     XCTAssertNil(error);
   }];
 
-  [mockPiggybackManager stopMocking];
 }
 
 // test to verify piggyback refresh token behavior.
 - (void)testTokenPiggyback
 {
-  id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
   [FBSDKAccessToken setCurrentAccessToken:nil];
   // use stubs because test tokens are not refreshable.
   [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
@@ -332,13 +313,11 @@
   XCTAssertTrue([[FBSDKAccessToken currentAccessToken].permissions containsObject:@"email"]);
   XCTAssertTrue([[FBSDKAccessToken currentAccessToken].declinedPermissions containsObject:@"user_friends"]);
   [FBSDKAccessToken setCurrentAccessToken:nil];
-  [mockPiggybackManager stopMocking];
 }
 
 // test no piggyback if refresh date is today.
 - (void)testTokenPiggybackSkipped
 {
-  id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
   [FBSDKAccessToken setCurrentAccessToken:nil];
   FBSDKAccessToken *tokenNoRefresh = [[FBSDKAccessToken alloc]
                                       initWithTokenString:@"token"
@@ -372,12 +351,10 @@
     XCTAssertNil(error);
   }];
   XCTAssertEqualObjects(tokenNoRefresh, [FBSDKAccessToken currentAccessToken]);
-  [mockPiggybackManager stopMocking];
 }
 
 - (void)testUnsettingAccessToken
 {
-  id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
   XCTestExpectation *expectation = [self expectationWithDescription:@"completed request"];
   __block int tokenChangeCount = 0;
   [self expectationForNotification:FBSDKAccessTokenDidChangeNotification
@@ -420,12 +397,10 @@
     XCTAssertNil(error);
   }];
   XCTAssertNil([FBSDKAccessToken currentAccessToken]);
-  [mockPiggybackManager stopMocking];
 }
 
 - (void)testUnsettingAccessTokenSkipped
 {
-  id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
   XCTestExpectation *expectation = [self expectationWithDescription:@"completed request"];
   [self expectationForNotification:FBSDKAccessTokenDidChangeNotification
                             object:nil
@@ -468,12 +443,10 @@
     XCTAssertNil(error);
   }];
   XCTAssertNotNil([FBSDKAccessToken currentAccessToken]);
-  [mockPiggybackManager stopMocking];
 }
 
 - (void)testUnsettingAccessTokenFlag
 {
-  id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
   XCTestExpectation *expectation = [self expectationWithDescription:@"completed request"];
   [self expectationForNotification:FBSDKAccessTokenDidChangeNotification
                             object:nil
@@ -512,7 +485,6 @@
     XCTAssertNil(error);
   }];
   XCTAssertNotNil([FBSDKAccessToken currentAccessToken]);
-  [mockPiggybackManager stopMocking];
 }
 
 - (void)testUserAgentSuffix
@@ -562,7 +534,6 @@
 
 - (void)testNonDictionaryInError
 {
-  id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
   XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
 
   [FBSDKAccessToken setCurrentAccessToken:nil];
@@ -596,7 +567,6 @@
   [self waitForExpectationsWithTimeout:2 handler:^(NSError *error) {
     XCTAssertNil(error);
   }];
-  [mockPiggybackManager stopMocking];
 }
 
 - (void)testRequestWithBatchConstructionWithSingleGetRequest
@@ -684,7 +654,6 @@
 // verify we do a single retry.
 - (void)testRetry
 {
-  id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
   __block int requestCount = 0;
   XCTestExpectation *expectation = [self expectationWithDescription:@"completed request"];
   [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
@@ -710,12 +679,10 @@
     XCTAssertNil(error);
   }];
   XCTAssertEqual(2, requestCount);
-  [mockPiggybackManager stopMocking];
 }
 
 - (void)_testRetryDisabled
 {
-  id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
   FBSDKSettings.graphErrorRecoveryEnabled = NO;
 
   __block int requestCount = 0;
@@ -747,7 +714,6 @@
   }];
   XCTAssertEqual(1, requestCount);
   FBSDKSettings.graphErrorRecoveryEnabled = NO;
-  [mockPiggybackManager stopMocking];
 }
 
 @end

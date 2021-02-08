@@ -311,6 +311,9 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Stubs `FBSDKAppEventsConfigurationManager`'s `loadAppEventsConfigurationWithBlock` method
 - (void)stubLoadingAppEventsConfiguration;
 
+/// Stubs `FBSDKGraphRequestPiggybackManager`'s + `addServerConfigurationPiggyback:` method
+- (void)stubAddingServerConfigurationPiggyback;
+
 @end
 
 NS_ASSUME_NONNULL_END

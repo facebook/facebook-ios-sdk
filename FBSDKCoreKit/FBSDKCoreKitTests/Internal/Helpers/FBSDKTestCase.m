@@ -673,6 +673,11 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   OCMStubIgnoringNonObjectArgs(ClassMethod([self.utilityClassMock startGCDTimerWithInterval:5 block:OCMArg.any]));
 }
 
+- (void)stubAddingServerConfigurationPiggyback
+{
+  OCMStub([self.graphRequestPiggybackManagerMock addServerConfigurationPiggyback:OCMOCK_ANY]);
+}
+
 // MARK: - Helpers
 
 - (void)resetCachedSettings
