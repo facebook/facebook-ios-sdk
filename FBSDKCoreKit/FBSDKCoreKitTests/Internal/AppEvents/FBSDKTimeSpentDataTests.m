@@ -16,12 +16,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
 #import "FBSDKTimeSpentData.h"
 
-static NSString *const _mockApplication = @"mockApplication";
+static NSString *const _applicationName = @"someApplication";
 
 @interface FBSDKTimeSpentData ()
 
@@ -39,10 +38,10 @@ static NSString *const _mockApplication = @"mockApplication";
 
 - (void)testSetSourceApplication
 {
-  [FBSDKTimeSpentData setSourceApplication:_mockApplication isFromAppLink:YES];
+  [FBSDKTimeSpentData setSourceApplication:_applicationName isFromAppLink:YES];
 
   NSString *sourceApplication = [FBSDKTimeSpentData getSourceApplication];
-  XCTAssertEqualObjects(sourceApplication, @"AppLink(mockApplication)");
+  XCTAssertEqualObjects(sourceApplication, @"AppLink(someApplication)");
 
   [FBSDKTimeSpentData resetSourceApplication];
   sourceApplication = [FBSDKTimeSpentData getSourceApplication];
@@ -51,7 +50,7 @@ static NSString *const _mockApplication = @"mockApplication";
 
 - (void)testAppEventsParametersForDeactivate
 {
-  [FBSDKTimeSpentData setSourceApplication:_mockApplication isFromAppLink:YES];
+  [FBSDKTimeSpentData setSourceApplication:_applicationName isFromAppLink:YES];
   FBSDKTimeSpentData *timeSpentData = [[FBSDKTimeSpentData alloc] init];
   NSDictionary<NSString *, NSString *> *params = [timeSpentData appEventsParametersForDeactivate];
   XCTAssertNotNil(params[@"_session_id"]);
