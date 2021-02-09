@@ -29,10 +29,9 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.default_subspecs = 'CoreKit'
-  s.swift_version = '5.0'
 
   s.subspec 'CoreKit' do |ss|
-    ss.dependency 'FBSDKCoreKit', "~> #{s.version}"
+    ss.vendored_framework = 'FBSDKCoreKit.xcframework'
   end
   s.subspec 'LoginKit' do |ss|
     ss.dependency 'FacebookSDK/CoreKit'
