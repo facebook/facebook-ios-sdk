@@ -262,7 +262,6 @@
   [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
     XCTAssertNil(error);
   }];
-
 }
 
 // test to verify piggyback refresh token behavior.

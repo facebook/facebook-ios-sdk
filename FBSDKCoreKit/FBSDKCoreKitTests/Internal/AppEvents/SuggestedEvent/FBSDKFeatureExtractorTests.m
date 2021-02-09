@@ -23,7 +23,6 @@
 #import "FBSDKFeatureExtractor.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKModelManager.h"
-#import "FBSDKViewHierarchyMacros.h"
 #import "FBSDKTestCase.h"
 #import "FBSDKViewHierarchyMacros.h"
 
