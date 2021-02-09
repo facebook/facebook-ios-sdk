@@ -25,6 +25,7 @@
 #import <objc/runtime.h>
 
 #import "FBSDKAccessToken.h"
+#import "FBSDKAppEventsAtePublisher.h"
 #import "FBSDKAppEventsConfiguration.h"
 #import "FBSDKAppEventsConfigurationManager.h"
 #import "FBSDKAppEventsDeviceInfo.h"
@@ -335,6 +336,8 @@ static NSString *g_overrideAppID = nil;
 
 @property (nonatomic, copy) NSString *userID;
 
+@property (nonatomic, strong) id<FBSDKAtePublishing> atePublisher;
+
 @end
 
 @implementation FBSDKAppEvents
@@ -360,18 +363,33 @@ static NSString *g_overrideAppID = nil;
 
 - (instancetype)init
 {
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  NSString *userID = [defaults stringForKey:USER_ID_USER_DEFAULTS_KEY];
+  FBSDKAppEventsAtePublisher *publisher = [[FBSDKAppEventsAtePublisher alloc] initWithAppIdentifier:self.appID];
+  return [self initWithFlushBehavior:FBSDKAppEventsFlushBehaviorAuto
+                flushPeriodInSeconds:FLUSH_PERIOD_IN_SECONDS
+                              userID:userID
+                        atePublisher:publisher];
+}
+
+- (instancetype)initWithFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior
+                 flushPeriodInSeconds:(int)flushPeriodInSeconds
+                               userID:(nonnull NSString *)userID
+                         atePublisher:(nonnull id<FBSDKAtePublishing>)atePublisher
+{
   self = [super init];
   if (self) {
-    _flushBehavior = FBSDKAppEventsFlushBehaviorAuto;
+    _flushBehavior = flushBehavior;
 
     __weak FBSDKAppEvents *weakSelf = self;
-    self.flushTimer = [FBSDKUtility startGCDTimerWithInterval:FLUSH_PERIOD_IN_SECONDS
+    self.flushTimer = [FBSDKUtility startGCDTimerWithInterval:flushPeriodInSeconds
                                                         block:^{
                                                           [weakSelf flushTimerFired:nil];
                                                         }];
 
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    _userID = [defaults stringForKey:USER_ID_USER_DEFAULTS_KEY];
+    _userID = userID;
+    _atePublisher = atePublisher;
+
     [self fetchServerConfiguration:nil];
   }
 
@@ -998,49 +1016,9 @@ static NSString *g_overrideAppID = nil;
 {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    NSString *appID = [self appID];
-    if (appID.length == 0) {
-      [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:@"Missing [FBSDKAppEvents appID] for [FBSDKAppEvents publishATE:]"];
-      return;
+    if (self.atePublisher) {
+      [self.atePublisher publishATE];
     }
-    NSString *lastATEPingString = [NSString stringWithFormat:@"com.facebook.sdk:lastATEPing%@", appID];
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    id lastPublishDate = [defaults objectForKey:lastATEPingString];
-    if ([lastPublishDate isKindOfClass:[NSDate class]] && [(NSDate *)lastPublishDate timeIntervalSinceNow] * -1 < 24 * 60 * 60) {
-      return;
-    }
-
-    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-    [FBSDKTypeUtility dictionary:parameters setObject:@"CUSTOM_APP_EVENTS" forKey:@"event"];
-
-    NSOperatingSystemVersion operatingSystemVersion = [FBSDKInternalUtility operatingSystemVersion];
-    NSString *osVersion = [NSString stringWithFormat:@"%ti.%ti.%ti",
-                           operatingSystemVersion.majorVersion,
-                           operatingSystemVersion.minorVersion,
-                           operatingSystemVersion.patchVersion];
-
-    NSArray *event = @[
-      @{
-        @"_eventName" : @"fb_mobile_ate_status",
-        @"ate_status" : @([FBSDKSettings getAdvertisingTrackingStatus]).stringValue,
-        @"os_version" : osVersion,
-      }
-    ];
-    [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKBasicUtility JSONStringForObject:event error:NULL invalidObjectHandler:NULL] forKey:@"custom_events"];
-
-    [FBSDKAppEventsDeviceInfo extendDictionaryWithDeviceInfo:parameters];
-
-    NSString *path = [NSString stringWithFormat:@"%@/activities", appID];
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:path
-                                                                   parameters:parameters
-                                                                  tokenString:nil
-                                                                   HTTPMethod:FBSDKHTTPMethodPOST
-                                                                        flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
-    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-      if (!error) {
-        [defaults setObject:[NSDate date] forKey:lastATEPingString];
-      }
-    }];
   });
 }
 

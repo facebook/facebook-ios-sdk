@@ -52,7 +52,6 @@ static NSString *const _mockUserID = @"mockUserID";
 @property (nonatomic, copy) NSString *pushNotificationsDeviceTokenString;
 - (void)checkPersistedEvents;
 - (void)publishInstall;
-- (void)publishATE;
 - (void)flushForReason:(FBSDKAppEventsFlushReason)flushReason;
 - (void)fetchServerConfiguration:(FBSDKCodeBlock)callback;
 - (void)instanceLogEvent:(FBSDKAppEventName)eventName
@@ -557,70 +556,6 @@ static NSString *const _mockUserID = @"mockUserID";
   [self.appEventsMock publishInstall];
 
   OCMVerifyAll(self.appEventsMock);
-}
-
-- (void)testPublishATEWithNoPing
-{
-  [self stubAppID:@"mockAppID"];
-  [self stubUserDefaultsWith:[UserDefaultsSpy new]];
-  [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingAllowed];
-
-  id graphRequestMock = OCMClassMock([FBSDKGraphRequest class]);
-  OCMStub([graphRequestMock alloc]).andReturn(graphRequestMock);
-  OCMStub(
-    [graphRequestMock initWithGraphPath:[OCMArg any]
-                             parameters:[OCMArg any]
-                            tokenString:nil
-                             HTTPMethod:FBSDKHTTPMethodPOST
-                                  flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery]
-  ).andReturn(graphRequestMock);
-
-  [self.appEventsMock publishATE];
-
-  OCMVerify([graphRequestMock startWithCompletionHandler:[OCMArg any]]);
-
-  [graphRequestMock stopMocking];
-  graphRequestMock = nil;
-}
-
-- (void)testPublishATEWithPingLessThan24Hours
-{
-  [self stubAppID:@"mockAppID"];
-  UserDefaultsSpy *userDefault = [UserDefaultsSpy new];
-  [userDefault setObject:[NSDate dateWithTimeIntervalSinceNow:-12 * 60 * 60] forKey:[NSString stringWithFormat:@"com.facebook.sdk:lastATEPing%@", @"mockAppID"]];
-  [self stubUserDefaultsWith:userDefault];
-  [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingAllowed];
-
-  id graphRequestMock = OCMClassMock([FBSDKGraphRequest class]);
-  OCMStub([graphRequestMock alloc]).andReturn(graphRequestMock);
-  OCMStub(
-    [graphRequestMock initWithGraphPath:[OCMArg any]
-                             parameters:[OCMArg any]
-                            tokenString:nil
-                             HTTPMethod:FBSDKHTTPMethodPOST
-                                  flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery]
-  ).andReturn(graphRequestMock);
-
-  [self.appEventsMock publishATE];
-
-  OCMReject([graphRequestMock startWithCompletionHandler:[OCMArg any]]);
-
-  [graphRequestMock stopMocking];
-  graphRequestMock = nil;
-}
-
-- (void)testPublishATEWithVerifyingParams
-{
-  [self stubAppID:@"mockAppID"];
-  [self stubUserDefaultsWith:[UserDefaultsSpy new]];
-  [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingAllowed];
-
-  [self.appEventsMock publishATE];
-
-  OCMReject(
-    [self.appEventsUtilityClassMock activityParametersDictionaryForEvent:[OCMArg any]
-                                               shouldAccessAdvertisingID:[OCMArg any]]
-  );
 }
 
 #pragma mark  Tests for Kill Switch
