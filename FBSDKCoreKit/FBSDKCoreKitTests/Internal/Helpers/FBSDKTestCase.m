@@ -99,7 +99,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self setUpNSBundleMock];
   [self setUpSettingsMock];
   [self setUpServerConfigurationManagerMock];
-  [self setUpAppEventsMock];
   [self setUpAppEventsUtilityMock];
   [self setUpFBApplicationDelegateMock];
   [self setUpGateKeeperManagerMock];
@@ -131,6 +130,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self setUpPasteboardClassMock];
   [self setUpAppEventsConfigurationManagerClassMock];
   [self setUpASIdentifierClassMock];
+  [self setUpAppEventsMock];
 }
 
 - (void)tearDown
@@ -277,6 +277,12 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)setUpAppEventsMock
 {
   if (self.shouldAppEventsMockBePartial) {
+    // Partial mocks will try and fetch various configurations upon creation.
+    // This is ham-fisted but preempts accidental network traffic.
+    // We can get rid of this when we refactor to have an injectable dependency
+    // for creating graph requests.
+    [self stubAllocatingGraphRequestConnection];
+
     // Since the `init` method is marked unavailable but just as a measure to prevent creating multiple
     // instances and enforce the singleton pattern, we will circumvent that by casting to a plain `NSObject`
     // after `alloc` in order to call `init`.

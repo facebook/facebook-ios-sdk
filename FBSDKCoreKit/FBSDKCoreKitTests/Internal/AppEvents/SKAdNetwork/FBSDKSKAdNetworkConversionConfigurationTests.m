@@ -38,16 +38,6 @@
 
 @implementation FBSDKSKAdNetworkConversionConfigurationTests
 
-- (void)setUp
-{
-  [super setUp];
-}
-
-- (void)tearDown
-{
-  [super tearDown];
-}
-
 - (void)testInit
 {
   // Init with nil
