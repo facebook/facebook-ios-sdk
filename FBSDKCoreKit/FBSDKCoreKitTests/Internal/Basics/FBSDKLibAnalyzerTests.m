@@ -36,6 +36,8 @@
 
 - (void)setUp
 {
+  [super setUp];
+
   [FBSDKLibAnalyzer initialize];
 }
 
@@ -46,13 +48,8 @@
                                       @"FBSDKLoginKit",
                                       @"FBSDKShareKit",
                                       @"FBSDKTVOSKit"];
-  id analyzerMock = [OCMockObject niceMockForClass:[FBSDKLibAnalyzer class]];
-  [[analyzerMock expect] _getClassNames:[OCMArg any] frameworks:[OCMArg any]];
-
-  NSDictionary *result = [FBSDKLibAnalyzer getMethodsTable:prefixes frameworks:frameworks];
-  XCTAssertNotNil(result);
-
-  [analyzerMock verify];
+  NSDictionary *result = [FBSDKLibAnalyzer.class getMethodsTable:prefixes frameworks:frameworks];
+  XCTAssertTrue(result.count > 0, "Should find at least one method declared in the provided frameworks");
 }
 
 - (void)testGetAddress
