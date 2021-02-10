@@ -38,12 +38,7 @@
 
 - (void)publishATE
 {
-  NSString *appID = self.appIdentifier;
-  if (appID.length == 0) {
-    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:@"Missing [FBSDKAppEvents appID] for [FBSDKAppEvents publishATE:]"];
-    return;
-  }
-  NSString *lastATEPingString = [NSString stringWithFormat:@"com.facebook.sdk:lastATEPing%@", appID];
+  NSString *lastATEPingString = [NSString stringWithFormat:@"com.facebook.sdk:lastATEPing%@", self.appIdentifier];
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   id lastPublishDate = [defaults objectForKey:lastATEPingString];
   if ([lastPublishDate isKindOfClass:[NSDate class]] && [(NSDate *)lastPublishDate timeIntervalSinceNow] * -1 < 24 * 60 * 60) {
@@ -70,7 +65,7 @@
 
   [FBSDKAppEventsDeviceInfo extendDictionaryWithDeviceInfo:parameters];
 
-  NSString *path = [NSString stringWithFormat:@"%@/activities", appID];
+  NSString *path = [NSString stringWithFormat:@"%@/activities", self.appIdentifier];
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:path
                                                                  parameters:parameters
                                                                 tokenString:nil
