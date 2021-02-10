@@ -81,8 +81,8 @@
   [_delegate resetApplicationObserverCache];
 
   [self stubLoadingAdNetworkReporterConfiguration];
-
   [self stubServerConfigurationFetchingWithConfiguration:FBSDKServerConfigurationFixtures.defaultConfig error:nil];
+  [self stubLoadingGateKeepers];
 }
 
 - (void)tearDown
