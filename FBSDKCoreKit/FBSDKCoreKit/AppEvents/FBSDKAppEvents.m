@@ -323,6 +323,7 @@ NSString *const FBSDKAPPEventsWKWebViewMessagesProtocolKey = @"fbmq-0.1";
 #define FBUnityUtilityUpdateBindingsSelector @"triggerUpdateBindings:"
 
 static NSString *g_overrideAppID = nil;
+static BOOL g_explicitEventsLoggedYet;
 
 @interface FBSDKAppEvents ()
 
@@ -342,7 +343,6 @@ static NSString *g_overrideAppID = nil;
 
 @implementation FBSDKAppEvents
 {
-  BOOL _explicitEventsLoggedYet;
   FBSDKServerConfiguration *_serverConfiguration;
   FBSDKAppEventsState *_appEventsState;
 #if !TARGET_OS_TV
@@ -716,7 +716,7 @@ static NSString *g_overrideAppID = nil;
 {
   if (![g_overrideAppID isEqualToString:appID]) {
     FBSDKConditionalLog(
-      ![FBSDKAppEvents singleton]->_explicitEventsLoggedYet,
+      !g_explicitEventsLoggedYet,
       FBSDKLoggingBehaviorDeveloperErrors,
       @"[FBSDKAppEvents setLoggingOverrideAppID:] should only be called prior to any events being logged."
     );
@@ -1153,8 +1153,8 @@ static NSString *g_overrideAppID = nil;
     return;
   }
 
-  if (!isImplicitlyLogged && !_explicitEventsLoggedYet) {
-    _explicitEventsLoggedYet = YES;
+  if (!isImplicitlyLogged && !g_explicitEventsLoggedYet) {
+    g_explicitEventsLoggedYet = YES;
   }
   __block BOOL failed = ![FBSDKAppEventsUtility validateIdentifier:eventName];
 
