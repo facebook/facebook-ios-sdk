@@ -472,7 +472,8 @@ release_sdk() {
        -configuration Release | xcpretty
 
       cd build || exit
-      zip -r FacebookSDK_static.zip ./*.framework ./*/*.framework
+      cp ../LICENSE ./ # LICENSE file
+      zip -r FacebookSDK_static.zip ./*.framework ./*/*.framework LICENSE
       mv FacebookSDK_Static.zip Release/
       for kit in "${SDK_KITS[@]}"; do
         if [ ! -d "$kit".framework ] \
