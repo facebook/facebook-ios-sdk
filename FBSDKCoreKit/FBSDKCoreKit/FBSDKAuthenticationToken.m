@@ -94,12 +94,6 @@ NSString *const FBSDKAuthenticationTokenGraphDomainCodingKey = @"FBSDKAuthentica
 
 + (void)setCurrentAuthenticationToken:(FBSDKAuthenticationToken *)token
 {
-  [self setCurrentAuthenticationToken:token shouldPostNotification:YES];
-}
-
-+ (void)setCurrentAuthenticationToken:(FBSDKAuthenticationToken *)token
-               shouldPostNotification:(BOOL)shouldPostNotification
-{
   if (token != g_currentAuthenticationToken) {
     g_currentAuthenticationToken = token;
     [[self tokenCache] setAuthenticationToken:token];

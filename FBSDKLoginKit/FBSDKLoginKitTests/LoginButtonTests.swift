@@ -43,7 +43,7 @@ class LoginButtonTests: XCTestCase {
     super.setUp()
 
     AccessToken.setCurrent(nil, shouldDispatchNotif: false)
-    AuthenticationToken.setCurrent(nil, shouldPostNotification: false)
+    AuthenticationToken.setCurrent(nil)
     Profile.current = nil
 
     button = FBLoginButton()
@@ -172,7 +172,7 @@ class LoginButtonTests: XCTestCase {
   }
 
   func testDeterminingAuthenticationWithoutAccessTokenWithAuthToken() {
-    AuthenticationToken.setCurrent(sampleToken, shouldPostNotification: false)
+    AuthenticationToken.setCurrent(sampleToken)
 
     XCTAssertTrue(
       button._isAuthenticated(),

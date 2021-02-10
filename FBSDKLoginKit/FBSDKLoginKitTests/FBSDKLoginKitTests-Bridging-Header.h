@@ -72,8 +72,7 @@ NS_ASSUME_NONNULL_BEGIN
                              claims:(nullable FBSDKAuthenticationTokenClaims *)claims
                                 jti:(NSString *)jti;
 
-+ (void)setCurrentAuthenticationToken:(nullable FBSDKAuthenticationToken *)token
-               shouldPostNotification:(BOOL)shouldPostNotification;
++ (void)setCurrentAuthenticationToken:(nullable FBSDKAuthenticationToken *)token;
 
 @end
 

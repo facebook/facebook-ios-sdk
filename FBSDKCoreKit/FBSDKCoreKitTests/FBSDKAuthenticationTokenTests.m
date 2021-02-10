@@ -46,14 +46,6 @@
   NotificationCenterSpy *_notificationCenterSpy;
 }
 
-- (void)setUp
-{
-  [super setUp];
-
-  _notificationCenterSpy = [NotificationCenterSpy new];
-  [self stubDefaultNotificationCenterWith:_notificationCenterSpy];
-}
-
 // MARK: - Persistence
 
 - (void)testRetrievingCurrentToken
