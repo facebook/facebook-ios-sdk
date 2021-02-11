@@ -218,7 +218,7 @@ static NSString *_lastTreeHash;
   NSString *advertiserID = [FBSDKAppEventsUtility advertiserID] ?: @"";
   machine = machine ?: @"";
   NSString *debugStatus = [FBSDKAppEventsUtility isDebugBuild] ? @"1" : @"0";
-#if TARGET_IPHONE_SIMULATOR
+#if TARGET_OS_SIMULATOR
   NSString *isSimulator = @"1";
 #else
   NSString *isSimulator = @"0";

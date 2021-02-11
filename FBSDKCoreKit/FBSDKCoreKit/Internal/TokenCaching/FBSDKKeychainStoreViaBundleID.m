@@ -40,7 +40,7 @@
   [FBSDKTypeUtility dictionary:query setObject:self.service forKey:(__bridge id)[FBSDKDynamicFrameworkLoader loadkSecAttrService]];
   [FBSDKTypeUtility dictionary:query setObject:key forKey:(__bridge id)[FBSDKDynamicFrameworkLoader loadkSecAttrGeneric]];
 
-#if !TARGET_IPHONE_SIMULATOR
+#if !TARGET_OS_SIMULATOR
   [FBSDKTypeUtility dictionary:query setObject:self.accessGroup forKey:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessGroup]];
 #endif
 

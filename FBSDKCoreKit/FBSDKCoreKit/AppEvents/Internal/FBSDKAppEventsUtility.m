@@ -340,7 +340,7 @@ static NSArray<NSString *> *standardEvents;
 
 + (BOOL)isDebugBuild
 {
-#if TARGET_IPHONE_SIMULATOR
+#if TARGET_OS_SIMULATOR
   return YES;
 #else
   BOOL isDevelopment = NO;
