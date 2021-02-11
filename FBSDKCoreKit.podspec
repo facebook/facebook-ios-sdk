@@ -29,14 +29,6 @@ Pod::Spec.new do |s|
   s.ios.weak_frameworks = 'Accelerate', 'Accounts', 'AdSupport', 'Social', 'Security', 'StoreKit', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
   s.tvos.weak_frameworks = 'CoreLocation', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
 
-  # This excludes `FBSDKCoreKit/FBSDKCoreKit/Internal_NoARC/` folder, as that folder includes only `no-arc` files.
-  s.requires_arc = ['FBSDKCoreKit/FBSDKCoreKit/*',
-                    'FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*',
-                    'FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*',
-                    'Sources/FBSDKCoreKit_Basics/**/*',
-                    'FBSDKCoreKit/FBSDKCoreKit/GraphAPI/*',
-                    'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*']
-
   s.default_subspecs = 'Core', 'Basics'
   s.swift_version = '5.0'
   s.pod_target_xcconfig = {
