@@ -2013,14 +2013,6 @@
 			path = Shared;
 			sourceTree = "<group>";
 		};
-		81C9692F1C114723002FC037 /* Internal_NoARC */ = {
-			isa = PBXGroup;
-			children = (
-				81C969311C114723002FC037 /* FBSDKDynamicFrameworkLoader.m */,
-			);
-			path = Internal_NoARC;
-			sourceTree = "<group>";
-		};
 		893F44921A64448E001DB0B6 /* Internal */ = {
 			isa = PBXGroup;
 			children = (
@@ -2052,6 +2044,7 @@
 				520223F51D83C8D200CE0AB5 /* FBSDKDeviceRequestsHelper.h */,
 				520223F61D83C8D200CE0AB5 /* FBSDKDeviceRequestsHelper.m */,
 				81C969301C114723002FC037 /* FBSDKDynamicFrameworkLoader.h */,
+				81C969311C114723002FC037 /* FBSDKDynamicFrameworkLoader.m */,
 				F44B04EC256456140059A3A6 /* FBSDKDynamicFrameworkResolving.h */,
 				894C0B5F1A7150AC009137EF /* FBSDKError.h */,
 				894C0B601A7150AC009137EF /* FBSDKError.m */,
@@ -2388,7 +2381,6 @@
 				89C8B1971A8D7A15009B07F5 /* FBSDKUtility.h */,
 				89C8B1981A8D7A15009B07F5 /* FBSDKUtility.m */,
 				893F44921A64448E001DB0B6 /* Internal */,
-				81C9692F1C114723002FC037 /* Internal_NoARC */,
 				9D26974A1A5DF40700143BFC /* Supporting Files */,
 				F487DBCA231EBD8B008416A9 /* Swift */,
 			);
