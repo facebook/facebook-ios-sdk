@@ -107,7 +107,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 #endif
 >
 
-@property (nonatomic, retain) NSMutableArray *requests;
+@property (nonatomic, retain) NSMutableArray<FBSDKGraphRequestMetadata *> *requests;
 @property (nonatomic, assign) FBSDKGraphRequestConnectionState state;
 @property (nonatomic, strong) FBSDKLogger *logger;
 @property (nonatomic, assign) uint64_t requestStartTime;
