@@ -135,10 +135,10 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (instancetype)init
 {
-  return [self initWithUrlSessionProxyFactory:[FBSDKURLSessionProxyFactory new]];
+  return [self initWithURLSessionProxyFactory:[FBSDKURLSessionProxyFactory new]];
 }
 
-- (instancetype)initWithUrlSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
+- (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
 {
   if ((self = [super init])) {
     _requests = [[NSMutableArray alloc] init];
@@ -1181,11 +1181,15 @@ static NSError *_Nullable errorFromResult(id untypedParam, FBSDKGraphRequest *re
       // prevent further attempts at recovery (i.e., additional retries).
       [retryRequest setGraphErrorRecoveryDisabled:YES];
       FBSDKGraphRequestMetadata *retryMetadata = [[FBSDKGraphRequestMetadata alloc] initWithRequest:retryRequest completionHandler:_recoveringRequestMetadata.completionHandler batchParameters:_recoveringRequestMetadata.batchParameters];
-      [retryRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *retriedError) {
+      // Future work should include providing the ability to pass a session proxy provider to
+      // the `FBSDKGraphRequest` convenience method `startWithCompletionHandler:`
+      FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:_sessionProxyFactory];
+      [connection addRequest:retryRequest completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *retriedError) {
         [self processResultBody:result error:retriedError metadata:retryMetadata canNotifyDelegate:YES];
         self->_errorRecoveryProcessor = nil;
         self->_recoveringRequestMetadata = nil;
       }];
+      [connection start];
     } else {
       [self processResultBody:nil error:error metadata:_recoveringRequestMetadata canNotifyDelegate:YES];
       _errorRecoveryProcessor = nil;

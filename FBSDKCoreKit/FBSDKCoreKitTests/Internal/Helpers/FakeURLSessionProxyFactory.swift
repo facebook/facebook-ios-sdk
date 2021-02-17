@@ -18,9 +18,38 @@
 
 @objcMembers
 public class FakeURLSessionProxyFactory: NSObject, URLSessionProxyProviding {
-  public var stubbedSession: FakeURLSessionProxy?
+  private var stubbedSessions: [FakeURLSessionProxy]
+
+  private init(session: FakeURLSessionProxy) {
+    self.stubbedSessions = [session]
+  }
+
+  private init(sessions: [FakeURLSessionProxy]) {
+    self.stubbedSessions = sessions
+  }
+
+  /// Creates a new provider stubbed with the `FakeURLSessionProxy`
+  ///
+  /// If you provide a single session, all calls to `createSessionProxy` will return the same
+  /// session instance
+  public static func create(with session: FakeURLSessionProxy) -> FakeURLSessionProxyFactory {
+    return FakeURLSessionProxyFactory(session: session)
+  }
+
+  /// Creates a new provider stubbed with the `FakeURLSessionProxy`
+  ///
+  /// If you provide multiple sessions, they will be provided in the order they are requested
+  public static func create(withSessions sessions: [FakeURLSessionProxy]) -> FakeURLSessionProxyFactory {
+    return FakeURLSessionProxyFactory(sessions: sessions)
+  }
+
+  // MARK: - UrlSessionProxyProviding
 
   public func createSessionProxy(with delegate: URLSessionDataDelegate?, queue: OperationQueue?) -> URLSessionProxying {
-    return stubbedSession ?? FakeURLSessionProxy()
+    if stubbedSessions.count > 1 {
+      return stubbedSessions.removeFirst()
+    } else {
+      return stubbedSessions[0]
+    }
   }
 }

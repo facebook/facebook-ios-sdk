@@ -20,9 +20,6 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
-#import <OHHTTPStubs/NSURLRequest+HTTPBodyTesting.h>
-#import <OHHTTPStubs/OHHTTPStubs.h>
-
 #import "FBSDKCoreKit.h"
 #import "FBSDKCoreKitTestUtility.h"
 #import "FBSDKCoreKitTests-Swift.h"
@@ -35,7 +32,7 @@
 
 @interface FBSDKGraphRequestConnection (Testing)
 
-- (instancetype)initWithUrlSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)sessionProvider;
+- (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)sessionProxyFactory;
 
 - (NSMutableURLRequest *)requestWithBatch:(NSArray *)requests
                                   timeout:(NSTimeInterval)timeout;
@@ -74,13 +71,6 @@
   [self stubAddingServerConfigurationPiggyback];
 }
 
-- (void)tearDown
-{
-  [super tearDown];
-
-  [OHHTTPStubs removeAllStubs];
-}
-
 #pragma mark - FBSDKGraphRequestConnectionDelegate
 
 - (void)requestConnection:(FBSDKGraphRequestConnection *)connection didFailWithError:(NSError *)error
@@ -111,8 +101,7 @@
 
 - (void)testCreatingWithDefaultUrlSessionProxyFactory
 {
-  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
-
+  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
   NSObject *sessionProvider = (NSObject *)connection.sessionProxyFactory;
   XCTAssertEqualObjects(
     sessionProvider.class,
@@ -123,9 +112,11 @@
 
 - (void)testCreatingWithCustomUrlSessionProxyFactory
 {
-  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory new];
-  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithUrlSessionProxyFactory:fakeProxyFactory];
+  FakeURLSessionProxy *fakeSession = [FakeURLSessionProxy new];
+  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory createWith:fakeSession];
+  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory];
   NSObject *sessionProvider = (NSObject *)connection.sessionProxyFactory;
+
   XCTAssertEqualObjects(
     sessionProvider.class,
     FakeURLSessionProxyFactory.class,
@@ -135,12 +126,9 @@
 
 - (void)testDerivingSessionFromSessionProvider
 {
-  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory new];
   FakeURLSessionProxy *fakeSession = [FakeURLSessionProxy new];
-  fakeProxyFactory.stubbedSession = fakeSession;
-
-  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithUrlSessionProxyFactory:fakeProxyFactory];
-
+  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory createWith:fakeSession];
+  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory];
   NSObject *session = (NSObject *)connection.session;
 
   XCTAssertEqualObjects(
@@ -150,82 +138,68 @@
   );
 }
 
-- (void)_testClientToken
+- (void)testClientToken
 {
-  // if it's a batch request the body will be zipped so make sure we don't do that
-  id mockUtility = [OCMockObject niceMockForClass:[FBSDKBasicUtility class]];
-  [[[mockUtility stub] andReturn:nil] gzip:[OCMArg any]];
+  XCTestExpectation *expectation = [[XCTestExpectation alloc] initWithDescription:self.name];
 
-  XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
+  [self stubFetchingCachedServerConfiguration];
   [self stubCurrentAccessTokenWith:nil];
   [self stubClientTokenWith:@"clienttoken"];
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
-                 // If it's a batch request, the token will be in the body. If it's a single request it will be in the url
-                 // we should check that it's in one or the other.
-                 NSString *url = request.URL.absoluteString;
-                 NSString *body = [[NSString alloc] initWithData:request.OHHTTPStubs_HTTPBody encoding:NSUTF8StringEncoding];
-                 u_long tokenLength = ([body rangeOfString:@"access_token"].length + [url rangeOfString:@"access_token"].length);
-                 XCTAssertTrue(tokenLength > 0);
-                 return YES;
-               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-                 NSData *data = [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463, \"type\":\"OAuthException\"}}" dataUsingEncoding:NSUTF8StringEncoding];
 
-                 return [OHHTTPStubsResponse responseWithData:data
-                                                   statusCode:400
-                                                      headers:nil];
-               }];
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-    // make sure there is no recovery info for client token failures.
-    XCTAssertNil(error.localizedRecoverySuggestion);
-    [exp fulfill];
-  }];
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError *error) {
-    XCTAssertNil(error);
-  }];
-  [FBSDKSettings setClientToken:nil];
+  FakeURLSessionProxy *fakeSession = [FakeURLSessionProxy new];
+  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory createWith:fakeSession];
+
+  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory];
+  [connection addRequest:self.requestForMeWithEmptyFields
+       completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
+         // make sure there is no recovery info for client token failures.
+         XCTAssertNil(error.localizedRecoverySuggestion);
+         [expectation fulfill];
+       }];
+  [connection start];
+
+  NSData *data = [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463, \"type\":\"OAuthException\"}}" dataUsingEncoding:NSUTF8StringEncoding];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:400 HTTPVersion:nil headerFields:nil];
+
+  fakeSession.capturedCompletion(data, response, nil);
+  [self waitForExpectations:@[expectation] timeout:1];
 }
 
 - (void)testClientTokenSkipped
 {
-  XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
-                 XCTAssertTrue([[request.URL absoluteString] rangeOfString:@"access_token"].location == NSNotFound);
-                 return YES;
-               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-                 NSData *data = [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
+  XCTestExpectation *expectation = [[XCTestExpectation alloc] initWithDescription:self.name];
 
-                 return [OHHTTPStubsResponse responseWithData:data
-                                                   statusCode:400
-                                                      headers:nil];
-               }];
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""} flags:FBSDKGraphRequestFlagSkipClientToken]
-   startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-     [exp fulfill];
-   }];
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError *error) {
-    XCTAssertNil(error);
+  [self stubFetchingCachedServerConfiguration];
+  [self stubCurrentAccessTokenWith:nil];
+  [self stubClientTokenWith:@"clienttoken"];
+
+  FakeURLSessionProxy *fakeSession = [FakeURLSessionProxy new];
+  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory createWith:fakeSession];
+
+  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory];
+  [connection addRequest:self.requestForMeWithEmptyFields completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
+    // make sure there is no recovery info for client token failures.
+    XCTAssertNil(error.localizedRecoverySuggestion);
+    [expectation fulfill];
   }];
-  [FBSDKSettings setClientToken:nil];
+  [connection start];
+
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:400 HTTPVersion:nil headerFields:nil];
+
+  fakeSession.capturedCompletion(self.missingTokenData, response, nil);
+  [self waitForExpectations:@[expectation] timeout:1];
 }
 
 - (void)testConnectionDelegate
 {
-  // stub out a batch response that returns /me.id twice
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
-                 return YES;
-               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-                 NSString *meResponse = [@"{ \"id\":\"userid\"}" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
-                 NSString *responseString = [NSString stringWithFormat:@"[ {\"code\":200,\"body\": \"%@\" }, {\"code\":200,\"body\": \"%@\" } ]", meResponse, meResponse];
-                 NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
-                 return [OHHTTPStubsResponse responseWithData:data
-                                                   statusCode:200
-                                                      headers:nil];
-               }];
-  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
+  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
+
+  [self stubFetchingCachedServerConfiguration];
+  FakeURLSessionProxy *fakeSession = [FakeURLSessionProxy new];
+  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory createWith:fakeSession];
+
+  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory];
   __block int actualCallbacksCount = 0;
-  XCTestExpectation *expectation = [self expectationWithDescription:@"expected to receive delegate completion"];
   [connection addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
        completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {
          XCTAssertEqual(1, actualCallbacksCount++, @"this should have been the second callback");
@@ -244,25 +218,27 @@
   };
   connection.delegate = self;
   [connection start];
-  [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
-    XCTAssertNil(error);
-  }];
+
+  NSString *meResponse = [@"{ \"id\":\"userid\"}" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+  NSString *responseString = [NSString stringWithFormat:@"[ {\"code\":200,\"body\": \"%@\" }, {\"code\":200,\"body\": \"%@\" } ]", meResponse, meResponse];
+  NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:200 HTTPVersion:nil headerFields:nil];
+
+  fakeSession.capturedCompletion(data, response, nil);
+
+  [self waitForExpectations:@[expectation] timeout:1];
 }
 
 - (void)testNonErrorEmptyDictionaryOrNullResponse
 {
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
-                 return YES;
-               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-                 NSString *responseString = [NSString stringWithFormat:@"[ {\"code\":200,\"body\": null }, {\"code\":200,\"body\": {} } ]"];
-                 NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
-                 return [OHHTTPStubsResponse responseWithData:data
-                                                   statusCode:200
-                                                      headers:nil];
-               }];
-  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
+  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
+
+  [self stubFetchingCachedServerConfiguration];
+  FakeURLSessionProxy *fakeSession = [FakeURLSessionProxy new];
+  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory createWith:fakeSession];
+
+  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory];
   __block int actualCallbacksCount = 0;
-  XCTestExpectation *expectation = [self expectationWithDescription:@"expected not to crash on null or empty dict responses"];
   [connection addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
        completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {
          XCTAssertEqual(1, actualCallbacksCount++, @"this should have been the second callback");
@@ -281,21 +257,25 @@
   };
   connection.delegate = self;
   [connection start];
-  [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
-    XCTAssertNil(error);
-  }];
+
+  NSString *responseString = [NSString stringWithFormat:@"[ {\"code\":200,\"body\": null }, {\"code\":200,\"body\": {} } ]"];
+  NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:200 HTTPVersion:nil headerFields:nil];
+
+  fakeSession.capturedCompletion(data, response, nil);
+
+  [self waitForExpectations:@[expectation] timeout:1];
 }
 
 - (void)testConnectionDelegateWithNetworkError
 {
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
-                 return YES;
-               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-                 // stub a response indicating a disconnected network
-                 return [OHHTTPStubsResponse responseWithError:[NSError errorWithDomain:@"NSURLErrorDomain" code:-1009 userInfo:nil]];
-               }];
-  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
-  XCTestExpectation *expectation = [self expectationWithDescription:@"expected to receive network error"];
+  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
+
+  [self stubFetchingCachedServerConfiguration];
+  FakeURLSessionProxy *fakeSession = [FakeURLSessionProxy new];
+  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory createWith:fakeSession];
+
+  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory];
   [connection addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
        completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {}];
   self.requestConnectionCallback = ^(FBSDKGraphRequestConnection *conn, NSError *error) {
@@ -304,33 +284,24 @@
   };
   connection.delegate = self;
   [connection start];
-  [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
-    XCTAssertNil(error);
-  }];
+
+  fakeSession.capturedCompletion(nil, nil, [NSError errorWithDomain:@"NSURLErrorDomain" code:-1009 userInfo:nil]);
+
+  [self waitForExpectations:@[expectation] timeout:1];
 }
 
+// TODO: Fix this to avoid using class property for access token
 // test to verify piggyback refresh token behavior.
 - (void)testTokenPiggyback
 {
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  // use stubs because test tokens are not refreshable.
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
-                 return YES;
-               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-                 NSString *meResponse = [@"{ \"id\":\"userid\"}" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
-                 NSString *refreshResponse = [[NSString stringWithFormat:@"{ \"access_token\":\"123\", \"expires_at\":%.0f }", [NSDate dateWithTimeIntervalSinceNow:60].timeIntervalSince1970] stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
-                 NSString *permissionsResponse = [@"{ \"data\": [ { \"permission\" : \"public_profile\", \"status\" : \"granted\" },  { \"permission\" : \"email\", \"status\" : \"granted\" },  { \"permission\" : \"user_friends\", \"status\" : \"declined\" } ] }" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
-                 NSString *responseString = [NSString stringWithFormat:@"[ {\"code\":200,\"body\": \"%@\" },"
-                                             @"{\"code\":200,\"body\": \"%@\" },"
-                                             @"{\"code\":200,\"body\": \"%@\" } ]",
-                                             meResponse,
-                                             refreshResponse,
-                                             permissionsResponse];
-                 NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
-                 return [OHHTTPStubsResponse responseWithData:data
-                                                   statusCode:200
-                                                      headers:nil];
-               }];
+  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
+
+  // FBSDKAccessToken.currentAccessToken = nil;
+  [self stubFetchingCachedServerConfiguration];
+  FakeURLSessionProxy *fakeSession = [FakeURLSessionProxy new];
+  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory createWith:fakeSession];
+
+  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory];
   FBSDKAccessToken *tokenThatNeedsRefresh = [[FBSDKAccessToken alloc]
                                              initWithTokenString:@"token"
                                              permissions:@[]
@@ -342,15 +313,29 @@
                                              refreshDate:[NSDate distantPast]
                                              dataAccessExpirationDate:[NSDate distantPast]];
   [FBSDKAccessToken setCurrentAccessToken:tokenThatNeedsRefresh];
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}];
-  XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
-  [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-    XCTAssertEqualObjects(tokenThatNeedsRefresh.userID, result[@"id"]);
-    [exp fulfill];
-  }];
-  [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
-    XCTAssertNil(error);
-  }];
+  [connection addRequest:self.requestForMeWithEmptyFields
+       completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
+         XCTAssertEqualObjects(tokenThatNeedsRefresh.userID, result[@"id"]);
+         [expectation fulfill];
+       }];
+  [connection start];
+
+  NSString *meResponse = [@"{ \"id\":\"userid\"}" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+  NSString *refreshResponse = [[NSString stringWithFormat:@"{ \"access_token\":\"123\", \"expires_at\":%.0f }", [NSDate dateWithTimeIntervalSinceNow:60].timeIntervalSince1970] stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+  NSString *permissionsResponse = [@"{ \"data\": [ { \"permission\" : \"public_profile\", \"status\" : \"granted\" },  { \"permission\" : \"email\", \"status\" : \"granted\" },  { \"permission\" : \"user_friends\", \"status\" : \"declined\" } ] }" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+  NSString *responseString = [NSString stringWithFormat:@"[ {\"code\":200,\"body\": \"%@\" },"
+                              @"{\"code\":200,\"body\": \"%@\" },"
+                              @"{\"code\":200,\"body\": \"%@\" } ]",
+                              meResponse,
+                              refreshResponse,
+                              permissionsResponse];
+  NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:200 HTTPVersion:nil headerFields:nil];
+
+  fakeSession.capturedCompletion(data, response, nil);
+
+  [self waitForExpectations:@[expectation] timeout:1];
+
   XCTAssertGreaterThan([[FBSDKAccessToken currentAccessToken].expirationDate timeIntervalSinceNow], 0);
   XCTAssertGreaterThan([[FBSDKAccessToken currentAccessToken].refreshDate timeIntervalSinceNow], -60);
   XCTAssertNotEqualObjects(tokenThatNeedsRefresh, [FBSDKAccessToken currentAccessToken]);
@@ -362,7 +347,14 @@
 // test no piggyback if refresh date is today.
 - (void)testTokenPiggybackSkipped
 {
-  [FBSDKAccessToken setCurrentAccessToken:nil];
+  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
+
+  [self stubFetchingCachedServerConfiguration];
+  FakeURLSessionProxy *fakeSession = [FakeURLSessionProxy new];
+  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory createWith:fakeSession];
+
+  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory];
+
   FBSDKAccessToken *tokenNoRefresh = [[FBSDKAccessToken alloc]
                                       initWithTokenString:@"token"
                                       permissions:@[]
@@ -374,43 +366,46 @@
                                       refreshDate:[NSDate date]
                                       dataAccessExpirationDate:[NSDate distantPast]];
   [FBSDKAccessToken setCurrentAccessToken:tokenNoRefresh];
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}];
-  XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *r) {
-                 // assert the path of r is "me"; since piggyback would go to root batch endpoint.
-                 XCTAssertTrue([r.URL.path hasSuffix:@"me"]);
-                 return YES;
-               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *r) {
-                 NSString *responseString = @"{ \"id\" : \"userid\"}";
-                 NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
-                 return [OHHTTPStubsResponse responseWithData:data
-                                                   statusCode:200
-                                                      headers:nil];
-               }];
-  [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-    XCTAssertEqualObjects(tokenNoRefresh.userID, result[@"id"]);
-    [exp fulfill];
-  }];
-  [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
-    XCTAssertNil(error);
-  }];
+
+  [connection addRequest:self.requestForMeWithEmptyFields
+       completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
+         XCTAssertEqualObjects(tokenNoRefresh.userID, result[@"id"]);
+         [expectation fulfill];
+       }];
+  [connection start];
+
+  NSString *responseString = @"{ \"id\" : \"userid\"}";
+  NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:200 HTTPVersion:nil headerFields:nil];
+
+  fakeSession.capturedCompletion(data, response, nil);
+
+  [self waitForExpectations:@[expectation] timeout:1];
+
   XCTAssertEqualObjects(tokenNoRefresh, [FBSDKAccessToken currentAccessToken]);
 }
 
 - (void)testUnsettingAccessToken
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:@"completed request"];
   __block int tokenChangeCount = 0;
-  [self expectationForNotification:FBSDKAccessTokenDidChangeNotification
-                            object:nil
-                           handler:^BOOL (NSNotification *notification) {
-                             if (++tokenChangeCount == 2) {
-                               XCTAssertNil(notification.userInfo[FBSDKAccessTokenChangeNewKey]);
-                               XCTAssertNotNil(notification.userInfo[FBSDKAccessTokenChangeOldKey]);
-                               return YES;
-                             }
-                             return NO;
-                           }];
+  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
+  XCTestExpectation *notificationExpectation = [self expectationForNotification:FBSDKAccessTokenDidChangeNotification
+                                                                         object:nil
+                                                                        handler:^BOOL (NSNotification *notification) {
+                                                                          if (++tokenChangeCount == 2) {
+                                                                            XCTAssertNil(notification.userInfo[FBSDKAccessTokenChangeNewKey]);
+                                                                            XCTAssertNotNil(notification.userInfo[FBSDKAccessTokenChangeOldKey]);
+                                                                            return YES;
+                                                                          }
+                                                                          return NO;
+                                                                        }];
+
+  [self stubFetchingCachedServerConfiguration];
+  FakeURLSessionProxy *fakeSession = [FakeURLSessionProxy new];
+  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory createWith:fakeSession];
+
+  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory];
+
   FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                     permissions:@[@"public_profile"]
                                                             declinedPermissions:@[]
@@ -421,37 +416,41 @@
                                                                     refreshDate:nil
                                                        dataAccessExpirationDate:nil];
   [FBSDKAccessToken setCurrentAccessToken:accessToken];
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
-                 return YES;
-               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-                 NSData *data = [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
 
-                 return [OHHTTPStubsResponse responseWithData:data
-                                                   statusCode:400
-                                                      headers:nil];
-               }];
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
-   startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-     XCTAssertNil(result);
-     XCTAssertEqualObjects(@"Token is broke", error.userInfo[FBSDKErrorDeveloperMessageKey]);
-     [expectation fulfill];
-   }];
+  [connection addRequest:self.requestForMeWithEmptyFields
+       completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
+         XCTAssertNil(result);
+         XCTAssertEqualObjects(@"Token is broke", error.userInfo[FBSDKErrorDeveloperMessageKey]);
+         [expectation fulfill];
+       }];
+  [connection start];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError *error) {
-    XCTAssertNil(error);
-  }];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:400 HTTPVersion:nil headerFields:nil];
+
+  fakeSession.capturedCompletion(self.missingTokenData, response, nil);
+
+  [self waitForExpectations:@[expectation, notificationExpectation] timeout:1];
+
   XCTAssertNil([FBSDKAccessToken currentAccessToken]);
 }
 
 - (void)testUnsettingAccessTokenSkipped
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:@"completed request"];
-  [self expectationForNotification:FBSDKAccessTokenDidChangeNotification
-                            object:nil
-                           handler:^BOOL (NSNotification *notification) {
-                             XCTAssertNotNil(notification.userInfo[FBSDKAccessTokenChangeNewKey]);
-                             return YES;
-                           }];
+  // Setup expectations
+  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
+  XCTestExpectation *notificationExpectation = [self expectationForNotification:FBSDKAccessTokenDidChangeNotification
+                                                                         object:nil
+                                                                        handler:^BOOL (NSNotification *notification) {
+                                                                          XCTAssertNotNil(notification.userInfo[FBSDKAccessTokenChangeNewKey]);
+                                                                          return YES;
+                                                                        }];
+
+  [self stubFetchingCachedServerConfiguration];
+  FakeURLSessionProxy *fakeSession = [FakeURLSessionProxy new];
+  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory createWith:fakeSession];
+
+  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory];
+
   FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                     permissions:@[@"public_profile"]
                                                             declinedPermissions:@[]
@@ -463,41 +462,37 @@
                                                        dataAccessExpirationDate:nil];
 
   [FBSDKAccessToken setCurrentAccessToken:accessToken];
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
-                 return YES;
-               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-                 NSData *data = [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
 
-                 return [OHHTTPStubsResponse responseWithData:data
-                                                   statusCode:400
-                                                      headers:nil];
-               }];
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me"
-                                     parameters:@{@"fields" : @""}
-                                    tokenString:@"notCurrentToken"
-                                        version:nil
-                                     HTTPMethod:@""]
-   startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-     XCTAssertNil(result);
-     XCTAssertEqualObjects(@"Token is broke", error.userInfo[FBSDKErrorDeveloperMessageKey]);
-     [expectation fulfill];
-   }];
-
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError *error) {
-    XCTAssertNil(error);
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me"
+                                                                 parameters:@{@"fields" : @""}
+                                                                tokenString:@"notCurrentToken"
+                                                                    version:nil
+                                                                 HTTPMethod:@""];
+  [connection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
+    XCTAssertNil(result);
+    XCTAssertEqualObjects(@"Token is broke", error.userInfo[FBSDKErrorDeveloperMessageKey]);
+    [expectation fulfill];
   }];
+  [connection start];
+
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:400 HTTPVersion:nil headerFields:nil];
+
+  fakeSession.capturedCompletion(self.missingTokenData, response, nil);
+
+  [self waitForExpectations:@[expectation, notificationExpectation] timeout:1];
+
   XCTAssertNotNil([FBSDKAccessToken currentAccessToken]);
 }
 
 - (void)testUnsettingAccessTokenFlag
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:@"completed request"];
-  [self expectationForNotification:FBSDKAccessTokenDidChangeNotification
-                            object:nil
-                           handler:^BOOL (NSNotification *notification) {
-                             XCTAssertNotNil(notification.userInfo[FBSDKAccessTokenChangeNewKey]);
-                             return YES;
-                           }];
+  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
+  XCTestExpectation *notificationExpectation = [self expectationForNotification:FBSDKAccessTokenDidChangeNotification
+                                                                         object:nil
+                                                                        handler:^BOOL (NSNotification *notification) {
+                                                                          XCTAssertNotNil(notification.userInfo[FBSDKAccessTokenChangeNewKey]);
+                                                                          return YES;
+                                                                        }];
   FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                     permissions:@[@"public_profile"]
                                                             declinedPermissions:@[]
@@ -507,117 +502,98 @@
                                                                  expirationDate:nil
                                                                     refreshDate:nil
                                                        dataAccessExpirationDate:nil];
-
   [FBSDKAccessToken setCurrentAccessToken:accessToken];
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
-                 return YES;
-               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-                 NSData *data = [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
 
-                 return [OHHTTPStubsResponse responseWithData:data
-                                                   statusCode:400
-                                                      headers:nil];
-               }];
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""} flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError]
-   startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-     XCTAssertNil(result);
-     XCTAssertEqualObjects(@"Token is broke", error.userInfo[FBSDKErrorDeveloperMessageKey]);
-     [expectation fulfill];
-   }];
+  [self stubFetchingCachedServerConfiguration];
+  FakeURLSessionProxy *fakeSession = [FakeURLSessionProxy new];
+  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory createWith:fakeSession];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError *error) {
-    XCTAssertNil(error);
+  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory];
+
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""} flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError];
+  [connection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
+    XCTAssertNil(result);
+    XCTAssertEqualObjects(@"Token is broke", error.userInfo[FBSDKErrorDeveloperMessageKey]);
+    [expectation fulfill];
   }];
+  [connection start];
+
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:400 HTTPVersion:nil headerFields:nil];
+
+  fakeSession.capturedCompletion(self.missingTokenData, response, nil);
+
+  [self waitForExpectations:@[expectation, notificationExpectation] timeout:1];
+
   XCTAssertNotNil([FBSDKAccessToken currentAccessToken]);
 }
 
-- (void)testUserAgentSuffix
+- (void)testRequestWithUserAgentSuffix
 {
-  // Disable compressing network request
-  id mockUtility = [OCMockObject niceMockForClass:[FBSDKBasicUtility class]];
-  [[[mockUtility stub] andReturn:nil] gzip:[OCMArg any]];
-  XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
-  XCTestExpectation *exp2 = [self expectationWithDescription:@"completed request 2"];
-
   [FBSDKAccessToken setCurrentAccessToken:nil];
   [FBSDKSettings setUserAgentSuffix:@"UnitTest.1.0.0"];
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
-                 NSString *actualUserAgent = [request valueForHTTPHeaderField:@"User-Agent"];
-                 NSString *body = [[NSString alloc] initWithData:request.OHHTTPStubs_HTTPBody encoding:NSUTF8StringEncoding];
-                 if ([body containsString:@"with_suffix"] || [body containsString:@"without_suffix"]) {
-                   BOOL expectUserAgentSuffix = [body containsString:@"fields=with_suffix"];
-                   if (expectUserAgentSuffix) {
-                     XCTAssertTrue([actualUserAgent hasSuffix:@"/UnitTest.1.0.0"], @"unexpected user agent %@", actualUserAgent);
-                   } else {
-                     XCTAssertFalse([actualUserAgent hasSuffix:@"/UnitTest.1.0.0"], @"unexpected user agent %@", actualUserAgent);
-                   }
-                 }
 
-                 return YES;
-               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-                 NSData *data = [@"{\"error\": {\"message\": \"Missing oktne\",\"code\": 190, \"type\":\"OAuthException\"}}" dataUsingEncoding:NSUTF8StringEncoding];
+  [self stubFetchingCachedServerConfiguration];
+  FakeURLSessionProxy *fakeSession = [FakeURLSessionProxy new];
+  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory createWith:fakeSession];
+  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory];
 
-                 return [OHHTTPStubsResponse responseWithData:data
-                                                   statusCode:400
-                                                      headers:nil];
-               }];
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @"with_suffix"}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-    [exp fulfill];
-  }];
+  [connection addRequest:self.requestForMeWithEmptyFields
+       completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {}];
+  [connection start];
 
-  [FBSDKSettings setUserAgentSuffix:nil];
-  // issue a second request o verify clearing out of user agent suffix, passing a field=name to uniquely identify the request.
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @"without_suffix"}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-    [exp2 fulfill];
-  }];
-
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError *error) {
-    XCTAssertNil(error);
-  }];
+  NSString *userAgent = [fakeSession.capturedRequest valueForHTTPHeaderField:@"User-Agent"];
+  XCTAssertTrue([userAgent hasSuffix:@"/UnitTest.1.0.0"], @"unexpected user agent %@", userAgent);
 }
 
+- (void)testRequestWithoutUserAgentSuffix
+{
+  [FBSDKAccessToken setCurrentAccessToken:nil];
+  [FBSDKSettings setUserAgentSuffix:nil];
+
+  [self stubFetchingCachedServerConfiguration];
+  FakeURLSessionProxy *fakeSession = [FakeURLSessionProxy new];
+  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory createWith:fakeSession];
+  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory];
+
+  [connection addRequest:self.requestForMeWithEmptyFields
+       completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {}];
+  [connection start];
+
+  NSString *userAgent = [fakeSession.capturedRequest valueForHTTPHeaderField:@"User-Agent"];
+  XCTAssertFalse([userAgent hasSuffix:@"/UnitTest.1.0.0"], @"unexpected user agent %@", userAgent);
+}
+
+// TODO: Use fuzzy testing
 - (void)testNonDictionaryInError
 {
-  XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
+  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
 
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
-                 return YES;
-               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-                 NSData *data = [@"{\"error\": \"a-non-dictionary\"}" dataUsingEncoding:NSUTF8StringEncoding];
-                 return [OHHTTPStubsResponse responseWithData:data
-                                                   statusCode:200
-                                                      headers:nil];
-               }];
+  [self stubFetchingCachedServerConfiguration];
+  FakeURLSessionProxy *fakeSession = [FakeURLSessionProxy new];
+  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory createWith:fakeSession];
+  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory];
 
-  // adding fresh token to avoid piggybacking a token refresh
-  FBSDKAccessToken *tokenNoRefresh = [[FBSDKAccessToken alloc]
-                                      initWithTokenString:@"token"
-                                      permissions:@[]
-                                      declinedPermissions:@[]
-                                      expiredPermissions:@[]
-                                      appID:@"appid"
-                                      userID:@"userid"
-                                      expirationDate:[NSDate distantPast]
-                                      refreshDate:[NSDate date]
-                                      dataAccessExpirationDate:[NSDate distantPast]];
-  [FBSDKAccessToken setCurrentAccessToken:tokenNoRefresh];
+  [connection addRequest:self.requestForMeWithEmptyFields
+       completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
+         // should not crash when receiving something other than a dictionary within the response.
+         [expectation fulfill];
+       }];
 
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-    // should not crash when receiving something other than a dictionary within the response.
-    [exp fulfill];
-  }];
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError *error) {
-    XCTAssertNil(error);
-  }];
+  [connection start];
+
+  NSData *data = [@"{\"error\": \"a-non-dictionary\"}" dataUsingEncoding:NSUTF8StringEncoding];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:200 HTTPVersion:nil headerFields:nil];
+
+  fakeSession.capturedCompletion(data, response, nil);
+
+  [self waitForExpectations:@[expectation] timeout:1];
 }
 
 - (void)testRequestWithBatchConstructionWithSingleGetRequest
 {
   FBSDKGraphRequest *singleRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @"with_suffix"}];
   FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
-  [connection addRequest:singleRequest completionHandler:^(FBSDKGraphRequestConnection *_Nullable _connection, id _Nullable result, NSError *_Nullable error) {}];
+  [connection addRequest:singleRequest completionHandler:^(FBSDKGraphRequestConnection *_Nullable potentialConnection, id _Nullable result, NSError *_Nullable error) {}];
   NSURLRequest *request = [connection requestWithBatch:connection.requests timeout:0];
 
   NSURLComponents *urlComponents = [NSURLComponents componentsWithString:request.URL.absoluteString];
@@ -635,7 +611,7 @@
   };
   FBSDKGraphRequest *singleRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"activities" parameters:parameters HTTPMethod:FBSDKHTTPMethodPOST];
   FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
-  [connection addRequest:singleRequest completionHandler:^(FBSDKGraphRequestConnection *_Nullable _connection, id _Nullable result, NSError *_Nullable error) {}];
+  [connection addRequest:singleRequest completionHandler:^(FBSDKGraphRequestConnection *_Nullable potentialConnection, id _Nullable result, NSError *_Nullable error) {}];
   NSURLRequest *request = [connection requestWithBatch:connection.requests timeout:0];
 
   NSURLComponents *urlComponents = [NSURLComponents componentsWithString:request.URL.absoluteString];
@@ -652,7 +628,11 @@
 - (void)testAccessTokenWithRequest
 {
   NSString *expectedToken = @"fake_token";
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""} tokenString:expectedToken HTTPMethod:FBSDKHTTPMethodGET flags:FBSDKGraphRequestFlagNone];
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me"
+                                                                 parameters:@{@"fields" : @""}
+                                                                tokenString:expectedToken
+                                                                 HTTPMethod:FBSDKHTTPMethodGET
+                                                                      flags:FBSDKGraphRequestFlagNone];
   FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
 
   NSString *token = [connection accessTokenWithRequest:request];
@@ -664,10 +644,9 @@
 {
   NSString *clientToken = @"client_token";
   [self stubClientTokenWith:clientToken];
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""} tokenString:nil HTTPMethod:FBSDKHTTPMethodGET flags:FBSDKGraphRequestFlagNone];
   FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
 
-  NSString *token = [connection accessTokenWithRequest:request];
+  NSString *token = [connection accessTokenWithRequest:self.requestForMeWithEmptyFieldsNoTokenString];
 
   NSString *expectedToken = [NSString stringWithFormat:@"%@|%@", self.appID, clientToken];
   XCTAssertEqualObjects(token, expectedToken);
@@ -679,12 +658,14 @@
 {
   NSString *clientToken = @"client_token";
   [self stubClientTokenWith:clientToken];
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""} tokenString:nil HTTPMethod:FBSDKHTTPMethodGET flags:FBSDKGraphRequestFlagNone];
   FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
-  FBSDKAuthenticationToken *authToken = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"token_string" nonce:@"nonce" claims:nil graphDomain:@"gaming"];
+  FBSDKAuthenticationToken *authToken = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"token_string"
+                                                                                        nonce:@"nonce"
+                                                                                       claims:nil
+                                                                                  graphDomain:@"gaming"];
   [FBSDKAuthenticationToken setCurrentAuthenticationToken:authToken];
 
-  NSString *token = [connection accessTokenWithRequest:request];
+  NSString *token = [connection accessTokenWithRequest:self.requestForMeWithEmptyFieldsNoTokenString];
 
   NSString *expectedToken = [NSString stringWithFormat:@"GG|%@|%@", self.appID, clientToken];
   XCTAssertEqualObjects(token, expectedToken);
@@ -695,69 +676,99 @@
 
 #pragma mark - Error recovery.
 
-// verify we do a single retry.
 - (void)testRetry
 {
-  __block int requestCount = 0;
-  XCTestExpectation *expectation = [self expectationWithDescription:@"completed request"];
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
-                 return YES;
-               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-                 XCTAssertLessThanOrEqual(++requestCount, 2);
-                 NSString *responseJSON = (requestCount == 1
-                   ? @"{\"error\": {\"message\": \"Server is busy\",\"code\": 1,\"error_subcode\": 463}}"
-                   : @"{\"error\": {\"message\": \"Server is busy\",\"code\": 2,\"error_subcode\": 463}}");
-                 NSData *data = [responseJSON dataUsingEncoding:NSUTF8StringEncoding];
+  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
 
-                 return [OHHTTPStubsResponse responseWithData:data
-                                                   statusCode:400
-                                                      headers:nil];
-               }];
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-    // verify we get the second error instance.
-    XCTAssertEqual(2, [error.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] integerValue]);
-    [expectation fulfill];
-  }];
+  [self stubFetchingCachedServerConfiguration];
+  FakeURLSessionProxy *fakeSession = [FakeURLSessionProxy new];
+  FakeURLSessionProxy *fakeSession2 = [FakeURLSessionProxy new];
+  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory createWithSessions:@[fakeSession, fakeSession2]];
+  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory];
 
-  [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
-    XCTAssertNil(error);
-  }];
-  XCTAssertEqual(2, requestCount);
+  __block int completionCallCount = 0;
+  [connection addRequest:self.requestForMeWithEmptyFields
+       completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
+         completionCallCount++;
+         XCTAssertEqual(completionCallCount, 1, "The completion should only be called once");
+         XCTAssertEqual(
+           2,
+           [error.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] integerValue],
+           "The completion should be called with the expected error code"
+         );
+         [expectation fulfill];
+       }];
+
+  [connection start];
+
+  NSData *data = [@"{\"error\": {\"message\": \"Server is busy\",\"code\": 1,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:400 HTTPVersion:nil headerFields:nil];
+
+  // The first captured completion will be invoked and cause the retry
+  fakeSession.capturedCompletion(data, response, nil);
+
+  // It's necessary to dispatch async to avoid the completion from being invoked before it is captured
+  dispatch_async(dispatch_get_main_queue(), ^{
+    NSData *secondData = [@"{\"error\": {\"message\": \"Server is busy\",\"code\": 2,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
+    fakeSession2.capturedCompletion(secondData, response, nil);
+  });
+
+  [self waitForExpectations:@[expectation] timeout:100];
 }
 
-- (void)_testRetryDisabled
+- (void)testRetryDisabled
 {
   FBSDKSettings.graphErrorRecoveryEnabled = NO;
 
-  __block int requestCount = 0;
-  XCTestExpectation *expectation = [self expectationWithDescription:@"completed request"];
-  [OHHTTPStubs stubRequestsPassingTest:^BOOL (NSURLRequest *request) {
-                 return YES;
-               } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-                 XCTAssertLessThanOrEqual(++requestCount, 1);
-                 NSString *responseJSON = (requestCount == 1
-                   ? @"{\"error\": {\"message\": \"Server is busy\",\"code\": 1,\"error_subcode\": 463}}"
-                   : @"{\"error\": {\"message\": \"Server is busy\",\"code\": 2,\"error_subcode\": 463}}");
-                 NSData *data = [responseJSON dataUsingEncoding:NSUTF8StringEncoding];
+  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
 
-                 return [OHHTTPStubsResponse responseWithData:data
-                                                   statusCode:400
-                                                      headers:nil];
-               }];
+  [self stubFetchingCachedServerConfiguration];
+  FakeURLSessionProxy *fakeSession = [FakeURLSessionProxy new];
+  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory createWith:fakeSession];
+  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory];
 
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}];
+  __block int completionCallCount = 0;
+  [connection addRequest:self.requestForMeWithEmptyFields
+       completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
+         completionCallCount++;
+         XCTAssertEqual(completionCallCount, 1, "The completion should only be called once");
+         XCTAssertEqual(
+           1,
+           [error.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] integerValue],
+           "The completion should be called with the expected error code"
+         );
 
-  [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-    // verify we don't get the second error instance.
-    XCTAssertEqual(1, [error.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] integerValue]);
-    [expectation fulfill];
-  }];
+         [expectation fulfill];
+       }];
 
-  [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
-    XCTAssertNil(error);
-  }];
-  XCTAssertEqual(1, requestCount);
+  [connection start];
+
+  NSData *data = [@"{\"error\": {\"message\": \"Server is busy\",\"code\": 1,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:400 HTTPVersion:nil headerFields:nil];
+
+  // The first captured completion will be invoked and cause the retry
+  fakeSession.capturedCompletion(data, response, nil);
+
+  [self waitForExpectations:@[expectation] timeout:1];
+
   FBSDKSettings.graphErrorRecoveryEnabled = NO;
+}
+
+// MARK: - Helpers
+
+- (FBSDKGraphRequest *)requestForMeWithEmptyFields
+{
+  return [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}];
+}
+
+- (FBSDKGraphRequest *)requestForMeWithEmptyFieldsNoTokenString
+{
+  return [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""} tokenString:nil HTTPMethod:FBSDKHTTPMethodGET flags:FBSDKGraphRequestFlagNone];
+}
+
+- (NSData *)missingTokenData
+{
+  return [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
 }
 
 @end

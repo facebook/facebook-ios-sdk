@@ -19,9 +19,6 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
-#import <OHHTTPStubs/NSURLRequest+HTTPBodyTesting.h>
-#import <OHHTTPStubs/OHHTTPStubs.h>
-
 #import "FBSDKAccessToken.h"
 #import "FBSDKAppEvents.h"
 #import "FBSDKAppEventsState.h"
@@ -128,13 +125,6 @@ static NSString *const _mockUserID = @"mockUserID";
 
   // This should be removed when these tests are updated to check the actual requests that are created
   [self stubAllocatingGraphRequestConnection];
-}
-
-- (void)tearDown
-{
-  [super tearDown];
-
-  [OHHTTPStubs removeAllStubs];
 }
 
 - (void)testAppEventsMockIsSingleton
