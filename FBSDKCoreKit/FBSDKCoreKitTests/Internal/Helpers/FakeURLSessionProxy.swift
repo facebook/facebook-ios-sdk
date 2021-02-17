@@ -20,13 +20,13 @@
 public class FakeURLSessionProxy: NSObject, URLSessionProxying {
   public var delegateQueue: OperationQueue?
   /// The most recent captured completion
-  public var capturedCompletion: URLSessionTaskBlock?
+  public var capturedCompletion: UrlSessionTaskBlock?
   /// The most recent captured request
   public var capturedRequest: URLRequest?
   /// All captured requests for this networker instance
   public var capturedRequests = [URLRequest]()
 
-  public func execute(_ request: URLRequest, completionHandler handler: @escaping URLSessionTaskBlock) {
+  public func execute(_ request: URLRequest, completionHandler handler: @escaping UrlSessionTaskBlock) {
     capturedRequest = request
     capturedRequests.append(request)
     capturedCompletion = handler
