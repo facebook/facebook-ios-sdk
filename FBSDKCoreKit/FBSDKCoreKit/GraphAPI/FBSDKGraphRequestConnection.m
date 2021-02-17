@@ -31,6 +31,9 @@
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings+Internal.h"
+#import "FBSDKURLSession+URLSessionProxying.h"
+#import "FBSDKURLSessionProxyFactory.h"
+#import "FBSDKURLSessionProxying.h"
 
 NSString *const FBSDKNonJSONResponseProperty = @"FACEBOOK_NON_JSON_RESULT";
 
@@ -122,7 +125,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   NSString *_overrideVersionPart;
   NSUInteger _expectingResults;
   NSOperationQueue *_delegateQueue;
-  FBSDKURLSession *_session;
+  id<FBSDKURLSessionProxying> _session;
+  id<FBSDKURLSessionProxyProviding> _sessionProxyFactory;
 #if !TARGET_OS_TV
   FBSDKGraphRequestMetadata *_recoveringRequestMetadata;
   FBSDKGraphErrorRecoveryProcessor *_errorRecoveryProcessor;
@@ -131,12 +135,18 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (instancetype)init
 {
+  return [self initWithUrlSessionProxyFactory:[FBSDKURLSessionProxyFactory new]];
+}
+
+- (instancetype)initWithUrlSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
+{
   if ((self = [super init])) {
     _requests = [[NSMutableArray alloc] init];
     _timeout = g_defaultTimeout;
     _state = kStateCreated;
     _logger = [[FBSDKLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorNetworkRequests];
-    _session = [[FBSDKURLSession alloc] initWithDelegate:self delegateQueue:_delegateQueue];
+    _sessionProxyFactory = proxyFactory;
+    _session = [proxyFactory createSessionProxyWithDelegate:self queue:_delegateQueue];
   }
   return self;
 }
@@ -238,7 +248,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [self logRequest:request bodyLength:0 bodyLogger:nil attachmentLogger:nil];
   _requestStartTime = [FBSDKInternalUtility currentTimeInMilliseconds];
 
-  FBSDKURLSessionTaskBlock completionHanlder = ^(NSData *responseDataV1, NSURLResponse *responseV1, NSError *errorV1) {
+  FBSDKURLSessionTaskBlock completionHandler = ^(NSData *responseDataV1, NSURLResponse *responseV1, NSError *errorV1) {
     FBSDKURLSessionTaskBlock handler = ^(NSData *responseDataV2,
                                          NSURLResponse *responseV2,
                                          NSError *errorV2) {
@@ -253,7 +263,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
       [self taskDidCompleteWithResponse:responseV1 data:responseDataV1 requestStartTime:self.requestStartTime handler:handler];
     }
   };
-  [self.session executeURLRequest:request completionHandler:completionHanlder];
+  [self.session executeURLRequest:request completionHandler:completionHandler];
 
   id<FBSDKGraphRequestConnectionDelegate> delegate = self.delegate;
   if ([delegate respondsToSelector:@selector(requestConnectionWillBeginLoading:)]) {
@@ -278,9 +288,14 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   _delegateQueue = queue;
 }
 
-- (FBSDKURLSession *)session
+- (id<FBSDKURLSessionProxying>)session
 {
   return _session;
+}
+
+- (id<FBSDKURLSessionProxyProviding>)sessionProxyFactory
+{
+  return _sessionProxyFactory;
 }
 
 #pragma mark - Private methods (request generation)

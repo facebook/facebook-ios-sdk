@@ -16,34 +16,35 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@class FBSDKGraphRequestBody;
-@protocol FBSDKURLSessionProxying;
-@protocol FBSDKURLSessionProxyProviding;
+import FBSDKCoreKit
 
-#if SWIFT_PACKAGE
- #import "FBSDKGraphRequestConnection.h"
-#else
- #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
-#endif
+class URLSessionProxyFactoryTests: XCTestCase, URLSessionDataDelegate {
 
-@interface FBSDKGraphRequestConnection (Internal)
+  let factory = URLSessionProxyFactory()
 
-@property (nonatomic, readonly) NSMutableArray *requests;
-@property (nonatomic, strong) id<FBSDKURLSessionProxying> session;
-@property (nonatomic, strong) id<FBSDKURLSessionProxyProviding> sessionProxyFactory;
+  func testCreatingSessionProxy() {
+    guard let proxy = factory.createSessionProxy(with: self, queue: OperationQueue.main) as? FBSDKURLSession else {
+      return XCTFail("Session proxies should be created with the correct concrete type")
+    }
 
-/**
- Get the graph request url for a single graph request
- @param request The Graph Request we need the url for
- @param forBatch whether the request is a batch request.
- */
-- (NSString *)urlStringForSingleRequest:(FBSDKGraphRequest *)request forBatch:(BOOL)forBatch;
+    XCTAssertEqual(
+      proxy.delegateQueue, OperationQueue.main,
+      "The provided proxy Should use the operation queue it was created with"
+    )
+    XCTAssertTrue(
+      proxy.delegate === self,
+      "The provided proxy should use the delegate it was created with"
+    )
+  }
 
-/**
- Add the specified body as the HTTPBody of the specified request.
- @param body The FBSDKGraphRequestBody to attach to the request.
- @param request The NSURLRequest to attach the body to.
- */
-- (void)addBody:(FBSDKGraphRequestBody *)body toPostRequest:(NSMutableURLRequest *)request;
+  func testCreatingSessionProxies() {
+    let proxy = factory.createSessionProxy(with: self, queue: OperationQueue.main)
+    let proxy2 = factory.createSessionProxy(with: self, queue: OperationQueue.main)
 
-@end
+    XCTAssertFalse(
+      proxy === proxy2,
+      "Session proxies should be unique"
+    )
+  }
+
+}

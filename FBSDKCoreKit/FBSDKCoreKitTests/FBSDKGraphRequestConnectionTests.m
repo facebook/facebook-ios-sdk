@@ -25,13 +25,17 @@
 
 #import "FBSDKCoreKit.h"
 #import "FBSDKCoreKitTestUtility.h"
+#import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKFeatureManager.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestPiggybackManager.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKTestCase.h"
+#import "FBSDKURLSessionProxyFactory.h"
 
 @interface FBSDKGraphRequestConnection (Testing)
+
+- (instancetype)initWithUrlSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)sessionProvider;
 
 - (NSMutableURLRequest *)requestWithBatch:(NSArray *)requests
                                   timeout:(NSTimeInterval)timeout;
@@ -104,6 +108,47 @@
 }
 
 #pragma mark - Tests
+
+- (void)testCreatingWithDefaultUrlSessionProxyFactory
+{
+  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
+
+  NSObject *sessionProvider = (NSObject *)connection.sessionProxyFactory;
+  XCTAssertEqualObjects(
+    sessionProvider.class,
+    FBSDKURLSessionProxyFactory.class,
+    "A graph request connection should have the correct concrete session provider by default"
+  );
+}
+
+- (void)testCreatingWithCustomUrlSessionProxyFactory
+{
+  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory new];
+  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithUrlSessionProxyFactory:fakeProxyFactory];
+  NSObject *sessionProvider = (NSObject *)connection.sessionProxyFactory;
+  XCTAssertEqualObjects(
+    sessionProvider.class,
+    FakeURLSessionProxyFactory.class,
+    "A graph request connection should persist the session provider it was created with"
+  );
+}
+
+- (void)testDerivingSessionFromSessionProvider
+{
+  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory new];
+  FakeURLSessionProxy *fakeSession = [FakeURLSessionProxy new];
+  fakeProxyFactory.stubbedSession = fakeSession;
+
+  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithUrlSessionProxyFactory:fakeProxyFactory];
+
+  NSObject *session = (NSObject *)connection.session;
+
+  XCTAssertEqualObjects(
+    session,
+    fakeSession,
+    "A graph request connection should derive sessions from the session provider"
+  );
+}
 
 - (void)_testClientToken
 {

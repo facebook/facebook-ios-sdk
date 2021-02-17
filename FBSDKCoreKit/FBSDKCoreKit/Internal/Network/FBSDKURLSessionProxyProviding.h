@@ -16,34 +16,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@class FBSDKGraphRequestBody;
-@protocol FBSDKURLSessionProxying;
-@protocol FBSDKURLSessionProxyProviding;
+#import <Foundation/Foundation.h>
 
-#if SWIFT_PACKAGE
- #import "FBSDKGraphRequestConnection.h"
-#else
- #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
-#endif
+#import "FBSDKURLSessionProxying.h"
 
-@interface FBSDKGraphRequestConnection (Internal)
+NS_ASSUME_NONNULL_BEGIN
 
-@property (nonatomic, readonly) NSMutableArray *requests;
-@property (nonatomic, strong) id<FBSDKURLSessionProxying> session;
-@property (nonatomic, strong) id<FBSDKURLSessionProxyProviding> sessionProxyFactory;
+NS_SWIFT_NAME(URLSessionProxyProviding)
+@protocol FBSDKURLSessionProxyProviding
 
-/**
- Get the graph request url for a single graph request
- @param request The Graph Request we need the url for
- @param forBatch whether the request is a batch request.
- */
-- (NSString *)urlStringForSingleRequest:(FBSDKGraphRequest *)request forBatch:(BOOL)forBatch;
-
-/**
- Add the specified body as the HTTPBody of the specified request.
- @param body The FBSDKGraphRequestBody to attach to the request.
- @param request The NSURLRequest to attach the body to.
- */
-- (void)addBody:(FBSDKGraphRequestBody *)body toPostRequest:(NSMutableURLRequest *)request;
+- (id<FBSDKURLSessionProxying>)createSessionProxyWithDelegate:(nullable id<NSURLSessionDataDelegate>)delegate
+                                                        queue:(nullable NSOperationQueue *)queue;
 
 @end
+
+NS_ASSUME_NONNULL_END
