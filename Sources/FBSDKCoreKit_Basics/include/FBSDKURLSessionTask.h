@@ -21,9 +21,9 @@
 typedef void (^FBSDKURLSessionTaskBlock)(NSData *responseData,
                                          NSURLResponse *response,
                                          NSError *error)
-NS_SWIFT_NAME(URLSessionTaskBlock);
+NS_SWIFT_NAME(UrlSessionTaskBlock);
 
-NS_SWIFT_NAME(URLSessionTask)
+NS_SWIFT_NAME(UrlSessionTask)
 @interface FBSDKURLSessionTask : NSObject
 
 @property (nonatomic, strong) NSURLSessionTask *task;
