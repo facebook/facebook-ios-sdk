@@ -50,9 +50,7 @@ Pod::Spec.new do |s|
                        'FBSDKCoreKit/FBSDKCoreKit/include/**/*',
                        'FBSDKCoreKit/FBSDKCoreKit/Swift/Exports.swift'
     ss.source_files = 'FBSDKCoreKit/FBSDKCoreKit/**/*.{h,hpp,m,mm,swift}'
-    ss.public_header_files = 'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.h',
-                             'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/**/*.h',
-                             'FBSDKCoreKit/FBSDKCoreKit/*.h',
+    ss.public_header_files = 'FBSDKCoreKit/FBSDKCoreKit/*.h',
                              'FBSDKCoreKit/FBSDKCoreKit/AppEvents/*.h',
                              'FBSDKCoreKit/FBSDKCoreKit/AppLink/*.h',
                              'FBSDKCoreKit/FBSDKCoreKit/AppLink/Resolver/*.h',
