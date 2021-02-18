@@ -20,10 +20,10 @@
 
 @implementation _FBSDKTemporaryErrorRecoveryAttempter
 
-- (void)attemptRecoveryFromError:(NSError *)error optionIndex:(NSUInteger)recoveryOptionIndex delegate:(id)delegate didRecoverSelector:(SEL)didRecoverSelector contextInfo:(void *)contextInfo
+- (void)attemptRecoveryFromError:(NSError *)error optionIndex:(NSUInteger)recoveryOptionIndex completionHandler:(void (^)(BOOL didRecover))completionHandler
 {
   @try {
-    [super completeRecovery:YES delegate:delegate didRecoverSelector:didRecoverSelector contextInfo:contextInfo];
+    [super completeRecovery:YES completionHandler:completionHandler];
   } @catch (NSException *exception) {
     NSLog(@"Fail to complete error recovery. Exception reason: %@", exception.reason);
   }

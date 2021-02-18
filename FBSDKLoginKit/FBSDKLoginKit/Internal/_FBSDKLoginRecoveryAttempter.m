@@ -29,12 +29,10 @@
 
 - (void)attemptRecoveryFromError:(NSError *)error
                      optionIndex:(NSUInteger)recoveryOptionIndex
-                        delegate:(id)delegate
-              didRecoverSelector:(SEL)didRecoverSelector
-                     contextInfo:(void *)contextInfo
+               completionHandler:(void (^)(BOOL didRecover))completionHandler
 {
   void (^handler)(BOOL) = ^(BOOL didRecover) {
-    [super completeRecovery:didRecover delegate:delegate didRecoverSelector:didRecoverSelector contextInfo:contextInfo];
+    [super completeRecovery:didRecover completionHandler:completionHandler];
   };
   NSSet *currentPermissions = [FBSDKAccessToken currentAccessToken].permissions;
   if (recoveryOptionIndex == 0 && currentPermissions.count > 0) {

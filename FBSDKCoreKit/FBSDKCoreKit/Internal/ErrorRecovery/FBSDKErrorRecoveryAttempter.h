@@ -35,5 +35,5 @@ NS_SWIFT_NAME(ErrorRecoveryAttempter)
 @end
 
 @interface FBSDKErrorRecoveryAttempter (Protected)
-- (void)completeRecovery:(BOOL)didRecover delegate:(id)delegate didRecoverSelector:(SEL)didRecoverSelector contextInfo:(void *)contextInfo;
+- (void)completeRecovery:(BOOL)didRecover completionHandler:(void (^)(BOOL didRecover))completionHandler;
 @end

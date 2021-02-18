@@ -107,9 +107,9 @@
                                                    handler:^(UIAlertAction *_Nonnull action) {
                                                      [self->_recoveryAttempter attemptRecoveryFromError:self->_error
                                                                                             optionIndex:i
-                                                                                               delegate:self
-                                                                                     didRecoverSelector:@selector(didPresentErrorWithRecovery:contextInfo:)
-                                                                                            contextInfo:nil];
+                                                                                      completionHandler:^(BOOL didRecover) {
+                                                                  [self didPresentErrorWithRecovery:didRecover contextInfo:nil];
+                                                                }];
                                                    }];
     [alertController addAction:option];
   }
@@ -129,9 +129,9 @@
                                                    handler:^(UIAlertAction *_Nonnull action) {
                                                      [self->_recoveryAttempter attemptRecoveryFromError:self->_error
                                                                                             optionIndex:0
-                                                                                               delegate:self
-                                                                                     didRecoverSelector:@selector(didPresentErrorWithRecovery:contextInfo:)
-                                                                                            contextInfo:nil];
+                                                                                      completionHandler:^(BOOL didRecover) {
+                                                                  [self didPresentErrorWithRecovery:didRecover contextInfo:nil];
+                                                                }];
                                                    }];
   [alertController addAction:OKAction];
   UIViewController *topMostViewController = [FBSDKInternalUtility topMostViewController];
