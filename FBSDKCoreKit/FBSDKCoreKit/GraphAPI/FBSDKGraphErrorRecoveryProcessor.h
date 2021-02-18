@@ -96,9 +96,10 @@ NS_SWIFT_UNAVAILABLE("")
 @interface FBSDKGraphErrorRecoveryProcessor : NSObject
 
 /**
-  Gets the delegate. Note this is a strong reference, and is nil'ed out after recovery is complete.
+  Gets the delegate for the current error being processed.
  */
-@property (nonatomic, strong, readonly, nullable) id<FBSDKGraphErrorRecoveryProcessorDelegate>delegate;
+@property (nonatomic, weak, readonly, nullable) id<FBSDKGraphErrorRecoveryProcessorDelegate>delegate
+DEPRECATED_MSG_ATTRIBUTE("FBSDKGraphErrorRecoveryProcessor's delegate will be removed in the next major version release.");
 
 /**
   Attempts to process the error, return YES if the error can be processed.
@@ -115,7 +116,8 @@ NS_SWIFT_UNAVAILABLE("")
  @param didRecover if the recovery succeeded
  @param contextInfo unused
  */
-- (void)didPresentErrorWithRecovery:(BOOL)didRecover contextInfo:(nullable void *)contextInfo;
+- (void)didPresentErrorWithRecovery:(BOOL)didRecover contextInfo:(nullable void *)contextInfo
+DEPRECATED_MSG_ATTRIBUTE("didPresentErrorWithRecovery:contextInfo: will be removed in the next major version release.");
 
 @end
 
