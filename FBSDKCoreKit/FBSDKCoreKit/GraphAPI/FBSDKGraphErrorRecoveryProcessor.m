@@ -67,7 +67,7 @@
           return YES;
         }
       }
-      return NO;
+      break;
     case FBSDKGraphRequestErrorOther:
       if (request.tokenString && [request.tokenString isEqualToString:[FBSDKAccessToken currentAccessToken].tokenString]) {
         NSString *message = error.userInfo[FBSDKErrorLocalizedDescriptionKey];
@@ -84,10 +84,12 @@
             );
             [self displayAlertWithTitle:title message:message cancelButtonTitle:localizedOK];
           });
+          return YES;
         }
       }
-      return NO;
+      break;
   }
+  self.delegate = nil;
   return NO;
 }
 
