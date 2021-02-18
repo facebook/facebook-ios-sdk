@@ -10,12 +10,8 @@
 	<string>FacebookSDK</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>38C2A0D4F62B675E8C16C8BC1437C7753846C8AC</key>
-		<string>git://github.com/AliSoftware/OHHTTPStubs.git</string>
 		<key>A20D666FF4B08EFE53F147818C2D4D17E2242912</key>
 		<string>ssh://projects.git.vip.facebook.com/data/gitrepos/ios-sdk</string>
-		<key>DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8</key>
-		<string>https://github.com/AFNetworking/AFNetworking.git</string>
 		<key>E4BCE3AE6B24E41B9BCE312FF3B0B6CD0B8B8025</key>
 		<string>git://github.com/erikdoe/ocmock</string>
 	</dict>
@@ -23,12 +19,8 @@
 	<string>FacebookSDK.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>38C2A0D4F62B675E8C16C8BC1437C7753846C8AC</key>
-		<string>../Carthage/Checkouts/OHHTTPStubs</string>
 		<key>A20D666FF4B08EFE53F147818C2D4D17E2242912</key>
 		<string>..</string>
-		<key>DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8</key>
-		<string>../Carthage/Checkouts/OHHTTPStubs/OHHTTPStubs/UnitTests/AFNetworking</string>
 		<key>E4BCE3AE6B24E41B9BCE312FF3B0B6CD0B8B8025</key>
 		<string>../Carthage/Checkouts/ocmock</string>
 	</dict>
@@ -44,14 +36,6 @@
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8</string>
-			<key>IDESourceControlWCCName</key>
-			<string>AFNetworking</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>A20D666FF4B08EFE53F147818C2D4D17E2242912</string>
 			<key>IDESourceControlWCCName</key>
 			<string>ios-sdk</string>
@@ -63,14 +47,6 @@
 			<string>E4BCE3AE6B24E41B9BCE312FF3B0B6CD0B8B8025</string>
 			<key>IDESourceControlWCCName</key>
 			<string>OCMock</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>38C2A0D4F62B675E8C16C8BC1437C7753846C8AC</string>
-			<key>IDESourceControlWCCName</key>
-			<string>OHHTTPStubs</string>
 		</dict>
 	</array>
 </dict>
