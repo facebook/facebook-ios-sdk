@@ -30,21 +30,33 @@
 #import "FBSDKTestCase.h"
 #import "FBSDKURLSessionProxyFactory.h"
 
+typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
+  kStateCreated,
+  kStateSerialized,
+  kStateStarted,
+  kStateCompleted,
+  kStateCancelled,
+};
+
 @interface FBSDKGraphRequestConnection (Testing)
 
 @property (nonatomic, strong) id<FBSDKURLSessionProxying> session;
 @property (nonatomic, strong) id<FBSDKURLSessionProxyProviding> sessionProxyFactory;
+@property (nonatomic, assign) FBSDKGraphRequestConnectionState state;
 
++ (void)resetDefaultConnectionTimeout;
 - (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)sessionProxyFactory;
-
 - (NSMutableURLRequest *)requestWithBatch:(NSArray *)requests
                                   timeout:(NSTimeInterval)timeout;
-
 - (NSString *)accessTokenWithRequest:(FBSDKGraphRequest *)request;
 
 @end
 
 @interface FBSDKGraphRequestConnectionTests : FBSDKTestCase <FBSDKGraphRequestConnectionDelegate>
+
+@property (nonatomic, strong) FakeURLSessionProxy *session;
+@property (nonatomic, strong) FakeURLSessionProxyFactory *sessionFactory;
+@property (nonatomic, strong) FBSDKGraphRequestConnection *connection;
 
 @property (nonatomic, copy) void (^requestConnectionStartingCallback)(FBSDKGraphRequestConnection *connection);
 @property (nonatomic, copy) void (^requestConnectionCallback)(FBSDKGraphRequestConnection *connection, NSError *error);
@@ -61,8 +73,6 @@
 
 @implementation FBSDKGraphRequestConnectionTests
 
-#pragma mark - XCTestCase
-
 - (void)setUp
 {
   [super setUp];
@@ -72,9 +82,24 @@
   [self stubIsSDKInitialized:YES];
   [self stubLoadingGateKeepers];
   [self stubAddingServerConfigurationPiggyback];
+
+  _session = [FakeURLSessionProxy new];
+  _sessionFactory = [FakeURLSessionProxyFactory createWith:_session];
+  _connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:_sessionFactory];
 }
 
-#pragma mark - FBSDKGraphRequestConnectionDelegate
+- (void)tearDown
+{
+  [FBSDKGraphRequestConnection resetDefaultConnectionTimeout];
+
+  _session = nil;
+  _sessionFactory = nil;
+  _connection = nil;
+
+  [super tearDown];
+}
+
+// MARK: - FBSDKGraphRequestConnectionDelegate
 
 - (void)requestConnection:(FBSDKGraphRequestConnection *)connection didFailWithError:(NSError *)error
 {
@@ -100,7 +125,7 @@
   }
 }
 
-#pragma mark - Tests
+// MARK: - Creating Connection
 
 - (void)testCreatingWithDefaultUrlSessionProxyFactory
 {
@@ -115,10 +140,7 @@
 
 - (void)testCreatingWithCustomUrlSessionProxyFactory
 {
-  FakeURLSessionProxy *fakeSession = [FakeURLSessionProxy new];
-  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory createWith:fakeSession];
-  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory];
-  NSObject *sessionProvider = (NSObject *)connection.sessionProxyFactory;
+  NSObject *sessionProvider = (NSObject *)self.connection.sessionProxyFactory;
 
   XCTAssertEqualObjects(
     sessionProvider.class,
@@ -129,17 +151,144 @@
 
 - (void)testDerivingSessionFromSessionProvider
 {
-  FakeURLSessionProxy *fakeSession = [FakeURLSessionProxy new];
-  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory createWith:fakeSession];
-  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory];
-  NSObject *session = (NSObject *)connection.session;
+  NSObject *session = (NSObject *)self.connection.session;
 
   XCTAssertEqualObjects(
     session,
-    fakeSession,
+    self.session,
     "A graph request connection should derive sessions from the session provider"
   );
 }
+
+// MARK: - Properties
+
+- (void)testDefaultConnectionTimeout
+{
+  XCTAssertEqual(
+    FBSDKGraphRequestConnection.defaultConnectionTimeout,
+    60,
+    "Should have a default connection timeout of 60 seconds"
+  );
+}
+
+- (void)testOverridingDefaultConnectionTimeoutWithInvalidTimeout
+{
+  [FBSDKGraphRequestConnection setDefaultConnectionTimeout:-1];
+  XCTAssertEqual(
+    FBSDKGraphRequestConnection.defaultConnectionTimeout,
+    60,
+    "Should not be able to override the default connection timeout with an invalid timeout"
+  );
+}
+
+- (void)testOverridingDefaultConnectionTimeoutWithValidTimeout
+{
+  [FBSDKGraphRequestConnection setDefaultConnectionTimeout:100];
+  XCTAssertEqual(
+    FBSDKGraphRequestConnection.defaultConnectionTimeout,
+    100,
+    "Should be able to override the default connection timeout"
+  );
+}
+
+// MARK: - Adding Requests
+
+- (void)testAddingRequestWithoutBatchEntryName
+{
+  [self.connection addRequest:self.requestForMeWithEmptyFields
+            completionHandler:^(FBSDKGraphRequestConnection *_connection, id result, NSError *error) {
+              // Do nothing here
+            }];
+  FBSDKGraphRequestMetadata *metadata = self.connection.requests.firstObject;
+  XCTAssertNil(
+    metadata.batchParameters,
+    "Adding a request without a batch entry name should not store batch parameters"
+  );
+}
+
+- (void)testAddingRequestWithEmptyBatchEntryName
+{
+  [self.connection addRequest:self.requestForMeWithEmptyFields
+               batchEntryName:@""
+            completionHandler:^(FBSDKGraphRequestConnection *_connection, id result, NSError *error) {
+              // Do nothing here
+            }];
+  FBSDKGraphRequestMetadata *metadata = self.connection.requests.firstObject;
+  XCTAssertNil(
+    metadata.batchParameters,
+    "Should not store batch parameters for a request with an empty batch entry name"
+  );
+}
+
+- (void)testAddingRequestWithValidBatchEntryName
+{
+  [self.connection addRequest:self.requestForMeWithEmptyFields
+               batchEntryName:@"foo"
+            completionHandler:^(FBSDKGraphRequestConnection *_connection, id result, NSError *error) {
+              // Do nothing here
+            }];
+  NSDictionary *expectedParameters = @{ @"name" : @"foo" };
+  FBSDKGraphRequestMetadata *metadata = self.connection.requests.firstObject;
+  XCTAssertEqualObjects(
+    metadata.batchParameters,
+    expectedParameters,
+    "Should create and store batch parameters for a request with a non-empty batch entry name"
+  );
+}
+
+- (void)testAddingRequestWithBatchParameters
+{
+  NSArray *states = @[@(kStateStarted), @(kStateCancelled), @(kStateCompleted), @(kStateSerialized)];
+
+  for (NSNumber *state in states) {
+    self.connection.state = state.intValue;
+    XCTAssertThrowsSpecificNamed(
+      [self.connection addRequest:self.requestForMeWithEmptyFields
+                  batchParameters:@{}
+                completionHandler:^(FBSDKGraphRequestConnection *_connection, id result, NSError *error) {}],
+      NSException,
+      NSInternalInconsistencyException,
+      "Should throw error on request addition when state has raw value: %@",
+      state
+    );
+  }
+  self.connection.state = kStateCreated;
+
+  XCTAssertNoThrow(
+    [self.connection addRequest:self.requestForMeWithEmptyFields
+                batchParameters:@{}
+              completionHandler:^(FBSDKGraphRequestConnection *_connection, id result, NSError *error) {}],
+    "Should not throw an error on request addition when state is 'created'"
+  );
+}
+
+// MARK: - Cancelling
+
+- (void)testCancellingConnection
+{
+  NSArray *states = @[@(kStateCreated), @(kStateStarted), @(kStateCancelled), @(kStateCompleted), @(kStateSerialized)];
+
+  int expectedInvalidationCallCount = 0;
+  for (NSNumber *state in states) {
+    self.connection.state = state.intValue;
+    expectedInvalidationCallCount++;
+
+    [self.connection cancel];
+
+    XCTAssertEqual(
+      self.connection.state,
+      kStateCancelled,
+      "Cancelling a connection should set the state to the expected value"
+    );
+    XCTAssertEqual(
+      self.session.invalidateAndCancelCallCount,
+      expectedInvalidationCallCount,
+      "Cancelling a connetion should invalidate and cancel the session"
+    );
+  }
+}
+
+// MARK: - Client Token
 
 - (void)testClientToken
 {

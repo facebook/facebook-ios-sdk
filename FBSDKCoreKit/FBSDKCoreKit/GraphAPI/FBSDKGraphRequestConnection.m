@@ -1223,4 +1223,16 @@ static NSError *_Nullable errorFromResult(id untypedParam, FBSDKGraphRequest *re
   return result;
 }
 
+// MARK: - Testability
+
+#if DEBUG
+
+/// Resets the default connection timeout to 60 seconds
++ (void)resetDefaultConnectionTimeout
+{
+  g_defaultTimeout = 60;
+}
+
+#endif
+
 @end

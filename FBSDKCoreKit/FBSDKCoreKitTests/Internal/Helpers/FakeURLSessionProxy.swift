@@ -25,6 +25,7 @@ public class FakeURLSessionProxy: NSObject, URLSessionProxying {
   public var capturedRequest: URLRequest?
   /// All captured requests for this networker instance
   public var capturedRequests = [URLRequest]()
+  public var invalidateAndCancelCallCount = 0
 
   public func execute(_ request: URLRequest, completionHandler handler: @escaping UrlSessionTaskBlock) {
     capturedRequest = request
@@ -33,6 +34,6 @@ public class FakeURLSessionProxy: NSObject, URLSessionProxying {
   }
 
   public func invalidateAndCancel() {
-    // TODO: capture call count
+    invalidateAndCancelCallCount += 1
   }
 }
