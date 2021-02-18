@@ -23,7 +23,7 @@
 - (void)attemptRecoveryFromError:(NSError *)error optionIndex:(NSUInteger)recoveryOptionIndex completionHandler:(void (^)(BOOL didRecover))completionHandler
 {
   @try {
-    [super completeRecovery:YES completionHandler:completionHandler];
+    completionHandler(YES);
   } @catch (NSException *exception) {
     NSLog(@"Fail to complete error recovery. Exception reason: %@", exception.reason);
   }

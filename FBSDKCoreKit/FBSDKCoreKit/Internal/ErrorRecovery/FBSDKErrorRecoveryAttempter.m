@@ -61,12 +61,3 @@
 }
 
 @end
-
-@implementation FBSDKErrorRecoveryAttempter (Protected)
-
-- (void)completeRecovery:(BOOL)didRecover completionHandler:(void (^)(BOOL didRecover))completionHandler
-{
-  completionHandler(didRecover);
-}
-
-@end
