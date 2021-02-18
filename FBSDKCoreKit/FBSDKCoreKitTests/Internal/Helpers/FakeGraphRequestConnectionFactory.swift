@@ -16,22 +16,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+@objcMembers
+public class FakeGraphRequestConnectionFactory: NSObject, GraphRequestConnectionProviding {
+  let stubbedConnection: GraphRequestConnecting
 
-#import "FBSDKCoreKit+Internal.h"
+  private init(stubbedConnection: GraphRequestConnecting) {
+    self.stubbedConnection = stubbedConnection
+  }
 
-NS_ASSUME_NONNULL_BEGIN
+  static func create(withStubbedConnection connection: GraphRequestConnecting) -> FakeGraphRequestConnectionFactory {
+    return FakeGraphRequestConnectionFactory(stubbedConnection: connection)
+  }
 
-NS_PROTOCOL_REQUIRES_EXPLICIT_IMPLEMENTATION
-NS_SWIFT_NAME(URLSessionProxying)
-@protocol FBSDKURLSessionProxying
+  // MARK: - GraphRequestConnectionProviding
 
-@property (nullable, nonatomic, retain) NSOperationQueue *delegateQueue;
-
-- (void)executeURLRequest:(NSURLRequest *)request
-        completionHandler:(FBSDKURLSessionTaskBlock)handler;
-- (void)invalidateAndCancel;
-
-@end
-
-NS_ASSUME_NONNULL_END
+  public func createGraphRequestConnection() -> GraphRequestConnecting {
+    return stubbedConnection
+  }
+}

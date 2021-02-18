@@ -27,11 +27,12 @@
 #import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKSessionProviding.h"
 #import "FBSDKTestCase.h"
-#import "FBSDKURLSession+UrlSessionProxying.h"
 #import "FakeBundle.h"
-
 #import "FBSDKURLSessionProxyProviding.h"
 #import "FBSDKURLSessionProxyFactory.h"
+#import "FBSDKGraphRequestConnecting.h"
+#import "FBSDKGraphRequestConnectionFactory.h"
+#import "FBSDKGraphRequestConnectionProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

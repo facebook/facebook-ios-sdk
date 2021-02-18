@@ -114,6 +114,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (nonatomic, assign) FBSDKGraphRequestConnectionState state;
 @property (nonatomic, strong) FBSDKLogger *logger;
 @property (nonatomic, assign) uint64_t requestStartTime;
+@property (nonatomic, strong) id<FBSDKURLSessionProxying> session;
+@property (nonatomic, strong) id<FBSDKURLSessionProxyProviding> sessionProxyFactory;
 
 @end
 

@@ -201,8 +201,9 @@ static NSString *const _fakeChallence = @"some_challenge";
 {
   FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:_parameters appID:_fakeAppID];
   FakeGraphRequestConnection *connection = [FakeGraphRequestConnection new];
+  FakeGraphRequestConnectionFactory *factory = [FakeGraphRequestConnectionFactory createWithStubbedConnection:connection];
 
-  [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:connection
+  [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:factory
                                                              handler:nil];
   XCTAssertNil(connection.capturedGraphRequest, "Should not create a graph request if there's no handler to use the result");
 }
@@ -213,6 +214,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 
   FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters appID:_fakeAppID];
   FakeGraphRequestConnection *connection = [FakeGraphRequestConnection new];
+  FakeGraphRequestConnectionFactory *factory = [FakeGraphRequestConnectionFactory createWithStubbedConnection:connection];
 
   __block BOOL completionWasInvoked = NO;
   FBSDKLoginCompletionParametersBlock handler = ^(FBSDKLoginCompletionParameters *_Nonnull completionParams) {
@@ -225,7 +227,7 @@ static NSString *const _fakeChallence = @"some_challenge";
     completionWasInvoked = YES;
   };
 
-  [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:connection
+  [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:factory
                                                              handler:handler];
   XCTAssertTrue(completionWasInvoked);
 }
@@ -236,6 +238,7 @@ static NSString *const _fakeChallence = @"some_challenge";
   appID = nil;
   FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:_parameters appID:appID];
   FakeGraphRequestConnection *connection = [FakeGraphRequestConnection new];
+  FakeGraphRequestConnectionFactory *factory = [FakeGraphRequestConnectionFactory createWithStubbedConnection:connection];
 
   __block BOOL completionWasInvoked = NO;
   FBSDKLoginCompletionParametersBlock handler = ^(FBSDKLoginCompletionParameters *_Nonnull completionParams) {
@@ -248,7 +251,7 @@ static NSString *const _fakeChallence = @"some_challenge";
     completionWasInvoked = YES;
   };
 
-  [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:connection
+  [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:factory
                                                              handler:handler];
   XCTAssertTrue(completionWasInvoked);
   XCTAssertNil(connection.capturedGraphRequest, "Should not create a graph request if there's no handler to use the result");
@@ -258,8 +261,9 @@ static NSString *const _fakeChallence = @"some_challenge";
 {
   FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:_parameters appID:_fakeAppID];
   FakeGraphRequestConnection *connection = [FakeGraphRequestConnection new];
+  FakeGraphRequestConnectionFactory *factory = [FakeGraphRequestConnectionFactory createWithStubbedConnection:connection];
 
-  [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:connection
+  [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:factory
                                                              handler:^(FBSDKLoginCompletionParameters *_Nonnull parameters) {
                                                                // not important here
                                                              }];
@@ -300,6 +304,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 {
   FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:_parameters appID:_fakeAppID];
   FakeGraphRequestConnection *connection = [FakeGraphRequestConnection new];
+  FakeGraphRequestConnectionFactory *factory = [FakeGraphRequestConnectionFactory createWithStubbedConnection:connection];
 
   __block BOOL completionWasInvoked = NO;
   FBSDKLoginCompletionParametersBlock handler = ^(FBSDKLoginCompletionParameters *_Nonnull completionParams) {
@@ -312,7 +317,7 @@ static NSString *const _fakeChallence = @"some_challenge";
     completionWasInvoked = YES;
   };
 
-  [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:connection
+  [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:factory
                                                              handler:handler];
   connection.capturedCompletionHandler(nil, nil, self.sampleError);
   XCTAssertTrue(completionWasInvoked);
@@ -322,6 +327,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 {
   FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:_parameters appID:_fakeAppID];
   FakeGraphRequestConnection *connection = [FakeGraphRequestConnection new];
+  FakeGraphRequestConnectionFactory *factory = [FakeGraphRequestConnectionFactory createWithStubbedConnection:connection];
   NSDictionary *stubbedResult = @{ @"access_token" : self.name };
 
   __block BOOL completionWasInvoked = NO;
@@ -339,7 +345,7 @@ static NSString *const _fakeChallence = @"some_challenge";
     completionWasInvoked = YES;
   };
 
-  [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:connection
+  [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:factory
                                                              handler:handler];
   connection.capturedCompletionHandler(nil, stubbedResult, nil);
   XCTAssertTrue(completionWasInvoked);
@@ -349,6 +355,8 @@ static NSString *const _fakeChallence = @"some_challenge";
 {
   FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:_parameters appID:_fakeAppID];
   FakeGraphRequestConnection *connection = [FakeGraphRequestConnection new];
+  FakeGraphRequestConnectionFactory *factory = [FakeGraphRequestConnectionFactory createWithStubbedConnection:connection];
+
   NSDictionary *stubbedResult = @{
     @"access_token" : self.name,
     @"expires_in" : @"10000",
@@ -361,7 +369,7 @@ static NSString *const _fakeChallence = @"some_challenge";
     completionWasInvoked = YES;
   };
 
-  [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:connection
+  [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:factory
                                                              handler:handler];
 
   for (int i = 0; i < 100; i++) {

@@ -18,19 +18,22 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKCoreKit+Internal.h"
+#if SWIFT_PACKAGE
+#import "FBSDKCoreKit.h"
+#else
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_PROTOCOL_REQUIRES_EXPLICIT_IMPLEMENTATION
-NS_SWIFT_NAME(URLSessionProxying)
-@protocol FBSDKURLSessionProxying
+/// A protocol to describe an object that can manage graph requests
+NS_SWIFT_NAME(GraphRequestConnecting)
+@protocol FBSDKGraphRequestConnecting
 
-@property (nullable, nonatomic, retain) NSOperationQueue *delegateQueue;
+- (void)addRequest:(FBSDKGraphRequest *)request
+ completionHandler:(FBSDKGraphRequestBlock)handler;
 
-- (void)executeURLRequest:(NSURLRequest *)request
-        completionHandler:(FBSDKURLSessionTaskBlock)handler;
-- (void)invalidateAndCancel;
+- (void)start;
 
 @end
 

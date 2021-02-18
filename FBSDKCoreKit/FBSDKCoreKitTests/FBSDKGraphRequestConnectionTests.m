@@ -32,6 +32,9 @@
 
 @interface FBSDKGraphRequestConnection (Testing)
 
+@property (nonatomic, strong) id<FBSDKURLSessionProxying> session;
+@property (nonatomic, strong) id<FBSDKURLSessionProxyProviding> sessionProxyFactory;
+
 - (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)sessionProxyFactory;
 
 - (NSMutableURLRequest *)requestWithBatch:(NSArray *)requests

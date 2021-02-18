@@ -24,6 +24,10 @@
  #import <FBSDKCoreKit/FBSDKGraphRequest.h>
 #endif
 
+#import "FBSDKGraphRequestConnectionProviding.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_OPTIONS(NSUInteger, FBSDKGraphRequestFlags) {
   FBSDKGraphRequestFlagNone = 0,
   // indicates this request should not use a client token as its token parameter
@@ -35,14 +39,6 @@ typedef NS_OPTIONS(NSUInteger, FBSDKGraphRequestFlags) {
 };
 @interface FBSDKGraphRequest (Internal)
 
-- (instancetype)initWithGraphPath:(NSString *)graphPath
-                       parameters:(NSDictionary *)parameters
-                            flags:(FBSDKGraphRequestFlags)flags;
-- (instancetype)initWithGraphPath:(NSString *)graphPath
-                       parameters:(NSDictionary *)parameters
-                      tokenString:(NSString *)tokenString
-                       HTTPMethod:(NSString *)HTTPMethod
-                            flags:(FBSDKGraphRequestFlags)flags;
 // Generally, requests automatically issued by the SDK
 // should not invalidate the token and should disableErrorRecovery
 // so that we don't cause a sudden change in token state or trigger recovery
@@ -51,10 +47,29 @@ typedef NS_OPTIONS(NSUInteger, FBSDKGraphRequestFlags) {
 @property (nonatomic, readonly, getter = isGraphErrorRecoveryDisabled) BOOL graphErrorRecoveryDisabled;
 @property (nonatomic, readonly) BOOL hasAttachments;
 
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(nullable NSDictionary *)parameters
+                            flags:(FBSDKGraphRequestFlags)flags;
+
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(nullable NSDictionary *)parameters
+                      tokenString:(nullable NSString *)tokenString
+                       HTTPMethod:(nullable NSString *)HTTPMethod
+                            flags:(FBSDKGraphRequestFlags)flags;
+
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(nullable NSDictionary *)parameters
+                      tokenString:(nullable NSString *)tokenString
+                       HTTPMethod:(nullable NSString *)HTTPMethod
+                            flags:(FBSDKGraphRequestFlags)flags
+                connectionFactory:(id<FBSDKGraphRequestConnectionProviding>)factory;
+
 + (BOOL)isAttachment:(id)item;
 + (NSString *)serializeURL:(NSString *)baseUrl
-                    params:(NSDictionary *)params
-                httpMethod:(NSString *)httpMethod
+                    params:(nullable NSDictionary *)params
+                httpMethod:(nullable NSString *)httpMethod
                   forBatch:(BOOL)forBatch;
 
 @end
+
+NS_ASSUME_NONNULL_END

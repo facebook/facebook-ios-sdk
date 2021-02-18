@@ -16,22 +16,26 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+import FBSDKCoreKit
 
-#import "FBSDKCoreKit+Internal.h"
+class GraphRequestConnectionFactoryTests: XCTestCase {
 
-NS_ASSUME_NONNULL_BEGIN
+  let factory = GraphRequestConnectionFactory()
 
-NS_PROTOCOL_REQUIRES_EXPLICIT_IMPLEMENTATION
-NS_SWIFT_NAME(URLSessionProxying)
-@protocol FBSDKURLSessionProxying
+  func testCreatingConnection() {
+    if (factory.createGraphRequestConnection() as? GraphRequestConnection) == nil {
+      XCTFail("Should create a connection of the correct concrete type")
+    }
+  }
 
-@property (nullable, nonatomic, retain) NSOperationQueue *delegateQueue;
+  func testCreatingConnections() {
+    let connection = factory.createGraphRequestConnection()
+    let connection2 = factory.createGraphRequestConnection()
 
-- (void)executeURLRequest:(NSURLRequest *)request
-        completionHandler:(FBSDKURLSessionTaskBlock)handler;
-- (void)invalidateAndCancel;
+    XCTAssertFalse(
+      connection === connection2,
+      "Connections should be unique"
+    )
+  }
 
-@end
-
-NS_ASSUME_NONNULL_END
+}

@@ -28,7 +28,7 @@
   #import <FBSDKCoreKit/FBSDKCoreKit.h>
  #endif
 
- #import "FBSDKGraphRequestConnectionProviding.h"
+ #import "FBSDKCoreKit+Internal.h"
  #import "FBSDKLoginConstants.h"
  #import "FBSDKLoginError.h"
  #import "FBSDKLoginManager+Internal.h"
@@ -197,11 +197,11 @@
 
 - (void)exchangeNonceForTokenWithHandler:(FBSDKLoginCompletionParametersBlock)handler
 {
-  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
-  [self exchangeNonceForTokenWithGraphRequestConnectionProvider:connection handler:handler];
+  id<FBSDKGraphRequestConnectionProviding> provider = [FBSDKGraphRequestConnectionFactory new];
+  [self exchangeNonceForTokenWithGraphRequestConnectionProvider:provider handler:handler];
 }
 
-- (void)exchangeNonceForTokenWithGraphRequestConnectionProvider:(nonnull id<FBSDKGraphRequestConnectionProviding>)connection
+- (void)exchangeNonceForTokenWithGraphRequestConnectionProvider:(nonnull id<FBSDKGraphRequestConnectionProviding>)connectionProvider
                                                         handler:(nonnull FBSDKLoginCompletionParametersBlock)handler
 {
   if (!handler) {
@@ -226,6 +226,7 @@
                                      flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError
                                      | FBSDKGraphRequestFlagDisableErrorRecovery];
   __block FBSDKLoginCompletionParameters *parameters = _parameters;
+  FBSDKGraphRequestConnection *connection = (FBSDKGraphRequestConnection *)[connectionProvider createGraphRequestConnection];
   [connection addRequest:tokenRequest completionHandler:^(FBSDKGraphRequestConnection *requestConnection,
                                                           id result,
                                                           NSError *graphRequestError) {

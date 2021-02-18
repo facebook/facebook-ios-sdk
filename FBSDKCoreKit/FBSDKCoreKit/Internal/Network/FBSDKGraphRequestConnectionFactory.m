@@ -16,22 +16,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#import "FBSDKGraphRequestConnectionFactory.h"
 
-#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKGraphRequestConnection.h"
+#import "FBSDKGraphRequestConnection+GraphRequestConnecting.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@implementation FBSDKGraphRequestConnectionFactory
 
-NS_PROTOCOL_REQUIRES_EXPLICIT_IMPLEMENTATION
-NS_SWIFT_NAME(URLSessionProxying)
-@protocol FBSDKURLSessionProxying
-
-@property (nullable, nonatomic, retain) NSOperationQueue *delegateQueue;
-
-- (void)executeURLRequest:(NSURLRequest *)request
-        completionHandler:(FBSDKURLSessionTaskBlock)handler;
-- (void)invalidateAndCancel;
+- (nonnull id<FBSDKGraphRequestConnecting>)createGraphRequestConnection
+{
+  return [FBSDKGraphRequestConnection new];
+}
 
 @end
-
-NS_ASSUME_NONNULL_END

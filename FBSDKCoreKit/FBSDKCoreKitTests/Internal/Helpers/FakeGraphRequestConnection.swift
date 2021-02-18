@@ -16,29 +16,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+@objcMembers
+public class FakeGraphRequestConnection: NSObject, GraphRequestConnecting {
+  var capturedRequest: GraphRequest?
+  var capturedCompletion: GraphRequestBlock?
+  var startCallCount = 0
 
-#if SWIFT_PACKAGE
-#import "FBSDKCoreKit.h"
-#else
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-#endif
+  public func add(_ request: GraphRequest, completionHandler handler: @escaping GraphRequestBlock) {
+    self.capturedRequest = request
+    self.capturedCompletion = handler
+  }
 
-NS_ASSUME_NONNULL_BEGIN
-
-/// An internal protocol used to describe an object that can handle graph requests
-NS_SWIFT_NAME(GraphRequestConnectionProviding)
-@protocol FBSDKGraphRequestConnectionProviding <NSObject>
-
-- (void)addRequest:(FBSDKGraphRequest *)request
- completionHandler:(FBSDKGraphRequestBlock)handler;
-- (void)start;
-
-@end
-
-// MARK: Default Protocol Conformances
-
-@interface FBSDKGraphRequestConnection (GraphRequestConnection) <FBSDKGraphRequestConnectionProviding>
-@end
-
-NS_ASSUME_NONNULL_END
+  public func start() {
+    self.startCallCount += 1
+  }
+}

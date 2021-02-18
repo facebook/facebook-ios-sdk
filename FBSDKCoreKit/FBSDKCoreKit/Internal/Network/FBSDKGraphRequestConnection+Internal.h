@@ -29,8 +29,11 @@
 @interface FBSDKGraphRequestConnection (Internal)
 
 @property (nonatomic, readonly) NSMutableArray *requests;
-@property (nonatomic, strong) id<FBSDKURLSessionProxying> session;
-@property (nonatomic, strong) id<FBSDKURLSessionProxyProviding> sessionProxyFactory;
+
+/**
+ Initializes the connection with a url session proxy factory
+ */
+- (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory;
 
 /**
  Get the graph request url for a single graph request

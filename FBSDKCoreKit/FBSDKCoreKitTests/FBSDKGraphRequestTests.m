@@ -18,8 +18,12 @@
 
 #import <XCTest/XCTest.h>
 
+#import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequest+Internal.h"
+#import "FBSDKGraphRequestConnection+GraphRequestConnecting.h"
+#import "FBSDKGraphRequestConnectionFactory.h"
+#import "FBSDKGraphRequestConnectionProviding.h"
 #import "FBSDKGraphRequestDataAttachment.h"
 #import "FBSDKGraphRequestMetadata.h"
 #import "FBSDKInternalUtility.h"
@@ -38,9 +42,13 @@ static NSDictionary<NSString *, NSString *> *const _mockEmptyParameters(void)
   return @{};
 }
 
+@interface FBSDKGraphRequest (Testing)
+@property (nonatomic, strong) id<FBSDKGraphRequestConnectionProviding> connectionFactory;
+@end
+
 @interface FBSDKGraphRequestTests : XCTestCase
 {
-  FBSDKGraphRequestConnection *_mockConnection;
+  FBSDKGraphRequestConnection *_connection;
 }
 
 @end
@@ -49,18 +57,76 @@ static NSDictionary<NSString *, NSString *> *const _mockEmptyParameters(void)
 
 - (void)setUp
 {
-  _mockConnection = [[FBSDKGraphRequestConnection alloc] init];
+  _connection = [[FBSDKGraphRequestConnection alloc] init];
 }
 
 #pragma mark - Tests
+
+- (void)testCreatingGraphRequestWithDefaultSessionProxyFactory
+{
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:_mockGraphPath];
+  NSObject *factory = (NSObject *)request.connectionFactory;
+  XCTAssertEqualObjects(
+    factory.class,
+    FBSDKGraphRequestConnectionFactory.class,
+    "A graph request should have the correct concrete session provider by default"
+  );
+}
+
+- (void)testCreatingWithCustomUrlSessionProxyFactory
+{
+  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
+  FakeGraphRequestConnectionFactory *fakeConnectionFactory = [FakeGraphRequestConnectionFactory createWithStubbedConnection:connection];
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:_mockGraphPath
+                                                                 parameters:nil
+                                                                tokenString:nil
+                                                                 HTTPMethod:nil
+                                                                      flags:FBSDKGraphRequestFlagNone
+                                                          connectionFactory:fakeConnectionFactory];
+  NSObject *factory = (NSObject *)request.connectionFactory;
+
+  XCTAssertEqualObjects(
+    factory.class,
+    FakeGraphRequestConnectionFactory.class,
+    "A graph request should persist the session factory it was created with"
+  );
+}
 
 - (void)testDefaultGETParameters
 {
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:_mockGraphPath];
 
-  [_mockConnection addRequest:request
-            completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {}];
+  [_connection addRequest:request
+        completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {}];
   [self verifyRequest:request expectedGraphPath:_mockGraphPath expectedParameters:_mockParameters() expectedTokenString:nil expectedVersion:_mockDefaultVersion expectedMethod:FBSDKHTTPMethodGET];
+}
+
+- (void)testStartRequestUsesRequestProvidedByFactory
+{
+  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
+
+  FakeGraphRequestConnection *fakeConnection = [FakeGraphRequestConnection new];
+  FakeGraphRequestConnectionFactory *fakeConnectionFactory = [FakeGraphRequestConnectionFactory createWithStubbedConnection:fakeConnection];
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:_mockGraphPath
+                                                                 parameters:nil
+                                                                tokenString:nil
+                                                                 HTTPMethod:nil
+                                                                      flags:FBSDKGraphRequestFlagNone
+                                                          connectionFactory:fakeConnectionFactory];
+
+  [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *_Nullable potentialConnection, id _Nullable result, NSError *_Nullable error) {
+    XCTAssertEqualObjects(result, self.name);
+    [expectation fulfill];
+  }];
+
+  fakeConnection.capturedCompletion(nil, self.name, nil);
+  XCTAssertEqual(
+    fakeConnection.startCallCount,
+    1,
+    "The graph request should start the connection once"
+  );
+
+  [self waitForExpectations:@[expectation] timeout:1];
 }
 
 - (void)testGraphRequestGETWithEmptyParameters
