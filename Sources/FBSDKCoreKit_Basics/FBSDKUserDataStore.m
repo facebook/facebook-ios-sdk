@@ -17,7 +17,6 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "FBSDKUserDataStore.h"
-#import "FBSDKUserDataStore+Internal.h"
 
 #import "FBSDKBasicUtility.h"
 #import "FBSDKTypeUtility.h"
