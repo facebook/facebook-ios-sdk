@@ -17,12 +17,12 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @objcMembers
-public class FakeBridgeApiRequest: NSObject, FBSDKBridgeAPIRequestProtocol {
-  public var actionID: String?
-  public var methodName: String?
-  public var protocolType: FBSDKBridgeAPIProtocolType
-  public var `protocol`: BridgeAPIProtocol?
-  public var scheme: String?
+class FakeBridgeApiRequest: NSObject, FBSDKBridgeAPIRequestProtocol {
+  var actionID: String?
+  var methodName: String?
+  var protocolType: FBSDKBridgeAPIProtocolType
+  var `protocol`: BridgeAPIProtocol?
+  var scheme: String?
 
   let url: URL?
 
@@ -32,25 +32,25 @@ public class FakeBridgeApiRequest: NSObject, FBSDKBridgeAPIRequestProtocol {
     self.scheme = scheme
   }
 
-  public func copy(with zone: NSZone? = nil) -> Any {
+  func copy(with zone: NSZone? = nil) -> Any {
     return self
   }
 
-  public func requestURL() throws -> URL {
+  func requestURL() throws -> URL {
     guard let url = url else {
       throw FakeBridgeApiRequestError(domain: "tests", code: 0, userInfo: [:])
     }
     return url
   }
 
-  public static func request(withURL url: URL?) -> FakeBridgeApiRequest {
+  static func request(withURL url: URL?) -> FakeBridgeApiRequest {
     return FakeBridgeApiRequest(url: url)
   }
 
-  public static func request(withURL url: URL, scheme: String) -> FakeBridgeApiRequest {
+  static func request(withURL url: URL, scheme: String) -> FakeBridgeApiRequest {
     return FakeBridgeApiRequest(url: url, scheme: scheme)
   }
 }
 
 @objc
-public class FakeBridgeApiRequestError: NSError {}
+class FakeBridgeApiRequestError: NSError {}

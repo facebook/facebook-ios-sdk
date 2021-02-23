@@ -17,9 +17,9 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @objcMembers
-public class SampleAccessToken: NSObject {
+class SampleAccessToken: NSObject {
 
-  public static var validToken: AccessToken {
+  static var validToken: AccessToken {
     return AccessToken(
       tokenString: "123",
       permissions: [],
@@ -33,7 +33,7 @@ public class SampleAccessToken: NSObject {
     )
   }
   
-  public static var expiredToken: AccessToken {
+  static var expiredToken: AccessToken {
     return AccessToken(
       tokenString: "123",
       permissions: [],
@@ -47,7 +47,7 @@ public class SampleAccessToken: NSObject {
     )
   }
 
-  public static func valid(withRefreshDate date: Date?) -> AccessToken {
+  static func valid(withRefreshDate date: Date?) -> AccessToken {
     return AccessToken(
       tokenString: "123",
       permissions: [],
@@ -61,7 +61,7 @@ public class SampleAccessToken: NSObject {
     )
   }
 
-  public static func validToken(withPermissions permissions: [String]) -> AccessToken {
+  static func validToken(withPermissions permissions: [String]) -> AccessToken {
     return AccessToken(
       tokenString: "123",
       permissions: permissions,
@@ -75,7 +75,7 @@ public class SampleAccessToken: NSObject {
     )
   }
 
-  public static func validToken(
+  static func validToken(
     withPermissions permissions: [String],
     declinedPermissions: [String] = [],
     expiredPermissions: [String] = []

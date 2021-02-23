@@ -20,17 +20,18 @@ import Foundation
 
 @testable import FBSDKCoreKit
 
-@objc public class SampleGraphRequest: NSObject {
+@objcMembers
+class SampleGraphRequest: NSObject {
 
-  @objc public static let valid = create()
-  @objc public static var withOutdatedVersionWithAttachment = create(
+  static let valid = create()
+  static var withOutdatedVersionWithAttachment = create(
     parameters: ["attachment": Data(count: 8)],
     version: "3.0"
   )
-  @objc public static var withOutdatedVersion = create(version: "3.0")
-  @objc public static var withAttachment = create(parameters: ["attachment": Data(count: 8)])
+  static var withOutdatedVersion = create(version: "3.0")
+  static var withAttachment = create(parameters: ["attachment": Data(count: 8)])
 
-  @objc public static func create(
+  static func create(
     path: String = "/me",
     parameters: [String: Any] = [:],
     version: String = Settings.graphAPIVersion

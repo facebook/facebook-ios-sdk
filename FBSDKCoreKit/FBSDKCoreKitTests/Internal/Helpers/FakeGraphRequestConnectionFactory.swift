@@ -17,7 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @objcMembers
-public class FakeGraphRequestConnectionFactory: NSObject, GraphRequestConnectionProviding {
+class FakeGraphRequestConnectionFactory: NSObject, GraphRequestConnectionProviding {
   let stubbedConnection: GraphRequestConnecting
 
   private init(stubbedConnection: GraphRequestConnecting) {
@@ -30,7 +30,7 @@ public class FakeGraphRequestConnectionFactory: NSObject, GraphRequestConnection
 
   // MARK: - GraphRequestConnectionProviding
 
-  public func createGraphRequestConnection() -> GraphRequestConnecting {
+  func createGraphRequestConnection() -> GraphRequestConnecting {
     return stubbedConnection
   }
 }

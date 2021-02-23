@@ -19,21 +19,21 @@
 import Foundation
 
 @objcMembers
-public class AuthenticationSessionSpy: NSObject, AuthenticationSessionHandling {
+class AuthenticationSessionSpy: NSObject, AuthenticationSessionHandling {
 
-  public var capturedUrl: URL
-  public var capturedCallbackUrlScheme: String?
-  public var capturedCompletionHandler: FBSDKAuthenticationCompletionHandler?
-  public var startCallCount = 0
-  public var cancelCallCount = 0
+  var capturedUrl: URL
+  var capturedCallbackUrlScheme: String?
+  var capturedCompletionHandler: FBSDKAuthenticationCompletionHandler?
+  var startCallCount = 0
+  var cancelCallCount = 0
 
-  public static var makeDefaultSpy: AuthenticationSessionSpy {
+  static var makeDefaultSpy: AuthenticationSessionSpy {
     guard let url = URL(string: "http://example.com") else { fatalError("Url creation failed") }
 
     return AuthenticationSessionSpy(url: url, callbackURLScheme: nil) { _, _ in }
   }
 
-  public required init(
+  required init(
     url: URL,
     callbackURLScheme: String?,
     completionHandler: @escaping FBSDKAuthenticationCompletionHandler
@@ -43,12 +43,12 @@ public class AuthenticationSessionSpy: NSObject, AuthenticationSessionHandling {
     capturedCompletionHandler = completionHandler
   }
 
-  public func start() -> Bool {
+  func start() -> Bool {
     startCallCount += 1
     return true
   }
 
-  public func cancel() {
+  func cancel() {
     cancelCallCount += 1
   }
 }

@@ -17,17 +17,17 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @objcMembers
-public class FakeGraphRequestConnection: NSObject, GraphRequestConnecting {
+class FakeGraphRequestConnection: NSObject, GraphRequestConnecting {
   var capturedRequest: GraphRequest?
   var capturedCompletion: GraphRequestBlock?
   var startCallCount = 0
 
-  public func add(_ request: GraphRequest, completionHandler handler: @escaping GraphRequestBlock) {
+  func add(_ request: GraphRequest, completionHandler handler: @escaping GraphRequestBlock) {
     self.capturedRequest = request
     self.capturedCompletion = handler
   }
 
-  public func start() {
+  func start() {
     self.startCallCount += 1
   }
 }

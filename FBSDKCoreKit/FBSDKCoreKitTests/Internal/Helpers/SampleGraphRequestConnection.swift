@@ -20,13 +20,14 @@ import Foundation
 
 @testable import FBSDKCoreKit
 
-@objc public class SampleGraphRequestConnection: NSObject {
+@objcMembers
+class SampleGraphRequestConnection: NSObject {
 
-  @objc public static var empty: GraphRequestConnection {
+  static var empty: GraphRequestConnection {
     GraphRequestConnection()
   }
 
-  @objc public static func with(requests: [GraphRequest]) -> GraphRequestConnection {
+  static func with(requests: [GraphRequest]) -> GraphRequestConnection {
     let connection = GraphRequestConnection()
     requests.forEach {
       connection.add($0) { _, _, _ in }

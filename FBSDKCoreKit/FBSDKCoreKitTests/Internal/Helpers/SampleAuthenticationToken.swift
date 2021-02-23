@@ -17,9 +17,9 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @objcMembers
-public class SampleAuthenticationToken: NSObject {
+class SampleAuthenticationToken: NSObject {
 
-  public static var validToken: AuthenticationToken {
+  static var validToken: AuthenticationToken {
     return AuthenticationToken(
       tokenString: "fakeTokenString",
       nonce: "fakeNonce",

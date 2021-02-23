@@ -17,23 +17,23 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @objcMembers
-public class FakeURLSessionProxy: NSObject, URLSessionProxying {
-  public var delegateQueue: OperationQueue?
+class FakeURLSessionProxy: NSObject, URLSessionProxying {
+  var delegateQueue: OperationQueue?
   /// The most recent captured completion
-  public var capturedCompletion: UrlSessionTaskBlock?
+  var capturedCompletion: UrlSessionTaskBlock?
   /// The most recent captured request
-  public var capturedRequest: URLRequest?
+  var capturedRequest: URLRequest?
   /// All captured requests for this networker instance
-  public var capturedRequests = [URLRequest]()
-  public var invalidateAndCancelCallCount = 0
+  var capturedRequests = [URLRequest]()
+  var invalidateAndCancelCallCount = 0
 
-  public func execute(_ request: URLRequest, completionHandler handler: @escaping UrlSessionTaskBlock) {
+  func execute(_ request: URLRequest, completionHandler handler: @escaping UrlSessionTaskBlock) {
     capturedRequest = request
     capturedRequests.append(request)
     capturedCompletion = handler
   }
 
-  public func invalidateAndCancel() {
+  func invalidateAndCancel() {
     invalidateAndCancelCallCount += 1
   }
 }

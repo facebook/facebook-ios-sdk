@@ -18,8 +18,9 @@
 
 import FBSDKCoreKit
 
-@objc public class SampleUserProfile: NSObject {
-  @objc public static var valid: Profile {
+@objcMembers
+class SampleUserProfile: NSObject {
+  static var valid: Profile {
     return Profile(
       userID: "123",
       firstName: "John",

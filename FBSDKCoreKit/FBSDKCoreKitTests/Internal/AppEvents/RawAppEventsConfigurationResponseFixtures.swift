@@ -18,8 +18,8 @@
 
 import Foundation
 
-@objc
-public class RawAppEventsConfigurationResponseFixtures: NSObject {
+@objcMembers
+class RawAppEventsConfigurationResponseFixtures: NSObject {
 
   enum Keys {
     static let defaultATEStatus = "default_ate_status"
@@ -28,8 +28,7 @@ public class RawAppEventsConfigurationResponseFixtures: NSObject {
   }
 
   /// Provides a dictionary with well-known keys and random values for a network provided app events configuration
-  @objc
-  public class var random: [AnyHashable: Any] {
+  class var random: [AnyHashable: Any] {
     return [
       Keys.defaultATEStatus: Fuzzer.random,
       Keys.advertiserIDCollectionEnabled: Fuzzer.random,

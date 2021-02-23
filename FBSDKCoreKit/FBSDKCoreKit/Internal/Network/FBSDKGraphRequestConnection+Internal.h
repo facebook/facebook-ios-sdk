@@ -31,11 +31,6 @@
 @property (nonatomic, readonly) NSMutableArray *requests;
 
 /**
- Initializes the connection with a url session proxy factory
- */
-- (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory;
-
-/**
  Get the graph request url for a single graph request
  @param request The Graph Request we need the url for
  @param forBatch whether the request is a batch request.

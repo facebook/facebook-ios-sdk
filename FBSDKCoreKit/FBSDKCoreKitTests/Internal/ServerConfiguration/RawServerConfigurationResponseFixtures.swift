@@ -18,8 +18,8 @@
 
 import Foundation
 
-@objc
-public class RawServerConfigurationResponseFixtures: NSObject {
+@objcMembers
+class RawServerConfigurationResponseFixtures: NSObject {
 
   enum Keys {
     static let appEventsFeatureBitmask = "app_events_feature_bitmask"
@@ -45,8 +45,7 @@ public class RawServerConfigurationResponseFixtures: NSObject {
   }
 
   /// Provides a dictionary with well-known keys and random values for a network provided server configuration
-  @objc
-  public class var random: [AnyHashable: Any] {
+  class var random: [AnyHashable: Any] {
     return [
       Keys.appEventsFeatureBitmask: Fuzzer.random,
       Keys.appName: Fuzzer.random,

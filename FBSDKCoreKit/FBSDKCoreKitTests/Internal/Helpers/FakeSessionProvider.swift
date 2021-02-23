@@ -17,21 +17,21 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @objcMembers
-public class FakeSessionDataTask: NSObject, SessionDataTask {
+class FakeSessionDataTask: NSObject, SessionDataTask {
   var resumeCallCount = 0
   var cancelCallCount = 0
 
-  public func resume() {
+  func resume() {
     resumeCallCount += 1
   }
 
-  public func cancel() {
+  func cancel() {
     cancelCallCount += 1
   }
 }
 
 @objcMembers
-public class FakeSessionProvider: NSObject, SessionProviding {
+class FakeSessionProvider: NSObject, SessionProviding {
   /// Data to return in a data task completion handler
   var data: Data?
   /// A url response to return in a data task completion handler
@@ -41,7 +41,7 @@ public class FakeSessionProvider: NSObject, SessionProviding {
   /// A data task to return from `dataTask(with:completion:)`
   var stubbedDataTask: SessionDataTask?
 
-  public func dataTask(
+  func dataTask(
     with request: URLRequest,
     completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void
   ) -> SessionDataTask {

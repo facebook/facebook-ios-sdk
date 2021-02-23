@@ -18,11 +18,10 @@
 
 import Foundation
 
-@objc
-public class SampleRawRemotePermissionList: NSObject {
+@objcMembers
+class SampleRawRemotePermissionList: NSObject {
 
-  @objc
-  public static var missingPermissions: [String: Any] {
+  static var missingPermissions: [String: Any] {
     [
       "data": [
         [
@@ -41,8 +40,7 @@ public class SampleRawRemotePermissionList: NSObject {
     ]
   }
 
-  @objc
-  public static var missingStatus: [String: Any] {
+  static var missingStatus: [String: Any] {
     [
       "data": [
         [
@@ -53,11 +51,9 @@ public class SampleRawRemotePermissionList: NSObject {
     ]
   }
 
-  @objc
-  public static let missingTopLevelKey: [String: Any] = [:]
+  static let missingTopLevelKey: [String: Any] = [:]
 
-  @objc
-  public static var randomValues: Any {
+  static var randomValues: Any {
     let json: Any = [
       "data": [
         [
@@ -69,8 +65,7 @@ public class SampleRawRemotePermissionList: NSObject {
     return Fuzzer.randomize(json: json)
   }
 
-  @objc
-  public static var validAllStatuses: [String: Any] {
+  static var validAllStatuses: [String: Any] {
     [
       "data": [
         [
@@ -89,8 +84,7 @@ public class SampleRawRemotePermissionList: NSObject {
     ]
   }
 
-  @objc
-  public static func with(
+  static func with(
     granted: [String] = [],
     declined: [String] = [],
     expired: [String] = []
@@ -118,7 +112,7 @@ public class SampleRawRemotePermissionList: NSObject {
 
 }
 
-@objc public class SampleRawRemotePermission: NSObject {
-
-  @objc public static let missingTopLevelKey: [String: Any] = [:]
+@objcMembers
+class SampleRawRemotePermission: NSObject {
+  static let missingTopLevelKey: [String: Any] = [:]
 }

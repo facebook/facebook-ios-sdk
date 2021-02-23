@@ -17,10 +17,10 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @objcMembers
-public class FakeDylibResolver: NSObject, FBSDKDynamicFrameworkResolving {
+class FakeDylibResolver: NSObject, FBSDKDynamicFrameworkResolving {
   var stubSafariViewControllerClass: AnyClass?
 
-  public func safariViewControllerClass() -> AnyClass? {
+  func safariViewControllerClass() -> AnyClass? {
     return stubSafariViewControllerClass
   }
 }
