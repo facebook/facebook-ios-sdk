@@ -351,6 +351,33 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   }
 }
 
+- (void)testStartingConnectionWithUninitializedSDK
+{
+  [FBSDKGraphRequestConnection resetCanMakeRequests];
+  NSString *msg = @"FBSDKGraphRequestConnection cannot be started before Facebook SDK initialized.";
+  NSError *expectedError = [FBSDKError unknownErrorWithMessage:msg];
+
+  __block BOOL completionWasCalled = NO;
+  __weak typeof(self) weakSelf = self;
+  [self.connection addRequest:self.sampleRequest
+            completionHandler:^(FBSDKGraphRequestConnection *_Nullable _connection, id _Nullable result, NSError *_Nullable error) {
+              XCTAssertEqualObjects(
+                error,
+                expectedError,
+                "Starting a graph request before the SDK is initialized should return an error"
+              );
+              XCTAssertEqual(
+                weakSelf.connection.state,
+                kStateCancelled,
+                "Starting a graph request before the SDK is initialized should update the connection state"
+              );
+              completionWasCalled = YES;
+            }];
+  [self.connection start];
+
+  XCTAssertTrue(completionWasCalled, "Sanity check");
+}
+
 // MARK: - Client Token
 
 - (void)testClientToken
@@ -970,6 +997,11 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 }
 
 // MARK: - Helpers
+
+- (FBSDKGraphRequest *)sampleRequest
+{
+  return self.requestForMeWithEmptyFields;
+}
 
 - (FBSDKGraphRequest *)requestForMeWithEmptyFields
 {
