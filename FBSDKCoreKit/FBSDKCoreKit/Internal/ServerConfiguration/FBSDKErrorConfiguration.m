@@ -87,7 +87,7 @@ static NSString *const kErrorCategoryLogin = @"login";
            @"recovery_message" : localizedTransientSuggestion,
            @"recovery_options" : @[localizedOK]},
       ];
-      [self parseArray:fallbackArray];
+      [self updateWithArray:fallbackArray];
     }
   }
   return self;
@@ -110,7 +110,7 @@ static NSString *const kErrorCategoryLogin = @"login";
   return configuration;
 }
 
-- (void)parseArray:(NSArray<NSDictionary *> *)array
+- (void)updateWithArray:(NSArray<NSDictionary *> *)array
 {
   for (NSDictionary *dictionary in [FBSDKTypeUtility arrayValue:array]) {
     [FBSDKTypeUtility dictionary:dictionary enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {

@@ -62,7 +62,7 @@
 - (void)testErrorConfigurationAdditonalArray
 {
   FBSDKErrorConfiguration *intermediaryConfiguration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
-  [intermediaryConfiguration parseArray:rawErrorCodeConfiguration];
+  [intermediaryConfiguration updateWithArray:rawErrorCodeConfiguration];
 
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:intermediaryConfiguration];
   FBSDKErrorConfiguration *configuration = [NSKeyedUnarchiver unarchiveObjectWithData:data];
@@ -90,7 +90,7 @@
     ];
 
     FBSDKErrorConfiguration *configuration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
-    [configuration parseArray:array];
+    [configuration updateWithArray:array];
   }
 }
 
@@ -107,7 +107,7 @@
     ];
 
     FBSDKErrorConfiguration *configuration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
-    [configuration parseArray:array];
+    [configuration updateWithArray:array];
   }
 }
 
@@ -124,7 +124,7 @@
     ];
 
     FBSDKErrorConfiguration *configuration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
-    [configuration parseArray:array];
+    [configuration updateWithArray:array];
   }
 }
 
@@ -141,7 +141,7 @@
     ];
 
     FBSDKErrorConfiguration *configuration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
-    [configuration parseArray:array];
+    [configuration updateWithArray:array];
   }
 }
 
@@ -158,7 +158,7 @@
     ];
 
     FBSDKErrorConfiguration *configuration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
-    [configuration parseArray:array];
+    [configuration updateWithArray:array];
   }
 }
 
@@ -175,7 +175,7 @@
     ];
 
     FBSDKErrorConfiguration *configuration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
-    [configuration parseArray:array];
+    [configuration updateWithArray:array];
   }
 }
 
@@ -192,7 +192,7 @@
     ];
 
     FBSDKErrorConfiguration *configuration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
-    [configuration parseArray:array];
+    [configuration updateWithArray:array];
   }
 }
 
@@ -209,7 +209,7 @@
     ];
 
     FBSDKErrorConfiguration *configuration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
-    [configuration parseArray:array];
+    [configuration updateWithArray:array];
   }
 }
 
@@ -225,7 +225,7 @@
     ];
 
     FBSDKErrorConfiguration *configuration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
-    [configuration parseArray:array];
+    [configuration updateWithArray:array];
   }
 }
 
@@ -241,7 +241,7 @@
     ];
 
     FBSDKErrorConfiguration *configuration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
-    [configuration parseArray:array];
+    [configuration updateWithArray:array];
   }
 }
 
@@ -251,7 +251,7 @@
     NSArray *array = [Fuzzer randomizeWithJson:rawErrorCodeConfiguration];
 
     FBSDKErrorConfiguration *configuration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
-    [configuration parseArray:array];
+    [configuration updateWithArray:array];
   }
 }
 
