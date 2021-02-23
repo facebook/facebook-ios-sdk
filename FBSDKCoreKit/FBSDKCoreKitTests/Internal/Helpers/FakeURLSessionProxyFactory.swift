@@ -20,11 +20,11 @@
 class FakeURLSessionProxyFactory: NSObject, URLSessionProxyProviding {
   private var stubbedSessions: [FakeURLSessionProxy]
 
-  private init(session: FakeURLSessionProxy) {
+  init(session: FakeURLSessionProxy) {
     self.stubbedSessions = [session]
   }
 
-  private init(sessions: [FakeURLSessionProxy]) {
+  init(sessions: [FakeURLSessionProxy]) {
     self.stubbedSessions = sessions
   }
 

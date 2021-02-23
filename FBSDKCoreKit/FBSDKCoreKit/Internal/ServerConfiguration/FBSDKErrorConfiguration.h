@@ -17,12 +17,24 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "FBSDKErrorRecoveryConfiguration.h"
+#import "FBSDKErrorConfigurationProtocol.h"
 
 @class FBSDKGraphRequest;
 
-// maps codes and subcodes pairs to FBSDKErrorRecoveryConfiguration instances.
+@protocol FBSDKDecodableErrorConfiguration <NSObject>
+
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary;
+- (void)updateWithArray:(NSArray<NSDictionary *> *)array;
+
+@end
+
 NS_SWIFT_NAME(ErrorConfiguration)
-@interface FBSDKErrorConfiguration : NSObject <NSSecureCoding, NSCopying>
+@interface FBSDKErrorConfiguration : NSObject <
+NSSecureCoding,
+NSCopying,
+FBSDKErrorConfiguration,
+FBSDKDecodableErrorConfiguration
+>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

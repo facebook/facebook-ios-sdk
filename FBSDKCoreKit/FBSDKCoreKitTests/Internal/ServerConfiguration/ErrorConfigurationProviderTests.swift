@@ -16,32 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+import FBSDKCoreKit
 
-#if SWIFT_PACKAGE
-#import "FBSDKConstants.h"
-#else
-#import <FBSDKCoreKit/FBSDKConstants.h>
-#endif
+class ErrorConfigurationProviderTests: XCTestCase {
 
-NS_ASSUME_NONNULL_BEGIN
+  func testErrorConfigurationRecoveryProvider() {
+    XCTAssertTrue(
+      ErrorConfigurationProvider().errorConfiguration() is ErrorConfiguration,
+      "The default error configuration provider should provide the expected concrete type"
+    )
+  }
 
-//immutable
-NS_SWIFT_NAME(ErrorRecoveryConfiguration)
-@interface FBSDKErrorRecoveryConfiguration : NSObject<NSCopying, NSSecureCoding>
-
-@property (nonatomic, readonly) NSString *localizedRecoveryDescription;
-@property (nonatomic, readonly) NSArray *localizedRecoveryOptionDescriptions;
-@property (nonatomic, readonly) FBSDKGraphRequestError errorCategory;
-@property (nonatomic, readonly) NSString *recoveryActionName;
-
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
-
-- (instancetype)initWithRecoveryDescription:(NSString *)description
-                         optionDescriptions:(NSArray *)optionDescriptions
-                                   category:(FBSDKGraphRequestError)category
-                         recoveryActionName:(NSString *)recoveryActionName NS_DESIGNATED_INITIALIZER;
-@end
-
-NS_ASSUME_NONNULL_END
+}

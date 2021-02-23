@@ -42,15 +42,19 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 @property (nonatomic, strong) id<FBSDKURLSessionProxying> session;
 @property (nonatomic, strong) id<FBSDKURLSessionProxyProviding> sessionProxyFactory;
+@property (nonatomic, strong) id<FBSDKErrorConfigurationProviding> errorConfigurationProvider;
 @property (nonatomic, assign) FBSDKGraphRequestConnectionState state;
 
 + (BOOL)canMakeRequests;
 + (void)resetCanMakeRequests;
 + (void)resetDefaultConnectionTimeout;
 - (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)sessionProxyFactory;
+- (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
+                    errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider;
 - (NSMutableURLRequest *)requestWithBatch:(NSArray *)requests
                                   timeout:(NSTimeInterval)timeout;
 - (NSString *)accessTokenWithRequest:(FBSDKGraphRequest *)request;
+- (NSError *)errorFromResult:(id)untypedParam request:(FBSDKGraphRequest *)request;
 - (NSString *)_overrideVersionPart;
 
 @end
@@ -59,6 +63,9 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 @property (nonatomic, strong) FakeURLSessionProxy *session;
 @property (nonatomic, strong) FakeURLSessionProxyFactory *sessionFactory;
+@property (nonatomic, strong) TestErrorConfiguration *errorConfiguration;
+@property (nonatomic, strong) TestErrorConfigurationProvider *errorConfigurationProvider;
+@property (nonatomic, strong) FBSDKErrorRecoveryConfiguration *errorRecoveryConfiguration;
 @property (nonatomic, strong) FBSDKGraphRequestConnection *connection;
 
 @property (nonatomic, copy) void (^requestConnectionStartingCallback)(FBSDKGraphRequestConnection *connection);
@@ -87,19 +94,22 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
   [FBSDKGraphRequestConnection setCanMakeRequests];
 
-  _session = [FakeURLSessionProxy new];
-  _sessionFactory = [FakeURLSessionProxyFactory createWith:_session];
-  _connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:_sessionFactory];
+  self.session = [FakeURLSessionProxy new];
+  self.sessionFactory = [FakeURLSessionProxyFactory createWith:self.session];
+  self.errorRecoveryConfiguration = [[FBSDKErrorRecoveryConfiguration alloc] initWithRecoveryDescription:@"Recovery Description"
+                                                                                      optionDescriptions:@[@"Option1", @"Option2"]
+                                                                                                category:FBSDKGraphRequestErrorOther
+                                                                                      recoveryActionName:@"Recovery Action"];
+  self.errorConfiguration = [TestErrorConfiguration new];
+  self.errorConfiguration.stubbedRecoveryConfiguration = self.errorRecoveryConfiguration;
+  self.errorConfigurationProvider = [[TestErrorConfigurationProvider alloc] initWithConfiguration:self.errorConfiguration];
+  self.connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:self.sessionFactory
+                                                             errorConfigurationProvider:self.errorConfigurationProvider];
 }
 
 - (void)tearDown
 {
   [FBSDKGraphRequestConnection resetDefaultConnectionTimeout];
-
-  _session = nil;
-  _sessionFactory = nil;
-  _connection = nil;
-
   [FBSDKGraphRequestConnection resetCanMakeRequests];
 
   [super tearDown];
@@ -163,6 +173,28 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
     session,
     self.session,
     "A graph request connection should derive sessions from the session provider"
+  );
+}
+
+- (void)testCreatingWithDefaultErrorConfigurationProvider
+{
+  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
+  NSObject *errorConfigurationProvider = (NSObject *)connection.errorConfigurationProvider;
+  XCTAssertEqualObjects(
+    errorConfigurationProvider.class,
+    FBSDKErrorConfigurationProvider.class,
+    "A graph request connection should have the correct error configuration provider by default"
+  );
+}
+
+- (void)testCreatingWithCustomErrorConfigurationProvider
+{
+  NSObject *errorConfigurationProvider = (NSObject *)self.connection.errorConfigurationProvider;
+
+  XCTAssertEqualObjects(
+    errorConfigurationProvider.class,
+    TestErrorConfigurationProvider.class,
+    "A graph request connection should persist the error configuration provider it was created with"
   );
 }
 
@@ -259,7 +291,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testAddingRequestWithoutBatchEntryName
 {
   [self.connection addRequest:self.requestForMeWithEmptyFields
-            completionHandler:^(FBSDKGraphRequestConnection *_connection, id result, NSError *error) {
+            completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
               // Do nothing here
             }];
   FBSDKGraphRequestMetadata *metadata = self.connection.requests.firstObject;
@@ -273,7 +305,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 {
   [self.connection addRequest:self.requestForMeWithEmptyFields
                batchEntryName:@""
-            completionHandler:^(FBSDKGraphRequestConnection *_connection, id result, NSError *error) {
+            completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
               // Do nothing here
             }];
   FBSDKGraphRequestMetadata *metadata = self.connection.requests.firstObject;
@@ -287,7 +319,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 {
   [self.connection addRequest:self.requestForMeWithEmptyFields
                batchEntryName:@"foo"
-            completionHandler:^(FBSDKGraphRequestConnection *_connection, id result, NSError *error) {
+            completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
               // Do nothing here
             }];
   NSDictionary *expectedParameters = @{ @"name" : @"foo" };
@@ -308,7 +340,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
     XCTAssertThrowsSpecificNamed(
       [self.connection addRequest:self.requestForMeWithEmptyFields
                   batchParameters:@{}
-                completionHandler:^(FBSDKGraphRequestConnection *_connection, id result, NSError *error) {}],
+                completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}],
       NSException,
       NSInternalInconsistencyException,
       "Should throw error on request addition when state has raw value: %@",
@@ -320,7 +352,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   XCTAssertNoThrow(
     [self.connection addRequest:self.requestForMeWithEmptyFields
                 batchParameters:@{}
-              completionHandler:^(FBSDKGraphRequestConnection *_connection, id result, NSError *error) {}],
+              completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}],
     "Should not throw an error on request addition when state is 'created'"
   );
 }
@@ -360,7 +392,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   __block BOOL completionWasCalled = NO;
   __weak typeof(self) weakSelf = self;
   [self.connection addRequest:self.sampleRequest
-            completionHandler:^(FBSDKGraphRequestConnection *_Nullable _connection, id _Nullable result, NSError *_Nullable error) {
+            completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
               XCTAssertEqualObjects(
                 error,
                 expectedError,
@@ -376,6 +408,131 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [self.connection start];
 
   XCTAssertTrue(completionWasCalled, "Sanity check");
+}
+
+// MARK: - Errors From Results
+
+- (void)testErrorFromResultWithNonDictionaryInput
+{
+  NSArray *inputs = @[@"foo", @123, @YES, NSNull.null, NSData.data, @[]];
+
+  for (id input in inputs) {
+    XCTAssertNil(
+      [self.connection errorFromResult:input request:self.sampleRequest],
+      "Should not create an error from %@",
+      input
+    );
+  }
+}
+
+- (void)testErrorFromResultWithMissingBodyInInput
+{
+  XCTAssertNil(
+    [self.connection errorFromResult:@{} request:self.sampleRequest],
+    "Should not create an error from an empty dictionary"
+  );
+}
+
+- (void)testErrorFromResultWithMissingErrorInInputBody
+{
+  NSDictionary *result = @{
+    @"body" : @{}
+  };
+
+  XCTAssertNil(
+    [self.connection errorFromResult:result request:self.sampleRequest],
+    "Should not create an error from a dictionary with a missing error key"
+  );
+}
+
+- (void)testErrorFromResultWithFuzzyInput
+{
+  for (int i = 1; i < 100; i++) {
+    [self.connection errorFromResult:[Fuzzer randomizeWithJson:self.sampleErrorDictionary]
+                             request:self.sampleRequest];
+  }
+}
+
+- (void)testErrorFromResultDependsOnErrorConfiguration
+{
+  [self.connection errorFromResult:self.sampleErrorDictionary request:self.sampleRequest];
+  FBSDKGraphRequest *capturedRequest = self.errorConfiguration.capturedGraphRequest;
+
+  XCTAssertNotNil(capturedRequest.graphPath, "Should capture the graph request from the result");
+  XCTAssertEqualObjects(
+    self.errorConfiguration.capturedRecoveryConfigurationCode,
+    @"1",
+    "Should capture the error code from the result"
+  );
+  XCTAssertEqualObjects(
+    self.errorConfiguration.capturedRecoveryConfigurationSubcode,
+    @"2",
+    "Should capture the error subcode from the result"
+  );
+}
+
+- (void)testErrorFromResult
+{
+  NSError *error = [self.connection errorFromResult:self.sampleErrorDictionary request:self.sampleRequest];
+  XCTAssertEqualObjects(
+    error.userInfo[NSLocalizedRecoverySuggestionErrorKey],
+    self.errorRecoveryConfiguration.localizedRecoveryDescription,
+    "Should derive the recovery description from the recovery configuration"
+  );
+  XCTAssertEqualObjects(
+    error.userInfo[NSLocalizedRecoveryOptionsErrorKey],
+    self.errorRecoveryConfiguration.localizedRecoveryOptionDescriptions,
+    "Should derive the recovery options from the recovery configuration"
+  );
+  XCTAssertNil(
+    error.userInfo[NSRecoveryAttempterErrorKey],
+    "A non transient error should not provide a recovery attempter"
+  );
+}
+
+- (void)testErrorFromResultMessagePriority
+{
+  NSDictionary *response = @{
+    @"body" : @{
+      @"error" : @{ @"error_msg" : @"error_msg" }
+    }
+  };
+  NSError *error = [self.connection errorFromResult:response request:self.sampleRequest];
+  XCTAssertEqualObjects(
+    error.userInfo[FBSDKErrorDeveloperMessageKey],
+    @"error_msg",
+    "Should use the 'error_msg' if it's the only message available"
+  );
+  response = @{
+    @"body" : @{
+      @"error" : @{
+        @"error_msg" : @"error_msg",
+        @"error_reason" : @"error_reason"
+      }
+    }
+  };
+  error = [self.connection errorFromResult:response request:self.sampleRequest];
+  XCTAssertEqualObjects(
+    error.userInfo[FBSDKErrorDeveloperMessageKey],
+    @"error_reason",
+    "Should prefer the 'error_reason' to the 'error_msg'"
+  );
+
+  response = @{
+    @"body" : @{
+      @"error" : @{
+        @"error_msg" : @"error_msg",
+        @"error_reason" : @"error_reason",
+        @"message" : @"message"
+      }
+    }
+  };
+  error = [self.connection errorFromResult:response request:self.sampleRequest];
+  XCTAssertEqualObjects(
+    error.userInfo[FBSDKErrorDeveloperMessageKey],
+    @"message",
+    "Should prefer the 'message' key to other error message keys"
+  );
 }
 
 // MARK: - Client Token
@@ -835,7 +992,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 {
   FBSDKGraphRequest *singleRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @"with_suffix"}];
   FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
-  [connection addRequest:singleRequest completionHandler:^(FBSDKGraphRequestConnection *_Nullable potentialConnection, id _Nullable result, NSError *_Nullable error) {}];
+  [connection addRequest:singleRequest completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {}];
   NSURLRequest *request = [connection requestWithBatch:connection.requests timeout:0];
 
   NSURLComponents *urlComponents = [NSURLComponents componentsWithString:request.URL.absoluteString];
@@ -853,7 +1010,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   };
   FBSDKGraphRequest *singleRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"activities" parameters:parameters HTTPMethod:FBSDKHTTPMethodPOST];
   FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
-  [connection addRequest:singleRequest completionHandler:^(FBSDKGraphRequestConnection *_Nullable potentialConnection, id _Nullable result, NSError *_Nullable error) {}];
+  [connection addRequest:singleRequest completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {}];
   NSURLRequest *request = [connection requestWithBatch:connection.requests timeout:0];
 
   NSURLComponents *urlComponents = [NSURLComponents componentsWithString:request.URL.absoluteString];
@@ -1016,6 +1173,26 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (NSData *)missingTokenData
 {
   return [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
+}
+
+- (NSDictionary *)sampleErrorDictionary
+{
+  return @{
+    @"code" : @200,
+    @"body" : @{
+      @"error" : @{
+        @"is_transient" : @1,
+        @"code" : @1,
+        @"error_subcode" : @2,
+        @"error_msg" : @"error_msg",
+        @"error_reason" : @"error_reason",
+        @"message" : @"message",
+        @"error_user_title" : @"error_user_title",
+        @"error_user_msg" : @"error_user_msg",
+        @"error_user_msg" : @"error_user_msg",
+      }
+    }
+  };
 }
 
 @end

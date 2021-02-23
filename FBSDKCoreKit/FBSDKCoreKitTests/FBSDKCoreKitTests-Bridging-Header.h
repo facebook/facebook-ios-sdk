@@ -35,6 +35,9 @@
 #import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKGraphRequestConnectionFactory.h"
 #import "FBSDKGraphRequestConnectionProviding.h"
+// ErrorConfiguration Abstractions
+#import "FBSDKErrorConfigurationProviding.h"
+#import "FBSDKErrorConfigurationProvider.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

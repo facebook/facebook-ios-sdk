@@ -16,32 +16,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#import "FBSDKErrorConfigurationProvider.h"
 
-#if SWIFT_PACKAGE
-#import "FBSDKConstants.h"
-#else
-#import <FBSDKCoreKit/FBSDKConstants.h>
-#endif
+#import "FBSDKServerConfigurationManager.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@implementation FBSDKErrorConfigurationProvider
 
-//immutable
-NS_SWIFT_NAME(ErrorRecoveryConfiguration)
-@interface FBSDKErrorRecoveryConfiguration : NSObject<NSCopying, NSSecureCoding>
+- (id<FBSDKErrorConfiguration>)errorConfiguration
+{
+  return [[FBSDKServerConfigurationManager cachedServerConfiguration] errorConfiguration]
+  ?: [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
+}
 
-@property (nonatomic, readonly) NSString *localizedRecoveryDescription;
-@property (nonatomic, readonly) NSArray *localizedRecoveryOptionDescriptions;
-@property (nonatomic, readonly) FBSDKGraphRequestError errorCategory;
-@property (nonatomic, readonly) NSString *recoveryActionName;
-
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
-
-- (instancetype)initWithRecoveryDescription:(NSString *)description
-                         optionDescriptions:(NSArray *)optionDescriptions
-                                   category:(FBSDKGraphRequestError)category
-                         recoveryActionName:(NSString *)recoveryActionName NS_DESIGNATED_INITIALIZER;
 @end
-
-NS_ASSUME_NONNULL_END

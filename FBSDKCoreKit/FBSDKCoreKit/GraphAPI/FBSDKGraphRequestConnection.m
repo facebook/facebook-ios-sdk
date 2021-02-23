@@ -22,7 +22,7 @@
 #import "FBSDKConstants.h"
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKError.h"
-#import "FBSDKErrorConfiguration.h"
+#import "FBSDKErrorConfigurationProvider.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestBody.h"
 #import "FBSDKGraphRequestDataAttachment.h"
@@ -59,8 +59,6 @@ static NSString *const kUserAgentBase = @"FBiOSSDK";
 static NSString *const kBatchRestMethodBaseURL = @"method/";
 
 static NSTimeInterval g_defaultTimeout = 60.0;
-
-static FBSDKErrorConfiguration *g_errorConfiguration;
 
 #if !TARGET_OS_TV
 static FBSDKAccessToken *_CreateExpiredAccessToken(FBSDKAccessToken *accessToken)
@@ -116,6 +114,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (nonatomic, assign) uint64_t requestStartTime;
 @property (nonatomic, strong) id<FBSDKURLSessionProxying> session;
 @property (nonatomic, strong) id<FBSDKURLSessionProxyProviding> sessionProxyFactory;
+@property (nonatomic, strong) id<FBSDKErrorConfigurationProviding> errorConfigurationProvider;
 
 @end
 
@@ -144,6 +143,13 @@ static BOOL _canMakeRequests = NO;
 
 - (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
 {
+  return [self initWithURLSessionProxyFactory:proxyFactory
+                   errorConfigurationProvider:[FBSDKErrorConfigurationProvider new]];
+}
+
+- (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
+                    errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
+{
   if ((self = [super init])) {
     _requests = [[NSMutableArray alloc] init];
     _timeout = g_defaultTimeout;
@@ -151,6 +157,7 @@ static BOOL _canMakeRequests = NO;
     _logger = [[FBSDKLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorNetworkRequests];
     _sessionProxyFactory = proxyFactory;
     _session = [proxyFactory createSessionProxyWithDelegate:self queue:_delegateQueue];
+    _errorConfigurationProvider = errorConfigurationProvider;
   }
   return self;
 }
@@ -219,11 +226,6 @@ static BOOL _canMakeRequests = NO;
 
 - (void)start
 {
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    g_errorConfiguration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
-  });
-
   if (![self.class canMakeRequests]) {
     NSString *msg = @"FBSDKGraphRequestConnection cannot be started before Facebook SDK initialized.";
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
@@ -235,9 +237,6 @@ static BOOL _canMakeRequests = NO;
 
     return;
   }
-
-  // optimistically check for updated server configuration;
-  g_errorConfiguration = [FBSDKServerConfigurationManager cachedServerConfiguration].errorConfiguration ?: g_errorConfiguration;
 
   if (self.state != kStateCreated && self.state != kStateSerialized) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
@@ -820,7 +819,7 @@ static BOOL _canMakeRequests = NO;
 
   [self.requests enumerateObjectsUsingBlock:^(FBSDKGraphRequestMetadata *metadata, NSUInteger i, BOOL *stop) {
     id result = networkError ? nil : [FBSDKTypeUtility array:results objectAtIndex:i];
-    NSError *const resultError = networkError ?: errorFromResult(result, metadata.request);
+    NSError *const resultError = networkError ?: [self errorFromResult:result request:metadata.request];
 
     id body = nil;
     if (!resultError && [result isKindOfClass:[NSDictionary class]]) {
@@ -919,7 +918,7 @@ static BOOL _canMakeRequests = NO;
   }];
 }
 
-static NSError *_Nullable errorFromResult(id untypedParam, FBSDKGraphRequest *request)
+- (NSError *_Nullable)errorFromResult:(id)untypedParam request:(FBSDKGraphRequest *)request
 {
   NSDictionary *const result = FBSDK_CAST_TO_CLASS_OR_NIL(untypedParam, NSDictionary);
   if (!result) {
@@ -949,17 +948,23 @@ static NSError *_Nullable errorFromResult(id untypedParam, FBSDKGraphRequest *re
   [FBSDKTypeUtility dictionary:userInfo setObject:result[@"code"] forKey:FBSDKGraphRequestErrorHTTPStatusCodeKey];
   [FBSDKTypeUtility dictionary:userInfo setObject:result forKey:FBSDKGraphRequestErrorParsedJSONResponseKey];
 
-  FBSDKErrorRecoveryConfiguration *recoveryConfiguration = [g_errorConfiguration
-                                                            recoveryConfigurationForCode:[userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] stringValue]
-                                                            subcode:[userInfo[FBSDKGraphRequestErrorGraphErrorSubcodeKey] stringValue]
+  NSString *errorCode = [[FBSDKTypeUtility numberValue:userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey]] stringValue];
+  NSString *errorSubcode = [[FBSDKTypeUtility numberValue:userInfo[FBSDKGraphRequestErrorGraphErrorSubcodeKey]] stringValue];
+  FBSDKErrorRecoveryConfiguration *recoveryConfiguration = [self.errorConfigurationProvider.errorConfiguration
+                                                            recoveryConfigurationForCode:errorCode ?: @"*"
+                                                            subcode:errorSubcode ?: @"*"
                                                             request:request];
-  if ([errorDictionary[@"is_transient"] boolValue]) {
-    [FBSDKTypeUtility dictionary:userInfo setObject:@(FBSDKGraphRequestErrorTransient) forKey:FBSDKGraphRequestErrorKey];
-  } else {
-    [FBSDKTypeUtility dictionary:userInfo setObject:@(recoveryConfiguration.errorCategory) forKey:FBSDKGraphRequestErrorKey];
-  }
-  [FBSDKTypeUtility dictionary:userInfo setObject:recoveryConfiguration.localizedRecoveryDescription forKey:NSLocalizedRecoverySuggestionErrorKey];
-  [FBSDKTypeUtility dictionary:userInfo setObject:recoveryConfiguration.localizedRecoveryOptionDescriptions forKey:NSLocalizedRecoveryOptionsErrorKey];
+  BOOL isTransient = [[FBSDKTypeUtility numberValue:errorDictionary[@"is_transient"]] boolValue];
+  NSNumber *errorCategory = isTransient ? @(FBSDKGraphRequestErrorTransient) : @(recoveryConfiguration.errorCategory);
+  [FBSDKTypeUtility dictionary:userInfo
+                     setObject:errorCategory
+                        forKey:FBSDKGraphRequestErrorKey];
+  [FBSDKTypeUtility dictionary:userInfo
+                     setObject:recoveryConfiguration.localizedRecoveryDescription
+                        forKey:NSLocalizedRecoverySuggestionErrorKey];
+  [FBSDKTypeUtility dictionary:userInfo
+                     setObject:recoveryConfiguration.localizedRecoveryOptionDescriptions
+                        forKey:NSLocalizedRecoveryOptionsErrorKey];
   FBSDKErrorRecoveryAttempter *attempter = [FBSDKErrorRecoveryAttempter recoveryAttempterFromConfiguration:recoveryConfiguration];
   [FBSDKTypeUtility dictionary:userInfo setObject:attempter forKey:NSRecoveryAttempterErrorKey];
 

@@ -16,32 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+@objcMembers
+public class TestErrorConfigurationProvider: NSObject, ErrorConfigurationProviding {
+  public let configuration: ErrorConfigurationProtocol
 
-#if SWIFT_PACKAGE
-#import "FBSDKConstants.h"
-#else
-#import <FBSDKCoreKit/FBSDKConstants.h>
-#endif
+  public init(configuration: ErrorConfigurationProtocol) {
+    self.configuration = configuration
+  }
 
-NS_ASSUME_NONNULL_BEGIN
-
-//immutable
-NS_SWIFT_NAME(ErrorRecoveryConfiguration)
-@interface FBSDKErrorRecoveryConfiguration : NSObject<NSCopying, NSSecureCoding>
-
-@property (nonatomic, readonly) NSString *localizedRecoveryDescription;
-@property (nonatomic, readonly) NSArray *localizedRecoveryOptionDescriptions;
-@property (nonatomic, readonly) FBSDKGraphRequestError errorCategory;
-@property (nonatomic, readonly) NSString *recoveryActionName;
-
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
-
-- (instancetype)initWithRecoveryDescription:(NSString *)description
-                         optionDescriptions:(NSArray *)optionDescriptions
-                                   category:(FBSDKGraphRequestError)category
-                         recoveryActionName:(NSString *)recoveryActionName NS_DESIGNATED_INITIALIZER;
-@end
-
-NS_ASSUME_NONNULL_END
+  public func errorConfiguration() -> ErrorConfigurationProtocol {
+    return configuration
+  }
+}
