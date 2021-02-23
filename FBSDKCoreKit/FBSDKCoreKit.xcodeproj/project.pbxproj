@@ -1028,6 +1028,10 @@
 		F496E5FE24E5D0D5006231A2 /* FakeTokenCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = F496E5FD24E5D0D5006231A2 /* FakeTokenCache.swift */; };
 		F496E60F24E5D195006231A2 /* SampleAccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = F496E60E24E5D195006231A2 /* SampleAccessToken.swift */; };
 		F496E61224E6049A006231A2 /* AppDelegateObserverFake.swift in Sources */ = {isa = PBXBuildFile; fileRef = F496E61124E6049A006231A2 /* AppDelegateObserverFake.swift */; };
+		F4A2B1A525E56BF400DE13D9 /* FBSDKDeviceButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D9E16AA1CB46C7D00C8B68F /* FBSDKDeviceButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F4A2B1BA25E56BF500DE13D9 /* FBSDKDeviceButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D9E16AA1CB46C7D00C8B68F /* FBSDKDeviceButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F4A2B1D525E56C3200DE13D9 /* FBSDKDeviceViewControllerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D10A68B1CB38D5D00F42AC1 /* FBSDKDeviceViewControllerBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F4A2B1E325E56C3300DE13D9 /* FBSDKDeviceViewControllerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D10A68B1CB38D5D00F42AC1 /* FBSDKDeviceViewControllerBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4A826B724EC6FAD00EB2CD4 /* FBSDKProfileTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F4A826B624EC6FAC00EB2CD4 /* FBSDKProfileTests.m */; };
 		F4AE435225508FEA00FA9DE6 /* FBSDKProfilePictureView+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = B301910D253622A2001A8DB0 /* FBSDKProfilePictureView+Internal.h */; };
 		F4BD4024241EEDE500B45D39 /* FBSDKTestCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = F4BD4023241EEDE500B45D39 /* FBSDKTestCoder.m */; };
@@ -2947,6 +2951,7 @@
 				81B71D4B1D19C87400933E93 /* FBSDKBridgeAPIResponse.h in Headers */,
 				FDAF4A8E2395D27900711C4C /* FBSDKModelUtility.h in Headers */,
 				F9A06DB82510FAD3007E6386 /* FBSDKAppEventsConfiguration.h in Headers */,
+				F4A2B1A525E56BF400DE13D9 /* FBSDKDeviceButton.h in Headers */,
 				81B71D4C1D19C87400933E93 /* FBSDKCoreKit+Internal.h in Headers */,
 				BFC02453237B6B8E00A596EE /* FBSDKTensor.hpp in Headers */,
 				F441659325CAFED900DAB0A5 /* FBSDKURLSessionTask.h in Headers */,
@@ -3005,6 +3010,7 @@
 				81B71D651D19C87400933E93 /* FBSDKBridgeAPIRequest.h in Headers */,
 				81B71D671D19C87400933E93 /* FBSDKWebDialogView.h in Headers */,
 				81B71D681D19C87400933E93 /* FBSDKServerConfiguration+Internal.h in Headers */,
+				F4A2B1E325E56C3300DE13D9 /* FBSDKDeviceViewControllerBase.h in Headers */,
 				81B71D6A1D19C87400933E93 /* FBSDKCloseIcon.h in Headers */,
 				F441659125CAFED900DAB0A5 /* FBSDKLibAnalyzer.h in Headers */,
 				5DBC72D22373793400A9D859 /* FBSDKModelManager.h in Headers */,
@@ -3166,8 +3172,10 @@
 				C5696F83209BBC35009C931F /* FBSDKViewHierarchy.h in Headers */,
 				C5EAFA5E255283C100458DF5 /* FBSDKUserDataStore+Internal.h in Headers */,
 				5E3AFFE7258C191200BE46AB /* FBSDKAuthenticationTokenHeader.h in Headers */,
+				F4A2B1BA25E56BF500DE13D9 /* FBSDKDeviceButton.h in Headers */,
 				9DA81AF61AA4EF3300B9FE0B /* FBSDKProfile.h in Headers */,
 				5DBC72D12373793300A9D859 /* FBSDKModelManager.h in Headers */,
+				F4A2B1D525E56C3200DE13D9 /* FBSDKDeviceViewControllerBase.h in Headers */,
 				C4FC99D9202CD5590038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.h in Headers */,
 				52963A94215992F400C7B252 /* FBSDKWebViewAppLinkResolver.h in Headers */,
 				5D4360DB23219F7900254DF7 /* FBSDKCrashObserver.h in Headers */,

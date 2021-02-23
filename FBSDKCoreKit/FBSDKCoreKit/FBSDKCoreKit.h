@@ -27,6 +27,8 @@
  #import <FBSDKCoreKit/FBSDKButton.h>
  #import <FBSDKCoreKit/FBSDKConstants.h>
  #import <FBSDKCoreKit/FBSDKCopying.h>
+ #import <FBSDKCoreKit/FBSDKDeviceButton.h>
+ #import <FBSDKCoreKit/FBSDKDeviceViewControllerBase.h>
  #import <FBSDKCoreKit/FBSDKGraphRequest.h>
  #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
  #import <FBSDKCoreKit/FBSDKGraphRequestDataAttachment.h>
@@ -51,9 +53,6 @@
   #import <FBSDKCoreKit/FBSDKProfilePictureView.h>
   #import <FBSDKCoreKit/FBSDKURL.h>
   #import <FBSDKCoreKit/FBSDKWebViewAppLinkResolver.h>
- #else
-  #import <FBSDKCoreKit/FBSDKDeviceButton.h>
-  #import <FBSDKCoreKit/FBSDKDeviceViewControllerBase.h>
  #endif
 
 #else
@@ -65,6 +64,8 @@
  #import "FBSDKButton.h"
  #import "FBSDKConstants.h"
  #import "FBSDKCopying.h"
+ #import "FBSDKDeviceButton.h"
+ #import "FBSDKDeviceViewControllerBase.h"
  #import "FBSDKGraphRequest.h"
  #import "FBSDKGraphRequestConnection.h"
  #import "FBSDKGraphRequestDataAttachment.h"
@@ -89,9 +90,6 @@
   #import "FBSDKProfilePictureView.h"
   #import "FBSDKURL.h"
   #import "FBSDKWebViewAppLinkResolver.h"
- #else
-  #import "FBSDKDeviceButton.h"
-  #import "FBSDKDeviceViewControllerBase.h"
  #endif
 
 #endif
