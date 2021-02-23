@@ -26,7 +26,14 @@
 #import "FBSDKTestCase.h"
 #import "UserDefaultsSpy.h"
 
+@interface FBSDKGraphRequestConnection (AppDelegateTesting)
++ (BOOL)canMakeRequests;
++ (void)resetCanMakeRequests;
+@end
+
 @interface FBSDKApplicationDelegate (Testing)
+
++ (void)resetIsSdkInitialized;
 
 - (BOOL)isAppLaunched;
 - (void)setIsAppLaunched:(BOOL)isLaunched;
@@ -163,6 +170,19 @@
 
 // MARK: - Lifecycle Methods
 
+- (void)testInitializingSdkEnablesGraphRequests
+{
+  [FBSDKApplicationDelegate resetIsSdkInitialized];
+  [FBSDKGraphRequestConnection resetCanMakeRequests];
+
+  [FBSDKApplicationDelegate initializeSDK:@{}];
+
+  XCTAssertTrue(
+    [FBSDKGraphRequestConnection canMakeRequests],
+    "Initializing the SDK should enable making graph requests"
+  );
+}
+
 - (void)testDidFinishLaunchingLaunchedApp
 {
   _delegate.isAppLaunched = YES;
@@ -171,7 +191,6 @@
     [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil],
     "Should return false if the application is already launched"
   );
-  // TODO: check that side effects do not occur
 }
 
 - (void)testDidFinishLaunchingSetsCurrentAccessTokenWithCache

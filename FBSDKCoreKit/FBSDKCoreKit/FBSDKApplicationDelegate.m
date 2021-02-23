@@ -72,7 +72,7 @@ static UIApplicationState _applicationState;
     return;
   }
 
-  g_isSDKInitialized = YES;
+  [self setIsSdkInitialized];
 
   FBSDKApplicationDelegate *delegate = [self sharedInstance];
   [FBSDKSettings recordInstall];
@@ -428,9 +428,20 @@ static UIApplicationState _applicationState;
   return g_isSDKInitialized;
 }
 
++ (void)setIsSdkInitialized
+{
+  g_isSDKInitialized = YES;
+  [FBSDKGraphRequestConnection setCanMakeRequests];
+}
+
 // MARK: - Testability
 
 #if DEBUG
+
++ (void)resetIsSdkInitialized
+{
+  g_isSDKInitialized = NO;
+}
 
 - (BOOL)isAppLaunched
 {
@@ -440,11 +451,6 @@ static UIApplicationState _applicationState;
 - (void)setIsAppLaunched:(BOOL)isLaunched
 {
   _isAppLaunched = isLaunched;
-}
-
-+ (void)setIsSdkInitialized:(BOOL)isInitialized
-{
-  g_isSDKInitialized = isInitialized;
 }
 
 - (NSHashTable<id<FBSDKApplicationObserving>> *)applicationObservers

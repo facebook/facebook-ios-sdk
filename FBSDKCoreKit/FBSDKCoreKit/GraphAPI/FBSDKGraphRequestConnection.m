@@ -135,6 +135,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 #endif
 }
 
+static BOOL _canMakeRequests = NO;
+
 - (instancetype)init
 {
   return [self initWithURLSessionProxyFactory:[FBSDKURLSessionProxyFactory new]];
@@ -222,7 +224,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
     g_errorConfiguration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
   });
 
-  if (![FBSDKApplicationDelegate isSDKInitialized]) {
+  if (![self.class canMakeRequests]) {
     NSString *msg = @"FBSDKGraphRequestConnection cannot be started before Facebook SDK initialized.";
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                        formatString:@"%@", msg];
@@ -288,6 +290,18 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 {
   _session.delegateQueue = queue;
   _delegateQueue = queue;
+}
+
+#pragma mark - Private Properties
+
++ (void)setCanMakeRequests
+{
+  _canMakeRequests = YES;
+}
+
++ (BOOL)canMakeRequests
+{
+  return _canMakeRequests;
 }
 
 - (id<FBSDKURLSessionProxying>)session
@@ -1231,6 +1245,16 @@ static NSError *_Nullable errorFromResult(id untypedParam, FBSDKGraphRequest *re
 + (void)resetDefaultConnectionTimeout
 {
   g_defaultTimeout = 60;
+}
+
+- (NSString *)_overrideVersionPart
+{
+  return _overrideVersionPart;
+}
+
++ (void)resetCanMakeRequests
+{
+  _canMakeRequests = NO;
 }
 
 #endif

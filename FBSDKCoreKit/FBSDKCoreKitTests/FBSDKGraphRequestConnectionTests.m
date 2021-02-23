@@ -44,11 +44,14 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (nonatomic, strong) id<FBSDKURLSessionProxyProviding> sessionProxyFactory;
 @property (nonatomic, assign) FBSDKGraphRequestConnectionState state;
 
++ (BOOL)canMakeRequests;
++ (void)resetCanMakeRequests;
 + (void)resetDefaultConnectionTimeout;
 - (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)sessionProxyFactory;
 - (NSMutableURLRequest *)requestWithBatch:(NSArray *)requests
                                   timeout:(NSTimeInterval)timeout;
 - (NSString *)accessTokenWithRequest:(FBSDKGraphRequest *)request;
+- (NSString *)_overrideVersionPart;
 
 @end
 
@@ -79,9 +82,10 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
   [self stubAppID:self.appID];
   [self stubCheckingFeatures];
-  [self stubIsSDKInitialized:YES];
   [self stubLoadingGateKeepers];
   [self stubAddingServerConfigurationPiggyback];
+
+  [FBSDKGraphRequestConnection setCanMakeRequests];
 
   _session = [FakeURLSessionProxy new];
   _sessionFactory = [FakeURLSessionProxyFactory createWith:_session];
@@ -95,6 +99,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   _session = nil;
   _sessionFactory = nil;
   _connection = nil;
+
+  [FBSDKGraphRequestConnection resetCanMakeRequests];
 
   [super tearDown];
 }
@@ -125,7 +131,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   }
 }
 
-// MARK: - Creating Connection
+// MARK: - Dependencies
 
 - (void)testCreatingWithDefaultUrlSessionProxyFactory
 {
@@ -188,6 +194,63 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
     FBSDKGraphRequestConnection.defaultConnectionTimeout,
     100,
     "Should be able to override the default connection timeout"
+  );
+}
+
+- (void)testDefaultOverriddenVersionPart
+{
+  XCTAssertNil(
+    [self.connection _overrideVersionPart],
+    "There should not be an overridden version part by default"
+  );
+}
+
+- (void)testOverridingVersionPartWithInvalidVersions
+{
+  NSArray *strings = @[@"", @"abc", @"-5", @"1.1.1.1.1", @"v1.1.1.1"];
+  for (NSString *string in strings) {
+    [self.connection overrideGraphAPIVersion:string];
+    XCTAssertEqualObjects(
+      [self.connection _overrideVersionPart],
+      string,
+      "Should not be able to override the graph api version with %@ but you can",
+      string
+    );
+  }
+}
+
+- (void)testOverridingVersionPartWithValidVersions
+{
+  NSArray *strings = @[@"1", @"1.1", @"1.1.1", @"v1", @"v1.1", @"v1.1.1"];
+  for (NSString *string in strings) {
+    [self.connection overrideGraphAPIVersion:string];
+    XCTAssertEqualObjects(
+      [self.connection _overrideVersionPart],
+      string,
+      "Should be able to override the graph api version with a valid version string"
+    );
+  }
+}
+
+- (void)testOverridingVersionCopies
+{
+  NSString *version = @"v1.0";
+  [self.connection overrideGraphAPIVersion:version];
+  version = @"foo";
+
+  XCTAssertNotEqual(
+    version,
+    [self.connection _overrideVersionPart],
+    "Should copy the version so that changes to the original string do not affect the stored value"
+  );
+}
+
+- (void)testDefaultCanMakeRequests
+{
+  [FBSDKGraphRequestConnection resetCanMakeRequests];
+  XCTAssertFalse(
+    [FBSDKGraphRequestConnection canMakeRequests],
+    "Should not be able to make requests by default"
   );
 }
 
@@ -311,7 +374,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [connection start];
 
   NSData *data = [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463, \"type\":\"OAuthException\"}}" dataUsingEncoding:NSUTF8StringEncoding];
-  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:400 HTTPVersion:nil headerFields:nil];
+  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL new] statusCode:400 HTTPVersion:nil headerFields:nil];
 
   fakeSession.capturedCompletion(data, response, nil);
   [self waitForExpectations:@[expectation] timeout:1];

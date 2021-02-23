@@ -30,6 +30,8 @@
 
 @property (nonatomic, readonly) NSMutableArray *requests;
 
++ (void)setCanMakeRequests;
+
 /**
  Get the graph request url for a single graph request
  @param request The Graph Request we need the url for

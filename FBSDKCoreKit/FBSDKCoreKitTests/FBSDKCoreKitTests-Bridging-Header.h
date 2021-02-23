@@ -28,8 +28,10 @@
 #import "FBSDKSessionProviding.h"
 #import "FBSDKTestCase.h"
 #import "FakeBundle.h"
+// URLSession Abstraction
 #import "FBSDKURLSessionProxyProviding.h"
 #import "FBSDKURLSessionProxyFactory.h"
+// GraphRequestConnection Abstraction
 #import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKGraphRequestConnectionFactory.h"
 #import "FBSDKGraphRequestConnectionProviding.h"
