@@ -20,6 +20,8 @@
 
 #import "FBSDKCopying.h"
 
+@class FBSDKAuthenticationTokenClaims;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -53,6 +55,11 @@ NS_SWIFT_NAME(AuthenticationToken)
   The graph domain where the user is authenticated.
  */
 @property (nonatomic, copy, readonly) NSString *graphDomain;
+
+/**
+  Returns the claims encoded in the AuthenticationToken
+ */
+- (nullable FBSDKAuthenticationTokenClaims *)claims;
 
 @end
 

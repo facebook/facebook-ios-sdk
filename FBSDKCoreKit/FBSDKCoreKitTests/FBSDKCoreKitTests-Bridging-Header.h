@@ -94,9 +94,7 @@ NS_SWIFT_NAME(FBProfilePictureViewState)
 @interface FBSDKAuthenticationToken (Testing)
 
 - (instancetype)initWithTokenString:(NSString *)tokenString
-                              nonce:(NSString *)nonce
-                             claims:(nullable FBSDKAuthenticationTokenClaims *)claims
-                                jti:(NSString *)jti;
+                              nonce:(NSString *)nonce;
 
 + (void)setCurrentAuthenticationToken:(nullable FBSDKAuthenticationToken *)token
                shouldPostNotification:(BOOL)shouldPostNotification;

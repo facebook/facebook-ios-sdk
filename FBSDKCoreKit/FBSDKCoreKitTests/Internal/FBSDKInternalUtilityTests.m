@@ -43,7 +43,6 @@
 
 - (instancetype)initWithTokenString:(NSString *)tokenString
                               nonce:(NSString *)nonce
-                             claims:(nullable FBSDKAuthenticationTokenClaims *)claims
                         graphDomain:(NSString *)graphDomain;
 
 @end
@@ -189,7 +188,9 @@
 - (void)testFacebookGamingURL
 {
   [self stubFacebookDomainPartWith:@""];
-  FBSDKAuthenticationToken *authToken = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"token_string" nonce:@"nonce" claims:nil graphDomain:@"gaming"];
+  FBSDKAuthenticationToken *authToken = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"token_string"
+                                                                                        nonce:@"nonce"
+                                                                                  graphDomain:@"gaming"];
   [FBSDKAuthenticationToken setCurrentAuthenticationToken:authToken];
   NSString *URLString;
 

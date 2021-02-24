@@ -35,12 +35,6 @@
  #import "FBSDKLoginUtility.h"
  #import "FBSDKPermission.h"
 
-@interface FBSDKAuthenticationToken (ClaimsProviding)
-
-- (FBSDKAuthenticationTokenClaims *)claims;
-
-@end
-
 @implementation FBSDKLoginCompletionParameters
 
 - (instancetype)init

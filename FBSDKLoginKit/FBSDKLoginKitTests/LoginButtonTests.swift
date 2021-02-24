@@ -36,7 +36,7 @@ class LoginButtonTests: XCTestCase {
   }
 
   var sampleToken: AuthenticationToken {
-    return AuthenticationToken(tokenString: "abc", nonce: "123", claims: nil, jti: "jti")
+    return AuthenticationToken(tokenString: "abc", nonce: "123")
   }
 
   override func setUp() {

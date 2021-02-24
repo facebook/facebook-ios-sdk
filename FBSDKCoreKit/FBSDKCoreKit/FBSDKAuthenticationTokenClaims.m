@@ -55,7 +55,7 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
   return self;
 }
 
-+ (nullable FBSDKAuthenticationTokenClaims *)validatedClaimsWithEncodedString:(NSString *)encodedClaims nonce:(NSString *)expectedNonce
++ (nullable FBSDKAuthenticationTokenClaims *)claimsFromEncodedString:(NSString *)encodedClaims nonce:(NSString *)expectedNonce
 {
   NSError *error;
   NSData *claimsData = [FBSDKBase64 decodeAsData:[FBSDKBase64 base64FromBase64Url:encodedClaims]];

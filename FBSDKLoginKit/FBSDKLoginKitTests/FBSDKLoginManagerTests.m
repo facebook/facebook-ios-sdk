@@ -65,12 +65,6 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
 @end
 
-@interface FBSDKAuthenticationToken (Testing)
-
-- (NSString *)jti;
-
-@end
-
 @interface FBSDKLoginManagerTests : XCTestCase
 
 @end
@@ -754,7 +748,6 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertNotNil(authToken, @"An Authentication token should be created after successful login");
   XCTAssertEqualObjects(authToken.tokenString, tokenString, @"A raw authentication token string should be stored");
   XCTAssertEqualObjects(authToken.nonce, kFakeNonce, @"The nonce claims in the authentication token should be stored");
-  XCTAssertEqualObjects(authToken.jti, kFakeJTI, @"The jit on the auth token should be derived from the claims");
 }
 
 - (void)validateProfile:(FBSDKProfile *)profile

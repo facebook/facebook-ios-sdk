@@ -48,8 +48,13 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 - (instancetype)initWithTokenString:(NSString *)tokenString
                               nonce:(NSString *)nonce
-                             claims:(nullable FBSDKAuthenticationTokenClaims *)claims
                         graphDomain:(NSString *)graphDomain;
+
+@end
+
+@interface FBSDKAuthenticationTokenClaims (Internal)
+
++ (nullable FBSDKAuthenticationTokenClaims *)claimsFromEncodedString:(NSString *)encodedClaims nonce:(NSString *)expectedNonce;
 
 @end
 
@@ -111,7 +116,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   NSString *encodedClaims = [FBSDKTypeUtility array:segments objectAtIndex:1];
   signature = [FBSDKTypeUtility array:segments objectAtIndex:2];
 
-  claims = [FBSDKAuthenticationTokenClaims validatedClaimsWithEncodedString:encodedClaims nonce:nonce];
+  claims = [FBSDKAuthenticationTokenClaims claimsFromEncodedString:encodedClaims nonce:nonce];
   header = [FBSDKAuthenticationTokenHeader validatedHeaderWithEncodedString:encodedHeader];
 
   if (!claims || !header) {
@@ -127,7 +132,6 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
                if (success) {
                  FBSDKAuthenticationToken *token = [[FBSDKAuthenticationToken alloc] initWithTokenString:tokenString
                                                                                                    nonce:nonce
-                                                                                                  claims:claims
                                                                                              graphDomain:graphDomain];
                  completion(token);
                } else {

@@ -55,13 +55,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-/**
- Returns a new instance, when one can be created from the parameters given, otherwise `nil`.
- @param encodedClaims Base64-encoded string of the claims.
- @param nonce The expected nonce string.
- */
-+ (nullable FBSDKAuthenticationTokenClaims *)validatedClaimsWithEncodedString:(NSString *)encodedClaims nonce:(NSString *)nonce;
-
 @end
 
 NS_ASSUME_NONNULL_END

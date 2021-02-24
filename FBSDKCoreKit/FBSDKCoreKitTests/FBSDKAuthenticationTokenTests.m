@@ -30,8 +30,6 @@
 
 - (instancetype)initWithTokenString:(NSString *)tokenString
                               nonce:(NSString *)nonce
-                             claims:(nullable FBSDKAuthenticationTokenClaims *)claims
-                                jti:(NSString *)jti
                         graphDomain:(NSString *)graphDomain;
 
 @end
@@ -70,14 +68,11 @@
 {
   NSString *expectedTokenString = @"expectedTokenString";
   NSString *expectedNonce = @"expectedNonce";
-  NSString *expectedJTI = @"expectedJTI";
   NSString *expectedGraphDomain = @"expectedGraphDomain";
 
   FBSDKTestCoder *coder = [FBSDKTestCoder new];
   _token = [[FBSDKAuthenticationToken alloc] initWithTokenString:expectedTokenString
                                                            nonce:expectedNonce
-                                                          claims:nil
-                                                             jti:expectedJTI
                                                      graphDomain:expectedGraphDomain];
   [_token encodeWithCoder:coder];
 
@@ -90,11 +85,6 @@
     coder.encodedObject[@"FBSDKAuthenticationTokenNonceCodingKey"],
     expectedNonce,
     @"Should encode the expected nonce string"
-  );
-  XCTAssertEqualObjects(
-    coder.encodedObject[@"FBSDKAuthenticationTokenJtiCodingKey"],
-    expectedJTI,
-    @"Should encode the expected JTI"
   );
   XCTAssertEqualObjects(
     coder.encodedObject[@"FBSDKAuthenticationTokenGraphDomainCodingKey"],
@@ -117,11 +107,6 @@
     coder.decodedObject[@"FBSDKAuthenticationTokenNonceCodingKey"],
     [NSString class],
     @"Initializing from a decoder should attempt to decode a String for the nonce key"
-  );
-  XCTAssertEqualObjects(
-    coder.decodedObject[@"FBSDKAuthenticationTokenJtiCodingKey"],
-    [NSString class],
-    @"Initializing from a decoder should attempt to decode a String for the jti key"
   );
   XCTAssertEqualObjects(
     coder.decodedObject[@"FBSDKAuthenticationTokenGraphDomainCodingKey"],

@@ -30,10 +30,6 @@ static NSString *const _encodedHeader = @"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9";
 static NSString *const _encodedClaims = @"eyJzdWIiOiIxMjM0IiwibmFtZSI6IlRlc3QgVXNlciIsImlzcyI6Imh0dHBzOi8vZmFjZWJvb2suY29tL2RpYWxvZy9vYXV0aCIsImF1ZCI6IjQzMjEiLCJub25jZSI6InNvbWVfbm9uY2UiLCJleHAiOjE1MTYyNTkwMjIsImVtYWlsIjoiZW1haWxAZW1haWwuY29tIiwicGljdHVyZSI6Imh0dHBzOi8vd3d3LmZhY2Vib29rLmNvbS9zb21lX3BpY3R1cmUiLCJpYXQiOjE1MTYyMzkwMjJ9";
 static NSString *const _signature = @"rTaqfx5Dz0UbzxZ3vBhitgtetWKBJ3-egz5n6l4ngLYqQ7ywapDvS7cM1NRGAh9drT8QeoxKPm0H_1B1LJBNyx-Fiseetfs7XANuocwTx9k7so3bi_EW0V-RYoDTgg5asS9Ra2qYM829xMYkhBHXp1HwHo0uHz1tafQ1hTsxtzH29t23_EnPpnVx5jvu-UeAEL4Q7VeIIfkweQYzuT3cowWAs-Vhyvl9I39Z4Uh_3ZhkpBJW1CblPW3ekHoySC61qwePM9Fk0q3N7K45LtktIMR5biV0RvJceTGOssHGhjaQ3hzpRq318MZKfBtg6C-Ryhh8SmOkuDrrj-VNdoVHKg";
 static NSString *const _certificateKey = @"some_key";
-static NSString *const _mockAppID = @"4321";
-static NSString *const _mockJTI = @"some_jti";
-static NSString *const _mockNonce = @"some_nonce";
-static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
 
 typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
@@ -51,21 +47,6 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 @end
 
-@interface FBSDKAuthenticationTokenClaims (Testing)
-
-- (instancetype)initWithJti:(NSString *)jti
-                        iss:(NSString *)iss
-                        aud:(NSString *)aud
-                      nonce:(NSString *)nonce
-                        exp:(long)exp
-                        iat:(long)iat
-                        sub:(NSString *)sub
-                       name:(nullable NSString *)name
-                      email:(nullable NSString *)email
-                    picture:(nullable NSString *)picture;
-
-@end
-
 @interface FBSDKAuthenticationTokenHeader (Testing)
 
 - (instancetype)initWithAlg:(NSString *)alg
@@ -80,8 +61,6 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 @implementation FBSDKAuthenticationTokenFactoryTests
 {
-  FBSDKAuthenticationTokenClaims *_claims;
-  NSDictionary *_claimsDict;
   FBSDKAuthenticationTokenHeader *_header;
   NSDictionary *_headerDict;
 }
@@ -89,34 +68,6 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 - (void)setUp
 {
   [super setUp];
-
-  [self stubAppID:_mockAppID];
-
-  long currentTime = [[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]] longValue];
-
-  _claims = [[FBSDKAuthenticationTokenClaims alloc] initWithJti:_mockJTI
-                                                            iss:_facebookURL
-                                                            aud:_mockAppID
-                                                          nonce:_mockNonce
-                                                            exp:currentTime + 60 * 60 * 48 // 2 days later
-                                                            iat:currentTime - 60 // 1 min ago
-                                                            sub:@"1234"
-                                                           name:@"Test User"
-                                                          email:@"email@email.com"
-                                                        picture:@"https://www.facebook.com/some_picture"];
-
-  _claimsDict = @{
-    @"iss" : _facebookURL,
-    @"aud" : _mockAppID,
-    @"nonce" : _mockNonce,
-    @"exp" : @(currentTime + 60 * 60 * 48), // 2 days later
-    @"iat" : @(currentTime - 60), // 1 min ago
-    @"jti" : _mockJTI,
-    @"sub" : @"1234",
-    @"name" : @"Test User",
-    @"email" : @"email@email.com",
-    @"picture" : @"https://www.facebook.com/some_picture",
-  };
 
   _header = [[FBSDKAuthenticationTokenHeader alloc] initWithAlg:@"RS256"
                                                             typ:@"JWT"
@@ -142,102 +93,6 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   [[FBSDKAuthenticationTokenFactory new] createTokenFromTokenString:@"invalid_token" nonce:@"123456789" completion:completion];
 
   XCTAssertTrue(wasCalled, @"Completion handler should be called syncronously");
-}
-
-// MARK: - Decoding Claims
-
-- (void)testDecodeValidClaims
-{
-  NSData *claimsData = [FBSDKTypeUtility dataWithJSONObject:_claimsDict options:0 error:nil];
-  NSString *encodedClaims = [self base64URLEncodeData:claimsData];
-
-  FBSDKAuthenticationTokenClaims *claims = [FBSDKAuthenticationTokenClaims validatedClaimsWithEncodedString:encodedClaims nonce:_mockNonce];
-  XCTAssertEqualObjects(claims, _claims);
-}
-
-- (void)testDecodeInvalidFormatClaims
-{
-  NSData *claimsData = [@"invalid_claims" dataUsingEncoding:NSUTF8StringEncoding];
-  NSString *encodedClaims = [self base64URLEncodeData:claimsData];
-
-  XCTAssertNil([FBSDKAuthenticationTokenClaims validatedClaimsWithEncodedString:encodedClaims nonce:_mockNonce]);
-}
-
-- (void)testDecodeInvalidClaims
-{
-  long currentTime = [[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]] longValue];
-
-  // non facebook issuer
-  [self assertDecodeClaimsFailWithInvalidEntry:@"iss"
-                                         value:@"https://notfacebook.com"];
-  [self assertDecodeClaimsFailWithInvalidEntry:@"iss"
-                                         value:nil];
-  [self assertDecodeClaimsFailWithInvalidEntry:@"iss"
-                                         value:@""];
-
-  // incorrect audience
-  [self assertDecodeClaimsFailWithInvalidEntry:@"aud"
-                                         value:@"wrong_app_id"];
-  [self assertDecodeClaimsFailWithInvalidEntry:@"aud"
-                                         value:nil];
-  [self assertDecodeClaimsFailWithInvalidEntry:@"aud"
-                                         value:@""];
-
-  // expired
-  [self assertDecodeClaimsFailWithInvalidEntry:@"exp"
-                                         value:@(currentTime - 60 * 60)];
-  [self assertDecodeClaimsFailWithInvalidEntry:@"exp"
-                                         value:nil];
-  [self assertDecodeClaimsFailWithInvalidEntry:@"exp"
-                                         value:@""];
-
-  // issued too long ago
-  [self assertDecodeClaimsFailWithInvalidEntry:@"iat"
-                                         value:@(currentTime - 60 * 60)];
-  [self assertDecodeClaimsFailWithInvalidEntry:@"iat"
-                                         value:nil];
-  [self assertDecodeClaimsFailWithInvalidEntry:@"iat"
-                                         value:@""];
-
-  // incorrect nonce
-  [self assertDecodeClaimsFailWithInvalidEntry:@"nonce"
-                                         value:@"incorrect_nonce"];
-  [self assertDecodeClaimsFailWithInvalidEntry:@"nonce"
-                                         value:nil];
-  [self assertDecodeClaimsFailWithInvalidEntry:@"nonce"
-                                         value:@""];
-
-  // invalid user ID
-  [self assertDecodeClaimsFailWithInvalidEntry:@"sub"
-                                         value:nil];
-  [self assertDecodeClaimsFailWithInvalidEntry:@"sub"
-                                         value:@""];
-
-  // invalid JIT
-  [self assertDecodeClaimsFailWithInvalidEntry:@"jti"
-                                         value:nil];
-  [self assertDecodeClaimsFailWithInvalidEntry:@"jti"
-                                         value:@""];
-}
-
-- (void)testDecodeEmptyClaims
-{
-  NSDictionary *claims = @{};
-  NSData *claimsData = [FBSDKTypeUtility dataWithJSONObject:claims options:0 error:nil];
-  NSString *encodedClaims = [self base64URLEncodeData:claimsData];
-
-  XCTAssertNil([FBSDKAuthenticationTokenClaims validatedClaimsWithEncodedString:encodedClaims nonce:_mockNonce]);
-}
-
-- (void)testDecodeRandomClaims
-{
-  for (int i = 0; i < 100; i++) {
-    NSDictionary *randomizedClaims = [Fuzzer randomizeWithJson:_claims];
-    NSData *claimsData = [FBSDKTypeUtility dataWithJSONObject:randomizedClaims options:0 error:nil];
-    NSString *encodedClaims = [self base64URLEncodeData:claimsData];
-
-    [FBSDKAuthenticationTokenClaims validatedClaimsWithEncodedString:encodedClaims nonce:_mockNonce];
-  }
 }
 
 // MARK: - Decoding Header
@@ -512,21 +367,6 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 }
 
 // MARK: - Helpers
-
-- (void)assertDecodeClaimsFailWithInvalidEntry:(NSString *)key value:(id)value
-{
-  NSMutableDictionary *invalidClaims = [_claimsDict mutableCopy];
-  if (value) {
-    [FBSDKTypeUtility dictionary:invalidClaims setObject:value forKey:key];
-  } else {
-    [invalidClaims removeObjectForKey:key];
-  }
-
-  NSData *claimsData = [FBSDKTypeUtility dataWithJSONObject:invalidClaims options:0 error:nil];
-  NSString *encodedClaims = [self base64URLEncodeData:claimsData];
-
-  XCTAssertNil([FBSDKAuthenticationTokenClaims validatedClaimsWithEncodedString:encodedClaims nonce:_mockNonce]);
-}
 
 - (void)assertDecodeHeaderFailWithInvalidEntry:(NSString *)key value:(id)value
 {

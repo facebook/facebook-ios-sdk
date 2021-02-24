@@ -38,53 +38,37 @@ static FBSDKAuthenticationToken *g_currentAuthenticationToken;
 
 NSString *const FBSDKAuthenticationTokenTokenStringCodingKey = @"FBSDKAuthenticationTokenTokenStringCodingKey";
 NSString *const FBSDKAuthenticationTokenNonceCodingKey = @"FBSDKAuthenticationTokenNonceCodingKey";
-NSString *const FBSDKAuthenticationTokenJtiCodingKey = @"FBSDKAuthenticationTokenJtiCodingKey";
 NSString *const FBSDKAuthenticationTokenGraphDomainCodingKey = @"FBSDKAuthenticationTokenGraphDomainCodingKey";
+
+@interface FBSDKAuthenticationTokenClaims (Internal)
+
++ (nullable FBSDKAuthenticationTokenClaims *)claimsFromEncodedString:(NSString *)encodedClaims nonce:(NSString *)expectedNonce;
+
+@end
 
 @implementation FBSDKAuthenticationToken
 {
-  FBSDKAuthenticationTokenClaims *_claims;
   NSString *_jti;
 }
 
 - (instancetype)initWithTokenString:(NSString *)tokenString
                               nonce:(NSString *)nonce
-                             claims:(nullable FBSDKAuthenticationTokenClaims *)claims
-                        graphDomain:(NSString *)graphDomain
-{
-  return [self initWithTokenString:tokenString
-                             nonce:nonce
-                            claims:claims
-                               jti:claims.jti
-                       graphDomain:graphDomain];
-}
-
-- (instancetype)initWithTokenString:(NSString *)tokenString
-                              nonce:(NSString *)nonce
-                             claims:(nullable FBSDKAuthenticationTokenClaims *)claims
-                                jti:(NSString *)jti
-{
-  return [self initWithTokenString:tokenString
-                             nonce:nonce
-                            claims:claims
-                               jti:jti
-                       graphDomain:@"facebook"];
-}
-
-- (instancetype)initWithTokenString:(NSString *)tokenString
-                              nonce:(NSString *)nonce
-                             claims:(nullable FBSDKAuthenticationTokenClaims *)claims
-                                jti:(NSString *)jti
                         graphDomain:(NSString *)graphDomain
 {
   if ((self = [super init])) {
     _tokenString = tokenString;
     _nonce = nonce;
-    _claims = claims;
-    _jti = jti;
     _graphDomain = graphDomain;
   }
   return self;
+}
+
+- (instancetype)initWithTokenString:(NSString *)tokenString
+                              nonce:(NSString *)nonce
+{
+  return [self initWithTokenString:tokenString
+                             nonce:nonce
+                       graphDomain:@"facebook"];
 }
 
 + (nullable FBSDKAuthenticationToken *)currentAuthenticationToken
@@ -100,17 +84,17 @@ NSString *const FBSDKAuthenticationTokenGraphDomainCodingKey = @"FBSDKAuthentica
   }
 }
 
-- (NSString *)jti
+- (FBSDKAuthenticationTokenClaims *)claims
 {
-  return _jti;
+  NSArray *segments = [_tokenString componentsSeparatedByString:@"."];
+  if (segments.count != 3) {
+    return nil;
+  }
+  NSString *encodedClaims = [FBSDKTypeUtility array:segments objectAtIndex:1];
+  return [FBSDKAuthenticationTokenClaims claimsFromEncodedString:encodedClaims nonce:_nonce];
 }
 
-- (nullable FBSDKAuthenticationTokenClaims *)claims
-{
-  return _claims;
-}
-
-#pragma mark Storage
+#pragma mark - Storage
 
 + (id<FBSDKTokenCaching>)tokenCache
 {
@@ -126,13 +110,10 @@ NSString *const FBSDKAuthenticationTokenGraphDomainCodingKey = @"FBSDKAuthentica
 {
   NSString *tokenString = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKAuthenticationTokenTokenStringCodingKey];
   NSString *nonce = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKAuthenticationTokenNonceCodingKey];
-  NSString *jti = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKAuthenticationTokenJtiCodingKey];
   NSString *graphDomain = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKAuthenticationTokenGraphDomainCodingKey];
 
   return [self initWithTokenString:tokenString
                              nonce:nonce
-                            claims:nil
-                               jti:jti
                        graphDomain:graphDomain];
 }
 
@@ -140,7 +121,6 @@ NSString *const FBSDKAuthenticationTokenGraphDomainCodingKey = @"FBSDKAuthentica
 {
   [encoder encodeObject:self.tokenString forKey:FBSDKAuthenticationTokenTokenStringCodingKey];
   [encoder encodeObject:self.nonce forKey:FBSDKAuthenticationTokenNonceCodingKey];
-  [encoder encodeObject:_jti forKey:FBSDKAuthenticationTokenJtiCodingKey];
   [encoder encodeObject:_graphDomain forKey:FBSDKAuthenticationTokenGraphDomainCodingKey];
 }
 

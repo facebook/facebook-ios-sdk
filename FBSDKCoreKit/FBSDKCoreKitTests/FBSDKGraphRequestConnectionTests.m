@@ -76,7 +76,6 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (instancetype)initWithTokenString:(NSString *)tokenString
                               nonce:(NSString *)nonce
-                             claims:(nullable FBSDKAuthenticationTokenClaims *)claims
                         graphDomain:(NSString *)graphDomain;
 
 @end
@@ -1060,7 +1059,6 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
   FBSDKAuthenticationToken *authToken = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"token_string"
                                                                                         nonce:@"nonce"
-                                                                                       claims:nil
                                                                                   graphDomain:@"gaming"];
   [FBSDKAuthenticationToken setCurrentAuthenticationToken:authToken];
 

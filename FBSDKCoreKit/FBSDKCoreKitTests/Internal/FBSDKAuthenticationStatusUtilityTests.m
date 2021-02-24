@@ -18,7 +18,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import "FBSDKAuthenticationToken+Internal.h"
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKTestCase.h"
 

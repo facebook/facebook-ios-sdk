@@ -28,8 +28,6 @@
   #import "FBSDKCoreKit+Internal.h"
  #endif
 
- #import "FBSDKAuthenticationToken+Internal.h"
-
 static NSString *const FBSDKOIDCStatusPath = @"/platform/oidc/status";
 
 @implementation FBSDKAuthenticationStatusUtility

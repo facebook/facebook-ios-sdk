@@ -61,6 +61,7 @@
  #import "FBSDKAppEvents.h"
  #import "FBSDKApplicationDelegate.h"
  #import "FBSDKAuthenticationToken.h"
+ #import "FBSDKAuthenticationTokenClaims.h"
  #import "FBSDKButton.h"
  #import "FBSDKConstants.h"
  #import "FBSDKCopying.h"
