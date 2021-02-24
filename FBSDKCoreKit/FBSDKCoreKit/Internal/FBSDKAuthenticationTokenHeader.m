@@ -39,7 +39,7 @@
   return self;
 }
 
-+ (nullable FBSDKAuthenticationTokenHeader *)validatedHeaderWithEncodedString:(NSString *)encodedHeader
++ (nullable FBSDKAuthenticationTokenHeader *)headerFromEncodedString:(NSString *)encodedHeader
 {
   NSError *error;
   NSData *headerData = [FBSDKBase64 decodeAsData:[FBSDKBase64 base64FromBase64Url:encodedHeader]];

@@ -16,7 +16,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
 #import "FBSDKCoreKit+Internal.h"
@@ -47,38 +46,11 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 @end
 
-@interface FBSDKAuthenticationTokenHeader (Testing)
-
-- (instancetype)initWithAlg:(NSString *)alg
-                        typ:(NSString *)typ
-                        kid:(NSString *)kid;
-
-@end
-
 @interface FBSDKAuthenticationTokenFactoryTests : FBSDKTestCase
 
 @end
 
 @implementation FBSDKAuthenticationTokenFactoryTests
-{
-  FBSDKAuthenticationTokenHeader *_header;
-  NSDictionary *_headerDict;
-}
-
-- (void)setUp
-{
-  [super setUp];
-
-  _header = [[FBSDKAuthenticationTokenHeader alloc] initWithAlg:@"RS256"
-                                                            typ:@"JWT"
-                                                            kid:@"abcd1234"];
-
-  _headerDict = @{
-    @"alg" : @"RS256",
-    @"typ" : @"JWT",
-    @"kid" : @"abcd1234",
-  };
-}
 
 // MARK: - Creation
 
@@ -93,59 +65,6 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   [[FBSDKAuthenticationTokenFactory new] createTokenFromTokenString:@"invalid_token" nonce:@"123456789" completion:completion];
 
   XCTAssertTrue(wasCalled, @"Completion handler should be called syncronously");
-}
-
-// MARK: - Decoding Header
-
-- (void)testDecodeValidHeader
-{
-  NSData *headerData = [FBSDKTypeUtility dataWithJSONObject:_headerDict options:0 error:nil];
-  NSString *encodedHeader = [self base64URLEncodeData:headerData];
-
-  FBSDKAuthenticationTokenHeader *header = [FBSDKAuthenticationTokenHeader validatedHeaderWithEncodedString:encodedHeader];
-  XCTAssertEqualObjects(header, _header);
-}
-
-- (void)testDecodeInvalidFormatHeader
-{
-  NSData *headerData = [@"invalid_header" dataUsingEncoding:NSUTF8StringEncoding];
-  NSString *encodedHeader = [self base64URLEncodeData:headerData];
-
-  XCTAssertNil([FBSDKAuthenticationTokenHeader validatedHeaderWithEncodedString:encodedHeader]);
-}
-
-- (void)testDecodeInvalidHeader
-{
-  [self assertDecodeHeaderFailWithInvalidEntry:@"alg" value:@"wrong_algorithm"];
-  [self assertDecodeHeaderFailWithInvalidEntry:@"alg" value:nil];
-  [self assertDecodeHeaderFailWithInvalidEntry:@"alg" value:@""];
-
-  [self assertDecodeHeaderFailWithInvalidEntry:@"typ" value:@"some_type"];
-  [self assertDecodeHeaderFailWithInvalidEntry:@"typ" value:nil];
-  [self assertDecodeHeaderFailWithInvalidEntry:@"typ" value:@""];
-
-  [self assertDecodeHeaderFailWithInvalidEntry:@"kid" value:nil];
-  [self assertDecodeHeaderFailWithInvalidEntry:@"kid" value:@""];
-}
-
-- (void)testDecodeEmptyHeader
-{
-  NSDictionary *header = @{};
-  NSData *headerData = [FBSDKTypeUtility dataWithJSONObject:header options:0 error:nil];
-  NSString *encodedHeader = [self base64URLEncodeData:headerData];
-
-  XCTAssertNil([FBSDKAuthenticationTokenHeader validatedHeaderWithEncodedString:encodedHeader]);
-}
-
-- (void)testDecodeRandomHeader
-{
-  for (int i = 0; i < 100; i++) {
-    NSDictionary *randomizedHeader = [Fuzzer randomizeWithJson:_headerDict];
-    NSData *headerData = [FBSDKTypeUtility dataWithJSONObject:randomizedHeader options:0 error:nil];
-    NSString *encodedHeader = [self base64URLEncodeData:headerData];
-
-    [FBSDKAuthenticationTokenHeader validatedHeaderWithEncodedString:encodedHeader];
-  }
 }
 
 // MARK: - Verifying Signature
@@ -367,28 +286,6 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 }
 
 // MARK: - Helpers
-
-- (void)assertDecodeHeaderFailWithInvalidEntry:(NSString *)key value:(id)value
-{
-  NSMutableDictionary *invalidHeader = [_headerDict mutableCopy];
-  if (value) {
-    [FBSDKTypeUtility dictionary:invalidHeader setObject:value forKey:key];
-  } else {
-    [invalidHeader removeObjectForKey:key];
-  }
-  NSData *headerData = [FBSDKTypeUtility dataWithJSONObject:invalidHeader options:0 error:nil];
-  NSString *encodedHeader = [self base64URLEncodeData:headerData];
-
-  XCTAssertNil([FBSDKAuthenticationTokenHeader validatedHeaderWithEncodedString:encodedHeader]);
-}
-
-- (NSString *)base64URLEncodeData:(NSData *)data
-{
-  NSString *base64 = [FBSDKBase64 encodeData:data];
-  NSString *base64URL = [base64 stringByReplacingOccurrencesOfString:@"+" withString:@"-"];
-  base64URL = [base64URL stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
-  return [base64URL stringByReplacingOccurrencesOfString:@"=" withString:@""];
-}
 
 - (NSDictionary *)validRawCertificateResponse
 {

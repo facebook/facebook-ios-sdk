@@ -117,7 +117,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   signature = [FBSDKTypeUtility array:segments objectAtIndex:2];
 
   claims = [FBSDKAuthenticationTokenClaims claimsFromEncodedString:encodedClaims nonce:nonce];
-  header = [FBSDKAuthenticationTokenHeader validatedHeaderWithEncodedString:encodedHeader];
+  header = [FBSDKAuthenticationTokenHeader headerFromEncodedString:encodedHeader];
 
   if (!claims || !header) {
     completion(nil);

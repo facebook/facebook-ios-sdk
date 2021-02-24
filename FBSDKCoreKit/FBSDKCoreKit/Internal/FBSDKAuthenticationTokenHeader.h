@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
  Returns a new instance, when one can be created from the parameters given, otherwise `nil`.
  @param encodedHeader Base64-encoded string of the header.
  */
-+ (nullable FBSDKAuthenticationTokenHeader *)validatedHeaderWithEncodedString:(NSString *)encodedHeader;
++ (nullable FBSDKAuthenticationTokenHeader *)headerFromEncodedString:(NSString *)encodedHeader;
 
 @end
 
