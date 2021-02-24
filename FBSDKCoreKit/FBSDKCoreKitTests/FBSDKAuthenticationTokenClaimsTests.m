@@ -38,7 +38,8 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
                         sub:(NSString *)sub
                        name:(nullable NSString *)name
                       email:(nullable NSString *)email
-                    picture:(nullable NSString *)picture;
+                    picture:(nullable NSString *)picture
+                userFriends:(nullable NSArray<NSString *> *)userFriends;
 
 + (nullable FBSDKAuthenticationTokenClaims *)claimsFromEncodedString:(NSString *)encodedClaims nonce:(NSString *)expectedNonce;
 
@@ -71,20 +72,11 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
                                                             sub:@"1234"
                                                            name:@"Test User"
                                                           email:@"email@email.com"
-                                                        picture:@"https://www.facebook.com/some_picture"];
+                                                        picture:@"https://www.facebook.com/some_picture"
+                                                    userFriends:@[@"1122", @"3344", @"5566"]
+  ];
 
-  _claimsDict = @{
-    @"iss" : _claims.iss,
-    @"aud" : _claims.aud,
-    @"nonce" : _claims.nonce,
-    @"exp" : @(_claims.exp),
-    @"iat" : @(_claims.iat),
-    @"jti" : _claims.jti,
-    @"sub" : _claims.sub,
-    @"name" : _claims.name,
-    @"email" : _claims.email,
-    @"picture" : _claims.picture,
-  };
+  _claimsDict = [self dictionaryFromClaims:_claims];
 }
 
 // MARK: - Decoding Claims
@@ -106,7 +98,7 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
   XCTAssertNil([FBSDKAuthenticationTokenClaims claimsFromEncodedString:encodedClaims nonce:_mockNonce]);
 }
 
-- (void)testDecodeInvalidClaims
+- (void)testDecodeClaimsWithInvalidRequiredClaims
 {
   long currentTime = [[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]] longValue];
 
@@ -163,6 +155,16 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
                                          value:@""];
 }
 
+- (void)testDecodeClaimsWithInvalidOptionalClaims
+{
+  for (NSString *claim in @[@"name", @"email", @"picture", @"user_friends"]) {
+    [self assertDecodeClaimsDropInvalidEntry:claim value:nil];
+    [self assertDecodeClaimsDropInvalidEntry:claim value:[NSDictionary new]];
+  }
+
+  [self assertDecodeClaimsDropInvalidEntry:@"user_friends" value:@[[NSDictionary new]]];
+}
+
 - (void)testDecodeEmptyClaims
 {
   NSDictionary *claims = @{};
@@ -200,12 +202,48 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
   XCTAssertNil([FBSDKAuthenticationTokenClaims claimsFromEncodedString:encodedClaims nonce:_mockNonce]);
 }
 
+- (void)assertDecodeClaimsDropInvalidEntry:(NSString *)key value:(id)value
+{
+  NSMutableDictionary *invalidClaims = [_claimsDict mutableCopy];
+  if (value) {
+    [FBSDKTypeUtility dictionary:invalidClaims setObject:value forKey:key];
+  } else {
+    [invalidClaims removeObjectForKey:key];
+  }
+
+  NSData *claimsData = [FBSDKTypeUtility dataWithJSONObject:invalidClaims options:0 error:nil];
+  NSString *encodedClaims = [self base64URLEncodeData:claimsData];
+
+  FBSDKAuthenticationTokenClaims *actualClaims = [FBSDKAuthenticationTokenClaims claimsFromEncodedString:encodedClaims nonce:_mockNonce];
+  XCTAssertNotNil(actualClaims);
+  XCTAssertNil([self dictionaryFromClaims:actualClaims][key]);
+}
+
 - (NSString *)base64URLEncodeData:(NSData *)data
 {
   NSString *base64 = [FBSDKBase64 encodeData:data];
   NSString *base64URL = [base64 stringByReplacingOccurrencesOfString:@"+" withString:@"-"];
   base64URL = [base64URL stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
   return [base64URL stringByReplacingOccurrencesOfString:@"=" withString:@""];
+}
+
+- (NSDictionary *)dictionaryFromClaims:(FBSDKAuthenticationTokenClaims *)claims
+{
+  NSMutableDictionary *dict = [NSMutableDictionary new];
+  [dict setValue:claims.iss forKey:@"iss"];
+  [dict setValue:claims.aud forKey:@"aud"];
+  [dict setValue:claims.nonce forKey:@"nonce"];
+  [dict setValue:@(claims.exp) forKey:@"exp"];
+  [dict setValue:@(claims.iat) forKey:@"iat"];
+  [dict setValue:@(claims.exp) forKey:@"exp"];
+  [dict setValue:claims.jti forKey:@"jti"];
+  [dict setValue:claims.sub forKey:@"sub"];
+  [dict setValue:claims.name forKey:@"name"];
+  [dict setValue:claims.email forKey:@"email"];
+  [dict setValue:claims.picture forKey:@"picture"];
+  [dict setValue:claims.userFriends forKey:@"user_friends"];
+
+  return dict;
 }
 
 @end

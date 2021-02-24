@@ -52,6 +52,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// URL of the End-User's profile picture.
 @property (nullable, nonatomic, readonly, strong) NSString *picture;
 
+/// End-User's friends.
+@property (nullable, nonatomic, readonly, strong) NSArray<NSString *> *userFriends;
+
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 

@@ -38,6 +38,7 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
                        name:(nullable NSString *)name
                       email:(nullable NSString *)email
                     picture:(nullable NSString *)picture
+                userFriends:(nullable NSArray<NSString *> *)userFriends
 {
   if (self = [super init]) {
     _jti = jti;
@@ -50,6 +51,7 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
     _name = name;
     _email = email;
     _picture = picture;
+    _userFriends = userFriends;
   }
 
   return self;
@@ -93,6 +95,14 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
       NSString *email = [FBSDKTypeUtility stringValue:claimsDict[@"email"]];
       NSString *picture = [FBSDKTypeUtility stringValue:claimsDict[@"picture"]];
 
+      NSArray<NSString *> *userFriends = [FBSDKTypeUtility arrayValue:claimsDict[@"user_friends"]];
+      for (NSString *friend in userFriends) {
+        if (![FBSDKTypeUtility stringValue:friend]) {
+          userFriends = nil;
+          break;
+        }
+      }
+
       if (hasJti && isFacebook && audMatched && !isExpired && issuedRecently && nonceMatched && userIDValid) {
         return [[FBSDKAuthenticationTokenClaims alloc] initWithJti:jti
                                                                iss:iss
@@ -103,13 +113,16 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
                                                                sub:sub
                                                               name:name
                                                              email:email
-                                                           picture:picture];
+                                                           picture:picture
+                                                       userFriends:userFriends];
       }
     }
   }
 
   return nil;
 }
+
+// MARK: Equality
 
 - (BOOL)isEqualToClaims:(FBSDKAuthenticationTokenClaims *)claims
 {
@@ -122,7 +135,8 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
   && [_sub isEqualToString:claims.sub]
   && [_name isEqualToString:claims.name]
   && [_email isEqualToString:claims.email]
-  && [_picture isEqualToString:claims.picture];
+  && [_picture isEqualToString:claims.picture]
+  && [_userFriends isEqualToArray:claims.userFriends];
 }
 
 - (BOOL)isEqual:(id)object

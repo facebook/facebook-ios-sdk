@@ -95,6 +95,7 @@
         @"public_profile",
         @"gaming_profile",
         @"gaming_user_picture",
+        @"user_friends",
                                              ]];
       NSSet *combined = [permissions setByAddingObjectsFromSet:validPermissions];
 
