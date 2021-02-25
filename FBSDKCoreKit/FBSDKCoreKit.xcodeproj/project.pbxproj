@@ -830,7 +830,7 @@
 		F40B24B2247324BB0059351C /* RawServerConfigurationResponseFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40B24B1247324BB0059351C /* RawServerConfigurationResponseFixtures.swift */; };
 		F40B24C224732DD90059351C /* Fuzzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40B24C124732DD90059351C /* Fuzzer.swift */; };
 		F40D25F325E41C71004681FC /* TestOperationQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40D25F225E41C71004681FC /* TestOperationQueue.swift */; };
-		F40D269125E4376D004681FC /* TestGraphRequestPiggybackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40D269025E4376D004681FC /* TestGraphRequestPiggybackManager.swift */; };
+		F40D269125E4376D004681FC /* TestLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40D269025E4376D004681FC /* TestLogger.swift */; };
 		F40D26FD25E443E8004681FC /* FBSDKGraphRequestPiggybackManagerProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = F40D26EE25E44268004681FC /* FBSDKGraphRequestPiggybackManagerProvider.m */; };
 		F40D270B25E443E9004681FC /* FBSDKGraphRequestPiggybackManagerProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = F40D26EE25E44268004681FC /* FBSDKGraphRequestPiggybackManagerProvider.m */; };
 		F40D270C25E443EA004681FC /* FBSDKGraphRequestPiggybackManagerProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = F40D26EE25E44268004681FC /* FBSDKGraphRequestPiggybackManagerProvider.m */; };
@@ -1069,6 +1069,8 @@
 		F4EB31BB2540A1B800736B67 /* SampleGraphRequestConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EB31BA2540A1B800736B67 /* SampleGraphRequestConnection.swift */; };
 		F4EB31D32540A35800736B67 /* SampleGraphRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EB31D22540A35800736B67 /* SampleGraphRequest.swift */; };
 		F4EB33CE2542323500736B67 /* SampleRawRemotePermissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EB33CD2542323500736B67 /* SampleRawRemotePermissions.swift */; };
+		F4EC331125E5C1A20003C0CF /* TestGraphRequestPiggybackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EC330925E5C1A10003C0CF /* TestGraphRequestPiggybackManager.swift */; };
+		F4EC333A25E5CC9C0003C0CF /* TestGraphRequestBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EC333925E5CC9C0003C0CF /* TestGraphRequestBody.swift */; };
 		F4ED90DB24EDDC610048D283 /* NotificationCenterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ED90DA24EDDC610048D283 /* NotificationCenterSpy.swift */; };
 		F4F6029525D5BD7E0053D3E7 /* FBSDKURLSessionProxyFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = F4F6029325D5BD7E0053D3E7 /* FBSDKURLSessionProxyFactory.h */; };
 		F4F6029625D5BD7E0053D3E7 /* FBSDKURLSessionProxyFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = F4F6029325D5BD7E0053D3E7 /* FBSDKURLSessionProxyFactory.h */; };
@@ -1614,7 +1616,7 @@
 		F40D25F225E41C71004681FC /* TestOperationQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestOperationQueue.swift; sourceTree = "<group>"; };
 		F40D262425E433D2004681FC /* FBSDKGraphRequestPiggybackManaging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKGraphRequestPiggybackManaging.h; sourceTree = "<group>"; };
 		F40D262D25E433E9004681FC /* FBSDKGraphRequestPiggybackManager+GraphRequestPiggybackManaging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKGraphRequestPiggybackManager+GraphRequestPiggybackManaging.h"; sourceTree = "<group>"; };
-		F40D269025E4376D004681FC /* TestGraphRequestPiggybackManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestPiggybackManager.swift; sourceTree = "<group>"; };
+		F40D269025E4376D004681FC /* TestLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestLogger.swift; sourceTree = "<group>"; };
 		F40D26E025E441DB004681FC /* FBSDKGraphRequestPiggybackManagerProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKGraphRequestPiggybackManagerProviding.h; sourceTree = "<group>"; };
 		F40D26EE25E44268004681FC /* FBSDKGraphRequestPiggybackManagerProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKGraphRequestPiggybackManagerProvider.m; sourceTree = "<group>"; };
 		F40D26EF25E442A7004681FC /* FBSDKGraphRequestPiggybackManagerProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKGraphRequestPiggybackManagerProvider.h; sourceTree = "<group>"; };
@@ -1701,6 +1703,8 @@
 		F4EB31BA2540A1B800736B67 /* SampleGraphRequestConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleGraphRequestConnection.swift; sourceTree = "<group>"; };
 		F4EB31D22540A35800736B67 /* SampleGraphRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleGraphRequest.swift; sourceTree = "<group>"; };
 		F4EB33CD2542323500736B67 /* SampleRawRemotePermissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleRawRemotePermissions.swift; sourceTree = "<group>"; };
+		F4EC330925E5C1A10003C0CF /* TestGraphRequestPiggybackManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestPiggybackManager.swift; sourceTree = "<group>"; };
+		F4EC333925E5CC9C0003C0CF /* TestGraphRequestBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestBody.swift; sourceTree = "<group>"; };
 		F4ED90DA24EDDC610048D283 /* NotificationCenterSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenterSpy.swift; sourceTree = "<group>"; };
 		F4F6027525D5BADC0053D3E7 /* FBSDKURLSessionProxying.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKURLSessionProxying.h; sourceTree = "<group>"; };
 		F4F6028525D5BB280053D3E7 /* FBSDKURLSessionProxyProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKURLSessionProxyProviding.h; sourceTree = "<group>"; };
@@ -2773,7 +2777,9 @@
 				F494285C25829C72008FE009 /* FakeSessionProvider.swift */,
 				F40D25F225E41C71004681FC /* TestOperationQueue.swift */,
 				F40D272825E4448A004681FC /* TestGraphRequestPiggybackManagerProvider.swift */,
-				F40D269025E4376D004681FC /* TestGraphRequestPiggybackManager.swift */,
+				F4EC330925E5C1A10003C0CF /* TestGraphRequestPiggybackManager.swift */,
+				F4EC333925E5CC9C0003C0CF /* TestGraphRequestBody.swift */,
+				F40D269025E4376D004681FC /* TestLogger.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -4247,6 +4253,7 @@
 			files = (
 				F40D25F325E41C71004681FC /* TestOperationQueue.swift in Sources */,
 				F492C0A324E1F5F600BA21F7 /* UserDefaultsSpy.m in Sources */,
+				F4EC331125E5C1A20003C0CF /* TestGraphRequestPiggybackManager.swift in Sources */,
 				9DF18BCB1A9F2517000F6748 /* FBSDKErrorConfigurationTests.m in Sources */,
 				9D18A8E91A95495D00A41042 /* FBSDKAppEventsUtilityTests.m in Sources */,
 				5CD6DB3C255B1D07002C296F /* FBSDKAppEventsUtilityTests.swift in Sources */,
@@ -4287,6 +4294,7 @@
 				5D2165F22229C6A3004952D8 /* FBSDKGraphRequestTests.m in Sources */,
 				F402B071255C740C00473083 /* ViewControllerSpy.swift in Sources */,
 				F931C07024F960D00088AD5F /* FBSDKSKAdNetworkRuleTests.swift in Sources */,
+				F4EC333A25E5CC9C0003C0CF /* TestGraphRequestBody.swift in Sources */,
 				7E253D811A8EAEF500CCCFE7 /* FBSDKInternalUtilityTests.m in Sources */,
 				C5F6EC861FA24FAF009EB258 /* FBSDKPaymentObserverTests.m in Sources */,
 				5D497702244A3E6A00BD45C6 /* FBSDKIntegrityTests.m in Sources */,
@@ -4310,7 +4318,7 @@
 				C51121CC20A27EF50041DC94 /* FBSDKSampleEventBinding.swift in Sources */,
 				F916581524F6BAB200BB759A /* FBSDKSKAdNetworkConversionConfigurationTests.m in Sources */,
 				F4A826B724EC6FAD00EB2CD4 /* FBSDKProfileTests.m in Sources */,
-				F40D269125E4376D004681FC /* TestGraphRequestPiggybackManager.swift in Sources */,
+				F40D269125E4376D004681FC /* TestLogger.swift in Sources */,
 				5D59BFFF23A7505D0008CA5A /* FBSDKLibAnalyzerTests.m in Sources */,
 				F4EB317F2540955500736B67 /* FBSDKGraphRequestPiggybackManagerTests.m in Sources */,
 				F40B24B2247324BB0059351C /* RawServerConfigurationResponseFixtures.swift in Sources */,

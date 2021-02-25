@@ -16,18 +16,28 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+@objcMembers
+class TestGraphRequestBody: GraphRequestBody {
+  var capturedKey: String?
+  var capturedFormValue: String?
+  var capturedImage: UIImage?
+  var capturedData: Data?
+  var capturedAttachment: GraphRequestDataAttachment?
 
-#import "FBSDKErrorConfigurationProtocol.h"
+  override func append(withKey key: String!, formValue value: String!, logger: Logger!) {
+    capturedKey = key
+    capturedFormValue = value
+  }
 
-NS_ASSUME_NONNULL_BEGIN
+  override func append(withKey key: String!, imageValue image: UIImage!, logger: Logger!) {
+    capturedImage = image
+  }
 
-/// Describes any type that can provide an error configuration
-NS_SWIFT_NAME(ErrorConfigurationProviding)
-@protocol FBSDKErrorConfigurationProviding
+  override func append(withKey key: String!, dataValue data: Data!, logger: Logger!) {
+    capturedData = data
+  }
 
-- (nullable id<FBSDKErrorConfiguration>)errorConfiguration;
-
-@end
-
-NS_ASSUME_NONNULL_END
+  override func append(withKey key: String!, dataAttachmentValue dataAttachment: GraphRequestDataAttachment!, logger: Logger!) {
+    capturedAttachment = dataAttachment
+  }
+}

@@ -18,13 +18,13 @@
 
 @objcMembers
 class TestErrorConfigurationProvider: NSObject, ErrorConfigurationProviding {
-  let configuration: ErrorConfigurationProtocol
+  let configuration: ErrorConfigurationProtocol?
 
-  init(configuration: ErrorConfigurationProtocol) {
+  init(configuration: ErrorConfigurationProtocol? = nil) {
     self.configuration = configuration
   }
 
-  func errorConfiguration() -> ErrorConfigurationProtocol {
+  func errorConfiguration() -> ErrorConfigurationProtocol? {
     return configuration
   }
 }

@@ -16,18 +16,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+@objcMembers
+class TestLogger: Logger {
+  static var capturedLoggingBehavior: String?
+  static var capturedLogEntry: String?
 
-#import "FBSDKErrorConfigurationProtocol.h"
+  override class func singleShotLogEntry(_ loggingBehavior: String, logEntry: String) {
+    capturedLoggingBehavior = loggingBehavior
+    capturedLogEntry = logEntry
+  }
 
-NS_ASSUME_NONNULL_BEGIN
-
-/// Describes any type that can provide an error configuration
-NS_SWIFT_NAME(ErrorConfigurationProviding)
-@protocol FBSDKErrorConfigurationProviding
-
-- (nullable id<FBSDKErrorConfiguration>)errorConfiguration;
-
-@end
-
-NS_ASSUME_NONNULL_END
+  class func reset() {
+    capturedLoggingBehavior = nil
+    capturedLogEntry = nil
+  }
+}

@@ -392,7 +392,7 @@ static BOOL _canMakeRequests = NO;
     } else if ([value isKindOfClass:[FBSDKGraphRequestDataAttachment class]]) {
       [body appendWithKey:key dataAttachmentValue:(FBSDKGraphRequestDataAttachment *)value logger:logger];
     } else {
-      [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors formatString:@"Unsupported FBSDKGraphRequest attachment:%@, skipping.", value];
+      [logger.class singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors formatString:@"Unsupported FBSDKGraphRequest attachment:%@, skipping.", value];
     }
   }];
 }
