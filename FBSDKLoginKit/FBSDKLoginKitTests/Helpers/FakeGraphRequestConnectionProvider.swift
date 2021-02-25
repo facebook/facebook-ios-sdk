@@ -19,15 +19,15 @@
 import Foundation
 
 @objcMembers
-public class FakeGraphRequestConnectionFactory: NSObject, GraphRequestConnectionProviding {
+public class TestGraphRequestConnectionFactory: NSObject, GraphRequestConnectionProviding {
   let stubbedConnection: GraphRequestConnecting
 
   private init(stubbedConnection: GraphRequestConnecting) {
     self.stubbedConnection = stubbedConnection
   }
 
-  static func create(withStubbedConnection connection: GraphRequestConnecting) -> FakeGraphRequestConnectionFactory {
-    return FakeGraphRequestConnectionFactory(stubbedConnection: connection)
+  static func create(withStubbedConnection connection: GraphRequestConnecting) -> TestGraphRequestConnectionFactory {
+    return TestGraphRequestConnectionFactory(stubbedConnection: connection)
   }
 
   // MARK: - GraphRequestConnectionProviding
@@ -38,7 +38,7 @@ public class FakeGraphRequestConnectionFactory: NSObject, GraphRequestConnection
 }
 
 @objcMembers
-public class FakeGraphRequestConnection: NSObject, GraphRequestConnecting {
+public class TestGraphRequestConnection: NSObject, GraphRequestConnecting {
   var startCallCount = 0
   var capturedGraphRequest: GraphRequest?
   var capturedCompletionHandler: GraphRequestBlock?

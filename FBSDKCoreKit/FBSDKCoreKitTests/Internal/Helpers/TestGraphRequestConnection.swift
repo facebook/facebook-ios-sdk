@@ -17,7 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @objcMembers
-class FakeGraphRequestConnection: NSObject, GraphRequestConnecting {
+class TestGraphRequestConnection: NSObject, GraphRequestConnecting {
   var capturedRequest: GraphRequest?
   var capturedCompletion: GraphRequestBlock?
   var startCallCount = 0

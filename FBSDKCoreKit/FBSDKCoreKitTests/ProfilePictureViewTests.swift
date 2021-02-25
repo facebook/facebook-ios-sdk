@@ -19,7 +19,7 @@
 import FBSDKCoreKit
 import XCTest
 
-class ProfilePictureView: XCTestCase {
+class ProfilePictureViewTests: XCTestCase {
   var sampleProfile: Profile {
     return Profile(
       userID: "Sample ID",

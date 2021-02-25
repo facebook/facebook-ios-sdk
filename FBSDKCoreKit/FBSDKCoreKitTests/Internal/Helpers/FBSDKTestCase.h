@@ -29,7 +29,7 @@
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationManager.h"
 
-@class FakeTokenCache;
+@class TestTokenCache;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -210,7 +210,7 @@ Also, to get a better understanding of mocking, please read the documentation at
 - (void)stubLoggingIfUserSettingsChanged;
 
 /// Stubs `FBSDKSettings.tokenCache`
-- (void)stubTokenCacheWith:(FakeTokenCache *)cache;
+- (void)stubTokenCacheWith:(TestTokenCache *)cache;
 
 /// Stubs `FBSDKProfile.fetchCachedProfile`
 - (void)stubCachedProfileWith:(FBSDKProfile *__nullable)profile;

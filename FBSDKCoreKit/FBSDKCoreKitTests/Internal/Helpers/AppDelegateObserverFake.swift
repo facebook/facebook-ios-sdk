@@ -17,7 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @objcMembers
-class ApplicationDelegateObserverFake: NSObject, FBSDKApplicationObserving {
+class TestApplicationDelegateObserver: NSObject, FBSDKApplicationObserving {
   var didFinishLaunchingCallCount = 0
   var capturedLaunchOptions: [UIApplication.LaunchOptionsKey: Any]?
 

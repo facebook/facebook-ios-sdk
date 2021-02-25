@@ -76,7 +76,7 @@ static NSDictionary<NSString *, NSString *> *const _mockEmptyParameters(void)
 - (void)testCreatingWithCustomUrlSessionProxyFactory
 {
   FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
-  FakeGraphRequestConnectionFactory *fakeConnectionFactory = [FakeGraphRequestConnectionFactory createWithStubbedConnection:connection];
+  TestGraphRequestConnectionFactory *fakeConnectionFactory = [TestGraphRequestConnectionFactory createWithStubbedConnection:connection];
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:_mockGraphPath
                                                                  parameters:nil
                                                                 tokenString:nil
@@ -87,7 +87,7 @@ static NSDictionary<NSString *, NSString *> *const _mockEmptyParameters(void)
 
   XCTAssertEqualObjects(
     factory.class,
-    FakeGraphRequestConnectionFactory.class,
+    TestGraphRequestConnectionFactory.class,
     "A graph request should persist the session factory it was created with"
   );
 }
@@ -105,8 +105,8 @@ static NSDictionary<NSString *, NSString *> *const _mockEmptyParameters(void)
 {
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
 
-  FakeGraphRequestConnection *fakeConnection = [FakeGraphRequestConnection new];
-  FakeGraphRequestConnectionFactory *fakeConnectionFactory = [FakeGraphRequestConnectionFactory createWithStubbedConnection:fakeConnection];
+  TestGraphRequestConnection *fakeConnection = [TestGraphRequestConnection new];
+  TestGraphRequestConnectionFactory *fakeConnectionFactory = [TestGraphRequestConnectionFactory createWithStubbedConnection:fakeConnection];
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:_mockGraphPath
                                                                  parameters:nil
                                                                 tokenString:nil

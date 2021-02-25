@@ -48,7 +48,7 @@
 
 - (void)testRetrievingCurrentToken
 {
-  FakeTokenCache *cache = [[FakeTokenCache alloc] initWithAccessToken:nil authenticationToken:nil];
+  TestTokenCache *cache = [[TestTokenCache alloc] initWithAccessToken:nil authenticationToken:nil];
   _token = SampleAuthenticationToken.validToken;
   id partialTokenMock = OCMPartialMock(_token);
   OCMStub([partialTokenMock tokenCache]).andReturn(cache);

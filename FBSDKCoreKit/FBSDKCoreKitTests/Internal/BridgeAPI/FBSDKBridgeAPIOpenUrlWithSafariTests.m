@@ -122,7 +122,7 @@
 
 - (void)testWithoutSafariVcAvailable
 {
-  FakeDylibResolver *resolver = [FakeDylibResolver new];
+  TestDylibResolver *resolver = [TestDylibResolver new];
   self.urlOpener.stubbedIsAuthenticationUrl = NO;
   self.api.expectingBackground = YES;
 

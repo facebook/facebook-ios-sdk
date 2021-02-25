@@ -16,18 +16,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import FBSDKCoreKit
-
 @objcMembers
-class FakeTokenCache: NSObject, TokenCaching {
-  var accessToken: AccessToken?
-  var authenticationToken: AuthenticationToken?
+class TestURLSessionProxy: NSObject, URLSessionProxying {
+  var delegateQueue: OperationQueue?
+  /// The most recent captured completion
+  var capturedCompletion: UrlSessionTaskBlock?
+  /// The most recent captured request
+  var capturedRequest: URLRequest?
+  /// All captured requests for this networker instance
+  var capturedRequests = [URLRequest]()
+  var invalidateAndCancelCallCount = 0
 
-  init(
-    accessToken: AccessToken?,
-    authenticationToken: AuthenticationToken?
-  ) {
-    self.accessToken = accessToken
-    self.authenticationToken = authenticationToken
+  func execute(_ request: URLRequest, completionHandler handler: @escaping UrlSessionTaskBlock) {
+    capturedRequest = request
+    capturedRequests.append(request)
+    capturedCompletion = handler
+  }
+
+  func invalidateAndCancel() {
+    invalidateAndCancelCallCount += 1
   }
 }

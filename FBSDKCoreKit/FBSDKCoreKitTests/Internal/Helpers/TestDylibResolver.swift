@@ -17,40 +17,10 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @objcMembers
-class FakeBridgeApiRequest: NSObject, FBSDKBridgeAPIRequestProtocol {
-  var actionID: String?
-  var methodName: String?
-  var protocolType: FBSDKBridgeAPIProtocolType
-  var `protocol`: BridgeAPIProtocol?
-  var scheme: String?
+class TestDylibResolver: NSObject, FBSDKDynamicFrameworkResolving {
+  var stubSafariViewControllerClass: AnyClass?
 
-  let url: URL?
-
-  init(url: URL?, protocolType: FBSDKBridgeAPIProtocolType = .native, scheme: String? = nil) {
-    self.url = url
-    self.protocolType = protocolType
-    self.scheme = scheme
-  }
-
-  func copy(with zone: NSZone? = nil) -> Any {
-    return self
-  }
-
-  func requestURL() throws -> URL {
-    guard let url = url else {
-      throw FakeBridgeApiRequestError(domain: "tests", code: 0, userInfo: [:])
-    }
-    return url
-  }
-
-  static func request(withURL url: URL?) -> FakeBridgeApiRequest {
-    return FakeBridgeApiRequest(url: url)
-  }
-
-  static func request(withURL url: URL, scheme: String) -> FakeBridgeApiRequest {
-    return FakeBridgeApiRequest(url: url, scheme: scheme)
+  func safariViewControllerClass() -> AnyClass? {
+    return stubSafariViewControllerClass
   }
 }
-
-@objc
-class FakeBridgeApiRequestError: NSError {}

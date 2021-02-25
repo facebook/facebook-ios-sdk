@@ -77,8 +77,8 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 - (void)testVerifySignatureWithoutDataWithoutResponseWithoutError
 {
-  FakeSessionDataTask *dataTask = [FakeSessionDataTask new];
-  FakeSessionProvider *session = [FakeSessionProvider new];
+  TestSessionDataTask *dataTask = [TestSessionDataTask new];
+  TestSessionProvider *session = [TestSessionProvider new];
   session.stubbedDataTask = dataTask;
   FBSDKAuthenticationTokenFactory *factory = [[FBSDKAuthenticationTokenFactory alloc] initWithSessionProvider:session];
 
@@ -105,8 +105,8 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 - (void)testVerifySignatureWithDataWithInvalidResponseWithoutError
 {
-  FakeSessionDataTask *dataTask = [FakeSessionDataTask new];
-  FakeSessionProvider *session = [FakeSessionProvider new];
+  TestSessionDataTask *dataTask = [TestSessionDataTask new];
+  TestSessionProvider *session = [TestSessionProvider new];
   session.data = [@"foo" dataUsingEncoding:NSUTF8StringEncoding];
   session.urlResponse = [[NSHTTPURLResponse alloc] initWithURL:self.sampleURL statusCode:401 HTTPVersion:nil headerFields:nil];
   session.stubbedDataTask = dataTask;
@@ -135,8 +135,8 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 - (void)testVerifySignatureWithInvalidDataWithValidResponseWithoutError
 {
-  FakeSessionDataTask *dataTask = [FakeSessionDataTask new];
-  FakeSessionProvider *session = [FakeSessionProvider new];
+  TestSessionDataTask *dataTask = [TestSessionDataTask new];
+  TestSessionProvider *session = [TestSessionProvider new];
   session.data = [@"foo" dataUsingEncoding:NSUTF8StringEncoding];
   session.urlResponse = [[NSHTTPURLResponse alloc] initWithURL:self.sampleURL statusCode:200 HTTPVersion:nil headerFields:nil];
   session.stubbedDataTask = dataTask;
@@ -165,8 +165,8 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 - (void)testVerifySignatureWithValidDataWithValidResponseWithError
 {
-  FakeSessionDataTask *dataTask = [FakeSessionDataTask new];
-  FakeSessionProvider *session = [FakeSessionProvider new];
+  TestSessionDataTask *dataTask = [TestSessionDataTask new];
+  TestSessionProvider *session = [TestSessionProvider new];
   session.data = [self validCertificateData];
   session.urlResponse = [[NSHTTPURLResponse alloc] initWithURL:self.sampleURL statusCode:200 HTTPVersion:nil headerFields:nil];
   session.error = [self sampleError];
@@ -196,8 +196,8 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 - (void)testVerifySignatureWithValidDataWithValidResponseWithoutError
 {
-  FakeSessionDataTask *dataTask = [FakeSessionDataTask new];
-  FakeSessionProvider *session = [FakeSessionProvider new];
+  TestSessionDataTask *dataTask = [TestSessionDataTask new];
+  TestSessionProvider *session = [TestSessionProvider new];
   session.data = [self validCertificateData];
   session.urlResponse = [[NSHTTPURLResponse alloc] initWithURL:self.sampleURL statusCode:200 HTTPVersion:nil headerFields:nil];
   session.stubbedDataTask = dataTask;
@@ -232,8 +232,8 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   ];
 
   for (NSData *certificateData in certificates) {
-    FakeSessionDataTask *dataTask = [FakeSessionDataTask new];
-    FakeSessionProvider *session = [FakeSessionProvider new];
+    TestSessionDataTask *dataTask = [TestSessionDataTask new];
+    TestSessionProvider *session = [TestSessionProvider new];
     session.data = certificateData;
     session.urlResponse = [[NSHTTPURLResponse alloc] initWithURL:self.sampleURL statusCode:200 HTTPVersion:nil headerFields:nil];
     session.stubbedDataTask = dataTask;
@@ -262,8 +262,8 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 - (void)testVerifySignatureWithFuzzyData
 {
-  FakeSessionDataTask *dataTask = [FakeSessionDataTask new];
-  FakeSessionProvider *session = [FakeSessionProvider new];
+  TestSessionDataTask *dataTask = [TestSessionDataTask new];
+  TestSessionProvider *session = [TestSessionProvider new];
   session.urlResponse = [[NSHTTPURLResponse alloc] initWithURL:self.sampleURL statusCode:200 HTTPVersion:nil headerFields:nil];
   session.stubbedDataTask = dataTask;
   FBSDKAuthenticationTokenFactory *factory = [[FBSDKAuthenticationTokenFactory alloc] initWithSessionProvider:session];

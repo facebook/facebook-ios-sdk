@@ -17,35 +17,21 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @objcMembers
-class FakeSessionDataTask: NSObject, SessionDataTask {
-  var resumeCallCount = 0
-  var cancelCallCount = 0
+class TestGraphRequestConnectionFactory: NSObject, GraphRequestConnectionProviding {
+  var stubbedConnection: GraphRequestConnecting?
 
-  func resume() {
-    resumeCallCount += 1
+  static func create(withStubbedConnection connection: GraphRequestConnecting) -> TestGraphRequestConnectionFactory {
+    let factory = TestGraphRequestConnectionFactory()
+    factory.stubbedConnection = connection
+    return factory
   }
 
-  func cancel() {
-    cancelCallCount += 1
-  }
-}
+  // MARK: - GraphRequestConnectionProviding
 
-@objcMembers
-class FakeSessionProvider: NSObject, SessionProviding {
-  /// Data to return in a data task completion handler
-  var data: Data?
-  /// A url response to return in a data task completion handler
-  var urlResponse: URLResponse?
-  /// An error to return in a data task completion handler
-  var error: Error?
-  /// A data task to return from `dataTask(with:completion:)`
-  var stubbedDataTask: SessionDataTask?
-
-  func dataTask(
-    with request: URLRequest,
-    completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void
-  ) -> SessionDataTask {
-    completionHandler(data, urlResponse, error)
-    return stubbedDataTask ?? FakeSessionDataTask()
+  func createGraphRequestConnection() -> GraphRequestConnecting {
+    guard let connection = stubbedConnection else {
+      fatalError("Must stub a connection for a test connection factory")
+    }
+    return connection
   }
 }

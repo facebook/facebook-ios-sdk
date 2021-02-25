@@ -17,23 +17,40 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @objcMembers
-class FakeURLSessionProxy: NSObject, URLSessionProxying {
-  var delegateQueue: OperationQueue?
-  /// The most recent captured completion
-  var capturedCompletion: UrlSessionTaskBlock?
-  /// The most recent captured request
-  var capturedRequest: URLRequest?
-  /// All captured requests for this networker instance
-  var capturedRequests = [URLRequest]()
-  var invalidateAndCancelCallCount = 0
+class TestBridgeApiRequest: NSObject, FBSDKBridgeAPIRequestProtocol {
+  var actionID: String?
+  var methodName: String?
+  var protocolType: FBSDKBridgeAPIProtocolType
+  var `protocol`: BridgeAPIProtocol?
+  var scheme: String?
 
-  func execute(_ request: URLRequest, completionHandler handler: @escaping UrlSessionTaskBlock) {
-    capturedRequest = request
-    capturedRequests.append(request)
-    capturedCompletion = handler
+  let url: URL?
+
+  init(url: URL?, protocolType: FBSDKBridgeAPIProtocolType = .native, scheme: String? = nil) {
+    self.url = url
+    self.protocolType = protocolType
+    self.scheme = scheme
   }
 
-  func invalidateAndCancel() {
-    invalidateAndCancelCallCount += 1
+  func copy(with zone: NSZone? = nil) -> Any {
+    return self
+  }
+
+  func requestURL() throws -> URL {
+    guard let url = url else {
+      throw FakeBridgeApiRequestError(domain: "tests", code: 0, userInfo: [:])
+    }
+    return url
+  }
+
+  static func request(withURL url: URL?) -> TestBridgeApiRequest {
+    return TestBridgeApiRequest(url: url)
+  }
+
+  static func request(withURL url: URL, scheme: String) -> TestBridgeApiRequest {
+    return TestBridgeApiRequest(url: url, scheme: scheme)
   }
 }
+
+@objc
+class FakeBridgeApiRequestError: NSError {}

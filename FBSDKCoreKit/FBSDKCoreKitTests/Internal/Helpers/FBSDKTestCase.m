@@ -508,7 +508,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   OCMStub(ClassMethod([_settingsClassMock _logIfSDKSettingsChanged]));
 }
 
-- (void)stubTokenCacheWith:(FakeTokenCache *)cache
+- (void)stubTokenCacheWith:(TestTokenCache *)cache
 {
   OCMStub(ClassMethod([_settingsClassMock tokenCache])).andReturn(cache);
 }

@@ -120,7 +120,7 @@
 
 - (void)testAddingNewObserver
 {
-  ApplicationDelegateObserverFake *observer = [ApplicationDelegateObserverFake new];
+  TestApplicationDelegateObserver *observer = [TestApplicationDelegateObserver new];
   [_delegate addObserver:observer];
 
   XCTAssertEqual(
@@ -132,7 +132,7 @@
 
 - (void)testAddingDuplicateObservers
 {
-  ApplicationDelegateObserverFake *observer = [ApplicationDelegateObserverFake new];
+  TestApplicationDelegateObserver *observer = [TestApplicationDelegateObserver new];
   [_delegate addObserver:observer];
   [_delegate addObserver:observer];
 
@@ -145,7 +145,7 @@
 
 - (void)testRemovingObserver
 {
-  ApplicationDelegateObserverFake *observer = [ApplicationDelegateObserverFake new];
+  TestApplicationDelegateObserver *observer = [TestApplicationDelegateObserver new];
   [_delegate addObserver:observer];
   [_delegate removeObserver:observer];
 
@@ -158,7 +158,7 @@
 
 - (void)testRemovingMissingObserver
 {
-  ApplicationDelegateObserverFake *observer = [ApplicationDelegateObserverFake new];
+  TestApplicationDelegateObserver *observer = [TestApplicationDelegateObserver new];
   [_delegate removeObserver:observer];
 
   XCTAssertEqual(
@@ -196,7 +196,7 @@
 - (void)testDidFinishLaunchingSetsCurrentAccessTokenWithCache
 {
   FBSDKAccessToken *expected = SampleAccessToken.validToken;
-  FakeTokenCache *cache = [[FakeTokenCache alloc] initWithAccessToken:expected
+  TestTokenCache *cache = [[TestTokenCache alloc] initWithAccessToken:expected
                                                   authenticationToken:nil];
   [self stubTokenCacheWith:cache];
 
@@ -208,7 +208,7 @@
 
 - (void)testDidFinishLaunchingSetsCurrentAccessTokenWithoutCache
 {
-  [self stubTokenCacheWith:[[FakeTokenCache alloc] initWithAccessToken:nil authenticationToken:nil]];
+  [self stubTokenCacheWith:[[TestTokenCache alloc] initWithAccessToken:nil authenticationToken:nil]];
 
   [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 
@@ -219,7 +219,7 @@
 - (void)testDidFinishLaunchingSetsCurrentAuthenticationTokenWithCache
 {
   FBSDKAuthenticationToken *expected = SampleAuthenticationToken.validToken;
-  FakeTokenCache *cache = [[FakeTokenCache alloc] initWithAccessToken:nil
+  TestTokenCache *cache = [[TestTokenCache alloc] initWithAccessToken:nil
                                                   authenticationToken:expected];
   [self stubTokenCacheWith:cache];
 
@@ -231,7 +231,7 @@
 
 - (void)testDidFinishLaunchingSetsCurrentAuthenticationTokenWithoutCache
 {
-  FakeTokenCache *cache = [[FakeTokenCache alloc] initWithAccessToken:nil authenticationToken:nil];
+  TestTokenCache *cache = [[TestTokenCache alloc] initWithAccessToken:nil authenticationToken:nil];
   [self stubTokenCacheWith:cache];
 
   [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
@@ -291,8 +291,8 @@
 
 - (void)testDidFinishLaunchingWithObservers
 {
-  ApplicationDelegateObserverFake *observer1 = [ApplicationDelegateObserverFake new];
-  ApplicationDelegateObserverFake *observer2 = [ApplicationDelegateObserverFake new];
+  TestApplicationDelegateObserver *observer1 = [TestApplicationDelegateObserver new];
+  TestApplicationDelegateObserver *observer2 = [TestApplicationDelegateObserver new];
 
   [_delegate addObserver:observer1];
   [_delegate addObserver:observer2];

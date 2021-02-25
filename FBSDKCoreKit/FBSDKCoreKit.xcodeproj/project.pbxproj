@@ -825,7 +825,7 @@
 		F40682D825CF5E20003ADDDA /* FBSDKAppEventsNumberParser.m in Sources */ = {isa = PBXBuildFile; fileRef = F40682D425CF5E20003ADDDA /* FBSDKAppEventsNumberParser.m */; };
 		F40682F525CF6031003ADDDA /* FBSDKAppEventsNumberParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F40682F425CF6031003ADDDA /* FBSDKAppEventsNumberParserTests.m */; };
 		F408C6C02563091900372D61 /* FBSDKBridgeAPIOpenBridgeRequestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F408C6BF2563091900372D61 /* FBSDKBridgeAPIOpenBridgeRequestTests.m */; };
-		F408C6E9256309A500372D61 /* FakeBridgeApiRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F408C6E8256309A500372D61 /* FakeBridgeApiRequest.swift */; };
+		F408C6E9256309A500372D61 /* TestBridgeApiRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F408C6E8256309A500372D61 /* TestBridgeApiRequest.swift */; };
 		F408C712256320F300372D61 /* FBSDKBridgeAPIRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F408C711256320F300372D61 /* FBSDKBridgeAPIRequestTests.swift */; };
 		F40B24B2247324BB0059351C /* RawServerConfigurationResponseFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40B24B1247324BB0059351C /* RawServerConfigurationResponseFixtures.swift */; };
 		F40B24C224732DD90059351C /* Fuzzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40B24C124732DD90059351C /* Fuzzer.swift */; };
@@ -841,7 +841,7 @@
 		F41979282475A20E003007CC /* FBSDKTypeUtilityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F41979272475A20E003007CC /* FBSDKTypeUtilityTests.m */; };
 		F428430B246B427700CD4393 /* FBSDKServerConfigurationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F428430A246B427700CD4393 /* FBSDKServerConfigurationManagerTests.swift */; };
 		F43DC8F025E05DE40009E7D5 /* TestErrorConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43DC8E825E05DE40009E7D5 /* TestErrorConfiguration.swift */; };
-		F43F398B25D48C4B0046027A /* FakeURLSessionProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43F397C25D48C4B0046027A /* FakeURLSessionProxy.swift */; };
+		F43F398B25D48C4B0046027A /* TestURLSessionProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43F397C25D48C4B0046027A /* TestURLSessionProxy.swift */; };
 		F44163EC25CAFE3E00DAB0A5 /* FBSDKTypeUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = F4A11B4824E36E5200D4C010 /* FBSDKTypeUtility.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F44163ED25CAFE3E00DAB0A5 /* FBSDKBasicUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = F4A11B4D24E36E5200D4C010 /* FBSDKBasicUtility.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F44163EE25CAFE3E00DAB0A5 /* FBSDKURLSession.h in Headers */ = {isa = PBXBuildFile; fileRef = F4A11B4F24E36E5200D4C010 /* FBSDKURLSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -930,8 +930,8 @@
 		F441DC2D25DC93C10092C8F6 /* FBSDKGraphRequestConnectionFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F441DC2725DC93C10092C8F6 /* FBSDKGraphRequestConnectionFactory.m */; };
 		F441DC2E25DC93C10092C8F6 /* FBSDKGraphRequestConnectionFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F441DC2725DC93C10092C8F6 /* FBSDKGraphRequestConnectionFactory.m */; };
 		F441DC2F25DC93C10092C8F6 /* FBSDKGraphRequestConnectionFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F441DC2725DC93C10092C8F6 /* FBSDKGraphRequestConnectionFactory.m */; };
-		F441DC3E25DC97E60092C8F6 /* FakeGraphRequestConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F441DC3D25DC97E60092C8F6 /* FakeGraphRequestConnection.swift */; };
-		F441DC6725DC9AEB0092C8F6 /* FakeGraphRequestConnectionFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F441DC6625DC9AEB0092C8F6 /* FakeGraphRequestConnectionFactory.swift */; };
+		F441DC3E25DC97E60092C8F6 /* TestGraphRequestConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F441DC3D25DC97E60092C8F6 /* TestGraphRequestConnection.swift */; };
+		F441DC6725DC9AEB0092C8F6 /* TestGraphRequestConnectionFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F441DC6625DC9AEB0092C8F6 /* TestGraphRequestConnectionFactory.swift */; };
 		F441DD0925DD7A4A0092C8F6 /* FBSDKGraphRequestConnectionProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F441DC1725DC91A00092C8F6 /* FBSDKGraphRequestConnectionProviding.h */; };
 		F441DD1725DD7A4B0092C8F6 /* FBSDKGraphRequestConnectionProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F441DC1725DC91A00092C8F6 /* FBSDKGraphRequestConnectionProviding.h */; };
 		F441DDE725DDDB670092C8F6 /* GraphRequestConnectionFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F441DDD725DDDB670092C8F6 /* GraphRequestConnectionFactoryTests.swift */; };
@@ -950,7 +950,7 @@
 		F44B04EF256456140059A3A6 /* FBSDKDynamicFrameworkResolving.h in Headers */ = {isa = PBXBuildFile; fileRef = F44B04EC256456140059A3A6 /* FBSDKDynamicFrameworkResolving.h */; };
 		F44B04F0256456140059A3A6 /* FBSDKDynamicFrameworkResolving.h in Headers */ = {isa = PBXBuildFile; fileRef = F44B04EC256456140059A3A6 /* FBSDKDynamicFrameworkResolving.h */; };
 		F44B04F1256456140059A3A6 /* FBSDKDynamicFrameworkResolving.h in Headers */ = {isa = PBXBuildFile; fileRef = F44B04EC256456140059A3A6 /* FBSDKDynamicFrameworkResolving.h */; };
-		F44B051125645DAC0059A3A6 /* FakeDylibResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44B051025645DAC0059A3A6 /* FakeDylibResolver.swift */; };
+		F44B051125645DAC0059A3A6 /* TestDylibResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44B051025645DAC0059A3A6 /* TestDylibResolver.swift */; };
 		F44B056F256491590059A3A6 /* FBSDKBridgeAPI+SessionCompletionHandlerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F44B056E256491590059A3A6 /* FBSDKBridgeAPI+SessionCompletionHandlerTests.m */; };
 		F44CFF6425D4931C000E36E5 /* FBSDKURLSession+URLSessionProxying.h in Headers */ = {isa = PBXBuildFile; fileRef = F44CFF6225D4931C000E36E5 /* FBSDKURLSession+URLSessionProxying.h */; };
 		F44CFF6525D4931C000E36E5 /* FBSDKURLSession+URLSessionProxying.h in Headers */ = {isa = PBXBuildFile; fileRef = F44CFF6225D4931C000E36E5 /* FBSDKURLSession+URLSessionProxying.h */; };
@@ -1034,11 +1034,11 @@
 		F48AD348257700B80052C056 /* SampleAuthenticationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48AD347257700B80052C056 /* SampleAuthenticationToken.swift */; };
 		F492C0A224E1F5F600BA21F7 /* KeychainStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F492C0A024E1F5F600BA21F7 /* KeychainStoreSpy.swift */; };
 		F492C0A324E1F5F600BA21F7 /* UserDefaultsSpy.m in Sources */ = {isa = PBXBuildFile; fileRef = F492C0A124E1F5F600BA21F7 /* UserDefaultsSpy.m */; };
-		F494285D25829C72008FE009 /* FakeSessionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F494285C25829C72008FE009 /* FakeSessionProvider.swift */; };
+		F494285D25829C72008FE009 /* TestSessionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F494285C25829C72008FE009 /* TestSessionProvider.swift */; };
 		F494286B25829CE8008FE009 /* FBSDKSessionProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F494284025829B98008FE009 /* FBSDKSessionProviding.h */; };
 		F494287925829CE8008FE009 /* FBSDKSessionProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F494284025829B98008FE009 /* FBSDKSessionProviding.h */; };
 		F496E58F24E49DBC006231A2 /* SampleAppEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = F496E58E24E49DBC006231A2 /* SampleAppEvents.swift */; };
-		F496E5FE24E5D0D5006231A2 /* FakeTokenCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = F496E5FD24E5D0D5006231A2 /* FakeTokenCache.swift */; };
+		F496E5FE24E5D0D5006231A2 /* TestTokenCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = F496E5FD24E5D0D5006231A2 /* TestTokenCache.swift */; };
 		F496E60F24E5D195006231A2 /* SampleAccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = F496E60E24E5D195006231A2 /* SampleAccessToken.swift */; };
 		F496E61224E6049A006231A2 /* AppDelegateObserverFake.swift in Sources */ = {isa = PBXBuildFile; fileRef = F496E61124E6049A006231A2 /* AppDelegateObserverFake.swift */; };
 		F4A2B1A525E56BF400DE13D9 /* FBSDKDeviceButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D9E16AA1CB46C7D00C8B68F /* FBSDKDeviceButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1099,7 +1099,7 @@
 		F4F6032025D5C8AB0053D3E7 /* FBSDKURLSessionProxying.h in Headers */ = {isa = PBXBuildFile; fileRef = F4F6027525D5BADC0053D3E7 /* FBSDKURLSessionProxying.h */; };
 		F4F6032E25D5C8AB0053D3E7 /* FBSDKURLSessionProxyProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F4F6028525D5BB280053D3E7 /* FBSDKURLSessionProxyProviding.h */; };
 		F4F6032F25D5C8AB0053D3E7 /* FBSDKURLSessionProxying.h in Headers */ = {isa = PBXBuildFile; fileRef = F4F6027525D5BADC0053D3E7 /* FBSDKURLSessionProxying.h */; };
-		F4F6037025D5D3A30053D3E7 /* FakeURLSessionProxyFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F6036F25D5D3A30053D3E7 /* FakeURLSessionProxyFactory.swift */; };
+		F4F6037025D5D3A30053D3E7 /* TestURLSessionProxyFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F6036F25D5D3A30053D3E7 /* TestURLSessionProxyFactory.swift */; };
 		F4F603A625D5D9B50053D3E7 /* UrlSessionProxyFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F603A525D5D9B50053D3E7 /* UrlSessionProxyFactoryTests.swift */; };
 		F4F98C5324CB820A00F0D6EC /* FBSDKSafeCast.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F98C4A24CB820A00F0D6EC /* FBSDKSafeCast.m */; };
 		F4F98C5424CB820A00F0D6EC /* FBSDKSafeCast.m in Sources */ = {isa = PBXBuildFile; fileRef = F4F98C4A24CB820A00F0D6EC /* FBSDKSafeCast.m */; };
@@ -1619,7 +1619,7 @@
 		F40682D425CF5E20003ADDDA /* FBSDKAppEventsNumberParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppEventsNumberParser.m; sourceTree = "<group>"; };
 		F40682F425CF6031003ADDDA /* FBSDKAppEventsNumberParserTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppEventsNumberParserTests.m; sourceTree = "<group>"; };
 		F408C6BF2563091900372D61 /* FBSDKBridgeAPIOpenBridgeRequestTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKBridgeAPIOpenBridgeRequestTests.m; sourceTree = "<group>"; };
-		F408C6E8256309A500372D61 /* FakeBridgeApiRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeBridgeApiRequest.swift; sourceTree = "<group>"; };
+		F408C6E8256309A500372D61 /* TestBridgeApiRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBridgeApiRequest.swift; sourceTree = "<group>"; };
 		F408C711256320F300372D61 /* FBSDKBridgeAPIRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBSDKBridgeAPIRequestTests.swift; sourceTree = "<group>"; };
 		F40B24B1247324BB0059351C /* RawServerConfigurationResponseFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawServerConfigurationResponseFixtures.swift; sourceTree = "<group>"; };
 		F40B24C124732DD90059351C /* Fuzzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fuzzer.swift; sourceTree = "<group>"; };
@@ -1638,14 +1638,14 @@
 		F41979272475A20E003007CC /* FBSDKTypeUtilityTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKTypeUtilityTests.m; sourceTree = "<group>"; };
 		F428430A246B427700CD4393 /* FBSDKServerConfigurationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBSDKServerConfigurationManagerTests.swift; sourceTree = "<group>"; };
 		F43DC8E825E05DE40009E7D5 /* TestErrorConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestErrorConfiguration.swift; sourceTree = "<group>"; };
-		F43F397C25D48C4B0046027A /* FakeURLSessionProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeURLSessionProxy.swift; sourceTree = "<group>"; };
+		F43F397C25D48C4B0046027A /* TestURLSessionProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestURLSessionProxy.swift; sourceTree = "<group>"; };
 		F441DC1625DC91A00092C8F6 /* FBSDKGraphRequestConnection+GraphRequestConnecting.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKGraphRequestConnection+GraphRequestConnecting.h"; sourceTree = "<group>"; };
 		F441DC1725DC91A00092C8F6 /* FBSDKGraphRequestConnectionProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKGraphRequestConnectionProviding.h; sourceTree = "<group>"; };
 		F441DC1825DC92870092C8F6 /* FBSDKGraphRequestConnecting.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKGraphRequestConnecting.h; sourceTree = "<group>"; };
 		F441DC2625DC93C10092C8F6 /* FBSDKGraphRequestConnectionFactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKGraphRequestConnectionFactory.h; sourceTree = "<group>"; };
 		F441DC2725DC93C10092C8F6 /* FBSDKGraphRequestConnectionFactory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKGraphRequestConnectionFactory.m; sourceTree = "<group>"; };
-		F441DC3D25DC97E60092C8F6 /* FakeGraphRequestConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeGraphRequestConnection.swift; sourceTree = "<group>"; };
-		F441DC6625DC9AEB0092C8F6 /* FakeGraphRequestConnectionFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeGraphRequestConnectionFactory.swift; sourceTree = "<group>"; };
+		F441DC3D25DC97E60092C8F6 /* TestGraphRequestConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestConnection.swift; sourceTree = "<group>"; };
+		F441DC6625DC9AEB0092C8F6 /* TestGraphRequestConnectionFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestConnectionFactory.swift; sourceTree = "<group>"; };
 		F441DDD725DDDB670092C8F6 /* GraphRequestConnectionFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphRequestConnectionFactoryTests.swift; sourceTree = "<group>"; };
 		F443A27C25D1F45E0093AB78 /* FBSDKAppEventsPublishAteTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppEventsPublishAteTests.m; sourceTree = "<group>"; };
 		F443A2B725D20A530093AB78 /* FBSDKAppEventsAtePublisher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKAppEventsAtePublisher.h; sourceTree = "<group>"; };
@@ -1653,7 +1653,7 @@
 		F443A31B25D231460093AB78 /* FBSDKAppEventsAtePublisherTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppEventsAtePublisherTests.m; sourceTree = "<group>"; };
 		F44B04A8256442050059A3A6 /* FBSDKBridgeAPIOpenUrlWithSafariTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKBridgeAPIOpenUrlWithSafariTests.m; sourceTree = "<group>"; };
 		F44B04EC256456140059A3A6 /* FBSDKDynamicFrameworkResolving.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKDynamicFrameworkResolving.h; sourceTree = "<group>"; };
-		F44B051025645DAC0059A3A6 /* FakeDylibResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeDylibResolver.swift; sourceTree = "<group>"; };
+		F44B051025645DAC0059A3A6 /* TestDylibResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDylibResolver.swift; sourceTree = "<group>"; };
 		F44B056E256491590059A3A6 /* FBSDKBridgeAPI+SessionCompletionHandlerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "FBSDKBridgeAPI+SessionCompletionHandlerTests.m"; sourceTree = "<group>"; };
 		F44CFF6225D4931C000E36E5 /* FBSDKURLSession+URLSessionProxying.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKURLSession+URLSessionProxying.h"; sourceTree = "<group>"; };
 		F468B29C24C2456F00979F8D /* FBSDKRestrictiveData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKRestrictiveData.h; sourceTree = "<group>"; };
@@ -1677,9 +1677,9 @@
 		F492C0A024E1F5F600BA21F7 /* KeychainStoreSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainStoreSpy.swift; sourceTree = "<group>"; };
 		F492C0A124E1F5F600BA21F7 /* UserDefaultsSpy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDefaultsSpy.m; sourceTree = "<group>"; };
 		F494284025829B98008FE009 /* FBSDKSessionProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKSessionProviding.h; sourceTree = "<group>"; };
-		F494285C25829C72008FE009 /* FakeSessionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeSessionProvider.swift; sourceTree = "<group>"; };
+		F494285C25829C72008FE009 /* TestSessionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSessionProvider.swift; sourceTree = "<group>"; };
 		F496E58E24E49DBC006231A2 /* SampleAppEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SampleAppEvents.swift; path = FBSDKCoreKitTests/Internal/Helpers/SampleAppEvents.swift; sourceTree = SOURCE_ROOT; };
-		F496E5FD24E5D0D5006231A2 /* FakeTokenCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeTokenCache.swift; sourceTree = "<group>"; };
+		F496E5FD24E5D0D5006231A2 /* TestTokenCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTokenCache.swift; sourceTree = "<group>"; };
 		F496E60E24E5D195006231A2 /* SampleAccessToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAccessToken.swift; sourceTree = "<group>"; };
 		F496E61124E6049A006231A2 /* AppDelegateObserverFake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateObserverFake.swift; sourceTree = "<group>"; };
 		F4A11B4824E36E5200D4C010 /* FBSDKTypeUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKTypeUtility.h; sourceTree = "<group>"; };
@@ -1729,7 +1729,7 @@
 		F4F6028525D5BB280053D3E7 /* FBSDKURLSessionProxyProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKURLSessionProxyProviding.h; sourceTree = "<group>"; };
 		F4F6029325D5BD7E0053D3E7 /* FBSDKURLSessionProxyFactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKURLSessionProxyFactory.h; sourceTree = "<group>"; };
 		F4F6029425D5BD7E0053D3E7 /* FBSDKURLSessionProxyFactory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKURLSessionProxyFactory.m; sourceTree = "<group>"; };
-		F4F6036F25D5D3A30053D3E7 /* FakeURLSessionProxyFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeURLSessionProxyFactory.swift; sourceTree = "<group>"; };
+		F4F6036F25D5D3A30053D3E7 /* TestURLSessionProxyFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestURLSessionProxyFactory.swift; sourceTree = "<group>"; };
 		F4F603A525D5D9B50053D3E7 /* UrlSessionProxyFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlSessionProxyFactoryTests.swift; sourceTree = "<group>"; };
 		F4F98C4A24CB820A00F0D6EC /* FBSDKSafeCast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKSafeCast.m; sourceTree = "<group>"; };
 		F4FE997D24D906B9008879A4 /* FBSDKJSONValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKJSONValue.m; sourceTree = "<group>"; };
@@ -2054,25 +2054,24 @@
 		893F44921A64448E001DB0B6 /* Internal */ = {
 			isa = PBXGroup;
 			children = (
-				B3C20ACC250B100F00DEC008 /* FBSDKAccessToken+Internal.h */,
-				5DB7ADCA22EA59E60012E8CB /* Instrument */,
 				894C0B0E1A7021F8009137EF /* Base64 */,
 				894C0AE11A6F1D27009137EF /* BridgeAPI */,
 				894C0B061A702194009137EF /* Cryptography */,
 				9D92FC4B1CB31F3A0091B6F7 /* Device */,
 				9D3AF4861A9EF9E200EEF724 /* ErrorRecovery */,
+				B3C20ACC250B100F00DEC008 /* FBSDKAccessToken+Internal.h */,
+				894C0ACD1A6F0D3F009137EF /* FBSDKApplicationDelegate+Internal.h */,
+				C5188DF8222F388400F4D8BC /* FBSDKApplicationObserving.h */,
 				52963A9E215993C100C7B252 /* FBSDKAppLink_Internal.h */,
 				52963A9B215993C100C7B252 /* FBSDKAppLinkReturnToRefererView_Internal.h */,
-				894C0ACD1A6F0D3F009137EF /* FBSDKApplicationDelegate+Internal.h */,
-				C6C5CBCB2581871B00AA3BB3 /* FBSDKAuthenticationStatusUtility.h */,
-				C6C5CBCA2581871B00AA3BB3 /* FBSDKAuthenticationStatusUtility.m */,
-				5E3AFFE5258C191200BE46AB /* FBSDKAuthenticationTokenHeader.h */,
-				5E3AFFE6258C191200BE46AB /* FBSDKAuthenticationTokenHeader.m */,
-				C6A308BA257AD1FF003C52FD /* FBSDKAuthenticationTokenFactory.h */,
-				C6A308BB257AD1FF003C52FD /* FBSDKAuthenticationTokenFactory.m */,
-				C5188DF8222F388400F4D8BC /* FBSDKApplicationObserving.h */,
 				89D05AA71AA1134000609300 /* FBSDKAudioResourceLoader.h */,
 				89D05AA81AA1134000609300 /* FBSDKAudioResourceLoader.m */,
+				C6C5CBCB2581871B00AA3BB3 /* FBSDKAuthenticationStatusUtility.h */,
+				C6C5CBCA2581871B00AA3BB3 /* FBSDKAuthenticationStatusUtility.m */,
+				C6A308BA257AD1FF003C52FD /* FBSDKAuthenticationTokenFactory.h */,
+				C6A308BB257AD1FF003C52FD /* FBSDKAuthenticationTokenFactory.m */,
+				5E3AFFE5258C191200BE46AB /* FBSDKAuthenticationTokenHeader.h */,
+				5E3AFFE6258C191200BE46AB /* FBSDKAuthenticationTokenHeader.m */,
 				9D195CC61B9FE2E000BD6BEC /* FBSDKContainerViewController.h */,
 				9D195CC71B9FE2E000BD6BEC /* FBSDKContainerViewController.m */,
 				890414731A647D2E00617215 /* FBSDKCoreKit+Internal.h */,
@@ -2083,6 +2082,9 @@
 				F44B04EC256456140059A3A6 /* FBSDKDynamicFrameworkResolving.h */,
 				894C0B5F1A7150AC009137EF /* FBSDKError.h */,
 				894C0B601A7150AC009137EF /* FBSDKError.m */,
+				F4EC344925E6DC3F0003C0CF /* FBSDKEventLogger.h */,
+				F4EC344A25E6DC3F0003C0CF /* FBSDKEventLogger.m */,
+				F4EC343B25E6DAAA0003C0CF /* FBSDKEventLogging.h */,
 				C5C7B74822D84F64004A5A0C /* FBSDKFeatureManager.h */,
 				C5C7B74922D84F64004A5A0C /* FBSDKFeatureManager.m */,
 				9D28F1911DB14DBB0057D709 /* FBSDKImageDownloader.h */,
@@ -2097,22 +2099,20 @@
 				ADEA17711B7ECA1A0070EDC0 /* FBSDKMonotonicTime.h */,
 				ADEA17721B7ECA1A0070EDC0 /* FBSDKMonotonicTime.m */,
 				9DE6C46D1AAF6E2800EC4C99 /* FBSDKProfile+Internal.h */,
+				B301910D253622A2001A8DB0 /* FBSDKProfilePictureView+Internal.h */,
+				F494284025829B98008FE009 /* FBSDKSessionProviding.h */,
 				9DA830421A699A2200770955 /* FBSDKSettings+Internal.h */,
+				F4EC338625E6A8C30003C0CF /* FBSDKSettings+SettingsProtocol.h */,
+				F4EC338525E6A86B0003C0CF /* FBSDKSettingsProtocol.h */,
 				C5696FA1209CCEB3009C931F /* FBSDKSwizzler.h */,
 				C5696FA2209CCEB4009C931F /* FBSDKSwizzler.m */,
 				52963A9D215993C100C7B252 /* FBSDKURL_Internal.h */,
-				F4EC338525E6A86B0003C0CF /* FBSDKSettingsProtocol.h */,
-				F4EC338625E6A8C30003C0CF /* FBSDKSettings+SettingsProtocol.h */,
+				5DB7ADCA22EA59E60012E8CB /* Instrument */,
 				89FB8C3D1A84237A003CAE60 /* Network */,
 				89830F251A7805A900226ABB /* ServerConfiguration */,
 				9D32A8381A69941A000A936D /* TokenCaching */,
 				89FB8C3E1A842393003CAE60 /* UI */,
 				89FB8C431A842644003CAE60 /* WebDialog */,
-				B301910D253622A2001A8DB0 /* FBSDKProfilePictureView+Internal.h */,
-				F494284025829B98008FE009 /* FBSDKSessionProviding.h */,
-				F4EC343B25E6DAAA0003C0CF /* FBSDKEventLogging.h */,
-				F4EC344925E6DC3F0003C0CF /* FBSDKEventLogger.h */,
-				F4EC344A25E6DC3F0003C0CF /* FBSDKEventLogger.m */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
@@ -2145,23 +2145,23 @@
 		893F44A41A644552001DB0B6 /* Internal */ = {
 			isa = PBXGroup;
 			children = (
-				C6381619257EDF2100B7690F /* FBSDKAuthenticationTokenFactoryTests.m */,
-				C6C5CBDB2581875600AA3BB3 /* FBSDKAuthenticationStatusUtilityTests.m */,
-				40853B9324C8C43300A7CB16 /* FBSDKJSONValueTests.m */,
-				C6E3622525E03FD0007D555D /* FBSDKAuthenticationTokenHeaderTests.m */,
 				9D18A8D91A95403F00A41042 /* AppEvents */,
 				7E5557391A8D833800344F86 /* AppLinks */,
 				894C0B481A705244009137EF /* Base64 */,
 				5DBB0438227FEF510009E0A6 /* Basics */,
 				894C0B341A702DDD009137EF /* BridgeAPI */,
+				C6C5CBDB2581875600AA3BB3 /* FBSDKAuthenticationStatusUtilityTests.m */,
+				C6381619257EDF2100B7690F /* FBSDKAuthenticationTokenFactoryTests.m */,
+				C6E3622525E03FD0007D555D /* FBSDKAuthenticationTokenHeaderTests.m */,
 				9DF18BCA1A9F2517000F6748 /* FBSDKErrorConfigurationTests.m */,
+				F4EC349625E6FBAC0003C0CF /* FBSDKEventLoggerTests.m */,
 				893F44A51A6445C1001DB0B6 /* FBSDKInternalUtilityTests.m */,
+				40853B9324C8C43300A7CB16 /* FBSDKJSONValueTests.m */,
 				F4CD7CDA243E2CF7004C27F1 /* Helpers */,
 				5DB6129923593AA300150851 /* Instrument */,
 				F4EB317D2540952B00736B67 /* Network */,
 				F4E50151243648A100C99262 /* ServerConfiguration */,
 				F4D80C242566D471008CCAF0 /* UI */,
-				F4EC349625E6FBAC0003C0CF /* FBSDKEventLoggerTests.m */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
@@ -2290,10 +2290,10 @@
 				9DA81B271AA65FA200B9FE0B /* FBSDKGraphRequestPiggybackManager.h */,
 				9DA81B281AA65FA200B9FE0B /* FBSDKGraphRequestPiggybackManager.m */,
 				F40D262D25E433E9004681FC /* FBSDKGraphRequestPiggybackManager+GraphRequestPiggybackManaging.h */,
-				F40D262425E433D2004681FC /* FBSDKGraphRequestPiggybackManaging.h */,
-				F40D26E025E441DB004681FC /* FBSDKGraphRequestPiggybackManagerProviding.h */,
 				F40D26EF25E442A7004681FC /* FBSDKGraphRequestPiggybackManagerProvider.h */,
 				F40D26EE25E44268004681FC /* FBSDKGraphRequestPiggybackManagerProvider.m */,
+				F40D26E025E441DB004681FC /* FBSDKGraphRequestPiggybackManagerProviding.h */,
+				F40D262425E433D2004681FC /* FBSDKGraphRequestPiggybackManaging.h */,
 				F44CFF6225D4931C000E36E5 /* FBSDKURLSession+URLSessionProxying.h */,
 				F4F6029325D5BD7E0053D3E7 /* FBSDKURLSessionProxyFactory.h */,
 				F4F6029425D5BD7E0053D3E7 /* FBSDKURLSessionProxyFactory.m */,
@@ -2405,16 +2405,17 @@
 		9D2697491A5DF40700143BFC /* FBSDKCoreKit */ = {
 			isa = PBXGroup;
 			children = (
-				F4BD248E24C2189E00975C87 /* Basics */,
-				E4320C3123B8943700EF2653 /* GraphAPI */,
 				C5188EC122371EE400F4D8BC /* AppEvents */,
 				C5188F1C223857D700F4D8BC /* AppLink */,
+				F4BD248E24C2189E00975C87 /* Basics */,
 				9D3029081A65C4420086B9ED /* FBSDKAccessToken.h */,
 				9D3029091A65C4420086B9ED /* FBSDKAccessToken.m */,
-				F48AD2E42576FE050052C056 /* FBSDKAuthenticationToken.h */,
-				F48AD2E32576FE050052C056 /* FBSDKAuthenticationToken.m */,
 				9D34A11D1A5F038300C37317 /* FBSDKApplicationDelegate.h */,
 				9D34A11E1A5F038300C37317 /* FBSDKApplicationDelegate.m */,
+				F48AD2E42576FE050052C056 /* FBSDKAuthenticationToken.h */,
+				F48AD2E32576FE050052C056 /* FBSDKAuthenticationToken.m */,
+				5E47555B2580577B00C98E30 /* FBSDKAuthenticationTokenClaims.h */,
+				5E47555C2580577C00C98E30 /* FBSDKAuthenticationTokenClaims.m */,
 				891687EC1AB38C7C00F55364 /* FBSDKButton.h */,
 				891687ED1AB38C7C00F55364 /* FBSDKButton.m */,
 				894C0B661A7150CC009137EF /* FBSDKConstants.h */,
@@ -2430,8 +2431,6 @@
 				890414871A64893100617215 /* FBSDKMutableCopying.h */,
 				9DA81AF41AA4EF3300B9FE0B /* FBSDKProfile.h */,
 				9DA81AF51AA4EF3300B9FE0B /* FBSDKProfile.m */,
-				5E47555B2580577B00C98E30 /* FBSDKAuthenticationTokenClaims.h */,
-				5E47555C2580577C00C98E30 /* FBSDKAuthenticationTokenClaims.m */,
 				899C3CF61A8BF73A00EA8658 /* FBSDKProfilePictureView.h */,
 				899C3CF71A8BF73A00EA8658 /* FBSDKProfilePictureView.m */,
 				9DA8303A1A6999EC00770955 /* FBSDKSettings.h */,
@@ -2442,6 +2441,7 @@
 				52963A6B215992F100C7B252 /* FBSDKURL.m */,
 				89C8B1971A8D7A15009B07F5 /* FBSDKUtility.h */,
 				89C8B1981A8D7A15009B07F5 /* FBSDKUtility.m */,
+				E4320C3123B8943700EF2653 /* GraphAPI */,
 				893F44921A64448E001DB0B6 /* Internal */,
 				9D26974A1A5DF40700143BFC /* Supporting Files */,
 				F487DBCA231EBD8B008416A9 /* Swift */,
@@ -2460,21 +2460,21 @@
 		9D2697561A5DF40700143BFC /* FBSDKCoreKitTests */ = {
 			isa = PBXGroup;
 			children = (
+				C511229F20A4BCEB0041DC94 /* FBSDKApplicationDelegateTests.m */,
+				2A3DA4151CB4C0F600339BD4 /* FBSDKAppLinkUtilityTests.swift */,
+				C6E3621625DF4E54007D555D /* FBSDKAuthenticationTokenClaimsTests.m */,
 				F48AD3242576FEB20052C056 /* FBSDKAuthenticationTokenTests.m */,
-				F4A826B624EC6FAC00EB2CD4 /* FBSDKProfileTests.m */,
-				F413883D24C76F3B001BC075 /* FBSDKSafeCastTests.m */,
 				7E253D841A8EB78300CCCFE7 /* FBSDKCoreKitTestUtility.h */,
 				7E253D821A8EB76500CCCFE7 /* FBSDKCoreKitTestUtility.m */,
-				C511229F20A4BCEB0041DC94 /* FBSDKApplicationDelegateTests.m */,
 				9D3AF4651A9ED47900EEF724 /* FBSDKGraphRequestConnectionTests.m */,
+				5D2165F12229C6A3004952D8 /* FBSDKGraphRequestTests.m */,
+				F4A826B624EC6FAC00EB2CD4 /* FBSDKProfileTests.m */,
+				F413883D24C76F3B001BC075 /* FBSDKSafeCastTests.m */,
 				F93680D4249D490600446E35 /* FBSDKSettingsTests.m */,
 				89C8B19B1A8D7A27009B07F5 /* FBSDKUtilityTests.swift */,
 				893F44A41A644552001DB0B6 /* Internal */,
-				9D2697571A5DF40700143BFC /* Supporting Files */,
-				2A3DA4151CB4C0F600339BD4 /* FBSDKAppLinkUtilityTests.swift */,
-				5D2165F12229C6A3004952D8 /* FBSDKGraphRequestTests.m */,
 				C67BED29257F1A6300D356C9 /* ProfilePictureViewTests.swift */,
-				C6E3621625DF4E54007D555D /* FBSDKAuthenticationTokenClaimsTests.m */,
+				9D2697571A5DF40700143BFC /* Supporting Files */,
 			);
 			path = FBSDKCoreKitTests;
 			sourceTree = "<group>";
@@ -2765,48 +2765,48 @@
 		F4CD7CDA243E2CF7004C27F1 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				F496E58E24E49DBC006231A2 /* SampleAppEvents.swift */,
-				F492C0A024E1F5F600BA21F7 /* KeychainStoreSpy.swift */,
-				F492C09F24E1F5F600BA21F7 /* UserDefaultsSpy.h */,
-				F492C0A124E1F5F600BA21F7 /* UserDefaultsSpy.m */,
+				F496E61124E6049A006231A2 /* AppDelegateObserverFake.swift */,
+				F402AFF2255B4EE400473083 /* AuthenticationSessionSpy.swift */,
 				F47E560C24E1EA8D001497C9 /* FakeBundle.h */,
 				F47E55FB24E1EA8D001497C9 /* FakeBundle.m */,
+				F402B060255C645600473083 /* FakeLoginManager.h */,
+				F402B061255C645600473083 /* FakeLoginManager.m */,
+				F4E50152243648A100C99262 /* FBSDKServerConfigurationFixtures.h */,
+				F4E50153243648A100C99262 /* FBSDKServerConfigurationFixtures.m */,
+				F4DE31F424DB695100297C18 /* FBSDKTestCase.h */,
+				F4DE31F524DB695100297C18 /* FBSDKTestCase.m */,
 				F4BD4022241EEDE500B45D39 /* FBSDKTestCoder.h */,
 				F4BD4023241EEDE500B45D39 /* FBSDKTestCoder.m */,
 				F40B24C124732DD90059351C /* Fuzzer.swift */,
-				F4DE31F424DB695100297C18 /* FBSDKTestCase.h */,
-				F4DE31F524DB695100297C18 /* FBSDKTestCase.m */,
-				F496E5FD24E5D0D5006231A2 /* FakeTokenCache.swift */,
-				F496E60E24E5D195006231A2 /* SampleAccessToken.swift */,
-				F48AD347257700B80052C056 /* SampleAuthenticationToken.swift */,
-				F496E61124E6049A006231A2 /* AppDelegateObserverFake.swift */,
-				F4E50153243648A100C99262 /* FBSDKServerConfigurationFixtures.m */,
+				F492C0A024E1F5F600BA21F7 /* KeychainStoreSpy.swift */,
 				F4ED90DA24EDDC610048D283 /* NotificationCenterSpy.swift */,
-				F4E50152243648A100C99262 /* FBSDKServerConfigurationFixtures.h */,
+				F496E60E24E5D195006231A2 /* SampleAccessToken.swift */,
+				F496E58E24E49DBC006231A2 /* SampleAppEvents.swift */,
+				F48AD347257700B80052C056 /* SampleAuthenticationToken.swift */,
 				F4EB31D22540A35800736B67 /* SampleGraphRequest.swift */,
 				F4EB31BA2540A1B800736B67 /* SampleGraphRequestConnection.swift */,
 				F4EB33CD2542323500736B67 /* SampleRawRemotePermissions.swift */,
 				5C49DF8F2554C9ED00E0FD91 /* SampleUserProfile.swift */,
-				F402AFF2255B4EE400473083 /* AuthenticationSessionSpy.swift */,
-				F402B070255C740C00473083 /* ViewControllerSpy.swift */,
-				F4EAC30D25E040AA00587C32 /* TestErrorConfigurationProvider.swift */,
+				F408C6E8256309A500372D61 /* TestBridgeApiRequest.swift */,
+				F44B051025645DAC0059A3A6 /* TestDylibResolver.swift */,
 				F43DC8E825E05DE40009E7D5 /* TestErrorConfiguration.swift */,
-				F402B060255C645600473083 /* FakeLoginManager.h */,
-				F402B061255C645600473083 /* FakeLoginManager.m */,
-				F408C6E8256309A500372D61 /* FakeBridgeApiRequest.swift */,
-				F44B051025645DAC0059A3A6 /* FakeDylibResolver.swift */,
-				F4F6036F25D5D3A30053D3E7 /* FakeURLSessionProxyFactory.swift */,
-				F441DC3D25DC97E60092C8F6 /* FakeGraphRequestConnection.swift */,
-				F441DC6625DC9AEB0092C8F6 /* FakeGraphRequestConnectionFactory.swift */,
-				F43F397C25D48C4B0046027A /* FakeURLSessionProxy.swift */,
-				F494285C25829C72008FE009 /* FakeSessionProvider.swift */,
-				F40D25F225E41C71004681FC /* TestOperationQueue.swift */,
-				F40D272825E4448A004681FC /* TestGraphRequestPiggybackManagerProvider.swift */,
-				F4EC330925E5C1A10003C0CF /* TestGraphRequestPiggybackManager.swift */,
-				F4EC333925E5CC9C0003C0CF /* TestGraphRequestBody.swift */,
-				F40D269025E4376D004681FC /* TestLogger.swift */,
+				F4EAC30D25E040AA00587C32 /* TestErrorConfigurationProvider.swift */,
 				F4EC346D25E6F1230003C0CF /* TestEventLogger.swift */,
+				F4EC333925E5CC9C0003C0CF /* TestGraphRequestBody.swift */,
+				F441DC3D25DC97E60092C8F6 /* TestGraphRequestConnection.swift */,
+				F441DC6625DC9AEB0092C8F6 /* TestGraphRequestConnectionFactory.swift */,
+				F4EC330925E5C1A10003C0CF /* TestGraphRequestPiggybackManager.swift */,
+				F40D272825E4448A004681FC /* TestGraphRequestPiggybackManagerProvider.swift */,
+				F40D269025E4376D004681FC /* TestLogger.swift */,
+				F40D25F225E41C71004681FC /* TestOperationQueue.swift */,
+				F494285C25829C72008FE009 /* TestSessionProvider.swift */,
 				F4EC339425E6ABE60003C0CF /* TestSettings.swift */,
+				F496E5FD24E5D0D5006231A2 /* TestTokenCache.swift */,
+				F43F397C25D48C4B0046027A /* TestURLSessionProxy.swift */,
+				F4F6036F25D5D3A30053D3E7 /* TestURLSessionProxyFactory.swift */,
+				F492C09F24E1F5F600BA21F7 /* UserDefaultsSpy.h */,
+				F492C0A124E1F5F600BA21F7 /* UserDefaultsSpy.m */,
+				F402B070255C740C00473083 /* ViewControllerSpy.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -2822,10 +2822,10 @@
 		F4E50151243648A100C99262 /* ServerConfiguration */ = {
 			isa = PBXGroup;
 			children = (
-				F4E50154243648A100C99262 /* FBSDKServerConfigurationTests.m */,
-				F428430A246B427700CD4393 /* FBSDKServerConfigurationManagerTests.swift */,
-				F40B24B1247324BB0059351C /* RawServerConfigurationResponseFixtures.swift */,
 				F4EAC3A625E05CBB00587C32 /* ErrorConfigurationProviderTests.swift */,
+				F428430A246B427700CD4393 /* FBSDKServerConfigurationManagerTests.swift */,
+				F4E50154243648A100C99262 /* FBSDKServerConfigurationTests.m */,
+				F40B24B1247324BB0059351C /* RawServerConfigurationResponseFixtures.swift */,
 			);
 			path = ServerConfiguration;
 			sourceTree = "<group>";
@@ -4291,7 +4291,7 @@
 				9DF18BCB1A9F2517000F6748 /* FBSDKErrorConfigurationTests.m in Sources */,
 				9D18A8E91A95495D00A41042 /* FBSDKAppEventsUtilityTests.m in Sources */,
 				5CD6DB3C255B1D07002C296F /* FBSDKAppEventsUtilityTests.swift in Sources */,
-				F441DC6725DC9AEB0092C8F6 /* FakeGraphRequestConnectionFactory.swift in Sources */,
+				F441DC6725DC9AEB0092C8F6 /* TestGraphRequestConnectionFactory.swift in Sources */,
 				F4F603A625D5D9B50053D3E7 /* UrlSessionProxyFactoryTests.swift in Sources */,
 				F4BD4024241EEDE500B45D39 /* FBSDKTestCoder.m in Sources */,
 				F98D1D5525124FCB00276B68 /* FBSDKAppEventsConfigurationTests.swift in Sources */,
@@ -4338,15 +4338,15 @@
 				C6381628257EDF2100B7690F /* FBSDKAuthenticationTokenFactoryTests.m in Sources */,
 				F9CEF1EB24F769F900EB0C3D /* FBSDKSKAdNetworkReporterTests.m in Sources */,
 				F98D1D73251297A900276B68 /* FBSDKAppEventsConfigurationManagerTests.swift in Sources */,
-				F44B051125645DAC0059A3A6 /* FakeDylibResolver.swift in Sources */,
+				F44B051125645DAC0059A3A6 /* TestDylibResolver.swift in Sources */,
 				45540DB125271A88008E853E /* FBSDKAppLinkResolverRequestBuilderTests.m in Sources */,
 				F408C712256320F300372D61 /* FBSDKBridgeAPIRequestTests.swift in Sources */,
 				5DAB01F123A1831A005495FB /* FBSDKCrashObserverTests.m in Sources */,
 				F443A27D25D1F45E0093AB78 /* FBSDKAppEventsPublishAteTests.m in Sources */,
 				F40B24C224732DD90059351C /* Fuzzer.swift in Sources */,
 				40853B9424C8C43300A7CB16 /* FBSDKJSONValueTests.m in Sources */,
-				F408C6E9256309A500372D61 /* FakeBridgeApiRequest.swift in Sources */,
-				F494285D25829C72008FE009 /* FakeSessionProvider.swift in Sources */,
+				F408C6E9256309A500372D61 /* TestBridgeApiRequest.swift in Sources */,
+				F494285D25829C72008FE009 /* TestSessionProvider.swift in Sources */,
 				5C49DF9E2554C9ED00E0FD91 /* SampleUserProfile.swift in Sources */,
 				89C8B19C1A8D7A27009B07F5 /* FBSDKUtilityTests.swift in Sources */,
 				F441DDE725DDDB670092C8F6 /* GraphRequestConnectionFactoryTests.swift in Sources */,
@@ -4363,7 +4363,7 @@
 				C6C5CBDC2581875600AA3BB3 /* FBSDKAuthenticationStatusUtilityTests.m in Sources */,
 				F4EB31D32540A35800736B67 /* SampleGraphRequest.swift in Sources */,
 				F402B062255C645600473083 /* FakeLoginManager.m in Sources */,
-				F441DC3E25DC97E60092C8F6 /* FakeGraphRequestConnection.swift in Sources */,
+				F441DC3E25DC97E60092C8F6 /* TestGraphRequestConnection.swift in Sources */,
 				F4D80B582565D6B3008CCAF0 /* FBSDKRestrictiveDataTests.m in Sources */,
 				F4EB33CE2542323500736B67 /* SampleRawRemotePermissions.swift in Sources */,
 				5DBB0447227FEF700009E0A6 /* FBSDKBasicUtilityTests.m in Sources */,
@@ -4371,10 +4371,10 @@
 				F952EA4F2339432100B20652 /* FBSDKMetadataIndexerTests.m in Sources */,
 				5DB612A823593AB600150851 /* FBSDKCrashShieldTests.m in Sources */,
 				F44B04B7256442050059A3A6 /* FBSDKBridgeAPIOpenUrlWithSafariTests.m in Sources */,
-				F4F6037025D5D3A30053D3E7 /* FakeURLSessionProxyFactory.swift in Sources */,
+				F4F6037025D5D3A30053D3E7 /* TestURLSessionProxyFactory.swift in Sources */,
 				F40682F525CF6031003ADDDA /* FBSDKAppEventsNumberParserTests.m in Sources */,
 				E493252D23F7C60E0000B63A /* FBSDKModelParserTests.mm in Sources */,
-				F496E5FE24E5D0D5006231A2 /* FakeTokenCache.swift in Sources */,
+				F496E5FE24E5D0D5006231A2 /* TestTokenCache.swift in Sources */,
 				F492C0A224E1F5F600BA21F7 /* KeychainStoreSpy.swift in Sources */,
 				5D68D7D822BAEEF60063A3E2 /* FBSDKTimeSpentDataTests.m in Sources */,
 				F4EC339525E6ABE60003C0CF /* TestSettings.swift in Sources */,
@@ -4391,7 +4391,7 @@
 				F402AFF3255B4EE400473083 /* AuthenticationSessionSpy.swift in Sources */,
 				F408C6C02563091900372D61 /* FBSDKBridgeAPIOpenBridgeRequestTests.m in Sources */,
 				F4EAC3A725E05CBB00587C32 /* ErrorConfigurationProviderTests.swift in Sources */,
-				F43F398B25D48C4B0046027A /* FakeURLSessionProxy.swift in Sources */,
+				F43F398B25D48C4B0046027A /* TestURLSessionProxy.swift in Sources */,
 				F98D1D3825124FAE00276B68 /* FBSDKAppEventsConfigurationFixtures.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

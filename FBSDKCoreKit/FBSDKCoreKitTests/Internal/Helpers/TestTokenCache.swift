@@ -16,11 +16,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@objcMembers
-class FakeDylibResolver: NSObject, FBSDKDynamicFrameworkResolving {
-  var stubSafariViewControllerClass: AnyClass?
+import FBSDKCoreKit
 
-  func safariViewControllerClass() -> AnyClass? {
-    return stubSafariViewControllerClass
+@objcMembers
+class TestTokenCache: NSObject, TokenCaching {
+  var accessToken: AccessToken?
+  var authenticationToken: AuthenticationToken?
+
+  init(
+    accessToken: AccessToken?,
+    authenticationToken: AuthenticationToken?
+  ) {
+    self.accessToken = accessToken
+    self.authenticationToken = authenticationToken
   }
 }

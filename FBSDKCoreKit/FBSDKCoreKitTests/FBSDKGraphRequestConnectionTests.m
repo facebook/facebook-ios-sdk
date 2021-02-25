@@ -79,15 +79,15 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @interface FBSDKGraphRequestConnectionTests : XCTestCase <FBSDKGraphRequestConnectionDelegate>
 
 @property (nonatomic, strong) NSString *appID;
-@property (nonatomic, strong) FakeURLSessionProxy *session;
-@property (nonatomic, strong) FakeURLSessionProxyFactory *sessionFactory;
+@property (nonatomic, strong) TestURLSessionProxy *session;
+@property (nonatomic, strong) TestURLSessionProxyFactory *sessionFactory;
 @property (nonatomic, strong) TestErrorConfiguration *errorConfiguration;
 @property (nonatomic, strong) TestErrorConfigurationProvider *errorConfigurationProvider;
 @property (nonatomic, strong) FBSDKErrorRecoveryConfiguration *errorRecoveryConfiguration;
 @property (nonatomic, strong) TestGraphRequestPiggybackManager *piggybackManager;
 @property (nonatomic, strong) TestGraphRequestPiggybackManagerProvider *piggybackManagerProvider;
 @property (nonatomic, strong) TestSettings *settings;
-@property (nonatomic, strong) FakeGraphRequestConnectionFactory *connectionFactory;
+@property (nonatomic, strong) TestGraphRequestConnectionFactory *connectionFactory;
 @property (nonatomic, strong) TestEventLogger *eventLogger;
 @property (nonatomic, strong) FBSDKGraphRequestConnection *connection;
 
@@ -112,8 +112,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [FBSDKGraphRequestConnection setCanMakeRequests];
 
   self.appID = @"appid";
-  self.session = [FakeURLSessionProxy new];
-  self.sessionFactory = [FakeURLSessionProxyFactory createWith:self.session];
+  self.session = [TestURLSessionProxy new];
+  self.sessionFactory = [TestURLSessionProxyFactory createWith:self.session];
   self.errorRecoveryConfiguration = self.nonTransientErrorRecoveryConfiguration;
   self.errorConfiguration = [TestErrorConfiguration new];
   self.errorConfiguration.stubbedRecoveryConfiguration = self.errorRecoveryConfiguration;
@@ -122,7 +122,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   self.piggybackManagerProvider = TestGraphRequestPiggybackManagerProvider.self;
   TestSettings.appID = self.appID;
   self.settings = TestSettings.self;
-  self.connectionFactory = [FakeGraphRequestConnectionFactory new];
+  self.connectionFactory = [TestGraphRequestConnectionFactory new];
   self.eventLogger = [TestEventLogger new];
   self.connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:self.sessionFactory
                                                              errorConfigurationProvider:self.errorConfigurationProvider
@@ -189,7 +189,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
   XCTAssertEqualObjects(
     sessionProvider.class,
-    FakeURLSessionProxyFactory.class,
+    TestURLSessionProxyFactory.class,
     "A graph request connection should persist the session provider it was created with"
   );
 }
@@ -1000,11 +1000,11 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
   self.errorConfigurationProvider.configuration = nil;
   [self.connection addRequest:self.requestForMeWithEmptyFields
-       completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
-         // make sure there is no recovery info for client token failures.
-         XCTAssertNil(error.localizedRecoverySuggestion);
-         [expectation fulfill];
-       }];
+            completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
+              // make sure there is no recovery info for client token failures.
+              XCTAssertNil(error.localizedRecoverySuggestion);
+              [expectation fulfill];
+            }];
   [self.connection start];
 
   NSData *data = [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463, \"type\":\"OAuthException\"}}" dataUsingEncoding:NSUTF8StringEncoding];
@@ -1365,8 +1365,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
   FBSDKSettings.graphErrorRecoveryEnabled = YES;
 
-  FakeURLSessionProxy *fakeSession = [FakeURLSessionProxy new];
-  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory createWithSessions:@[fakeSession]];
+  TestURLSessionProxy *fakeSession = [TestURLSessionProxy new];
+  TestURLSessionProxyFactory *fakeProxyFactory = [TestURLSessionProxyFactory createWithSessions:@[fakeSession]];
 
   self.errorRecoveryConfiguration = self.transientErrorRecoveryConfiguration;
   self.errorConfiguration.stubbedRecoveryConfiguration = self.errorRecoveryConfiguration;

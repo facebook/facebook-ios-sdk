@@ -70,7 +70,7 @@
 - (void)testOpeningBridgeRequestWithRequestUrlUsingSafariVcWithFromVc
 {
   ViewControllerSpy *spy = [ViewControllerSpy makeDefaultSpy];
-  FakeBridgeApiRequest *request = [FakeBridgeApiRequest requestWithURL:self.sampleUrl];
+  TestBridgeApiRequest *request = [TestBridgeApiRequest requestWithURL:self.sampleUrl];
   [self.api openBridgeAPIRequest:request
          useSafariViewController:YES
               fromViewController:spy
@@ -92,7 +92,7 @@
 
 - (void)testOpeningBridgeRequestWithRequestUrlUsingSafariVcWithoutFromVc
 {
-  FakeBridgeApiRequest *request = [FakeBridgeApiRequest requestWithURL:self.sampleUrl];
+  TestBridgeApiRequest *request = [TestBridgeApiRequest requestWithURL:self.sampleUrl];
   [self.api openBridgeAPIRequest:request
          useSafariViewController:YES
               fromViewController:nil
@@ -115,7 +115,7 @@
 - (void)testOpeningBridgeRequestWithRequestUrlNotUsingSafariVcWithFromVc
 {
   ViewControllerSpy *spy = [ViewControllerSpy makeDefaultSpy];
-  FakeBridgeApiRequest *request = [FakeBridgeApiRequest requestWithURL:self.sampleUrl];
+  TestBridgeApiRequest *request = [TestBridgeApiRequest requestWithURL:self.sampleUrl];
   [self.api openBridgeAPIRequest:request
          useSafariViewController:NO
               fromViewController:spy
@@ -132,7 +132,7 @@
 
 - (void)testOpeningBridgeRequestWithRequestUrlNotUsingSafariVcWithoutFromVc
 {
-  FakeBridgeApiRequest *request = [FakeBridgeApiRequest requestWithURL:self.sampleUrl];
+  TestBridgeApiRequest *request = [TestBridgeApiRequest requestWithURL:self.sampleUrl];
   [self.api openBridgeAPIRequest:request
          useSafariViewController:NO
               fromViewController:nil
@@ -150,7 +150,7 @@
 - (void)testOpeningBridgeRequestWithoutRequestUrlUsingSafariVcWithFromVc
 {
   ViewControllerSpy *spy = [ViewControllerSpy makeDefaultSpy];
-  FakeBridgeApiRequest *request = [FakeBridgeApiRequest requestWithURL:nil];
+  TestBridgeApiRequest *request = [TestBridgeApiRequest requestWithURL:nil];
   FBSDKBridgeAPIResponseBlock completionHandler = ^(FBSDKBridgeAPIResponse *_Nonnull response) {
     XCTAssertEqualObjects(
       response.request,
@@ -172,7 +172,7 @@
 
 - (void)testOpeningBridgeRequestWithoutRequestUrlUsingSafariVcWithoutFromVc
 {
-  FakeBridgeApiRequest *request = [FakeBridgeApiRequest requestWithURL:nil];
+  TestBridgeApiRequest *request = [TestBridgeApiRequest requestWithURL:nil];
   FBSDKBridgeAPIResponseBlock completionHandler = ^(FBSDKBridgeAPIResponse *_Nonnull response) {
     XCTAssertEqualObjects(
       response.request,
@@ -195,7 +195,7 @@
 - (void)testOpeningBridgeRequestWithoutRequestUrlNotUsingSafariVcWithFromVc
 {
   ViewControllerSpy *spy = [ViewControllerSpy makeDefaultSpy];
-  FakeBridgeApiRequest *request = [FakeBridgeApiRequest requestWithURL:nil];
+  TestBridgeApiRequest *request = [TestBridgeApiRequest requestWithURL:nil];
   FBSDKBridgeAPIResponseBlock completionHandler = ^(FBSDKBridgeAPIResponse *_Nonnull response) {
     XCTAssertEqualObjects(
       response.request,
@@ -217,7 +217,7 @@
 
 - (void)testOpeningBridgeRequestWithoutRequestUrlNotUsingSafariVcWithoutFromVc
 {
-  FakeBridgeApiRequest *request = [FakeBridgeApiRequest requestWithURL:nil];
+  TestBridgeApiRequest *request = [TestBridgeApiRequest requestWithURL:nil];
   FBSDKBridgeAPIResponseBlock completionHandler = ^(FBSDKBridgeAPIResponse *_Nonnull response) {
     XCTAssertEqualObjects(
       response.request,
