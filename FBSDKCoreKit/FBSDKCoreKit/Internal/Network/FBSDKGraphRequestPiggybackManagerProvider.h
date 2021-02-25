@@ -16,15 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@objcMembers
-class TestErrorConfigurationProvider: NSObject, ErrorConfigurationProviding {
-  let configuration: ErrorConfigurationProtocol
+#import <Foundation/Foundation.h>
 
-  init(configuration: ErrorConfigurationProtocol) {
-    self.configuration = configuration
-  }
+#import "FBSDKGraphRequestPiggybackManagerProviding.h"
 
-  func errorConfiguration() -> ErrorConfigurationProtocol {
-    return configuration
-  }
-}
+NS_ASSUME_NONNULL_BEGIN
+
+/// A concrete class for providing types that conform to `GraphRequestPiggybackManaging`
+NS_SWIFT_NAME(GraphRequestPiggybackManagerProvider)
+@interface FBSDKGraphRequestPiggybackManagerProvider : NSObject <FBSDKGraphRequestPiggybackManagerProviding>
+@end
+
+NS_ASSUME_NONNULL_END

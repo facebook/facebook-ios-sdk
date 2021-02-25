@@ -17,14 +17,11 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @objcMembers
-class TestErrorConfigurationProvider: NSObject, ErrorConfigurationProviding {
-  let configuration: ErrorConfigurationProtocol
+class TestGraphRequestPiggybackManagerProvider: NSObject, GraphRequestPiggybackManagerProviding {
 
-  init(configuration: ErrorConfigurationProtocol) {
-    self.configuration = configuration
+  /// Returns the class TestGraphRequestPiggybackManager. This will need to be reset between tests.
+  static func piggybackManager() -> GraphRequestPiggybackManaging.Type {
+    return TestGraphRequestPiggybackManager.self
   }
 
-  func errorConfiguration() -> ErrorConfigurationProtocol {
-    return configuration
-  }
 }

@@ -38,6 +38,10 @@
 // ErrorConfiguration Abstractions
 #import "FBSDKErrorConfigurationProviding.h"
 #import "FBSDKErrorConfigurationProvider.h"
+// GraphRequestPiggybackManager Abstractions
+#import "FBSDKGraphRequestPiggybackManaging.h"
+#import "FBSDKGraphRequestPiggybackManagerProviding.h"
+#import "FBSDKGraphRequestPiggybackManagerProvider.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

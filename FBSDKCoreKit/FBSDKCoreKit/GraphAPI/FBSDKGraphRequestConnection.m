@@ -27,7 +27,7 @@
 #import "FBSDKGraphRequestBody.h"
 #import "FBSDKGraphRequestDataAttachment.h"
 #import "FBSDKGraphRequestMetadata.h"
-#import "FBSDKGraphRequestPiggybackManager.h"
+#import "FBSDKGraphRequestPiggybackManagerProvider.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings+Internal.h"
@@ -115,6 +115,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (nonatomic, strong) id<FBSDKURLSessionProxying> session;
 @property (nonatomic, strong) id<FBSDKURLSessionProxyProviding> sessionProxyFactory;
 @property (nonatomic, strong) id<FBSDKErrorConfigurationProviding> errorConfigurationProvider;
+@property (nonatomic, strong) Class<FBSDKGraphRequestPiggybackManagerProviding> piggybackManagerProvider;
 
 @end
 
@@ -150,6 +151,15 @@ static BOOL _canMakeRequests = NO;
 - (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
                     errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
 {
+  return [self initWithURLSessionProxyFactory:proxyFactory
+                   errorConfigurationProvider:errorConfigurationProvider
+                     piggybackManagerProvider:FBSDKGraphRequestPiggybackManagerProvider.self];
+}
+
+- (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
+                    errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
+                      piggybackManagerProvider:(Class<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
+{
   if ((self = [super init])) {
     _requests = [[NSMutableArray alloc] init];
     _timeout = g_defaultTimeout;
@@ -158,6 +168,7 @@ static BOOL _canMakeRequests = NO;
     _sessionProxyFactory = proxyFactory;
     _session = [proxyFactory createSessionProxyWithDelegate:self queue:_delegateQueue];
     _errorConfigurationProvider = errorConfigurationProvider;
+    _piggybackManagerProvider = piggybackManagerProvider;
   }
   return self;
 }
@@ -243,7 +254,8 @@ static BOOL _canMakeRequests = NO;
                        formatString:@"FBSDKGraphRequestConnection cannot be started again."];
     return;
   }
-  [FBSDKGraphRequestPiggybackManager addPiggybackRequests:self];
+  Class<FBSDKGraphRequestPiggybackManaging> piggybackManager = [self.piggybackManagerProvider.class piggybackManager];
+  [piggybackManager.class addPiggybackRequests:self];
   NSMutableURLRequest *request = [self requestWithBatch:self.requests timeout:_timeout];
 
   self.state = kStateStarted;

@@ -17,14 +17,14 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @objcMembers
-class TestErrorConfigurationProvider: NSObject, ErrorConfigurationProviding {
-  let configuration: ErrorConfigurationProtocol
+class TestGraphRequestPiggybackManager: NSObject, GraphRequestPiggybackManaging {
+  static var capturedConnection: GraphRequestConnection?
 
-  init(configuration: ErrorConfigurationProtocol) {
-    self.configuration = configuration
+  static func addPiggybackRequests(_ connection: GraphRequestConnection!) {
+    capturedConnection = connection
   }
 
-  func errorConfiguration() -> ErrorConfigurationProtocol {
-    return configuration
+  static func reset() {
+    capturedConnection = nil
   }
 }

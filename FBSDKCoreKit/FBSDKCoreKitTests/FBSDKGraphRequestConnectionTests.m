@@ -25,7 +25,6 @@
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKFeatureManager.h"
 #import "FBSDKGraphRequest+Internal.h"
-#import "FBSDKGraphRequestPiggybackManager.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKTestCase.h"
 #import "FBSDKURLSessionProxyFactory.h"
@@ -43,6 +42,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (nonatomic, strong) id<FBSDKURLSessionProxying> session;
 @property (nonatomic, strong) id<FBSDKURLSessionProxyProviding> sessionProxyFactory;
 @property (nonatomic, strong) id<FBSDKErrorConfigurationProviding> errorConfigurationProvider;
+@property (nonatomic, strong) id<FBSDKGraphRequestPiggybackManaging> piggybackManager;
+@property (nonatomic, strong) Class<FBSDKGraphRequestPiggybackManagerProviding> piggybackManagerProvider;
 @property (nonatomic, assign) FBSDKGraphRequestConnectionState state;
 
 + (BOOL)canMakeRequests;
@@ -51,6 +52,9 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)sessionProxyFactory;
 - (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
                     errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider;
+- (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
+                    errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
+                      piggybackManagerProvider:(id<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider;
 - (NSMutableURLRequest *)requestWithBatch:(NSArray *)requests
                                   timeout:(NSTimeInterval)timeout;
 - (NSString *)accessTokenWithRequest:(FBSDKGraphRequest *)request;
@@ -66,6 +70,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (nonatomic, strong) TestErrorConfiguration *errorConfiguration;
 @property (nonatomic, strong) TestErrorConfigurationProvider *errorConfigurationProvider;
 @property (nonatomic, strong) FBSDKErrorRecoveryConfiguration *errorRecoveryConfiguration;
+@property (nonatomic, strong) TestGraphRequestPiggybackManager *piggybackManager;
+@property (nonatomic, strong) TestGraphRequestPiggybackManagerProvider *piggybackManagerProvider;
 @property (nonatomic, strong) FBSDKGraphRequestConnection *connection;
 
 @property (nonatomic, copy) void (^requestConnectionStartingCallback)(FBSDKGraphRequestConnection *connection);
@@ -102,14 +108,18 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   self.errorConfiguration = [TestErrorConfiguration new];
   self.errorConfiguration.stubbedRecoveryConfiguration = self.errorRecoveryConfiguration;
   self.errorConfigurationProvider = [[TestErrorConfigurationProvider alloc] initWithConfiguration:self.errorConfiguration];
+  self.piggybackManager = [TestGraphRequestPiggybackManager new];
+  self.piggybackManagerProvider = TestGraphRequestPiggybackManagerProvider.self;
   self.connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:self.sessionFactory
-                                                             errorConfigurationProvider:self.errorConfigurationProvider];
+                                                             errorConfigurationProvider:self.errorConfigurationProvider
+                                                               piggybackManagerProvider:self.piggybackManagerProvider];
 }
 
 - (void)tearDown
 {
   [FBSDKGraphRequestConnection resetDefaultConnectionTimeout];
   [FBSDKGraphRequestConnection resetCanMakeRequests];
+  [TestGraphRequestPiggybackManager reset];
 
   [super tearDown];
 }
@@ -194,6 +204,28 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
     errorConfigurationProvider.class,
     TestErrorConfigurationProvider.class,
     "A graph request connection should persist the error configuration provider it was created with"
+  );
+}
+
+- (void)testCreatingWithDefaultPiggybackManagerProvider
+{
+  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
+  NSObject *piggybackManager = (NSObject *)connection.piggybackManagerProvider;
+  XCTAssertEqualObjects(
+    piggybackManager.class,
+    FBSDKGraphRequestPiggybackManagerProvider.class,
+    "A graph request connection should have the correct piggyback manager provider by default"
+  );
+}
+
+- (void)testCreatingWithCustomPiggybackManager
+{
+  NSObject *provider = (NSObject *)self.connection.piggybackManagerProvider;
+
+  XCTAssertEqualObjects(
+    provider,
+    self.piggybackManagerProvider,
+    "A graph request connection should persist the piggyback manager provider it was created with"
   );
 }
 
@@ -489,6 +521,19 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   );
 
   queue.capturedOperationBlock();
+}
+
+- (void)testStartingInvokesPiggybackManager
+{
+  [self.connection addRequest:self.sampleRequest
+            completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}];
+  [self.connection start];
+
+  XCTAssertEqualObjects(
+    self.connection,
+    TestGraphRequestPiggybackManager.capturedConnection,
+    "Starting a request should invoke the piggyback manager"
+  );
 }
 
 // MARK: - Errors From Results
