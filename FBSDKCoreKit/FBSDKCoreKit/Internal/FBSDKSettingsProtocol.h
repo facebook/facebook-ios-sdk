@@ -16,15 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@objcMembers
-class TestErrorConfigurationProvider: NSObject, ErrorConfigurationProviding {
-  var configuration: ErrorConfigurationProtocol?
+@class FBSDKSettings;
 
-  init(configuration: ErrorConfigurationProtocol? = nil) {
-    self.configuration = configuration
-  }
+NS_SWIFT_NAME(SettingsProtocol)
+@protocol FBSDKSettings
 
-  func errorConfiguration() -> ErrorConfigurationProtocol? {
-    return configuration
-  }
-}
+@property (class, nonatomic, copy, nullable) NSString *appID;
+@property (class, nonatomic, copy, nullable) NSString *clientToken;
+@property (class, nullable, nonatomic, copy) NSString *userAgentSuffix;
+@property (class, nonatomic, copy, nonnull) NSSet<FBSDKLoggingBehavior> *loggingBehaviors;
+
+@end

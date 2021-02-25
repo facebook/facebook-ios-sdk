@@ -113,10 +113,27 @@ FBSDKHTTPMethod FBSDKHTTPMethodDELETE = @"DELETE";
                             flags:(FBSDKGraphRequestFlags)flags
                 connectionFactory:(id<FBSDKGraphRequestConnectionProviding>)factory
 {
+  return [self initWithGraphPath:graphPath
+                      parameters:parameters
+                     tokenString:tokenString
+                      HTTPMethod:method
+                         version:[FBSDKSettings graphAPIVersion]
+                           flags:flags
+               connectionFactory:factory];
+}
+
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(NSDictionary *)parameters
+                      tokenString:(NSString *)tokenString
+                       HTTPMethod:(NSString *)method
+                          version:(NSString *)version
+                            flags:(FBSDKGraphRequestFlags)flags
+                connectionFactory:(id<FBSDKGraphRequestConnectionProviding>)factory
+{
   if ((self = [self initWithGraphPath:graphPath
                            parameters:parameters
                           tokenString:tokenString
-                              version:[FBSDKSettings graphAPIVersion]
+                              version:version
                            HTTPMethod:method])) {
     self.flags |= flags;
     self.connectionFactory = factory;

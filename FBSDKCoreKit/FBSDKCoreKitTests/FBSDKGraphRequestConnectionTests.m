@@ -16,7 +16,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <OCMock/OCMock.h>
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
@@ -26,6 +25,7 @@
 #import "FBSDKFeatureManager.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKSettings+Internal.h"
+#import "FBSDKSettingsProtocol.h"
 #import "FBSDKTestCase.h"
 #import "FBSDKURLSessionProxyFactory.h"
 
@@ -44,6 +44,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (nonatomic, strong) id<FBSDKErrorConfigurationProviding> errorConfigurationProvider;
 @property (nonatomic, strong) id<FBSDKGraphRequestPiggybackManaging> piggybackManager;
 @property (nonatomic, strong) Class<FBSDKGraphRequestPiggybackManagerProviding> piggybackManagerProvider;
+@property (nonatomic, strong) Class<FBSDKSettings> settings;
+@property (nonatomic, strong) id<FBSDKGraphRequestConnectionProviding> connectionFactory;
 @property (nonatomic, assign) FBSDKGraphRequestConnectionState state;
 
 + (BOOL)canMakeRequests;
@@ -54,7 +56,9 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
                     errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider;
 - (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
                     errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
-                      piggybackManagerProvider:(id<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider;
+                      piggybackManagerProvider:(id<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
+                                      settings:(id<FBSDKSettings>)settings
+                             connectionFactory:(id<FBSDKGraphRequestConnectionProviding>)factory;
 - (NSMutableURLRequest *)requestWithBatch:(NSArray *)requests
                                   timeout:(NSTimeInterval)timeout;
 - (void)addRequest:(FBSDKGraphRequestMetadata *)metadata
@@ -71,8 +75,9 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 @end
 
-@interface FBSDKGraphRequestConnectionTests : FBSDKTestCase <FBSDKGraphRequestConnectionDelegate>
+@interface FBSDKGraphRequestConnectionTests : XCTestCase <FBSDKGraphRequestConnectionDelegate>
 
+@property (nonatomic, strong) NSString *appID;
 @property (nonatomic, strong) FakeURLSessionProxy *session;
 @property (nonatomic, strong) FakeURLSessionProxyFactory *sessionFactory;
 @property (nonatomic, strong) TestErrorConfiguration *errorConfiguration;
@@ -80,6 +85,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (nonatomic, strong) FBSDKErrorRecoveryConfiguration *errorRecoveryConfiguration;
 @property (nonatomic, strong) TestGraphRequestPiggybackManager *piggybackManager;
 @property (nonatomic, strong) TestGraphRequestPiggybackManagerProvider *piggybackManagerProvider;
+@property (nonatomic, strong) TestSettings *settings;
+@property (nonatomic, strong) FakeGraphRequestConnectionFactory *connectionFactory;
 @property (nonatomic, strong) FBSDKGraphRequestConnection *connection;
 
 @property (nonatomic, copy) void (^requestConnectionStartingCallback)(FBSDKGraphRequestConnection *connection);
@@ -100,27 +107,26 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 {
   [super setUp];
 
-  [self stubAppID:self.appID];
-  [self stubCheckingFeatures];
-  [self stubLoadingGateKeepers];
-  [self stubAddingServerConfigurationPiggyback];
-
   [FBSDKGraphRequestConnection setCanMakeRequests];
 
+  self.appID = @"appid";
   self.session = [FakeURLSessionProxy new];
   self.sessionFactory = [FakeURLSessionProxyFactory createWith:self.session];
-  self.errorRecoveryConfiguration = [[FBSDKErrorRecoveryConfiguration alloc] initWithRecoveryDescription:@"Recovery Description"
-                                                                                      optionDescriptions:@[@"Option1", @"Option2"]
-                                                                                                category:FBSDKGraphRequestErrorOther
-                                                                                      recoveryActionName:@"Recovery Action"];
+  self.errorRecoveryConfiguration = self.nonTransientErrorRecoveryConfiguration;
   self.errorConfiguration = [TestErrorConfiguration new];
   self.errorConfiguration.stubbedRecoveryConfiguration = self.errorRecoveryConfiguration;
   self.errorConfigurationProvider = [[TestErrorConfigurationProvider alloc] initWithConfiguration:self.errorConfiguration];
   self.piggybackManager = [TestGraphRequestPiggybackManager new];
   self.piggybackManagerProvider = TestGraphRequestPiggybackManagerProvider.self;
+  TestSettings.appID = self.appID;
+  self.settings = TestSettings.self;
+  self.connectionFactory = [FakeGraphRequestConnectionFactory new];
   self.connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:self.sessionFactory
                                                              errorConfigurationProvider:self.errorConfigurationProvider
-                                                               piggybackManagerProvider:self.piggybackManagerProvider];
+                                                               piggybackManagerProvider:self.piggybackManagerProvider
+                                                                               settings:self.settings
+                                                                      connectionFactory:self.connectionFactory];
+  self.connectionFactory.stubbedConnection = self.connection;
 }
 
 - (void)tearDown
@@ -129,6 +135,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [FBSDKGraphRequestConnection resetCanMakeRequests];
   [TestGraphRequestPiggybackManager reset];
   [TestLogger reset];
+  [TestSettings reset];
 
   [super tearDown];
 }
@@ -235,6 +242,50 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
     provider,
     self.piggybackManagerProvider,
     "A graph request connection should persist the piggyback manager provider it was created with"
+  );
+}
+
+- (void)testCreatingWithDefaultSettings
+{
+  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
+  NSObject *settings = (NSObject *)connection.settings;
+  XCTAssertEqualObjects(
+    settings.class,
+    FBSDKSettings.class,
+    "A graph request connection should have the correct settings type by default"
+  );
+}
+
+- (void)testCreatingWithCustomSettings
+{
+  NSObject *settings = (NSObject *)self.connection.settings;
+
+  XCTAssertEqualObjects(
+    settings,
+    self.settings,
+    "A graph request connection should persist the settings it was created with"
+  );
+}
+
+- (void)testCreatingWithDefaultConnectionFactory
+{
+  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
+  NSObject *factory = (NSObject *)connection.connectionFactory;
+  XCTAssertEqualObjects(
+    factory.class,
+    FBSDKGraphRequestConnectionFactory.class,
+    "A graph request connection should have the correct connection factory by default"
+  );
+}
+
+- (void)testCreatingWithCustomConnectionFactory
+{
+  NSObject *factory = (NSObject *)self.connection.connectionFactory;
+
+  XCTAssertEqualObjects(
+    factory,
+    self.connectionFactory,
+    "A graph request connection should persist the connection factory it was created with"
   );
 }
 
@@ -351,9 +402,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testAddingRequestWithoutBatchEntryName
 {
   [self.connection addRequest:self.requestForMeWithEmptyFields
-            completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-              // Do nothing here
-            }];
+            completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}];
   FBSDKGraphRequestMetadata *metadata = self.connection.requests.firstObject;
   XCTAssertNil(
     metadata.batchParameters,
@@ -365,9 +414,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 {
   [self.connection addRequest:self.requestForMeWithEmptyFields
                batchEntryName:@""
-            completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-              // Do nothing here
-            }];
+            completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}];
   FBSDKGraphRequestMetadata *metadata = self.connection.requests.firstObject;
   XCTAssertNil(
     metadata.batchParameters,
@@ -379,9 +426,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 {
   [self.connection addRequest:self.requestForMeWithEmptyFields
                batchEntryName:@"foo"
-            completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-              // Do nothing here
-            }];
+            completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}];
   NSDictionary *expectedParameters = @{ @"name" : @"foo" };
   FBSDKGraphRequestMetadata *metadata = self.connection.requests.firstObject;
   XCTAssertEqualObjects(
@@ -927,13 +972,9 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 {
   XCTestExpectation *expectation = [[XCTestExpectation alloc] initWithDescription:self.name];
 
-  [self stubCurrentAccessTokenWith:nil];
-  [self stubClientTokenWith:@"clienttoken"];
-
   self.errorConfigurationProvider = [[TestErrorConfigurationProvider alloc] initWithConfiguration:nil];
   FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:self.sessionFactory
-                                                                                     errorConfigurationProvider:self.errorConfigurationProvider
-                                                                                       piggybackManagerProvider:self.piggybackManagerProvider];
+                                                                                     errorConfigurationProvider:self.errorConfigurationProvider];
   [connection addRequest:self.requestForMeWithEmptyFields
        completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
          // make sure there is no recovery info for client token failures.
@@ -953,13 +994,9 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 {
   XCTestExpectation *expectation = [[XCTestExpectation alloc] initWithDescription:self.name];
 
-  [self stubCurrentAccessTokenWith:nil];
-  [self stubClientTokenWith:@"clienttoken"];
-
   self.errorConfigurationProvider = [[TestErrorConfigurationProvider alloc] initWithConfiguration:nil];
   FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:self.sessionFactory
-                                                                                     errorConfigurationProvider:self.errorConfigurationProvider
-                                                                                       piggybackManagerProvider:self.piggybackManagerProvider];
+                                                                                     errorConfigurationProvider:self.errorConfigurationProvider];
   [connection addRequest:self.requestForMeWithEmptyFields completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
     // make sure there is no recovery info for client token failures.
     XCTAssertNil(error.localizedRecoverySuggestion);
@@ -1058,93 +1095,6 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [self waitForExpectations:@[expectation] timeout:1];
 }
 
-// TODO: Fix this to avoid using class property for access token
-// test to verify piggyback refresh token behavior.
-- (void)testTokenPiggyback
-{
-  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
-
-  FakeURLSessionProxy *fakeSession = [FakeURLSessionProxy new];
-  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory createWith:fakeSession];
-
-  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory];
-  FBSDKAccessToken *tokenThatNeedsRefresh = [[FBSDKAccessToken alloc]
-                                             initWithTokenString:@"token"
-                                             permissions:@[]
-                                             declinedPermissions:@[]
-                                             expiredPermissions:@[]
-                                             appID:@"appid"
-                                             userID:@"userid"
-                                             expirationDate:[NSDate distantPast]
-                                             refreshDate:[NSDate distantPast]
-                                             dataAccessExpirationDate:[NSDate distantPast]];
-  [FBSDKAccessToken setCurrentAccessToken:tokenThatNeedsRefresh];
-  [connection addRequest:self.requestForMeWithEmptyFields
-       completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
-         XCTAssertEqualObjects(tokenThatNeedsRefresh.userID, result[@"id"]);
-         [expectation fulfill];
-       }];
-  [connection start];
-
-  NSString *meResponse = [@"{ \"id\":\"userid\"}" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
-  NSString *refreshResponse = [[NSString stringWithFormat:@"{ \"access_token\":\"123\", \"expires_at\":%.0f }", [NSDate dateWithTimeIntervalSinceNow:60].timeIntervalSince1970] stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
-  NSString *permissionsResponse = [@"{ \"data\": [ { \"permission\" : \"public_profile\", \"status\" : \"granted\" },  { \"permission\" : \"email\", \"status\" : \"granted\" },  { \"permission\" : \"user_friends\", \"status\" : \"declined\" } ] }" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
-  NSString *responseString = [NSString stringWithFormat:@"[ {\"code\":200,\"body\": \"%@\" },"
-                              @"{\"code\":200,\"body\": \"%@\" },"
-                              @"{\"code\":200,\"body\": \"%@\" } ]",
-                              meResponse,
-                              refreshResponse,
-                              permissionsResponse];
-  NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
-  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:200 HTTPVersion:nil headerFields:nil];
-
-  fakeSession.capturedCompletion(data, response, nil);
-
-  [self waitForExpectations:@[expectation] timeout:1];
-
-  XCTAssertGreaterThan([[FBSDKAccessToken currentAccessToken].expirationDate timeIntervalSinceNow], 0);
-  XCTAssertGreaterThan([[FBSDKAccessToken currentAccessToken].refreshDate timeIntervalSinceNow], -60);
-  XCTAssertNotEqualObjects(tokenThatNeedsRefresh, [FBSDKAccessToken currentAccessToken]);
-  XCTAssertTrue([[FBSDKAccessToken currentAccessToken].permissions containsObject:@"email"]);
-  XCTAssertTrue([[FBSDKAccessToken currentAccessToken].declinedPermissions containsObject:@"user_friends"]);
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-}
-
-// test no piggyback if refresh date is today.
-- (void)testTokenPiggybackSkipped
-{
-  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
-
-  FBSDKAccessToken *tokenNoRefresh = [[FBSDKAccessToken alloc]
-                                      initWithTokenString:@"token"
-                                      permissions:@[]
-                                      declinedPermissions:@[]
-                                      expiredPermissions:@[]
-                                      appID:@"appid"
-                                      userID:@"userid"
-                                      expirationDate:[NSDate distantPast]
-                                      refreshDate:[NSDate date]
-                                      dataAccessExpirationDate:[NSDate distantPast]];
-  [FBSDKAccessToken setCurrentAccessToken:tokenNoRefresh];
-
-  [self.connection addRequest:self.requestForMeWithEmptyFields
-            completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
-              XCTAssertEqualObjects(tokenNoRefresh.userID, result[@"id"]);
-              [expectation fulfill];
-            }];
-  [self.connection start];
-
-  NSString *responseString = @"{ \"id\" : \"userid\"}";
-  NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
-  NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:200 HTTPVersion:nil headerFields:nil];
-
-  self.session.capturedCompletion(data, response, nil);
-
-  [self waitForExpectations:@[expectation] timeout:1];
-
-  XCTAssertEqualObjects(tokenNoRefresh, [FBSDKAccessToken currentAccessToken]);
-}
-
 - (void)testUnsettingAccessToken
 {
   __block int tokenChangeCount = 0;
@@ -1190,7 +1140,6 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testUnsettingAccessTokenSkipped
 {
-  // Setup expectations
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
   XCTestExpectation *notificationExpectation = [self expectationForNotification:FBSDKAccessTokenDidChangeNotification
                                                                          object:nil
@@ -1272,7 +1221,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testRequestWithUserAgentSuffix
 {
   [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setUserAgentSuffix:@"UnitTest.1.0.0"];
+  TestSettings.userAgentSuffix = @"UnitTest.1.0.0";
 
   [self.connection addRequest:self.requestForMeWithEmptyFields
             completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {}];
@@ -1285,7 +1234,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testRequestWithoutUserAgentSuffix
 {
   [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setUserAgentSuffix:nil];
+  TestSettings.userAgentSuffix = nil;
 
   [self.connection addRequest:self.requestForMeWithEmptyFields
             completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {}];
@@ -1363,19 +1312,17 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testAccessTokenWithRequestWithFacebookClientToken
 {
   NSString *clientToken = @"client_token";
-  [self stubClientTokenWith:clientToken];
+  TestSettings.clientToken = clientToken;
   NSString *token = [self.connection accessTokenWithRequest:self.requestForMeWithEmptyFieldsNoTokenString];
 
   NSString *expectedToken = [NSString stringWithFormat:@"%@|%@", self.appID, clientToken];
   XCTAssertEqualObjects(token, expectedToken);
-
-  [self stubClientTokenWith:nil];
 }
 
 - (void)testAccessTokenWithRequestWithGamingClientToken
 {
   NSString *clientToken = @"client_token";
-  [self stubClientTokenWith:clientToken];
+  TestSettings.clientToken = clientToken;
   FBSDKAuthenticationToken *authToken = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"token_string"
                                                                                         nonce:@"nonce"
                                                                                   graphDomain:@"gaming"];
@@ -1385,50 +1332,57 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   NSString *expectedToken = [NSString stringWithFormat:@"GG|%@|%@", self.appID, clientToken];
   XCTAssertEqualObjects(token, expectedToken);
 
-  [self stubClientTokenWith:nil];
   [FBSDKAuthenticationToken setCurrentAuthenticationToken:nil];
 }
 
 #pragma mark - Error recovery.
 
-- (void)testRetry
+- (void)testRetryWithTransientError
 {
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
 
-  [self stubFetchingCachedServerConfiguration];
+  FBSDKSettings.graphErrorRecoveryEnabled = YES;
+
   FakeURLSessionProxy *fakeSession = [FakeURLSessionProxy new];
-  FakeURLSessionProxy *fakeSession2 = [FakeURLSessionProxy new];
-  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory createWithSessions:@[fakeSession, fakeSession2]];
-  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory];
+  FakeURLSessionProxyFactory *fakeProxyFactory = [FakeURLSessionProxyFactory createWithSessions:@[fakeSession]];
 
+  self.errorRecoveryConfiguration = self.transientErrorRecoveryConfiguration;
+  self.errorConfiguration.stubbedRecoveryConfiguration = self.errorRecoveryConfiguration;
+  self.errorConfigurationProvider.configuration = self.errorConfiguration;
+  FBSDKGraphRequestConnection *retryConnection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory
+                                                                                          errorConfigurationProvider:self.errorConfigurationProvider
+                                                                                            piggybackManagerProvider:self.piggybackManagerProvider
+                                                                                                            settings:self.settings
+                                                                                                   connectionFactory:self.connectionFactory];
+  self.connectionFactory.stubbedConnection = retryConnection;
   __block int completionCallCount = 0;
-  [connection addRequest:self.requestForMeWithEmptyFields
-       completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
-         completionCallCount++;
-         XCTAssertEqual(completionCallCount, 1, "The completion should only be called once");
-         XCTAssertEqual(
-           2,
-           [error.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] integerValue],
-           "The completion should be called with the expected error code"
-         );
-         [expectation fulfill];
-       }];
+  [self.connection addRequest:self.requestForMeWithEmptyFields
+            completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
+              completionCallCount++;
+              XCTAssertEqual(completionCallCount, 1, "The completion should only be called once");
+              XCTAssertEqual(
+                2,
+                [error.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] integerValue],
+                "The completion should be called with the expected error code"
+              );
+              [expectation fulfill];
+            }];
 
-  [connection start];
+  [self.connection start];
 
   NSData *data = [@"{\"error\": {\"message\": \"Server is busy\",\"code\": 1,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
   NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:400 HTTPVersion:nil headerFields:nil];
 
   // The first captured completion will be invoked and cause the retry
-  fakeSession.capturedCompletion(data, response, nil);
+  self.session.capturedCompletion(data, response, nil);
 
   // It's necessary to dispatch async to avoid the completion from being invoked before it is captured
   dispatch_async(dispatch_get_main_queue(), ^{
     NSData *secondData = [@"{\"error\": {\"message\": \"Server is busy\",\"code\": 2,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
-    fakeSession2.capturedCompletion(secondData, response, nil);
+    fakeSession.capturedCompletion(secondData, response, nil);
   });
 
-  [self waitForExpectations:@[expectation] timeout:100];
+  [self waitForExpectations:@[expectation] timeout:1];
 }
 
 - (void)testRetryDisabled
@@ -1460,8 +1414,6 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   self.session.capturedCompletion(data, response, nil);
 
   [self waitForExpectations:@[expectation] timeout:1];
-
-  FBSDKSettings.graphErrorRecoveryEnabled = NO;
 }
 
 // MARK: - Helpers
@@ -1516,6 +1468,22 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
       }
     }
   };
+}
+
+- (FBSDKErrorRecoveryConfiguration *)transientErrorRecoveryConfiguration
+{
+  return [[FBSDKErrorRecoveryConfiguration alloc] initWithRecoveryDescription:@"Recovery Description"
+                                                           optionDescriptions:@[@"Option1", @"Option2"]
+                                                                     category:FBSDKGraphRequestErrorTransient
+                                                           recoveryActionName:@"Recovery Action"];
+}
+
+- (FBSDKErrorRecoveryConfiguration *)nonTransientErrorRecoveryConfiguration
+{
+  return [[FBSDKErrorRecoveryConfiguration alloc] initWithRecoveryDescription:@"Recovery Description"
+                                                           optionDescriptions:@[@"Option1", @"Option2"]
+                                                                     category:FBSDKGraphRequestErrorOther
+                                                           recoveryActionName:@"Recovery Action"];
 }
 
 @end

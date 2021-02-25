@@ -26,6 +26,7 @@
 #import "FBSDKSKAdNetworkRule.h"
 #import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKSessionProviding.h"
+#import "FBSDKSettingsProtocol.h"
 #import "FBSDKTestCase.h"
 #import "FakeBundle.h"
 // URLSession Abstraction

@@ -64,6 +64,14 @@ typedef NS_OPTIONS(NSUInteger, FBSDKGraphRequestFlags) {
                             flags:(FBSDKGraphRequestFlags)flags
                 connectionFactory:(id<FBSDKGraphRequestConnectionProviding>)factory;
 
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(NSDictionary *)parameters
+                      tokenString:(NSString *)tokenString
+                       HTTPMethod:(NSString *)method
+                          version:(NSString *)version
+                            flags:(FBSDKGraphRequestFlags)flags
+                connectionFactory:(id<FBSDKGraphRequestConnectionProviding>)factory;
+
 + (BOOL)isAttachment:(id)item;
 + (NSString *)serializeURL:(NSString *)baseUrl
                     params:(nullable NSDictionary *)params

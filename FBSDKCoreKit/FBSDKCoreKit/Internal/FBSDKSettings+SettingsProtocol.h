@@ -16,15 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@objcMembers
-class TestErrorConfigurationProvider: NSObject, ErrorConfigurationProviding {
-  var configuration: ErrorConfigurationProtocol?
+#import <Foundation/Foundation.h>
 
-  init(configuration: ErrorConfigurationProtocol? = nil) {
-    self.configuration = configuration
-  }
+@protocol FBSDKSettings;
 
-  func errorConfiguration() -> ErrorConfigurationProtocol? {
-    return configuration
-  }
-}
+NS_ASSUME_NONNULL_BEGIN
+
+/// Default conformance to the settings protocol
+@interface FBSDKSettings (SettingsProtocol)id <FBSDKSettings>
+@end
+
+NS_ASSUME_NONNULL_END

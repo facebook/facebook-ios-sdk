@@ -17,14 +17,15 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @objcMembers
-class TestErrorConfigurationProvider: NSObject, ErrorConfigurationProviding {
-  var configuration: ErrorConfigurationProtocol?
+class TestSettings: NSObject, SettingsProtocol {
+  static var appID: String?
+  static var clientToken: String?
+  static var userAgentSuffix: String?
+  static var loggingBehaviors = Set<String>()
 
-  init(configuration: ErrorConfigurationProtocol? = nil) {
-    self.configuration = configuration
-  }
-
-  func errorConfiguration() -> ErrorConfigurationProtocol? {
-    return configuration
+  static func reset() {
+    appID = nil
+    clientToken = nil
+    loggingBehaviors = []
   }
 }

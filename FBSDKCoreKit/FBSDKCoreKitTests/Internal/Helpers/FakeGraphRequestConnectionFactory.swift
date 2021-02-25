@@ -18,19 +18,20 @@
 
 @objcMembers
 class FakeGraphRequestConnectionFactory: NSObject, GraphRequestConnectionProviding {
-  let stubbedConnection: GraphRequestConnecting
-
-  private init(stubbedConnection: GraphRequestConnecting) {
-    self.stubbedConnection = stubbedConnection
-  }
+  var stubbedConnection: GraphRequestConnecting?
 
   static func create(withStubbedConnection connection: GraphRequestConnecting) -> FakeGraphRequestConnectionFactory {
-    return FakeGraphRequestConnectionFactory(stubbedConnection: connection)
+    let factory = FakeGraphRequestConnectionFactory()
+    factory.stubbedConnection = connection
+    return factory
   }
 
   // MARK: - GraphRequestConnectionProviding
 
   func createGraphRequestConnection() -> GraphRequestConnecting {
-    return stubbedConnection
+    guard let connection = stubbedConnection else {
+      fatalError("Must stub a connection for a test connection factory")
+    }
+    return connection
   }
 }

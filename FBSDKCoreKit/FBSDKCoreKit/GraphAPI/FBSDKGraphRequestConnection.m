@@ -25,12 +25,13 @@
 #import "FBSDKErrorConfigurationProvider.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestBody.h"
+#import "FBSDKGraphRequestConnectionFactory.h"
 #import "FBSDKGraphRequestDataAttachment.h"
 #import "FBSDKGraphRequestMetadata.h"
 #import "FBSDKGraphRequestPiggybackManagerProvider.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
-#import "FBSDKSettings+Internal.h"
+#import "FBSDKSettingsProtocol.h"
 #import "FBSDKURLSession+URLSessionProxying.h"
 #import "FBSDKURLSessionProxyFactory.h"
 #import "FBSDKURLSessionProxying.h"
@@ -116,6 +117,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (nonatomic, strong) id<FBSDKURLSessionProxyProviding> sessionProxyFactory;
 @property (nonatomic, strong) id<FBSDKErrorConfigurationProviding> errorConfigurationProvider;
 @property (nonatomic, strong) Class<FBSDKGraphRequestPiggybackManagerProviding> piggybackManagerProvider;
+@property (nonatomic, strong) Class<FBSDKSettings> settings;
+@property (nonatomic, strong) id<FBSDKGraphRequestConnectionProviding> connectionFactory;
 
 @end
 
@@ -160,6 +163,30 @@ static BOOL _canMakeRequests = NO;
                     errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
                       piggybackManagerProvider:(Class<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
 {
+  return [self initWithURLSessionProxyFactory:proxyFactory
+                   errorConfigurationProvider:errorConfigurationProvider
+                     piggybackManagerProvider:piggybackManagerProvider
+                                     settings:FBSDKSettings.self];
+}
+
+- (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
+                    errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
+                      piggybackManagerProvider:(Class<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
+                                      settings:(Class<FBSDKSettings>)settings
+{
+  return [self initWithURLSessionProxyFactory:proxyFactory
+                   errorConfigurationProvider:errorConfigurationProvider
+                     piggybackManagerProvider:piggybackManagerProvider
+                                     settings:settings
+                            connectionFactory:[FBSDKGraphRequestConnectionFactory new]];
+}
+
+- (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
+                    errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
+                      piggybackManagerProvider:(Class<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
+                                      settings:(Class<FBSDKSettings>)settings
+                             connectionFactory:(id<FBSDKGraphRequestConnectionProviding>)factory
+{
   if ((self = [super init])) {
     _requests = [[NSMutableArray alloc] init];
     _timeout = g_defaultTimeout;
@@ -169,6 +196,8 @@ static BOOL _canMakeRequests = NO;
     _session = [proxyFactory createSessionProxyWithDelegate:self queue:_delegateQueue];
     _errorConfigurationProvider = errorConfigurationProvider;
     _piggybackManagerProvider = piggybackManagerProvider;
+    _settings = settings;
+    _connectionFactory = factory;
   }
   return self;
 }
@@ -414,7 +443,7 @@ static BOOL _canMakeRequests = NO;
   NSString *batchToken = nil;
   for (FBSDKGraphRequestMetadata *metadata in requests) {
     NSString *individualToken = [self accessTokenWithRequest:metadata.request];
-    BOOL isClientToken = [FBSDKSettings clientToken] && [individualToken hasSuffix:[FBSDKSettings clientToken]];
+    BOOL isClientToken = [self.settings.class clientToken] && [individualToken hasSuffix:[self.settings.class clientToken]];
     if (!batchToken
         && !isClientToken) {
       batchToken = individualToken;
@@ -505,7 +534,7 @@ static BOOL _canMakeRequests = NO;
   } else {
     // Find the session with an app ID and use that as the batch_app_id. If we can't
     // find one, try to load it from the plist. As a last resort, pass 0.
-    NSString *batchAppID = [FBSDKSettings appID];
+    NSString *batchAppID = [self.settings.class appID];
     if (!batchAppID || batchAppID.length == 0) {
       // The Graph API batch method requires either an access token or batch_app_id.
       // If we can't determine an App ID to use for the batch, we can't issue it.
@@ -547,7 +576,7 @@ static BOOL _canMakeRequests = NO;
   } else {
     request.HTTPBody = body.data;
   }
-  [request setValue:[FBSDKGraphRequestConnection userAgent] forHTTPHeaderField:@"User-Agent"];
+  [request setValue:[self userAgent] forHTTPHeaderField:@"User-Agent"];
   [request setValue:[body mimeContentType] forHTTPHeaderField:@"Content-Type"];
   [request setHTTPShouldHandleCookies:NO];
 
@@ -1136,8 +1165,8 @@ static BOOL _canMakeRequests = NO;
 - (NSString *)accessTokenWithRequest:(FBSDKGraphRequest *)request
 {
   NSString *token = request.tokenString ?: request.parameters[kAccessTokenKey];
-  if (!token && !(request.flags & FBSDKGraphRequestFlagSkipClientToken) && [FBSDKSettings clientToken].length > 0) {
-    NSString *baseTokenString = [NSString stringWithFormat:@"%@|%@", FBSDKSettings.appID, FBSDKSettings.clientToken];
+  if (!token && !(request.flags & FBSDKGraphRequestFlagSkipClientToken) && [[self.settings.class clientToken] length] > 0) {
+    NSString *baseTokenString = [NSString stringWithFormat:@"%@|%@", [self.settings.class appID], [self.settings.class clientToken]];
     if ([FBSDKAuthenticationToken.currentAuthenticationToken.graphDomain isEqualToString:@"gaming"]) {
       return [@"GG|" stringByAppendingString:baseTokenString];
     } else {
@@ -1149,14 +1178,14 @@ static BOOL _canMakeRequests = NO;
 
 - (void)registerTokenToOmitFromLog:(NSString *)token
 {
-  if (![FBSDKSettings.loggingBehaviors containsObject:FBSDKLoggingBehaviorAccessTokens]) {
+  if (![[self.settings.class loggingBehaviors] containsObject:FBSDKLoggingBehaviorAccessTokens]) {
     [FBSDKLogger registerStringToReplace:token replaceWith:@"ACCESS_TOKEN_REMOVED"];
   }
 }
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-+ (NSString *)userAgent
+- (NSString *)userAgent
 {
   static NSString *agent = nil;
   static dispatch_once_t onceToken;
@@ -1164,8 +1193,8 @@ static BOOL _canMakeRequests = NO;
     agent = [NSString stringWithFormat:@"%@.%@", kUserAgentBase, FBSDK_VERSION_STRING];
   });
   NSString *agentWithSuffix = nil;
-  if ([FBSDKSettings userAgentSuffix]) {
-    agentWithSuffix = [NSString stringWithFormat:@"%@/%@", agent, [FBSDKSettings userAgentSuffix]];
+  if ([self.settings.class userAgentSuffix]) {
+    agentWithSuffix = [NSString stringWithFormat:@"%@/%@", agent, [self.settings.class userAgentSuffix]];
   }
   if (@available(iOS 13.0, *)) {
     NSProcessInfo *processInfo = [NSProcessInfo processInfo];
@@ -1209,20 +1238,16 @@ static BOOL _canMakeRequests = NO;
       FBSDKGraphRequest *retryRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:originalRequest.graphPath
                                                                           parameters:originalRequest.parameters
                                                                          tokenString:[FBSDKAccessToken currentAccessToken].tokenString
+                                                                          HTTPMethod:originalRequest.HTTPMethod
                                                                              version:originalRequest.version
-                                                                          HTTPMethod:originalRequest.HTTPMethod];
-      // prevent further attempts at recovery (i.e., additional retries).
-      [retryRequest setGraphErrorRecoveryDisabled:YES];
+                                                                               flags:FBSDKGraphRequestFlagDisableErrorRecovery
+                                                                   connectionFactory:self.connectionFactory];
       FBSDKGraphRequestMetadata *retryMetadata = [[FBSDKGraphRequestMetadata alloc] initWithRequest:retryRequest completionHandler:_recoveringRequestMetadata.completionHandler batchParameters:_recoveringRequestMetadata.batchParameters];
-      // Future work should include providing the ability to pass a session proxy provider to
-      // the `FBSDKGraphRequest` convenience method `startWithCompletionHandler:`
-      FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:_sessionProxyFactory];
-      [connection addRequest:retryRequest completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *retriedError) {
+      [retryRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *retriedError) {
         [self processResultBody:result error:retriedError metadata:retryMetadata canNotifyDelegate:YES];
         self->_errorRecoveryProcessor = nil;
         self->_recoveringRequestMetadata = nil;
       }];
-      [connection start];
     } else {
       [self processResultBody:nil error:error metadata:_recoveringRequestMetadata canNotifyDelegate:YES];
       _errorRecoveryProcessor = nil;
