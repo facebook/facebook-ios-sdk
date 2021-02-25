@@ -285,6 +285,26 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   );
 }
 
+- (void)testDelegateQueue
+{
+  XCTAssertNil(self.connection.delegateQueue, "Should not have a delegate queue by default");
+}
+
+- (void)testSettingDelegateQueue
+{
+  self.connection.delegateQueue = NSOperationQueue.currentQueue;
+  XCTAssertEqualObjects(
+    self.connection.delegateQueue,
+    NSOperationQueue.currentQueue,
+    "Should be able to set the delegate queue"
+  );
+  XCTAssertEqualObjects(
+    self.session.delegateQueue,
+    NSOperationQueue.currentQueue,
+    "Should set the session's delegate queue when setting the connnection's delegate queue"
+  );
+}
+
 // MARK: - Adding Requests
 
 - (void)testAddingRequestWithoutBatchEntryName
@@ -382,6 +402,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   }
 }
 
+// MARK: - Starting
+
 - (void)testStartingConnectionWithUninitializedSDK
 {
   [FBSDKGraphRequestConnection resetCanMakeRequests];
@@ -406,7 +428,67 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
             }];
   [self.connection start];
 
-  XCTAssertTrue(completionWasCalled, "Sanity check");
+  XCTAssertTrue(completionWasCalled);
+}
+
+- (void)testStartingWithInvalidStates
+{
+  NSArray *states = @[@(kStateStarted), @(kStateCancelled), @(kStateCompleted)];
+
+  for (NSNumber *state in states) {
+    self.connection.state = kStateCreated;
+    [self.connection addRequest:self.sampleRequest
+              completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+                XCTFail("Should not be called");
+              }];
+    self.connection.state = state.intValue;
+    [self.connection start];
+    XCTAssertEqual(
+      self.connection.state,
+      state.intValue,
+      "Should not change the connection state when starting in an invalid state"
+    );
+    XCTAssertNil(self.session.capturedRequest, "Should not start a request for a connection in an invalid state");
+  }
+}
+
+- (void)testStartingWithValidStates
+{
+  NSArray *states = @[@(kStateCreated), @(kStateSerialized)];
+
+  for (NSNumber *state in states) {
+    self.connection.state = kStateCreated;
+    [self.connection addRequest:self.sampleRequest
+              completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+                XCTFail("Should not be called");
+              }];
+    self.connection.state = state.intValue;
+    [self.connection start];
+    XCTAssertEqual(
+      self.connection.state,
+      kStateStarted,
+      "Should change the connection state to 'started' when starting in an valid state"
+    );
+    XCTAssertNotNil(self.session.capturedRequest, "Should start a request for a connection in an valid state");
+  }
+}
+
+- (void)testStartingWithDelegateQueue
+{
+  self.connection.delegate = self;
+  TestOperationQueue *queue = [TestOperationQueue new];
+  self.connection.delegateQueue = queue;
+  [self.connection addRequest:self.sampleRequest
+            completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+              XCTFail("Should not be called");
+            }];
+  [self.connection start];
+  XCTAssertTrue(
+    queue.addOperationWithBlockWasCalled,
+    "Starting a connection should add the request to the delegate queue when one exists"
+  );
+
+  queue.capturedOperationBlock();
 }
 
 // MARK: - Errors From Results
