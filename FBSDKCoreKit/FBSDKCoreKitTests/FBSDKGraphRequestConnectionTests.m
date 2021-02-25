@@ -46,19 +46,18 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (nonatomic, strong) Class<FBSDKGraphRequestPiggybackManagerProviding> piggybackManagerProvider;
 @property (nonatomic, strong) Class<FBSDKSettings> settings;
 @property (nonatomic, strong) id<FBSDKGraphRequestConnectionProviding> connectionFactory;
+@property (nonatomic, strong) id<FBSDKEventLogging> eventLogger;
 @property (nonatomic, assign) FBSDKGraphRequestConnectionState state;
 
 + (BOOL)canMakeRequests;
 + (void)resetCanMakeRequests;
 + (void)resetDefaultConnectionTimeout;
-- (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)sessionProxyFactory;
-- (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
-                    errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider;
 - (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
                     errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
                       piggybackManagerProvider:(id<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
                                       settings:(id<FBSDKSettings>)settings
-                             connectionFactory:(id<FBSDKGraphRequestConnectionProviding>)factory;
+                             connectionFactory:(id<FBSDKGraphRequestConnectionProviding>)factory
+                                   eventLogger:(id<FBSDKEventLogging>)eventLogger;
 - (NSMutableURLRequest *)requestWithBatch:(NSArray *)requests
                                   timeout:(NSTimeInterval)timeout;
 - (void)addRequest:(FBSDKGraphRequestMetadata *)metadata
@@ -72,7 +71,9 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (NSString *)accessTokenWithRequest:(FBSDKGraphRequest *)request;
 - (NSError *)errorFromResult:(id)untypedParam request:(FBSDKGraphRequest *)request;
 - (NSString *)_overrideVersionPart;
-
+- (NSArray *)parseJSONResponse:(NSData *)data
+                         error:(NSError **)error
+                    statusCode:(NSInteger)statusCode;
 @end
 
 @interface FBSDKGraphRequestConnectionTests : XCTestCase <FBSDKGraphRequestConnectionDelegate>
@@ -87,6 +88,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (nonatomic, strong) TestGraphRequestPiggybackManagerProvider *piggybackManagerProvider;
 @property (nonatomic, strong) TestSettings *settings;
 @property (nonatomic, strong) FakeGraphRequestConnectionFactory *connectionFactory;
+@property (nonatomic, strong) TestEventLogger *eventLogger;
 @property (nonatomic, strong) FBSDKGraphRequestConnection *connection;
 
 @property (nonatomic, copy) void (^requestConnectionStartingCallback)(FBSDKGraphRequestConnection *connection);
@@ -121,11 +123,13 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   TestSettings.appID = self.appID;
   self.settings = TestSettings.self;
   self.connectionFactory = [FakeGraphRequestConnectionFactory new];
+  self.eventLogger = [TestEventLogger new];
   self.connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:self.sessionFactory
                                                              errorConfigurationProvider:self.errorConfigurationProvider
                                                                piggybackManagerProvider:self.piggybackManagerProvider
                                                                                settings:self.settings
-                                                                      connectionFactory:self.connectionFactory];
+                                                                      connectionFactory:self.connectionFactory
+                                                                            eventLogger:self.eventLogger];
   self.connectionFactory.stubbedConnection = self.connection;
 }
 
@@ -286,6 +290,28 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
     factory,
     self.connectionFactory,
     "A graph request connection should persist the connection factory it was created with"
+  );
+}
+
+- (void)testCreatingWithDefaultEventsLogger
+{
+  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
+  NSObject *logger = (NSObject *)connection.eventLogger;
+  XCTAssertEqualObjects(
+    logger.class,
+    FBSDKEventLogger.class,
+    "A graph request connection should have the correct events logger by default"
+  );
+}
+
+- (void)testCreatingWithCustomEventsLogger
+{
+  NSObject *logger = (NSObject *)self.connection.eventLogger;
+
+  XCTAssertEqualObjects(
+    logger,
+    self.eventLogger,
+    "A graph request connection should persist the events logger it was created with"
   );
 }
 
@@ -972,16 +998,14 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 {
   XCTestExpectation *expectation = [[XCTestExpectation alloc] initWithDescription:self.name];
 
-  self.errorConfigurationProvider = [[TestErrorConfigurationProvider alloc] initWithConfiguration:nil];
-  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:self.sessionFactory
-                                                                                     errorConfigurationProvider:self.errorConfigurationProvider];
-  [connection addRequest:self.requestForMeWithEmptyFields
+  self.errorConfigurationProvider.configuration = nil;
+  [self.connection addRequest:self.requestForMeWithEmptyFields
        completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
          // make sure there is no recovery info for client token failures.
          XCTAssertNil(error.localizedRecoverySuggestion);
          [expectation fulfill];
        }];
-  [connection start];
+  [self.connection start];
 
   NSData *data = [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463, \"type\":\"OAuthException\"}}" dataUsingEncoding:NSUTF8StringEncoding];
   NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[NSURL new] statusCode:400 HTTPVersion:nil headerFields:nil];
@@ -994,15 +1018,13 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 {
   XCTestExpectation *expectation = [[XCTestExpectation alloc] initWithDescription:self.name];
 
-  self.errorConfigurationProvider = [[TestErrorConfigurationProvider alloc] initWithConfiguration:nil];
-  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:self.sessionFactory
-                                                                                     errorConfigurationProvider:self.errorConfigurationProvider];
-  [connection addRequest:self.requestForMeWithEmptyFields completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
+  self.errorConfigurationProvider.configuration = nil;
+  [self.connection addRequest:self.requestForMeWithEmptyFields completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
     // make sure there is no recovery info for client token failures.
     XCTAssertNil(error.localizedRecoverySuggestion);
     [expectation fulfill];
   }];
-  [connection start];
+  [self.connection start];
 
   NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:400 HTTPVersion:nil headerFields:nil];
 
@@ -1353,7 +1375,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
                                                                                           errorConfigurationProvider:self.errorConfigurationProvider
                                                                                             piggybackManagerProvider:self.piggybackManagerProvider
                                                                                                             settings:self.settings
-                                                                                                   connectionFactory:self.connectionFactory];
+                                                                                                   connectionFactory:self.connectionFactory
+                                                                                                         eventLogger:self.eventLogger];
   self.connectionFactory.stubbedConnection = retryConnection;
   __block int completionCallCount = 0;
   [self.connection addRequest:self.requestForMeWithEmptyFields
@@ -1414,6 +1437,26 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   self.session.capturedCompletion(data, response, nil);
 
   [self waitForExpectations:@[expectation] timeout:1];
+}
+
+// MARK: - Response Parsing
+
+- (void)testParsingJsonResponseWithInvalidData
+{
+  uint16_t value = 0xb70f;
+  NSData *data = [NSData dataWithBytes:&value length:2];
+  NSError *error;
+  [self.connection parseJSONResponse:data error:&error statusCode:0];
+
+  XCTAssertEqualObjects(
+    self.eventLogger.capturedEventName,
+    @"fb_response_invalid_utf8",
+    "Should log the correct event name"
+  );
+  XCTAssertTrue(
+    self.eventLogger.capturedIsImplicitlyLogged,
+    "Should implicitly log an event indicating a json parsing failure"
+  );
 }
 
 // MARK: - Helpers

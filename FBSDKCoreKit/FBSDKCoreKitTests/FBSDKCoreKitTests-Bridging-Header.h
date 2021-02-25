@@ -43,6 +43,8 @@
 #import "FBSDKGraphRequestPiggybackManaging.h"
 #import "FBSDKGraphRequestPiggybackManagerProviding.h"
 #import "FBSDKGraphRequestPiggybackManagerProvider.h"
+// AppEvents Abstractions
+#import "FBSDKEventLogger.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

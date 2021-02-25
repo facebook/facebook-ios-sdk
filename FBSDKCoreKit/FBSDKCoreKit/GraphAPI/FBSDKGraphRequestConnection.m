@@ -23,6 +23,7 @@
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKError.h"
 #import "FBSDKErrorConfigurationProvider.h"
+#import "FBSDKEventLogger.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestBody.h"
 #import "FBSDKGraphRequestConnectionFactory.h"
@@ -119,6 +120,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (nonatomic, strong) Class<FBSDKGraphRequestPiggybackManagerProviding> piggybackManagerProvider;
 @property (nonatomic, strong) Class<FBSDKSettings> settings;
 @property (nonatomic, strong) id<FBSDKGraphRequestConnectionProviding> connectionFactory;
+@property (nonatomic, strong) id<FBSDKEventLogging> eventLogger;
 
 @end
 
@@ -142,43 +144,12 @@ static BOOL _canMakeRequests = NO;
 
 - (instancetype)init
 {
-  return [self initWithURLSessionProxyFactory:[FBSDKURLSessionProxyFactory new]];
-}
-
-- (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
-{
-  return [self initWithURLSessionProxyFactory:proxyFactory
-                   errorConfigurationProvider:[FBSDKErrorConfigurationProvider new]];
-}
-
-- (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
-                    errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
-{
-  return [self initWithURLSessionProxyFactory:proxyFactory
-                   errorConfigurationProvider:errorConfigurationProvider
-                     piggybackManagerProvider:FBSDKGraphRequestPiggybackManagerProvider.self];
-}
-
-- (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
-                    errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
-                      piggybackManagerProvider:(Class<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
-{
-  return [self initWithURLSessionProxyFactory:proxyFactory
-                   errorConfigurationProvider:errorConfigurationProvider
-                     piggybackManagerProvider:piggybackManagerProvider
-                                     settings:FBSDKSettings.self];
-}
-
-- (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
-                    errorConfigurationProvider:(id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
-                      piggybackManagerProvider:(Class<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
-                                      settings:(Class<FBSDKSettings>)settings
-{
-  return [self initWithURLSessionProxyFactory:proxyFactory
-                   errorConfigurationProvider:errorConfigurationProvider
-                     piggybackManagerProvider:piggybackManagerProvider
-                                     settings:settings
-                            connectionFactory:[FBSDKGraphRequestConnectionFactory new]];
+  return [self initWithURLSessionProxyFactory:[FBSDKURLSessionProxyFactory new]
+                   errorConfigurationProvider:[FBSDKErrorConfigurationProvider new]
+                     piggybackManagerProvider:FBSDKGraphRequestPiggybackManagerProvider.self
+                                     settings:FBSDKSettings.self
+                            connectionFactory:[FBSDKGraphRequestConnectionFactory new]
+                                  eventLogger:[FBSDKEventLogger new]];
 }
 
 - (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
@@ -186,6 +157,7 @@ static BOOL _canMakeRequests = NO;
                       piggybackManagerProvider:(Class<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
                                       settings:(Class<FBSDKSettings>)settings
                              connectionFactory:(id<FBSDKGraphRequestConnectionProviding>)factory
+                                   eventLogger:(id<FBSDKEventLogging>)eventLogger
 {
   if ((self = [super init])) {
     _requests = [[NSMutableArray alloc] init];
@@ -198,6 +170,7 @@ static BOOL _canMakeRequests = NO;
     _piggybackManagerProvider = piggybackManagerProvider;
     _settings = settings;
     _connectionFactory = factory;
+    _eventLogger = eventLogger;
   }
   return self;
 }
@@ -746,8 +719,7 @@ static BOOL _canMakeRequests = NO;
   if (responseUTF8 == nil) {
     NSString *base64Data = data.length != 0 ? [data base64EncodedStringWithOptions:0] : @"";
     if (base64Data != nil) {
-      [FBSDKAppEvents logInternalEvent:@"fb_response_invalid_utf8"
-                    isImplicitlyLogged:YES];
+      [self.eventLogger logInternalEvent:@"fb_response_invalid_utf8" isImplicitlyLogged:YES];
     }
   }
 
