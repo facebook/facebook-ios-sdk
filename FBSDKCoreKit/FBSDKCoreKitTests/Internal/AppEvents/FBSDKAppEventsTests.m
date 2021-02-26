@@ -59,6 +59,16 @@ static NSString *const _mockUserID = @"mockUserID";
 
 + (FBSDKAppEvents *)singleton;
 
++ (void)setCanLogEvents;
+
++ (void)resetCanLogEvents;
+
++ (BOOL)canLogEvents;
+
++ (void)resetApplicationState;
+
++ (UIApplicationState)applicationState;
+
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 
@@ -125,6 +135,8 @@ static NSString *const _mockUserID = @"mockUserID";
 
   // This should be removed when these tests are updated to check the actual requests that are created
   [self stubAllocatingGraphRequestConnection];
+  [FBSDKAppEvents resetApplicationState];
+  [FBSDKAppEvents resetCanLogEvents];
 }
 
 - (void)testAppEventsMockIsSingleton
@@ -348,7 +360,7 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testActivateAppWithInitializedSDK
 {
-  [self stubIsSDKInitialized:YES];
+  [FBSDKAppEvents setCanLogEvents];
 
   OCMExpect([self.appEventsMock publishInstall]);
   OCMExpect([self.appEventsMock fetchServerConfiguration:NULL]);
@@ -360,8 +372,7 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testActivateAppWithoutInitializedSDK
 {
-  [self stubIsSDKInitialized:NO];
-
+  [FBSDKAppEvents resetCanLogEvents];
   [FBSDKAppEvents activateApp];
 
   OCMReject([self.appEventsMock publishInstall]);
@@ -714,6 +725,22 @@ static NSString *const _mockUserID = @"mockUserID";
   [FBSDKAppEvents logImplicitEvent:_mockEventName valueToSum:@(_mockPurchaseAmount) parameters:@{} accessToken:nil];
 
   OCMVerifyAll(self.appEventsMock);
+}
+
+#pragma mark Test for Singleton Values
+
+- (void)testCanLogEventValues
+{
+  XCTAssertFalse([FBSDKAppEvents canLogEvents], "The default value of canLogEvents should be NO");
+  [FBSDKAppEvents setCanLogEvents];
+  XCTAssertTrue([FBSDKAppEvents canLogEvents], "canLogEvents should now have a value of YES");
+}
+
+- (void)testApplicationStateValues
+{
+  XCTAssertEqual([FBSDKAppEvents applicationState], UIApplicationStateInactive, "The default value of applicationState should be UIApplicationStateInactive");
+  [FBSDKAppEvents setApplicationState:UIApplicationStateBackground];
+  XCTAssertEqual([FBSDKAppEvents applicationState], UIApplicationStateBackground, "The value of applicationState after calling setApplicationState should be UIApplicationStateBackground");
 }
 
 @end

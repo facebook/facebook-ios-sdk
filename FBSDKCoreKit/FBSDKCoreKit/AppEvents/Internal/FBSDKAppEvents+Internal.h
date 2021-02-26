@@ -22,6 +22,7 @@
  #import <FBSDKCoreKit/FBSDKAppEvents.h>
 #endif
 
+#import <UIKit/UIApplication.h>
 #import "FBSDKAppEventsUtility.h"
 
 @class FBSDKGraphRequest;
@@ -201,6 +202,10 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
 @interface FBSDKAppEvents (Internal)
 
 @property (class, nonatomic, readonly, strong) FBSDKAppEvents *singleton;
+
++ (void)setCanLogEvents;
+
++ (void)setApplicationState:(UIApplicationState)state;
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;

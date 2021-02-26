@@ -353,6 +353,10 @@ static BOOL g_explicitEventsLoggedYet;
 
 #pragma mark - Object Lifecycle
 
+static BOOL _canLogEvents = NO;
+
+static UIApplicationState _applicationState = UIApplicationStateInactive;
+
 + (void)initialize
 {
   if (self == [FBSDKAppEvents class]) {
@@ -650,7 +654,7 @@ static BOOL g_explicitEventsLoggedYet;
 
 + (void)activateApp
 {
-  if (![FBSDKApplicationDelegate isSDKInitialized]) {
+  if (![self canLogEvents]) {
     NSLog(
       @"<Warning> App events cannot be activated before the Facebook SDK is initialized. "
       "Learn more: https://github.com/facebook/facebook-ios-sdk/blob/master/CHANGELOG.md#900"
@@ -1035,6 +1039,26 @@ static BOOL g_explicitEventsLoggedYet;
   }
 }
 
++ (void)setCanLogEvents
+{
+  _canLogEvents = YES;
+}
+
++ (BOOL)canLogEvents
+{
+  return _canLogEvents;
+}
+
++ (void)setApplicationState:(UIApplicationState)state
+{
+  _applicationState = state;
+}
+
++ (UIApplicationState)applicationState
+{
+  return _applicationState;
+}
+
 #if !TARGET_OS_TV
 - (void)enableCodelessEvents
 {
@@ -1213,7 +1237,7 @@ static BOOL g_explicitEventsLoggedYet;
     applicationState = [UIApplication sharedApplication].applicationState;
   } else {
     currentViewControllerName = @"off_thread";
-    applicationState = [FBSDKApplicationDelegate applicationState];
+    applicationState = [self.class applicationState];
   }
   [FBSDKTypeUtility dictionary:eventDictionary setObject:currentViewControllerName forKey:@"_ui"];
 
@@ -1502,5 +1526,21 @@ static BOOL g_explicitEventsLoggedYet;
 
   return request;
 }
+
+#pragma mark - Testability
+
+#if DEBUG
+
++ (void)resetCanLogEvents
+{
+  _canLogEvents = NO;
+}
+
++ (void)resetApplicationState
+{
+  _applicationState = UIApplicationStateInactive;
+}
+
+#endif
 
 @end

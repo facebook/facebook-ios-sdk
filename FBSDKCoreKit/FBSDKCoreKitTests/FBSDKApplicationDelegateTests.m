@@ -19,6 +19,7 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
+#import "FBSDKAppEvents.h"
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitTestUtility.h"
 #import "FBSDKCoreKitTests-Swift.h"
@@ -42,6 +43,7 @@
 - (void)_logSDKInitialize;
 - (void)applicationDidBecomeActive:(NSNotification *)notification;
 - (void)applicationWillResignActive:(NSNotification *)notification;
+- (void)setApplicationState:(UIApplicationState)state;
 
 @end
 
@@ -56,6 +58,12 @@
   id _partialDelegateMock;
   NotificationCenterSpy *_notificationCenterSpy;
 }
+@end
+
+@interface FBSDKAppEvents (Testing)
++ (UIApplicationState)applicationState;
++ (void)resetCanLogEvents;
++ (BOOL)canLogEvents;
 @end
 
 @implementation FBSDKApplicationDelegateTests
@@ -180,6 +188,19 @@
   XCTAssertTrue(
     [FBSDKGraphRequestConnection canMakeRequests],
     "Initializing the SDK should enable making graph requests"
+  );
+}
+
+- (void)testInitializingSdkEnablesLogEvents
+{
+  [FBSDKApplicationDelegate resetIsSdkInitialized];
+  [FBSDKAppEvents resetCanLogEvents];
+
+  [FBSDKApplicationDelegate initializeSDK:@{}];
+
+  XCTAssertTrue(
+    [FBSDKAppEvents canLogEvents],
+    "Initializing the SDK should enable event logging"
   );
 }
 
@@ -354,6 +375,12 @@
   [_delegate applicationWillResignActive:notification];
 
   OCMVerify([observer applicationWillResignActive:application]);
+}
+
+- (void)testSetApplicationState
+{
+  [_delegate setApplicationState:UIApplicationStateBackground];
+  XCTAssertEqual([FBSDKAppEvents applicationState], UIApplicationStateBackground, "The value of applicationState after calling setApplicationState should be UIApplicationStateBackground");
 }
 
 @end
