@@ -352,6 +352,10 @@ static FBSDKProfile *g_currentProfile;
     graphPath = [graphPath stringByAppendingString:@",email"];
   }
 
+  if ([token.permissions containsObject:@"user_friends"]) {
+    graphPath = [graphPath stringByAppendingString:@",friends"];
+  }
+
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
                                                                  parameters:nil
                                                                       flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
@@ -365,23 +369,29 @@ static FBSDKProfile *g_currentProfile;
   FBSDKParseProfileBlock parseBlock = ^void (id result, FBSDKProfile **profileRef) {
     if (profileRef == NULL
         || result == nil
-        || result[@"id"] == nil
-        || ((NSString *) result[@"id"]).length == 0) {
+        || [FBSDKTypeUtility dictionaryValue:result] == nil) {
       return;
     }
+
+    NSString *profileID = [FBSDKTypeUtility stringValue:result[@"id"]];
+    if (profileID == nil || profileID.length == 0) {
+      return;
+    }
+
     NSString *urlString = [FBSDKTypeUtility stringValue:result[@"link"]];
     NSURL *linkUrl = [FBSDKTypeUtility URLValue:[NSURL URLWithString:urlString]];
+    NSArray<FBSDKUserIdentifier *> *friendIDs = [self friendIDsFromGraphResult:[FBSDKTypeUtility dictionaryValue:result[@"friends"]]];
 
-    FBSDKProfile *profile = [[FBSDKProfile alloc] initWithUserID:result[@"id"]
-                                                       firstName:result[@"first_name"]
-                                                      middleName:result[@"middle_name"]
-                                                        lastName:result[@"last_name"]
-                                                            name:result[@"name"]
+    FBSDKProfile *profile = [[FBSDKProfile alloc] initWithUserID:profileID
+                                                       firstName:[FBSDKTypeUtility stringValue:result[@"first_name"]]
+                                                      middleName:[FBSDKTypeUtility stringValue:result[@"middle_name"]]
+                                                        lastName:[FBSDKTypeUtility stringValue:result[@"last_name"]]
+                                                            name:[FBSDKTypeUtility stringValue:result[@"name"]]
                                                          linkURL:linkUrl
                                                      refreshDate:[NSDate date]
                                                         imageURL:nil
-                                                           email:result[@"email"]
-                                                       friendIDs:nil];
+                                                           email:[FBSDKTypeUtility stringValue:result[@"email"]]
+                                                       friendIDs:friendIDs];
     *profileRef = [profile copy];
   };
   [[self class] loadProfileWithToken:token completion:completion graphRequest:request parseBlock:parseBlock];
@@ -426,6 +436,24 @@ static FBSDKProfile *g_currentProfile;
 {
   FBSDKAccessToken *token = notification.userInfo[FBSDKAccessTokenChangeNewKey];
   [self loadProfileWithToken:token completion:NULL];
+}
+
++ (NSArray<FBSDKUserIdentifier *> *)friendIDsFromGraphResult:(NSDictionary<NSString *, id> *)result
+{
+  NSArray *rawFriends = [FBSDKTypeUtility arrayValue:result[@"data"]];
+  NSMutableArray *friendIDs = NSMutableArray.new;
+
+  for (NSDictionary *rawFriend in rawFriends) {
+    if ([FBSDKTypeUtility dictionaryValue:rawFriend]) {
+      FBSDKUserIdentifier *friendID = [FBSDKTypeUtility stringValue:rawFriend[@"id"]];
+      [FBSDKTypeUtility array:friendIDs addObject:friendID];
+    }
+  }
+
+  if (friendIDs.count <= 0) {
+    return nil;
+  }
+  return friendIDs;
 }
 
  #pragma clang diagnostic pop
