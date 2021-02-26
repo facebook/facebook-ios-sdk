@@ -30,7 +30,29 @@ class SampleUserProfile: NSObject {
       linkURL: URL(string: "http://www.example.com"),
       refreshDate: .distantFuture,
       imageURL: URL(string: "http://www.example.com/image.jpg"),
-      email: "example@example.com"
+      email: "example@example.com",
+      friendIDs: [
+        "456",
+        "789",
+      ]
+    )
+  }
+
+  public static func valid(withImageURL url: URL?) -> Profile {
+    return Profile(
+      userID: "123",
+      firstName: "John",
+      middleName: "K",
+      lastName: "Smith",
+      name: "John Smith",
+      linkURL: URL(string: "http://www.example.com"),
+      refreshDate: .distantFuture,
+      imageURL: url,
+      email: "example@example.com",
+      friendIDs: [
+        "456",
+        "789",
+      ]
     )
   }
 }

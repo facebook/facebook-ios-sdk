@@ -257,7 +257,8 @@
                                       linkURL:nil
                                   refreshDate:nil
                                      imageURL:imageURL
-                                        email:claims.email];
+                                        email:claims.email
+                                    friendIDs:claims.userFriends];
 }
 
 + (NSDate *)expirationDateFromParameters:(NSDictionary *)parameters

@@ -44,6 +44,24 @@ static NSString *const _fakeChallence = @"some_challenge";
                                      nonce:(nonnull NSString *)nonce
                                    handler:(FBSDKLoginCompletionParametersBlock)handler;
 
++ (FBSDKProfile *)profileWithClaims:(FBSDKAuthenticationTokenClaims *)claims;
+
+@end
+
+@interface FBSDKAuthenticationTokenClaims (Testing)
+
+- (instancetype)initWithJti:(NSString *)jti
+                        iss:(NSString *)iss
+                        aud:(NSString *)aud
+                      nonce:(NSString *)nonce
+                        exp:(long)exp
+                        iat:(long)iat
+                        sub:(NSString *)sub
+                       name:(nullable NSString *)name
+                      email:(nullable NSString *)email
+                    picture:(nullable NSString *)picture
+                userFriends:(nullable NSArray<NSString *> *)userFriends;
+
 @end
 
 @interface FBSDKLoginCompletionTests : XCTestCase
@@ -457,6 +475,28 @@ static NSString *const _fakeChallence = @"some_challenge";
   XCTAssertNil(completer.parameters.error);
   XCTAssertEqual(completer.exchangeNonceCount, 0);
   XCTAssertEqual(completer.fetchAndSetAuthTokenCount, 0);
+}
+
+// MARK: Profile
+- (void)testCreateProfileWithClaims
+{
+  FBSDKAuthenticationTokenClaims *claim = [[FBSDKAuthenticationTokenClaims alloc] initWithJti:@"some_jti"
+                                                                                          iss:@"some_iss"
+                                                                                          aud:@"some_aud"
+                                                                                        nonce:@"some_nonce"
+                                                                                          exp:1234
+                                                                                          iat:1234
+                                                                                          sub:@"some_sub"
+                                                                                         name:@"some_name"
+                                                                                        email:@"example@example.com"
+                                                                                      picture:@"www.facebook.com"
+                                                                                  userFriends:@[@"123", @"456"]];
+  FBSDKProfile *profile = [FBSDKLoginURLCompleter profileWithClaims:claim];
+  XCTAssertEqualObjects(profile.userID, claim.sub);
+  XCTAssertEqualObjects(profile.name, claim.name);
+  XCTAssertEqualObjects(profile.imageURL.absoluteString, claim.picture);
+  XCTAssertEqualObjects(profile.email, claim.email);
+  XCTAssertEqualObjects(profile.friendIDs, claim.userFriends);
 }
 
 // MARK: Helpers

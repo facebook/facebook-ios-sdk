@@ -114,6 +114,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
     @"name" : @"Test User",
     @"email" : @"email@email.com",
     @"picture" : @"https://www.facebook.com/some_picture",
+    @"user_friends" : @[@"123", @"456"],
   };
 
   _header = @{
@@ -345,7 +346,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   NSString *encodedHeader = [FBSDKBase64 encodeData:headerData];
 
   NSString *tokenString = [NSString stringWithFormat:@"%@.%@.%@", encodedHeader, encodedClaims, @"signature"];
-  NSURL *url = [self authorizeURLWithFragment:[NSString stringWithFormat:@"granted_scopes=public_profile,email&id_token=%@", tokenString] challenge:kFakeChallenge];
+  NSURL *url = [self authorizeURLWithFragment:[NSString stringWithFormat:@"granted_scopes=public_profile,email,user_friends&id_token=%@", tokenString] challenge:kFakeChallenge];
 
   [target setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
     XCTAssertFalse(result.isCancelled);
@@ -757,6 +758,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertEqualObjects(profile.userID, _claims[@"sub"], @"failed to parse userID");
   XCTAssertEqualObjects(profile.imageURL.absoluteString, _claims[@"picture"], @"failed to parse user profile picture");
   XCTAssertEqualObjects(profile.email, _claims[@"email"], @"failed to parse user email");
+  XCTAssertEqualObjects(profile.friendIDs, _claims[@"user_friends"], @"failed to parse user friends");
 }
 
 - (NSURL *)authorizeURLWithParameters:(NSString *)parameters joinedBy:(NSString *)joinChar

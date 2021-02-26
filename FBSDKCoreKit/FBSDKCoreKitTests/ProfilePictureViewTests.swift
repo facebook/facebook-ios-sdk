@@ -20,30 +20,6 @@ import FBSDKCoreKit
 import XCTest
 
 class ProfilePictureViewTests: XCTestCase {
-  var sampleProfile: Profile {
-    return Profile(
-      userID: "Sample ID",
-      firstName: nil,
-      middleName: nil,
-      lastName: nil,
-      name: "Sample Name",
-      linkURL: nil,
-      refreshDate: nil,
-      imageURL: URL(string:"https://www.facebook.com/"),
-      email:nil
-    )
-  }
-  var sampleProfileWithoutImageURL: Profile {
-    return Profile(
-      userID: "Sample ID",
-      firstName: nil,
-      middleName: nil,
-      lastName: nil,
-      name: "Sample Name",
-      linkURL: nil,
-      refreshDate: nil
-    )
-  }
 
   override func setUp() {
     super.setUp()
@@ -57,7 +33,7 @@ class ProfilePictureViewTests: XCTestCase {
   func testImageUpdateWithoutAccessTokenWithProfile() {
     let view = TestView()
     AccessToken.setCurrent(nil, shouldDispatchNotif: false)
-    Profile.setCurrent(sampleProfile, shouldPostNotification: false)
+    Profile.setCurrent(SampleUserProfile.valid, shouldPostNotification: false)
 
     view._updateImage()
 
@@ -76,7 +52,7 @@ class ProfilePictureViewTests: XCTestCase {
   func testImageUpdateWithAccessTokenWithProfile() {
     let view = TestView()
     AccessToken.setCurrent(SampleAccessToken.validToken, shouldDispatchNotif: false)
-    Profile.setCurrent(sampleProfile, shouldPostNotification: false)
+    Profile.setCurrent(SampleUserProfile.valid, shouldPostNotification: false)
 
     view._updateImage()
 
@@ -114,7 +90,7 @@ class ProfilePictureViewTests: XCTestCase {
   func testImageUpdateWithoutAccessTokenWithProfileNoImageURL() {
     let view = TestView()
     AccessToken.setCurrent(nil, shouldDispatchNotif: false)
-    Profile.setCurrent(sampleProfileWithoutImageURL, shouldPostNotification: false)
+    Profile.setCurrent(SampleUserProfile.valid(withImageURL: nil), shouldPostNotification: false)
 
     view._updateImage()
 
@@ -169,7 +145,7 @@ class ProfilePictureViewTests: XCTestCase {
 
   func testReceivingProfileNotification() {
     let view = TestView()
-    Profile.setCurrent(sampleProfile, shouldPostNotification: false)
+    Profile.setCurrent(SampleUserProfile.valid, shouldPostNotification: false)
     let notification = Notification(
       name: .ProfileDidChange,
       object: nil,
@@ -189,7 +165,7 @@ class ProfilePictureViewTests: XCTestCase {
 
   func testUpdatinImageWithProfileWithImageURL() {
     let view = TestView()
-    Profile.setCurrent(sampleProfile, shouldPostNotification: false)
+    Profile.setCurrent(SampleUserProfile.valid, shouldPostNotification: false)
 
     view._updateImageWithProfile()
 
@@ -203,7 +179,7 @@ class ProfilePictureViewTests: XCTestCase {
 
   func testUpdatinImageWithProfileWithoutImageURL() {
     let view = TestView()
-    Profile.setCurrent(sampleProfileWithoutImageURL, shouldPostNotification: false)
+    Profile.setCurrent(SampleUserProfile.valid(withImageURL: nil), shouldPostNotification: false)
 
     view._updateImageWithProfile()
 

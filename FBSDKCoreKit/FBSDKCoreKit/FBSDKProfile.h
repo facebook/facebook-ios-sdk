@@ -77,6 +77,12 @@ typedef void (^FBSDKProfileBlock)(FBSDKProfile *_Nullable profile, NSError *_Nul
 NS_SWIFT_NAME(ProfileBlock);
 
 /**
+ Represents the unique identifier for an end user
+ */
+typedef NSString FBSDKUserIdentifier
+NS_SWIFT_NAME(UserIdentifier);
+
+/**
   Represents an immutable Facebook profile
 
  This class provides a global "currentProfile" instance to more easily
@@ -104,7 +110,7 @@ NS_SWIFT_NAME(Profile)
  @param linkURL the link for this profile
  @param refreshDate the optional date this profile was fetched. Defaults to [NSDate date].
  */
-- (instancetype)initWithUserID:(NSString *)userID
+- (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
                      firstName:(nullable NSString *)firstName
                     middleName:(nullable NSString *)middleName
                       lastName:(nullable NSString *)lastName
@@ -124,7 +130,7 @@ NS_SWIFT_NAME(Profile)
  @param imageURL an optional URL to use for fetching a user's profile image
  @param email the user's email
  */
-- (instancetype)initWithUserID:(NSString *)userID
+- (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
                      firstName:(nullable NSString *)firstName
                     middleName:(nullable NSString *)middleName
                       lastName:(nullable NSString *)lastName
@@ -133,6 +139,31 @@ NS_SWIFT_NAME(Profile)
                    refreshDate:(nullable NSDate *)refreshDate
                       imageURL:(nullable NSURL *)imageURL
                          email:(nullable NSString *)email
+DEPRECATED_MSG_ATTRIBUTE("This constructor will be removed in the next major release.");
+
+/**
+  initializes a new instance.
+ @param userID the user ID
+ @param firstName the user's first name
+ @param middleName the user's middle name
+ @param lastName the user's last name
+ @param name the user's complete name
+ @param linkURL the link for this profile
+ @param refreshDate the optional date this profile was fetched. Defaults to [NSDate date].
+ @param imageURL an optional URL to use for fetching a user's profile image
+ @param email the user's email
+ @param friendIDs a list of identifiers for the user's friends
+ */
+- (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
+                     firstName:(nullable NSString *)firstName
+                    middleName:(nullable NSString *)middleName
+                      lastName:(nullable NSString *)lastName
+                          name:(nullable NSString *)name
+                       linkURL:(nullable NSURL *)linkURL
+                   refreshDate:(nullable NSDate *)refreshDate
+                      imageURL:(nullable NSURL *)imageURL
+                         email:(nullable NSString *)email
+                     friendIDs:(nullable NSArray<FBSDKUserIdentifier *> *)friendIDs
 NS_DESIGNATED_INITIALIZER;
 
 /**
@@ -149,7 +180,7 @@ NS_SWIFT_NAME(current);
 /**
   The user id
  */
-@property (nonatomic, copy, readonly) NSString *userID;
+@property (nonatomic, copy, readonly) FBSDKUserIdentifier *userID;
 /**
   The user's first name
  */
@@ -190,6 +221,12 @@ NS_SWIFT_NAME(current);
  IMPORTANT: This field will only be populated if your user has granted your application the 'email' permission.
  */
 @property (nonatomic, copy, readonly, nullable) NSString *email;
+/**
+  A list of identifiers of the user's friends.
+
+ IMPORTANT: This field will only be populated if your user has granted your application the 'user_friends' permission.
+ */
+@property (nonatomic, copy, readonly, nullable) NSArray<FBSDKUserIdentifier *> *friendIDs;
 
 /**
   Indicates if `currentProfile` will automatically observe `FBSDKAccessTokenDidChangeNotification` notifications
