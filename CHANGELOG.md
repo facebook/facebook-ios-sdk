@@ -9,7 +9,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Important
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.0.1...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.1.0...HEAD)
+
+## 9.1.0
+
+### Fixed
+
+- Build Warnings for SPM with Xcode 12.5 Beta 2 [#1661](https://github.com/facebook/facebook-ios-sdk/pull/1661)
+- Memory leak in `FBSDKGraphErrorRecoveryProcessor`
+- Name conflict for Swift version of `FBSDKURLSessionTask`
+- Avoids call to `AppEvents` singleton when setting overriding app ID [#1647](https://github.com/facebook/facebook-ios-sdk/pull/1647)
+- CocoaPods now compiles `FBSDKDynamicFrameworkLoader` with ARC.
+- CocoaPods now uses static frameworks as the prebuilt libraries for the aggregate FacebookSDK podspec
+
+### Deprecated
+
+- `FBSDKGraphErrorRecoveryProcessor`'s `delegate` property
+- `FBSDKGraphErrorRecoveryProcessor`'s `didPresentErrorWithRecovery:contextInfo:` method
+
+### Removed
+
+- Internal type `FBSDKErrorRecoveryAttempter`
+
+[2021-02-25](https://github.com/facebook/facebook-ios-sdk/releases/tag/v9.1.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.0.1...v9.1.0)
 
 ## 9.0.1
 
