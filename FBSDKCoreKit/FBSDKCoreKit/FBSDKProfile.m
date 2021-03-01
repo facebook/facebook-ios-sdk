@@ -219,9 +219,9 @@ static FBSDKProfile *g_currentProfile;
     && [_name isEqualToString:profile.name]
     && [_linkURL isEqual:profile.linkURL]
     && [_refreshDate isEqualToDate:profile.refreshDate])
-    && [_imageURL isEqual:profile.imageURL]
-    && [_email isEqualToString:profile.email]
-    && [_friendIDs isEqualToArray:profile.friendIDs];
+  && [_imageURL isEqual:profile.imageURL]
+  && [_email isEqualToString:profile.email]
+  && [_friendIDs isEqualToArray:profile.friendIDs];
 }
 
  #pragma mark NSCoding
