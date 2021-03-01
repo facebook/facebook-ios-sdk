@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+- App Events use the correct token if none have been provided manually
+
 ### Important
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.1.0...HEAD)

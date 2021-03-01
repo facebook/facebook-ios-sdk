@@ -317,4 +317,13 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   }
 }
 
+- (void)testProvideTokenForAppAndClient
+{
+  [FBSDKAppEvents setLoggingOverrideAppID:nil];
+  [FBSDKSettings setAppID:@"123"];
+  [FBSDKSettings setClientToken:@"toktok"];
+  NSString *token = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
+  XCTAssertEqualObjects(@"123|toktok", token);
+}
+
 @end
