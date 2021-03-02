@@ -46,13 +46,21 @@ NS_ASSUME_NONNULL_BEGIN
 /// End-User's full name in displayable form including all name parts.
 @property (nullable, nonatomic, readonly, strong) NSString *name;
 
-/// End-User's preferred e-mail address.
+/**
+ End-User's preferred e-mail address.
+
+ IMPORTANT: This field will only be populated if your user has granted your application the 'email' permission.
+ */
 @property (nullable, nonatomic, readonly, strong) NSString *email;
 
 /// URL of the End-User's profile picture.
 @property (nullable, nonatomic, readonly, strong) NSString *picture;
 
-/// End-User's friends.
+/**
+ End-User's friends.
+
+ IMPORTANT: This field will only be populated if your user has granted your application the 'user_friends' permission.
+ */
 @property (nullable, nonatomic, readonly, strong) NSArray<NSString *> *userFriends;
 
 - (instancetype)init NS_UNAVAILABLE;

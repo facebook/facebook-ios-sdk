@@ -58,10 +58,10 @@
     return nil;
   }
 
-  NSSet<FBSDKPermission *> *permissionsSet = [FBSDKLoginConfiguration permissionsFromRawPermissions:[NSSet setWithArray:permissions] forTrackingPreference:tracking];
+  NSSet<FBSDKPermission *> *permissionsSet = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:permissions]];
   if (!permissionsSet) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                       formatString:@"Invalid combination of permissions and tracking preference provided to login configuration. The only permissions allowed when `tracking` is `.limited` are 'email', 'public_profile', 'gaming_profile' and 'gaming_user_picture'. Returning nil."];
+                       formatString:@"Invalid combination of permissions provided to login configuration."];
     return nil;
   }
 
@@ -83,32 +83,6 @@
   }
 
   return self;
-}
-
-+ (NSSet<FBSDKPermission *> *)permissionsFromRawPermissions:(NSSet<NSString *> *)permissions
-                                      forTrackingPreference:(FBSDKLoginTracking)tracking
-{
-  switch (tracking) {
-    case FBSDKLoginTrackingLimited: {
-      NSSet<NSString *> *validPermissions = [NSSet setWithArray:@[
-        @"email",
-        @"public_profile",
-        @"gaming_profile",
-        @"gaming_user_picture",
-        @"user_friends",
-                                             ]];
-      NSSet *combined = [permissions setByAddingObjectsFromSet:validPermissions];
-
-      if (permissions.count != 0 && combined.count > validPermissions.count) {
-        return nil;
-      }
-      break;
-    }
-    case FBSDKLoginTrackingEnabled:
-      break;
-  }
-
-  return [FBSDKPermission permissionsFromRawPermissions:permissions];
 }
 
 @end

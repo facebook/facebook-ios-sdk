@@ -83,27 +83,4 @@ class LoginConfigurationTests: XCTestCase {
       "Should create a configuration with the provided tracking preference"
     )
   }
-
-  func testCreatingWithPermissionsForLimitedTracking() {
-    let allowedPermissions = Set([Permission.email])
-    let disallowedPermissions = Set([Permission.userBirthday, .userPosts])
-
-    var configuration = LoginConfiguration(
-      permissions: disallowedPermissions,
-      tracking: .limited
-    )
-    XCTAssertNil(
-      configuration,
-      "Should not create a configuration with permissions that are disallowed based on the tracking preference" // swiftlint:disable:this line_length
-    )
-
-    configuration = LoginConfiguration(
-      permissions: allowedPermissions,
-      tracking: .limited
-    )
-    XCTAssertNotNil(
-      configuration,
-      "Should create a configuration with permissions that are allowed based on the tracking preference" // swiftlint:disable:this line_length
-    )
-  }
 }
