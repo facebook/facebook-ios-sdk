@@ -48,6 +48,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (nonatomic, strong) id<FBSDKGraphRequestConnectionProviding> connectionFactory;
 @property (nonatomic, strong) id<FBSDKEventLogging> eventLogger;
 @property (nonatomic, assign) FBSDKGraphRequestConnectionState state;
+@property (nonatomic, strong) FBSDKLogger *logger;
 
 + (BOOL)canMakeRequests;
 + (void)resetCanMakeRequests;
@@ -74,6 +75,19 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (NSArray *)parseJSONResponse:(NSData *)data
                          error:(NSError **)error
                     statusCode:(NSInteger)statusCode;
+- (void)processResultBody:(NSDictionary *)body
+                    error:(NSError *)error
+                 metadata:(FBSDKGraphRequestMetadata *)metadata
+        canNotifyDelegate:(BOOL)canNotifyDelegate;
+- (void)logRequest:(NSMutableURLRequest *)request
+        bodyLength:(NSUInteger)bodyLength
+        bodyLogger:(FBSDKLogger *)bodyLogger
+  attachmentLogger:(FBSDKLogger *)attachmentLogger;
+- (void)        URLSession:(NSURLSession *)session
+                      task:(NSURLSessionTask *)task
+           didSendBodyData:(int64_t)bytesSent
+            totalBytesSent:(int64_t)totalBytesSent
+  totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend;
 @end
 
 @interface FBSDKGraphRequestConnectionTests : XCTestCase <FBSDKGraphRequestConnectionDelegate>
@@ -93,6 +107,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 @property (nonatomic, copy) void (^requestConnectionStartingCallback)(FBSDKGraphRequestConnection *connection);
 @property (nonatomic, copy) void (^requestConnectionCallback)(FBSDKGraphRequestConnection *connection, NSError *error);
+@property (nonatomic) BOOL didInvokeDelegateRequestConnectionDidSendBodyData;
 @end
 
 @interface FBSDKAuthenticationToken (Testing)
@@ -168,6 +183,14 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
     self.requestConnectionStartingCallback(connection);
     self.requestConnectionStartingCallback = nil;
   }
+}
+
+- (void)  requestConnection:(FBSDKGraphRequestConnection *)connection
+            didSendBodyData:(NSInteger)bytesWritten
+          totalBytesWritten:(NSInteger)totalBytesWritten
+  totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite
+{
+  self.didInvokeDelegateRequestConnectionDidSendBodyData = YES;
 }
 
 // MARK: - Dependencies
@@ -772,6 +795,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [FBSDKGraphRequestConnection resetCanMakeRequests];
   NSString *msg = @"FBSDKGraphRequestConnection cannot be started before Facebook SDK initialized.";
   NSError *expectedError = [FBSDKError unknownErrorWithMessage:msg];
+  self.connection.logger = [TestLogger new];
 
   __block BOOL completionWasCalled = NO;
   __weak typeof(self) weakSelf = self;
@@ -791,13 +815,24 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
             }];
   [self.connection start];
 
+  XCTAssertEqualObjects(
+    TestLogger.capturedLogEntry,
+    msg,
+    "Starting a graph request before the SDK is initialized should log a warning"
+  );
+  XCTAssertEqual(
+    TestLogger.capturedLoggingBehavior,
+    FBSDKLoggingBehaviorDeveloperErrors,
+    "Starting a graph request before the SDK is initialized should log a warning"
+  );
   XCTAssertTrue(completionWasCalled);
 }
 
 - (void)testStartingWithInvalidStates
 {
-  NSArray *states = @[@(kStateStarted), @(kStateCancelled), @(kStateCompleted)];
+  self.connection.logger = [TestLogger new];
 
+  NSArray *states = @[@(kStateStarted), @(kStateCancelled), @(kStateCompleted)];
   for (NSNumber *state in states) {
     self.connection.state = kStateCreated;
     [self.connection addRequest:self.sampleRequest
@@ -810,6 +845,16 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
       self.connection.state,
       state.intValue,
       "Should not change the connection state when starting in an invalid state"
+    );
+    XCTAssertEqualObjects(
+      TestLogger.capturedLogEntry,
+      @"FBSDKGraphRequestConnection cannot be started again.",
+      "Starting a connection in an invalid state"
+    );
+    XCTAssertEqual(
+      TestLogger.capturedLoggingBehavior,
+      FBSDKLoggingBehaviorDeveloperErrors,
+      "Starting a connection in an invalid state"
     );
     XCTAssertNil(self.session.capturedRequest, "Should not start a request for a connection in an invalid state");
   }
@@ -1459,6 +1504,98 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   );
 }
 
+- (void)testProcessingResultBodyWithDebugDictionary
+{
+  self.connection.logger = [TestLogger new];
+  NSArray *entries = @[
+    @"message1 Link: link1",
+    @"message2 Link: link2"
+  ];
+  [self.connection processResultBody:self.debugResponse error:nil metadata:nil canNotifyDelegate:NO];
+  XCTAssertEqualObjects(
+    TestLogger.capturedLogEntries,
+    entries,
+    "Should log entries from the debug dictionary"
+  );
+}
+
+- (void)testProcessingResultBodyWithRandomizedDebugDictionary
+{
+  for (int i = 1; i < 100; i++) {
+    NSDictionary *body = [Fuzzer randomizeWithJson:self.debugResponse];
+    [self.connection processResultBody:body error:nil metadata:nil canNotifyDelegate:NO];
+  }
+}
+
+- (void)testLogRequestWithInactiveLogger
+{
+  NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:self.sampleUrl];
+  TestLogger *logger = [TestLogger new];
+  TestLogger *bodyLogger = [TestLogger new];
+  TestLogger *attachmentLogger = [TestLogger new];
+  self.connection.logger = logger;
+  [self.connection logRequest:request bodyLength:1024 bodyLogger:bodyLogger attachmentLogger:attachmentLogger];
+
+  XCTAssertEqualObjects(logger.capturedAppendedKeys, @[]);
+  XCTAssertEqualObjects(logger.capturedAppendedValues, @[]);
+}
+
+- (void)testLogRequestWithActiveLogger
+{
+  NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:self.sampleUrl];
+  TestLogger *logger = [TestLogger new];
+  TestLogger *bodyLogger = [TestLogger new];
+  TestLogger *attachmentLogger = [TestLogger new];
+
+  bodyLogger.contents = @"bodyContents";
+  attachmentLogger.contents = @"attachmentLoggerContents";
+  logger.stubbedIsActive = YES;
+  self.connection.logger = logger;
+
+  [self.connection logRequest:request bodyLength:1024 bodyLogger:bodyLogger attachmentLogger:attachmentLogger];
+
+  NSArray *expectedKeys = @[
+    @"URL",
+    @"Method",
+    @"UserAgent",
+    @"MIME",
+    @"Body Size",
+    @"Body (w/o attachments)",
+    @"Attachments"
+  ];
+
+  NSArray *expectedValues = @[
+    @"https://example.com",
+    @"GET",
+    @"",
+    @"",
+    @"1 kB",
+    @"bodyContents",
+    @"attachmentLoggerContents"
+  ];
+
+  XCTAssertEqualObjects(
+    logger.capturedAppendedKeys,
+    expectedKeys,
+    "Should append the expected key value pairs to log"
+  );
+  XCTAssertEqualObjects(
+    logger.capturedAppendedValues,
+    expectedValues,
+    "Should append the expected key value pairs to log"
+  );
+}
+
+- (void)testInvokesDelegate
+{
+  self.connection.delegate = self;
+  [self.connection URLSession:nil task:nil didSendBodyData:0 totalBytesSent:0 totalBytesExpectedToSend:0];
+  XCTAssertTrue(
+    self.didInvokeDelegateRequestConnectionDidSendBodyData,
+    "The url session data delegate should pass through to the graph request connection delegate"
+  );
+}
+
 // MARK: - Helpers
 
 - (FBSDKGraphRequest *)sampleRequest
@@ -1527,6 +1664,31 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
                                                            optionDescriptions:@[@"Option1", @"Option2"]
                                                                      category:FBSDKGraphRequestErrorOther
                                                            recoveryActionName:@"Recovery Action"];
+}
+
+- (NSDictionary *)debugResponse
+{
+  return @{
+    @"__debug__" : @{
+      @"messages" : @[
+        @{
+          @"message" : @"message1",
+          @"type" : @"type1",
+          @"link" : @"link1"
+        },
+        @{
+          @"message" : @"message2",
+          @"type" : @"warning",
+          @"link" : @"link2"
+        }
+      ]
+    }
+  };
+}
+
+- (NSURL *)sampleUrl
+{
+  return [NSURL URLWithString:@"https://example.com"];
 }
 
 @end

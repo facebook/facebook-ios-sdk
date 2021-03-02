@@ -18,7 +18,6 @@
 
 #import "FBSDKGraphRequestConnection+Internal.h"
 
-#import "FBSDKAppEvents+Internal.h"
 #import "FBSDKConstants.h"
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKError.h"
@@ -241,8 +240,8 @@ static BOOL _canMakeRequests = NO;
 {
   if (![self.class canMakeRequests]) {
     NSString *msg = @"FBSDKGraphRequestConnection cannot be started before Facebook SDK initialized.";
-    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                       formatString:@"%@", msg];
+    [self.logger.class singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                             formatString:@"%@", msg];
     self.state = kStateCancelled;
     [self completeFBSDKURLSessionWithResponse:nil
                                          data:nil
@@ -252,8 +251,8 @@ static BOOL _canMakeRequests = NO;
   }
 
   if (self.state != kStateCreated && self.state != kStateSerialized) {
-    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                       formatString:@"FBSDKGraphRequestConnection cannot be started again."];
+    [self.logger.class singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                             formatString:@"FBSDKGraphRequestConnection cannot be started again."];
     return;
   }
   Class<FBSDKGraphRequestPiggybackManaging> piggybackManager = [self.piggybackManagerProvider.class piggybackManager];
@@ -927,7 +926,7 @@ static BOOL _canMakeRequests = NO;
       message = [message stringByAppendingFormat:@" Link: %@", link];
     }
 
-    [FBSDKLogger singleShotLogEntry:loggingBehavior logEntry:message];
+    [self.logger.class singleShotLogEntry:loggingBehavior logEntry:message];
   }];
 }
 

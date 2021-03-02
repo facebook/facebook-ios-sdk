@@ -19,15 +19,43 @@
 @objcMembers
 class TestLogger: Logger {
   static var capturedLoggingBehavior: String?
+  /// The most recent log entry
   static var capturedLogEntry: String?
+  /// All log entries captured between resetting the fixture
+  static var capturedLogEntries = [String]()
+
+  var capturedAppendedKeys = [String]()
+  var capturedAppendedValues = [String]()
+  var stubbedIsActive = false
+  var capturedContents = ""
 
   override class func singleShotLogEntry(_ loggingBehavior: String, logEntry: String) {
     capturedLoggingBehavior = loggingBehavior
     capturedLogEntry = logEntry
+    capturedLogEntries.append(logEntry)
+  }
+
+  override var contents: String {
+    get {
+      return capturedContents
+    }
+    set {
+      capturedContents = newValue
+    }
+  }
+
+  override var isActive: Bool {
+    return stubbedIsActive
+  }
+
+  override func appendKey(_ key: String, value: String) {
+    capturedAppendedKeys.append(key)
+    capturedAppendedValues.append(value)
   }
 
   class func reset() {
     capturedLoggingBehavior = nil
     capturedLogEntry = nil
+    capturedLogEntries = []
   }
 }
