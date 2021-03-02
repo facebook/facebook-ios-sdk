@@ -37,18 +37,6 @@ Runs an upload to a users Gaming Media Library with the given configuration
 
 @param configuration model object contain the content that will be uploaded
 @param completionHandler a callback that is fired when the upload completes.
-
-@deprecated - This method is deprecated. Please use uploadVideoWithConfiguration:andResultCompletionHandler: instead.
-*/
-+ (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration * _Nonnull)configuration
-                andCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
-DEPRECATED_MSG_ATTRIBUTE("Please use uploadVideoWithConfiguration:andResultCompletionHandler: instead");
-
-/**
-Runs an upload to a users Gaming Media Library with the given configuration
-
-@param configuration model object contain the content that will be uploaded
-@param completionHandler a callback that is fired when the upload completes.
 */
 + (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration * _Nonnull)configuration
           andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler;

@@ -50,7 +50,6 @@ static FBSDKAccessToken *g_currentAccessToken;
 #define FBSDK_ACCESSTOKEN_REFRESHDATE_KEY @"refreshDate"
 #define FBSDK_ACCESSTOKEN_EXPIRATIONDATE_KEY @"expirationDate"
 #define FBSDK_ACCESSTOKEN_DATA_EXPIRATIONDATE_KEY @"dataAccessExpirationDate"
-#define FBSDK_ACCESSTOKEN_GRAPH_DOMAIN_KEY @"graphDomain"
 
 @implementation FBSDKAccessToken
 
@@ -76,36 +75,6 @@ static FBSDKAccessToken *g_currentAccessToken;
     _dataAccessExpirationDate = [dataAccessExpirationDate copy] ?: [NSDate distantFuture];
   }
   return self;
-}
-
-- (instancetype)initWithTokenString:(NSString *)tokenString
-                        permissions:(NSArray<NSString *> *)permissions
-                declinedPermissions:(NSArray<NSString *> *)declinedPermissions
-                 expiredPermissions:(NSArray<NSString *> *)expiredPermissions
-                              appID:(NSString *)appID
-                             userID:(NSString *)userID
-                     expirationDate:(NSDate *)expirationDate
-                        refreshDate:(NSDate *)refreshDate
-           dataAccessExpirationDate:(NSDate *)dataAccessExpirationDate
-                        graphDomain:(NSString *)graphDomain
-{
-  FBSDKAccessToken *accessToken =
-  [self
-   initWithTokenString:tokenString
-   permissions:permissions
-   declinedPermissions:declinedPermissions
-   expiredPermissions:expiredPermissions
-   appID:appID
-   userID:userID
-   expirationDate:expirationDate
-   refreshDate:refreshDate
-   dataAccessExpirationDate:dataAccessExpirationDate];
-
-  if (accessToken != nil) {
-    accessToken->_graphDomain = [graphDomain copy];
-  }
-
-  return accessToken;
 }
 
 - (BOOL)hasGranted:(NSString *)permission
@@ -201,7 +170,6 @@ static FBSDKAccessToken *g_currentAccessToken;
     self.refreshDate.hash,
     self.expirationDate.hash,
     self.dataAccessExpirationDate.hash,
-    self.graphDomain.hash
   };
   #pragma clange diagnostic pop
 
@@ -221,8 +189,6 @@ static FBSDKAccessToken *g_currentAccessToken;
 
 - (BOOL)isEqualToAccessToken:(FBSDKAccessToken *)token
 {
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   return (token
     && [FBSDKInternalUtility object:self.tokenString isEqualToObject:token.tokenString]
     && [FBSDKInternalUtility object:self.permissions isEqualToObject:token.permissions]
@@ -232,9 +198,7 @@ static FBSDKAccessToken *g_currentAccessToken;
     && [FBSDKInternalUtility object:self.userID isEqualToObject:token.userID]
     && [FBSDKInternalUtility object:self.refreshDate isEqualToObject:token.refreshDate]
     && [FBSDKInternalUtility object:self.expirationDate isEqualToObject:token.expirationDate]
-    && [FBSDKInternalUtility object:self.dataAccessExpirationDate isEqualToObject:token.dataAccessExpirationDate]
-    && [FBSDKInternalUtility object:self.graphDomain isEqualToObject:token.graphDomain]);
-  #pragma clange diagnostic pop
+    && [FBSDKInternalUtility object:self.dataAccessExpirationDate isEqualToObject:token.dataAccessExpirationDate]);
 }
 
 #pragma mark - NSCopying
@@ -263,7 +227,6 @@ static FBSDKAccessToken *g_currentAccessToken;
   NSDate *refreshDate = [decoder decodeObjectOfClass:[NSDate class] forKey:FBSDK_ACCESSTOKEN_REFRESHDATE_KEY];
   NSDate *expirationDate = [decoder decodeObjectOfClass:[NSDate class] forKey:FBSDK_ACCESSTOKEN_EXPIRATIONDATE_KEY];
   NSDate *dataAccessExpirationDate = [decoder decodeObjectOfClass:[NSDate class] forKey:FBSDK_ACCESSTOKEN_DATA_EXPIRATIONDATE_KEY];
-  NSString *graphDomain = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_ACCESSTOKEN_GRAPH_DOMAIN_KEY];
 
   return
   [self
@@ -275,8 +238,7 @@ static FBSDKAccessToken *g_currentAccessToken;
    userID:userID
    expirationDate:expirationDate
    refreshDate:refreshDate
-   dataAccessExpirationDate:dataAccessExpirationDate
-   graphDomain:graphDomain];
+   dataAccessExpirationDate:dataAccessExpirationDate];
 }
 
 - (void)encodeWithCoder:(NSCoder *)encoder
@@ -290,10 +252,6 @@ static FBSDKAccessToken *g_currentAccessToken;
   [encoder encodeObject:self.expirationDate forKey:FBSDK_ACCESSTOKEN_EXPIRATIONDATE_KEY];
   [encoder encodeObject:self.refreshDate forKey:FBSDK_ACCESSTOKEN_REFRESHDATE_KEY];
   [encoder encodeObject:self.dataAccessExpirationDate forKey:FBSDK_ACCESSTOKEN_DATA_EXPIRATIONDATE_KEY];
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  [encoder encodeObject:self.graphDomain forKey:FBSDK_ACCESSTOKEN_GRAPH_DOMAIN_KEY];
-  #pragma clange diagnostic pop
 }
 
 #pragma mark - Testability

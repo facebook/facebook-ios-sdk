@@ -73,9 +73,6 @@ static NSDate *_lastRefreshTry = nil;
           ? [NSDate dateWithTimeIntervalSince1970:dataAccessExpirationDateNumber.doubleValue]
           : [NSDate distantFuture]);
       }
-
-      #pragma clang diagnostic push
-      #pragma clang diagnostic ignored "-Wdeprecated-declarations"
       FBSDKAccessToken *refreshedToken = [[FBSDKAccessToken alloc] initWithTokenString:tokenString ?: currentToken.tokenString
                                                                            permissions:(permissions ?: currentToken.permissions).allObjects
                                                                    declinedPermissions:(declinedPermissions ?: currentToken.declinedPermissions).allObjects
@@ -84,9 +81,7 @@ static NSDate *_lastRefreshTry = nil;
                                                                                 userID:currentToken.userID
                                                                         expirationDate:expirationDate
                                                                            refreshDate:[NSDate date]
-                                                              dataAccessExpirationDate:dataExpirationDate
-                                                                           graphDomain:graphDomain ?: currentToken.graphDomain];
-      #pragma clange diagnostic pop
+                                                              dataAccessExpirationDate:dataExpirationDate];
 
       if (expectedToken == currentToken) {
         [FBSDKAccessToken setCurrentAccessToken:refreshedToken];
