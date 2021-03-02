@@ -19,7 +19,7 @@
 #import "FBSDKErrorRecoveryConfiguration.h"
 #import "FBSDKErrorConfigurationProtocol.h"
 
-@class FBSDKGraphRequest;
+@protocol FBSDKGraphRequest;
 
 @protocol FBSDKDecodableErrorConfiguration <NSObject>
 
@@ -47,6 +47,6 @@ FBSDKDecodableErrorConfiguration
 
 // NSString "code" instances support "*" wildcard semantics (nil is treated as "*" also)
 // 'request' is optional, typically for identifying special graph request semantics (e.g., no recovery for client token)
-- (FBSDKErrorRecoveryConfiguration *)recoveryConfigurationForCode:(NSString *)code subcode:(NSString *)subcode request:(FBSDKGraphRequest *)request;
+- (FBSDKErrorRecoveryConfiguration *)recoveryConfigurationForCode:(NSString *)code subcode:(NSString *)subcode request:(id<FBSDKGraphRequest>)request;
 
 @end

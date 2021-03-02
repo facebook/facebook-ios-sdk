@@ -958,7 +958,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testErrorFromResultDependsOnErrorConfiguration
 {
   [self.connection errorFromResult:self.sampleErrorDictionary request:self.sampleRequest];
-  FBSDKGraphRequest *capturedRequest = self.errorConfiguration.capturedGraphRequest;
+  FBSDKGraphRequest *capturedRequest = (FBSDKGraphRequest *)self.errorConfiguration.capturedGraphRequest;
 
   XCTAssertNotNil(capturedRequest.graphPath, "Should capture the graph request from the result");
   XCTAssertEqualObjects(

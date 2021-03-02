@@ -25,20 +25,12 @@
 #endif
 
 #import "FBSDKGraphRequestConnectionProviding.h"
+#import "FBSDKGraphRequestFlags.h"
+#import "FBSDKGraphRequestProtocol+Internal.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_OPTIONS(NSUInteger, FBSDKGraphRequestFlags) {
-  FBSDKGraphRequestFlagNone = 0,
-  // indicates this request should not use a client token as its token parameter
-  FBSDKGraphRequestFlagSkipClientToken = 1 << 1,
-  // indicates this request should not close the session if its response is an oauth error
-  FBSDKGraphRequestFlagDoNotInvalidateTokenOnError = 1 << 2,
-  // indicates this request should not perform error recovery
-  FBSDKGraphRequestFlagDisableErrorRecovery = 1 << 3,
-} NS_SWIFT_NAME(GraphRequestFlags);
-
-@interface FBSDKGraphRequest (Internal)
+@interface FBSDKGraphRequest (Internal) <FBSDKGraphRequestInternal>
 
 // Generally, requests automatically issued by the SDK
 // should not invalidate the token and should disableErrorRecovery

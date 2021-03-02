@@ -441,7 +441,7 @@ static UIApplicationState _applicationState;
   [FBSDKGraphRequestConnection setCanMakeRequests];
   [FBSDKAppEvents setCanLogEvents];
   [FBSDKGateKeeperManager configureWithSettings:FBSDKSettings.class
-                           graphRequestProvider:[FBSDKGraphRequestFactory new]];
+                                requestProvider:[FBSDKGraphRequestFactory new]];
 }
 
 // MARK: - Testability

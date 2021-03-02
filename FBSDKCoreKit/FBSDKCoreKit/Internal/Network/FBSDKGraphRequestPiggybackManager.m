@@ -158,10 +158,11 @@ static NSDate *_lastRefreshTry = nil;
        }];
 }
 
-+ (BOOL)_safeForPiggyback:(FBSDKGraphRequest *)request
++ (BOOL)_safeForPiggyback:(id<FBSDKGraphRequest>)request
 {
-  return [request.version isEqualToString:[FBSDKSettings graphAPIVersion]]
-  && !request.hasAttachments;
+  BOOL isVersionSafe = [request.version isEqualToString:[FBSDKSettings graphAPIVersion]];
+  BOOL hasAttachments = [(id<FBSDKGraphRequestInternal>)request hasAttachments];
+  return isVersionSafe && !hasAttachments;
 }
 
 + (int)_tokenRefreshThresholdInSeconds

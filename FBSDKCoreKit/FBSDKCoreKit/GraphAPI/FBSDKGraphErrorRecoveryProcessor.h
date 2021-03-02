@@ -31,7 +31,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class FBSDKGraphErrorRecoveryProcessor;
-@class FBSDKGraphRequest;
+@protocol FBSDKGraphRequest;
 
 /**
   Defines a delegate for `FBSDKGraphErrorRecoveryProcessor`.
@@ -108,7 +108,7 @@ DEPRECATED_MSG_ATTRIBUTE("FBSDKGraphErrorRecoveryProcessor's delegate will be re
  @param delegate the delegate that will be retained until recovery is complete.
  */
 - (BOOL)processError:(NSError *)error
-             request:(FBSDKGraphRequest *)request
+             request:(id<FBSDKGraphRequest>)request
             delegate:(nullable id<FBSDKGraphErrorRecoveryProcessorDelegate>)delegate;
 
 /**

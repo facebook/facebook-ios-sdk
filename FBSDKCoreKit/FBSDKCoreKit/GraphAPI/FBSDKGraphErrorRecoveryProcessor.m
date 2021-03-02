@@ -35,7 +35,7 @@
 
 @implementation FBSDKGraphErrorRecoveryProcessor
 
-- (BOOL)processError:(NSError *)error request:(FBSDKGraphRequest *)request delegate:(id<FBSDKGraphErrorRecoveryProcessorDelegate>)delegate
+- (BOOL)processError:(NSError *)error request:(id<FBSDKGraphRequest>)request delegate:(id<FBSDKGraphErrorRecoveryProcessorDelegate>)delegate
 {
   if ([delegate respondsToSelector:@selector(processorWillProcessError:error:)]) {
     if (![delegate processorWillProcessError:self error:error]) {

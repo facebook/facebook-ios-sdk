@@ -44,7 +44,7 @@ static const NSTimeInterval kTimeout = 4.0;
 static NSDate *_timestamp;
 static BOOL _loadingGateKeepers;
 static BOOL _requeryFinishedForAppStart;
-static id<FBSDKGraphRequestProviding> _graphRequestProvider;
+static id<FBSDKGraphRequestProviding> _requestProvider;
 static Class<FBSDKSettings> _settings;
 static FBSDKLogger *_logger;
 
@@ -54,16 +54,16 @@ static FBSDKLogger *_logger;
   if (self == [FBSDKGateKeeperManager class]) {
     _completionBlocks = [NSMutableArray array];
     _logger = [FBSDKLogger new];
-    _graphRequestProvider = nil;
+    _requestProvider = nil;
     _settings = nil;
     _canLoadGateKeepers = NO;
   }
 }
 
 + (void)configureWithSettings:(Class<FBSDKSettings>)settings
-         graphRequestProvider:(id<FBSDKGraphRequestProviding>)graphRequestProvider
+              requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
 {
-  _graphRequestProvider = graphRequestProvider;
+  _requestProvider = requestProvider;
   _settings = settings;
   _canLoadGateKeepers = YES;
 }
@@ -119,7 +119,7 @@ static FBSDKLogger *_logger;
         [FBSDKTypeUtility array:_completionBlocks addObject:completionBlock];
         if (!_loadingGateKeepers) {
           _loadingGateKeepers = YES;
-          FBSDKGraphRequest *request = [[self class] requestToLoadGateKeepers];
+          id<FBSDKGraphRequest> request = [[self class] requestToLoadGateKeepers];
 
           // start request with specified timeout instead of the default 180s
           FBSDKGraphRequestConnection *requestConnection = [FBSDKGraphRequestConnection new];
@@ -139,7 +139,7 @@ static FBSDKLogger *_logger;
 
 #pragma mark - Internal Class Methods
 
-+ (FBSDKGraphRequest *)requestToLoadGateKeepers
++ (id<FBSDKGraphRequest>)requestToLoadGateKeepers
 {
   NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:parameters setObject:@"ios" forKey:@"platform"];
@@ -147,14 +147,12 @@ static FBSDKLogger *_logger;
   [FBSDKTypeUtility dictionary:parameters setObject:FBSDK_GATEKEEPER_APP_GATEKEEPER_FIELDS forKey:@"fields"];
   [FBSDKTypeUtility dictionary:parameters setObject:[UIDevice currentDevice].systemVersion forKey:@"os_version"];
 
-  // TODO: This casting can be removed once request connection is provided by a factory
-  // that has a method for taking a GraphRequestProtocol.
-  return (FBSDKGraphRequest *)[self.graphRequestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/%@",
-                                                                                          [self.settings appID], FBSDK_GATEKEEPER_APP_GATEKEEPER_EDGE]
-                                                                              parameters:parameters
-                                                                             tokenString:nil
-                                                                              HTTPMethod:nil
-                                                                                   flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
+  return [self.requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/%@",
+                                                                [self.settings appID], FBSDK_GATEKEEPER_APP_GATEKEEPER_EDGE]
+                                                    parameters:parameters
+                                                   tokenString:nil
+                                                    HTTPMethod:nil
+                                                         flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
 }
 
 #pragma mark - Helper Class Methods
@@ -235,9 +233,9 @@ static FBSDKLogger *_logger;
   return _logger;
 }
 
-+ (id<FBSDKGraphRequestProviding>)graphRequestProvider
++ (id<FBSDKGraphRequestProviding>)requestProvider
 {
-  return _graphRequestProvider;
+  return _requestProvider;
 }
 
 + (Class<FBSDKSettings>)settings
@@ -266,12 +264,12 @@ static FBSDKLogger *_logger;
 
 + (void)setGraphRequestProvider:(id<FBSDKGraphRequestProviding>)provider
 {
-  _graphRequestProvider = provider;
+  _requestProvider = provider;
 }
 
 + (void)reset
 {
-  _graphRequestProvider = nil;
+  _requestProvider = nil;
   _gateKeepers = nil;
   _settings = nil;
   _canLoadGateKeepers = NO;

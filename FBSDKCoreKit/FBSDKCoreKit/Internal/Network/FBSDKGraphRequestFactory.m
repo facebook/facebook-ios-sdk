@@ -18,7 +18,6 @@
 
 #import "FBSDKGraphRequestFactory.h"
 
-#import "FBSDKGraphRequest+GraphRequestProtocol.h"
 #import "FBSDKGraphRequest+Internal.h"
 
 @implementation FBSDKGraphRequestFactory

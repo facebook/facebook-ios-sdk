@@ -19,7 +19,7 @@
 import Foundation
 
 @objcMembers
-public class TestGraphRequestConnectionFactory: NSObject, GraphRequestConnectionProviding {
+class TestGraphRequestConnectionFactory: NSObject, GraphRequestConnectionProviding {
   let stubbedConnection: GraphRequestConnecting
 
   private init(stubbedConnection: GraphRequestConnecting) {
@@ -32,23 +32,23 @@ public class TestGraphRequestConnectionFactory: NSObject, GraphRequestConnection
 
   // MARK: - GraphRequestConnectionProviding
 
-  public func createGraphRequestConnection() -> GraphRequestConnecting {
+  func createGraphRequestConnection() -> GraphRequestConnecting {
     return stubbedConnection
   }
 }
 
 @objcMembers
-public class TestGraphRequestConnection: NSObject, GraphRequestConnecting {
+class TestGraphRequestConnection: NSObject, GraphRequestConnecting {
   var startCallCount = 0
-  var capturedGraphRequest: GraphRequest?
+  var capturedGraphRequest: GraphRequestProtocol?
   var capturedCompletionHandler: GraphRequestBlock?
 
-  public func add(_ request: GraphRequest, completionHandler handler: @escaping GraphRequestBlock) {
+  func add(_ request: GraphRequestProtocol, completionHandler handler: @escaping GraphRequestBlock) {
     capturedGraphRequest = request
     capturedCompletionHandler = handler
   }
 
-  public func start() {
-    self.startCallCount += 1
+  func start() {
+    startCallCount += 1
   }
 }

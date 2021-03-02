@@ -285,33 +285,42 @@ static NSString *const _fakeChallence = @"some_challenge";
                                                              handler:^(FBSDKLoginCompletionParameters *_Nonnull parameters) {
                                                                // not important here
                                                              }];
+  FBSDKGraphRequest *capturedRequest = (FBSDKGraphRequest *)connection.capturedGraphRequest;
   XCTAssertEqualObjects(
-    connection.capturedGraphRequest.graphPath,
+    capturedRequest.graphPath,
     @"oauth/access_token",
     "Should create a graph request with the expected graph path"
   );
   XCTAssertEqualObjects(
-    [connection.capturedGraphRequest.parameters objectForKey:@"grant_type"],
+    [FBSDKTypeUtility dictionary:capturedRequest.parameters
+                    objectForKey:@"grant_type"
+                          ofType:NSString.class],
     @"fb_exchange_nonce",
     "Should create a graph request with the expected grant type parameter"
   );
   XCTAssertEqualObjects(
-    [connection.capturedGraphRequest.parameters objectForKey:@"fb_exchange_nonce"],
+    [FBSDKTypeUtility dictionary:capturedRequest.parameters
+                    objectForKey:@"fb_exchange_nonce"
+                          ofType:NSString.class],
     completer.parameters.nonceString,
     "Should create a graph request with the expected nonce parameter"
   );
   XCTAssertEqualObjects(
-    [connection.capturedGraphRequest.parameters objectForKey:@"client_id"],
+    [FBSDKTypeUtility dictionary:capturedRequest.parameters
+                    objectForKey:@"client_id"
+                          ofType:NSString.class],
     _fakeAppID,
     "Should create a graph request with the expected app id parameter"
   );
   XCTAssertEqualObjects(
-    [connection.capturedGraphRequest.parameters objectForKey:@"fields"],
+    [FBSDKTypeUtility dictionary:capturedRequest.parameters
+                    objectForKey:@"fields"
+                          ofType:NSString.class],
     @"",
     "Should create a graph request with the expected fields parameter"
   );
   XCTAssertEqual(
-    connection.capturedGraphRequest.flags,
+    capturedRequest.flags,
     FBSDKGraphRequestFlagDoNotInvalidateTokenOnError
     | FBSDKGraphRequestFlagDisableErrorRecovery,
     "The graph request should not invalidate the token on error or disable error recovery"

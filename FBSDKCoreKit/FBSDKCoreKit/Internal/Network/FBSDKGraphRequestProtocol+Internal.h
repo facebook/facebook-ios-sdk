@@ -18,13 +18,19 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKGraphRequest.h"
-#import "FBSDKGraphRequestProtocol.h"
+#import "FBSDKGraphRequestFlags.h"
+
+@protocol FBSDKGraphRequest;
 
 NS_ASSUME_NONNULL_BEGIN
 
-// Default conformance to the FBSDKGraphRequest protocol
-@interface FBSDKGraphRequest (GraphRequestProtocol) <FBSDKGraphRequest>
+NS_SWIFT_NAME(GraphRequestInternalProtocol)
+@protocol FBSDKGraphRequestInternal <FBSDKGraphRequest>
+
+@property (nonatomic, assign) FBSDKGraphRequestFlags flags;
+@property (nonatomic, readonly, getter = isGraphErrorRecoveryDisabled) BOOL graphErrorRecoveryDisabled;
+@property (nonatomic, readonly) BOOL hasAttachments;
+
 @end
 
 NS_ASSUME_NONNULL_END

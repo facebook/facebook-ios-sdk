@@ -204,16 +204,29 @@
   );
 }
 
-- (void)testInitializingSdkConfiguredGateKeeperManager
+- (void)testInitializingSdkConfiguresGateKeeperManager
 {
   [FBSDKApplicationDelegate resetIsSdkInitialized];
   [FBSDKGateKeeperManager reset];
 
   [FBSDKApplicationDelegate initializeSDK:@{}];
 
+  NSObject *requestProvider = (NSObject *)FBSDKGateKeeperManager.requestProvider;
+  NSObject *settings = (NSObject *)FBSDKGateKeeperManager.settings;
+
   XCTAssertTrue(
     [FBSDKGateKeeperManager canLoadGateKeepers],
     "Initializing the SDK should enable loading gatekeepers"
+  );
+  XCTAssertEqualObjects(
+    settings,
+    FBSDKSettings.class,
+    "Should be configured with the expected concrete settings"
+  );
+  XCTAssertEqualObjects(
+    requestProvider.class,
+    FBSDKGraphRequestFactory.class,
+    "Should be configured with the expected concrete graph request provider"
   );
 }
 

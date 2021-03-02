@@ -48,7 +48,6 @@
 // GraphRequest Abstraction
 #import "FBSDKGraphRequestProviding.h"
 #import "FBSDKGraphRequestFactory.h"
-#import "FBSDKGraphRequest+GraphRequestProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -117,11 +116,11 @@ NS_SWIFT_NAME(FBProfilePictureViewState)
 @property (class, nonatomic, readonly) BOOL canLoadGateKeepers;
 @property (class, nonatomic, nullable) FBSDKLogger *logger;
 @property (class, nonatomic, nullable) Class<FBSDKSettings> settings;
-@property (class, nonatomic, nullable) id<FBSDKGraphRequestProviding> graphRequestProvider;
+@property (class, nonatomic, nullable) id<FBSDKGraphRequestProviding> requestProvider;
 @property (class, nonatomic, nullable) NSDictionary *gateKeepers;
 
 + (void)configureWithSettings:(Class<FBSDKSettings>)settings
-         graphRequestProvider:(id<FBSDKGraphRequestProviding>)graphRequestProvider
+              requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
 NS_SWIFT_NAME(configure(settings:graphRequestProvider:));
 + (FBSDKGraphRequest *)requestToLoadGateKeepers;
 + (void)reset;

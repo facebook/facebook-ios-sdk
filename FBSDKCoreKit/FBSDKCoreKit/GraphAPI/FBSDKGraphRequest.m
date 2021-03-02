@@ -252,7 +252,8 @@ FBSDKHTTPMethod FBSDKHTTPMethodDELETE = @"DELETE";
 - (FBSDKGraphRequestConnection *)startWithCompletionHandler:(FBSDKGraphRequestBlock)handler
 {
   id<FBSDKGraphRequestConnecting> connection = [self.connectionFactory createGraphRequestConnection];
-  [connection addRequest:self completionHandler:handler];
+  id<FBSDKGraphRequest> request = (id<FBSDKGraphRequest>)self;
+  [connection addRequest:request completionHandler:handler];
   [connection start];
   return (FBSDKGraphRequestConnection *)connection;
 }

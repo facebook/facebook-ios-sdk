@@ -18,11 +18,11 @@
 
 #import "FBSDKGraphRequestMetadata.h"
 
-#import "FBSDKGraphRequest.h"
+#import "FBSDKGraphRequestProtocol.h"
 
 @implementation FBSDKGraphRequestMetadata
 
-- (instancetype)initWithRequest:(FBSDKGraphRequest *)request
+- (instancetype)initWithRequest:(id<FBSDKGraphRequest>)request
               completionHandler:(FBSDKGraphRequestBlock)handler
                 batchParameters:(NSDictionary *)batchParameters
 {

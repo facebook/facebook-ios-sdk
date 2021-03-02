@@ -18,13 +18,13 @@
 
 #import "FBSDKErrorRecoveryConfiguration.h"
 
-@class FBSDKGraphRequest;
+@protocol FBSDKGraphRequest;
 
 NS_SWIFT_NAME(ErrorConfigurationProtocol)
 @protocol FBSDKErrorConfiguration
 
 - (FBSDKErrorRecoveryConfiguration *)recoveryConfigurationForCode:(NSString *)code
                                                           subcode:(NSString *)subcode
-                                                          request:(FBSDKGraphRequest *)request;
+                                                          request:(id<FBSDKGraphRequest>)request;
 
 @end

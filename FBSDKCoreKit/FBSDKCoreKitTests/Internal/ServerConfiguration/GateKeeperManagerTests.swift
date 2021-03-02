@@ -49,7 +49,7 @@ class GateKeeperManagerTests: XCTestCase {
       "Should have a logger by default"
     )
     XCTAssertNil(
-      GateKeeperManager.graphRequestProvider,
+      GateKeeperManager.requestProvider,
       "Should not have a graph request factory by default"
     )
     XCTAssertNil(
@@ -63,7 +63,7 @@ class GateKeeperManagerTests: XCTestCase {
       settings: TestSettings.self,
       graphRequestProvider: graphRequestFactory
     )
-    XCTAssertTrue(GateKeeperManager.graphRequestProvider === graphRequestFactory)
+    XCTAssertTrue(GateKeeperManager.requestProvider === graphRequestFactory)
     XCTAssertTrue(GateKeeperManager.settings is TestSettings.Type)
   }
 

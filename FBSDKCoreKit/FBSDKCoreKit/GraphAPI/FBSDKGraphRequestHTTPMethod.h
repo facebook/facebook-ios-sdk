@@ -18,12 +18,14 @@
 
 #import <Foundation/Foundation.h>
 
-NS_ASSUME_NONNULL_BEGIN
+/// typedef for FBSDKHTTPMethod
+typedef NSString *const FBSDKHTTPMethod NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(HTTPMethod);
 
-/// A protocol to describe anything that represents a graph request
-NS_SWIFT_NAME(GraphRequestProtocol)
-@protocol FBSDKGraphRequest
+/// GET Request
+FOUNDATION_EXPORT FBSDKHTTPMethod FBSDKHTTPMethodGET NS_SWIFT_NAME(get);
 
-@end
+/// POST Request
+FOUNDATION_EXPORT FBSDKHTTPMethod FBSDKHTTPMethodPOST NS_SWIFT_NAME(post);
 
-NS_ASSUME_NONNULL_END
+/// DELETE Request
+FOUNDATION_EXPORT FBSDKHTTPMethod FBSDKHTTPMethodDELETE NS_SWIFT_NAME(delete);

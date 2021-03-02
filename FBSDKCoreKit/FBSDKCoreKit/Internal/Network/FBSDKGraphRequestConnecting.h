@@ -26,11 +26,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol FBSDKGraphRequest;
+
 /// A protocol to describe an object that can manage graph requests
 NS_SWIFT_NAME(GraphRequestConnecting)
 @protocol FBSDKGraphRequestConnecting
 
-- (void)addRequest:(FBSDKGraphRequest *)request
+- (void)addRequest:(id<FBSDKGraphRequest>)request
  completionHandler:(FBSDKGraphRequestBlock)handler;
 
 - (void)start;

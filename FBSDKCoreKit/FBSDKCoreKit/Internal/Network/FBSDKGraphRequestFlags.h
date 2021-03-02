@@ -16,34 +16,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@class FBSDKGraphRequestBody;
-@protocol FBSDKURLSessionProxying;
-@protocol FBSDKURLSessionProxyProviding;
+#import <Foundation/Foundation.h>
 
-#if SWIFT_PACKAGE
- #import "FBSDKGraphRequestConnection.h"
-#else
- #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
-#endif
+NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKGraphRequestConnection (Internal)
+typedef NS_OPTIONS(NSUInteger, FBSDKGraphRequestFlags) {
+  FBSDKGraphRequestFlagNone = 0,
+  // indicates this request should not use a client token as its token parameter
+  FBSDKGraphRequestFlagSkipClientToken = 1 << 1,
+  // indicates this request should not close the session if its response is an oauth error
+  FBSDKGraphRequestFlagDoNotInvalidateTokenOnError = 1 << 2,
+  // indicates this request should not perform error recovery
+  FBSDKGraphRequestFlagDisableErrorRecovery = 1 << 3,
+} NS_SWIFT_NAME(GraphRequestFlags);
 
-@property (nonatomic, readonly) NSMutableArray *requests;
-
-+ (void)setCanMakeRequests;
-
-/**
- Get the graph request url for a single graph request
- @param request The Graph Request we need the url for
- @param forBatch whether the request is a batch request.
- */
-- (NSString *)urlStringForSingleRequest:(id<FBSDKGraphRequest>)request forBatch:(BOOL)forBatch;
-
-/**
- Add the specified body as the HTTPBody of the specified request.
- @param body The FBSDKGraphRequestBody to attach to the request.
- @param request The NSURLRequest to attach the body to.
- */
-- (void)addBody:(FBSDKGraphRequestBody *)body toPostRequest:(NSMutableURLRequest *)request;
-
-@end
+NS_ASSUME_NONNULL_END

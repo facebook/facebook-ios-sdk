@@ -28,7 +28,7 @@ class GraphRequestFactoryTests: XCTestCase {
       parameters: ["some": "thing"],
       tokenString: "foo",
       httpMethod: .get,
-      flags: [.skipClientToken, .doNotInvalidateTokenOnError]
+      flags: [.skipClientToken, .disableErrorRecovery]
     )
     guard let graphRequest = request as? GraphRequest else {
       return XCTFail("Should create a request of the correct concrete type")

@@ -70,6 +70,7 @@
  #import "FBSDKGraphRequest.h"
  #import "FBSDKGraphRequestConnection.h"
  #import "FBSDKGraphRequestDataAttachment.h"
+ #import "FBSDKGraphRequestProtocol.h"
  #import "FBSDKSettings.h"
  #import "FBSDKTestUsersManager.h"
  #import "FBSDKUtility.h"

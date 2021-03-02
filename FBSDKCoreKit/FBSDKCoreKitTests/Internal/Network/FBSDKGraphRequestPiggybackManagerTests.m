@@ -184,7 +184,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [Manager addRefreshPiggyback:connection permissionHandler:nil];
 
   FBSDKGraphRequestMetadata *metadata = connection.requests.firstObject;
-  FBSDKGraphRequest *request = metadata.request;
+  FBSDKGraphRequest *request = (FBSDKGraphRequest *)metadata.request;
   XCTAssertNotNil(request, "Adding a refresh piggyback to a connection should add a request for refreshing the access token");
 
   XCTAssertEqualObjects(
@@ -441,7 +441,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [Manager addRefreshPiggyback:connection permissionHandler:nil];
 
   FBSDKGraphRequestMetadata *metadata = connection.requests.lastObject;
-  FBSDKGraphRequest *request = metadata.request;
+  FBSDKGraphRequest *request = (FBSDKGraphRequest *)metadata.request;
   XCTAssertNotNil(request, "Adding a refresh piggyback to a connection should add a request for refreshing permissions");
 
   XCTAssertEqualObjects(
@@ -774,7 +774,8 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   FBSDKGraphRequestMetadata *requestMetadata = connection.requests.firstObject;
   FBSDKGraphRequest *expectedServerConfigurationRequest = [FBSDKServerConfigurationManager requestToLoadServerConfiguration:nil];
 
-  [self validateServerConfigurationRequest:requestMetadata.request isEqualTo:expectedServerConfigurationRequest];
+  [self validateServerConfigurationRequest:(FBSDKGraphRequest *)requestMetadata.request
+                                 isEqualTo:expectedServerConfigurationRequest];
 }
 
 - (void)testAddingServerConfigurationPiggybackWithDefaultConfigurationNonExpiredCache

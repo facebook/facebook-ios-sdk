@@ -18,11 +18,17 @@
 
 @objcMembers
 class TestGraphRequestConnection: NSObject, GraphRequestConnecting {
-  var capturedRequest: GraphRequest?
+
+  var capturedRequest: GraphRequestProtocol?
   var capturedCompletion: GraphRequestBlock?
   var startCallCount = 0
 
   func add(_ request: GraphRequest, completionHandler handler: @escaping GraphRequestBlock) {
+    self.capturedRequest = request
+    self.capturedCompletion = handler
+  }
+
+  func add(_ request: GraphRequestProtocol, completionHandler handler: @escaping GraphRequestBlock) {
     self.capturedRequest = request
     self.capturedCompletion = handler
   }

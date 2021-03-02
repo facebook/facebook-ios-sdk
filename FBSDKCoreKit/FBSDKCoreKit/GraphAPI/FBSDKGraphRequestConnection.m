@@ -193,13 +193,13 @@ static BOOL _canMakeRequests = NO;
   return g_defaultTimeout;
 }
 
-- (void) addRequest:(FBSDKGraphRequest *)request
+- (void) addRequest:(id<FBSDKGraphRequest>)request
   completionHandler:(FBSDKGraphRequestBlock)handler
 {
   [self addRequest:request batchEntryName:@"" completionHandler:handler];
 }
 
-- (void) addRequest:(FBSDKGraphRequest *)request
+- (void) addRequest:(id<FBSDKGraphRequest>)request
      batchEntryName:(NSString *)name
   completionHandler:(FBSDKGraphRequestBlock)handler
 {
@@ -207,7 +207,7 @@ static BOOL _canMakeRequests = NO;
   [self addRequest:request batchParameters:batchParams completionHandler:handler];
 }
 
-- (void) addRequest:(FBSDKGraphRequest *)request
+- (void) addRequest:(id<FBSDKGraphRequest>)request
     batchParameters:(NSDictionary<NSString *, id> *)batchParameters
   completionHandler:(FBSDKGraphRequestBlock)handler
 {
@@ -434,7 +434,7 @@ static BOOL _canMakeRequests = NO;
   }
 }
 
-- (BOOL)_shouldWarnOnMissingFieldsParam:(FBSDKGraphRequest *)request
+- (BOOL)_shouldWarnOnMissingFieldsParam:(id<FBSDKGraphRequest>)request
 {
   NSString *minVersion = @"2.4";
   NSString *version = request.version;
@@ -455,7 +455,7 @@ static BOOL _canMakeRequests = NO;
 - (void)_validateFieldsParamForGetRequests:(NSArray *)requests
 {
   for (FBSDKGraphRequestMetadata *metadata in requests) {
-    FBSDKGraphRequest *request = metadata.request;
+    id<FBSDKGraphRequest> request = metadata.request;
     if ([request.HTTPMethod.uppercaseString isEqualToString:@"GET"]
         && [self _shouldWarnOnMissingFieldsParam:request]
         && !request.parameters[@"fields"]
@@ -578,7 +578,7 @@ static BOOL _canMakeRequests = NO;
 //
 // Attachments are named and referenced by name in the URL.
 //
-- (NSString *)urlStringForSingleRequest:(FBSDKGraphRequest *)request forBatch:(BOOL)forBatch
+- (NSString *)urlStringForSingleRequest:(id<FBSDKGraphRequest>)request forBatch:(BOOL)forBatch
 {
   NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionaryWithDictionary:request.parameters];
   [FBSDKTypeUtility dictionary:params setObject:@"json" forKey:@"format"];
@@ -821,7 +821,7 @@ static BOOL _canMakeRequests = NO;
   _expectingResults = count;
   NSUInteger disabledRecoveryCount = 0;
   for (FBSDKGraphRequestMetadata *metadata in self.requests) {
-    if (metadata.request.graphErrorRecoveryDisabled) {
+    if ([(id<FBSDKGraphRequestInternal>)metadata.request isGraphErrorRecoveryDisabled]) {
       disabledRecoveryCount++;
     }
   }
@@ -840,7 +840,8 @@ static BOOL _canMakeRequests = NO;
     }
 
   #if !TARGET_OS_TV
-    if (resultError && !metadata.request.graphErrorRecoveryDisabled && isSingleRequestToRecover) {
+    BOOL isRecoveryDisabled = [(id<FBSDKGraphRequestInternal>)metadata.request isGraphErrorRecoveryDisabled];
+    if (resultError && !isRecoveryDisabled && isSingleRequestToRecover) {
       self->_recoveringRequestMetadata = metadata;
       self->_errorRecoveryProcessor = [[FBSDKGraphErrorRecoveryProcessor alloc] init];
       if ([self->_errorRecoveryProcessor processError:resultError request:metadata.request delegate:self]) {
@@ -877,7 +878,8 @@ static BOOL _canMakeRequests = NO;
 
 #if !TARGET_OS_TV
   void (^clearToken)(NSInteger) = ^(NSInteger errorSubcode) {
-    if (metadata.request.flags & FBSDKGraphRequestFlagDoNotInvalidateTokenOnError) {
+    FBSDKGraphRequestFlags flags = [(id<FBSDKGraphRequestInternal>)metadata.request flags];
+    if (flags & FBSDKGraphRequestFlagDoNotInvalidateTokenOnError) {
       return;
     }
     if (errorSubcode == 493) {
@@ -930,7 +932,7 @@ static BOOL _canMakeRequests = NO;
   }];
 }
 
-- (NSError *_Nullable)errorFromResult:(id)untypedParam request:(FBSDKGraphRequest *)request
+- (NSError *_Nullable)errorFromResult:(id)untypedParam request:(id<FBSDKGraphRequest>)request
 {
   NSDictionary *const result = FBSDK_CAST_TO_CLASS_OR_NIL(untypedParam, NSDictionary);
   if (!result) {
@@ -1133,10 +1135,11 @@ static BOOL _canMakeRequests = NO;
   }
 }
 
-- (NSString *)accessTokenWithRequest:(FBSDKGraphRequest *)request
+- (NSString *)accessTokenWithRequest:(id<FBSDKGraphRequest>)request
 {
   NSString *token = request.tokenString ?: request.parameters[kAccessTokenKey];
-  if (!token && !(request.flags & FBSDKGraphRequestFlagSkipClientToken) && [[self.settings.class clientToken] length] > 0) {
+  FBSDKGraphRequestFlags flags = [(id<FBSDKGraphRequestInternal>)request flags];
+  if (!token && !(flags & FBSDKGraphRequestFlagSkipClientToken) && [[self.settings.class clientToken] length] > 0) {
     NSString *baseTokenString = [NSString stringWithFormat:@"%@|%@", [self.settings.class appID], [self.settings.class clientToken]];
     if ([FBSDKAuthenticationToken.currentAuthenticationToken.graphDomain isEqualToString:@"gaming"]) {
       return [@"GG|" stringByAppendingString:baseTokenString];
@@ -1205,14 +1208,14 @@ static BOOL _canMakeRequests = NO;
 {
   @try {
     if (didRecover) {
-      FBSDKGraphRequest *originalRequest = _recoveringRequestMetadata.request;
-      FBSDKGraphRequest *retryRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:originalRequest.graphPath
-                                                                          parameters:originalRequest.parameters
-                                                                         tokenString:[FBSDKAccessToken currentAccessToken].tokenString
-                                                                          HTTPMethod:originalRequest.HTTPMethod
-                                                                             version:originalRequest.version
-                                                                               flags:FBSDKGraphRequestFlagDisableErrorRecovery
-                                                                   connectionFactory:self.connectionFactory];
+      id<FBSDKGraphRequest> originalRequest = _recoveringRequestMetadata.request;
+      id<FBSDKGraphRequest> retryRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:originalRequest.graphPath
+                                                                             parameters:originalRequest.parameters
+                                                                            tokenString:[FBSDKAccessToken currentAccessToken].tokenString
+                                                                             HTTPMethod:originalRequest.HTTPMethod
+                                                                                version:originalRequest.version
+                                                                                  flags:FBSDKGraphRequestFlagDisableErrorRecovery
+                                                                      connectionFactory:self.connectionFactory];
       FBSDKGraphRequestMetadata *retryMetadata = [[FBSDKGraphRequestMetadata alloc] initWithRequest:retryRequest completionHandler:_recoveringRequestMetadata.completionHandler batchParameters:_recoveringRequestMetadata.batchParameters];
       [retryRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *retriedError) {
         [self processResultBody:result error:retriedError metadata:retryMetadata canNotifyDelegate:YES];
@@ -1239,7 +1242,7 @@ static BOOL _canMakeRequests = NO;
                              (unsigned long)self.requests.count];
   BOOL comma = NO;
   for (FBSDKGraphRequestMetadata *metadata in self.requests) {
-    FBSDKGraphRequest *request = metadata.request;
+    id<FBSDKGraphRequest> request = metadata.request;
     if (comma) {
       [result appendString:@",\n"];
     }
