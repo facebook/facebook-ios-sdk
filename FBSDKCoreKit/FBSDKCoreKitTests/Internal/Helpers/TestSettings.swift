@@ -22,10 +22,13 @@ class TestSettings: NSObject, SettingsProtocol {
   static var clientToken: String?
   static var userAgentSuffix: String?
   static var loggingBehaviors = Set<String>()
+  static var sdkVersion: String?
 
   static func reset() {
     appID = nil
     clientToken = nil
+    userAgentSuffix = nil
     loggingBehaviors = []
+    sdkVersion = nil
   }
 }

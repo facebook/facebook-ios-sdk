@@ -16,15 +16,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@class FBSDKSettings;
+#import "FBSDKGraphRequestFactory.h"
 
-NS_SWIFT_NAME(SettingsProtocol)
-@protocol FBSDKSettings
+#import "FBSDKGraphRequest+GraphRequestProtocol.h"
+#import "FBSDKGraphRequest+Internal.h"
 
-@property (class, nonatomic, copy, nullable) NSString *appID;
-@property (class, nonatomic, copy, nullable) NSString *clientToken;
-@property (class, nullable, nonatomic, copy) NSString *userAgentSuffix;
-@property (class, nullable, nonatomic, copy) NSString *sdkVersion;
-@property (class, nonatomic, copy, nonnull) NSSet<FBSDKLoggingBehavior> *loggingBehaviors;
+@implementation FBSDKGraphRequestFactory
+
+- (nonnull id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
+                                                      parameters:(NSDictionary *)parameters
+                                                     tokenString:(NSString *)tokenString
+                                                      HTTPMethod:(FBSDKHTTPMethod)method
+                                                           flags:(FBSDKGraphRequestFlags)flags
+{
+  return [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
+                                           parameters:parameters
+                                          tokenString:tokenString
+                                           HTTPMethod:method
+                                                flags:flags];
+}
 
 @end

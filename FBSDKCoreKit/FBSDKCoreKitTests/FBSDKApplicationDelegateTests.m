@@ -204,6 +204,19 @@
   );
 }
 
+- (void)testInitializingSdkConfiguredGateKeeperManager
+{
+  [FBSDKApplicationDelegate resetIsSdkInitialized];
+  [FBSDKGateKeeperManager reset];
+
+  [FBSDKApplicationDelegate initializeSDK:@{}];
+
+  XCTAssertTrue(
+    [FBSDKGateKeeperManager canLoadGateKeepers],
+    "Initializing the SDK should enable loading gatekeepers"
+  );
+}
+
 - (void)testDidFinishLaunchingLaunchedApp
 {
   _delegate.isAppLaunched = YES;

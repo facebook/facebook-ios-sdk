@@ -28,6 +28,7 @@
 #import "FBSDKEventDeactivationManager.h"
 #import "FBSDKFeatureManager.h"
 #import "FBSDKGateKeeperManager.h"
+#import "FBSDKGraphRequestFactory.h"
 #import "FBSDKInstrumentManager.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
@@ -439,6 +440,8 @@ static UIApplicationState _applicationState;
   g_isSDKInitialized = YES;
   [FBSDKGraphRequestConnection setCanMakeRequests];
   [FBSDKAppEvents setCanLogEvents];
+  [FBSDKGateKeeperManager configureWithSettings:FBSDKSettings.class
+                           graphRequestProvider:[FBSDKGraphRequestFactory new]];
 }
 
 // MARK: - Testability

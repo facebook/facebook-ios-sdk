@@ -45,6 +45,10 @@
 #import "FBSDKGraphRequestPiggybackManagerProvider.h"
 // AppEvents Abstractions
 #import "FBSDKEventLogger.h"
+// GraphRequest Abstraction
+#import "FBSDKGraphRequestProviding.h"
+#import "FBSDKGraphRequestFactory.h"
+#import "FBSDKGraphRequest+GraphRequestProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -105,6 +109,22 @@ NS_SWIFT_NAME(FBProfilePictureViewState)
 
 + (void)setCurrentAuthenticationToken:(nullable FBSDKAuthenticationToken *)token
                shouldPostNotification:(BOOL)shouldPostNotification;
+
+@end
+
+@interface FBSDKGateKeeperManager (Testing)
+
+@property (class, nonatomic, readonly) BOOL canLoadGateKeepers;
+@property (class, nonatomic, nullable) FBSDKLogger *logger;
+@property (class, nonatomic, nullable) Class<FBSDKSettings> settings;
+@property (class, nonatomic, nullable) id<FBSDKGraphRequestProviding> graphRequestProvider;
+@property (class, nonatomic, nullable) NSDictionary *gateKeepers;
+
++ (void)configureWithSettings:(Class<FBSDKSettings>)settings
+         graphRequestProvider:(id<FBSDKGraphRequestProviding>)graphRequestProvider
+NS_SWIFT_NAME(configure(settings:graphRequestProvider:));
++ (FBSDKGraphRequest *)requestToLoadGateKeepers;
++ (void)reset;
 
 @end
 

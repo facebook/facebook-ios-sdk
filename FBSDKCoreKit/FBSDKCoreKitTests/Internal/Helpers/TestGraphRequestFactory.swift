@@ -16,15 +16,30 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@class FBSDKSettings;
+@objcMembers
+class TestGraphRequestFactory: NSObject, GraphRequestProviding {
 
-NS_SWIFT_NAME(SettingsProtocol)
-@protocol FBSDKSettings
+  var stubbedRequest: GraphRequestProtocol = GraphRequest(graphPath: "me")
+  var capturedWithGraphPath: String?
+  var capturedParameters = [AnyHashable: Any]()
+  var capturedTokenString: String?
+  var capturedHttpMethod: HTTPMethod?
+  var capturedFlags: GraphRequestFlags?
 
-@property (class, nonatomic, copy, nullable) NSString *appID;
-@property (class, nonatomic, copy, nullable) NSString *clientToken;
-@property (class, nullable, nonatomic, copy) NSString *userAgentSuffix;
-@property (class, nullable, nonatomic, copy) NSString *sdkVersion;
-@property (class, nonatomic, copy, nonnull) NSSet<FBSDKLoggingBehavior> *loggingBehaviors;
+  // MARK: - GraphRequestProviding
 
-@end
+  func createGraphRequest(
+    withGraphPath graphPath: String,
+    parameters: [AnyHashable : Any],
+    tokenString: String?,
+    httpMethod method: HTTPMethod?,
+    flags: GraphRequestFlags
+  ) -> GraphRequestProtocol {
+    capturedWithGraphPath = graphPath
+    capturedParameters = parameters
+    capturedTokenString = tokenString
+    capturedHttpMethod = method
+    capturedFlags = flags
+    return stubbedRequest
+  }
+}

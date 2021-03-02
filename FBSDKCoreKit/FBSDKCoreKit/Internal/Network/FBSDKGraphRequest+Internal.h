@@ -36,7 +36,8 @@ typedef NS_OPTIONS(NSUInteger, FBSDKGraphRequestFlags) {
   FBSDKGraphRequestFlagDoNotInvalidateTokenOnError = 1 << 2,
   // indicates this request should not perform error recovery
   FBSDKGraphRequestFlagDisableErrorRecovery = 1 << 3,
-};
+} NS_SWIFT_NAME(GraphRequestFlags);
+
 @interface FBSDKGraphRequest (Internal)
 
 // Generally, requests automatically issued by the SDK
