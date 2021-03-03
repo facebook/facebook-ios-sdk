@@ -9,9 +9,35 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Important
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.1.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v10.0.0...HEAD)
 
-## 9.1.0
+## 10.0.0
+
+### Added
+
+- `FBSDKProfile` initializer that does includes optional `friendIDs` argument
+- `claims` property of type `FBSDKAuthenticationTokenClaims` added to `FBSDKAuthenticationToken`
+
+### Changed
+
+- The default Graph API version is updated to v10.0 see our associated blog [post](https://developers.facebook.com/blog/post/2021/02/23/introducing-graph-v10-marketing-api-v10/) for more on these changes.
+- Type `FBSDKAuthenticationTokenClaims` is public now
+
+### Deprecated
+
+- `FBSDKProfile` initializer that does not include optional `friendIDs` argument
+
+### Removed
+
+- `FBSDKAccessToken`'s `graphDomain` property (NOTE: This property is still available on the type `FBSDKAuthenticationToken`)
+- `FBSDKAppLinkReturnToRefererView` - this is default behavior as of iOS 9.0 which remains the minimum supported iOS version for the SDK
+- `FBSDKAppLinkReturnToRefererController` - this is default behavior as of iOS 9.0 which remains the minimum supported iOS version for the SDK
+- Internal type `FBSDKErrorRecoveryAttempter`
+- `FBSDKGraphErrorRecoveryProcessor`'s `delegate` property
+- `FBSDKGraphErrorRecoveryProcessor`'s `didPresentErrorWithRecovery:contextInfo:` method
+- `FBSDKErrorRecoveryAttempting`'s `attemptRecoveryFromError:optionIndex:delegate:didRecoverSelector:contextInfo:` method
+- `FBSDKGamingVideoUploader`'s `uploadVideoWithConfiguration:andCompletionHandler:` method
+- `FBSDKGamingImageUploader`'s `uploadImageWithConfiguration:andCompletionHandler:` method
 
 ### Fixed
 
@@ -21,18 +47,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Avoids call to `AppEvents` singleton when setting overriding app ID [#1647](https://github.com/facebook/facebook-ios-sdk/pull/1647)
 - CocoaPods now compiles `FBSDKDynamicFrameworkLoader` with ARC.
 - CocoaPods now uses static frameworks as the prebuilt libraries for the aggregate FacebookSDK podspec
+- Issue with absolute paths in XCFramework debugging [#1664](https://github.com/facebook/facebook-ios-sdk/issues/1664)
 
-### Deprecated
-
-- `FBSDKGraphErrorRecoveryProcessor`'s `delegate` property
-- `FBSDKGraphErrorRecoveryProcessor`'s `didPresentErrorWithRecovery:contextInfo:` method
-
-### Removed
-
-- Internal type `FBSDKErrorRecoveryAttempter`
-
-[2021-02-25](https://github.com/facebook/facebook-ios-sdk/releases/tag/v9.1.0) |
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.0.1...v9.1.0)
+[2021-02-27](https://github.com/facebook/facebook-ios-sdk/releases/tag/v10.0.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.0.1...v10.0.0)
 
 ## 9.0.1
 
