@@ -388,6 +388,36 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   );
 }
 
+- (void)testCompletingTokenExtensionRequestWithUpdatedEmptyGraphDomain
+{
+  [self completeTokenRefreshForAccessToken:SampleAccessToken.validToken results:@{@"graph_domain" : @""}];
+
+  // Check that an access token with the expected field values was set
+  OCMVerify(
+    ClassMethod(
+      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
+        [self validateRefreshedToken:obj withExpectedGraphDomain:@""];
+        return true;
+      }]]
+    )
+  );
+}
+
+- (void)testCompletingTokenExtensionRequestWithUpdatedWhitespaceOnlyGraphDomain
+{
+  [self completeTokenRefreshForAccessToken:SampleAccessToken.validToken results:@{@"graph_domain" : @"    "}];
+
+  // Check that an access token with the expected field values was set
+  OCMVerify(
+    ClassMethod(
+      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
+        [self validateRefreshedToken:obj withExpectedGraphDomain:@"    "];
+        return true;
+      }]]
+    )
+  );
+}
+
 - (void)testCompletingTokenExtensionRequestWithFuzzyValues
 {
   for (int i = 0; i < 100; i++) {
@@ -874,27 +904,35 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
 - (void)validateRefreshedToken:(FBSDKAccessToken *)token
 {
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   [self validateRefreshedToken:token
        withExpectedTokenString:SampleAccessToken.validToken.tokenString
            expectedRefreshDate:[NSDate date]
         expectedExpirationDate:NSDate.distantFuture
     expectedDataExpirationDate:NSDate.distantFuture
+           expectedGraphDomain:SampleAccessToken.validToken.graphDomain
            expectedPermissions:[NSArray array]
    expectedDeclinedPermissions:[NSArray array]
     expectedExpiredPermissions:[NSArray array]];
+  #pragma clange diagnostic pop
 }
 
 - (void)validateRefreshedToken:(FBSDKAccessToken *)token
        withExpectedTokenString:(NSString *)expectedTokenString
 {
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   [self validateRefreshedToken:token
        withExpectedTokenString:expectedTokenString
            expectedRefreshDate:[NSDate date]
         expectedExpirationDate:NSDate.distantFuture
     expectedDataExpirationDate:NSDate.distantFuture
+           expectedGraphDomain:SampleAccessToken.validToken.graphDomain
            expectedPermissions:[NSArray array]
    expectedDeclinedPermissions:[NSArray array]
     expectedExpiredPermissions:[NSArray array]];
+  #pragma clange diagnostic pop
 }
 
 - (void)validateRefreshedToken:(FBSDKAccessToken *)token
@@ -905,6 +943,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
            expectedRefreshDate:[NSDate date]
         expectedExpirationDate:expectedExpirationDate
     expectedDataExpirationDate:NSDate.distantFuture
+           expectedGraphDomain:SampleAccessToken.validToken.graphDomain
            expectedPermissions:[NSArray array]
    expectedDeclinedPermissions:[NSArray array]
     expectedExpiredPermissions:[NSArray array]];
@@ -918,6 +957,21 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
            expectedRefreshDate:[NSDate date]
         expectedExpirationDate:NSDate.distantFuture
     expectedDataExpirationDate:expectedDataExpirationDate
+           expectedGraphDomain:SampleAccessToken.validToken.graphDomain
+           expectedPermissions:[NSArray array]
+   expectedDeclinedPermissions:[NSArray array]
+    expectedExpiredPermissions:[NSArray array]];
+}
+
+- (void)validateRefreshedToken:(FBSDKAccessToken *)token
+       withExpectedGraphDomain:(NSString *)expectedGraphDomain
+{
+  [self validateRefreshedToken:token
+       withExpectedTokenString:SampleAccessToken.validToken.tokenString
+           expectedRefreshDate:[NSDate date]
+        expectedExpirationDate:NSDate.distantFuture
+    expectedDataExpirationDate:NSDate.distantFuture
+           expectedGraphDomain:expectedGraphDomain
            expectedPermissions:[NSArray array]
    expectedDeclinedPermissions:[NSArray array]
     expectedExpiredPermissions:[NSArray array]];
@@ -933,6 +987,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
            expectedRefreshDate:[NSDate date]
         expectedExpirationDate:NSDate.distantFuture
     expectedDataExpirationDate:NSDate.distantFuture
+           expectedGraphDomain:SampleAccessToken.validToken.graphDomain
            expectedPermissions:expectedPermissions
    expectedDeclinedPermissions:expectedDeclinedPermissions
     expectedExpiredPermissions:expectedExpiredPermissions];
@@ -943,6 +998,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
            expectedRefreshDate:(NSDate *)expectedRefreshDate
         expectedExpirationDate:(NSDate *)expectedExpirationDate
     expectedDataExpirationDate:(NSDate *)expectedDataExpirationDate
+           expectedGraphDomain:(NSString *)expectedGraphDomain
            expectedPermissions:(NSArray *)expectedPermissions
    expectedDeclinedPermissions:(NSArray *)expectedDeclinedPermissions
     expectedExpiredPermissions:(NSArray *)expectedExpiredPermissions
@@ -951,6 +1007,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   XCTAssertEqualWithAccuracy(token.refreshDate.timeIntervalSince1970, expectedRefreshDate.timeIntervalSince1970, 1, "A refreshed token should have the expected refresh date");
   XCTAssertEqualObjects(token.expirationDate, expectedExpirationDate, "A refreshed token should have the expected expiration date");
   XCTAssertEqualObjects(token.dataAccessExpirationDate, expectedDataExpirationDate, "A refreshed token should have the expected data access expiration date");
+  XCTAssertEqualObjects(token.graphDomain, expectedGraphDomain, "A refreshed token should have the expected graph domain");
   XCTAssertEqualObjects(token.permissions.allObjects, expectedPermissions, "A refreshed token should have the expected permissions");
   XCTAssertEqualObjects(token.declinedPermissions.allObjects, expectedDeclinedPermissions, "A refreshed token should have the expected declined permissions");
   XCTAssertEqualObjects(token.expiredPermissions.allObjects, expectedExpiredPermissions, "A refreshed token should have the expected expired permissions");

@@ -36,6 +36,9 @@
 
 @end
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 @implementation FBSDKSettingsTests
 {
   id _mockAppEventsUtility;
@@ -1679,3 +1682,5 @@ static NSString *const whiteSpaceToken = @"   ";
 }
 
 @end
+
+#pragma clang diagnostic pop

@@ -581,6 +581,8 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 
     FBSDKAccessToken *token;
     if (parameters.accessTokenString) {
+      #pragma clang diagnostic push
+      #pragma clang diagnostic ignored "-Wdeprecated-declarations"
       token = [[FBSDKAccessToken alloc] initWithTokenString:parameters.accessTokenString
                                                 permissions:rawGrantedPermissions.allObjects
                                         declinedPermissions:rawDeclinedPermissions.allObjects
@@ -589,7 +591,9 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
                                                      userID:parameters.userID
                                              expirationDate:parameters.expirationDate
                                                 refreshDate:[NSDate date]
-                                   dataAccessExpirationDate:parameters.dataAccessExpirationDate];
+                                   dataAccessExpirationDate:parameters.dataAccessExpirationDate
+                                                graphDomain:parameters.graphDomain];
+      #pragma clange diagnostic pop
     }
 
     return [[FBSDKLoginManagerLoginResult alloc] initWithToken:token

@@ -57,6 +57,7 @@
         if (recoveryOptionsTitles.count > 0 && self->_recoveryAttempter) {
           NSString *recoverySuggestion = error.userInfo[NSLocalizedRecoverySuggestionErrorKey];
           self->_error = error;
+          self->_delegate = delegate;
           dispatch_async(dispatch_get_main_queue(), ^{
             [self displayAlertWithRecoverySuggestion:recoverySuggestion recoveryOptionsTitles:recoveryOptionsTitles delegate:delegate];
           });
@@ -70,6 +71,7 @@
         NSString *title = error.userInfo[FBSDKErrorLocalizedTitleKey];
         if (message) {
           self->_error = error;
+          self->_delegate = delegate;
           dispatch_async(dispatch_get_main_queue(), ^{
             NSString *localizedOK =
             NSLocalizedStringWithDefaultValue(
@@ -107,6 +109,7 @@
                                                                                             optionIndex:i
                                                                                       completionHandler:^(BOOL didRecover) {
                                                                   [delegate processorDidAttemptRecovery:self didRecover:didRecover error:self->_error];
+                                                                  self->_delegate = nil;
                                                                 }];
                                                    }];
     [alertController addAction:option];
@@ -132,6 +135,7 @@
                                                                                             optionIndex:0
                                                                                       completionHandler:^(BOOL didRecover) {
                                                                   [delegate processorDidAttemptRecovery:self didRecover:didRecover error:self->_error];
+                                                                  self->_delegate = nil;
                                                                 }];
                                                    }];
   [alertController addAction:OKAction];
@@ -139,6 +143,15 @@
   [topMostViewController presentViewController:alertController
                                       animated:YES
                                     completion:nil];
+}
+
+ #pragma mark - FBSDKErrorRecoveryAttempting "delegate"
+
+- (void)didPresentErrorWithRecovery:(BOOL)didRecover contextInfo:(void *)contextInfo
+{
+  // Deprecated method (no longer used by FBSDK)
+  [_delegate processorDidAttemptRecovery:self didRecover:didRecover error:_error];
+  _delegate = nil;
 }
 
 @end
