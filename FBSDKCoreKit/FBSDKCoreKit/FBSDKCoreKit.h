@@ -42,6 +42,8 @@
   #import <FBSDKCoreKit/FBSDKAppLinkResolver.h>
   #import <FBSDKCoreKit/FBSDKAppLinkResolverRequestBuilder.h>
   #import <FBSDKCoreKit/FBSDKAppLinkResolving.h>
+  #import <FBSDKCoreKit/FBSDKAppLinkReturnToRefererController.h>
+  #import <FBSDKCoreKit/FBSDKAppLinkReturnToRefererView.h>
   #import <FBSDKCoreKit/FBSDKAppLinkTarget.h>
   #import <FBSDKCoreKit/FBSDKAppLinkUtility.h>
   #import <FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.h>
@@ -79,6 +81,8 @@
   #import "FBSDKAppLinkResolver.h"
   #import "FBSDKAppLinkResolverRequestBuilder.h"
   #import "FBSDKAppLinkResolving.h"
+  #import "FBSDKAppLinkReturnToRefererController.h"
+  #import "FBSDKAppLinkReturnToRefererView.h"
   #import "FBSDKAppLinkTarget.h"
   #import "FBSDKAppLinkUtility.h"
   #import "FBSDKGraphErrorRecoveryProcessor.h"
