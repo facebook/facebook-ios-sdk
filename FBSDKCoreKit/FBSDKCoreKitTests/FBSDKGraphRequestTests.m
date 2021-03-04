@@ -30,7 +30,7 @@
 #import "FBSDKUtility.h"
 
 static NSString *const _mockGraphPath = @"me";
-static NSString *const _mockDefaultVersion = @"v10.0";
+static NSString *const _mockDefaultVersion = @"v9.0";
 static NSString *const _mockPrefix = @"graph.";
 static NSDictionary<NSString *, NSString *> *const _mockParameters(void)
 {
@@ -220,12 +220,12 @@ static NSDictionary<NSString *, NSString *> *const _mockEmptyParameters(void)
                                            params:_mockParameters()
                                        httpMethod:FBSDKHTTPMethodPOST
                                          forBatch:YES];
-  NSString *expectedURL = @"https://graph.facebook.com/v10.0/me?fields=";
+  NSString *expectedURL = @"https://graph.facebook.com/v9.0/me?fields=";
 
   XCTAssertEqualObjects(url, expectedURL);
 
   // Test URLEncode and URLDecode
-  NSString *expectedEncodedURL = @"https%3A%2F%2Fgraph.facebook.com%2Fv10.0%2Fme%3Ffields%3D";
+  NSString *expectedEncodedURL = @"https%3A%2F%2Fgraph.facebook.com%2Fv9.0%2Fme%3Ffields%3D";
   NSString *encodedSerializedURL = [FBSDKUtility URLEncode:expectedURL];
 
   XCTAssertEqualObjects(encodedSerializedURL, expectedEncodedURL);
