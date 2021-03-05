@@ -17,13 +17,14 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "FBSDKCoreKit+Internal.h"
+#import "FBSDKGraphRequestConnecting.h"
 
 NS_SWIFT_NAME(GraphRequestPiggybackManager)
 @interface FBSDKGraphRequestPiggybackManager : NSObject
 
 + (void)addPiggybackRequests:(FBSDKGraphRequestConnection *)connection;
 
-+ (void)addRefreshPiggyback:(FBSDKGraphRequestConnection *)connection permissionHandler:(FBSDKGraphRequestBlock)permissionHandler;
++ (void)addRefreshPiggyback:(id<FBSDKGraphRequestConnecting>)connection permissionHandler:(FBSDKGraphRequestBlock)permissionHandler;
 
 + (void)addRefreshPiggybackIfStale:(FBSDKGraphRequestConnection *)connection;
 

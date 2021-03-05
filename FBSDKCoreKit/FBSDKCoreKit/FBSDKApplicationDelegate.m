@@ -446,6 +446,8 @@ static UIApplicationState _applicationState;
   FBSDKTokenCache *tokenCache = [FBSDKTokenCache new];
   [FBSDKAccessToken setTokenCache:tokenCache];
   [FBSDKAuthenticationToken setTokenCache:tokenCache];
+
+  [FBSDKAccessToken setConnectionFactory:[FBSDKGraphRequestConnectionFactory new]];
 }
 
 // MARK: - Testability

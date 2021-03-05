@@ -44,7 +44,7 @@ static NSDate *_lastRefreshTry = nil;
   }
 }
 
-+ (void)addRefreshPiggyback:(FBSDKGraphRequestConnection *)connection permissionHandler:(FBSDKGraphRequestBlock)permissionHandler
++ (void)addRefreshPiggyback:(id<FBSDKGraphRequestConnecting>)connection permissionHandler:(FBSDKGraphRequestBlock)permissionHandler
 {
   FBSDKAccessToken *expectedToken = [FBSDKAccessToken currentAccessToken];
   if (!expectedToken) {

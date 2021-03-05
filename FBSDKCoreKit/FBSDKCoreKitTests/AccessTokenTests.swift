@@ -22,6 +22,7 @@ import XCTest
 class AccessTokenTests: XCTestCase{
   override func tearDown() {
     AccessToken.current = nil;
+    AccessToken.connectionFactory = nil;
     AccessToken.resetTokenCache()
   }
 
@@ -44,5 +45,19 @@ class AccessTokenTests: XCTestCase{
     AccessToken.current = testToken
 
     XCTAssertTrue(cache.accessToken === testToken, "Setting the global access token should invoke the cache")
+  }
+
+  func testRefreshTokenThroughTestGraphRequestConnection() {
+    let testConnection = TestGraphRequestConnection()
+    let factory = TestGraphRequestConnectionFactory.create(withStubbedConnection: testConnection)
+    AccessToken.connectionFactory = factory;
+
+    AccessToken.current = nil;
+    AccessToken.refreshCurrentAccessToken(nil)
+    XCTAssertEqual(testConnection.startCallCount, 0, "Should not start connection if no current access token available")
+
+    AccessToken.current = SampleAccessToken.validToken
+    AccessToken.refreshCurrentAccessToken(nil)
+    XCTAssertEqual(testConnection.startCallCount, 1, "Should start one connection for refreshing")
   }
 }

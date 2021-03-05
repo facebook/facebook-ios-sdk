@@ -250,6 +250,20 @@
   XCTAssertEqualObjects(tokenCache.class, FBSDKTokenCache.class, "Should be configured with expected concrete token cache");
 }
 
+- (void)testInitializingSdkConfiguresAccessTokenConnectionFactory
+{
+  [FBSDKApplicationDelegate resetIsSdkInitialized];
+  FBSDKAccessToken.connectionFactory = nil;
+  [FBSDKApplicationDelegate initializeSDK:@{}];
+
+  NSObject *connectionFactory = (NSObject *) FBSDKAccessToken.connectionFactory;
+  XCTAssertEqualObjects(
+    connectionFactory.class,
+    FBSDKGraphRequestConnectionFactory.class,
+    "Should be configured with expected concrete graph request connection factory"
+  );
+}
+
 - (void)testDidFinishLaunchingLaunchedApp
 {
   _delegate.isAppLaunched = YES;
