@@ -15,23 +15,21 @@
 // COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 #if SWIFT_PACKAGE
- #import "FBSDKAccessToken.h"
+ #import "FBSDKAuthenticationToken.h"
 #else
- #import <FBSDKCoreKit/FBSDKAccessToken.h>
+ #import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
 #endif
 
 #import "FBSDKCoreKit+Internal.h"
 @protocol FBSDKTokenCaching;
 
-@interface FBSDKAccessToken (Internal)
+@interface FBSDKAuthenticationToken (Internal)
 
 @property (class, nonatomic, copy) id<FBSDKTokenCaching> tokenCache;
 
 + (void)resetTokenCache;
-
-+ (void)setCurrentAccessToken:(FBSDKAccessToken *)token
-          shouldDispatchNotif:(BOOL)shouldDispatchNotif;
 
 @end

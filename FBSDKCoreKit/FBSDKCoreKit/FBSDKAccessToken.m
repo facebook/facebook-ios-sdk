@@ -22,7 +22,6 @@
 #import "FBSDKGraphRequestPiggybackManager.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKMath.h"
-#import "FBSDKSettings+Internal.h"
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 
@@ -40,6 +39,7 @@ NSString *const FBSDKAccessTokenChangeOldKey = @"FBSDKAccessTokenOld";
 NSString *const FBSDKAccessTokenDidExpireKey = @"FBSDKAccessTokenDidExpireKey";
 
 static FBSDKAccessToken *g_currentAccessToken;
+static id<FBSDKTokenCaching> g_tokenCache;
 
 #define FBSDK_ACCESSTOKEN_TOKENSTRING_KEY @"tokenString"
 #define FBSDK_ACCESSTOKEN_PERMISSIONS_KEY @"permissions"
@@ -123,6 +123,23 @@ static FBSDKAccessToken *g_currentAccessToken;
   return [self.expirationDate compare:NSDate.date] == NSOrderedAscending;
 }
 
++ (id<FBSDKTokenCaching>)tokenCache
+{
+  return g_tokenCache;
+}
+
++ (void)setTokenCache:(id<FBSDKTokenCaching>)cache
+{
+  if (g_tokenCache != cache) {
+    g_tokenCache = cache;
+  }
+}
+
++ (void)resetTokenCache
+{
+  [FBSDKAccessToken setTokenCache:nil];
+}
+
 + (FBSDKAccessToken *)currentAccessToken
 {
   return g_currentAccessToken;
@@ -153,7 +170,7 @@ static FBSDKAccessToken *g_currentAccessToken;
       [FBSDKInternalUtility deleteFacebookCookies];
     }
 
-    [FBSDKSettings tokenCache].accessToken = token;
+    self.tokenCache.accessToken = token;
     if (shouldDispatchNotif) {
       [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKAccessTokenDidChangeNotification
                                                           object:[self class]

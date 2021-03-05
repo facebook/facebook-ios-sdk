@@ -16,22 +16,33 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if SWIFT_PACKAGE
- #import "FBSDKAccessToken.h"
-#else
- #import <FBSDKCoreKit/FBSDKAccessToken.h>
-#endif
+import XCTest
+@testable import FBSDKCoreKit
 
-#import "FBSDKCoreKit+Internal.h"
-@protocol FBSDKTokenCaching;
+class AccessTokenTests: XCTestCase{
+  override func tearDown() {
+    AccessToken.current = nil;
+    AccessToken.resetTokenCache()
+  }
 
-@interface FBSDKAccessToken (Internal)
+  func testAccessTokenCacheIsNilByDefault(){
+    AccessToken.resetTokenCache()
+    XCTAssertNil(AccessToken.tokenCache, "Access token cache should be nil by default")
+  }
 
-@property (class, nonatomic, copy) id<FBSDKTokenCaching> tokenCache;
+  func testSetTokenCache() {
+    let cache = TestTokenCache(accessToken: nil, authenticationToken: nil)
+    AccessToken.tokenCache = cache
+    XCTAssertTrue(AccessToken.tokenCache === cache, "Access token cache should be settable")
+  }
 
-+ (void)resetTokenCache;
+  func testRetrievingCurrentToken() {
+    let cache = TestTokenCache(accessToken: nil, authenticationToken: nil)
+    let testToken = SampleAccessToken.validToken
 
-+ (void)setCurrentAccessToken:(FBSDKAccessToken *)token
-          shouldDispatchNotif:(BOOL)shouldDispatchNotif;
+    AccessToken.tokenCache = cache
+    AccessToken.current = testToken
 
-@end
+    XCTAssertTrue(cache.accessToken === testToken, "Setting the global access token should invoke the cache")
+  }
+}

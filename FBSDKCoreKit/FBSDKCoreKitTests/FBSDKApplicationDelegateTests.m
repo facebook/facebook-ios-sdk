@@ -230,6 +230,26 @@
   );
 }
 
+- (void)testInitializingSdkConfiguresAccessTokenCache
+{
+  [FBSDKApplicationDelegate resetIsSdkInitialized];
+  [FBSDKAccessToken setTokenCache:nil];
+  [FBSDKApplicationDelegate initializeSDK:@{}];
+
+  NSObject *tokenCache = (NSObject *) FBSDKAccessToken.tokenCache;
+  XCTAssertEqualObjects(tokenCache.class, FBSDKTokenCache.class, "Should be configured with expected concrete token cache");
+}
+
+- (void)testInitializingSdkConfiguresAuthenticationTokenCache
+{
+  [FBSDKApplicationDelegate resetIsSdkInitialized];
+  [FBSDKAuthenticationToken setTokenCache:nil];
+  [FBSDKApplicationDelegate initializeSDK:@{}];
+
+  NSObject *tokenCache = (NSObject *) FBSDKAuthenticationToken.tokenCache;
+  XCTAssertEqualObjects(tokenCache.class, FBSDKTokenCache.class, "Should be configured with expected concrete token cache");
+}
+
 - (void)testDidFinishLaunchingLaunchedApp
 {
   _delegate.isAppLaunched = YES;
@@ -245,7 +265,7 @@
   FBSDKAccessToken *expected = SampleAccessToken.validToken;
   TestTokenCache *cache = [[TestTokenCache alloc] initWithAccessToken:expected
                                                   authenticationToken:nil];
-  [self stubTokenCacheWith:cache];
+  [FBSDKAccessToken setTokenCache:cache];
 
   [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 
@@ -255,7 +275,7 @@
 
 - (void)testDidFinishLaunchingSetsCurrentAccessTokenWithoutCache
 {
-  [self stubTokenCacheWith:[[TestTokenCache alloc] initWithAccessToken:nil authenticationToken:nil]];
+  [FBSDKAccessToken setTokenCache:[[TestTokenCache alloc] initWithAccessToken:nil authenticationToken:nil]];
 
   [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 
@@ -268,8 +288,7 @@
   FBSDKAuthenticationToken *expected = SampleAuthenticationToken.validToken;
   TestTokenCache *cache = [[TestTokenCache alloc] initWithAccessToken:nil
                                                   authenticationToken:expected];
-  [self stubTokenCacheWith:cache];
-
+  [FBSDKAuthenticationToken setTokenCache:cache];
   [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 
   // Should set the current authentication token to the cached access token when it exists
@@ -279,7 +298,7 @@
 - (void)testDidFinishLaunchingSetsCurrentAuthenticationTokenWithoutCache
 {
   TestTokenCache *cache = [[TestTokenCache alloc] initWithAccessToken:nil authenticationToken:nil];
-  [self stubTokenCacheWith:cache];
+  [FBSDKAuthenticationToken setTokenCache:cache];
 
   [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 

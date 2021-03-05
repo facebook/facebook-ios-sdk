@@ -36,6 +36,7 @@
 #import "FBSDKServerConfigurationManager.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKTimeSpentData.h"
+#import "FBSDKTokenCache.h"
 
 #if !TARGET_OS_TV
  #import "FBSDKContainerViewController.h"
@@ -203,7 +204,7 @@ static UIApplicationState _applicationState;
   _isAppLaunched = YES;
 
   // Retrieve cached tokens
-  FBSDKAccessToken *cachedToken = FBSDKSettings.tokenCache.accessToken;
+  FBSDKAccessToken *cachedToken = FBSDKAccessToken.tokenCache.accessToken;
   [FBSDKAccessToken setCurrentAccessToken:cachedToken];
 
   // fetch app settings
@@ -216,7 +217,7 @@ static UIApplicationState _applicationState;
   FBSDKProfile *cachedProfile = [FBSDKProfile fetchCachedProfile];
   [FBSDKProfile setCurrentProfile:cachedProfile];
 
-  FBSDKAuthenticationToken *cachedAuthToken = FBSDKSettings.tokenCache.authenticationToken;
+  FBSDKAuthenticationToken *cachedAuthToken = FBSDKAuthenticationToken.tokenCache.authenticationToken;
   [FBSDKAuthenticationToken setCurrentAuthenticationToken:cachedAuthToken];
   [FBSDKAuthenticationStatusUtility checkAuthenticationStatus];
 #endif
@@ -442,6 +443,9 @@ static UIApplicationState _applicationState;
   [FBSDKAppEvents setCanLogEvents];
   [FBSDKGateKeeperManager configureWithSettings:FBSDKSettings.class
                                 requestProvider:[FBSDKGraphRequestFactory new]];
+  FBSDKTokenCache *tokenCache = [FBSDKTokenCache new];
+  [FBSDKAccessToken setTokenCache:tokenCache];
+  [FBSDKAuthenticationToken setTokenCache:tokenCache];
 }
 
 // MARK: - Testability

@@ -26,7 +26,6 @@
 #import "FBSDKAppEventsConfigurationManager.h"
 #import "FBSDKCoreKit.h"
 #import "FBSDKInternalUtility.h"
-#import "FBSDKTokenCache.h"
 
 #define FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(TYPE, PLIST_KEY, GETTER, SETTER, DEFAULT_VALUE, ENABLE_CACHE) \
   static TYPE *g_ ## PLIST_KEY = nil; \
@@ -63,7 +62,6 @@ FBSDKLoggingBehavior FBSDKLoggingBehaviorGraphAPIDebugWarning = @"graph_api_debu
 FBSDKLoggingBehavior FBSDKLoggingBehaviorGraphAPIDebugInfo = @"graph_api_debug_info";
 FBSDKLoggingBehavior FBSDKLoggingBehaviorNetworkRequests = @"network_requests";
 
-static NSObject<FBSDKTokenCaching> *g_tokenCache;
 static NSMutableSet<FBSDKLoggingBehavior> *g_loggingBehaviors;
 static NSString *const FBSDKSettingsLimitEventAndDataUsage = @"com.facebook.sdk:FBSDKSettingsLimitEventAndDataUsage";
 static NSString *const FBSDKSettingsBitmask = @"com.facebook.sdk:FBSDKSettingsBitmask";
@@ -99,7 +97,6 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
 + (void)initialize
 {
   if (self == [FBSDKSettings class]) {
-    g_tokenCache = [FBSDKTokenCache new];
     g_accessTokenExpirer = [[FBSDKAccessTokenExpirer alloc] init];
 
     [FBSDKSettings _logWarnings];
@@ -329,18 +326,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 #pragma mark - Internal
 
-+ (NSObject<FBSDKTokenCaching> *)tokenCache
-{
-  return g_tokenCache;
-}
-
-+ (void)setTokenCache:(NSObject<FBSDKTokenCaching> *)cache
-{
-  if (g_tokenCache != cache) {
-    g_tokenCache = cache;
-  }
-}
-
 + (NSString *)userAgentSuffix
 {
   return g_userAgentSuffix;
@@ -536,11 +521,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 + (void)resetLoggingBehaviorsCache
 {
   g_loggingBehaviors = nil;
-}
-
-+ (void)resetTokenCache
-{
-  g_tokenCache = nil;
 }
 
 + (void)resetFacebookAppIDCache

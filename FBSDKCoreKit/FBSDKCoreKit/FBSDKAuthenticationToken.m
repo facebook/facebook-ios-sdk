@@ -17,6 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "FBSDKAuthenticationToken.h"
+#import "FBSDKAuthenticationToken+Internal.h"
 
 #import <Foundation/Foundation.h>
 
@@ -35,6 +36,7 @@
 #import "FBSDKAuthenticationTokenClaims.h"
 
 static FBSDKAuthenticationToken *g_currentAuthenticationToken;
+static id<FBSDKTokenCaching> g_tokenCache;
 
 NSString *const FBSDKAuthenticationTokenTokenStringCodingKey = @"FBSDKAuthenticationTokenTokenStringCodingKey";
 NSString *const FBSDKAuthenticationTokenNonceCodingKey = @"FBSDKAuthenticationTokenNonceCodingKey";
@@ -80,7 +82,7 @@ NSString *const FBSDKAuthenticationTokenGraphDomainCodingKey = @"FBSDKAuthentica
 {
   if (token != g_currentAuthenticationToken) {
     g_currentAuthenticationToken = token;
-    [[self tokenCache] setAuthenticationToken:token];
+    self.tokenCache.authenticationToken = token;
   }
 }
 
@@ -98,7 +100,19 @@ NSString *const FBSDKAuthenticationTokenGraphDomainCodingKey = @"FBSDKAuthentica
 
 + (id<FBSDKTokenCaching>)tokenCache
 {
-  return FBSDKSettings.tokenCache;
+  return g_tokenCache;
+}
+
++ (void)setTokenCache:(id<FBSDKTokenCaching>)cache
+{
+  if (g_tokenCache != cache) {
+    g_tokenCache = cache;
+  }
+}
+
++ (void)resetTokenCache
+{
+  g_tokenCache = nil;
 }
 
 + (BOOL)supportsSecureCoding

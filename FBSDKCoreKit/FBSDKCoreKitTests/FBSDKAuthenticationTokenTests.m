@@ -115,4 +115,18 @@
   );
 }
 
+- (void)testTokenCacheIsNilByDefault
+{
+  [FBSDKAuthenticationToken resetTokenCache];
+  XCTAssertNil(FBSDKAuthenticationToken.tokenCache, @"Authentication token cache should be nil by default");
+}
+
+- (void)testTokenCacheCanBeSet
+{
+  TestTokenCache *cache = [[TestTokenCache alloc] initWithAccessToken:nil
+                                                  authenticationToken:nil];
+  FBSDKAuthenticationToken.tokenCache = cache;
+  XCTAssertEqualObjects(FBSDKAuthenticationToken.tokenCache, cache, @"Authentication token cache should be settable");
+}
+
 @end
