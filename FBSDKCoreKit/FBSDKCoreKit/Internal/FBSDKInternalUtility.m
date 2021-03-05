@@ -636,6 +636,7 @@ static NSMapTable *_transientObjects;
 #pragma mark - Testability
 
 #if DEBUG
+ #if FBSDKTEST
 
 + (void)resetQuerySchemesCache
 {
@@ -686,6 +687,7 @@ static NSMapTable *_transientObjects;
   }
 }
 
+ #endif
 #endif
 
 @end

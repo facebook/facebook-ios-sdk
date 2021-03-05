@@ -531,6 +531,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 #pragma mark - Testability
 
 #if DEBUG
+ #if FBSDKTEST
 
 + (void)resetLoggingBehaviorsCache
 {
@@ -612,6 +613,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   g_dataProcessingOptions = nil;
 }
 
+ #endif
 #endif
 
 @end

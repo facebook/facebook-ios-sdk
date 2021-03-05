@@ -145,6 +145,7 @@ static dispatch_once_t *singletonToken;
 #pragma mark - Testability
 
 #if DEBUG
+ #if FBSDKTEST
 
 + (void)resetSingletonToken
 {
@@ -153,6 +154,7 @@ static dispatch_once_t *singletonToken;
   }
 }
 
+ #endif
 #endif
 
 @end

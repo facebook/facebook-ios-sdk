@@ -281,6 +281,7 @@ static NSMutableDictionary<NSString *, NSMutableDictionary *> *g_recordedValues;
  #pragma mark - Testability
 
  #if DEBUG
+  #if FBSDKTEST
 
 + (void)setConfiguration:(FBSDKSKAdNetworkConversionConfiguration *)configuration
 {
@@ -292,8 +293,8 @@ static NSMutableDictionary<NSString *, NSMutableDictionary *> *g_recordedValues;
   g_isSKAdNetworkReportEnabled = enabled;
 }
 
+  #endif
  #endif
-
 @end
 
 #endif

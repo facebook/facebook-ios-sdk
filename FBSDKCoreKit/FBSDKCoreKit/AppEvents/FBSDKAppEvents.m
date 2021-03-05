@@ -328,6 +328,7 @@ static BOOL g_explicitEventsLoggedYet;
 @interface FBSDKAppEvents ()
 
 @property (nonatomic, assign) FBSDKAppEventsFlushBehavior flushBehavior;
+
 // for testing only.
 @property (nonatomic, assign) BOOL disableTimer;
 

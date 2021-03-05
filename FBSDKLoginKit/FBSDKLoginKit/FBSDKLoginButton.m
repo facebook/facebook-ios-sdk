@@ -437,6 +437,7 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 // MARK: - Testability
 
  #if DEBUG
+  #if FBSDKTEST
 
 - (NSString *)userName
 {
@@ -448,6 +449,7 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
   return _userID;
 }
 
+  #endif
  #endif
 
 @end

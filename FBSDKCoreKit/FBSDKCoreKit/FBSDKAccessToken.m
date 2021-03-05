@@ -299,12 +299,14 @@ static FBSDKAccessToken *g_currentAccessToken;
 #pragma mark - Testability
 
 #if DEBUG
+ #if FBSDKTEST
 
 + (void)resetCurrentAccessTokenCache
 {
   g_currentAccessToken = nil;
 }
 
+ #endif
 #endif
 
 @end

@@ -447,6 +447,7 @@ static UIApplicationState _applicationState;
 // MARK: - Testability
 
 #if DEBUG
+ #if FBSDKTEST
 
 + (void)resetIsSdkInitialized
 {
@@ -473,6 +474,7 @@ static UIApplicationState _applicationState;
   _applicationObservers = [NSHashTable new];
 }
 
+ #endif
 #endif
 
 @end
