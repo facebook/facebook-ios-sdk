@@ -20,7 +20,7 @@
 class TestGraphRequestFactory: NSObject, GraphRequestProviding {
 
   var stubbedRequest: GraphRequestProtocol = GraphRequest(graphPath: "me")
-  var capturedWithGraphPath: String?
+  var capturedGraphPath: String?
   var capturedParameters = [AnyHashable: Any]()
   var capturedTokenString: String?
   var capturedHttpMethod: HTTPMethod?
@@ -35,7 +35,7 @@ class TestGraphRequestFactory: NSObject, GraphRequestProviding {
     httpMethod method: HTTPMethod?,
     flags: GraphRequestFlags
   ) -> GraphRequestProtocol {
-    capturedWithGraphPath = graphPath
+    capturedGraphPath = graphPath
     capturedParameters = parameters
     capturedTokenString = tokenString
     capturedHttpMethod = method

@@ -1046,6 +1046,9 @@
 		F496E5FE24E5D0D5006231A2 /* TestTokenCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = F496E5FD24E5D0D5006231A2 /* TestTokenCache.swift */; };
 		F496E60F24E5D195006231A2 /* SampleAccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = F496E60E24E5D195006231A2 /* SampleAccessToken.swift */; };
 		F496E61224E6049A006231A2 /* AppDelegateObserverFake.swift in Sources */ = {isa = PBXBuildFile; fileRef = F496E61124E6049A006231A2 /* AppDelegateObserverFake.swift */; };
+		F4A02FF725EEC1CB00D19DE9 /* SampleRawRemoteGateKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A02FF625EEC1CB00D19DE9 /* SampleRawRemoteGateKeeper.swift */; };
+		F4A0304925EECC6800D19DE9 /* SampleRawRemoteGateKeeperList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A0304825EECC6800D19DE9 /* SampleRawRemoteGateKeeperList.swift */; };
+		F4A0309625EEE42300D19DE9 /* SampleError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A0308E25EEE42300D19DE9 /* SampleError.swift */; };
 		F4A2B1A525E56BF400DE13D9 /* FBSDKDeviceButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D9E16AA1CB46C7D00C8B68F /* FBSDKDeviceButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4A2B1BA25E56BF500DE13D9 /* FBSDKDeviceButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D9E16AA1CB46C7D00C8B68F /* FBSDKDeviceButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4A2B1D525E56C3200DE13D9 /* FBSDKDeviceViewControllerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D10A68B1CB38D5D00F42AC1 /* FBSDKDeviceViewControllerBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1701,6 +1704,11 @@
 		F496E5FD24E5D0D5006231A2 /* TestTokenCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTokenCache.swift; sourceTree = "<group>"; };
 		F496E60E24E5D195006231A2 /* SampleAccessToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAccessToken.swift; sourceTree = "<group>"; };
 		F496E61124E6049A006231A2 /* AppDelegateObserverFake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateObserverFake.swift; sourceTree = "<group>"; };
+		F4A02F8C25EEAF6600D19DE9 /* FBSDKDataPersisting.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKDataPersisting.h; sourceTree = "<group>"; };
+		F4A02F9425EEB09500D19DE9 /* NSUserDefaults+FBSDKDataPersisting.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSUserDefaults+FBSDKDataPersisting.h"; sourceTree = "<group>"; };
+		F4A02FF625EEC1CB00D19DE9 /* SampleRawRemoteGateKeeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleRawRemoteGateKeeper.swift; sourceTree = "<group>"; };
+		F4A0304825EECC6800D19DE9 /* SampleRawRemoteGateKeeperList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleRawRemoteGateKeeperList.swift; sourceTree = "<group>"; };
+		F4A0308E25EEE42300D19DE9 /* SampleError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleError.swift; sourceTree = "<group>"; };
 		F4A11B4824E36E5200D4C010 /* FBSDKTypeUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKTypeUtility.h; sourceTree = "<group>"; };
 		F4A11B4924E36E5200D4C010 /* FBSDKURLSessionTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKURLSessionTask.h; sourceTree = "<group>"; };
 		F4A11B4A24E36E5200D4C010 /* FBSDKSafeCast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKSafeCast.h; sourceTree = "<group>"; };
@@ -2142,6 +2150,8 @@
 				9D32A8381A69941A000A936D /* TokenCaching */,
 				89FB8C3E1A842393003CAE60 /* UI */,
 				89FB8C431A842644003CAE60 /* WebDialog */,
+				F4A02F9425EEB09500D19DE9 /* NSUserDefaults+FBSDKDataPersisting.h */,
+				F4A02F8C25EEAF6600D19DE9 /* FBSDKDataPersisting.h */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
@@ -2820,10 +2830,13 @@
 				F496E60E24E5D195006231A2 /* SampleAccessToken.swift */,
 				F496E58E24E49DBC006231A2 /* SampleAppEvents.swift */,
 				F48AD347257700B80052C056 /* SampleAuthenticationToken.swift */,
+				F4A0308E25EEE42300D19DE9 /* SampleError.swift */,
 				F4EB31D22540A35800736B67 /* SampleGraphRequest.swift */,
 				F4EB31BA2540A1B800736B67 /* SampleGraphRequestConnection.swift */,
 				F4EB33CD2542323500736B67 /* SampleRawRemotePermissions.swift */,
+				F4A02FF625EEC1CB00D19DE9 /* SampleRawRemoteGateKeeper.swift */,
 				5C49DF8F2554C9ED00E0FD91 /* SampleUserProfile.swift */,
+				F4A0304825EECC6800D19DE9 /* SampleRawRemoteGateKeeperList.swift */,
 				F408C6E8256309A500372D61 /* TestBridgeApiRequest.swift */,
 				F44B051025645DAC0059A3A6 /* TestDylibResolver.swift */,
 				F43DC8E825E05DE40009E7D5 /* TestErrorConfiguration.swift */,
@@ -4389,6 +4402,7 @@
 				F428430B246B427700CD4393 /* FBSDKServerConfigurationManagerTests.swift in Sources */,
 				C6381628257EDF2100B7690F /* FBSDKAuthenticationTokenFactoryTests.m in Sources */,
 				F9CEF1EB24F769F900EB0C3D /* FBSDKSKAdNetworkReporterTests.m in Sources */,
+				F4A0304925EECC6800D19DE9 /* SampleRawRemoteGateKeeperList.swift in Sources */,
 				F98D1D73251297A900276B68 /* FBSDKAppEventsConfigurationManagerTests.swift in Sources */,
 				F44B051125645DAC0059A3A6 /* TestDylibResolver.swift in Sources */,
 				45540DB125271A88008E853E /* FBSDKAppLinkResolverRequestBuilderTests.m in Sources */,
@@ -4441,6 +4455,7 @@
 				F44B056F256491590059A3A6 /* FBSDKBridgeAPI+SessionCompletionHandlerTests.m in Sources */,
 				F4CCDC9E25E959200057FE5F /* TestGraphRequestFactory.swift in Sources */,
 				F4EB31BB2540A1B800736B67 /* SampleGraphRequestConnection.swift in Sources */,
+				F4A0309625EEE42300D19DE9 /* SampleError.swift in Sources */,
 				F943113424FB2E67002441F1 /* FBSDKSKAdNetworkEventTests.swift in Sources */,
 				F98D1D64251295E900276B68 /* RawAppEventsConfigurationResponseFixtures.swift in Sources */,
 				F402AFF3255B4EE400473083 /* AuthenticationSessionSpy.swift in Sources */,
@@ -4448,6 +4463,7 @@
 				F4EAC3A725E05CBB00587C32 /* ErrorConfigurationProviderTests.swift in Sources */,
 				F43F398B25D48C4B0046027A /* TestURLSessionProxy.swift in Sources */,
 				F98D1D3825124FAE00276B68 /* FBSDKAppEventsConfigurationFixtures.m in Sources */,
+				F4A02FF725EEC1CB00D19DE9 /* SampleRawRemoteGateKeeper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FBSDKSettings;
 @protocol FBSDKGraphRequestProviding;
 @protocol FBSDKGraphRequestConnectionProviding;
+@protocol FBSDKDataPersisting;
 
 /// typedef for FBSDKAppEventUserDataType
 typedef NSString *const FBSDKGateKeeperKey NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(GateKeeperManager.GateKeeperKey);
@@ -41,7 +42,8 @@ NS_SWIFT_NAME(GateKeeperManager)
  */
 + (void)configureWithSettings:(Class<FBSDKSettings>)settings
               requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-           connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider;
+           connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
+                        store:(id<FBSDKDataPersisting>)store;
 
 /**
  Returns the locally cached configuration.

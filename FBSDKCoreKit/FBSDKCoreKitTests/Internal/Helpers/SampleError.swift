@@ -16,14 +16,4 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-
-@protocol FBSDKSettings;
-
-NS_ASSUME_NONNULL_BEGIN
-
-/// Default conformance to the settings protocol
-@interface FBSDKSettings (SettingsProtocol) <FBSDKSettings>
-@end
-
-NS_ASSUME_NONNULL_END
+struct SampleError: Error {}

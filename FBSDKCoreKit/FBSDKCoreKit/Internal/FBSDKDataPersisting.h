@@ -18,12 +18,19 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol FBSDKSettings;
-
 NS_ASSUME_NONNULL_BEGIN
 
-/// Default conformance to the settings protocol
-@interface FBSDKSettings (SettingsProtocol) <FBSDKSettings>
+/// An internal protocol used to describe a session data task
+NS_SWIFT_NAME(DataPersisting)
+@protocol FBSDKDataPersisting
+
+- (void)setObject:(id)value
+           forKey:(NSString *)defaultName;
+- (NSData *)dataForKey:(NSString *)defaultName;
+- (NSInteger)integerForKey:(NSString *)defaultName;
+- (NSString *)stringForKey:(NSString *)defaultName;
+- (id)objectForKey:(NSString *)defaultName;
+
 @end
 
 NS_ASSUME_NONNULL_END

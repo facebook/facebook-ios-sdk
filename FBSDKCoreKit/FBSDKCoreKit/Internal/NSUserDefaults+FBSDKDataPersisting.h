@@ -18,12 +18,12 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol FBSDKSettings;
+#import "FBSDKDataPersisting.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// Default conformance to the settings protocol
-@interface FBSDKSettings (SettingsProtocol) <FBSDKSettings>
+/// Default conformance to the data persisting protocol
+@interface NSUserDefaults (DataPersisting) <FBSDKDataPersisting>
 @end
 
 NS_ASSUME_NONNULL_END

@@ -16,14 +16,43 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-
-@protocol FBSDKSettings;
-
-NS_ASSUME_NONNULL_BEGIN
-
-/// Default conformance to the settings protocol
-@interface FBSDKSettings (SettingsProtocol) <FBSDKSettings>
-@end
-
-NS_ASSUME_NONNULL_END
+enum SampleRawRemoteGatekeeperList {
+  static let valid: [String: Any] = {
+    [
+      "data": [
+        [
+          "gatekeepers": [
+            SampleRawRemoteGatekeeper.validEnabled,
+            SampleRawRemoteGatekeeper.validDisabled
+          ]
+        ]
+      ]
+    ]
+  }()
+  static let validHeterogeneous: [String: Any] = {
+    [
+      "data": [
+        [
+          "gatekeepers": [
+            SampleRawRemoteGatekeeper.valid(name: "foo", enabled: true),
+            SampleRawRemoteGatekeeper.valid(name: "bar", enabled: false)
+          ]
+        ]
+      ]
+    ]
+  }()
+  static let missingGatekeepers: [String: Any] = {
+    [
+      "data": []
+    ]
+  }()
+  static let emptyGatekeepers: [String: Any] = {
+    [
+      "data": [
+        [
+          "gatekeepers": []
+        ]
+      ]
+    ]
+  }()
+}

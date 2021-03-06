@@ -37,6 +37,7 @@
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKTimeSpentData.h"
 #import "FBSDKTokenCache.h"
+#import "NSUserDefaults+FBSDKDataPersisting.h"
 
 #if !TARGET_OS_TV
  #import "FBSDKContainerViewController.h"
@@ -443,11 +444,12 @@ static UIApplicationState _applicationState;
   [FBSDKAppEvents setCanLogEvents];
   [FBSDKGateKeeperManager configureWithSettings:FBSDKSettings.class
                                 requestProvider:[FBSDKGraphRequestFactory new]
-                             connectionProvider:[FBSDKGraphRequestConnectionFactory new]];
+                             connectionProvider:[FBSDKGraphRequestConnectionFactory new]
+                                          store:NSUserDefaults.standardUserDefaults];
   FBSDKTokenCache *tokenCache = [FBSDKTokenCache new];
   [FBSDKAccessToken setTokenCache:tokenCache];
-  [FBSDKAuthenticationToken setTokenCache:tokenCache];
   [FBSDKAccessToken setConnectionFactory:[FBSDKGraphRequestConnectionFactory new]];
+  [FBSDKAuthenticationToken setTokenCache:tokenCache];
 }
 
 // MARK: - Testability

@@ -16,14 +16,30 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+enum SampleRawRemoteGatekeeper {
 
-@protocol FBSDKSettings;
+  static func valid(name: String, enabled: Bool) -> [String: Any] {
+    return [
+      "key": name,
+      "value": enabled
+    ]
+  }
 
-NS_ASSUME_NONNULL_BEGIN
+  static let validEnabled = [
+    "key": "foo",
+    "value": true
+  ] as [String: Any]
 
-/// Default conformance to the settings protocol
-@interface FBSDKSettings (SettingsProtocol) <FBSDKSettings>
-@end
+  static let validDisabled = [
+    "key": "foo",
+    "value": false
+  ] as [String: Any]
 
-NS_ASSUME_NONNULL_END
+  static let missingKey = [
+    "value": false
+  ]
+
+  static let missingValue = [
+    "key": "foo"
+  ]
+}

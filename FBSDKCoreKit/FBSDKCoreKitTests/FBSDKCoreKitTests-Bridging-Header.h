@@ -28,6 +28,7 @@
 #import "FBSDKSessionProviding.h"
 #import "FBSDKSettingsProtocol.h"
 #import "FBSDKTestCase.h"
+#import "UserDefaultsSpy.h"
 #import "FakeBundle.h"
 // URLSession Abstraction
 #import "FBSDKURLSessionProxyProviding.h"
@@ -48,6 +49,9 @@
 // GraphRequest Abstraction
 #import "FBSDKGraphRequestProviding.h"
 #import "FBSDKGraphRequestFactory.h"
+// Data Persistance
+#import "FBSDKDataPersisting.h"
+#import "NSUserDefaults+FBSDKDataPersisting.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -118,6 +122,8 @@ NS_SWIFT_NAME(FBProfilePictureViewState)
 @property (class, nonatomic, nullable) Class<FBSDKSettings> settings;
 @property (class, nonatomic, nullable) id<FBSDKGraphRequestProviding> requestProvider;
 @property (class, nonatomic, nullable) id<FBSDKGraphRequestConnectionProviding> connectionProvider;
+@property (class, nonatomic, nullable) id<FBSDKDataPersisting> store;
+
 @property (class, nonatomic, nullable) NSDictionary *gateKeepers;
 @property (class, nonatomic) BOOL requeryFinishedForAppStart;
 @property (class, nonatomic, nullable) NSDate *timestamp;
@@ -126,8 +132,11 @@ NS_SWIFT_NAME(FBProfilePictureViewState)
 + (void)configureWithSettings:(Class<FBSDKSettings>)settings
               requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
            connectionProvider:(nonnull id<FBSDKGraphRequestConnectionProviding>)connectionProvider
-NS_SWIFT_NAME(configure(settings:requestProvider:connectionProvider:));
+                        store:(id<FBSDKDataPersisting>)store
+NS_SWIFT_NAME(configure(settings:requestProvider:connectionProvider:store:));
 + (id<FBSDKGraphRequest>)requestToLoadGateKeepers;
++ (void)processLoadRequestResponse:(nullable id)result error:(nullable NSError *)error
+NS_SWIFT_NAME(parse(result:error:));
 + (BOOL)_gateKeeperIsValid;
 + (void)reset;
 

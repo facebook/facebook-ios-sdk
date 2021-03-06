@@ -54,6 +54,7 @@
   }
 
   _capturedValues = tmp;
+  _capturedSetObjectKey = defaultName;
 }
 
 @end
