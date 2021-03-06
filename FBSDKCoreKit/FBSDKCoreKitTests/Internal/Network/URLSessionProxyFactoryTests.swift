@@ -28,7 +28,8 @@ class URLSessionProxyFactoryTests: XCTestCase, URLSessionDataDelegate {
     }
 
     XCTAssertEqual(
-      proxy.delegateQueue, OperationQueue.main,
+      proxy.delegateQueue,
+      OperationQueue.main,
       "The provided proxy Should use the operation queue it was created with"
     )
     XCTAssertTrue(

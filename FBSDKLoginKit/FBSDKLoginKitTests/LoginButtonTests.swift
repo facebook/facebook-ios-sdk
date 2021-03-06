@@ -19,10 +19,12 @@
 import FBSDKCoreKit
 import XCTest
 
+// swiftlint:disable type_body_length
+
 class LoginButtonTests: XCTestCase {
 
   let validNonce: String = "abc123"
-  var button: FBLoginButton! // swiftlint:disable:this force_unwrapping
+  var button: FBLoginButton! // swiftlint:disable:this implicitly_unwrapped_optional
   var sampleProfile: Profile {
     return Profile(
       userID: "Sample ID",
@@ -140,7 +142,7 @@ class LoginButtonTests: XCTestCase {
   func testInitialContentUpdateWithoutAccessTokenWithoutProfile() {
     let button = TestButton()
     AccessToken.setCurrent(nil, shouldDispatchNotif: false)
-    Profile.setCurrent(nil, shouldPostNotification: false);
+    Profile.setCurrent(nil, shouldPostNotification: false)
 
     button._initializeContent()
 

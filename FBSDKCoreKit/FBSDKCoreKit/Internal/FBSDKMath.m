@@ -29,66 +29,14 @@
 
 #pragma mark - Class Methods
 
-+ (CGPoint)ceilForPoint:(CGPoint)value
-{
-  return CGPointMake(ceilf(value.x), ceilf(value.x));
-}
-
 + (CGSize)ceilForSize:(CGSize)value
 {
   return CGSizeMake(ceilf(value.width), ceilf(value.height));
 }
 
-+ (CGPoint)floorForPoint:(CGPoint)value
-{
-  return CGPointMake(floorf(value.x), floorf(value.y));
-}
-
 + (CGSize)floorForSize:(CGSize)value
 {
   return CGSizeMake(floorf(value.width), floorf(value.height));
-}
-
-+ (NSUInteger)hashWithCGFloat:(CGFloat)value
-{
-#if CGFLOAT_IS_DOUBLE
-  return [self hashWithDouble:value];
-#else
-  return [self hashWithFloat:value];
-#endif
-}
-
-+ (NSUInteger)hashWithCString:(const char *)value
-{
-  // FNV-1a hash.
-  NSUInteger hash = sizeof(NSUInteger) == 4 ? 2166136261U : 14695981039346656037U;
-  while (*value) {
-    hash ^= *value++;
-    hash *= sizeof(NSUInteger) == 4 ? 16777619 : 1099511628211;
-  }
-  return hash;
-}
-
-+ (NSUInteger)hashWithDouble:(double)value
-{
-  assert(sizeof(double) == sizeof(uint64_t)); // Size of double must be 8 bytes
-  union {
-    double key;
-    uint64_t bits;
-  } u;
-  u.key = value;
-  return [self hashWithLong:u.bits];
-}
-
-+ (NSUInteger)hashWithFloat:(float)value
-{
-  assert(sizeof(float) == sizeof(uint32_t)); // Size of float must be 4 bytes
-  union {
-    float key;
-    uint32_t bits;
-  } u;
-  u.key = value;
-  return [self hashWithInteger:u.bits];
 }
 
 + (NSUInteger)hashWithInteger:(NSUInteger)value

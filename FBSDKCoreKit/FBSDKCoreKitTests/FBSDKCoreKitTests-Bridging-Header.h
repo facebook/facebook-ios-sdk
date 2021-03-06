@@ -22,6 +22,7 @@
 #import "FBSDKBridgeAPI+Testing.h"
 #import "FBSDKCloseIcon.h"
 #import "FBSDKEventDeactivationManager.h"
+#import "FBSDKMath.h"
 #import "FBSDKSKAdNetworkEvent.h"
 #import "FBSDKSKAdNetworkRule.h"
 #import "FBSDKServerConfigurationFixtures.h"

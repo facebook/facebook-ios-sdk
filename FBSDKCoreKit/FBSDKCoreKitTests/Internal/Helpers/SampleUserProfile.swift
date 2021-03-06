@@ -38,7 +38,7 @@ class SampleUserProfile: NSObject {
     )
   }
 
-  public static func valid(withImageURL url: URL?) -> Profile {
+  static func valid(withImageURL url: URL?) -> Profile {
     return Profile(
       userID: "123",
       firstName: "John",

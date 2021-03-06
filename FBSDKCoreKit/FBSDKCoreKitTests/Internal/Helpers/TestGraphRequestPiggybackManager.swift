@@ -20,6 +20,7 @@
 class TestGraphRequestPiggybackManager: NSObject, GraphRequestPiggybackManaging {
   static var capturedConnection: GraphRequestConnection?
 
+  // swiftlint:disable:next implicitly_unwrapped_optional
   static func addPiggybackRequests(_ connection: GraphRequestConnection!) {
     capturedConnection = connection
   }

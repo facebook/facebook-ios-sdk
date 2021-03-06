@@ -78,7 +78,7 @@ class LoginConfigurationTests: XCTestCase {
     let config = LoginConfiguration(permissions: permissions)
 
     XCTAssertEqual(
-      Set((config?.requestedPermissions.map { $0.value })!),
+      Set((config?.requestedPermissions.map { $0.value })!), // swiftlint:disable:this force_unwrapping
       Set(permissions.map { $0.name }),
       "Should create a configuration with the provided tracking preference"
     )

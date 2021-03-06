@@ -1049,6 +1049,8 @@
 		F4A02FF725EEC1CB00D19DE9 /* SampleRawRemoteGateKeeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A02FF625EEC1CB00D19DE9 /* SampleRawRemoteGateKeeper.swift */; };
 		F4A0304925EECC6800D19DE9 /* SampleRawRemoteGateKeeperList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A0304825EECC6800D19DE9 /* SampleRawRemoteGateKeeperList.swift */; };
 		F4A0309625EEE42300D19DE9 /* SampleError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A0308E25EEE42300D19DE9 /* SampleError.swift */; };
+		F4A030D525F021D000D19DE9 /* FBSDKColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A030CD25F021D000D19DE9 /* FBSDKColorTests.swift */; };
+		F4A032A925F05CFF00D19DE9 /* MathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A032A125F05CFF00D19DE9 /* MathTests.swift */; };
 		F4A2B1A525E56BF400DE13D9 /* FBSDKDeviceButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D9E16AA1CB46C7D00C8B68F /* FBSDKDeviceButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4A2B1BA25E56BF500DE13D9 /* FBSDKDeviceButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D9E16AA1CB46C7D00C8B68F /* FBSDKDeviceButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4A2B1D525E56C3200DE13D9 /* FBSDKDeviceViewControllerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D10A68B1CB38D5D00F42AC1 /* FBSDKDeviceViewControllerBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1709,6 +1711,8 @@
 		F4A02FF625EEC1CB00D19DE9 /* SampleRawRemoteGateKeeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleRawRemoteGateKeeper.swift; sourceTree = "<group>"; };
 		F4A0304825EECC6800D19DE9 /* SampleRawRemoteGateKeeperList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleRawRemoteGateKeeperList.swift; sourceTree = "<group>"; };
 		F4A0308E25EEE42300D19DE9 /* SampleError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleError.swift; sourceTree = "<group>"; };
+		F4A030CD25F021D000D19DE9 /* FBSDKColorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBSDKColorTests.swift; sourceTree = "<group>"; };
+		F4A032A125F05CFF00D19DE9 /* MathTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathTests.swift; sourceTree = "<group>"; };
 		F4A11B4824E36E5200D4C010 /* FBSDKTypeUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKTypeUtility.h; sourceTree = "<group>"; };
 		F4A11B4924E36E5200D4C010 /* FBSDKURLSessionTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKURLSessionTask.h; sourceTree = "<group>"; };
 		F4A11B4A24E36E5200D4C010 /* FBSDKSafeCast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKSafeCast.h; sourceTree = "<group>"; };
@@ -2518,6 +2522,7 @@
 				89C8B19B1A8D7A27009B07F5 /* FBSDKUtilityTests.swift */,
 				893F44A41A644552001DB0B6 /* Internal */,
 				C67BED29257F1A6300D356C9 /* ProfilePictureViewTests.swift */,
+				F4A032A125F05CFF00D19DE9 /* MathTests.swift */,
 				9D2697571A5DF40700143BFC /* Supporting Files */,
 				1613935425F17CD7001F0D31 /* AccessTokenTests.swift */,
 			);
@@ -2865,6 +2870,7 @@
 		F4D80C242566D471008CCAF0 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				F4A030CD25F021D000D19DE9 /* FBSDKColorTests.swift */,
 				F4D80C072566D469008CCAF0 /* FBSDKDrawableTests.swift */,
 			);
 			path = UI;
@@ -4396,6 +4402,7 @@
 				F402B071255C740C00473083 /* ViewControllerSpy.swift in Sources */,
 				F931C07024F960D00088AD5F /* FBSDKSKAdNetworkRuleTests.swift in Sources */,
 				F4EC333A25E5CC9C0003C0CF /* TestGraphRequestBody.swift in Sources */,
+				F4A032A925F05CFF00D19DE9 /* MathTests.swift in Sources */,
 				7E253D811A8EAEF500CCCFE7 /* FBSDKInternalUtilityTests.m in Sources */,
 				C5F6EC861FA24FAF009EB258 /* FBSDKPaymentObserverTests.m in Sources */,
 				5D497702244A3E6A00BD45C6 /* FBSDKIntegrityTests.m in Sources */,
@@ -4410,6 +4417,7 @@
 				5DAB01F123A1831A005495FB /* FBSDKCrashObserverTests.m in Sources */,
 				F443A27D25D1F45E0093AB78 /* FBSDKAppEventsPublishAteTests.m in Sources */,
 				F40B24C224732DD90059351C /* Fuzzer.swift in Sources */,
+				F4A030D525F021D000D19DE9 /* FBSDKColorTests.swift in Sources */,
 				40853B9424C8C43300A7CB16 /* FBSDKJSONValueTests.m in Sources */,
 				F408C6E9256309A500372D61 /* TestBridgeApiRequest.swift in Sources */,
 				F494285D25829C72008FE009 /* TestSessionProvider.swift in Sources */,

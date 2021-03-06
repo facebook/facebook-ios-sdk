@@ -23,7 +23,11 @@ class TestErrorConfiguration: NSObject, ErrorConfigurationProtocol {
   var capturedGraphRequest: GraphRequestProtocol?
   var stubbedRecoveryConfiguration: ErrorRecoveryConfiguration?
 
-  func recoveryConfiguration(forCode code: String, subcode: String, request: GraphRequestProtocol) -> ErrorRecoveryConfiguration {
+  func recoveryConfiguration(
+    forCode code: String,
+    subcode: String,
+    request: GraphRequestProtocol
+  ) -> ErrorRecoveryConfiguration {
     capturedRecoveryConfigurationCode = code
     capturedRecoveryConfigurationSubcode = subcode
     capturedGraphRequest = request

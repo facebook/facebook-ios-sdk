@@ -20,7 +20,7 @@ import XCTest
 
 class FBSDKDrawableTests: FBSDKTestCase {
   let size = CGSize(width: 100, height: 100)
-  let placeholderImageColor = UIColor(
+  let placeholderImageColor = UIColor( // swiftlint:disable:this object_literal
     red: 157.0 / 255.0,
     green: 177.0 / 255.0,
     blue: 204.0 / 255.0,

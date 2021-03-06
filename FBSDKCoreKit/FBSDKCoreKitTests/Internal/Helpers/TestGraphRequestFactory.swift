@@ -30,7 +30,7 @@ class TestGraphRequestFactory: NSObject, GraphRequestProviding {
 
   func createGraphRequest(
     withGraphPath graphPath: String,
-    parameters: [AnyHashable : Any],
+    parameters: [AnyHashable: Any],
     tokenString: String?,
     httpMethod method: HTTPMethod?,
     flags: GraphRequestFlags

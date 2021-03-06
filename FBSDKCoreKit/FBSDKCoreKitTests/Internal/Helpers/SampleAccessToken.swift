@@ -32,7 +32,7 @@ class SampleAccessToken: NSObject {
       dataAccessExpirationDate: nil
     )
   }
-  
+
   static var expiredToken: AccessToken {
     return AccessToken(
       tokenString: "123",

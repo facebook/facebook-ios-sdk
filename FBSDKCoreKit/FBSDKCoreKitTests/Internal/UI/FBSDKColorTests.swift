@@ -16,21 +16,22 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <CoreGraphics/CoreGraphics.h>
-#import <Foundation/Foundation.h>
+import XCTest
 
-NS_ASSUME_NONNULL_BEGIN
+class FBSDKColorTests: XCTestCase {
+  let color = UIColor( // swiftlint:disable:this object_literal
+    red: 157.0 / 255.0,
+    green: 177.0 / 255.0,
+    blue: 204.0 / 255.0,
+    alpha: 1.0
+  )
 
-@interface FBSDKMath : NSObject
-
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
-
-+ (CGSize)ceilForSize:(CGSize)value;
-+ (CGSize)floorForSize:(CGSize)value;
-+ (NSUInteger)hashWithInteger:(NSUInteger)value;
-+ (NSUInteger)hashWithIntegerArray:(NSUInteger *)values count:(NSUInteger)count;
-
-@end
-
-NS_ASSUME_NONNULL_END
+  func testColorWithRBG() {
+    let newColor = FBSDKUIColorWithRGB(157, 177, 204)
+    XCTAssertEqual(
+      color,
+      newColor,
+      "There should be helpers for creating colors from rbg values"
+    )
+  }
+}

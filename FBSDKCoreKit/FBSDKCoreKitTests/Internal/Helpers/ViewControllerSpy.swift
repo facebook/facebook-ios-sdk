@@ -28,7 +28,7 @@ class ViewControllerSpy: UIViewController {
   var capturedPresentViewControllerCompletion: (() -> Void)?
 
   /// Used for providing a value to return for the readonly `transitionCoordinator` property
-  var stubbedTransitionCoordinator: UIViewControllerTransitionCoordinator? = nil
+  var stubbedTransitionCoordinator: UIViewControllerTransitionCoordinator?
 
   // Overriding with no implementation to stub the property
   override var transitionCoordinator: UIViewControllerTransitionCoordinator? {

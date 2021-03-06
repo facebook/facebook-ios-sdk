@@ -18,6 +18,8 @@
 
 import XCTest
 
+// swiftlint:disable type_body_length file_length
+
 class GateKeeperManagerTests: XCTestCase {
 
   let requestFactory = TestGraphRequestFactory()
@@ -82,8 +84,7 @@ class GateKeeperManagerTests: XCTestCase {
 
   // MARK: - Gatekeeper Validity
 
-  func testValidityWithUnfinishedRequeryWithInvalidTimestamp()
-  {
+  func testValidityWithUnfinishedRequeryWithInvalidTimestamp() {
     GateKeeperManager.requeryFinishedForAppStart = false
     GateKeeperManager.timestamp = Date.distantPast
 
@@ -93,8 +94,7 @@ class GateKeeperManagerTests: XCTestCase {
     )
   }
 
-  func testValidityWithUnfinishedRequeryWithValidTimestamp()
-  {
+  func testValidityWithUnfinishedRequeryWithValidTimestamp() {
     GateKeeperManager.requeryFinishedForAppStart = false
     GateKeeperManager.timestamp = Date()
 
@@ -104,8 +104,7 @@ class GateKeeperManagerTests: XCTestCase {
     )
   }
 
-  func testValidityWithFinishedRequeryWithInvalidTimestamp()
-  {
+  func testValidityWithFinishedRequeryWithInvalidTimestamp() {
     GateKeeperManager.requeryFinishedForAppStart = true
     GateKeeperManager.timestamp = Date.distantPast
 
@@ -115,8 +114,7 @@ class GateKeeperManagerTests: XCTestCase {
     )
   }
 
-  func testValidityWithFinishedRequeryWithValidTimestamp()
-  {
+  func testValidityWithFinishedRequeryWithValidTimestamp() {
     GateKeeperManager.requeryFinishedForAppStart = true
     GateKeeperManager.timestamp = Date()
 
@@ -162,7 +160,7 @@ class GateKeeperManagerTests: XCTestCase {
       XCTAssertNil(
         potentialError,
         "Should complete without error if the app id is missing"
-      );
+      )
       didInvokeCompletion = true
     }
     XCTAssertTrue(didInvokeCompletion)
@@ -177,7 +175,7 @@ class GateKeeperManagerTests: XCTestCase {
       XCTAssertNil(
         potentialError,
         "Should complete without error if the gatekeeper is valid"
-      );
+      )
       didInvokeCompletion = true
     }
     XCTAssertTrue(didInvokeCompletion)
@@ -199,7 +197,7 @@ class GateKeeperManagerTests: XCTestCase {
     GateKeeperManager.loadGateKeepers { _ in
       XCTFail("Should not invoke completion")
     }
-    XCTAssertTrue(GateKeeperManager.isLoadingGateKeepers, "Should track when loading is in progress");
+    XCTAssertTrue(GateKeeperManager.isLoadingGateKeepers, "Should track when loading is in progress")
     validateGraphRequest(
       connection.capturedRequest,
       isEqualTo: GateKeeperManager.requestToLoadGateKeepers()
@@ -239,7 +237,7 @@ class GateKeeperManagerTests: XCTestCase {
     GateKeeperManager.loadGateKeepers(nil)
 
     XCTAssertEqual(
-      GateKeeperManager.gateKeepers! as NSDictionary,
+      GateKeeperManager.gateKeepers as NSDictionary?,
       [
         "key": "foo",
         "value": true
@@ -279,7 +277,7 @@ class GateKeeperManagerTests: XCTestCase {
     let version = "bar"
     TestSettings.appID = appIdentifier
     TestSettings.sdkVersion = version
-    let _ = GateKeeperManager.requestToLoadGateKeepers()
+    _ = GateKeeperManager.requestToLoadGateKeepers()
 
     XCTAssertEqual(
       requestFactory.capturedGraphPath,
@@ -433,7 +431,7 @@ class GateKeeperManagerTests: XCTestCase {
     )
   }
 
-  // MARK: -  Helpers
+  // MARK: - Helpers
 
   func updateGateKeeperValidity(isValid: Bool) {
     if isValid {
@@ -463,6 +461,12 @@ class GateKeeperManagerTests: XCTestCase {
     let parameters = request.parameters as NSDictionary
     let otherParameters = otherRequest.parameters as NSDictionary
     XCTAssertEqual(parameters, otherParameters, "Parameters should be equal", file: file, line: line)
-    XCTAssertEqual(request.tokenString, otherRequest.tokenString, "Token strings should be equal", file: file, line: line)
+    XCTAssertEqual(
+      request.tokenString,
+      otherRequest.tokenString,
+      "Token strings should be equal",
+      file: file,
+      line: line
+    )
   }
 }

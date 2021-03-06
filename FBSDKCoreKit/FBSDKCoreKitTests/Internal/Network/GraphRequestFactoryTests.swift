@@ -45,14 +45,9 @@ class GraphRequestFactoryTests: XCTestCase {
       "Should provide the parameters to the underlying type"
     )
     XCTAssertEqual(
-      graphRequest.httpMethod, .get,
+      graphRequest.httpMethod,
+      .get,
       "Should provide the HTTP method to the underlying type"
     )
-    // TODO: Figure out why this is not consistently passing
-//    XCTAssertEqual(
-//      graphRequest.flags,
-//      [.disableErrorRecovery],
-//      "Should provide the flags to the underlying type"
-//    )
   }
 }
