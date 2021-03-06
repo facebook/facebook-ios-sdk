@@ -119,7 +119,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self setUpGraphRequestPiggybackManagerMock];
   [self setUpGraphRequestConnectionClassMock];
   [self setUpCrashShieldClassMock];
-  [self setUpNSDateClassMock];
   [self setUpSharedApplicationMock];
   [self setUpLoggerClassMock];
   [self setUpProcessInfoMock];
@@ -211,9 +210,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   [_crashShieldClassMock stopMocking];
   _crashShieldClassMock = nil;
-
-  [_nsDateClassMock stopMocking];
-  _nsDateClassMock = nil;
 
   [_sharedApplicationMock stopMocking];
   _sharedApplicationMock = nil;
@@ -390,11 +386,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)setUpCrashShieldClassMock
 {
   self.crashShieldClassMock = OCMClassMock(FBSDKCrashShield.class);
-}
-
-- (void)setUpNSDateClassMock
-{
-  self.nsDateClassMock = OCMClassMock(NSDate.class);
 }
 
 - (void)setUpSharedApplicationMock

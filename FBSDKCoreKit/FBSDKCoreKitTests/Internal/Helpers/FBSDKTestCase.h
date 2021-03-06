@@ -134,9 +134,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing a `FBSDKCrashShield` class mock between tests
 @property (nullable, nonatomic, assign) id crashShieldClassMock;
 
-/// Used for sharing a `NSDate` class mock between tests
-@property (nullable, nonatomic, assign) id nsDateClassMock;
-
 /// Used for sharing a `UIApplication.sharedApplication` mock between tests
 @property (nullable, nonatomic, assign) id sharedApplicationMock;
 
