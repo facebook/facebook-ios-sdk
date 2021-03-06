@@ -23,6 +23,7 @@
  #import <FBSDKCoreKit_Basics/FBSDKJSONValue.h>
  #import <FBSDKCoreKit_Basics/FBSDKLibAnalyzer.h>
  #import <FBSDKCoreKit_Basics/FBSDKSafeCast.h>
+ #import <FBSDKCoreKit_Basics/FBSDKSessionProviding.h>
  #import <FBSDKCoreKit_Basics/FBSDKTypeUtility.h>
  #import <FBSDKCoreKit_Basics/FBSDKURLSession.h>
  #import <FBSDKCoreKit_Basics/FBSDKURLSessionTask.h>
@@ -34,6 +35,7 @@
  #import "FBSDKJSONValue.h"
  #import "FBSDKLibAnalyzer.h"
  #import "FBSDKSafeCast.h"
+ #import "FBSDKSessionProviding.h"
  #import "FBSDKTypeUtility.h"
  #import "FBSDKURLSession.h"
  #import "FBSDKURLSessionTask.h"

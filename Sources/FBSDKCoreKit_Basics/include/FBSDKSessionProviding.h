@@ -16,41 +16,37 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@objcMembers
-class TestSessionDataTask: NSObject, SessionDataTask {
-  var resumeCallCount = 0
-  var cancelCallCount = 0
-  var stubbedState: URLSessionTask.State = .completed
+#import <Foundation/Foundation.h>
 
-  var state: URLSessionTask.State {
-    return stubbedState
-  }
+NS_ASSUME_NONNULL_BEGIN
 
-  func resume() {
-    resumeCallCount += 1
-  }
+/// An internal protocol used to describe a session data task
+NS_SWIFT_NAME(SessionDataTask)
+@protocol FBSDKSessionDataTask <NSObject>
 
-  func cancel() {
-    cancelCallCount += 1
-  }
-}
+@property(readonly) NSURLSessionTaskState state;
 
-@objcMembers
-class TestSessionProvider: NSObject, SessionProviding {
-  /// Data to return in a data task completion handler
-  var data: Data?
-  /// A url response to return in a data task completion handler
-  var urlResponse: URLResponse?
-  /// An error to return in a data task completion handler
-  var error: Error?
-  /// A data task to return from `dataTask(with:completion:)`
-  var stubbedDataTask: SessionDataTask?
+- (void)resume;
+- (void)cancel;
 
-  func dataTask(
-    with request: URLRequest,
-    completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void
-  ) -> SessionDataTask {
-    completionHandler(data, urlResponse, error)
-    return stubbedDataTask ?? TestSessionDataTask()
-  }
-}
+@end
+
+/// An internal protocol used to describe a url session
+NS_SWIFT_NAME(SessionProviding)
+@protocol FBSDKSessionProviding <NSObject>
+
+- (id<FBSDKSessionDataTask>)dataTaskWithRequest:(NSURLRequest *)request
+                              completionHandler:(void (^)(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error))completionHandler;
+
+@end
+
+// MARK: Default Protocol Conformances
+
+@interface NSURLSessionDataTask (SessionDataTask) <FBSDKSessionDataTask>
+@end
+
+@interface NSURLSession (SessionProviding) <FBSDKSessionProviding>
+@end
+
+
+NS_ASSUME_NONNULL_END

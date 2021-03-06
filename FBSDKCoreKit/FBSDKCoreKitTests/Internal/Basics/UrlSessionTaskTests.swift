@@ -16,41 +16,50 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@objcMembers
-class TestSessionDataTask: NSObject, SessionDataTask {
-  var resumeCallCount = 0
-  var cancelCallCount = 0
-  var stubbedState: URLSessionTask.State = .completed
+import XCTest
 
-  var state: URLSessionTask.State {
-    return stubbedState
+class UrlSessionTaskTests: XCTestCase {
+
+  let dataTask = TestSessionDataTask()
+  let provider = TestSessionProvider()
+  var task: UrlSessionTask!
+
+  override func setUp() {
+    super.setUp()
+
+    provider.stubbedDataTask = dataTask
+    task = UrlSessionTask(
+       request: SampleUrlRequest.valid,
+       fromSession: provider
+     ) { (_, _, _) in }
   }
 
-  func resume() {
-    resumeCallCount += 1
+  func testStarting() {
+    task.start()
+
+    XCTAssertEqual(
+      dataTask.resumeCallCount,
+      1,
+      "Starting a session task should resume the underlying data task"
+    )
   }
 
-  func cancel() {
-    cancelCallCount += 1
+  func testStopping() {
+    task.cancel()
+
+    XCTAssertEqual(
+      dataTask.cancelCallCount,
+      1,
+      "Cancelling a session task should cancel the underlying data task"
+    )
   }
-}
 
-@objcMembers
-class TestSessionProvider: NSObject, SessionProviding {
-  /// Data to return in a data task completion handler
-  var data: Data?
-  /// A url response to return in a data task completion handler
-  var urlResponse: URLResponse?
-  /// An error to return in a data task completion handler
-  var error: Error?
-  /// A data task to return from `dataTask(with:completion:)`
-  var stubbedDataTask: SessionDataTask?
-
-  func dataTask(
-    with request: URLRequest,
-    completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void
-  ) -> SessionDataTask {
-    completionHandler(data, urlResponse, error)
-    return stubbedDataTask ?? TestSessionDataTask()
+  func testState() {
+    dataTask.stubbedState = .running
+    XCTAssertEqual(
+      task.state,
+      .running,
+      "Should return the state of the underlying data task"
+    )
   }
 }

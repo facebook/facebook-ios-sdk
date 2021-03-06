@@ -35,7 +35,6 @@
 #import <CommonCrypto/CommonCrypto.h>
 
 #import "FBSDKAuthenticationTokenClaims.h"
-#import "FBSDKSessionProviding.h"
 
 static NSString *const FBSDKBeginCertificate = @"-----BEGIN CERTIFICATE-----";
 static NSString *const FBSDKEndCertificate = @"-----END CERTIFICATE-----";

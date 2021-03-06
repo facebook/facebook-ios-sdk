@@ -16,30 +16,20 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+import Foundation
 
-NS_ASSUME_NONNULL_BEGIN
+struct SampleUrl {
 
-/// An internal protocol used to describe a session data task
-NS_SWIFT_NAME(SessionDataTask)
-@protocol FBSDKSessionDataTask <NSObject>
-- (void)resume;
-- (void)cancel;
-@end
+  static let valid: URL = {
+    // swiftlint:disable:next force_unwrapping
+    return URL(string: "https://www.example.com")!
+  }()
 
-/// An internal protocol used to describe a url session
-NS_SWIFT_NAME(SessionProviding)
-@protocol FBSDKSessionProviding <NSObject>
-- (id<FBSDKSessionDataTask>)dataTaskWithRequest:(NSURLRequest *)request completionHandler:(void (^)(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error))completionHandler;
-@end
+}
 
-// MARK: Default Protocol Conformances
+struct SampleUrlRequest {
 
-@interface NSURLSessionDataTask (SessionDataTask) <FBSDKSessionDataTask>
-@end
-
-@interface NSURLSession (SessionProviding) <FBSDKSessionProviding>
-@end
-
-
-NS_ASSUME_NONNULL_END
+  static let valid: URLRequest = {
+    return URLRequest(url: SampleUrl.valid)
+  }()
+}
