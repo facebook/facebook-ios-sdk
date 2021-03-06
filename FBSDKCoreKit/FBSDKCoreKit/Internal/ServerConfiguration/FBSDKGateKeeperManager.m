@@ -25,6 +25,7 @@
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequest+Internal.h"
+#import "FBSDKGraphRequestConnectionProviding.h"
 #import "FBSDKGraphRequestProviding.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKSettings.h"
@@ -45,6 +46,7 @@ static NSDate *_timestamp;
 static BOOL _loadingGateKeepers;
 static BOOL _requeryFinishedForAppStart;
 static id<FBSDKGraphRequestProviding> _requestProvider;
+static id<FBSDKGraphRequestConnectionProviding> _connectionProvider;
 static Class<FBSDKSettings> _settings;
 static FBSDKLogger *_logger;
 
@@ -55,6 +57,7 @@ static FBSDKLogger *_logger;
     _completionBlocks = [NSMutableArray array];
     _logger = [FBSDKLogger new];
     _requestProvider = nil;
+    _connectionProvider = nil;
     _settings = nil;
     _canLoadGateKeepers = NO;
   }
@@ -62,9 +65,11 @@ static FBSDKLogger *_logger;
 
 + (void)configureWithSettings:(Class<FBSDKSettings>)settings
               requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+           connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
 {
-  _requestProvider = requestProvider;
   _settings = settings;
+  _requestProvider = requestProvider;
+  _connectionProvider = connectionProvider;
   _canLoadGateKeepers = YES;
 }
 
@@ -87,7 +92,7 @@ static FBSDKLogger *_logger;
         return;
       }
 
-      NSString *appID = [FBSDKSettings appID];
+      NSString *appID = [self.settings appID];
       if (!appID) {
         _gateKeepers = nil;
         if (completionBlock != NULL) {
@@ -122,7 +127,7 @@ static FBSDKLogger *_logger;
           id<FBSDKGraphRequest> request = [[self class] requestToLoadGateKeepers];
 
           // start request with specified timeout instead of the default 180s
-          FBSDKGraphRequestConnection *requestConnection = [FBSDKGraphRequestConnection new];
+          id<FBSDKGraphRequestConnecting> requestConnection = [self.connectionProvider createGraphRequestConnection];
           requestConnection.timeout = kTimeout;
           [requestConnection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
             _requeryFinishedForAppStart = YES;
@@ -243,6 +248,16 @@ static FBSDKLogger *_logger;
   return _settings;
 }
 
++ (id<FBSDKGraphRequestConnectionProviding>)connectionProvider
+{
+  return _connectionProvider;
+}
+
++ (NSDictionary *)gateKeepers
+{
+  return _gateKeepers;
+}
+
 // MARK: - Testability
 
 #if DEBUG
@@ -257,14 +272,24 @@ static FBSDKLogger *_logger;
   _logger = logger;
 }
 
-+ (void)setSettings:(Class<FBSDKSettings>)settings
++ (void)setGateKeepers:(NSDictionary *)gateKeepers
 {
-  _settings = settings;
+  _gateKeepers = gateKeepers;
 }
 
-+ (void)setGraphRequestProvider:(id<FBSDKGraphRequestProviding>)provider
++ (void)setRequeryFinishedForAppStart:(BOOL)isFinished
 {
-  _requestProvider = provider;
+  _requeryFinishedForAppStart = isFinished;
+}
+
++ (void)setTimestamp:(NSDate *)timestamp
+{
+  _timestamp = timestamp;
+}
+
++ (BOOL)isLoadingGateKeepers
+{
+  return _loadingGateKeepers;
 }
 
 + (void)reset
@@ -272,6 +297,10 @@ static FBSDKLogger *_logger;
   _requestProvider = nil;
   _gateKeepers = nil;
   _settings = nil;
+  _connectionProvider = nil;
+  _timestamp = nil;
+  _requeryFinishedForAppStart = NO;
+  _loadingGateKeepers = NO;
   _canLoadGateKeepers = NO;
 }
 

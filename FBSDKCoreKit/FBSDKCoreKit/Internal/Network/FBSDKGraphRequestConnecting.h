@@ -32,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(GraphRequestConnecting)
 @protocol FBSDKGraphRequestConnecting
 
+@property (nonatomic, assign) NSTimeInterval timeout;
+
 - (void)addRequest:(id<FBSDKGraphRequest>)request
  completionHandler:(FBSDKGraphRequestBlock)handler;
 

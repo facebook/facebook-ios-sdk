@@ -117,12 +117,18 @@ NS_SWIFT_NAME(FBProfilePictureViewState)
 @property (class, nonatomic, nullable) FBSDKLogger *logger;
 @property (class, nonatomic, nullable) Class<FBSDKSettings> settings;
 @property (class, nonatomic, nullable) id<FBSDKGraphRequestProviding> requestProvider;
+@property (class, nonatomic, nullable) id<FBSDKGraphRequestConnectionProviding> connectionProvider;
 @property (class, nonatomic, nullable) NSDictionary *gateKeepers;
+@property (class, nonatomic) BOOL requeryFinishedForAppStart;
+@property (class, nonatomic, nullable) NSDate *timestamp;
+@property (class, nonatomic) BOOL isLoadingGateKeepers;
 
 + (void)configureWithSettings:(Class<FBSDKSettings>)settings
               requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-NS_SWIFT_NAME(configure(settings:graphRequestProvider:));
-+ (FBSDKGraphRequest *)requestToLoadGateKeepers;
+           connectionProvider:(nonnull id<FBSDKGraphRequestConnectionProviding>)connectionProvider
+NS_SWIFT_NAME(configure(settings:requestProvider:connectionProvider:));
++ (id<FBSDKGraphRequest>)requestToLoadGateKeepers;
++ (BOOL)_gateKeeperIsValid;
 + (void)reset;
 
 @end

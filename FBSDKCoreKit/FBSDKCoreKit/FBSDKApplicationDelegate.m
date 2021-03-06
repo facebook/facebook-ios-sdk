@@ -442,11 +442,11 @@ static UIApplicationState _applicationState;
   [FBSDKGraphRequestConnection setCanMakeRequests];
   [FBSDKAppEvents setCanLogEvents];
   [FBSDKGateKeeperManager configureWithSettings:FBSDKSettings.class
-                                requestProvider:[FBSDKGraphRequestFactory new]];
+                                requestProvider:[FBSDKGraphRequestFactory new]
+                             connectionProvider:[FBSDKGraphRequestConnectionFactory new]];
   FBSDKTokenCache *tokenCache = [FBSDKTokenCache new];
   [FBSDKAccessToken setTokenCache:tokenCache];
   [FBSDKAuthenticationToken setTokenCache:tokenCache];
-
   [FBSDKAccessToken setConnectionFactory:[FBSDKGraphRequestConnectionFactory new]];
 }
 

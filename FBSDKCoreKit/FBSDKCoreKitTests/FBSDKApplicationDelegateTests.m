@@ -212,6 +212,7 @@
   [FBSDKApplicationDelegate initializeSDK:@{}];
 
   NSObject *requestProvider = (NSObject *)FBSDKGateKeeperManager.requestProvider;
+  NSObject *connectionProvider = (NSObject *)FBSDKGateKeeperManager.connectionProvider;
   NSObject *settings = (NSObject *)FBSDKGateKeeperManager.settings;
 
   XCTAssertTrue(
@@ -227,6 +228,11 @@
     requestProvider.class,
     FBSDKGraphRequestFactory.class,
     "Should be configured with the expected concrete graph request provider"
+  );
+  XCTAssertEqualObjects(
+    connectionProvider.class,
+    FBSDKGraphRequestConnectionFactory.class,
+    "Should be configured with the expected concrete graph request connection provider"
   );
 }
 

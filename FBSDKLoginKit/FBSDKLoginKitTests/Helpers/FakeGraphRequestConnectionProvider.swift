@@ -39,6 +39,7 @@ class TestGraphRequestConnectionFactory: NSObject, GraphRequestConnectionProvidi
 
 @objcMembers
 class TestGraphRequestConnection: NSObject, GraphRequestConnecting {
+  var timeout: TimeInterval = 0
   var startCallCount = 0
   var capturedGraphRequest: GraphRequestProtocol?
   var capturedCompletionHandler: GraphRequestBlock?
