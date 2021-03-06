@@ -1051,6 +1051,7 @@
 		F4A0337225F13BCE00D19DE9 /* FBSDKSessionProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F494284025829B98008FE009 /* FBSDKSessionProviding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4A033C525F13E1300D19DE9 /* UrlSessionTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A033C425F13E1300D19DE9 /* UrlSessionTaskTests.swift */; };
 		F4A033D425F13FD700D19DE9 /* SampleUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A033D325F13FD700D19DE9 /* SampleUrl.swift */; };
+		F4A033E325F1545B00D19DE9 /* GraphRequestPiggyBackManagerProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A033E225F1545B00D19DE9 /* GraphRequestPiggyBackManagerProviderTests.swift */; };
 		F4A2B1A525E56BF400DE13D9 /* FBSDKDeviceButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D9E16AA1CB46C7D00C8B68F /* FBSDKDeviceButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4A2B1BA25E56BF500DE13D9 /* FBSDKDeviceButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D9E16AA1CB46C7D00C8B68F /* FBSDKDeviceButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4A2B1D525E56C3200DE13D9 /* FBSDKDeviceViewControllerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D10A68B1CB38D5D00F42AC1 /* FBSDKDeviceViewControllerBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1714,6 +1715,7 @@
 		F4A032A125F05CFF00D19DE9 /* MathTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathTests.swift; sourceTree = "<group>"; };
 		F4A033C425F13E1300D19DE9 /* UrlSessionTaskTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlSessionTaskTests.swift; sourceTree = "<group>"; };
 		F4A033D325F13FD700D19DE9 /* SampleUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleUrl.swift; sourceTree = "<group>"; };
+		F4A033E225F1545B00D19DE9 /* GraphRequestPiggyBackManagerProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphRequestPiggyBackManagerProviderTests.swift; sourceTree = "<group>"; };
 		F4A11B4824E36E5200D4C010 /* FBSDKTypeUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKTypeUtility.h; sourceTree = "<group>"; };
 		F4A11B4924E36E5200D4C010 /* FBSDKURLSessionTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKURLSessionTask.h; sourceTree = "<group>"; };
 		F4A11B4A24E36E5200D4C010 /* FBSDKSafeCast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKSafeCast.h; sourceTree = "<group>"; };
@@ -2896,6 +2898,7 @@
 				F4EB317E2540955500736B67 /* FBSDKGraphRequestPiggybackManagerTests.m */,
 				F441DDD725DDDB670092C8F6 /* GraphRequestConnectionFactoryTests.swift */,
 				F4CCDDF925E9B3AF0057FE5F /* GraphRequestFactoryTests.swift */,
+				F4A033E225F1545B00D19DE9 /* GraphRequestPiggyBackManagerProviderTests.swift */,
 				F4F603A525D5D9B50053D3E7 /* UrlSessionProxyFactoryTests.swift */,
 			);
 			path = Network;
@@ -4380,6 +4383,7 @@
 				F4ED90DB24EDDC610048D283 /* NotificationCenterSpy.swift in Sources */,
 				F93680E3249D490600446E35 /* FBSDKSettingsTests.m in Sources */,
 				E4C2B97A23867327002335A4 /* FBSDKModelRuntimeTests.mm in Sources */,
+				F4A033E325F1545B00D19DE9 /* GraphRequestPiggyBackManagerProviderTests.swift in Sources */,
 				F48AD348257700B80052C056 /* SampleAuthenticationToken.swift in Sources */,
 				F496E61224E6049A006231A2 /* AppDelegateObserverFake.swift in Sources */,
 				F4EC349725E6FBAC0003C0CF /* FBSDKEventLoggerTests.m in Sources */,
