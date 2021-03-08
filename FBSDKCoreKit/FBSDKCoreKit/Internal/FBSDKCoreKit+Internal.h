@@ -35,7 +35,6 @@
  #import "FBSDKCoreKit+Internal.h"
 
  #if !TARGET_OS_TV
-  #import "FBSDKAudioResourceLoader.h"
   #import "FBSDKAuthenticationStatusUtility.h"
   #import "FBSDKBridgeAPI.h"
   #import "FBSDKBridgeAPI+Internal.h"
@@ -127,7 +126,6 @@
   #import "BridgeAPI/FBSDKBridgeAPI.h"
   #import "BridgeAPI/FBSDKBridgeAPI+Internal.h"
   #import "Cryptography/FBSDKCrypto.h"
-  #import "FBSDKAudioResourceLoader.h"
   #import "FBSDKAuthenticationStatusUtility.h"
   #import "FBSDKContainerViewController.h"
   #import "FBSDKMonotonicTime.h"

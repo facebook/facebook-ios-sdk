@@ -16,7 +16,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <AudioToolbox/AudioToolbox.h>
 #import <Foundation/Foundation.h>
 #import <QuartzCore/QuartzCore.h>
 
@@ -61,13 +60,6 @@ FOUNDATION_EXPORT CATransform3D fbsdkdfl_CATransform3DMakeTranslation (CGFloat t
 FOUNDATION_EXPORT CATransform3D fbsdkdfl_CATransform3DConcat (CATransform3D a, CATransform3D b);
 
 FOUNDATION_EXPORT const CATransform3D fbsdkdfl_CATransform3DIdentity;
-
-#pragma mark - AudioToolbox APIs
-
-// These are local wrappers around the corresponding methods in AudioToolbox/AudioToolbox.h
-FOUNDATION_EXPORT OSStatus fbsdkdfl_AudioServicesCreateSystemSoundID(CFURLRef inFileURL, SystemSoundID *outSystemSoundID);
-FOUNDATION_EXPORT OSStatus fbsdkdfl_AudioServicesDisposeSystemSoundID(SystemSoundID inSystemSoundID);
-FOUNDATION_EXPORT void fbsdkdfl_AudioServicesPlaySystemSound(SystemSoundID inSystemSoundID);
 
 #pragma mark - AdSupport Classes
 

@@ -327,35 +327,6 @@ CATransform3D fbsdkdfl_CATransform3DConcat(CATransform3D a, CATransform3D b)
   return f(a, b);
 }
 
-#pragma mark - AudioToolbox APIs
-
-_fbsdkdfl_load_framework_once_impl_(AudioToolbox)
-_fbsdkdfl_handle_get_impl_(AudioToolbox)
-
-#define _fbsdkdfl_AudioToolbox_get_f(SYMBOL) _fbsdkdfl_symbol_get_f(AudioToolbox, SYMBOL)
-
-typedef OSStatus (*AudioServicesCreateSystemSoundID_type)(CFURLRef, SystemSoundID *);
-typedef OSStatus (*AudioServicesDisposeSystemSoundID_type)(SystemSoundID);
-typedef void (*AudioServicesPlaySystemSound_type)(SystemSoundID);
-
-OSStatus fbsdkdfl_AudioServicesCreateSystemSoundID(CFURLRef inFileURL, SystemSoundID *outSystemSoundID)
-{
-  _fbsdkdfl_AudioToolbox_get_f(AudioServicesCreateSystemSoundID);
-  return f(inFileURL, outSystemSoundID);
-}
-
-OSStatus fbsdkdfl_AudioServicesDisposeSystemSoundID(SystemSoundID inSystemSoundID)
-{
-  _fbsdkdfl_AudioToolbox_get_f(AudioServicesDisposeSystemSoundID);
-  return f(inSystemSoundID);
-}
-
-void fbsdkdfl_AudioServicesPlaySystemSound(SystemSoundID inSystemSoundID)
-{
-  _fbsdkdfl_AudioToolbox_get_f(AudioServicesPlaySystemSound);
-  return f(inSystemSoundID);
-}
-
 #pragma mark - Ad Support Classes
 
 _fbsdkdfl_load_framework_once_impl_(AdSupport)
