@@ -3596,6 +3596,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 81B71DA01D19C87400933E93 /* Build configuration list for PBXNativeTarget "FBSDKCoreKit-Dynamic" */;
 			buildPhases = (
+				F4A0364025F2EFF600D19DE9 /* ShellScript */,
 				81B71CFF1D19C87400933E93 /* Sources */,
 				81B71D451D19C87400933E93 /* Frameworks */,
 				81B71D471D19C87400933E93 /* Headers */,
@@ -3987,6 +3988,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint --config ../.swiftlint.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+		F4A0364025F2EFF600D19DE9 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint --config ../.swiftlint.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

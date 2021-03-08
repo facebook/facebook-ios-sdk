@@ -17,16 +17,18 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import XCTest
-@testable import FBSDKCoreKit
 
-class AccessTokenTests: XCTestCase{
+class AccessTokenTests: XCTestCase {
+
   override func tearDown() {
-    AccessToken.current = nil;
-    AccessToken.connectionFactory = nil;
+    super.tearDown()
+
+    AccessToken.current = nil
+    AccessToken.connectionFactory = nil
     AccessToken.resetTokenCache()
   }
 
-  func testAccessTokenCacheIsNilByDefault(){
+  func testAccessTokenCacheIsNilByDefault() {
     AccessToken.resetTokenCache()
     XCTAssertNil(AccessToken.tokenCache, "Access token cache should be nil by default")
   }
@@ -50,9 +52,9 @@ class AccessTokenTests: XCTestCase{
   func testRefreshTokenThroughTestGraphRequestConnection() {
     let testConnection = TestGraphRequestConnection()
     let factory = TestGraphRequestConnectionFactory.create(withStubbedConnection: testConnection)
-    AccessToken.connectionFactory = factory;
+    AccessToken.connectionFactory = factory
 
-    AccessToken.current = nil;
+    AccessToken.current = nil
     AccessToken.refreshCurrentAccessToken(nil)
     XCTAssertEqual(testConnection.startCallCount, 0, "Should not start connection if no current access token available")
 

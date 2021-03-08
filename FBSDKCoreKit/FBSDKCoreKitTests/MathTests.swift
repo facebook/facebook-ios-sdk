@@ -62,7 +62,7 @@ class MathUtilityTests: XCTestCase {
   }
 
   func testHashWithIntegerArray() {
-    var array: [UInt] = [1,2,3]
+    var array: [UInt] = [1, 2, 3]
     let hash = FBSDKMath.hash(withIntegerArray: &array, count: 10)
     let hash2 = FBSDKMath.hash(withIntegerArray: &array, count: 10)
 
@@ -74,7 +74,7 @@ class MathUtilityTests: XCTestCase {
   }
 
   func testHashingIntegerArrayWithEmptyCount() {
-    var array: [UInt] = [1,2,3]
+    var array: [UInt] = [1, 2, 3]
     XCTAssertEqual(FBSDKMath.hash(withIntegerArray: &array, count: 0), 0)
   }
 }

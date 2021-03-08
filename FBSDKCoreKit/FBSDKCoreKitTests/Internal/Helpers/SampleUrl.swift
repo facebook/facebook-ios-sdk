@@ -18,7 +18,7 @@
 
 import Foundation
 
-struct SampleUrl {
+enum SampleUrl {
 
   static let valid: URL = {
     // swiftlint:disable:next force_unwrapping
@@ -27,7 +27,7 @@ struct SampleUrl {
 
 }
 
-struct SampleUrlRequest {
+enum SampleUrlRequest {
 
   static let valid: URLRequest = {
     return URLRequest(url: SampleUrl.valid)

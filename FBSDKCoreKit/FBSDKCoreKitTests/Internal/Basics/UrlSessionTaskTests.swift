@@ -22,7 +22,7 @@ class UrlSessionTaskTests: XCTestCase {
 
   let dataTask = TestSessionDataTask()
   let provider = TestSessionProvider()
-  var task: UrlSessionTask!
+  var task: UrlSessionTask! // swiftlint:disable:this implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
@@ -31,7 +31,7 @@ class UrlSessionTaskTests: XCTestCase {
     task = UrlSessionTask(
        request: SampleUrlRequest.valid,
        fromSession: provider
-     ) { (_, _, _) in }
+     ) { _, _, _ in }
   }
 
   func testStarting() {

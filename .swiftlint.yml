@@ -35,7 +35,10 @@ nesting:
 private_outlet:
   allow_private_set: true
 type_name:
-  excluded: [RawAppEventsConfigurationResponseFixtures]
+  excluded: [
+    RawAppEventsConfigurationResponseFixtures,
+    GraphRequestPiggybackManagerProviderTests
+  ]
 
 # Xcode fixits insert these as "public override" vs "override public" so overriding Swiftlint's defaullt of "override, acl, ..." to "acl, override, ..."
 modifier_order:
