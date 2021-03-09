@@ -1,0 +1,499 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F4A406E725F4590F00F0E578 /* SampleAccessTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A406E625F4590F00F0E578 /* SampleAccessTokens.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F40185C125F45AD800C57ADE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F40185BE25F45AD800C57ADE /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 81B71CFC1D19C87400933E93;
+			remoteInfo = "FBSDKCoreKit-Dynamic";
+		};
+		F40185D025F45AD800C57ADE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F40185BE25F45AD800C57ADE /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9D2697471A5DF40700143BFC;
+			remoteInfo = FBSDKCoreKit;
+		};
+		F40185D225F45AD800C57ADE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F40185BE25F45AD800C57ADE /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 81B71DA31D19C87400933E93;
+			remoteInfo = "FBSDKCoreKit-Dynamic";
+		};
+		F40185D425F45AD800C57ADE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F40185BE25F45AD800C57ADE /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9D2697521A5DF40700143BFC;
+			remoteInfo = FBSDKCoreKitTests;
+		};
+		F40185D625F45AD800C57ADE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F40185BE25F45AD800C57ADE /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9DB0FA731BC1CA71005EB8B1;
+			remoteInfo = FBSDKCoreKit_TV;
+		};
+		F40185D825F45AD800C57ADE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F40185BE25F45AD800C57ADE /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 814AC8571D1B528900D61E6C;
+			remoteInfo = "FBSDKCoreKit_TV-Dynamic";
+		};
+		F40185DA25F45AD800C57ADE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F40185BE25F45AD800C57ADE /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C5C4B3B62276B51500CA3706;
+			remoteInfo = FBSDKCoreKit_Basics;
+		};
+		F40185DC25F45AD800C57ADE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F40185BE25F45AD800C57ADE /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C5C4B4D42276BA1200CA3706;
+			remoteInfo = "FBSDKCoreKit_Basics-Dynamic";
+		};
+		F40185DE25F45AD800C57ADE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F40185BE25F45AD800C57ADE /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C5C4B3CC2276B67200CA3706;
+			remoteInfo = FBSDKCoreKit_Basics_TV;
+		};
+		F40185E025F45AD800C57ADE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F40185BE25F45AD800C57ADE /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C5C4B4EA2276BA8D00CA3706;
+			remoteInfo = "FBSDKCoreKit_Basics_TV-Dynamic";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		F40185BE25F45AD800C57ADE /* FBSDKCoreKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSDKCoreKit.xcodeproj; path = "/Users/joesusnick/fbsource/fbobjc/ios-sdk/FBSDKCoreKit/FBSDKCoreKit.xcodeproj"; sourceTree = "<absolute>"; };
+		F4A406E625F4590F00F0E578 /* SampleAccessTokens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleAccessTokens.swift; sourceTree = "<group>"; };
+		F4E5F09025F4354900D67852 /* TestTools.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TestTools.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F4E5F08D25F4354900D67852 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F40185BF25F45AD800C57ADE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F40185D125F45AD800C57ADE /* FBSDKCoreKit.framework */,
+				F40185D325F45AD800C57ADE /* FBSDKCoreKit.framework */,
+				F40185D525F45AD800C57ADE /* FBSDKCoreKitTests.xctest */,
+				F40185D725F45AD800C57ADE /* FBSDKCoreKit.framework */,
+				F40185D925F45AD800C57ADE /* FBSDKCoreKit.framework */,
+				F40185DB25F45AD800C57ADE /* FBSDKCoreKit.framework */,
+				F40185DD25F45AD800C57ADE /* FBSDKCoreKit.framework */,
+				F40185DF25F45AD800C57ADE /* FBSDKCoreKit.framework */,
+				F40185E125F45AD800C57ADE /* FBSDKCoreKit.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F4A406E525F4590F00F0E578 /* TestTools */ = {
+			isa = PBXGroup;
+			children = (
+				F4A406E625F4590F00F0E578 /* SampleAccessTokens.swift */,
+			);
+			path = TestTools;
+			sourceTree = "<group>";
+		};
+		F4E5F08625F4354900D67852 = {
+			isa = PBXGroup;
+			children = (
+				F4A406E525F4590F00F0E578 /* TestTools */,
+				F4E5F09125F4354900D67852 /* Products */,
+				F40185BE25F45AD800C57ADE /* FBSDKCoreKit.xcodeproj */,
+			);
+			sourceTree = "<group>";
+		};
+		F4E5F09125F4354900D67852 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F4E5F09025F4354900D67852 /* TestTools.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		F4E5F08B25F4354900D67852 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		F4E5F08F25F4354900D67852 /* TestTools */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F4E5F09825F4354900D67852 /* Build configuration list for PBXNativeTarget "TestTools" */;
+			buildPhases = (
+				F4E5F08B25F4354900D67852 /* Headers */,
+				F4E5F08C25F4354900D67852 /* Sources */,
+				F4E5F08D25F4354900D67852 /* Frameworks */,
+				F4E5F08E25F4354900D67852 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F40185C225F45AD800C57ADE /* PBXTargetDependency */,
+			);
+			name = TestTools;
+			productName = TestTools;
+			productReference = F4E5F09025F4354900D67852 /* TestTools.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F4E5F08725F4354900D67852 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1240;
+				TargetAttributes = {
+					F4E5F08F25F4354900D67852 = {
+						CreatedOnToolsVersion = 12.4;
+					};
+				};
+			};
+			buildConfigurationList = F4E5F08A25F4354900D67852 /* Build configuration list for PBXProject "TestTools" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F4E5F08625F4354900D67852;
+			productRefGroup = F4E5F09125F4354900D67852 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = F40185BF25F45AD800C57ADE /* Products */;
+					ProjectRef = F40185BE25F45AD800C57ADE /* FBSDKCoreKit.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				F4E5F08F25F4354900D67852 /* TestTools */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		F40185D125F45AD800C57ADE /* FBSDKCoreKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKCoreKit.framework;
+			remoteRef = F40185D025F45AD800C57ADE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F40185D325F45AD800C57ADE /* FBSDKCoreKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKCoreKit.framework;
+			remoteRef = F40185D225F45AD800C57ADE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F40185D525F45AD800C57ADE /* FBSDKCoreKitTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = FBSDKCoreKitTests.xctest;
+			remoteRef = F40185D425F45AD800C57ADE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F40185D725F45AD800C57ADE /* FBSDKCoreKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKCoreKit.framework;
+			remoteRef = F40185D625F45AD800C57ADE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F40185D925F45AD800C57ADE /* FBSDKCoreKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKCoreKit.framework;
+			remoteRef = F40185D825F45AD800C57ADE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F40185DB25F45AD800C57ADE /* FBSDKCoreKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKCoreKit.framework;
+			remoteRef = F40185DA25F45AD800C57ADE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F40185DD25F45AD800C57ADE /* FBSDKCoreKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKCoreKit.framework;
+			remoteRef = F40185DC25F45AD800C57ADE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F40185DF25F45AD800C57ADE /* FBSDKCoreKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKCoreKit.framework;
+			remoteRef = F40185DE25F45AD800C57ADE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F40185E125F45AD800C57ADE /* FBSDKCoreKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKCoreKit.framework;
+			remoteRef = F40185E025F45AD800C57ADE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F4E5F08E25F4354900D67852 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F4E5F08C25F4354900D67852 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4A406E725F4590F00F0E578 /* SampleAccessTokens.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F40185C225F45AD800C57ADE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "FBSDKCoreKit-Dynamic";
+			targetProxy = F40185C125F45AD800C57ADE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		F4E5F09625F4354900D67852 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		F4E5F09725F4354900D67852 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		F4E5F09925F4354900D67852 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.TestTools;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F4E5F09A25F4354900D67852 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.TestTools;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F4E5F08A25F4354900D67852 /* Build configuration list for PBXProject "TestTools" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F4E5F09625F4354900D67852 /* Debug */,
+				F4E5F09725F4354900D67852 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F4E5F09825F4354900D67852 /* Build configuration list for PBXNativeTarget "TestTools" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F4E5F09925F4354900D67852 /* Debug */,
+				F4E5F09A25F4354900D67852 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F4E5F08725F4354900D67852 /* Project object */;
+}

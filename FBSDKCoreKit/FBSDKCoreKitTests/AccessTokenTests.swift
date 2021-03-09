@@ -16,6 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import TestTools
 import XCTest
 
 class AccessTokenTests: XCTestCase {
@@ -41,7 +42,7 @@ class AccessTokenTests: XCTestCase {
 
   func testRetrievingCurrentToken() {
     let cache = TestTokenCache(accessToken: nil, authenticationToken: nil)
-    let testToken = SampleAccessToken.validToken
+    let testToken = SampleAccessTokens.validToken
 
     AccessToken.tokenCache = cache
     AccessToken.current = testToken
@@ -58,7 +59,7 @@ class AccessTokenTests: XCTestCase {
     AccessToken.refreshCurrentAccessToken(nil)
     XCTAssertEqual(testConnection.startCallCount, 0, "Should not start connection if no current access token available")
 
-    AccessToken.current = SampleAccessToken.validToken
+    AccessToken.current = SampleAccessTokens.validToken
     AccessToken.refreshCurrentAccessToken(nil)
     XCTAssertEqual(testConnection.startCallCount, 1, "Should start one connection for refreshing")
   }

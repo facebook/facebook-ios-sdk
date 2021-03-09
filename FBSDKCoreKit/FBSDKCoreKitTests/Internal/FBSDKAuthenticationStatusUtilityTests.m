@@ -18,6 +18,7 @@
 
 #import <XCTest/XCTest.h>
 
+@import TestTools;
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKTestCase.h"
 
@@ -45,7 +46,7 @@
 {
   [super setUp];
   [FBSDKAuthenticationToken setCurrentAuthenticationToken:SampleAuthenticationToken.validToken];
-  [FBSDKAccessToken setCurrentAccessToken:SampleAccessToken.validToken shouldDispatchNotif:NO];
+  [FBSDKAccessToken setCurrentAccessToken:SampleAccessTokens.validToken shouldDispatchNotif:NO];
   [FBSDKProfile setCurrentProfile:SampleUserProfile.valid shouldPostNotification:NO];
 }
 

@@ -16,6 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import TestTools
 import FBSDKCoreKit
 import XCTest
 
@@ -113,7 +114,7 @@ class LoginButtonTests: XCTestCase {
 
   func testInitialContentUpdateWithActiveAccessTokenWithProfile() {
     let button = TestButton()
-    AccessToken.setCurrent(SampleAccessToken.validToken, shouldDispatchNotif: false)
+    AccessToken.setCurrent(SampleAccessTokens.validToken, shouldDispatchNotif: false)
     let profile = Profile(
       userID: "Sample ID",
       firstName: nil,
@@ -165,7 +166,7 @@ class LoginButtonTests: XCTestCase {
   // MARK: - Determining Authentication Status
 
   func testDeterminingAuthenticationWithAccessTokenWithoutAuthToken() {
-    AccessToken.setCurrent(SampleAccessToken.validToken, shouldDispatchNotif: false)
+    AccessToken.setCurrent(SampleAccessTokens.validToken, shouldDispatchNotif: false)
 
     XCTAssertTrue(
       button._isAuthenticated(),
@@ -314,7 +315,7 @@ class LoginButtonTests: XCTestCase {
 
   func testUpdatingContentWithValidAccessToken() {
     let button = TestButton()
-    AccessToken.setCurrent(SampleAccessToken.validToken, shouldDispatchNotif: false)
+    AccessToken.setCurrent(SampleAccessTokens.validToken, shouldDispatchNotif: false)
 
     button._updateContentForAccessToken()
 
@@ -327,7 +328,7 @@ class LoginButtonTests: XCTestCase {
 
   func testUpdatingContentWithInvalidAccessToken() {
     let button = TestButton()
-    AccessToken.setCurrent(SampleAccessToken.expiredToken, shouldDispatchNotif: false)
+    AccessToken.setCurrent(SampleAccessTokens.expiredToken, shouldDispatchNotif: false)
 
     button._updateContentForAccessToken()
     button._updateContentForAccessToken()
@@ -345,10 +346,10 @@ class LoginButtonTests: XCTestCase {
     // Make sure the username and id properties on button are set to the same values
     // as the access token. This is an easy way to do with without having to stub
     // a network call
-    let profile = sampleProfile(userID: SampleAccessToken.validToken.userID)
+    let profile = sampleProfile(userID: SampleAccessTokens.validToken.userID)
     button._updateContent(forUserProfile: profile)
 
-    AccessToken.setCurrent(SampleAccessToken.validToken, shouldDispatchNotif: false)
+    AccessToken.setCurrent(SampleAccessTokens.validToken, shouldDispatchNotif: false)
 
     button._updateContentForAccessToken()
 

@@ -19,6 +19,8 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
+@import TestTools;
+
 #import "FBSDKAccessToken.h"
 #import "FBSDKAppEvents.h"
 #import "FBSDKAppEventsState.h"
@@ -437,7 +439,7 @@ static NSString *const _mockUserID = @"mockUserID";
   [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingDisallowed];
 
   XCTAssertNil(
-    [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:SampleAccessToken.validToken],
+    [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:SampleAccessTokens.validToken],
     "Should not create a request for third party id if tracking is disallowed even if there is a current access token"
   );
   XCTAssertNil(
@@ -452,7 +454,7 @@ static NSString *const _mockUserID = @"mockUserID";
   [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingAllowed];
 
   XCTAssertNil(
-    [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:SampleAccessToken.validToken],
+    [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:SampleAccessTokens.validToken],
     "Should not create a request for third party id if event and data usage is limited even if there is a current access token"
   );
   XCTAssertNil(
@@ -490,7 +492,7 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testRequestForCustomAudienceThirdPartyIDWithAccessTokenWithoutAdvertiserID
 {
-  FBSDKAccessToken *token = SampleAccessToken.validToken;
+  FBSDKAccessToken *token = SampleAccessTokens.validToken;
   [self stubSettingsShouldLimitEventAndDataUsageWith:NO];
   [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingAllowed];
   [self stubAppEventsUtilityAdvertiserIDWith:nil];
@@ -512,7 +514,7 @@ static NSString *const _mockUserID = @"mockUserID";
 {
   NSString *expectedGraphPath = [NSString stringWithFormat:@"%@/custom_audience_third_party_id", _mockAppID];
 
-  FBSDKAccessToken *token = SampleAccessToken.validToken;
+  FBSDKAccessToken *token = SampleAccessTokens.validToken;
   NSString *advertiserID = @"abc123";
 
   [self stubSettingsShouldLimitEventAndDataUsageWith:NO];

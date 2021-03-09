@@ -16,10 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@objcMembers
-class SampleAccessToken: NSObject {
+import FBSDKCoreKit
+import Foundation
 
-  static var validToken: AccessToken {
+@objcMembers
+public class SampleAccessTokens: NSObject {
+
+  public static var validToken: AccessToken {
     return AccessToken(
       tokenString: "123",
       permissions: [],
@@ -33,7 +36,7 @@ class SampleAccessToken: NSObject {
     )
   }
 
-  static var expiredToken: AccessToken {
+  public static var expiredToken: AccessToken {
     return AccessToken(
       tokenString: "123",
       permissions: [],
@@ -47,7 +50,7 @@ class SampleAccessToken: NSObject {
     )
   }
 
-  static func valid(withRefreshDate date: Date?) -> AccessToken {
+  public static func valid(withRefreshDate date: Date?) -> AccessToken {
     return AccessToken(
       tokenString: "123",
       permissions: [],
@@ -61,7 +64,7 @@ class SampleAccessToken: NSObject {
     )
   }
 
-  static func validToken(withPermissions permissions: [String]) -> AccessToken {
+  public static func validToken(withPermissions permissions: [String]) -> AccessToken {
     return AccessToken(
       tokenString: "123",
       permissions: permissions,
@@ -75,7 +78,7 @@ class SampleAccessToken: NSObject {
     )
   }
 
-  static func validToken(
+  public static func validToken(
     withPermissions permissions: [String],
     declinedPermissions: [String] = [],
     expiredPermissions: [String] = []

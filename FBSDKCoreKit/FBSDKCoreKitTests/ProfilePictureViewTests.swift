@@ -16,6 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import TestTools
 import FBSDKCoreKit
 import XCTest
 
@@ -51,7 +52,7 @@ class ProfilePictureViewTests: XCTestCase {
 
   func testImageUpdateWithAccessTokenWithProfile() {
     let view = TestView()
-    AccessToken.setCurrent(SampleAccessToken.validToken, shouldDispatchNotif: false)
+    AccessToken.setCurrent(SampleAccessTokens.validToken, shouldDispatchNotif: false)
     Profile.setCurrent(SampleUserProfile.valid, shouldPostNotification: false)
 
     view._updateImage()
@@ -192,7 +193,7 @@ class ProfilePictureViewTests: XCTestCase {
 
   func testUpdatingImageWithValidAccessToken() {
     let view = TestView()
-    AccessToken.setCurrent(SampleAccessToken.validToken, shouldDispatchNotif: false)
+    AccessToken.setCurrent(SampleAccessTokens.validToken, shouldDispatchNotif: false)
 
     view._updateImageWithAccessToken()
 
@@ -206,7 +207,7 @@ class ProfilePictureViewTests: XCTestCase {
 
   func testUpdatingImageWithInvalidAccessToken() {
     let view = TestView()
-    AccessToken.setCurrent(SampleAccessToken.expiredToken, shouldDispatchNotif: false)
+    AccessToken.setCurrent(SampleAccessTokens.expiredToken, shouldDispatchNotif: false)
 
     view._updateImageWithAccessToken()
 

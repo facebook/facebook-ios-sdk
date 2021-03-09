@@ -19,6 +19,8 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
+@import TestTools;
+
 #import "FBSDKAppEvents.h"
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitTestUtility.h"
@@ -288,7 +290,7 @@
 
 - (void)testDidFinishLaunchingSetsCurrentAccessTokenWithCache
 {
-  FBSDKAccessToken *expected = SampleAccessToken.validToken;
+  FBSDKAccessToken *expected = SampleAccessTokens.validToken;
   TestTokenCache *cache = [[TestTokenCache alloc] initWithAccessToken:expected
                                                   authenticationToken:nil];
   [FBSDKAccessToken setTokenCache:cache];

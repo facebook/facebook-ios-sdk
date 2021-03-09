@@ -21,7 +21,7 @@ import Foundation
 @testable import FBSDKCoreKit
 
 @objcMembers
-class SampleGraphRequest: NSObject {
+class SampleGraphRequests: NSObject {
 
   static let valid = create()
   static var withOutdatedVersionWithAttachment = create(
