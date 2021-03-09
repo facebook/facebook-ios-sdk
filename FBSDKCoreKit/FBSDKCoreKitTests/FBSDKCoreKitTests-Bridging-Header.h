@@ -30,6 +30,7 @@
 #import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKSettingsProtocol.h"
 #import "FBSDKTestCase.h"
+#import "FBSDKTestCoder.h"
 #import "UserDefaultsSpy.h"
 #import "FakeBundle.h"
 // URLSession Abstraction

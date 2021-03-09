@@ -25,14 +25,46 @@ class RawAppEventsConfigurationResponseFixtures: NSObject {
     static let defaultATEStatus = "default_ate_status"
     static let advertiserIDCollectionEnabled = "advertiser_id_collection_enabled"
     static let eventCollectionEnabled = "event_collection_enabled"
+    static let topLevel = "app_events_config"
+  }
+
+  static var valid: [String: Any] {
+    return [
+      Keys.topLevel: [
+        Keys.defaultATEStatus: 1,
+        Keys.advertiserIDCollectionEnabled: false,
+        Keys.eventCollectionEnabled: true
+      ]
+    ]
+  }
+
+  static var validMissingTopLevelKey: [String: Any] {
+    return [
+      Keys.defaultATEStatus: 1,
+      Keys.advertiserIDCollectionEnabled: 1,
+      Keys.eventCollectionEnabled: 1,
+    ]
+  }
+
+  static var invalidValues: [String: Any] {
+    return [
+      Keys.topLevel: [
+        Keys.defaultATEStatus: "foo",
+        Keys.advertiserIDCollectionEnabled: "bar",
+        Keys.eventCollectionEnabled: "baz"
+      ]
+    ]
   }
 
   /// Provides a dictionary with well-known keys and random values for a network provided app events configuration
-  class var random: [AnyHashable: Any] {
-    return [
-      Keys.defaultATEStatus: Fuzzer.random,
-      Keys.advertiserIDCollectionEnabled: Fuzzer.random,
-      Keys.eventCollectionEnabled: Fuzzer.random,
+  static var random: Any {
+    let response = [
+      Keys.topLevel: [
+        Keys.defaultATEStatus: Fuzzer.random,
+        Keys.advertiserIDCollectionEnabled: Fuzzer.random,
+        Keys.eventCollectionEnabled: Fuzzer.random,
+      ]
     ]
+    return Fuzzer.randomize(json: response)
   }
 }

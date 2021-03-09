@@ -20,6 +20,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+NS_SWIFT_NAME(TestCoder)
 @interface FBSDKTestCoder : NSCoder
 
 @property (nonatomic) NSMutableDictionary<NSString *, id> *encodedObject;
