@@ -153,7 +153,6 @@
 		C6E1332C259173B000B611C6 /* FBSDKPermission.h in Headers */ = {isa = PBXBuildFile; fileRef = C6E1332B259173AF00B611C6 /* FBSDKPermission.h */; };
 		C6E1333F259174A500B611C6 /* FBSDKPermission.m in Sources */ = {isa = PBXBuildFile; fileRef = C6E1333E259174A500B611C6 /* FBSDKPermission.m */; };
 		C6E63D2D24F822620015FC7C /* FBSDKReferralManagerLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = C6E63D2C24F822620015FC7C /* FBSDKReferralManagerLogger.m */; };
-		F401866525F45BD100C57ADE /* TestTools.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F401866425F45BD100C57ADE /* TestTools.framework */; };
 		F40BFD56257852E5007B85AC /* LoginButtonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40BFD55257852E5007B85AC /* LoginButtonTests.swift */; };
 		F462DC0E23B958E000FFCECA /* FBSDKLoginKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D9DB8DE1A114E500086167B /* FBSDKLoginKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F462DC0F23B958E100FFCECA /* FBSDKLoginKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D9DB8DE1A114E500086167B /* FBSDKLoginKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -309,6 +308,20 @@
 			remoteGlobalIDString = 818EB4211D1A283100252851;
 			remoteInfo = "FBSDKLoginKit-Dynamic";
 		};
+		F468741F25F7D39A00ABD912 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F468741B25F7D39A00ABD912 /* TestTools.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F4E5F09025F4354900D67852;
+			remoteInfo = TestTools;
+		};
+		F468742825F7D3AF00ABD912 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F468741B25F7D39A00ABD912 /* TestTools.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F4E5F08F25F4354900D67852;
+			remoteInfo = TestTools;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -410,7 +423,6 @@
 		C6E63D2224F8219A0015FC7C /* FBSDKReferralManagerLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKReferralManagerLogger.h; sourceTree = "<group>"; };
 		C6E63D2C24F822620015FC7C /* FBSDKReferralManagerLogger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKReferralManagerLogger.m; sourceTree = "<group>"; };
 		F401864D25F45B8100C57ADE /* TestTools.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TestTools.xcodeproj; path = ../../../TestTools/TestTools.xcodeproj; sourceTree = "<group>"; };
-		F401866425F45BD100C57ADE /* TestTools.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = TestTools.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F40BFD55257852E5007B85AC /* LoginButtonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginButtonTests.swift; sourceTree = "<group>"; };
 		F4647451256AD09000502449 /* FBSDKLoginKitTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKLoginKitTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		F4647478256AEF8E00502449 /* NonceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonceTests.swift; sourceTree = "<group>"; };
@@ -419,6 +431,7 @@
 		F464749B256B048500502449 /* LoginConfigurationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginConfigurationTests.swift; sourceTree = "<group>"; };
 		F4665CC0258D684300981FDE /* Fuzzer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Fuzzer.swift; sourceTree = "<group>"; };
 		F4665CD2258D687500981FDE /* FakeGraphRequestConnectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeGraphRequestConnectionProvider.swift; sourceTree = "<group>"; };
+		F468741B25F7D39A00ABD912 /* TestTools.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TestTools.xcodeproj; path = ../TestTools/TestTools.xcodeproj; sourceTree = "<group>"; };
 		F46FA659245347570060C902 /* FBLoginButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBLoginButton.swift; sourceTree = "<group>"; };
 		F46FA65C245347820060C902 /* LoginManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginManager.swift; sourceTree = "<group>"; };
 		F47FB44E25805E7900922543 /* FBSDKLoginManagerLoggerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKLoginManagerLoggerTests.m; sourceTree = "<group>"; };
@@ -467,7 +480,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F401866525F45BD100C57ADE /* TestTools.framework in Frameworks */,
 				6B4453551A8AF2B9004C4437 /* Accounts.framework in Frameworks */,
 				9DCDEC9E1A82ECA1002A2A66 /* libOCMock.a in Frameworks */,
 				9DEE5C941A671B5500D750E1 /* XCTest.framework in Frameworks */,
@@ -566,7 +578,7 @@
 		893774AF1A3B815D00BE2807 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				F401866425F45BD100C57ADE /* TestTools.framework */,
+				F468741B25F7D39A00ABD912 /* TestTools.xcodeproj */,
 				0BD1F3512093A1A3005109EC /* UIKit.framework */,
 				0BD1F34C2093A1A0005109EC /* CoreGraphics.framework */,
 				8118B6781D0A5B9400962084 /* FBSDKCoreKit.xcodeproj */,
@@ -727,6 +739,14 @@
 				F4665CD2258D687500981FDE /* FakeGraphRequestConnectionProvider.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		F468741C25F7D39A00ABD912 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F468742025F7D39A00ABD912 /* TestTools.framework */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		F46FA66E24535E3F0060C902 /* Swift */ = {
@@ -932,7 +952,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				F45045AE25F425FF0032CC7E /* PBXTargetDependency */,
+				F468742925F7D3AF00ABD912 /* PBXTargetDependency */,
 				F410D0552370CD0F005B9318 /* PBXTargetDependency */,
 				F410D0532370CD0B005B9318 /* PBXTargetDependency */,
 			);
@@ -984,6 +1004,10 @@
 				{
 					ProductGroup = 8118B6791D0A5B9400962084 /* Products */;
 					ProjectRef = 8118B6781D0A5B9400962084 /* FBSDKCoreKit.xcodeproj */;
+				},
+				{
+					ProductGroup = F468741C25F7D39A00ABD912 /* Products */;
+					ProjectRef = F468741B25F7D39A00ABD912 /* TestTools.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1061,6 +1085,13 @@
 			fileType = wrapper.framework;
 			path = FBSDKCoreKit.framework;
 			remoteRef = 817490FE1D1C6C11006E09DF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F468742025F7D39A00ABD912 /* TestTools.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = TestTools.framework;
+			remoteRef = F468741F25F7D39A00ABD912 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1299,9 +1330,10 @@
 			target = 818EB4211D1A283100252851 /* FBSDKLoginKit-Dynamic */;
 			targetProxy = F410D0542370CD0F005B9318 /* PBXContainerItemProxy */;
 		};
-		F45045AE25F425FF0032CC7E /* PBXTargetDependency */ = {
+		F468742925F7D3AF00ABD912 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = F45045AD25F425FF0032CC7E /* TestTools */;
+			name = TestTools;
+			targetProxy = F468742825F7D3AF00ABD912 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1521,13 +1553,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		F45045AD25F425FF0032CC7E /* TestTools */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = TestTools;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9D9DB8D01A114E500086167B /* Project object */;
 }

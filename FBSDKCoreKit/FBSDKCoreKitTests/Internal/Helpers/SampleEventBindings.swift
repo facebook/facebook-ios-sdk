@@ -16,23 +16,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+@objcMembers
+class SampleEventBinding: NSObject {
 
-#if !TARGET_OS_TV
+  static func valid(withName name: String) -> EventBinding {
+    // swiftlint:disable:next force_unwrapping
+    return EventBinding(json: SampleRawRemoteEventBindings.rawBinding(name: name))!
+  }
 
-#import <Foundation/Foundation.h>
+}
 
-NS_ASSUME_NONNULL_BEGIN
+@objcMembers
+class SampleEventBindingList: NSObject {
 
-NS_SWIFT_NAME(EventBindingManager)
-@interface FBSDKEventBindingManager : NSObject
+  static var valid: [EventBinding] {
+    return SampleRawRemoteEventBindings.bindings.compactMap { EventBinding(json: $0) }
+  }
 
-- (instancetype)initWithJSON:(NSDictionary*)dict;
-- (void)updateBindings:(NSArray *)bindings;
-+ (NSArray *)parseArray:(NSArray *)array;
-
-@end
-
-NS_ASSUME_NONNULL_END
-
-#endif
+}

@@ -703,7 +703,7 @@
 		C4FC99F1202CD56D0038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = C4FC99D7202CD5590038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.h */; };
 		C4FC99F2202CD56D0038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = C4FC99D8202CD5590038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.m */; };
 		C51121CB20A27EF50041DC94 /* FBSDKEventBindingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C51121C920A27EF50041DC94 /* FBSDKEventBindingTests.m */; };
-		C51121CC20A27EF50041DC94 /* FBSDKSampleEventBinding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51121CA20A27EF50041DC94 /* FBSDKSampleEventBinding.swift */; };
+		C51121CC20A27EF50041DC94 /* SampleRawRemoteEventBindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51121CA20A27EF50041DC94 /* SampleRawRemoteEventBindings.swift */; };
 		C51122A020A4BCEB0041DC94 /* FBSDKApplicationDelegateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C511229F20A4BCEB0041DC94 /* FBSDKApplicationDelegateTests.m */; };
 		C5188DF9222F388400F4D8BC /* FBSDKApplicationObserving.h in Headers */ = {isa = PBXBuildFile; fileRef = C5188DF8222F388400F4D8BC /* FBSDKApplicationObserving.h */; };
 		C5188DFA222F388400F4D8BC /* FBSDKApplicationObserving.h in Headers */ = {isa = PBXBuildFile; fileRef = C5188DF8222F388400F4D8BC /* FBSDKApplicationObserving.h */; };
@@ -1047,6 +1047,9 @@
 		F4A033C525F13E1300D19DE9 /* UrlSessionTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A033C425F13E1300D19DE9 /* UrlSessionTaskTests.swift */; };
 		F4A033D425F13FD700D19DE9 /* SampleUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A033D325F13FD700D19DE9 /* SampleUrl.swift */; };
 		F4A033E325F1545B00D19DE9 /* GraphRequestPiggyBackManagerProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A033E225F1545B00D19DE9 /* GraphRequestPiggyBackManagerProviderTests.swift */; };
+		F4A0341925F15D9500D19DE9 /* EventBindingManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A0341825F15D9500D19DE9 /* EventBindingManagerTests.swift */; };
+		F4A0346E25F1985300D19DE9 /* TestSwizzler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A0346D25F1985200D19DE9 /* TestSwizzler.swift */; };
+		F4A035C225F2C6F800D19DE9 /* SampleEventBindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A035C125F2C6F800D19DE9 /* SampleEventBindings.swift */; };
 		F4A2B1A525E56BF400DE13D9 /* FBSDKDeviceButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D9E16AA1CB46C7D00C8B68F /* FBSDKDeviceButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4A2B1BA25E56BF500DE13D9 /* FBSDKDeviceButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D9E16AA1CB46C7D00C8B68F /* FBSDKDeviceButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4A2B1D525E56C3200DE13D9 /* FBSDKDeviceViewControllerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D10A68B1CB38D5D00F42AC1 /* FBSDKDeviceViewControllerBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1294,6 +1297,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 81B71CFC1D19C87400933E93;
 			remoteInfo = "FBSDKCoreKit-Dynamic";
+		};
+		F46873E425F7D0D500ABD912 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4A4069C25F4522500F0E578 /* TestTools.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F4E5F09025F4354900D67852;
+			remoteInfo = TestTools;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -1581,7 +1591,7 @@
 		C4FC99D7202CD5590038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKHybridAppEventsScriptMessageHandler.h; sourceTree = "<group>"; };
 		C4FC99D8202CD5590038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKHybridAppEventsScriptMessageHandler.m; sourceTree = "<group>"; };
 		C51121C920A27EF50041DC94 /* FBSDKEventBindingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKEventBindingTests.m; sourceTree = "<group>"; };
-		C51121CA20A27EF50041DC94 /* FBSDKSampleEventBinding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBSDKSampleEventBinding.swift; sourceTree = "<group>"; };
+		C51121CA20A27EF50041DC94 /* SampleRawRemoteEventBindings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleRawRemoteEventBindings.swift; sourceTree = "<group>"; };
 		C511229F20A4BCEB0041DC94 /* FBSDKApplicationDelegateTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKApplicationDelegateTests.m; sourceTree = "<group>"; };
 		C5188DF8222F388400F4D8BC /* FBSDKApplicationObserving.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKApplicationObserving.h; sourceTree = "<group>"; };
 		C5188E312231C4B500F4D8BC /* FBSDKBridgeAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKBridgeAPI.h; sourceTree = "<group>"; };
@@ -1708,6 +1718,11 @@
 		F4A033C425F13E1300D19DE9 /* UrlSessionTaskTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlSessionTaskTests.swift; sourceTree = "<group>"; };
 		F4A033D325F13FD700D19DE9 /* SampleUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleUrl.swift; sourceTree = "<group>"; };
 		F4A033E225F1545B00D19DE9 /* GraphRequestPiggyBackManagerProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphRequestPiggyBackManagerProviderTests.swift; sourceTree = "<group>"; };
+		F4A0341825F15D9500D19DE9 /* EventBindingManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventBindingManagerTests.swift; sourceTree = "<group>"; };
+		F4A0342725F164EF00D19DE9 /* FBSDKSwizzling.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKSwizzling.h; sourceTree = "<group>"; };
+		F4A0342825F1650900D19DE9 /* FBSDKSwizzler+Swizzling.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKSwizzler+Swizzling.h"; sourceTree = "<group>"; };
+		F4A0346D25F1985200D19DE9 /* TestSwizzler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSwizzler.swift; sourceTree = "<group>"; };
+		F4A035C125F2C6F800D19DE9 /* SampleEventBindings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleEventBindings.swift; sourceTree = "<group>"; };
 		F4A11B4824E36E5200D4C010 /* FBSDKTypeUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKTypeUtility.h; sourceTree = "<group>"; };
 		F4A11B4924E36E5200D4C010 /* FBSDKURLSessionTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKURLSessionTask.h; sourceTree = "<group>"; };
 		F4A11B4A24E36E5200D4C010 /* FBSDKSafeCast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKSafeCast.h; sourceTree = "<group>"; };
@@ -2111,6 +2126,7 @@
 				9D195CC61B9FE2E000BD6BEC /* FBSDKContainerViewController.h */,
 				9D195CC71B9FE2E000BD6BEC /* FBSDKContainerViewController.m */,
 				890414731A647D2E00617215 /* FBSDKCoreKit+Internal.h */,
+				F4A02F8C25EEAF6600D19DE9 /* FBSDKDataPersisting.h */,
 				520223F51D83C8D200CE0AB5 /* FBSDKDeviceRequestsHelper.h */,
 				520223F61D83C8D200CE0AB5 /* FBSDKDeviceRequestsHelper.m */,
 				81C969301C114723002FC037 /* FBSDKDynamicFrameworkLoader.h */,
@@ -2141,15 +2157,16 @@
 				F4EC338525E6A86B0003C0CF /* FBSDKSettingsProtocol.h */,
 				C5696FA1209CCEB3009C931F /* FBSDKSwizzler.h */,
 				C5696FA2209CCEB4009C931F /* FBSDKSwizzler.m */,
+				F4A0342825F1650900D19DE9 /* FBSDKSwizzler+Swizzling.h */,
+				F4A0342725F164EF00D19DE9 /* FBSDKSwizzling.h */,
 				52963A9D215993C100C7B252 /* FBSDKURL_Internal.h */,
 				5DB7ADCA22EA59E60012E8CB /* Instrument */,
 				89FB8C3D1A84237A003CAE60 /* Network */,
+				F4A02F9425EEB09500D19DE9 /* NSUserDefaults+FBSDKDataPersisting.h */,
 				89830F251A7805A900226ABB /* ServerConfiguration */,
 				9D32A8381A69941A000A936D /* TokenCaching */,
 				89FB8C3E1A842393003CAE60 /* UI */,
 				89FB8C431A842644003CAE60 /* WebDialog */,
-				F4A02F9425EEB09500D19DE9 /* NSUserDefaults+FBSDKDataPersisting.h */,
-				F4A02F8C25EEAF6600D19DE9 /* FBSDKDataPersisting.h */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
@@ -2633,7 +2650,7 @@
 		C51121C720A27EF50041DC94 /* Codeless */ = {
 			isa = PBXGroup;
 			children = (
-				C51121CA20A27EF50041DC94 /* FBSDKSampleEventBinding.swift */,
+				F4A0341825F15D9500D19DE9 /* EventBindingManagerTests.swift */,
 				C51121C920A27EF50041DC94 /* FBSDKEventBindingTests.m */,
 			);
 			path = Codeless;
@@ -2762,6 +2779,14 @@
 			path = ML;
 			sourceTree = "<group>";
 		};
+		F46873DA25F7D0D500ABD912 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F46873E525F7D0D500ABD912 /* TestTools.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		F487DBCA231EBD8B008416A9 /* Swift */ = {
 			isa = PBXGroup;
 			children = (
@@ -2830,8 +2855,10 @@
 				F496E58E24E49DBC006231A2 /* SampleAppEvents.swift */,
 				F48AD347257700B80052C056 /* SampleAuthenticationToken.swift */,
 				F4A0308E25EEE42300D19DE9 /* SampleError.swift */,
+				F4A035C125F2C6F800D19DE9 /* SampleEventBindings.swift */,
 				F4EB31BA2540A1B800736B67 /* SampleGraphRequestConnection.swift */,
 				F4EB31D22540A35800736B67 /* SampleGraphRequests.swift */,
+				C51121CA20A27EF50041DC94 /* SampleRawRemoteEventBindings.swift */,
 				F4A02FF625EEC1CB00D19DE9 /* SampleRawRemoteGateKeeper.swift */,
 				F4A0304825EECC6800D19DE9 /* SampleRawRemoteGateKeeperList.swift */,
 				F4EB33CD2542323500736B67 /* SampleRawRemotePermissions.swift */,
@@ -2852,6 +2879,7 @@
 				F40D25F225E41C71004681FC /* TestOperationQueue.swift */,
 				F494285C25829C72008FE009 /* TestSessionProvider.swift */,
 				F4EC339425E6ABE60003C0CF /* TestSettings.swift */,
+				F4A0346D25F1985200D19DE9 /* TestSwizzler.swift */,
 				F496E5FD24E5D0D5006231A2 /* TestTokenCache.swift */,
 				F43F397C25D48C4B0046027A /* TestURLSessionProxy.swift */,
 				F4F6036F25D5D3A30053D3E7 /* TestURLSessionProxyFactory.swift */,
@@ -3779,6 +3807,10 @@
 					ProductGroup = 9D9947101A9531B5003375EC /* Products */;
 					ProjectRef = 9D99470F1A9531B5003375EC /* OCMock.xcodeproj */;
 				},
+				{
+					ProductGroup = F46873DA25F7D0D500ABD912 /* Products */;
+					ProjectRef = F4A4069C25F4522500F0E578 /* TestTools.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -3847,6 +3879,13 @@
 			fileType = wrapper.cfbundle;
 			path = OCMockLibTests.xctest;
 			remoteRef = 9D9947281A9531B5003375EC /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F46873E525F7D0D500ABD912 /* TestTools.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = TestTools.framework;
+			remoteRef = F46873E425F7D0D500ABD912 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -4403,6 +4442,7 @@
 				C77C07A62486BAC600345460 /* FBSDKRestrictiveDataFilterTests.m in Sources */,
 				F4E50155243648A100C99262 /* FBSDKServerConfigurationFixtures.m in Sources */,
 				894C0B4A1A70524F009137EF /* FBSDKBase64Tests.swift in Sources */,
+				F4A0346E25F1985300D19DE9 /* TestSwizzler.swift in Sources */,
 				894C0B3A1A702EBE009137EF /* FBSDKBridgeAPIProtocolNativeV1Tests.m in Sources */,
 				F4E50156243648A100C99262 /* FBSDKServerConfigurationTests.m in Sources */,
 				F48AD3252576FEB20052C056 /* FBSDKAuthenticationTokenTests.m in Sources */,
@@ -4436,7 +4476,7 @@
 				89C8B19C1A8D7A27009B07F5 /* FBSDKUtilityTests.swift in Sources */,
 				F441DDE725DDDB670092C8F6 /* GraphRequestConnectionFactoryTests.swift in Sources */,
 				F41979282475A20E003007CC /* FBSDKTypeUtilityTests.m in Sources */,
-				C51121CC20A27EF50041DC94 /* FBSDKSampleEventBinding.swift in Sources */,
+				C51121CC20A27EF50041DC94 /* SampleRawRemoteEventBindings.swift in Sources */,
 				F916581524F6BAB200BB759A /* FBSDKSKAdNetworkConversionConfigurationTests.m in Sources */,
 				F4A826B724EC6FAD00EB2CD4 /* FBSDKProfileTests.m in Sources */,
 				F4CCDC8825E958320057FE5F /* GateKeeperManagerTests.swift in Sources */,
@@ -4449,8 +4489,10 @@
 				C6E3622625E03FD0007D555D /* FBSDKAuthenticationTokenHeaderTests.m in Sources */,
 				C6C5CBDC2581875600AA3BB3 /* FBSDKAuthenticationStatusUtilityTests.m in Sources */,
 				F4EB31D32540A35800736B67 /* SampleGraphRequests.swift in Sources */,
+				F4A0341925F15D9500D19DE9 /* EventBindingManagerTests.swift in Sources */,
 				F402B062255C645600473083 /* FakeLoginManager.m in Sources */,
 				F441DC3E25DC97E60092C8F6 /* TestGraphRequestConnection.swift in Sources */,
+				F4A035C225F2C6F800D19DE9 /* SampleEventBindings.swift in Sources */,
 				F4D80B582565D6B3008CCAF0 /* FBSDKRestrictiveDataTests.m in Sources */,
 				F4EB33CE2542323500736B67 /* SampleRawRemotePermissions.swift in Sources */,
 				5DBB0447227FEF700009E0A6 /* FBSDKBasicUtilityTests.m in Sources */,

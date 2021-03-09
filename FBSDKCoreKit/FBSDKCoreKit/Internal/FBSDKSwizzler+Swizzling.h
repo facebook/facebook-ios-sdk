@@ -16,23 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
-#if !TARGET_OS_TV
-
 #import <Foundation/Foundation.h>
+
+#import "FBSDKSwizzling.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(EventBindingManager)
-@interface FBSDKEventBindingManager : NSObject
-
-- (instancetype)initWithJSON:(NSDictionary*)dict;
-- (void)updateBindings:(NSArray *)bindings;
-+ (NSArray *)parseArray:(NSArray *)array;
-
+// Default conformance to the Swizzling interface
+@interface FBSDKSwizzler (Swizzling) <FBSDKSwizzling>
 @end
 
 NS_ASSUME_NONNULL_END
-
-#endif

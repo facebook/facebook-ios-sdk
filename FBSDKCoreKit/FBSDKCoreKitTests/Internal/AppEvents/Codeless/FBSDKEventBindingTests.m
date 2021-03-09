@@ -50,7 +50,7 @@
   [super setUp];
 
   eventBindingManager = [[FBSDKEventBindingManager alloc]
-                         initWithJSON:[FBSDKSampleEventBinding getSampleDictionary]];
+                         initWithJSON:[SampleRawRemoteEventBindings sampleDictionary]];
   window = [[UIWindow alloc] init];
   UIViewController *vc = [[UIViewController alloc] init];
   UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
@@ -94,7 +94,7 @@
 
 - (void)testMatching
 {
-  NSArray *bindings = [FBSDKEventBindingManager parseArray:[FBSDKSampleEventBinding getSampleDictionary][@"event_bindings"]];
+  NSArray *bindings = [FBSDKEventBindingManager parseArray:[SampleRawRemoteEventBindings sampleDictionary][@"event_bindings"]];
   FBSDKEventBinding *binding = bindings[0];
   XCTAssertTrue([FBSDKEventBinding isViewMatchPath:stepper path:binding.path]);
 
@@ -116,7 +116,7 @@
 
 - (void)testEventBindingEquation
 {
-  NSArray *bindings = [FBSDKEventBindingManager parseArray:[FBSDKSampleEventBinding getSampleDictionary][@"event_bindings"]];
+  NSArray *bindings = [FBSDKEventBindingManager parseArray:[SampleRawRemoteEventBindings sampleDictionary][@"event_bindings"]];
   XCTAssertTrue([bindings[0] isEqualToBinding:bindings[0]]);
   XCTAssertFalse([bindings[0] isEqualToBinding:bindings[1]]);
 }
@@ -124,7 +124,7 @@
 - (void)testParsing
 {
   for (int i = 0; i < 100; i++) {
-    NSDictionary *sampleData = [FBSDKSampleEventBinding getSampleDictionary];
+    NSDictionary *sampleData = [SampleRawRemoteEventBindings sampleDictionary];
     [FBSDKEventBindingManager parseArray:@[[Fuzzer randomizeWithJson:sampleData]]];
   }
 }

@@ -22,6 +22,8 @@
 #import "FBSDKBridgeAPI+Testing.h"
 #import "FBSDKCloseIcon.h"
 #import "FBSDKEventDeactivationManager.h"
+#import "FBSDKEventBinding.h"
+#import "FBSDKEventBindingManager.h"
 #import "FBSDKMath.h"
 #import "FBSDKSKAdNetworkEvent.h"
 #import "FBSDKSKAdNetworkRule.h"
@@ -52,6 +54,8 @@
 // Data Persistance
 #import "FBSDKDataPersisting.h"
 #import "NSUserDefaults+FBSDKDataPersisting.h"
+// Swizzling
+#import "FBSDKSwizzling.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -139,6 +143,22 @@ NS_SWIFT_NAME(configure(settings:requestProvider:connectionProvider:store:));
 NS_SWIFT_NAME(parse(result:error:));
 + (BOOL)_gateKeeperIsValid;
 + (void)reset;
+
+@end
+
+@interface FBSDKEventBindingManager (Testing)
+
+@property (nonatomic) BOOL isStarted;
+@property (nonatomic, nullable) NSMutableDictionary *reactBindings;
+@property (nonatomic, readonly) NSSet *validClasses;
+@property (nonatomic) BOOL hasReactNative;
+@property (nonatomic, nullable) NSArray<FBSDKEventBinding *> *eventBindings;
+@property (nonatomic, nullable, readonly) Class<FBSDKSwizzling> swizzler;
+
+- (instancetype)initWithSwizzler:(Class<FBSDKSwizzling>)swizzling;
+- (instancetype)initWithSwizzler:(Class<FBSDKSwizzling>)swizzling
+                            json:(NSDictionary *)dict;
+- (void)start;
 
 @end
 

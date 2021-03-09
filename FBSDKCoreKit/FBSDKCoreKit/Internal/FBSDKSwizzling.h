@@ -16,23 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
-#if !TARGET_OS_TV
-
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(EventBindingManager)
-@interface FBSDKEventBindingManager : NSObject
+NS_SWIFT_NAME(Swizzling)
+@protocol FBSDKSwizzling
 
-- (instancetype)initWithJSON:(NSDictionary*)dict;
-- (void)updateBindings:(NSArray *)bindings;
-+ (NSArray *)parseArray:(NSArray *)array;
++ (void)swizzleSelector:(SEL)aSelector onClass:(Class)aClass withBlock:(swizzleBlock)block named:(NSString *)aName;
 
 @end
 
 NS_ASSUME_NONNULL_END
-
-#endif

@@ -16,23 +16,39 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+struct SwizzleEvidence: Equatable {
+  let selector: Selector
+  let `class`: AnyClass
+  let block: swizzleBlock?
 
-#if !TARGET_OS_TV
+  init(
+    selector: Selector,
+    `class`: AnyClass,
+    block: swizzleBlock? = nil
+  ) {
+    self.selector = selector
+    self.`class` = `class`
+    self.block = block
+  }
 
-#import <Foundation/Foundation.h>
+  static func == (lhs: SwizzleEvidence, rhs: SwizzleEvidence) -> Bool {
+    return lhs.selector == rhs.selector && lhs.class == rhs.class
+  }
+}
 
-NS_ASSUME_NONNULL_BEGIN
+class TestSwizzler: Swizzling {
+  static var evidence = [SwizzleEvidence]()
 
-NS_SWIFT_NAME(EventBindingManager)
-@interface FBSDKEventBindingManager : NSObject
+  static func swizzleSelector(
+    _ aSelector: Selector,
+    on aClass: AnyClass,
+    with block: @escaping swizzleBlock,
+    named aName: String
+  ) {
+    evidence.append(.init(selector: aSelector, class: aClass, block: block))
+  }
 
-- (instancetype)initWithJSON:(NSDictionary*)dict;
-- (void)updateBindings:(NSArray *)bindings;
-+ (NSArray *)parseArray:(NSArray *)array;
-
-@end
-
-NS_ASSUME_NONNULL_END
-
-#endif
+  static func reset() {
+    evidence = []
+  }
+}
