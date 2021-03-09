@@ -313,13 +313,20 @@ static NSArray<NSString *> *standardEvents;
     token = [FBSDKAccessToken currentAccessToken];
   }
 
-  NSString *appID = [FBSDKAppEvents loggingOverrideAppID] ?: token.appID ?: [FBSDKSettings appID];
+  NSString *loggingOverrideAppID = [FBSDKAppEvents loggingOverrideAppID];
+
+  NSString *appID = loggingOverrideAppID ?: token.appID ?: [FBSDKSettings appID];
   NSString *tokenString = token.tokenString;
+  NSString *clientTokenString = [FBSDKSettings clientToken];
+
   if (!tokenString || ![appID isEqualToString:token.appID]) {
-    // If there's an logging override app id present, then we don't want to use the client token since the client token
-    // is intended to match up with the primary app id (and AppEvents doesn't require a client token).
-    NSString *clientTokenString = [FBSDKSettings clientToken];
-    if (clientTokenString && appID && [appID isEqualToString:token.appID]) {
+    // If there's a logging override app id present
+    // then we don't want to use the client token since the client token
+    // is intended to match up with the primary app id
+    // and AppEvents doesn't require a client token.
+    if (clientTokenString && loggingOverrideAppID) {
+      tokenString = nil;
+    } else if (clientTokenString && appID && ([appID isEqualToString:token.appID] || token == nil)) {
       tokenString = [NSString stringWithFormat:@"%@|%@", appID, clientTokenString];
     } else if (appID) {
       tokenString = nil;
