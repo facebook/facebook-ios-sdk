@@ -317,4 +317,233 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   }
 }
 
+// MARK: - Token Strings
+
+- (void)testTokenStringWithoutAccessTokenWithoutAppIdWithoutClientToken
+{
+  [FBSDKAppEvents setLoggingOverrideAppID:nil];
+  [FBSDKAccessToken setCurrentAccessToken:nil];
+  [FBSDKSettings setAppID:nil];
+  [FBSDKSettings setClientToken:nil];
+  NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
+  XCTAssertNil(
+    tokenString,
+    "Should not provide a token string without an app id or client token"
+  );
+}
+
+- (void)testTokenStringWithoutAccessTokenWithoutAppIdWithClientToken
+{
+  [FBSDKAppEvents setLoggingOverrideAppID:nil];
+  [FBSDKAccessToken setCurrentAccessToken:nil];
+  [FBSDKSettings setAppID:nil];
+  [FBSDKSettings setClientToken:@"toktok"];
+  NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
+  XCTAssertNil(
+    tokenString,
+    "Should not provide a token string without an app id"
+  );
+}
+
+- (void)testTokenStringWithoutAccessTokenWithAppIdWithoutClientToken
+{
+  [FBSDKAppEvents setLoggingOverrideAppID:nil];
+  [FBSDKAccessToken setCurrentAccessToken:nil];
+  [FBSDKSettings setAppID:@"123"];
+  [FBSDKSettings setClientToken:nil];
+  NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
+  XCTAssertNil(
+    tokenString,
+    "Should not provide a token string without a client token"
+  );
+}
+
+- (void)testTokenStringWithoutAccessTokenWithAppIdWithClientToken
+{
+  [FBSDKAppEvents setLoggingOverrideAppID:nil];
+  [FBSDKAccessToken setCurrentAccessToken:nil];
+  [FBSDKSettings setAppID:@"123"];
+  [FBSDKSettings setClientToken:@"toktok"];
+  NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
+  XCTAssertEqualObjects(
+    tokenString,
+    @"123|toktok",
+    "Should provide a token string with the app id and client token"
+  );
+}
+
+- (void)testTokenStringWithAccessTokenWithoutAppIdWithClientToken
+{
+  [FBSDKAppEvents setLoggingOverrideAppID:nil];
+  [FBSDKAccessToken setCurrentAccessToken:SampleAccessToken.validToken];
+  [FBSDKSettings setAppID:nil];
+  [FBSDKSettings setClientToken:@"toktok"];
+  NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
+  XCTAssertEqualObjects(
+    tokenString,
+    SampleAccessToken.validToken.appID,
+    "Should provide a token string with the access token's app id"
+  );
+}
+
+- (void)testTokenStringWithAccessTokenWithoutAppIdWithoutClientToken
+{
+  [FBSDKAppEvents setLoggingOverrideAppID:nil];
+  [FBSDKAccessToken setCurrentAccessToken:SampleAccessToken.validToken];
+  [FBSDKSettings setAppID:nil];
+  [FBSDKSettings setClientToken:nil];
+  NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
+  XCTAssertEqualObjects(
+    tokenString,
+    SampleAccessToken.validToken.appID,
+    "Should provide a token string with the access token's app id"
+  );
+}
+
+- (void)testTokenStringWithAccessTokenWithAppIdWithoutClientToken
+{
+  [FBSDKAppEvents setLoggingOverrideAppID:nil];
+  [FBSDKAccessToken setCurrentAccessToken:SampleAccessToken.validToken];
+  [FBSDKSettings setAppID:@"456"];
+  [FBSDKSettings setClientToken:nil];
+  NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
+  XCTAssertEqualObjects(
+    tokenString,
+    SampleAccessToken.validToken.appID,
+    "Should provide a token string with the access token's app id"
+  );
+}
+
+- (void)testTokenStringWithAccessTokenWithAppIdWithClientToken
+{
+  [FBSDKAppEvents setLoggingOverrideAppID:nil];
+  [FBSDKAccessToken setCurrentAccessToken:SampleAccessToken.validToken];
+  [FBSDKSettings setAppID:@"456"];
+  [FBSDKSettings setClientToken:@"toktok"];
+  NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
+  XCTAssertEqualObjects(
+    tokenString,
+    SampleAccessToken.validToken.appID,
+    "Should provide a token string with the access token's app id"
+  );
+}
+
+- (void)testTokenStringWithoutAccessTokenWithoutAppIdWithoutClientTokenWithLoggingAppID
+{
+  [FBSDKAppEvents setLoggingOverrideAppID:@"789"];
+  [FBSDKAccessToken setCurrentAccessToken:nil];
+  [FBSDKSettings setAppID:nil];
+  [FBSDKSettings setClientToken:nil];
+  NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
+  XCTAssertNil(
+    tokenString,
+    "Should not provide a token string without an app id or client token"
+  );
+}
+
+- (void)testTokenStringWithoutAccessTokenWithoutAppIdWithClientTokenWithLoggingAppID
+{
+  [FBSDKAppEvents setLoggingOverrideAppID:@"789"];
+  [FBSDKAccessToken setCurrentAccessToken:nil];
+  [FBSDKSettings setAppID:nil];
+  [FBSDKSettings setClientToken:@"toktok"];
+  NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
+  XCTAssertNil(
+    tokenString,
+    "Should not provide a token string with the logging app id and client token"
+  );
+}
+
+- (void)testTokenStringWithoutAccessTokenWithAppIdWithoutClientTokenWithLoggingAppID
+{
+  [FBSDKAppEvents setLoggingOverrideAppID:@"789"];
+  [FBSDKAccessToken setCurrentAccessToken:nil];
+  [FBSDKSettings setAppID:@"123"];
+  [FBSDKSettings setClientToken:nil];
+  NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
+  XCTAssertNil(
+    tokenString,
+    "Should not provide a token string without a client token"
+  );
+}
+
+- (void)testTokenStringWithoutAccessTokenWithAppIdWithClientTokenWithLoggingAppID
+{
+  [FBSDKAppEvents setLoggingOverrideAppID:@"789"];
+  [FBSDKAccessToken setCurrentAccessToken:nil];
+  [FBSDKSettings setAppID:@"123"];
+  [FBSDKSettings setClientToken:@"toktok"];
+  NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
+  XCTAssertNil(
+    tokenString,
+    "Should not provide a token string with the logging app id and client token"
+  );
+}
+
+- (void)testTokenStringWithAccessTokenWithoutAppIdWithClientTokenWithLoggingAppID
+{
+  [FBSDKAppEvents setLoggingOverrideAppID:@"789"];
+  [FBSDKAccessToken setCurrentAccessToken:SampleAccessToken.validToken];
+  [FBSDKSettings setAppID:nil];
+  [FBSDKSettings setClientToken:@"toktok"];
+  NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
+  XCTAssertNil(
+    tokenString,
+    "Should not provide a token string when the logging override and access token app ids are mismatched"
+  );
+}
+
+- (void)testTokenStringWithAccessTokenWithoutAppIdWithoutClientTokenWithLoggingAppID
+{
+  [FBSDKAppEvents setLoggingOverrideAppID:@"789"];
+  [FBSDKAccessToken setCurrentAccessToken:SampleAccessToken.validToken];
+  [FBSDKSettings setAppID:nil];
+  [FBSDKSettings setClientToken:nil];
+  NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
+  XCTAssertNil(
+    tokenString,
+    "Should not provide a token string when the logging override and access token app ids are mismatched"
+  );
+}
+
+- (void)testTokenStringWithAccessTokenWithAppIdWithoutClientTokenWithLoggingAppID
+{
+  [FBSDKAppEvents setLoggingOverrideAppID:@"789"];
+  [FBSDKAccessToken setCurrentAccessToken:SampleAccessToken.validToken];
+  [FBSDKSettings setAppID:@"456"];
+  [FBSDKSettings setClientToken:nil];
+  NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
+  XCTAssertNil(
+    tokenString,
+    "Should not provide a token string when the logging override and access token app ids are mismatched"
+  );
+}
+
+- (void)testTokenStringWithAccessTokenWithAppIdWithClientTokenWithLoggingAppID
+{
+  [FBSDKAppEvents setLoggingOverrideAppID:@"789"];
+  [FBSDKAccessToken setCurrentAccessToken:SampleAccessToken.validToken];
+  [FBSDKSettings setAppID:@"456"];
+  [FBSDKSettings setClientToken:@"toktok"];
+  NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
+  XCTAssertNil(
+    tokenString,
+    "Should not provide a token string when the logging override and access token app ids are mismatched"
+  );
+}
+
+- (void)testTokenStringWithAccessTokenWithAppIdWithClientTokenWithLoggingAppIDMatching
+{
+  [FBSDKAppEvents setLoggingOverrideAppID:SampleAccessToken.validToken.appID];
+  [FBSDKAccessToken setCurrentAccessToken:SampleAccessToken.validToken];
+  [FBSDKSettings setAppID:@"456"];
+  [FBSDKSettings setClientToken:@"toktok"];
+  NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
+  XCTAssertEqualObjects(
+    tokenString,
+    SampleAccessToken.validToken.appID,
+    "Should provide a token string with the access token's app id when the logging override matches it"
+  );
+}
+
 @end

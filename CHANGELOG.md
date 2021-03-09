@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Avoids call to `AppEvents` singleton when setting overriding app ID [#1647](https://github.com/facebook/facebook-ios-sdk/pull/1647)
 - CocoaPods now compiles `FBSDKDynamicFrameworkLoader` with ARC.
 - CocoaPods now uses static frameworks as the prebuilt libraries for the aggregate FacebookSDK podspec
+- App Events use the correct token if none have been provided manually ([@ptxmac](https://github.com/ptxmac)[#1670](https://github.com/facebook/facebook-ios-sdk/pull/1670)
 
 ### Deprecated
 
