@@ -28,7 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
  Callback block for returning an array of FBSDKAccessToken instances (and possibly `NSNull` instances); or an error.
  */
 typedef void (^FBSDKAccessTokensBlock)(NSArray<FBSDKAccessToken *> *tokens, NSError *_Nullable error)
-NS_SWIFT_NAME(AccessTokensBlock);
+NS_SWIFT_NAME(AccessTokensBlock)
+DEPRECATED_MSG_ATTRIBUTE("AccessTokensBlock is deprecated and will be removed in the next major release");
 
 
 /**
@@ -44,6 +45,7 @@ NS_SWIFT_NAME(AccessTokensBlock);
  an app id and app secret. You will typically use this class to write unit or integration tests.
  Make sure you NEVER include your app secret in your production app.
  */
+DEPRECATED_MSG_ATTRIBUTE("FBSDKTestUsersManager is deprecated and will be removed in the next major release")
 NS_SWIFT_NAME(TestUsersManager)
 @interface FBSDKTestUsersManager : NSObject
 
