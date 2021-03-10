@@ -31,6 +31,7 @@
 #import "FBSDKSettingsProtocol.h"
 #import "FBSDKTestCase.h"
 #import "FBSDKTestCoder.h"
+#import "FBSDKViewHierarchy.h"
 #import "UserDefaultsSpy.h"
 #import "FakeBundle.h"
 // URLSession Abstraction
@@ -160,6 +161,11 @@ NS_SWIFT_NAME(parse(result:error:));
 - (instancetype)initWithSwizzler:(Class<FBSDKSwizzling>)swizzling
                             json:(NSDictionary *)dict;
 - (void)start;
+- (void)handleReactNativeTouchesWithHandler:(id)handler
+                                    command:(SEL)command
+                                    touches:(id)touches
+                                  eventName:(id)eventName;
+- (void)matchView:(UIView *)view delegate:(id)delegate;
 
 @end
 

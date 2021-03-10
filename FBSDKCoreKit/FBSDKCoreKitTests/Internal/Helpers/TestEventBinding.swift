@@ -16,36 +16,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-struct SwizzleEvidence: Equatable {
-  let selector: Selector
-  let `class`: AnyClass
+class TestEventBinding: EventBinding {
+  var trackEventWasCalled = false
+  var stubbedPath = [Any]()
 
-  init(
-    selector: Selector,
-    `class`: AnyClass
-  ) {
-    self.selector = selector
-    self.`class` = `class`
+  init(view potentialView: UIView? = nil) {
+    super.init()
+
+    if let view = potentialView,
+       let path = ViewHierarchy.getPath(view) {
+      stubbedPath = path
+    }
   }
 
-  static func == (lhs: SwizzleEvidence, rhs: SwizzleEvidence) -> Bool {
-    return lhs.selector == rhs.selector && lhs.class == rhs.class
-  }
-}
-
-class TestSwizzler: Swizzling {
-  static var evidence = [SwizzleEvidence]()
-
-  static func swizzleSelector(
-    _ aSelector: Selector,
-    on aClass: AnyClass,
-    with block: @escaping swizzleBlock,
-    named aName: String
-  ) {
-    evidence.append(.init(selector: aSelector, class: aClass))
+  override var path: [Any]! { // swiftlint:disable:this implicitly_unwrapped_optional
+    return stubbedPath
   }
 
-  static func reset() {
-    evidence = []
+  override func trackEvent(_ sender: Any!) { // swiftlint:disable:this implicitly_unwrapped_optional
+    trackEventWasCalled = true
   }
 }

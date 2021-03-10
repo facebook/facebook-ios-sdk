@@ -23,7 +23,7 @@ protocol WindowMoving {
   func didMoveToWindow()
 }
 
-class EventBindingManagerTests: XCTestCase {
+class EventBindingManagerTests: XCTestCase, UITableViewDelegate { // swiftlint:disable:this type_body_length
 
   var manager: EventBindingManager! // swiftlint:disable:this implicitly_unwrapped_optional
   var bindings = SampleEventBindingList.valid
@@ -167,19 +167,20 @@ class EventBindingManagerTests: XCTestCase {
     manager.start()
 
     // This is ugly but there is no good way to do this in Swift.
-    // swiftlint:disable line_length
     let expected = "["
       .appending(
         [
-          "FBSDKCoreKitTests.SwizzleEvidence(selector: didMoveToWindow, class: UIControl, block: Optional((Function)))",
-          "FBSDKCoreKitTests.SwizzleEvidence(selector: didMoveToWindow, class: RCTView, block: Optional((Function)))",
-          "FBSDKCoreKitTests.SwizzleEvidence(selector: didMoveToWindow, class: RCTTextView, block: Optional((Function)))",
-          "FBSDKCoreKitTests.SwizzleEvidence(selector: didMoveToWindow, class: RCTImageView, block: Optional((Function)))"
+          "FBSDKCoreKitTests.SwizzleEvidence(selector: didMoveToWindow, class: UIControl)",
+          "FBSDKCoreKitTests.SwizzleEvidence(selector: didMoveToWindow, class: RCTView)",
+          "FBSDKCoreKitTests.SwizzleEvidence(selector: didMoveToWindow, class: RCTTextView)",
+          "FBSDKCoreKitTests.SwizzleEvidence(selector: didMoveToWindow, class: RCTImageView)",
+          "FBSDKCoreKitTests.SwizzleEvidence(selector: _updateAndDispatchTouches:eventName:, class: RCTTouchHandler)",
+          "FBSDKCoreKitTests.SwizzleEvidence(selector: setDelegate:, class: UITableView)",
+          "FBSDKCoreKitTests.SwizzleEvidence(selector: setDelegate:, class: UICollectionView)"
         ]
         .joined(separator: ", ")
       )
     .appending("]")
-    // swiftlint:enable line_length
 
     XCTAssertEqual(
       TestSwizzler.evidence.description,
@@ -275,10 +276,12 @@ class EventBindingManagerTests: XCTestCase {
 
   func registerReactNativeClasses() {
     if objc_lookUpClass("RCTRootView") == nil,
+      let touchHandler: AnyClass = objc_allocateClassPair(NSObject.self, "RCTTouchHandler", 0),
       let reactRootView: AnyClass = objc_allocateClassPair(NSObject.self, "RCTRootView", 0),
       let imageView: AnyClass = objc_allocateClassPair(NSObject.self, "RCTImageView", 0),
       let textView: AnyClass = objc_allocateClassPair(NSObject.self, "RCTTextView", 0),
       let view: AnyClass = objc_allocateClassPair(NSObject.self, "RCTView", 0) {
+      objc_registerClassPair(touchHandler)
       objc_registerClassPair(reactRootView)
       objc_registerClassPair(imageView)
       objc_registerClassPair(textView)
@@ -287,14 +290,51 @@ class EventBindingManagerTests: XCTestCase {
   }
 
   func deregisterReactNativeClasses() {
-    if let rootViewClass = objc_lookUpClass("RCTRootView"),
+    if let touchHandler = objc_lookUpClass("RCTTouchHandler"),
+       let rootViewClass = objc_lookUpClass("RCTRootView"),
        let imageView = objc_lookUpClass("RCTImageView"),
        let textView = objc_lookUpClass("RCTTextView"),
        let view = objc_lookUpClass("RCTView") {
+      objc_disposeClassPair(touchHandler)
       objc_disposeClassPair(rootViewClass)
       objc_disposeClassPair(imageView)
       objc_disposeClassPair(textView)
       objc_disposeClassPair(view)
+    }
+  }
+
+  enum ViewHierarchies {
+
+    static func validReactNativeAncestor(interactionEnabled: Bool) -> (root: UIView, leaf: UIView) {
+      let reactView1 = TestReactNativeView()
+      reactView1.isUserInteractionEnabled = false
+      let reactView2 = TestReactNativeView()
+      reactView2.isUserInteractionEnabled = interactionEnabled
+      let view = UIView()
+      reactView2.addSubview(reactView1)
+      reactView1.addSubview(view)
+
+      return (root: reactView2, leaf: view)
+    }
+
+    static func validControl(isNestedInWindow: Bool) -> (root: UIView, leaf: TestControl) {
+      let window = UIWindow()
+      let control = TestControl()
+
+      if isNestedInWindow {
+        control.stubbedWindow = window
+        return (root: window, leaf: control)
+      } else {
+        return (root: control, leaf: control)
+      }
+    }
+
+    static var validReactNative: TestReactNativeView {
+      let window = UIWindow()
+      let view = TestReactNativeView()
+      view.stubbedWindow = window
+
+      return view
     }
   }
 }

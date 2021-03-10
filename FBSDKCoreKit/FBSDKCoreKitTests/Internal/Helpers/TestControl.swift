@@ -16,36 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-struct SwizzleEvidence: Equatable {
-  let selector: Selector
-  let `class`: AnyClass
+class TestControl: UIControl {
+  var capturedAction: Selector?
+  var stubbedWindow: UIWindow?
 
-  init(
-    selector: Selector,
-    `class`: AnyClass
-  ) {
-    self.selector = selector
-    self.`class` = `class`
+  override var window: UIWindow? {
+    return stubbedWindow
   }
 
-  static func == (lhs: SwizzleEvidence, rhs: SwizzleEvidence) -> Bool {
-    return lhs.selector == rhs.selector && lhs.class == rhs.class
-  }
-}
-
-class TestSwizzler: Swizzling {
-  static var evidence = [SwizzleEvidence]()
-
-  static func swizzleSelector(
-    _ aSelector: Selector,
-    on aClass: AnyClass,
-    with block: @escaping swizzleBlock,
-    named aName: String
-  ) {
-    evidence.append(.init(selector: aSelector, class: aClass))
-  }
-
-  static func reset() {
-    evidence = []
+  override func addTarget(_ target: Any?, action: Selector, for controlEvents: UIControl.Event) {
+    capturedAction = action
   }
 }

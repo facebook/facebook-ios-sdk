@@ -178,6 +178,10 @@ static id<FBSDKNumberParsing> _numberParser;
 
 + (BOOL)isPath:(NSArray *)path matchViewPath:(NSArray *)viewPath
 {
+  if ((path.count == 0) || (viewPath.count == 0)) {
+    return NO;
+  }
+
   for (NSInteger i = 0; i < MIN(path.count, viewPath.count); i++) {
     NSInteger idxPath = path.count - i - 1;
     NSInteger idxViewPath = viewPath.count - i - 1;

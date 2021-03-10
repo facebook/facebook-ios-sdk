@@ -172,34 +172,12 @@
                              named:@"match_react_native"];
 
     // RCTTouchHandler handles with touch events, like touchEnd and uses RCTEventDispather to dispatch events, so we can check _updateAndDispatchTouches to fire events
-    [self.swizzler swizzleSelector:@selector(_updateAndDispatchTouches:eventName:) onClass:classRCTTouchHandler withBlock:^(id touchHandler, SEL command, id touches, id eventName) {
-                                                                                                                  if ([touches isKindOfClass:[NSSet class]] && [eventName isKindOfClass:[NSString class]]) {
-                                                                                                                    @try {
-                                                                                                                      NSString *reactEventName = (NSString *)eventName;
-                                                                                                                      NSSet<UITouch *> *reactTouches = (NSSet<UITouch *> *)touches;
-                                                                                                                      if ([reactEventName isEqualToString:ReactNativeTouchEndEventName]) {
-                                                                                                                        for (UITouch *touch in reactTouches) {
-                                                                                                                          UIView *targetView = ((UITouch *)touch).view.superview;
-                                                                                                                          NSNumber *reactTag = nil;
-                                                                                                                          // Find the closest React-managed touchable view like RCTTouchHandler
-                                                                                                                          while (targetView) {
-                                                                                                                            reactTag = [FBSDKViewHierarchy getViewReactTag:targetView];
-                                                                                                                            if (reactTag != nil && targetView.userInteractionEnabled) {
-                                                                                                                              break;
-                                                                                                                            }
-                                                                                                                            targetView = targetView.superview;
-                                                                                                                          }
-                                                                                                                          FBSDKEventBinding *eventBinding = self->_reactBindings[reactTag];
-                                                                                                                          if (reactTag != nil && eventBinding != nil) {
-                                                                                                                            [eventBinding trackEvent:nil];
-                                                                                                                          }
-                                                                                                                        }
-                                                                                                                      }
-                                                                                                                    } @catch (NSException *exception) {
-                                                                                                                      // Catch exception here to prevent LytroKit from crashing app
-                                                                                                                    }
-                                                                                                                  }
-                                                                                                                } named:@"dispatch_rn_event"];
+    [self.swizzler swizzleSelector:@selector(_updateAndDispatchTouches:eventName:)
+                           onClass:classRCTTouchHandler
+                         withBlock:^(id touchHandler, SEL command, id touches, id eventName) {
+                           [self handleReactNativeTouchesWithHandler:touchHandler command:command touches:touches eventName:eventName];
+                         }
+                             named:@"dispatch_rn_event"];
   }
 
   // UITableView
@@ -428,6 +406,41 @@
     [self rematchBindings];
   });
 }
+
+// MARK: Method Replacements
+
+- (void)handleReactNativeTouchesWithHandler:(id)handler
+                                    command:(SEL)command
+                                    touches:(id)touches
+                                  eventName:(id)eventName
+{
+  if ([touches isKindOfClass:[NSSet class]] && [eventName isKindOfClass:[NSString class]]) {
+    @try {
+      NSString *reactEventName = (NSString *)eventName;
+      NSSet<UITouch *> *reactTouches = (NSSet<UITouch *> *)touches;
+      if ([reactEventName isEqualToString:ReactNativeTouchEndEventName]) {
+        for (UITouch *touch in reactTouches) {
+          UIView *targetView = ((UITouch *)touch).view.superview;
+          NSNumber *reactTag = nil;
+          // Find the closest React-managed touchable view like RCTTouchHandler
+          while (targetView) {
+            reactTag = [FBSDKViewHierarchy getViewReactTag:targetView];
+            if (reactTag != nil && targetView.userInteractionEnabled) {
+              break;
+            }
+            targetView = targetView.superview;
+          }
+          FBSDKEventBinding *eventBinding = self->_reactBindings[reactTag];
+          if (reactTag != nil && eventBinding != nil) {
+            [eventBinding trackEvent:nil];
+          }
+        }
+      }
+    } @catch (NSException *exception) {
+      // Catch exception here to prevent LytroKit from crashing app
+    }
+  }
+};
 
 - (BOOL)isStarted
 {
