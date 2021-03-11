@@ -3,7 +3,7 @@ version: 2.1
 executors:
   xcode:
     macos:
-      xcode: 11.5.0
+      xcode: 12.4.0
 
 useMacOS: &useMacOS
   executor: xcode
