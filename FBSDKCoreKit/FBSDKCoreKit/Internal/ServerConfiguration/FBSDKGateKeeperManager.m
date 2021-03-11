@@ -147,7 +147,7 @@ static FBSDKLogger *_logger;
 
 #pragma mark - Internal Class Methods
 
-+ (id<FBSDKGraphRequest>)requestToLoadGateKeepers
++ (nullable id<FBSDKGraphRequest>)requestToLoadGateKeepers
 {
   NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:parameters setObject:@"ios" forKey:@"platform"];

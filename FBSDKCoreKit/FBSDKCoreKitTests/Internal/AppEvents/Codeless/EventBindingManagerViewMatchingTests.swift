@@ -23,7 +23,9 @@ extension EventBindingManagerTests {
   // MARK: - View Matching
 
   func testMatchingViewWithoutEventBindings() {
-    let control = ViewHierarchies.validControl(isNestedInWindow: true).leaf
+    let control = TestControl()
+    let window = UIWindow()
+    control.stubbedWindow = window
     manager.eventBindings = nil
     manager.match(control, delegate: self)
 
@@ -34,7 +36,7 @@ extension EventBindingManagerTests {
   }
 
   func testMatchingViewWithoutWindow() {
-    let control = ViewHierarchies.validControl(isNestedInWindow: false).leaf
+    let control = TestControl()
     XCTAssertNotNil(manager.eventBindings, "There should be event bindings from setup")
     manager.match(control, delegate: self)
 
@@ -45,40 +47,63 @@ extension EventBindingManagerTests {
   }
 
   func testMatchingControlWithWindow() {
-    let expectation = XCTestExpectation(description: name)
-    let control = ViewHierarchies.validControl(isNestedInWindow: true).leaf
+    let control = TestControl()
+    let window = UIWindow()
+    control.stubbedWindow = window
     let binding = TestEventBinding(view: control)
     manager.eventBindings = [TestEventBinding(), binding]
     manager.match(control, delegate: self)
 
-    DispatchQueue.main.asyncAfter(deadline: .now()) {
-      XCTAssertNotNil(
-        control.capturedAction,
-        "Should add an action to a control that is in a window"
-      )
-      expectation.fulfill()
-    }
-
-    wait(for: [expectation], timeout: 1)
+    XCTAssertNotNil(
+      control.capturedAction,
+      "Should add an action to a control that is in a window"
+    )
   }
 
   func testMatchingReactNativeView() {
-    let expectation = XCTestExpectation(description: name)
-    let view = ViewHierarchies.validReactNative
+    let window = UIWindow()
+    let view = TestReactNativeView()
+    view.stubbedWindow = window
+
     let binding = TestEventBinding(view: view)
     manager = EventBindingManager(swizzler: TestSwizzler.self)
     manager.eventBindings = [TestEventBinding(), binding]
     manager.match(view, delegate: self)
 
-    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-      XCTAssertEqual(
-        self.manager.reactBindings?[view.reactTag] as? TestEventBinding,
-        binding,
-        "Should store the binding for the react tag that corresponds to the view"
-      )
-      expectation.fulfill()
-    }
+    XCTAssertEqual(
+      self.manager.reactBindings?[view.reactTag] as? TestEventBinding,
+      binding,
+      "Should store the binding for the react tag that corresponds to the view"
+    )
+  }
 
-    wait(for: [expectation], timeout: 1)
+  func testMatchingTableView() {
+    let (tableView, cell) = ViewHierarchies.nestedTableViewAndCell
+    let binding = TestEventBinding(view: cell)
+
+    manager.eventBindings = [binding]
+    manager.match(tableView, delegate: self)
+
+    XCTAssertTrue(
+      TestSwizzler.evidence.contains {
+        $0.selector == #selector(UITableViewDelegate.tableView(_:didSelectRowAt:))
+      },
+      "Should replace did select row at when matching a table view and a delegate"
+    )
+  }
+
+  func testMatchingCollectionView() {
+    let (collection, cell) = ViewHierarchies.nestedCollectionViewAndCell
+    let binding = TestEventBinding(view: cell)
+
+    manager.eventBindings = [binding]
+    manager.match(collection, delegate: self)
+
+    XCTAssertTrue(
+      TestSwizzler.evidence.contains {
+        $0.selector == #selector(UICollectionViewDelegate.collectionView(_:didSelectItemAt:))
+      },
+      "Should replace did select item at when matching a collection view and a delegate"
+    )
   }
 }

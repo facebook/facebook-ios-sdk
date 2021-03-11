@@ -161,11 +161,22 @@ NS_SWIFT_NAME(parse(result:error:));
 - (instancetype)initWithSwizzler:(Class<FBSDKSwizzling>)swizzling
                             json:(NSDictionary *)dict;
 - (void)start;
-- (void)handleReactNativeTouchesWithHandler:(id)handler
-                                    command:(SEL)command
+- (void)handleReactNativeTouchesWithHandler:(nullable id)handler
+                                    command:(nullable SEL)command
                                     touches:(id)touches
                                   eventName:(id)eventName;
-- (void)matchView:(UIView *)view delegate:(id)delegate;
+- (void)handleDidSelectRowWithBindings:(NSArray<FBSDKEventBinding *> *)bindings
+                                target:(nullable id)target
+                               command:(nullable SEL)command
+                             tableView:(UITableView *)tableView
+                             indexPath:(NSIndexPath *)indexPath;
+- (void)handleDidSelectItemWithBindings:(NSArray<FBSDKEventBinding *> *)bindings
+                                 target:(nullable id)target
+                                command:(nullable SEL)command
+                         collectionView:(UICollectionView *)collectionView
+                              indexPath:(NSIndexPath *)indexPath;
+- (void)matchView:(UIView *)view
+         delegate:(id)delegate;
 
 @end
 

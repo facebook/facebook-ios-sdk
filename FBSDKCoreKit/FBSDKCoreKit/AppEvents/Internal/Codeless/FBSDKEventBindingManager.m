@@ -277,7 +277,7 @@
 
     NSArray *path = [FBSDKViewHierarchy getPath:view];
 
-    fb_dispatch_on_default_thread(^{
+    void (^matchBlock)(void) = ^void () {
       if ([view isKindOfClass:[UIControl class]]) {
         UIControl *control = (UIControl *)view;
         for (FBSDKEventBinding *binding in self->_eventBindings) {
@@ -307,7 +307,7 @@
         }
       } else if ([view isKindOfClass:[UITableView class]]
                  && [delegate conformsToProtocol:@protocol(UITableViewDelegate)]) {
-        fb_dispatch_on_default_thread(^{
+        void (^tableViewBlock)(void) = ^void () {
           NSMutableSet *matchedBindings = [NSMutableSet set];
           for (FBSDKEventBinding *binding in self->_eventBindings) {
             if (binding.path.count > 1) {
@@ -322,26 +322,24 @@
           if (matchedBindings.count > 0) {
             NSArray *bindings = matchedBindings.allObjects;
             void (^block)(id, SEL, id, id) = ^(id target, SEL command, UITableView *tableView, NSIndexPath *indexPath) {
-              fb_dispatch_on_main_thread(^{
-                for (FBSDKEventBinding *binding in bindings) {
-                  FBSDKCodelessPathComponent *component = binding.path.lastObject;
-                  if ((component.section == -1 || component.section == indexPath.section)
-                      && (component.row == -1 || component.row == indexPath.row)) {
-                    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-                    [binding trackEvent:cell];
-                  }
-                }
-              });
+              [self handleDidSelectRowWithBindings:bindings target:target command:command tableView:tableView indexPath:indexPath];
             };
             [weakSwizzler swizzleSelector:@selector(tableView:didSelectRowAtIndexPath:)
                                   onClass:[delegate class]
                                 withBlock:block
                                     named:@"handle_table_view"];
           }
-        });
+        };
+      #if DEBUG
+      #if FBSDKTEST
+        tableViewBlock();
+      #else
+        fb_dispatch_on_default_thread(tableViewBlock);
+      #endif
+      #endif
       } else if ([view isKindOfClass:[UICollectionView class]]
                  && [delegate conformsToProtocol:@protocol(UICollectionViewDelegate)]) {
-        fb_dispatch_on_default_thread(^{
+        void (^collectionViewBlock)(void) = ^void () {
           NSMutableSet *matchedBindings = [NSMutableSet set];
           for (FBSDKEventBinding *binding in self->_eventBindings) {
             if (binding.path.count > 1) {
@@ -356,25 +354,31 @@
           if (matchedBindings.count > 0) {
             NSArray *bindings = matchedBindings.allObjects;
             void (^block)(id, SEL, id, id) = ^(id target, SEL command, UICollectionView *collectionView, NSIndexPath *indexPath) {
-              fb_dispatch_on_main_thread(^{
-                for (FBSDKEventBinding *binding in bindings) {
-                  FBSDKCodelessPathComponent *component = binding.path.lastObject;
-                  if ((component.section == -1 || component.section == indexPath.section)
-                      && (component.row == -1 || component.row == indexPath.row)) {
-                    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-                    [binding trackEvent:cell];
-                  }
-                }
-              });
+              [self handleDidSelectItemWithBindings:bindings target:target command:command collectionView:collectionView indexPath:indexPath];
             };
             [weakSwizzler swizzleSelector:@selector(collectionView:didSelectItemAtIndexPath:)
                                   onClass:[delegate class]
                                 withBlock:block
                                     named:@"handle_collection_view"];
           }
-        });
+        };
+      #if DEBUG
+      #if FBSDKTEST
+        collectionViewBlock();
+      #else
+        fb_dispatch_on_default_thread(collectionViewBlock);
+      #endif
+      #endif
       }
-    });
+    };
+
+  #if DEBUG
+  #if FBSDKTEST
+    matchBlock();
+  #else
+    fb_dispatch_on_default_thread(matchBlock);
+  #endif
+  #endif
   });
 }
 
@@ -441,6 +445,46 @@
     }
   }
 };
+
+- (void)handleDidSelectRowWithBindings:(NSArray<FBSDKEventBinding *> *)bindings
+                                target:(nullable id)target
+                               command:(nullable SEL)command
+                             tableView:(UITableView *)tableView
+                             indexPath:(NSIndexPath *)indexPath
+{
+  fb_dispatch_on_main_thread(^{
+    for (FBSDKEventBinding *binding in bindings) {
+      FBSDKCodelessPathComponent *component = binding.path.lastObject;
+      if ((component.section == -1 || component.section == indexPath.section)
+          && (component.row == -1 || component.row == indexPath.row)) {
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        if (cell) {
+          [binding trackEvent:cell];
+        }
+      }
+    }
+  });
+}
+
+- (void)handleDidSelectItemWithBindings:(NSArray<FBSDKEventBinding *> *)bindings
+                                 target:(nullable id)target
+                                command:(nullable SEL)command
+                         collectionView:(UICollectionView *)collectionView
+                              indexPath:(NSIndexPath *)indexPath
+{
+  fb_dispatch_on_main_thread(^{
+    for (FBSDKEventBinding *binding in bindings) {
+      FBSDKCodelessPathComponent *component = binding.path.lastObject;
+      if ((component.section == -1 || component.section == indexPath.section)
+          && (component.row == -1 || component.row == indexPath.row)) {
+        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+        if (cell) {
+          [binding trackEvent:cell];
+        }
+      }
+    }
+  });
+}
 
 - (BOOL)isStarted
 {

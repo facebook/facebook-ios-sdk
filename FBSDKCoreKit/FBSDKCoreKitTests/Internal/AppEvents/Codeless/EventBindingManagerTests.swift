@@ -23,7 +23,9 @@ protocol WindowMoving {
   func didMoveToWindow()
 }
 
-class EventBindingManagerTests: XCTestCase, UITableViewDelegate { // swiftlint:disable:this type_body_length
+class EventBindingManagerTests: XCTestCase, // swiftlint:disable:this type_body_length
+                                UITableViewDelegate,
+                                UICollectionViewDelegate {
 
   var manager: EventBindingManager! // swiftlint:disable:this implicitly_unwrapped_optional
   var bindings = SampleEventBindingList.valid
@@ -305,7 +307,7 @@ class EventBindingManagerTests: XCTestCase, UITableViewDelegate { // swiftlint:d
 
   enum ViewHierarchies {
 
-    static func validReactNativeAncestor(interactionEnabled: Bool) -> (root: UIView, leaf: UIView) {
+    static func viewWithReactNativeAncestor(interactionEnabled: Bool) -> (root: UIView, leaf: UIView) {
       let reactView1 = TestReactNativeView()
       reactView1.isUserInteractionEnabled = false
       let reactView2 = TestReactNativeView()
@@ -317,24 +319,34 @@ class EventBindingManagerTests: XCTestCase, UITableViewDelegate { // swiftlint:d
       return (root: reactView2, leaf: view)
     }
 
-    static func validControl(isNestedInWindow: Bool) -> (root: UIView, leaf: TestControl) {
+    static var nestedTableViewAndCell: (tableView: TestTableView, cell: UITableViewCell) {
       let window = UIWindow()
-      let control = TestControl()
-
-      if isNestedInWindow {
-        control.stubbedWindow = window
-        return (root: window, leaf: control)
-      } else {
-        return (root: control, leaf: control)
-      }
-    }
-
-    static var validReactNative: TestReactNativeView {
-      let window = UIWindow()
-      let view = TestReactNativeView()
+      let tableView = TestTableView()
+      tableView.stubbedWindow = window
+      let view = TestView()
       view.stubbedWindow = window
+      let cell = UITableViewCell()
+      view.addSubview(tableView)
+      tableView.addSubview(cell)
 
-      return view
+      return (tableView, cell)
     }
+
+    static var nestedCollectionViewAndCell: (tableView: TestCollectionView, cell: UICollectionViewCell) {
+      let window = UIWindow()
+      let collectionView = TestCollectionView(
+        frame: .zero,
+        collectionViewLayout: UICollectionViewFlowLayout()
+      )
+      collectionView.stubbedWindow = window
+      let view = TestView()
+      view.stubbedWindow = window
+      let cell = UICollectionViewCell()
+      view.addSubview(collectionView)
+      collectionView.addSubview(cell)
+
+      return (collectionView, cell)
+    }
+
   }
 }
