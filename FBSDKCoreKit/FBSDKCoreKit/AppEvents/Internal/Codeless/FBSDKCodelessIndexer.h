@@ -25,7 +25,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void(^FBSDKCodelessSettingLoadBlock)(BOOL isCodelessSetupEnabled, NSError *_Nullable error);
-@protocol FBSDKGraphRequestProviding;
 
 NS_SWIFT_NAME(CodelessIndexer)
 @interface FBSDKCodelessIndexer : NSObject
