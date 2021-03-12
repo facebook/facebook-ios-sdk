@@ -330,12 +330,10 @@
                                     named:@"handle_table_view"];
           }
         };
-      #if DEBUG
       #if FBSDKTEST
         tableViewBlock();
       #else
         fb_dispatch_on_default_thread(tableViewBlock);
-      #endif
       #endif
       } else if ([view isKindOfClass:[UICollectionView class]]
                  && [delegate conformsToProtocol:@protocol(UICollectionViewDelegate)]) {
@@ -362,22 +360,18 @@
                                     named:@"handle_collection_view"];
           }
         };
-      #if DEBUG
       #if FBSDKTEST
         collectionViewBlock();
       #else
         fb_dispatch_on_default_thread(collectionViewBlock);
       #endif
-      #endif
       }
     };
 
-  #if DEBUG
   #if FBSDKTEST
     matchBlock();
   #else
     fb_dispatch_on_default_thread(matchBlock);
-  #endif
   #endif
   });
 }
