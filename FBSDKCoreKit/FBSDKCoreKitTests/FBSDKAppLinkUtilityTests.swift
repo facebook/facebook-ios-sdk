@@ -19,6 +19,15 @@
 import FBSDKCoreKit
 
 class FBSDKAppLinkUtilityTests: FBSDKTestCase {
+
+  let requestFactory = TestGraphRequestFactory()
+  
+  override func setUp() {
+    super.setUp()
+    
+    AppLinkUtility.configure(withRequestProvider: requestFactory)
+  }
+
   func testWithNoPromoCode() {
     let url = URL(string: "myapp://somelink/?someparam=somevalue")! // swiftlint:disable:this force_unwrapping
     let promoCode = AppLinkUtility.appInvitePromotionCode(from: url)
@@ -47,4 +56,18 @@ class FBSDKAppLinkUtilityTests: FBSDKTestCase {
     XCTAssertTrue(AppLinkUtility.isMatchURLScheme("fb123"))
     XCTAssertFalse(AppLinkUtility.isMatchURLScheme("not_in_url_schemes"))
   }
+  
+  func testRequestProvider() {
+    XCTAssertTrue(
+      AppLinkUtility.requestProvider() is TestGraphRequestFactory,
+      "Should use the provided request provider type"
+      )
+  }
+
+  func testRequestProviderAfterGraphRequest() {
+    AppLinkUtility.fetchDeferredAppLink()
+    XCTAssertEqual(requestFactory.capturedGraphPath, "(null)/activities")
+    XCTAssertEqual(requestFactory.capturedHttpMethod, HTTPMethod(rawValue: "POST"))
+  }
+  
 }

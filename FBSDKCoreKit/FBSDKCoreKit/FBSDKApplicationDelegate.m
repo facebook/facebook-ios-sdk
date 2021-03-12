@@ -40,9 +40,12 @@
 #import "NSUserDefaults+FBSDKDataPersisting.h"
 
 #if !TARGET_OS_TV
+ #import "FBSDKAppLinkUtility+Internal.h"
+ #import "FBSDKCodelessIndexer+Internal.h"
  #import "FBSDKContainerViewController.h"
  #import "FBSDKMeasurementEventListener.h"
  #import "FBSDKProfile+Internal.h"
+ #import "FBSDKSKAdNetworkReporter+Internal.h"
 #endif
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
@@ -450,6 +453,11 @@ static UIApplicationState _applicationState;
   [FBSDKAccessToken setTokenCache:tokenCache];
   [FBSDKAccessToken setConnectionFactory:[FBSDKGraphRequestConnectionFactory new]];
   [FBSDKAuthenticationToken setTokenCache:tokenCache];
+#if !TARGET_OS_TV
+  [FBSDKAppLinkUtility configureWithRequestProvider:[FBSDKGraphRequestFactory new]];
+  [FBSDKCodelessIndexer configureWithRequestProvider:[FBSDKGraphRequestFactory new]];
+  [FBSDKSKAdNetworkReporter configureWithRequestProvider:[FBSDKGraphRequestFactory new]];
+#endif
 }
 
 // MARK: - Testability

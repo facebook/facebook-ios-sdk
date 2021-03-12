@@ -29,7 +29,7 @@
  #import <sys/utsname.h>
 
  #import "FBSDKCoreKit+Internal.h"
- #import "FBSDKGraphRequest.h"
+ #import "FBSDKGraphRequestProviding.h"
  #import "FBSDKSettings.h"
 
 @implementation FBSDKCodelessIndexer
@@ -45,6 +45,14 @@ static const NSTimeInterval kTimeout = 4.0;
 static NSString *_deviceSessionID;
 static NSTimer *_appIndexingTimer;
 static NSString *_lastTreeHash;
+static id<FBSDKGraphRequestProviding> _requestProvider;
+
++ (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+{
+  if (self == [FBSDKCodelessIndexer class]) {
+    _requestProvider = requestProvider;
+  }
+}
 
 + (void)enable
 {
@@ -96,7 +104,7 @@ static NSString *_lastTreeHash;
     }
 
     if (![self _codelessSetupTimestampIsValid:[FBSDKTypeUtility dictionary:_codelessSetting objectForKey:CODELESS_SETTING_TIMESTAMP_KEY ofType:NSObject.class]]) {
-      FBSDKGraphRequest *request = [self requestToLoadCodelessSetup:appID];
+      id<FBSDKGraphRequest> request = [self requestToLoadCodelessSetup:appID];
       if (request == nil) {
         return;
       }
@@ -126,7 +134,7 @@ static NSString *_lastTreeHash;
 
  #pragma clang diagnostic pop
 
-+ (FBSDKGraphRequest *)requestToLoadCodelessSetup:(NSString *)appID
++ (id<FBSDKGraphRequest>)requestToLoadCodelessSetup:(NSString *)appID
 {
   NSString *advertiserID = [FBSDKAppEventsUtility advertiserID];
   if (!advertiserID) {
@@ -137,12 +145,11 @@ static NSString *_lastTreeHash;
     @"fields" : CODELESS_SETUP_ENABLED_FIELD,
     @"advertiser_id" : advertiserID
   };
-
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:appID
-                                                                 parameters:parameters
-                                                                tokenString:nil
-                                                                 HTTPMethod:nil
-                                                                      flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
+  id<FBSDKGraphRequest> request = [_requestProvider createGraphRequestWithGraphPath:appID
+                                                                         parameters:parameters
+                                                                        tokenString:nil
+                                                                         HTTPMethod:nil
+                                                                              flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
   return request;
 }
 
@@ -175,11 +182,11 @@ static NSString *_lastTreeHash;
     CODELESS_INDEXING_SESSION_ID_KEY : [self currentSessionDeviceID],
     CODELESS_INDEXING_EXT_INFO_KEY : [self extInfo]
   };
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
-                                initWithGraphPath:[NSString stringWithFormat:@"%@/%@",
-                                                   [FBSDKSettings appID], CODELESS_INDEXING_SESSION_ENDPOINT]
-                                parameters:parameters
-                                HTTPMethod:FBSDKHTTPMethodPOST];
+  id<FBSDKGraphRequest> request = [_requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/%@",
+                                                                                     [FBSDKSettings appID],
+                                                                                     CODELESS_INDEXING_SESSION_ENDPOINT]
+                                                                         parameters:parameters
+                                                                         HTTPMethod:FBSDKHTTPMethodPOST];
   [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     _isCheckingSession = NO;
     if ([result isKindOfClass:[NSDictionary class]]) {
@@ -192,7 +199,6 @@ static NSString *_lastTreeHash;
                                                     selector:@selector(startIndexing)
                                                     userInfo:nil
                                                      repeats:YES];
-
           [[NSRunLoop mainRunLoop] addTimer:_appIndexingTimer forMode:NSDefaultRunLoopMode];
         }
       } else {
@@ -298,17 +304,16 @@ static NSString *_lastTreeHash;
 
   NSBundle *mainBundle = [NSBundle mainBundle];
   NSString *version = [mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
-                                initWithGraphPath:[NSString stringWithFormat:@"%@/%@",
-                                                   [FBSDKSettings appID], CODELESS_INDEXING_ENDPOINT]
-                                parameters:@{
-                                  CODELESS_INDEXING_TREE_KEY : tree,
-                                  CODELESS_INDEXING_APP_VERSION_KEY : version ?: @"",
-                                  CODELESS_INDEXING_PLATFORM_KEY : @"iOS",
-                                  CODELESS_INDEXING_SESSION_ID_KEY : [self currentSessionDeviceID]
-                                }
-                                HTTPMethod:FBSDKHTTPMethodPOST];
+  id<FBSDKGraphRequest> request = [_requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/%@",
+                                                                                     [FBSDKSettings appID],
+                                                                                     CODELESS_INDEXING_ENDPOINT]
+                                                                         parameters:@{
+                                     CODELESS_INDEXING_TREE_KEY : tree,
+                                     CODELESS_INDEXING_APP_VERSION_KEY : version ?: @"",
+                                     CODELESS_INDEXING_PLATFORM_KEY : @"iOS",
+                                     CODELESS_INDEXING_SESSION_ID_KEY : [self currentSessionDeviceID]
+                                   }
+                                                                         HTTPMethod:FBSDKHTTPMethodPOST];
   _isCodelessIndexing = YES;
   [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     _isCodelessIndexing = NO;
@@ -402,6 +407,17 @@ static NSString *_lastTreeHash;
     CODELESS_VIEW_TREE_VISIBILITY_KEY : view.isHidden ? @4 : @0
   };
 }
+
+ #if DEBUG
+  #if FBSDKTEST
+
++ (id<FBSDKGraphRequestProviding>)requestProvider
+{
+  return _requestProvider;
+}
+
+  #endif
+ #endif
 
 @end
 

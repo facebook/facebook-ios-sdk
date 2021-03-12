@@ -23,7 +23,7 @@
  #import "FBSDKAppLinkUtility.h"
 
  #import "FBSDKAppEventsUtility.h"
- #import "FBSDKGraphRequest.h"
+ #import "FBSDKGraphRequestProviding.h"
  #import "FBSDKInternalUtility.h"
  #import "FBSDKSettings.h"
  #import "FBSDKURL.h"
@@ -31,9 +31,17 @@
 
 static NSString *const FBSDKLastDeferredAppLink = @"com.facebook.sdk:lastDeferredAppLink%@";
 static NSString *const FBSDKDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
+static id<FBSDKGraphRequestProviding> _requestProvider;
 
 @implementation FBSDKAppLinkUtility
 {}
+
++ (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+{
+  if (self == [FBSDKAppLinkUtility class]) {
+    _requestProvider = requestProvider;
+  }
+}
 
 + (void)fetchDeferredAppLink:(FBSDKURLBlock)handler
 {
@@ -56,13 +64,11 @@ static NSString *const FBSDKDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
     NSMutableDictionary *deferredAppLinkParameters =
     [FBSDKAppEventsUtility activityParametersDictionaryForEvent:FBSDKDeferredAppLinkEvent
                                       shouldAccessAdvertisingID:YES];
-
-    FBSDKGraphRequest *deferredAppLinkRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/activities", appID, nil]
-                                                                                  parameters:deferredAppLinkParameters
-                                                                                 tokenString:nil
-                                                                                     version:nil
-                                                                                  HTTPMethod:FBSDKHTTPMethodPOST];
-
+    id<FBSDKGraphRequest> deferredAppLinkRequest = [_requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/activities", appID, nil]
+                                                                                          parameters:deferredAppLinkParameters
+                                                                                         tokenString:nil
+                                                                                             version:nil
+                                                                                          HTTPMethod:FBSDKHTTPMethodPOST];
     [deferredAppLinkRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection,
                                                          id result,
                                                          NSError *error) {
@@ -127,6 +133,17 @@ static NSString *const FBSDKDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
   }
   return NO;
 }
+
+ #if DEBUG
+  #if FBSDKTEST
+
++ (id<FBSDKGraphRequestProviding>)requestProvider
+{
+  return _requestProvider;
+}
+
+  #endif
+ #endif
 
 @end
 

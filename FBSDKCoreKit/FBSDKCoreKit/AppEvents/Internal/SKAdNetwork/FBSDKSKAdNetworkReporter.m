@@ -27,6 +27,7 @@
  #import <objc/message.h>
 
  #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKGraphRequestProviding.h"
  #import "FBSDKSKAdNetworkConversionConfiguration.h"
 
  #define FBSDK_SKADNETWORK_CONFIG_TIME_OUT 86400
@@ -48,8 +49,16 @@ static NSInteger g_conversionValue = 0;
 static NSDate *g_timestamp = nil;
 static NSMutableSet<NSString *> *g_recordedEvents;
 static NSMutableDictionary<NSString *, NSMutableDictionary *> *g_recordedValues;
+static id<FBSDKGraphRequestProviding> _requestProvider;
 
 @implementation FBSDKSKAdNetworkReporter
+
++ (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+{
+  if (self == [FBSDKSKAdNetworkReporter class]) {
+    _requestProvider = requestProvider;
+  }
+}
 
 + (void)enable
 {
@@ -120,8 +129,7 @@ static NSMutableDictionary<NSString *, NSMutableDictionary *> *g_recordedValues;
       return;
     }
     g_isRequestStarted = YES;
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
-                                  initWithGraphPath:[NSString stringWithFormat:@"%@/ios_skadnetwork_conversion_config", [FBSDKSettings appID]]];
+    id<FBSDKGraphRequest> request = [_requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/ios_skadnetwork_conversion_config", [FBSDKSettings appID]]];
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
       dispatch_async(serialQueue, ^{
         if (error) {
@@ -291,6 +299,11 @@ static NSMutableDictionary<NSString *, NSMutableDictionary *> *g_recordedValues;
 + (void)setSKAdNetworkReportEnabled:(BOOL)enabled
 {
   g_isSKAdNetworkReportEnabled = enabled;
+}
+
++ (id<FBSDKGraphRequestProviding>)requestProvider
+{
+  return _requestProvider;
 }
 
   #endif

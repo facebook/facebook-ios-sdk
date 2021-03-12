@@ -58,6 +58,8 @@
 #import "NSUserDefaults+FBSDKDataPersisting.h"
 // Swizzling
 #import "FBSDKSwizzling.h"
+// AppLinkUtility method
+#import "FBSDKAppLinkUtility+Internal.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -145,6 +147,12 @@ NS_SWIFT_NAME(configure(settings:requestProvider:connectionProvider:store:));
 NS_SWIFT_NAME(parse(result:error:));
 + (BOOL)_gateKeeperIsValid;
 + (void)reset;
++ (id<FBSDKGraphRequestProviding>)requestProvider;
+
+@end
+
+@interface FBSDKAppLinkUtility (Testing)
++ (id<FBSDKGraphRequestProviding>)requestProvider;
 
 @end
 

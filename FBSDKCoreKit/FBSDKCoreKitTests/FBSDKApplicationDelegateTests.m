@@ -52,6 +52,24 @@
 @interface FBSDKBridgeAPI (ApplicationObserving) <FBSDKApplicationObserving>
 @end
 
+@interface FBSDKAppEvents (Testing)
++ (UIApplicationState)applicationState;
++ (void)resetCanLogEvents;
++ (BOOL)canLogEvents;
+@end
+
+@interface FBSDKCodelessIndexer (Testing)
++ (id<FBSDKGraphRequestProviding>)requestProvider;
+@end
+
+@interface FBSDKSKAdNetworkReporter (Testing)
++ (id<FBSDKGraphRequestProviding>)requestProvider;
+@end
+
+@interface FBSDKAppLinkUtility (Testing)
++ (id<FBSDKGraphRequestProviding>)requestProvider;
+@end
+
 @interface FBSDKApplicationDelegateTests : FBSDKTestCase
 {
   FBSDKApplicationDelegate *_delegate;
@@ -60,12 +78,6 @@
   id _partialDelegateMock;
   NotificationCenterSpy *_notificationCenterSpy;
 }
-@end
-
-@interface FBSDKAppEvents (Testing)
-+ (UIApplicationState)applicationState;
-+ (void)resetCanLogEvents;
-+ (BOOL)canLogEvents;
 @end
 
 @implementation FBSDKApplicationDelegateTests
@@ -241,6 +253,42 @@
     store,
     NSUserDefaults.standardUserDefaults,
     "Should be configured with the expected concrete data store"
+  );
+}
+
+- (void)testConfiguringCodelessIndexer
+{
+  [FBSDKApplicationDelegate resetIsSdkInitialized];
+  [FBSDKApplicationDelegate initializeSDK:@{}];
+  NSObject *requestProvider = (NSObject *)[FBSDKCodelessIndexer requestProvider];
+  XCTAssertEqualObjects(
+    requestProvider.class,
+    FBSDKGraphRequestFactory.class,
+    "Should be configured with the expected concrete graph request provider"
+  );
+}
+
+- (void)testConfiguringAppLinkUtility
+{
+  [FBSDKApplicationDelegate resetIsSdkInitialized];
+  [FBSDKApplicationDelegate initializeSDK:@{}];
+  NSObject *requestProvider = (NSObject *)[FBSDKAppLinkUtility requestProvider];
+  XCTAssertEqualObjects(
+    requestProvider.class,
+    FBSDKGraphRequestFactory.class,
+    "Should be configured with the expected concrete graph request provider"
+  );
+}
+
+- (void)testConfiguringFBSDKSKAdNetworkReporter
+{
+  [FBSDKApplicationDelegate resetIsSdkInitialized];
+  [FBSDKApplicationDelegate initializeSDK:@{}];
+  NSObject *requestProvider = (NSObject *)[FBSDKSKAdNetworkReporter requestProvider];
+  XCTAssertEqualObjects(
+    requestProvider.class,
+    FBSDKGraphRequestFactory.class,
+    "Should be configured with the expected concrete graph request provider"
   );
 }
 

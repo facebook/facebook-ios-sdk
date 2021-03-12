@@ -17,25 +17,16 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "TargetConditionals.h"
-
 #if !TARGET_OS_TV
 
-#import <Foundation/Foundation.h>
+ #import <Foundation/Foundation.h>
 
-NS_ASSUME_NONNULL_BEGIN
+ #import "FBSDKSKAdNetworkReporter.h"
 
-typedef void(^FBSDKCodelessSettingLoadBlock)(BOOL isCodelessSetupEnabled, NSError *_Nullable error);
-@protocol FBSDKGraphRequestProviding;
+@interface FBSDKSKAdNetworkReporter (Internal)
 
-NS_SWIFT_NAME(CodelessIndexer)
-@interface FBSDKCodelessIndexer : NSObject
-
-@property (class, nonatomic, copy, readonly) NSString *extInfo;
-
-+ (void)enable;
++ (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider;
 
 @end
-
-NS_ASSUME_NONNULL_END
 
 #endif

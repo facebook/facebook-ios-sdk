@@ -23,6 +23,7 @@
 
  #import <StoreKit/StoreKit.h>
 
+ #import "FBSDKCoreKitTests-Swift.h"
  #import "FBSDKSKAdNetworkConversionConfiguration.h"
  #import "FBSDKSKAdNetworkReporter.h"
  #import "FBSDKSettings+Internal.h"
@@ -32,6 +33,7 @@
 static NSString *const FBSDKSettingsInstallTimestamp = @"com.facebook.sdk:FBSDKSettingsInstallTimestamp";
 static NSString *const FBSDKSKAdNetworkReporterKey = @"com.facebook.sdk:FBSDKSKAdNetworkReporter";
 
+typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 @interface FBSDKSKAdNetworkReporter ()
 
 + (void)setConfiguration:(FBSDKSKAdNetworkConversionConfiguration *)configuration;
@@ -43,6 +45,10 @@ static NSString *const FBSDKSKAdNetworkReporterKey = @"com.facebook.sdk:FBSDKSKA
 + (void)_updateConversionValue:(NSInteger)value;
 
 + (void)setSKAdNetworkReportEnabled:(BOOL)enabled;
+
++ (void)_loadConfigurationWithBlock:(FBSDKSKAdNetworkReporterBlock)block;
++ (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider;
++ (id<FBSDKGraphRequestProviding>)requestProvider;
 
 @end
 
@@ -76,7 +82,6 @@ static NSString *const FBSDKSKAdNetworkReporterKey = @"com.facebook.sdk:FBSDKSKA
 
   [FBSDKSKAdNetworkReporter _loadReportData];
   [FBSDKSKAdNetworkReporter setSKAdNetworkReportEnabled:YES];
-
   [self stubLoadingAdNetworkReporterConfiguration];
 }
 
@@ -214,6 +219,17 @@ static NSString *const FBSDKSKAdNetworkReporterKey = @"com.facebook.sdk:FBSDKSKA
     };
     XCTAssertTrue([expectedValues isEqualToDictionary:recordedValues]);
   }
+}
+
+- (void)testConfigureWithRequestProvider
+{
+  id<FBSDKGraphRequestProviding> requestProvider = [FBSDKGraphRequestFactory new];
+  [FBSDKSKAdNetworkReporter configureWithRequestProvider:requestProvider];
+  XCTAssertEqualObjects(
+    requestProvider,
+    [FBSDKSKAdNetworkReporter requestProvider],
+    "Should be able to configure a reporter with a request provider"
+  );
 }
 
 @end

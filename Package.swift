@@ -63,6 +63,7 @@ let package = Package(
                 .headerSearchPath("AppEvents/Internal/ML"),
                 .headerSearchPath("AppEvents/Internal/Integrity"),
                 .headerSearchPath("AppEvents/Internal/EventDeactivation"),
+                .headerSearchPath("AppEvents/Internal/SKAdNetwork"),
                 .headerSearchPath("AppEvents/Internal/SuggestedEvents"),
                 .headerSearchPath("AppLink"),
                 .headerSearchPath("AppLink/Internal"),
