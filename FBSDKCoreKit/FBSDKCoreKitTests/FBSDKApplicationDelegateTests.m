@@ -80,6 +80,13 @@
 }
 @end
 
+@interface FBSDKAppEvents (Testing)
++ (UIApplicationState)applicationState;
++ (void)resetCanLogEvents;
++ (BOOL)canLogEvents;
++ (Class<FBSDKGateKeeperManaging>)gateKeeperManager;
+@end
+
 @implementation FBSDKApplicationDelegateTests
 
 - (void)setUp
@@ -215,6 +222,12 @@
   XCTAssertTrue(
     [FBSDKAppEvents canLogEvents],
     "Initializing the SDK should enable event logging"
+  );
+
+  XCTAssertEqualObjects(
+    FBSDKAppEvents.gateKeeperManager,
+    [FBSDKGateKeeperManager class],
+    "Initializing the SDK should set gate keeper manager for event logging"
   );
 }
 

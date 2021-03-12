@@ -17,6 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
+#import "FBSDKGateKeeperManaging.h"
 
 #define FBSDK_GATEKEEPER_MANAGER_CACHE_TIMEOUT (60 * 60)
 
@@ -33,7 +34,8 @@ typedef void (^FBSDKGKManagerBlock)(NSError * _Nullable error)
 NS_SWIFT_NAME(GKManagerBlock);
 
 NS_SWIFT_NAME(GateKeeperManager)
-@interface FBSDKGateKeeperManager : NSObject
+@interface FBSDKGateKeeperManager : NSObject<FBSDKGateKeeperManaging>
+
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 

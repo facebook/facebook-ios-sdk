@@ -444,6 +444,7 @@ static UIApplicationState _applicationState;
 {
   g_isSDKInitialized = YES;
   [FBSDKGraphRequestConnection setCanMakeRequests];
+  [FBSDKAppEvents setGateKeeperManager:[FBSDKGateKeeperManager class]];
   [FBSDKAppEvents setCanLogEvents];
   [FBSDKGateKeeperManager configureWithSettings:FBSDKSettings.class
                                 requestProvider:[FBSDKGraphRequestFactory new]

@@ -139,6 +139,7 @@ static NSString *const _mockUserID = @"mockUserID";
   [self stubAllocatingGraphRequestConnection];
   [FBSDKAppEvents resetApplicationState];
   [FBSDKAppEvents resetCanLogEvents];
+  [FBSDKAppEvents setGateKeeperManager:[TestGateKeeperManager class]];
 }
 
 - (void)testAppEventsMockIsSingleton
@@ -565,11 +566,7 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testAppEventsKillSwitchDisabled
 {
-  id mockGateKeeperManager = OCMClassMock([FBSDKGateKeeperManager class]);
-  OCMStub(
-    [mockGateKeeperManager boolForKey:[OCMArg any]
-                         defaultValue:NO]
-  ).andReturn(NO);
+  [TestGateKeeperManager setGateKeeperValueWithKey:@"app_events_killswitch" value:NO];
 
   OCMExpect([self.appEventStatesMock addEvent:[OCMArg any] isImplicit:NO]);
 
@@ -580,18 +577,11 @@ static NSString *const _mockUserID = @"mockUserID";
                            accessToken:nil];
 
   [self.appEventStatesMock verify];
-
-  [mockGateKeeperManager stopMocking];
-  mockGateKeeperManager = nil;
 }
 
 - (void)testAppEventsKillSwitchEnabled
 {
-  id mockGateKeeperManager = OCMClassMock([FBSDKGateKeeperManager class]);
-  OCMStub(
-    [mockGateKeeperManager boolForKey:[OCMArg any]
-                         defaultValue:NO]
-  ).andReturn(YES);
+  [TestGateKeeperManager setGateKeeperValueWithKey:@"app_events_killswitch" value:YES];
 
   OCMReject([self.appEventStatesMock addEvent:[OCMArg any] isImplicit:NO]);
 
@@ -600,9 +590,7 @@ static NSString *const _mockUserID = @"mockUserID";
                             parameters:nil
                     isImplicitlyLogged:NO
                            accessToken:nil];
-
-  [mockGateKeeperManager stopMocking];
-  mockGateKeeperManager = nil;
+  [TestGateKeeperManager setGateKeeperValueWithKey:@"app_events_killswitch" value:NO];
 }
 
 #pragma mark  Tests for log event

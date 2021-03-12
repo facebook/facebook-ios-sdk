@@ -324,6 +324,7 @@ NSString *const FBSDKAPPEventsWKWebViewMessagesProtocolKey = @"fbmq-0.1";
 
 static NSString *g_overrideAppID = nil;
 static BOOL g_explicitEventsLoggedYet;
+static Class<FBSDKGateKeeperManaging> g_gateKeeperManager;
 
 @interface FBSDKAppEvents ()
 
@@ -867,6 +868,18 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 
 #pragma mark - Internal Methods
 
++ (Class<FBSDKGateKeeperManaging>)gateKeeperManager
+{
+  return g_gateKeeperManager;
+}
+
++ (void)setGateKeeperManager:(Class<FBSDKGateKeeperManaging>)manager
+{
+  if (g_gateKeeperManager != manager) {
+    g_gateKeeperManager = manager;
+  }
+}
+
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 {
@@ -1157,14 +1170,17 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
              accessToken:(FBSDKAccessToken *)accessToken
 {
   // Kill events if kill-switch is enabled
-  if ([FBSDKGateKeeperManager boolForKey:FBSDKGateKeeperAppEventsKillSwitch
-                            defaultValue:NO]) {
+  if (!g_gateKeeperManager) {
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
+                       formatString:@"FBSDKAppEvents: Cannot log app events before the SDK is initialized."];
+    return;
+  } else if ([g_gateKeeperManager boolForKey:FBSDKGateKeeperAppEventsKillSwitch
+                                defaultValue:NO]) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
                        formatString:@"FBSDKAppEvents: KillSwitch is enabled and fail to log app event: %@",
      eventName];
     return;
   }
-
 #if !TARGET_OS_TV
   // Update conversion value for SKAdNetwork if needed
   [FBSDKSKAdNetworkReporter recordAndUpdateEvent:eventName currency:[FBSDKTypeUtility dictionary:parameters objectForKey:FBSDKAppEventParameterNameCurrency ofType:NSString.class] value:valueToSum];
