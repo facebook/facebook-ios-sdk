@@ -21,6 +21,25 @@ import XCTest
 
 class SettingsTests: XCTestCase {
 
+  var store = UserDefaultsSpy()
+
+  override func setUp() {
+    super.setUp()
+
+    Settings.configure(
+      store: store,
+      appEventsConfigurationProvider: TestAppEventsConfigurationProvider.self
+    )
+  }
+
+  override func tearDown() {
+    super.tearDown()
+
+    Settings.reset()
+    TestAppEventsConfigurationProvider.reset()
+    TestAppEventsConfiguration.reset()
+  }
+
   func testDefaultStore() {
     Settings.reset()
     XCTAssertNil(
@@ -30,12 +49,146 @@ class SettingsTests: XCTestCase {
   }
 
   func testConfiguringWithStore() {
-    let store = UserDefaultsSpy()
-    Settings.configure(store: store)
-
     XCTAssertTrue(
       Settings.store === store,
       "Should be able to set a persistent data store"
+    )
+  }
+
+  func testDefaultAppEventsConfigurationProvider() {
+    Settings.reset()
+    XCTAssertNil(
+      Settings.appEventsConfigurationProvider,
+      "Settings should not have a default app events configuration provider"
+    )
+  }
+
+  func testConfiguringWithAppEventsConfigurationProvider() {
+    XCTAssertTrue(
+      Settings.appEventsConfigurationProvider === TestAppEventsConfigurationProvider.self,
+      "Should be able to set an app events configuration provider"
+    )
+  }
+
+  // MARK: Advertiser Tracking Status
+
+  func testFacebookAdvertiserTrackingStatusDefaultValue() {
+    let configuration = TestAppEventsConfiguration(defaultAteStatus: .disallowed)
+    TestAppEventsConfigurationProvider.stubbedConfiguration = configuration
+
+    XCTAssertEqual(
+      Settings.getAdvertisingTrackingStatus(),
+      configuration.defaultATEStatus,
+      """
+      Advertiser tracking status should use the cached app events configuration
+      when there is no persisted overridden value
+      """
+    )
+    XCTAssertEqual(
+      store.capturedObjectRetrievalKey,
+      "com.facebook.sdk:FBSDKSettingsAdvertisingTrackingStatus",
+      """
+      Should attempt to retrieve the tracking status from the data store before
+      checking the cached configuration
+      """
+    )
+    XCTAssertTrue(
+      TestAppEventsConfigurationProvider.didRetrieveCachedConfiguration,
+      "Should attempt to retrieve the tracking status from a cached configuration"
+    )
+  }
+
+  func testGettingExplicitlySetFacebookAdvertiserTrackingStatus() {
+    Settings.setAdvertiserTrackingStatus(.disallowed)
+    XCTAssertEqual(
+      Settings.getAdvertisingTrackingStatus(),
+      .disallowed,
+      "Should return the explicitly set tracking status"
+    )
+    XCTAssertNil(
+      store.capturedObjectRetrievalKey,
+      "Should not attempt to retrieve the tracking status from the data store"
+    )
+    XCTAssertFalse(
+      TestAppEventsConfigurationProvider.didRetrieveCachedConfiguration,
+      "Should not attempt to retrieve the tracking status from a cached configuration"
+    )
+  }
+
+  func testGettingPersistedFacebookAdvertiserTrackingStatus() {
+    let key = "com.facebook.sdk:FBSDKSettingsAdvertisingTrackingStatus"
+    store.set(
+      NSNumber(value: AppEventsUtility.AdvertisingTrackingStatus.allowed.rawValue),
+      forKey: key
+    )
+    XCTAssertEqual(
+      Settings.getAdvertisingTrackingStatus(),
+      .allowed,
+      "Should return the tracking status from the data store"
+    )
+    XCTAssertEqual(
+      store.capturedObjectRetrievalKey,
+      key,
+      "Should retrieve the tracking status from the data store"
+    )
+    XCTAssertFalse(
+      TestAppEventsConfigurationProvider.didRetrieveCachedConfiguration,
+      "Should not attempt to retrieve the tracking status from a cached configuration"
+    )
+  }
+
+  func testGettingCachedFacebookAdvertiserTrackingStatus() {
+    let key = "com.facebook.sdk:FBSDKSettingsAdvertisingTrackingStatus"
+    store.set(
+      NSNumber(value: AppEventsUtility.AdvertisingTrackingStatus.allowed.rawValue),
+      forKey: key
+    )
+    XCTAssertEqual(
+      Settings.getAdvertisingTrackingStatus(),
+      .allowed,
+      "Should return the tracking status from the data store"
+    )
+    XCTAssertEqual(
+      store.capturedObjectRetrievalKey,
+      key,
+      "Should retrieve the tracking status from the data store"
+    )
+    XCTAssertFalse(
+      TestAppEventsConfigurationProvider.didRetrieveCachedConfiguration,
+      "Should not attempt to retrieve the tracking status from a cached configuration"
+    )
+  }
+
+  func testSettingFacebookAdvertiserTrackingStatusToEnabled() {
+    XCTAssertTrue(
+      Settings.setAdvertiserTrackingEnabled(true),
+      "Setting advertiser tracking status should indicate success"
+    )
+    XCTAssertEqual(
+      store.capturedSetObjectKey,
+      "com.facebook.sdk:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp",
+      "Should persist the time when the tracking status is set to enabled"
+    )
+  }
+
+  func testSettingFacebookAdvertiserTrackingStatusToDisallowed() {
+    XCTAssertTrue(
+      Settings.setAdvertiserTrackingEnabled(false),
+      "Setting advertiser tracking status should indicate success"
+    )
+    XCTAssertEqual(
+      store.capturedSetObjectKey,
+      "com.facebook.sdk:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp",
+      "Should persist the time when the tracking status is set to disallowed"
+    )
+  }
+
+  func testSettingFacebookAdvertiserTrackingStatusToUnspecified() {
+    Settings.setAdvertiserTrackingStatus(.unspecified)
+
+    XCTAssertNil(
+      store.object(forKey: "com.facebook.sdk:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp"),
+      "Should not capture the time the status is set to unspecified"
     )
   }
 }

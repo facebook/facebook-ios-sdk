@@ -21,6 +21,7 @@
 
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKCoreKit.h"
+#import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKSettings.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKTestCase.h"
@@ -58,7 +59,8 @@ static NSString *const whiteSpaceToken = @"   ";
 
   // Reset user defaults spy
   userDefaultsSpy = [UserDefaultsSpy new];
-  [FBSDKSettings configureWithStore:userDefaultsSpy];
+  [FBSDKSettings configureWithStore:userDefaultsSpy
+     appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class];
   [self stubLoggingIfUserSettingsChanged];
 }
 
@@ -1451,7 +1453,8 @@ static NSString *const whiteSpaceToken = @"   ";
 
   // Reset internal storage
   [FBSDKSettings reset];
-  [FBSDKSettings configureWithStore:userDefaultsSpy];
+  [FBSDKSettings configureWithStore:userDefaultsSpy
+     appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class];
 
   XCTAssertNotNil(
     FBSDKSettings.dataProcessingOptions,

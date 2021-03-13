@@ -22,8 +22,8 @@
 
 #import "FBSDKAccessTokenExpirer.h"
 #import "FBSDKAppEvents+Internal.h"
-#import "FBSDKAppEventsConfiguration.h"
-#import "FBSDKAppEventsConfigurationManager.h"
+#import "FBSDKAppEventsConfigurationProtocol.h"
+#import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKCoreKit.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKInternalUtility.h"
@@ -76,7 +76,8 @@ static NSString *g_defaultGraphAPIVersion;
 static FBSDKAccessTokenExpirer *g_accessTokenExpirer;
 static NSDictionary<NSString *, id> *g_dataProcessingOptions = nil;
 static NSNumber *g_advertiserTrackingStatus = nil;
-static id<FBSDKDataPersisting> _store;
+static id<FBSDKDataPersisting> _store = nil;
+static Class<FBSDKAppEventsConfigurationProviding> _appEventsConfigurationProvider = nil;
 
 //
 // Warning messages for App Event Flags
@@ -100,21 +101,27 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
 {
   if (self == [FBSDKSettings class]) {
     g_accessTokenExpirer = [[FBSDKAccessTokenExpirer alloc] init];
-    _store = nil;
 
     [FBSDKSettings _logWarnings];
     [FBSDKSettings _logIfSDKSettingsChanged];
   }
 }
 
-+ (void)configureWithStore:(id<FBSDKDataPersisting>)store
++ (void)      configureWithStore:(id<FBSDKDataPersisting>)store
+  appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)provider
 {
   _store = store;
+  _appEventsConfigurationProvider = provider;
 }
 
 + (id<FBSDKDataPersisting>)store
 {
   return _store;
+}
+
++ (id<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
+{
+  return _appEventsConfigurationProvider;
 }
 
 #pragma mark - Plist Configuration Settings
@@ -220,7 +227,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
     if (g_advertiserTrackingStatus == nil) {
       g_advertiserTrackingStatus = [self.store objectForKey:FBSDKSettingsAdvertisingTrackingStatus];
       if (g_advertiserTrackingStatus == nil) {
-        return [FBSDKAppEventsConfigurationManager cachedAppEventsConfiguration].defaultATEStatus;
+        return [[self.appEventsConfigurationProvider cachedAppEventsConfiguration] defaultATEStatus];
       }
     }
     return g_advertiserTrackingStatus.unsignedIntegerValue;
@@ -531,6 +538,8 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 + (void)reset
 {
   _store = nil;
+  _appEventsConfigurationProvider = nil;
+
   g_loggingBehaviors = nil;
   g_FacebookAppID = nil;
   g_FacebookUrlSchemeSuffix = nil;

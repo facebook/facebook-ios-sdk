@@ -346,10 +346,16 @@
   [FBSDKApplicationDelegate initializeSDK:@{}];
 
   NSObject *store = (NSObject *) FBSDKSettings.store;
+  NSObject *appEventsConfigProvider = (NSObject *) FBSDKSettings.appEventsConfigurationProvider;
   XCTAssertEqualObjects(
     store,
     NSUserDefaults.standardUserDefaults,
     "Should be configured with the expected concrete data store"
+  );
+  XCTAssertEqualObjects(
+    appEventsConfigProvider,
+    FBSDKAppEventsConfigurationManager.class,
+    "Should be configured with the expected concrete app events configuration provider"
   );
 }
 

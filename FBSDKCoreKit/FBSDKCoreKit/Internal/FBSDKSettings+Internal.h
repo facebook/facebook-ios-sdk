@@ -30,11 +30,13 @@
 
 @protocol FBSDKTokenCaching;
 @protocol FBSDKDataPersisting;
+@protocol FBSDKAppEventsConfigurationProviding;
 
 @interface FBSDKSettings (Internal)
 
 + (void)configureWithStore:(nonnull id<FBSDKDataPersisting>)store
-NS_SWIFT_NAME(configure(store:));
+appEventsConfigurationProvider:(nonnull Class<FBSDKAppEventsConfigurationProviding>)provider
+NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:));
 
 + (nullable NSObject<FBSDKTokenCaching> *)tokenCache;
 

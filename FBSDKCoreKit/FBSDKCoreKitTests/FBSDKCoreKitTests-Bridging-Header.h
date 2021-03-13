@@ -60,6 +60,10 @@
 #import "FBSDKSwizzling.h"
 // AppLinkUtility method
 #import "FBSDKAppLinkUtility+Internal.h"
+// AppEventsConfiguration
+#import "FBSDKAppEventsConfigurationProtocol.h"
+#import "FBSDKAppEventsConfigurationProviding.h"
+#import "FBSDKAppEventsConfiguration+AppEventsConfigurationProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -191,9 +195,11 @@ NS_SWIFT_NAME(parse(result:error:));
 @interface FBSDKSettings (Testing)
 
 @property (class, nonatomic, nullable, readonly) id<FBSDKDataPersisting> store;
+@property (class, nonatomic, nullable, readonly) id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
 
 + (void)configureWithStore:(id<FBSDKDataPersisting>)store
-NS_SWIFT_NAME(configure(store:));
+appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)provider
+NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:));
 
 + (void)reset;
 
