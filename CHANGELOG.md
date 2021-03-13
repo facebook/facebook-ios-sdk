@@ -15,7 +15,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
-- `friendIDs` property added to `FBSDKProfile` (NOTE: We are building out the `friendIDs` property in Limited Login with the intention to roll it out in the coming months, though it is not broadly available to developers at this time)
+- `friendIDs` property added to `FBSDKProfile` (NOTE: We are building out the `friendIDs` property in Limited Login with the intention to roll it out in early spring)
 - `FBSDKProfile` initializer that includes optional `friendIDs` argument
 - `claims` property of type `FBSDKAuthenticationTokenClaims` added to `FBSDKAuthenticationToken`
 

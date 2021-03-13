@@ -225,8 +225,7 @@ NS_SWIFT_NAME(current);
   A list of identifiers of the user's friends.
 
   IMPORTANT: This field will only be populated if your user has granted your application the 'user_friends' permission.
-  We are building out this field in Limited Login with the intention to roll it out in the coming months, though it is
- not broadly available to developers at this time.
+  We are building out this field in Limited Login with the intention to roll it out in early spring.
  */
 @property (nonatomic, copy, readonly, nullable) NSArray<FBSDKUserIdentifier *> *friendIDs;
 
