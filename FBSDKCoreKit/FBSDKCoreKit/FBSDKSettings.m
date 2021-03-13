@@ -25,6 +25,7 @@
 #import "FBSDKAppEventsConfiguration.h"
 #import "FBSDKAppEventsConfigurationManager.h"
 #import "FBSDKCoreKit.h"
+#import "FBSDKDataPersisting.h"
 #import "FBSDKInternalUtility.h"
 
 #define FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(TYPE, PLIST_KEY, GETTER, SETTER, DEFAULT_VALUE, ENABLE_CACHE) \
@@ -32,7 +33,7 @@
   + (TYPE *)GETTER \
   { \
     if ((g_ ## PLIST_KEY == nil) && ENABLE_CACHE) { \
-      g_ ## PLIST_KEY = [[[NSUserDefaults standardUserDefaults] objectForKey:@#PLIST_KEY] copy]; \
+      g_ ## PLIST_KEY = [[_store objectForKey:@#PLIST_KEY] copy]; \
     } \
     if (g_ ## PLIST_KEY == nil) { \
       g_ ## PLIST_KEY = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@#PLIST_KEY] copy] ?: DEFAULT_VALUE; \
@@ -43,9 +44,9 @@
     g_ ## PLIST_KEY = [value copy]; \
     if (ENABLE_CACHE) { \
       if (value != nil) { \
-        [[NSUserDefaults standardUserDefaults] setObject:value forKey:@#PLIST_KEY]; \
+        [_store setObject:value forKey:@#PLIST_KEY]; \
       } else { \
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@#PLIST_KEY]; \
+        [_store removeObjectForKey:@#PLIST_KEY]; \
       } \
     } \
     [FBSDKSettings _logIfSDKSettingsChanged]; \
@@ -75,6 +76,7 @@ static NSString *g_defaultGraphAPIVersion;
 static FBSDKAccessTokenExpirer *g_accessTokenExpirer;
 static NSDictionary<NSString *, id> *g_dataProcessingOptions = nil;
 static NSNumber *g_advertiserTrackingStatus = nil;
+static id<FBSDKDataPersisting> _store;
 
 //
 // Warning messages for App Event Flags
@@ -98,10 +100,21 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
 {
   if (self == [FBSDKSettings class]) {
     g_accessTokenExpirer = [[FBSDKAccessTokenExpirer alloc] init];
+    _store = nil;
 
     [FBSDKSettings _logWarnings];
     [FBSDKSettings _logIfSDKSettingsChanged];
   }
+}
+
++ (void)configureWithStore:(id<FBSDKDataPersisting>)store
+{
+  _store = store;
+}
+
++ (id<FBSDKDataPersisting>)store
+{
+  return _store;
 }
 
 #pragma mark - Plist Configuration Settings
@@ -205,7 +218,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 {
   if (@available(iOS 14.0, *)) {
     if (g_advertiserTrackingStatus == nil) {
-      g_advertiserTrackingStatus = [[NSUserDefaults standardUserDefaults] objectForKey:FBSDKSettingsAdvertisingTrackingStatus];
+      g_advertiserTrackingStatus = [self.store objectForKey:FBSDKSettingsAdvertisingTrackingStatus];
       if (g_advertiserTrackingStatus == nil) {
         return [FBSDKAppEventsConfigurationManager cachedAppEventsConfiguration].defaultATEStatus;
       }
@@ -220,7 +233,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 + (void)setAdvertiserTrackingStatus:(FBSDKAdvertisingTrackingStatus)status
 {
   g_advertiserTrackingStatus = @(status);
-  [[NSUserDefaults standardUserDefaults] setObject:g_advertiserTrackingStatus forKey:FBSDKSettingsAdvertisingTrackingStatus];
+  [self.store setObject:g_advertiserTrackingStatus forKey:FBSDKSettingsAdvertisingTrackingStatus];
 }
 
 + (BOOL)isSKAdNetworkReportEnabled
@@ -235,7 +248,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (BOOL)shouldLimitEventAndDataUsage
 {
-  NSNumber *storedValue = [[NSUserDefaults standardUserDefaults] objectForKey:FBSDKSettingsLimitEventAndDataUsage];
+  NSNumber *storedValue = [self.store objectForKey:FBSDKSettingsLimitEventAndDataUsage];
   if (storedValue == nil) {
     return NO;
   }
@@ -244,9 +257,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (void)setLimitEventAndDataUsage:(BOOL)limitEventAndDataUsage
 {
-  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-  [defaults setObject:@(limitEventAndDataUsage) forKey:FBSDKSettingsLimitEventAndDataUsage];
-  [defaults synchronize];
+  [self.store setObject:@(limitEventAndDataUsage) forKey:FBSDKSettingsLimitEventAndDataUsage];
 }
 
 + (NSSet<FBSDKLoggingBehavior> *)loggingBehaviors
@@ -283,8 +294,8 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   g_dataProcessingOptions = json;
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:g_dataProcessingOptions];
   if (data) {
-    [[NSUserDefaults standardUserDefaults] setObject:data
-                                              forKey:FBSDKSettingsDataProcessingOptions];
+    [self.store setObject:data
+                   forKey:FBSDKSettingsDataProcessingOptions];
   }
 }
 
@@ -364,7 +375,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 + (NSNumber *)appEventSettingsForUserDefaultsKey:(NSString *)userDefaultsKey
                                     defaultValue:(NSNumber *)defaultValue
 {
-  NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:userDefaultsKey];
+  NSData *data = [self.store objectForKey:userDefaultsKey];
   if ([data isKindOfClass:[NSNumber class]]) {
     return (NSNumber *)data;
   }
@@ -376,7 +387,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 + (NSDictionary<NSString *, id> *)dataProcessingOptions
 {
   if (!g_dataProcessingOptions) {
-    NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:FBSDKSettingsDataProcessingOptions];
+    NSData *data = [self.store objectForKey:FBSDKSettingsDataProcessingOptions];
     if ([data isKindOfClass:[NSData class]]) {
       NSDictionary<NSString *, id> *dataProcessingOptions = [NSKeyedUnarchiver unarchiveObjectWithData:data];
       if (dataProcessingOptions && [dataProcessingOptions isKindOfClass:[NSDictionary class]]) {
@@ -425,9 +436,9 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   bitmask |= ([FBSDKSettings isAutoLogAppEventsEnabled] ? 1 : 0) << bit++;
   bitmask |= ([FBSDKSettings isAdvertiserIDCollectionEnabled] ? 1 : 0) << bit++;
 
-  NSInteger previousBitmask = [[NSUserDefaults standardUserDefaults] integerForKey:FBSDKSettingsBitmask];
+  NSInteger previousBitmask = [self.store integerForKey:FBSDKSettingsBitmask];
   if (previousBitmask != bitmask) {
-    [[NSUserDefaults standardUserDefaults] setInteger:bitmask forKey:FBSDKSettingsBitmask];
+    [self.store setInteger:bitmask forKey:FBSDKSettingsBitmask];
 
     NSArray<NSString *> *keys = @[@"FacebookAutoLogAppEventsEnabled",
                                   @"FacebookAdvertiserIDCollectionEnabled"];
@@ -451,20 +462,19 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (void)recordInstall
 {
-  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-  if (![defaults objectForKey:FBSDKSettingsInstallTimestamp]) {
-    [defaults setObject:[NSDate date] forKey:FBSDKSettingsInstallTimestamp];
+  if (![self.store objectForKey:FBSDKSettingsInstallTimestamp]) {
+    [self.store setObject:[NSDate date] forKey:FBSDKSettingsInstallTimestamp];
   }
 }
 
 + (void)recordSetAdvertiserTrackingEnabled
 {
-  [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp];
+  [self.store setObject:[NSDate date] forKey:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp];
 }
 
 + (BOOL)isEventDelayTimerExpired
 {
-  NSDate *timestamp = [[NSUserDefaults standardUserDefaults] objectForKey:FBSDKSettingsInstallTimestamp];
+  NSDate *timestamp = [self.store objectForKey:FBSDKSettingsInstallTimestamp];
   if (timestamp) {
     return [[NSDate date] timeIntervalSinceDate:timestamp] > 86400;
   }
@@ -473,8 +483,8 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (BOOL)isSetATETimeExceedsInstallTime
 {
-  NSDate *installTimestamp = [[NSUserDefaults standardUserDefaults] objectForKey:FBSDKSettingsInstallTimestamp];
-  NSDate *setATETimestamp = [[NSUserDefaults standardUserDefaults] objectForKey:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp];
+  NSDate *installTimestamp = [self.store objectForKey:FBSDKSettingsInstallTimestamp];
+  NSDate *setATETimestamp = [self.store objectForKey:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp];
   if (installTimestamp && setATETimestamp) {
     return [setATETimestamp timeIntervalSinceDate:installTimestamp] > 86400;
   }
@@ -483,12 +493,12 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (NSDate *_Nullable)getInstallTimestamp
 {
-  return [[NSUserDefaults standardUserDefaults] objectForKey:FBSDKSettingsInstallTimestamp];
+  return [self.store objectForKey:FBSDKSettingsInstallTimestamp];
 }
 
 + (NSDate *_Nullable)getSetAdvertiserTrackingEnabledTimestamp
 {
-  return [[NSUserDefaults standardUserDefaults] objectForKey:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp];
+  return [self.store objectForKey:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp];
 }
 
 #pragma mark - Internal - Graph API Debug
@@ -518,78 +528,23 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 #if DEBUG
  #if FBSDKTEST
 
-+ (void)resetLoggingBehaviorsCache
++ (void)reset
 {
+  _store = nil;
   g_loggingBehaviors = nil;
-}
-
-+ (void)resetFacebookAppIDCache
-{
   g_FacebookAppID = nil;
-}
-
-+ (void)resetFacebookUrlSchemeSuffixCache
-{
   g_FacebookUrlSchemeSuffix = nil;
-}
-
-+ (void)resetFacebookClientTokenCache
-{
   g_FacebookClientToken = nil;
-}
-
-+ (void)resetFacebookDisplayNameCache
-{
   g_FacebookDisplayName = nil;
-}
-
-+ (void)resetFacebookDomainPartCache
-{
   g_FacebookDomainPart = nil;
-}
-
-+ (void)resetFacebookJpegCompressionQualityCache
-{
   g_FacebookJpegCompressionQuality = nil;
-}
-
-+ (void)resetFacebookInstrumentEnabledCache
-{
   g_FacebookInstrumentEnabled = nil;
-}
-
-+ (void)resetFacebookAutoLogAppEventsEnabledCache
-{
   g_FacebookAutoLogAppEventsEnabled = nil;
-}
-
-+ (void)resetFacebookAdvertiserIDCollectionEnabledCache
-{
   g_FacebookAdvertiserIDCollectionEnabled = nil;
-}
-
-+ (void)resetAdvertiserTrackingStatusCache
-{
   g_advertiserTrackingStatus = nil;
-}
-
-+ (void)resetFacebookSKAdNetworkReportEnabledCache
-{
   g_FacebookSKAdNetworkReportEnabled = nil;
-}
-
-+ (void)resetUserAgentSuffixCache
-{
   g_userAgentSuffix = nil;
-}
-
-+ (void)resetFacebookCodelessDebugLogEnabledCache
-{
   g_FacebookCodelessDebugLogEnabled = nil;
-}
-
-+ (void)resetDataProcessingOptionsCache
-{
   g_dataProcessingOptions = nil;
 }
 

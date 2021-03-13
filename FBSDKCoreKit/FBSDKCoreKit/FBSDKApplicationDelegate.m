@@ -454,6 +454,7 @@ static UIApplicationState _applicationState;
   [FBSDKAccessToken setTokenCache:tokenCache];
   [FBSDKAccessToken setConnectionFactory:[FBSDKGraphRequestConnectionFactory new]];
   [FBSDKAuthenticationToken setTokenCache:tokenCache];
+  [FBSDKSettings configureWithStore:NSUserDefaults.standardUserDefaults];
 #if !TARGET_OS_TV
   [FBSDKAppLinkUtility configureWithRequestProvider:[FBSDKGraphRequestFactory new]];
   [FBSDKCodelessIndexer configureWithRequestProvider:[FBSDKGraphRequestFactory new]];

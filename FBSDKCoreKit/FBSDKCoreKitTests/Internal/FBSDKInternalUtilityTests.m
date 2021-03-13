@@ -59,7 +59,7 @@
 {
   [super setUp];
 
-  [self resetCachedSettings];
+  [FBSDKSettings reset];
 
   [FBSDKInternalUtility resetQuerySchemesCache];
   [FBSDKInternalUtility resetIsFacebookAppInstalledCache];
@@ -73,7 +73,7 @@
 
 - (void)tearDown
 {
-  [self resetCachedSettings];
+  [FBSDKSettings reset];
 
   [super tearDown];
 }

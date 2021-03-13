@@ -82,7 +82,7 @@ NSString *const heightKey = @"height";
 - (void)resetCaches
 {
   [FBSDKProfile resetCurrentProfileCache];
-  [FBSDKSettings resetFacebookClientTokenCache];
+  [FBSDKSettings reset];
 }
 
 // MARK: - Creating Image URL

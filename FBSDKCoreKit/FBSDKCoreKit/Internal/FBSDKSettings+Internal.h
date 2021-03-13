@@ -29,8 +29,12 @@
 #define DATA_PROCESSING_OPTIONS_STATE   @"data_processing_options_state"
 
 @protocol FBSDKTokenCaching;
+@protocol FBSDKDataPersisting;
 
 @interface FBSDKSettings (Internal)
+
++ (void)configureWithStore:(nonnull id<FBSDKDataPersisting>)store
+NS_SWIFT_NAME(configure(store:));
 
 + (nullable NSObject<FBSDKTokenCaching> *)tokenCache;
 

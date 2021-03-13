@@ -16,24 +16,26 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+import FBSDKCoreKit
+import XCTest
 
-NS_ASSUME_NONNULL_BEGIN
+class SettingsTests: XCTestCase {
 
-/// An internal protocol used to describe a session data task
-NS_SWIFT_NAME(DataPersisting)
-@protocol FBSDKDataPersisting
+  func testDefaultStore() {
+    Settings.reset()
+    XCTAssertNil(
+      Settings.store,
+      "Settings should not have a default data store"
+    )
+  }
 
-- (void)setInteger:(NSInteger)value
-            forKey:(NSString *)defaultName;
-- (void)setObject:(id)value
-           forKey:(NSString *)defaultName;
-- (NSData *)dataForKey:(NSString *)defaultName;
-- (NSInteger)integerForKey:(NSString *)defaultName;
-- (NSString *)stringForKey:(NSString *)defaultName;
-- (id)objectForKey:(NSString *)defaultName;
-- (void)removeObjectForKey:(NSString *)defaultName;
+  func testConfiguringWithStore() {
+    let store = UserDefaultsSpy()
+    Settings.configure(store: store)
 
-@end
-
-NS_ASSUME_NONNULL_END
+    XCTAssertTrue(
+      Settings.store === store,
+      "Should be able to set a persistent data store"
+    )
+  }
+}

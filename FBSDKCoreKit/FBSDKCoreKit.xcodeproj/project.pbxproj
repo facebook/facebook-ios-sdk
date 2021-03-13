@@ -966,6 +966,8 @@
 		F44DD78725EB2ECE00F2BB20 /* FBSDKGraphRequestHTTPMethod.h in Headers */ = {isa = PBXBuildFile; fileRef = F44DD78525EB2ECE00F2BB20 /* FBSDKGraphRequestHTTPMethod.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F44DD78825EB2ECE00F2BB20 /* FBSDKGraphRequestHTTPMethod.h in Headers */ = {isa = PBXBuildFile; fileRef = F44DD78525EB2ECE00F2BB20 /* FBSDKGraphRequestHTTPMethod.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F44DD78925EB2ECE00F2BB20 /* FBSDKGraphRequestHTTPMethod.h in Headers */ = {isa = PBXBuildFile; fileRef = F44DD78525EB2ECE00F2BB20 /* FBSDKGraphRequestHTTPMethod.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F44F52F925FAAAFF00D774B7 /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44F52F025FAAAFE00D774B7 /* SettingsTests.swift */; };
+		F44F538325FAC1E800D774B7 /* TestTools.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F46873E525F7D0D500ABD912 /* TestTools.framework */; };
 		F462DBF023B94C0F00FFCECA /* FBSDKCrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 894C0B071A702194009137EF /* FBSDKCrypto.h */; };
 		F462DBF123B94C1000FFCECA /* FBSDKCrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 894C0B071A702194009137EF /* FBSDKCrypto.h */; };
 		F462DBFD23B9569000FFCECA /* FBSDKTokenCaching.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D32A83B1A69941A000A936D /* FBSDKTokenCaching.h */; };
@@ -1323,6 +1325,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 81B71CFC1D19C87400933E93;
 			remoteInfo = "FBSDKCoreKit-Dynamic";
+		};
+		F44F537925FAC1DA00D774B7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4A4069C25F4522500F0E578 /* TestTools.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F4E5F08F25F4354900D67852;
+			remoteInfo = TestTools;
 		};
 		F46873E425F7D0D500ABD912 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1714,6 +1723,7 @@
 		F44B056E256491590059A3A6 /* FBSDKBridgeAPI+SessionCompletionHandlerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "FBSDKBridgeAPI+SessionCompletionHandlerTests.m"; sourceTree = "<group>"; };
 		F44CFF6225D4931C000E36E5 /* FBSDKURLSession+URLSessionProxying.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKURLSession+URLSessionProxying.h"; sourceTree = "<group>"; };
 		F44DD78525EB2ECE00F2BB20 /* FBSDKGraphRequestHTTPMethod.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKGraphRequestHTTPMethod.h; sourceTree = "<group>"; };
+		F44F52F025FAAAFE00D774B7 /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
 		F468B29C24C2456F00979F8D /* FBSDKRestrictiveData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKRestrictiveData.h; sourceTree = "<group>"; };
 		F468B29D24C2456F00979F8D /* FBSDKRestrictiveData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKRestrictiveData.m; sourceTree = "<group>"; };
 		F468B2E024C25AB500979F8D /* FBSDKTypeUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKTypeUtility.m; sourceTree = "<group>"; };
@@ -1906,6 +1916,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F44F538325FAC1E800D774B7 /* TestTools.framework in Frameworks */,
 				FDB2B4F32398D73D00AE087E /* Accelerate.framework in Frameworks */,
 				9DAD87761A8AA75700FFA324 /* libOCMock.a in Frameworks */,
 				9DEE5C8C1A67199700D750E1 /* Foundation.framework in Frameworks */,
@@ -2575,6 +2586,7 @@
 				F413883D24C76F3B001BC075 /* FBSDKSafeCastTests.m */,
 				F93680D4249D490600446E35 /* FBSDKSettingsTests.m */,
 				89C8B19B1A8D7A27009B07F5 /* FBSDKUtilityTests.swift */,
+				F44F52F025FAAAFE00D774B7 /* SettingsTests.swift */,
 				893F44A41A644552001DB0B6 /* Internal */,
 				F4A032A125F05CFF00D19DE9 /* MathTests.swift */,
 				C67BED29257F1A6300D356C9 /* ProfilePictureViewTests.swift */,
@@ -3733,6 +3745,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				F44F537A25FAC1DA00D774B7 /* PBXTargetDependency */,
 				F410D0342370CBC2005B9318 /* PBXTargetDependency */,
 			);
 			name = FBSDKCoreKitTests;
@@ -4571,6 +4584,7 @@
 				F4D80B582565D6B3008CCAF0 /* FBSDKRestrictiveDataTests.m in Sources */,
 				F4EB33CE2542323500736B67 /* SampleRawRemotePermissions.swift in Sources */,
 				5DBB0447227FEF700009E0A6 /* FBSDKBasicUtilityTests.m in Sources */,
+				F44F52F925FAAAFF00D774B7 /* SettingsTests.swift in Sources */,
 				F4D80B812565E1C2008CCAF0 /* FBSDKInstrumentManagerTests.m in Sources */,
 				F952EA4F2339432100B20652 /* FBSDKMetadataIndexerTests.m in Sources */,
 				5DB612A823593AB600150851 /* FBSDKCrashShieldTests.m in Sources */,
@@ -4786,6 +4800,11 @@
 			isa = PBXTargetDependency;
 			target = 81B71CFC1D19C87400933E93 /* FBSDKCoreKit-Dynamic */;
 			targetProxy = F410D0332370CBC2005B9318 /* PBXContainerItemProxy */;
+		};
+		F44F537A25FAC1DA00D774B7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TestTools;
+			targetProxy = F44F537925FAC1DA00D774B7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

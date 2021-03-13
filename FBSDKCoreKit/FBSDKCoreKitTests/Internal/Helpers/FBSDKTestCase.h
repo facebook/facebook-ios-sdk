@@ -296,9 +296,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Stubs `FBSDKSettings.appURLSchemeSuffix` and return the provided value
 - (void)stubAppUrlSchemeSuffixWith:(nullable NSString *)suffix;
 
-/// Resets cached properties in `FBSDKSettings`
-- (void)resetCachedSettings;
-
 /// Stubs `FBSDKSettings.userAgentSuffix` and returns the provided value
 - (void)stubUserAgentSuffixWith:(nullable NSString *)suffix;
 

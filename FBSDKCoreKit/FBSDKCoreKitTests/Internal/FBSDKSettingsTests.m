@@ -25,9 +25,11 @@
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKTestCase.h"
 #import "FakeBundle.h"
+#import "NSUserDefaults+FBSDKDataPersisting.h"
 #import "UserDefaultsSpy.h"
 
 @interface FBSDKSettings ()
++ (void)reset;
 + (NSString *)userAgentSuffix;
 + (void)setUserAgentSuffix:(NSString *)suffix;
 @end
@@ -52,11 +54,11 @@ static NSString *const whiteSpaceToken = @"   ";
 {
   [super setUp];
 
-  [self resetCachedSettings];
+  [FBSDKSettings reset];
 
   // Reset user defaults spy
   userDefaultsSpy = [UserDefaultsSpy new];
-  [self stubUserDefaultsWith:userDefaultsSpy];
+  [FBSDKSettings configureWithStore:userDefaultsSpy];
   [self stubLoggingIfUserSettingsChanged];
 }
 
@@ -64,7 +66,7 @@ static NSString *const whiteSpaceToken = @"   ";
 {
   [super tearDown];
 
-  [self resetCachedSettings];
+  [FBSDKSettings reset];
 }
 
 - (void)testDefaultGraphAPIVersion
@@ -1021,51 +1023,6 @@ static NSString *const whiteSpaceToken = @"   ";
   );
 }
 
-// MARK: Advertiser Tracking Status
-
-- (void)testFacebookAdvertiserTrackingStatusDefaultValue
-{
-  if (@available(iOS 14.0, *)) {
-    XCTAssertTrue(
-      [FBSDKSettings getAdvertisingTrackingStatus] == FBSDKAdvertisingTrackingUnspecified,
-      "Advertiser tracking status should default to Unspecified when there is no plist value given"
-    );
-  }
-}
-
-- (void)testSettingFacebookAdvertiserTrackingStatus
-{
-  if (@available(iOS 14.0, *)) {
-    XCTAssertTrue([FBSDKSettings setAdvertiserTrackingEnabled:YES]);
-    XCTAssertTrue(
-      [FBSDKSettings getAdvertisingTrackingStatus] == FBSDKAdvertisingTrackingAllowed,
-      "Should use the explicitly set property"
-    );
-  } else {
-    XCTAssertFalse([FBSDKSettings setAdvertiserTrackingEnabled:YES]);
-    XCTAssertNil(
-      userDefaultsSpy.capturedValues[@"FacebookAdvertiserTrackingStatus"],
-      "Should be no-op in iOS13 and below"
-    );
-  }
-}
-
-- (void)testAdvertiserTrackingStatusInternalStorage
-{
-  FakeBundle *bundle = [FakeBundle bundleWithDictionary:@{}];
-  [self stubMainBundleWith:bundle];
-
-  if (@available(iOS 14.0, *)) {
-    [FBSDKSettings setAdvertiserTrackingStatus:FBSDKAdvertisingTrackingUnspecified];
-
-    XCTAssertTrue([FBSDKSettings getAdvertisingTrackingStatus] == FBSDKAdvertisingTrackingUnspecified, "sanity check");
-    XCTAssertNil(
-      userDefaultsSpy.capturedObjectRetrievalKey,
-      "Should not attempt to access the cache to retrieve objects that have a current value"
-    );
-  }
-}
-
 // MARK: SKAdNetwork Report Enabled
 
 - (void)testFacebookSKAdNetworkReportEnabledFromPlist
@@ -1493,7 +1450,8 @@ static NSString *const whiteSpaceToken = @"   ";
   FBSDKSettings.dataProcessingOptions = @[];
 
   // Reset internal storage
-  [self resetCachedSettings];
+  [FBSDKSettings reset];
+  [FBSDKSettings configureWithStore:userDefaultsSpy];
 
   XCTAssertNotNil(
     FBSDKSettings.dataProcessingOptions,
@@ -1558,17 +1516,15 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testIsEventDelayTimerExpired
 {
-  [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"];
   [FBSDKSettings recordInstall];
   XCTAssertFalse([FBSDKSettings isEventDelayTimerExpired]);
 
-  [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"];
   NSDate *today = [NSDate new];
   NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
   NSDateComponents *addComponents = [NSDateComponents new];
   addComponents.month = -1;
   NSDate *expiredDate = [calendar dateByAddingComponents:addComponents toDate:today options:0];
-  [[NSUserDefaults standardUserDefaults] setObject:expiredDate forKey:@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"];
+  [userDefaultsSpy setObject:expiredDate forKey:@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"];
   XCTAssertTrue([FBSDKSettings isEventDelayTimerExpired]);
 
   [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"];
@@ -1576,25 +1532,17 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testIsSetATETimeExceedsInstallTime
 {
-  [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"];
-  [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"com.facebook.sdk:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp"];
   [FBSDKSettings recordInstall];
   [FBSDKSettings recordSetAdvertiserTrackingEnabled];
   XCTAssertFalse([FBSDKSettings isSetATETimeExceedsInstallTime]);
-
-  [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"];
-  [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"com.facebook.sdk:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp"];
   [FBSDKSettings recordSetAdvertiserTrackingEnabled];
   NSDate *today = [NSDate new];
   NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
   NSDateComponents *addComponents = [NSDateComponents new];
   addComponents.month = -1;
   NSDate *expiredDate = [calendar dateByAddingComponents:addComponents toDate:today options:0];
-  [[NSUserDefaults standardUserDefaults] setObject:expiredDate forKey:@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"];
+  [userDefaultsSpy setObject:expiredDate forKey:@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"];
   XCTAssertTrue([FBSDKSettings isSetATETimeExceedsInstallTime]);
-
-  [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"];
-  [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"com.facebook.sdk:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp"];
 }
 
 - (void)testLoggingBehaviors

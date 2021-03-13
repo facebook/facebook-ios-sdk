@@ -188,4 +188,15 @@ NS_SWIFT_NAME(parse(result:error:));
 
 @end
 
+@interface FBSDKSettings (Testing)
+
+@property (class, nonatomic, nullable, readonly) id<FBSDKDataPersisting> store;
+
++ (void)configureWithStore:(id<FBSDKDataPersisting>)store
+NS_SWIFT_NAME(configure(store:));
+
++ (void)reset;
+
+@end
+
 NS_ASSUME_NONNULL_END

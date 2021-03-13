@@ -339,6 +339,20 @@
   );
 }
 
+- (void)testInitializingSdkConfiguresSettings
+{
+  [FBSDKApplicationDelegate resetIsSdkInitialized];
+  [FBSDKSettings reset];
+  [FBSDKApplicationDelegate initializeSDK:@{}];
+
+  NSObject *store = (NSObject *) FBSDKSettings.store;
+  XCTAssertEqualObjects(
+    store,
+    NSUserDefaults.standardUserDefaults,
+    "Should be configured with the expected concrete data store"
+  );
+}
+
 - (void)testDidFinishLaunchingLaunchedApp
 {
   _delegate.isAppLaunched = YES;

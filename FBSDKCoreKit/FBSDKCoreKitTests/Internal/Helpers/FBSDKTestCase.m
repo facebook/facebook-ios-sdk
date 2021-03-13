@@ -60,21 +60,7 @@
 
 @interface FBSDKSettings (Testing)
 + (void)_logIfSDKSettingsChanged;
-+ (void)resetLoggingBehaviorsCache;
-+ (void)resetFacebookAppIDCache;
-+ (void)resetFacebookUrlSchemeSuffixCache;
-+ (void)resetFacebookClientTokenCache;
-+ (void)resetFacebookDisplayNameCache;
-+ (void)resetFacebookDomainPartCache;
-+ (void)resetFacebookJpegCompressionQualityCache;
-+ (void)resetFacebookInstrumentEnabledCache;
-+ (void)resetFacebookAutoLogAppEventsEnabledCache;
-+ (void)resetFacebookAdvertiserIDCollectionEnabledCache;
-+ (void)resetAdvertiserTrackingStatusCache;
-+ (void)resetFacebookSKAdNetworkReportEnabledCache;
-+ (void)resetUserAgentSuffixCache;
-+ (void)resetFacebookCodelessDebugLogEnabledCache;
-+ (void)resetDataProcessingOptionsCache;
++ (void)reset;
 @end
 
 typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
@@ -718,25 +704,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 }
 
 // MARK: - Helpers
-
-- (void)resetCachedSettings
-{
-  [FBSDKSettings resetLoggingBehaviorsCache];
-  [FBSDKSettings resetFacebookAppIDCache];
-  [FBSDKSettings resetFacebookUrlSchemeSuffixCache];
-  [FBSDKSettings resetFacebookClientTokenCache];
-  [FBSDKSettings resetFacebookDisplayNameCache];
-  [FBSDKSettings resetFacebookDomainPartCache];
-  [FBSDKSettings resetFacebookJpegCompressionQualityCache];
-  [FBSDKSettings resetFacebookInstrumentEnabledCache];
-  [FBSDKSettings resetFacebookAutoLogAppEventsEnabledCache];
-  [FBSDKSettings resetFacebookAdvertiserIDCollectionEnabledCache];
-  [FBSDKSettings resetAdvertiserTrackingStatusCache];
-  [FBSDKSettings resetFacebookSKAdNetworkReportEnabledCache];
-  [FBSDKSettings resetUserAgentSuffixCache];
-  [FBSDKSettings resetFacebookCodelessDebugLogEnabledCache];
-  [FBSDKSettings resetDataProcessingOptionsCache];
-}
 
 - (id)nsNullIfNil:(id)nilValue
 {
