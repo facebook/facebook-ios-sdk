@@ -119,7 +119,7 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
   return _store;
 }
 
-+ (id<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
++ (Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
 {
   return _appEventsConfigurationProvider;
 }
