@@ -20,7 +20,7 @@ import FBSDKCoreKit
 
 @objcMembers
 class TestGraphRequestFactory: NSObject, GraphRequestProviding {
-  
+
   var stubbedRequest: GraphRequestProtocol = GraphRequest(graphPath: "me")
   var capturedGraphPath: String?
   var capturedParameters = [AnyHashable: Any]()
@@ -44,10 +44,10 @@ class TestGraphRequestFactory: NSObject, GraphRequestProviding {
     capturedFlags = flags
     return stubbedRequest
   }
-  
+
   func createGraphRequest(
     withGraphPath graphPath: String,
-    parameters: [String : Any],
+    parameters: [String: Any],
     httpMethod method: HTTPMethod
   ) -> GraphRequestProtocol {
     capturedGraphPath = graphPath
@@ -55,11 +55,12 @@ class TestGraphRequestFactory: NSObject, GraphRequestProviding {
     capturedHttpMethod = method
     return stubbedRequest
   }
-  
+
   func createGraphRequest(
     withGraphPath graphPath: String,
-    parameters: [String : Any],
-    tokenString: String?, version: String?,
+    parameters: [String: Any],
+    tokenString: String?,
+    version: String?,
     httpMethod method: HTTPMethod
   ) -> GraphRequestProtocol {
     capturedGraphPath = graphPath
@@ -68,7 +69,7 @@ class TestGraphRequestFactory: NSObject, GraphRequestProviding {
     capturedHttpMethod = method
     return stubbedRequest
   }
-  
+
   func createGraphRequest(
     withGraphPath graphPath: String
   ) -> GraphRequestProtocol {

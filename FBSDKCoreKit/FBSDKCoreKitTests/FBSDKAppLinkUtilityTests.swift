@@ -21,10 +21,10 @@ import FBSDKCoreKit
 class FBSDKAppLinkUtilityTests: FBSDKTestCase {
 
   let requestFactory = TestGraphRequestFactory()
-  
+
   override func setUp() {
     super.setUp()
-    
+
     AppLinkUtility.configure(withRequestProvider: requestFactory)
   }
 
@@ -56,7 +56,7 @@ class FBSDKAppLinkUtilityTests: FBSDKTestCase {
     XCTAssertTrue(AppLinkUtility.isMatchURLScheme("fb123"))
     XCTAssertFalse(AppLinkUtility.isMatchURLScheme("not_in_url_schemes"))
   }
-  
+
   func testRequestProvider() {
     XCTAssertTrue(
       AppLinkUtility.requestProvider() is TestGraphRequestFactory,
@@ -69,5 +69,5 @@ class FBSDKAppLinkUtilityTests: FBSDKTestCase {
     XCTAssertEqual(requestFactory.capturedGraphPath, "(null)/activities")
     XCTAssertEqual(requestFactory.capturedHttpMethod, HTTPMethod(rawValue: "POST"))
   }
-  
+
 }
