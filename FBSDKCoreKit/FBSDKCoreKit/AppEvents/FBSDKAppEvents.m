@@ -38,7 +38,8 @@
 #import "FBSDKError.h"
 #import "FBSDKEventDeactivationManager.h"
 #import "FBSDKFeatureManager.h"
-#import "FBSDKGraphRequest+Internal.h"
+#import "FBSDKGraphRequestProtocol.h"
+#import "FBSDKGraphRequestProviding.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
 #import "FBSDKPaymentObserver.h"
@@ -325,6 +326,7 @@ NSString *const FBSDKAPPEventsWKWebViewMessagesProtocolKey = @"fbmq-0.1";
 static NSString *g_overrideAppID = nil;
 static BOOL g_explicitEventsLoggedYet;
 static Class<FBSDKGateKeeperManaging> g_gateKeeperManager;
+static id<FBSDKGraphRequestProviding> g_graphRequestProvider;
 
 @interface FBSDKAppEvents ()
 
@@ -868,6 +870,14 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 
 #pragma mark - Internal Methods
 
++ (void)configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)manager
+                  graphRequestProvider:(id<FBSDKGraphRequestProviding>)provider
+{
+  [FBSDKAppEvents setGateKeeperManager:manager];
+  [FBSDKAppEvents setRequestProvider:provider];
+  [FBSDKAppEvents setCanLogEvents];
+}
+
 + (Class<FBSDKGateKeeperManaging>)gateKeeperManager
 {
   return g_gateKeeperManager;
@@ -877,6 +887,18 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 {
   if (g_gateKeeperManager != manager) {
     g_gateKeeperManager = manager;
+  }
+}
+
++ (id<FBSDKGraphRequestProviding>)requestProvider
+{
+  return g_graphRequestProvider;
+}
+
++ (void)setRequestProvider:(id<FBSDKGraphRequestProviding>)provider
+{
+  if (g_graphRequestProvider != provider) {
+    g_graphRequestProvider = provider;
   }
 }
 
@@ -1014,11 +1036,11 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
                                                                     shouldAccessAdvertisingID:self->_serverConfiguration.isAdvertisingIDEnabled];
     [self appendInstallTimestamp:params];
     NSString *path = [NSString stringWithFormat:@"%@/activities", appID];
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:path
-                                                                   parameters:params
-                                                                  tokenString:nil
-                                                                   HTTPMethod:FBSDKHTTPMethodPOST
-                                                                        flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
+    id<FBSDKGraphRequest> request = [g_graphRequestProvider createGraphRequestWithGraphPath:path
+                                                                                 parameters:params
+                                                                                tokenString:nil
+                                                                                 HTTPMethod:FBSDKHTTPMethodPOST
+                                                                                      flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
       if (!error) {
         [defaults setObject:[NSDate date] forKey:lastAttributionPingString];
@@ -1394,13 +1416,11 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
                       paramsForPrinting,
                       prettyPrintedJsonEvents];
     }
-
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/activities", appEventsState.appID]
-                                                                   parameters:postParameters
-                                                                  tokenString:appEventsState.tokenString
-                                                                   HTTPMethod:FBSDKHTTPMethodPOST
-                                                                        flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
-
+    id<FBSDKGraphRequest> request = [g_graphRequestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/activities", appEventsState.appID]
+                                                                                 parameters:postParameters
+                                                                                tokenString:appEventsState.tokenString
+                                                                                 HTTPMethod:FBSDKHTTPMethodPOST
+                                                                                      flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
       [self handleActivitiesPostCompletion:error
                               loggingEntry:loggingEntry
@@ -1503,7 +1523,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 
 #pragma mark - Custom Audience
 
-+ (FBSDKGraphRequest *)requestForCustomAudienceThirdPartyIDWithAccessToken:(FBSDKAccessToken *)accessToken
++ (id<FBSDKGraphRequest>)requestForCustomAudienceThirdPartyIDWithAccessToken:(FBSDKAccessToken *)accessToken
 {
   accessToken = accessToken ?: [FBSDKAccessToken currentAccessToken];
   // Rules for how we use the attribution ID / advertiser ID for an 'custom_audience_third_party_id' Graph API request
@@ -1529,18 +1549,18 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
     }
   }
 
-  NSDictionary *parameters = nil;
+  NSDictionary *parameters = @{};
   if (udid) {
     parameters = @{ @"udid" : udid };
   }
 
   NSString *graphPath = [NSString stringWithFormat:@"%@/custom_audience_third_party_id", [[self singleton] appID]];
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
-                                                                 parameters:parameters
-                                                                tokenString:tokenString
-                                                                 HTTPMethod:nil
-                                                                      flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
 
+  id<FBSDKGraphRequest> request = [g_graphRequestProvider createGraphRequestWithGraphPath:graphPath
+                                                                               parameters:parameters
+                                                                              tokenString:tokenString
+                                                                               HTTPMethod:FBSDKHTTPMethodGET
+                                                                                    flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
   return request;
 }
 

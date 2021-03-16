@@ -26,7 +26,7 @@ class TestGraphRequestFactory: NSObject, GraphRequestProviding {
   var capturedParameters = [AnyHashable: Any]()
   var capturedTokenString: String?
   var capturedHttpMethod: HTTPMethod?
-  var capturedFlags: GraphRequestFlags?
+  var capturedFlags: GraphRequestFlags = []
 
   // MARK: - GraphRequestProviding
 

@@ -56,6 +56,7 @@
 + (UIApplicationState)applicationState;
 + (void)resetCanLogEvents;
 + (BOOL)canLogEvents;
++ (id<FBSDKGraphRequestProviding>)requestProvider;
 @end
 
 @interface FBSDKCodelessIndexer (Testing)
@@ -228,6 +229,12 @@
     FBSDKAppEvents.gateKeeperManager,
     [FBSDKGateKeeperManager class],
     "Initializing the SDK should set gate keeper manager for event logging"
+  );
+  NSObject *requestProvider = (NSObject *) FBSDKAppEvents.requestProvider;
+  XCTAssertEqualObjects(
+    requestProvider.class,
+    FBSDKGraphRequestFactory.class,
+    "Initializing the SDK should set graph request factory for event logging"
   );
 }
 

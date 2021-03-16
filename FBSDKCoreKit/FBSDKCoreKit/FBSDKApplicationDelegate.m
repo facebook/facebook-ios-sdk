@@ -443,11 +443,12 @@ static UIApplicationState _applicationState;
 + (void)setIsSdkInitialized
 {
   g_isSDKInitialized = YES;
+  id<FBSDKGraphRequestProviding> graphRequestProvider = [FBSDKGraphRequestFactory new];
   [FBSDKGraphRequestConnection setCanMakeRequests];
-  [FBSDKAppEvents setGateKeeperManager:[FBSDKGateKeeperManager class]];
-  [FBSDKAppEvents setCanLogEvents];
+  [FBSDKAppEvents configureWithGateKeeperManager:[FBSDKGateKeeperManager class]
+                            graphRequestProvider:graphRequestProvider];
   [FBSDKGateKeeperManager configureWithSettings:FBSDKSettings.class
-                                requestProvider:[FBSDKGraphRequestFactory new]
+                                requestProvider:graphRequestProvider
                              connectionProvider:[FBSDKGraphRequestConnectionFactory new]
                                           store:NSUserDefaults.standardUserDefaults];
   FBSDKTokenCache *tokenCache = [FBSDKTokenCache new];

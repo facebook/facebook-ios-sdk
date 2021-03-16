@@ -27,7 +27,7 @@
 #import "FBSDKAppEventsUtility.h"
 
 @protocol FBSDKGateKeeperManaging;
-@class FBSDKGraphRequest;
+@protocol FBSDKGraphRequestProviding;
 
 // Internally known event names
 
@@ -209,7 +209,8 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
 
 + (void)setApplicationState:(UIApplicationState)state;
 
-+ (void)setGateKeeperManager:(Class<FBSDKGateKeeperManaging>)manager;
++ (void)configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)manager
+                  graphRequestProvider:(id<FBSDKGraphRequestProviding>)provider;
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;

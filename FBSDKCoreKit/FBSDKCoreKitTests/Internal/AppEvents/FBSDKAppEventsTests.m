@@ -29,8 +29,7 @@
 #import "FBSDKConstants.h"
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKGateKeeperManager.h"
-#import "FBSDKGraphRequest.h"
-#import "FBSDKGraphRequest+Internal.h"
+#import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
 #import "FBSDKServerConfigurationFixtures.h"
@@ -70,6 +69,10 @@ static NSString *const _mockUserID = @"mockUserID";
 + (void)resetApplicationState;
 
 + (UIApplicationState)applicationState;
+
++ (void)setGateKeeperManager:(Class<FBSDKGateKeeperManaging>)manager;
+
++ (void)setRequestProvider:(id<FBSDKGraphRequestProviding>)provider;
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
@@ -111,6 +114,7 @@ static NSString *const _mockUserID = @"mockUserID";
   NSDictionary<NSString *, id> *_mockPayload;
   double _mockPurchaseAmount;
   NSString *_mockCurrency;
+  TestGraphRequestFactory *_graphRequestFactory;
 }
 @end
 
@@ -129,6 +133,7 @@ static NSString *const _mockUserID = @"mockUserID";
   _mockPayload = @{@"fb_push_payload" : @{@"campaign" : @"testCampaign"}};
   _mockPurchaseAmount = 1.0;
   _mockCurrency = @"USD";
+  _graphRequestFactory = [TestGraphRequestFactory new];
 
   [FBSDKAppEvents setLoggingOverrideAppID:_mockAppID];
 
@@ -140,6 +145,7 @@ static NSString *const _mockUserID = @"mockUserID";
   [FBSDKAppEvents resetApplicationState];
   [FBSDKAppEvents resetCanLogEvents];
   [FBSDKAppEvents setGateKeeperManager:[TestGateKeeperManager class]];
+  [FBSDKAppEvents setRequestProvider:_graphRequestFactory];
 }
 
 - (void)testAppEventsMockIsSingleton
@@ -483,9 +489,9 @@ static NSString *const _mockUserID = @"mockUserID";
   [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingAllowed];
   [self stubAppEventsUtilityAdvertiserIDWith:advertiserID];
 
-  FBSDKGraphRequest *request = [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:nil];
+  id<FBSDKGraphRequest> request = [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:nil];
   XCTAssertEqualObjects(
-    request.parameters,
+    _graphRequestFactory.capturedParameters,
     @{ @"udid" : advertiserID },
     "Should include the udid in the request when there is no access token available"
   );
@@ -501,12 +507,12 @@ static NSString *const _mockUserID = @"mockUserID";
 
   FBSDKGraphRequest *request = [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:token];
   XCTAssertEqualObjects(
-    request.tokenString,
+    _graphRequestFactory.capturedTokenString,
     token.tokenString,
     "Should include the access token in the request when there is one available"
   );
   XCTAssertNil(
-    request.parameters[@"udid"],
+    _graphRequestFactory.capturedParameters[@"udid"],
     "Should not include the udid in the request when there is none available"
   );
 }
@@ -523,29 +529,29 @@ static NSString *const _mockUserID = @"mockUserID";
   [self stubAppEventsUtilityTokenStringToUseForTokenWith:token.tokenString];
   [self stubAppEventsUtilityAdvertiserIDWith:advertiserID];
 
-  FBSDKGraphRequest *request = [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:token];
+  id<FBSDKGraphRequest> request = [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:token];
 
   XCTAssertEqualObjects(
-    request.tokenString,
+    _graphRequestFactory.capturedTokenString,
     token.tokenString,
     "Should include the access token in the request when there is one available"
   );
   XCTAssertNil(
-    request.parameters[@"udid"],
+    _graphRequestFactory.capturedParameters[@"udid"],
     "Should not include the udid in the request when there is an access token available"
   );
   XCTAssertEqualObjects(
-    request.graphPath,
+    _graphRequestFactory.capturedGraphPath,
     expectedGraphPath,
     "Should use the expected graph path for the request"
   );
   XCTAssertEqual(
-    request.HTTPMethod,
+    _graphRequestFactory.capturedHttpMethod,
     FBSDKHTTPMethodGET,
     "Should use the expected http method for the request"
   );
   XCTAssertEqual(
-    request.flags,
+    _graphRequestFactory.capturedFlags,
     FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery,
     "Should use the expected flags for the request"
   );
