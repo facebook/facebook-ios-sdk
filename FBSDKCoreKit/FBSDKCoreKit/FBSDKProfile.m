@@ -273,24 +273,30 @@ static FBSDKProfile *g_currentProfile;
 
 @implementation FBSDKProfile (Internal)
 
+static id <FBSDKDataPersisting> _store;
+
++ (void)configureWithStore:(id<FBSDKDataPersisting>)store
+{
+  if (self == [FBSDKProfile class]) {
+    _store = store;
+  }
+}
+
  #pragma clang diagnostic push
  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (void)cacheProfile:(FBSDKProfile *)profile
 {
-  NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
   if (profile) {
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:profile];
-    [userDefaults setObject:data forKey:FBSDKProfileUserDefaultsKey];
+    [_store setObject:data forKey:FBSDKProfileUserDefaultsKey];
   } else {
-    [userDefaults removeObjectForKey:FBSDKProfileUserDefaultsKey];
+    [_store removeObjectForKey:FBSDKProfileUserDefaultsKey];
   }
-  [userDefaults synchronize];
 }
 
 + (FBSDKProfile *)fetchCachedProfile
 {
-  NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-  NSData *data = [userDefaults objectForKey:FBSDKProfileUserDefaultsKey];
+  NSData *data = [_store objectForKey:FBSDKProfileUserDefaultsKey];
   if (data != nil) {
     @try {
       return [NSKeyedUnarchiver unarchiveObjectWithData:data];
@@ -465,6 +471,16 @@ static FBSDKProfile *g_currentProfile;
 + (void)resetCurrentProfileCache
 {
   g_currentProfile = nil;
+}
+
++ (id<FBSDKDataPersisting>)store
+{
+  return _store;
+}
+
++ (void)reset
+{
+  _store = nil;
 }
 
 @end

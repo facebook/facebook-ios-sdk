@@ -461,6 +461,7 @@ static UIApplicationState _applicationState;
   [FBSDKAppLinkUtility configureWithRequestProvider:[FBSDKGraphRequestFactory new]];
   [FBSDKCodelessIndexer configureWithRequestProvider:[FBSDKGraphRequestFactory new]];
   [FBSDKSKAdNetworkReporter configureWithRequestProvider:[FBSDKGraphRequestFactory new]];
+  [FBSDKProfile configureWithStore:NSUserDefaults.standardUserDefaults];
 #endif
 }
 

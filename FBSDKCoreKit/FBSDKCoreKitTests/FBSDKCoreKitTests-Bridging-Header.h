@@ -111,9 +111,15 @@ NS_SWIFT_NAME(FBProfilePictureViewState)
 @end
 
 @interface FBSDKProfile (Testing)
+@property (class, nonatomic, nullable) id<FBSDKDataPersisting> store;
 
 + (void)setCurrentProfile:(nullable FBSDKProfile *)profile
    shouldPostNotification:(BOOL)shouldPostNotification;
+
++ (void)configureWithStore:(id<FBSDKDataPersisting>)store
+NS_SWIFT_NAME(configure(store:));
+
++ (void)reset;
 
 @end
 

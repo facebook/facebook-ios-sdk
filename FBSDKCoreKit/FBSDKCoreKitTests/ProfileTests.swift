@@ -16,38 +16,25 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKDataPersisting.h"
-#import "TargetConditionals.h"
+import FBSDKCoreKit
+import XCTest
 
-#if !TARGET_OS_TV
+class ProfileTests: XCTestCase {
 
- #import "FBSDKCoreKit+Internal.h"
+  func testDefaultStore() {
+    Profile.reset()
+    XCTAssertNil(
+      Profile.store,
+      "Profile should not have a default data store"
+    )
+  }
 
-NS_ASSUME_NONNULL_BEGIN
-
-typedef void (^FBSDKParseProfileBlock)(id result, FBSDKProfile *_Nonnull *_Nullable profileRef);
-
-@interface FBSDKProfile (Internal)
-
-+ (void)cacheProfile:(nullable FBSDKProfile *)profile;
-+ (nullable FBSDKProfile *)fetchCachedProfile;
-
-+ (NSURL *)imageURLForProfileID:(NSString *)profileId
-                    PictureMode:(FBSDKProfilePictureMode)mode
-                           size:(CGSize)size;
-
-+ (void)loadProfileWithToken:(FBSDKAccessToken *)token
-                  completion:(FBSDKProfileBlock)completion
-                graphRequest:(FBSDKGraphRequest *)request
-                  parseBlock:(FBSDKParseProfileBlock)parseBlock;
-
-+ (void)loadProfileWithToken:(FBSDKAccessToken *)token completion:(_Nullable FBSDKProfileBlock)completion;
-
-+ (void)observeChangeAccessTokenChange:(NSNotification *)notification;
-+ (void)configureWithStore:(id<FBSDKDataPersisting>)store;
-
-@end
-
-NS_ASSUME_NONNULL_END
-
-#endif
+  func testConfiguringWithStore() {
+    let store = UserDefaultsSpy()
+    Profile.configure(store: store)
+    XCTAssertTrue(
+      Profile.store === store,
+      "Should be able to set a persistent data store"
+    )
+  }
+}

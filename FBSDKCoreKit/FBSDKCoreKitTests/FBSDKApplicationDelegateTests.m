@@ -71,6 +71,10 @@
 + (id<FBSDKGraphRequestProviding>)requestProvider;
 @end
 
+@interface FBSDKProfile (Testing)
++ (id<FBSDKDataPersisting>)store;
+@end
+
 @interface FBSDKApplicationDelegateTests : FBSDKTestCase
 {
   FBSDKApplicationDelegate *_delegate;
@@ -320,6 +324,18 @@
 
   NSObject *tokenCache = (NSObject *) FBSDKAccessToken.tokenCache;
   XCTAssertEqualObjects(tokenCache.class, FBSDKTokenCache.class, "Should be configured with expected concrete token cache");
+}
+
+- (void)testInitializingSdkConfiguresProfile
+{
+  [FBSDKApplicationDelegate resetIsSdkInitialized];
+  [FBSDKApplicationDelegate initializeSDK:@{}];
+  NSObject *store = (NSObject *)[FBSDKProfile store];
+  XCTAssertEqualObjects(
+    store,
+    NSUserDefaults.standardUserDefaults,
+    "Should be configured with the expected concrete data store"
+  );
 }
 
 - (void)testInitializingSdkConfiguresAuthenticationTokenCache
