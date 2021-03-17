@@ -47,7 +47,7 @@
   [super setUp];
   [FBSDKAuthenticationToken setCurrentAuthenticationToken:SampleAuthenticationToken.validToken];
   [FBSDKAccessToken setCurrentAccessToken:SampleAccessTokens.validToken shouldDispatchNotif:NO];
-  [FBSDKProfile setCurrentProfile:SampleUserProfile.valid shouldPostNotification:NO];
+  [FBSDKProfile setCurrentProfile:SampleUserProfiles.valid shouldPostNotification:NO];
 }
 
 // MARK: checkAuthenticationStatus

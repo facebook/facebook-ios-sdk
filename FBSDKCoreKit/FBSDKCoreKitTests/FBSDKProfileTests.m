@@ -62,7 +62,7 @@ NSString *const heightKey = @"height";
   [super setUp];
 
   _sdkVersion = @"100";
-  _profile = SampleUserProfile.valid;
+  _profile = SampleUserProfiles.valid;
   _validClientToken = @"Foo";
   _validSquareSize = CGSizeMake(100, 100);
   _validNonSquareSize = CGSizeMake(10, 20);
@@ -418,21 +418,21 @@ NSString *const heightKey = @"height";
 - (void)testLoadingProfile
 {
   id result = @{
-    @"id" : SampleUserProfile.valid.userID,
-    @"first_name" : SampleUserProfile.valid.firstName,
-    @"middle_name" : SampleUserProfile.valid.middleName,
-    @"last_name" : SampleUserProfile.valid.lastName,
-    @"name" : SampleUserProfile.valid.name,
-    @"link" : SampleUserProfile.valid.linkURL,
-    @"email" : SampleUserProfile.valid.email,
+    @"id" : SampleUserProfiles.valid.userID,
+    @"first_name" : SampleUserProfiles.valid.firstName,
+    @"middle_name" : SampleUserProfiles.valid.middleName,
+    @"last_name" : SampleUserProfiles.valid.lastName,
+    @"name" : SampleUserProfiles.valid.name,
+    @"link" : SampleUserProfiles.valid.linkURL,
+    @"email" : SampleUserProfiles.valid.email,
     @"friends" : @{@"data" : @[
       @{
         @"name" : @"user1",
-        @"id" : SampleUserProfile.valid.friendIDs[0],
+        @"id" : SampleUserProfiles.valid.friendIDs[0],
       },
       @{
         @"name" : @"user2",
-        @"id" : SampleUserProfile.valid.friendIDs[1],
+        @"id" : SampleUserProfiles.valid.friendIDs[1],
       }
     ]}
   };
@@ -440,27 +440,27 @@ NSString *const heightKey = @"height";
 
   [FBSDKProfile loadProfileWithToken:SampleAccessTokens.validToken
                           completion:^(FBSDKProfile *profile, NSError *error) {
-                            XCTAssertEqualObjects(profile.firstName, SampleUserProfile.valid.firstName);
-                            XCTAssertEqualObjects(profile.middleName, SampleUserProfile.valid.middleName);
-                            XCTAssertEqualObjects(profile.lastName, SampleUserProfile.valid.lastName);
-                            XCTAssertEqualObjects(profile.name, SampleUserProfile.valid.name);
-                            XCTAssertEqualObjects(profile.userID, SampleUserProfile.valid.userID);
-                            XCTAssertEqualObjects(profile.linkURL, SampleUserProfile.valid.linkURL);
-                            XCTAssertEqualObjects(profile.email, SampleUserProfile.valid.email);
-                            XCTAssertEqualObjects(profile.friendIDs, SampleUserProfile.valid.friendIDs);
+                            XCTAssertEqualObjects(profile.firstName, SampleUserProfiles.valid.firstName);
+                            XCTAssertEqualObjects(profile.middleName, SampleUserProfiles.valid.middleName);
+                            XCTAssertEqualObjects(profile.lastName, SampleUserProfiles.valid.lastName);
+                            XCTAssertEqualObjects(profile.name, SampleUserProfiles.valid.name);
+                            XCTAssertEqualObjects(profile.userID, SampleUserProfiles.valid.userID);
+                            XCTAssertEqualObjects(profile.linkURL, SampleUserProfiles.valid.linkURL);
+                            XCTAssertEqualObjects(profile.email, SampleUserProfiles.valid.email);
+                            XCTAssertEqualObjects(profile.friendIDs, SampleUserProfiles.valid.friendIDs);
                           } graphRequest:self.graphRequestMock];
 }
 
 - (void)testLoadingProfileWithInvalidLink
 {
   id result = @{
-    @"id" : SampleUserProfile.valid.userID,
-    @"first_name" : SampleUserProfile.valid.firstName,
-    @"middle_name" : SampleUserProfile.valid.middleName,
-    @"last_name" : SampleUserProfile.valid.lastName,
-    @"name" : SampleUserProfile.valid.name,
+    @"id" : SampleUserProfiles.valid.userID,
+    @"first_name" : SampleUserProfiles.valid.firstName,
+    @"middle_name" : SampleUserProfiles.valid.middleName,
+    @"last_name" : SampleUserProfiles.valid.lastName,
+    @"name" : SampleUserProfiles.valid.name,
     @"link" : @"   ",
-    @"email" : SampleUserProfile.valid.email
+    @"email" : SampleUserProfiles.valid.email
   };
   [self stubGraphRequestWithResult:result error:nil connection:nil];
 
@@ -473,11 +473,11 @@ NSString *const heightKey = @"height";
 - (void)testProfileNilWithNilAccessToken
 {
   id result = @{
-    @"id" : SampleUserProfile.valid.userID,
-    @"first_name" : SampleUserProfile.valid.firstName,
-    @"middle_name" : SampleUserProfile.valid.middleName,
-    @"last_name" : SampleUserProfile.valid.lastName,
-    @"name" : SampleUserProfile.valid.name
+    @"id" : SampleUserProfiles.valid.userID,
+    @"first_name" : SampleUserProfiles.valid.firstName,
+    @"middle_name" : SampleUserProfiles.valid.middleName,
+    @"last_name" : SampleUserProfiles.valid.lastName,
+    @"name" : SampleUserProfiles.valid.name
   };
   [self stubGraphRequestWithResult:result error:nil connection:nil];
 
@@ -489,13 +489,13 @@ NSString *const heightKey = @"height";
 - (void)testLoadingProfileWithNoFriends
 {
   id result = @{
-    @"id" : SampleUserProfile.valid.userID,
-    @"first_name" : SampleUserProfile.valid.firstName,
-    @"middle_name" : SampleUserProfile.valid.middleName,
-    @"last_name" : SampleUserProfile.valid.lastName,
-    @"name" : SampleUserProfile.valid.name,
-    @"link" : SampleUserProfile.valid.linkURL,
-    @"email" : SampleUserProfile.valid.email,
+    @"id" : SampleUserProfiles.valid.userID,
+    @"first_name" : SampleUserProfiles.valid.firstName,
+    @"middle_name" : SampleUserProfiles.valid.middleName,
+    @"last_name" : SampleUserProfiles.valid.lastName,
+    @"name" : SampleUserProfiles.valid.name,
+    @"link" : SampleUserProfiles.valid.linkURL,
+    @"email" : SampleUserProfiles.valid.email,
     @"friends" : @{@"data" : @[]}
   };
   [self stubGraphRequestWithResult:result error:nil connection:nil];
@@ -510,13 +510,13 @@ NSString *const heightKey = @"height";
 - (void)testLoadingProfileWithUInvalidFriends
 {
   id result = @{
-    @"id" : SampleUserProfile.valid.userID,
-    @"first_name" : SampleUserProfile.valid.firstName,
-    @"middle_name" : SampleUserProfile.valid.middleName,
-    @"last_name" : SampleUserProfile.valid.lastName,
-    @"name" : SampleUserProfile.valid.name,
-    @"link" : SampleUserProfile.valid.linkURL,
-    @"email" : SampleUserProfile.valid.email,
+    @"id" : SampleUserProfiles.valid.userID,
+    @"first_name" : SampleUserProfiles.valid.firstName,
+    @"middle_name" : SampleUserProfiles.valid.middleName,
+    @"last_name" : SampleUserProfiles.valid.lastName,
+    @"name" : SampleUserProfiles.valid.name,
+    @"link" : SampleUserProfiles.valid.linkURL,
+    @"email" : SampleUserProfiles.valid.email,
     @"friends" : @"   "
   };
   [self stubGraphRequestWithResult:result error:nil connection:nil];
@@ -530,9 +530,9 @@ NSString *const heightKey = @"height";
 
 - (void)testProfileNotRefreshedIfNotStale
 {
-  [FBSDKProfile setCurrentProfile:SampleUserProfile.valid];
+  [FBSDKProfile setCurrentProfile:SampleUserProfiles.valid];
   id result = @{
-    @"id" : SampleUserProfile.valid.userID,
+    @"id" : SampleUserProfiles.valid.userID,
     @"first_name" : @"firstname",
     @"middle_name" : @"middlename",
     @"last_name" : @"lastname",
@@ -542,13 +542,13 @@ NSString *const heightKey = @"height";
 
   [FBSDKProfile loadProfileWithToken:nil
                           completion:^(FBSDKProfile *_Nullable profile, NSError *_Nullable error) {
-                            XCTAssertEqualObjects(profile.firstName, SampleUserProfile.valid.firstName);
-                            XCTAssertEqualObjects(profile.middleName, SampleUserProfile.valid.middleName);
-                            XCTAssertEqualObjects(profile.lastName, SampleUserProfile.valid.lastName);
-                            XCTAssertEqualObjects(profile.name, SampleUserProfile.valid.name);
-                            XCTAssertEqualObjects(profile.userID, SampleUserProfile.valid.userID);
-                            XCTAssertEqualObjects(profile.linkURL, SampleUserProfile.valid.linkURL);
-                            XCTAssertEqualObjects(profile.email, SampleUserProfile.valid.email);
+                            XCTAssertEqualObjects(profile.firstName, SampleUserProfiles.valid.firstName);
+                            XCTAssertEqualObjects(profile.middleName, SampleUserProfiles.valid.middleName);
+                            XCTAssertEqualObjects(profile.lastName, SampleUserProfiles.valid.lastName);
+                            XCTAssertEqualObjects(profile.name, SampleUserProfiles.valid.name);
+                            XCTAssertEqualObjects(profile.userID, SampleUserProfiles.valid.userID);
+                            XCTAssertEqualObjects(profile.linkURL, SampleUserProfiles.valid.linkURL);
+                            XCTAssertEqualObjects(profile.email, SampleUserProfiles.valid.email);
                           } graphRequest:self.graphRequestMock];
 }
 
@@ -623,21 +623,21 @@ NSString *const heightKey = @"height";
 {
   for (int i = 0; i < 100; i++) {
     NSDictionary *result = @{
-      @"id" : SampleUserProfile.valid.userID,
-      @"first_name" : SampleUserProfile.valid.firstName,
-      @"middle_name" : SampleUserProfile.valid.middleName,
-      @"last_name" : SampleUserProfile.valid.lastName,
-      @"name" : SampleUserProfile.valid.name,
-      @"link" : SampleUserProfile.valid.linkURL,
-      @"email" : SampleUserProfile.valid.email,
+      @"id" : SampleUserProfiles.valid.userID,
+      @"first_name" : SampleUserProfiles.valid.firstName,
+      @"middle_name" : SampleUserProfiles.valid.middleName,
+      @"last_name" : SampleUserProfiles.valid.lastName,
+      @"name" : SampleUserProfiles.valid.name,
+      @"link" : SampleUserProfiles.valid.linkURL,
+      @"email" : SampleUserProfiles.valid.email,
       @"friends" : @{@"data" : @[
         @{
           @"name" : @"user1",
-          @"id" : SampleUserProfile.valid.friendIDs[0],
+          @"id" : SampleUserProfiles.valid.friendIDs[0],
         },
         @{
           @"name" : @"user2",
-          @"id" : SampleUserProfile.valid.friendIDs[1],
+          @"id" : SampleUserProfiles.valid.friendIDs[1],
         }
       ]}
     };

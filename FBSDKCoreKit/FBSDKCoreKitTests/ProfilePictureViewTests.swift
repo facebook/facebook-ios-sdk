@@ -34,7 +34,7 @@ class ProfilePictureViewTests: XCTestCase {
   func testImageUpdateWithoutAccessTokenWithProfile() {
     let view = TestProfilePictureView()
     AccessToken.setCurrent(nil, shouldDispatchNotif: false)
-    Profile.setCurrent(SampleUserProfile.valid, shouldPostNotification: false)
+    Profile.setCurrent(SampleUserProfiles.valid, shouldPostNotification: false)
 
     view._updateImage()
 
@@ -53,7 +53,7 @@ class ProfilePictureViewTests: XCTestCase {
   func testImageUpdateWithAccessTokenWithProfile() {
     let view = TestProfilePictureView()
     AccessToken.setCurrent(SampleAccessTokens.validToken, shouldDispatchNotif: false)
-    Profile.setCurrent(SampleUserProfile.valid, shouldPostNotification: false)
+    Profile.setCurrent(SampleUserProfiles.valid, shouldPostNotification: false)
 
     view._updateImage()
 
@@ -91,7 +91,7 @@ class ProfilePictureViewTests: XCTestCase {
   func testImageUpdateWithoutAccessTokenWithProfileNoImageURL() {
     let view = TestProfilePictureView()
     AccessToken.setCurrent(nil, shouldDispatchNotif: false)
-    Profile.setCurrent(SampleUserProfile.valid(withImageURL: nil), shouldPostNotification: false)
+    Profile.setCurrent(SampleUserProfiles.missingImageUrl, shouldPostNotification: false)
 
     view._updateImage()
 
@@ -145,7 +145,7 @@ class ProfilePictureViewTests: XCTestCase {
 
   func testReceivingProfileNotification() {
     let view = TestProfilePictureView()
-    Profile.setCurrent(SampleUserProfile.valid, shouldPostNotification: false)
+    Profile.setCurrent(SampleUserProfiles.valid, shouldPostNotification: false)
     let notification = Notification(
       name: .ProfileDidChange,
       object: nil,
@@ -165,7 +165,7 @@ class ProfilePictureViewTests: XCTestCase {
 
   func testUpdatinImageWithProfileWithImageURL() {
     let view = TestProfilePictureView()
-    Profile.setCurrent(SampleUserProfile.valid, shouldPostNotification: false)
+    Profile.setCurrent(SampleUserProfiles.valid, shouldPostNotification: false)
 
     view._updateImageWithProfile()
 
@@ -179,7 +179,7 @@ class ProfilePictureViewTests: XCTestCase {
 
   func testUpdatinImageWithProfileWithoutImageURL() {
     let view = TestProfilePictureView()
-    Profile.setCurrent(SampleUserProfile.valid(withImageURL: nil), shouldPostNotification: false)
+    Profile.setCurrent(SampleUserProfiles.missingImageUrl, shouldPostNotification: false)
 
     view._updateImageWithProfile()
 

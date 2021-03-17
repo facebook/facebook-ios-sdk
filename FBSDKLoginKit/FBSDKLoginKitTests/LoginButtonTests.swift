@@ -26,18 +26,6 @@ class LoginButtonTests: XCTestCase {
 
   let validNonce: String = "abc123"
   var button: FBLoginButton! // swiftlint:disable:this implicitly_unwrapped_optional
-  var sampleProfile: Profile {
-    return Profile(
-      userID: "Sample ID",
-      firstName: nil,
-      middleName: nil,
-      lastName: nil,
-      name: "Sample Name",
-      linkURL: nil,
-      refreshDate: nil
-    )
-  }
-
   var sampleToken: AuthenticationToken {
     return AuthenticationToken(tokenString: "abc", nonce: "123")
   }
@@ -96,7 +84,7 @@ class LoginButtonTests: XCTestCase {
   func testInitialContentUpdateWithInactiveAccessTokenWithProfile() {
     let button = TestButton()
     AccessToken.setCurrent(nil, shouldDispatchNotif: false)
-    Profile.setCurrent(sampleProfile, shouldPostNotification: false)
+    Profile.setCurrent(SampleUserProfiles.valid, shouldPostNotification: false)
 
     button._initializeContent()
 
@@ -267,20 +255,20 @@ class LoginButtonTests: XCTestCase {
   }
 
   func testUpdatingContentWithProfile() {
-    button._updateContent(forUserProfile: sampleProfile)
+    button._updateContent(forUserProfile: SampleUserProfiles.valid)
 
     XCTAssertTrue(
       button.isSelected,
       "Should be selected if there is a valid profile"
     )
-    XCTAssertEqual(button.userName(), sampleProfile.name)
-    XCTAssertEqual(button.userID(), sampleProfile.userID)
+    XCTAssertEqual(button.userName(), SampleUserProfiles.valid.name)
+    XCTAssertEqual(button.userID(), SampleUserProfiles.valid.userID)
   }
 
   func testUpdatingContentForProfileWithNewId() {
     let button = TestButton()
-    let profile = sampleProfile(userID: name)
-    button._updateContent(forUserProfile: sampleProfile)
+    let profile = SampleUserProfiles.createValid(name: name)
+    button._updateContent(forUserProfile: SampleUserProfiles.valid)
     button._updateContent(forUserProfile: profile)
 
     XCTAssertEqual(
@@ -297,8 +285,8 @@ class LoginButtonTests: XCTestCase {
 
   func testUpdatingContentForProfileWithNewName() {
     let button = TestButton()
-    let profile = sampleProfile(name: name)
-    button._updateContent(forUserProfile: sampleProfile)
+    let profile = SampleUserProfiles.createValid(name: name)
+    button._updateContent(forUserProfile: SampleUserProfiles.valid)
     button._updateContent(forUserProfile: profile)
 
     XCTAssertEqual(
@@ -346,7 +334,7 @@ class LoginButtonTests: XCTestCase {
     // Make sure the username and id properties on button are set to the same values
     // as the access token. This is an easy way to do with without having to stub
     // a network call
-    let profile = sampleProfile(userID: SampleAccessTokens.validToken.userID)
+    let profile = SampleUserProfiles.createValid(userID: SampleAccessTokens.validToken.userID)
     button._updateContent(forUserProfile: profile)
 
     AccessToken.setCurrent(SampleAccessTokens.validToken, shouldDispatchNotif: false)
@@ -358,21 +346,6 @@ class LoginButtonTests: XCTestCase {
       0,
       "Should not try to fetch content for a token if the user identifier has not changed"
     )
-  }
-
-  private func sampleProfile(
-    userID: String = "Sample ID",
-    name: String = "Sample Name"
-  ) -> Profile {
-    return Profile(
-          userID: userID,
-          firstName: nil,
-          middleName: nil,
-          lastName: nil,
-          name: name,
-          linkURL: nil,
-          refreshDate: nil
-        )
   }
 }
 

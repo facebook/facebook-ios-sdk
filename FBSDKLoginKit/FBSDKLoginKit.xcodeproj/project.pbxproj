@@ -422,7 +422,6 @@
 		C6E1333E259174A500B611C6 /* FBSDKPermission.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKPermission.m; sourceTree = "<group>"; };
 		C6E63D2224F8219A0015FC7C /* FBSDKReferralManagerLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKReferralManagerLogger.h; sourceTree = "<group>"; };
 		C6E63D2C24F822620015FC7C /* FBSDKReferralManagerLogger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKReferralManagerLogger.m; sourceTree = "<group>"; };
-		F401864D25F45B8100C57ADE /* TestTools.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TestTools.xcodeproj; path = ../../../TestTools/TestTools.xcodeproj; sourceTree = "<group>"; };
 		F40BFD55257852E5007B85AC /* LoginButtonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginButtonTests.swift; sourceTree = "<group>"; };
 		F4647451256AD09000502449 /* FBSDKLoginKitTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKLoginKitTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		F4647478256AEF8E00502449 /* NonceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonceTests.swift; sourceTree = "<group>"; };
@@ -680,7 +679,6 @@
 				9DBA6A281A80252F00B4DE6A /* FBSDKLoginTooltipView.m */,
 				9DDFBB701A829503006C9208 /* FBSDKTooltipView.h */,
 				9DDFBB711A829503006C9208 /* FBSDKTooltipView.m */,
-				F401865C25F45B8500C57ADE /* Frameworks */,
 				9D03E8271A72DCA700207493 /* Internal */,
 				9D9DB8DC1A114E500086167B /* Supporting Files */,
 			);
@@ -722,14 +720,6 @@
 				9D9DB8EA1A114E500086167B /* Info.plist */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		F401865C25F45B8500C57ADE /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				F401864D25F45B8100C57ADE /* TestTools.xcodeproj */,
-			);
-			path = Frameworks;
 			sourceTree = "<group>";
 		};
 		F4665CBF258D684300981FDE /* Helpers */ = {

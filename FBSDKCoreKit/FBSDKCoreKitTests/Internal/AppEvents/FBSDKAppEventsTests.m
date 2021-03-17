@@ -489,7 +489,7 @@ static NSString *const _mockUserID = @"mockUserID";
   [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingAllowed];
   [self stubAppEventsUtilityAdvertiserIDWith:advertiserID];
 
-  id<FBSDKGraphRequest> request = [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:nil];
+  [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:nil];
   XCTAssertEqualObjects(
     _graphRequestFactory.capturedParameters,
     @{ @"udid" : advertiserID },
@@ -505,7 +505,7 @@ static NSString *const _mockUserID = @"mockUserID";
   [self stubAppEventsUtilityAdvertiserIDWith:nil];
   [self stubAppEventsUtilityTokenStringToUseForTokenWith:token.tokenString];
 
-  FBSDKGraphRequest *request = [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:token];
+  [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:token];
   XCTAssertEqualObjects(
     _graphRequestFactory.capturedTokenString,
     token.tokenString,
@@ -529,7 +529,7 @@ static NSString *const _mockUserID = @"mockUserID";
   [self stubAppEventsUtilityTokenStringToUseForTokenWith:token.tokenString];
   [self stubAppEventsUtilityAdvertiserIDWith:advertiserID];
 
-  id<FBSDKGraphRequest> request = [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:token];
+  [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:token];
 
   XCTAssertEqualObjects(
     _graphRequestFactory.capturedTokenString,

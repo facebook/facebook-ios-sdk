@@ -19,17 +19,22 @@
 import FBSDKCoreKit
 
 @objcMembers
-class SampleUserProfile: NSObject {
-  static var valid: Profile {
+public class SampleUserProfiles: NSObject {
+
+  public static let defaultName = "John Smith"
+  public static let defaultImageUrl = URL(string: "http://www.example.com/image.jpg")
+  public static let defaultUserID = "123"
+
+  public class var valid: Profile {
     return Profile(
-      userID: "123",
+      userID: defaultUserID,
       firstName: "John",
       middleName: "K",
       lastName: "Smith",
-      name: "John Smith",
+      name: defaultName,
       linkURL: URL(string: "http://www.example.com"),
       refreshDate: .distantFuture,
-      imageURL: URL(string: "http://www.example.com/image.jpg"),
+      imageURL: defaultImageUrl,
       email: "example@example.com",
       friendIDs: [
         "456",
@@ -38,15 +43,31 @@ class SampleUserProfile: NSObject {
     )
   }
 
-  static func valid(withImageURL url: URL?) -> Profile {
+  public static var missingImageUrl = createValid(imageURL: nil)
+
+  public static func createValid(userID: String) -> Profile {
+    return createValid(userID: userID, name: defaultName)
+  }
+
+  public static func createValid(isExpired: Bool) -> Profile {
+    return createValid(name: defaultName, isExpired: isExpired)
+  }
+
+  public static func createValid(
+    userID: String = defaultUserID,
+    name: String? = defaultName,
+    imageURL url: URL? = defaultImageUrl,
+    isExpired: Bool = false,
+    isLimited: Bool = false
+  ) -> Profile {
     return Profile(
-      userID: "123",
+      userID: userID,
       firstName: "John",
       middleName: "K",
       lastName: "Smith",
-      name: "John Smith",
+      name: name,
       linkURL: URL(string: "http://www.example.com"),
-      refreshDate: .distantFuture,
+      refreshDate: isExpired ? .distantPast : .distantFuture,
       imageURL: url,
       email: "example@example.com",
       friendIDs: [
