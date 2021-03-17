@@ -937,7 +937,6 @@
 		F441DC2D25DC93C10092C8F6 /* FBSDKGraphRequestConnectionFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F441DC2725DC93C10092C8F6 /* FBSDKGraphRequestConnectionFactory.m */; };
 		F441DC2E25DC93C10092C8F6 /* FBSDKGraphRequestConnectionFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F441DC2725DC93C10092C8F6 /* FBSDKGraphRequestConnectionFactory.m */; };
 		F441DC2F25DC93C10092C8F6 /* FBSDKGraphRequestConnectionFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F441DC2725DC93C10092C8F6 /* FBSDKGraphRequestConnectionFactory.m */; };
-		F441DC3E25DC97E60092C8F6 /* TestGraphRequestConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F441DC3D25DC97E60092C8F6 /* TestGraphRequestConnection.swift */; };
 		F441DC6725DC9AEB0092C8F6 /* TestGraphRequestConnectionFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F441DC6625DC9AEB0092C8F6 /* TestGraphRequestConnectionFactory.swift */; };
 		F441DD0925DD7A4A0092C8F6 /* FBSDKGraphRequestConnectionProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F441DC1725DC91A00092C8F6 /* FBSDKGraphRequestConnectionProviding.h */; };
 		F441DD1725DD7A4B0092C8F6 /* FBSDKGraphRequestConnectionProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F441DC1725DC91A00092C8F6 /* FBSDKGraphRequestConnectionProviding.h */; };
@@ -1722,7 +1721,6 @@
 		F441DC1825DC92870092C8F6 /* FBSDKGraphRequestConnecting.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKGraphRequestConnecting.h; sourceTree = "<group>"; };
 		F441DC2625DC93C10092C8F6 /* FBSDKGraphRequestConnectionFactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKGraphRequestConnectionFactory.h; sourceTree = "<group>"; };
 		F441DC2725DC93C10092C8F6 /* FBSDKGraphRequestConnectionFactory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKGraphRequestConnectionFactory.m; sourceTree = "<group>"; };
-		F441DC3D25DC97E60092C8F6 /* TestGraphRequestConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestConnection.swift; sourceTree = "<group>"; };
 		F441DC6625DC9AEB0092C8F6 /* TestGraphRequestConnectionFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestConnectionFactory.swift; sourceTree = "<group>"; };
 		F441DDD725DDDB670092C8F6 /* GraphRequestConnectionFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphRequestConnectionFactoryTests.swift; sourceTree = "<group>"; };
 		F443A27C25D1F45E0093AB78 /* FBSDKAppEventsPublishAteTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppEventsPublishAteTests.m; sourceTree = "<group>"; };
@@ -2956,7 +2954,6 @@
 				F4EC346D25E6F1230003C0CF /* TestEventLogger.swift */,
 				1696090925F7FEDB009279F4 /* TestGateKeeperManager.swift */,
 				F4EC333925E5CC9C0003C0CF /* TestGraphRequestBody.swift */,
-				F441DC3D25DC97E60092C8F6 /* TestGraphRequestConnection.swift */,
 				F441DC6625DC9AEB0092C8F6 /* TestGraphRequestConnectionFactory.swift */,
 				F4CCDC9D25E959200057FE5F /* TestGraphRequestFactory.swift */,
 				F4EC330925E5C1A10003C0CF /* TestGraphRequestPiggybackManager.swift */,
@@ -4612,7 +4609,6 @@
 				F4EB31D32540A35800736B67 /* SampleGraphRequests.swift in Sources */,
 				F4A0341925F15D9500D19DE9 /* EventBindingManagerTests.swift in Sources */,
 				F402B062255C645600473083 /* FakeLoginManager.m in Sources */,
-				F441DC3E25DC97E60092C8F6 /* TestGraphRequestConnection.swift in Sources */,
 				F4A035C225F2C6F800D19DE9 /* SampleEventBindings.swift in Sources */,
 				F4D80B582565D6B3008CCAF0 /* FBSDKRestrictiveDataTests.m in Sources */,
 				F4EB33CE2542323500736B67 /* SampleRawRemotePermissions.swift in Sources */,

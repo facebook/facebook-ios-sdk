@@ -18,6 +18,8 @@
 
 #import <XCTest/XCTest.h>
 
+@import TestTools;
+
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequest+Internal.h"

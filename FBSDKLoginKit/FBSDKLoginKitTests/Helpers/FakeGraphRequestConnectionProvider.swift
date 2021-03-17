@@ -36,26 +36,3 @@ class TestGraphRequestConnectionFactory: NSObject, GraphRequestConnectionProvidi
     return stubbedConnection
   }
 }
-
-@objcMembers
-class TestGraphRequestConnection: NSObject, GraphRequestConnecting {
-  var timeout: TimeInterval = 0
-  var startCallCount = 0
-  var cancelCallCount = 0
-  var capturedGraphRequest: GraphRequestProtocol?
-  var capturedCompletionHandler: GraphRequestBlock?
-
-  func add(_ request: GraphRequestProtocol, completionHandler handler: @escaping GraphRequestBlock) {
-    capturedGraphRequest = request
-    capturedCompletionHandler = handler
-  }
-
-  func start() {
-    startCallCount += 1
-  }
-
-  func cancel() {
-    cancelCallCount += 1
-  }
-
-}

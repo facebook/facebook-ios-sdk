@@ -16,6 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+@import TestTools;
 #import <XCTest/XCTest.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
@@ -223,7 +224,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 
   [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:factory
                                                              handler:nil];
-  XCTAssertNil(connection.capturedGraphRequest, "Should not create a graph request if there's no handler to use the result");
+  XCTAssertNil(connection.capturedRequest, "Should not create a graph request if there's no handler to use the result");
 }
 
 - (void)testNonceExchangeWithoutNonce
@@ -272,7 +273,7 @@ static NSString *const _fakeChallence = @"some_challenge";
   [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:factory
                                                              handler:handler];
   XCTAssertTrue(completionWasInvoked);
-  XCTAssertNil(connection.capturedGraphRequest, "Should not create a graph request if there's no handler to use the result");
+  XCTAssertNil(connection.capturedRequest, "Should not create a graph request if there's no handler to use the result");
 }
 
 - (void)testNonceExchangeGraphRequestCreation
@@ -285,7 +286,7 @@ static NSString *const _fakeChallence = @"some_challenge";
                                                              handler:^(FBSDKLoginCompletionParameters *_Nonnull parameters) {
                                                                // not important here
                                                              }];
-  FBSDKGraphRequest *capturedRequest = (FBSDKGraphRequest *)connection.capturedGraphRequest;
+  FBSDKGraphRequest *capturedRequest = (FBSDKGraphRequest *)connection.capturedRequest;
   XCTAssertEqualObjects(
     capturedRequest.graphPath,
     @"oauth/access_token",
@@ -346,7 +347,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 
   [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:factory
                                                              handler:handler];
-  connection.capturedCompletionHandler(nil, nil, self.sampleError);
+  connection.capturedCompletion(nil, nil, self.sampleError);
   XCTAssertTrue(completionWasInvoked);
 }
 
@@ -374,7 +375,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 
   [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:factory
                                                              handler:handler];
-  connection.capturedCompletionHandler(nil, stubbedResult, nil);
+  connection.capturedCompletion(nil, stubbedResult, nil);
   XCTAssertTrue(completionWasInvoked);
 }
 
@@ -402,7 +403,7 @@ static NSString *const _fakeChallence = @"some_challenge";
   for (int i = 0; i < 100; i++) {
     NSDictionary *params = [stubbedResult copy];
     NSDictionary *parameters = [Fuzzer randomizeWithJson:params];
-    connection.capturedCompletionHandler(nil, parameters, nil);
+    connection.capturedCompletion(nil, parameters, nil);
     XCTAssertTrue(completionWasInvoked);
     completionWasInvoked = NO;
   }

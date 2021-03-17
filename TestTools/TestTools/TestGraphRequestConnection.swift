@@ -19,29 +19,29 @@
 import FBSDKCoreKit
 
 @objcMembers
-class TestGraphRequestConnection: NSObject, GraphRequestConnecting {
+public class TestGraphRequestConnection: NSObject, GraphRequestConnecting {
 
-  var timeout: TimeInterval = 0
-  var capturedRequest: GraphRequestProtocol?
-  var capturedCompletion: GraphRequestBlock?
-  var startCallCount = 0
-  var cancelCallCount = 0
+  public var timeout: TimeInterval = 0
+  public var capturedRequest: GraphRequestProtocol?
+  public var capturedCompletion: GraphRequestBlock?
+  public var startCallCount = 0
+  public var cancelCallCount = 0
 
-  func add(_ request: GraphRequest, completionHandler handler: @escaping GraphRequestBlock) {
+  public func add(_ request: GraphRequest, completionHandler handler: @escaping GraphRequestBlock) {
     self.capturedRequest = request
     self.capturedCompletion = handler
   }
 
-  func add(_ request: GraphRequestProtocol, completionHandler handler: @escaping GraphRequestBlock) {
+  public func add(_ request: GraphRequestProtocol, completionHandler handler: @escaping GraphRequestBlock) {
     capturedRequest = request
     capturedCompletion = handler
   }
 
-  func start() {
+  public func start() {
     startCallCount += 1
   }
 
-  func cancel() {
+  public func cancel() {
     cancelCallCount += 1
   }
 }

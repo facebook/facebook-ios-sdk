@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F40BF67E26004BA4007DB231 /* TestGraphRequestConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40BF67D26004BA4007DB231 /* TestGraphRequestConnection.swift */; };
 		F4A406E725F4590F00F0E578 /* SampleAccessTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A406E625F4590F00F0E578 /* SampleAccessTokens.swift */; };
 /* End PBXBuildFile section */
 
@@ -85,6 +86,7 @@
 
 /* Begin PBXFileReference section */
 		F40185BE25F45AD800C57ADE /* FBSDKCoreKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSDKCoreKit.xcodeproj; path = "/Users/joesusnick/fbsource/fbobjc/ios-sdk/FBSDKCoreKit/FBSDKCoreKit.xcodeproj"; sourceTree = "<absolute>"; };
+		F40BF67D26004BA4007DB231 /* TestGraphRequestConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestGraphRequestConnection.swift; sourceTree = "<group>"; };
 		F4A406E625F4590F00F0E578 /* SampleAccessTokens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleAccessTokens.swift; sourceTree = "<group>"; };
 		F4E5F09025F4354900D67852 /* TestTools.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TestTools.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -119,6 +121,7 @@
 		F4A406E525F4590F00F0E578 /* TestTools */ = {
 			isa = PBXGroup;
 			children = (
+				F40BF67D26004BA4007DB231 /* TestGraphRequestConnection.swift */,
 				F4A406E625F4590F00F0E578 /* SampleAccessTokens.swift */,
 			);
 			path = TestTools;
@@ -291,6 +294,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F40BF67E26004BA4007DB231 /* TestGraphRequestConnection.swift in Sources */,
 				F4A406E725F4590F00F0E578 /* SampleAccessTokens.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
