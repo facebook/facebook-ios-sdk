@@ -21,10 +21,8 @@
 #import <AdSupport/AdSupport.h>
 
 #import "FBSDKAccessTokenExpirer.h"
-#import "FBSDKAppEvents+Internal.h"
 #import "FBSDKAppEventsConfigurationProtocol.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
-#import "FBSDKCoreKit.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKInternalUtility.h"
 
