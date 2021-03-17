@@ -267,7 +267,8 @@ static id<FBSDKProfileProviding> _profileFactory;
                                       refreshDate:nil
                                          imageURL:imageURL
                                             email:claims.email
-                                        friendIDs:claims.userFriends];
+                                        friendIDs:claims.userFriends
+                                        isLimited:YES];
 }
 
 + (NSDate *)expirationDateFromParameters:(NSDictionary *)parameters

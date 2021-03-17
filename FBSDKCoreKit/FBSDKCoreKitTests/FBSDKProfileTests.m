@@ -654,4 +654,145 @@ NSString *const heightKey = @"height";
   }
 }
 
+- (void)testEncoding
+{
+  NSURL *linkURL = [NSURL URLWithString:@"www.example.com"];
+  NSURL *imageURL = [NSURL URLWithString:@"www.example.com/image"];
+  NSDate *date = [NSDate date];
+  NSArray *friendIDS = @[@123, @456];
+
+  FBSDKTestCoder *coder = [FBSDKTestCoder new];
+  _profile = [[FBSDKProfile alloc] initWithUserID:@"userID"
+                                        firstName:@"firstName"
+                                       middleName:@"middleName"
+                                         lastName:@"lastName"
+                                             name:@"name"
+                                          linkURL:linkURL
+                                      refreshDate:date
+                                         imageURL:imageURL
+                                            email:@"email"
+                                        friendIDs:friendIDS
+                                        isLimited:YES];
+
+  [_profile encodeWithCoder:coder];
+
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"userID"],
+    @"userID",
+    "Should encode the expected user identifier"
+  );
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"firstName"],
+    @"firstName",
+    "Should encode the expected first name"
+  );
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"middleName"],
+    @"middleName",
+    "Should encode the expected middle name"
+  );
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"lastName"],
+    @"lastName",
+    "Should encode the expected last name"
+  );
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"name"],
+    @"name",
+    "Should encode the expected name"
+  );
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"linkURL"],
+    linkURL,
+    "Should encode the expected link URL"
+  );
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"refreshDate"],
+    date,
+    "Should encode the expected refresh date"
+  );
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"imageURL"],
+    imageURL,
+    "Should encode the expected image URL"
+  );
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"email"],
+    @"email",
+    "Should encode the expected email address"
+  );
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"friendIDs"],
+    friendIDS,
+    "Should encode the expected list of friend identifiers"
+  );
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"isLimited"],
+    @YES,
+    "Should encode the expected 'isLimited' value as an object"
+  );
+}
+
+- (void)testDecodingEntryWithMethodName
+{
+  FBSDKTestCoder *coder = [FBSDKTestCoder new];
+  _profile = [[FBSDKProfile alloc] initWithCoder:coder];
+
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"userID"],
+    NSString.class,
+    "Should decode a string for the userID key"
+  );
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"firstName"],
+    NSString.class,
+    "Should decode a string for the firstName key"
+  );
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"middleName"],
+    NSString.class,
+    "Should decode a string for the middleName key"
+  );
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"lastName"],
+    NSString.class,
+    "Should decode a string for the lastName key"
+  );
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"name"],
+    NSString.class,
+    "Should decode a string for the name key"
+  );
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"linkURL"],
+    NSURL.class,
+    "Should decode a url for the linkURL key"
+  );
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"refreshDate"],
+    NSDate.class,
+    "Should decode a date for the refreshDate key"
+  );
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"imageURL"],
+    NSURL.class,
+    "Should decode a url for the imageURL key"
+  );
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"email"],
+    NSString.class,
+    "Should decode a string for the email key"
+  );
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"friendIDs"],
+    NSArray.class,
+    "Should decode an array for the friendIDs key"
+  );
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"isLimited"],
+    @"decodeBoolForKey",
+    "Should decode a bool for the isLimited key"
+  );
+}
+
 @end

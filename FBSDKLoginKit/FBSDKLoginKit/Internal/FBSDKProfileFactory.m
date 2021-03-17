@@ -36,6 +36,7 @@
                                  imageURL:(nullable NSURL *)imageURL
                                     email:(nullable NSString *)email
                                 friendIDs:(nullable NSArray<FBSDKUserIdentifier *> *)friendIDs
+                                isLimited:(BOOL)isLimited
 {
   return [[FBSDKProfile alloc] initWithUserID:userID
                                     firstName:firstName
@@ -46,7 +47,8 @@
                                   refreshDate:refreshDate
                                      imageURL:imageURL
                                         email:email
-                                    friendIDs:friendIDs];
+                                    friendIDs:friendIDs
+                                    isLimited:isLimited];
 }
 
 @end

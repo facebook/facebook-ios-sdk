@@ -47,9 +47,16 @@ static FBSDKProfile *g_currentProfile;
  #define FBSDKPROFILE_IMAGEURL_KEY @"imageURL"
  #define FBSDKPROFILE_EMAIL_KEY @"email"
  #define FBSDKPROFILE_FRIENDIDS_KEY @"friendIDs"
+ #define FBSDKPROFILE_IS_LIMITED_KEY @"isLimited"
 
 // Once a day
  #define FBSDKPROFILE_STALE_IN_SECONDS (60 * 60 * 24)
+
+@interface FBSDKProfile ()
+
+@property (nonatomic, assign) BOOL isLimited;
+
+@end
 
 @implementation FBSDKProfile
 
@@ -105,6 +112,33 @@ static FBSDKProfile *g_currentProfile;
                       imageURL:(NSURL *)imageURL
                          email:(NSString *)email
                      friendIDs:(NSArray<FBSDKUserIdentifier *> *)friendIDs
+                     isLimited:(BOOL)isLimited
+{
+  self = [self initWithUserID:userID
+                    firstName:firstName
+                   middleName:middleName
+                     lastName:lastName
+                         name:name
+                      linkURL:linkURL
+                  refreshDate:refreshDate
+                     imageURL:imageURL
+                        email:email
+                    friendIDs:friendIDs];
+  self.isLimited = isLimited;
+
+  return self;
+}
+
+- (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
+                     firstName:(NSString *)firstName
+                    middleName:(NSString *)middleName
+                      lastName:(NSString *)lastName
+                          name:(NSString *)name
+                       linkURL:(NSURL *)linkURL
+                   refreshDate:(NSDate *)refreshDate
+                      imageURL:(NSURL *)imageURL
+                         email:(NSString *)email
+                     friendIDs:(NSArray<FBSDKUserIdentifier *> *)friendIDs
 {
   if ((self = [super init])) {
     _userID = [userID copy];
@@ -117,6 +151,7 @@ static FBSDKProfile *g_currentProfile;
     _imageURL = [imageURL copy];
     _email = [email copy];
     _friendIDs = [friendIDs copy];
+    self.isLimited = NO;
   }
   return self;
 }
@@ -218,10 +253,11 @@ static FBSDKProfile *g_currentProfile;
     && [_lastName isEqualToString:profile.lastName]
     && [_name isEqualToString:profile.name]
     && [_linkURL isEqual:profile.linkURL]
-    && [_refreshDate isEqualToDate:profile.refreshDate])
-  && [_imageURL isEqual:profile.imageURL]
-  && [_email isEqualToString:profile.email]
-  && [_friendIDs isEqualToArray:profile.friendIDs];
+    && [_refreshDate isEqualToDate:profile.refreshDate]
+    && [_imageURL isEqual:profile.imageURL]
+    && [_email isEqualToString:profile.email]
+    && [_friendIDs isEqualToArray:profile.friendIDs]
+    && _isLimited == profile.isLimited);
 }
 
  #pragma mark NSCoding
@@ -239,10 +275,11 @@ static FBSDKProfile *g_currentProfile;
   NSString *lastName = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKPROFILE_LASTNAME_KEY];
   NSString *name = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKPROFILE_NAME_KEY];
   NSURL *linkURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDKPROFILE_LINKURL_KEY];
-  NSDate *refreshDate = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDKPROFILE_REFRESHDATE_KEY];
+  NSDate *refreshDate = [decoder decodeObjectOfClass:[NSDate class] forKey:FBSDKPROFILE_REFRESHDATE_KEY];
   NSURL *imageURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDKPROFILE_IMAGEURL_KEY];
   NSString *email = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKPROFILE_EMAIL_KEY];
   NSArray<FBSDKUserIdentifier *> *friendIDs = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDKPROFILE_FRIENDIDS_KEY];
+  BOOL isLimited = [decoder decodeBoolForKey:FBSDKPROFILE_IS_LIMITED_KEY];
   return [self initWithUserID:userID
                     firstName:firstName
                    middleName:middleName
@@ -252,7 +289,8 @@ static FBSDKProfile *g_currentProfile;
                   refreshDate:refreshDate
                      imageURL:imageURL
                         email:email
-                    friendIDs:friendIDs];
+                    friendIDs:friendIDs
+                    isLimited:isLimited];
 }
 
 - (void)encodeWithCoder:(NSCoder *)encoder
@@ -267,6 +305,7 @@ static FBSDKProfile *g_currentProfile;
   [encoder encodeObject:self.imageURL forKey:FBSDKPROFILE_IMAGEURL_KEY];
   [encoder encodeObject:self.email forKey:FBSDKPROFILE_EMAIL_KEY];
   [encoder encodeObject:self.friendIDs forKey:FBSDKPROFILE_FRIENDIDS_KEY];
+  [encoder encodeBool:self.isLimited forKey:FBSDKPROFILE_IS_LIMITED_KEY];
 }
 
 @end
@@ -412,7 +451,7 @@ static id <FBSDKDataPersisting> _store;
 
   BOOL isStale = [[NSDate date] timeIntervalSinceDate:g_currentProfile.refreshDate] > FBSDKPROFILE_STALE_IN_SECONDS;
   if (token
-      && (isStale || ![g_currentProfile.userID isEqualToString:token.userID])) {
+      && (isStale || ![g_currentProfile.userID isEqualToString:token.userID] || g_currentProfile.isLimited)) {
     FBSDKProfile *expectedCurrentProfile = g_currentProfile;
 
     [executingRequestConnection cancel];

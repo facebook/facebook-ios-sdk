@@ -32,7 +32,8 @@ class ProfileFactoryTests: XCTestCase {
     refreshDate: SampleUserProfiles.valid.refreshDate,
     imageURL: SampleUserProfiles.valid.imageURL,
     email: SampleUserProfiles.valid.email,
-    friendIDs: SampleUserProfiles.valid.friendIDs
+    friendIDs: SampleUserProfiles.valid.friendIDs,
+    isLimited: true
   )
   let factory = ProfileFactory()
 
@@ -47,7 +48,8 @@ class ProfileFactoryTests: XCTestCase {
       refreshDate: SampleUserProfiles.valid.refreshDate,
       imageURL: SampleUserProfiles.valid.imageURL,
       email: SampleUserProfiles.valid.email,
-      friendIDs: SampleUserProfiles.valid.friendIDs
+      friendIDs: SampleUserProfiles.valid.friendIDs,
+      isLimited: true
     )
     XCTAssertEqual(profile.userID, expected.userID)
     XCTAssertEqual(profile.firstName, expected.firstName)

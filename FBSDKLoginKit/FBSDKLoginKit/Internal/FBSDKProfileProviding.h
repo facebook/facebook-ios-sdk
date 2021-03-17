@@ -38,7 +38,8 @@ NS_SWIFT_NAME(ProfileProviding)
                                  imageURL:(nullable NSURL *)imageURL
                                     email:(nullable NSString *)email
                                 friendIDs:(nullable NSArray<FBSDKUserIdentifier *> *)friendIDs
-NS_SWIFT_NAME(createProfile(userID:firstName:middleName:lastName:name:linkURL:refreshDate:imageURL:email:friendIDs:));
+                                isLimited:(BOOL)isLimited
+NS_SWIFT_NAME(createProfile(userID:firstName:middleName:lastName:name:linkURL:refreshDate:imageURL:email:friendIDs:isLimited:));
 
 @end
 

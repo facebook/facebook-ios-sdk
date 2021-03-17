@@ -563,6 +563,10 @@ static NSString *const _fakeChallence = @"some_challenge";
     claim.userFriends,
     "Should request a profile using the friend identifiers from the claims"
   );
+  XCTAssertTrue(
+    factory.capturedIsLimited,
+    "Should request a profile with limited information"
+  );
 }
 
 // MARK: Helpers

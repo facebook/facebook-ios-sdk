@@ -32,6 +32,7 @@ public class TestProfileProvider: NSObject, ProfileProviding {
   public var capturedImageURL: URL?
   public var capturedEmail: String?
   public var capturedFriendIDs: [String]?
+  public var capturedIsLimited = false
   private var stubbedProfile: Profile
 
   public init(stubbedProfile: Profile) {
@@ -48,7 +49,8 @@ public class TestProfileProvider: NSObject, ProfileProviding {
     refreshDate: Date?,
     imageURL: URL?,
     email: String?,
-    friendIDs: [String]?
+    friendIDs: [String]?,
+    isLimited: Bool
   ) -> Profile {
     capturedUserID = userID
     capturedFirstName = firstName
@@ -60,6 +62,7 @@ public class TestProfileProvider: NSObject, ProfileProviding {
     capturedImageURL = imageURL
     capturedEmail = email
     capturedFriendIDs = friendIDs
+    capturedIsLimited = isLimited
 
     return stubbedProfile
   }
