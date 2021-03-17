@@ -30,7 +30,9 @@
  #import <FBSDKCoreKit/FBSDKDeviceButton.h>
  #import <FBSDKCoreKit/FBSDKDeviceViewControllerBase.h>
  #import <FBSDKCoreKit/FBSDKGraphRequest.h>
+ #import <FBSDKCoreKit/FBSDKGraphRequestConnecting.h>
  #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
+ #import <FBSDKCoreKit/FBSDKGraphRequestConnection+GraphRequestConnecting.h>
  #import <FBSDKCoreKit/FBSDKGraphRequestDataAttachment.h>
  #import <FBSDKCoreKit/FBSDKSettings.h>
  #import <FBSDKCoreKit/FBSDKTestUsersManager.h>
@@ -68,7 +70,9 @@
  #import "FBSDKDeviceButton.h"
  #import "FBSDKDeviceViewControllerBase.h"
  #import "FBSDKGraphRequest.h"
+ #import "FBSDKGraphRequestConnecting.h"
  #import "FBSDKGraphRequestConnection.h"
+ #import "FBSDKGraphRequestConnection+GraphRequestConnecting.h"
  #import "FBSDKGraphRequestDataAttachment.h"
  #import "FBSDKGraphRequestProtocol.h"
  #import "FBSDKSettings.h"

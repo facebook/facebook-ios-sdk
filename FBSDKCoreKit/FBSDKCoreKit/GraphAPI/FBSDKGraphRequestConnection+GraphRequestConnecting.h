@@ -20,6 +20,8 @@
 
 #import "FBSDKGraphRequestConnecting.h"
 
+@protocol FBSDKGraphRequestConnecting;
+
 NS_ASSUME_NONNULL_BEGIN
 
 // Default conformance to the FBSDKGraphRequestConnecting protocol

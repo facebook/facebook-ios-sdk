@@ -18,9 +18,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKGraphRequestConnecting.h"
-
 NS_ASSUME_NONNULL_BEGIN
+
+@protocol FBSDKGraphRequestConnecting;
 
 /// Describes anything that can provide instances of `FBSDKGraphRequestConnecting`
 NS_SWIFT_NAME(GraphRequestConnectionProviding)

@@ -17,7 +17,6 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "FBSDKCoreKit+Internal.h"
-#import "FBSDKGraphRequestConnecting.h"
 
 NS_SWIFT_NAME(GraphRequestPiggybackManager)
 @interface FBSDKGraphRequestPiggybackManager : NSObject

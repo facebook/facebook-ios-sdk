@@ -18,15 +18,13 @@
 
 #import <Foundation/Foundation.h>
 
-#if SWIFT_PACKAGE
-#import "FBSDKCoreKit.h"
-#else
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-#endif
-
 NS_ASSUME_NONNULL_BEGIN
 
+@class FBSDKGraphRequestConnection;
 @protocol FBSDKGraphRequest;
+typedef void (^FBSDKGraphRequestBlock)(FBSDKGraphRequestConnection *_Nullable connection,
+                                       id _Nullable result,
+                                       NSError *_Nullable error);
 
 /// A protocol to describe an object that can manage graph requests
 NS_SWIFT_NAME(GraphRequestConnecting)
