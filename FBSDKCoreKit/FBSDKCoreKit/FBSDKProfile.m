@@ -408,7 +408,7 @@ static id <FBSDKDataPersisting> _store;
                 graphRequest:(FBSDKGraphRequest *)request
                   parseBlock:(FBSDKParseProfileBlock)parseBlock;
 {
-  static FBSDKGraphRequestConnection *executingRequestConnection = nil;
+  static id<FBSDKGraphRequestConnecting> executingRequestConnection = nil;
 
   BOOL isStale = [[NSDate date] timeIntervalSinceDate:g_currentProfile.refreshDate] > FBSDKPROFILE_STALE_IN_SECONDS;
   if (token

@@ -36,6 +36,7 @@ NS_SWIFT_NAME(GraphRequestConnecting)
  completionHandler:(FBSDKGraphRequestBlock)handler;
 
 - (void)start;
+- (void)cancel;
 
 @end
 

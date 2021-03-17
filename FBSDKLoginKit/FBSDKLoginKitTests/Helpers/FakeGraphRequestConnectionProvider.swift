@@ -41,6 +41,7 @@ class TestGraphRequestConnectionFactory: NSObject, GraphRequestConnectionProvidi
 class TestGraphRequestConnection: NSObject, GraphRequestConnecting {
   var timeout: TimeInterval = 0
   var startCallCount = 0
+  var cancelCallCount = 0
   var capturedGraphRequest: GraphRequestProtocol?
   var capturedCompletionHandler: GraphRequestBlock?
 
@@ -52,4 +53,9 @@ class TestGraphRequestConnection: NSObject, GraphRequestConnecting {
   func start() {
     startCallCount += 1
   }
+
+  func cancel() {
+    cancelCallCount += 1
+  }
+
 }

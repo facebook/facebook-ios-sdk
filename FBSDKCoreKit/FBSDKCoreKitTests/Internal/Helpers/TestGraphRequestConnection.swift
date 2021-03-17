@@ -25,6 +25,7 @@ class TestGraphRequestConnection: NSObject, GraphRequestConnecting {
   var capturedRequest: GraphRequestProtocol?
   var capturedCompletion: GraphRequestBlock?
   var startCallCount = 0
+  var cancelCallCount = 0
 
   func add(_ request: GraphRequest, completionHandler handler: @escaping GraphRequestBlock) {
     self.capturedRequest = request
@@ -32,11 +33,15 @@ class TestGraphRequestConnection: NSObject, GraphRequestConnecting {
   }
 
   func add(_ request: GraphRequestProtocol, completionHandler handler: @escaping GraphRequestBlock) {
-    self.capturedRequest = request
-    self.capturedCompletion = handler
+    capturedRequest = request
+    capturedCompletion = handler
   }
 
   func start() {
-    self.startCallCount += 1
+    startCallCount += 1
+  }
+
+  func cancel() {
+    cancelCallCount += 1
   }
 }
