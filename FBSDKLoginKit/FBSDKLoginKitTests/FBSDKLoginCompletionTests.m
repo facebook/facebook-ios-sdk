@@ -35,6 +35,8 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 @interface FBSDKLoginURLCompleter (Testing)
 
+@property (class, nonatomic, assign) id<FBSDKProfileProviding> profileFactory;
+
 - (FBSDKLoginCompletionParameters *)parameters;
 - (void)exchangeNonceForTokenWithGraphRequestConnectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connection
                                                         handler:(FBSDKLoginCompletionParametersBlock)handler;
@@ -46,6 +48,7 @@ static NSString *const _fakeChallence = @"some_challenge";
                                    handler:(FBSDKLoginCompletionParametersBlock)handler;
 
 + (FBSDKProfile *)profileWithClaims:(FBSDKAuthenticationTokenClaims *)claims;
++ (void)reset;
 
 @end
 
@@ -102,8 +105,9 @@ static NSString *const _fakeChallence = @"some_challenge";
 {
   [super setUp];
 
-  int secInDay = 60 * 60 * 24;
+  [FBSDKLoginURLCompleter reset];
 
+  int secInDay = 60 * 60 * 24;
   _parameters = @{
     @"access_token" : @"some_access_token",
     @"id_token" : @"some_id_token",
@@ -123,7 +127,36 @@ static NSString *const _fakeChallence = @"some_challenge";
   };
 }
 
+- (void)tearDown
+{
+  [FBSDKLoginURLCompleter reset];
+
+  [super tearDown];
+}
+
 // MARK: Creation
+
+- (void)testDefaultProfileProvider
+{
+  NSObject *factory = (NSObject *)FBSDKLoginURLCompleter.profileFactory;
+  XCTAssertEqualObjects(
+    factory.class,
+    FBSDKProfileFactory.class,
+    "Should have the expected concrete profile provider"
+  );
+}
+
+- (void)testSettingProfileProvider
+{
+  NSObject<FBSDKProfileProviding> *provider = [[TestProfileProvider alloc] initWithStubbedProfile:SampleUserProfiles.valid];
+  FBSDKLoginURLCompleter.profileFactory = provider;
+
+  XCTAssertEqualObjects(
+    FBSDKLoginURLCompleter.profileFactory,
+    provider,
+    "Should be able to inject a profile provider"
+  );
+}
 
 - (void)testInitWithAccessTokenWithIDToken
 {
@@ -488,8 +521,11 @@ static NSString *const _fakeChallence = @"some_challenge";
 }
 
 // MARK: Profile
+
 - (void)testCreateProfileWithClaims
 {
+  TestProfileProvider *factory = [[TestProfileProvider alloc] initWithStubbedProfile:SampleUserProfiles.valid];
+  FBSDKLoginURLCompleter.profileFactory = factory;
   FBSDKAuthenticationTokenClaims *claim = [[FBSDKAuthenticationTokenClaims alloc] initWithJti:@"some_jti"
                                                                                           iss:@"some_iss"
                                                                                           aud:@"some_aud"
@@ -501,12 +537,32 @@ static NSString *const _fakeChallence = @"some_challenge";
                                                                                         email:@"example@example.com"
                                                                                       picture:@"www.facebook.com"
                                                                                   userFriends:@[@"123", @"456"]];
-  FBSDKProfile *profile = [FBSDKLoginURLCompleter profileWithClaims:claim];
-  XCTAssertEqualObjects(profile.userID, claim.sub);
-  XCTAssertEqualObjects(profile.name, claim.name);
-  XCTAssertEqualObjects(profile.imageURL.absoluteString, claim.picture);
-  XCTAssertEqualObjects(profile.email, claim.email);
-  XCTAssertEqualObjects(profile.friendIDs, claim.userFriends);
+  [FBSDKLoginURLCompleter profileWithClaims:claim];
+  XCTAssertEqualObjects(
+    factory.capturedUserID,
+    claim.sub,
+    "Should request a profile with the claims sub as the user identifier"
+  );
+  XCTAssertEqualObjects(
+    factory.capturedName,
+    claim.name,
+    "Should request a profile using the name from the claims"
+  );
+  XCTAssertEqualObjects(
+    factory.capturedImageURL.absoluteString,
+    claim.picture,
+    "Should request an image URL from the claims"
+  );
+  XCTAssertEqualObjects(
+    factory.capturedEmail,
+    claim.email,
+    "Should request a profile using the email from the claims"
+  );
+  XCTAssertEqualObjects(
+    factory.capturedFriendIDs,
+    claim.userFriends,
+    "Should request a profile using the friend identifiers from the claims"
+  );
 }
 
 // MARK: Helpers

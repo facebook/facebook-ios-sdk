@@ -28,12 +28,12 @@
   #import <FBSDKCoreKit/FBSDKCoreKit.h>
  #endif
 
- #import "FBSDKCoreKit+Internal.h"
  #import "FBSDKLoginConstants.h"
  #import "FBSDKLoginError.h"
  #import "FBSDKLoginManager+Internal.h"
  #import "FBSDKLoginUtility.h"
  #import "FBSDKPermission.h"
+ #import "FBSDKProfileFactory.h"
 
 @implementation FBSDKLoginCompletionParameters
 
@@ -59,6 +59,15 @@
   FBSDKLoginCompletionParameters *_parameters;
   id<NSObject> _observer;
   BOOL _performExplicitFallback;
+}
+
+static id<FBSDKProfileProviding> _profileFactory;
+
++ (void)initialize
+{
+  if (self == [FBSDKLoginURLCompleter class]) {
+    _profileFactory = [FBSDKProfileFactory new];
+  }
 }
 
 - (instancetype)initWithURLParameters:(NSDictionary *)parameters
@@ -249,16 +258,16 @@
     imageURL = [NSURL URLWithString:claims.picture];
   }
 
-  return [[FBSDKProfile alloc] initWithUserID:claims.sub
-                                    firstName:nil
-                                   middleName:nil
-                                     lastName:nil
-                                         name:claims.name
-                                      linkURL:nil
-                                  refreshDate:nil
-                                     imageURL:imageURL
-                                        email:claims.email
-                                    friendIDs:claims.userFriends];
+  return [_profileFactory createProfileWithUserID:claims.sub
+                                        firstName:nil
+                                       middleName:nil
+                                         lastName:nil
+                                             name:claims.name
+                                          linkURL:nil
+                                      refreshDate:nil
+                                         imageURL:imageURL
+                                            email:claims.email
+                                        friendIDs:claims.userFriends];
 }
 
 + (NSDate *)expirationDateFromParameters:(NSDictionary *)parameters
@@ -306,10 +315,31 @@
 
 // MARK: Test Helpers
 
+ #if DEBUG
+  #if FBSDKTEST
+
++ (id<FBSDKProfileProviding>)profileFactory
+{
+  return _profileFactory;
+}
+
++ (void)setProfileFactory:(id<FBSDKProfileProviding>)factory
+{
+  _profileFactory = factory;
+}
+
 - (FBSDKLoginCompletionParameters *)parameters
 {
   return _parameters;
 }
+
++ (void)reset
+{
+  _profileFactory = [FBSDKProfileFactory new];
+}
+
+  #endif
+ #endif
 
 @end
 
