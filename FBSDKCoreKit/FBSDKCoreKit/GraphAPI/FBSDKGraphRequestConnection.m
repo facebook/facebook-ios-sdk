@@ -1246,7 +1246,7 @@ static BOOL _canMakeRequests = NO;
     if (comma) {
       [result appendString:@",\n"];
     }
-    [result appendString:request.description];
+    [result appendString:request.formattedDescription];
     comma = YES;
   }
   [result appendString:@"\n)>"];

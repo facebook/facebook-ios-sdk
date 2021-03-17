@@ -36,7 +36,7 @@
 + (void)resetCurrentProfileCache;
 + (void)loadProfileWithToken:(FBSDKAccessToken *)token
                   completion:(FBSDKProfileBlock)completion
-                graphRequest:(FBSDKGraphRequest *)request;
+                graphRequest:(id<FBSDKGraphRequest>)request;
 @end
 
 @interface FBSDKProfileTests : FBSDKTestCase
@@ -507,7 +507,7 @@ NSString *const heightKey = @"height";
                           } graphRequest:self.graphRequestMock];
 }
 
-- (void)testLoadingProfileWithUInvalidFriends
+- (void)testLoadingProfileWithInvalidFriends
 {
   id result = @{
     @"id" : SampleUserProfiles.valid.userID,
@@ -550,6 +550,80 @@ NSString *const heightKey = @"height";
                             XCTAssertEqualObjects(profile.linkURL, SampleUserProfiles.valid.linkURL);
                             XCTAssertEqualObjects(profile.email, SampleUserProfiles.valid.email);
                           } graphRequest:self.graphRequestMock];
+}
+
+- (void)testLoadingProfileWithLimitedProfileWithoutToken
+{
+  FBSDKProfile *expected = SampleUserProfiles.validLimited;
+  [FBSDKProfile setCurrentProfile:expected];
+  TestGraphRequest *request = [TestGraphRequest new];
+  [FBSDKProfile loadProfileWithToken:nil
+                          completion:^(FBSDKProfile *profile, NSError *error) {
+                            XCTAssertEqualObjects(
+                              profile,
+                              expected,
+                              "Should return the current profile synchronously"
+                            );
+                          }
+                        graphRequest:request];
+  XCTAssertEqual(
+    request.startCallCount,
+    0,
+    "Should not fetch a profile if there is no access token"
+  );
+}
+
+- (void)testLoadingProfileWithLimitedProfileWithToken
+{
+  [FBSDKProfile setCurrentProfile:SampleUserProfiles.validLimited];
+  TestGraphRequest *request = [TestGraphRequest new];
+  [FBSDKProfile loadProfileWithToken:SampleAccessTokens.validToken
+                          completion:^(FBSDKProfile *profile, NSError *error) {
+                            XCTFail("Should not invoke the completion");
+                          }
+                        graphRequest:request];
+  XCTAssertEqual(
+    request.startCallCount,
+    1,
+    "Should fetch a profile if it is limited and there is an access token"
+  );
+}
+
+- (void)testLoadingProfileWithExpiredNonLimitedProfileWithToken
+{
+  FBSDKProfile *expected = [SampleUserProfiles createValidWithIsExpired:YES];
+  [FBSDKProfile setCurrentProfile:expected];
+  TestGraphRequest *request = [TestGraphRequest new];
+  [FBSDKProfile loadProfileWithToken:SampleAccessTokens.validToken
+                          completion:^(FBSDKProfile *profile, NSError *error) {
+                            XCTFail("Should not invoke the completion");
+                          }
+                        graphRequest:request];
+  XCTAssertEqual(
+    request.startCallCount,
+    1,
+    "Should fetch a profile if it is expired and there is an access token"
+  );
+}
+
+- (void)testLoadingProfileWithCurrentlyLoadingProfile
+{
+  FBSDKProfile *expected = [SampleUserProfiles createValidWithIsExpired:YES];
+  [FBSDKProfile setCurrentProfile:expected];
+  TestGraphRequest *request = [TestGraphRequest new];
+  TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
+  request.stubbedConnection = connection;
+  [FBSDKProfile loadProfileWithToken:SampleAccessTokens.validToken
+                          completion:^(FBSDKProfile *profile, NSError *error) { XCTFail("Should not invoke the completion"); }
+                        graphRequest:request];
+  [FBSDKProfile loadProfileWithToken:SampleAccessTokens.validToken
+                          completion:^(FBSDKProfile *profile, NSError *error) { XCTFail("Should not invoke the completion"); }
+                        graphRequest:request];
+  XCTAssertEqual(
+    connection.cancelCallCount,
+    1,
+    "Should cancel an existing connection if a new connection is started before it completes"
+  );
 }
 
 - (void)testProfileParseBlockInvokedOnSuccessfulGraphRequest

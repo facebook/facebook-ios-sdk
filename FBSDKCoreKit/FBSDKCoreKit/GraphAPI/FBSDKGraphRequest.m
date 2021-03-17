@@ -22,7 +22,6 @@
 
 #import "FBSDKAccessToken.h"
 #import "FBSDKCoreKit.h"
-#import "FBSDKGraphRequestConnection.h"
 #import "FBSDKGraphRequestConnectionFactory.h"
 #import "FBSDKGraphRequestConnectionProviding.h"
 #import "FBSDKGraphRequestDataAttachment.h"
@@ -249,18 +248,23 @@ FBSDKHTTPMethod FBSDKHTTPMethodDELETE = @"DELETE";
   return params;
 }
 
-- (FBSDKGraphRequestConnection *)startWithCompletionHandler:(FBSDKGraphRequestBlock)handler
+- (id<FBSDKGraphRequestConnecting>)startWithCompletionHandler:(FBSDKGraphRequestBlock)handler
 {
   id<FBSDKGraphRequestConnecting> connection = [self.connectionFactory createGraphRequestConnection];
   id<FBSDKGraphRequest> request = (id<FBSDKGraphRequest>)self;
   [connection addRequest:request completionHandler:handler];
   [connection start];
-  return (FBSDKGraphRequestConnection *)connection;
+  return connection;
 }
 
 #pragma mark - Debugging helpers
 
 - (NSString *)description
+{
+  return [self formattedDescription];
+}
+
+- (NSString *)formattedDescription
 {
   NSMutableString *result = [NSMutableString stringWithFormat:@"<%@: %p",
                              NSStringFromClass([self class]),

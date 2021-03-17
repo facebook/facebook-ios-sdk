@@ -44,6 +44,7 @@ public class SampleUserProfiles: NSObject {
   }
 
   public static var missingImageUrl = createValid(imageURL: nil)
+  public static var validLimited = createValid(isLimited: true)
 
   public static func createValid(userID: String) -> Profile {
     return createValid(userID: userID, name: defaultName)
@@ -73,7 +74,8 @@ public class SampleUserProfiles: NSObject {
       friendIDs: [
         "456",
         "789",
-      ]
+      ],
+      isLimited: isLimited
     )
   }
 }

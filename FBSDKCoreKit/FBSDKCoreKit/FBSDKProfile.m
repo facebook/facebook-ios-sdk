@@ -401,15 +401,15 @@ static id <FBSDKDataPersisting> _store;
     graphPath = [graphPath stringByAppendingString:@",friends"];
   }
 
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
-                                                                 parameters:nil
-                                                                      flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
+  id<FBSDKGraphRequest> request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
+                                                                    parameters:nil
+                                                                         flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
   [[self class] loadProfileWithToken:token completion:completion graphRequest:request];
 }
 
 + (void)loadProfileWithToken:(FBSDKAccessToken *)token
                   completion:(FBSDKProfileBlock)completion
-                graphRequest:(FBSDKGraphRequest *)request
+                graphRequest:(id<FBSDKGraphRequest>)request
 {
   FBSDKParseProfileBlock parseBlock = ^void (id result, FBSDKProfile **profileRef) {
     if (profileRef == NULL
@@ -439,12 +439,15 @@ static id <FBSDKDataPersisting> _store;
                                                        friendIDs:friendIDs];
     *profileRef = [profile copy];
   };
-  [[self class] loadProfileWithToken:token completion:completion graphRequest:request parseBlock:parseBlock];
+  [[self class] loadProfileWithToken:token
+                          completion:completion
+                        graphRequest:request
+                          parseBlock:parseBlock];
 }
 
 + (void)loadProfileWithToken:(FBSDKAccessToken *)token
                   completion:(FBSDKProfileBlock)completion
-                graphRequest:(FBSDKGraphRequest *)request
+                graphRequest:(id<FBSDKGraphRequest>)request
                   parseBlock:(FBSDKParseProfileBlock)parseBlock;
 {
   static id<FBSDKGraphRequestConnecting> executingRequestConnection = nil;

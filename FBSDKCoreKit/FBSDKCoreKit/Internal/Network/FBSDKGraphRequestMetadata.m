@@ -50,7 +50,7 @@
           self,
           self.batchParameters,
           self.completionHandler,
-          self.request.description];
+          self.request.formattedDescription];
 }
 
 @end

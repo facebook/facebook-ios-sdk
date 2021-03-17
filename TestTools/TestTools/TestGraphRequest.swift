@@ -16,38 +16,33 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKDataPersisting.h"
-#import "TargetConditionals.h"
+@testable import FBSDKCoreKit
 
-#if !TARGET_OS_TV
+@objcMembers
+public class TestGraphRequest: NSObject, GraphRequestProtocol {
 
- #import "FBSDKCoreKit+Internal.h"
+  public var parameters = [String: Any]()
+  public var tokenString: String?
+  public var graphPath: String = ""
+  public var httpMethod = HTTPMethod.get
+  public var version: String = ""
+  public var stubbedConnection = TestGraphRequestConnection()
+  public var capturedCompletionHandler: GraphRequestBlock?
+  public var startCallCount = 0
+  public var cancelCallCount = 0
 
-NS_ASSUME_NONNULL_BEGIN
+  public func start(completionHandler handler: GraphRequestBlock? = nil) -> GraphRequestConnecting {
+    capturedCompletionHandler = handler
+    startCallCount += 1
 
-typedef void (^FBSDKParseProfileBlock)(id result, FBSDKProfile *_Nonnull *_Nullable profileRef);
+    return stubbedConnection
+  }
 
-@interface FBSDKProfile (Internal)
+  public func cancel() {
+    cancelCallCount += 1
+  }
 
-+ (void)cacheProfile:(nullable FBSDKProfile *)profile;
-+ (nullable FBSDKProfile *)fetchCachedProfile;
-
-+ (NSURL *)imageURLForProfileID:(NSString *)profileId
-                    PictureMode:(FBSDKProfilePictureMode)mode
-                           size:(CGSize)size;
-
-+ (void)loadProfileWithToken:(FBSDKAccessToken *)token
-                  completion:(FBSDKProfileBlock)completion
-                graphRequest:(id<FBSDKGraphRequest>)request
-                  parseBlock:(FBSDKParseProfileBlock)parseBlock;
-
-+ (void)loadProfileWithToken:(FBSDKAccessToken *)token completion:(_Nullable FBSDKProfileBlock)completion;
-
-+ (void)observeChangeAccessTokenChange:(NSNotification *)notification;
-+ (void)configureWithStore:(id<FBSDKDataPersisting>)store;
-
-@end
-
-NS_ASSUME_NONNULL_END
-
-#endif
+  public func formattedDescription() -> String {
+    return "Test graph request"
+  }
+}

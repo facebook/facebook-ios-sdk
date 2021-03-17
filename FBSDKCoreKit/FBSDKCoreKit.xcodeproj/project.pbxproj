@@ -937,8 +937,6 @@
 		F441DC2E25DC93C10092C8F6 /* FBSDKGraphRequestConnectionFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F441DC2725DC93C10092C8F6 /* FBSDKGraphRequestConnectionFactory.m */; };
 		F441DC2F25DC93C10092C8F6 /* FBSDKGraphRequestConnectionFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F441DC2725DC93C10092C8F6 /* FBSDKGraphRequestConnectionFactory.m */; };
 		F441DC6725DC9AEB0092C8F6 /* TestGraphRequestConnectionFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F441DC6625DC9AEB0092C8F6 /* TestGraphRequestConnectionFactory.swift */; };
-		F441DD0925DD7A4A0092C8F6 /* FBSDKGraphRequestConnectionProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F441DC1725DC91A00092C8F6 /* FBSDKGraphRequestConnectionProviding.h */; };
-		F441DD1725DD7A4B0092C8F6 /* FBSDKGraphRequestConnectionProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F441DC1725DC91A00092C8F6 /* FBSDKGraphRequestConnectionProviding.h */; };
 		F441DDE725DDDB670092C8F6 /* GraphRequestConnectionFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F441DDD725DDDB670092C8F6 /* GraphRequestConnectionFactoryTests.swift */; };
 		F443A27D25D1F45E0093AB78 /* FBSDKAppEventsPublishAteTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F443A27C25D1F45E0093AB78 /* FBSDKAppEventsPublishAteTests.m */; };
 		F443A2B925D20A530093AB78 /* FBSDKAppEventsAtePublisher.h in Headers */ = {isa = PBXBuildFile; fileRef = F443A2B725D20A530093AB78 /* FBSDKAppEventsAtePublisher.h */; };
@@ -2407,6 +2405,7 @@
 				F441DC1725DC91A00092C8F6 /* FBSDKGraphRequestConnectionProviding.h */,
 				F4CCDCD725E97C1F0057FE5F /* FBSDKGraphRequestFactory.h */,
 				F4CCDCD625E97C1F0057FE5F /* FBSDKGraphRequestFactory.m */,
+				F4CCDF8E25EB07930057FE5F /* FBSDKGraphRequestFlags.h */,
 				9DF2A3FD1A70572B00DFB2FD /* FBSDKGraphRequestMetadata.h */,
 				9DF2A3FE1A70572B00DFB2FD /* FBSDKGraphRequestMetadata.m */,
 				9DA81B271AA65FA200B9FE0B /* FBSDKGraphRequestPiggybackManager.h */,
@@ -2423,7 +2422,6 @@
 				F4F6029425D5BD7E0053D3E7 /* FBSDKURLSessionProxyFactory.m */,
 				F4F6027525D5BADC0053D3E7 /* FBSDKURLSessionProxying.h */,
 				F4F6028525D5BB280053D3E7 /* FBSDKURLSessionProxyProviding.h */,
-				F4CCDF8E25EB07930057FE5F /* FBSDKGraphRequestFlags.h */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -3326,7 +3324,6 @@
 				F48AD2EA2576FE050052C056 /* FBSDKAuthenticationToken.h in Headers */,
 				81B71D961D19C87400933E93 /* FBSDKBridgeAPIProtocolNativeV1.h in Headers */,
 				81B71D971D19C87400933E93 /* FBSDKURLOpening.h in Headers */,
-				F441DD1725DD7A4B0092C8F6 /* FBSDKGraphRequestConnectionProviding.h in Headers */,
 				81B71D981D19C87400933E93 /* FBSDKMath.h in Headers */,
 				5D6DF16B2398E2A200AC2D6C /* FBSDKEventDeactivationManager.h in Headers */,
 				52963AA0215993C100C7B252 /* FBSDKAppLinkReturnToRefererView_Internal.h in Headers */,
@@ -3392,7 +3389,6 @@
 				F441658125CAFED800DAB0A5 /* FBSDKURLSessionTask.h in Headers */,
 				F4F6030E25D5C8A80053D3E7 /* FBSDKURLSessionProxyProviding.h in Headers */,
 				9D0BC1661A8E892C00BE8BA4 /* FBSDKAppEventsState.h in Headers */,
-				F441DD0925DD7A4A0092C8F6 /* FBSDKGraphRequestConnectionProviding.h in Headers */,
 				F441DC2825DC93C10092C8F6 /* FBSDKGraphRequestConnectionFactory.h in Headers */,
 				894C0AED1A6F1DAB009137EF /* FBSDKBridgeAPIProtocolType.h in Headers */,
 				899C3D021A8C1ED200EA8658 /* FBSDKHumanSilhouetteIcon.h in Headers */,
