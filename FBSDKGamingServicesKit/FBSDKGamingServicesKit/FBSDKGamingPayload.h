@@ -15,29 +15,24 @@
 // COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#import <Foundation/Foundation.h>
 
-#if defined FBSDKCOCOAPODS || defined BUCK
+@class FBSDKURL;
 
- #import <FBSDKGamingServicesKit/FBSDKFriendFinderDialog.h>
- #import <FBSDKGamingServicesKit/FBSDKGamingGroupIntegration.h>
- #import <FBSDKGamingServicesKit/FBSDKGamingImageUploader.h>
- #import <FBSDKGamingServicesKit/FBSDKGamingImageUploaderConfiguration.h>
- #import <FBSDKGamingServicesKit/FBSDKGamingPayload.h>
- #import <FBSDKGamingServicesKit/FBSDKGamingPayloadObserver.h>
- #import <FBSDKGamingServicesKit/FBSDKGamingServiceCompletionHandler.h>
- #import <FBSDKGamingServicesKit/FBSDKGamingVideoUploader.h>
- #import <FBSDKGamingServicesKit/FBSDKGamingVideoUploaderConfiguration.h>
+NS_ASSUME_NONNULL_BEGIN
 
-#else
+extern NSString *const kGamingPayload;
+extern NSString *const kGamingPayloadGameRequestID;
 
- #import "FBSDKFriendFinderDialog.h"
- #import "FBSDKGamingGroupIntegration.h"
- #import "FBSDKGamingImageUploader.h"
- #import "FBSDKGamingImageUploaderConfiguration.h"
- #import "FBSDKGamingPayload.h"
- #import "FBSDKGamingPayloadObserver.h"
- #import "FBSDKGamingServiceCompletionHandler.h"
- #import "FBSDKGamingVideoUploader.h"
- #import "FBSDKGamingVideoUploaderConfiguration.h"
+NS_SWIFT_NAME(GamingPayload)
+@interface FBSDKGamingPayload : NSObject
 
-#endif
+@property (nonatomic, strong, nonnull) FBSDKURL *URL;
+@property (nonatomic, strong, readonly) NSString *payload;
+@property (nonatomic, strong, readonly) NSString *gameRequestID;
+
+- (instancetype)initWithUrl:(FBSDKURL * _Nonnull)url;
+
+@end
+
+NS_ASSUME_NONNULL_END

@@ -22,6 +22,14 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		9FB2855526014BF300DB99CB /* FBSDKGamingPayloadObserver.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FB2854126014BF300DB99CB /* FBSDKGamingPayloadObserver.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FB2855626014BF300DB99CB /* FBSDKGamingPayloadObserver.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FB2854126014BF300DB99CB /* FBSDKGamingPayloadObserver.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FB2855726014BF300DB99CB /* FBSDKGamingPayload.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FB2855226014BF300DB99CB /* FBSDKGamingPayload.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FB2855826014BF300DB99CB /* FBSDKGamingPayload.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FB2855226014BF300DB99CB /* FBSDKGamingPayload.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9FB2855926014BF300DB99CB /* FBSDKGamingPayload.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FB2855326014BF300DB99CB /* FBSDKGamingPayload.m */; };
+		9FB2855A26014BF300DB99CB /* FBSDKGamingPayload.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FB2855326014BF300DB99CB /* FBSDKGamingPayload.m */; };
+		9FB2855B26014BF300DB99CB /* FBSDKGamingPayloadObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FB2855426014BF300DB99CB /* FBSDKGamingPayloadObserver.m */; };
+		9FB2855C26014BF300DB99CB /* FBSDKGamingPayloadObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FB2855426014BF300DB99CB /* FBSDKGamingPayloadObserver.m */; };
 		9FB51BA024B8BD4700059B77 /* FBSDKGamingGroupIntegration.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FB51B8E24B8BD4700059B77 /* FBSDKGamingGroupIntegration.m */; };
 		9FB51BA124B8BD4700059B77 /* FBSDKGamingGroupIntegration.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FB51B9F24B8BD4700059B77 /* FBSDKGamingGroupIntegration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9FB51BA224B8BD5400059B77 /* FBSDKGamingGroupIntegration.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FB51B9F24B8BD4700059B77 /* FBSDKGamingGroupIntegration.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -232,6 +240,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9FB2854126014BF300DB99CB /* FBSDKGamingPayloadObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKGamingPayloadObserver.h; sourceTree = "<group>"; };
+		9FB2855226014BF300DB99CB /* FBSDKGamingPayload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKGamingPayload.h; sourceTree = "<group>"; };
+		9FB2855326014BF300DB99CB /* FBSDKGamingPayload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKGamingPayload.m; sourceTree = "<group>"; };
+		9FB2855426014BF300DB99CB /* FBSDKGamingPayloadObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKGamingPayloadObserver.m; sourceTree = "<group>"; };
 		9FB51B8E24B8BD4700059B77 /* FBSDKGamingGroupIntegration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKGamingGroupIntegration.m; sourceTree = "<group>"; };
 		9FB51B9F24B8BD4700059B77 /* FBSDKGamingGroupIntegration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKGamingGroupIntegration.h; sourceTree = "<group>"; };
 		9FC2000A247D82A00016A053 /* FBSDKGamingVideoUploaderConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKGamingVideoUploaderConfiguration.m; sourceTree = "<group>"; };
@@ -368,6 +380,10 @@
 		F4F7C9B523F48F2C0030A346 /* FBSDKGamingServicesKit */ = {
 			isa = PBXGroup;
 			children = (
+				9FB2855226014BF300DB99CB /* FBSDKGamingPayload.h */,
+				9FB2855326014BF300DB99CB /* FBSDKGamingPayload.m */,
+				9FB2854126014BF300DB99CB /* FBSDKGamingPayloadObserver.h */,
+				9FB2855426014BF300DB99CB /* FBSDKGamingPayloadObserver.m */,
 				9FC2000C247D82A00016A053 /* FBSDKGamingVideoUploader.h */,
 				9FC2000B247D82A00016A053 /* FBSDKGamingVideoUploader.m */,
 				9FC2000D247D82A00016A053 /* FBSDKGamingVideoUploaderConfiguration.h */,
@@ -511,9 +527,11 @@
 				F4F7C9EA23F48F2C0030A346 /* FBSDKFriendFinderDialog.h in Headers */,
 				F4F7C9E423F48F2C0030A346 /* FBSDKGamingServiceCompletionHandler.h in Headers */,
 				F4F7C9E823F48F2C0030A346 /* FBSDKGamingImageUploader.h in Headers */,
+				9FB2855726014BF300DB99CB /* FBSDKGamingPayload.h in Headers */,
 				F4DC057F2519499A0073B380 /* FBSDKCoreKitInternalImport.h in Headers */,
 				F4F7C9EB23F48F2C0030A346 /* FBSDKGamingServicesKit.h in Headers */,
 				F4F7CA3623F499600030A346 /* FBSDKCoreKit+Internal.h in Headers */,
+				9FB2855526014BF300DB99CB /* FBSDKGamingPayloadObserver.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -530,9 +548,11 @@
 				F4F7CA7123F49D6F0030A346 /* FBSDKGamingServiceCompletionHandler.h in Headers */,
 				F4F7CA7223F49D6F0030A346 /* FBSDKGamingImageUploader.h in Headers */,
 				F4F7CA7323F49D6F0030A346 /* FBSDKGamingServicesKit.h in Headers */,
+				9FB2855826014BF300DB99CB /* FBSDKGamingPayload.h in Headers */,
 				F4DC05832519499B0073B380 /* FBSDKCoreKitInternalImport.h in Headers */,
 				F4F7CA7423F49D6F0030A346 /* FBSDKCoreKit+Internal.h in Headers */,
 				9FC2002E247D8ACF0016A053 /* FBSDKVideoUploader.h in Headers */,
+				9FB2855626014BF300DB99CB /* FBSDKGamingPayloadObserver.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -840,6 +860,8 @@
 				9FB51BA024B8BD4700059B77 /* FBSDKGamingGroupIntegration.m in Sources */,
 				F4F7C9E623F48F2C0030A346 /* FBSDKGamingServiceController.m in Sources */,
 				9FC2000F247D82A00016A053 /* FBSDKGamingVideoUploader.m in Sources */,
+				9FB2855B26014BF300DB99CB /* FBSDKGamingPayloadObserver.m in Sources */,
+				9FB2855926014BF300DB99CB /* FBSDKGamingPayload.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -855,6 +877,8 @@
 				9FB51BA324B8BD6100059B77 /* FBSDKGamingGroupIntegration.m in Sources */,
 				F4F7CA7823F49D6F0030A346 /* FBSDKGamingImageUploaderConfiguration.m in Sources */,
 				F4F7CA7923F49D6F0030A346 /* FBSDKGamingServiceController.m in Sources */,
+				9FB2855C26014BF300DB99CB /* FBSDKGamingPayloadObserver.m in Sources */,
+				9FB2855A26014BF300DB99CB /* FBSDKGamingPayload.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
