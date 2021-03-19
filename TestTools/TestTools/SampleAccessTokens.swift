@@ -22,74 +22,88 @@ import Foundation
 @objcMembers
 public class SampleAccessTokens: NSObject {
 
-  public static var validToken: AccessToken {
-    return AccessToken(
-      tokenString: "123",
-      permissions: [],
-      declinedPermissions: [],
-      expiredPermissions: [],
-      appID: "123",
-      userID: "user123",
-      expirationDate: nil,
-      refreshDate: nil,
-      dataAccessExpirationDate: nil
-    )
-  }
+  public static let defaultTokenString = "123"
+  public static let defaultAppID = "123"
+  public static let defaultUserID = "user123"
 
-  public static var expiredToken: AccessToken {
-    return AccessToken(
-      tokenString: "123",
+  public static var validToken = AccessToken(
+    tokenString: defaultTokenString,
+    permissions: [],
+    declinedPermissions: [],
+    expiredPermissions: [],
+    appID: defaultAppID,
+    userID: defaultUserID,
+    expirationDate: nil,
+    refreshDate: nil,
+    dataAccessExpirationDate: nil
+  )
+
+  public static var expiredToken = AccessToken(
+      tokenString: defaultTokenString,
       permissions: [],
       declinedPermissions: [],
       expiredPermissions: [],
-      appID: "123",
-      userID: "user123",
+      appID: defaultAppID,
+      userID: defaultUserID,
       expirationDate: .distantPast,
       refreshDate: nil,
       dataAccessExpirationDate: nil
-    )
-  }
+  )
 
-  public static func valid(withRefreshDate date: Date?) -> AccessToken {
+  public static func create(withRefreshDate date: Date?) -> AccessToken {
     return AccessToken(
-      tokenString: "123",
+      tokenString: defaultTokenString,
       permissions: [],
       declinedPermissions: [],
       expiredPermissions: [],
-      appID: "123",
-      userID: "user123",
+      appID: defaultAppID,
+      userID: defaultUserID,
       expirationDate: nil,
       refreshDate: date,
       dataAccessExpirationDate: nil
     )
   }
 
-  public static func validToken(withPermissions permissions: [String]) -> AccessToken {
+  public static func create(dataAccessExpirationDate date: Date) -> AccessToken {
     return AccessToken(
-      tokenString: "123",
+      tokenString: defaultTokenString,
+      permissions: [],
+      declinedPermissions: [],
+      expiredPermissions: [],
+      appID: defaultAppID,
+      userID: defaultUserID,
+      expirationDate: nil,
+      refreshDate: nil,
+      dataAccessExpirationDate: date
+    )
+  }
+
+  public static func create(withPermissions permissions: [String]) -> AccessToken {
+    return AccessToken(
+      tokenString: defaultTokenString,
       permissions: permissions,
       declinedPermissions: [],
       expiredPermissions: [],
-      appID: "123",
-      userID: "user123",
+      appID: defaultAppID,
+      userID: defaultUserID,
       expirationDate: nil,
       refreshDate: nil,
       dataAccessExpirationDate: nil
     )
   }
 
-  public static func validToken(
+  public static func create(
     withPermissions permissions: [String],
     declinedPermissions: [String] = [],
     expiredPermissions: [String] = []
   ) -> AccessToken {
     return AccessToken(
-      tokenString: "123",
+      tokenString: defaultTokenString,
       permissions: permissions,
       declinedPermissions: declinedPermissions,
       expiredPermissions: expiredPermissions,
-      appID: "123",
-      userID: "user123",
+      appID: defaultAppID,
+      userID: defaultUserID,
       expirationDate: nil,
       refreshDate: nil,
       dataAccessExpirationDate: nil

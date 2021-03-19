@@ -335,7 +335,7 @@ NSString *const heightKey = @"height";
 - (void)testGraphPathForProfileLoadWithLinkPermission
 {
   id profileMock = OCMClassMock([FBSDKProfile class]);
-  FBSDKAccessToken *token = [SampleAccessTokens validTokenWithPermissions:@[@"user_link"]];
+  FBSDKAccessToken *token = [SampleAccessTokens createWithPermissions:@[@"user_link"]];
   NSString *graphPath = @"me?fields=id,first_name,middle_name,last_name,name,link";
   __block BOOL graphRequestMethodInvoked = false;
   OCMStub([profileMock loadProfileWithToken:OCMOCK_ANY completion:OCMOCK_ANY graphRequest:OCMOCK_ANY]).andDo(^(NSInvocation *invocation) {
@@ -368,7 +368,7 @@ NSString *const heightKey = @"height";
 - (void)testGraphPathForProfileLoadWithEmailPermission
 {
   id profileMock = OCMClassMock([FBSDKProfile class]);
-  FBSDKAccessToken *token = [SampleAccessTokens validTokenWithPermissions:@[@"email"]];
+  FBSDKAccessToken *token = [SampleAccessTokens createWithPermissions:@[@"email"]];
   NSString *graphPath = @"me?fields=id,first_name,middle_name,last_name,name,email";
   __block BOOL graphRequestMethodInvoked = false;
   OCMStub([profileMock loadProfileWithToken:OCMOCK_ANY completion:OCMOCK_ANY graphRequest:OCMOCK_ANY]).andDo(^(NSInvocation *invocation) {
@@ -401,7 +401,7 @@ NSString *const heightKey = @"height";
 - (void)testGraphPathForProfileLoadWithFriendsPermission
 {
   id profileMock = OCMClassMock([FBSDKProfile class]);
-  FBSDKAccessToken *token = [SampleAccessTokens validTokenWithPermissions:@[@"user_friends"]];
+  FBSDKAccessToken *token = [SampleAccessTokens createWithPermissions:@[@"user_friends"]];
   NSString *graphPath = @"me?fields=id,first_name,middle_name,last_name,name,friends";
   __block BOOL graphRequestMethodInvoked = false;
   OCMStub([profileMock loadProfileWithToken:OCMOCK_ANY completion:OCMOCK_ANY graphRequest:OCMOCK_ANY]).andDo(^(NSInvocation *invocation) {
