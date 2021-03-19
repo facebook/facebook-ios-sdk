@@ -429,19 +429,9 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [OCMStub(ClassMethod([_settingsClassMock appID])) andReturn:appID];
 }
 
-- (void)stubIsSDKInitialized:(BOOL)initialized
-{
-  [OCMStub(ClassMethod([_fbApplicationDelegateClassMock isSDKInitialized])) andReturnValue:OCMOCK_VALUE(initialized)];
-}
-
 - (void)stubLoadingGateKeepers
 {
   OCMStub(ClassMethod([_gatekeeperManagerClassMock loadGateKeepers:OCMArg.any]));
-}
-
-- (void)stubCheckingFeatures
-{
-  OCMStubIgnoringNonObjectArgs([_featureManagerClassMock checkFeature:FBSDKFeatureInstrument completionBlock:OCMArg.any]);
 }
 
 - (void)stubFetchingCachedServerConfiguration
@@ -475,11 +465,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   OCMStub(ClassMethod([_settingsClassMock _logIfSDKSettingsChanged]));
 }
 
-- (void)stubTokenCacheWith:(TestTokenCache *)cache
-{
-  OCMStub(ClassMethod([_settingsClassMock tokenCache])).andReturn(cache);
-}
-
 - (void)stubIsAutoLogAppEventsEnabled:(BOOL)isEnabled
 {
   OCMStub(ClassMethod([_settingsClassMock isAutoLogAppEventsEnabled])).andReturn(isEnabled);
@@ -490,36 +475,14 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   OCMStub(ClassMethod([_profileClassMock fetchCachedProfile])).andReturn(profile);
 }
 
-- (void)stubFBApplicationDelegateSharedInstanceWith:(FBSDKApplicationDelegate *)delegate
-{
-  OCMStub(ClassMethod([_fbApplicationDelegateClassMock sharedInstance])).andReturn(delegate);
-}
-
-- (void)stubRegisterAppForAdNetworkAttribution
-{
-  if (@available(iOS 11.3, *)) {
-    OCMStub(ClassMethod([_skAdNetworkClassMock registerAppForAdNetworkAttribution]));
-  }
-}
-
 - (void)stubDefaultNotificationCenterWith:(NSNotificationCenter *)notificationCenter
 {
   OCMStub(ClassMethod([_nsNotificationCenterClassMock defaultCenter])).andReturn(notificationCenter);
 }
 
-- (void)stubDefaultMeasurementEventListenerWith:(FBSDKMeasurementEventListener *)eventListener
-{
-  OCMStub([_measurementEventListenerClassMock defaultListener]).andReturn(eventListener);
-}
-
 - (void)stubCurrentAccessTokenWith:(FBSDKAccessToken *)token
 {
   OCMStub(ClassMethod([_accessTokenClassMock currentAccessToken])).andReturn(token);
-}
-
-- (void)stubCurrentAuthenticationTokenWith:(FBSDKAuthenticationToken *)token
-{
-  OCMStub(ClassMethod([_authenticationTokenClassMock currentAuthenticationToken])).andReturn(token);
 }
 
 - (void)stubGraphAPIVersionWith:(NSString *)version
@@ -592,11 +555,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   OCMStub(ClassMethod([_graphRequestConnectionClassMock alloc]));
 }
 
-- (void)stubDisableFeature:(NSString *)feature
-{
-  OCMStub(ClassMethod([_featureManagerClassMock disableFeature:feature]));
-}
-
 - (void)stubIsDataProcessingRestricted:(BOOL)isRestricted
 {
   OCMStub(ClassMethod([_settingsClassMock isDataProcessingRestricted])).andReturn(isRestricted);
@@ -605,11 +563,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)stubFacebookDomainPartWith:(NSString *)domainPart
 {
   OCMStub(ClassMethod([_settingsClassMock facebookDomainPart])).andReturn(domainPart);
-}
-
-- (void)stubCanOpenURLWith:(BOOL)canOpenURL
-{
-  OCMStub([_sharedApplicationMock canOpenURL:OCMArg.any]).andReturn(canOpenURL);
 }
 
 - (void)stubOpenURLWith:(BOOL)openURL
@@ -651,11 +604,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 {
   // Note: the '5' is arbitrary and ignored but needs to be there for compilation.
   OCMStubIgnoringNonObjectArgs(ClassMethod([self.utilityClassMock startGCDTimerWithInterval:5 block:OCMArg.any]));
-}
-
-- (void)stubAddingServerConfigurationPiggyback
-{
-  OCMStub([self.graphRequestPiggybackManagerMock addServerConfigurationPiggyback:OCMOCK_ANY]);
 }
 
 - (void)stubIsAdvertiserTrackingEnabledWith:(BOOL)isAdvertiserTrackingEnabled

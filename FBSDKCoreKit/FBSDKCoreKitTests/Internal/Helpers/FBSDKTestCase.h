@@ -167,17 +167,11 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Stubs `FBSDKSettings.appID` and return the provided value
 - (void)stubAppID:(nullable NSString *)appID;
 
-/// Stubs `FBSDKSettings.isSDKInitialized` and return the provided value
-- (void)stubIsSDKInitialized:(BOOL)initialized;
-
 /// Stubs `FBSDKSettings.isAutoLogAppEventsEnabled` and return the provided value
 - (void)stubIsAutoLogAppEventsEnabled:(BOOL)isEnabled;
 
 /// Stubs `FBSDKGateKeeperManager.loadGateKeepers:` to avoid the side effect of a network fetch
 - (void)stubLoadingGateKeepers;
-
-/// Stubs `FBSDKFeatureManager.checkFeature:` for any feature requested by FeatureManager.
-- (void)stubCheckingFeatures;
 
 /// Stubs `FBSDKServerConfigurationManager.cachedServerConfiguration` and returns the default server configuration.
 /// Use this when you don't care what the actual configuration is and want to avoid a network call.
@@ -203,32 +197,17 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Prevents logging on changes to Settings properties
 - (void)stubLoggingIfUserSettingsChanged;
 
-/// Stubs `FBSDKSettings.tokenCache`
-- (void)stubTokenCacheWith:(TestTokenCache *)cache;
-
 /// Stubs `FBSDKProfile.fetchCachedProfile`
 - (void)stubCachedProfileWith:(FBSDKProfile *__nullable)profile;
 
-/// Stubs `FBSDKApplicationDelegate.sharedInstance`
-- (void)stubFBApplicationDelegateSharedInstanceWith:(FBSDKApplicationDelegate *)delegate;
-
-/// Stubs `SKAdNetwork.registerAppForAdNetworkAttribution`
-- (void)stubRegisterAppForAdNetworkAttribution;
-
 /// Stubs `NSNotificationCenter.defaultCenter` and returns the provided notification center
 - (void)stubDefaultNotificationCenterWith:(NSNotificationCenter *)notificationCenter;
-
-/// Stubs `MeasurementEventListener.defaultListener` and returns the provided listener.
-- (void)stubDefaultMeasurementEventListenerWith:(FBSDKMeasurementEventListener *)eventListener;
 
 /// Stubs `FBSDKSettings.graphAPIVersion` with the provided version string
 - (void)stubGraphAPIVersionWith:(NSString *)version;
 
 /// Stubs `FBSDKAccessToken.currentAccessToken` with the provided token
 - (void)stubCurrentAccessTokenWith:(nullable FBSDKAccessToken *)token;
-
-/// Stubs `FBSDKAuthenticationToken.currentAuthenticationToken` with the provided token
-- (void)stubCurrentAuthenticationTokenWith:(nullable FBSDKAuthenticationToken *)token;
 
 /// Stubs `FBSDKSettings.clientToken` with the provided token string
 - (void)stubClientTokenWith:(nullable NSString *)token;
@@ -267,17 +246,11 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// from hitting the network while proper mocks are being written.
 - (void)stubAllocatingGraphRequestConnection;
 
-/// Stubs `FBSDKFeatureManager.disableFeature:` for the provided feature
-- (void)stubDisableFeature:(NSString *)feature;
-
 /// Stubs `FBSDKSettings.isDataProcessingRestricted` and returns the provided value
 - (void)stubIsDataProcessingRestricted:(BOOL)isRestricted;
 
 /// Stubs `FBSDKSettings.facebookDomainPart` with the provided value
 - (void)stubFacebookDomainPartWith:(NSString *)domainPart;
-
-/// Stubs `UIApplication.sharedApplication`'s `canOpenURL:` method and returns the provided value
-- (void)stubCanOpenURLWith:(BOOL)canOpenURL;
 
 /// Stubs `UIApplication.sharedApplication`'s `openURL:` method and returns the provided value
 - (void)stubOpenURLWith:(BOOL)openURL;
@@ -301,9 +274,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 
 /// Stubs `FBSDKAppEventsConfigurationManager`'s `loadAppEventsConfigurationWithBlock` method
 - (void)stubLoadingAppEventsConfiguration;
-
-/// Stubs `FBSDKGraphRequestPiggybackManager`'s + `addServerConfigurationPiggyback:` method
-- (void)stubAddingServerConfigurationPiggyback;
 
 /// Stubs `FBSDKAppEventsConfigurationManager.cachedAppEventsConfiguration` and returns the provided configuration
 - (void)stubCachedAppEventsConfigurationWithConfiguration:(FBSDKAppEventsConfiguration *)configuration;
