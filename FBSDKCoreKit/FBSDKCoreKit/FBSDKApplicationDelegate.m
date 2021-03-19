@@ -38,6 +38,7 @@
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKTimeSpentData.h"
 #import "FBSDKTokenCache.h"
+#import "NSNotificationCenter+Extensions.h"
 #import "NSUserDefaults+FBSDKDataPersisting.h"
 
 #if !TARGET_OS_TV
@@ -68,11 +69,19 @@ static UIApplicationState _applicationState;
 {
   NSHashTable<id<FBSDKApplicationObserving>> *_applicationObservers;
   BOOL _isAppLaunched;
+  id<FBSDKNotificationObserving> _notificationObserver;
 }
 
 #pragma mark - Class Methods
 
 + (void)initializeSDK:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions
+{
+  [self initializeSDKWithApplicationDelegate:self.sharedInstance
+                               launchOptions:launchOptions];
+}
+
++ (void)initializeSDKWithApplicationDelegate:(FBSDKApplicationDelegate *)delegate
+                               launchOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions
 {
   if (g_isSDKInitialized) {
     // Do nothing if initialized already
@@ -81,10 +90,9 @@ static UIApplicationState _applicationState;
 
   [self setIsSdkInitialized];
 
-  FBSDKApplicationDelegate *delegate = [self sharedInstance];
   [FBSDKSettings recordInstall];
 
-  NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+  id<FBSDKNotificationObserving> defaultCenter = [delegate notificationObserver];
   [defaultCenter addObserver:delegate selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
   [defaultCenter addObserver:delegate selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
   [defaultCenter addObserver:delegate selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
@@ -134,15 +142,26 @@ static UIApplicationState _applicationState;
 
 - (instancetype)init
 {
+  return [self initWithNotificationObserver:NSNotificationCenter.defaultCenter];
+}
+
+- (instancetype)initWithNotificationObserver:(id<FBSDKNotificationObserving>)observer
+{
   if ((self = [super init]) != nil) {
     _applicationObservers = [[NSHashTable alloc] init];
+    _notificationObserver = observer;
   }
   return self;
 }
 
 - (void)dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
+  [_notificationObserver removeObserver:self];
+}
+
+- (id<FBSDKNotificationObserving>)notificationObserver
+{
+  return _notificationObserver;
 }
 
 #pragma mark - UIApplicationDelegate

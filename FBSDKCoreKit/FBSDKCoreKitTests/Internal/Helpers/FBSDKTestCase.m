@@ -94,7 +94,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self setUpAuthenticationTokenClassMock];
   [self setUpProfileMock];
   [self setUpSKAdNetworkMock];
-  [self setUpNSNotificationCenterMock];
   [self setUpMeasurementEventListenerMock];
   [self setUpTimeSpendDataMock];
   [self setUpInternalUtilityMock];
@@ -162,9 +161,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   [_skAdNetworkClassMock stopMocking];
   _skAdNetworkClassMock = nil;
-
-  [_nsNotificationCenterClassMock stopMocking];
-  _nsNotificationCenterClassMock = nil;
 
   [_measurementEventListenerClassMock stopMocking];
   _measurementEventListenerClassMock = nil;
@@ -313,11 +309,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   if (@available(iOS 11.3, *)) {
     self.skAdNetworkClassMock = OCMStrictClassMock(SKAdNetwork.class);
   }
-}
-
-- (void)setUpNSNotificationCenterMock
-{
-  self.nsNotificationCenterClassMock = OCMClassMock(NSNotificationCenter.class);
 }
 
 - (void)setUpMeasurementEventListenerMock
@@ -473,11 +464,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)stubCachedProfileWith:(FBSDKProfile *__nullable)profile
 {
   OCMStub(ClassMethod([_profileClassMock fetchCachedProfile])).andReturn(profile);
-}
-
-- (void)stubDefaultNotificationCenterWith:(NSNotificationCenter *)notificationCenter
-{
-  OCMStub(ClassMethod([_nsNotificationCenterClassMock defaultCenter])).andReturn(notificationCenter);
 }
 
 - (void)stubCurrentAccessTokenWith:(FBSDKAccessToken *)token

@@ -41,7 +41,6 @@
 @implementation FBSDKAuthenticationTokenTests
 {
   FBSDKAuthenticationToken *_token;
-  NotificationCenterSpy *_notificationCenterSpy;
 }
 
 // MARK: - Persistence

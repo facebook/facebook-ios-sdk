@@ -36,8 +36,6 @@
 
 @interface FBSDKApplicationDelegate (Testing)
 
-+ (void)resetIsSdkInitialized;
-
 - (BOOL)isAppLaunched;
 - (void)setIsAppLaunched:(BOOL)isLaunched;
 - (NSHashTable<id<FBSDKApplicationObserving>> *)applicationObservers;
@@ -81,7 +79,6 @@
   UserDefaultsSpy *_defaultsSpy;
   FBSDKProfile *_profile;
   id _partialDelegateMock;
-  NotificationCenterSpy *_notificationCenterSpy;
 }
 @end
 
@@ -98,14 +95,11 @@
 {
   [super setUp];
 
-  _delegate = FBSDKApplicationDelegate.sharedInstance;
+  _delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationObserver:[TestNotificationCenter new]];
   _delegate.isAppLaunched = NO;
 
   _defaultsSpy = [UserDefaultsSpy new];
   [self stubUserDefaultsWith:_defaultsSpy];
-
-  _notificationCenterSpy = [NotificationCenterSpy new];
-  [self stubDefaultNotificationCenterWith:_notificationCenterSpy];
 
   _profile = [[FBSDKProfile alloc] initWithUserID:self.name
                                         firstName:nil
@@ -568,7 +562,11 @@
 - (void)testSetApplicationState
 {
   [_delegate setApplicationState:UIApplicationStateBackground];
-  XCTAssertEqual([FBSDKAppEvents applicationState], UIApplicationStateBackground, "The value of applicationState after calling setApplicationState should be UIApplicationStateBackground");
+  XCTAssertEqual(
+    [FBSDKAppEvents applicationState],
+    UIApplicationStateBackground,
+    "The value of applicationState after calling setApplicationState should be UIApplicationStateBackground"
+  );
 }
 
 @end

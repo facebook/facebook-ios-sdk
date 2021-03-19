@@ -64,6 +64,9 @@
 #import "FBSDKAppEventsConfigurationProtocol.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsConfiguration+AppEventsConfigurationProtocol.h"
+// NotificationCenter
+#import "FBSDKNotificationProtocols.h"
+#import "NSNotificationCenter+Extensions.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -208,6 +211,22 @@ appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)prov
 NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:));
 
 + (void)reset;
+
+@end
+
+@interface FBSDKApplicationDelegate (Testing)
+
+@property (nonatomic, assign) id<FBSDKNotificationObserving> notificationObserver;
+
++ (void)initializeSDKWithApplicationDelegate:(FBSDKApplicationDelegate *)delegate
+                               launchOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
++ (void)resetIsSdkInitialized
+NS_SWIFT_NAME(reset());
+
+- (instancetype)initWithNotificationObserver:(id<FBSDKNotificationObserving>)notificationCenter;
+- (void)applicationDidEnterBackground:(NSNotification *)notification;
+- (void)applicationDidBecomeActive:(NSNotification *)notification;
+- (void)applicationWillResignActive:(NSNotification *)notification;
 
 @end
 

@@ -107,9 +107,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing an `SKAdNetwork` class mock between tests
 @property (nullable, nonatomic, assign) id skAdNetworkClassMock;
 
-/// Used for sharing an `NSNotificationCenter` class mock between tests
-@property (nullable, nonatomic, assign) id nsNotificationCenterClassMock;
-
 /// Used for sharing an `FBSDKMeasurementEventListener` class mock between tests
 @property (nullable, nonatomic, assign) id measurementEventListenerClassMock;
 
@@ -199,9 +196,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 
 /// Stubs `FBSDKProfile.fetchCachedProfile`
 - (void)stubCachedProfileWith:(FBSDKProfile *__nullable)profile;
-
-/// Stubs `NSNotificationCenter.defaultCenter` and returns the provided notification center
-- (void)stubDefaultNotificationCenterWith:(NSNotificationCenter *)notificationCenter;
 
 /// Stubs `FBSDKSettings.graphAPIVersion` with the provided version string
 - (void)stubGraphAPIVersionWith:(NSString *)version;

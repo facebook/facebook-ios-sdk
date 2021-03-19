@@ -19,16 +19,36 @@
 import Foundation
 
 @objcMembers
-class NotificationCenterSpy: NotificationCenter {
+class TestNotificationCenter: NSObject, NotificationObserving, NotificationPosting {
+
+  struct ObserverEvidence: Equatable {
+    let observer: Any
+    let name: Notification.Name?
+    let selector: Selector
+    let object: Any?
+
+    static func == (
+      lhs: TestNotificationCenter.ObserverEvidence,
+      rhs: TestNotificationCenter.ObserverEvidence
+    ) -> Bool {
+      return lhs.observer as AnyObject === rhs.observer as AnyObject &&
+        lhs.name == rhs.name &&
+        lhs.selector == rhs.selector &&
+        lhs.object as AnyObject === rhs.object as AnyObject
+    }
+  }
+
   var capturedRemovedObservers = [Any]()
   var capturedPostNames = [NSNotification.Name]()
   var capturedPostObjects = [Any]()
   var capturedPostUserInfos = [[AnyHashable: Any]]()
 
+  var capturedAddObserverInvocations = [ObserverEvidence]()
+
   // MARK: Posting
 
-  override func post(
-    name: NSNotification.Name,
+  func post(
+    name: Notification.Name,
     object: Any?,
     userInfo: [AnyHashable: Any]? = nil
   ) {
@@ -38,17 +58,24 @@ class NotificationCenterSpy: NotificationCenter {
   }
 
   // MARK: Observing
-  override func removeObserver(_ observer: Any) {
+  func removeObserver(_ observer: Any) {
     capturedRemovedObservers.append(observer)
   }
 
-  override func addObserver(
+  func addObserver(
     _ observer: Any,
     selector: Selector,
-    name: NSNotification.Name?,
+    name: Notification.Name?,
     object: Any?
   ) {
-    // TODO: capture values
+    capturedAddObserverInvocations.append(
+      ObserverEvidence(
+        observer: observer,
+        name: name,
+        selector: selector,
+        object: object
+      )
+    )
   }
 
   func clearTestEvidence() {
