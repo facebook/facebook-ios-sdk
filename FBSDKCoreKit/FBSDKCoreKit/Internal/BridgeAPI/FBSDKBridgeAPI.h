@@ -34,6 +34,8 @@
 #import "FBSDKBridgeAPIResponse.h"
 #import "FBSDKURLOpening.h"
 
+@protocol FBSDKOperatingSystemVersionComparing;
+
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^FBSDKBridgeAPIResponseBlock)(FBSDKBridgeAPIResponse *response)
@@ -41,7 +43,18 @@ NS_SWIFT_NAME(BridgeAPIResponseBlock);
 
 typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackURL, NSError *_Nullable error);
 
+NS_SWIFT_NAME(BridgeAPI)
 @interface FBSDKBridgeAPI : NSObject
+
+@property (class, nonatomic, readonly, strong) FBSDKBridgeAPI *sharedInstance
+NS_SWIFT_NAME(shared);
+@property (nonatomic, readonly, getter=isActive) BOOL active;
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
+- (instancetype)initWithProcessInfo:(id<FBSDKOperatingSystemVersionComparing>)processInfo
+NS_DESIGNATED_INITIALIZER;
 
 - (void)openBridgeAPIRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
      useSafariViewController:(BOOL)useSafariViewController
@@ -58,11 +71,6 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
         handler:(FBSDKSuccessBlock)handler;
 
 - (FBSDKAuthenticationCompletionHandler)sessionCompletionHandler;
-
-@property (class, nonatomic, readonly, strong) FBSDKBridgeAPI *sharedInstance
-NS_SWIFT_NAME(shared);
-@property (nonatomic, readonly, getter=isActive) BOOL active;
-
 
 @end
 

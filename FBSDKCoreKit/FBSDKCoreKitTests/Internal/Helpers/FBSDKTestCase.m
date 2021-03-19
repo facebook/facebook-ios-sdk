@@ -107,7 +107,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self setUpCrashShieldClassMock];
   [self setUpSharedApplicationMock];
   [self setUpLoggerClassMock];
-  [self setUpProcessInfoMock];
   [self setUpTransitionCoordinatorMock];
   [self setUpBridgeApiClassMock];
   [self setUpCrashObserverClassMock];
@@ -202,9 +201,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   [_loggerClassMock stopMocking];
   _loggerClassMock = nil;
-
-  [_processInfoMock stopMocking];
-  _processInfoMock = nil;
 
   [_transitionCoordinatorMock stopMocking];
   _transitionCoordinatorMock = nil;
@@ -383,12 +379,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)setUpLoggerClassMock
 {
   self.loggerClassMock = OCMClassMock(FBSDKLogger.class);
-}
-
-- (void)setUpProcessInfoMock
-{
-  self.processInfoMock = OCMClassMock(NSProcessInfo.class);
-  OCMStub(ClassMethod([_processInfoMock processInfo])).andReturn(_processInfoMock);
 }
 
 - (void)setUpTransitionCoordinatorMock
@@ -645,11 +635,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)stubUserAgentSuffixWith:(nullable NSString *)suffix
 {
   OCMStub(ClassMethod([self.settingsClassMock userAgentSuffix])).andReturn(suffix);
-}
-
-- (void)stubIsOperatingSystemVersionAtLeast:(NSOperatingSystemVersion)version with:(BOOL)returnValue
-{
-  OCMStub([self.processInfoMock isOperatingSystemAtLeastVersion:version]).andReturn(returnValue);
 }
 
 - (void)stubAppUrlSchemeWith:(nullable NSString *)scheme

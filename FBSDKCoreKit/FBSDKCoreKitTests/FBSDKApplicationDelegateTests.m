@@ -382,6 +382,17 @@
   );
 }
 
+- (void)testInitializingSdkAddsBridgeApiObserver
+{
+  [FBSDKApplicationDelegate resetIsSdkInitialized];
+  [FBSDKApplicationDelegate initializeSDK:@{}];
+
+  XCTAssertTrue(
+    [FBSDKApplicationDelegate.sharedInstance.applicationObservers containsObject:FBSDKBridgeAPI.sharedInstance],
+    "Should add the shared bridge api instance to the application observers"
+  );
+}
+
 - (void)testDidFinishLaunchingLaunchedApp
 {
   _delegate.isAppLaunched = YES;

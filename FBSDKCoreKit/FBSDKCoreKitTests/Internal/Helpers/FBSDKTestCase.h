@@ -140,9 +140,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing a `FBSDKLogger` class mock between tests
 @property (nullable, nonatomic, assign) id loggerClassMock;
 
-/// Used for sharing an `NSProcessInfo.processInfo` mock between tests
-@property (nullable, nonatomic, assign) id processInfoMock;
-
 /// Used for stubbing any instance that conforms to the `UIViewControllerTransitionCoordinator` protocol
 @property (nullable, nonatomic, assign) id transitionCoordinatorMock;
 
@@ -298,9 +295,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 
 /// Stubs `FBSDKSettings.userAgentSuffix` and returns the provided value
 - (void)stubUserAgentSuffixWith:(nullable NSString *)suffix;
-
-/// Stubs `NSProcessInfo`'s `isOperatingSystemVersionAtLeast:` and returns the provided value
-- (void)stubIsOperatingSystemVersionAtLeast:(NSOperatingSystemVersion)version with:(BOOL)returnValue;
 
 /// Stubs `FBSDKInternalUtility`'s `appURLScheme` property to return the provided scheme
 - (void)stubAppUrlSchemeWith:(nullable NSString *)scheme;

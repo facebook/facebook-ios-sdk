@@ -19,6 +19,8 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "FBSDKBridgeAPI.h"
 #import "FBSDKContainerViewController.h"
+#import "FBSDKOperatingSystemVersionComparing.h"
+#import "NSProcessInfo+OperatingSystemVersionComparing.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -52,6 +54,8 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 };
 
 @interface FBSDKBridgeAPI (Testing)
+
+@property (nonatomic, assign, readonly) id<FBSDKOperatingSystemVersionComparing> processInfo;
 
 - (id<FBSDKAuthenticationSession>)authenticationSession;
 - (FBSDKAuthenticationSession)authenticationSessionState;

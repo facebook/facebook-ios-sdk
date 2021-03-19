@@ -23,6 +23,8 @@
  #import "FBSDKBridgeAPI.h"
 
  #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKOperatingSystemVersionComparing.h"
+ #import "NSProcessInfo+OperatingSystemVersionComparing.h"
 
 /**
  Specifies state of FBSDKAuthenticationSession (SFAuthenticationSession (iOS 11) and ASWebAuthenticationSession (iOS 12+))
@@ -52,9 +54,9 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 
  #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
   #import <AuthenticationServices/AuthenticationServices.h>
-@interface FBSDKBridgeAPI () <FBSDKApplicationObserving, FBSDKContainerViewControllerDelegate, ASWebAuthenticationPresentationContextProviding>
+@interface FBSDKBridgeAPI () <FBSDKContainerViewControllerDelegate, ASWebAuthenticationPresentationContextProviding>
  #else
-@interface FBSDKBridgeAPI () <FBSDKApplicationObserving, FBSDKContainerViewControllerDelegate>
+@interface FBSDKBridgeAPI () <FBSDKContainerViewControllerDelegate>
  #endif
 
 @end
@@ -72,11 +74,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   BOOL _isDismissingSafariViewController;
   BOOL _isAppLaunched;
   FBSDKAuthenticationSession _authenticationSessionState;
-}
-
-+ (void)load
-{
-  [[FBSDKApplicationDelegate sharedInstance] addObserver:[FBSDKBridgeAPI sharedInstance]];
+  id<FBSDKOperatingSystemVersionComparing> _processInfo;
 }
 
 + (FBSDKBridgeAPI *)sharedInstance
@@ -84,9 +82,17 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   static FBSDKBridgeAPI *_sharedInstance;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    _sharedInstance = [[self alloc] init];
+    _sharedInstance = [[self alloc] initWithProcessInfo:NSProcessInfo.processInfo];
   });
   return _sharedInstance;
+}
+
+- (instancetype)initWithProcessInfo:(id<FBSDKOperatingSystemVersionComparing>)processInfo
+{
+  if ((self = [super init])) {
+    _processInfo = processInfo;
+  }
+  return self;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -259,10 +265,11 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 {
   _expectingBackground = YES;
   _pendingURLOpen = sender;
+  __block id<FBSDKOperatingSystemVersionComparing> weakProcessInfo = _processInfo;
   dispatch_async(dispatch_get_main_queue(), ^{
     // Dispatch openURL calls to prevent hangs if we're inside the current app delegate's openURL flow already
     NSOperatingSystemVersion iOS10Version = { .majorVersion = 10, .minorVersion = 0, .patchVersion = 0 };
-    if ([NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:iOS10Version]) {
+    if ([weakProcessInfo isOperatingSystemAtLeastVersion:iOS10Version]) {
       if (@available(iOS 10.0, *)) {
         [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:^(BOOL success) {
           handler(success, nil);
@@ -644,6 +651,11 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 - (void)setPendingRequestCompletionBlock:(FBSDKBridgeAPIResponseBlock)newValue
 {
   _pendingRequestCompletionBlock = newValue;
+}
+
+- (id<FBSDKOperatingSystemVersionComparing>)processInfo
+{
+  return _processInfo;
 }
 
   #endif

@@ -22,6 +22,7 @@
 #import <objc/runtime.h>
 
 #import "FBSDKAppEvents+Internal.h"
+#import "FBSDKBridgeAPI+ApplicationObserving.h"
 #import "FBSDKConstants.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError.h"
@@ -462,6 +463,7 @@ static UIApplicationState _applicationState;
   [FBSDKCodelessIndexer configureWithRequestProvider:[FBSDKGraphRequestFactory new]];
   [FBSDKSKAdNetworkReporter configureWithRequestProvider:[FBSDKGraphRequestFactory new]];
   [FBSDKProfile configureWithStore:NSUserDefaults.standardUserDefaults];
+  [self.sharedInstance addObserver:FBSDKBridgeAPI.sharedInstance];
 #endif
 }
 

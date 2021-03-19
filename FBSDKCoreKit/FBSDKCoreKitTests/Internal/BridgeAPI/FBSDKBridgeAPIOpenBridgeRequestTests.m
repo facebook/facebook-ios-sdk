@@ -39,7 +39,7 @@
 {
   [super setUp];
 
-  _api = [FBSDKBridgeAPI new];
+  _api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]];
   _partialMock = OCMPartialMock(self.api);
 
   OCMStub(

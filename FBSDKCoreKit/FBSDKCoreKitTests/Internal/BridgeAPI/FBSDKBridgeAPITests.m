@@ -25,7 +25,8 @@
   [super setUp];
 
   [FBSDKLoginManager resetTestEvidence];
-  _api = [FBSDKBridgeAPI new];
+
+  _api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]];
   _partialMock = OCMPartialMock(_api);
 
   [self stubLoadingAppEventsConfiguration];
@@ -320,8 +321,11 @@
 {
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
 
+  TestProcessInfo *processInfo = [[TestProcessInfo alloc]
+                                  initWithStubbedOperatingSystemCheckResult:NO];
+  self.api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:processInfo];
+
   BOOL applicationOpensSuccessfully = YES;
-  [self stubIsOperatingSystemVersionAtLeast:iOS10Version with:NO];
   [self stubOpenURLWith:applicationOpensSuccessfully];
 
   [self.api openURL:self.sampleUrl sender:nil handler:^(BOOL _success, NSError *_Nullable error) {
@@ -342,8 +346,11 @@
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
 
   BOOL applicationOpensSuccessfully = NO;
-  [self stubIsOperatingSystemVersionAtLeast:iOS10Version with:NO];
   [self stubOpenURLWith:applicationOpensSuccessfully];
+
+  TestProcessInfo *processInfo = [[TestProcessInfo alloc]
+                                  initWithStubbedOperatingSystemCheckResult:NO];
+  self.api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:processInfo];
 
   [self.api openURL:self.sampleUrl sender:nil handler:^(BOOL _success, NSError *_Nullable error) {
     XCTAssertEqual(
@@ -363,7 +370,6 @@
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
 
   BOOL applicationOpensSuccessfully = YES;
-  [self stubIsOperatingSystemVersionAtLeast:iOS10Version with:YES];
   [self stubOpenUrlOptionsCompletionHandlerWithPerformCompletion:YES
                                                completionSuccess:applicationOpensSuccessfully];
 
@@ -385,7 +391,6 @@
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
 
   BOOL applicationOpensSuccessfully = NO;
-  [self stubIsOperatingSystemVersionAtLeast:iOS10Version with:YES];
   [self stubOpenUrlOptionsCompletionHandlerWithPerformCompletion:YES
                                                completionSuccess:applicationOpensSuccessfully];
 
