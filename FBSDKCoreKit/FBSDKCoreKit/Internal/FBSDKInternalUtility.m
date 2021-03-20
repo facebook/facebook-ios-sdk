@@ -23,6 +23,7 @@
 
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKError.h"
+#import "FBSDKInfoDictionaryProviding.h"
 #import "FBSDKSettings.h"
 #import "FBSDKSettings+Internal.h"
 
@@ -39,6 +40,8 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift) {
 };
 
 @implementation FBSDKInternalUtility
+
+static id<FBSDKInfoDictionaryProviding> _infoDictionaryProvider;
 
 // These are stored at the class level so that they can be reset in unit tests
 static dispatch_once_t *fetchApplicationQuerySchemesToken;
@@ -57,6 +60,18 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 }
 
 #pragma mark - Class Methods
+
++ (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+{
+  if (self == FBSDKInternalUtility.class) {
+    _infoDictionaryProvider = infoDictionaryProvider;
+  }
+}
+
++ (id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+{
+  return _infoDictionaryProvider;
+}
 
 + (NSString *)appURLScheme
 {
@@ -567,7 +582,7 @@ static NSMapTable *_transientObjects;
   static dispatch_once_t once_token;
   fetchUrlSchemesToken = &once_token;
   dispatch_once(&once_token, ^{
-    urlTypes = [[NSBundle mainBundle].infoDictionary valueForKey:@"CFBundleURLTypes"];
+    urlTypes = [self.infoDictionaryProvider.infoDictionary valueForKey:@"CFBundleURLTypes"];
   });
   for (NSDictionary *urlType in urlTypes) {
     NSArray *urlSchemes = [urlType valueForKey:@"CFBundleURLSchemes"];
@@ -609,7 +624,7 @@ static NSMapTable *_transientObjects;
   static dispatch_once_t once_token;
   fetchApplicationQuerySchemesToken = &once_token;
   dispatch_once(&once_token, ^{
-    schemes = [[NSBundle mainBundle].infoDictionary valueForKey:@"LSApplicationQueriesSchemes"];
+    schemes = [self.infoDictionaryProvider.infoDictionary valueForKey:@"LSApplicationQueriesSchemes"];
   });
 
   return [schemes containsObject:urlScheme];
@@ -638,53 +653,35 @@ static NSMapTable *_transientObjects;
 #if DEBUG
  #if FBSDKTEST
 
-+ (void)resetQuerySchemesCache
++ (void)reset
 {
   if (fetchApplicationQuerySchemesToken) {
     *fetchApplicationQuerySchemesToken = 0;
   }
-}
-
-+ (void)resetDidCheckRegisteredCanOpenUrlSchemes
-{
   if (checkRegisteredCanOpenUrlSchemesToken) {
     *checkRegisteredCanOpenUrlSchemesToken = 0;
   }
-}
-
-+ (void)resetIsFacebookAppInstalledCache
-{
   if (checkIfFacebookAppInstalledToken) {
     *checkIfFacebookAppInstalledToken = 0;
   }
-}
-
-+ (void)resetDidCheckIfMessengerAppInstalledCache
-{
   if (checkIfMessengerAppInstalledToken) {
     *checkIfMessengerAppInstalledToken = 0;
   }
-}
-
-+ (void)resetDidCheckIfMSQRDAppInstalledCache
-{
   if (checkIfMSQRDPlayerAppInstalledToken) {
     *checkIfMSQRDPlayerAppInstalledToken = 0;
   }
-}
-
-+ (void)resetDidCheckOperatingSystemVersion
-{
   if (checkOperatingSystemVersionToken) {
     *checkOperatingSystemVersionToken = 0;
   }
-}
-
-+ (void)resetFetchingUrlSchemes
-{
   if (fetchUrlSchemesToken) {
     *fetchUrlSchemesToken = 0;
   }
+  _infoDictionaryProvider = nil;
+}
+
++ (void)setInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)provider
+{
+  _infoDictionaryProvider = provider;
 }
 
  #endif

@@ -38,6 +38,7 @@
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKTimeSpentData.h"
 #import "FBSDKTokenCache.h"
+#import "NSBundle+InfoDictionaryProviding.h"
 #import "NSNotificationCenter+Extensions.h"
 #import "NSUserDefaults+FBSDKDataPersisting.h"
 
@@ -476,9 +477,12 @@ static UIApplicationState _applicationState;
   [FBSDKAccessToken setConnectionFactory:[FBSDKGraphRequestConnectionFactory new]];
   [FBSDKAuthenticationToken setTokenCache:tokenCache];
   [FBSDKSettings configureWithStore:NSUserDefaults.standardUserDefaults
-     appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class];
+     appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
+             infoDictionaryProvider:NSBundle.mainBundle];
+  [FBSDKInternalUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle];
 #if !TARGET_OS_TV
-  [FBSDKAppLinkUtility configureWithRequestProvider:[FBSDKGraphRequestFactory new]];
+  [FBSDKAppLinkUtility configureWithRequestProvider:[FBSDKGraphRequestFactory new]
+                             infoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKCodelessIndexer configureWithRequestProvider:[FBSDKGraphRequestFactory new]];
   [FBSDKSKAdNetworkReporter configureWithRequestProvider:[FBSDKGraphRequestFactory new]];
   [FBSDKProfile configureWithStore:NSUserDefaults.standardUserDefaults];

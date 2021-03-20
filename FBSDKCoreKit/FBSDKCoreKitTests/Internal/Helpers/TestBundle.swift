@@ -16,47 +16,43 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FakeBundle.h"
+import FBSDKCoreKit
+import Foundation
 
-#import "FBSDKCoreKit+Internal.h"
+@objcMembers
+class TestBundle: NSObject, InfoDictionaryProviding {
+  private var stubbedInfoDictionary: [String: Any]?
+  var lastCapturedKey: String?
+  var capturedKeys = [String]()
+  var didAccessInfoDictionary = false
 
-@implementation FakeBundle
-{
-  NSDictionary *_dictionary;
-}
-
-- (instancetype)initWithDictionary:(NSDictionary *)dictionary
-{
-  if (self = [super init]) {
-    _dictionary = dictionary;
+  var infoDictionary: [String: Any]? {
+    get {
+      didAccessInfoDictionary = true
+      return stubbedInfoDictionary
+    }
+    set {
+      stubbedInfoDictionary = newValue
+    }
   }
 
-  return self;
-}
-
-+ (instancetype)bundleWithDictionary:(NSDictionary *)dictionary
-{
-  return [[FakeBundle alloc] initWithDictionary:dictionary];
-}
-
-- (NSDictionary *)infoDictionary
-{
-  return [_dictionary copy];
-}
-
-- (void)setInfoDictionary:(NSDictionary *)newValue
-{
-  _dictionary = newValue;
-}
-
-- (id)objectForInfoDictionaryKey:(NSString *)key
-{
-  if (!_capturedKeys) {
-    _capturedKeys = [NSMutableArray array];
+  override convenience init() {
+    self.init(infoDictionary: [:])
   }
-  _capturedKeys = [_capturedKeys arrayByAddingObject:key];
 
-  return [_dictionary objectForKey:key];
+  init(infoDictionary: [String: Any] = [:]) {
+    self.stubbedInfoDictionary = infoDictionary
+  }
+
+  func object(forInfoDictionaryKey key: String) -> Any? {
+    lastCapturedKey = key
+    capturedKeys.append(key)
+    return infoDictionary?[key] as Any?
+  }
+
+  func reset() {
+    lastCapturedKey = nil
+    stubbedInfoDictionary = nil
+    didAccessInfoDictionary = false
+  }
 }
-
-@end

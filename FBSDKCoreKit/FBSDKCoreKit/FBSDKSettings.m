@@ -24,6 +24,7 @@
 #import "FBSDKAppEventsConfigurationProtocol.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKDataPersisting.h"
+#import "FBSDKInfoDictionaryProviding.h"
 #import "FBSDKInternalUtility.h"
 
 #define FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(TYPE, PLIST_KEY, GETTER, SETTER, DEFAULT_VALUE, ENABLE_CACHE) \
@@ -34,7 +35,7 @@
       g_ ## PLIST_KEY = [[_store objectForKey:@#PLIST_KEY] copy]; \
     } \
     if (g_ ## PLIST_KEY == nil) { \
-      g_ ## PLIST_KEY = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@#PLIST_KEY] copy] ?: DEFAULT_VALUE; \
+      g_ ## PLIST_KEY = [[_infoDictionaryProvider objectForInfoDictionaryKey:@#PLIST_KEY] copy] ?: DEFAULT_VALUE; \
     } \
     return g_ ## PLIST_KEY; \
   } \
@@ -76,6 +77,7 @@ static NSDictionary<NSString *, id> *g_dataProcessingOptions = nil;
 static NSNumber *g_advertiserTrackingStatus = nil;
 static id<FBSDKDataPersisting> _store = nil;
 static Class<FBSDKAppEventsConfigurationProviding> _appEventsConfigurationProvider = nil;
+static id<FBSDKInfoDictionaryProviding> _infoDictionaryProvider = nil;
 
 //
 // Warning messages for App Event Flags
@@ -107,9 +109,11 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
 
 + (void)      configureWithStore:(id<FBSDKDataPersisting>)store
   appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)provider
+          infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
 {
   _store = store;
   _appEventsConfigurationProvider = provider;
+  _infoDictionaryProvider = infoDictionaryProvider;
 }
 
 + (id<FBSDKDataPersisting>)store
@@ -120,6 +124,11 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
 + (Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
 {
   return _appEventsConfigurationProvider;
+}
+
++ (id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+{
+  return _infoDictionaryProvider;
 }
 
 #pragma mark - Plist Configuration Settings
@@ -268,7 +277,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 + (NSSet<FBSDKLoggingBehavior> *)loggingBehaviors
 {
   if (!g_loggingBehaviors) {
-    NSArray<FBSDKLoggingBehavior> *bundleLoggingBehaviors = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FacebookLoggingBehavior"];
+    NSArray<FBSDKLoggingBehavior> *bundleLoggingBehaviors = [_infoDictionaryProvider objectForInfoDictionaryKey:@"FacebookLoggingBehavior"];
     if (bundleLoggingBehaviors) {
       g_loggingBehaviors = [[NSMutableSet alloc] initWithArray:bundleLoggingBehaviors];
     } else {
@@ -420,12 +429,11 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (void)_logWarnings
 {
-  NSBundle *mainBundle = [NSBundle mainBundle];
   // Log warnings for App Event Flags
-  if (![mainBundle objectForInfoDictionaryKey:@"FacebookAutoLogAppEventsEnabled"]) {
+  if (![_infoDictionaryProvider objectForInfoDictionaryKey:@"FacebookAutoLogAppEventsEnabled"]) {
     NSLog(autoLogAppEventsEnabledNotSetWarning);
   }
-  if (![mainBundle objectForInfoDictionaryKey:@"FacebookAdvertiserIDCollectionEnabled"]) {
+  if (![_infoDictionaryProvider objectForInfoDictionaryKey:@"FacebookAdvertiserIDCollectionEnabled"]) {
     NSLog(advertiserIDCollectionEnabledNotSetWarning);
   }
   if (![FBSDKSettings isAdvertiserIDCollectionEnabled]) {
@@ -451,7 +459,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
     NSInteger initialBitmask = 0;
     NSInteger usageBitmask = 0;
     for (int i = 0; i < keys.count; i++) {
-      NSNumber *plistValue = [[NSBundle mainBundle] objectForInfoDictionaryKey:[FBSDKTypeUtility array:keys objectAtIndex:i]];
+      NSNumber *plistValue = [_infoDictionaryProvider objectForInfoDictionaryKey:[FBSDKTypeUtility array:keys objectAtIndex:i]];
       BOOL initialValue = [(plistValue ?: [FBSDKTypeUtility array:defaultValues objectAtIndex:i]) boolValue];
       initialBitmask |= (initialValue ? 1 : 0) << i;
       usageBitmask |= (plistValue != nil ? 1 : 0) << i;
@@ -537,6 +545,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 {
   _store = nil;
   _appEventsConfigurationProvider = nil;
+  _infoDictionaryProvider = nil;
 
   g_loggingBehaviors = nil;
   g_FacebookAppID = nil;
@@ -553,6 +562,11 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   g_userAgentSuffix = nil;
   g_FacebookCodelessDebugLogEnabled = nil;
   g_dataProcessingOptions = nil;
+}
+
++ (void)setInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)provider
+{
+  _infoDictionaryProvider = provider;
 }
 
  #endif

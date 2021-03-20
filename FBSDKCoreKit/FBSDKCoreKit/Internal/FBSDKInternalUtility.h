@@ -28,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 #define FBSDK_CANOPENURL_MSQRD_PLAYER @"msqrdplayer"
 #define FBSDK_CANOPENURL_SHARE_EXTENSION @"fbshareextension"
 
+@protocol FBSDKInfoDictionaryProviding;
+
 /**
  Describes the callback for appLinkFromURLInBackground.
  @param object the FBSDKAppLink representing the deferred App Link
@@ -37,13 +39,13 @@ NS_ASSUME_NONNULL_BEGIN
 typedef id _Nullable (^FBSDKInvalidObjectHandler)(id object, BOOL *stop)
 NS_SWIFT_NAME(InvalidObjectHandler);
 
-
-
 NS_SWIFT_NAME(InternalUtility)
 @interface FBSDKInternalUtility : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
+
++ (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider;
 
 /**
   Constructs the scheme for apps that come to the current app through the bridge.

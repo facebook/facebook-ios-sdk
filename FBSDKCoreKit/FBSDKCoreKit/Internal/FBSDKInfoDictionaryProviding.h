@@ -20,14 +20,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FakeBundle : NSBundle
+NS_SWIFT_NAME(InfoDictionaryProviding)
+@protocol FBSDKInfoDictionaryProviding
 
-@property (nonatomic, copy) NSArray<NSString *> *capturedKeys;
+@property(nullable, readonly, copy) NSDictionary<NSString *,id> *infoDictionary;
 
-+ (instancetype)bundleWithDictionary:(NSDictionary *)dictionary;
-
-/// Overrides the current value set for the `infoDictionary` property with the new value
-- (void)setInfoDictionary:(NSDictionary *)newValue;
+- (nullable id)objectForInfoDictionaryKey:(NSString *)key;
 
 @end
 

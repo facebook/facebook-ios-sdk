@@ -67,6 +67,7 @@
 
 @interface FBSDKAppLinkUtility (Testing)
 + (id<FBSDKGraphRequestProviding>)requestProvider;
++ (id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider;
 @end
 
 @interface FBSDKProfile (Testing)
@@ -286,15 +287,21 @@
   );
 }
 
-- (void)testConfiguringAppLinkUtility
+- (void)testInitializingSdkConfiguresAppLinkUtility
 {
   [FBSDKApplicationDelegate resetIsSdkInitialized];
   [FBSDKApplicationDelegate initializeSDK:@{}];
   NSObject *requestProvider = (NSObject *)[FBSDKAppLinkUtility requestProvider];
+  NSObject *infoDictionaryProvider = (NSObject *)[FBSDKAppLinkUtility infoDictionaryProvider];
   XCTAssertEqualObjects(
     requestProvider.class,
     FBSDKGraphRequestFactory.class,
     "Should be configured with the expected concrete graph request provider"
+  );
+  XCTAssertEqualObjects(
+    infoDictionaryProvider.class,
+    NSBundle.class,
+    "Should be configured with the expected concrete info dictionary provider"
   );
 }
 
@@ -364,6 +371,7 @@
 
   NSObject *store = (NSObject *) FBSDKSettings.store;
   NSObject *appEventsConfigProvider = (NSObject *) FBSDKSettings.appEventsConfigurationProvider;
+  NSObject *infoDictionaryProvider = (NSObject *) FBSDKSettings.infoDictionaryProvider;
   XCTAssertEqualObjects(
     store,
     NSUserDefaults.standardUserDefaults,
@@ -373,6 +381,23 @@
     appEventsConfigProvider,
     FBSDKAppEventsConfigurationManager.class,
     "Should be configured with the expected concrete app events configuration provider"
+  );
+  XCTAssertEqualObjects(
+    infoDictionaryProvider,
+    NSBundle.mainBundle,
+    "Should be configured with the expected concrete info dictionary provider"
+  );
+}
+
+- (void)testInitializingSdkConfiguresInternalUtility
+{
+  [FBSDKApplicationDelegate resetIsSdkInitialized];
+  [FBSDKApplicationDelegate initializeSDK:@{}];
+  NSObject *infoDictionaryProvider = (NSObject *)[FBSDKInternalUtility infoDictionaryProvider];
+  XCTAssertEqualObjects(
+    infoDictionaryProvider.class,
+    NSBundle.class,
+    "Should be configured with the expected concrete info dictionary provider"
   );
 }
 

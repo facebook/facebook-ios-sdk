@@ -16,21 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-#if !TARGET_OS_TV
+#import <Foundation/Foundation.h>
 
- #import <Foundation/Foundation.h>
+#import "FBSDKInfoDictionaryProviding.h"
 
- #import "FBSDKAppLinkUtility.h"
+NS_ASSUME_NONNULL_BEGIN
 
-@protocol FBSDKInfoDictionaryProviding;
-
-@interface FBSDKAppLinkUtility (Internal)
-
-+ (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-              infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
-NS_SWIFT_NAME(configure(requestProvider:infoDictionaryProvider:));
-
+/// Default conformance to the info dictionary providing protocol
+@interface NSBundle (InfoDictionaryProviding) <FBSDKInfoDictionaryProviding>
 @end
 
-#endif
+NS_ASSUME_NONNULL_END

@@ -126,6 +126,8 @@ static NSString *const _mockUserID = @"mockUserID";
 
   [super setUp];
 
+  [FBSDKSettings reset];
+  [FBSDKInternalUtility reset];
   [self stubLoadingAdNetworkReporterConfiguration];
   [self stubServerConfigurationFetchingWithConfiguration:FBSDKServerConfigurationFixtures.defaultConfig error:nil];
 

@@ -24,6 +24,7 @@
 
  #import "FBSDKAppEventsUtility.h"
  #import "FBSDKGraphRequestProviding.h"
+ #import "FBSDKInfoDictionaryProviding.h"
  #import "FBSDKInternalUtility.h"
  #import "FBSDKSettings.h"
  #import "FBSDKURL.h"
@@ -32,14 +33,17 @@
 static NSString *const FBSDKLastDeferredAppLink = @"com.facebook.sdk:lastDeferredAppLink%@";
 static NSString *const FBSDKDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
 static id<FBSDKGraphRequestProviding> _requestProvider;
+static id<FBSDKInfoDictionaryProviding> _infoDictionaryProvider;
 
 @implementation FBSDKAppLinkUtility
 {}
 
 + (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+              infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
 {
   if (self == [FBSDKAppLinkUtility class]) {
     _requestProvider = requestProvider;
+    _infoDictionaryProvider = infoDictionaryProvider;
   }
 }
 
@@ -124,7 +128,7 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
   if (!scheme) {
     return NO;
   }
-  for (NSDictionary *urlType in [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleURLTypes"]) {
+  for (NSDictionary *urlType in [_infoDictionaryProvider objectForInfoDictionaryKey:@"CFBundleURLTypes"]) {
     for (NSString *urlScheme in urlType[@"CFBundleURLSchemes"]) {
       if ([urlScheme caseInsensitiveCompare:scheme] == NSOrderedSame) {
         return YES;
@@ -140,6 +144,11 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
 + (id<FBSDKGraphRequestProviding>)requestProvider
 {
   return _requestProvider;
+}
+
++ (id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+{
+  return _infoDictionaryProvider;
 }
 
   #endif

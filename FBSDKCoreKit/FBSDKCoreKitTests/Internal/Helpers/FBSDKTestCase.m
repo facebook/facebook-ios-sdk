@@ -82,7 +82,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self setUpUtilityClassMock];
   [self stubStartGCDTimerWithInterval];
 
-  [self setUpNSBundleMock];
   [self setUpSettingsMock];
   [self setUpServerConfigurationManagerMock];
   [self setUpAppEventsUtilityMock];
@@ -143,9 +142,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   [_settingsClassMock stopMocking];
   _settingsClassMock = nil;
-
-  [_nsBundleClassMock stopMocking];
-  _nsBundleClassMock = nil;
 
   [_nsUserDefaultsClassMock stopMocking];
   _nsUserDefaultsClassMock = nil;
@@ -277,11 +273,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)setUpAppEventsUtilityMock
 {
   _appEventsUtilityClassMock = OCMStrictClassMock(FBSDKAppEventsUtility.class);
-}
-
-- (void)setUpNSBundleMock
-{
-  self.nsBundleClassMock = OCMStrictClassMock(NSBundle.class);
 }
 
 - (void)setUpNSUserDefaultsMock
@@ -434,11 +425,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)stubCachedServerConfigurationWithServerConfiguration:(FBSDKServerConfiguration *)serverConfiguration
 {
   OCMStub(ClassMethod([_serverConfigurationManagerClassMock cachedServerConfiguration])).andReturn(serverConfiguration);
-}
-
-- (void)stubMainBundleWith:(NSBundle *)bundle
-{
-  OCMStub(ClassMethod([_nsBundleClassMock mainBundle])).andReturn(bundle);
 }
 
 - (void)stubUserDefaultsWith:(NSUserDefaults *)defaults

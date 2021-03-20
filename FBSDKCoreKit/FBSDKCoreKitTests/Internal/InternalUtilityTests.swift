@@ -16,21 +16,31 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-#if !TARGET_OS_TV
+import FBSDKCoreKit
+import XCTest
 
- #import <Foundation/Foundation.h>
+class InternalUtilityTests: XCTestCase {
 
- #import "FBSDKAppLinkUtility.h"
+  override func setUp() {
+    super.setUp()
 
-@protocol FBSDKInfoDictionaryProviding;
+    InternalUtility.reset()
+  }
 
-@interface FBSDKAppLinkUtility (Internal)
+  func testDefaultInfoDictionaryProvider() {
+    XCTAssertNil(
+      InternalUtility.infoDictionaryProvider,
+      "Should not have an info dictionary provider by default"
+    )
+  }
 
-+ (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-              infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
-NS_SWIFT_NAME(configure(requestProvider:infoDictionaryProvider:));
+  func testConfiguringWithInfoDictionaryProvider() {
+    let bundle = TestBundle()
+    InternalUtility.configure(withInfoDictionaryProvider: bundle)
 
-@end
-
-#endif
+    XCTAssertTrue(
+      InternalUtility.infoDictionaryProvider === bundle,
+      "Should be able to provide an info dictionary provider"
+    )
+  }
+}

@@ -21,11 +21,29 @@ import FBSDKCoreKit
 class FBSDKAppLinkUtilityTests: FBSDKTestCase {
 
   let requestFactory = TestGraphRequestFactory()
+  var bundle = TestBundle()
 
   override func setUp() {
     super.setUp()
 
-    AppLinkUtility.configure(withRequestProvider: requestFactory)
+    AppLinkUtility.configure(
+      requestProvider: requestFactory,
+      infoDictionaryProvider: bundle
+    )
+  }
+
+  func testConfiguringWithRequestProvider() {
+    XCTAssertTrue(
+      AppLinkUtility.requestProvider is TestGraphRequestFactory,
+      "Should use the provided request provider type"
+    )
+  }
+
+  func testConfiguringWithInfoDictionary() {
+    XCTAssertTrue(
+      AppLinkUtility.infoDictionaryProvider is TestBundle,
+      "Should use the provided info dictionary provider type"
+    )
   }
 
   func testWithNoPromoCode() {
@@ -49,19 +67,15 @@ class FBSDKAppLinkUtilityTests: FBSDKTestCase {
         ]
       ]
     ]
+    bundle = TestBundle(infoDictionary: bundleDict)
 
-    let fakeBundle = FakeBundle(dictionary: bundleDict)
-    stubMainBundle(with: fakeBundle)
+    AppLinkUtility.configure(
+      requestProvider: requestFactory,
+      infoDictionaryProvider: bundle
+    )
 
     XCTAssertTrue(AppLinkUtility.isMatchURLScheme("fb123"))
     XCTAssertFalse(AppLinkUtility.isMatchURLScheme("not_in_url_schemes"))
-  }
-
-  func testRequestProvider() {
-    XCTAssertTrue(
-      AppLinkUtility.requestProvider() is TestGraphRequestFactory,
-      "Should use the provided request provider type"
-      )
   }
 
   func testRequestProviderAfterGraphRequest() {

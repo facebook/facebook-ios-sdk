@@ -22,13 +22,15 @@ import XCTest
 class SettingsTests: XCTestCase {
 
   var store = UserDefaultsSpy()
+  let bundle = TestBundle()
 
   override func setUp() {
     super.setUp()
 
     Settings.configure(
       store: store,
-      appEventsConfigurationProvider: TestAppEventsConfigurationProvider.self
+      appEventsConfigurationProvider: TestAppEventsConfigurationProvider.self,
+      infoDictionaryProvider: bundle
     )
   }
 
@@ -67,6 +69,21 @@ class SettingsTests: XCTestCase {
     XCTAssertTrue(
       Settings.appEventsConfigurationProvider === TestAppEventsConfigurationProvider.self,
       "Should be able to set an app events configuration provider"
+    )
+  }
+
+  func testDefaultInfoDictionaryProvider() {
+    Settings.reset()
+    XCTAssertNil(
+      Settings.infoDictionaryProvider,
+      "Settings should not have a default info dictionary provider"
+    )
+  }
+
+  func testConfiguringWithInfoDictionaryProvider() {
+    XCTAssertTrue(
+      Settings.infoDictionaryProvider === bundle,
+      "Should be able to set an info dictionary provider"
     )
   }
 

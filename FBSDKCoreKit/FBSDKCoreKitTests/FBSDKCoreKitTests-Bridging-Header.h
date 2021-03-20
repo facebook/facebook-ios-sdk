@@ -33,7 +33,6 @@
 #import "FBSDKTestCoder.h"
 #import "FBSDKViewHierarchy.h"
 #import "UserDefaultsSpy.h"
-#import "FakeBundle.h"
 // URLSession Abstraction
 #import "FBSDKURLSessionProxyProviding.h"
 #import "FBSDKURLSessionProxyFactory.h"
@@ -67,6 +66,9 @@
 // NotificationCenter
 #import "FBSDKNotificationProtocols.h"
 #import "NSNotificationCenter+Extensions.h"
+// NSBundle
+#import "FBSDKInfoDictionaryProviding.h"
+#import "NSBundle+InfoDictionaryProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -165,7 +167,9 @@ NS_SWIFT_NAME(parse(result:error:));
 @end
 
 @interface FBSDKAppLinkUtility (Testing)
-+ (id<FBSDKGraphRequestProviding>)requestProvider;
+
+@property (class, nonatomic, nullable) id<FBSDKGraphRequestProviding> requestProvider;
+@property (class, nonatomic, nullable) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
 
 @end
 
@@ -205,10 +209,12 @@ NS_SWIFT_NAME(parse(result:error:));
 
 @property (class, nonatomic, nullable, readonly) id<FBSDKDataPersisting> store;
 @property (class, nonatomic, nullable, readonly) id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
+@property (class, nonatomic, nullable) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
 
 + (void)configureWithStore:(id<FBSDKDataPersisting>)store
 appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)provider
-NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:));
+    infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvider:));
 
 + (void)reset;
 
@@ -227,6 +233,15 @@ NS_SWIFT_NAME(reset());
 - (void)applicationDidEnterBackground:(NSNotification *)notification;
 - (void)applicationDidBecomeActive:(NSNotification *)notification;
 - (void)applicationWillResignActive:(NSNotification *)notification;
+
+@end
+
+@interface FBSDKInternalUtility (Testing)
+
+@property (class, nonatomic, nullable) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
+
++ (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider;
++ (void)reset;
 
 @end
 
