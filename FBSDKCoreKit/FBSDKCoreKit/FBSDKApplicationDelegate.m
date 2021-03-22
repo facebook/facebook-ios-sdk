@@ -71,6 +71,7 @@ static UIApplicationState _applicationState;
   NSHashTable<id<FBSDKApplicationObserving>> *_applicationObservers;
   BOOL _isAppLaunched;
   id<FBSDKNotificationObserving> _notificationObserver;
+  Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> _tokenWallet;
 }
 
 #pragma mark - Class Methods
@@ -143,14 +144,17 @@ static UIApplicationState _applicationState;
 
 - (instancetype)init
 {
-  return [self initWithNotificationObserver:NSNotificationCenter.defaultCenter];
+  return [self initWithNotificationObserver:NSNotificationCenter.defaultCenter
+                                tokenWallet:FBSDKAccessToken.class];
 }
 
 - (instancetype)initWithNotificationObserver:(id<FBSDKNotificationObserving>)observer
+                                 tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
 {
   if ((self = [super init]) != nil) {
     _applicationObservers = [[NSHashTable alloc] init];
     _notificationObserver = observer;
+    _tokenWallet = tokenWallet;
   }
   return self;
 }
@@ -163,6 +167,11 @@ static UIApplicationState _applicationState;
 - (id<FBSDKNotificationObserving>)notificationObserver
 {
   return _notificationObserver;
+}
+
+- (Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
+{
+  return _tokenWallet;
 }
 
 #pragma mark - UIApplicationDelegate
@@ -229,8 +238,8 @@ static UIApplicationState _applicationState;
   _isAppLaunched = YES;
 
   // Retrieve cached tokens
-  FBSDKAccessToken *cachedToken = FBSDKAccessToken.tokenCache.accessToken;
-  [FBSDKAccessToken setCurrentAccessToken:cachedToken];
+  FBSDKAccessToken *cachedToken = [[self.tokenWallet tokenCache] accessToken];
+  [self.tokenWallet setCurrentAccessToken:cachedToken];
 
   // fetch app settings
   [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:NULL];
@@ -485,7 +494,8 @@ static UIApplicationState _applicationState;
                              infoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKCodelessIndexer configureWithRequestProvider:[FBSDKGraphRequestFactory new]];
   [FBSDKSKAdNetworkReporter configureWithRequestProvider:[FBSDKGraphRequestFactory new]];
-  [FBSDKProfile configureWithStore:NSUserDefaults.standardUserDefaults];
+  [FBSDKProfile configureWithStore:NSUserDefaults.standardUserDefaults
+               accessTokenProvider:FBSDKAccessToken.class];
   [self.sharedInstance addObserver:FBSDKBridgeAPI.sharedInstance];
 #endif
 }

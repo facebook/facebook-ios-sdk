@@ -1097,6 +1097,7 @@
 		F4AC722F260044E400C26157 /* FBSDKGraphRequestConnection+GraphRequestConnecting.h in Headers */ = {isa = PBXBuildFile; fileRef = F441DC1625DC91A00092C8F6 /* FBSDKGraphRequestConnection+GraphRequestConnecting.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4AC7230260044E400C26157 /* FBSDKGraphRequestConnection+GraphRequestConnecting.h in Headers */ = {isa = PBXBuildFile; fileRef = F441DC1625DC91A00092C8F6 /* FBSDKGraphRequestConnection+GraphRequestConnecting.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4AE435225508FEA00FA9DE6 /* FBSDKProfilePictureView+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = B301910D253622A2001A8DB0 /* FBSDKProfilePictureView+Internal.h */; };
+		F4AF97032605246600E53370 /* TestTokenWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AF97022605246600E53370 /* TestTokenWallet.swift */; };
 		F4BD4024241EEDE500B45D39 /* FBSDKTestCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = F4BD4023241EEDE500B45D39 /* FBSDKTestCoder.m */; };
 		F4CCDC8825E958320057FE5F /* GateKeeperManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CCDC8725E958320057FE5F /* GateKeeperManagerTests.swift */; };
 		F4CCDC9E25E959200057FE5F /* TestGraphRequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CCDC9D25E959200057FE5F /* TestGraphRequestFactory.swift */; };
@@ -1814,6 +1815,9 @@
 		F4A11B5124E36E5200D4C010 /* FBSDKCrashObserving.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKCrashObserving.h; sourceTree = "<group>"; };
 		F4A4069C25F4522500F0E578 /* TestTools.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TestTools.xcodeproj; path = ../TestTools/TestTools.xcodeproj; sourceTree = "<group>"; };
 		F4A826B624EC6FAC00EB2CD4 /* FBSDKProfileTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKProfileTests.m; sourceTree = "<group>"; };
+		F4AF96EC26051FF600E53370 /* FBSDKAccessToken+AccessTokenProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKAccessToken+AccessTokenProtocols.h"; sourceTree = "<group>"; };
+		F4AF96F42605200800E53370 /* FBSDKAccessTokenProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKAccessTokenProtocols.h; sourceTree = "<group>"; };
+		F4AF97022605246600E53370 /* TestTokenWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTokenWallet.swift; sourceTree = "<group>"; };
 		F4BD4022241EEDE500B45D39 /* FBSDKTestCoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKTestCoder.h; sourceTree = "<group>"; };
 		F4BD4023241EEDE500B45D39 /* FBSDKTestCoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKTestCoder.m; sourceTree = "<group>"; };
 		F4CCDC8725E958320057FE5F /* GateKeeperManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GateKeeperManagerTests.swift; sourceTree = "<group>"; };
@@ -2192,6 +2196,8 @@
 				9D92FC4B1CB31F3A0091B6F7 /* Device */,
 				9D3AF4861A9EF9E200EEF724 /* ErrorRecovery */,
 				B3C20ACC250B100F00DEC008 /* FBSDKAccessToken+Internal.h */,
+				F4AF96EC26051FF600E53370 /* FBSDKAccessToken+AccessTokenProtocols.h */,
+				F4AF96F42605200800E53370 /* FBSDKAccessTokenProtocols.h */,
 				894C0ACD1A6F0D3F009137EF /* FBSDKApplicationDelegate+Internal.h */,
 				C5188DF8222F388400F4D8BC /* FBSDKApplicationObserving.h */,
 				52963A9E215993C100C7B252 /* FBSDKAppLink_Internal.h */,
@@ -2989,6 +2995,7 @@
 				F4A0346D25F1985200D19DE9 /* TestSwizzler.swift */,
 				F46989DB25F93FAD00120B09 /* TestTableView.swift */,
 				F496E5FD24E5D0D5006231A2 /* TestTokenCache.swift */,
+				F4AF97022605246600E53370 /* TestTokenWallet.swift */,
 				F48A9C5D25F83CE200A2DBDF /* TestTouch.swift */,
 				F43F397C25D48C4B0046027A /* TestURLSessionProxy.swift */,
 				F4F6036F25D5D3A30053D3E7 /* TestURLSessionProxyFactory.swift */,
@@ -4663,6 +4670,7 @@
 				C51121CB20A27EF50041DC94 /* FBSDKEventBindingTests.m in Sources */,
 				F413883E24C76F3B001BC075 /* FBSDKSafeCastTests.m in Sources */,
 				C6E3621725DF4E54007D555D /* FBSDKAuthenticationTokenClaimsTests.m in Sources */,
+				F4AF97032605246600E53370 /* TestTokenWallet.swift in Sources */,
 				F44B056F256491590059A3A6 /* FBSDKBridgeAPI+SessionCompletionHandlerTests.m in Sources */,
 				F4CCDC9E25E959200057FE5F /* TestGraphRequestFactory.swift in Sources */,
 				F4EB31BB2540A1B800736B67 /* SampleGraphRequestConnection.swift in Sources */,

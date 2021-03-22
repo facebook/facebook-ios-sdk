@@ -31,7 +31,10 @@ class ApplicationDelegateTests: XCTestCase {
 
     ApplicationDelegate.reset()
     center = TestNotificationCenter()
-    delegate = ApplicationDelegate(notificationObserver: center)
+    delegate = ApplicationDelegate(
+      notificationObserver: center,
+      tokenWallet: TestTokenWallet.self
+    )
   }
 
   func testDefaultNotificationCenter() {
@@ -46,6 +49,20 @@ class ApplicationDelegateTests: XCTestCase {
     XCTAssertTrue(
       delegate.notificationObserver is TestNotificationCenter,
       "Should be able to create with a custom notification center"
+    )
+  }
+
+  func testDefaultAccessTokenProvider() {
+    XCTAssertTrue(
+      ApplicationDelegate.shared.tokenWallet is AccessToken.Type,
+      "Should use the expected default access token provider"
+    )
+  }
+
+  func testCreatingWithAccessTokenProvider() {
+    XCTAssertTrue(
+      delegate.tokenWallet is TestTokenWallet.Type,
+      "Should be able to create with a custom access token provider"
     )
   }
 

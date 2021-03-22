@@ -60,6 +60,13 @@ static FBSDKProfile *g_currentProfile;
 
 @implementation FBSDKProfile
 
+static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
+
++ (Class<FBSDKAccessTokenProviding>)accessTokenProvider
+{
+  return _accessTokenProvider;
+}
+
 - (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
                      firstName:(NSString *)firstName
                     middleName:(NSString *)middleName
@@ -204,7 +211,7 @@ static FBSDKProfile *g_currentProfile;
 
 + (void)loadCurrentProfileWithCompletion:(FBSDKProfileBlock)completion
 {
-  [self loadProfileWithToken:[FBSDKAccessToken currentAccessToken] completion:completion];
+  [self loadProfileWithToken:[self.accessTokenProvider currentAccessToken] completion:completion];
 }
 
  #pragma mark - NSCopying
@@ -315,9 +322,11 @@ static FBSDKProfile *g_currentProfile;
 static id <FBSDKDataPersisting> _store;
 
 + (void)configureWithStore:(id<FBSDKDataPersisting>)store
+       accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
 {
   if (self == [FBSDKProfile class]) {
     _store = store;
+    _accessTokenProvider = accessTokenProvider;
   }
 }
 
@@ -370,8 +379,9 @@ static id <FBSDKDataPersisting> _store;
   [FBSDKTypeUtility dictionary:queryParameters setObject:@(roundf(size.width)) forKey:widthKey];
   [FBSDKTypeUtility dictionary:queryParameters setObject:@(roundf(size.height)) forKey:heightKey];
 
-  if (FBSDKAccessToken.currentAccessToken) {
-    [FBSDKTypeUtility dictionary:queryParameters setObject:FBSDKAccessToken.currentAccessToken.tokenString forKey:accessTokenKey];
+  if ([self.accessTokenProvider currentAccessToken]) {
+    [FBSDKTypeUtility dictionary:queryParameters setObject:[[self.accessTokenProvider currentAccessToken] tokenString]
+                          forKey:accessTokenKey];
   } else if (FBSDKSettings.clientToken) {
     [FBSDKTypeUtility dictionary:queryParameters setObject:FBSDKSettings.clientToken forKey:accessTokenKey];
   } else {
@@ -506,9 +516,8 @@ static id <FBSDKDataPersisting> _store;
 
  #pragma clang diagnostic pop
 
-@end
-
-@implementation FBSDKProfile (Testing)
+ #if DEBUG
+  #if FBSDKTEST
 
 + (void)resetCurrentProfileCache
 {
@@ -520,10 +529,19 @@ static id <FBSDKDataPersisting> _store;
   return _store;
 }
 
++ (void)setAccessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
+{
+  _accessTokenProvider = accessTokenProvider;
+}
+
 + (void)reset
 {
   _store = nil;
+  _accessTokenProvider = nil;
 }
+
+  #endif
+ #endif
 
 @end
 

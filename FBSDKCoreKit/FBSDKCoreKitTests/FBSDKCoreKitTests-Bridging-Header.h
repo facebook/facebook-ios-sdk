@@ -69,6 +69,9 @@
 // NSBundle
 #import "FBSDKInfoDictionaryProviding.h"
 #import "NSBundle+InfoDictionaryProviding.h"
+// AccessToken
+#import "FBSDKAccessTokenProtocols.h"
+#import "FBSDKAccessToken+AccessTokenProtocols.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -116,13 +119,12 @@ NS_SWIFT_NAME(FBProfilePictureViewState)
 @end
 
 @interface FBSDKProfile (Testing)
+
 @property (class, nonatomic, nullable) id<FBSDKDataPersisting> store;
+@property (class, nonatomic, nullable) Class<FBSDKAccessTokenProviding> accessTokenProvider;
 
 + (void)setCurrentProfile:(nullable FBSDKProfile *)profile
    shouldPostNotification:(BOOL)shouldPostNotification;
-
-+ (void)configureWithStore:(id<FBSDKDataPersisting>)store
-NS_SWIFT_NAME(configure(store:));
 
 + (void)reset;
 
@@ -223,13 +225,15 @@ NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvi
 @interface FBSDKApplicationDelegate (Testing)
 
 @property (nonatomic, assign) id<FBSDKNotificationObserving> notificationObserver;
+@property (nonatomic, nullable) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> tokenWallet;
 
 + (void)initializeSDKWithApplicationDelegate:(FBSDKApplicationDelegate *)delegate
                                launchOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
 + (void)resetIsSdkInitialized
 NS_SWIFT_NAME(reset());
 
-- (instancetype)initWithNotificationObserver:(id<FBSDKNotificationObserving>)notificationCenter;
+- (instancetype)initWithNotificationObserver:(id<FBSDKNotificationObserving>)observer
+                                 tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet;
 - (void)applicationDidEnterBackground:(NSNotification *)notification;
 - (void)applicationDidBecomeActive:(NSNotification *)notification;
 - (void)applicationWillResignActive:(NSNotification *)notification;
@@ -244,5 +248,7 @@ NS_SWIFT_NAME(reset());
 + (void)reset;
 
 @end
+
+
 
 NS_ASSUME_NONNULL_END

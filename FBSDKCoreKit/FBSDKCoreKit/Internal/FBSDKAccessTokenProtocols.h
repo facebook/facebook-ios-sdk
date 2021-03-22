@@ -16,54 +16,22 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import FBSDKCoreKit
-import XCTest
+#import <Foundation/Foundation.h>
 
-class ProfileTests: XCTestCase {
+@class FBSDKAccessToken;
+@protocol FBSDKTokenCaching;
 
-  var store = UserDefaultsSpy()
+NS_SWIFT_NAME(AccessTokenProviding)
+@protocol FBSDKAccessTokenProviding
 
-  override func setUp() {
-    super.setUp()
+@property (class, nonatomic, copy, nullable, readonly) FBSDKAccessToken *currentAccessToken;
+@property (class, nonatomic, copy, nullable) id<FBSDKTokenCaching> tokenCache;
 
-    Profile.reset()
-    TestTokenWallet.reset()
-  }
+@end
 
-  override func tearDown() {
-    super.tearDown()
+NS_SWIFT_NAME(AccessTokenSetting)
+@protocol FBSDKAccessTokenSetting
 
-    Profile.reset()
-    TestTokenWallet.reset()
-  }
+@property (class, nonatomic, copy, nullable) FBSDKAccessToken *currentAccessToken;
 
-  func testDefaultStore() {
-    XCTAssertNil(
-      Profile.store,
-      "Should not have a default data store"
-    )
-  }
-
-  func testConfiguringWithStore() {
-    Profile.configure(store: store, accessTokenProvider: TestTokenWallet.self)
-    XCTAssertTrue(
-      Profile.store === store,
-      "Should be able to set a persistent data store"
-    )
-  }
-
-  func testDefaultAccessTokenProvider() {
-    XCTAssertNil(
-      Profile.accessTokenProvider,
-      "Should not have a default access token provider"
-    )
-  }
-
-  func testConfiguringWithTokenProvider() {
-    Profile.configure(store: store, accessTokenProvider: TestTokenWallet.self)
-    XCTAssertTrue(
-      Profile.accessTokenProvider is TestTokenWallet.Type,
-      "Should be able to set a token wallet"
-    )
-  }
-}
+@end

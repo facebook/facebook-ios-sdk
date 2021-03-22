@@ -16,54 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import FBSDKCoreKit
-import XCTest
+#if SWIFT_PACKAGE
+ #import "FBSDKAccessToken.h"
+#else
+ #import <FBSDKCoreKit/FBSDKAccessToken.h>
+#endif
 
-class ProfileTests: XCTestCase {
+#import "FBSDKAccessTokenProtocols.h"
 
-  var store = UserDefaultsSpy()
-
-  override func setUp() {
-    super.setUp()
-
-    Profile.reset()
-    TestTokenWallet.reset()
-  }
-
-  override func tearDown() {
-    super.tearDown()
-
-    Profile.reset()
-    TestTokenWallet.reset()
-  }
-
-  func testDefaultStore() {
-    XCTAssertNil(
-      Profile.store,
-      "Should not have a default data store"
-    )
-  }
-
-  func testConfiguringWithStore() {
-    Profile.configure(store: store, accessTokenProvider: TestTokenWallet.self)
-    XCTAssertTrue(
-      Profile.store === store,
-      "Should be able to set a persistent data store"
-    )
-  }
-
-  func testDefaultAccessTokenProvider() {
-    XCTAssertNil(
-      Profile.accessTokenProvider,
-      "Should not have a default access token provider"
-    )
-  }
-
-  func testConfiguringWithTokenProvider() {
-    Profile.configure(store: store, accessTokenProvider: TestTokenWallet.self)
-    XCTAssertTrue(
-      Profile.accessTokenProvider is TestTokenWallet.Type,
-      "Should be able to set a token wallet"
-    )
-  }
-}
+// Default conformance to the AccessToken protocols
+@interface FBSDKAccessToken (AccessTokenProviding) <FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>
+@end

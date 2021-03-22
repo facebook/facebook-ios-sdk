@@ -61,6 +61,8 @@ NSString *const heightKey = @"height";
 {
   [super setUp];
 
+  [self resetCaches];
+
   _sdkVersion = @"100";
   _profile = SampleUserProfiles.valid;
   _validClientToken = @"Foo";
@@ -68,7 +70,7 @@ NSString *const heightKey = @"height";
   _validNonSquareSize = CGSizeMake(10, 20);
 
   [self stubGraphAPIVersionWith:_sdkVersion];
-  [self resetCaches];
+  FBSDKProfile.accessTokenProvider = TestTokenWallet.class;
 }
 
 - (void)tearDown
@@ -83,6 +85,8 @@ NSString *const heightKey = @"height";
 {
   [FBSDKProfile resetCurrentProfileCache];
   [FBSDKSettings reset];
+  [FBSDKProfile reset];
+  [TestTokenWallet reset];
 }
 
 // MARK: - Creating Image URL
@@ -140,8 +144,7 @@ NSString *const heightKey = @"height";
 
 - (void)testCreatingImageURLWithAccessTokenNoClientToken
 {
-  [self stubCurrentAccessTokenWith:SampleAccessTokens.validToken];
-
+  [TestTokenWallet setCurrentAccessToken:SampleAccessTokens.validToken];
   NSURL *url = [_profile imageURLForPictureMode:FBSDKProfilePictureModeNormal size:_validSquareSize];
   NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:true];
 
@@ -155,13 +158,13 @@ NSString *const heightKey = @"height";
   XCTAssertEqualObjects(
     [NSSet setWithArray:components.queryItems],
     expectedQueryItems,
-    "Should use the current client token as the 'access token' when there is no true access token available"
+    "Should use the current 'access token' when creating a url query"
   );
 }
 
 - (void)testCreatingImageURLWithAccessTokenAndClientToken
 {
-  [self stubCurrentAccessTokenWith:SampleAccessTokens.validToken];
+  [TestTokenWallet setCurrentAccessToken:SampleAccessTokens.validToken];
   [self stubClientTokenWith:_validClientToken];
 
   NSURL *url = [_profile imageURLForPictureMode:FBSDKProfilePictureModeNormal size:_validSquareSize];

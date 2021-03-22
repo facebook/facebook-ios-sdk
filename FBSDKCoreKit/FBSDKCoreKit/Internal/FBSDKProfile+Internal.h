@@ -16,6 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import "FBSDKAccessTokenProtocols.h"
 #import "FBSDKDataPersisting.h"
 #import "TargetConditionals.h"
 
@@ -44,7 +45,9 @@ typedef void (^FBSDKParseProfileBlock)(id result, FBSDKProfile *_Nonnull *_Nulla
 + (void)loadProfileWithToken:(FBSDKAccessToken *)token completion:(_Nullable FBSDKProfileBlock)completion;
 
 + (void)observeChangeAccessTokenChange:(NSNotification *)notification;
-+ (void)configureWithStore:(id<FBSDKDataPersisting>)store;
++ (void)configureWithStore:(id<FBSDKDataPersisting>)store
+       accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
+NS_SWIFT_NAME(configure(store:accessTokenProvider:));
 
 @end
 

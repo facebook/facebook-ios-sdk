@@ -96,7 +96,10 @@
 {
   [super setUp];
 
-  _delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationObserver:[TestNotificationCenter new]];
+  [TestTokenWallet reset];
+
+  _delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationObserver:[TestNotificationCenter new]
+                                                                 tokenWallet:TestTokenWallet.class];
   _delegate.isAppLaunched = NO;
 
   _defaultsSpy = [UserDefaultsSpy new];
@@ -132,6 +135,8 @@
 
   [_partialDelegateMock stopMocking];
   _partialDelegateMock = nil;
+
+  [TestTokenWallet reset];
 }
 
 // MARK: - Observers
@@ -332,10 +337,16 @@
   [FBSDKApplicationDelegate resetIsSdkInitialized];
   [FBSDKApplicationDelegate initializeSDK:@{}];
   NSObject *store = (NSObject *)[FBSDKProfile store];
+  NSObject *tokenProvider = (NSObject *)[FBSDKProfile accessTokenProvider];
   XCTAssertEqualObjects(
     store,
     NSUserDefaults.standardUserDefaults,
     "Should be configured with the expected concrete data store"
+  );
+  XCTAssertEqualObjects(
+    tokenProvider,
+    FBSDKAccessToken.class,
+    "Should be configured with the expected concrete token provider"
   );
 }
 
@@ -427,22 +438,31 @@
   FBSDKAccessToken *expected = SampleAccessTokens.validToken;
   TestTokenCache *cache = [[TestTokenCache alloc] initWithAccessToken:expected
                                                   authenticationToken:nil];
-  [FBSDKAccessToken setTokenCache:cache];
+  [TestTokenWallet setTokenCache:cache];
+
+  _delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationObserver:[TestNotificationCenter new]
+                                                                 tokenWallet:TestTokenWallet.class];
 
   [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 
-  // Should set the current access token to the cached access token when it exists
-  OCMVerify(ClassMethod([self.accessTokenClassMock setCurrentAccessToken:expected]));
+  XCTAssertEqualObjects(
+    TestTokenWallet.currentAccessToken,
+    expected,
+    "Should set the current access token to the cached access token when it exists"
+  );
 }
 
 - (void)testDidFinishLaunchingSetsCurrentAccessTokenWithoutCache
 {
-  [FBSDKAccessToken setTokenCache:[[TestTokenCache alloc] initWithAccessToken:nil authenticationToken:nil]];
+  TestTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
+  [TestTokenWallet setTokenCache:[[TestTokenCache alloc] initWithAccessToken:nil authenticationToken:nil]];
 
   [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 
-  // Should set the current access token to nil access token when there isn't a cached token
-  OCMVerify(ClassMethod([self.accessTokenClassMock setCurrentAccessToken:nil]));
+  XCTAssertNil(
+    TestTokenWallet.currentAccessToken,
+    "Should set the current access token to nil access token when there isn't a cached token"
+  );
 }
 
 - (void)testDidFinishLaunchingSetsCurrentAuthenticationTokenWithCache
