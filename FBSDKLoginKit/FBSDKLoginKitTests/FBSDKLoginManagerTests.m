@@ -115,6 +115,8 @@ static NSString *const kFakeJTI = @"a jti is just any string";
     @"email" : @"email@email.com",
     @"picture" : @"https://www.facebook.com/some_picture",
     @"user_friends" : @[@"123", @"456"],
+    @"user_birthday" : @"01/01/1990",
+    @"user_age_range" : @{@"min" : @((long)21)},
   };
 
   _header = @{
@@ -346,7 +348,14 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   NSString *encodedHeader = [FBSDKBase64 encodeData:headerData];
 
   NSString *tokenString = [NSString stringWithFormat:@"%@.%@.%@", encodedHeader, encodedClaims, @"signature"];
-  NSURL *url = [self authorizeURLWithFragment:[NSString stringWithFormat:@"granted_scopes=public_profile,email,user_friends&id_token=%@", tokenString] challenge:kFakeChallenge];
+  NSArray *permissions = @[
+    @"public_profile",
+    @"email",
+    @"user_friends",
+    @"user_birthday",
+    @"user_age_range"
+  ];
+  NSURL *url = [self authorizeURLWithFragment:[NSString stringWithFormat:@"granted_scopes=%@&id_token=%@", [permissions componentsJoinedByString:@","], tokenString] challenge:kFakeChallenge];
 
   [target setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
     XCTAssertFalse(result.isCancelled);
@@ -759,6 +768,18 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertEqualObjects(profile.imageURL.absoluteString, _claims[@"picture"], @"failed to parse user profile picture");
   XCTAssertEqualObjects(profile.email, _claims[@"email"], @"failed to parse user email");
   XCTAssertEqualObjects(profile.friendIDs, _claims[@"user_friends"], @"failed to parse user friends");
+  NSDateFormatter *formatter = NSDateFormatter.new;
+  [formatter setDateFormat:@"MM/dd/yyyy"];
+  XCTAssertEqualObjects(
+    [formatter stringFromDate:profile.birthday],
+    _claims[@"user_birthday"],
+    @"failed to parse user birthday"
+  );
+  XCTAssertEqualObjects(
+    profile.ageRange,
+    [FBSDKUserAgeRange ageRangeFromDictionary:_claims[@"user_age_range"]],
+    @"failed to parse user age range"
+  );
 }
 
 - (NSURL *)authorizeURLWithParameters:(NSString *)parameters joinedBy:(NSString *)joinChar

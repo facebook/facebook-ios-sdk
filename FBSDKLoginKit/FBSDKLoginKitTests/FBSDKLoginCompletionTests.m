@@ -48,7 +48,10 @@ static NSString *const _fakeChallence = @"some_challenge";
                                    handler:(FBSDKLoginCompletionParametersBlock)handler;
 
 + (FBSDKProfile *)profileWithClaims:(FBSDKAuthenticationTokenClaims *)claims;
+
 + (void)reset;
+
++ (NSDateFormatter *)dateFormatter;
 
 @end
 
@@ -566,6 +569,18 @@ static NSString *const _fakeChallence = @"some_challenge";
     factory.capturedFriendIDs,
     claim.userFriends,
     "Should request a profile using the friend identifiers from the claims"
+  );
+  NSDateFormatter *formatter = NSDateFormatter.new;
+  [formatter setDateFormat:@"MM/dd/yyyy"];
+  XCTAssertEqualObjects(
+    [formatter stringFromDate:factory.capturedBirthday],
+    claim.userBirthday,
+    "Should request a profile using the user birthday from the claims"
+  );
+  XCTAssertEqualObjects(
+    factory.capturedAgeRange,
+    [FBSDKUserAgeRange ageRangeFromDictionary:claim.userAgeRange],
+    "Should request a profile using the user age range from the claims"
   );
   XCTAssertTrue(
     factory.capturedIsLimited,

@@ -62,6 +62,7 @@
 }
 
 static id<FBSDKProfileProviding> _profileFactory;
+static NSDateFormatter *_dateFormatter;
 
 + (void)initialize
 {
@@ -258,6 +259,12 @@ static id<FBSDKProfileProviding> _profileFactory;
     imageURL = [NSURL URLWithString:claims.picture];
   }
 
+  NSDate *birthday;
+  if (claims.userBirthday) {
+    [FBSDKLoginURLCompleter.dateFormatter setDateFormat:@"MM/dd/yyyy"];
+    birthday = [FBSDKLoginURLCompleter.dateFormatter dateFromString:claims.userBirthday];
+  }
+
   return [_profileFactory createProfileWithUserID:claims.sub
                                         firstName:nil
                                        middleName:nil
@@ -268,8 +275,8 @@ static id<FBSDKProfileProviding> _profileFactory;
                                          imageURL:imageURL
                                             email:claims.email
                                         friendIDs:claims.userFriends
-                                         birthday:nil
-                                         ageRange:nil
+                                         birthday:birthday
+                                         ageRange:[FBSDKUserAgeRange ageRangeFromDictionary:claims.userAgeRange]
                                         isLimited:YES];
 }
 
@@ -314,6 +321,14 @@ static id<FBSDKProfileProviding> _profileFactory;
     }
   }
   return nil;
+}
+
++ (NSDateFormatter *)dateFormatter
+{
+  if (!_dateFormatter) {
+    _dateFormatter = NSDateFormatter.new;
+  }
+  return _dateFormatter;
 }
 
 // MARK: Test Helpers
