@@ -430,7 +430,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
 - (void)stubLoggingIfUserSettingsChanged
 {
-  OCMStub(ClassMethod([_settingsClassMock _logIfSDKSettingsChanged]));
+  OCMStub(ClassMethod([_settingsClassMock logIfSDKSettingsChanged]));
 }
 
 - (void)stubIsAutoLogAppEventsEnabled:(BOOL)isEnabled

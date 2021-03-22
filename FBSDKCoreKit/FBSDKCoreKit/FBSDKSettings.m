@@ -24,6 +24,7 @@
 #import "FBSDKAppEventsConfigurationProtocol.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKDataPersisting.h"
+#import "FBSDKEventLogging.h"
 #import "FBSDKInfoDictionaryProviding.h"
 #import "FBSDKInternalUtility.h"
 
@@ -48,7 +49,7 @@
         [_store removeObjectForKey:@#PLIST_KEY]; \
       } \
     } \
-    [FBSDKSettings _logIfSDKSettingsChanged]; \
+    [FBSDKSettings logIfSDKSettingsChanged]; \
   }
 
 FBSDKLoggingBehavior FBSDKLoggingBehaviorAccessTokens = @"include_access_tokens";
@@ -78,6 +79,7 @@ static NSNumber *g_advertiserTrackingStatus = nil;
 static id<FBSDKDataPersisting> _store = nil;
 static Class<FBSDKAppEventsConfigurationProviding> _appEventsConfigurationProvider = nil;
 static id<FBSDKInfoDictionaryProviding> _infoDictionaryProvider = nil;
+static id<FBSDKEventLogging> _eventLogger = nil;
 
 //
 // Warning messages for App Event Flags
@@ -101,19 +103,18 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
 {
   if (self == [FBSDKSettings class]) {
     g_accessTokenExpirer = [[FBSDKAccessTokenExpirer alloc] init];
-
-    [FBSDKSettings _logWarnings];
-    [FBSDKSettings _logIfSDKSettingsChanged];
   }
 }
 
 + (void)      configureWithStore:(id<FBSDKDataPersisting>)store
   appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)provider
           infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+                     eventLogger:(id<FBSDKEventLogging>)eventLogger
 {
   _store = store;
   _appEventsConfigurationProvider = provider;
   _infoDictionaryProvider = infoDictionaryProvider;
+  _eventLogger = eventLogger;
 }
 
 + (id<FBSDKDataPersisting>)store
@@ -129,6 +130,11 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
 + (id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
 {
   return _infoDictionaryProvider;
+}
+
++ (id<FBSDKEventLogging>)eventLogger
+{
+  return _eventLogger;
 }
 
 #pragma mark - Plist Configuration Settings
@@ -427,7 +433,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   return NO;
 }
 
-+ (void)_logWarnings
++ (void)logWarnings
 {
   // Log warnings for App Event Flags
   if (![_infoDictionaryProvider objectForInfoDictionaryKey:@"FacebookAutoLogAppEventsEnabled"]) {
@@ -441,7 +447,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   }
 }
 
-+ (void)_logIfSDKSettingsChanged
++ (void)logIfSDKSettingsChanged
 {
   NSInteger bitmask = 0;
   // Starting at 1 to maintain the meaning of the bits since the autoInit flag was removed.
@@ -464,12 +470,12 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
       initialBitmask |= (initialValue ? 1 : 0) << i;
       usageBitmask |= (plistValue != nil ? 1 : 0) << i;
     }
-    [FBSDKAppEvents logInternalEvent:@"fb_sdk_settings_changed"
-                          parameters:@{@"usage" : @(usageBitmask),
-                                       @"initial" : @(initialBitmask),
-                                       @"previous" : @(previousBitmask),
-                                       @"current" : @(bitmask)}
-                  isImplicitlyLogged:YES];
+    [[self.class eventLogger] logInternalEvent:@"fb_sdk_settings_changed"
+                                    parameters:@{@"usage" : @(usageBitmask),
+                                                 @"initial" : @(initialBitmask),
+                                                 @"previous" : @(previousBitmask),
+                                                 @"current" : @(bitmask)}
+                            isImplicitlyLogged:YES];
   }
 }
 
@@ -546,6 +552,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   _store = nil;
   _appEventsConfigurationProvider = nil;
   _infoDictionaryProvider = nil;
+  _eventLogger = nil;
 
   g_loggingBehaviors = nil;
   g_FacebookAppID = nil;

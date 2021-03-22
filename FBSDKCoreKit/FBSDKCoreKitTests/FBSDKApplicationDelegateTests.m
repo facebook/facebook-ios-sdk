@@ -95,9 +95,11 @@
   [super setUp];
 
   [TestTokenWallet reset];
+  [TestSettings reset];
 
   _delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationObserver:[TestNotificationCenter new]
-                                                                 tokenWallet:TestTokenWallet.class];
+                                                                 tokenWallet:TestTokenWallet.class
+                                                                    settings:TestSettings.class];
   _delegate.isAppLaunched = NO;
 
   _profile = [[FBSDKProfile alloc] initWithUserID:self.name
@@ -130,6 +132,7 @@
   _partialDelegateMock = nil;
 
   [TestTokenWallet reset];
+  [TestSettings reset];
 }
 
 // MARK: - Observers
@@ -376,6 +379,7 @@
   NSObject *store = (NSObject *) FBSDKSettings.store;
   NSObject *appEventsConfigProvider = (NSObject *) FBSDKSettings.appEventsConfigurationProvider;
   NSObject *infoDictionaryProvider = (NSObject *) FBSDKSettings.infoDictionaryProvider;
+  NSObject *eventLogger = (NSObject *) FBSDKSettings.eventLogger;
   XCTAssertEqualObjects(
     store,
     NSUserDefaults.standardUserDefaults,
@@ -391,6 +395,11 @@
     NSBundle.mainBundle,
     "Should be configured with the expected concrete info dictionary provider"
   );
+  XCTAssertEqualObjects(
+    eventLogger.class,
+    FBSDKEventLogger.class,
+    "Should be configured with the expected concrete event logger"
+  );
 }
 
 - (void)testInitializingSdkConfiguresInternalUtility
@@ -399,8 +408,8 @@
   [FBSDKApplicationDelegate initializeSDK:@{}];
   NSObject *infoDictionaryProvider = (NSObject *)[FBSDKInternalUtility infoDictionaryProvider];
   XCTAssertEqualObjects(
-    infoDictionaryProvider.class,
-    NSBundle.class,
+    infoDictionaryProvider,
+    NSBundle.mainBundle,
     "Should be configured with the expected concrete info dictionary provider"
   );
 }
@@ -428,6 +437,28 @@
   );
 }
 
+- (void)testInitializingSdkPerformsSettingsLogging
+{
+  [FBSDKApplicationDelegate resetIsSdkInitialized];
+  [FBSDKApplicationDelegate initializeSDKWithApplicationDelegate:_delegate
+                                                   launchOptions:@{}];
+  XCTAssertEqual(
+    TestSettings.logWarningsCallCount,
+    1,
+    "Should have settings log warnings upon initialization"
+  );
+  XCTAssertEqual(
+    TestSettings.logIfSDKSettingsChangedCallCount,
+    1,
+    "Should have settings log if there were changes upon initialization"
+  );
+  XCTAssertEqual(
+    TestSettings.recordInstallCallCount,
+    1,
+    "Should have settings record installations upon initialization"
+  );
+}
+
 - (void)testDidFinishLaunchingLaunchedApp
 {
   _delegate.isAppLaunched = YES;
@@ -446,7 +477,8 @@
   [TestTokenWallet setTokenCache:cache];
 
   _delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationObserver:[TestNotificationCenter new]
-                                                                 tokenWallet:TestTokenWallet.class];
+                                                                 tokenWallet:TestTokenWallet.class
+                                                                    settings:TestSettings.class];
 
   [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 

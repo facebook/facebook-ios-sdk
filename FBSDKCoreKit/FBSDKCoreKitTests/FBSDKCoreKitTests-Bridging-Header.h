@@ -28,7 +28,6 @@
 #import "FBSDKSKAdNetworkEvent.h"
 #import "FBSDKSKAdNetworkRule.h"
 #import "FBSDKServerConfigurationFixtures.h"
-#import "FBSDKSettingsProtocol.h"
 #import "FBSDKTestCase.h"
 #import "FBSDKTestCoder.h"
 #import "FBSDKViewHierarchy.h"
@@ -72,6 +71,10 @@
 // AccessToken
 #import "FBSDKAccessTokenProtocols.h"
 #import "FBSDKAccessToken+AccessTokenProtocols.h"
+// Settings
+#import "FBSDKSettingsLogging.h"
+#import "FBSDKSettingsProtocol.h"
+#import "FBSDKSettings+SettingsProtocols.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -212,11 +215,13 @@ NS_SWIFT_NAME(parse(result:error:));
 @property (class, nonatomic, nullable, readonly) id<FBSDKDataPersisting> store;
 @property (class, nonatomic, nullable, readonly) id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
 @property (class, nonatomic, nullable) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
+@property (class, nonatomic, nullable) id<FBSDKEventLogging> eventLogger;
 
 + (void)configureWithStore:(id<FBSDKDataPersisting>)store
 appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)provider
     infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
-NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvider:));
+               eventLogger:(id<FBSDKEventLogging>)eventLogger
+NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvider:eventLogger:));
 
 + (void)reset;
 
@@ -233,7 +238,8 @@ NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvi
 NS_SWIFT_NAME(reset());
 
 - (instancetype)initWithNotificationObserver:(id<FBSDKNotificationObserving>)observer
-                                 tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet;
+                                 tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
+                                    settings:(Class<FBSDKSettingsLogging>)settings;
 - (void)applicationDidEnterBackground:(NSNotification *)notification;
 - (void)applicationDidBecomeActive:(NSNotification *)notification;
 - (void)applicationWillResignActive:(NSNotification *)notification;

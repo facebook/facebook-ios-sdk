@@ -20,15 +20,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(EventLogging)
-@protocol FBSDKEventLogging
+NS_SWIFT_NAME(SettingsLogging)
+@protocol FBSDKSettingsLogging
 
-- (void)logInternalEvent:(NSString *)eventName
-      isImplicitlyLogged:(BOOL)isImplicitlyLogged;
-
-- (void)logInternalEvent:(NSString *)eventName
-              parameters:(NSDictionary *)parameters
-      isImplicitlyLogged:(BOOL)isImplicitlyLogged;
++ (void)logWarnings;
++ (void)logIfSDKSettingsChanged;
++ (void)recordInstall;
 
 @end
 

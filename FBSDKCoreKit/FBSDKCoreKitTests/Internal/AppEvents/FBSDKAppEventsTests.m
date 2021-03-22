@@ -444,7 +444,6 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testRequestForCustomAudienceThirdPartyIDWithTrackingDisallowed
 {
-  [self stubUserDefaultsWith:[UserDefaultsSpy new]];
   [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingDisallowed];
 
   XCTAssertNil(
@@ -561,7 +560,6 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testPublishInstall
 {
-  [self stubUserDefaultsWith:[UserDefaultsSpy new]];
   [self stubAppID:self.appID];
   OCMExpect([self.appEventsMock fetchServerConfiguration:[OCMArg any]]);
 

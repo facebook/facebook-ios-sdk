@@ -17,12 +17,28 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @objcMembers
-class TestSettings: NSObject, SettingsProtocol {
+class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
+
   static var appID: String?
   static var clientToken: String?
   static var userAgentSuffix: String?
   static var loggingBehaviors = Set<String>()
   static var sdkVersion: String?
+  static var logWarningsCallCount = 0
+  static var logIfSDKSettingsChangedCallCount = 0
+  static var recordInstallCallCount = 0
+
+  static func logWarnings() {
+    logWarningsCallCount += 1
+  }
+
+  static func logIfSDKSettingsChanged() {
+    logIfSDKSettingsChangedCallCount += 1
+  }
+
+  static func recordInstall() {
+    recordInstallCallCount += 1
+  }
 
   static func reset() {
     appID = nil
@@ -30,5 +46,8 @@ class TestSettings: NSObject, SettingsProtocol {
     userAgentSuffix = nil
     loggingBehaviors = []
     sdkVersion = nil
+    logWarningsCallCount = 0
+    logIfSDKSettingsChangedCallCount = 0
+    recordInstallCallCount = 0
   }
 }

@@ -32,13 +32,15 @@
 @protocol FBSDKDataPersisting;
 @protocol FBSDKAppEventsConfigurationProviding;
 @protocol FBSDKInfoDictionaryProviding;
+@protocol FBSDKEventLogging;
 
 @interface FBSDKSettings (Internal)
 
 + (void)configureWithStore:(nonnull id<FBSDKDataPersisting>)store
 appEventsConfigurationProvider:(nonnull Class<FBSDKAppEventsConfigurationProviding>)provider
     infoDictionaryProvider:(nonnull id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
-NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvider:));
+               eventLogger:(nonnull id<FBSDKEventLogging>)eventLogger
+NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvider:eventLogger:));
 
 + (nullable NSObject<FBSDKTokenCaching> *)tokenCache;
 
@@ -63,6 +65,10 @@ NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvi
 + (NSDate *_Nullable)getInstallTimestamp;
 
 + (NSDate *_Nullable)getSetAdvertiserTrackingEnabledTimestamp;
+
++ (void)logWarnings;
+
++ (void)logIfSDKSettingsChanged;
 
 @property (class, nullable, nonatomic, readonly, copy) NSString *graphAPIDebugParamValue;
 

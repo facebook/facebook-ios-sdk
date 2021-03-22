@@ -19,10 +19,22 @@
 @objcMembers
 class TestEventLogger: NSObject, EventLogging {
   var capturedEventName: String?
+  var capturedParameters = [AnyHashable: Any]()
   var capturedIsImplicitlyLogged = false
 
   func logInternalEvent(_ eventName: String, isImplicitlyLogged: Bool) {
     capturedEventName = eventName
     capturedIsImplicitlyLogged = isImplicitlyLogged
   }
+
+  func logInternalEvent(
+    _ eventName: String,
+    parameters: [AnyHashable: Any],
+    isImplicitlyLogged: Bool
+  ) {
+    capturedEventName = eventName
+    capturedParameters = parameters
+    capturedIsImplicitlyLogged = isImplicitlyLogged
+  }
+
 }

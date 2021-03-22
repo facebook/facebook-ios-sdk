@@ -23,6 +23,7 @@ class SettingsTests: XCTestCase {
 
   var store = UserDefaultsSpy()
   let bundle = TestBundle()
+  let logger = TestEventLogger()
 
   override func setUp() {
     super.setUp()
@@ -30,7 +31,8 @@ class SettingsTests: XCTestCase {
     Settings.configure(
       store: store,
       appEventsConfigurationProvider: TestAppEventsConfigurationProvider.self,
-      infoDictionaryProvider: bundle
+      infoDictionaryProvider: bundle,
+      eventLogger: logger
     )
   }
 
@@ -84,6 +86,21 @@ class SettingsTests: XCTestCase {
     XCTAssertTrue(
       Settings.infoDictionaryProvider === bundle,
       "Should be able to set an info dictionary provider"
+    )
+  }
+
+  func testDefaultEventLogger() {
+    Settings.reset()
+    XCTAssertNil(
+      Settings.eventLogger,
+      "Settings should not have a default event logger"
+    )
+  }
+
+  func testConfiguringWithEventLogger() {
+    XCTAssertTrue(
+      Settings.eventLogger === logger,
+      "Should be able to set an event logger"
     )
   }
 

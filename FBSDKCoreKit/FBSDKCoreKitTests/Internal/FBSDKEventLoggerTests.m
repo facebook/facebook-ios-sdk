@@ -34,4 +34,21 @@
   OCMVerify(ClassMethod([self.appEventsMock logInternalEvent:self.name isImplicitlyLogged:YES]));
 }
 
+- (void)testLoggingEventWithParametersDelegatesToAppEvents
+{
+  FBSDKEventLogger *logger = [FBSDKEventLogger new];
+  NSDictionary *parameters = @{@"foo" : @"bar"};
+  [logger logInternalEvent:self.name
+                parameters:parameters
+        isImplicitlyLogged:YES];
+  OCMVerify(
+    ClassMethod(
+      [self.appEventsMock
+       logInternalEvent:self.name
+       parameters:parameters
+       isImplicitlyLogged:YES]
+    )
+  );
+}
+
 @end

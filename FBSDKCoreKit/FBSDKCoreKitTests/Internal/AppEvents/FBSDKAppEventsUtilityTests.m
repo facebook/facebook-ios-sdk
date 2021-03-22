@@ -43,6 +43,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   UserDefaultsSpy *userDefaultsSpy;
   TestBundle *bundle;
+  TestEventLogger *logger;
 }
 
 - (void)setUp
@@ -57,9 +58,12 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 
   userDefaultsSpy = [UserDefaultsSpy new];
   bundle = [TestBundle new];
+  logger = [TestEventLogger new];
+
   [FBSDKSettings configureWithStore:userDefaultsSpy
      appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
-             infoDictionaryProvider:bundle];
+             infoDictionaryProvider:bundle
+                        eventLogger:logger];
 }
 
 - (void)tearDown
@@ -234,7 +238,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
       [FBSDKSettings reset];
       [FBSDKSettings configureWithStore:[UserDefaultsSpy new]
          appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
-                 infoDictionaryProvider:[TestBundle new]];
+                 infoDictionaryProvider:[TestBundle new]
+                            eventLogger:[TestEventLogger new]];
 
       if ([status unsignedIntegerValue] != FBSDKAdvertisingTrackingUnspecified) {
         [FBSDKSettings setAdvertiserTrackingStatus:[status unsignedIntegerValue]];

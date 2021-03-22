@@ -30,4 +30,13 @@
   [FBSDKAppEvents logInternalEvent:eventName isImplicitlyLogged:isImplicitlyLogged];
 }
 
+- (void)logInternalEvent:(NSString *)eventName
+              parameters:(NSDictionary *)parameters
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged
+{
+  [FBSDKAppEvents logInternalEvent:eventName
+                        parameters:parameters
+                isImplicitlyLogged:isImplicitlyLogged];
+}
+
 @end

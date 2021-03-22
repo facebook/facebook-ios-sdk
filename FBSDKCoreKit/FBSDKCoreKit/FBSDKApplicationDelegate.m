@@ -27,6 +27,7 @@
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError.h"
 #import "FBSDKEventDeactivationManager.h"
+#import "FBSDKEventLogger.h"
 #import "FBSDKFeatureManager.h"
 #import "FBSDKGateKeeperManager.h"
 #import "FBSDKGraphRequestFactory.h"
@@ -37,8 +38,10 @@
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationManager.h"
 #import "FBSDKSettings+Internal.h"
+#import "FBSDKSettingsLogging.h"
 #import "FBSDKTimeSpentData.h"
 #import "FBSDKTokenCache.h"
+#import "GraphAPI/FBSDKGraphRequest.h"
 #import "NSBundle+InfoDictionaryProviding.h"
 #import "NSNotificationCenter+Extensions.h"
 #import "NSUserDefaults+FBSDKDataPersisting.h"
@@ -73,6 +76,7 @@ static UIApplicationState _applicationState;
   BOOL _isAppLaunched;
   id<FBSDKNotificationObserving> _notificationObserver;
   Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> _tokenWallet;
+  Class<FBSDKSettingsLogging> _settings;
 }
 
 #pragma mark - Class Methods
@@ -93,7 +97,10 @@ static UIApplicationState _applicationState;
 
   [self setIsSdkInitialized];
 
-  [FBSDKSettings recordInstall];
+  Class<FBSDKSettingsLogging> settingsLogger = [delegate settings];
+  [settingsLogger logWarnings];
+  [settingsLogger logIfSDKSettingsChanged];
+  [settingsLogger recordInstall];
 
   id<FBSDKNotificationObserving> defaultCenter = [delegate notificationObserver];
   [defaultCenter addObserver:delegate selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -146,16 +153,19 @@ static UIApplicationState _applicationState;
 - (instancetype)init
 {
   return [self initWithNotificationObserver:NSNotificationCenter.defaultCenter
-                                tokenWallet:FBSDKAccessToken.class];
+                                tokenWallet:FBSDKAccessToken.class
+                                   settings:FBSDKSettings.class];
 }
 
 - (instancetype)initWithNotificationObserver:(id<FBSDKNotificationObserving>)observer
                                  tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
+                                    settings:(Class<FBSDKSettingsLogging>)settings
 {
   if ((self = [super init]) != nil) {
     _applicationObservers = [[NSHashTable alloc] init];
     _notificationObserver = observer;
     _tokenWallet = tokenWallet;
+    _settings = settings;
   }
   return self;
 }
@@ -173,6 +183,11 @@ static UIApplicationState _applicationState;
 - (Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
 {
   return _tokenWallet;
+}
+
+- (Class<FBSDKSettingsLogging>)settings
+{
+  return _settings;
 }
 
 #pragma mark - UIApplicationDelegate
@@ -453,7 +468,8 @@ static UIApplicationState _applicationState;
   [FBSDKAuthenticationToken setTokenCache:tokenCache];
   [FBSDKSettings configureWithStore:NSUserDefaults.standardUserDefaults
      appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
-             infoDictionaryProvider:NSBundle.mainBundle];
+             infoDictionaryProvider:NSBundle.mainBundle
+                        eventLogger:[FBSDKEventLogger new]];
   [FBSDKInternalUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:FBSDKAccessToken.class];
 #if !TARGET_OS_TV

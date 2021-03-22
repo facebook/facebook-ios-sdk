@@ -46,6 +46,7 @@
   id _mockAppEventsUtility;
   UserDefaultsSpy *userDefaultsSpy;
   TestBundle *bundle;
+  TestEventLogger *logger;
 }
 
 static NSString *const emptyString = @"";
@@ -60,9 +61,12 @@ static NSString *const whiteSpaceToken = @"   ";
   // Reset user defaults spy
   userDefaultsSpy = [UserDefaultsSpy new];
   bundle = [TestBundle new];
+  logger = [TestEventLogger new];
+
   [FBSDKSettings configureWithStore:userDefaultsSpy
      appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
              infoDictionaryProvider:bundle
+                        eventLogger:logger
   ];
   [self stubLoggingIfUserSettingsChanged];
 }
@@ -1402,7 +1406,8 @@ static NSString *const whiteSpaceToken = @"   ";
   [FBSDKSettings reset];
   [FBSDKSettings configureWithStore:userDefaultsSpy
      appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
-             infoDictionaryProvider:[TestBundle new]];
+             infoDictionaryProvider:[TestBundle new]
+                        eventLogger:[TestEventLogger new]];
 
   XCTAssertNotNil(
     FBSDKSettings.dataProcessingOptions,
