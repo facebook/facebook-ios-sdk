@@ -21,6 +21,7 @@
 #if !TARGET_OS_TV
 
 @class FBSDKProfile;
+@class FBSDKUserAgeRange;
 typedef NSString FBSDKUserIdentifier;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -38,8 +39,10 @@ NS_SWIFT_NAME(ProfileProviding)
                                  imageURL:(nullable NSURL *)imageURL
                                     email:(nullable NSString *)email
                                 friendIDs:(nullable NSArray<FBSDKUserIdentifier *> *)friendIDs
+                                 birthday:(nullable NSDate *)birthday
+                                 ageRange:(nullable FBSDKUserAgeRange *)ageRange
                                 isLimited:(BOOL)isLimited
-NS_SWIFT_NAME(createProfile(userID:firstName:middleName:lastName:name:linkURL:refreshDate:imageURL:email:friendIDs:isLimited:));
+NS_SWIFT_NAME(createProfile(userID:firstName:middleName:lastName:name:linkURL:refreshDate:imageURL:email:friendIDs:birthday:ageRange:isLimited:));
 
 @end
 

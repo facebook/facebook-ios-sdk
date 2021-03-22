@@ -22,6 +22,8 @@
 
  #import "FBSDKProfile+Internal.h"
 
+ #import "FBSDKUserAgeRange.h"
+
  #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 
 NSNotificationName const FBSDKProfileDidChangeNotification = @"com.facebook.sdk.FBSDKProfile.FBSDKProfileDidChangeNotification";;
@@ -48,6 +50,8 @@ static FBSDKProfile *g_currentProfile;
  #define FBSDKPROFILE_EMAIL_KEY @"email"
  #define FBSDKPROFILE_FRIENDIDS_KEY @"friendIDs"
  #define FBSDKPROFILE_IS_LIMITED_KEY @"isLimited"
+ #define FBSDKPROFILE_BIRTHDAY_KEY @"birthday"
+ #define FBSDKPROFILE_AGERANGE_KEY @"ageRange"
 
 // Once a day
  #define FBSDKPROFILE_STALE_IN_SECONDS (60 * 60 * 24)
@@ -84,7 +88,9 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
                   refreshDate:refreshDate
                      imageURL:nil
                         email:nil
-                    friendIDs:nil];
+                    friendIDs:nil
+                     birthday:nil
+                     ageRange:nil];
 }
 
 - (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
@@ -106,7 +112,9 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
                   refreshDate:refreshDate
                      imageURL:imageURL
                         email:email
-                    friendIDs:nil];
+                    friendIDs:nil
+                     birthday:nil
+                     ageRange:nil];
 }
 
 - (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
@@ -119,6 +127,32 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
                       imageURL:(NSURL *)imageURL
                          email:(NSString *)email
                      friendIDs:(NSArray<FBSDKUserIdentifier *> *)friendIDs
+{
+  return [self initWithUserID:userID
+                    firstName:firstName
+                   middleName:middleName
+                     lastName:lastName
+                         name:name
+                      linkURL:linkURL
+                  refreshDate:refreshDate
+                     imageURL:imageURL
+                        email:email
+                    friendIDs:friendIDs
+                     birthday:nil ageRange:nil];
+}
+
+- (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
+                     firstName:(NSString *)firstName
+                    middleName:(NSString *)middleName
+                      lastName:(NSString *)lastName
+                          name:(NSString *)name
+                       linkURL:(NSURL *)linkURL
+                   refreshDate:(NSDate *)refreshDate
+                      imageURL:(NSURL *)imageURL
+                         email:(NSString *)email
+                     friendIDs:(NSArray<FBSDKUserIdentifier *> *)friendIDs
+                      birthday:(NSDate *)birthday
+                      ageRange:(FBSDKUserAgeRange *)ageRange
                      isLimited:(BOOL)isLimited
 {
   self = [self initWithUserID:userID
@@ -130,7 +164,9 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
                   refreshDate:refreshDate
                      imageURL:imageURL
                         email:email
-                    friendIDs:friendIDs];
+                    friendIDs:friendIDs
+                     birthday:birthday
+                     ageRange:ageRange];
   self.isLimited = isLimited;
 
   return self;
@@ -146,6 +182,8 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
                       imageURL:(NSURL *)imageURL
                          email:(NSString *)email
                      friendIDs:(NSArray<FBSDKUserIdentifier *> *)friendIDs
+                      birthday:(NSDate *)birthday
+                      ageRange:(FBSDKUserAgeRange *)ageRange
 {
   if ((self = [super init])) {
     _userID = [userID copy];
@@ -159,6 +197,8 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
     _email = [email copy];
     _friendIDs = [friendIDs copy];
     self.isLimited = NO;
+    _birthday = [birthday copy];
+    _ageRange = [ageRange copy];
   }
   return self;
 }
@@ -287,6 +327,8 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
   NSString *email = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKPROFILE_EMAIL_KEY];
   NSArray<FBSDKUserIdentifier *> *friendIDs = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDKPROFILE_FRIENDIDS_KEY];
   BOOL isLimited = [decoder decodeBoolForKey:FBSDKPROFILE_IS_LIMITED_KEY];
+  NSDate *birthday = [decoder decodeObjectOfClass:[NSDate class] forKey:FBSDKPROFILE_BIRTHDAY_KEY];
+  FBSDKUserAgeRange *ageRange = [decoder decodeObjectOfClass:[FBSDKUserAgeRange class] forKey:FBSDKPROFILE_AGERANGE_KEY];
   return [self initWithUserID:userID
                     firstName:firstName
                    middleName:middleName
@@ -297,6 +339,8 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
                      imageURL:imageURL
                         email:email
                     friendIDs:friendIDs
+                     birthday:birthday
+                     ageRange:ageRange
                     isLimited:isLimited];
 }
 
@@ -313,6 +357,8 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
   [encoder encodeObject:self.email forKey:FBSDKPROFILE_EMAIL_KEY];
   [encoder encodeObject:self.friendIDs forKey:FBSDKPROFILE_FRIENDIDS_KEY];
   [encoder encodeBool:self.isLimited forKey:FBSDKPROFILE_IS_LIMITED_KEY];
+  [encoder encodeObject:self.birthday forKey:FBSDKPROFILE_BIRTHDAY_KEY];
+  [encoder encodeObject:self.ageRange forKey:FBSDKPROFILE_AGERANGE_KEY];
 }
 
 @end

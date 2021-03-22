@@ -36,6 +36,7 @@
  #import <FBSDKCoreKit/FBSDKGraphRequestDataAttachment.h>
  #import <FBSDKCoreKit/FBSDKSettings.h>
  #import <FBSDKCoreKit/FBSDKTestUsersManager.h>
+ #import <FBSDKCoreKit/FBSDKUserAgeRange.h>
  #import <FBSDKCoreKit/FBSDKUtility.h>
 
  #if !TARGET_OS_TV
@@ -77,6 +78,7 @@
  #import "FBSDKGraphRequestProtocol.h"
  #import "FBSDKSettings.h"
  #import "FBSDKTestUsersManager.h"
+ #import "FBSDKUserAgeRange.h"
  #import "FBSDKUtility.h"
 
  #if !TARGET_OS_TV

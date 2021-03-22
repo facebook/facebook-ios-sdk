@@ -268,6 +268,8 @@ static id<FBSDKProfileProviding> _profileFactory;
                                          imageURL:imageURL
                                             email:claims.email
                                         friendIDs:claims.userFriends
+                                         birthday:nil
+                                         ageRange:nil
                                         isLimited:YES];
 }
 

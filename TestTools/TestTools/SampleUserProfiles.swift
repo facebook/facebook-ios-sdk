@@ -39,7 +39,9 @@ public class SampleUserProfiles: NSObject {
       friendIDs: [
         "456",
         "789",
-      ]
+      ],
+      birthday: Date(timeIntervalSince1970: 0),
+      ageRange: UserAgeRange(from: ["min": 21])
     )
   }
 
@@ -75,6 +77,8 @@ public class SampleUserProfiles: NSObject {
         "456",
         "789",
       ],
+      birthday: Date(timeIntervalSince1970: 0),
+      ageRange: UserAgeRange(from: ["min": 21]),
       isLimited: isLimited
     )
   }

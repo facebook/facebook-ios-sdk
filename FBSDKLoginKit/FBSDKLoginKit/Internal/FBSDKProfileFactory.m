@@ -36,6 +36,8 @@
                                  imageURL:(nullable NSURL *)imageURL
                                     email:(nullable NSString *)email
                                 friendIDs:(nullable NSArray<FBSDKUserIdentifier *> *)friendIDs
+                                 birthday:(nullable NSDate *)birthday
+                                 ageRange:(nullable FBSDKUserAgeRange *)ageRange
                                 isLimited:(BOOL)isLimited
 {
   return [[FBSDKProfile alloc] initWithUserID:userID
@@ -48,6 +50,8 @@
                                      imageURL:imageURL
                                         email:email
                                     friendIDs:friendIDs
+                                     birthday:birthday
+                                     ageRange:ageRange
                                     isLimited:isLimited];
 }
 

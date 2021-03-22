@@ -731,77 +731,74 @@ NSString *const heightKey = @"height";
   }
 }
 
+// MARK: Storage
+
 - (void)testEncoding
 {
-  NSURL *linkURL = [NSURL URLWithString:@"www.example.com"];
-  NSURL *imageURL = [NSURL URLWithString:@"www.example.com/image"];
-  NSDate *date = [NSDate date];
-  NSArray *friendIDS = @[@123, @456];
-
   FBSDKTestCoder *coder = [FBSDKTestCoder new];
-  _profile = [[FBSDKProfile alloc] initWithUserID:@"userID"
-                                        firstName:@"firstName"
-                                       middleName:@"middleName"
-                                         lastName:@"lastName"
-                                             name:@"name"
-                                          linkURL:linkURL
-                                      refreshDate:date
-                                         imageURL:imageURL
-                                            email:@"email"
-                                        friendIDs:friendIDS
-                                        isLimited:YES];
+  _profile = SampleUserProfiles.validLimited;
 
   [_profile encodeWithCoder:coder];
 
   XCTAssertEqualObjects(
     coder.encodedObject[@"userID"],
-    @"userID",
+    _profile.userID,
     "Should encode the expected user identifier"
   );
   XCTAssertEqualObjects(
     coder.encodedObject[@"firstName"],
-    @"firstName",
+    _profile.firstName,
     "Should encode the expected first name"
   );
   XCTAssertEqualObjects(
     coder.encodedObject[@"middleName"],
-    @"middleName",
+    _profile.middleName,
     "Should encode the expected middle name"
   );
   XCTAssertEqualObjects(
     coder.encodedObject[@"lastName"],
-    @"lastName",
+    _profile.lastName,
     "Should encode the expected last name"
   );
   XCTAssertEqualObjects(
     coder.encodedObject[@"name"],
-    @"name",
+    _profile.name,
     "Should encode the expected name"
   );
   XCTAssertEqualObjects(
     coder.encodedObject[@"linkURL"],
-    linkURL,
+    _profile.linkURL,
     "Should encode the expected link URL"
   );
   XCTAssertEqualObjects(
     coder.encodedObject[@"refreshDate"],
-    date,
+    _profile.refreshDate,
     "Should encode the expected refresh date"
   );
   XCTAssertEqualObjects(
     coder.encodedObject[@"imageURL"],
-    imageURL,
+    _profile.imageURL,
     "Should encode the expected image URL"
   );
   XCTAssertEqualObjects(
     coder.encodedObject[@"email"],
-    @"email",
+    _profile.email,
     "Should encode the expected email address"
   );
   XCTAssertEqualObjects(
     coder.encodedObject[@"friendIDs"],
-    friendIDS,
+    _profile.friendIDs,
     "Should encode the expected list of friend identifiers"
+  );
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"birthday"],
+    _profile.birthday,
+    "Should encode the expected user birthday"
+  );
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"ageRange"],
+    _profile.ageRange,
+    "Should encode the expected user age range"
   );
   XCTAssertEqualObjects(
     coder.encodedObject[@"isLimited"],
@@ -864,6 +861,16 @@ NSString *const heightKey = @"height";
     coder.decodedObject[@"friendIDs"],
     NSArray.class,
     "Should decode an array for the friendIDs key"
+  );
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"birthday"],
+    NSDate.class,
+    "Should decode a date for the birthday key"
+  );
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"ageRange"],
+    FBSDKUserAgeRange.class,
+    "Should decode a UserAgeRange object for the ageRange key"
   );
   XCTAssertEqualObjects(
     coder.decodedObject[@"isLimited"],

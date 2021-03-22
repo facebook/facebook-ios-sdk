@@ -32,6 +32,8 @@ public class TestProfileProvider: NSObject, ProfileProviding {
   public var capturedImageURL: URL?
   public var capturedEmail: String?
   public var capturedFriendIDs: [String]?
+  public var capturedBirthday: Date?
+  public var capturedAgeRange: UserAgeRange?
   public var capturedIsLimited = false
   private var stubbedProfile: Profile
 
@@ -50,6 +52,8 @@ public class TestProfileProvider: NSObject, ProfileProviding {
     imageURL: URL?,
     email: String?,
     friendIDs: [String]?,
+    birthday: Date?,
+    ageRange: UserAgeRange?,
     isLimited: Bool
   ) -> Profile {
     capturedUserID = userID
@@ -62,6 +66,8 @@ public class TestProfileProvider: NSObject, ProfileProviding {
     capturedImageURL = imageURL
     capturedEmail = email
     capturedFriendIDs = friendIDs
+    capturedBirthday = birthday
+    capturedAgeRange = ageRange
     capturedIsLimited = isLimited
 
     return stubbedProfile
