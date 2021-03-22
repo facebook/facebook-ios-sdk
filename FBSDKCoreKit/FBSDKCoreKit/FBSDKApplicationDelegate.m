@@ -406,8 +406,6 @@ static UIApplicationState _applicationState;
     bit++;
   }
 
-  [self _logSwiftRuntimeAvailability];
-
   NSInteger existingBitmask = [[NSUserDefaults standardUserDefaults] integerForKey:FBSDKKitsBitmaskKey];
   if (existingBitmask != bitmask) {
     [[NSUserDefaults standardUserDefaults] setInteger:bitmask forKey:FBSDKKitsBitmaskKey];
@@ -431,39 +429,6 @@ static UIApplicationState _applicationState;
     [FBSDKAppEvents logInternalEvent:@"fb_auto_applink" parameters:params isImplicitlyLogged:YES];
   }
 #endif
-}
-
-- (void)_logSwiftRuntimeAvailability
-{
-  NSString *swiftUsageKey = @"is_using_swift";
-  NSString *eventName = @"fb_sdk_swift_runtime_check";
-  NSMutableDictionary<NSString *, NSNumber *> *params = NSMutableDictionary.new;
-
-  // Tracking if the consuming Application is using Swift
-  id delegate = [UIApplication sharedApplication].delegate;
-  NSString const *className = NSStringFromClass([delegate class]);
-  if ([className componentsSeparatedByString:@"."].count > 1) {
-    params[swiftUsageKey] = @YES;
-  }
-
-  // Additional check to see if the consuming application perhaps was
-  // originally an objc project but is now using Swift
-  if (!params[swiftUsageKey].boolValue) {
-    double delayInSeconds = 1.0;
-    dispatch_time_t delay = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(delay,
-      dispatch_get_main_queue(), ^{
-        UIViewController *topMostViewController = [FBSDKInternalUtility topMostViewController];
-        NSString const *vcClassName = NSStringFromClass([topMostViewController class]);
-        if ([vcClassName componentsSeparatedByString:@"."].count > 1) {
-          params[swiftUsageKey] = @YES;
-          [FBSDKAppEvents logInternalEvent:eventName
-                                parameters:params
-                        isImplicitlyLogged:NO];
-        }
-      });
-  }
-  ;
 }
 
 + (BOOL)isSDKInitialized

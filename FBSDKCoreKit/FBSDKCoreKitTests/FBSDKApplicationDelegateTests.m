@@ -27,7 +27,6 @@
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKTestCase.h"
-#import "UserDefaultsSpy.h"
 
 @interface FBSDKGraphRequestConnection (AppDelegateTesting)
 + (BOOL)canMakeRequests;
@@ -77,7 +76,6 @@
 @interface FBSDKApplicationDelegateTests : FBSDKTestCase
 {
   FBSDKApplicationDelegate *_delegate;
-  UserDefaultsSpy *_defaultsSpy;
   FBSDKProfile *_profile;
   id _partialDelegateMock;
 }
@@ -101,9 +99,6 @@
   _delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationObserver:[TestNotificationCenter new]
                                                                  tokenWallet:TestTokenWallet.class];
   _delegate.isAppLaunched = NO;
-
-  _defaultsSpy = [UserDefaultsSpy new];
-  [self stubUserDefaultsWith:_defaultsSpy];
 
   _profile = [[FBSDKProfile alloc] initWithUserID:self.name
                                         firstName:nil
@@ -129,8 +124,6 @@
   [super tearDown];
 
   _delegate = nil;
-
-  _defaultsSpy = nil;
   _profile = nil;
 
   [_partialDelegateMock stopMocking];
