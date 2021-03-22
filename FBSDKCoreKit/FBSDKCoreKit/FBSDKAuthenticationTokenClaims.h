@@ -63,6 +63,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nullable, nonatomic, readonly, strong) NSArray<NSString *> *userFriends;
 
+/// End-User's birthday
+@property (nullable, nonatomic, readonly, strong) NSString *userBirthday;
+
+/// End-User's age range
+@property (nullable, nonatomic, readonly, strong) NSDictionary<NSString *, NSNumber *> *userAgeRange;
+
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 

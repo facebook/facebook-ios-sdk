@@ -39,7 +39,9 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
                        name:(nullable NSString *)name
                       email:(nullable NSString *)email
                     picture:(nullable NSString *)picture
-                userFriends:(nullable NSArray<NSString *> *)userFriends;
+                userFriends:(nullable NSArray<NSString *> *)userFriends
+               userBirthday:(nullable NSString *)userBirthday
+               userAgeRange:(nullable NSDictionary<NSString *, NSNumber *> *)userAgeRange;
 
 + (nullable FBSDKAuthenticationTokenClaims *)claimsFromEncodedString:(NSString *)encodedClaims nonce:(NSString *)expectedNonce;
 
@@ -74,6 +76,8 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
                                                           email:@"email@email.com"
                                                         picture:@"https://www.facebook.com/some_picture"
                                                     userFriends:@[@"1122", @"3344", @"5566"]
+                                                   userBirthday:@"01/01/1990"
+                                                   userAgeRange:@{@"min" : @((long)21)}
   ];
 
   _claimsDict = [self dictionaryFromClaims:_claims];
@@ -157,12 +161,17 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
 
 - (void)testDecodeClaimsWithInvalidOptionalClaims
 {
-  for (NSString *claim in @[@"name", @"email", @"picture", @"user_friends"]) {
+  for (NSString *claim in @[@"name", @"email", @"picture", @"user_friends", @"user_birthday", @"user_age_range"]) {
     [self assertDecodeClaimsDropInvalidEntry:claim value:nil];
-    [self assertDecodeClaimsDropInvalidEntry:claim value:[NSDictionary new]];
+    [self assertDecodeClaimsDropInvalidEntry:claim value:NSDictionary.new];
   }
 
   [self assertDecodeClaimsDropInvalidEntry:@"user_friends" value:@[[NSDictionary new]]];
+  [self assertDecodeClaimsDropInvalidEntry:@"user_friends" value:@[]];
+
+  [self assertDecodeClaimsDropInvalidEntry:@"user_age_range" value:@""];
+  [self assertDecodeClaimsDropInvalidEntry:@"user_age_range" value:@{@"min" : @((long)123), @"max" : @"test"}];
+  [self assertDecodeClaimsDropInvalidEntry:@"user_age_range" value:@{}];
 }
 
 - (void)testDecodeEmptyClaims
@@ -242,6 +251,8 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
   [dict setValue:claims.email forKey:@"email"];
   [dict setValue:claims.picture forKey:@"picture"];
   [dict setValue:claims.userFriends forKey:@"user_friends"];
+  [dict setValue:claims.userBirthday forKey:@"user_birthday"];
+  [dict setValue:claims.userAgeRange forKey:@"user_age_range"];
 
   return dict;
 }

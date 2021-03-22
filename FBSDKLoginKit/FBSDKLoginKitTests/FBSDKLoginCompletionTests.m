@@ -64,7 +64,9 @@ static NSString *const _fakeChallence = @"some_challenge";
                        name:(nullable NSString *)name
                       email:(nullable NSString *)email
                     picture:(nullable NSString *)picture
-                userFriends:(nullable NSArray<NSString *> *)userFriends;
+                userFriends:(nullable NSArray<NSString *> *)userFriends
+               userBirthday:(nullable NSString *)userBirthday
+               userAgeRange:(nullable NSDictionary *)userAgeRange;
 
 @end
 
@@ -536,7 +538,9 @@ static NSString *const _fakeChallence = @"some_challenge";
                                                                                          name:@"some_name"
                                                                                         email:@"example@example.com"
                                                                                       picture:@"www.facebook.com"
-                                                                                  userFriends:@[@"123", @"456"]];
+                                                                                  userFriends:@[@"123", @"456"]
+                                                                                 userBirthday:@"01/01/1990"
+                                                                                 userAgeRange:@{@"min" : @((long)21)}];
   [FBSDKLoginURLCompleter profileWithClaims:claim];
   XCTAssertEqualObjects(
     factory.capturedUserID,
