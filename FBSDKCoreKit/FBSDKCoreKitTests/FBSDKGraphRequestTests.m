@@ -48,6 +48,10 @@ static NSDictionary<NSString *, NSString *> *const _mockEmptyParameters(void)
 @property (nonatomic, strong) id<FBSDKGraphRequestConnectionProviding> connectionFactory;
 @end
 
+@interface FBSDKAccessToken (Testing)
++ (void)resetCurrentAccessTokenCache;
+@end
+
 @interface FBSDKGraphRequestTests : XCTestCase
 {
   FBSDKGraphRequestConnection *_connection;
@@ -59,7 +63,10 @@ static NSDictionary<NSString *, NSString *> *const _mockEmptyParameters(void)
 
 - (void)setUp
 {
+  [super setUp];
+
   _connection = [[FBSDKGraphRequestConnection alloc] init];
+  [FBSDKAccessToken resetCurrentAccessTokenCache];
 }
 
 #pragma mark - Tests

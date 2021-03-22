@@ -18,7 +18,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import "FBSDKAccessToken.h"
 #import "FBSDKAppEvents.h"
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKApplicationDelegate.h"
@@ -52,9 +51,6 @@ Before you write a new class mock. Check to see if there's already an implementa
 Also, to get a better understanding of mocking, please read the documentation at https://ocmock.org/
 */
 @interface FBSDKTestCase : XCTestCase
-
-/// Used for sharing an `FBSDKAccessToken` class mock between tests
-@property (nullable, assign) id accessTokenClassMock;
 
 /// Used for sharing an `FBSDKAuthenticationToken` class mock between tests
 @property (nullable, assign) id authenticationTokenClassMock;
@@ -193,9 +189,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 
 /// Stubs `FBSDKSettings.graphAPIVersion` with the provided version string
 - (void)stubGraphAPIVersionWith:(NSString *)version;
-
-/// Stubs `FBSDKAccessToken.currentAccessToken` with the provided token
-- (void)stubCurrentAccessTokenWith:(nullable FBSDKAccessToken *)token;
 
 /// Stubs `FBSDKSettings.clientToken` with the provided token string
 - (void)stubClientTokenWith:(nullable NSString *)token;

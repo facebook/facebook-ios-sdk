@@ -412,6 +412,18 @@
   );
 }
 
+- (void)testInitializingSdkConfiguredGraphRequestPiggybackManager
+{
+  [FBSDKApplicationDelegate resetIsSdkInitialized];
+  [FBSDKApplicationDelegate initializeSDK:@{}];
+  NSObject *tokenWallet = (NSObject *) FBSDKGraphRequestPiggybackManager.tokenWallet;
+  XCTAssertEqualObjects(
+    tokenWallet,
+    FBSDKAccessToken.class,
+    "Should be configured with the expected concrete access token provider"
+  );
+}
+
 - (void)testInitializingSdkAddsBridgeApiObserver
 {
   [FBSDKApplicationDelegate resetIsSdkInitialized];

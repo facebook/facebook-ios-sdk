@@ -1818,6 +1818,7 @@
 		F4AF96EC26051FF600E53370 /* FBSDKAccessToken+AccessTokenProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKAccessToken+AccessTokenProtocols.h"; sourceTree = "<group>"; };
 		F4AF96F42605200800E53370 /* FBSDKAccessTokenProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKAccessTokenProtocols.h; sourceTree = "<group>"; };
 		F4AF97022605246600E53370 /* TestTokenWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTokenWallet.swift; sourceTree = "<group>"; };
+		F4AF976326055D1900E53370 /* FBSDKGraphRequestPiggybackManager+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKGraphRequestPiggybackManager+Internal.h"; sourceTree = "<group>"; };
 		F4BD4022241EEDE500B45D39 /* FBSDKTestCoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKTestCoder.h; sourceTree = "<group>"; };
 		F4BD4023241EEDE500B45D39 /* FBSDKTestCoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKTestCoder.m; sourceTree = "<group>"; };
 		F4CCDC8725E958320057FE5F /* GateKeeperManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GateKeeperManagerTests.swift; sourceTree = "<group>"; };
@@ -2442,6 +2443,7 @@
 				9DF2A3FD1A70572B00DFB2FD /* FBSDKGraphRequestMetadata.h */,
 				9DF2A3FE1A70572B00DFB2FD /* FBSDKGraphRequestMetadata.m */,
 				9DA81B271AA65FA200B9FE0B /* FBSDKGraphRequestPiggybackManager.h */,
+				F4AF976326055D1900E53370 /* FBSDKGraphRequestPiggybackManager+Internal.h */,
 				9DA81B281AA65FA200B9FE0B /* FBSDKGraphRequestPiggybackManager.m */,
 				F40D262D25E433E9004681FC /* FBSDKGraphRequestPiggybackManager+GraphRequestPiggybackManaging.h */,
 				F40D26EF25E442A7004681FC /* FBSDKGraphRequestPiggybackManagerProvider.h */,

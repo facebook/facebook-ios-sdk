@@ -249,6 +249,10 @@ NS_SWIFT_NAME(reset());
 
 @end
 
+@interface FBSDKGraphRequestPiggybackManager (Testing)
 
+@property (class, nonatomic, nullable) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> tokenWallet;
+
+@end
 
 NS_ASSUME_NONNULL_END

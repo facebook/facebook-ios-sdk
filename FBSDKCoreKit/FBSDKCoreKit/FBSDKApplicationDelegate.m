@@ -30,6 +30,7 @@
 #import "FBSDKFeatureManager.h"
 #import "FBSDKGateKeeperManager.h"
 #import "FBSDKGraphRequestFactory.h"
+#import "FBSDKGraphRequestPiggybackManager+Internal.h"
 #import "FBSDKInstrumentManager.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
@@ -489,6 +490,7 @@ static UIApplicationState _applicationState;
      appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
              infoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKInternalUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle];
+  [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:FBSDKAccessToken.class];
 #if !TARGET_OS_TV
   [FBSDKAppLinkUtility configureWithRequestProvider:[FBSDKGraphRequestFactory new]
                              infoDictionaryProvider:NSBundle.mainBundle];

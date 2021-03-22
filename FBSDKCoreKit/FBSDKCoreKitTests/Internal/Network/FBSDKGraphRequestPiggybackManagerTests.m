@@ -25,16 +25,14 @@
 #import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKTestCase.h"
 
-@interface FBSDKAccessToken (Testing)
-+ (void)resetCurrentAccessTokenCache;
-@end
-
-@interface FBSDKGraphRequestPiggybackManager (Testing)
+@interface FBSDKGraphRequestPiggybackManager (FBSDKGraphRequestPiggybackManagerTests)
 
 + (int)_tokenRefreshThresholdInSeconds;
 + (int)_tokenRefreshRetryInSeconds;
 + (BOOL)_safeForPiggyback:(FBSDKGraphRequest *)request;
 + (void)_setLastRefreshTry:(NSDate *)date;
++ (void)configureWithTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet;
++ (void)reset;
 
 @end
 
@@ -49,8 +47,9 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)setUp
 {
   [super setUp];
-
   [self resetCaches];
+
+  [Manager configureWithTokenWallet:TestTokenWallet.class];
 }
 
 - (void)tearDown
@@ -62,10 +61,29 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
 - (void)resetCaches
 {
-  [FBSDKAccessToken resetCurrentAccessTokenCache];
+  [TestTokenWallet reset];
+  [FBSDKGraphRequestPiggybackManager reset];
 }
 
 // MARK: - Defaults
+
+- (void)testDefaultTokenWallet
+{
+  [Manager reset];
+  XCTAssertNil(
+    [Manager tokenWallet],
+    "Should not have an access token provider by default"
+  );
+}
+
+- (void)testConfiguringWithTokenWallet
+{
+  XCTAssertEqualObjects(
+    [Manager tokenWallet],
+    TestTokenWallet.class,
+    "Should be configurable with an access token provider"
+  );
+}
 
 - (void)testRefreshThresholdInSeconds
 {
@@ -179,7 +197,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testAddsTokenExtensionRequest
 {
   [self stubAppID:@"abc123"];
-  [self stubCurrentAccessTokenWith:SampleAccessTokens.validToken];
+  TestTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
   FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
 
   [Manager addRefreshPiggyback:connection permissionHandler:nil];
@@ -213,16 +231,8 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 {
   [self completeTokenRefreshForAccessToken:SampleAccessTokens.validToken results:nil];
 
-  // Check that an access token with the expected field values was set
-  OCMVerify(
-    ClassMethod(
-      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
-        [self validateRefreshedToken:obj
-             withExpectedTokenString:SampleAccessTokens.validToken.tokenString];
-        return true;
-      }]]
-    )
-  );
+  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+       withExpectedTokenString:SampleAccessTokens.validToken.tokenString];
 }
 
 - (void)testCompletingTokenExtensionRequestWithUpdatedEmptyTokenString
@@ -230,15 +240,8 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [self completeTokenRefreshForAccessToken:SampleAccessTokens.validToken
                                    results:@{@"access_token" : @""}];
 
-  // Check that an access token with the expected field values was set
-  OCMVerify(
-    ClassMethod(
-      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
-        [self validateRefreshedToken:obj withExpectedTokenString:@""];
-        return true;
-      }]]
-    )
-  );
+  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+       withExpectedTokenString:@""];
 }
 
 - (void)testCompletingTokenExtensionRequestWithUpdatedWhitespaceOnlyTokenString
@@ -246,15 +249,8 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [self completeTokenRefreshForAccessToken:SampleAccessTokens.validToken
                                    results:@{@"access_token" : @"    "}];
 
-  // Check that an access token with the expected field values was set
-  OCMVerify(
-    ClassMethod(
-      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
-        [self validateRefreshedToken:obj withExpectedTokenString:@"    "];
-        return true;
-      }]]
-    )
-  );
+  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+       withExpectedTokenString:@"    "];
 }
 
 - (void)testCompletingTokenExtensionRequestWithInvalidExpirationDate
@@ -262,28 +258,12 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [self completeTokenRefreshForAccessToken:SampleAccessTokens.validToken
                                    results:@{@"expires_at" : @"0"}];
 
-  // Check that an access token with the expected field values was set
-  OCMVerify(
-    ClassMethod(
-      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
-        [self validateRefreshedToken:obj];
-        return true;
-      }]]
-    )
-  );
+  [self validateRefreshedToken:TestTokenWallet.currentAccessToken];
 
   [self completeTokenRefreshForAccessToken:SampleAccessTokens.validToken
                                    results:@{@"expires_at" : @"-1000"}];
 
-  // Check that an access token with the expected field values was set
-  OCMVerify(
-    ClassMethod(
-      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
-        [self validateRefreshedToken:obj];
-        return true;
-      }]]
-    )
-  );
+  [self validateRefreshedToken:TestTokenWallet.currentAccessToken];
 }
 
 - (void)testCompletingTokenExtensionRequestWithUnreasonableValidExpirationDate
@@ -293,15 +273,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
   NSDate *expectedExpirationDate = [NSDate dateWithTimeIntervalSince1970:100];
 
-  // Check that an access token with the expected field values was set
-  OCMVerify(
-    ClassMethod(
-      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
-        [self validateRefreshedToken:obj expectedExpirationDate:expectedExpirationDate];
-        return true;
-      }]]
-    )
-  );
+  [self validateRefreshedToken:TestTokenWallet.currentAccessToken expectedExpirationDate:expectedExpirationDate];
 }
 
 - (void)testCompletingTokenExtensionRequestWithReasonableValidExpirationDate
@@ -314,42 +286,19 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
   NSDate *expectedExpirationDate = [NSDate dateWithTimeIntervalSince1970:oneWeekFromNow.timeIntervalSince1970];
 
-  // Check that an access token with the expected field values was set
-  OCMVerify(
-    ClassMethod(
-      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
-        [self validateRefreshedToken:obj expectedExpirationDate:expectedExpirationDate];
-        return true;
-      }]]
-    )
-  );
+  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+        expectedExpirationDate:expectedExpirationDate];
 }
 
 - (void)testCompletingTokenExtensionRequestWithInvalidDataExpirationDate
 {
   [self completeTokenRefreshForAccessToken:SampleAccessTokens.validToken results:@{@"data_access_expiration_time" : @"0"}];
 
-  // Check that an access token with the expected field values was set
-  OCMVerify(
-    ClassMethod(
-      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
-        [self validateRefreshedToken:obj];
-        return true;
-      }]]
-    )
-  );
+  [self validateRefreshedToken:TestTokenWallet.currentAccessToken];
 
   [self completeTokenRefreshForAccessToken:SampleAccessTokens.validToken results:@{@"data_access_expiration_time" : @"-1000"}];
 
-  // Check that an access token with the expected field values was set
-  OCMVerify(
-    ClassMethod(
-      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
-        [self validateRefreshedToken:obj];
-        return true;
-      }]]
-    )
-  );
+  [self validateRefreshedToken:TestTokenWallet.currentAccessToken];
 }
 
 - (void)testCompletingTokenExtensionRequestWithUnreasonableValidDataExpirationDate
@@ -358,15 +307,8 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
   NSDate *expectedExpirationDate = [NSDate dateWithTimeIntervalSince1970:100];
 
-  // Check that an access token with the expected field values was set
-  OCMVerify(
-    ClassMethod(
-      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
-        [self validateRefreshedToken:obj expectedDataExpirationDate:expectedExpirationDate];
-        return true;
-      }]]
-    )
-  );
+  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+    expectedDataExpirationDate:expectedExpirationDate];
 }
 
 - (void)testCompletingTokenExtensionRequestWithReasonableValidDataExpirationDate
@@ -378,45 +320,24 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
   NSDate *expectedExpirationDate = [NSDate dateWithTimeIntervalSince1970:oneWeekFromNow.timeIntervalSince1970];
 
-  // Check that an access token with the expected field values was set
-  OCMVerify(
-    ClassMethod(
-      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
-        [self validateRefreshedToken:obj expectedDataExpirationDate:expectedExpirationDate];
-        return true;
-      }]]
-    )
-  );
+  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+    expectedDataExpirationDate:expectedExpirationDate];
 }
 
 - (void)testCompletingTokenExtensionRequestWithUpdatedEmptyGraphDomain
 {
   [self completeTokenRefreshForAccessToken:SampleAccessTokens.validToken results:@{@"graph_domain" : @""}];
 
-  // Check that an access token with the expected field values was set
-  OCMVerify(
-    ClassMethod(
-      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
-        [self validateRefreshedToken:obj withExpectedGraphDomain:@""];
-        return true;
-      }]]
-    )
-  );
+  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+       withExpectedGraphDomain:@""];
 }
 
 - (void)testCompletingTokenExtensionRequestWithUpdatedWhitespaceOnlyGraphDomain
 {
   [self completeTokenRefreshForAccessToken:SampleAccessTokens.validToken results:@{@"graph_domain" : @"    "}];
 
-  // Check that an access token with the expected field values was set
-  OCMVerify(
-    ClassMethod(
-      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
-        [self validateRefreshedToken:obj withExpectedGraphDomain:@"    "];
-        return true;
-      }]]
-    )
-  );
+  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+       withExpectedGraphDomain:@"    "];
 }
 
 - (void)testCompletingTokenExtensionRequestWithFuzzyValues
@@ -436,7 +357,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testAddsPermissionsRefreshRequest
 {
   [self stubAppID:@"abc123"];
-  [self stubCurrentAccessTokenWith:SampleAccessTokens.validToken];
+  TestTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
   FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
 
   [Manager addRefreshPiggyback:connection permissionHandler:nil];
@@ -472,18 +393,11 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [self completePermissionsRefreshForAccessToken:token results:nil];
 
   // Refreshed token clears permissions when there is no error
-  OCMVerify(
-    ClassMethod(
-      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
-        [self validateRefreshedToken:obj
-             withExpectedPermissions:@[]
-         expectedDeclinedPermissions:@[]
-          expectedExpiredPermissions:@[]
-        ];
-        return true;
-      }]]
-    )
-  );
+  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+       withExpectedPermissions:@[]
+   expectedDeclinedPermissions:@[]
+    expectedExpiredPermissions:@[]
+  ];
 }
 
 - (void)testCompletingPermissionsRefreshRequestWithEmptyResultsWithError
@@ -495,18 +409,11 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [self completePermissionsRefreshForAccessToken:token results:nil error:[NSError new]];
 
   // Refreshed token uses permissions from current access token when there is an error on permissions refresh
-  OCMVerify(
-    ClassMethod(
-      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
-        [self validateRefreshedToken:obj
-             withExpectedPermissions:token.permissions.allObjects
-         expectedDeclinedPermissions:token.declinedPermissions.allObjects
-          expectedExpiredPermissions:token.expiredPermissions.allObjects
-        ];
-        return true;
-      }]]
-    )
-  );
+  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+       withExpectedPermissions:token.permissions.allObjects
+   expectedDeclinedPermissions:token.declinedPermissions.allObjects
+    expectedExpiredPermissions:token.expiredPermissions.allObjects
+  ];
 }
 
 - (void)testCompletingPermissionsRefreshRequestWithNewGrantedPermissions
@@ -520,18 +427,11 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [self completePermissionsRefreshForAccessToken:token results:results];
 
   // Refreshed token clears unspecified permissions when there are newly specified permissions in the response
-  OCMVerify(
-    ClassMethod(
-      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
-        [self validateRefreshedToken:obj
-             withExpectedPermissions:@[@"foo"]
-         expectedDeclinedPermissions:@[]
-          expectedExpiredPermissions:@[]
-        ];
-        return true;
-      }]]
-    )
-  );
+  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+       withExpectedPermissions:@[@"foo"]
+   expectedDeclinedPermissions:@[]
+    expectedExpiredPermissions:@[]
+  ];
 }
 
 - (void)testCompletingPermissionsRefreshRequestWithNewDeclinedPermissions
@@ -545,44 +445,29 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [self completePermissionsRefreshForAccessToken:token results:results];
 
   // Refreshed token clears unspecified permissions when there are newly specified permissions in the response
-  OCMVerify(
-    ClassMethod(
-      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
-        [self validateRefreshedToken:obj
-             withExpectedPermissions:@[]
-         expectedDeclinedPermissions:@[@"foo"]
-          expectedExpiredPermissions:@[]
-        ];
-        return true;
-      }]]
-    )
-  );
+  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+       withExpectedPermissions:@[]
+   expectedDeclinedPermissions:@[@"foo"]
+    expectedExpiredPermissions:@[]
+  ];
 }
 
 - (void)testCompletingPermissionsRefreshRequestWithNewExpiredPermissions
 {
-  FBSDKAccessToken *token = [SampleAccessTokens createWithPermissions:@[@"email"]
-                                                  declinedPermissions:@[@"publish"]
-                                                   expiredPermissions:@[@"friends"]];
-  [self stubCurrentAccessTokenWith:token];
+  TestTokenWallet.currentAccessToken = [SampleAccessTokens createWithPermissions:@[@"email"]
+                                                             declinedPermissions:@[@"publish"]
+                                                              expiredPermissions:@[@"friends"]];
 
   NSDictionary *results = [SampleRawRemotePermissionList withGranted:@[] declined:@[] expired:@[@"foo"]];
 
   [self completePermissionsRefreshForAccessToken:SampleAccessTokens.validToken results:results];
 
   // Refreshed token clears unspecified permissions when there are newly specified permissions in the response
-  OCMVerify(
-    ClassMethod(
-      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
-        [self validateRefreshedToken:obj
-             withExpectedPermissions:@[]
-         expectedDeclinedPermissions:@[]
-          expectedExpiredPermissions:@[@"foo"]
-        ];
-        return true;
-      }]]
-    )
-  );
+  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+       withExpectedPermissions:@[]
+   expectedDeclinedPermissions:@[]
+    expectedExpiredPermissions:@[@"foo"]
+  ];
 }
 
 - (void)testCompletingPermissionsRefreshRequestWithNewPermissions
@@ -598,27 +483,19 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [self completePermissionsRefreshForAccessToken:token results:results];
 
   // Refreshed token clears unspecified permissions when there are newly specified permissions in the response
-  OCMVerify(
-    ClassMethod(
-      [self.accessTokenClassMock setCurrentAccessToken:[OCMArg checkWithBlock:^BOOL (id obj) {
-        [self validateRefreshedToken:obj
-             withExpectedPermissions:@[@"foo"]
-         expectedDeclinedPermissions:@[@"bar"]
-          expectedExpiredPermissions:@[@"baz"]
-        ];
-        return true;
-      }]]
-    )
-  );
+  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+       withExpectedPermissions:@[@"foo"]
+   expectedDeclinedPermissions:@[@"bar"]
+    expectedExpiredPermissions:@[@"baz"]
+  ];
 }
 
 - (void)testCompletingPermissionsRefreshRequestWithPermissionsHandlerWithoutError
 {
   XCTestExpectation *expectation = [[XCTestExpectation alloc] initWithDescription:self.name];
-  FBSDKAccessToken *expectedToken = [SampleAccessTokens createWithPermissions:@[@"email"]
-                                                          declinedPermissions:@[@"publish"]
-                                                           expiredPermissions:@[@"friends"]];
-  [self stubCurrentAccessTokenWith:expectedToken];
+  TestTokenWallet.currentAccessToken = [SampleAccessTokens createWithPermissions:@[@"email"]
+                                                             declinedPermissions:@[@"publish"]
+                                                              expiredPermissions:@[@"friends"]];
 
   NSDictionary *results = [SampleRawRemotePermissionList withGranted:@[@"foo"]
                                                             declined:@[@"bar"]
@@ -645,10 +522,9 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testCompletingPermissionsRefreshRequestWithPermissionsHandlerWithError
 {
   XCTestExpectation *expectation = [[XCTestExpectation alloc] initWithDescription:self.name];
-  FBSDKAccessToken *expectedToken = [SampleAccessTokens createWithPermissions:@[@"email"]
-                                                          declinedPermissions:@[@"publish"]
-                                                           expiredPermissions:@[@"friends"]];
-  [self stubCurrentAccessTokenWith:expectedToken];
+  TestTokenWallet.currentAccessToken = [SampleAccessTokens createWithPermissions:@[@"email"]
+                                                             declinedPermissions:@[@"publish"]
+                                                              expiredPermissions:@[@"friends"]];
 
   NSDictionary *results = [SampleRawRemotePermissionList withGranted:@[@"foo"]
                                                             declined:@[@"bar"]
@@ -679,8 +555,6 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
 - (void)testRefreshIfStaleWithoutAccessToken
 {
-  [self stubCurrentAccessTokenWith:nil];
-
   // Shouldn't add the refresh if there's no access token
   OCMReject(ClassMethod([self.graphRequestPiggybackManagerMock addRefreshPiggyback:OCMArg.any permissionHandler:NULL]));
 
@@ -689,7 +563,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
 - (void)testRefreshIfStaleWithAccessTokenWithoutRefreshDate
 {
-  [self stubCurrentAccessTokenWith:SampleAccessTokens.validToken];
+  TestTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
 
   // Should not add the refresh if the access token is missing a refresh date
   OCMReject(ClassMethod([self.graphRequestPiggybackManagerMock addRefreshPiggyback:OCMArg.any permissionHandler:NULL]));
@@ -702,7 +576,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testRefreshIfStaleWithOldRefreshWithOldTokenRefresh
 {
   [self stubGraphRequestPiggybackManagerLastRefreshTryWith:NSDate.distantPast];
-  [self stubCurrentAccessTokenWith:self.twoDayOldToken];
+  TestTokenWallet.currentAccessToken = self.twoDayOldToken;
 
   [Manager addRefreshPiggybackIfStale:SampleGraphRequestConnection.empty];
 
@@ -714,7 +588,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testRefreshIfStaleWithOldLastRefreshWithRecentTokenRefresh
 {
   [self stubGraphRequestPiggybackManagerLastRefreshTryWith:NSDate.distantPast];
-  [self stubCurrentAccessTokenWith:SampleAccessTokens.validToken];
+  TestTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
 
   OCMReject(ClassMethod([self.graphRequestPiggybackManagerMock addRefreshPiggyback:OCMArg.any permissionHandler:NULL]));
 
@@ -739,7 +613,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 {
   // Used for manipulating the initial value of the method scoped constant `lastRefreshTry`
   [self stubGraphRequestPiggybackManagerLastRefreshTryWith:NSDate.distantFuture];
-  [self stubCurrentAccessTokenWith:self.twoDayOldToken];
+  TestTokenWallet.currentAccessToken = self.twoDayOldToken;
 
   OCMReject(ClassMethod([self.graphRequestPiggybackManagerMock addRefreshPiggyback:OCMArg.any permissionHandler:NULL]));
 
@@ -750,7 +624,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 {
   // Used for manipulating the initial value of the method scoped constant `lastRefreshTry`
   [self stubGraphRequestPiggybackManagerLastRefreshTryWith:NSDate.distantPast];
-  [self stubCurrentAccessTokenWith:self.twoDayOldToken];
+  TestTokenWallet.currentAccessToken = self.twoDayOldToken;
 
   [Manager addRefreshPiggybackIfStale:SampleGraphRequestConnection.empty];
 
@@ -1017,7 +891,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)completeTokenRefreshForAccessToken:(FBSDKAccessToken *)token results:(NSDictionary *)results
 {
   [self stubAppID:token.appID];
-  [self stubCurrentAccessTokenWith:token];
+  TestTokenWallet.currentAccessToken = token;
   FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
 
   [Manager addRefreshPiggyback:connection permissionHandler:nil];
@@ -1057,7 +931,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
                                permissionHandler:(FBSDKGraphRequestBlock)permissionHandler
 {
   [self stubAppID:token.appID];
-  [self stubCurrentAccessTokenWith:token];
+  TestTokenWallet.currentAccessToken = token;
   FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
 
   [Manager addRefreshPiggyback:connection permissionHandler:permissionHandler];

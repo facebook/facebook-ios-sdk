@@ -89,7 +89,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self setUpGateKeeperManagerMock];
   [self setUpFeatureManagerMock];
   [self setUpNSUserDefaultsMock];
-  [self setUpAccessTokenMock];
   [self setUpAuthenticationTokenClassMock];
   [self setUpProfileMock];
   [self setUpSKAdNetworkMock];
@@ -145,9 +144,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   [_nsUserDefaultsClassMock stopMocking];
   _nsUserDefaultsClassMock = nil;
-
-  [_accessTokenClassMock stopMocking];
-  _accessTokenClassMock = nil;
 
   [_authenticationTokenClassMock stopMocking];
   _authenticationTokenClassMock = nil;
@@ -278,11 +274,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)setUpNSUserDefaultsMock
 {
   self.nsUserDefaultsClassMock = OCMStrictClassMock(NSUserDefaults.class);
-}
-
-- (void)setUpAccessTokenMock
-{
-  self.accessTokenClassMock = OCMStrictClassMock(FBSDKAccessToken.class);
 }
 
 - (void)setUpAuthenticationTokenClassMock
@@ -450,11 +441,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)stubCachedProfileWith:(FBSDKProfile *__nullable)profile
 {
   OCMStub(ClassMethod([_profileClassMock fetchCachedProfile])).andReturn(profile);
-}
-
-- (void)stubCurrentAccessTokenWith:(FBSDKAccessToken *)token
-{
-  OCMStub(ClassMethod([_accessTokenClassMock currentAccessToken])).andReturn(token);
 }
 
 - (void)stubGraphAPIVersionWith:(NSString *)version
