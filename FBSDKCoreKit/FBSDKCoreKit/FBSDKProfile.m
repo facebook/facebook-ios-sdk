@@ -38,6 +38,7 @@ NSString *const FBSDKProfileChangeOldKey = @"FBSDKProfileOld";
 NSString *const FBSDKProfileChangeNewKey = @"FBSDKProfileNew";
 static NSString *const FBSDKProfileUserDefaultsKey = @"com.facebook.sdk.FBSDKProfile.currentProfile";
 static FBSDKProfile *g_currentProfile;
+static NSDateFormatter *_dateFormatter;
 
  #define FBSDKPROFILE_USERID_KEY @"userID"
  #define FBSDKPROFILE_FIRSTNAME_KEY @"firstName"
@@ -457,6 +458,14 @@ static id <FBSDKDataPersisting> _store;
     graphPath = [graphPath stringByAppendingString:@",friends"];
   }
 
+  if ([token.permissions containsObject:@"user_birthday"]) {
+    graphPath = [graphPath stringByAppendingString:@",birthday"];
+  }
+
+  if ([token.permissions containsObject:@"user_age_range"]) {
+    graphPath = [graphPath stringByAppendingString:@",age_range"];
+  }
+
   id<FBSDKGraphRequest> request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
                                                                     parameters:nil
                                                                          flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
@@ -482,6 +491,10 @@ static id <FBSDKDataPersisting> _store;
     NSString *urlString = [FBSDKTypeUtility stringValue:result[@"link"]];
     NSURL *linkUrl = [FBSDKTypeUtility URLValue:[NSURL URLWithString:urlString]];
     NSArray<FBSDKUserIdentifier *> *friendIDs = [self friendIDsFromGraphResult:[FBSDKTypeUtility dictionaryValue:result[@"friends"]]];
+    FBSDKUserAgeRange *ageRange = [FBSDKUserAgeRange ageRangeFromDictionary:[FBSDKTypeUtility dictionaryValue:result[@"age_range"]]];
+
+    [FBSDKProfile.dateFormatter setDateFormat:@"MM/dd/yyyy"];
+    NSDate *birthday = [FBSDKProfile.dateFormatter dateFromString:[FBSDKTypeUtility stringValue:result[@"birthday"]]];
 
     FBSDKProfile *profile = [[FBSDKProfile alloc] initWithUserID:profileID
                                                        firstName:[FBSDKTypeUtility stringValue:result[@"first_name"]]
@@ -492,7 +505,9 @@ static id <FBSDKDataPersisting> _store;
                                                      refreshDate:[NSDate date]
                                                         imageURL:nil
                                                            email:[FBSDKTypeUtility stringValue:result[@"email"]]
-                                                       friendIDs:friendIDs];
+                                                       friendIDs:friendIDs
+                                                        birthday:birthday
+                                                        ageRange:ageRange];
     *profileRef = [profile copy];
   };
   [[self class] loadProfileWithToken:token
@@ -558,6 +573,14 @@ static id <FBSDKDataPersisting> _store;
     return nil;
   }
   return friendIDs;
+}
+
++ (NSDateFormatter *)dateFormatter
+{
+  if (!_dateFormatter) {
+    _dateFormatter = NSDateFormatter.new;
+  }
+  return _dateFormatter;
 }
 
  #pragma clang diagnostic pop
