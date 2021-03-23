@@ -31,10 +31,12 @@
 #import "FBSDKGraphRequestPiggybackManagerProvider.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
+#import "FBSDKOperatingSystemVersionComparing.h"
 #import "FBSDKSettingsProtocol.h"
 #import "FBSDKURLSession+URLSessionProxying.h"
 #import "FBSDKURLSessionProxyFactory.h"
 #import "FBSDKURLSessionProxying.h"
+#import "NSProcessInfo+Protocols.h"
 
 NSString *const FBSDKNonJSONResponseProperty = @"FACEBOOK_NON_JSON_RESULT";
 
@@ -120,6 +122,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (nonatomic, strong) Class<FBSDKSettings> settings;
 @property (nonatomic, strong) id<FBSDKGraphRequestConnectionProviding> connectionFactory;
 @property (nonatomic, strong) id<FBSDKEventLogging> eventLogger;
+@property (nonatomic, strong) id<FBSDKOperatingSystemVersionComparing> operatingSystemVersionComparer;
+@property (nonatomic, strong) id<FBSDKMacCatalystDetermining> macCatalystDeterminator;
 
 @end
 
@@ -148,7 +152,9 @@ static BOOL _canMakeRequests = NO;
                      piggybackManagerProvider:FBSDKGraphRequestPiggybackManagerProvider.self
                                      settings:FBSDKSettings.self
                             connectionFactory:[FBSDKGraphRequestConnectionFactory new]
-                                  eventLogger:[FBSDKEventLogger new]];
+                                  eventLogger:[FBSDKEventLogger new]
+               operatingSystemVersionComparer:NSProcessInfo.processInfo
+                      macCatalystDeterminator:NSProcessInfo.processInfo];
 }
 
 - (instancetype)initWithURLSessionProxyFactory:(id<FBSDKURLSessionProxyProviding>)proxyFactory
@@ -157,6 +163,8 @@ static BOOL _canMakeRequests = NO;
                                       settings:(Class<FBSDKSettings>)settings
                              connectionFactory:(id<FBSDKGraphRequestConnectionProviding>)factory
                                    eventLogger:(id<FBSDKEventLogging>)eventLogger
+                operatingSystemVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
+                       macCatalystDeterminator:(id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
 {
   if ((self = [super init])) {
     _requests = [[NSMutableArray alloc] init];
@@ -170,6 +178,8 @@ static BOOL _canMakeRequests = NO;
     _settings = settings;
     _connectionFactory = factory;
     _eventLogger = eventLogger;
+    _operatingSystemVersionComparer = operatingSystemVersionComparer;
+    _macCatalystDeterminator = macCatalystDeterminator;
   }
   return self;
 }
@@ -1095,7 +1105,7 @@ static BOOL _canMakeRequests = NO;
   @try {
     if ([error.domain isEqualToString:NSURLErrorDomain] && error.code == kCFURLErrorSecureConnectionFailed) {
       NSOperatingSystemVersion iOS9Version = { .majorVersion = 9, .minorVersion = 0, .patchVersion = 0 };
-      if ([NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:iOS9Version]) {
+      if ([self.operatingSystemVersionComparer isOperatingSystemAtLeastVersion:iOS9Version]) {
         [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                                logEntry:@"WARNING: FBSDK secure network request failed. Please verify you have configured your "
          "app for Application Transport Security compatibility described at https://developers.facebook.com/docs/ios/ios9"];
@@ -1171,9 +1181,8 @@ static BOOL _canMakeRequests = NO;
     agentWithSuffix = [NSString stringWithFormat:@"%@/%@", agent, [self.settings.class userAgentSuffix]];
   }
   if (@available(iOS 13.0, *)) {
-    NSProcessInfo *processInfo = [NSProcessInfo processInfo];
     SEL selector = NSSelectorFromString(@"isMacCatalystApp");
-    if (selector && [processInfo respondsToSelector:selector] && [processInfo performSelector:selector]) {
+    if (selector && [self.macCatalystDeterminator respondsToSelector:selector] && [self.macCatalystDeterminator performSelector:selector]) {
       return [NSString stringWithFormat:@"%@/%@", agentWithSuffix ?: agent, @"macOS"];
     }
   }

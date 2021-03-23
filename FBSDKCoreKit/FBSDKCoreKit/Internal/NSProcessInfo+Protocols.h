@@ -18,12 +18,16 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKMacCatalystDetermining.h"
 #import "FBSDKOperatingSystemVersionComparing.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 /// Default conformance to the `OperatingSystemVersionComparing` protocol
 @interface NSProcessInfo (OperatingSystemVersionComparing) <FBSDKOperatingSystemVersionComparing>
+@end
+
+@interface NSProcessInfo (MacCatalystDetermining) <FBSDKMacCatalystDetermining>
 @end
 
 NS_ASSUME_NONNULL_END

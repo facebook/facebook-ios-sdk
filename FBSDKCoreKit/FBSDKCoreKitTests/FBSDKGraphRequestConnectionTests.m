@@ -58,7 +58,9 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
                       piggybackManagerProvider:(id<FBSDKGraphRequestPiggybackManagerProviding>)piggybackManagerProvider
                                       settings:(id<FBSDKSettings>)settings
                              connectionFactory:(id<FBSDKGraphRequestConnectionProviding>)factory
-                                   eventLogger:(id<FBSDKEventLogging>)eventLogger;
+                                   eventLogger:(id<FBSDKEventLogging>)eventLogger
+                operatingSystemVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
+                       macCatalystDeterminator:(id<FBSDKMacCatalystDetermining>)macCatalystDeterminator;
 - (NSMutableURLRequest *)requestWithBatch:(NSArray *)requests
                                   timeout:(NSTimeInterval)timeout;
 - (void)addRequest:(FBSDKGraphRequestMetadata *)metadata
@@ -103,6 +105,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (nonatomic, strong) TestSettings *settings;
 @property (nonatomic, strong) TestGraphRequestConnectionFactory *connectionFactory;
 @property (nonatomic, strong) TestEventLogger *eventLogger;
+@property (nonatomic, strong) TestProcessInfo *processInfo;
+@property (nonatomic, strong) TestMacCatalystDeterminator *macCatalystDeterminator;
 @property (nonatomic, strong) FBSDKGraphRequestConnection *connection;
 
 @property (nonatomic, copy) void (^requestConnectionStartingCallback)(FBSDKGraphRequestConnection *connection);
@@ -139,12 +143,15 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   self.settings = TestSettings.self;
   self.connectionFactory = [TestGraphRequestConnectionFactory new];
   self.eventLogger = [TestEventLogger new];
+  self.macCatalystDeterminator = [TestMacCatalystDeterminator new];
   self.connection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:self.sessionFactory
                                                              errorConfigurationProvider:self.errorConfigurationProvider
                                                                piggybackManagerProvider:self.piggybackManagerProvider
                                                                                settings:self.settings
                                                                       connectionFactory:self.connectionFactory
-                                                                            eventLogger:self.eventLogger];
+                                                                            eventLogger:self.eventLogger
+                                                         operatingSystemVersionComparer:self.processInfo
+                                                                macCatalystDeterminator:self.macCatalystDeterminator];
   self.connectionFactory.stubbedConnection = self.connection;
 }
 
@@ -1311,6 +1318,20 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   XCTAssertFalse([userAgent hasSuffix:@"/UnitTest.1.0.0"], @"unexpected user agent %@", userAgent);
 }
 
+- (void)testRequestWithMacCatalystUserAgent
+{
+  self.macCatalystDeterminator.stubbedIsMacCatalystApp = YES;
+  [FBSDKAccessToken setCurrentAccessToken:nil];
+  TestSettings.userAgentSuffix = nil;
+
+  [self.connection addRequest:self.requestForMeWithEmptyFields
+            completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {}];
+  [self.connection start];
+
+  NSString *userAgent = [self.session.capturedRequest valueForHTTPHeaderField:@"User-Agent"];
+  XCTAssertTrue([userAgent hasSuffix:@"/macOS"], @"unexpected user agent %@", userAgent);
+}
+
 - (void)testNonDictionaryInError
 {
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
@@ -1421,7 +1442,9 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
                                                                                             piggybackManagerProvider:self.piggybackManagerProvider
                                                                                                             settings:self.settings
                                                                                                    connectionFactory:self.connectionFactory
-                                                                                                         eventLogger:self.eventLogger];
+                                                                                                         eventLogger:self.eventLogger
+                                                                                      operatingSystemVersionComparer:self.processInfo
+                                                                                             macCatalystDeterminator:self.macCatalystDeterminator];
   self.connectionFactory.stubbedConnection = retryConnection;
   __block int completionCallCount = 0;
   [self.connection addRequest:self.requestForMeWithEmptyFields

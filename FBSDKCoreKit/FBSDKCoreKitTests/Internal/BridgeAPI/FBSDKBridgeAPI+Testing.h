@@ -20,7 +20,7 @@
 #import "FBSDKBridgeAPI.h"
 #import "FBSDKContainerViewController.h"
 #import "FBSDKOperatingSystemVersionComparing.h"
-#import "NSProcessInfo+OperatingSystemVersionComparing.h"
+#import "NSProcessInfo+Protocols.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

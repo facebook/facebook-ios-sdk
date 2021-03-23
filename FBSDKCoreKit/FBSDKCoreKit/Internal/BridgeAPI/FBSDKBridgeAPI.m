@@ -24,7 +24,7 @@
 
  #import "FBSDKCoreKit+Internal.h"
  #import "FBSDKOperatingSystemVersionComparing.h"
- #import "NSProcessInfo+OperatingSystemVersionComparing.h"
+ #import "NSProcessInfo+Protocols.h"
 
 /**
  Specifies state of FBSDKAuthenticationSession (SFAuthenticationSession (iOS 11) and ASWebAuthenticationSession (iOS 12+))
