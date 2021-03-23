@@ -173,7 +173,7 @@
 - (void)testDialogCompletionOnURLCallback
 {
   id settings = OCMClassMock([FBSDKSettings class]);
-  OCMStub([settings appID]).andReturn(@"123");
+  OCMStub(ClassMethod([settings appID])).andReturn(@"123");
 
   [self stubGraphRequestWithResult:@{@"id" : @"111"} error:nil];
   OCMStub([_mockConfig shouldLaunchMediaDialog]).andReturn(true);

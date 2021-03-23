@@ -178,9 +178,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Stubs `NSUserDefaults.standardUserDefaults` with the provided NSUserDefaults
 - (void)stubUserDefaultsWith:(NSUserDefaults *)defaults;
 
-/// Prevents logging on changes to Settings properties
-- (void)stubLoggingIfUserSettingsChanged;
-
 /// Stubs `FBSDKProfile.fetchCachedProfile`
 - (void)stubCachedProfileWith:(FBSDKProfile *__nullable)profile;
 

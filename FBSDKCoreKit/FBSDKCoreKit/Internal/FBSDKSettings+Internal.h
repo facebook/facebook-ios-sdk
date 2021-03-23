@@ -36,6 +36,13 @@
 
 @interface FBSDKSettings (Internal)
 
+@property (class, nullable, nonatomic, readonly, copy) NSString *graphAPIDebugParamValue;
+
+// used by Unity.
+@property (class, nullable, nonatomic, copy) NSString *userAgentSuffix;
+
+@property (class, nonnull, readonly) FBSDKSettings *sharedSettings;
+
 + (void)configureWithStore:(nonnull id<FBSDKDataPersisting>)store
 appEventsConfigurationProvider:(nonnull Class<FBSDKAppEventsConfigurationProviding>)provider
     infoDictionaryProvider:(nonnull id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
@@ -46,7 +53,7 @@ NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvi
 
 + (void)setTokenCache:(nullable NSObject<FBSDKTokenCaching> *)tokenCache;
 
-+ (FBSDKAdvertisingTrackingStatus)getAdvertisingTrackingStatus;
++ (FBSDKAdvertisingTrackingStatus)advertisingTrackingStatus;
 
 + (void)setAdvertiserTrackingStatus:(FBSDKAdvertisingTrackingStatus)status;
 
@@ -69,10 +76,5 @@ NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvi
 + (void)logWarnings;
 
 + (void)logIfSDKSettingsChanged;
-
-@property (class, nullable, nonatomic, readonly, copy) NSString *graphAPIDebugParamValue;
-
-// used by Unity.
-@property (class, nullable, nonatomic, copy) NSString *userAgentSuffix;
 
 @end

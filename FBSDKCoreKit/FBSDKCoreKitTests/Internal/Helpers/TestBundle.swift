@@ -51,6 +51,7 @@ class TestBundle: NSObject, InfoDictionaryProviding {
   }
 
   func reset() {
+    capturedKeys = []
     lastCapturedKey = nil
     stubbedInfoDictionary = nil
     didAccessInfoDictionary = false

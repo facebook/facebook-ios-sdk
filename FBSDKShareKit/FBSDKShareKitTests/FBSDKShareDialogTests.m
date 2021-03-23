@@ -602,7 +602,7 @@
   [[[mockApplication stub] andReturnValue:@YES] canOpenURL:OCMOCK_ANY];
   id mockInternalUtility = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
   id settingsClassMock = [OCMockObject niceMockForClass:[FBSDKSettings class]];
-  [[[settingsClassMock stub] andReturn:appID] appID];
+  OCMStub(ClassMethod([settingsClassMock appID])).andReturn(appID);
   id mockSLController = [OCMockObject niceMockForClass:[fbsdkdfl_SLComposeViewControllerClass() class]];
   [[[mockSLController stub] andReturn:mockSLController] composeViewControllerForServiceType:OCMOCK_ANY];
   [[[mockSLController stub] andReturnValue:@YES] isAvailableForServiceType:OCMOCK_ANY];

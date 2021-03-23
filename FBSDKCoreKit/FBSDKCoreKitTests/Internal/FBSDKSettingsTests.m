@@ -52,13 +52,17 @@
 static NSString *const emptyString = @"";
 static NSString *const whiteSpaceToken = @"   ";
 
-- (void)setUp
++ (void)setUp
 {
   [super setUp];
 
   [FBSDKSettings reset];
+}
 
-  // Reset user defaults spy
+- (void)setUp
+{
+  [super setUp];
+
   userDefaultsSpy = [UserDefaultsSpy new];
   bundle = [TestBundle new];
   logger = [TestEventLogger new];
@@ -68,7 +72,6 @@ static NSString *const whiteSpaceToken = @"   ";
              infoDictionaryProvider:bundle
                         eventLogger:logger
   ];
-  [self stubLoggingIfUserSettingsChanged];
 }
 
 - (void)tearDown
@@ -255,6 +258,8 @@ static NSString *const whiteSpaceToken = @"   ";
 {
   FBSDKSettings.facebookDomainPart = @"foo";
 
+  [self resetLoggingSideEffects];
+
   XCTAssertNotNil(FBSDKSettings.facebookDomainPart, "sanity check");
   XCTAssertNil(
     userDefaultsSpy.capturedObjectRetrievalKey,
@@ -374,6 +379,8 @@ static NSString *const whiteSpaceToken = @"   ";
 {
   FBSDKSettings.clientToken = @"foo";
 
+  [self resetLoggingSideEffects];
+
   XCTAssertNotNil(FBSDKSettings.clientToken, "sanity check");
   XCTAssertNil(
     userDefaultsSpy.capturedObjectRetrievalKey,
@@ -488,6 +495,8 @@ static NSString *const whiteSpaceToken = @"   ";
 {
   FBSDKSettings.appID = @"foo";
 
+  [self resetLoggingSideEffects];
+
   XCTAssertNotNil(FBSDKSettings.appID, "sanity check");
   XCTAssertNil(
     userDefaultsSpy.capturedObjectRetrievalKey,
@@ -601,6 +610,8 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testDisplayNameInternalStorage
 {
   FBSDKSettings.displayName = @"foo";
+
+  [self resetLoggingSideEffects];
 
   XCTAssertNotNil(FBSDKSettings.displayName, "sanity check");
   XCTAssertNil(
@@ -719,6 +730,8 @@ static NSString *const whiteSpaceToken = @"   ";
 {
   FBSDKSettings.JPEGCompressionQuality = 1;
 
+  [self resetLoggingSideEffects];
+
   XCTAssertEqual(FBSDKSettings.JPEGCompressionQuality, 1, "Sanity check");
   XCTAssertNil(
     userDefaultsSpy.capturedObjectRetrievalKey,
@@ -833,6 +846,8 @@ static NSString *const whiteSpaceToken = @"   ";
 {
   FBSDKSettings.appURLSchemeSuffix = @"foo";
 
+  [self resetLoggingSideEffects];
+
   XCTAssertNotNil(FBSDKSettings.appURLSchemeSuffix, "sanity check");
   XCTAssertNil(
     userDefaultsSpy.capturedObjectRetrievalKey,
@@ -906,6 +921,8 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testAutoLogAppEventsEnabledInternalStorage
 {
   FBSDKSettings.autoLogAppEventsEnabled = @YES;
+
+  [self resetLoggingSideEffects];
 
   XCTAssertTrue(FBSDKSettings.autoLogAppEventsEnabled, "sanity check");
   XCTAssertNil(
@@ -982,6 +999,8 @@ static NSString *const whiteSpaceToken = @"   ";
 {
   FBSDKSettings.advertiserIDCollectionEnabled = @YES;
 
+  [self resetLoggingSideEffects];
+
   XCTAssertTrue(FBSDKSettings.advertiserIDCollectionEnabled, "sanity check");
   XCTAssertNil(
     userDefaultsSpy.capturedObjectRetrievalKey,
@@ -1055,6 +1074,8 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testFacebookSKAdNetworkReportEnabledInternalStorage
 {
   FBSDKSettings.SKAdNetworkReportEnabled = YES;
+
+  [self resetLoggingSideEffects];
 
   XCTAssertTrue(FBSDKSettings.SKAdNetworkReportEnabled, "sanity check");
   XCTAssertNil(
@@ -1133,6 +1154,8 @@ static NSString *const whiteSpaceToken = @"   ";
 - (void)testCachedFacebookCodelessDebugLogEnabledInternalStorage
 {
   FBSDKSettings.codelessDebugLogEnabled = @YES;
+
+  [self resetLoggingSideEffects];
 
   XCTAssertTrue(FBSDKSettings.codelessDebugLogEnabled, "sanity check");
   XCTAssertNil(
@@ -1572,6 +1595,20 @@ static NSString *const whiteSpaceToken = @"   ";
   XCTAssertTrue([FBSDKSettings isDataProcessingRestricted]);
   [FBSDKSettings setDataProcessingOptions:nil];
   XCTAssertFalse([FBSDKSettings isDataProcessingRestricted]);
+}
+
+/**
+ Setting the plist-based properties will call `logIfSDKSettingsChanged` which will
+ access properties some properties, check for plist and cache values and set defaults
+ for them.
+ Clearing the test fixtures enables us to only observe the side effects from
+ getting the property and not those from setting the property in a test or resetting
+ the property as part of test lifecycle management.
+ */
+- (void)resetLoggingSideEffects
+{
+  bundle = [TestBundle new];
+  userDefaultsSpy = [UserDefaultsSpy new];
 }
 
 @end

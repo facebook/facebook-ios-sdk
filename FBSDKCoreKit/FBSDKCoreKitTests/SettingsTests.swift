@@ -111,7 +111,7 @@ class SettingsTests: XCTestCase {
     TestAppEventsConfigurationProvider.stubbedConfiguration = configuration
 
     XCTAssertEqual(
-      Settings.getAdvertisingTrackingStatus(),
+      Settings.advertisingTrackingStatus(),
       configuration.defaultATEStatus,
       """
       Advertiser tracking status should use the cached app events configuration
@@ -135,7 +135,7 @@ class SettingsTests: XCTestCase {
   func testGettingExplicitlySetFacebookAdvertiserTrackingStatus() {
     Settings.setAdvertiserTrackingStatus(.disallowed)
     XCTAssertEqual(
-      Settings.getAdvertisingTrackingStatus(),
+      Settings.advertisingTrackingStatus(),
       .disallowed,
       "Should return the explicitly set tracking status"
     )
@@ -156,7 +156,7 @@ class SettingsTests: XCTestCase {
       forKey: key
     )
     XCTAssertEqual(
-      Settings.getAdvertisingTrackingStatus(),
+      Settings.advertisingTrackingStatus(),
       .allowed,
       "Should return the tracking status from the data store"
     )
@@ -178,7 +178,7 @@ class SettingsTests: XCTestCase {
       forKey: key
     )
     XCTAssertEqual(
-      Settings.getAdvertisingTrackingStatus(),
+      Settings.advertisingTrackingStatus(),
       .allowed,
       "Should return the tracking status from the data store"
     )

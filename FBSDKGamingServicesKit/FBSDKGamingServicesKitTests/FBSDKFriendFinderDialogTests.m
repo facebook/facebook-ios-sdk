@@ -106,7 +106,7 @@
 - (void)testHandlingOfCallbackURL
 {
   id settings = OCMClassMock([FBSDKSettings class]);
-  OCMStub([settings appID]).andReturn(@"123");
+  OCMStub(ClassMethod([settings appID])).andReturn(@"123");
 
   __block id<FBSDKURLOpening> delegate;
   [FBSDKGamingServicesKitTestUtility captureURLDelegateFromBridgeAPI:^(id<FBSDKURLOpening> obj) {

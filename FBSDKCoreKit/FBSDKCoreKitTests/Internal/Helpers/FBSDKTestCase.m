@@ -423,11 +423,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   OCMStub(ClassMethod([_nsUserDefaultsClassMock standardUserDefaults])).andReturn(defaults);
 }
 
-- (void)stubLoggingIfUserSettingsChanged
-{
-  OCMStub(ClassMethod([_settingsClassMock logIfSDKSettingsChanged]));
-}
-
 - (void)stubIsAutoLogAppEventsEnabled:(BOOL)isEnabled
 {
   OCMStub(ClassMethod([_settingsClassMock isAutoLogAppEventsEnabled])).andReturn(isEnabled);
@@ -455,7 +450,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
 - (void)stubAdvertisingTrackingStatusWith:(FBSDKAdvertisingTrackingStatus)trackingStatus
 {
-  OCMStub(ClassMethod([_settingsClassMock getAdvertisingTrackingStatus])).andReturn(trackingStatus);
+  OCMStub(ClassMethod([_settingsClassMock advertisingTrackingStatus])).andReturn(trackingStatus);
 }
 
 - (void)stubLoadingAdNetworkReporterConfiguration

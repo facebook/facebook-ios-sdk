@@ -57,7 +57,7 @@
   NSArray *event = @[
     @{
       @"_eventName" : @"fb_mobile_ate_status",
-      @"ate_status" : @([FBSDKSettings getAdvertisingTrackingStatus]).stringValue,
+      @"ate_status" : @([FBSDKSettings advertisingTrackingStatus]).stringValue,
       @"os_version" : osVersion,
     }
   ];
