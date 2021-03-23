@@ -67,7 +67,7 @@ NSString *const FBSDKApplicationDidBecomeActiveNotification = @"com.facebook.sdk
 
 static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 static NSString *const FBSDKKitsBitmaskKey = @"com.facebook.sdk.kits.bitmask";
-static BOOL g_isSDKInitialized = NO;
+static BOOL hasInitializeBeenCalled = NO;
 static UIApplicationState _applicationState;
 
 @implementation FBSDKApplicationDelegate
@@ -83,59 +83,7 @@ static UIApplicationState _applicationState;
 
 + (void)initializeSDK:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions
 {
-  [self initializeSDKWithApplicationDelegate:self.sharedInstance
-                               launchOptions:launchOptions];
-}
-
-+ (void)initializeSDKWithApplicationDelegate:(FBSDKApplicationDelegate *)delegate
-                               launchOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions
-{
-  if (g_isSDKInitialized) {
-    // Do nothing if initialized already
-    return;
-  }
-
-  [self setIsSdkInitialized];
-
-  Class<FBSDKSettingsLogging> settingsLogger = [delegate settings];
-  [settingsLogger logWarnings];
-  [settingsLogger logIfSDKSettingsChanged];
-  [settingsLogger recordInstall];
-
-  id<FBSDKNotificationObserving> defaultCenter = [delegate notificationObserver];
-  [defaultCenter addObserver:delegate selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
-  [defaultCenter addObserver:delegate selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
-  [defaultCenter addObserver:delegate selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
-
-  [[FBSDKAppEvents singleton] registerNotifications];
-
-  [delegate application:[UIApplication sharedApplication] didFinishLaunchingWithOptions:launchOptions];
-
-  // In case of sdk autoInit enabled sdk expects one appDidBecomeActive notification after app launch and has some logic to ignore it.
-  // if sdk autoInit disabled app won't receive appDidBecomeActive on app launch and will ignore the first one it gets instead of handling it.
-  // Send first applicationDidBecomeActive notification manually
-  if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-    [delegate applicationDidBecomeActive:nil];
-  }
-
-  [FBSDKFeatureManager checkFeature:FBSDKFeatureInstrument completionBlock:^(BOOL enabled) {
-    if (enabled) {
-      [FBSDKInstrumentManager enable];
-    }
-  }];
-
-#if !TARGET_OS_TV
-  // Register Listener for App Link measurement events
-  [FBSDKMeasurementEventListener defaultListener];
-  [delegate _logIfAutoAppLinkEnabled];
-#endif
-  // Set the SourceApplication for time spent data. This is not going to update the value if the app has already launched.
-  [FBSDKTimeSpentData setSourceApplication:launchOptions[UIApplicationLaunchOptionsSourceApplicationKey]
-                                   openURL:launchOptions[UIApplicationLaunchOptionsURLKey]];
-  // Register on UIApplicationDidEnterBackgroundNotification events to reset source application data when app backgrounds.
-  [FBSDKTimeSpentData registerAutoResetSourceApplication];
-
-  [FBSDKInternalUtility validateFacebookReservedURLSchemes];
+  [self.sharedInstance initializeSDKWithLaunchOptions:launchOptions];
 }
 
 + (FBSDKApplicationDelegate *)sharedInstance
@@ -143,7 +91,7 @@ static UIApplicationState _applicationState;
   static FBSDKApplicationDelegate *_sharedInstance;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    _sharedInstance = [[self alloc] init];
+    _sharedInstance = [self new];
   });
   return _sharedInstance;
 }
@@ -168,6 +116,74 @@ static UIApplicationState _applicationState;
     _settings = settings;
   }
   return self;
+}
+
+- (void)initializeSDKWithLaunchOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions
+{
+  if (hasInitializeBeenCalled) {
+    // Do nothing if initialized already
+    return;
+  } else {
+    hasInitializeBeenCalled = YES;
+  }
+  [self configureDependencies];
+
+  id<FBSDKSettingsLogging> const settingsLogger = self.settings;
+  [settingsLogger logWarnings];
+  [settingsLogger logIfSDKSettingsChanged];
+  [settingsLogger recordInstall];
+
+  [self addObservers];
+
+  [[FBSDKAppEvents singleton] registerNotifications];
+
+  [self application:[UIApplication sharedApplication] didFinishLaunchingWithOptions:launchOptions];
+
+  // In case of sdk autoInit enabled sdk expects one appDidBecomeActive notification after app launch and has some logic to ignore it.
+  // if sdk autoInit disabled app won't receive appDidBecomeActive on app launch and will ignore the first one it gets instead of handling it.
+  // Send first applicationDidBecomeActive notification manually
+  if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+    [self applicationDidBecomeActive:nil];
+  }
+
+  [FBSDKFeatureManager checkFeature:FBSDKFeatureInstrument completionBlock:^(BOOL enabled) {
+    if (enabled) {
+      [FBSDKInstrumentManager enable];
+    }
+  }];
+
+#if !TARGET_OS_TV
+  // Register Listener for App Link measurement events
+  [FBSDKMeasurementEventListener defaultListener];
+  [self _logIfAutoAppLinkEnabled];
+#endif
+  // Set the SourceApplication for time spent data. This is not going to update the value if the app has already launched.
+  [FBSDKTimeSpentData setSourceApplication:launchOptions[UIApplicationLaunchOptionsSourceApplicationKey]
+                                   openURL:launchOptions[UIApplicationLaunchOptionsURLKey]];
+  // Register on UIApplicationDidEnterBackgroundNotification events to reset source application data when app backgrounds.
+  [FBSDKTimeSpentData registerAutoResetSourceApplication];
+
+  [FBSDKInternalUtility validateFacebookReservedURLSchemes];
+}
+
+- (void)addObservers
+{
+  id<FBSDKNotificationObserving> const observer = self.notificationObserver;
+  [observer addObserver:self
+               selector:@selector(applicationDidEnterBackground:)
+                   name:UIApplicationDidEnterBackgroundNotification
+                 object:nil];
+  [observer addObserver:self
+               selector:@selector(applicationDidBecomeActive:)
+                   name:UIApplicationDidBecomeActiveNotification
+                 object:nil];
+  [observer addObserver:self
+               selector:@selector(applicationWillResignActive:)
+                   name:UIApplicationWillResignActiveNotification
+                 object:nil];
+#if !TARGET_OS_TV
+  [self addObserver:FBSDKBridgeAPI.sharedInstance];
+#endif
 }
 
 - (void)dealloc
@@ -247,8 +263,8 @@ static UIApplicationState _applicationState;
     return NO;
   }
 
-  if (!g_isSDKInitialized) {
-    [FBSDKApplicationDelegate initializeSDK:launchOptions];
+  if (!hasInitializeBeenCalled) {
+    [self initializeSDKWithLaunchOptions:launchOptions];
   }
 
   _isAppLaunched = YES;
@@ -448,12 +464,11 @@ static UIApplicationState _applicationState;
 
 + (BOOL)isSDKInitialized
 {
-  return g_isSDKInitialized;
+  return hasInitializeBeenCalled;
 }
 
-+ (void)setIsSdkInitialized
+- (void)configureDependencies
 {
-  g_isSDKInitialized = YES;
   id<FBSDKGraphRequestProviding> graphRequestProvider = [FBSDKGraphRequestFactory new];
   [FBSDKGraphRequestConnection setCanMakeRequests];
   [FBSDKAppEvents configureWithGateKeeperManager:[FBSDKGateKeeperManager class]
@@ -479,7 +494,6 @@ static UIApplicationState _applicationState;
   [FBSDKSKAdNetworkReporter configureWithRequestProvider:[FBSDKGraphRequestFactory new]];
   [FBSDKProfile configureWithStore:NSUserDefaults.standardUserDefaults
                accessTokenProvider:FBSDKAccessToken.class];
-  [self.sharedInstance addObserver:FBSDKBridgeAPI.sharedInstance];
 #endif
 }
 
@@ -488,9 +502,9 @@ static UIApplicationState _applicationState;
 #if DEBUG
  #if FBSDKTEST
 
-+ (void)resetIsSdkInitialized
++ (void)resetHasInitializeBeenCalled
 {
-  g_isSDKInitialized = NO;
+  hasInitializeBeenCalled = NO;
 }
 
 - (BOOL)isAppLaunched

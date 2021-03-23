@@ -892,8 +892,6 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testOverridingCachedAutoLogAppEventsEnabled
 {
-  [self stubInitializeSDKWith:@{}];
-
   XCTAssertTrue(FBSDKSettings.isAutoLogAppEventsEnabled);
 
   bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"FacebookAutoLogAppEventsEnabled" : @NO}];
@@ -968,8 +966,6 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testOverridingCachedFacebookAdvertiserIDCollectionEnabled
 {
-  [self stubInitializeSDKWith:@{}];
-
   FBSDKSettings.advertiserIDCollectionEnabled = true;
   XCTAssertTrue(FBSDKSettings.isAdvertiserIDCollectionEnabled);
 
@@ -1045,8 +1041,6 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testOverridingCachedFacebookSKAdNetworkReportEnabled
 {
-  [self stubInitializeSDKWith:@{}];
-
   XCTAssertTrue(FBSDKSettings.SKAdNetworkReportEnabled);
 
   bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"FacebookSKAdNetworkReportEnabled" : @NO}];
@@ -1124,8 +1118,6 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testOverridingCachedFacebookCodelessDebugLogEnabled
 {
-  [self stubInitializeSDKWith:@{}];
-
   FBSDKSettings.codelessDebugLogEnabled = true;
   XCTAssertTrue(FBSDKSettings.isCodelessDebugLogEnabled);
 

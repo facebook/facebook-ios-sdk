@@ -234,7 +234,7 @@ NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvi
 
 + (void)initializeSDKWithApplicationDelegate:(FBSDKApplicationDelegate *)delegate
                                launchOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
-+ (void)resetIsSdkInitialized
++ (void)resetHasInitializeBeenCalled
 NS_SWIFT_NAME(reset());
 
 - (instancetype)initWithNotificationObserver:(id<FBSDKNotificationObserving>)observer

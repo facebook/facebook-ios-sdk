@@ -178,9 +178,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Stubs `NSUserDefaults.standardUserDefaults` with the provided NSUserDefaults
 - (void)stubUserDefaultsWith:(NSUserDefaults *)defaults;
 
-/// Stubs `FBSDKApplicationDelegate.initializeSDK` with a dictionary of launch options
-- (void)stubInitializeSDKWith:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
-
 /// Prevents logging on changes to Settings properties
 - (void)stubLoggingIfUserSettingsChanged;
 

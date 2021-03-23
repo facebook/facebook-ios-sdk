@@ -103,7 +103,8 @@ didFinishLaunchingWithOptions:(nullable NSDictionary<UIApplicationLaunchOptionsK
  @param launchOptions The launchOptions as passed to [UIApplicationDelegate application:didFinishLaunchingWithOptions:].
  Could be nil if you don't call this function from [UIApplicationDelegate application:didFinishLaunchingWithOptions:].
  */
-+ (void)initializeSDK:(nullable NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
++ (void)initializeSDK:(nullable NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions
+DEPRECATED_MSG_ATTRIBUTE("This method is called automatically from `application:didFinishLaunchingWithOptions:`. Please use that method instead. This one will be removed in a future release.");
 
 @end
 

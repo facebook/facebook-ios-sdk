@@ -43,6 +43,7 @@
 - (void)applicationDidBecomeActive:(NSNotification *)notification;
 - (void)applicationWillResignActive:(NSNotification *)notification;
 - (void)setApplicationState:(UIApplicationState)state;
+- (void)initializeSDKWithLaunchOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
 
 @end
 
@@ -202,10 +203,10 @@
 
 - (void)testInitializingSdkEnablesGraphRequests
 {
-  [FBSDKApplicationDelegate resetIsSdkInitialized];
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [FBSDKGraphRequestConnection resetCanMakeRequests];
 
-  [FBSDKApplicationDelegate initializeSDK:@{}];
+  [_delegate initializeSDKWithLaunchOptions:@{}];
 
   XCTAssertTrue(
     [FBSDKGraphRequestConnection canMakeRequests],
@@ -215,10 +216,10 @@
 
 - (void)testInitializingSdkEnablesLogEvents
 {
-  [FBSDKApplicationDelegate resetIsSdkInitialized];
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [FBSDKAppEvents resetCanLogEvents];
 
-  [FBSDKApplicationDelegate initializeSDK:@{}];
+  [_delegate initializeSDKWithLaunchOptions:@{}];
 
   XCTAssertTrue(
     [FBSDKAppEvents canLogEvents],
@@ -240,10 +241,10 @@
 
 - (void)testInitializingSdkConfiguresGateKeeperManager
 {
-  [FBSDKApplicationDelegate resetIsSdkInitialized];
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [FBSDKGateKeeperManager reset];
 
-  [FBSDKApplicationDelegate initializeSDK:@{}];
+  [_delegate initializeSDKWithLaunchOptions:@{}];
 
   NSObject *requestProvider = (NSObject *)FBSDKGateKeeperManager.requestProvider;
   NSObject *connectionProvider = (NSObject *)FBSDKGateKeeperManager.connectionProvider;
@@ -278,8 +279,8 @@
 
 - (void)testConfiguringCodelessIndexer
 {
-  [FBSDKApplicationDelegate resetIsSdkInitialized];
-  [FBSDKApplicationDelegate initializeSDK:@{}];
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
+  [_delegate initializeSDKWithLaunchOptions:@{}];
   NSObject *requestProvider = (NSObject *)[FBSDKCodelessIndexer requestProvider];
   XCTAssertEqualObjects(
     requestProvider.class,
@@ -290,8 +291,8 @@
 
 - (void)testInitializingSdkConfiguresAppLinkUtility
 {
-  [FBSDKApplicationDelegate resetIsSdkInitialized];
-  [FBSDKApplicationDelegate initializeSDK:@{}];
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
+  [_delegate initializeSDKWithLaunchOptions:@{}];
   NSObject *requestProvider = (NSObject *)[FBSDKAppLinkUtility requestProvider];
   NSObject *infoDictionaryProvider = (NSObject *)[FBSDKAppLinkUtility infoDictionaryProvider];
   XCTAssertEqualObjects(
@@ -308,8 +309,8 @@
 
 - (void)testConfiguringFBSDKSKAdNetworkReporter
 {
-  [FBSDKApplicationDelegate resetIsSdkInitialized];
-  [FBSDKApplicationDelegate initializeSDK:@{}];
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
+  [_delegate initializeSDKWithLaunchOptions:@{}];
   NSObject *requestProvider = (NSObject *)[FBSDKSKAdNetworkReporter requestProvider];
   XCTAssertEqualObjects(
     requestProvider.class,
@@ -320,9 +321,9 @@
 
 - (void)testInitializingSdkConfiguresAccessTokenCache
 {
-  [FBSDKApplicationDelegate resetIsSdkInitialized];
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [FBSDKAccessToken setTokenCache:nil];
-  [FBSDKApplicationDelegate initializeSDK:@{}];
+  [_delegate initializeSDKWithLaunchOptions:@{}];
 
   NSObject *tokenCache = (NSObject *) FBSDKAccessToken.tokenCache;
   XCTAssertEqualObjects(tokenCache.class, FBSDKTokenCache.class, "Should be configured with expected concrete token cache");
@@ -330,8 +331,8 @@
 
 - (void)testInitializingSdkConfiguresProfile
 {
-  [FBSDKApplicationDelegate resetIsSdkInitialized];
-  [FBSDKApplicationDelegate initializeSDK:@{}];
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
+  [_delegate initializeSDKWithLaunchOptions:@{}];
   NSObject *store = (NSObject *)[FBSDKProfile store];
   NSObject *tokenProvider = (NSObject *)[FBSDKProfile accessTokenProvider];
   XCTAssertEqualObjects(
@@ -348,9 +349,9 @@
 
 - (void)testInitializingSdkConfiguresAuthenticationTokenCache
 {
-  [FBSDKApplicationDelegate resetIsSdkInitialized];
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [FBSDKAuthenticationToken setTokenCache:nil];
-  [FBSDKApplicationDelegate initializeSDK:@{}];
+  [_delegate initializeSDKWithLaunchOptions:@{}];
 
   NSObject *tokenCache = (NSObject *) FBSDKAuthenticationToken.tokenCache;
   XCTAssertEqualObjects(tokenCache.class, FBSDKTokenCache.class, "Should be configured with expected concrete token cache");
@@ -358,9 +359,9 @@
 
 - (void)testInitializingSdkConfiguresAccessTokenConnectionFactory
 {
-  [FBSDKApplicationDelegate resetIsSdkInitialized];
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   FBSDKAccessToken.connectionFactory = nil;
-  [FBSDKApplicationDelegate initializeSDK:@{}];
+  [_delegate initializeSDKWithLaunchOptions:@{}];
 
   NSObject *connectionFactory = (NSObject *) FBSDKAccessToken.connectionFactory;
   XCTAssertEqualObjects(
@@ -372,9 +373,9 @@
 
 - (void)testInitializingSdkConfiguresSettings
 {
-  [FBSDKApplicationDelegate resetIsSdkInitialized];
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [FBSDKSettings reset];
-  [FBSDKApplicationDelegate initializeSDK:@{}];
+  [_delegate initializeSDKWithLaunchOptions:@{}];
 
   NSObject *store = (NSObject *) FBSDKSettings.store;
   NSObject *appEventsConfigProvider = (NSObject *) FBSDKSettings.appEventsConfigurationProvider;
@@ -404,8 +405,8 @@
 
 - (void)testInitializingSdkConfiguresInternalUtility
 {
-  [FBSDKApplicationDelegate resetIsSdkInitialized];
-  [FBSDKApplicationDelegate initializeSDK:@{}];
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
+  [_delegate initializeSDKWithLaunchOptions:@{}];
   NSObject *infoDictionaryProvider = (NSObject *)[FBSDKInternalUtility infoDictionaryProvider];
   XCTAssertEqualObjects(
     infoDictionaryProvider,
@@ -416,8 +417,8 @@
 
 - (void)testInitializingSdkConfiguredGraphRequestPiggybackManager
 {
-  [FBSDKApplicationDelegate resetIsSdkInitialized];
-  [FBSDKApplicationDelegate initializeSDK:@{}];
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
+  [_delegate initializeSDKWithLaunchOptions:@{}];
   NSObject *tokenWallet = (NSObject *) FBSDKGraphRequestPiggybackManager.tokenWallet;
   XCTAssertEqualObjects(
     tokenWallet,
@@ -428,20 +429,19 @@
 
 - (void)testInitializingSdkAddsBridgeApiObserver
 {
-  [FBSDKApplicationDelegate resetIsSdkInitialized];
-  [FBSDKApplicationDelegate initializeSDK:@{}];
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
+  [_delegate initializeSDKWithLaunchOptions:@{}];
 
   XCTAssertTrue(
-    [FBSDKApplicationDelegate.sharedInstance.applicationObservers containsObject:FBSDKBridgeAPI.sharedInstance],
+    [_delegate.applicationObservers containsObject:FBSDKBridgeAPI.sharedInstance],
     "Should add the shared bridge api instance to the application observers"
   );
 }
 
 - (void)testInitializingSdkPerformsSettingsLogging
 {
-  [FBSDKApplicationDelegate resetIsSdkInitialized];
-  [FBSDKApplicationDelegate initializeSDKWithApplicationDelegate:_delegate
-                                                   launchOptions:@{}];
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
+  [_delegate initializeSDKWithLaunchOptions:@{}];
   XCTAssertEqual(
     TestSettings.logWarningsCallCount,
     1,

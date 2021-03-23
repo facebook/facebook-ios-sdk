@@ -423,11 +423,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   OCMStub(ClassMethod([_nsUserDefaultsClassMock standardUserDefaults])).andReturn(defaults);
 }
 
-- (void)stubInitializeSDKWith:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions
-{
-  OCMStub(ClassMethod([_fbApplicationDelegateClassMock initializeSDK:OCMArg.any]));
-}
-
 - (void)stubLoggingIfUserSettingsChanged
 {
   OCMStub(ClassMethod([_settingsClassMock logIfSDKSettingsChanged]));
