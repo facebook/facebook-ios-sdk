@@ -75,6 +75,7 @@ let package = Package(
                 .headerSearchPath("Internal/Cryptography"),
                 .headerSearchPath("Internal/Device"),
                 .headerSearchPath("Internal/ErrorRecovery"),
+                .headerSearchPath("Internal/FeatureManager"),
                 .headerSearchPath("Internal/Instrument"),
                 .headerSearchPath("Internal/Instrument/CrashReport"),
                 .headerSearchPath("Internal/Instrument/ErrorReport"),

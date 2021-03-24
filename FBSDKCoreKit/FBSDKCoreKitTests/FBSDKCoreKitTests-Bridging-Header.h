@@ -21,6 +21,7 @@
 #import "FBSDKAppEventsConfigurationFixtures.h"
 #import "FBSDKBridgeAPI+Testing.h"
 #import "FBSDKCloseIcon.h"
+#import "FBSDKCrashObserver.h"
 #import "FBSDKEventDeactivationManager.h"
 #import "FBSDKEventBinding.h"
 #import "FBSDKEventBindingManager.h"
@@ -75,6 +76,10 @@
 #import "FBSDKSettingsLogging.h"
 #import "FBSDKSettingsProtocol.h"
 #import "FBSDKSettings+SettingsProtocols.h"
+// FeatureManager abstraction
+#import "FBSDKFeatureChecking.h"
+#import "FBSDKFeatureCheckerProviding.h"
+#import "FBSDKFeatureManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -243,6 +248,11 @@ NS_SWIFT_NAME(reset());
 - (void)applicationDidEnterBackground:(NSNotification *)notification;
 - (void)applicationDidBecomeActive:(NSNotification *)notification;
 - (void)applicationWillResignActive:(NSNotification *)notification;
+@end
+
+@interface FBSDKCrashObserver (Testing)
+
+- (instancetype)initWithFeatureManagerProvider:(id<FBSDKFeatureCheckerProviding>)featureManagerProvider;
 
 @end
 

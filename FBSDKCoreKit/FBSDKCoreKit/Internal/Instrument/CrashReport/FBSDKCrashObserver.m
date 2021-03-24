@@ -19,17 +19,26 @@
 #import "FBSDKCrashObserver.h"
 
 #import "FBSDKCrashShield.h"
-#import "FBSDKFeatureManager.h"
+#import "FBSDKFeatureCheckerFactory.h"
+#import "FBSDKFeatureCheckerProviding.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequestConnection.h"
 #import "FBSDKSettings.h"
 #import "FBSDKSettings+Internal.h"
 
 @implementation FBSDKCrashObserver
+{
+  Class<FBSDKFeatureChecking> _featureManager;
+}
 
 @synthesize prefixes, frameworks;
 
 - (instancetype)init
+{
+  return [self initWithFeatureManagerProvider:[FBSDKFeatureCheckerFactory new]];
+}
+
+- (instancetype)initWithFeatureManagerProvider:(id<FBSDKFeatureCheckerProviding>)featureManagerProvider
 {
   if ((self = [super init])) {
     prefixes = @[@"FBSDK", @"_FBSDK"];
@@ -38,6 +47,7 @@
                    @"FBSDKShareKit",
                    @"FBSDKGamingServicesKit",
                    @"FBSDKTVOSKit"];
+    _featureManager = [featureManagerProvider createFeatureChecker];
   }
   return self;
 }
@@ -79,7 +89,7 @@
       }
     }];
   }
-  [FBSDKFeatureManager checkFeature:FBSDKFeatureCrashShield completionBlock:^(BOOL enabled) {
+  [_featureManager checkFeature:FBSDKFeatureCrashShield completionBlock:^(BOOL enabled) {
     if (enabled) {
       [FBSDKCrashShield analyze:processedCrashLogs];
     }

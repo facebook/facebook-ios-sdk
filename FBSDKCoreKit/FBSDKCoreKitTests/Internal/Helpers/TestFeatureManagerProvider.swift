@@ -16,21 +16,23 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+import FBSDKCoreKit
 
-#import "FBSDKInternalUtility.h"
+@objcMembers
+class TestFeatureManagerProvider: NSObject, FeatureCheckerProviding {
 
-NS_ASSUME_NONNULL_BEGIN
+  var stubbedFeatureManager: FeatureChecking.Type?
 
-@protocol FBSDKFeatureCheckerProviding;
+  static func create(withStubbedFeatureManager feature: FeatureChecking.Type) -> TestFeatureManagerProvider {
+    let provider = TestFeatureManagerProvider()
+    provider.stubbedFeatureManager = feature
+    return provider
+  }
 
-NS_SWIFT_NAME(CrashObserver)
-@interface FBSDKCrashObserver : NSObject <FBSDKCrashObserving>
-
-+ (void)enable;
-
-- (instancetype)initWithFeatureManagerProvider:(id<FBSDKFeatureCheckerProviding>)featureManagerProvider;
-
-@end
-
-NS_ASSUME_NONNULL_END
+  func createFeatureChecker() -> FeatureChecking.Type {
+    guard let feature = stubbedFeatureManager else {
+      fatalError("Must stub a feature for a test feature provider")
+    }
+    return feature
+  }
+}

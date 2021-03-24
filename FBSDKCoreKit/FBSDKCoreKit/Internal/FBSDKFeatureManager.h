@@ -67,11 +67,11 @@ typedef NS_ENUM(NSUInteger, FBSDKFeature)
 
   // Features in ShareKit
   /** Essential of ShareKit */
-  FBDSDKFeatureShare = 0x02000000,
+  FBSDKFeatureShare = 0x02000000,
 
   // Features in GamingServicesKit
   /** Essential of GamingServicesKit */
-  FBDSDKFeatureGamingServices = 0x03000000,
+  FBSDKFeatureGamingServices = 0x03000000,
 
 } NS_SWIFT_NAME(SDKFeature);
 

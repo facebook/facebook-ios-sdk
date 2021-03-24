@@ -18,18 +18,15 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKInternalUtility.h"
+#import "FBSDKFeatureChecking.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol FBSDKFeatureCheckerProviding;
+/// Describes anything that can provide instances of `Feature Manager`
+NS_SWIFT_NAME(FeatureCheckerProviding)
+@protocol FBSDKFeatureCheckerProviding <NSObject>
 
-NS_SWIFT_NAME(CrashObserver)
-@interface FBSDKCrashObserver : NSObject <FBSDKCrashObserving>
-
-+ (void)enable;
-
-- (instancetype)initWithFeatureManagerProvider:(id<FBSDKFeatureCheckerProviding>)featureManagerProvider;
+- (Class<FBSDKFeatureChecking>)createFeatureChecker;
 
 @end
 

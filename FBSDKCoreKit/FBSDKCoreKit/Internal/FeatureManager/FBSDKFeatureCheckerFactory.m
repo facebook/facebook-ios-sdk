@@ -15,22 +15,15 @@
 // COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#import "FBSDKFeatureCheckerFactory.h"
 
-#import <Foundation/Foundation.h>
+#import "FBSDKFeatureManager+FeatureChecking.h"
 
-#import "FBSDKInternalUtility.h"
+@implementation FBSDKFeatureCheckerFactory
 
-NS_ASSUME_NONNULL_BEGIN
-
-@protocol FBSDKFeatureCheckerProviding;
-
-NS_SWIFT_NAME(CrashObserver)
-@interface FBSDKCrashObserver : NSObject <FBSDKCrashObserving>
-
-+ (void)enable;
-
-- (instancetype)initWithFeatureManagerProvider:(id<FBSDKFeatureCheckerProviding>)featureManagerProvider;
+- (Class<FBSDKFeatureChecking>)createFeatureChecker
+{
+  return FBSDKFeatureManager.class;
+}
 
 @end
-
-NS_ASSUME_NONNULL_END

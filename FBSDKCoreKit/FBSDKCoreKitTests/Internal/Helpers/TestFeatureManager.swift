@@ -16,21 +16,22 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+import FBSDKCoreKit
+import XCTest
 
-#import "FBSDKInternalUtility.h"
+@objcMembers
+class TestFeatureManager: NSObject, FeatureChecking {
 
-NS_ASSUME_NONNULL_BEGIN
+  static var capturedCompletionBlock: FBSDKFeatureManagerBlock?
+  static var capturedFeatures = [SDKFeature]()
 
-@protocol FBSDKFeatureCheckerProviding;
+  static func check(_ feature: SDKFeature, completionBlock: @escaping FBSDKFeatureManagerBlock) {
+    capturedFeatures.append(feature)
+    capturedCompletionBlock = completionBlock
+  }
 
-NS_SWIFT_NAME(CrashObserver)
-@interface FBSDKCrashObserver : NSObject <FBSDKCrashObserving>
-
-+ (void)enable;
-
-- (instancetype)initWithFeatureManagerProvider:(id<FBSDKFeatureCheckerProviding>)featureManagerProvider;
-
-@end
-
-NS_ASSUME_NONNULL_END
+  static func reset() {
+    capturedFeatures = []
+    capturedCompletionBlock = nil
+  }
+}
