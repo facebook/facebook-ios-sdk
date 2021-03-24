@@ -167,11 +167,22 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
   }
 
   [self assertDecodeClaimsDropInvalidEntry:@"user_friends" value:@[[NSDictionary new]]];
-  [self assertDecodeClaimsDropInvalidEntry:@"user_friends" value:@[]];
 
   [self assertDecodeClaimsDropInvalidEntry:@"user_age_range" value:@""];
   [self assertDecodeClaimsDropInvalidEntry:@"user_age_range" value:@{@"min" : @((long)123), @"max" : @"test"}];
   [self assertDecodeClaimsDropInvalidEntry:@"user_age_range" value:@{}];
+}
+
+- (void)testDecodeClaimsWithEmptyFriendsList
+{
+  NSMutableDictionary *claims = [_claimsDict mutableCopy];
+  [FBSDKTypeUtility dictionary:claims setObject:@[] forKey:@"user_friends"];
+
+  NSData *claimsData = [FBSDKTypeUtility dataWithJSONObject:claims options:0 error:nil];
+  NSString *encodedClaims = [self base64URLEncodeData:claimsData];
+
+  FBSDKAuthenticationTokenClaims *actualClaims = [FBSDKAuthenticationTokenClaims claimsFromEncodedString:encodedClaims nonce:_mockNonce];
+  XCTAssertEqualObjects(actualClaims.userFriends, @[]);
 }
 
 - (void)testDecodeEmptyClaims

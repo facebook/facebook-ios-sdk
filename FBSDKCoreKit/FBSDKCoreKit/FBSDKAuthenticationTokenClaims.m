@@ -116,9 +116,6 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
       }
 
       NSArray<NSString *> *userFriends = [FBSDKTypeUtility arrayValue:claimsDict[@"user_friends"]];
-      if (userFriends.count == 0) {
-        userFriends = nil;
-      }
       for (NSString *friend in userFriends) {
         if (![FBSDKTypeUtility stringValue:friend]) {
           userFriends = nil;
