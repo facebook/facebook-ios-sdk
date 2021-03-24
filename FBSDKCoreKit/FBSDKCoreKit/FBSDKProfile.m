@@ -278,6 +278,9 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
     self.imageURL.hash,
     self.email.hash,
     self.friendIDs.hash,
+    self.birthday.hash,
+    self.ageRange.hash,
+    self.isLimited
   };
   return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
 }
@@ -305,7 +308,9 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
     && [_imageURL isEqual:profile.imageURL]
     && [_email isEqualToString:profile.email]
     && [_friendIDs isEqualToArray:profile.friendIDs]
-    && _isLimited == profile.isLimited);
+    && _isLimited == profile.isLimited
+    && [_birthday isEqualToDate:profile.birthday]
+    && [_ageRange isEqual:profile.ageRange]);
 }
 
  #pragma mark NSCoding
