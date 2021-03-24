@@ -19,10 +19,10 @@
 #import <Foundation/Foundation.h>
 
 #import "FBSDKServerConfiguration.h"
+#import "FBSDKServerConfigurationProviding.h"
 
 #define FBSDK_SERVER_CONFIGURATION_MANAGER_CACHE_TIMEOUT (60 * 60)
-typedef void (^FBSDKServerConfigurationBlock)(FBSDKServerConfiguration *serverConfiguration, NSError *error)
-NS_SWIFT_NAME(ServerConfigurationBlock);
+
 
 NS_SWIFT_NAME(ServerConfigurationManager)
 @interface FBSDKServerConfigurationManager : NSObject

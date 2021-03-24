@@ -27,7 +27,7 @@
 #import "FBSDKAccessToken.h"
 #import "FBSDKAppEventsAtePublisher.h"
 #import "FBSDKAppEventsConfiguration.h"
-#import "FBSDKAppEventsConfigurationManager.h"
+#import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsDeviceInfo.h"
 #import "FBSDKAppEventsState.h"
 #import "FBSDKAppEventsStateManager.h"
@@ -45,7 +45,7 @@
 #import "FBSDKPaymentObserver.h"
 #import "FBSDKRestrictiveDataFilterManager.h"
 #import "FBSDKServerConfiguration.h"
-#import "FBSDKServerConfigurationManager.h"
+#import "FBSDKServerConfigurationProviding.h"
 #import "FBSDKSettings.h"
 #import "FBSDKTimeSpentData.h"
 #import "FBSDKUtility.h"
@@ -326,6 +326,8 @@ NSString *const FBSDKAPPEventsWKWebViewMessagesProtocolKey = @"fbmq-0.1";
 static NSString *g_overrideAppID = nil;
 static BOOL g_explicitEventsLoggedYet;
 static Class<FBSDKGateKeeperManaging> g_gateKeeperManager;
+static Class<FBSDKAppEventsConfigurationProviding> g_appEventsConfigurationProvider;
+static Class<FBSDKServerConfigurationProviding> g_serverConfigurationProvider;
 static id<FBSDKGraphRequestProviding> g_graphRequestProvider;
 
 @interface FBSDKAppEvents ()
@@ -870,10 +872,14 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 
 #pragma mark - Internal Methods
 
-+ (void)configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)manager
++ (void)configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
+        appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
+           serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                   graphRequestProvider:(id<FBSDKGraphRequestProviding>)provider
 {
-  [FBSDKAppEvents setGateKeeperManager:manager];
+  [FBSDKAppEvents setGateKeeperManager:gateKeeperManager];
+  [FBSDKAppEvents setAppEventsConfigurationProvider:appEventsConfigurationProvider];
+  [FBSDKAppEvents setServerConfigurationProvider:serverConfigurationProvider];
   [FBSDKAppEvents setRequestProvider:provider];
   [FBSDKAppEvents setCanLogEvents];
 }
@@ -887,6 +893,30 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 {
   if (g_gateKeeperManager != manager) {
     g_gateKeeperManager = manager;
+  }
+}
+
++ (Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
+{
+  return g_appEventsConfigurationProvider;
+}
+
++ (void)setAppEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)provider
+{
+  if (g_appEventsConfigurationProvider != provider) {
+    g_appEventsConfigurationProvider = provider;
+  }
+}
+
++ (Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+{
+  return g_serverConfigurationProvider;
+}
+
++ (void)setServerConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)provider
+{
+  if (g_serverConfigurationProvider != provider) {
+    g_serverConfigurationProvider = provider;
   }
 }
 
@@ -1119,8 +1149,8 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 // app events can use a server configuration up to 24 hours old to minimize network traffic.
 - (void)fetchServerConfiguration:(FBSDKCodeBlock)callback
 {
-  [FBSDKAppEventsConfigurationManager loadAppEventsConfigurationWithBlock:^{
-    [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
+  [g_appEventsConfigurationProvider loadAppEventsConfigurationWithBlock:^{
+    [g_serverConfigurationProvider loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
       self->_serverConfiguration = serverConfiguration;
 
       if (self->_serverConfiguration.implicitPurchaseLoggingEnabled && [FBSDKSettings isAutoLogAppEventsEnabled]) {

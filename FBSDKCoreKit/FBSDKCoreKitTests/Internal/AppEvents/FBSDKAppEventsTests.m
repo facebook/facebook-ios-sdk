@@ -23,6 +23,7 @@
 
 #import "FBSDKAccessToken.h"
 #import "FBSDKAppEvents.h"
+#import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsState.h"
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKApplicationDelegate.h"
@@ -71,6 +72,10 @@ static NSString *const _mockUserID = @"mockUserID";
 + (UIApplicationState)applicationState;
 
 + (void)setGateKeeperManager:(Class<FBSDKGateKeeperManaging>)manager;
+
++ (void)setAppEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)provider;
+
++ (void)setServerConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)provider;
 
 + (void)setRequestProvider:(id<FBSDKGraphRequestProviding>)provider;
 
@@ -721,6 +726,35 @@ static NSString *const _mockUserID = @"mockUserID";
   [FBSDKAppEvents logImplicitEvent:_mockEventName valueToSum:@(_mockPurchaseAmount) parameters:@{} accessToken:nil];
 
   OCMVerifyAll(self.appEventsMock);
+}
+
+#pragma mark Test for Server Configuration
+
+- (void)testFetchServerConfiguration
+{
+  FBSDKAppEventsConfiguration *configuration = [[FBSDKAppEventsConfiguration alloc] initWithJSON:@{}];
+  TestAppEventsConfigurationProvider.stubbedConfiguration = configuration;
+  [FBSDKAppEvents setAppEventsConfigurationProvider:TestAppEventsConfigurationProvider.class];
+  [FBSDKAppEvents setServerConfigurationProvider:TestServerConfigurationProvider.class];
+
+  __block BOOL didRunCallback = NO;
+  [[FBSDKAppEvents singleton] fetchServerConfiguration:^void (void) {
+    didRunCallback = YES;
+  }];
+  XCTAssertNotNil(
+    TestAppEventsConfigurationProvider.capturedBlock,
+    "The expected block should be captured by the AppEventsConfiguration provider"
+  );
+  TestAppEventsConfigurationProvider.capturedBlock();
+  XCTAssertNotNil(
+    TestServerConfigurationProvider.capturedCompletionBlock,
+    "The expected block should be captured by the ServerConfiguration provider"
+  );
+  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  XCTAssertTrue(
+    didRunCallback,
+    "fetchServerConfiguration should call the callback block"
+  );
 }
 
 #pragma mark Test for Singleton Values

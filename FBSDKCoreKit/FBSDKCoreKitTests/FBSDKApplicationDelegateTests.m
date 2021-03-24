@@ -87,6 +87,8 @@
 + (void)resetCanLogEvents;
 + (BOOL)canLogEvents;
 + (Class<FBSDKGateKeeperManaging>)gateKeeperManager;
++ (Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider;
++ (Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
 @end
 
 @implementation FBSDKApplicationDelegateTests
@@ -236,6 +238,17 @@
     requestProvider.class,
     FBSDKGraphRequestFactory.class,
     "Initializing the SDK should set graph request factory for event logging"
+  );
+
+  XCTAssertEqualObjects(
+    FBSDKAppEvents.appEventsConfigurationProvider,
+    FBSDKAppEventsConfigurationManager.class,
+    "Initializing the SDK should set AppEvents configuration provider for event logging"
+  );
+  XCTAssertEqualObjects(
+    FBSDKAppEvents.serverConfigurationProvider,
+    FBSDKServerConfigurationManager.class,
+    "Initializing the SDK should set server configuration provider for event logging"
   );
 }
 

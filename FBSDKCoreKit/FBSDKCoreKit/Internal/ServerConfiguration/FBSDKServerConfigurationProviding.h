@@ -16,26 +16,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@objcMembers
-class TestAppEventsConfigurationProvider: NSObject, AppEventsConfigurationProviding {
-  static var stubbedConfiguration: AppEventsConfigurationProtocol?
-  static var didRetrieveCachedConfiguration = false
-  static var capturedBlock: AppEventsConfigurationProvidingBlock?
+#import <Foundation/Foundation.h>
 
-  static func cachedAppEventsConfiguration() -> AppEventsConfigurationProtocol {
-    guard let configuration = stubbedConfiguration else {
-      fatalError("A cached configuration is required")
-    }
-    didRetrieveCachedConfiguration = true
-    return configuration
-  }
+@class FBSDKServerConfiguration;
 
-  static func reset() {
-    stubbedConfiguration = nil
-    didRetrieveCachedConfiguration = false
-  }
+NS_SWIFT_NAME(ServerConfigurationBlock)
+typedef void (^FBSDKServerConfigurationBlock)(FBSDKServerConfiguration *serverConfiguration, NSError *error);
 
-  static func loadAppEventsConfiguration(_ block: @escaping AppEventsConfigurationProvidingBlock) {
-    capturedBlock = block
-  }
-}
+NS_SWIFT_NAME(ServerConfigurationProviding)
+@protocol FBSDKServerConfigurationProviding
+
+/**
+  Executes the completionBlock with a valid and current configuration when it is available.
+
+ This method will use a cached configuration if it is valid and not expired.
+ */
++ (void)loadServerConfigurationWithCompletionBlock:(FBSDKServerConfigurationBlock)completionBlock;
+
+@end

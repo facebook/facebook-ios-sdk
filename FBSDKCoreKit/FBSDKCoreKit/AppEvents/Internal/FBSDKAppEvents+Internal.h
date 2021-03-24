@@ -27,6 +27,8 @@
 #import "FBSDKAppEventsUtility.h"
 
 @protocol FBSDKGateKeeperManaging;
+@protocol FBSDKAppEventsConfigurationProviding;
+@protocol FBSDKServerConfigurationProviding;
 @protocol FBSDKGraphRequestProviding;
 
 // Internally known event names
@@ -209,7 +211,9 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
 
 + (void)setApplicationState:(UIApplicationState)state;
 
-+ (void)configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)manager
++ (void)configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
+        appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
+           serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                   graphRequestProvider:(id<FBSDKGraphRequestProviding>)provider;
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName

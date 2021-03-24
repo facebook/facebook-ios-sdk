@@ -16,26 +16,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@objcMembers
-class TestAppEventsConfigurationProvider: NSObject, AppEventsConfigurationProviding {
-  static var stubbedConfiguration: AppEventsConfigurationProtocol?
-  static var didRetrieveCachedConfiguration = false
-  static var capturedBlock: AppEventsConfigurationProvidingBlock?
+#import <Foundation/Foundation.h>
 
-  static func cachedAppEventsConfiguration() -> AppEventsConfigurationProtocol {
-    guard let configuration = stubbedConfiguration else {
-      fatalError("A cached configuration is required")
-    }
-    didRetrieveCachedConfiguration = true
-    return configuration
-  }
+#import "FBSDKServerConfigurationProviding.h"
 
-  static func reset() {
-    stubbedConfiguration = nil
-    didRetrieveCachedConfiguration = false
-  }
-
-  static func loadAppEventsConfiguration(_ block: @escaping AppEventsConfigurationProvidingBlock) {
-    capturedBlock = block
-  }
-}
+@interface FBSDKServerConfigurationManager (ServerConfigurationProviding) <FBSDKServerConfigurationProviding>
+@end

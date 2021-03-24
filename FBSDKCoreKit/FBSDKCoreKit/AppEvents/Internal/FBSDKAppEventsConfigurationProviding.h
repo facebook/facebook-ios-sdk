@@ -18,6 +18,9 @@
 
 #import <Foundation/Foundation.h>
 
+NS_SWIFT_NAME(AppEventsConfigurationProvidingBlock)
+typedef void (^FBSDKAppEventsConfigurationProvidingBlock)(void);
+
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKAppEventsConfiguration;
@@ -26,6 +29,8 @@ NS_SWIFT_NAME(AppEventsConfigurationProviding)
 @protocol FBSDKAppEventsConfigurationProviding
 
 + (id<FBSDKAppEventsConfiguration>)cachedAppEventsConfiguration;
+
++ (void)loadAppEventsConfigurationWithBlock:(FBSDKAppEventsConfigurationProvidingBlock)block;
 
 @end
 

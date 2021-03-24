@@ -22,6 +22,7 @@
 #import <objc/runtime.h>
 
 #import "FBSDKAppEvents+Internal.h"
+#import "FBSDKAppEventsConfigurationManager.h"
 #import "FBSDKBridgeAPI+ApplicationObserving.h"
 #import "FBSDKConstants.h"
 #import "FBSDKDynamicFrameworkLoader.h"
@@ -36,7 +37,7 @@
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
 #import "FBSDKServerConfiguration.h"
-#import "FBSDKServerConfigurationManager.h"
+#import "FBSDKServerConfigurationManager+ServerConfigurationProviding.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKSettingsLogging.h"
 #import "FBSDKTimeSpentData.h"
@@ -472,6 +473,8 @@ static UIApplicationState _applicationState;
   id<FBSDKGraphRequestProviding> graphRequestProvider = [FBSDKGraphRequestFactory new];
   [FBSDKGraphRequestConnection setCanMakeRequests];
   [FBSDKAppEvents configureWithGateKeeperManager:[FBSDKGateKeeperManager class]
+                  appEventsConfigurationProvider:[FBSDKAppEventsConfigurationManager class]
+                     serverConfigurationProvider:[FBSDKServerConfigurationManager class]
                             graphRequestProvider:graphRequestProvider];
   [FBSDKGateKeeperManager configureWithSettings:FBSDKSettings.class
                                 requestProvider:graphRequestProvider

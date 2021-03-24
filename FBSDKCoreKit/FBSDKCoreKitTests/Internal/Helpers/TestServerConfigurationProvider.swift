@@ -17,25 +17,10 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @objcMembers
-class TestAppEventsConfigurationProvider: NSObject, AppEventsConfigurationProviding {
-  static var stubbedConfiguration: AppEventsConfigurationProtocol?
-  static var didRetrieveCachedConfiguration = false
-  static var capturedBlock: AppEventsConfigurationProvidingBlock?
+class TestServerConfigurationProvider: NSObject, ServerConfigurationProviding {
+  static var capturedCompletionBlock: ServerConfigurationBlock?
 
-  static func cachedAppEventsConfiguration() -> AppEventsConfigurationProtocol {
-    guard let configuration = stubbedConfiguration else {
-      fatalError("A cached configuration is required")
-    }
-    didRetrieveCachedConfiguration = true
-    return configuration
-  }
-
-  static func reset() {
-    stubbedConfiguration = nil
-    didRetrieveCachedConfiguration = false
-  }
-
-  static func loadAppEventsConfiguration(_ block: @escaping AppEventsConfigurationProvidingBlock) {
-    capturedBlock = block
+  static func loadServerConfiguration(completionBlock: @escaping ServerConfigurationBlock) {
+    capturedCompletionBlock = completionBlock
   }
 }
