@@ -50,12 +50,14 @@
   if (!data) {
     return nil;
   }
+  id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createInsecureUnarchiverFor:data];
 
-  NSDictionary *dict = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-  if (![dict isKindOfClass:[NSDictionary class]]) {
-    return nil;
+  NSDictionary<NSString *, id> *dict = nil;
+  @try {
+    dict = [unarchiver decodeObjectOfClass:NSDictionary.class forKey:NSKeyedArchiveRootObjectKey];
+  } @catch (NSException *ex) {
+    // ignore decoding exceptions
   }
-
   return dict;
 }
 

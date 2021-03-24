@@ -393,10 +393,12 @@ static id <FBSDKDataPersisting> _store;
 {
   NSData *data = [_store objectForKey:FBSDKProfileUserDefaultsKey];
   if (data != nil) {
+    id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createSecureUnarchiverFor:data];
+
     @try {
-      return [NSKeyedUnarchiver unarchiveObjectWithData:data];
+      return [unarchiver decodeObjectOfClass:[FBSDKProfile class] forKey:NSKeyedArchiveRootObjectKey];
     } @catch (NSException *exception) {
-      return nil;
+      // Ignore decode error
     }
   }
   return nil;

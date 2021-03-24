@@ -69,7 +69,9 @@
 {
   NSString *appID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_APPEVENTSSTATE_APPID_KEY];
   NSString *tokenString = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_APPEVENTSSTATE_TOKENSTRING_KEY];
-  NSArray *events = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDK_APPEVENTSSTATE_EVENTS_KEY];
+  NSArray *events = [FBSDKTypeUtility arrayValue:[decoder decodeObjectOfClasses:
+                                                  [NSSet setWithArray:@[NSArray.class, NSDictionary.class]]
+                                                                         forKey:FBSDK_APPEVENTSSTATE_EVENTS_KEY]];
   NSUInteger numSkipped = [[decoder decodeObjectOfClass:[NSNumber class] forKey:FBSDK_APPEVENTSSTATE_NUMSKIPPED_KEY] unsignedIntegerValue];
 
   if ((self = [self initWithToken:tokenString appID:appID])) {

@@ -262,9 +262,16 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
   NSURL *smartLoginMenuIconURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_MENU_ICON_URL_KEY];
   NSString *updateMessage = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_KEY];
   NSArray *eventBindings = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS];
-  NSDictionary<NSString *, id> *restrictiveParams = [decoder decodeObjectOfClass:[NSDictionary class] forKey:FBSDK_SERVER_CONFIGURATION_RESTRICTIVE_PARAMS];
-  NSDictionary<NSString *, id> *AAMRules = [decoder decodeObjectOfClass:[NSDictionary class] forKey:FBSDK_SERVER_CONFIGURATION_AAM_RULES];
-  NSDictionary<NSString *, id> *suggestedEventsSetting = [decoder decodeObjectOfClass:[NSDictionary class] forKey:FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING];
+  NSSet *dictionaryClasses = [NSSet setWithObjects:
+                              [NSDictionary class],
+                              [NSArray class],
+                              [NSData class],
+                              [NSString class],
+                              [NSNumber class],
+                              nil];
+  NSDictionary<NSString *, id> *restrictiveParams = [FBSDKTypeUtility dictionaryValue:[decoder decodeObjectOfClasses:dictionaryClasses forKey:FBSDK_SERVER_CONFIGURATION_RESTRICTIVE_PARAMS]];
+  NSDictionary<NSString *, id> *AAMRules = [FBSDKTypeUtility dictionaryValue:[decoder decodeObjectOfClasses:dictionaryClasses forKey:FBSDK_SERVER_CONFIGURATION_AAM_RULES]];
+  NSDictionary<NSString *, id> *suggestedEventsSetting = [FBSDKTypeUtility dictionaryValue:[decoder decodeObjectOfClasses:dictionaryClasses forKey:FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING]];
   NSInteger version = [decoder decodeIntegerForKey:FBSDK_SERVER_CONFIGURATION_VERSION_KEY];
   FBSDKServerConfiguration *configuration = [self initWithAppID:appID
                                                                     appName:appName

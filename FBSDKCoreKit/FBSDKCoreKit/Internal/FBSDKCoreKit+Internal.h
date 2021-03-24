@@ -111,6 +111,7 @@
  #import "FBSDKTimeSpentData.h"
  #import "FBSDKTokenCache.h"
  #import "FBSDKTokenCaching.h"
+ #import "FBSDKUnarchiverProvider.h"
 
 #else
 
@@ -169,6 +170,7 @@
  #import "FBSDKProfilePictureView+Internal.h"
  #import "FBSDKSettings+Internal.h"
  #import "FBSDKSwizzler.h"
+ #import "FBSDKUnarchiverProvider.h"
  #import "Network/FBSDKGraphRequest+Internal.h"
  #import "Network/FBSDKGraphRequestBody.h"
  #import "Network/FBSDKGraphRequestConnection+Internal.h"

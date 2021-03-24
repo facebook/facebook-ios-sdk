@@ -60,7 +60,15 @@ static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
     if ([dict[kFBSDKTokenUUIDKey] isEqualToString:uuid]) {
       id tokenData = dict[kFBSDKTokenEncodedKey];
       if ([tokenData isKindOfClass:[NSData class]]) {
-        return [NSKeyedUnarchiver unarchiveObjectWithData:tokenData];
+        id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createSecureUnarchiverFor:tokenData];
+
+        FBSDKAccessToken *unarchivedToken = nil;
+        @try {
+          unarchivedToken = [unarchiver decodeObjectOfClass:FBSDKAccessToken.class forKey:NSKeyedArchiveRootObjectKey];
+        } @catch (NSException *ex) {
+          // ignore decoding exceptions
+        }
+        return unarchivedToken;
       }
     }
   }
@@ -104,9 +112,17 @@ static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
     // do a type check to make sure it is NSString
     if ([dict[kFBSDKTokenUUIDKey] isEqualToString:uuid]) {
       id tokenData = dict[kFBSDKTokenEncodedKey];
-      if ([tokenData isKindOfClass:[NSData class]]) {
-        return [NSKeyedUnarchiver unarchiveObjectWithData:tokenData];
+      id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createSecureUnarchiverFor:tokenData];
+
+      FBSDKAuthenticationToken *unarchivedToken = nil;
+      @try {
+        unarchivedToken = [unarchiver decodeObjectOfClass:FBSDKAuthenticationToken.class forKey:NSKeyedArchiveRootObjectKey];
+      } @catch (NSException *ex) {
+        // ignore decoding exceptions
+      } @finally {
+        return unarchivedToken;
       }
+      return nil;
     }
   }
   // if the uuid doesn't match (including if there is no uuid in defaults which means uninstalled case)

@@ -82,7 +82,7 @@ static FBSDKLogger *_logger;
 {
   [self loadGateKeepers:nil];
 
-  return _gateKeepers[key] ? [_gateKeepers[key] boolValue] : defaultValue;
+  return _gateKeepers[key] != nil ? [_gateKeepers[key] boolValue] : defaultValue;
 }
 
 + (void)loadGateKeepers:(FBSDKGKManagerBlock)completionBlock
@@ -110,12 +110,14 @@ static FBSDKLogger *_logger;
                                 appID];
         NSData *data = [self.store objectForKey:defaultKey];
         if ([data isKindOfClass:[NSData class]]) {
-          #pragma clang diagnostic push
-          #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-          NSDictionary<NSString *, id> *gatekeeper = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-          #pragma clang diagnostic pop
-          if (gatekeeper != nil && [gatekeeper isKindOfClass:[NSDictionary class]]) {
-            _gateKeepers = gatekeeper;
+          id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createSecureUnarchiverFor:data];
+          @try {
+            _gateKeepers = [FBSDKTypeUtility dictionaryValue:
+                            [unarchiver decodeObjectOfClasses:
+                             [NSSet setWithObjects:NSDictionary.class, NSString.class, NSNumber.class, nil]
+                                                       forKey:NSKeyedArchiveRootObjectKey]];
+          } @catch (NSException *ex) {
+            // ignore decoding exceptions
           }
         }
       }

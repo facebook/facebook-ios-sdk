@@ -94,7 +94,13 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
     NSString *defaultKey = [NSString stringWithFormat:CODELESS_SETTING_KEY, appID];
     NSData *data = [defaults objectForKey:defaultKey];
     if ([data isKindOfClass:[NSData class]]) {
-      NSMutableDictionary<NSString *, id> *codelessSetting = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+      NSMutableDictionary<NSString *, id> *codelessSetting = nil;
+      id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createInsecureUnarchiverFor:data];
+      @try {
+        codelessSetting = [unarchiver decodeObjectOfClass:NSDictionary.class forKey:NSKeyedArchiveRootObjectKey];
+      } @catch (NSException *ex) {
+        // ignore decoding exceptions
+      }
       if (codelessSetting) {
         _codelessSetting = codelessSetting;
       }

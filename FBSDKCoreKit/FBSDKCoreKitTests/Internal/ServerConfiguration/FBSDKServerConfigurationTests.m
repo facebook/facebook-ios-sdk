@@ -675,7 +675,13 @@ typedef FBSDKServerConfigurationFixtures Fixtures;
                                [NSString class],
                                [NSNumber class],
                                nil];
-
+  NSSet *dictionaryClasses = [NSSet setWithObjects:
+                              [NSDictionary class],
+                              [NSArray class],
+                              [NSData class],
+                              [NSString class],
+                              [NSNumber class],
+                              nil];
   XCTAssertEqualObjects(decoder.decodedObject[@"appID"], NSString.class);
   XCTAssertEqualObjects(decoder.decodedObject[@"appName"], NSString.class);
   XCTAssertEqualObjects(
@@ -732,9 +738,9 @@ typedef FBSDKServerConfigurationFixtures Fixtures;
   XCTAssertEqualObjects(decoder.decodedObject[@"smarstLoginBookmarkMenuURL"], NSURL.class);
   XCTAssertEqualObjects(decoder.decodedObject[@"SDKUpdateMessage"], NSString.class);
   XCTAssertEqualObjects(decoder.decodedObject[@"eventBindings"], NSArray.class);
-  XCTAssertEqualObjects(decoder.decodedObject[@"restrictiveParams"], NSDictionary.class);
-  XCTAssertEqualObjects(decoder.decodedObject[@"AAMRules"], NSDictionary.class);
-  XCTAssertEqualObjects(decoder.decodedObject[@"suggestedEventsSetting"], NSDictionary.class);
+  XCTAssertEqualObjects(decoder.decodedObject[@"restrictiveParams"], dictionaryClasses);
+  XCTAssertEqualObjects(decoder.decodedObject[@"AAMRules"], dictionaryClasses);
+  XCTAssertEqualObjects(decoder.decodedObject[@"suggestedEventsSetting"], dictionaryClasses);
 }
 
 - (void)testRetrievingInvalidDialogConfigurationForDialogName
