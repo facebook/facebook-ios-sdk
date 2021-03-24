@@ -41,6 +41,7 @@
 #define FBSDK_APPEVENTSUTILITY_MAX_IDENTIFIER_LENGTH 40
 
 static NSArray<NSString *> *standardEvents;
+static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 
 @implementation FBSDKAppEventsUtility
 
@@ -146,6 +147,13 @@ static NSArray<NSString *> *standardEvents;
 
 + (NSString *)advertiserID
 {
+  BOOL shouldUseCachedManagerIfAvailable = [FBSDKSettings shouldUseCachedValuesForExpensiveMetadata];
+  id<FBSDKDynamicFrameworkResolving> dynamicFrameworkResolver = FBSDKDynamicFrameworkLoader.shared;
+  return [self _advertiserIDFromDynamicFrameworkResolver:dynamicFrameworkResolver useCachedManagerIfAvailable:shouldUseCachedManagerIfAvailable];
+}
+
++ (NSString *)_advertiserIDFromDynamicFrameworkResolver:(id<FBSDKDynamicFrameworkResolving>)dynamicFrameworkResolver useCachedManagerIfAvailable:(BOOL)useCachedManagerIfAvailable
+{
   if (!FBSDKSettings.isAdvertiserIDCollectionEnabled) {
     return nil;
   }
@@ -156,15 +164,22 @@ static NSArray<NSString *> *standardEvents;
     }
   }
 
-  NSString *result = nil;
+  ASIdentifierManager *manager = [self _asIdentifierManagerUseCachedManagerIfAvailable:useCachedManagerIfAvailable dynamicFrameworkResolver:dynamicFrameworkResolver];
+  return manager.advertisingIdentifier.UUIDString;
+}
 
-  Class ASIdentifierManagerClass = fbsdkdfl_ASIdentifierManagerClass();
-  if ([ASIdentifierManagerClass class]) {
-    ASIdentifierManager *manager = [ASIdentifierManagerClass sharedManager];
-    result = manager.advertisingIdentifier.UUIDString;
++ (ASIdentifierManager *)_asIdentifierManagerUseCachedManagerIfAvailable:(BOOL)useCachedManagerIfAvailable dynamicFrameworkResolver:(id<FBSDKDynamicFrameworkResolving>)dynamicFrameworkResolver
+{
+  if (useCachedManagerIfAvailable && _cachedAdvertiserIdentifierManager) {
+    return _cachedAdvertiserIdentifierManager;
   }
 
-  return result;
+  Class ASIdentifierManagerClass = [dynamicFrameworkResolver asIdentifierManagerClass];
+  ASIdentifierManager *manager = [ASIdentifierManagerClass sharedManager];
+  if (useCachedManagerIfAvailable) {
+    _cachedAdvertiserIdentifierManager = manager;
+  }
+  return manager;
 }
 
 + (BOOL)isStandardEvent:(nullable NSString *)event

@@ -126,6 +126,11 @@ _fbsdkdfl_handle_get_impl_(Security)
   return fbsdkdfl_SFSafariViewControllerClass();
 }
 
+- (Class)asIdentifierManagerClass
+{
+  return fbsdkdfl_ASIdentifierManagerClass();
+}
+
 #define _fbsdkdfl_Security_get_k(SYMBOL) _fbsdkdfl_symbol_get_k(Security, SYMBOL, CFTypeRef *)
 
 #define _fbsdkdfl_Security_get_and_return_k(SYMBOL) \
