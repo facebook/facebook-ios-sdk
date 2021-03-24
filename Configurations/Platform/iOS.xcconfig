@@ -27,6 +27,7 @@ LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @loader_path/
 
 // Bitcode Support
 ENABLE_BITCODE = YES
+BITCODE_GENERATION_MODE = bitcode
 
 FB_BITCODE_FLAG = -fembed-bitcode
 OTHER_CFLAGS = $(inherited) $(FB_BITCODE_FLAG)

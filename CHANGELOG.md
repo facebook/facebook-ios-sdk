@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+### Fixed
+
+- Static library binaries are built with `BITCODE_GENERATION_MODE = bitcode` to fix errors where Xcode is unable to build apps with bitcode enabled. [#1698](https://github.com/facebook/facebook-ios-sdk/pull/1698)
+
 ### Important
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.1.0...HEAD)
