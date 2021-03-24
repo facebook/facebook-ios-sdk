@@ -117,6 +117,13 @@ NS_SWIFT_NAME(jpegCompressionQuality);
 @property (class, nonatomic, assign, getter=shouldLimitEventAndDataUsage) BOOL limitEventAndDataUsage;
 
 /**
+ Whether in memory cached values should be used for expensive metadata fields, such as
+ carrier and advertiser ID, that are fetched on many applicationDidBecomeActive notifications.
+ Defaults to NO. This value is stored on the device and persists across app launches.
+ */
+@property (class, nonatomic, assign, getter=shouldUseCachedValuesForExpensiveMetadata) BOOL shouldUseCachedValuesForExpensiveMetadata;
+
+/**
  A convenient way to toggle error recovery for all FBSDKGraphRequest instances created after this is set.
  */
 @property (class, nonatomic, assign, getter=isGraphErrorRecoveryEnabled) BOOL graphErrorRecoveryEnabled;

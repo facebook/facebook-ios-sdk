@@ -1295,6 +1295,21 @@ static NSString *const whiteSpaceToken = @"   ";
   );
 }
 
+- (void)testSetUseCachedValuesForExpensiveMetadata
+{
+  FBSDKSettings.shouldUseCachedValuesForExpensiveMetadata = YES;
+
+  XCTAssertEqualObjects(
+    userDefaultsSpy.capturedValues[@"com.facebook.sdk:FBSDKSettingsUseCachedValuesForExpensiveMetadata"],
+    @YES,
+    "Should store whether or not to limit event and data usage in the user defaults"
+  );
+  XCTAssertTrue(
+    FBSDKSettings.shouldUseCachedValuesForExpensiveMetadata,
+    "should use cached values for expensive metadata"
+  );
+}
+
 - (void)testSetLimitEventAndDataUsageWithEmptyCache
 {
   FBSDKSettings.limitEventAndDataUsage = YES;
