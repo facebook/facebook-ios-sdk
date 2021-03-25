@@ -17,15 +17,26 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import FBSDKCoreKit
+import TestTools
 import XCTest
 
 class CrashObserversTest: XCTestCase {
 
+  var featureManagerProvider: TestFeatureManagerProvider! // swiftlint:disable:this implicitly_unwrapped_optional
+  var requestProvider: TestGraphRequestFactory! // swiftlint:disable:this implicitly_unwrapped_optional
+  var crashObserver: CrashObserver! // swiftlint:disable:this implicitly_unwrapped_optional
+
+  override func setUp() {
+    super.setUp()
+    featureManagerProvider = TestFeatureManagerProvider.create(withStubbedFeatureManager: TestFeatureManager.self)
+    requestProvider = TestGraphRequestFactory()
+    crashObserver = CrashObserver(
+      featureManagerProvider: featureManagerProvider,
+      graphRequestProvider: requestProvider
+    )
+  }
+
   func testDidReceiveCrashLogs() {
-    let featureManagerProvider = TestFeatureManagerProvider.create(withStubbedFeatureManager: TestFeatureManager.self)
-
-    let crashObserver = CrashObserver(featureManagerProvider: featureManagerProvider)
-
     crashObserver.didReceiveCrashLogs([])
     XCTAssertEqual(TestFeatureManager.capturedFeatures, [])
 

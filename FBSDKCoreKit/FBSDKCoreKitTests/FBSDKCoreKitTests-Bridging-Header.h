@@ -258,7 +258,8 @@ NS_SWIFT_NAME(reset());
 
 @interface FBSDKCrashObserver (Testing)
 
-- (instancetype)initWithFeatureManagerProvider:(id<FBSDKFeatureCheckerProviding>)featureManagerProvider;
+- (instancetype)initWithFeatureManagerProvider:(id<FBSDKFeatureCheckerProviding>)featureManagerProvider
+                          graphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider;
 
 @end
 
