@@ -143,7 +143,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_DECL(NSNumber, _codelessDebugLogEnable
   FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IVAR_DECL(NSNumber, _codelessDebugLogEnabled);
 }
 
-static dispatch_once_t *sharedSettingsNonce;
+static dispatch_once_t sharedSettingsNonce;
 
 + (void)initialize
 {
@@ -165,9 +165,7 @@ static dispatch_once_t *sharedSettingsNonce;
 + (instancetype)sharedSettings
 {
   static id instance;
-  static dispatch_once_t nonce;
-  sharedSettingsNonce = &nonce;
-  dispatch_once(&nonce, ^{
+  dispatch_once(&sharedSettingsNonce, ^{
     instance = [[self alloc] init];
   });
   return instance;
@@ -258,7 +256,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (BOOL)isInstrumentEnabled
 {
-  return [self.sharedSettings _instrumentEnabled].boolValue;
+  return self.sharedSettings._instrumentEnabled.boolValue;
 }
 
 + (void)setInstrumentEnabled:(BOOL)instrumentEnabled
@@ -278,7 +276,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (BOOL)isAutoLogAppEventsEnabled
 {
-  return [self.sharedSettings _autoLogAppEventsEnabled].boolValue;
+  return self.sharedSettings._autoLogAppEventsEnabled.boolValue;
 }
 
 + (void)setAutoLogAppEventsEnabled:(BOOL)autoLogAppEventsEnabled
@@ -687,7 +685,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 {
   // Reset the nonce so that a new instance will be created.
   if (sharedSettingsNonce) {
-    *sharedSettingsNonce = 0;
+    sharedSettingsNonce = 0;
   }
 }
 

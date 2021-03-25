@@ -90,7 +90,13 @@ NS_ASSUME_NONNULL_BEGIN
 // Categories needed to expose private methods to Swift
 @interface FBSDKAppEventsConfigurationManager (Testing)
 
+@property (class, nonatomic) FBSDKAppEventsConfigurationManager *shared;
+@property (nonatomic, nullable) id<FBSDKDataPersisting> store;
+
 + (void)_processResponse:(id)response error:(nullable NSError *)error;
++ (void)configureWithStore:(id<FBSDKDataPersisting>)store
+NS_SWIFT_NAME(configure(store:));
++ (void)reset;
 
 @end
 

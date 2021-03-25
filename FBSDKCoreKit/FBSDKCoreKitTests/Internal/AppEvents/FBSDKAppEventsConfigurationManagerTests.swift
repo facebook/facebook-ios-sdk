@@ -17,6 +17,46 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
+
+  let store = UserDefaultsSpy()
+
+  override class func setUp() {
+    super.setUp()
+
+    AppEventsConfigurationManager.reset()
+  }
+
+  override func setUp() {
+    super.setUp()
+
+    AppEventsConfigurationManager.configure(
+      store: store
+    )
+  }
+
+  override func tearDown() {
+    super.tearDown()
+
+    AppEventsConfigurationManager.reset()
+  }
+
+  // MARK: - Dependencies
+
+  func testDefaultDependencies() {
+    AppEventsConfigurationManager.reset()
+
+    XCTAssertNil(
+      AppEventsConfigurationManager.shared.store,
+      "Should not have a data store by default"
+    )
+  }
+
+  func testConfiguringWithDependencies() {
+    XCTAssertTrue(AppEventsConfigurationManager.shared.store === store)
+  }
+
+  // MARK: - Parsing
+
   func testParsingResponses() {
     for _ in 0..<100 {
       AppEventsConfigurationManager._processResponse(RawAppEventsConfigurationResponseFixtures.random, error: nil)

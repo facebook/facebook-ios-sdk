@@ -82,7 +82,7 @@ static BOOL _isTurnedOff;
   if (_isTurnedOff || ![self _isSafeToGenerateMapping]) {
     return;
   }
-  static dispatch_once_t onceToken = 0;
+  static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     [FBSDKCrashHandler _installExceptionsHandler];
     _processedCrashLogs = [self _getProcessedCrashLogs];

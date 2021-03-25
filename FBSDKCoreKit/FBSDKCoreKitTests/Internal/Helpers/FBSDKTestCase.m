@@ -561,7 +561,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
 - (void)stubCachedAppEventsConfigurationWithConfiguration:(FBSDKAppEventsConfiguration *)configuration
 {
-  OCMStub([self.appEventsConfigurationManagerClassMock cachedAppEventsConfiguration]).andReturn(configuration);
+  OCMStub(ClassMethod([self.appEventsConfigurationManagerClassMock cachedAppEventsConfiguration])).andReturn(configuration);
 }
 
 - (void)stubSharedAsIdentifierManagerWithAsIdentifierManager:(ASIdentifierManager *)identifierManager

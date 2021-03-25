@@ -490,6 +490,7 @@ static UIApplicationState _applicationState;
                         eventLogger:[FBSDKEventLogger new]];
   [FBSDKInternalUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:FBSDKAccessToken.class];
+  [FBSDKAppEventsConfigurationManager configureWithStore:NSUserDefaults.standardUserDefaults];
 #if !TARGET_OS_TV
   [FBSDKAppLinkUtility configureWithRequestProvider:[FBSDKGraphRequestFactory new]
                              infoDictionaryProvider:NSBundle.mainBundle];

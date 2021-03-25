@@ -21,11 +21,14 @@
 #import "FBSDKAppEventsConfiguration.h"
 
 typedef void (^FBSDKAppEventsConfigurationManagerBlock)(void);
+@protocol FBSDKDataPersisting;
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AppEventsConfigurationManager)
 @interface FBSDKAppEventsConfigurationManager : NSObject
+
++ (void)configureWithStore:(id<FBSDKDataPersisting>)store;
 
 + (FBSDKAppEventsConfiguration *)cachedAppEventsConfiguration;
 

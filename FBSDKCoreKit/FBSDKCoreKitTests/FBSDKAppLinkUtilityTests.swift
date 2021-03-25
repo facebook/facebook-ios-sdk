@@ -32,6 +32,13 @@ class FBSDKAppLinkUtilityTests: FBSDKTestCase {
     )
   }
 
+  override class func tearDown() {
+    super.tearDown()
+
+    // This can be removed once AppLinkUtility injects a manager.
+    AppEventsConfigurationManager.reset()
+  }
+
   func testConfiguringWithRequestProvider() {
     XCTAssertTrue(
       AppLinkUtility.requestProvider is TestGraphRequestFactory,
@@ -79,6 +86,8 @@ class FBSDKAppLinkUtilityTests: FBSDKTestCase {
   }
 
   func testRequestProviderAfterGraphRequest() {
+    AppEventsConfigurationManager.configure(store: UserDefaultsSpy())
+
     AppLinkUtility.fetchDeferredAppLink()
     XCTAssertEqual(requestFactory.capturedGraphPath, "(null)/activities")
     XCTAssertEqual(requestFactory.capturedHttpMethod, HTTPMethod(rawValue: "POST"))

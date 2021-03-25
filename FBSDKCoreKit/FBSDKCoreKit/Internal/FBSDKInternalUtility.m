@@ -44,13 +44,13 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift) {
 static id<FBSDKInfoDictionaryProviding> _infoDictionaryProvider;
 
 // These are stored at the class level so that they can be reset in unit tests
-static dispatch_once_t *fetchApplicationQuerySchemesToken;
-static dispatch_once_t *checkIfFacebookAppInstalledToken;
-static dispatch_once_t *checkIfMessengerAppInstalledToken;
-static dispatch_once_t *checkIfMSQRDPlayerAppInstalledToken;
-static dispatch_once_t *checkRegisteredCanOpenUrlSchemesToken;
-static dispatch_once_t *checkOperatingSystemVersionToken;
-static dispatch_once_t *fetchUrlSchemesToken;
+static dispatch_once_t fetchApplicationQuerySchemesToken;
+static dispatch_once_t checkIfFacebookAppInstalledToken;
+static dispatch_once_t checkIfMessengerAppInstalledToken;
+static dispatch_once_t checkIfMSQRDPlayerAppInstalledToken;
+static dispatch_once_t checkRegisteredCanOpenUrlSchemesToken;
+static dispatch_once_t checkOperatingSystemVersionToken;
+static dispatch_once_t fetchUrlSchemesToken;
 
 static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 {
@@ -277,9 +277,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
     .minorVersion = 0,
     .patchVersion = 0,
   };
-  static dispatch_once_t once_token;
-  checkOperatingSystemVersionToken = &once_token;
-  dispatch_once(&once_token, ^{
+  dispatch_once(&checkOperatingSystemVersionToken, ^{
     operatingSystemVersion = [NSProcessInfo processInfo].operatingSystemVersion;
   });
   return operatingSystemVersion;
@@ -390,9 +388,7 @@ static NSMapTable *_transientObjects;
 
 + (BOOL)isFacebookAppInstalled
 {
-  static dispatch_once_t once_token;
-  checkIfFacebookAppInstalledToken = &once_token;
-  dispatch_once(&once_token, ^{
+  dispatch_once(&checkIfFacebookAppInstalledToken, ^{
     [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
   });
   return [self _canOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
@@ -400,9 +396,7 @@ static NSMapTable *_transientObjects;
 
 + (BOOL)isMessengerAppInstalled
 {
-  static dispatch_once_t once_token;
-  checkIfMessengerAppInstalledToken = &once_token;
-  dispatch_once(&once_token, ^{
+  dispatch_once(&checkIfMessengerAppInstalledToken, ^{
     [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_MESSENGER];
   });
   return [self _canOpenURLScheme:FBSDK_CANOPENURL_MESSENGER];
@@ -410,9 +404,7 @@ static NSMapTable *_transientObjects;
 
 + (BOOL)isMSQRDPlayerAppInstalled
 {
-  static dispatch_once_t once_token;
-  checkIfMSQRDPlayerAppInstalledToken = &once_token;
-  dispatch_once(&once_token, ^{
+  dispatch_once(&checkIfMSQRDPlayerAppInstalledToken, ^{
     [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_MSQRD_PLAYER];
   });
   return [self _canOpenURLScheme:FBSDK_CANOPENURL_MSQRD_PLAYER];
@@ -578,10 +570,7 @@ static NSMapTable *_transientObjects;
 + (BOOL)isRegisteredURLScheme:(NSString *)urlScheme
 {
   static NSArray *urlTypes = nil;
-
-  static dispatch_once_t once_token;
-  fetchUrlSchemesToken = &once_token;
-  dispatch_once(&once_token, ^{
+  dispatch_once(&fetchUrlSchemesToken, ^{
     urlTypes = [self.infoDictionaryProvider.infoDictionary valueForKey:@"CFBundleURLTypes"];
   });
   for (NSDictionary *urlType in urlTypes) {
@@ -596,10 +585,7 @@ static NSMapTable *_transientObjects;
 + (void)checkRegisteredCanOpenURLScheme:(NSString *)urlScheme
 {
   static NSMutableSet *checkedSchemes = nil;
-
-  static dispatch_once_t once_token;
-  checkRegisteredCanOpenUrlSchemesToken = &once_token;
-  dispatch_once(&once_token, ^{
+  dispatch_once(&checkRegisteredCanOpenUrlSchemesToken, ^{
     checkedSchemes = [NSMutableSet set];
   });
 
@@ -620,10 +606,7 @@ static NSMapTable *_transientObjects;
 + (BOOL)isRegisteredCanOpenURLScheme:(NSString *)urlScheme
 {
   static NSArray *schemes = nil;
-
-  static dispatch_once_t once_token;
-  fetchApplicationQuerySchemesToken = &once_token;
-  dispatch_once(&once_token, ^{
+  dispatch_once(&fetchApplicationQuerySchemesToken, ^{
     schemes = [self.infoDictionaryProvider.infoDictionary valueForKey:@"LSApplicationQueriesSchemes"];
   });
 
@@ -656,25 +639,25 @@ static NSMapTable *_transientObjects;
 + (void)reset
 {
   if (fetchApplicationQuerySchemesToken) {
-    *fetchApplicationQuerySchemesToken = 0;
+    fetchApplicationQuerySchemesToken = 0;
   }
   if (checkRegisteredCanOpenUrlSchemesToken) {
-    *checkRegisteredCanOpenUrlSchemesToken = 0;
+    checkRegisteredCanOpenUrlSchemesToken = 0;
   }
   if (checkIfFacebookAppInstalledToken) {
-    *checkIfFacebookAppInstalledToken = 0;
+    checkIfFacebookAppInstalledToken = 0;
   }
   if (checkIfMessengerAppInstalledToken) {
-    *checkIfMessengerAppInstalledToken = 0;
+    checkIfMessengerAppInstalledToken = 0;
   }
   if (checkIfMSQRDPlayerAppInstalledToken) {
-    *checkIfMSQRDPlayerAppInstalledToken = 0;
+    checkIfMSQRDPlayerAppInstalledToken = 0;
   }
   if (checkOperatingSystemVersionToken) {
-    *checkOperatingSystemVersionToken = 0;
+    checkOperatingSystemVersionToken = 0;
   }
   if (fetchUrlSchemesToken) {
-    *fetchUrlSchemesToken = 0;
+    fetchUrlSchemesToken = 0;
   }
   _infoDictionaryProvider = nil;
 }

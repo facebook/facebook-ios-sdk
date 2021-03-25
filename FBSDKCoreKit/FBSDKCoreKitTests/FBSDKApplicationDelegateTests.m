@@ -428,7 +428,7 @@
   );
 }
 
-- (void)testInitializingSdkConfiguredGraphRequestPiggybackManager
+- (void)testInitializingSdkConfiguresGraphRequestPiggybackManager
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [_delegate initializeSDKWithLaunchOptions:@{}];
@@ -469,6 +469,18 @@
     TestSettings.recordInstallCallCount,
     1,
     "Should have settings record installations upon initialization"
+  );
+}
+
+- (void)testInitializingSdkConfiguresAppEventsConfigurationManager
+{
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
+  [_delegate initializeSDKWithLaunchOptions:@{}];
+  NSObject *store = (NSObject *) FBSDKAppEventsConfigurationManager.shared.store;
+  XCTAssertEqualObjects(
+    store,
+    NSUserDefaults.standardUserDefaults,
+    "Should be configured with the expected concrete data store"
   );
 }
 
