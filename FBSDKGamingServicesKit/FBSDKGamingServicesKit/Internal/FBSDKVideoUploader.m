@@ -123,20 +123,13 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
 
 - (void)_startTransferRequestWithOffsetDictionary:(NSDictionary *)offsetDictionary
 {
-  dispatch_queue_t dataQueue;
-  NSOperatingSystemVersion iOS8Version = { .majorVersion = 8, .minorVersion = 0, .patchVersion = 0 };
-  if ([NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:iOS8Version]) {
-    dataQueue = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0);
-  } else {
-    dataQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
-  }
   NSUInteger startOffset = [offsetDictionary[FBSDK_GAMING_VIDEO_START_OFFSET] unsignedIntegerValue];
   NSUInteger endOffset = [offsetDictionary[FBSDK_GAMING_VIDEO_END_OFFSET] unsignedIntegerValue];
   if (startOffset == endOffset) {
     [self _postFinishRequest];
     return;
   } else {
-    dispatch_async(dataQueue, ^{
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
       size_t chunkSize = (unsigned long)(endOffset - startOffset);
       NSData *data = [self.delegate videoChunkDataForVideoUploader:self startOffset:startOffset endOffset:endOffset];
       if (data == nil || data.length != chunkSize) {

@@ -1104,12 +1104,9 @@ static BOOL _canMakeRequests = NO;
 {
   @try {
     if ([error.domain isEqualToString:NSURLErrorDomain] && error.code == kCFURLErrorSecureConnectionFailed) {
-      NSOperatingSystemVersion iOS9Version = { .majorVersion = 9, .minorVersion = 0, .patchVersion = 0 };
-      if ([self.operatingSystemVersionComparer isOperatingSystemAtLeastVersion:iOS9Version]) {
-        [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                               logEntry:@"WARNING: FBSDK secure network request failed. Please verify you have configured your "
-         "app for Application Transport Security compatibility described at https://developers.facebook.com/docs/ios/ios9"];
-      }
+      [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                             logEntry:@"WARNING: FBSDK secure network request failed. Please verify you have followed "
+       "all of the steps at https://developers.facebook.com/docs/ios/getting-started"];
     }
     [self logAndInvokeHandler:handler error:error];
   } @finally {}
