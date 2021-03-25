@@ -1153,7 +1153,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
     [g_serverConfigurationProvider loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
       self->_serverConfiguration = serverConfiguration;
 
-      if (self->_serverConfiguration.implicitPurchaseLoggingEnabled && [FBSDKSettings isAutoLogAppEventsEnabled]) {
+      if ([FBSDKSettings isAutoLogAppEventsEnabled] && self->_serverConfiguration.implicitPurchaseLoggingEnabled) {
         [FBSDKPaymentObserver startObservingTransactions];
       } else {
         [FBSDKPaymentObserver stopObservingTransactions];
