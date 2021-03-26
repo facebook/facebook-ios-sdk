@@ -72,6 +72,32 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
 @end
 
+@interface TestFBSDKBridgeAPI : FBSDKBridgeAPI
+
+@property int openURLWithSFVCCount;
+@property int openURLCount;
+
+@end
+
+@implementation TestFBSDKBridgeAPI
+
+- (void)openURLWithSafariViewController:(NSURL *)url
+                                 sender:(id<FBSDKURLOpening>)sender
+                     fromViewController:(UIViewController *)fromViewController
+                                handler:(FBSDKSuccessBlock)handler
+{
+  _openURLWithSFVCCount += 1;
+  handler(YES, nil);
+}
+
+- (void)openURL:(NSURL *)url sender:(id<FBSDKURLOpening>)sender handler:(FBSDKSuccessBlock)handler
+{
+  _openURLCount += 1;
+  handler(YES, nil);
+}
+
+@end
+
 @interface FBSDKLoginManagerTests : XCTestCase
 
 @end
@@ -84,6 +110,9 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   id _mockAccessTokenClass;
   id _mockAuthenticationTokenClass;
   id _mockProfileClass;
+  id _mockBridgeAPIClass;
+
+  TestFBSDKBridgeAPI *_testBridgeAPI;
 
   NSDictionary *_claims;
   NSDictionary *_header;
@@ -108,6 +137,10 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   _mockAccessTokenClass = OCMClassMock(FBSDKAccessToken.class);
   _mockAuthenticationTokenClass = OCMClassMock(FBSDKAuthenticationToken.class);
   _mockProfileClass = OCMClassMock(FBSDKProfile.class);
+
+  _mockBridgeAPIClass = OCMClassMock(FBSDKBridgeAPI.class);
+  _testBridgeAPI = TestFBSDKBridgeAPI.alloc;
+  OCMStub([_mockBridgeAPIClass sharedInstance]).andReturn(_testBridgeAPI);
 
   long currentTime = [[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]] longValue];
   _claims = @{
@@ -151,6 +184,9 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
   [_mockProfileClass stopMocking];
   _mockProfileClass = nil;
+
+  [_mockBridgeAPIClass stopMocking];
+  _mockBridgeAPIClass = nil;
 }
 
 // MARK: openURL Auth
@@ -158,12 +194,14 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 // verify basic case of first login and getting granted and declined permissions (is not classified as cancelled)
 - (void)testOpenURLAuth
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:@"completed auth"];
+  __block BOOL handlerCalled;
   NSURL *url = [self authorizeURLWithFragment:@"granted_scopes=public_profile&denied_scopes=email%2Cuser_friends&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949"];
   FBSDKLoginManager *target = _mockLoginManager;
   [target setRequestedPermissions:[NSSet setWithObjects:@"email", @"user_friends", nil]];
   __block FBSDKAccessToken *tokenAfterAuth;
   [target setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    handlerCalled = YES;
+
     XCTAssertFalse(result.isCancelled);
     tokenAfterAuth = [FBSDKAccessToken currentAccessToken];
     XCTAssertEqualObjects(tokenAfterAuth, result.token);
@@ -176,15 +214,11 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
     OCMReject([self->_mockAuthenticationTokenClass setCurrentAuthenticationToken:OCMOCK_ANY]);
     XCTAssertNil(result.authenticationToken);
-
-    [expectation fulfill];
   }];
 
   XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
-  [self waitForExpectationsWithTimeout:3 handler:^(NSError *error) {
-    XCTAssertNil(error);
-  }];
+  XCTAssert(handlerCalled, "Completion handler should be invoked synchronously");
 
   // now test a cancel and make sure the current token is not touched.
   url = [self authorizeURLWithParameters:@"error=access_denied&error_code=200&error_description=Permissions+error&error_reason=user_denied#_=_" joinedBy:@"?"];
@@ -209,25 +243,24 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 // verify that recentlyDeclined is a subset of requestedPermissions (i.e., other declined permissions are not in recentlyDeclined)
 - (void)testOpenURLRecentlyDeclined
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:@"completed auth"];
+  __block BOOL handlerCalled;
   // receive url with denied_scopes more than what was requested.
   NSURL *url = [self authorizeURLWithFragment:@"granted_scopes=public_profile&denied_scopes=user_friends,user_likes&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949"];
 
   FBSDKLoginManagerLoginResultBlock handler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    handlerCalled = YES;
     XCTAssertFalse(result.isCancelled);
     XCTAssertEqualObjects(result.declinedPermissions, [NSSet setWithObject:@"user_friends"]);
     NSSet *expectedDeclinedPermissions = [NSSet setWithObjects:@"user_friends", @"user_likes", nil];
     XCTAssertEqualObjects(result.token.declinedPermissions, expectedDeclinedPermissions);
     XCTAssertEqualObjects(result.grantedPermissions, [NSSet setWithObject:@"public_profile"]);
-    [expectation fulfill];
   };
   FBSDKLoginManager *target = _mockLoginManager;
   [target setRequestedPermissions:[NSSet setWithObject:@"user_friends"]];
   [target setHandler:handler];
   XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
-  [self waitForExpectationsWithTimeout:3 handler:^(NSError *error) {
-    XCTAssertNil(error);
-  }];
+
+  XCTAssert(handlerCalled, "Completion handler should be invoked synchronously");
 }
 
 - (void)testOpenURLNoGrantedPermission
@@ -325,7 +358,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
 - (void)testOpenURLWithBadChallenge
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:@"completed auth"];
+  __block BOOL handlerCalled;
   NSURL *url = [self authorizeURLWithFragment:@"granted_scopes=public_profile&denied_scopes=email%2Cuser_friends&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949"
                                     challenge:@"someotherchallenge"];
   FBSDKLoginManager *target = _mockLoginManager;
@@ -333,33 +366,29 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   [target setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
     XCTAssertNotNil(error);
     XCTAssertNil(result.token);
-    [expectation fulfill];
+    handlerCalled = YES;
   }];
 
   XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
-  [self waitForExpectationsWithTimeout:3 handler:^(NSError *error) {
-    XCTAssertNil(error);
-  }];
+  XCTAssert(handlerCalled, "Completion handler should be invoked synchronously");
 }
 
 - (void)testOpenURLWithNoChallengeAndError
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:@"completed auth"];
+  __block BOOL handlerCalled;
   NSURL *url = [self authorizeURLWithParameters:@"error=some_error&error_code=999&error_message=Errorerror_reason=foo#_=_" joinedBy:@"?"];
 
   FBSDKLoginManager *target = _mockLoginManager;
   [target setRequestedPermissions:[NSSet setWithObjects:@"email", @"user_friends", nil]];
   [target setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    handlerCalled = YES;
     XCTAssertNotNil(error);
-    [expectation fulfill];
   }];
 
   XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
-  [self waitForExpectationsWithTimeout:3 handler:^(NSError *error) {
-    XCTAssertNil(error);
-  }];
+  XCTAssert(handlerCalled, "Completion handler should be invoked synchronously");
 }
 
 - (void)testOpenURLWithNonFacebookURL
@@ -375,7 +404,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
 - (void)testOpenURLAuthWithAuthenticationToken
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
+  __block BOOL handlerCalled;
   FBSDKLoginManager *target = _mockLoginManager;
   [FBSDKAuthenticationTokenFactory setSkipSignatureVerification:YES];
 
@@ -395,6 +424,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   NSURL *url = [self authorizeURLWithFragment:[NSString stringWithFormat:@"granted_scopes=%@&id_token=%@", [permissions componentsJoinedByString:@","], tokenString] challenge:kFakeChallenge];
 
   [target setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    handlerCalled = YES;
     XCTAssertFalse(result.isCancelled);
 
     FBSDKAuthenticationToken *authToken = result.authenticationToken;
@@ -405,15 +435,11 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
     OCMReject([self->_mockAccessTokenClass setCurrentAccessToken:OCMOCK_ANY]);
     XCTAssertNil(result.token);
-
-    [expectation fulfill];
   }];
 
   XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
-  [self waitForExpectationsWithTimeout:3 handler:^(NSError *error) {
-    XCTAssertNil(error);
-  }];
+  XCTAssertTrue(handlerCalled, "Should invoke completion synchronously");
 
   [FBSDKAuthenticationTokenFactory setSkipSignatureVerification:NO];
 }
@@ -438,7 +464,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
 - (void)testOpenURLAuthWithAuthenticationTokenWithAccessToken
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
+  __block BOOL handlerCalled;
   FBSDKLoginManager *target = _mockLoginManager;
   [FBSDKAuthenticationTokenFactory setSkipSignatureVerification:YES];
 
@@ -469,14 +495,12 @@ static NSString *const kFakeJTI = @"a jti is just any string";
     XCTAssertFalse(accessToken.declinedPermissions.count, @"unexpected permissions");
     XCTAssertFalse(result.declinedPermissions.count, @"unexpected permissions");
 
-    [expectation fulfill];
+    handlerCalled = YES;
   }];
 
   XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
-  [self waitForExpectationsWithTimeout:3 handler:^(NSError *error) {
-    XCTAssertNil(error);
-  }];
+  XCTAssertTrue(handlerCalled, "Should invoke completion synchronously");
 
   [FBSDKAuthenticationTokenFactory setSkipSignatureVerification:NO];
 }
@@ -530,16 +554,39 @@ static NSString *const kFakeJTI = @"a jti is just any string";
                               queryParameters:OCMOCK_ANY
                                         error:((NSError __autoreleasing **)[OCMArg setTo:URLError])];
 
-  XCTestExpectation *expectation = [self expectationWithDescription:@"completed auth"];
+  __block BOOL handlerCalled;
   FBSDKLoginManager *manager = [FBSDKLoginManager new];
   [manager logInWithPermissions:@[@"public_profile"] fromViewController:nil handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-    [expectation fulfill];
+    handlerCalled = YES;
   }];
   // This makes sure that FBSDKLoginManager is retaining itself for the duration of the call
   manager = nil;
-  [self waitForExpectationsWithTimeout:5 handler:^(NSError *_Nullable error) {
-    XCTAssertNil(error);
-  }];
+  XCTAssertTrue(handlerCalled, "Should invoke completion synchronously");
+}
+
+- (void)testLoginWithSFVC
+{
+  FBSDKLoginManager *manager = [FBSDKLoginManager new];
+  [manager logInWithPermissions:@[@"public_profile"] fromViewController:nil handler:nil];
+
+  XCTAssertEqual(_testBridgeAPI.openURLWithSFVCCount, 1, "openURLWithSafariViewController should be called");
+  XCTAssertEqual(_testBridgeAPI.openURLCount, 0, "openURL should not be called");
+}
+
+- (void)testLoginWithBrowser
+{
+  FBSDKServerConfiguration *mockConfig = [OCMockObject niceMockForClass:FBSDKServerConfiguration.class];
+  OCMStub([mockConfig useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameLogin]).andReturn(NO);
+  id mockConfigManagerClass = OCMClassMock(FBSDKServerConfigurationManager.class);
+  OCMStub([mockConfigManagerClass cachedServerConfiguration]).andReturn(mockConfig);
+
+  FBSDKLoginManager *manager = [FBSDKLoginManager new];
+  [manager logInWithPermissions:@[@"public_profile"] fromViewController:nil handler:nil];
+
+  XCTAssertEqual(_testBridgeAPI.openURLCount, 1, "openURL should be called");
+  XCTAssertEqual(_testBridgeAPI.openURLWithSFVCCount, 0, "openURLWithSafariViewController should not be called");
+
+  [mockConfigManagerClass stopMocking];
 }
 
 - (void)testCallingLoginWhileAnotherLoginHasNotFinishedNoOps
@@ -656,12 +703,12 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
 - (void)testLogInWithURLFailWithInvalidLoginData
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
+  __block BOOL handlerCalled;
   NSURL *urlWithInvalidLoginData = [NSURL URLWithString:@"myapp://somelink/?al_applink_data=%7B%22target_url%22%3Anull%2C%22extras%22%3A%7B%22fb_login%22%3A%22invalid%22%7D%2C%22referer_app_link%22%3A%7B%22url%22%3A%22fb%3A%5C%2F%5C%2F%5C%2F%22%2C%22app_name%22%3A%22Facebook%22%7D%7D"];
   FBSDKLoginManagerLoginResultBlock handler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    handlerCalled = YES;
     if (error) {
       XCTAssertNil(result);
-      [expectation fulfill];
     } else {
       XCTFail(@"Should have error");
     }
@@ -669,19 +716,17 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
   [_mockLoginManager logInWithURL:urlWithInvalidLoginData handler:handler];
 
-  [self waitForExpectationsWithTimeout:1 handler:^(NSError *_Nullable error) {
-    XCTAssertNil(error);
-  }];
+  XCTAssert(handlerCalled, @"Completion handler should be invoked synchronously");
 }
 
 - (void)testLogInWithURLFailWithNoLoginData
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
+  __block BOOL handlerCalled;
   NSURL *urlWithNoLoginData = [NSURL URLWithString:@"myapp://somelink/?al_applink_data=%7B%22target_url%22%3Anull%2C%22extras%22%3A%7B%22some_param%22%3A%22some_value%22%7D%2C%22referer_app_link%22%3A%7B%22url%22%3A%22fb%3A%5C%2F%5C%2F%5C%2F%22%2C%22app_name%22%3A%22Facebook%22%7D%7D"];
   FBSDKLoginManagerLoginResultBlock handler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    handlerCalled = YES;
     if (error) {
       XCTAssertNil(result);
-      [expectation fulfill];
     } else {
       XCTFail(@"Should have error");
     }
@@ -689,9 +734,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
   [_mockLoginManager logInWithURL:urlWithNoLoginData handler:handler];
 
-  [self waitForExpectationsWithTimeout:1 handler:^(NSError *_Nullable error) {
-    XCTAssertNil(error);
-  }];
+  XCTAssert(handlerCalled, @"Completion handler should be invoked synchronously");
 }
 
 // MARK: Logout
