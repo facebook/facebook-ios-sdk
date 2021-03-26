@@ -367,7 +367,9 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 {
   if (self == [FBSDKAppEvents class]) {
     g_overrideAppID = [[[NSBundle mainBundle] objectForInfoDictionaryKey:FBSDKAppEventsOverrideAppIDBundleKey] copy];
-    [FBSDKBasicUtility anonymousID];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void) {
+      [FBSDKBasicUtility anonymousID];
+    });
   }
 }
 
