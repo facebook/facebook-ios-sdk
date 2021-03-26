@@ -1,4 +1,5 @@
 InheritParentConfig: true
 Checks: '
--idfa-usage
+-idfa-usage,
+-ad-tracking-usage
 '
