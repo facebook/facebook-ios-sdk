@@ -24,6 +24,7 @@
 
 #ifdef BUCK
  #import <FBSDKLoginKit+Internal/FBSDKLoginManager+Internal.h>
+ #import <FBSDKLoginKit+Internal/FBSDKLoginManagerLogger.h>
  #import <FBSDKLoginKit+Internal/FBSDKPermission.h>
  #import <FBSDKLoginKit/FBSDKLoginConstants.h>
  #import <FBSDKLoginKit/FBSDKLoginManager.h>
@@ -32,6 +33,7 @@
  #import "FBSDKLoginConstants.h"
  #import "FBSDKLoginManager.h"
  #import "FBSDKLoginManager+Internal.h"
+ #import "FBSDKLoginManagerLogger.h"
  #import "FBSDKLoginManagerLoginResult.h"
  #import "FBSDKPermission.h"
 #endif
@@ -516,13 +518,18 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   FBSDKLoginConfiguration *config = [[FBSDKLoginConfiguration alloc]
                                      initWithPermissions:@[@"public_profile", @"email"]
                                      tracking:FBSDKLoginTrackingEnabled];
+  FBSDKLoginManagerLogger *logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:@"123"
+                                                                                 tracking:FBSDKLoginTrackingEnabled];
 
-  NSDictionary *params = [_mockLoginManager logInParametersWithConfiguration:config serverConfiguration:nil];
+  NSDictionary *params = [_mockLoginManager logInParametersWithConfiguration:config serverConfiguration:nil logger:logger authMethod:@"sfvc_auth"];
+
   [self validateCommonLoginParameters:params];
   XCTAssertEqualObjects(params[@"response_type"], @"id_token,token_or_nonce,signed_request,graph_domain");
   XCTAssertEqualObjects(params[@"scope"], @"public_profile,email,openid");
   XCTAssertNotNil(params[@"nonce"]);
   XCTAssertNil(params[@"tp"], "Regular login should not send a tracking parameter");
+  NSDictionary *state = [FBSDKBasicUtility objectForJSONString:params[@"state"] error:nil];
+  XCTAssertEqualObjects(state[@"3_method"], @"sfvc_auth");
 }
 
 - (void)testLoginTrackingLimitedLoginParams
@@ -531,13 +538,18 @@ static NSString *const kFakeJTI = @"a jti is just any string";
                                      initWithPermissions:@[@"public_profile", @"email"]
                                      tracking:FBSDKLoginTrackingLimited
                                      nonce:@"some_nonce"];
+  FBSDKLoginManagerLogger *logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:@"123"
+                                                                                 tracking:FBSDKLoginTrackingLimited];
 
-  NSDictionary *params = [_mockLoginManager logInParametersWithConfiguration:config serverConfiguration:nil];
+  NSDictionary *params = [_mockLoginManager logInParametersWithConfiguration:config serverConfiguration:nil logger:logger authMethod:@"browser_auth"];
+
   [self validateCommonLoginParameters:params];
   XCTAssertEqualObjects(params[@"response_type"], @"id_token,graph_domain");
   XCTAssertEqualObjects(params[@"scope"], @"public_profile,email,openid");
   XCTAssertEqualObjects(params[@"nonce"], @"some_nonce");
   XCTAssertEqualObjects(params[@"tp"], @"ios_14_do_not_track");
+  NSDictionary *state = [FBSDKBasicUtility objectForJSONString:params[@"state"] error:nil];
+  XCTAssertEqualObjects(state[@"3_method"], @"browser_auth");
 }
 
 - (void)testLoginParamsWithNilConfiguration
@@ -550,7 +562,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   };
   [_mockLoginManager setHandler:handler];
 
-  NSDictionary *params = [_mockLoginManager logInParametersWithConfiguration:nil serverConfiguration:nil];
+  NSDictionary *params = [_mockLoginManager logInParametersWithConfiguration:nil serverConfiguration:nil logger:nil authMethod:@"sfvc_auth"];
 
   XCTAssertNil(params);
   XCTAssert(wasCalled);
@@ -739,17 +751,24 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 - (void)validateCommonLoginParameters:(NSDictionary *)params
 {
   XCTAssertEqualObjects(params[@"client_id"], kFakeAppID);
-  XCTAssertEqualObjects(params[@"redirect_uri"], @"fbconnect://success");
   XCTAssertEqualObjects(params[@"display"], @"touch");
   XCTAssertEqualObjects(params[@"sdk"], @"ios");
   XCTAssertEqualObjects(params[@"return_scopes"], @"true");
   XCTAssertEqual(params[@"auth_type"], FBSDKLoginAuthTypeRerequest);
   XCTAssertEqualObjects(params[@"fbapp_pres"], @0);
   XCTAssertEqualObjects(params[@"ies"], [FBSDKSettings isAutoLogAppEventsEnabled] ? @1 : @0);
+  XCTAssertNotNil(params[@"e2e"]);
+
+  NSDictionary *state = [FBSDKBasicUtility objectForJSONString:params[@"state"] error:nil];
+  XCTAssertNotNil(state[@"challenge"]);
+  XCTAssertNotNil(state[@"0_auth_logger_id"]);
 
   long long cbt = [params[@"cbt"] longLongValue];
   long long currentMilliseconds = round(1000 * [NSDate date].timeIntervalSince1970);
   XCTAssertEqualWithAccuracy(cbt, currentMilliseconds, 500);
+
+  NSString *expectedRedirectUri = [NSString stringWithFormat:@"fb%@://authorize/", kFakeAppID];
+  XCTAssertEqualObjects(params[@"redirect_uri"], expectedRedirectUri);
 }
 
 - (void)validateAuthenticationToken:(FBSDKAuthenticationToken *)authToken

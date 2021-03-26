@@ -70,7 +70,9 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 
 // made available for testing only
 - (NSDictionary *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration
-                               serverConfiguration:(FBSDKServerConfiguration *)serverConfiguration;
+                               serverConfiguration:(FBSDKServerConfiguration *)serverConfiguration
+                                            logger:(FBSDKLoginManagerLogger *)logger
+                                        authMethod:(NSString *)authMethod;
 // made available for testing only
 - (void)validateReauthentication:(FBSDKAccessToken *)currentToken withResult:(FBSDKLoginManagerLoginResult *)loginResult;
 
