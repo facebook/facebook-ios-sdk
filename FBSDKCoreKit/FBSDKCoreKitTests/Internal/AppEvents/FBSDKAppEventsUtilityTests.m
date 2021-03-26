@@ -46,6 +46,13 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   TestEventLogger *logger;
 }
 
++ (void)setUp
+{
+  [super setUp];
+
+  FBSDKAppEventsUtility.cachedAdvertiserIdentifierManager = nil;
+}
+
 - (void)setUp
 {
   self.shouldAppEventsMockBePartial = YES;
@@ -78,6 +85,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   [FBSDKAppEvents reset];
   [TestAppEventsConfigurationProvider reset];
   [TestServerConfigurationProvider reset];
+  FBSDKAppEventsUtility.cachedAdvertiserIdentifierManager = nil;
 
   [super tearDown];
 }

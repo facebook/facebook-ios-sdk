@@ -149,10 +149,12 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 {
   BOOL shouldUseCachedManagerIfAvailable = [FBSDKSettings shouldUseCachedValuesForExpensiveMetadata];
   id<FBSDKDynamicFrameworkResolving> dynamicFrameworkResolver = FBSDKDynamicFrameworkLoader.shared;
-  return [self _advertiserIDFromDynamicFrameworkResolver:dynamicFrameworkResolver useCachedManagerIfAvailable:shouldUseCachedManagerIfAvailable];
+  return [self _advertiserIDFromDynamicFrameworkResolver:dynamicFrameworkResolver
+                                  shouldUseCachedManager:shouldUseCachedManagerIfAvailable];
 }
 
-+ (NSString *)_advertiserIDFromDynamicFrameworkResolver:(id<FBSDKDynamicFrameworkResolving>)dynamicFrameworkResolver useCachedManagerIfAvailable:(BOOL)useCachedManagerIfAvailable
++ (NSString *)_advertiserIDFromDynamicFrameworkResolver:(id<FBSDKDynamicFrameworkResolving>)dynamicFrameworkResolver
+                                 shouldUseCachedManager:(BOOL)shouldUseCachedManager
 {
   if (!FBSDKSettings.isAdvertiserIDCollectionEnabled) {
     return nil;
@@ -164,20 +166,24 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
     }
   }
 
-  ASIdentifierManager *manager = [self _asIdentifierManagerUseCachedManagerIfAvailable:useCachedManagerIfAvailable dynamicFrameworkResolver:dynamicFrameworkResolver];
+  ASIdentifierManager *manager = [self _asIdentifierManagerWithShouldUseCachedManager:shouldUseCachedManager
+                                                             dynamicFrameworkResolver:dynamicFrameworkResolver];
   return manager.advertisingIdentifier.UUIDString;
 }
 
-+ (ASIdentifierManager *)_asIdentifierManagerUseCachedManagerIfAvailable:(BOOL)useCachedManagerIfAvailable dynamicFrameworkResolver:(id<FBSDKDynamicFrameworkResolving>)dynamicFrameworkResolver
++ (ASIdentifierManager *)_asIdentifierManagerWithShouldUseCachedManager:(BOOL)shouldUseCachedManager
+                                               dynamicFrameworkResolver:(id<FBSDKDynamicFrameworkResolving>)dynamicFrameworkResolver
 {
-  if (useCachedManagerIfAvailable && _cachedAdvertiserIdentifierManager) {
+  if (shouldUseCachedManager && _cachedAdvertiserIdentifierManager) {
     return _cachedAdvertiserIdentifierManager;
   }
 
   Class ASIdentifierManagerClass = [dynamicFrameworkResolver asIdentifierManagerClass];
   ASIdentifierManager *manager = [ASIdentifierManagerClass sharedManager];
-  if (useCachedManagerIfAvailable) {
+  if (shouldUseCachedManager) {
     _cachedAdvertiserIdentifierManager = manager;
+  } else {
+    _cachedAdvertiserIdentifierManager = nil;
   }
   return manager;
 }
@@ -450,5 +456,21 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
   NSUInteger matches = [regex numberOfMatchesInString:text options:0 range:NSMakeRange(0, [text length])];
   return matches > 0;
 }
+
+#if DEBUG
+ #if FBSDKTEST
+
++ (ASIdentifierManager *)cachedAdvertiserIdentifierManager
+{
+  return _cachedAdvertiserIdentifierManager;
+}
+
++ (void)setCachedAdvertiserIdentifierManager:(ASIdentifierManager *)manager
+{
+  _cachedAdvertiserIdentifierManager = manager;
+}
+
+ #endif
+#endif
 
 @end

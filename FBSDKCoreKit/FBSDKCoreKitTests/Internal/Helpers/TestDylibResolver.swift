@@ -19,13 +19,15 @@
 @objcMembers
 class TestDylibResolver: NSObject, FBSDKDynamicFrameworkResolving {
   var stubSafariViewControllerClass: AnyClass?
-  var stubASIdentifierManagerClass: AnyClass?
+  var stubbedASIdentifierManagerClass: AnyClass?
+  var didLoadIdentifierManagerClass = false
 
   func safariViewControllerClass() -> AnyClass? {
     return stubSafariViewControllerClass
   }
 
   func asIdentifierManagerClass() -> AnyClass? {
-    return stubASIdentifierManagerClass
+    didLoadIdentifierManagerClass = true
+    return stubbedASIdentifierManagerClass
   }
 }
