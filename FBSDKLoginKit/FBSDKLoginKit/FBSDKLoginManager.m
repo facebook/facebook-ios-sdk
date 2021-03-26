@@ -483,12 +483,20 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 
 - (void)validateReauthentication:(FBSDKAccessToken *)currentToken withResult:(FBSDKLoginManagerLoginResult *)loginResult
 {
-  FBSDKGraphRequest *requestMe = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me"
-                                                                   parameters:@{@"fields" : @""}
-                                                                  tokenString:loginResult.token.tokenString
-                                                                   HTTPMethod:nil
-                                                                        flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
-  [requestMe startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+  id<FBSDKGraphRequestConnectionProviding> provider = [FBSDKGraphRequestConnectionFactory new];
+  [self validateReauthenticationWithGraphRequestConnectionProvider:provider withToken:currentToken withResult:loginResult];
+}
+
+- (void)validateReauthenticationWithGraphRequestConnectionProvider:(nonnull id<FBSDKGraphRequestConnectionProviding>)connectionProvider
+                                                         withToken:(FBSDKAccessToken *)currentToken
+                                                        withResult:(FBSDKLoginManagerLoginResult *)loginResult
+{
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me"
+                                                                 parameters:@{@"fields" : @""}
+                                                                tokenString:loginResult.token.tokenString
+                                                                 HTTPMethod:nil
+                                                                      flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
+  FBSDKGraphRequestBlock handler = ^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     NSString *actualID = result[@"id"];
     if ([currentToken.userID isEqualToString:actualID]) {
       [FBSDKAccessToken setCurrentAccessToken:loginResult.token];
@@ -501,7 +509,11 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
                                              userInfo:userInfo];
       [self invokeHandler:nil error:resultError];
     }
-  }];
+  };
+
+  FBSDKGraphRequestConnection *connection = (FBSDKGraphRequestConnection *)[connectionProvider createGraphRequestConnection];
+  [connection addRequest:request completionHandler:handler];
+  [connection start];
 }
 
 // change bool to auth method string.

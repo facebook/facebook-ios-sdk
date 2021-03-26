@@ -16,8 +16,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+@import TestTools;
 #import <OCMock/OCMock.h>
-#import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
@@ -38,6 +38,7 @@
  #import "FBSDKPermission.h"
 #endif
 
+#import "FBSDKLoginKitTests-Swift.h"
 #import "FBSDKLoginUtilityTests.h"
 
 static NSString *const kFakeAppID = @"7391628439";
@@ -58,6 +59,10 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 - (NSSet<FBSDKPermission *> *)recentlyGrantedPermissionsFromGrantedPermissions:(NSSet<FBSDKPermission *> *)grantedPermissions;
 
 - (NSSet<FBSDKPermission *> *)recentlyDeclinedPermissionsFromDeclinedPermissions:(NSSet<FBSDKPermission *> *)declinedPermissions;
+
+- (void)validateReauthenticationWithGraphRequestConnectionProvider:(nonnull id<FBSDKGraphRequestConnectionProviding>)connectionProvider
+                                                         withToken:(FBSDKAccessToken *)currentToken
+                                                        withResult:(FBSDKLoginManagerLoginResult *)loginResult;
 
 @end
 
@@ -225,6 +230,25 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   }];
 }
 
+- (void)testOpenURLNoGrantedPermission
+{
+  __block BOOL handlerCalled;
+  // receive url with denied_scopes more than what was requested.
+  NSURL *url = [self authorizeURLWithFragment:@"denied_scopes=user_friends,user_likes&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949"];
+
+  FBSDKLoginManagerLoginResultBlock handler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    handlerCalled = YES;
+    XCTAssertTrue(result.isCancelled);
+    XCTAssertNil(result.token);
+  };
+  FBSDKLoginManager *target = _mockLoginManager;
+  [target setRequestedPermissions:[NSSet setWithObject:@"user_friends"]];
+  [target setHandler:handler];
+  XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+
+  XCTAssert(handlerCalled, "Completion handler should be invoked synchronously");
+}
+
 // verify that a reauth for already granted permissions is not treated as a cancellation.
 - (void)testOpenURLReauthSamePermissionsIsNotCancelled
 {
@@ -338,6 +362,17 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   }];
 }
 
+- (void)testOpenURLWithNonFacebookURL
+{
+  NSURL *url = [NSURL URLWithString:@"test://test?granted_scopes=public_profile&access_token=sometoken&expires_in=5183949"];
+  FBSDKLoginManager *target = _mockLoginManager;
+  [target setState:FBSDKLoginManagerStatePerformingLogin];
+
+  XCTAssertFalse([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
+
+  OCMVerify([target handleImplicitCancelOfLogIn]);
+}
+
 - (void)testOpenURLAuthWithAuthenticationToken
 {
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
@@ -444,6 +479,43 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   }];
 
   [FBSDKAuthenticationTokenFactory setSkipSignatureVerification:NO];
+}
+
+// MARK: FBSDKURLOpening
+
+- (void)testApplicationDidBecomeActiveWhileLogin
+{
+  FBSDKLoginManager *manager = _mockLoginManager;
+  [manager setState:FBSDKLoginManagerStatePerformingLogin];
+
+  [manager applicationDidBecomeActive:nil];
+
+  OCMVerify([manager handleImplicitCancelOfLogIn]);
+}
+
+- (void)testIsAuthenticationURL
+{
+  FBSDKLoginManager *manager = _mockLoginManager;
+
+  XCTAssertFalse([manager isAuthenticationURL:[NSURL URLWithString:@"https://www.facebook.com/some/test/url"]]);
+  XCTAssertTrue([manager isAuthenticationURL:[NSURL URLWithString:@"https://www.facebook.com/v9.0/dialog/oauth/?test=test"]]);
+  XCTAssertFalse([manager isAuthenticationURL:nil]);
+  XCTAssertFalse([manager isAuthenticationURL:NSURL.new]);
+  XCTAssertFalse([manager isAuthenticationURL:[NSURL URLWithString:@"123"]]);
+}
+
+- (void)testShouldStopPropagationOfURL
+{
+  FBSDKLoginManager *manager = _mockLoginManager;
+
+  NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fb%@://no-op/test/", kFakeAppID]];
+  XCTAssertTrue([manager shouldStopPropagationOfURL:url]);
+
+  url = [NSURL URLWithString:[NSString stringWithFormat:@"fb%@://", kFakeAppID]];
+  XCTAssertFalse([manager shouldStopPropagationOfURL:url]);
+
+  url = [NSURL URLWithString:@"https://no-op/"];
+  XCTAssertFalse([manager shouldStopPropagationOfURL:url]);
 }
 
 // MARK: Login
@@ -652,12 +724,15 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 {
   [FBSDKAccessToken setCurrentAccessToken:nil shouldDispatchNotif:NO];
 
+  __block BOOL handlerCalled;
   [_mockLoginManager reauthorizeDataAccess:[UIViewController new]
                                    handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+                                     handlerCalled = true;
                                      XCTAssertNil(result, "Should not have a result when reauthorizing without a current access token");
                                      XCTAssertEqual(error.domain, FBSDKLoginErrorDomain);
                                      XCTAssertEqual(error.code, FBSDKLoginErrorMissingAccessToken);
                                    }];
+  XCTAssert(handlerCalled, @"Completion handler should be invoked synchronously");
 }
 
 - (void)testReauthorizingWithAccessToken
@@ -675,6 +750,19 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertEqualObjects(manager.configuration.requestedPermissions, NSSet.new);
   XCTAssertNotNil(manager.configuration.nonce);
   OCMVerify([manager logIn]);
+}
+
+- (void)testReauthorizingWithInvalidStartState
+{
+  FBSDKLoginManager *manager = _mockLoginManager;
+  [manager setState:FBSDKLoginManagerStateStart];
+
+  [manager reauthorizeDataAccess:[UIViewController new]
+                         handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+                           XCTFail("Should not actually reauthorize and call the handler in this test");
+                         }];
+
+  OCMReject([manager logIn]);
 }
 
 // MARK: Permissions
@@ -731,6 +819,116 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   NSSet *recentlyDeclinedPermissions = [_mockLoginManager recentlyDeclinedPermissionsFromDeclinedPermissions:declinedPermissions];
   NSSet *expectedPermisssions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:@[@"user_friends"]]];
   XCTAssertEqualObjects(recentlyDeclinedPermissions, expectedPermisssions);
+}
+
+// MARK: Reauthentication
+
+- (void)testValidateReauthenticationGraphRequestCreation
+{
+  FBSDKLoginManager *manager = _mockLoginManager;
+  TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
+  TestGraphRequestConnectionFactory *factory = [TestGraphRequestConnectionFactory createWithStubbedConnection:connection];
+  FBSDKLoginManagerLoginResult *result = [[FBSDKLoginManagerLoginResult alloc] initWithToken:SampleAccessTokens.validToken authenticationToken:nil isCancelled:NO grantedPermissions:NSSet.new declinedPermissions:NSSet.new];
+
+  [manager validateReauthenticationWithGraphRequestConnectionProvider:factory withToken:result.token withResult:result];
+
+  FBSDKGraphRequest *capturedRequest = (FBSDKGraphRequest *)connection.capturedRequest;
+  XCTAssertEqualObjects(
+    capturedRequest.graphPath,
+    @"me",
+    "Should create a graph request with the expected graph path"
+  );
+  XCTAssertEqualObjects(
+    capturedRequest.tokenString,
+    SampleAccessTokens.validToken.tokenString,
+    "Should create a graph request with the expected access token string"
+  );
+  XCTAssertEqual(
+    capturedRequest.flags,
+    FBSDKGraphRequestFlagDoNotInvalidateTokenOnError
+    | FBSDKGraphRequestFlagDisableErrorRecovery,
+    "The graph request should not invalidate the token on error or disable error recovery"
+  );
+}
+
+- (void)testValidateReauthenticationCompletionWithError
+{
+  FBSDKLoginManager *manager = _mockLoginManager;
+  TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
+  TestGraphRequestConnectionFactory *factory = [TestGraphRequestConnectionFactory createWithStubbedConnection:connection];
+  FBSDKLoginManagerLoginResult *loginResult = [[FBSDKLoginManagerLoginResult alloc] initWithToken:SampleAccessTokens.validToken authenticationToken:nil isCancelled:NO grantedPermissions:NSSet.new declinedPermissions:NSSet.new];
+
+  __block BOOL completionWasInvoked = NO;
+  [manager setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    completionWasInvoked = YES;
+    XCTAssertNotNil(error);
+    XCTAssertNil(result);
+  }];
+
+  [manager validateReauthenticationWithGraphRequestConnectionProvider:factory withToken:SampleAccessTokens.validToken withResult:loginResult];
+  connection.capturedCompletion(nil, nil, [FBSDKError unknownErrorWithMessage:@"test"]);
+
+  XCTAssertTrue(completionWasInvoked);
+}
+
+- (void)testValidateReauthenticationCompletionWithMatchingUserID
+{
+  FBSDKLoginManager *manager = _mockLoginManager;
+  TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
+  TestGraphRequestConnectionFactory *factory = [TestGraphRequestConnectionFactory createWithStubbedConnection:connection];
+  FBSDKLoginManagerLoginResult *loginResult = [[FBSDKLoginManagerLoginResult alloc] initWithToken:SampleAccessTokens.validToken authenticationToken:nil isCancelled:NO grantedPermissions:NSSet.new declinedPermissions:NSSet.new];
+
+  __block BOOL completionWasInvoked = NO;
+  [manager setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    completionWasInvoked = YES;
+    XCTAssertNil(error);
+    XCTAssertEqualObjects(result, loginResult);
+  }];
+
+  [manager validateReauthenticationWithGraphRequestConnectionProvider:factory withToken:SampleAccessTokens.validToken withResult:loginResult];
+  connection.capturedCompletion(nil, @{@"id" : SampleAccessTokens.validToken.userID}, nil);
+
+  XCTAssertTrue(completionWasInvoked);
+}
+
+- (void)testValidateReauthenticationCompletionWithMismatchedUserID
+{
+  FBSDKLoginManager *manager = _mockLoginManager;
+  TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
+  TestGraphRequestConnectionFactory *factory = [TestGraphRequestConnectionFactory createWithStubbedConnection:connection];
+  FBSDKLoginManagerLoginResult *loginResult = [[FBSDKLoginManagerLoginResult alloc] initWithToken:SampleAccessTokens.validToken authenticationToken:nil isCancelled:NO grantedPermissions:NSSet.new declinedPermissions:NSSet.new];
+
+  __block BOOL completionWasInvoked = NO;
+  [manager setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    completionWasInvoked = YES;
+    XCTAssertNotNil(error);
+    XCTAssertNil(result);
+  }];
+
+  [manager validateReauthenticationWithGraphRequestConnectionProvider:factory withToken:SampleAccessTokens.validToken withResult:loginResult];
+  connection.capturedCompletion(nil, @{@"id" : @"456"}, nil);
+
+  XCTAssertTrue(completionWasInvoked);
+}
+
+// MARK: isPerformingLogin
+
+- (void)testIsPerformingLoginWhenIdle
+{
+  [((FBSDKLoginManager *)_mockLoginManager) setState:(FBSDKLoginManagerState)FBSDKLoginManagerStateIdle];
+  XCTAssertFalse([_mockLoginManager isPerformingLogin]);
+}
+
+- (void)testIsPerformingLoginWhenStarted
+{
+  [((FBSDKLoginManager *)_mockLoginManager) setState:(FBSDKLoginManagerState)FBSDKLoginManagerStateStart];
+  XCTAssertFalse([_mockLoginManager isPerformingLogin]);
+}
+
+- (void)testIsPerformingLoginWhenPerformingLogin
+{
+  [((FBSDKLoginManager *)_mockLoginManager) setState:(FBSDKLoginManagerState)FBSDKLoginManagerStatePerformingLogin];
+  XCTAssert([_mockLoginManager isPerformingLogin]);
 }
 
 // MARK: Helpers
