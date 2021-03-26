@@ -88,7 +88,7 @@
                                                                            parameters:@{@"crash_reports" : crashReports ?: @""}
                                                                            HTTPMethod:FBSDKHTTPMethodPOST];
 
-    [request startWithCompletionHandler:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
+    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
       if (!error && [result isKindOfClass:[NSDictionary class]] && result[@"success"]) {
         [FBSDKCrashHandler clearCrashReportFiles];
       }
