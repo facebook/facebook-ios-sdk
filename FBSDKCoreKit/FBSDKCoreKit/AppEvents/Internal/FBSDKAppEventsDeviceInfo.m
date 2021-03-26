@@ -181,7 +181,7 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024; // bytes
 
   if (!_carrierName || !shouldUseCachedValues) {
     NSString *newCarrierName = [FBSDKAppEventsDeviceInfo _getCarrier];
-    if (![newCarrierName isEqualToString:_carrierName]) {
+    if (!_carrierName || ![newCarrierName isEqualToString:_carrierName]) {
       _carrierName = newCarrierName;
       _isEncodingDirty = YES;
     }
@@ -190,7 +190,7 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024; // bytes
   if (!_timeZoneName || !_timeZoneAbbrev || !shouldUseCachedValues) {
     NSTimeZone *timeZone = [NSTimeZone systemTimeZone];
     NSString *timeZoneName = timeZone.name;
-    if (![timeZoneName isEqualToString:_timeZoneName]) {
+    if (!_timeZoneName || ![timeZoneName isEqualToString:_timeZoneName]) {
       _timeZoneName = timeZoneName;
       _timeZoneAbbrev = timeZone.abbreviation;
       _isEncodingDirty = YES;

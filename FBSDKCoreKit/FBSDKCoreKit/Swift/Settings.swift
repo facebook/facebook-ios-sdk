@@ -18,17 +18,17 @@
 
 import Foundation
 
-//--------------------------------------
+// --------------------------------------
 // MARK: - SDKSettings
-//--------------------------------------
+// --------------------------------------
 
 /**
  Provides access to settings and configuration used by the entire SDK.
  */
 public extension Settings {
-  //--------------------------------------
+  // --------------------------------------
   // MARK: - SDKSettings + Logging Behavior
-  //--------------------------------------
+  // --------------------------------------
 
   /**
    Current logging behaviors of Facebook SDK.

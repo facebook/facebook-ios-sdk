@@ -30,6 +30,7 @@
 @protocol FBSDKAppEventsConfigurationProviding;
 @protocol FBSDKServerConfigurationProviding;
 @protocol FBSDKGraphRequestProviding;
+@protocol FBSDKDataPersisting;
 
 // Internally known event names
 
@@ -214,7 +215,8 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
 + (void)configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
         appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
            serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
-                  graphRequestProvider:(id<FBSDKGraphRequestProviding>)provider;
+                  graphRequestProvider:(id<FBSDKGraphRequestProviding>)provider
+                                 store:(id<FBSDKDataPersisting>)store;
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;

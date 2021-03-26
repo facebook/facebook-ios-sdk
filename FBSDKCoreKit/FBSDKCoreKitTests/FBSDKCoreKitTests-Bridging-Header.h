@@ -18,7 +18,7 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#import "FBSDKAppEventsConfigurationFixtures.h"
+#import "FBSDKAppEventsAtePublisher.h"
 #import "FBSDKBridgeAPI+Testing.h"
 #import "FBSDKCloseIcon.h"
 #import "FBSDKCrashObserver.h"
@@ -275,6 +275,29 @@ NS_SWIFT_NAME(reset());
 @interface FBSDKGraphRequestPiggybackManager (Testing)
 
 @property (class, nonatomic, nullable) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> tokenWallet;
+
+@end
+
+@interface FBSDKAppEventsAtePublisher (Testing)
+
+@property (nonatomic, strong) id<FBSDKDataPersisting> store;
+
+@end
+
+@interface FBSDKAppEvents (Testing)
+
++ (void)reset;
+
+@end
+
+@interface FBSDKAppEventsConfiguration (Testing)
+
++ (FBSDKAppEventsConfiguration *)defaultConfiguration;
+
+- (instancetype)initWithDefaultATEStatus:(FBSDKAdvertisingTrackingStatus)defaultATEStatus
+           advertiserIDCollectionEnabled:(BOOL)advertiserIDCollectionEnabled
+                  eventCollectionEnabled:(BOOL)eventCollectionEnabled
+NS_SWIFT_NAME(init(defaultATEStatus:advertiserIDCollectionEnabled:eventCollectionEnabled:));
 
 @end
 

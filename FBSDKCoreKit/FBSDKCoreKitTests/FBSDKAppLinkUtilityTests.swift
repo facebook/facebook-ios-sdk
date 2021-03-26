@@ -26,6 +26,7 @@ class FBSDKAppLinkUtilityTests: FBSDKTestCase {
   override func setUp() {
     super.setUp()
 
+    TestAppEventsConfigurationProvider.stubbedConfiguration = SampleAppEventsConfigurations.valid
     AppLinkUtility.configure(
       requestProvider: requestFactory,
       infoDictionaryProvider: bundle
@@ -37,6 +38,7 @@ class FBSDKAppLinkUtilityTests: FBSDKTestCase {
 
     // This can be removed once AppLinkUtility injects a manager.
     AppEventsConfigurationManager.reset()
+    TestAppEventsConfigurationProvider.reset()
   }
 
   func testConfiguringWithRequestProvider() {

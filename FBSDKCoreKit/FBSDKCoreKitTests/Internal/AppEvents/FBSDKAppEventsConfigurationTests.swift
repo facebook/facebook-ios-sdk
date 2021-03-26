@@ -19,21 +19,15 @@
 import XCTest
 
 class FBSDKAppEventsConfigurationTests: XCTestCase {
-  typealias Fixtures = FBSDKAppEventsConfigurationFixtures
 
-  private var config = Fixtures.defaultConfig()
-
-  override func setUp() {
-    super.setUp()
-    config = Fixtures.defaultConfig()
-  }
+  private var config = SampleAppEventsConfigurations.valid
 
   func testCreatingWithDefaultATEStatus() {
     XCTAssertEqual(config.defaultATEStatus, .unspecified, "Default ATE Status should be unspecified")
   }
 
   func testCreatingWithKnownDefaultATEStatus() {
-    config = Fixtures.config(with: ["default_ate_status": AppEventsUtility.AdvertisingTrackingStatus.allowed.rawValue])
+    config = SampleAppEventsConfigurations.create(defaultATEStatus: AppEventsUtility.AdvertisingTrackingStatus.allowed)
     XCTAssertEqual(config.defaultATEStatus, .allowed, "Default ATE Status should be settable")
   }
 
@@ -43,7 +37,7 @@ class FBSDKAppEventsConfigurationTests: XCTestCase {
   }
 
   func testCreatingWithKnownAdvertisingIDCollectionEnabled() {
-    config = Fixtures.config(with: ["advertiser_id_collection_enabled": false])
+    config = SampleAppEventsConfigurations.create(advertiserIDCollectionEnabled: false)
     XCTAssertFalse(config.advertiserIDCollectionEnabled, "Advertising identifier collection enabled should be settable")
   }
 
@@ -52,7 +46,7 @@ class FBSDKAppEventsConfigurationTests: XCTestCase {
   }
 
   func testCreatingWithKnownEventCollectionEnabled() {
-    config = Fixtures.config(with: ["event_collection_enabled": true])
+    config = SampleAppEventsConfigurations.create(eventCollectionEnabled: true)
     XCTAssertTrue(config.eventCollectionEnabled, "Event collection enabled should be settable")
   }
 

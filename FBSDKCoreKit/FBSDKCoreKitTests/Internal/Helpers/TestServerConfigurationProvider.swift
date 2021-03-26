@@ -23,4 +23,8 @@ class TestServerConfigurationProvider: NSObject, ServerConfigurationProviding {
   static func loadServerConfiguration(completionBlock: @escaping ServerConfigurationBlock) {
     capturedCompletionBlock = completionBlock
   }
+
+  static func reset() {
+    capturedCompletionBlock = nil
+  }
 }

@@ -471,32 +471,34 @@ static UIApplicationState _applicationState;
 - (void)configureDependencies
 {
   id<FBSDKGraphRequestProviding> graphRequestProvider = [FBSDKGraphRequestFactory new];
+  id<FBSDKDataPersisting> store = NSUserDefaults.standardUserDefaults;
   [FBSDKGraphRequestConnection setCanMakeRequests];
   [FBSDKAppEvents configureWithGateKeeperManager:[FBSDKGateKeeperManager class]
                   appEventsConfigurationProvider:[FBSDKAppEventsConfigurationManager class]
                      serverConfigurationProvider:[FBSDKServerConfigurationManager class]
-                            graphRequestProvider:graphRequestProvider];
+                            graphRequestProvider:graphRequestProvider
+                                           store:store];
   [FBSDKGateKeeperManager configureWithSettings:FBSDKSettings.class
                                 requestProvider:graphRequestProvider
                              connectionProvider:[FBSDKGraphRequestConnectionFactory new]
-                                          store:NSUserDefaults.standardUserDefaults];
+                                          store:store];
   FBSDKTokenCache *tokenCache = [FBSDKTokenCache new];
   [FBSDKAccessToken setTokenCache:tokenCache];
   [FBSDKAccessToken setConnectionFactory:[FBSDKGraphRequestConnectionFactory new]];
   [FBSDKAuthenticationToken setTokenCache:tokenCache];
-  [FBSDKSettings configureWithStore:NSUserDefaults.standardUserDefaults
+  [FBSDKSettings configureWithStore:store
      appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
              infoDictionaryProvider:NSBundle.mainBundle
                         eventLogger:[FBSDKEventLogger new]];
   [FBSDKInternalUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:FBSDKAccessToken.class];
-  [FBSDKAppEventsConfigurationManager configureWithStore:NSUserDefaults.standardUserDefaults];
+  [FBSDKAppEventsConfigurationManager configureWithStore:store];
 #if !TARGET_OS_TV
   [FBSDKAppLinkUtility configureWithRequestProvider:[FBSDKGraphRequestFactory new]
                              infoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKCodelessIndexer configureWithRequestProvider:[FBSDKGraphRequestFactory new]];
   [FBSDKSKAdNetworkReporter configureWithRequestProvider:[FBSDKGraphRequestFactory new]];
-  [FBSDKProfile configureWithStore:NSUserDefaults.standardUserDefaults
+  [FBSDKProfile configureWithStore:store
                accessTokenProvider:FBSDKAccessToken.class];
 #endif
 }

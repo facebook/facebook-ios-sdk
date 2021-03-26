@@ -20,10 +20,13 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKAppEventsAtePublisher.h"
+#import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKTestCase.h"
 #import "UserDefaultsSpy.h"
 
 @interface FBSDKAppEventsAtePublisherTests : FBSDKTestCase
+
+@property (nonatomic, strong) UserDefaultsSpy *store;
 
 @end
 
@@ -32,17 +35,24 @@
 static const int TWELVE_HOURS_AGO_IN_SECONDS = -12 * 60 * 60;
 static const int FORTY_EIGHT_HOURS_AGO_IN_SECONDS = -48 * 60 * 60;
 
+- (void)setUp
+{
+  [super setUp];
+
+  self.store = [UserDefaultsSpy new];
+}
+
 - (void)testCreatingWithEmptyAppIdentifier
 {
   XCTAssertNil(
-    [[FBSDKAppEventsAtePublisher alloc] initWithAppIdentifier:@""],
+    [[FBSDKAppEventsAtePublisher alloc] initWithAppIdentifier:@"" store:self.store],
     "Should not create an ATE publisher with an empty app identifier"
   );
 }
 
 - (void)testCreatingWithValidAppIdentifier
 {
-  FBSDKAppEventsAtePublisher *publisher = [[FBSDKAppEventsAtePublisher alloc] initWithAppIdentifier:self.name];
+  FBSDKAppEventsAtePublisher *publisher = [[FBSDKAppEventsAtePublisher alloc] initWithAppIdentifier:self.name store:self.store];
   XCTAssertEqualObjects(
     publisher.appIdentifier,
     self.name,
@@ -52,7 +62,6 @@ static const int FORTY_EIGHT_HOURS_AGO_IN_SECONDS = -48 * 60 * 60;
 
 - (void)testPublishingAteWithoutLastPublishDate
 {
-  [self stubUserDefaultsWith:UserDefaultsSpy.new];
   [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingAllowed];
 
   id graphRequestMock = OCMClassMock([FBSDKGraphRequest class]);
@@ -65,7 +74,7 @@ static const int FORTY_EIGHT_HOURS_AGO_IN_SECONDS = -48 * 60 * 60;
                                   flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery]
   ).andReturn(graphRequestMock);
 
-  FBSDKAppEventsAtePublisher *publisher = [[FBSDKAppEventsAtePublisher alloc] initWithAppIdentifier:self.name];
+  FBSDKAppEventsAtePublisher *publisher = [[FBSDKAppEventsAtePublisher alloc] initWithAppIdentifier:self.name store:self.store];
 
   [publisher publishATE];
 
@@ -73,14 +82,19 @@ static const int FORTY_EIGHT_HOURS_AGO_IN_SECONDS = -48 * 60 * 60;
 
   [graphRequestMock stopMocking];
   graphRequestMock = nil;
+
+  NSString *key = [NSString stringWithFormat:@"com.facebook.sdk:lastATEPing%@", publisher.appIdentifier];
+  XCTAssertEqualObjects(
+    self.store.capturedObjectRetrievalKey,
+    key,
+    "Should use the store to access the last published date"
+  );
 }
 
 - (void)testPublishingWithNonExpiredLastPublishDate
 {
-  UserDefaultsSpy *userDefault = [UserDefaultsSpy new];
-  [userDefault setObject:[NSDate dateWithTimeIntervalSinceNow:TWELVE_HOURS_AGO_IN_SECONDS]
-                  forKey:[NSString stringWithFormat:@"com.facebook.sdk:lastATEPing%@", @"mockAppID"]];
-  [self stubUserDefaultsWith:userDefault];
+  [self.store setObject:[NSDate dateWithTimeIntervalSinceNow:TWELVE_HOURS_AGO_IN_SECONDS]
+                 forKey:[NSString stringWithFormat:@"com.facebook.sdk:lastATEPing%@", @"mockAppID"]];
   [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingAllowed];
 
   id graphRequestMock = OCMClassMock([FBSDKGraphRequest class]);
@@ -93,7 +107,7 @@ static const int FORTY_EIGHT_HOURS_AGO_IN_SECONDS = -48 * 60 * 60;
                                   flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery]
   ).andReturn(graphRequestMock);
 
-  FBSDKAppEventsAtePublisher *publisher = [[FBSDKAppEventsAtePublisher alloc] initWithAppIdentifier:@"mockAppID"];
+  FBSDKAppEventsAtePublisher *publisher = [[FBSDKAppEventsAtePublisher alloc] initWithAppIdentifier:@"mockAppID" store:self.store];
 
   OCMReject([graphRequestMock startWithCompletionHandler:[OCMArg any]]);
 
@@ -101,14 +115,19 @@ static const int FORTY_EIGHT_HOURS_AGO_IN_SECONDS = -48 * 60 * 60;
 
   [graphRequestMock stopMocking];
   graphRequestMock = nil;
+
+  NSString *key = [NSString stringWithFormat:@"com.facebook.sdk:lastATEPing%@", publisher.appIdentifier];
+  XCTAssertEqualObjects(
+    self.store.capturedObjectRetrievalKey,
+    key,
+    "Should use the store to access the last published date"
+  );
 }
 
 - (void)testPublishingWithExpiredLastPublishDate
 {
-  UserDefaultsSpy *userDefault = [UserDefaultsSpy new];
-  [userDefault setObject:[NSDate dateWithTimeIntervalSinceNow:FORTY_EIGHT_HOURS_AGO_IN_SECONDS]
-                  forKey:[NSString stringWithFormat:@"com.facebook.sdk:lastATEPing%@", @"mockAppID"]];
-  [self stubUserDefaultsWith:userDefault];
+  [self.store setObject:[NSDate dateWithTimeIntervalSinceNow:FORTY_EIGHT_HOURS_AGO_IN_SECONDS]
+                 forKey:[NSString stringWithFormat:@"com.facebook.sdk:lastATEPing%@", @"mockAppID"]];
   [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingAllowed];
 
   id graphRequestMock = OCMClassMock([FBSDKGraphRequest class]);
@@ -121,7 +140,8 @@ static const int FORTY_EIGHT_HOURS_AGO_IN_SECONDS = -48 * 60 * 60;
                                   flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery]
   ).andReturn(graphRequestMock);
 
-  FBSDKAppEventsAtePublisher *publisher = [[FBSDKAppEventsAtePublisher alloc] initWithAppIdentifier:@"mockAppID"];
+  FBSDKAppEventsAtePublisher *publisher = [[FBSDKAppEventsAtePublisher alloc] initWithAppIdentifier:@"mockAppID"
+                                                                                              store:self.store];
 
   [publisher publishATE];
 
@@ -129,6 +149,13 @@ static const int FORTY_EIGHT_HOURS_AGO_IN_SECONDS = -48 * 60 * 60;
 
   [graphRequestMock stopMocking];
   graphRequestMock = nil;
+
+  NSString *key = [NSString stringWithFormat:@"com.facebook.sdk:lastATEPing%@", publisher.appIdentifier];
+  XCTAssertEqualObjects(
+    self.store.capturedObjectRetrievalKey,
+    key,
+    "Should use the store to access the last published date"
+  );
 }
 
 @end

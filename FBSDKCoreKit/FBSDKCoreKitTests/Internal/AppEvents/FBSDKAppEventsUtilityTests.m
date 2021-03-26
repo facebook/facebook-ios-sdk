@@ -59,16 +59,25 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   userDefaultsSpy = [UserDefaultsSpy new];
   bundle = [TestBundle new];
   logger = [TestEventLogger new];
+  TestAppEventsConfigurationProvider.stubbedConfiguration = SampleAppEventsConfigurations.valid;
 
   [FBSDKSettings configureWithStore:userDefaultsSpy
      appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
              infoDictionaryProvider:bundle
                         eventLogger:logger];
+  [FBSDKAppEvents configureWithGateKeeperManager:TestGateKeeperManager.self
+                  appEventsConfigurationProvider:TestAppEventsConfigurationProvider.self
+                     serverConfigurationProvider:TestServerConfigurationProvider.self
+                            graphRequestProvider:[TestGraphRequestFactory new]
+                                           store:userDefaultsSpy];
 }
 
 - (void)tearDown
 {
   [self.appEventsUtilityClassMock stopMocking];
+  [FBSDKAppEvents reset];
+  [TestAppEventsConfigurationProvider reset];
+  [TestServerConfigurationProvider reset];
 
   [super tearDown];
 }
@@ -179,9 +188,9 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 - (void)testGetAdvertiserIDOniOS14WithCollectionEnabled
 {
   [self stubIsAdvertiserIDCollectionEnabledWith:YES];
-  FBSDKAppEventsConfiguration *configuration = [FBSDKAppEventsConfigurationFixtures configWithDefaultATEStatus:FBSDKAdvertisingTrackingUnspecified
-                                                                                 advertiserIDCollectionEnabled:YES
-                                                                                        eventCollectionEnabled:YES];
+  FBSDKAppEventsConfiguration *configuration = [SampleAppEventsConfigurations createWithDefaultATEStatus:FBSDKAdvertisingTrackingUnspecified
+                                                                           advertiserIDCollectionEnabled:YES
+                                                                                  eventCollectionEnabled:YES];
   [self stubCachedAppEventsConfigurationWithConfiguration:configuration];
   [self stubAdvertisingIdentifierWithIdentifier:NSUUID.UUID];
   [self stubSharedAsIdentifierManagerWithAsIdentifierManager:self.asIdentifierManagerClassMock];
@@ -198,9 +207,9 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [self stubIsAdvertiserTrackingEnabledWith:YES];
 
-  FBSDKAppEventsConfiguration *configuration = [FBSDKAppEventsConfigurationFixtures configWithDefaultATEStatus:FBSDKAdvertisingTrackingUnspecified
-                                                                                 advertiserIDCollectionEnabled:NO
-                                                                                        eventCollectionEnabled:YES];
+  FBSDKAppEventsConfiguration *configuration = [SampleAppEventsConfigurations createWithDefaultATEStatus:FBSDKAdvertisingTrackingUnspecified
+                                                                           advertiserIDCollectionEnabled:NO
+                                                                                  eventCollectionEnabled:YES];
   [self stubCachedAppEventsConfigurationWithConfiguration:configuration];
   [self stubAdvertisingIdentifierWithIdentifier:NSUUID.UUID];
   [self stubSharedAsIdentifierManagerWithAsIdentifierManager:self.asIdentifierManagerClassMock];
@@ -214,9 +223,9 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingDisallowed];
 
-  FBSDKAppEventsConfiguration *configuration = [FBSDKAppEventsConfigurationFixtures configWithDefaultATEStatus:FBSDKAdvertisingTrackingUnspecified
-                                                                                 advertiserIDCollectionEnabled:YES
-                                                                                        eventCollectionEnabled:NO];
+  FBSDKAppEventsConfiguration *configuration = [SampleAppEventsConfigurations createWithDefaultATEStatus:FBSDKAdvertisingTrackingUnspecified
+                                                                           advertiserIDCollectionEnabled:YES
+                                                                                  eventCollectionEnabled:NO];
   [self stubCachedAppEventsConfigurationWithConfiguration:configuration];
 
   if (@available(iOS 14.0, *)) {

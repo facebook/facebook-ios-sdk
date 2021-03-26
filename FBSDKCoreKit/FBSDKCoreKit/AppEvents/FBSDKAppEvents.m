@@ -332,6 +332,8 @@ static id<FBSDKGraphRequestProviding> g_graphRequestProvider;
 
 @interface FBSDKAppEvents ()
 
+@property (class, nullable, assign) id<FBSDKDataPersisting> store;
+
 @property (nonatomic, assign) FBSDKAppEventsFlushBehavior flushBehavior;
 
 // for testing only.
@@ -359,6 +361,7 @@ static id<FBSDKGraphRequestProviding> g_graphRequestProvider;
 
 #pragma mark - Object Lifecycle
 
+static id<FBSDKDataPersisting> _store;
 static BOOL _canLogEvents = NO;
 
 static UIApplicationState _applicationState = UIApplicationStateInactive;
@@ -375,9 +378,9 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 
 - (instancetype)init
 {
-  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-  NSString *userID = [defaults stringForKey:USER_ID_USER_DEFAULTS_KEY];
-  FBSDKAppEventsAtePublisher *publisher = [[FBSDKAppEventsAtePublisher alloc] initWithAppIdentifier:self.appID];
+  NSString *userID = [self.class.store stringForKey:USER_ID_USER_DEFAULTS_KEY];
+  FBSDKAppEventsAtePublisher *publisher = [[FBSDKAppEventsAtePublisher alloc] initWithAppIdentifier:self.appID
+                                                                                              store:self.class.store];
   return [self initWithFlushBehavior:FBSDKAppEventsFlushBehaviorAuto
                 flushPeriodInSeconds:FLUSH_PERIOD_IN_SECONDS
                               userID:userID
@@ -747,9 +750,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
     return;
   }
   [[self class] singleton].userID = userID;
-  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-  [defaults setObject:userID forKey:USER_ID_USER_DEFAULTS_KEY];
-  [defaults synchronize];
+  [self.store setObject:userID forKey:USER_ID_USER_DEFAULTS_KEY];
 }
 
 + (void)clearUserID
@@ -878,11 +879,17 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
         appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
            serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                   graphRequestProvider:(id<FBSDKGraphRequestProviding>)provider
+                                 store:(id<FBSDKDataPersisting>)store
 {
-  [FBSDKAppEvents setGateKeeperManager:gateKeeperManager];
   [FBSDKAppEvents setAppEventsConfigurationProvider:appEventsConfigurationProvider];
   [FBSDKAppEvents setServerConfigurationProvider:serverConfigurationProvider];
-  [FBSDKAppEvents setRequestProvider:provider];
+  if (g_gateKeeperManager != gateKeeperManager) {
+    g_gateKeeperManager = gateKeeperManager;
+  }
+  if (g_graphRequestProvider != provider) {
+    g_graphRequestProvider = provider;
+  }
+  self.store = store;
   [FBSDKAppEvents setCanLogEvents];
 }
 
@@ -891,11 +898,9 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   return g_gateKeeperManager;
 }
 
-+ (void)setGateKeeperManager:(Class<FBSDKGateKeeperManaging>)manager
++ (id<FBSDKGraphRequestProviding>)requestProvider
 {
-  if (g_gateKeeperManager != manager) {
-    g_gateKeeperManager = manager;
-  }
+  return g_graphRequestProvider;
 }
 
 + (Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
@@ -922,15 +927,15 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   }
 }
 
-+ (id<FBSDKGraphRequestProviding>)requestProvider
++ (id<FBSDKDataPersisting>)store
 {
-  return g_graphRequestProvider;
+  return _store;
 }
 
-+ (void)setRequestProvider:(id<FBSDKGraphRequestProviding>)provider
++ (void)setStore:(id<FBSDKDataPersisting>)store
 {
-  if (g_graphRequestProvider != provider) {
-    g_graphRequestProvider = provider;
+  if (_store != store) {
+    _store = store;
   }
 }
 
@@ -1056,7 +1061,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
     return;
   }
   NSString *lastAttributionPingString = [NSString stringWithFormat:@"com.facebook.sdk:lastAttributionPing%@", appID];
-  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  id<FBSDKDataPersisting> defaults = self.class.store;
   if ([defaults objectForKey:lastAttributionPingString]) {
     return;
   }
@@ -1078,7 +1083,6 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
         [defaults setObject:[NSDate date] forKey:lastAttributionPingString];
         NSString *lastInstallResponseKey = [NSString stringWithFormat:@"com.facebook.sdk:lastInstallResponse%@", appID];
         [defaults setObject:result forKey:lastInstallResponseKey];
-        [defaults synchronize];
       }
     }];
   }];
@@ -1600,8 +1604,12 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 
 #if DEBUG
 
-+ (void)resetCanLogEvents
++ (void)reset
 {
+  [self resetApplicationState];
+  g_gateKeeperManager = nil;
+  g_graphRequestProvider = nil;
+  _store = nil;
   _canLogEvents = NO;
 }
 

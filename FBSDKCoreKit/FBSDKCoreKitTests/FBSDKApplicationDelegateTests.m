@@ -50,13 +50,6 @@
 @interface FBSDKBridgeAPI (ApplicationObserving) <FBSDKApplicationObserving>
 @end
 
-@interface FBSDKAppEvents (Testing)
-+ (UIApplicationState)applicationState;
-+ (void)resetCanLogEvents;
-+ (BOOL)canLogEvents;
-+ (id<FBSDKGraphRequestProviding>)requestProvider;
-@end
-
 @interface FBSDKCodelessIndexer (Testing)
 + (id<FBSDKGraphRequestProviding>)requestProvider;
 @end
@@ -82,13 +75,14 @@
 }
 @end
 
-@interface FBSDKAppEvents (Testing)
+@interface FBSDKAppEvents (ApplicationDelegateTesting)
 + (UIApplicationState)applicationState;
-+ (void)resetCanLogEvents;
 + (BOOL)canLogEvents;
 + (Class<FBSDKGateKeeperManaging>)gateKeeperManager;
 + (Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider;
 + (Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
++ (id<FBSDKGraphRequestProviding>)requestProvider;
++ (id<FBSDKDataPersisting>)store;
 @end
 
 @implementation FBSDKApplicationDelegateTests
@@ -216,10 +210,10 @@
   );
 }
 
-- (void)testInitializingSdkEnablesLogEvents
+- (void)testInitializingSdkEnablesAppEvents
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
-  [FBSDKAppEvents resetCanLogEvents];
+  [FBSDKAppEvents reset];
 
   [_delegate initializeSDKWithLaunchOptions:@{}];
 
@@ -230,7 +224,7 @@
 
   XCTAssertEqualObjects(
     FBSDKAppEvents.gateKeeperManager,
-    [FBSDKGateKeeperManager class],
+    FBSDKGateKeeperManager.class,
     "Initializing the SDK should set gate keeper manager for event logging"
   );
   NSObject *requestProvider = (NSObject *) FBSDKAppEvents.requestProvider;
@@ -249,6 +243,12 @@
     FBSDKAppEvents.serverConfigurationProvider,
     FBSDKServerConfigurationManager.class,
     "Initializing the SDK should set server configuration provider for event logging"
+  );
+  NSObject *store = (NSObject *)FBSDKAppEvents.store;
+  XCTAssertEqualObjects(
+    store,
+    NSUserDefaults.standardUserDefaults,
+    "Should be configured with the expected concrete data store"
   );
 }
 

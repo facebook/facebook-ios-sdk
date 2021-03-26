@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol FBSDKDataPersisting;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKAtePublishing <NSObject>
@@ -32,7 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
-- (nullable instancetype)initWithAppIdentifier:(NSString *)appIdentifier;
+- (nullable instancetype)initWithAppIdentifier:(NSString *)appIdentifier
+                                         store:(id<FBSDKDataPersisting>)store;
 
 - (void)publishATE;
 

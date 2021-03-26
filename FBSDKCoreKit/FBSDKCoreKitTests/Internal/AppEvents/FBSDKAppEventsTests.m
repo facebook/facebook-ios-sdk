@@ -49,6 +49,8 @@ static NSString *const _mockUserID = @"mockUserID";
 
 @interface FBSDKAppEvents ()
 @property (nonatomic, copy) NSString *pushNotificationsDeviceTokenString;
+@property (nonatomic, strong) id<FBSDKAtePublishing> atePublisher;
+
 - (void)checkPersistedEvents;
 - (void)publishInstall;
 - (void)flushForReason:(FBSDKAppEventsFlushReason)flushReason;
@@ -61,13 +63,11 @@ static NSString *const _mockUserID = @"mockUserID";
 
 + (FBSDKAppEvents *)singleton;
 
++ (void)reset;
+
 + (void)setCanLogEvents;
 
-+ (void)resetCanLogEvents;
-
 + (BOOL)canLogEvents;
-
-+ (void)resetApplicationState;
 
 + (UIApplicationState)applicationState;
 
@@ -120,10 +120,18 @@ static NSString *const _mockUserID = @"mockUserID";
   double _mockPurchaseAmount;
   NSString *_mockCurrency;
   TestGraphRequestFactory *_graphRequestFactory;
+  UserDefaultsSpy *_store;
 }
 @end
 
 @implementation FBSDKAppEventsTests
+
++ (void)setUp
+{
+  [super setUp];
+
+  [FBSDKAppEvents reset];
+}
 
 - (void)setUp
 {
@@ -141,6 +149,7 @@ static NSString *const _mockUserID = @"mockUserID";
   _mockPurchaseAmount = 1.0;
   _mockCurrency = @"USD";
   _graphRequestFactory = [TestGraphRequestFactory new];
+  _store = [UserDefaultsSpy new];
 
   [FBSDKAppEvents setLoggingOverrideAppID:_mockAppID];
 
@@ -149,10 +158,41 @@ static NSString *const _mockUserID = @"mockUserID";
 
   // This should be removed when these tests are updated to check the actual requests that are created
   [self stubAllocatingGraphRequestConnection];
-  [FBSDKAppEvents resetApplicationState];
-  [FBSDKAppEvents resetCanLogEvents];
-  [FBSDKAppEvents setGateKeeperManager:[TestGateKeeperManager class]];
-  [FBSDKAppEvents setRequestProvider:_graphRequestFactory];
+  [FBSDKAppEvents configureWithGateKeeperManager:TestGateKeeperManager.self
+                  appEventsConfigurationProvider:TestAppEventsConfigurationProvider.self
+                     serverConfigurationProvider:TestServerConfigurationProvider.self
+                            graphRequestProvider:_graphRequestFactory
+                                           store:_store];
+}
+
+- (void)tearDown
+{
+  [super tearDown];
+
+  [FBSDKAppEvents reset];
+  [TestAppEventsConfigurationProvider reset];
+  [TestServerConfigurationProvider reset];
+}
+
+- (void)testInitializingCreatesAtePublisher
+{
+  // This is necessary for now because we stub the AppEvents Singleton. Should be able
+  // to move away from this pattern once all the dependencies are manageable but for now
+  // this is a workaround to be able to test that initializing uses the dependencies
+  // configured on the type to create objects.
+  FBSDKAppEvents *events = (FBSDKAppEvents *)[(NSObject *)[FBSDKAppEvents alloc] init];
+  FBSDKAppEventsAtePublisher *publisher = events.atePublisher;
+
+  XCTAssertEqualObjects(
+    publisher.store,
+    _store,
+    "Initializing should create an ate publisher with the expected data store"
+  );
+  XCTAssertEqualObjects(
+    publisher.appIdentifier,
+    _mockAppID,
+    "Initializing should create an ate publisher with the expected app id"
+  );
 }
 
 - (void)testAppEventsMockIsSingleton
@@ -388,7 +428,6 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testActivateAppWithoutInitializedSDK
 {
-  [FBSDKAppEvents resetCanLogEvents];
   [FBSDKAppEvents activateApp];
 
   OCMReject([self.appEventsMock publishInstall]);
@@ -761,6 +800,7 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testCanLogEventValues
 {
+  [FBSDKAppEvents reset];
   XCTAssertFalse([FBSDKAppEvents canLogEvents], "The default value of canLogEvents should be NO");
   [FBSDKAppEvents setCanLogEvents];
   XCTAssertTrue([FBSDKAppEvents canLogEvents], "canLogEvents should now have a value of YES");
