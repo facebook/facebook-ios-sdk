@@ -129,7 +129,7 @@ static UIApplicationState _applicationState;
   }
   [self configureDependencies];
 
-  id<FBSDKSettingsLogging> const settingsLogger = self.settings;
+  Class<FBSDKSettingsLogging> const settingsLogger = self.settings;
   [settingsLogger logWarnings];
   [settingsLogger logIfSDKSettingsChanged];
   [settingsLogger recordInstall];
