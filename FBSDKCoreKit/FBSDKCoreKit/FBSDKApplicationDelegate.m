@@ -29,7 +29,7 @@
 #import "FBSDKError.h"
 #import "FBSDKEventDeactivationManager.h"
 #import "FBSDKEventLogger.h"
-#import "FBSDKFeatureManager.h"
+#import "FBSDKFeatureManager+FeatureChecking.h"
 #import "FBSDKGateKeeperManager.h"
 #import "FBSDKGraphRequestFactory.h"
 #import "FBSDKGraphRequestPiggybackManager+Internal.h"
@@ -477,6 +477,7 @@ static UIApplicationState _applicationState;
                   appEventsConfigurationProvider:[FBSDKAppEventsConfigurationManager class]
                      serverConfigurationProvider:[FBSDKServerConfigurationManager class]
                             graphRequestProvider:graphRequestProvider
+                                  featureChecker:[FBSDKFeatureManager class]
                                            store:store];
   [FBSDKGateKeeperManager configureWithSettings:FBSDKSettings.class
                                 requestProvider:graphRequestProvider

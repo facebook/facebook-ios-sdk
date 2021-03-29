@@ -37,7 +37,7 @@
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError.h"
 #import "FBSDKEventDeactivationManager.h"
-#import "FBSDKFeatureManager.h"
+#import "FBSDKFeatureChecking.h"
 #import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKGraphRequestProviding.h"
 #import "FBSDKInternalUtility.h"
@@ -329,6 +329,7 @@ static Class<FBSDKGateKeeperManaging> g_gateKeeperManager;
 static Class<FBSDKAppEventsConfigurationProviding> g_appEventsConfigurationProvider;
 static Class<FBSDKServerConfigurationProviding> g_serverConfigurationProvider;
 static id<FBSDKGraphRequestProviding> g_graphRequestProvider;
+static Class<FBSDKFeatureChecking> g_featureChecker;
 
 @interface FBSDKAppEvents ()
 
@@ -879,6 +880,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
         appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
            serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                   graphRequestProvider:(id<FBSDKGraphRequestProviding>)provider
+                        featureChecker:(Class<FBSDKFeatureChecking>)featureChecker
                                  store:(id<FBSDKDataPersisting>)store
 {
   [FBSDKAppEvents setAppEventsConfigurationProvider:appEventsConfigurationProvider];
@@ -886,26 +888,24 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   if (g_gateKeeperManager != gateKeeperManager) {
     g_gateKeeperManager = gateKeeperManager;
   }
-  if (g_graphRequestProvider != provider) {
-    g_graphRequestProvider = provider;
-  }
   self.store = store;
+  [FBSDKAppEvents setRequestProvider:provider];
+  [FBSDKAppEvents setFeatureChecker:featureChecker];
   [FBSDKAppEvents setCanLogEvents];
 }
 
-+ (Class<FBSDKGateKeeperManaging>)gateKeeperManager
++ (void)setFeatureChecker:(Class<FBSDKFeatureChecking>)checker
 {
-  return g_gateKeeperManager;
+  if (g_featureChecker != checker) {
+    g_featureChecker = checker;
+  }
 }
 
-+ (id<FBSDKGraphRequestProviding>)requestProvider
++ (void)setRequestProvider:(id<FBSDKGraphRequestProviding>)provider
 {
-  return g_graphRequestProvider;
-}
-
-+ (Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
-{
-  return g_appEventsConfigurationProvider;
+  if (g_graphRequestProvider != provider) {
+    g_graphRequestProvider = provider;
+  }
 }
 
 + (void)setAppEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)provider
@@ -913,11 +913,6 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   if (g_appEventsConfigurationProvider != provider) {
     g_appEventsConfigurationProvider = provider;
   }
-}
-
-+ (Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
-{
-  return g_serverConfigurationProvider;
 }
 
 + (void)setServerConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)provider
@@ -1164,45 +1159,45 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
       } else {
         [FBSDKPaymentObserver stopObservingTransactions];
       }
-      [FBSDKFeatureManager checkFeature:FBSDKFeatureRestrictiveDataFiltering completionBlock:^(BOOL enabled) {
+      [g_featureChecker checkFeature:FBSDKFeatureRestrictiveDataFiltering completionBlock:^(BOOL enabled) {
         if (enabled) {
           [FBSDKRestrictiveDataFilterManager enable];
         }
       }];
-      [FBSDKFeatureManager checkFeature:FBSDKFeatureEventDeactivation completionBlock:^(BOOL enabled) {
+      [g_featureChecker checkFeature:FBSDKFeatureEventDeactivation completionBlock:^(BOOL enabled) {
         if (enabled) {
           [FBSDKEventDeactivationManager enable];
         }
       }];
       if (@available(iOS 14.0, *)) {
-        [FBSDKFeatureManager checkFeature:FBSDKFeatureATELogging completionBlock:^(BOOL enabled) {
+        [g_featureChecker checkFeature:FBSDKFeatureATELogging completionBlock:^(BOOL enabled) {
           if (enabled) {
             [self publishATE];
           }
         }];
       }
     #if !TARGET_OS_TV
-      [FBSDKFeatureManager checkFeature:FBSDKFeatureCodelessEvents completionBlock:^(BOOL enabled) {
+      [g_featureChecker checkFeature:FBSDKFeatureCodelessEvents completionBlock:^(BOOL enabled) {
         if (enabled) {
           [self enableCodelessEvents];
         }
       }];
-      [FBSDKFeatureManager checkFeature:FBSDKFeatureAAM completionBlock:^(BOOL enabled) {
+      [g_featureChecker checkFeature:FBSDKFeatureAAM completionBlock:^(BOOL enabled) {
         if (enabled) {
           [FBSDKMetadataIndexer enable];
         }
       }];
-      [FBSDKFeatureManager checkFeature:FBSDKFeaturePrivacyProtection completionBlock:^(BOOL enabled) {
+      [g_featureChecker checkFeature:FBSDKFeaturePrivacyProtection completionBlock:^(BOOL enabled) {
         if (enabled) {
           [FBSDKModelManager enable];
         }
       }];
       if (@available(iOS 11.3, *)) {
         if (FBSDKSettings.SKAdNetworkReportEnabled) {
-          [FBSDKFeatureManager checkFeature:FBSDKFeatureSKAdNetwork completionBlock:^(BOOL SKAdNetworkEnabled) {
+          [g_featureChecker checkFeature:FBSDKFeatureSKAdNetwork completionBlock:^(BOOL SKAdNetworkEnabled) {
             if (SKAdNetworkEnabled) {
               [SKAdNetwork registerAppForAdNetworkAttribution];
-              [FBSDKFeatureManager checkFeature:FBSDKFeatureSKAdNetworkConversionValue completionBlock:^(BOOL SKAdNetworkConversionValueEnabled) {
+              [g_featureChecker checkFeature:FBSDKFeatureSKAdNetworkConversionValue completionBlock:^(BOOL SKAdNetworkConversionValueEnabled) {
                 if (SKAdNetworkConversionValueEnabled) {
                   [FBSDKSKAdNetworkReporter enable];
                 }
@@ -1616,6 +1611,31 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 + (void)resetApplicationState
 {
   _applicationState = UIApplicationStateInactive;
+}
+
++ (Class<FBSDKFeatureChecking>)featureChecker
+{
+  return g_featureChecker;
+}
+
++ (id<FBSDKGraphRequestProviding>)requestProvider
+{
+  return g_graphRequestProvider;
+}
+
++ (Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+{
+  return g_serverConfigurationProvider;
+}
+
++ (Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
+{
+  return g_appEventsConfigurationProvider;
+}
+
++ (Class<FBSDKGateKeeperManaging>)gateKeeperManager
+{
+  return g_gateKeeperManager;
 }
 
 #endif

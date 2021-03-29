@@ -79,6 +79,8 @@ static NSString *const _mockUserID = @"mockUserID";
 
 + (void)setRequestProvider:(id<FBSDKGraphRequestProviding>)provider;
 
++ (void)setFeatureChecker:(Class<FBSDKFeatureChecking>)checker;
+
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 
@@ -141,6 +143,11 @@ static NSString *const _mockUserID = @"mockUserID";
 
   [FBSDKSettings reset];
   [FBSDKInternalUtility reset];
+  [TestFeatureManager reset];
+  [FBSDKAppEvents setAppEventsConfigurationProvider:TestAppEventsConfigurationProvider.class];
+  [FBSDKAppEvents setServerConfigurationProvider:TestServerConfigurationProvider.class];
+  [FBSDKAppEvents setFeatureChecker:TestFeatureManager.class];
+
   [self stubLoadingAdNetworkReporterConfiguration];
   [self stubServerConfigurationFetchingWithConfiguration:FBSDKServerConfigurationFixtures.defaultConfig error:nil];
 
@@ -162,6 +169,7 @@ static NSString *const _mockUserID = @"mockUserID";
                   appEventsConfigurationProvider:TestAppEventsConfigurationProvider.self
                      serverConfigurationProvider:TestServerConfigurationProvider.self
                             graphRequestProvider:_graphRequestFactory
+                                  featureChecker:TestFeatureManager.self
                                            store:_store];
 }
 
@@ -773,8 +781,6 @@ static NSString *const _mockUserID = @"mockUserID";
 {
   FBSDKAppEventsConfiguration *configuration = [[FBSDKAppEventsConfiguration alloc] initWithJSON:@{}];
   TestAppEventsConfigurationProvider.stubbedConfiguration = configuration;
-  [FBSDKAppEvents setAppEventsConfigurationProvider:TestAppEventsConfigurationProvider.class];
-  [FBSDKAppEvents setServerConfigurationProvider:TestServerConfigurationProvider.class];
 
   __block BOOL didRunCallback = NO;
   [[FBSDKAppEvents singleton] fetchServerConfiguration:^void (void) {
@@ -793,6 +799,50 @@ static NSString *const _mockUserID = @"mockUserID";
   XCTAssertTrue(
     didRunCallback,
     "fetchServerConfiguration should call the callback block"
+  );
+}
+
+- (void)testFetchingConfigurationIncludingCertainFeatures
+{
+  [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
+  TestAppEventsConfigurationProvider.capturedBlock();
+  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  XCTAssertTrue(
+    [TestFeatureManager capturedFeaturesContains:FBSDKFeatureRestrictiveDataFiltering],
+    "fetchConfiguration should check if the RestrictiveDataFiltering feature is enabled"
+  );
+  // TODO: Once FBSDKRestrictiveDataFilterManager is injected, similar for all other features
+  //
+  // [TestFeatureManager capturedCompletionBlocks[FBSDKFeatureRestrictiveDataFiltering](YES)
+  //
+  // XCTAssertTrue(
+  // self.restrictiveDataFilterManager.isEnabled,
+  // "Should use the feature manager to determine if features are enabled"
+  // )
+
+  XCTAssertTrue(
+    [TestFeatureManager capturedFeaturesContains:FBSDKFeatureEventDeactivation],
+    "fetchConfiguration should check if the EventDeactivation feature is enabled"
+  );
+  XCTAssertTrue(
+    [TestFeatureManager capturedFeaturesContains:FBSDKFeatureATELogging],
+    "fetchConfiguration should check if the ATELogging feature is enabled"
+  );
+  XCTAssertTrue(
+    [TestFeatureManager capturedFeaturesContains:FBSDKFeatureCodelessEvents],
+    "fetchConfiguration should check if CodelessEvents feature is enabled"
+  );
+  XCTAssertTrue(
+    [TestFeatureManager capturedFeaturesContains:FBSDKFeatureAAM],
+    "fetchConfiguration should check if the AAM feature is enabled"
+  );
+  XCTAssertTrue(
+    [TestFeatureManager capturedFeaturesContains:FBSDKFeaturePrivacyProtection],
+    "fetchConfiguration should check if the PrivacyProtection feature is enabled"
+  );
+  XCTAssertTrue(
+    [TestFeatureManager capturedFeaturesContains:FBSDKFeatureSKAdNetwork],
+    "fetchConfiguration should check if the SKAdNetwork feature is enabled"
   );
 }
 

@@ -82,6 +82,7 @@
 + (Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider;
 + (Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
 + (id<FBSDKGraphRequestProviding>)requestProvider;
++ (Class<FBSDKFeatureChecking>)featureChecker;
 + (id<FBSDKDataPersisting>)store;
 @end
 
@@ -249,6 +250,11 @@
     store,
     NSUserDefaults.standardUserDefaults,
     "Should be configured with the expected concrete data store"
+  );
+  XCTAssertEqualObjects(
+    FBSDKAppEvents.featureChecker,
+    FBSDKFeatureManager.class,
+    "Initializing the SDK should set feature checker for event logging"
   );
 }
 
