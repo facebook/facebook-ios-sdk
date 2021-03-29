@@ -77,6 +77,7 @@ typedef NS_ENUM(NSUInteger, FBSDKFeature)
 
 typedef void (^FBSDKFeatureManagerBlock)(BOOL enabled);
 
+NS_SWIFT_NAME(FeatureManager)
 @interface FBSDKFeatureManager : NSObject
 
 + (void)checkFeature:(FBSDKFeature)feature

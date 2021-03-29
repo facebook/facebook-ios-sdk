@@ -1092,6 +1092,7 @@
 		F46E52A9260D249000BAF55C /* TestMeasurementEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46E52A8260D248F00BAF55C /* TestMeasurementEvent.swift */; };
 		F46E5338260D431200BAF55C /* TestURLOpener.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46E5330260D431200BAF55C /* TestURLOpener.swift */; };
 		F46E5407260E421100BAF55C /* TestAppLinkResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46E5406260E421100BAF55C /* TestAppLinkResolver.swift */; };
+		F46E5453260E613500BAF55C /* FeatureCheckerFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46E544B260E613500BAF55C /* FeatureCheckerFactoryTests.swift */; };
 		F46FA62D24533F450060C902 /* AccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = F487DBD9231EC293008416A9 /* AccessToken.swift */; };
 		F46FA63C24533F450060C902 /* AccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = F487DBD9231EC293008416A9 /* AccessToken.swift */; };
 		F46FA63D24533F610060C902 /* Permission.swift in Sources */ = {isa = PBXBuildFile; fileRef = F487DBCB231EC1A0008416A9 /* Permission.swift */; };
@@ -1849,6 +1850,7 @@
 		F46E52F7260D34DE00BAF55C /* UIApplication+URLOpener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIApplication+URLOpener.h"; sourceTree = "<group>"; };
 		F46E5330260D431200BAF55C /* TestURLOpener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestURLOpener.swift; sourceTree = "<group>"; };
 		F46E5406260E421100BAF55C /* TestAppLinkResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAppLinkResolver.swift; sourceTree = "<group>"; };
+		F46E544B260E613500BAF55C /* FeatureCheckerFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureCheckerFactoryTests.swift; sourceTree = "<group>"; };
 		F487DBCB231EC1A0008416A9 /* Permission.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Permission.swift; sourceTree = "<group>"; };
 		F487DBCD231EC20E008416A9 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		F487DBD9231EC293008416A9 /* AccessToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessToken.swift; sourceTree = "<group>"; };
@@ -2743,6 +2745,7 @@
 				F93680D4249D490600446E35 /* FBSDKSettingsTests.m */,
 				C6E98C8C2602BC9F001A56B1 /* FBSDKUserAgeRangeTests.m */,
 				89C8B19B1A8D7A27009B07F5 /* FBSDKUtilityTests.swift */,
+				F46E544B260E613500BAF55C /* FeatureCheckerFactoryTests.swift */,
 				893F44A41A644552001DB0B6 /* Internal */,
 				F4A032A125F05CFF00D19DE9 /* MathTests.swift */,
 				C67BED29257F1A6300D356C9 /* ProfilePictureViewTests.swift */,
@@ -4748,6 +4751,7 @@
 				F48AD348257700B80052C056 /* SampleAuthenticationToken.swift in Sources */,
 				F496E61224E6049A006231A2 /* AppDelegateObserverFake.swift in Sources */,
 				F4EC349725E6FBAC0003C0CF /* FBSDKEventLoggerTests.m in Sources */,
+				F46E5453260E613500BAF55C /* FeatureCheckerFactoryTests.swift in Sources */,
 				BF5D97C3242EC2D10096D7AA /* FBSDKFeatureExtractorTests.m in Sources */,
 				F443A31C25D231460093AB78 /* FBSDKAppEventsAtePublisherTests.m in Sources */,
 				5DAB023C23A1BA17005495FB /* FBSDKEventDeactivationTests.swift in Sources */,

@@ -83,6 +83,7 @@
 #import "FBSDKFeatureChecking.h"
 #import "FBSDKFeatureCheckerProviding.h"
 #import "FBSDKFeatureManager.h"
+#import "FBSDKFeatureCheckerFactory.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

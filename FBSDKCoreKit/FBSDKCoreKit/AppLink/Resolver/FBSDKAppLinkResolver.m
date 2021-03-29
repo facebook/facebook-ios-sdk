@@ -50,14 +50,11 @@ static NSString *const kAppLinksKey = @"app_links";
 @property (nonatomic, strong) NSMutableDictionary<NSURL *, FBSDKAppLink *> *cachedFBSDKAppLinks;
 @property (nonatomic, assign) UIUserInterfaceIdiom userInterfaceIdiom;
 @property (nonatomic, strong) FBSDKAppLinkResolverRequestBuilder *requestBuilder;
+@property (nonatomic, strong) id<FBSDKGraphRequestProviding> requestProvider;
+
 @end
 
 @implementation FBSDKAppLinkResolver
-
-+ (void)initialize
-{
-  if (self == [FBSDKAppLinkResolver class]) {}
-}
 
 - (instancetype)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom
 {
