@@ -16,24 +16,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+import Foundation
 
-#if !TARGET_OS_TV
+enum SampleUrls {
 
- #import "FBSDKMeasurementEvent.h"
+  static let valid: URL = {
+    // swiftlint:disable:next force_unwrapping
+    return URL(string: "https://www.example.com")!
+  }()
 
-NS_ASSUME_NONNULL_BEGIN
+  static func valid(path: String) -> URL {
+    return valid.appendingPathComponent(path)
+  }
 
-/**
- Provides methods for posting notifications from App Links
- */
-@interface FBSDKMeasurementEvent (Internal)
+}
 
-- (void)postNotificationForEventName:(NSString *)name
-                                args:(NSDictionary<NSString *, id> *)args;
+enum SampleUrlRequest {
 
-@end
-
-NS_ASSUME_NONNULL_END
-
-#endif
+  static let valid: URLRequest = {
+    return URLRequest(url: SampleUrls.valid)
+  }()
+}

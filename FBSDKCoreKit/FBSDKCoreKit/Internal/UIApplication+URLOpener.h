@@ -20,20 +20,12 @@
 
 #if !TARGET_OS_TV
 
- #import "FBSDKMeasurementEvent.h"
+ #import <UIKit/UIKit.h>
 
-NS_ASSUME_NONNULL_BEGIN
+ #import "FBSDKURLOpener.h"
 
-/**
- Provides methods for posting notifications from App Links
- */
-@interface FBSDKMeasurementEvent (Internal)
-
-- (void)postNotificationForEventName:(NSString *)name
-                                args:(NSDictionary<NSString *, id> *)args;
-
+// Default conformance to the URL opener protocol
+@interface UIApplication (URLOpener) <FBSDKURLOpener>
 @end
-
-NS_ASSUME_NONNULL_END
 
 #endif

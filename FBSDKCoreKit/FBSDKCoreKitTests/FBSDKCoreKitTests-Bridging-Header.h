@@ -20,6 +20,7 @@
 #import <AdSupport/AdSupport.h>
 
 #import "FBSDKAppEventsAtePublisher.h"
+#import "FBSDKAppLinkEventPosting.h"
 #import "FBSDKBridgeAPI+Testing.h"
 #import "FBSDKCloseIcon.h"
 #import "FBSDKCrashObserver.h"
@@ -32,6 +33,7 @@
 #import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKTestCase.h"
 #import "FBSDKTestCoder.h"
+#import "FBSDKURLOpener.h"
 #import "FBSDKViewHierarchy.h"
 #import "UserDefaultsSpy.h"
 // URLSession Abstraction
@@ -309,6 +311,33 @@ NS_SWIFT_NAME(reset());
            advertiserIDCollectionEnabled:(BOOL)advertiserIDCollectionEnabled
                   eventCollectionEnabled:(BOOL)eventCollectionEnabled
 NS_SWIFT_NAME(init(defaultATEStatus:advertiserIDCollectionEnabled:eventCollectionEnabled:));
+
+@end
+
+@interface FBSDKAppLink (Testing)
+
++ (instancetype)appLinkWithSourceURL:(nullable NSURL *)sourceURL
+                             targets:(nullable NSArray<FBSDKAppLinkTarget *> *)targets
+                              webURL:(nullable NSURL *)webURL
+                    isBackToReferrer:(BOOL)isBackToReferrer;
+
+@end
+
+@interface FBSDKAppLinkNavigation (Testing)
+
++ (void)reset;
+
+- (nullable NSURL *)appLinkURLWithTargetURL:(NSURL *)targetUrl error:(NSError **)error;
+- (void)postAppLinkNavigateEventNotificationWithTargetURL:(nullable NSURL *)outputURL
+                                                    error:(nullable NSError *)error
+                                                     type:(FBSDKAppLinkNavigationType)type
+                                              eventPoster:(id<FBSDKAppLinkEventPosting>)eventPoster;
+- (FBSDKAppLinkNavigationType)navigationTypeForTargets:(NSArray<FBSDKAppLinkTarget *> *)targets
+                                             urlOpener:(id<FBSDKURLOpener>)urlOpener;
+- (FBSDKAppLinkNavigationType)navigateWithUrlOpener:(id<FBSDKURLOpener>)urlOpener
+                                        eventPoster:(id<FBSDKAppLinkEventPosting>)eventPoster
+                                              error:(NSError **)error
+NS_SWIFT_NAME(navigate(urlOpener:eventPoster:error:));
 
 @end
 

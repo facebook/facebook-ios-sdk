@@ -16,24 +16,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+import FBSDKCoreKit
+import Foundation
 
-#if !TARGET_OS_TV
+@objcMembers
+class TestMeasurementEvent: NSObject, AppLinkEventPosting {
+  var capturedEventName: String?
+  var capturedArgs = [String: String]()
 
- #import "FBSDKMeasurementEvent.h"
-
-NS_ASSUME_NONNULL_BEGIN
-
-/**
- Provides methods for posting notifications from App Links
- */
-@interface FBSDKMeasurementEvent (Internal)
-
-- (void)postNotificationForEventName:(NSString *)name
-                                args:(NSDictionary<NSString *, id> *)args;
-
-@end
-
-NS_ASSUME_NONNULL_END
-
-#endif
+  func postNotification(forEventName name: String, args: [String: Any]) {
+    capturedEventName = name
+    capturedArgs = args as? [String: String] ?? [:]
+  }
+}

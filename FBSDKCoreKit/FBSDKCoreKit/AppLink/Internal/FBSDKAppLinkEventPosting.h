@@ -20,14 +20,12 @@
 
 #if !TARGET_OS_TV
 
- #import "FBSDKMeasurementEvent.h"
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- Provides methods for posting notifications from App Links
- */
-@interface FBSDKMeasurementEvent (Internal)
+NS_SWIFT_NAME(AppLinkEventPosting)
+@protocol FBSDKAppLinkEventPosting
 
 - (void)postNotificationForEventName:(NSString *)name
                                 args:(NSDictionary<NSString *, id> *)args;

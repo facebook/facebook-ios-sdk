@@ -16,15 +16,34 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+import FBSDKCoreKit
+import Foundation
 
-#import "FBSDKInternalUtility.h"
+@objcMembers
+class TestURLOpener: NSObject, URLOpener {
+  var capturedOpenUrl: URL?
+  var capturedCanOpenUrl: URL?
+  var openUrlStubs = [URL: Bool]()
+  let canOpenUrl: Bool
 
-NS_ASSUME_NONNULL_BEGIN
+  init(canOpenUrl: Bool) {
+    self.canOpenUrl = canOpenUrl
+  }
 
-NS_SWIFT_NAME(InfoDictionaryProviding)
-@protocol FBSDKInfoDictionaryProviding
+  func stubOpen(url: URL, success: Bool) {
+    openUrlStubs[url] = success
+  }
 
-@end
+  func canOpen(_ url: URL) -> Bool {
+    capturedCanOpenUrl = url
+    return canOpenUrl
+  }
 
-NS_ASSUME_NONNULL_END
+  func open(_ url: URL) -> Bool {
+    capturedOpenUrl = url
+    guard let didOpen = openUrlStubs[url] else {
+      fatalError("Must stub whether \(url.absoluteString) can be opened")
+    }
+    return didOpen
+  }
+}

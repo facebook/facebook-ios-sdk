@@ -16,24 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+@objcMembers
+class TestAppLinkResolver: NSObject, AppLinkResolving {
+  var capturedUrl: URL?
+  var capturedCompletion: AppLinkBlock?
 
-#if !TARGET_OS_TV
-
- #import "FBSDKMeasurementEvent.h"
-
-NS_ASSUME_NONNULL_BEGIN
-
-/**
- Provides methods for posting notifications from App Links
- */
-@interface FBSDKMeasurementEvent (Internal)
-
-- (void)postNotificationForEventName:(NSString *)name
-                                args:(NSDictionary<NSString *, id> *)args;
-
-@end
-
-NS_ASSUME_NONNULL_END
-
-#endif
+  func appLink(from url: URL, handler: @escaping AppLinkBlock) {
+    capturedUrl = url
+    capturedCompletion = handler
+  }
+}

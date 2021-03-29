@@ -109,9 +109,9 @@ NSString *const AutoAppLinkFlagKey = @"is_auto_applink";
         }
         [FBSDKTypeUtility dictionary:logData setObject:forRenderBackToReferrerBar ? EVENT_YES_VAL : EVENT_NO_VAL forKey:@"forRenderBackToReferrerBar"];
         [FBSDKTypeUtility dictionary:logData setObject:forOpenURLEvent ? EVENT_YES_VAL : EVENT_NO_VAL forKey:@"forOpenUrl"];
-        [FBSDKMeasurementEvent postNotificationForEventName:FBSDKAppLinkParseEventName args:logData];
+        [[FBSDKMeasurementEvent new] postNotificationForEventName:FBSDKAppLinkParseEventName args:logData];
         if (forOpenURLEvent) {
-          [FBSDKMeasurementEvent postNotificationForEventName:FBSDKAppLinkNavigateInEventName args:logData];
+          [[FBSDKMeasurementEvent new] postNotificationForEventName:FBSDKAppLinkNavigateInEventName args:logData];
         }
       }
     }

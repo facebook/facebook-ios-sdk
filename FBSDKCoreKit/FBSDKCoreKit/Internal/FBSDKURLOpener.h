@@ -16,20 +16,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import Foundation
+#import <Foundation/Foundation.h>
 
-enum SampleUrl {
+NS_ASSUME_NONNULL_BEGIN
 
-  static let valid: URL = {
-    // swiftlint:disable:next force_unwrapping
-    return URL(string: "https://www.example.com")!
-  }()
+NS_SWIFT_NAME(URLOpener)
+@protocol FBSDKURLOpener
 
-}
+- (BOOL)canOpenURL:(NSURL *)url;
+- (BOOL)openURL:(NSURL *)url;
 
-enum SampleUrlRequest {
+@end
 
-  static let valid: URLRequest = {
-    return URLRequest(url: SampleUrl.valid)
-  }()
-}
+NS_ASSUME_NONNULL_END

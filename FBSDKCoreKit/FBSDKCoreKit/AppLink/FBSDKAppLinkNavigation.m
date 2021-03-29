@@ -22,12 +22,16 @@
 
  #import "FBSDKAppLinkNavigation.h"
 
+ #import "FBSDKAppLinkEventPosting.h"
  #import "FBSDKAppLinkTarget.h"
  #import "FBSDKAppLink_Internal.h"
  #import "FBSDKInternalUtility.h"
+ #import "FBSDKMeasurementEvent+AppLinkEventPosting.h"
  #import "FBSDKMeasurementEvent_Internal.h"
  #import "FBSDKSettings.h"
+ #import "FBSDKURLOpener.h"
  #import "FBSDKWebViewAppLinkResolver.h"
+ #import "UIApplication+URLOpener.h"
 
 FOUNDATION_EXPORT NSString *const FBSDKAppLinkDataParameterName;
 FOUNDATION_EXPORT NSString *const FBSDKAppLinkTargetKeyName;
@@ -115,6 +119,15 @@ static id<FBSDKAppLinkResolving> defaultResolver;
 
 - (FBSDKAppLinkNavigationType)navigate:(NSError **)error
 {
+  return [self navigateWithUrlOpener:UIApplication.sharedApplication
+                         eventPoster:[FBSDKMeasurementEvent new]
+                               error:error];
+}
+
+- (FBSDKAppLinkNavigationType)navigateWithUrlOpener:(id<FBSDKURLOpener>)urlOpener
+                                        eventPoster:(id<FBSDKAppLinkEventPosting>)eventPoster
+                                              error:(NSError *__autoreleasing *)error
+{
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   NSURL *openedURL = nil;
@@ -128,7 +141,7 @@ static id<FBSDKAppLinkResolving> defaultResolver;
       if (error) {
         *error = encodingError;
       }
-    } else if ([[UIApplication sharedApplication] openURL:appLinkAppURL]) {
+    } else if ([urlOpener openURL:appLinkAppURL]) {
       retType = FBSDKAppLinkNavigationTypeApp;
       openedURL = appLinkAppURL;
       break;
@@ -143,7 +156,7 @@ static id<FBSDKAppLinkResolving> defaultResolver;
       if (error) {
         *error = encodingError;
       }
-    } else if ([[UIApplication sharedApplication] openURL:appLinkBrowserURL]) {
+    } else if ([urlOpener openURL:appLinkBrowserURL]) {
       // This was a browser navigation.
       retType = FBSDKAppLinkNavigationTypeBrowser;
       openedURL = appLinkBrowserURL;
@@ -153,11 +166,25 @@ static id<FBSDKAppLinkResolving> defaultResolver;
 
   [self postAppLinkNavigateEventNotificationWithTargetURL:openedURL
                                                     error:error ? *error : nil
-                                                     type:retType];
+                                                     type:retType
+                                              eventPoster:eventPoster];
   return retType;
 }
 
-- (void)postAppLinkNavigateEventNotificationWithTargetURL:(NSURL *)outputURL error:(NSError *)error type:(FBSDKAppLinkNavigationType)type
+- (void)postAppLinkNavigateEventNotificationWithTargetURL:(NSURL *)outputURL
+                                                    error:(NSError *)error
+                                                     type:(FBSDKAppLinkNavigationType)type
+{
+  [self postAppLinkNavigateEventNotificationWithTargetURL:outputURL
+                                                    error:error
+                                                     type:type
+                                              eventPoster:[FBSDKMeasurementEvent new]];
+}
+
+- (void)postAppLinkNavigateEventNotificationWithTargetURL:(NSURL *)outputURL
+                                                    error:(NSError *)error
+                                                     type:(FBSDKAppLinkNavigationType)type
+                                              eventPoster:(id<FBSDKAppLinkEventPosting>)eventPoster
 {
   NSString *const EVENT_YES_VAL = @"1";
   NSString *const EVENT_NO_VAL = @"0";
@@ -214,9 +241,9 @@ static id<FBSDKAppLinkResolving> defaultResolver;
   }
 
   if (self.appLink.backToReferrer) {
-    [FBSDKMeasurementEvent postNotificationForEventName:FBSDKAppLinkNavigateBackToReferrerEventName args:logData];
+    [eventPoster postNotificationForEventName:FBSDKAppLinkNavigateBackToReferrerEventName args:logData];
   } else {
-    [FBSDKMeasurementEvent postNotificationForEventName:FBSDKAppLinkNavigateOutEventName args:logData];
+    [eventPoster postNotificationForEventName:FBSDKAppLinkNavigateOutEventName args:logData];
   }
 }
 
@@ -271,9 +298,15 @@ static id<FBSDKAppLinkResolving> defaultResolver;
 
 - (FBSDKAppLinkNavigationType)navigationType
 {
+  return [self navigationTypeForTargets:self.appLink.targets urlOpener:UIApplication.sharedApplication];
+}
+
+- (FBSDKAppLinkNavigationType)navigationTypeForTargets:(nonnull NSArray<FBSDKAppLinkTarget *> *)targets
+                                             urlOpener:(nonnull id<FBSDKURLOpener>)urlOpener
+{
   FBSDKAppLinkTarget *eligibleTarget = nil;
   for (FBSDKAppLinkTarget *target in self.appLink.targets) {
-    if ([[UIApplication sharedApplication] canOpenURL:target.URL]) {
+    if ([urlOpener canOpenURL:target.URL]) {
       eligibleTarget = target;
       break;
     }
@@ -312,6 +345,17 @@ static id<FBSDKAppLinkResolving> defaultResolver;
 {
   defaultResolver = resolver;
 }
+
+ #if DEBUG
+  #if FBSDKTEST
+
++ (void)reset
+{
+  defaultResolver = nil;
+}
+
+  #endif
+ #endif
 
 @end
 
