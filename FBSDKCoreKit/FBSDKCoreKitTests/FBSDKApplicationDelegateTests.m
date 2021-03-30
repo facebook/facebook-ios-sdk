@@ -92,11 +92,11 @@
 {
   [super setUp];
 
-  [TestTokenWallet reset];
+  [TestAccessTokenWallet reset];
   [TestSettings reset];
 
   _delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationObserver:[TestNotificationCenter new]
-                                                                 tokenWallet:TestTokenWallet.class
+                                                                 tokenWallet:TestAccessTokenWallet.class
                                                                     settings:TestSettings.class];
   _delegate.isAppLaunched = NO;
 
@@ -129,7 +129,7 @@
   [_partialDelegateMock stopMocking];
   _partialDelegateMock = nil;
 
-  [TestTokenWallet reset];
+  [TestAccessTokenWallet reset];
   [TestSettings reset];
 }
 
@@ -505,16 +505,16 @@
   FBSDKAccessToken *expected = SampleAccessTokens.validToken;
   TestTokenCache *cache = [[TestTokenCache alloc] initWithAccessToken:expected
                                                   authenticationToken:nil];
-  [TestTokenWallet setTokenCache:cache];
+  [TestAccessTokenWallet setTokenCache:cache];
 
   _delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationObserver:[TestNotificationCenter new]
-                                                                 tokenWallet:TestTokenWallet.class
+                                                                 tokenWallet:TestAccessTokenWallet.class
                                                                     settings:TestSettings.class];
 
   [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 
   XCTAssertEqualObjects(
-    TestTokenWallet.currentAccessToken,
+    TestAccessTokenWallet.currentAccessToken,
     expected,
     "Should set the current access token to the cached access token when it exists"
   );
@@ -522,13 +522,13 @@
 
 - (void)testDidFinishLaunchingSetsCurrentAccessTokenWithoutCache
 {
-  TestTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
-  [TestTokenWallet setTokenCache:[[TestTokenCache alloc] initWithAccessToken:nil authenticationToken:nil]];
+  TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
+  [TestAccessTokenWallet setTokenCache:[[TestTokenCache alloc] initWithAccessToken:nil authenticationToken:nil]];
 
   [_delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 
   XCTAssertNil(
-    TestTokenWallet.currentAccessToken,
+    TestAccessTokenWallet.currentAccessToken,
     "Should set the current access token to nil access token when there isn't a cached token"
   );
 }

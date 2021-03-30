@@ -19,12 +19,10 @@
 import FBSDKCoreKit
 
 @objcMembers
-class TestTokenWallet: NSObject, AccessTokenProviding, AccessTokenSetting {
-  static var tokenCache: TokenCaching?
-  static var currentAccessToken: AccessToken?
+class TestClientTokenProvider: NSObject, ClientTokenProviding {
+  var clientToken: String?
 
-  static func reset() {
-    tokenCache = nil
-    currentAccessToken = nil
+  init(clientToken: String? = nil) {
+    self.clientToken = clientToken
   }
 }

@@ -33,7 +33,7 @@ class ViewImpressionTrackerTests: XCTestCase {
     super.setUp()
 
     ViewImpressionTracker.reset()
-    TestTokenWallet.currentAccessToken = SampleAccessTokens.validToken
+    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
 
     tracker = createImpressionTracker(named: sharedTrackerName)
   }
@@ -62,7 +62,7 @@ class ViewImpressionTrackerTests: XCTestCase {
       "Should be able to create with a notification observer"
     )
     XCTAssertTrue(
-      tracker.tokenWallet is TestTokenWallet.Type,
+      tracker.tokenWallet is TestAccessTokenWallet.Type,
       "Should be able to create with a token wallet type"
     )
   }
@@ -220,7 +220,7 @@ class ViewImpressionTrackerTests: XCTestCase {
       graphRequestProvider: requestProvider,
       eventLogger: logger,
       notificationObserver: notificationCenter,
-      tokenWallet: TestTokenWallet.self
+      tokenWallet: TestAccessTokenWallet.self
     )
   }
 }

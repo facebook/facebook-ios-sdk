@@ -33,7 +33,7 @@ class ApplicationDelegateTests: XCTestCase {
     center = TestNotificationCenter()
     delegate = ApplicationDelegate(
       notificationObserver: center,
-      tokenWallet: TestTokenWallet.self,
+      tokenWallet: TestAccessTokenWallet.self,
       settings: TestSettings.self
     )
   }
@@ -53,17 +53,17 @@ class ApplicationDelegateTests: XCTestCase {
     )
   }
 
-  func testDefaultAccessTokenProvider() {
+  func testDefaultAccessTokenSetter() {
     XCTAssertTrue(
       ApplicationDelegate.shared.tokenWallet is AccessToken.Type,
-      "Should use the expected default access token provider"
+      "Should use the expected default access token setter"
     )
   }
 
-  func testCreatingWithAccessTokenProvider() {
+  func testCreatingWithAccessTokenSetter() {
     XCTAssertTrue(
-      delegate.tokenWallet is TestTokenWallet.Type,
-      "Should be able to create with a custom access token provider"
+      delegate.tokenWallet is TestAccessTokenWallet.Type,
+      "Should be able to create with a custom access token setter"
     )
   }
 

@@ -49,7 +49,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [super setUp];
   [self resetCaches];
 
-  [Manager configureWithTokenWallet:TestTokenWallet.class];
+  [Manager configureWithTokenWallet:TestAccessTokenWallet.class];
 }
 
 - (void)tearDown
@@ -61,7 +61,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
 - (void)resetCaches
 {
-  [TestTokenWallet reset];
+  [TestAccessTokenWallet reset];
   [FBSDKGraphRequestPiggybackManager reset];
 }
 
@@ -80,7 +80,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 {
   XCTAssertEqualObjects(
     [Manager tokenWallet],
-    TestTokenWallet.class,
+    TestAccessTokenWallet.class,
     "Should be configurable with an access token provider"
   );
 }
@@ -197,7 +197,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testAddsTokenExtensionRequest
 {
   [self stubAppID:@"abc123"];
-  TestTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
+  TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
   FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
 
   [Manager addRefreshPiggyback:connection permissionHandler:nil];
@@ -231,7 +231,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 {
   [self completeTokenRefreshForAccessToken:SampleAccessTokens.validToken results:nil];
 
-  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+  [self validateRefreshedToken:TestAccessTokenWallet.currentAccessToken
        withExpectedTokenString:SampleAccessTokens.validToken.tokenString];
 }
 
@@ -240,7 +240,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [self completeTokenRefreshForAccessToken:SampleAccessTokens.validToken
                                    results:@{@"access_token" : @""}];
 
-  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+  [self validateRefreshedToken:TestAccessTokenWallet.currentAccessToken
        withExpectedTokenString:@""];
 }
 
@@ -249,7 +249,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [self completeTokenRefreshForAccessToken:SampleAccessTokens.validToken
                                    results:@{@"access_token" : @"    "}];
 
-  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+  [self validateRefreshedToken:TestAccessTokenWallet.currentAccessToken
        withExpectedTokenString:@"    "];
 }
 
@@ -258,12 +258,12 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [self completeTokenRefreshForAccessToken:SampleAccessTokens.validToken
                                    results:@{@"expires_at" : @"0"}];
 
-  [self validateRefreshedToken:TestTokenWallet.currentAccessToken];
+  [self validateRefreshedToken:TestAccessTokenWallet.currentAccessToken];
 
   [self completeTokenRefreshForAccessToken:SampleAccessTokens.validToken
                                    results:@{@"expires_at" : @"-1000"}];
 
-  [self validateRefreshedToken:TestTokenWallet.currentAccessToken];
+  [self validateRefreshedToken:TestAccessTokenWallet.currentAccessToken];
 }
 
 - (void)testCompletingTokenExtensionRequestWithUnreasonableValidExpirationDate
@@ -273,7 +273,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
   NSDate *expectedExpirationDate = [NSDate dateWithTimeIntervalSince1970:100];
 
-  [self validateRefreshedToken:TestTokenWallet.currentAccessToken expectedExpirationDate:expectedExpirationDate];
+  [self validateRefreshedToken:TestAccessTokenWallet.currentAccessToken expectedExpirationDate:expectedExpirationDate];
 }
 
 - (void)testCompletingTokenExtensionRequestWithReasonableValidExpirationDate
@@ -286,7 +286,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
   NSDate *expectedExpirationDate = [NSDate dateWithTimeIntervalSince1970:oneWeekFromNow.timeIntervalSince1970];
 
-  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+  [self validateRefreshedToken:TestAccessTokenWallet.currentAccessToken
         expectedExpirationDate:expectedExpirationDate];
 }
 
@@ -294,11 +294,11 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 {
   [self completeTokenRefreshForAccessToken:SampleAccessTokens.validToken results:@{@"data_access_expiration_time" : @"0"}];
 
-  [self validateRefreshedToken:TestTokenWallet.currentAccessToken];
+  [self validateRefreshedToken:TestAccessTokenWallet.currentAccessToken];
 
   [self completeTokenRefreshForAccessToken:SampleAccessTokens.validToken results:@{@"data_access_expiration_time" : @"-1000"}];
 
-  [self validateRefreshedToken:TestTokenWallet.currentAccessToken];
+  [self validateRefreshedToken:TestAccessTokenWallet.currentAccessToken];
 }
 
 - (void)testCompletingTokenExtensionRequestWithUnreasonableValidDataExpirationDate
@@ -307,7 +307,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
   NSDate *expectedExpirationDate = [NSDate dateWithTimeIntervalSince1970:100];
 
-  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+  [self validateRefreshedToken:TestAccessTokenWallet.currentAccessToken
     expectedDataExpirationDate:expectedExpirationDate];
 }
 
@@ -320,7 +320,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
   NSDate *expectedExpirationDate = [NSDate dateWithTimeIntervalSince1970:oneWeekFromNow.timeIntervalSince1970];
 
-  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+  [self validateRefreshedToken:TestAccessTokenWallet.currentAccessToken
     expectedDataExpirationDate:expectedExpirationDate];
 }
 
@@ -328,7 +328,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 {
   [self completeTokenRefreshForAccessToken:SampleAccessTokens.validToken results:@{@"graph_domain" : @""}];
 
-  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+  [self validateRefreshedToken:TestAccessTokenWallet.currentAccessToken
        withExpectedGraphDomain:@""];
 }
 
@@ -336,7 +336,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 {
   [self completeTokenRefreshForAccessToken:SampleAccessTokens.validToken results:@{@"graph_domain" : @"    "}];
 
-  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+  [self validateRefreshedToken:TestAccessTokenWallet.currentAccessToken
        withExpectedGraphDomain:@"    "];
 }
 
@@ -357,7 +357,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testAddsPermissionsRefreshRequest
 {
   [self stubAppID:@"abc123"];
-  TestTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
+  TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
   FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
 
   [Manager addRefreshPiggyback:connection permissionHandler:nil];
@@ -393,7 +393,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [self completePermissionsRefreshForAccessToken:token results:nil];
 
   // Refreshed token clears permissions when there is no error
-  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+  [self validateRefreshedToken:TestAccessTokenWallet.currentAccessToken
        withExpectedPermissions:@[]
    expectedDeclinedPermissions:@[]
     expectedExpiredPermissions:@[]
@@ -409,7 +409,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [self completePermissionsRefreshForAccessToken:token results:nil error:[NSError new]];
 
   // Refreshed token uses permissions from current access token when there is an error on permissions refresh
-  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+  [self validateRefreshedToken:TestAccessTokenWallet.currentAccessToken
        withExpectedPermissions:token.permissions.allObjects
    expectedDeclinedPermissions:token.declinedPermissions.allObjects
     expectedExpiredPermissions:token.expiredPermissions.allObjects
@@ -427,7 +427,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [self completePermissionsRefreshForAccessToken:token results:results];
 
   // Refreshed token clears unspecified permissions when there are newly specified permissions in the response
-  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+  [self validateRefreshedToken:TestAccessTokenWallet.currentAccessToken
        withExpectedPermissions:@[@"foo"]
    expectedDeclinedPermissions:@[]
     expectedExpiredPermissions:@[]
@@ -445,7 +445,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [self completePermissionsRefreshForAccessToken:token results:results];
 
   // Refreshed token clears unspecified permissions when there are newly specified permissions in the response
-  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+  [self validateRefreshedToken:TestAccessTokenWallet.currentAccessToken
        withExpectedPermissions:@[]
    expectedDeclinedPermissions:@[@"foo"]
     expectedExpiredPermissions:@[]
@@ -454,16 +454,16 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
 - (void)testCompletingPermissionsRefreshRequestWithNewExpiredPermissions
 {
-  TestTokenWallet.currentAccessToken = [SampleAccessTokens createWithPermissions:@[@"email"]
-                                                             declinedPermissions:@[@"publish"]
-                                                              expiredPermissions:@[@"friends"]];
+  TestAccessTokenWallet.currentAccessToken = [SampleAccessTokens createWithPermissions:@[@"email"]
+                                                                   declinedPermissions:@[@"publish"]
+                                                                    expiredPermissions:@[@"friends"]];
 
   NSDictionary *results = [SampleRawRemotePermissionList withGranted:@[] declined:@[] expired:@[@"foo"]];
 
   [self completePermissionsRefreshForAccessToken:SampleAccessTokens.validToken results:results];
 
   // Refreshed token clears unspecified permissions when there are newly specified permissions in the response
-  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+  [self validateRefreshedToken:TestAccessTokenWallet.currentAccessToken
        withExpectedPermissions:@[]
    expectedDeclinedPermissions:@[]
     expectedExpiredPermissions:@[@"foo"]
@@ -483,7 +483,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [self completePermissionsRefreshForAccessToken:token results:results];
 
   // Refreshed token clears unspecified permissions when there are newly specified permissions in the response
-  [self validateRefreshedToken:TestTokenWallet.currentAccessToken
+  [self validateRefreshedToken:TestAccessTokenWallet.currentAccessToken
        withExpectedPermissions:@[@"foo"]
    expectedDeclinedPermissions:@[@"bar"]
     expectedExpiredPermissions:@[@"baz"]
@@ -493,9 +493,9 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testCompletingPermissionsRefreshRequestWithPermissionsHandlerWithoutError
 {
   XCTestExpectation *expectation = [[XCTestExpectation alloc] initWithDescription:self.name];
-  TestTokenWallet.currentAccessToken = [SampleAccessTokens createWithPermissions:@[@"email"]
-                                                             declinedPermissions:@[@"publish"]
-                                                              expiredPermissions:@[@"friends"]];
+  TestAccessTokenWallet.currentAccessToken = [SampleAccessTokens createWithPermissions:@[@"email"]
+                                                                   declinedPermissions:@[@"publish"]
+                                                                    expiredPermissions:@[@"friends"]];
 
   NSDictionary *results = [SampleRawRemotePermissionList withGranted:@[@"foo"]
                                                             declined:@[@"bar"]
@@ -522,9 +522,9 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testCompletingPermissionsRefreshRequestWithPermissionsHandlerWithError
 {
   XCTestExpectation *expectation = [[XCTestExpectation alloc] initWithDescription:self.name];
-  TestTokenWallet.currentAccessToken = [SampleAccessTokens createWithPermissions:@[@"email"]
-                                                             declinedPermissions:@[@"publish"]
-                                                              expiredPermissions:@[@"friends"]];
+  TestAccessTokenWallet.currentAccessToken = [SampleAccessTokens createWithPermissions:@[@"email"]
+                                                                   declinedPermissions:@[@"publish"]
+                                                                    expiredPermissions:@[@"friends"]];
 
   NSDictionary *results = [SampleRawRemotePermissionList withGranted:@[@"foo"]
                                                             declined:@[@"bar"]
@@ -563,7 +563,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
 - (void)testRefreshIfStaleWithAccessTokenWithoutRefreshDate
 {
-  TestTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
+  TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
 
   // Should not add the refresh if the access token is missing a refresh date
   OCMReject(ClassMethod([self.graphRequestPiggybackManagerMock addRefreshPiggyback:OCMArg.any permissionHandler:NULL]));
@@ -576,7 +576,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testRefreshIfStaleWithOldRefreshWithOldTokenRefresh
 {
   [self stubGraphRequestPiggybackManagerLastRefreshTryWith:NSDate.distantPast];
-  TestTokenWallet.currentAccessToken = self.twoDayOldToken;
+  TestAccessTokenWallet.currentAccessToken = self.twoDayOldToken;
 
   [Manager addRefreshPiggybackIfStale:SampleGraphRequestConnection.empty];
 
@@ -588,7 +588,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testRefreshIfStaleWithOldLastRefreshWithRecentTokenRefresh
 {
   [self stubGraphRequestPiggybackManagerLastRefreshTryWith:NSDate.distantPast];
-  TestTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
+  TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
 
   OCMReject(ClassMethod([self.graphRequestPiggybackManagerMock addRefreshPiggyback:OCMArg.any permissionHandler:NULL]));
 
@@ -613,7 +613,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 {
   // Used for manipulating the initial value of the method scoped constant `lastRefreshTry`
   [self stubGraphRequestPiggybackManagerLastRefreshTryWith:NSDate.distantFuture];
-  TestTokenWallet.currentAccessToken = self.twoDayOldToken;
+  TestAccessTokenWallet.currentAccessToken = self.twoDayOldToken;
 
   OCMReject(ClassMethod([self.graphRequestPiggybackManagerMock addRefreshPiggyback:OCMArg.any permissionHandler:NULL]));
 
@@ -624,7 +624,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 {
   // Used for manipulating the initial value of the method scoped constant `lastRefreshTry`
   [self stubGraphRequestPiggybackManagerLastRefreshTryWith:NSDate.distantPast];
-  TestTokenWallet.currentAccessToken = self.twoDayOldToken;
+  TestAccessTokenWallet.currentAccessToken = self.twoDayOldToken;
 
   [Manager addRefreshPiggybackIfStale:SampleGraphRequestConnection.empty];
 
@@ -891,7 +891,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)completeTokenRefreshForAccessToken:(FBSDKAccessToken *)token results:(NSDictionary *)results
 {
   [self stubAppID:token.appID];
-  TestTokenWallet.currentAccessToken = token;
+  TestAccessTokenWallet.currentAccessToken = token;
   FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
 
   [Manager addRefreshPiggyback:connection permissionHandler:nil];
@@ -931,7 +931,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
                                permissionHandler:(FBSDKGraphRequestBlock)permissionHandler
 {
   [self stubAppID:token.appID];
-  TestTokenWallet.currentAccessToken = token;
+  TestAccessTokenWallet.currentAccessToken = token;
   FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
 
   [Manager addRefreshPiggyback:connection permissionHandler:permissionHandler];

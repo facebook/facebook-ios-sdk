@@ -70,7 +70,7 @@ NSString *const heightKey = @"height";
   _validNonSquareSize = CGSizeMake(10, 20);
 
   [self stubGraphAPIVersionWith:_sdkVersion];
-  FBSDKProfile.accessTokenProvider = TestTokenWallet.class;
+  FBSDKProfile.accessTokenProvider = TestAccessTokenWallet.class;
 }
 
 - (void)tearDown
@@ -86,7 +86,7 @@ NSString *const heightKey = @"height";
   [FBSDKProfile resetCurrentProfileCache];
   [FBSDKSettings reset];
   [FBSDKProfile reset];
-  [TestTokenWallet reset];
+  [TestAccessTokenWallet reset];
 }
 
 // MARK: - Creating Image URL
@@ -144,7 +144,7 @@ NSString *const heightKey = @"height";
 
 - (void)testCreatingImageURLWithAccessTokenNoClientToken
 {
-  [TestTokenWallet setCurrentAccessToken:SampleAccessTokens.validToken];
+  [TestAccessTokenWallet setCurrentAccessToken:SampleAccessTokens.validToken];
   NSURL *url = [_profile imageURLForPictureMode:FBSDKProfilePictureModeNormal size:_validSquareSize];
   NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:true];
 
@@ -164,7 +164,7 @@ NSString *const heightKey = @"height";
 
 - (void)testCreatingImageURLWithAccessTokenAndClientToken
 {
-  [TestTokenWallet setCurrentAccessToken:SampleAccessTokens.validToken];
+  [TestAccessTokenWallet setCurrentAccessToken:SampleAccessTokens.validToken];
   [self stubClientTokenWith:_validClientToken];
 
   NSURL *url = [_profile imageURLForPictureMode:FBSDKProfilePictureModeNormal size:_validSquareSize];

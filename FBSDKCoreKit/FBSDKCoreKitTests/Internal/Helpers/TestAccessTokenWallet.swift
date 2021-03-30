@@ -17,53 +17,14 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import FBSDKCoreKit
-import XCTest
 
-class ProfileTests: XCTestCase {
+@objcMembers
+class TestAccessTokenWallet: NSObject, AccessTokenProviding, AccessTokenSetting {
+  static var tokenCache: TokenCaching?
+  static var currentAccessToken: AccessToken?
 
-  var store = UserDefaultsSpy()
-
-  override func setUp() {
-    super.setUp()
-
-    Profile.reset()
-    TestAccessTokenWallet.reset()
-  }
-
-  override func tearDown() {
-    super.tearDown()
-
-    Profile.reset()
-    TestAccessTokenWallet.reset()
-  }
-
-  func testDefaultStore() {
-    XCTAssertNil(
-      Profile.store,
-      "Should not have a default data store"
-    )
-  }
-
-  func testConfiguringWithStore() {
-    Profile.configure(store: store, accessTokenProvider: TestAccessTokenWallet.self)
-    XCTAssertTrue(
-      Profile.store === store,
-      "Should be able to set a persistent data store"
-    )
-  }
-
-  func testDefaultAccessTokenProvider() {
-    XCTAssertNil(
-      Profile.accessTokenProvider,
-      "Should not have a default access token provider"
-    )
-  }
-
-  func testConfiguringWithTokenProvider() {
-    Profile.configure(store: store, accessTokenProvider: TestAccessTokenWallet.self)
-    XCTAssertTrue(
-      Profile.accessTokenProvider is TestAccessTokenWallet.Type,
-      "Should be able to set a token wallet"
-    )
+  static func reset() {
+    tokenCache = nil
+    currentAccessToken = nil
   }
 }
