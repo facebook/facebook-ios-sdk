@@ -18,7 +18,7 @@
 
 import XCTest
 
-class FBSDKColorTests: XCTestCase {
+class ColorTests: XCTestCase {
   let color = UIColor( // swiftlint:disable:this object_literal
     red: 157.0 / 255.0,
     green: 177.0 / 255.0,

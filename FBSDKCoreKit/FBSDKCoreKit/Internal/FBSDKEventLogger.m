@@ -39,4 +39,15 @@
                 isImplicitlyLogged:isImplicitlyLogged];
 }
 
+- (void)logInternalEvent:(nonnull NSString *)eventName
+              parameters:(nonnull NSDictionary *)parameters
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged
+             accessToken:(id)accessToken
+{
+  [FBSDKAppEvents logInternalEvent:eventName
+                        parameters:parameters
+                isImplicitlyLogged:isImplicitlyLogged
+                       accessToken:accessToken];
+}
+
 @end

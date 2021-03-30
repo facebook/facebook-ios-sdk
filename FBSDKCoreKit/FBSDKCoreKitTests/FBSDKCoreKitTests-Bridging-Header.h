@@ -342,4 +342,17 @@ NS_SWIFT_NAME(navigate(urlOpener:eventPoster:error:));
 
 @end
 
+@interface FBSDKViewImpressionTracker(Testing)
+
+@property (nonatomic, assign) id<FBSDKGraphRequestProviding> graphRequestProvider;
+@property (nonatomic, assign) id<FBSDKEventLogging> eventLogger;
+@property (nonatomic, strong) id<FBSDKNotificationObserving> notificationObserver;
+@property (nonatomic, strong) Class<FBSDKAccessTokenProviding> tokenWallet;
+
++ (void)reset;
+- (NSSet *)trackedImpressions;
+- (void)_applicationDidEnterBackgroundNotification:(NSNotification *)notification;
+
+@end
+
 NS_ASSUME_NONNULL_END

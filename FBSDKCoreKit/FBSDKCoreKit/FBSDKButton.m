@@ -20,12 +20,16 @@
 #import "FBSDKButton+Subclass.h"
 
 #import "FBSDKAccessToken.h"
+#import "FBSDKAccessToken+AccessTokenProtocols.h"
 #import "FBSDKAppEvents.h"
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKApplicationDelegate+Internal.h"
+#import "FBSDKEventLogger.h"
+#import "FBSDKGraphRequestFactory.h"
 #import "FBSDKLogo.h"
 #import "FBSDKUIUtility.h"
 #import "FBSDKViewImpressionTracker.h"
+#import "NSNotificationCenter+Extensions.h"
 
 #define HEIGHT_TO_FONT_SIZE 0.47
 #define HEIGHT_TO_MARGIN 0.27
@@ -104,7 +108,12 @@
     NSString *identifier = ((id<FBSDKButtonImpressionTracking>)self).impressionTrackingIdentifier;
     NSDictionary<NSString *, id> *parameters = ((id<FBSDKButtonImpressionTracking>)self).analyticsParameters;
     if (eventName && identifier) {
-      FBSDKViewImpressionTracker *impressionTracker = [FBSDKViewImpressionTracker impressionTrackerWithEventName:eventName];
+      FBSDKViewImpressionTracker *impressionTracker
+        = [FBSDKViewImpressionTracker impressionTrackerWithEventName:eventName
+                                                graphRequestProvider:[FBSDKGraphRequestFactory new]
+                                                         eventLogger:[FBSDKEventLogger new]
+                                                notificationObserver:NSNotificationCenter.defaultCenter
+                                                         tokenWallet:FBSDKAccessToken.class];
       [impressionTracker logImpressionWithIdentifier:identifier parameters:parameters];
     }
   }

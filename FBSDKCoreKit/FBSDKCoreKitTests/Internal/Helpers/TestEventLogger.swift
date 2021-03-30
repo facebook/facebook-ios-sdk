@@ -21,6 +21,7 @@ class TestEventLogger: NSObject, EventLogging {
   var capturedEventName: String?
   var capturedParameters = [AnyHashable: Any]()
   var capturedIsImplicitlyLogged = false
+  var capturedAccessToken: AccessToken?
 
   func logInternalEvent(_ eventName: String, isImplicitlyLogged: Bool) {
     capturedEventName = eventName
@@ -37,4 +38,15 @@ class TestEventLogger: NSObject, EventLogging {
     capturedIsImplicitlyLogged = isImplicitlyLogged
   }
 
+  func logInternalEvent(
+    _ eventName: String,
+    parameters: [AnyHashable: Any],
+    isImplicitlyLogged: Bool,
+    accessToken: AccessToken
+  ) {
+    capturedEventName = eventName
+    capturedParameters = parameters
+    capturedIsImplicitlyLogged = isImplicitlyLogged
+    capturedAccessToken = accessToken
+  }
 }

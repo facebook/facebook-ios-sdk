@@ -18,10 +18,11 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKGraphRequestFlags.h"
+
 @protocol FBSDKGraphRequest;
 
 typedef NSString *const FBSDKHTTPMethod NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(HTTPMethod);
-typedef NS_OPTIONS(NSUInteger, FBSDKGraphRequestFlags);
 
 NS_ASSUME_NONNULL_BEGIN
 

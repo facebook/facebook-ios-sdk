@@ -19,27 +19,50 @@
 #import "FBSDKViewImpressionTracker.h"
 
 #import "FBSDKAccessToken.h"
+#import "FBSDKAccessTokenProtocols.h"
 #import "FBSDKAppEvents+Internal.h"
+#import "FBSDKEventLogging.h"
+#import "FBSDKGraphRequestProviding.h"
 #import "FBSDKInternalUtility.h"
+#import "FBSDKNotificationProtocols.h"
+
+@interface FBSDKViewImpressionTracker ()
+
+@property (nonatomic, strong) id<FBSDKGraphRequestProviding> graphRequestProvider;
+@property (nonatomic, strong) id<FBSDKEventLogging> eventLogger;
+@property (nonatomic, strong) id<FBSDKNotificationObserving> notificationObserver;
+@property (nonatomic, strong) Class<FBSDKAccessTokenProviding> tokenWallet;
+
+@end
 
 @implementation FBSDKViewImpressionTracker
 {
   NSMutableSet *_trackedImpressions;
 }
 
+static dispatch_once_t token;
+
 #pragma mark - Class Methods
 
 + (instancetype)impressionTrackerWithEventName:(NSString *)eventName
+                          graphRequestProvider:(id<FBSDKGraphRequestProviding>)graphRequestProvider
+                                   eventLogger:(id<FBSDKEventLogging>)eventLogger
+                          notificationObserver:(id<FBSDKNotificationObserving>)notificationObserver
+                                   tokenWallet:(Class<FBSDKAccessTokenProviding>)tokenWallet
 {
   static NSMutableDictionary *_impressionTrackers = nil;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
+
+  dispatch_once(&token, ^{
     _impressionTrackers = [[NSMutableDictionary alloc] init];
   });
   // Maintains a single instance of an impression tracker for each event name
   FBSDKViewImpressionTracker *impressionTracker = _impressionTrackers[eventName];
   if (!impressionTracker) {
-    impressionTracker = [[self alloc] initWithEventName:eventName];
+    impressionTracker = [[self alloc] initWithEventName:eventName
+                                   graphRequestProvider:graphRequestProvider
+                                            eventLogger:eventLogger
+                                   notificationObserver:notificationObserver
+                                            tokenWallet:tokenWallet];
     [FBSDKTypeUtility dictionary:_impressionTrackers setObject:impressionTracker forKey:eventName];
   }
   return impressionTracker;
@@ -48,22 +71,30 @@
 #pragma mark - Object Lifecycle
 
 - (instancetype)initWithEventName:(NSString *)eventName
+             graphRequestProvider:(id<FBSDKGraphRequestProviding>)graphRequestProvider
+                      eventLogger:(id<FBSDKEventLogging>)eventLogger
+             notificationObserver:(id<FBSDKNotificationObserving>)notificationObserver
+                      tokenWallet:(Class<FBSDKAccessTokenProviding>)tokenWallet
 {
   if ((self = [super init])) {
     _eventName = [eventName copy];
     _trackedImpressions = [[NSMutableSet alloc] init];
+    _graphRequestProvider = graphRequestProvider;
+    _eventLogger = eventLogger;
+    _notificationObserver = notificationObserver;
+    _tokenWallet = tokenWallet;
 
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(_applicationDidEnterBackgroundNotification:)
-                                                 name:UIApplicationDidEnterBackgroundNotification
-                                               object:[UIApplication sharedApplication]];
+    [self.notificationObserver addObserver:self
+                                  selector:@selector(_applicationDidEnterBackgroundNotification:)
+                                      name:UIApplicationDidEnterBackgroundNotification
+                                    object:UIApplication.sharedApplication];
   }
   return self;
 }
 
 - (void)dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
+  [self.notificationObserver removeObserver:self];
 }
 
 #pragma mark - Public API
@@ -80,10 +111,10 @@
   }
   [_trackedImpressions addObject:impressionKey];
 
-  [FBSDKAppEvents logInternalEvent:self.eventName
-                        parameters:parameters
-                isImplicitlyLogged:YES
-                       accessToken:[FBSDKAccessToken currentAccessToken]];
+  [self.eventLogger logInternalEvent:self.eventName
+                          parameters:parameters
+                  isImplicitlyLogged:YES
+                         accessToken:[self.tokenWallet currentAccessToken]];
 }
 
 #pragma mark - Helper Methods
@@ -94,5 +125,23 @@
   // are triggered.
   [_trackedImpressions removeAllObjects];
 }
+
+#if DEBUG
+ #if FBSDKTEST
+
++ (void)reset
+{
+  if (token) {
+    token = 0;
+  }
+}
+
+- (NSMutableSet *)trackedImpressions
+{
+  return _trackedImpressions;
+}
+
+ #endif
+#endif
 
 @end
