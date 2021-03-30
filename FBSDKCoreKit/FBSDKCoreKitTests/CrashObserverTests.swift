@@ -25,14 +25,32 @@ class CrashObserversTest: XCTestCase {
   var featureManagerProvider: TestFeatureManagerProvider! // swiftlint:disable:this implicitly_unwrapped_optional
   var requestProvider: TestGraphRequestFactory! // swiftlint:disable:this implicitly_unwrapped_optional
   var crashObserver: CrashObserver! // swiftlint:disable:this implicitly_unwrapped_optional
+  var settings: TestSettings! // swiftlint:disable:this implicitly_unwrapped_optional
+
 
   override func setUp() {
     super.setUp()
     featureManagerProvider = TestFeatureManagerProvider.create(withStubbedFeatureManager: TestFeatureManager.self)
     requestProvider = TestGraphRequestFactory()
+    settings = TestSettings()
     crashObserver = CrashObserver(
       featureManagerProvider: featureManagerProvider,
-      graphRequestProvider: requestProvider
+      graphRequestProvider: requestProvider,
+      settings: settings
+    )
+  }
+
+  func testDefaultCrashObserverSettings() {
+    XCTAssertTrue(
+      CrashObserver().settings is Settings,
+      "Should use the shared settings instance by default"
+    )
+  }
+
+  func testCreatingWithCustomSettings() {
+    XCTAssertTrue(
+      crashObserver.settings is TestSettings,
+     "Should be able to create with custom settings"
     )
   }
 

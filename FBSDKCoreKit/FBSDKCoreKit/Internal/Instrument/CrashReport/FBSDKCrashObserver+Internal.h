@@ -16,43 +16,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@objcMembers
-class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
-  static var appID: String?
-  static var clientToken: String?
-  static var userAgentSuffix: String?
-  static var loggingBehaviors = Set<String>()
-  static var sdkVersion: String?
-  static var logWarningsCallCount = 0
-  static var logIfSDKSettingsChangedCallCount = 0
-  static var recordInstallCallCount = 0
+#import <Foundation/Foundation.h>
 
-  var appID: String?
+#import "FBSDKInternalUtility.h"
 
-  func isDataProcessingRestricted() -> Bool {
-    return false
-  }
+NS_ASSUME_NONNULL_BEGIN
 
-  static func logWarnings() {
-    logWarningsCallCount += 1
-  }
+@interface FBSDKCrashObserver (Internal)
 
-  static func logIfSDKSettingsChanged() {
-    logIfSDKSettingsChangedCallCount += 1
-  }
+- (id<FBSDKSettings>)settings;
 
-  static func recordInstall() {
-    recordInstallCallCount += 1
-  }
+@end
 
-  static func reset() {
-    appID = nil
-    clientToken = nil
-    userAgentSuffix = nil
-    loggingBehaviors = []
-    sdkVersion = nil
-    logWarningsCallCount = 0
-    logIfSDKSettingsChangedCallCount = 0
-    recordInstallCallCount = 0
-  }
-}
+NS_ASSUME_NONNULL_END

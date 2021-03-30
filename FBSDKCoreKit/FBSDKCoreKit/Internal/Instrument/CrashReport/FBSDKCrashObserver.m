@@ -23,13 +23,15 @@
 #import "FBSDKFeatureCheckerProviding.h"
 #import "FBSDKGraphRequestFactory.h"
 #import "FBSDKGraphRequestProviding.h"
-#import "FBSDKSettings.h"
-#import "FBSDKSettings+Internal.h"
+#import "FBSDKSettings+SettingsLogging.h"
+#import "FBSDKSettings+SettingsProtocols.h"
+#import "FBSDKSettingsProtocol.h"
 
 @implementation FBSDKCrashObserver
 {
   Class<FBSDKFeatureChecking> _featureChecker;
   id<FBSDKGraphRequestProviding> _requestProvider;
+  id<FBSDKSettings> _settings;
 }
 
 @synthesize prefixes, frameworks;
@@ -37,11 +39,13 @@
 - (instancetype)init
 {
   return [self initWithFeatureManagerProvider:[FBSDKFeatureCheckerFactory new]
-                         graphRequestProvider:[FBSDKGraphRequestFactory new]];
+                         graphRequestProvider:[FBSDKGraphRequestFactory new]
+                                     settings:FBSDKSettings.sharedSettings];
 }
 
 - (instancetype)initWithFeatureManagerProvider:(id<FBSDKFeatureCheckerProviding>)featureManagerProvider
                           graphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+                                      settings:(id<FBSDKSettings>)settings
 {
   if ((self = [super init])) {
     prefixes = @[@"FBSDK", @"_FBSDK"];
@@ -52,6 +56,7 @@
                    @"FBSDKTVOSKit"];
     _featureChecker = [featureManagerProvider createFeatureChecker];
     _requestProvider = requestProvider;
+    _settings = settings;
   }
   return self;
 }
@@ -73,7 +78,7 @@
 
 - (void)didReceiveCrashLogs:(NSArray<NSDictionary<NSString *, id> *> *)processedCrashLogs
 {
-  if ([FBSDKSettings isDataProcessingRestricted]) {
+  if ([_settings isDataProcessingRestricted]) {
     return;
   }
   if (0 == processedCrashLogs.count) {
@@ -84,7 +89,7 @@
   if (jsonData) {
     NSString *crashReports = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 
-    id<FBSDKGraphRequest> request = [_requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/instruments", [FBSDKSettings appID]]
+    id<FBSDKGraphRequest> request = [_requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/instruments", [_settings appID]]
                                                                            parameters:@{@"crash_reports" : crashReports ?: @""}
                                                                            HTTPMethod:FBSDKHTTPMethodPOST];
 
@@ -100,5 +105,15 @@
     }
   }];
 }
+
+#if DEBUG
+ #if FBSDKTEST
+- (id<FBSDKSettings>)settings
+{
+  return _settings;
+}
+
+ #endif
+#endif
 
 @end

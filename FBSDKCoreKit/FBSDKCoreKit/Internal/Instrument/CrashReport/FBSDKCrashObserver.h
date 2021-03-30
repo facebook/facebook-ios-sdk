@@ -30,7 +30,10 @@ NS_SWIFT_NAME(CrashObserver)
 + (void)enable;
 
 - (instancetype)initWithFeatureManagerProvider:(id<FBSDKFeatureCheckerProviding>)featureManagerProvider
-                          graphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider;
+                          graphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+                                      settings:(id<FBSDKSettings>)settings;
+
+- (instancetype)init;
 
 @end
 

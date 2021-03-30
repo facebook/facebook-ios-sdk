@@ -1471,6 +1471,8 @@
 		58E9CD3A2602604F004818D8 /* TestFeatureManagerProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFeatureManagerProvider.swift; sourceTree = "<group>"; };
 		58E9CD562602A3C2004818D8 /* TestFeatureManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFeatureManager.swift; sourceTree = "<group>"; };
 		58E9CE1726050495004818D8 /* CrashObserverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashObserverTests.swift; sourceTree = "<group>"; };
+		58E9CF85260D2E86004818D8 /* FBSDKSettings+SettingsLogging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKSettings+SettingsLogging.h"; sourceTree = "<group>"; };
+		58E9CFF226123B07004818D8 /* FBSDKCrashObserver+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKCrashObserver+Internal.h"; sourceTree = "<group>"; };
 		5C59531F25548690000D0A3C /* FBSDKCoreKitTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBSDKCoreKitTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		5CD6DB3B255B1D07002C296F /* FBSDKAppEventsUtilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBSDKAppEventsUtilityTests.swift; sourceTree = "<group>"; };
 		5D2165E022264453004952D8 /* FBSDKAppEventsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppEventsTests.m; sourceTree = "<group>"; };
@@ -2186,6 +2188,7 @@
 				5D90CDDE2343D4BD00AF326A /* FBSDKCrashShield.m */,
 				5D4360DA23219F7900254DF7 /* FBSDKCrashObserver.h */,
 				5D4360DF23219F8E00254DF7 /* FBSDKCrashObserver.m */,
+				58E9CFF226123B07004818D8 /* FBSDKCrashObserver+Internal.h */,
 			);
 			path = CrashReport;
 			sourceTree = "<group>";
@@ -2384,6 +2387,7 @@
 				9D32A8381A69941A000A936D /* TokenCaching */,
 				89FB8C3E1A842393003CAE60 /* UI */,
 				89FB8C431A842644003CAE60 /* WebDialog */,
+				58E9CF85260D2E86004818D8 /* FBSDKSettings+SettingsLogging.h */,
 			);
 			path = Internal;
 			sourceTree = "<group>";

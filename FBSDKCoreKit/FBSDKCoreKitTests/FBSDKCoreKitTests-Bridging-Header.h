@@ -24,6 +24,7 @@
 #import "FBSDKBridgeAPI+Testing.h"
 #import "FBSDKCloseIcon.h"
 #import "FBSDKCrashObserver.h"
+#import "FBSDKCrashObserver+Internal.h"
 #import "FBSDKEventDeactivationManager.h"
 #import "FBSDKEventBinding.h"
 #import "FBSDKEventBindingManager.h"
@@ -276,8 +277,13 @@ NS_SWIFT_NAME(reset());
 
 @interface FBSDKCrashObserver (Testing)
 
+@property (nonatomic, nullable) id<FBSDKSettings> settings;
+
 - (instancetype)initWithFeatureManagerProvider:(id<FBSDKFeatureCheckerProviding>)featureManagerProvider
-                          graphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider;
+                          graphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+                                      settings:(id<FBSDKSettings>)settings;
+
+- (instancetype)init;
 
 @end
 

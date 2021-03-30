@@ -18,17 +18,13 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol FBSDKSettings;
-@protocol FBSDKSettingsLogging;
+#import "FBSDKSettings.h"
+#import "FBSDKSettingsProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 /// Default conformance to the settings protocol
 @interface FBSDKSettings (SettingsProtocol) <FBSDKSettings>
-@end
-
-// Default conformance to the settings logging protocol
-@interface FBSDKSettings (SettingsLogging) <FBSDKSettingsLogging>
 @end
 
 NS_ASSUME_NONNULL_END
