@@ -21,11 +21,9 @@
 #import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKGraphRequestHTTPMethod.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
-@class FBSDKAccessToken;
 @protocol FBSDKGraphRequestConnecting;
 
+NS_ASSUME_NONNULL_BEGIN
 /**
   Represents a request to the Facebook Graph API.
 

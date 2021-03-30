@@ -472,6 +472,7 @@ static UIApplicationState _applicationState;
 {
   id<FBSDKGraphRequestProviding> graphRequestProvider = [FBSDKGraphRequestFactory new];
   id<FBSDKDataPersisting> store = NSUserDefaults.standardUserDefaults;
+  [FBSDKGraphRequest setCurrentAccessTokenStringProvider:FBSDKAccessToken.class];
   [FBSDKGraphRequestConnection setCanMakeRequests];
   [FBSDKAppEvents configureWithGateKeeperManager:[FBSDKGateKeeperManager class]
                   appEventsConfigurationProvider:[FBSDKAppEventsConfigurationManager class]

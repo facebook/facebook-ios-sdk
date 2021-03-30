@@ -18,6 +18,7 @@
 
 #import "FBSDKAccessToken.h"
 #import "FBSDKAccessToken+Internal.h"
+#import "FBSDKAccessToken+TokenStringProviding.h"
 
 #import "FBSDKGraphRequestPiggybackManager.h"
 #import "FBSDKInternalUtility.h"
@@ -144,6 +145,11 @@ static id<FBSDKGraphRequestConnectionProviding> g_connectionFactory;
 + (FBSDKAccessToken *)currentAccessToken
 {
   return g_currentAccessToken;
+}
+
++ (NSString *)tokenString
+{
+  return FBSDKAccessToken.currentAccessToken.tokenString;
 }
 
 + (void)setCurrentAccessToken:(FBSDKAccessToken *)token

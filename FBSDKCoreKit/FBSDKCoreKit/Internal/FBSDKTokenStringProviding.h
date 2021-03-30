@@ -16,18 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import FBSDKCoreKit
+#import <Foundation/Foundation.h>
 
-@objcMembers
-class TestAccessTokenWallet: NSObject, AccessTokenProviding, AccessTokenSetting, TokenStringProviding {
-  static var tokenCache: TokenCaching?
-  static var currentAccessToken: AccessToken?
-  static var tokenString: String? {
-    return currentAccessToken?.tokenString
-  }
+NS_SWIFT_NAME(TokenStringProviding)
+@protocol FBSDKTokenStringProviding
 
-  static func reset() {
-    tokenCache = nil
-    currentAccessToken = nil
-  }
-}
+/**
+ Return the token string of the current access token.
+ */
+@property (class, nonatomic, copy, nullable, readonly) NSString * tokenString;
+
+@end

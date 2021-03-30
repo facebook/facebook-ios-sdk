@@ -33,6 +33,10 @@
 + (void)resetCanMakeRequests;
 @end
 
+@interface FBSDKGraphRequest (AppDelegateTesting)
++ (Class<FBSDKCurrentAccessTokenStringProviding>)currentAccessTokenStringProvider;
+@end
+
 @interface FBSDKApplicationDelegate (Testing)
 
 - (BOOL)isAppLaunched;
@@ -487,6 +491,19 @@
     store,
     NSUserDefaults.standardUserDefaults,
     "Should be configured with the expected concrete data store"
+  );
+}
+
+- (void)testInitializingSdkConfiguresCurrentAccessTokenProviderForGraphRequest
+{
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
+  [FBSDKGraphRequest setCurrentAccessTokenStringProvider:nil];
+  [FBSDKApplicationDelegate initializeSDK:@{}];
+
+  XCTAssertEqualObjects(
+    [FBSDKGraphRequest currentAccessTokenStringProvider],
+    FBSDKAccessToken.class,
+    "Should be configered with expected access token class."
   );
 }
 

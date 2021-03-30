@@ -269,6 +269,20 @@ static NSDictionary<NSString *, NSString *> *const _mockEmptyParameters(void)
   XCTAssertFalse([FBSDKGraphRequest isAttachment:date]);
 }
 
+- (void)testCreateRequestWithDefaultTokenString
+{
+  TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
+  [FBSDKGraphRequest setCurrentAccessTokenStringProvider:[TestAccessTokenWallet class]];
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:_mockGraphPath parameters:_mockEmptyParameters()];
+  XCTAssertEqual(
+    request.tokenString,
+    TestAccessTokenWallet.tokenString,
+    "Should use the token string provider for the token string"
+  );
+  XCTAssertNotNil(request.tokenString, "Should have a concrete token string");
+  [FBSDKGraphRequest setCurrentAccessTokenStringProvider:nil];
+}
+
 #pragma mark - helper function
 
 - (void)verifyRequest:(FBSDKGraphRequest *)request

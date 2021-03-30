@@ -28,6 +28,8 @@
 #import "FBSDKGraphRequestFlags.h"
 #import "FBSDKGraphRequestProtocol+Internal.h"
 
+@protocol FBSDKCurrentAccessTokenStringProviding;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKGraphRequest (Internal) <FBSDKGraphRequestInternal>
@@ -70,6 +72,8 @@ NS_ASSUME_NONNULL_BEGIN
                     params:(nullable NSDictionary *)params
                 httpMethod:(nullable NSString *)httpMethod
                   forBatch:(BOOL)forBatch;
+
++ (void)setCurrentAccessTokenStringProvider:(Class<FBSDKCurrentAccessTokenStringProviding>)provider;
 
 @end
 

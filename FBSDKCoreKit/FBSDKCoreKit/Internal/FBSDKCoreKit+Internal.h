@@ -61,6 +61,7 @@
   #import "FBSDKSmartDeviceDialogView.h"
  #endif
 
+ #import "FBSDKAccessToken+AccessTokenProtocols.h"
  #import "FBSDKAccessToken+Internal.h"
  #import "FBSDKAppEvents+Internal.h"
  #import "FBSDKAppEventsConfiguration.h"
@@ -113,6 +114,7 @@
  #import "FBSDKTimeSpentData.h"
  #import "FBSDKTokenCache.h"
  #import "FBSDKTokenCaching.h"
+ #import "FBSDKTokenStringProviding.h"
  #import "FBSDKUnarchiverProvider.h"
 
 #else
@@ -155,6 +157,7 @@
  #import "../AppEvents/Internal/Integrity/FBSDKRestrictiveDataFilterManager.h"
  #import "Base64/FBSDKBase64.h"
  #import "ErrorRecovery/FBSDKErrorRecoveryAttempter.h"
+ #import "FBSDKAccessToken+AccessTokenProtocols.h"
  #import "FBSDKAccessToken+Internal.h"
  #import "FBSDKApplicationDelegate+Internal.h"
  #import "FBSDKApplicationObserving.h"
@@ -173,6 +176,7 @@
  #import "FBSDKProfilePictureView+Internal.h"
  #import "FBSDKSettings+Internal.h"
  #import "FBSDKSwizzler.h"
+ #import "FBSDKTokenStringProviding.h"
  #import "FBSDKUnarchiverProvider.h"
  #import "Network/FBSDKGraphRequest+Internal.h"
  #import "Network/FBSDKGraphRequestBody.h"
