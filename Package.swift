@@ -83,7 +83,8 @@ let package = Package(
                 .headerSearchPath("Internal/Network"),
                 .headerSearchPath("Internal/ServerConfiguration"),
                 .headerSearchPath("Internal/TokenCaching"),
-                .headerSearchPath("Internal/UI")
+                .headerSearchPath("Internal/UI"),
+                .headerSearchPath("Internal/WebDialog")
             ],
             linkerSettings: [
                 .linkedFramework("Accelerate")
