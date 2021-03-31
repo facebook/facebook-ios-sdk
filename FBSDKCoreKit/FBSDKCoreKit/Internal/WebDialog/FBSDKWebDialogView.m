@@ -27,6 +27,7 @@
  #import "FBSDKCloseIcon.h"
  #import "FBSDKError.h"
  #import "FBSDKInternalUtility.h"
+ #import "FBSDKURLOpener.h"
  #import "FBSDKWebViewProviding.h"
 
  #ifdef BUCK
@@ -48,10 +49,23 @@
 @implementation FBSDKWebDialogView
 
 static id<FBSDKWebViewProviding> _webViewProvider;
+static id<FBSDKURLOpener> _urlOpener;
 
 + (void)configureWithWebViewProvider:(id<FBSDKWebViewProviding>)provider
+                           urlOpener:(id<FBSDKURLOpener>)urlOpener;
 {
   _webViewProvider = provider;
+  _urlOpener = urlOpener;
+}
+
++ (id<FBSDKURLOpener>)urlOpener
+{
+  return _urlOpener;
+}
+
+- (id<FBSDKURLOpener>)urlOpener
+{
+  return FBSDKWebDialogView.urlOpener;
 }
 
  #pragma mark - Object Lifecycle
@@ -218,15 +232,12 @@ static id<FBSDKWebViewProviding> _webViewProvider;
     decisionHandler(WKNavigationActionPolicyCancel);
   } else if (navigationAction.navigationType == WKNavigationTypeLinkActivated) {
     if (@available(iOS 10.0, *)) {
-      [UIApplication.sharedApplication openURL:URL options:@{} completionHandler:^(BOOL success) {
+      [self.urlOpener openURL:URL options:@{} completionHandler:^(BOOL success) {
         decisionHandler(WKNavigationActionPolicyCancel);
       }];
     } else {
-      #pragma clang diagnostic push
-      #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-      [[UIApplication sharedApplication] openURL:URL];
+      [self.urlOpener openURL:URL];
       decisionHandler(WKNavigationActionPolicyCancel);
-      #pragma clang diagnostic pop
     }
   } else {
     decisionHandler(WKNavigationActionPolicyAllow);
@@ -245,6 +256,7 @@ static id<FBSDKWebViewProviding> _webViewProvider;
 + (void)reset
 {
   _webViewProvider = nil;
+  _urlOpener = nil;
 }
 
 + (id<FBSDKWebViewProviding>)webViewProvider

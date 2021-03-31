@@ -518,10 +518,16 @@
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [_delegate initializeSDKWithLaunchOptions:@{}];
   NSObject *webViewProvider = (NSObject *) FBSDKWebDialogView.webViewProvider;
+  NSObject *urlOpener = (NSObject *) FBSDKWebDialogView.urlOpener;
   XCTAssertEqualObjects(
     webViewProvider.class,
     FBSDKWebViewFactory.class,
     "Should be configured with the expected concrete web view provider"
+  );
+  XCTAssertEqualObjects(
+    urlOpener,
+    UIApplication.sharedApplication,
+    "Should be configured with the expected concrete url opener"
   );
 }
 

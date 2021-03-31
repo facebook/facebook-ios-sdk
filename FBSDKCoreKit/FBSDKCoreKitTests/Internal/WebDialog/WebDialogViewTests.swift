@@ -19,28 +19,39 @@
 import FBSDKCoreKit
 import XCTest
 
-class WebDialogViewTests: XCTestCase {
+class WebDialogViewTests: XCTestCase, WebDialogViewDelegate { // swiftlint:disable:this type_body_length
 
   var dialog: FBWebDialogView! // swiftlint:disable:this implicitly_unwrapped_optional
   var webView = TestWebView()
   var factory = TestWebViewFactory()
   let frame = CGRect(origin: .zero, size: CGSize(width: 10, height: 10))
+  var delegateDidFailWithErrorWasCalled = false
+  var capturedDelegateDidFailError: Error?
+  var capturedDidCompleteResults: [String: String]?
+  var webDialogViewDidCancelWasCalled = false
+  var webDialogViewDidFinishLoadWasCalled = false
+  var urlOpener = TestURLOpener()
 
   override func setUp() {
     super.setUp()
 
     webView = factory.webView
-    FBWebDialogView.configure(withWebViewProvider: factory)
+    FBWebDialogView.configure(withWebViewProvider: factory, urlOpener: urlOpener)
     dialog = FBWebDialogView(frame: frame)
+    dialog.delegate = self
   }
 
-  func testCreatingWithDefaultWebView() {
+  func testCreatingWithDefaults() {
     FBWebDialogView.reset()
     let dialog = FBWebDialogView(frame: .zero)
 
     XCTAssertNil(
       dialog.webView,
       "Should not have a webview by default"
+    )
+    XCTAssertNil(
+      FBWebDialogView.urlOpener,
+      "Should not have a url opener by default"
     )
   }
 
@@ -135,13 +146,240 @@ class WebDialogViewTests: XCTestCase {
     )
   }
 
+  // MARK: - Delegate Methods
+
+  func testFailingNavigationWithRecognizedError() {
+    dialog.webView(WKWebView(), didFail: nil, withError: SampleError())
+
+    XCTAssertFalse(
+      activityIndicatorView.isAnimating,
+      "Should stop animating the activity indicator when the navigation fails"
+    )
+    XCTAssertTrue(
+      delegateDidFailWithErrorWasCalled,
+      "Should invoke the delegate for an unrecognized error"
+    )
+    XCTAssertTrue(
+      capturedDelegateDidFailError is SampleError,
+      "Should propage the error from the failure"
+    )
+  }
+
+  func testFailingNavigationWithCancellationError() {
+    let error = NSError(domain: NSURLErrorDomain, code: NSURLErrorCancelled, userInfo: nil)
+    dialog.webView(WKWebView(), didFail: nil, withError: error)
+
+    XCTAssertFalse(
+      delegateDidFailWithErrorWasCalled,
+      "Should not invoke the delegate for a cancellation error"
+    )
+  }
+
+  func testFailingNavigationWithWebKitError() {
+    let error = NSError(domain: "WebKitErrorDomain", code: 102, userInfo: nil)
+    dialog.webView(WKWebView(), didFail: nil, withError: error)
+
+    XCTAssertFalse(
+      delegateDidFailWithErrorWasCalled,
+      "Should not invoke the delegate for a webkit error"
+    )
+  }
+
+  func testDecideNavigationPolicyWithConnectScheme() {
+    var policy: WKNavigationActionPolicy?
+    dialog.webView(
+      WKWebView(),
+      decidePolicyFor: TestWebKitNavigationAction(
+        stubbedRequest: URLRequest(url: URLs.connectURL)
+      )
+    ) {
+      policy = $0
+    }
+
+    XCTAssertEqual(policy, .cancel)
+    XCTAssertEqual(capturedDidCompleteResults, [:])
+  }
+
+  func testDecideNavigationPolicyWithQueryAndFragment() {
+    [
+      (URLs.connectURLWithQuery, ["bar": "baz"]),
+      (URLs.connectURLWithFragment, ["fragment": ""]),
+      (URLs.connectURLWithQueryAndFragment, ["bar": "baz", "fragment": ""])
+    ].forEach {
+      let (url, expectedResults) = $0
+      capturedDidCompleteResults = nil
+
+      var policy: WKNavigationActionPolicy?
+      dialog.webView(
+        WKWebView(),
+        decidePolicyFor: TestWebKitNavigationAction(
+          stubbedRequest: URLRequest(url: url)
+        )
+      ) {
+        policy = $0
+      }
+
+      XCTAssertEqual(policy, .cancel)
+      XCTAssertEqual(capturedDidCompleteResults, expectedResults)
+    }
+  }
+
+  func testDecideNavigationPolicyWithCancelledUrl() {
+    var policy: WKNavigationActionPolicy?
+    dialog.webView(
+      WKWebView(),
+      decidePolicyFor: TestWebKitNavigationAction(
+        stubbedRequest: URLRequest(url: URLs.cancelURLWithoutError)
+      )
+    ) {
+      policy = $0
+    }
+
+    XCTAssertEqual(policy, .cancel)
+    XCTAssertNil(
+      capturedDidCompleteResults,
+      "Should not pass parameters on deciding the navigation policy of a cancelled url"
+    )
+    XCTAssertTrue(
+      webDialogViewDidCancelWasCalled,
+      "Should inform the delegate when a url cancels the navigation"
+    )
+  }
+
+  func testDecideNavigationPolicyWithCancelledUrlWithError() {
+    var policy: WKNavigationActionPolicy?
+    dialog.webView(
+      WKWebView(),
+      decidePolicyFor: TestWebKitNavigationAction(
+        stubbedRequest: URLRequest(url: URLs.cancelURLWithError)
+      )
+    ) {
+      policy = $0
+    }
+
+    XCTAssertEqual(policy, .cancel)
+    XCTAssertNil(
+      capturedDidCompleteResults,
+      "Should not pass parameters on deciding the navigation policy of a cancelled url"
+    )
+    XCTAssertTrue(
+      delegateDidFailWithErrorWasCalled,
+      "Should invoke the delegate with failure when the url is cancelled and contains an error"
+    )
+    guard let error = capturedDelegateDidFailError as NSError?,
+          error.domain == "com.facebook.sdk.core",
+          error.code == 999
+    else {
+      return XCTFail("Should create an error from the URL and call the delegate with it")
+    }
+  }
+
+  func testDecideNavigationPolicyWithActivatedNavigationType() {
+    var policy: WKNavigationActionPolicy?
+    dialog.webView(
+      WKWebView(),
+      decidePolicyFor: TestWebKitNavigationAction(
+        stubbedRequest: URLRequest(url: SampleUrls.valid),
+        navigationType: .linkActivated
+      )
+    ) {
+      policy = $0
+    }
+
+    XCTAssertEqual(urlOpener.capturedOpenUrl, SampleUrls.valid)
+    urlOpener.capturedOpenUrlCompletion?(true)
+    XCTAssertEqual(
+      policy,
+      .cancel,
+      "Completing with a successful url opening will should set the policy to cancelled"
+    )
+
+    policy = nil
+
+    urlOpener.capturedOpenUrlCompletion?(false)
+    XCTAssertEqual(
+      policy,
+      .cancel,
+      "Completing with a failed url opening will should set the policy to cancelled"
+    )
+  }
+
+  func testDecideNavigationPolicyWithoutConnectUrlWithoutActivatedNavigationType() {
+    var policy: WKNavigationActionPolicy?
+    dialog.webView(
+      WKWebView(),
+      decidePolicyFor: TestWebKitNavigationAction(
+        stubbedRequest: URLRequest(url: SampleUrls.valid),
+        navigationType: .other
+      )
+    ) {
+      policy = $0
+    }
+
+    XCTAssertNil(urlOpener.capturedOpenUrl)
+    XCTAssertEqual(
+      policy,
+      .allow,
+      "The default navigation policy should be allowed"
+    )
+  }
+
+  func testDidFinishNavigation() {
+    dialog.webView(
+      WKWebView(),
+      didFinish: nil
+    )
+    XCTAssertFalse(
+      activityIndicatorView.isAnimating,
+      "Finishing loading should stop the activity indicator"
+    )
+    XCTAssertTrue(
+      webDialogViewDidFinishLoadWasCalled,
+      "Should call the delegate method when loading is finished"
+    )
+  }
+
   // MARK: - Helpers
+
+  // swiftlint:disable force_unwrapping
+  enum URLs {
+    static let connectURL = URL(string: "fbconnect://foo")!
+    static let connectURLWithQuery = URL(string: "fbconnect://foo?bar=baz")!
+    static let connectURLWithFragment = URL(string: "fbconnect://foo#fragment")!
+    static let connectURLWithQueryAndFragment = URL(string: "fbconnect://foo?bar=baz#fragment")!
+    static let cancelURLWithoutError = URL(string: "fbconnect://cancel")!
+    static let cancelURLWithError = URL(string: "fbconnect://cancel?error_code=999&error_message=anErrorOhNO")!
+  }
+  // swiftlint:enable force_unwrapping
 
   var activityIndicatorView: UIActivityIndicatorView {
     guard let loadingIndicator = webView.subviews.first as? UIActivityIndicatorView else {
       fatalError("Should provide an activity indicator view during setup")
     }
     return loadingIndicator
+  }
+
+  func webDialogView(
+    _ webDialogView: FBWebDialogView,
+    didCompleteWithResults results: [AnyHashable: Any]
+  ) {
+    capturedDidCompleteResults = results as? [String: String]
+  }
+
+  func webDialogView(
+    _ webDialogView: FBWebDialogView,
+    didFailWithError error: Error
+  ) {
+    delegateDidFailWithErrorWasCalled = true
+    capturedDelegateDidFailError = error
+  }
+
+  func webDialogViewDidCancel(_ webDialogView: FBWebDialogView) {
+    webDialogViewDidCancelWasCalled = true
+  }
+
+  func webDialogViewDidFinishLoad(_ webDialogView: FBWebDialogView) {
+    webDialogViewDidFinishLoadWasCalled = true
   }
 
 }

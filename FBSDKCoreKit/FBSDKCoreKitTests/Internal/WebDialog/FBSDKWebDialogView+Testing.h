@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKWebDialogView (Testing) <WKNavigationDelegate>
 
 @property (class, nullable, nonatomic, readonly, strong) id<FBSDKWebViewProviding> webViewProvider;
+@property (class, nullable, nonatomic, readonly, strong) id<FBSDKURLOpener> urlOpener;
 @property (nonatomic, strong) UIButton *closeButton;
 @property (nonatomic, strong) UIActivityIndicatorView *loadingView;
 @property (nullable, nonatomic, strong) id<FBSDKWebView> webView;

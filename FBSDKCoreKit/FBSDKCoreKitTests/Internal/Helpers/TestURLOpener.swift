@@ -25,8 +25,9 @@ class TestURLOpener: NSObject, URLOpener {
   var capturedCanOpenUrl: URL?
   var openUrlStubs = [URL: Bool]()
   let canOpenUrl: Bool
+  var capturedOpenUrlCompletion: ((Bool) -> Void)?
 
-  init(canOpenUrl: Bool) {
+  init(canOpenUrl: Bool = false) {
     self.canOpenUrl = canOpenUrl
   }
 
@@ -45,5 +46,14 @@ class TestURLOpener: NSObject, URLOpener {
       fatalError("Must stub whether \(url.absoluteString) can be opened")
     }
     return didOpen
+  }
+
+  func open(
+    _ url: URL,
+    options: [UIApplication.OpenExternalURLOptionsKey: Any] = [:],
+    completionHandler completion: ((Bool) -> Void)?
+  ) {
+    capturedOpenUrl = url
+    capturedOpenUrlCompletion = completion
   }
 }

@@ -25,6 +25,9 @@ NS_SWIFT_NAME(URLOpener)
 
 - (BOOL)canOpenURL:(NSURL *)url;
 - (BOOL)openURL:(NSURL *)url;
+- (void)openURL:(NSURL *)url
+        options:(NSDictionary<UIApplicationOpenExternalURLOptionsKey, id> *)options
+completionHandler:(nullable void (^)(BOOL success))completion;
 
 @end
 

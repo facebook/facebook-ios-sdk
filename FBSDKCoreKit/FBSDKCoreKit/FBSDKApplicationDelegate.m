@@ -54,8 +54,10 @@
  #import "FBSDKMeasurementEventListener.h"
  #import "FBSDKProfile+Internal.h"
  #import "FBSDKSKAdNetworkReporter+Internal.h"
+ #import "FBSDKURLOpener.h"
  #import "FBSDKWebDialogView.h"
  #import "FBSDKWebViewFactory.h"
+ #import "UIApplication+URLOpener.h"
 #endif
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
@@ -507,7 +509,8 @@ static UIApplicationState _applicationState;
   }
   [FBSDKProfile configureWithStore:store
                accessTokenProvider:FBSDKAccessToken.class];
-  [FBSDKWebDialogView configureWithWebViewProvider:[FBSDKWebViewFactory new]];
+  [FBSDKWebDialogView configureWithWebViewProvider:[FBSDKWebViewFactory new]
+                                         urlOpener:UIApplication.sharedApplication];
 #endif
 }
 

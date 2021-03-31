@@ -16,37 +16,27 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+import WebKit
 
-#if !TARGET_OS_TV
+class TestWebKitNavigationAction: WKNavigationAction {
+  let stubbedRequest: URLRequest
+  let stubbedNavigationType: WKNavigationType
 
-#import <UIKit/UIKit.h>
+  init(
+    stubbedRequest: URLRequest,
+    navigationType: WKNavigationType = .other
+  ) {
+    self.stubbedRequest = stubbedRequest
+    stubbedNavigationType = navigationType
 
-@protocol FBSDKWebDialogViewDelegate;
-@protocol FBSDKWebViewProviding;
-@protocol FBSDKURLOpener;
+    super.init()
+  }
 
-NS_SWIFT_NAME(FBWebDialogView)
-@interface FBSDKWebDialogView : UIView
+  override var request: URLRequest {
+    return stubbedRequest
+  }
 
-@property (nonatomic, weak) id<FBSDKWebDialogViewDelegate> delegate;
-
-+ (void)configureWithWebViewProvider:(id<FBSDKWebViewProviding>)provider
-                           urlOpener:(id<FBSDKURLOpener>)urlOpener;
-
-- (void)loadURL:(NSURL *)URL;
-- (void)stopLoading;
-
-@end
-
-NS_SWIFT_NAME(WebDialogViewDelegate)
-@protocol FBSDKWebDialogViewDelegate <NSObject>
-
-- (void)webDialogView:(FBSDKWebDialogView *)webDialogView didCompleteWithResults:(NSDictionary *)results;
-- (void)webDialogView:(FBSDKWebDialogView *)webDialogView didFailWithError:(NSError *)error;
-- (void)webDialogViewDidCancel:(FBSDKWebDialogView *)webDialogView;
-- (void)webDialogViewDidFinishLoad:(FBSDKWebDialogView *)webDialogView;
-
-@end
-
-#endif
+  override var navigationType: WKNavigationType {
+    return stubbedNavigationType
+  }
+}
