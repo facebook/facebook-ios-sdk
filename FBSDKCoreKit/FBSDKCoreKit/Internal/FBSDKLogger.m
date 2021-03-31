@@ -117,7 +117,9 @@ static NSMutableDictionary *g_startTimesWithTags = nil;
 
 + (NSUInteger)generateSerialNumber
 {
-  return g_serialNumberCounter++;
+  @synchronized(self) {
+    return ++g_serialNumberCounter;
+  }
 }
 
 + (void)singleShotLogEntry:(NSString *)loggingBehavior
