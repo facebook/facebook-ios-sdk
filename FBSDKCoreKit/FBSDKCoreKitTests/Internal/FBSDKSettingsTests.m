@@ -1174,7 +1174,6 @@ static NSString *const whiteSpaceToken = @"   ";
 {
   // Using false because it is not the default value for `isAutoInitializationEnabled`
   userDefaultsSpy.capturedValues = @{ @"FacebookAutoLogAppEventsEnabled" : @NO };
-  [self stubUserDefaultsWith:userDefaultsSpy];
 
   XCTAssertFalse(
     FBSDKSettings.isAutoLogAppEventsEnabled,
