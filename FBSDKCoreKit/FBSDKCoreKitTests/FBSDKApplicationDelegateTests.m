@@ -497,8 +497,7 @@
 - (void)testInitializingSdkConfiguresCurrentAccessTokenProviderForGraphRequest
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
-  [FBSDKGraphRequest setCurrentAccessTokenStringProvider:nil];
-  [FBSDKApplicationDelegate initializeSDK:@{}];
+  [_delegate initializeSDKWithLaunchOptions:@{}];
 
   XCTAssertEqualObjects(
     [FBSDKGraphRequest currentAccessTokenStringProvider],

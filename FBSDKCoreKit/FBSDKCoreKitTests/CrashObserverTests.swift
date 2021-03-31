@@ -27,7 +27,6 @@ class CrashObserversTest: XCTestCase {
   var crashObserver: CrashObserver! // swiftlint:disable:this implicitly_unwrapped_optional
   var settings: TestSettings! // swiftlint:disable:this implicitly_unwrapped_optional
 
-
   override func setUp() {
     super.setUp()
     featureManagerProvider = TestFeatureManagerProvider.create(withStubbedFeatureManager: TestFeatureManager.self)
@@ -50,7 +49,7 @@ class CrashObserversTest: XCTestCase {
   func testCreatingWithCustomSettings() {
     XCTAssertTrue(
       crashObserver.settings is TestSettings,
-     "Should be able to create with custom settings"
+      "Should be able to create with custom settings"
     )
   }
 

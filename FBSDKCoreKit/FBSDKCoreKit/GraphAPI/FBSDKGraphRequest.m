@@ -290,6 +290,11 @@ static Class<FBSDKTokenStringProviding> _currentAccessTokenStringProvider;
 
 #if DEBUG
 
++ (void)reset
+{
+  _currentAccessTokenStringProvider = nil;
+}
+
 + (Class<FBSDKTokenStringProviding>)currentAccessTokenStringProvider
 {
   return _currentAccessTokenStringProvider;

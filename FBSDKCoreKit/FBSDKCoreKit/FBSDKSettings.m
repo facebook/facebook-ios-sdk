@@ -532,6 +532,11 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (BOOL)isDataProcessingRestricted
 {
+  return [self.sharedSettings isDataProcessingRestricted];
+}
+
+- (BOOL)isDataProcessingRestricted
+{
   NSArray<NSString *> *options = [FBSDKTypeUtility dictionary:[FBSDKSettings dataProcessingOptions]
                                                  objectForKey:DATA_PROCESSING_OPTIONS
                                                        ofType:NSArray.class];
