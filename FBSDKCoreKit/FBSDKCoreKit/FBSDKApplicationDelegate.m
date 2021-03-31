@@ -499,7 +499,10 @@ static UIApplicationState _applicationState;
   [FBSDKAppLinkUtility configureWithRequestProvider:[FBSDKGraphRequestFactory new]
                              infoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKCodelessIndexer configureWithRequestProvider:[FBSDKGraphRequestFactory new]];
-  [FBSDKSKAdNetworkReporter configureWithRequestProvider:[FBSDKGraphRequestFactory new]];
+  if (@available(iOS 14.0, *)) {
+    [FBSDKSKAdNetworkReporter configureWithRequestProvider:[FBSDKGraphRequestFactory new]
+                                                     store:store];
+  }
   [FBSDKProfile configureWithStore:store
                accessTokenProvider:FBSDKAccessToken.class];
 #endif

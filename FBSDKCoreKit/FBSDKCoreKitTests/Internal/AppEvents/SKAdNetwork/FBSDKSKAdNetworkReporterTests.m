@@ -47,8 +47,11 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 + (void)setSKAdNetworkReportEnabled:(BOOL)enabled;
 
 + (void)_loadConfigurationWithBlock:(FBSDKSKAdNetworkReporterBlock)block;
-+ (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider;
++ (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+                               store:(id<FBSDKDataPersisting>)store;
 + (id<FBSDKGraphRequestProviding>)requestProvider;
++ (id<FBSDKDataPersisting>)store;
++ (void)reset;
 
 @end
 
@@ -67,7 +70,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [super setUp];
 
   userDefaultsSpy = [UserDefaultsSpy new];
-  [self stubUserDefaultsWith:userDefaultsSpy];
 
   NSDictionary *json = @{
     @"data" : @[@{
@@ -82,12 +84,17 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   [FBSDKSKAdNetworkReporter _loadReportData];
   [FBSDKSKAdNetworkReporter setSKAdNetworkReportEnabled:YES];
+
+  TestGraphRequestFactory *requestProvider = [TestGraphRequestFactory new];
+  [FBSDKSKAdNetworkReporter configureWithRequestProvider:requestProvider store:userDefaultsSpy];
   [self stubLoadingAdNetworkReporterConfiguration];
 }
 
 - (void)tearDown
 {
   [super tearDown];
+
+  [FBSDKSKAdNetworkReporter reset];
 }
 
 - (void)testShouldCutoffWithoutTimestampWithoutCutoffTime
@@ -151,10 +158,10 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   NSDateComponents *addComponents = [NSDateComponents new];
   addComponents.day = -2;
   NSDate *expiredDate = [calendar dateByAddingComponents:addComponents toDate:[NSDate date] options:0];
-  [[NSUserDefaults standardUserDefaults] setObject:expiredDate forKey:FBSDKSettingsInstallTimestamp];
+  [userDefaultsSpy setObject:expiredDate forKey:FBSDKSettingsInstallTimestamp];
   XCTAssertTrue([FBSDKSKAdNetworkReporter _shouldCutoff]);
 
-  [[NSUserDefaults standardUserDefaults] removeObjectForKey:FBSDKSettingsInstallTimestamp];
+  [userDefaultsSpy removeObjectForKey:FBSDKSettingsInstallTimestamp];
 }
 
 - (void)testCutoffWhenTimeBucketIsAvailable
@@ -205,7 +212,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
     [FBSDKSKAdNetworkReporter _recordAndUpdateEvent:@"fb_mobile_purchase" currency:@"USD" value:@(100)];
     [FBSDKSKAdNetworkReporter _recordAndUpdateEvent:@"fb_mobile_purchase" currency:@"USD" value:@(201)];
     [FBSDKSKAdNetworkReporter _recordAndUpdateEvent:@"test" currency:nil value:nil];
-    NSData *cache = [[NSUserDefaults standardUserDefaults] objectForKey:FBSDKSKAdNetworkReporterKey];
+    NSData *cache = [userDefaultsSpy objectForKey:FBSDKSKAdNetworkReporterKey];
     XCTAssertNotNil(cache);
     NSDictionary<NSString *, id> *data = [FBSDKTypeUtility dictionaryValue:[NSKeyedUnarchiver unarchiveObjectWithData:cache]];
     NSMutableSet<NSString *> *recordedEvents = [FBSDKTypeUtility dictionary:data objectForKey:@"recorded_events" ofType:NSMutableSet.class];
@@ -221,14 +228,20 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   }
 }
 
-- (void)testConfigureWithRequestProvider
+- (void)testConfiguringWithDependencies
 {
   id<FBSDKGraphRequestProviding> requestProvider = [FBSDKGraphRequestFactory new];
-  [FBSDKSKAdNetworkReporter configureWithRequestProvider:requestProvider];
+  id<FBSDKDataPersisting> store = [UserDefaultsSpy new];
+  [FBSDKSKAdNetworkReporter configureWithRequestProvider:requestProvider store:store];
   XCTAssertEqualObjects(
     requestProvider,
     [FBSDKSKAdNetworkReporter requestProvider],
     "Should be able to configure a reporter with a request provider"
+  );
+  XCTAssertEqualObjects(
+    store,
+    [FBSDKSKAdNetworkReporter store],
+    "Should be able to configure a reporter with a persistent data store"
   );
 }
 

@@ -82,9 +82,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing an `FBSDKGraphRequest` class mock between tests
 @property (nullable, assign) id graphRequestMock;
 
-/// Used for sharing an `NSUserDefaults` class mock between tests
-@property (nullable, assign) id nsUserDefaultsClassMock;
-
 /// Used for sharing an `FBSDKProfile` class mock between tests
 @property (nullable, assign) id profileClassMock;
 
@@ -168,9 +165,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// If the completion is nil then this will ignore any arguments passed to it.
 - (void)stubServerConfigurationFetchingWithConfiguration:(nullable FBSDKServerConfiguration *)configuration
                                                    error:(nullable NSError *)error;
-
-/// Stubs `NSUserDefaults.standardUserDefaults` with the provided NSUserDefaults
-- (void)stubUserDefaultsWith:(NSUserDefaults *)defaults;
 
 /// Stubs `FBSDKProfile.fetchCachedProfile`
 - (void)stubCachedProfileWith:(FBSDKProfile *__nullable)profile;

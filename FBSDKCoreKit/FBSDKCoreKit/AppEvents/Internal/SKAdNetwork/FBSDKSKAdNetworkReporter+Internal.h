@@ -25,7 +25,8 @@
 
 @interface FBSDKSKAdNetworkReporter (Internal)
 
-+ (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider;
++ (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+                               store:(id<FBSDKDataPersisting>)store;
 
 @end
 

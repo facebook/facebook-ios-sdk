@@ -88,7 +88,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self setUpFBApplicationDelegateMock];
   [self setUpGateKeeperManagerMock];
   [self setUpFeatureManagerMock];
-  [self setUpNSUserDefaultsMock];
   [self setUpAuthenticationTokenClassMock];
   [self setUpProfileMock];
   [self setUpSKAdNetworkMock];
@@ -139,9 +138,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   [_settingsClassMock stopMocking];
   _settingsClassMock = nil;
-
-  [_nsUserDefaultsClassMock stopMocking];
-  _nsUserDefaultsClassMock = nil;
 
   [_authenticationTokenClassMock stopMocking];
   _authenticationTokenClassMock = nil;
@@ -261,11 +257,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)setUpAppEventsUtilityMock
 {
   _appEventsUtilityClassMock = OCMStrictClassMock(FBSDKAppEventsUtility.class);
-}
-
-- (void)setUpNSUserDefaultsMock
-{
-  self.nsUserDefaultsClassMock = OCMStrictClassMock(NSUserDefaults.class);
 }
 
 - (void)setUpAuthenticationTokenClassMock
@@ -398,11 +389,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)stubCachedServerConfigurationWithServerConfiguration:(FBSDKServerConfiguration *)serverConfiguration
 {
   OCMStub(ClassMethod([_serverConfigurationManagerClassMock cachedServerConfiguration])).andReturn(serverConfiguration);
-}
-
-- (void)stubUserDefaultsWith:(NSUserDefaults *)defaults
-{
-  OCMStub(ClassMethod([_nsUserDefaultsClassMock standardUserDefaults])).andReturn(defaults);
 }
 
 - (void)stubIsAutoLogAppEventsEnabled:(BOOL)isEnabled

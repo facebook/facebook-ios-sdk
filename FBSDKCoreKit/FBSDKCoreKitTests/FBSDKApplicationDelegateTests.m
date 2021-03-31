@@ -60,6 +60,7 @@
 
 @interface FBSDKSKAdNetworkReporter (Testing)
 + (id<FBSDKGraphRequestProviding>)requestProvider;
++ (id<FBSDKDataPersisting>)store;
 @end
 
 @interface FBSDKAppLinkUtility (Testing)
@@ -335,10 +336,16 @@
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [_delegate initializeSDKWithLaunchOptions:@{}];
   NSObject *requestProvider = (NSObject *)[FBSDKSKAdNetworkReporter requestProvider];
+  NSObject *store = (NSObject *)[FBSDKSKAdNetworkReporter store];
   XCTAssertEqualObjects(
     requestProvider.class,
     FBSDKGraphRequestFactory.class,
     "Should be configured with the expected concrete graph request provider"
+  );
+  XCTAssertEqualObjects(
+    store,
+    NSUserDefaults.standardUserDefaults,
+    "Should be configured with the standard user defaults"
   );
 }
 
