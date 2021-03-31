@@ -289,6 +289,7 @@ static Class<FBSDKTokenStringProviding> _currentAccessTokenStringProvider;
 }
 
 #if DEBUG
+ #if FBSDKTEST
 
 + (void)reset
 {
@@ -300,6 +301,7 @@ static Class<FBSDKTokenStringProviding> _currentAccessTokenStringProvider;
   return _currentAccessTokenStringProvider;
 }
 
+ #endif
 #endif
 
 @end

@@ -16,35 +16,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#if !TARGET_OS_TV
+#import "FBSDKWebDialogView.h"
+#import "FBSDKWebViewFactory.h"
+#import "FBSDKWebViewProviding.h"
+#import "WKWebView+WebViewProtocol.h"
 
-#import <UIKit/UIKit.h>
+NS_ASSUME_NONNULL_BEGIN
 
-@protocol FBSDKWebDialogViewDelegate;
-@protocol FBSDKWebViewProviding;
+@interface FBSDKWebDialogView (Testing) <WKNavigationDelegate>
 
-NS_SWIFT_NAME(FBWebDialogView)
-@interface FBSDKWebDialogView : UIView
+@property (class, nullable, nonatomic, readonly, strong) id<FBSDKWebViewProviding> webViewProvider;
+@property (nonatomic, strong) UIButton *closeButton;
+@property (nonatomic, strong) UIActivityIndicatorView *loadingView;
+@property (nullable, nonatomic, strong) id<FBSDKWebView> webView;
 
-@property (nonatomic, weak) id<FBSDKWebDialogViewDelegate> delegate;
-
-+ (void)configureWithWebViewProvider:(id<FBSDKWebViewProviding>)provider;
-
-- (void)loadURL:(NSURL *)URL;
-- (void)stopLoading;
-
-@end
-
-NS_SWIFT_NAME(WebDialogViewDelegate)
-@protocol FBSDKWebDialogViewDelegate <NSObject>
-
-- (void)webDialogView:(FBSDKWebDialogView *)webDialogView didCompleteWithResults:(NSDictionary *)results;
-- (void)webDialogView:(FBSDKWebDialogView *)webDialogView didFailWithError:(NSError *)error;
-- (void)webDialogViewDidCancel:(FBSDKWebDialogView *)webDialogView;
-- (void)webDialogViewDidFinishLoad:(FBSDKWebDialogView *)webDialogView;
++ (void)reset;
 
 @end
 
-#endif
+NS_ASSUME_NONNULL_END

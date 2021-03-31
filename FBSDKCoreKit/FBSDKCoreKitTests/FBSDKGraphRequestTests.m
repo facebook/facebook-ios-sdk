@@ -45,12 +45,17 @@ static NSDictionary<NSString *, NSString *> *const _mockEmptyParameters(void)
 }
 
 @interface FBSDKGraphRequest (Testing)
+
 @property (nonatomic, strong) id<FBSDKGraphRequestConnectionProviding> connectionFactory;
+
 + (void)reset;
+
 @end
 
 @interface FBSDKAccessToken (Testing)
+
 + (void)resetCurrentAccessTokenCache;
+
 @end
 
 @interface FBSDKGraphRequestTests : XCTestCase
@@ -282,6 +287,7 @@ static NSDictionary<NSString *, NSString *> *const _mockEmptyParameters(void)
     "Should use the token string provider for the token string"
   );
   XCTAssertNotNil(request.tokenString, "Should have a concrete token string");
+  [FBSDKGraphRequest reset];
 }
 
 #pragma mark - helper function

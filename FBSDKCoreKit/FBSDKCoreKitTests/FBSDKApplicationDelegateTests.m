@@ -513,6 +513,18 @@
   );
 }
 
+- (void)testInitializingSdkConfiguresWebDialogView
+{
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
+  [_delegate initializeSDKWithLaunchOptions:@{}];
+  NSObject *webViewProvider = (NSObject *) FBSDKWebDialogView.webViewProvider;
+  XCTAssertEqualObjects(
+    webViewProvider.class,
+    FBSDKWebViewFactory.class,
+    "Should be configured with the expected concrete web view provider"
+  );
+}
+
 - (void)testDidFinishLaunchingLaunchedApp
 {
   _delegate.isAppLaunched = YES;

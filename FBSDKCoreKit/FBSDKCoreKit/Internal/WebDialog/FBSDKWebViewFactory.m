@@ -20,30 +20,18 @@
 
 #if !TARGET_OS_TV
 
-#import <UIKit/UIKit.h>
+ #import "FBSDKWebViewFactory.h"
 
-@protocol FBSDKWebDialogViewDelegate;
-@protocol FBSDKWebViewProviding;
+ #import "WKWebView+WebViewProtocol.h"
 
-NS_SWIFT_NAME(FBWebDialogView)
-@interface FBSDKWebDialogView : UIView
+@protocol FBSDKWebView;
 
-@property (nonatomic, weak) id<FBSDKWebDialogViewDelegate> delegate;
+@implementation FBSDKWebViewFactory
 
-+ (void)configureWithWebViewProvider:(id<FBSDKWebViewProviding>)provider;
-
-- (void)loadURL:(NSURL *)URL;
-- (void)stopLoading;
-
-@end
-
-NS_SWIFT_NAME(WebDialogViewDelegate)
-@protocol FBSDKWebDialogViewDelegate <NSObject>
-
-- (void)webDialogView:(FBSDKWebDialogView *)webDialogView didCompleteWithResults:(NSDictionary *)results;
-- (void)webDialogView:(FBSDKWebDialogView *)webDialogView didFailWithError:(NSError *)error;
-- (void)webDialogViewDidCancel:(FBSDKWebDialogView *)webDialogView;
-- (void)webDialogViewDidFinishLoad:(FBSDKWebDialogView *)webDialogView;
+- (nonnull id<FBSDKWebView>)createWebViewWithFrame:(CGRect)frame
+{
+  return [[WKWebView alloc] initWithFrame:frame];
+}
 
 @end
 

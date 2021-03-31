@@ -21,30 +21,29 @@
 #if !TARGET_OS_TV
 
 #import <UIKit/UIKit.h>
+#import <WebKit/WebKit.h>
 
-@protocol FBSDKWebDialogViewDelegate;
-@protocol FBSDKWebViewProviding;
+NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(FBWebDialogView)
-@interface FBSDKWebDialogView : UIView
+NS_SWIFT_NAME(WebView)
+@protocol FBSDKWebView
 
-@property (nonatomic, weak) id<FBSDKWebDialogViewDelegate> delegate;
+@property (nullable, nonatomic, weak) id <WKNavigationDelegate> navigationDelegate;
+@property(nonatomic) CGRect frame;
+@property(nonatomic) CGRect bounds;
 
-+ (void)configureWithWebViewProvider:(id<FBSDKWebViewProviding>)provider;
-
-- (void)loadURL:(NSURL *)URL;
+- (nullable WKNavigation *)loadRequest:(NSURLRequest *)request;
 - (void)stopLoading;
 
 @end
 
-NS_SWIFT_NAME(WebDialogViewDelegate)
-@protocol FBSDKWebDialogViewDelegate <NSObject>
+NS_SWIFT_NAME(WebViewProviding)
+@protocol FBSDKWebViewProviding
 
-- (void)webDialogView:(FBSDKWebDialogView *)webDialogView didCompleteWithResults:(NSDictionary *)results;
-- (void)webDialogView:(FBSDKWebDialogView *)webDialogView didFailWithError:(NSError *)error;
-- (void)webDialogViewDidCancel:(FBSDKWebDialogView *)webDialogView;
-- (void)webDialogViewDidFinishLoad:(FBSDKWebDialogView *)webDialogView;
+- (id<FBSDKWebView>)createWebViewWithFrame:(CGRect)frame;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

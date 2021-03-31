@@ -16,35 +16,22 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+import FBSDKCoreKit
 
-#if !TARGET_OS_TV
+class WebViewFactoryTests: XCTestCase {
 
-#import <UIKit/UIKit.h>
+  let factory = WebViewFactory()
+  let frame = CGRect(origin: .zero, size: .init(width: 5, height: 5))
 
-@protocol FBSDKWebDialogViewDelegate;
-@protocol FBSDKWebViewProviding;
+  func testCreatingWebView() {
+    guard let webView = factory.createWebView(withFrame: frame) as? WKWebView else {
+      return XCTFail("Should create a webview of the expected concrete type")
+    }
 
-NS_SWIFT_NAME(FBWebDialogView)
-@interface FBSDKWebDialogView : UIView
-
-@property (nonatomic, weak) id<FBSDKWebDialogViewDelegate> delegate;
-
-+ (void)configureWithWebViewProvider:(id<FBSDKWebViewProviding>)provider;
-
-- (void)loadURL:(NSURL *)URL;
-- (void)stopLoading;
-
-@end
-
-NS_SWIFT_NAME(WebDialogViewDelegate)
-@protocol FBSDKWebDialogViewDelegate <NSObject>
-
-- (void)webDialogView:(FBSDKWebDialogView *)webDialogView didCompleteWithResults:(NSDictionary *)results;
-- (void)webDialogView:(FBSDKWebDialogView *)webDialogView didFailWithError:(NSError *)error;
-- (void)webDialogViewDidCancel:(FBSDKWebDialogView *)webDialogView;
-- (void)webDialogViewDidFinishLoad:(FBSDKWebDialogView *)webDialogView;
-
-@end
-
-#endif
+    XCTAssertEqual(
+      webView.frame,
+      frame,
+      "Should create a webview with the given frame"
+    )
+  }
+}

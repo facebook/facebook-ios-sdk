@@ -27,32 +27,52 @@
  #import "FBSDKCloseIcon.h"
  #import "FBSDKError.h"
  #import "FBSDKInternalUtility.h"
+ #import "FBSDKWebViewProviding.h"
+
+ #ifdef BUCK
+  #import <FBSDKCoreKit_Basics/FBSDKSafeCast.h>
+ #else
+  #import "FBSDKSafeCast.h"
+ #endif
 
  #define FBSDK_WEB_DIALOG_VIEW_BORDER_WIDTH 10.0
 
 @interface FBSDKWebDialogView () <WKNavigationDelegate>
+
+@property (nonatomic, strong) UIButton *closeButton;
+@property (nonatomic, strong) UIActivityIndicatorView *loadingView;
+@property (nonatomic, strong) id<FBSDKWebView> webView;
+
 @end
 
 @implementation FBSDKWebDialogView
+
+static id<FBSDKWebViewProviding> _webViewProvider;
+
++ (void)configureWithWebViewProvider:(id<FBSDKWebViewProviding>)provider
 {
-  UIButton *_closeButton;
-  UIActivityIndicatorView *_loadingView;
-  WKWebView *_webView;
+  _webViewProvider = provider;
 }
 
  #pragma mark - Object Lifecycle
 
- #pragma clang diagnostic push
- #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (instancetype)initWithFrame:(CGRect)frame
 {
   if ((self = [super initWithFrame:frame])) {
     self.backgroundColor = [UIColor clearColor];
     self.opaque = NO;
 
-    _webView = [[WKWebView alloc] initWithFrame:CGRectZero];
+    _webView = [_webViewProvider createWebViewWithFrame:CGRectZero];
     _webView.navigationDelegate = self;
-    [self addSubview:_webView];
+
+    // Since we cannot constrain the webview protocol to be a UIView subclass
+    // perform a check here to make sure it can be cast to a UIView
+    UIView *webView = FBSDK_CAST_TO_CLASS_OR_NIL(_webView, UIView);
+    if (!webView) {
+      return self;
+    }
+
+    [self addSubview:webView];
 
     _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage *closeImage = [[[FBSDKCloseIcon alloc] init] imageWithSize:CGSizeMake(29.0, 29.0)];
@@ -67,31 +87,40 @@
     [self addSubview:_closeButton];
     [_closeButton addTarget:self action:@selector(_close:) forControlEvents:UIControlEventTouchUpInside];
 
-    _loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    UIActivityIndicatorViewStyle style;
+    if (@available(iOS 13.0, *)) {
+      style = UIActivityIndicatorViewStyleLarge;
+    } else {
+      #pragma clang diagnostic push
+      #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+      style = UIActivityIndicatorViewStyleWhiteLarge;
+      #pragma clang diagnostic pop
+    }
+    _loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:style];
     _loadingView.color = [UIColor grayColor];
-    [_webView addSubview:_loadingView];
+    _loadingView.hidesWhenStopped = YES;
+    [webView addSubview:_loadingView];
   }
   return self;
 }
 
- #pragma clang diagnostic pop
-
 - (void)dealloc
 {
-  _webView.navigationDelegate = nil;
+  self.webView.navigationDelegate = nil;
 }
 
  #pragma mark - Public Methods
 
 - (void)loadURL:(NSURL *)URL
 {
-  [_loadingView startAnimating];
-  [_webView loadRequest:[NSURLRequest requestWithURL:URL]];
+  [self.loadingView startAnimating];
+  [self.webView loadRequest:[NSURLRequest requestWithURL:URL]];
 }
 
 - (void)stopLoading
 {
-  [_webView stopLoading];
+  [self.webView stopLoading];
+  [self.loadingView stopAnimating];
 }
 
  #pragma mark - Layout
@@ -104,13 +133,11 @@
   CGContextFillRect(context, self.bounds);
   [[UIColor blackColor] setStroke];
   CGContextSetLineWidth(context, 1.0 / self.layer.contentsScale);
-  CGContextStrokeRect(context, _webView.frame);
+  CGContextStrokeRect(context, self.webView.frame);
   CGContextRestoreGState(context);
   [super drawRect:rect];
 }
 
- #pragma clang diagnostic push
- #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)layoutSubviews
 {
   [super layoutSubviews];
@@ -128,35 +155,33 @@
     FBSDK_WEB_DIALOG_VIEW_BORDER_WIDTH,
     FBSDK_WEB_DIALOG_VIEW_BORDER_WIDTH
   );
-  _webView.frame = CGRectIntegral(UIEdgeInsetsInsetRect(bounds, webViewInsets));
+  self.webView.frame = CGRectIntegral(UIEdgeInsetsInsetRect(bounds, webViewInsets));
 
-  CGRect webViewBounds = _webView.bounds;
-  _loadingView.center = CGPointMake(CGRectGetMidX(webViewBounds), CGRectGetMidY(webViewBounds));
+  CGRect webViewBounds = self.webView.bounds;
+  self.loadingView.center = CGPointMake(CGRectGetMidX(webViewBounds), CGRectGetMidY(webViewBounds));
 
   if (CGRectGetHeight(webViewBounds) == 0.0) {
-    _closeButton.alpha = 0.0;
+    self.closeButton.alpha = 0.0;
   } else {
-    _closeButton.alpha = 1.0;
-    CGRect closeButtonFrame = _closeButton.bounds;
+    self.closeButton.alpha = 1.0;
+    CGRect closeButtonFrame = self.closeButton.bounds;
     closeButtonFrame.origin = bounds.origin;
-    _closeButton.frame = CGRectIntegral(closeButtonFrame);
+    self.closeButton.frame = CGRectIntegral(closeButtonFrame);
   }
 }
-
- #pragma clang diagnostic pop
 
  #pragma mark - Actions
 
 - (void)_close:(id)sender
 {
-  [_delegate webDialogViewDidCancel:self];
+  [self.delegate webDialogViewDidCancel:self];
 }
 
  #pragma mark - WKNavigationDelegate
 
 - (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
-  [_loadingView stopAnimating];
+  [self.loadingView stopAnimating];
 
   // 102 == WebKitErrorFrameLoadInterruptedByPolicyChange
   // NSURLErrorCancelled == "Operation could not be completed", note NSURLErrorCancelled occurs when the user clicks
@@ -165,12 +190,10 @@
   // application needs
   if (!(([error.domain isEqualToString:NSURLErrorDomain] && error.code == NSURLErrorCancelled)
         || ([error.domain isEqualToString:@"WebKitErrorDomain"] && error.code == 102))) {
-    [_delegate webDialogView:self didFailWithError:error];
+    [self.delegate webDialogView:self didFailWithError:error];
   }
 }
 
- #pragma clang diagnostic push
- #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)                  webView:(WKWebView *)webView
   decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction
                   decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
@@ -185,29 +208,52 @@
       if (errorCode) {
         NSString *errorMessage = [FBSDKTypeUtility stringValue:parameters[@"error_msg"]];
         NSError *error = [FBSDKError errorWithCode:errorCode message:errorMessage];
-        [_delegate webDialogView:self didFailWithError:error];
+        [self.delegate webDialogView:self didFailWithError:error];
       } else {
-        [_delegate webDialogViewDidCancel:self];
+        [self.delegate webDialogViewDidCancel:self];
       }
     } else {
-      [_delegate webDialogView:self didCompleteWithResults:parameters];
+      [self.delegate webDialogView:self didCompleteWithResults:parameters];
     }
     decisionHandler(WKNavigationActionPolicyCancel);
   } else if (navigationAction.navigationType == WKNavigationTypeLinkActivated) {
-    [[UIApplication sharedApplication] openURL:URL];
-    decisionHandler(WKNavigationActionPolicyCancel);
+    if (@available(iOS 10.0, *)) {
+      [UIApplication.sharedApplication openURL:URL options:@{} completionHandler:^(BOOL success) {
+        decisionHandler(WKNavigationActionPolicyCancel);
+      }];
+    } else {
+      #pragma clang diagnostic push
+      #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+      [[UIApplication sharedApplication] openURL:URL];
+      decisionHandler(WKNavigationActionPolicyCancel);
+      #pragma clang diagnostic pop
+    }
   } else {
     decisionHandler(WKNavigationActionPolicyAllow);
   }
 }
 
- #pragma clang diagnostic pop
-
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
-  [_loadingView stopAnimating];
-  [_delegate webDialogViewDidFinishLoad:self];
+  [self.loadingView stopAnimating];
+  [self.delegate webDialogViewDidFinishLoad:self];
 }
+
+ #if DEBUG
+  #if FBSDKTEST
+
++ (void)reset
+{
+  _webViewProvider = nil;
+}
+
++ (id<FBSDKWebViewProviding>)webViewProvider
+{
+  return _webViewProvider;
+}
+
+  #endif
+ #endif
 
 @end
 

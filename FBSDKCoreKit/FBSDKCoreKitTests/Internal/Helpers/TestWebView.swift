@@ -16,35 +16,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+class TestWebView: UIView, WebView {
+  weak var navigationDelegate: WKNavigationDelegate?
+  var capturedRequest: URLRequest?
+  var stopLoadingCallCount = 0
 
-#if !TARGET_OS_TV
+  func load(_ request: URLRequest) -> WKNavigation? {
+    capturedRequest = request
+    return nil
+  }
 
-#import <UIKit/UIKit.h>
-
-@protocol FBSDKWebDialogViewDelegate;
-@protocol FBSDKWebViewProviding;
-
-NS_SWIFT_NAME(FBWebDialogView)
-@interface FBSDKWebDialogView : UIView
-
-@property (nonatomic, weak) id<FBSDKWebDialogViewDelegate> delegate;
-
-+ (void)configureWithWebViewProvider:(id<FBSDKWebViewProviding>)provider;
-
-- (void)loadURL:(NSURL *)URL;
-- (void)stopLoading;
-
-@end
-
-NS_SWIFT_NAME(WebDialogViewDelegate)
-@protocol FBSDKWebDialogViewDelegate <NSObject>
-
-- (void)webDialogView:(FBSDKWebDialogView *)webDialogView didCompleteWithResults:(NSDictionary *)results;
-- (void)webDialogView:(FBSDKWebDialogView *)webDialogView didFailWithError:(NSError *)error;
-- (void)webDialogViewDidCancel:(FBSDKWebDialogView *)webDialogView;
-- (void)webDialogViewDidFinishLoad:(FBSDKWebDialogView *)webDialogView;
-
-@end
-
-#endif
+  func stopLoading() {
+    stopLoadingCallCount += 1
+  }
+}
