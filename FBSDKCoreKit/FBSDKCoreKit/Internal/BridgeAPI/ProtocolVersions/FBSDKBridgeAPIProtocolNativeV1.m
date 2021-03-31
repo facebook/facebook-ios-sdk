@@ -30,7 +30,9 @@
  #import "FBSDKConstants.h"
  #import "FBSDKError.h"
  #import "FBSDKInternalUtility.h"
+ #import "FBSDKPasteboard.h"
  #import "FBSDKSettings.h"
+ #import "UIPasteboard+Pasteboard.h"
 
  #define FBSDKBridgeAPIProtocolNativeV1BridgeMaxBase64DataLengthThreshold (1024 * 16)
 
@@ -110,7 +112,7 @@ static const struct {
 }
 
 - (instancetype)initWithAppScheme:(NSString *)appScheme
-                       pasteboard:(UIPasteboard *)pasteboard
+                       pasteboard:(id<FBSDKPasteboard>)pasteboard
               dataLengthThreshold:(NSUInteger)dataLengthThreshold
                    includeAppIcon:(BOOL)includeAppIcon
 {
@@ -274,8 +276,6 @@ static const struct {
   return [NSError errorWithDomain:domain code:code userInfo:userInfo];
 }
 
- #pragma clang diagnostic push
- #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (NSString *)_JSONStringForObject:(id)object enablePasteboard:(BOOL)enablePasteboard error:(NSError **)errorRef
 {
   __block BOOL didAddToPasteboard = NO;
@@ -307,9 +307,7 @@ static const struct {
         // if we are adding this to the general pasteboard, then we want to remove it when we are done with the share.
         // the Facebook app will not clear the value with this version of the protocol, so we should do it when the app
         // becomes active again
-        NSString *pasteboardName = self->_pasteboard.name;
-        if ([pasteboardName isEqualToString:UIPasteboardNameGeneral]
-            || [pasteboardName isEqualToString:UIPasteboardNameFind]) {
+        if (self->_pasteboard._isGeneralPasteboard || self->_pasteboard._isFindPasteboard) {
           [[self class] clearData:data fromPasteboardOnApplicationDidBecomeActive:self->_pasteboard];
         }
       }
@@ -321,9 +319,7 @@ static const struct {
   }];
 }
 
- #pragma clang diagnostic pop
-
-+ (void)clearData:(NSData *)data fromPasteboardOnApplicationDidBecomeActive:(UIPasteboard *)pasteboard
++ (void)clearData:(NSData *)data fromPasteboardOnApplicationDidBecomeActive:(id<FBSDKPasteboard>)pasteboard
 {
   void (^notificationBlock)(NSNotification *) = ^(NSNotification *note) {
     // After testing, it seems that reading the pasteboard will not result in a system dialog since

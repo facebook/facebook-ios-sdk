@@ -107,7 +107,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self setUpBridgeApiClassMock];
   [self setUpCrashObserverClassMock];
   [self setUpErrorReportClassMock];
-  [self setUpPasteboardClassMock];
   [self setUpAppEventsConfigurationManagerClassMock];
   [self setUpASIdentifierClassMock];
   [self setUpAppEventsMock];
@@ -197,9 +196,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   [_errorReportClassMock stopMocking];
   _errorReportClassMock = nil;
-
-  [_pasteboardClassMock stopMocking];
-  _pasteboardClassMock = nil;
 
   [_appEventsConfigurationManagerClassMock stopMocking];
   _appEventsConfigurationManagerClassMock = nil;
@@ -364,11 +360,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)setUpErrorReportClassMock
 {
   _errorReportClassMock = OCMClassMock(FBSDKErrorReport.class);
-}
-
-- (void)setUpPasteboardClassMock
-{
-  _pasteboardClassMock = OCMClassMock(UIPasteboard.class);
 }
 
 - (void)setUpAppEventsConfigurationManagerClassMock

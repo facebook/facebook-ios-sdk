@@ -1104,6 +1104,7 @@
 		F46E556F260FAB1F00BAF55C /* AppLinkResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46E556E260FAB1F00BAF55C /* AppLinkResolverTests.swift */; };
 		F46E55A2260FB07B00BAF55C /* TestAppLinkResolverRequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46E55A1260FB07B00BAF55C /* TestAppLinkResolverRequestBuilder.swift */; };
 		F46E5663260FC23900BAF55C /* TestClientTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46E5662260FC23900BAF55C /* TestClientTokenProvider.swift */; };
+		F46E56FA260FE86F00BAF55C /* TestPasteboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46E56F9260FE86F00BAF55C /* TestPasteboard.swift */; };
 		F46FA62D24533F450060C902 /* AccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = F487DBD9231EC293008416A9 /* AccessToken.swift */; };
 		F46FA63C24533F450060C902 /* AccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = F487DBD9231EC293008416A9 /* AccessToken.swift */; };
 		F46FA63D24533F610060C902 /* Permission.swift in Sources */ = {isa = PBXBuildFile; fileRef = F487DBCB231EC1A0008416A9 /* Permission.swift */; };
@@ -1873,6 +1874,9 @@
 		F46E55CA260FB61800BAF55C /* FBSDKClientTokenProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKClientTokenProviding.h; sourceTree = "<group>"; };
 		F46E55CB260FB6A500BAF55C /* FBSDKSettings+ClientTokenProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKSettings+ClientTokenProviding.h"; sourceTree = "<group>"; };
 		F46E5662260FC23900BAF55C /* TestClientTokenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestClientTokenProvider.swift; sourceTree = "<group>"; };
+		F46E56DD260FE62100BAF55C /* FBSDKPasteboard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKPasteboard.h; sourceTree = "<group>"; };
+		F46E56EB260FE6B300BAF55C /* UIPasteboard+Pasteboard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIPasteboard+Pasteboard.h"; sourceTree = "<group>"; };
+		F46E56F9260FE86F00BAF55C /* TestPasteboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPasteboard.swift; sourceTree = "<group>"; };
 		F487DBCB231EC1A0008416A9 /* Permission.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Permission.swift; sourceTree = "<group>"; };
 		F487DBCD231EC20E008416A9 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		F487DBD9231EC293008416A9 /* AccessToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessToken.swift; sourceTree = "<group>"; };
@@ -2477,6 +2481,8 @@
 		894C0AFC1A6F229B009137EF /* ProtocolVersions */ = {
 			isa = PBXGroup;
 			children = (
+				F46E56DD260FE62100BAF55C /* FBSDKPasteboard.h */,
+				F46E56EB260FE6B300BAF55C /* UIPasteboard+Pasteboard.h */,
 				894C0AF41A6F2278009137EF /* FBSDKBridgeAPIProtocolNativeV1.h */,
 				894C0AF51A6F2278009137EF /* FBSDKBridgeAPIProtocolNativeV1.m */,
 				89D4AE9D1A803F1E00DB8C72 /* FBSDKBridgeAPIProtocolWebV1.h */,
@@ -3119,6 +3125,7 @@
 				F4A033D325F13FD700D19DE9 /* SampleUrls.swift */,
 				F4A033D325F13FD700D19DE9 /* SampleUrl.swift */,
 				F4AF97022605246600E53370 /* TestAccessTokenWallet.swift */,
+				F46E56F9260FE86F00BAF55C /* TestPasteboard.swift */,
 				F44F545925FADACA00D774B7 /* TestAppEventsConfiguration.swift */,
 				F44F53DB25FAC63900D774B7 /* TestAppEventsConfigurationProvider.swift */,
 				F46E5406260E421100BAF55C /* TestAppLinkResolver.swift */,
@@ -4812,6 +4819,7 @@
 				F4E50156243648A100C99262 /* FBSDKServerConfigurationTests.m in Sources */,
 				F48AD3252576FEB20052C056 /* FBSDKAuthenticationTokenTests.m in Sources */,
 				F43DC8F025E05DE40009E7D5 /* TestErrorConfiguration.swift in Sources */,
+				F46E56FA260FE86F00BAF55C /* TestPasteboard.swift in Sources */,
 				2A3DA4161CB4C0F600339BD4 /* FBSDKAppLinkUtilityTests.swift in Sources */,
 				F4DE31F624DB695100297C18 /* FBSDKTestCase.m in Sources */,
 				F43D7EF42603A7FA005AE003 /* ApplicationDelegateTests.swift in Sources */,

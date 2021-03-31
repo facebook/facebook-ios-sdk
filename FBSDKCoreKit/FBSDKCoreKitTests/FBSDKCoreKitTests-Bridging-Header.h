@@ -29,6 +29,7 @@
 #import "FBSDKEventBinding.h"
 #import "FBSDKEventBindingManager.h"
 #import "FBSDKMath.h"
+#import "FBSDKPasteboard.h"
 #import "FBSDKSKAdNetworkEvent.h"
 #import "FBSDKSKAdNetworkRule.h"
 #import "FBSDKServerConfigurationFixtures.h"

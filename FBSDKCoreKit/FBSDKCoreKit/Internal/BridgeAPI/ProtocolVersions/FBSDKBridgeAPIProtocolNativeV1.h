@@ -24,6 +24,8 @@
 
 #import "FBSDKBridgeAPIProtocol.h"
 
+@protocol FBSDKPasteboard;
+
 typedef struct
 {
   __unsafe_unretained NSString *bridgeArgs;
@@ -63,7 +65,7 @@ NS_SWIFT_NAME(BridgeAPIProtocolNativeV1)
 
 - (instancetype)initWithAppScheme:(NSString *)appScheme;
 - (instancetype)initWithAppScheme:(NSString *)appScheme
-                       pasteboard:(UIPasteboard *)pasteboard
+                       pasteboard:(id<FBSDKPasteboard>)pasteboard
               dataLengthThreshold:(NSUInteger)dataLengthThreshold
                    includeAppIcon:(BOOL)includeAppIcon
 NS_DESIGNATED_INITIALIZER;
@@ -71,7 +73,7 @@ NS_DESIGNATED_INITIALIZER;
 @property (nonatomic, copy, readonly) NSString *appScheme;
 @property (nonatomic, assign, readonly) NSUInteger dataLengthThreshold;
 @property (nonatomic, assign, readonly, getter=shouldIncludeAppIcon) BOOL includeAppIcon;
-@property (nonatomic, strong, readonly) UIPasteboard *pasteboard;
+@property (nonatomic, strong, readonly) id<FBSDKPasteboard> pasteboard;
 
 @end
 
