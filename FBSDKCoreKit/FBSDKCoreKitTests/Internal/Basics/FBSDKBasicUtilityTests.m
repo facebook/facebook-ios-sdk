@@ -18,7 +18,7 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKCoreKit.h"
-#import "FBSDKInternalUtility.h"
+#import "FBSDKCoreKitBasicsImport.h"
 
 @interface FBSDKBasicUtilityTests : XCTestCase
 @end

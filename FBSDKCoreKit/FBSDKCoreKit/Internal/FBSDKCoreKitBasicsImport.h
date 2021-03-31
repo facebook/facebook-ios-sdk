@@ -16,32 +16,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKRestrictiveData.h"
-
-#import <Foundation/Foundation.h>
-
-#import "FBSDKCoreKitBasicsImport.h"
-
-#define RESTRICTIVE_PARAM @"restrictive_param"
-#define DEPRECATED_PARAM @"deprecated_param"
-#define IS_DEPRECATED_EVENT @"is_deprecated_event"
-
-@implementation FBSDKRestrictiveData
-
-- (instancetype)initWithEventName:(NSString *)eventName params:(id)params
-{
-  self = [super init];
-  if (self) {
-    NSDictionary<NSString *, id> *paramDict = [FBSDKTypeUtility dictionaryValue:params];
-    if (!paramDict) {
-      return nil;
-    }
-    _eventName = eventName;
-    _restrictiveParams = paramDict[RESTRICTIVE_PARAM] ? [FBSDKTypeUtility dictionaryValue:paramDict[RESTRICTIVE_PARAM]] : nil;
-    _deprecatedParams = paramDict[DEPRECATED_PARAM] ? [FBSDKTypeUtility arrayValue:paramDict[DEPRECATED_PARAM]] : nil;
-    _deprecatedEvent = (paramDict[IS_DEPRECATED_EVENT] && [paramDict[IS_DEPRECATED_EVENT] respondsToSelector:@selector(boolValue)]) ? [paramDict[IS_DEPRECATED_EVENT] boolValue] : NO;
-  }
-  return self;
-}
-
-@end
+#if defined FBSDKCOCOAPODS
+ #import <FBSDKCoreKit/FBSDKCoreKit_Basics.h>
+#elif defined BUCK
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#else
+ #import "../../../Sources/FBSDKCoreKit_Basics/include/FBSDKCoreKit_Basics.h"
+#endif

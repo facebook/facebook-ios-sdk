@@ -19,9 +19,9 @@
 #import "FBSDKError.h"
 
 #import "FBSDKConstants.h"
+#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKErrorReport.h"
 #import "FBSDKFeatureManager.h"
-#import "FBSDKInternalUtility.h"
 #import "FBSDKSettings.h"
 
 @implementation FBSDKError

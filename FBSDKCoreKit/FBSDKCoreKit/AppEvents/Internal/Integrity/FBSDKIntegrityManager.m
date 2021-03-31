@@ -22,8 +22,8 @@
 
  #import "FBSDKIntegrityManager.h"
 
+ #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKGateKeeperManager.h"
- #import "FBSDKInternalUtility.h"
  #import "FBSDKModelManager.h"
  #import "FBSDKSettings.h"
 

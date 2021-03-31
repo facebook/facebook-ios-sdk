@@ -25,7 +25,7 @@
  #import "FBSDKAppEvents.h"
  #import "FBSDKCodelessParameterComponent.h"
  #import "FBSDKCodelessPathComponent.h"
- #import "FBSDKInternalUtility.h"
+ #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKSwizzler.h"
  #import "FBSDKUtility.h"
  #import "FBSDKViewHierarchy.h"

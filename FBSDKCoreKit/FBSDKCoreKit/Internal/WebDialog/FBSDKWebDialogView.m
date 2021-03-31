@@ -25,8 +25,8 @@
  #import <WebKit/WebKit.h>
 
  #import "FBSDKCloseIcon.h"
+ #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKError.h"
- #import "FBSDKInternalUtility.h"
  #import "FBSDKURLOpener.h"
  #import "FBSDKWebViewProviding.h"
 

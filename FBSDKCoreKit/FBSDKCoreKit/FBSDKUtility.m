@@ -20,6 +20,7 @@
 
 #import <CommonCrypto/CommonDigest.h>
 
+#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKInternalUtility.h"
 
 @implementation FBSDKUtility

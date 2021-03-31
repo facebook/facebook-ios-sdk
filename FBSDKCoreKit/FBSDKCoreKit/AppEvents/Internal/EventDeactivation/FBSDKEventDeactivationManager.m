@@ -18,7 +18,7 @@
 
 #import "FBSDKEventDeactivationManager.h"
 
-#import "FBSDKInternalUtility.h"
+#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKServerConfigurationManager.h"
 
 static NSString *const DEPRECATED_PARAM_KEY = @"deprecated_param";

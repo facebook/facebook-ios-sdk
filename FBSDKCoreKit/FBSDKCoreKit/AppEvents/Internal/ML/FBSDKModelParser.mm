@@ -22,7 +22,7 @@
 
  #import "FBSDKModelParser.h"
 
- #import "FBSDKInternalUtility.h"
+ #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKMLMacros.h"
 
 NS_ASSUME_NONNULL_BEGIN

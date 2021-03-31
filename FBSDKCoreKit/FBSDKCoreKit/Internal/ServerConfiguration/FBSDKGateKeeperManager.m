@@ -23,12 +23,12 @@
 #import <objc/runtime.h>
 
 #import "FBSDKAppEventsUtility.h"
+#import "FBSDKCoreKit+Internal.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestConnectionProviding.h"
 #import "FBSDKGraphRequestProviding.h"
-#import "FBSDKInternalUtility.h"
 #import "FBSDKSettings.h"
 #import "FBSDKSettingsProtocol.h"
 

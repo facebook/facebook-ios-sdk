@@ -18,8 +18,8 @@
 
 #import "FBSDKKeychainStoreViaBundleID.h"
 
+#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDynamicFrameworkLoader.h"
-#import "FBSDKInternalUtility.h"
 
 @implementation FBSDKKeychainStoreViaBundleID
 

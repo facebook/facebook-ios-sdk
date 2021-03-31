@@ -21,6 +21,7 @@
 #import "FBSDKAccessToken.h"
 #import "FBSDKAccessTokenProtocols.h"
 #import "FBSDKAppEvents+Internal.h"
+#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKEventLogging.h"
 #import "FBSDKGraphRequestProviding.h"
 #import "FBSDKInternalUtility.h"

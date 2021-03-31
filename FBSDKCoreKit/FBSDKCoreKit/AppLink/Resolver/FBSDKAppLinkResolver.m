@@ -27,8 +27,9 @@
  #import "FBSDKAppLink.h"
  #import "FBSDKAppLinkResolverRequestBuilder.h"
  #import "FBSDKAppLinkTarget.h"
- #import "FBSDKInternalUtility.h"
+ #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKLogger.h"
+ #import "FBSDKSettings+Internal.h"
  #import "FBSDKUtility.h"
 
 // Dependencies

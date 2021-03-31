@@ -23,12 +23,12 @@
  #import "FBSDKModelManager.h"
 
  #import "FBSDKAppEvents+Internal.h"
+ #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKFeatureExtractor.h"
  #import "FBSDKFeatureManager.h"
  #import "FBSDKGraphRequest.h"
  #import "FBSDKGraphRequestConnection.h"
  #import "FBSDKIntegrityManager.h"
- #import "FBSDKInternalUtility.h"
  #import "FBSDKMLMacros.h"
  #import "FBSDKModelParser.h"
  #import "FBSDKModelRuntime.hpp"

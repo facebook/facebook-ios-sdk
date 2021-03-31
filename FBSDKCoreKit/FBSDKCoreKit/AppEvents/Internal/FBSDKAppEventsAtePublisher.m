@@ -19,7 +19,11 @@
 #import "FBSDKAppEventsAtePublisher.h"
 
 #import "FBSDKAppEventsDeviceInfo.h"
+#import "FBSDKCoreKitBasicsImport.h"
+#import "FBSDKDataPersisting.h"
 #import "FBSDKInternalUtility.h"
+#import "FBSDKLogger.h"
+#import "FBSDKSettings+Internal.h"
 
 @interface FBSDKAppEventsAtePublisher ()
 

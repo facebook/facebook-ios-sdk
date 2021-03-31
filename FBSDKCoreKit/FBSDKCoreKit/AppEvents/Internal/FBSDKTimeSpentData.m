@@ -20,6 +20,7 @@
 
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKAppEventsUtility.h"
+#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
 #import "FBSDKServerConfiguration.h"

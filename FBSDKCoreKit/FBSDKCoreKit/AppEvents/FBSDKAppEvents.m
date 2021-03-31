@@ -34,6 +34,8 @@
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKApplicationDelegate+Internal.h"
 #import "FBSDKConstants.h"
+#import "FBSDKCoreKitBasicsImport.h"
+#import "FBSDKDataPersisting.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError.h"
 #import "FBSDKEventDeactivationManager.h"
@@ -47,6 +49,7 @@
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationProviding.h"
 #import "FBSDKSettings.h"
+#import "FBSDKSettings+Internal.h"
 #import "FBSDKTimeSpentData.h"
 #import "FBSDKUtility.h"
 

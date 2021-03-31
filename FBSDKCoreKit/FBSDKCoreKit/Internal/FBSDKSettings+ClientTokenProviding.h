@@ -18,7 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol FBSDKSettings;
+#import "FBSDKSettings.h"
+
 @protocol FBSDKClientTokenProviding;
 
 NS_ASSUME_NONNULL_BEGIN

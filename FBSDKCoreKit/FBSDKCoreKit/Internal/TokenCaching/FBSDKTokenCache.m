@@ -18,9 +18,10 @@
 
 #import "FBSDKTokenCache.h"
 
+#import "FBSDKAuthenticationToken+Internal.h"
 #import "FBSDKDynamicFrameworkLoader.h"
-#import "FBSDKInternalUtility.h"
 #import "FBSDKKeychainStore.h"
+#import "FBSDKUnarchiverProvider.h"
 
 static NSString *const kFBSDKAccessTokenUserDefaultsKey = @"com.facebook.sdk.v4.FBSDKAccessTokenInformationKey";
 static NSString *const kFBSDKAccessTokenKeychainKey = @"com.facebook.sdk.v4.FBSDKAccessTokenInformationKeychainKey";

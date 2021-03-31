@@ -18,11 +18,13 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKInternalUtility.h"
+#import "FBSDKCoreKitBasicsImport.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKFeatureCheckerProviding;
+@protocol FBSDKGraphRequestProviding;
+@protocol FBSDKSettings;
 
 NS_SWIFT_NAME(CrashObserver)
 @interface FBSDKCrashObserver : NSObject <FBSDKCrashObserving>

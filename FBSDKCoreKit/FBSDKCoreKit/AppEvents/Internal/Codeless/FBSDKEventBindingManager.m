@@ -27,8 +27,9 @@
  #import <objc/runtime.h>
 
  #import "FBSDKCodelessPathComponent.h"
+ #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKEventBinding.h"
- #import "FBSDKInternalUtility.h"
+ #import "FBSDKSwizzler.h"
  #import "FBSDKSwizzler+Swizzling.h"
  #import "FBSDKViewHierarchy.h"
  #import "FBSDKViewHierarchyMacros.h"

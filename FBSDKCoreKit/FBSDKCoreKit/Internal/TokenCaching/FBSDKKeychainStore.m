@@ -18,10 +18,11 @@
 
 #import "FBSDKKeychainStore.h"
 
+#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDynamicFrameworkLoader.h"
-#import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
+#import "FBSDKUnarchiverProvider.h"
 
 @implementation FBSDKKeychainStore
 

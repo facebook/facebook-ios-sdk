@@ -22,9 +22,10 @@
 
 #import "FBSDKAppEventsState.h"
 #import "FBSDKAppEventsUtility.h"
-#import "FBSDKInternalUtility.h"
+#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
+#import "FBSDKUnarchiverProvider.h"
 
 // A quick optimization to allow returning empty array if we know there are no persisted events.
 static BOOL g_canSkipDiskCheck = NO;

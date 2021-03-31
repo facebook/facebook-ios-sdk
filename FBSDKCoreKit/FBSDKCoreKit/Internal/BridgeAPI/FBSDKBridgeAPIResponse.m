@@ -25,6 +25,7 @@
  #import "FBSDKBridgeAPIProtocol.h"
  #import "FBSDKBridgeAPIProtocolType.h"
  #import "FBSDKBridgeAPIRequest+Private.h"
+ #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKInternalUtility.h"
 
 @interface FBSDKBridgeAPIResponse ()

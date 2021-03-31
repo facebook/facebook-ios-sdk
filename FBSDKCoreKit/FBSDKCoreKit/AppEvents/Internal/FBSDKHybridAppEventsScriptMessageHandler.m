@@ -29,7 +29,7 @@
  #endif
 
  #import "FBSDKAppEvents+Internal.h"
- #import "FBSDKInternalUtility.h"
+ #import "FBSDKCoreKitBasicsImport.h"
 
 NSString *const FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey = @"_fb_pixel_referral_id";
 

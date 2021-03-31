@@ -24,6 +24,7 @@
 
  #import "FBSDKAppLink.h"
  #import "FBSDKAppLinkTarget.h"
+ #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKInternalUtility.h"
 
  #pragma clang diagnostic push
