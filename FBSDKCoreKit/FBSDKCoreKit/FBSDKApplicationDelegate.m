@@ -35,7 +35,7 @@
 #import "FBSDKGraphRequestPiggybackManager+Internal.h"
 #import "FBSDKInstrumentManager.h"
 #import "FBSDKInternalUtility.h"
-#import "FBSDKLogger.h"
+#import "FBSDKLogger+Logging.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationManager+ServerConfigurationProviding.h"
 #import "FBSDKSettings+Internal.h"
@@ -483,7 +483,8 @@ static UIApplicationState _applicationState;
                      serverConfigurationProvider:[FBSDKServerConfigurationManager class]
                             graphRequestProvider:graphRequestProvider
                                   featureChecker:[FBSDKFeatureManager class]
-                                           store:store];
+                                           store:store
+                                          logger:[FBSDKLogger class]];
   [FBSDKGateKeeperManager configureWithSettings:FBSDKSettings.class
                                 requestProvider:graphRequestProvider
                              connectionProvider:[FBSDKGraphRequestConnectionFactory new]

@@ -147,6 +147,7 @@ static NSString *const _mockUserID = @"mockUserID";
   [FBSDKAppEvents setAppEventsConfigurationProvider:TestAppEventsConfigurationProvider.class];
   [FBSDKAppEvents setServerConfigurationProvider:TestServerConfigurationProvider.class];
   [FBSDKAppEvents setFeatureChecker:TestFeatureManager.class];
+  [TestLogger reset];
 
   [self stubLoadingAdNetworkReporterConfiguration];
   [self stubServerConfigurationFetchingWithConfiguration:FBSDKServerConfigurationFixtures.defaultConfig error:nil];
@@ -170,7 +171,8 @@ static NSString *const _mockUserID = @"mockUserID";
                      serverConfigurationProvider:TestServerConfigurationProvider.self
                             graphRequestProvider:_graphRequestFactory
                                   featureChecker:TestFeatureManager.self
-                                           store:_store];
+                                           store:_store
+                                          logger:TestLogger.self];
 }
 
 - (void)tearDown
@@ -312,6 +314,12 @@ static NSString *const _mockUserID = @"mockUserID";
                              mpn:nil
                            brand:nil
                       parameters:@{}];
+
+  XCTAssertEqual(
+    TestLogger.capturedLoggingBehavior,
+    FBSDKLoggingBehaviorDeveloperErrors,
+    "A log entry of LoggingBehaviorDeveloperErrors should be posted when some parameters are nil for logProductItem"
+  );
 }
 
 #pragma mark  Tests for set and clear user data
@@ -472,6 +480,12 @@ static NSString *const _mockUserID = @"mockUserID";
   NSDictionary<NSString *, id> *mockPayload = @{@"fb_push_payload" : @{@"campaign" : @""}};
   OCMReject([self.appEventsMock logEvent:eventName parameters:[OCMArg any]]);
   [FBSDKAppEvents logPushNotificationOpen:mockPayload];
+
+  XCTAssertEqual(
+    TestLogger.capturedLoggingBehavior,
+    FBSDKLoggingBehaviorDeveloperErrors,
+    "A log entry of LoggingBehaviorDeveloperErrors should be posted if logPushNotificationOpen is fed with empty campagin"
+  );
 }
 
 - (void)testSetFlushBehavior
@@ -648,6 +662,7 @@ static NSString *const _mockUserID = @"mockUserID";
                             parameters:nil
                     isImplicitlyLogged:NO
                            accessToken:nil];
+
   [TestGateKeeperManager setGateKeeperValueWithKey:@"app_events_killswitch" value:NO];
 }
 

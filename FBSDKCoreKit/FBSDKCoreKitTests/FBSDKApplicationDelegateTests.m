@@ -89,6 +89,7 @@
 + (id<FBSDKGraphRequestProviding>)requestProvider;
 + (Class<FBSDKFeatureChecking>)featureChecker;
 + (id<FBSDKDataPersisting>)store;
++ (id<FBSDKLogging>)logger;
 @end
 
 @implementation FBSDKApplicationDelegateTests
@@ -260,6 +261,11 @@
     FBSDKAppEvents.featureChecker,
     FBSDKFeatureManager.class,
     "Initializing the SDK should set feature checker for event logging"
+  );
+  XCTAssertEqualObjects(
+    FBSDKAppEvents.logger,
+    FBSDKLogger.class,
+    "Initializing the SDK should set concrete logger for event logging"
   );
 }
 
