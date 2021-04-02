@@ -53,8 +53,22 @@ static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
 {
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   NSString *uuid = [defaults objectForKey:kFBSDKAccessTokenUserDefaultsKey];
-
   NSDictionary<NSString *, id> *dict = [_keychainStore dictionaryForKey:kFBSDKAccessTokenKeychainKey];
+
+  if (!uuid && !dict) {
+    return nil;
+  }
+
+  if (!uuid) {
+    [self clearAccessTokenCache];
+    return nil;
+  }
+
+  if (!dict) {
+    [defaults setObject:nil forKey:kFBSDKAccessTokenUserDefaultsKey];
+    return nil;
+  }
+
   if ([dict[kFBSDKTokenUUIDKey] isKindOfClass:[NSString class]]) {
     // there is a bug while running on simulator that the uuid stored in dict can be NSData,
     // do a type check to make sure it is NSString
