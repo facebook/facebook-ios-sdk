@@ -46,6 +46,8 @@ NS_SWIFT_NAME(InternalUtility)
 
 + (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider;
 
+@property (class, nonnull, readonly) FBSDKInternalUtility *sharedUtility;
+
 /**
   Constructs the scheme for apps that come to the current app through the bridge.
  */
@@ -246,7 +248,7 @@ NS_SWIFT_NAME(InternalUtility)
 /**
  returns the current key window
  */
-+ (nullable UIWindow *)findWindow;
+- (nullable UIWindow *)findWindow;
 
 /**
   returns currently displayed top view controller.

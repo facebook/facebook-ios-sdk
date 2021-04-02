@@ -51,12 +51,24 @@ static dispatch_once_t checkIfMSQRDPlayerAppInstalledToken;
 static dispatch_once_t checkRegisteredCanOpenUrlSchemesToken;
 static dispatch_once_t checkOperatingSystemVersionToken;
 static dispatch_once_t fetchUrlSchemesToken;
+static dispatch_once_t sharedUtilityNonce;
 
 static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 {
   return [FBSDKAuthenticationToken.currentAuthenticationToken respondsToSelector:@selector(graphDomain)]
   && [FBSDKAuthenticationToken.currentAuthenticationToken.graphDomain isEqualToString:@"gaming"]
   && ([hostPrefix isEqualToString:@"graph."] || [hostPrefix isEqualToString:@"graph-video."]);
+}
+
+// Transitional singleton introduced as a way to change the usage semantics
+// from a type-based interface to an instance-based interface.
++ (instancetype)sharedUtility
+{
+  static id instance;
+  dispatch_once(&sharedUtilityNonce, ^{
+    instance = [[self alloc] init];
+  });
+  return instance;
 }
 
 #pragma mark - Class Methods
@@ -472,7 +484,7 @@ static NSMapTable *_transientObjects;
   }
 }
 
-+ (UIWindow *)findWindow
+- (UIWindow *)findWindow
 {
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -521,7 +533,7 @@ static NSMapTable *_transientObjects;
 
 + (UIViewController *)topMostViewController
 {
-  UIWindow *keyWindow = [self findWindow];
+  UIWindow *keyWindow = [self.sharedUtility findWindow];
   // SDK expects a key window at this point, if it is not, make it one
   if (keyWindow != nil && !keyWindow.isKeyWindow) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
@@ -541,7 +553,7 @@ static NSMapTable *_transientObjects;
 {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
   if (@available(iOS 13.0, *)) {
-    return [self findWindow].windowScene.interfaceOrientation;
+    return [self.sharedUtility findWindow].windowScene.interfaceOrientation;
   } else {
     return UIInterfaceOrientationUnknown;
   }
@@ -658,6 +670,9 @@ static NSMapTable *_transientObjects;
   }
   if (fetchUrlSchemesToken) {
     fetchUrlSchemesToken = 0;
+  }
+  if (sharedUtilityNonce) {
+    sharedUtilityNonce = 0;
   }
   _infoDictionaryProvider = nil;
 }

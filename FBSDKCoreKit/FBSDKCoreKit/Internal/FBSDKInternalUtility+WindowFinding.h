@@ -20,35 +20,15 @@
 
 #if !TARGET_OS_TV
 
-#import <Foundation/Foundation.h>
+ #import "FBSDKInternalUtility.h"
+ #import "FBSDKWindowFinding.h"
 
-@protocol FBSDKWebDialogDelegate;
-@protocol FBSDKWindowFinding;
+NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(WebDialog)
-@interface FBSDKWebDialog : NSObject
-
-+ (instancetype)showWithName:(NSString *)name
-                  parameters:(NSDictionary *)parameters
-                windowFinder:(id<FBSDKWindowFinding>)windowFinder
-                    delegate:(id<FBSDKWebDialogDelegate>)delegate;
-
-@property (nonatomic, assign, getter=shouldDeferVisibility) BOOL deferVisibility;
-@property (nonatomic, weak) id<FBSDKWebDialogDelegate> delegate;
-@property (nonatomic, copy) NSString *name;
-@property (nonatomic, copy) NSDictionary *parameters;
-
-- (BOOL)show;
+@interface FBSDKInternalUtility () <FBSDKWindowFinding>
 
 @end
 
-NS_SWIFT_NAME(WebDialogDelegate)
-@protocol FBSDKWebDialogDelegate <NSObject>
-
-- (void)webDialog:(FBSDKWebDialog *)webDialog didCompleteWithResults:(NSDictionary *)results;
-- (void)webDialog:(FBSDKWebDialog *)webDialog didFailWithError:(NSError *)error;
-- (void)webDialogDidCancel:(FBSDKWebDialog *)webDialog;
-
-@end
+NS_ASSUME_NONNULL_END
 
 #endif

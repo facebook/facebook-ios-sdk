@@ -37,7 +37,9 @@
 #import "FBSDKTestCoder.h"
 #import "FBSDKURLOpener.h"
 #import "FBSDKViewHierarchy.h"
+#import "FBSDKWebDialog+Testing.h"
 #import "FBSDKWebDialogView+Testing.h"
+#import "FBSDKWindowFinding.h"
 #import "UserDefaultsSpy.h"
 // URLSession Abstraction
 #import "FBSDKURLSessionProxyProviding.h"

@@ -592,6 +592,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   NSDictionary *parameters = [FBSDKShareUtility feedShareDictionaryForContent:shareContent];
   _webDialog = [FBSDKWebDialog showWithName:FBSDK_SHARE_FEED_METHOD_NAME
                                  parameters:parameters
+                               windowFinder:FBSDKInternalUtility.sharedUtility
                                    delegate:self];
   return YES;
 }
@@ -749,6 +750,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   }
   _webDialog = [FBSDKWebDialog showWithName:methodName
                                  parameters:parameters
+                               windowFinder:FBSDKInternalUtility.sharedUtility
                                    delegate:self];
   return YES;
 }

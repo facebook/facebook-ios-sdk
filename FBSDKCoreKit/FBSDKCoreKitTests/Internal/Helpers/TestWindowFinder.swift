@@ -16,39 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+class TestWindowFinder: WindowFinding {
+  let stubbedWindow: UIWindow?
 
-#if !TARGET_OS_TV
+  init(stubbedWindow: UIWindow? = nil) {
+    self.stubbedWindow = stubbedWindow
+  }
 
-#import <Foundation/Foundation.h>
-
-@protocol FBSDKWebDialogDelegate;
-@protocol FBSDKWindowFinding;
-
-NS_SWIFT_NAME(WebDialog)
-@interface FBSDKWebDialog : NSObject
-
-+ (instancetype)showWithName:(NSString *)name
-                  parameters:(NSDictionary *)parameters
-                windowFinder:(id<FBSDKWindowFinding>)windowFinder
-                    delegate:(id<FBSDKWebDialogDelegate>)delegate;
-
-@property (nonatomic, assign, getter=shouldDeferVisibility) BOOL deferVisibility;
-@property (nonatomic, weak) id<FBSDKWebDialogDelegate> delegate;
-@property (nonatomic, copy) NSString *name;
-@property (nonatomic, copy) NSDictionary *parameters;
-
-- (BOOL)show;
-
-@end
-
-NS_SWIFT_NAME(WebDialogDelegate)
-@protocol FBSDKWebDialogDelegate <NSObject>
-
-- (void)webDialog:(FBSDKWebDialog *)webDialog didCompleteWithResults:(NSDictionary *)results;
-- (void)webDialog:(FBSDKWebDialog *)webDialog didFailWithError:(NSError *)error;
-- (void)webDialogDidCancel:(FBSDKWebDialog *)webDialog;
-
-@end
-
-#endif
+  func findWindow() -> UIWindow? {
+    return stubbedWindow
+  }
+}

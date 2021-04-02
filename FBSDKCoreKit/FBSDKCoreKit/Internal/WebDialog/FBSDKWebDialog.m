@@ -29,6 +29,7 @@
  #import "FBSDKLogger.h"
  #import "FBSDKSettings.h"
  #import "FBSDKWebDialogView.h"
+ #import "FBSDKWindowFinding.h"
 
  #define FBSDK_WEB_DIALOG_SHOW_ANIMATION_DURATION 0.2
  #define FBSDK_WEB_DIALOG_DISMISS_ANIMATION_DURATION 0.3
@@ -38,6 +39,9 @@ typedef void (^FBSDKBoolBlock)(BOOL finished);
 static FBSDKWebDialog *g_currentDialog = nil;
 
 @interface FBSDKWebDialog () <FBSDKWebDialogViewDelegate>
+
+@property (nonatomic, strong) id<FBSDKWindowFinding> windowFinder;
+
 @end
 
 @implementation FBSDKWebDialog
@@ -50,9 +54,11 @@ static FBSDKWebDialog *g_currentDialog = nil;
 
 + (instancetype)showWithName:(NSString *)name
                   parameters:(NSDictionary *)parameters
+                windowFinder:(id<FBSDKWindowFinding>)windowFinder
                     delegate:(id<FBSDKWebDialogDelegate>)delegate
 {
   FBSDKWebDialog *dialog = [[self alloc] init];
+  dialog.windowFinder = windowFinder;
   dialog.name = name;
   dialog.parameters = parameters;
   dialog.delegate = delegate;
@@ -88,7 +94,7 @@ static FBSDKWebDialog *g_currentDialog = nil;
 
   g_currentDialog = self;
 
-  UIWindow *window = [FBSDKInternalUtility findWindow];
+  UIWindow *window = [self.windowFinder findWindow];
   if (!window) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                        formatString:@"There are no valid ViewController to present FBSDKWebDialog", nil];
@@ -211,10 +217,14 @@ static FBSDKWebDialog *g_currentDialog = nil;
 - (void)_failWithError:(NSError *)error
 {
   // defer so that the consumer is guaranteed to have an opportunity to set the delegate before we fail
+#ifndef FBSDKTEST
   dispatch_async(dispatch_get_main_queue(), ^{
-    [self _dismissAnimated:YES];
-    [self->_delegate webDialog:self didFailWithError:error];
-  });
+#endif
+  [self _dismissAnimated:YES];
+  [self->_delegate webDialog:self didFailWithError:error];
+#ifndef FBSDKTEST
+});
+#endif
 }
 
 - (NSURL *)_generateURL:(NSError **)errorRef
@@ -236,7 +246,7 @@ static FBSDKWebDialog *g_currentDialog = nil;
 
 - (BOOL)_showWebView
 {
-  UIWindow *window = [FBSDKInternalUtility findWindow];
+  UIWindow *window = [self.windowFinder findWindow];
   if (!window) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                        formatString:@"There are no valid ViewController to present FBSDKWebDialog", nil];
@@ -249,18 +259,18 @@ static FBSDKWebDialog *g_currentDialog = nil;
   _backgroundView = [[UIView alloc] initWithFrame:window.bounds];
   _backgroundView.alpha = 0.0;
   _backgroundView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-  _backgroundView.backgroundColor = [UIColor colorWithWhite:0.3 alpha:0.8];
-  [window addSubview:_backgroundView];
-  [window addSubview:_dialogView];
+    _backgroundView.backgroundColor = [UIColor colorWithWhite:0.3 alpha:0.8];
+    [window addSubview:_backgroundView];
+    [window addSubview:_dialogView];
 
-  [_dialogView becomeFirstResponder]; // dismisses the keyboard if it there was another first responder with it
-  [self _updateViewsWithScale:0.001 alpha:0.0 animationDuration:0.0 completion:NULL];
-  [self _updateViewsWithScale:1.1 alpha:1.0 animationDuration:FBSDK_WEB_DIALOG_SHOW_ANIMATION_DURATION completion:^(BOOL finished1) {
-    [self _updateViewsWithScale:0.9 alpha:1.0 animationDuration:FBSDK_WEB_DIALOG_SHOW_ANIMATION_DURATION completion:^(BOOL finished2) {
-      [self _updateViewsWithScale:1.0 alpha:1.0 animationDuration:FBSDK_WEB_DIALOG_SHOW_ANIMATION_DURATION completion:NULL];
+    [_dialogView becomeFirstResponder]; // dismisses the keyboard if it there was another first responder with it
+    [self _updateViewsWithScale:0.001 alpha:0.0 animationDuration:0.0 completion:NULL];
+    [self _updateViewsWithScale:1.1 alpha:1.0 animationDuration:FBSDK_WEB_DIALOG_SHOW_ANIMATION_DURATION completion:^(BOOL finished1) {
+      [self _updateViewsWithScale:0.9 alpha:1.0 animationDuration:FBSDK_WEB_DIALOG_SHOW_ANIMATION_DURATION completion:^(BOOL finished2) {
+        [self _updateViewsWithScale:1.0 alpha:1.0 animationDuration:FBSDK_WEB_DIALOG_SHOW_ANIMATION_DURATION completion:NULL];
+      }];
     }];
-  }];
-  return YES;
+    return YES;
 }
 
 - (CGRect)_applicationFrameForOrientation
