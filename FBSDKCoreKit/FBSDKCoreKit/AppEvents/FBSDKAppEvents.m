@@ -1176,9 +1176,10 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
         }
       }];
       if (@available(iOS 14.0, *)) {
+        __weak FBSDKAppEvents *weakSelf = self;
         [g_featureChecker checkFeature:FBSDKFeatureATELogging completionBlock:^(BOOL enabled) {
           if (enabled) {
-            [self publishATE];
+            [weakSelf publishATE];
           }
         }];
       }
