@@ -22,18 +22,16 @@ import XCTest
 
 class CrashObserversTest: XCTestCase {
 
-  var featureManagerProvider: TestFeatureManagerProvider! // swiftlint:disable:this implicitly_unwrapped_optional
   var requestProvider: TestGraphRequestFactory! // swiftlint:disable:this implicitly_unwrapped_optional
   var crashObserver: CrashObserver! // swiftlint:disable:this implicitly_unwrapped_optional
   var settings: TestSettings! // swiftlint:disable:this implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
-    featureManagerProvider = TestFeatureManagerProvider.create(withStubbedFeatureManager: TestFeatureManager.self)
     requestProvider = TestGraphRequestFactory()
     settings = TestSettings()
     crashObserver = CrashObserver(
-      featureManagerProvider: featureManagerProvider,
+      featureChecker: TestFeatureManager.self,
       graphRequestProvider: requestProvider,
       settings: settings
     )
@@ -56,8 +54,6 @@ class CrashObserversTest: XCTestCase {
   func testDidReceiveCrashLogs() {
     crashObserver.didReceiveCrashLogs([])
     XCTAssertEqual(TestFeatureManager.capturedFeatures, [])
-
-    featureManagerProvider.stubbedFeatureManager?.check(SDKFeature.crashShield, completionBlock: nil)
 
     let processedCrashLogs = CrashObserversTest.getCrashLogs()
 

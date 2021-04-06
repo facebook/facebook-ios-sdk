@@ -92,9 +92,7 @@
 #import "FBSDKSettings+SettingsProtocols.h"
 // FeatureManager abstraction
 #import "FBSDKFeatureChecking.h"
-#import "FBSDKFeatureCheckerProviding.h"
 #import "FBSDKFeatureManager.h"
-#import "FBSDKFeatureCheckerFactory.h"
 // AppLinkResolver
 #import "FBSDKAppLinkResolverRequestBuilding.h"
 #import "FBSDKAppLinkResolverRequestBuilder+Protocols.h"
@@ -289,9 +287,9 @@ NS_SWIFT_NAME(reset());
 
 @property (nonatomic, nullable) id<FBSDKSettings> settings;
 
-- (instancetype)initWithFeatureManagerProvider:(id<FBSDKFeatureCheckerProviding>)featureManagerProvider
-                          graphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-                                      settings:(id<FBSDKSettings>)settings;
+- (instancetype)initWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
+                  graphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+                              settings:(id<FBSDKSettings>)settings;
 
 - (instancetype)init;
 

@@ -22,7 +22,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol FBSDKFeatureCheckerProviding;
+@protocol FBSDKFeatureChecking;
 @protocol FBSDKGraphRequestProviding;
 @protocol FBSDKSettings;
 
@@ -33,9 +33,9 @@ NS_SWIFT_NAME(CrashObserver)
 
 - (void)enable;
 
-- (instancetype)initWithFeatureManagerProvider:(id<FBSDKFeatureCheckerProviding>)featureManagerProvider
-                          graphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-                                      settings:(id<FBSDKSettings>)settings;
+- (instancetype)initWithFeatureChecker:(Class<FBSDKFeatureChecking>)featureChecker
+                  graphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+                              settings:(id<FBSDKSettings>)settings;
 
 @end
 
