@@ -16,39 +16,53 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@objcMembers
-class TestSessionDataTask: NSObject, SessionDataTask {
-  var resumeCallCount = 0
-  var cancelCallCount = 0
-  var stubbedState: URLSessionTask.State = .completed
+import Foundation
 
-  var state: URLSessionTask.State {
-    return stubbedState
+enum SampleHTTPURLResponses {
+  private enum MimeType: Hashable {
+    case applicationJSON
+    case png
+
+    var description: String {
+      switch self {
+      case .applicationJSON: return "application/json"
+      case .png: return "image/png"
+      }
+    }
   }
 
-  func resume() {
-    resumeCallCount += 1
-  }
+  static let valid = HTTPURLResponse(
+    url: SampleUrls.valid,
+    mimeType: MimeType.applicationJSON.description,
+    expectedContentLength: 0,
+    textEncodingName: nil
+  )
 
-  func cancel() {
-    cancelCallCount += 1
-  }
-}
+  static let missingMimeType = HTTPURLResponse(
+    url: SampleUrls.valid,
+    mimeType: nil,
+    expectedContentLength: 0,
+    textEncodingName: nil
+  )
 
-@objcMembers
-class TestSessionProvider: NSObject, SessionProviding {
-  /// A data task to return from `dataTask(with:completion:)`
-  var stubbedDataTask: SessionDataTask?
-  /// The completion handler to be invoked in the test
-  var capturedCompletion: ((Data?, URLResponse?, Error?) -> Void)?
-  var dataTaskCallCount = 0
+  static let pngMimeType = HTTPURLResponse(
+    url: SampleUrls.valid,
+    mimeType: MimeType.png.description,
+    expectedContentLength: 0,
+    textEncodingName: nil
+  )
 
-  func dataTask(
-    with request: URLRequest,
-    completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void
-  ) -> SessionDataTask {
-    dataTaskCallCount += 1
-    capturedCompletion = completionHandler
-    return stubbedDataTask ?? TestSessionDataTask()
-  }
+  static let invalidStatusCode = HTTPURLResponse(
+    url: SampleUrls.valid,
+    statusCode: 500,
+    httpVersion: nil,
+    headerFields: nil
+  )
+
+  static let validStatusCode = HTTPURLResponse(
+    url: SampleUrls.valid,
+    statusCode: 200,
+    httpVersion: nil,
+    headerFields: nil
+  )
 }

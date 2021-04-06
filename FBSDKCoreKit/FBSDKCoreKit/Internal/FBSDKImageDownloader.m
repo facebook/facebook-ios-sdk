@@ -18,13 +18,19 @@
 
 #import "FBSDKImageDownloader.h"
 
+#import "FBSDKCoreKitBasicsImport.h"
+
 static NSString *const kImageDirectory = @"fbsdkimages";
 static NSString *const kCachedResponseUserInfoKeyTimestamp = @"timestamp";
 
+@interface FBSDKImageDownloader ()
+
+@property (nonatomic, strong) id<FBSDKSessionProviding> sessionProvider;
+@property (nonatomic, strong) NSURLCache *urlCache;
+
+@end
+
 @implementation FBSDKImageDownloader
-{
-  NSURLCache *_urlCache;
-}
 
 + (FBSDKImageDownloader *)sharedInstance
 {
@@ -38,6 +44,11 @@ static NSString *const kCachedResponseUserInfoKeyTimestamp = @"timestamp";
 
 - (instancetype)init
 {
+  return [self initWithSessionProvider:NSURLSession.sharedSession];
+}
+
+- (instancetype)initWithSessionProvider:(id<FBSDKSessionProviding>)sessionProvider
+{
   if ((self = [super init])) {
   #if TARGET_OS_MACCATALYST
     _urlCache = [[NSURLCache alloc] initWithMemoryCapacity:1024 * 1024 * 8
@@ -48,13 +59,14 @@ static NSString *const kCachedResponseUserInfoKeyTimestamp = @"timestamp";
                                               diskCapacity:1024 * 1024 * 100
                                                   diskPath:kImageDirectory];
   #endif
+    _sessionProvider = sessionProvider;
   }
   return self;
 }
 
 - (void)removeAll
 {
-  [_urlCache removeAllCachedResponses];
+  [self.urlCache removeAllCachedResponses];
 }
 
 - (void)downloadImageWithURL:(NSURL *)url
@@ -62,7 +74,7 @@ static NSString *const kCachedResponseUserInfoKeyTimestamp = @"timestamp";
                   completion:(FBSDKImageDownloadBlock)completion
 {
   NSURLRequest *request = [NSURLRequest requestWithURL:url];
-  NSCachedURLResponse *cachedResponse = [_urlCache cachedResponseForRequest:request];
+  NSCachedURLResponse *cachedResponse = [self.urlCache cachedResponseForRequest:request];
   NSDate *modificationDate = cachedResponse.userInfo[kCachedResponseUserInfoKeyTimestamp];
   BOOL isExpired = ([[modificationDate dateByAddingTimeInterval:ttl] compare:[NSDate date]] == NSOrderedAscending);
 
@@ -74,25 +86,24 @@ static NSString *const kCachedResponseUserInfoKeyTimestamp = @"timestamp";
   };
 
   if (cachedResponse == nil || isExpired) {
-    NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:request
-                                            completionHandler:
-                                  ^(NSData *data, NSURLResponse *response, NSError *error) {
-                                    if ([response isKindOfClass:[NSHTTPURLResponse class]]
-                                        && ((NSHTTPURLResponse *)response).statusCode == 200
-                                        && error == nil
-                                        && data != nil) {
-                                      NSCachedURLResponse *responseToCache =
-                                      [[NSCachedURLResponse alloc] initWithResponse:response
-                                                                               data:data
-                                                                           userInfo:@{ kCachedResponseUserInfoKeyTimestamp : [NSDate date] }
-                                                                      storagePolicy:NSURLCacheStorageAllowed];
-                                      [self->_urlCache storeCachedResponse:responseToCache forRequest:request];
-                                      completionWrapper(responseToCache);
-                                    } else if (completion != NULL) {
-                                      completion(nil);
-                                    }
-                                  }];
+    id<FBSDKSessionDataTask> task = [self.sessionProvider dataTaskWithRequest:request
+                                                            completionHandler:
+                                     ^(NSData *data, NSURLResponse *response, NSError *error) {
+                                       if ([response isKindOfClass:[NSHTTPURLResponse class]]
+                                           && ((NSHTTPURLResponse *)response).statusCode == 200
+                                           && error == nil
+                                           && data != nil) {
+                                         NSCachedURLResponse *responseToCache =
+                                         [[NSCachedURLResponse alloc] initWithResponse:response
+                                                                                  data:data
+                                                                              userInfo:@{ kCachedResponseUserInfoKeyTimestamp : [NSDate date] }
+                                                                         storagePolicy:NSURLCacheStorageAllowed];
+                                         [self->_urlCache storeCachedResponse:responseToCache forRequest:request];
+                                         completionWrapper(responseToCache);
+                                       } else if (completion != NULL) {
+                                         completion(nil);
+                                       }
+                                     }];
     [task resume];
   } else {
     completionWrapper(cachedResponse);

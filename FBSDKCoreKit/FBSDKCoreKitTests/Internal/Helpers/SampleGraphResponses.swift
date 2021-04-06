@@ -16,39 +16,43 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@objcMembers
-class TestSessionDataTask: NSObject, SessionDataTask {
-  var resumeCallCount = 0
-  var cancelCallCount = 0
-  var stubbedState: URLSessionTask.State = .completed
+import Foundation
 
-  var state: URLSessionTask.State {
-    return stubbedState
+enum SampleGraphResponses {
+  case empty
+  case nonJSON
+  case utf8String
+  case dictionary
+
+  var unserialized: Any? {
+    switch self {
+    case .empty, .nonJSON:
+      return nil
+
+    case .utf8String:
+      return "top level type"
+
+    case .dictionary:
+      return ["name": "bob"]
+    }
   }
 
-  func resume() {
-    resumeCallCount += 1
-  }
+  var data: Data {
+    switch self {
+    case .empty:
+      return Data()
 
-  func cancel() {
-    cancelCallCount += 1
-  }
-}
+    case .nonJSON:
+      return withUnsafeBytes(of: 100.0) { Data($0) }
 
-@objcMembers
-class TestSessionProvider: NSObject, SessionProviding {
-  /// A data task to return from `dataTask(with:completion:)`
-  var stubbedDataTask: SessionDataTask?
-  /// The completion handler to be invoked in the test
-  var capturedCompletion: ((Data?, URLResponse?, Error?) -> Void)?
-  var dataTaskCallCount = 0
+    case .utf8String:
+      return (unserialized as! String).data(using: .utf8)! // swiftlint:disable:this force_cast force_unwrapping
 
-  func dataTask(
-    with request: URLRequest,
-    completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void
-  ) -> SessionDataTask {
-    dataTaskCallCount += 1
-    capturedCompletion = completionHandler
-    return stubbedDataTask ?? TestSessionDataTask()
+    case .dictionary:
+      return try! JSONSerialization.data(  // swiftlint:disable:this force_try
+        withJSONObject: unserialized as Any,
+        options: []
+      )
+    }
   }
 }

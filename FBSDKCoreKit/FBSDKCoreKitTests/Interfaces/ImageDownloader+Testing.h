@@ -16,39 +16,20 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@objcMembers
-class TestSessionDataTask: NSObject, SessionDataTask {
-  var resumeCallCount = 0
-  var cancelCallCount = 0
-  var stubbedState: URLSessionTask.State = .completed
+#import "FBSDKImageDownloader.h"
 
-  var state: URLSessionTask.State {
-    return stubbedState
-  }
+@protocol FBSDKSessionProviding;
 
-  func resume() {
-    resumeCallCount += 1
-  }
+NS_ASSUME_NONNULL_BEGIN
 
-  func cancel() {
-    cancelCallCount += 1
-  }
-}
+@interface FBSDKImageDownloader (Testing)
 
-@objcMembers
-class TestSessionProvider: NSObject, SessionProviding {
-  /// A data task to return from `dataTask(with:completion:)`
-  var stubbedDataTask: SessionDataTask?
-  /// The completion handler to be invoked in the test
-  var capturedCompletion: ((Data?, URLResponse?, Error?) -> Void)?
-  var dataTaskCallCount = 0
+@property (nonatomic, strong) id<FBSDKSessionProviding> sessionProvider;
+@property (nonatomic, strong) NSURLCache *urlCache;
 
-  func dataTask(
-    with request: URLRequest,
-    completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void
-  ) -> SessionDataTask {
-    dataTaskCallCount += 1
-    capturedCompletion = completionHandler
-    return stubbedDataTask ?? TestSessionDataTask()
-  }
-}
+- (instancetype)initWithSessionProvider:(id<FBSDKSessionProviding>)sessionProvider
+NS_SWIFT_NAME(init(sessionProvider:));
+
+@end
+
+NS_ASSUME_NONNULL_END
