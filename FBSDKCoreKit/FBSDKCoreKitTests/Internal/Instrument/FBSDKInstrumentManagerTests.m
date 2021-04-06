@@ -40,7 +40,7 @@
   [FBSDKInstrumentManager enable];
 
   OCMVerify([self.crashObserverClassMock enable]);
-  OCMVerify([self.errorReportClassMock enable]);
+  OCMVerify(ClassMethod([self.errorReportClassMock enable]));
 }
 
 - (void)testEnablingWithAutoLogEventsEnabledFeaturesDisabled

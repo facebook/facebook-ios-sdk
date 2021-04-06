@@ -16,44 +16,27 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@objcMembers
-class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
-  static var appID: String?
-  static var clientToken: String?
-  static var userAgentSuffix: String?
-  static var loggingBehaviors = Set<String>()
-  static var sdkVersion: String?
-  static var logWarningsCallCount = 0
-  static var logIfSDKSettingsChangedCallCount = 0
-  static var recordInstallCallCount = 0
-  var stubbedIsDataProcessingRestricted = false
+import FBSDKCoreKit
+import XCTest
 
-  var appID: String?
+import Foundation
 
-  func isDataProcessingRestricted() -> Bool {
-    return stubbedIsDataProcessingRestricted
-  }
+class TestFileDataExtractor: FileDataExtracting {
+  static var stubbedData: Data?
+  static var capturedFileNames = [String]()
 
-  static func logWarnings() {
-    logWarningsCallCount += 1
-  }
-
-  static func logIfSDKSettingsChanged() {
-    logIfSDKSettingsChangedCallCount += 1
-  }
-
-  static func recordInstall() {
-    recordInstallCallCount += 1
+  static func data(
+    withContentsOfFile path: String,
+    options readOptionsMask: NSData.ReadingOptions = []
+  ) throws -> Data {
+    capturedFileNames.append(path)
+    guard let data = stubbedData else {
+      throw SampleError()
+    }
+    return data
   }
 
   static func reset() {
-    appID = nil
-    clientToken = nil
-    userAgentSuffix = nil
-    loggingBehaviors = []
-    sdkVersion = nil
-    logWarningsCallCount = 0
-    logIfSDKSettingsChangedCallCount = 0
-    recordInstallCallCount = 0
+    capturedFileNames = []
   }
 }

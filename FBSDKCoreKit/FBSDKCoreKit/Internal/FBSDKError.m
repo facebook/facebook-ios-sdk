@@ -26,9 +26,14 @@
 
 @implementation FBSDKError
 
-static BOOL isErrorReportEnabled = NO;
+static BOOL _isErrorReportEnabled = NO;
 
 #pragma mark - Class Methods
+
++ (BOOL)isErrorReportEnabled
+{
+  return _isErrorReportEnabled;
+}
 
 + (NSError *)errorWithCode:(NSInteger)code message:(NSString *)message
 {
@@ -75,7 +80,7 @@ static BOOL isErrorReportEnabled = NO;
   [FBSDKTypeUtility dictionary:fullUserInfo setObject:message forKey:FBSDKErrorDeveloperMessageKey];
   [FBSDKTypeUtility dictionary:fullUserInfo setObject:underlyingError forKey:NSUnderlyingErrorKey];
   userInfo = fullUserInfo.count ? [fullUserInfo copy] : nil;
-  if (isErrorReportEnabled) {
+  if (self.isErrorReportEnabled) {
     [FBSDKErrorReport saveError:code errorDomain:domain message:message];
   }
 
@@ -207,7 +212,18 @@ static BOOL isErrorReportEnabled = NO;
 
 + (void)enableErrorReport
 {
-  isErrorReportEnabled = YES;
+  _isErrorReportEnabled = YES;
 }
+
+#if DEBUG
+ #if FBSDKTEST
+
++ (void)reset
+{
+  _isErrorReportEnabled = NO;
+}
+
+ #endif
+#endif
 
 @end

@@ -16,44 +16,36 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@objcMembers
-class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
-  static var appID: String?
-  static var clientToken: String?
-  static var userAgentSuffix: String?
-  static var loggingBehaviors = Set<String>()
-  static var sdkVersion: String?
-  static var logWarningsCallCount = 0
-  static var logIfSDKSettingsChangedCallCount = 0
-  static var recordInstallCallCount = 0
-  var stubbedIsDataProcessingRestricted = false
+#import <Foundation/Foundation.h>
 
-  var appID: String?
+NS_ASSUME_NONNULL_BEGIN
 
-  func isDataProcessingRestricted() -> Bool {
-    return stubbedIsDataProcessingRestricted
-  }
+/// An internal protocol used to describe a file manager
+NS_SWIFT_NAME(FileManaging)
+@protocol FBSDKFileManaging
 
-  static func logWarnings() {
-    logWarningsCallCount += 1
-  }
+- (nullable NSURL *)URLForDirectory:(NSSearchPathDirectory)directory
+                  inDomain:(NSSearchPathDomainMask)domain
+         appropriateForURL:(NSURL *)url
+                    create:(BOOL)shouldCreate
+                     error:(NSError * _Nullable *)error;
 
-  static func logIfSDKSettingsChanged() {
-    logIfSDKSettingsChangedCallCount += 1
-  }
+- (BOOL)createDirectoryAtPath:(NSString *)path
+  withIntermediateDirectories:(BOOL)createIntermediates
+                   attributes:(NSDictionary<NSFileAttributeKey, id> * _Nullable)attributes
+                        error:(NSError * _Nullable *)error;
 
-  static func recordInstall() {
-    recordInstallCallCount += 1
-  }
+- (BOOL)fileExistsAtPath:(NSString *)path;
 
-  static func reset() {
-    appID = nil
-    clientToken = nil
-    userAgentSuffix = nil
-    loggingBehaviors = []
-    sdkVersion = nil
-    logWarningsCallCount = 0
-    logIfSDKSettingsChangedCallCount = 0
-    recordInstallCallCount = 0
-  }
-}
+- (BOOL)removeItemAtPath:(NSString *)path
+                   error:(NSError * _Nullable *)error;
+
+- (NSArray<NSString *> *)contentsOfDirectoryAtPath:(NSString *)path
+                                             error:(NSError * _Nullable *)error;
+
+@end
+
+@interface NSFileManager (FBSDKFileManaging) <FBSDKFileManaging>
+@end
+
+NS_ASSUME_NONNULL_END

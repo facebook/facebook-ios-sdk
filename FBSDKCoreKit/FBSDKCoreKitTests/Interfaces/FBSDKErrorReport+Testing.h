@@ -16,44 +16,22 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@objcMembers
-class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
-  static var appID: String?
-  static var clientToken: String?
-  static var userAgentSuffix: String?
-  static var loggingBehaviors = Set<String>()
-  static var sdkVersion: String?
-  static var logWarningsCallCount = 0
-  static var logIfSDKSettingsChangedCallCount = 0
-  static var recordInstallCallCount = 0
-  var stubbedIsDataProcessingRestricted = false
+#import "FBSDKErrorReport.h"
 
-  var appID: String?
+NS_ASSUME_NONNULL_BEGIN
 
-  func isDataProcessingRestricted() -> Bool {
-    return stubbedIsDataProcessingRestricted
-  }
+@interface FBSDKErrorReport (Testing)
 
-  static func logWarnings() {
-    logWarningsCallCount += 1
-  }
+@property (nonatomic, strong) id<FBSDKGraphRequestProviding> requestProvider;
+@property (nonatomic, strong) id<FBSDKFileManaging> fileManager;
+@property (nonatomic, strong) id<FBSDKSettings> settings;
+@property (nonatomic, strong) Class<FBSDKFileDataExtracting> dataExtractor;
+@property (nonatomic, readonly, strong) NSString *directoryPath;
 
-  static func logIfSDKSettingsChanged() {
-    logIfSDKSettingsChangedCallCount += 1
-  }
+- (void)enable;
+- (NSArray<NSDictionary<NSString *, id> *> *)loadErrorReports;
+- (void)uploadErrors;
 
-  static func recordInstall() {
-    recordInstallCallCount += 1
-  }
+@end
 
-  static func reset() {
-    appID = nil
-    clientToken = nil
-    userAgentSuffix = nil
-    loggingBehaviors = []
-    sdkVersion = nil
-    logWarningsCallCount = 0
-    logIfSDKSettingsChangedCallCount = 0
-    recordInstallCallCount = 0
-  }
-}
+NS_ASSUME_NONNULL_END
