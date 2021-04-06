@@ -100,6 +100,8 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
     1,
     "Should start the session data task when verifying a signature"
   );
+
+  session.capturedCompletion(nil, nil, nil);
   XCTAssertTrue(wasCalled);
 }
 
@@ -107,8 +109,6 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 {
   TestSessionDataTask *dataTask = [TestSessionDataTask new];
   TestSessionProvider *session = [TestSessionProvider new];
-  session.data = [@"foo" dataUsingEncoding:NSUTF8StringEncoding];
-  session.urlResponse = [[NSHTTPURLResponse alloc] initWithURL:self.sampleURL statusCode:401 HTTPVersion:nil headerFields:nil];
   session.stubbedDataTask = dataTask;
   FBSDKAuthenticationTokenFactory *factory = [[FBSDKAuthenticationTokenFactory alloc] initWithSessionProvider:session];
 
@@ -130,6 +130,12 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
     1,
     "Should start the session data task when verifying a signature"
   );
+
+  session.capturedCompletion(
+    [@"foo" dataUsingEncoding:NSUTF8StringEncoding],
+    [[NSHTTPURLResponse alloc] initWithURL:self.sampleURL statusCode:401 HTTPVersion:nil headerFields:nil],
+    nil
+  );
   XCTAssertTrue(wasCalled);
 }
 
@@ -137,8 +143,6 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 {
   TestSessionDataTask *dataTask = [TestSessionDataTask new];
   TestSessionProvider *session = [TestSessionProvider new];
-  session.data = [@"foo" dataUsingEncoding:NSUTF8StringEncoding];
-  session.urlResponse = [[NSHTTPURLResponse alloc] initWithURL:self.sampleURL statusCode:200 HTTPVersion:nil headerFields:nil];
   session.stubbedDataTask = dataTask;
   FBSDKAuthenticationTokenFactory *factory = [[FBSDKAuthenticationTokenFactory alloc] initWithSessionProvider:session];
 
@@ -160,6 +164,12 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
     1,
     "Should start the session data task when verifying a signature"
   );
+
+  session.capturedCompletion(
+    [@"foo" dataUsingEncoding:NSUTF8StringEncoding],
+    [[NSHTTPURLResponse alloc] initWithURL:self.sampleURL statusCode:200 HTTPVersion:nil headerFields:nil],
+    nil
+  );
   XCTAssertTrue(wasCalled);
 }
 
@@ -167,9 +177,6 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 {
   TestSessionDataTask *dataTask = [TestSessionDataTask new];
   TestSessionProvider *session = [TestSessionProvider new];
-  session.data = [self validCertificateData];
-  session.urlResponse = [[NSHTTPURLResponse alloc] initWithURL:self.sampleURL statusCode:200 HTTPVersion:nil headerFields:nil];
-  session.error = [self sampleError];
   session.stubbedDataTask = dataTask;
   FBSDKAuthenticationTokenFactory *factory = [[FBSDKAuthenticationTokenFactory alloc] initWithSessionProvider:session];
 
@@ -191,6 +198,12 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
     1,
     "Should start the session data task when verifying a signature"
   );
+
+  session.capturedCompletion(
+    [self validCertificateData],
+    [[NSHTTPURLResponse alloc] initWithURL:self.sampleURL statusCode:200 HTTPVersion:nil headerFields:nil],
+    [self sampleError]
+  );
   XCTAssertTrue(wasCalled);
 }
 
@@ -198,8 +211,6 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 {
   TestSessionDataTask *dataTask = [TestSessionDataTask new];
   TestSessionProvider *session = [TestSessionProvider new];
-  session.data = [self validCertificateData];
-  session.urlResponse = [[NSHTTPURLResponse alloc] initWithURL:self.sampleURL statusCode:200 HTTPVersion:nil headerFields:nil];
   session.stubbedDataTask = dataTask;
   FBSDKAuthenticationTokenFactory *factory = [[FBSDKAuthenticationTokenFactory alloc] initWithSessionProvider:session];
 
@@ -221,6 +232,12 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
     1,
     "Should start the session data task when verifying a signature"
   );
+  session.capturedCompletion(
+    [self validCertificateData],
+    [[NSHTTPURLResponse alloc] initWithURL:self.sampleURL statusCode:200 HTTPVersion:nil headerFields:nil],
+    nil
+  );
+
   XCTAssertTrue(wasCalled);
 }
 
@@ -234,8 +251,6 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   for (NSData *certificateData in certificates) {
     TestSessionDataTask *dataTask = [TestSessionDataTask new];
     TestSessionProvider *session = [TestSessionProvider new];
-    session.data = certificateData;
-    session.urlResponse = [[NSHTTPURLResponse alloc] initWithURL:self.sampleURL statusCode:200 HTTPVersion:nil headerFields:nil];
     session.stubbedDataTask = dataTask;
     FBSDKAuthenticationTokenFactory *factory = [[FBSDKAuthenticationTokenFactory alloc] initWithSessionProvider:session];
 
@@ -256,6 +271,11 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
       1,
       "Should start the session data task when verifying a signature"
     );
+    session.capturedCompletion(
+      certificateData,
+      [[NSHTTPURLResponse alloc] initWithURL:self.sampleURL statusCode:200 HTTPVersion:nil headerFields:nil],
+      nil
+    );
     XCTAssertTrue(wasCalled);
   }
 }
@@ -264,15 +284,11 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 {
   TestSessionDataTask *dataTask = [TestSessionDataTask new];
   TestSessionProvider *session = [TestSessionProvider new];
-  session.urlResponse = [[NSHTTPURLResponse alloc] initWithURL:self.sampleURL statusCode:200 HTTPVersion:nil headerFields:nil];
   session.stubbedDataTask = dataTask;
   FBSDKAuthenticationTokenFactory *factory = [[FBSDKAuthenticationTokenFactory alloc] initWithSessionProvider:session];
 
   for (int i = 0; i < 100; i++) {
     NSDictionary *randomizedCertificates = [Fuzzer randomizeWithJson:self.validRawCertificateResponse];
-    NSData *data = [FBSDKTypeUtility dataWithJSONObject:randomizedCertificates options:0 error:nil];
-    session.data = data;
-
     __block BOOL wasCalled = NO;
     [factory verifySignature:_signature
                       header:_encodedHeader
@@ -281,6 +297,11 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
                   completion:^(BOOL success) {
                     wasCalled = YES;
                   }];
+    session.capturedCompletion(
+      [FBSDKTypeUtility dataWithJSONObject:randomizedCertificates options:0 error:nil],
+      [[NSHTTPURLResponse alloc] initWithURL:self.sampleURL statusCode:200 HTTPVersion:nil headerFields:nil],
+      nil
+    );
     XCTAssertTrue(wasCalled);
   }
 }

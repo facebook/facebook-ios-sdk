@@ -37,20 +37,16 @@ class TestSessionDataTask: NSObject, SessionDataTask {
 
 @objcMembers
 class TestSessionProvider: NSObject, SessionProviding {
-  /// Data to return in a data task completion handler
-  var data: Data?
-  /// A url response to return in a data task completion handler
-  var urlResponse: URLResponse?
-  /// An error to return in a data task completion handler
-  var error: Error?
   /// A data task to return from `dataTask(with:completion:)`
   var stubbedDataTask: SessionDataTask?
+  /// The completion handler to be invoked in the test
+  var capturedCompletion: ((Data?, URLResponse?, Error?) -> Void)?
 
   func dataTask(
     with request: URLRequest,
     completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void
   ) -> SessionDataTask {
-    completionHandler(data, urlResponse, error)
+    capturedCompletion = completionHandler
     return stubbedDataTask ?? TestSessionDataTask()
   }
 }
