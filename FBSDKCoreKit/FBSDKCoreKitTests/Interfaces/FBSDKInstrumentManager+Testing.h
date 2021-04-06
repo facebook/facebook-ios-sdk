@@ -16,31 +16,25 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-
-#import "FBSDKError.h"
-
-@protocol FBSDKGraphRequestProviding;
-@protocol FBSDKFileManaging;
-@protocol FBSDKSettings;
-@protocol FBSDKFileDataExtracting;
+#import "FBSDKCoreKitBasicsImport.h"
+#import "FBSDKErrorReporting.h"
+#import "FBSDKFeatureChecking.h"
+#import "FBSDKInstrumentManager.h"
+#import "FBSDKSettings.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(ErrorReport)
-@interface FBSDKErrorReport : NSObject
+@interface FBSDKInstrumentManager (Testing)
 
-@property (class, nonatomic, readonly) FBSDKErrorReport *shared;
+@property (nonatomic, strong) Class<FBSDKFeatureChecking> featureChecker;
+@property (nonatomic, strong) id<FBSDKSettings> settings;
+@property (nonatomic, strong) id<FBSDKCrashObserving> crashObserver;
+@property (nonatomic, strong) id<FBSDKErrorReporting> errorReport;
 
-+ (void)saveError:(NSInteger)errorCode
-      errorDomain:(NSErrorDomain)errorDomain
-          message:(nullable NSString *)message;
-
-- (instancetype)initWithGraphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-                                 fileManager:(id<FBSDKFileManaging>)fileManager
-                                    settings:(id<FBSDKSettings>)settings
-                           fileDataExtractor:(Class<FBSDKFileDataExtracting>)dataExtractor;
-- (void)enable;
+- (instancetype)initWithFeatureCheckerProvider:(Class<FBSDKFeatureChecking>)featureChecker
+                                      settings:(id<FBSDKSettings>)settings
+                                 crashObserver:(id<FBSDKCrashObserving>)crashObserver
+                                   errorReport:(id<FBSDKErrorReporting>)errorReport;
 
 @end
 

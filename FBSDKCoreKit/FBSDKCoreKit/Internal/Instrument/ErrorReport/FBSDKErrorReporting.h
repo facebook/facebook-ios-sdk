@@ -18,30 +18,18 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKError.h"
-
-@protocol FBSDKGraphRequestProviding;
-@protocol FBSDKFileManaging;
-@protocol FBSDKSettings;
-@protocol FBSDKFileDataExtracting;
+#import "FBSDKErrorReport.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(ErrorReport)
-@interface FBSDKErrorReport : NSObject
+NS_SWIFT_NAME(ErrorReporting)
+@protocol FBSDKErrorReporting
 
-@property (class, nonatomic, readonly) FBSDKErrorReport *shared;
-
-+ (void)saveError:(NSInteger)errorCode
-      errorDomain:(NSErrorDomain)errorDomain
-          message:(nullable NSString *)message;
-
-- (instancetype)initWithGraphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-                                 fileManager:(id<FBSDKFileManaging>)fileManager
-                                    settings:(id<FBSDKSettings>)settings
-                           fileDataExtractor:(Class<FBSDKFileDataExtracting>)dataExtractor;
 - (void)enable;
 
+@end
+
+@interface FBSDKErrorReport (ErrorReporting) <FBSDKErrorReporting>
 @end
 
 NS_ASSUME_NONNULL_END

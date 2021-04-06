@@ -259,7 +259,7 @@ static void FBSDKExceptionHandler(NSException *exception)
 + (void)_sendCrashLogs
 {
   for (id<FBSDKCrashObserving> observer in _observers) {
-    if (observer && [observer respondsToSelector:@selector(didReceiveCrashLogs:)]) {
+    if (observer) {
       NSArray<NSDictionary<NSString *, id> *> *filteredCrashLogs = [self _filterCrashLogs:observer.prefixes processedCrashLogs:_processedCrashLogs];
       [observer didReceiveCrashLogs:filteredCrashLogs];
     }

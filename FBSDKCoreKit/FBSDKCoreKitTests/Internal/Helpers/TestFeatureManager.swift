@@ -21,7 +21,6 @@ import XCTest
 
 @objcMembers
 class TestFeatureManager: NSObject, FeatureChecking {
-
   static var capturedFeatures = [SDKFeature]()
   static var capturedCompletionBlocks: [SDKFeature: FBSDKFeatureManagerBlock] = [:]
 
@@ -37,5 +36,15 @@ class TestFeatureManager: NSObject, FeatureChecking {
 
   static func capturedFeaturesContains(_ feature: SDKFeature) -> Bool {
     return capturedFeatures.contains(feature)
+  }
+
+  static func completeCheck(
+    forFeature feature: SDKFeature,
+    with isEnabled: Bool
+  ) {
+    guard let completion = capturedCompletionBlocks[feature] else {
+      return
+    }
+    completion(isEnabled)
   }
 }

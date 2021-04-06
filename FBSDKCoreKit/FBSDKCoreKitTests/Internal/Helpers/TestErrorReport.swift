@@ -16,32 +16,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+class TestErrorReport: ErrorReporting {
+  var wasEnableCalled = false
 
-#import "FBSDKError.h"
-
-@protocol FBSDKGraphRequestProviding;
-@protocol FBSDKFileManaging;
-@protocol FBSDKSettings;
-@protocol FBSDKFileDataExtracting;
-
-NS_ASSUME_NONNULL_BEGIN
-
-NS_SWIFT_NAME(ErrorReport)
-@interface FBSDKErrorReport : NSObject
-
-@property (class, nonatomic, readonly) FBSDKErrorReport *shared;
-
-+ (void)saveError:(NSInteger)errorCode
-      errorDomain:(NSErrorDomain)errorDomain
-          message:(nullable NSString *)message;
-
-- (instancetype)initWithGraphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-                                 fileManager:(id<FBSDKFileManaging>)fileManager
-                                    settings:(id<FBSDKSettings>)settings
-                           fileDataExtractor:(Class<FBSDKFileDataExtracting>)dataExtractor;
-- (void)enable;
-
-@end
-
-NS_ASSUME_NONNULL_END
+  func enable() {
+    wasEnableCalled = true
+  }
+}

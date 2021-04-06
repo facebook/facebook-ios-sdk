@@ -20,12 +20,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol FBSDKCrashObserving <NSObject>
+NS_SWIFT_NAME(CrashObserving)
+@protocol FBSDKCrashObserving
 
 @property (nonatomic, copy) NSArray<NSString *> *prefixes;
 @property (nullable, nonatomic, copy) NSArray<NSString *> *frameworks;
 
-@optional
+- (void)enable;
 
 - (void)didReceiveCrashLogs:(NSArray<NSDictionary<NSString *, id> *> *)crashLogs;
 

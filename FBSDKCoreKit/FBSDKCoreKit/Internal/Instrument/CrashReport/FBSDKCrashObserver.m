@@ -62,17 +62,17 @@
   return self;
 }
 
-+ (void)enable
+- (void)enable
 {
-  [FBSDKCrashHandler addObserver:[FBSDKCrashObserver sharedInstance]];
+  [FBSDKCrashHandler addObserver:self];
 }
 
-+ (FBSDKCrashObserver *)sharedInstance
++ (instancetype)shared
 {
   static FBSDKCrashObserver *_sharedInstance;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    _sharedInstance = [[self alloc] init];
+  static dispatch_once_t nonce;
+  dispatch_once(&nonce, ^{
+    _sharedInstance = [self new];
   });
   return _sharedInstance;
 }

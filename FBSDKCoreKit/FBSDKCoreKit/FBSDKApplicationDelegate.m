@@ -153,7 +153,7 @@ static UIApplicationState _applicationState;
 
   [FBSDKFeatureManager checkFeature:FBSDKFeatureInstrument completionBlock:^(BOOL enabled) {
     if (enabled) {
-      [FBSDKInstrumentManager enable];
+      [FBSDKInstrumentManager.shared enable];
     }
   }];
 

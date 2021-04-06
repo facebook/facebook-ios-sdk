@@ -276,7 +276,12 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (BOOL)isAutoLogAppEventsEnabled
 {
-  return self.sharedSettings._autoLogAppEventsEnabled.boolValue;
+  return [self.sharedSettings isAutoLogAppEventsEnabled];
+}
+
+- (BOOL)isAutoLogAppEventsEnabled
+{
+  return self._autoLogAppEventsEnabled.boolValue;
 }
 
 + (void)setAutoLogAppEventsEnabled:(BOOL)autoLogAppEventsEnabled

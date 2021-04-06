@@ -16,32 +16,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+class TestCrashObserver: CrashObserving {
+  var wasEnableCalled = false
+  var prefixes = [String]()
+  var frameworks: [String]?
 
-#import "FBSDKError.h"
+  func enable() {
+    wasEnableCalled = true
+  }
 
-@protocol FBSDKGraphRequestProviding;
-@protocol FBSDKFileManaging;
-@protocol FBSDKSettings;
-@protocol FBSDKFileDataExtracting;
+  func didReceiveCrashLogs(_ crashLogs: [[String: Any]]) {
+  }
 
-NS_ASSUME_NONNULL_BEGIN
-
-NS_SWIFT_NAME(ErrorReport)
-@interface FBSDKErrorReport : NSObject
-
-@property (class, nonatomic, readonly) FBSDKErrorReport *shared;
-
-+ (void)saveError:(NSInteger)errorCode
-      errorDomain:(NSErrorDomain)errorDomain
-          message:(nullable NSString *)message;
-
-- (instancetype)initWithGraphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-                                 fileManager:(id<FBSDKFileManaging>)fileManager
-                                    settings:(id<FBSDKSettings>)settings
-                           fileDataExtractor:(Class<FBSDKFileDataExtracting>)dataExtractor;
-- (void)enable;
-
-@end
-
-NS_ASSUME_NONNULL_END
+}

@@ -27,11 +27,16 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   static var logIfSDKSettingsChangedCallCount = 0
   static var recordInstallCallCount = 0
   var stubbedIsDataProcessingRestricted = false
+  var stubbedIsAutoLogAppEventsEnabled = false
 
   var appID: String?
 
-  func isDataProcessingRestricted() -> Bool {
+  var isDataProcessingRestricted: Bool {
     return stubbedIsDataProcessingRestricted
+  }
+
+  var isAutoLogAppEventsEnabled: Bool {
+    return stubbedIsAutoLogAppEventsEnabled
   }
 
   static func logWarnings() {

@@ -19,26 +19,70 @@
 #import "FBSDKInstrumentManager.h"
 
 #import "FBSDKCrashObserver.h"
-#import "FBSDKErrorReport.h"
+#import "FBSDKErrorReporting.h"
+#import "FBSDKFeatureChecking.h"
 #import "FBSDKFeatureManager.h"
-#import "FBSDKSettings.h"
+#import "FBSDKSettings+Internal.h"
+#import "FBSDKSettings+SettingsProtocols.h"
+#import "FBSDKSettingsProtocol.h"
+
+@interface FBSDKInstrumentManager ()
+
+@property (nonatomic, strong) Class<FBSDKFeatureChecking> featureChecker;
+@property (nonatomic, strong) id<FBSDKSettings> settings;
+@property (nonatomic, strong) id<FBSDKCrashObserving> crashObserver;
+@property (nonatomic, strong) id<FBSDKErrorReporting> errorReport;
+
+@end
 
 @implementation FBSDKInstrumentManager
 
-+ (void)enable
+- (instancetype)init
 {
-  if (![FBSDKSettings isAutoLogAppEventsEnabled]) {
+  return [self initWithFeatureCheckerProvider:FBSDKFeatureManager.class
+                                     settings:FBSDKSettings.sharedSettings
+                                crashObserver:FBSDKCrashObserver.shared
+                                  errorReport:FBSDKErrorReport.shared];
+}
+
+- (instancetype)initWithFeatureCheckerProvider:(Class<FBSDKFeatureChecking>)featureChecker
+                                      settings:(id<FBSDKSettings>)settings
+                                 crashObserver:(id<FBSDKCrashObserving>)crashObserver
+                                   errorReport:(id<FBSDKErrorReporting>)errorReport
+{
+  if ((self = [super init])) {
+    _featureChecker = featureChecker;
+    _settings = settings;
+    _crashObserver = crashObserver;
+    _errorReport = errorReport;
+  }
+  return self;
+}
+
++ (instancetype)shared
+{
+  static dispatch_once_t nonce;
+  static id instance;
+  dispatch_once(&nonce, ^{
+    instance = [[self alloc] init];
+  });
+  return instance;
+}
+
+- (void)enable
+{
+  if (![self.settings isAutoLogAppEventsEnabled]) {
     return;
   }
 
-  [FBSDKFeatureManager checkFeature:FBSDKFeatureCrashReport completionBlock:^(BOOL enabled) {
+  [self.featureChecker checkFeature:FBSDKFeatureCrashReport completionBlock:^(BOOL enabled) {
     if (enabled) {
-      [FBSDKCrashObserver enable];
+      [self.crashObserver enable];
     }
   }];
-  [FBSDKFeatureManager checkFeature:FBSDKFeatureErrorReport completionBlock:^(BOOL enabled) {
+  [self.featureChecker checkFeature:FBSDKFeatureErrorReport completionBlock:^(BOOL enabled) {
     if (enabled) {
-      [FBSDKErrorReport enable];
+      [self.errorReport enable];
     }
   }];
 }

@@ -20,9 +20,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+NS_SWIFT_NAME(InstrumentManager)
 @interface FBSDKInstrumentManager : NSObject
 
-+ (void)enable;
+@property (class, nonatomic, readonly) FBSDKInstrumentManager *shared;
+
+- (void)enable;
 
 @end
 

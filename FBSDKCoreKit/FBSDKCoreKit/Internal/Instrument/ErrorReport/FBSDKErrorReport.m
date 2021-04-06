@@ -74,9 +74,14 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
   return self;
 }
 
-+ (void)enable
++ (instancetype)shared
 {
-  [[FBSDKErrorReport new] enable];
+  static FBSDKErrorReport *_sharedInstance;
+  static dispatch_once_t nonce;
+  dispatch_once(&nonce, ^{
+    _sharedInstance = [self new];
+  });
+  return _sharedInstance;
 }
 
 - (void)enable
