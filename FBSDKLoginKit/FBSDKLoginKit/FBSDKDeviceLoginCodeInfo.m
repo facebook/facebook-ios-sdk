@@ -18,7 +18,11 @@
 
 #import "FBSDKDeviceLoginCodeInfo+Internal.h"
 
-#import "FBSDKCoreKitBasicsImport.h"
+#ifdef FBSDKCOCOAPODS
+ #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+#else
+ #import "FBSDKCoreKit+Internal.h"
+#endif
 
 @implementation FBSDKDeviceLoginCodeInfo
 
