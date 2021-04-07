@@ -28,8 +28,6 @@
 
 #if defined FBSDKCOCOAPODS || defined BUCK
 
- #import "FBSDKCoreKit+Internal.h"
-
  #if !TARGET_OS_TV
   #import "FBSDKAuthenticationStatusUtility.h"
   #import "FBSDKBridgeAPI.h"
@@ -71,7 +69,6 @@
  #import "FBSDKApplicationObserving.h"
  #import "FBSDKAuthenticationStatusUtility.h"
  #import "FBSDKAuthenticationToken+Internal.h"
- #import "FBSDKAuthenticationTokenClaims.h"
  #import "FBSDKAuthenticationTokenFactory.h"
  #import "FBSDKAuthenticationTokenHeader.h"
  #import "FBSDKBase64.h"
