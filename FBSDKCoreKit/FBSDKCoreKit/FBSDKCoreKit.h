@@ -24,6 +24,7 @@
  #import <FBSDKCoreKit/FBSDKAppEvents.h>
  #import <FBSDKCoreKit/FBSDKApplicationDelegate.h>
  #import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
+ #import <FBSDKCoreKit/FBSDKAuthenticationTokenClaims.h>
  #import <FBSDKCoreKit/FBSDKButton.h>
  #import <FBSDKCoreKit/FBSDKConstants.h>
  #import <FBSDKCoreKit/FBSDKCopying.h>
