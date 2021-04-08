@@ -16,25 +16,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-
-#import "FBSDKCoreKitBasicsImport.h"
+#import "FBSDKCrashHandlerProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol FBSDKFeatureChecking;
-@protocol FBSDKGraphRequestProviding;
-@protocol FBSDKSettings;
-
-NS_SWIFT_NAME(CrashObserver)
-@interface FBSDKCrashObserver : NSObject <FBSDKCrashObserving>
-
-@property (class, nonatomic, readonly) FBSDKCrashObserver *shared;
-
-- (instancetype)initWithFeatureChecker:(Class<FBSDKFeatureChecking>)featureCheckrer
-                          graphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-                                      settings:(id<FBSDKSettings>)settings;
-
+// Default conformance to the FBSDKCrashHandler protocol
+@interface FBSDKCrashHandler (CrashHandlerProtocol) <FBSDKCrashHandler>
 @end
 
 NS_ASSUME_NONNULL_END

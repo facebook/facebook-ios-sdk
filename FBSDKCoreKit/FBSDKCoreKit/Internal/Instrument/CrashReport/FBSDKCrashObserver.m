@@ -64,11 +64,6 @@
   return self;
 }
 
-- (void)enable
-{
-  [FBSDKCrashHandler addObserver:self];
-}
-
 + (instancetype)shared
 {
   static FBSDKCrashObserver *_sharedInstance;

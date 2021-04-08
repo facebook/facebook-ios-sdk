@@ -22,7 +22,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+NS_SWIFT_NAME(CrashHandler)
 @interface FBSDKCrashHandler : NSObject
+
+@property (class, nonatomic, readonly) FBSDKCrashHandler *shared;
 
 + (void)disable;
 + (void)addObserver:(id<FBSDKCrashObserving>)observer;

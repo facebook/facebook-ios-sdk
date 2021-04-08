@@ -19,6 +19,8 @@
 #ifdef BUCK
  #import <FBSDKCoreKit_Basics/FBSDKBasicUtility.h>
  #import <FBSDKCoreKit_Basics/FBSDKCrashHandler.h>
+ #import <FBSDKCoreKit_Basics/FBSDKCrashHandler+CrashHandlerProtocol.h>
+ #import <FBSDKCoreKit_Basics/FBSDKCrashHandlerProtocol.h>
  #import <FBSDKCoreKit_Basics/FBSDKCrashObserving.h>
  #import <FBSDKCoreKit_Basics/FBSDKJSONValue.h>
  #import <FBSDKCoreKit_Basics/FBSDKLibAnalyzer.h>
@@ -31,6 +33,8 @@
 #else
  #import "FBSDKBasicUtility.h"
  #import "FBSDKCrashHandler.h"
+ #import "FBSDKCrashHandler+CrashHandlerProtocol.h"
+ #import "FBSDKCrashHandlerProtocol.h"
  #import "FBSDKCrashObserving.h"
  #import "FBSDKJSONValue.h"
  #import "FBSDKLibAnalyzer.h"

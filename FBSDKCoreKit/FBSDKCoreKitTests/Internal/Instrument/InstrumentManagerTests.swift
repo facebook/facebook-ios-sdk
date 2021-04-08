@@ -25,6 +25,7 @@ class InstrumentManagerTests: XCTestCase {
   let settings = TestSettings()
   let crashObserver = TestCrashObserver()
   let errorReporter = TestErrorReport()
+  let crashHandler = TestCrashHandler()
 
   override class func setUp() {
     super.setUp()
@@ -39,7 +40,8 @@ class InstrumentManagerTests: XCTestCase {
       featureCheckerProvider: TestFeatureManager.self,
       settings: settings,
       crashObserver: crashObserver,
-      errorReport: errorReporter
+      errorReport: errorReporter,
+      crashHandler: crashHandler
     )
   }
 
@@ -71,6 +73,11 @@ class InstrumentManagerTests: XCTestCase {
       ObjectIdentifier(ErrorReport.shared),
       "Should use the shared error report instance by default"
     )
+    XCTAssertEqual(
+      ObjectIdentifier(manager.crashHandler),
+      ObjectIdentifier(CrashHandler.shared),
+      "Should use the shared Crash Handler instance by default"
+    )
   }
 
   func testEnablingWithBothEnabled() {
@@ -81,7 +88,8 @@ class InstrumentManagerTests: XCTestCase {
     TestFeatureManager.completeCheck(forFeature: .crashReport, with: true)
     TestFeatureManager.completeCheck(forFeature: .errorReport, with: true)
 
-    XCTAssertTrue(crashObserver.wasEnableCalled)
+    XCTAssertTrue(crashHandler.wasAddObserverCalled)
+    XCTAssertNotNil(crashHandler.observer)
     XCTAssertTrue(errorReporter.wasEnableCalled)
   }
 
@@ -93,7 +101,8 @@ class InstrumentManagerTests: XCTestCase {
     TestFeatureManager.completeCheck(forFeature: .crashReport, with: false)
     TestFeatureManager.completeCheck(forFeature: .errorReport, with: false)
 
-    XCTAssertFalse(crashObserver.wasEnableCalled)
+    XCTAssertFalse(crashHandler.wasAddObserverCalled)
+    XCTAssertNil(crashHandler.observer)
     XCTAssertFalse(errorReporter.wasEnableCalled)
   }
 
@@ -105,7 +114,8 @@ class InstrumentManagerTests: XCTestCase {
     TestFeatureManager.completeCheck(forFeature: .crashReport, with: true)
     TestFeatureManager.completeCheck(forFeature: .errorReport, with: true)
 
-    XCTAssertFalse(crashObserver.wasEnableCalled)
+    XCTAssertFalse(crashHandler.wasAddObserverCalled)
+    XCTAssertNil(crashHandler.observer)
     XCTAssertFalse(errorReporter.wasEnableCalled)
   }
 
@@ -117,7 +127,8 @@ class InstrumentManagerTests: XCTestCase {
     TestFeatureManager.completeCheck(forFeature: .crashReport, with: false)
     TestFeatureManager.completeCheck(forFeature: .errorReport, with: false)
 
-    XCTAssertFalse(crashObserver.wasEnableCalled)
+    XCTAssertFalse(crashHandler.wasAddObserverCalled)
+    XCTAssertNil(crashHandler.observer)
     XCTAssertFalse(errorReporter.wasEnableCalled)
   }
 }

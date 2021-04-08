@@ -18,6 +18,7 @@
 
 #import "FBSDKInstrumentManager.h"
 
+#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKCrashObserver.h"
 #import "FBSDKErrorReporting.h"
 #import "FBSDKFeatureChecking.h"
@@ -32,6 +33,7 @@
 @property (nonatomic, strong) id<FBSDKSettings> settings;
 @property (nonatomic, strong) id<FBSDKCrashObserving> crashObserver;
 @property (nonatomic, strong) id<FBSDKErrorReporting> errorReport;
+@property (nonatomic, strong) id<FBSDKCrashHandler> crashHandler;
 
 @end
 
@@ -42,19 +44,22 @@
   return [self initWithFeatureCheckerProvider:FBSDKFeatureManager.class
                                      settings:FBSDKSettings.sharedSettings
                                 crashObserver:FBSDKCrashObserver.shared
-                                  errorReport:FBSDKErrorReport.shared];
+                                  errorReport:FBSDKErrorReport.shared
+                                 crashHandler:FBSDKCrashHandler.shared];
 }
 
 - (instancetype)initWithFeatureCheckerProvider:(Class<FBSDKFeatureChecking>)featureChecker
                                       settings:(id<FBSDKSettings>)settings
                                  crashObserver:(id<FBSDKCrashObserving>)crashObserver
                                    errorReport:(id<FBSDKErrorReporting>)errorReport
+                                  crashHandler:(id<FBSDKCrashHandler>)crashHandler
 {
   if ((self = [super init])) {
     _featureChecker = featureChecker;
     _settings = settings;
     _crashObserver = crashObserver;
     _errorReport = errorReport;
+    _crashHandler = crashHandler;
   }
   return self;
 }
@@ -77,7 +82,7 @@
 
   [self.featureChecker checkFeature:FBSDKFeatureCrashReport completionBlock:^(BOOL enabled) {
     if (enabled) {
-      [self.crashObserver enable];
+      [self.crashHandler addObserver:self.crashObserver];
     }
   }];
   [self.featureChecker checkFeature:FBSDKFeatureErrorReport completionBlock:^(BOOL enabled) {

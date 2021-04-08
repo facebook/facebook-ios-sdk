@@ -23,6 +23,7 @@
 #import "FBSDKAppLinkEventPosting.h"
 #import "FBSDKBridgeAPI+Testing.h"
 #import "FBSDKCloseIcon.h"
+#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKCrashObserver.h"
 #import "FBSDKCrashObserver+Internal.h"
 #import "FBSDKEventDeactivationManager.h"

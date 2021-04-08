@@ -26,8 +26,6 @@ NS_SWIFT_NAME(CrashObserving)
 @property (nonatomic, copy) NSArray<NSString *> *prefixes;
 @property (nullable, nonatomic, copy) NSArray<NSString *> *frameworks;
 
-- (void)enable;
-
 - (void)didReceiveCrashLogs:(NSArray<NSDictionary<NSString *, id> *> *)crashLogs;
 
 @end

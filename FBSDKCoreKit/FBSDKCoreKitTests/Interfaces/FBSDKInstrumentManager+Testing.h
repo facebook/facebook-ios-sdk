@@ -30,11 +30,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) id<FBSDKSettings> settings;
 @property (nonatomic, strong) id<FBSDKCrashObserving> crashObserver;
 @property (nonatomic, strong) id<FBSDKErrorReporting> errorReport;
+@property (nonatomic, strong) id<FBSDKCrashHandler> crashHandler;
 
 - (instancetype)initWithFeatureCheckerProvider:(Class<FBSDKFeatureChecking>)featureChecker
                                       settings:(id<FBSDKSettings>)settings
                                  crashObserver:(id<FBSDKCrashObserving>)crashObserver
-                                   errorReport:(id<FBSDKErrorReporting>)errorReport;
+                                   errorReport:(id<FBSDKErrorReporting>)errorReport
+                                  crashHandler:(id<FBSDKCrashHandler>)crashHandler;
 
 @end
 

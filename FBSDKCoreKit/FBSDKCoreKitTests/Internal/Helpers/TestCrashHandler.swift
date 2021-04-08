@@ -16,25 +16,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+import FBSDKCoreKit
+import XCTest
 
-#import "FBSDKCoreKitBasicsImport.h"
+@objcMembers
+class TestCrashHandler: NSObject, CrashHandlerProtocol {
+  var wasAddObserverCalled = false
+  var observer: CrashObserving?
 
-NS_ASSUME_NONNULL_BEGIN
-
-@protocol FBSDKFeatureChecking;
-@protocol FBSDKGraphRequestProviding;
-@protocol FBSDKSettings;
-
-NS_SWIFT_NAME(CrashObserver)
-@interface FBSDKCrashObserver : NSObject <FBSDKCrashObserving>
-
-@property (class, nonatomic, readonly) FBSDKCrashObserver *shared;
-
-- (instancetype)initWithFeatureChecker:(Class<FBSDKFeatureChecking>)featureCheckrer
-                          graphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-                                      settings:(id<FBSDKSettings>)settings;
-
-@end
-
-NS_ASSUME_NONNULL_END
+  func addObserver(_ observer: CrashObserving) {
+    wasAddObserverCalled = true
+    self.observer = observer
+    return
+  }
+}
