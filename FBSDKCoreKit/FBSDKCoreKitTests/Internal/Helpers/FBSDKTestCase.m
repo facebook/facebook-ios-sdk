@@ -104,8 +104,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self setUpLoggerClassMock];
   [self setUpTransitionCoordinatorMock];
   [self setUpBridgeApiClassMock];
-  [self setUpCrashObserverClassMock];
-  [self setUpErrorReportClassMock];
   [self setUpAppEventsConfigurationManagerClassMock];
   [self setUpASIdentifierClassMock];
   [self setUpAppEventsMock];
@@ -186,12 +184,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   [_bridgeApiResponseClassMock stopMocking];
   _bridgeApiResponseClassMock = nil;
-
-  [_crashObserverClassMock stopMocking];
-  _crashObserverClassMock = nil;
-
-  [_errorReportClassMock stopMocking];
-  _errorReportClassMock = nil;
 
   [_appEventsConfigurationManagerClassMock stopMocking];
   _appEventsConfigurationManagerClassMock = nil;
@@ -341,16 +333,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)setUpBridgeApiClassMock
 {
   _bridgeApiResponseClassMock = OCMClassMock(FBSDKBridgeAPIResponse.class);
-}
-
-- (void)setUpCrashObserverClassMock
-{
-  _crashObserverClassMock = OCMClassMock(FBSDKCrashObserver.class);
-}
-
-- (void)setUpErrorReportClassMock
-{
-  _errorReportClassMock = OCMClassMock(FBSDKErrorReport.class);
 }
 
 - (void)setUpAppEventsConfigurationManagerClassMock

@@ -130,12 +130,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing a `FBSDKBridgeAPIResponse` class mock between tests
 @property (nullable, nonatomic, assign) id bridgeApiResponseClassMock;
 
-/// Used for sharing a `FBSDKCrashObserver` class mock between tests
-@property (nullable, nonatomic, assign) id crashObserverClassMock;
-
-/// Used for sharing a `FBSDKErrorReport` class mock between tests
-@property (nullable, nonatomic, assign) id errorReportClassMock;
-
 /// Used for sharing a `FBSDKAppEventsConfigurationManager` class mock between tests
 @property (nullable, nonatomic, assign) id appEventsConfigurationManagerClassMock;
 
