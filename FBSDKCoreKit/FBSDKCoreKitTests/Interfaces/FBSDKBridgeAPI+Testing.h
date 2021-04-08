@@ -99,4 +99,14 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 
 @end
 
+@interface FBSDKBridgeAPIResponse (Testing)
+
++ (nullable instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
+                                          responseURL:(NSURL *)responseURL
+                                    sourceApplication:(NSString *)sourceApplication
+                                    osVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)comparer
+                                                error:(NSError *__autoreleasing *)errorRef;
+
+@end
+
 NS_ASSUME_NONNULL_END

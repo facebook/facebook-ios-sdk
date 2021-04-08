@@ -18,10 +18,9 @@
 
 import Foundation
 
+// swiftlint:disable force_unwrapping
 enum SampleUrls {
-
   static let valid: URL = {
-    // swiftlint:disable:next force_unwrapping
     return URL(string: "https://www.example.com")!
   }()
 
@@ -29,6 +28,11 @@ enum SampleUrls {
     return valid.appendingPathComponent(path)
   }
 
+  static func valid(queryItems: [URLQueryItem]) -> URL {
+    var components = URLComponents(url: valid, resolvingAgainstBaseURL: false)!
+    components.queryItems = queryItems
+    return components.url!
+  }
 }
 
 enum SampleUrlRequest {

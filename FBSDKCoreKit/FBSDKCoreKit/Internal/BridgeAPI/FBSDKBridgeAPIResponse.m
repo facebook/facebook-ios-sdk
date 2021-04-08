@@ -27,6 +27,8 @@
  #import "FBSDKBridgeAPIRequest+Private.h"
  #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKInternalUtility.h"
+ #import "FBSDKOperatingSystemVersionComparing.h"
+ #import "NSProcessInfo+Protocols.h"
 
 @interface FBSDKBridgeAPIResponse ()
 - (instancetype)initWithRequest:(id<FBSDKBridgeAPIRequestProtocol>)request
@@ -53,8 +55,22 @@
                            sourceApplication:(NSString *)sourceApplication
                                        error:(NSError *__autoreleasing *)errorRef
 {
+  return [self bridgeAPIResponseWithRequest:request
+                                responseURL:responseURL
+                          sourceApplication:sourceApplication
+                          osVersionComparer:NSProcessInfo.processInfo
+                                      error:errorRef];
+}
+
++ (instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
+                                 responseURL:(NSURL *)responseURL
+                           sourceApplication:(NSString *)sourceApplication
+                           osVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)comparer
+                                       error:(NSError *__autoreleasing *)errorRef
+{
   FBSDKBridgeAPIProtocolType protocolType = request.protocolType;
-  if (@available(iOS 13.0, *)) {
+  NSOperatingSystemVersion iOS13Version = { .majorVersion = 13, .minorVersion = 0, .patchVersion = 0 };
+  if ([comparer isOperatingSystemAtLeastVersion:iOS13Version]) {
     // SourceApplication is not available in iOS 13.
     // https://forums.developer.apple.com/thread/119118
   } else {
@@ -74,9 +90,6 @@
     }
   }
   NSDictionary<NSString *, NSString *> *const queryParameters = [FBSDKBasicUtility dictionaryWithQueryString:responseURL.query];
-  if (!queryParameters) {
-    return nil;
-  }
   id<FBSDKBridgeAPIProtocol> protocol = request.protocol;
   BOOL cancelled;
   NSError *error;
