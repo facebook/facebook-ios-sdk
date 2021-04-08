@@ -19,6 +19,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <AdSupport/AdSupport.h>
 
+#import "FBSDKBridgeAPIProtocolWebV1.h"
 #import "FBSDKAppEventsAtePublisher.h"
 #import "FBSDKAppLinkEventPosting.h"
 #import "FBSDKBridgeAPI+Testing.h"

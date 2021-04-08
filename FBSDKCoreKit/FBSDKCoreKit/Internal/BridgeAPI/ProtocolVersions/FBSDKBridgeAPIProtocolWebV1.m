@@ -45,6 +45,9 @@
                        parameters:(NSDictionary *)parameters
                             error:(NSError *__autoreleasing *)errorRef
 {
+  if (![FBSDKTypeUtility stringValue:actionID] || ![FBSDKTypeUtility stringValue:methodName]) {
+    return nil;
+  }
   NSMutableDictionary *queryParameters = [[NSMutableDictionary alloc] initWithDictionary:parameters];
   [FBSDKTypeUtility dictionary:queryParameters setObject:@"touch" forKey:@"display"];
   NSString *bridgeArgs = [FBSDKBasicUtility JSONStringForObject:@{ FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_ACTION_ID_KEY : actionID }
@@ -81,7 +84,6 @@
       return @{
         @"completionGesture" : @"cancel",
       };
-      break;
     }
     default: {
       if (errorRef != NULL) {
@@ -89,7 +91,6 @@
                                       message:[FBSDKTypeUtility stringValue:queryParameters[@"error_message"]]];
       }
       return nil;
-      break;
     }
   }
 
