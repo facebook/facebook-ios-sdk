@@ -124,6 +124,7 @@ static NSString *const _mockUserID = @"mockUserID";
   TestGraphRequestFactory *_graphRequestFactory;
   UserDefaultsSpy *_store;
   TestFeatureManager *_featureManager;
+  TestSettings *_settings;
 }
 @end
 
@@ -143,6 +144,9 @@ static NSString *const _mockUserID = @"mockUserID";
   [super setUp];
 
   [FBSDKSettings reset];
+  [TestSettings reset];
+  _settings = [TestSettings new];
+  _settings.stubbedIsAutoLogAppEventsEnabled = YES;
   [FBSDKInternalUtility reset];
   [FBSDKAppEvents setAppEventsConfigurationProvider:TestAppEventsConfigurationProvider.class];
   [FBSDKAppEvents setServerConfigurationProvider:TestServerConfigurationProvider.class];
@@ -173,7 +177,8 @@ static NSString *const _mockUserID = @"mockUserID";
                             graphRequestProvider:_graphRequestFactory
                                   featureChecker:_featureManager
                                            store:_store
-                                          logger:TestLogger.self];
+                                          logger:TestLogger.self
+                                        settings:_settings];
 }
 
 - (void)tearDown
@@ -512,7 +517,7 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testRequestForCustomAudienceThirdPartyIDWithTrackingDisallowed
 {
-  [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingDisallowed];
+  _settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingDisallowed;
 
   XCTAssertNil(
     [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:SampleAccessTokens.validToken],
@@ -526,8 +531,8 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testRequestForCustomAudienceThirdPartyIDWithLimitedEventAndDataUsage
 {
-  [self stubSettingsShouldLimitEventAndDataUsageWith:YES];
-  [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingAllowed];
+  _settings.stubbedLimitEventAndDataUsage = YES;
+  _settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
 
   XCTAssertNil(
     [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:SampleAccessTokens.validToken],
@@ -541,8 +546,8 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testRequestForCustomAudienceThirdPartyIDWithoutAccessTokenWithoutAdvertiserID
 {
-  [self stubSettingsShouldLimitEventAndDataUsageWith:NO];
-  [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingAllowed];
+  _settings.stubbedLimitEventAndDataUsage = NO;
+  _settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
   [self stubAppEventsUtilityAdvertiserIDWith:nil];
 
   XCTAssertNil(
@@ -554,8 +559,8 @@ static NSString *const _mockUserID = @"mockUserID";
 - (void)testRequestForCustomAudienceThirdPartyIDWithoutAccessTokenWithAdvertiserID
 {
   NSString *advertiserID = @"abc123";
-  [self stubSettingsShouldLimitEventAndDataUsageWith:NO];
-  [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingAllowed];
+  _settings.stubbedLimitEventAndDataUsage = NO;
+  _settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
   [self stubAppEventsUtilityAdvertiserIDWith:advertiserID];
 
   [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:nil];
@@ -569,8 +574,8 @@ static NSString *const _mockUserID = @"mockUserID";
 - (void)testRequestForCustomAudienceThirdPartyIDWithAccessTokenWithoutAdvertiserID
 {
   FBSDKAccessToken *token = SampleAccessTokens.validToken;
-  [self stubSettingsShouldLimitEventAndDataUsageWith:NO];
-  [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingAllowed];
+  _settings.stubbedLimitEventAndDataUsage = NO;
+  _settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
   [self stubAppEventsUtilityAdvertiserIDWith:nil];
   [self stubAppEventsUtilityTokenStringToUseForTokenWith:token.tokenString];
 
@@ -592,9 +597,8 @@ static NSString *const _mockUserID = @"mockUserID";
 
   FBSDKAccessToken *token = SampleAccessTokens.validToken;
   NSString *advertiserID = @"abc123";
-
-  [self stubSettingsShouldLimitEventAndDataUsageWith:NO];
-  [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingAllowed];
+  _settings.stubbedLimitEventAndDataUsage = NO;
+  _settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
   [self stubAppEventsUtilityTokenStringToUseForTokenWith:token.tokenString];
   [self stubAppEventsUtilityAdvertiserIDWith:advertiserID];
 
@@ -749,7 +753,7 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testInstanceLogEventWhenAutoLogAppEventsDisabled
 {
-  [self stubIsAutoLogAppEventsEnabled:NO];
+  _settings.stubbedIsAutoLogAppEventsEnabled = NO;
   OCMReject(
     [self.appEventsMock instanceLogEvent:_mockEventName
                               valueToSum:@(_mockPurchaseAmount)
@@ -763,7 +767,6 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testInstanceLogEventWhenAutoLogAppEventsEnabled
 {
-  [self stubIsAutoLogAppEventsEnabled:YES];
   OCMExpect(
     [self.appEventsMock instanceLogEvent:_mockEventName
                               valueToSum:@(_mockPurchaseAmount)
@@ -857,9 +860,29 @@ static NSString *const _mockUserID = @"mockUserID";
     [_featureManager capturedFeaturesContains:FBSDKFeaturePrivacyProtection],
     "fetchConfiguration should check if the PrivacyProtection feature is enabled"
   );
+}
+
+- (void)testFetchingConfigurationIncludingSKAdNetworkIfSKAdNetworkReportEnabled
+{
+  _settings.stubbedIsSKAdNetworkReportEnabled = YES;
+  [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
+  TestAppEventsConfigurationProvider.capturedBlock();
+  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
   XCTAssertTrue(
     [_featureManager capturedFeaturesContains:FBSDKFeatureSKAdNetwork],
-    "fetchConfiguration should check if the SKAdNetwork feature is enabled"
+    "fetchConfiguration should check if the SKAdNetwork feature is enabled when SKAdNetworkReport is enabled"
+  );
+}
+
+- (void)testFetchingConfigurationNotIncludingSKAdNetworkIfSKAdNetworkReportDisabled
+{
+  _settings.stubbedIsSKAdNetworkReportEnabled = NO;
+  [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
+  TestAppEventsConfigurationProvider.capturedBlock();
+  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  XCTAssertFalse(
+    [_featureManager capturedFeaturesContains:FBSDKFeatureSKAdNetwork],
+    "fetchConfiguration should NOT check if the SKAdNetwork feature is disabled when SKAdNetworkReport is disabled"
   );
 }
 

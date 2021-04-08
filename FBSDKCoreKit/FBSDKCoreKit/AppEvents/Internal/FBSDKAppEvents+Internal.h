@@ -33,6 +33,7 @@
 @protocol FBSDKDataPersisting;
 @protocol FBSDKFeatureChecking;
 @protocol FBSDKLogging;
+@protocol FBSDKSettings;
 
 // Internally known event names
 
@@ -220,7 +221,8 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
                   graphRequestProvider:(id<FBSDKGraphRequestProviding>)provider
                         featureChecker:(id<FBSDKFeatureChecking>)featureChecker
                                  store:(id<FBSDKDataPersisting>)store
-                                logger:(Class<FBSDKLogging>)logger;
+                                logger:(Class<FBSDKLogging>)logger
+                              settings:(id<FBSDKSettings>)settings;
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;

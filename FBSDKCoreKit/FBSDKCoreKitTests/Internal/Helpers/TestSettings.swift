@@ -26,10 +26,18 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   static var logWarningsCallCount = 0
   static var logIfSDKSettingsChangedCallCount = 0
   static var recordInstallCallCount = 0
-  var stubbedIsDataProcessingRestricted = false
-  var stubbedIsAutoLogAppEventsEnabled = false
 
   var appID: String?
+
+  var advertisingTrackingStatus: AppEventsUtility.AdvertisingTrackingStatus = .unspecified
+  var stubbedIsDataProcessingRestricted = false
+  var stubbedIsAutoLogAppEventsEnabled = false
+  var stubbedInstallTimestamp: Date?
+  // swiftlint:disable:next identifier_name
+  var stubbedSetAdvertiserTrackingEnabledTimestamp: Date?
+  var stubbedIsSetATETimeExceedsInstallTime = false
+  var stubbedIsSKAdNetworkReportEnabled = false
+  var stubbedLimitEventAndDataUsage = false
 
   var isDataProcessingRestricted: Bool {
     return stubbedIsDataProcessingRestricted
@@ -37,6 +45,30 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
 
   var isAutoLogAppEventsEnabled: Bool {
     return stubbedIsAutoLogAppEventsEnabled
+  }
+
+  var isSetATETimeExceedsInstallTime: Bool {
+    return stubbedIsSetATETimeExceedsInstallTime
+  }
+
+  var isSKAdNetworkReportEnabled: Bool {
+    return stubbedIsSKAdNetworkReportEnabled
+  }
+
+  var loggingBehaviors: Set<String> {
+    return TestSettings.loggingBehaviors
+  }
+
+  var shouldLimitEventAndDataUsage: Bool {
+    return stubbedLimitEventAndDataUsage
+  }
+
+  var installTimestamp: Date? {
+    return stubbedInstallTimestamp
+  }
+
+  var advertiserTrackingEnabledTimestamp: Date? {
+    return stubbedSetAdvertiserTrackingEnabledTimestamp
   }
 
   static func logWarnings() {

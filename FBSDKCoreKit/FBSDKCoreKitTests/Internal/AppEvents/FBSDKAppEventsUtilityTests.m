@@ -78,7 +78,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
                             graphRequestProvider:[TestGraphRequestFactory new]
                                   featureChecker:[TestFeatureManager new]
                                            store:userDefaultsSpy
-                                          logger:TestLogger.class];
+                                          logger:TestLogger.class
+                                        settings:[TestSettings new]];
 }
 
 - (void)tearDown

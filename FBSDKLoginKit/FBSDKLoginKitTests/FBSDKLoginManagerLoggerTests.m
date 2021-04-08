@@ -29,6 +29,8 @@
  #import "FBSDKLoginManagerLogger.h"
 #endif
 
+@protocol FBSDKSettings;
+
 @interface FBSDKAppEvents (Testing)
 
 + (FBSDKAppEvents *)singleton;
@@ -39,6 +41,11 @@
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken;
 
++ (void)setSettings:(id<FBSDKSettings>)settings;
+
+@end
+
+@interface FBSDKSettings (SettingProtocol) <FBSDKSettings>
 @end
 
 @interface FBSDKLoginManagerLoggerTests : XCTestCase
@@ -47,6 +54,7 @@
 @implementation FBSDKLoginManagerLoggerTests
 {
   id _appEventsMock;
+  id _settingsMock;
   id _loginManagerMock;
 }
 
@@ -54,9 +62,12 @@
 {
   [super setUp];
   _loginManagerMock = OCMClassMock(FBSDKLoginManager.class);
+  _settingsMock = OCMClassMock(FBSDKSettings.class);
+  OCMStub([_settingsMock isAutoLogAppEventsEnabled]).andReturn(YES);
   // Set up AppEvents singleton mock
   _appEventsMock = OCMClassMock(FBSDKAppEvents.class);
   OCMStub([_appEventsMock singleton]).andReturn(_appEventsMock);
+  [FBSDKAppEvents setSettings:_settingsMock];
 }
 
 - (void)tearDown

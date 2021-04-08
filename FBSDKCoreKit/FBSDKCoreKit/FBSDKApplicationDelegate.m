@@ -39,6 +39,7 @@
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationManager+ServerConfigurationProviding.h"
 #import "FBSDKSettings+Internal.h"
+#import "FBSDKSettings+SettingsProtocols.h"
 #import "FBSDKSettingsLogging.h"
 #import "FBSDKTimeSpentData.h"
 #import "FBSDKTokenCache.h"
@@ -478,13 +479,6 @@ static UIApplicationState _applicationState;
   id<FBSDKDataPersisting> store = NSUserDefaults.standardUserDefaults;
   [FBSDKGraphRequest setCurrentAccessTokenStringProvider:FBSDKAccessToken.class];
   [FBSDKGraphRequestConnection setCanMakeRequests];
-  [FBSDKAppEvents configureWithGateKeeperManager:[FBSDKGateKeeperManager class]
-                  appEventsConfigurationProvider:[FBSDKAppEventsConfigurationManager class]
-                     serverConfigurationProvider:[FBSDKServerConfigurationManager class]
-                            graphRequestProvider:graphRequestProvider
-                                  featureChecker:FBSDKFeatureManager.shared
-                                           store:store
-                                          logger:[FBSDKLogger class]];
   [FBSDKGateKeeperManager configureWithSettings:FBSDKSettings.class
                                 requestProvider:graphRequestProvider
                              connectionProvider:[FBSDKGraphRequestConnectionFactory new]
@@ -497,6 +491,15 @@ static UIApplicationState _applicationState;
      appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
              infoDictionaryProvider:NSBundle.mainBundle
                         eventLogger:[FBSDKEventLogger new]];
+  [FBSDKAppEvents configureWithGateKeeperManager:[FBSDKGateKeeperManager class]
+                  appEventsConfigurationProvider:[FBSDKAppEventsConfigurationManager class]
+                     serverConfigurationProvider:[FBSDKServerConfigurationManager class]
+                            graphRequestProvider:graphRequestProvider
+                                  featureChecker:FBSDKFeatureManager.shared
+                                           store:store
+                                          logger:[FBSDKLogger class]
+                                        settings:[FBSDKSettings sharedSettings]];
+
   [FBSDKInternalUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:FBSDKAccessToken.class];
   [FBSDKAppEventsConfigurationManager configureWithStore:store];

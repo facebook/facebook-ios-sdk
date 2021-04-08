@@ -33,6 +33,7 @@
 #import "FBSDKAppEventsStateManager.h"
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKApplicationDelegate+Internal.h"
+#import "FBSDKCodelessIndexer.h"
 #import "FBSDKConstants.h"
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDataPersisting.h"
@@ -40,16 +41,19 @@
 #import "FBSDKError.h"
 #import "FBSDKEventDeactivationManager.h"
 #import "FBSDKFeatureChecking.h"
+#import "FBSDKGateKeeperManaging.h"
 #import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKGraphRequestProviding.h"
 #import "FBSDKInternalUtility.h"
+#import "FBSDKLogger.h"
 #import "FBSDKLogging.h"
+#import "FBSDKMetadataIndexer.h"
 #import "FBSDKPaymentObserver.h"
 #import "FBSDKRestrictiveDataFilterManager.h"
+#import "FBSDKSKAdNetworkReporter.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationProviding.h"
-#import "FBSDKSettings.h"
-#import "FBSDKSettings+Internal.h"
+#import "FBSDKSettingsProtocol.h"
 #import "FBSDKTimeSpentData.h"
 #import "FBSDKUtility.h"
 
@@ -334,6 +338,7 @@ static Class<FBSDKServerConfigurationProviding> g_serverConfigurationProvider;
 static id<FBSDKGraphRequestProviding> g_graphRequestProvider;
 static id<FBSDKFeatureChecking> g_featureChecker;
 static Class<FBSDKLogging> g_logger;
+static id<FBSDKSettings> g_settings;
 
 @interface FBSDKAppEvents ()
 
@@ -887,6 +892,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
                         featureChecker:(id<FBSDKFeatureChecking>)featureChecker
                                  store:(id<FBSDKDataPersisting>)store
                                 logger:(Class<FBSDKLogging>)logger
+                              settings:(id<FBSDKSettings>)settings
 {
   [FBSDKAppEvents setAppEventsConfigurationProvider:appEventsConfigurationProvider];
   [FBSDKAppEvents setServerConfigurationProvider:serverConfigurationProvider];
@@ -898,6 +904,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   [FBSDKAppEvents setRequestProvider:provider];
   [FBSDKAppEvents setFeatureChecker:featureChecker];
   [FBSDKAppEvents setCanLogEvents];
+  g_settings = settings;
 }
 
 + (void)setFeatureChecker:(id<FBSDKFeatureChecking>)checker
@@ -999,7 +1006,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken
 {
-  if ([FBSDKSettings isAutoLogAppEventsEnabled]) {
+  if ([g_settings isAutoLogAppEventsEnabled]) {
     [[FBSDKAppEvents singleton] instanceLogEvent:eventName
                                       valueToSum:valueToSum
                                       parameters:parameters
@@ -1051,7 +1058,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 #pragma mark - Private Methods
 - (NSString *)appID
 {
-  return [FBSDKAppEvents loggingOverrideAppID] ?: [FBSDKSettings appID];
+  return [FBSDKAppEvents loggingOverrideAppID] ?: [g_settings appID];
 }
 
 - (void)publishInstall
@@ -1102,11 +1109,11 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 - (void)appendInstallTimestamp:(NSMutableDictionary *)parameters
 {
   if (@available(iOS 14.0, *)) {
-    if ([FBSDKSettings isSetATETimeExceedsInstallTime]) {
-      NSDate *setAteTimestamp = [FBSDKSettings getSetAdvertiserTrackingEnabledTimestamp];
+    if ([g_settings isSetATETimeExceedsInstallTime]) {
+      NSDate *setAteTimestamp = g_settings.advertiserTrackingEnabledTimestamp;
       [FBSDKTypeUtility dictionary:parameters setObject:@([FBSDKAppEventsUtility convertToUnixTime:setAteTimestamp]) forKey:@"install_timestamp"];
     } else {
-      NSDate *installTimestamp = [FBSDKSettings getInstallTimestamp];
+      NSDate *installTimestamp = g_settings.installTimestamp;
       [FBSDKTypeUtility dictionary:parameters setObject:@([FBSDKAppEventsUtility convertToUnixTime:installTimestamp]) forKey:@"install_timestamp"];
     }
   }
@@ -1160,7 +1167,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
     [g_serverConfigurationProvider loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
       self->_serverConfiguration = serverConfiguration;
 
-      if ([FBSDKSettings isAutoLogAppEventsEnabled] && self->_serverConfiguration.implicitPurchaseLoggingEnabled) {
+      if ([g_settings isAutoLogAppEventsEnabled] && self->_serverConfiguration.implicitPurchaseLoggingEnabled) {
         [FBSDKPaymentObserver startObservingTransactions];
       } else {
         [FBSDKPaymentObserver stopObservingTransactions];
@@ -1200,7 +1207,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
         }
       }];
       if (@available(iOS 11.3, *)) {
-        if (FBSDKSettings.SKAdNetworkReportEnabled) {
+        if ([g_settings isSKAdNetworkReportEnabled]) {
           [g_featureChecker checkFeature:FBSDKFeatureSKAdNetwork completionBlock:^(BOOL SKAdNetworkEnabled) {
             if (SKAdNetworkEnabled) {
               [SKAdNetwork registerAppForAdNetworkAttribution];
@@ -1437,7 +1444,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
     }
 
     NSString *loggingEntry = nil;
-    if ([FBSDKSettings.loggingBehaviors containsObject:FBSDKLoggingBehaviorAppEvents]) {
+    if ([g_settings.loggingBehaviors containsObject:FBSDKLoggingBehaviorAppEvents]) {
       NSData *prettyJSONData = [FBSDKTypeUtility dataWithJSONObject:appEventsState.events
                                                             options:NSJSONWritingPrettyPrinted
                                                               error:NULL];
@@ -1570,8 +1577,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   // so use that data here to return nil as well.
   // 3) if we have a user session token, then no need to send attribution ID / advertiser ID back as the udid parameter
   // 4) otherwise, send back the udid parameter.
-
-  if ([FBSDKSettings advertisingTrackingStatus] == FBSDKAdvertisingTrackingDisallowed || FBSDKSettings.shouldLimitEventAndDataUsage) {
+  if (g_settings.advertisingTrackingStatus == FBSDKAdvertisingTrackingDisallowed || g_settings.shouldLimitEventAndDataUsage) {
     return nil;
   }
 
@@ -1648,6 +1654,16 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 + (Class<FBSDKLogging>)logger
 {
   return g_logger;
+}
+
++ (id<FBSDKSettings>)settings
+{
+  return g_settings;
+}
+
++ (void)setSettings:(id<FBSDKSettings>)settings
+{
+  g_settings = settings;
 }
 
 #endif

@@ -359,6 +359,11 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (BOOL)isSKAdNetworkReportEnabled
 {
+  return self.sharedSettings.isSKAdNetworkReportEnabled;
+}
+
+- (BOOL)isSKAdNetworkReportEnabled
+{
   return [self _SKAdNetworkReportEnabled].boolValue;
 }
 
@@ -369,7 +374,12 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (BOOL)shouldLimitEventAndDataUsage
 {
-  NSNumber *storedValue = [self.store objectForKey:FBSDKSettingsLimitEventAndDataUsage];
+  return self.sharedSettings.shouldLimitEventAndDataUsage;
+}
+
+- (BOOL)shouldLimitEventAndDataUsage
+{
+  NSNumber *storedValue = [FBSDKSettings.store objectForKey:FBSDKSettingsLimitEventAndDataUsage];
   if (storedValue == nil) {
     return NO;
   }
@@ -378,7 +388,12 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (void)setLimitEventAndDataUsage:(BOOL)limitEventAndDataUsage
 {
-  [self.store setObject:@(limitEventAndDataUsage) forKey:FBSDKSettingsLimitEventAndDataUsage];
+  [self.sharedSettings setLimitEventAndDataUsage:limitEventAndDataUsage];
+}
+
+- (void)setLimitEventAndDataUsage:(BOOL)limitEventAndDataUsage
+{
+  [_store setObject:@(limitEventAndDataUsage) forKey:FBSDKSettingsLimitEventAndDataUsage];
 }
 
 + (BOOL)shouldUseCachedValuesForExpensiveMetadata
@@ -408,6 +423,11 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
     }
   }
   return [g_loggingBehaviors copy];
+}
+
+- (NSSet<FBSDKLoggingBehavior> *)loggingBehaviors
+{
+  return [self.class loggingBehaviors];
 }
 
 + (void)setDataProcessingOptions:(nullable NSArray<NSString *> *)options
@@ -637,8 +657,13 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (BOOL)isSetATETimeExceedsInstallTime
 {
-  NSDate *installTimestamp = [self.store objectForKey:FBSDKSettingsInstallTimestamp];
-  NSDate *setATETimestamp = [self.store objectForKey:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp];
+  return [self.sharedSettings isSetATETimeExceedsInstallTime];
+}
+
+- (BOOL)isSetATETimeExceedsInstallTime
+{
+  NSDate *installTimestamp = [self installTimestamp];
+  NSDate *setATETimestamp = [self advertiserTrackingEnabledTimestamp];
   if (installTimestamp && setATETimestamp) {
     return [setATETimestamp timeIntervalSinceDate:installTimestamp] > 86400;
   }
@@ -647,10 +672,20 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 + (NSDate *_Nullable)getInstallTimestamp
 {
+  return self.sharedSettings.installTimestamp;
+}
+
+- (NSDate *_Nullable)installTimestamp
+{
   return [self.store objectForKey:FBSDKSettingsInstallTimestamp];
 }
 
 + (NSDate *_Nullable)getSetAdvertiserTrackingEnabledTimestamp
+{
+  return [self.sharedSettings advertiserTrackingEnabledTimestamp];
+}
+
+- (NSDate *_Nullable)advertiserTrackingEnabledTimestamp
 {
   return [self.store objectForKey:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp];
 }

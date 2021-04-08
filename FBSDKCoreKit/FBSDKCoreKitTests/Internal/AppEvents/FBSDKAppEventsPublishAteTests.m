@@ -9,7 +9,10 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
+@import TestTools;
+
 #import "FBSDKAppEventsAtePublisher.h"
+#import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKTestCase.h"
 #import "UserDefaultsSpy.h"
 
@@ -42,10 +45,11 @@
                                userID:(NSString *)userID
                          atePublisher:(id<FBSDKAtePublishing>)atePublisher;
 - (void)publishATE;
++ (void)setSettings:(id<FBSDKSettings>)settings;
 @end
 
 @interface FBSDKAppEventsPublishAteTests : FBSDKTestCase
-
+@property (nonatomic, strong) id<FBSDKSettings> settings;
 @end
 
 @implementation FBSDKAppEventsPublishAteTests
@@ -55,11 +59,13 @@
   [super setUp];
 
   [self stubAllocatingGraphRequestConnection];
+  _settings = [TestSettings new];
+  [FBSDKAppEvents setSettings:_settings];
 }
 
 - (void)testDefaultAppEventsAtePublisher
 {
-  [self stubAppID:self.name];
+  _settings.appID = self.name;
 
   FBSDKAppEvents *appEvents = (FBSDKAppEvents *)[(NSObject *)[FBSDKAppEvents alloc] init];
 

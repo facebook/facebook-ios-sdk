@@ -90,6 +90,7 @@
 + (Class<FBSDKFeatureChecking>)featureChecker;
 + (id<FBSDKDataPersisting>)store;
 + (id<FBSDKLogging>)logger;
++ (id<FBSDKSettings>)settings;
 @end
 
 @implementation FBSDKApplicationDelegateTests
@@ -266,6 +267,11 @@
     FBSDKAppEvents.logger,
     FBSDKLogger.class,
     "Initializing the SDK should set concrete logger for event logging"
+  );
+  XCTAssertEqualObjects(
+    FBSDKAppEvents.settings,
+    FBSDKSettings.sharedSettings,
+    "Initializing the SDK should set concrete settings for event logging"
   );
 }
 
