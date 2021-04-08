@@ -332,7 +332,7 @@ static Class<FBSDKGateKeeperManaging> g_gateKeeperManager;
 static Class<FBSDKAppEventsConfigurationProviding> g_appEventsConfigurationProvider;
 static Class<FBSDKServerConfigurationProviding> g_serverConfigurationProvider;
 static id<FBSDKGraphRequestProviding> g_graphRequestProvider;
-static Class<FBSDKFeatureChecking> g_featureChecker;
+static id<FBSDKFeatureChecking> g_featureChecker;
 static Class<FBSDKLogging> g_logger;
 
 @interface FBSDKAppEvents ()
@@ -884,7 +884,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
         appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
            serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                   graphRequestProvider:(id<FBSDKGraphRequestProviding>)provider
-                        featureChecker:(Class<FBSDKFeatureChecking>)featureChecker
+                        featureChecker:(id<FBSDKFeatureChecking>)featureChecker
                                  store:(id<FBSDKDataPersisting>)store
                                 logger:(Class<FBSDKLogging>)logger
 {
@@ -900,7 +900,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   [FBSDKAppEvents setCanLogEvents];
 }
 
-+ (void)setFeatureChecker:(Class<FBSDKFeatureChecking>)checker
++ (void)setFeatureChecker:(id<FBSDKFeatureChecking>)checker
 {
   if (g_featureChecker != checker) {
     g_featureChecker = checker;
@@ -1620,7 +1620,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   _applicationState = UIApplicationStateInactive;
 }
 
-+ (Class<FBSDKFeatureChecking>)featureChecker
++ (id<FBSDKFeatureChecking>)featureChecker
 {
   return g_featureChecker;
 }

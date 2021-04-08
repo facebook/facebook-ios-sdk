@@ -38,6 +38,14 @@ class ApplicationDelegateTests: XCTestCase {
     )
   }
 
+  override func tearDown() {
+    super.tearDown()
+
+    TestAccessTokenWallet.reset()
+    TestSettings.reset()
+    TestGateKeeperManager.reset()
+  }
+
   func testDefaultNotificationCenter() {
     XCTAssertEqual(
       ApplicationDelegate.shared.notificationObserver as? NotificationCenter,
@@ -81,7 +89,7 @@ class ApplicationDelegateTests: XCTestCase {
           object: nil
         )
       ),
-      "Should start observing application backgrounding upon initializtion"
+      "Should start observing application backgrounding upon initialization"
     )
     XCTAssertTrue(
       center.capturedAddObserverInvocations.contains(
@@ -92,7 +100,7 @@ class ApplicationDelegateTests: XCTestCase {
           object: nil
         )
       ),
-      "Should start observing application foregrounding upon initializtion"
+      "Should start observing application foregrounding upon initialization"
     )
     XCTAssertTrue(
       center.capturedAddObserverInvocations.contains(

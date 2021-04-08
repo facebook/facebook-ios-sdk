@@ -26,13 +26,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKInstrumentManager (Testing)
 
-@property (nonatomic, strong) Class<FBSDKFeatureChecking> featureChecker;
+@property (nonatomic, strong) id<FBSDKFeatureChecking> featureChecker;
 @property (nonatomic, strong) id<FBSDKSettings> settings;
 @property (nonatomic, strong) id<FBSDKCrashObserving> crashObserver;
 @property (nonatomic, strong) id<FBSDKErrorReporting> errorReport;
 @property (nonatomic, strong) id<FBSDKCrashHandler> crashHandler;
 
-- (instancetype)initWithFeatureCheckerProvider:(Class<FBSDKFeatureChecking>)featureChecker
+- (instancetype)initWithFeatureCheckerProvider:(id<FBSDKFeatureChecking>)featureChecker
                                       settings:(id<FBSDKSettings>)settings
                                  crashObserver:(id<FBSDKCrashObserving>)crashObserver
                                    errorReport:(id<FBSDKErrorReporting>)errorReport

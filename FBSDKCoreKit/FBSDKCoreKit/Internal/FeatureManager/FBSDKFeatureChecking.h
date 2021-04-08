@@ -21,7 +21,7 @@
 NS_SWIFT_NAME(FeatureChecking)
 @protocol FBSDKFeatureChecking
 
-+ (void)checkFeature:(FBSDKFeature)feature
+- (void)checkFeature:(FBSDKFeature)feature
      completionBlock:(FBSDKFeatureManagerBlock)completionBlock;
 
 @end

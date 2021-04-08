@@ -151,7 +151,7 @@ static UIApplicationState _applicationState;
     [self applicationDidBecomeActive:nil];
   }
 
-  [FBSDKFeatureManager checkFeature:FBSDKFeatureInstrument completionBlock:^(BOOL enabled) {
+  [FBSDKFeatureManager.shared checkFeature:FBSDKFeatureInstrument completionBlock:^(BOOL enabled) {
     if (enabled) {
       [FBSDKInstrumentManager.shared enable];
     }
@@ -482,7 +482,7 @@ static UIApplicationState _applicationState;
                   appEventsConfigurationProvider:[FBSDKAppEventsConfigurationManager class]
                      serverConfigurationProvider:[FBSDKServerConfigurationManager class]
                             graphRequestProvider:graphRequestProvider
-                                  featureChecker:[FBSDKFeatureManager class]
+                                  featureChecker:FBSDKFeatureManager.shared
                                            store:store
                                           logger:[FBSDKLogger class]];
   [FBSDKGateKeeperManager configureWithSettings:FBSDKSettings.class

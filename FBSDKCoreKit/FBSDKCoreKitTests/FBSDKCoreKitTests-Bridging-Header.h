@@ -48,6 +48,7 @@
 #import "FBSDKWebDialogView+Testing.h"
 #import "FBSDKWindowFinding.h"
 #import "ImageDownloader+Testing.h"
+#import "FeatureManager+Testing.h"
 #import "UserDefaultsSpy.h"
 // URLSession Abstraction
 #import "FBSDKURLSessionProxyProviding.h"

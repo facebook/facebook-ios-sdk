@@ -32,9 +32,15 @@
   self = [super init];
   if (self) {
     _capturedValues = [NSDictionary dictionary];
+    _stringForKeyCallback = ^(NSString *key) { return key; };
   }
 
   return self;
+}
+
+- (NSString *)stringForKey:(NSString *)defaultName
+{
+  return _stringForKeyCallback(defaultName);
 }
 
 - (id)objectForKey:(NSString *)defaultName

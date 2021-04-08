@@ -218,7 +218,7 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
         appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
            serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                   graphRequestProvider:(id<FBSDKGraphRequestProviding>)provider
-                        featureChecker:(Class<FBSDKFeatureChecking>)featureChecker
+                        featureChecker:(id<FBSDKFeatureChecking>)featureChecker
                                  store:(id<FBSDKDataPersisting>)store
                                 logger:(Class<FBSDKLogging>)logger;
 

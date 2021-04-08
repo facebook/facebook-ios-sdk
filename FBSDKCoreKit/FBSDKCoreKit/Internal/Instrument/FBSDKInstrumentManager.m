@@ -22,14 +22,14 @@
 #import "FBSDKCrashObserver.h"
 #import "FBSDKErrorReporting.h"
 #import "FBSDKFeatureChecking.h"
-#import "FBSDKFeatureManager.h"
+#import "FBSDKFeatureManager+FeatureChecking.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKSettings+SettingsProtocols.h"
 #import "FBSDKSettingsProtocol.h"
 
 @interface FBSDKInstrumentManager ()
 
-@property (nonatomic, strong) Class<FBSDKFeatureChecking> featureChecker;
+@property (nonatomic, strong) id<FBSDKFeatureChecking> featureChecker;
 @property (nonatomic, strong) id<FBSDKSettings> settings;
 @property (nonatomic, strong) id<FBSDKCrashObserving> crashObserver;
 @property (nonatomic, strong) id<FBSDKErrorReporting> errorReport;
@@ -41,14 +41,14 @@
 
 - (instancetype)init
 {
-  return [self initWithFeatureCheckerProvider:FBSDKFeatureManager.class
+  return [self initWithFeatureCheckerProvider:FBSDKFeatureManager.shared
                                      settings:FBSDKSettings.sharedSettings
                                 crashObserver:FBSDKCrashObserver.shared
                                   errorReport:FBSDKErrorReport.shared
                                  crashHandler:FBSDKCrashHandler.shared];
 }
 
-- (instancetype)initWithFeatureCheckerProvider:(Class<FBSDKFeatureChecking>)featureChecker
+- (instancetype)initWithFeatureCheckerProvider:(id<FBSDKFeatureChecking>)featureChecker
                                       settings:(id<FBSDKSettings>)settings
                                  crashObserver:(id<FBSDKCrashObserving>)crashObserver
                                    errorReport:(id<FBSDKErrorReporting>)errorReport

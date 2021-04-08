@@ -20,6 +20,7 @@
 
 #import "FBSDKCrashShield.h"
 #import "FBSDKFeatureChecking.h"
+#import "FBSDKFeatureManager+FeatureChecking.h"
 #import "FBSDKGraphRequestFactory.h"
 #import "FBSDKGraphRequestProviding.h"
 #import "FBSDKSettings+Internal.h"
@@ -29,7 +30,7 @@
 
 @interface FBSDKCrashObserver ()
 
-@property (nonatomic, strong) Class<FBSDKFeatureChecking> featureChecker;
+@property (nonatomic, strong) id<FBSDKFeatureChecking> featureChecker;
 @property (nonatomic, strong) id<FBSDKGraphRequestProviding> requestProvider;
 @property (nonatomic, strong) id<FBSDKSettings> settings;
 
@@ -41,12 +42,12 @@
 
 - (instancetype)init
 {
-  return [self initWithFeatureChecker:FBSDKFeatureManager.class
+  return [self initWithFeatureChecker:FBSDKFeatureManager.shared
                  graphRequestProvider:[FBSDKGraphRequestFactory new]
                              settings:FBSDKSettings.sharedSettings];
 }
 
-- (instancetype)initWithFeatureChecker:(Class<FBSDKFeatureChecking>)featureChecker
+- (instancetype)initWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
                   graphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
                               settings:(id<FBSDKSettings>)settings
 {

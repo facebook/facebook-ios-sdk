@@ -26,18 +26,13 @@ class InstrumentManagerTests: XCTestCase {
   let crashObserver = TestCrashObserver()
   let errorReporter = TestErrorReport()
   let crashHandler = TestCrashHandler()
-
-  override class func setUp() {
-    super.setUp()
-
-    TestFeatureManager.reset()
-  }
+  let featureManager = TestFeatureManager()
 
   override func setUp() {
     super.setUp()
 
     manager = InstrumentManager(
-      featureCheckerProvider: TestFeatureManager.self,
+      featureCheckerProvider: featureManager,
       settings: settings,
       crashObserver: crashObserver,
       errorReport: errorReporter,
@@ -45,17 +40,11 @@ class InstrumentManagerTests: XCTestCase {
     )
   }
 
-  override func tearDown() {
-    super.tearDown()
-
-    TestFeatureManager.reset()
-  }
-
   func testDefaultDependencies() {
     let manager = InstrumentManager.shared
 
     XCTAssertTrue(
-      manager.featureChecker is FeatureManager.Type,
+      manager.featureChecker is FeatureManager,
       "Should use the expected feature checker type by default"
     )
     XCTAssertEqual(
@@ -85,8 +74,8 @@ class InstrumentManagerTests: XCTestCase {
 
     manager.enable()
 
-    TestFeatureManager.completeCheck(forFeature: .crashReport, with: true)
-    TestFeatureManager.completeCheck(forFeature: .errorReport, with: true)
+    featureManager.completeCheck(forFeature: .crashReport, with: true)
+    featureManager.completeCheck(forFeature: .errorReport, with: true)
 
     XCTAssertTrue(crashHandler.wasAddObserverCalled)
     XCTAssertNotNil(crashHandler.observer)
@@ -98,8 +87,8 @@ class InstrumentManagerTests: XCTestCase {
 
     manager.enable()
 
-    TestFeatureManager.completeCheck(forFeature: .crashReport, with: false)
-    TestFeatureManager.completeCheck(forFeature: .errorReport, with: false)
+    featureManager.completeCheck(forFeature: .crashReport, with: false)
+    featureManager.completeCheck(forFeature: .errorReport, with: false)
 
     XCTAssertFalse(crashHandler.wasAddObserverCalled)
     XCTAssertNil(crashHandler.observer)
@@ -111,8 +100,8 @@ class InstrumentManagerTests: XCTestCase {
 
     manager.enable()
 
-    TestFeatureManager.completeCheck(forFeature: .crashReport, with: true)
-    TestFeatureManager.completeCheck(forFeature: .errorReport, with: true)
+    featureManager.completeCheck(forFeature: .crashReport, with: true)
+    featureManager.completeCheck(forFeature: .errorReport, with: true)
 
     XCTAssertFalse(crashHandler.wasAddObserverCalled)
     XCTAssertNil(crashHandler.observer)
@@ -124,8 +113,8 @@ class InstrumentManagerTests: XCTestCase {
 
     manager.enable()
 
-    TestFeatureManager.completeCheck(forFeature: .crashReport, with: false)
-    TestFeatureManager.completeCheck(forFeature: .errorReport, with: false)
+    featureManager.completeCheck(forFeature: .crashReport, with: false)
+    featureManager.completeCheck(forFeature: .errorReport, with: false)
 
     XCTAssertFalse(crashHandler.wasAddObserverCalled)
     XCTAssertNil(crashHandler.observer)

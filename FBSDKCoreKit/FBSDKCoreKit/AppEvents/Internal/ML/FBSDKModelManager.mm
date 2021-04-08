@@ -73,7 +73,7 @@ NS_ASSUME_NONNULL_BEGIN
       _directoryPath = dirPath;
       _modelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
       NSDate *timestamp = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_REQUEST_TIMESTAMP_KEY];
-      if ([_modelInfo count] == 0 || ![FBSDKFeatureManager isEnabled:FBSDKFeatureModelRequest] || ![self isValidTimestamp:timestamp]) {
+      if ([_modelInfo count] == 0 || ![FBSDKFeatureManager.shared isEnabled:FBSDKFeatureModelRequest] || ![self isValidTimestamp:timestamp]) {
         // fetch api
         FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
                                       initWithGraphPath:[NSString stringWithFormat:@"%@/model_asset", [FBSDKSettings appID]]];
@@ -257,14 +257,14 @@ NS_ASSUME_NONNULL_BEGIN
       return;
     }
 
-    if ([FBSDKFeatureManager isEnabled:FBSDKFeatureSuggestedEvents]) {
+    if ([FBSDKFeatureManager.shared isEnabled:FBSDKFeatureSuggestedEvents]) {
       [self getModelAndRules:MTMLTaskAppEventPredKey onSuccess:^() {
         [FBSDKFeatureExtractor loadRulesForKey:MTMLTaskAppEventPredKey];
         [FBSDKSuggestedEventsIndexer enable];
       }];
     }
 
-    if ([FBSDKFeatureManager isEnabled:FBSDKFeatureIntelligentIntegrity]) {
+    if ([FBSDKFeatureManager.shared isEnabled:FBSDKFeatureIntelligentIntegrity]) {
       [self getModelAndRules:MTMLTaskIntegrityDetectKey onSuccess:^() {
         [FBSDKIntegrityManager enable];
       }];

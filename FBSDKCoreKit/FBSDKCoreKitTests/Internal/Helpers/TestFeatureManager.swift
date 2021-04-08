@@ -21,24 +21,19 @@ import XCTest
 
 @objcMembers
 class TestFeatureManager: NSObject, FeatureChecking {
-  static var capturedFeatures = [SDKFeature]()
-  static var capturedCompletionBlocks: [SDKFeature: FBSDKFeatureManagerBlock] = [:]
+  var capturedFeatures = [SDKFeature]()
+  var capturedCompletionBlocks: [SDKFeature: FBSDKFeatureManagerBlock] = [:]
 
-  static func check(_ feature: SDKFeature, completionBlock: @escaping FBSDKFeatureManagerBlock) {
+  func check(_ feature: SDKFeature, completionBlock: @escaping FBSDKFeatureManagerBlock) {
     capturedFeatures.append(feature)
     capturedCompletionBlocks[feature] = completionBlock
   }
 
-  static func reset() {
-    capturedFeatures = []
-    capturedCompletionBlocks = [:]
-  }
-
-  static func capturedFeaturesContains(_ feature: SDKFeature) -> Bool {
+  func capturedFeaturesContains(_ feature: SDKFeature) -> Bool {
     return capturedFeatures.contains(feature)
   }
 
-  static func completeCheck(
+  func completeCheck(
     forFeature feature: SDKFeature,
     with isEnabled: Bool
   ) {

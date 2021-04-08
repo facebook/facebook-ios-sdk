@@ -25,13 +25,14 @@ class CrashObserversTest: XCTestCase {
   var requestProvider: TestGraphRequestFactory! // swiftlint:disable:this implicitly_unwrapped_optional
   var crashObserver: CrashObserver! // swiftlint:disable:this implicitly_unwrapped_optional
   var settings: TestSettings! // swiftlint:disable:this implicitly_unwrapped_optional
+  let featureManager = TestFeatureManager()
 
   override func setUp() {
     super.setUp()
     requestProvider = TestGraphRequestFactory()
     settings = TestSettings()
     crashObserver = CrashObserver(
-      featureChecker: TestFeatureManager.self,
+      featureChecker: featureManager,
       graphRequestProvider: requestProvider,
       settings: settings
     )
@@ -53,14 +54,14 @@ class CrashObserversTest: XCTestCase {
 
   func testDidReceiveCrashLogs() {
     crashObserver.didReceiveCrashLogs([])
-    XCTAssertEqual(TestFeatureManager.capturedFeatures, [])
+    XCTAssertEqual(featureManager.capturedFeatures, [])
 
     let processedCrashLogs = CrashObserversTest.getCrashLogs()
 
     crashObserver.didReceiveCrashLogs(processedCrashLogs)
 
     XCTAssertTrue(
-      TestFeatureManager.capturedFeatures.contains(SDKFeature.crashShield),
+      featureManager.capturedFeatures.contains(SDKFeature.crashShield),
       "Receiving crash logs should check to see if the crash shield feature is enabled"
     )
   }

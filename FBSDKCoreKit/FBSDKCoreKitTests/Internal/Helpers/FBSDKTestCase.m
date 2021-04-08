@@ -213,6 +213,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)setUpFeatureManagerMock
 {
   _featureManagerClassMock = [OCMockObject niceMockForClass:[FBSDKFeatureManager class]];
+  OCMStub(ClassMethod([_featureManagerClassMock shared])).andReturn(_featureManagerClassMock);
 }
 
 - (void)setUpServerConfigurationManagerMock

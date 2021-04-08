@@ -16,23 +16,20 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#import "FBSDKFeatureManager.h"
+
+@protocol FBSDKSessionProviding;
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// An internal protocol used to describe a session data task
-NS_SWIFT_NAME(DataPersisting)
-@protocol FBSDKDataPersisting
+@interface FBSDKFeatureManager (Testing)
 
-- (void)setInteger:(NSInteger)value
-            forKey:(NSString *)defaultName;
-- (void)setObject:(id)value
-           forKey:(NSString *)defaultName;
-- (nullable NSData *)dataForKey:(NSString *)defaultName;
-- (NSInteger)integerForKey:(NSString *)defaultName;
-- (nullable NSString *)stringForKey:(NSString *)defaultName;
-- (nullable id)objectForKey:(NSString *)defaultName;
-- (void)removeObjectForKey:(NSString *)defaultName;
+@property (nullable, nonatomic) Class<FBSDKGateKeeperManaging> gateKeeperManager;
+@property (nullable, nonatomic) id<FBSDKDataPersisting> store;
+
+- (instancetype)initWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
+                                    store:(id<FBSDKDataPersisting>)store
+NS_SWIFT_NAME(init(gateKeeperManager:store:));
 
 @end
 

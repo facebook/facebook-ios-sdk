@@ -100,6 +100,7 @@
 
   [TestAccessTokenWallet reset];
   [TestSettings reset];
+  [TestGateKeeperManager reset];
 
   _delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationObserver:[TestNotificationCenter new]
                                                                  tokenWallet:TestAccessTokenWallet.class
@@ -122,7 +123,6 @@
 
   [self stubLoadingAdNetworkReporterConfiguration];
   [self stubServerConfigurationFetchingWithConfiguration:FBSDKServerConfigurationFixtures.defaultConfig error:nil];
-  [self stubLoadingGateKeepers];
 }
 
 - (void)tearDown
@@ -259,7 +259,7 @@
   );
   XCTAssertEqualObjects(
     FBSDKAppEvents.featureChecker,
-    FBSDKFeatureManager.class,
+    FBSDKFeatureManager.shared,
     "Initializing the SDK should set feature checker for event logging"
   );
   XCTAssertEqualObjects(

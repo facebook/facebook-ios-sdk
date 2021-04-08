@@ -267,7 +267,7 @@ class GateKeeperManagerTests: XCTestCase {
 
     XCTAssertNil(
       GateKeeperManager.gateKeepers,
-      "Should not have gatekeeprs for the current app identifier by default"
+      "Should not have gatekeepers for the current app identifier by default"
     )
   }
 

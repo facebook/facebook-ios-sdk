@@ -147,7 +147,7 @@
   [FBSDKCrashShield analyze:self.coreKitCrashLogs];
 
   // Should disable a core feature found in a crashlog regardless of data processing permissions
-  OCMVerify(ClassMethod([self.featureManagerClassMock disableFeature:@"CodelessEvents"]));
+  OCMVerify([self.featureManagerClassMock disableFeature:@"CodelessEvents"]);
 }
 
 - (void)testDisablingNonCoreKitFeatureWithDataProcessingRestricted
@@ -156,7 +156,7 @@
   [self preventGraphRequest];
 
   // Should not disable a non core feature found in a crashlog regardless of data processing permissions
-  OCMReject(ClassMethod([self.featureManagerClassMock disableFeature:OCMArg.any]));
+  OCMReject([self.featureManagerClassMock disableFeature:OCMArg.any]);
 
   [FBSDKCrashShield analyze:self.nonCoreKitCrashLogs];
 }
@@ -169,7 +169,7 @@
   [FBSDKCrashShield analyze:self.coreKitCrashLogs];
 
   // Should disable a core feature found in a crashlog regardless of data processing permissions
-  OCMVerify(ClassMethod([self.featureManagerClassMock disableFeature:@"CodelessEvents"]));
+  OCMVerify([self.featureManagerClassMock disableFeature:@"CodelessEvents"]);
 }
 
 - (void)testDisablingNonCoreKitFeatureWithDataProcessingUnrestricted
@@ -178,7 +178,7 @@
   [self preventGraphRequest];
 
   // Should not disable a non core feature found in a crashlog regardless of data processing permissions
-  OCMReject(ClassMethod([self.featureManagerClassMock disableFeature:OCMArg.any]));
+  OCMReject([self.featureManagerClassMock disableFeature:OCMArg.any]);
 
   [FBSDKCrashShield analyze:self.nonCoreKitCrashLogs];
 }

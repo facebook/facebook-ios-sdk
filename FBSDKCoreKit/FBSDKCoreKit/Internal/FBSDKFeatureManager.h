@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol FBSDKGateKeeperManaging;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -80,10 +82,12 @@ typedef void (^FBSDKFeatureManagerBlock)(BOOL enabled);
 NS_SWIFT_NAME(FeatureManager)
 @interface FBSDKFeatureManager : NSObject
 
-+ (void)checkFeature:(FBSDKFeature)feature
+@property (class, nonatomic, strong, readonly) FBSDKFeatureManager *shared;
+
+- (BOOL)isEnabled:(FBSDKFeature)feature;
+- (void)checkFeature:(FBSDKFeature)feature
      completionBlock:(FBSDKFeatureManagerBlock)completionBlock;
-+ (BOOL)isEnabled:(FBSDKFeature)feature;
-+ (void)disableFeature:(NSString *)featureName;
+- (void)disableFeature:(NSString *)featureName;
 
 @end
 

@@ -123,6 +123,7 @@ static NSString *const _mockUserID = @"mockUserID";
   NSString *_mockCurrency;
   TestGraphRequestFactory *_graphRequestFactory;
   UserDefaultsSpy *_store;
+  TestFeatureManager *_featureManager;
 }
 @end
 
@@ -143,7 +144,6 @@ static NSString *const _mockUserID = @"mockUserID";
 
   [FBSDKSettings reset];
   [FBSDKInternalUtility reset];
-  [TestFeatureManager reset];
   [FBSDKAppEvents setAppEventsConfigurationProvider:TestAppEventsConfigurationProvider.class];
   [FBSDKAppEvents setServerConfigurationProvider:TestServerConfigurationProvider.class];
   [FBSDKAppEvents setFeatureChecker:TestFeatureManager.class];
@@ -158,6 +158,7 @@ static NSString *const _mockUserID = @"mockUserID";
   _mockCurrency = @"USD";
   _graphRequestFactory = [TestGraphRequestFactory new];
   _store = [UserDefaultsSpy new];
+  _featureManager = [TestFeatureManager new];
 
   [FBSDKAppEvents setLoggingOverrideAppID:_mockAppID];
 
@@ -170,7 +171,7 @@ static NSString *const _mockUserID = @"mockUserID";
                   appEventsConfigurationProvider:TestAppEventsConfigurationProvider.self
                      serverConfigurationProvider:TestServerConfigurationProvider.self
                             graphRequestProvider:_graphRequestFactory
-                                  featureChecker:TestFeatureManager.self
+                                  featureChecker:_featureManager
                                            store:_store
                                           logger:TestLogger.self];
 }
@@ -182,6 +183,7 @@ static NSString *const _mockUserID = @"mockUserID";
   [FBSDKAppEvents reset];
   [TestAppEventsConfigurationProvider reset];
   [TestServerConfigurationProvider reset];
+  [TestGateKeeperManager reset];
 }
 
 - (void)testInitializingCreatesAtePublisher
@@ -823,7 +825,7 @@ static NSString *const _mockUserID = @"mockUserID";
   TestAppEventsConfigurationProvider.capturedBlock();
   TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
   XCTAssertTrue(
-    [TestFeatureManager capturedFeaturesContains:FBSDKFeatureRestrictiveDataFiltering],
+    [_featureManager capturedFeaturesContains:FBSDKFeatureRestrictiveDataFiltering],
     "fetchConfiguration should check if the RestrictiveDataFiltering feature is enabled"
   );
   // TODO: Once FBSDKRestrictiveDataFilterManager is injected, similar for all other features
@@ -836,27 +838,27 @@ static NSString *const _mockUserID = @"mockUserID";
   // )
 
   XCTAssertTrue(
-    [TestFeatureManager capturedFeaturesContains:FBSDKFeatureEventDeactivation],
+    [_featureManager capturedFeaturesContains:FBSDKFeatureEventDeactivation],
     "fetchConfiguration should check if the EventDeactivation feature is enabled"
   );
   XCTAssertTrue(
-    [TestFeatureManager capturedFeaturesContains:FBSDKFeatureATELogging],
+    [_featureManager capturedFeaturesContains:FBSDKFeatureATELogging],
     "fetchConfiguration should check if the ATELogging feature is enabled"
   );
   XCTAssertTrue(
-    [TestFeatureManager capturedFeaturesContains:FBSDKFeatureCodelessEvents],
+    [_featureManager capturedFeaturesContains:FBSDKFeatureCodelessEvents],
     "fetchConfiguration should check if CodelessEvents feature is enabled"
   );
   XCTAssertTrue(
-    [TestFeatureManager capturedFeaturesContains:FBSDKFeatureAAM],
+    [_featureManager capturedFeaturesContains:FBSDKFeatureAAM],
     "fetchConfiguration should check if the AAM feature is enabled"
   );
   XCTAssertTrue(
-    [TestFeatureManager capturedFeaturesContains:FBSDKFeaturePrivacyProtection],
+    [_featureManager capturedFeaturesContains:FBSDKFeaturePrivacyProtection],
     "fetchConfiguration should check if the PrivacyProtection feature is enabled"
   );
   XCTAssertTrue(
-    [TestFeatureManager capturedFeaturesContains:FBSDKFeatureSKAdNetwork],
+    [_featureManager capturedFeaturesContains:FBSDKFeatureSKAdNetwork],
     "fetchConfiguration should check if the SKAdNetwork feature is enabled"
   );
 }

@@ -18,22 +18,67 @@
 
 #import "FBSDKFeatureManager.h"
 
+#import "FBSDKGateKeeperManager.h"
+#import "FBSDKGateKeeperManaging.h"
 #import "FBSDKSettings.h"
-#import "ServerConfiguration/FBSDKGateKeeperManager.h"
+#import "NSUserDefaults+FBSDKDataPersisting.h"
 
 static NSString *const FBSDKFeatureManagerPrefix = @"com.facebook.sdk:FBSDKFeatureManager.FBSDKFeature";
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface FBSDKFeatureManager ()
+
+@property (nullable, nonatomic) Class<FBSDKGateKeeperManaging> gateKeeperManager;
+@property (nullable, nonatomic) id<FBSDKDataPersisting> store;
+
+@end
+
 @implementation FBSDKFeatureManager
 
 #pragma mark - Public methods
 
+// Transitional singleton introduced as a way to change the usage semantics
+// from a type-based interface to an instance-based interface.
+// The goal is to move from:
+// ClassWithoutUnderlyingInstance -> ClassRelyingOnUnderlyingInstance -> Instance
++ (instancetype)shared
+{
+  static dispatch_once_t nonce;
+  static id instance;
+  dispatch_once(&nonce, ^{
+    instance = [[self alloc] init];
+  });
+  return instance;
+}
+
+- (instancetype)init
+{
+  return [self initWithGateKeeperManager:FBSDKGateKeeperManager.class
+                                   store:NSUserDefaults.standardUserDefaults];
+}
+
+- (instancetype)initWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
+                                    store:(id<FBSDKDataPersisting>)store
+{
+  if ((self = [super init])) {
+    _gateKeeperManager = gateKeeperManager;
+    _store = store;
+  }
+  return self;
+}
+
 + (void)checkFeature:(FBSDKFeature)feature
      completionBlock:(FBSDKFeatureManagerBlock)completionBlock
 {
+  [self.shared checkFeature:feature completionBlock:completionBlock];
+}
+
+- (void)checkFeature:(FBSDKFeature)feature
+     completionBlock:(FBSDKFeatureManagerBlock)completionBlock
+{
   // check if the feature is locally disabled by Crash Shield first
-  NSString *version = [[NSUserDefaults standardUserDefaults] valueForKey:[FBSDKFeatureManagerPrefix stringByAppendingString:[self featureName:feature]]];
+  NSString *version = [self.store stringForKey:[FBSDKFeatureManagerPrefix stringByAppendingString:[self.class featureName:feature]]];
   if (version && [version isEqualToString:[FBSDKSettings sdkVersion]]) {
     if (completionBlock) {
       completionBlock(false);
@@ -41,30 +86,30 @@ NS_ASSUME_NONNULL_BEGIN
     return;
   }
   // check gk
-  [FBSDKGateKeeperManager loadGateKeepers:^(NSError *_Nullable error) {
+  [self.gateKeeperManager loadGateKeepers:^(NSError *_Nullable error) {
     if (completionBlock) {
-      completionBlock([FBSDKFeatureManager isEnabled:feature]);
+      completionBlock([self isEnabled:feature]);
     }
   }];
 }
 
-+ (BOOL)isEnabled:(FBSDKFeature)feature
+- (BOOL)isEnabled:(FBSDKFeature)feature
 {
   if (FBSDKFeatureCore == feature) {
     return YES;
   }
 
-  FBSDKFeature parentFeature = [self getParentFeature:feature];
+  FBSDKFeature parentFeature = [self.class getParentFeature:feature];
   if (parentFeature == feature) {
     return [self checkGK:feature];
   } else {
-    return [FBSDKFeatureManager isEnabled:parentFeature] && [self checkGK:feature];
+    return [self isEnabled:parentFeature] && [self checkGK:feature];
   }
 }
 
-+ (void)disableFeature:(NSString *)featureName
+- (void)disableFeature:(NSString *)featureName
 {
-  [[NSUserDefaults standardUserDefaults] setObject:[FBSDKSettings sdkVersion] forKey:[FBSDKFeatureManagerPrefix stringByAppendingString:featureName]];
+  [self.store setObject:[FBSDKSettings sdkVersion] forKey:[FBSDKFeatureManagerPrefix stringByAppendingString:featureName]];
 }
 
 #pragma mark - Private methods
@@ -82,12 +127,12 @@ NS_ASSUME_NONNULL_BEGIN
   }
 }
 
-+ (BOOL)checkGK:(FBSDKFeature)feature
+- (BOOL)checkGK:(FBSDKFeature)feature
 {
-  NSString *key = [NSString stringWithFormat:@"FBSDKFeature%@", [self featureName:feature]];
-  BOOL defaultValue = [self defaultStatus:feature];
+  NSString *key = [NSString stringWithFormat:@"FBSDKFeature%@", [self.class featureName:feature]];
+  BOOL defaultValue = [self.class defaultStatus:feature];
 
-  return [FBSDKGateKeeperManager boolForKey:key
+  return [self.gateKeeperManager boolForKey:key
                                defaultValue:defaultValue];
 }
 
@@ -112,11 +157,8 @@ NS_ASSUME_NONNULL_BEGIN
     case FBSDKFeatureCrashShield: featureName = @"CrashShield"; break;
     case FBSDKFeatureErrorReport: featureName = @"ErrorReport"; break;
     case FBSDKFeatureATELogging: featureName = @"ATELogging"; break;
-
     case FBSDKFeatureLogin: featureName = @"LoginKit"; break;
-
     case FBSDKFeatureShare: featureName = @"ShareKit"; break;
-
     case FBSDKFeatureGamingServices: featureName = @"GamingServicesKit"; break;
   }
 

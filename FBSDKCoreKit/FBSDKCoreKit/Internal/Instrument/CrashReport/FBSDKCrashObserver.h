@@ -31,9 +31,9 @@ NS_SWIFT_NAME(CrashObserver)
 
 @property (class, nonatomic, readonly) FBSDKCrashObserver *shared;
 
-- (instancetype)initWithFeatureChecker:(Class<FBSDKFeatureChecking>)featureCheckrer
-                          graphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-                                      settings:(id<FBSDKSettings>)settings;
+- (instancetype)initWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
+                  graphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+                              settings:(id<FBSDKSettings>)settings;
 
 @end
 

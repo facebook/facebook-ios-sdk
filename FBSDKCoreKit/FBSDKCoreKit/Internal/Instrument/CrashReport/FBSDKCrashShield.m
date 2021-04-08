@@ -81,7 +81,7 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
     NSArray<NSString *> *callstack = crashLog[@"callstack"];
     NSString *featureName = [self _getFeature:callstack];
     if (featureName) {
-      [FBSDKFeatureManager disableFeature:featureName];
+      [FBSDKFeatureManager.shared disableFeature:featureName];
       [disabledFeatues addObject:featureName];
       continue;
     }
