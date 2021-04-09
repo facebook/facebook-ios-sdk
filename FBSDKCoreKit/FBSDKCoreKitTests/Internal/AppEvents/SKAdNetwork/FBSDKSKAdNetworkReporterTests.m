@@ -221,7 +221,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
     NSMutableDictionary<NSString *, id> *recordedValues = [FBSDKTypeUtility dictionary:data objectForKey:@"recorded_values" ofType:NSMutableDictionary.class];
     NSDictionary<NSString *, id> *expectedValues = @{
       @"fb_mobile_purchase" : @{
-        @"USD" : @(301)
+        @"USD" : @301
       }
     };
     XCTAssertTrue([expectedValues isEqualToDictionary:recordedValues]);

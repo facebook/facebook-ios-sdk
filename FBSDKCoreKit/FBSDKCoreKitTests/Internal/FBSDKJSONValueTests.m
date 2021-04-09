@@ -100,8 +100,8 @@
 
   NSArray *const a = @[@1, @2, @3];
   NSDictionary *const d = @{@"key" : @"value"};
-  XCTAssertEqualObjects(actual[0].rawObject, @(1));
-  XCTAssertEqualObjects([actual[0] numberOrNil], @(1));
+  XCTAssertEqualObjects(actual[0].rawObject, @1);
+  XCTAssertEqualObjects([actual[0] numberOrNil], @1);
   XCTAssertNil([actual[0] stringOrNil]);
 
   XCTAssertEqualObjects(actual[1].rawObject, @"hi");

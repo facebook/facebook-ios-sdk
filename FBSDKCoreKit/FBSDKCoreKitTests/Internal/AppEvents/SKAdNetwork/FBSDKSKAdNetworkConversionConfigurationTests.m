@@ -107,7 +107,7 @@
           @"values" : @[
             @{
               @"currency" : @"USD",
-              @"amount" : @(100)
+              @"amount" : @100
             }
           ]
         }
@@ -121,11 +121,11 @@
           @"values" : @[
             @{
               @"currency" : @"USD",
-              @"amount" : @(100)
+              @"amount" : @100
             },
             @{
               @"currency" : @"JPY",
-              @"amount" : @(100)
+              @"amount" : @100
             }
           ]
         }
@@ -143,7 +143,7 @@
                                                     @"values" : @[
                                                       @{
                                                         @"currency" : @"USD",
-                                                        @"amount" : @(100)
+                                                        @"amount" : @100
                                                       }
                                                     ]
                                                   }
@@ -157,11 +157,11 @@
                                                     @"values" : @[
                                                       @{
                                                         @"currency" : @"USD",
-                                                        @"amount" : @(100)
+                                                        @"amount" : @100
                                                       },
                                                       @{
                                                         @"currency" : @"JPY",
-                                                        @"amount" : @(100)
+                                                        @"amount" : @100
                                                       }
                                                     ]
                                                   }
@@ -206,7 +206,7 @@
           @"event_name" : @"fb_mobile_purchase",
           @"values" : @[
             @{
-              @"amount" : @(100)
+              @"amount" : @100
             },
           ]
         }
@@ -220,7 +220,7 @@
           @"values" : @[
             @{
               @"currency" : @"USD",
-              @"amount" : @(100)
+              @"amount" : @100
             },
           ]
         }
@@ -255,7 +255,7 @@
                           @"values" : @[
                             @{
                               @"currency" : @"USD",
-                              @"amount" : @(100)
+                              @"amount" : @100
                             }
                           ]
                         },
@@ -264,7 +264,7 @@
                           @"values" : @[
                             @{
                               @"currency" : @"EU",
-                              @"amount" : @(100)
+                              @"amount" : @100
                             }
                           ]
                         },
@@ -278,11 +278,11 @@
                           @"values" : @[
                             @{
                               @"currency" : @"USD",
-                              @"amount" : @(100)
+                              @"amount" : @100
                             },
                             @{
                               @"currency" : @"JPY",
-                              @"amount" : @(100)
+                              @"amount" : @100
                             }
                           ]
                         },
@@ -325,7 +325,7 @@
                           @"values" : @[
                             @{
                               @"currency" : @"USD",
-                              @"amount" : @(100)
+                              @"amount" : @100
                             }
                           ]
                         },
@@ -334,7 +334,7 @@
                           @"values" : @[
                             @{
                               @"currency" : @"eu",
-                              @"amount" : @(100)
+                              @"amount" : @100
                             }
                           ]
                         },
@@ -348,11 +348,11 @@
                           @"values" : @[
                             @{
                               @"currency" : @"usd",
-                              @"amount" : @(100)
+                              @"amount" : @100
                             },
                             @{
                               @"currency" : @"jpy",
-                              @"amount" : @(100)
+                              @"amount" : @100
                             }
                           ]
                         },
