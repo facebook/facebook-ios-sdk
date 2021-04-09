@@ -78,7 +78,7 @@
 {
   NSMutableDictionary<NSString *, id> *updatedParameters = [NSMutableDictionary dictionaryWithDictionary:existingParameters];
 
-  NSMutableDictionary<NSString *, id> *videoParameters = [[NSMutableDictionary alloc] init];
+  NSMutableDictionary<NSString *, id> *videoParameters = [NSMutableDictionary new];
   if (_video.videoAsset) {
     if (bridgeOptions & FBSDKShareBridgeOptionsVideoAsset) {
       // bridge the PHAsset.localIdentifier
@@ -217,7 +217,7 @@
 
 - (id)copyWithZone:(NSZone *)zone
 {
-  FBSDKShareVideoContent *copy = [[FBSDKShareVideoContent alloc] init];
+  FBSDKShareVideoContent *copy = [FBSDKShareVideoContent new];
   copy->_contentURL = [_contentURL copy];
   copy->_hashtag = [_hashtag copy];
   copy->_peopleIDs = [_peopleIDs copy];

@@ -114,7 +114,7 @@ NSString *NSStringFromFBSDKAppGroupPrivacy(FBSDKAppGroupPrivacy privacy)
 
 - (id)copyWithZone:(NSZone *)zone
 {
-  FBSDKAppGroupContent *copy = [[FBSDKAppGroupContent alloc] init];
+  FBSDKAppGroupContent *copy = [FBSDKAppGroupContent new];
   copy->_groupDescription = [_groupDescription copy];
   copy->_name = [_name copy];
   copy->_privacy = _privacy;

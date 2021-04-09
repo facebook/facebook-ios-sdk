@@ -242,7 +242,7 @@
 
 - (id)copyWithZone:(NSZone *)zone
 {
-  FBSDKGameRequestContent *copy = [[FBSDKGameRequestContent alloc] init];
+  FBSDKGameRequestContent *copy = [FBSDKGameRequestContent new];
   copy->_actionType = _actionType;
   copy->_data = [_data copy];
   copy->_filters = _filters;

@@ -172,7 +172,7 @@
     [alertController addAction:[UIAlertAction actionWithTitle:cancelTitle style:UIAlertActionStyleCancel handler:NULL]];
     [parentViewController presentViewController:alertController animated:YES completion:NULL];
   } else {
-    FBSDKDeviceLoginViewController *vc = [[FBSDKDeviceLoginViewController alloc] init];
+    FBSDKDeviceLoginViewController *vc = [FBSDKDeviceLoginViewController new];
     vc.delegate = self;
     vc.permissions = self.permissions;
     vc.redirectURL = self.redirectURL;

@@ -234,7 +234,7 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
 
 - (id)copyWithZone:(NSZone *)zone
 {
-  FBSDKShareCameraEffectContent *copy = [[FBSDKShareCameraEffectContent alloc] init];
+  FBSDKShareCameraEffectContent *copy = [FBSDKShareCameraEffectContent new];
   copy->_effectID = [_effectID copy];
   copy->_effectArguments = [_effectArguments copy];
   copy->_effectTextures = [_effectTextures copy];

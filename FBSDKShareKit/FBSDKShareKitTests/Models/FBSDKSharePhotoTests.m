@@ -90,7 +90,7 @@
 
 - (void)testWithInvalidPhotos
 {
-  FBSDKSharePhotoContent *content = [[FBSDKSharePhotoContent alloc] init];
+  FBSDKSharePhotoContent *content = [FBSDKSharePhotoContent new];
   NSArray *photos = @[
     [FBSDKShareModelTestUtility photoWithImageURL],
     [FBSDKShareModelTestUtility photoWithImage],

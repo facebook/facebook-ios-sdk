@@ -253,7 +253,7 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
 
 - (NSMutableDictionary *)_parametersForNewEvent
 {
-  NSMutableDictionary *eventParameters = [[NSMutableDictionary alloc] init];
+  NSMutableDictionary *eventParameters = [NSMutableDictionary new];
 
   // NOTE: We ALWAYS add all params to each event, to ensure predictable mapping on the backend.
   [FBSDKTypeUtility dictionary:eventParameters setObject:_identifier ?: FBSDKLoginManagerLoggerValueEmpty forKey:FBSDKLoginManagerLoggerParamIdentifierKey];

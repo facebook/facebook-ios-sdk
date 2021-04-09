@@ -51,7 +51,7 @@ static NSString *const _applicationName = @"someApplication";
 - (void)testAppEventsParametersForDeactivate
 {
   [FBSDKTimeSpentData setSourceApplication:_applicationName isFromAppLink:YES];
-  FBSDKTimeSpentData *timeSpentData = [[FBSDKTimeSpentData alloc] init];
+  FBSDKTimeSpentData *timeSpentData = [FBSDKTimeSpentData new];
   NSDictionary<NSString *, NSString *> *params = [timeSpentData appEventsParametersForDeactivate];
   XCTAssertNotNil(params[@"_session_id"]);
   XCTAssertNotNil(params[@"fb_mobile_app_interruptions"]);

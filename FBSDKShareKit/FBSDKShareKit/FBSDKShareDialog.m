@@ -89,7 +89,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
                              withContent:(id<FBSDKSharingContent>)content
                                 delegate:(nullable id<FBSDKSharingDelegate>)delegate
 {
-  FBSDKShareDialog *dialog = [[self alloc] init];
+  FBSDKShareDialog *dialog = [self new];
   dialog.fromViewController = viewController;
   dialog.shareContent = content;
   dialog.delegate = delegate;
@@ -347,7 +347,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   FBSDKShareDialogValidateAPISchemeRegisteredForCanOpenUrl();
   NSString *scheme = FBSDK_CANOPENURL_FBAPI;
   NSString *minimumVersion = FBSDK_SHARE_METHOD_ATTRIBUTED_SHARE_SHEET_MIN_VERSION;
-  NSURLComponents *components = [[NSURLComponents alloc] init];
+  NSURLComponents *components = [NSURLComponents new];
   components.scheme = [scheme stringByAppendingString:minimumVersion];
   components.path = @"/";
   return ([[UIApplication sharedApplication] canOpenURL:components.URL]
@@ -357,7 +357,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
 - (BOOL)_canUseFBShareSheet
 {
   FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanOpenUrl();
-  NSURLComponents *components = [[NSURLComponents alloc] init];
+  NSURLComponents *components = [NSURLComponents new];
   components.scheme = FBSDK_CANOPENURL_SHARE_EXTENSION;
   components.path = @"/";
   return [[UIApplication sharedApplication] canOpenURL:components.URL];
@@ -377,7 +377,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
 {
   FBSDKShareDialogValidateAPISchemeRegisteredForCanOpenUrl();
   NSString *scheme = FBSDK_CANOPENURL_FBAPI;
-  NSURLComponents *components = [[NSURLComponents alloc] init];
+  NSURLComponents *components = [NSURLComponents new];
   components.scheme = [scheme stringByAppendingString:minimumVersion];
   components.path = @"/";
   return [[UIApplication sharedApplication] canOpenURL:components.URL];
@@ -481,7 +481,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
       [self _invokeDelegateDidCancel];
     } else {
       // not all web dialogs report cancellation, so assume that the share has completed with no additional information
-      NSMutableDictionary *results = [[NSMutableDictionary alloc] init];
+      NSMutableDictionary *results = [NSMutableDictionary new];
       // the web response comes back with a different payload, so we need to translate it
       [FBSDKTypeUtility dictionary:results
                          setObject:webResponseParameters[FBSDK_SHARE_WEB_PARAM_POST_ID_KEY]
@@ -646,7 +646,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
     } else if (response.error) {
       [self _invokeDelegateDidFailWithError:response.error];
     } else {
-      NSMutableDictionary *results = [[NSMutableDictionary alloc] init];
+      NSMutableDictionary *results = [NSMutableDictionary new];
       [FBSDKTypeUtility dictionary:results
                          setObject:responseParameters[FBSDK_SHARE_RESULT_POST_ID_KEY]
                             forKey:FBSDK_SHARE_RESULT_POST_ID_KEY];

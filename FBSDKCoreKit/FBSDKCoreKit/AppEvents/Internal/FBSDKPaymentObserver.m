@@ -83,7 +83,7 @@ static dispatch_once_t singletonToken;
 {
   static FBSDKPaymentObserver *shared = nil;
   dispatch_once(&singletonToken, ^{
-    shared = [[FBSDKPaymentObserver alloc] init];
+    shared = [FBSDKPaymentObserver new];
   });
   return shared;
 }
@@ -170,7 +170,7 @@ static dispatch_once_t singletonToken;
 + (void)initialize
 {
   if ([self class] == [FBSDKPaymentProductRequestor class]) {
-    g_pendingRequestors = [[NSMutableArray alloc] init];
+    g_pendingRequestors = [NSMutableArray new];
   }
 }
 
@@ -179,7 +179,7 @@ static dispatch_once_t singletonToken;
   self = [super init];
   if (self) {
     _transaction = transaction;
-    _formatter = [[NSDateFormatter alloc] init];
+    _formatter = [NSDateFormatter new];
     _formatter.dateFormat = @"yyyy-MM-dd HH:mm:ssZ";
     NSString *data = [[NSUserDefaults standardUserDefaults] stringForKey:FBSDKPaymentObserverOriginalTransactionKey];
     _eventsWithReceipt = [NSSet setWithArray:@[FBSDKAppEventNamePurchased, FBSDKAppEventNameSubscribe,
@@ -187,7 +187,7 @@ static dispatch_once_t singletonToken;
     if (data) {
       _originalTransactionSet = [NSMutableSet setWithArray:[data componentsSeparatedByString:FBSDKPaymentObserverDelimiter]];
     } else {
-      _originalTransactionSet = [[NSMutableSet alloc] init];
+      _originalTransactionSet = [NSMutableSet new];
     }
   }
   return self;

@@ -219,7 +219,7 @@
 
 - (id)copyWithZone:(NSZone *)zone
 {
-  FBSDKShareMediaContent *copy = [[FBSDKShareMediaContent alloc] init];
+  FBSDKShareMediaContent *copy = [FBSDKShareMediaContent new];
   copy->_contentURL = [_contentURL copy];
   copy->_hashtag = [_hashtag copy];
   copy->_peopleIDs = [_peopleIDs copy];

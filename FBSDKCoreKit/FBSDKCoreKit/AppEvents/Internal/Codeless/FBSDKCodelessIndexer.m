@@ -106,7 +106,7 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
       }
     }
     if (!_codelessSetting) {
-      _codelessSetting = [[NSMutableDictionary alloc] init];
+      _codelessSetting = [NSMutableDictionary new];
     }
 
     if (![self _codelessSetupTimestampIsValid:[FBSDKTypeUtility dictionary:_codelessSetting objectForKey:CODELESS_SETTING_TIMESTAMP_KEY ofType:NSObject.class]]) {
@@ -114,7 +114,7 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
       if (request == nil) {
         return;
       }
-      FBSDKGraphRequestConnection *requestConnection = [[FBSDKGraphRequestConnection alloc] init];
+      FBSDKGraphRequestConnection *requestConnection = [FBSDKGraphRequestConnection new];
       requestConnection.timeout = kTimeout;
       [requestConnection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *codelessLoadingError) {
         if (codelessLoadingError) {

@@ -167,7 +167,7 @@ static BOOL _canMakeRequests = NO;
                        macCatalystDeterminator:(id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
 {
   if ((self = [super init])) {
-    _requests = [[NSMutableArray alloc] init];
+    _requests = [NSMutableArray new];
     _timeout = g_defaultTimeout;
     _state = kStateCreated;
     _logger = [[FBSDKLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorNetworkRequests];
@@ -348,7 +348,7 @@ static BOOL _canMakeRequests = NO;
        attachments:(NSMutableDictionary *)attachments
         batchToken:(NSString *)batchToken
 {
-  NSMutableDictionary *requestElement = [[NSMutableDictionary alloc] init];
+  NSMutableDictionary *requestElement = [NSMutableDictionary new];
 
   if (metadata.batchParameters) {
     [requestElement addEntriesFromDictionary:metadata.batchParameters];
@@ -421,7 +421,7 @@ static BOOL _canMakeRequests = NO;
         andNameAttachments:(NSMutableDictionary *)attachments
                     logger:(FBSDKLogger *)logger
 {
-  NSMutableArray *batch = [[NSMutableArray alloc] init];
+  NSMutableArray *batch = [NSMutableArray new];
   NSString *batchToken = nil;
   for (FBSDKGraphRequestMetadata *metadata in requests) {
     NSString *individualToken = [self accessTokenWithRequest:metadata.request];
@@ -484,7 +484,7 @@ static BOOL _canMakeRequests = NO;
 - (NSMutableURLRequest *)requestWithBatch:(NSArray *)requests
                                   timeout:(NSTimeInterval)timeout
 {
-  FBSDKGraphRequestBody *body = [[FBSDKGraphRequestBody alloc] init];
+  FBSDKGraphRequestBody *body = [FBSDKGraphRequestBody new];
   FBSDKLogger *bodyLogger = [[FBSDKLogger alloc] initWithLoggingBehavior:_logger.loggingBehavior];
   FBSDKLogger *attachmentLogger = [[FBSDKLogger alloc] initWithLoggingBehavior:_logger.loggingBehavior];
 
@@ -528,7 +528,7 @@ static BOOL _canMakeRequests = NO;
 
     [body appendWithKey:@"batch_app_id" formValue:batchAppID logger:bodyLogger];
 
-    NSMutableDictionary *attachments = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary *attachments = [NSMutableDictionary new];
 
     [self appendJSONRequests:requests
                       toBody:body
@@ -722,7 +722,7 @@ static BOOL _canMakeRequests = NO;
   // Graph API can return "true" or "false", which is not valid JSON.
   // Translate that before asking JSON parser to look at it.
   NSString *responseUTF8 = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-  NSMutableArray *results = [[NSMutableArray alloc] init];;
+  NSMutableArray *results = [NSMutableArray new];;
   id response = [self parseJSONOrOtherwise:responseUTF8 error:error];
 
   if (responseUTF8 == nil) {
@@ -853,7 +853,7 @@ static BOOL _canMakeRequests = NO;
     BOOL isRecoveryDisabled = [(id<FBSDKGraphRequestInternal>)metadata.request isGraphErrorRecoveryDisabled];
     if (resultError && !isRecoveryDisabled && isSingleRequestToRecover) {
       self->_recoveringRequestMetadata = metadata;
-      self->_errorRecoveryProcessor = [[FBSDKGraphErrorRecoveryProcessor alloc] init];
+      self->_errorRecoveryProcessor = [FBSDKGraphErrorRecoveryProcessor new];
       if ([self->_errorRecoveryProcessor processError:resultError request:metadata.request delegate:self]) {
         return;
       }
@@ -1004,7 +1004,7 @@ static BOOL _canMakeRequests = NO;
                  innerError:(NSError *)innerError
                     message:(NSString *)message
 {
-  NSMutableDictionary *const userInfo = [[NSMutableDictionary alloc] init];
+  NSMutableDictionary *const userInfo = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:userInfo setObject:@(statusCode) forKey:FBSDKGraphRequestErrorHTTPStatusCodeKey];
 
   if (response) {

@@ -40,7 +40,7 @@ using std::vector;
 
 - (void)setUp
 {
-  _mockWeightsInfoDict = [[NSMutableDictionary alloc] init];
+  _mockWeightsInfoDict = [NSMutableDictionary new];
 }
 
 - (void)tearDown

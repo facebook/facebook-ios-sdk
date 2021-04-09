@@ -53,18 +53,18 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName);
 
 - (void)setUp
 {
-  scrollview = [[UIScrollView alloc] init];
+  scrollview = [UIScrollView new];
 
-  label = [[UILabel alloc] init];
+  label = [UILabel new];
   label.text = NSLocalizedString(@"I am a label", nil);
   [scrollview addSubview:label];
 
-  textField = [[UITextField alloc] init];
+  textField = [UITextField new];
   textField.text = NSLocalizedString(@"I am a text field", nil);
   textField.placeholder = NSLocalizedString(@"text field placeholder", nil);
   [scrollview addSubview:textField];
 
-  textView = [[UITextView alloc] init];
+  textView = [UITextView new];
   textView.text = NSLocalizedString(@"I am a text view", nil);
   [scrollview addSubview:textView];
 
@@ -110,9 +110,9 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName);
   XCTAssertEqualObjects([FBSDKViewHierarchy getHint:label], @"");
 
   // test for getting hint for UINavigationController
-  UINavigationController *NC = [[UINavigationController alloc] init];
+  UINavigationController *NC = [UINavigationController new];
   XCTAssertEqualObjects([FBSDKViewHierarchy getHint:NC], @"");
-  UIViewController *VC = [[UIViewController alloc] init];
+  UIViewController *VC = [UIViewController new];
   [NC addChildViewController:VC];
   XCTAssertEqualObjects([FBSDKViewHierarchy getHint:NC], @"UIViewController");
 }

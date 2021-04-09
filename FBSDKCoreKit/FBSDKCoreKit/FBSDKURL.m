@@ -87,7 +87,7 @@ NSString *const AutoAppLinkFlagKey = @"is_auto_applink";
         // Raise Measurement Event
         NSString *const EVENT_YES_VAL = @"1";
         NSString *const EVENT_NO_VAL = @"0";
-        NSMutableDictionary<NSString *, id> *logData = [[NSMutableDictionary alloc] init];
+        NSMutableDictionary<NSString *, id> *logData = [NSMutableDictionary new];
         [FBSDKTypeUtility dictionary:logData setObject:version forKey:@"version"];
         if (refererURLString) {
           [FBSDKTypeUtility dictionary:logData setObject:refererURLString forKey:@"refererURL"];

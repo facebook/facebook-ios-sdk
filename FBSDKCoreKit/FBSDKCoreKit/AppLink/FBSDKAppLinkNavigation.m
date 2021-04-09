@@ -58,7 +58,7 @@ static id<FBSDKAppLinkResolving> defaultResolver;
                                extras:(NSDictionary<NSString *, id> *)extras
                           appLinkData:(NSDictionary<NSString *, id> *)appLinkData
 {
-  FBSDKAppLinkNavigation *navigation = [[self alloc] init];
+  FBSDKAppLinkNavigation *navigation = [self new];
   navigation.appLink = appLink;
   navigation.extras = extras;
   navigation.appLinkData = appLinkData;
@@ -189,7 +189,7 @@ static id<FBSDKAppLinkResolving> defaultResolver;
   NSString *const EVENT_YES_VAL = @"1";
   NSString *const EVENT_NO_VAL = @"0";
   NSMutableDictionary<NSString *, id> *logData =
-  [[NSMutableDictionary alloc] init];
+  [NSMutableDictionary new];
 
   NSString *outputURLScheme = outputURL.scheme;
   NSString *outputURLString = outputURL.absoluteString;

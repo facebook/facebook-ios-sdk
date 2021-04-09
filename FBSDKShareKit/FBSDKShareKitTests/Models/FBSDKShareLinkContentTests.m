@@ -65,7 +65,7 @@
 
 - (void)testWithInvalidPeopleIDs
 {
-  FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
+  FBSDKShareLinkContent *content = [FBSDKShareLinkContent new];
   NSArray *array = @[
     @"one",
     @2,

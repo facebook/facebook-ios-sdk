@@ -170,7 +170,7 @@
 
 - (id)copyWithZone:(NSZone *)zone
 {
-  FBSDKAppInviteContent *copy = [[FBSDKAppInviteContent alloc] init];
+  FBSDKAppInviteContent *copy = [FBSDKAppInviteContent new];
   copy->_appLinkURL = [_appLinkURL copy];
   copy->_appInvitePreviewImageURL = [_appInvitePreviewImageURL copy];
   copy->_promotionText = [_promotionText copy];

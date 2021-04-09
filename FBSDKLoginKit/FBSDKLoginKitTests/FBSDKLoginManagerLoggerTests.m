@@ -29,8 +29,6 @@
  #import "FBSDKLoginManagerLogger.h"
 #endif
 
-@protocol FBSDKSettings;
-
 @interface FBSDKAppEvents (Testing)
 
 + (FBSDKAppEvents *)singleton;
@@ -43,9 +41,6 @@
 
 + (void)setSettings:(id<FBSDKSettings>)settings;
 
-@end
-
-@interface FBSDKSettings (SettingProtocol) <FBSDKSettings>
 @end
 
 @interface FBSDKLoginManagerLoggerTests : XCTestCase

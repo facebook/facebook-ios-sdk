@@ -69,7 +69,7 @@ static NSString *const FBSDKLoginViewControllerTag = @"FBSDKLoginViewController"
 - (UIViewController *)viewControllerForElement:(TVViewElement *)element existingViewController:(UIViewController *)existingViewController
 {
   if ([element isKindOfClass:[FBSDKTVLoginViewControllerElement class]]) {
-    FBSDKDeviceLoginViewController *vc = [[FBSDKDeviceLoginViewController alloc] init];
+    FBSDKDeviceLoginViewController *vc = [FBSDKDeviceLoginViewController new];
     vc.delegate = (FBSDKTVLoginViewControllerElement *)element;
     vc.permissions = [self permissionsFromElement:element];
     vc.redirectURL = [NSURL URLWithString:element.attributes[@"redirectURL"]];

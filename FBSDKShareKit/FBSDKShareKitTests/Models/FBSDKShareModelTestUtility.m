@@ -46,7 +46,7 @@
 
 + (FBSDKShareLinkContent *)linkContentWithoutQuote
 {
-  FBSDKShareLinkContent *linkContent = [[FBSDKShareLinkContent alloc] init];
+  FBSDKShareLinkContent *linkContent = [FBSDKShareLinkContent new];
   linkContent.contentURL = [self contentURL];
   linkContent.hashtag = [self hashtag];
   linkContent.peopleIDs = [self peopleIDs];
@@ -77,7 +77,7 @@
 
 + (FBSDKSharePhotoContent *)photoContent
 {
-  FBSDKSharePhotoContent *content = [[FBSDKSharePhotoContent alloc] init];
+  FBSDKSharePhotoContent *content = [FBSDKSharePhotoContent new];
   content.contentURL = [self contentURL];
   content.hashtag = [self hashtag];
   content.peopleIDs = [self peopleIDs];
@@ -89,7 +89,7 @@
 
 + (FBSDKSharePhotoContent *)photoContentWithFileURLs
 {
-  FBSDKSharePhotoContent *const content = [[FBSDKSharePhotoContent alloc] init];
+  FBSDKSharePhotoContent *const content = [FBSDKSharePhotoContent new];
   content.contentURL = [self contentURL];
   content.hashtag = [self hashtag];
   content.peopleIDs = [self peopleIDs];
@@ -101,7 +101,7 @@
 
 + (FBSDKSharePhotoContent *)photoContentWithImages
 {
-  FBSDKSharePhotoContent *content = [[FBSDKSharePhotoContent alloc] init];
+  FBSDKSharePhotoContent *content = [FBSDKSharePhotoContent new];
   content.contentURL = [self contentURL];
   content.hashtag = [self hashtag];
   content.peopleIDs = [self peopleIDs];
@@ -213,7 +213,7 @@
 
 + (FBSDKShareVideoContent *)videoContentWithoutPreviewPhoto
 {
-  FBSDKShareVideoContent *content = [[FBSDKShareVideoContent alloc] init];
+  FBSDKShareVideoContent *content = [FBSDKShareVideoContent new];
   content.contentURL = [self contentURL];
   content.hashtag = [self hashtag];
   content.peopleIDs = [self peopleIDs];
@@ -225,7 +225,7 @@
 
 + (FBSDKShareVideoContent *)videoContentWithPreviewPhoto
 {
-  FBSDKShareVideoContent *content = [[FBSDKShareVideoContent alloc] init];
+  FBSDKShareVideoContent *content = [FBSDKShareVideoContent new];
   content.contentURL = [self contentURL];
   content.hashtag = [self hashtag];
   content.peopleIDs = [self peopleIDs];

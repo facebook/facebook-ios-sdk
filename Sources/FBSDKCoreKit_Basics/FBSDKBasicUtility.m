@@ -105,7 +105,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
   } else if ([object isKindOfClass:[NSURL class]]) {
     object = ((NSURL *)object).absoluteString;
   } else if ([object isKindOfClass:[NSDictionary class]]) {
-    NSMutableDictionary<NSString *, id> *dictionary = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary<NSString *, id> *dictionary = [NSMutableDictionary new];
     [FBSDKTypeUtility dictionary:(NSDictionary<id, id> *) object enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *dictionaryStop) {
       [FBSDKTypeUtility dictionary:dictionary
                          setObject:[self _convertObjectToJSONObject:obj invalidObjectHandler:invalidObjectHandler stop:&stop]
@@ -116,7 +116,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
     }];
     object = dictionary;
   } else if ([object isKindOfClass:[NSArray class]]) {
-    NSMutableArray<id> *array = [[NSMutableArray alloc] init];
+    NSMutableArray<id> *array = [NSMutableArray new];
     for (id obj in (NSArray *)object) {
       id convertedObj = [self _convertObjectToJSONObject:obj invalidObjectHandler:invalidObjectHandler stop:&stop];
       [FBSDKTypeUtility array:array addObject:convertedObj];
@@ -150,7 +150,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
                                            error:(NSError *__autoreleasing *)errorRef
                             invalidObjectHandler:(FBSDKInvalidObjectHandler)invalidObjectHandler
 {
-  NSMutableString *queryString = [[NSMutableString alloc] init];
+  NSMutableString *queryString = [NSMutableString new];
   __block BOOL hasParameters = NO;
   if (dictionary) {
     NSMutableArray<NSString *> *keys = [dictionary.allKeys mutableCopy];
@@ -214,7 +214,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
 
 + (NSDictionary<NSString *, NSString *> *)dictionaryWithQueryString:(NSString *)queryString
 {
-  NSMutableDictionary<NSString *, NSString *> *result = [[NSMutableDictionary alloc] init];
+  NSMutableDictionary<NSString *, NSString *> *result = [NSMutableDictionary new];
   NSArray<NSString *> *parts = [queryString componentsSeparatedByString:@"&"];
 
   for (NSString *part in parts) {

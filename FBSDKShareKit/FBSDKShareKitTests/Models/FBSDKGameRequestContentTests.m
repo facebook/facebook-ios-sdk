@@ -74,7 +74,7 @@
 
 - (void)testValidationWithNoProperties
 {
-  FBSDKGameRequestContent *content = [[FBSDKGameRequestContent alloc] init];
+  FBSDKGameRequestContent *content = [FBSDKGameRequestContent new];
   [self _testValidationWithContent:content errorArgumentName:@"message"];
 }
 
@@ -207,14 +207,14 @@
 
 + (FBSDKGameRequestContent *)_contentWithMinimalProperties
 {
-  FBSDKGameRequestContent *content = [[FBSDKGameRequestContent alloc] init];
+  FBSDKGameRequestContent *content = [FBSDKGameRequestContent new];
   content.message = [self _message];
   return content;
 }
 
 + (FBSDKGameRequestContent *)_contentWithAllProperties
 {
-  FBSDKGameRequestContent *content = [[FBSDKGameRequestContent alloc] init];
+  FBSDKGameRequestContent *content = [FBSDKGameRequestContent new];
   content.actionType = [self _actionType];
   content.data = [self _data];
   content.filters = [self _filters];
@@ -228,7 +228,7 @@
 
 + (FBSDKGameRequestContent *)_contentWithManyProperties
 {
-  FBSDKGameRequestContent *content = [[FBSDKGameRequestContent alloc] init];
+  FBSDKGameRequestContent *content = [FBSDKGameRequestContent new];
   content.data = [self _data];
   content.message = [self _message];
   content.title = [self _title];

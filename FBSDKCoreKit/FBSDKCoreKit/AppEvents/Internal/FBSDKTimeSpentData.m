@@ -118,7 +118,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
   static FBSDKTimeSpentData *shared = nil;
 
   dispatch_once(&pred, ^{
-    shared = [[FBSDKTimeSpentData alloc] init];
+    shared = [FBSDKTimeSpentData new];
   });
   return shared;
 }

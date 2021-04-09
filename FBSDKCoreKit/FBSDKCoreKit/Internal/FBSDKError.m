@@ -121,7 +121,7 @@ static BOOL _isErrorReportEnabled = NO;
   if (!message) {
     message = [[NSString alloc] initWithFormat:@"Invalid value for %@: %@", name, value];
   }
-  NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+  NSMutableDictionary *userInfo = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:userInfo setObject:name forKey:FBSDKErrorArgumentNameKey];
   [FBSDKTypeUtility dictionary:userInfo setObject:value forKey:FBSDKErrorArgumentValueKey];
   return [self errorWithDomain:domain
@@ -149,7 +149,7 @@ static BOOL _isErrorReportEnabled = NO;
     message =
     [[NSString alloc] initWithFormat:@"Invalid item (%@) found in collection for %@: %@", item, name, collection];
   }
-  NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+  NSMutableDictionary *userInfo = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:userInfo setObject:name forKey:FBSDKErrorArgumentNameKey];
   [FBSDKTypeUtility dictionary:userInfo setObject:item forKey:FBSDKErrorArgumentValueKey];
   [FBSDKTypeUtility dictionary:userInfo setObject:collection forKey:FBSDKErrorArgumentCollectionKey];

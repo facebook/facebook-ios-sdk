@@ -45,7 +45,7 @@
 {
   if ((self = [super init])) {
     _accessTokenString = [accessTokenString copy];
-    _items = [[NSMutableDictionary alloc] init];
+    _items = [NSMutableDictionary new];
   }
   return self;
 }
@@ -99,7 +99,7 @@
 
 - (void)_prune
 {
-  NSMutableArray *keysToRemove = [[NSMutableArray alloc] init];
+  NSMutableArray *keysToRemove = [NSMutableArray new];
   [FBSDKTypeUtility dictionary:_items enumerateKeysAndObjectsUsingBlock:^(NSString *objectID,
                                                                           FBSDKLikeActionController *likeActionController,
                                                                           BOOL *stop) {

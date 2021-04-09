@@ -67,7 +67,7 @@
 
 - (void)testValidationWithNilAppLinkURL
 {
-  FBSDKAppInviteContent *content = [[FBSDKAppInviteContent alloc] init];
+  FBSDKAppInviteContent *content = [FBSDKAppInviteContent new];
   content.appInvitePreviewImageURL = [[self class] _appInvitePreviewImageURL];
   NSError *error;
   XCTAssertNotNil(content);
@@ -80,7 +80,7 @@
 
 - (void)testValidationWithNilPreviewImageURL
 {
-  FBSDKAppInviteContent *content = [[FBSDKAppInviteContent alloc] init];
+  FBSDKAppInviteContent *content = [FBSDKAppInviteContent new];
   content.appLinkURL = [[self class] _appLinkURL];
   NSError *error;
   XCTAssertNotNil(content);
@@ -91,7 +91,7 @@
 
 - (void)testValidationWithNilPromotionTextNilPromotionCode
 {
-  FBSDKAppInviteContent *content = [[FBSDKAppInviteContent alloc] init];
+  FBSDKAppInviteContent *content = [FBSDKAppInviteContent new];
   content.appLinkURL = [[self class] _appLinkURL];
   NSError *error;
   XCTAssertNotNil(content);
@@ -102,7 +102,7 @@
 
 - (void)testValidationWithValidPromotionCodeNilPromotionText
 {
-  FBSDKAppInviteContent *content = [[FBSDKAppInviteContent alloc] init];
+  FBSDKAppInviteContent *content = [FBSDKAppInviteContent new];
   content.appLinkURL = [[self class] _appLinkURL];
   content.promotionCode = @"XSKSK";
   NSError *error;
@@ -116,7 +116,7 @@
 
 - (void)testValidationWithValidPromotionTextNilPromotionCode
 {
-  FBSDKAppInviteContent *content = [[FBSDKAppInviteContent alloc] init];
+  FBSDKAppInviteContent *content = [FBSDKAppInviteContent new];
   content.appLinkURL = [[self class] _appLinkURL];
   content.promotionText = @"Some Promo Text";
   NSError *error;
@@ -128,7 +128,7 @@
 
 - (void)testValidationWithInvalidPromotionText
 {
-  FBSDKAppInviteContent *content = [[FBSDKAppInviteContent alloc] init];
+  FBSDKAppInviteContent *content = [FBSDKAppInviteContent new];
   content.appLinkURL = [[self class] _appLinkURL];
   content.promotionText = @"_Invalid_promotionText";
   NSError *error;
@@ -142,7 +142,7 @@
 
 - (void)testValidationWithInvalidPromotionCode
 {
-  FBSDKAppInviteContent *content = [[FBSDKAppInviteContent alloc] init];
+  FBSDKAppInviteContent *content = [FBSDKAppInviteContent new];
   content.appLinkURL = [[self class] _appLinkURL];
   content.promotionText = @"Some promo text";
   content.promotionCode = @"_invalid promo_code";
@@ -159,7 +159,7 @@
 
 + (FBSDKAppInviteContent *)_content
 {
-  FBSDKAppInviteContent *content = [[FBSDKAppInviteContent alloc] init];
+  FBSDKAppInviteContent *content = [FBSDKAppInviteContent new];
   content.appLinkURL = [self _appLinkURL];
   content.appInvitePreviewImageURL = [self _appInvitePreviewImageURL];
   return content;

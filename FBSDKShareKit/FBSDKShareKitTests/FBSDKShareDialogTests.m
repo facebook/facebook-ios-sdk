@@ -77,7 +77,7 @@
 
 - (void)testCanShowNativeDialogWithoutShareContent
 {
-  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [FBSDKShareDialog new];
   dialog.mode = FBSDKShareDialogModeNative;
   [self _mockApplicationForURL:OCMOCK_ANY canOpen:YES usingBlock:^{
     [self _mockUseNativeDialogUsingBlock:^{
@@ -91,7 +91,7 @@
 
 - (void)testCanShowNativeLinkContent
 {
-  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [FBSDKShareDialog new];
   dialog.mode = FBSDKShareDialogModeNative;
   [self _mockUseNativeDialogUsingBlock:^{
     dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
@@ -104,7 +104,7 @@
 
 - (void)testCanShowNativePhotoContent
 {
-  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [FBSDKShareDialog new];
   dialog.mode = FBSDKShareDialogModeNative;
   [self _mockUseNativeDialogUsingBlock:^{
     dialog.shareContent = [FBSDKShareModelTestUtility photoContent];
@@ -117,7 +117,7 @@
 
 - (void)testCanShowNativePhotoContentWithFileURL
 {
-  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [FBSDKShareDialog new];
   dialog.mode = FBSDKShareDialogModeNative;
   [self _mockUseNativeDialogUsingBlock:^{
     dialog.shareContent = [FBSDKShareModelTestUtility photoContentWithFileURLs];
@@ -130,7 +130,7 @@
 
 - (void)testCanShowNativeVideoContentWithoutPreviewPhoto
 {
-  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [FBSDKShareDialog new];
   dialog.mode = FBSDKShareDialogModeNative;
   [self _mockApplicationForURL:OCMOCK_ANY canOpen:YES usingBlock:^{
     [self _mockUseNativeDialogUsingBlock:^{
@@ -145,7 +145,7 @@
 
 - (void)testCanShowNative
 {
-  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [FBSDKShareDialog new];
   dialog.mode = FBSDKShareDialogModeNative;
   [self _mockApplicationForURL:OCMOCK_ANY canOpen:NO usingBlock:^{
     [self _mockUseNativeDialogUsingBlock:^{
@@ -159,7 +159,7 @@
 
 - (void)testShowNativeDoesValidate
 {
-  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [FBSDKShareDialog new];
   dialog.mode = FBSDKShareDialogModeNative;
   dialog.shareContent = [FBSDKShareModelTestUtility photoContent];
   [self _mockApplicationForURL:OCMOCK_ANY canOpen:YES usingBlock:^{
@@ -171,7 +171,7 @@
 
 - (void)testValidateShareSheet
 {
-  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [FBSDKShareDialog new];
   dialog.mode = FBSDKShareDialogModeShareSheet;
   NSError *error;
   dialog.shareContent = [FBSDKShareModelTestUtility linkContentWithoutQuote];
@@ -192,7 +192,7 @@
 
 - (void)testCanShowBrowser
 {
-  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [FBSDKShareDialog new];
   dialog.mode = FBSDKShareDialogModeBrowser;
   XCTAssertTrue(
     [dialog canShow],
@@ -220,7 +220,7 @@
 
 - (void)testValidateBrowser
 {
-  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [FBSDKShareDialog new];
   dialog.mode = FBSDKShareDialogModeBrowser;
   __block NSError *error;
   dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
@@ -244,7 +244,7 @@
 
 - (void)testCanShowWeb
 {
-  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [FBSDKShareDialog new];
   dialog.mode = FBSDKShareDialogModeWeb;
   XCTAssertTrue(
     [dialog canShow],
@@ -271,7 +271,7 @@
 
 - (void)testValidateWeb
 {
-  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [FBSDKShareDialog new];
   dialog.mode = FBSDKShareDialogModeWeb;
   __block NSError *error;
   dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
@@ -335,7 +335,7 @@
 
 - (void)testCanShowFeedBrowser
 {
-  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [FBSDKShareDialog new];
   dialog.mode = FBSDKShareDialogModeFeedBrowser;
   XCTAssertTrue(
     [dialog canShow],
@@ -360,7 +360,7 @@
 
 - (void)testValidateFeedBrowser
 {
-  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [FBSDKShareDialog new];
   dialog.mode = FBSDKShareDialogModeFeedBrowser;
   NSError *error;
   dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
@@ -378,7 +378,7 @@
 
 - (void)testCanShowFeedWeb
 {
-  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [FBSDKShareDialog new];
   dialog.mode = FBSDKShareDialogModeFeedWeb;
   XCTAssertTrue(
     [dialog canShow],
@@ -403,7 +403,7 @@
 
 - (void)testValidateFeedWeb
 {
-  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [FBSDKShareDialog new];
   dialog.mode = FBSDKShareDialogModeFeedWeb;
   NSError *error;
   dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
@@ -419,7 +419,7 @@
 
 - (void)testThatInitialTextIsSetCorrectlyWhenShareExtensionIsAvailable
 {
-  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [FBSDKShareDialog new];
   FBSDKShareLinkContent *content = [FBSDKShareModelTestUtility linkContent];
   content.hashtag = [FBSDKHashtag hashtagWithString:@"#hashtag"];
   content.quote = @"a quote";
@@ -436,7 +436,7 @@
 
 - (void)testCameraShareModes
 {
-  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [FBSDKShareDialog new];
   dialog.shareContent = [FBSDKShareModelTestUtility cameraEffectContent];
 
   // When native is available.
@@ -489,7 +489,7 @@
 
 - (void)testShowCameraShareToPlayerWhenPlayerInstalled
 {
-  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [FBSDKShareDialog new];
   dialog.shareContent = [FBSDKShareModelTestUtility cameraEffectContent];
   [self _showNativeDialog:dialog
        nonSupportedScheme:nil
@@ -499,7 +499,7 @@
 
 - (void)testShowCameraShareToFBWhenPlayerNotInstalled
 {
-  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [FBSDKShareDialog new];
   dialog.shareContent = [FBSDKShareModelTestUtility cameraEffectContent];
   [self _showNativeDialog:dialog
        nonSupportedScheme:[NSString stringWithFormat:@"%@:/", FBSDK_CANOPENURL_MSQRD_PLAYER]

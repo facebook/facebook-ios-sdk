@@ -178,7 +178,7 @@ static FBSDKLogger *_logger;
 
       NSMutableDictionary<NSString *, id> *gateKeeper = [_gateKeepers mutableCopy];
       if (!gateKeeper) {
-        gateKeeper = [[NSMutableDictionary alloc] init];
+        gateKeeper = [NSMutableDictionary new];
       }
       NSDictionary<NSString *, id> *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
       NSDictionary<NSString *, id> *fetchedData = [FBSDKTypeUtility dictionaryValue:[resultDictionary[@"data"] firstObject]];
