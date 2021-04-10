@@ -49,13 +49,13 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 + (void)initialize
 {
   if (self == [FBSDKGameRequestDialog class]) {
-    _recipientCache = [[FBSDKGameRequestFrictionlessRecipientCache alloc] init];
+    _recipientCache = [FBSDKGameRequestFrictionlessRecipientCache new];
   }
 }
 
 + (instancetype)dialogWithContent:(FBSDKGameRequestContent *)content delegate:(id<FBSDKGameRequestDialogDelegate>)delegate
 {
-  FBSDKGameRequestDialog *dialog = [[self alloc] init];
+  FBSDKGameRequestDialog *dialog = [self new];
   dialog.content = content;
   dialog.delegate = delegate;
   return dialog;
@@ -73,7 +73,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 - (instancetype)init
 {
   if ((self = [super init])) {
-    _webDialog = [[FBSDKWebDialog alloc] init];
+    _webDialog = [FBSDKWebDialog new];
     _webDialog.delegate = self;
     _webDialog.name = FBSDK_APP_REQUEST_METHOD_NAME;
   }
@@ -113,7 +113,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
     return NO;
   }
 
-  NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
+  NSMutableDictionary *parameters = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:parameters setObject:[content.recipients componentsJoinedByString:@","] forKey:@"to"];
   [FBSDKTypeUtility dictionary:parameters setObject:content.message forKey:@"message"];
   [FBSDKTypeUtility dictionary:parameters setObject:[self _actionTypeNameForActionType:content.actionType] forKey:@"action_type"];

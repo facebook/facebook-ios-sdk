@@ -116,7 +116,7 @@ _fbsdkdfl_handle_get_impl_(Security)
   static dispatch_once_t onceToken;
   static FBSDKDynamicFrameworkLoader *shared = nil;
   dispatch_once(&onceToken, ^{
-    shared = [[self alloc] init];
+    shared = [self new];
   });
   return shared;
 }

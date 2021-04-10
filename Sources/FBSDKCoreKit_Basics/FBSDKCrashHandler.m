@@ -61,7 +61,7 @@ static BOOL _isTurnedOff;
   directoryPath = dirPath;
   NSString *identifier = [[NSUUID UUID] UUIDString];
   mappingTableIdentifier = [identifier stringByReplacingOccurrencesOfString:@"-" withString:@""];
-  _observers = [[NSHashTable alloc] init];
+  _observers = [NSHashTable new];
 }
 
 + (instancetype)shared

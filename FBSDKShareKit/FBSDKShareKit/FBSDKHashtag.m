@@ -42,7 +42,7 @@ static NSRegularExpression *HashtagRegularExpression()
 
 + (instancetype)hashtagWithString:(NSString *)hashtagString
 {
-  FBSDKHashtag *hashtag = [[self alloc] init];
+  FBSDKHashtag *hashtag = [self new];
   hashtag.stringRepresentation = hashtagString;
   return hashtag;
 }
@@ -119,7 +119,7 @@ static NSRegularExpression *HashtagRegularExpression()
 
 - (id)copyWithZone:(NSZone *)zone
 {
-  FBSDKHashtag *copy = [[FBSDKHashtag alloc] init];
+  FBSDKHashtag *copy = [FBSDKHashtag new];
   copy.stringRepresentation = [_stringRepresentation copy];
   return copy;
 }

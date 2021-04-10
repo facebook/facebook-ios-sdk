@@ -66,8 +66,8 @@ NSString *const FBSDKBridgeAPIVersionKey = @"version";
         FBSDK_CANOPENURL_MSQRD_PLAYER : [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"msqrdplayer-api20170208"]
       },
       @(FBSDKBridgeAPIProtocolTypeWeb) : @{
-        @"https" : [[FBSDKBridgeAPIProtocolWebV1 alloc] init],
-        @"web" : [[FBSDKBridgeAPIProtocolWebV2 alloc] init]
+        @"https" : [FBSDKBridgeAPIProtocolWebV1 new],
+        @"web" : [FBSDKBridgeAPIProtocolWebV2 new]
       },
     };
   });
@@ -144,7 +144,7 @@ NSString *const FBSDKBridgeAPIVersionKey = @"version";
   if (type == FBSDKBridgeAPIProtocolTypeWeb) {
     return protocol;
   }
-  NSURLComponents *components = [[NSURLComponents alloc] init];
+  NSURLComponents *components = [NSURLComponents new];
   components.scheme = scheme;
   components.path = @"/";
   if ([[UIApplication sharedApplication] canOpenURL:components.URL]) {

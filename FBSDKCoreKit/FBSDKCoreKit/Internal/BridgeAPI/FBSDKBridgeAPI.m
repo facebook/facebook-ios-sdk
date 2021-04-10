@@ -224,7 +224,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
     Class loginManagerClass = NSClassFromString(@"FBSDKLoginManager");
     if (loginManagerClass) {
       id annotation = launchOptions[UIApplicationLaunchOptionsAnnotationKey];
-      id<FBSDKURLOpening> loginManager = [[loginManagerClass alloc] init];
+      id<FBSDKURLOpening> loginManager = [loginManagerClass new];
       return [loginManager application:application
                                openURL:launchedURL
                      sourceApplication:sourceApplication
@@ -384,7 +384,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
     NSURLQueryItem *sfvcQueryItem = [[NSURLQueryItem alloc] initWithName:@"sfvc" value:@"1"];
     components.queryItems = [components.queryItems arrayByAddingObject:sfvcQueryItem];
     url = components.URL;
-    FBSDKContainerViewController *container = [[FBSDKContainerViewController alloc] init];
+    FBSDKContainerViewController *container = [FBSDKContainerViewController new];
     container.delegate = self;
     if (parent.transitionCoordinator != nil) {
       // Wait until the transition is finished before presenting SafariVC to avoid a blank screen.

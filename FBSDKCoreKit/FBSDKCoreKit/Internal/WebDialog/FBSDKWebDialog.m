@@ -57,7 +57,7 @@ static FBSDKWebDialog *g_currentDialog = nil;
                 windowFinder:(id<FBSDKWindowFinding>)windowFinder
                     delegate:(id<FBSDKWebDialogDelegate>)delegate
 {
-  FBSDKWebDialog *dialog = [[self alloc] init];
+  FBSDKWebDialog *dialog = [self new];
   dialog.windowFinder = windowFinder;
   dialog.name = name;
   dialog.parameters = parameters;
@@ -229,7 +229,7 @@ static FBSDKWebDialog *g_currentDialog = nil;
 
 - (NSURL *)_generateURL:(NSError **)errorRef
 {
-  NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
+  NSMutableDictionary *parameters = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:parameters setObject:@"touch" forKey:@"display"];
   [FBSDKTypeUtility dictionary:parameters setObject:[NSString stringWithFormat:@"ios-%@", [FBSDKSettings sdkVersion]] forKey:@"sdk"];
   [FBSDKTypeUtility dictionary:parameters setObject:@"fbconnect://success" forKey:@"redirect_uri"];

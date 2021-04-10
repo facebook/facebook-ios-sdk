@@ -128,7 +128,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 
   dispatch_once(&fetchBundleOnce, ^{
     NSBundle *mainBundle = [NSBundle mainBundle];
-    urlSchemes = [[NSMutableArray alloc] init];
+    urlSchemes = [NSMutableArray new];
     for (NSDictionary<NSString *, id> *fields in [mainBundle objectForInfoDictionaryKey:@"CFBundleURLTypes"]) {
       NSArray<NSString *> *schemesForType = fields[@"CFBundleURLSchemes"];
       if (schemesForType) {
@@ -297,7 +297,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 
     [mutableSet addCharactersInString:@"- "];
     restOfStringCharacterSet = [mutableSet copy];
-    cachedIdentifiers = [[NSMutableSet alloc] init];
+    cachedIdentifiers = [NSMutableSet new];
   });
 
   @synchronized(self) {

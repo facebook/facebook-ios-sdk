@@ -150,7 +150,7 @@ static dispatch_once_t sharedSettingsNonce;
   if (self == [FBSDKSettings class]) {
     // This should be moved to ApplicationDelegate and its initialization
     // should be separated from its storage and notification observing
-    g_accessTokenExpirer = [[FBSDKAccessTokenExpirer alloc] init];
+    g_accessTokenExpirer = [FBSDKAccessTokenExpirer new];
   }
 }
 
@@ -166,7 +166,7 @@ static dispatch_once_t sharedSettingsNonce;
 {
   static id instance;
   dispatch_once(&sharedSettingsNonce, ^{
-    instance = [[self alloc] init];
+    instance = [self new];
   });
   return instance;
 }

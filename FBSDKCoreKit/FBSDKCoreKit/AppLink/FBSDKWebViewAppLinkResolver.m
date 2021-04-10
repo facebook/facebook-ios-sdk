@@ -111,7 +111,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
     static id instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[self alloc] init];
+        instance = [self new];
     });
     return instance;
 }
@@ -164,9 +164,9 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
             NSData *responseData = result[@"data"];
             NSHTTPURLResponse *response = result[@"response"];
             
-            WKWebView *webView = [[WKWebView alloc] init];
+            WKWebView *webView = [WKWebView new];
             
-            FBSDKWebViewAppLinkResolverWebViewDelegate *listener = [[FBSDKWebViewAppLinkResolverWebViewDelegate alloc] init];
+            FBSDKWebViewAppLinkResolverWebViewDelegate *listener = [FBSDKWebViewAppLinkResolverWebViewDelegate new];
             __block FBSDKWebViewAppLinkResolverWebViewDelegate *retainedListener = listener;
             listener.didFinishLoad = ^(WKWebView *view) {
                 if (retainedListener) {

@@ -36,7 +36,7 @@
                           appStoreId:(NSString *)appStoreId
                              appName:(NSString *)appName
 {
-  FBSDKAppLinkTarget *target = [[self alloc] init];
+  FBSDKAppLinkTarget *target = [self new];
   target.URL = url;
   target.appStoreId = appStoreId;
   target.appName = appName;

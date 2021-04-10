@@ -227,17 +227,17 @@ static FBSDKLikeActionControllerCache *_cache = nil;
   if (data) {
     [data writeToURL:fileURL atomically:YES];
   } else {
-    [[[NSFileManager alloc] init] removeItemAtURL:fileURL error:NULL];
+    [[NSFileManager new] removeItemAtURL:fileURL error:NULL];
   }
 }
 
 + (NSURL *)_cacheFileURL
 {
-  NSURL *directoryURL = [[[NSFileManager alloc] init] URLForDirectory:NSLibraryDirectory
-                                                             inDomain:NSUserDomainMask
-                                                    appropriateForURL:nil
-                                                               create:YES
-                                                                error:NULL];
+  NSURL *directoryURL = [[NSFileManager new] URLForDirectory:NSLibraryDirectory
+                                                    inDomain:NSUserDomainMask
+                                           appropriateForURL:nil
+                                                      create:YES
+                                                       error:NULL];
   return [directoryURL URLByAppendingPathComponent:@"com-facebook-sdk-like-data"];
 }
 
@@ -755,7 +755,7 @@ static void FBSDKLikeActionControllerAddRefreshRequests(FBSDKAccessToken *access
   if (completion == NULL) {
     return;
   }
-  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
+  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
   [connection overrideGraphAPIVersion:FBSDK_LIKE_ACTION_CONTROLLER_API_VERSION];
   if ([_objectID rangeOfString:@"://"].location != NSNotFound) {
     FBSDKLikeActionControllerAddGetObjectIDWithObjectURLRequest(_accessToken,
@@ -798,7 +798,7 @@ static void FBSDKLikeActionControllerAddRefreshRequests(FBSDKAccessToken *access
                         parameters:analyticsParameters
                 isImplicitlyLogged:YES
                        accessToken:_accessToken];
-  FBSDKLikeDialog *dialog = [[FBSDKLikeDialog alloc] init];
+  FBSDKLikeDialog *dialog = [FBSDKLikeDialog new];
   dialog.objectID = _objectID;
   dialog.objectType = _objectType;
   dialog.delegate = self;
@@ -830,7 +830,7 @@ static void FBSDKLikeActionControllerAddRefreshRequests(FBSDKAccessToken *access
 {
   _objectIsLikedIsPending = YES;
   [self _ensureVerifiedObjectID:^(NSString *verifiedObjectID) {
-    FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
+    FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
     [connection overrideGraphAPIVersion:FBSDK_LIKE_ACTION_CONTROLLER_API_VERSION];
     fbsdk_like_action_controller_publish_like_completion_block completionHandler = ^(BOOL success,
                                                                                      NSString *unlikeToken) {
@@ -875,7 +875,7 @@ static void FBSDKLikeActionControllerAddRefreshRequests(FBSDKAccessToken *access
                    fromViewController:(UIViewController *)fromViewController
 {
   _objectIsLikedIsPending = YES;
-  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
+  FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
   [connection overrideGraphAPIVersion:FBSDK_LIKE_ACTION_CONTROLLER_API_VERSION];
   fbsdk_like_action_controller_publish_unlike_completion_block completionHandler = ^(BOOL success) {
     self->_objectIsLikedIsPending = NO;
@@ -941,7 +941,7 @@ static void FBSDKLikeActionControllerAddRefreshRequests(FBSDKAccessToken *access
   _refreshState = FBSDKLikeActionControllerRefreshStateActive;
 
   [self _ensureVerifiedObjectID:^(NSString *verifiedObjectID) {
-    FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
+    FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
     [connection overrideGraphAPIVersion:FBSDK_LIKE_ACTION_CONTROLLER_API_VERSION];
     FBSDKLikeActionControllerAddRefreshRequests(self->_accessToken,
       connection,

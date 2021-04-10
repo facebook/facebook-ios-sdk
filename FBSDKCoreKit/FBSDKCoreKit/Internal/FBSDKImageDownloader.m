@@ -37,7 +37,7 @@ static NSString *const kCachedResponseUserInfoKeyTimestamp = @"timestamp";
   static FBSDKImageDownloader *instance;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    instance = [[FBSDKImageDownloader alloc] init];
+    instance = [FBSDKImageDownloader new];
   });
   return instance;
 }

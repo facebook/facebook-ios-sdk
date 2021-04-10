@@ -94,22 +94,22 @@
      },
    }];
 
-  _emailField = [[UITextField alloc] init];
+  _emailField = [UITextField new];
   _emailField.placeholder = NSLocalizedString(@"Enter your email", nil);
   _emailField.keyboardType = UIKeyboardTypeEmailAddress;
 
-  _emailView = [[UITextView alloc] init];
+  _emailView = [UITextView new];
   _emailView.keyboardType = UIKeyboardTypeEmailAddress;
 
-  _phoneField = [[UITextField alloc] init];
+  _phoneField = [UITextField new];
   _phoneField.placeholder = NSLocalizedString(@"Enter your phone", nil);
   _phoneField.keyboardType = UIKeyboardTypePhonePad;
 
-  _pwdField = [[UITextField alloc] init];
+  _pwdField = [UITextField new];
   _pwdField.placeholder = NSLocalizedString(@"Enter your password", nil);
   _pwdField.secureTextEntry = YES;
 
-  _pwdView = [[UITextView alloc] init];
+  _pwdView = [UITextView new];
   _pwdView.secureTextEntry = YES;
 }
 

@@ -162,7 +162,7 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 
 - (void)configureButton
 {
-  _loginManager = [[FBSDKLoginManager alloc] init];
+  _loginManager = [FBSDKLoginManager new];
 
   NSString *logInTitle = [self _shortLogInTitle];
   NSString *logOutTitle = [self _logOutTitle];
@@ -362,7 +362,7 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
   if (self._isAuthenticated || self.tooltipBehavior == FBSDKLoginButtonTooltipBehaviorDisable) {
     return;
   } else {
-    FBSDKLoginTooltipView *tooltipView = [[FBSDKLoginTooltipView alloc] init];
+    FBSDKLoginTooltipView *tooltipView = [FBSDKLoginTooltipView new];
     tooltipView.colorStyle = self.tooltipColorStyle;
     if (self.tooltipBehavior == FBSDKLoginButtonTooltipBehaviorForceDisplay) {
       tooltipView.forceDisplay = YES;

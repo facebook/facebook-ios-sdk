@@ -38,14 +38,14 @@ NSString *const kFBSDKShareVideoURLKey = @"videoURL";
 
 + (instancetype)videoWithData:(NSData *)data
 {
-  FBSDKShareVideo *video = [[FBSDKShareVideo alloc] init];
+  FBSDKShareVideo *video = [FBSDKShareVideo new];
   video.data = data;
   return video;
 }
 
 + (instancetype)videoWithData:(NSData *)data previewPhoto:(FBSDKSharePhoto *)previewPhoto
 {
-  FBSDKShareVideo *video = [[FBSDKShareVideo alloc] init];
+  FBSDKShareVideo *video = [FBSDKShareVideo new];
   video.data = data;
   video.previewPhoto = previewPhoto;
   return video;
@@ -53,14 +53,14 @@ NSString *const kFBSDKShareVideoURLKey = @"videoURL";
 
 + (instancetype)videoWithVideoAsset:(PHAsset *)videoAsset
 {
-  FBSDKShareVideo *video = [[FBSDKShareVideo alloc] init];
+  FBSDKShareVideo *video = [FBSDKShareVideo new];
   video.videoAsset = videoAsset;
   return video;
 }
 
 + (instancetype)videoWithVideoAsset:(PHAsset *)videoAsset previewPhoto:(FBSDKSharePhoto *)previewPhoto
 {
-  FBSDKShareVideo *video = [[FBSDKShareVideo alloc] init];
+  FBSDKShareVideo *video = [FBSDKShareVideo new];
   video.videoAsset = videoAsset;
   video.previewPhoto = previewPhoto;
   return video;
@@ -68,14 +68,14 @@ NSString *const kFBSDKShareVideoURLKey = @"videoURL";
 
 + (instancetype)videoWithVideoURL:(NSURL *)videoURL
 {
-  FBSDKShareVideo *video = [[FBSDKShareVideo alloc] init];
+  FBSDKShareVideo *video = [FBSDKShareVideo new];
   video.videoURL = videoURL;
   return video;
 }
 
 + (instancetype)videoWithVideoURL:(NSURL *)videoURL previewPhoto:(FBSDKSharePhoto *)previewPhoto
 {
-  FBSDKShareVideo *video = [[FBSDKShareVideo alloc] init];
+  FBSDKShareVideo *video = [FBSDKShareVideo new];
   video.videoURL = videoURL;
   video.previewPhoto = previewPhoto;
   return video;
@@ -260,7 +260,7 @@ NSString *const kFBSDKShareVideoURLKey = @"videoURL";
 
 - (id)copyWithZone:(NSZone *)zone
 {
-  FBSDKShareVideo *copy = [[FBSDKShareVideo alloc] init];
+  FBSDKShareVideo *copy = [FBSDKShareVideo new];
   copy->_data = [_data copy];
   copy->_videoAsset = [_videoAsset copy];
   copy->_videoURL = [_videoURL copy];

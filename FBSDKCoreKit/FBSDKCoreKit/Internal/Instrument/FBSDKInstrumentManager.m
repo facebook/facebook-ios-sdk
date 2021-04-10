@@ -69,7 +69,7 @@
   static dispatch_once_t nonce;
   static id instance;
   dispatch_once(&nonce, ^{
-    instance = [[self alloc] init];
+    instance = [self new];
   });
   return instance;
 }

@@ -54,7 +54,7 @@ static dispatch_once_t token;
   static NSMutableDictionary *_impressionTrackers = nil;
 
   dispatch_once(&token, ^{
-    _impressionTrackers = [[NSMutableDictionary alloc] init];
+    _impressionTrackers = [NSMutableDictionary new];
   });
   // Maintains a single instance of an impression tracker for each event name
   FBSDKViewImpressionTracker *impressionTracker = _impressionTrackers[eventName];
@@ -79,7 +79,7 @@ static dispatch_once_t token;
 {
   if ((self = [super init])) {
     _eventName = [eventName copy];
-    _trackedImpressions = [[NSMutableSet alloc] init];
+    _trackedImpressions = [NSMutableSet new];
     _graphRequestProvider = graphRequestProvider;
     _eventLogger = eventLogger;
     _notificationObserver = notificationObserver;

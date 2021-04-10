@@ -35,7 +35,7 @@
 
 - (void)testShareLinkContentValidationWithNilValues
 {
-  FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
+  FBSDKShareLinkContent *content = [FBSDKShareLinkContent new];
   XCTAssertNotNil(content.shareUUID);
   NSError *error;
   XCTAssertTrue([content validateWithOptions:FBSDKShareBridgeOptionsDefault error:&error]);
@@ -44,7 +44,7 @@
 
 - (void)testShareLinkContentValidationWithValidValues
 {
-  FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
+  FBSDKShareLinkContent *content = [FBSDKShareLinkContent new];
   content.contentURL = [FBSDKShareModelTestUtility contentURL];
   content.peopleIDs = [FBSDKShareModelTestUtility peopleIDs];
   content.placeID = [FBSDKShareModelTestUtility placeID];
@@ -57,7 +57,7 @@
 
 - (void)testShareLinkContentParameters
 {
-  FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
+  FBSDKShareLinkContent *content = [FBSDKShareLinkContent new];
   content.contentURL = [FBSDKShareModelTestUtility contentURL];
   XCTAssertNotNil(content.shareUUID);
   NSDictionary<NSString *, id> *parameters = [FBSDKShareUtility parametersForShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault shouldFailOnDataError:YES];

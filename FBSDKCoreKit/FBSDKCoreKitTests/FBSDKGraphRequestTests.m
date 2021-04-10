@@ -71,7 +71,7 @@ static NSDictionary<NSString *, NSString *> *const _mockEmptyParameters(void)
 {
   [super setUp];
 
-  _connection = [[FBSDKGraphRequestConnection alloc] init];
+  _connection = [FBSDKGraphRequestConnection new];
   [FBSDKAccessToken resetCurrentAccessTokenCache];
   [FBSDKGraphRequest reset];
 }

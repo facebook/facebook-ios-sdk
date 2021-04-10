@@ -257,7 +257,7 @@
 
 - (FBSDKIcon *)defaultIcon
 {
-  return [[FBSDKLogo alloc] init];
+  return [FBSDKLogo new];
 }
 
 - (UIColor *)defaultSelectedColor

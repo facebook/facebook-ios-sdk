@@ -51,24 +51,24 @@
 
   eventBindingManager = [[FBSDKEventBindingManager alloc]
                          initWithJSON:[SampleRawRemoteEventBindings sampleDictionary]];
-  window = [[UIWindow alloc] init];
-  UIViewController *vc = [[UIViewController alloc] init];
+  window = [UIWindow new];
+  UIViewController *vc = [UIViewController new];
   UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
 
-  UITabBarController *tab = [[UITabBarController alloc] init];
+  UITabBarController *tab = [UITabBarController new];
   tab.viewControllers = @[nav];
   window.rootViewController = tab;
 
-  UIStackView *firstStackView = [[UIStackView alloc] init];
+  UIStackView *firstStackView = [UIStackView new];
   [vc.view addSubview:firstStackView];
-  UIStackView *secondStackView = [[UIStackView alloc] init];
+  UIStackView *secondStackView = [UIStackView new];
   [firstStackView addSubview:secondStackView];
 
   btnBuy = [UIButton buttonWithType:UIButtonTypeCustom];
   [btnBuy setTitle:NSLocalizedString(@"Buy", nil) forState:UIControlStateNormal];
   [firstStackView addSubview:btnBuy];
 
-  UILabel *lblPrice = [[UILabel alloc] init];
+  UILabel *lblPrice = [UILabel new];
   lblPrice.text = NSLocalizedString(@"$2.0", nil);
   [firstStackView addSubview:lblPrice];
 
@@ -76,11 +76,11 @@
   [btnConfirm setTitle:NSLocalizedString(@"Confirm", nil) forState:UIControlStateNormal];
   [firstStackView addSubview:btnConfirm];
 
-  lblPrice = [[UILabel alloc] init];
+  lblPrice = [UILabel new];
   lblPrice.text = NSLocalizedString(@"$3.0", nil);
   [secondStackView addSubview:lblPrice];
 
-  stepper = [[UIStepper alloc] init];
+  stepper = [UIStepper new];
   [secondStackView addSubview:stepper];
 }
 

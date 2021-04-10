@@ -449,7 +449,7 @@
 
 - (NSDictionary *)_encodeQueryParameters:(NSDictionary *)queryParameters
 {
-  NSMutableDictionary *encoded = [[NSMutableDictionary alloc] init];
+  NSMutableDictionary *encoded = [NSMutableDictionary new];
   [queryParameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
     if (![FBSDKBasicUtility dictionary:encoded setJSONStringForObject:obj forKey:key error:NULL]) {
       [FBSDKTypeUtility dictionary:encoded setObject:obj forKey:key];

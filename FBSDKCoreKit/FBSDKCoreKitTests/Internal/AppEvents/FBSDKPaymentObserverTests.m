@@ -66,7 +66,7 @@
   id partialMockObserver = [OCMockObject partialMockForObject:[FBSDKPaymentObserver singleton]];
 
   NSMutableArray<SKPaymentTransaction *> *transactions = [NSMutableArray array];
-  SKPaymentTransaction *transaction = [[SKPaymentTransaction alloc] init];
+  SKPaymentTransaction *transaction = [SKPaymentTransaction new];
   [transactions addObject:transaction];
 
   [[partialMockObserver expect] handleTransaction:[OCMArg any]];

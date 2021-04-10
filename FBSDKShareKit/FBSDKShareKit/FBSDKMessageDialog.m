@@ -53,7 +53,7 @@
 + (instancetype)dialogWithContent:(id<FBSDKSharingContent>)content
                          delegate:(nullable id<FBSDKSharingDelegate>)delegate
 {
-  FBSDKMessageDialog *dialog = [[self alloc] init];
+  FBSDKMessageDialog *dialog = [self new];
   dialog.shareContent = content;
   dialog.delegate = delegate;
   return dialog;

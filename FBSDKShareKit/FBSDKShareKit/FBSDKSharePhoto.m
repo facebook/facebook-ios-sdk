@@ -39,7 +39,7 @@ NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
 
 + (instancetype)photoWithImage:(UIImage *)image userGenerated:(BOOL)userGenerated
 {
-  FBSDKSharePhoto *photo = [[self alloc] init];
+  FBSDKSharePhoto *photo = [self new];
   photo.image = image;
   photo.userGenerated = userGenerated;
   return photo;
@@ -47,7 +47,7 @@ NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
 
 + (instancetype)photoWithImageURL:(NSURL *)imageURL userGenerated:(BOOL)userGenerated
 {
-  FBSDKSharePhoto *photo = [[self alloc] init];
+  FBSDKSharePhoto *photo = [self new];
   photo.imageURL = imageURL;
   photo.userGenerated = userGenerated;
   return photo;
@@ -55,7 +55,7 @@ NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
 
 + (instancetype)photoWithPhotoAsset:(PHAsset *)photoAsset userGenerated:(BOOL)userGenerated
 {
-  FBSDKSharePhoto *photo = [[self alloc] init];
+  FBSDKSharePhoto *photo = [self new];
   photo.photoAsset = photoAsset;
   photo.userGenerated = userGenerated;
   return photo;
@@ -221,7 +221,7 @@ NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
 
 - (id)copyWithZone:(NSZone *)zone
 {
-  FBSDKSharePhoto *copy = [[FBSDKSharePhoto alloc] init];
+  FBSDKSharePhoto *copy = [FBSDKSharePhoto new];
   copy->_image = [_image copy];
   copy->_imageURL = [_imageURL copy];
   copy->_photoAsset = [_photoAsset copy];

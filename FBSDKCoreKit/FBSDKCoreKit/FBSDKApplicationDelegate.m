@@ -116,7 +116,7 @@ static UIApplicationState _applicationState;
                                     settings:(Class<FBSDKSettingsLogging>)settings
 {
   if ((self = [super init]) != nil) {
-    _applicationObservers = [[NSHashTable alloc] init];
+    _applicationObservers = [NSHashTable new];
     _notificationObserver = observer;
     _tokenWallet = tokenWallet;
     _settings = settings;
@@ -397,7 +397,7 @@ static UIApplicationState _applicationState;
   NSString *targetURLString = applinkData[@"target_url"];
   NSURL *targetURL = [targetURLString isKindOfClass:[NSString class]] ? [NSURL URLWithString:targetURLString] : nil;
 
-  NSMutableDictionary *logData = [[NSMutableDictionary alloc] init];
+  NSMutableDictionary *logData = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:logData setObject:targetURL.absoluteString forKey:@"targetURL"];
   [FBSDKTypeUtility dictionary:logData setObject:targetURL.host forKey:@"targetURLHost"];
 
@@ -457,7 +457,7 @@ static UIApplicationState _applicationState;
 #if !TARGET_OS_TV
   NSNumber *enabled = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FBSDKAutoAppLinkEnabled"];
   if (enabled.boolValue) {
-    NSMutableDictionary<NSString *, NSString *> *params = [[NSMutableDictionary alloc] init];
+    NSMutableDictionary<NSString *, NSString *> *params = [NSMutableDictionary new];
     if (![FBSDKAppLinkUtility isMatchURLScheme:[NSString stringWithFormat:@"fb%@", [FBSDKSettings appID]]]) {
       NSString *warning = @"You haven't set the Auto App Link URL scheme: fb<YOUR APP ID>";
       [FBSDKTypeUtility dictionary:params setObject:warning forKey:@"SchemeWarning"];

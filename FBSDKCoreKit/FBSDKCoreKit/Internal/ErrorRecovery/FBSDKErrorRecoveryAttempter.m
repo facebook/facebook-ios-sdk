@@ -26,14 +26,14 @@
 + (instancetype)recoveryAttempterFromConfiguration:(FBSDKErrorRecoveryConfiguration *)configuration
 {
   if (configuration.errorCategory == FBSDKGraphRequestErrorTransient) {
-    return [[_FBSDKTemporaryErrorRecoveryAttempter alloc] init];
+    return [_FBSDKTemporaryErrorRecoveryAttempter new];
   } else if (configuration.errorCategory == FBSDKGraphRequestErrorOther) {
     return nil;
   }
   if ([configuration.recoveryActionName isEqualToString:@"login"]) {
     Class loginRecoveryAttmpterClass = NSClassFromString(@"_FBSDKLoginRecoveryAttempter");
     if (loginRecoveryAttmpterClass) {
-      return [[loginRecoveryAttmpterClass alloc] init];
+      return [loginRecoveryAttmpterClass new];
     }
   }
   return nil;

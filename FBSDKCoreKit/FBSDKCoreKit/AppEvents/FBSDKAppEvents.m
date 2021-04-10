@@ -834,7 +834,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
     Class WKUserScriptClass = fbsdkdfl_WKUserScriptClass();
     if (WKUserScriptClass != nil) {
       WKUserContentController *controller = webView.configuration.userContentController;
-      FBSDKHybridAppEventsScriptMessageHandler *scriptHandler = [[FBSDKHybridAppEventsScriptMessageHandler alloc] init];
+      FBSDKHybridAppEventsScriptMessageHandler *scriptHandler = [FBSDKHybridAppEventsScriptMessageHandler new];
       [controller addScriptMessageHandler:scriptHandler name:FBSDKAppEventsWKWebViewMessagesHandlerKey];
 
       NSString *js = [NSString stringWithFormat:@"window.fbmq_%@={'sendEvent': function(pixel_id,event_name,custom_data){var msg={\"%@\":pixel_id, \"%@\":event_name,\"%@\":custom_data};window.webkit.messageHandlers[\"%@\"].postMessage(msg);}, 'getProtocol':function(){return \"%@\";}}",
@@ -1032,7 +1032,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   static dispatch_once_t onceToken;
   static FBSDKAppEvents *shared = nil;
   dispatch_once(&onceToken, ^{
-    shared = [[self alloc] init];
+    shared = [self new];
   });
   return shared;
 }
@@ -1146,7 +1146,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
     [FBSDKCodelessIndexer enable];
 
     if (!_eventBindingManager) {
-      _eventBindingManager = [[FBSDKEventBindingManager alloc] init];
+      _eventBindingManager = [FBSDKEventBindingManager new];
     }
 
     if ([FBSDKInternalUtility isUnity]) {

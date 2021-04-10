@@ -56,7 +56,7 @@ static dispatch_queue_t serialQueue;
 
 + (void)initialize
 {
-  _rules = [[NSMutableDictionary alloc] init];
+  _rules = [NSMutableDictionary new];
   serialQueue = dispatch_queue_create("com.facebook.appevents.MetadataIndexer", DISPATCH_QUEUE_SERIAL);
 }
 
@@ -106,7 +106,7 @@ static dispatch_queue_t serialQueue;
 
 + (void)initStore
 {
-  _store = [[NSMutableDictionary alloc] init];
+  _store = [NSMutableDictionary new];
   for (NSString *key in _rules) {
     NSString *data = [FBSDKUserDataStore getInternalHashedDataForType:key];
     if (data.length > 0) {
@@ -116,7 +116,7 @@ static dispatch_queue_t serialQueue;
 
   for (NSString *key in _rules) {
     if (!_store[key]) {
-      [FBSDKTypeUtility dictionary:_store setObject:[[NSMutableArray alloc] init] forKey:key];
+      [FBSDKTypeUtility dictionary:_store setObject:[NSMutableArray new] forKey:key];
     }
   }
 }
@@ -177,7 +177,7 @@ static dispatch_queue_t serialQueue;
 
 + (NSArray<NSString *> *)getLabelsOfView:(UIView *)view
 {
-  NSMutableArray<NSString *> *labels = [[NSMutableArray alloc] init];
+  NSMutableArray<NSString *> *labels = [NSMutableArray new];
 
   NSString *placeholder = [self normalizeField:[FBSDKViewHierarchy getHint:view]];
   if (placeholder.length > 0) {

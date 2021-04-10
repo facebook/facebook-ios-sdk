@@ -98,7 +98,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (bool)validateWeights:(std::unordered_map<std::string, fbsdk::MTensor>)weights forKey:(NSString *)key
 {
-  NSMutableDictionary<NSString *, NSArray *> *weightsInfoDict = [[NSMutableDictionary alloc] init];
+  NSMutableDictionary<NSString *, NSArray *> *weightsInfoDict = [NSMutableDictionary new];
   if ([key hasPrefix:MTMLKey]) {
     [weightsInfoDict addEntriesFromDictionary:[self getMTMLWeightsInfo]];
   }

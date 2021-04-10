@@ -38,7 +38,7 @@ static NSString *const FBSDKMeasurementEventPrefix = @"bf_";
   static dispatch_once_t dispatchOnceLocker = 0;
   static FBSDKMeasurementEventListener *defaultListener = nil;
   dispatch_once(&dispatchOnceLocker, ^{
-    defaultListener = [[self alloc] init];
+    defaultListener = [self new];
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     [center addObserver:defaultListener
                selector:@selector(logFBAppEventForNotification:)
@@ -58,7 +58,7 @@ static NSString *const FBSDKMeasurementEventPrefix = @"bf_";
     }
   }
   NSDictionary<NSString *, id> *eventArgs = note.userInfo[FBSDKMeasurementEventArgs];
-  NSMutableDictionary<NSString *, id> *logData = [[NSMutableDictionary alloc] init];
+  NSMutableDictionary<NSString *, id> *logData = [NSMutableDictionary new];
   for (NSString *key in eventArgs.allKeys) {
     NSError *error = nil;
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[^0-9a-zA-Z _-]" options:0 error:&error];

@@ -47,7 +47,7 @@ static dispatch_once_t sharedConfigurationManagerNonce;
 {
   static id instance;
   dispatch_once(&sharedConfigurationManagerNonce, ^{
-    instance = [[self alloc] init];
+    instance = [self new];
   });
   return instance;
 }

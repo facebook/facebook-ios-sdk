@@ -138,7 +138,7 @@ static const struct {
   NSString *const host = @"dialog";
   NSString *const path = [@"/" stringByAppendingString:methodName];
 
-  NSMutableDictionary<NSString *, id> *const queryParameters = [[NSMutableDictionary alloc] init];
+  NSMutableDictionary<NSString *, id> *const queryParameters = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:queryParameters setObject:methodVersion
                         forKey:FBSDKBridgeAPIProtocolNativeV1OutputKeys.methodVersion];
 
@@ -252,7 +252,7 @@ static const struct {
 
 - (NSDictionary *)_bridgeParametersWithActionID:(NSString *)actionID error:(NSError *__autoreleasing *)errorRef
 {
-  NSMutableDictionary *bridgeParameters = [[NSMutableDictionary alloc] init];
+  NSMutableDictionary *bridgeParameters = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:bridgeParameters setObject:actionID
                         forKey:FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeys.actionID];
   [FBSDKTypeUtility dictionary:bridgeParameters setObject:[self _appIcon]
@@ -290,7 +290,7 @@ static const struct {
     }
     if ([invalidObject isKindOfClass:[NSData class]]) {
       NSData *data = (NSData *)invalidObject;
-      NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+      NSMutableDictionary *dictionary = [NSMutableDictionary new];
       if (didAddToPasteboard || !enablePasteboard || !self->_pasteboard || (data.length < self->_dataLengthThreshold)) {
         dictionary[FBSDKBridgeAPIProtocolNativeV1DataKeys.isBase64] = @YES;
         [FBSDKTypeUtility dictionary:dictionary setObject:dataTag forKey:FBSDKBridgeAPIProtocolNativeV1DataKeys.tag];

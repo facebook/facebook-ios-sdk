@@ -57,7 +57,7 @@
 
 - (void)testCanShow
 {
-  FBSDKMessageDialog *dialog = [[FBSDKMessageDialog alloc] init];
+  FBSDKMessageDialog *dialog = [FBSDKMessageDialog new];
   [self _mockApplicationForURL:OCMOCK_ANY canOpen:YES usingBlock:^{
     XCTAssertTrue([dialog canShow]);
     dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
@@ -80,7 +80,7 @@
 
 - (void)testValidate
 {
-  FBSDKMessageDialog *dialog = [[FBSDKMessageDialog alloc] init];
+  FBSDKMessageDialog *dialog = [FBSDKMessageDialog new];
   NSError *error;
   dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
   XCTAssertTrue(
@@ -129,7 +129,7 @@
 - (void)testShowInvokesDelegateWhenCannotShow
 {
   [self _mockApplicationForURL:OCMOCK_ANY canOpen:NO usingBlock:^{
-    FBSDKMessageDialog *dialog = [[FBSDKMessageDialog alloc] init];
+    FBSDKMessageDialog *dialog = [FBSDKMessageDialog new];
     FakeSharingDelegate *delegate = [FakeSharingDelegate new];
     dialog.delegate = delegate;
 
@@ -156,7 +156,7 @@
 - (void)testShowInvokesDelegateWhenMissingContent
 {
   [self _mockApplicationForURL:OCMOCK_ANY canOpen:YES usingBlock:^{
-    FBSDKMessageDialog *dialog = [[FBSDKMessageDialog alloc] init];
+    FBSDKMessageDialog *dialog = [FBSDKMessageDialog new];
     FakeSharingDelegate *delegate = [FakeSharingDelegate new];
     dialog.delegate = delegate;
 
@@ -183,7 +183,7 @@
 - (void)testShowInvokesDelegateWhenCannotValidate
 {
   [self _mockApplicationForURL:OCMOCK_ANY canOpen:YES usingBlock:^{
-    FBSDKMessageDialog *dialog = [[FBSDKMessageDialog alloc] init];
+    FBSDKMessageDialog *dialog = [FBSDKMessageDialog new];
     // Using invalid share content to force validation failure
     dialog.shareContent = [FBSDKShareModelTestUtility cameraEffectContent];
     FakeSharingDelegate *delegate = [FakeSharingDelegate new];

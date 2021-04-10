@@ -81,7 +81,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
 + (void)initialize
 {
   if (self == [FBSDKServerConfigurationManager class]) {
-    _completionBlocks = [[NSMutableArray alloc] init];
+    _completionBlocks = [NSMutableArray new];
   }
 }
 
@@ -315,7 +315,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                       appID:(NSString *)appID
                                       error:(NSError *)error
 {
-  NSMutableArray *completionBlocks = [[NSMutableArray alloc] init];
+  NSMutableArray *completionBlocks = [NSMutableArray new];
   @synchronized(self) {
     if (error) {
       // Only set the error if we don't have previously fetched app settings.
@@ -372,7 +372,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
 
 + (NSDictionary *)_parseDialogConfigurations:(NSDictionary *)dictionary
 {
-  NSMutableDictionary *dialogConfigurations = [[NSMutableDictionary alloc] init];
+  NSMutableDictionary *dialogConfigurations = [NSMutableDictionary new];
   NSArray *dialogConfigurationsArray = [FBSDKTypeUtility arrayValue:dictionary[@"data"]];
   for (id dialogConfiguration in dialogConfigurationsArray) {
     NSDictionary *dialogConfigurationDictionary = [FBSDKTypeUtility dictionaryValue:dialogConfiguration];

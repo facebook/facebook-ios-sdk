@@ -89,7 +89,7 @@
   }
 
   FBSDKGraphRequestConnection *const connection =
-  [[FBSDKGraphRequestConnection alloc] init];
+  [FBSDKGraphRequestConnection new];
 
   FBSDKGamingImageUploader *const uploader =
   [[FBSDKGamingImageUploader alloc]
