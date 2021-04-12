@@ -7,13 +7,45 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-### Fixed
-
-- Static library binaries are built with `BITCODE_GENERATION_MODE = bitcode` to fix errors where Xcode is unable to build apps with bitcode enabled. [#1698](https://github.com/facebook/facebook-ios-sdk/pull/1698)
-
 ### Important
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.1.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.2.0...HEAD)
+
+## 9.2.0
+
+### Added
+
+- Added Limited Login support for `user_friends`, `user_birthday` and `user_age_range` permissions under public beta.
+- Shared Profile instance will be populated with `birthday` and `ageRange` fields using the claims from the `AuthenticationToken`. (NOTE: birthday and ageRange fields are in public beta mode)
+- Added a convenience initializer to `Profile` as part of fixing a bug where upgrading from limited to regular login would fail to fetch the profile using the newly available access token.
+- `GamingServicesKit` added an observer class where if developers set the delegate we will trigger the delegate method with a `GamingPayload` object if any urls contain gaming payload data. (NOTE: This feature is currently under development)
+
+### Fixed
+
+**Performance Improvements**
+
+- Added in memory cache for carrier and timezone so they are not dynamically loaded on every `didBecomeActive`
+- Added cached `ASIdentifierManager` to avoid dynamic loading on every `didBecomeActive`
+- Backgrounds the expensive property creation that happens during AppEvents class initialization.
+- Added thread safety for incrementing the serial number used by the logging utility.
+- Added early return to Access Token to avoid unnecessary writes to keychain which can cause performance issues.
+
+**Bug Fixes**
+
+- Fixed using CocoaPods with the `generate_multiple_pod_projects` flag. [#1707](https://github.com/facebook/facebook-ios-sdk/issues/1707)
+- Adhere to flush behavior for logging completion. Will now only flush events if the flush behavior is `explicitOnly`.
+- Static library binaries are built with `BITCODE_GENERATION_MODE = bitcode` to fix errors where Xcode is unable to build apps with bitcode enabled. [#1698](https://github.com/facebook/facebook-ios-sdk/pull/1698)
+
+### Deprecated
+
+- `TestUsersManager`. The APIs that back this convenience type still exist but there is no compelling reason to have this be part of the core SDK. See the [commit message](https://github.com/facebook/facebook-ios-sdk/commit/441f7fcefadd36218b81fbca0a5d406ceb86a2da) for more on the rationale.
+
+### Removed
+
+- Internal type `AudioResourceLoader`.
+
+[2021-04-06](https://github.com/facebook/facebook-ios-sdk/releases/tag/v9.2.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.1.0...v9.2.0)
 
 ## 9.1.0
 

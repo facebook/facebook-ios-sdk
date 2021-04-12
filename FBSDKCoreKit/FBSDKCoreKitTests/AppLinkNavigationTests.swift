@@ -86,7 +86,7 @@ class FBSDKAppLinkNavigationTests: XCTestCase { // swiftlint:disable:this type_b
       let url = try navigation.appLinkURL(withTargetURL: SampleUrls.valid)
       let payload = decodedPayload(url: url)
 
-      XCTAssertEqual(payload?.userAgent, "FBSDK 9.1.0")
+      XCTAssertEqual(payload?.userAgent, "FBSDK \(FBSDK_VERSION_STRING)")
       XCTAssertEqual(payload?.version, "1.0")
       XCTAssertEqual(payload?.extras, [:])
       XCTAssertNil(payload?.targetUrl)
@@ -107,7 +107,7 @@ class FBSDKAppLinkNavigationTests: XCTestCase { // swiftlint:disable:this type_b
       let url = try navigation.appLinkURL(withTargetURL: SampleUrls.valid)
       let payload = decodedPayload(url: url)
 
-      XCTAssertEqual(payload?.userAgent, "FBSDK 9.1.0")
+      XCTAssertEqual(payload?.userAgent, "FBSDK \(FBSDK_VERSION_STRING)")
       XCTAssertEqual(payload?.version, "1.0")
       XCTAssertEqual(payload?.extras, [:])
       XCTAssertEqual(payload?.targetUrl, SampleUrls.valid)
