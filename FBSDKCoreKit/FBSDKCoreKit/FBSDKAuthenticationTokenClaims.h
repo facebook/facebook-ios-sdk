@@ -59,7 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  End-User's friends.
 
- IMPORTANT: We are building out this field in Limited Login with the intention to roll it out in early spring.
+ IMPORTANT: This field will only be populated if your user has granted your application the 'user_friends' permission.
  */
 @property (nullable, nonatomic, readonly, strong) NSArray<NSString *> *userFriends;
 
