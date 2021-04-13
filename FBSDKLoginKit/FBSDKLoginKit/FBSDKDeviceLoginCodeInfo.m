@@ -18,12 +18,6 @@
 
 #import "FBSDKDeviceLoginCodeInfo+Internal.h"
 
-#ifdef FBSDKCOCOAPODS
- #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
- #import "FBSDKCoreKit+Internal.h"
-#endif
-
 @implementation FBSDKDeviceLoginCodeInfo
 
 - (instancetype)initWithIdentifier:(NSString *)identifier
@@ -33,13 +27,10 @@
                    pollingInterval:(NSUInteger)pollingInterval
 {
   if ((self = [super init])) {
-    NSString *validIdentifier = [FBSDKTypeUtility coercedToStringValue:identifier];
-    NSString *validLoginCode = [FBSDKTypeUtility coercedToStringValue:loginCode];
-
-    _identifier = validIdentifier == nil || validIdentifier.length == 0 ? nil : [identifier copy];
-    _loginCode = validLoginCode == nil || validLoginCode.length == 0 ? nil : [loginCode copy];
-    _verificationURL = [FBSDKTypeUtility URLValue:[verificationURL copy]];
-    _expirationDate = [expirationDate isKindOfClass:NSDate.class] ? [expirationDate copy] : nil;
+    _identifier = [identifier copy];
+    _loginCode = [loginCode copy];
+    _verificationURL = [verificationURL copy];
+    _expirationDate = [expirationDate copy];
     _pollingInterval = pollingInterval;
   }
   return self;

@@ -28,11 +28,9 @@
 static NSString *const _validIdentifier = @"abcd";
 static NSString *const _validIdentifier2 = @"123";
 static NSString *const _validIdentifier3 = @"123abc";
-static NSString *const _emptyIdentifier = @"";
 static NSString *const _validLoginCode = @"abcd";
 static NSString *const _validLoginCode2 = @"123";
 static NSString *const _validLoginCode3 = @"123abc";
-static NSString *const _emptyLoginCode = @"";
 static NSURL *_validVerifictationURL;
 static NSDate *_validexpirationDate;
 static NSUInteger *const _validPollingInterval = 1;
@@ -70,50 +68,12 @@ static NSUInteger *const _validPollingInterval = 1;
                                   loginCode:_validLoginCode3];
 }
 
-- (void)testCreateWithNilIdentifierAndLoginCode
-{
-  [self assertCreationSucceedWithIdentifier:nil
-                                  loginCode:nil];
-}
-
-- (void)testCreateWithEmptyIdentifierAndLoginCode
-{
-  FBSDKDeviceLoginCodeInfo *deviceLoginCodeInfo = [[FBSDKDeviceLoginCodeInfo alloc] initWithIdentifier:_emptyIdentifier
-                                                                                             loginCode:_emptyLoginCode
-                                                                                       verificationURL:_validVerifictationURL
-                                                                                        expirationDate:_validexpirationDate
-                                                                                       pollingInterval:_validPollingInterval];
-  XCTAssertNil(deviceLoginCodeInfo.identifier);
-  XCTAssertNil(deviceLoginCodeInfo.loginCode);
-  XCTAssertEqual(deviceLoginCodeInfo.verificationURL, _validVerifictationURL);
-  XCTAssertEqual(deviceLoginCodeInfo.expirationDate, _validexpirationDate);
-  XCTAssertEqual(deviceLoginCodeInfo.pollingInterval, _validPollingInterval);
-}
-
 - (void)testCreateWithValidStringCastIdentifierAndLoginCode
 {
   NSString *stringCastIdentifier = (NSString *)@123;
   NSString *stringCastLoginCode = (NSString *)@123;
   [self assertCreationSucceedWithIdentifier:stringCastIdentifier
                                   loginCode:stringCastLoginCode];
-}
-
-- (void)testCreateWithInvalidCast
-{
-  NSString *invalidIdentifier = (NSString *)NSDictionary.new;
-  NSString *invalidLoginCode = (NSString *)NSDictionary.new;
-  NSURL *invalidVerificationURL = (NSURL *)NSDictionary.new;
-  NSDate *invalidExpirationDate = (NSDate *)NSDictionary.new;
-  FBSDKDeviceLoginCodeInfo *deviceLoginCodeInfo = [[FBSDKDeviceLoginCodeInfo alloc] initWithIdentifier:invalidIdentifier
-                                                                                             loginCode:invalidLoginCode
-                                                                                       verificationURL:invalidVerificationURL
-                                                                                        expirationDate:invalidExpirationDate
-                                                                                       pollingInterval:_validPollingInterval];
-  XCTAssertNil(deviceLoginCodeInfo.identifier);
-  XCTAssertNil(deviceLoginCodeInfo.loginCode);
-  XCTAssertNil(deviceLoginCodeInfo.verificationURL);
-  XCTAssertNil(deviceLoginCodeInfo.expirationDate);
-  XCTAssertEqual(deviceLoginCodeInfo.pollingInterval, _validPollingInterval);
 }
 
 - (void)assertCreationSucceedWithIdentifier:(NSString *)identifier loginCode:(NSString *)loginCode
