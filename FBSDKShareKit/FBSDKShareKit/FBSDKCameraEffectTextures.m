@@ -127,7 +127,7 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
 
 - (id)_valueForKey:(NSString *)key
 {
-  key = [FBSDKTypeUtility stringValue:key];
+  key = [FBSDKTypeUtility coercedToStringValue:key];
   return (key ? [FBSDKTypeUtility objectValue:_textures[key]] : nil);
 }
 

@@ -80,11 +80,14 @@ NS_SWIFT_NAME(TypeUtility)
 /// Returns an NSNumber if the provided object is an NSNumber, otherwise returns nil.
 + (NSNumber *)numberValue:(id)object;
 
+/// Returns an NSString if the provided object is an NSString, otherwise returns nil.
++ (NSString *)stringValueOrNil:(id)object;
+
 /// Returns the provided object if it is non-null
 + (nullable id)objectValue:(id)object;
 
-/// Returns an NSString if the provided object is an NSString, otherwise returns nil.
-+ (nullable NSString *)stringValue:(id)object;
+/// Returns an NSString if the provided object can be coered to an NSString, otherwise returns nil.
++ (nullable NSString *)coercedToStringValue:(id)object;
 
 /// Returns an NSTimeInterval if the provided object is an NSTimeInterval, otherwise returns nil.
 + (NSTimeInterval)timeIntervalValue:(id)object;

@@ -28,7 +28,7 @@
 
 + (BOOL)isValidNonce:(NSString *)nonce
 {
-  NSString *string = [FBSDKTypeUtility stringValue:nonce];
+  NSString *string = [FBSDKTypeUtility coercedToStringValue:nonce];
   NSRange whiteSpaceRange = [string rangeOfCharacterFromSet:[NSCharacterSet whitespaceCharacterSet]];
   BOOL containsWhitespace = (whiteSpaceRange.location != NSNotFound);
 

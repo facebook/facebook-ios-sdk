@@ -490,28 +490,28 @@ static id <FBSDKDataPersisting> _store;
       return;
     }
 
-    NSString *profileID = [FBSDKTypeUtility stringValue:result[@"id"]];
+    NSString *profileID = [FBSDKTypeUtility coercedToStringValue:result[@"id"]];
     if (profileID == nil || profileID.length == 0) {
       return;
     }
 
-    NSString *urlString = [FBSDKTypeUtility stringValue:result[@"link"]];
+    NSString *urlString = [FBSDKTypeUtility coercedToStringValue:result[@"link"]];
     NSURL *linkUrl = [FBSDKTypeUtility URLValue:[NSURL URLWithString:urlString]];
     NSArray<FBSDKUserIdentifier *> *friendIDs = [self friendIDsFromGraphResult:[FBSDKTypeUtility dictionaryValue:result[@"friends"]]];
     FBSDKUserAgeRange *ageRange = [FBSDKUserAgeRange ageRangeFromDictionary:[FBSDKTypeUtility dictionaryValue:result[@"age_range"]]];
 
     [FBSDKProfile.dateFormatter setDateFormat:@"MM/dd/yyyy"];
-    NSDate *birthday = [FBSDKProfile.dateFormatter dateFromString:[FBSDKTypeUtility stringValue:result[@"birthday"]]];
+    NSDate *birthday = [FBSDKProfile.dateFormatter dateFromString:[FBSDKTypeUtility coercedToStringValue:result[@"birthday"]]];
 
     FBSDKProfile *profile = [[FBSDKProfile alloc] initWithUserID:profileID
-                                                       firstName:[FBSDKTypeUtility stringValue:result[@"first_name"]]
-                                                      middleName:[FBSDKTypeUtility stringValue:result[@"middle_name"]]
-                                                        lastName:[FBSDKTypeUtility stringValue:result[@"last_name"]]
-                                                            name:[FBSDKTypeUtility stringValue:result[@"name"]]
+                                                       firstName:[FBSDKTypeUtility coercedToStringValue:result[@"first_name"]]
+                                                      middleName:[FBSDKTypeUtility coercedToStringValue:result[@"middle_name"]]
+                                                        lastName:[FBSDKTypeUtility coercedToStringValue:result[@"last_name"]]
+                                                            name:[FBSDKTypeUtility coercedToStringValue:result[@"name"]]
                                                          linkURL:linkUrl
                                                      refreshDate:[NSDate date]
                                                         imageURL:nil
-                                                           email:[FBSDKTypeUtility stringValue:result[@"email"]]
+                                                           email:[FBSDKTypeUtility coercedToStringValue:result[@"email"]]
                                                        friendIDs:friendIDs
                                                         birthday:birthday
                                                         ageRange:ageRange];
@@ -571,7 +571,7 @@ static id <FBSDKDataPersisting> _store;
 
   for (NSDictionary *rawFriend in rawFriends) {
     if ([FBSDKTypeUtility dictionaryValue:rawFriend]) {
-      FBSDKUserIdentifier *friendID = [FBSDKTypeUtility stringValue:rawFriend[@"id"]];
+      FBSDKUserIdentifier *friendID = [FBSDKTypeUtility coercedToStringValue:rawFriend[@"id"]];
       [FBSDKTypeUtility array:friendIDs addObject:friendID];
     }
   }

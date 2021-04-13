@@ -115,7 +115,7 @@ static NSString *const kErrorCategoryLogin = @"login";
   for (NSDictionary *dictionary in [FBSDKTypeUtility arrayValue:array]) {
     [FBSDKTypeUtility dictionary:dictionary enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
       FBSDKGraphRequestError category;
-      NSString *action = [FBSDKTypeUtility stringValue:dictionary[@"name"]];
+      NSString *action = [FBSDKTypeUtility coercedToStringValue:dictionary[@"name"]];
       if ([action isEqualToString:kErrorCategoryOther]) {
         category = FBSDKGraphRequestErrorOther;
       } else if ([action isEqualToString:kErrorCategoryTransient]) {

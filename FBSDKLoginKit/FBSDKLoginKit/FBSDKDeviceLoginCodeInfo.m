@@ -33,8 +33,8 @@
                    pollingInterval:(NSUInteger)pollingInterval
 {
   if ((self = [super init])) {
-    NSString *validIdentifier = [FBSDKTypeUtility stringValue:identifier];
-    NSString *validLoginCode = [FBSDKTypeUtility stringValue:loginCode];
+    NSString *validIdentifier = [FBSDKTypeUtility coercedToStringValue:identifier];
+    NSString *validLoginCode = [FBSDKTypeUtility coercedToStringValue:loginCode];
 
     _identifier = validIdentifier == nil || validIdentifier.length == 0 ? nil : [identifier copy];
     _loginCode = validLoginCode == nil || validLoginCode.length == 0 ? nil : [loginCode copy];

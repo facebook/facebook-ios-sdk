@@ -114,12 +114,17 @@
   }
 }
 
++ (NSString *)stringValueOrNil:(id)object
+{
+  return [self _objectValue:object ofClass:NSString.class];
+}
+
 + (id)objectValue:(id)object
 {
   return ([object isKindOfClass:[NSNull class]] ? nil : object);
 }
 
-+ (NSString *)stringValue:(id)object
++ (NSString *)coercedToStringValue:(id)object
 {
   if ([object isKindOfClass:[NSString class]]) {
     return (NSString *)object;

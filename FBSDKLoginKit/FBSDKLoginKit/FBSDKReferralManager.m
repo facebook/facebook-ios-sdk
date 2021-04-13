@@ -198,7 +198,7 @@ static int const FBClientStateChallengeLength = 20;
     if (!error) {
       NSMutableArray<FBSDKReferralCode *> *referralCodes = [NSMutableArray array];
       for (FBSDKJSONField *object in referralCodesJSON) {
-        FBSDKReferralCode *referralCode = [FBSDKReferralCode initWithString:[FBSDKTypeUtility stringValue:[object rawObject]]];
+        FBSDKReferralCode *referralCode = [FBSDKReferralCode initWithString:[FBSDKTypeUtility coercedToStringValue:[object rawObject]]];
         if (referralCode) {
           [FBSDKTypeUtility array:referralCodes addObject:referralCode];
         }

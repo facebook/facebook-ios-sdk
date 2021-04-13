@@ -138,7 +138,7 @@ static NSMutableSet<NSString *> *_restrictedEvents;
   // match by params in custom events with event name
   for (FBSDKRestrictiveEventFilter *filter in _params) {
     if ([filter.eventName isEqualToString:eventName]) {
-      NSString *type = [FBSDKTypeUtility stringValue:filter.restrictiveParams[paramKey]];
+      NSString *type = [FBSDKTypeUtility coercedToStringValue:filter.restrictiveParams[paramKey]];
       if (type) {
         return type;
       }

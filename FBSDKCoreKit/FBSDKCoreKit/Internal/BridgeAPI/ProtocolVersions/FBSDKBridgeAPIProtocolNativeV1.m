@@ -203,7 +203,7 @@ static const struct {
     return nil;
   }
   NSString *responseActionID = bridgeParameters[FBSDKBridgeAPIProtocolNativeV1BridgeParameterInputKeys.actionID];
-  responseActionID = [FBSDKTypeUtility stringValue:responseActionID];
+  responseActionID = [FBSDKTypeUtility coercedToStringValue:responseActionID];
   if (![responseActionID isEqualToString:actionID]) {
     return nil;
   }
@@ -228,7 +228,7 @@ static const struct {
     return nil;
   }
   if (cancelledRef != NULL) {
-    NSString *completionGesture = [FBSDKTypeUtility stringValue:resultParameters[@"completionGesture"]];
+    NSString *completionGesture = [FBSDKTypeUtility coercedToStringValue:resultParameters[@"completionGesture"]];
     *cancelledRef = [completionGesture isEqualToString:@"cancel"];
   }
   return resultParameters;
@@ -269,7 +269,7 @@ static const struct {
   if (!dictionary) {
     return nil;
   }
-  NSString *domain = [FBSDKTypeUtility stringValue:dictionary[FBSDKBridgeAPIProtocolNativeV1ErrorKeys.domain]]
+  NSString *domain = [FBSDKTypeUtility coercedToStringValue:dictionary[FBSDKBridgeAPIProtocolNativeV1ErrorKeys.domain]]
   ?: FBSDKErrorDomain;
   NSInteger code = [FBSDKTypeUtility integerValue:dictionary[FBSDKBridgeAPIProtocolNativeV1ErrorKeys.code]]
   ?: FBSDKErrorUnknown;

@@ -426,7 +426,7 @@ static NSMapTable *_transientObjects;
 
 + (BOOL)_canOpenURLScheme:(NSString *)scheme
 {
-  scheme = [FBSDKTypeUtility stringValue:scheme];
+  scheme = [FBSDKTypeUtility coercedToStringValue:scheme];
   if (!scheme) {
     return NO;
   }

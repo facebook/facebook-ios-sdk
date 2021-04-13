@@ -257,7 +257,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   [self _cleanUp];
 
   NSError *error = [FBSDKError errorWithCode:[FBSDKTypeUtility unsignedIntegerValue:results[@"error_code"]]
-                                     message:[FBSDKTypeUtility stringValue:results[@"error_message"]]];
+                                     message:[FBSDKTypeUtility coercedToStringValue:results[@"error_message"]]];
   if (!error.code) {
     // reformat "to[x]" keys into an array.
     int counter = 0;

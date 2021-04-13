@@ -109,7 +109,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
     [FBSDKTypeUtility dictionary:(NSDictionary<id, id> *) object enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *dictionaryStop) {
       [FBSDKTypeUtility dictionary:dictionary
                          setObject:[self _convertObjectToJSONObject:obj invalidObjectHandler:invalidObjectHandler stop:&stop]
-                            forKey:[FBSDKTypeUtility stringValue:key]];
+                            forKey:[FBSDKTypeUtility coercedToStringValue:key]];
       if (stop) {
         *dictionaryStop = YES;
       }
@@ -136,7 +136,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
 
 + (id)objectForJSONString:(NSString *)string error:(NSError *__autoreleasing *)errorRef
 {
-  NSData *data = [[FBSDKTypeUtility stringValue:string] dataUsingEncoding:NSUTF8StringEncoding];
+  NSData *data = [[FBSDKTypeUtility stringValueOrNil:string] dataUsingEncoding:NSUTF8StringEncoding];
   if (!data) {
     if (errorRef != NULL) {
       *errorRef = nil;

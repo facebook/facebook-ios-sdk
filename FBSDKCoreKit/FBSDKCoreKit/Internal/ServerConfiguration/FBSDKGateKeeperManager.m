@@ -188,7 +188,7 @@ static FBSDKLogger *_logger;
         // updates gate keeper with fetched data
         for (id gateKeeperEntry in gateKeeperList) {
           NSDictionary<NSString *, id> *entry = [FBSDKTypeUtility dictionaryValue:gateKeeperEntry];
-          NSString *key = [FBSDKTypeUtility stringValue:entry[@"key"]];
+          NSString *key = [FBSDKTypeUtility coercedToStringValue:entry[@"key"]];
           NSNumber *value = [FBSDKTypeUtility numberValue:entry[@"value"]];
           if (entry != nil && key != nil && value != nil) {
             [FBSDKTypeUtility dictionary:gateKeeper setObject:value forKey:key];

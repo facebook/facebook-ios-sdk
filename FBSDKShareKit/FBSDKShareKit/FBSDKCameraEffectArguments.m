@@ -139,7 +139,7 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
 
 - (id)_valueForKey:(NSString *)key
 {
-  key = [FBSDKTypeUtility stringValue:key];
+  key = [FBSDKTypeUtility coercedToStringValue:key];
   return (key ? [FBSDKTypeUtility objectValue:_arguments[key]] : nil);
 }
 

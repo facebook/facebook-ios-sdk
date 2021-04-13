@@ -492,16 +492,12 @@
 		89FC9C751A3FAB4B0001910E /* FBSDKSharePhotoContentTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKSharePhotoContentTests.m; sourceTree = "<group>"; };
 		9382B7921BB47DC100E4B24F /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		939000631EB80C1A00250D4C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS10.2.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
-		9D10A6491CB3806700F42AC1 /* FBSDKDeviceShareViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKDeviceShareViewController.h; sourceTree = "<group>"; };
-		9D10A64A1CB3806700F42AC1 /* FBSDKDeviceShareViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKDeviceShareViewController.m; sourceTree = "<group>"; };
 		9D2D99941BC452DE00929E76 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKShareKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D46C5F01A11E5D800A0DDB6 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKShareKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D46C5F41A11E5D800A0DDB6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9D46C5F51A11E5D800A0DDB6 /* FBSDKShareKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKShareKit.h; sourceTree = "<group>"; };
 		9D46C5FB1A11E5D800A0DDB6 /* FBSDKShareKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FBSDKShareKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D46C6011A11E5D800A0DDB6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9D9E16B21CB46E8F00C8B68F /* FBSDKDeviceShareButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKDeviceShareButton.h; sourceTree = "<group>"; };
-		9D9E16B31CB46E8F00C8B68F /* FBSDKDeviceShareButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKDeviceShareButton.m; sourceTree = "<group>"; };
 		9DEE5C8F1A671B2100D750E1 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		9DEE5C911A671B2700D750E1 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		A41549F61E6653AE001F7152 /* FBSDKCameraEffectTextures+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBSDKCameraEffectTextures+Internal.h"; sourceTree = "<group>"; };
@@ -837,10 +833,6 @@
 				F4E7517523EA19010061BBFC /* FBSDKMessageDialog.m */,
 				F4E7517623EA19010061BBFC /* FBSDKSendButton.h */,
 				F4E7517423EA19000061BBFC /* FBSDKSendButton.m */,
-				9D9E16B21CB46E8F00C8B68F /* FBSDKDeviceShareButton.h */,
-				9D9E16B31CB46E8F00C8B68F /* FBSDKDeviceShareButton.m */,
-				9D10A6491CB3806700F42AC1 /* FBSDKDeviceShareViewController.h */,
-				9D10A64A1CB3806700F42AC1 /* FBSDKDeviceShareViewController.m */,
 				89F203821AA9255B0053499E /* FBSDKGameRequestDialog.h */,
 				89F203831AA9255B0053499E /* FBSDKGameRequestDialog.m */,
 				89688B551AA639CB00A98519 /* FBSDKLiking.h */,

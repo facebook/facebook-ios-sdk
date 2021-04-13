@@ -220,7 +220,7 @@ static id<FBSDKURLOpener> _urlOpener;
     if ([URL.resourceSpecifier hasPrefix:@"//cancel"]) {
       NSInteger errorCode = [FBSDKTypeUtility integerValue:parameters[@"error_code"]];
       if (errorCode) {
-        NSString *errorMessage = [FBSDKTypeUtility stringValue:parameters[@"error_msg"]];
+        NSString *errorMessage = [FBSDKTypeUtility coercedToStringValue:parameters[@"error_msg"]];
         NSError *error = [FBSDKError errorWithCode:errorCode message:errorMessage];
         [self.delegate webDialogView:self didFailWithError:error];
       } else {

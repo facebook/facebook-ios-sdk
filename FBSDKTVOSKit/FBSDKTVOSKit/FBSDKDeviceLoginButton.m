@@ -236,9 +236,9 @@
                                                                      parameters:nil
                                                                           flags:FBSDKGraphRequestFlagDisableErrorRecovery];
       [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-        NSString *userID = [FBSDKTypeUtility stringValue:result[@"id"]];
+        NSString *userID = [FBSDKTypeUtility coercedToStringValue:result[@"id"]];
         if (!error && [[FBSDKAccessToken currentAccessToken].userID isEqualToString:userID]) {
-          self->_userName = [FBSDKTypeUtility stringValue:result[@"name"]];
+          self->_userName = [FBSDKTypeUtility coercedToStringValue:result[@"name"]];
           self->_userID = userID;
         }
       }];

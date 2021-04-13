@@ -923,9 +923,9 @@ static BOOL _canMakeRequests = NO;
 
   [messages enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
     NSDictionary *messageDict = [FBSDKTypeUtility dictionaryValue:obj];
-    NSString *message = [FBSDKTypeUtility stringValue:messageDict[@"message"]];
-    NSString *type = [FBSDKTypeUtility stringValue:messageDict[@"type"]];
-    NSString *link = [FBSDKTypeUtility stringValue:messageDict[@"link"]];
+    NSString *message = [FBSDKTypeUtility coercedToStringValue:messageDict[@"message"]];
+    NSString *type = [FBSDKTypeUtility coercedToStringValue:messageDict[@"type"]];
+    NSString *link = [FBSDKTypeUtility coercedToStringValue:messageDict[@"link"]];
     if (!message || !type) {
       return;
     }

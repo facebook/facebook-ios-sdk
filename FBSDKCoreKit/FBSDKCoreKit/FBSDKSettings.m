@@ -566,7 +566,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
                                                  objectForKey:DATA_PROCESSING_OPTIONS
                                                        ofType:NSArray.class];
   for (NSString *option in options) {
-    if ([@"ldu" isEqualToString:[[FBSDKTypeUtility stringValue:option] lowercaseString]]) {
+    if ([@"ldu" isEqualToString:[[FBSDKTypeUtility coercedToStringValue:option] lowercaseString]]) {
       return YES;
     }
   }

@@ -28,7 +28,7 @@
 
 - (nullable instancetype)initWithString:(NSString *)string
 {
-  NSString *permission = [FBSDKTypeUtility stringValue:string];
+  NSString *permission = [FBSDKTypeUtility coercedToStringValue:string];
   if (permission.length <= 0) {
     return nil;
   }
