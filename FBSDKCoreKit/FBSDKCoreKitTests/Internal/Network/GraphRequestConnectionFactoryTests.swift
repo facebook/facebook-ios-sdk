@@ -37,5 +37,4 @@ class GraphRequestConnectionFactoryTests: XCTestCase {
       "Connections should be unique"
     )
   }
-
 }

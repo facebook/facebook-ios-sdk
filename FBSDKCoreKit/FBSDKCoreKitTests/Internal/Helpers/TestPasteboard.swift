@@ -35,5 +35,4 @@ class TestPasteboard: NSObject, Pasteboard {
     capturedData = data
     capturedPasteboardType = pasteboardType
   }
-
 }

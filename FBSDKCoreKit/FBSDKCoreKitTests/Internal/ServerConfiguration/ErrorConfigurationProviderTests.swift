@@ -26,5 +26,4 @@ class ErrorConfigurationProviderTests: XCTestCase {
       "The default error configuration provider should provide the expected concrete type"
     )
   }
-
 }

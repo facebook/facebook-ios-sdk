@@ -23,5 +23,4 @@ class TestGraphRequestPiggybackManagerProvider: NSObject, GraphRequestPiggybackM
   static func piggybackManager() -> GraphRequestPiggybackManaging.Type {
     return TestGraphRequestPiggybackManager.self
   }
-
 }

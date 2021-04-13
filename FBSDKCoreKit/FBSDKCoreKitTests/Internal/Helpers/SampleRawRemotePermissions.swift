@@ -109,7 +109,6 @@ class SampleRawRemotePermissionList: NSObject {
     }
     return ["data": grantedPermissions + expiredPermissions + declinedPermissions]
   }
-
 }
 
 @objcMembers

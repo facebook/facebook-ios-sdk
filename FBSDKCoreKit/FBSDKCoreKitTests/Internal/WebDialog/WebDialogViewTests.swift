@@ -381,5 +381,4 @@ class WebDialogViewTests: XCTestCase, WebDialogViewDelegate { // swiftlint:disab
   func webDialogViewDidFinishLoad(_ webDialogView: FBWebDialogView) {
     webDialogViewDidFinishLoadWasCalled = true
   }
-
 }

@@ -141,5 +141,4 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
   func webDialogDidCancel(_ webDialog: WebDialog) {
     webDialogDidCancelWasCalled = true
   }
-
 }

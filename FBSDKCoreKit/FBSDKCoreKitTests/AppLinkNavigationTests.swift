@@ -186,7 +186,6 @@ class FBSDKAppLinkNavigationTests: XCTestCase { // swiftlint:disable:this type_b
     } catch {
       print(error)
     }
-
   }
 
   // MARK: - Posting Navigation Events

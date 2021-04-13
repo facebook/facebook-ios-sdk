@@ -23,7 +23,6 @@ class SampleEventBinding: NSObject {
     // swiftlint:disable:next force_unwrapping
     return EventBinding(json: SampleRawRemoteEventBindings.rawBinding(name: name))!
   }
-
 }
 
 @objcMembers
@@ -32,5 +31,4 @@ class SampleEventBindingList: NSObject {
   static var valid: [EventBinding] {
     return SampleRawRemoteEventBindings.bindings.compactMap { EventBinding(json: $0) }
   }
-
 }

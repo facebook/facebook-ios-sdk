@@ -47,5 +47,4 @@ class URLSessionProxyFactoryTests: XCTestCase, URLSessionDataDelegate {
       "Session proxies should be unique"
     )
   }
-
 }

@@ -94,5 +94,4 @@ class FBSDKAppLinkUtilityTests: FBSDKTestCase {
     XCTAssertEqual(requestFactory.capturedGraphPath, "(null)/activities")
     XCTAssertEqual(requestFactory.capturedHttpMethod, HTTPMethod(rawValue: "POST"))
   }
-
 }

@@ -25,5 +25,4 @@ class SampleAuthenticationToken: NSObject {
       nonce: "fakeNonce"
     )
   }
-
 }

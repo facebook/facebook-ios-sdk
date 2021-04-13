@@ -27,5 +27,4 @@ class TestCrashObserver: CrashObserving {
 
   func didReceiveCrashLogs(_ crashLogs: [[String: Any]]) {
   }
-
 }

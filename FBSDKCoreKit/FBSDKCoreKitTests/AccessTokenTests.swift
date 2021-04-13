@@ -238,5 +238,4 @@ class AccessTokenTests: XCTestCase {
       )
     }
   }
-
 }

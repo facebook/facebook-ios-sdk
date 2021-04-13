@@ -72,5 +72,4 @@ public class TestProfileProvider: NSObject, ProfileProviding {
 
     return stubbedProfile
   }
-
 }

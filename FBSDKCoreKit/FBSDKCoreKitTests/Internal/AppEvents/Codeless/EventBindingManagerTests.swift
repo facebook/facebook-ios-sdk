@@ -347,6 +347,5 @@ class EventBindingManagerTests: XCTestCase, // swiftlint:disable:this type_body_
 
       return (collectionView, cell)
     }
-
   }
 }

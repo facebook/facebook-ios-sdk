@@ -30,5 +30,4 @@ class TestAppLinkResolverRequestBuilder: AppLinkResolverRequestBuilding {
   func getIdiomSpecificField() -> String? {
     return stubbedIdiomSpecificField
   }
-
 }

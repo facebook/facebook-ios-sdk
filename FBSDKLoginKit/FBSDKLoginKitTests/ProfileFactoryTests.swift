@@ -68,5 +68,4 @@ class ProfileFactoryTests: XCTestCase {
     XCTAssertEqual(profile.birthday, expected.birthday)
     XCTAssertEqual(profile.ageRange, expected.ageRange)
   }
-
 }
