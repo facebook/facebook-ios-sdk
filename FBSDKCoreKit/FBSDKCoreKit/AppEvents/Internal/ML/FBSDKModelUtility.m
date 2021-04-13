@@ -26,9 +26,9 @@
 
 @implementation FBSDKModelUtility : NSObject
 
-+ (NSString *)normalizeText:(NSString *)text
++ (NSString *)normalizedText:(NSString *)text
 {
-  NSMutableArray *tokens = [[text componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] mutableCopy];
+  NSMutableArray *tokens = [[text componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] mutableCopy];
   [tokens removeObject:@""];
   return [tokens componentsJoinedByString:@" "];
 }

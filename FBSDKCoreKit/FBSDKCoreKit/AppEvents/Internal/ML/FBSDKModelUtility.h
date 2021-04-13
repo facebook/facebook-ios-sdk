@@ -22,9 +22,10 @@
 
  #import <Foundation/Foundation.h>
 
+NS_SWIFT_NAME(ModelUtility)
 @interface FBSDKModelUtility : NSObject
 
-+ (NSString *)normalizeText:(NSString *)text;
++ (NSString *)normalizedText:(NSString *)text;
 
 @end
 

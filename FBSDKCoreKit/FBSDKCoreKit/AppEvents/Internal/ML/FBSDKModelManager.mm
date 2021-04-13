@@ -162,7 +162,7 @@ NS_ASSUME_NONNULL_BEGIN
       return false;
     }
     NSArray<NSString *> *integrityMapping = [self getIntegrityMapping];
-    NSString *text = [FBSDKModelUtility normalizeText:param];
+    NSString *text = [FBSDKModelUtility normalizedText:param];
     const char *bytes = [text UTF8String];
     if ((int)strlen(bytes) == 0) {
       return false;

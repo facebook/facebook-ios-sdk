@@ -1227,6 +1227,7 @@
 		F4CCDE7225EAFB320057FE5F /* FBSDKGraphRequestProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = F4CCDE6F25EAFB320057FE5F /* FBSDKGraphRequestProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4CCDE7325EAFB320057FE5F /* FBSDKGraphRequestProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = F4CCDE6F25EAFB320057FE5F /* FBSDKGraphRequestProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4D58EC22620FF15006FEC6B /* HybridAppEventsScriptMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D58EBA2620FF14006FEC6B /* HybridAppEventsScriptMessageHandlerTests.swift */; };
+		F4D58F4726220152006FEC6B /* ModelUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D58F4626220152006FEC6B /* ModelUtilityTests.swift */; };
 		F4D80B582565D6B3008CCAF0 /* FBSDKRestrictiveDataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F4D80B572565D6B2008CCAF0 /* FBSDKRestrictiveDataTests.m */; };
 		F4D80C082566D469008CCAF0 /* DrawableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D80C072566D469008CCAF0 /* DrawableTests.swift */; };
 		F4D80C402566D856008CCAF0 /* TestAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4D80C3F2566D856008CCAF0 /* TestAssets.xcassets */; };
@@ -2025,6 +2026,7 @@
 		F4CCDF8E25EB07930057FE5F /* FBSDKGraphRequestFlags.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKGraphRequestFlags.h; sourceTree = "<group>"; };
 		F4D58EBA2620FF14006FEC6B /* HybridAppEventsScriptMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HybridAppEventsScriptMessageHandlerTests.swift; sourceTree = "<group>"; };
 		F4D58EF726210254006FEC6B /* FBSDKHybridAppEventsScriptMessageHandler+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKHybridAppEventsScriptMessageHandler+Testing.h"; sourceTree = "<group>"; };
+		F4D58F4626220152006FEC6B /* ModelUtilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelUtilityTests.swift; sourceTree = "<group>"; };
 		F4D80B572565D6B2008CCAF0 /* FBSDKRestrictiveDataTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKRestrictiveDataTests.m; sourceTree = "<group>"; };
 		F4D80C072566D469008CCAF0 /* DrawableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawableTests.swift; sourceTree = "<group>"; };
 		F4D80C3F2566D856008CCAF0 /* TestAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = TestAssets.xcassets; sourceTree = "<group>"; };
@@ -3131,6 +3133,7 @@
 			children = (
 				E493252C23F7C60E0000B63A /* FBSDKModelParserTests.mm */,
 				E4C2B97923867327002335A4 /* FBSDKModelRuntimeTests.mm */,
+				F4D58F4626220152006FEC6B /* ModelUtilityTests.swift */,
 			);
 			path = ML;
 			sourceTree = "<group>";
@@ -5051,6 +5054,7 @@
 				F4D80B582565D6B3008CCAF0 /* FBSDKRestrictiveDataTests.m in Sources */,
 				F46EAB8326179B57000629F3 /* SampleGraphResponses.swift in Sources */,
 				F4EB33CE2542323500736B67 /* SampleRawRemotePermissions.swift in Sources */,
+				F4D58F4726220152006FEC6B /* ModelUtilityTests.swift in Sources */,
 				5DBB0447227FEF700009E0A6 /* FBSDKBasicUtilityTests.m in Sources */,
 				F44F52F925FAAAFF00D774B7 /* SettingsTests.swift in Sources */,
 				F952EA4F2339432100B20652 /* FBSDKMetadataIndexerTests.m in Sources */,

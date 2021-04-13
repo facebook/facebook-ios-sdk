@@ -37,6 +37,7 @@
 #import "FBSDKFileDataExtracting.h"
 #import "FBSDKInstrumentManager+Testing.h"
 #import "FBSDKMath.h"
+#import "FBSDKModelUtility.h"
 #import "FBSDKPasteboard.h"
 #import "FBSDKSKAdNetworkEvent.h"
 #import "FBSDKSKAdNetworkRule.h"

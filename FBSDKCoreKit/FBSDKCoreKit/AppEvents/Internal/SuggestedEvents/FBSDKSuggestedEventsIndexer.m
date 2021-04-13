@@ -219,7 +219,7 @@ static NSMutableSet<NSString *> *_unconfirmedEvents;
     fb_dispatch_on_default_thread(^{
       NSMutableDictionary<NSString *, id> *viewTreeCopy = [viewTree mutableCopy];
       float *denseData = [FBSDKFeatureExtractor getDenseFeatures:viewTree];
-      NSString *textFeature = [FBSDKModelUtility normalizeText:[FBSDKFeatureExtractor getTextFeature:text withScreenName:viewTreeCopy[@"screenname"]]];
+      NSString *textFeature = [FBSDKModelUtility normalizedText:[FBSDKFeatureExtractor getTextFeature:text withScreenName:viewTreeCopy[@"screenname"]]];
       NSString *event = [FBSDKModelManager processSuggestedEvents:textFeature denseData:denseData];
       if (!event || [event isEqualToString:SUGGESTED_EVENT_OTHER]) {
         return;
