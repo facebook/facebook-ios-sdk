@@ -74,4 +74,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FBSDKDeviceLoginManagerResult (Testing)
+
+- (instancetype)initWithToken:(nullable FBSDKAccessToken *)token
+                  isCancelled:(BOOL)cancelled;
+
+@end
+
 NS_ASSUME_NONNULL_END
