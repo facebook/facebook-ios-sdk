@@ -20,7 +20,7 @@ import FBSDKCoreKit
 import XCTest
 
 // swiftlint:disable force_unwrapping
-class WebViewAppLinkResolverTests: XCTestCase {
+class WebViewAppLinkResolverTests: XCTestCase { // swiftlint:disable:this type_body_length
 
   var result: [AnyHashable: Any]?
   var error: Error?
@@ -114,7 +114,9 @@ class WebViewAppLinkResolverTests: XCTestCase {
     )
     XCTAssertEqual(
       error as NSError?,
-      SDKError.unknownError(withMessage: "Invalid network response - missing data") as NSError,
+      SDKError.unknownError(
+        withMessage: "Invalid network response - missing data"
+      ) as NSError,
       "Should call the completion with an error indicating the missing data"
     )
   }
@@ -188,6 +190,108 @@ class WebViewAppLinkResolverTests: XCTestCase {
       redirectURL,
       "The second request should be to the redirect url"
     )
+  }
+
+  // MARK: - Building Applink from AppLinkData
+
+  func testBuildingLinkFromEmptyData() {
+    let link = resolver.appLink(
+      fromALData: [:],
+      destination: SampleUrls.valid
+    )
+    XCTAssertEqual(
+      link.sourceURL,
+      SampleUrls.valid,
+      "Should use the destination as the source url for the app link"
+    )
+    XCTAssertEqual(
+      link.webURL,
+      SampleUrls.valid,
+      "The web url should default to the destination"
+    )
+    XCTAssertTrue(link.targets.isEmpty, "Should not have any targets by default")
+  }
+
+  func testBuildingLinkWithInvalidAppLinkData() {
+    let link = resolver.appLink(
+      fromALData: SampleAppLinkResolverData.invalid,
+      destination: SampleUrls.valid
+    )
+    XCTAssertEqual(
+      link.sourceURL,
+      SampleUrls.valid,
+      "Should use the destination as the source url for the app link"
+    )
+    XCTAssertEqual(
+      link.webURL,
+      SampleUrls.valid,
+      "The web url should default to the destination"
+    )
+    XCTAssertEqual(
+      link.targets.count,
+      2,
+      "Should create a target for each platform link"
+    )
+    guard let target = link.targets.first else {
+      return XCTFail("Should create targets")
+    }
+    XCTAssertNil(
+      target.url,
+      "Should create a target even if the url is invalid"
+    )
+    XCTAssertTrue(
+      target.appName.isEmpty,
+      "Should be able to create a target without an app name"
+    )
+    XCTAssertNil(
+      target.appStoreId,
+      "Should create a target even if the app store ID is invalid"
+    )
+  }
+
+  func testBuildingLinkWithShouldNotFallbackToWebURL() {
+    ["no", "false", "0"].forEach { fallbackValue in
+      let link = resolver.appLink(
+        fromALData: SampleAppLinkResolverData.withShouldFallback(fallbackValue),
+        destination: SampleUrls.valid
+      )
+      XCTAssertEqual(
+        link.sourceURL,
+        SampleUrls.valid,
+        "Should use the destination as the source url for the app link"
+      )
+      XCTAssertNil(
+        link.webURL,
+        "The web url should be nil when the fallback is falsy"
+      )
+      XCTAssertTrue(
+        link.targets.isEmpty,
+        "Should not create targets for either platform"
+      )
+    }
+  }
+
+  func testBuildingLinkWithShouldFallbackToWebURL() {
+    ["yes", "true", "1"].forEach { fallbackValue in
+      let link = resolver.appLink(
+        fromALData: SampleAppLinkResolverData.withShouldFallback(fallbackValue),
+        destination: SampleUrls.valid
+      )
+      XCTAssertEqual(
+        link.sourceURL,
+        SampleUrls.valid,
+        "Should use the destination as the source url for the app link"
+      )
+      XCTAssertEqual(
+        link.webURL?.absoluteString,
+        SampleAppLinkResolverData.urlString,
+        "The web url should be used when the fallback is truthy"
+      )
+      XCTAssertTrue(
+        link.targets.isEmpty,
+        "Should not create targets for either platform"
+      )
+    }
   }
 
   // MARK: - Helpers

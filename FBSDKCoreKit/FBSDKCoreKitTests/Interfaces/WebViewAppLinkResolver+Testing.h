@@ -29,6 +29,8 @@ NS_SWIFT_NAME(URLFollowRedirectsBlock);
 
 - (instancetype)initWithSessionProvider:(id<FBSDKSessionProviding>)sessionProvider;
 - (void)followRedirects:(NSURL *)url handler:(FBSDKURLFollowRedirectsBlock)handler;
+- (FBSDKAppLink *)appLinkFromALData:(NSDictionary<NSString *, id> *)appLinkDict
+                        destination:(NSURL *)destination;
 
 @end
 
