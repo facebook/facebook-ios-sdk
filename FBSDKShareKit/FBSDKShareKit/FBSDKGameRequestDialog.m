@@ -32,7 +32,7 @@
  #import "FBSDKShareConstants.h"
  #import "FBSDKShareUtility.h"
 
-@interface FBSDKGameRequestDialog () <FBSDKWebDialogDelegate>
+@interface FBSDKGameRequestDialog () <FBSDKWebDialogDelegate, FBSDKURLOpening>
 @end
 
 @implementation FBSDKGameRequestDialog
@@ -67,6 +67,59 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   FBSDKGameRequestDialog *dialog = [self dialogWithContent:content delegate:delegate];
   [dialog show];
   return dialog;
+}
+
+ #pragma mark - FBSDKURLOpening
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation
+{
+  const BOOL isGamingUrl =
+  [self
+   canOpenURL:url
+   forApplication:application
+   sourceApplication:sourceApplication
+   annotation:annotation];
+
+  if (isGamingUrl) {
+    [self completeSuccessfully];
+  }
+
+  return isGamingUrl;
+}
+
+- (BOOL) canOpenURL:(NSURL *)url
+     forApplication:(UIApplication *)application
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation
+{
+  return
+  [self
+   isValidCallbackURL:url];
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+  [self completeSuccessfully];
+}
+
+- (BOOL)isAuthenticationURL:(NSURL *)url
+{
+  return false;
+}
+
+- (void)completeSuccessfully
+{
+  // _completionHandler(true, nil);
+}
+
+ #pragma mark - Helpers
+
+- (BOOL)isValidCallbackURL:(NSURL *)url
+{
+  return
+  [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", [FBSDKSettings appID]]];
 }
 
  #pragma mark - Object Lifecycle
