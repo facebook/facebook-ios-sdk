@@ -39,21 +39,6 @@ static inline CGSize FBSDKEdgeInsetsOutsetSize(CGSize size, UIEdgeInsets insets)
   );
 }
 
-/**
-  Limits a CGFloat value, using the scale to limit to pixels (instead of points).
-
-
- The limitFunction is frequention floorf, ceilf or roundf.  If the scale is 2.0,
- you may get back values of *.5 to correspond to pixels.
- */
-typedef float (*FBSDKLimitFunctionType)(float);
-static inline CGFloat FBSDKPointsForScreenPixels(FBSDKLimitFunctionType limitFunction,
-                                                 CGFloat screenScale,
-                                                 CGFloat pointValue)
-{
-  return limitFunction(pointValue * screenScale) / screenScale;
-}
-
 static inline CGSize FBSDKTextSize(NSString *text,
                                    UIFont *font,
                                    CGSize constrainedSize,

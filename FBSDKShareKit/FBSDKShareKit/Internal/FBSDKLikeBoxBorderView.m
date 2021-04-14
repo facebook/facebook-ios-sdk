@@ -313,6 +313,14 @@
 
  #pragma mark - Helper Methods
 
+typedef float (*FBSDKLimitFunctionType)(float);
+static inline CGFloat FBSDKPointsForScreenPixels(FBSDKLimitFunctionType limitFunction,
+                                                 CGFloat screenScale,
+                                                 CGFloat pointValue)
+{
+  return limitFunction(pointValue * screenScale) / screenScale;
+}
+
 - (UIEdgeInsets)_borderInsets
 {
   // inset the border bounds by 1/2 of the border width, since it is drawn split between inside and outside of the path

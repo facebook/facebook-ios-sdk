@@ -1228,6 +1228,7 @@
 		F4CCDE7325EAFB320057FE5F /* FBSDKGraphRequestProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = F4CCDE6F25EAFB320057FE5F /* FBSDKGraphRequestProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4CEF5C72623B08F00B4EF6C /* SampleAppLinkResolverData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CEF5BF2623B08F00B4EF6C /* SampleAppLinkResolverData.swift */; };
 		F4CEF6682623C28000B4EF6C /* FBSDKGraphRequestBodyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F4CEF6672623C28000B4EF6C /* FBSDKGraphRequestBodyTests.m */; };
+		F4CEF75926249BF500B4EF6C /* UIUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CEF75126249BF500B4EF6C /* UIUtilityTests.swift */; };
 		F4D58EC22620FF15006FEC6B /* HybridAppEventsScriptMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D58EBA2620FF14006FEC6B /* HybridAppEventsScriptMessageHandlerTests.swift */; };
 		F4D58F4726220152006FEC6B /* ModelUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D58F4626220152006FEC6B /* ModelUtilityTests.swift */; };
 		F4D58F9026237CB5006FEC6B /* WebViewAppLinkResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D58F8F26237CB5006FEC6B /* WebViewAppLinkResolverTests.swift */; };
@@ -2029,6 +2030,7 @@
 		F4CCDF8E25EB07930057FE5F /* FBSDKGraphRequestFlags.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKGraphRequestFlags.h; sourceTree = "<group>"; };
 		F4CEF5BF2623B08F00B4EF6C /* SampleAppLinkResolverData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAppLinkResolverData.swift; sourceTree = "<group>"; };
 		F4CEF6672623C28000B4EF6C /* FBSDKGraphRequestBodyTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBSDKGraphRequestBodyTests.m; path = Network/FBSDKGraphRequestBodyTests.m; sourceTree = "<group>"; };
+		F4CEF75126249BF500B4EF6C /* UIUtilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIUtilityTests.swift; sourceTree = "<group>"; };
 		F4D58EBA2620FF14006FEC6B /* HybridAppEventsScriptMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HybridAppEventsScriptMessageHandlerTests.swift; sourceTree = "<group>"; };
 		F4D58EF726210254006FEC6B /* FBSDKHybridAppEventsScriptMessageHandler+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKHybridAppEventsScriptMessageHandler+Testing.h"; sourceTree = "<group>"; };
 		F4D58F4626220152006FEC6B /* ModelUtilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelUtilityTests.swift; sourceTree = "<group>"; };
@@ -3323,6 +3325,7 @@
 			children = (
 				F4A030CD25F021D000D19DE9 /* ColorTests.swift */,
 				F4D80C072566D469008CCAF0 /* DrawableTests.swift */,
+				F4CEF75126249BF500B4EF6C /* UIUtilityTests.swift */,
 				F46E5488260E62D100BAF55C /* ViewImpressionTrackerTests.swift */,
 			);
 			path = UI;
@@ -4960,6 +4963,7 @@
 				5D2165E122264453004952D8 /* FBSDKAppEventsTests.m in Sources */,
 				F496E58F24E49DBC006231A2 /* SampleAppEvents.swift in Sources */,
 				C67BED2A257F1A6300D356C9 /* ProfilePictureViewTests.swift in Sources */,
+				F4CEF75926249BF500B4EF6C /* UIUtilityTests.swift in Sources */,
 				F4D58F9026237CB5006FEC6B /* WebViewAppLinkResolverTests.swift in Sources */,
 				F46989B325F93F8800120B09 /* TestView.swift in Sources */,
 				F40D272925E4448A004681FC /* TestGraphRequestPiggybackManagerProvider.swift in Sources */,
