@@ -65,4 +65,16 @@ enum SampleHTTPURLResponses {
     httpVersion: nil,
     headerFields: nil
   )
+
+  static func valid(
+    statusCode: Int,
+    headerFields: [String: String]? = nil
+  ) -> HTTPURLResponse {
+    return HTTPURLResponse(
+      url: SampleUrls.valid,
+      statusCode: statusCode,
+      httpVersion: nil,
+      headerFields: headerFields
+    )! // swiftlint:disable:this force_unwrapping
+  }
 }

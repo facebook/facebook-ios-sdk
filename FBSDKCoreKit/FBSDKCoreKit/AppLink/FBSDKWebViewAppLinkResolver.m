@@ -28,6 +28,7 @@
 #import "FBSDKAppLink.h"
 #import "FBSDKAppLinkTarget.h"
 #import "FBSDKCoreKitBasicsImport.h"
+#import "FBSDKError.h"
 
 /**
  Describes the callback for appLinkFromURLInBackground.
@@ -105,7 +106,26 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
 
 @end
 
+@interface FBSDKWebViewAppLinkResolver ()
+
+@property (nonatomic, strong) id<FBSDKSessionProviding> sessionProvider;
+
+@end
+
 @implementation FBSDKWebViewAppLinkResolver
+
+- (instancetype)init
+{
+  return [self initWithSessionProvider:NSURLSession.sharedSession];
+}
+
+- (instancetype)initWithSessionProvider:(id<FBSDKSessionProviding>)sessionProvider
+{
+  if ((self = [super init])) {
+    _sessionProvider = sessionProvider;
+  }
+  return self;
+}
 
 + (instancetype)sharedInstance {
     static id instance;
@@ -139,16 +159,20 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
       }
     }
 
-    handler(@{ @"response" : response, @"data" : data }, nil);
+    if (data) {
+      handler(@{ @"response" : response, @"data" : data }, nil);
+    } else {
+      handler(nil, [FBSDKError unknownErrorWithMessage:@"Invalid network response - missing data"]);
+    }
   };
 
   NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
   [request setValue:FBSDKWebViewAppLinkResolverMetaTagPrefix forHTTPHeaderField:FBSDKWebViewAppLinkResolverPreferHeader];
 
-  NSURLSession *session = [NSURLSession sharedSession];
-  [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+  id<FBSDKSessionDataTask> task = [self.sessionProvider dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
     completion(response, data, error);
-  }] resume];
+  }];
+  [task resume];
 }
 
 - (void)appLinkFromURL:(NSURL *)url handler:(FBSDKAppLinkBlock)handler

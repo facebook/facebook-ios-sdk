@@ -16,42 +16,20 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@objcMembers
-class TestSessionDataTask: NSObject, SessionDataTask {
-  var resumeCallCount = 0
-  var cancelCallCount = 0
-  var stubbedState: URLSessionTask.State = .completed
+#import "FBSDKWebViewAppLinkResolver.h"
 
-  var state: URLSessionTask.State {
-    return stubbedState
-  }
+NS_ASSUME_NONNULL_BEGIN
 
-  func resume() {
-    resumeCallCount += 1
-  }
+typedef void (^FBSDKURLFollowRedirectsBlock)(NSDictionary<NSString *, id> * _Nullable result, NSError * _Nullable error)
+NS_SWIFT_NAME(URLFollowRedirectsBlock);
 
-  func cancel() {
-    cancelCallCount += 1
-  }
-}
+@interface FBSDKWebViewAppLinkResolver (Testing)
 
-@objcMembers
-class TestSessionProvider: NSObject, SessionProviding {
-  /// A data task to return from `dataTask(with:completion:)`
-  var stubbedDataTask: SessionDataTask?
-  /// The completion handler to be invoked in the test
-  var capturedCompletion: ((Data?, URLResponse?, Error?) -> Void)?
-  /// The url request for the data task
-  var capturedRequest: URLRequest?
-  var dataTaskCallCount = 0
+@property (nonatomic, strong) id<FBSDKSessionProviding> sessionProvider;
 
-  func dataTask(
-    with request: URLRequest,
-    completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void
-  ) -> SessionDataTask {
-    dataTaskCallCount += 1
-    capturedRequest = request
-    capturedCompletion = completionHandler
-    return stubbedDataTask ?? TestSessionDataTask()
-  }
-}
+- (instancetype)initWithSessionProvider:(id<FBSDKSessionProviding>)sessionProvider;
+- (void)followRedirects:(NSURL *)url handler:(FBSDKURLFollowRedirectsBlock)handler;
+
+@end
+
+NS_ASSUME_NONNULL_END

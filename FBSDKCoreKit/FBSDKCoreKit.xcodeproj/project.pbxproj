@@ -1228,6 +1228,7 @@
 		F4CCDE7325EAFB320057FE5F /* FBSDKGraphRequestProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = F4CCDE6F25EAFB320057FE5F /* FBSDKGraphRequestProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4D58EC22620FF15006FEC6B /* HybridAppEventsScriptMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D58EBA2620FF14006FEC6B /* HybridAppEventsScriptMessageHandlerTests.swift */; };
 		F4D58F4726220152006FEC6B /* ModelUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D58F4626220152006FEC6B /* ModelUtilityTests.swift */; };
+		F4D58F9026237CB5006FEC6B /* WebViewAppLinkResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D58F8F26237CB5006FEC6B /* WebViewAppLinkResolverTests.swift */; };
 		F4D80B582565D6B3008CCAF0 /* FBSDKRestrictiveDataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F4D80B572565D6B2008CCAF0 /* FBSDKRestrictiveDataTests.m */; };
 		F4D80C082566D469008CCAF0 /* DrawableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D80C072566D469008CCAF0 /* DrawableTests.swift */; };
 		F4D80C402566D856008CCAF0 /* TestAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4D80C3F2566D856008CCAF0 /* TestAssets.xcassets */; };
@@ -2027,6 +2028,8 @@
 		F4D58EBA2620FF14006FEC6B /* HybridAppEventsScriptMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HybridAppEventsScriptMessageHandlerTests.swift; sourceTree = "<group>"; };
 		F4D58EF726210254006FEC6B /* FBSDKHybridAppEventsScriptMessageHandler+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKHybridAppEventsScriptMessageHandler+Testing.h"; sourceTree = "<group>"; };
 		F4D58F4626220152006FEC6B /* ModelUtilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelUtilityTests.swift; sourceTree = "<group>"; };
+		F4D58F7A26237C71006FEC6B /* WebViewAppLinkResolver+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WebViewAppLinkResolver+Testing.h"; sourceTree = "<group>"; };
+		F4D58F8F26237CB5006FEC6B /* WebViewAppLinkResolverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewAppLinkResolverTests.swift; sourceTree = "<group>"; };
 		F4D80B572565D6B2008CCAF0 /* FBSDKRestrictiveDataTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKRestrictiveDataTests.m; sourceTree = "<group>"; };
 		F4D80C072566D469008CCAF0 /* DrawableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawableTests.swift; sourceTree = "<group>"; };
 		F4D80C3F2566D856008CCAF0 /* TestAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = TestAssets.xcassets; sourceTree = "<group>"; };
@@ -2320,6 +2323,7 @@
 			isa = PBXGroup;
 			children = (
 				45540DB025271A88008E853E /* FBSDKAppLinkResolverRequestBuilderTests.m */,
+				F4D58F8F26237CB5006FEC6B /* WebViewAppLinkResolverTests.swift */,
 				F46E556E260FAB1F00BAF55C /* AppLinkResolverTests.swift */,
 			);
 			path = AppLinks;
@@ -3215,6 +3219,7 @@
 				F40404C82612789100870E1D /* FBSDKWebDialogView+Testing.h */,
 				F4E89106261E2B5B003184B3 /* FeatureManager+Testing.h */,
 				F4D58EF726210254006FEC6B /* FBSDKHybridAppEventsScriptMessageHandler+Testing.h */,
+				F4D58F7A26237C71006FEC6B /* WebViewAppLinkResolver+Testing.h */,
 				F455441226178ACF00A547A1 /* ImageDownloader+Testing.h */,
 			);
 			path = Interfaces;
@@ -4949,6 +4954,7 @@
 				5D2165E122264453004952D8 /* FBSDKAppEventsTests.m in Sources */,
 				F496E58F24E49DBC006231A2 /* SampleAppEvents.swift in Sources */,
 				C67BED2A257F1A6300D356C9 /* ProfilePictureViewTests.swift in Sources */,
+				F4D58F9026237CB5006FEC6B /* WebViewAppLinkResolverTests.swift in Sources */,
 				F46989B325F93F8800120B09 /* TestView.swift in Sources */,
 				F40D272925E4448A004681FC /* TestGraphRequestPiggybackManagerProvider.swift in Sources */,
 				F44F545A25FADACA00D774B7 /* TestAppEventsConfiguration.swift in Sources */,

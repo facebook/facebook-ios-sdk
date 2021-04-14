@@ -28,6 +28,7 @@
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKCrashObserver.h"
 #import "FBSDKCrashObserver+Internal.h"
+#import "FBSDKError.h"
 #import "FBSDKEventDeactivationManager.h"
 #import "FBSDKEventBinding.h"
 #import "FBSDKEventBindingManager.h"
@@ -52,6 +53,7 @@
 #import "ImageDownloader+Testing.h"
 #import "FeatureManager+Testing.h"
 #import "UserDefaultsSpy.h"
+#import "WebViewAppLinkResolver+Testing.h"
 // URLSession Abstraction
 #import "FBSDKURLSessionProxyProviding.h"
 #import "FBSDKURLSessionProxyFactory.h"
