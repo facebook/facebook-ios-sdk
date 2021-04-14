@@ -25,38 +25,9 @@
 #import "FBSDKCoreKitImport.h"
 
 #import "FBSDKSharingValidation.h"
+#import "FBSDKGameRequestURLProvider.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-/**
- NS_ENUM(NSUInteger, FBSDKGameRequestActionType)
-  Additional context about the nature of the request.
- */
-typedef NS_ENUM(NSUInteger, FBSDKGameRequestActionType)
-{
-  /** No action type */
-  FBSDKGameRequestActionTypeNone = 0,
-  /** Send action type: The user is sending an object to the friends. */
-  FBSDKGameRequestActionTypeSend,
-  /** Ask For action type: The user is asking for an object from friends. */
-  FBSDKGameRequestActionTypeAskFor,
-  /** Turn action type: It is the turn of the friends to play against the user in a match. (no object) */
-  FBSDKGameRequestActionTypeTurn,
-} NS_SWIFT_NAME(GameRequestActionType);
-
-/**
- NS_ENUM(NSUInteger, FBSDKGameRequestFilters)
-  Filter for who can be displayed in the multi-friend selector.
- */
-typedef NS_ENUM(NSUInteger, FBSDKGameRequestFilter)
-{
-  /** No filter, all friends can be displayed. */
-  FBSDKGameRequestFilterNone = 0,
-  /** Friends using the app can be displayed. */
-  FBSDKGameRequestFilterAppUsers,
-  /** Friends not using the app can be displayed. */
-  FBSDKGameRequestFilterAppNonUsers,
-} NS_SWIFT_NAME(GameRequestFilter);
 
 /**
   A model for a game request.
@@ -132,6 +103,11 @@ NS_SWIFT_NAME(GameRequestContent)
   The title for the dialog.
  */
 @property (nonatomic, copy) NSString *title;
+
+/**
+  The call to action for the dialog.
+ */
+@property (nonatomic, copy) NSString *cta;
 
 @end
 

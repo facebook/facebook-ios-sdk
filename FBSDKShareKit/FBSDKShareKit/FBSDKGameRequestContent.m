@@ -153,13 +153,15 @@
                                                 isIn:@[@(FBSDKGameRequestActionTypeNone),
                                                        @(FBSDKGameRequestActionTypeSend),
                                                        @(FBSDKGameRequestActionTypeAskFor),
-                                                       @(FBSDKGameRequestActionTypeTurn)]
+                                                       @(FBSDKGameRequestActionTypeTurn),
+                                                       @(FBSDKGameRequestActionTypeInvite)]
                                                error:errorRef]
   && [FBSDKShareUtility validateArgumentWithName:@"filters"
                                            value:_filters
                                             isIn:@[@(FBSDKGameRequestFilterNone),
                                                    @(FBSDKGameRequestFilterAppUsers),
-                                                   @(FBSDKGameRequestFilterAppNonUsers)]
+                                                   @(FBSDKGameRequestFilterAppNonUsers),
+                                                   @(FBSDKGameRequestFilterEverybody)]
                                            error:errorRef];
 }
 

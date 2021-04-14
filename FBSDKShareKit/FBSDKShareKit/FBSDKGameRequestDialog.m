@@ -28,6 +28,7 @@
   #import "FBSDKCoreKit+Internal.h"
  #endif
  #import "FBSDKGameRequestFrictionlessRecipientCache.h"
+ #import "FBSDKGameRequestURLProvider.h"
  #import "FBSDKShareConstants.h"
  #import "FBSDKShareUtility.h"
 
@@ -113,15 +114,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
     return NO;
   }
 
-  NSMutableDictionary *parameters = [NSMutableDictionary new];
-  [FBSDKTypeUtility dictionary:parameters setObject:[content.recipients componentsJoinedByString:@","] forKey:@"to"];
-  [FBSDKTypeUtility dictionary:parameters setObject:content.message forKey:@"message"];
-  [FBSDKTypeUtility dictionary:parameters setObject:[self _actionTypeNameForActionType:content.actionType] forKey:@"action_type"];
-  [FBSDKTypeUtility dictionary:parameters setObject:content.objectID forKey:@"object_id"];
-  [FBSDKTypeUtility dictionary:parameters setObject:[self _filtersNameForFilters:content.filters] forKey:@"filters"];
-  [FBSDKTypeUtility dictionary:parameters setObject:[content.recipientSuggestions componentsJoinedByString:@","] forKey:@"suggestions"];
-  [FBSDKTypeUtility dictionary:parameters setObject:content.data forKey:@"data"];
-  [FBSDKTypeUtility dictionary:parameters setObject:content.title forKey:@"title"];
+  NSMutableDictionary *parameters = [self _convertGameRequestContentToDictionaryV1:content];
 
   // check if we are sending to a specific set of recipients.  if we are and they are all frictionless recipients, we
   // can perform this action without displaying the web dialog
@@ -159,6 +152,36 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
                                                    message:nil];
   }
   return NO;
+}
+
+- (NSMutableDictionary *)_convertGameRequestContentToDictionaryV1:(FBSDKGameRequestContent *)content
+{
+  NSMutableDictionary *parameters = [NSMutableDictionary new];
+  [FBSDKTypeUtility dictionary:parameters setObject:[content.recipients componentsJoinedByString:@","] forKey:@"to"];
+  [FBSDKTypeUtility dictionary:parameters setObject:content.message forKey:@"message"];
+  [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKGameRequestURLProvider actionTypeNameForActionType:content.actionType] forKey:@"action_type"];
+  [FBSDKTypeUtility dictionary:parameters setObject:content.objectID forKey:@"object_id"];
+  [FBSDKTypeUtility dictionary:parameters setObject:content.data forKey:@"data"];
+  [FBSDKTypeUtility dictionary:parameters setObject:content.title forKey:@"title"];
+
+  [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKGameRequestURLProvider filtersNameForFilters:content.filters] forKey:@"filters"];
+  [FBSDKTypeUtility dictionary:parameters setObject:[content.recipientSuggestions componentsJoinedByString:@","] forKey:@"suggestions"];
+  return parameters;
+}
+
+- (NSMutableDictionary *)_convertGameRequestContentToDictionaryV2:(FBSDKGameRequestContent *)content
+{
+  NSMutableDictionary *parameters = [NSMutableDictionary new];
+  [FBSDKTypeUtility dictionary:parameters setObject:[content.recipients componentsJoinedByString:@","] forKey:@"to"];
+  [FBSDKTypeUtility dictionary:parameters setObject:content.message forKey:@"message"];
+  [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKGameRequestURLProvider actionTypeNameForActionType:content.actionType] forKey:@"action_type"];
+  [FBSDKTypeUtility dictionary:parameters setObject:content.objectID forKey:@"object_id"];
+  [FBSDKTypeUtility dictionary:parameters setObject:content.data forKey:@"data"];
+  [FBSDKTypeUtility dictionary:parameters setObject:content.title forKey:@"title"];
+
+  [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKGameRequestURLProvider filtersNameForFilters:content.filters] forKey:@"options"];
+  [FBSDKTypeUtility dictionary:parameters setObject:content.cta forKey:@"cta"];
+  return parameters;
 }
 
  #pragma mark - FBSDKWebDialogDelegate
@@ -323,45 +346,6 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   if (error) {
     return;
   } else {}
-}
-
-- (NSString *)_actionTypeNameForActionType:(FBSDKGameRequestActionType)actionType
-{
-  switch (actionType) {
-    case FBSDKGameRequestActionTypeNone: {
-      return nil;
-    }
-    case FBSDKGameRequestActionTypeSend: {
-      return @"send";
-    }
-    case FBSDKGameRequestActionTypeAskFor: {
-      return @"askfor";
-    }
-    case FBSDKGameRequestActionTypeTurn: {
-      return @"turn";
-    }
-    default: {
-      return nil;
-    }
-  }
-}
-
-- (NSString *)_filtersNameForFilters:(FBSDKGameRequestFilter)filters
-{
-  switch (filters) {
-    case FBSDKGameRequestFilterNone: {
-      return nil;
-    }
-    case FBSDKGameRequestFilterAppUsers: {
-      return @"app_users";
-    }
-    case FBSDKGameRequestFilterAppNonUsers: {
-      return @"app_non_users";
-    }
-    default: {
-      return nil;
-    }
-  }
 }
 
 @end
