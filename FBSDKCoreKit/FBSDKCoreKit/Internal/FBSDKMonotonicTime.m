@@ -27,11 +27,6 @@
  #include <mach/mach.h>
  #include <mach/mach_time.h>
 
-/**
- * PLEASE NOTE: FBSDKSDKMonotonicTimeTests work fine, but are disabled
- * because they take several seconds. Please re-enable them to test
- * any changes you're making here!
- */
 static uint64_t _get_time_nanoseconds(void)
 {
   static struct mach_timebase_info tb_info = {0};
@@ -48,45 +43,6 @@ FBSDKMonotonicTimeSeconds FBSDKMonotonicTimeGetCurrentSeconds(void)
 {
   const uint64_t nowNanoSeconds = _get_time_nanoseconds();
   return (FBSDKMonotonicTimeSeconds)nowNanoSeconds / (FBSDKMonotonicTimeSeconds)1000000000.0;
-}
-
-FBSDKMonotonicTimeMilliseconds FBSDKMonotonicTimeGetCurrentMilliseconds(void)
-{
-  const uint64_t nowNanoSeconds = _get_time_nanoseconds();
-  return nowNanoSeconds / 1000000;
-}
-
-FBSDKMonotonicTimeNanoseconds FBSDKMonotonicTimeGetCurrentNanoseconds(void)
-{
-  return _get_time_nanoseconds();
-}
-
-FBSDKMachAbsoluteTimeUnits FBSDKMonotonicTimeConvertSecondsToMachUnits(FBSDKMonotonicTimeSeconds seconds)
-{
-  static double ratio = 0;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    struct mach_timebase_info tb_info = {0};
-    int ret = mach_timebase_info(&tb_info);
-    assert(0 == ret);
-    ratio = ((double) tb_info.denom / (double)tb_info.numer) * 1000000000.0;
-  });
-
-  return seconds * ratio;
-}
-
-FBSDKMonotonicTimeSeconds FBSDKMonotonicTimeConvertMachUnitsToSeconds(FBSDKMachAbsoluteTimeUnits machUnits)
-{
-  static double ratio = 0;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    struct mach_timebase_info tb_info = {0};
-    int ret = mach_timebase_info(&tb_info);
-    assert(0 == ret);
-    ratio = ((double) tb_info.numer / (double)tb_info.denom) / 1000000000.0;
-  });
-
-  return ratio * (double)machUnits;
 }
 
 #endif

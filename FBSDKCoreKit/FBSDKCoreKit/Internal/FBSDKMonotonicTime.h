@@ -23,19 +23,6 @@
  #include <stdint.h>
 
 typedef double FBSDKMonotonicTimeSeconds;
-typedef uint64_t FBSDKMonotonicTimeMilliseconds;
-typedef uint64_t FBSDKMonotonicTimeNanoseconds;
-typedef uint64_t FBSDKMachAbsoluteTimeUnits;
-
-/**
- * return current monotonic time in Milliseconds
- * Millisecond precision, uint64_t value.
- * Avoids float/double math operations, thus more efficient than FBSDKMonotonicTimeGetCurrentSeconds.
- * Should be preferred over FBSDKMonotonicTimeGetCurrentSeconds in case millisecond
- * precision is required.
- * IMPORTANT: this timer doesn't run while the device is sleeping.
- */
-FBSDKMonotonicTimeMilliseconds FBSDKMonotonicTimeGetCurrentMilliseconds(void);
 
 /**
  * return current monotonic time in Seconds
@@ -45,29 +32,5 @@ FBSDKMonotonicTimeMilliseconds FBSDKMonotonicTimeGetCurrentMilliseconds(void);
  * IMPORTANT: this timer doesn't run while the device is sleeping.
  */
 FBSDKMonotonicTimeSeconds FBSDKMonotonicTimeGetCurrentSeconds(void);
-
-/**
- * return current monotonic time in NanoSeconds
- * Nanosecond precision, uint64_t value.
- * Useful when nanosecond precision is required but you want to avoid float/double math operations.
- * IMPORTANT: this timer doesn't run while the device is sleeping.
- */
-FBSDKMonotonicTimeNanoseconds FBSDKMonotonicTimeGetCurrentNanoseconds(void);
-
-/**
- * return number of MachTimeUnits for given number of seconds
- * this is useful when you want to use the really fast mach_absolute_time() function
- * to calculate deltas between two points and then check it against a (precomputed) threshold.
- * Nanosecond precision, uint64_t value.
- */
-FBSDKMachAbsoluteTimeUnits FBSDKMonotonicTimeConvertSecondsToMachUnits(FBSDKMonotonicTimeSeconds seconds);
-
-/**
- * return the number of seconds for a given amount of MachTimeUnits
- * this is useful when you want to use the really fast mach_absolute_time() function, take
- * deltas between time points, and when you're out of the timing critical section, use
- * this function to compute how many seconds the delta works out to be.
- */
-FBSDKMonotonicTimeSeconds FBSDKMonotonicTimeConvertMachUnitsToSeconds(FBSDKMachAbsoluteTimeUnits machUnits);
 
 #endif
