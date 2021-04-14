@@ -300,16 +300,6 @@ static void (*fb_swizzledMethods[MAX_ARGS - MIN_ARGS + 1])() = {fb_swizzledMetho
   });
 }
 
-+ (void)unswizzleSelector:(SEL)aSelector onClass:(Class)aClass
-{
-  Method aMethod = class_getInstanceMethod(aClass, aSelector);
-  FBSDKSwizzle *swizzle = [FBSDKSwizzler swizzleForMethod:aMethod];
-  if (swizzle) {
-    method_setImplementation(aMethod, swizzle.originalMethod);
-    [FBSDKSwizzler removeSwizzleForMethod:aMethod];
-  }
-}
-
 /*
  Remove the named swizzle from the given class/selector. If aName is nil, remove all
  swizzles for this class/selector
