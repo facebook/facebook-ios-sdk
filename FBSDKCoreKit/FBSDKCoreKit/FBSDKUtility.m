@@ -20,6 +20,8 @@
 
 #import <CommonCrypto/CommonDigest.h>
 
+#import "FBSDKAccessToken.h"
+#import "FBSDKAuthenticationToken.h"
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKInternalUtility.h"
 
@@ -78,6 +80,18 @@
 + (NSString *)SHA256Hash:(NSObject *)input
 {
   return [FBSDKBasicUtility SHA256Hash:input];
+}
+
++ (NSString *)getGraphDomainFromToken
+{
+  NSString *graphDomain = FBSDKAuthenticationToken.currentAuthenticationToken.graphDomain;
+  if (!graphDomain) {
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    graphDomain = FBSDKAccessToken.currentAccessToken.graphDomain;
+    #pragma clange diagnostic pop
+  }
+  return graphDomain;
 }
 
 @end

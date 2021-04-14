@@ -32,6 +32,8 @@
  #import "FBSDKShareConstants.h"
  #import "FBSDKShareUtility.h"
 
+ #define FBSDK_APP_REQUEST_METHOD_NAME @"apprequests"
+
 @interface FBSDKGameRequestDialog () <FBSDKWebDialogDelegate, FBSDKURLOpening>
 @end
 
@@ -40,8 +42,6 @@
   BOOL _dialogIsFrictionless;
   FBSDKWebDialog *_webDialog;
 }
-
- #define FBSDK_APP_REQUEST_METHOD_NAME @"apprequests"
 
  #pragma mark - Class Methods
 
@@ -65,8 +65,29 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 + (instancetype)showWithContent:(FBSDKGameRequestContent *)content delegate:(id<FBSDKGameRequestDialogDelegate>)delegate
 {
   FBSDKGameRequestDialog *dialog = [self dialogWithContent:content delegate:delegate];
-  [dialog show];
+  NSString *graphDomain = [FBSDKUtility getGraphDomainFromToken];
+  if ([graphDomain isEqualToString:@"gaming"] && [FBSDKInternalUtility isFacebookAppInstalled]) {
+    [dialog launchGameRequestDialogWithGameRequestContent:content delegate:delegate];
+  } else {
+    [dialog show];
+  }
   return dialog;
+}
+
+- (void)launchGameRequestDialogWithGameRequestContent:(FBSDKGameRequestContent *)requestContent delegate:(id<FBSDKGameRequestDialogDelegate>)delegate;
+{
+  __weak typeof(self) weakSelf = self;
+  if ([FBSDKAccessToken currentAccessToken] == nil) {
+    return;
+  }
+
+  NSDictionary *contentDictionary = [self _convertGameRequestContentToDictionaryV2:_content];
+  [[FBSDKBridgeAPI sharedInstance]
+   openURL:[FBSDKGameRequestURLProvider createDeepLinkURLWithQueryDictionary:contentDictionary]
+   sender:weakSelf
+   handler:^(BOOL success, NSError *_Nullable error) {
+     if (!success) {}
+   }];
 }
 
  #pragma mark - FBSDKURLOpening
@@ -156,6 +177,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
     [_delegate gameRequestDialog:self didFailWithError:error];
     return NO;
   }
+
   if (![self validateWithError:&error]) {
     [_delegate gameRequestDialog:self didFailWithError:error];
     return NO;

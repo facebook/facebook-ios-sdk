@@ -62,7 +62,8 @@
       return @"app_non_users";
     }
     case FBSDKGameRequestFilterEverybody: {
-      if ([FBSDKAuthenticationToken.currentAuthenticationToken.graphDomain isEqualToString:@"gaming"] && [FBSDKInternalUtility isFacebookAppInstalled]) {
+      NSString *graphDomain = [FBSDKUtility getGraphDomainFromToken];
+      if ([graphDomain isEqualToString:@"gaming"] && [FBSDKInternalUtility isFacebookAppInstalled]) {
         return @"everybody";
       }
       return nil;
@@ -89,7 +90,7 @@
       return @"turn";
     }
     case FBSDKGameRequestActionTypeInvite: {
-      return @"INVITE";
+      return @"invite";
     }
     default: {
       return nil;
