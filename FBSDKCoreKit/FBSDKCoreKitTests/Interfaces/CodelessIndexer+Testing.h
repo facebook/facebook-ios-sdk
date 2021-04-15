@@ -29,13 +29,20 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic, copy) Class<FBSDKSwizzling> swizzler;
 @property (class, nullable, nonatomic, readonly) id<FBSDKSettings> settings;
 @property (class, nullable, nonatomic, readonly) id<FBSDKAdvertiserIDProviding> advertiserIDProvider;
+@property (class, nullable, nonatomic, readonly) NSString *currentSessionDeviceID;
+@property (class, readonly) BOOL isCheckingSession;
+@property (class, nullable, nonatomic, readonly) NSTimer *appIndexingTimer;
 
 + (nullable id<FBSDKGraphRequest>)requestToLoadCodelessSetup:(NSString *)appID
 NS_SWIFT_NAME(requestToLoadCodelessSetup(appID:));
 
 + (void)loadCodelessSettingWithCompletionBlock:(FBSDKCodelessSettingLoadBlock)completionBlock;
++ (void)uploadIndexing:(nullable NSString *)tree;
++ (void)checkCodelessIndexingSession;
++ (NSDictionary<NSString *, NSNumber *> *)dimensionOf:(NSObject *)obj;
 
 + (void)reset;
++ (void)resetIsCodelessIndexing;
 
 @end
 

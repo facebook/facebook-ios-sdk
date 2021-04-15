@@ -21,6 +21,7 @@ import XCTest
 
 class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_length
 
+  let request = TestGraphRequest()
   let requestFactory = TestGraphRequestFactory()
   let store = UserDefaultsSpy()
   let connection: TestGraphRequestConnection = TestGraphRequestConnection()
@@ -34,12 +35,29 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
   var codelessSettingStorageKey: String! // swiftlint:disable:this implicitly_unwrapped_optional
   var capturedIsEnabled = false
   var capturedError: Error?
+  let frame = CGRect(
+    origin: CGPoint(x: 20, y: 20),
+    size: CGSize(width: 36, height: 36)
+  )
+  lazy var view = {
+    return UIView(frame: frame)
+  }()
+  let autoEventSetupEnabled = "auto_event_setup_enabled"
+
+  enum Keys {
+    static let codelessEnabled = "is_app_indexing_enabled"
+    static let fields = "fields"
+    static let advertiserID = "advertiser_id"
+    static let deviceSessionID = "device_session_id"
+    static let extInfo = "extinfo"
+  }
 
   override func setUp() {
     super.setUp()
 
     CodelessIndexerTests.reset()
 
+    requestFactory.stubbedRequest = request
     settings.appID = name
     codelessSettingStorageKey = "com.facebook.sdk:codelessSetting\(name)"
 
@@ -150,8 +168,8 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     CodelessIndexer.requestToLoadCodelessSetup(appID: appID)
 
     let expectedParameters = [
-      "fields": "auto_event_setup_enabled",
-      "advertiser_id": name
+      Keys.fields: autoEventSetupEnabled,
+      Keys.advertiserID: name
     ]
     XCTAssertEqual(
       requestFactory.capturedGraphPath,
@@ -357,7 +375,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
 
     TestServerConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
 
-    connection.capturedCompletion?(nil, ["auto_event_setup_enabled": true], nil)
+    connection.capturedCompletion?(nil, [autoEventSetupEnabled: true], nil)
 
     XCTAssertNil(capturedError)
     XCTAssertTrue(
@@ -382,7 +400,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
 
     TestServerConfigurationProvider.capturedCompletionBlock?(enabledConfiguration, nil)
 
-    connection.capturedCompletion?(nil, ["auto_event_setup_enabled": true], nil)
+    connection.capturedCompletion?(nil, [autoEventSetupEnabled: true], nil)
 
     XCTAssertNil(capturedError)
     XCTAssertTrue(
@@ -393,6 +411,405 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       store.capturedSetObjectKey,
       codelessSettingStorageKey,
       "Should persist the fetched setting"
+    )
+  }
+
+  // MARK: - Uploading Indexing
+
+  enum SampleViewHierarchyTrees {
+    static let empty = ""
+    static let valid = "UIButton"
+  }
+
+  func testUploadingWithoutAppID() {
+    settings.appID = nil
+    CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.empty)
+
+    XCTAssertNotNil(
+      requestFactory.capturedGraphPath,
+      "Should not create an upload request without an app identifier but it will"
+    )
+  }
+
+  func testUploadingWithoutViewHierarchy() {
+    CodelessIndexer.uploadIndexing(nil)
+
+    XCTAssertNil(
+      requestFactory.capturedGraphPath,
+      "Should not create an upload request without a view hierarchy"
+    )
+  }
+
+  func testUploadingWithEmptyViewHierarchy() {
+    CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.empty)
+
+    XCTAssertNotNil(
+      requestFactory.capturedGraphPath,
+      "Should not create an upload request with an empty view hierarchy but it will"
+    )
+  }
+
+  func testUploadingWhileUploadInProgress() {
+    CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.valid)
+    // Reset the test evidence to be able to check that the second call
+    // does not create a graph request
+    requestFactory.capturedGraphPath = nil
+    CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.valid)
+
+    XCTAssertNil(
+      requestFactory.capturedGraphPath,
+      "Should not create an upload request if an upload is in progress"
+    )
+  }
+
+  func testUploadingIdenticalViewHierarchy() {
+    CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.valid)
+    // Reset the flag so that it treats the first call as completed
+    CodelessIndexer.resetIsCodelessIndexing()
+    // Reset the test evidence to be able to check that the second call
+    // does not create a graph request
+    requestFactory.capturedGraphPath = nil
+    CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.valid)
+
+    XCTAssertNil(
+      requestFactory.capturedGraphPath,
+      "Should not create an upload request for a hierarchy that is identical to one that was previously uploaded"
+    )
+  }
+
+  func testUploadRequest() {
+    CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.valid)
+
+    XCTAssertEqual(
+      requestFactory.capturedGraphPath,
+      "\(settings.appID!)/app_indexing", // swiftlint:disable:this force_unwrapping
+      "Should create a request with the expected graph path"
+    )
+    XCTAssertEqual(
+      requestFactory.capturedHttpMethod,
+      .post,
+      "Should create a request with the expected http method"
+    )
+    XCTAssertEqual(
+      requestFactory.capturedParameters as? [String: String],
+      [
+        "app_version": "",
+        Keys.deviceSessionID: CodelessIndexer.currentSessionDeviceID!,  // swiftlint:disable:this force_unwrapping
+        "platform": "iOS",
+        "tree": "UIButton"
+      ],
+      "Should create a request with the expected parameters"
+    )
+    XCTAssertEqual(
+      requestFactory.capturedFlags,
+      [],
+      "Should create a request with the expected flags"
+    )
+  }
+
+  func testCompletingUploadWithoutInformation() {
+    let sessionID = CodelessIndexer.currentSessionDeviceID
+    CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.valid)
+
+    guard let completion = request.capturedCompletionHandler else {
+      return XCTFail("Should start a request with a completion handler")
+    }
+    completion(nil, nil, nil)
+
+    XCTAssertEqual(
+      sessionID,
+      CodelessIndexer.currentSessionDeviceID,
+      "Completing with no results or error should be treated as a noop"
+    )
+  }
+
+  func testCompletingUploadWithErrorOnly() {
+    let sessionID = CodelessIndexer.currentSessionDeviceID
+    CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.valid)
+
+    guard let completion = request.capturedCompletionHandler else {
+      return XCTFail("Should start a request with a completion handler")
+    }
+    completion(nil, nil, SampleError())
+
+    XCTAssertEqual(
+      sessionID,
+      CodelessIndexer.currentSessionDeviceID,
+      "Completing with only an error should be treated as a noop"
+    )
+  }
+
+  func testCompletingUploadWithResultsIndicatingThatCodelessIsEnabled() {
+    let sessionID = CodelessIndexer.currentSessionDeviceID
+    CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.valid)
+
+    guard let completion = request.capturedCompletionHandler else {
+      return XCTFail("Should start a request with a completion handler")
+    }
+    completion(nil, [Keys.codelessEnabled: true], nil)
+
+    XCTAssertEqual(
+      sessionID,
+      CodelessIndexer.currentSessionDeviceID,
+      "Completing with results indicating that codeless is enabled should be treated as a noop"
+    )
+  }
+
+  func testCompletingUploadWithResultsIndicatingThatCodelessIsDisabled() {
+    let sessionID = CodelessIndexer.currentSessionDeviceID
+    CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.valid)
+
+    guard let completion = request.capturedCompletionHandler else {
+      return XCTFail("Should start a request with a completion handler")
+    }
+    completion(nil, [Keys.codelessEnabled: false], nil)
+
+    XCTAssertNotEqual(
+      sessionID,
+      CodelessIndexer.currentSessionDeviceID,
+      """
+      Completing with results indicating that codeless is disabled should
+      reset the session identifier
+      """
+    )
+  }
+
+  // MARK: - Checking Indexing Session
+
+  func testCheckingIndexingSessionWhileIndexing() {
+    CodelessIndexer.checkCodelessIndexingSession()
+    request.capturedCompletionHandler = nil
+    CodelessIndexer.checkCodelessIndexingSession()
+
+    XCTAssertNil(
+      request.capturedCompletionHandler,
+      "Should not create a second request to cehck the indexing status if the first is incomplete"
+    )
+  }
+
+  func testCheckingIndexingSessionRequest() {
+    CodelessIndexer.checkCodelessIndexingSession()
+
+    guard let sessionID = CodelessIndexer.currentSessionDeviceID else {
+      return XCTFail("Should provide a session device identifier")
+    }
+
+    let expectedParameters = [
+      Keys.deviceSessionID: sessionID,
+      Keys.extInfo: CodelessIndexer.extInfo
+    ]
+
+    XCTAssertEqual(
+      requestFactory.capturedGraphPath,
+      "\(name)/app_indexing_session",
+      "Should request the session with the expected graph path"
+    )
+    XCTAssertEqual(
+      requestFactory.capturedParameters as? [String: String],
+      expectedParameters,
+      "Should request the session with the expected parameters"
+    )
+    XCTAssertEqual(
+      requestFactory.capturedHttpMethod,
+      .post,
+      "Should request the session with the expected http method"
+    )
+  }
+
+  func testCompleteCheckingIndexingSessionWithNoInput() {
+    CodelessIndexer.checkCodelessIndexingSession()
+
+    request.capturedCompletionHandler?(nil, nil, nil)
+
+    XCTAssertFalse(
+      CodelessIndexer.isCheckingSession,
+      "Should reset the ability to check a session after the request completes"
+    )
+    XCTAssertNil(
+      CodelessIndexer.appIndexingTimer,
+      "Should not create an indexing timer without a result"
+    )
+  }
+
+  func testCompleteCheckingIndexingSessionWithErrorOnly() {
+    CodelessIndexer.checkCodelessIndexingSession()
+
+    request.capturedCompletionHandler?(nil, nil, SampleError())
+
+    XCTAssertFalse(CodelessIndexer.isCheckingSession)
+    XCTAssertNil(
+      CodelessIndexer.appIndexingTimer,
+      "Should not create an indexing timer if there is an error"
+    )
+  }
+
+  func testCompleteCheckingIndexingSessionWithInvalidResults() {
+    CodelessIndexer.checkCodelessIndexingSession()
+
+    (1 ... 20).forEach { _ in
+      request.capturedCompletionHandler?(nil, Fuzzer.random, nil)
+
+      XCTAssertNil(
+        CodelessIndexer.appIndexingTimer,
+        "Should not create an indexing timer if the result is invalid"
+      )
+    }
+  }
+
+  func testCompletingCheckingIndexingWithCodelessEnabledResult() {
+    CodelessIndexer.checkCodelessIndexingSession()
+
+    request.capturedCompletionHandler?(nil, [Keys.codelessEnabled: true], nil)
+
+    XCTAssertFalse(CodelessIndexer.isCheckingSession)
+    XCTAssertNotNil(
+      CodelessIndexer.appIndexingTimer,
+      "Should create an indexing timer if the result indicates that codeless is enabled"
+    )
+    // Invalidate for cleanup
+    CodelessIndexer.appIndexingTimer?.invalidate()
+  }
+
+  func testCompletingCheckingIndexingWithCodelessDisabledResult() {
+    let sessionIdentifier = CodelessIndexer.currentSessionDeviceID
+    CodelessIndexer.checkCodelessIndexingSession()
+
+    request.capturedCompletionHandler?(nil, [Keys.codelessEnabled: false], nil)
+
+    XCTAssertFalse(CodelessIndexer.isCheckingSession)
+    XCTAssertNil(
+      CodelessIndexer.appIndexingTimer,
+      "Should not create an indexing timer if the result indicates that codeless is disabled"
+    )
+    XCTAssertNotEqual(
+      sessionIdentifier,
+      CodelessIndexer.currentSessionDeviceID,
+      "Should reset the current session device identifier if the result indicates that codeless is disabled"
+    )
+  }
+
+  // MARK: - Miscellaneous
+
+  func testExtraInfo() {
+    XCTAssertEqual(
+      CodelessIndexer.extInfo,
+      """
+      ["x86_64","","1","1","en_US"]
+      """,
+      "Should be able to provide extra info as a string representation of an array of strings"
+    )
+  }
+
+  func testCurrentSessionDeviceID() {
+    let identifier = CodelessIndexer.currentSessionDeviceID
+
+    XCTAssertEqual(
+      CodelessIndexer.currentSessionDeviceID,
+      identifier,
+      "Should only create a single session device ID"
+    )
+
+    CodelessIndexer.reset()
+
+    XCTAssertNotEqual(
+      CodelessIndexer.currentSessionDeviceID,
+      identifier,
+      "Should create unique session device IDs per sdk launch"
+    )
+  }
+
+  func testDimensionOfNonView() {
+    let dimensions = CodelessIndexer.dimension(of: "" as NSString)
+
+    XCTAssertEqual(
+      dimensions,
+      [
+        CODELESS_VIEW_TREE_TOP_KEY: 0,
+        CODELESS_VIEW_TREE_LEFT_KEY: 0,
+        CODELESS_VIEW_TREE_WIDTH_KEY: 0,
+        CODELESS_VIEW_TREE_HEIGHT_KEY: 0,
+        CODELESS_VIEW_TREE_OFFSET_X_KEY: 0,
+        CODELESS_VIEW_TREE_OFFSET_Y_KEY: 0,
+        CODELESS_VIEW_TREE_VISIBILITY_KEY: 0
+      ],
+      "Dimension of a non-view should be considered to be zero"
+    )
+  }
+
+  func testDimensionOfView() {
+    let dimensions = CodelessIndexer.dimension(of: view)
+
+    XCTAssertEqual(
+      dimensions,
+      [
+        CODELESS_VIEW_TREE_TOP_KEY: 20,
+        CODELESS_VIEW_TREE_LEFT_KEY: 20,
+        CODELESS_VIEW_TREE_WIDTH_KEY: 36,
+        CODELESS_VIEW_TREE_HEIGHT_KEY: 36,
+        CODELESS_VIEW_TREE_OFFSET_X_KEY: 0,
+        CODELESS_VIEW_TREE_OFFSET_Y_KEY: 0,
+        CODELESS_VIEW_TREE_VISIBILITY_KEY: 0
+      ],
+      "Should calculate the correct view dimensions"
+    )
+  }
+
+  func testDimensionOfViewController() {
+    let controller = UIViewController()
+    controller.view = view
+    let dimensions = CodelessIndexer.dimension(of: controller)
+
+    XCTAssertEqual(
+      dimensions,
+      [
+        CODELESS_VIEW_TREE_TOP_KEY: 20,
+        CODELESS_VIEW_TREE_LEFT_KEY: 20,
+        CODELESS_VIEW_TREE_WIDTH_KEY: 36,
+        CODELESS_VIEW_TREE_HEIGHT_KEY: 36,
+        CODELESS_VIEW_TREE_OFFSET_X_KEY: 0,
+        CODELESS_VIEW_TREE_OFFSET_Y_KEY: 0,
+        CODELESS_VIEW_TREE_VISIBILITY_KEY: 0
+      ],
+      "Should calculate the correct view dimensions"
+    )
+  }
+
+  func testDimensionOfScrollView() {
+    let view = UIScrollView(frame: frame)
+    view.setContentOffset(CGPoint(x: 100, y: 100), animated: false)
+    let dimensions = CodelessIndexer.dimension(of: view)
+
+    XCTAssertEqual(
+      dimensions,
+      [
+        CODELESS_VIEW_TREE_TOP_KEY: 20,
+        CODELESS_VIEW_TREE_LEFT_KEY: 20,
+        CODELESS_VIEW_TREE_WIDTH_KEY: 36,
+        CODELESS_VIEW_TREE_HEIGHT_KEY: 36,
+        CODELESS_VIEW_TREE_OFFSET_X_KEY: 100,
+        CODELESS_VIEW_TREE_OFFSET_Y_KEY: 100,
+        CODELESS_VIEW_TREE_VISIBILITY_KEY: 0
+      ],
+      "Should calculate the correct view dimensions"
+    )
+  }
+
+  func testDimensionOfHiddenView() {
+    view.isHidden = true
+    let dimensions = CodelessIndexer.dimension(of: view)
+
+    XCTAssertEqual(
+      dimensions,
+      [
+        CODELESS_VIEW_TREE_TOP_KEY: 20,
+        CODELESS_VIEW_TREE_LEFT_KEY: 20,
+        CODELESS_VIEW_TREE_WIDTH_KEY: 36,
+        CODELESS_VIEW_TREE_HEIGHT_KEY: 36,
+        CODELESS_VIEW_TREE_OFFSET_X_KEY: 0,
+        CODELESS_VIEW_TREE_OFFSET_Y_KEY: 0,
+        CODELESS_VIEW_TREE_VISIBILITY_KEY: 4
+      ],
+      "Should calculate the correct view dimensions and indicate hidden status"
     )
   }
 

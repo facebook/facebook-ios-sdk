@@ -34,13 +34,13 @@
  #import "FBSDKSettingsProtocol.h"
  #import "FBSDKSwizzling.h"
 
-@interface FBSDKCodelessIndexer (Testing)
+@interface FBSDKCodelessIndexer ()
 
 @property (class, nullable, nonatomic, readonly) id<FBSDKGraphRequestProviding> requestProvider;
 @property (class, nullable, nonatomic, readonly) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (class, nullable, nonatomic, readonly) id<FBSDKDataPersisting> store;
-@property (class, nullable, nonatomic, copy) id<FBSDKGraphRequestConnectionProviding> connectionProvider;
-@property (class, nullable, nonatomic, copy) Class<FBSDKSwizzling> swizzler;
+@property (class, nullable, nonatomic, readonly, copy) id<FBSDKGraphRequestConnectionProviding> connectionProvider;
+@property (class, nullable, nonatomic, readonly, copy) Class<FBSDKSwizzling> swizzler;
 @property (class, nullable, nonatomic, readonly) id<FBSDKSettings> settings;
 @property (class, nullable, nonatomic, readonly) id<FBSDKAdvertiserIDProviding> advertiserIDProvider;
 
@@ -260,7 +260,7 @@ static id<FBSDKSettings> _settings;
     CODELESS_INDEXING_EXT_INFO_KEY : [self extInfo]
   };
   id<FBSDKGraphRequest> request = [_requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/%@",
-                                                                                     [FBSDKSettings appID],
+                                                                                     [self.settings appID],
                                                                                      CODELESS_INDEXING_SESSION_ENDPOINT]
                                                                          parameters:parameters
                                                                          HTTPMethod:FBSDKHTTPMethodPOST];
@@ -382,7 +382,7 @@ static id<FBSDKSettings> _settings;
   NSBundle *mainBundle = [NSBundle mainBundle];
   NSString *version = [mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
   id<FBSDKGraphRequest> request = [_requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/%@",
-                                                                                     [FBSDKSettings appID],
+                                                                                     [self.settings appID],
                                                                                      CODELESS_INDEXING_ENDPOINT]
                                                                          parameters:@{
                                      CODELESS_INDEXING_TREE_KEY : tree,
@@ -502,6 +502,23 @@ static id<FBSDKSettings> _settings;
   _swizzler = nil;
   _settings = nil;
   _advertiserIDProvider = nil;
+  _deviceSessionID = nil;
+  _lastTreeHash = nil;
+}
+
++ (void)resetIsCodelessIndexing
+{
+  _isCodelessIndexing = NO;
+}
+
++ (BOOL)isCheckingSession
+{
+  return _isCheckingSession;
+}
+
++ (NSTimer *)appIndexingTimer
+{
+  return _appIndexingTimer;
 }
 
   #endif
