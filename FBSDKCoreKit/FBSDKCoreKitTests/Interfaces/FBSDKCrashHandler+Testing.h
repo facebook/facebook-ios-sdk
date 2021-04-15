@@ -19,6 +19,7 @@
 #import "FBSDKCoreKitBasicsImport.h"
 
 @protocol FBSDKFileManaging;
+@protocol FBSDKFileDataExtracting;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -27,12 +28,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) id<FBSDKFileManaging> fileManager;
 @property (nonatomic) id<FBSDKInfoDictionaryProviding> bundle;
+@property (nonatomic, strong) Class<FBSDKFileDataExtracting> dataExtractor;
 
 - (instancetype)init;
 
 - (instancetype)initWithFileManager: (id<FBSDKFileManaging>)fileManager
                            bundle: (id<FBSDKInfoDictionaryProviding>)bundle
-NS_SWIFT_NAME(init(fileManager:bundle:));
+                  fileDataExtractor:(nonnull Class<FBSDKFileDataExtracting>)dataExtractor
+NS_SWIFT_NAME(init(fileManager:bundle:dataExtractor:));
 
 - (NSArray<NSString *> *)_getCrashLogFileNames:(NSArray<NSString *> *)files;
 - (NSString *)_getPathToCrashFile:(NSString *)timestamp;
@@ -41,6 +44,7 @@ NS_SWIFT_NAME(init(fileManager:bundle:));
 - (NSArray<NSDictionary<NSString *, id> *> *)_filterCrashLogs:(NSArray<NSString *> *)prefixList
                                            processedCrashLogs:(NSArray<NSDictionary<NSString *, id> *> *)processedCrashLogs;
 - (void)_saveCrashLog:(NSDictionary<NSString *, id> *)crashLog;
+- (nullable NSData *)_loadCrashLog:(NSString *)fileName;
 
 @end
 NS_ASSUME_NONNULL_END

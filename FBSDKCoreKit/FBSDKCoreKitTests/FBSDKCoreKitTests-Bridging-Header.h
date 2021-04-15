@@ -34,7 +34,6 @@
 #import "FBSDKEventBindingManager.h"
 #import "FBSDKErrorReport.h"
 #import "FBSDKErrorReport+Testing.h"
-#import "FBSDKFileDataExtracting.h"
 #import "FBSDKInstrumentManager+Testing.h"
 #import "FBSDKMath.h"
 #import "FBSDKModelUtility.h"

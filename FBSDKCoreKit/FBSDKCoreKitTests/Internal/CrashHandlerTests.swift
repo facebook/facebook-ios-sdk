@@ -27,10 +27,13 @@ class CrashHandlersTest: XCTestCase {
 
   override func setUp() {
     super.setUp()
-
     testFileManager = TestFileManager(tempDirectoryURL: URL(fileURLWithPath: "1"))
     testBundle = TestBundle()
-    crashHandler = CrashHandler(fileManager: testFileManager, bundle: testBundle)
+    crashHandler = CrashHandler(
+      fileManager: testFileManager,
+      bundle: testBundle,
+      dataExtractor: TestFileDataExtractor.self
+    )
   }
 
   func testCreatingWithCustomFileManager() {
@@ -44,6 +47,13 @@ class CrashHandlersTest: XCTestCase {
     XCTAssertTrue(
       crashHandler.bundle is TestBundle,
       "Should be able to create with custom bundle"
+    )
+  }
+
+  func testCreatingWithCustomDataExtractor() {
+    XCTAssertTrue(
+      crashHandler.dataExtractor is TestFileDataExtractor.Type,
+      "Should be able to create with custom data extractor"
     )
   }
 
@@ -121,6 +131,17 @@ class CrashHandlersTest: XCTestCase {
        item in the stack begins with any of the provided prefixes
        """
     )
+  }
+
+  func testLoadCrashLogs() {
+    let fileName = "dance_with_animals.txt"
+    crashHandler._loadCrashLog(fileName)
+    guard let path = TestFileDataExtractor.capturedFileNames.first,
+          path.contains("dance_with_animals.txt")
+    else {
+      XCTFail("Loading a crash log should check the provided path for crashlog data")
+      return
+      }
   }
 
   func testSaveCrashLogs() {

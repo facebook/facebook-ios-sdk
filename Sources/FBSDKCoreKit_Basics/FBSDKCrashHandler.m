@@ -23,6 +23,7 @@
 #import <sys/utsname.h>
 
 #import "FBSDKCrashObserving.h"
+#import "FBSDKFileDataExtracting.h"
 #import "FBSDKFileManaging.h"
 #import "FBSDKLibAnalyzer.h"
 #import "FBSDKTypeUtility.h"
@@ -52,6 +53,7 @@ NSString *const kFBSDKMappingTableIdentifier = @"mapping_table_identifier";
 
 @property (nonatomic) BOOL isTurnedOn;
 @property (nonatomic) id<FBSDKFileManaging> fileManager;
+@property (nonatomic, strong) Class<FBSDKFileDataExtracting> dataExtractor;
 @property (nonatomic) id<FBSDKInfoDictionaryProviding> bundle;
 @property (nonatomic) NSHashTable<id<FBSDKCrashObserving>> *observers;
 @property (nonatomic) NSArray<NSDictionary<NSString *, id> *> *processedCrashLogs;
@@ -62,17 +64,22 @@ NSString *const kFBSDKMappingTableIdentifier = @"mapping_table_identifier";
 
 - (instancetype)init
 {
-  return [self initWithFileManager:NSFileManager.defaultManager bundle:NSBundle.mainBundle];
+  return [self initWithFileManager:NSFileManager.defaultManager
+                            bundle:NSBundle.mainBundle
+                 fileDataExtractor:NSData.class
+  ];
 }
 
 - (instancetype)initWithFileManager:(id<FBSDKFileManaging>)fileManager
                              bundle:(id<FBSDKInfoDictionaryProviding>)bundle
+                  fileDataExtractor:(nonnull Class<FBSDKFileDataExtracting>)dataExtractor
 {
   if ((self = [super init])) {
     _observers = [NSHashTable new];
     _isTurnedOn = YES;
     _fileManager = fileManager;
     _bundle = bundle;
+    _dataExtractor = dataExtractor;
 
     NSString *dirPath = [NSTemporaryDirectory() stringByAppendingPathComponent:FBSDK_CRASH_PATH_NAME];
     if (![_fileManager fileExistsAtPath:dirPath]) {
@@ -297,7 +304,7 @@ static void FBSDKExceptionHandler(NSException *exception)
 
 - (nullable NSData *)_loadCrashLog:(NSString *)fileName
 {
-  return [NSData dataWithContentsOfFile:[directoryPath stringByAppendingPathComponent:fileName] options:NSDataReadingMappedIfSafe error:nil];
+  return [self.dataExtractor dataWithContentsOfFile:[directoryPath stringByAppendingPathComponent:fileName] options:NSDataReadingMappedIfSafe error:nil];
 }
 
 + (NSArray<NSString *> *)_getCrashLogFileNames:(NSArray<NSString *> *)files
@@ -429,7 +436,7 @@ static void FBSDKExceptionHandler(NSException *exception)
 - (nullable NSData *)_loadLibData:(NSDictionary<NSString *, id> *)crashLog
 {
   NSString *identifier = [FBSDKTypeUtility dictionary:crashLog objectForKey:kFBSDKMappingTableIdentifier ofType:NSObject.class];
-  return [NSData dataWithContentsOfFile:[self _getPathToLibDataFile:identifier] options:NSDataReadingMappedIfSafe error:nil];
+  return [self.dataExtractor dataWithContentsOfFile:[self _getPathToLibDataFile:identifier] options:NSDataReadingMappedIfSafe error:nil];
 }
 
 + (NSString *)_getPathToCrashFile:(NSString *)timestamp

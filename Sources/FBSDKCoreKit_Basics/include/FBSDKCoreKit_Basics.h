@@ -22,6 +22,7 @@
  #import <FBSDKCoreKit_Basics/FBSDKCrashHandler+CrashHandlerProtocol.h>
  #import <FBSDKCoreKit_Basics/FBSDKCrashHandlerProtocol.h>
  #import <FBSDKCoreKit_Basics/FBSDKCrashObserving.h>
+ #import <FBSDKCoreKit_Basics/FBSDKFileDataExtracting.h>
  #import  <FBSDKCoreKit_Basics/FBSDKFileManaging.h>
  #import <FBSDKCoreKit_Basics/FBSDKInfoDictionaryProviding.h>
  #import <FBSDKCoreKit_Basics/FBSDKJSONValue.h>
@@ -39,6 +40,7 @@
  #import "FBSDKCrashHandler+CrashHandlerProtocol.h"
  #import "FBSDKCrashHandlerProtocol.h"
  #import "FBSDKCrashObserving.h"
+ #import "FBSDKFileDataExtracting.h"
  #import "FBSDKFileManaging.h"
  #import "FBSDKInfoDictionaryProviding.h"
  #import "FBSDKJSONValue.h"

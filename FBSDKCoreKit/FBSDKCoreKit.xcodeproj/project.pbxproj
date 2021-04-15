@@ -196,6 +196,10 @@
 		58E9D6042624E52B004818D8 /* FBSDKInfoDictionaryProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F43D7FF42603FE3E005AE003 /* FBSDKInfoDictionaryProviding.h */; };
 		58E9D6052624E52C004818D8 /* FBSDKInfoDictionaryProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F43D7FF42603FE3E005AE003 /* FBSDKInfoDictionaryProviding.h */; };
 		58E9D6062624E52C004818D8 /* FBSDKInfoDictionaryProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F43D7FF42603FE3E005AE003 /* FBSDKInfoDictionaryProviding.h */; };
+		58E9D72C262749EF004818D8 /* FBSDKFileDataExtracting.h in Headers */ = {isa = PBXBuildFile; fileRef = F433228E2616323B002CC793 /* FBSDKFileDataExtracting.h */; };
+		58E9D734262749EF004818D8 /* FBSDKFileDataExtracting.h in Headers */ = {isa = PBXBuildFile; fileRef = F433228E2616323B002CC793 /* FBSDKFileDataExtracting.h */; };
+		58E9D742262749F0004818D8 /* FBSDKFileDataExtracting.h in Headers */ = {isa = PBXBuildFile; fileRef = F433228E2616323B002CC793 /* FBSDKFileDataExtracting.h */; };
+		58E9D743262749F0004818D8 /* FBSDKFileDataExtracting.h in Headers */ = {isa = PBXBuildFile; fileRef = F433228E2616323B002CC793 /* FBSDKFileDataExtracting.h */; };
 		5CD6DB3C255B1D07002C296F /* FBSDKAppEventsUtilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD6DB3B255B1D07002C296F /* FBSDKAppEventsUtilityTests.swift */; };
 		5D2165E122264453004952D8 /* FBSDKAppEventsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D2165E022264453004952D8 /* FBSDKAppEventsTests.m */; };
 		5D2165F22229C6A3004952D8 /* FBSDKGraphRequestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D2165F12229C6A3004952D8 /* FBSDKGraphRequestTests.m */; };
@@ -2436,7 +2440,6 @@
 				890414731A647D2E00617215 /* FBSDKCoreKit+Internal.h */,
 				F49FA7A62613C8F900653457 /* FBSDKCoreKitBasicsImport.h */,
 				F4A02F8C25EEAF6600D19DE9 /* FBSDKDataPersisting.h */,
-				F433228E2616323B002CC793 /* FBSDKFileDataExtracting.h */,
 				520223F51D83C8D200CE0AB5 /* FBSDKDeviceRequestsHelper.h */,
 				520223F61D83C8D200CE0AB5 /* FBSDKDeviceRequestsHelper.m */,
 				81C969301C114723002FC037 /* FBSDKDynamicFrameworkLoader.h */,
@@ -3177,6 +3180,7 @@
 		F4A11B4724E36E5200D4C010 /* include */ = {
 			isa = PBXGroup;
 			children = (
+				F433228E2616323B002CC793 /* FBSDKFileDataExtracting.h */,
 				58E9D215261CC3FD004818D8 /* FBSDKCrashHandler+CrashHandlerProtocol.h */,
 				F4A11B4824E36E5200D4C010 /* FBSDKTypeUtility.h */,
 				F4A11B4924E36E5200D4C010 /* FBSDKURLSessionTask.h */,
@@ -4045,6 +4049,7 @@
 				F44163EF25CAFE3E00DAB0A5 /* FBSDKCrashHandler.h in Headers */,
 				F44163F225CAFE3E00DAB0A5 /* FBSDKCoreKit_Basics.h in Headers */,
 				F44163EE25CAFE3E00DAB0A5 /* FBSDKURLSession.h in Headers */,
+				58E9D72C262749EF004818D8 /* FBSDKFileDataExtracting.h in Headers */,
 				58E9D5D12624E51E004818D8 /* NSBundle+InfoDictionaryProviding.h in Headers */,
 				F44163F025CAFE3E00DAB0A5 /* FBSDKURLSessionTask.h in Headers */,
 				F44163F125CAFE3E00DAB0A5 /* FBSDKJSONValue.h in Headers */,
@@ -4069,6 +4074,7 @@
 				F44166B825CAFFE700DAB0A5 /* FBSDKURLSession.h in Headers */,
 				F44164F525CAFEA500DAB0A5 /* FBSDKJSONValue.h in Headers */,
 				F441655625CAFECA00DAB0A5 /* FBSDKBasicUtility.h in Headers */,
+				58E9D742262749F0004818D8 /* FBSDKFileDataExtracting.h in Headers */,
 				58E9D5E72624E51F004818D8 /* NSBundle+InfoDictionaryProviding.h in Headers */,
 				F44165CB25CAFEE600DAB0A5 /* FBSDKCrashHandler.h in Headers */,
 				F44165C725CAFEE600DAB0A5 /* FBSDKLibAnalyzer.h in Headers */,
@@ -4093,6 +4099,7 @@
 				F441641425CAFE4000DAB0A5 /* FBSDKCrashHandler.h in Headers */,
 				F441641725CAFE4000DAB0A5 /* FBSDKCoreKit_Basics.h in Headers */,
 				F441641325CAFE4000DAB0A5 /* FBSDKURLSession.h in Headers */,
+				58E9D734262749EF004818D8 /* FBSDKFileDataExtracting.h in Headers */,
 				58E9D5E62624E51E004818D8 /* NSBundle+InfoDictionaryProviding.h in Headers */,
 				F441641525CAFE4000DAB0A5 /* FBSDKURLSessionTask.h in Headers */,
 				F441641625CAFE4000DAB0A5 /* FBSDKJSONValue.h in Headers */,
@@ -4117,6 +4124,7 @@
 				F44166EB25CAFFE700DAB0A5 /* FBSDKURLSession.h in Headers */,
 				F441650325CAFEA700DAB0A5 /* FBSDKJSONValue.h in Headers */,
 				F441656425CAFECB00DAB0A5 /* FBSDKBasicUtility.h in Headers */,
+				58E9D743262749F0004818D8 /* FBSDKFileDataExtracting.h in Headers */,
 				58E9D5E82624E51F004818D8 /* NSBundle+InfoDictionaryProviding.h in Headers */,
 				F44165DD25CAFEE700DAB0A5 /* FBSDKCrashHandler.h in Headers */,
 				F44165D925CAFEE700DAB0A5 /* FBSDKLibAnalyzer.h in Headers */,
