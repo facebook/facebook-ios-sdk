@@ -22,8 +22,8 @@
 #import <sys/time.h>
 
 #import "FBSDKCoreKit+Internal.h"
+#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKError.h"
-#import "FBSDKInfoDictionaryProviding.h"
 #import "FBSDKSettings.h"
 #import "FBSDKSettings+Internal.h"
 

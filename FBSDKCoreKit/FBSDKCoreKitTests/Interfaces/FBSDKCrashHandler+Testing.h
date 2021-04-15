@@ -25,10 +25,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKCrashHandler (Testing)
 
+@property (nonatomic) id<FBSDKFileManaging> fileManager;
+@property (nonatomic) id<FBSDKInfoDictionaryProviding> bundle;
+
 - (instancetype)init;
 
 - (instancetype)initWithFileManager: (id<FBSDKFileManaging>)fileManager
-NS_SWIFT_NAME(init(fileManager:));
+                           bundle: (id<FBSDKInfoDictionaryProviding>)bundle
+NS_SWIFT_NAME(init(fileManager:bundle:));
 
 - (NSArray<NSString *> *)_getCrashLogFileNames:(NSArray<NSString *> *)files;
 - (NSString *)_getPathToCrashFile:(NSString *)timestamp;
@@ -36,6 +40,7 @@ NS_SWIFT_NAME(init(fileManager:));
     containsPrefix:(NSArray<NSString *> *)prefixList;
 - (NSArray<NSDictionary<NSString *, id> *> *)_filterCrashLogs:(NSArray<NSString *> *)prefixList
                                            processedCrashLogs:(NSArray<NSDictionary<NSString *, id> *> *)processedCrashLogs;
+- (void)_saveCrashLog:(NSDictionary<NSString *, id> *)crashLog;
 
 @end
 NS_ASSUME_NONNULL_END

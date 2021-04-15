@@ -25,6 +25,7 @@
 #import "FBSDKAppEventsConfigurationManager.h"
 #import "FBSDKBridgeAPI+ApplicationObserving.h"
 #import "FBSDKConstants.h"
+#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError.h"
 #import "FBSDKEventDeactivationManager.h"
@@ -44,7 +45,6 @@
 #import "FBSDKTimeSpentData.h"
 #import "FBSDKTokenCache.h"
 #import "GraphAPI/FBSDKGraphRequest.h"
-#import "NSBundle+InfoDictionaryProviding.h"
 #import "NSNotificationCenter+Extensions.h"
 #import "NSUserDefaults+FBSDKDataPersisting.h"
 

@@ -26,6 +26,7 @@
 #import "FBSDKFileManaging.h"
 #import "FBSDKLibAnalyzer.h"
 #import "FBSDKTypeUtility.h"
+#import "NSBundle+InfoDictionaryProviding.h"
 
 #define FBSDK_MAX_CRASH_LOGS 5
 #define FBSDK_CRASH_PATH_NAME @"instrument"
@@ -51,6 +52,7 @@ NSString *const kFBSDKMappingTableIdentifier = @"mapping_table_identifier";
 
 @property (nonatomic) BOOL isTurnedOn;
 @property (nonatomic) id<FBSDKFileManaging> fileManager;
+@property (nonatomic) id<FBSDKInfoDictionaryProviding> bundle;
 @property (nonatomic) NSHashTable<id<FBSDKCrashObserving>> *observers;
 @property (nonatomic) NSArray<NSDictionary<NSString *, id> *> *processedCrashLogs;
 
@@ -60,15 +62,17 @@ NSString *const kFBSDKMappingTableIdentifier = @"mapping_table_identifier";
 
 - (instancetype)init
 {
-  return [self initWithFileManager:NSFileManager.defaultManager];
+  return [self initWithFileManager:NSFileManager.defaultManager bundle:NSBundle.mainBundle];
 }
 
 - (instancetype)initWithFileManager:(id<FBSDKFileManaging>)fileManager
+                             bundle:(id<FBSDKInfoDictionaryProviding>)bundle
 {
   if ((self = [super init])) {
     _observers = [NSHashTable new];
     _isTurnedOn = YES;
     _fileManager = fileManager;
+    _bundle = bundle;
 
     NSString *dirPath = [NSTemporaryDirectory() stringByAppendingPathComponent:FBSDK_CRASH_PATH_NAME];
     if (![_fileManager fileExistsAtPath:dirPath]) {
@@ -327,9 +331,8 @@ static void FBSDKExceptionHandler(NSException *exception)
   [FBSDKTypeUtility dictionary:completeCrashLog setObject:currentTimestamp forKey:kFBSDKCrashTimestamp];
   [FBSDKTypeUtility dictionary:completeCrashLog setObject:mappingTableIdentifier forKey:kFBSDKMappingTableIdentifier];
 
-  NSBundle *mainBundle = [NSBundle mainBundle];
-  NSString *version = [mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-  NSString *build = [mainBundle objectForInfoDictionaryKey:@"CFBundleVersion"];
+  NSString *version = [self.bundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+  NSString *build = [self.bundle objectForInfoDictionaryKey:@"CFBundleVersion"];
   [FBSDKTypeUtility dictionary:completeCrashLog setObject:[NSString stringWithFormat:@"%@(%@)", version, build] forKey:kFBSDKAppVersion];
 
   struct utsname systemInfo;

@@ -23,6 +23,7 @@
  #import <FBSDKCoreKit_Basics/FBSDKCrashHandlerProtocol.h>
  #import <FBSDKCoreKit_Basics/FBSDKCrashObserving.h>
  #import  <FBSDKCoreKit_Basics/FBSDKFileManaging.h>
+ #import <FBSDKCoreKit_Basics/FBSDKInfoDictionaryProviding.h>
  #import <FBSDKCoreKit_Basics/FBSDKJSONValue.h>
  #import <FBSDKCoreKit_Basics/FBSDKLibAnalyzer.h>
  #import <FBSDKCoreKit_Basics/FBSDKSafeCast.h>
@@ -31,7 +32,7 @@
  #import <FBSDKCoreKit_Basics/FBSDKURLSession.h>
  #import <FBSDKCoreKit_Basics/FBSDKURLSessionTask.h>
  #import <FBSDKCoreKit_Basics/FBSDKUserDataStore.h>
-
+ #import <FBSDKCoreKit_Basics/NSBundle+InfoDictionaryProviding.h>
 #else
  #import "FBSDKBasicUtility.h"
  #import "FBSDKCrashHandler.h"
@@ -39,6 +40,7 @@
  #import "FBSDKCrashHandlerProtocol.h"
  #import "FBSDKCrashObserving.h"
  #import "FBSDKFileManaging.h"
+ #import "FBSDKInfoDictionaryProviding.h"
  #import "FBSDKJSONValue.h"
  #import "FBSDKLibAnalyzer.h"
  #import "FBSDKSafeCast.h"
@@ -47,5 +49,5 @@
  #import "FBSDKURLSession.h"
  #import "FBSDKURLSessionTask.h"
  #import "FBSDKUserDataStore.h"
-
+ #import "NSBundle+InfoDictionaryProviding.h"
 #endif

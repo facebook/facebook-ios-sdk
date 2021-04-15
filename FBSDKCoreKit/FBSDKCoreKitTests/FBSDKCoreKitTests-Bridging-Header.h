@@ -87,9 +87,6 @@
 // NotificationCenter
 #import "FBSDKNotificationProtocols.h"
 #import "NSNotificationCenter+Extensions.h"
-// NSBundle
-#import "FBSDKInfoDictionaryProviding.h"
-#import "NSBundle+InfoDictionaryProviding.h"
 // AccessToken
 #import "FBSDKAccessTokenProtocols.h"
 #import "FBSDKAccessToken+AccessTokenProtocols.h"

@@ -23,12 +23,28 @@ class CrashHandlersTest: XCTestCase {
 
   var crashHandler: CrashHandler! // swiftlint:disable:this implicitly_unwrapped_optional
   var testFileManager: FileManaging! // swiftlint:disable:this implicitly_unwrapped_optional
+  var testBundle: TestBundle! // swiftlint:disable:this implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
 
     testFileManager = TestFileManager(tempDirectoryURL: URL(fileURLWithPath: "1"))
-    crashHandler = CrashHandler(fileManager: testFileManager)
+    testBundle = TestBundle()
+    crashHandler = CrashHandler(fileManager: testFileManager, bundle: testBundle)
+  }
+
+  func testCreatingWithCustomFileManager() {
+    XCTAssertTrue(
+      crashHandler.fileManager is TestFileManager,
+      "Should be able to create with custom file managing"
+    )
+  }
+
+  func testCreatingWithCustomBundle() {
+    XCTAssertTrue(
+      crashHandler.bundle is TestBundle,
+      "Should be able to create with custom bundle"
+    )
   }
 
   func testGetFBSDKVersion() {
@@ -105,6 +121,11 @@ class CrashHandlersTest: XCTestCase {
        item in the stack begins with any of the provided prefixes
        """
     )
+  }
+
+  func testSaveCrashLogs() {
+    crashHandler._saveCrashLog(self.processedCrashLogs()[0])
+    XCTAssertEqual(testBundle.capturedKeys, ["CFBundleShortVersionString", "CFBundleVersion"])
   }
 
   func testFilterCrashLogs() {
