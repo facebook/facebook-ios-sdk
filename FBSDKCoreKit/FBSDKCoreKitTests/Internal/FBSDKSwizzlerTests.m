@@ -22,6 +22,7 @@
 
 @interface FBSDKSwizzlerTestObject : NSObject
 
+@property (nonatomic) int methodToSwizzleAsynchronouslyCallCount;
 @property (nonatomic) int methodWithNoArgumentsCallCount;
 @property (nonatomic) int methodWithOneArgumentCallCount;
 @property (nonatomic) int methodWithTwoArgumentsCallCount;
@@ -32,6 +33,7 @@
 @property (nonatomic) int methodToOverrideCallCount;
 @property (nonatomic) int methodToSwizzleInSuperAndSubclassCallCount;
 
+- (void)methodToSwizzleAsynchronously;
 - (void)methodWithNoArguments;
 - (void)methodWithOneArgument:(id)arg;
 - (void)methodWithArgument:(id)arg
@@ -55,6 +57,7 @@
 - (instancetype)init
 {
   if ((self = [super init])) {
+    _methodToSwizzleAsynchronouslyCallCount = 0;
     _methodWithNoArgumentsCallCount = 0;
     _methodWithOneArgumentCallCount = 0;
     _methodWithTwoArgumentsCallCount = 0;
@@ -65,6 +68,11 @@
     _methodToOverrideCallCount = 0;
   }
   return self;
+}
+
+- (void)methodToSwizzleAsynchronously
+{
+  self.methodToSwizzleAsynchronouslyCallCount++;
 }
 
 - (void)methodWithNoArguments
@@ -138,43 +146,81 @@
 
 @end
 
+@interface FBSDKSwizzler (Testing)
+
++ (void)swizzleSelector:(SEL)aSelector
+                onClass:(Class)aClass
+              withBlock:(swizzleBlock)aBlock
+                  named:(NSString *)aName
+                  async:(BOOL)async;
+
+@end
+
 @interface FBSDKSwizzlerTests : XCTestCase
 @end
 
 @implementation FBSDKSwizzlerTests
 
+- (void)testSwizzlingIsAsynchronousByDefault
+{
+  __block int swizzleBlockInvocationCount = 0;
+  [FBSDKSwizzler swizzleSelector:@selector(methodToSwizzleAsynchronously)
+                         onClass:FBSDKSwizzlerTestObject.class
+                       withBlock:^{
+                         swizzleBlockInvocationCount++;
+                       }
+                           named:self.name];
+  FBSDKSwizzlerTestObject *testObject = [FBSDKSwizzlerTestObject new];
+  [testObject methodToSwizzleAsynchronously];
+  XCTAssertEqual(
+    swizzleBlockInvocationCount,
+    0,
+    "Should not swizzle the method synchronously"
+  );
+  XCTAssertEqual(
+    testObject.methodToSwizzleAsynchronouslyCallCount,
+    1,
+    "Should invoke the original implementation once per method call"
+  );
+
+  // Predicates expectations are evaluated every second so we can just poll
+  // the method until it has been swizzled asynchronously
+  NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL (id evaluatedObject, NSDictionary<NSString *, id> *bindings) {
+    [testObject methodToSwizzleAsynchronously];
+    return swizzleBlockInvocationCount > 0;
+  }];
+
+  XCTNSPredicateExpectation *expectation = [[XCTNSPredicateExpectation alloc] initWithPredicate:predicate object:self];
+  [self waitForExpectations:@[expectation] timeout:3];
+}
+
 - (void)testSwizzlingMethodWithNoArguments
 {
-  XCTestExpectation *expectation = [[XCTestExpectation alloc] initWithDescription:self.name];
   __block int swizzleBlockInvocationCount = 0;
   [FBSDKSwizzler swizzleSelector:@selector(methodWithNoArguments)
                          onClass:FBSDKSwizzlerTestObject.class
                        withBlock:^{
                          swizzleBlockInvocationCount++;
                        }
-                           named:self.name];
-  dispatch_async(dispatch_get_main_queue(), ^{
-    FBSDKSwizzlerTestObject *testObject = [FBSDKSwizzlerTestObject new];
-    [testObject methodWithNoArguments];
-    [testObject methodWithNoArguments];
-    XCTAssertEqual(
-      swizzleBlockInvocationCount,
-      2,
-      "Should invoke the swizzle block once per method call"
-    );
-    XCTAssertEqual(
-      testObject.methodWithNoArgumentsCallCount,
-      2,
-      "Should invoke the original implementation once per method call"
-    );
-    [expectation fulfill];
-  });
-  [self waitForExpectations:@[expectation] timeout:2];
+                           named:self.name
+                           async:NO];
+  FBSDKSwizzlerTestObject *testObject = [FBSDKSwizzlerTestObject new];
+  [testObject methodWithNoArguments];
+  [testObject methodWithNoArguments];
+  XCTAssertEqual(
+    swizzleBlockInvocationCount,
+    2,
+    "Should invoke the swizzle block once per method call"
+  );
+  XCTAssertEqual(
+    testObject.methodWithNoArgumentsCallCount,
+    2,
+    "Should invoke the original implementation once per method call"
+  );
 }
 
 - (void)testSwizzlingMethodWithOneArgument
 {
-  XCTestExpectation *expectation = [[XCTestExpectation alloc] initWithDescription:self.name];
   __block int swizzleBlockInvocationCount = 0;
   __block id capturedArgument = nil;
   [FBSDKSwizzler swizzleSelector:@selector(methodWithOneArgument:)
@@ -183,34 +229,29 @@
                          swizzleBlockInvocationCount++;
                          capturedArgument = arg;
                        }
-                           named:self.name];
-
-  dispatch_async(dispatch_get_main_queue(), ^{
-    FBSDKSwizzlerTestObject *testObject = [FBSDKSwizzlerTestObject new];
-    [testObject methodWithOneArgument:@"Foo"];
-    XCTAssertEqualObjects(
-      capturedArgument,
-      @"Foo",
-      "Should invoke the swizzle block with the original arguments"
-    );
-    XCTAssertEqual(
-      testObject.methodWithOneArgumentCallCount,
-      1,
-      "Should invoke the original implementation"
-    );
-    XCTAssertEqual(
-      swizzleBlockInvocationCount,
-      1,
-      "Should invoke the swizzle block once per method call"
-    );
-    [expectation fulfill];
-  });
-  [self waitForExpectations:@[expectation] timeout:2];
+                           named:self.name
+                           async:NO];
+  FBSDKSwizzlerTestObject *testObject = [FBSDKSwizzlerTestObject new];
+  [testObject methodWithOneArgument:@"Foo"];
+  XCTAssertEqualObjects(
+    capturedArgument,
+    @"Foo",
+    "Should invoke the swizzle block with the original arguments"
+  );
+  XCTAssertEqual(
+    testObject.methodWithOneArgumentCallCount,
+    1,
+    "Should invoke the original implementation"
+  );
+  XCTAssertEqual(
+    swizzleBlockInvocationCount,
+    1,
+    "Should invoke the swizzle block once per method call"
+  );
 }
 
 - (void)testSwizzlingMethodWithTwoArguments
 {
-  XCTestExpectation *expectation = [[XCTestExpectation alloc] initWithDescription:self.name];
   __block id capturedArg1 = nil;
   __block id capturedArg2 = nil;
   __block int swizzleBlockInvocationCount = 0;
@@ -221,34 +262,29 @@
                          capturedArg2 = arg2;
                          swizzleBlockInvocationCount++;
                        }
-                           named:self.name];
-
-  dispatch_async(dispatch_get_main_queue(), ^{
-    NSString *arg1 = @"Foo";
-    NSString *arg2 = @"Bar";
-    FBSDKSwizzlerTestObject *testObject = [FBSDKSwizzlerTestObject new];
-    [testObject methodWithArgument:arg1
-                    secondArgument:arg2];
-    XCTAssertEqualObjects(capturedArg1, arg1);
-    XCTAssertEqualObjects(capturedArg2, arg2);
-    XCTAssertEqual(
-      testObject.methodWithTwoArgumentsCallCount,
-      1,
-      "Should invoke the original implementation"
-    );
-    XCTAssertEqual(
-      swizzleBlockInvocationCount,
-      1,
-      "Should invoke the swizzle block once per method call"
-    );
-    [expectation fulfill];
-  });
-  [self waitForExpectations:@[expectation] timeout:2];
+                           named:self.name
+                           async:NO];
+  NSString *arg1 = @"Foo";
+  NSString *arg2 = @"Bar";
+  FBSDKSwizzlerTestObject *testObject = [FBSDKSwizzlerTestObject new];
+  [testObject methodWithArgument:arg1
+                  secondArgument:arg2];
+  XCTAssertEqualObjects(capturedArg1, arg1);
+  XCTAssertEqualObjects(capturedArg2, arg2);
+  XCTAssertEqual(
+    testObject.methodWithTwoArgumentsCallCount,
+    1,
+    "Should invoke the original implementation"
+  );
+  XCTAssertEqual(
+    swizzleBlockInvocationCount,
+    1,
+    "Should invoke the swizzle block once per method call"
+  );
 }
 
 - (void)testSwizzlingMethodWithMaxAllowedArguments
 {
-  XCTestExpectation *expectation = [[XCTestExpectation alloc] initWithDescription:self.name];
   __block id capturedArg1 = nil;
   __block id capturedArg2 = nil;
   __block id capturedArg3 = nil;
@@ -261,192 +297,165 @@
                          capturedArg3 = arg3;
                          swizzleBlockInvocationCount++;
                        }
-                           named:self.name];
-
-  dispatch_async(dispatch_get_main_queue(), ^{
-    NSString *arg1 = @"Foo";
-    NSString *arg2 = @"Bar";
-    NSString *arg3 = @"Baz";
-    FBSDKSwizzlerTestObject *testObject = [FBSDKSwizzlerTestObject new];
-    [testObject methodWithArgument:arg1
-                    secondArgument:arg2
-                     thirdArgument:arg3];
-    XCTAssertEqualObjects(capturedArg1, arg1);
-    XCTAssertEqualObjects(capturedArg2, arg2);
-    XCTAssertEqualObjects(capturedArg3, arg3);
-    XCTAssertEqual(
-      testObject.methodWithThreeArgumentsCallCount,
-      1,
-      "Should invoke the original implementation"
-    );
-    XCTAssertEqual(
-      swizzleBlockInvocationCount,
-      1,
-      "Should invoke the swizzle block once per method call"
-    );
-    [expectation fulfill];
-  });
-  [self waitForExpectations:@[expectation] timeout:2];
+                           named:self.name
+                           async:NO];
+  NSString *arg1 = @"Foo";
+  NSString *arg2 = @"Bar";
+  NSString *arg3 = @"Baz";
+  FBSDKSwizzlerTestObject *testObject = [FBSDKSwizzlerTestObject new];
+  [testObject methodWithArgument:arg1
+                  secondArgument:arg2
+                   thirdArgument:arg3];
+  XCTAssertEqualObjects(capturedArg1, arg1);
+  XCTAssertEqualObjects(capturedArg2, arg2);
+  XCTAssertEqualObjects(capturedArg3, arg3);
+  XCTAssertEqual(
+    testObject.methodWithThreeArgumentsCallCount,
+    1,
+    "Should invoke the original implementation"
+  );
+  XCTAssertEqual(
+    swizzleBlockInvocationCount,
+    1,
+    "Should invoke the swizzle block once per method call"
+  );
 }
 
 - (void)testSwizzlingMethodWithMoreThanMaxAllowedArguments
 {
-  XCTestExpectation *expectation = [[XCTestExpectation alloc] initWithDescription:self.name];
   __block BOOL didInvokeSwizzleBlock = NO;
   [FBSDKSwizzler swizzleSelector:@selector(methodWithArgument:secondArgument:thirdArgument:fourthArgument:) // fifthArgument:)
                          onClass:FBSDKSwizzlerTestObject.class
                        withBlock:^(id caller, SEL command, id arg1, id arg2, id arg3, id arg4) {
                          didInvokeSwizzleBlock = YES;
                        }
-                           named:self.name];
-
-  dispatch_async(dispatch_get_main_queue(), ^{
-    FBSDKSwizzlerTestObject *testObject = [FBSDKSwizzlerTestObject new];
-    [testObject methodWithArgument:@"Foo"
-                    secondArgument:@"Foo"
-                     thirdArgument:@"Foo"
-                    fourthArgument:@"Foo"];
-    XCTAssertFalse(
-      didInvokeSwizzleBlock,
-      "Should not invoke the swizzle block if there are too many arguments"
-    );
-    XCTAssertEqual(
-      testObject.methodWithFourArgumentsCallCount,
-      1,
-      "Should invoke the original implementation"
-    );
-    [expectation fulfill];
-  });
-  [self waitForExpectations:@[expectation] timeout:2];
+                           named:self.name
+                           async:NO];
+  FBSDKSwizzlerTestObject *testObject = [FBSDKSwizzlerTestObject new];
+  [testObject methodWithArgument:@"Foo"
+                  secondArgument:@"Foo"
+                   thirdArgument:@"Foo"
+                  fourthArgument:@"Foo"];
+  XCTAssertFalse(
+    didInvokeSwizzleBlock,
+    "Should not invoke the swizzle block if there are too many arguments"
+  );
+  XCTAssertEqual(
+    testObject.methodWithFourArgumentsCallCount,
+    1,
+    "Should invoke the original implementation"
+  );
 }
 
 - (void)testSwizzlingWithNoName
 {
-  XCTestExpectation *expectation = [[XCTestExpectation alloc] initWithDescription:self.name];
   __block BOOL swizzleBlockWasCalled = NO;
   [FBSDKSwizzler swizzleSelector:@selector(methodWithNoArguments)
                          onClass:FBSDKSwizzlerTestObject.class
                        withBlock:^{
                          swizzleBlockWasCalled = YES;
                        }
-                           named:nil];
-  dispatch_async(dispatch_get_main_queue(), ^{
-    FBSDKSwizzlerTestObject *testObject = [FBSDKSwizzlerTestObject new];
-    [testObject methodWithNoArguments];
-    XCTAssertFalse(
-      swizzleBlockWasCalled,
-      "Should not invoke the swizzle block for an unnamed swizzle"
-    );
-    XCTAssertEqual(
-      testObject.methodWithNoArgumentsCallCount,
-      1,
-      "Should invoke the original implementation once per method call"
-    );
-    [expectation fulfill];
-  });
-  [self waitForExpectations:@[expectation] timeout:2];
+                           named:nil
+                           async:NO];
+  FBSDKSwizzlerTestObject *testObject = [FBSDKSwizzlerTestObject new];
+  [testObject methodWithNoArguments];
+  XCTAssertFalse(
+    swizzleBlockWasCalled,
+    "Should not invoke the swizzle block for an unnamed swizzle"
+  );
+  XCTAssertEqual(
+    testObject.methodWithNoArgumentsCallCount,
+    1,
+    "Should invoke the original implementation once per method call"
+  );
 }
 
 - (void)testUnswizzling
 {
-  XCTestExpectation *expectation = [[XCTestExpectation alloc] initWithDescription:self.name];
   __block BOOL swizzleBlockWasCalled = NO;
   [FBSDKSwizzler swizzleSelector:@selector(methodToUnswizzle)
                          onClass:FBSDKSwizzlerTestObject.class
                        withBlock:^{
                          swizzleBlockWasCalled = YES;
                        }
-                           named:self.name];
-  dispatch_async(dispatch_get_main_queue(), ^{
-    FBSDKSwizzlerTestObject *testObject = [FBSDKSwizzlerTestObject new];
-    [testObject methodToUnswizzle];
-    XCTAssertTrue(swizzleBlockWasCalled);
+                           named:self.name
+                           async:NO];
+  FBSDKSwizzlerTestObject *testObject = [FBSDKSwizzlerTestObject new];
+  [testObject methodToUnswizzle];
+  XCTAssertTrue(swizzleBlockWasCalled);
 
-    // Reset the expectation
-    swizzleBlockWasCalled = NO;
+  // Reset the expectation
+  swizzleBlockWasCalled = NO;
 
-    [FBSDKSwizzler unswizzleSelector:@selector(methodToUnswizzle)
-                             onClass:FBSDKSwizzlerTestObject.class
-                               named:self.name];
+  [FBSDKSwizzler unswizzleSelector:@selector(methodToUnswizzle)
+                           onClass:FBSDKSwizzlerTestObject.class
+                             named:self.name];
 
-    [testObject methodToUnswizzle];
-    XCTAssertFalse(
-      swizzleBlockWasCalled,
-      "Should not invoke the swizzle block after the method has been unswizzled"
-    );
-    XCTAssertEqual(
-      testObject.methodToUnswizzleCallCount,
-      2,
-      "Should invoke the original implementation once per method call"
-    );
-    [expectation fulfill];
-  });
-  [self waitForExpectations:@[expectation] timeout:2];
+  [testObject methodToUnswizzle];
+  XCTAssertFalse(
+    swizzleBlockWasCalled,
+    "Should not invoke the swizzle block after the method has been unswizzled"
+  );
+  XCTAssertEqual(
+    testObject.methodToUnswizzleCallCount,
+    2,
+    "Should invoke the original implementation once per method call"
+  );
 }
 
 - (void)testConflictingSwizzles
 {
-  XCTestExpectation *expectation = [[XCTestExpectation alloc] initWithDescription:self.name];
   __block int swizzleBlockInvocationCount = 0;
   [FBSDKSwizzler swizzleSelector:@selector(methodToConflict)
                          onClass:FBSDKSwizzlerTestObject.class
                        withBlock:^{
                          XCTFail("Should not call the overridden swizzle block");
                        }
-                           named:self.name];
+                           named:self.name
+                           async:NO];
   [FBSDKSwizzler swizzleSelector:@selector(methodToConflict)
                          onClass:FBSDKSwizzlerTestObject.class
                        withBlock:^{
                          swizzleBlockInvocationCount++;
                        }
-                           named:self.name];
-
-  dispatch_async(dispatch_get_main_queue(), ^{
-    FBSDKSwizzlerTestObject *testObject = [FBSDKSwizzlerTestObject new];
-    [testObject methodToConflict];
-    XCTAssertEqual(
-      swizzleBlockInvocationCount,
-      1,
-      "Should override the first swizzle block with the subsequent swizzle block"
-    );
-    XCTAssertEqual(
-      testObject.methodToConflictCallCount,
-      1,
-      "Should invoke the original implementation once per method call"
-    );
-    [expectation fulfill];
-  });
-  [self waitForExpectations:@[expectation] timeout:2];
+                           named:self.name
+                           async:NO];
+  FBSDKSwizzlerTestObject *testObject = [FBSDKSwizzlerTestObject new];
+  [testObject methodToConflict];
+  XCTAssertEqual(
+    swizzleBlockInvocationCount,
+    1,
+    "Should override the first swizzle block with the subsequent swizzle block"
+  );
+  XCTAssertEqual(
+    testObject.methodToConflictCallCount,
+    1,
+    "Should invoke the original implementation once per method call"
+  );
 }
 
 - (void)testSwizzlingSubclass
 {
-  XCTestExpectation *expectation = [[XCTestExpectation alloc] initWithDescription:self.name];
   __block int swizzleBlockInvocationCount = 0;
   [FBSDKSwizzler swizzleSelector:@selector(methodToOverride)
                          onClass:FBSDKSwizzlerTestObject.class
                        withBlock:^{
                          swizzleBlockInvocationCount++;
                        }
-                           named:self.name];
+                           named:self.name
+                           async:NO];
+  FBSDKSwizzlerTestObjectSubclass *testObject = [FBSDKSwizzlerTestObjectSubclass new];
+  [testObject methodToOverride];
 
-  dispatch_async(dispatch_get_main_queue(), ^{
-    FBSDKSwizzlerTestObjectSubclass *testObject = [FBSDKSwizzlerTestObjectSubclass new];
-    [testObject methodToOverride];
-
-    XCTAssertEqual(
-      swizzleBlockInvocationCount,
-      1,
-      "Should find the swizzle on the superclass"
-    );
-    [expectation fulfill];
-  });
-  [self waitForExpectations:@[expectation] timeout:2];
+  XCTAssertEqual(
+    swizzleBlockInvocationCount,
+    1,
+    "Should find the swizzle on the superclass"
+  );
 }
 
 - (void)testSwizzlingWhenBothSubAndSuperclassAreSwizzled
 {
-  XCTestExpectation *expectation = [[XCTestExpectation alloc] initWithDescription:self.name];
   // Swizzle the superclass
   __block int firstSwizzleBlockCallCount = 0;
   [FBSDKSwizzler swizzleSelector:@selector(methodToSwizzleInSuperAndSubclass)
@@ -454,7 +463,8 @@
                        withBlock:^{
                          firstSwizzleBlockCallCount++;
                        }
-                           named:self.name];
+                           named:self.name
+                           async:NO];
   // Swizzle the same method on the subclass
   __block int secondSwizzleBlockCallCount = 0;
   [FBSDKSwizzler swizzleSelector:@selector(methodToSwizzleInSuperAndSubclass)
@@ -462,31 +472,26 @@
                        withBlock:^{
                          secondSwizzleBlockCallCount++;
                        }
-                           named:self.name];
+                           named:self.name
+                           async:NO];
+  FBSDKSwizzlerTestObjectSubclass *testObject = [FBSDKSwizzlerTestObjectSubclass new];
+  [testObject methodToSwizzleInSuperAndSubclass];
 
-  dispatch_async(dispatch_get_main_queue(), ^{
-    FBSDKSwizzlerTestObjectSubclass *testObject = [FBSDKSwizzlerTestObjectSubclass new];
-    [testObject methodToSwizzleInSuperAndSubclass];
-
-    XCTAssertEqual(
-      firstSwizzleBlockCallCount,
-      1,
-      "Should call the swizzle block on the superclass"
-    );
-    XCTAssertEqual(
-      secondSwizzleBlockCallCount,
-      1,
-      "Should call the swizzle block on the subclass"
-    );
-    XCTAssertEqual(
-      testObject.methodToSwizzleInSuperAndSubclassCallCount,
-      2,
-      "Should call the original method on the superclass and subclass"
-    );
-
-    [expectation fulfill];
-  });
-  [self waitForExpectations:@[expectation] timeout:2];
+  XCTAssertEqual(
+    firstSwizzleBlockCallCount,
+    1,
+    "Should call the swizzle block on the superclass"
+  );
+  XCTAssertEqual(
+    secondSwizzleBlockCallCount,
+    1,
+    "Should call the swizzle block on the subclass"
+  );
+  XCTAssertEqual(
+    testObject.methodToSwizzleInSuperAndSubclassCallCount,
+    2,
+    "Should call the original method on the superclass and subclass"
+  );
 }
 
 @end
