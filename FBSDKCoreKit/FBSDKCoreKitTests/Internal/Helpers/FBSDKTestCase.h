@@ -181,7 +181,7 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Stubs `FBSDKSettings.shouldLimitEventAndDataUsage` with the provided value
 - (void)stubSettingsShouldLimitEventAndDataUsageWith:(BOOL)shouldLimit;
 
-/// Stubs `FBSDKAppEventsUtility.advertiserID` with the provided value
+/// Stubs `FBSDKAppEventsUtility.shared.advertiserID` with the provided value
 - (void)stubAppEventsUtilityAdvertiserIDWith:(nullable NSString *)identifier;
 
 /// Stubs `FBSDKAppEventsUtility.tokenStringToUseFor:` and returns the provided string
@@ -240,9 +240,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 
 /// Stubs `ASIdentifierManager.advertisingIdentifier` and returns the provided value
 - (void)stubAdvertisingIdentifierWithIdentifier:(NSUUID *)uuid;
-
-/// Stubs `AppEventsUtility.advertiserID` and returns the provided value
-- (void)stubAdvertiserIdentifierWithIdentifierString:(NSString *)advertiserIdentifierString;
 
 /// Stubs `FBSDKSettings.isAdvertiserIDCollectionEnabled` and return the provided value
 - (void)stubIsAdvertiserIDCollectionEnabledWith:(BOOL)isAdvertiserIDCollectionEnabled;

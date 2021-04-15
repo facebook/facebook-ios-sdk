@@ -199,7 +199,7 @@ static id<FBSDKSettings> _settings;
 
 + (id<FBSDKGraphRequest>)requestToLoadCodelessSetup:(NSString *)appID
 {
-  NSString *advertiserID = [FBSDKAppEventsUtility advertiserID];
+  NSString *advertiserID = [FBSDKAppEventsUtility.shared advertiserID];
   if (!advertiserID) {
     return nil;
   }
@@ -284,7 +284,7 @@ static id<FBSDKSettings> _settings;
   struct utsname systemInfo;
   uname(&systemInfo);
   NSString *machine = @(systemInfo.machine);
-  NSString *advertiserID = [FBSDKAppEventsUtility advertiserID] ?: @"";
+  NSString *advertiserID = [FBSDKAppEventsUtility.shared advertiserID] ?: @"";
   machine = machine ?: @"";
   NSString *debugStatus = [FBSDKAppEventsUtility isDebugBuild] ? @"1" : @"0";
 #if TARGET_OS_SIMULATOR

@@ -113,7 +113,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, class, nonatomic) ASIdentifierManager *cachedAdvertiserIdentifierManager;
 
-+ (ASIdentifierManager *)_asIdentifierManagerWithShouldUseCachedManager:(BOOL)useCachedManagerIfAvailable
+- (ASIdentifierManager *)_asIdentifierManagerWithShouldUseCachedManager:(BOOL)useCachedManagerIfAvailable
                                                dynamicFrameworkResolver:(id<FBSDKDynamicFrameworkResolving>)dynamicFrameworkResolver
 NS_SWIFT_NAME(asIdentifierManager(shouldUseCachedManager:dynamicFrameworkResolver:));
 

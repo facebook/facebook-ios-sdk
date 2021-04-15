@@ -1586,7 +1586,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   if (!accessToken) {
     // We don't have a logged in user, so we need some form of udid representation. Prefer advertiser ID if
     // available. Note that this function only makes sense to be called in the context of advertising.
-    udid = [FBSDKAppEventsUtility advertiserID];
+    udid = [FBSDKAppEventsUtility.shared advertiserID];
     if (!udid) {
       // No udid, and no user token.  No point in making the request.
       return nil;

@@ -416,7 +416,8 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
 - (void)stubAppEventsUtilityAdvertiserIDWith:(nullable NSString *)identifier
 {
-  OCMStub(ClassMethod([_appEventsUtilityClassMock advertiserID])).andReturn(identifier);
+  OCMStub(ClassMethod([_appEventsUtilityClassMock shared])).andReturn(_appEventsUtilityClassMock);
+  OCMStub([_appEventsUtilityClassMock advertiserID]).andReturn(identifier);
 }
 
 - (void)stubAppEventsUtilityTokenStringToUseForTokenWith:(NSString *)tokenString
@@ -518,11 +519,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)stubAdvertisingIdentifierWithIdentifier:(NSUUID *)uuid
 {
   OCMStub([self.asIdentifierManagerClassMock advertisingIdentifier]).andReturn(uuid);
-}
-
-- (void)stubAdvertiserIdentifierWithIdentifierString:(NSString *)advertiserIdentifierString
-{
-  OCMStub([self.appEventsUtilityClassMock advertiserID]).andReturn(advertiserIdentifierString);
 }
 
 - (void)stubIsAdvertiserIDCollectionEnabledWith:(BOOL)isAdvertiserIDCollectionEnabled

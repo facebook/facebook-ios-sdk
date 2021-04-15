@@ -46,7 +46,7 @@ extension FBSDKAppEventsUtilityTests {
     AppEventsUtility.cachedAdvertiserIdentifierManager = cachedManager
     let resolver = TestDylibResolver()
 
-    let manager = AppEventsUtility.asIdentifierManager(
+    let manager = AppEventsUtility.shared.asIdentifierManager(
       shouldUseCachedManager: true,
       dynamicFrameworkResolver: resolver
     )
@@ -70,7 +70,7 @@ extension FBSDKAppEventsUtilityTests {
       return XCTFail("Should not begin the test with a cached manager")
     }
 
-    let manager = AppEventsUtility.asIdentifierManager(
+    let manager = AppEventsUtility.shared.asIdentifierManager(
       shouldUseCachedManager: true,
       dynamicFrameworkResolver: resolver
     )
@@ -96,7 +96,7 @@ extension FBSDKAppEventsUtilityTests {
     let resolver = TestDylibResolver()
     resolver.stubbedASIdentifierManagerClass = ASIdentifierManager.self
 
-    let manager = AppEventsUtility.asIdentifierManager(
+    let manager = AppEventsUtility.shared.asIdentifierManager(
       shouldUseCachedManager: false,
       dynamicFrameworkResolver: resolver
     )
@@ -123,7 +123,7 @@ extension FBSDKAppEventsUtilityTests {
       return XCTFail("Should not begin the test with a cached manager")
     }
 
-    let manager = AppEventsUtility.asIdentifierManager(
+    let manager = AppEventsUtility.shared.asIdentifierManager(
       shouldUseCachedManager: false,
       dynamicFrameworkResolver: resolver
     )

@@ -115,9 +115,9 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 
 - (void)testParamsDictionary
 {
-  [self stubAdvertiserIdentifierWithIdentifierString:NSUUID.UUID.UUIDString];
+  [self stubAppEventsUtilityAdvertiserIDWith:NSUUID.UUID.UUIDString];
   [self stubIsAdvertiserTrackingEnabledWith:YES];
-  [self stubAdvertiserIdentifierWithIdentifierString:NSUUID.UUID.UUIDString];
+  [self stubAppEventsUtilityAdvertiserIDWith:NSUUID.UUID.UUIDString];
   NSDictionary *dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
                                                          shouldAccessAdvertisingID:YES];
   XCTAssertEqualObjects(@"event", dict[@"event"]);
@@ -209,7 +209,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 
   if (@available(iOS 14.0, *)) {
     XCTAssertNotNil(
-      [FBSDKAppEventsUtility advertiserID],
+      [FBSDKAppEventsUtility.shared advertiserID],
       "Advertiser id should not be nil when collection is enabled"
     );
   }
@@ -227,7 +227,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   [self stubSharedAsIdentifierManagerWithAsIdentifierManager:self.asIdentifierManagerClassMock];
 
   if (@available(iOS 14.0, *)) {
-    XCTAssertNil([FBSDKAppEventsUtility advertiserID]);
+    XCTAssertNil([FBSDKAppEventsUtility.shared advertiserID]);
   }
 }
 
