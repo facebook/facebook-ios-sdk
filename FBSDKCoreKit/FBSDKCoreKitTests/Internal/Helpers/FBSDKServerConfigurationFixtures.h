@@ -22,6 +22,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+NS_SWIFT_NAME(ServerConfigurationFixtures)
 @interface FBSDKServerConfigurationFixtures : NSObject
 
 /// A default configuration with valid inputs. This is the same default configuration used in production code

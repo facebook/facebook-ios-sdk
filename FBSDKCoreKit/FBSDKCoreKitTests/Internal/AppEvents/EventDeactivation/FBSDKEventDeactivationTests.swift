@@ -31,7 +31,7 @@ class FBSDKEventDeactivationTests: FBSDKTestCase {
       ]
     ]
 
-    let serverConfiguration = FBSDKServerConfigurationFixtures.config(with: ["restrictiveParams": events])
+    let serverConfiguration = ServerConfigurationFixtures.config(with: ["restrictiveParams": events])
     stubCachedServerConfiguration(with: serverConfiguration)
 
     FBSDKEventDeactivationManager.enable()

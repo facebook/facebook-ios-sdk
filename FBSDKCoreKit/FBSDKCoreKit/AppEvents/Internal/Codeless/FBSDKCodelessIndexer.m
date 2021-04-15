@@ -42,6 +42,7 @@
 @property (class, nullable, nonatomic, copy) id<FBSDKGraphRequestConnectionProviding> connectionProvider;
 @property (class, nullable, nonatomic, copy) Class<FBSDKSwizzling> swizzler;
 @property (class, nullable, nonatomic, readonly) id<FBSDKSettings> settings;
+@property (class, nullable, nonatomic, readonly) id<FBSDKAdvertiserIDProviding> advertiserIDProvider;
 
 @end
 
@@ -65,6 +66,7 @@ static id<FBSDKGraphRequestConnectionProviding> _connectionProvider;
 static Class<FBSDKSwizzling> _swizzler;
 static id<FBSDKSettings> _settings;
 static id<FBSDKAdvertiserIDProviding> _advertiserIDProvider;
+static id<FBSDKSettings> _settings;
 
 + (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
          serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
@@ -145,20 +147,19 @@ static id<FBSDKAdvertiserIDProviding> _advertiserIDProvider;
 // DO NOT call this function, it is only called once in the enable function
 + (void)loadCodelessSettingWithCompletionBlock:(FBSDKCodelessSettingLoadBlock)completionBlock
 {
-  NSString *appID = [FBSDKSettings appID];
+  NSString *appID = [self.settings appID];
   if (appID == nil) {
     return;
   }
 
-  [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *serverConfigurationLoadingError) {
-    if (!serverConfiguration.codelessEventsEnabled) {
+  [self.serverConfigurationProvider loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *serverConfigurationLoadingError) {
+    if (!serverConfiguration.isCodelessEventsEnabled) {
       return;
     }
 
     // load the defaults
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *defaultKey = [NSString stringWithFormat:CODELESS_SETTING_KEY, appID];
-    NSData *data = [defaults objectForKey:defaultKey];
+    NSData *data = [self.store objectForKey:defaultKey];
     if ([data isKindOfClass:[NSData class]]) {
       NSMutableDictionary<NSString *, id> *codelessSetting = nil;
       id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createInsecureUnarchiverFor:data];
@@ -171,16 +172,19 @@ static id<FBSDKAdvertiserIDProviding> _advertiserIDProvider;
         _codelessSetting = codelessSetting;
       }
     }
-    if (!_codelessSetting) {
-      _codelessSetting = [NSMutableDictionary new];
-    }
 
-    if (![self _codelessSetupTimestampIsValid:[FBSDKTypeUtility dictionary:_codelessSetting objectForKey:CODELESS_SETTING_TIMESTAMP_KEY ofType:NSObject.class]]) {
+    if (
+      _codelessSetting
+      && [self _codelessSetupTimestampIsValid:[FBSDKTypeUtility dictionary:_codelessSetting objectForKey:CODELESS_SETTING_TIMESTAMP_KEY ofType:NSObject.class]]
+    ) {
+      completionBlock([FBSDKTypeUtility boolValue:[FBSDKTypeUtility dictionary:_codelessSetting objectForKey:CODELESS_SETUP_ENABLED_KEY ofType:NSObject.class]], nil);
+    } else {
+      _codelessSetting = [NSMutableDictionary new];
       id<FBSDKGraphRequest> request = [self requestToLoadCodelessSetup:appID];
       if (request == nil) {
         return;
       }
-      FBSDKGraphRequestConnection *requestConnection = [FBSDKGraphRequestConnection new];
+      id<FBSDKGraphRequestConnecting> requestConnection = [self.connectionProvider createGraphRequestConnection];
       requestConnection.timeout = kTimeout;
       [requestConnection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *codelessLoadingError) {
         if (codelessLoadingError) {
@@ -193,13 +197,11 @@ static id<FBSDKAdvertiserIDProviding> _advertiserIDProvider;
           [FBSDKTypeUtility dictionary:_codelessSetting setObject:@(isCodelessSetupEnabled) forKey:CODELESS_SETUP_ENABLED_KEY];
           [FBSDKTypeUtility dictionary:_codelessSetting setObject:[NSDate date] forKey:CODELESS_SETTING_TIMESTAMP_KEY];
           // update the cached copy in user defaults
-          [defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:_codelessSetting] forKey:defaultKey];
+          [self.store setObject:[NSKeyedArchiver archivedDataWithRootObject:_codelessSetting] forKey:defaultKey];
           completionBlock(isCodelessSetupEnabled, codelessLoadingError);
         }
       }];
       [requestConnection start];
-    } else {
-      completionBlock([FBSDKTypeUtility boolValue:[FBSDKTypeUtility dictionary:_codelessSetting objectForKey:CODELESS_SETUP_ENABLED_KEY ofType:NSObject.class]], nil);
     }
   }];
 }
@@ -208,7 +210,7 @@ static id<FBSDKAdvertiserIDProviding> _advertiserIDProvider;
 
 + (id<FBSDKGraphRequest>)requestToLoadCodelessSetup:(NSString *)appID
 {
-  NSString *advertiserID = [FBSDKAppEventsUtility.shared advertiserID];
+  NSString *advertiserID = self.advertiserIDProvider.advertiserID;
   if (!advertiserID) {
     return nil;
   }
@@ -217,11 +219,11 @@ static id<FBSDKAdvertiserIDProviding> _advertiserIDProvider;
     @"fields" : CODELESS_SETUP_ENABLED_FIELD,
     @"advertiser_id" : advertiserID
   };
-  id<FBSDKGraphRequest> request = [_requestProvider createGraphRequestWithGraphPath:appID
-                                                                         parameters:parameters
-                                                                        tokenString:nil
-                                                                         HTTPMethod:nil
-                                                                              flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
+  id<FBSDKGraphRequest> request = [self.requestProvider createGraphRequestWithGraphPath:appID
+                                                                             parameters:parameters
+                                                                            tokenString:nil
+                                                                             HTTPMethod:nil
+                                                                                  flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
   return request;
 }
 
@@ -236,11 +238,14 @@ static id<FBSDKAdvertiserIDProviding> _advertiserIDProvider;
   [UIApplication sharedApplication].applicationSupportsShakeToEdit = YES;
   Class class = [UIApplication class];
 
-  [FBSDKSwizzler swizzleSelector:@selector(motionBegan:withEvent:) onClass:class withBlock:^{
-                                                                                   if ([FBSDKServerConfigurationManager cachedServerConfiguration].isCodelessEventsEnabled) {
-                                                                                     [self checkCodelessIndexingSession];
-                                                                                   }
-                                                                                 } named:@"motionBegan"];
+  [self.swizzler swizzleSelector:@selector(motionBegan:withEvent:)
+                         onClass:class
+                       withBlock:^{
+                         if ([FBSDKServerConfigurationManager cachedServerConfiguration].isCodelessEventsEnabled) {
+                           [self checkCodelessIndexingSession];
+                         }
+                       }
+                           named:@"motionBegan"];
 }
 
 + (void)checkCodelessIndexingSession
@@ -485,6 +490,11 @@ static id<FBSDKAdvertiserIDProviding> _advertiserIDProvider;
 
 + (void)reset
 {
+  _isCheckingSession = NO;
+  _isCodelessIndexing = NO;
+  _isCodelessIndexingEnabled = NO;
+  _isGestureSet = NO;
+  _codelessSetting = nil;
   _requestProvider = nil;
   _serverConfigurationProvider = nil;
   _store = nil;

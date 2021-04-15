@@ -30,6 +30,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic, readonly) id<FBSDKSettings> settings;
 @property (class, nullable, nonatomic, readonly) id<FBSDKAdvertiserIDProviding> advertiserIDProvider;
 
++ (nullable id<FBSDKGraphRequest>)requestToLoadCodelessSetup:(NSString *)appID
+NS_SWIFT_NAME(requestToLoadCodelessSetup(appID:));
+
++ (void)loadCodelessSettingWithCompletionBlock:(FBSDKCodelessSettingLoadBlock)completionBlock;
+
 + (void)reset;
 
 @end
