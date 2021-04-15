@@ -128,14 +128,6 @@ commands:
           at: .
       - run: sh scripts/run.sh lint cocoapods << parameters.arguments >>
 
-  lint_swift:
-    description: Lints using Swiftlint
-    steps:
-      - attach_workspace:
-          at: .
-      - run: brew install swiftlint
-      - run: sh scripts/run.sh lint swift
-
   publish_aggregate_cocoapod:
     description: Pushes aggregate pod FacebookSDK to trunk
     steps:
@@ -255,10 +247,6 @@ jobs:
     steps:
       - lint_cocoapods:
           arguments: --use-libraries
-  lint-swift:
-    <<: *useMacOS
-    steps:
-      - lint_swift
   publish-aggregate-cocoapod:
     <<: *useMacOS
     steps:
@@ -310,8 +298,6 @@ workflows:
       - lint-cocoapods:
           <<: *requiresSetup
       - lint-cocoapods-static:
-          <<: *requiresSetup
-      - lint-swift:
           <<: *requiresSetup
       - verify-spm-headers:
           <<: *requiresSetup
