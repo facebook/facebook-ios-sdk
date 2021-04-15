@@ -23,6 +23,7 @@
 #import <sys/utsname.h>
 
 #import "FBSDKCrashObserving.h"
+#import "FBSDKFileManaging.h"
 #import "FBSDKLibAnalyzer.h"
 #import "FBSDKTypeUtility.h"
 
@@ -46,22 +47,38 @@ NSString *const kFBSDKDeviceOSVersion = @"device_os_version";
 NSString *const kFBSDKMapingTable = @"mapping_table";
 NSString *const kFBSDKMappingTableIdentifier = @"mapping_table_identifier";
 
+@interface FBSDKCrashHandler ()
+
+@property (nonatomic) BOOL isTurnedOn;
+@property (nonatomic) id<FBSDKFileManaging> fileManager;
+@property (nonatomic) NSHashTable<id<FBSDKCrashObserving>> *observers;
+@property (nonatomic) NSArray<NSDictionary<NSString *, id> *> *processedCrashLogs;
+
+@end
+
 @implementation FBSDKCrashHandler
 
-static NSHashTable<id<FBSDKCrashObserving>> *_observers;
-static NSArray<NSDictionary<NSString *, id> *> *_processedCrashLogs;
-static BOOL _isTurnedOff;
-
-+ (void)initialize
+- (instancetype)init
 {
-  NSString *dirPath = [NSTemporaryDirectory() stringByAppendingPathComponent:FBSDK_CRASH_PATH_NAME];
-  if (![[NSFileManager defaultManager] fileExistsAtPath:dirPath]) {
-    [[NSFileManager defaultManager] createDirectoryAtPath:dirPath withIntermediateDirectories:NO attributes:NULL error:NULL];
+  return [self initWithFileManager:NSFileManager.defaultManager];
+}
+
+- (instancetype)initWithFileManager:(id<FBSDKFileManaging>)fileManager
+{
+  if ((self = [super init])) {
+    _observers = [NSHashTable new];
+    _isTurnedOn = YES;
+    _fileManager = fileManager;
+
+    NSString *dirPath = [NSTemporaryDirectory() stringByAppendingPathComponent:FBSDK_CRASH_PATH_NAME];
+    if (![_fileManager fileExistsAtPath:dirPath]) {
+      [_fileManager createDirectoryAtPath:dirPath withIntermediateDirectories:NO attributes:NULL error:NULL];
+    }
+    directoryPath = dirPath;
+    NSString *identifier = [[NSUUID UUID] UUIDString];
+    mappingTableIdentifier = [identifier stringByReplacingOccurrencesOfString:@"-" withString:@""];
   }
-  directoryPath = dirPath;
-  NSString *identifier = [[NSUUID UUID] UUIDString];
-  mappingTableIdentifier = [identifier stringByReplacingOccurrencesOfString:@"-" withString:@""];
-  _observers = [NSHashTable new];
+  return self;
 }
 
 + (instancetype)shared
@@ -83,9 +100,14 @@ static BOOL _isTurnedOff;
 
 + (void)disable
 {
-  _isTurnedOff = YES;
+  [FBSDKCrashHandler.shared disable];
+}
+
+- (void)disable
+{
+  self.isTurnedOn = NO;
   [FBSDKCrashHandler.shared _uninstallExceptionsHandler];
-  _observers = nil;
+  self.observers = nil;
 }
 
 + (void)addObserver:(id<FBSDKCrashObserving>)observer
@@ -95,7 +117,7 @@ static BOOL _isTurnedOff;
 
 - (void)addObserver:(id<FBSDKCrashObserving>)observer
 {
-  if (_isTurnedOff || ![self _isSafeToGenerateMapping]) {
+  if (!self.isTurnedOn || ![self _isSafeToGenerateMapping]) {
     return;
   }
   static dispatch_once_t onceToken;
@@ -104,8 +126,8 @@ static BOOL _isTurnedOff;
     _processedCrashLogs = [self _getProcessedCrashLogs];
   });
   @synchronized(_observers) {
-    if (![_observers containsObject:observer]) {
-      [_observers addObject:observer];
+    if (![self.observers containsObject:observer]) {
+      [self.observers addObject:observer];
       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void) {
         [self _generateMethodMapping:observer];
       });
@@ -122,9 +144,9 @@ static BOOL _isTurnedOff;
 - (void)removeObserver:(id<FBSDKCrashObserving>)observer
 {
   @synchronized(_observers) {
-    if ([_observers containsObject:observer]) {
-      [_observers removeObject:observer];
-      if (_observers.count == 0) {
+    if ([self.observers containsObject:observer]) {
+      [self.observers removeObject:observer];
+      if (self.observers.count == 0) {
         [FBSDKCrashHandler.shared _uninstallExceptionsHandler];
       }
     }
@@ -138,12 +160,12 @@ static BOOL _isTurnedOff;
 
 - (void)clearCrashReportFiles
 {
-  NSArray<NSString *> *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directoryPath error:nil];
+  NSArray<NSString *> *files = [self.fileManager contentsOfDirectoryAtPath:directoryPath error:nil];
 
   for (NSUInteger i = 0; i < files.count; i++) {
     // remove all crash related files except for the current mapping table
     if ([[FBSDKTypeUtility array:files objectAtIndex:i] hasPrefix:@"crash_"] && ![[FBSDKTypeUtility array:files objectAtIndex:i] containsString:mappingTableIdentifier]) {
-      [[NSFileManager defaultManager] removeItemAtPath:[directoryPath stringByAppendingPathComponent:[FBSDKTypeUtility array:files objectAtIndex:i]] error:nil];
+      [self.fileManager removeItemAtPath:[directoryPath stringByAppendingPathComponent:[FBSDKTypeUtility array:files objectAtIndex:i]] error:nil];
     }
   }
 }
@@ -243,7 +265,7 @@ static void FBSDKExceptionHandler(NSException *exception)
 
 - (NSArray<NSDictionary<NSString *, id> *> *)_loadCrashLogs
 {
-  NSArray<NSString *> *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directoryPath error:NULL];
+  NSArray<NSString *> *files = [self.fileManager contentsOfDirectoryAtPath:directoryPath error:NULL];
   NSArray<NSString *> *fileNames = [[self _getCrashLogFileNames:files] sortedArrayUsingComparator:^NSComparisonResult (id _Nonnull obj1, id _Nonnull obj2) {
     return [obj2 compare:obj1];
   }];
@@ -445,7 +467,7 @@ static void FBSDKExceptionHandler(NSException *exception)
     return YES;
   }
 
-  return [[NSFileManager defaultManager] fileExistsAtPath:[self _getPathToLibDataFile:identifier]];
+  return [self.fileManager fileExistsAtPath:[self _getPathToLibDataFile:identifier]];
 #endif
 }
 

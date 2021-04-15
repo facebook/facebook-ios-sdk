@@ -34,7 +34,6 @@
 #import "FBSDKEventBindingManager.h"
 #import "FBSDKErrorReport.h"
 #import "FBSDKErrorReport+Testing.h"
-#import "FBSDKFileManaging.h"
 #import "FBSDKFileDataExtracting.h"
 #import "FBSDKInstrumentManager+Testing.h"
 #import "FBSDKMath.h"
@@ -52,6 +51,7 @@
 #import "FBSDKWindowFinding.h"
 #import "ImageDownloader+Testing.h"
 #import "FeatureManager+Testing.h"
+#import "FBSDKCrashHandler+Testing.h"
 #import "UserDefaultsSpy.h"
 #import "WebViewAppLinkResolver+Testing.h"
 // URLSession Abstraction

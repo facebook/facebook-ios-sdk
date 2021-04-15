@@ -18,8 +18,8 @@
 
 #import "FBSDKErrorReport.h"
 
+#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKFileDataExtracting.h"
-#import "FBSDKFileManaging.h"
 #import "FBSDKGraphRequestFactory.h"
 #import "FBSDKGraphRequestProviding.h"
 #import "FBSDKInternalUtility.h"

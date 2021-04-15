@@ -16,24 +16,26 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#import "FBSDKCoreKitBasicsImport.h"
 
-#import "FBSDKCrashObserving.h"
+@protocol FBSDKFileManaging;
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(CrashHandler)
-@interface FBSDKCrashHandler : NSObject
 
-@property (class, nonatomic, readonly) FBSDKCrashHandler *shared;
+@interface FBSDKCrashHandler (Testing)
 
-- (void)disable;
-+ (void)disable;
-+ (void)addObserver:(id<FBSDKCrashObserving>)observer;
-+ (void)removeObserver:(id<FBSDKCrashObserving>)observer;
-+ (void)clearCrashReportFiles;
-+ (NSString *)getFBSDKVersion;
+- (instancetype)init;
+
+- (instancetype)initWithFileManager: (id<FBSDKFileManaging>)fileManager
+NS_SWIFT_NAME(init(fileManager:));
+
+- (NSArray<NSString *> *)_getCrashLogFileNames:(NSArray<NSString *> *)files;
+- (NSString *)_getPathToCrashFile:(NSString *)timestamp;
+- (BOOL)_callstack:(NSArray<NSString *> *)callstack
+    containsPrefix:(NSArray<NSString *> *)prefixList;
+- (NSArray<NSDictionary<NSString *, id> *> *)_filterCrashLogs:(NSArray<NSString *> *)prefixList
+                                           processedCrashLogs:(NSArray<NSDictionary<NSString *, id> *> *)processedCrashLogs;
 
 @end
-
 NS_ASSUME_NONNULL_END
