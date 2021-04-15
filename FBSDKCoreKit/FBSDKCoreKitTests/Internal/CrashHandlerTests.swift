@@ -82,7 +82,6 @@ class CrashHandlersTest: XCTestCase {
     XCTAssertFalse(result.contains("SUGGEST_EVENT_3.weights"))
     XCTAssertFalse(result.contains("SUGGEST_EVENT_3.rules"))
     XCTAssertFalse(result.contains("crash.text"))
-
   }
 
   func testGettingFileNamesFromEmptyList() {
