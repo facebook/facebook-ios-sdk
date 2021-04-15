@@ -16,14 +16,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-
-#import "FBSDKGraphRequestConnecting.h"
+#import "FBSDKCodelessIndexer+Internal.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-// Default conformance to the FBSDKGraphRequestConnecting protocol
-@interface FBSDKGraphRequestConnection (ConnectionProviding) <FBSDKGraphRequestConnecting>
+@interface FBSDKCodelessIndexer (Testing)
+
+@property (class, nullable, nonatomic, readonly) id<FBSDKGraphRequestProviding> requestProvider;
+@property (class, nullable, nonatomic, readonly) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
+@property (class, nullable, nonatomic, readonly) id<FBSDKDataPersisting> store;
+@property (class, nullable, nonatomic, copy) id<FBSDKGraphRequestConnectionProviding> connectionProvider;
+@property (class, nullable, nonatomic, copy) Class<FBSDKSwizzling> swizzler;
+@property (class, nullable, nonatomic, readonly) id<FBSDKSettings> settings;
+
++ (void)reset;
+
 @end
 
 NS_ASSUME_NONNULL_END

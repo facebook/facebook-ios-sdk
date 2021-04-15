@@ -22,10 +22,21 @@
  #import <Foundation/Foundation.h>
 
  #import "FBSDKCodelessIndexer.h"
+ #import "FBSDKDataPersisting.h"
+ #import "FBSDKGraphRequestConnectionProviding.h"
+ #import "FBSDKGraphRequestProviding.h"
+ #import "FBSDKServerConfigurationProviding.h"
+ #import "FBSDKSettingsProtocol.h"
+ #import "FBSDKSwizzling.h"
 
 @interface FBSDKCodelessIndexer (Internal)
 
-+ (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider;
++ (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+         serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+                               store:(id<FBSDKDataPersisting>)store
+                  connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
+                            swizzler:(Class<FBSDKSwizzling>)swizzler
+                            settings:(id<FBSDKSettings>)settings;
 
 @end
 

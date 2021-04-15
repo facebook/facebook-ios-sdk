@@ -18,6 +18,13 @@
 
 #import <Foundation/Foundation.h>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wstrict-prototypes"
+
+typedef void (^swizzleBlock)();
+
+#pragma clang diagnostic pop
+
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(Swizzling)

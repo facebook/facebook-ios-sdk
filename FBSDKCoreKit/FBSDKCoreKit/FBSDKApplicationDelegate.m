@@ -477,15 +477,17 @@ static UIApplicationState _applicationState;
 {
   id<FBSDKGraphRequestProviding> graphRequestProvider = [FBSDKGraphRequestFactory new];
   id<FBSDKDataPersisting> store = NSUserDefaults.standardUserDefaults;
+  id<FBSDKGraphRequestConnectionProviding> connectionProvider = [FBSDKGraphRequestConnectionFactory new];
+  id<FBSDKSettings> sharedSettings = FBSDKSettings.sharedSettings;
   [FBSDKGraphRequest setCurrentAccessTokenStringProvider:FBSDKAccessToken.class];
   [FBSDKGraphRequestConnection setCanMakeRequests];
   [FBSDKGateKeeperManager configureWithSettings:FBSDKSettings.class
                                 requestProvider:graphRequestProvider
-                             connectionProvider:[FBSDKGraphRequestConnectionFactory new]
+                             connectionProvider:connectionProvider
                                           store:store];
   FBSDKTokenCache *tokenCache = [FBSDKTokenCache new];
   [FBSDKAccessToken setTokenCache:tokenCache];
-  [FBSDKAccessToken setConnectionFactory:[FBSDKGraphRequestConnectionFactory new]];
+  [FBSDKAccessToken setConnectionFactory:connectionProvider];
   [FBSDKAuthenticationToken setTokenCache:tokenCache];
   [FBSDKSettings configureWithStore:store
      appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
@@ -498,17 +500,22 @@ static UIApplicationState _applicationState;
                                   featureChecker:FBSDKFeatureManager.shared
                                            store:store
                                           logger:[FBSDKLogger class]
-                                        settings:[FBSDKSettings sharedSettings]];
+                                        settings:sharedSettings];
 
   [FBSDKInternalUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:FBSDKAccessToken.class];
   [FBSDKAppEventsConfigurationManager configureWithStore:store];
 #if !TARGET_OS_TV
-  [FBSDKAppLinkUtility configureWithRequestProvider:[FBSDKGraphRequestFactory new]
+  [FBSDKAppLinkUtility configureWithRequestProvider:graphRequestProvider
                              infoDictionaryProvider:NSBundle.mainBundle];
-  [FBSDKCodelessIndexer configureWithRequestProvider:[FBSDKGraphRequestFactory new]];
+  [FBSDKCodelessIndexer configureWithRequestProvider:graphRequestProvider
+                         serverConfigurationProvider:FBSDKServerConfigurationManager.class
+                                               store:store
+                                  connectionProvider:connectionProvider
+                                            swizzler:FBSDKSwizzler.class
+                                            settings:sharedSettings];
   if (@available(iOS 14.0, *)) {
-    [FBSDKSKAdNetworkReporter configureWithRequestProvider:[FBSDKGraphRequestFactory new]
+    [FBSDKSKAdNetworkReporter configureWithRequestProvider:graphRequestProvider
                                                      store:store];
   }
   [FBSDKProfile configureWithStore:store

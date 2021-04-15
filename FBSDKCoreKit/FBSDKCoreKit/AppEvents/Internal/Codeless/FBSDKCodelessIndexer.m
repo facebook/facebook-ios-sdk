@@ -30,7 +30,19 @@
 
  #import "FBSDKCoreKit+Internal.h"
  #import "FBSDKGraphRequestProviding.h"
- #import "FBSDKSettings.h"
+ #import "FBSDKSettingsProtocol.h"
+ #import "FBSDKSwizzling.h"
+
+@interface FBSDKCodelessIndexer (Testing)
+
+@property (class, nullable, nonatomic, readonly) id<FBSDKGraphRequestProviding> requestProvider;
+@property (class, nullable, nonatomic, readonly) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
+@property (class, nullable, nonatomic, readonly) id<FBSDKDataPersisting> store;
+@property (class, nullable, nonatomic, copy) id<FBSDKGraphRequestConnectionProviding> connectionProvider;
+@property (class, nullable, nonatomic, copy) Class<FBSDKSwizzling> swizzler;
+@property (class, nullable, nonatomic, readonly) id<FBSDKSettings> settings;
+
+@end
 
 @implementation FBSDKCodelessIndexer
 
@@ -46,12 +58,57 @@ static NSString *_deviceSessionID;
 static NSTimer *_appIndexingTimer;
 static NSString *_lastTreeHash;
 static id<FBSDKGraphRequestProviding> _requestProvider;
+static Class<FBSDKServerConfigurationProviding> _serverConfigurationProvider;
+static id<FBSDKDataPersisting> _store;
+static id<FBSDKGraphRequestConnectionProviding> _connectionProvider;
+static Class<FBSDKSwizzling> _swizzler;
+static id<FBSDKSettings> _settings;
 
 + (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+         serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+                               store:(id<FBSDKDataPersisting>)store
+                  connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
+                            swizzler:(Class<FBSDKSwizzling>)swizzler
+                            settings:(id<FBSDKSettings>)settings
 {
   if (self == [FBSDKCodelessIndexer class]) {
     _requestProvider = requestProvider;
+    _serverConfigurationProvider = serverConfigurationProvider;
+    _store = store;
+    _connectionProvider = connectionProvider;
+    _swizzler = swizzler;
+    _settings = settings;
   }
+}
+
++ (id<FBSDKGraphRequestProviding>)requestProvider
+{
+  return _requestProvider;
+}
+
++ (Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+{
+  return _serverConfigurationProvider;
+}
+
++ (id<FBSDKDataPersisting>)store
+{
+  return _store;
+}
+
++ (id<FBSDKGraphRequestConnectionProviding>)connectionProvider
+{
+  return _connectionProvider;
+}
+
++ (Class<FBSDKSwizzling>)swizzler
+{
+  return _swizzler;
+}
+
++ (id<FBSDKSettings>)settings
+{
+  return _settings;
 }
 
 + (void)enable
@@ -76,7 +133,7 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
 
  #pragma clang diagnostic push
  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-// DO NOT call this function, it is only called once in the load function
+// DO NOT call this function, it is only called once in the enable function
 + (void)loadCodelessSettingWithCompletionBlock:(FBSDKCodelessSettingLoadBlock)completionBlock
 {
   NSString *appID = [FBSDKSettings appID];
@@ -417,9 +474,14 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
  #if DEBUG
   #if FBSDKTEST
 
-+ (id<FBSDKGraphRequestProviding>)requestProvider
++ (void)reset
 {
-  return _requestProvider;
+  _requestProvider = nil;
+  _serverConfigurationProvider = nil;
+  _store = nil;
+  _connectionProvider = nil;
+  _swizzler = nil;
+  _settings = nil;
 }
 
   #endif

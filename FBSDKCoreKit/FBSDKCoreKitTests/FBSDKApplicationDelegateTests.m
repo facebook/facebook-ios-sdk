@@ -318,10 +318,40 @@
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [_delegate initializeSDKWithLaunchOptions:@{}];
   NSObject *requestProvider = (NSObject *)[FBSDKCodelessIndexer requestProvider];
+  NSObject *serverConfigurationProvider = (NSObject *)[FBSDKCodelessIndexer serverConfigurationProvider];
+  NSObject *store = (NSObject *)[FBSDKCodelessIndexer store];
+  NSObject *connectionProvider = (NSObject *)[FBSDKCodelessIndexer connectionProvider];
+  NSObject *swizzler = (NSObject *)[FBSDKCodelessIndexer swizzler];
+  NSObject *settings = (NSObject *)[FBSDKCodelessIndexer settings];
   XCTAssertEqualObjects(
     requestProvider.class,
     FBSDKGraphRequestFactory.class,
     "Should be configured with the expected concrete graph request provider"
+  );
+  XCTAssertEqualObjects(
+    serverConfigurationProvider,
+    FBSDKServerConfigurationManager.class,
+    "Should be configured with the expected concrete server configuration provider"
+  );
+  XCTAssertEqualObjects(
+    store,
+    NSUserDefaults.standardUserDefaults,
+    "Should be configured with the standard user defaults"
+  );
+  XCTAssertEqualObjects(
+    connectionProvider.class,
+    FBSDKGraphRequestConnectionFactory.class,
+    "Should be configured with the expected concrete graph request connection provider"
+  );
+  XCTAssertEqualObjects(
+    swizzler,
+    FBSDKSwizzler.class,
+    "Should be configured with the expected concrete swizzler"
+  );
+  XCTAssertEqualObjects(
+    settings,
+    FBSDKSettings.sharedSettings,
+    "Should be configured with the expected concrete settings"
   );
 }
 

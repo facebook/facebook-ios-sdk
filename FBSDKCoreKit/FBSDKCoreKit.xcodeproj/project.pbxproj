@@ -1217,6 +1217,7 @@
 		F4C11CA526191C7D00FB4596 /* TestCrashObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C11CA426191C7C00FB4596 /* TestCrashObserver.swift */; };
 		F4C11CCE26191CBD00FB4596 /* TestErrorReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C11CCD26191CBD00FB4596 /* TestErrorReport.swift */; };
 		F4C23BD82624C04400FA79AE /* FBSDKSwizzlerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F4C23BD72624C04400FA79AE /* FBSDKSwizzlerTests.m */; };
+		F4C23CB22625E31C00FA79AE /* CodelessIndexerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C23CAA2625E31B00FA79AE /* CodelessIndexerTests.swift */; };
 		F4C29B5B260920E9008818DD /* TestMacCatalystDeterminator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C29B5A260920E9008818DD /* TestMacCatalystDeterminator.swift */; };
 		F4C65113260CEE8100E95F96 /* SampleAppEventsConfigurations.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C6510B260CEE8100E95F96 /* SampleAppEventsConfigurations.swift */; };
 		F4C651EA260CFEDC00E95F96 /* AppLinkNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C651E2260CFEDC00E95F96 /* AppLinkNavigationTests.swift */; };
@@ -2020,6 +2021,8 @@
 		F4C11CA426191C7C00FB4596 /* TestCrashObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCrashObserver.swift; sourceTree = "<group>"; };
 		F4C11CCD26191CBD00FB4596 /* TestErrorReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestErrorReport.swift; sourceTree = "<group>"; };
 		F4C23BD72624C04400FA79AE /* FBSDKSwizzlerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKSwizzlerTests.m; sourceTree = "<group>"; };
+		F4C23CAA2625E31B00FA79AE /* CodelessIndexerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodelessIndexerTests.swift; sourceTree = "<group>"; };
+		F4C23CFF2625EE7500FA79AE /* CodelessIndexer+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CodelessIndexer+Testing.h"; sourceTree = "<group>"; };
 		F4C29B4526091DBC008818DD /* FBSDKMacCatalystDetermining.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKMacCatalystDetermining.h; sourceTree = "<group>"; };
 		F4C29B5A260920E9008818DD /* TestMacCatalystDeterminator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestMacCatalystDeterminator.swift; sourceTree = "<group>"; };
 		F4C6510B260CEE8100E95F96 /* SampleAppEventsConfigurations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAppEventsConfigurations.swift; sourceTree = "<group>"; };
@@ -3009,6 +3012,7 @@
 			isa = PBXGroup;
 			children = (
 				F4A0341825F15D9500D19DE9 /* EventBindingManagerTests.swift */,
+				F4C23CAA2625E31B00FA79AE /* CodelessIndexerTests.swift */,
 				F48A9CD825F83EBA00A2DBDF /* EventBindingManagerEventHandlingTests.swift */,
 				F48A9D0125F83F8200A2DBDF /* EventBindingManagerViewMatchingTests.swift */,
 				C51121C920A27EF50041DC94 /* FBSDKEventBindingTests.m */,
@@ -3223,16 +3227,17 @@
 		F4C11B012617C61F00FB4596 /* Interfaces */ = {
 			isa = PBXGroup;
 			children = (
+				F4C23CFF2625EE7500FA79AE /* CodelessIndexer+Testing.h */,
 				F402AFE4255B4D1C00473083 /* FBSDKBridgeAPI+Testing.h */,
 				F4BDCED62616172A00D3FFF4 /* FBSDKErrorReport+Testing.h */,
+				F4D58EF726210254006FEC6B /* FBSDKHybridAppEventsScriptMessageHandler+Testing.h */,
 				F4C11C962619182D00FB4596 /* FBSDKInstrumentManager+Testing.h */,
 				F49FA9722613D7C300653457 /* FBSDKWebDialog+Testing.h */,
 				F40404C82612789100870E1D /* FBSDKWebDialogView+Testing.h */,
 				F4E89106261E2B5B003184B3 /* FeatureManager+Testing.h */,
-				F4D58EF726210254006FEC6B /* FBSDKHybridAppEventsScriptMessageHandler+Testing.h */,
-				F4D58F7A26237C71006FEC6B /* WebViewAppLinkResolver+Testing.h */,
 				F455441226178ACF00A547A1 /* ImageDownloader+Testing.h */,
 				58E9D62E2625F76E004818D8 /* FBSDKCrashHandler+Testing.h */,
+				F4D58F7A26237C71006FEC6B /* WebViewAppLinkResolver+Testing.h */,
 			);
 			path = Interfaces;
 			sourceTree = "<group>";
@@ -4982,6 +4987,7 @@
 				F43D7FB02603FCCC005AE003 /* InternalUtilityTests.swift in Sources */,
 				58E9CE1826050495004818D8 /* CrashObserverTests.swift in Sources */,
 				F433229D261632E2002CC793 /* TestFileDataExtractor.swift in Sources */,
+				F4C23CB22625E31C00FA79AE /* CodelessIndexerTests.swift in Sources */,
 				F4C11CCE26191CBD00FB4596 /* TestErrorReport.swift in Sources */,
 				F4E890DE261E2AF0003184B3 /* FeatureManagerTests.swift in Sources */,
 				F4D80C082566D469008CCAF0 /* DrawableTests.swift in Sources */,
