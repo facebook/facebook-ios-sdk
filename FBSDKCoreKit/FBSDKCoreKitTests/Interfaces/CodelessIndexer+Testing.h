@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic, copy) id<FBSDKGraphRequestConnectionProviding> connectionProvider;
 @property (class, nullable, nonatomic, copy) Class<FBSDKSwizzling> swizzler;
 @property (class, nullable, nonatomic, readonly) id<FBSDKSettings> settings;
+@property (class, nullable, nonatomic, readonly) id<FBSDKAdvertiserIDProviding> advertiserIDProvider;
 
 + (void)reset;
 

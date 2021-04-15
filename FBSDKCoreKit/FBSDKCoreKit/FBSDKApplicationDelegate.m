@@ -23,6 +23,7 @@
 
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKAppEventsConfigurationManager.h"
+#import "FBSDKAppEventsUtility+AdvertiserIDProviding.h"
 #import "FBSDKBridgeAPI+ApplicationObserving.h"
 #import "FBSDKConstants.h"
 #import "FBSDKCoreKitBasicsImport.h"
@@ -513,7 +514,8 @@ static UIApplicationState _applicationState;
                                                store:store
                                   connectionProvider:connectionProvider
                                             swizzler:FBSDKSwizzler.class
-                                            settings:sharedSettings];
+                                            settings:sharedSettings
+                                advertiserIDProvider:FBSDKAppEventsUtility.shared];
   if (@available(iOS 14.0, *)) {
     [FBSDKSKAdNetworkReporter configureWithRequestProvider:graphRequestProvider
                                                      store:store];

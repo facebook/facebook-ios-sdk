@@ -28,6 +28,7 @@ class CodelessIndexerTests: XCTestCase {
     return TestGraphRequestConnectionFactory.create(withStubbedConnection: connection)
   }()
   let settings = TestSettings()
+  let advertiserIDProvider = TestAdvertiserIDProvider()
 
   override func setUp() {
     super.setUp()
@@ -40,7 +41,8 @@ class CodelessIndexerTests: XCTestCase {
       store: store,
       connectionProvider: connectionFactory,
       swizzler: TestSwizzler.self,
-      settings: settings
+      settings: settings,
+      advertiserIDProvider: advertiserIDProvider
     )
   }
 
@@ -85,6 +87,10 @@ class CodelessIndexerTests: XCTestCase {
       CodelessIndexer.settings,
       "Should not have a settings instance by default"
     )
+    XCTAssertNil(
+      CodelessIndexer.advertiserIDProvider,
+      "Should not have an advertiser ID provider by default"
+    )
   }
 
   func testConfiguringWithDependencies() {
@@ -114,6 +120,10 @@ class CodelessIndexerTests: XCTestCase {
     XCTAssertTrue(
       CodelessIndexer.settings is TestSettings,
       "Should be able to configure with a settings"
+    )
+    XCTAssertTrue(
+      CodelessIndexer.advertiserIDProvider is TestAdvertiserIDProvider,
+      "Should be able to configure with an advertiser ID provider"
     )
   }
 }

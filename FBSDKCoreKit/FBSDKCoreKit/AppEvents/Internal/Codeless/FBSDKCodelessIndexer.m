@@ -28,6 +28,7 @@
  #import <sys/sysctl.h>
  #import <sys/utsname.h>
 
+ #import "FBSDKAdvertiserIDProviding.h"
  #import "FBSDKCoreKit+Internal.h"
  #import "FBSDKGraphRequestProviding.h"
  #import "FBSDKSettingsProtocol.h"
@@ -63,6 +64,7 @@ static id<FBSDKDataPersisting> _store;
 static id<FBSDKGraphRequestConnectionProviding> _connectionProvider;
 static Class<FBSDKSwizzling> _swizzler;
 static id<FBSDKSettings> _settings;
+static id<FBSDKAdvertiserIDProviding> _advertiserIDProvider;
 
 + (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
          serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
@@ -70,6 +72,7 @@ static id<FBSDKSettings> _settings;
                   connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
                             swizzler:(Class<FBSDKSwizzling>)swizzler
                             settings:(id<FBSDKSettings>)settings
+                advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
 {
   if (self == [FBSDKCodelessIndexer class]) {
     _requestProvider = requestProvider;
@@ -78,6 +81,7 @@ static id<FBSDKSettings> _settings;
     _connectionProvider = connectionProvider;
     _swizzler = swizzler;
     _settings = settings;
+    _advertiserIDProvider = advertiserIDProvider;
   }
 }
 
@@ -109,6 +113,11 @@ static id<FBSDKSettings> _settings;
 + (id<FBSDKSettings>)settings
 {
   return _settings;
+}
+
++ (id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
+{
+  return _advertiserIDProvider;
 }
 
 + (void)enable
@@ -482,6 +491,7 @@ static id<FBSDKSettings> _settings;
   _connectionProvider = nil;
   _swizzler = nil;
   _settings = nil;
+  _advertiserIDProvider = nil;
 }
 
   #endif

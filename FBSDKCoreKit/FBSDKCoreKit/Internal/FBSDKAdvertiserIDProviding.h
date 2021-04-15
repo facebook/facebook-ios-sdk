@@ -16,32 +16,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-#if !TARGET_OS_TV
+#import <Foundation/Foundation.h>
 
- #import <Foundation/Foundation.h>
+#import "FBSDKAdvertiserIDProviding.h"
 
-// TODO: Can these all be forward decls?
+NS_ASSUME_NONNULL_BEGIN
 
- #import "FBSDKAdvertiserIDProviding.h"
- #import "FBSDKCodelessIndexer.h"
- #import "FBSDKDataPersisting.h"
- #import "FBSDKGraphRequestConnectionProviding.h"
- #import "FBSDKGraphRequestProviding.h"
- #import "FBSDKServerConfigurationProviding.h"
- #import "FBSDKSettingsProtocol.h"
- #import "FBSDKSwizzling.h"
+/// An internal protocol used to describe anything that can return an advertiser ID string
+NS_SWIFT_NAME(AdvertiserIDProviding)
+@protocol FBSDKAdvertiserIDProviding
 
-@interface FBSDKCodelessIndexer (Internal)
-
-+ (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-         serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
-                               store:(id<FBSDKDataPersisting>)store
-                  connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
-                            swizzler:(Class<FBSDKSwizzling>)swizzler
-                            settings:(id<FBSDKSettings>)settings
-                advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertisingIDProvider;
+@property (nullable, nonatomic, copy, readonly) NSString *advertiserID;
 
 @end
 
-#endif
+NS_ASSUME_NONNULL_END

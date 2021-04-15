@@ -323,6 +323,7 @@
   NSObject *connectionProvider = (NSObject *)[FBSDKCodelessIndexer connectionProvider];
   NSObject *swizzler = (NSObject *)[FBSDKCodelessIndexer swizzler];
   NSObject *settings = (NSObject *)[FBSDKCodelessIndexer settings];
+  NSObject *advertiserIDProvider = (NSObject *)[FBSDKCodelessIndexer advertiserIDProvider];
   XCTAssertEqualObjects(
     requestProvider.class,
     FBSDKGraphRequestFactory.class,
@@ -352,6 +353,11 @@
     settings,
     FBSDKSettings.sharedSettings,
     "Should be configured with the expected concrete settings"
+  );
+  XCTAssertEqualObjects(
+    advertiserIDProvider,
+    FBSDKAppEventsUtility.shared,
+    "Should be configured with the expected concrete advertiser identifier provider"
   );
 }
 
