@@ -51,10 +51,10 @@
 
   invalidData = @{
     @"data" : @[@{
-                  @"timer_buckets" : @(1),
-                  @"timer_interval" : @(1000),
+                  @"timer_buckets" : @1,
+                  @"timer_interval" : @1000,
                   @"default_currency" : @"usd",
-                  @"cutoff_time" : @(2),
+                  @"cutoff_time" : @2,
     }]
   };
   config = [[FBSDKSKAdNetworkConversionConfiguration alloc] initWithJSON:(NSDictionary *)invalidData];
@@ -62,9 +62,9 @@
 
   invalidData = @{
     @"data" : @[@{
-                  @"timer_buckets" : @(1),
-                  @"timer_interval" : @(1000),
-                  @"cutoff_time" : @(2),
+                  @"timer_buckets" : @1,
+                  @"timer_interval" : @1000,
+                  @"cutoff_time" : @2,
                   @"conversion_value_rules" : @[],
     }]
   };
@@ -74,10 +74,10 @@
   // Init with valid data
   NSDictionary<NSString *, id> *validData = @{
     @"data" : @[@{
-                  @"timer_buckets" : @(1),
-                  @"timer_interval" : @(1000),
+                  @"timer_buckets" : @1,
+                  @"timer_interval" : @1000,
                   @"default_currency" : @"usd",
-                  @"cutoff_time" : @(2),
+                  @"cutoff_time" : @2,
                   @"conversion_value_rules" : @[],
     }]
   };
@@ -92,7 +92,7 @@
 {
   NSArray<NSDictionary<NSString *, id> *> *rules = @[
     @{
-      @"conversion_value" : @(2),
+      @"conversion_value" : @2,
       @"events" : @[
         @{
           @"event_name" : @"fb_mobile_purchase",
@@ -100,7 +100,7 @@
       ],
     },
     @{
-      @"conversion_value" : @(4),
+      @"conversion_value" : @4,
       @"events" : @[
         @{
           @"event_name" : @"fb_mobile_purchase",
@@ -114,7 +114,7 @@
       ],
     },
     @{
-      @"conversion_value" : @(3),
+      @"conversion_value" : @3,
       @"events" : @[
         @{
           @"event_name" : @"fb_mobile_purchase",
@@ -136,7 +136,7 @@
   NSArray<FBSDKSKAdNetworkRule *> *conversionBitRules = [FBSDKSKAdNetworkConversionConfiguration parseRules:rules];
   NSMutableArray<FBSDKSKAdNetworkRule *> *expected = [NSMutableArray new];
   [FBSDKTypeUtility array:expected addObject:[[FBSDKSKAdNetworkRule alloc] initWithJSON:@{
-                                                @"conversion_value" : @(4),
+                                                @"conversion_value" : @4,
                                                 @"events" : @[
                                                   @{
                                                     @"event_name" : @"fb_mobile_purchase",
@@ -150,7 +150,7 @@
                                                 ],
    }]];
   [FBSDKTypeUtility array:expected addObject:[[FBSDKSKAdNetworkRule alloc] initWithJSON:@{
-                                                @"conversion_value" : @(3),
+                                                @"conversion_value" : @3,
                                                 @"events" : @[
                                                   @{
                                                     @"event_name" : @"fb_mobile_purchase",
@@ -168,7 +168,7 @@
                                                 ],
    }]];
   [FBSDKTypeUtility array:expected addObject:[[FBSDKSKAdNetworkRule alloc] initWithJSON:@{
-                                                @"conversion_value" : @(2),
+                                                @"conversion_value" : @2,
                                                 @"events" : @[
                                                   @{
                                                     @"event_name" : @"fb_mobile_purchase",
@@ -200,7 +200,7 @@
   XCTAssertNil([FBSDKSKAdNetworkConversionConfiguration parseRules:invalidData]);
   invalidData = @[
     @{
-      @"conversion_value" : @(2),
+      @"conversion_value" : @2,
       @"events" : @[
         @{
           @"event_name" : @"fb_mobile_purchase",
@@ -213,7 +213,7 @@
       ],
     },
     @{
-      @"conversion_value" : @(3),
+      @"conversion_value" : @3,
       @"events" : @[
         @{
           @"event_name" : @"fb_mobile_purchase",
@@ -234,13 +234,13 @@
 {
   NSDictionary<NSString *, id> *data = @{
     @"data" : @[@{
-                  @"timer_buckets" : @(1),
-                  @"timer_interval" : @(1000),
-                  @"cutoff_time" : @(2),
+                  @"timer_buckets" : @1,
+                  @"timer_interval" : @1000,
+                  @"cutoff_time" : @2,
                   @"default_currency" : @"usd",
                   @"conversion_value_rules" : @[
                     @{
-                      @"conversion_value" : @(2),
+                      @"conversion_value" : @2,
                       @"events" : @[
                         @{
                           @"event_name" : @"fb_mobile_purchase",
@@ -248,7 +248,7 @@
                       ],
                     },
                     @{
-                      @"conversion_value" : @(4),
+                      @"conversion_value" : @4,
                       @"events" : @[
                         @{
                           @"event_name" : @"fb_mobile_purchase",
@@ -271,7 +271,7 @@
                       ],
                     },
                     @{
-                      @"conversion_value" : @(3),
+                      @"conversion_value" : @3,
                       @"events" : @[
                         @{
                           @"event_name" : @"fb_mobile_purchase",
@@ -304,13 +304,13 @@
 {
   NSDictionary<NSString *, id> *data = @{
     @"data" : @[@{
-                  @"timer_buckets" : @(1),
-                  @"timer_interval" : @(1000),
-                  @"cutoff_time" : @(2),
+                  @"timer_buckets" : @1,
+                  @"timer_interval" : @1000,
+                  @"cutoff_time" : @2,
                   @"default_currency" : @"usd",
                   @"conversion_value_rules" : @[
                     @{
-                      @"conversion_value" : @(2),
+                      @"conversion_value" : @2,
                       @"events" : @[
                         @{
                           @"event_name" : @"fb_mobile_purchase",
@@ -318,7 +318,7 @@
                       ],
                     },
                     @{
-                      @"conversion_value" : @(4),
+                      @"conversion_value" : @4,
                       @"events" : @[
                         @{
                           @"event_name" : @"fb_mobile_purchase",
@@ -341,7 +341,7 @@
                       ],
                     },
                     @{
-                      @"conversion_value" : @(3),
+                      @"conversion_value" : @3,
                       @"events" : @[
                         @{
                           @"event_name" : @"fb_mobile_purchase",

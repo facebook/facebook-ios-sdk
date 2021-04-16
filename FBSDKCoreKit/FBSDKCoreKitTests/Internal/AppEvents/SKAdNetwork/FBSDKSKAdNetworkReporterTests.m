@@ -73,9 +73,9 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   NSDictionary *json = @{
     @"data" : @[@{
-                  @"timer_buckets" : @(1),
-                  @"timer_interval" : @(1000),
-                  @"cutoff_time" : @(1),
+                  @"timer_buckets" : @1,
+                  @"timer_interval" : @1000,
+                  @"cutoff_time" : @1,
                   @"default_currency" : @"usd",
                   @"conversion_value_rules" : @[],
     }]
@@ -191,13 +191,13 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   if (@available(iOS 14, *)) {
     NSDictionary<NSString *, id> *json = @{
       @"data" : @[@{
-                    @"timer_buckets" : @(1),
-                    @"timer_interval" : @(1000),
-                    @"cutoff_time" : @(1),
+                    @"timer_buckets" : @1,
+                    @"timer_interval" : @1000,
+                    @"cutoff_time" : @1,
                     @"default_currency" : @"USD",
                     @"conversion_value_rules" : @[
                       @{
-                        @"conversion_value" : @(2),
+                        @"conversion_value" : @2,
                         @"events" : @[
                           @{
                             @"event_name" : @"fb_test",
@@ -209,8 +209,8 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
     FBSDKSKAdNetworkConversionConfiguration *config = [[FBSDKSKAdNetworkConversionConfiguration alloc] initWithJSON:json];
     [FBSDKSKAdNetworkReporter setConfiguration:config];
     [FBSDKSKAdNetworkReporter _recordAndUpdateEvent:@"fb_test" currency:nil value:nil];
-    [FBSDKSKAdNetworkReporter _recordAndUpdateEvent:@"fb_mobile_purchase" currency:@"USD" value:@(100)];
-    [FBSDKSKAdNetworkReporter _recordAndUpdateEvent:@"fb_mobile_purchase" currency:@"USD" value:@(201)];
+    [FBSDKSKAdNetworkReporter _recordAndUpdateEvent:@"fb_mobile_purchase" currency:@"USD" value:@100];
+    [FBSDKSKAdNetworkReporter _recordAndUpdateEvent:@"fb_mobile_purchase" currency:@"USD" value:@201];
     [FBSDKSKAdNetworkReporter _recordAndUpdateEvent:@"test" currency:nil value:nil];
     NSData *cache = [userDefaultsSpy objectForKey:FBSDKSKAdNetworkReporterKey];
     XCTAssertNotNil(cache);

@@ -45,7 +45,7 @@
     id applicationMock = [OCMockObject mockForClass:[UIApplication class]];
     [[[applicationMock stub] andReturnValue:@(canOpen)] canOpenURL:URL];
     [[[applicationMock stub] andReturn:nil] keyWindow];
-    [[[applicationMock stub] andReturnValue:@(0)] applicationState];
+    [[[applicationMock stub] andReturnValue:@0] applicationState];
     id applicationClassMock = [OCMockObject mockForClass:[UIApplication class]];
     [[[[applicationClassMock stub] classMethod] andReturn:applicationMock] sharedApplication];
     block();
