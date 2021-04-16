@@ -16,9 +16,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKEventLogging.h"
+import FBSDKCoreKit
+import XCTest
 
-NS_SWIFT_NAME(EventLogger)
-@interface FBSDKEventLogger : NSObject <FBSDKEventLogging>
+class TestFeatureExtractor: FeatureExtracting {
+  static func getDenseFeatures(_ viewHierarchy: [AnyHashable: Any]) -> UnsafeMutablePointer<Float>? {
+    // TODO
+    return nil
+  }
 
-@end
+  static func reset() {
+    // TODO
+  }
+}

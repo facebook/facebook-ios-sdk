@@ -50,7 +50,7 @@ class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
     handler = HybridAppEventsScriptMessageHandler()
 
     XCTAssertTrue(
-      handler.eventLogger is FBSDKEventLogger,
+      handler.eventLogger is EventLogger,
       "Should use the correct concrete event logger by default"
     )
   }

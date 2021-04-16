@@ -16,9 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKEventLogging.h"
+#import <Foundation/Foundation.h>
 
-NS_SWIFT_NAME(EventLogger)
-@interface FBSDKEventLogger : NSObject <FBSDKEventLogging>
+NS_ASSUME_NONNULL_BEGIN
+
+NS_SWIFT_NAME(FeatureExtracting)
+@protocol FBSDKFeatureExtracting
+
++ (nullable float *)getDenseFeatures:(NSDictionary *)viewHierarchy;
 
 @end
+
+NS_ASSUME_NONNULL_END
