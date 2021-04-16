@@ -9,6 +9,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Important
 
+**Performance Improvements**
+
+- Cocoapods: FBSDKCoreKit rebuilds FacebookSDKStrings.bundle so xcode processes the strings files into binary plist format. This strips comments and saves ~181KB in disk space for apps. [#1713](https://github.com/facebook/facebook-ios-sdk/pull/1713)
+
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.2.0...HEAD)
 
 ## 9.2.0
