@@ -44,6 +44,7 @@ FBSDKAppEventUserDataType FBSDKAppEventCity = @"ct";
 FBSDKAppEventUserDataType FBSDKAppEventState = @"st";
 FBSDKAppEventUserDataType FBSDKAppEventZip = @"zp";
 FBSDKAppEventUserDataType FBSDKAppEventCountry = @"country";
+FBSDKAppEventUserDataType FBSDKAppEventExternalId = @"external_id";
 
 @implementation FBSDKUserDataStore
 
@@ -65,6 +66,7 @@ FBSDKAppEventUserDataType FBSDKAppEventCountry = @"country";
                state:(nullable NSString *)state
                  zip:(nullable NSString *)zip
              country:(nullable NSString *)country
+          externalId:(nullable NSString *)externalId
 {
   NSMutableDictionary *ud = [NSMutableDictionary new];
   if (email) {
@@ -96,6 +98,9 @@ FBSDKAppEventUserDataType FBSDKAppEventCountry = @"country";
   }
   if (country) {
     [FBSDKTypeUtility dictionary:ud setObject:[FBSDKUserDataStore encryptData:country type:FBSDKAppEventCountry] forKey:FBSDKAppEventCountry];
+  }
+  if (externalId) {
+    [FBSDKTypeUtility dictionary:ud setObject:[FBSDKUserDataStore encryptData:externalId type:FBSDKAppEventExternalId] forKey:FBSDKAppEventExternalId];
   }
 
   dispatch_async(serialQueue, ^{
@@ -184,7 +189,8 @@ FBSDKAppEventUserDataType FBSDKAppEventCountry = @"country";
                               city:nil
                              state:nil
                                zip:nil
-                           country:nil];
+                           country:nil
+                        externalId:nil];
 }
 
 + (NSString *)getInternalHashedDataForType:(FBSDKAppEventUserDataType)type
@@ -260,6 +266,8 @@ FBSDKAppEventUserDataType FBSDKAppEventCountry = @"country";
     NSString *temp = [data stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     temp = temp.lowercaseString;
     normalizedData = temp.length > 0 ? [temp substringToIndex:1] : @"";
+  } else if ([type isEqualToString:FBSDKAppEventExternalId]) {
+    normalizedData = data;
   }
   return normalizedData;
 }

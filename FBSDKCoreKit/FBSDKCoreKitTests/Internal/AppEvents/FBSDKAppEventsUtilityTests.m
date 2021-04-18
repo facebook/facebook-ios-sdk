@@ -133,6 +133,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   NSString *testGender = @"m";
   NSString *testCity = @"menlopark";
   NSString *testState = @"test_s";
+  NSString *testExternalId = @"facebook123";
   [FBSDKAppEvents setUserData:testEmail forType:FBSDKAppEventEmail];
   [FBSDKAppEvents setUserData:testFirstName forType:FBSDKAppEventFirstName];
   [FBSDKAppEvents setUserData:testLastName forType:FBSDKAppEventLastName];
@@ -140,6 +141,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   [FBSDKAppEvents setUserData:testGender forType:FBSDKAppEventGender];
   [FBSDKAppEvents setUserData:testCity forType:FBSDKAppEventCity];
   [FBSDKAppEvents setUserData:testState forType:FBSDKAppEventState];
+  [FBSDKAppEvents setUserData:testExternalId forType:FBSDKAppEventExternalId];
   dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
                                            shouldAccessAdvertisingID:YES];
   XCTAssertEqualObjects(@"event", dict[@"event"]);
@@ -152,7 +154,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
                                                                  @"ph" : [FBSDKUtility SHA256Hash:testPhone],
                                                                  @"ge" : [FBSDKUtility SHA256Hash:testGender],
                                                                  @"ct" : [FBSDKUtility SHA256Hash:testCity],
-                                                                 @"st" : [FBSDKUtility SHA256Hash:testState]};
+                                                                 @"st" : [FBSDKUtility SHA256Hash:testState],
+                                                                 @"external_id" : [FBSDKUtility SHA256Hash:testExternalId]};
   NSDictionary<NSString *, NSString *> *actualUserDataDict = (NSDictionary<NSString *, NSString *> *)[FBSDKTypeUtility JSONObjectWithData:[dict[@"ud"] dataUsingEncoding:NSUTF8StringEncoding]
                                                                                                     options: NSJSONReadingMutableContainers
                                                                                                     error: nil];

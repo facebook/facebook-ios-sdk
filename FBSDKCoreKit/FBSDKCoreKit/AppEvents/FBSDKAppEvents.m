@@ -793,7 +793,8 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
                               city:city
                              state:state
                                zip:zip
-                           country:country];
+                           country:country
+                        externalId:nil];
 }
 
 + (NSString *)getUserData
