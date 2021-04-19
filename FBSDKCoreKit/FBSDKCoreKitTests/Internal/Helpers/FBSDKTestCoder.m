@@ -67,6 +67,13 @@
   return nil;
 }
 
+- (id)decodeObjectForKey:(NSString *)key
+{
+  self.decodedObject[key] = @"decodeObjectForKey";
+
+  return nil;
+}
+
 - (BOOL)decodeBoolForKey:(NSString *)key
 {
   self.decodedObject[key] = @"decodeBoolForKey";
