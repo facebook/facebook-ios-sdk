@@ -53,6 +53,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation FBSDKModelManager
 
+typedef void (^FBSDKDownloadCompletionBlock)(void);
+
+// Transitional singleton introduced as a way to change the usage semantics
+// from a type-based interface to an instance-based interface.
++ (instancetype)shared
+{
+  static dispatch_once_t nonce;
+  static id instance;
+  dispatch_once(&nonce, ^{
+    instance = [self new];
+  });
+  return instance;
+}
+
  #pragma mark - Public methods
 
 + (void)enable
@@ -187,7 +201,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  #pragma mark - SuggestedEvents Inferencer method
 
-+ (NSString *)processSuggestedEvents:(NSString *)textFeature denseData:(nullable float *)denseData
+- (NSString *)processSuggestedEvents:(NSString *)textFeature denseData:(nullable float *)denseData
 {
   @try {
     NSArray<NSString *> *eventMapping = [FBSDKModelManager getSuggestedEventsMapping];
@@ -260,7 +274,7 @@ NS_ASSUME_NONNULL_BEGIN
     if ([FBSDKFeatureManager.shared isEnabled:FBSDKFeatureSuggestedEvents]) {
       [self getModelAndRules:MTMLTaskAppEventPredKey onSuccess:^() {
         [FBSDKFeatureExtractor loadRulesForKey:MTMLTaskAppEventPredKey];
-        [FBSDKSuggestedEventsIndexer enable];
+        [FBSDKSuggestedEventsIndexer.shared enable];
       }];
     }
 

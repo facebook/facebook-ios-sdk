@@ -16,25 +16,19 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+import FBSDKCoreKit
+import Foundation
 
-#if !TARGET_OS_TV
+class TestEventProcessor: EventProcessing {
+  var processSuggestedEventsCallCount = 0
+  var stubbedProcessedEvents: String?
 
- #import <Foundation/Foundation.h>
+  func processSuggestedEvents(
+    _ textFeature: String,
+    denseData: UnsafeMutablePointer<Float>?
+  ) -> String {
+    processSuggestedEventsCallCount += 1
 
-@protocol FBSDKModelManagerDelegate;
-
-NS_ASSUME_NONNULL_BEGIN
-
-NS_SWIFT_NAME(SuggestedEventsIndexer)
-@interface FBSDKSuggestedEventsIndexer : NSObject
-
-@property (class, nonatomic, strong, readonly) FBSDKSuggestedEventsIndexer *shared;
-
-- (void)enable;
-
-@end
-
-NS_ASSUME_NONNULL_END
-
-#endif
+    return stubbedProcessedEvents ?? ""
+  }
+}

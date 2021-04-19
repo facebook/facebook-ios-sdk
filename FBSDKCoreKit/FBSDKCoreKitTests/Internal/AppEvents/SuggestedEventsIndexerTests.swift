@@ -23,6 +23,7 @@ class SuggestedEventsIndexerTests: XCTestCase {
   let requestProvider = TestGraphRequestFactory()
   let settings = TestSettings()
   let eventLogger = TestEventLogger()
+  var eventProcessor: EventProcessing? = TestEventProcessor()
   var indexer: SuggestedEventsIndexer! // swiftlint:disable:this implicitly_unwrapped_optional
 
   override func setUp() {
@@ -36,7 +37,8 @@ class SuggestedEventsIndexerTests: XCTestCase {
       swizzler: TestSwizzler.self,
       settings: settings,
       eventLogger: eventLogger,
-      featureExtractor: TestFeatureExtractor.self
+      featureExtractor: TestFeatureExtractor.self,
+      eventProcessor: eventProcessor! // swiftlint:disable:this force_unwrapping
     )
   }
 
@@ -75,6 +77,10 @@ class SuggestedEventsIndexerTests: XCTestCase {
       indexer.eventLogger is EventLogger,
       "Should have an event logger of the expected default type"
     )
+    XCTAssertTrue(
+      indexer.eventProcessor is ModelManager,
+      "Should have an event processor of the expected default type"
+    )
   }
 
   func testCustomDependencies() {
@@ -97,6 +103,30 @@ class SuggestedEventsIndexerTests: XCTestCase {
     XCTAssertTrue(
       indexer.eventLogger is TestEventLogger,
       "Should be able to create an instance with a custom event logger"
+    )
+    XCTAssertTrue(
+      indexer.eventProcessor is TestEventProcessor,
+      "Should be able to create an instance with a custom event processor"
+    )
+  }
+
+  func testEventProcessorIsWeaklyHeld() {
+    eventProcessor = nil
+
+    XCTAssertNil(
+      indexer.eventProcessor,
+      "Should not hold a strong reference to the delegate"
+    )
+  }
+
+  // MARK: - Enabling
+
+  func testEnablingLoadsServerConfiguration() {
+    indexer.enable()
+
+    XCTAssertTrue(
+      TestServerConfigurationProvider.loadServerConfigurationWasCalled,
+      "Enabling should load a server configuration"
     )
   }
 }

@@ -32,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) id<FBSDKSettings> settings;
 @property (nonatomic, readonly) id<FBSDKEventLogging> eventLogger;
 @property (nonatomic, readonly) Class<FBSDKFeatureExtracting> featureExtractor;
+@property (nullable, nonatomic, weak) id<FBSDKEventProcessing> eventProcessor;
 
 - (instancetype)initWithGraphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
                  serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
@@ -39,7 +40,8 @@ NS_ASSUME_NONNULL_BEGIN
                                     settings:(id<FBSDKSettings>)settings
                                  eventLogger:(id<FBSDKEventLogging>)eventLogger
                             featureExtractor:(Class<FBSDKFeatureExtracting>)featureExtractor
-NS_SWIFT_NAME(init(requestProvider:serverConfigurationProvider:swizzler:settings:eventLogger:featureExtractor:));
+                              eventProcessor:(id<FBSDKEventProcessing>)eventProcessor
+NS_SWIFT_NAME(init(requestProvider:serverConfigurationProvider:swizzler:settings:eventLogger:featureExtractor:eventProcessor:));
 
 @end
 

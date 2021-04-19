@@ -29,6 +29,7 @@
  #import <sys/utsname.h>
 
  #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKEventProcessing.h"
  #import "FBSDKFeatureExtracting.h"
  #import "FBSDKFeatureExtractor.h"
  #import "FBSDKGraphRequestFactory.h"
@@ -53,6 +54,7 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
 @property (nonatomic, readonly) Class<FBSDKFeatureExtracting> featureExtractor;
 @property (nonatomic, readonly) NSMutableSet<NSString *> *optInEvents;
 @property (nonatomic, readonly) NSMutableSet<NSString *> *unconfirmedEvents;
+@property (nonatomic, readonly, weak) id<FBSDKEventProcessing> eventProcessor;
 
 @end
 
@@ -65,7 +67,8 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
                                    swizzler:FBSDKSwizzler.class
                                    settings:FBSDKSettings.sharedSettings
                                 eventLogger:[FBSDKEventLogger new]
-                           featureExtractor:FBSDKFeatureExtractor.class];
+                           featureExtractor:FBSDKFeatureExtractor.class
+                             eventProcessor:FBSDKModelManager.shared];
 }
 
 - (instancetype)initWithGraphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
@@ -74,6 +77,7 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
                                     settings:(id<FBSDKSettings>)settings
                                  eventLogger:(id<FBSDKEventLogging>)eventLogger
                             featureExtractor:(Class<FBSDKFeatureExtracting>)featureExtractor
+                              eventProcessor:(id<FBSDKEventProcessing>)eventProcessor
 {
   if ((self = [super init])) {
     _optInEvents = [NSMutableSet set];
@@ -84,6 +88,7 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
     _settings = settings;
     _eventLogger = eventLogger;
     _featureExtractor = featureExtractor;
+    _eventProcessor = eventProcessor;
   }
   return self;
 }
@@ -100,15 +105,10 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
   return instance;
 }
 
-+ (void)enable
-{
-  [self.shared enable];
-}
-
 - (void)enable
 {
   __weak typeof(self) weakSelf = self;
-  [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
+  [self.serverConfigurationProvider loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
     if (error) {
       return;
     }
@@ -279,7 +279,7 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
       NSMutableDictionary<NSString *, id> *viewTreeCopy = [viewTree mutableCopy];
       float *denseData = [FBSDKFeatureExtractor getDenseFeatures:viewTree];
       NSString *textFeature = [FBSDKModelUtility normalizedText:[FBSDKFeatureExtractor getTextFeature:text withScreenName:viewTreeCopy[@"screenname"]]];
-      NSString *event = [FBSDKModelManager processSuggestedEvents:textFeature denseData:denseData];
+      NSString *event = [FBSDKModelManager.shared processSuggestedEvents:textFeature denseData:denseData];
       if (!event || [event isEqualToString:SUGGESTED_EVENT_OTHER]) {
         return;
       }

@@ -22,19 +22,22 @@
 
  #import <Foundation/Foundation.h>
 
+ #import "FBSDKEventProcessing.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^FBSDKDownloadCompletionBlock)(void);
+NS_SWIFT_NAME(ModelManager)
+@interface FBSDKModelManager : NSObject<FBSDKEventProcessing>
 
-@interface FBSDKModelManager : NSObject
-
++ (instancetype)shared;
 + (void)enable;
 + (nullable NSDictionary *)getRulesForKey:(NSString *)useCase;
 + (nullable NSData *)getWeightsForKey:(NSString *)useCase;
 + (nullable NSArray *)getThresholdsForKey:(NSString *)useCase;
 
 + (BOOL)processIntegrity:(nullable NSString *)param;
-+ (NSString *)processSuggestedEvents:(NSString *)textFeature denseData:(nullable float *)denseData;
+
+- (NSString *)processSuggestedEvents:(NSString *)textFeature denseData:(nullable float *)denseData;
 
 @end
 
