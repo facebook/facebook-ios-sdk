@@ -33,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) id<FBSDKEventLogging> eventLogger;
 @property (nonatomic, readonly) Class<FBSDKFeatureExtracting> featureExtractor;
 @property (nullable, nonatomic, weak) id<FBSDKEventProcessing> eventProcessor;
+@property (nonatomic, readonly) NSSet<NSString *> *optInEvents;
+@property (nonatomic, readonly) NSSet<NSString *> *unconfirmedEvents;
 
 - (instancetype)initWithGraphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
                  serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider

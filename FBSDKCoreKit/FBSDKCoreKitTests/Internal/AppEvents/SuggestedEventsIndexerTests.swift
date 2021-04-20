@@ -26,6 +26,17 @@ class SuggestedEventsIndexerTests: XCTestCase {
   var eventProcessor: EventProcessing? = TestEventProcessor()
   var indexer: SuggestedEventsIndexer! // swiftlint:disable:this implicitly_unwrapped_optional
 
+  enum Keys {
+    static let productionEvents = "production_events"
+    static let predictionEvents = "eligible_for_prediction_events"
+    static let setting = "suggestedEventsSetting"
+  }
+
+  enum Values {
+    static let productionEvents = ["foo", "bar", "baz"]
+    static let predictionEvents = productionEvents.map { return $0 + "1" }
+  }
+
   override func setUp() {
     super.setUp()
 
@@ -129,4 +140,82 @@ class SuggestedEventsIndexerTests: XCTestCase {
       "Enabling should load a server configuration"
     )
   }
+
+  func testCompletingEnablingWithErrorOnly() {
+    indexer.enable()
+
+    TestServerConfigurationProvider.capturedCompletionBlock?(nil, SampleError())
+
+    XCTAssertTrue(
+      indexer.optInEvents.isEmpty,
+      "Should not set events if there is an error fetching the server configuration"
+    )
+    XCTAssertTrue(
+      indexer.unconfirmedEvents.isEmpty,
+      "Should not set events if there is an error fetching the server configuration"
+    )
+  }
+
+  func testCompletingEnablingWithEmptySuggestedEventsSetting() {
+    indexer.enable()
+
+    TestServerConfigurationProvider.capturedCompletionBlock?(
+      ServerConfigurationFixtures.defaultConfig(),
+      nil
+    )
+
+    XCTAssertTrue(
+      indexer.optInEvents.isEmpty,
+      "Should not set events if there is no suggested events setting in the server configuration"
+    )
+    XCTAssertTrue(
+      indexer.unconfirmedEvents.isEmpty,
+      "Should not set events if there is no suggested events setting in the server configuration"
+    )
+  }
+
+  func testCompletingEnablingWithSuggestedEventsSettingAndError() {
+    indexer.enable()
+
+    TestServerConfigurationProvider.capturedCompletionBlock?(
+      ServerConfigurationFixtures.config(with: validSetting),
+      SampleError()
+    )
+
+    XCTAssertTrue(
+      indexer.optInEvents.isEmpty,
+      "Should not set events if there is an error fetching the server configuration"
+    )
+    XCTAssertTrue(
+      indexer.unconfirmedEvents.isEmpty,
+      "Should not set events if there is an error fetching the server configuration"
+    )
+  }
+
+  func testCompletingEnablingWithNonRepeatingSuggestedEventsSetting() {
+    indexer.enable()
+
+    TestServerConfigurationProvider.capturedCompletionBlock?(
+      ServerConfigurationFixtures.config(with: validSetting),
+      nil
+    )
+
+    XCTAssertEqual(
+      indexer.optInEvents,
+      Set(Values.productionEvents),
+      "Should set up suggested events successfully"
+    )
+    XCTAssertEqual(
+      indexer.unconfirmedEvents,
+      Set(Values.predictionEvents),
+      "Should set up suggested events successfully"
+    )
+  }
+
+  let validSetting: [String: Any] = [
+    Keys.setting: [
+      Keys.productionEvents: Values.productionEvents,
+      Keys.predictionEvents: Values.predictionEvents
+    ]
+  ]
 }
