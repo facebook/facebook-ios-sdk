@@ -275,24 +275,30 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
     [FBSDKTypeUtility dictionary:viewTree setObject:screenName ?: @"" forKey:VIEW_HIERARCHY_SCREEN_NAME_KEY];
 
     __weak typeof(self) weakSelf = self;
-    fb_dispatch_on_default_thread(^{
+    dispatch_block_t predictAndLogBlock = ^{
       NSMutableDictionary<NSString *, id> *viewTreeCopy = [viewTree mutableCopy];
-      float *denseData = [FBSDKFeatureExtractor getDenseFeatures:viewTree];
+      float *denseData = [weakSelf.featureExtractor getDenseFeatures:viewTree];
       NSString *textFeature = [FBSDKModelUtility normalizedText:[FBSDKFeatureExtractor getTextFeature:text withScreenName:viewTreeCopy[@"screenname"]]];
-      NSString *event = [FBSDKModelManager.shared processSuggestedEvents:textFeature denseData:denseData];
+      NSString *event = [weakSelf.eventProcessor processSuggestedEvents:textFeature denseData:denseData];
       if (!event || [event isEqualToString:SUGGESTED_EVENT_OTHER]) {
         return;
       }
       if ([weakSelf.optInEvents containsObject:event]) {
-        [FBSDKAppEvents logEvent:event
-                      parameters:@{@"_is_suggested_event" : @"1",
-                                   @"_button_text" : text}];
-      } else if ([weakSelf.unconfirmedEvents containsObject:event]) {
+        [weakSelf.eventLogger logEvent:event
+                            parameters:@{@"_is_suggested_event" : @"1",
+                                         @"_button_text" : text}];
+      } else if ([weakSelf.unconfirmedEvents containsObject:event] && denseData) {
         // Only send back not confirmed events to advertisers
-        [weakSelf logSuggestedEvent:event withText:text withDenseFeature:[self getDenseFeaure:denseData] ?: @""];
+        [weakSelf logSuggestedEvent:event text:text denseFeature:[self getDenseFeaure:denseData] ?: @""];
       }
       free(denseData);
-    });
+    };
+
+  #ifdef FBSDKTEST
+    predictAndLogBlock();
+  #else
+    fb_dispatch_on_default_thread(predictAndLogBlock);
+  #endif
   });
 }
 
@@ -320,8 +326,13 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
   return [textArray componentsJoinedByString:@" "];
 }
 
-- (void)logSuggestedEvent:(NSString *)event withText:(NSString *)text withDenseFeature:(NSString *)denseFeature
+- (void)logSuggestedEvent:(NSString *)event
+                     text:(NSString *)text
+             denseFeature:(NSString *)denseFeature
 {
+  if (!denseFeature) {
+    return;
+  }
   NSString *metadata = [FBSDKBasicUtility JSONStringForObject:@{@"button_text" : text,
                                                                 @"dense" : denseFeature, }
                                                         error:nil
@@ -330,13 +341,12 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
     return;
   }
 
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
-                                initWithGraphPath:[NSString stringWithFormat:@"%@/suggested_events", [FBSDKSettings appID]]
-                                parameters:@{
-                                  @"event_name" : event,
-                                  @"metadata" : metadata,
-                                }
-                                HTTPMethod:FBSDKHTTPMethodPOST];
+  id<FBSDKGraphRequest> request = [self.requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/suggested_events", [self.settings appID]]
+                                                                             parameters:@{
+                                     @"event_name" : event,
+                                     @"metadata" : metadata,
+                                   }
+                                                                             HTTPMethod:FBSDKHTTPMethodPOST];
   [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}];
   return;
 }

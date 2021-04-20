@@ -25,6 +25,9 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(EventLogging)
 @protocol FBSDKEventLogging
 
+- (void)logEvent:(NSString *)eventName
+      parameters:(NSDictionary<NSString *, id> *)parameters;
+
 - (void)logInternalEvent:(NSString *)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 

@@ -45,6 +45,12 @@ NS_ASSUME_NONNULL_BEGIN
                               eventProcessor:(id<FBSDKEventProcessing>)eventProcessor
 NS_SWIFT_NAME(init(requestProvider:serverConfigurationProvider:swizzler:settings:eventLogger:featureExtractor:eventProcessor:));
 
+- (void)logSuggestedEvent:(NSString *)event
+                     text:(NSString *)text
+             denseFeature:(nullable NSString *)denseFeature;
+- (void)predictEventWithUIResponder:(UIResponder *)uiResponder
+                               text:(NSString *)text;
+
 @end
 
 NS_ASSUME_NONNULL_END

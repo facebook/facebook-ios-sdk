@@ -20,12 +20,17 @@ import FBSDKCoreKit
 import XCTest
 
 class TestFeatureExtractor: FeatureExtracting {
+  static var stubbedDenseFeatures: UnsafeMutablePointer<Float>?
+
+  static func stub(denseFeatures: UnsafeMutablePointer<Float>) {
+    stubbedDenseFeatures = denseFeatures
+  }
+
   static func getDenseFeatures(_ viewHierarchy: [AnyHashable: Any]) -> UnsafeMutablePointer<Float>? {
-    // TODO
-    return nil
+    return stubbedDenseFeatures
   }
 
   static func reset() {
-    // TODO
+    stubbedDenseFeatures = nil
   }
 }

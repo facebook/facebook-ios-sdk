@@ -23,6 +23,11 @@ class TestEventLogger: NSObject, EventLogging {
   var capturedIsImplicitlyLogged = false
   var capturedAccessToken: AccessToken?
 
+  func logEvent(_ eventName: String, parameters: [String: Any]) {
+    capturedEventName = eventName
+    capturedParameters = parameters
+  }
+
   func logInternalEvent(_ eventName: String, isImplicitlyLogged: Bool) {
     capturedEventName = eventName
     capturedIsImplicitlyLogged = isImplicitlyLogged

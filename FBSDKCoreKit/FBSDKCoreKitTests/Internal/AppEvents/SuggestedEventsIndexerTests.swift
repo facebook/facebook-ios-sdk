@@ -18,29 +18,41 @@
 
 import XCTest
 
+// swiftlint:disable type_body_length
 class SuggestedEventsIndexerTests: XCTestCase {
 
   let requestProvider = TestGraphRequestFactory()
   let settings = TestSettings()
   let eventLogger = TestEventLogger()
-  var eventProcessor: EventProcessing? = TestEventProcessor()
+  var eventProcessor: TestEventProcessor? = TestEventProcessor()
   var indexer: SuggestedEventsIndexer! // swiftlint:disable:this implicitly_unwrapped_optional
 
   enum Keys {
     static let productionEvents = "production_events"
     static let predictionEvents = "eligible_for_prediction_events"
     static let setting = "suggestedEventsSetting"
+    static let eventName = "event_name"
+    static let metadata = "metadata"
+    static let buttonText = "button_text"
+    static let eventButtonText = "_button_text"
+    static let dense = "dense"
+    static let isSuggestedEvent = "_is_suggested_event"
   }
 
   enum Values {
-    static let productionEvents = ["foo", "bar", "baz"]
-    static let predictionEvents = productionEvents.map { return $0 + "1" }
+    static let optInEvents = ["foo", "bar", "baz"]
+    static let unconfirmedEvents = optInEvents.map { return $0 + "1" }
+    static let buttonText = "Purchase"
+    static let denseFeature = "1,2,3"
+    static let processedEvent = "purchase"
   }
 
   override func setUp() {
     super.setUp()
 
     SuggestedEventsIndexerTests.reset()
+
+    settings.appID = name
 
     indexer = SuggestedEventsIndexer(
       requestProvider: requestProvider,
@@ -142,9 +154,7 @@ class SuggestedEventsIndexerTests: XCTestCase {
   }
 
   func testCompletingEnablingWithErrorOnly() {
-    indexer.enable()
-
-    TestServerConfigurationProvider.capturedCompletionBlock?(nil, SampleError())
+    enable(error: SampleError())
 
     XCTAssertTrue(
       indexer.optInEvents.isEmpty,
@@ -157,12 +167,7 @@ class SuggestedEventsIndexerTests: XCTestCase {
   }
 
   func testCompletingEnablingWithEmptySuggestedEventsSetting() {
-    indexer.enable()
-
-    TestServerConfigurationProvider.capturedCompletionBlock?(
-      ServerConfigurationFixtures.defaultConfig(),
-      nil
-    )
+    enable()
 
     XCTAssertTrue(
       indexer.optInEvents.isEmpty,
@@ -175,11 +180,10 @@ class SuggestedEventsIndexerTests: XCTestCase {
   }
 
   func testCompletingEnablingWithSuggestedEventsSettingAndError() {
-    indexer.enable()
-
-    TestServerConfigurationProvider.capturedCompletionBlock?(
-      ServerConfigurationFixtures.config(with: validSetting),
-      SampleError()
+    enable(
+      optInEvents: Values.optInEvents,
+      unconfirmedEvents: Values.unconfirmedEvents,
+      error: SampleError()
     )
 
     XCTAssertTrue(
@@ -193,29 +197,319 @@ class SuggestedEventsIndexerTests: XCTestCase {
   }
 
   func testCompletingEnablingWithNonRepeatingSuggestedEventsSetting() {
-    indexer.enable()
-
-    TestServerConfigurationProvider.capturedCompletionBlock?(
-      ServerConfigurationFixtures.config(with: validSetting),
-      nil
+    enable(
+      optInEvents: Values.optInEvents,
+      unconfirmedEvents: Values.unconfirmedEvents
     )
 
     XCTAssertEqual(
       indexer.optInEvents,
-      Set(Values.productionEvents),
+      Set(Values.optInEvents),
       "Should set up suggested events successfully"
     )
     XCTAssertEqual(
       indexer.unconfirmedEvents,
-      Set(Values.predictionEvents),
+      Set(Values.unconfirmedEvents),
       "Should set up suggested events successfully"
     )
   }
 
-  let validSetting: [String: Any] = [
-    Keys.setting: [
-      Keys.productionEvents: Values.productionEvents,
-      Keys.predictionEvents: Values.predictionEvents
-    ]
-  ]
-}
+  // MARK: - Logging Suggested Event
+
+  func testLoggingEventWithoutDenseFeature() {
+    indexer.logSuggestedEvent(
+      name,
+      text: Values.buttonText,
+      denseFeature: nil
+    )
+
+    XCTAssertNil(
+      requestProvider.capturedGraphPath,
+      "Should not create a request if there is no dense feature"
+    )
+  }
+
+  func testLoggingEventWithDenseFeature() {
+    indexer.logSuggestedEvent(
+      name,
+      text: Values.buttonText,
+      denseFeature: Values.denseFeature
+    )
+
+    let expectedMetadata = [Keys.dense: Values.denseFeature, Keys.buttonText: Values.buttonText]
+    guard let parameter = requestProvider.capturedParameters[Keys.metadata] as? String,
+          let data = parameter.data(using: .utf8),
+          let decodedMetadata = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: String]
+    else {
+      return XCTFail("Should capture the metadata in the parameters")
+    }
+
+    XCTAssertEqual(
+      requestProvider.capturedGraphPath,
+      "\(name)/suggested_events",
+      "Should use the app identifier from the settings"
+    )
+    XCTAssertEqual(
+      requestProvider.capturedParameters[Keys.eventName] as? String,
+      name,
+      "Should capture the event name in the parameters"
+    )
+    XCTAssertEqual(
+      decodedMetadata,
+      expectedMetadata,
+      "Should request the expected metadata"
+    )
+    XCTAssertNil(
+      requestProvider.capturedTokenString,
+      "The request should be tokenless"
+    )
+    XCTAssertEqual(
+      requestProvider.capturedHttpMethod,
+      .post,
+      "Should use the expected http method"
+    )
+    XCTAssertTrue(
+      requestProvider.capturedFlags.isEmpty,
+      "Should not create the request with explicit request flags"
+    )
+  }
+
+  // MARK: - Predicting Events
+
+  func testPredictingEventWithTooMuchText() {
+    indexer.predictEvent(
+      with: UIResponder(),
+      text: String(describing: Array(repeating: "A", count: 101))
+    )
+
+    XCTAssertEqual(
+      eventProcessor?.processSuggestedEventsCallCount,
+      0,
+      "Should not ask the event processor to process events if the text is too long"
+    )
+    XCTAssertNil(
+      eventLogger.capturedEventName,
+      "Should not log an event if the text is too long"
+    )
+    XCTAssertNil(
+      requestProvider.capturedGraphPath,
+      "Should not create a request if the text is too long"
+    )
+  }
+
+  func testPredictingEventWithEmptyText() {
+    indexer.predictEvent(with: UIResponder(), text: "")
+
+    XCTAssertEqual(
+      eventProcessor?.processSuggestedEventsCallCount,
+      0,
+      "Should not ask the event processor to process events if the text is empty"
+    )
+    XCTAssertNil(
+      eventLogger.capturedEventName,
+      "Should not log an event if the text is empty"
+    )
+    XCTAssertNil(
+      requestProvider.capturedGraphPath,
+      "Should not create a request if the text is empty"
+    )
+  }
+
+  func testPredictingEventWithSensitiveText() {
+    indexer.predictEvent(with: UIResponder(), text: "me@example.com")
+
+    XCTAssertEqual(
+      eventProcessor?.processSuggestedEventsCallCount,
+      0,
+      "Should not ask the event processor to process events if the text is sensitive"
+    )
+    XCTAssertNil(
+      eventLogger.capturedEventName,
+      "Should not log an event if the text is sensitive"
+    )
+    XCTAssertNil(
+      requestProvider.capturedGraphPath,
+      "Should not create a request if the text is sensitive"
+    )
+  }
+
+  func testPredictingEventWithoutModelManagerDelegate() {
+    indexer.predictEvent(with: UIResponder(), text: Values.buttonText)
+
+    XCTAssertNil(
+      eventLogger.capturedEventName,
+      "Should not log if there is no delegate to process events"
+    )
+    XCTAssertNil(
+      requestProvider.capturedGraphPath,
+      "Should not create a request if there is no delegate to process events"
+    )
+  }
+
+  // | has processed event | processed event matches optin event | matches unconfirmed event |
+  // | no                  | n/a                                 | n/a                       |
+  func testPredictingWithoutProcessedEvents() {
+    indexer.predictEvent(with: UIResponder(), text: Values.buttonText)
+
+    XCTAssertEqual(
+      eventProcessor?.processSuggestedEventsCallCount,
+      1,
+      "Should ask the event processor to process events"
+    )
+    XCTAssertNil(
+      eventLogger.capturedEventName,
+      "Should not log if there are no processed events from the delegate"
+    )
+  }
+
+  // | has processed event | processed event matches optin event | matches unconfirmed event |
+  // | yes                 | no                                  | no                        |
+  func testPredictingWithProcessedEventsMatchingNone() {
+    eventProcessor?.stubbedProcessedEvents = Values.processedEvent
+    indexer.predictEvent(with: UIResponder(), text: Values.buttonText)
+
+    XCTAssertEqual(
+      eventProcessor?.processSuggestedEventsCallCount,
+      1,
+      "Should ask the event processor to process events"
+    )
+    XCTAssertNil(
+      eventLogger.capturedEventName,
+      "Should not log if there are no processed events from the delegate"
+    )
+  }
+
+  // | has processed event | processed event matches optin event | matches unconfirmed event |
+  // | yes                 | yes                                 | no                        |
+  func testPredictingWithProcessedEventsMatchingOptinEvent() {
+    eventProcessor?.stubbedProcessedEvents = Values.processedEvent
+    enable(
+      optInEvents: [Values.processedEvent],
+      unconfirmedEvents: Values.unconfirmedEvents
+    )
+
+    indexer.predictEvent(with: UIResponder(), text: Values.buttonText)
+
+    XCTAssertEqual(
+      eventLogger.capturedEventName,
+      Values.processedEvent,
+      "Should log an opt-in event with the expected event name"
+    )
+    XCTAssertEqual(
+      eventLogger.capturedParameters as? [String: String],
+      [
+        Keys.isSuggestedEvent: "1",
+        Keys.eventButtonText: Values.buttonText
+      ],
+      "Should log an opt-in event with the expected parameters"
+    )
+  }
+
+  // | processed event | matches optin | matches unconfirmed | dense data |
+  // | yes             | no            | yes                 | null       |
+  func testPredictingWithProcessedEventMatchingUnconfirmedEventWithoutDenseData() {
+    eventProcessor?.stubbedProcessedEvents = Values.processedEvent
+    enable(
+      optInEvents: Values.optInEvents,
+      unconfirmedEvents: [Values.processedEvent]
+    )
+
+    indexer.predictEvent(with: UIResponder(), text: Values.buttonText)
+
+    XCTAssertNil(
+      eventLogger.capturedEventName,
+      "Should not log unconfirmed events"
+    )
+    XCTAssertNil(
+      requestProvider.capturedGraphPath,
+      "Should not create a request if there is no dense data"
+    )
+  }
+
+  // | processed event | matches optin | matches unconfirmed | dense data |
+  // | yes             | no            | yes                 | non-null   |
+  func testPredictingWithProcessedEventMatchingUnconfirmedEvent() {
+    let denseData: [Float] = [1.0, 2.0, 3.0]
+    let pointer = UnsafeMutablePointer<Float>.allocate(capacity: denseData.count)
+
+    TestFeatureExtractor.stub(denseFeatures: pointer)
+    eventProcessor?.stubbedProcessedEvents = Values.processedEvent
+    enable(
+      optInEvents: Values.optInEvents,
+      unconfirmedEvents: [Values.processedEvent]
+    )
+
+    indexer.predictEvent(with: UIResponder(), text: Values.buttonText)
+
+    XCTAssertNil(
+      eventLogger.capturedEventName,
+      "Should not log unconfirmed events"
+    )
+    XCTAssertEqual(
+      requestProvider.capturedGraphPath,
+      "\(name)/suggested_events",
+      "Should create a request for an unconfirmed event when there is dense data"
+    )
+  }
+
+  // | has processed event | processed event matches optin event | matches unconfirmed event |
+  // | yes                 | yes                                 | yes                       |
+  func testPredictingWithProcessedEventMatchingBoth() {
+    eventProcessor?.stubbedProcessedEvents = Values.processedEvent
+    enable(
+      optInEvents: [Values.processedEvent],
+      unconfirmedEvents: [Values.processedEvent]
+    )
+
+    indexer.predictEvent(with: UIResponder(), text: Values.buttonText)
+
+    XCTAssertEqual(
+      eventLogger.capturedEventName,
+      Values.processedEvent,
+      "Should log an opt-in event with the expected event name"
+    )
+    XCTAssertNil(
+      requestProvider.capturedGraphPath,
+      """
+      Should not create a request when there are matching unconfirmed events if
+      there are also matching opt-in events
+      """
+    )
+  }
+
+  // MARK: - Helpers
+
+  /// Calls enable and invokes the captured server configuration completion with the
+  /// provided opt-in / unconfirmed events and error
+  func enable(
+    optInEvents: [String]? = nil,
+    unconfirmedEvents: [String]? = nil,
+    error: Error? = nil
+  ) {
+    let setting = indexerSetting(
+      optInEvents: optInEvents,
+      unconfirmedEvents: unconfirmedEvents
+    )
+    indexer.enable()
+    TestServerConfigurationProvider.capturedCompletionBlock?(
+      ServerConfigurationFixtures.config(with: setting),
+      error
+    )
+  }
+
+  func indexerSetting(
+    optInEvents: [String]?,
+    unconfirmedEvents: [String]?
+  ) -> [String: Any] {
+    var events = [String: Any]()
+
+    if let productionEvents = optInEvents {
+      events[Keys.productionEvents] = productionEvents
+    }
+    if let predictionEvents = unconfirmedEvents {
+      events[Keys.predictionEvents] = predictionEvents
+    }
+
+    return events.isEmpty ? [:] : [Keys.setting: events]
+  }
+} // swiftlint:disable:this file_length
