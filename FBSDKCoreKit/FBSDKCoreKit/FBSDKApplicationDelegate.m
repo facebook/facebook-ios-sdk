@@ -486,7 +486,7 @@ static UIApplicationState _applicationState;
                                 requestProvider:graphRequestProvider
                              connectionProvider:connectionProvider
                                           store:store];
-  FBSDKTokenCache *tokenCache = [FBSDKTokenCache new];
+  FBSDKTokenCache *tokenCache = [[FBSDKTokenCache alloc] initWithSettings:FBSDKSettings.sharedSettings];
   [FBSDKAccessToken setTokenCache:tokenCache];
   [FBSDKAccessToken setConnectionFactory:connectionProvider];
   [FBSDKAuthenticationToken setTokenCache:tokenCache];

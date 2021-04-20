@@ -37,5 +37,6 @@ NS_SWIFT_NAME(SettingsProtocol)
 @property (nonatomic, readonly, nullable) NSDate* installTimestamp;
 @property (nonatomic, readonly, nullable) NSDate* advertiserTrackingEnabledTimestamp;
 @property (nonatomic, readonly) BOOL shouldLimitEventAndDataUsage;
+@property (nonatomic) BOOL shouldUseTokenOptimizations;
 
 @end

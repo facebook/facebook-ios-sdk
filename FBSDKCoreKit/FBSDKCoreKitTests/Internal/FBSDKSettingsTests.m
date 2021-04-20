@@ -24,6 +24,7 @@
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKSettings.h"
 #import "FBSDKSettings+Internal.h"
+#import "FBSDKSettingsProtocol.h"
 #import "FBSDKTestCase.h"
 #import "NSUserDefaults+FBSDKDataPersisting.h"
 #import "UserDefaultsSpy.h"
@@ -1306,6 +1307,21 @@ static NSString *const whiteSpaceToken = @"   ";
   XCTAssertTrue(
     FBSDKSettings.shouldUseCachedValuesForExpensiveMetadata,
     "should use cached values for expensive metadata"
+  );
+}
+
+- (void)testSetUseTokenOptimizations
+{
+  FBSDKSettings.sharedSettings.shouldUseTokenOptimizations = NO;
+
+  XCTAssertEqualObjects(
+    userDefaultsSpy.capturedValues[@"com.facebook.sdk.FBSDKSettingsUseTokenOptimizations"],
+    @NO,
+    "Should store whether or not to use token optimizations"
+  );
+  XCTAssertFalse(
+    FBSDKSettings.sharedSettings.shouldUseTokenOptimizations,
+    "Should use token optimizations"
   );
 }
 

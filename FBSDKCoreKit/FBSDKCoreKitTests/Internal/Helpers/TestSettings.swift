@@ -18,6 +18,8 @@
 
 @objcMembers
 class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
+
+
   static var appID: String?
   static var clientToken: String?
   static var userAgentSuffix: String?
@@ -38,6 +40,7 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   var stubbedIsSetATETimeExceedsInstallTime = false
   var stubbedIsSKAdNetworkReportEnabled = false
   var stubbedLimitEventAndDataUsage = false
+  var shouldUseTokenOptimizations = true
 
   var isDataProcessingRestricted: Bool {
     return stubbedIsDataProcessingRestricted

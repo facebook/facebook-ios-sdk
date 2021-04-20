@@ -26,7 +26,11 @@
 
 #import "FBSDKTokenCaching.h"
 
+@protocol FBSDKSettings;
+
 NS_SWIFT_NAME(TokenCache)
 @interface FBSDKTokenCache : NSObject<FBSDKTokenCaching>
+
+- (instancetype)initWithSettings:(id<FBSDKSettings>)settings;
 
 @end
