@@ -33,6 +33,7 @@
  #import "FBSDKShareUtility.h"
 
  #define FBSDK_APP_REQUEST_METHOD_NAME @"apprequests"
+ #define FBSDK_GAME_REQUEST_URL_HOST @"game_requests"
 
 @interface FBSDKGameRequestDialog () <FBSDKWebDialogDelegate, FBSDKURLOpening>
 @end
@@ -40,6 +41,7 @@
 @implementation FBSDKGameRequestDialog
 {
   BOOL _dialogIsFrictionless;
+  BOOL _isAwaitingResult;
   FBSDKWebDialog *_webDialog;
 }
 
@@ -74,20 +76,51 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   return dialog;
 }
 
-- (void)launchGameRequestDialogWithGameRequestContent:(FBSDKGameRequestContent *)requestContent delegate:(id<FBSDKGameRequestDialogDelegate>)delegate;
+- (void)launchGameRequestDialogWithGameRequestContent:(FBSDKGameRequestContent *)requestContent delegate:(id<FBSDKGameRequestDialogDelegate>)delegate
 {
+  NSError *error;
   __weak typeof(self) weakSelf = self;
-  if ([FBSDKAccessToken currentAccessToken] == nil) {
+  NSDictionary *contentDictionary = [self _convertGameRequestContentToDictionaryV2:_content];
+
+  [self validateWithError:&error];
+  if (error) {
+    [self handleDialogError:error];
     return;
   }
-
-  NSDictionary *contentDictionary = [self _convertGameRequestContentToDictionaryV2:_content];
+  _isAwaitingResult = YES;
   [[FBSDKBridgeAPI sharedInstance]
    openURL:[FBSDKGameRequestURLProvider createDeepLinkURLWithQueryDictionary:contentDictionary]
    sender:weakSelf
-   handler:^(BOOL success, NSError *_Nullable error) {
-     if (!success) {}
+   handler:^(BOOL success, NSError *_Nullable bridgeError) {
+     if (!success && bridgeError) {
+       [weakSelf handleBridgeAPIFailureWithError:bridgeError];
+     }
    }];
+}
+
+- (void)facebookAppReturnedURL:(NSURL *_Nullable)url
+{
+  [self _cleanUp];
+  if (!url) {
+    NSError *error = [FBSDKError errorWithDomain:FBSDKShareErrorDomain
+                                            code:FBSDKShareErrorUnknown
+                                         message:@"Facebook app did not return a url"];
+    [self handleDialogError:error];
+  }
+  NSDictionary *parsedResults = [self parsedPayloadFromURL:url];
+  if (parsedResults) {
+    [_delegate gameRequestDialog:self didCompleteWithResults:parsedResults];
+  }
+}
+
+- (void)handleDialogError:(NSError *_Nullable)error
+{
+  if (error) {
+    [_delegate gameRequestDialog:self didFailWithError:error];
+  } else {
+    [self _didCancel];
+  }
+  [self _cleanUp];
 }
 
  #pragma mark - FBSDKURLOpening
@@ -103,8 +136,8 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
    sourceApplication:sourceApplication
    annotation:annotation];
 
-  if (isGamingUrl) {
-    [self completeSuccessfully];
+  if (isGamingUrl && _isAwaitingResult) {
+    [self facebookAppReturnedURL:url];
   }
 
   return isGamingUrl;
@@ -122,7 +155,9 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-  [self completeSuccessfully];
+  if (_isAwaitingResult) {
+    [self _didCancel];
+  }
 }
 
 - (BOOL)isAuthenticationURL:(NSURL *)url
@@ -130,9 +165,15 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   return false;
 }
 
-- (void)completeSuccessfully
+- (void)handleBridgeAPIFailureWithError:(NSError *)error
 {
-  // _completionHandler(true, nil);
+  if (error) {
+    NSError *sdkError = [FBSDKError
+                         errorWithCode:FBSDKErrorBridgeAPIInterruption
+                         message:@"Error occured while interacting with Gaming Services, Failed to open bridge."
+                         underlyingError:error];
+    [self handleDialogError:sdkError];
+  }
 }
 
  #pragma mark - Helpers
@@ -140,7 +181,29 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 - (BOOL)isValidCallbackURL:(NSURL *)url
 {
   return
-  [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", [FBSDKSettings appID]]];
+  [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", [FBSDKSettings appID]]]
+  && [url.host isEqualToString:FBSDK_GAME_REQUEST_URL_HOST];
+}
+
+- (NSDictionary<NSString *, NSString *> *_Nullable)parsedPayloadFromURL:(NSURL *)url
+{
+  NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
+  if (!urlComponents.queryItems) {
+    // If the url contains no query items, then the user self closed the dialog within fbios.
+    [self _didCancel];
+    return nil;
+  }
+
+  NSMutableDictionary *parsedURLQuery = [NSMutableDictionary new];
+  for (NSURLQueryItem *query in urlComponents.queryItems) {
+    if ([query.name isEqual:@"request_id"]) {
+      [FBSDKTypeUtility dictionary:parsedURLQuery setObject:query.value forKey:query.name];
+    }
+    if ([query.name isEqual:@"recipients"]) {
+      [FBSDKTypeUtility dictionary:parsedURLQuery setObject:[query.value componentsSeparatedByString:@","] forKey:query.name];
+    }
+  }
+  return parsedURLQuery;
 }
 
  #pragma mark - Object Lifecycle
@@ -397,6 +460,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 - (void)_cleanUp
 {
   _dialogIsFrictionless = NO;
+  _isAwaitingResult = NO;
 }
 
 - (void)_handleCompletionWithDialogResults:(NSDictionary *)results error:(NSError *)error
