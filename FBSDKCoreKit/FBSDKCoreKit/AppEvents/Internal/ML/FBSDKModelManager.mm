@@ -68,8 +68,12 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
 }
 
  #pragma mark - Public methods
-
 + (void)enable
+{
+  [[self shared] enable];
+}
+
+- (void)enable
 {
   @try {
     static dispatch_once_t onceToken;
@@ -87,7 +91,7 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
       _directoryPath = dirPath;
       _modelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
       NSDate *timestamp = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_REQUEST_TIMESTAMP_KEY];
-      if ([_modelInfo count] == 0 || ![FBSDKFeatureManager.shared isEnabled:FBSDKFeatureModelRequest] || ![self isValidTimestamp:timestamp]) {
+      if ([_modelInfo count] == 0 || ![FBSDKFeatureManager.shared isEnabled:FBSDKFeatureModelRequest] || ![self.class isValidTimestamp:timestamp]) {
         // fetch api
         FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
                                       initWithGraphPath:[NSString stringWithFormat:@"%@/model_asset", [FBSDKSettings appID]]];
@@ -95,19 +99,19 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
         [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
           if (!error) {
             NSDictionary<NSString *, id> *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
-            NSDictionary<NSString *, id> *modelInfo = [self convertToDictionary:resultDictionary[MODEL_DATA_KEY]];
+            NSDictionary<NSString *, id> *modelInfo = [self.class convertToDictionary:resultDictionary[MODEL_DATA_KEY]];
             if (modelInfo) {
               _modelInfo = [modelInfo mutableCopy];
-              [self processMTML];
+              [self.class processMTML];
               // update cache for model info and timestamp
               [[NSUserDefaults standardUserDefaults] setObject:_modelInfo forKey:MODEL_INFO_KEY];
               [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:MODEL_REQUEST_TIMESTAMP_KEY];
             }
           }
-          [self checkFeaturesAndExecuteForMTML];
+          [self.class checkFeaturesAndExecuteForMTML];
         }];
       } else {
-        [self checkFeaturesAndExecuteForMTML];
+        [self.class checkFeaturesAndExecuteForMTML];
       }
     });
   } @catch (NSException *exception) {

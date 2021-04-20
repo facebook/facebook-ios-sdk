@@ -125,6 +125,7 @@ static NSString *const _mockUserID = @"mockUserID";
   UserDefaultsSpy *_store;
   TestFeatureManager *_featureManager;
   TestSettings *_settings;
+  TestEventProcessor *_eventProcessor;
 }
 @end
 
@@ -152,7 +153,7 @@ static NSString *const _mockUserID = @"mockUserID";
   [FBSDKAppEvents setServerConfigurationProvider:TestServerConfigurationProvider.class];
   [FBSDKAppEvents setFeatureChecker:TestFeatureManager.class];
   [TestLogger reset];
-
+  _eventProcessor = [TestEventProcessor new];
   [self stubLoadingAdNetworkReporterConfiguration];
   [self stubServerConfigurationFetchingWithConfiguration:FBSDKServerConfigurationFixtures.defaultConfig error:nil];
 
@@ -179,6 +180,7 @@ static NSString *const _mockUserID = @"mockUserID";
                                            store:_store
                                           logger:TestLogger.self
                                         settings:_settings];
+  [FBSDKAppEvents setEventProcessor:_eventProcessor];
 }
 
 - (void)tearDown
@@ -856,10 +858,6 @@ static NSString *const _mockUserID = @"mockUserID";
     [_featureManager capturedFeaturesContains:FBSDKFeatureAAM],
     "fetchConfiguration should check if the AAM feature is enabled"
   );
-  XCTAssertTrue(
-    [_featureManager capturedFeaturesContains:FBSDKFeaturePrivacyProtection],
-    "fetchConfiguration should check if the PrivacyProtection feature is enabled"
-  );
 }
 
 - (void)testFetchingConfigurationIncludingSKAdNetworkIfSKAdNetworkReportEnabled
@@ -883,6 +881,23 @@ static NSString *const _mockUserID = @"mockUserID";
   XCTAssertFalse(
     [_featureManager capturedFeaturesContains:FBSDKFeatureSKAdNetwork],
     "fetchConfiguration should NOT check if the SKAdNetwork feature is disabled when SKAdNetworkReport is disabled"
+  );
+}
+
+- (void)testFetchingConfigurationIncludingPrivacyProtection
+{
+  [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
+  TestAppEventsConfigurationProvider.capturedBlock();
+  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  XCTAssertTrue(
+    [_featureManager capturedFeaturesContains:FBSDKFeaturePrivacyProtection],
+    "Fetching a configuration should check if the PrivacyProtection feature is enabled"
+  );
+  [_featureManager completeCheckForFeature:FBSDKFeaturePrivacyProtection
+                                      with:YES];
+  XCTAssertTrue(
+    _eventProcessor.isEnabled,
+    "Fetching a configuration should enable event processing if PrivacyProtection feature is enabled"
   );
 }
 

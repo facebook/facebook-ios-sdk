@@ -28,6 +28,8 @@ NS_SWIFT_NAME(EventProcessing)
 - (NSString *)processSuggestedEvents:(NSString *)textFeature
                            denseData:(nullable float *)denseData;
 
+- (void)enable;
+
 @end
 
 NS_ASSUME_NONNULL_END

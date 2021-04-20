@@ -38,6 +38,7 @@ NS_SWIFT_NAME(ModelManager)
 + (BOOL)processIntegrity:(nullable NSString *)param;
 
 - (NSString *)processSuggestedEvents:(NSString *)textFeature denseData:(nullable float *)denseData;
+- (void)enable;
 
 @end
 

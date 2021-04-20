@@ -19,9 +19,11 @@
 import FBSDKCoreKit
 import Foundation
 
-class TestEventProcessor: EventProcessing {
+@objcMembers
+class TestEventProcessor: NSObject, EventProcessing {
   var processSuggestedEventsCallCount = 0
   var stubbedProcessedEvents: String?
+  var isEnabled = false
 
   func processSuggestedEvents(
     _ textFeature: String,
@@ -30,5 +32,9 @@ class TestEventProcessor: EventProcessing {
     processSuggestedEventsCallCount += 1
 
     return stubbedProcessedEvents ?? ""
+  }
+
+  func enable() {
+    isEnabled = true
   }
 }

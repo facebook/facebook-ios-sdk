@@ -60,9 +60,9 @@
 #if !TARGET_OS_TV
 
  #import "FBSDKEventBindingManager.h"
+ #import "FBSDKEventProcessing.h"
  #import "FBSDKHybridAppEventsScriptMessageHandler.h"
  #import "FBSDKIntegrityManager.h"
- #import "FBSDKModelManager.h"
 
 #endif
 
@@ -339,6 +339,10 @@ static id<FBSDKGraphRequestProviding> g_graphRequestProvider;
 static id<FBSDKFeatureChecking> g_featureChecker;
 static Class<FBSDKLogging> g_logger;
 static id<FBSDKSettings> g_settings;
+
+#if !TARGET_OS_TV
+static id<FBSDKEventProcessing> g_eventProcessor = nil;
+#endif
 
 @interface FBSDKAppEvents ()
 
@@ -948,6 +952,15 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   }
 }
 
+#if !TARGET_OS_TV
+
++ (void)setEventProcessor:(id<FBSDKEventProcessing>)eventProcessor
+{
+  g_eventProcessor = eventProcessor;
+}
+
+#endif
+
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 {
@@ -1204,7 +1217,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
       }];
       [g_featureChecker checkFeature:FBSDKFeaturePrivacyProtection completionBlock:^(BOOL enabled) {
         if (enabled) {
-          [FBSDKModelManager enable];
+          [g_eventProcessor enable];
         }
       }];
       if (@available(iOS 11.3, *)) {
@@ -1666,6 +1679,15 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 {
   g_settings = settings;
 }
+
+ #if !TARGET_OS_TV
+
++ (id<FBSDKEventProcessing>)eventProcessor
+{
+  return g_eventProcessor;
+}
+
+ #endif
 
 #endif
 

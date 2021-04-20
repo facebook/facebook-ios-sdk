@@ -91,6 +91,7 @@
 + (id<FBSDKDataPersisting>)store;
 + (id<FBSDKLogging>)logger;
 + (id<FBSDKSettings>)settings;
++ (id<FBSDKEventProcessing>)eventProcessor;
 @end
 
 @implementation FBSDKApplicationDelegateTests
@@ -272,6 +273,11 @@
     FBSDKAppEvents.settings,
     FBSDKSettings.sharedSettings,
     "Initializing the SDK should set concrete settings for event logging"
+  );
+  XCTAssertEqualObjects(
+    FBSDKAppEvents.eventProcessor,
+    FBSDKModelManager.shared,
+    "Initializing the SDK should set concrete event processor for event logging"
   );
 }
 

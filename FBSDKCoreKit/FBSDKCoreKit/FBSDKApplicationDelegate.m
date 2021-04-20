@@ -54,6 +54,7 @@
  #import "FBSDKCodelessIndexer+Internal.h"
  #import "FBSDKContainerViewController.h"
  #import "FBSDKMeasurementEventListener.h"
+ #import "FBSDKModelManager.h"
  #import "FBSDKProfile+Internal.h"
  #import "FBSDKSKAdNetworkReporter+Internal.h"
  #import "FBSDKURLOpener.h"
@@ -524,6 +525,7 @@ static UIApplicationState _applicationState;
                accessTokenProvider:FBSDKAccessToken.class];
   [FBSDKWebDialogView configureWithWebViewProvider:[FBSDKWebViewFactory new]
                                          urlOpener:UIApplication.sharedApplication];
+  [FBSDKAppEvents setEventProcessor:[FBSDKModelManager shared]];
 #endif
 }
 

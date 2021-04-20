@@ -34,6 +34,7 @@
 @protocol FBSDKFeatureChecking;
 @protocol FBSDKLogging;
 @protocol FBSDKSettings;
+@protocol FBSDKEventProcessing;
 
 // Internally known event names
 
@@ -258,5 +259,9 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
 
 - (void)flushForReason:(FBSDKAppEventsFlushReason)flushReason;
 - (void)registerNotifications;
+
+#if !TARGET_OS_TV
++ (void)setEventProcessor:(id<FBSDKEventProcessing>)eventProcessor;
+#endif
 
 @end
