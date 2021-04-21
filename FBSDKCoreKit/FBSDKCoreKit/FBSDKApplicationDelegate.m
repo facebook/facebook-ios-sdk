@@ -25,6 +25,7 @@
 #import "FBSDKAppEventsConfigurationManager.h"
 #import "FBSDKAppEventsUtility+AdvertiserIDProviding.h"
 #import "FBSDKBridgeAPI+ApplicationObserving.h"
+#import "FBSDKButton+Subclass.h"
 #import "FBSDKConstants.h"
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDynamicFrameworkLoader.h"
@@ -61,16 +62,6 @@
  #import "FBSDKWebDialogView.h"
  #import "FBSDKWebViewFactory.h"
  #import "UIApplication+URLOpener.h"
-#endif
-
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
-
-NSNotificationName const FBSDKApplicationDidBecomeActiveNotification = @"com.facebook.sdk.FBSDKApplicationDidBecomeActiveNotification";
-
-#else
-
-NSString *const FBSDKApplicationDidBecomeActiveNotification = @"com.facebook.sdk.FBSDKApplicationDidBecomeActiveNotification";
-
 #endif
 
 static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
@@ -507,6 +498,7 @@ static UIApplicationState _applicationState;
   [FBSDKInternalUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:FBSDKAccessToken.class];
   [FBSDKAppEventsConfigurationManager configureWithStore:store];
+  [FBSDKButton setApplicationActivationNotifier:self];
 #if !TARGET_OS_TV
   [FBSDKAppLinkUtility configureWithRequestProvider:graphRequestProvider
                              infoDictionaryProvider:NSBundle.mainBundle];

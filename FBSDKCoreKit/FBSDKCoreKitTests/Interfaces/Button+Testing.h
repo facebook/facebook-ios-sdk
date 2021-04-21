@@ -16,24 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-
-#if SWIFT_PACKAGE
- #import "FBSDKApplicationDelegate.h"
-#else
- #import <FBSDKCoreKit/FBSDKApplicationDelegate.h>
-#endif
-
-#import "FBSDKApplicationObserving.h"
+#import "FBSDKButton.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKApplicationDelegate ()
+@interface FBSDKButton (Testing)
 
-- (void)addObserver:(id<FBSDKApplicationObserving>)observer;
-- (void)removeObserver:(id<FBSDKApplicationObserving>)observer;
-+ (BOOL)isSDKInitialized;
-+ (UIApplicationState)applicationState;
+@property (class, nonatomic) id applicationActivationNotifier;
 
 @end
 

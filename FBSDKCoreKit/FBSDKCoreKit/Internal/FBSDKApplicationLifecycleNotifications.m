@@ -16,25 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#import "FBSDKApplicationLifecycleNotifications.h"
 
-#if SWIFT_PACKAGE
- #import "FBSDKApplicationDelegate.h"
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+
+NSNotificationName const FBSDKApplicationDidBecomeActiveNotification = @"com.facebook.sdk.FBSDKApplicationDidBecomeActiveNotification";
+
 #else
- #import <FBSDKCoreKit/FBSDKApplicationDelegate.h>
+
+NSString *const FBSDKApplicationDidBecomeActiveNotification = @"com.facebook.sdk.FBSDKApplicationDidBecomeActiveNotification";
+
 #endif
-
-#import "FBSDKApplicationObserving.h"
-
-NS_ASSUME_NONNULL_BEGIN
-
-@interface FBSDKApplicationDelegate ()
-
-- (void)addObserver:(id<FBSDKApplicationObserving>)observer;
-- (void)removeObserver:(id<FBSDKApplicationObserving>)observer;
-+ (BOOL)isSDKInitialized;
-+ (UIApplicationState)applicationState;
-
-@end
-
-NS_ASSUME_NONNULL_END

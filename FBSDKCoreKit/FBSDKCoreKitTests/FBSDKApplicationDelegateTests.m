@@ -585,6 +585,18 @@
   );
 }
 
+- (void)testInitializingSdkConfiguresButtonSuperclass
+{
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
+  [_delegate initializeSDKWithLaunchOptions:@{}];
+  NSObject *notifier = (NSObject *) FBSDKButton.applicationActivationNotifier;
+  XCTAssertEqualObjects(
+    notifier.class,
+    FBSDKApplicationDelegate.class,
+    "Should be configured with the expected concrete application activation notifier"
+  );
+}
+
 - (void)testDidFinishLaunchingLaunchedApp
 {
   _delegate.isAppLaunched = YES;

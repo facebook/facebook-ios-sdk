@@ -18,23 +18,12 @@
 
 #import <Foundation/Foundation.h>
 
-#if SWIFT_PACKAGE
- #import "FBSDKApplicationDelegate.h"
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+
+extern NSNotificationName const FBSDKApplicationDidBecomeActiveNotification;
+
 #else
- #import <FBSDKCoreKit/FBSDKApplicationDelegate.h>
+
+extern NSString *const FBSDKApplicationDidBecomeActiveNotification;
+
 #endif
-
-#import "FBSDKApplicationObserving.h"
-
-NS_ASSUME_NONNULL_BEGIN
-
-@interface FBSDKApplicationDelegate ()
-
-- (void)addObserver:(id<FBSDKApplicationObserving>)observer;
-- (void)removeObserver:(id<FBSDKApplicationObserving>)observer;
-+ (BOOL)isSDKInitialized;
-+ (UIApplicationState)applicationState;
-
-@end
-
-NS_ASSUME_NONNULL_END

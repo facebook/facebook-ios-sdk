@@ -23,7 +23,7 @@
 #import "FBSDKAccessToken+AccessTokenProtocols.h"
 #import "FBSDKAppEvents.h"
 #import "FBSDKAppEvents+Internal.h"
-#import "FBSDKApplicationDelegate+Internal.h"
+#import "FBSDKApplicationLifecycleNotifications.h"
 #import "FBSDKEventLogger.h"
 #import "FBSDKGraphRequestFactory.h"
 #import "FBSDKLogo.h"
@@ -36,10 +36,28 @@
 #define HEIGHT_TO_PADDING 0.23
 #define HEIGHT_TO_TEXT_PADDING_CORRECTION 0.08
 
+@interface FBSDKButton ()
+
+@property (class, nonatomic) id applicationActivationNotifier;
+
+@end
+
 @implementation FBSDKButton
 {
   BOOL _skipIntrinsicContentSizing;
   BOOL _isExplicitlyDisabled;
+}
+
+static id _applicationActivationNotifier;
+
++ (id)applicationActivationNotifier
+{
+  return _applicationActivationNotifier;
+}
+
++ (void)setApplicationActivationNotifier:(id)notifier
+{
+  _applicationActivationNotifier = notifier;
 }
 
 #pragma mark - Object Lifecycle
@@ -439,7 +457,7 @@
   [[NSNotificationCenter defaultCenter] addObserver:self
                                            selector:@selector(_applicationDidBecomeActiveNotification:)
                                                name:FBSDKApplicationDidBecomeActiveNotification
-                                             object:[FBSDKApplicationDelegate sharedInstance]];
+                                             object:self.class.applicationActivationNotifier];
 }
 
 - (CGFloat)_fontSizeForHeight:(CGFloat)height
