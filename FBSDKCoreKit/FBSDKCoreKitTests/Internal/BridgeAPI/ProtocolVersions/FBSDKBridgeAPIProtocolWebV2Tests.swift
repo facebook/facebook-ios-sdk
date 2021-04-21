@@ -18,6 +18,7 @@
 
 import XCTest
 
+// swiftlint:disable type_body_length
 class FBSDKBridgeAPIProtocolWebV2Tests: FBSDKTestCase {
 
   enum Keys {

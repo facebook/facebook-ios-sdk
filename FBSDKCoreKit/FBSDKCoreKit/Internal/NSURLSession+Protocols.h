@@ -18,26 +18,12 @@
 
 #import <Foundation/Foundation.h>
 
-NS_ASSUME_NONNULL_BEGIN
+#import "FBSDKCoreKitBasicsImport.h"
 
-/// An internal protocol used to describe a session data task
-NS_SWIFT_NAME(SessionDataTask)
-@protocol FBSDKSessionDataTask <NSObject>
+// MARK: Default Protocol Conformances
 
-@property(readonly) NSURLSessionTaskState state;
-
-- (void)resume;
-- (void)cancel;
-
+@interface NSURLSessionDataTask (FBSessionDataTask) <FBSDKSessionDataTask>
 @end
 
-/// An internal protocol used to describe a url session
-NS_SWIFT_NAME(SessionProviding)
-@protocol FBSDKSessionProviding <NSObject>
-
-- (id<FBSDKSessionDataTask>)dataTaskWithRequest:(NSURLRequest *)request
-                              completionHandler:(void (^)(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error))completionHandler;
-
+@interface NSURLSession (SessionProviding) <FBSDKSessionProviding>
 @end
-
-NS_ASSUME_NONNULL_END
