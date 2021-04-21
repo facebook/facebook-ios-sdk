@@ -19,7 +19,6 @@
 @objcMembers
 class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
 
-
   static var appID: String?
   static var clientToken: String?
   static var userAgentSuffix: String?

@@ -27,23 +27,35 @@
  #import "FBSDKDialogConfiguration.h"
  #import "FBSDKError.h"
  #import "FBSDKInternalUtility.h"
- #import "FBSDKServerConfiguration.h"
  #import "FBSDKServerConfigurationManager.h"
+ #import "FBSDKServerConfigurationProviding.h"
+
+@interface FBSDKBridgeAPIProtocolWebV2 ()
+
+@property (nonatomic, readonly) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
+@property (nonatomic, readonly) id<FBSDKBridgeAPIProtocol> nativeBridge;
+
+@end
 
 @implementation FBSDKBridgeAPIProtocolWebV2
-{
-  FBSDKBridgeAPIProtocolNativeV1 *_nativeProtocol;
-}
 
  #pragma mark - Object Lifecycle
 
 - (instancetype)init
 {
+  return [self initWithServerConfigurationProvider:FBSDKServerConfigurationManager.class
+                                      nativeBridge:[[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:nil
+                                                                                                  pasteboard:nil
+                                                                                         dataLengthThreshold:0
+                                                                                              includeAppIcon:NO]];
+}
+
+- (instancetype)initWithServerConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+                                       nativeBridge:(id<FBSDKBridgeAPIProtocol>)nativeBridge
+{
   if ((self = [super init])) {
-    _nativeProtocol = [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:nil
-                                                                     pasteboard:nil
-                                                            dataLengthThreshold:0
-                                                                 includeAppIcon:NO];
+    _serverConfigurationProvider = serverConfigurationProvider;
+    _nativeBridge = nativeBridge;
   }
   return self;
 }
@@ -92,11 +104,11 @@
     return nil;
   }
 
-  NSURL *requestURL = [_nativeProtocol requestURLWithActionID:actionID
-                                                       scheme:scheme
-                                                   methodName:methodName
-                                                methodVersion:methodVersion
-                                                   parameters:parameters error:errorRef];
+  NSURL *requestURL = [_nativeBridge requestURLWithActionID:actionID
+                                                     scheme:scheme
+                                                 methodName:methodName
+                                              methodVersion:methodVersion
+                                                 parameters:parameters error:errorRef];
   if (!requestURL) {
     return nil;
   }
@@ -125,10 +137,10 @@
                                       cancelled:(BOOL *)cancelledRef
                                           error:(NSError *__autoreleasing *)errorRef
 {
-  return [_nativeProtocol responseParametersForActionID:actionID
-                                        queryParameters:queryParameters
-                                              cancelled:cancelledRef
-                                                  error:errorRef];
+  return [_nativeBridge responseParametersForActionID:actionID
+                                      queryParameters:queryParameters
+                                            cancelled:cancelledRef
+                                                error:errorRef];
 }
 
 @end

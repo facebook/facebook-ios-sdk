@@ -1035,6 +1035,7 @@
 		F44FAE60262BA76300E5195E /* FBSDKApplicationLifecycleNotifications.h in Headers */ = {isa = PBXBuildFile; fileRef = F4756E5D262BA1D200C7CF2E /* FBSDKApplicationLifecycleNotifications.h */; };
 		F44FAE6E262BA76600E5195E /* FBSDKApplicationLifecycleNotifications.h in Headers */ = {isa = PBXBuildFile; fileRef = F4756E5D262BA1D200C7CF2E /* FBSDKApplicationLifecycleNotifications.h */; };
 		F44FAE7C262BA76700E5195E /* FBSDKApplicationLifecycleNotifications.h in Headers */ = {isa = PBXBuildFile; fileRef = F4756E5D262BA1D200C7CF2E /* FBSDKApplicationLifecycleNotifications.h */; };
+		F4529752262DE08B00DDA430 /* FBSDKBridgeAPIProtocolWebV2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F452974A262DE08B00DDA430 /* FBSDKBridgeAPIProtocolWebV2Tests.swift */; };
 		F45543EA2617885900A547A1 /* ImageDownloaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45543E92617885900A547A1 /* ImageDownloaderTests.swift */; };
 		F462DBF023B94C0F00FFCECA /* FBSDKCrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 894C0B071A702194009137EF /* FBSDKCrypto.h */; };
 		F462DBF123B94C1000FFCECA /* FBSDKCrypto.h in Headers */ = {isa = PBXBuildFile; fileRef = 894C0B071A702194009137EF /* FBSDKCrypto.h */; };
@@ -1907,6 +1908,8 @@
 		F44F544B25FACDCB00D774B7 /* FBSDKAppEventsConfigurationManager+AppEventsConfigurationProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKAppEventsConfigurationManager+AppEventsConfigurationProviding.h"; sourceTree = "<group>"; };
 		F44F545925FADACA00D774B7 /* TestAppEventsConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAppEventsConfiguration.swift; sourceTree = "<group>"; };
 		F45296AE262BB0FB00DDA430 /* Button+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Button+Testing.h"; sourceTree = "<group>"; };
+		F452974A262DE08B00DDA430 /* FBSDKBridgeAPIProtocolWebV2Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBSDKBridgeAPIProtocolWebV2Tests.swift; sourceTree = "<group>"; };
+		F452977A262DE42D00DDA430 /* FBSDKBridgeAPIProtocolWebV2+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKBridgeAPIProtocolWebV2+Testing.h"; sourceTree = "<group>"; };
 		F45543E92617885900A547A1 /* ImageDownloaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloaderTests.swift; sourceTree = "<group>"; };
 		F455441226178ACF00A547A1 /* ImageDownloader+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ImageDownloader+Testing.h"; sourceTree = "<group>"; };
 		F460EF46262B436E00D48A2A /* FBSDKEventProcessing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKEventProcessing.h; sourceTree = "<group>"; };
@@ -2657,6 +2660,7 @@
 			isa = PBXGroup;
 			children = (
 				F4C11B772618E51C00FB4596 /* FBSDKBridgeAPIProtocolWebV1Tests.swift */,
+				F452974A262DE08B00DDA430 /* FBSDKBridgeAPIProtocolWebV2Tests.swift */,
 				894C0B391A702EBE009137EF /* FBSDKBridgeAPIProtocolNativeV1Tests.m */,
 			);
 			path = ProtocolVersions;
@@ -3260,6 +3264,7 @@
 				F455441226178ACF00A547A1 /* ImageDownloader+Testing.h */,
 				58E9D62E2625F76E004818D8 /* FBSDKCrashHandler+Testing.h */,
 				F4AAAEE026289E3C00EDCF06 /* SuggestedEventsIndexer+Testing.h */,
+				F452977A262DE42D00DDA430 /* FBSDKBridgeAPIProtocolWebV2+Testing.h */,
 				F4D58F7A26237C71006FEC6B /* WebViewAppLinkResolver+Testing.h */,
 			);
 			path = Interfaces;
@@ -5017,6 +5022,7 @@
 				9D18A8DB1A95405A00A41042 /* FBSDKAppEventsStateTests.m in Sources */,
 				F4ED90DB24EDDC610048D283 /* TestNotificationCenter.swift in Sources */,
 				F93680E3249D490600446E35 /* FBSDKSettingsTests.m in Sources */,
+				F4529752262DE08B00DDA430 /* FBSDKBridgeAPIProtocolWebV2Tests.swift in Sources */,
 				F48A9D0225F83F8200A2DBDF /* EventBindingManagerViewMatchingTests.swift in Sources */,
 				F46E5489260E62D100BAF55C /* ViewImpressionTrackerTests.swift in Sources */,
 				E4C2B97A23867327002335A4 /* FBSDKModelRuntimeTests.mm in Sources */,

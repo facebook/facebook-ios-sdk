@@ -23,6 +23,8 @@
 #import "CodelessIndexer+Testing.h"
 #import "FBSDKHybridAppEventsScriptMessageHandler+Testing.h"
 #import "FBSDKBridgeAPIProtocolWebV1.h"
+#import "FBSDKBridgeAPIProtocolWebV2+Testing.h"
+#import "FBSDKBridgeAPIProtocolNativeV1.h"
 #import "FBSDKAdvertiserIDProviding.h"
 #import "FBSDKAppEventsAtePublisher.h"
 #import "FBSDKAppLinkEventPosting.h"
