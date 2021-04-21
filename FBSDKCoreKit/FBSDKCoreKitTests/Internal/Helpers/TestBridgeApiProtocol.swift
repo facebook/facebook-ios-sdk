@@ -18,6 +18,7 @@
 
 class TestBridgeApiProtocol: NSObject, BridgeAPIProtocol {
   var stubbedRequestURL = SampleUrls.valid
+  var stubbedRequestURLError: Error?
   var stubbedResponseParameters = [AnyHashable: Any]()
   var capturedRequestUrlActionID: String?
   var capturedRequestUrlScheme: String?
@@ -40,6 +41,10 @@ class TestBridgeApiProtocol: NSObject, BridgeAPIProtocol {
     capturedRequestUrlMethodName = methodName
     capturedRequestUrlMethodVersion = methodVersion
     capturedRequestUrlParameters = parameters
+
+    if let error = stubbedRequestURLError {
+      throw error
+    }
 
     return stubbedRequestURL
   }

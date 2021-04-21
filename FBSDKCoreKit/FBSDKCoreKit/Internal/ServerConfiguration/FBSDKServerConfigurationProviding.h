@@ -20,8 +20,10 @@
 
 @class FBSDKServerConfiguration;
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(ServerConfigurationBlock)
-typedef void (^FBSDKServerConfigurationBlock)(FBSDKServerConfiguration *serverConfiguration, NSError *error);
+typedef void (^FBSDKServerConfigurationBlock)(FBSDKServerConfiguration * _Nullable serverConfiguration, NSError * _Nullable error);
 
 NS_SWIFT_NAME(ServerConfigurationProviding)
 @protocol FBSDKServerConfigurationProviding
@@ -31,6 +33,10 @@ NS_SWIFT_NAME(ServerConfigurationProviding)
 
  This method will use a cached configuration if it is valid and not expired.
  */
-+ (void)loadServerConfigurationWithCompletionBlock:(FBSDKServerConfigurationBlock)completionBlock;
++ (void)loadServerConfigurationWithCompletionBlock:(nullable FBSDKServerConfigurationBlock)completionBlock;
+
++ (nullable FBSDKServerConfiguration *)cachedServerConfiguration;
 
 @end
+
+NS_ASSUME_NONNULL_END

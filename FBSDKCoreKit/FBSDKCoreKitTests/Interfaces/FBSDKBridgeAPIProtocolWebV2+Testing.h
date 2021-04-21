@@ -20,6 +20,7 @@
 
 @protocol FBSDKServerConfigurationProviding;
 @protocol FBSDKBridgeAPIProtocol;
+@class FBSDKDialogConfiguration;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -30,6 +31,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithServerConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                        nativeBridge:(id<FBSDKBridgeAPIProtocol>)nativeBridge;
+
+- (nullable NSURL *)_redirectURLWithActionID:(nullable NSString *)actionID
+                                  methodName:(nullable NSString *)methodName
+                                       error:(NSError **)errorRef;
+- (nullable NSURL *)_requestURLForDialogConfiguration:(FBSDKDialogConfiguration *)dialogConfiguration
+                                                error:(NSError **)errorRef;
 
 @end
 

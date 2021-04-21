@@ -95,7 +95,7 @@
                        parameters:(NSDictionary *)parameters
                             error:(NSError *__autoreleasing *)errorRef
 {
-  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager cachedServerConfiguration];
+  FBSDKServerConfiguration *serverConfiguration = [self.serverConfigurationProvider cachedServerConfiguration];
   FBSDKDialogConfiguration *dialogConfiguration = [serverConfiguration dialogConfigurationForDialogName:methodName];
   if (!dialogConfiguration) {
     if (errorRef != NULL) {

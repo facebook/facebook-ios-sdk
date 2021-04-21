@@ -18,10 +18,16 @@
 
 @objcMembers
 class TestServerConfigurationProvider: NSObject, ServerConfigurationProviding {
+
   static var capturedCompletionBlock: ServerConfigurationBlock?
   static var loadServerConfigurationWasCalled = false
+  static var stubbedServerConfiguration: ServerConfiguration?
 
-  static func loadServerConfiguration(completionBlock: @escaping ServerConfigurationBlock) {
+  static func cachedServerConfiguration() -> ServerConfiguration? {
+    return stubbedServerConfiguration
+  }
+
+  static func loadServerConfiguration(completionBlock: ServerConfigurationBlock?) {
     loadServerConfigurationWasCalled = true
     capturedCompletionBlock = completionBlock
   }
