@@ -42,7 +42,7 @@
 @property (class, nullable, nonatomic, copy) NSString *userAgentSuffix;
 
 @property (class, nonnull, readonly) FBSDKSettings *sharedSettings;
-@property (nonatomic) BOOL shoudUseTokenOptimizations;
+@property (nonatomic) BOOL shouldUseTokenOptimizations;
 
 + (void)configureWithStore:(nonnull id<FBSDKDataPersisting>)store
 appEventsConfigurationProvider:(nonnull Class<FBSDKAppEventsConfigurationProviding>)provider
