@@ -19,6 +19,7 @@
 #import "FBSDKImageDownloader.h"
 
 #import "FBSDKCoreKitBasicsImport.h"
+#import "NSURLSession+Protocols.h"
 
 static NSString *const kImageDirectory = @"fbsdkimages";
 static NSString *const kCachedResponseUserInfoKeyTimestamp = @"timestamp";

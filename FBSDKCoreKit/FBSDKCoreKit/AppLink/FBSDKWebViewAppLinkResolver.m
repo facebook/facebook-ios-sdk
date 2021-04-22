@@ -29,6 +29,7 @@
 #import "FBSDKAppLinkTarget.h"
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKError.h"
+#import "NSURLSession+Protocols.h"
 
 /**
  Describes the callback for appLinkFromURLInBackground.
