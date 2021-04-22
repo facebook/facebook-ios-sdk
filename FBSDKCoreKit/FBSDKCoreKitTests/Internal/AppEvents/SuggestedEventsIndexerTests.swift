@@ -18,14 +18,20 @@
 
 import XCTest
 
-// swiftlint:disable type_body_length
-class SuggestedEventsIndexerTests: XCTestCase {
+// swiftlint:disable type_body_length implicitly_unwrapped_optional
+class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollectionViewDelegate {
 
   let requestProvider = TestGraphRequestFactory()
   let settings = TestSettings()
   let eventLogger = TestEventLogger()
-  var eventProcessor: TestEventProcessor? = TestEventProcessor()
-  var indexer: SuggestedEventsIndexer! // swiftlint:disable:this implicitly_unwrapped_optional
+  var eventProcessor: TestEventProcessor! = TestEventProcessor()
+  let collectionView = TestCollectionView(
+    frame: .zero,
+    collectionViewLayout: UICollectionViewFlowLayout()
+  )
+  let tableView = TestTableView()
+  let button = UIButton()
+  var indexer: SuggestedEventsIndexer!
 
   enum Keys {
     static let productionEvents = "production_events"
@@ -61,7 +67,7 @@ class SuggestedEventsIndexerTests: XCTestCase {
       settings: settings,
       eventLogger: eventLogger,
       featureExtractor: TestFeatureExtractor.self,
-      eventProcessor: eventProcessor! // swiftlint:disable:this force_unwrapping
+      eventProcessor: eventProcessor
     )
   }
 
@@ -75,7 +81,15 @@ class SuggestedEventsIndexerTests: XCTestCase {
     TestServerConfigurationProvider.reset()
     TestSwizzler.reset()
     TestFeatureExtractor.reset()
+    SuggestedEventsIndexer.reset()
   }
+
+  // MARK: - Delegate methods
+
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {}
+  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {}
+
+  // MARK: - Dependencies
 
   func testDefaultDependencies() {
     indexer = SuggestedEventsIndexer()
@@ -138,7 +152,7 @@ class SuggestedEventsIndexerTests: XCTestCase {
 
     XCTAssertNil(
       indexer.eventProcessor,
-      "Should not hold a strong reference to the delegate"
+      "Should not hold a strong reference to the event processor"
     )
   }
 
@@ -196,7 +210,7 @@ class SuggestedEventsIndexerTests: XCTestCase {
     )
   }
 
-  func testCompletingEnablingWithNonRepeatingSuggestedEventsSetting() {
+  func testCompletingEnablingWithSuggestedEventsSetting() {
     enable(
       optInEvents: Values.optInEvents,
       unconfirmedEvents: Values.unconfirmedEvents
@@ -211,6 +225,53 @@ class SuggestedEventsIndexerTests: XCTestCase {
       indexer.unconfirmedEvents,
       Set(Values.unconfirmedEvents),
       "Should set up suggested events successfully"
+    )
+  }
+
+  func testEnablingWithSuggestedEventsSettingInvokesSetup() {
+    enable(
+      optInEvents: Values.optInEvents,
+      unconfirmedEvents: Values.unconfirmedEvents
+    )
+
+    let expected = [
+      SwizzleEvidence(
+        selector: #selector(UIControl.didMoveToWindow),
+        class: UIControl.self
+      ),
+      SwizzleEvidence(
+        selector: #selector(setter: UITableView.delegate),
+        class: UITableView.self
+      ),
+      SwizzleEvidence(
+        selector: #selector(setter: UICollectionView.delegate),
+        class: UICollectionView.self
+      )
+    ]
+    XCTAssertEqual(
+      TestSwizzler.evidence,
+      expected,
+      "Should swizzle the expected methods as part of setup"
+    )
+  }
+
+  func testEnablingOnlySwizzlesOnce() {
+    enable(
+      optInEvents: Values.optInEvents,
+      unconfirmedEvents: Values.unconfirmedEvents
+    )
+
+    TestSwizzler.reset()
+
+    enable(
+      optInEvents: Values.optInEvents,
+      unconfirmedEvents: Values.unconfirmedEvents
+    )
+
+    XCTAssertEqual(
+      TestSwizzler.evidence,
+      [],
+      "Enabling should only setup and swizzle methods once"
     )
   }
 
@@ -283,7 +344,7 @@ class SuggestedEventsIndexerTests: XCTestCase {
     )
 
     XCTAssertEqual(
-      eventProcessor?.processSuggestedEventsCallCount,
+      eventProcessor.processSuggestedEventsCallCount,
       0,
       "Should not ask the event processor to process events if the text is too long"
     )
@@ -301,7 +362,7 @@ class SuggestedEventsIndexerTests: XCTestCase {
     indexer.predictEvent(with: UIResponder(), text: "")
 
     XCTAssertEqual(
-      eventProcessor?.processSuggestedEventsCallCount,
+      eventProcessor.processSuggestedEventsCallCount,
       0,
       "Should not ask the event processor to process events if the text is empty"
     )
@@ -319,7 +380,7 @@ class SuggestedEventsIndexerTests: XCTestCase {
     indexer.predictEvent(with: UIResponder(), text: "me@example.com")
 
     XCTAssertEqual(
-      eventProcessor?.processSuggestedEventsCallCount,
+      eventProcessor.processSuggestedEventsCallCount,
       0,
       "Should not ask the event processor to process events if the text is sensitive"
     )
@@ -333,16 +394,16 @@ class SuggestedEventsIndexerTests: XCTestCase {
     )
   }
 
-  func testPredictingEventWithoutModelManagerDelegate() {
+  func testPredictingEventWithoutEventProcessor() {
     indexer.predictEvent(with: UIResponder(), text: Values.buttonText)
 
     XCTAssertNil(
       eventLogger.capturedEventName,
-      "Should not log if there is no delegate to process events"
+      "Should not log if there is no event processor to process events"
     )
     XCTAssertNil(
       requestProvider.capturedGraphPath,
-      "Should not create a request if there is no delegate to process events"
+      "Should not create a request if there is no event processor to process events"
     )
   }
 
@@ -352,37 +413,39 @@ class SuggestedEventsIndexerTests: XCTestCase {
     indexer.predictEvent(with: UIResponder(), text: Values.buttonText)
 
     XCTAssertEqual(
-      eventProcessor?.processSuggestedEventsCallCount,
+      eventProcessor.processSuggestedEventsCallCount,
       1,
       "Should ask the event processor to process events"
     )
     XCTAssertNil(
       eventLogger.capturedEventName,
-      "Should not log if there are no processed events from the delegate"
+      "Should not log if there are no processed events from the event processor"
     )
   }
 
   // | has processed event | processed event matches optin event | matches unconfirmed event |
   // | yes                 | no                                  | no                        |
   func testPredictingWithProcessedEventsMatchingNone() {
-    eventProcessor?.stubbedProcessedEvents = Values.processedEvent
+    eventProcessor.stubbedProcessedEvents = Values.processedEvent
+
     indexer.predictEvent(with: UIResponder(), text: Values.buttonText)
 
     XCTAssertEqual(
-      eventProcessor?.processSuggestedEventsCallCount,
+      eventProcessor.processSuggestedEventsCallCount,
       1,
       "Should ask the event processor to process events"
     )
     XCTAssertNil(
       eventLogger.capturedEventName,
-      "Should not log if there are no processed events from the delegate"
+      "Should not log if there are no processed events from the event processor"
     )
   }
 
   // | has processed event | processed event matches optin event | matches unconfirmed event |
   // | yes                 | yes                                 | no                        |
   func testPredictingWithProcessedEventsMatchingOptinEvent() {
-    eventProcessor?.stubbedProcessedEvents = Values.processedEvent
+    eventProcessor.stubbedProcessedEvents = Values.processedEvent
+
     enable(
       optInEvents: [Values.processedEvent],
       unconfirmedEvents: Values.unconfirmedEvents
@@ -408,7 +471,8 @@ class SuggestedEventsIndexerTests: XCTestCase {
   // | processed event | matches optin | matches unconfirmed | dense data |
   // | yes             | no            | yes                 | null       |
   func testPredictingWithProcessedEventMatchingUnconfirmedEventWithoutDenseData() {
-    eventProcessor?.stubbedProcessedEvents = Values.processedEvent
+    eventProcessor.stubbedProcessedEvents = Values.processedEvent
+
     enable(
       optInEvents: Values.optInEvents,
       unconfirmedEvents: [Values.processedEvent]
@@ -433,7 +497,8 @@ class SuggestedEventsIndexerTests: XCTestCase {
     let pointer = UnsafeMutablePointer<Float>.allocate(capacity: denseData.count)
 
     TestFeatureExtractor.stub(denseFeatures: pointer)
-    eventProcessor?.stubbedProcessedEvents = Values.processedEvent
+    eventProcessor.stubbedProcessedEvents = Values.processedEvent
+
     enable(
       optInEvents: Values.optInEvents,
       unconfirmedEvents: [Values.processedEvent]
@@ -455,7 +520,8 @@ class SuggestedEventsIndexerTests: XCTestCase {
   // | has processed event | processed event matches optin event | matches unconfirmed event |
   // | yes                 | yes                                 | yes                       |
   func testPredictingWithProcessedEventMatchingBoth() {
-    eventProcessor?.stubbedProcessedEvents = Values.processedEvent
+    eventProcessor.stubbedProcessedEvents = Values.processedEvent
+
     enable(
       optInEvents: [Values.processedEvent],
       unconfirmedEvents: [Values.processedEvent]
@@ -475,6 +541,108 @@ class SuggestedEventsIndexerTests: XCTestCase {
       there are also matching opt-in events
       """
     )
+  }
+
+  // MARK: - View Matching and Handling
+
+  func testMatchingMissingView() {
+    indexer.matchSubviews(in: nil)
+
+    XCTAssertTrue(
+      TestSwizzler.evidence.isEmpty,
+      "Should not swizzle views that don't exist"
+    )
+  }
+
+  func testMatchingDirectSubviews() {
+    let view = TestView()
+    tableView.delegate = self
+    collectionView.delegate = self
+    view.addSubview(tableView)
+    view.addSubview(collectionView)
+    view.addSubview(button)
+
+    indexer.matchSubviews(in: view)
+
+    assertSwizzlesTableViewDelegate()
+    assertSwizzlesCollectionViewDelegate()
+    assertAddsTargetToButton()
+  }
+
+  func testMatchingNestedSubviews() {
+    let view = TestView()
+    tableView.delegate = self
+    collectionView.delegate = self
+    let secondLayerView = TestView()
+    let thirdLayerView = TestView()
+    let thirdLayerView2 = TestView()
+    view.addSubview(secondLayerView)
+    secondLayerView.addSubview(button)
+    secondLayerView.addSubview(thirdLayerView)
+    secondLayerView.addSubview(thirdLayerView2)
+    thirdLayerView.addSubview(tableView)
+    thirdLayerView2.addSubview(collectionView)
+
+    indexer.matchSubviews(in: view)
+
+    assertSwizzlesTableViewDelegate()
+    assertSwizzlesCollectionViewDelegate()
+    assertAddsTargetToButton()
+  }
+
+  func testMatchingSubviewsNestedInControls() {
+    let view = TestView()
+    tableView.delegate = self
+    collectionView.delegate = self
+    let control = UIControl()
+    view.addSubview(control)
+    control.addSubview(button)
+    control.addSubview(tableView)
+    control.addSubview(collectionView)
+
+    TestSwizzler.reset()
+
+    indexer.matchSubviews(in: view)
+
+    XCTAssertEqual(
+      TestSwizzler.evidence,
+      [],
+      "Should not match views nested in controls"
+    )
+    XCTAssertTrue(
+      button.allTargets.isEmpty,
+      "Should not match views nested in controls"
+    )
+  }
+
+  func testHandlingTableViewWithMissingDelegate() {
+    indexer.handle(tableView, withDelegate: nil)
+
+    XCTAssertTrue(
+      TestSwizzler.evidence.isEmpty,
+      "Should not swizzle a table view delegate method if no delegate is provided"
+    )
+  }
+
+  func testHandlingTableViewWithDelegate() {
+    indexer.handle(tableView, withDelegate: self)
+
+    assertSwizzlesTableViewDelegate()
+  }
+
+  func testHandlingCollectionViewWithMissingDelegate() {
+    indexer.handle(collectionView, withDelegate: nil)
+
+    XCTAssertTrue(
+      TestSwizzler.evidence.isEmpty,
+      "Should not swizzle a collection view delegate method if no delegate is provided"
+    )
+  }
+
+  func testHandlingCollectionViewWithDelegate() {
+    indexer.handle(collectionView, withDelegate: self)
+
+    assertSwizzlesCollectionViewDelegate()
   }
 
   // MARK: - Helpers
@@ -512,4 +680,50 @@ class SuggestedEventsIndexerTests: XCTestCase {
 
     return events.isEmpty ? [:] : [Keys.setting: events]
   }
+
+  func assertSwizzlesTableViewDelegate(
+    file: StaticString = #file,
+    line: UInt = #line
+  ) {
+    let expected = SwizzleEvidence(
+      selector: #selector(UITableViewDelegate.tableView(_:didSelectRowAt:)),
+      class: SuggestedEventsIndexerTests.self
+    )
+    XCTAssertTrue(
+      TestSwizzler.evidence.contains(expected),
+      "Should swizzle the expected table view delegate method",
+      file: file,
+      line: line
+    )
+  }
+
+  func assertSwizzlesCollectionViewDelegate(
+    file: StaticString = #file,
+    line: UInt = #line
+  ) {
+    let expected = SwizzleEvidence(
+      selector: #selector(UICollectionViewDelegate.collectionView(_:didSelectItemAt:)),
+      class: SuggestedEventsIndexerTests.self
+    )
+    XCTAssertTrue(
+      TestSwizzler.evidence.contains(expected),
+      "Should swizzle the expected collection view delegate method",
+      file: file,
+      line: line
+    )
+  }
+
+  func assertAddsTargetToButton(
+    file: StaticString = #file,
+    line: UInt = #line
+  ) {
+    XCTAssertEqual(
+      button.allTargets.first as? SuggestedEventsIndexer,
+      indexer,
+      "Indexer should add itself as a target of the button",
+      file: file,
+      line: line
+    )
+  }
+
 } // swiftlint:disable:this file_length

@@ -125,6 +125,7 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
   }];
 }
 
+static dispatch_once_t setupNonce;
 - (void)setup
 {
   // won't do the model prediction when there is no opt-in event and unconfirmed event
@@ -132,14 +133,16 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
     return;
   }
 
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
+  dispatch_once(&setupNonce, ^{
     // swizzle UIButton
-    [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:[UIControl class] withBlock:^(UIControl *control) {
-                                                                                          if (control.window && [control isKindOfClass:[UIButton class]]) {
-                                                                                            [((UIButton *)control) addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchDown];
-                                                                                          }
-                                                                                        } named:@"suggested_events"];
+    [self.swizzler swizzleSelector:@selector(didMoveToWindow)
+                           onClass:[UIControl class]
+                         withBlock:^(UIControl *control) {
+                           if (control.window && [control isKindOfClass:[UIButton class]]) {
+                             [((UIButton *)control) addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchDown];
+                           }
+                         }
+                             named:@"suggested_events"];
 
     // UITableView
     void (^tableViewBlock)(UITableView *tableView,
@@ -148,7 +151,7 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
     ^(UITableView *tableView, SEL cmd, id<UITableViewDelegate> delegate) {
       [self handleView:tableView withDelegate:delegate];
     };
-    [FBSDKSwizzler swizzleSelector:@selector(setDelegate:)
+    [self.swizzler swizzleSelector:@selector(setDelegate:)
                            onClass:[UITableView class]
                          withBlock:tableViewBlock
                              named:@"suggested_events"];
@@ -160,7 +163,7 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
     ^(UICollectionView *collectionView, SEL cmd, id<UICollectionViewDelegate> delegate) {
       [self handleView:collectionView withDelegate:delegate];
     };
-    [FBSDKSwizzler swizzleSelector:@selector(setDelegate:)
+    [self.swizzler swizzleSelector:@selector(setDelegate:)
                            onClass:[UICollectionView class]
                          withBlock:collectionViewBlock
                              named:@"suggested_events"];
@@ -221,7 +224,7 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
       [self predictEventWithUIResponder:cell
                                    text:[self getTextFromContentView:[cell contentView]]];
     };
-    [FBSDKSwizzler swizzleSelector:@selector(tableView:didSelectRowAtIndexPath:)
+    [self.swizzler swizzleSelector:@selector(tableView:didSelectRowAtIndexPath:)
                            onClass:[delegate class]
                          withBlock:block
                              named:@"suggested_events"];
@@ -232,7 +235,7 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
       [self predictEventWithUIResponder:cell
                                    text:[self getTextFromContentView:[cell contentView]]];
     };
-    [FBSDKSwizzler swizzleSelector:@selector(collectionView:didSelectItemAtIndexPath:)
+    [self.swizzler swizzleSelector:@selector(collectionView:didSelectItemAtIndexPath:)
                            onClass:[delegate class]
                          withBlock:block
                              named:@"suggested_events"];
@@ -350,6 +353,19 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
   [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}];
   return;
 }
+
+ #pragma mark - Testability
+
+ #ifdef FBSDKTEST
+
++ (void)reset
+{
+  if (setupNonce) {
+    setupNonce = 0;
+  }
+}
+
+ #endif
 
 @end
 

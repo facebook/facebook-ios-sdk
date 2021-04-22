@@ -36,6 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSSet<NSString *> *optInEvents;
 @property (nonatomic, readonly) NSSet<NSString *> *unconfirmedEvents;
 
++ (void)reset;
+
 - (instancetype)initWithGraphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
                  serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                     swizzler:(Class<FBSDKSwizzling>)swizzler
@@ -50,6 +52,9 @@ NS_SWIFT_NAME(init(requestProvider:serverConfigurationProvider:swizzler:settings
              denseFeature:(nullable NSString *)denseFeature;
 - (void)predictEventWithUIResponder:(UIResponder *)uiResponder
                                text:(NSString *)text;
+- (void)handleView:(UIView *)view
+      withDelegate:(nullable id)delegate;
+- (void)matchSubviewsIn:(nullable UIView *)view;
 
 @end
 
