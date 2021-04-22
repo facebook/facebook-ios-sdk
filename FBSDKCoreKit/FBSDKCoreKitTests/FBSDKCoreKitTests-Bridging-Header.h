@@ -174,6 +174,8 @@ NS_SWIFT_NAME(FBProfilePictureViewState)
 
 @property (class, nonatomic, nullable) id<FBSDKDataPersisting> store;
 @property (class, nonatomic, nullable) Class<FBSDKAccessTokenProviding> accessTokenProvider;
+@property (class, nonatomic, nullable) id<FBSDKNotificationPosting, FBSDKNotificationObserving> notificationCenter;
+
 
 + (void)setCurrentProfile:(nullable FBSDKProfile *)profile
    shouldPostNotification:(BOOL)shouldPostNotification;

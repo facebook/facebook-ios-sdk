@@ -514,7 +514,8 @@ static UIApplicationState _applicationState;
                                                      store:store];
   }
   [FBSDKProfile configureWithStore:store
-               accessTokenProvider:FBSDKAccessToken.class];
+               accessTokenProvider:FBSDKAccessToken.class
+                notificationCenter:NSNotificationCenter.defaultCenter];
   [FBSDKWebDialogView configureWithWebViewProvider:[FBSDKWebViewFactory new]
                                          urlOpener:UIApplication.sharedApplication];
   [FBSDKAppEvents setEventProcessor:[FBSDKModelManager shared]];

@@ -419,6 +419,7 @@
   [_delegate initializeSDKWithLaunchOptions:@{}];
   NSObject *store = (NSObject *)[FBSDKProfile store];
   NSObject *tokenProvider = (NSObject *)[FBSDKProfile accessTokenProvider];
+  NSObject *notificationCenter = (NSObject *)[FBSDKProfile notificationCenter];
   XCTAssertEqualObjects(
     store,
     NSUserDefaults.standardUserDefaults,
@@ -428,6 +429,11 @@
     tokenProvider,
     FBSDKAccessToken.class,
     "Should be configured with the expected concrete token provider"
+  );
+  XCTAssertEqualObjects(
+    notificationCenter,
+    NSNotificationCenter.defaultCenter,
+    "Should be configured with the expected concrete Notification Center"
   );
 }
 

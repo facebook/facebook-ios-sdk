@@ -16,6 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import "FBSDKNotificationProtocols.h"
 #import "TargetConditionals.h"
 
 #if !TARGET_OS_TV
@@ -66,10 +67,16 @@ static NSDateFormatter *_dateFormatter;
 @implementation FBSDKProfile
 
 static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
+static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCenter = nil;
 
 + (Class<FBSDKAccessTokenProviding>)accessTokenProvider
 {
   return _accessTokenProvider;
+}
+
++ (id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
+{
+  return _notificationCenter;
 }
 
 - (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
@@ -226,9 +233,9 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
     g_currentProfile = profile;
 
     if (shouldPostNotification) {
-      [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKProfileDidChangeNotification
-                                                          object:[self class]
-                                                        userInfo:userInfo];
+      [_notificationCenter postNotificationName:FBSDKProfileDidChangeNotification
+                                         object:[self class]
+                                       userInfo:userInfo];
     }
   }
 }
@@ -241,12 +248,12 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
 + (void)enableUpdatesOnAccessTokenChange:(BOOL)enable
 {
   if (enable) {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(observeChangeAccessTokenChange:)
-                                                 name:FBSDKAccessTokenDidChangeNotification
-                                               object:nil];
+    [_notificationCenter addObserver:self
+                            selector:@selector(observeChangeAccessTokenChange:)
+                                name:FBSDKAccessTokenDidChangeNotification
+                              object:nil];
   } else {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [_notificationCenter removeObserver:self];
   }
 }
 
@@ -375,10 +382,12 @@ static id <FBSDKDataPersisting> _store;
 
 + (void)configureWithStore:(id<FBSDKDataPersisting>)store
        accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
+        notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
 {
   if (self == [FBSDKProfile class]) {
     _store = store;
     _accessTokenProvider = accessTokenProvider;
+    _notificationCenter = notificationCenter;
   }
 }
 
@@ -614,6 +623,7 @@ static id <FBSDKDataPersisting> _store;
 {
   _store = nil;
   _accessTokenProvider = nil;
+  _notificationCenter = nil;
 }
 
   #endif
