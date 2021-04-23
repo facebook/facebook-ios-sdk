@@ -87,6 +87,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
     [self handleDialogError:error];
     return;
   }
+
   _isAwaitingResult = YES;
   [[FBSDKBridgeAPI sharedInstance]
    openURL:[FBSDKGameRequestURLProvider createDeepLinkURLWithQueryDictionary:contentDictionary]
@@ -310,7 +311,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 - (NSMutableDictionary *)_convertGameRequestContentToDictionaryV2:(FBSDKGameRequestContent *)content
 {
   NSMutableDictionary *parameters = [NSMutableDictionary new];
-  [FBSDKTypeUtility dictionary:parameters setObject:[content.recipients componentsJoinedByString:@","] forKey:@"to"];
+  [FBSDKTypeUtility dictionary:parameters setObject:[content.recipientSuggestions componentsJoinedByString:@","] forKey:@"to"];
   [FBSDKTypeUtility dictionary:parameters setObject:content.message forKey:@"message"];
   [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKGameRequestURLProvider actionTypeNameForActionType:content.actionType] forKey:@"action_type"];
   [FBSDKTypeUtility dictionary:parameters setObject:content.objectID forKey:@"object_id"];
