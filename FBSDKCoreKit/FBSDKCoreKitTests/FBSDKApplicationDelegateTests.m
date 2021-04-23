@@ -25,6 +25,7 @@
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitTestUtility.h"
 #import "FBSDKCoreKitTests-Swift.h"
+#import "FBSDKPaymentObserver.h"
 #import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKTestCase.h"
 
@@ -92,6 +93,7 @@
 + (id<FBSDKLogging>)logger;
 + (id<FBSDKSettings>)settings;
 + (id<FBSDKEventProcessing>)eventProcessor;
++ (Class<FBSDKPaymentObserving>)paymentObserver;
 @end
 
 @implementation FBSDKApplicationDelegateTests
@@ -278,6 +280,11 @@
     FBSDKAppEvents.eventProcessor,
     FBSDKModelManager.shared,
     "Initializing the SDK should set concrete event processor for event logging"
+  );
+  XCTAssertEqualObjects(
+    FBSDKAppEvents.paymentObserver,
+    FBSDKPaymentObserver.class,
+    "Initializing the SDK should set concrete payment observer for event logging"
   );
 }
 

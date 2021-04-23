@@ -39,6 +39,8 @@
 #import "FBSDKInstrumentManager.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger+Logging.h"
+#import "FBSDKPaymentObserver.h"
+#import "FBSDKPaymentObserver+PaymentObserving.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationManager+ServerConfigurationProviding.h"
 #import "FBSDKSettings+Internal.h"
@@ -486,15 +488,15 @@ static UIApplicationState _applicationState;
      appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
              infoDictionaryProvider:NSBundle.mainBundle
                         eventLogger:[FBSDKEventLogger new]];
-  [FBSDKAppEvents configureWithGateKeeperManager:[FBSDKGateKeeperManager class]
-                  appEventsConfigurationProvider:[FBSDKAppEventsConfigurationManager class]
-                     serverConfigurationProvider:[FBSDKServerConfigurationManager class]
+  [FBSDKAppEvents configureWithGateKeeperManager:FBSDKGateKeeperManager.class
+                  appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
+                     serverConfigurationProvider:FBSDKServerConfigurationManager.class
                             graphRequestProvider:graphRequestProvider
                                   featureChecker:FBSDKFeatureManager.shared
                                            store:store
-                                          logger:[FBSDKLogger class]
-                                        settings:sharedSettings];
-
+                                          logger:FBSDKLogger.class
+                                        settings:sharedSettings
+                                 paymentObserver:FBSDKPaymentObserver.class];
   [FBSDKInternalUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:FBSDKAccessToken.class];
   [FBSDKAppEventsConfigurationManager configureWithStore:store];

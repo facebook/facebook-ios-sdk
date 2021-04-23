@@ -35,6 +35,7 @@
 @protocol FBSDKLogging;
 @protocol FBSDKSettings;
 @protocol FBSDKEventProcessing;
+@protocol FBSDKPaymentObserving;
 
 // Internally known event names
 
@@ -223,7 +224,8 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
                         featureChecker:(id<FBSDKFeatureChecking>)featureChecker
                                  store:(id<FBSDKDataPersisting>)store
                                 logger:(Class<FBSDKLogging>)logger
-                              settings:(id<FBSDKSettings>)settings;
+                              settings:(id<FBSDKSettings>)settings
+                       paymentObserver:(Class<FBSDKPaymentObserving>)paymentObserver;
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;

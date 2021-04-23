@@ -48,7 +48,7 @@
 #import "FBSDKLogger.h"
 #import "FBSDKLogging.h"
 #import "FBSDKMetadataIndexer.h"
-#import "FBSDKPaymentObserver.h"
+#import "FBSDKPaymentObserving.h"
 #import "FBSDKRestrictiveDataFilterManager.h"
 #import "FBSDKSKAdNetworkReporter.h"
 #import "FBSDKServerConfiguration.h"
@@ -339,6 +339,7 @@ static id<FBSDKGraphRequestProviding> g_graphRequestProvider;
 static id<FBSDKFeatureChecking> g_featureChecker;
 static Class<FBSDKLogging> g_logger;
 static id<FBSDKSettings> g_settings;
+static Class<FBSDKPaymentObserving> g_paymentObserver;
 
 #if !TARGET_OS_TV
 static id<FBSDKEventProcessing> g_eventProcessor = nil;
@@ -898,18 +899,18 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
                                  store:(id<FBSDKDataPersisting>)store
                                 logger:(Class<FBSDKLogging>)logger
                               settings:(id<FBSDKSettings>)settings
+                       paymentObserver:(Class<FBSDKPaymentObserving>)paymentObserver
 {
   [FBSDKAppEvents setAppEventsConfigurationProvider:appEventsConfigurationProvider];
   [FBSDKAppEvents setServerConfigurationProvider:serverConfigurationProvider];
-  if (g_gateKeeperManager != gateKeeperManager) {
-    g_gateKeeperManager = gateKeeperManager;
-  }
+  g_gateKeeperManager = gateKeeperManager;
   self.store = store;
   g_logger = logger;
   [FBSDKAppEvents setRequestProvider:provider];
   [FBSDKAppEvents setFeatureChecker:featureChecker];
   [FBSDKAppEvents setCanLogEvents];
   g_settings = settings;
+  g_paymentObserver = paymentObserver;
 }
 
 + (void)setFeatureChecker:(id<FBSDKFeatureChecking>)checker
@@ -1182,9 +1183,9 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
       self->_serverConfiguration = serverConfiguration;
 
       if ([g_settings isAutoLogAppEventsEnabled] && self->_serverConfiguration.implicitPurchaseLoggingEnabled) {
-        [FBSDKPaymentObserver startObservingTransactions];
+        [g_paymentObserver startObservingTransactions];
       } else {
-        [FBSDKPaymentObserver stopObservingTransactions];
+        [g_paymentObserver stopObservingTransactions];
       }
       [g_featureChecker checkFeature:FBSDKFeatureRestrictiveDataFiltering completionBlock:^(BOOL enabled) {
         if (enabled) {
@@ -1678,6 +1679,16 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 + (void)setSettings:(id<FBSDKSettings>)settings
 {
   g_settings = settings;
+}
+
++ (Class<FBSDKPaymentObserving>)paymentObserver
+{
+  return g_paymentObserver;
+}
+
++ (void)setPaymentObserver:(Class<FBSDKPaymentObserving>)paymentObserver
+{
+  g_paymentObserver = paymentObserver;
 }
 
  #if !TARGET_OS_TV

@@ -108,6 +108,8 @@
 #import "FBSDKAppLinkResolverRequestBuilding.h"
 #import "FBSDKAppLinkResolverRequestBuilder+Protocols.h"
 #import "FBSDKClientTokenProviding.h"
+// PaymentObserver
+#import "FBSDKPaymentObserving.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

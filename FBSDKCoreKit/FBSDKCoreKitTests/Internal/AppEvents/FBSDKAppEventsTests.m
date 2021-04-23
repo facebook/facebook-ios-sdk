@@ -143,17 +143,16 @@ static NSString *const _mockUserID = @"mockUserID";
   self.shouldAppEventsMockBePartial = YES;
 
   [super setUp];
-
+  [self resetTestHelpers];
   [FBSDKSettings reset];
-  [TestSettings reset];
   _settings = [TestSettings new];
   _settings.stubbedIsAutoLogAppEventsEnabled = YES;
   [FBSDKInternalUtility reset];
   [FBSDKAppEvents setAppEventsConfigurationProvider:TestAppEventsConfigurationProvider.class];
   [FBSDKAppEvents setServerConfigurationProvider:TestServerConfigurationProvider.class];
   [FBSDKAppEvents setFeatureChecker:TestFeatureManager.class];
-  [TestLogger reset];
   _eventProcessor = [TestEventProcessor new];
+
   [self stubLoadingAdNetworkReporterConfiguration];
   [self stubServerConfigurationFetchingWithConfiguration:FBSDKServerConfigurationFixtures.defaultConfig error:nil];
 
@@ -179,18 +178,25 @@ static NSString *const _mockUserID = @"mockUserID";
                                   featureChecker:_featureManager
                                            store:_store
                                           logger:TestLogger.self
-                                        settings:_settings];
+                                        settings:_settings
+                                 paymentObserver:TestPaymentObserver.self];
   [FBSDKAppEvents setEventProcessor:_eventProcessor];
 }
 
 - (void)tearDown
 {
   [super tearDown];
-
   [FBSDKAppEvents reset];
   [TestAppEventsConfigurationProvider reset];
   [TestServerConfigurationProvider reset];
   [TestGateKeeperManager reset];
+}
+
+- (void)resetTestHelpers
+{
+  [TestSettings reset];
+  [TestLogger reset];
+  [TestPaymentObserver reset];
 }
 
 - (void)testInitializingCreatesAtePublisher
@@ -857,6 +863,57 @@ static NSString *const _mockUserID = @"mockUserID";
   XCTAssertTrue(
     [_featureManager capturedFeaturesContains:FBSDKFeatureAAM],
     "fetchConfiguration should check if the AAM feature is enabled"
+  );
+}
+
+- (void)testFetchingConfigurationStartsPaymentObservingIfConfigurationAllowed
+{
+  _settings.stubbedIsAutoLogAppEventsEnabled = YES;
+  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationFixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @YES}];
+  [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
+  TestAppEventsConfigurationProvider.capturedBlock();
+  TestServerConfigurationProvider.capturedCompletionBlock(serverConfiguration, nil);
+  XCTAssertTrue(
+    TestPaymentObserver.didStartObservingTransactions,
+    "fetchConfiguration should start payment observing if the configuration allows it"
+  );
+  XCTAssertFalse(
+    TestPaymentObserver.didStopObservingTransactions,
+    "fetchConfiguration shouldn't stop payment observing if the configuration allows it"
+  );
+}
+
+- (void)testFetchingConfigurationStopsPaymentObservingIfConfigurationDisallowed
+{
+  _settings.stubbedIsAutoLogAppEventsEnabled = YES;
+  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationFixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @NO}];
+  [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
+  TestAppEventsConfigurationProvider.capturedBlock();
+  TestServerConfigurationProvider.capturedCompletionBlock(serverConfiguration, nil);
+  XCTAssertFalse(
+    TestPaymentObserver.didStartObservingTransactions,
+    "Fetching a configuration shouldn't start payment observing if the configuration disallows it"
+  );
+  XCTAssertTrue(
+    TestPaymentObserver.didStopObservingTransactions,
+    "Fetching a configuration should stop payment observing if the configuration disallows it"
+  );
+}
+
+- (void)testFetchingConfigurationStopPaymentObservingIfAutoLogAppEventsDisabled
+{
+  _settings.stubbedIsAutoLogAppEventsEnabled = NO;
+  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationFixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @YES}];
+  [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
+  TestAppEventsConfigurationProvider.capturedBlock();
+  TestServerConfigurationProvider.capturedCompletionBlock(serverConfiguration, nil);
+  XCTAssertFalse(
+    TestPaymentObserver.didStartObservingTransactions,
+    "Fetching a configuration shouldn't start payment observing if auto log app events is disabled"
+  );
+  XCTAssertTrue(
+    TestPaymentObserver.didStopObservingTransactions,
+    "Fetching a configuration should stop payment observing if auto log app events is disabled"
   );
 }
 
