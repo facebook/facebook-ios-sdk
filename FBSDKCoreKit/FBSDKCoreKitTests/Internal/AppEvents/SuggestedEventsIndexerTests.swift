@@ -725,5 +725,4 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
       line: line
     )
   }
-
 } // swiftlint:disable:this file_length
