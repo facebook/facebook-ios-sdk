@@ -16,34 +16,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if BUCK
-import FacebookCore
-#endif
-
-import FBSDKCoreKit
-
-public extension LoginConfiguration {
-
-  /**
-   Attempts to allocate and initialize a new configuration with the expected parameters.
-
-   - parameter permissions: The requested permissions for the login attempt.
-   The only permissions allowed when `tracking` is `.limited` are 'email' and 'public_profile'.
-   Defaults to an empty `Permission` array.
-   - parameter tracking: The tracking preference to use for a login attempt. Defaults to `.enabled`
-   - parameter nonce: An optional nonce to use for the login attempt.
-    A valid nonce must be an alphanumeric string without whitespace.
-    Creation of the configuration will fail if the nonce is invalid. Defaults to a `UUID` string.
-   */
-  convenience init?(
-    permissions: Set<Permission> = [],
-    tracking: LoginTracking = .enabled,
-    nonce: String = UUID().uuidString
-  ) {
-    self.init(
-      __permissions: permissions.map { $0.name },
-      tracking: tracking,
-      nonce: nonce
-    )
-  }
-}
+// Need to treat ObjC as separate dependency for SPM because it does not
+// support mixed Swift and ObjC sources.
+// See: https://forums.swift.org/t/16648/2 for more details
+//
+@_exported import FacebookCore

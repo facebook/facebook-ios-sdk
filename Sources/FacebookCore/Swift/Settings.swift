@@ -16,10 +16,34 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Need to treat ObjC as separate dependency for SPM because it does not
-// support mixed Swift and ObjC sources. In order to expose the dependent
-// interface we need to pass through the import of the `FBSDKCoreKit`
-// target defined in Package.swift.
-// See: https://forums.swift.org/t/16648/2 for more details
-//
-@_exported import FBSDKCoreKit
+#if BUCK
+import FBSDKCoreKit
+#endif
+
+import Foundation
+
+// --------------------------------------
+// MARK: - SDKSettings
+// --------------------------------------
+
+/**
+ Provides access to settings and configuration used by the entire SDK.
+ */
+public extension Settings {
+  // --------------------------------------
+  // MARK: - SDKSettings + Logging Behavior
+  // --------------------------------------
+
+  /**
+   Current logging behaviors of Facebook SDK.
+   The default enabled behavior is `.DeveloperErrors` only.
+   */
+  static var loggingBehaviors: Set<LoggingBehavior> {
+    get {
+      Set(Settings.__loggingBehaviors.map { LoggingBehavior(rawValue: $0) })
+    }
+    set {
+      Settings.__loggingBehaviors = Set(newValue.map { $0.rawValue })
+    }
+  }
+}
