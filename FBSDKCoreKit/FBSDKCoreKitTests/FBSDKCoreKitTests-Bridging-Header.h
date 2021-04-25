@@ -19,6 +19,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <AdSupport/AdSupport.h>
 
+#import "AEM+Testing.h"
 #import "Button+Testing.h"
 #import "CodelessIndexer+Testing.h"
 #import "FBSDKHybridAppEventsScriptMessageHandler+Testing.h"
