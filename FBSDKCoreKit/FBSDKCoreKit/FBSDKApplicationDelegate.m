@@ -53,6 +53,7 @@
 #import "NSUserDefaults+FBSDKDataPersisting.h"
 
 #if !TARGET_OS_TV
+ #import "FBSDKAEMReporter+Internal.h"
  #import "FBSDKAppLinkUtility+Internal.h"
  #import "FBSDKCodelessIndexer+Internal.h"
  #import "FBSDKContainerViewController.h"
@@ -157,6 +158,16 @@ static UIApplicationState _applicationState;
   // Register Listener for App Link measurement events
   [FBSDKMeasurementEventListener defaultListener];
   [self _logIfAutoAppLinkEnabled];
+
+  NSURL *url = [FBSDKTypeUtility dictionary:launchOptions objectForKey:UIApplicationLaunchOptionsURLKey ofType:NSURL.class];
+  if (url) {
+    [FBSDKFeatureManager.shared checkFeature:FBSDKFeatureAAM completionBlock:^(BOOL enabled) {
+      if (enabled) {
+        [FBSDKAEMReporter enable];
+        [FBSDKAEMReporter handleURL:url];
+      }
+    }];
+  }
 #endif
   // Set the SourceApplication for time spent data. This is not going to update the value if the app has already launched.
   [FBSDKTimeSpentData setSourceApplication:launchOptions[UIApplicationLaunchOptionsSourceApplicationKey]
@@ -235,6 +246,10 @@ static UIApplicationState _applicationState;
                                  userInfo:nil];
   }
   [FBSDKTimeSpentData setSourceApplication:sourceApplication openURL:url];
+
+#if !TARGET_OS_TV
+  [FBSDKAEMReporter handleURL:url];
+#endif
 
   BOOL handled = NO;
   NSArray<id<FBSDKApplicationObserving>> *observers = [_applicationObservers allObjects];
@@ -514,6 +529,7 @@ static UIApplicationState _applicationState;
   if (@available(iOS 14.0, *)) {
     [FBSDKSKAdNetworkReporter configureWithRequestProvider:graphRequestProvider
                                                      store:store];
+    [FBSDKAEMReporter configureWithRequestProvider:graphRequestProvider];
   }
   [FBSDKProfile configureWithStore:store
                accessTokenProvider:FBSDKAccessToken.class

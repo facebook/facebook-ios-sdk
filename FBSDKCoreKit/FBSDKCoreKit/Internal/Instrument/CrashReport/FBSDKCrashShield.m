@@ -34,6 +34,13 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
   if (self == [FBSDKCrashShield class]) {
     _featureMapping =
     @{
+      @"AEM" : @ [
+        @"FBSDKAEMConfiguration",
+        @"FBSDKAEMEvent",
+        @"FBSDKAEMInvocation",
+        @"FBSDKAEMReporter",
+        @"FBSDKAEMRule",
+      ],
       @"AAM" : @[
         @"FBSDKMetadataIndexer",
       ],

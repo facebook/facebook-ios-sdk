@@ -24,6 +24,7 @@
 
 #import <objc/runtime.h>
 
+#import "FBSDKAEMReporter.h"
 #import "FBSDKAccessToken.h"
 #import "FBSDKAppEventsAtePublisher.h"
 #import "FBSDKAppEventsConfiguration.h"
@@ -1235,6 +1236,13 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
           }];
         }
       }
+      if (@available(iOS 14.0, *)) {
+        [g_featureChecker checkFeature:FBSDKFeatureAEM completionBlock:^(BOOL AEMEnabled) {
+          if (AEMEnabled) {
+            [FBSDKAEMReporter enable];
+          }
+        }];
+      }
     #endif
       if (callback) {
         callback();
@@ -1266,6 +1274,10 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 #if !TARGET_OS_TV
   // Update conversion value for SKAdNetwork if needed
   [FBSDKSKAdNetworkReporter recordAndUpdateEvent:eventName currency:[FBSDKTypeUtility dictionary:parameters objectForKey:FBSDKAppEventParameterNameCurrency ofType:NSString.class] value:valueToSum];
+  // Update conversion value for AEM if needed
+  [FBSDKAEMReporter recordAndUpdateEvent:eventName
+                                currency:[FBSDKTypeUtility dictionary:parameters objectForKey:FBSDKAppEventParameterNameCurrency ofType:NSString.class]
+                                   value:valueToSum];
 #endif
 
   if ([FBSDKAppEventsUtility shouldDropAppEvent]) {

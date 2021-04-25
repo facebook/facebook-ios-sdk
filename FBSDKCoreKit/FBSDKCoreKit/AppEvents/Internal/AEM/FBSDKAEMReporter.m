@@ -59,7 +59,6 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
 
 @implementation FBSDKAEMReporter
 
-// TODO: Add configuration in SDK initialization
 + (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
 {
   if (self == [FBSDKAEMReporter class]) {

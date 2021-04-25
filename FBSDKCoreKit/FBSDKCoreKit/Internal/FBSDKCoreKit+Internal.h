@@ -29,6 +29,7 @@
 #if defined FBSDKCOCOAPODS || defined BUCK
 
  #if !TARGET_OS_TV
+  #import "FBSDKAEMReporter.h"
   #import "FBSDKAuthenticationStatusUtility.h"
   #import "FBSDKBridgeAPI.h"
   #import "FBSDKBridgeAPI+Internal.h"
@@ -117,6 +118,7 @@
 
  #if !TARGET_OS_TV
   #import "../AppEvents/Internal/AAM/FBSDKMetadataIndexer.h"
+  #import "../AppEvents/Internal/AEM/FBSDKAEMReporter.h"
   #import "../AppEvents/Internal/Codeless/FBSDKCodelessIndexer.h"
   #import "../AppEvents/Internal/SKAdNetwork/FBSDKSKAdNetworkReporter.h"
   #import "../AppEvents/Internal/SuggestedEvents/FBSDKSuggestedEventsIndexer.h"

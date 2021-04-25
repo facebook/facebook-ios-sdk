@@ -90,6 +90,7 @@ let package = Package(
                 .headerSearchPath("AppEvents"),
                 .headerSearchPath("AppEvents/Internal"),
                 .headerSearchPath("AppEvents/Internal/AAM"),
+                .headerSearchPath("AppEvents/Internal/AEM"),
                 .headerSearchPath("AppEvents/Internal/Codeless"),
                 .headerSearchPath("AppEvents/Internal/ViewHierarchy/"),
                 .headerSearchPath("AppEvents/Internal/ML"),

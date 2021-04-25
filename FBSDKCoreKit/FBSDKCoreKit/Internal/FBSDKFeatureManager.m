@@ -157,6 +157,7 @@ NS_ASSUME_NONNULL_BEGIN
     case FBSDKFeatureCrashShield: featureName = @"CrashShield"; break;
     case FBSDKFeatureErrorReport: featureName = @"ErrorReport"; break;
     case FBSDKFeatureATELogging: featureName = @"ATELogging"; break;
+    case FBSDKFeatureAEM: featureName = @"AEM"; break;
     case FBSDKFeatureLogin: featureName = @"LoginKit"; break;
     case FBSDKFeatureShare: featureName = @"ShareKit"; break;
     case FBSDKFeatureGamingServices: featureName = @"GamingServicesKit"; break;
@@ -180,6 +181,7 @@ NS_ASSUME_NONNULL_BEGIN
     case FBSDKFeatureIntelligentIntegrity:
     case FBSDKFeatureModelRequest:
     case FBSDKFeatureATELogging:
+    case FBSDKFeatureAEM:
     case FBSDKFeatureSKAdNetwork:
     case FBSDKFeatureSKAdNetworkConversionValue:
       return NO;
