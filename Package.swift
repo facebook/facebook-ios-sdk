@@ -117,7 +117,8 @@ let package = Package(
                 .headerSearchPath("Internal/ServerConfiguration"),
                 .headerSearchPath("Internal/TokenCaching"),
                 .headerSearchPath("Internal/UI"),
-                .headerSearchPath("Internal/WebDialog")
+                .headerSearchPath("Internal/WebDialog"),
+                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil))
             ],
             linkerSettings: [
                 .linkedFramework("Accelerate")

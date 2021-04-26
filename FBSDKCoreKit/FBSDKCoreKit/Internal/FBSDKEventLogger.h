@@ -21,4 +21,6 @@
 NS_SWIFT_NAME(EventLogger)
 @interface FBSDKEventLogger : NSObject <FBSDKEventLogging>
 
+@property (nonatomic, readonly) FBSDKAppEventsFlushBehavior flushBehavior;
+
 @end

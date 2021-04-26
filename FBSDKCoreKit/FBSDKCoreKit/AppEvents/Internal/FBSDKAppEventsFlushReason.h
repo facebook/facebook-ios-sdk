@@ -18,20 +18,12 @@
 
 #import <Foundation/Foundation.h>
 
-NS_ASSUME_NONNULL_BEGIN
-
-// Class to encapsulate implicit logging of purchase events
-NS_SWIFT_NAME(PaymentObserver)
-@interface FBSDKPaymentObserver : NSObject
-
-@property (class, readonly) FBSDKPaymentObserver *shared;
-
-+ (instancetype)new NS_UNAVAILABLE;
-- (instancetype)init NS_UNAVAILABLE;
-
-- (void)startObservingTransactions;
-- (void)stopObservingTransactions;
-
-@end
-
-NS_ASSUME_NONNULL_END
+typedef NS_ENUM(NSUInteger, FBSDKAppEventsFlushReason)
+{
+  FBSDKAppEventsFlushReasonExplicit,
+  FBSDKAppEventsFlushReasonTimer,
+  FBSDKAppEventsFlushReasonSessionChange,
+  FBSDKAppEventsFlushReasonPersistedEvents,
+  FBSDKAppEventsFlushReasonEventThreshold,
+  FBSDKAppEventsFlushReasonEagerlyFlushingEvent
+} NS_SWIFT_NAME(AppEventsUtility.FlushReason);

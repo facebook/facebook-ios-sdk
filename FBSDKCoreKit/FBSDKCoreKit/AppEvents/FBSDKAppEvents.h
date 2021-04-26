@@ -24,8 +24,14 @@
 
 #ifdef BUCK
 #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
+#import <FBSDKCoreKit/FBSDKAppEventParameterName.h>
+#import <FBSDKCoreKit/FBSDKAppEventName.h>
+#import <FBSDKCoreKit/FBSDKAppEventsFlushBehavior.h>
 #else
 #import "FBSDKGraphRequestConnection.h"
+#import "FBSDKAppEventParameterName.h"
+#import "FBSDKAppEventName.h"
+#import "FBSDKAppEventsFlushBehavior.h"
 #endif
 
 NS_ASSUME_NONNULL_BEGIN
@@ -50,25 +56,6 @@ NS_SWIFT_NAME(AppEventsLoggingResultNotification);
 /**  optional plist key ("FacebookLoggingOverrideAppID") for setting `loggingOverrideAppID` */
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsOverrideAppIDBundleKey
 NS_SWIFT_NAME(AppEventsOverrideAppIDBundleKey);
-
-/**
-
- NS_ENUM (NSUInteger, FBSDKAppEventsFlushBehavior)
-
-  Specifies when `FBSDKAppEvents` sends log events to the server.
-
- */
-typedef NS_ENUM(NSUInteger, FBSDKAppEventsFlushBehavior)
-{
-
-  /** Flush automatically: periodically (once a minute or every 100 logged events) and always at app reactivation. */
-  FBSDKAppEventsFlushBehaviorAuto = 0,
-
-  /** Only flush when the `flush` method is called. When an app is moved to background/terminated, the
-   events are persisted and re-established at activation, but they will only be written with an
-   explicit call to `flush`. */
-  FBSDKAppEventsFlushBehaviorExplicitOnly,
-} NS_SWIFT_NAME(AppEvents.FlushBehavior);
 
 /**
   NS_ENUM(NSUInteger, FBSDKProductAvailability)
@@ -108,132 +95,6 @@ typedef NS_ENUM(NSUInteger, FBSDKProductCondition)
   FBSDKProductConditionRefurbished,
   FBSDKProductConditionUsed,
 } NS_SWIFT_NAME(AppEvents.ProductCondition);
-
-/**
- @methodgroup Predefined event names for logging events common to many apps.  Logging occurs through the `logEvent` family of methods on `FBSDKAppEvents`.
- Common event parameters are provided in the `FBSDKAppEventsParameterNames*` constants.
- */
-
-/// typedef for FBSDKAppEventName
-typedef NSString *const FBSDKAppEventName NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(AppEvents.Name);
-
-/** Log this event when the user has achieved a level in the app. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameAchievedLevel;
-
-/** Log this event when the user has entered their payment info. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameAddedPaymentInfo;
-
-/** Log this event when the user has added an item to their cart.  The valueToSum passed to logEvent should be the item's price. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameAddedToCart;
-
-/** Log this event when the user has added an item to their wishlist.  The valueToSum passed to logEvent should be the item's price. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameAddedToWishlist;
-
-/** Log this event when a user has completed registration with the app. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameCompletedRegistration;
-
-/** Log this event when the user has completed a tutorial in the app. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameCompletedTutorial;
-
-/** Log this event when the user has entered the checkout process.  The valueToSum passed to logEvent should be the total price in the cart. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameInitiatedCheckout;
-
-/** Log this event when the user has completed a transaction.  The valueToSum passed to logEvent should be the total price of the transaction. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNamePurchased;
-
-/** Log this event when the user has rated an item in the app.  The valueToSum passed to logEvent should be the numeric rating. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameRated;
-
-/** Log this event when a user has performed a search within the app. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameSearched;
-
-/** Log this event when the user has spent app credits.  The valueToSum passed to logEvent should be the number of credits spent. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameSpentCredits;
-
-/** Log this event when the user has unlocked an achievement in the app. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameUnlockedAchievement;
-
-/** Log this event when a user has viewed a form of content in the app. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameViewedContent;
-
-/** A telephone/SMS, email, chat or other type of contact between a customer and your business. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameContact;
-
-/** The customization of products through a configuration tool or other application your business owns. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameCustomizeProduct;
-
-/** The donation of funds to your organization or cause. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameDonate;
-
-/** When a person finds one of your locations via web or application, with an intention to visit (example: find product at a local store). */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameFindLocation;
-
-/** The booking of an appointment to visit one of your locations. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameSchedule;
-
-/** The start of a free trial of a product or service you offer (example: trial subscription). */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameStartTrial;
-
-/** The submission of an application for a product, service or program you offer (example: credit card, educational program or job). */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameSubmitApplication;
-
-/** The start of a paid subscription for a product or service you offer. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameSubscribe;
-
-/** Log this event when the user views an ad. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameAdImpression;
-
-/** Log this event when the user clicks an ad. */
-FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameAdClick;
-
-/**
- @methodgroup Predefined event name parameters for common additional information to accompany events logged through the `logEvent` family
- of methods on `FBSDKAppEvents`.  Common event names are provided in the `FBAppEventName*` constants.
- */
-
-/// typedef for FBSDKAppEventParameterName
-typedef NSString *const FBSDKAppEventParameterName NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(AppEvents.ParameterName);
-
- /**
-  * Parameter key used to specify data for the one or more pieces of content being logged about.
-  * Data should be a JSON encoded string.
-  * Example:
-  * "[{\"id\": \"1234\", \"quantity\": 2, \"item_price\": 5.99}, {\"id\": \"5678\", \"quantity\": 1, \"item_price\": 9.99}]"
-  */
-FOUNDATION_EXPORT FBSDKAppEventParameterName FBSDKAppEventParameterNameContent;
-
-/** Parameter key used to specify an ID for the specific piece of content being logged about.  Could be an EAN, article identifier, etc., depending on the nature of the app. */
-FOUNDATION_EXPORT FBSDKAppEventParameterName FBSDKAppEventParameterNameContentID;
-
-/** Parameter key used to specify a generic content type/family for the logged event, e.g. "music", "photo", "video".  Options to use will vary based upon what the app is all about. */
-FOUNDATION_EXPORT FBSDKAppEventParameterName FBSDKAppEventParameterNameContentType;
-
-/** Parameter key used to specify currency used with logged event.  E.g. "USD", "EUR", "GBP".  See ISO-4217 for specific values.  One reference for these is <http://en.wikipedia.org/wiki/ISO_4217>. */
-FOUNDATION_EXPORT FBSDKAppEventParameterName FBSDKAppEventParameterNameCurrency;
-
-/** Parameter key used to specify a description appropriate to the event being logged.  E.g., the name of the achievement unlocked in the `FBAppEventNameAchievementUnlocked` event. */
-FOUNDATION_EXPORT FBSDKAppEventParameterName FBSDKAppEventParameterNameDescription;
-
-/** Parameter key used to specify the level achieved in a `FBAppEventNameAchieved` event. */
-FOUNDATION_EXPORT FBSDKAppEventParameterName FBSDKAppEventParameterNameLevel;
-
-/** Parameter key used to specify the maximum rating available for the `FBAppEventNameRate` event.  E.g., "5" or "10". */
-FOUNDATION_EXPORT FBSDKAppEventParameterName FBSDKAppEventParameterNameMaxRatingValue;
-
-/** Parameter key used to specify how many items are being processed for an `FBAppEventNameInitiatedCheckout` or `FBAppEventNamePurchased` event. */
-FOUNDATION_EXPORT FBSDKAppEventParameterName FBSDKAppEventParameterNameNumItems;
-
-/** Parameter key used to specify whether payment info is available for the `FBAppEventNameInitiatedCheckout` event.  `FBSDKAppEventParameterValueYes` and `FBSDKAppEventParameterValueNo` are good canonical values to use for this parameter. */
-FOUNDATION_EXPORT FBSDKAppEventParameterName FBSDKAppEventParameterNamePaymentInfoAvailable;
-
-/** Parameter key used to specify method user has used to register for the app, e.g., "Facebook", "email", "Twitter", etc */
-FOUNDATION_EXPORT FBSDKAppEventParameterName FBSDKAppEventParameterNameRegistrationMethod;
-
-/** Parameter key used to specify the string provided by the user for a search operation. */
-FOUNDATION_EXPORT FBSDKAppEventParameterName FBSDKAppEventParameterNameSearchString;
-
-/** Parameter key used to specify whether the activity being logged about was successful or not.  `FBSDKAppEventParameterValueYes` and `FBSDKAppEventParameterValueNo` are good canonical values to use for this parameter. */
-FOUNDATION_EXPORT FBSDKAppEventParameterName FBSDKAppEventParameterNameSuccess;
 
 /**
  @methodgroup Predefined event name parameters for common additional information to accompany events logged through the `logProductItem` method on `FBSDKAppEvents`.

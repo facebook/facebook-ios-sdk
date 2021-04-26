@@ -18,19 +18,25 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKPaymentProductRequestorCreating.h"
+
+@protocol FBSDKSettings;
+@protocol FBSDKEventLogging;
+@protocol FBSDKGateKeeperManaging;
+@protocol FBSDKDataPersisting;
+@protocol FBSDKLogging;
+
 NS_ASSUME_NONNULL_BEGIN
 
-// Class to encapsulate implicit logging of purchase events
-NS_SWIFT_NAME(PaymentObserver)
-@interface FBSDKPaymentObserver : NSObject
+NS_SWIFT_NAME(PaymentProductRequestorFactory)
+@interface FBSDKPaymentProductRequestorFactory : NSObject<FBSDKPaymentProductRequestorCreating>
 
-@property (class, readonly) FBSDKPaymentObserver *shared;
-
-+ (instancetype)new NS_UNAVAILABLE;
-- (instancetype)init NS_UNAVAILABLE;
-
-- (void)startObservingTransactions;
-- (void)stopObservingTransactions;
+- (instancetype)initWithSettings:(id<FBSDKSettings>)settings
+                     eventLogger:(id<FBSDKEventLogging>)eventLogger
+               gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
+                           store:(id<FBSDKDataPersisting>)store
+                          logger:(id<FBSDKLogging>)logger
+NS_SWIFT_NAME(init(settings:eventLogger:gateKeeperManager:store:logger:));
 
 @end
 

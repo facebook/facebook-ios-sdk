@@ -146,7 +146,7 @@ class FBSDKAEMEventTests: XCTestCase {
     func testParsing() {
         (1 ... 100).forEach { _ in
             if let data = (Fuzzer.randomize(json: self.sampleData) as? [String: Any]) {
-                FBSDKAEMEvent(json: data)
+                _ = FBSDKAEMEvent(json: data)
             }
         }
     }

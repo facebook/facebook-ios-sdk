@@ -506,7 +506,7 @@ static UIApplicationState _applicationState;
                                            store:store
                                           logger:FBSDKLogger.class
                                         settings:sharedSettings
-                                 paymentObserver:FBSDKPaymentObserver.class];
+                                 paymentObserver:FBSDKPaymentObserver.shared];
   [FBSDKInternalUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:FBSDKAccessToken.class];
   [FBSDKAppEventsConfigurationManager configureWithStore:store];

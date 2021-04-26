@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKAppEventsFlushReason.h"
+
 @class FBSDKAccessToken;
 
 typedef NS_ENUM(NSUInteger, FBSDKAdvertisingTrackingStatus)
@@ -26,16 +28,6 @@ typedef NS_ENUM(NSUInteger, FBSDKAdvertisingTrackingStatus)
   FBSDKAdvertisingTrackingDisallowed,
   FBSDKAdvertisingTrackingUnspecified
 } NS_SWIFT_NAME(AppEventsUtility.AdvertisingTrackingStatus);
-
-typedef NS_ENUM(NSUInteger, FBSDKAppEventsFlushReason)
-{
-  FBSDKAppEventsFlushReasonExplicit,
-  FBSDKAppEventsFlushReasonTimer,
-  FBSDKAppEventsFlushReasonSessionChange,
-  FBSDKAppEventsFlushReasonPersistedEvents,
-  FBSDKAppEventsFlushReasonEventThreshold,
-  FBSDKAppEventsFlushReasonEagerlyFlushingEvent
-} NS_SWIFT_NAME(AppEventsUtility.FlushReason);
 
 NS_SWIFT_NAME(AppEventsUtility)
 @interface FBSDKAppEventsUtility : NSObject

@@ -340,7 +340,7 @@ static id<FBSDKGraphRequestProviding> g_graphRequestProvider;
 static id<FBSDKFeatureChecking> g_featureChecker;
 static Class<FBSDKLogging> g_logger;
 static id<FBSDKSettings> g_settings;
-static Class<FBSDKPaymentObserving> g_paymentObserver;
+static id<FBSDKPaymentObserving> g_paymentObserver;
 
 #if !TARGET_OS_TV
 static id<FBSDKEventProcessing> g_eventProcessor = nil;
@@ -900,7 +900,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
                                  store:(id<FBSDKDataPersisting>)store
                                 logger:(Class<FBSDKLogging>)logger
                               settings:(id<FBSDKSettings>)settings
-                       paymentObserver:(Class<FBSDKPaymentObserving>)paymentObserver
+                       paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
 {
   [FBSDKAppEvents setAppEventsConfigurationProvider:appEventsConfigurationProvider];
   [FBSDKAppEvents setServerConfigurationProvider:serverConfigurationProvider];
@@ -1693,12 +1693,12 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   g_settings = settings;
 }
 
-+ (Class<FBSDKPaymentObserving>)paymentObserver
++ (id<FBSDKPaymentObserving>)paymentObserver
 {
   return g_paymentObserver;
 }
 
-+ (void)setPaymentObserver:(Class<FBSDKPaymentObserving>)paymentObserver
++ (void)setPaymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
 {
   g_paymentObserver = paymentObserver;
 }

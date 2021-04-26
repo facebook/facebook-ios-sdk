@@ -283,7 +283,7 @@
   );
   XCTAssertEqualObjects(
     FBSDKAppEvents.paymentObserver,
-    FBSDKPaymentObserver.class,
+    FBSDKPaymentObserver.shared,
     "Initializing the SDK should set concrete payment observer for event logging"
   );
 }

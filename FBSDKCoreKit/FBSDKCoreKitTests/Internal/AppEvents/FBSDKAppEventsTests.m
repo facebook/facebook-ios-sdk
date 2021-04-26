@@ -126,6 +126,7 @@ static NSString *const _mockUserID = @"mockUserID";
   TestFeatureManager *_featureManager;
   TestSettings *_settings;
   TestEventProcessor *_eventProcessor;
+  TestPaymentObserver *_paymentObserver;
 }
 @end
 
@@ -163,6 +164,7 @@ static NSString *const _mockUserID = @"mockUserID";
   _graphRequestFactory = [TestGraphRequestFactory new];
   _store = [UserDefaultsSpy new];
   _featureManager = [TestFeatureManager new];
+  _paymentObserver = [TestPaymentObserver new];
 
   [FBSDKAppEvents setLoggingOverrideAppID:_mockAppID];
 
@@ -179,7 +181,7 @@ static NSString *const _mockUserID = @"mockUserID";
                                            store:_store
                                           logger:TestLogger.self
                                         settings:_settings
-                                 paymentObserver:TestPaymentObserver.self];
+                                 paymentObserver:_paymentObserver];
   [FBSDKAppEvents setEventProcessor:_eventProcessor];
 }
 
@@ -196,7 +198,6 @@ static NSString *const _mockUserID = @"mockUserID";
 {
   [TestSettings reset];
   [TestLogger reset];
-  [TestPaymentObserver reset];
 }
 
 - (void)testInitializingCreatesAtePublisher
@@ -874,11 +875,11 @@ static NSString *const _mockUserID = @"mockUserID";
   TestAppEventsConfigurationProvider.capturedBlock();
   TestServerConfigurationProvider.capturedCompletionBlock(serverConfiguration, nil);
   XCTAssertTrue(
-    TestPaymentObserver.didStartObservingTransactions,
+    _paymentObserver.didStartObservingTransactions,
     "fetchConfiguration should start payment observing if the configuration allows it"
   );
   XCTAssertFalse(
-    TestPaymentObserver.didStopObservingTransactions,
+    _paymentObserver.didStopObservingTransactions,
     "fetchConfiguration shouldn't stop payment observing if the configuration allows it"
   );
 }
@@ -891,11 +892,11 @@ static NSString *const _mockUserID = @"mockUserID";
   TestAppEventsConfigurationProvider.capturedBlock();
   TestServerConfigurationProvider.capturedCompletionBlock(serverConfiguration, nil);
   XCTAssertFalse(
-    TestPaymentObserver.didStartObservingTransactions,
+    _paymentObserver.didStartObservingTransactions,
     "Fetching a configuration shouldn't start payment observing if the configuration disallows it"
   );
   XCTAssertTrue(
-    TestPaymentObserver.didStopObservingTransactions,
+    _paymentObserver.didStopObservingTransactions,
     "Fetching a configuration should stop payment observing if the configuration disallows it"
   );
 }
@@ -908,11 +909,11 @@ static NSString *const _mockUserID = @"mockUserID";
   TestAppEventsConfigurationProvider.capturedBlock();
   TestServerConfigurationProvider.capturedCompletionBlock(serverConfiguration, nil);
   XCTAssertFalse(
-    TestPaymentObserver.didStartObservingTransactions,
+    _paymentObserver.didStartObservingTransactions,
     "Fetching a configuration shouldn't start payment observing if auto log app events is disabled"
   );
   XCTAssertTrue(
-    TestPaymentObserver.didStopObservingTransactions,
+    _paymentObserver.didStopObservingTransactions,
     "Fetching a configuration should stop payment observing if auto log app events is disabled"
   );
 }

@@ -21,7 +21,10 @@
 #ifdef BUCK
 
  #import <FBSDKCoreKit/FBSDKAccessToken.h>
+ #import <FBSDKCoreKit/FBSDKAppEventName.h>
+ #import <FBSDKCoreKit/FBSDKAppEventParameterName.h>
  #import <FBSDKCoreKit/FBSDKAppEvents.h>
+ #import <FBSDKCoreKit/FBSDKAppEventsFlushBehavior.h>
  #import <FBSDKCoreKit/FBSDKApplicationDelegate.h>
  #import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
  #import <FBSDKCoreKit/FBSDKAuthenticationTokenClaims.h>
@@ -63,7 +66,10 @@
 #else
 
  #import "FBSDKAccessToken.h"
+ #import "FBSDKAppEventName.h"
+ #import "FBSDKAppEventParameterName.h"
  #import "FBSDKAppEvents.h"
+ #import "FBSDKAppEventsFlushBehavior.h"
  #import "FBSDKApplicationDelegate.h"
  #import "FBSDKAuthenticationToken.h"
  #import "FBSDKAuthenticationTokenClaims.h"

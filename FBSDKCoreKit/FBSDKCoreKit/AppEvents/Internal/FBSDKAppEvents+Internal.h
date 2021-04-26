@@ -225,7 +225,7 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
                                  store:(id<FBSDKDataPersisting>)store
                                 logger:(Class<FBSDKLogging>)logger
                               settings:(id<FBSDKSettings>)settings
-                       paymentObserver:(Class<FBSDKPaymentObserving>)paymentObserver;
+                       paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver;
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;

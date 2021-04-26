@@ -18,19 +18,14 @@
 
 @objcMembers
 class TestPaymentObserver: NSObject, PaymentObserving {
-  static var didStartObservingTransactions = false
-  static var didStopObservingTransactions = false
+  var didStartObservingTransactions = false
+  var didStopObservingTransactions = false
 
-  static func startTransactions() {
+  func startTransactions() {
     didStartObservingTransactions = true
   }
 
-  static func stopTransactions() {
+  func stopTransactions() {
     didStopObservingTransactions = true
-  }
-
-  static func reset() {
-    didStartObservingTransactions = false
-    didStopObservingTransactions = false
   }
 }

@@ -21,6 +21,6 @@
 // Protocol of the class to encapsulate implicit logging of purchase events
 NS_SWIFT_NAME(PaymentObserving)
 @protocol FBSDKPaymentObserving
-+ (void)startObservingTransactions;
-+ (void)stopObservingTransactions;
+- (void)startObservingTransactions;
+- (void)stopObservingTransactions;
 @end

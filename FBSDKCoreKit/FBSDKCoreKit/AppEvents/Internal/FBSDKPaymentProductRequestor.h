@@ -17,20 +17,27 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
+#import <StoreKit/StoreKit.h>
+
+@protocol FBSDKSettings;
+@protocol FBSDKEventLogging;
+@protocol FBSDKGateKeeperManaging;
+@protocol FBSDKDataPersisting;
+@protocol FBSDKLogging;
 
 NS_ASSUME_NONNULL_BEGIN
 
-// Class to encapsulate implicit logging of purchase events
-NS_SWIFT_NAME(PaymentObserver)
-@interface FBSDKPaymentObserver : NSObject
+NS_SWIFT_NAME(PaymentProductRequestor)
+@interface FBSDKPaymentProductRequestor : NSObject <SKProductsRequestDelegate>
 
-@property (class, readonly) FBSDKPaymentObserver *shared;
+- (instancetype)initWithTransaction:(SKPaymentTransaction *)transaction
+                           settings:(id<FBSDKSettings>)settings
+                        eventLogger:(id<FBSDKEventLogging>)eventLogger
+                  gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
+                              store:(id<FBSDKDataPersisting>)store
+                             logger:(id<FBSDKLogging>)logger;
 
-+ (instancetype)new NS_UNAVAILABLE;
-- (instancetype)init NS_UNAVAILABLE;
-
-- (void)startObservingTransactions;
-- (void)stopObservingTransactions;
+- (void)resolveProducts;
 
 @end
 

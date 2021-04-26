@@ -29,6 +29,7 @@
  #import <sys/utsname.h>
 
  #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKEventLogger.h"
  #import "FBSDKEventProcessing.h"
  #import "FBSDKFeatureExtracting.h"
  #import "FBSDKFeatureExtractor.h"

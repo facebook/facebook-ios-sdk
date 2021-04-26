@@ -16,21 +16,23 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#import <StoreKit/StoreKit.h>
+
+#import "FBSDKPaymentObserver.h"
+#import "FBSDKPaymentProductRequestorCreating.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-// Class to encapsulate implicit logging of purchase events
-NS_SWIFT_NAME(PaymentObserver)
-@interface FBSDKPaymentObserver : NSObject
+@interface FBSDKPaymentObserver (Testing)
 
-@property (class, readonly) FBSDKPaymentObserver *shared;
+@property (nonatomic, readonly) SKPaymentQueue *paymentQueue;
+@property (nonatomic, readonly) id<FBSDKPaymentProductRequestorCreating> requestorFactory;
 
-+ (instancetype)new NS_UNAVAILABLE;
-- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithPaymentQueue:(SKPaymentQueue *)paymentQueue
+      paymentProductRequestorFactory:(id<FBSDKPaymentProductRequestorCreating>)paymentProductRequestorFactory
+NS_SWIFT_NAME(init(paymentQueue:paymentProductRequestorFactory:));
 
-- (void)startObservingTransactions;
-- (void)stopObservingTransactions;
+- (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions;
 
 @end
 

@@ -18,20 +18,23 @@
 
 #import <Foundation/Foundation.h>
 
-NS_ASSUME_NONNULL_BEGIN
+/**
 
-// Class to encapsulate implicit logging of purchase events
-NS_SWIFT_NAME(PaymentObserver)
-@interface FBSDKPaymentObserver : NSObject
+ NS_ENUM (NSUInteger, FBSDKAppEventsFlushBehavior)
 
-@property (class, readonly) FBSDKPaymentObserver *shared;
+  Specifies when `FBSDKAppEvents` sends log events to the server.
 
-+ (instancetype)new NS_UNAVAILABLE;
-- (instancetype)init NS_UNAVAILABLE;
+ */
+typedef NS_ENUM(NSUInteger, FBSDKAppEventsFlushBehavior)
+{
 
-- (void)startObservingTransactions;
-- (void)stopObservingTransactions;
+  /** Flush automatically: periodically (once a minute or every 100 logged events) and always at app reactivation. */
+  FBSDKAppEventsFlushBehaviorAuto = 0,
 
-@end
+  /** Only flush when the `flush` method is called. When an app is moved to background/terminated, the
+   events are persisted and re-established at activation, but they will only be written with an
+   explicit call to `flush`. */
+  FBSDKAppEventsFlushBehaviorExplicitOnly,
+} NS_SWIFT_NAME(AppEvents.FlushBehavior);
 
-NS_ASSUME_NONNULL_END
+
