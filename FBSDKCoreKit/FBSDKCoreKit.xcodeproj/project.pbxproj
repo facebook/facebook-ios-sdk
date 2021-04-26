@@ -1130,6 +1130,8 @@
 		F4756EE3262BA3DC00C7CF2E /* FBSDKApplicationLifecycleNotifications.m in Sources */ = {isa = PBXBuildFile; fileRef = F4756EDD262BA3DC00C7CF2E /* FBSDKApplicationLifecycleNotifications.m */; };
 		F4756EE4262BA3DC00C7CF2E /* FBSDKApplicationLifecycleNotifications.m in Sources */ = {isa = PBXBuildFile; fileRef = F4756EDD262BA3DC00C7CF2E /* FBSDKApplicationLifecycleNotifications.m */; };
 		F4756EE5262BA3DC00C7CF2E /* FBSDKApplicationLifecycleNotifications.m in Sources */ = {isa = PBXBuildFile; fileRef = F4756EDD262BA3DC00C7CF2E /* FBSDKApplicationLifecycleNotifications.m */; };
+		F47AB74126336CE6005A3333 /* SuggestedEventsIndexerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AAAEA326289D6700EDCF06 /* SuggestedEventsIndexerTests.swift */; };
+		F47AB75C26336CFE005A3333 /* TestFeatureExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AAAF212628ACFC00EDCF06 /* TestFeatureExtractor.swift */; };
 		F4849BE0261CC903005E5329 /* BridgeAPIResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4849BD8261CC903005E5329 /* BridgeAPIResponseTests.swift */; };
 		F4849C3D261CD456005E5329 /* TestBridgeApiProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4849C35261CD456005E5329 /* TestBridgeApiProtocol.swift */; };
 		F48A9C3525F83CA400A2DBDF /* TestReactNativeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48A9C2C25F83CA400A2DBDF /* TestReactNativeView.swift */; };
@@ -2845,11 +2847,6 @@
 				F952EA4D2339412C00B20652 /* AAM */,
 				C51121C720A27EF50041DC94 /* Codeless */,
 				5DAB023A23A1B9FC005495FB /* EventDeactivation */,
-				5D497700244A3E5700BD45C6 /* Integrity */,
-				E493252B23F7C51D0000B63A /* ML */,
-				F916580524F6BA9300BB759A /* SKAdNetwork */,
-				BF5D97B4242EC2890096D7AA /* SuggestedEvent */,
-				BF1C64E2240399180052C580 /* ViewHierarchy */,
 				F443A31B25D231460093AB78 /* FBSDKAppEventsAtePublisherTests.m */,
 				F98D1D72251297A900276B68 /* FBSDKAppEventsConfigurationManagerTests.swift */,
 				F98D1D5425124FCB00276B68 /* FBSDKAppEventsConfigurationTests.swift */,
@@ -2859,11 +2856,16 @@
 				5D2165E022264453004952D8 /* FBSDKAppEventsTests.m */,
 				9D18A8E81A95495D00A41042 /* FBSDKAppEventsUtilityTests.m */,
 				5CD6DB3B255B1D07002C296F /* FBSDKAppEventsUtilityTests.swift */,
-				F4D58EBA2620FF14006FEC6B /* HybridAppEventsScriptMessageHandlerTests.swift */,
 				C5F6EC851FA24FAF009EB258 /* FBSDKPaymentObserverTests.m */,
 				5D68D7D722BAEEF60063A3E2 /* FBSDKTimeSpentDataTests.m */,
+				F4D58EBA2620FF14006FEC6B /* HybridAppEventsScriptMessageHandlerTests.swift */,
+				5D497700244A3E5700BD45C6 /* Integrity */,
+				E493252B23F7C51D0000B63A /* ML */,
 				F98D1D63251295E900276B68 /* RawAppEventsConfigurationResponseFixtures.swift */,
+				F916580524F6BA9300BB759A /* SKAdNetwork */,
+				BF5D97B4242EC2890096D7AA /* SuggestedEvent */,
 				F4AAAEA326289D6700EDCF06 /* SuggestedEventsIndexerTests.swift */,
+				BF1C64E2240399180052C580 /* ViewHierarchy */,
 			);
 			path = AppEvents;
 			sourceTree = "<group>";
@@ -5128,6 +5130,7 @@
 			files = (
 				F40D25F325E41C71004681FC /* TestOperationQueue.swift in Sources */,
 				F492C0A324E1F5F600BA21F7 /* UserDefaultsSpy.m in Sources */,
+				F47AB74126336CE6005A3333 /* SuggestedEventsIndexerTests.swift in Sources */,
 				F4C23BD82624C04400FA79AE /* FBSDKSwizzlerTests.m in Sources */,
 				F4849C3D261CD456005E5329 /* TestBridgeApiProtocol.swift in Sources */,
 				F4EC331125E5C1A20003C0CF /* TestGraphRequestPiggybackManager.swift in Sources */,
@@ -5282,6 +5285,7 @@
 				F44B04B7256442050059A3A6 /* FBSDKBridgeAPIOpenUrlWithSafariTests.m in Sources */,
 				F48A9CBD25F83D3600A2DBDF /* TestControl.swift in Sources */,
 				F4F6037025D5D3A30053D3E7 /* TestURLSessionProxyFactory.swift in Sources */,
+				F47AB75C26336CFE005A3333 /* TestFeatureExtractor.swift in Sources */,
 				58E9CAA125FC0E40004818D8 /* ProfileTests.swift in Sources */,
 				F40682F525CF6031003ADDDA /* FBSDKAppEventsNumberParserTests.m in Sources */,
 				F48A9C8725F83D1300A2DBDF /* TestEventBinding.swift in Sources */,
