@@ -755,6 +755,13 @@
   XCTAssertFalse(notifiedObservers, "Should indicate if no observers were notified");
 }
 
+- (void)testApplicationOpenURL
+{
+  [_delegate application:UIApplication.sharedApplication openURL:[NSURL URLWithString:@"fb://test.com"] options:@{}];
+
+  OCMVerify([self.featureManagerClassMock checkFeature:FBSDKFeatureAEM completionBlock:[OCMArg any]]);
+}
+
 - (void)testAppEventsEnabled
 {
   [self stubIsAutoLogAppEventsEnabled:YES];

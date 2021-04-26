@@ -158,16 +158,6 @@ static UIApplicationState _applicationState;
   // Register Listener for App Link measurement events
   [FBSDKMeasurementEventListener defaultListener];
   [self _logIfAutoAppLinkEnabled];
-
-  NSURL *url = [FBSDKTypeUtility dictionary:launchOptions objectForKey:UIApplicationLaunchOptionsURLKey ofType:NSURL.class];
-  if (url) {
-    [FBSDKFeatureManager.shared checkFeature:FBSDKFeatureAAM completionBlock:^(BOOL enabled) {
-      if (enabled) {
-        [FBSDKAEMReporter enable];
-        [FBSDKAEMReporter handleURL:url];
-      }
-    }];
-  }
 #endif
   // Set the SourceApplication for time spent data. This is not going to update the value if the app has already launched.
   [FBSDKTimeSpentData setSourceApplication:launchOptions[UIApplicationLaunchOptionsSourceApplicationKey]
@@ -248,7 +238,12 @@ static UIApplicationState _applicationState;
   [FBSDKTimeSpentData setSourceApplication:sourceApplication openURL:url];
 
 #if !TARGET_OS_TV
-  [FBSDKAEMReporter handleURL:url];
+  [FBSDKFeatureManager.shared checkFeature:FBSDKFeatureAEM completionBlock:^(BOOL enabled) {
+    if (enabled) {
+      [FBSDKAEMReporter enable];
+      [FBSDKAEMReporter handleURL:url];
+    }
+  }];
 #endif
 
   BOOL handled = NO;

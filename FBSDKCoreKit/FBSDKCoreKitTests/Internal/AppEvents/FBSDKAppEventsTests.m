@@ -941,6 +941,20 @@ static NSString *const _mockUserID = @"mockUserID";
   );
 }
 
+- (void)testFetchingConfigurationIncludingAEM
+{
+  if (@available(iOS 14.0, *)) {
+    [FBSDKAEMReporter setEnabled:NO];
+    [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
+    TestAppEventsConfigurationProvider.capturedBlock();
+    TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+    XCTAssertTrue(
+      [_featureManager capturedFeaturesContains:FBSDKFeatureAEM],
+      "Fetching a configuration should check if the AEM feature is enabled"
+    );
+  }
+}
+
 - (void)testFetchingConfigurationIncludingPrivacyProtection
 {
   [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
