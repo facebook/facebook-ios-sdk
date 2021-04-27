@@ -177,7 +177,11 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
       return;
     }
     g_isLoadingConfiguration = YES;
-    id<FBSDKGraphRequest> request = [self.requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/aem_conversion_configs", [FBSDKSettings appID]]];
+    id<FBSDKGraphRequest> request = [self.requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/aem_conversion_configs", [FBSDKSettings appID]]
+                                                                               parameters:@{}
+                                                                              tokenString:nil
+                                                                               HTTPMethod:FBSDKHTTPMethodGET
+                                                                                    flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
       dispatch_async(g_serialQueue, ^() {
         if (error) {
@@ -336,7 +340,9 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
       NSString *reports = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
       id<FBSDKGraphRequest> request = [self.requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/aem_conversions", FBSDKSettings.appID]
                                                                                  parameters:@{@"aem_conversions" : reports}
-                                                                                 HTTPMethod:FBSDKHTTPMethodPOST];
+                                                                                tokenString:nil
+                                                                                 HTTPMethod:FBSDKHTTPMethodPOST
+                                                                                      flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
       [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
         if (error) {
           return;
