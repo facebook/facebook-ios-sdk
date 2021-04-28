@@ -59,6 +59,8 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
 
 @implementation FBSDKAEMReporter
 
+static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBSDKAEMReporter";
+
 + (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
 {
   if (self == [FBSDKAEMReporter class]) {
@@ -79,11 +81,11 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
       g_reportFile = [FBSDKBasicUtility persistenceFilePath:FBSDKAEMReporterFileName];
       g_configFile = [FBSDKBasicUtility persistenceFilePath:FBSDKAEMConfigFileName];
       g_completionBlocks = [NSMutableArray new];
-      g_serialQueue = dispatch_queue_create("com.facebook.appevents.AEM.FBSDKAEMReporter", DISPATCH_QUEUE_SERIAL);
-      dispatch_async(g_serialQueue, ^() {
+      g_serialQueue = dispatch_queue_create(dispatchQueueLabel, DISPATCH_QUEUE_SERIAL);
+      [self dispatchOnQueue:g_serialQueue block:^() {
         g_configs = [self _loadConfigs];
         g_invocations = [self _loadReportData];
-      });
+      }];
       [self _loadConfigurationWithBlock:^(NSError *error) {
         if (error) {
           return;
@@ -155,15 +157,15 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
 
 + (void)_appendAndSaveInvocation:(FBSDKAEMInvocation *)invocation
 {
-  dispatch_async(g_serialQueue, ^() {
+  [self dispatchOnQueue:g_serialQueue block:^() {
     [FBSDKTypeUtility array:g_invocations addObject:invocation];
     [self _saveReportData];
-  });
+  }];
 }
 
 + (void)_loadConfigurationWithBlock:(FBSDKAEMReporterBlock)block
 {
-  dispatch_async(g_serialQueue, ^() {
+  [self dispatchOnQueue:g_serialQueue block:^() {
     [FBSDKTypeUtility array:g_completionBlocks addObject:block];
     // Executes blocks if there is cache
     if ([self _isConfigRefreshTimestampValid] && g_configs.count > 0) {
@@ -183,7 +185,7 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
                                                                                HTTPMethod:FBSDKHTTPMethodGET
                                                                                     flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-      dispatch_async(g_serialQueue, ^() {
+      [self dispatchOnQueue:g_serialQueue block:^() {
         if (error) {
           for (FBSDKAEMReporterBlock executionBlock in g_completionBlocks) {
             executionBlock(error);
@@ -204,9 +206,9 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
           [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:@"Received invalid AEM config"];
         }
         g_isLoadingConfiguration = NO;
-      });
+      }];
     }];
-  });
+  }];
 }
 
 + (BOOL)_isConfigRefreshTimestampValid
@@ -347,16 +349,28 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
         if (error) {
           return;
         }
-        dispatch_async(g_serialQueue, ^() {
+
+        [self dispatchOnQueue:g_serialQueue block:^() {
           for (FBSDKAEMInvocation *invocation in aggregatedInvocations) {
             invocation.isAggregated = YES;
           }
           [self _saveReportData];
-        });
+        }];
       }];
     }
   } @catch (NSException *exception) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents logEntry:@"Fail to send AEM reports"];
+  }
+}
+
++ (void)dispatchOnQueue:(dispatch_queue_t)queue block:(dispatch_block_t)block
+{
+  if (block != nil) {
+    if (strcmp(dispatch_queue_get_label(queue), dispatchQueueLabel) == 0) {
+      dispatch_async(queue, block);
+    } else {
+      block();
+    }
   }
 }
 
@@ -429,7 +443,7 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
  #if DEBUG
   #if FBSDKTEST
 
-+ (NSMutableDictionary<NSString *, NSMutableArray<FBSDKAEMConfiguration *> *> *)getConfigs
++ (NSMutableDictionary<NSString *, NSMutableArray<FBSDKAEMConfiguration *> *> *)configs
 {
   return g_configs;
 }
@@ -444,12 +458,12 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
   g_invocations = invocations;
 }
 
-+ (NSMutableArray<FBSDKAEMInvocation *> *)getInvocations
++ (NSMutableArray<FBSDKAEMInvocation *> *)invocations
 {
   return g_invocations;
 }
 
-+ (void)setEnabled:(BOOL)enabled
++ (void)setIsEnabled:(BOOL)enabled
 {
   g_isAEMReportEnabled = enabled;
 }
@@ -477,6 +491,16 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
 + (void)setIsLoadingConfiguration:(BOOL)loading
 {
   g_isLoadingConfiguration = loading;
+}
+
++ (NSString *)reportFilePath
+{
+  return g_reportFile;
+}
+
++ (void)setReportFilePath:(NSString *)path
+{
+  g_reportFile = path;
 }
 
   #endif

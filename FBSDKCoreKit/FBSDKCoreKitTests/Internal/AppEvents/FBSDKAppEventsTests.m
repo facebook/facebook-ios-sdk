@@ -944,7 +944,7 @@ static NSString *const _mockUserID = @"mockUserID";
 - (void)testFetchingConfigurationIncludingAEM
 {
   if (@available(iOS 14.0, *)) {
-    [FBSDKAEMReporter setEnabled:NO];
+    FBSDKAEMReporter.isEnabled = NO;
     [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
     TestAppEventsConfigurationProvider.capturedBlock();
     TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
