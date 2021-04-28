@@ -26,6 +26,8 @@
 #import "FBSDKSwizzling.h"
 #import "FBSDKTestCoder.h"
 
+typedef void (^FBSDKAEMReporterBlock)(NSError *_Nullable);
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKAEMConfiguration (Testing)
@@ -81,11 +83,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKAEMReporter (Testing)
 
+@property (nonatomic, assign) BOOL isLoadingConfiguration;
+
 + (void)enable;
 
 + (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider;
 
 + (nullable FBSDKAEMInvocation *)parseURL:(nullable NSURL *)url;
+
++ (void)_loadConfigurationWithBlock:(nullable FBSDKAEMReporterBlock)block;
+
++ (void)_sendAggregationRequest;
 
 + (BOOL)_isConfigRefreshTimestampValid;
 
@@ -114,6 +122,10 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)setInvocations:(NSMutableArray<FBSDKAEMInvocation *> *)invocations;
 
 + (NSMutableArray<FBSDKAEMInvocation *> *)getInvocations;
+
++ (void)setCompletionBlocks:(NSMutableArray<FBSDKAEMReporterBlock> *)completionBlocks;
+
++ (void)setIsLoadingConfiguration:(BOOL)loading;
 
 @end
 

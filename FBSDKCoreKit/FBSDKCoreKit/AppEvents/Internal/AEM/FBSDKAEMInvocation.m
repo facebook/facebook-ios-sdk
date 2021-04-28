@@ -363,7 +363,7 @@ static NSString *const IS_AGGREGATED_KEY = @"is_aggregated";
 - (void)reset
 {
   _timestamp = [NSDate date];
-  _configMode = nil;
+  _configMode = @"DEFAULT";
   _configID = -1;
   _recordedEvents = [NSMutableSet new];
   _recordedValues = [NSMutableDictionary new];

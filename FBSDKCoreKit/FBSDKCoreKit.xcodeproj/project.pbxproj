@@ -1401,6 +1401,7 @@
 		F9CBE51424E090590097B442 /* FBSDKSKAdNetworkReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F9CBE51024E085CD0097B442 /* FBSDKSKAdNetworkReporter.m */; };
 		F9DE56BA24F61B090009CD69 /* FBSDKSKAdNetworkConversionConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = F9DE56B824F61B090009CD69 /* FBSDKSKAdNetworkConversionConfiguration.h */; };
 		F9DE56BB24F61B090009CD69 /* FBSDKSKAdNetworkConversionConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = F9DE56B924F61B090009CD69 /* FBSDKSKAdNetworkConversionConfiguration.m */; };
+		F9F657602637963200A7AF30 /* TestInvocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9F6575F2637963200A7AF30 /* TestInvocation.swift */; };
 		F9FD9A6221659F120068DEAF /* FBSDKGateKeeperManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F9FD9A6121659F120068DEAF /* FBSDKGateKeeperManager.h */; };
 		F9FD9A6321659F120068DEAF /* FBSDKGateKeeperManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F9FD9A6121659F120068DEAF /* FBSDKGateKeeperManager.h */; };
 		F9FD9A6421659F120068DEAF /* FBSDKGateKeeperManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F9FD9A6121659F120068DEAF /* FBSDKGateKeeperManager.h */; };
@@ -2191,6 +2192,7 @@
 		F9CEF1EA24F769F900EB0C3D /* FBSDKSKAdNetworkReporterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKSKAdNetworkReporterTests.m; sourceTree = "<group>"; };
 		F9DE56B824F61B090009CD69 /* FBSDKSKAdNetworkConversionConfiguration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKSKAdNetworkConversionConfiguration.h; sourceTree = "<group>"; };
 		F9DE56B924F61B090009CD69 /* FBSDKSKAdNetworkConversionConfiguration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKSKAdNetworkConversionConfiguration.m; sourceTree = "<group>"; };
+		F9F6575F2637963200A7AF30 /* TestInvocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestInvocation.swift; sourceTree = "<group>"; };
 		F9FD9A6121659F120068DEAF /* FBSDKGateKeeperManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKGateKeeperManager.h; sourceTree = "<group>"; };
 		F9FD9A7C21659F320068DEAF /* FBSDKGateKeeperManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKGateKeeperManager.m; sourceTree = "<group>"; };
 		F9FFE01C2252D665007B2346 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
@@ -3392,6 +3394,7 @@
 				F4CCDC9D25E959200057FE5F /* TestGraphRequestFactory.swift */,
 				F4EC330925E5C1A10003C0CF /* TestGraphRequestPiggybackManager.swift */,
 				F40D272825E4448A004681FC /* TestGraphRequestPiggybackManagerProvider.swift */,
+				F9F6575F2637963200A7AF30 /* TestInvocation.swift */,
 				F40D269025E4376D004681FC /* TestLogger.swift */,
 				F4C29B5A260920E9008818DD /* TestMacCatalystDeterminator.swift */,
 				F46E52A8260D248F00BAF55C /* TestMeasurementEvent.swift */,
@@ -5265,6 +5268,7 @@
 				F4C11CA526191C7D00FB4596 /* TestCrashObserver.swift in Sources */,
 				F402B062255C645600473083 /* FakeLoginManager.m in Sources */,
 				58E9CD572602A3C2004818D8 /* TestFeatureManager.swift in Sources */,
+				F9F657602637963200A7AF30 /* TestInvocation.swift in Sources */,
 				F4A035C225F2C6F800D19DE9 /* SampleEventBindings.swift in Sources */,
 				F4D80B582565D6B3008CCAF0 /* FBSDKRestrictiveDataTests.m in Sources */,
 				F46EAB8326179B57000629F3 /* SampleGraphResponses.swift in Sources */,
