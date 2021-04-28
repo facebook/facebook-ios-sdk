@@ -7,13 +7,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.3.0...HEAD)
+
+## 9.3.0
+
 ### Important
 
 **Performance Improvements**
 
 - Cocoapods: FBSDKCoreKit rebuilds FacebookSDKStrings.bundle so xcode processes the strings files into binary plist format. This strips comments and saves ~181KB in disk space for apps. [#1713](https://github.com/facebook/facebook-ios-sdk/pull/1713)
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.2.0...HEAD)
+### Added
+
+- Added AEM (Aggregated Events Measurement) support under public beta.
+- Added `external_id` support in advanced matching.
+
+### Fixed
+
+- Fix for shadowing swift type. [#1721](https://github.com/facebook/facebook-ios-sdk/pull/1721)
+- Optimization for cached token fetching. See the [commit message](https://github.com/facebook/facebook-ios-sdk/commit/13fabd2f9ea2036b533f86e9443e201951e4e707) for more details.
+- Cocoapods with generate_multiple_pod_projects [#1709](https://github.com/facebook/facebook-ios-sdk/pull/1709)
+
+[2021-04-25](https://github.com/facebook/facebook-ios-sdk/releases/tag/v9.3.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.2.0...v9.3.0)
 
 ## 9.2.0
 
