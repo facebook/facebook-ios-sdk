@@ -18,6 +18,7 @@
 
 #import "FBSDKPaymentProductRequestor.h"
 
+@protocol FBSDKProductsRequest;
 @protocol FBSDKProductsRequestCreating;
 @class SKPaymentQueue;
 
@@ -25,8 +26,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKPaymentProductRequestor (Testing)
 
-@property (nonatomic, readonly) id<FBSDKProductsRequestCreating> productRequestFactory;
+@property (class, nonatomic, readonly) NSMutableArray *pendingRequestors;
+@property (nonatomic, retain) id<FBSDKProductsRequest> productsRequest;
 @property (nonatomic, retain) SKPaymentTransaction *transaction;
+@property (nonatomic, readonly) id<FBSDKProductsRequestCreating> productRequestFactory;
 @property (nonatomic, readonly) id<FBSDKSettings> settings;
 @property (nonatomic, readonly) id<FBSDKEventLogging> eventLogger;
 @property (nonatomic, readonly) Class<FBSDKGateKeeperManaging> gateKeeperManager;

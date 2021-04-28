@@ -27,6 +27,7 @@
 #import "FBSDKEventLogging.h"
 #import "FBSDKGateKeeperManaging.h"
 #import "FBSDKLogging.h"
+#import "FBSDKProductsRequestProtocols.h"
 #import "FBSDKSettingsProtocol.h"
 
 static NSString *const FBSDKPaymentObserverOriginalTransactionKey = @"com.facebook.appevents.PaymentObserver.originalTransaction";
@@ -47,15 +48,14 @@ static NSString *const FBSDKAppEventParameterNameTrialPeriod = @"fb_iap_trial_pe
 static NSString *const FBSDKAppEventParameterNameTrialPrice = @"fb_iap_trial_price";
 
 static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_auto_log_subs";
-
-static NSMutableArray *g_pendingRequestors;
 static int const FBSDKMaxParameterValueLength = 100;
 
 @interface FBSDKPaymentProductRequestor ()
 
+@property (class, nonatomic, readonly) NSMutableArray *pendingRequestors;
 @property (nonatomic, retain) SKPaymentTransaction *transaction;
+@property (nonatomic, retain) id<FBSDKProductsRequest> productsRequest;
 @property (nonatomic, readonly) id<FBSDKProductsRequestCreating> productRequestFactory;
-@property (nonatomic, retain) SKProductsRequest *productRequest;
 @property (nonatomic, readonly) id<FBSDKSettings> settings;
 @property (nonatomic, readonly) id<FBSDKEventLogging> eventLogger;
 @property (nonatomic, readonly) Class<FBSDKGateKeeperManaging> gateKeeperManager;
@@ -69,10 +69,12 @@ static int const FBSDKMaxParameterValueLength = 100;
 
 @implementation FBSDKPaymentProductRequestor
 
+static NSMutableArray *_pendingRequestors;
+
 + (void)initialize
 {
   if ([self class] == [FBSDKPaymentProductRequestor class]) {
-    g_pendingRequestors = [NSMutableArray new];
+    _pendingRequestors = [NSMutableArray new];
   }
 }
 
@@ -106,13 +108,18 @@ static int const FBSDKMaxParameterValueLength = 100;
   return self;
 }
 
-- (void)setProductRequest:(SKProductsRequest *)productRequest
++ (NSMutableArray *)pendingRequestors
 {
-  if (productRequest != _productRequest) {
-    if (_productRequest) {
-      _productRequest.delegate = nil;
+  return _pendingRequestors;
+}
+
+- (void)setProductsRequest:(id<FBSDKProductsRequest>)productsRequest
+{
+  if (productsRequest != _productsRequest) {
+    if (_productsRequest) {
+      _productsRequest.delegate = nil;
     }
-    _productRequest = productRequest;
+    _productsRequest = productsRequest;
   }
 }
 
@@ -120,12 +127,12 @@ static int const FBSDKMaxParameterValueLength = 100;
 {
   NSString *productId = self.transaction.payment.productIdentifier;
   NSSet *productIdentifiers = [NSSet setWithObjects:productId, nil];
-  self.productRequest = [[SKProductsRequest alloc] initWithProductIdentifiers:productIdentifiers];
-  self.productRequest.delegate = self;
-  @synchronized(g_pendingRequestors) {
-    [FBSDKTypeUtility array:g_pendingRequestors addObject:self];
+  self.productsRequest = [self.productRequestFactory createWithProductIdentifiers:productIdentifiers];
+  self.productsRequest.delegate = self;
+  @synchronized(self.class.pendingRequestors) {
+    [FBSDKTypeUtility array:self.class.pendingRequestors addObject:self];
   }
-  [self.productRequest start];
+  [self.productsRequest start];
 }
 
 - (NSString *)getTruncatedString:(NSString *)inputString
@@ -361,8 +368,8 @@ static int const FBSDKMaxParameterValueLength = 100;
 
 - (void)cleanUp
 {
-  @synchronized(g_pendingRequestors) {
-    [g_pendingRequestors removeObject:self];
+  @synchronized(self.class.pendingRequestors) {
+    [self.class.pendingRequestors removeObject:self];
   }
 }
 

@@ -19,5 +19,45 @@
 import XCTest
 
 class PaymentProductRequestorTests: XCTestCase {
-  // TODO: Fill out tests
+
+  var transaction = TestPaymentTransaction(state: .deferred)
+  var requestFactory = TestProductsRequestFactory()
+  let settings = TestSettings()
+  let eventLogger = TestEventLogger()
+  let store = UserDefaultsSpy()
+  let logger = TestLogger()
+
+  lazy var requestor = PaymentProductRequestor(
+    transaction: transaction,
+    settings: settings,
+    eventLogger: eventLogger,
+    gateKeeperManager: TestGateKeeperManager.self,
+    store: store,
+    logger: logger,
+    productsRequestFactory: requestFactory
+  )
+
+  func testResolvingProducts() {
+    requestor.resolveProducts()
+
+    XCTAssertEqual(
+      requestFactory.capturedProductIdentifiers,
+      Set([transaction.payment.productIdentifier]),
+      "Should use the product identifier from the transaction's payment to create the products request"
+    )
+    XCTAssertEqual(
+      requestor.productsRequest.delegate as? PaymentProductRequestor,
+      requestor,
+      "Should set the requestor as the products request delegate when resolving products"
+    )
+    XCTAssertEqual(
+      requestFactory.request.startCallCount,
+      1,
+      "Should start the products request when resolving products"
+    )
+    XCTAssertTrue(
+      PaymentProductRequestor.pendingRequestors.contains(requestor),
+      "Should maintain a list of strong references to requestors performing requests"
+    )
+  }
 }

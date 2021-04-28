@@ -16,8 +16,22 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+// TODO: Move
+class TestPayment: SKPayment {
+  let stubbedProductIdentifier: String
+
+  init(productIdentifier: String) {
+    stubbedProductIdentifier = productIdentifier
+  }
+
+  override var productIdentifier: String {
+    stubbedProductIdentifier
+  }
+}
+
 class TestPaymentTransaction: SKPaymentTransaction {
   private let stubbedTransactionState: SKPaymentTransactionState
+  let stubbedPayment = TestPayment(productIdentifier: UUID().uuidString)
 
   init(state: SKPaymentTransactionState) {
     stubbedTransactionState = state
@@ -27,5 +41,9 @@ class TestPaymentTransaction: SKPaymentTransaction {
 
   override var transactionState: SKPaymentTransactionState {
     return stubbedTransactionState
+  }
+
+  override var payment: SKPayment {
+    return stubbedPayment
   }
 }

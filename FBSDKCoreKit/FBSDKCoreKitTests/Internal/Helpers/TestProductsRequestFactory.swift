@@ -18,8 +18,10 @@
 
 class TestProductsRequestFactory: ProductsRequestCreating {
   let request = TestProductsRequest()
+  var capturedProductIdentifiers = Set<String>()
 
   func create(withProductIdentifiers identifiers: Set<String>) -> ProductsRequest {
+    capturedProductIdentifiers.formUnion(identifiers)
     return request
   }
 }
