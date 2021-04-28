@@ -21,6 +21,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Added AEM (Aggregated Events Measurement) support under public beta.
 - Added `external_id` support in advanced matching.
+- `GamingServicesKit` changed the Game Request feature flow where if the user has the facebook app installed, they will not see a webview to complete a game request. Instead they will switch to the facebook app and app switch back once the request is sent or the user cancels the dialog.
 
 ### Fixed
 
