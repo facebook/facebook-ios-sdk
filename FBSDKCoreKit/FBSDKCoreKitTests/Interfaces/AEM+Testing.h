@@ -83,7 +83,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKAEMReporter (Testing)
 
-@property (nonatomic, assign) BOOL isLoadingConfiguration;
+@property (class, nonatomic, assign) BOOL isLoadingConfiguration;
+@property (class, nonatomic) dispatch_queue_t queue;
+@property (class, nonatomic) NSDate *timestamp;
+@property (class, nonatomic) BOOL isEnabled;
+@property (class, nonatomic) NSMutableDictionary<NSString *, NSMutableArray<FBSDKAEMConfiguration *> *> *configs;
+@property (class, nonatomic) NSMutableArray<FBSDKAEMInvocation *> *invocations;
+@property (class, nonatomic) NSMutableArray<FBSDKAEMReporterBlock> *completionBlocks;
+@property (class, nonatomic) NSString *reportFilePath;
 
 + (void)enable;
 
@@ -106,26 +113,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)_saveReportData;
 
 + (void)_clearCache;
-
-+ (void)setQueue:(nullable dispatch_queue_t)queue;
-
-+ (void)setTimestamp:(NSDate *)timestamp;
-
-+ (void)setEnabled:(BOOL)enabled;
-
-+ (BOOL)isEnabled;
-
-+ (void)setConfigs:(NSMutableDictionary<NSString *, NSMutableArray<FBSDKAEMConfiguration *> *> *)configs;
-
-+ (NSMutableDictionary<NSString *, NSMutableArray<FBSDKAEMConfiguration *> *> *)getConfigs;
-
-+ (void)setInvocations:(NSMutableArray<FBSDKAEMInvocation *> *)invocations;
-
-+ (NSMutableArray<FBSDKAEMInvocation *> *)getInvocations;
-
-+ (void)setCompletionBlocks:(NSMutableArray<FBSDKAEMReporterBlock> *)completionBlocks;
-
-+ (void)setIsLoadingConfiguration:(BOOL)loading;
 
 @end
 
