@@ -1237,6 +1237,11 @@
 		F4AC7230260044E400C26157 /* FBSDKGraphRequestConnection+GraphRequestConnecting.h in Headers */ = {isa = PBXBuildFile; fileRef = F441DC1625DC91A00092C8F6 /* FBSDKGraphRequestConnection+GraphRequestConnecting.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4AE435225508FEA00FA9DE6 /* FBSDKProfilePictureView+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = B301910D253622A2001A8DB0 /* FBSDKProfilePictureView+Internal.h */; };
 		F4AE6324263736D400E0B661 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4AE631C263736D300E0B661 /* StoreKit.framework */; };
+		F4AE63332637386B00E0B661 /* PaymentProductRequestorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE63322637386B00E0B661 /* PaymentProductRequestorTests.swift */; };
+		F4AE635C263738AA00E0B661 /* TestPaymentQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE635B263738AA00E0B661 /* TestPaymentQueue.swift */; };
+		F4AE6385263738E500E0B661 /* TestPaymentTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE6384263738E500E0B661 /* TestPaymentTransaction.swift */; };
+		F4AE63AE2637396300E0B661 /* TestPaymentProductRequestor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE63AD2637396300E0B661 /* TestPaymentProductRequestor.swift */; };
+		F4AE63D72637398D00E0B661 /* TestPaymentProductRequestorFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE63D62637398D00E0B661 /* TestPaymentProductRequestorFactory.swift */; };
 		F4AF97032605246600E53370 /* TestAccessTokenWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AF97022605246600E53370 /* TestAccessTokenWallet.swift */; };
 		F4BD4024241EEDE500B45D39 /* FBSDKTestCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = F4BD4023241EEDE500B45D39 /* FBSDKTestCoder.m */; };
 		F4BDCE0726152DEF00D3FFF4 /* TestWindowFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BDCDFF26152DEF00D3FFF4 /* TestWindowFinder.swift */; };
@@ -2108,6 +2113,11 @@
 		F4AAAF212628ACFC00EDCF06 /* TestFeatureExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFeatureExtractor.swift; sourceTree = "<group>"; };
 		F4AAAF9B2628EA6F00EDCF06 /* TestEventProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestEventProcessor.swift; sourceTree = "<group>"; };
 		F4AE631C263736D300E0B661 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS14.3.sdk/System/Library/Frameworks/StoreKit.framework; sourceTree = DEVELOPER_DIR; };
+		F4AE63322637386B00E0B661 /* PaymentProductRequestorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProductRequestorTests.swift; sourceTree = "<group>"; };
+		F4AE635B263738AA00E0B661 /* TestPaymentQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPaymentQueue.swift; sourceTree = "<group>"; };
+		F4AE6384263738E500E0B661 /* TestPaymentTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPaymentTransaction.swift; sourceTree = "<group>"; };
+		F4AE63AD2637396300E0B661 /* TestPaymentProductRequestor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPaymentProductRequestor.swift; sourceTree = "<group>"; };
+		F4AE63D62637398D00E0B661 /* TestPaymentProductRequestorFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPaymentProductRequestorFactory.swift; sourceTree = "<group>"; };
 		F4AF96EC26051FF600E53370 /* FBSDKAccessToken+AccessTokenProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKAccessToken+AccessTokenProtocols.h"; sourceTree = "<group>"; };
 		F4AF96F42605200800E53370 /* FBSDKAccessTokenProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKAccessTokenProtocols.h; sourceTree = "<group>"; };
 		F4AF97022605246600E53370 /* TestAccessTokenWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAccessTokenWallet.swift; sourceTree = "<group>"; };
@@ -2915,6 +2925,7 @@
 				9D18A8E81A95495D00A41042 /* FBSDKAppEventsUtilityTests.m */,
 				5CD6DB3B255B1D07002C296F /* FBSDKAppEventsUtilityTests.swift */,
 				F47AB77726336D9A005A3333 /* PaymentObserverTests.swift */,
+				F4AE63322637386B00E0B661 /* PaymentProductRequestorTests.swift */,
 				F4AA88452634E76300825641 /* PaymentProductRequestorFactoryTests.swift */,
 				5D68D7D722BAEEF60063A3E2 /* FBSDKTimeSpentDataTests.m */,
 				F4D58EBA2620FF14006FEC6B /* HybridAppEventsScriptMessageHandlerTests.swift */,
@@ -3465,8 +3476,9 @@
 				F4C11CCD26191CBD00FB4596 /* TestErrorReport.swift */,
 				F48A9C8625F83D1300A2DBDF /* TestEventBinding.swift */,
 				F4EC346D25E6F1230003C0CF /* TestEventLogger.swift */,
-				58E9CD562602A3C2004818D8 /* TestFeatureManager.swift */,
+				F4AAAF9B2628EA6F00EDCF06 /* TestEventProcessor.swift */,
 				F4AAAF212628ACFC00EDCF06 /* TestFeatureExtractor.swift */,
+				58E9CD562602A3C2004818D8 /* TestFeatureManager.swift */,
 				F433229C261632E2002CC793 /* TestFileDataExtractor.swift */,
 				F4BDCF3326161A3F00D3FFF4 /* TestFileManager.swift */,
 				1696090925F7FEDB009279F4 /* TestGateKeeperManager.swift */,
@@ -3479,11 +3491,14 @@
 				F40D269025E4376D004681FC /* TestLogger.swift */,
 				F4C29B5A260920E9008818DD /* TestMacCatalystDeterminator.swift */,
 				F46E52A8260D248F00BAF55C /* TestMeasurementEvent.swift */,
-				F4AAAF9B2628EA6F00EDCF06 /* TestEventProcessor.swift */,
 				F4ED90DA24EDDC610048D283 /* TestNotificationCenter.swift */,
 				F40D25F225E41C71004681FC /* TestOperationQueue.swift */,
 				F46E56F9260FE86F00BAF55C /* TestPasteboard.swift */,
 				1687D7F02627999A0067A81A /* TestPaymentObserver.swift */,
+				F4AE63AD2637396300E0B661 /* TestPaymentProductRequestor.swift */,
+				F4AE63D62637398D00E0B661 /* TestPaymentProductRequestorFactory.swift */,
+				F4AE635B263738AA00E0B661 /* TestPaymentQueue.swift */,
+				F4AE6384263738E500E0B661 /* TestPaymentTransaction.swift */,
 				F43D7E7B2602823C005AE003 /* TestProcessInfo.swift */,
 				F48A9C2C25F83CA400A2DBDF /* TestReactNativeView.swift */,
 				164DC6D8260A90DC00640CFA /* TestServerConfigurationProvider.swift */,
@@ -5250,6 +5265,7 @@
 				F4C23BD82624C04400FA79AE /* FBSDKSwizzlerTests.m in Sources */,
 				F4849C3D261CD456005E5329 /* TestBridgeApiProtocol.swift in Sources */,
 				F4EC331125E5C1A20003C0CF /* TestGraphRequestPiggybackManager.swift in Sources */,
+				F4AE63AE2637396300E0B661 /* TestPaymentProductRequestor.swift in Sources */,
 				F48A9C5E25F83CE300A2DBDF /* TestTouch.swift in Sources */,
 				F4BDCE0726152DEF00D3FFF4 /* TestWindowFinder.swift in Sources */,
 				9DF18BCB1A9F2517000F6748 /* FBSDKErrorConfigurationTests.m in Sources */,
@@ -5272,6 +5288,7 @@
 				F4CEF75926249BF500B4EF6C /* UIUtilityTests.swift in Sources */,
 				F4D58F9026237CB5006FEC6B /* WebViewAppLinkResolverTests.swift in Sources */,
 				F46989B325F93F8800120B09 /* TestView.swift in Sources */,
+				F4AE6385263738E500E0B661 /* TestPaymentTransaction.swift in Sources */,
 				F40D272925E4448A004681FC /* TestGraphRequestPiggybackManagerProvider.swift in Sources */,
 				F44F545A25FADACA00D774B7 /* TestAppEventsConfiguration.swift in Sources */,
 				F43D7FB02603FCCC005AE003 /* InternalUtilityTests.swift in Sources */,
@@ -5316,12 +5333,14 @@
 				F4CEF6682623C28000B4EF6C /* FBSDKGraphRequestBodyTests.m in Sources */,
 				F48AD3252576FEB20052C056 /* FBSDKAuthenticationTokenTests.m in Sources */,
 				F43DC8F025E05DE40009E7D5 /* TestErrorConfiguration.swift in Sources */,
+				F4AE63332637386B00E0B661 /* PaymentProductRequestorTests.swift in Sources */,
 				F4BDCF3426161A3F00D3FFF4 /* TestFileManager.swift in Sources */,
 				F4BE807126128822007BAD0D /* TestWebView.swift in Sources */,
 				F46E56FA260FE86F00BAF55C /* TestPasteboard.swift in Sources */,
 				F91D1BFE2632916D005CA2C5 /* FBSDKAEMEventTests.swift in Sources */,
 				2A3DA4161CB4C0F600339BD4 /* FBSDKAppLinkUtilityTests.swift in Sources */,
 				F4DE31F624DB695100297C18 /* FBSDKTestCase.m in Sources */,
+				F4AE63D72637398D00E0B661 /* TestPaymentProductRequestorFactory.swift in Sources */,
 				F43D7EF42603A7FA005AE003 /* ApplicationDelegateTests.swift in Sources */,
 				5D2165F22229C6A3004952D8 /* FBSDKGraphRequestTests.m in Sources */,
 				F91D1BD92632911B005CA2C5 /* SampleAEMData.swift in Sources */,
@@ -5351,6 +5370,7 @@
 				F46E5338260D431200BAF55C /* TestURLOpener.swift in Sources */,
 				F443A27D25D1F45E0093AB78 /* FBSDKAppEventsPublishAteTests.m in Sources */,
 				F47AB77826336D9A005A3333 /* PaymentObserverTests.swift in Sources */,
+				F4AE635C263738AA00E0B661 /* TestPaymentQueue.swift in Sources */,
 				F4849BE0261CC903005E5329 /* BridgeAPIResponseTests.swift in Sources */,
 				F40B24C224732DD90059351C /* Fuzzer.swift in Sources */,
 				F4A030D525F021D000D19DE9 /* ColorTests.swift in Sources */,

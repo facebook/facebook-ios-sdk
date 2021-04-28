@@ -18,59 +18,6 @@
 
 import XCTest
 
-// TODO: Move
-class TestPaymentQueue: SKPaymentQueue {
-
-  var addTransactionObserverWasCalled = false
-  var removeTransactionObserverWasCalled = false
-
-  override func add(_ observer: SKPaymentTransactionObserver) {
-    addTransactionObserverWasCalled = true
-  }
-
-  override func remove(_ observer: SKPaymentTransactionObserver) {
-    removeTransactionObserverWasCalled = true
-  }
-}
-
-class TestPaymentProductRequestor: PaymentProductRequestor {
-  var wasResolveProductsCalled = false
-
-  override func resolveProducts() {
-    wasResolveProductsCalled = true
-  }
-}
-
-class TestPaymentTransaction: SKPaymentTransaction {
-  private let stubbedTransactionState: SKPaymentTransactionState
-
-  init(state: SKPaymentTransactionState) {
-    stubbedTransactionState = state
-
-    super.init()
-  }
-
-  override var transactionState: SKPaymentTransactionState {
-    return stubbedTransactionState
-  }
-}
-
-class TestPaymentProductRequestorFactory: PaymentProductRequestorCreating {
-  struct Evidence {
-    let requestor: TestPaymentProductRequestor
-    let transaction: SKPaymentTransaction
-  }
-
-  var evidence = [Evidence]()
-
-  func createRequestor(transaction: SKPaymentTransaction) -> PaymentProductRequestor {
-    let requestor = TestPaymentProductRequestor()
-    evidence.append(Evidence(requestor: requestor, transaction: transaction))
-
-    return requestor
-  }
-}
-
 class PaymentObserverTests: XCTestCase {
 
   lazy var observer = PaymentObserver(
