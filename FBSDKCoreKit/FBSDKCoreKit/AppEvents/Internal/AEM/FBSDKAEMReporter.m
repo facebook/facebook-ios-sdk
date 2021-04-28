@@ -459,6 +459,11 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
   return g_isAEMReportEnabled;
 }
 
++ (void)setCompletionBlocks:(NSMutableArray<FBSDKAEMReporterBlock> *)completionBlocks
+{
+  g_completionBlocks = completionBlocks;
+}
+
 + (void)setQueue:(nullable dispatch_queue_t)queue
 {
   g_serialQueue = queue;
@@ -467,6 +472,11 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
 + (void)setTimestamp:(NSDate *)timestamp
 {
   g_configRefreshTimestamp = timestamp;
+}
+
++ (void)setIsLoadingConfiguration:(BOOL)loading
+{
+  g_isLoadingConfiguration = loading;
 }
 
   #endif

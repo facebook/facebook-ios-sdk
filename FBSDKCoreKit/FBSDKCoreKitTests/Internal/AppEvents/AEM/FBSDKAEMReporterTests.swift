@@ -39,6 +39,29 @@ class FBSDKAEMReporterTests: XCTestCase {
       static let USD = "USD"
   }
 
+  var requestProvider: TestGraphRequestFactory! // swiftlint:disable:this implicitly_unwrapped_optional
+
+  // swiftlint:disable:next implicitly_unwrapped_optional
+  let date: Date! = Calendar.current.date(byAdding: .day, value: -2, to: Date())
+
+  let queue: DispatchQueue! = DispatchQueue.main // swiftlint:disable:this implicitly_unwrapped_optional
+
+  var testInvocation: TestInvocation! // swiftlint:disable:this implicitly_unwrapped_optional
+
+  // swiftlint:disable:next implicitly_unwrapped_optional
+  var reportFile: String! = FBSDKBasicUtility.persistenceFilePath("FBSDKAEMReportData.report")
+
+  override func setUp() {
+    super.setUp()
+    self.requestProvider = TestGraphRequestFactory()
+    self.testInvocation = TestInvocation()
+    FBSDKAEMReporter.configure(withRequestProvider: self.requestProvider)
+    FBSDKAEMReporter.setQueue(self.queue)
+    FBSDKAEMReporter.setInvocations([])
+    FBSDKAEMReporter.setCompletionBlocks([])
+    FBSDKAEMReporter.setIsLoadingConfiguration(false)
+  }
+
   func testEnable() {
     FBSDKAEMReporter.enable()
 
@@ -184,13 +207,13 @@ class FBSDKAEMReporterTests: XCTestCase {
     guard let url = URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22acstoken%22%2C+%22campaign_id%22%3A+%22campaignid%22%7D") // swiftlint:disable:this line_length
     else { return XCTFail("Unwrapping Error") }
     FBSDKAEMReporter.handle(url)
-    DispatchQueue.main.async {
+    self.queue.async {
       let invocations = FBSDKAEMReporter.getInvocations()
       if (invocations.count > 0) { // swiftlint:disable:this empty_count control_statement
         expectation.fulfill()
       }
     }
-    waitForExpectations(timeout: 5, handler: nil)
+    waitForExpectations(timeout: 1, handler: nil)
   }
 
   func testIsConfigRefreshTimestampValid() {
@@ -207,5 +230,148 @@ class FBSDKAEMReporterTests: XCTestCase {
       FBSDKAEMReporter._isConfigRefreshTimestampValid(),
       "Timestamp should not be valid"
     )
+  }
+
+  func testSendAggregationRequest() {
+    FBSDKAEMReporter.configure(withRequestProvider: requestProvider)
+    FBSDKAEMReporter._sendAggregationRequest()
+    XCTAssertNil(
+        self.requestProvider.capturedGraphPath,
+        "GraphRequst should be created because of there is no invocation"
+    )
+
+    let url = URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22acstoken%22%2C+%22campaign_id%22%3A+%22campaignid%22%2C+%22advertiser_id%22%3A+%22advertiserid%22%7D") // swiftlint:disable:this line_length
+    guard let invocation = FBSDKAEMReporter.parseURL(url) else { return XCTFail("Parsing Error") }
+    invocation.isAggregated = false
+    FBSDKAEMReporter.setInvocations([invocation])
+    FBSDKAEMReporter._sendAggregationRequest()
+    XCTAssertTrue(
+        self.requestProvider.capturedGraphPath?.hasSuffix("aem_conversions") == true,
+        "GraphRequst should created because of there is non-aggregated invocation"
+    )
+  }
+
+  func testRecordAndUpdateEvents() {
+    let expectation = self.expectation(description: name)
+    self.removeReportFile()
+    FBSDKAEMReporter.setEnabled(true)
+    FBSDKAEMReporter.setTimestamp(Date())
+    guard let invocation = FBSDKAEMInvocation(
+      campaignID: "campaignid",
+      acsToken: "acstoken",
+      acsSharedSecret: "acssharedsecret",
+      acsConfigID: "acsconfigid",
+      advertiserID: "advertiserid"
+    )
+    else { return XCTFail("Unwrapping Error") }
+    guard let config = FBSDKAEMConfiguration(json: SampleAEMData.validConfigData3)
+    else { return XCTFail("Unwrapping Error") }
+
+    FBSDKAEMReporter.setConfigs(
+        NSMutableDictionary(dictionary: [Values.defaultMode: [config]])
+    )
+    FBSDKAEMReporter.setInvocations(NSMutableArray(array: [invocation]))
+    FBSDKAEMReporter.recordAndUpdateEvent(Values.purchase, currency: Values.USD, value: 100)
+    self.queue.async {
+        // Invocation should be attributed and updated while request should be sent
+        // swiftlint:disable:next control_statement
+        if (self.requestProvider.capturedGraphPath?.hasSuffix("aem_conversions") == true
+                && !invocation.isAggregated
+                && FileManager.default.fileExists(atPath: self.reportFile)) {
+          expectation.fulfill()
+        }
+    }
+    waitForExpectations(timeout: 1, handler: nil)
+  }
+
+  func testRecordAndUpdateEventsWithAEMDisabled() {
+      let expectation = self.expectation(description: name)
+      FBSDKAEMReporter.setEnabled(false)
+      FBSDKAEMReporter.setTimestamp(self.date)
+
+      FBSDKAEMReporter.recordAndUpdateEvent(Values.purchase, currency: Values.USD, value: 100)
+      self.queue.async {
+          if self.requestProvider.capturedGraphPath?.hasSuffix("aem_conversion_configs") == nil {
+            expectation.fulfill()
+          }
+      }
+      waitForExpectations(timeout: 1, handler: nil)
+   }
+
+   func testRecordAndUpdateEventsWithEmptyEvent() {
+       let expectation = self.expectation(description: name)
+       self.removeReportFile()
+       FBSDKAEMReporter.setEnabled(true)
+       FBSDKAEMReporter.setTimestamp(self.date)
+
+       FBSDKAEMReporter.recordAndUpdateEvent("", currency: Values.USD, value: 100)
+       self.queue.async {
+            if self.requestProvider.capturedGraphPath?.hasSuffix("aem_conversion_configs") == nil,
+                !FileManager.default.fileExists(atPath: self.reportFile) {
+              expectation.fulfill()
+            }
+       }
+       waitForExpectations(timeout: 1, handler: nil)
+    }
+
+  func testRecordAndUpdateEventsWithEmptyConfigs() {
+      let expectation = self.expectation(description: name)
+      FBSDKAEMReporter.setEnabled(true)
+      FBSDKAEMReporter.setTimestamp(self.date)
+      FBSDKAEMReporter.setInvocations([self.testInvocation!]) // swiftlint:disable:this force_unwrapping
+      FBSDKAEMReporter.setConfigs([:])
+
+      FBSDKAEMReporter.recordAndUpdateEvent(Values.purchase, currency: Values.USD, value: 100)
+      self.queue.async {
+          if self.testInvocation.attributionCallCount == 0,
+             self.testInvocation.updateConversionCallCount == 0 {
+             expectation.fulfill()
+          }
+      }
+      waitForExpectations(timeout: 1, handler: nil)
+   }
+
+   func testLoadConfigurationWithBlock() {
+      let expectation = self.expectation(description: name)
+      guard let config = FBSDKAEMConfiguration(json: SampleAEMData.validConfigData3)
+      else { return XCTFail("Unwrapping Error") }
+      var blockCall = 0
+      FBSDKAEMReporter.setEnabled(true)
+      FBSDKAEMReporter.setTimestamp(Date())
+      FBSDKAEMReporter.setConfigs(
+        NSMutableDictionary(dictionary: [Values.defaultMode: [config]])
+      )
+
+      FBSDKAEMReporter._loadConfiguration { (_) in
+        blockCall += 1
+      }
+      self.queue.async {
+          if blockCall == 1 {
+            expectation.fulfill()
+          }
+      }
+      waitForExpectations(timeout: 1, handler: nil)
+   }
+
+  func testLoadConfigurationWithoutBlock() {
+     let expectation = self.expectation(description: name)
+     FBSDKAEMReporter.setEnabled(true)
+     FBSDKAEMReporter.setTimestamp(self.date)
+
+     FBSDKAEMReporter._loadConfiguration(block: nil)
+     self.queue.async {
+         if self.requestProvider.capturedGraphPath?.hasSuffix("aem_conversion_configs") == true {
+           expectation.fulfill()
+         }
+     }
+     waitForExpectations(timeout: 1, handler: nil)
+  }
+
+  // MARK: - Helpers
+
+  func removeReportFile() {
+    do {
+      try FileManager.default.removeItem(at: URL(fileURLWithPath: self.reportFile))
+    } catch _ as NSError { }
   }
 }
