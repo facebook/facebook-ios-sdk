@@ -54,6 +54,7 @@ static int const FBSDKMaxParameterValueLength = 100;
 @interface FBSDKPaymentProductRequestor ()
 
 @property (nonatomic, retain) SKPaymentTransaction *transaction;
+@property (nonatomic, readonly) id<FBSDKProductsRequestCreating> productRequestFactory;
 @property (nonatomic, retain) SKProductsRequest *productRequest;
 @property (nonatomic, readonly) id<FBSDKSettings> settings;
 @property (nonatomic, readonly) id<FBSDKEventLogging> eventLogger;
@@ -81,6 +82,7 @@ static int const FBSDKMaxParameterValueLength = 100;
                   gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
                               store:(id<FBSDKDataPersisting>)store
                              logger:(id<FBSDKLogging>)logger
+             productsRequestFactory:(id<FBSDKProductsRequestCreating>)productRequestFactory
 {
   if ((self = [super init])) {
     _settings = settings;
@@ -88,6 +90,7 @@ static int const FBSDKMaxParameterValueLength = 100;
     _gateKeeperManager = gateKeeperManager;
     _store = store;
     _logger = logger;
+    _productRequestFactory = productRequestFactory;
     _transaction = transaction;
     _formatter = [NSDateFormatter new];
     _formatter.dateFormat = @"yyyy-MM-dd HH:mm:ssZ";

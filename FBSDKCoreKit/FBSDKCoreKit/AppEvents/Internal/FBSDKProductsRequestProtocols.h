@@ -16,21 +16,26 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+@protocol SKProductsRequestDelegate;
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// Class to encapsulate implicit logging of purchase events
-NS_SWIFT_NAME(PaymentObserver)
-@interface FBSDKPaymentObserver : NSObject
+/// An abstraction for an `SKProductsRequest` instance
+NS_SWIFT_NAME(ProductsRequest)
+@protocol FBSDKProductsRequest
 
-@property (class, readonly) FBSDKPaymentObserver *shared;
+@property(nonatomic, weak, nullable) id <SKProductsRequestDelegate> delegate;
 
-+ (instancetype)new NS_UNAVAILABLE;
-- (instancetype)init NS_UNAVAILABLE;
+- (void)cancel;
+- (void)start;
 
-- (void)startObservingTransactions;
-- (void)stopObservingTransactions;
+@end
+
+/// An abstraction for any object that can create a `ProductsRequest`
+NS_SWIFT_NAME(ProductsRequestCreating)
+@protocol FBSDKProductsRequestCreating
+
+- (id<FBSDKProductsRequest>)createWithProductIdentifiers:(NSSet<NSString *> *)identifiers;
 
 @end
 

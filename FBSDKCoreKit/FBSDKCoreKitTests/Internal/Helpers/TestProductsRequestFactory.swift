@@ -16,22 +16,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+class TestProductsRequestFactory: ProductsRequestCreating {
+  let request = TestProductsRequest()
 
-NS_ASSUME_NONNULL_BEGIN
-
-/// Class to encapsulate implicit logging of purchase events
-NS_SWIFT_NAME(PaymentObserver)
-@interface FBSDKPaymentObserver : NSObject
-
-@property (class, readonly) FBSDKPaymentObserver *shared;
-
-+ (instancetype)new NS_UNAVAILABLE;
-- (instancetype)init NS_UNAVAILABLE;
-
-- (void)startObservingTransactions;
-- (void)stopObservingTransactions;
-
-@end
-
-NS_ASSUME_NONNULL_END
+  func create(withProductIdentifiers identifiers: Set<String>) -> ProductsRequest {
+    return request
+  }
+}

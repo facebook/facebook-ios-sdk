@@ -16,10 +16,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <StoreKit/StoreKit.h>
-
 #import "FBSDKPaymentObserver.h"
 #import "FBSDKPaymentProductRequestorCreating.h"
+
+@class SKPaymentQueue;
 
 NS_ASSUME_NONNULL_BEGIN
 

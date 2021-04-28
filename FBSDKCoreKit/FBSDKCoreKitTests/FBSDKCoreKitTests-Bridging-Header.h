@@ -63,6 +63,7 @@
 #import "FBSDKPaymentProductRequestor.h"
 #import "PaymentProductRequestor+Testing.h"
 #import "PaymentProductRequestorFactory+Testing.h"
+#import "FBSDKProductRequestFactory.h"
 #import "SuggestedEventsIndexer+Testing.h"
 #import "UserDefaultsSpy.h"
 #import "WebViewAppLinkResolver+Testing.h"

@@ -25,9 +25,11 @@
 @protocol FBSDKGateKeeperManaging;
 @protocol FBSDKDataPersisting;
 @protocol FBSDKLogging;
+@protocol FBSDKProductsRequestCreating;
 
 NS_ASSUME_NONNULL_BEGIN
 
+/// Factory used to create `FBSDKPaymentProductRequestor` instances with dependencies.
 NS_SWIFT_NAME(PaymentProductRequestorFactory)
 @interface FBSDKPaymentProductRequestorFactory : NSObject<FBSDKPaymentProductRequestorCreating>
 
@@ -36,7 +38,8 @@ NS_SWIFT_NAME(PaymentProductRequestorFactory)
                gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
                            store:(id<FBSDKDataPersisting>)store
                           logger:(id<FBSDKLogging>)logger
-NS_SWIFT_NAME(init(settings:eventLogger:gateKeeperManager:store:logger:));
+           productsRequestFactory:(id<FBSDKProductsRequestCreating>)productsRequestFactory
+NS_SWIFT_NAME(init(settings:eventLogger:gateKeeperManager:store:logger:productsRequestFactory:));
 
 @end
 

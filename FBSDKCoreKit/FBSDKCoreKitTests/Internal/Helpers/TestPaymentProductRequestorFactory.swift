@@ -22,10 +22,35 @@ class TestPaymentProductRequestorFactory: PaymentProductRequestorCreating {
     let transaction: SKPaymentTransaction
   }
 
+  // Dummy class to avoid polluting the shared test gatekeeper manager
+  class PaymentGateKeeperManager: GateKeeperManaging {
+    static func bool(forKey key: String, defaultValue: Bool) -> Bool {
+      return false
+    }
+    static func loadGateKeepers(_ completionBlock: @escaping GKManagerBlock) {
+      // noop
+    }
+  }
+
+  let transaction = TestPaymentTransaction(state: .deferred)
+  let settings = TestSettings()
+  let eventLogger = TestEventLogger()
+  let store = UserDefaultsSpy()
+  let logger = TestLogger()
+  let requestFactory = TestProductsRequestFactory()
+
   var evidence = [Evidence]()
 
   func createRequestor(transaction: SKPaymentTransaction) -> PaymentProductRequestor {
-    let requestor = TestPaymentProductRequestor()
+    let requestor = TestPaymentProductRequestor(
+      transaction: transaction,
+      settings: settings,
+      eventLogger: eventLogger,
+      gateKeeperManager: PaymentGateKeeperManager.self,
+      store: store,
+      logger: logger,
+      productsRequestFactory: requestFactory
+    )
     evidence.append(Evidence(requestor: requestor, transaction: transaction))
 
     return requestor

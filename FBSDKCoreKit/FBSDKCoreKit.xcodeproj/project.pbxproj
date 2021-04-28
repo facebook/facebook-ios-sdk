@@ -1242,6 +1242,12 @@
 		F4AE6385263738E500E0B661 /* TestPaymentTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE6384263738E500E0B661 /* TestPaymentTransaction.swift */; };
 		F4AE63AE2637396300E0B661 /* TestPaymentProductRequestor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE63AD2637396300E0B661 /* TestPaymentProductRequestor.swift */; };
 		F4AE63D72637398D00E0B661 /* TestPaymentProductRequestorFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE63D62637398D00E0B661 /* TestPaymentProductRequestorFactory.swift */; };
+		F4AE641D26373E7200E0B661 /* FBSDKProductRequestFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F4AE640E26373D9900E0B661 /* FBSDKProductRequestFactory.m */; };
+		F4AE642B26373E7300E0B661 /* FBSDKProductRequestFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F4AE640E26373D9900E0B661 /* FBSDKProductRequestFactory.m */; };
+		F4AE642C26373E7400E0B661 /* FBSDKProductRequestFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F4AE640E26373D9900E0B661 /* FBSDKProductRequestFactory.m */; };
+		F4AE643A26373E7500E0B661 /* FBSDKProductRequestFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F4AE640E26373D9900E0B661 /* FBSDKProductRequestFactory.m */; };
+		F4AE647D26374B3400E0B661 /* TestProductsRequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE647526374B3400E0B661 /* TestProductsRequestFactory.swift */; };
+		F4AE64A626374BA400E0B661 /* TestProductsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE64A526374BA400E0B661 /* TestProductsRequest.swift */; };
 		F4AF97032605246600E53370 /* TestAccessTokenWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AF97022605246600E53370 /* TestAccessTokenWallet.swift */; };
 		F4BD4024241EEDE500B45D39 /* FBSDKTestCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = F4BD4023241EEDE500B45D39 /* FBSDKTestCoder.m */; };
 		F4BDCE0726152DEF00D3FFF4 /* TestWindowFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BDCDFF26152DEF00D3FFF4 /* TestWindowFinder.swift */; };
@@ -2118,6 +2124,12 @@
 		F4AE6384263738E500E0B661 /* TestPaymentTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPaymentTransaction.swift; sourceTree = "<group>"; };
 		F4AE63AD2637396300E0B661 /* TestPaymentProductRequestor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPaymentProductRequestor.swift; sourceTree = "<group>"; };
 		F4AE63D62637398D00E0B661 /* TestPaymentProductRequestorFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPaymentProductRequestorFactory.swift; sourceTree = "<group>"; };
+		F4AE640D26373BDD00E0B661 /* FBSDKProductsRequestProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKProductsRequestProtocols.h; sourceTree = "<group>"; };
+		F4AE640E26373D9900E0B661 /* FBSDKProductRequestFactory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKProductRequestFactory.m; sourceTree = "<group>"; };
+		F4AE640F26373D9900E0B661 /* FBSDKProductRequestFactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKProductRequestFactory.h; sourceTree = "<group>"; };
+		F4AE647526374B3400E0B661 /* TestProductsRequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestProductsRequestFactory.swift; sourceTree = "<group>"; };
+		F4AE64A526374BA400E0B661 /* TestProductsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestProductsRequest.swift; sourceTree = "<group>"; };
+		F4AE64CE26374F6F00E0B661 /* SKProductsRequest+FBSDKProductsRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SKProductsRequest+FBSDKProductsRequest.h"; sourceTree = "<group>"; };
 		F4AF96EC26051FF600E53370 /* FBSDKAccessToken+AccessTokenProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKAccessToken+AccessTokenProtocols.h"; sourceTree = "<group>"; };
 		F4AF96F42605200800E53370 /* FBSDKAccessTokenProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKAccessTokenProtocols.h; sourceTree = "<group>"; };
 		F4AF97022605246600E53370 /* TestAccessTokenWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAccessTokenWallet.swift; sourceTree = "<group>"; };
@@ -3230,12 +3242,16 @@
 				F4AAAF0C2628AB9E00EDCF06 /* FBSDKFeatureExtracting.h */,
 				C4FC99D7202CD5590038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.h */,
 				C4FC99D8202CD5590038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.m */,
-				9D0BC14A1A8D236200BE8BA4 /* FBSDKPaymentObserver.h */,
 				F4AA87F62634DD9200825641 /* FBSDKPaymentProductRequestorCreating.h */,
 				F4AA880B2634DDB400825641 /* FBSDKPaymentProductRequestorFactory.h */,
 				F4AA880C2634DE0E00825641 /* FBSDKPaymentProductRequestorFactory.m */,
+				9D0BC14A1A8D236200BE8BA4 /* FBSDKPaymentObserver.h */,
 				9D0BC14B1A8D236200BE8BA4 /* FBSDKPaymentObserver.m */,
 				F4379F022634979E00097F05 /* FBSDKPaymentProductRequestor.h */,
+				F4AE640D26373BDD00E0B661 /* FBSDKProductsRequestProtocols.h */,
+				F4AE64CE26374F6F00E0B661 /* SKProductsRequest+FBSDKProductsRequest.h */,
+				F4AE640F26373D9900E0B661 /* FBSDKProductRequestFactory.h */,
+				F4AE640E26373D9900E0B661 /* FBSDKProductRequestFactory.m */,
 				F4379F0A263497DC00097F05 /* FBSDKPaymentProductRequestor.m */,
 				9D0BC14C1A8D236200BE8BA4 /* FBSDKTimeSpentData.h */,
 				9D0BC14D1A8D236200BE8BA4 /* FBSDKTimeSpentData.m */,
@@ -3476,6 +3492,8 @@
 				F4C11CCD26191CBD00FB4596 /* TestErrorReport.swift */,
 				F48A9C8625F83D1300A2DBDF /* TestEventBinding.swift */,
 				F4EC346D25E6F1230003C0CF /* TestEventLogger.swift */,
+				F4AE647526374B3400E0B661 /* TestProductsRequestFactory.swift */,
+				F4AE64A526374BA400E0B661 /* TestProductsRequest.swift */,
 				F4AAAF9B2628EA6F00EDCF06 /* TestEventProcessor.swift */,
 				F4AAAF212628ACFC00EDCF06 /* TestFeatureExtractor.swift */,
 				58E9CD562602A3C2004818D8 /* TestFeatureManager.swift */,
@@ -4912,6 +4930,7 @@
 				F441DC2F25DC93C10092C8F6 /* FBSDKGraphRequestConnectionFactory.m in Sources */,
 				814AC7F41D1B528900D61E6C /* FBSDKErrorRecoveryAttempter.m in Sources */,
 				9E5D8783260A30120064F8AC /* FBSDKUnarchiverProvider.m in Sources */,
+				F4AE643A26373E7500E0B661 /* FBSDKProductRequestFactory.m in Sources */,
 				9E5D877F260A30120064F8AC /* FBSDKObjectDecoder.m in Sources */,
 				814AC7F51D1B528900D61E6C /* FBSDKButton.m in Sources */,
 				C6897AAA260028EB00E5F5D5 /* FBSDKUserAgeRange.m in Sources */,
@@ -5093,6 +5112,7 @@
 				FDAF4A912395D27D00711C4C /* FBSDKModelUtility.m in Sources */,
 				F4713D7D2375DA8200748692 /* FBSDKSuggestedEventsIndexer.m in Sources */,
 				F91D1B9326328F0A005CA2C5 /* FBSDKAEMEvent.m in Sources */,
+				F4AE642B26373E7300E0B661 /* FBSDKProductRequestFactory.m in Sources */,
 				52963AAF2159A16E00C7B252 /* FBSDKMeasurementEvent.m in Sources */,
 				81B71D3F1D19C87400933E93 /* FBSDKBridgeAPIProtocolNativeV1.m in Sources */,
 				F4379F5126349CE700097F05 /* FBSDKPaymentProductRequestor.m in Sources */,
@@ -5236,6 +5256,7 @@
 				FDAF4A8D2395D21700711C4C /* FBSDKModelUtility.m in Sources */,
 				F9FD9A7D21659F320068DEAF /* FBSDKGateKeeperManager.m in Sources */,
 				F91D1B2A26328ED4005CA2C5 /* FBSDKAEMEvent.m in Sources */,
+				F4AE641D26373E7200E0B661 /* FBSDKProductRequestFactory.m in Sources */,
 				BF247C832374E1B200A522C0 /* FBSDKSuggestedEventsIndexer.m in Sources */,
 				52963AAE2159A16E00C7B252 /* FBSDKMeasurementEvent.m in Sources */,
 				F4379F4326349CE600097F05 /* FBSDKPaymentProductRequestor.m in Sources */,
@@ -5440,6 +5461,7 @@
 				C51122A020A4BCEB0041DC94 /* FBSDKApplicationDelegateTests.m in Sources */,
 				F4AA88462634E76300825641 /* PaymentProductRequestorFactoryTests.swift in Sources */,
 				C51121CB20A27EF50041DC94 /* FBSDKEventBindingTests.m in Sources */,
+				F4AE64A626374BA400E0B661 /* TestProductsRequest.swift in Sources */,
 				F413883E24C76F3B001BC075 /* FBSDKSafeCastTests.m in Sources */,
 				C6E98C8D2602BC9F001A56B1 /* FBSDKUserAgeRangeTests.m in Sources */,
 				C6E3621725DF4E54007D555D /* FBSDKAuthenticationTokenClaimsTests.m in Sources */,
@@ -5456,6 +5478,7 @@
 				F4EAC3A725E05CBB00587C32 /* ErrorConfigurationProviderTests.swift in Sources */,
 				F43F398B25D48C4B0046027A /* TestURLSessionProxy.swift in Sources */,
 				F45543EA2617885900A547A1 /* ImageDownloaderTests.swift in Sources */,
+				F4AE647D26374B3400E0B661 /* TestProductsRequestFactory.swift in Sources */,
 				F4A02FF725EEC1CB00D19DE9 /* SampleRawRemoteGateKeeper.swift in Sources */,
 				F4C11B782618E51D00FB4596 /* FBSDKBridgeAPIProtocolWebV1Tests.swift in Sources */,
 			);
@@ -5494,6 +5517,7 @@
 				F4FE998124D906BA008879A4 /* FBSDKJSONValue.m in Sources */,
 				9D6DEEBD1BC238F5001A94ED /* FBSDKPaymentObserver.m in Sources */,
 				F9FD9A7F21659F320068DEAF /* FBSDKGateKeeperManager.m in Sources */,
+				F4AE642C26373E7400E0B661 /* FBSDKProductRequestFactory.m in Sources */,
 				F441DC2E25DC93C10092C8F6 /* FBSDKGraphRequestConnectionFactory.m in Sources */,
 				9D6DEEB71BC23890001A94ED /* FBSDKErrorRecoveryAttempter.m in Sources */,
 				9E5D8782260A30120064F8AC /* FBSDKUnarchiverProvider.m in Sources */,

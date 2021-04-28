@@ -22,6 +22,8 @@
 #import "FBSDKGateKeeperManaging.h"
 #import "FBSDKLogger.h"
 #import "FBSDKPaymentProductRequestor.h"
+#import "FBSDKProductRequestFactory.h"
+#import "FBSDKProductsRequestProtocols.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKSettings+SettingsProtocols.h"
 #import "NSUserDefaults+FBSDKDataPersisting.h"
@@ -33,6 +35,7 @@
 @property (nullable, nonatomic) Class<FBSDKGateKeeperManaging> gateKeeperManager;
 @property (nullable, nonatomic) id<FBSDKDataPersisting> store;
 @property (nullable, nonatomic) id<FBSDKLogging> logger;
+@property (nonatomic, readonly) id<FBSDKProductsRequestCreating> productsRequestFactory;
 
 @end
 
@@ -41,10 +44,11 @@
 - (instancetype)init
 {
   return [self initWithSettings:FBSDKSettings.sharedSettings
-                    eventLogger:[FBSDKEventLogger new]
-              gateKeeperManager:FBSDKGateKeeperManager.class
-                          store:NSUserDefaults.standardUserDefaults
-                         logger:[FBSDKLogger new]];
+                     eventLogger:[FBSDKEventLogger new]
+               gateKeeperManager:FBSDKGateKeeperManager.class
+                           store:NSUserDefaults.standardUserDefaults
+                          logger:[FBSDKLogger new]
+          productsRequestFactory:[FBSDKProductRequestFactory new]];
 }
 
 - (instancetype)initWithSettings:(id<FBSDKSettings>)settings
@@ -52,6 +56,7 @@
                gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
                            store:(id<FBSDKDataPersisting>)store
                           logger:(id<FBSDKLogging>)logger
+          productsRequestFactory:(id<FBSDKProductsRequestCreating>)productsRequestFactory
 {
   if ((self = [super init])) {
     _settings = settings;
@@ -59,6 +64,7 @@
     _gateKeeperManager = gateKeeperManager;
     _store = store;
     _logger = logger;
+    _productsRequestFactory = productsRequestFactory;
   }
 
   return self;
@@ -71,7 +77,8 @@
                                                        eventLogger:self.eventLogger
                                                  gateKeeperManager:self.gateKeeperManager
                                                              store:self.store
-                                                            logger:self.logger];
+                                                            logger:self.logger
+                                            productsRequestFactory:self.productsRequestFactory];
 }
 
 @end

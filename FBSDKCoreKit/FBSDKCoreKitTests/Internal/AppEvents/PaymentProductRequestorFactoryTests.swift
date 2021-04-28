@@ -24,12 +24,14 @@ class PaymentProductRequestorFactoryTests: XCTestCase {
   let eventLogger = TestEventLogger()
   let store = UserDefaultsSpy()
   let logger = TestLogger()
+  let requestFactory = TestProductsRequestFactory()
   lazy var factory = PaymentProductRequestorFactory(
     settings: settings,
     eventLogger: eventLogger,
     gateKeeperManager: TestGateKeeperManager.self,
     store: store,
-    logger: logger
+    logger: logger,
+    productsRequestFactory: requestFactory
   )
 
   override func setUp() {
@@ -71,6 +73,9 @@ class PaymentProductRequestorFactoryTests: XCTestCase {
       factory.logger is Logger,
       "Should use the expected concrete logger by default"
     )
+    XCTAssertTrue(
+      factory.productsRequestFactory is ProductRequestFactory
+    )
   }
 
   func testCreatingWithCustomDependencies() {
@@ -96,6 +101,10 @@ class PaymentProductRequestorFactoryTests: XCTestCase {
     XCTAssertTrue(
       factory.logger is TestLogger,
       "Should use the provided logger"
+    )
+    XCTAssertTrue(
+      factory.productsRequestFactory is TestProductsRequestFactory,
+      "Should use the provided product request factory"
     )
   }
 
@@ -130,6 +139,10 @@ class PaymentProductRequestorFactoryTests: XCTestCase {
     XCTAssertTrue(
       requestor.logger is TestLogger,
       "Should create a requestor using the expected logger"
+    )
+    XCTAssertTrue(
+      requestor.productRequestFactory is TestProductsRequestFactory,
+      "Should create a requestor using the expected product request factory"
     )
   }
 }

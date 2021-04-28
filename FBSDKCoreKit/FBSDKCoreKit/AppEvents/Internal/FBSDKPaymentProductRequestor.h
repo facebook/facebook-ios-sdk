@@ -16,7 +16,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
 #import <StoreKit/StoreKit.h>
 
 @protocol FBSDKSettings;
@@ -24,18 +23,27 @@
 @protocol FBSDKGateKeeperManaging;
 @protocol FBSDKDataPersisting;
 @protocol FBSDKLogging;
+@protocol FBSDKProductsRequestCreating;
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ Used for requesting information about purchase events from StoreKit to use when
+ logging AppEvents
+ */
 NS_SWIFT_NAME(PaymentProductRequestor)
 @interface FBSDKPaymentProductRequestor : NSObject <SKProductsRequestDelegate>
+
++ (instancetype)new NS_UNAVAILABLE;
+- (instancetype)init NS_UNAVAILABLE;
 
 - (instancetype)initWithTransaction:(SKPaymentTransaction *)transaction
                            settings:(id<FBSDKSettings>)settings
                         eventLogger:(id<FBSDKEventLogging>)eventLogger
                   gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
                               store:(id<FBSDKDataPersisting>)store
-                             logger:(id<FBSDKLogging>)logger;
+                             logger:(id<FBSDKLogging>)logger
+              productsRequestFactory:(id<FBSDKProductsRequestCreating>)productRequestFactory;
 
 - (void)resolveProducts;
 

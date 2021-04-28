@@ -16,22 +16,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+class TestProductsRequest: ProductsRequest {
+  var cancelCallCount = 0
+  var startCallCount = 0
 
-NS_ASSUME_NONNULL_BEGIN
+  weak var delegate: SKProductsRequestDelegate?
 
-/// Class to encapsulate implicit logging of purchase events
-NS_SWIFT_NAME(PaymentObserver)
-@interface FBSDKPaymentObserver : NSObject
+  func cancel() {
+    cancelCallCount += 1
+  }
 
-@property (class, readonly) FBSDKPaymentObserver *shared;
-
-+ (instancetype)new NS_UNAVAILABLE;
-- (instancetype)init NS_UNAVAILABLE;
-
-- (void)startObservingTransactions;
-- (void)stopObservingTransactions;
-
-@end
-
-NS_ASSUME_NONNULL_END
+  func start() {
+    startCallCount += 1
+  }
+}

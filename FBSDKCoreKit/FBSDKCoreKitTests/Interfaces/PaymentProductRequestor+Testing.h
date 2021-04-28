@@ -16,14 +16,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <StoreKit/StoreKit.h>
-
 #import "FBSDKPaymentProductRequestor.h"
+
+@protocol FBSDKProductsRequestCreating;
+@class SKPaymentQueue;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKPaymentProductRequestor (Testing)
 
+@property (nonatomic, readonly) id<FBSDKProductsRequestCreating> productRequestFactory;
 @property (nonatomic, retain) SKPaymentTransaction *transaction;
 @property (nonatomic, readonly) id<FBSDKSettings> settings;
 @property (nonatomic, readonly) id<FBSDKEventLogging> eventLogger;

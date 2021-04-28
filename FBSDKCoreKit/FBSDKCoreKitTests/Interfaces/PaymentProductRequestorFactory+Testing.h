@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic) Class<FBSDKGateKeeperManaging> gateKeeperManager;
 @property (nullable, nonatomic) id<FBSDKDataPersisting> store;
 @property (nullable, nonatomic) id<FBSDKLogging> logger;
+@property (nonatomic, readonly) id<FBSDKProductsRequestCreating> productsRequestFactory;
 
 @end
 

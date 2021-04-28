@@ -20,7 +20,6 @@
 
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <Security/Security.h>
-#import <StoreKit/StoreKit.h>
 
 #import <dlfcn.h>
 
@@ -419,25 +418,6 @@ NSString *fbsdkdfl_ACFacebookPermissionsKey(void)
 Class fbsdkdfl_ACAccountStoreClass(void)
 {
   _fbsdkdfl_Accounts_get_c(ACAccountStore);
-  return c;
-}
-
-#pragma mark - StoreKit Classes
-
-_fbsdkdfl_load_framework_once_impl_(StoreKit)
-_fbsdkdfl_handle_get_impl_(StoreKit)
-
-#define _fbsdkdfl_StoreKit_get_c(SYMBOL) _fbsdkdfl_symbol_get_c(StoreKit, SYMBOL);
-
-Class fbsdkdfl_SKPaymentQueueClass(void)
-{
-  _fbsdkdfl_StoreKit_get_c(SKPaymentQueue);
-  return c;
-}
-
-Class fbsdkdfl_SKProductsRequestClass(void)
-{
-  _fbsdkdfl_StoreKit_get_c(SKProductsRequest);
   return c;
 }
 

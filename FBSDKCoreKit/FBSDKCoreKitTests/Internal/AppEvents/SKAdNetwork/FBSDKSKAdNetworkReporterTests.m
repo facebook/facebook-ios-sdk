@@ -21,8 +21,6 @@
 
 #if !TARGET_OS_TV
 
- #import <StoreKit/StoreKit.h>
-
  #import "FBSDKCoreKitTests-Swift.h"
  #import "FBSDKSKAdNetworkConversionConfiguration.h"
  #import "FBSDKSKAdNetworkReporter.h"

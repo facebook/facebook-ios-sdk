@@ -87,11 +87,6 @@ FOUNDATION_EXPORT NSString *fbsdkdfl_ACFacebookPermissionsKey(void);
 
 FOUNDATION_EXPORT Class fbsdkdfl_ACAccountStoreClass(void);
 
-#pragma mark - StoreKit classes
-
-FOUNDATION_EXPORT Class fbsdkdfl_SKPaymentQueueClass(void);
-FOUNDATION_EXPORT Class fbsdkdfl_SKProductsRequestClass(void);
-
 #pragma mark - AssetsLibrary Classes
 
 FOUNDATION_EXPORT Class fbsdkdfl_ALAssetsLibraryClass(void);
