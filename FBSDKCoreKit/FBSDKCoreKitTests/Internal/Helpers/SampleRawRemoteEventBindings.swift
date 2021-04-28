@@ -20,13 +20,13 @@
 class SampleRawRemoteEventBindings: NSObject {
 
   static var sampleDictionary: [String: Any] {
-    return [
+    [
       "event_bindings": bindings
     ]
   }
 
   static var bindings: [[String: Any]] {
-    return [
+    [
       [
         "event_name": "Quantity Changed",
         "event_type": "click",
@@ -144,7 +144,7 @@ class SampleRawRemoteEventBindings: NSObject {
   }
 
   static func rawBinding(name: String) -> [String: Any] {
-    return [
+    [
       "event_name": name,
       "event_type": "click",
       "app_version": "1.2",

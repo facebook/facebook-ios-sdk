@@ -47,7 +47,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
 
   enum Values {
     static let optInEvents = ["foo", "bar", "baz"]
-    static let unconfirmedEvents = optInEvents.map { return $0 + "1" }
+    static let unconfirmedEvents = optInEvents.map { $0 + "1" }
     static let buttonText = "Purchase"
     static let denseFeature = "1,2,3"
     static let processedEvent = "purchase"

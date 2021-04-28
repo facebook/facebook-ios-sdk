@@ -45,7 +45,7 @@ class TestLogger: Logger {
   }
 
   override var isActive: Bool {
-    return stubbedIsActive
+    stubbedIsActive
   }
 
   override func appendKey(_ key: String, value: String) {

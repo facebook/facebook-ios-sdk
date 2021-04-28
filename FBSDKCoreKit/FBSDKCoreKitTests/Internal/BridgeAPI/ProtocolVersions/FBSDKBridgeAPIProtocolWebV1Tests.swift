@@ -57,11 +57,11 @@ class FBSDKBridgeAPIProtocolWebV1Tests: FBSDKTestCase {
     // swiftlint:enable force_try force_unwrapping
 
     static func withBridgeArgs(responseActionID: String) -> [String: Any] {
-      return [Keys.bridgeArgs: jsonString(actionID: responseActionID)]
+      [Keys.bridgeArgs: jsonString(actionID: responseActionID)]
     }
 
     static func validWithErrorCode(_ code: Int) -> [String: Any] {
-      return [
+      [
         Keys.errorCode: code,
         Keys.bridgeArgs: jsonString(actionID: Values.actionID)
       ]

@@ -229,19 +229,19 @@ class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
     let stubbedBody: Any
 
     override var name: String {
-      return stubbedName
+      stubbedName
     }
 
     override var body: Any {
-      return stubbedBody
+      stubbedBody
     }
 
     init(
       name: String,
       body: Any? = nil
     ) {
-      self.stubbedName = name
-      self.stubbedBody = body ?? ""
+      stubbedName = name
+      stubbedBody = body ?? ""
     }
   }
 }

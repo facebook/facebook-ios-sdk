@@ -24,10 +24,10 @@ class TestAppLinkResolverRequestBuilder: AppLinkResolverRequestBuilding {
   var stubbedIdiomSpecificField: String?
 
   func request(for urls: [URL]) -> GraphRequestProtocol {
-    return stubbedGraphRequest
+    stubbedGraphRequest
   }
 
   func getIdiomSpecificField() -> String? {
-    return stubbedIdiomSpecificField
+    stubbedIdiomSpecificField
   }
 }

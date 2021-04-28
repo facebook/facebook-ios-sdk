@@ -21,11 +21,11 @@ import Foundation
 // swiftlint:disable force_unwrapping
 enum SampleUrls {
   static let valid: URL = {
-    return URL(string: "https://www.example.com")!
+    URL(string: "https://www.example.com")!
   }()
 
   static func valid(path: String) -> URL {
-    return valid.appendingPathComponent(path)
+    valid.appendingPathComponent(path)
   }
 
   static func valid(queryItems: [URLQueryItem]) -> URL {
@@ -38,6 +38,6 @@ enum SampleUrls {
 enum SampleUrlRequest {
 
   static let valid: URLRequest = {
-    return URLRequest(url: SampleUrls.valid)
+    URLRequest(url: SampleUrls.valid)
   }()
 }

@@ -23,7 +23,7 @@ class BridgeAPIResponseTests: XCTestCase {
   let bridgeProtocol = TestBridgeApiProtocol()
   let queryItems = [URLQueryItem(name: "foo", value: "bar")]
   lazy var responseURL: URL = {
-    return SampleUrls.valid(queryItems: queryItems)
+    SampleUrls.valid(queryItems: queryItems)
   }()
 
   func testCreatingWithMinimalInput() {

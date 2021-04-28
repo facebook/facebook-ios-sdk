@@ -23,7 +23,7 @@ class TestSessionDataTask: NSObject, SessionDataTask {
   var stubbedState: URLSessionTask.State = .completed
 
   var state: URLSessionTask.State {
-    return stubbedState
+    stubbedState
   }
 
   func resume() {

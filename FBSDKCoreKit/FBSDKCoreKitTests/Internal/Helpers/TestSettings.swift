@@ -42,35 +42,35 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   var shouldUseTokenOptimizations = true
 
   var isDataProcessingRestricted: Bool {
-    return stubbedIsDataProcessingRestricted
+    stubbedIsDataProcessingRestricted
   }
 
   var isAutoLogAppEventsEnabled: Bool {
-    return stubbedIsAutoLogAppEventsEnabled
+    stubbedIsAutoLogAppEventsEnabled
   }
 
   var isSetATETimeExceedsInstallTime: Bool {
-    return stubbedIsSetATETimeExceedsInstallTime
+    stubbedIsSetATETimeExceedsInstallTime
   }
 
   var isSKAdNetworkReportEnabled: Bool {
-    return stubbedIsSKAdNetworkReportEnabled
+    stubbedIsSKAdNetworkReportEnabled
   }
 
   var loggingBehaviors: Set<String> {
-    return TestSettings.loggingBehaviors
+    TestSettings.loggingBehaviors
   }
 
   var shouldLimitEventAndDataUsage: Bool {
-    return stubbedLimitEventAndDataUsage
+    stubbedLimitEventAndDataUsage
   }
 
   var installTimestamp: Date? {
-    return stubbedInstallTimestamp
+    stubbedInstallTimestamp
   }
 
   var advertiserTrackingEnabledTimestamp: Date? {
-    return stubbedSetAdvertiserTrackingEnabledTimestamp
+    stubbedSetAdvertiserTrackingEnabledTimestamp
   }
 
   static func logWarnings() {

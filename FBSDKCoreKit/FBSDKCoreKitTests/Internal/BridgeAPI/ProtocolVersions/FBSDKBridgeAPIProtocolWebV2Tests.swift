@@ -377,6 +377,6 @@ class FBSDKBridgeAPIProtocolWebV2Tests: FBSDKTestCase {
   }
 
   func queryItems(from url: URL) -> [URLQueryItem] {
-    return URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems ?? []
+    URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems ?? []
   }
 }

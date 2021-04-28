@@ -33,7 +33,7 @@ class TestBridgeApiRequest: NSObject, FBSDKBridgeAPIRequestProtocol {
   }
 
   func copy(with zone: NSZone? = nil) -> Any {
-    return self
+    self
   }
 
   func requestURL() throws -> URL {
@@ -44,11 +44,11 @@ class TestBridgeApiRequest: NSObject, FBSDKBridgeAPIRequestProtocol {
   }
 
   static func request(withURL url: URL?) -> TestBridgeApiRequest {
-    return TestBridgeApiRequest(url: url)
+    TestBridgeApiRequest(url: url)
   }
 
   static func request(withURL url: URL, scheme: String) -> TestBridgeApiRequest {
-    return TestBridgeApiRequest(url: url, scheme: scheme)
+    TestBridgeApiRequest(url: url, scheme: scheme)
   }
 }
 

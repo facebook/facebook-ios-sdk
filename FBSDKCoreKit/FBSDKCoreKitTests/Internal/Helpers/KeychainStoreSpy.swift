@@ -21,16 +21,16 @@ class KeychainStoreSpy: KeychainStore {
 
   override func setData(_ value: Data, forKey key: String, accessibility: CFTypeRef) -> Bool {
     // Right now just return true. Later will add actual spying
-    return true
+    true
   }
 
   override func setDictionary(_ value: [AnyHashable: Any], forKey key: String, accessibility: CFTypeRef) -> Bool {
     // Right now just return true. Later will add actual spying
-    return true
+    true
   }
 
   override func setString(_ value: String, forKey key: String, accessibility: CFTypeRef) -> Bool {
     // Right now just return true. Later will add actual spying
-    return true
+    true
   }
 }

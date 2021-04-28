@@ -90,19 +90,19 @@ class SampleRawRemotePermissionList: NSObject {
     expired: [String] = []
   ) -> [String: Any] {
     let grantedPermissions = granted.map {
-      return [
+      [
         "permission": $0,
         "status": "granted"
       ]
     }
     let declinedPermissions = declined.map {
-      return [
+      [
         "permission": $0,
         "status": "declined"
       ]
     }
     let expiredPermissions = expired.map {
-      return [
+      [
         "permission": $0,
         "status": "expired"
       ]

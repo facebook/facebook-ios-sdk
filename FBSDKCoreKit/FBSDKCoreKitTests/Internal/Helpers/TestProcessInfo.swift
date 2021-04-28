@@ -32,6 +32,6 @@ class TestProcessInfo: NSObject, OperatingSystemVersionComparing {
   }
 
   func isOperatingSystemAtLeast(_ version: OperatingSystemVersion) -> Bool {
-    return stubbedOperatingSystemCheckResult
+    stubbedOperatingSystemCheckResult
   }
 }

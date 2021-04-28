@@ -24,7 +24,7 @@ class TestServerConfigurationProvider: NSObject, ServerConfigurationProviding {
   static var stubbedServerConfiguration: ServerConfiguration?
 
   static func cachedServerConfiguration() -> ServerConfiguration? {
-    return stubbedServerConfiguration
+    stubbedServerConfiguration
   }
 
   static func loadServerConfiguration(completionBlock: ServerConfigurationBlock?) {

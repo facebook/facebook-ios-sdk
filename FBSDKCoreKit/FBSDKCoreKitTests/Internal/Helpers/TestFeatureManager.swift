@@ -30,7 +30,7 @@ class TestFeatureManager: NSObject, FeatureChecking {
   }
 
   func capturedFeaturesContains(_ feature: SDKFeature) -> Bool {
-    return capturedFeatures.contains(feature)
+    capturedFeatures.contains(feature)
   }
 
   func completeCheck(

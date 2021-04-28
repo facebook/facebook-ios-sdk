@@ -171,9 +171,7 @@ class ErrorReportTests: XCTestCase { // swiftlint:disable:this type_body_length
   func testLoadingReportsWithValidReportNames() {
     fileManager.stubbedContentsOfDirectory = validReportNames
 
-    let expectedFilePaths = validReportNames.map {
-      return report.directoryPath + "/" + $0
-    }
+    let expectedFilePaths = validReportNames.map { report.directoryPath + "/" + $0 }
 
     report.loadErrorReports()
 
@@ -303,9 +301,7 @@ class ErrorReportTests: XCTestCase { // swiftlint:disable:this type_body_length
     }
 
     XCTAssertTrue(
-      files.contains {
-        return $0.hasPrefix("error_report") && $0.hasSuffix(".json")
-      },
+      files.contains { $0.hasPrefix("error_report") && $0.hasSuffix(".json") },
       "Should contain the file with the error report"
     )
   }
@@ -313,7 +309,7 @@ class ErrorReportTests: XCTestCase { // swiftlint:disable:this type_body_length
   // MARK: - Helpers
 
   var validError: CodableError {
-    return CodableError(
+    CodableError(
       code: code,
       domain: domain,
       timestamp: Date(timeIntervalSince1970: timeInterval)
@@ -321,7 +317,7 @@ class ErrorReportTests: XCTestCase { // swiftlint:disable:this type_body_length
   }
 
   var encodedError: Data {
-    return try! JSONEncoder().encode(validError) // swiftlint:disable:this force_try
+    try! JSONEncoder().encode(validError) // swiftlint:disable:this force_try
   }
 
   func seedErrorReportData() {

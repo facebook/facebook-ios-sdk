@@ -42,7 +42,7 @@ enum SampleAppLinkResolverData {
   ]
 
   static func withShouldFallback(_ shouldFallbackString: String) -> [String: Any] {
-    return [
+    [
       Keys.web: [
         [
           Keys.url: [
@@ -61,21 +61,21 @@ enum SampleAppLinkResolverData {
   }
 
   static let fields = urlField(value: Values.arrayOfDictionaries)
-    .merging(appStoreIdField(value: Values.arrayOfDictionaries)) { return $1 }
-    .merging(appNameField(value: Values.arrayOfDictionaries)) { return $1 }
+    .merging(appStoreIdField(value: Values.arrayOfDictionaries)) { $1 }
+    .merging(appNameField(value: Values.arrayOfDictionaries)) { $1 }
 
   static func urlField(value: Any) -> [String: Any] {
-    return [
+    [
       Keys.url: value
     ]
   }
   static func appStoreIdField(value: Any) -> [String: Any] {
-    return [
+    [
       Keys.appStoreID: value
     ]
   }
   static func appNameField(value: Any) -> [String: Any] {
-    return [
+    [
       Keys.appName: value
     ]
   }

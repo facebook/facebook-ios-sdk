@@ -24,6 +24,6 @@ class TestReactNativeView: UIView {
   var stubbedWindow: UIWindow?
 
   override var window: UIWindow? {
-    return stubbedWindow
+    stubbedWindow
   }
 }

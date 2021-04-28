@@ -21,6 +21,6 @@ class TestGraphRequestPiggybackManagerProvider: NSObject, GraphRequestPiggybackM
 
   /// Returns the class TestGraphRequestPiggybackManager. This will need to be reset between tests.
   static func piggybackManager() -> GraphRequestPiggybackManaging.Type {
-    return TestGraphRequestPiggybackManager.self
+    TestGraphRequestPiggybackManager.self
   }
 }

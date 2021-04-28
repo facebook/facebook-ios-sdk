@@ -33,23 +33,19 @@ class TestURLSessionProxyFactory: NSObject, URLSessionProxyProviding {
   /// If you provide a single session, all calls to `createSessionProxy` will return the same
   /// session instance
   static func create(with session: TestURLSessionProxy) -> TestURLSessionProxyFactory {
-    return TestURLSessionProxyFactory(session: session)
+    TestURLSessionProxyFactory(session: session)
   }
 
   /// Creates a new provider stubbed with the `FakeURLSessionProxy`
   ///
   /// If you provide multiple sessions, they will be provided in the order they are requested
   static func create(withSessions sessions: [TestURLSessionProxy]) -> TestURLSessionProxyFactory {
-    return TestURLSessionProxyFactory(sessions: sessions)
+    TestURLSessionProxyFactory(sessions: sessions)
   }
 
   // MARK: - UrlSessionProxyProviding
 
   func createSessionProxy(with delegate: URLSessionDataDelegate?, queue: OperationQueue?) -> URLSessionProxying {
-    if stubbedSessions.count > 1 {
-      return stubbedSessions.removeFirst()
-    } else {
-      return stubbedSessions[0]
-    }
+    return stubbedSessions.count > 1 ? stubbedSessions.removeFirst() : stubbedSessions[0]
   }
 }

@@ -21,6 +21,6 @@ class TestTouch: UITouch {
   var stubbedView: UIView?
 
   override var view: UIView? {
-    return stubbedView
+    stubbedView
   }
 }
