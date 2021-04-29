@@ -585,6 +585,18 @@ static id <FBSDKDataPersisting> _store;
     graphPath = [graphPath stringByAppendingString:@",age_range"];
   }
 
+  if ([token.permissions containsObject:@"user_hometown"]) {
+    graphPath = [graphPath stringByAppendingString:@",hometown"];
+  }
+
+  if ([token.permissions containsObject:@"user_location"]) {
+    graphPath = [graphPath stringByAppendingString:@",location"];
+  }
+
+  if ([token.permissions containsObject:@"user_gender"]) {
+    graphPath = [graphPath stringByAppendingString:@",gender"];
+  }
+
   id<FBSDKGraphRequest> request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
                                                                     parameters:nil
                                                                          flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
@@ -614,6 +626,9 @@ static id <FBSDKDataPersisting> _store;
 
     [FBSDKProfile.dateFormatter setDateFormat:@"MM/dd/yyyy"];
     NSDate *birthday = [FBSDKProfile.dateFormatter dateFromString:[FBSDKTypeUtility coercedToStringValue:result[@"birthday"]]];
+    FBSDKLocation *hometown = [FBSDKLocation locationFromDictionary:[FBSDKTypeUtility dictionaryValue:result[@"hometown"]]];
+    FBSDKLocation *location = [FBSDKLocation locationFromDictionary:[FBSDKTypeUtility dictionaryValue:result[@"location"]]];
+    NSString *gender = [FBSDKTypeUtility coercedToStringValue:result[@"gender"]];
 
     FBSDKProfile *profile = [[FBSDKProfile alloc] initWithUserID:profileID
                                                        firstName:[FBSDKTypeUtility coercedToStringValue:result[@"first_name"]]
@@ -626,7 +641,10 @@ static id <FBSDKDataPersisting> _store;
                                                            email:[FBSDKTypeUtility coercedToStringValue:result[@"email"]]
                                                        friendIDs:friendIDs
                                                         birthday:birthday
-                                                        ageRange:ageRange];
+                                                        ageRange:ageRange
+                                                        hometown:hometown
+                                                        location:location
+                                                          gender:gender];
     *profileRef = [profile copy];
   };
   [[self class] loadProfileWithToken:token
