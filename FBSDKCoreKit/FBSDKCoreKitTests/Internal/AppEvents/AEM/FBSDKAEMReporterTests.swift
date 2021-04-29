@@ -49,7 +49,7 @@ class FBSDKAEMReporterTests: XCTestCase {
   )! // swiftlint:disable:this force_unwrapping
   var testInvocation = TestInvocation()
   lazy var reportFilePath = FBSDKBasicUtility.persistenceFilePath(name)
-  let urlWithInvocation = URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22acstoken%22%2C+%22campaign_id%22%3A+%22campaignid%22%2C+%22advertiser_id%22%3A+%22advertiserid%22%7D")! // swiftlint:disable:this line_length force_unwrapping
+  let urlWithInvocation = URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22test_token_1234567%22%2C+%22campaign_ids%22%3A+%22test_campaign_1234%22%2C+%22advertiser_id%22%3A+%22test_advertiserid_12345%22%7D")! // swiftlint:disable:this line_length force_unwrapping
 
   override func setUp() {
     super.setUp()
@@ -84,16 +84,16 @@ class FBSDKAEMReporterTests: XCTestCase {
     url = URL(string: "fb123://test.com")
     XCTAssertNil(FBSDKAEMReporter.parseURL(url))
 
-    url = URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22acstoken%22%2C+%22campaign_id%22%3A+%22campaignid%22%7D") // swiftlint:disable:this line_length
+    url = URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22test_token_1234567%22%2C+%22campaign_ids%22%3A+%22test_campaign_1234%22%7D") // swiftlint:disable:this line_length
     var invocation = FBSDKAEMReporter.parseURL(url)
-    XCTAssertEqual(invocation?.acsToken, "acstoken")
-    XCTAssertEqual(invocation?.campaignID, "campaignid")
+    XCTAssertEqual(invocation?.acsToken, "test_token_1234567")
+    XCTAssertEqual(invocation?.campaignID, "test_campaign_1234")
     XCTAssertNil(invocation?.advertiserID)
 
     invocation = FBSDKAEMReporter.parseURL(urlWithInvocation)
-    XCTAssertEqual(invocation?.acsToken, "acstoken")
-    XCTAssertEqual(invocation?.campaignID, "campaignid")
-    XCTAssertEqual(invocation?.advertiserID, "advertiserid")
+    XCTAssertEqual(invocation?.acsToken, "test_token_1234567")
+    XCTAssertEqual(invocation?.campaignID, "test_campaign_1234")
+    XCTAssertEqual(invocation?.advertiserID, "test_advertiserid_12345")
   }
 
   func testLoadReportData() {
@@ -105,9 +105,9 @@ class FBSDKAEMReporterTests: XCTestCase {
     FBSDKAEMReporter._saveReportData()
     let data = FBSDKAEMReporter._loadReportData() as? [FBSDKAEMInvocation]
     XCTAssertEqual(data?.count, 1)
-    XCTAssertEqual(data?[0].acsToken, "acstoken")
-    XCTAssertEqual(data?[0].campaignID, "campaignid")
-    XCTAssertEqual(data?[0].advertiserID, "advertiserid")
+    XCTAssertEqual(data?[0].acsToken, "test_token_1234567")
+    XCTAssertEqual(data?[0].campaignID, "test_campaign_1234")
+    XCTAssertEqual(data?[0].advertiserID, "test_advertiserid_12345")
   }
 
   func testLoadConfigs() {
@@ -162,17 +162,17 @@ class FBSDKAEMReporterTests: XCTestCase {
     XCTAssertEqual(configList?.count, 1, "Should have the expected number of configs")
 
     guard let invocation1 = FBSDKAEMInvocation(
-      campaignID: "campaignid",
-      acsToken: "acstoken",
-      acsSharedSecret: "acssharedsecret",
-      acsConfigID: "acsconfigid",
-      advertiserID: "advertiserid"
+      campaignID: "test_campaign_1234",
+      acsToken: "test_token_1234567",
+      acsSharedSecret: "test_shared_secret",
+      acsConfigID: "test_config_id_123",
+      advertiserID: "test_advertiserid_12345"
     ), let invocation2 = FBSDKAEMInvocation(
-      campaignID: "campaignid",
-      acsToken: "acstoken",
-      acsSharedSecret: "acssharedsecret",
-      acsConfigID: "acsconfigid",
-      advertiserID: "advertiserid"
+      campaignID: "test_campaign_1234",
+      acsToken: "test_token_1234567",
+      acsSharedSecret: "test_shared_secret",
+      acsConfigID: "test_config_id_123",
+      advertiserID: "test_advertiserid_12345"
     )
     else { return XCTFail("Unwrapping Error") }
     invocation1.setConfigID(10000)
@@ -196,7 +196,7 @@ class FBSDKAEMReporterTests: XCTestCase {
   }
 
   func testHandleURL() {
-    guard let url = URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22acstoken%22%2C+%22campaign_id%22%3A+%22campaignid%22%7D") // swiftlint:disable:this line_length
+    guard let url = URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22test_token_1234567%22%2C+%22campaign_ids%22%3A+%22test_campaign_1234%22%7D") // swiftlint:disable:this line_length
     else { return XCTFail("Unwrapping Error") }
     FBSDKAEMReporter.handle(url)
     let invocations = FBSDKAEMReporter.invocations
@@ -280,11 +280,11 @@ class FBSDKAEMReporterTests: XCTestCase {
   func testRecordAndUpdateEvents() {
     FBSDKAEMReporter.timestamp = Date()
     guard let invocation = FBSDKAEMInvocation(
-      campaignID: "campaignid",
-      acsToken: "acstoken",
-      acsSharedSecret: "acssharedsecret",
-      acsConfigID: "acsconfigid",
-      advertiserID: "advertiserid"
+      campaignID: "test_campaign_1234",
+      acsToken: "test_token_1234567",
+      acsSharedSecret: "test_shared_secret",
+      acsConfigID: "test_config_id_123",
+      advertiserID: "test_advertiserid_12345"
     )
     else { return XCTFail("Unwrapping Error") }
     guard let config = FBSDKAEMConfiguration(json: SampleAEMData.validConfigData3)
