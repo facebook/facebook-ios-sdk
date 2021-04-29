@@ -41,7 +41,8 @@ xcodebuild -target "${TARGET}" \
   -sdk iphoneos \
   BUILD_DIR="${BUILD_DIR}" \
   BUILD_ROOT="${BUILD_ROOT}" \
-  BUILD_LIBRARY_FOR_DISTRIBUTION=YES
+  BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
+  SWIFT_SERIALIZE_DEBUGGING_OPTIONS=NO
 
 xcodebuild -target "${TARGET}" \
   ONLY_ACTIVE_ARCH=NO \
@@ -49,7 +50,8 @@ xcodebuild -target "${TARGET}" \
   -sdk iphonesimulator \
   BUILD_DIR="${BUILD_DIR}" \
   BUILD_ROOT="${BUILD_ROOT}" \
-  BUILD_LIBRARY_FOR_DISTRIBUTION=YES
+  BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
+  SWIFT_SERIALIZE_DEBUGGING_OPTIONS=NO
 
 # Step 2. Copy the framework structure to the universal folder
 cp -R "${BUILD_DIR}/${CONFIGURATION}-iphoneos/${PROJECT_NAME}.framework" "${UNIVERSAL_BUILD_FOLDER}/"
