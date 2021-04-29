@@ -27,23 +27,55 @@
 #import "FBSDKSettings.h"
 #import "FBSDKUnarchiverProvider.h"
 
+@interface FBSDKAppEventsStateManager (Internal)
 // A quick optimization to allow returning empty array if we know there are no persisted events.
-static BOOL g_canSkipDiskCheck = NO;
+@property (nonatomic, readwrite, assign) BOOL canSkipDiskCheck;
+@end
 
 @implementation FBSDKAppEventsStateManager
+{
+  BOOL _canSkipDiskCheck;
+}
 
-+ (void)clearPersistedAppEventsStates
+- (instancetype)init
+{
+  self.canSkipDiskCheck = NO;
+  return self;
+}
+
+- (void)setCanSkipDiskCheck:(BOOL)canSkipDiskCheck
+{
+  _canSkipDiskCheck = canSkipDiskCheck;
+}
+
+- (BOOL)canSkipDiskCheck
+{
+  return _canSkipDiskCheck;
+}
+
++ (FBSDKAppEventsStateManager *)shared
+{
+  static dispatch_once_t nonce;
+  static FBSDKAppEventsStateManager *instance = nil;
+
+  dispatch_once(&nonce, ^{
+    instance = [FBSDKAppEventsStateManager new];
+  });
+  return instance;
+}
+
+- (void)clearPersistedAppEventsStates
 {
   [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
                          logEntry:@"FBSDKAppEvents Persist: Clearing"];
-  [[NSFileManager defaultManager] removeItemAtPath:[[self class] filePath]
+  [[NSFileManager defaultManager] removeItemAtPath:[self filePath]
                                              error:NULL];
-  g_canSkipDiskCheck = YES;
+  self.canSkipDiskCheck = YES;
 }
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-+ (void)persistAppEventsData:(FBSDKAppEventsState *)appEventsState
+- (void)persistAppEventsData:(FBSDKAppEventsState *)appEventsState
 {
   [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
                      formatString:@"FBSDKAppEvents Persist: Writing %lu events", (unsigned long)appEventsState.events.count];
@@ -51,18 +83,18 @@ static BOOL g_canSkipDiskCheck = NO;
   if (!appEventsState.events.count) {
     return;
   }
-  NSMutableArray *existingEvents = [NSMutableArray arrayWithArray:[[self class] retrievePersistedAppEventsStates]];
+  NSMutableArray *existingEvents = [NSMutableArray arrayWithArray:[self retrievePersistedAppEventsStates]];
   [FBSDKTypeUtility array:existingEvents addObject:appEventsState];
 
-  [NSKeyedArchiver archiveRootObject:existingEvents toFile:[[self class] filePath]];
-  g_canSkipDiskCheck = NO;
+  [NSKeyedArchiver archiveRootObject:existingEvents toFile:[self filePath]];
+  self.canSkipDiskCheck = NO;
 }
 
-+ (NSArray *)retrievePersistedAppEventsStates
+- (NSArray *)retrievePersistedAppEventsStates
 {
   NSMutableArray *eventsStates = [NSMutableArray array];
-  if (!g_canSkipDiskCheck) {
-    NSData *data = [[NSData alloc] initWithContentsOfFile:[[self class] filePath] options:NSDataReadingMappedIfSafe error:NULL];
+  if (!self.canSkipDiskCheck) {
+    NSData *data = [[NSData alloc] initWithContentsOfFile:[self filePath] options:NSDataReadingMappedIfSafe error:NULL];
     id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createSecureUnarchiverFor:data];
     @try {
       NSArray<FBSDKAppEventsState *> *retrievedEvents = [unarchiver decodeObjectOfClasses:
@@ -77,7 +109,7 @@ static BOOL g_canSkipDiskCheck = NO;
                        formatString:@"FBSDKAppEvents Persist: Read %lu event states. First state has %lu events",
      (unsigned long)eventsStates.count,
      (unsigned long)(eventsStates.count > 0 ? ((FBSDKAppEventsState *)[FBSDKTypeUtility array:eventsStates objectAtIndex:0]).events.count : 0)];
-    [[self class] clearPersistedAppEventsStates];
+    [self clearPersistedAppEventsStates];
   }
   return eventsStates;
 }
@@ -86,7 +118,7 @@ static BOOL g_canSkipDiskCheck = NO;
 
 #pragma mark - Private Helpers
 
-+ (NSString *)filePath
+- (NSString *)filePath
 {
   return [FBSDKBasicUtility persistenceFilePath:@"com-facebook-sdk-AppEventsPersistedEvents.json"];
 }
