@@ -157,6 +157,10 @@ static NSString *const kFakeJTI = @"a jti is just any string";
     @"user_friends" : @[@"123", @"456"],
     @"user_birthday" : @"01/01/1990",
     @"user_age_range" : @{@"min" : @((long)21)},
+    @"user_hometown" : @{@"id" : @"112724962075996", @"name" : @"Martinez, California"},
+    @"user_location" : @{@"id" : @"110843418940484", @"name" : @"Seattle, Washington"},
+    @"user_gender" : @"male",
+    @"user_link" : @"https://www.facebook.com",
   };
 
   _header = @{
@@ -419,7 +423,11 @@ static NSString *const kFakeJTI = @"a jti is just any string";
     @"email",
     @"user_friends",
     @"user_birthday",
-    @"user_age_range"
+    @"user_age_range",
+    @"user_hometown",
+    @"user_location",
+    @"user_gender",
+    @"user_link"
   ];
   NSURL *url = [self authorizeURLWithFragment:[NSString stringWithFormat:@"granted_scopes=%@&id_token=%@", [permissions componentsJoinedByString:@","], tokenString] challenge:kFakeChallenge];
 
@@ -1039,6 +1047,22 @@ static NSString *const kFakeJTI = @"a jti is just any string";
     profile.ageRange,
     [FBSDKUserAgeRange ageRangeFromDictionary:_claims[@"user_age_range"]],
     @"failed to parse user age range"
+  );
+  XCTAssertEqualObjects(
+    profile.hometown,
+    [FBSDKLocation locationFromDictionary:_claims[@"user_hometown"]],
+    @"failed to parse user hometown"
+  );
+  XCTAssertEqualObjects(
+    profile.location,
+    [FBSDKLocation locationFromDictionary:_claims[@"user_location"]],
+    @"failed to parse user location"
+  );
+  XCTAssertEqualObjects(profile.gender, _claims[@"user_gender"], @"failed to parse user gender");
+  XCTAssertEqualObjects(
+    profile.linkURL,
+    [NSURL URLWithString:_claims[@"user_link"]],
+    @"failed to parse user link"
   );
 }
 

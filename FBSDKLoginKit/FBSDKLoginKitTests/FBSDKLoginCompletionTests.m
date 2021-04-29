@@ -590,6 +590,26 @@ static NSString *const _fakeChallence = @"some_challenge";
     [FBSDKUserAgeRange ageRangeFromDictionary:claim.userAgeRange],
     "Should request a profile using the user age range from the claims"
   );
+  XCTAssertEqualObjects(
+    factory.capturedHometown,
+    [FBSDKLocation locationFromDictionary:claim.userHometown],
+    "Should request a profile using the user hometown from the claims"
+  );
+  XCTAssertEqualObjects(
+    factory.capturedLocation,
+    [FBSDKLocation locationFromDictionary:claim.userLocation],
+    "Should request a profile using the user location from the claims"
+  );
+  XCTAssertEqualObjects(
+    factory.capturedGender,
+    claim.userGender,
+    "Should request a profile using the gender from the claims"
+  );
+  XCTAssertEqualObjects(
+    factory.capturedLinkURL,
+    [NSURL URLWithString:claim.userLink],
+    "Should request a profile using the link from the claims"
+  );
   XCTAssertTrue(
     factory.capturedIsLimited,
     "Should request a profile with limited information"

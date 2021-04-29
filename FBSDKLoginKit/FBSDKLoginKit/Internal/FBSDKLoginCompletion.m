@@ -270,16 +270,16 @@ static NSDateFormatter *_dateFormatter;
                                        middleName:nil
                                          lastName:nil
                                              name:claims.name
-                                          linkURL:nil
+                                          linkURL:[NSURL URLWithString:claims.userLink]
                                       refreshDate:nil
                                          imageURL:imageURL
                                             email:claims.email
                                         friendIDs:claims.userFriends
                                          birthday:birthday
                                          ageRange:[FBSDKUserAgeRange ageRangeFromDictionary:claims.userAgeRange]
-                                         hometown:nil
-                                         location:nil
-                                           gender:nil
+                                         hometown:[FBSDKLocation locationFromDictionary:claims.userHometown]
+                                         location:[FBSDKLocation locationFromDictionary:claims.userLocation]
+                                           gender:claims.userGender
                                         isLimited:YES];
 }
 
