@@ -69,6 +69,18 @@ NS_ASSUME_NONNULL_BEGIN
 /// End-User's age range
 @property (nullable, nonatomic, readonly, strong) NSDictionary<NSString *, NSNumber *> *userAgeRange;
 
+/// End-User's hometown
+@property (nullable, nonatomic, readonly, strong) NSDictionary<NSString *, NSString *> *userHometown;
+
+/// End-User's location
+@property (nullable, nonatomic, readonly, strong) NSDictionary<NSString *, NSString *> *userLocation;
+
+/// End-User's gender
+@property (nullable, nonatomic, readonly, strong) NSString *userGender;
+
+/// End-User's link
+@property (nullable, nonatomic, readonly, strong) NSString *userLink;
+
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 

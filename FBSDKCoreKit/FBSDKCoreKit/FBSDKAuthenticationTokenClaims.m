@@ -41,6 +41,10 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
                 userFriends:(nullable NSArray<NSString *> *)userFriends
                userBirthday:(nullable NSString *)userBirthday
                userAgeRange:(nullable NSDictionary<NSString *, NSNumber *> *)userAgeRange
+               userHometown:(nullable NSDictionary<NSString *, NSString *> *)userHometown
+               userLocation:(nullable NSDictionary<NSString *, NSString *> *)userLocation
+                 userGender:(nullable NSString *)userGender
+                   userLink:(nullable NSString *)userLink
 {
   if (self = [super init]) {
     _jti = jti;
@@ -56,6 +60,10 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
     _userFriends = userFriends;
     _userBirthday = userBirthday;
     _userAgeRange = userAgeRange;
+    _userHometown = userHometown;
+    _userLocation = userLocation;
+    _userGender = userGender;
+    _userLink = userLink;
   }
 
   return self;
@@ -115,6 +123,12 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
         }
       }
 
+      NSMutableDictionary<NSString *, NSString *> *userHometown = [self extractLocationDictFromClaims:claimsDict key:@"user_hometown"];
+      NSMutableDictionary<NSString *, NSString *> *userLocation = [self extractLocationDictFromClaims:claimsDict key:@"user_location"];
+
+      NSString *userGender = [FBSDKTypeUtility coercedToStringValue:claimsDict[@"user_gender"]];
+      NSString *userLink = [FBSDKTypeUtility coercedToStringValue:claimsDict[@"user_link"]];
+
       NSArray<NSString *> *userFriends = [FBSDKTypeUtility arrayValue:claimsDict[@"user_friends"]];
       for (NSString *friend in userFriends) {
         if (![FBSDKTypeUtility coercedToStringValue:friend]) {
@@ -136,12 +150,36 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
                                                            picture:picture
                                                        userFriends:userFriends
                                                       userBirthday:userBirthday
-                                                      userAgeRange:userAgeRange];
+                                                      userAgeRange:userAgeRange
+                                                      userHometown:userHometown
+                                                      userLocation:userLocation
+                                                        userGender:userGender
+                                                          userLink:userLink];
       }
     }
   }
 
   return nil;
+}
+
++ (nullable NSMutableDictionary<NSString *, NSString *> *)extractLocationDictFromClaims:(NSDictionary *)claimsDict key:(NSString *)keyName
+{
+  NSDictionary *rawLocationData = [FBSDKTypeUtility dictionaryValue:claimsDict[keyName]];
+  NSMutableDictionary<NSString *, NSString *> *location;
+  if (rawLocationData.count > 0) {
+    location = NSMutableDictionary.new;
+    for (NSString *key in rawLocationData) {
+      NSString *value = [FBSDKTypeUtility dictionary:rawLocationData
+                                        objectForKey:key
+                                              ofType:NSString.class];
+      if (value == nil) {
+        return nil;
+      }
+
+      [FBSDKTypeUtility dictionary:location setObject:value forKey:key];
+    }
+  }
+  return location;
 }
 
 // MARK: Equality
@@ -160,7 +198,11 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
   && [_picture isEqualToString:claims.picture]
   && [_userFriends isEqualToArray:claims.userFriends]
   && [_userBirthday isEqualToString:claims.userBirthday]
-  && [_userAgeRange isEqualToDictionary:claims.userAgeRange];
+  && [_userAgeRange isEqualToDictionary:claims.userAgeRange]
+  && [_userHometown isEqualToDictionary:claims.userHometown]
+  && [_userLocation isEqualToDictionary:claims.userLocation]
+  && [_userGender isEqualToString:claims.userGender]
+  && [_userLink isEqualToString:claims.userLink];
 }
 
 - (BOOL)isEqual:(id)object
