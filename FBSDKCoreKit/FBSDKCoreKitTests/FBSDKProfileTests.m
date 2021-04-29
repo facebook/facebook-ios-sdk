@@ -769,6 +769,21 @@ NSString *const heightKey = @"height";
     "Should encode the expected user age range"
   );
   XCTAssertEqualObjects(
+    coder.encodedObject[@"hometown"],
+    _profile.hometown,
+    "Should encode the expected user hometown"
+  );
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"location"],
+    _profile.location,
+    "Should encode the expected user location"
+  );
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"gender"],
+    _profile.gender,
+    "Should encode the expected user gender"
+  );
+  XCTAssertEqualObjects(
     coder.encodedObject[@"isLimited"],
     @YES,
     "Should encode the expected 'isLimited' value as an object"
@@ -839,6 +854,21 @@ NSString *const heightKey = @"height";
     coder.decodedObject[@"ageRange"],
     FBSDKUserAgeRange.class,
     "Should decode a UserAgeRange object for the ageRange key"
+  );
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"hometown"],
+    FBSDKLocation.class,
+    "Should decode a Location object for the hometown key"
+  );
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"location"],
+    FBSDKLocation.class,
+    "Should decode a Location object for the location key"
+  );
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"gender"],
+    NSString.class,
+    "Should decode a string for the gender key"
   );
   XCTAssertEqualObjects(
     coder.decodedObject[@"isLimited"],

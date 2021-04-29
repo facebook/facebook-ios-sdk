@@ -277,6 +277,9 @@ static NSDateFormatter *_dateFormatter;
                                         friendIDs:claims.userFriends
                                          birthday:birthday
                                          ageRange:[FBSDKUserAgeRange ageRangeFromDictionary:claims.userAgeRange]
+                                         hometown:nil
+                                         location:nil
+                                           gender:nil
                                         isLimited:YES];
 }
 
