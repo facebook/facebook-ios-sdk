@@ -47,6 +47,7 @@
 #import "FBSDKSettings+SettingsProtocols.h"
 #import "FBSDKSettingsLogging.h"
 #import "FBSDKTimeSpentData.h"
+#import "FBSDKTimeSpentData+TimeSpentRecording.h"
 #import "FBSDKTokenCache.h"
 #import "GraphAPI/FBSDKGraphRequest.h"
 #import "NSNotificationCenter+Extensions.h"
@@ -506,7 +507,8 @@ static UIApplicationState _applicationState;
                                            store:store
                                           logger:FBSDKLogger.class
                                         settings:sharedSettings
-                                 paymentObserver:FBSDKPaymentObserver.shared];
+                                 paymentObserver:FBSDKPaymentObserver.shared
+                               timeSpentRecorder:FBSDKTimeSpentData.shared];
   [FBSDKInternalUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:FBSDKAccessToken.class];
   [FBSDKAppEventsConfigurationManager configureWithStore:store];

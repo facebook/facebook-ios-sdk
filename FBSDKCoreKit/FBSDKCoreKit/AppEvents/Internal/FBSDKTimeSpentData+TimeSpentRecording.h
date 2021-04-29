@@ -18,19 +18,11 @@
 
 #import <Foundation/Foundation.h>
 
-FOUNDATION_EXPORT NSString *const FBSDKTimeSpentFilename;
+#import "FBSDKTimeSpentRecording.h"
 
-// Class to encapsulate persisting of time spent data collected by [FBSDKAppEvents activateApp].  The activate app App Event is
-// logged when restore: is called with sufficient time since the last deactivation.
-NS_SWIFT_NAME(TimeSpentData)
-@interface FBSDKTimeSpentData : NSObject
-@property (class, nonatomic, readonly) FBSDKTimeSpentData* shared;
+NS_ASSUME_NONNULL_BEGIN
 
-+ (void)setSourceApplication:(NSString *)sourceApplication openURL:(NSURL *)url;
-+ (void)setSourceApplication:(NSString *)sourceApplication isFromAppLink:(BOOL)isFromAppLink;
-+ (void)registerAutoResetSourceApplication;
-
-- (void)suspend;
-- (void)restore:(BOOL)calledFromActivateApp;
-
+@interface FBSDKTimeSpentData (TimeSpentRecording) <FBSDKTimeSpentRecording>
 @end
+
+NS_ASSUME_NONNULL_END

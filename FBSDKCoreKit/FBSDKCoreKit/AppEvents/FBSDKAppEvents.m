@@ -55,7 +55,7 @@
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationProviding.h"
 #import "FBSDKSettingsProtocol.h"
-#import "FBSDKTimeSpentData.h"
+#import "FBSDKTimeSpentRecording.h"
 #import "FBSDKUtility.h"
 
 #if !TARGET_OS_TV
@@ -341,6 +341,7 @@ static id<FBSDKFeatureChecking> g_featureChecker;
 static Class<FBSDKLogging> g_logger;
 static id<FBSDKSettings> g_settings;
 static id<FBSDKPaymentObserving> g_paymentObserver;
+static id<FBSDKTimeSpentRecording> g_timeSpentRecorder;
 
 #if !TARGET_OS_TV
 static id<FBSDKEventProcessing> g_eventProcessor = nil;
@@ -700,7 +701,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   // Restore time spent data, indicating that we're being called from "activateApp", which will,
   // when appropriate, result in logging an "activated app" and "deactivated app" (for the
   // previous session) App Event.
-  [FBSDKTimeSpentData restore:YES];
+  [g_timeSpentRecorder restore:YES];
 }
 
 + (void)setPushNotificationsDeviceToken:(NSData *)deviceToken
@@ -901,6 +902,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
                                 logger:(Class<FBSDKLogging>)logger
                               settings:(id<FBSDKSettings>)settings
                        paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
+                     timeSpentRecorder:(id<FBSDKTimeSpentRecording>)timeSpentRecorder
 {
   [FBSDKAppEvents setAppEventsConfigurationProvider:appEventsConfigurationProvider];
   [FBSDKAppEvents setServerConfigurationProvider:serverConfigurationProvider];
@@ -912,6 +914,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   [FBSDKAppEvents setCanLogEvents];
   g_settings = settings;
   g_paymentObserver = paymentObserver;
+  g_timeSpentRecorder = timeSpentRecorder;
 }
 
 + (void)setFeatureChecker:(id<FBSDKFeatureChecking>)checker
@@ -1575,7 +1578,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   [self checkPersistedEvents];
 
   // Restore time spent data, indicating that we're not being called from "activateApp".
-  [FBSDKTimeSpentData restore:NO];
+  [g_timeSpentRecorder restore:NO];
 }
 
 - (void)applicationMovingFromActiveStateOrTerminating
@@ -1590,7 +1593,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   if (copy) {
     [FBSDKAppEventsStateManager.shared persistAppEventsData:copy];
   }
-  [FBSDKTimeSpentData suspend];
+  [g_timeSpentRecorder suspend];
 }
 
 #pragma mark - Custom Audience
@@ -1701,6 +1704,11 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 + (void)setPaymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
 {
   g_paymentObserver = paymentObserver;
+}
+
++ (id<FBSDKTimeSpentRecording>)timeSpentRecorder
+{
+  return g_timeSpentRecorder;
 }
 
  #if !TARGET_OS_TV

@@ -60,6 +60,8 @@ static NSString *const _mockUserID = @"mockUserID";
               parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken;
+- (void)applicationDidBecomeActive;
+- (void)applicationMovingFromActiveStateOrTerminating;
 
 + (FBSDKAppEvents *)singleton;
 
@@ -127,6 +129,7 @@ static NSString *const _mockUserID = @"mockUserID";
   TestSettings *_settings;
   TestEventProcessor *_eventProcessor;
   TestPaymentObserver *_paymentObserver;
+  TestTimeSpentRecorder *_timeSpentRecorder;
 }
 @end
 
@@ -153,6 +156,8 @@ static NSString *const _mockUserID = @"mockUserID";
   [FBSDKAppEvents setServerConfigurationProvider:TestServerConfigurationProvider.class];
   [FBSDKAppEvents setFeatureChecker:TestFeatureManager.class];
   _eventProcessor = [TestEventProcessor new];
+  _paymentObserver = [TestPaymentObserver new];
+  _timeSpentRecorder = [TestTimeSpentRecorder new];
 
   [self stubLoadingAdNetworkReporterConfiguration];
   [self stubServerConfigurationFetchingWithConfiguration:FBSDKServerConfigurationFixtures.defaultConfig error:nil];
@@ -181,7 +186,8 @@ static NSString *const _mockUserID = @"mockUserID";
                                            store:_store
                                           logger:TestLogger.self
                                         settings:_settings
-                                 paymentObserver:_paymentObserver];
+                                 paymentObserver:_paymentObserver
+                               timeSpentRecorder:_timeSpentRecorder];
   [FBSDKAppEvents setEventProcessor:_eventProcessor];
 }
 
@@ -456,14 +462,52 @@ static NSString *const _mockUserID = @"mockUserID";
   [FBSDKAppEvents activateApp];
 
   OCMVerifyAll(self.appEventsMock);
+  XCTAssertTrue(
+    _timeSpentRecorder.restoreWasCalled,
+    "Activating App with initialized SDK should restore recording time spent data."
+  );
+  XCTAssertTrue(
+    _timeSpentRecorder.capturedCalledFromActivateApp,
+    "Activating App with initialized SDK should indicate its calling from activateApp when restoring recording time spent data."
+  );
+}
+
+- (void)testApplicationBecomingActiveRestoresTimeSpentRecording
+{
+  FBSDKAppEvents *events = (FBSDKAppEvents *)[(NSObject *)[FBSDKAppEvents alloc] init];
+  [events applicationDidBecomeActive];
+  XCTAssertTrue(
+    _timeSpentRecorder.restoreWasCalled,
+    "When application did become active, the time spent recording should be restored."
+  );
+  XCTAssertFalse(
+    _timeSpentRecorder.capturedCalledFromActivateApp,
+    "When application did become active, the time spent recording restoration should be indicated that it's not activating."
+  );
+}
+
+- (void)testApplicationTerminatingSuspendsTimeSpentRecording
+{
+  FBSDKAppEvents *events = (FBSDKAppEvents *)[(NSObject *)[FBSDKAppEvents alloc] init];
+  [events applicationMovingFromActiveStateOrTerminating];
+  XCTAssertTrue(
+    _timeSpentRecorder.suspendWasCalled,
+    "When application terminates or moves from active state, the time spent recording should be suspended."
+  );
 }
 
 - (void)testActivateAppWithoutInitializedSDK
 {
+  [FBSDKAppEvents reset];
   [FBSDKAppEvents activateApp];
 
   OCMReject([self.appEventsMock publishInstall]);
   OCMReject([self.appEventsMock fetchServerConfiguration:NULL]);
+
+  XCTAssertFalse(
+    _timeSpentRecorder.restoreWasCalled,
+    "Activating App without initialized SDK cannot restore recording time spent data."
+  );
 }
 
 #pragma mark  Test for log push notification

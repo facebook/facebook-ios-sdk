@@ -95,36 +95,19 @@ static const long INACTIVE_SECONDS_QUANTA[] =
   NSString *_sessionID;
 }
 
-//
-// Public methods
-//
-
-+ (void)suspend
-{
-  [self.singleton instanceSuspend];
-}
-
-+ (void)restore:(BOOL)calledFromActivateApp
-{
-  [self.singleton instanceRestore:calledFromActivateApp];
-}
-
-//
-// Internal methods
-//
-+ (FBSDKTimeSpentData *)singleton
++ (FBSDKTimeSpentData *)shared
 {
   static dispatch_once_t pred;
-  static FBSDKTimeSpentData *shared = nil;
+  static FBSDKTimeSpentData *instance = nil;
 
   dispatch_once(&pred, ^{
-    shared = [FBSDKTimeSpentData new];
+    instance = [FBSDKTimeSpentData new];
   });
-  return shared;
+  return instance;
 }
 
 // Calculate and persist time spent data for this instance of the app activation.
-- (void)instanceSuspend
+- (void)suspend
 {
   [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
   if (!_isCurrentlyLoaded) {
@@ -168,7 +151,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
 // Called during activation - either through an explicit 'activateApp' call or implicitly when the app is foregrounded.
 // In both cases, we restore the persisted event data.  In the case of the activateApp, we log an 'app activated'
 // event if there's been enough time between the last deactivation and now.
-- (void)instanceRestore:(BOOL)calledFromActivateApp
+- (void)restore:(BOOL)calledFromActivateApp
 {
   [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
 

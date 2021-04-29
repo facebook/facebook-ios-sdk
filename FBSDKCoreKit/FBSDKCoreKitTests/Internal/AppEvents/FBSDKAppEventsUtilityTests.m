@@ -80,7 +80,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
                                            store:userDefaultsSpy
                                           logger:TestLogger.class
                                         settings:[TestSettings new]
-                                 paymentObserver:TestPaymentObserver.self];
+                                 paymentObserver:[TestPaymentObserver new]
+                               timeSpentRecorder:[TestTimeSpentRecorder new]];
 }
 
 - (void)tearDown

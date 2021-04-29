@@ -16,21 +16,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+@objcMembers
+class TestTimeSpentRecorder: NSObject, TimeSpentRecording {
+  var restoreWasCalled = false
+  var suspendWasCalled = false
+  var capturedCalledFromActivateApp = false
 
-FOUNDATION_EXPORT NSString *const FBSDKTimeSpentFilename;
+  func suspend() {
+    suspendWasCalled = true
+  }
 
-// Class to encapsulate persisting of time spent data collected by [FBSDKAppEvents activateApp].  The activate app App Event is
-// logged when restore: is called with sufficient time since the last deactivation.
-NS_SWIFT_NAME(TimeSpentData)
-@interface FBSDKTimeSpentData : NSObject
-@property (class, nonatomic, readonly) FBSDKTimeSpentData* shared;
-
-+ (void)setSourceApplication:(NSString *)sourceApplication openURL:(NSURL *)url;
-+ (void)setSourceApplication:(NSString *)sourceApplication isFromAppLink:(BOOL)isFromAppLink;
-+ (void)registerAutoResetSourceApplication;
-
-- (void)suspend;
-- (void)restore:(BOOL)calledFromActivateApp;
-
-@end
+  func restore(_ calledFromActivateApp: Bool) {
+    restoreWasCalled = true
+    capturedCalledFromActivateApp = calledFromActivateApp
+  }
+}

@@ -94,6 +94,7 @@
 + (id<FBSDKSettings>)settings;
 + (id<FBSDKEventProcessing>)eventProcessor;
 + (Class<FBSDKPaymentObserving>)paymentObserver;
++ (id<FBSDKTimeSpentRecording>)timeSpentRecorder;
 @end
 
 @implementation FBSDKApplicationDelegateTests
@@ -285,6 +286,11 @@
     FBSDKAppEvents.paymentObserver,
     FBSDKPaymentObserver.shared,
     "Initializing the SDK should set concrete payment observer for event logging"
+  );
+  XCTAssertEqualObjects(
+    FBSDKAppEvents.timeSpentRecorder,
+    FBSDKTimeSpentData.shared,
+    "Initializing the SDK should set concrete time spent recorder for event logging"
   );
 }
 
