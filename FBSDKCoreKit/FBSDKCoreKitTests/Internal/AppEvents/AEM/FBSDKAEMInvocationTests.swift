@@ -21,7 +21,7 @@ import XCTest
 class FBSDKAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_length
 
     enum Keys {
-        static let campaignID = "campaign_id"
+        static let campaignID = "campaign_ids"
         static let ACSToken = "acs_token"
         static let ACSSharedSecret = "shared_secret"
         static let ACSConfigID = "acs_config_id"
@@ -58,11 +58,11 @@ class FBSDKAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_
 
     var validInvocation: FBSDKAEMInvocation! // swiftlint:disable:this implicitly_unwrapped_optional
       = FBSDKAEMInvocation(
-        campaignID: "campaignid",
-        acsToken: "acstoken",
-        acsSharedSecret: "ACSSharedSecret",
-        acsConfigID: "acsConfigID",
-        advertiserID: "advertiserid",
+        campaignID: "test_campaign_1234",
+        acsToken: "test_token_12345",
+        acsSharedSecret: "test_shared_secret",
+        acsConfigID: "test_config_123",
+        advertiserID: "test_advertiserid_coffee",
         timestamp: Date(timeIntervalSince1970: 1618383600),
         configMode: "DEFAULT",
         configID: 10,
@@ -140,23 +140,23 @@ class FBSDKAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_
         XCTAssertNil(FBSDKAEMInvocation(appLinkData: nil))
 
         invalidData = [
-          "acs_token": "acstoken",
+          "acs_token": "test_token_12345",
         ]
         XCTAssertNil(FBSDKAEMInvocation(appLinkData: invalidData))
 
         invalidData = [
-          "campaign_id": "campaignid",
+          "campaign_ids": "test_campaign_1234",
         ]
         XCTAssertNil(FBSDKAEMInvocation(appLinkData: invalidData))
 
         invalidData = [
-          "advertiser_id": "advertiserid",
+          "advertiser_id": "test_advertiserid_coffee",
         ]
         XCTAssertNil(FBSDKAEMInvocation(appLinkData: invalidData))
 
         invalidData = [
           "acs_token": 123,
-          "campaign_id": 123,
+          "campaign_ids": 123,
         ]
         XCTAssertNil(FBSDKAEMInvocation(appLinkData: invalidData))
     }
@@ -166,23 +166,23 @@ class FBSDKAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_
         var invocation: FBSDKAEMInvocation?
 
         validData = [
-          "acs_token": "acstoken",
-          "campaign_id": "campaignid",
+          "acs_token": "test_token_12345",
+          "campaign_ids": "test_campaign_1234",
         ]
         invocation = FBSDKAEMInvocation(appLinkData: validData)
-        XCTAssertEqual(invocation?.acsToken, "acstoken")
-        XCTAssertEqual(invocation?.campaignID, "campaignid")
+        XCTAssertEqual(invocation?.acsToken, "test_token_12345")
+        XCTAssertEqual(invocation?.campaignID, "test_campaign_1234")
         XCTAssertNil(invocation?.advertiserID)
 
         validData = [
-          "acs_token": "acstoken",
-          "campaign_id": "campaignid",
-          "advertiser_id": "advertiserid",
+          "acs_token": "test_token_12345",
+          "campaign_ids": "test_campaign_1234",
+          "advertiser_id": "test_advertiserid_coffee",
         ]
         invocation = FBSDKAEMInvocation(appLinkData: validData)
-        XCTAssertEqual(invocation?.acsToken, "acstoken")
-        XCTAssertEqual(invocation?.campaignID, "campaignid")
-        XCTAssertEqual(invocation?.advertiserID, "advertiserid")
+        XCTAssertEqual(invocation?.acsToken, "test_token_12345")
+        XCTAssertEqual(invocation?.campaignID, "test_campaign_1234")
+        XCTAssertEqual(invocation?.advertiserID, "test_advertiserid_coffee")
     }
 
   func testFindConfig() {
@@ -195,11 +195,11 @@ class FBSDKAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_
     )
 
     invocation = FBSDKAEMInvocation(
-      campaignID: "campaignid",
-      acsToken: "acstoken",
+      campaignID: "test_campaign_1234",
+      acsToken: "test_token_12345",
       acsSharedSecret: nil,
       acsConfigID: nil,
-      advertiserID: "advertiserid"
+      advertiserID: "test_advertiserid_coffee"
     )
     let config = invocation?._findConfig([Values.defaultMode: [config1, config2]])
     XCTAssertEqual(invocation?.configID, 20000, "Should set the invocation with expected configID")

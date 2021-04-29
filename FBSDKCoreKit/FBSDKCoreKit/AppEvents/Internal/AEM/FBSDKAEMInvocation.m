@@ -28,7 +28,7 @@
 
  #define SEC_IN_DAY 86400
 
-static NSString *const CAMPAIGN_ID_KEY = @"campaign_id";
+static NSString *const CAMPAIGN_ID_KEY = @"campaign_ids";
 static NSString *const ACS_TOKEN_KEY = @"acs_token";
 static NSString *const ACS_SHARED_SECRET_KEY = @"shared_secret";
 static NSString *const ACS_CONFIG_ID_KEY = @"acs_config_id";
