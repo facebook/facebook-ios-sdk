@@ -813,7 +813,7 @@ static NSString *const _mockUserID = @"mockUserID";
                               parameters:@{}
                       isImplicitlyLogged:NO
                              accessToken:nil]
-  ).andForwardToRealObject();
+  );
 
   [FBSDKAppEvents logInternalEvent:_mockEventName valueToSum:_mockPurchaseAmount isImplicitlyLogged:NO];
 }
