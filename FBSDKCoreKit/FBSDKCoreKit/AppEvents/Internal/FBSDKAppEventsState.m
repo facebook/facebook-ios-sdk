@@ -167,14 +167,15 @@
     && [self.appID isEqualToString:appID]);
 }
 
-- (NSString *)JSONStringForEvents:(BOOL)includeImplicitEvents
+- (NSString *)JSONStringForEventsIncludingImplicitEvents:(BOOL)includeImplicitEvents
 {
   [FBSDKEventDeactivationManager processEvents:_mutableEvents];
   [FBSDKRestrictiveDataFilterManager processEvents:_mutableEvents];
 
   NSMutableArray *events = [[NSMutableArray alloc] initWithCapacity:_mutableEvents.count];
   for (NSDictionary *eventAndImplicitFlag in _mutableEvents) {
-    if (!includeImplicitEvents && [eventAndImplicitFlag[FBSDK_APPEVENTSTATE_ISIMPLICIT_KEY] boolValue]) {
+    const BOOL isImplicitEvent = [eventAndImplicitFlag[FBSDK_APPEVENTSTATE_ISIMPLICIT_KEY] boolValue];
+    if (!includeImplicitEvents && isImplicitEvent) {
       continue;
     }
     NSMutableDictionary *event = eventAndImplicitFlag[@"event"];

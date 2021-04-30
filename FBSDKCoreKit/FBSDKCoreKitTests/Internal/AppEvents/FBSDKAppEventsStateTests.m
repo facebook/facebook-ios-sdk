@@ -428,7 +428,7 @@
 
 - (void)testJSONStringForEventsWithNoEvents
 {
-  NSString *json = [_state JSONStringForEvents:YES];
+  NSString *json = [_state JSONStringForEventsIncludingImplicitEvents:YES];
   NSString *expected = [FBSDKBasicUtility JSONStringForObject:@[] error:nil invalidObjectHandler:nil];
 
   XCTAssertEqualObjects(json, expected, "Should represent events as empty json array when there are no events");
@@ -439,7 +439,7 @@
   [_state addEvent:SampleAppEvents.validEvent isImplicit:YES];
   [_state addEvent:SampleAppEvents.validEvent isImplicit:YES];
 
-  NSString *json = [_state JSONStringForEvents:YES];
+  NSString *json = [_state JSONStringForEventsIncludingImplicitEvents:YES];
   NSString *expected = [FBSDKBasicUtility JSONStringForObject:@[SampleAppEvents.validEvent, SampleAppEvents.validEvent] error:nil invalidObjectHandler:nil];
 
   XCTAssertEqualObjects(json, expected, "Should represent events as empty json array when there are no events");
@@ -450,7 +450,7 @@
   [_state addEvent:SampleAppEvents.validEvent isImplicit:YES];
   [_state addEvent:SampleAppEvents.validEvent isImplicit:NO];
 
-  NSString *json = [_state JSONStringForEvents:NO];
+  NSString *json = [_state JSONStringForEventsIncludingImplicitEvents:NO];
 
   NSString *expected = [FBSDKBasicUtility JSONStringForObject:@[SampleAppEvents.validEvent] error:nil invalidObjectHandler:nil];
 

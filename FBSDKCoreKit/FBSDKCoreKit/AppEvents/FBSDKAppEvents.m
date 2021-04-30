@@ -1451,7 +1451,8 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
       return;
     }
     NSString *receipt_data = appEventsState.extractReceiptData;
-    NSString *encodedEvents = [appEventsState JSONStringForEvents:self->_serverConfiguration.implicitLoggingEnabled];
+    const BOOL shouldIncludeImplicitEvents = (self->_serverConfiguration.implicitLoggingEnabled && g_settings.isAutoLogAppEventsEnabled);
+    NSString *encodedEvents = [appEventsState JSONStringForEventsIncludingImplicitEvents:shouldIncludeImplicitEvents];
     if (!encodedEvents || appEventsState.events.count == 0) {
       [g_logger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
                           logEntry:@"FBSDKAppEvents: Flushing skipped - no events after removing implicitly logged ones.\n"];

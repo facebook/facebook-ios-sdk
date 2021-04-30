@@ -36,7 +36,7 @@ NS_SWIFT_NAME(AppEventsState)
 - (void)addEventsFromAppEventState:(FBSDKAppEventsState *)appEventsState;
 - (BOOL)isCompatibleWithAppEventsState:(FBSDKAppEventsState *)appEventsState;
 - (BOOL)isCompatibleWithTokenString:(NSString *)tokenString appID:(NSString *)appID;
-- (NSString *)JSONStringForEvents:(BOOL)includeImplicitEvents;
+- (NSString *)JSONStringForEventsIncludingImplicitEvents:(BOOL)includeImplicitEvents;
 - (NSString *)extractReceiptData;
 
 @end
