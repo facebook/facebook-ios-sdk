@@ -18,6 +18,7 @@
 
 #import "FBSDKPaymentProductRequestorFactory.h"
 
+#import "FBSDKAppStoreReceiptProviding.h"
 #import "FBSDKEventLogger.h"
 #import "FBSDKGateKeeperManaging.h"
 #import "FBSDKLogger.h"
@@ -36,6 +37,7 @@
 @property (nullable, nonatomic) id<FBSDKDataPersisting> store;
 @property (nullable, nonatomic) id<FBSDKLogging> logger;
 @property (nonatomic, readonly) id<FBSDKProductsRequestCreating> productsRequestFactory;
+@property (nonatomic, readonly) id<FBSDKAppStoreReceiptProviding> appStoreReceiptProvider;
 
 @end
 
@@ -44,11 +46,12 @@
 - (instancetype)init
 {
   return [self initWithSettings:FBSDKSettings.sharedSettings
-                     eventLogger:[FBSDKEventLogger new]
-               gateKeeperManager:FBSDKGateKeeperManager.class
-                           store:NSUserDefaults.standardUserDefaults
-                          logger:[FBSDKLogger new]
-          productsRequestFactory:[FBSDKProductRequestFactory new]];
+                      eventLogger:[FBSDKEventLogger new]
+                gateKeeperManager:FBSDKGateKeeperManager.class
+                            store:NSUserDefaults.standardUserDefaults
+                           logger:[FBSDKLogger new]
+           productsRequestFactory:[FBSDKProductRequestFactory new]
+          appStoreReceiptProvider:[NSBundle bundleForClass:self.class]];
 }
 
 - (instancetype)initWithSettings:(id<FBSDKSettings>)settings
@@ -57,6 +60,7 @@
                            store:(id<FBSDKDataPersisting>)store
                           logger:(id<FBSDKLogging>)logger
           productsRequestFactory:(id<FBSDKProductsRequestCreating>)productsRequestFactory
+         appStoreReceiptProvider:(id<FBSDKAppStoreReceiptProviding>)receiptProvider
 {
   if ((self = [super init])) {
     _settings = settings;
@@ -65,6 +69,7 @@
     _store = store;
     _logger = logger;
     _productsRequestFactory = productsRequestFactory;
+    _appStoreReceiptProvider = receiptProvider;
   }
 
   return self;
@@ -78,7 +83,8 @@
                                                  gateKeeperManager:self.gateKeeperManager
                                                              store:self.store
                                                             logger:self.logger
-                                            productsRequestFactory:self.productsRequestFactory];
+                                            productsRequestFactory:self.productsRequestFactory
+                                           appStoreReceiptProvider:self.appStoreReceiptProvider];
 }
 
 @end

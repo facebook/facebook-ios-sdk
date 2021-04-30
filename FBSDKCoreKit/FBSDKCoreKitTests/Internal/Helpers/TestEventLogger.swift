@@ -18,14 +18,18 @@
 
 @objcMembers
 class TestEventLogger: NSObject, EventLogging {
+  var flushCallCount = 0
   var flushBehavior: AppEvents.FlushBehavior = .auto
   var capturedEventName: String?
   var capturedParameters = [AnyHashable: Any]()
   var capturedIsImplicitlyLogged = false
   var capturedAccessToken: AccessToken?
+  var capturedValueToSum: Double?
+  var capturedFlushReason: UInt?
 
   func flush(forReason flushReason: UInt) {
-    // TODO
+    flushCallCount += 1
+    capturedFlushReason = flushReason
   }
 
   func logEvent(_ eventName: String, parameters: [String: Any]) {
@@ -39,6 +43,8 @@ class TestEventLogger: NSObject, EventLogging {
     parameters: [String: Any]
   ) {
     capturedEventName = eventName
+    capturedValueToSum = valueToSum
+    capturedParameters = parameters
   }
 
   func logInternalEvent(_ eventName: String, isImplicitlyLogged: Bool) {

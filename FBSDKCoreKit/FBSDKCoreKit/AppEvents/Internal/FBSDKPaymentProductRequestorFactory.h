@@ -26,6 +26,7 @@
 @protocol FBSDKDataPersisting;
 @protocol FBSDKLogging;
 @protocol FBSDKProductsRequestCreating;
+@protocol FBSDKAppStoreReceiptProviding;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -39,7 +40,8 @@ NS_SWIFT_NAME(PaymentProductRequestorFactory)
                            store:(id<FBSDKDataPersisting>)store
                           logger:(id<FBSDKLogging>)logger
            productsRequestFactory:(id<FBSDKProductsRequestCreating>)productsRequestFactory
-NS_SWIFT_NAME(init(settings:eventLogger:gateKeeperManager:store:logger:productsRequestFactory:));
+         appStoreReceiptProvider:(id<FBSDKAppStoreReceiptProviding>)receiptProvider
+NS_SWIFT_NAME(init(settings:eventLogger:gateKeeperManager:store:logger:productsRequestFactory:receiptProvider:));
 
 @end
 

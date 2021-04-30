@@ -25,13 +25,15 @@ class PaymentProductRequestorFactoryTests: XCTestCase {
   let store = UserDefaultsSpy()
   let logger = TestLogger()
   let requestFactory = TestProductsRequestFactory()
+  let receiptProvider = TestAppStoreReceiptProvider()
   lazy var factory = PaymentProductRequestorFactory(
     settings: settings,
     eventLogger: eventLogger,
     gateKeeperManager: TestGateKeeperManager.self,
     store: store,
     logger: logger,
-    productsRequestFactory: requestFactory
+    productsRequestFactory: requestFactory,
+    receiptProvider: receiptProvider
   )
 
   override func setUp() {
@@ -76,6 +78,10 @@ class PaymentProductRequestorFactoryTests: XCTestCase {
     XCTAssertTrue(
       factory.productsRequestFactory is ProductRequestFactory
     )
+    XCTAssertTrue(
+      factory.appStoreReceiptProvider is Bundle,
+      "Should use the expected concrete app store receipt provider by default"
+    )
   }
 
   func testCreatingWithCustomDependencies() {
@@ -105,6 +111,10 @@ class PaymentProductRequestorFactoryTests: XCTestCase {
     XCTAssertTrue(
       factory.productsRequestFactory is TestProductsRequestFactory,
       "Should use the provided product request factory"
+    )
+    XCTAssertTrue(
+      factory.appStoreReceiptProvider is TestAppStoreReceiptProvider,
+      "Should use the provided app store receipt provider"
     )
   }
 
@@ -143,6 +153,10 @@ class PaymentProductRequestorFactoryTests: XCTestCase {
     XCTAssertTrue(
       requestor.productRequestFactory is TestProductsRequestFactory,
       "Should create a requestor using the expected product request factory"
+    )
+    XCTAssertTrue(
+      requestor.appStoreReceiptProvider is TestAppStoreReceiptProvider,
+      "Should create a requestor using the expected app store receipt provider"
     )
   }
 }

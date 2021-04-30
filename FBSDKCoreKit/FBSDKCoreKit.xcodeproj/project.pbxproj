@@ -1267,6 +1267,7 @@
 		F4AE643A26373E7500E0B661 /* FBSDKProductRequestFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F4AE640E26373D9900E0B661 /* FBSDKProductRequestFactory.m */; };
 		F4AE647D26374B3400E0B661 /* TestProductsRequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE647526374B3400E0B661 /* TestProductsRequestFactory.swift */; };
 		F4AE64A626374BA400E0B661 /* TestProductsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE64A526374BA400E0B661 /* TestProductsRequest.swift */; };
+		F4AE657326377A1C00E0B661 /* TestAppStoreReceiptProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE657226377A1C00E0B661 /* TestAppStoreReceiptProvider.swift */; };
 		F4AF97032605246600E53370 /* TestAccessTokenWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AF97022605246600E53370 /* TestAccessTokenWallet.swift */; };
 		F4BD4024241EEDE500B45D39 /* FBSDKTestCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = F4BD4023241EEDE500B45D39 /* FBSDKTestCoder.m */; };
 		F4BDCE0726152DEF00D3FFF4 /* TestWindowFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BDCDFF26152DEF00D3FFF4 /* TestWindowFinder.swift */; };
@@ -2156,6 +2157,8 @@
 		F4AE647526374B3400E0B661 /* TestProductsRequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestProductsRequestFactory.swift; sourceTree = "<group>"; };
 		F4AE64A526374BA400E0B661 /* TestProductsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestProductsRequest.swift; sourceTree = "<group>"; };
 		F4AE64CE26374F6F00E0B661 /* SKProductsRequest+FBSDKProductsRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SKProductsRequest+FBSDKProductsRequest.h"; sourceTree = "<group>"; };
+		F4AE65322637789400E0B661 /* FBSDKAppStoreReceiptProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKAppStoreReceiptProviding.h; sourceTree = "<group>"; };
+		F4AE657226377A1C00E0B661 /* TestAppStoreReceiptProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAppStoreReceiptProvider.swift; sourceTree = "<group>"; };
 		F4AF96EC26051FF600E53370 /* FBSDKAccessToken+AccessTokenProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKAccessToken+AccessTokenProtocols.h"; sourceTree = "<group>"; };
 		F4AF96F42605200800E53370 /* FBSDKAccessTokenProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKAccessTokenProtocols.h; sourceTree = "<group>"; };
 		F4AF97022605246600E53370 /* TestAccessTokenWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAccessTokenWallet.swift; sourceTree = "<group>"; };
@@ -3272,6 +3275,7 @@
 				F4A2FAAC2634AB7C00E5CC0C /* FBSDKAppEventsFlushReason.h */,
 				9D0BC15A1A8D427800BE8BA4 /* FBSDKAppEventsUtility.m */,
 				F4AAAF0C2628AB9E00EDCF06 /* FBSDKFeatureExtracting.h */,
+				F4AE65322637789400E0B661 /* FBSDKAppStoreReceiptProviding.h */,
 				C4FC99D7202CD5590038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.h */,
 				C4FC99D8202CD5590038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.m */,
 				F4AA87F62634DD9200825641 /* FBSDKPaymentProductRequestorCreating.h */,
@@ -3509,6 +3513,7 @@
 				F4C23D7226261A7000FA79AE /* TestAdvertiserIDProvider.swift */,
 				F44F545925FADACA00D774B7 /* TestAppEventsConfiguration.swift */,
 				F44F53DB25FAC63900D774B7 /* TestAppEventsConfigurationProvider.swift */,
+				F4AE657226377A1C00E0B661 /* TestAppStoreReceiptProvider.swift */,
 				F91D1C58263294B5005CA2C5 /* TestApplicationDelegate.swift */,
 				F46E5406260E421100BAF55C /* TestAppLinkResolver.swift */,
 				F46E55A1260FB07B00BAF55C /* TestAppLinkResolverRequestBuilder.swift */,
@@ -5446,6 +5451,7 @@
 				F4849BE0261CC903005E5329 /* BridgeAPIResponseTests.swift in Sources */,
 				F40B24C224732DD90059351C /* Fuzzer.swift in Sources */,
 				F4A030D525F021D000D19DE9 /* ColorTests.swift in Sources */,
+				F4AE657326377A1C00E0B661 /* TestAppStoreReceiptProvider.swift in Sources */,
 				40853B9424C8C43300A7CB16 /* FBSDKJSONValueTests.m in Sources */,
 				F408C6E9256309A500372D61 /* TestBridgeApiRequest.swift in Sources */,
 				F494285D25829C72008FE009 /* TestSessionProvider.swift in Sources */,

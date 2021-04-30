@@ -16,32 +16,19 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKPaymentProductRequestor.h"
-
-@protocol FBSDKProductsRequest;
-@protocol FBSDKProductsRequestCreating;
-@class SKPaymentQueue;
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKPaymentProductRequestor (Testing)
+NS_SWIFT_NAME(AppStoreReceiptProviding)
+@protocol FBSDKAppStoreReceiptProviding
 
-@property (class, nonatomic, readonly) NSMutableArray *pendingRequestors;
-@property (nonatomic, retain) id<FBSDKProductsRequest> productsRequest;
-@property (nonatomic, retain) SKPaymentTransaction *transaction;
-@property (nonatomic, readonly) id<FBSDKProductsRequestCreating> productRequestFactory;
-@property (nonatomic, readonly) id<FBSDKSettings> settings;
-@property (nonatomic, readonly) id<FBSDKEventLogging> eventLogger;
-@property (nonatomic, readonly) Class<FBSDKGateKeeperManaging> gateKeeperManager;
-@property (nonatomic, readonly) id<FBSDKDataPersisting> store;
-@property (nonatomic, readonly) id<FBSDKLogging> logger;
-@property (nonatomic, readonly) id<FBSDKAppStoreReceiptProviding> appStoreReceiptProvider;
+@property (nullable, readonly, copy) NSURL *appStoreReceiptURL;
 
-- (NSData *)fetchDeviceReceipt;
-- (void)logImplicitTransactionEvent:(NSString *)eventName
-                         valueToSum:(double)valueToSum
-                         parameters:(NSDictionary<NSString *, id> *)parameters;
+@end
 
+// Default conformance to the AppStoreReceiptProvider protocol
+@interface NSBundle () <FBSDKAppStoreReceiptProviding>
 @end
 
 NS_ASSUME_NONNULL_END

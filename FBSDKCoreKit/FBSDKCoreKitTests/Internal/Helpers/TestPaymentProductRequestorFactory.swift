@@ -38,6 +38,7 @@ class TestPaymentProductRequestorFactory: PaymentProductRequestorCreating {
   let store = UserDefaultsSpy()
   let logger = TestLogger()
   let requestFactory = TestProductsRequestFactory()
+  let receiptProvider = TestAppStoreReceiptProvider()
 
   var evidence = [Evidence]()
 
@@ -49,7 +50,8 @@ class TestPaymentProductRequestorFactory: PaymentProductRequestorCreating {
       gateKeeperManager: PaymentGateKeeperManager.self,
       store: store,
       logger: logger,
-      productsRequestFactory: requestFactory
+      productsRequestFactory: requestFactory,
+      appStoreReceiptProvider: receiptProvider
     )
     evidence.append(Evidence(requestor: requestor, transaction: transaction))
 

@@ -22,6 +22,7 @@
 
 #import "FBSDKAppEventName.h"
 #import "FBSDKAppEventParameterName.h"
+#import "FBSDKAppStoreReceiptProviding.h"
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKEventLogging.h"
@@ -54,6 +55,7 @@ static int const FBSDKMaxParameterValueLength = 100;
 
 @property (class, nonatomic, readonly) NSMutableArray *pendingRequestors;
 @property (nonatomic, retain) SKPaymentTransaction *transaction;
+@property (nonatomic, readonly) id<FBSDKAppStoreReceiptProviding> appStoreReceiptProvider;
 @property (nonatomic, retain) id<FBSDKProductsRequest> productsRequest;
 @property (nonatomic, readonly) id<FBSDKProductsRequestCreating> productRequestFactory;
 @property (nonatomic, readonly) id<FBSDKSettings> settings;
@@ -85,6 +87,7 @@ static NSMutableArray *_pendingRequestors;
                               store:(id<FBSDKDataPersisting>)store
                              logger:(id<FBSDKLogging>)logger
              productsRequestFactory:(id<FBSDKProductsRequestCreating>)productRequestFactory
+            appStoreReceiptProvider:(id<FBSDKAppStoreReceiptProviding>)receiptProvider
 {
   if ((self = [super init])) {
     _settings = settings;
@@ -93,6 +96,7 @@ static NSMutableArray *_pendingRequestors;
     _store = store;
     _logger = logger;
     _productRequestFactory = productRequestFactory;
+    _appStoreReceiptProvider = receiptProvider;
     _transaction = transaction;
     _formatter = [NSDateFormatter new];
     _formatter.dateFormat = @"yyyy-MM-dd HH:mm:ssZ";
@@ -474,7 +478,7 @@ static NSMutableArray *_pendingRequestors;
 // Fetch the current receipt for this application.
 - (NSData *)fetchDeviceReceipt
 {
-  NSURL *receiptURL = [NSBundle bundleForClass:[self class]].appStoreReceiptURL;
+  NSURL *receiptURL = self.appStoreReceiptProvider.appStoreReceiptURL;
   NSData *receipt = [NSData dataWithContentsOfURL:receiptURL];
   return receipt;
 }

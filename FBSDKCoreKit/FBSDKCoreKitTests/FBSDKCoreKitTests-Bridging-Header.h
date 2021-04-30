@@ -22,6 +22,8 @@
 #import "AEM+Testing.h"
 #import "Button+Testing.h"
 #import "CodelessIndexer+Testing.h"
+#import "FBSDKAppStoreReceiptProviding.h"
+#import "FBSDKAppEventsFlushReason.h"
 #import "FBSDKHybridAppEventsScriptMessageHandler+Testing.h"
 #import "FBSDKBridgeAPIProtocolWebV1.h"
 #import "FBSDKBridgeAPIProtocolWebV2+Testing.h"
