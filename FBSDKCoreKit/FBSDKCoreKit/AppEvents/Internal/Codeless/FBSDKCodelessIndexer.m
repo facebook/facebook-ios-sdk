@@ -447,7 +447,10 @@ static id<FBSDKSettings> _settings;
 
 + (UIImage *)screenshot
 {
-  UIWindow *window = [UIApplication sharedApplication].delegate.window;
+  UIWindow *window = [FBSDKInternalUtility.sharedUtility findWindow];
+  if (!window) {
+    return nil;
+  }
 
   UIGraphicsBeginImageContext(window.bounds.size);
   [window drawViewHierarchyInRect:window.bounds afterScreenUpdates:YES];
