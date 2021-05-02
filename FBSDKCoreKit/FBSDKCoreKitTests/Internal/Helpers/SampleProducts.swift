@@ -16,39 +16,20 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class TestPaymentTransaction: SKPaymentTransaction {
-  private let stubbedTransactionIdentifier: String?
-  private let stubbedTransactionState: SKPaymentTransactionState
-  private let stubbedTransactionDate: Date?
-  private let stubbedPayment: TestPayment
+@available(iOS 11.2, *)
+enum SampleProducts {
+  static var valid = TestProduct()
+  static var validSubscription = TestProduct(subscriptionPeriod: validSubscriptionPeriod)
+  static var invalidSubscription = TestProduct(subscriptionPeriod: invalidSubscriptionPeriod)
 
-  init(
-    identifier: String? = nil,
-    state: SKPaymentTransactionState,
-    date: Date? = nil,
-    payment: TestPayment = TestPayment(productIdentifier: UUID().uuidString)
-  ) {
-    stubbedTransactionIdentifier = identifier
-    stubbedTransactionState = state
-    stubbedTransactionDate = date
-    stubbedPayment = payment
-
-    super.init()
+  static func createSubscription(discount: TestProductDiscount) -> TestProduct {
+    return TestProduct(subscriptionPeriod: validSubscriptionPeriod, discount: discount)
   }
 
-  override var transactionIdentifier: String? {
-    stubbedTransactionIdentifier
-  }
-
-  override var transactionState: SKPaymentTransactionState {
-    stubbedTransactionState
-  }
-
-  override var transactionDate: Date? {
-    stubbedTransactionDate
-  }
-
-  override var payment: SKPayment {
-    stubbedPayment
-  }
+  private static var validSubscriptionPeriod = TestProductSubscriptionPeriod(
+    numberOfUnits: 1
+  )
+  private static var invalidSubscriptionPeriod = TestProductSubscriptionPeriod(
+    numberOfUnits: 0
+  )
 }

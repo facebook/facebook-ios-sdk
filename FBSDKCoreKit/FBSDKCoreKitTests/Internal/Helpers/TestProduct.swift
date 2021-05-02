@@ -16,39 +16,40 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class TestPaymentTransaction: SKPaymentTransaction {
-  private let stubbedTransactionIdentifier: String?
-  private let stubbedTransactionState: SKPaymentTransactionState
-  private let stubbedTransactionDate: Date?
-  private let stubbedPayment: TestPayment
+@available(iOS 11.2, *)
+class TestProduct: SKProduct {
+  static let title = "Product title"
+  static let productDescription = "Some description"
+
+  let stubbedSubscriptionPeriod: TestProductSubscriptionPeriod?
+  let stubbedDiscount: TestProductDiscount?
 
   init(
-    identifier: String? = nil,
-    state: SKPaymentTransactionState,
-    date: Date? = nil,
-    payment: TestPayment = TestPayment(productIdentifier: UUID().uuidString)
+    subscriptionPeriod: TestProductSubscriptionPeriod? = nil,
+    discount: TestProductDiscount? = nil
   ) {
-    stubbedTransactionIdentifier = identifier
-    stubbedTransactionState = state
-    stubbedTransactionDate = date
-    stubbedPayment = payment
-
-    super.init()
+    stubbedSubscriptionPeriod = subscriptionPeriod
+    stubbedDiscount = discount
   }
 
-  override var transactionIdentifier: String? {
-    stubbedTransactionIdentifier
+  override var subscriptionPeriod: SKProductSubscriptionPeriod? {
+    stubbedSubscriptionPeriod
   }
 
-  override var transactionState: SKPaymentTransactionState {
-    stubbedTransactionState
+  override var priceLocale: Locale {
+    let localeIdentifier = NSLocale.localeIdentifier(fromComponents: [NSLocale.Key.currencyCode.rawValue: "USD"])
+    return NSLocale(localeIdentifier: localeIdentifier) as Locale
   }
 
-  override var transactionDate: Date? {
-    stubbedTransactionDate
+  override var localizedTitle: String {
+    TestProduct.title
   }
 
-  override var payment: SKPayment {
-    stubbedPayment
+  override var localizedDescription: String {
+    TestProduct.productDescription
+  }
+
+  override var introductoryPrice: SKProductDiscount? {
+    stubbedDiscount
   }
 }

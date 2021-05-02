@@ -18,7 +18,8 @@
 
 import XCTest
 
-class PaymentProductRequestorTests: XCTestCase {
+@available(iOS 11.2, *)
+class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_body_length
 
   var transaction = TestPaymentTransaction(state: .deferred)
   var requestFactory = TestProductsRequestFactory()
@@ -52,6 +53,9 @@ class PaymentProductRequestorTests: XCTestCase {
   enum Values {
     static let appName = "foo"
     static let existingValue = "bar"
+    static let inApp = "inapp"
+    static let subscription = "subs"
+    static let oneDaySubscriptionPeriod = "P1D"
   }
 
   func testResolvingProducts() {
@@ -198,6 +202,226 @@ class PaymentProductRequestorTests: XCTestCase {
     )
   }
 
+  // MARK: - Subscriptions
+
+  func testIsSubscriptionWithValidSubscription() {
+    XCTAssertTrue(
+      requestor.isSubscription(SampleProducts.validSubscription),
+      "A product with a non zero subscription period should be considered a subscription"
+    )
+  }
+
+  func testIsSubscriptionWithNonSubscription() {
+    XCTAssertFalse(
+      requestor.isSubscription(SampleProducts.valid),
+      "A product without a subscription period should not be considered a subscription"
+    )
+  }
+
+  func testIsSubscriptionWithInvalidSubscription() {
+    XCTAssertFalse(
+      requestor.isSubscription(SampleProducts.invalidSubscription),
+      "A product with an empty subscription period should be considered a subscription"
+    )
+  }
+
+  // MARK: - Event Parameters
+
+  func testParametersForPurchasedTransactionWithoutProduct() throws {
+    let transaction = TestPaymentTransaction(
+      identifier: name,
+      state: .purchased,
+      date: .distantPast,
+      payment: TestPayment(productIdentifier: name, quantity: 5)
+    )
+
+    let rawParameters = requestor.getEventParameters(of: nil, with: transaction)
+    let data = try JSONSerialization.data(withJSONObject: rawParameters, options: [])
+    let parameters = try JSONDecoder().decode(PaymentProductParameters.self, from: data)
+
+    let expectedParameters = PaymentProductParameters(
+      contentID: transaction.payment.productIdentifier,
+      productType: Values.inApp,
+      numberOfItems: 5,
+      transactionDate: "0001-12-31 16:07:02-075258"
+    )
+
+    XCTAssertEqual(parameters, expectedParameters)
+  }
+
+  func testParametersForRestoredTransactionWithoutProduct() throws {
+    let transaction = TestPaymentTransaction(
+      identifier: name,
+      state: .restored,
+      date: .distantPast,
+      payment: TestPayment(productIdentifier: name, quantity: 5)
+    )
+
+    let rawParameters = requestor.getEventParameters(of: nil, with: transaction)
+    let data = try JSONSerialization.data(withJSONObject: rawParameters, options: [])
+    let parameters = try JSONDecoder().decode(PaymentProductParameters.self, from: data)
+
+    let expectedParameters = PaymentProductParameters(
+      contentID: transaction.payment.productIdentifier,
+      productType: Values.inApp,
+      numberOfItems: 5,
+      transactionDate: "0001-12-31 16:07:02-075258"
+    )
+
+    XCTAssertEqual(parameters, expectedParameters)
+  }
+
+  func testParametersForOtherTransactionsWithoutProduct() throws {
+    try [SKPaymentTransactionState.deferred, .failed, .purchasing].forEach { state in
+      let transaction = TestPaymentTransaction(
+        identifier: name,
+        state: state,
+        date: .distantPast,
+        payment: TestPayment(productIdentifier: name, quantity: 5)
+      )
+
+      let rawParameters = requestor.getEventParameters(of: nil, with: transaction)
+      let data = try JSONSerialization.data(withJSONObject: rawParameters, options: [])
+      let parameters = try JSONDecoder().decode(PaymentProductParameters.self, from: data)
+
+      let expectedParameters = PaymentProductParameters(
+        contentID: transaction.payment.productIdentifier,
+        productType: Values.inApp,
+        numberOfItems: 5,
+        transactionDate: ""
+      )
+
+      XCTAssertEqual(parameters, expectedParameters)
+    }
+  }
+
+  func testParametersForPurchasedTransactionWithProduct() throws {
+    let transaction = TestPaymentTransaction(
+      identifier: name,
+      state: .purchased,
+      date: .distantPast,
+      payment: TestPayment(productIdentifier: name, quantity: 5)
+    )
+
+    let rawParameters = requestor.getEventParameters(
+      of: SampleProducts.valid,
+      with: transaction
+    )
+    let data = try JSONSerialization.data(withJSONObject: rawParameters, options: [])
+    let parameters = try JSONDecoder().decode(PaymentProductParameters.self, from: data)
+
+    let expectedParameters = PaymentProductParameters(
+      contentID: transaction.payment.productIdentifier,
+      productType: Values.inApp,
+      numberOfItems: 5,
+      transactionDate: "0001-12-31 16:07:02-075258",
+      transactionID: name,
+      currency: "USD",
+      productTitle: TestProduct.title,
+      description: TestProduct.productDescription
+    )
+
+    XCTAssertEqual(parameters, expectedParameters)
+  }
+
+  func testParametersForTransactionWithProduct() throws {
+    let transaction = TestPaymentTransaction(
+      identifier: name,
+      state: .deferred,
+      date: .distantPast,
+      payment: TestPayment(productIdentifier: name, quantity: 5)
+    )
+
+    let rawParameters = requestor.getEventParameters(
+      of: SampleProducts.valid,
+      with: transaction
+    )
+    let data = try JSONSerialization.data(withJSONObject: rawParameters, options: [])
+    let parameters = try JSONDecoder().decode(PaymentProductParameters.self, from: data)
+
+    let expectedParameters = PaymentProductParameters(
+      contentID: transaction.payment.productIdentifier,
+      productType: Values.inApp,
+      numberOfItems: 5,
+      transactionDate: "",
+      currency: "USD",
+      productTitle: TestProduct.title,
+      description: TestProduct.productDescription
+    )
+
+    XCTAssertEqual(parameters, expectedParameters)
+  }
+
+  func testParametersForTransactionWithSubscriptionProduct() throws {
+    let transaction = TestPaymentTransaction(
+      identifier: name,
+      state: .deferred,
+      date: .distantPast,
+      payment: TestPayment(productIdentifier: name, quantity: 5)
+    )
+
+    let rawParameters = requestor.getEventParameters(
+      of: SampleProducts.validSubscription,
+      with: transaction
+    )
+    let data = try JSONSerialization.data(withJSONObject: rawParameters, options: [])
+    let parameters = try JSONDecoder().decode(PaymentProductParameters.self, from: data)
+
+    let expectedParameters = PaymentProductParameters(
+      contentID: transaction.payment.productIdentifier,
+      productType: Values.subscription,
+      numberOfItems: 5,
+      transactionDate: "",
+      currency: "USD",
+      productTitle: TestProduct.title,
+      description: TestProduct.productDescription,
+      subscriptionPeriod: Values.oneDaySubscriptionPeriod,
+      isStartTrial: "0"
+    )
+
+    XCTAssertEqual(parameters, expectedParameters)
+  }
+
+  func testParametersForTransactionWithDiscountedSubscriptionProducts() throws {
+    let transaction = TestPaymentTransaction(
+      identifier: name,
+      state: .deferred,
+      date: .distantPast,
+      payment: TestPayment(productIdentifier: name, quantity: 5)
+    )
+
+    try [SKProductDiscount.PaymentMode.freeTrial, .payAsYouGo, .payUpFront].forEach { discountMode in
+      let discount = TestProductDiscount(
+        paymentMode: discountMode,
+        price: 100.0,
+        subscriptionPeriod: TestProductSubscriptionPeriod(numberOfUnits: 5)
+      )
+
+      let rawParameters = requestor.getEventParameters(
+        of: SampleProducts.createSubscription(discount: discount),
+        with: transaction
+      )
+      let data = try JSONSerialization.data(withJSONObject: rawParameters, options: [])
+      let parameters = try JSONDecoder().decode(PaymentProductParameters.self, from: data)
+
+      let expectedParameters = PaymentProductParameters(
+        contentID: transaction.payment.productIdentifier,
+        productType: Values.subscription,
+        numberOfItems: 5,
+        transactionDate: "",
+        currency: "USD",
+        productTitle: TestProduct.title,
+        description: TestProduct.productDescription,
+        subscriptionPeriod: Values.oneDaySubscriptionPeriod,
+        isStartTrial: discountMode == .freeTrial ? "1" : "0",
+        isFreeTrial: discountMode == .freeTrial ? "1" : "0",
+        trialPeriod: "P5D",
+        trialPrice: 100
+      )
+      XCTAssertEqual(parameters, expectedParameters)
+    }
+  }
+
   // MARK: - Helpers
 
   var encodedAppName: Data {
@@ -207,4 +431,66 @@ class PaymentProductRequestorTests: XCTestCase {
   func seedReceiptData() throws {
     try encodedAppName.write(to: tempURL)
   }
-}
+
+  struct PaymentProductParameters: Codable, Equatable {
+    let contentID: String
+    let productType: String
+    let numberOfItems: Int
+    let transactionDate: String
+    let transactionID: String?
+    let currency: String?
+    let productTitle: String?
+    let description: String?
+    let subscriptionPeriod: String?
+    let isStartTrial: String?
+    let isFreeTrial: String?
+    let trialPeriod: String?
+    let trialPrice: Int?
+
+    init(
+      contentID: String,
+      productType: String,
+      numberOfItems: Int,
+      transactionDate: String,
+      transactionID: String? = nil,
+      currency: String? = nil,
+      productTitle: String? = nil,
+      description: String? = nil,
+      subscriptionPeriod: String? = nil,
+      isStartTrial: String? = nil,
+      isFreeTrial: String? = nil,
+      trialPeriod: String? = nil,
+      trialPrice: Int? = nil
+    ) {
+      self.contentID = contentID
+      self.productType = productType
+      self.numberOfItems = numberOfItems
+      self.transactionDate = transactionDate
+      self.transactionID = transactionID
+      self.currency = currency
+      self.productTitle = productTitle
+      self.description = description
+      self.subscriptionPeriod = subscriptionPeriod
+      self.isStartTrial = isStartTrial
+      self.isFreeTrial = isFreeTrial
+      self.trialPeriod = trialPeriod
+      self.trialPrice = trialPrice
+    }
+
+    enum CodingKeys: String, CodingKey {
+      case contentID = "fb_content_id"
+      case productType = "fb_iap_product_type"
+      case numberOfItems = "fb_num_items"
+      case transactionDate = "fb_transaction_date"
+      case transactionID = "fb_transaction_id"
+      case currency = "fb_currency"
+      case productTitle = "fb_content_title"
+      case description = "fb_description"
+      case subscriptionPeriod = "fb_iap_subs_period"
+      case isStartTrial = "fb_iap_is_start_trial"
+      case isFreeTrial = "fb_iap_has_free_trial"
+      case trialPeriod = "fb_iap_trial_period"
+      case trialPrice = "fb_iap_trial_price"
+    }
+  }
+} // swiftlint:disable:this file_length

@@ -16,39 +16,31 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class TestPaymentTransaction: SKPaymentTransaction {
-  private let stubbedTransactionIdentifier: String?
-  private let stubbedTransactionState: SKPaymentTransactionState
-  private let stubbedTransactionDate: Date?
-  private let stubbedPayment: TestPayment
+@available(iOS 11.2, *)
+class TestProductDiscount: SKProductDiscount {
+  let stubbedPaymentMode: PaymentMode
+  let stubbedPrice: NSDecimalNumber
+  let stubbedSubscriptionPeriod: TestProductSubscriptionPeriod
 
   init(
-    identifier: String? = nil,
-    state: SKPaymentTransactionState,
-    date: Date? = nil,
-    payment: TestPayment = TestPayment(productIdentifier: UUID().uuidString)
+    paymentMode: PaymentMode,
+    price: NSDecimalNumber,
+    subscriptionPeriod: TestProductSubscriptionPeriod
   ) {
-    stubbedTransactionIdentifier = identifier
-    stubbedTransactionState = state
-    stubbedTransactionDate = date
-    stubbedPayment = payment
-
-    super.init()
+    stubbedPaymentMode = paymentMode
+    stubbedPrice = price
+    stubbedSubscriptionPeriod = subscriptionPeriod
   }
 
-  override var transactionIdentifier: String? {
-    stubbedTransactionIdentifier
+  override var paymentMode: SKProductDiscount.PaymentMode {
+    return stubbedPaymentMode
   }
 
-  override var transactionState: SKPaymentTransactionState {
-    stubbedTransactionState
+  override var price: NSDecimalNumber {
+    return stubbedPrice
   }
 
-  override var transactionDate: Date? {
-    stubbedTransactionDate
-  }
-
-  override var payment: SKPayment {
-    stubbedPayment
+  override var subscriptionPeriod: SKProductSubscriptionPeriod {
+    return stubbedSubscriptionPeriod
   }
 }

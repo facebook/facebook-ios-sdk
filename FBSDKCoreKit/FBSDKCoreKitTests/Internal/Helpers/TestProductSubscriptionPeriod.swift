@@ -16,39 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class TestPaymentTransaction: SKPaymentTransaction {
-  private let stubbedTransactionIdentifier: String?
-  private let stubbedTransactionState: SKPaymentTransactionState
-  private let stubbedTransactionDate: Date?
-  private let stubbedPayment: TestPayment
+@available(iOS 11.2, *)
+class TestProductSubscriptionPeriod: SKProductSubscriptionPeriod {
+  let stubbedNumberOfUnits: Int
 
-  init(
-    identifier: String? = nil,
-    state: SKPaymentTransactionState,
-    date: Date? = nil,
-    payment: TestPayment = TestPayment(productIdentifier: UUID().uuidString)
-  ) {
-    stubbedTransactionIdentifier = identifier
-    stubbedTransactionState = state
-    stubbedTransactionDate = date
-    stubbedPayment = payment
-
-    super.init()
+  init(numberOfUnits: Int) {
+    stubbedNumberOfUnits = numberOfUnits
   }
 
-  override var transactionIdentifier: String? {
-    stubbedTransactionIdentifier
-  }
-
-  override var transactionState: SKPaymentTransactionState {
-    stubbedTransactionState
-  }
-
-  override var transactionDate: Date? {
-    stubbedTransactionDate
-  }
-
-  override var payment: SKPayment {
-    stubbedPayment
+  override var numberOfUnits: Int {
+    return stubbedNumberOfUnits
   }
 }

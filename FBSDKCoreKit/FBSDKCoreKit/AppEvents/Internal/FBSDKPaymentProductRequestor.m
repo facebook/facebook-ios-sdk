@@ -180,13 +180,13 @@ static NSMutableArray *_pendingRequestors;
     case SKPaymentTransactionStatePurchasing:
       break;
     case SKPaymentTransactionStatePurchased:
-      transactionID = self.transaction.transactionIdentifier;
-      transactionDate = [_formatter stringFromDate:self.transaction.transactionDate];
+      transactionID = transaction.transactionIdentifier;
+      transactionDate = [_formatter stringFromDate:transaction.transactionDate];
       break;
     case SKPaymentTransactionStateFailed:
       break;
     case SKPaymentTransactionStateRestored:
-      transactionDate = [_formatter stringFromDate:self.transaction.transactionDate];
+      transactionDate = [_formatter stringFromDate:transaction.transactionDate];
       break;
     default: break;
   }

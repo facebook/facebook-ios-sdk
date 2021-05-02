@@ -1213,6 +1213,11 @@
 		F4A0341925F15D9500D19DE9 /* EventBindingManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A0341825F15D9500D19DE9 /* EventBindingManagerTests.swift */; };
 		F4A0346E25F1985300D19DE9 /* TestSwizzler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A0346D25F1985200D19DE9 /* TestSwizzler.swift */; };
 		F4A035C225F2C6F800D19DE9 /* SampleEventBindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A035C125F2C6F800D19DE9 /* SampleEventBindings.swift */; };
+		F4A25D1C2638A1F10074EE92 /* TestPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A25D142638A1F10074EE92 /* TestPayment.swift */; };
+		F4A25D452638A26F0074EE92 /* SampleProducts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A25D442638A26F0074EE92 /* SampleProducts.swift */; };
+		F4A25D6E2638A28B0074EE92 /* TestProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A25D6D2638A28A0074EE92 /* TestProduct.swift */; };
+		F4A25D972638A2A90074EE92 /* TestProductSubscriptionPeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A25D962638A2A90074EE92 /* TestProductSubscriptionPeriod.swift */; };
+		F4A25DE52638C8E50074EE92 /* TestProductDiscount.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A25DDD2638C8E40074EE92 /* TestProductDiscount.swift */; };
 		F4A2B1A525E56BF400DE13D9 /* FBSDKDeviceButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D9E16AA1CB46C7D00C8B68F /* FBSDKDeviceButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4A2B1BA25E56BF500DE13D9 /* FBSDKDeviceButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D9E16AA1CB46C7D00C8B68F /* FBSDKDeviceButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4A2B1D525E56C3200DE13D9 /* FBSDKDeviceViewControllerBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D10A68B1CB38D5D00F42AC1 /* FBSDKDeviceViewControllerBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -2127,6 +2132,11 @@
 		F4A11B4F24E36E5200D4C010 /* FBSDKURLSession.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKURLSession.h; sourceTree = "<group>"; };
 		F4A11B5024E36E5200D4C010 /* FBSDKCoreKit_Basics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKCoreKit_Basics.h; sourceTree = "<group>"; };
 		F4A11B5124E36E5200D4C010 /* FBSDKCrashObserving.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKCrashObserving.h; sourceTree = "<group>"; };
+		F4A25D142638A1F10074EE92 /* TestPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPayment.swift; sourceTree = "<group>"; };
+		F4A25D442638A26F0074EE92 /* SampleProducts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleProducts.swift; sourceTree = "<group>"; };
+		F4A25D6D2638A28A0074EE92 /* TestProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestProduct.swift; sourceTree = "<group>"; };
+		F4A25D962638A2A90074EE92 /* TestProductSubscriptionPeriod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestProductSubscriptionPeriod.swift; sourceTree = "<group>"; };
+		F4A25DDD2638C8E40074EE92 /* TestProductDiscount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestProductDiscount.swift; sourceTree = "<group>"; };
 		F4A2FAAC2634AB7C00E5CC0C /* FBSDKAppEventsFlushReason.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKAppEventsFlushReason.h; sourceTree = "<group>"; };
 		F4A4069C25F4522500F0E578 /* TestTools.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TestTools.xcodeproj; path = ../TestTools/TestTools.xcodeproj; sourceTree = "<group>"; };
 		F4A5C4C12634A2FA0011D001 /* FBSDKAppEventName.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKAppEventName.h; sourceTree = "<group>"; };
@@ -3504,6 +3514,7 @@
 				F4EB31D22540A35800736B67 /* SampleGraphRequests.swift */,
 				F46EAB8226179B56000629F3 /* SampleGraphResponses.swift */,
 				F46EAB5E26179595000629F3 /* SampleHTTPUrlResponses.swift */,
+				F4A25D442638A26F0074EE92 /* SampleProducts.swift */,
 				C51121CA20A27EF50041DC94 /* SampleRawRemoteEventBindings.swift */,
 				F4A02FF625EEC1CB00D19DE9 /* SampleRawRemoteGateKeeper.swift */,
 				F4A0304825EECC6800D19DE9 /* SampleRawRemoteGateKeeperList.swift */,
@@ -3513,10 +3524,10 @@
 				F4C23D7226261A7000FA79AE /* TestAdvertiserIDProvider.swift */,
 				F44F545925FADACA00D774B7 /* TestAppEventsConfiguration.swift */,
 				F44F53DB25FAC63900D774B7 /* TestAppEventsConfigurationProvider.swift */,
-				F4AE657226377A1C00E0B661 /* TestAppStoreReceiptProvider.swift */,
 				F91D1C58263294B5005CA2C5 /* TestApplicationDelegate.swift */,
 				F46E5406260E421100BAF55C /* TestAppLinkResolver.swift */,
 				F46E55A1260FB07B00BAF55C /* TestAppLinkResolverRequestBuilder.swift */,
+				F4AE657226377A1C00E0B661 /* TestAppStoreReceiptProvider.swift */,
 				F4849C35261CD456005E5329 /* TestBridgeApiProtocol.swift */,
 				F408C6E8256309A500372D61 /* TestBridgeApiRequest.swift */,
 				F43D7FCB2603FDD9005AE003 /* TestBundle.swift */,
@@ -3531,8 +3542,6 @@
 				F4C11CCD26191CBD00FB4596 /* TestErrorReport.swift */,
 				F48A9C8625F83D1300A2DBDF /* TestEventBinding.swift */,
 				F4EC346D25E6F1230003C0CF /* TestEventLogger.swift */,
-				F4AE647526374B3400E0B661 /* TestProductsRequestFactory.swift */,
-				F4AE64A526374BA400E0B661 /* TestProductsRequest.swift */,
 				F4AAAF9B2628EA6F00EDCF06 /* TestEventProcessor.swift */,
 				F4AAAF212628ACFC00EDCF06 /* TestFeatureExtractor.swift */,
 				58E9CD562602A3C2004818D8 /* TestFeatureManager.swift */,
@@ -3551,12 +3560,18 @@
 				F4ED90DA24EDDC610048D283 /* TestNotificationCenter.swift */,
 				F40D25F225E41C71004681FC /* TestOperationQueue.swift */,
 				F46E56F9260FE86F00BAF55C /* TestPasteboard.swift */,
+				F4A25D142638A1F10074EE92 /* TestPayment.swift */,
 				1687D7F02627999A0067A81A /* TestPaymentObserver.swift */,
 				F4AE63AD2637396300E0B661 /* TestPaymentProductRequestor.swift */,
 				F4AE63D62637398D00E0B661 /* TestPaymentProductRequestorFactory.swift */,
 				F4AE635B263738AA00E0B661 /* TestPaymentQueue.swift */,
 				F4AE6384263738E500E0B661 /* TestPaymentTransaction.swift */,
 				F43D7E7B2602823C005AE003 /* TestProcessInfo.swift */,
+				F4A25D6D2638A28A0074EE92 /* TestProduct.swift */,
+				F4A25DDD2638C8E40074EE92 /* TestProductDiscount.swift */,
+				F4AE64A526374BA400E0B661 /* TestProductsRequest.swift */,
+				F4AE647526374B3400E0B661 /* TestProductsRequestFactory.swift */,
+				F4A25D962638A2A90074EE92 /* TestProductSubscriptionPeriod.swift */,
 				F48A9C2C25F83CA400A2DBDF /* TestReactNativeView.swift */,
 				164DC6D8260A90DC00640CFA /* TestServerConfigurationProvider.swift */,
 				F494285C25829C72008FE009 /* TestSessionProvider.swift */,
@@ -5423,6 +5438,7 @@
 				F91D1BD92632911B005CA2C5 /* SampleAEMData.swift in Sources */,
 				F402B071255C740C00473083 /* ViewControllerSpy.swift in Sources */,
 				F931C07024F960D00088AD5F /* FBSDKSKAdNetworkRuleTests.swift in Sources */,
+				F4A25D452638A26F0074EE92 /* SampleProducts.swift in Sources */,
 				F4EC333A25E5CC9C0003C0CF /* TestGraphRequestBody.swift in Sources */,
 				F43D7E7C2602823C005AE003 /* TestProcessInfo.swift in Sources */,
 				F46E556F260FAB1F00BAF55C /* AppLinkResolverTests.swift in Sources */,
@@ -5462,12 +5478,15 @@
 				F4D58EC22620FF15006FEC6B /* HybridAppEventsScriptMessageHandlerTests.swift in Sources */,
 				C51121CC20A27EF50041DC94 /* SampleRawRemoteEventBindings.swift in Sources */,
 				F916581524F6BAB200BB759A /* FBSDKSKAdNetworkConversionConfigurationTests.m in Sources */,
+				F4A25D972638A2A90074EE92 /* TestProductSubscriptionPeriod.swift in Sources */,
 				F48A9C3525F83CA400A2DBDF /* TestReactNativeView.swift in Sources */,
 				F4A826B724EC6FAD00EB2CD4 /* FBSDKProfileTests.m in Sources */,
+				F4A25D6E2638A28B0074EE92 /* TestProduct.swift in Sources */,
 				F4BDCEAE261613D300D3FFF4 /* ErrorReportTests.swift in Sources */,
 				F46E5407260E421100BAF55C /* TestAppLinkResolver.swift in Sources */,
 				F4CCDC8825E958320057FE5F /* GateKeeperManagerTests.swift in Sources */,
 				F40D269125E4376D004681FC /* TestLogger.swift in Sources */,
+				F4A25DE52638C8E50074EE92 /* TestProductDiscount.swift in Sources */,
 				5D59BFFF23A7505D0008CA5A /* FBSDKLibAnalyzerTests.m in Sources */,
 				F4EB317F2540955500736B67 /* FBSDKGraphRequestPiggybackManagerTests.m in Sources */,
 				F4BE809A2612886D007BAD0D /* TestWebViewFactory.swift in Sources */,
@@ -5496,6 +5515,7 @@
 				F44F53DC25FAC63900D774B7 /* TestAppEventsConfigurationProvider.swift in Sources */,
 				F4C29B5B260920E9008818DD /* TestMacCatalystDeterminator.swift in Sources */,
 				1613935525F17CD7001F0D31 /* AccessTokenTests.swift in Sources */,
+				F4A25D1C2638A1F10074EE92 /* TestPayment.swift in Sources */,
 				F91D1BFD2632916D005CA2C5 /* FBSDKAEMReporterTests.swift in Sources */,
 				F46E55A2260FB07B00BAF55C /* TestAppLinkResolverRequestBuilder.swift in Sources */,
 				F44B04B7256442050059A3A6 /* FBSDKBridgeAPIOpenUrlWithSafariTests.m in Sources */,

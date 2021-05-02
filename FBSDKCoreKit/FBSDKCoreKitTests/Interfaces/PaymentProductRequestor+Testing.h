@@ -41,6 +41,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)logImplicitTransactionEvent:(NSString *)eventName
                          valueToSum:(double)valueToSum
                          parameters:(NSDictionary<NSString *, id> *)parameters;
+- (BOOL)isSubscription:(SKProduct *)product;
+- (NSMutableDictionary<NSString *, id> *)getEventParametersOfProduct:(nullable SKProduct *)product
+                                                     withTransaction:(SKPaymentTransaction *)transaction;
 
 @end
 

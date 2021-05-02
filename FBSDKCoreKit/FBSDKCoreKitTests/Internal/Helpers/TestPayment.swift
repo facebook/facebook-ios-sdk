@@ -16,39 +16,23 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class TestPaymentTransaction: SKPaymentTransaction {
-  private let stubbedTransactionIdentifier: String?
-  private let stubbedTransactionState: SKPaymentTransactionState
-  private let stubbedTransactionDate: Date?
-  private let stubbedPayment: TestPayment
+class TestPayment: SKPayment {
+  let stubbedProductIdentifier: String
+  let stubbedQuantity: Int
 
   init(
-    identifier: String? = nil,
-    state: SKPaymentTransactionState,
-    date: Date? = nil,
-    payment: TestPayment = TestPayment(productIdentifier: UUID().uuidString)
+    productIdentifier: String,
+    quantity: Int = 0
   ) {
-    stubbedTransactionIdentifier = identifier
-    stubbedTransactionState = state
-    stubbedTransactionDate = date
-    stubbedPayment = payment
-
-    super.init()
+    stubbedProductIdentifier = productIdentifier
+    stubbedQuantity = quantity
   }
 
-  override var transactionIdentifier: String? {
-    stubbedTransactionIdentifier
+  override var productIdentifier: String {
+    stubbedProductIdentifier
   }
 
-  override var transactionState: SKPaymentTransactionState {
-    stubbedTransactionState
-  }
-
-  override var transactionDate: Date? {
-    stubbedTransactionDate
-  }
-
-  override var payment: SKPayment {
-    stubbedPayment
+  override var quantity: Int {
+    stubbedQuantity
   }
 }
