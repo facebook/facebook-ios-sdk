@@ -929,6 +929,7 @@
 		F413883E24C76F3B001BC075 /* FBSDKSafeCastTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F413883D24C76F3B001BC075 /* FBSDKSafeCastTests.m */; };
 		F41979282475A20E003007CC /* FBSDKTypeUtilityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F41979272475A20E003007CC /* FBSDKTypeUtilityTests.m */; };
 		F428430B246B427700CD4393 /* FBSDKServerConfigurationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F428430A246B427700CD4393 /* FBSDKServerConfigurationManagerTests.swift */; };
+		F42DA15B2639BF5A00993228 /* PaymentProductRequestorTests+PaymentProductParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42DA1532639BF5A00993228 /* PaymentProductRequestorTests+PaymentProductParameters.swift */; };
 		F433229D261632E2002CC793 /* TestFileDataExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F433229C261632E2002CC793 /* TestFileDataExtractor.swift */; };
 		F4379F4326349CE600097F05 /* FBSDKPaymentProductRequestor.m in Sources */ = {isa = PBXBuildFile; fileRef = F4379F0A263497DC00097F05 /* FBSDKPaymentProductRequestor.m */; };
 		F4379F5126349CE700097F05 /* FBSDKPaymentProductRequestor.m in Sources */ = {isa = PBXBuildFile; fileRef = F4379F0A263497DC00097F05 /* FBSDKPaymentProductRequestor.m */; };
@@ -1995,6 +1996,7 @@
 		F413883D24C76F3B001BC075 /* FBSDKSafeCastTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = FBSDKSafeCastTests.m; path = Internal/Basics/FBSDKSafeCastTests.m; sourceTree = "<group>"; };
 		F41979272475A20E003007CC /* FBSDKTypeUtilityTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKTypeUtilityTests.m; sourceTree = "<group>"; };
 		F428430A246B427700CD4393 /* FBSDKServerConfigurationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBSDKServerConfigurationManagerTests.swift; sourceTree = "<group>"; };
+		F42DA1532639BF5A00993228 /* PaymentProductRequestorTests+PaymentProductParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentProductRequestorTests+PaymentProductParameters.swift"; sourceTree = "<group>"; };
 		F433229C261632E2002CC793 /* TestFileDataExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFileDataExtractor.swift; sourceTree = "<group>"; };
 		F4379F022634979E00097F05 /* FBSDKPaymentProductRequestor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKPaymentProductRequestor.h; sourceTree = "<group>"; };
 		F4379F0A263497DC00097F05 /* FBSDKPaymentProductRequestor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKPaymentProductRequestor.m; sourceTree = "<group>"; };
@@ -2978,6 +2980,7 @@
 				5CD6DB3B255B1D07002C296F /* FBSDKAppEventsUtilityTests.swift */,
 				F47AB77726336D9A005A3333 /* PaymentObserverTests.swift */,
 				F4AE63322637386B00E0B661 /* PaymentProductRequestorTests.swift */,
+				F42DA1532639BF5A00993228 /* PaymentProductRequestorTests+PaymentProductParameters.swift */,
 				F4AA88452634E76300825641 /* PaymentProductRequestorFactoryTests.swift */,
 				5D68D7D722BAEEF60063A3E2 /* FBSDKTimeSpentDataTests.m */,
 				F4D58EBA2620FF14006FEC6B /* HybridAppEventsScriptMessageHandlerTests.swift */,
@@ -5504,6 +5507,7 @@
 				F9F657602637963200A7AF30 /* TestInvocation.swift in Sources */,
 				F4A035C225F2C6F800D19DE9 /* SampleEventBindings.swift in Sources */,
 				F4D80B582565D6B3008CCAF0 /* FBSDKRestrictiveDataTests.m in Sources */,
+				F42DA15B2639BF5A00993228 /* PaymentProductRequestorTests+PaymentProductParameters.swift in Sources */,
 				F46EAB8326179B57000629F3 /* SampleGraphResponses.swift in Sources */,
 				F4EB33CE2542323500736B67 /* SampleRawRemotePermissions.swift in Sources */,
 				F4D58F4726220152006FEC6B /* ModelUtilityTests.swift in Sources */,

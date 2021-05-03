@@ -44,6 +44,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)isSubscription:(SKProduct *)product;
 - (NSMutableDictionary<NSString *, id> *)getEventParametersOfProduct:(nullable SKProduct *)product
                                                      withTransaction:(SKPaymentTransaction *)transaction;
+- (void)logImplicitSubscribeTransaction:(SKPaymentTransaction *)transaction
+                              ofProduct:(nullable SKProduct *)product;
+- (void)appendOriginalTransactionID:(NSString *)transactionID;
 
 @end
 

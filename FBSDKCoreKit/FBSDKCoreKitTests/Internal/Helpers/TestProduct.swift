@@ -22,7 +22,7 @@ class TestProduct: SKProduct {
   static let productDescription = "Some description"
 
   let stubbedSubscriptionPeriod: TestProductSubscriptionPeriod?
-  let stubbedDiscount: TestProductDiscount?
+  let stubbedDiscount: SKProductDiscount?
 
   init(
     subscriptionPeriod: TestProductSubscriptionPeriod? = nil,
@@ -51,5 +51,9 @@ class TestProduct: SKProduct {
 
   override var introductoryPrice: SKProductDiscount? {
     stubbedDiscount
+  }
+
+  override var discounts: [SKProductDiscount] {
+    [stubbedDiscount].compactMap { $0 }
   }
 }

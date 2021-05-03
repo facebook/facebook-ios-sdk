@@ -18,18 +18,25 @@
 
 @available(iOS 11.2, *)
 class TestProductDiscount: SKProductDiscount {
+  let stubbedIdentifier: String
   let stubbedPaymentMode: PaymentMode
   let stubbedPrice: NSDecimalNumber
   let stubbedSubscriptionPeriod: TestProductSubscriptionPeriod
 
   init(
+    identifier: String = "identifier",
     paymentMode: PaymentMode,
     price: NSDecimalNumber,
     subscriptionPeriod: TestProductSubscriptionPeriod
   ) {
+    stubbedIdentifier = identifier
     stubbedPaymentMode = paymentMode
     stubbedPrice = price
     stubbedSubscriptionPeriod = subscriptionPeriod
+  }
+
+  override var identifier: String? {
+    stubbedIdentifier
   }
 
   override var paymentMode: SKProductDiscount.PaymentMode {

@@ -18,6 +18,7 @@
 
 import XCTest
 
+@available(iOS 12.2, *)
 class PaymentObserverTests: XCTestCase {
 
   lazy var observer = PaymentObserver(

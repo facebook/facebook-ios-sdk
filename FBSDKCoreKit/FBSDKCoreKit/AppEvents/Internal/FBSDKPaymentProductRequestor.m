@@ -100,7 +100,7 @@ static NSMutableArray *_pendingRequestors;
     _transaction = transaction;
     _formatter = [NSDateFormatter new];
     _formatter.dateFormat = @"yyyy-MM-dd HH:mm:ssZ";
-    NSString *data = [[NSUserDefaults standardUserDefaults] stringForKey:FBSDKPaymentObserverOriginalTransactionKey];
+    NSString *data = [_store stringForKey:FBSDKPaymentObserverOriginalTransactionKey];
     _eventsWithReceipt = [NSSet setWithArray:@[FBSDKAppEventNamePurchased, FBSDKAppEventNameSubscribe,
                                                FBSDKAppEventNameStartTrial]];
     if (data) {
@@ -242,8 +242,8 @@ static NSMutableArray *_pendingRequestors;
     return;
   }
   [self.originalTransactionSet addObject:transactionID];
-  [[NSUserDefaults standardUserDefaults] setObject:[[self.originalTransactionSet allObjects] componentsJoinedByString:FBSDKPaymentObserverDelimiter]
-                                            forKey:FBSDKPaymentObserverOriginalTransactionKey];
+  [self.store setObject:[[self.originalTransactionSet allObjects] componentsJoinedByString:FBSDKPaymentObserverDelimiter]
+                 forKey:FBSDKPaymentObserverOriginalTransactionKey];
 }
 
 - (void)clearOriginalTransactionID:(NSString *)transactionID
@@ -252,8 +252,8 @@ static NSMutableArray *_pendingRequestors;
     return;
   }
   [self.originalTransactionSet removeObject:transactionID];
-  [[NSUserDefaults standardUserDefaults] setObject:[[self.originalTransactionSet allObjects] componentsJoinedByString:FBSDKPaymentObserverDelimiter]
-                                            forKey:FBSDKPaymentObserverOriginalTransactionKey];
+  [self.store setObject:[[self.originalTransactionSet allObjects] componentsJoinedByString:FBSDKPaymentObserverDelimiter]
+                 forKey:FBSDKPaymentObserverOriginalTransactionKey];
 }
 
 - (BOOL)isStartTrial:(SKPaymentTransaction *)transaction
@@ -287,34 +287,6 @@ static NSMutableArray *_pendingRequestors;
       if (!originalTransactionID) {
         return YES;
       }
-    }
-  }
-#endif
-#endif
-  return NO;
-}
-
-- (BOOL)hasStartTrial:(SKProduct *)product
-{
-#if !TARGET_OS_TV
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_1
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_4
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_12_1
-  // promotional offer starting from iOS 12.2
-  if (@available(iOS 12.2, *)) {
-    NSArray<SKProductDiscount *> *discounts = product.discounts;
-    for (SKProductDiscount *discount in discounts) {
-      if (discount.paymentMode == SKProductDiscountPaymentModeFreeTrial) {
-        return YES;
-      }
-    }
-  }
-#endif
-#endif
-  // introductory offer starting from iOS 11.2
-  if (@available(iOS 11.2, *)) {
-    if (product.introductoryPrice && (product.introductoryPrice.paymentMode == SKProductDiscountPaymentModeFreeTrial)) {
-      return YES;
     }
   }
 #endif
@@ -391,7 +363,7 @@ static NSMutableArray *_pendingRequestors;
         eventName = FBSDKAppEventNameStartTrial;
         [self clearOriginalTransactionID:originalTransactionID];
       } else {
-        if (originalTransactionID && [_originalTransactionSet containsObject:originalTransactionID]) {
+        if (originalTransactionID && [self.originalTransactionSet containsObject:originalTransactionID]) {
           return;
         }
         eventName = FBSDKAppEventNameSubscribe;

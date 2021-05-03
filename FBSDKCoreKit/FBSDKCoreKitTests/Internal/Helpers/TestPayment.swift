@@ -16,16 +16,20 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+@available(iOS 12.2, *)
 class TestPayment: SKPayment {
   let stubbedProductIdentifier: String
   let stubbedQuantity: Int
+  let stubbedPaymentDiscount: SKPaymentDiscount?
 
   init(
     productIdentifier: String,
-    quantity: Int = 0
+    quantity: Int = 0,
+    discount: SKPaymentDiscount? = nil
   ) {
     stubbedProductIdentifier = productIdentifier
     stubbedQuantity = quantity
+    stubbedPaymentDiscount = discount
   }
 
   override var productIdentifier: String {
@@ -34,5 +38,10 @@ class TestPayment: SKPayment {
 
   override var quantity: Int {
     stubbedQuantity
+  }
+
+  @available(iOS 12.2, *)
+  override var paymentDiscount: SKPaymentDiscount? {
+    stubbedPaymentDiscount
   }
 }

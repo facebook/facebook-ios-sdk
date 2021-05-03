@@ -18,7 +18,7 @@
 
 import XCTest
 
-@available(iOS 11.2, *)
+@available(iOS 12.2, *)
 class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_body_length
 
   var transaction = TestPaymentTransaction(state: .deferred)
@@ -32,6 +32,13 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
     isDirectory: true
   ).appendingPathComponent(name)
   let receiptProvider = TestAppStoreReceiptProvider()
+  let sampleDiscount = SKPaymentDiscount(
+    identifier: "identifier",
+    keyIdentifier: "key",
+    nonce: UUID(),
+    signature: "signature",
+    timestamp: 1
+  )
 
   lazy var requestor = PaymentProductRequestor(
     transaction: transaction,
@@ -47,15 +54,21 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
   enum Keys {
     static let receiptData = "receipt_data"
     static let implicitlyLogged = "_implicitlyLogged"
-    static let existingKey = "some_parameter"
+    static let passThroughParameter = "some_parameter"
+    static let originalTransactionsPersistence = "com.facebook.appevents.PaymentObserver.originalTransaction"
   }
 
   enum Values {
     static let appName = "foo"
-    static let existingValue = "bar"
+    static let passThroughValue = "bar"
     static let inApp = "inapp"
     static let subscription = "subs"
     static let oneDaySubscriptionPeriod = "P1D"
+    static let willSubscribeEventName = "SubscriptionInitiatedCheckout"
+    static let didSubscribeEventName = "Subscribe"
+    static let startTrialEventName = "StartTrial"
+    static let subscriptionFailedEventName = "SubscriptionFailed"
+    static let subscriptionRestoredEventName = "SubscriptionRestore"
   }
 
   func testResolvingProducts() {
@@ -107,30 +120,22 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
     try seedReceiptData()
     receiptProvider.stubbedURL = tempURL
 
-    [AppEvents.Name.purchased, AppEvents.Name.subscribe, AppEvents.Name.startTrial].forEach { eventName in
+    try [AppEvents.Name.purchased, AppEvents.Name.subscribe, AppEvents.Name.startTrial].forEach { eventName in
       requestor.logImplicitTransactionEvent(
         eventName.rawValue,
         valueToSum: 100,
-        parameters: [Keys.existingKey: Values.existingValue]
+        parameters: [Keys.passThroughParameter: Values.passThroughValue]
+      )
+      let expected = PaymentProductParameters(
+        isImplicitlyLogged: "1",
+        receiptData: encodedAppName.base64EncodedString(),
+        passThroughParameter: Values.passThroughValue
       )
 
-      guard let parameters = eventLogger.capturedParameters as? [String: String] else {
-        return XCTFail("Should log an event with parameters")
-      }
       XCTAssertEqual(
-        parameters[Keys.receiptData],
-        encodedAppName.base64EncodedString(),
+        try decodedEventParameters(),
+        expected,
         "Should fetch and include the receipt data for events matching transaction names"
-      )
-      XCTAssertEqual(
-        parameters[Keys.existingKey],
-        Values.existingValue,
-        "Should pass through the provided parameters"
-      )
-      XCTAssertEqual(
-        parameters[Keys.implicitlyLogged],
-        "1",
-        "Should log whether the event is implicitly logged"
       )
       XCTAssertEqual(
         eventLogger.capturedValueToSum,
@@ -144,29 +149,22 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
     try seedReceiptData()
     receiptProvider.stubbedURL = tempURL
 
-    ["foo", "bar", "baz"].forEach { eventName in
+    try ["foo", "bar", "baz"].forEach { eventName in
       requestor.logImplicitTransactionEvent(
         eventName,
         valueToSum: 100,
-        parameters: [Keys.existingKey: Values.existingValue]
+        parameters: [Keys.passThroughParameter: Values.passThroughValue]
       )
 
-      guard let parameters = eventLogger.capturedParameters as? [String: String] else {
-        return XCTFail("Should log an event with parameters")
-      }
-      XCTAssertNil(
-        parameters[Keys.receiptData],
+      let expected = PaymentProductParameters(
+        isImplicitlyLogged: "1",
+        passThroughParameter: Values.passThroughValue
+      )
+
+      XCTAssertEqual(
+        try decodedEventParameters(),
+        expected,
         "Should not fetch and include the receipt data for events that do not match transaction names"
-      )
-      XCTAssertEqual(
-        parameters[Keys.existingKey],
-        Values.existingValue,
-        "Should pass through the provided parameters"
-      )
-      XCTAssertEqual(
-        parameters[Keys.implicitlyLogged],
-        "1",
-        "Should log whether the event is implicitly logged"
       )
       XCTAssertEqual(
         eventLogger.capturedValueToSum,
@@ -391,12 +389,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
     )
 
     try [SKProductDiscount.PaymentMode.freeTrial, .payAsYouGo, .payUpFront].forEach { discountMode in
-      let discount = TestProductDiscount(
-        paymentMode: discountMode,
-        price: 100.0,
-        subscriptionPeriod: TestProductSubscriptionPeriod(numberOfUnits: 5)
-      )
-
+      let discount = createDiscount(mode: discountMode)
       let rawParameters = requestor.getEventParameters(
         of: SampleProducts.createSubscription(discount: discount),
         with: transaction
@@ -422,7 +415,172 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
     }
   }
 
+  // MARK: - Subscription Event Logging
+
+  // MARK: Purchasing
+
+  func testLoggingPurchasingSubscription() {
+    let originalTransaction = TestPaymentTransaction(identifier: "foo", state: .purchased)
+    let transaction = TestPaymentTransaction(
+      state: .purchasing,
+      originalTransaction: originalTransaction
+    )
+    requestor.logImplicitSubscribeTransaction(transaction, of: nil)
+
+    let expected = PaymentProductParameters(
+      contentID: transaction.payment.productIdentifier,
+      productType: Values.inApp,
+      numberOfItems: 0,
+      transactionDate: "",
+      isImplicitlyLogged: "1"
+    )
+    XCTAssertEqual(
+      try decodedEventParameters(),
+      expected,
+      "Should log the expected parameters"
+    )
+    XCTAssertEqual(
+      eventLogger.capturedEventName,
+      Values.willSubscribeEventName,
+      "Should log the expected name"
+    )
+    XCTAssertNil(
+      store.capturedSetObjectKey,
+      "Should not remove the original transaction from the persisted transaction ids when the state is purchasing"
+    )
+  }
+
+  // MARK: Purchased
+
+  func testLoggingLoggedPurchasedSubscription() {
+    let identifier = "foo"
+    let originalTransaction = TestPaymentTransaction(identifier: identifier, state: .purchased)
+    let transaction = TestPaymentTransaction(
+      state: .purchased,
+      originalTransaction: originalTransaction
+    )
+    // Sets it to be previously logged
+    requestor.appendOriginalTransactionID(identifier)
+
+    requestor.logImplicitSubscribeTransaction(transaction, of: nil)
+
+    XCTAssertNil(
+      eventLogger.capturedEventName,
+      "Should not log a previously logged purchased subscription"
+    )
+    XCTAssertFalse(
+      store.capturedValues.compactMap { $0.value as? String }
+        .filter { $0.contains(identifier) }
+        .isEmpty,
+      "Should not clear the persisted identifier of the previously logged purchase"
+    )
+  }
+
+  func testLoggingUnloggedPurchasedSubscription() {
+    let identifier = "foo"
+    let originalTransaction = TestPaymentTransaction(identifier: identifier, state: .purchased)
+    let transaction = TestPaymentTransaction(
+      state: .purchased,
+      originalTransaction: originalTransaction
+    )
+    requestor.logImplicitSubscribeTransaction(transaction, of: nil)
+
+    XCTAssertEqual(
+      eventLogger.capturedEventName,
+      Values.didSubscribeEventName,
+      "Should log a previously unlogged purchased subscription"
+    )
+    XCTAssertFalse(
+      store.capturedValues.compactMap { $0.value as? String }
+        .filter { $0.contains(identifier) }
+        .isEmpty,
+      "Should persist the identifier of the purchase"
+    )
+  }
+
+  func testLoggingPurchasedTrialSubscription() {
+    let identifier = "foo"
+    let originalTransaction = TestPaymentTransaction(identifier: identifier, state: .purchased)
+    let discountedPayment = TestPayment(
+      productIdentifier: "bar",
+      discount: sampleDiscount
+    )
+    let transaction = TestPaymentTransaction(
+      state: .purchased,
+      payment: discountedPayment,
+      originalTransaction: originalTransaction
+    )
+    let product = SampleProducts.createSubscription(discount: createDiscount(mode: .freeTrial))
+
+    // Set it to be previously logged so we can check that it was cleared
+    requestor.appendOriginalTransactionID(identifier)
+
+    requestor.logImplicitSubscribeTransaction(transaction, of: product)
+
+    XCTAssertEqual(
+      eventLogger.capturedEventName,
+      Values.startTrialEventName,
+      "Should log whether a purchase marks the start of a trial"
+    )
+    // Clears original transaction ID
+    XCTAssertEqual(
+      store.capturedSetObjectKey,
+      Keys.originalTransactionsPersistence,
+      "Should override the existing transaction ids"
+    )
+    XCTAssertFalse(
+      store.capturedValues.contains {
+        return $0.value as? String == identifier
+      },
+      "Logging a trial start should clear the original transaction"
+    )
+  }
+
+  // MARK: Failed, Restored, Deferred
+
+  func testLoggingSubscriptions() {
+    let testData: [(paymentState: SKPaymentTransactionState, eventName: String?, message: String)] = [
+      (
+        .failed,
+        Values.subscriptionFailedEventName,
+        "Should log the expected event name for a subscription failure"
+      ),
+      (
+        .restored,
+        Values.subscriptionRestoredEventName,
+        "Should log the expected event name for a subscription restoration"
+      ),
+      (
+        .deferred,
+        nil,
+        "Should not log an event for a subscription deferral"
+      )
+    ]
+
+    testData.forEach {
+      eventLogger.capturedEventName = nil
+      let transaction = TestPaymentTransaction(
+        state: $0.paymentState
+      )
+      requestor.logImplicitSubscribeTransaction(transaction, of: nil)
+
+      XCTAssertEqual(
+        eventLogger.capturedEventName,
+        $0.eventName,
+        $0.message
+      )
+    }
+  }
+
   // MARK: - Helpers
+
+  func createDiscount(mode: SKProductDiscount.PaymentMode) -> TestProductDiscount {
+    TestProductDiscount(
+     paymentMode: mode,
+     price: 100.0,
+     subscriptionPeriod: TestProductSubscriptionPeriod(numberOfUnits: 5)
+   )
+  }
 
   var encodedAppName: Data {
     return Values.appName.data(using: .utf8)! // swiftlint:disable:this force_unwrapping
@@ -432,65 +590,14 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
     try encodedAppName.write(to: tempURL)
   }
 
-  struct PaymentProductParameters: Codable, Equatable {
-    let contentID: String
-    let productType: String
-    let numberOfItems: Int
-    let transactionDate: String
-    let transactionID: String?
-    let currency: String?
-    let productTitle: String?
-    let description: String?
-    let subscriptionPeriod: String?
-    let isStartTrial: String?
-    let isFreeTrial: String?
-    let trialPeriod: String?
-    let trialPrice: Int?
-
-    init(
-      contentID: String,
-      productType: String,
-      numberOfItems: Int,
-      transactionDate: String,
-      transactionID: String? = nil,
-      currency: String? = nil,
-      productTitle: String? = nil,
-      description: String? = nil,
-      subscriptionPeriod: String? = nil,
-      isStartTrial: String? = nil,
-      isFreeTrial: String? = nil,
-      trialPeriod: String? = nil,
-      trialPrice: Int? = nil
-    ) {
-      self.contentID = contentID
-      self.productType = productType
-      self.numberOfItems = numberOfItems
-      self.transactionDate = transactionDate
-      self.transactionID = transactionID
-      self.currency = currency
-      self.productTitle = productTitle
-      self.description = description
-      self.subscriptionPeriod = subscriptionPeriod
-      self.isStartTrial = isStartTrial
-      self.isFreeTrial = isFreeTrial
-      self.trialPeriod = trialPeriod
-      self.trialPrice = trialPrice
+  func decodedEventParameters() throws -> PaymentProductParameters {
+    guard let rawParameters = eventLogger.capturedParameters as? [String: Any] else {
+      throw MissingEventParametersError()
     }
-
-    enum CodingKeys: String, CodingKey {
-      case contentID = "fb_content_id"
-      case productType = "fb_iap_product_type"
-      case numberOfItems = "fb_num_items"
-      case transactionDate = "fb_transaction_date"
-      case transactionID = "fb_transaction_id"
-      case currency = "fb_currency"
-      case productTitle = "fb_content_title"
-      case description = "fb_description"
-      case subscriptionPeriod = "fb_iap_subs_period"
-      case isStartTrial = "fb_iap_is_start_trial"
-      case isFreeTrial = "fb_iap_has_free_trial"
-      case trialPeriod = "fb_iap_trial_period"
-      case trialPrice = "fb_iap_trial_price"
-    }
+    let data = try JSONSerialization.data(withJSONObject: rawParameters, options: [])
+    return try JSONDecoder().decode(PaymentProductParameters.self, from: data)
   }
+
+  struct MissingEventParametersError: Error {}
+
 } // swiftlint:disable:this file_length
