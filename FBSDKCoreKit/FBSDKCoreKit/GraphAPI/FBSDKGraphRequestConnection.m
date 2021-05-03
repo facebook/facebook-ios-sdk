@@ -763,7 +763,7 @@ static BOOL _canMakeRequests = NO;
         }
         [FBSDKTypeUtility array:results addObject:result];
       }
-      if (batchResultError) {
+      if (batchResultError && (*error == nil)) {
         // We'll report back the last error we saw.
         *error = batchResultError;
       }
