@@ -65,6 +65,9 @@ static NSString *const _fakeChallence = @"some_challenge";
                         iat:(long)iat
                         sub:(NSString *)sub
                        name:(nullable NSString *)name
+                  firstName:(nullable NSString *)firstName
+                 middleName:(nullable NSString *)middleName
+                   lastName:(nullable NSString *)lastName
                       email:(nullable NSString *)email
                     picture:(nullable NSString *)picture
                 userFriends:(nullable NSArray<NSString *> *)userFriends
@@ -543,6 +546,9 @@ static NSString *const _fakeChallence = @"some_challenge";
                                                                                           iat:1234
                                                                                           sub:@"some_sub"
                                                                                          name:@"some_name"
+                                                                                    firstName:@"first"
+                                                                                   middleName:@"middle"
+                                                                                     lastName:@"last"
                                                                                         email:@"example@example.com"
                                                                                       picture:@"www.facebook.com"
                                                                                   userFriends:@[@"123", @"456"]
