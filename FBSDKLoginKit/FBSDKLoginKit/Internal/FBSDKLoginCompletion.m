@@ -266,9 +266,9 @@ static NSDateFormatter *_dateFormatter;
   }
 
   return [_profileFactory createProfileWithUserID:claims.sub
-                                        firstName:nil
-                                       middleName:nil
-                                         lastName:nil
+                                        firstName:claims.firstName
+                                       middleName:claims.middleName
+                                         lastName:claims.lastName
                                              name:claims.name
                                           linkURL:[NSURL URLWithString:claims.userLink]
                                       refreshDate:nil

@@ -570,6 +570,21 @@ static NSString *const _fakeChallence = @"some_challenge";
     "Should request a profile using the name from the claims"
   );
   XCTAssertEqualObjects(
+    factory.capturedFirstName,
+    claim.firstName,
+    "Should request a profile using the first name from the claims"
+  );
+  XCTAssertEqualObjects(
+    factory.capturedMiddleName,
+    claim.middleName,
+    "Should request a profile using the middle name from the claims"
+  );
+  XCTAssertEqualObjects(
+    factory.capturedLastName,
+    claim.lastName,
+    "Should request a profile using the last name from the claims"
+  );
+  XCTAssertEqualObjects(
     factory.capturedImageURL.absoluteString,
     claim.picture,
     "Should request an image URL from the claims"

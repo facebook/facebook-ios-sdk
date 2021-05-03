@@ -152,6 +152,9 @@ static NSString *const kFakeJTI = @"a jti is just any string";
     @"jti" : kFakeJTI,
     @"sub" : @"1234",
     @"name" : @"Test User",
+    @"first_name" : @"Test",
+    @"middle_name" : @"Middle",
+    @"last_name" : @"User",
     @"email" : @"email@email.com",
     @"picture" : @"https://www.facebook.com/some_picture",
     @"user_friends" : @[@"123", @"456"],
@@ -1032,6 +1035,9 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 {
   XCTAssertNotNil(profile, @"user profile should be updated");
   XCTAssertEqualObjects(profile.name, _claims[@"name"], @"failed to parse user name");
+  XCTAssertEqualObjects(profile.firstName, _claims[@"first_name"], @"failed to parse user first name");
+  XCTAssertEqualObjects(profile.middleName, _claims[@"middle_name"], @"failed to parse user middle name");
+  XCTAssertEqualObjects(profile.lastName, _claims[@"last_name"], @"failed to parse user last name");
   XCTAssertEqualObjects(profile.userID, _claims[@"sub"], @"failed to parse userID");
   XCTAssertEqualObjects(profile.imageURL.absoluteString, _claims[@"picture"], @"failed to parse user profile picture");
   XCTAssertEqualObjects(profile.email, _claims[@"email"], @"failed to parse user email");
