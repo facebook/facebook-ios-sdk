@@ -88,7 +88,7 @@
 + (Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider;
 + (Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
 + (id<FBSDKGraphRequestProviding>)requestProvider;
-+ (Class<FBSDKFeatureChecking>)featureChecker;
++ (id<FBSDKFeatureChecking>)featureChecker;
 + (id<FBSDKDataPersisting>)store;
 + (id<FBSDKLogging>)logger;
 + (id<FBSDKSettings>)settings;

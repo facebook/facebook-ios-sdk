@@ -73,16 +73,6 @@ static NSString *const _mockUserID = @"mockUserID";
 
 + (UIApplicationState)applicationState;
 
-+ (void)setGateKeeperManager:(Class<FBSDKGateKeeperManaging>)manager;
-
-+ (void)setAppEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)provider;
-
-+ (void)setServerConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)provider;
-
-+ (void)setRequestProvider:(id<FBSDKGraphRequestProviding>)provider;
-
-+ (void)setFeatureChecker:(Class<FBSDKFeatureChecking>)checker;
-
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 
@@ -152,9 +142,6 @@ static NSString *const _mockUserID = @"mockUserID";
   _settings = [TestSettings new];
   _settings.stubbedIsAutoLogAppEventsEnabled = YES;
   [FBSDKInternalUtility reset];
-  [FBSDKAppEvents setAppEventsConfigurationProvider:TestAppEventsConfigurationProvider.class];
-  [FBSDKAppEvents setServerConfigurationProvider:TestServerConfigurationProvider.class];
-  [FBSDKAppEvents setFeatureChecker:TestFeatureManager.class];
   _eventProcessor = [TestEventProcessor new];
   _paymentObserver = [TestPaymentObserver new];
   _timeSpentRecorder = [TestTimeSpentRecorder new];
@@ -178,13 +165,13 @@ static NSString *const _mockUserID = @"mockUserID";
 
   // This should be removed when these tests are updated to check the actual requests that are created
   [self stubAllocatingGraphRequestConnection];
-  [FBSDKAppEvents configureWithGateKeeperManager:TestGateKeeperManager.self
-                  appEventsConfigurationProvider:TestAppEventsConfigurationProvider.self
-                     serverConfigurationProvider:TestServerConfigurationProvider.self
+  [FBSDKAppEvents configureWithGateKeeperManager:TestGateKeeperManager.class
+                  appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
+                     serverConfigurationProvider:TestServerConfigurationProvider.class
                             graphRequestProvider:_graphRequestFactory
                                   featureChecker:_featureManager
                                            store:_store
-                                          logger:TestLogger.self
+                                          logger:TestLogger.class
                                         settings:_settings
                                  paymentObserver:_paymentObserver
                                timeSpentRecorder:_timeSpentRecorder];
