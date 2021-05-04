@@ -212,7 +212,7 @@ typedef OSStatus (*SecItemAdd_type)(CFDictionaryRef, CFTypeRef);
 typedef OSStatus (*SecItemCopyMatching_type)(CFDictionaryRef, CFTypeRef);
 typedef OSStatus (*SecItemDelete_type)(CFDictionaryRef);
 
-int fbsdkdfl_SecRandomCopyBytes(SecRandomRef rnd, size_t count, uint8_t *bytes)
+int fbsdkdfl_SecRandomCopyBytes(SecRandomRef rnd, size_t count, void *bytes)
 {
   _fbsdkdfl_Security_get_f(SecRandomCopyBytes);
   return f(rnd, count, bytes);

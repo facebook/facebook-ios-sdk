@@ -26,12 +26,12 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Security APIs
 
 // These are local wrappers around the corresponding methods in Security/SecRandom.h
-FOUNDATION_EXPORT int fbsdkdfl_SecRandomCopyBytes(SecRandomRef rnd, size_t count, uint8_t *bytes);
+FOUNDATION_EXPORT int fbsdkdfl_SecRandomCopyBytes(SecRandomRef rnd, size_t count, void *bytes);
 
 // These are local wrappers around Keychain API
 FOUNDATION_EXPORT OSStatus fbsdkdfl_SecItemUpdate(CFDictionaryRef query, CFDictionaryRef attributesToUpdate);
 FOUNDATION_EXPORT OSStatus fbsdkdfl_SecItemAdd(CFDictionaryRef attributes, CFTypeRef _Nullable * _Nullable result);
-FOUNDATION_EXPORT OSStatus fbsdkdfl_SecItemCopyMatching(CFDictionaryRef query, CFTypeRef _Nullable * _Nullable result);
+FOUNDATION_EXPORT OSStatus fbsdkdfl_SecItemCopyMatching(CFDictionaryRef query, CFTypeRef * __nullable CF_RETURNS_RETAINED result);
 FOUNDATION_EXPORT OSStatus fbsdkdfl_SecItemDelete(CFDictionaryRef query);
 
 #pragma mark - Social Constants
