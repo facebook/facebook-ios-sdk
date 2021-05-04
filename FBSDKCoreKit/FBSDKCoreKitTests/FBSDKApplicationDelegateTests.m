@@ -94,7 +94,7 @@
 + (id<FBSDKGraphRequestProviding>)requestProvider;
 + (id<FBSDKFeatureChecking>)featureChecker;
 + (id<FBSDKDataPersisting>)store;
-+ (id<FBSDKLogging>)logger;
++ (Class<FBSDKLogging>)logger;
 + (id<FBSDKSettings>)settings;
 + (id<FBSDKEventProcessing>)eventProcessor;
 + (id<FBSDKPaymentObserving>)paymentObserver;

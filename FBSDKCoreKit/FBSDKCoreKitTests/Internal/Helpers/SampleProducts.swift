@@ -18,18 +18,31 @@
 
 @available(iOS 11.2, *)
 enum SampleProducts {
-  static var valid = TestProduct()
-  static var validSubscription = TestProduct(subscriptionPeriod: validSubscriptionPeriod)
-  static var invalidSubscription = TestProduct(subscriptionPeriod: invalidSubscriptionPeriod)
-
-  static func createSubscription(discount: TestProductDiscount) -> TestProduct {
-    return TestProduct(subscriptionPeriod: validSubscriptionPeriod, discount: discount)
+  static func createValid() -> TestProduct {
+    TestProduct()
   }
 
-  private static var validSubscriptionPeriod = TestProductSubscriptionPeriod(
-    numberOfUnits: 1
-  )
-  private static var invalidSubscriptionPeriod = TestProductSubscriptionPeriod(
-    numberOfUnits: 0
-  )
+  static func createValidSubscription() -> TestProduct {
+    TestProduct(subscriptionPeriod: createValidSubscriptionPeriod())
+  }
+
+  static func createInvalidSubscription() -> TestProduct {
+    TestProduct(subscriptionPeriod: createInvalidSubscriptionPeriod())
+  }
+
+  static func createSubscription(discount: TestProductDiscount) -> TestProduct {
+    return TestProduct(subscriptionPeriod: createValidSubscriptionPeriod(), discount: discount)
+  }
+
+  private static func createValidSubscriptionPeriod() -> TestProductSubscriptionPeriod {
+    TestProductSubscriptionPeriod(
+      numberOfUnits: 1
+    )
+  }
+
+  private static func createInvalidSubscriptionPeriod() -> TestProductSubscriptionPeriod {
+    TestProductSubscriptionPeriod(
+      numberOfUnits: 0
+    )
+  }
 }

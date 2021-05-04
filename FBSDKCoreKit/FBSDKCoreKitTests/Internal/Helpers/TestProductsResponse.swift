@@ -16,14 +16,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@objcMembers
-class TestLoggerFactory: LoggingCreating {
-  var capturedLoggingBehavior: LoggingBehavior?
-  var logger: TestLogger! // swiftlint:disable:this implicitly_unwrapped_optional
+class TestProductsResponse: SKProductsResponse {
+  private let stubbedProducts: [SKProduct]
+  private let stubbedInvalidProductIdentifiers: [String]
 
-  func createLogger(withLoggingBehavior loggingBehavior: LoggingBehavior) -> Logging {
-    capturedLoggingBehavior = loggingBehavior
-    logger = TestLogger(loggingBehavior: loggingBehavior)
-    return logger
+  init(
+    products: [SKProduct],
+    invalidProductIdentifiers: [String]
+  ) {
+    stubbedProducts = products
+    stubbedInvalidProductIdentifiers = invalidProductIdentifiers
   }
+
+  override var products: [SKProduct] {
+    stubbedProducts
+  }
+
+  override var invalidProductIdentifiers: [String] {
+    stubbedInvalidProductIdentifiers
+  }
+
 }

@@ -69,6 +69,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
     static let startTrialEventName = "StartTrial"
     static let subscriptionFailedEventName = "SubscriptionFailed"
     static let subscriptionRestoredEventName = "SubscriptionRestore"
+    static let mobilePurchase = "fb_mobile_purchase"
   }
 
   func testResolvingProducts() {
@@ -204,21 +205,21 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
 
   func testIsSubscriptionWithValidSubscription() {
     XCTAssertTrue(
-      requestor.isSubscription(SampleProducts.validSubscription),
+      requestor.isSubscription(SampleProducts.createValidSubscription()),
       "A product with a non zero subscription period should be considered a subscription"
     )
   }
 
   func testIsSubscriptionWithNonSubscription() {
     XCTAssertFalse(
-      requestor.isSubscription(SampleProducts.valid),
+      requestor.isSubscription(SampleProducts.createValid()),
       "A product without a subscription period should not be considered a subscription"
     )
   }
 
   func testIsSubscriptionWithInvalidSubscription() {
     XCTAssertFalse(
-      requestor.isSubscription(SampleProducts.invalidSubscription),
+      requestor.isSubscription(SampleProducts.createInvalidSubscription()),
       "A product with an empty subscription period should be considered a subscription"
     )
   }
@@ -302,7 +303,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
     )
 
     let rawParameters = requestor.getEventParameters(
-      of: SampleProducts.valid,
+      of: SampleProducts.createValid(),
       with: transaction
     )
     let data = try JSONSerialization.data(withJSONObject: rawParameters, options: [])
@@ -331,7 +332,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
     )
 
     let rawParameters = requestor.getEventParameters(
-      of: SampleProducts.valid,
+      of: SampleProducts.createValid(),
       with: transaction
     )
     let data = try JSONSerialization.data(withJSONObject: rawParameters, options: [])
@@ -359,7 +360,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
     )
 
     let rawParameters = requestor.getEventParameters(
-      of: SampleProducts.validSubscription,
+      of: SampleProducts.createValidSubscription(),
       with: transaction
     )
     let data = try JSONSerialization.data(withJSONObject: rawParameters, options: [])
@@ -570,6 +571,116 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
         $0.message
       )
     }
+  }
+
+  // MARK: - Request Delegate Methods
+
+  func testReceivingProductRequestResponseWithoutProductsOrProductIdentifiers() {
+    // use a non-deferred state so we can observe implicit logging
+    requestor.transaction = TestPaymentTransaction(state: .purchased)
+
+    let response = TestProductsResponse(
+      products: [],
+      invalidProductIdentifiers: []
+    )
+    requestor.productsRequest(SKProductsRequest(), didReceive: response)
+
+    XCTAssertEqual(
+      loggerFactory.capturedLoggingBehavior,
+      LoggingBehavior.appEvents,
+      "Should request a logger with the expected logging behavior"
+    )
+    XCTAssertEqual(
+      loggerFactory.logger.capturedContents,
+      "FBSDKPaymentObserver: Expect to resolve one product per request",
+      """
+      Should provide a useful message when receiving a product request
+      response without products or product identifiers
+      """
+    )
+    XCTAssertEqual(
+      eventLogger.capturedEventName,
+      Values.mobilePurchase,
+      "bar"
+    )
+  }
+
+  func testReceivingProductRequestResponseWithoutMultipleProducts() throws {
+    // use a transaction with a non-deferred state so we can observe implicit logging
+    transaction = TestPaymentTransaction(state: .purchased)
+
+    let response = TestProductsResponse(
+      products: [
+        SampleProducts.createValid(),
+        SampleProducts.createValidSubscription()
+      ],
+      invalidProductIdentifiers: []
+    )
+
+    requestor.productsRequest(SKProductsRequest(), didReceive: response)
+
+    XCTAssertEqual(
+      loggerFactory.logger.capturedContents,
+      "FBSDKPaymentObserver: Expect to resolve one product per request",
+      """
+      Should provide a useful message when receiving a product request
+      response with multiple products
+      """
+    )
+
+    let parameters = try decodedEventParameters()
+    let expectedParameters = PaymentProductParameters(
+      contentID: transaction.payment.productIdentifier,
+      productType: Values.inApp,
+      numberOfItems: 0,
+      transactionDate: "",
+      currency: "USD",
+      productTitle: TestProduct.title,
+      description: TestProduct.productDescription,
+      isImplicitlyLogged: "1"
+    )
+    XCTAssertEqual(parameters, expectedParameters)
+  }
+
+  func testDidFinishRequest() {
+    // use a transaction with a non-deferred state so we can observe implicit logging
+    transaction = TestPaymentTransaction(state: .purchased)
+
+    // ensure there's a requestor to remove
+    requestor.resolveProducts()
+    XCTAssertTrue(PaymentProductRequestor.pendingRequestors.contains(requestor))
+
+    requestor.requestDidFinish(SKRequest())
+
+    XCTAssertFalse(
+      PaymentProductRequestor.pendingRequestors.contains(requestor),
+      "Finishing any request should remove the pending requestors"
+    )
+    XCTAssertNil(
+      eventLogger.capturedEventName,
+      "Should not log an event when the request finishes"
+    )
+  }
+
+  func testDidFailRequest() {
+    // use a transaction with a non-deferred state so we can observe implicit logging
+    transaction = TestPaymentTransaction(state: .purchased)
+
+    // ensure there's a requestor to remove
+    requestor.resolveProducts()
+    XCTAssertTrue(PaymentProductRequestor.pendingRequestors.contains(requestor))
+
+    requestor.request(SKRequest(), didFailWithError: SampleError())
+
+    XCTAssertFalse(
+      PaymentProductRequestor.pendingRequestors.contains(requestor),
+      "Failing any request should remove the pending requestors"
+    )
+    XCTAssertEqual(
+      eventLogger.capturedEventName,
+      Values.mobilePurchase,
+      "Should log an event when the request fails. This seems like it might be a bug."
+    )
   }
 
   // MARK: - Helpers

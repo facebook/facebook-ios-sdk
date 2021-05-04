@@ -47,6 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)logImplicitSubscribeTransaction:(SKPaymentTransaction *)transaction
                               ofProduct:(nullable SKProduct *)product;
 - (void)appendOriginalTransactionID:(NSString *)transactionID;
+- (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response;
 
 @end
 

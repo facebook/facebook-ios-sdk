@@ -944,6 +944,7 @@
 		F42DA24B263B0A0400993228 /* FBSDKLoggerFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F42DA221263B061100993228 /* FBSDKLoggerFactory.m */; };
 		F42DA24C263B0A0400993228 /* FBSDKLoggerFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F42DA221263B061100993228 /* FBSDKLoggerFactory.m */; };
 		F42DA25B263B0A7700993228 /* TestLoggerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42DA25A263B0A7700993228 /* TestLoggerFactory.swift */; };
+		F42DA1B8263AFDEB00993228 /* TestProductsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42DA1B0263AFDEB00993228 /* TestProductsResponse.swift */; };
 		F433229D261632E2002CC793 /* TestFileDataExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F433229C261632E2002CC793 /* TestFileDataExtractor.swift */; };
 		F4379F4326349CE600097F05 /* FBSDKPaymentProductRequestor.m in Sources */ = {isa = PBXBuildFile; fileRef = F4379F0A263497DC00097F05 /* FBSDKPaymentProductRequestor.m */; };
 		F4379F5126349CE700097F05 /* FBSDKPaymentProductRequestor.m in Sources */ = {isa = PBXBuildFile; fileRef = F4379F0A263497DC00097F05 /* FBSDKPaymentProductRequestor.m */; };
@@ -2018,6 +2019,7 @@
 		F42DA220263B05DA00993228 /* FBSDKLoggerFactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKLoggerFactory.h; sourceTree = "<group>"; };
 		F42DA221263B061100993228 /* FBSDKLoggerFactory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKLoggerFactory.m; sourceTree = "<group>"; };
 		F42DA25A263B0A7700993228 /* TestLoggerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestLoggerFactory.swift; sourceTree = "<group>"; };
+		F42DA1B0263AFDEB00993228 /* TestProductsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestProductsResponse.swift; sourceTree = "<group>"; };
 		F433229C261632E2002CC793 /* TestFileDataExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFileDataExtractor.swift; sourceTree = "<group>"; };
 		F4379F022634979E00097F05 /* FBSDKPaymentProductRequestor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKPaymentProductRequestor.h; sourceTree = "<group>"; };
 		F4379F0A263497DC00097F05 /* FBSDKPaymentProductRequestor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKPaymentProductRequestor.m; sourceTree = "<group>"; };
@@ -3602,6 +3604,7 @@
 				F4A25DDD2638C8E40074EE92 /* TestProductDiscount.swift */,
 				F4AE64A526374BA400E0B661 /* TestProductsRequest.swift */,
 				F4AE647526374B3400E0B661 /* TestProductsRequestFactory.swift */,
+				F42DA1B0263AFDEB00993228 /* TestProductsResponse.swift */,
 				F4A25D962638A2A90074EE92 /* TestProductSubscriptionPeriod.swift */,
 				F48A9C2C25F83CA400A2DBDF /* TestReactNativeView.swift */,
 				164DC6D8260A90DC00640CFA /* TestServerConfigurationProvider.swift */,
@@ -5539,6 +5542,7 @@
 				F41200D0255F45FE009E323F /* FBSDKBridgeAPI+ApplicationOpenUrlTests.m in Sources */,
 				C6E3622625E03FD0007D555D /* FBSDKAuthenticationTokenHeaderTests.m in Sources */,
 				C6C5CBDC2581875600AA3BB3 /* FBSDKAuthenticationStatusUtilityTests.m in Sources */,
+				F42DA1B8263AFDEB00993228 /* TestProductsResponse.swift in Sources */,
 				F91D1C60263294B5005CA2C5 /* TestApplicationDelegate.swift in Sources */,
 				F4EB31D32540A35800736B67 /* SampleGraphRequests.swift in Sources */,
 				F4A0341925F15D9500D19DE9 /* EventBindingManagerTests.swift in Sources */,
