@@ -1265,13 +1265,13 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   // Kill events if kill-switch is enabled
   if (!g_gateKeeperManager) {
     [g_logger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
-                    formatString:@"FBSDKAppEvents: Cannot log app events before the SDK is initialized."];
+                        logEntry:@"FBSDKAppEvents: Cannot log app events before the SDK is initialized."];
     return;
   } else if ([g_gateKeeperManager boolForKey:FBSDKGateKeeperAppEventsKillSwitch
                                 defaultValue:NO]) {
+    NSString *message = [NSString stringWithFormat:@"FBSDKAppEvents: KillSwitch is enabled and fail to log app event: %@", eventName];
     [g_logger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
-                    formatString:@"FBSDKAppEvents: KillSwitch is enabled and fail to log app event: %@",
-     eventName];
+                        logEntry:message];
     return;
   }
 #if !TARGET_OS_TV
@@ -1376,10 +1376,11 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 
     [_appEventsState addEvent:eventDictionary isImplicit:isImplicitlyLogged];
     if (!isImplicitlyLogged) {
+      NSString *message = [NSString stringWithFormat:@"FBSDKAppEvents: Recording event @ %ld: %@",
+                           [FBSDKAppEventsUtility unixTimeNow],
+                           eventDictionary];
       [g_logger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
-                      formatString:@"FBSDKAppEvents: Recording event @ %ld: %@",
-       [FBSDKAppEventsUtility unixTimeNow],
-       eventDictionary];
+                          logEntry:message];
     }
 
     [self checkPersistedEvents];
@@ -1560,8 +1561,9 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
       break;
   }
 
+  NSString *message = [NSString stringWithFormat:@"%@\nFlush Result : %@", loggingEntry, resultString];
   [g_logger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
-                  formatString:@"%@\nFlush Result : %@", loggingEntry, resultString];
+                      logEntry:message];
 }
 
 - (void)flushTimerFired:(id)arg

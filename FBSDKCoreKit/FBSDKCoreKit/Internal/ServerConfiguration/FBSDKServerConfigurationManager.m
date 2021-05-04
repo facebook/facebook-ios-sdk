@@ -324,8 +324,9 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
       if (_serverConfiguration && [_serverConfiguration.appID isEqualToString:appID]) {
         // We have older app settings but the refresh received an error.
         // Log and ignore the error.
+        NSString *msg = [NSString stringWithFormat:@"loadServerConfigurationWithCompletionBlock failed with %@", error];
         [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational
-                           formatString:@"loadServerConfigurationWithCompletionBlock failed with %@", error];
+                               logEntry:msg];
       } else {
         _serverConfiguration = nil;
       }

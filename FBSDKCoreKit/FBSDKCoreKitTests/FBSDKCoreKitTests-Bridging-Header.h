@@ -120,6 +120,11 @@
 #import "FBSDKPaymentObserving.h"
 // TimeSpentData abstraction
 #import "FBSDKTimeSpentRecording.h"
+// Logging
+#import "FBSDKLogging.h"
+#import "FBSDKLogger+Logging.h"
+#import "FBSDKLoggerFactory.h"
+#import "FBSDKLoggingCreating.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

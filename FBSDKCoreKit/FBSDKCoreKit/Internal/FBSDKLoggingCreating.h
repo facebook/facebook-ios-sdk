@@ -16,19 +16,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKPaymentProductRequestorFactory.h"
+#import <Foundation/Foundation.h>
+
+#import "FBSDKLoggingBehavior.h"
+#import "FBSDKLogging.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKPaymentProductRequestorFactory (Testing)
+NS_SWIFT_NAME(LoggingCreating)
+@protocol FBSDKLoggingCreating
 
-@property (nonatomic, readonly) id<FBSDKSettings> settings;
-@property (nonatomic, readonly) id<FBSDKEventLogging> eventLogger;
-@property (nullable, nonatomic) Class<FBSDKGateKeeperManaging> gateKeeperManager;
-@property (nullable, nonatomic) id<FBSDKDataPersisting> store;
-@property (nullable, nonatomic) id<FBSDKLoggingCreating> loggerFactory;
-@property (nonatomic, readonly) id<FBSDKProductsRequestCreating> productsRequestFactory;
-@property (nonatomic, readonly) id<FBSDKAppStoreReceiptProviding> appStoreReceiptProvider;
+- (id<FBSDKLogging>)createLoggerWithLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior;
 
 @end
 

@@ -16,20 +16,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKPaymentProductRequestorFactory.h"
-
-NS_ASSUME_NONNULL_BEGIN
-
-@interface FBSDKPaymentProductRequestorFactory (Testing)
-
-@property (nonatomic, readonly) id<FBSDKSettings> settings;
-@property (nonatomic, readonly) id<FBSDKEventLogging> eventLogger;
-@property (nullable, nonatomic) Class<FBSDKGateKeeperManaging> gateKeeperManager;
-@property (nullable, nonatomic) id<FBSDKDataPersisting> store;
-@property (nullable, nonatomic) id<FBSDKLoggingCreating> loggerFactory;
-@property (nonatomic, readonly) id<FBSDKProductsRequestCreating> productsRequestFactory;
-@property (nonatomic, readonly) id<FBSDKAppStoreReceiptProviding> appStoreReceiptProvider;
-
-@end
-
-NS_ASSUME_NONNULL_END
+@objcMembers
+class TestLoggerFactory: LoggingCreating {
+  func createLogger(withLoggingBehavior loggingBehavior: LoggingBehavior) -> Logging {
+    TestLogger(loggingBehavior: loggingBehavior)
+  }
+}

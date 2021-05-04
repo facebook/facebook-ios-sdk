@@ -125,23 +125,15 @@ static NSMutableDictionary *g_startTimesWithTags = nil;
 + (void)singleShotLogEntry:(NSString *)loggingBehavior
                   logEntry:(NSString *)logEntry
 {
-  if ([FBSDKSettings.loggingBehaviors containsObject:loggingBehavior]) {
-    FBSDKLogger *logger = [[FBSDKLogger alloc] initWithLoggingBehavior:loggingBehavior];
-    [logger appendString:logEntry];
-    [logger emitToNSLog];
-  }
+  FBSDKLogger *logger = [[FBSDKLogger alloc] initWithLoggingBehavior:loggingBehavior];
+  [logger logEntry:logEntry];
 }
 
-+ (void)singleShotLogEntry:(NSString *)loggingBehavior
-              formatString:(NSString *)formatString, ...
+- (void)logEntry:(NSString *)logEntry
 {
-  if ([FBSDKSettings.loggingBehaviors containsObject:loggingBehavior]) {
-    va_list vaArguments;
-    va_start(vaArguments, formatString);
-    NSString *logString = [[NSString alloc] initWithFormat:formatString arguments:vaArguments];
-    va_end(vaArguments);
-
-    [self singleShotLogEntry:loggingBehavior logEntry:logString];
+  if ([FBSDKSettings.loggingBehaviors containsObject:_loggingBehavior]) {
+    [self appendString:logEntry];
+    [self emitToNSLog];
   }
 }
 

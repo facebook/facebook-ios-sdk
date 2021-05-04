@@ -23,7 +23,7 @@ class PaymentProductRequestorFactoryTests: XCTestCase {
   let settings = TestSettings()
   let eventLogger = TestEventLogger()
   let store = UserDefaultsSpy()
-  let logger = TestLogger()
+  let loggerFactory = TestLoggerFactory()
   let requestFactory = TestProductsRequestFactory()
   let receiptProvider = TestAppStoreReceiptProvider()
   lazy var factory = PaymentProductRequestorFactory(
@@ -31,7 +31,7 @@ class PaymentProductRequestorFactoryTests: XCTestCase {
     eventLogger: eventLogger,
     gateKeeperManager: TestGateKeeperManager.self,
     store: store,
-    logger: logger,
+    loggerFactory: loggerFactory,
     productsRequestFactory: requestFactory,
     receiptProvider: receiptProvider
   )
@@ -72,8 +72,8 @@ class PaymentProductRequestorFactoryTests: XCTestCase {
       "Should use the expected persistent data store by default"
     )
     XCTAssertTrue(
-      factory.logger is Logger,
-      "Should use the expected concrete logger by default"
+      factory.loggerFactory is LoggerFactory,
+      "Should use the expected concrete logger factory by default"
     )
     XCTAssertTrue(
       factory.productsRequestFactory is ProductRequestFactory
@@ -105,8 +105,8 @@ class PaymentProductRequestorFactoryTests: XCTestCase {
       "Should use the provided persistent data store"
     )
     XCTAssertTrue(
-      factory.logger is TestLogger,
-      "Should use the provided logger"
+      factory.loggerFactory is TestLoggerFactory,
+      "Should use the provided logger factory"
     )
     XCTAssertTrue(
       factory.productsRequestFactory is TestProductsRequestFactory,
@@ -147,7 +147,7 @@ class PaymentProductRequestorFactoryTests: XCTestCase {
       "Should create a requestor using the expected persistent data store"
     )
     XCTAssertTrue(
-      requestor.logger is TestLogger,
+      requestor.loggerFactory is TestLoggerFactory,
       "Should create a requestor using the expected logger"
     )
     XCTAssertTrue(

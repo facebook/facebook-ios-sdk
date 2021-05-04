@@ -250,8 +250,9 @@ static BOOL _canMakeRequests = NO;
 {
   if (![self.class canMakeRequests]) {
     NSString *msg = @"FBSDKGraphRequestConnection cannot be started before Facebook SDK initialized.";
+    // TODO: Use a logger provider for this.
     [self.logger.class singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                             formatString:@"%@", msg];
+                                 logEntry:msg];
     self.state = kStateCancelled;
     [self completeFBSDKURLSessionWithResponse:nil
                                          data:nil
@@ -262,7 +263,7 @@ static BOOL _canMakeRequests = NO;
 
   if (self.state != kStateCreated && self.state != kStateSerialized) {
     [self.logger.class singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                             formatString:@"FBSDKGraphRequestConnection cannot be started again."];
+                                 logEntry:@"FBSDKGraphRequestConnection cannot be started again."];
     return;
   }
   Class<FBSDKGraphRequestPiggybackManaging> piggybackManager = [self.piggybackManagerProvider.class piggybackManager];
@@ -403,7 +404,8 @@ static BOOL _canMakeRequests = NO;
     } else if ([value isKindOfClass:[FBSDKGraphRequestDataAttachment class]]) {
       [body appendWithKey:key dataAttachmentValue:(FBSDKGraphRequestDataAttachment *)value logger:logger];
     } else {
-      [logger.class singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors formatString:@"Unsupported FBSDKGraphRequest attachment:%@, skipping.", value];
+      NSString *msg = [NSString stringWithFormat:@"Unsupported FBSDKGraphRequest attachment:%@, skipping.", value];
+      [logger.class singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:msg];
     }
   }];
 }
@@ -470,8 +472,9 @@ static BOOL _canMakeRequests = NO;
         && [self _shouldWarnOnMissingFieldsParam:request]
         && !request.parameters[@"fields"]
         && [request.graphPath rangeOfString:@"fields="].location == NSNotFound) {
+      NSString *msg = [NSString stringWithFormat:@"starting with Graph API v2.4, GET requests for /%@ should contain an explicit \"fields\" parameter", request.graphPath];
       [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                         formatString:@"starting with Graph API v2.4, GET requests for /%@ should contain an explicit \"fields\" parameter", request.graphPath];
+                             logEntry:msg];
     }
   }
 }
@@ -1081,7 +1084,7 @@ static BOOL _canMakeRequests = NO;
 
 - (void)logMessage:(NSString *)message
 {
-  [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorNetworkRequests formatString:@"%@", message];
+  [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorNetworkRequests logEntry:message];
 }
 
 - (void)taskDidCompleteWithResponse:(NSURLResponse *)response

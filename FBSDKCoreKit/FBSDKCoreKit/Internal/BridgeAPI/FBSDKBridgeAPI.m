@@ -377,7 +377,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
     UIViewController *parent = fromViewController ?: [FBSDKInternalUtility topMostViewController];
     if (parent == nil) {
       [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                         formatString:@"There are no valid ViewController to present SafariViewController with", nil];
+                             logEntry:@"There are no valid ViewController to present SafariViewController with"];
       return;
     }
 
@@ -427,7 +427,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   if (AuthenticationSessionClass != nil) {
     if (_authenticationSession != nil) {
       [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                         formatString:@"There is already a request for authenticated session. Cancelling active SFAuthenticationSession before starting the new one.", nil];
+                             logEntry:@"There is already a request for authenticated session. Cancelling active SFAuthenticationSession before starting the new one."];
       [_authenticationSession cancel];
     }
     _authenticationSession = [[AuthenticationSessionClass alloc] initWithURL:url

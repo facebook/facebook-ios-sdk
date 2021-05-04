@@ -41,10 +41,13 @@ struct FBSDKDFLLoadSymbolContext {
 static void *fbsdkdfl_load_library_once(const char *path)
 {
   void *handle = dlopen(path, RTLD_LAZY);
+  NSString *msg;
   if (handle) {
-    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational formatString:@"Dynamically loaded library at %s", path];
+    msg = [NSString stringWithFormat:@"Dynamically loaded library at %s", path];
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational logEntry:msg];
   } else {
-    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational formatString:@"Failed to load library at %s", path];
+    msg = [NSString stringWithFormat:@"Failed to load library at %s", path];
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational logEntry:msg];
   }
   return handle;
 }

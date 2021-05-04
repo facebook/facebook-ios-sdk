@@ -122,7 +122,8 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
                      withIntermediateDirectories:NO
                                       attributes:NULL
                                            error:NULL]) {
-      [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational formatString:@"Failed to create library at %@", self.directoryPath];
+      NSString *msg = [NSString stringWithFormat:@"Failed to create library at %@", self.directoryPath];
+      [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational logEntry:msg];
     }
   }
 }

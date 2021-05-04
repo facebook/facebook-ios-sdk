@@ -411,8 +411,9 @@ static FBSDKLikeActionControllerCache *_cache = nil;
 
 - (void)likeDialog:(FBSDKLikeDialog *)likeDialog didFailWithError:(NSError *)error
 {
+  NSString *msg = [NSString stringWithFormat:@"Like dialog error for %@(%@): %@", _objectID, NSStringFromFBSDKLikeObjectType(_objectType), error];
   [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorUIControlErrors
-                     formatString:@"Like dialog error for %@(%@): %@", _objectID, NSStringFromFBSDKLikeObjectType(_objectType), error];
+                         logEntry:msg];
 
   if ([error.userInfo[@"error_reason"] isEqualToString:@"dialog_disabled"]) {
     _fbsdkLikeActionControllerDisabled = YES;
@@ -495,11 +496,12 @@ static void FBSDKLikeActionControllerAddGetEngagementRequest(FBSDKAccessToken *a
     NSString *socialSentenceWithLike = nil;
     NSString *socialSentenceWithoutLike = nil;
     if (error) {
+      NSString *msg = [NSString stringWithFormat:@"Error fetching engagement for %@ (%@): %@",
+                       objectID,
+                       NSStringFromFBSDKLikeObjectType(objectType),
+                       error];
       [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorUIControlErrors
-                         formatString:@"Error fetching engagement for %@ (%@): %@",
-       objectID,
-       NSStringFromFBSDKLikeObjectType(objectType),
-       error];
+                             logEntry:msg];
       FBSDKLikeActionControllerLogError(@"get_engagement", objectID, objectType, accessToken, error);
     } else {
       success = YES;
@@ -601,8 +603,9 @@ static void FBSDKLikeActionControllerAddGetOGObjectLikeRequest(FBSDKAccessToken 
     FBSDKTriStateBOOL objectIsLiked = FBSDKTriStateBOOLValueUnknown;
     NSString *unlikeToken = nil;
     if (error) {
+      NSString *msg = [NSString stringWithFormat:@"Error fetching like state for %@(%@): %@", objectID, NSStringFromFBSDKLikeObjectType(objectType), error];
       [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorUIControlErrors
-                         formatString:@"Error fetching like state for %@(%@): %@", objectID, NSStringFromFBSDKLikeObjectType(objectType), error];
+                             logEntry:msg];
       FBSDKLikeActionControllerLogError(@"get_og_object_like", objectID, objectType, accessToken, error);
     } else {
       success = YES;
@@ -638,8 +641,9 @@ static void FBSDKLikeActionControllerAddPublishLikeRequest(FBSDKAccessToken *acc
     BOOL success = NO;
     NSString *unlikeToken = nil;
     if (error) {
+      NSString *msg = [NSString stringWithFormat:@"Error liking object %@(%@): %@", objectID, NSStringFromFBSDKLikeObjectType(objectType), error];
       [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorUIControlErrors
-                         formatString:@"Error liking object %@(%@): %@", objectID, NSStringFromFBSDKLikeObjectType(objectType), error];
+                             logEntry:msg];
       FBSDKLikeActionControllerLogError(@"publish_like", objectID, objectType, accessToken, error);
     } else {
       success = YES;
@@ -667,8 +671,9 @@ static void FBSDKLikeActionControllerAddPublishUnlikeRequest(FBSDKAccessToken *a
   [connection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id result, NSError *error) {
     BOOL success = NO;
     if (error) {
+      NSString *msg = [NSString stringWithFormat:@"Error unliking object with unlike token %@(%@): %@", unlikeToken, NSStringFromFBSDKLikeObjectType(objectType), error];
       [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorUIControlErrors
-                         formatString:@"Error unliking object with unlike token %@(%@): %@", unlikeToken, NSStringFromFBSDKLikeObjectType(objectType), error];
+                             logEntry:msg];
       FBSDKLikeActionControllerLogError(@"publish_unlike", unlikeToken, objectType, accessToken, error);
     } else {
       success = YES;

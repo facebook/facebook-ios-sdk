@@ -26,7 +26,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
   let settings = TestSettings()
   let eventLogger = TestEventLogger()
   let store = UserDefaultsSpy()
-  let logger = TestLogger()
+  let loggerFactory = TestLoggerFactory()
   lazy var tempURL = URL(
     fileURLWithPath: NSTemporaryDirectory(),
     isDirectory: true
@@ -46,7 +46,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
     eventLogger: eventLogger,
     gateKeeperManager: TestGateKeeperManager.self,
     store: store,
-    logger: logger,
+    loggerFactory: loggerFactory,
     productsRequestFactory: requestFactory,
     appStoreReceiptProvider: receiptProvider
   )

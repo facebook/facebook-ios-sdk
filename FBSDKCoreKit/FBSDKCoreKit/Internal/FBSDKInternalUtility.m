@@ -378,9 +378,10 @@ static NSMapTable *_transientObjects;
   } else if (count != 0) {
     [_transientObjects setObject:@(count - 1) forKey:object];
   } else {
+    NSString *msg = [NSString stringWithFormat:@"unregisterTransientObject:%@ count is 0. This may indicate a bug in the FBSDK. Please"
+                     " file a report to developers.facebook.com/bugs if you encounter any problems. Thanks!", [object class]];
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                       formatString:@"unregisterTransientObject:%@ count is 0. This may indicate a bug in the FBSDK. Please"
-     " file a report to developers.facebook.com/bugs if you encounter any problems. Thanks!", [object class]];
+                           logEntry:msg];
   }
 }
 
@@ -435,8 +436,9 @@ static NSMapTable *_transientObjects;
   @try {
     components.scheme = scheme;
   } @catch (NSException *exception) {
+    NSString *msg = [NSString stringWithFormat:@"Invalid URL scheme provided: %@", scheme];
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                       formatString:@"Invalid URL scheme provided: %@", scheme];
+                           logEntry:msg];
     return NO;
   }
 
@@ -526,7 +528,7 @@ static NSMapTable *_transientObjects;
 
   if (topWindow == nil) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                       formatString:@"Unable to find a valid UIWindow", nil];
+                           logEntry:@"Unable to find a valid UIWindow"];
   }
   return topWindow;
 }
@@ -536,8 +538,9 @@ static NSMapTable *_transientObjects;
   UIWindow *keyWindow = [self.sharedUtility findWindow];
   // SDK expects a key window at this point, if it is not, make it one
   if (keyWindow != nil && !keyWindow.isKeyWindow) {
+    NSString *msg = [NSString stringWithFormat:@"Unable to obtain a key window, marking %@ as keyWindow", keyWindow.description];
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                       formatString:@"Unable to obtain a key window, marking %@ as keyWindow", keyWindow.description];
+                           logEntry:msg];
     [keyWindow makeKeyWindow];
   }
 

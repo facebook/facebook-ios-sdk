@@ -97,7 +97,7 @@ static FBSDKWebDialog *g_currentDialog = nil;
   UIWindow *window = [self.windowFinder findWindow];
   if (!window) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                       formatString:@"There are no valid ViewController to present FBSDKWebDialog", nil];
+                           logEntry:@"There are no valid ViewController to present FBSDKWebDialog"];
     [self _failWithError:nil];
     return NO;
   }
@@ -249,7 +249,7 @@ static FBSDKWebDialog *g_currentDialog = nil;
   UIWindow *window = [self.windowFinder findWindow];
   if (!window) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                       formatString:@"There are no valid ViewController to present FBSDKWebDialog", nil];
+                           logEntry:@"There are no valid ViewController to present FBSDKWebDialog"];
     [self _failWithError:nil];
     return NO;
   }

@@ -27,7 +27,7 @@
 #import "FBSDKDataPersisting.h"
 #import "FBSDKEventLogging.h"
 #import "FBSDKGateKeeperManaging.h"
-#import "FBSDKLogging.h"
+#import "FBSDKLoggingCreating.h"
 #import "FBSDKProductsRequestProtocols.h"
 #import "FBSDKSettingsProtocol.h"
 
@@ -62,7 +62,7 @@ static int const FBSDKMaxParameterValueLength = 100;
 @property (nonatomic, readonly) id<FBSDKEventLogging> eventLogger;
 @property (nonatomic, readonly) Class<FBSDKGateKeeperManaging> gateKeeperManager;
 @property (nonatomic, readonly) id<FBSDKDataPersisting> store;
-@property (nonatomic, readonly) id<FBSDKLogging> logger;
+@property (nonatomic, readonly) id<FBSDKLoggingCreating> loggerFactory;
 @property (nonatomic) NSMutableSet<NSString *> *originalTransactionSet;
 @property (nonatomic) NSSet<NSString *> *eventsWithReceipt;
 @property (nonatomic, readonly) NSDateFormatter *formatter;
@@ -85,7 +85,7 @@ static NSMutableArray *_pendingRequestors;
                         eventLogger:(id<FBSDKEventLogging>)eventLogger
                   gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
                               store:(id<FBSDKDataPersisting>)store
-                             logger:(id<FBSDKLogging>)logger
+                      loggerFactory:(id<FBSDKLoggingCreating>)loggerFactory
              productsRequestFactory:(id<FBSDKProductsRequestCreating>)productRequestFactory
             appStoreReceiptProvider:(id<FBSDKAppStoreReceiptProviding>)receiptProvider
 {
@@ -94,7 +94,7 @@ static NSMutableArray *_pendingRequestors;
     _eventLogger = eventLogger;
     _gateKeeperManager = gateKeeperManager;
     _store = store;
-    _logger = logger;
+    _loggerFactory = loggerFactory;
     _productRequestFactory = productRequestFactory;
     _appStoreReceiptProvider = receiptProvider;
     _transaction = transaction;
@@ -321,8 +321,8 @@ static NSMutableArray *_pendingRequestors;
   NSArray *products = response.products;
   NSArray *invalidProductIdentifiers = response.invalidProductIdentifiers;
   if (products.count + invalidProductIdentifiers.count != 1) {
-    [self.logger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
-                       formatString:@"FBSDKPaymentObserver: Expect to resolve one product per request"];
+    id<FBSDKLogging> logger = [self.loggerFactory createLoggerWithLoggingBehavior:FBSDKLoggingBehaviorAppEvents];
+    [logger logEntry:@"FBSDKPaymentObserver: Expect to resolve one product per request"];
   }
   SKProduct *product = nil;
   if (products.count) {

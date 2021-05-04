@@ -50,14 +50,14 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
 static id<FBSDKGraphRequestConnectionProviding> _connectionProvider;
 static Class<FBSDKSettings> _settings;
 static id<FBSDKDataPersisting> _store;
-static FBSDKLogger *_logger;
+static id<FBSDKLogging> _logger;
 
 #pragma mark - Public Class Methods
 + (void)initialize
 {
   if (self == [FBSDKGateKeeperManager class]) {
     _completionBlocks = [NSMutableArray array];
-    _logger = [FBSDKLogger new];
+    _logger = [[FBSDKLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
     _store = nil;
     _requestProvider = nil;
     _connectionProvider = nil;
@@ -90,8 +90,7 @@ static FBSDKLogger *_logger;
   @try {
     @synchronized(self) {
       if (!_canLoadGateKeepers) {
-        [self.logger.class singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                                     logEntry:@"Cannot load gate keepers before configuring."];
+        [self.logger logEntry:@"Cannot load gate keepers before configuring."];
         return;
       }
 
@@ -238,7 +237,7 @@ static FBSDKLogger *_logger;
   return NO;
 }
 
-+ (FBSDKLogger *)logger
++ (id<FBSDKLogging>)logger
 {
   return _logger;
 }

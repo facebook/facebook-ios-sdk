@@ -121,7 +121,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
   // Can happen if the clock on the device is changed
   if (timeSinceRestore < 0) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
-                       formatString:@"Clock skew detected"];
+                           logEntry:@"Clock skew detected"];
     timeSinceRestore = 0;
   }
 
@@ -142,8 +142,9 @@ static const long INACTIVE_SECONDS_QUANTA[] =
               encoding:NSASCIIStringEncoding
                  error:nil];
 
+  NSString *msg = [NSString stringWithFormat:@"FBSDKTimeSpentData Persist: %@", content];
   [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
-                     formatString:@"FBSDKTimeSpentData Persist: %@", content];
+                         logEntry:msg];
 
   _isCurrentlyLoaded = NO;
 }
@@ -163,8 +164,9 @@ static const long INACTIVE_SECONDS_QUANTA[] =
                                 usedEncoding:nil
                                        error:nil];
 
+    NSString *msg = [NSString stringWithFormat:@"FBSDKTimeSpentData Restore: %@", content];
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
-                       formatString:@"FBSDKTimeSpentData Restore: %@", content];
+                           logEntry:msg];
 
     long now = [FBSDKAppEventsUtility unixTimeNow];
     if (!content) {

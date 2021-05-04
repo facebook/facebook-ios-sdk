@@ -29,6 +29,7 @@ class GateKeeperManagerTests: XCTestCase {
   let connectionFactory = TestGraphRequestConnectionFactory()
   let store = UserDefaultsSpy()
   let storeIdentifierPrefix = "com.facebook.sdk:GateKeepers"
+  let logger = TestLogger(loggingBehavior: .developerErrors)
 
   override func setUp() {
     super.setUp()
@@ -40,7 +41,7 @@ class GateKeeperManagerTests: XCTestCase {
       connectionProvider: connectionFactory,
       store: store
     )
-    GateKeeperManager.logger = TestLogger()
+    GateKeeperManager.logger = logger
   }
 
   override func tearDown() {
@@ -58,6 +59,11 @@ class GateKeeperManagerTests: XCTestCase {
     XCTAssertNotNil(
       GateKeeperManager.logger,
       "Should have a logger by default"
+    )
+    XCTAssertEqual(
+      GateKeeperManager.logger?.loggingBehavior,
+      .developerErrors,
+      "The logger should have the expected logging behavior"
     )
     XCTAssertNil(
       GateKeeperManager.requestProvider,
@@ -135,13 +141,8 @@ class GateKeeperManagerTests: XCTestCase {
       XCTFail("Should not invoke the completion when exiting early")
     }
     XCTAssertEqual(
-      TestLogger.capturedLogEntry,
+      logger.capturedContents,
       "Cannot load gate keepers before configuring.",
-      "Should log a developer warning when trying to use a non-configured manager"
-    )
-    XCTAssertEqual(
-      TestLogger.capturedLoggingBehavior,
-      LoggingBehavior.developerErrors.rawValue,
       "Should log a developer warning when trying to use a non-configured manager"
     )
   }

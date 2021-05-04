@@ -49,7 +49,7 @@ static NSString *const FBSDKOIDCStatusPath = @"/platform/oidc/status";
                                        });
                                      } else {
                                        [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorNetworkRequests
-                                                          formatString:@"%@", [error localizedDescription]];
+                                                              logEntry:error.localizedDescription];
                                      }
                                    }] resume];
   }

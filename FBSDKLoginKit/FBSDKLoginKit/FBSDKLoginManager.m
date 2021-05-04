@@ -185,7 +185,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
       NSString *errorStr = @"** WARNING: You are trying to start a login while a previous login has not finished yet."
       "This is unsupported behavior. You should wait until the previous login handler gets called to start a new login.";
       [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                         formatString:@"%@", errorStr];
+                             logEntry:errorStr];
       return NO;
     }
     case FBSDKLoginManagerStatePerformingLogin: {
@@ -287,7 +287,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
       _handler = nil;
     } else {
       [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                         formatString:@"** WARNING: You are requesting permissions inside the completion block of an existing login."
+                             logEntry:@"** WARNING: You are requesting permissions inside the completion block of an existing login."
        "This is unsupported behavior. You should request additional permissions only when they are needed, such as requesting for publish_actions"
        "when the user performs a sharing action."];
     }

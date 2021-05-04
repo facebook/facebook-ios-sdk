@@ -77,8 +77,9 @@
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)persistAppEventsData:(FBSDKAppEventsState *)appEventsState
 {
+  NSString *msg = [NSString stringWithFormat:@"FBSDKAppEvents Persist: Writing %lu events", (unsigned long)appEventsState.events.count];
   [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
-                     formatString:@"FBSDKAppEvents Persist: Writing %lu events", (unsigned long)appEventsState.events.count];
+                         logEntry:msg];
 
   if (!appEventsState.events.count) {
     return;
@@ -105,10 +106,11 @@
       // ignore decoding exceptions from previous versions of the archive, etc
     }
 
+    NSString *msg = [NSString stringWithFormat:@"FBSDKAppEvents Persist: Read %lu event states. First state has %lu events",
+                     (unsigned long)eventsStates.count,
+                     (unsigned long)(eventsStates.count > 0 ? ((FBSDKAppEventsState *)[FBSDKTypeUtility array:eventsStates objectAtIndex:0]).events.count : 0)];
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
-                       formatString:@"FBSDKAppEvents Persist: Read %lu event states. First state has %lu events",
-     (unsigned long)eventsStates.count,
-     (unsigned long)(eventsStates.count > 0 ? ((FBSDKAppEventsState *)[FBSDKTypeUtility array:eventsStates objectAtIndex:0]).events.count : 0)];
+                           logEntry:msg];
     [self clearPersistedAppEventsStates];
   }
   return eventsStates;

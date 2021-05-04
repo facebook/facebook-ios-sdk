@@ -359,7 +359,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   UIViewController *topMostViewController = [FBSDKInternalUtility topMostViewController];
   if (!topMostViewController) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                       formatString:@"There are no valid ViewController to present FBSDKWebDialog", nil];
+                           logEntry:@"There are no valid ViewController to present FBSDKWebDialog"];
     [self _handleCompletionWithDialogResults:nil error:nil];
     return NO;
   }

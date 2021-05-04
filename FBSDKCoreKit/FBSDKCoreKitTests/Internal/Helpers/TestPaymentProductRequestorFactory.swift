@@ -37,7 +37,7 @@ class TestPaymentProductRequestorFactory: PaymentProductRequestorCreating {
   let settings = TestSettings()
   let eventLogger = TestEventLogger()
   let store = UserDefaultsSpy()
-  let logger = TestLogger()
+  let loggerFactory = TestLoggerFactory()
   let requestFactory = TestProductsRequestFactory()
   let receiptProvider = TestAppStoreReceiptProvider()
 
@@ -50,7 +50,7 @@ class TestPaymentProductRequestorFactory: PaymentProductRequestorCreating {
       eventLogger: eventLogger,
       gateKeeperManager: PaymentGateKeeperManager.self,
       store: store,
-      logger: logger,
+      loggerFactory: loggerFactory,
       productsRequestFactory: requestFactory,
       appStoreReceiptProvider: receiptProvider
     )

@@ -752,7 +752,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testAppendingUnknownAttachmentTypeWithLogger
 {
   TestGraphRequestBody *body = [TestGraphRequestBody new];
-  TestLogger *logger = [TestLogger new];
+  TestLogger *logger = [self createLogger];
   [self.connection appendAttachments:@{ self.name : UIColor.grayColor }
                               toBody:body
                          addFormData:NO
@@ -802,7 +802,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [FBSDKGraphRequestConnection resetCanMakeRequests];
   NSString *msg = @"FBSDKGraphRequestConnection cannot be started before Facebook SDK initialized.";
   NSError *expectedError = [FBSDKError unknownErrorWithMessage:msg];
-  self.connection.logger = [TestLogger new];
+  self.connection.logger = [self createLogger];
 
   __block BOOL completionWasCalled = NO;
   __weak typeof(self) weakSelf = self;
@@ -837,7 +837,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testStartingWithInvalidStates
 {
-  self.connection.logger = [TestLogger new];
+  self.connection.logger = [self createLogger];
 
   NSArray *states = @[@(kStateStarted), @(kStateCancelled), @(kStateCompleted)];
   for (NSNumber *state in states) {
@@ -1529,7 +1529,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testProcessingResultBodyWithDebugDictionary
 {
-  self.connection.logger = [TestLogger new];
+  self.connection.logger = [self createLogger];
   NSArray *entries = @[
     @"message1 Link: link1",
     @"message2 Link: link2"
@@ -1553,9 +1553,9 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testLogRequestWithInactiveLogger
 {
   NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:self.sampleUrl];
-  TestLogger *logger = [TestLogger new];
-  TestLogger *bodyLogger = [TestLogger new];
-  TestLogger *attachmentLogger = [TestLogger new];
+  TestLogger *logger = [self createLogger];
+  TestLogger *bodyLogger = [self createLogger];
+  TestLogger *attachmentLogger = [self createLogger];
   self.connection.logger = logger;
   [self.connection logRequest:request bodyLength:1024 bodyLogger:bodyLogger attachmentLogger:attachmentLogger];
 
@@ -1566,12 +1566,13 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testLogRequestWithActiveLogger
 {
   NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:self.sampleUrl];
-  TestLogger *logger = [TestLogger new];
-  TestLogger *bodyLogger = [TestLogger new];
-  TestLogger *attachmentLogger = [TestLogger new];
+  TestLogger *logger = [self createLogger];
+  TestLogger *bodyLogger = [self createLogger];
+  TestLogger *attachmentLogger = [self createLogger];
 
-  bodyLogger.contents = @"bodyContents";
-  attachmentLogger.contents = @"attachmentLoggerContents";
+  // Start with some previously 'logged' contents
+  bodyLogger.capturedContents = @"bodyContents";
+  attachmentLogger.capturedContents = @"attachmentLoggerContents";
   logger.stubbedIsActive = YES;
   self.connection.logger = logger;
 
@@ -1621,6 +1622,11 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 // MARK: - Helpers
 
+- (TestLogger *)createLogger
+{
+  return [[TestLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
+}
+
 - (FBSDKGraphRequest *)sampleRequest
 {
   return self.requestForMeWithEmptyFields;
@@ -1666,7 +1672,6 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
         @"error_reason" : @"error_reason",
         @"message" : @"message",
         @"error_user_title" : @"error_user_title",
-        @"error_user_msg" : @"error_user_msg",
         @"error_user_msg" : @"error_user_msg",
       }
     }

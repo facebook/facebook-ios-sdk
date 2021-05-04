@@ -87,8 +87,9 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
     _nonce = [nonce copy];
   } else {
     _nonce = nil;
+    NSString *msg = [NSString stringWithFormat:@"Unable to set invalid nonce: %@ on FBSDKLoginButton", nonce];
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                       formatString:@"Unable to set invalid nonce: %@ on FBSDKLoginButton", nonce];
+                           logEntry:msg];
   }
 }
 

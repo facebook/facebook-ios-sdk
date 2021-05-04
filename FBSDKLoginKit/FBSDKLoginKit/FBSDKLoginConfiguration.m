@@ -53,15 +53,16 @@
                                        nonce:(NSString *)nonce
 {
   if (![FBSDKNonceUtility isValidNonce:nonce]) {
+    NSString *msg = [NSString stringWithFormat:@"Invalid nonce:%@ provided to login configuration. Returning nil.", nonce];
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                       formatString:@"Invalid nonce:%@ provided to login configuration. Returning nil.", nonce];
+                           logEntry:msg];
     return nil;
   }
 
   NSSet<FBSDKPermission *> *permissionsSet = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:permissions]];
   if (!permissionsSet) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                       formatString:@"Invalid combination of permissions provided to login configuration."];
+                           logEntry:@"Invalid combination of permissions provided to login configuration."];
     return nil;
   }
 
