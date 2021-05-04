@@ -16,7 +16,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
 #import "FBSDKAppEventsState.h"
@@ -26,7 +25,8 @@
 
 #define FBSDK_APPEVENTSSTATE_MAX_EVENTS 1000
 
-@interface FBSDKAppEventsStateTests : FBSDKTestCase
+@interface FBSDKAppEventsStateTests : XCTestCase
+@property (nonatomic, copy) NSString *appID;
 @end
 
 @implementation FBSDKAppEventsStateTests
@@ -39,8 +39,8 @@
 - (void)setUp
 {
   [super setUp];
-
-  [self.appEventStatesMock stopMocking];
+  
+  _appID = @"appid";
   [self setUpFixtures];
 }
 
