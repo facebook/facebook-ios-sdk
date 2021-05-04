@@ -837,11 +837,8 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 #if !TARGET_OS_TV
 + (void)augmentHybridWKWebView:(WKWebView *)webView
 {
-  // Ensure we can instantiate WebKit before trying this
-  Class WKWebViewClass = fbsdkdfl_WKWebViewClass();
-  if (WKWebViewClass != nil && [webView isKindOfClass:WKWebViewClass]) {
-    Class WKUserScriptClass = fbsdkdfl_WKUserScriptClass();
-    if (WKUserScriptClass != nil) {
+  if ([webView isKindOfClass:WKWebView.class]) {
+    if (WKUserScript.class != nil) {
       WKUserContentController *controller = webView.configuration.userContentController;
       FBSDKHybridAppEventsScriptMessageHandler *scriptHandler = [FBSDKHybridAppEventsScriptMessageHandler new];
       [controller addScriptMessageHandler:scriptHandler name:FBSDKAppEventsWKWebViewMessagesHandlerKey];
@@ -855,7 +852,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
                       FBSDKAPPEventsWKWebViewMessagesProtocolKey
       ];
 
-      [controller addUserScript:[[WKUserScriptClass alloc] initWithSource:js injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO]];
+      [controller addUserScript:[[WKUserScript.class alloc] initWithSource:js injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO]];
     }
   } else {
     [FBSDKAppEventsUtility logAndNotify:@"You must call augmentHybridWKWebView with WebKit linked to your project and a WKWebView instance"];

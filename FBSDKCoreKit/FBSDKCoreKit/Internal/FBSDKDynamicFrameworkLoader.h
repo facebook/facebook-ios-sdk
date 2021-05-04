@@ -116,11 +116,6 @@ FOUNDATION_EXPORT CFStringRef fbsdkdfl_kUTTagClassMIMEType(void);
 FOUNDATION_EXPORT CFStringRef fbsdkdfl_kUTTypeJPEG(void);
 FOUNDATION_EXPORT CFStringRef fbsdkdfl_kUTTypePNG(void);
 
-#pragma mark - WebKit Classes
-
-FOUNDATION_EXPORT Class fbsdkdfl_WKWebViewClass(void);
-FOUNDATION_EXPORT Class fbsdkdfl_WKUserScriptClass(void);
-
 /**
 
   This class provides a way to load constants and methods from Apple Frameworks in a dynamic
