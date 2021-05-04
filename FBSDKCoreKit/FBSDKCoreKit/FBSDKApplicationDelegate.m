@@ -74,6 +74,12 @@ static NSString *const FBSDKKitsBitmaskKey = @"com.facebook.sdk.kits.bitmask";
 static BOOL hasInitializeBeenCalled = NO;
 static UIApplicationState _applicationState;
 
+@interface FBSDKApplicationDelegate ()
+
+@property (nonnull, nonatomic, readonly) id<FBSDKFeatureChecking> featureChecker;
+
+@end
+
 @implementation FBSDKApplicationDelegate
 {
   NSHashTable<id<FBSDKApplicationObserving>> *_applicationObservers;
@@ -106,18 +112,21 @@ static UIApplicationState _applicationState;
 {
   return [self initWithNotificationObserver:NSNotificationCenter.defaultCenter
                                 tokenWallet:FBSDKAccessToken.class
-                                   settings:FBSDKSettings.class];
+                                   settings:FBSDKSettings.class
+                             featureChecker:FBSDKFeatureManager.shared];
 }
 
 - (instancetype)initWithNotificationObserver:(id<FBSDKNotificationObserving>)observer
                                  tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
                                     settings:(Class<FBSDKSettingsLogging>)settings
+                              featureChecker:(id<FBSDKFeatureChecking>)featureChecker
 {
   if ((self = [super init]) != nil) {
     _applicationObservers = [NSHashTable new];
     _notificationObserver = observer;
     _tokenWallet = tokenWallet;
     _settings = settings;
+    _featureChecker = featureChecker;
   }
   return self;
 }
@@ -150,7 +159,7 @@ static UIApplicationState _applicationState;
     [self applicationDidBecomeActive:nil];
   }
 
-  [FBSDKFeatureManager.shared checkFeature:FBSDKFeatureInstrument completionBlock:^(BOOL enabled) {
+  [self.featureChecker checkFeature:FBSDKFeatureInstrument completionBlock:^(BOOL enabled) {
     if (enabled) {
       [FBSDKInstrumentManager.shared enable];
     }
@@ -240,7 +249,7 @@ static UIApplicationState _applicationState;
   [FBSDKTimeSpentData setSourceApplication:sourceApplication openURL:url];
 
 #if !TARGET_OS_TV
-  [FBSDKFeatureManager.shared checkFeature:FBSDKFeatureAEM completionBlock:^(BOOL enabled) {
+  [self.featureChecker checkFeature:FBSDKFeatureAEM completionBlock:^(BOOL enabled) {
     if (enabled) {
       [FBSDKAEMReporter enable];
       [FBSDKAEMReporter handleURL:url];
@@ -504,7 +513,7 @@ static UIApplicationState _applicationState;
                   appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
                      serverConfigurationProvider:FBSDKServerConfigurationManager.class
                             graphRequestProvider:graphRequestProvider
-                                  featureChecker:FBSDKFeatureManager.shared
+                                  featureChecker:self.featureChecker
                                            store:store
                                           logger:FBSDKLogger.class
                                         settings:sharedSettings

@@ -20,6 +20,7 @@
 #import <AdSupport/AdSupport.h>
 
 #import "AEM+Testing.h"
+#import "ApplicationDelegate+Testing.h"
 #import "Button+Testing.h"
 #import "CodelessIndexer+Testing.h"
 #import "FBSDKAppStoreReceiptProviding.h"
@@ -295,24 +296,6 @@ NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvi
 
 + (void)reset;
 
-@end
-
-@interface FBSDKApplicationDelegate (Testing)
-
-@property (nonatomic, assign) id<FBSDKNotificationObserving> notificationObserver;
-@property (nonatomic, nullable) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> tokenWallet;
-
-+ (void)initializeSDKWithApplicationDelegate:(FBSDKApplicationDelegate *)delegate
-                               launchOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
-+ (void)resetHasInitializeBeenCalled
-NS_SWIFT_NAME(reset());
-
-- (instancetype)initWithNotificationObserver:(id<FBSDKNotificationObserving>)observer
-                                 tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
-                                    settings:(Class<FBSDKSettingsLogging>)settings;
-- (void)applicationDidEnterBackground:(NSNotification *)notification;
-- (void)applicationDidBecomeActive:(NSNotification *)notification;
-- (void)applicationWillResignActive:(NSNotification *)notification;
 @end
 
 @interface FBSDKCrashObserver (Testing)

@@ -22,19 +22,20 @@ import XCTest
 class ApplicationDelegateTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional weak_delegate
-  var center: TestNotificationCenter!
   var delegate: ApplicationDelegate!
+  var center = TestNotificationCenter()
+  var featureChecker = TestFeatureManager()
   // swiftlint:enable implicitly_unwrapped_optional weak_delegate
 
   override func setUp() {
     super.setUp()
 
     ApplicationDelegate.reset()
-    center = TestNotificationCenter()
     delegate = ApplicationDelegate(
       notificationObserver: center,
       tokenWallet: TestAccessTokenWallet.self,
-      settings: TestSettings.self
+      settings: TestSettings.self,
+      featureChecker: featureChecker
     )
   }
 
@@ -46,32 +47,36 @@ class ApplicationDelegateTests: XCTestCase {
     TestGateKeeperManager.reset()
   }
 
-  func testDefaultNotificationCenter() {
+  func testDefaultDependencies() {
     XCTAssertEqual(
       ApplicationDelegate.shared.notificationObserver as? NotificationCenter,
       NotificationCenter.default,
       "Should use the default system notification center"
     )
-  }
-
-  func testCreatingAndDestroyingWithNotificationCenter() {
-    XCTAssertTrue(
-      delegate.notificationObserver is TestNotificationCenter,
-      "Should be able to create with a custom notification center"
-    )
-  }
-
-  func testDefaultAccessTokenSetter() {
     XCTAssertTrue(
       ApplicationDelegate.shared.tokenWallet is AccessToken.Type,
       "Should use the expected default access token setter"
     )
+    XCTAssertEqual(
+      ApplicationDelegate.shared.featureChecker as? FeatureManager,
+      FeatureManager.shared,
+      "Should use the default feature checker"
+    )
   }
 
-  func testCreatingWithAccessTokenSetter() {
+  func testCreatingWithDependencies() {
+    XCTAssertTrue(
+      delegate.notificationObserver is TestNotificationCenter,
+      "Should be able to create with a custom notification center"
+    )
     XCTAssertTrue(
       delegate.tokenWallet is TestAccessTokenWallet.Type,
       "Should be able to create with a custom access token setter"
+    )
+    XCTAssertEqual(
+      delegate.featureChecker as? TestFeatureManager,
+      featureChecker,
+      "Should be able to create with a feature checker"
     )
   }
 
@@ -112,6 +117,18 @@ class ApplicationDelegateTests: XCTestCase {
         )
       ),
       "Should start observing application resignation upon initializtion"
+    )
+  }
+
+  func testOpeningURLChecksAEMFeatureAvailability() {
+    delegate.application(
+      UIApplication.shared,
+      open: SampleUrls.validApp,
+      options: [:]
+    )
+    XCTAssertTrue(
+      featureChecker.capturedFeaturesContains(.AEM),
+      "Opening a deep link should check if the AEM feature is enabled"
     )
   }
 }

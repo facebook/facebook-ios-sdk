@@ -20,9 +20,8 @@ import Foundation
 
 // swiftlint:disable force_unwrapping
 enum SampleUrls {
-  static let valid: URL = {
-    URL(string: "https://www.example.com")!
-  }()
+  static let valid = URL(string: "https://www.example.com")!
+  static let validApp = URL(string: "fb://test.com")!
 
   static func valid(path: String) -> URL {
     valid.appendingPathComponent(path)
