@@ -99,6 +99,8 @@
 #import "FBSDKAppEventsConfigurationProtocol.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsConfiguration+AppEventsConfigurationProtocol.h"
+// AppEventsStateManager Abstraction
+#import "FBSDKAppEventsStatePersisting.h"
 // NotificationCenter
 #import "FBSDKNotificationProtocols.h"
 #import "NSNotificationCenter+Extensions.h"

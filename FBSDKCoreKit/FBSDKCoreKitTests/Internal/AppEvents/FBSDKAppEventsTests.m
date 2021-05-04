@@ -51,7 +51,6 @@ static NSString *const _mockUserID = @"mockUserID";
 @property (nonatomic, copy) NSString *pushNotificationsDeviceTokenString;
 @property (nonatomic, strong) id<FBSDKAtePublishing> atePublisher;
 
-- (void)checkPersistedEvents;
 - (void)publishInstall;
 - (void)flushForReason:(FBSDKAppEventsFlushReason)flushReason;
 - (void)fetchServerConfiguration:(FBSDKCodeBlock)callback;
@@ -62,6 +61,7 @@ static NSString *const _mockUserID = @"mockUserID";
              accessToken:(FBSDKAccessToken *)accessToken;
 - (void)applicationDidBecomeActive;
 - (void)applicationMovingFromActiveStateOrTerminating;
+- (void)setFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior;
 
 + (FBSDKAppEvents *)singleton;
 
@@ -120,6 +120,7 @@ static NSString *const _mockUserID = @"mockUserID";
   TestEventProcessor *_eventProcessor;
   TestPaymentObserver *_paymentObserver;
   TestTimeSpentRecorder *_timeSpentRecorder;
+  TestAppEventsStateStore *_appEventsStateStore;
 }
 @end
 
@@ -157,6 +158,7 @@ static NSString *const _mockUserID = @"mockUserID";
   _store = [UserDefaultsSpy new];
   _featureManager = [TestFeatureManager new];
   _paymentObserver = [TestPaymentObserver new];
+  _appEventsStateStore = [TestAppEventsStateStore new];
 
   [FBSDKAppEvents setLoggingOverrideAppID:_mockAppID];
 
@@ -174,7 +176,8 @@ static NSString *const _mockUserID = @"mockUserID";
                                           logger:TestLogger.class
                                         settings:_settings
                                  paymentObserver:_paymentObserver
-                               timeSpentRecorder:_timeSpentRecorder];
+                               timeSpentRecorder:_timeSpentRecorder
+                             appEventsStateStore:_appEventsStateStore];
   [FBSDKAppEvents setEventProcessor:_eventProcessor];
 }
 
@@ -483,6 +486,28 @@ static NSString *const _mockUserID = @"mockUserID";
   );
 }
 
+- (void)testApplicationTerminatingPersistingStates
+{
+  FBSDKAppEvents *events = (FBSDKAppEvents *)[(NSObject *)[FBSDKAppEvents alloc] init];
+  [events setFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly];
+  [events instanceLogEvent:_mockEventName
+                valueToSum:@(_mockPurchaseAmount)
+                parameters:nil
+        isImplicitlyLogged:NO
+               accessToken:nil];
+  [events instanceLogEvent:_mockEventName
+                valueToSum:@(_mockPurchaseAmount)
+                parameters:nil
+        isImplicitlyLogged:NO
+               accessToken:nil];
+  [events applicationMovingFromActiveStateOrTerminating];
+
+  XCTAssertTrue(
+    _appEventsStateStore.capturedPersistedState.count > 0,
+    "When application terminates or moves from active state, the existing state should be persisted."
+  );
+}
+
 - (void)testActivateAppWithoutInitializedSDK
 {
   [FBSDKAppEvents reset];
@@ -546,13 +571,15 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testCheckPersistedEventsCalledWhenLogEvent
 {
-  OCMExpect([self.appEventsMock checkPersistedEvents]);
-
   OCMStub([self.appEventsMock flushBehavior]).andReturn(FBSDKAppEventsFlushReasonEagerlyFlushingEvent);
 
   [FBSDKAppEvents logEvent:FBSDKAppEventNamePurchased valueToSum:@(_mockPurchaseAmount) parameters:@{} accessToken:nil];
 
   OCMVerifyAll(self.appEventsMock);
+  XCTAssertTrue(
+    _appEventsStateStore.retrievePersistedAppEventStatesWasCalled,
+    "Should retrieve persisted states when logEvent was called and flush behavior was FlushReasonEagerlyFlushingEvent"
+  );
 }
 
 - (void)testRequestForCustomAudienceThirdPartyIDWithTrackingDisallowed

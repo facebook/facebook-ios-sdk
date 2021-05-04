@@ -31,7 +31,7 @@
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsDeviceInfo.h"
 #import "FBSDKAppEventsState.h"
-#import "FBSDKAppEventsStateManager.h"
+#import "FBSDKAppEventsStatePersisting.h"
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKApplicationDelegate+Internal.h"
 #import "FBSDKCodelessIndexer.h"
@@ -342,6 +342,7 @@ static Class<FBSDKLogging> g_logger;
 static id<FBSDKSettings> g_settings;
 static id<FBSDKPaymentObserving> g_paymentObserver;
 static id<FBSDKTimeSpentRecording> g_timeSpentRecorder;
+static id<FBSDKAppEventsStatePersisting> g_appEventsStateStore;
 
 #if !TARGET_OS_TV
 static id<FBSDKEventProcessing> g_eventProcessor = nil;
@@ -903,6 +904,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
                               settings:(id<FBSDKSettings>)settings
                        paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
                      timeSpentRecorder:(id<FBSDKTimeSpentRecording>)timeSpentRecorder
+                   appEventsStateStore:(id<FBSDKAppEventsStatePersisting>)appEventsStateStore
 {
   [FBSDKAppEvents setAppEventsConfigurationProvider:appEventsConfigurationProvider];
   [FBSDKAppEvents setServerConfigurationProvider:serverConfigurationProvider];
@@ -915,6 +917,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   g_settings = settings;
   g_paymentObserver = paymentObserver;
   g_timeSpentRecorder = timeSpentRecorder;
+  g_appEventsStateStore = appEventsStateStore;
 }
 
 + (void)setFeatureChecker:(id<FBSDKFeatureChecking>)checker
@@ -1367,7 +1370,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
       _appEventsState = [[FBSDKAppEventsState alloc] initWithToken:tokenString appID:appID];
     } else if (![_appEventsState isCompatibleWithTokenString:tokenString appID:appID]) {
       if (self.flushBehavior == FBSDKAppEventsFlushBehaviorExplicitOnly) {
-        [FBSDKAppEventsStateManager.shared persistAppEventsData:_appEventsState];
+        [g_appEventsStateStore persistAppEventsData:_appEventsState];
       } else {
         [self flushForReason:FBSDKAppEventsFlushReasonSessionChange];
       }
@@ -1399,7 +1402,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 // otherwise, either flush (if not explicitonly behavior) or persist them back.
 - (void)checkPersistedEvents
 {
-  NSArray *existingEventsStates = [FBSDKAppEventsStateManager.shared retrievePersistedAppEventsStates];
+  NSArray *existingEventsStates = [g_appEventsStateStore retrievePersistedAppEventsStates];
   if (existingEventsStates.count == 0) {
     return;
   }
@@ -1416,7 +1419,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
       [matchingEventsPreviouslySaved addEventsFromAppEventState:saved];
     } else {
       if (self.flushBehavior == FBSDKAppEventsFlushBehaviorExplicitOnly) {
-        [FBSDKAppEventsStateManager.shared persistAppEventsData:saved];
+        [g_appEventsStateStore persistAppEventsData:saved];
       } else {
         dispatch_async(dispatch_get_main_queue(), ^{
           [self flushOnMainQueue:saved forReason:FBSDKAppEventsFlushReasonPersistedEvents];
@@ -1541,7 +1544,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
         [_appEventsState addEventsFromAppEventState:appEventsState];
       } else {
         // flush failed due to connectivity. Persist to be tried again later.
-        [FBSDKAppEventsStateManager.shared persistAppEventsData:appEventsState];
+        [g_appEventsStateStore persistAppEventsData:appEventsState];
       }
     }
   }
@@ -1594,7 +1597,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
     _appEventsState = nil;
   }
   if (copy) {
-    [FBSDKAppEventsStateManager.shared persistAppEventsData:copy];
+    [g_appEventsStateStore persistAppEventsData:copy];
   }
   [g_timeSpentRecorder suspend];
 }
@@ -1712,6 +1715,16 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 + (id<FBSDKTimeSpentRecording>)timeSpentRecorder
 {
   return g_timeSpentRecorder;
+}
+
++ (id<FBSDKAppEventsStatePersisting>)appEventsStateStore
+{
+  return g_appEventsStateStore;
+}
+
+- (void)setFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior
+{
+  _flushBehavior = flushBehavior;
 }
 
  #if !TARGET_OS_TV

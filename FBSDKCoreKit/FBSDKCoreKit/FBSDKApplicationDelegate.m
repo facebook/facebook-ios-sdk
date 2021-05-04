@@ -23,6 +23,7 @@
 
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKAppEventsConfigurationManager.h"
+#import "FBSDKAppEventsStateManager+AppEventsStatePersisting.h"
 #import "FBSDKAppEventsUtility+AdvertiserIDProviding.h"
 #import "FBSDKBridgeAPI+ApplicationObserving.h"
 #import "FBSDKButton+Subclass.h"
@@ -508,7 +509,8 @@ static UIApplicationState _applicationState;
                                           logger:FBSDKLogger.class
                                         settings:sharedSettings
                                  paymentObserver:FBSDKPaymentObserver.shared
-                               timeSpentRecorder:FBSDKTimeSpentData.shared];
+                               timeSpentRecorder:FBSDKTimeSpentData.shared
+                             appEventsStateStore:FBSDKAppEventsStateManager.shared];
   [FBSDKInternalUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:FBSDKAccessToken.class];
   [FBSDKAppEventsConfigurationManager configureWithStore:store];

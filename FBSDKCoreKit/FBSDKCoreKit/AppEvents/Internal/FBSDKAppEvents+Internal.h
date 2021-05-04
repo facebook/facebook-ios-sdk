@@ -37,6 +37,7 @@
 @protocol FBSDKEventProcessing;
 @protocol FBSDKPaymentObserving;
 @protocol FBSDKTimeSpentRecording;
+@protocol FBSDKAppEventsStatePersisting;
 
 // Internally known event names
 
@@ -225,7 +226,8 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
                                 logger:(Class<FBSDKLogging>)logger
                               settings:(id<FBSDKSettings>)settings
                        paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
-                     timeSpentRecorder:(id<FBSDKTimeSpentRecording>)timeSpentRecorder;
+                     timeSpentRecorder:(id<FBSDKTimeSpentRecording>)timeSpentRecorder
+                   appEventsStateStore:(id<FBSDKAppEventsStatePersisting>)appEventsStateStore;
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
