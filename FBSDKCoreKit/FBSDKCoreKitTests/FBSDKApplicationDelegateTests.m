@@ -22,6 +22,7 @@
 @import TestTools;
 
 #import "FBSDKAppEvents.h"
+#import "FBSDKConversionValueUpdating.h"
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitTestUtility.h"
 #import "FBSDKCoreKitTests-Swift.h"
@@ -63,6 +64,7 @@
 @interface FBSDKSKAdNetworkReporter (Testing)
 + (id<FBSDKGraphRequestProviding>)requestProvider;
 + (id<FBSDKDataPersisting>)store;
++ (Class<FBSDKConversionValueUpdating>)conversionValueUpdatable;
 @end
 
 @interface FBSDKAppLinkUtility (Testing)
@@ -417,6 +419,7 @@
   [self.delegate initializeSDKWithLaunchOptions:@{}];
   NSObject *requestProvider = (NSObject *)[FBSDKSKAdNetworkReporter requestProvider];
   NSObject *store = (NSObject *)[FBSDKSKAdNetworkReporter store];
+  NSObject *conversionValueUpdatable = (NSObject *)[FBSDKSKAdNetworkReporter conversionValueUpdatable];
   XCTAssertEqualObjects(
     requestProvider.class,
     FBSDKGraphRequestFactory.class,
@@ -427,6 +430,13 @@
     NSUserDefaults.standardUserDefaults,
     "Should be configured with the standard user defaults"
   );
+  if (@available(iOS 11.3, *)) {
+    XCTAssertEqualObjects(
+      conversionValueUpdatable,
+      SKAdNetwork.class,
+      "Should be configured with the default Conversion Value Updating Class"
+    );
+  }
 }
 
 - (void)testInitializingSdkConfiguresAccessTokenCache

@@ -16,20 +16,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-#if !TARGET_OS_TV
+#import <Foundation/Foundation.h>
+#import <StoreKit/StoreKit.h>
 
- #import <Foundation/Foundation.h>
- #import "FBSDKConversionValueUpdating.h"
- #import "FBSDKSKAdNetworkReporter.h"
+NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKSKAdNetworkReporter (Internal)
+/// An internal protocol used to describe a type that can update a value
+NS_SWIFT_NAME(ConversionValueUpdating)
+@protocol FBSDKConversionValueUpdating
 
-+ (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-                               store:(id<FBSDKDataPersisting>)store
-            conversionValueUpdatable:(Class<FBSDKConversionValueUpdating>)conversionValueUpdatable
-NS_SWIFT_NAME(configure(requestProvider:store:conversionValueUpdateable:));
++ (void)updateConversionValue:(NSInteger)conversionValue;
 
 @end
 
-#endif
+NS_ASSUME_NONNULL_END

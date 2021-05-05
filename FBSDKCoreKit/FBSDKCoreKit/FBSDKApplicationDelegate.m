@@ -66,6 +66,7 @@
  #import "FBSDKURLOpener.h"
  #import "FBSDKWebDialogView.h"
  #import "FBSDKWebViewFactory.h"
+ #import "SKAdNetwork+ConversionValueUpdating.h"
  #import "UIApplication+URLOpener.h"
 #endif
 
@@ -536,7 +537,8 @@ static UIApplicationState _applicationState;
                                 advertiserIDProvider:FBSDKAppEventsUtility.shared];
   if (@available(iOS 14.0, *)) {
     [FBSDKSKAdNetworkReporter configureWithRequestProvider:graphRequestProvider
-                                                     store:store];
+                                                     store:store
+                                  conversionValueUpdatable:SKAdNetwork.class];
     [FBSDKAEMReporter configureWithRequestProvider:graphRequestProvider];
   }
   [FBSDKProfile configureWithStore:store

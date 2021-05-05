@@ -51,6 +51,7 @@
 #import "FBSDKPasteboard.h"
 #import "FBSDKSKAdNetworkEvent.h"
 #import "FBSDKSKAdNetworkRule.h"
+#import "FBSDKSKAdNetworkReporter.h"
 #import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKTestCase.h"
 #import "FBSDKTestCoder.h"
@@ -70,6 +71,7 @@
 #import "SuggestedEventsIndexer+Testing.h"
 #import "UserDefaultsSpy.h"
 #import "WebViewAppLinkResolver+Testing.h"
+#import "FBSDKConversionValueUpdating.h"
 // URLSession Abstraction
 #import "FBSDKURLSessionProxyProviding.h"
 #import "FBSDKURLSessionProxyFactory.h"

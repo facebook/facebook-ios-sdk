@@ -16,20 +16,19 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-#if !TARGET_OS_TV
+import FBSDKCoreKit
+import XCTest
 
- #import <Foundation/Foundation.h>
- #import "FBSDKConversionValueUpdating.h"
- #import "FBSDKSKAdNetworkReporter.h"
+@objcMembers
+class TestConversionValueUpdating: NSObject, ConversionValueUpdating {
 
-@interface FBSDKSKAdNetworkReporter (Internal)
+  static var wasUpdateVersionValueCalled: Bool = false
 
-+ (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-                               store:(id<FBSDKDataPersisting>)store
-            conversionValueUpdatable:(Class<FBSDKConversionValueUpdating>)conversionValueUpdatable
-NS_SWIFT_NAME(configure(requestProvider:store:conversionValueUpdateable:));
+  static func updateConversionValue(_ conversionValue: Int) {
+    wasUpdateVersionValueCalled = true
+  }
 
-@end
-
-#endif
+  static func reset() {
+    wasUpdateVersionValueCalled = false
+  }
+}
