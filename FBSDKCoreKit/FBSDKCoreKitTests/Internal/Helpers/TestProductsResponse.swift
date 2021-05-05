@@ -35,5 +35,4 @@ class TestProductsResponse: SKProductsResponse {
   override var invalidProductIdentifiers: [String] {
     stubbedInvalidProductIdentifiers
   }
-
 }

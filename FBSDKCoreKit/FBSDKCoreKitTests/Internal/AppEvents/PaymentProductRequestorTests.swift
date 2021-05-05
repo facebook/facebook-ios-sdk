@@ -710,5 +710,4 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
   }
 
   struct MissingEventParametersError: Error {}
-
 } // swiftlint:disable:this file_length
