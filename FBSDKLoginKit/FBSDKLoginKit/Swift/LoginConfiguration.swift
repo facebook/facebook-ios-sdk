@@ -28,7 +28,6 @@ public extension LoginConfiguration {
    Attempts to allocate and initialize a new configuration with the expected parameters.
 
    - parameter permissions: The requested permissions for the login attempt.
-   The only permissions allowed when `tracking` is `.limited` are 'email' and 'public_profile'.
    Defaults to an empty `Permission` array.
    - parameter tracking: The tracking preference to use for a login attempt. Defaults to `.enabled`
    - parameter nonce: An optional nonce to use for the login attempt.
