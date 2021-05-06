@@ -102,6 +102,7 @@
 + (id<FBSDKPaymentObserving>)paymentObserver;
 + (id<FBSDKTimeSpentRecording>)timeSpentRecorder;
 + (id<FBSDKAppEventsStatePersisting>)appEventsStateStore;
++ (Class<FBSDKMetadataIndexing>)metadataIndexer;
 @end
 
 @implementation FBSDKApplicationDelegateTests
@@ -291,6 +292,11 @@
     FBSDKAppEvents.eventProcessor,
     FBSDKModelManager.shared,
     "Initializing the SDK should set concrete event processor for event logging"
+  );
+  XCTAssertEqualObjects(
+    FBSDKAppEvents.metadataIndexer,
+    FBSDKMetadataIndexer.class,
+    "Initializing the SDK should set concrete metadata indexer for event logging"
   );
   XCTAssertEqualObjects(
     FBSDKAppEvents.paymentObserver,

@@ -60,6 +60,7 @@
  #import "FBSDKCodelessIndexer+Internal.h"
  #import "FBSDKContainerViewController.h"
  #import "FBSDKMeasurementEventListener.h"
+ #import "FBSDKMetadataIndexer+MetadataIndexing.h"
  #import "FBSDKModelManager.h"
  #import "FBSDKProfile+Internal.h"
  #import "FBSDKSKAdNetworkReporter+Internal.h"
@@ -546,7 +547,8 @@ static UIApplicationState _applicationState;
                 notificationCenter:NSNotificationCenter.defaultCenter];
   [FBSDKWebDialogView configureWithWebViewProvider:[FBSDKWebViewFactory new]
                                          urlOpener:UIApplication.sharedApplication];
-  [FBSDKAppEvents setEventProcessor:[FBSDKModelManager shared]];
+  [FBSDKAppEvents configureNonTVComponentsWithEventProcessor:FBSDKModelManager.shared
+                                             metadataIndexer:FBSDKMetadataIndexer.class];
 #endif
 }
 

@@ -178,7 +178,8 @@ static NSString *const _mockUserID = @"mockUserID";
                                  paymentObserver:_paymentObserver
                                timeSpentRecorder:_timeSpentRecorder
                              appEventsStateStore:_appEventsStateStore];
-  [FBSDKAppEvents setEventProcessor:_eventProcessor];
+  [FBSDKAppEvents configureNonTVComponentsWithEventProcessor:_eventProcessor
+                                             metadataIndexer:TestMetadataIndexer.class];
 }
 
 - (void)tearDown
@@ -188,6 +189,7 @@ static NSString *const _mockUserID = @"mockUserID";
   [TestAppEventsConfigurationProvider reset];
   [TestServerConfigurationProvider reset];
   [TestGateKeeperManager reset];
+  [TestMetadataIndexer reset];
 }
 
 - (void)resetTestHelpers
@@ -919,9 +921,28 @@ static NSString *const _mockUserID = @"mockUserID";
     [_featureManager capturedFeaturesContains:FBSDKFeatureCodelessEvents],
     "fetchConfiguration should check if CodelessEvents feature is enabled"
   );
+}
+
+- (void)testFetchingConfigurationIncludingAAM
+{
+  [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
+  TestAppEventsConfigurationProvider.capturedBlock();
+  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
   XCTAssertTrue(
     [_featureManager capturedFeaturesContains:FBSDKFeatureAAM],
-    "fetchConfiguration should check if the AAM feature is enabled"
+    "Fetch a configuration should check if the AAM feature is enabled"
+  );
+}
+
+- (void)testFetchingConfigurationEnablingMetadataIndexigIfAAMEnabled
+{
+  [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
+  TestAppEventsConfigurationProvider.capturedBlock();
+  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  [_featureManager completeCheckForFeature:FBSDKFeatureAAM with:YES];
+  XCTAssertTrue(
+    TestMetadataIndexer.enableWasCalled,
+    "Fetching a configuration should enable metadata indexer if AAM feature is enabled"
   );
 }
 

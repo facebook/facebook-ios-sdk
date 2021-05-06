@@ -130,6 +130,8 @@
 #import "FBSDKLogger+Logging.h"
 #import "FBSDKLoggerFactory.h"
 #import "FBSDKLoggingCreating.h"
+// MetadataIndexer abstraction
+#import "FBSDKMetadataIndexing.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

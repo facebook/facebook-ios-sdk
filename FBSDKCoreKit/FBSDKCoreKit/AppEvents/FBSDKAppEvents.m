@@ -48,7 +48,7 @@
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
 #import "FBSDKLogging.h"
-#import "FBSDKMetadataIndexer.h"
+#import "FBSDKMetadataIndexing.h"
 #import "FBSDKPaymentObserving.h"
 #import "FBSDKRestrictiveDataFilterManager.h"
 #import "FBSDKSKAdNetworkReporter.h"
@@ -346,6 +346,7 @@ static id<FBSDKAppEventsStatePersisting> g_appEventsStateStore;
 
 #if !TARGET_OS_TV
 static id<FBSDKEventProcessing> g_eventProcessor = nil;
+static Class<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 #endif
 
 @interface FBSDKAppEvents ()
@@ -959,9 +960,11 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 
 #if !TARGET_OS_TV
 
-+ (void)setEventProcessor:(id<FBSDKEventProcessing>)eventProcessor
++ (void)configureNonTVComponentsWithEventProcessor:(id<FBSDKEventProcessing>)eventProcessor
+                                   metadataIndexer:(Class<FBSDKMetadataIndexing>)metadataIndexer
 {
   g_eventProcessor = eventProcessor;
+  g_metadataIndexer = metadataIndexer;
 }
 
 #endif
@@ -1217,7 +1220,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
       }];
       [g_featureChecker checkFeature:FBSDKFeatureAAM completionBlock:^(BOOL enabled) {
         if (enabled) {
-          [FBSDKMetadataIndexer enable];
+          [g_metadataIndexer enable];
         }
       }];
       [g_featureChecker checkFeature:FBSDKFeaturePrivacyProtection completionBlock:^(BOOL enabled) {
@@ -1729,6 +1732,11 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 + (id<FBSDKEventProcessing>)eventProcessor
 {
   return g_eventProcessor;
+}
+
++ (Class<FBSDKMetadataIndexing>)metadataIndexer
+{
+  return g_metadataIndexer;
 }
 
  #endif

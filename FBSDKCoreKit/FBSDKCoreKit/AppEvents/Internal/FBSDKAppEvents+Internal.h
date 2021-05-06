@@ -38,6 +38,7 @@
 @protocol FBSDKPaymentObserving;
 @protocol FBSDKTimeSpentRecording;
 @protocol FBSDKAppEventsStatePersisting;
+@protocol FBSDKMetadataIndexing;
 
 // Internally known event names
 
@@ -265,7 +266,10 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
 - (void)registerNotifications;
 
 #if !TARGET_OS_TV
-+ (void)setEventProcessor:(id<FBSDKEventProcessing>)eventProcessor;
+
++ (void)configureNonTVComponentsWithEventProcessor:(id<FBSDKEventProcessing>)eventProcessor
+                                   metadataIndexer:(Class<FBSDKMetadataIndexing>)metadataIndexer;
+
 #endif
 
 @end
