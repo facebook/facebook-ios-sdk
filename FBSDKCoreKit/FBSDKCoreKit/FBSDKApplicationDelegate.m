@@ -497,6 +497,10 @@ static UIApplicationState _applicationState;
   id<FBSDKDataPersisting> store = NSUserDefaults.standardUserDefaults;
   id<FBSDKGraphRequestConnectionProviding> connectionProvider = [FBSDKGraphRequestConnectionFactory new];
   id<FBSDKSettings> sharedSettings = FBSDKSettings.sharedSettings;
+  [FBSDKSettings configureWithStore:store
+     appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
+             infoDictionaryProvider:NSBundle.mainBundle
+                        eventLogger:[FBSDKEventLogger new]];
   [FBSDKGraphRequest setCurrentAccessTokenStringProvider:FBSDKAccessToken.class];
   [FBSDKGraphRequestConnection setCanMakeRequests];
   [FBSDKGateKeeperManager configureWithSettings:FBSDKSettings.class
@@ -507,10 +511,6 @@ static UIApplicationState _applicationState;
   [FBSDKAccessToken setTokenCache:tokenCache];
   [FBSDKAccessToken setConnectionFactory:connectionProvider];
   [FBSDKAuthenticationToken setTokenCache:tokenCache];
-  [FBSDKSettings configureWithStore:store
-     appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
-             infoDictionaryProvider:NSBundle.mainBundle
-                        eventLogger:[FBSDKEventLogger new]];
   [FBSDKAppEvents configureWithGateKeeperManager:FBSDKGateKeeperManager.class
                   appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
                      serverConfigurationProvider:FBSDKServerConfigurationManager.class

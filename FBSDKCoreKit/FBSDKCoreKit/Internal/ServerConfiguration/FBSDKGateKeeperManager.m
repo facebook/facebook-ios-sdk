@@ -50,14 +50,12 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
 static id<FBSDKGraphRequestConnectionProviding> _connectionProvider;
 static Class<FBSDKSettings> _settings;
 static id<FBSDKDataPersisting> _store;
-static id<FBSDKLogging> _logger;
 
 #pragma mark - Public Class Methods
 + (void)initialize
 {
   if (self == [FBSDKGateKeeperManager class]) {
     _completionBlocks = [NSMutableArray array];
-    _logger = [[FBSDKLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
     _store = nil;
     _requestProvider = nil;
     _connectionProvider = nil;
@@ -90,7 +88,9 @@ static id<FBSDKLogging> _logger;
   @try {
     @synchronized(self) {
       if (!_canLoadGateKeepers) {
-        [self.logger logEntry:@"Cannot load gate keepers before configuring."];
+        // If we can't load the gatekeepers then it means we didn't have an opportunity
+        // to inject our own logger type. Fall back to NSLog for the developer error.
+        NSLog(@"Cannot load gate keepers before configuring.");
         return;
       }
 
@@ -237,11 +237,6 @@ static id<FBSDKLogging> _logger;
   return NO;
 }
 
-+ (id<FBSDKLogging>)logger
-{
-  return _logger;
-}
-
 + (id<FBSDKGraphRequestProviding>)requestProvider
 {
   return _requestProvider;
@@ -274,11 +269,6 @@ static id<FBSDKLogging> _logger;
 + (BOOL)canLoadGateKeepers
 {
   return _canLoadGateKeepers;
-}
-
-+ (void)setLogger:(FBSDKLogger *)logger
-{
-  _logger = logger;
 }
 
 + (void)setGateKeepers:(NSDictionary *)gateKeepers
