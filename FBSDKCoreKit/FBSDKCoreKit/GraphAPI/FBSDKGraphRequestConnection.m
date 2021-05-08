@@ -834,7 +834,7 @@ static BOOL _canMakeRequests = NO;
   _expectingResults = count;
   NSUInteger disabledRecoveryCount = 0;
   for (FBSDKGraphRequestMetadata *metadata in self.requests) {
-    if ([(id<FBSDKGraphRequestInternal>)metadata.request isGraphErrorRecoveryDisabled]) {
+    if ([metadata.request isGraphErrorRecoveryDisabled]) {
       disabledRecoveryCount++;
     }
   }
@@ -853,7 +853,7 @@ static BOOL _canMakeRequests = NO;
     }
 
   #if !TARGET_OS_TV
-    BOOL isRecoveryDisabled = [(id<FBSDKGraphRequestInternal>)metadata.request isGraphErrorRecoveryDisabled];
+    BOOL isRecoveryDisabled = [metadata.request isGraphErrorRecoveryDisabled];
     if (resultError && !isRecoveryDisabled && isSingleRequestToRecover) {
       self->_recoveringRequestMetadata = metadata;
       self->_errorRecoveryProcessor = [FBSDKGraphErrorRecoveryProcessor new];
@@ -891,7 +891,7 @@ static BOOL _canMakeRequests = NO;
 
 #if !TARGET_OS_TV
   void (^clearToken)(NSInteger) = ^(NSInteger errorSubcode) {
-    FBSDKGraphRequestFlags flags = [(id<FBSDKGraphRequestInternal>)metadata.request flags];
+    FBSDKGraphRequestFlags flags = [metadata.request flags];
     if (flags & FBSDKGraphRequestFlagDoNotInvalidateTokenOnError) {
       return;
     }
@@ -1148,7 +1148,7 @@ static BOOL _canMakeRequests = NO;
 - (NSString *)accessTokenWithRequest:(id<FBSDKGraphRequest>)request
 {
   NSString *token = request.tokenString ?: request.parameters[kAccessTokenKey];
-  FBSDKGraphRequestFlags flags = [(id<FBSDKGraphRequestInternal>)request flags];
+  FBSDKGraphRequestFlags flags = [request flags];
   if (!token && !(flags & FBSDKGraphRequestFlagSkipClientToken) && [[self.settings.class clientToken] length] > 0) {
     NSString *baseTokenString = [NSString stringWithFormat:@"%@|%@", [self.settings.class appID], [self.settings.class clientToken]];
     if ([FBSDKAuthenticationToken.currentAuthenticationToken.graphDomain isEqualToString:@"gaming"]) {

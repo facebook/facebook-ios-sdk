@@ -18,7 +18,11 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKGraphRequestFlags.h"
+#if SWIFT_PACKAGE
+ #import "FBSDKGraphRequestFlags.h"
+#else
+ #import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
+#endif
 
 @protocol FBSDKGraphRequest;
 

@@ -19,6 +19,7 @@
 #import <Foundation/Foundation.h>
 
 #import "FBSDKGraphRequestHTTPMethod.h"
+#import "FBSDKGraphRequestFlags.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -57,6 +58,21 @@ NS_SWIFT_NAME(GraphRequestProtocol)
   The Graph API version to use (e.g., "v2.0")
  */
 @property (nonatomic, copy, readonly) NSString *version;
+
+/**
+   The graph request flags to use
+ */
+@property (nonatomic, assign, readonly) FBSDKGraphRequestFlags flags;
+
+/**
+ Convenience property to determine if graph error recover is disabled
+ */
+@property (nonatomic, getter = isGraphErrorRecoveryDisabled) BOOL graphErrorRecoveryDisabled;
+
+/**
+  Convenience property to determine if the request has attachments
+ */
+@property (nonatomic, readonly) BOOL hasAttachments;
 
 /**
   Starts a connection to the Graph API.

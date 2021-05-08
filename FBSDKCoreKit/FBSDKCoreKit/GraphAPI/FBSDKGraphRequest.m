@@ -37,7 +37,7 @@ FBSDKHTTPMethod FBSDKHTTPMethodDELETE = @"DELETE";
 static Class<FBSDKTokenStringProviding> _currentAccessTokenStringProvider;
 
 @interface FBSDKGraphRequest ()
-@property (nonatomic, assign) FBSDKGraphRequestFlags flags;
+@property (nonatomic, readwrite, assign) FBSDKGraphRequestFlags flags;
 @property (nonatomic, readwrite, copy) FBSDKHTTPMethod HTTPMethod;
 @property (nonatomic, strong) id<FBSDKGraphRequestConnectionProviding> connectionFactory;
 @end
@@ -45,6 +45,7 @@ static Class<FBSDKTokenStringProviding> _currentAccessTokenStringProvider;
 @implementation FBSDKGraphRequest
 
 @synthesize HTTPMethod;
+@synthesize flags;
 
 - (instancetype)initWithGraphPath:(NSString *)graphPath
 {
@@ -82,27 +83,27 @@ static Class<FBSDKTokenStringProviding> _currentAccessTokenStringProvider;
 
 - (instancetype)initWithGraphPath:(NSString *)graphPath
                        parameters:(NSDictionary *)parameters
-                            flags:(FBSDKGraphRequestFlags)flags
+                            flags:(FBSDKGraphRequestFlags)requestFlags
 {
   return [self initWithGraphPath:graphPath
                       parameters:parameters
                      tokenString:[_currentAccessTokenStringProvider tokenString]
                       HTTPMethod:FBSDKHTTPMethodGET
-                           flags:flags];
+                           flags:requestFlags];
 }
 
 - (instancetype)initWithGraphPath:(NSString *)graphPath
                        parameters:(NSDictionary *)parameters
                       tokenString:(NSString *)tokenString
                        HTTPMethod:(FBSDKHTTPMethod)method
-                            flags:(FBSDKGraphRequestFlags)flags
+                            flags:(FBSDKGraphRequestFlags)requestFlags
 {
   if ((self = [self initWithGraphPath:graphPath
                            parameters:parameters
                           tokenString:tokenString
                               version:[FBSDKSettings graphAPIVersion]
                            HTTPMethod:method])) {
-    self.flags |= flags;
+    self.flags |= requestFlags;
   }
   return self;
 }
@@ -111,7 +112,7 @@ static Class<FBSDKTokenStringProviding> _currentAccessTokenStringProvider;
                        parameters:(NSDictionary *)parameters
                       tokenString:(NSString *)tokenString
                        HTTPMethod:(NSString *)method
-                            flags:(FBSDKGraphRequestFlags)flags
+                            flags:(FBSDKGraphRequestFlags)requestFlags
                 connectionFactory:(id<FBSDKGraphRequestConnectionProviding>)factory
 {
   return [self initWithGraphPath:graphPath
@@ -119,7 +120,7 @@ static Class<FBSDKTokenStringProviding> _currentAccessTokenStringProvider;
                      tokenString:tokenString
                       HTTPMethod:method
                          version:[FBSDKSettings graphAPIVersion]
-                           flags:flags
+                           flags:requestFlags
                connectionFactory:factory];
 }
 
@@ -128,7 +129,7 @@ static Class<FBSDKTokenStringProviding> _currentAccessTokenStringProvider;
                       tokenString:(NSString *)tokenString
                        HTTPMethod:(NSString *)method
                           version:(NSString *)version
-                            flags:(FBSDKGraphRequestFlags)flags
+                            flags:(FBSDKGraphRequestFlags)requestFlags
                 connectionFactory:(id<FBSDKGraphRequestConnectionProviding>)factory
 {
   if ((self = [self initWithGraphPath:graphPath
@@ -136,7 +137,7 @@ static Class<FBSDKTokenStringProviding> _currentAccessTokenStringProvider;
                           tokenString:tokenString
                               version:version
                            HTTPMethod:method])) {
-    self.flags |= flags;
+    self.flags |= requestFlags;
     self.connectionFactory = factory;
   }
   return self;
@@ -155,7 +156,7 @@ static Class<FBSDKTokenStringProviding> _currentAccessTokenStringProvider;
     self.HTTPMethod = method.length > 0 ? [method copy] : FBSDKHTTPMethodGET;
     _parameters = parameters ?: @{};
     if (!FBSDKSettings.isGraphErrorRecoveryEnabled) {
-      _flags = FBSDKGraphRequestFlagDisableErrorRecovery;
+      self.flags = FBSDKGraphRequestFlagDisableErrorRecovery;
     }
     _connectionFactory = [FBSDKGraphRequestConnectionFactory new];
   }

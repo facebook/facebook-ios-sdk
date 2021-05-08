@@ -174,7 +174,7 @@ static Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> _tokenWallet = 
 + (BOOL)_safeForPiggyback:(id<FBSDKGraphRequest>)request
 {
   BOOL isVersionSafe = [request.version isEqualToString:[FBSDKSettings graphAPIVersion]];
-  BOOL hasAttachments = [(id<FBSDKGraphRequestInternal>)request hasAttachments];
+  BOOL hasAttachments = [request hasAttachments];
   return isVersionSafe && !hasAttachments;
 }
 

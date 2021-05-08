@@ -38,6 +38,7 @@
  #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
  #import <FBSDKCoreKit/FBSDKGraphRequestConnection+GraphRequestConnecting.h>
  #import <FBSDKCoreKit/FBSDKGraphRequestDataAttachment.h>
+ #import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
  #import <FBSDKCoreKit/FBSDKLocation.h>
  #import <FBSDKCoreKit/FBSDKLoggingBehavior.h>
  #import <FBSDKCoreKit/FBSDKSettings.h>
@@ -84,6 +85,7 @@
  #import "FBSDKGraphRequestConnection.h"
  #import "FBSDKGraphRequestConnection+GraphRequestConnecting.h"
  #import "FBSDKGraphRequestDataAttachment.h"
+ #import "FBSDKGraphRequestFlags.h"
  #import "FBSDKGraphRequestProtocol.h"
  #import "FBSDKLocation.h"
  #import "FBSDKLoggingBehavior.h"

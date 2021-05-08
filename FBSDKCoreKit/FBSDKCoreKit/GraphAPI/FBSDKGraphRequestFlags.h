@@ -18,19 +18,19 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKGraphRequestFlags.h"
-
-@protocol FBSDKGraphRequest;
-
 NS_ASSUME_NONNULL_BEGIN
-
-NS_SWIFT_NAME(GraphRequestInternalProtocol)
-@protocol FBSDKGraphRequestInternal <FBSDKGraphRequest>
-
-@property (nonatomic, assign) FBSDKGraphRequestFlags flags;
-@property (nonatomic, readonly, getter = isGraphErrorRecoveryDisabled) BOOL graphErrorRecoveryDisabled;
-@property (nonatomic, readonly) BOOL hasAttachments;
-
-@end
+ 
+/**
+ Flags that indicate how a graph request should be treated in various scenarios
+ */
+typedef NS_OPTIONS(NSUInteger, FBSDKGraphRequestFlags) {
+  FBSDKGraphRequestFlagNone = 0,
+  // indicates this request should not use a client token as its token parameter
+  FBSDKGraphRequestFlagSkipClientToken = 1 << 1,
+  // indicates this request should not close the session if its response is an oauth error
+  FBSDKGraphRequestFlagDoNotInvalidateTokenOnError = 1 << 2,
+  // indicates this request should not perform error recovery
+  FBSDKGraphRequestFlagDisableErrorRecovery = 1 << 3,
+} NS_SWIFT_NAME(GraphRequestFlags);
 
 NS_ASSUME_NONNULL_END
