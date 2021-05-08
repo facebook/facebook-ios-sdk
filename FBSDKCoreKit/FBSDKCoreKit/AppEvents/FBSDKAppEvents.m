@@ -1120,12 +1120,19 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 
 - (void)publishATE
 {
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    if (self.atePublisher) {
-      [self.atePublisher publishATE];
-    }
+  if (self.appID.length == 0) {
+    return;
+  }
+  self.atePublisher = self.atePublisher ?: [[FBSDKAppEventsAtePublisher alloc] initWithAppIdentifier:self.appID
+                                                                                               store:self.class.store];
+#if FBSDKTEST
+  [self.atePublisher publishATE];
+#else
+  __weak FBSDKAppEvents *weakSelf = self;
+  fb_dispatch_on_default_thread(^(void) {
+    [weakSelf.atePublisher publishATE];
   });
+#endif
 }
 
 - (void)appendInstallTimestamp:(NSMutableDictionary *)parameters

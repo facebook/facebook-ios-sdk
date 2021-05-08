@@ -99,7 +99,7 @@
   [appEvents publishATE];
 }
 
-- (void)testPublishingAteUsesPublisherOnlyOnce
+- (void)testPublishingAteAgainAfterSettingAppID
 {
   FakeAtePublisher *publisher = [FakeAtePublisher new];
   FBSDKAppEvents *appEvents = [[FBSDKAppEvents alloc] initWithFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly
@@ -107,17 +107,11 @@
                                                                      userID:@"1"
                                                                atePublisher:publisher];
   [appEvents publishATE];
+  XCTAssertFalse(publisher.publishAteWasCalled, "App events Should not invoke the ATE publisher when there is not App ID");
 
-  XCTAssertTrue(publisher.publishAteWasCalled, "App events should use the provided ATE publisher");
-
-  // Reset the spy
-  publisher.publishAteWasCalled = NO;
-
+  _settings.appID = self.name;
   [appEvents publishATE];
-  XCTAssertFalse(
-    publisher.publishAteWasCalled,
-    "Should not invoke the ate publisher more than once"
-  );
+  XCTAssertTrue(publisher.publishAteWasCalled, "App events should use the provided ATE publisher");
 }
 
 @end
