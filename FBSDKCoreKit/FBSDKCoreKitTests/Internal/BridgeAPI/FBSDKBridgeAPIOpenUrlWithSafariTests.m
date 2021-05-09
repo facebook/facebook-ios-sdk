@@ -32,6 +32,9 @@
                       fromViewController:(UIViewController *)fromViewController
                                  handler:(FBSDKSuccessBlock)handler
                            dylibResolver:(id<FBSDKDynamicFrameworkResolving>)dylibResolver;
+- (void)openURLWithAuthenticationSession:(NSURL *)url;
+- (void)setSessionCompletionHandlerFromHandler:(void (^)(BOOL, NSError *))handler;
+
 @end
 
 @interface FBSDKBridgeAPIOpenUrlWithSafariTests : FBSDKTestCase

@@ -20,6 +20,14 @@
 
 #if !TARGET_OS_TV
 
+#import <UIKit/UIKit.h>
+
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
 NS_SWIFT_NAME(URLOpening)
 @protocol FBSDKURLOpening <NSObject>
 

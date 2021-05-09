@@ -25,6 +25,7 @@
 #import "FBSDKAppEventsConfigurationManager.h"
 #import "FBSDKAppEventsStateManager+AppEventsStatePersisting.h"
 #import "FBSDKAppEventsUtility+AdvertiserIDProviding.h"
+#import "FBSDKAuthenticationStatusUtility.h"
 #import "FBSDKBridgeAPI+ApplicationObserving.h"
 #import "FBSDKButton+Subclass.h"
 #import "FBSDKConstants.h"

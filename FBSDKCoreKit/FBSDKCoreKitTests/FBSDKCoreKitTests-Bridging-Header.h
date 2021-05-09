@@ -25,6 +25,7 @@
 #import "CodelessIndexer+Testing.h"
 #import "FBSDKAppStoreReceiptProviding.h"
 #import "FBSDKAppEventsFlushReason.h"
+#import "FBSDKAuthenticationStatusUtility.h"
 #import "FBSDKHybridAppEventsScriptMessageHandler+Testing.h"
 #import "FBSDKBridgeAPIProtocolWebV1.h"
 #import "FBSDKBridgeAPIProtocolWebV2+Testing.h"

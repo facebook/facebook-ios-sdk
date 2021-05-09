@@ -31,6 +31,12 @@
 #import "FBSDKBridgeAPIProtocol.h"
 #import "FBSDKBridgeAPIProtocolType.h"
 
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
 @protocol FBSDKBridgeAPIRequestProtocol <NSObject, NSCopying>
 
 @property (nonatomic, copy, readonly) NSString *scheme;
@@ -43,6 +49,12 @@
 
 @end
 
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
 NS_SWIFT_NAME(BridgeAPIRequest)
 @interface FBSDKBridgeAPIRequest : NSObject <FBSDKCopying, FBSDKBridgeAPIRequestProtocol>
 

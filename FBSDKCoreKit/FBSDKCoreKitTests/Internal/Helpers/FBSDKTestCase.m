@@ -30,6 +30,8 @@
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKAppEventsState.h"
 #import "FBSDKApplicationDelegate+Internal.h"
+#import "FBSDKBridgeAPI.h"
+#import "FBSDKBridgeAPI+Internal.h"
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitTestUtility.h"
 #import "FBSDKCrashObserver.h"

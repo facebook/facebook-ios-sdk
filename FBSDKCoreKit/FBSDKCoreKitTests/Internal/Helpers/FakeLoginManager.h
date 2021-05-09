@@ -18,8 +18,6 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#import "FBSDKURLOpening.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
 /// Duplicate minimal interface for `FBSDKLoginManager` that can fulfill the `FBSDKBridgeAPI`'s runtime requirement.

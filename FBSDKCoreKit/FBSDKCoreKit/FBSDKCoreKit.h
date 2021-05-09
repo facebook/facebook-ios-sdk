@@ -56,12 +56,18 @@
   #import <FBSDKCoreKit/FBSDKAppLinkReturnToRefererView.h>
   #import <FBSDKCoreKit/FBSDKAppLinkTarget.h>
   #import <FBSDKCoreKit/FBSDKAppLinkUtility.h>
+  #import <FBSDKCoreKit/FBSDKBridgeAPI.h>
+  #import <FBSDKCoreKit/FBSDKBridgeAPIProtocol.h>
+  #import <FBSDKCoreKit/FBSDKBridgeAPIProtocolType.h>
+  #import <FBSDKCoreKit/FBSDKBridgeAPIRequest.h>
+  #import <FBSDKCoreKit/FBSDKBridgeAPIResponse.h>
   #import <FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.h>
   #import <FBSDKCoreKit/FBSDKMeasurementEvent.h>
   #import <FBSDKCoreKit/FBSDKMutableCopying.h>
   #import <FBSDKCoreKit/FBSDKProfile.h>
   #import <FBSDKCoreKit/FBSDKProfilePictureView.h>
   #import <FBSDKCoreKit/FBSDKURL.h>
+  #import <FBSDKCoreKit/FBSDKURLOpening.h>
   #import <FBSDKCoreKit/FBSDKWebViewAppLinkResolver.h>
  #endif
 
@@ -104,12 +110,18 @@
   #import "FBSDKAppLinkReturnToRefererView.h"
   #import "FBSDKAppLinkTarget.h"
   #import "FBSDKAppLinkUtility.h"
+  #import "FBSDKBridgeAPI.h"
+  #import "FBSDKBridgeAPIProtocol.h"
+  #import "FBSDKBridgeAPIProtocolType.h"
+  #import "FBSDKBridgeAPIRequest.h"
+  #import "FBSDKBridgeAPIResponse.h"
   #import "FBSDKGraphErrorRecoveryProcessor.h"
   #import "FBSDKMeasurementEvent.h"
   #import "FBSDKMutableCopying.h"
   #import "FBSDKProfile.h"
   #import "FBSDKProfilePictureView.h"
   #import "FBSDKURL.h"
+  #import "FBSDKURLOpening.h"
   #import "FBSDKWebViewAppLinkResolver.h"
  #endif
 

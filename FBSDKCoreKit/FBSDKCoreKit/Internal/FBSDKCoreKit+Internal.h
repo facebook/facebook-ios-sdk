@@ -29,10 +29,6 @@
 #if defined FBSDKCOCOAPODS || defined BUCK
 
  #if !TARGET_OS_TV
-  #import "FBSDKAEMReporter.h"
-  #import "FBSDKAuthenticationStatusUtility.h"
-  #import "FBSDKBridgeAPI.h"
-  #import "FBSDKBridgeAPI+Internal.h"
   #import "FBSDKCloseIcon.h"
   #import "FBSDKCodelessIndexer.h"
   #import "FBSDKColor.h"
@@ -68,7 +64,6 @@
  #import "FBSDKAppEventsUtility.h"
  #import "FBSDKApplicationDelegate+Internal.h"
  #import "FBSDKApplicationObserving.h"
- #import "FBSDKAuthenticationStatusUtility.h"
  #import "FBSDKAuthenticationToken+Internal.h"
  #import "FBSDKAuthenticationTokenFactory.h"
  #import "FBSDKAuthenticationTokenHeader.h"
@@ -117,14 +112,11 @@
 
  #if !TARGET_OS_TV
   #import "../AppEvents/Internal/AAM/FBSDKMetadataIndexer.h"
-  #import "../AppEvents/Internal/AEM/FBSDKAEMReporter.h"
   #import "../AppEvents/Internal/Codeless/FBSDKCodelessIndexer.h"
   #import "../AppEvents/Internal/SKAdNetwork/FBSDKSKAdNetworkReporter.h"
   #import "../AppEvents/Internal/SuggestedEvents/FBSDKSuggestedEventsIndexer.h"
   #import "../AppEvents/Internal/ViewHierarchy/FBSDKViewHierarchy.h"
   #import "../AppEvents/Internal/ViewHierarchy/FBSDKViewHierarchyMacros.h"
-  #import "BridgeAPI/FBSDKBridgeAPI.h"
-  #import "BridgeAPI/FBSDKBridgeAPI+Internal.h"
   #import "Cryptography/FBSDKCrypto.h"
   #import "FBSDKAuthenticationStatusUtility.h"
   #import "FBSDKContainerViewController.h"
