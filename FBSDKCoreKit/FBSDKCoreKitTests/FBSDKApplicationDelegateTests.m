@@ -596,10 +596,29 @@
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [self.delegate initializeSDKWithLaunchOptions:@{}];
   NSObject *store = (NSObject *) FBSDKAppEventsConfigurationManager.shared.store;
+  NSObject *settings = (NSObject *) FBSDKAppEventsConfigurationManager.shared.settings;
+  NSObject *requestProvider = (NSObject *) FBSDKAppEventsConfigurationManager.shared.requestFactory;
+  NSObject *connectionProvider = (NSObject *) FBSDKAppEventsConfigurationManager.shared.connectionFactory;
+
   XCTAssertEqualObjects(
     store,
     NSUserDefaults.standardUserDefaults,
     "Should be configured with the expected concrete data store"
+  );
+  XCTAssertEqualObjects(
+    settings,
+    FBSDKSettings.sharedSettings,
+    "Should be configured with the expected concrete settings"
+  );
+  XCTAssertEqualObjects(
+    requestProvider.class,
+    FBSDKGraphRequestFactory.class,
+    "Should be configured with the expected concrete request provider"
+  );
+  XCTAssertEqualObjects(
+    connectionProvider.class,
+    FBSDKGraphRequestConnectionFactory.class,
+    "Should be configured with the expected concrete connection provider"
   );
 }
 

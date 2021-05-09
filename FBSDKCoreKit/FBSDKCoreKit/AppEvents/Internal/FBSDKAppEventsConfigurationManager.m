@@ -27,6 +27,9 @@ static const NSTimeInterval kTimeout = 4.0;
 @interface FBSDKAppEventsConfigurationManager ()
 
 @property (nullable, nonatomic) id<FBSDKDataPersisting> store;
+@property (nullable, nonatomic) id<FBSDKSettings> settings;
+@property (nullable, nonatomic) id<FBSDKGraphRequestProviding> requestFactory;
+@property (nullable, nonatomic) id<FBSDKGraphRequestConnectionProviding> connectionFactory;
 @property (nonnull, nonatomic) FBSDKAppEventsConfiguration *configuration;
 @property (nonatomic) BOOL isLoadingConfiguration;
 @property (nonatomic) BOOL hasRequeryFinishedForAppStart;
@@ -52,16 +55,28 @@ static dispatch_once_t sharedConfigurationManagerNonce;
   return instance;
 }
 
-+ (void)configureWithStore:(id<FBSDKDataPersisting>)store
++ (void)     configureWithStore:(id<FBSDKDataPersisting>)store
+                       settings:(id<FBSDKSettings>)settings
+            graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory
+  graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionProviding>)graphRequestConnectionFactory
 {
-  [self.shared configureWithStore:store];
+  [self.shared configureWithStore:store
+                         settings:settings
+              graphRequestFactory:graphRequestFactory
+    graphRequestConnectionFactory:graphRequestConnectionFactory];
 }
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-- (void)configureWithStore:(id<FBSDKDataPersisting>)store
+- (void)     configureWithStore:(id<FBSDKDataPersisting>)store
+                       settings:(id<FBSDKSettings>)settings
+            graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory
+  graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionProviding>)graphRequestConnectionFactory
 {
   self.store = store;
+  self.settings = settings;
+  self.requestFactory = graphRequestFactory;
+  self.connectionFactory = graphRequestConnectionFactory;
   id data = [self.store objectForKey:FBSDKAppEventsConfigurationKey];
   if ([data isKindOfClass:NSData.class]) {
     self.configuration = [NSKeyedUnarchiver unarchiveObjectWithData:data];

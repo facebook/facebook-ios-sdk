@@ -88,7 +88,12 @@ class FBSDKAppLinkUtilityTests: FBSDKTestCase {
   }
 
   func testRequestProviderAfterGraphRequest() {
-    AppEventsConfigurationManager.configure(store: UserDefaultsSpy())
+    AppEventsConfigurationManager.configure(
+      store: UserDefaultsSpy(),
+      settings: TestSettings(),
+      graphRequestFactory: TestGraphRequestFactory(),
+      graphRequestConnectionFactory: TestGraphRequestConnectionFactory()
+    )
 
     AppLinkUtility.fetchDeferredAppLink()
     XCTAssertEqual(requestFactory.capturedGraphPath, "(null)/activities")

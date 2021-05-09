@@ -525,7 +525,10 @@ static UIApplicationState _applicationState;
                              appEventsStateStore:FBSDKAppEventsStateManager.shared];
   [FBSDKInternalUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:FBSDKAccessToken.class];
-  [FBSDKAppEventsConfigurationManager configureWithStore:store];
+  [FBSDKAppEventsConfigurationManager configureWithStore:store
+                                                settings:sharedSettings
+                                     graphRequestFactory:graphRequestProvider
+                           graphRequestConnectionFactory:connectionProvider];
   [FBSDKButton setApplicationActivationNotifier:self];
 #if !TARGET_OS_TV
   [FBSDKAppLinkUtility configureWithRequestProvider:graphRequestProvider

@@ -155,10 +155,11 @@ NS_SWIFT_NAME(asIdentifierManager(shouldUseCachedManager:dynamicFrameworkResolve
 
 @property (class, nonatomic) FBSDKAppEventsConfigurationManager *shared;
 @property (nonatomic, nullable) id<FBSDKDataPersisting> store;
+@property (nullable, nonatomic) id<FBSDKSettings> settings;
+@property (nullable, nonatomic) id<FBSDKGraphRequestProviding> requestFactory;
+@property (nullable, nonatomic) id<FBSDKGraphRequestConnectionProviding> connectionFactory;
 
 + (void)_processResponse:(id)response error:(nullable NSError *)error;
-+ (void)configureWithStore:(id<FBSDKDataPersisting>)store
-NS_SWIFT_NAME(configure(store:));
 + (void)reset;
 
 @end

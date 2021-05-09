@@ -19,6 +19,9 @@
 class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
 
   let store = UserDefaultsSpy()
+  let settings = TestSettings()
+  let requestFactory = TestGraphRequestFactory()
+  let connectionFactory = TestGraphRequestConnectionFactory()
 
   override class func setUp() {
     super.setUp()
@@ -30,7 +33,10 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
     super.setUp()
 
     AppEventsConfigurationManager.configure(
-      store: store
+      store: store,
+      settings: settings,
+      graphRequestFactory: requestFactory,
+      graphRequestConnectionFactory: connectionFactory
     )
   }
 
@@ -49,10 +55,40 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
       AppEventsConfigurationManager.shared.store,
       "Should not have a data store by default"
     )
+    XCTAssertNil(
+      AppEventsConfigurationManager.shared.settings,
+      "Should not have a settings by default"
+    )
+    XCTAssertNil(
+      AppEventsConfigurationManager.shared.requestFactory,
+      "Should not have a graph request factory by default"
+    )
+    XCTAssertNil(
+      AppEventsConfigurationManager.shared.connectionFactory,
+      "Should not have a graph request connection factory by default"
+    )
   }
 
   func testConfiguringWithDependencies() {
-    XCTAssertTrue(AppEventsConfigurationManager.shared.store === store)
+    XCTAssertTrue(
+      AppEventsConfigurationManager.shared.store === store,
+      "Should be able to configure with a persistent data store"
+    )
+    XCTAssertEqual(
+      AppEventsConfigurationManager.shared.settings as? TestSettings,
+      settings,
+      "Should be able to configure with custom settings"
+    )
+    XCTAssertEqual(
+      AppEventsConfigurationManager.shared.requestFactory as? TestGraphRequestFactory,
+      requestFactory,
+      "Should be able to configure with a custom graph request provider"
+    )
+    XCTAssertEqual(
+      AppEventsConfigurationManager.shared.connectionFactory as? TestGraphRequestConnectionFactory,
+      connectionFactory,
+      "Should be able to configure with a custom graph request connection provider"
+    )
   }
 
   // MARK: - Parsing
