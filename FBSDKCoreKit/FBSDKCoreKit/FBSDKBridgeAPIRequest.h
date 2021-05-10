@@ -22,12 +22,7 @@
 
 #import <Foundation/Foundation.h>
 
-#if SWIFT_PACKAGE
 #import "FBSDKCopying.h"
-#else
-#import <FBSDKCoreKit/FBSDKCopying.h>
-#endif
-
 #import "FBSDKBridgeAPIProtocol.h"
 #import "FBSDKBridgeAPIProtocolType.h"
 

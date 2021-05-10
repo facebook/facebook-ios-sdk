@@ -16,11 +16,22 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Need to treat ObjC as separate dependency for SPM because it does not
-// support mixed Swift and ObjC sources. In order to expose the dependent
-// interface we need to pass through the import of the `FBSDKShareKitObjC`
-// target defined in Package.swift.
-// See: https://forums.swift.org/t/16648/2 for more details
-//
+import FacebookGamingServices
 
-@_exported import LegacyCoreKit
+struct VerifyFacebookGamingServices {
+    func verifyTransitiveSymbols() {
+        // Verifies Swift only symbol
+        _ = Permission.email
+
+        // Verifies ObjC symbol
+        Settings.appID = "Foo"
+
+        // Additional Sanity Check
+        AppEvents.logEvent(AppEvents.Name("foo"))
+    }
+
+    func verifyGamingSymbols() {
+        // Verifies ObjC symbol
+        _ = GamingPayload.self
+    }
+}

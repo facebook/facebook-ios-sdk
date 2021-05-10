@@ -47,6 +47,7 @@ Pod::Spec.new do |s|
   s.subspec 'Core' do |ss|
     ss.dependency 'FBSDKCoreKit/Basics'
     ss.exclude_files = 'Sources/FBSDKCoreKit_Basics/**/*',
+                       'Sources/FacebookCore/Exports.swift',
                        'FBSDKCoreKit/FBSDKCoreKit/include/**/*',
                        'FBSDKCoreKit/FBSDKCoreKit/Swift/Exports.swift'
     ss.source_files = 'FBSDKCoreKit/FBSDKCoreKit/**/*.{h,hpp,m,mm}',
