@@ -25,8 +25,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKMetadataIndexer : NSObject
+@property (class, nonatomic, readonly) FBSDKMetadataIndexer *shared;
 
-+ (void)enable;
+- (void)enable;
 
 @end
 

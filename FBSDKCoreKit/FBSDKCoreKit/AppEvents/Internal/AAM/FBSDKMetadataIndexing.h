@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(MetadataIndexing)
 @protocol FBSDKMetadataIndexing
 
-+ (void)enable;
+- (void)enable;
 
 @end
 

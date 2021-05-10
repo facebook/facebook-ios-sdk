@@ -552,7 +552,7 @@ static UIApplicationState _applicationState;
   [FBSDKWebDialogView configureWithWebViewProvider:[FBSDKWebViewFactory new]
                                          urlOpener:UIApplication.sharedApplication];
   [FBSDKAppEvents configureNonTVComponentsWithEventProcessor:FBSDKModelManager.shared
-                                             metadataIndexer:FBSDKMetadataIndexer.class];
+                                             metadataIndexer:FBSDKMetadataIndexer.shared];
 #endif
 }
 

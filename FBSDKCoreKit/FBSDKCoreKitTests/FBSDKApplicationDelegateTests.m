@@ -102,7 +102,7 @@
 + (id<FBSDKPaymentObserving>)paymentObserver;
 + (id<FBSDKTimeSpentRecording>)timeSpentRecorder;
 + (id<FBSDKAppEventsStatePersisting>)appEventsStateStore;
-+ (Class<FBSDKMetadataIndexing>)metadataIndexer;
++ (id<FBSDKMetadataIndexing>)metadataIndexer;
 @end
 
 @implementation FBSDKApplicationDelegateTests
@@ -295,7 +295,7 @@
   );
   XCTAssertEqualObjects(
     FBSDKAppEvents.metadataIndexer,
-    FBSDKMetadataIndexer.class,
+    FBSDKMetadataIndexer.shared,
     "Initializing the SDK should set concrete metadata indexer for event logging"
   );
   XCTAssertEqualObjects(

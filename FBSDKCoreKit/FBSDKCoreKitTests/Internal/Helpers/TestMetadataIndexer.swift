@@ -18,13 +18,9 @@
 
 @objcMembers
 class TestMetadataIndexer: NSObject, MetadataIndexing {
-  static var enableWasCalled = false
+  var enableWasCalled = false
 
-  static func enable() {
+  func enable() {
     enableWasCalled = true
-  }
-
-  static func reset() {
-    enableWasCalled = false
   }
 }

@@ -121,6 +121,7 @@ static NSString *const _mockUserID = @"mockUserID";
   TestPaymentObserver *_paymentObserver;
   TestTimeSpentRecorder *_timeSpentRecorder;
   TestAppEventsStateStore *_appEventsStateStore;
+  TestMetadataIndexer *_metadataIndexer;
 }
 @end
 
@@ -146,6 +147,7 @@ static NSString *const _mockUserID = @"mockUserID";
   _eventProcessor = [TestEventProcessor new];
   _paymentObserver = [TestPaymentObserver new];
   _timeSpentRecorder = [TestTimeSpentRecorder new];
+  _metadataIndexer = [TestMetadataIndexer new];
 
   [self stubLoadingAdNetworkReporterConfiguration];
   [self stubServerConfigurationFetchingWithConfiguration:FBSDKServerConfigurationFixtures.defaultConfig error:nil];
@@ -179,7 +181,7 @@ static NSString *const _mockUserID = @"mockUserID";
                                timeSpentRecorder:_timeSpentRecorder
                              appEventsStateStore:_appEventsStateStore];
   [FBSDKAppEvents configureNonTVComponentsWithEventProcessor:_eventProcessor
-                                             metadataIndexer:TestMetadataIndexer.class];
+                                             metadataIndexer:_metadataIndexer];
 }
 
 - (void)tearDown
@@ -189,7 +191,6 @@ static NSString *const _mockUserID = @"mockUserID";
   [TestAppEventsConfigurationProvider reset];
   [TestServerConfigurationProvider reset];
   [TestGateKeeperManager reset];
-  [TestMetadataIndexer reset];
 }
 
 - (void)resetTestHelpers
@@ -941,7 +942,7 @@ static NSString *const _mockUserID = @"mockUserID";
   TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
   [_featureManager completeCheckForFeature:FBSDKFeatureAAM with:YES];
   XCTAssertTrue(
-    TestMetadataIndexer.enableWasCalled,
+    _metadataIndexer.enableWasCalled,
     "Fetching a configuration should enable metadata indexer if AAM feature is enabled"
   );
 }

@@ -346,7 +346,7 @@ static id<FBSDKAppEventsStatePersisting> g_appEventsStateStore;
 
 #if !TARGET_OS_TV
 static id<FBSDKEventProcessing> g_eventProcessor = nil;
-static Class<FBSDKMetadataIndexing> g_metadataIndexer = nil;
+static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 #endif
 
 @interface FBSDKAppEvents ()
@@ -961,7 +961,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 #if !TARGET_OS_TV
 
 + (void)configureNonTVComponentsWithEventProcessor:(id<FBSDKEventProcessing>)eventProcessor
-                                   metadataIndexer:(Class<FBSDKMetadataIndexing>)metadataIndexer
+                                   metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer
 {
   g_eventProcessor = eventProcessor;
   g_metadataIndexer = metadataIndexer;
@@ -1741,7 +1741,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   return g_eventProcessor;
 }
 
-+ (Class<FBSDKMetadataIndexing>)metadataIndexer
++ (id<FBSDKMetadataIndexing>)metadataIndexer
 {
   return g_metadataIndexer;
 }
