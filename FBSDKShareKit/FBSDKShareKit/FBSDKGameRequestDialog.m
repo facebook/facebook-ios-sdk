@@ -212,16 +212,10 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 - (instancetype)init
 {
   if ((self = [super init])) {
-    _webDialog = [FBSDKWebDialog new];
-    _webDialog.delegate = self;
-    _webDialog.name = FBSDK_APP_REQUEST_METHOD_NAME;
+    _webDialog = [FBSDKWebDialog dialogWithName:FBSDK_APP_REQUEST_METHOD_NAME
+                                       delegate:self];
   }
   return self;
-}
-
-- (void)dealloc
-{
-  _webDialog.delegate = nil;
 }
 
  #pragma mark - Public Methods
@@ -257,7 +251,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 
   // check if we are sending to a specific set of recipients.  if we are and they are all frictionless recipients, we
   // can perform this action without displaying the web dialog
-  _webDialog.deferVisibility = NO;
+  _webDialog.shouldDeferVisibility = NO;
   NSArray *recipients = content.recipients;
   if (_frictionlessRequestsEnabled && recipients) {
     // specify these parameters to get the frictionless recipients from the dialog when it is presented
@@ -266,7 +260,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 
     _dialogIsFrictionless = YES;
     if ([_recipientCache recipientsAreFrictionless:recipients]) {
-      _webDialog.deferVisibility = YES;
+      _webDialog.shouldDeferVisibility = YES;
     }
   }
 

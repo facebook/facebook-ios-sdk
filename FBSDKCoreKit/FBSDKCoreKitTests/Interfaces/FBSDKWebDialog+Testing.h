@@ -18,7 +18,9 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#import "FBSDKWebDialog.h"
+#import "FBSDKWebDialog+Internal.h"
+
+@protocol FBSDKWindowFinding;
 
 NS_ASSUME_NONNULL_BEGIN
 

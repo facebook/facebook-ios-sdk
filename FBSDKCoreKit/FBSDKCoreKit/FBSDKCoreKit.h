@@ -69,6 +69,7 @@
   #import <FBSDKCoreKit/FBSDKRandom.h>
   #import <FBSDKCoreKit/FBSDKURL.h>
   #import <FBSDKCoreKit/FBSDKURLOpening.h>
+  #import <FBSDKCoreKit/FBSDKWebDialog.h>
   #import <FBSDKCoreKit/FBSDKWebViewAppLinkResolver.h>
  #endif
 
@@ -124,6 +125,7 @@
   #import "FBSDKProfilePictureView.h"
   #import "FBSDKURL.h"
   #import "FBSDKURLOpening.h"
+  #import "FBSDKWebDialog.h"
   #import "FBSDKWebViewAppLinkResolver.h"
  #endif
 

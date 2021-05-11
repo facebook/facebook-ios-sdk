@@ -45,6 +45,7 @@
 #import "FBSDKErrorReport.h"
 #import "FBSDKErrorReport+Testing.h"
 #import "FBSDKFeatureExtracting.h"
+#import "FBSDKHumanSilhouetteIcon.h"
 #import "FBSDKInstrumentManager+Testing.h"
 #import "FBSDKMath.h"
 #import "FBSDKModelManager.h"

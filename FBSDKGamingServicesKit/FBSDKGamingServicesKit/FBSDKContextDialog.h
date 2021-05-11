@@ -35,8 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(ContextDialog)
 @interface FBSDKContextDialog : NSObject
 
-- (instancetype)init NS_DESIGNATED_INITIALIZER
-NS_SWIFT_UNAVAILABLE("Use init(content:delegate:) instead");
+- (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
 /**

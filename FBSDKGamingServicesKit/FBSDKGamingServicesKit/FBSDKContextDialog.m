@@ -25,12 +25,12 @@
  #import "FBSDKCoreKitInternalImport.h"
 
 @interface FBSDKContextDialog () <FBSDKWebDialogDelegate>
+
+@property (nonatomic) FBSDKWebDialog *webDialog;
+
 @end
 
 @implementation FBSDKContextDialog
-{
-  FBSDKWebDialog *_webDialog;
-}
 
  #define FBSDK_CONTEXT_METHOD_NAME @"context"
 
@@ -64,23 +64,6 @@
   FBSDKContextDialog *dialog = [self switchAsyncDialogWithContent:content delegate:delegate];
   [dialog show];
   return dialog;
-}
-
- #pragma mark - Object Lifecycle
-
-- (instancetype)init
-{
-  if ((self = [super init])) {
-    _webDialog = [FBSDKWebDialog new];
-    _webDialog.delegate = self;
-    _webDialog.name = FBSDK_CONTEXT_METHOD_NAME;
-  }
-  return self;
-}
-
-- (void)dealloc
-{
-  _webDialog.delegate = nil;
 }
 
  #pragma mark - Public Methods
@@ -120,8 +103,9 @@
     [FBSDKTypeUtility dictionary:parameters setObject:switchAsyncContent.contextToken forKey:@"context_token"];
   }
 
-  _webDialog.parameters = parameters;
-  [_webDialog show];
+  self.webDialog = [FBSDKWebDialog showWithName:FBSDK_CONTEXT_METHOD_NAME
+                                     parameters:parameters
+                                       delegate:self];
   [FBSDKInternalUtility registerTransientObject:self];
   return YES;
 }
@@ -161,7 +145,7 @@
 
 - (void)webDialog:(FBSDKWebDialog *)webDialog didCompleteWithResults:(NSDictionary *)results
 {
-  if (_webDialog != webDialog) {
+  if (self.webDialog != webDialog) {
     return;
   }
 
@@ -173,7 +157,7 @@
 
 - (void)webDialog:(FBSDKWebDialog *)webDialog didFailWithError:(NSError *)error
 {
-  if (_webDialog != webDialog) {
+  if (self.webDialog != webDialog) {
     return;
   }
   [self _handleCompletionWithDialogResults:nil error:error];
@@ -182,7 +166,7 @@
 
 - (void)webDialogDidCancel:(FBSDKWebDialog *)webDialog
 {
-  if (_webDialog != webDialog) {
+  if (self.webDialog != webDialog) {
     return;
   }
   [_delegate contextDialogDidCancel:self];

@@ -30,8 +30,6 @@
 
  #if !TARGET_OS_TV
   #import "FBSDKCodelessIndexer.h"
-  #import "FBSDKHumanSilhouetteIcon.h"
-  #import "FBSDKInternalUtility+WindowFinding.h"
   #import "FBSDKMetadataIndexer.h"
   #import "FBSDKMonotonicTime.h"
   #import "FBSDKSKAdNetworkReporter.h"
@@ -40,8 +38,6 @@
   #import "FBSDKViewHierarchy.h"
   #import "FBSDKViewHierarchyMacros.h"
   #import "FBSDKViewImpressionTracker.h"
-  #import "FBSDKWebDialog.h"
-  #import "FBSDKWindowFinding.h"
  #else
   #import "FBSDKDeviceButton+Internal.h"
   #import "FBSDKDeviceDialogView.h"
@@ -113,13 +109,9 @@
   #import "../AppEvents/Internal/ViewHierarchy/FBSDKViewHierarchy.h"
   #import "../AppEvents/Internal/ViewHierarchy/FBSDKViewHierarchyMacros.h"
   #import "FBSDKAuthenticationStatusUtility.h"
-  #import "FBSDKInternalUtility+WindowFinding.h"
   #import "FBSDKMonotonicTime.h"
-  #import "FBSDKWindowFinding.h"
-  #import "UI/FBSDKHumanSilhouetteIcon.h"
   #import "UI/FBSDKUIUtility.h"
   #import "UI/FBSDKViewImpressionTracker.h"
-  #import "WebDialog/FBSDKWebDialog.h"
  #else
   #import "Device/FBSDKDeviceButton+Internal.h"
   #import "Device/FBSDKDeviceDialogView.h"

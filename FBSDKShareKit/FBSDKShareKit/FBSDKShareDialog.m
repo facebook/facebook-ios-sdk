@@ -111,7 +111,6 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
 
 - (void)dealloc
 {
-  _webDialog.delegate = nil;
   if (_temporaryFiles) {
     NSFileManager *const fileManager = [NSFileManager defaultManager];
     for (NSURL *temporaryFile in _temporaryFiles) {
@@ -385,7 +384,6 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
 
 - (void)_cleanUpWebDialog
 {
-  _webDialog.delegate = nil;
   _webDialog = nil;
 }
 
@@ -592,7 +590,6 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   NSDictionary *parameters = [FBSDKShareUtility feedShareDictionaryForContent:shareContent];
   _webDialog = [FBSDKWebDialog showWithName:FBSDK_SHARE_FEED_METHOD_NAME
                                  parameters:parameters
-                               windowFinder:FBSDKInternalUtility.sharedUtility
                                    delegate:self];
   return YES;
 }
@@ -750,7 +747,6 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   }
   _webDialog = [FBSDKWebDialog showWithName:methodName
                                  parameters:parameters
-                               windowFinder:FBSDKInternalUtility.sharedUtility
                                    delegate:self];
   return YES;
 }
