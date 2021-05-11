@@ -23,6 +23,7 @@
 
 #import "FBSDKAccessToken.h"
 #import "FBSDKAppEvents.h"
+#import "FBSDKAppEvents+Internal.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsState.h"
 #import "FBSDKAppEventsUtility.h"
@@ -43,11 +44,11 @@ static NSString *const _mockAppID = @"mockAppID";
 static NSString *const _mockUserID = @"mockUserID";
 
 // An extension that redeclares a private method so that it can be mocked
-@interface FBSDKApplicationDelegate ()
+@interface FBSDKApplicationDelegate (Testing)
 - (void)_logSDKInitialize;
 @end
 
-@interface FBSDKAppEvents ()
+@interface FBSDKAppEvents (Testing)
 @property (nonatomic, copy) NSString *pushNotificationsDeviceTokenString;
 @property (nonatomic, strong) id<FBSDKAtePublishing> atePublisher;
 
@@ -78,10 +79,6 @@ static NSString *const _mockUserID = @"mockUserID";
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
               valueToSum:(double)valueToSum
-      isImplicitlyLogged:(BOOL)isImplicitlyLogged;
-
-+ (void)logInternalEvent:(FBSDKAppEventName)eventName
-              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName

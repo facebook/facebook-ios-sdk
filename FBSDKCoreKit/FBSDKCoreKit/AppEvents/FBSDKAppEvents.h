@@ -726,6 +726,32 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
  */
 + (void)sendEventBindingsToUnity;
 
+/*
+ * SDK Specific Event Logging
+ * Do not call directly outside of the SDK itself.
+ */
+
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
++ (void)logInternalEvent:(FBSDKAppEventName)eventName
+              parameters:(NSDictionary *)parameters
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged;
+
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
++ (void)logInternalEvent:(FBSDKAppEventName)eventName
+              parameters:(NSDictionary *)parameters
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged
+             accessToken:(FBSDKAccessToken *)accessToken;
+
 @end
 
 NS_ASSUME_NONNULL_END

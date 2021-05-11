@@ -45,6 +45,12 @@ static NSString *const FBSDKReferralManagerLoggerResultSuccessString = @"success
 static NSString *const FBSDKReferralManagerLoggerResultCancelString = @"cancelled";
 static NSString *const FBSDKReferralManagerLoggerResultErrorString = @"error";
 
+/** Use to log the start of a referral request */
+FBSDKAppEventName const FBSDKAppEventNameFBReferralStart = @"fb_referral_start";
+
+/** Use to log the end of a referral request */
+FBSDKAppEventName const FBSDKAppEventNameFBReferralEnd = @"fb_referral_end";
+
 @implementation FBSDKReferralManagerLogger
 {
   @private

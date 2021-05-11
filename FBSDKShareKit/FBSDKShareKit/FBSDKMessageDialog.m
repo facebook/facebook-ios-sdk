@@ -27,6 +27,8 @@
  #else
   #import "FBSDKCoreKit+Internal.h"
  #endif
+
+ #import "FBSDKShareAppEventNames.h"
  #import "FBSDKShareCameraEffectContent.h"
  #import "FBSDKShareConstants.h"
  #import "FBSDKShareDefines.h"
@@ -39,6 +41,11 @@
  #pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FBSDKMessageDialog
  #pragma clang diagnostic pop
+
+FBSDKAppEventName FBSDKAppEventNameFBSDKEventMessengerShareDialogShow = @"fb_messenger_dialog_share_show";
+FBSDKAppEventName FBSDKAppEventNameFBSDKEventMessengerShareDialogResult = @"fb_messenger_dialog_share_result";
+NSString *const FBSDKAppEventParameterDialogShareContentPageID = @"fb_dialog_share_content_page_id";
+NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share_content_uuid";
 
  #pragma mark - Class Methods
 

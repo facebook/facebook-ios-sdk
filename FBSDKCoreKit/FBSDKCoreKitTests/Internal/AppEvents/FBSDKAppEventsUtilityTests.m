@@ -24,6 +24,7 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
+#import "FBSDKAppEvents+Internal.h"
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKTestCase.h"

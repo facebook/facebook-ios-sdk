@@ -37,6 +37,8 @@ static const CGFloat kButtonHeight = 28.0;
 static const CGFloat kRightMargin = 8.0;
 static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 
+FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_button_did_tap";
+
 @implementation FBSDKLoginButton
 {
   BOOL _hasShownTooltipBubble;

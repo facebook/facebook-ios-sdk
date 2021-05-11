@@ -23,6 +23,7 @@
 #import "ApplicationDelegate+Testing.h"
 #import "Button+Testing.h"
 #import "CodelessIndexer+Testing.h"
+#import "FBSDKAccessToken+Internal.h"
 #import "FBSDKAppStoreReceiptProviding.h"
 #import "FBSDKAppEventsFlushReason.h"
 #import "FBSDKAuthenticationStatusUtility.h"

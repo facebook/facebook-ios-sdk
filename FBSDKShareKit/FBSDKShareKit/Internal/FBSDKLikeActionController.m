@@ -38,6 +38,13 @@
  #import "FBSDKLikeActionControllerCache.h"
  #import "FBSDKLikeDialog.h"
 
+FBSDKAppEventName FBSDKAppEventNameFBSDKLikeControlDidDisable = @"fb_like_control_did_disable";
+FBSDKAppEventName FBSDKAppEventNameFBSDKLikeControlDidLike = @"fb_like_control_did_like";
+FBSDKAppEventName FBSDKAppEventNameFBSDKLikeControlDidPresentDialog = @"fb_like_control_did_present_dialog";
+FBSDKAppEventName FBSDKAppEventNameFBSDKLikeControlDidUnlike = @"fb_like_control_did_unlike";
+FBSDKAppEventName FBSDKAppEventNameFBSDKLikeControlError = @"fb_like_control_error";
+FBSDKAppEventName FBSDKAppEventNameFBSDKLikeControlNetworkUnavailable = @"fb_like_control_network_unavailable";
+
 typedef NS_ENUM(NSInteger, FBSDKTriStateBOOL) {
   FBSDKTriStateBOOLValueUnknown = -1,
   FBSDKTriStateBOOLValueNO = 0,

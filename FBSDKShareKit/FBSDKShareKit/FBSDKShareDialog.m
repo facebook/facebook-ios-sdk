@@ -29,6 +29,8 @@
  #else
   #import "FBSDKCoreKit+Internal.h"
  #endif
+
+ #import "FBSDKShareAppEventNames.h"
  #import "FBSDKShareCameraEffectContent.h"
  #import "FBSDKShareConstants.h"
  #import "FBSDKShareDefines.h"
@@ -49,6 +51,9 @@
  #define FBSDK_SHARE_METHOD_ATTRIBUTED_SHARE_SHEET_MIN_VERSION @"20150629"
  #define FBSDK_SHARE_METHOD_QUOTE_MIN_VERSION @"20160328"
  #define FBSDK_SHARE_METHOD_MMP_MIN_VERSION @"20160328"
+
+FBSDKAppEventName FBSDKAppEventNameFBSDKEventShareDialogShow = @"fb_dialog_share_show";
+FBSDKAppEventName FBSDKAppEventNameFBSDKEventShareDialogResult = @"fb_dialog_share_result";
 
 static inline void FBSDKShareDialogValidateAPISchemeRegisteredForCanOpenUrl()
 {

@@ -22,6 +22,7 @@
 
 #import <sys/utsname.h>
 
+#import "FBSDKAppEvents+Internal.h"
 #import "FBSDKCoreKit+Internal.h"
 
 #define FBSDK_DEVICE_INFO_DEVICE @"device"

@@ -30,6 +30,9 @@
  #import "FBSDKMessageDialog.h"
  #import "FBSDKMessengerIcon.h"
 
+FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonImpression = @"fb_send_button_impression";
+FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonDidTap = @"fb_send_button_did_tap";
+
 @interface FBSDKSendButton () <FBSDKButtonImpressionTracking>
 @end
 
