@@ -1168,6 +1168,8 @@
 		F47AB74126336CE6005A3333 /* SuggestedEventsIndexerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AAAEA326289D6700EDCF06 /* SuggestedEventsIndexerTests.swift */; };
 		F47AB75C26336CFE005A3333 /* TestFeatureExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AAAF212628ACFC00EDCF06 /* TestFeatureExtractor.swift */; };
 		F47AB77826336D9A005A3333 /* PaymentObserverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47AB77726336D9A005A3333 /* PaymentObserverTests.swift */; };
+		F4818E5B264A126500542054 /* FBSDKTokenCaching.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D32A83B1A69941A000A936D /* FBSDKTokenCaching.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F4818E63264A126600542054 /* FBSDKTokenCaching.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D32A83B1A69941A000A936D /* FBSDKTokenCaching.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4849BE0261CC903005E5329 /* BridgeAPIResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4849BD8261CC903005E5329 /* BridgeAPIResponseTests.swift */; };
 		F4849C3D261CD456005E5329 /* TestBridgeApiProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4849C35261CD456005E5329 /* TestBridgeApiProtocol.swift */; };
 		F48A9C3525F83CA400A2DBDF /* TestReactNativeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48A9C2C25F83CA400A2DBDF /* TestReactNativeView.swift */; };
@@ -3823,6 +3825,7 @@
 				F462DBF123B94C1000FFCECA /* FBSDKCrypto.h in Headers */,
 				F44E71062630C40600BF26C0 /* NSURLSession+Protocols.h in Headers */,
 				814AC8271D1B528900D61E6C /* FBSDKDeviceButton.h in Headers */,
+				F4818E63264A126600542054 /* FBSDKTokenCaching.h in Headers */,
 				F44164CB25CAFE9700DAB0A5 /* FBSDKJSONValue.h in Headers */,
 				F44164A225CAFE8300DAB0A5 /* FBSDKURLSession.h in Headers */,
 				814AC8291D1B528900D61E6C /* FBSDKTokenCache.h in Headers */,
@@ -4380,6 +4383,7 @@
 				5DB7B07E230363190012E8CB /* FBSDKInstrumentManager.h in Headers */,
 				F44E71052630C40600BF26C0 /* NSURLSession+Protocols.h in Headers */,
 				F44164BD25CAFE9700DAB0A5 /* FBSDKJSONValue.h in Headers */,
+				F4818E5B264A126500542054 /* FBSDKTokenCaching.h in Headers */,
 				F441649425CAFE8100DAB0A5 /* FBSDKURLSession.h in Headers */,
 				9D9E16AE1CB46C8900C8B68F /* FBSDKDeviceButton.h in Headers */,
 				9D6DEEB41BC23855001A94ED /* FBSDKTokenCache.h in Headers */,
