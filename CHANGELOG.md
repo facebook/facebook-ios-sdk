@@ -7,6 +7,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+### Removed
+
+- `AppLinkReturnToRefererControllerDelegate`
+- `AppLinkReturnToRefererController`
+- `FBSDKIncludeStatusBarInSize`
+- `AppLinkReturnToRefererViewDelegate`
+- `FBAppLinkReturnToRefererView`
+- `FBSDKApplicationDelegate.initializeSDK:launchOptions:`. The replacement method is `FBSDKApplicationDelegate.application:didFinishLaunchingWithOptions:`
+- `FBSDKErrorRecoveryAttempting`'s `attemptRecoveryFromError:optionIndex:delegate:didRecoverSelector:contextInfo:`
+- `FBSDKProfile`'s `initWithUserID:firstName:middleName:lastName:name:linkURL:refreshDate:imageURL:email:`
+- `FBSDKProfile`'s `initWithUserID:firstName:middleName:lastName:name:linkURL:refreshDate:imageURL:email:friendIDs:birthday:ageRange:isLimited:`
+- `FBSDKProfile`'s `initWithUserID:firstName:middleName:lastName:name:linkURL:refreshDate:imageURL:email:friendIDs:`
+- `FBSDKProfile`'s `initWithUserID:firstName:middleName:lastName:name:linkURL:refreshDate:imageURL:email:friendIDs:birthday:ageRange:`
+- `FBSDKAccessTokensBlock`
+- `FBSDKTestUsersManager`
+- `FBSDKGraphErrorRecoveryProcessor`'s `delegate` property
+- `FBSDKGraphErrorRecoveryProcessor`'s `didPresentErrorWithRecovery:contextInfo:`
+- `FBSDKGamingVideoUploader`'s `uploadVideoWithConfiguration:andCompletionHandler:`
+- `FBSDKGamingImageUploader`'s `uploadImageWithConfiguration:andCompletionHandler:`
+
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.3.0...HEAD)
 
 ## 9.3.0

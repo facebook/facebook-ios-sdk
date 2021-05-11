@@ -121,61 +121,6 @@ NS_SWIFT_NAME(Profile)
                    refreshDate:(nullable NSDate *)refreshDate;
 
 /**
-  initializes a new instance.
- @param userID the user ID
- @param firstName the user's first name
- @param middleName the user's middle name
- @param lastName the user's last name
- @param name the user's complete name
- @param linkURL the link for this profile
- @param refreshDate the optional date this profile was fetched. Defaults to [NSDate date].
- @param imageURL an optional URL to use for fetching a user's profile image
- @param email the user's email
- */
-- (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
-                     firstName:(nullable NSString *)firstName
-                    middleName:(nullable NSString *)middleName
-                      lastName:(nullable NSString *)lastName
-                          name:(nullable NSString *)name
-                       linkURL:(nullable NSURL *)linkURL
-                   refreshDate:(nullable NSDate *)refreshDate
-                      imageURL:(nullable NSURL *)imageURL
-                         email:(nullable NSString *)email
-DEPRECATED_MSG_ATTRIBUTE("This constructor will be removed in the next major release.");
-
-/**
- @param userID the user ID
- @param firstName the user's first name
- @param middleName the user's middle name
- @param lastName the user's last name
- @param name the user's complete name
- @param linkURL the link for this profile
- @param refreshDate the optional date this profile was fetched. Defaults to [NSDate date].
- @param imageURL an optional URL to use for fetching a user's profile image
- @param email the user's email
- @param friendIDs a list of identifiers for the user's friends
- @param birthday the user's birthday
- @param ageRange the user's age range
- @param isLimited indicates if the information provided is incomplete in some way.
- When true, `loadCurrentProfileWithCompletion:` will assume the profile is
- incomplete and disregard any cached profile. Defaults to false.
- */
-- (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
-                     firstName:(nullable NSString *)firstName
-                    middleName:(nullable NSString *)middleName
-                      lastName:(nullable NSString *)lastName
-                          name:(nullable NSString *)name
-                       linkURL:(nullable NSURL *)linkURL
-                   refreshDate:(nullable NSDate *)refreshDate
-                      imageURL:(nullable NSURL *)imageURL
-                         email:(nullable NSString *)email
-                     friendIDs:(nullable NSArray<FBSDKUserIdentifier *> *)friendIDs
-                      birthday:(nullable NSDate *)birthday
-                      ageRange:(nullable FBSDKUserAgeRange *)ageRange
-                     isLimited:(BOOL)isLimited
-DEPRECATED_MSG_ATTRIBUTE("This constructor will be removed in the next major release.");
-
-/**
  @param userID the user ID
  @param firstName the user's first name
  @param middleName the user's middle name
@@ -211,60 +156,6 @@ DEPRECATED_MSG_ATTRIBUTE("This constructor will be removed in the next major rel
                       location:(nullable FBSDKLocation *)location
                         gender:(nullable NSString *)gender
                      isLimited:(BOOL)isLimited;
-
-/**
-  initializes a new instance.
- @param userID the user ID
- @param firstName the user's first name
- @param middleName the user's middle name
- @param lastName the user's last name
- @param name the user's complete name
- @param linkURL the link for this profile
- @param refreshDate the optional date this profile was fetched. Defaults to [NSDate date].
- @param imageURL an optional URL to use for fetching a user's profile image
- @param email the user's email
- @param friendIDs a list of identifiers for the user's friends
- */
-- (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
-                     firstName:(nullable NSString *)firstName
-                    middleName:(nullable NSString *)middleName
-                      lastName:(nullable NSString *)lastName
-                          name:(nullable NSString *)name
-                       linkURL:(nullable NSURL *)linkURL
-                   refreshDate:(nullable NSDate *)refreshDate
-                      imageURL:(nullable NSURL *)imageURL
-                         email:(nullable NSString *)email
-                     friendIDs:(nullable NSArray<FBSDKUserIdentifier *> *)friendIDs
-DEPRECATED_MSG_ATTRIBUTE("This constructor will be removed in the next major release.");
-
-/**
-  initializes a new instance.
- @param userID the user ID
- @param firstName the user's first name
- @param middleName the user's middle name
- @param lastName the user's last name
- @param name the user's complete name
- @param linkURL the link for this profile
- @param refreshDate the optional date this profile was fetched. Defaults to [NSDate date].
- @param imageURL an optional URL to use for fetching a user's profile image
- @param email the user's email
- @param friendIDs a list of identifiers for the user's friends
- @param birthday the user's birthday
- @param ageRange the user's age range
- */
-- (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
-                     firstName:(nullable NSString *)firstName
-                    middleName:(nullable NSString *)middleName
-                      lastName:(nullable NSString *)lastName
-                          name:(nullable NSString *)name
-                       linkURL:(nullable NSURL *)linkURL
-                   refreshDate:(nullable NSDate *)refreshDate
-                      imageURL:(nullable NSURL *)imageURL
-                         email:(nullable NSString *)email
-                     friendIDs:(nullable NSArray<FBSDKUserIdentifier *> *)friendIDs
-                      birthday:(nullable NSDate *)birthday
-                      ageRange:(nullable FBSDKUserAgeRange *)ageRange
-DEPRECATED_MSG_ATTRIBUTE("This constructor will be removed in the next major release.");;
 
 /**
   initializes a new instance.

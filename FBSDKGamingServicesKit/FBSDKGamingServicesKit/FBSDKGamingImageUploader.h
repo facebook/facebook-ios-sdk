@@ -32,20 +32,6 @@ NS_SWIFT_NAME(GamingImageUploader)
 - (instancetype _Nonnull )init NS_SWIFT_UNAVAILABLE("Should not create instances of this class");
 
 /**
- Runs an upload to a users Gaming Media Library with the given configuration
-
- @param configuration model object contain the content that will be uploaded
- @param completionHandler a callback that is fired dependent on the configuration.
-  Fired when the upload completes or when the users returns to the caller app
-  after the media dialog is shown.
-
-@deprecated - This method is deprecated. Please use uploadImageWithConfiguration:andResultCompletionHandler: instead.
-*/
-+ (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration * _Nonnull)configuration
-                andCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
-DEPRECATED_MSG_ATTRIBUTE("Please use uploadImageWithConfiguration:andResultCompletionHandler: instead");
-
-/**
 Runs an upload to a users Gaming Media Library with the given configuration
 
 @param configuration model object contain the content that will be uploaded

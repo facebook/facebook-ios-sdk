@@ -31,6 +31,8 @@
   NSError *_error;
 }
 
+@property (nullable, nonatomic, readonly, weak) id<FBSDKGraphErrorRecoveryProcessorDelegate> delegate;
+
 @end
 
 @implementation FBSDKGraphErrorRecoveryProcessor
@@ -143,15 +145,6 @@
   [topMostViewController presentViewController:alertController
                                       animated:YES
                                     completion:nil];
-}
-
- #pragma mark - FBSDKErrorRecoveryAttempting "delegate"
-
-- (void)didPresentErrorWithRecovery:(BOOL)didRecover contextInfo:(void *)contextInfo
-{
-  // Deprecated method (no longer used by FBSDK)
-  [_delegate processorDidAttemptRecovery:self didRecover:didRecover error:_error];
-  _delegate = nil;
 }
 
 @end

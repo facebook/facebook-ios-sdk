@@ -37,10 +37,7 @@
 
  #define FBSDK_MESSAGE_DIALOG_APP_SCHEME @"fb-messenger-share-api"
 
- #pragma clang diagnostic push
- #pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FBSDKMessageDialog
- #pragma clang diagnostic pop
 
 FBSDKAppEventName FBSDKAppEventNameFBSDKEventMessengerShareDialogShow = @"fb_messenger_dialog_share_show";
 FBSDKAppEventName FBSDKAppEventNameFBSDKEventMessengerShareDialogResult = @"fb_messenger_dialog_share_result";
