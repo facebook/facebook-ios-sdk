@@ -11,10 +11,12 @@
 		F43C34EA2370F948005145DD /* VerifyFacebookCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43C34E72370F947005145DD /* VerifyFacebookCore.swift */; };
 		F43C34EB2370F948005145DD /* VerifyFacebookShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43C34E82370F948005145DD /* VerifyFacebookShare.swift */; };
 		F43C34EC2370F948005145DD /* VerifyFacebookLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43C34E92370F948005145DD /* VerifyFacebookLogin.swift */; };
+		F43FBA9F2649D79300FDCB82 /* VerifyFacebookGamingServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43FBA9E2649D79300FDCB82 /* VerifyFacebookGamingServices.swift */; };
 		F43C34EE2370F957005145DD /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = F43C34ED2370F957005145DD /* README.md */; };
 		F4CEA54023C29C9E0086EB16 /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = F4CEA53F23C29C9E0086EB16 /* FacebookShare */; };
 		F4CEA54223C29C9E0086EB16 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = F4CEA54123C29C9E0086EB16 /* FacebookLogin */; };
 		F4CEA54423C29C9E0086EB16 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = F4CEA54323C29C9E0086EB16 /* FacebookCore */; };
+		F43FBA972649CEA800FDCB82 /* FacebookGamingServices in Frameworks */ = {isa = PBXBuildFile; productRef = F43FBA962649CEA800FDCB82 /* FacebookGamingServices */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,7 @@
 		F43C34E72370F947005145DD /* VerifyFacebookCore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyFacebookCore.swift; sourceTree = "<group>"; };
 		F43C34E82370F948005145DD /* VerifyFacebookShare.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyFacebookShare.swift; sourceTree = "<group>"; };
 		F43C34E92370F948005145DD /* VerifyFacebookLogin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyFacebookLogin.swift; sourceTree = "<group>"; };
+		F43FBA9E2649D79300FDCB82 /* VerifyFacebookGamingServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyFacebookGamingServices.swift; sourceTree = "<group>"; };
 		F43C34ED2370F957005145DD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -35,6 +38,7 @@
 				F4CEA54223C29C9E0086EB16 /* FacebookLogin in Frameworks */,
 				F4CEA54423C29C9E0086EB16 /* FacebookCore in Frameworks */,
 				F4CEA54023C29C9E0086EB16 /* FacebookShare in Frameworks */,
+				F43FBA972649CEA800FDCB82 /* FacebookGamingServices in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -64,6 +68,7 @@
 				F43C34E72370F947005145DD /* VerifyFacebookCore.swift */,
 				F43C34E92370F948005145DD /* VerifyFacebookLogin.swift */,
 				F43C34E82370F948005145DD /* VerifyFacebookShare.swift */,
+				F43FBA9E2649D79300FDCB82 /* VerifyFacebookGamingServices.swift */,
 				F43C34D72370F8BD005145DD /* SmoketestSPM.h */,
 				F43C34D82370F8BD005145DD /* Info.plist */,
 			);
@@ -102,6 +107,7 @@
 				F4CEA53F23C29C9E0086EB16 /* FacebookShare */,
 				F4CEA54123C29C9E0086EB16 /* FacebookLogin */,
 				F4CEA54323C29C9E0086EB16 /* FacebookCore */,
+				F43FBA962649CEA800FDCB82 /* FacebookGamingServices */,
 			);
 			productName = SmoketestSPM;
 			productReference = F43C34D42370F8BD005145DD /* SmoketestSPM.framework */;
@@ -159,6 +165,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F43FBA9F2649D79300FDCB82 /* VerifyFacebookGamingServices.swift in Sources */,
 				F43C34EB2370F948005145DD /* VerifyFacebookShare.swift in Sources */,
 				F43C34EC2370F948005145DD /* VerifyFacebookLogin.swift in Sources */,
 				F43C34EA2370F948005145DD /* VerifyFacebookCore.swift in Sources */,
@@ -372,6 +379,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		F43FBA962649CEA800FDCB82 /* FacebookGamingServices */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F4CEA53E23C29C9E0086EB16 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookGamingServices;
+		};
 		F4CEA53F23C29C9E0086EB16 /* FacebookShare */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F4CEA53E23C29C9E0086EB16 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;

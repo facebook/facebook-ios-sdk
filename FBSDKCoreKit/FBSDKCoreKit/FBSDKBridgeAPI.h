@@ -22,16 +22,11 @@
 
 #import <UIKit/UIKit.h>
 
-#if SWIFT_PACKAGE
-#import "FBSDKCoreKit.h"
-#else
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-#endif
-
 #import "FBSDKBridgeAPIProtocol.h"
 #import "FBSDKBridgeAPIProtocolType.h"
 #import "FBSDKBridgeAPIRequest.h"
 #import "FBSDKBridgeAPIResponse.h"
+#import "FBSDKConstants.h"
 #import "FBSDKURLOpening.h"
 
 @protocol FBSDKOperatingSystemVersionComparing;
