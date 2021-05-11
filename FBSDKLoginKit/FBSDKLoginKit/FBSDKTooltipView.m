@@ -209,8 +209,8 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
   switch (colorStyle) {
     case FBSDKTooltipColorStyleNeutralGray:
       _gradientColors = @[
-        (id)(FBSDKUIColorWithRGB(0x51, 0x50, 0x4f).CGColor),
-        (id)(FBSDKUIColorWithRGB(0x2d, 0x2c, 0x2c).CGColor)
+        (id)([[UIColor colorWithRed:(0x51 / 255.0) green:(0x50 / 255.0) blue:(0x4f / 255.0) alpha:1.0] CGColor]),
+        (id)([[UIColor colorWithRed:(0x2d / 255.0) green:(0x2c / 255.0) blue:(0x2c / 255.0) alpha:1.0] CGColor])
     ];
     _innerStrokeColor = [UIColor colorWithWhite:0.13f alpha:1.0f];
     _crossCloseGlyphColor = [UIColor colorWithWhite:0.69f alpha:1.0f];
@@ -219,8 +219,8 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
     case FBSDKTooltipColorStyleFriendlyBlue:
     default:
       _gradientColors = @[
-        (id)(FBSDKUIColorWithRGB(0x6e, 0x9c, 0xf5).CGColor),
-        (id)(FBSDKUIColorWithRGB(0x49, 0x74, 0xc6).CGColor)
+        (id)([[UIColor colorWithRed:(0x6e / 255.0) green:(0x9c / 255.0) blue:(0xf5 / 255.0) alpha:1.0] CGColor]),
+        (id)([[UIColor colorWithRed:(0x49 / 255.0) green:(0x74 / 255.0) blue:(0xc6 / 255.0) alpha:1.0] CGColor])
     ];
     _innerStrokeColor = [UIColor colorWithRed:0.12f green:0.26f blue:0.55f alpha:1.0f];
     _crossCloseGlyphColor = [UIColor colorWithRed:0.60f green:0.73f blue:1.0f alpha:1.0f];
@@ -603,7 +603,11 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
   [attrString addAttribute:NSFontAttributeName value:font range:fullRange];
   [attrString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:fullRange];
   if (tagline.length) {
-    [attrString addAttribute:NSForegroundColorAttributeName value:FBSDKUIColorWithRGB(0x6D, 0x87, 0xC7) range:NSMakeRange(0, tagline.length)];
+    UIColor *color = [UIColor colorWithRed:(0x6D / 255.0)
+                                     green:(0x87 / 255.0)
+                                      blue:(0xC7 / 255.0)
+                                     alpha:1.0];
+    [attrString addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(0, tagline.length)];
   }
 
   _textLabel.attributedText = attrString;

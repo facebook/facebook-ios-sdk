@@ -109,7 +109,10 @@
   _likeCountLabel = [[UILabel alloc] initWithFrame:CGRectZero];
   _likeCountLabel.font = [UIFont systemFontOfSize:11.0];
   _likeCountLabel.textAlignment = NSTextAlignmentCenter;
-  _likeCountLabel.textColor = FBSDKUIColorWithRGB(0x6A, 0x71, 0x80);
+  _likeCountLabel.textColor = [UIColor colorWithRed:(0x6A / 255.0)
+                                              green:(0x71 / 255.0)
+                                               blue:(0x80 / 255.0)
+                                              alpha:1.0];
   _borderView.contentView = _likeCountLabel;
 }
 

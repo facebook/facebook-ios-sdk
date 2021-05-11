@@ -29,9 +29,7 @@
 #if defined FBSDKCOCOAPODS || defined BUCK
 
  #if !TARGET_OS_TV
-  #import "FBSDKCloseIcon.h"
   #import "FBSDKCodelessIndexer.h"
-  #import "FBSDKColor.h"
   #import "FBSDKContainerViewController.h"
   #import "FBSDKCrypto.h"
   #import "FBSDKHumanSilhouetteIcon.h"
@@ -122,8 +120,6 @@
   #import "FBSDKInternalUtility+WindowFinding.h"
   #import "FBSDKMonotonicTime.h"
   #import "FBSDKWindowFinding.h"
-  #import "UI/FBSDKCloseIcon.h"
-  #import "UI/FBSDKColor.h"
   #import "UI/FBSDKHumanSilhouetteIcon.h"
   #import "UI/FBSDKUIUtility.h"
   #import "UI/FBSDKViewImpressionTracker.h"
