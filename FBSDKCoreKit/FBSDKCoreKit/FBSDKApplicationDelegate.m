@@ -21,6 +21,7 @@
 
 #import <objc/runtime.h>
 
+#import "FBSDKAccessToken+Internal.h"
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKAppEventsConfigurationManager.h"
 #import "FBSDKAppEventsStateManager+AppEventsStatePersisting.h"

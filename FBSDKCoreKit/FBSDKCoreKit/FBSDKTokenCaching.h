@@ -21,10 +21,29 @@
 @class FBSDKAccessToken;
 @class FBSDKAuthenticationToken;
 
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
 NS_SWIFT_NAME(TokenCaching)
 @protocol FBSDKTokenCaching<NSObject>
 
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
 @property (nonatomic, copy) FBSDKAccessToken *accessToken;
+
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
 @property (nonatomic, copy) FBSDKAuthenticationToken *authenticationToken;
 
 @end

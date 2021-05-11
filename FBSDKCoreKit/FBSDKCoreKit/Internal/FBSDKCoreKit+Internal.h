@@ -104,7 +104,6 @@
  #import "FBSDKSwizzler.h"
  #import "FBSDKTimeSpentData.h"
  #import "FBSDKTokenCache.h"
- #import "FBSDKTokenCaching.h"
  #import "FBSDKTokenStringProviding.h"
  #import "FBSDKUnarchiverProvider.h"
 
@@ -186,7 +185,6 @@
  #import "ServerConfiguration/FBSDKServerConfigurationManager+Internal.h"
  #import "TokenCaching/FBSDKKeychainStore.h"
  #import "TokenCaching/FBSDKTokenCache.h"
- #import "TokenCaching/FBSDKTokenCaching.h"
  #import "UI/FBSDKButton+Subclass.h"
  #import "UI/FBSDKIcon.h"
  #import "UI/FBSDKLogo.h"
