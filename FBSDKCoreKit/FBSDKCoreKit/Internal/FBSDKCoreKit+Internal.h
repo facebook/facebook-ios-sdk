@@ -30,7 +30,6 @@
 
  #if !TARGET_OS_TV
   #import "FBSDKCodelessIndexer.h"
-  #import "FBSDKContainerViewController.h"
   #import "FBSDKHumanSilhouetteIcon.h"
   #import "FBSDKInternalUtility+WindowFinding.h"
   #import "FBSDKMetadataIndexer.h"
@@ -114,7 +113,6 @@
   #import "../AppEvents/Internal/ViewHierarchy/FBSDKViewHierarchy.h"
   #import "../AppEvents/Internal/ViewHierarchy/FBSDKViewHierarchyMacros.h"
   #import "FBSDKAuthenticationStatusUtility.h"
-  #import "FBSDKContainerViewController.h"
   #import "FBSDKInternalUtility+WindowFinding.h"
   #import "FBSDKMonotonicTime.h"
   #import "FBSDKWindowFinding.h"

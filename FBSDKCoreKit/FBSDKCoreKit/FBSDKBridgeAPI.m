@@ -23,6 +23,7 @@
  #import "FBSDKBridgeAPI.h"
 
  #import "FBSDKApplicationLifecycleNotifications.h"
+ #import "FBSDKContainerViewController.h"
  #import "FBSDKCoreKit+Internal.h"
  #import "FBSDKOperatingSystemVersionComparing.h"
  #import "NSProcessInfo+Protocols.h"
