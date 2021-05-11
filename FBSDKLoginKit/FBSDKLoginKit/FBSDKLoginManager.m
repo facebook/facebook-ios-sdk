@@ -476,7 +476,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 
 + (NSString *)stringForChallenge
 {
-  NSString *challenge = [FBSDKCrypto randomString:FBClientStateChallengeLength];
+  NSString *challenge = fb_randomString(FBClientStateChallengeLength);
 
   return [challenge stringByReplacingOccurrencesOfString:@"+" withString:@"="];
 }

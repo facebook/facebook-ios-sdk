@@ -66,6 +66,7 @@
   #import <FBSDKCoreKit/FBSDKMutableCopying.h>
   #import <FBSDKCoreKit/FBSDKProfile.h>
   #import <FBSDKCoreKit/FBSDKProfilePictureView.h>
+  #import <FBSDKCoreKit/FBSDKRandom.h>
   #import <FBSDKCoreKit/FBSDKURL.h>
   #import <FBSDKCoreKit/FBSDKURLOpening.h>
   #import <FBSDKCoreKit/FBSDKWebViewAppLinkResolver.h>
@@ -95,6 +96,7 @@
  #import "FBSDKGraphRequestProtocol.h"
  #import "FBSDKLocation.h"
  #import "FBSDKLoggingBehavior.h"
+ #import "FBSDKRandom.h"
  #import "FBSDKSettings.h"
  #import "FBSDKTestUsersManager.h"
  #import "FBSDKUserAgeRange.h"
