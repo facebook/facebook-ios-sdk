@@ -31,17 +31,12 @@
   #import <FBSDKCoreKit/FBSDKCoreKit.h>
  #endif
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
-
  #import "FBSDKLoginCompletion.h"
  #import "FBSDKLoginConstants.h"
  #import "FBSDKLoginError.h"
  #import "FBSDKLoginManagerLogger.h"
  #import "FBSDKLoginUtility.h"
+ #import "FBSDKMonotonicTime.h"
  #import "FBSDKPermission.h"
  #import "_FBSDKLoginRecoveryAttempter.h"
 

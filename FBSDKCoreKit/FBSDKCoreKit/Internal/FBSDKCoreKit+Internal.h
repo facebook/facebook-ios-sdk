@@ -31,7 +31,6 @@
  #if !TARGET_OS_TV
   #import "FBSDKCodelessIndexer.h"
   #import "FBSDKMetadataIndexer.h"
-  #import "FBSDKMonotonicTime.h"
   #import "FBSDKSKAdNetworkReporter.h"
   #import "FBSDKSuggestedEventsIndexer.h"
   #import "FBSDKUIUtility.h"
@@ -109,7 +108,6 @@
   #import "../AppEvents/Internal/ViewHierarchy/FBSDKViewHierarchy.h"
   #import "../AppEvents/Internal/ViewHierarchy/FBSDKViewHierarchyMacros.h"
   #import "FBSDKAuthenticationStatusUtility.h"
-  #import "FBSDKMonotonicTime.h"
   #import "UI/FBSDKUIUtility.h"
   #import "UI/FBSDKViewImpressionTracker.h"
  #else
