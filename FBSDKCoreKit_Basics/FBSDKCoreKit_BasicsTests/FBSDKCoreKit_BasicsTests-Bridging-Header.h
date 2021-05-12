@@ -16,15 +16,4 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "Shared/Platform/iOS.xcconfig"
-#include "Shared/Target/LogicTests.xcconfig"
-
-PRODUCT_NAME = FBSDKCoreKitTests
-PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBSDKCoreKitTests
-
-INFOPLIST_FILE = $(SRCROOT)/FBSDKCoreKitTests/Info.plist
-
-HEADER_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)
-LIBRARY_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)
-
-SWIFT_OBJC_BRIDGING_HEADER = FBSDKCoreKitTests/FBSDKCoreKitTests-Bridging-Header.h
+// Import internal ObjC types here to use them in Swift tests

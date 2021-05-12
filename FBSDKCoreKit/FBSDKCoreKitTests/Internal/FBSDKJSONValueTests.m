@@ -19,7 +19,7 @@
 #import <Foundation/Foundation.h>
 #import <XCTest/XCTest.h>
 
-#import "FBSDKJSONValue.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 @interface FBSDKJSONValueTests : XCTestCase
 @end

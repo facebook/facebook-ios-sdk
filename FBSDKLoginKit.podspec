@@ -36,7 +36,11 @@ Pod::Spec.new do |s|
 
   s.default_subspecs = 'Login'
   s.swift_version = '5.0'
-  s.prefix_header_contents = '#define FBSDKCOCOAPODS'
+
+  s.pod_target_xcconfig = {
+    'GCC_PREPROCESSOR_DEFINITIONS': '$(inherited) FBSDKCOCOAPODS=1',
+    'OTHER_SWIFT_FLAGS': '$(inherited) -Xcc -DFBSDKCOCOAPODS',
+  }
 
   s.subspec 'Login' do |ss|
     ss.dependency 'FBSDKCoreKit', "~> #{s.version}"

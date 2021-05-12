@@ -18,7 +18,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "FBSDKCoreKit+Internal.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 @interface FBSDKLibAnalyzer ()
 

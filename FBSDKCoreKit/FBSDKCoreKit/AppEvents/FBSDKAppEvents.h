@@ -22,6 +22,14 @@
 #import <WebKit/WebKit.h>
 #endif
 
+#if defined FBSDKCOCOAPODS
+ #import <FBSDKCoreKit/FBSDKCoreKit_Basics.h>
+#elif defined FBSDK_SWIFT_PACKAGE
+  @import FBSDKCoreKit_Basics;
+#else
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#endif
+
 #ifdef BUCK
 #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
 #import <FBSDKCoreKit/FBSDKAppEventParameterName.h>
@@ -188,46 +196,6 @@ FOUNDATION_EXPORT FBSDKAppEventParameterName FBSDKAppEventParameterNameAdType;
 /** Parameter key used to specify the unique ID for all events within a subscription
  * in an FBSDKAppEventNameSubscribe or FBSDKAppEventNameStartTrial event. */
 FOUNDATION_EXPORT FBSDKAppEventParameterName FBSDKAppEventParameterNameOrderID;
-
-/*
- @methodgroup Predefined values to assign to user data store
- */
-
-/// typedef for FBSDKAppEventUserDataType
-typedef NSString *const FBSDKAppEventUserDataType NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(AppEvents.UserDataType);
-
-/** Parameter key used to specify user's email. */
-FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventEmail;
-
-/** Parameter key used to specify user's first name. */
-FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventFirstName;
-
-/** Parameter key used to specify user's last name. */
-FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventLastName;
-
-/** Parameter key used to specify user's phone. */
-FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventPhone;
-
-/** Parameter key used to specify user's date of birth. */
-FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventDateOfBirth;
-
-/** Parameter key used to specify user's gender. */
-FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventGender;
-
-/** Parameter key used to specify user's city. */
-FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventCity;
-
-/** Parameter key used to specify user's state. */
-FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventState;
-
-/** Parameter key used to specify user's zip. */
-FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventZip;
-
-/** Parameter key used to specify user's country. */
-FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventCountry;
-
-/** Parameter key used to specify user's external id. */
-FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventExternalId;
 
 /**
 

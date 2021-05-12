@@ -120,7 +120,8 @@ let package = Package(
                 .headerSearchPath("Internal/TokenCaching"),
                 .headerSearchPath("Internal/UI"),
                 .headerSearchPath("Internal/WebDialog"),
-                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil))
+                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil)),
+                .unsafeFlags(["-fmodules", "-fcxx-modules"])
             ],
             linkerSettings: [
                 .linkedFramework("Accelerate")
@@ -132,7 +133,14 @@ let package = Package(
         */
         .target(
             name: "FacebookCore",
-            dependencies: ["LegacyCoreKit"]
+            dependencies: ["LegacyCoreKit"],
+            cSettings: [
+                .headerSearchPath("../../FBSDKCoreKit/FBSDKCoreKit/Internal"),
+                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil))
+            ],
+            swiftSettings: [
+                .define("FBSDK_SWIFT_PACKAGE")
+            ]
         ),
 
         /*
@@ -143,7 +151,10 @@ let package = Package(
         */
         .target(
             name: "FBSDKCoreKit",
-            dependencies: ["LegacyCoreKit", "FacebookCore"]
+            dependencies: ["LegacyCoreKit", "FacebookCore"],
+            cSettings: [
+                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil))
+            ]
         ),
 
         /*
@@ -172,7 +183,10 @@ let package = Package(
         .target(
             name: "FacebookLogin",
             dependencies: ["FacebookCore", "FBSDKLoginKit"],
-            path: "FBSDKLoginKit/FBSDKLoginKit/Swift"
+            path: "FBSDKLoginKit/FBSDKLoginKit/Swift",
+            cSettings: [
+                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil))
+            ]
         ),
 
         /*
@@ -187,11 +201,7 @@ let package = Package(
             cSettings: [
                 .headerSearchPath("Internal"),
                 .headerSearchPath("../../FBSDKCoreKit/FBSDKCoreKit/Internal"),
-                .define(
-                    conditionalCompilationFlag,
-                    to: nil,
-                    .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil)
-                )
+                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil))
             ]
         ),
 
@@ -201,7 +211,10 @@ let package = Package(
         .target(
             name: "FacebookShare",
             dependencies: ["FacebookCore", "FBSDKShareKit"],
-            path: "FBSDKShareKit/FBSDKShareKit/Swift"
+            path: "FBSDKShareKit/FBSDKShareKit/Swift",
+            cSettings: [
+                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil))
+            ]
         ),
 
         /*
@@ -231,7 +244,10 @@ let package = Package(
         .target(
             name: "FacebookGamingServices",
             dependencies: ["FacebookCore", "FBSDKGamingServicesKit"],
-            path: "FBSDKGamingServicesKit/FBSDKGamingServicesKit/Swift"
+            path: "FBSDKGamingServicesKit/FBSDKGamingServicesKit/Swift",
+            cSettings: [
+                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil))
+            ]
         )
     ],
     cxxLanguageStandard: CXXLanguageStandard.cxx11

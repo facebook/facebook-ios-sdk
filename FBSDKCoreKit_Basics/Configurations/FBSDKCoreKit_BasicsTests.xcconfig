@@ -19,12 +19,12 @@
 #include "Shared/Platform/iOS.xcconfig"
 #include "Shared/Target/LogicTests.xcconfig"
 
-PRODUCT_NAME = FBSDKCoreKitTests
-PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBSDKCoreKitTests
+PRODUCT_NAME = FBSDKCoreKit_BasicsTests
+PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBSDKCoreKitBasicsTests
 
-INFOPLIST_FILE = $(SRCROOT)/FBSDKCoreKitTests/Info.plist
+INFOPLIST_FILE = $(SRCROOT)/FBSDKCoreKit_BasicsTests/Info.plist
 
 HEADER_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)
 LIBRARY_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)
 
-SWIFT_OBJC_BRIDGING_HEADER = FBSDKCoreKitTests/FBSDKCoreKitTests-Bridging-Header.h
+SWIFT_OBJC_BRIDGING_HEADER = FBSDKCoreKit_BasicsTests/FBSDKCoreKit_BasicsTests-Bridging-Header.h

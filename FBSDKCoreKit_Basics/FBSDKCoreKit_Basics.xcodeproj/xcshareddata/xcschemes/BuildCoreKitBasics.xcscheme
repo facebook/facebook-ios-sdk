@@ -17,7 +17,7 @@
                BlueprintIdentifier = "C5FCE31D228E08CA00867DFD"
                BuildableName = "FBSDKCoreKit_Basics-Universal"
                BlueprintName = "FBSDKCoreKit_Basics-Universal"
-               ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
+               ReferencedContainer = "container:FBSDKCoreKit_Basics.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -31,7 +31,7 @@
                BlueprintIdentifier = "C5FCE332228E08D400867DFD"
                BuildableName = "FBSDKCoreKit_Basics_TV-Universal"
                BlueprintName = "FBSDKCoreKit_Basics_TV-Universal"
-               ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
+               ReferencedContainer = "container:FBSDKCoreKit_Basics.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -47,7 +47,7 @@
             BlueprintIdentifier = "C5FCE31D228E08CA00867DFD"
             BuildableName = "FBSDKCoreKit_Basics-Universal"
             BlueprintName = "FBSDKCoreKit_Basics-Universal"
-            ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
+            ReferencedContainer = "container:FBSDKCoreKit_Basics.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
@@ -69,7 +69,7 @@
             BlueprintIdentifier = "C5FCE31D228E08CA00867DFD"
             BuildableName = "FBSDKCoreKit_Basics-Universal"
             BlueprintName = "FBSDKCoreKit_Basics-Universal"
-            ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
+            ReferencedContainer = "container:FBSDKCoreKit_Basics.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </LaunchAction>
@@ -85,7 +85,7 @@
             BlueprintIdentifier = "C5FCE31D228E08CA00867DFD"
             BuildableName = "FBSDKCoreKit_Basics-Universal"
             BlueprintName = "FBSDKCoreKit_Basics-Universal"
-            ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
+            ReferencedContainer = "container:FBSDKCoreKit_Basics.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

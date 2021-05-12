@@ -16,15 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "Shared/Platform/iOS.xcconfig"
-#include "Shared/Target/LogicTests.xcconfig"
+#include "Shared/Platform/tvOS.xcconfig"
+#include "Shared/Target/DynamicFramework.xcconfig"
+#include "Shared/Version.xcconfig"
 
-PRODUCT_NAME = FBSDKCoreKitTests
-PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBSDKCoreKitTests
+PRODUCT_NAME = FBSDKCoreKit_Basics
+PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBSDKCoreKitBasics
 
-INFOPLIST_FILE = $(SRCROOT)/FBSDKCoreKitTests/Info.plist
+CURRENT_PROJECT_VERSION = $(FBSDK_PROJECT_VERSION)
 
-HEADER_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)
-LIBRARY_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)
-
-SWIFT_OBJC_BRIDGING_HEADER = FBSDKCoreKitTests/FBSDKCoreKitTests-Bridging-Header.h
+INFOPLIST_FILE = $(SRCROOT)/FBSDKCoreKit_Basics/Info.plist
+MODULEMAP_FILE = $(SRCROOT)/FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.modulemap

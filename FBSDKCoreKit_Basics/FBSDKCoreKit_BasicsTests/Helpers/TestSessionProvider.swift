@@ -16,15 +16,45 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "Shared/Platform/iOS.xcconfig"
-#include "Shared/Target/LogicTests.xcconfig"
+import Foundation
+import FBSDKCoreKit_Basics
 
-PRODUCT_NAME = FBSDKCoreKitTests
-PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBSDKCoreKitTests
+@objcMembers
+class TestSessionDataTask: NSObject, SessionDataTask {
+  var resumeCallCount = 0
+  var cancelCallCount = 0
+  var stubbedState: URLSessionTask.State = .completed
 
-INFOPLIST_FILE = $(SRCROOT)/FBSDKCoreKitTests/Info.plist
+  var state: URLSessionTask.State {
+    stubbedState
+  }
 
-HEADER_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)
-LIBRARY_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)
+  func resume() {
+    resumeCallCount += 1
+  }
 
-SWIFT_OBJC_BRIDGING_HEADER = FBSDKCoreKitTests/FBSDKCoreKitTests-Bridging-Header.h
+  func cancel() {
+    cancelCallCount += 1
+  }
+}
+
+@objcMembers
+class TestSessionProvider: NSObject, SessionProviding {
+  /// A data task to return from `dataTask(with:completion:)`
+  var stubbedDataTask: SessionDataTask?
+  /// The completion handler to be invoked in the test
+  var capturedCompletion: ((Data?, URLResponse?, Error?) -> Void)?
+  /// The url request for the data task
+  var capturedRequest: URLRequest?
+  var dataTaskCallCount = 0
+
+  func dataTask(
+    with request: URLRequest,
+    completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void
+  ) -> SessionDataTask {
+    dataTaskCallCount += 1
+    capturedRequest = request
+    capturedCompletion = completionHandler
+    return stubbedDataTask ?? TestSessionDataTask()
+  }
+}

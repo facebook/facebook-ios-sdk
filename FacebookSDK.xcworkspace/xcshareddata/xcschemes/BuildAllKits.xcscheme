@@ -14,6 +14,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "C5FCE31D228E08CA00867DFD"
+               BuildableName = "FBSDKCoreKit_Basics-Universal"
+               BlueprintName = "FBSDKCoreKit_Basics-Universal"
+               ReferencedContainer = "container:FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "9D2697701A5DF56700143BFC"
                BuildableName = "FBSDKCoreKit-Universal"
                BlueprintName = "FBSDKCoreKit-Universal"

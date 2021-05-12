@@ -14,6 +14,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "C5FCE332228E08D400867DFD"
+               BuildableName = "FBSDKCoreKit_Basics_TV-Universal"
+               BlueprintName = "FBSDKCoreKit_Basics_TV-Universal"
+               ReferencedContainer = "container:FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "9D6DEEFA1BC2E546001A94ED"
                BuildableName = "FBSDKCoreKit_TV-Universal"
                BlueprintName = "FBSDKCoreKit_TV-Universal"

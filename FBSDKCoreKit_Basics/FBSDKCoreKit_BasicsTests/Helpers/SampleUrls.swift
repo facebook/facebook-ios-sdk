@@ -16,50 +16,27 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import XCTest
+import Foundation
 
-class UrlSessionTaskTests: XCTestCase {
+// swiftlint:disable force_unwrapping
+enum SampleUrls {
+  static let valid = URL(string: "https://www.example.com")!
+  static let validApp = URL(string: "fb://test.com")!
 
-  let dataTask = TestSessionDataTask()
-  let provider = TestSessionProvider()
-  var task: UrlSessionTask! // swiftlint:disable:this implicitly_unwrapped_optional
-
-  override func setUp() {
-    super.setUp()
-
-    provider.stubbedDataTask = dataTask
-    task = UrlSessionTask(
-       request: SampleUrlRequest.valid,
-       fromSession: provider
-     ) { _, _, _ in }
+  static func valid(path: String) -> URL {
+    valid.appendingPathComponent(path)
   }
 
-  func testStarting() {
-    task.start()
-
-    XCTAssertEqual(
-      dataTask.resumeCallCount,
-      1,
-      "Starting a session task should resume the underlying data task"
-    )
+  static func valid(queryItems: [URLQueryItem]) -> URL {
+    var components = URLComponents(url: valid, resolvingAgainstBaseURL: false)!
+    components.queryItems = queryItems
+    return components.url!
   }
+}
 
-  func testStopping() {
-    task.cancel()
+enum SampleUrlRequest {
 
-    XCTAssertEqual(
-      dataTask.cancelCallCount,
-      1,
-      "Cancelling a session task should cancel the underlying data task"
-    )
-  }
-
-  func testState() {
-    dataTask.stubbedState = .running
-    XCTAssertEqual(
-      task.state,
-      .running,
-      "Should return the state of the underlying data task"
-    )
-  }
+  static let valid: URLRequest = {
+    URLRequest(url: SampleUrls.valid)
+  }()
 }

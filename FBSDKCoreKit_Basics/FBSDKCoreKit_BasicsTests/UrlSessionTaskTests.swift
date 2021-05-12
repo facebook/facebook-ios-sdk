@@ -16,15 +16,51 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "Shared/Platform/iOS.xcconfig"
-#include "Shared/Target/LogicTests.xcconfig"
+import FBSDKCoreKit_Basics
+import XCTest
 
-PRODUCT_NAME = FBSDKCoreKitTests
-PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBSDKCoreKitTests
+class UrlSessionTaskTests: XCTestCase {
 
-INFOPLIST_FILE = $(SRCROOT)/FBSDKCoreKitTests/Info.plist
+  let dataTask = TestSessionDataTask()
+  let provider = TestSessionProvider()
+  var task: UrlSessionTask! // swiftlint:disable:this implicitly_unwrapped_optional
 
-HEADER_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)
-LIBRARY_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)
+  override func setUp() {
+    super.setUp()
 
-SWIFT_OBJC_BRIDGING_HEADER = FBSDKCoreKitTests/FBSDKCoreKitTests-Bridging-Header.h
+    provider.stubbedDataTask = dataTask
+    task = UrlSessionTask(
+       request: SampleUrlRequest.valid,
+       fromSession: provider
+     ) { _, _, _ in }
+  }
+
+  func testStarting() {
+    task.start()
+
+    XCTAssertEqual(
+      dataTask.resumeCallCount,
+      1,
+      "Starting a session task should resume the underlying data task"
+    )
+  }
+
+  func testStopping() {
+    task.cancel()
+
+    XCTAssertEqual(
+      dataTask.cancelCallCount,
+      1,
+      "Cancelling a session task should cancel the underlying data task"
+    )
+  }
+
+  func testState() {
+    dataTask.stubbedState = .running
+    XCTAssertEqual(
+      task.state,
+      .running,
+      "Should return the state of the underlying data task"
+    )
+  }
+}

@@ -19,12 +19,13 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
 #if !TARGET_OS_TV
 
  #import "FBSDKSKAdNetworkConversionConfiguration.h"
  #import "FBSDKSKAdNetworkRule.h"
  #import "FBSDKTestCase.h"
- #import "FBSDKTypeUtility.h"
 
 @interface FBSDKSKAdNetworkConversionConfiguration ()
 

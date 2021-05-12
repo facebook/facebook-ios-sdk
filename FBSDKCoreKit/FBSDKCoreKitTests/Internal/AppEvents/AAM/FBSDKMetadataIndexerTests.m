@@ -20,8 +20,8 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKMetadataIndexer.h"
-#import "FBSDKTypeUtility.h"
 
 @interface FBSDKMetadataIndexer ()
 @property (nonnull, nonatomic, readonly) NSMutableDictionary<NSString *, NSMutableArray<NSString *> *> *store;

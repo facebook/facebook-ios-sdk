@@ -33,14 +33,15 @@ Pod::Spec.new do |s|
   s.swift_version = '5.0'
   s.pod_target_xcconfig = {
     'GCC_PREPROCESSOR_DEFINITIONS': '$(inherited) FBSDKCOCOAPODS=1',
-    'DEFINES_MODULE': 'YES'
+    'DEFINES_MODULE': 'YES',
   }
-  s.user_target_xcconfig = {'GCC_PREPROCESSOR_DEFINITIONS': '$(inherited) FBSDKCOCOAPODS=1' }
+  s.user_target_xcconfig = {
+    'GCC_PREPROCESSOR_DEFINITIONS': '$(inherited) FBSDKCOCOAPODS=1'
+  }
   s.library = 'c++', 'stdc++'
 
   s.subspec 'Basics' do |ss|
     ss.source_files = 'Sources/FBSDKCoreKit_Basics/**/*.{h,m}'
-    ss.private_header_files = 'Sources/FBSDKCoreKit_Basics/**/*+Internal.h'
     ss.library = 'z'
   end
 
