@@ -23,6 +23,7 @@
 #endif
 
 #import "FBSDKCoreKit+Internal.h"
+#import "FBSDKAppEventsUtility.h"
 
 #define DATA_PROCESSING_OPTIONS         @"data_processing_options"
 #define DATA_PROCESSING_OPTIONS_COUNTRY @"data_processing_options_country"

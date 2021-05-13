@@ -2410,6 +2410,8 @@
 		893F44921A64448E001DB0B6 /* Internal */ = {
 			isa = PBXGroup;
 			children = (
+				F4A2FAAC2634AB7C00E5CC0C /* FBSDKAppEventsFlushReason.h */,
+				9D0BC1591A8D427800BE8BA4 /* FBSDKAppEventsUtility.h */,
 				F4756E5D262BA1D200C7CF2E /* FBSDKApplicationLifecycleNotifications.h */,
 				F4756EDD262BA3DC00C7CF2E /* FBSDKApplicationLifecycleNotifications.m */,
 				894C0B0E1A7021F8009137EF /* Base64 */,
@@ -3073,8 +3075,6 @@
 				9D0BC15E1A8D428700BE8BA4 /* FBSDKAppEventsStateManager.m */,
 				16485A0A2639E553001A861F /* FBSDKAppEventsStatePersisting.h */,
 				16485A292639F55D001A861F /* FBSDKAppEventsStateManager+AppEventsStatePersisting.h */,
-				9D0BC1591A8D427800BE8BA4 /* FBSDKAppEventsUtility.h */,
-				F4A2FAAC2634AB7C00E5CC0C /* FBSDKAppEventsFlushReason.h */,
 				9D0BC15A1A8D427800BE8BA4 /* FBSDKAppEventsUtility.m */,
 				F4AAAF0C2628AB9E00EDCF06 /* FBSDKFeatureExtracting.h */,
 				F4AE65322637789400E0B661 /* FBSDKAppStoreReceiptProviding.h */,

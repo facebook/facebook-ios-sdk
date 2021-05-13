@@ -45,7 +45,6 @@
   #import "FBSDKSmartDeviceDialogView.h"
  #endif
 
- #import "FBSDKAppEventsUtility.h"
  #import "FBSDKApplicationDelegate+Internal.h"
  #import "FBSDKApplicationObserving.h"
  #import "FBSDKAuthenticationToken+Internal.h"
@@ -109,7 +108,6 @@
   #import "Device/FBSDKSmartDeviceDialogView.h"
  #endif
 
- #import "../AppEvents/Internal/FBSDKAppEventsUtility.h"
  #import "../AppEvents/Internal/Integrity/FBSDKRestrictiveDataFilterManager.h"
  #import "Base64/FBSDKBase64.h"
  #import "ErrorRecovery/FBSDKErrorRecoveryAttempter.h"
