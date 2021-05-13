@@ -62,7 +62,7 @@ static FBSDKGamingPayloadObserver *shared = nil;
   }
 
   if ([_delegate respondsToSelector:@selector(updatedURLContaining:)]) {
-    FBSDKGamingPayload *payload = [[FBSDKGamingPayload alloc] initWithUrl:sdkURL];
+    FBSDKGamingPayload *payload = [[FBSDKGamingPayload alloc] initWithURL:sdkURL];
     [_delegate updatedURLContaining:payload];
     return true;
   }

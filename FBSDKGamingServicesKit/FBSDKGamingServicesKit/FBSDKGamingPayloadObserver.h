@@ -26,12 +26,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(GamingPayload)
+NS_SWIFT_NAME(GamingPayloadObserver)
 @interface FBSDKGamingPayloadObserver : NSObject
 
-@property (nonatomic, weak) id<FBSDKGamingPayloadDelegate> delegate;
-
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 + (instancetype)shared;
-
+@property (nonatomic, weak) id<FBSDKGamingPayloadDelegate> delegate;
 @end
 NS_ASSUME_NONNULL_END

@@ -9,7 +9,7 @@ NSString *const kGamingPayloadGameRequestID = @"game_request_id";
 
 @implementation FBSDKGamingPayload : NSObject
 
-- (instancetype)initWithUrl:(FBSDKURL *_Nonnull)url
+- (instancetype)initWithURL:(FBSDKURL *_Nonnull)url
 {
   if (self = [super init]) {
     _URL = url;
