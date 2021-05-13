@@ -34,7 +34,7 @@ class FBSDKEventDeactivationTests: FBSDKTestCase {
     let serverConfiguration = ServerConfigurationFixtures.config(with: ["restrictiveParams": events])
     stubCachedServerConfiguration(with: serverConfiguration)
 
-    FBSDKEventDeactivationManager.enable()
+    FBSDKEventDeactivationManager.shared.enable()
   }
 
   func testProcessParameters() {
@@ -46,7 +46,7 @@ class FBSDKEventDeactivationTests: FBSDKTestCase {
       "deprecated_3": "test",
     ]
 
-    guard let result = FBSDKEventDeactivationManager.processParameters(
+    guard let result = FBSDKEventDeactivationManager.shared.processParameters(
       parameters,
       eventName: "manual_initiated_checkout"
     ) else {

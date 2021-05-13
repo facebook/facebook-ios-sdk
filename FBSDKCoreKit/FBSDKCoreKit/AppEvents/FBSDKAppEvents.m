@@ -1145,7 +1145,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
       }];
       [g_featureChecker checkFeature:FBSDKFeatureEventDeactivation completionBlock:^(BOOL enabled) {
         if (enabled) {
-          [FBSDKEventDeactivationManager enable];
+          [FBSDKEventDeactivationManager.shared enable];
         }
       }];
       if (@available(iOS 14.0, *)) {
@@ -1262,7 +1262,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
     return;
   }
   // Filter out deactivated params
-  parameters = [FBSDKEventDeactivationManager processParameters:parameters eventName:eventName];
+  parameters = [FBSDKEventDeactivationManager.shared processParameters:parameters eventName:eventName];
 
 #if !TARGET_OS_TV
   // Filter out restrictive data with on-device ML

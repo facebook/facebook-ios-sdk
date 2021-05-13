@@ -169,7 +169,7 @@
 
 - (NSString *)JSONStringForEventsIncludingImplicitEvents:(BOOL)includeImplicitEvents
 {
-  [FBSDKEventDeactivationManager processEvents:_mutableEvents];
+  [FBSDKEventDeactivationManager.shared processEvents:_mutableEvents];
   [FBSDKRestrictiveDataFilterManager processEvents:_mutableEvents];
 
   NSMutableArray *events = [[NSMutableArray alloc] initWithCapacity:_mutableEvents.count];
