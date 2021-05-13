@@ -16,16 +16,19 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+#import <Foundation/Foundation.h>
 
-#if !TARGET_OS_TV
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
 
- #import "FBSDKAppLinkReturnToRefererView.h"
+ @warning UNSAFE - DO NOT USE
+ */
+NS_SWIFT_NAME(FBButtonImpressionTracking)
+@protocol FBSDKButtonImpressionTracking <NSObject>
 
-@interface FBSDKAppLinkReturnToRefererView (Internal)
-
-- (CGFloat)statusBarHeight;
+@property (nonatomic, readonly, copy) NSDictionary<NSString *, id> *analyticsParameters;
+@property (nonatomic, readonly, copy) NSString *impressionTrackingEventName;
+@property (nonatomic, readonly, copy) NSString *impressionTrackingIdentifier;
 
 @end
-
-#endif

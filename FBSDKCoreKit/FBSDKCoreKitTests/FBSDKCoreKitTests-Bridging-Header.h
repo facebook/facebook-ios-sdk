@@ -102,10 +102,13 @@
 // AppLinkUtility method
 #import "FBSDKAppLinkUtility+Internal.h"
 // AppEventsConfiguration
+#import "FBSDKAppEventsConfigurationManager.h"
 #import "FBSDKAppEventsConfigurationProtocol.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsConfiguration+AppEventsConfigurationProtocol.h"
 // AppEventsStateManager Abstraction
+#import "FBSDKAppEventsState.h"
+#import "FBSDKAppEventsStateManager.h"
 #import "FBSDKAppEventsStatePersisting.h"
 // NotificationCenter
 #import "FBSDKNotificationProtocols.h"

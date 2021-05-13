@@ -34,6 +34,7 @@
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
 #import "FBSDKSettings+Internal.h"
+#import "FBSDKTimeSpentData.h"
 
 #define FBSDK_APPEVENTSUTILITY_ANONYMOUSIDFILENAME @"com-facebook-sdk-PersistedAnonymousID.json"
 #define FBSDK_APPEVENTSUTILITY_ANONYMOUSID_KEY @"anon_id"

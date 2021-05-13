@@ -29,6 +29,7 @@
  #import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
  #import <FBSDKCoreKit/FBSDKAuthenticationTokenClaims.h>
  #import <FBSDKCoreKit/FBSDKButton.h>
+ #import <FBSDKCoreKit/FBSDKButtonImpressionTracking.h>
  #import <FBSDKCoreKit/FBSDKConstants.h>
  #import <FBSDKCoreKit/FBSDKCopying.h>
  #import <FBSDKCoreKit/FBSDKDeviceButton.h>
@@ -39,6 +40,7 @@
  #import <FBSDKCoreKit/FBSDKGraphRequestConnection+GraphRequestConnecting.h>
  #import <FBSDKCoreKit/FBSDKGraphRequestDataAttachment.h>
  #import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
+ #import <FBSDKCoreKit/FBSDKImpressionTrackingButton.h>
  #import <FBSDKCoreKit/FBSDKLocation.h>
  #import <FBSDKCoreKit/FBSDKLoggingBehavior.h>
  #import <FBSDKCoreKit/FBSDKSettings.h>
@@ -81,6 +83,7 @@
  #import "FBSDKAuthenticationToken.h"
  #import "FBSDKAuthenticationTokenClaims.h"
  #import "FBSDKButton.h"
+ #import "FBSDKButtonImpressionTracking.h"
  #import "FBSDKConstants.h"
  #import "FBSDKCopying.h"
  #import "FBSDKDeviceButton.h"
@@ -92,6 +95,7 @@
  #import "FBSDKGraphRequestDataAttachment.h"
  #import "FBSDKGraphRequestFlags.h"
  #import "FBSDKGraphRequestProtocol.h"
+ #import "FBSDKImpressionTrackingButton.h"
  #import "FBSDKLocation.h"
  #import "FBSDKLoggingBehavior.h"
  #import "FBSDKRandom.h"

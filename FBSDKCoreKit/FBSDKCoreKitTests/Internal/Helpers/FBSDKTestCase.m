@@ -28,6 +28,7 @@
 
 #import "FBSDKAppEvents.h"
 #import "FBSDKAppEvents+Internal.h"
+#import "FBSDKAppEventsConfigurationManager.h"
 #import "FBSDKAppEventsState.h"
 #import "FBSDKApplicationDelegate+Internal.h"
 #import "FBSDKBridgeAPI.h"

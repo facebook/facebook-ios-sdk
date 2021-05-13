@@ -30,6 +30,7 @@
 #import "FBSDKPaymentObserver.h"
 #import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKTestCase.h"
+#import "FBSDKTimeSpentData.h"
 
 @interface FBSDKGraphRequestConnection (AppDelegateTesting)
 + (BOOL)canMakeRequests;

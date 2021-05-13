@@ -16,10 +16,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKLoginCompletion+Internal.h"
-#import "FBSDKLoginError.h"
-#import "FBSDKLoginManager+Internal.h"
-#import "FBSDKLoginManagerLogger.h"
-#import "FBSDKLoginUtility.h"
-#import "FBSDKMonotonicTime.h"
-#import "FBSDKPermission.h"
+#import <UIKit/UIKit.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
+NS_SWIFT_NAME(ImpressionTrackingButton)
+@interface FBSDKImpressionTrackingButton : UIButton
+@end
+
+NS_ASSUME_NONNULL_END

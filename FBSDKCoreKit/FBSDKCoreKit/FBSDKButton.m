@@ -118,26 +118,6 @@ static id _applicationActivationNotifier;
   return size;
 }
 
-- (void)layoutSubviews
-{
-  // automatic impression tracking if the button conforms to FBSDKButtonImpressionTracking
-  if ([self conformsToProtocol:@protocol(FBSDKButtonImpressionTracking)]) {
-    NSString *eventName = ((id<FBSDKButtonImpressionTracking>)self).impressionTrackingEventName;
-    NSString *identifier = ((id<FBSDKButtonImpressionTracking>)self).impressionTrackingIdentifier;
-    NSDictionary<NSString *, id> *parameters = ((id<FBSDKButtonImpressionTracking>)self).analyticsParameters;
-    if (eventName && identifier) {
-      FBSDKViewImpressionTracker *impressionTracker
-        = [FBSDKViewImpressionTracker impressionTrackerWithEventName:eventName
-                                                graphRequestProvider:[FBSDKGraphRequestFactory new]
-                                                         eventLogger:[FBSDKEventLogger new]
-                                                notificationObserver:NSNotificationCenter.defaultCenter
-                                                         tokenWallet:FBSDKAccessToken.class];
-      [impressionTracker logImpressionWithIdentifier:identifier parameters:parameters];
-    }
-  }
-  [super layoutSubviews];
-}
-
 - (CGSize)sizeThatFits:(CGSize)size
 {
   if (self.hidden) {

@@ -19,25 +19,18 @@
 #import <Foundation/Foundation.h>
 
 #if SWIFT_PACKAGE
-#import "FBSDKButton.h"
+ #import "FBSDKButton.h"
+ #import "FBSDKButtonImpressionTracking.h"
 #else
-#import <FBSDKCoreKit/FBSDKButton.h>
+ #import <FBSDKCoreKit/FBSDKButton.h>
+ #import <FBSDKCoreKit/FBSDKButtonImpressionTracking.h>
 #endif
 
 #import "FBSDKIcon.h"
 
-NS_SWIFT_NAME(FBButtonImpressionTracking)
-@protocol FBSDKButtonImpressionTracking <NSObject>
-
-@property (nonatomic, readonly, copy) NSDictionary<NSString *, id> *analyticsParameters;
-@property (nonatomic, readonly, copy) NSString *impressionTrackingEventName;
-@property (nonatomic, readonly, copy) NSString *impressionTrackingIdentifier;
-
-@end
-
 @interface FBSDKButton ()
 
-@property (nonatomic, readonly, getter=isImplicitlyDisabled) BOOL implicitlyDisabled;
+@property (nonatomic, readonly, getter = isImplicitlyDisabled) BOOL implicitlyDisabled;
 
 + (void)setApplicationActivationNotifier:(id)notifier;
 
@@ -49,14 +42,14 @@ NS_SWIFT_NAME(FBButtonImpressionTracking)
                     title:(NSString *)title
           backgroundColor:(UIColor *)backgroundColor
          highlightedColor:(UIColor *)highlightedColor;
-- (void)configureWithIcon:(FBSDKIcon *)icon
-                    title:(NSString *)title
-          backgroundColor:(UIColor *)backgroundColor
-         highlightedColor:(UIColor *)highlightedColor
-            selectedTitle:(NSString *)selectedTitle
-             selectedIcon:(FBSDKIcon *)selectedIcon
-            selectedColor:(UIColor *)selectedColor
- selectedHighlightedColor:(UIColor *)selectedHighlightedColor;
+- (void) configureWithIcon:(FBSDKIcon *)icon
+                     title:(NSString *)title
+           backgroundColor:(UIColor *)backgroundColor
+          highlightedColor:(UIColor *)highlightedColor
+             selectedTitle:(NSString *)selectedTitle
+              selectedIcon:(FBSDKIcon *)selectedIcon
+             selectedColor:(UIColor *)selectedColor
+  selectedHighlightedColor:(UIColor *)selectedHighlightedColor;
 - (UIColor *)defaultBackgroundColor;
 - (UIColor *)defaultDisabledColor;
 - (UIFont *)defaultFont;

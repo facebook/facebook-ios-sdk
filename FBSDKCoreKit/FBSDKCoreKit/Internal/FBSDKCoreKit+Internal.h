@@ -45,10 +45,6 @@
   #import "FBSDKSmartDeviceDialogView.h"
  #endif
 
- #import "FBSDKAppEventsConfiguration.h"
- #import "FBSDKAppEventsConfigurationManager.h"
- #import "FBSDKAppEventsState.h"
- #import "FBSDKAppEventsStateManager.h"
  #import "FBSDKAppEventsUtility.h"
  #import "FBSDKApplicationDelegate+Internal.h"
  #import "FBSDKApplicationObserving.h"
@@ -62,7 +58,6 @@
  #import "FBSDKDynamicFrameworkLoader.h"
  #import "FBSDKError.h"
  #import "FBSDKErrorRecoveryAttempter.h"
- #import "FBSDKEventLogger.h"
  #import "FBSDKGateKeeperManager.h"
  #import "FBSDKGraphRequest+Internal.h"
  #import "FBSDKGraphRequestBody.h"
@@ -90,7 +85,6 @@
  #import "FBSDKServerConfigurationManager+Internal.h"
  #import "FBSDKSettings+Internal.h"
  #import "FBSDKSwizzler.h"
- #import "FBSDKTimeSpentData.h"
  #import "FBSDKTokenCache.h"
  #import "FBSDKTokenStringProviding.h"
  #import "FBSDKUnarchiverProvider.h"
@@ -115,12 +109,7 @@
   #import "Device/FBSDKSmartDeviceDialogView.h"
  #endif
 
- #import "../AppEvents/Internal/FBSDKAppEventsConfiguration.h"
- #import "../AppEvents/Internal/FBSDKAppEventsConfigurationManager.h"
- #import "../AppEvents/Internal/FBSDKAppEventsState.h"
- #import "../AppEvents/Internal/FBSDKAppEventsStateManager.h"
  #import "../AppEvents/Internal/FBSDKAppEventsUtility.h"
- #import "../AppEvents/Internal/FBSDKTimeSpentData.h"
  #import "../AppEvents/Internal/Integrity/FBSDKRestrictiveDataFilterManager.h"
  #import "Base64/FBSDKBase64.h"
  #import "ErrorRecovery/FBSDKErrorRecoveryAttempter.h"
@@ -132,7 +121,6 @@
  #import "FBSDKDeviceRequestsHelper.h"
  #import "FBSDKDynamicFrameworkLoader.h"
  #import "FBSDKError.h"
- #import "FBSDKEventLogger.h"
  #import "FBSDKImageDownloader.h"
  #import "FBSDKInternalUtility.h"
  #import "FBSDKLogger.h"

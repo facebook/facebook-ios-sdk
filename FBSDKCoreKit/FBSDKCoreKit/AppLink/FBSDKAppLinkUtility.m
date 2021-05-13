@@ -22,6 +22,7 @@
 
  #import "FBSDKAppLinkUtility.h"
 
+ #import "FBSDKAppEventsConfigurationManager.h"
  #import "FBSDKAppEventsUtility.h"
  #import "FBSDKCoreKit+Internal.h"
  #import "FBSDKCoreKitBasicsImport.h"
