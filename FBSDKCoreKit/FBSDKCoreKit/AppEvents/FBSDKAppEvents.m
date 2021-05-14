@@ -30,6 +30,7 @@
 #import "FBSDKAppEventsConfiguration.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsDeviceInfo.h"
+#import "FBSDKAppEventsParameterProcessing.h"
 #import "FBSDKAppEventsState.h"
 #import "FBSDKAppEventsStatePersisting.h"
 #import "FBSDKAppEventsUtility.h"
@@ -40,7 +41,6 @@
 #import "FBSDKDataPersisting.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError.h"
-#import "FBSDKEventDeactivationManager.h"
 #import "FBSDKFeatureChecking.h"
 #import "FBSDKGateKeeperManaging.h"
 #import "FBSDKGraphRequestProtocol.h"
@@ -280,6 +280,7 @@ static id<FBSDKSettings> g_settings;
 static id<FBSDKPaymentObserving> g_paymentObserver;
 static id<FBSDKTimeSpentRecording> g_timeSpentRecorder;
 static id<FBSDKAppEventsStatePersisting> g_appEventsStateStore;
+static id<FBSDKAppEventsParameterProcessing> g_eventDeactivationParameterProcessor;
 
 #if !TARGET_OS_TV
 static id<FBSDKEventProcessing> g_eventProcessor = nil;
@@ -840,6 +841,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
                        paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
                      timeSpentRecorder:(id<FBSDKTimeSpentRecording>)timeSpentRecorder
                    appEventsStateStore:(id<FBSDKAppEventsStatePersisting>)appEventsStateStore
+   eventDeactivationParameterProcessor:(id<FBSDKAppEventsParameterProcessing>)eventDeactivationParameterProcessor
 {
   [FBSDKAppEvents setAppEventsConfigurationProvider:appEventsConfigurationProvider];
   [FBSDKAppEvents setServerConfigurationProvider:serverConfigurationProvider];
@@ -853,6 +855,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   g_paymentObserver = paymentObserver;
   g_timeSpentRecorder = timeSpentRecorder;
   g_appEventsStateStore = appEventsStateStore;
+  g_eventDeactivationParameterProcessor = eventDeactivationParameterProcessor;
 }
 
 + (void)setFeatureChecker:(id<FBSDKFeatureChecking>)checker
@@ -1145,7 +1148,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
       }];
       [g_featureChecker checkFeature:FBSDKFeatureEventDeactivation completionBlock:^(BOOL enabled) {
         if (enabled) {
-          [FBSDKEventDeactivationManager.shared enable];
+          [g_eventDeactivationParameterProcessor enable];
         }
       }];
       if (@available(iOS 14.0, *)) {
@@ -1262,7 +1265,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
     return;
   }
   // Filter out deactivated params
-  parameters = [FBSDKEventDeactivationManager.shared processParameters:parameters eventName:eventName];
+  parameters = [g_eventDeactivationParameterProcessor processParameters:parameters eventName:eventName];
 
 #if !TARGET_OS_TV
   // Filter out restrictive data with on-device ML
@@ -1681,6 +1684,11 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 + (id<FBSDKMetadataIndexing>)metadataIndexer
 {
   return g_metadataIndexer;
+}
+
++ (id<FBSDKAppEventsParameterProcessing>)eventDeactivationParameterProcessor
+{
+  return g_eventDeactivationParameterProcessor;
 }
 
  #endif

@@ -119,6 +119,7 @@ static NSString *const _mockUserID = @"mockUserID";
   TestTimeSpentRecorder *_timeSpentRecorder;
   TestAppEventsStateStore *_appEventsStateStore;
   TestMetadataIndexer *_metadataIndexer;
+  TestEventDeactivationParameterProcessor *_eventDeactivationParameterProcessor;
 }
 @end
 
@@ -158,6 +159,7 @@ static NSString *const _mockUserID = @"mockUserID";
   _featureManager = [TestFeatureManager new];
   _paymentObserver = [TestPaymentObserver new];
   _appEventsStateStore = [TestAppEventsStateStore new];
+  _eventDeactivationParameterProcessor = [TestEventDeactivationParameterProcessor new];
 
   [FBSDKAppEvents setLoggingOverrideAppID:_mockAppID];
 
@@ -176,7 +178,8 @@ static NSString *const _mockUserID = @"mockUserID";
                                         settings:_settings
                                  paymentObserver:_paymentObserver
                                timeSpentRecorder:_timeSpentRecorder
-                             appEventsStateStore:_appEventsStateStore];
+                             appEventsStateStore:_appEventsStateStore
+             eventDeactivationParameterProcessor:_eventDeactivationParameterProcessor];
   [FBSDKAppEvents configureNonTVComponentsWithEventProcessor:_eventProcessor
                                              metadataIndexer:_metadataIndexer];
 }
@@ -519,6 +522,26 @@ static NSString *const _mockUserID = @"mockUserID";
   XCTAssertFalse(
     _timeSpentRecorder.restoreWasCalled,
     "Activating App without initialized SDK cannot restore recording time spent data."
+  );
+}
+
+- (void)testInstanceLogEventFilteringOutDeactivatedParameters
+{
+  NSDictionary<NSString *, id> *parameters = @{@"key" : @"value"};
+  [FBSDKAppEvents.singleton instanceLogEvent:_mockEventName
+                                  valueToSum:@(_mockPurchaseAmount)
+                                  parameters:parameters
+                          isImplicitlyLogged:NO
+                                 accessToken:nil];
+  XCTAssertEqualObjects(
+    _eventDeactivationParameterProcessor.capturedEventName,
+    _mockEventName,
+    "AppEvents instance should submit the event name to event deactivation parameters processor."
+  );
+  XCTAssertEqualObjects(
+    _eventDeactivationParameterProcessor.capturedParameters,
+    parameters,
+    "AppEvents instance should submit the parameters to event deactivation parameters processor."
   );
 }
 
@@ -908,16 +931,35 @@ static NSString *const _mockUserID = @"mockUserID";
   // )
 
   XCTAssertTrue(
-    [_featureManager capturedFeaturesContains:FBSDKFeatureEventDeactivation],
-    "fetchConfiguration should check if the EventDeactivation feature is enabled"
-  );
-  XCTAssertTrue(
     [_featureManager capturedFeaturesContains:FBSDKFeatureATELogging],
     "fetchConfiguration should check if the ATELogging feature is enabled"
   );
   XCTAssertTrue(
     [_featureManager capturedFeaturesContains:FBSDKFeatureCodelessEvents],
     "fetchConfiguration should check if CodelessEvents feature is enabled"
+  );
+}
+
+- (void)testFetchingConfigurationIncludingEventDeactivation
+{
+  [FBSDKAppEvents.singleton fetchServerConfiguration:nil];
+  TestAppEventsConfigurationProvider.capturedBlock();
+  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  XCTAssertTrue(
+    [_featureManager capturedFeaturesContains:FBSDKFeatureEventDeactivation],
+    "Fetching a configuration should check if the EventDeactivation feature is enabled"
+  );
+}
+
+- (void)testFetchingConfigurationEnablingEventDeactivationParameterProcessorIfEventDeactivationEnabled
+{
+  [FBSDKAppEvents.singleton fetchServerConfiguration:nil];
+  TestAppEventsConfigurationProvider.capturedBlock();
+  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  [_featureManager completeCheckForFeature:FBSDKFeatureEventDeactivation with:YES];
+  XCTAssertTrue(
+    _eventDeactivationParameterProcessor.enableWasCalled,
+    "Fetching a configuration should enable event deactivation parameters processor if event deactivation feature is enabled"
   );
 }
 

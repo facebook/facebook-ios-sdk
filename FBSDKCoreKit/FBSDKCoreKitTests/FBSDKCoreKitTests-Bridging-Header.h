@@ -138,6 +138,8 @@
 #import "FBSDKLoggingCreating.h"
 // MetadataIndexer abstraction
 #import "FBSDKMetadataIndexing.h"
+// Parameter processors
+#import "FBSDKAppEventsParameterProcessing.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

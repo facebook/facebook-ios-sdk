@@ -26,6 +26,7 @@
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitTestUtility.h"
 #import "FBSDKCoreKitTests-Swift.h"
+#import "FBSDKEventDeactivationManager+AppEventsParameterProcessing.h"
 #import "FBSDKFeatureManager+FeatureChecking.h"
 #import "FBSDKPaymentObserver.h"
 #import "FBSDKServerConfigurationFixtures.h"
@@ -104,6 +105,7 @@
 + (id<FBSDKTimeSpentRecording>)timeSpentRecorder;
 + (id<FBSDKAppEventsStatePersisting>)appEventsStateStore;
 + (id<FBSDKMetadataIndexing>)metadataIndexer;
++ (id<FBSDKAppEventsParameterProcessing>)eventDeactivationParameterProcessor;
 @end
 
 @implementation FBSDKApplicationDelegateTests
@@ -313,6 +315,11 @@
     FBSDKAppEvents.appEventsStateStore,
     FBSDKAppEventsStateManager.shared,
     "Initializing the SDK should set concrete state store for event logging"
+  );
+  XCTAssertEqualObjects(
+    FBSDKAppEvents.eventDeactivationParameterProcessor,
+    FBSDKEventDeactivationManager.shared,
+    "Initializing the SDK should set concrete event deactivation parameter processor for event logging"
   );
 }
 
