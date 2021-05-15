@@ -20,8 +20,9 @@
 
 #import "FBSDKAccessToken.h"
 #import "FBSDKAccessToken+AccessTokenProtocols.h"
+#import "FBSDKAppEvents.h"
+#import "FBSDKAppEvents+EventLogging.h"
 #import "FBSDKButtonImpressionTracking.h"
-#import "FBSDKEventLogger.h"
 #import "FBSDKGraphRequestFactory.h"
 #import "FBSDKViewImpressionTracker.h"
 #import "NSNotificationCenter+Extensions.h"
@@ -39,7 +40,7 @@
       FBSDKViewImpressionTracker *impressionTracker
         = [FBSDKViewImpressionTracker impressionTrackerWithEventName:eventName
                                                 graphRequestProvider:[FBSDKGraphRequestFactory new]
-                                                         eventLogger:[FBSDKEventLogger new]
+                                                         eventLogger:FBSDKAppEvents.singleton
                                                 notificationObserver:NSNotificationCenter.defaultCenter
                                                          tokenWallet:FBSDKAccessToken.class];
       [impressionTracker logImpressionWithIdentifier:identifier parameters:parameters];

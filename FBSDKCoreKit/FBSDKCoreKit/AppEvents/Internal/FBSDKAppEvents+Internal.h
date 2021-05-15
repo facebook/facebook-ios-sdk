@@ -131,8 +131,6 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
 
 @interface FBSDKAppEvents (Internal)
 
-@property (class, nonatomic, readonly, strong) FBSDKAppEvents *singleton;
-
 + (void)setApplicationState:(UIApplicationState)state;
 
 + (void)configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager

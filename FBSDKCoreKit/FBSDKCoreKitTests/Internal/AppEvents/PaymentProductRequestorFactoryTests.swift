@@ -58,8 +58,9 @@ class PaymentProductRequestorFactoryTests: XCTestCase {
       Settings.shared,
       "Should use the expected concrete settings by default"
     )
-    XCTAssertTrue(
-      factory.eventLogger is EventLogger,
+    XCTAssertEqual(
+      ObjectIdentifier(factory.eventLogger),
+      ObjectIdentifier(AppEvents.singleton),
       "Should use the expected concrete event logger by default"
     )
     XCTAssertTrue(

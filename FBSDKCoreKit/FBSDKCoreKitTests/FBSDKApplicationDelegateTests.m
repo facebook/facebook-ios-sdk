@@ -537,8 +537,8 @@
     "Should be configured with the expected concrete info dictionary provider"
   );
   XCTAssertEqualObjects(
-    eventLogger.class,
-    FBSDKEventLogger.class,
+    eventLogger,
+    FBSDKAppEvents.singleton,
     "Should be configured with the expected concrete event logger"
   );
 }

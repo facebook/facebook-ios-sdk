@@ -110,8 +110,9 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
       indexer.settings is Settings,
       "Should have a settings of the expected default type"
     )
-    XCTAssertTrue(
-      indexer.eventLogger is EventLogger,
+    XCTAssertEqual(
+      ObjectIdentifier(indexer.eventLogger),
+      ObjectIdentifier(AppEvents.singleton),
       "Should have an event logger of the expected default type"
     )
     XCTAssertTrue(

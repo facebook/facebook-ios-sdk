@@ -90,7 +90,7 @@
 #import "FBSDKGraphRequestPiggybackManagerProviding.h"
 #import "FBSDKGraphRequestPiggybackManagerProvider.h"
 // AppEvents Abstractions
-#import "FBSDKEventLogger.h"
+#import "FBSDKAppEvents+EventLogging.h"
 // GraphRequest Abstraction
 #import "FBSDKGraphRequestProviding.h"
 #import "FBSDKGraphRequestFactory.h"

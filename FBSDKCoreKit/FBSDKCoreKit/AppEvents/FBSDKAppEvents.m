@@ -399,20 +399,39 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 
 + (void)logEvent:(FBSDKAppEventName)eventName
 {
-  [FBSDKAppEvents logEvent:eventName
-                parameters:@{}];
+  [self.singleton logEvent:eventName];
+}
+
+- (void)logEvent:(FBSDKAppEventName)eventName
+{
+  [self logEvent:eventName
+      parameters:@{}];
 }
 
 + (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(double)valueToSum
 {
-  [FBSDKAppEvents logEvent:eventName
-                valueToSum:valueToSum
-                parameters:@{}];
+  [self.singleton logEvent:eventName
+                valueToSum:valueToSum];
+}
+
+- (void)logEvent:(FBSDKAppEventName)eventName
+      valueToSum:(double)valueToSum
+{
+  [self logEvent:eventName
+      valueToSum:valueToSum
+      parameters:@{}];
 }
 
 + (void)logEvent:(FBSDKAppEventName)eventName
       parameters:(NSDictionary *)parameters
+{
+  [self.singleton logEvent:eventName
+                parameters:parameters];
+}
+
+- (void)logEvent:(NSString *)eventName
+      parameters:(NSDictionary<NSString *, id> *)parameters
 {
   [FBSDKAppEvents logEvent:eventName
                 valueToSum:nil
@@ -421,6 +440,15 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 }
 
 + (void)logEvent:(FBSDKAppEventName)eventName
+      valueToSum:(double)valueToSum
+      parameters:(NSDictionary *)parameters
+{
+  [self.singleton logEvent:eventName
+                valueToSum:valueToSum
+                parameters:parameters];
+}
+
+- (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(double)valueToSum
       parameters:(NSDictionary *)parameters
 {
@@ -435,11 +463,22 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
       parameters:(NSDictionary *)parameters
      accessToken:(FBSDKAccessToken *)accessToken
 {
-  [[FBSDKAppEvents singleton] instanceLogEvent:eventName
-                                    valueToSum:valueToSum
-                                    parameters:parameters
-                            isImplicitlyLogged:[parameters[FBSDKAppEventParameterImplicitlyLogged] boolValue]
-                                   accessToken:accessToken];
+  [self.singleton logEvent:eventName
+                valueToSum:valueToSum
+                parameters:parameters
+               accessToken:accessToken];
+}
+
+- (void)logEvent:(FBSDKAppEventName)eventName
+      valueToSum:(NSNumber *)valueToSum
+      parameters:(NSDictionary *)parameters
+     accessToken:(FBSDKAccessToken *)accessToken
+{
+  [self instanceLogEvent:eventName
+              valueToSum:valueToSum
+              parameters:parameters
+      isImplicitlyLogged:[parameters[FBSDKAppEventParameterImplicitlyLogged] boolValue]
+             accessToken:accessToken];
 }
 
 + (void)logPurchase:(double)purchaseAmount
@@ -910,32 +949,57 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 #endif
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
-      isImplicitlyLogged:(BOOL)isImplicitlyLogged;
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
-  [FBSDKAppEvents logInternalEvent:eventName
-                        parameters:@{}
+  [self.singleton logInternalEvent:eventName
                 isImplicitlyLogged:isImplicitlyLogged];
+}
+
+- (void)logInternalEvent:(FBSDKAppEventName)eventName
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged
+{
+  [self logInternalEvent:eventName
+              parameters:@{}
+      isImplicitlyLogged:isImplicitlyLogged];
 }
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
               valueToSum:(double)valueToSum
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
-  [FBSDKAppEvents logInternalEvent:eventName
+  [self.singleton logInternalEvent:eventName
                         valueToSum:valueToSum
-                        parameters:@{}
                 isImplicitlyLogged:isImplicitlyLogged];
+}
+
+- (void)logInternalEvent:(FBSDKAppEventName)eventName
+              valueToSum:(double)valueToSum
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged
+{
+  [self logInternalEvent:eventName
+              valueToSum:valueToSum
+              parameters:@{}
+      isImplicitlyLogged:isImplicitlyLogged];
 }
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
               parameters:(NSDictionary *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
-  [FBSDKAppEvents logInternalEvent:eventName
-                        valueToSum:nil
+  [self.singleton logInternalEvent:eventName
                         parameters:parameters
-                isImplicitlyLogged:isImplicitlyLogged
-                       accessToken:nil];
+                isImplicitlyLogged:isImplicitlyLogged];
+}
+
+- (void)logInternalEvent:(FBSDKAppEventName)eventName
+              parameters:(NSDictionary *)parameters
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged
+{
+  [self logInternalEvent:eventName
+              valueToSum:nil
+              parameters:parameters
+      isImplicitlyLogged:isImplicitlyLogged
+             accessToken:nil];
 }
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
@@ -943,11 +1007,22 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken
 {
-  [FBSDKAppEvents logInternalEvent:eventName
-                        valueToSum:nil
+  [self.singleton logInternalEvent:eventName
                         parameters:parameters
                 isImplicitlyLogged:isImplicitlyLogged
                        accessToken:accessToken];
+}
+
+- (void)logInternalEvent:(FBSDKAppEventName)eventName
+              parameters:(NSDictionary *)parameters
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged
+             accessToken:(FBSDKAccessToken *)accessToken
+{
+  [self logInternalEvent:eventName
+              valueToSum:nil
+              parameters:parameters
+      isImplicitlyLogged:isImplicitlyLogged
+             accessToken:accessToken];
 }
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
@@ -955,11 +1030,22 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
               parameters:(NSDictionary *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
-  [FBSDKAppEvents logInternalEvent:eventName
-                        valueToSum:@(valueToSum)
+  [self.singleton logInternalEvent:eventName
+                        valueToSum:valueToSum
                         parameters:parameters
-                isImplicitlyLogged:isImplicitlyLogged
-                       accessToken:nil];
+                isImplicitlyLogged:isImplicitlyLogged];
+}
+
+- (void)logInternalEvent:(FBSDKAppEventName)eventName
+              valueToSum:(double)valueToSum
+              parameters:(NSDictionary *)parameters
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged
+{
+  [self logInternalEvent:eventName
+              valueToSum:@(valueToSum)
+              parameters:parameters
+      isImplicitlyLogged:isImplicitlyLogged
+             accessToken:nil];
 }
 
 + (void)logInternalEvent:(NSString *)eventName
@@ -968,12 +1054,25 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken
 {
+  [self.singleton logInternalEvent:eventName
+                        valueToSum:valueToSum
+                        parameters:parameters
+                isImplicitlyLogged:isImplicitlyLogged
+                       accessToken:accessToken];
+}
+
+- (void)logInternalEvent:(NSString *)eventName
+              valueToSum:(NSNumber *)valueToSum
+              parameters:(NSDictionary *)parameters
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged
+             accessToken:(FBSDKAccessToken *)accessToken
+{
   if ([g_settings isAutoLogAppEventsEnabled]) {
-    [[FBSDKAppEvents singleton] instanceLogEvent:eventName
-                                      valueToSum:valueToSum
-                                      parameters:parameters
-                              isImplicitlyLogged:isImplicitlyLogged
-                                     accessToken:accessToken];
+    [self instanceLogEvent:eventName
+                valueToSum:valueToSum
+                parameters:parameters
+        isImplicitlyLogged:isImplicitlyLogged
+               accessToken:accessToken];
   }
 }
 
@@ -982,11 +1081,23 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
               parameters:(NSDictionary *)parameters
              accessToken:(FBSDKAccessToken *)accessToken
 {
-  [[FBSDKAppEvents singleton] instanceLogEvent:eventName
-                                    valueToSum:valueToSum
-                                    parameters:parameters
-                            isImplicitlyLogged:YES
-                                   accessToken:accessToken];
+  [self.singleton instanceLogEvent:eventName
+                        valueToSum:valueToSum
+                        parameters:parameters
+                isImplicitlyLogged:YES
+                       accessToken:accessToken];
+}
+
+- (void)logImplicitEvent:(NSString *)eventName
+              valueToSum:(NSNumber *)valueToSum
+              parameters:(NSDictionary *)parameters
+             accessToken:(FBSDKAccessToken *)accessToken
+{
+  [self instanceLogEvent:eventName
+              valueToSum:valueToSum
+              parameters:parameters
+      isImplicitlyLogged:YES
+             accessToken:accessToken];
 }
 
 + (FBSDKAppEvents *)singleton

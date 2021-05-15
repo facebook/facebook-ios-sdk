@@ -18,8 +18,8 @@
 
 #import "FBSDKPaymentProductRequestorFactory.h"
 
+#import "FBSDKAppEvents+EventLogging.h"
 #import "FBSDKAppStoreReceiptProviding.h"
-#import "FBSDKEventLogger.h"
 #import "FBSDKGateKeeperManaging.h"
 #import "FBSDKLoggerFactory.h"
 #import "FBSDKPaymentProductRequestor.h"
@@ -46,7 +46,7 @@
 - (instancetype)init
 {
   return [self initWithSettings:FBSDKSettings.sharedSettings
-                      eventLogger:[FBSDKEventLogger new]
+                      eventLogger:FBSDKAppEvents.singleton
                 gateKeeperManager:FBSDKGateKeeperManager.class
                             store:NSUserDefaults.standardUserDefaults
                     loggerFactory:[FBSDKLoggerFactory new]

@@ -253,6 +253,14 @@ NS_SWIFT_NAME(AppEvents)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
+@property (class, nonatomic, readonly, strong) FBSDKAppEvents *singleton;
+
 /*
  * Control over event batching/flushing
  */

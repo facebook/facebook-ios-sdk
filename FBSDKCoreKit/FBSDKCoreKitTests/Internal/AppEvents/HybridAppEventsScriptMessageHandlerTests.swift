@@ -49,8 +49,9 @@ class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
   func testCreatingWithDefaults() {
     handler = HybridAppEventsScriptMessageHandler()
 
-    XCTAssertTrue(
-      handler.eventLogger is EventLogger,
+    XCTAssertEqual(
+      ObjectIdentifier(handler.eventLogger),
+      ObjectIdentifier(AppEvents.singleton),
       "Should use the correct concrete event logger by default"
     )
   }

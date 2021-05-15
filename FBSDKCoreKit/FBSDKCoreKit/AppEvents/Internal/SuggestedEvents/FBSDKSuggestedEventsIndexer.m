@@ -28,8 +28,9 @@
  #import <sys/sysctl.h>
  #import <sys/utsname.h>
 
+ #import "FBSDKAppEvents.h"
+ #import "FBSDKAppEvents+EventLogging.h"
  #import "FBSDKCoreKit+Internal.h"
- #import "FBSDKEventLogger.h"
  #import "FBSDKEventProcessing.h"
  #import "FBSDKFeatureExtracting.h"
  #import "FBSDKFeatureExtractor.h"
@@ -67,7 +68,7 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
                 serverConfigurationProvider:FBSDKServerConfigurationManager.class
                                    swizzler:FBSDKSwizzler.class
                                    settings:FBSDKSettings.sharedSettings
-                                eventLogger:[FBSDKEventLogger new]
+                                eventLogger:FBSDKAppEvents.singleton
                            featureExtractor:FBSDKFeatureExtractor.class
                              eventProcessor:FBSDKModelManager.shared];
 }
