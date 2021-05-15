@@ -165,6 +165,8 @@ NS_SWIFT_NAME(asIdentifierManager(shouldUseCachedManager:dynamicFrameworkResolve
 @property (nullable, nonatomic) id<FBSDKSettings> settings;
 @property (nullable, nonatomic) id<FBSDKGraphRequestProviding> requestFactory;
 @property (nullable, nonatomic) id<FBSDKGraphRequestConnectionProviding> connectionFactory;
+@property (nonatomic) BOOL hasRequeryFinishedForAppStart;
+@property (nullable, nonatomic) NSDate *timestamp;
 
 + (void)_processResponse:(id)response error:(nullable NSError *)error;
 + (void)reset;

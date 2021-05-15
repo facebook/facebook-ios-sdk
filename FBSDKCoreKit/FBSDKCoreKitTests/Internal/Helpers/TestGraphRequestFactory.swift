@@ -76,4 +76,13 @@ class TestGraphRequestFactory: NSObject, GraphRequestProviding {
     capturedGraphPath = graphPath
     return stubbedRequest
   }
+
+  func createGraphRequest(
+    withGraphPath graphPath: String,
+    parameters: [String: Any]
+  ) -> GraphRequestProtocol {
+    capturedGraphPath = graphPath
+    capturedParameters = parameters
+    return stubbedRequest
+  }
 }
