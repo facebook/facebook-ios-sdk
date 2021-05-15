@@ -333,6 +333,10 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   NSSet *permissions = [configuration.requestedPermissions setByAddingObject:[[FBSDKPermission alloc]initWithString:@"openid"]];
   [FBSDKTypeUtility dictionary:loginParams setObject:[permissions.allObjects componentsJoinedByString:@","] forKey:@"scope"];
 
+  if (configuration.messengerPageId) {
+    [FBSDKTypeUtility dictionary:loginParams setObject:configuration.messengerPageId forKey:@"messenger_page_id"];
+  }
+
   NSError *error;
   NSURL *redirectURL = [FBSDKInternalUtility appURLWithHost:@"authorize" path:@"" queryParameters:@{} error:&error];
   if (!error) {

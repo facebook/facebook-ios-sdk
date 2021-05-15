@@ -50,7 +50,28 @@
 
 - (nullable instancetype)initWithPermissions:(NSArray<NSString *> *)permissions
                                     tracking:(FBSDKLoginTracking)tracking
+                             messengerPageId:(nullable NSString *)messengerPageId
+{
+  return [[FBSDKLoginConfiguration alloc] initWithPermissions:permissions
+                                                     tracking:tracking
+                                                        nonce:NSUUID.UUID.UUIDString
+                                              messengerPageId:messengerPageId];
+}
+
+- (nullable instancetype)initWithPermissions:(NSArray<NSString *> *)permissions
+                                    tracking:(FBSDKLoginTracking)tracking
                                        nonce:(NSString *)nonce
+{
+  return [[FBSDKLoginConfiguration alloc] initWithPermissions:permissions
+                                                     tracking:tracking
+                                                        nonce:nonce
+                                              messengerPageId:nil];
+}
+
+- (nullable instancetype)initWithPermissions:(NSArray<NSString *> *)permissions
+                                    tracking:(FBSDKLoginTracking)tracking
+                                       nonce:(NSString *)nonce
+                             messengerPageId:(nullable NSString *)messengerPageId
 {
   if (![FBSDKNonceUtility isValidNonce:nonce]) {
     NSString *msg = [NSString stringWithFormat:@"Invalid nonce:%@ provided to login configuration. Returning nil.", nonce];
@@ -70,6 +91,7 @@
     _requestedPermissions = permissionsSet;
     _tracking = tracking;
     _nonce = nonce;
+    _messengerPageId = [FBSDKTypeUtility coercedToStringValue:messengerPageId];
   }
 
   return self;
@@ -81,6 +103,7 @@
     _requestedPermissions = [NSSet set];
     _tracking = FBSDKLoginTrackingEnabled;
     _nonce = NSUUID.UUID.UUIDString;
+    _messengerPageId = nil;
   }
 
   return self;

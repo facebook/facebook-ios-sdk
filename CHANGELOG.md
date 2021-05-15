@@ -7,6 +7,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+### Added
+- Added ability to add `messenger_page_id` param to `FBSDKLoginButton` and `FBSDKLoginConfiguration`
+
 ### Removed
 
 - `AppLinkReturnToRefererControllerDelegate`

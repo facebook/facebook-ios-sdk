@@ -320,10 +320,12 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   if (self.nonce) {
     return [[FBSDKLoginConfiguration alloc] initWithPermissions:self.permissions
                                                        tracking:self.loginTracking
-                                                          nonce:self.nonce];
+                                                          nonce:self.nonce
+                                                messengerPageId:self.messengerPageId];
   } else {
     return [[FBSDKLoginConfiguration alloc] initWithPermissions:self.permissions
-                                                       tracking:self.loginTracking];
+                                                       tracking:self.loginTracking
+                                                messengerPageId:self.messengerPageId];
   }
 }
 
