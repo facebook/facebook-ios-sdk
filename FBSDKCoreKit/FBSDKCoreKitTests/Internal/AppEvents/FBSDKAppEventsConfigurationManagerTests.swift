@@ -149,7 +149,6 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
       [],
       "Should not specify flags when creating the request"
     )
-
   }
 
   func testLoadingConfigurationWithoutAppID() {
