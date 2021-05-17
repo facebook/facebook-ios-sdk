@@ -18,6 +18,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import "FBSDKApplicationObserving.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -96,6 +98,20 @@ controlled via 'FacebookAutoLogAppEventsEnabled' key in the project info plist f
  */
 - (BOOL)application:(UIApplication *)application
 didFinishLaunchingWithOptions:(nullable NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
+
+/**
+  Adds an observer that will be informed about application lifecycle events.
+
+  @note Observers are weakly held
+ */
+- (void)addObserver:(id<FBSDKApplicationObserving>)observer;
+
+/**
+  Removes an observer so that it will no longer be informed about application lifecycle events.
+
+  @note Observers are weakly held
+ */
+- (void)removeObserver:(id<FBSDKApplicationObserving>)observer;
 
 @end
 

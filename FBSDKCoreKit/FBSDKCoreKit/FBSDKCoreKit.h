@@ -26,6 +26,7 @@
  #import <FBSDKCoreKit/FBSDKAppEvents.h>
  #import <FBSDKCoreKit/FBSDKAppEventsFlushBehavior.h>
  #import <FBSDKCoreKit/FBSDKApplicationDelegate.h>
+ #import <FBSDKCoreKit/FBSDKApplicationObserving.h>
  #import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
  #import <FBSDKCoreKit/FBSDKAuthenticationTokenClaims.h>
  #import <FBSDKCoreKit/FBSDKButton.h>
@@ -81,6 +82,7 @@
  #import "FBSDKAppEvents.h"
  #import "FBSDKAppEventsFlushBehavior.h"
  #import "FBSDKApplicationDelegate.h"
+ #import "FBSDKApplicationObserving.h"
  #import "FBSDKAuthenticationToken.h"
  #import "FBSDKAuthenticationTokenClaims.h"
  #import "FBSDKButton.h"

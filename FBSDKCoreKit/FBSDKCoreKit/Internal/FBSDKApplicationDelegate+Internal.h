@@ -30,8 +30,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKApplicationDelegate ()
 
-- (void)addObserver:(id<FBSDKApplicationObserving>)observer;
-- (void)removeObserver:(id<FBSDKApplicationObserving>)observer;
 + (BOOL)isSDKInitialized;
 + (UIApplicationState)applicationState;
 

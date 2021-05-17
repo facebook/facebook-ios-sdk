@@ -22,6 +22,9 @@
 @import TestTools;
 
 #import "FBSDKAppEvents.h"
+#import "FBSDKApplicationDelegate+Internal.h"
+#import "FBSDKApplicationObserving.h"
+#import "FBSDKAuthenticationToken+Internal.h"
 #import "FBSDKConversionValueUpdating.h"
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitTestUtility.h"
