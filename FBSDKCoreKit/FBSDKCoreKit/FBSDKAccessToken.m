@@ -20,6 +20,7 @@
 #import "FBSDKAccessToken+Internal.h"
 #import "FBSDKAccessToken+TokenStringProviding.h"
 
+#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKGraphRequestPiggybackManager.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKMath.h"

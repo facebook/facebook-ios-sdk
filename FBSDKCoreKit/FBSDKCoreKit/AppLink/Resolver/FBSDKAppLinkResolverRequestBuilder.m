@@ -25,7 +25,7 @@
 
  #import <UIKit/UIKit.h>
 
- #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKGraphRequest+Internal.h"
 
 static NSString *const kIOSKey = @"ios";

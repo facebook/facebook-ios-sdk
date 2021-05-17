@@ -31,6 +31,7 @@
   #import <FBSDKCoreKit/FBSDKCoreKit.h>
  #endif
 
+ #import "FBSDKCoreKitBasicsImportForLoginKit.h"
  #import "FBSDKLoginCompletion.h"
  #import "FBSDKLoginConstants.h"
  #import "FBSDKLoginError.h"

@@ -27,6 +27,8 @@
  #else
   #import "FBSDKCoreKit+Internal.h"
  #endif
+
+ #import "FBSDKCoreKitBasicsImportForShareKit.h"
  #import "FBSDKShareConstants.h"
  #import "FBSDKShareDefines.h"
 

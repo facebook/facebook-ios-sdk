@@ -22,7 +22,6 @@
  #import <FBSDKCoreKit/FBSDKSettings.h>
 #endif
 
-#import "FBSDKCoreKit+Internal.h"
 #import "FBSDKAppEventsUtility.h"
 
 #define DATA_PROCESSING_OPTIONS         @"data_processing_options"

@@ -22,7 +22,7 @@
 
  #import "FBSDKAEMEvent.h"
 
- #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKCoreKitBasicsImport.h"
 
 static NSString *const EVENT_NAME_KEY = @"event_name";
 static NSString *const VALUES_KEY = @"values";

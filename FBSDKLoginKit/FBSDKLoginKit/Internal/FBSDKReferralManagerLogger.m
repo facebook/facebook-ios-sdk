@@ -22,14 +22,9 @@
 
  #import "FBSDKReferralManagerLogger.h"
 
+ #import "FBSDKCoreKitBasicsImportForLoginKit.h"
  #import "FBSDKLoginConstants.h"
  #import "FBSDKReferralManagerResult.h"
-
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
 
 static NSString *const FBSDKReferralManagerLoggerParamIdentifierKey = @"0_logger_id";
 static NSString *const FBSDKReferralManagerLoggerParamTimestampKey = @"1_timestamp_ms";

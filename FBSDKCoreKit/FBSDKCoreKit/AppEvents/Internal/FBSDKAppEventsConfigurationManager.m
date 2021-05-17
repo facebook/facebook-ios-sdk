@@ -18,8 +18,9 @@
 
 #import "FBSDKAppEventsConfigurationManager.h"
 
-#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDataPersisting.h"
+#import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKGraphRequestConnectionProviding.h"
 #import "FBSDKGraphRequestProviding.h"
 #import "FBSDKSettingsProtocol.h"

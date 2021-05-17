@@ -22,7 +22,7 @@
 
  #import "FBSDKSKAdNetworkConversionConfiguration.h"
 
- #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKCoreKitBasicsImport.h"
 
 @implementation FBSDKSKAdNetworkConversionConfiguration
 

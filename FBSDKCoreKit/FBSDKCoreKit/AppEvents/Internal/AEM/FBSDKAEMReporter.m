@@ -26,7 +26,11 @@
 
  #import "FBSDKAEMConfiguration.h"
  #import "FBSDKAEMInvocation.h"
- #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKCoreKitBasicsImport.h"
+ #import "FBSDKGraphRequestProtocol.h"
+ #import "FBSDKGraphRequestProviding.h"
+ #import "FBSDKLogger.h"
+ #import "FBSDKSettings.h"
 
  #define FBSDK_AEM_CONFIG_TIME_OUT 86400
 

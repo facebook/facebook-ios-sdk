@@ -23,7 +23,9 @@
 
 #ifdef BUCK
  #import <FBSDKCoreKit/FBSDKCoreKit.h>
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #else
+@import FBSDKCoreKit_Basics;
 @import FBSDKCoreKit;
 #endif
 

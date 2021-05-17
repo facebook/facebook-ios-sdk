@@ -28,6 +28,7 @@
   #import "FBSDKCoreKit+Internal.h"
  #endif
 
+ #import "FBSDKCoreKitBasicsImportForLoginKit.h"
  #import "FBSDKLoginTooltipView.h"
  #import "FBSDKNonceUtility.h"
 

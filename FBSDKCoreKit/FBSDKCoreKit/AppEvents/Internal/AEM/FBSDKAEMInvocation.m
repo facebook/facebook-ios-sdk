@@ -24,7 +24,7 @@
 
  #import <CommonCrypto/CommonHMAC.h>
 
- #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKCoreKitBasicsImport.h"
 
  #define SEC_IN_DAY 86400
 

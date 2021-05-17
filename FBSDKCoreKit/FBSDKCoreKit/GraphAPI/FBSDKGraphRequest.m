@@ -20,7 +20,8 @@
 
 #import <UIKit/UIKit.h>
 
-#import "FBSDKCoreKit.h"
+#import "FBSDKCoreKitBasicsImport.h"
+#import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKGraphRequestConnectionFactory.h"
 #import "FBSDKGraphRequestConnectionProviding.h"
 #import "FBSDKGraphRequestDataAttachment.h"

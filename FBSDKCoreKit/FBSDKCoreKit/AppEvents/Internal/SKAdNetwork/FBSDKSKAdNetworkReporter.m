@@ -26,10 +26,15 @@
 
  #import <objc/message.h>
 
+ #import "FBSDKAppEventsUtility.h"
  #import "FBSDKConversionValueUpdating.h"
- #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKCoreKitBasicsImport.h"
+ #import "FBSDKDataPersisting.h"
+ #import "FBSDKGraphRequestConnection.h"
+ #import "FBSDKGraphRequestProtocol.h"
  #import "FBSDKGraphRequestProviding.h"
  #import "FBSDKSKAdNetworkConversionConfiguration.h"
+ #import "FBSDKSettings.h"
 
  #define FBSDK_SKADNETWORK_CONFIG_TIME_OUT 86400
 

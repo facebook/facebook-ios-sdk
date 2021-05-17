@@ -18,11 +18,8 @@
 
 #import "FBSDKAuthenticationTokenHeader.h"
 
-#ifdef FBSDKCOCOAPODS
- #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
- #import "FBSDKCoreKit+Internal.h"
-#endif
+#import "FBSDKBase64.h"
+#import "FBSDKCoreKitBasicsImport.h"
 
 @implementation FBSDKAuthenticationTokenHeader
 

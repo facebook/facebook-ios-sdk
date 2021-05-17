@@ -18,8 +18,9 @@
 
 #import "FBSDKLogger.h"
 
+#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKInternalUtility.h"
-#import "FBSDKSettings+Internal.h"
+#import "FBSDKSettings.h"
 
 static NSUInteger g_serialNumberCounter = 1111;
 static NSMutableDictionary *g_stringsToReplace = nil;

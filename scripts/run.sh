@@ -73,16 +73,16 @@ main() {
 
     SDK_VERSION_FILES=(
       "Configurations/Version.xcconfig"
-      "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h"
+      "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKitVersions.h"
       "Sources/FBSDKCoreKit_Basics/FBSDKCrashHandler.m"
     )
 
     SDK_GRAPH_API_VERSION_FILES=(
-      "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h"
+      "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKitVersions.h"
       "FBSDKCoreKit/FBSDKCoreKitTests/FBSDKGraphRequestTests.m"
     )
 
-    SDK_MAIN_VERSION_FILE="FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h"
+    SDK_MAIN_VERSION_FILE="FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKitVersions.h"
 
     SDK_FRAMEWORK_NAME="FacebookSDK"
 
@@ -641,7 +641,7 @@ verify_spm_headers() {
 
       mkdir -p include
 
-      headers=$(find . -name "*.h" -type f -not -path "./include/*" -not -path "**/Internal/*" -not -path "**/Basics/*")
+      headers=$(find . -name "*.h" -type f -not -path "./include/*" -not -path "**/Internal/*")
       echo "$(basename ${headers} )" | sort >| headers.txt
 
       cat headers.txt

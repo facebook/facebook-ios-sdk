@@ -18,6 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKSwizzler.h"
 #import "FBSDKSwizzling.h"
 
 NS_ASSUME_NONNULL_BEGIN

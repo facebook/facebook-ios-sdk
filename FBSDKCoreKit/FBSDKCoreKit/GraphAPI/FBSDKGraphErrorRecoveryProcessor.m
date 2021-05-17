@@ -22,8 +22,11 @@
 
  #import "FBSDKGraphErrorRecoveryProcessor.h"
 
- #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKAccessToken.h"
+ #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKErrorRecoveryAttempter.h"
+ #import "FBSDKGraphRequestProtocol.h"
+ #import "FBSDKInternalUtility.h"
 
 @interface FBSDKGraphErrorRecoveryProcessor ()
 {

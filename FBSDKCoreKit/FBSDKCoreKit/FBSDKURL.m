@@ -22,7 +22,7 @@
 
  #import "FBSDKAppLinkTarget.h"
  #import "FBSDKAppLink_Internal.h"
- #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKMeasurementEvent_Internal.h"
  #import "FBSDKSettings.h"
  #import "FBSDKURL_Internal.h"

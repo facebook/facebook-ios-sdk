@@ -27,6 +27,7 @@
  #import "FBSDKCoreKit+Internal.h"
 #endif
 
+#import "FBSDKCoreKitBasicsImportForLoginKit.h"
 #import "FBSDKDeviceLoginCodeInfo+Internal.h"
 #import "FBSDKLoginConstants.h"
 

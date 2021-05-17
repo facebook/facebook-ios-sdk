@@ -22,7 +22,7 @@
 
  #import "FBSDKAEMConfiguration.h"
 
- #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKCoreKitBasicsImport.h"
 
 static NSString *const DEFAULT_CURRENCY_KEY = @"default_currency";
 static NSString *const CUTOFF_TIME_KEY = @"cutoff_time";

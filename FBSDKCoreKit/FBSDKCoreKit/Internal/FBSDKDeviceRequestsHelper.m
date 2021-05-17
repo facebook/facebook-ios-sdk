@@ -23,7 +23,9 @@
 #import <sys/utsname.h>
 
 #import "FBSDKAppEvents+Internal.h"
-#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKCoreKitBasicsImport.h"
+#import "FBSDKLogger.h"
+#import "FBSDKSettings.h"
 
 #define FBSDK_DEVICE_INFO_DEVICE @"device"
 #define FBSDK_DEVICE_INFO_MODEL @"model"

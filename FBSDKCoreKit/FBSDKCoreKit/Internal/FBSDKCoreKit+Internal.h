@@ -24,8 +24,6 @@
  #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #endif
 
-#import "FBSDKCoreKitBasicsImport.h"
-
 #if defined FBSDKCOCOAPODS || defined BUCK
 
  #if !TARGET_OS_TV

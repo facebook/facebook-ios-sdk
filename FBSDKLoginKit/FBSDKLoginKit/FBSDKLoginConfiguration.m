@@ -30,6 +30,7 @@
   #import "FBSDKCoreKit+Internal.h"
  #endif
 
+ #import "FBSDKCoreKitBasicsImportForLoginKit.h"
  #import "FBSDKPermission.h"
 
 @implementation FBSDKLoginConfiguration

@@ -16,22 +16,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+// TODO: This needs to be renamed once BUCK does not include CoreKit Internal Headers
 
-#import "FBSDKCoreKitBasicsImport.h"
-
-NS_ASSUME_NONNULL_BEGIN
-
-NS_PROTOCOL_REQUIRES_EXPLICIT_IMPLEMENTATION
-NS_SWIFT_NAME(URLSessionProxying)
-@protocol FBSDKURLSessionProxying
-
-@property (nullable, nonatomic, retain) NSOperationQueue *delegateQueue;
-
-- (void)executeURLRequest:(NSURLRequest *)request
-        completionHandler:(FBSDKURLSessionTaskBlock)handler;
-- (void)invalidateAndCancel;
-
-@end
-
-NS_ASSUME_NONNULL_END
+#if defined FBSDKCOCOAPODS
+ #import <FBSDKCoreKit/FBSDKCoreKit_Basics.h>
+#elif defined FBSDK_SWIFT_PACKAGE
+@import FBSDKCoreKit_Basics;
+#else
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#endif

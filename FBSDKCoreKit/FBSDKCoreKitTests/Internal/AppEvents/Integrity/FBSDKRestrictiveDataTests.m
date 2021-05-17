@@ -18,6 +18,8 @@
 
 #import <XCTest/XCTest.h>
 
+@import FBSDKCoreKit_Basics;
+
 #import "FBSDKInternalUtility.h"
 #import "FBSDKRestrictiveData.h"
 #import "FBSDKTestCase.h"

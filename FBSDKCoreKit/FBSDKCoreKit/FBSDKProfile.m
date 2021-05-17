@@ -23,6 +23,7 @@
 
  #import "FBSDKProfile+Internal.h"
 
+ #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKLocation.h"
  #import "FBSDKUserAgeRange.h"
 

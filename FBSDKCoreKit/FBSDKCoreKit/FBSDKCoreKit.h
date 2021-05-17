@@ -32,6 +32,7 @@
  #import <FBSDKCoreKit/FBSDKButtonImpressionTracking.h>
  #import <FBSDKCoreKit/FBSDKConstants.h>
  #import <FBSDKCoreKit/FBSDKCopying.h>
+ #import <FBSDKCoreKit/FBSDKCoreKitVersions.h>
  #import <FBSDKCoreKit/FBSDKDeviceButton.h>
  #import <FBSDKCoreKit/FBSDKDeviceViewControllerBase.h>
  #import <FBSDKCoreKit/FBSDKGraphRequest.h>
@@ -86,6 +87,7 @@
  #import "FBSDKButtonImpressionTracking.h"
  #import "FBSDKConstants.h"
  #import "FBSDKCopying.h"
+ #import "FBSDKCoreKitVersions.h"
  #import "FBSDKDeviceButton.h"
  #import "FBSDKDeviceViewControllerBase.h"
  #import "FBSDKGraphRequest.h"
@@ -128,6 +130,3 @@
  #endif
 
 #endif
-
-#define FBSDK_VERSION_STRING @"9.3.0"
-#define FBSDK_TARGET_PLATFORM_VERSION @"v9.0"

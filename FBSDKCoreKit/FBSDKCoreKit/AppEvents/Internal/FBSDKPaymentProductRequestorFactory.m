@@ -20,6 +20,7 @@
 
 #import "FBSDKAppEvents+EventLogging.h"
 #import "FBSDKAppStoreReceiptProviding.h"
+#import "FBSDKGateKeeperManager.h"
 #import "FBSDKGateKeeperManaging.h"
 #import "FBSDKLoggerFactory.h"
 #import "FBSDKPaymentProductRequestor.h"

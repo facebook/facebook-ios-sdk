@@ -18,11 +18,9 @@
 
 #import "FBSDKAuthenticationTokenClaims.h"
 
-#ifdef FBSDKCOCOAPODS
- #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
- #import "FBSDKCoreKit+Internal.h"
-#endif
+#import "FBSDKBase64.h"
+#import "FBSDKCoreKitBasicsImport.h"
+#import "FBSDKSettings.h"
 
 static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
 

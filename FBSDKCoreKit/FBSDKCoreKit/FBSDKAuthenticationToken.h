@@ -21,6 +21,7 @@
 #import "FBSDKCopying.h"
 
 @class FBSDKAuthenticationTokenClaims;
+@protocol FBSDKTokenCaching;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -60,6 +61,14 @@ NS_SWIFT_NAME(AuthenticationToken)
   Returns the claims encoded in the AuthenticationToken
  */
 - (nullable FBSDKAuthenticationTokenClaims *)claims;
+
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
+@property (class, nonatomic, copy) id<FBSDKTokenCaching> tokenCache;
 
 @end
 

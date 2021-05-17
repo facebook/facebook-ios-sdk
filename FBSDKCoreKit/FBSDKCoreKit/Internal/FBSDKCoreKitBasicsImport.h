@@ -19,7 +19,7 @@
 #if defined FBSDKCOCOAPODS
  #import <FBSDKCoreKit/FBSDKCoreKit_Basics.h>
 #elif defined FBSDK_SWIFT_PACKAGE
-@import FBSDKCoreKit_Basics;
+ #import <FBSDKCoreKit_Basics.h>
 #else
  #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #endif

@@ -18,6 +18,7 @@
 
 #import "FBSDKCrashShield.h"
 
+#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKFeatureManager.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequestConnection.h"

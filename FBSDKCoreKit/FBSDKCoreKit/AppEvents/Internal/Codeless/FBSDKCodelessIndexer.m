@@ -29,10 +29,25 @@
  #import <sys/utsname.h>
 
  #import "FBSDKAdvertiserIDProviding.h"
- #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKCoreKitBasicsImport.h"
+ #import "FBSDKDataPersisting.h"
+ #import "FBSDKGraphRequestConnecting.h"
+ #import "FBSDKGraphRequestConnectionProviding.h"
+ #import "FBSDKGraphRequestHTTPMethod.h"
+ #import "FBSDKGraphRequestProtocol.h"
  #import "FBSDKGraphRequestProviding.h"
+ #import "FBSDKInternalUtility.h"
+ #import "FBSDKObjectDecoding.h"
+ #import "FBSDKServerConfiguration.h"
+ #import "FBSDKServerConfigurationManager.h"
+ #import "FBSDKServerConfigurationProviding.h"
+ #import "FBSDKSettings+Internal.h"
  #import "FBSDKSettingsProtocol.h"
  #import "FBSDKSwizzling.h"
+ #import "FBSDKUnarchiverProvider.h"
+ #import "FBSDKUtility.h"
+ #import "FBSDKViewHierarchy.h"
+ #import "FBSDKViewHierarchyMacros.h"
 
 @interface FBSDKCodelessIndexer ()
 
