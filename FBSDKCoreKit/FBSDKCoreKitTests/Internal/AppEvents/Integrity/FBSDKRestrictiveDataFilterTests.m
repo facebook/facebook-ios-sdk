@@ -84,28 +84,21 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
 - (void)testFilterByParams
 {
-  NSString *testEventName = @"restrictive_event_name";
-  OCMStub([self.appEventsUtilityClassMock shouldDropAppEvent]).andReturn(NO);
+  NSString *eventName = @"restrictive_event_name";
+  NSDictionary *parameters = @{@"dob" : @"06-29-2019"};
+  NSDictionary *expected = @{@"_restrictedParams" : @"{\"dob\":\"4\"}"};
 
-  // filtered by param key
-  [[self.appEventStatesMock expect] addEvent:[OCMArg checkWithBlock:^(id value) {
-    XCTAssertEqualObjects(value[@"_eventName"], testEventName);
-    XCTAssertNil(value[@"dob"]);
-    XCTAssertEqualObjects(value[@"_restrictedParams"], @"{\"dob\":\"4\"}");
-    return YES;
-  }] isImplicit:NO];
-  [FBSDKAppEvents logEvent:testEventName parameters:@{@"dob" : @"06-29-2019"}];
-  [self.appEventStatesMock verify];
+  XCTAssertEqualObjects(
+    [FBSDKRestrictiveDataFilterManager processParameters:parameters eventName:eventName],
+    expected
+  );
 
-  // should not be filtered
-  [[self.appEventStatesMock expect] addEvent:[OCMArg checkWithBlock:^(id value) {
-    XCTAssertEqualObjects(value[@"_eventName"], testEventName);
-    XCTAssertEqualObjects(value[@"test_key"], @66666);
-    XCTAssertNil(value[@"_restrictedParams"]);
-    return YES;
-  }] isImplicit:NO];
-  [FBSDKAppEvents logEvent:testEventName parameters:@{@"test_key" : @66666}];
-  [self.appEventStatesMock verify];
+  parameters = @{@"test_key" : @66666};
+
+  XCTAssertEqualObjects(
+    [FBSDKRestrictiveDataFilterManager processParameters:parameters eventName:eventName],
+    parameters
+  );
 }
 
 - (void)testGetMatchedDataTypeByParam

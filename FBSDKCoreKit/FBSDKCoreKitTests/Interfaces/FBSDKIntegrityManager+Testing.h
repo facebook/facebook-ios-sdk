@@ -16,25 +16,22 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import FBSDKCoreKit
-import Foundation
+#import "FBSDKGateKeeperManaging.h"
+#import "FBSDKIntegrityManager.h"
+#import "FBSDKIntegrityManager+AppEventsParametersProcessing.h"
+#import "FBSDKIntegrityProcessing.h"
 
-@objcMembers
-class TestEventProcessor: NSObject, EventProcessing {
-  var processSuggestedEventsCallCount = 0
-  var stubbedProcessedEvents: String?
-  var isEnabled = false
+NS_ASSUME_NONNULL_BEGIN
 
-  func processSuggestedEvents(
-    _ textFeature: String,
-    denseData: UnsafeMutablePointer<Float>?
-  ) -> String {
-    processSuggestedEventsCallCount += 1
+@interface FBSDKIntegrityManager (Testing)
 
-    return stubbedProcessedEvents ?? ""
-  }
+@property (nullable, nonatomic) Class<FBSDKGateKeeperManaging> gateKeeperManager;
+@property (nullable, nonatomic) id<FBSDKIntegrityProcessing> integrityProcessor;
+@property (nonatomic) BOOL isIntegrityEnabled;
+@property (nonatomic) BOOL isSampleEnabled;
 
-  func enable() {
-    isEnabled = true
-  }
-}
++ (void)reset;
+
+@end
+
+NS_ASSUME_NONNULL_END

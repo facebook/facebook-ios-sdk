@@ -114,7 +114,7 @@ static NSString *const _mockUserID = @"mockUserID";
   UserDefaultsSpy *_store;
   TestFeatureManager *_featureManager;
   TestSettings *_settings;
-  TestEventProcessor *_eventProcessor;
+  TestOnDeviceMLModelManager *_onDeviceMLModelManager;
   TestPaymentObserver *_paymentObserver;
   TestTimeSpentRecorder *_timeSpentRecorder;
   TestAppEventsStateStore *_appEventsStateStore;
@@ -142,7 +142,7 @@ static NSString *const _mockUserID = @"mockUserID";
   _settings = [TestSettings new];
   _settings.stubbedIsAutoLogAppEventsEnabled = YES;
   [FBSDKInternalUtility reset];
-  _eventProcessor = [TestEventProcessor new];
+  _onDeviceMLModelManager = [TestOnDeviceMLModelManager new];
   _paymentObserver = [TestPaymentObserver new];
   _timeSpentRecorder = [TestTimeSpentRecorder new];
   _metadataIndexer = [TestMetadataIndexer new];
@@ -180,8 +180,8 @@ static NSString *const _mockUserID = @"mockUserID";
                                timeSpentRecorder:_timeSpentRecorder
                              appEventsStateStore:_appEventsStateStore
              eventDeactivationParameterProcessor:_eventDeactivationParameterProcessor];
-  [FBSDKAppEvents configureNonTVComponentsWithEventProcessor:_eventProcessor
-                                             metadataIndexer:_metadataIndexer];
+  [FBSDKAppEvents configureNonTVComponentsWithOnDeviceMLModelManager:_onDeviceMLModelManager
+                                                     metadataIndexer:_metadataIndexer];
 }
 
 - (void)tearDown
@@ -1087,7 +1087,7 @@ static NSString *const _mockUserID = @"mockUserID";
   [_featureManager completeCheckForFeature:FBSDKFeaturePrivacyProtection
                                       with:YES];
   XCTAssertTrue(
-    _eventProcessor.isEnabled,
+    _onDeviceMLModelManager.isEnabled,
     "Fetching a configuration should enable event processing if PrivacyProtection feature is enabled"
   );
 }

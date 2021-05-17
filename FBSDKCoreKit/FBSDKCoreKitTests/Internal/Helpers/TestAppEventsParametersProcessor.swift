@@ -16,26 +16,20 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKErrorReport.h"
+import FBSDKCoreKit
+import Foundation
 
-NS_ASSUME_NONNULL_BEGIN
+class TestAppEventsParametersProcessor: AppEventsParameterProcessing {
+  var wasEnableCalled = false
 
-@protocol FBSDKGraphRequestProviding;
-@protocol FBSDKFileManaging;
-@protocol FBSDKSettings;
+  func enable() {
+    wasEnableCalled = true
+  }
 
-@interface FBSDKErrorReport (Testing)
-
-@property (nonatomic, strong) id<FBSDKGraphRequestProviding> requestProvider;
-@property (nonatomic, strong) id<FBSDKFileManaging> fileManager;
-@property (nonatomic, strong) id<FBSDKSettings> settings;
-@property (nonatomic, strong) Class<FBSDKFileDataExtracting> dataExtractor;
-@property (nonatomic, readonly, strong) NSString *directoryPath;
-
-- (void)enable;
-- (NSArray<NSDictionary<NSString *, id> *> *)loadErrorReports;
-- (void)uploadErrors;
-
-@end
-
-NS_ASSUME_NONNULL_END
+  func processParameters(
+    _ parameters: [String: Any]?,
+    eventName: String
+  ) -> [String: Any]? {
+    return nil
+  }
+}

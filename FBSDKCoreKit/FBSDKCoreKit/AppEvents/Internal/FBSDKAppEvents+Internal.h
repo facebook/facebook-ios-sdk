@@ -174,8 +174,8 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
 
 #if !TARGET_OS_TV
 
-+ (void)configureNonTVComponentsWithEventProcessor:(id<FBSDKEventProcessing>)eventProcessor
-                                   metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer;
++ (void)configureNonTVComponentsWithOnDeviceMLModelManager:(id<FBSDKEventProcessing>)modelManager
+                                           metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer;
 
 #endif
 

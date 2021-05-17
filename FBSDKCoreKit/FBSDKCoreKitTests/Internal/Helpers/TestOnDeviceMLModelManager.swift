@@ -16,26 +16,27 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKErrorReport.h"
+import FBSDKCoreKit
+import Foundation
 
-NS_ASSUME_NONNULL_BEGIN
+@objcMembers
+class TestOnDeviceMLModelManager: NSObject, EventProcessing, IntegrityParametersProcessorProvider {
 
-@protocol FBSDKGraphRequestProviding;
-@protocol FBSDKFileManaging;
-@protocol FBSDKSettings;
+  var processSuggestedEventsCallCount = 0
+  var stubbedProcessedEvents: String?
+  var isEnabled = false
+  var integrityParametersProcessor: AppEventsParameterProcessing?
 
-@interface FBSDKErrorReport (Testing)
+  func processSuggestedEvents(
+    _ textFeature: String,
+    denseData: UnsafeMutablePointer<Float>?
+  ) -> String {
+    processSuggestedEventsCallCount += 1
 
-@property (nonatomic, strong) id<FBSDKGraphRequestProviding> requestProvider;
-@property (nonatomic, strong) id<FBSDKFileManaging> fileManager;
-@property (nonatomic, strong) id<FBSDKSettings> settings;
-@property (nonatomic, strong) Class<FBSDKFileDataExtracting> dataExtractor;
-@property (nonatomic, readonly, strong) NSString *directoryPath;
+    return stubbedProcessedEvents ?? ""
+  }
 
-- (void)enable;
-- (NSArray<NSDictionary<NSString *, id> *> *)loadErrorReports;
-- (void)uploadErrors;
-
-@end
-
-NS_ASSUME_NONNULL_END
+  func enable() {
+    isEnabled = true
+  }
+}

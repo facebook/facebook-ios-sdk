@@ -21,14 +21,17 @@
 #if !TARGET_OS_TV
 
  #import "FBSDKModelManager.h"
+ #import "FBSDKModelManager+IntegrityProcessing.h"
 
  #import "FBSDKAppEvents+Internal.h"
+ #import "FBSDKAppEventsParameterProcessing.h"
  #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKFeatureExtractor.h"
  #import "FBSDKFeatureManager.h"
+ #import "FBSDKGateKeeperManager.h"
  #import "FBSDKGraphRequest.h"
  #import "FBSDKGraphRequestConnection.h"
- #import "FBSDKIntegrityManager.h"
+ #import "FBSDKIntegrityManager+AppEventsParametersProcessing.h"
  #import "FBSDKMLMacros.h"
  #import "FBSDKModelParser.h"
  #import "FBSDKModelRuntime.hpp"
@@ -50,6 +53,12 @@ static NSMutableDictionary<NSString *, id> *_modelInfo;
 static std::unordered_map<std::string, fbsdk::MTensor> _MTMLWeights;
 
 NS_ASSUME_NONNULL_BEGIN
+
+@interface FBSDKModelManager ()
+
+@property (nonatomic) id<FBSDKAppEventsParameterProcessing> integrityParametersProcessor;
+
+@end
 
 @implementation FBSDKModelManager
 
@@ -172,14 +181,15 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
 
  #pragma mark - Integrity Inferencer method
 
-+ (BOOL)processIntegrity:(nullable NSString *)param
+// Used by the `integrityParametersProcessor` which holds a weak reference to this instance
+- (BOOL)processIntegrity:(nullable NSString *)param
 {
   NSString *integrityType = INTEGRITY_NONE;
   @try {
     if (param.length == 0 || _MTMLWeights.size() == 0) {
       return false;
     }
-    NSArray<NSString *> *integrityMapping = [self getIntegrityMapping];
+    NSArray<NSString *> *integrityMapping = [self.class getIntegrityMapping];
     NSString *text = [FBSDKModelUtility normalizedText:param];
     const char *bytes = [text UTF8String];
     if ((int)strlen(bytes) == 0) {
@@ -284,7 +294,9 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
 
     if ([FBSDKFeatureManager.shared isEnabled:FBSDKFeatureIntelligentIntegrity]) {
       [self getModelAndRules:MTMLTaskIntegrityDetectKey onSuccess:^() {
-        [FBSDKIntegrityManager enable];
+        [self.shared setIntegrityParametersProcessor:[[FBSDKIntegrityManager alloc] initWithGateKeeperManager:FBSDKGateKeeperManager.class
+                                                                                           integrityProcessor:self.shared]];
+        [[self.shared integrityParametersProcessor] enable];
       }];
     }
   }];

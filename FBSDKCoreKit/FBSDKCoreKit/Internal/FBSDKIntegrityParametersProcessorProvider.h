@@ -16,25 +16,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKErrorReport.h"
+#import <Foundation/Foundation.h>
+
+@protocol FBSDKAppEventsParameterProcessing;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol FBSDKGraphRequestProviding;
-@protocol FBSDKFileManaging;
-@protocol FBSDKSettings;
+NS_SWIFT_NAME(IntegrityParametersProcessorProvider)
+@protocol FBSDKIntegrityParametersProcessorProvider
 
-@interface FBSDKErrorReport (Testing)
-
-@property (nonatomic, strong) id<FBSDKGraphRequestProviding> requestProvider;
-@property (nonatomic, strong) id<FBSDKFileManaging> fileManager;
-@property (nonatomic, strong) id<FBSDKSettings> settings;
-@property (nonatomic, strong) Class<FBSDKFileDataExtracting> dataExtractor;
-@property (nonatomic, readonly, strong) NSString *directoryPath;
-
-- (void)enable;
-- (NSArray<NSDictionary<NSString *, id> *> *)loadErrorReports;
-- (void)uploadErrors;
+@property (nullable, nonatomic) id<FBSDKAppEventsParameterProcessing> integrityParametersProcessor;
 
 @end
 

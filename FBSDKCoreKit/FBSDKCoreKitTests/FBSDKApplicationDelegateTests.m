@@ -103,7 +103,7 @@
 + (id<FBSDKDataPersisting>)store;
 + (Class<FBSDKLogging>)logger;
 + (id<FBSDKSettings>)settings;
-+ (id<FBSDKEventProcessing>)eventProcessor;
++ (id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>)onDeviceMLModelManager;
 + (id<FBSDKPaymentObserving>)paymentObserver;
 + (id<FBSDKTimeSpentRecording>)timeSpentRecorder;
 + (id<FBSDKAppEventsStatePersisting>)appEventsStateStore;
@@ -295,9 +295,9 @@
     "Initializing the SDK should set concrete settings for event logging"
   );
   XCTAssertEqualObjects(
-    FBSDKAppEvents.eventProcessor,
+    FBSDKAppEvents.onDeviceMLModelManager,
     FBSDKModelManager.shared,
-    "Initializing the SDK should set concrete event processor for event logging"
+    "Initializing the SDK should set concrete on device model manager for event logging"
   );
   XCTAssertEqualObjects(
     FBSDKAppEvents.metadataIndexer,

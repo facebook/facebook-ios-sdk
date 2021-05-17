@@ -554,8 +554,8 @@ static UIApplicationState _applicationState;
                 notificationCenter:NSNotificationCenter.defaultCenter];
   [FBSDKWebDialogView configureWithWebViewProvider:[FBSDKWebViewFactory new]
                                          urlOpener:UIApplication.sharedApplication];
-  [FBSDKAppEvents configureNonTVComponentsWithEventProcessor:FBSDKModelManager.shared
-                                             metadataIndexer:FBSDKMetadataIndexer.shared];
+  [FBSDKAppEvents configureNonTVComponentsWithOnDeviceMLModelManager:FBSDKModelManager.shared
+                                                     metadataIndexer:FBSDKMetadataIndexer.shared];
 #endif
 }
 

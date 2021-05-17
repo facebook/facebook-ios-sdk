@@ -24,7 +24,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
   let requestProvider = TestGraphRequestFactory()
   let settings = TestSettings()
   let eventLogger = TestEventLogger()
-  var eventProcessor: TestEventProcessor! = TestEventProcessor()
+  var eventProcessor: TestOnDeviceMLModelManager! = TestOnDeviceMLModelManager()
   let collectionView = TestCollectionView(
     frame: .zero,
     collectionViewLayout: UICollectionViewFlowLayout()
@@ -143,7 +143,7 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
       "Should be able to create an instance with a custom event logger"
     )
     XCTAssertTrue(
-      indexer.eventProcessor is TestEventProcessor,
+      indexer.eventProcessor is TestOnDeviceMLModelManager,
       "Should be able to create an instance with a custom event processor"
     )
   }

@@ -16,26 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKErrorReport.h"
+class TestIntegrityProcessor: IntegrityProcessing {
+  var stubbedParameters = [String: Bool]()
 
-NS_ASSUME_NONNULL_BEGIN
+  func processIntegrity(_ potentialParameter: String?) -> Bool {
+    guard let parameter = potentialParameter else {
+      return false
+    }
 
-@protocol FBSDKGraphRequestProviding;
-@protocol FBSDKFileManaging;
-@protocol FBSDKSettings;
-
-@interface FBSDKErrorReport (Testing)
-
-@property (nonatomic, strong) id<FBSDKGraphRequestProviding> requestProvider;
-@property (nonatomic, strong) id<FBSDKFileManaging> fileManager;
-@property (nonatomic, strong) id<FBSDKSettings> settings;
-@property (nonatomic, strong) Class<FBSDKFileDataExtracting> dataExtractor;
-@property (nonatomic, readonly, strong) NSString *directoryPath;
-
-- (void)enable;
-- (NSArray<NSDictionary<NSString *, id> *> *)loadErrorReports;
-- (void)uploadErrors;
-
-@end
-
-NS_ASSUME_NONNULL_END
+    return stubbedParameters[parameter] ?? false
+  }
+}

@@ -48,6 +48,8 @@
 #import "FBSDKFeatureExtracting.h"
 #import "FBSDKHumanSilhouetteIcon.h"
 #import "FBSDKInstrumentManager+Testing.h"
+#import "FBSDKIntegrityManager+Testing.h"
+#import "FBSDKModelManager+IntegrityParametersProcessorProvider.h"
 #import "FBSDKMath.h"
 #import "FBSDKModelManager.h"
 #import "FBSDKModelUtility.h"

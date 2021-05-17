@@ -63,7 +63,7 @@
  #import "FBSDKEventBindingManager.h"
  #import "FBSDKEventProcessing.h"
  #import "FBSDKHybridAppEventsScriptMessageHandler.h"
- #import "FBSDKIntegrityManager.h"
+ #import "FBSDKIntegrityParametersProcessorProvider.h"
 
 #endif
 
@@ -283,7 +283,7 @@ static id<FBSDKAppEventsStatePersisting> g_appEventsStateStore;
 static id<FBSDKAppEventsParameterProcessing> g_eventDeactivationParameterProcessor;
 
 #if !TARGET_OS_TV
-static id<FBSDKEventProcessing> g_eventProcessor = nil;
+static id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider> g_onDeviceMLModelManager = nil;
 static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 #endif
 
@@ -939,10 +939,10 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 
 #if !TARGET_OS_TV
 
-+ (void)configureNonTVComponentsWithEventProcessor:(id<FBSDKEventProcessing>)eventProcessor
-                                   metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer
++ (void)configureNonTVComponentsWithOnDeviceMLModelManager:(id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>)modelManager
+                                           metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer
 {
-  g_eventProcessor = eventProcessor;
+  g_onDeviceMLModelManager = modelManager;
   g_metadataIndexer = metadataIndexer;
 }
 
@@ -1283,7 +1283,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
       }];
       [g_featureChecker checkFeature:FBSDKFeaturePrivacyProtection completionBlock:^(BOOL enabled) {
         if (enabled) {
-          [g_eventProcessor enable];
+          [g_onDeviceMLModelManager enable];
         }
       }];
       if (@available(iOS 11.3, *)) {
@@ -1380,7 +1380,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 
 #if !TARGET_OS_TV
   // Filter out restrictive data with on-device ML
-  parameters = [FBSDKIntegrityManager processParameters:parameters];
+  parameters = [g_onDeviceMLModelManager.integrityParametersProcessor processParameters:parameters eventName:eventName];
 #endif
   // Filter out restrictive keys
   parameters = [FBSDKRestrictiveDataFilterManager processParameters:parameters
@@ -1787,9 +1787,9 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 
  #if !TARGET_OS_TV
 
-+ (id<FBSDKEventProcessing>)eventProcessor
++ (id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>)onDeviceMLModelManager
 {
-  return g_eventProcessor;
+  return g_onDeviceMLModelManager;
 }
 
 + (id<FBSDKMetadataIndexing>)metadataIndexer
