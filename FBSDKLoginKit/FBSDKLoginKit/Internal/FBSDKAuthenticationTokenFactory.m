@@ -18,18 +18,16 @@
 
 #import "FBSDKAuthenticationTokenFactory.h"
 
-#ifdef FBSDKCOCOAPODS
- #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
- #import "FBSDKCoreKit+Internal.h"
-#endif
-
 #import <Security/Security.h>
 
 #import <CommonCrypto/CommonCrypto.h>
 
-#import "FBSDKAuthenticationTokenClaims.h"
-#import "NSURLSession+Protocols.h"
+#import "FBSDKAuthenticationTokenHeader.h"
+#import "FBSDKCoreKitBasicsImportForLoginKit.h"
+#import "FBSDKCoreKitImport.h"
+
+@interface NSURLSession (SessionProviding) <FBSDKSessionProviding>
+@end
 
 static NSString *const FBSDKBeginCertificate = @"-----BEGIN CERTIFICATE-----";
 static NSString *const FBSDKEndCertificate = @"-----END CERTIFICATE-----";
@@ -243,10 +241,10 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 - (NSURL *)_certificateEndpoint
 {
   NSError *error;
-  NSURL *url = [FBSDKInternalUtility unversionedFacebookURLWithHostPrefix:@"m"
-                                                                     path:@"/.well-known/oauth/openid/certs/"
-                                                          queryParameters:@{}
-                                                                    error:&error];
+  NSURL *url = [FBSDKUtility unversionedFacebookURLWithHostPrefix:@"m"
+                                                             path:@"/.well-known/oauth/openid/certs/"
+                                                  queryParameters:@{}
+                                                            error:&error];
 
   return url;
 }

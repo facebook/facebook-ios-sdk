@@ -18,10 +18,10 @@
 
 #import <Foundation/Foundation.h>
 
-#if SWIFT_PACKAGE
- #import "FBSDKAuthenticationToken.h"
+#if FBSDK_SWIFT_PACKAGE
+ #import <FBSDKCoreKit.h>
 #else
- #import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #endif
 
 NS_ASSUME_NONNULL_BEGIN

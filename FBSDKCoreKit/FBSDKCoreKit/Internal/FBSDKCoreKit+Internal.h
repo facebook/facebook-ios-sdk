@@ -43,9 +43,6 @@
   #import "FBSDKSmartDeviceDialogView.h"
  #endif
 
- #import "FBSDKAuthenticationTokenFactory.h"
- #import "FBSDKAuthenticationTokenHeader.h"
- #import "FBSDKBase64.h"
  #import "FBSDKButton+Subclass.h"
  #import "FBSDKDeviceRequestsHelper.h"
  #import "FBSDKDialogConfiguration.h"
@@ -104,10 +101,7 @@
  #endif
 
  #import "../AppEvents/Internal/Integrity/FBSDKRestrictiveDataFilterManager.h"
- #import "Base64/FBSDKBase64.h"
  #import "ErrorRecovery/FBSDKErrorRecoveryAttempter.h"
- #import "FBSDKAuthenticationTokenFactory.h"
- #import "FBSDKAuthenticationTokenHeader.h"
  #import "FBSDKDeviceRequestsHelper.h"
  #import "FBSDKDynamicFrameworkLoader.h"
  #import "FBSDKError.h"

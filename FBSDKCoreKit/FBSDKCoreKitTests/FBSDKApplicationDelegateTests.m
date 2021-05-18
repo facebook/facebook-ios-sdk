@@ -493,7 +493,6 @@
 - (void)testInitializingSdkConfiguresAuthenticationTokenCache
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
-  [FBSDKAuthenticationToken setTokenCache:nil];
   [self.delegate initializeSDKWithLaunchOptions:@{}];
 
   NSObject *tokenCache = (NSObject *) FBSDKAuthenticationToken.tokenCache;

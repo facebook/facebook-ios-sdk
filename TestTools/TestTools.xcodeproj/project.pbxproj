@@ -10,6 +10,7 @@
 		F40BF67E26004BA4007DB231 /* TestGraphRequestConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40BF67D26004BA4007DB231 /* TestGraphRequestConnection.swift */; };
 		F40BF7822600F7BF007DB231 /* TestGraphRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40BF7752600F7BF007DB231 /* TestGraphRequest.swift */; };
 		F40BF7C02600F89D007DB231 /* SampleUserProfiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40BF7B32600F89D007DB231 /* SampleUserProfiles.swift */; };
+		F4639040264C894700DEFA97 /* TestSessionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F463903F264C894700DEFA97 /* TestSessionProvider.swift */; };
 		F4A406E725F4590F00F0E578 /* SampleAccessTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A406E625F4590F00F0E578 /* SampleAccessTokens.swift */; };
 /* End PBXBuildFile section */
 
@@ -49,34 +50,6 @@
 			remoteGlobalIDString = 814AC8571D1B528900D61E6C;
 			remoteInfo = "FBSDKCoreKit_TV-Dynamic";
 		};
-		C6369EEA2627AC9300DBC810 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C6369ED02627AC9300DBC810 /* FBSDKCoreKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C5C4B3B62276B51500CA3706;
-			remoteInfo = FBSDKCoreKit_Basics;
-		};
-		C6369EEC2627AC9300DBC810 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C6369ED02627AC9300DBC810 /* FBSDKCoreKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C5C4B4D42276BA1200CA3706;
-			remoteInfo = "FBSDKCoreKit_Basics-Dynamic";
-		};
-		C6369EEE2627AC9300DBC810 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C6369ED02627AC9300DBC810 /* FBSDKCoreKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C5C4B3CC2276B67200CA3706;
-			remoteInfo = FBSDKCoreKit_Basics_TV;
-		};
-		C6369EF02627AC9300DBC810 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C6369ED02627AC9300DBC810 /* FBSDKCoreKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = C5C4B4EA2276BA8D00CA3706;
-			remoteInfo = "FBSDKCoreKit_Basics_TV-Dynamic";
-		};
 		C6369EF22627AC9A00DBC810 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C6369ED02627AC9300DBC810 /* FBSDKCoreKit.xcodeproj */;
@@ -91,6 +64,7 @@
 		F40BF67D26004BA4007DB231 /* TestGraphRequestConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestGraphRequestConnection.swift; sourceTree = "<group>"; };
 		F40BF7752600F7BF007DB231 /* TestGraphRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestGraphRequest.swift; sourceTree = "<group>"; };
 		F40BF7B32600F89D007DB231 /* SampleUserProfiles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleUserProfiles.swift; sourceTree = "<group>"; };
+		F463903F264C894700DEFA97 /* TestSessionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSessionProvider.swift; sourceTree = "<group>"; };
 		F4A406E625F4590F00F0E578 /* SampleAccessTokens.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleAccessTokens.swift; sourceTree = "<group>"; };
 		F4E5F09025F4354900D67852 /* TestTools.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TestTools.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -114,10 +88,6 @@
 				C6369EE52627AC9300DBC810 /* FBSDKCoreKitTests.xctest */,
 				C6369EE72627AC9300DBC810 /* FBSDKCoreKit.framework */,
 				C6369EE92627AC9300DBC810 /* FBSDKCoreKit.framework */,
-				C6369EEB2627AC9300DBC810 /* FBSDKCoreKit.framework */,
-				C6369EED2627AC9300DBC810 /* FBSDKCoreKit.framework */,
-				C6369EEF2627AC9300DBC810 /* FBSDKCoreKit.framework */,
-				C6369EF12627AC9300DBC810 /* FBSDKCoreKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -129,6 +99,7 @@
 				F40BF7752600F7BF007DB231 /* TestGraphRequest.swift */,
 				F40BF67D26004BA4007DB231 /* TestGraphRequestConnection.swift */,
 				F4A406E625F4590F00F0E578 /* SampleAccessTokens.swift */,
+				F463903F264C894700DEFA97 /* TestSessionProvider.swift */,
 			);
 			path = TestTools;
 			sourceTree = "<group>";
@@ -255,34 +226,6 @@
 			remoteRef = C6369EE82627AC9300DBC810 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C6369EEB2627AC9300DBC810 /* FBSDKCoreKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKCoreKit.framework;
-			remoteRef = C6369EEA2627AC9300DBC810 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C6369EED2627AC9300DBC810 /* FBSDKCoreKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKCoreKit.framework;
-			remoteRef = C6369EEC2627AC9300DBC810 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C6369EEF2627AC9300DBC810 /* FBSDKCoreKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKCoreKit.framework;
-			remoteRef = C6369EEE2627AC9300DBC810 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C6369EF12627AC9300DBC810 /* FBSDKCoreKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKCoreKit.framework;
-			remoteRef = C6369EF02627AC9300DBC810 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -300,6 +243,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4639040264C894700DEFA97 /* TestSessionProvider.swift in Sources */,
 				F40BF7C02600F89D007DB231 /* SampleUserProfiles.swift in Sources */,
 				F40BF67E26004BA4007DB231 /* TestGraphRequestConnection.swift in Sources */,
 				F4A406E725F4590F00F0E578 /* SampleAccessTokens.swift in Sources */,

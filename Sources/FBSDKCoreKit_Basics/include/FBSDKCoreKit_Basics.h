@@ -34,6 +34,7 @@
 // public headers without bracket import syntax.
 
 #if defined FBSDK_SWIFT_PACKAGE || defined FBSDKCOCOAPODS
+ #import "FBSDKBase64.h"
  #import "FBSDKBasicUtility.h"
  #import "FBSDKCrashHandler.h"
  #import "FBSDKCrashHandler+CrashHandlerProtocol.h"
@@ -52,6 +53,7 @@
  #import "FBSDKUserDataStore.h"
  #import "NSBundle+InfoDictionaryProviding.h"
 #else
+ #import <FBSDKCoreKit_Basics/FBSDKBase64.h>
  #import <FBSDKCoreKit_Basics/FBSDKBasicUtility.h>
  #import <FBSDKCoreKit_Basics/FBSDKCrashHandler.h>
  #import <FBSDKCoreKit_Basics/FBSDKCrashHandler+CrashHandlerProtocol.h>

@@ -16,36 +16,39 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@objcMembers
-class TestSessionDataTask: NSObject, SessionDataTask {
-  var resumeCallCount = 0
-  var cancelCallCount = 0
-  var stubbedState: URLSessionTask.State = .completed
+import FBSDKCoreKit_Basics
+import Foundation
 
-  var state: URLSessionTask.State {
+@objcMembers
+public class TestSessionDataTask: NSObject, SessionDataTask {
+  public var resumeCallCount = 0
+  public var cancelCallCount = 0
+  public var stubbedState: URLSessionTask.State = .completed
+
+  public var state: URLSessionTask.State {
     stubbedState
   }
 
-  func resume() {
+  public func resume() {
     resumeCallCount += 1
   }
 
-  func cancel() {
+  public func cancel() {
     cancelCallCount += 1
   }
 }
 
 @objcMembers
-class TestSessionProvider: NSObject, SessionProviding {
+public class TestSessionProvider: NSObject, SessionProviding {
   /// A data task to return from `dataTask(with:completion:)`
-  var stubbedDataTask: SessionDataTask?
+  public var stubbedDataTask: SessionDataTask?
   /// The completion handler to be invoked in the test
-  var capturedCompletion: ((Data?, URLResponse?, Error?) -> Void)?
+  public var capturedCompletion: ((Data?, URLResponse?, Error?) -> Void)?
   /// The url request for the data task
-  var capturedRequest: URLRequest?
-  var dataTaskCallCount = 0
+  public var capturedRequest: URLRequest?
+  public var dataTaskCallCount = 0
 
-  func dataTask(
+  public func dataTask(
     with request: URLRequest,
     completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void
   ) -> SessionDataTask {

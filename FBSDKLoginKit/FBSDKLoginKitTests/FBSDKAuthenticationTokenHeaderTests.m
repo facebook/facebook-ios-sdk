@@ -18,9 +18,9 @@
 
 #import <XCTest/XCTest.h>
 
-#import "FBSDKCoreKit+Internal.h"
-#import "FBSDKCoreKitTests-Swift.h"
-#import "FBSDKTestCase.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+
+#import "FBSDKLoginKitTests-Swift.h"
 
 @interface FBSDKAuthenticationTokenHeader (Testing)
 
@@ -30,7 +30,7 @@
 
 @end
 
-@interface FBSDKAuthenticationTokenHeaderTests : FBSDKTestCase
+@interface FBSDKAuthenticationTokenHeaderTests : XCTestCase
 
 @end
 

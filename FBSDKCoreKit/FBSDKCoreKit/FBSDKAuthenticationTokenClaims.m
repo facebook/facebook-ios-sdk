@@ -18,7 +18,6 @@
 
 #import "FBSDKAuthenticationTokenClaims.h"
 
-#import "FBSDKBase64.h"
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKSettings.h"
 

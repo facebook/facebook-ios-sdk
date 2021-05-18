@@ -91,6 +91,17 @@ NS_SWIFT_NAME(sha256Hash(_:));
  */
 + (NSString *)getGraphDomainFromToken;
 
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
++ (NSURL *)unversionedFacebookURLWithHostPrefix:(NSString *)hostPrefix
+                                           path:(NSString *)path
+                                queryParameters:(NSDictionary *)queryParameters
+                                          error:(NSError *__autoreleasing *)errorRef;
+
 @end
 
 NS_ASSUME_NONNULL_END

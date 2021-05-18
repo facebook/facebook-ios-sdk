@@ -18,8 +18,7 @@
 
 #import "FBSDKAuthenticationTokenHeader.h"
 
-#import "FBSDKBase64.h"
-#import "FBSDKCoreKitBasicsImport.h"
+#import "FBSDKCoreKitBasicsImportForLoginKit.h"
 
 @implementation FBSDKAuthenticationTokenHeader
 
