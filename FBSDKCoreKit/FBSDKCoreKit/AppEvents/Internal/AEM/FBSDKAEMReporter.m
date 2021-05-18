@@ -85,7 +85,9 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBSDKAEMRepo
       g_reportFile = [FBSDKBasicUtility persistenceFilePath:FBSDKAEMReporterFileName];
       g_configFile = [FBSDKBasicUtility persistenceFilePath:FBSDKAEMConfigFileName];
       g_completionBlocks = [NSMutableArray new];
-      g_serialQueue = dispatch_queue_create(dispatchQueueLabel, DISPATCH_QUEUE_SERIAL);
+      if (!g_serialQueue) {
+        g_serialQueue = dispatch_queue_create(dispatchQueueLabel, DISPATCH_QUEUE_SERIAL);
+      }
       [self dispatchOnQueue:g_serialQueue block:^() {
         g_configs = [self _loadConfigs];
         g_invocations = [self _loadReportData];
@@ -220,7 +222,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBSDKAEMRepo
   return g_configRefreshTimestamp && [[NSDate date] timeIntervalSinceDate:g_configRefreshTimestamp] < FBSDK_AEM_CONFIG_TIME_OUT;
 }
 
- #pragma mark - Bacground methods
+ #pragma mark - Background methods
 
 + (NSMutableDictionary<NSString *, NSMutableArray<FBSDKAEMConfiguration *> *> *)_loadConfigs
 {
@@ -388,26 +390,32 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBSDKAEMRepo
 
 + (void)_clearConfigs
 {
-  BOOL isConfigCacheUpdated = NO;
+  BOOL shouldSaveCache = NO;
   if (g_configs.count > 0) {
     NSMutableDictionary<NSString *, NSMutableArray<FBSDKAEMConfiguration *> *> *configs = [NSMutableDictionary new];
     for (NSString *key in g_configs) {
-      NSMutableArray<FBSDKAEMConfiguration *> *configList = [FBSDKTypeUtility dictionary:g_configs objectForKey:key ofType:NSMutableArray.class];
-      NSMutableArray<FBSDKAEMConfiguration *> *newConfigs = [NSMutableArray new];
-      for (int i = 0; i < configList.count - 1; i++) {
-        FBSDKAEMConfiguration *config = [FBSDKTypeUtility array:configList objectAtIndex:i];
-        if (![self _isUsingConfig:config forInvocations:g_invocations]) {
-          isConfigCacheUpdated = YES;
+      NSMutableArray<FBSDKAEMConfiguration *> *oldConfigurations = [FBSDKTypeUtility dictionary:g_configs objectForKey:key ofType:NSMutableArray.class];
+      NSMutableArray<FBSDKAEMConfiguration *> *newConfigurations = [NSMutableArray new];
+
+      // Removes the last of the old configurations and stores it so it can be
+      // added to the array-to-save
+      FBSDKAEMConfiguration *lastConfiguration = oldConfigurations.lastObject;
+      [oldConfigurations removeLastObject];
+
+      for (FBSDKAEMConfiguration *oldConfiguration in oldConfigurations) {
+        if (![self _isUsingConfig:oldConfiguration forInvocations:g_invocations]) {
+          shouldSaveCache = YES;
           continue;
         }
-        [FBSDKTypeUtility array:newConfigs addObject:config];
+        [FBSDKTypeUtility array:newConfigurations addObject:oldConfiguration];
       }
-      [FBSDKTypeUtility array:newConfigs addObject:configList.lastObject];
-      [FBSDKTypeUtility dictionary:configs setObject:newConfigs forKey:key];
+
+      [FBSDKTypeUtility array:newConfigurations addObject:lastConfiguration];
+      [FBSDKTypeUtility dictionary:configs setObject:newConfigurations forKey:key];
     }
     g_configs = configs;
   }
-  if (isConfigCacheUpdated) {
+  if (shouldSaveCache) {
     [self _saveConfigs];
   }
 }

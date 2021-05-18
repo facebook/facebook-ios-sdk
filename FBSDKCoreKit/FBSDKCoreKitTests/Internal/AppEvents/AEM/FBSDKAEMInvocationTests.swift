@@ -56,8 +56,8 @@ class FBSDKAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_
         static let USD = "USD"
     }
 
-    var validInvocation: FBSDKAEMInvocation! // swiftlint:disable:this implicitly_unwrapped_optional
-      = FBSDKAEMInvocation(
+    var validInvocation: AEMInvocation! // swiftlint:disable:this implicitly_unwrapped_optional
+      = AEMInvocation(
         campaignID: "test_campaign_1234",
         acsToken: "test_token_12345",
         acsSharedSecret: "test_shared_secret",
@@ -73,8 +73,8 @@ class FBSDKAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_
         conversionTimestamp: Date(timeIntervalSince1970: 1618383700),
         isAggregated: false
       )
-    var config1: FBSDKAEMConfiguration!  // swiftlint:disable:this implicitly_unwrapped_optional
-      = FBSDKAEMConfiguration(json: [
+    var config1: AEMConfiguration!  // swiftlint:disable:this implicitly_unwrapped_optional
+      = AEMConfiguration(json: [
         Keys.defaultCurrency: Values.USD,
         Keys.cutoffTime: 1,
         Keys.validFrom: 10000,
@@ -112,8 +112,8 @@ class FBSDKAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_
           ]
         ]
       ])
-    var config2: FBSDKAEMConfiguration! // swiftlint:disable:this implicitly_unwrapped_optional
-      = FBSDKAEMConfiguration(json: [
+    var config2: AEMConfiguration! // swiftlint:disable:this implicitly_unwrapped_optional
+      = AEMConfiguration(json: [
         Keys.defaultCurrency: Values.USD,
         Keys.cutoffTime: 1,
         Keys.validFrom: 20000,
@@ -137,39 +137,39 @@ class FBSDKAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_
     func testInvocationWithInvalidAppLinkData() {
         var invalidData: [String: Any] = [:]
 
-        XCTAssertNil(FBSDKAEMInvocation(appLinkData: nil))
+        XCTAssertNil(AEMInvocation(appLinkData: nil))
 
         invalidData = [
           "acs_token": "test_token_12345",
         ]
-        XCTAssertNil(FBSDKAEMInvocation(appLinkData: invalidData))
+        XCTAssertNil(AEMInvocation(appLinkData: invalidData))
 
         invalidData = [
           "campaign_ids": "test_campaign_1234",
         ]
-        XCTAssertNil(FBSDKAEMInvocation(appLinkData: invalidData))
+        XCTAssertNil(AEMInvocation(appLinkData: invalidData))
 
         invalidData = [
           "advertiser_id": "test_advertiserid_coffee",
         ]
-        XCTAssertNil(FBSDKAEMInvocation(appLinkData: invalidData))
+        XCTAssertNil(AEMInvocation(appLinkData: invalidData))
 
         invalidData = [
           "acs_token": 123,
           "campaign_ids": 123,
         ]
-        XCTAssertNil(FBSDKAEMInvocation(appLinkData: invalidData))
+        XCTAssertNil(AEMInvocation(appLinkData: invalidData))
     }
 
     func testInvocationWithValidAppLinkData() {
         var validData: [String: Any] = [:]
-        var invocation: FBSDKAEMInvocation?
+        var invocation: AEMInvocation?
 
         validData = [
           "acs_token": "test_token_12345",
           "campaign_ids": "test_campaign_1234",
         ]
-        invocation = FBSDKAEMInvocation(appLinkData: validData)
+        invocation = AEMInvocation(appLinkData: validData)
         XCTAssertEqual(invocation?.acsToken, "test_token_12345")
         XCTAssertEqual(invocation?.campaignID, "test_campaign_1234")
         XCTAssertNil(invocation?.advertiserID)
@@ -179,14 +179,14 @@ class FBSDKAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_
           "campaign_ids": "test_campaign_1234",
           "advertiser_id": "test_advertiserid_coffee",
         ]
-        invocation = FBSDKAEMInvocation(appLinkData: validData)
+        invocation = AEMInvocation(appLinkData: validData)
         XCTAssertEqual(invocation?.acsToken, "test_token_12345")
         XCTAssertEqual(invocation?.campaignID, "test_campaign_1234")
         XCTAssertEqual(invocation?.advertiserID, "test_advertiserid_coffee")
     }
 
   func testFindConfig() {
-    var invocation: FBSDKAEMInvocation? = self.validInvocation
+    var invocation: AEMInvocation? = self.validInvocation
     invocation?.reset()
     invocation?.setConfigID(10)
     XCTAssertNil(
@@ -194,7 +194,7 @@ class FBSDKAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_
       "Should not find the config with unmatched configID"
     )
 
-    invocation = FBSDKAEMInvocation(
+    invocation = AEMInvocation(
       campaignID: "test_campaign_1234",
       acsToken: "test_token_12345",
       acsSharedSecret: nil,
@@ -209,7 +209,7 @@ class FBSDKAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_
   }
 
   func testAttributeEventWithValue() {
-    let invocation: FBSDKAEMInvocation = self.validInvocation
+    let invocation: AEMInvocation = self.validInvocation
     invocation.reset()
     invocation._setConfig(config1)
 
@@ -235,7 +235,7 @@ class FBSDKAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_
   }
 
   func testAttributeUnexpectedEventWithoutValue() {
-    let invocation: FBSDKAEMInvocation = self.validInvocation
+    let invocation: AEMInvocation = self.validInvocation
     invocation.reset()
     invocation._setConfig(config1)
 
@@ -248,7 +248,7 @@ class FBSDKAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_
   }
 
   func testAttributeExpectedEventWithoutValue() {
-    let invocation: FBSDKAEMInvocation = self.validInvocation
+    let invocation: AEMInvocation = self.validInvocation
     invocation.reset()
     invocation._setConfig(config1)
 
@@ -268,7 +268,7 @@ class FBSDKAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_
   }
 
   func testUpdateConversionWithValue() {
-    let invocation: FBSDKAEMInvocation = self.validInvocation
+    let invocation: AEMInvocation = self.validInvocation
     invocation.reset()
     invocation._setConfig(config1)
 
@@ -312,7 +312,7 @@ class FBSDKAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_
   }
 
   func testUpdateConversionWithouValue() {
-    let invocation: FBSDKAEMInvocation = self.validInvocation
+    let invocation: AEMInvocation = self.validInvocation
     invocation.reset()
     invocation._setConfig(config2)
 
@@ -341,14 +341,14 @@ class FBSDKAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_
 
   func testSecureCoding() {
     XCTAssertTrue(
-      FBSDKAEMInvocation.supportsSecureCoding,
+      AEMInvocation.supportsSecureCoding,
       "AEM Invocation should support secure coding"
     )
   }
 
   func testEncoding() { // swiftlint:disable:this function_body_length
     let coder = TestCoder()
-    let invocation: FBSDKAEMInvocation = self.validInvocation
+    let invocation: AEMInvocation = self.validInvocation
     invocation.encode(with: coder)
 
     XCTAssertEqual(
@@ -424,7 +424,7 @@ class FBSDKAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_
 
   func testDecoding() { // swiftlint:disable:this function_body_length
     let decoder = TestCoder()
-    _ = FBSDKAEMInvocation(coder: decoder)
+    _ = AEMInvocation(coder: decoder)
 
     XCTAssertTrue(
       decoder.decodedObject[Keys.campaignID] is NSString.Type,

@@ -24,6 +24,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+NS_SWIFT_NAME(AEMReporter)
 @interface FBSDKAEMReporter : NSObject
 
 + (void)enable;
@@ -32,7 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)recordAndUpdateEvent:(NSString *)event
                     currency:(nullable NSString *)currency
-                       value:(nullable NSNumber *)value;
+                       value:(nullable NSNumber *)value
+NS_SWIFT_NAME(recordAndUpdate(event:currency:value:));
 
 @end
 

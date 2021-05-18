@@ -26,6 +26,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+NS_SWIFT_NAME(AEMInvocation)
 @interface FBSDKAEMInvocation : NSObject <NSCopying, NSSecureCoding>
 
 @property (nonatomic, readonly, copy) NSString *campaignID;

@@ -26,6 +26,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+NS_SWIFT_NAME(AEMConfiguration)
 @interface FBSDKAEMConfiguration : NSObject <NSCopying, NSSecureCoding>
 
 @property (nonatomic, readonly, assign) NSInteger cutoffTime;

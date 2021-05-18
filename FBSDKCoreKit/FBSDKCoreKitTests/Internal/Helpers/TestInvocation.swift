@@ -17,7 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @objcMembers
-class TestInvocation: FBSDKAEMInvocation {
+class TestInvocation: AEMInvocation {
 
   var attributionCallCount = 0
   var updateConversionCallCount = 0
@@ -26,13 +26,13 @@ class TestInvocation: FBSDKAEMInvocation {
     _ event: String,
     currency: String?,
     value: NSNumber?,
-    configs: [String: [FBSDKAEMConfiguration]]?) -> Bool {
+    configs: [String: [AEMConfiguration]]?) -> Bool {
     attributionCallCount += 1
     return true
   }
 
   override func updateConversionValue(
-    withConfigs configs: [String: [FBSDKAEMConfiguration]]?) -> Bool {
+    withConfigs configs: [String: [AEMConfiguration]]?) -> Bool {
     updateConversionCallCount += 1
     return true
   }
