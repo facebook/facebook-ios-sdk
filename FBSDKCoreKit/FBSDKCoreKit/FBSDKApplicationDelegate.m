@@ -33,10 +33,13 @@
 #import "FBSDKButton+Subclass.h"
 #import "FBSDKConstants.h"
 #import "FBSDKCoreKitBasicsImport.h"
+#import "FBSDKCrashShield+Internal.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError.h"
+#import "FBSDKEventDeactivationManager.h"
 #import "FBSDKEventDeactivationManager+AppEventsParameterProcessing.h"
 #import "FBSDKFeatureManager+FeatureChecking.h"
+#import "FBSDKFeatureManager+FeatureDisabling.h"
 #import "FBSDKGateKeeperManager.h"
 #import "FBSDKGraphRequestFactory.h"
 #import "FBSDKGraphRequestPiggybackManager+Internal.h"
@@ -533,6 +536,7 @@ static UIApplicationState _applicationState;
                                      graphRequestFactory:graphRequestProvider
                            graphRequestConnectionFactory:connectionProvider];
   [FBSDKButton setApplicationActivationNotifier:self];
+
 #if !TARGET_OS_TV
   [FBSDKAppLinkUtility configureWithRequestProvider:graphRequestProvider
                              infoDictionaryProvider:NSBundle.mainBundle];
@@ -543,6 +547,9 @@ static UIApplicationState _applicationState;
                                             swizzler:FBSDKSwizzler.class
                                             settings:sharedSettings
                                 advertiserIDProvider:FBSDKAppEventsUtility.shared];
+  [FBSDKCrashShield configureWithSettings:sharedSettings
+                          requestProvider:[FBSDKGraphRequestFactory new]
+                          featureChecking:FBSDKFeatureManager.shared];
   if (@available(iOS 14.0, *)) {
     [FBSDKSKAdNetworkReporter configureWithRequestProvider:graphRequestProvider
                                                      store:store

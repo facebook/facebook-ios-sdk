@@ -29,6 +29,7 @@
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitTestUtility.h"
 #import "FBSDKCoreKitTests-Swift.h"
+#import "FBSDKCrashShield+Internal.h"
 #import "FBSDKEventDeactivationManager+AppEventsParameterProcessing.h"
 #import "FBSDKFeatureManager+FeatureChecking.h"
 #import "FBSDKPaymentObserver.h"
@@ -79,6 +80,12 @@
 
 @interface FBSDKProfile (Testing)
 + (id<FBSDKDataPersisting>)store;
+@end
+
+@interface FBSDKCrashShield (Testing)
++ (id<FBSDKSettings>)settings;
++ (id<FBSDKGraphRequestProviding>)requestProvider;
++ (id<FBSDKFeatureChecking>)featureChecking;
 @end
 
 @interface FBSDKApplicationDelegateTests : FBSDKTestCase
@@ -409,6 +416,30 @@
     advertiserIDProvider,
     FBSDKAppEventsUtility.shared,
     "Should be configured with the expected concrete advertiser identifier provider"
+  );
+}
+
+- (void)testConfiguringCrashShield
+{
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
+  [self.delegate initializeSDKWithLaunchOptions:@{}];
+  NSObject *settings = (NSObject *)[FBSDKCrashShield settings];
+  NSObject *requestProvider = (NSObject *)[FBSDKCrashShield requestProvider];
+  NSObject *featureChecking = (NSObject *)[FBSDKCrashShield featureChecking];
+  XCTAssertEqualObjects(
+    settings.class,
+    FBSDKSettings.class,
+    "Should be configured with the expected settings"
+  );
+  XCTAssertEqualObjects(
+    requestProvider.class,
+    FBSDKGraphRequestFactory.class,
+    "Should be configured with the expected concrete graph request provider"
+  );
+  XCTAssertEqualObjects(
+    featureChecking.class,
+    FBSDKFeatureManager.class,
+    "Should be configured with the expected concrete Feature manager"
   );
 }
 

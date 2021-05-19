@@ -18,21 +18,9 @@
 
 #import "FBSDKFeatureManager.h"
 
-@protocol FBSDKSessionProviding;
+NS_SWIFT_NAME(FeatureDisabling)
+@protocol FBSDKFeatureDisabling
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface FBSDKFeatureManager (Testing)
-
-@property (nullable, nonatomic) Class<FBSDKGateKeeperManaging> gateKeeperManager;
-@property (nullable, nonatomic) id<FBSDKDataPersisting> store;
-
-- (instancetype)initWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
-                                    store:(id<FBSDKDataPersisting>)store
-NS_SWIFT_NAME(init(gateKeeperManager:store:));
-
-+ (NSString *)featureName:(FBSDKFeature)feature;
+- (void)disableFeature:(FBSDKFeature)feature;
 
 @end
-
-NS_ASSUME_NONNULL_END

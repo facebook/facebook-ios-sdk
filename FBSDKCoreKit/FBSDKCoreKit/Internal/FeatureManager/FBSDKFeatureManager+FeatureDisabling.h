@@ -16,23 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKFeatureManager.h"
+#import <Foundation/Foundation.h>
 
-@protocol FBSDKSessionProviding;
+#import "FBSDKFeatureDisabling.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKFeatureManager (Testing)
-
-@property (nullable, nonatomic) Class<FBSDKGateKeeperManaging> gateKeeperManager;
-@property (nullable, nonatomic) id<FBSDKDataPersisting> store;
-
-- (instancetype)initWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
-                                    store:(id<FBSDKDataPersisting>)store
-NS_SWIFT_NAME(init(gateKeeperManager:store:));
-
-+ (NSString *)featureName:(FBSDKFeature)feature;
-
+// Default conformance to the FBSDKFeatureDisabling protocol
+@interface FBSDKFeatureManager (FBSDKFeatureDisabling) <FBSDKFeatureDisabling>
 @end
 
 NS_ASSUME_NONNULL_END

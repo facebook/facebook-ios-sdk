@@ -125,6 +125,7 @@
 // FeatureManager abstraction
 #import "FBSDKFeatureChecking.h"
 #import "FBSDKFeatureManager.h"
+#import "FBSDKFeatureDisabling.h"
 // AppLinkResolver
 #import "FBSDKAppLinkResolverRequestBuilding.h"
 #import "FBSDKAppLinkResolverRequestBuilder+Protocols.h"
@@ -319,7 +320,7 @@ NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvi
 
 @property (nonatomic, nullable) id<FBSDKSettings> settings;
 
-- (instancetype)initWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
+- (instancetype)initWithFeatureChecker:(id<FBSDKFeatureChecking, FBSDKFeatureDisabling>)featureChecker
                   graphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
                               settings:(id<FBSDKSettings>)settings;
 

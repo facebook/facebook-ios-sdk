@@ -16,11 +16,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKCrashShield.h"
+#import "FBSDKFeatureDisabling.h"
 #import "FBSDKFeatureManager.h"
 #import "FBSDKTestCase.h"
 
@@ -28,13 +28,39 @@
 
 + (nullable NSString *)_getFeature:(NSArray<NSString *> *)callstack;
 + (nullable NSString *)_getClassName:(NSString *)entry;
++ (void)configureWithSettings:(id<FBSDKSettings>)settings
+              requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+              featureChecking:(id<FBSDKFeatureChecking, FBSDKFeatureDisabling>)featureChecking;
+
++ (void)reset;
+
++ (FBSDKFeature)featureForString:(NSString *)featureName;
 
 @end
 
-@interface FBSDKCrashShieldTests : FBSDKTestCase
+@interface FBSDKCrashShieldTests : XCTestCase
+
+@property (nonatomic) TestSettings *settings;
+@property (nonatomic) TestGraphRequestFactory *graphRequestFactory;
+@property (nonatomic) TestFeatureManager *featureManager;
+
 @end
 
 @implementation FBSDKCrashShieldTests
+
+typedef FBSDKCrashShield CrashShield;
+
+- (void)setUp
+{
+  [super setUp];
+  [FBSDKCrashShield reset];
+  _settings = [TestSettings new];
+  _graphRequestFactory = [TestGraphRequestFactory new];
+  _featureManager = [TestFeatureManager new];
+  [CrashShield configureWithSettings:_settings
+                     requestProvider:_graphRequestFactory
+                     featureChecking:_featureManager];
+}
 
 // MARK: - Get Feature
 
@@ -125,9 +151,11 @@
 - (void)testAnalyzingEmptyCrashLogs
 {
   // Should not create a graph request for posting a non-existent crash
-  OCMReject(ClassMethod([self.graphRequestMock alloc]));
-
   [FBSDKCrashShield analyze:@[]];
+  XCTAssertNil(
+    [self.graphRequestFactory capturedGraphPath],
+    "Should not create a graph request for posting a non-existent crash"
+  );
 }
 
 - (void)testAnalyzingInvalidCrashLogs
@@ -141,116 +169,124 @@
 
 - (void)testDisablingCoreKitFeatureWithDataProcessingRestricted
 {
-  [self stubIsDataProcessingRestricted:YES];
-  [self preventGraphRequest];
-
+  self.settings.stubbedIsDataProcessingRestricted = YES;
   [FBSDKCrashShield analyze:self.coreKitCrashLogs];
 
-  // Should disable a core feature found in a crashlog regardless of data processing permissions
-  OCMVerify([self.featureManagerClassMock disableFeature:@"CodelessEvents"]);
+  XCTAssertTrue(
+    [self.featureManager disabledFeaturesContains:FBSDKFeatureCodelessEvents],
+    "Should not disable a non core feature found in a crashlog regardless of data processing permissions"
+  );
 }
 
 - (void)testDisablingNonCoreKitFeatureWithDataProcessingRestricted
 {
-  [self stubIsDataProcessingRestricted:YES];
-  [self preventGraphRequest];
-
-  // Should not disable a non core feature found in a crashlog regardless of data processing permissions
-  OCMReject([self.featureManagerClassMock disableFeature:OCMArg.any]);
-
+  self.settings.stubbedIsDataProcessingRestricted = YES;
   [FBSDKCrashShield analyze:self.nonCoreKitCrashLogs];
+
+  XCTAssertFalse(
+    [self.featureManager disabledFeaturesContains:FBSDKFeatureCodelessEvents],
+    "Should not disable a non core feature found in a crashlog regardless of data processing permissions"
+  );
 }
 
 - (void)testDisablingCoreKitFeatureWithDataProcessingUnrestricted
 {
-  [self stubIsDataProcessingRestricted:NO];
-  [self preventGraphRequest];
+  self.settings.stubbedIsDataProcessingRestricted = NO;
 
   [FBSDKCrashShield analyze:self.coreKitCrashLogs];
 
-  // Should disable a core feature found in a crashlog regardless of data processing permissions
-  OCMVerify([self.featureManagerClassMock disableFeature:@"CodelessEvents"]);
+  XCTAssertTrue(
+    [self.featureManager disabledFeaturesContains:FBSDKFeatureCodelessEvents],
+    "Should not disable a non core feature found in a crashlog regardless of data processing permissions"
+  );
 }
 
 - (void)testDisablingNonCoreKitFeatureWithDataProcessingUnrestricted
 {
-  [self stubIsDataProcessingRestricted:NO];
-  [self preventGraphRequest];
-
-  // Should not disable a non core feature found in a crashlog regardless of data processing permissions
-  OCMReject([self.featureManagerClassMock disableFeature:OCMArg.any]);
-
+  self.settings.stubbedIsDataProcessingRestricted = NO;
   [FBSDKCrashShield analyze:self.nonCoreKitCrashLogs];
+
+  XCTAssertFalse(
+    [self.featureManager disabledFeaturesContains:FBSDKFeatureCodelessEvents],
+    "Should not disable a non core feature found in a crashlog regardless of data processing permissions"
+  );
+}
+
+- (void)testFeatureForStringWithFeatureNone
+{
+  NSDictionary<NSString *, NSNumber *> *pairs = @{
+    @"" : @(FBSDKFeatureNone),
+    @"CoreKit" : @(FBSDKFeatureCore),
+    @"AppEvents" : @(FBSDKFeatureAppEvents),
+    @"CodelessEvents" : @(FBSDKFeatureCodelessEvents),
+    @"RestrictiveDataFiltering" : @(FBSDKFeatureRestrictiveDataFiltering),
+    @"AAM" : @(FBSDKFeatureAAM),
+    @"PrivacyProtection" : @(FBSDKFeaturePrivacyProtection),
+    @"SuggestedEvents" : @(FBSDKFeatureSuggestedEvents),
+    @"IntelligentIntegrity" : @(FBSDKFeatureIntelligentIntegrity),
+    @"ModelRequest" : @(FBSDKFeatureModelRequest),
+    @"EventDeactivation" : @(FBSDKFeatureEventDeactivation),
+    @"SKAdNetwork" : @(FBSDKFeatureSKAdNetwork),
+    @"SKAdNetworkConversionValue" : @(FBSDKFeatureSKAdNetworkConversionValue),
+    @"Instrument" : @(FBSDKFeatureInstrument),
+    @"CrashReport" : @(FBSDKFeatureCrashReport),
+    @"CrashShield" : @(FBSDKFeatureCrashShield),
+    @"ErrorReport" : @(FBSDKFeatureErrorReport),
+    @"ATELogging" : @(FBSDKFeatureATELogging),
+    @"AEM" : @(FBSDKFeatureAEM),
+    @"LoginKit" : @(FBSDKFeatureLogin),
+    @"ShareKit" : @(FBSDKFeatureShare),
+    @"GamingServicesKit" : @(FBSDKFeatureGamingServices),
+  };
+
+  for (id key in pairs) {
+    XCTAssertEqual(
+      [FBSDKCrashShield featureForString:key],
+      [pairs objectForKey:key].intValue
+    );
+  }
 }
 
 // MARK: - Analyze: Posting Crash Logs
 
 - (void)testPostingCoreKitCrashLogsWithDataProcessingRestricted
 {
-  [self stubIsDataProcessingRestricted:YES];
-
-  OCMReject([self.graphRequestMock alloc]);
+  self.settings.stubbedIsDataProcessingRestricted = YES;
 
   [FBSDKCrashShield analyze:self.coreKitCrashLogs];
+  XCTAssertNil([self.graphRequestFactory capturedGraphPath]);
 }
 
 - (void)testPostingNonCoreKitCrashLogsWithDataProcessingRestricted
 {
-  [self stubIsDataProcessingRestricted:YES];
-
-  OCMReject([self.graphRequestMock alloc]);
+  self.settings.stubbedIsDataProcessingRestricted = YES;
 
   [FBSDKCrashShield analyze:self.nonCoreKitCrashLogs];
+  XCTAssertNil([self.graphRequestFactory capturedGraphPath]);
 }
 
 - (void)testPostingCoreKitCrashLogsWithDataProcessingUnrestricted
 {
   // Setup
-  [self stubIsDataProcessingRestricted:NO];
-  [self stubAppID:self.appID];
-  [self preventGraphRequest];
+  self.settings.stubbedIsDataProcessingRestricted = NO;
+  self.settings.appID = @"appID";
 
   // Act
   [FBSDKCrashShield analyze:self.coreKitCrashLogs];
 
-  // Assert
-  NSString *expectedPath = [NSString stringWithFormat:@"%@/instruments", self.appID];
-
-  OCMVerify(
-    (void)[self.graphRequestMock initWithGraphPath:expectedPath
-                                        parameters:OCMArg.any
-                                        HTTPMethod:FBSDKHTTPMethodPOST]
-  );
-  OCMVerify([self.graphRequestMock startWithCompletionHandler:nil]);
+  XCTAssertNotNil([self.graphRequestFactory capturedGraphPath]);
 }
 
 - (void)testPostingNonCoreKitCrashLogsWithDataProcessingUnrestricted
 {
-  [self stubIsDataProcessingRestricted:NO];
-  [self stubAppID:self.appID];
-
-  [self preventGraphRequest];
-
-  OCMReject(
-    [self.graphRequestMock initWithGraphPath:OCMArg.any
-                                  parameters:OCMArg.any
-                                  HTTPMethod:FBSDKHTTPMethodPOST]
-  );
-  OCMReject([self.graphRequestMock startWithCompletionHandler:nil]);
+  self.settings.stubbedIsDataProcessingRestricted = NO;
+  self.settings.appID = @"appID";
 
   [FBSDKCrashShield analyze:self.nonCoreKitCrashLogs];
+  XCTAssertNil([self.graphRequestFactory capturedGraphPath]);
 }
 
 // MARK: - Helpers
-
-- (NSString *)encodedCoreKitFeatureDataWithTimestamp:(NSString *)timestamp
-{
-  NSData *featureData = [FBSDKTypeUtility dataWithJSONObject:@{
-                           @"feature_names" : @[@"CodelessEvents"],
-                           @"timestamp" : timestamp
-                         } options:0 error:nil];
-  return [[NSString alloc] initWithData:featureData encoding:NSUTF8StringEncoding];
-}
 
 - (NSArray<NSDictionary<NSString *, id> *> *)coreKitCrashLogs
 {
@@ -280,17 +316,6 @@
                                                            @"device_os_version" : @"13.1.3",
   }];
   return crashLogs;
-}
-
-- (void)preventGraphRequest
-{
-  OCMStub(ClassMethod([self.graphRequestMock alloc])).andReturn(self.graphRequestMock);
-  OCMStub(
-    [self.graphRequestMock initWithGraphPath:OCMArg.any
-                                  parameters:OCMArg.any
-                                  HTTPMethod:FBSDKHTTPMethodPOST]
-  ).andReturn(self.graphRequestMock);
-  OCMStub([self.graphRequestMock startWithCompletionHandler:nil]);
 }
 
 @end

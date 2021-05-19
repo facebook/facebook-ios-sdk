@@ -20,7 +20,9 @@ import FBSDKCoreKit
 import XCTest
 
 @objcMembers
-class TestFeatureManager: NSObject, FeatureChecking {
+class TestFeatureManager: NSObject, FeatureChecking, FeatureDisabling {
+
+  var disabledFeatures = [SDKFeature]()
   var capturedFeatures = [SDKFeature]()
   var capturedCompletionBlocks: [SDKFeature: FBSDKFeatureManagerBlock] = [:]
 
@@ -31,6 +33,14 @@ class TestFeatureManager: NSObject, FeatureChecking {
 
   func capturedFeaturesContains(_ feature: SDKFeature) -> Bool {
     capturedFeatures.contains(feature)
+  }
+
+  func disableFeature(_ feature: SDKFeature) {
+    disabledFeatures.append(feature)
+  }
+
+  func disabledFeaturesContains(_ feature: SDKFeature) -> Bool {
+    disabledFeatures.contains(feature)
   }
 
   func completeCheck(
