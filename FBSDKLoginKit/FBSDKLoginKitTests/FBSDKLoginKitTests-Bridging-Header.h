@@ -21,14 +21,18 @@
 #import "FBSDKCoreKit+Internal.h"
 
 #ifdef BUCK
+ #import <FBSDKLoginKit+Internal/FBSDKAuthenticationTokenCreating.h>
  #import <FBSDKLoginKit+Internal/FBSDKAuthenticationTokenFactory.h>
  #import <FBSDKLoginKit+Internal/FBSDKAuthenticationTokenHeader.h>
+ #import <FBSDKLoginKit+Internal/FBSDKLoginCompletion+Internal.h>
  #import <FBSDKLoginKit+Internal/FBSDKNonceUtility.h>
  #import <FBSDKLoginKit+Internal/FBSDKPermission.h>
  #import <FBSDKLoginKit+Internal/FBSDKProfileFactory.h>
 #else
+ #import "FBSDKAuthenticationTokenCreating.h"
  #import "FBSDKAuthenticationTokenFactory.h"
  #import "FBSDKAuthenticationTokenHeader.h"
+ #import "FBSDKLoginCompletion+Internal.h"
  #import "FBSDKNonceUtility.h"
  #import "FBSDKPermission.h"
  #import "FBSDKProfileFactory.h"

@@ -28,7 +28,7 @@
   #import <FBSDKCoreKit/FBSDKCoreKit.h>
  #endif
 
- #import "FBSDKAuthenticationTokenFactory.h"
+ #import "FBSDKAuthenticationTokenCreating.h"
  #import "FBSDKCoreKitBasicsImportForLoginKit.h"
  #import "FBSDKLoginConstants.h"
  #import "FBSDKLoginError.h"
@@ -61,6 +61,8 @@
   FBSDKLoginCompletionParameters *_parameters;
   id<NSObject> _observer;
   BOOL _performExplicitFallback;
+  id<FBSDKGraphRequestConnectionProviding> _connectionProvider;
+  id<FBSDKAuthenticationTokenCreating> _authenticationTokenCreator;
 }
 
 static id<FBSDKProfileProviding> _profileFactory;
@@ -75,8 +77,12 @@ static NSDateFormatter *_dateFormatter;
 
 - (instancetype)initWithURLParameters:(NSDictionary *)parameters
                                 appID:(NSString *)appID
+                   connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
+           authenticationTokenCreator:(id<FBSDKAuthenticationTokenCreating>)authenticationTokenCreator
 {
   if ((self = [super init]) != nil) {
+    _connectionProvider = connectionProvider;
+    _authenticationTokenCreator = authenticationTokenCreator;
     _parameters = [FBSDKLoginCompletionParameters new];
 
     BOOL hasNonEmptyNonceString = ((NSString *)[FBSDKTypeUtility dictionary:parameters objectForKey:@"nonce" ofType:NSString.class]).length > 0;
@@ -142,10 +148,10 @@ static NSDateFormatter *_dateFormatter;
     }
     handler(parameters);
   };
-  [[FBSDKAuthenticationTokenFactory new] createTokenFromTokenString:_parameters.authenticationTokenString
-                                                              nonce:nonce
-                                                        graphDomain:parameters.graphDomain
-                                                         completion:completion];
+  [_authenticationTokenCreator createTokenFromTokenString:_parameters.authenticationTokenString
+                                                    nonce:nonce
+                                              graphDomain:parameters.graphDomain
+                                               completion:completion];
 }
 
 - (void)setParametersWithDictionary:(NSDictionary *)parameters appID:(NSString *)appID
@@ -203,13 +209,6 @@ static NSDateFormatter *_dateFormatter;
 
 - (void)exchangeNonceForTokenWithHandler:(FBSDKLoginCompletionParametersBlock)handler
 {
-  id<FBSDKGraphRequestConnectionProviding> provider = [FBSDKGraphRequestConnectionFactory new];
-  [self exchangeNonceForTokenWithGraphRequestConnectionProvider:provider handler:handler];
-}
-
-- (void)exchangeNonceForTokenWithGraphRequestConnectionProvider:(nonnull id<FBSDKGraphRequestConnectionProviding>)connectionProvider
-                                                        handler:(nonnull FBSDKLoginCompletionParametersBlock)handler
-{
   if (!handler) {
     return;
   }
@@ -232,7 +231,7 @@ static NSDateFormatter *_dateFormatter;
                                      flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError
                                      | FBSDKGraphRequestFlagDisableErrorRecovery];
   __block FBSDKLoginCompletionParameters *parameters = _parameters;
-  FBSDKGraphRequestConnection *connection = (FBSDKGraphRequestConnection *)[connectionProvider createGraphRequestConnection];
+  id<FBSDKGraphRequestConnecting> connection = [_connectionProvider createGraphRequestConnection];
   [connection addRequest:tokenRequest completionHandler:^(FBSDKGraphRequestConnection *requestConnection,
                                                           id result,
                                                           NSError *graphRequestError) {

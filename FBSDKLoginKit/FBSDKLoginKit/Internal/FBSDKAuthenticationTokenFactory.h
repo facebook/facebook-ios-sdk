@@ -23,18 +23,16 @@
 #else
  #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #endif
+#import "FBSDKAuthenticationTokenCreating.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-typedef void (^FBSDKAuthenticationTokenBlock)(FBSDKAuthenticationToken *_Nullable token)
-NS_SWIFT_NAME(AuthenticationTokenBlock);
 
 /**
  Class responsible for generating an `AuthenticationToken` given a valid token string.
  An `AuthenticationToken` is verified based of the OpenID Connect Protocol.
  */
 NS_SWIFT_NAME(AuthenticationTokenFactory)
-@interface FBSDKAuthenticationTokenFactory : NSObject
+@interface FBSDKAuthenticationTokenFactory : NSObject<FBSDKAuthenticationTokenCreating>
 
  /**
   Create an `AuthenticationToken` given a valid token string.

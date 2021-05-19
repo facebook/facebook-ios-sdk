@@ -31,6 +31,7 @@
   #import <FBSDKCoreKit/FBSDKCoreKit.h>
  #endif
 
+ #import "FBSDKAuthenticationTokenFactory.h"
  #import "FBSDKCoreKitBasicsImportForLoginKit.h"
  #import "FBSDKLoginCompletion.h"
  #import "FBSDKLoginConstants.h"
@@ -146,7 +147,10 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 
   NSDictionary *params = [self logInParametersFromURL:url];
   if (params) {
-    id<FBSDKLoginCompleting> completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:params appID:[FBSDKSettings appID]];
+    id<FBSDKLoginCompleting> completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:params
+                                                                                         appID:FBSDKSettings.appID
+                                                                            connectionProvider:FBSDKGraphRequestConnectionFactory.new
+                                                                    authenticationTokenCreator:FBSDKAuthenticationTokenFactory.new];
     [completer completeLoginWithHandler:^(FBSDKLoginCompletionParameters *parameters) {
       [self completeAuthentication:parameters expectChallenge:NO];
     }];
@@ -679,7 +683,9 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   if (isFacebookURL) {
     NSDictionary *urlParameters = [FBSDKLoginUtility queryParamsFromLoginURL:url];
     id<FBSDKLoginCompleting> completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:urlParameters
-                                                                                         appID:[FBSDKSettings appID]];
+                                                                                         appID:FBSDKSettings.appID
+                                                                            connectionProvider:FBSDKGraphRequestConnectionFactory.new
+                                                                    authenticationTokenCreator:FBSDKAuthenticationTokenFactory.new];
 
     // any necessary strong reference is maintained by the FBSDKLoginURLCompleter handler
     [completer completeLoginWithHandler:^(FBSDKLoginCompletionParameters *parameters) {

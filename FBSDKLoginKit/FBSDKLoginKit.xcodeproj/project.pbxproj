@@ -134,6 +134,7 @@
 		C60390DC2592F40200F9247E /* FBSDKPermissionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C60390DB2592F40200F9247E /* FBSDKPermissionTests.m */; };
 		C625B49C24F97DF0003DCE23 /* FBSDKReferralManagerLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = C6E63D2C24F822620015FC7C /* FBSDKReferralManagerLogger.m */; };
 		C632597324EDAF0F00D8F7E3 /* FBSDKReferralManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C632597224EDAF0F00D8F7E3 /* FBSDKReferralManagerTests.m */; };
+		C6334462264DE38A00C0BF84 /* FBSDKAuthenticationTokenCreating.h in Headers */ = {isa = PBXBuildFile; fileRef = C633445E264DE38A00C0BF84 /* FBSDKAuthenticationTokenCreating.h */; };
 		C6470B1024F44C0100E7AEF7 /* FBSDKReferralManagerResult.h in Headers */ = {isa = PBXBuildFile; fileRef = C68C1C6024F074FD005067E1 /* FBSDKReferralManagerResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C6470B2024F45A3A00E7AEF7 /* FBSDKReferralManagerResult.m in Sources */ = {isa = PBXBuildFile; fileRef = C68C1C6B24F07688005067E1 /* FBSDKReferralManagerResult.m */; };
 		C67DC40F25882264004D7E43 /* FBSDKLoginCompletionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C67DC40E25882263004D7E43 /* FBSDKLoginCompletionTests.m */; };
@@ -141,6 +142,7 @@
 		C681486D24F866EA004EED1A /* FBSDKReferralCode.m in Sources */ = {isa = PBXBuildFile; fileRef = C681486B24F866EA004EED1A /* FBSDKReferralCode.m */; };
 		C681486E24F86712004EED1A /* FBSDKReferralCode.h in Headers */ = {isa = PBXBuildFile; fileRef = C681486124F866EA004EED1A /* FBSDKReferralCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C681486F24F86806004EED1A /* FBSDKReferralCode.m in Sources */ = {isa = PBXBuildFile; fileRef = C681486B24F866EA004EED1A /* FBSDKReferralCode.m */; };
+		C6843CCB264C726700E595DC /* TestAuthenticationTokenFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6843CCA264C726700E595DC /* TestAuthenticationTokenFactory.swift */; };
 		C68C1C6A24F074FD005067E1 /* FBSDKReferralManagerResult.h in Headers */ = {isa = PBXBuildFile; fileRef = C68C1C6024F074FD005067E1 /* FBSDKReferralManagerResult.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C68C1C6C24F07688005067E1 /* FBSDKReferralManagerResult.m in Sources */ = {isa = PBXBuildFile; fileRef = C68C1C6B24F07688005067E1 /* FBSDKReferralManagerResult.m */; };
 		C6CE2BBF24EB72F200CF2EB6 /* FBSDKReferralManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C6CE2BB424EB72F200CF2EB6 /* FBSDKReferralManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -476,9 +478,12 @@
 		9DEE5C931A671B5500D750E1 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		C60390DB2592F40200F9247E /* FBSDKPermissionTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKPermissionTests.m; sourceTree = "<group>"; };
 		C632597224EDAF0F00D8F7E3 /* FBSDKReferralManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKReferralManagerTests.m; sourceTree = "<group>"; };
+		C633445E264DE38A00C0BF84 /* FBSDKAuthenticationTokenCreating.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKAuthenticationTokenCreating.h; sourceTree = "<group>"; };
 		C67DC40E25882263004D7E43 /* FBSDKLoginCompletionTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKLoginCompletionTests.m; sourceTree = "<group>"; };
 		C681486124F866EA004EED1A /* FBSDKReferralCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKReferralCode.h; sourceTree = "<group>"; };
 		C681486B24F866EA004EED1A /* FBSDKReferralCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKReferralCode.m; sourceTree = "<group>"; };
+		C6843CB0264C64B100E595DC /* FBSDKAuthenticationTokenProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKAuthenticationTokenProviding.h; sourceTree = "<group>"; };
+		C6843CCA264C726700E595DC /* TestAuthenticationTokenFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAuthenticationTokenFactory.swift; sourceTree = "<group>"; };
 		C68C1C6024F074FD005067E1 /* FBSDKReferralManagerResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKReferralManagerResult.h; sourceTree = "<group>"; };
 		C68C1C6B24F07688005067E1 /* FBSDKReferralManagerResult.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKReferralManagerResult.m; sourceTree = "<group>"; };
 		C6CE2BB424EB72F200CF2EB6 /* FBSDKReferralManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKReferralManager.h; sourceTree = "<group>"; };
@@ -688,6 +693,7 @@
 			isa = PBXGroup;
 			children = (
 				F4963C902651B3D4004E7269 /* FBSDKCoreKitBasicsImportForLoginKit.h */,
+				C633445E264DE38A00C0BF84 /* FBSDKAuthenticationTokenCreating.h */,
 				F42BF79A264AE16200B0156B /* FBSDKAuthenticationTokenFactory.h */,
 				F42BF790264AE16200B0156B /* FBSDKAuthenticationTokenFactory.m */,
 				F42BF79B264AE16200B0156B /* FBSDKAuthenticationTokenHeader.h */,
@@ -703,6 +709,7 @@
 				9DBC4C3B1A782E2000816FE8 /* FBSDKCoreKit+Internal.h */,
 				6B5D2DEC1A8EB1D200D3EF09 /* FBSDKLoginCompletion.h */,
 				6B5D2DED1A8EB1D200D3EF09 /* FBSDKLoginCompletion.m */,
+				C6843CB0264C64B100E595DC /* FBSDKAuthenticationTokenProviding.h */,
 				F4A71FAB25FFC2A8009FA5F3 /* FBSDKProfileFactory.h */,
 				F4A71FB525FFC2A8009FA5F3 /* FBSDKProfileFactory.m */,
 				6BAFD01F1A9531EA0096E4B5 /* FBSDKLoginCompletion+Internal.h */,
@@ -851,6 +858,7 @@
 				F4665CD2258D687500981FDE /* FakeGraphRequestConnectionProvider.swift */,
 				F4665CC0258D684300981FDE /* Fuzzer.swift */,
 				F40BF6D726005443007DB231 /* TestProfileProvider.swift */,
+				C6843CCA264C726700E595DC /* TestAuthenticationTokenFactory.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -965,6 +973,7 @@
 				9D3AF4931A9EFEFB00EEF724 /* _FBSDKLoginRecoveryAttempter.h in Headers */,
 				F4E2024F264723C2006F2763 /* FBSDKMonotonicTime.h in Headers */,
 				F4963C972651B3D4004E7269 /* FBSDKCoreKitBasicsImportForLoginKit.h in Headers */,
+				C6334462264DE38A00C0BF84 /* FBSDKAuthenticationTokenCreating.h in Headers */,
 				C6CE2BBF24EB72F200CF2EB6 /* FBSDKReferralManager.h in Headers */,
 				9DBC4C3C1A782E2000816FE8 /* FBSDKCoreKit+Internal.h in Headers */,
 				9D03E8341A72DF5800207493 /* FBSDKLoginConstants.h in Headers */,
@@ -1435,6 +1444,7 @@
 				F40BF6D826005443007DB231 /* TestProfileProvider.swift in Sources */,
 				F46BC80E264C7DDD00A32F02 /* FBSDKAuthenticationTokenFactoryTests.m in Sources */,
 				C632597324EDAF0F00D8F7E3 /* FBSDKReferralManagerTests.m in Sources */,
+				C6843CCB264C726700E595DC /* TestAuthenticationTokenFactory.swift in Sources */,
 				C67DC40F25882264004D7E43 /* FBSDKLoginCompletionTests.m in Sources */,
 				C60390DC2592F40200F9247E /* FBSDKPermissionTests.m in Sources */,
 				F4665CD3258D687500981FDE /* FakeGraphRequestConnectionProvider.swift in Sources */,

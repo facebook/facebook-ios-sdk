@@ -26,7 +26,6 @@
  #import <FBSDKLoginKit+Internal/FBSDKLoginCompletion+Internal.h>
  #import <FBSDKLoginKit+Internal/FBSDKPermission.h>
 #else
- #import "FBSDKLoginCompletion+Internal.h"
  #import "FBSDKPermission.h"
 #endif
 #import "FBSDKLoginKitTests-Swift.h"
@@ -39,13 +38,11 @@ static NSString *const _fakeChallence = @"some_challenge";
 @property (class, nonatomic, assign) id<FBSDKProfileProviding> profileFactory;
 
 - (FBSDKLoginCompletionParameters *)parameters;
-- (void)exchangeNonceForTokenWithGraphRequestConnectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connection
-                                                        handler:(FBSDKLoginCompletionParametersBlock)handler;
 
 - (void)exchangeNonceForTokenWithHandler:(FBSDKLoginCompletionParametersBlock)handler;
 
-- (void)fetchAndSetPropertiesForParameters:(nonnull FBSDKLoginCompletionParameters *)parameters
-                                     nonce:(nonnull NSString *)nonce
+- (void)fetchAndSetPropertiesForParameters:(FBSDKLoginCompletionParameters *)parameters
+                                     nonce:(NSString *)nonce
                                    handler:(FBSDKLoginCompletionParametersBlock)handler;
 
 + (FBSDKProfile *)profileWithClaims:(FBSDKAuthenticationTokenClaims *)claims;
@@ -81,34 +78,21 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 @end
 
+@interface FBSDKAuthenticationToken (Testing)
+
+- (instancetype)initWithTokenString:(NSString *)tokenString
+                              nonce:(NSString *)nonce;
+
+@end
+
 @interface FBSDKLoginCompletionTests : XCTestCase
 {
   NSDictionary *_parameters;
 }
 
-@end
+@property TestGraphRequestConnection *graphConnection;
 
-@interface FBSDKTestLoginURLCompleter : FBSDKLoginURLCompleter
-
-@property int exchangeNonceCount;
-
-@property int fetchAndSetAuthTokenCount;
-
-@end
-
-@implementation FBSDKTestLoginURLCompleter
-
-- (void)exchangeNonceForTokenWithHandler:(FBSDKLoginCompletionParametersBlock)handler
-{
-  _exchangeNonceCount += 1;
-}
-
-- (void)fetchAndSetPropertiesForParameters:(nonnull FBSDKLoginCompletionParameters *)parameters
-                                     nonce:(nonnull NSString *)nonce
-                                   handler:(FBSDKLoginCompletionParametersBlock)handler
-{
-  _fetchAndSetAuthTokenCount += 1;
-}
+@property TestAuthenticationTokenFactory *authenticationTokenFactory;
 
 @end
 
@@ -138,6 +122,9 @@ static NSString *const _fakeChallence = @"some_challenge";
     @"error" : @"some_error",
     @"error_message" : @"some_error_message",
   };
+
+  _graphConnection = TestGraphRequestConnection.new;
+  _authenticationTokenFactory = TestAuthenticationTokenFactory.new;
 }
 
 - (void)tearDown
@@ -175,8 +162,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 {
   NSMutableDictionary *parameters = self.parametersWithIDtoken.mutableCopy;
   [parameters addEntriesFromDictionary:self.parametersWithAccessToken];
-
-  FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters appID:_fakeAppID];
+  FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
 
   [self verifyParameters:completer.parameters urlParameter:parameters];
 }
@@ -184,8 +170,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 - (void)testInitWithAccessToken
 {
   NSDictionary *parameters = self.parametersWithAccessToken;
-
-  FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters appID:_fakeAppID];
+  FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
 
   [self verifyParameters:completer.parameters urlParameter:parameters];
 }
@@ -193,8 +178,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 - (void)testInitWithNonce
 {
   NSDictionary *parameters = self.parametersWithNonce;
-
-  FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters appID:_fakeAppID];
+  FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
 
   [self verifyParameters:completer.parameters urlParameter:parameters];
 }
@@ -202,8 +186,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 - (void)testInitWithIDToken
 {
   NSDictionary *parameters = self.parametersWithIDtoken;
-
-  FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters appID:_fakeAppID];
+  FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
 
   [self verifyParameters:completer.parameters urlParameter:parameters];
 }
@@ -211,8 +194,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 - (void)testInitWithoutAccessTokenWithoutIDTokenWithoutNonce
 {
   NSDictionary *parameters = self.parametersWithoutAccessTokenWithoutIDTokenWithoutNonce;
-
-  FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters appID:_fakeAppID];
+  FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
 
   [self verifyEmptyParameters:completer.parameters];
 }
@@ -220,15 +202,14 @@ static NSString *const _fakeChallence = @"some_challenge";
 - (void)testInitWithEmptyAccessTokenWithEmptyIDTokenWithEmptyNonce
 {
   NSDictionary *parameters = self.parametersWithEmptyAccessTokenWithEmptyIDTokenWithEmptyNonce;
-
-  FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters appID:_fakeAppID];
+  FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
 
   [self verifyEmptyParameters:completer.parameters];
 }
 
 - (void)testInitWithEmptyParameters
 {
-  FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:@{} appID:_fakeAppID];
+  FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:@{} appID:_fakeAppID];
 
   [self verifyEmptyParameters:completer.parameters];
 }
@@ -237,8 +218,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 {
   NSMutableDictionary *parameters = self.parametersWithIDtoken.mutableCopy;
   [parameters addEntriesFromDictionary:self.parametersWithNonce];
-
-  FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters appID:_fakeAppID];
+  FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
 
   XCTAssertNotNil(completer.parameters.error);
 }
@@ -246,8 +226,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 - (void)testInitWithError
 {
   NSDictionary *parameters = self.parametersWithError;
-
-  FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters appID:_fakeAppID];
+  FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
 
   XCTAssertNotNil(completer.parameters.error);
 }
@@ -256,30 +235,26 @@ static NSString *const _fakeChallence = @"some_challenge";
 {
   for (int i = 0; i < 100; i++) {
     NSDictionary *parameters = [Fuzzer randomizeWithJson:_parameters];
-    FBSDKLoginURLCompleter *_completer __unused = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters appID:_fakeAppID];
+    FBSDKLoginURLCompleter *_completer __unused = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
   }
 }
 
-// MARK: - Nonce Exchange
+// MARK: Completion
 
-- (void)testExchangeNonceForTokenWithMissingHandler
+- (void)testCompleteWithMissingHandler
 {
-  FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:_parameters appID:_fakeAppID];
-  TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
-  TestGraphRequestConnectionFactory *factory = [TestGraphRequestConnectionFactory createWithStubbedConnection:connection];
+  FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:_parameters appID:_fakeAppID];
 
-  [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:factory
-                                                             handler:nil];
-  XCTAssertNil(connection.capturedRequest, "Should not create a graph request if there's no handler to use the result");
+  FBSDKLoginCompletionParametersBlock handler = nil;
+  [completer completeLoginWithHandler:handler];
+
+  XCTAssertNil(_graphConnection.capturedRequest, "Should not create a graph request if there's no handler to use the result");
 }
 
-- (void)testNonceExchangeWithoutNonce
+- (void)testCompleteWithoutAppID
 {
-  NSDictionary *parameters = self.rawParametersWithMissingNonce;
-
-  FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters appID:_fakeAppID];
-  TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
-  TestGraphRequestConnectionFactory *factory = [TestGraphRequestConnectionFactory createWithStubbedConnection:connection];
+  NSString *appID = nil;
+  FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:_parameters appID:appID];
 
   __block BOOL completionWasInvoked = NO;
   FBSDKLoginCompletionParametersBlock handler = ^(FBSDKLoginCompletionParameters *_Nonnull completionParams) {
@@ -292,47 +267,23 @@ static NSString *const _fakeChallence = @"some_challenge";
     completionWasInvoked = YES;
   };
 
-  [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:factory
-                                                             handler:handler];
+  [completer completeLoginWithHandler:handler];
   XCTAssertTrue(completionWasInvoked);
+  XCTAssertNil(_graphConnection.capturedRequest, "Should not create a graph request if there's no handler to use the result");
 }
 
-- (void)testNonceExchangeWithoutAppID
+- (void)testCompleteWithNonceGraphRequestCreation
 {
-  NSString *appID = @"123";
-  appID = nil;
-  FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:_parameters appID:appID];
-  TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
-  TestGraphRequestConnectionFactory *factory = [TestGraphRequestConnectionFactory createWithStubbedConnection:connection];
-
-  __block BOOL completionWasInvoked = NO;
-  FBSDKLoginCompletionParametersBlock handler = ^(FBSDKLoginCompletionParameters *_Nonnull completionParams) {
-    XCTAssertEqualObjects(
-      completer.parameters,
-      completionParams,
-      "Should call the completion with the provided parameters"
-    );
-    XCTAssertEqual(completer.parameters.error.code, FBSDKErrorInvalidArgument, "Should provide an error with the expected code");
-    completionWasInvoked = YES;
+  FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:self.parametersWithNonce appID:_fakeAppID];
+  FBSDKLoginCompletionParametersBlock handler = ^(FBSDKLoginCompletionParameters *parameters) {
+    // do nothing
   };
 
-  [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:factory
-                                                             handler:handler];
-  XCTAssertTrue(completionWasInvoked);
-  XCTAssertNil(connection.capturedRequest, "Should not create a graph request if there's no handler to use the result");
-}
+  [completer completeLoginWithHandler:handler];
 
-- (void)testNonceExchangeGraphRequestCreation
-{
-  FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:_parameters appID:_fakeAppID];
-  TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
-  TestGraphRequestConnectionFactory *factory = [TestGraphRequestConnectionFactory createWithStubbedConnection:connection];
-
-  [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:factory
-                                                             handler:^(FBSDKLoginCompletionParameters *_Nonnull parameters) {
-                                                               // not important here
-                                                             }];
-  FBSDKGraphRequest *capturedRequest = (FBSDKGraphRequest *)connection.capturedRequest;
+  XCTAssertNil(completer.parameters.error);
+  XCTAssertNil(_authenticationTokenFactory.capturedTokenString);
+  FBSDKGraphRequest *capturedRequest = (FBSDKGraphRequest *)_graphConnection.capturedRequest;
   XCTAssertEqualObjects(
     capturedRequest.graphPath,
     @"oauth/access_token",
@@ -376,9 +327,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (void)testNonceExchangeCompletionWithError
 {
-  FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:_parameters appID:_fakeAppID];
-  TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
-  TestGraphRequestConnectionFactory *factory = [TestGraphRequestConnectionFactory createWithStubbedConnection:connection];
+  FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:self.parametersWithNonce appID:_fakeAppID];
 
   __block BOOL completionWasInvoked = NO;
   FBSDKLoginCompletionParametersBlock handler = ^(FBSDKLoginCompletionParameters *_Nonnull completionParams) {
@@ -391,17 +340,14 @@ static NSString *const _fakeChallence = @"some_challenge";
     completionWasInvoked = YES;
   };
 
-  [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:factory
-                                                             handler:handler];
-  connection.capturedCompletion(nil, nil, self.sampleError);
+  [completer completeLoginWithHandler:handler];
+  _graphConnection.capturedCompletion(nil, nil, self.sampleError);
   XCTAssertTrue(completionWasInvoked);
 }
 
 - (void)testNonceExchangeCompletionWithAccessTokenString
 {
-  FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:_parameters appID:_fakeAppID];
-  TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
-  TestGraphRequestConnectionFactory *factory = [TestGraphRequestConnectionFactory createWithStubbedConnection:connection];
+  FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:self.parametersWithNonce appID:_fakeAppID];
   NSDictionary *stubbedResult = @{ @"access_token" : self.name };
 
   __block BOOL completionWasInvoked = NO;
@@ -419,17 +365,14 @@ static NSString *const _fakeChallence = @"some_challenge";
     completionWasInvoked = YES;
   };
 
-  [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:factory
-                                                             handler:handler];
-  connection.capturedCompletion(nil, stubbedResult, nil);
+  [completer completeLoginWithHandler:handler];
+  _graphConnection.capturedCompletion(nil, stubbedResult, nil);
   XCTAssertTrue(completionWasInvoked);
 }
 
 - (void)testNonceExchangeWithRandomResults
 {
-  FBSDKLoginURLCompleter *completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:_parameters appID:_fakeAppID];
-  TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
-  TestGraphRequestConnectionFactory *factory = [TestGraphRequestConnectionFactory createWithStubbedConnection:connection];
+  FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:self.parametersWithNonce appID:_fakeAppID];
 
   NSDictionary *stubbedResult = @{
     @"access_token" : self.name,
@@ -443,37 +386,20 @@ static NSString *const _fakeChallence = @"some_challenge";
     completionWasInvoked = YES;
   };
 
-  [completer exchangeNonceForTokenWithGraphRequestConnectionProvider:factory
-                                                             handler:handler];
+  [completer completeLoginWithHandler:handler];
 
   for (int i = 0; i < 100; i++) {
     NSDictionary *params = [stubbedResult copy];
     NSDictionary *parameters = [Fuzzer randomizeWithJson:params];
-    connection.capturedCompletion(nil, parameters, nil);
+    _graphConnection.capturedCompletion(nil, parameters, nil);
     XCTAssertTrue(completionWasInvoked);
     completionWasInvoked = NO;
   }
 }
 
-// MARK: Completion
-
-- (void)testCompleteWithNonce
-{
-  FBSDKTestLoginURLCompleter *completer = [[FBSDKTestLoginURLCompleter alloc] initWithURLParameters:self.parametersWithNonce appID:_fakeAppID];
-  FBSDKLoginCompletionParametersBlock handler = ^(FBSDKLoginCompletionParameters *parameters) {
-    // do nothing
-  };
-
-  [completer completeLoginWithHandler:handler];
-
-  XCTAssertNil(completer.parameters.error);
-  XCTAssertEqual(completer.exchangeNonceCount, 1);
-  XCTAssertEqual(completer.fetchAndSetAuthTokenCount, 0);
-}
-
 - (void)testCompleteWithAuthenticationTokenWithoutNonce
 {
-  FBSDKTestLoginURLCompleter *completer = [[FBSDKTestLoginURLCompleter alloc] initWithURLParameters:self.parametersWithIDtoken appID:_fakeAppID];
+  FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:self.parametersWithIDtoken appID:_fakeAppID];
   FBSDKLoginCompletionParametersBlock handler = ^(FBSDKLoginCompletionParameters *parameters) {
     // do nothing
   };
@@ -481,44 +407,85 @@ static NSString *const _fakeChallence = @"some_challenge";
   [completer completeLoginWithHandler:handler];
 
   XCTAssertNotNil(completer.parameters.error);
-  XCTAssertEqual(completer.exchangeNonceCount, 0);
-  XCTAssertEqual(completer.fetchAndSetAuthTokenCount, 0);
+  XCTAssertNil(_graphConnection.capturedRequest);
+  XCTAssertNil(_authenticationTokenFactory.capturedTokenString);
 }
 
 - (void)testCompleteWithAuthenticationTokenWithNonce
 {
-  FBSDKTestLoginURLCompleter *completer = [[FBSDKTestLoginURLCompleter alloc] initWithURLParameters:self.parametersWithIDtoken appID:_fakeAppID];
+  FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:self.parametersWithIDtoken appID:_fakeAppID];
+
   FBSDKLoginCompletionParametersBlock handler = ^(FBSDKLoginCompletionParameters *parameters) {
     // do nothing
   };
+  NSString *nonce = @"some_nonce";
 
-  [completer completeLoginWithHandler:handler nonce:@"some_nonce"];
+  [completer completeLoginWithHandler:handler nonce:nonce];
 
   XCTAssertNil(completer.parameters.error);
-  XCTAssertEqual(completer.exchangeNonceCount, 0);
-  XCTAssertEqual(completer.fetchAndSetAuthTokenCount, 1);
+  XCTAssertNil(_graphConnection.capturedRequest);
+  XCTAssertEqualObjects(_authenticationTokenFactory.capturedTokenString, self.parametersWithIDtoken[@"id_token"]);
+  XCTAssertEqualObjects(_authenticationTokenFactory.capturedNonce, nonce);
+}
+
+- (void)testAuthenticationTokenCreationCompleteWithEmptyResult
+{
+  FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:self.parametersWithIDtoken appID:_fakeAppID];
+  NSString *nonce = @"some_nonce";
+
+  __block BOOL wasCalled = NO;
+  FBSDKLoginCompletionParametersBlock handler = ^(FBSDKLoginCompletionParameters *parameters) {
+    wasCalled = YES;
+    XCTAssertNotNil(parameters.error);
+    XCTAssertNil(parameters.authenticationToken);
+  };
+
+  [completer completeLoginWithHandler:handler nonce:nonce];
+  _authenticationTokenFactory.capturedCompletion(nil);
+
+  XCTAssert(wasCalled, @"Handler should be invoked syncronously");
+}
+
+- (void)testAuthenticationTokenCreationCompleteWithToken
+{
+  FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:self.parametersWithIDtoken appID:_fakeAppID];
+  NSString *nonce = @"some_nonce";
+
+  __block BOOL wasCalled = NO;
+  FBSDKLoginCompletionParametersBlock handler = ^(FBSDKLoginCompletionParameters *parameters) {
+    wasCalled = YES;
+    XCTAssertNil(completer.parameters.error);
+    XCTAssertEqualObjects(parameters.authenticationToken.tokenString, self.parametersWithIDtoken[@"id_token"]);
+    XCTAssertEqualObjects(parameters.authenticationToken.nonce, nonce);
+  };
+
+  [completer completeLoginWithHandler:handler nonce:nonce];
+  _authenticationTokenFactory.capturedCompletion([[FBSDKAuthenticationToken alloc] initWithTokenString:self.parametersWithIDtoken[@"id_token"] nonce:nonce]);
+
+  XCTAssert(wasCalled, @"Handler should be invoked syncronously");
 }
 
 - (void)testCompleteWithAccessToken
 {
-  FBSDKTestLoginURLCompleter *completer = [[FBSDKTestLoginURLCompleter alloc] initWithURLParameters:self.parametersWithAccessToken appID:_fakeAppID];
+  FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:self.parametersWithAccessToken appID:_fakeAppID];
 
   __block BOOL wasCalled = NO;
   FBSDKLoginCompletionParametersBlock handler = ^(FBSDKLoginCompletionParameters *parameters) {
     wasCalled = YES;
+    [self verifyParameters:parameters urlParameter:self.parametersWithAccessToken];
   };
 
   [completer completeLoginWithHandler:handler nonce:@"some_nonce"];
 
   XCTAssert(wasCalled, @"Handler should be invoked syncronously");
   XCTAssertNil(completer.parameters.error);
-  XCTAssertEqual(completer.exchangeNonceCount, 0);
-  XCTAssertEqual(completer.fetchAndSetAuthTokenCount, 0);
+  XCTAssertNil(_graphConnection.capturedRequest);
+  XCTAssertNil(_authenticationTokenFactory.capturedTokenString);
 }
 
 - (void)testCompleteWithEmptyParameters
 {
-  FBSDKTestLoginURLCompleter *completer = [[FBSDKTestLoginURLCompleter alloc] initWithURLParameters:@{} appID:_fakeAppID];
+  FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:@{} appID:_fakeAppID];
 
   __block BOOL wasCalled = NO;
   FBSDKLoginCompletionParametersBlock handler = ^(FBSDKLoginCompletionParameters *parameters) {
@@ -529,8 +496,8 @@ static NSString *const _fakeChallence = @"some_challenge";
 
   XCTAssert(wasCalled, @"Handler should be invoked syncronously");
   XCTAssertNil(completer.parameters.error);
-  XCTAssertEqual(completer.exchangeNonceCount, 0);
-  XCTAssertEqual(completer.fetchAndSetAuthTokenCount, 0);
+  XCTAssertNil(_graphConnection.capturedRequest);
+  XCTAssertNil(_authenticationTokenFactory.capturedTokenString);
 }
 
 // MARK: Profile
@@ -734,6 +701,16 @@ static NSString *const _fakeChallence = @"some_challenge";
   XCTAssertNil(parameters.dataAccessExpirationDate);
   XCTAssertNil(parameters.nonceString);
   XCTAssertNil(parameters.error);
+}
+
+- (FBSDKLoginURLCompleter *)loginCompleterWithParameters:(NSDictionary *)parameters
+                                                   appID:(NSString *)appID
+{
+  TestGraphRequestConnectionFactory *graphConnectionFactory = [TestGraphRequestConnectionFactory createWithStubbedConnection:_graphConnection];
+  return [[FBSDKLoginURLCompleter alloc] initWithURLParameters:parameters
+                                                         appID:appID
+                                            connectionProvider:graphConnectionFactory
+                                    authenticationTokenCreator:_authenticationTokenFactory];
 }
 
 @end
