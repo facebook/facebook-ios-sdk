@@ -121,14 +121,16 @@ static NSDateFormatter *_dateFormatter;
 {
   // If there is a nonceString then it means we logged in from the app.
   if (_parameters.nonceString) {
-    [self exchangeNonceForTokenWithHandler:handler];
+    [self exchangeNonceForTokenWithHandler:handler authenticationNonce:nonce];
   } else if (_parameters.authenticationTokenString && !nonce) {
     // If there is no nonce then somehow an auth token string was provided
     // but the call did not originate from the sdk. This is not a valid state
     _parameters.error = [FBSDKError errorWithCode:FBSDKLoginErrorUnknown message:@"Please try to login again"];
     handler(_parameters);
   } else if (_parameters.authenticationTokenString && nonce) {
-    [self fetchAndSetPropertiesForParameters:_parameters nonce:nonce handler:handler];
+    [self fetchAndSetPropertiesForParameters:_parameters
+                                       nonce:nonce
+                                     handler:handler];
   } else {
     handler(_parameters);
   }
@@ -208,6 +210,7 @@ static NSDateFormatter *_dateFormatter;
 }
 
 - (void)exchangeNonceForTokenWithHandler:(FBSDKLoginCompletionParametersBlock)handler
+                     authenticationNonce:(NSString *)authenticationNonce
 {
   if (!handler) {
     return;
@@ -239,6 +242,14 @@ static NSDateFormatter *_dateFormatter;
                                                               parameters.accessTokenString = [FBSDKTypeUtility dictionary:result objectForKey:@"access_token" ofType:NSString.class];
                                                               parameters.expirationDate = [FBSDKLoginURLCompleter expirationDateFromParameters:result];
                                                               parameters.dataAccessExpirationDate = [FBSDKLoginURLCompleter dataAccessExpirationDateFromParameters:result];
+                                                              parameters.authenticationTokenString = [FBSDKTypeUtility dictionary:result objectForKey:@"id_token" ofType:NSString.class];
+
+                                                              if (parameters.authenticationTokenString) {
+                                                                [self fetchAndSetPropertiesForParameters:parameters
+                                                                                                   nonce:authenticationNonce
+                                                                                                 handler:handler];
+                                                                return;
+                                                              }
                                                             } else {
                                                               parameters.error = graphRequestError;
                                                             }

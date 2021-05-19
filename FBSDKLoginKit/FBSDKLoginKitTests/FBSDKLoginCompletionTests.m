@@ -39,12 +39,6 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (FBSDKLoginCompletionParameters *)parameters;
 
-- (void)exchangeNonceForTokenWithHandler:(FBSDKLoginCompletionParametersBlock)handler;
-
-- (void)fetchAndSetPropertiesForParameters:(FBSDKLoginCompletionParameters *)parameters
-                                     nonce:(NSString *)nonce
-                                   handler:(FBSDKLoginCompletionParametersBlock)handler;
-
 + (FBSDKProfile *)profileWithClaims:(FBSDKAuthenticationTokenClaims *)claims;
 
 + (void)reset;
@@ -370,6 +364,44 @@ static NSString *const _fakeChallence = @"some_challenge";
   XCTAssertTrue(completionWasInvoked);
 }
 
+- (void)testNonceExchangeCompletionWithAccessTokenStringAndAuthenticationTokenString
+{
+  FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:self.parametersWithNonce appID:_fakeAppID];
+  NSString *nonce = @"some_nonce";
+  NSString *id_token = @"some_id_token";
+  NSDictionary *stubbedResult = @{
+    @"access_token" : self.name,
+    @"id_token" : id_token
+  };
+  FBSDKLoginCompletionParametersBlock handler = ^(FBSDKLoginCompletionParameters *_Nonnull completionParams) {
+    // not important
+  };
+
+  [completer completeLoginWithHandler:handler nonce:nonce];
+  _graphConnection.capturedCompletion(nil, stubbedResult, nil);
+
+  XCTAssertEqualObjects(
+    completer.parameters.accessTokenString,
+    self.name,
+    "Should set the access token string from the graph request's result"
+  );
+  XCTAssertEqualObjects(
+    completer.parameters.authenticationTokenString,
+    id_token,
+    "Should set the authentication token string from the graph request's result"
+  );
+  XCTAssertEqual(
+    _authenticationTokenFactory.capturedTokenString,
+    id_token,
+    "Should call AuthenticationTokenFactory with the expected token string"
+  );
+  XCTAssertEqual(
+    _authenticationTokenFactory.capturedNonce,
+    nonce,
+    "Should call AuthenticationTokenFactory with the expected nonce"
+  );
+}
+
 - (void)testNonceExchangeWithRandomResults
 {
   FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:self.parametersWithNonce appID:_fakeAppID];
@@ -424,8 +456,16 @@ static NSString *const _fakeChallence = @"some_challenge";
 
   XCTAssertNil(completer.parameters.error);
   XCTAssertNil(_graphConnection.capturedRequest);
-  XCTAssertEqualObjects(_authenticationTokenFactory.capturedTokenString, self.parametersWithIDtoken[@"id_token"]);
-  XCTAssertEqualObjects(_authenticationTokenFactory.capturedNonce, nonce);
+  XCTAssertEqualObjects(
+    _authenticationTokenFactory.capturedTokenString,
+    self.parametersWithIDtoken[@"id_token"],
+    "Should call AuthenticationTokenFactory with the expected token string"
+  );
+  XCTAssertEqualObjects(
+    _authenticationTokenFactory.capturedNonce,
+    nonce,
+    "Should call AuthenticationTokenFactory with the expected nonce"
+  );
 }
 
 - (void)testAuthenticationTokenCreationCompleteWithEmptyResult
