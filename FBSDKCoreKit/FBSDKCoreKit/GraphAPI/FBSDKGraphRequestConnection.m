@@ -18,11 +18,11 @@
 
 #import "FBSDKGraphRequestConnection+Internal.h"
 
+#import "FBSDKAppEvents+EventLogging.h"
 #import "FBSDKConstants.h"
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKError.h"
 #import "FBSDKErrorConfigurationProvider.h"
-#import "FBSDKEventLogger.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestBody.h"
 #import "FBSDKGraphRequestConnectionFactory.h"
@@ -152,7 +152,7 @@ static BOOL _canMakeRequests = NO;
                      piggybackManagerProvider:FBSDKGraphRequestPiggybackManagerProvider.self
                                      settings:FBSDKSettings.self
                             connectionFactory:[FBSDKGraphRequestConnectionFactory new]
-                                  eventLogger:[FBSDKEventLogger new]
+                                  eventLogger:FBSDKAppEvents.singleton
                operatingSystemVersionComparer:NSProcessInfo.processInfo
                       macCatalystDeterminator:NSProcessInfo.processInfo];
 }
@@ -250,8 +250,9 @@ static BOOL _canMakeRequests = NO;
 {
   if (![self.class canMakeRequests]) {
     NSString *msg = @"FBSDKGraphRequestConnection cannot be started before Facebook SDK initialized.";
+    // TODO: Use a logger provider for this.
     [self.logger.class singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                             formatString:@"%@", msg];
+                                 logEntry:msg];
     self.state = kStateCancelled;
     [self completeFBSDKURLSessionWithResponse:nil
                                          data:nil
@@ -262,7 +263,7 @@ static BOOL _canMakeRequests = NO;
 
   if (self.state != kStateCreated && self.state != kStateSerialized) {
     [self.logger.class singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                             formatString:@"FBSDKGraphRequestConnection cannot be started again."];
+                                 logEntry:@"FBSDKGraphRequestConnection cannot be started again."];
     return;
   }
   Class<FBSDKGraphRequestPiggybackManaging> piggybackManager = [self.piggybackManagerProvider.class piggybackManager];
@@ -403,7 +404,8 @@ static BOOL _canMakeRequests = NO;
     } else if ([value isKindOfClass:[FBSDKGraphRequestDataAttachment class]]) {
       [body appendWithKey:key dataAttachmentValue:(FBSDKGraphRequestDataAttachment *)value logger:logger];
     } else {
-      [logger.class singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors formatString:@"Unsupported FBSDKGraphRequest attachment:%@, skipping.", value];
+      NSString *msg = [NSString stringWithFormat:@"Unsupported FBSDKGraphRequest attachment:%@, skipping.", value];
+      [logger.class singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:msg];
     }
   }];
 }
@@ -470,8 +472,9 @@ static BOOL _canMakeRequests = NO;
         && [self _shouldWarnOnMissingFieldsParam:request]
         && !request.parameters[@"fields"]
         && [request.graphPath rangeOfString:@"fields="].location == NSNotFound) {
+      NSString *msg = [NSString stringWithFormat:@"starting with Graph API v2.4, GET requests for /%@ should contain an explicit \"fields\" parameter", request.graphPath];
       [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                         formatString:@"starting with Graph API v2.4, GET requests for /%@ should contain an explicit \"fields\" parameter", request.graphPath];
+                             logEntry:msg];
     }
   }
 }
@@ -763,7 +766,7 @@ static BOOL _canMakeRequests = NO;
         }
         [FBSDKTypeUtility array:results addObject:result];
       }
-      if (batchResultError) {
+      if (batchResultError && (*error == nil)) {
         // We'll report back the last error we saw.
         *error = batchResultError;
       }
@@ -831,7 +834,7 @@ static BOOL _canMakeRequests = NO;
   _expectingResults = count;
   NSUInteger disabledRecoveryCount = 0;
   for (FBSDKGraphRequestMetadata *metadata in self.requests) {
-    if ([(id<FBSDKGraphRequestInternal>)metadata.request isGraphErrorRecoveryDisabled]) {
+    if ([metadata.request isGraphErrorRecoveryDisabled]) {
       disabledRecoveryCount++;
     }
   }
@@ -850,7 +853,7 @@ static BOOL _canMakeRequests = NO;
     }
 
   #if !TARGET_OS_TV
-    BOOL isRecoveryDisabled = [(id<FBSDKGraphRequestInternal>)metadata.request isGraphErrorRecoveryDisabled];
+    BOOL isRecoveryDisabled = [metadata.request isGraphErrorRecoveryDisabled];
     if (resultError && !isRecoveryDisabled && isSingleRequestToRecover) {
       self->_recoveringRequestMetadata = metadata;
       self->_errorRecoveryProcessor = [FBSDKGraphErrorRecoveryProcessor new];
@@ -888,7 +891,7 @@ static BOOL _canMakeRequests = NO;
 
 #if !TARGET_OS_TV
   void (^clearToken)(NSInteger) = ^(NSInteger errorSubcode) {
-    FBSDKGraphRequestFlags flags = [(id<FBSDKGraphRequestInternal>)metadata.request flags];
+    FBSDKGraphRequestFlags flags = [metadata.request flags];
     if (flags & FBSDKGraphRequestFlagDoNotInvalidateTokenOnError) {
       return;
     }
@@ -1081,7 +1084,7 @@ static BOOL _canMakeRequests = NO;
 
 - (void)logMessage:(NSString *)message
 {
-  [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorNetworkRequests formatString:@"%@", message];
+  [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorNetworkRequests logEntry:message];
 }
 
 - (void)taskDidCompleteWithResponse:(NSURLResponse *)response
@@ -1145,7 +1148,7 @@ static BOOL _canMakeRequests = NO;
 - (NSString *)accessTokenWithRequest:(id<FBSDKGraphRequest>)request
 {
   NSString *token = request.tokenString ?: request.parameters[kAccessTokenKey];
-  FBSDKGraphRequestFlags flags = [(id<FBSDKGraphRequestInternal>)request flags];
+  FBSDKGraphRequestFlags flags = [request flags];
   if (!token && !(flags & FBSDKGraphRequestFlagSkipClientToken) && [[self.settings.class clientToken] length] > 0) {
     NSString *baseTokenString = [NSString stringWithFormat:@"%@|%@", [self.settings.class appID], [self.settings.class clientToken]];
     if ([FBSDKAuthenticationToken.currentAuthenticationToken.graphDomain isEqualToString:@"gaming"]) {

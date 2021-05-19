@@ -18,7 +18,7 @@
 
 #import "UserDefaultsSpy.h"
 
-#import "FBSDKTypeUtility.h"
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 @implementation UserDefaultsSpy
 

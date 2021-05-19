@@ -16,6 +16,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#if BUCK
+import FacebookCore
+#endif
+
 import FBSDKCoreKit
 
 public extension LoginConfiguration {
@@ -24,22 +28,24 @@ public extension LoginConfiguration {
    Attempts to allocate and initialize a new configuration with the expected parameters.
 
    - parameter permissions: The requested permissions for the login attempt.
-   The only permissions allowed when `tracking` is `.limited` are 'email' and 'public_profile'.
    Defaults to an empty `Permission` array.
    - parameter tracking: The tracking preference to use for a login attempt. Defaults to `.enabled`
    - parameter nonce: An optional nonce to use for the login attempt.
     A valid nonce must be an alphanumeric string without whitespace.
     Creation of the configuration will fail if the nonce is invalid. Defaults to a `UUID` string.
+   - parameter messengerPageId: An optional page id to use for a login attempt. Defaults to `nil`
    */
   convenience init?(
     permissions: Set<Permission> = [],
     tracking: LoginTracking = .enabled,
-    nonce: String = UUID().uuidString
+    nonce: String = UUID().uuidString,
+    messengerPageId: String? = nil
   ) {
     self.init(
       __permissions: permissions.map { $0.name },
       tracking: tracking,
-      nonce: nonce
+      nonce: nonce,
+      messengerPageId: messengerPageId
     )
   }
 }

@@ -7,13 +7,56 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+### Added
+
+- Added ability to add `messenger_page_id` param to `FBSDKLoginButton` and `FBSDKLoginConfiguration`
+- Added `FBSDKApplicationObserving` - a protocol for describing types that can optional respond to lifecycle events propagated by `ApplicationDelegate`
+- Added `addObserver:` and `removeObserver:` to `FBSDKApplicationDelegate`
+
+### Removed
+
+- `AppLinkReturnToRefererControllerDelegate`
+- `AppLinkReturnToRefererController`
+- `FBSDKIncludeStatusBarInSize`
+- `AppLinkReturnToRefererViewDelegate`
+- `FBAppLinkReturnToRefererView`
+- `FBSDKApplicationDelegate.initializeSDK:launchOptions:`. The replacement method is `FBSDKApplicationDelegate.application:didFinishLaunchingWithOptions:`
+- `FBSDKErrorRecoveryAttempting`'s `attemptRecoveryFromError:optionIndex:delegate:didRecoverSelector:contextInfo:`
+- `FBSDKProfile`'s `initWithUserID:firstName:middleName:lastName:name:linkURL:refreshDate:imageURL:email:`
+- `FBSDKProfile`'s `initWithUserID:firstName:middleName:lastName:name:linkURL:refreshDate:imageURL:email:friendIDs:birthday:ageRange:isLimited:`
+- `FBSDKProfile`'s `initWithUserID:firstName:middleName:lastName:name:linkURL:refreshDate:imageURL:email:friendIDs:`
+- `FBSDKProfile`'s `initWithUserID:firstName:middleName:lastName:name:linkURL:refreshDate:imageURL:email:friendIDs:birthday:ageRange:`
+- `FBSDKAccessTokensBlock`
+- `FBSDKTestUsersManager`
+- `FBSDKGraphErrorRecoveryProcessor`'s `delegate` property
+- `FBSDKGraphErrorRecoveryProcessor`'s `didPresentErrorWithRecovery:contextInfo:`
+- `FBSDKGamingVideoUploader`'s `uploadVideoWithConfiguration:andCompletionHandler:`
+- `FBSDKGamingImageUploader`'s `uploadImageWithConfiguration:andCompletionHandler:`
+
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.3.0...HEAD)
+
+## 9.3.0
+
 ### Important
 
 **Performance Improvements**
 
 - Cocoapods: FBSDKCoreKit rebuilds FacebookSDKStrings.bundle so xcode processes the strings files into binary plist format. This strips comments and saves ~181KB in disk space for apps. [#1713](https://github.com/facebook/facebook-ios-sdk/pull/1713)
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.2.0...HEAD)
+### Added
+
+- Added AEM (Aggregated Events Measurement) support under public beta.
+- Added `external_id` support in advanced matching.
+- `GamingServicesKit` changed the Game Request feature flow where if the user has the facebook app installed, they will not see a webview to complete a game request. Instead they will switch to the facebook app and app switch back once the request is sent or the user cancels the dialog.
+
+### Fixed
+
+- Fix for shadowing swift type. [#1721](https://github.com/facebook/facebook-ios-sdk/pull/1721)
+- Optimization for cached token fetching. See the [commit message](https://github.com/facebook/facebook-ios-sdk/commit/13fabd2f9ea2036b533f86e9443e201951e4e707) for more details.
+- Cocoapods with generate_multiple_pod_projects [#1709](https://github.com/facebook/facebook-ios-sdk/pull/1709)
+
+[2021-04-25](https://github.com/facebook/facebook-ios-sdk/releases/tag/v9.3.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.2.0...v9.3.0)
 
 ## 9.2.0
 

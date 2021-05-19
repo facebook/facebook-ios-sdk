@@ -24,6 +24,6 @@ class TestWindowFinder: WindowFinding {
   }
 
   func findWindow() -> UIWindow? {
-    return stubbedWindow
+    stubbedWindow
   }
 }

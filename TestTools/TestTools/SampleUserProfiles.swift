@@ -41,7 +41,10 @@ public class SampleUserProfiles: NSObject {
         "789",
       ],
       birthday: Date(timeIntervalSince1970: 0),
-      ageRange: UserAgeRange(from: ["min": 21])
+      ageRange: UserAgeRange(from: ["min": 21]),
+      hometown: Location(from: ["id": "112724962075996", "name": "Martinez, California"]),
+      location: Location(from: ["id": "110843418940484", "name": "Seattle, Washington"]),
+      gender: "male"
     )
   }
 
@@ -79,6 +82,9 @@ public class SampleUserProfiles: NSObject {
       ],
       birthday: Date(timeIntervalSince1970: 0),
       ageRange: UserAgeRange(from: ["min": 21]),
+      hometown: Location(from: ["id": "112724962075996", "name": "Martinez, California"]),
+      location: Location(from: ["id": "110843418940484", "name": "Seattle, Washington"]),
+      gender: "male",
       isLimited: isLimited
     )
   }

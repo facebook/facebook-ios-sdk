@@ -41,39 +41,41 @@ NS_ASSUME_NONNULL_BEGIN
  */
 typedef NS_ENUM(NSUInteger, FBSDKFeature)
 {
+  FBSDKFeatureNone = 0x00000000,
   // Features in CoreKit
   /** Essential of CoreKit */
-  FBSDKFeatureCore = 0x00000000,
+  FBSDKFeatureCore = 0x01000000,
   /** App Events */
-  FBSDKFeatureAppEvents = 0x00010000,
-  FBSDKFeatureCodelessEvents = 0x00010100,
-  FBSDKFeatureRestrictiveDataFiltering = 0x00010200,
-  FBSDKFeatureAAM = 0x00010300,
-  FBSDKFeaturePrivacyProtection = 0x00010400,
-  FBSDKFeatureSuggestedEvents = 0x00010401,
-  FBSDKFeatureIntelligentIntegrity = 0x00010402,
-  FBSDKFeatureModelRequest = 0x00010403,
-  FBSDKFeatureEventDeactivation = 0x00010500,
-  FBSDKFeatureSKAdNetwork = 0x00010600,
-  FBSDKFeatureSKAdNetworkConversionValue = 0x00010601,
-  FBSDKFeatureATELogging = 0x00010700,
+  FBSDKFeatureAppEvents = 0x01010000,
+  FBSDKFeatureCodelessEvents = 0x01010100,
+  FBSDKFeatureRestrictiveDataFiltering = 0x01010200,
+  FBSDKFeatureAAM = 0x01010300,
+  FBSDKFeaturePrivacyProtection = 0x01010400,
+  FBSDKFeatureSuggestedEvents = 0x01010401,
+  FBSDKFeatureIntelligentIntegrity = 0x01010402,
+  FBSDKFeatureModelRequest = 0x01010403,
+  FBSDKFeatureEventDeactivation = 0x01010500,
+  FBSDKFeatureSKAdNetwork = 0x01010600,
+  FBSDKFeatureSKAdNetworkConversionValue = 0x01010601,
+  FBSDKFeatureATELogging = 0x01010700,
+  FBSDKFeatureAEM = 0x01010800,
   /** Instrument */
-  FBSDKFeatureInstrument = 0x00020000,
-  FBSDKFeatureCrashReport = 0x00020100,
-  FBSDKFeatureCrashShield = 0x00020101,
-  FBSDKFeatureErrorReport = 0x00020200,
+  FBSDKFeatureInstrument = 0x01020000,
+  FBSDKFeatureCrashReport = 0x01020100,
+  FBSDKFeatureCrashShield = 0x01020101,
+  FBSDKFeatureErrorReport = 0x01020200,
 
   // Features in LoginKit
   /** Essential of LoginKit */
-  FBSDKFeatureLogin = 0x01000000,
+  FBSDKFeatureLogin = 0x02000000,
 
   // Features in ShareKit
   /** Essential of ShareKit */
-  FBSDKFeatureShare = 0x02000000,
+  FBSDKFeatureShare = 0x03000000,
 
   // Features in GamingServicesKit
   /** Essential of GamingServicesKit */
-  FBSDKFeatureGamingServices = 0x03000000,
+  FBSDKFeatureGamingServices = 0x04000000,
 
 } NS_SWIFT_NAME(SDKFeature);
 
@@ -87,7 +89,7 @@ NS_SWIFT_NAME(FeatureManager)
 - (BOOL)isEnabled:(FBSDKFeature)feature;
 - (void)checkFeature:(FBSDKFeature)feature
      completionBlock:(FBSDKFeatureManagerBlock)completionBlock;
-- (void)disableFeature:(NSString *)featureName;
+- (void)disableFeature:(FBSDKFeature)feature;
 
 @end
 

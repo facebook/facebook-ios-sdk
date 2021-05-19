@@ -21,7 +21,7 @@ import XCTest
 extension EventBindingManagerTests {
 
   var firstIndexPath: IndexPath {
-    return IndexPath(row: 0, section: 0)
+    IndexPath(row: 0, section: 0)
   }
 
   // MARK: - Touch Handling

@@ -24,7 +24,6 @@
 
  #import <UIKit/UIKit.h>
 
- #import "FBSDKBase64.h"
  #import "FBSDKBridgeAPIRequest.h"
  #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKError.h"

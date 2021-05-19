@@ -26,27 +26,21 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark - Security APIs
 
 // These are local wrappers around the corresponding methods in Security/SecRandom.h
-FOUNDATION_EXPORT int fbsdkdfl_SecRandomCopyBytes(SecRandomRef rnd, size_t count, uint8_t *bytes);
+FOUNDATION_EXPORT int fbsdkdfl_SecRandomCopyBytes(SecRandomRef rnd, size_t count, void *bytes);
 
 // These are local wrappers around Keychain API
 FOUNDATION_EXPORT OSStatus fbsdkdfl_SecItemUpdate(CFDictionaryRef query, CFDictionaryRef attributesToUpdate);
 FOUNDATION_EXPORT OSStatus fbsdkdfl_SecItemAdd(CFDictionaryRef attributes, CFTypeRef _Nullable * _Nullable result);
-FOUNDATION_EXPORT OSStatus fbsdkdfl_SecItemCopyMatching(CFDictionaryRef query, CFTypeRef _Nullable * _Nullable result);
+FOUNDATION_EXPORT OSStatus fbsdkdfl_SecItemCopyMatching(CFDictionaryRef query, CFTypeRef * __nullable CF_RETURNS_RETAINED result);
 FOUNDATION_EXPORT OSStatus fbsdkdfl_SecItemDelete(CFDictionaryRef query);
 
 #pragma mark - Social Constants
 
 FOUNDATION_EXPORT NSString *fbsdkdfl_SLServiceTypeFacebook(void);
-FOUNDATION_EXPORT NSString *fbsdkdfl_SLServiceTypeTwitter(void);
 
 #pragma mark - Social Classes
 
 FOUNDATION_EXPORT Class fbsdkdfl_SLComposeViewControllerClass(void);
-
-#pragma mark - MessageUI Classes
-
-FOUNDATION_EXPORT Class fbsdkdfl_MFMailComposeViewControllerClass(void);
-FOUNDATION_EXPORT Class fbsdkdfl_MFMessageComposeViewControllerClass(void);
 
 #pragma mark - QuartzCore Classes
 
@@ -74,57 +68,13 @@ FOUNDATION_EXPORT Class fbsdkdfl_SFAuthenticationSessionClass(void);
 
 FOUNDATION_EXPORT Class fbsdkdfl_ASWebAuthenticationSessionClass(void);
 
-#pragma mark - Accounts Constants
-
-FOUNDATION_EXPORT NSString *fbsdkdfl_ACFacebookAppIdKey(void);
-FOUNDATION_EXPORT NSString *fbsdkdfl_ACFacebookAudienceEveryone(void);
-FOUNDATION_EXPORT NSString *fbsdkdfl_ACFacebookAudienceFriends(void);
-FOUNDATION_EXPORT NSString *fbsdkdfl_ACFacebookAudienceKey(void);
-FOUNDATION_EXPORT NSString *fbsdkdfl_ACFacebookAudienceOnlyMe(void);
-FOUNDATION_EXPORT NSString *fbsdkdfl_ACFacebookPermissionsKey(void);
-
 #pragma mark - Accounts Classes
 
 FOUNDATION_EXPORT Class fbsdkdfl_ACAccountStoreClass(void);
 
-#pragma mark - StoreKit classes
-
-FOUNDATION_EXPORT Class fbsdkdfl_SKPaymentQueueClass(void);
-FOUNDATION_EXPORT Class fbsdkdfl_SKProductsRequestClass(void);
-
-#pragma mark - AssetsLibrary Classes
-
-FOUNDATION_EXPORT Class fbsdkdfl_ALAssetsLibraryClass(void);
-
 #pragma mark - CoreTelephony Classes
 
 FOUNDATION_EXPORT Class fbsdkdfl_CTTelephonyNetworkInfoClass(void);
-
-#pragma mark - CoreImage
-
-FOUNDATION_EXPORT Class fbsdkdfl_CIImageClass(void);
-FOUNDATION_EXPORT Class fbsdkdfl_CIFilterClass(void);
-FOUNDATION_EXPORT NSString *fbsdkdfl_kCIInputImageKey(void);
-FOUNDATION_EXPORT NSString *fbsdkdfl_kCIInputRadiusKey(void);
-FOUNDATION_EXPORT NSString *fbsdkdfl_kCIOutputImageKey(void);
-
-#pragma mark - Photos.framework
-
-FOUNDATION_EXPORT Class fbsdkdfl_PHPhotoLibrary(void);
-FOUNDATION_EXPORT Class fbsdkdfl_PHAssetChangeRequest(void);
-
-#pragma mark - MobileCoreServices
-
-FOUNDATION_EXPORT CFStringRef fbsdkdfl_UTTypeCopyPreferredTagWithClass(CFStringRef inUTI,
-                                                                  CFStringRef inTagClass);
-FOUNDATION_EXPORT CFStringRef fbsdkdfl_kUTTagClassMIMEType(void);
-FOUNDATION_EXPORT CFStringRef fbsdkdfl_kUTTypeJPEG(void);
-FOUNDATION_EXPORT CFStringRef fbsdkdfl_kUTTypePNG(void);
-
-#pragma mark - WebKit Classes
-
-FOUNDATION_EXPORT Class fbsdkdfl_WKWebViewClass(void);
-FOUNDATION_EXPORT Class fbsdkdfl_WKUserScriptClass(void);
 
 /**
 
@@ -179,13 +129,6 @@ NS_SWIFT_NAME(DynamicFrameworkLoader)
  @return The kSecAttrService value or nil.
  */
 + (CFTypeRef)loadkSecAttrService;
-
-/**
-  Load the kSecAttrGeneric value from the Security Framework
-
- @return The kSecAttrGeneric value or nil.
- */
-+ (CFTypeRef)loadkSecAttrGeneric;
 
 /**
   Load the kSecValueData value from the Security Framework

@@ -161,7 +161,7 @@
 
 @implementation FBSDKSwizzlerTests
 
-- (void)testSwizzlingIsAsynchronousByDefault
+- (void)_testSwizzlingIsAsynchronousByDefault
 {
   __block int swizzleBlockInvocationCount = 0;
   [FBSDKSwizzler swizzleSelector:@selector(methodToSwizzleAsynchronously)

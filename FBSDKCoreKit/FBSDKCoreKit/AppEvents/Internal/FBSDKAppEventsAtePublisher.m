@@ -21,6 +21,8 @@
 #import "FBSDKAppEventsDeviceInfo.h"
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDataPersisting.h"
+#import "FBSDKGraphRequest.h"
+#import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings+Internal.h"
@@ -28,6 +30,7 @@
 @interface FBSDKAppEventsAtePublisher ()
 
 @property (nullable, nonatomic, assign) id<FBSDKDataPersisting> store;
+@property (nonatomic) BOOL isProcessing;
 
 @end
 
@@ -50,9 +53,14 @@
 
 - (void)publishATE
 {
+  if (self.isProcessing) {
+    return;
+  }
+  self.isProcessing = YES;
   NSString *lastATEPingString = [NSString stringWithFormat:@"com.facebook.sdk:lastATEPing%@", self.appIdentifier];
   id lastPublishDate = [self.store objectForKey:lastATEPingString];
   if ([lastPublishDate isKindOfClass:[NSDate class]] && [(NSDate *)lastPublishDate timeIntervalSinceNow] * -1 < 24 * 60 * 60) {
+    self.isProcessing = NO;
     return;
   }
 
@@ -87,7 +95,12 @@
     if (!error) {
       [weakStore setObject:[NSDate date] forKey:lastATEPingString];
     }
+    self.isProcessing = NO;
   }];
+
+#if FBSDKTEST
+  self.isProcessing = NO;
+#endif
 }
 
 @end

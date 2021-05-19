@@ -49,8 +49,9 @@ class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
   func testCreatingWithDefaults() {
     handler = HybridAppEventsScriptMessageHandler()
 
-    XCTAssertTrue(
-      handler.eventLogger is EventLogger,
+    XCTAssertEqual(
+      ObjectIdentifier(handler.eventLogger),
+      ObjectIdentifier(AppEvents.singleton),
       "Should use the correct concrete event logger by default"
     )
   }
@@ -229,19 +230,19 @@ class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
     let stubbedBody: Any
 
     override var name: String {
-      return stubbedName
+      stubbedName
     }
 
     override var body: Any {
-      return stubbedBody
+      stubbedBody
     }
 
     init(
       name: String,
       body: Any? = nil
     ) {
-      self.stubbedName = name
-      self.stubbedBody = body ?? ""
+      stubbedName = name
+      stubbedBody = body ?? ""
     }
   }
 }

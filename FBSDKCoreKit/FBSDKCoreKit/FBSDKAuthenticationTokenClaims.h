@@ -46,6 +46,15 @@ NS_ASSUME_NONNULL_BEGIN
 /// End-User's full name in displayable form including all name parts.
 @property (nullable, nonatomic, readonly, strong) NSString *name;
 
+/// End-User's first name in displayable form
+@property (nullable, nonatomic, readonly, strong) NSString *firstName;
+
+/// End-User's middle name in displayable form
+@property (nullable, nonatomic, readonly, strong) NSString *middleName;
+
+/// End-User's last name in displayable form
+@property (nullable, nonatomic, readonly, strong) NSString *lastName;
+
 /**
  End-User's preferred e-mail address.
 
@@ -68,6 +77,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// End-User's age range
 @property (nullable, nonatomic, readonly, strong) NSDictionary<NSString *, NSNumber *> *userAgeRange;
+
+/// End-User's hometown
+@property (nullable, nonatomic, readonly, strong) NSDictionary<NSString *, NSString *> *userHometown;
+
+/// End-User's location
+@property (nullable, nonatomic, readonly, strong) NSDictionary<NSString *, NSString *> *userLocation;
+
+/// End-User's gender
+@property (nullable, nonatomic, readonly, strong) NSString *userGender;
+
+/// End-User's link
+@property (nullable, nonatomic, readonly, strong) NSString *userLink;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

@@ -23,6 +23,7 @@
 #import "FBSDKProfilePictureView.h"
 
 @class FBSDKAuthenticationTokenClaims;
+@class FBSDKLocation;
 @class FBSDKProfile;
 @class FBSDKUserAgeRange;
 
@@ -120,29 +121,6 @@ NS_SWIFT_NAME(Profile)
                    refreshDate:(nullable NSDate *)refreshDate;
 
 /**
-  initializes a new instance.
- @param userID the user ID
- @param firstName the user's first name
- @param middleName the user's middle name
- @param lastName the user's last name
- @param name the user's complete name
- @param linkURL the link for this profile
- @param refreshDate the optional date this profile was fetched. Defaults to [NSDate date].
- @param imageURL an optional URL to use for fetching a user's profile image
- @param email the user's email
- */
-- (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
-                     firstName:(nullable NSString *)firstName
-                    middleName:(nullable NSString *)middleName
-                      lastName:(nullable NSString *)lastName
-                          name:(nullable NSString *)name
-                       linkURL:(nullable NSURL *)linkURL
-                   refreshDate:(nullable NSDate *)refreshDate
-                      imageURL:(nullable NSURL *)imageURL
-                         email:(nullable NSString *)email
-DEPRECATED_MSG_ATTRIBUTE("This constructor will be removed in the next major release.");
-
-/**
  @param userID the user ID
  @param firstName the user's first name
  @param middleName the user's middle name
@@ -155,6 +133,9 @@ DEPRECATED_MSG_ATTRIBUTE("This constructor will be removed in the next major rel
  @param friendIDs a list of identifiers for the user's friends
  @param birthday the user's birthday
  @param ageRange the user's age range
+ @param hometown the user's hometown
+ @param location the user's location
+ @param gender the user's gender
  @param isLimited indicates if the information provided is incomplete in some way.
  When true, `loadCurrentProfileWithCompletion:` will assume the profile is
  incomplete and disregard any cached profile. Defaults to false.
@@ -171,32 +152,10 @@ DEPRECATED_MSG_ATTRIBUTE("This constructor will be removed in the next major rel
                      friendIDs:(nullable NSArray<FBSDKUserIdentifier *> *)friendIDs
                       birthday:(nullable NSDate *)birthday
                       ageRange:(nullable FBSDKUserAgeRange *)ageRange
+                      hometown:(nullable FBSDKLocation *)hometown
+                      location:(nullable FBSDKLocation *)location
+                        gender:(nullable NSString *)gender
                      isLimited:(BOOL)isLimited;
-
-/**
-  initializes a new instance.
- @param userID the user ID
- @param firstName the user's first name
- @param middleName the user's middle name
- @param lastName the user's last name
- @param name the user's complete name
- @param linkURL the link for this profile
- @param refreshDate the optional date this profile was fetched. Defaults to [NSDate date].
- @param imageURL an optional URL to use for fetching a user's profile image
- @param email the user's email
- @param friendIDs a list of identifiers for the user's friends
- */
-- (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
-                     firstName:(nullable NSString *)firstName
-                    middleName:(nullable NSString *)middleName
-                      lastName:(nullable NSString *)lastName
-                          name:(nullable NSString *)name
-                       linkURL:(nullable NSURL *)linkURL
-                   refreshDate:(nullable NSDate *)refreshDate
-                      imageURL:(nullable NSURL *)imageURL
-                         email:(nullable NSString *)email
-                     friendIDs:(nullable NSArray<FBSDKUserIdentifier *> *)friendIDs
-DEPRECATED_MSG_ATTRIBUTE("This constructor will be removed in the next major release.");;
 
 /**
   initializes a new instance.
@@ -212,6 +171,9 @@ DEPRECATED_MSG_ATTRIBUTE("This constructor will be removed in the next major rel
  @param friendIDs a list of identifiers for the user's friends
  @param birthday the user's birthday
  @param ageRange the user's age range
+ @param hometown the user's hometown
+ @param location the user's location
+ @param gender the user's gender
  */
 - (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
                      firstName:(nullable NSString *)firstName
@@ -225,6 +187,9 @@ DEPRECATED_MSG_ATTRIBUTE("This constructor will be removed in the next major rel
                      friendIDs:(nullable NSArray<FBSDKUserIdentifier *> *)friendIDs
                       birthday:(nullable NSDate *)birthday
                       ageRange:(nullable FBSDKUserAgeRange *)ageRange
+                      hometown:(nullable FBSDKLocation *)hometown
+                      location:(nullable FBSDKLocation *)location
+                         gender:(nullable NSString *)gender
 NS_DESIGNATED_INITIALIZER;
 
 /**
@@ -302,6 +267,27 @@ NS_SWIFT_NAME(current);
  IMPORTANT: This field will only be populated if your user has granted your application the 'user_age_range' permission.
  */
 @property (nonatomic, copy, readonly, nullable) FBSDKUserAgeRange *ageRange;
+
+/**
+  The user's hometown
+
+ IMPORTANT: This field will only be populated if your user has granted your application the 'user_hometown' permission.
+ */
+@property (nonatomic, copy, readonly, nullable) FBSDKLocation *hometown;
+
+/**
+  The user's location
+
+ IMPORTANT: This field will only be populated if your user has granted your application the 'user_location' permission.
+ */
+@property (nonatomic, copy, readonly, nullable) FBSDKLocation *location;
+
+/**
+  The user's gender
+
+ IMPORTANT: This field will only be populated if your user has granted your application the 'user_gender' permission.
+ */
+@property (nonatomic, copy, readonly, nullable) NSString *gender;
 
 /**
   Indicates if `currentProfile` will automatically observe `FBSDKAccessTokenDidChangeNotification` notifications

@@ -20,6 +20,7 @@
 #import <XCTest/XCTest.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #ifdef BUCK
  #import <FBSDKLoginKit+Internal/FBSDKLoginManagerLogger.h>
@@ -28,20 +29,6 @@
  #import "FBSDKLoginManager.h"
  #import "FBSDKLoginManagerLogger.h"
 #endif
-
-@interface FBSDKAppEvents (Testing)
-
-+ (FBSDKAppEvents *)singleton;
-
-- (void)instanceLogEvent:(FBSDKAppEventName)eventName
-              valueToSum:(NSNumber *)valueToSum
-              parameters:(NSDictionary *)parameters
-      isImplicitlyLogged:(BOOL)isImplicitlyLogged
-             accessToken:(FBSDKAccessToken *)accessToken;
-
-+ (void)setSettings:(id<FBSDKSettings>)settings;
-
-@end
 
 @interface FBSDKLoginManagerLoggerTests : XCTestCase
 @end
@@ -59,10 +46,8 @@
   _loginManagerMock = OCMClassMock(FBSDKLoginManager.class);
   _settingsMock = OCMClassMock(FBSDKSettings.class);
   OCMStub([_settingsMock isAutoLogAppEventsEnabled]).andReturn(YES);
-  // Set up AppEvents singleton mock
+  // Set up AppEvents class mock
   _appEventsMock = OCMClassMock(FBSDKAppEvents.class);
-  OCMStub([_appEventsMock singleton]).andReturn(_appEventsMock);
-  [FBSDKAppEvents setSettings:_settingsMock];
 }
 
 - (void)tearDown
@@ -197,11 +182,11 @@
   [logger startSessionForLoginManager:_loginManagerMock];
 
   OCMVerify(
-    [_appEventsMock instanceLogEvent:OCMArg.any
-                          valueToSum:OCMArg.any
-                          parameters:[OCMArg checkWithBlock:verifyParameterContents]
-                  isImplicitlyLogged:OCMArg.any
-                         accessToken:OCMArg.any]
+    ClassMethod(
+      [_appEventsMock logInternalEvent:OCMArg.any
+                            parameters:[OCMArg checkWithBlock:verifyParameterContents]
+                    isImplicitlyLogged:OCMArg.any]
+    )
   );
 }
 

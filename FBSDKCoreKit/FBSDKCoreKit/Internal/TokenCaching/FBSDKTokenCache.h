@@ -18,13 +18,14 @@
 
 #import <Foundation/Foundation.h>
 
-#if SWIFT_PACKAGE
+#if FBSDK_SWIFT_PACKAGE
 #import "FBSDKAccessToken.h"
+#import "FBSDKTokenCaching.h"
 #else
 #import <FBSDKCoreKit/FBSDKAccessToken.h>
+#import <FBSDKCoreKit/FBSDKTokenCaching.h>
 #endif
 
-#import "FBSDKTokenCaching.h"
 
 @protocol FBSDKSettings;
 

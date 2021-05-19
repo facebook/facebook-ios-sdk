@@ -27,6 +27,8 @@
  #else
   #import "FBSDKCoreKit+Internal.h"
  #endif
+
+ #import "FBSDKCoreKitBasicsImportForShareKit.h"
  #import "FBSDKGameRequestFrictionlessRecipientCache.h"
  #import "FBSDKGameRequestURLProvider.h"
  #import "FBSDKShareConstants.h"
@@ -87,6 +89,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
     [self handleDialogError:error];
     return;
   }
+
   _isAwaitingResult = YES;
   [[FBSDKBridgeAPI sharedInstance]
    openURL:[FBSDKGameRequestURLProvider createDeepLinkURLWithQueryDictionary:contentDictionary]
@@ -211,16 +214,10 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 - (instancetype)init
 {
   if ((self = [super init])) {
-    _webDialog = [FBSDKWebDialog new];
-    _webDialog.delegate = self;
-    _webDialog.name = FBSDK_APP_REQUEST_METHOD_NAME;
+    _webDialog = [FBSDKWebDialog dialogWithName:FBSDK_APP_REQUEST_METHOD_NAME
+                                       delegate:self];
   }
   return self;
-}
-
-- (void)dealloc
-{
-  _webDialog.delegate = nil;
 }
 
  #pragma mark - Public Methods
@@ -256,7 +253,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 
   // check if we are sending to a specific set of recipients.  if we are and they are all frictionless recipients, we
   // can perform this action without displaying the web dialog
-  _webDialog.deferVisibility = NO;
+  _webDialog.shouldDeferVisibility = NO;
   NSArray *recipients = content.recipients;
   if (_frictionlessRequestsEnabled && recipients) {
     // specify these parameters to get the frictionless recipients from the dialog when it is presented
@@ -265,7 +262,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 
     _dialogIsFrictionless = YES;
     if ([_recipientCache recipientsAreFrictionless:recipients]) {
-      _webDialog.deferVisibility = YES;
+      _webDialog.shouldDeferVisibility = YES;
     }
   }
 
@@ -310,7 +307,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 - (NSMutableDictionary *)_convertGameRequestContentToDictionaryV2:(FBSDKGameRequestContent *)content
 {
   NSMutableDictionary *parameters = [NSMutableDictionary new];
-  [FBSDKTypeUtility dictionary:parameters setObject:[content.recipients componentsJoinedByString:@","] forKey:@"to"];
+  [FBSDKTypeUtility dictionary:parameters setObject:[content.recipientSuggestions componentsJoinedByString:@","] forKey:@"to"];
   [FBSDKTypeUtility dictionary:parameters setObject:content.message forKey:@"message"];
   [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKGameRequestURLProvider actionTypeNameForActionType:content.actionType] forKey:@"action_type"];
   [FBSDKTypeUtility dictionary:parameters setObject:content.objectID forKey:@"object_id"];
@@ -358,7 +355,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   UIViewController *topMostViewController = [FBSDKInternalUtility topMostViewController];
   if (!topMostViewController) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                       formatString:@"There are no valid ViewController to present FBSDKWebDialog", nil];
+                           logEntry:@"There are no valid ViewController to present FBSDKWebDialog"];
     [self _handleCompletionWithDialogResults:nil error:nil];
     return NO;
   }

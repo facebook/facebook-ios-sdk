@@ -17,11 +17,12 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import FBSDKCoreKit
+import TestTools
 
 @objcMembers
 class TestGraphRequestFactory: NSObject, GraphRequestProviding {
 
-  var stubbedRequest: GraphRequestProtocol = GraphRequest(graphPath: "me")
+  var stubbedRequest: GraphRequestProtocol = TestGraphRequest(graphPath: "me", HTTPMethod: .get)
   var capturedGraphPath: String?
   var capturedParameters = [AnyHashable: Any]()
   var capturedTokenString: String?
@@ -74,6 +75,15 @@ class TestGraphRequestFactory: NSObject, GraphRequestProviding {
     withGraphPath graphPath: String
   ) -> GraphRequestProtocol {
     capturedGraphPath = graphPath
+    return stubbedRequest
+  }
+
+  func createGraphRequest(
+    withGraphPath graphPath: String,
+    parameters: [String: Any]
+  ) -> GraphRequestProtocol {
+    capturedGraphPath = graphPath
+    capturedParameters = parameters
     return stubbedRequest
   }
 }

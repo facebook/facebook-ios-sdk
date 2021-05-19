@@ -20,6 +20,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol FBSDKGraphRequestProviding;
+@protocol FBSDKFileManaging;
+@protocol FBSDKSettings;
+
 @interface FBSDKErrorReport (Testing)
 
 @property (nonatomic, strong) id<FBSDKGraphRequestProviding> requestProvider;

@@ -28,6 +28,8 @@
   #import <FBSDKCoreKit/FBSDKCoreKit.h>
  #endif
 
+ #import "FBSDKAuthenticationTokenFactory.h"
+ #import "FBSDKCoreKitBasicsImportForLoginKit.h"
  #import "FBSDKLoginConstants.h"
  #import "FBSDKLoginError.h"
  #import "FBSDKLoginManager+Internal.h"
@@ -266,17 +268,20 @@ static NSDateFormatter *_dateFormatter;
   }
 
   return [_profileFactory createProfileWithUserID:claims.sub
-                                        firstName:nil
-                                       middleName:nil
-                                         lastName:nil
+                                        firstName:claims.firstName
+                                       middleName:claims.middleName
+                                         lastName:claims.lastName
                                              name:claims.name
-                                          linkURL:nil
+                                          linkURL:[NSURL URLWithString:claims.userLink]
                                       refreshDate:nil
                                          imageURL:imageURL
                                             email:claims.email
                                         friendIDs:claims.userFriends
                                          birthday:birthday
                                          ageRange:[FBSDKUserAgeRange ageRangeFromDictionary:claims.userAgeRange]
+                                         hometown:[FBSDKLocation locationFromDictionary:claims.userHometown]
+                                         location:[FBSDKLocation locationFromDictionary:claims.userLocation]
+                                           gender:claims.userGender
                                         isLimited:YES];
 }
 

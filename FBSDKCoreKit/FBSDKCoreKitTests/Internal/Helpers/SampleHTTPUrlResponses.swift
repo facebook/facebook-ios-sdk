@@ -70,7 +70,7 @@ enum SampleHTTPURLResponses {
     statusCode: Int,
     headerFields: [String: String]? = nil
   ) -> HTTPURLResponse {
-    return HTTPURLResponse(
+    HTTPURLResponse(
       url: SampleUrls.valid,
       statusCode: statusCode,
       httpVersion: nil,

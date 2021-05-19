@@ -18,7 +18,7 @@
 
 #import "FBSDKCrypto.h"
 
-#import "FBSDKBase64.h"
+#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 
 static inline void FBSDKCryptoBlankData(NSData *data)

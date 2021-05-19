@@ -22,10 +22,10 @@ import Foundation
 class SampleAppEvents: NSObject {
 
   static var validEvent: [String: String] {
-    return ["_eventName": "event1"]
+    ["_eventName": "event1"]
   }
 
   static func validEvent(withName name: String) -> [String: String] {
-    return ["_eventName": name]
+    ["_eventName": name]
   }
 }

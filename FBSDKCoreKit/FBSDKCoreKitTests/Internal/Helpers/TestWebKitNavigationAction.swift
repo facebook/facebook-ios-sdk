@@ -33,10 +33,10 @@ class TestWebKitNavigationAction: WKNavigationAction {
   }
 
   override var request: URLRequest {
-    return stubbedRequest
+    stubbedRequest
   }
 
   override var navigationType: WKNavigationType {
-    return stubbedNavigationType
+    stubbedNavigationType
   }
 }

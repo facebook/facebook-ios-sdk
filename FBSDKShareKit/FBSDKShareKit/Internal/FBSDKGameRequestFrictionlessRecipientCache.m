@@ -34,6 +34,8 @@
   #import "FBSDKCoreKit+Internal.h"
  #endif
 
+ #import "FBSDKCoreKitBasicsImportForShareKit.h"
+
 @implementation FBSDKGameRequestFrictionlessRecipientCache
 {
   NSSet *_recipientIDs;

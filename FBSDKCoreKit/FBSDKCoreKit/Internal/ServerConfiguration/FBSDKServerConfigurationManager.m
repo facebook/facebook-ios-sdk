@@ -21,14 +21,18 @@
 #import <objc/runtime.h>
 
 #import "FBSDKAppEventsUtility.h"
-#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequest+Internal.h"
+#import "FBSDKGraphRequestConnection.h"
 #import "FBSDKImageDownloader.h"
+#import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
+#import "FBSDKObjectDecoding.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfiguration+Internal.h"
 #import "FBSDKSettings.h"
+#import "FBSDKUnarchiverProvider.h"
 
 #define FBSDK_SERVER_CONFIGURATION_USER_DEFAULTS_KEY @"com.facebook.sdk:serverConfiguration%@"
 
@@ -324,8 +328,9 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
       if (_serverConfiguration && [_serverConfiguration.appID isEqualToString:appID]) {
         // We have older app settings but the refresh received an error.
         // Log and ignore the error.
+        NSString *msg = [NSString stringWithFormat:@"loadServerConfigurationWithCompletionBlock failed with %@", error];
         [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational
-                           formatString:@"loadServerConfigurationWithCompletionBlock failed with %@", error];
+                               logEntry:msg];
       } else {
         _serverConfiguration = nil;
       }

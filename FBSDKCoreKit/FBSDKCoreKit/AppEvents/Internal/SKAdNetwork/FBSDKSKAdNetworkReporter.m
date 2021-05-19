@@ -26,9 +26,15 @@
 
  #import <objc/message.h>
 
- #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKAppEventsUtility.h"
+ #import "FBSDKConversionValueUpdating.h"
+ #import "FBSDKCoreKitBasicsImport.h"
+ #import "FBSDKDataPersisting.h"
+ #import "FBSDKGraphRequestConnection.h"
+ #import "FBSDKGraphRequestProtocol.h"
  #import "FBSDKGraphRequestProviding.h"
  #import "FBSDKSKAdNetworkConversionConfiguration.h"
+ #import "FBSDKSettings.h"
 
  #define FBSDK_SKADNETWORK_CONFIG_TIME_OUT 86400
 
@@ -51,15 +57,18 @@ static NSMutableSet<NSString *> *g_recordedEvents;
 static NSMutableDictionary<NSString *, NSMutableDictionary *> *g_recordedValues;
 static id<FBSDKGraphRequestProviding> _requestProvider;
 static id<FBSDKDataPersisting> _store;
+static Class<FBSDKConversionValueUpdating> _conversionValueUpdatable;
 
 @implementation FBSDKSKAdNetworkReporter
 
 + (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
                                store:(id<FBSDKDataPersisting>)store
+            conversionValueUpdatable:(Class<FBSDKConversionValueUpdating>)conversionValueUpdatable
 {
   if (self == [FBSDKSKAdNetworkReporter class]) {
     _requestProvider = requestProvider;
     _store = store;
+    _conversionValueUpdatable = conversionValueUpdatable;
   }
 }
 
@@ -71,6 +80,11 @@ static id<FBSDKDataPersisting> _store;
 + (id<FBSDKDataPersisting>)store
 {
   return _store;
+}
+
++ (Class<FBSDKConversionValueUpdating>)conversionValueUpdatable
+{
+  return _conversionValueUpdatable;
 }
 
 + (void)enable
@@ -238,12 +252,7 @@ static id<FBSDKDataPersisting> _store;
     if ([self _shouldCutoff]) {
       return;
     }
-    SEL selector = NSSelectorFromString(@"updateConversionValue:");
-    if (![[SKAdNetwork class] respondsToSelector:selector]) {
-      return;
-    }
-    send_type msgSend = (send_type)objc_msgSend;
-    msgSend([SKAdNetwork class], selector, value);
+    [_conversionValueUpdatable updateConversionValue:value];
     g_conversionValue = value + 1;
     g_timestamp = [NSDate date];
     [self _saveReportData];
@@ -308,6 +317,7 @@ static id<FBSDKDataPersisting> _store;
 {
   _store = nil;
   _requestProvider = nil;
+  _conversionValueUpdatable = nil;
   [self setConfiguration:nil];
   [self setSKAdNetworkReportEnabled:false];
 }

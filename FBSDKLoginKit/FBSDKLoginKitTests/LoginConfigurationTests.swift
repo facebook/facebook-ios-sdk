@@ -16,6 +16,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#if BUCK
+import FacebookCore
+#endif
+
 import XCTest
 
 class LoginConfigurationTests: XCTestCase {
@@ -38,6 +42,10 @@ class LoginConfigurationTests: XCTestCase {
     XCTAssertNotNil(
       config.nonce,
       "A config should be created with a default nonce"
+    )
+    XCTAssertNil(
+      config.messengerPageId,
+      "Messenger Page Id should default to nil when unspecified"
     )
   }
 
@@ -81,6 +89,16 @@ class LoginConfigurationTests: XCTestCase {
       Set((config?.requestedPermissions.map { $0.value })!), // swiftlint:disable:this force_unwrapping
       Set(permissions.map { $0.name }),
       "Should create a configuration with the provided tracking preference"
+    )
+  }
+
+  func testCreatingWithMessengerPageId() {
+    let messengerPageId = "12345"
+    let config = LoginConfiguration(messengerPageId: messengerPageId)
+    XCTAssertEqual(
+      config?.messengerPageId,
+      messengerPageId,
+      "Should create a configuration with the provided Messenger Page Id"
     )
   }
 }

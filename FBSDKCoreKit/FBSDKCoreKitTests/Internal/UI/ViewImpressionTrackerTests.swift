@@ -215,7 +215,7 @@ class ViewImpressionTrackerTests: XCTestCase {
   // MARK: - Helpers
 
   func createImpressionTracker(named name: String) -> ViewImpressionTracker {
-    return ViewImpressionTracker(
+    ViewImpressionTracker(
       eventName: name,
       graphRequestProvider: requestProvider,
       eventLogger: logger,

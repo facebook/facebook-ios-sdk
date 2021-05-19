@@ -23,14 +23,17 @@
 #import <objc/runtime.h>
 
 #import "FBSDKAppEventsUtility.h"
-#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequest+Internal.h"
+#import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKGraphRequestConnectionProviding.h"
 #import "FBSDKGraphRequestProviding.h"
+#import "FBSDKObjectDecoding.h"
 #import "FBSDKSettings.h"
 #import "FBSDKSettingsProtocol.h"
+#import "FBSDKUnarchiverProvider.h"
 
 #define FBSDK_GATEKEEPERS_USER_DEFAULTS_KEY @"com.facebook.sdk:GateKeepers%@"
 
@@ -50,14 +53,12 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
 static id<FBSDKGraphRequestConnectionProviding> _connectionProvider;
 static Class<FBSDKSettings> _settings;
 static id<FBSDKDataPersisting> _store;
-static FBSDKLogger *_logger;
 
 #pragma mark - Public Class Methods
 + (void)initialize
 {
   if (self == [FBSDKGateKeeperManager class]) {
     _completionBlocks = [NSMutableArray array];
-    _logger = [FBSDKLogger new];
     _store = nil;
     _requestProvider = nil;
     _connectionProvider = nil;
@@ -90,8 +91,9 @@ static FBSDKLogger *_logger;
   @try {
     @synchronized(self) {
       if (!_canLoadGateKeepers) {
-        [self.logger.class singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                                     logEntry:@"Cannot load gate keepers before configuring."];
+        // If we can't load the gatekeepers then it means we didn't have an opportunity
+        // to inject our own logger type. Fall back to NSLog for the developer error.
+        NSLog(@"Cannot load gate keepers before configuring.");
         return;
       }
 
@@ -238,11 +240,6 @@ static FBSDKLogger *_logger;
   return NO;
 }
 
-+ (FBSDKLogger *)logger
-{
-  return _logger;
-}
-
 + (id<FBSDKGraphRequestProviding>)requestProvider
 {
   return _requestProvider;
@@ -275,11 +272,6 @@ static FBSDKLogger *_logger;
 + (BOOL)canLoadGateKeepers
 {
   return _canLoadGateKeepers;
-}
-
-+ (void)setLogger:(FBSDKLogger *)logger
-{
-  _logger = logger;
 }
 
 + (void)setGateKeepers:(NSDictionary *)gateKeepers

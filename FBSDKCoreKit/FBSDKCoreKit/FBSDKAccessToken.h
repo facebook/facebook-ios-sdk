@@ -19,6 +19,8 @@
 #import <Foundation/Foundation.h>
 
 #import "FBSDKCopying.h"
+#import "FBSDKTokenCaching.h"
+
 #ifdef BUCK
 #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
 #else
@@ -112,6 +114,14 @@ NS_SWIFT_NAME(AccessToken)
 
  */
 @property (class, nonatomic, assign, readonly, getter=isCurrentAccessTokenActive) BOOL currentAccessTokenIsActive;
+
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
+@property (nullable, class, nonatomic, copy) id<FBSDKTokenCaching> tokenCache;
 
 /**
   Returns the app ID.

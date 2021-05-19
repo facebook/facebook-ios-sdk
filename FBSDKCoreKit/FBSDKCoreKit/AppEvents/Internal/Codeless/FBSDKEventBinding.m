@@ -26,6 +26,7 @@
  #import "FBSDKCodelessParameterComponent.h"
  #import "FBSDKCodelessPathComponent.h"
  #import "FBSDKCoreKitBasicsImport.h"
+ #import "FBSDKInternalUtility.h"
  #import "FBSDKSwizzler.h"
  #import "FBSDKUtility.h"
  #import "FBSDKViewHierarchy.h"
@@ -248,7 +249,7 @@ static id<FBSDKNumberParsing> _numberParser;
   if (parent) {
     children = [FBSDKViewHierarchy getChildren:parent];
   } else {
-    UIWindow *window = [UIApplication sharedApplication].delegate.window;
+    UIWindow *window = [FBSDKInternalUtility.sharedUtility findWindow];
     if (window) {
       children = @[window];
     } else {

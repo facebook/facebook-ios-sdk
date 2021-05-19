@@ -20,6 +20,7 @@
 
 #if !TARGET_OS_TV
 
+@class FBSDKLocation;
 @class FBSDKProfile;
 @class FBSDKUserAgeRange;
 typedef NSString FBSDKUserIdentifier;
@@ -41,8 +42,11 @@ NS_SWIFT_NAME(ProfileProviding)
                                 friendIDs:(nullable NSArray<FBSDKUserIdentifier *> *)friendIDs
                                  birthday:(nullable NSDate *)birthday
                                  ageRange:(nullable FBSDKUserAgeRange *)ageRange
+                                 hometown:(nullable FBSDKLocation *)hometown
+                                 location:(nullable FBSDKLocation *)location
+                                 gender:(nullable NSString *)gender
                                 isLimited:(BOOL)isLimited
-NS_SWIFT_NAME(createProfile(userID:firstName:middleName:lastName:name:linkURL:refreshDate:imageURL:email:friendIDs:birthday:ageRange:isLimited:));
+NS_SWIFT_NAME(createProfile(userID:firstName:middleName:lastName:name:linkURL:refreshDate:imageURL:email:friendIDs:birthday:ageRange:hometown:location:gender:isLimited:));
 
 @end
 

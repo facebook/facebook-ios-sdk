@@ -21,7 +21,7 @@ class TestControl: UIControl {
   var stubbedWindow: UIWindow?
 
   override var window: UIWindow? {
-    return stubbedWindow
+    stubbedWindow
   }
 
   override func addTarget(_ target: Any?, action: Selector, for controlEvents: UIControl.Event) {

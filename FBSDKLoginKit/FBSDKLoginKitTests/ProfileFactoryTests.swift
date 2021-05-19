@@ -35,6 +35,9 @@ class ProfileFactoryTests: XCTestCase {
     friendIDs: SampleUserProfiles.valid.friendIDs,
     birthday: SampleUserProfiles.valid.birthday,
     ageRange: SampleUserProfiles.valid.ageRange,
+    hometown: SampleUserProfiles.valid.hometown,
+    location: SampleUserProfiles.valid.location,
+    gender: SampleUserProfiles.valid.gender,
     isLimited: true
   )
   let factory = ProfileFactory()
@@ -53,6 +56,9 @@ class ProfileFactoryTests: XCTestCase {
       friendIDs: SampleUserProfiles.valid.friendIDs,
       birthday: SampleUserProfiles.valid.birthday,
       ageRange: SampleUserProfiles.valid.ageRange,
+      hometown: SampleUserProfiles.valid.hometown,
+      location: SampleUserProfiles.valid.location,
+      gender: SampleUserProfiles.valid.gender,
       isLimited: true
     )
     XCTAssertEqual(profile.userID, expected.userID)
@@ -67,5 +73,8 @@ class ProfileFactoryTests: XCTestCase {
     XCTAssertEqual(profile.friendIDs, expected.friendIDs)
     XCTAssertEqual(profile.birthday, expected.birthday)
     XCTAssertEqual(profile.ageRange, expected.ageRange)
+    XCTAssertEqual(profile.hometown, expected.hometown)
+    XCTAssertEqual(profile.location, expected.location)
+    XCTAssertEqual(profile.gender, expected.gender)
   }
 }

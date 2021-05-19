@@ -22,14 +22,19 @@
 
  #import "FBSDKGraphErrorRecoveryProcessor.h"
 
- #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKAccessToken.h"
+ #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKErrorRecoveryAttempter.h"
+ #import "FBSDKGraphRequestProtocol.h"
+ #import "FBSDKInternalUtility.h"
 
 @interface FBSDKGraphErrorRecoveryProcessor ()
 {
   FBSDKErrorRecoveryAttempter *_recoveryAttempter;
   NSError *_error;
 }
+
+@property (nullable, nonatomic, readonly, weak) id<FBSDKGraphErrorRecoveryProcessorDelegate> delegate;
 
 @end
 
@@ -143,15 +148,6 @@
   [topMostViewController presentViewController:alertController
                                       animated:YES
                                     completion:nil];
-}
-
- #pragma mark - FBSDKErrorRecoveryAttempting "delegate"
-
-- (void)didPresentErrorWithRecovery:(BOOL)didRecover contextInfo:(void *)contextInfo
-{
-  // Deprecated method (no longer used by FBSDK)
-  [_delegate processorDidAttemptRecovery:self didRecover:didRecover error:_error];
-  _delegate = nil;
 }
 
 @end

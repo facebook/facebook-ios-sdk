@@ -16,12 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import "FBSDKNotificationProtocols.h"
 #import "TargetConditionals.h"
 
 #if !TARGET_OS_TV
 
  #import "FBSDKProfile+Internal.h"
 
+ #import "FBSDKCoreKitBasicsImport.h"
+ #import "FBSDKLocation.h"
  #import "FBSDKUserAgeRange.h"
 
  #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
@@ -53,6 +56,9 @@ static NSDateFormatter *_dateFormatter;
  #define FBSDKPROFILE_IS_LIMITED_KEY @"isLimited"
  #define FBSDKPROFILE_BIRTHDAY_KEY @"birthday"
  #define FBSDKPROFILE_AGERANGE_KEY @"ageRange"
+ #define FBSDKPROFILE_HOMETOWN_KEY @"hometown"
+ #define FBSDKPROFILE_LOCATION_KEY @"location"
+ #define FBSDKPROFILE_GENDER_KEY @"gender"
 
 // Once a day
  #define FBSDKPROFILE_STALE_IN_SECONDS (60 * 60 * 24)
@@ -66,10 +72,16 @@ static NSDateFormatter *_dateFormatter;
 @implementation FBSDKProfile
 
 static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
+static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCenter = nil;
 
 + (Class<FBSDKAccessTokenProviding>)accessTokenProvider
 {
   return _accessTokenProvider;
+}
+
++ (id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
+{
+  return _notificationCenter;
 }
 
 - (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
@@ -91,7 +103,10 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
                         email:nil
                     friendIDs:nil
                      birthday:nil
-                     ageRange:nil];
+                     ageRange:nil
+                     hometown:nil
+                     location:nil
+                       gender:nil];
 }
 
 - (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
@@ -115,7 +130,10 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
                         email:email
                     friendIDs:nil
                      birthday:nil
-                     ageRange:nil];
+                     ageRange:nil
+                     hometown:nil
+                     location:nil
+                       gender:nil];
 }
 
 - (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
@@ -139,7 +157,41 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
                      imageURL:imageURL
                         email:email
                     friendIDs:friendIDs
-                     birthday:nil ageRange:nil];
+                     birthday:nil
+                     ageRange:nil
+                     hometown:nil
+                     location:nil
+                       gender:nil];
+}
+
+- (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
+                     firstName:(NSString *)firstName
+                    middleName:(NSString *)middleName
+                      lastName:(NSString *)lastName
+                          name:(NSString *)name
+                       linkURL:(NSURL *)linkURL
+                   refreshDate:(NSDate *)refreshDate
+                      imageURL:(NSURL *)imageURL
+                         email:(NSString *)email
+                     friendIDs:(NSArray<FBSDKUserIdentifier *> *)friendIDs
+                      birthday:(NSDate *)birthday
+                      ageRange:(FBSDKUserAgeRange *)ageRange
+{
+  return [self initWithUserID:userID
+                    firstName:firstName
+                   middleName:middleName
+                     lastName:lastName
+                         name:name
+                      linkURL:linkURL
+                  refreshDate:refreshDate
+                     imageURL:imageURL
+                        email:email
+                    friendIDs:friendIDs
+                     birthday:birthday
+                     ageRange:ageRange
+                     hometown:nil
+                     location:nil
+                       gender:nil];
 }
 
 - (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
@@ -156,6 +208,41 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
                       ageRange:(FBSDKUserAgeRange *)ageRange
                      isLimited:(BOOL)isLimited
 {
+  return [self initWithUserID:userID
+                    firstName:firstName
+                   middleName:middleName
+                     lastName:lastName
+                         name:name
+                      linkURL:linkURL
+                  refreshDate:refreshDate
+                     imageURL:imageURL
+                        email:email
+                    friendIDs:friendIDs
+                     birthday:birthday
+                     ageRange:ageRange
+                     hometown:nil
+                     location:nil
+                       gender:nil
+                    isLimited:isLimited];
+}
+
+- (instancetype)initWithUserID:(FBSDKUserIdentifier *)userID
+                     firstName:(NSString *)firstName
+                    middleName:(NSString *)middleName
+                      lastName:(NSString *)lastName
+                          name:(NSString *)name
+                       linkURL:(NSURL *)linkURL
+                   refreshDate:(NSDate *)refreshDate
+                      imageURL:(NSURL *)imageURL
+                         email:(NSString *)email
+                     friendIDs:(NSArray<FBSDKUserIdentifier *> *)friendIDs
+                      birthday:(NSDate *)birthday
+                      ageRange:(FBSDKUserAgeRange *)ageRange
+                      hometown:(FBSDKLocation *)hometown
+                      location:(FBSDKLocation *)location
+                        gender:(NSString *)gender
+                     isLimited:(BOOL)isLimited
+{
   self = [self initWithUserID:userID
                     firstName:firstName
                    middleName:middleName
@@ -167,7 +254,10 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
                         email:email
                     friendIDs:friendIDs
                      birthday:birthday
-                     ageRange:ageRange];
+                     ageRange:ageRange
+                     hometown:hometown
+                     location:location
+                       gender:gender];
   self.isLimited = isLimited;
 
   return self;
@@ -185,6 +275,9 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
                      friendIDs:(NSArray<FBSDKUserIdentifier *> *)friendIDs
                       birthday:(NSDate *)birthday
                       ageRange:(FBSDKUserAgeRange *)ageRange
+                      hometown:(FBSDKLocation *)hometown
+                      location:(FBSDKLocation *)location
+                        gender:(NSString *)gender
 {
   if ((self = [super init])) {
     _userID = [userID copy];
@@ -200,6 +293,9 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
     self.isLimited = NO;
     _birthday = [birthday copy];
     _ageRange = [ageRange copy];
+    _hometown = [hometown copy];
+    _location = [location copy];
+    _gender = [gender copy];
   }
   return self;
 }
@@ -226,9 +322,9 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
     g_currentProfile = profile;
 
     if (shouldPostNotification) {
-      [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKProfileDidChangeNotification
-                                                          object:[self class]
-                                                        userInfo:userInfo];
+      [_notificationCenter postNotificationName:FBSDKProfileDidChangeNotification
+                                         object:[self class]
+                                       userInfo:userInfo];
     }
   }
 }
@@ -241,12 +337,12 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
 + (void)enableUpdatesOnAccessTokenChange:(BOOL)enable
 {
   if (enable) {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(observeChangeAccessTokenChange:)
-                                                 name:FBSDKAccessTokenDidChangeNotification
-                                               object:nil];
+    [_notificationCenter addObserver:self
+                            selector:@selector(observeChangeAccessTokenChange:)
+                                name:FBSDKAccessTokenDidChangeNotification
+                              object:nil];
   } else {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [_notificationCenter removeObserver:self];
   }
 }
 
@@ -280,6 +376,9 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
     self.friendIDs.hash,
     self.birthday.hash,
     self.ageRange.hash,
+    self.hometown.hash,
+    self.location.hash,
+    self.gender.hash,
     self.isLimited
   };
   return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
@@ -310,7 +409,10 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
     && [_friendIDs isEqualToArray:profile.friendIDs]
     && _isLimited == profile.isLimited
     && [_birthday isEqualToDate:profile.birthday]
-    && [_ageRange isEqual:profile.ageRange]);
+    && [_ageRange isEqual:profile.ageRange]
+    && [_hometown isEqual:profile.hometown]
+    && [_location isEqual:profile.location]
+    && [_gender isEqual:profile.gender]);
 }
 
  #pragma mark NSCoding
@@ -335,6 +437,9 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
   BOOL isLimited = [decoder decodeBoolForKey:FBSDKPROFILE_IS_LIMITED_KEY];
   NSDate *birthday = [decoder decodeObjectOfClass:[NSDate class] forKey:FBSDKPROFILE_BIRTHDAY_KEY];
   FBSDKUserAgeRange *ageRange = [decoder decodeObjectOfClass:[FBSDKUserAgeRange class] forKey:FBSDKPROFILE_AGERANGE_KEY];
+  FBSDKLocation *hometown = [decoder decodeObjectOfClass:[FBSDKLocation class] forKey:FBSDKPROFILE_HOMETOWN_KEY];
+  FBSDKLocation *location = [decoder decodeObjectOfClass:[FBSDKLocation class] forKey:FBSDKPROFILE_LOCATION_KEY];
+  NSString *gender = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKPROFILE_GENDER_KEY];
   return [self initWithUserID:userID
                     firstName:firstName
                    middleName:middleName
@@ -347,6 +452,9 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
                     friendIDs:friendIDs
                      birthday:birthday
                      ageRange:ageRange
+                     hometown:hometown
+                     location:location
+                       gender:gender
                     isLimited:isLimited];
 }
 
@@ -365,6 +473,9 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
   [encoder encodeBool:self.isLimited forKey:FBSDKPROFILE_IS_LIMITED_KEY];
   [encoder encodeObject:self.birthday forKey:FBSDKPROFILE_BIRTHDAY_KEY];
   [encoder encodeObject:self.ageRange forKey:FBSDKPROFILE_AGERANGE_KEY];
+  [encoder encodeObject:self.hometown forKey:FBSDKPROFILE_HOMETOWN_KEY];
+  [encoder encodeObject:self.location forKey:FBSDKPROFILE_LOCATION_KEY];
+  [encoder encodeObject:self.gender forKey:FBSDKPROFILE_GENDER_KEY];
 }
 
 @end
@@ -375,10 +486,12 @@ static id <FBSDKDataPersisting> _store;
 
 + (void)configureWithStore:(id<FBSDKDataPersisting>)store
        accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
+        notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
 {
   if (self == [FBSDKProfile class]) {
     _store = store;
     _accessTokenProvider = accessTokenProvider;
+    _notificationCenter = notificationCenter;
   }
 }
 
@@ -473,6 +586,18 @@ static id <FBSDKDataPersisting> _store;
     graphPath = [graphPath stringByAppendingString:@",age_range"];
   }
 
+  if ([token.permissions containsObject:@"user_hometown"]) {
+    graphPath = [graphPath stringByAppendingString:@",hometown"];
+  }
+
+  if ([token.permissions containsObject:@"user_location"]) {
+    graphPath = [graphPath stringByAppendingString:@",location"];
+  }
+
+  if ([token.permissions containsObject:@"user_gender"]) {
+    graphPath = [graphPath stringByAppendingString:@",gender"];
+  }
+
   id<FBSDKGraphRequest> request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
                                                                     parameters:nil
                                                                          flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
@@ -502,6 +627,9 @@ static id <FBSDKDataPersisting> _store;
 
     [FBSDKProfile.dateFormatter setDateFormat:@"MM/dd/yyyy"];
     NSDate *birthday = [FBSDKProfile.dateFormatter dateFromString:[FBSDKTypeUtility coercedToStringValue:result[@"birthday"]]];
+    FBSDKLocation *hometown = [FBSDKLocation locationFromDictionary:[FBSDKTypeUtility dictionaryValue:result[@"hometown"]]];
+    FBSDKLocation *location = [FBSDKLocation locationFromDictionary:[FBSDKTypeUtility dictionaryValue:result[@"location"]]];
+    NSString *gender = [FBSDKTypeUtility coercedToStringValue:result[@"gender"]];
 
     FBSDKProfile *profile = [[FBSDKProfile alloc] initWithUserID:profileID
                                                        firstName:[FBSDKTypeUtility coercedToStringValue:result[@"first_name"]]
@@ -514,7 +642,10 @@ static id <FBSDKDataPersisting> _store;
                                                            email:[FBSDKTypeUtility coercedToStringValue:result[@"email"]]
                                                        friendIDs:friendIDs
                                                         birthday:birthday
-                                                        ageRange:ageRange];
+                                                        ageRange:ageRange
+                                                        hometown:hometown
+                                                        location:location
+                                                          gender:gender];
     *profileRef = [profile copy];
   };
   [[self class] loadProfileWithToken:token
@@ -614,6 +745,7 @@ static id <FBSDKDataPersisting> _store;
 {
   _store = nil;
   _accessTokenProvider = nil;
+  _notificationCenter = nil;
 }
 
   #endif

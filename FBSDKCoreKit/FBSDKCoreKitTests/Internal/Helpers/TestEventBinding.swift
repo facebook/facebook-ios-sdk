@@ -30,7 +30,7 @@ class TestEventBinding: EventBinding {
   }
 
   override var path: [Any]! { // swiftlint:disable:this implicitly_unwrapped_optional
-    return stubbedPath
+    stubbedPath
   }
 
   override func trackEvent(_ sender: Any!) { // swiftlint:disable:this implicitly_unwrapped_optional

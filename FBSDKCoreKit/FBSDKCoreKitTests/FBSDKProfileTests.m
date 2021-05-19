@@ -378,6 +378,21 @@ NSString *const heightKey = @"height";
   [self verifyGraphPath:@"me?fields=id,first_name,middle_name,last_name,name,age_range" forPermissions:@[@"user_age_range"]];
 }
 
+- (void)testGraphPathForProfileLoadWithHometownPermission
+{
+  [self verifyGraphPath:@"me?fields=id,first_name,middle_name,last_name,name,hometown" forPermissions:@[@"user_hometown"]];
+}
+
+- (void)testGraphPathForProfileLoadWithLocationPermission
+{
+  [self verifyGraphPath:@"me?fields=id,first_name,middle_name,last_name,name,location" forPermissions:@[@"user_location"]];
+}
+
+- (void)testGraphPathForProfileLoadWithGenderPermission
+{
+  [self verifyGraphPath:@"me?fields=id,first_name,middle_name,last_name,name,gender" forPermissions:@[@"user_gender"]];
+}
+
 - (void)testLoadingProfile
 {
   [self stubGraphRequestWithResult:self.sampleGraphResult error:nil connection:nil];
@@ -396,6 +411,9 @@ NSString *const heightKey = @"height";
                             XCTAssertEqualObjects(profile.friendIDs, SampleUserProfiles.valid.friendIDs);
                             XCTAssertEqualObjects([formatter stringFromDate:profile.birthday], self.sampleGraphResult[@"birthday"]);
                             XCTAssertEqualObjects(profile.ageRange, SampleUserProfiles.valid.ageRange);
+                            XCTAssertEqualObjects(profile.hometown, SampleUserProfiles.valid.hometown);
+                            XCTAssertEqualObjects(profile.location, SampleUserProfiles.valid.location);
+                            XCTAssertEqualObjects(profile.gender, SampleUserProfiles.valid.gender);
                           } graphRequest:self.graphRequestMock];
 }
 
@@ -515,6 +533,69 @@ NSString *const heightKey = @"height";
                           completion:^(FBSDKProfile *profile, NSError *error) {
                             XCTAssertNotNil(profile);
                             XCTAssertNil(profile.ageRange);
+                          } graphRequest:self.graphRequestMock];
+}
+
+- (void)testLoadingProfileWithInvalidHometown
+{
+  id result = @{
+    @"id" : SampleUserProfiles.valid.userID,
+    @"first_name" : SampleUserProfiles.valid.firstName,
+    @"middle_name" : SampleUserProfiles.valid.middleName,
+    @"last_name" : SampleUserProfiles.valid.lastName,
+    @"name" : SampleUserProfiles.valid.name,
+    @"link" : SampleUserProfiles.valid.linkURL,
+    @"email" : SampleUserProfiles.valid.email,
+    @"hometown" : @"hometown"
+  };
+  [self stubGraphRequestWithResult:result error:nil connection:nil];
+
+  [FBSDKProfile loadProfileWithToken:SampleAccessTokens.validToken
+                          completion:^(FBSDKProfile *profile, NSError *error) {
+                            XCTAssertNotNil(profile);
+                            XCTAssertNil(profile.hometown);
+                          } graphRequest:self.graphRequestMock];
+}
+
+- (void)testLoadingProfileWithInvalidLocation
+{
+  id result = @{
+    @"id" : SampleUserProfiles.valid.userID,
+    @"first_name" : SampleUserProfiles.valid.firstName,
+    @"middle_name" : SampleUserProfiles.valid.middleName,
+    @"last_name" : SampleUserProfiles.valid.lastName,
+    @"name" : SampleUserProfiles.valid.name,
+    @"link" : SampleUserProfiles.valid.linkURL,
+    @"email" : SampleUserProfiles.valid.email,
+    @"location" : @"location"
+  };
+  [self stubGraphRequestWithResult:result error:nil connection:nil];
+
+  [FBSDKProfile loadProfileWithToken:SampleAccessTokens.validToken
+                          completion:^(FBSDKProfile *profile, NSError *error) {
+                            XCTAssertNotNil(profile);
+                            XCTAssertNil(profile.location);
+                          } graphRequest:self.graphRequestMock];
+}
+
+- (void)testLoadingProfileWithInvalidGender
+{
+  id result = @{
+    @"id" : SampleUserProfiles.valid.userID,
+    @"first_name" : SampleUserProfiles.valid.firstName,
+    @"middle_name" : SampleUserProfiles.valid.middleName,
+    @"last_name" : SampleUserProfiles.valid.lastName,
+    @"name" : SampleUserProfiles.valid.name,
+    @"link" : SampleUserProfiles.valid.linkURL,
+    @"email" : SampleUserProfiles.valid.email,
+    @"gender" : @{}
+  };
+  [self stubGraphRequestWithResult:result error:nil connection:nil];
+
+  [FBSDKProfile loadProfileWithToken:SampleAccessTokens.validToken
+                          completion:^(FBSDKProfile *profile, NSError *error) {
+                            XCTAssertNotNil(profile);
+                            XCTAssertNil(profile.gender);
                           } graphRequest:self.graphRequestMock];
 }
 
@@ -769,6 +850,21 @@ NSString *const heightKey = @"height";
     "Should encode the expected user age range"
   );
   XCTAssertEqualObjects(
+    coder.encodedObject[@"hometown"],
+    _profile.hometown,
+    "Should encode the expected user hometown"
+  );
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"location"],
+    _profile.location,
+    "Should encode the expected user location"
+  );
+  XCTAssertEqualObjects(
+    coder.encodedObject[@"gender"],
+    _profile.gender,
+    "Should encode the expected user gender"
+  );
+  XCTAssertEqualObjects(
     coder.encodedObject[@"isLimited"],
     @YES,
     "Should encode the expected 'isLimited' value as an object"
@@ -841,6 +937,21 @@ NSString *const heightKey = @"height";
     "Should decode a UserAgeRange object for the ageRange key"
   );
   XCTAssertEqualObjects(
+    coder.decodedObject[@"hometown"],
+    FBSDKLocation.class,
+    "Should decode a Location object for the hometown key"
+  );
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"location"],
+    FBSDKLocation.class,
+    "Should decode a Location object for the location key"
+  );
+  XCTAssertEqualObjects(
+    coder.decodedObject[@"gender"],
+    NSString.class,
+    "Should decode a string for the gender key"
+  );
+  XCTAssertEqualObjects(
     coder.decodedObject[@"isLimited"],
     @"decodeBoolForKey",
     "Should decode a bool for the isLimited key"
@@ -873,6 +984,15 @@ NSString *const heightKey = @"height";
     @"age_range" : @{
       @"min" : SampleUserProfiles.valid.ageRange.min,
     },
+    @"hometown" : @{
+      @"id" : SampleUserProfiles.valid.hometown.id,
+      @"name" : SampleUserProfiles.valid.hometown.name,
+    },
+    @"location" : @{
+      @"id" : SampleUserProfiles.valid.location.id,
+      @"name" : SampleUserProfiles.valid.location.name,
+    },
+    @"gender" : SampleUserProfiles.valid.gender,
   };
 }
 

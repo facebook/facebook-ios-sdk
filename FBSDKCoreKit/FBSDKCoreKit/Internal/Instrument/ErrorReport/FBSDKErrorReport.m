@@ -19,7 +19,10 @@
 #import "FBSDKErrorReport.h"
 
 #import "FBSDKCoreKitBasicsImport.h"
+#import "FBSDKGraphRequest.h"
+#import "FBSDKGraphRequestConnection.h"
 #import "FBSDKGraphRequestFactory.h"
+#import "FBSDKGraphRequestHTTPMethod.h"
 #import "FBSDKGraphRequestProviding.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
@@ -122,7 +125,8 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
                      withIntermediateDirectories:NO
                                       attributes:NULL
                                            error:NULL]) {
-      [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational formatString:@"Failed to create library at %@", self.directoryPath];
+      NSString *msg = [NSString stringWithFormat:@"Failed to create library at %@", self.directoryPath];
+      [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational logEntry:msg];
     }
   }
 }

@@ -34,6 +34,9 @@ public class TestProfileProvider: NSObject, ProfileProviding {
   public var capturedFriendIDs: [String]?
   public var capturedBirthday: Date?
   public var capturedAgeRange: UserAgeRange?
+  public var capturedHometown: Location?
+  public var capturedLocation: Location?
+  public var capturedGender: String?
   public var capturedIsLimited = false
   private var stubbedProfile: Profile
 
@@ -54,6 +57,9 @@ public class TestProfileProvider: NSObject, ProfileProviding {
     friendIDs: [String]?,
     birthday: Date?,
     ageRange: UserAgeRange?,
+    hometown: Location?,
+    location: Location?,
+    gender: String?,
     isLimited: Bool
   ) -> Profile {
     capturedUserID = userID
@@ -68,6 +74,9 @@ public class TestProfileProvider: NSObject, ProfileProviding {
     capturedFriendIDs = friendIDs
     capturedBirthday = birthday
     capturedAgeRange = ageRange
+    capturedHometown = hometown
+    capturedLocation = location
+    capturedGender = gender
     capturedIsLimited = isLimited
 
     return stubbedProfile

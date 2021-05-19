@@ -23,7 +23,7 @@ class TestAccessTokenWallet: NSObject, AccessTokenProviding, AccessTokenSetting,
   static var tokenCache: TokenCaching?
   static var currentAccessToken: AccessToken?
   static var tokenString: String? {
-    return currentAccessToken?.tokenString
+    currentAccessToken?.tokenString
   }
 
   static func reset() {

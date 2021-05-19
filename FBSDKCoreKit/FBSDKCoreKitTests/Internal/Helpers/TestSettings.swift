@@ -18,11 +18,10 @@
 
 @objcMembers
 class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
-
   static var appID: String?
   static var clientToken: String?
   static var userAgentSuffix: String?
-  static var loggingBehaviors = Set<String>()
+  static var loggingBehaviors = Set<LoggingBehavior>()
   static var sdkVersion: String?
   static var logWarningsCallCount = 0
   static var logIfSDKSettingsChangedCallCount = 0
@@ -42,35 +41,35 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   var shouldUseTokenOptimizations = true
 
   var isDataProcessingRestricted: Bool {
-    return stubbedIsDataProcessingRestricted
+    stubbedIsDataProcessingRestricted
   }
 
   var isAutoLogAppEventsEnabled: Bool {
-    return stubbedIsAutoLogAppEventsEnabled
+    stubbedIsAutoLogAppEventsEnabled
   }
 
   var isSetATETimeExceedsInstallTime: Bool {
-    return stubbedIsSetATETimeExceedsInstallTime
+    stubbedIsSetATETimeExceedsInstallTime
   }
 
   var isSKAdNetworkReportEnabled: Bool {
-    return stubbedIsSKAdNetworkReportEnabled
+    stubbedIsSKAdNetworkReportEnabled
   }
 
-  var loggingBehaviors: Set<String> {
-    return TestSettings.loggingBehaviors
+  var loggingBehaviors: Set<LoggingBehavior> {
+    TestSettings.loggingBehaviors
   }
 
   var shouldLimitEventAndDataUsage: Bool {
-    return stubbedLimitEventAndDataUsage
+    stubbedLimitEventAndDataUsage
   }
 
   var installTimestamp: Date? {
-    return stubbedInstallTimestamp
+    stubbedInstallTimestamp
   }
 
   var advertiserTrackingEnabledTimestamp: Date? {
-    return stubbedSetAdvertiserTrackingEnabledTimestamp
+    stubbedSetAdvertiserTrackingEnabledTimestamp
   }
 
   static func logWarnings() {

@@ -22,15 +22,9 @@
 
  #import "FBSDKHybridAppEventsScriptMessageHandler.h"
 
- #if SWIFT_PACKAGE
-  #import "FBSDKAppEvents.h"
- #else
-  #import <FBSDKCoreKit/FBSDKAppEvents.h>
- #endif
-
+ #import "FBSDKAppEvents+EventLogging.h"
  #import "FBSDKAppEvents+Internal.h"
  #import "FBSDKCoreKitBasicsImport.h"
- #import "FBSDKEventLogger.h"
  #import "FBSDKEventLogging.h"
 
 NSString *const FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey = @"_fb_pixel_referral_id";
@@ -48,7 +42,7 @@ NSString *const FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey = @"_fb_pix
 
 - (instancetype)init
 {
-  return [self initWithEventLogger:[FBSDKEventLogger new]];
+  return [self initWithEventLogger:FBSDKAppEvents.singleton];
 }
 
 - (instancetype)initWithEventLogger:(id<FBSDKEventLogging>)eventLogger

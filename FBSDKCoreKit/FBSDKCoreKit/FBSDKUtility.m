@@ -94,4 +94,15 @@
   return graphDomain;
 }
 
++ (NSURL *)unversionedFacebookURLWithHostPrefix:(NSString *)hostPrefix
+                                           path:(NSString *)path
+                                queryParameters:(NSDictionary *)queryParameters
+                                          error:(NSError *__autoreleasing *)errorRef
+{
+  return [FBSDKInternalUtility unversionedFacebookURLWithHostPrefix:hostPrefix
+                                                               path:path
+                                                    queryParameters:queryParameters
+                                                              error:errorRef];
+}
+
 @end

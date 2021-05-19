@@ -24,6 +24,6 @@ class TestMacCatalystDeterminator: NSObject, MacCatalystDetermining {
   var stubbedIsMacCatalystApp = false
 
   func isMacCatalystApp() -> Bool {
-    return stubbedIsMacCatalystApp
+    stubbedIsMacCatalystApp
   }
 }

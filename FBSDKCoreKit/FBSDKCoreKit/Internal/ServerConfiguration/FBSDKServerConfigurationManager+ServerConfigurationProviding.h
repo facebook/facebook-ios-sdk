@@ -18,6 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKServerConfigurationManager.h"
 #import "FBSDKServerConfigurationProviding.h"
 
 @interface FBSDKServerConfigurationManager (ServerConfigurationProviding) <FBSDKServerConfigurationProviding>

@@ -27,10 +27,10 @@ class TestCollectionView: UICollectionView {
   }
 
   override func cellForItem(at indexPath: IndexPath) -> UICollectionViewCell? {
-    return stubbedCellMap[indexPath]
+    stubbedCellMap[indexPath]
   }
 
   override var window: UIWindow? {
-    return stubbedWindow
+    stubbedWindow
   }
 }

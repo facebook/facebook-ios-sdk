@@ -121,7 +121,7 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
     windowFinder: TestWindowFinder = TestWindowFinder(stubbedWindow: UIWindow()),
     delegate: WebDialogDelegate? = nil
   ) -> WebDialog {
-    return WebDialog.show(
+    WebDialog.show(
       withName: name,
       parameters: parameters ?? self.parameters,
       windowFinder: windowFinder,

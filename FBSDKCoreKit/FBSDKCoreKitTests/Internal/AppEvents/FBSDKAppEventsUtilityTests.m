@@ -24,6 +24,7 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
+#import "FBSDKAppEvents+Internal.h"
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKTestCase.h"
@@ -79,7 +80,11 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
                                   featureChecker:[TestFeatureManager new]
                                            store:userDefaultsSpy
                                           logger:TestLogger.class
-                                        settings:[TestSettings new]];
+                                        settings:[TestSettings new]
+                                 paymentObserver:[TestPaymentObserver new]
+                               timeSpentRecorder:[TestTimeSpentRecorder new]
+                             appEventsStateStore:[TestAppEventsStateStore new]
+             eventDeactivationParameterProcessor:[TestEventDeactivationParameterProcessor new]];
 }
 
 - (void)tearDown

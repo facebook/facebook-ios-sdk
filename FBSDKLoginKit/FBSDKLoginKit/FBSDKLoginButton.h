@@ -107,6 +107,10 @@ NS_SWIFT_NAME(FBLoginButton)
  An invalid nonce will not be set. Instead, default unique nonces will be used for login attempts.
  */
 @property (copy, nonatomic, nullable) NSString *nonce;
+/**
+  Gets or sets an optional page id to use for login attempts. Used in conjunction with some Page related permissions.
+ */
+@property (copy, nonatomic, nullable) NSString *messengerPageId;
 
 @end
 

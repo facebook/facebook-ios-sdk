@@ -27,10 +27,10 @@ class TestTableView: UITableView {
   }
 
   override func cellForRow(at indexPath: IndexPath) -> UITableViewCell? {
-    return stubbedCellMap[indexPath]
+    stubbedCellMap[indexPath]
   }
 
   override var window: UIWindow? {
-    return stubbedWindow
+    stubbedWindow
   }
 }

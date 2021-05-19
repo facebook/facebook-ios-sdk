@@ -37,20 +37,6 @@
 }
 
 + (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration *_Nonnull)configuration
-                andCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
-{
-  return
-  [self
-   uploadImageWithConfiguration:configuration
-   completionHandler:^(BOOL success, id _Nullable result, NSError *_Nullable error) {
-     if (completionHandler) {
-       completionHandler(success, error);
-     }
-   }
-   andProgressHandler:nil];
-}
-
-+ (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration *_Nonnull)configuration
           andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
 {
   return

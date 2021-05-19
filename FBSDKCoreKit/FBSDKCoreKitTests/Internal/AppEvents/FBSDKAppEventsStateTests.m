@@ -16,7 +16,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
 #import "FBSDKAppEventsState.h"
@@ -26,7 +25,8 @@
 
 #define FBSDK_APPEVENTSSTATE_MAX_EVENTS 1000
 
-@interface FBSDKAppEventsStateTests : FBSDKTestCase
+@interface FBSDKAppEventsStateTests : XCTestCase
+@property (nonatomic, copy) NSString *appID;
 @end
 
 @implementation FBSDKAppEventsStateTests
@@ -40,7 +40,7 @@
 {
   [super setUp];
 
-  [self.appEventStatesMock stopMocking];
+  _appID = @"appid";
   [self setUpFixtures];
 }
 
@@ -428,7 +428,7 @@
 
 - (void)testJSONStringForEventsWithNoEvents
 {
-  NSString *json = [_state JSONStringForEvents:YES];
+  NSString *json = [_state JSONStringForEventsIncludingImplicitEvents:YES];
   NSString *expected = [FBSDKBasicUtility JSONStringForObject:@[] error:nil invalidObjectHandler:nil];
 
   XCTAssertEqualObjects(json, expected, "Should represent events as empty json array when there are no events");
@@ -439,7 +439,7 @@
   [_state addEvent:SampleAppEvents.validEvent isImplicit:YES];
   [_state addEvent:SampleAppEvents.validEvent isImplicit:YES];
 
-  NSString *json = [_state JSONStringForEvents:YES];
+  NSString *json = [_state JSONStringForEventsIncludingImplicitEvents:YES];
   NSString *expected = [FBSDKBasicUtility JSONStringForObject:@[SampleAppEvents.validEvent, SampleAppEvents.validEvent] error:nil invalidObjectHandler:nil];
 
   XCTAssertEqualObjects(json, expected, "Should represent events as empty json array when there are no events");
@@ -450,7 +450,7 @@
   [_state addEvent:SampleAppEvents.validEvent isImplicit:YES];
   [_state addEvent:SampleAppEvents.validEvent isImplicit:NO];
 
-  NSString *json = [_state JSONStringForEvents:NO];
+  NSString *json = [_state JSONStringForEventsIncludingImplicitEvents:NO];
 
   NSString *expected = [FBSDKBasicUtility JSONStringForObject:@[SampleAppEvents.validEvent] error:nil invalidObjectHandler:nil];
 

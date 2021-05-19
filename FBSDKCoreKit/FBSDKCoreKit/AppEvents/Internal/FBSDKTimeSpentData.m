@@ -95,36 +95,19 @@ static const long INACTIVE_SECONDS_QUANTA[] =
   NSString *_sessionID;
 }
 
-//
-// Public methods
-//
-
-+ (void)suspend
-{
-  [self.singleton instanceSuspend];
-}
-
-+ (void)restore:(BOOL)calledFromActivateApp
-{
-  [self.singleton instanceRestore:calledFromActivateApp];
-}
-
-//
-// Internal methods
-//
-+ (FBSDKTimeSpentData *)singleton
++ (FBSDKTimeSpentData *)shared
 {
   static dispatch_once_t pred;
-  static FBSDKTimeSpentData *shared = nil;
+  static FBSDKTimeSpentData *instance = nil;
 
   dispatch_once(&pred, ^{
-    shared = [FBSDKTimeSpentData new];
+    instance = [FBSDKTimeSpentData new];
   });
-  return shared;
+  return instance;
 }
 
 // Calculate and persist time spent data for this instance of the app activation.
-- (void)instanceSuspend
+- (void)suspend
 {
   [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
   if (!_isCurrentlyLoaded) {
@@ -138,7 +121,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
   // Can happen if the clock on the device is changed
   if (timeSinceRestore < 0) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
-                       formatString:@"Clock skew detected"];
+                           logEntry:@"Clock skew detected"];
     timeSinceRestore = 0;
   }
 
@@ -159,8 +142,9 @@ static const long INACTIVE_SECONDS_QUANTA[] =
               encoding:NSASCIIStringEncoding
                  error:nil];
 
+  NSString *msg = [NSString stringWithFormat:@"FBSDKTimeSpentData Persist: %@", content];
   [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
-                     formatString:@"FBSDKTimeSpentData Persist: %@", content];
+                         logEntry:msg];
 
   _isCurrentlyLoaded = NO;
 }
@@ -168,7 +152,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
 // Called during activation - either through an explicit 'activateApp' call or implicitly when the app is foregrounded.
 // In both cases, we restore the persisted event data.  In the case of the activateApp, we log an 'app activated'
 // event if there's been enough time between the last deactivation and now.
-- (void)instanceRestore:(BOOL)calledFromActivateApp
+- (void)restore:(BOOL)calledFromActivateApp
 {
   [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
 
@@ -180,8 +164,9 @@ static const long INACTIVE_SECONDS_QUANTA[] =
                                 usedEncoding:nil
                                        error:nil];
 
+    NSString *msg = [NSString stringWithFormat:@"FBSDKTimeSpentData Restore: %@", content];
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
-                       formatString:@"FBSDKTimeSpentData Restore: %@", content];
+                           logEntry:msg];
 
     long now = [FBSDKAppEventsUtility unixTimeNow];
     if (!content) {

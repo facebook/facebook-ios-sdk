@@ -19,7 +19,7 @@
 enum SampleRawRemoteGatekeeper {
 
   static func valid(name: String, enabled: Bool) -> [String: Any] {
-    return [
+    [
       "key": name,
       "value": enabled
     ]

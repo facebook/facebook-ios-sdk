@@ -19,6 +19,8 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
+#import <TestTools/TestTools-Swift.h>
+
 #import "FBSDKCoreKit.h"
 #import "FBSDKCoreKitTestUtility.h"
 #import "FBSDKCoreKitTests-Swift.h"
@@ -71,8 +73,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
                    toBody:(FBSDKGraphRequestBody *)body
               addFormData:(BOOL)addFormData
                    logger:(FBSDKLogger *)logger;
-- (NSString *)accessTokenWithRequest:(FBSDKGraphRequest *)request;
-- (NSError *)errorFromResult:(id)untypedParam request:(FBSDKGraphRequest *)request;
+- (NSString *)accessTokenWithRequest:(id<FBSDKGraphRequest>)request;
+- (NSError *)errorFromResult:(id)untypedParam request:(id<FBSDKGraphRequest>)request;
 - (NSString *)_overrideVersionPart;
 - (NSArray *)parseJSONResponse:(NSData *)data
                          error:(NSError **)error
@@ -162,6 +164,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [TestGraphRequestPiggybackManager reset];
   [TestLogger reset];
   [TestSettings reset];
+  [TestAccessTokenWallet reset];
 
   [super tearDown];
 }
@@ -328,8 +331,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   FBSDKGraphRequestConnection *connection = [FBSDKGraphRequestConnection new];
   NSObject *logger = (NSObject *)connection.eventLogger;
   XCTAssertEqualObjects(
-    logger.class,
-    FBSDKEventLogger.class,
+    logger,
+    FBSDKAppEvents.singleton,
     "A graph request connection should have the correct events logger by default"
   );
 }
@@ -548,8 +551,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testAddingRequestToBatchSetsMethod
 {
-  FBSDKGraphRequest *postRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me"
-                                                                     HTTPMethod:FBSDKHTTPMethodPOST];
+  id<FBSDKGraphRequest> postRequest = [[TestGraphRequest alloc] initWithGraphPath:@"me"
+                                                                       HTTPMethod:FBSDKHTTPMethodPOST];
   FBSDKGraphRequestMetadata *metadata = [[FBSDKGraphRequestMetadata alloc] initWithRequest:postRequest
                                                                          completionHandler:nil
                                                                            batchParameters:@{}];
@@ -590,8 +593,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   NSData *data = [@"foo" dataUsingEncoding:NSUTF8StringEncoding];
   NSData *data2 = [@"bar" dataUsingEncoding:NSUTF8StringEncoding];
 
-  FBSDKGraphRequest *request = [self sampleRequestWithParameters:@{ self.name : data }];
-  FBSDKGraphRequest *request2 = [self sampleRequestWithParameters:@{ self.name : data2 }];
+  id<FBSDKGraphRequest> request = [self sampleRequestWithParameters:@{ self.name : data }];
+  id<FBSDKGraphRequest> request2 = [self sampleRequestWithParameters:@{ self.name : data2 }];
   FBSDKGraphRequestMetadata *metadata1 = [self metadataWithRequest:request];
   FBSDKGraphRequestMetadata *metadata2 = [self metadataWithRequest:request2];
 
@@ -752,7 +755,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testAppendingUnknownAttachmentTypeWithLogger
 {
   TestGraphRequestBody *body = [TestGraphRequestBody new];
-  TestLogger *logger = [TestLogger new];
+  TestLogger *logger = [self createLogger];
   [self.connection appendAttachments:@{ self.name : UIColor.grayColor }
                               toBody:body
                          addFormData:NO
@@ -802,7 +805,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [FBSDKGraphRequestConnection resetCanMakeRequests];
   NSString *msg = @"FBSDKGraphRequestConnection cannot be started before Facebook SDK initialized.";
   NSError *expectedError = [FBSDKError unknownErrorWithMessage:msg];
-  self.connection.logger = [TestLogger new];
+  self.connection.logger = [self createLogger];
 
   __block BOOL completionWasCalled = NO;
   __weak typeof(self) weakSelf = self;
@@ -837,7 +840,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testStartingWithInvalidStates
 {
-  self.connection.logger = [TestLogger new];
+  self.connection.logger = [self createLogger];
 
   NSArray *states = @[@(kStateStarted), @(kStateCancelled), @(kStateCompleted)];
   for (NSNumber *state in states) {
@@ -965,7 +968,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testErrorFromResultDependsOnErrorConfiguration
 {
   [self.connection errorFromResult:self.sampleErrorDictionary request:self.sampleRequest];
-  FBSDKGraphRequest *capturedRequest = (FBSDKGraphRequest *)self.errorConfiguration.capturedGraphRequest;
+  id<FBSDKGraphRequest> capturedRequest = (id<FBSDKGraphRequest>)self.errorConfiguration.capturedGraphRequest;
 
   XCTAssertNotNil(capturedRequest.graphPath, "Should capture the graph request from the result");
   XCTAssertEqualObjects(
@@ -1089,11 +1092,11 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
 
   __block int actualCallbacksCount = 0;
-  [self.connection addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
+  [self.connection addRequest:[[TestGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
             completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {
               XCTAssertEqual(1, actualCallbacksCount++, @"this should have been the second callback");
             }];
-  [self.connection addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
+  [self.connection addRequest:[[TestGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
             completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {
               XCTAssertEqual(2, actualCallbacksCount++, @"this should have been the third callback");
             }];
@@ -1123,11 +1126,11 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
 
   __block int actualCallbacksCount = 0;
-  [self.connection addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
+  [self.connection addRequest:[[TestGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
             completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {
               XCTAssertEqual(1, actualCallbacksCount++, @"this should have been the second callback");
             }];
-  [self.connection addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
+  [self.connection addRequest:[[TestGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
             completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {
               XCTAssertEqual(2, actualCallbacksCount++, @"this should have been the third callback");
             }];
@@ -1155,7 +1158,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 {
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
 
-  [self.connection addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
+  [self.connection addRequest:[[TestGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
             completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {}];
   self.requestConnectionCallback = ^(FBSDKGraphRequestConnection *conn, NSError *error) {
     NSCAssert(error != nil, @"didFinishLoading shouldn't have been called");
@@ -1194,8 +1197,9 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
                                                                     refreshDate:nil
                                                        dataAccessExpirationDate:nil];
   [FBSDKAccessToken setCurrentAccessToken:accessToken];
+  TestAccessTokenWallet.currentAccessToken = accessToken;
 
-  [self.connection addRequest:self.requestForMeWithEmptyFields
+  [self.connection addRequest:[self requestWithTokenString:accessToken.tokenString]
             completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
               XCTAssertNil(result);
               XCTAssertEqualObjects(@"Token is broke", error.userInfo[FBSDKErrorDeveloperMessageKey]);
@@ -1234,11 +1238,9 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
   [FBSDKAccessToken setCurrentAccessToken:accessToken];
 
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me"
-                                                                 parameters:@{@"fields" : @""}
-                                                                tokenString:@"notCurrentToken"
-                                                                    version:nil
-                                                                 HTTPMethod:@""];
+  id<FBSDKGraphRequest> request = [[TestGraphRequest alloc] initWithGraphPath:@"me"
+                                                                   parameters:@{@"fields" : @""}
+                                                                  tokenString:@"notCurrentToken"];
   [self.connection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
     XCTAssertNil(result);
     XCTAssertEqualObjects(@"Token is broke", error.userInfo[FBSDKErrorDeveloperMessageKey]);
@@ -1275,7 +1277,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
                                                        dataAccessExpirationDate:nil];
   [FBSDKAccessToken setCurrentAccessToken:accessToken];
 
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""} flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError];
+  id<FBSDKGraphRequest> request = [[TestGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""} flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError];
   [self.connection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
     XCTAssertNil(result);
     XCTAssertEqualObjects(@"Token is broke", error.userInfo[FBSDKErrorDeveloperMessageKey]);
@@ -1353,7 +1355,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testRequestWithBatchConstructionWithSingleGetRequest
 {
-  FBSDKGraphRequest *singleRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @"with_suffix"}];
+  id<FBSDKGraphRequest> singleRequest = [[TestGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @"with_suffix"}];
   [self.connection addRequest:singleRequest completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {}];
   NSURLRequest *request = [self.connection requestWithBatch:self.connection.requests timeout:0];
 
@@ -1370,7 +1372,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   NSDictionary *parameters = @{
     @"first_key" : @"first_value",
   };
-  FBSDKGraphRequest *singleRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"activities" parameters:parameters HTTPMethod:FBSDKHTTPMethodPOST];
+  id<FBSDKGraphRequest> singleRequest = [[TestGraphRequest alloc] initWithGraphPath:@"activities" parameters:parameters HTTPMethod:FBSDKHTTPMethodPOST];
   [self.connection addRequest:singleRequest completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {}];
   NSURLRequest *request = [self.connection requestWithBatch:self.connection.requests timeout:0];
 
@@ -1388,11 +1390,11 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testAccessTokenWithRequest
 {
   NSString *expectedToken = @"fake_token";
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me"
-                                                                 parameters:@{@"fields" : @""}
-                                                                tokenString:expectedToken
-                                                                 HTTPMethod:FBSDKHTTPMethodGET
-                                                                      flags:FBSDKGraphRequestFlagNone];
+  id<FBSDKGraphRequest> request = [[TestGraphRequest alloc] initWithGraphPath:@"me"
+                                                                   parameters:@{@"fields" : @""}
+                                                                  tokenString:expectedToken
+                                                                   HTTPMethod:FBSDKHTTPMethodGET
+                                                                        flags:FBSDKGraphRequestFlagNone];
   NSString *token = [self.connection accessTokenWithRequest:request];
   XCTAssertEqualObjects(token, expectedToken);
 }
@@ -1529,7 +1531,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testProcessingResultBodyWithDebugDictionary
 {
-  self.connection.logger = [TestLogger new];
+  self.connection.logger = [self createLogger];
   NSArray *entries = @[
     @"message1 Link: link1",
     @"message2 Link: link2"
@@ -1553,9 +1555,9 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testLogRequestWithInactiveLogger
 {
   NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:self.sampleUrl];
-  TestLogger *logger = [TestLogger new];
-  TestLogger *bodyLogger = [TestLogger new];
-  TestLogger *attachmentLogger = [TestLogger new];
+  TestLogger *logger = [self createLogger];
+  TestLogger *bodyLogger = [self createLogger];
+  TestLogger *attachmentLogger = [self createLogger];
   self.connection.logger = logger;
   [self.connection logRequest:request bodyLength:1024 bodyLogger:bodyLogger attachmentLogger:attachmentLogger];
 
@@ -1566,12 +1568,13 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testLogRequestWithActiveLogger
 {
   NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:self.sampleUrl];
-  TestLogger *logger = [TestLogger new];
-  TestLogger *bodyLogger = [TestLogger new];
-  TestLogger *attachmentLogger = [TestLogger new];
+  TestLogger *logger = [self createLogger];
+  TestLogger *bodyLogger = [self createLogger];
+  TestLogger *attachmentLogger = [self createLogger];
 
-  bodyLogger.contents = @"bodyContents";
-  attachmentLogger.contents = @"attachmentLoggerContents";
+  // Start with some previously 'logged' contents
+  bodyLogger.capturedContents = @"bodyContents";
+  attachmentLogger.capturedContents = @"attachmentLoggerContents";
   logger.stubbedIsActive = YES;
   self.connection.logger = logger;
 
@@ -1621,27 +1624,41 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 // MARK: - Helpers
 
-- (FBSDKGraphRequest *)sampleRequest
+- (TestLogger *)createLogger
+{
+  return [[TestLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
+}
+
+- (id<FBSDKGraphRequest>)sampleRequest
 {
   return self.requestForMeWithEmptyFields;
 }
 
-- (FBSDKGraphRequest *)sampleRequestWithParameters:(NSDictionary *)parameters
+- (id<FBSDKGraphRequest>)sampleRequestWithParameters:(NSDictionary *)parameters
 {
-  return [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:parameters];
+  return [[TestGraphRequest alloc] initWithGraphPath:@"me" parameters:parameters];
 }
 
-- (FBSDKGraphRequest *)requestForMeWithEmptyFields
+- (id<FBSDKGraphRequest>)requestForMeWithEmptyFields
 {
-  return [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}];
+  return [[TestGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}];
 }
 
-- (FBSDKGraphRequest *)requestForMeWithEmptyFieldsNoTokenString
+- (id<FBSDKGraphRequest>)requestForMeWithEmptyFieldsNoTokenString
 {
-  return [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""} tokenString:nil HTTPMethod:FBSDKHTTPMethodGET flags:FBSDKGraphRequestFlagNone];
+  return [[TestGraphRequest alloc] initWithGraphPath:@"me"
+                                          parameters:@{@"fields" : @""}
+                                               flags:FBSDKGraphRequestFlagNone];
 }
 
-- (FBSDKGraphRequestMetadata *)metadataWithRequest:(FBSDKGraphRequest *)request
+- (id<FBSDKGraphRequest>)requestWithTokenString:(NSString *)tokenString
+{
+  return [[TestGraphRequest alloc] initWithGraphPath:@"me"
+                                          parameters:@{@"fields" : @""}
+                                         tokenString:tokenString];
+}
+
+- (FBSDKGraphRequestMetadata *)metadataWithRequest:(id<FBSDKGraphRequest>)request
 {
   return [[FBSDKGraphRequestMetadata alloc] initWithRequest:request
                                           completionHandler:nil
@@ -1666,7 +1683,6 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
         @"error_reason" : @"error_reason",
         @"message" : @"message",
         @"error_user_title" : @"error_user_title",
-        @"error_user_msg" : @"error_user_msg",
         @"error_user_msg" : @"error_user_msg",
       }
     }

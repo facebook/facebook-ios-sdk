@@ -28,18 +28,26 @@
  #import <sys/sysctl.h>
  #import <sys/utsname.h>
 
- #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKAppEvents.h"
+ #import "FBSDKAppEvents+EventLogging.h"
+ #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKEventProcessing.h"
  #import "FBSDKFeatureExtracting.h"
  #import "FBSDKFeatureExtractor.h"
  #import "FBSDKGraphRequestFactory.h"
+ #import "FBSDKGraphRequestHTTPMethod.h"
+ #import "FBSDKGraphRequestProtocol.h"
+ #import "FBSDKInternalUtility.h"
  #import "FBSDKMLMacros.h"
  #import "FBSDKModelManager.h"
  #import "FBSDKModelUtility.h"
  #import "FBSDKServerConfigurationManager+ServerConfigurationProviding.h"
+ #import "FBSDKSettings+Internal.h"
  #import "FBSDKSettings+SettingsProtocols.h"
  #import "FBSDKSwizzler+Swizzling.h"
  #import "FBSDKSwizzling.h"
+ #import "FBSDKViewHierarchy.h"
+ #import "FBSDKViewHierarchyMacros.h"
 
 NSString *const OptInEvents = @"production_events";
 NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
@@ -66,7 +74,7 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
                 serverConfigurationProvider:FBSDKServerConfigurationManager.class
                                    swizzler:FBSDKSwizzler.class
                                    settings:FBSDKSettings.sharedSettings
-                                eventLogger:[FBSDKEventLogger new]
+                                eventLogger:FBSDKAppEvents.singleton
                            featureExtractor:FBSDKFeatureExtractor.class
                              eventProcessor:FBSDKModelManager.shared];
 }

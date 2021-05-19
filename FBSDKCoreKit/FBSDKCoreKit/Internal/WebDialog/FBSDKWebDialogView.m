@@ -30,12 +30,6 @@
  #import "FBSDKURLOpener.h"
  #import "FBSDKWebViewProviding.h"
 
- #ifdef BUCK
-  #import <FBSDKCoreKit_Basics/FBSDKSafeCast.h>
- #else
-  #import "FBSDKSafeCast.h"
- #endif
-
  #define FBSDK_WEB_DIALOG_VIEW_BORDER_WIDTH 10.0
 
 @interface FBSDKWebDialogView () <WKNavigationDelegate>

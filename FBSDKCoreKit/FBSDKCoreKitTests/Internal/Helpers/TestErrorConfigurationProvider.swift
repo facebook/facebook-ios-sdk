@@ -25,6 +25,6 @@ class TestErrorConfigurationProvider: NSObject, ErrorConfigurationProviding {
   }
 
   func errorConfiguration() -> ErrorConfigurationProtocol? {
-    return configuration
+    configuration
   }
 }

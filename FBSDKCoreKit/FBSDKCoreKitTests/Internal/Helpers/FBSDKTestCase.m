@@ -28,8 +28,11 @@
 
 #import "FBSDKAppEvents.h"
 #import "FBSDKAppEvents+Internal.h"
+#import "FBSDKAppEventsConfigurationManager.h"
 #import "FBSDKAppEventsState.h"
 #import "FBSDKApplicationDelegate+Internal.h"
+#import "FBSDKBridgeAPI.h"
+#import "FBSDKBridgeAPI+Internal.h"
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitTestUtility.h"
 #import "FBSDKCrashObserver.h"
@@ -447,7 +450,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
 - (void)stubAllocatingGraphRequestConnection
 {
-  OCMStub(ClassMethod([_graphRequestConnectionClassMock alloc]));
+  OCMStub(ClassMethod([_graphRequestConnectionClassMock alloc])).andReturn(_graphRequestConnectionClassMock);
 }
 
 - (void)stubIsDataProcessingRestricted:(BOOL)isRestricted

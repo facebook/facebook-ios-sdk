@@ -24,6 +24,8 @@
  #import "FBSDKCoreKit+Internal.h"
 #endif
 
+#import "FBSDKCoreKitBasicsImportForShareKit.h"
+
 #define FBSDK_GAME_REQUEST_URL_SCHEME @"https"
 #define FBSDK_GAME_REQUEST_URL_HOST @"fb.gg"
 #define FBSDK_GAME_REQUEST_URL_PATH @"/game_requestui/%@/"

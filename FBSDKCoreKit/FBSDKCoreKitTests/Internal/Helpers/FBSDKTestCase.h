@@ -19,6 +19,7 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKAppEvents.h"
+#import "FBSDKAppEventsConfiguration.h"
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKApplicationDelegate.h"
 #import "FBSDKGraphRequestConnection.h"

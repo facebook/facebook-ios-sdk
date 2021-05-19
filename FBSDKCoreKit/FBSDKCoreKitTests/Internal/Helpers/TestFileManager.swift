@@ -42,7 +42,7 @@ class TestFileManager: FileManaging {
     appropriateFor url: URL,
     create shouldCreate: Bool
     ) throws -> URL {
-    return tempDirectoryURL
+    tempDirectoryURL
   }
 
   func createDirectory(

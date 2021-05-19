@@ -31,7 +31,11 @@ NS_SWIFT_NAME(GamingPayload)
 @property (nonatomic, strong, readonly) NSString *payload;
 @property (nonatomic, strong, readonly) NSString *gameRequestID;
 
-- (instancetype)initWithUrl:(FBSDKURL * _Nonnull)url;
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
+- (instancetype)initWithURL:(FBSDKURL * _Nonnull)url
+NS_SWIFT_NAME(initWith(URL:));
 
 @end
 

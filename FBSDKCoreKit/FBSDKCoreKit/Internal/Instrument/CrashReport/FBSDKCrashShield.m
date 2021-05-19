@@ -18,22 +18,71 @@
 
 #import "FBSDKCrashShield.h"
 
-#import "FBSDKFeatureManager.h"
-#import "FBSDKGraphRequest.h"
-#import "FBSDKGraphRequestConnection.h"
+#import "FBSDKCoreKitBasicsImport.h"
+#import "FBSDKFeatureChecking.h"
+#import "FBSDKFeatureDisabling.h"
+#import "FBSDKGraphRequestFactory.h"
+#import "FBSDKGraphRequestHTTPMethod.h"
+#import "FBSDKGraphRequestProtocol.h"
+#import "FBSDKGraphRequestProviding.h"
 #import "FBSDKInternalUtility.h"
-#import "FBSDKSettings.h"
 #import "FBSDKSettings+Internal.h"
+#import "FBSDKSettingsProtocol.h"
+
+@interface FBSDKCrashShield ()
+
+@property (class, nullable, nonatomic, readonly) id<FBSDKGraphRequestProviding> requestProvider;
+@property (class, nullable, nonatomic, readonly) id<FBSDKFeatureChecking, FBSDKFeatureDisabling> featureChecking;
+@property (class, nullable, nonatomic, readonly) id<FBSDKSettings> settings;
+
+@end
 
 @implementation FBSDKCrashShield
 
+static id<FBSDKGraphRequestProviding> _requestProvider;
+static id<FBSDKFeatureChecking, FBSDKFeatureDisabling> _featureChecking;
 static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
+static NSDictionary<NSString *, NSNumber *> *_featureForStringMap;
+static id<FBSDKSettings> _settings;
+
++ (id<FBSDKSettings>)settings
+{
+  return _settings;
+}
+
++ (id<FBSDKGraphRequestProviding>)requestProvider
+{
+  return _requestProvider;
+}
+
++ (id<FBSDKFeatureChecking, FBSDKFeatureDisabling>)featureChecking
+{
+  return _featureChecking;
+}
+
++ (void)configureWithSettings:(id<FBSDKSettings>)settings
+              requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+              featureChecking:(id<FBSDKFeatureChecking, FBSDKFeatureDisabling>)featureChecking
+{
+  if (self == [FBSDKCrashShield class]) {
+    _settings = settings;
+    _requestProvider = requestProvider;
+    _featureChecking = featureChecking;
+  }
+}
 
 + (void)initialize
 {
   if (self == [FBSDKCrashShield class]) {
     _featureMapping =
     @{
+      @"AEM" : @ [
+        @"FBSDKAEMConfiguration",
+        @"FBSDKAEMEvent",
+        @"FBSDKAEMInvocation",
+        @"FBSDKAEMReporter",
+        @"FBSDKAEMRule",
+      ],
       @"AAM" : @[
         @"FBSDKMetadataIndexer",
       ],
@@ -71,34 +120,58 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
         @"FBSDKSKAdNetworkEvent",
       ],
     };
+
+    _featureForStringMap = @{
+      @"CoreKit" : @(FBSDKFeatureCore),
+      @"AppEvents" : @(FBSDKFeatureAppEvents),
+      @"CodelessEvents" : @(FBSDKFeatureCodelessEvents),
+      @"RestrictiveDataFiltering" : @(FBSDKFeatureRestrictiveDataFiltering),
+      @"AAM" : @(FBSDKFeatureAAM),
+      @"PrivacyProtection" : @(FBSDKFeaturePrivacyProtection),
+      @"SuggestedEvents" : @(FBSDKFeatureSuggestedEvents),
+      @"IntelligentIntegrity" : @(FBSDKFeatureIntelligentIntegrity),
+      @"ModelRequest" : @(FBSDKFeatureModelRequest),
+      @"EventDeactivation" : @(FBSDKFeatureEventDeactivation),
+      @"SKAdNetwork" : @(FBSDKFeatureSKAdNetwork),
+      @"SKAdNetworkConversionValue" : @(FBSDKFeatureSKAdNetworkConversionValue),
+      @"Instrument" : @(FBSDKFeatureInstrument),
+      @"CrashReport" : @(FBSDKFeatureCrashReport),
+      @"CrashShield" : @(FBSDKFeatureCrashShield),
+      @"ErrorReport" : @(FBSDKFeatureErrorReport),
+      @"ATELogging" : @(FBSDKFeatureATELogging),
+      @"AEM" : @(FBSDKFeatureAEM),
+      @"LoginKit" : @(FBSDKFeatureLogin),
+      @"ShareKit" : @(FBSDKFeatureShare),
+      @"GamingServicesKit" : @(FBSDKFeatureGamingServices),
+    };
   }
 }
 
 + (void)analyze:(NSArray<NSDictionary<NSString *, id> *> *)crashLogs
 {
-  NSMutableSet<NSString *> *disabledFeatues = [NSMutableSet set];
+  NSMutableSet<NSString *> *disabledFeatures = [NSMutableSet set];
   for (NSDictionary<NSString *, id> *crashLog in crashLogs) {
     NSArray<NSString *> *callstack = crashLog[@"callstack"];
     NSString *featureName = [self _getFeature:callstack];
     if (featureName) {
-      [FBSDKFeatureManager.shared disableFeature:featureName];
-      [disabledFeatues addObject:featureName];
+      [_featureChecking disableFeature:[self featureForString:featureName]];
+      [disabledFeatures addObject:featureName];
       continue;
     }
   }
-  if ([FBSDKSettings isDataProcessingRestricted]) {
+  if ([self.settings isDataProcessingRestricted]) {
     return;
   }
-  if (disabledFeatues.count > 0) {
-    NSDictionary<NSString *, id> *disabledFeatureLog = @{@"feature_names" : [disabledFeatues allObjects],
+  if (disabledFeatures.count > 0) {
+    NSDictionary<NSString *, id> *disabledFeatureLog = @{@"feature_names" : [disabledFeatures allObjects],
                                                          @"timestamp" : [NSString stringWithFormat:@"%.0lf", [[NSDate date] timeIntervalSince1970]], };
     NSData *jsonData = [FBSDKTypeUtility dataWithJSONObject:disabledFeatureLog options:0 error:nil];
     if (jsonData) {
       NSString *disabledFeatureReport = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
       if (disabledFeatureReport) {
-        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/instruments", [FBSDKSettings appID]]
-                                                                       parameters:@{@"crash_shield" : disabledFeatureReport}
-                                                                       HTTPMethod:FBSDKHTTPMethodPOST];
+        id<FBSDKGraphRequest> request = [_requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/instruments", [self.settings appID]]
+                                                                               parameters:@{@"crash_shield" : disabledFeatureReport}
+                                                                               HTTPMethod:FBSDKHTTPMethodPOST];
 
         [request startWithCompletionHandler:nil];
       }
@@ -107,6 +180,11 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
 }
 
 #pragma mark - Private Methods
++ (int)featureForString:(NSString *)featureName
+{
+  NSNumber *feature = [FBSDKTypeUtility dictionary:_featureForStringMap objectForKey:featureName ofType:NSObject.class];
+  return feature.intValue;
+}
 
 + (nullable NSString *)_getFeature:(NSArray<NSString *> *)callstack
 {
@@ -136,5 +214,18 @@ static NSDictionary<NSString *, NSArray<NSString *> *> *_featureMapping;
   }
   return className;
 }
+
+#if DEBUG
+ #if FBSDKTEST
+
++ (void)reset
+{
+  _settings = nil;
+  _requestProvider = nil;
+  _featureChecking = nil;
+}
+
+ #endif
+#endif
 
 @end

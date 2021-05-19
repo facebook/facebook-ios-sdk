@@ -21,10 +21,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /// typedef for FBSDKAppEventUserDataType
-typedef NSString *const FBSDKAppEventUserDataType NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(AppEvents.UserDataType);
+typedef NSString *const FBSDKAppEventUserDataType NS_TYPED_EXTENSIBLE_ENUM; // NS_SWIFT_NAME(AppEvents.UserDataType);
 
 /** Parameter key used to specify user's email. */
-FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventEmail;
 FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventEmail;
 
 /** Parameter key used to specify user's first name. */

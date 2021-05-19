@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
  * Constants defining logging behavior.  Use with <[FBSDKSettings setLoggingBehavior]>.
  */
 
-typedef NSString *const FBSDKLoggingBehavior NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(LoggingBehavior);
+typedef NSString * FBSDKLoggingBehavior NS_EXTENSIBLE_STRING_ENUM NS_SWIFT_NAME(LoggingBehavior);
 
 /** Include access token in logging. */
 FOUNDATION_EXPORT FBSDKLoggingBehavior FBSDKLoggingBehaviorAccessTokens;

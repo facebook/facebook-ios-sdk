@@ -36,7 +36,7 @@ class SampleGraphRequests: NSObject {
     parameters: [String: Any] = [:],
     version: String = Settings.graphAPIVersion
   ) -> GraphRequest {
-    return GraphRequest(
+    GraphRequest(
       graphPath: path,
       parameters: parameters,
       tokenString: nil,

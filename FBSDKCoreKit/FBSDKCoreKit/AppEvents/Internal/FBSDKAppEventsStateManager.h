@@ -20,16 +20,19 @@
 
 @class FBSDKAppEventsState;
 
+NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AppEventsStateManager)
 @interface FBSDKAppEventsStateManager : NSObject
+@property (class, readonly, nonatomic) FBSDKAppEventsStateManager* shared;
 
-+ (void)clearPersistedAppEventsStates;
+- (void)clearPersistedAppEventsStates;
 
 // reads all saved event states, appends the param, and writes them all.
-+ (void)persistAppEventsData:(FBSDKAppEventsState *)appEventsState;
+- (void)persistAppEventsData:(FBSDKAppEventsState *)appEventsState;
 
 // returns the array of saved app event states and deletes them.
-+ (NSArray *)retrievePersistedAppEventsStates;
+- (NSArray *)retrievePersistedAppEventsStates;
 
 
 @end
+NS_ASSUME_NONNULL_END

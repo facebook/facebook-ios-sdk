@@ -24,12 +24,13 @@ FOUNDATION_EXPORT NSString *const FBSDKTimeSpentFilename;
 // logged when restore: is called with sufficient time since the last deactivation.
 NS_SWIFT_NAME(TimeSpentData)
 @interface FBSDKTimeSpentData : NSObject
-
-+ (void)suspend;
-+ (void)restore:(BOOL)calledFromActivateApp;
+@property (class, nonatomic, readonly) FBSDKTimeSpentData* shared;
 
 + (void)setSourceApplication:(NSString *)sourceApplication openURL:(NSURL *)url;
 + (void)setSourceApplication:(NSString *)sourceApplication isFromAppLink:(BOOL)isFromAppLink;
 + (void)registerAutoResetSourceApplication;
+
+- (void)suspend;
+- (void)restore:(BOOL)calledFromActivateApp;
 
 @end

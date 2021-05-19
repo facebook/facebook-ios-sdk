@@ -24,7 +24,7 @@ class SampleAppEventsConfigurations: NSObject {
   static let `default` = AppEventsConfiguration.default()
 
   static var valid: AppEventsConfiguration {
-    return create(
+    create(
       defaultATEStatus: AppEventsUtility.AdvertisingTrackingStatus.unspecified,
       advertiserIDCollectionEnabled: true,
       eventCollectionEnabled: false
@@ -34,7 +34,7 @@ class SampleAppEventsConfigurations: NSObject {
   static func create(
     defaultATEStatus status: AppEventsUtility.AdvertisingTrackingStatus
   ) -> AppEventsConfiguration {
-    return create(
+    create(
       defaultATEStatus: status,
       advertiserIDCollectionEnabled: self.default.advertiserIDCollectionEnabled,
       eventCollectionEnabled: self.default.eventCollectionEnabled
@@ -44,7 +44,7 @@ class SampleAppEventsConfigurations: NSObject {
   static func create(
     advertiserIDCollectionEnabled: Bool
   ) -> AppEventsConfiguration {
-    return create(
+    create(
       defaultATEStatus: self.default.defaultATEStatus,
       advertiserIDCollectionEnabled: advertiserIDCollectionEnabled,
       eventCollectionEnabled: self.default.eventCollectionEnabled
@@ -54,7 +54,7 @@ class SampleAppEventsConfigurations: NSObject {
   static func create(
     eventCollectionEnabled: Bool
   ) -> AppEventsConfiguration {
-    return create(
+    create(
       defaultATEStatus: self.default.defaultATEStatus,
       advertiserIDCollectionEnabled: self.default.advertiserIDCollectionEnabled,
       eventCollectionEnabled: eventCollectionEnabled
@@ -66,7 +66,7 @@ class SampleAppEventsConfigurations: NSObject {
     advertiserIDCollectionEnabled: Bool?,
     eventCollectionEnabled: Bool?
   ) -> AppEventsConfiguration {
-    return AppEventsConfiguration(
+    AppEventsConfiguration(
       defaultATEStatus: defaultATEStatus ?? self.default.defaultATEStatus,
       advertiserIDCollectionEnabled: advertiserIDCollectionEnabled ?? self.default.advertiserIDCollectionEnabled,
       eventCollectionEnabled: eventCollectionEnabled ?? self.default.eventCollectionEnabled
@@ -78,7 +78,7 @@ class SampleAppEventsConfigurations: NSObject {
     advertiserIDCollectionEnabled: Bool,
     eventCollectionEnabled: Bool
   ) -> AppEventsConfiguration {
-    return AppEventsConfiguration(
+    AppEventsConfiguration(
       defaultATEStatus: defaultATEStatus,
       advertiserIDCollectionEnabled: advertiserIDCollectionEnabled,
       eventCollectionEnabled: eventCollectionEnabled

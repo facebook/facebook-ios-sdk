@@ -31,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
                                     store:(id<FBSDKDataPersisting>)store
 NS_SWIFT_NAME(init(gateKeeperManager:store:));
 
++ (NSString *)featureName:(FBSDKFeature)feature;
+
 @end
 
 NS_ASSUME_NONNULL_END

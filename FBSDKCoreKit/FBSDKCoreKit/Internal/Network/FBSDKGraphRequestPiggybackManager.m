@@ -18,7 +18,7 @@
 
 #import "FBSDKGraphRequestPiggybackManager.h"
 
-#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKCoreKitBasicsImport.h"
 
 static int const FBSDKTokenRefreshThresholdSeconds = 24 * 60 * 60; // day
 static int const FBSDKTokenRefreshRetrySeconds = 60 * 60; // hour
@@ -174,7 +174,7 @@ static Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> _tokenWallet = 
 + (BOOL)_safeForPiggyback:(id<FBSDKGraphRequest>)request
 {
   BOOL isVersionSafe = [request.version isEqualToString:[FBSDKSettings graphAPIVersion]];
-  BOOL hasAttachments = [(id<FBSDKGraphRequestInternal>)request hasAttachments];
+  BOOL hasAttachments = [request hasAttachments];
   return isVersionSafe && !hasAttachments;
 }
 

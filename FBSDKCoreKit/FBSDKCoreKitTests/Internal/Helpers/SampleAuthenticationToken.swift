@@ -20,7 +20,7 @@
 class SampleAuthenticationToken: NSObject {
 
   static var validToken: AuthenticationToken {
-    return AuthenticationToken(
+    AuthenticationToken(
       tokenString: "fakeTokenString",
       nonce: "fakeNonce"
     )

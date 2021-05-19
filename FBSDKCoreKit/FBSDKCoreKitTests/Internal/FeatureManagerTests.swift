@@ -210,22 +210,25 @@ class FeatureManagerTests: XCTestCase {
   }
 
   func testDisablingFeatures() {
-    [
-      "AAM",
-      "CodelessEvents",
-      "RestrictiveDataFiltering",
-      "ErrorReport",
-      "PrivacyProtection",
-      "SuggestedEvents",
-      "IntelligentIntegrity",
-      "EventDeactivation",
-      "SKAdNetworkConversionValue"
-    ].forEach { featureName in
-      manager.disableFeature(featureName)
+    let testData: [SDKFeature] = [
+      .none,
+      .AAM,
+      .codelessEvents,
+      .restrictiveDataFiltering,
+      .errorReport,
+      .privacyProtection,
+      .suggestedEvents,
+      .intelligentIntegrity,
+      .eventDeactivation,
+      .skAdNetworkConversionValue
+    ]
 
+    testData.forEach { featureName in
+      manager.disableFeature(featureName)
+      let featureString = FeatureManager.featureName(featureName)
       XCTAssertEqual(
         store.capturedSetObjectKey,
-        userDefaultsPrefix + featureName
+        userDefaultsPrefix + featureString
       )
     }
   }

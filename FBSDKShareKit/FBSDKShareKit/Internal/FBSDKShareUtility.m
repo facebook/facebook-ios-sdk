@@ -25,6 +25,8 @@
 #else
  #import "FBSDKCoreKit+Internal.h"
 #endif
+
+#import "FBSDKCoreKitBasicsImportForShareKit.h"
 #import "FBSDKShareConstants.h"
 #import "FBSDKShareLinkContent.h"
 
@@ -165,8 +167,9 @@
   if (hashtag.isValid) {
     return hashtag.stringRepresentation;
   } else {
+    NSString *msg = [NSString stringWithFormat:@"Invalid hashtag: '%@'", hashtag.stringRepresentation];
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                       formatString:@"Invalid hashtag: '%@'", hashtag.stringRepresentation];
+                           logEntry:msg];
     return nil;
   }
 }

@@ -22,8 +22,10 @@
 
  #import "FBSDKFeatureExtractor.h"
 
- #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKModelManager.h"
+ #import "FBSDKViewHierarchy.h"
+ #import "FBSDKViewHierarchyMacros.h"
 
  #define REGEX_CR_PASSWORD_FIELD @"password"
  #define REGEX_CR_HAS_CONFIRM_PASSWORD_FIELD @"(?i)(confirm.*password)|(password.*(confirmation|confirm)|confirmation)"

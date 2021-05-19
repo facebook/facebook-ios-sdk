@@ -22,12 +22,16 @@ import XCTest
 class ProfileTests: XCTestCase {
 
   var store = UserDefaultsSpy()
+  var notificationCenter = TestNotificationCenter()
 
   override func setUp() {
     super.setUp()
-
-    Profile.reset()
     TestAccessTokenWallet.reset()
+    Profile.configure(
+      store: store,
+      accessTokenProvider: TestAccessTokenWallet.self,
+      notificationCenter: notificationCenter
+    )
   }
 
   override func tearDown() {
@@ -38,6 +42,7 @@ class ProfileTests: XCTestCase {
   }
 
   func testDefaultStore() {
+    Profile.reset()
     XCTAssertNil(
       Profile.store,
       "Should not have a default data store"
@@ -45,14 +50,21 @@ class ProfileTests: XCTestCase {
   }
 
   func testConfiguringWithStore() {
-    Profile.configure(store: store, accessTokenProvider: TestAccessTokenWallet.self)
     XCTAssertTrue(
       Profile.store === store,
       "Should be able to set a persistent data store"
     )
   }
 
+  func testConfiguringWithNotificationCenter() {
+    XCTAssertTrue(
+      Profile.notificationCenter === notificationCenter,
+      "Should be able to set a Notification Posting"
+    )
+  }
+
   func testDefaultAccessTokenProvider() {
+    Profile.reset()
     XCTAssertNil(
       Profile.accessTokenProvider,
       "Should not have a default access token provider"
@@ -60,7 +72,6 @@ class ProfileTests: XCTestCase {
   }
 
   func testConfiguringWithTokenProvider() {
-    Profile.configure(store: store, accessTokenProvider: TestAccessTokenWallet.self)
     XCTAssertTrue(
       Profile.accessTokenProvider is TestAccessTokenWallet.Type,
       "Should be able to set a token wallet"

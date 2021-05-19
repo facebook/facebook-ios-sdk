@@ -30,6 +30,7 @@
 #import <UIKit/UIKit.h>
 
 #import "FBSDKAppEvents+Internal.h"
+#import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKSettings+Internal.h"

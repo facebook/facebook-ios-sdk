@@ -54,22 +54,6 @@
   return nil;
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-implementations"
-- (void)attemptRecoveryFromError:(NSError *)error
-                     optionIndex:(NSUInteger)recoveryOptionIndex
-                        delegate:(nullable id)delegate
-              didRecoverSelector:(SEL)didRecoverSelector
-                     contextInfo:(nullable void *)contextInfo
-{
-  [self attemptRecoveryFromError:error optionIndex:recoveryOptionIndex completionHandler:^(BOOL didRecover) {
-    void (*callback)(id, SEL, BOOL, void *) = (void *)[delegate methodForSelector:didRecoverSelector];
-    (*callback)(delegate, didRecoverSelector, didRecover, contextInfo);
-  }];
-}
-
-#pragma clang diagnostic pop
-
 - (void)attemptRecoveryFromError:(NSError *)error optionIndex:(NSUInteger)recoveryOptionIndex completionHandler:(void (^)(BOOL didRecover))completionHandler
 {
   // should be implemented by subclasses.

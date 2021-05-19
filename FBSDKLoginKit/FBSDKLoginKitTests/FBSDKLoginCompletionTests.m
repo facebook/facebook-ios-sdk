@@ -20,6 +20,7 @@
 #import <XCTest/XCTest.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #ifdef BUCK
  #import <FBSDKLoginKit+Internal/FBSDKLoginCompletion+Internal.h>
@@ -65,11 +66,18 @@ static NSString *const _fakeChallence = @"some_challenge";
                         iat:(long)iat
                         sub:(NSString *)sub
                        name:(nullable NSString *)name
+                  firstName:(nullable NSString *)firstName
+                 middleName:(nullable NSString *)middleName
+                   lastName:(nullable NSString *)lastName
                       email:(nullable NSString *)email
                     picture:(nullable NSString *)picture
                 userFriends:(nullable NSArray<NSString *> *)userFriends
                userBirthday:(nullable NSString *)userBirthday
-               userAgeRange:(nullable NSDictionary *)userAgeRange;
+               userAgeRange:(nullable NSDictionary *)userAgeRange
+               userHometown:(nullable NSDictionary *)userHometown
+               userLocation:(nullable NSDictionary *)userLocation
+                 userGender:(nullable NSString *)userGender
+                   userLink:(nullable NSString *)userLink;
 
 @end
 
@@ -539,11 +547,18 @@ static NSString *const _fakeChallence = @"some_challenge";
                                                                                           iat:1234
                                                                                           sub:@"some_sub"
                                                                                          name:@"some_name"
+                                                                                    firstName:@"first"
+                                                                                   middleName:@"middle"
+                                                                                     lastName:@"last"
                                                                                         email:@"example@example.com"
                                                                                       picture:@"www.facebook.com"
                                                                                   userFriends:@[@"123", @"456"]
                                                                                  userBirthday:@"01/01/1990"
-                                                                                 userAgeRange:@{@"min" : @((long)21)}];
+                                                                                 userAgeRange:@{@"min" : @((long)21)}
+                                                                                 userHometown:@{@"id" : @"112724962075996", @"name" : @"Martinez, California"}
+                                                                                 userLocation:@{@"id" : @"110843418940484", @"name" : @"Seattle, Washington"}
+                                                                                   userGender:@"male"
+                                                                                     userLink:@"facebook.com"];
   [FBSDKLoginURLCompleter profileWithClaims:claim];
   XCTAssertEqualObjects(
     factory.capturedUserID,
@@ -554,6 +569,21 @@ static NSString *const _fakeChallence = @"some_challenge";
     factory.capturedName,
     claim.name,
     "Should request a profile using the name from the claims"
+  );
+  XCTAssertEqualObjects(
+    factory.capturedFirstName,
+    claim.firstName,
+    "Should request a profile using the first name from the claims"
+  );
+  XCTAssertEqualObjects(
+    factory.capturedMiddleName,
+    claim.middleName,
+    "Should request a profile using the middle name from the claims"
+  );
+  XCTAssertEqualObjects(
+    factory.capturedLastName,
+    claim.lastName,
+    "Should request a profile using the last name from the claims"
   );
   XCTAssertEqualObjects(
     factory.capturedImageURL.absoluteString,
@@ -581,6 +611,26 @@ static NSString *const _fakeChallence = @"some_challenge";
     factory.capturedAgeRange,
     [FBSDKUserAgeRange ageRangeFromDictionary:claim.userAgeRange],
     "Should request a profile using the user age range from the claims"
+  );
+  XCTAssertEqualObjects(
+    factory.capturedHometown,
+    [FBSDKLocation locationFromDictionary:claim.userHometown],
+    "Should request a profile using the user hometown from the claims"
+  );
+  XCTAssertEqualObjects(
+    factory.capturedLocation,
+    [FBSDKLocation locationFromDictionary:claim.userLocation],
+    "Should request a profile using the user location from the claims"
+  );
+  XCTAssertEqualObjects(
+    factory.capturedGender,
+    claim.userGender,
+    "Should request a profile using the gender from the claims"
+  );
+  XCTAssertEqualObjects(
+    factory.capturedLinkURL,
+    [NSURL URLWithString:claim.userLink],
+    "Should request a profile using the link from the claims"
   );
   XCTAssertTrue(
     factory.capturedIsLimited,

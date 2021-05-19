@@ -21,7 +21,7 @@ class SampleEventBinding: NSObject {
 
   static func valid(withName name: String) -> EventBinding {
     // swiftlint:disable:next force_unwrapping
-    return EventBinding(json: SampleRawRemoteEventBindings.rawBinding(name: name))!
+    EventBinding(json: SampleRawRemoteEventBindings.rawBinding(name: name))!
   }
 }
 
@@ -29,6 +29,6 @@ class SampleEventBinding: NSObject {
 class SampleEventBindingList: NSObject {
 
   static var valid: [EventBinding] {
-    return SampleRawRemoteEventBindings.bindings.compactMap { EventBinding(json: $0) }
+    SampleRawRemoteEventBindings.bindings.compactMap { EventBinding(json: $0) }
   }
 }

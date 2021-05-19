@@ -16,16 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
 #if !TARGET_OS_TV
 
- #import <StoreKit/StoreKit.h>
-
+ #import "FBSDKConversionValueUpdating.h"
  #import "FBSDKCoreKitTests-Swift.h"
  #import "FBSDKSKAdNetworkConversionConfiguration.h"
  #import "FBSDKSKAdNetworkReporter.h"
+ #import "FBSDKSKAdNetworkReporter+Internal.h"
  #import "FBSDKSettings+Internal.h"
  #import "FBSDKTestCase.h"
  #import "UserDefaultsSpy.h"
@@ -51,11 +50,12 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
                                store:(id<FBSDKDataPersisting>)store;
 + (id<FBSDKGraphRequestProviding>)requestProvider;
 + (id<FBSDKDataPersisting>)store;
++ (Class<FBSDKConversionValueUpdating>)conversionValueUpdatable;
 + (void)reset;
 
 @end
 
-@interface FBSDKSKAdNetworkReporterTests : FBSDKTestCase
+@interface FBSDKSKAdNetworkReporterTests : XCTestCase
 
 @end
 
@@ -68,7 +68,8 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)setUp
 {
   [super setUp];
-
+  [FBSDKSKAdNetworkReporter reset];
+  [TestConversionValueUpdating reset];
   userDefaultsSpy = [UserDefaultsSpy new];
 
   NSDictionary *json = @{
@@ -86,8 +87,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [FBSDKSKAdNetworkReporter setSKAdNetworkReportEnabled:YES];
 
   TestGraphRequestFactory *requestProvider = [TestGraphRequestFactory new];
-  [FBSDKSKAdNetworkReporter configureWithRequestProvider:requestProvider store:userDefaultsSpy];
-  [self stubLoadingAdNetworkReporterConfiguration];
+  [FBSDKSKAdNetworkReporter configureWithRequestProvider:requestProvider store:userDefaultsSpy conversionValueUpdatable:TestConversionValueUpdating.class];
 }
 
 - (void)tearDown
@@ -167,7 +167,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)testCutoffWhenTimeBucketIsAvailable
 {
   if (@available(iOS 14, *)) {
-    id mock = OCMClassMock([SKAdNetwork class]);
     [FBSDKSKAdNetworkReporter setConfiguration:defaultConfiguration];
     NSDate *today = [NSDate date];
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
@@ -179,11 +178,19 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
     XCTAssertTrue([FBSDKSKAdNetworkReporter _shouldCutoff]);
     [FBSDKSKAdNetworkReporter checkAndRevokeTimer];
     XCTAssertNil([userDefaultsSpy objectForKey:FBSDKSKAdNetworkReporterKey]);
-
-    [mock reject];
-
+    XCTAssertFalse([TestConversionValueUpdating wasUpdateVersionValueCalled]);
     [userDefaultsSpy removeObjectForKey:FBSDKSettingsInstallTimestamp];
   }
+}
+
+- (void)testUpdateConversionValue
+{
+  [FBSDKSKAdNetworkReporter setConfiguration:defaultConfiguration];
+  [FBSDKSKAdNetworkReporter _updateConversionValue:2];
+  XCTAssertTrue(
+    [TestConversionValueUpdating wasUpdateVersionValueCalled],
+    "Should call updateConversionValue when not cutoff"
+  );
 }
 
 - (void)testRecord
@@ -232,7 +239,11 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 {
   id<FBSDKGraphRequestProviding> requestProvider = [FBSDKGraphRequestFactory new];
   id<FBSDKDataPersisting> store = [UserDefaultsSpy new];
-  [FBSDKSKAdNetworkReporter configureWithRequestProvider:requestProvider store:store];
+  Class<FBSDKConversionValueUpdating> conversionValueUpdatable = TestConversionValueUpdating.class;
+  [FBSDKSKAdNetworkReporter
+   configureWithRequestProvider:requestProvider
+   store:store
+   conversionValueUpdatable:conversionValueUpdatable];
   XCTAssertEqualObjects(
     requestProvider,
     [FBSDKSKAdNetworkReporter requestProvider],
@@ -242,6 +253,11 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
     store,
     [FBSDKSKAdNetworkReporter store],
     "Should be able to configure a reporter with a persistent data store"
+  );
+  XCTAssertEqualObjects(
+    TestConversionValueUpdating.class,
+    [FBSDKSKAdNetworkReporter conversionValueUpdatable],
+    "Should be able to configure a reporter with a Conversion Value Updater"
   );
 }
 
