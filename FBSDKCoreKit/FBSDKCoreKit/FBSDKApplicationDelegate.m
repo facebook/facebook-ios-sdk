@@ -86,17 +86,15 @@ static UIApplicationState _applicationState;
 @interface FBSDKApplicationDelegate ()
 
 @property (nonnull, nonatomic, readonly) id<FBSDKFeatureChecking> featureChecker;
+@property (nonnull, nonatomic, readonly) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> tokenWallet;
+@property (nonnull, nonatomic, readonly) Class<FBSDKSettingsLogging> settings;
+@property (nonnull, nonatomic, readonly) id<FBSDKNotificationObserving> notificationObserver;
+@property (nonnull, nonatomic, readonly) NSHashTable<id<FBSDKApplicationObserving>> *applicationObservers;
+@property (nonatomic) BOOL isAppLaunched;
 
 @end
 
 @implementation FBSDKApplicationDelegate
-{
-  NSHashTable<id<FBSDKApplicationObserving>> *_applicationObservers;
-  BOOL _isAppLaunched;
-  id<FBSDKNotificationObserving> _notificationObserver;
-  Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> _tokenWallet;
-  Class<FBSDKSettingsLogging> _settings;
-}
 
 #pragma mark - Class Methods
 
@@ -210,22 +208,7 @@ static UIApplicationState _applicationState;
 
 - (void)dealloc
 {
-  [_notificationObserver removeObserver:self];
-}
-
-- (id<FBSDKNotificationObserving>)notificationObserver
-{
-  return _notificationObserver;
-}
-
-- (Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
-{
-  return _tokenWallet;
-}
-
-- (Class<FBSDKSettingsLogging>)settings
-{
-  return _settings;
+  [self.notificationObserver removeObserver:self];
 }
 
 #pragma mark - UIApplicationDelegate
@@ -267,7 +250,7 @@ static UIApplicationState _applicationState;
 #endif
 
   BOOL handled = NO;
-  NSArray<id<FBSDKApplicationObserving>> *observers = [_applicationObservers allObjects];
+  NSArray<id<FBSDKApplicationObserving>> *observers = [self.applicationObservers allObjects];
   for (id<FBSDKApplicationObserving> observer in observers) {
     if ([observer respondsToSelector:@selector(application:openURL:sourceApplication:annotation:)]) {
       if ([observer application:application
@@ -290,7 +273,7 @@ static UIApplicationState _applicationState;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  if (_isAppLaunched) {
+  if (self.isAppLaunched) {
     return NO;
   }
 
@@ -298,7 +281,7 @@ static UIApplicationState _applicationState;
     [self initializeSDKWithLaunchOptions:launchOptions];
   }
 
-  _isAppLaunched = YES;
+  self.isAppLaunched = YES;
 
   // Retrieve cached tokens
   FBSDKAccessToken *cachedToken = [[self.tokenWallet tokenCache] accessToken];
@@ -318,7 +301,7 @@ static UIApplicationState _applicationState;
   [FBSDKAuthenticationToken setCurrentAuthenticationToken:cachedAuthToken];
   [FBSDKAuthenticationStatusUtility checkAuthenticationStatus];
 #endif
-  NSArray<id<FBSDKApplicationObserving>> *observers = [_applicationObservers allObjects];
+  NSArray<id<FBSDKApplicationObserving>> *observers = [self.applicationObservers allObjects];
   BOOL handled = NO;
   for (id<FBSDKApplicationObserving> observer in observers) {
     if ([observer respondsToSelector:@selector(application:didFinishLaunchingWithOptions:)]) {
@@ -334,7 +317,7 @@ static UIApplicationState _applicationState;
 - (void)applicationDidEnterBackground:(NSNotification *)notification
 {
   [self setApplicationState:UIApplicationStateBackground];
-  NSArray<id<FBSDKApplicationObserving>> *observers = [_applicationObservers allObjects];
+  NSArray<id<FBSDKApplicationObserving>> *observers = [self.applicationObservers allObjects];
   for (id<FBSDKApplicationObserving> observer in observers) {
     if ([observer respondsToSelector:@selector(applicationDidEnterBackground:)]) {
       [observer applicationDidEnterBackground:notification.object];
@@ -353,7 +336,7 @@ static UIApplicationState _applicationState;
   [FBSDKSKAdNetworkReporter checkAndRevokeTimer];
 #endif
 
-  NSArray<id<FBSDKApplicationObserving>> *observers = [_applicationObservers copy];
+  NSArray<id<FBSDKApplicationObserving>> *observers = [self.applicationObservers copy];
   for (id<FBSDKApplicationObserving> observer in observers) {
     if ([observer respondsToSelector:@selector(applicationDidBecomeActive:)]) {
       [observer applicationDidBecomeActive:notification.object];
@@ -364,7 +347,7 @@ static UIApplicationState _applicationState;
 - (void)applicationWillResignActive:(NSNotification *)notification
 {
   [self setApplicationState:UIApplicationStateInactive];
-  NSArray<id<FBSDKApplicationObserving>> *const observers = [_applicationObservers copy];
+  NSArray<id<FBSDKApplicationObserving>> *const observers = [self.applicationObservers copy];
   for (id<FBSDKApplicationObserving> observer in observers) {
     if ([observer respondsToSelector:@selector(applicationWillResignActive:)]) {
       [observer applicationWillResignActive:notification.object];
@@ -378,15 +361,15 @@ static UIApplicationState _applicationState;
 
 - (void)addObserver:(id<FBSDKApplicationObserving>)observer
 {
-  if (![_applicationObservers containsObject:observer]) {
-    [_applicationObservers addObject:observer];
+  if (![self.applicationObservers containsObject:observer]) {
+    [self.applicationObservers addObject:observer];
   }
 }
 
 - (void)removeObserver:(id<FBSDKApplicationObserving>)observer
 {
-  if ([_applicationObservers containsObject:observer]) {
-    [_applicationObservers removeObject:observer];
+  if ([self.applicationObservers containsObject:observer]) {
+    [self.applicationObservers removeObject:observer];
   }
 }
 
@@ -575,21 +558,6 @@ static UIApplicationState _applicationState;
 + (void)resetHasInitializeBeenCalled
 {
   hasInitializeBeenCalled = NO;
-}
-
-- (BOOL)isAppLaunched
-{
-  return _isAppLaunched;
-}
-
-- (void)setIsAppLaunched:(BOOL)isLaunched
-{
-  _isAppLaunched = isLaunched;
-}
-
-- (NSHashTable<id<FBSDKApplicationObserving>> *)applicationObservers
-{
-  return _applicationObservers;
 }
 
 - (void)resetApplicationObserverCache
