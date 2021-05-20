@@ -141,6 +141,16 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "9D2697511A5DF40700143BFC"
+               BuildableName = "FBSDKCoreKit_BasicsTests.xctest"
+               BlueprintName = "FBSDKCoreKit_BasicsTests"
+               ReferencedContainer = "container:FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "9D9DB8E31A114E500086167B"
                BuildableName = "FBSDKLoginKitTests.xctest"
                BlueprintName = "FBSDKLoginKitTests"
