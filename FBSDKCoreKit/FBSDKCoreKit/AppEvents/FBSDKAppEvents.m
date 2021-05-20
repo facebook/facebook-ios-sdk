@@ -174,8 +174,6 @@ FBSDKAppEventName FBSDKAppEventNameFBDialogsPresentMessageDialogPhoto = @"fb_dia
 FBSDKAppEventName FBSDKAppEventNameFBSDKLikeButtonImpression = @"fb_like_button_impression";
 FBSDKAppEventName FBSDKAppEventNameFBSDKLiveStreamingButtonImpression = @"fb_live_streaming_button_impression";
 
-FBSDKAppEventName FBSDKAppEventNameFBSDKSmartLoginService = @"fb_smart_login_service";
-
 FBSDKAppEventName FBSDKAppEventNameFBSDKLikeButtonDidTap = @"fb_like_button_did_tap";
 FBSDKAppEventName FBSDKAppEventNameFBSDKLiveStreamingButtonDidTap = @"fb_live_streaming_button_did_tap";
 

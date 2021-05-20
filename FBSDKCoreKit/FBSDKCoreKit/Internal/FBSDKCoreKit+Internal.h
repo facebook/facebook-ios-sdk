@@ -44,7 +44,6 @@
  #endif
 
  #import "FBSDKButton+Subclass.h"
- #import "FBSDKDeviceRequestsHelper.h"
  #import "FBSDKDialogConfiguration.h"
  #import "FBSDKDynamicFrameworkLoader.h"
  #import "FBSDKError.h"
@@ -102,7 +101,6 @@
 
  #import "../AppEvents/Internal/Integrity/FBSDKRestrictiveDataFilterManager.h"
  #import "ErrorRecovery/FBSDKErrorRecoveryAttempter.h"
- #import "FBSDKDeviceRequestsHelper.h"
  #import "FBSDKDynamicFrameworkLoader.h"
  #import "FBSDKError.h"
  #import "FBSDKImageDownloader.h"

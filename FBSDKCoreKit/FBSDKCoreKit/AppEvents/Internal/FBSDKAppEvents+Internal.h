@@ -112,8 +112,6 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogOutcomeValue_Failed;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLikeButtonImpression;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLiveStreamingButtonImpression;
 
-FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKSmartLoginService;
-
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLikeButtonDidTap;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLiveStreamingButtonDidTap;
 

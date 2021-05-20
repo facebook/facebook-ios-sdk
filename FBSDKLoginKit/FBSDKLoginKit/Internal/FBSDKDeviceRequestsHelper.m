@@ -22,10 +22,13 @@
 
 #import <sys/utsname.h>
 
-#import "FBSDKAppEvents+Internal.h"
-#import "FBSDKCoreKitBasicsImport.h"
-#import "FBSDKLogger.h"
-#import "FBSDKSettings.h"
+#if FBSDK_SWIFT_PACKAGE
+ #import <FBSDKCoreKit.h>
+#else
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#endif
+
+#import "FBSDKCoreKitBasicsImportForLoginKit.h"
 
 #define FBSDK_DEVICE_INFO_DEVICE @"device"
 #define FBSDK_DEVICE_INFO_MODEL @"model"
@@ -36,6 +39,8 @@
  #define FBSDK_FLAVOR @"tvos"
 #endif
 #define FBSDK_SERVICE_TYPE @"_fb._tcp."
+
+FBSDKAppEventName FBSDKAppEventNameFBSDKSmartLoginService = @"fb_smart_login_service";
 
 static NSMapTable *g_mdnsAdvertisementServices;
 
@@ -90,7 +95,7 @@ static NSMapTable *g_mdnsAdvertisementServices;
                            loginCode
   ];
   if (serviceName.length > 60) {
-    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:@"serviceName exceeded 60 characters"];
+    return NO;
   }
   NSNetService *mdnsAdvertisementService = [[NSNetService alloc]
                                             initWithDomain:@"local."
@@ -100,6 +105,7 @@ static NSMapTable *g_mdnsAdvertisementServices;
   mdnsAdvertisementService.delegate = delegate;
   [mdnsAdvertisementService publishWithOptions:NSNetServiceNoAutoRename | NSNetServiceListenForConnections];
   [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKSmartLoginService
+                        parameters:@{}
                 isImplicitlyLogged:YES];
   [g_mdnsAdvertisementServices setObject:mdnsAdvertisementService forKey:delegate];
 
