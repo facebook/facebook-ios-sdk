@@ -34,7 +34,6 @@
 #import "FBSDKAppEventsState.h"
 #import "FBSDKAppEventsStatePersisting.h"
 #import "FBSDKAppEventsUtility.h"
-#import "FBSDKApplicationDelegate+Internal.h"
 #import "FBSDKCodelessIndexer.h"
 #import "FBSDKConstants.h"
 #import "FBSDKCoreKitBasicsImport.h"
