@@ -23,7 +23,6 @@
 
 #import "FBSDKAppEventsAtePublisher.h"
 #import "FBSDKCoreKitTests-Swift.h"
-#import "FBSDKTestCase.h"
 #import "UserDefaultsSpy.h"
 
 // TODO: move to swift
@@ -58,7 +57,7 @@
 + (void)setSettings:(id<FBSDKSettings>)settings;
 @end
 
-@interface FBSDKAppEventsPublishAteTests : FBSDKTestCase
+@interface FBSDKAppEventsPublishAteTests : XCTestCase
 @property (nonatomic, strong) id<FBSDKSettings> settings;
 @end
 
@@ -68,7 +67,6 @@
 {
   [super setUp];
 
-  [self stubAllocatingGraphRequestConnection];
   _settings = [TestSettings new];
   [FBSDKAppEvents setSettings:_settings];
 }
