@@ -88,6 +88,10 @@
 + (id<FBSDKFeatureChecking>)featureChecking;
 @end
 
+@interface FBSDKRestrictiveDataFilterManager (Testing)
++ (Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
+@end
+
 @interface FBSDKApplicationDelegateTests : FBSDKTestCase
 {
   FBSDKProfile *_profile;
@@ -440,6 +444,19 @@
     featureChecking.class,
     FBSDKFeatureManager.class,
     "Should be configured with the expected concrete Feature manager"
+  );
+}
+
+- (void)testConfiguringRestrictiveDataFilterManager
+{
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
+  [self.delegate initializeSDKWithLaunchOptions:@{}];
+  NSObject *serverConfigurationProvider = (NSObject *)[FBSDKRestrictiveDataFilterManager serverConfigurationProvider];
+
+  XCTAssertEqualObjects(
+    serverConfigurationProvider,
+    FBSDKServerConfigurationManager.class,
+    "Should be configured with the expected concrete server configuration provider"
   );
 }
 

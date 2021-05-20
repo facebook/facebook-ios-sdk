@@ -48,6 +48,7 @@
 #import "FBSDKLogger+Logging.h"
 #import "FBSDKPaymentObserver.h"
 #import "FBSDKPaymentObserver+PaymentObserving.h"
+#import "FBSDKRestrictiveDataFilterManager.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationManager+ServerConfigurationProviding.h"
 #import "FBSDKSettings+Internal.h"
@@ -536,7 +537,7 @@ static UIApplicationState _applicationState;
                                      graphRequestFactory:graphRequestProvider
                            graphRequestConnectionFactory:connectionProvider];
   [FBSDKButton setApplicationActivationNotifier:self];
-
+  [FBSDKRestrictiveDataFilterManager configureWithServerConfigurationProvider:FBSDKServerConfigurationManager.class];
 #if !TARGET_OS_TV
   [FBSDKAppLinkUtility configureWithRequestProvider:graphRequestProvider
                              infoDictionaryProvider:NSBundle.mainBundle];

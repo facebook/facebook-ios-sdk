@@ -20,6 +20,7 @@
 
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKServerConfigurationManager.h"
+#import "FBSDKServerConfigurationProviding.h"
 
 @interface FBSDKRestrictiveEventFilter : NSObject
 
@@ -55,13 +56,21 @@
 static BOOL g_isRestrictiveEventFilterEnabled;
 static NSMutableArray<FBSDKRestrictiveEventFilter *> *_params;
 static NSMutableSet<NSString *> *_restrictedEvents;
+static Class<FBSDKServerConfigurationProviding> _serverConfigurationProvider;
+
++ (void)configureWithServerConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+{
+  if (self == [FBSDKRestrictiveDataFilterManager class]) {
+    _serverConfigurationProvider = serverConfigurationProvider;
+  }
+}
 
 + (void)enable
 {
   @try {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-      NSDictionary<NSString *, id> *restrictiveParams = [FBSDKServerConfigurationManager cachedServerConfiguration].restrictiveParams;
+      NSDictionary<NSString *, id> *restrictiveParams = [_serverConfigurationProvider cachedServerConfiguration].restrictiveParams;
       if (restrictiveParams) {
         [FBSDKRestrictiveDataFilterManager _updateFilters:restrictiveParams];
         g_isRestrictiveEventFilterEnabled = YES;
@@ -178,5 +187,21 @@ static NSMutableSet<NSString *> *_restrictedEvents;
     }
   }
 }
+
+#if DEBUG
+ #if FBSDKTEST
+
++ (Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+{
+  return _serverConfigurationProvider;
+}
+
++ (void)reset
+{
+  _serverConfigurationProvider = nil;
+}
+
+ #endif
+#endif
 
 @end

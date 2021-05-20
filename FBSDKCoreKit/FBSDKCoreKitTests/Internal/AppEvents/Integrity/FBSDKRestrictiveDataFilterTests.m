@@ -16,11 +16,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
 #import "FBSDKAppEvents.h"
 #import "FBSDKAppEventsState.h"
+#import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKRestrictiveDataFilterManager.h"
 #import "FBSDKServerConfiguration.h"
@@ -46,17 +46,13 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
 @end
 
-@interface FBSDKRestrictiveDataFilterTests : FBSDKTestCase
+@interface FBSDKRestrictiveDataFilterTests : XCTestCase
 @end
 
 @implementation FBSDKRestrictiveDataFilterTests
 
 - (void)setUp
 {
-  self.shouldAppEventsMockBePartial = YES;
-  // Prevents network requests from being made
-  [FBSDKGraphRequestConnection resetCanMakeRequests];
-
   [super setUp];
 
   NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionaryWithDictionary:@{
@@ -72,13 +68,11 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
                                                      }
                                                    }
                                                  }];
+  [FBSDKRestrictiveDataFilterManager configureWithServerConfigurationProvider:TestServerConfigurationProvider.class];
 
   FBSDKServerConfiguration *config = [FBSDKServerConfigurationFixtures configWithDictionary:@{ @"restrictiveParams" : params }];
-  [self stubCachedServerConfigurationWithServerConfiguration:config];
-  [self stubServerConfigurationFetchingWithConfiguration:config
-                                                   error:nil];
-  [self stubAllocatingGraphRequestConnection];
-  [self stubLoadingAdNetworkReporterConfiguration];
+
+  [TestServerConfigurationProvider setStubbedServerConfiguration:config];
   [FBSDKRestrictiveDataFilterManager enable];
 }
 
