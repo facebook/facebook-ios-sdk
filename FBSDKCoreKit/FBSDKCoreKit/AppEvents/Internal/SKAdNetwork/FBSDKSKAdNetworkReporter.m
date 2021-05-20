@@ -278,7 +278,20 @@ static Class<FBSDKConversionValueUpdating> _conversionValueUpdatable;
   g_recordedEvents = [NSMutableSet new];
   g_recordedValues = [NSMutableDictionary new];
   if ([cachedReportData isKindOfClass:[NSData class]]) {
-    NSDictionary<NSString *, id> *data = [FBSDKTypeUtility dictionaryValue:[NSKeyedUnarchiver unarchiveObjectWithData:cachedReportData]];
+    NSDictionary<NSString *, id> *data;
+    if (@available(iOS 11.0, *)) {
+      data = [FBSDKTypeUtility dictionaryValue:[NSKeyedUnarchiver
+                                                unarchivedObjectOfClasses:[NSSet setWithArray:
+                                                                           @[NSString.class,
+                                                                             NSNumber.class,
+                                                                             NSArray.class,
+                                                                             NSDictionary.class,
+                                                                             NSSet.class]]
+                                                fromData:cachedReportData
+                                                error:nil]];
+    } else {
+      data = [FBSDKTypeUtility dictionaryValue:[NSKeyedUnarchiver unarchiveObjectWithData:cachedReportData]];
+    }
     if (data) {
       g_conversionValue = [FBSDKTypeUtility integerValue:data[@"conversion_value"]];
       g_timestamp = [FBSDKTypeUtility dictionary:data objectForKey:@"timestamp" ofType:NSDate.class];

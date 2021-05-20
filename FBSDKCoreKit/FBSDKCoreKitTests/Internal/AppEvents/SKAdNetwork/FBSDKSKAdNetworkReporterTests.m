@@ -221,7 +221,16 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
     [FBSDKSKAdNetworkReporter _recordAndUpdateEvent:@"test" currency:nil value:nil];
     NSData *cache = [userDefaultsSpy objectForKey:FBSDKSKAdNetworkReporterKey];
     XCTAssertNotNil(cache);
-    NSDictionary<NSString *, id> *data = [FBSDKTypeUtility dictionaryValue:[NSKeyedUnarchiver unarchiveObjectWithData:cache]];
+    // cannot adopt NSKeyedUnarchiver.unarchivedDictionaryWithKeysOfClasses::: due to nested collections
+    NSDictionary<NSString *, id> *data = [FBSDKTypeUtility dictionaryValue: [NSKeyedUnarchiver
+                                                                             unarchivedObjectOfClasses:[NSSet setWithArray:
+                                                                                                        @[NSDictionary.class,
+                                                                                                          NSString.class,
+                                                                                                          NSNumber.class,
+                                                                                                          NSDate.class,
+                                                                                                          NSSet.class]]
+                                                                             fromData:cache
+                                                                             error:nil]];
     NSMutableSet<NSString *> *recordedEvents = [FBSDKTypeUtility dictionary:data objectForKey:@"recorded_events" ofType:NSMutableSet.class];
     NSSet<NSString *> *expectedEvents = [NSSet setWithArray:@[@"fb_test", @"fb_mobile_purchase"]];
     XCTAssertTrue([expectedEvents isEqualToSet:recordedEvents]);

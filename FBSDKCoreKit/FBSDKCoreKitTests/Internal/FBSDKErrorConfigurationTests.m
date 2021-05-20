@@ -65,8 +65,13 @@
   [intermediaryConfiguration updateWithArray:rawErrorCodeConfiguration];
 
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:intermediaryConfiguration];
-  FBSDKErrorConfiguration *configuration = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-
+  FBSDKErrorConfiguration *configuration;
+  if (@available(iOS 11.0, *)) {
+    configuration = [NSKeyedUnarchiver unarchivedObjectOfClass:FBSDKErrorConfiguration.class fromData:data error:nil];
+  } else {
+    configuration = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+  }
+  XCTAssertNotNil(configuration);
   XCTAssertEqual(FBSDKGraphRequestErrorTransient, [configuration recoveryConfigurationForCode:@"1" subcode:nil request:nil].errorCategory);
   XCTAssertEqual(FBSDKGraphRequestErrorRecoverable, [configuration recoveryConfigurationForCode:@"1" subcode:@"12312" request:nil].errorCategory);
   XCTAssertEqual(FBSDKGraphRequestErrorTransient, [configuration recoveryConfigurationForCode:@"2" subcode:@"*" request:nil].errorCategory);

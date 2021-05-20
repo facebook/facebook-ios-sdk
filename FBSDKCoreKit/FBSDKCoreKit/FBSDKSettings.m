@@ -560,9 +560,17 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   if (!g_dataProcessingOptions) {
     NSData *data = [self.store objectForKey:FBSDKSettingsDataProcessingOptions];
     if ([data isKindOfClass:[NSData class]]) {
-      NSDictionary<NSString *, id> *dataProcessingOptions = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-      if (dataProcessingOptions && [dataProcessingOptions isKindOfClass:[NSDictionary class]]) {
-        g_dataProcessingOptions = dataProcessingOptions;
+      if (@available(iOS 11.0, tvOS 11.0, *)) {
+        if (@available(tvOS 11.0, *)) {
+          g_dataProcessingOptions = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[NSString.class, NSNumber.class, NSArray.class, NSDictionary.class, NSSet.class]] fromData:data error:nil];
+        } else {
+          // Fallback on earlier versions
+        }
+      } else {
+        NSDictionary<NSString*, id> *dataProcessingOptions = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        if (dataProcessingOptions && [dataProcessingOptions isKindOfClass:[NSDictionary class]]) {
+          g_dataProcessingOptions = dataProcessingOptions;
+        }
       }
     }
   }
