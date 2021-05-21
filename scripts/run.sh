@@ -363,16 +363,18 @@ lint_sdk() {
 
       set +e
 
-      if [ "$spec" != FBSDKCoreKit.podspec ]; then
-        dependent_spec="--include-podspecs=FBSDKCoreKit.podspec"
+      if [ "$spec" == FBSDKCoreKit.podspec ]; then
+        dependent_spec="--include-podspecs=FBSDKCoreKit_Basics.podspec"
+      else
+        dependent_spec="--include-podspecs=FBSDK{CoreKit,CoreKit_Basics}.podspec"
       fi
 
       if [ "$spec" == FBSDKTVOSKit.podspec ]; then
-        dependent_spec="--include-podspecs=FBSDK{Core,Share,Login}Kit.podspec"
+        dependent_spec="--include-podspecs=FBSDK{CoreKit,ShareKit,LoginKit,CoreKit_Basics}.podspec"
       fi
 
       if [ "$spec" == FBSDKGamingServicesKit.podspec ]; then
-        dependent_spec="--include-podspecs=FBSDK{Core,Share}Kit.podspec"
+        dependent_spec="--include-podspecs=FBSDK{CoreKit,ShareKit,CoreKit_Basics}.podspec"
       fi
 
       echo ""
