@@ -43,6 +43,7 @@ Pod::Spec.new do |s|
   }
 
   s.subspec 'Login' do |ss|
+    ss.dependency 'FBSDKCoreKit_Basics', "~> #{s.version}"
     ss.dependency 'FBSDKCoreKit', "~> #{s.version}"
     ss.exclude_files = 'FBSDKLoginKit/FBSDKLoginKit/include/**/*',
                        'FBSDKLoginKit/FBSDKLoginKit/Swift/Exports.swift'

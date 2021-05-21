@@ -24,9 +24,7 @@
  #import "FBSDKCoreKit+Internal.h"
 #endif
 
-#if defined FBSDKCOCOAPODS
- #import <FBSDKCoreKit/FBSDKCoreKit_Basics.h>
-#elif defined FBSDK_SWIFT_PACKAGE
+#if defined FBSDK_SWIFT_PACKAGE
 @import FBSDKCoreKit_Basics;
 #else
  #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>

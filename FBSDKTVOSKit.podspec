@@ -34,6 +34,7 @@ Pod::Spec.new do |s|
     'GCC_PREPROCESSOR_DEFINITIONS': '$(inherited) FBSDKCOCOAPODS=1'
   }
 
+  s.dependency 'FBSDKCoreKit_Basics', "~> #{s.version}"
   s.dependency 'FBSDKCoreKit', "~> #{s.version}"
   s.dependency 'FBSDKShareKit', "~> #{s.version}"
   s.dependency 'FBSDKLoginKit', "~> #{s.version}"

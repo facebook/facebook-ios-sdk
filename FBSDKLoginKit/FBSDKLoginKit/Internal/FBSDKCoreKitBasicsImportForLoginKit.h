@@ -18,9 +18,7 @@
 
 // TODO: This needs to be renamed once BUCK does not include CoreKit Internal Headers
 
-#if defined FBSDKCOCOAPODS
- #import <FBSDKCoreKit/FBSDKCoreKit_Basics.h>
-#elif defined FBSDK_SWIFT_PACKAGE
+#if defined FBSDK_SWIFT_PACKAGE
 @import FBSDKCoreKit_Basics;
 #else
  #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
