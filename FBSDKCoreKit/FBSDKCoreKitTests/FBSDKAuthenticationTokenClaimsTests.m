@@ -37,9 +37,9 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
                         iat:(long)iat
                         sub:(NSString *)sub
                        name:(nullable NSString *)name
-                  firstName:(nullable NSString *)firstName
+                  givenName:(nullable NSString *)givenName
                  middleName:(nullable NSString *)middleName
-                   lastName:(nullable NSString *)lastName
+                 familyName:(nullable NSString *)familyName
                       email:(nullable NSString *)email
                     picture:(nullable NSString *)picture
                 userFriends:(nullable NSArray<NSString *> *)userFriends
@@ -80,9 +80,9 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
                                                             iat:currentTime - 60 // 1 min ago
                                                             sub:@"1234"
                                                            name:@"Test User"
-                                                      firstName:@"Test"
+                                                      givenName:@"Test"
                                                      middleName:@"Middle"
-                                                       lastName:@"User"
+                                                     familyName:@"User"
                                                           email:@"email@email.com"
                                                         picture:@"https://www.facebook.com/some_picture"
                                                     userFriends:@[@"1122", @"3344", @"5566"]
@@ -175,7 +175,7 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
 
 - (void)testDecodeClaimsWithInvalidOptionalClaims
 {
-  for (NSString *claim in @[@"name", @"first_name", @"middle_name", @"last_name", @"email", @"picture", @"user_friends", @"user_birthday", @"user_age_range", @"user_hometown", @"user_location", @"user_gender", @"user_link"]) {
+  for (NSString *claim in @[@"name", @"given_name", @"middle_name", @"family_name", @"email", @"picture", @"user_friends", @"user_birthday", @"user_age_range", @"user_hometown", @"user_location", @"user_gender", @"user_link"]) {
     [self assertDecodeClaimsDropInvalidEntry:claim value:nil];
     [self assertDecodeClaimsDropInvalidEntry:claim value:NSDictionary.new];
   }
@@ -281,9 +281,9 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
   [dict setValue:claims.jti forKey:@"jti"];
   [dict setValue:claims.sub forKey:@"sub"];
   [dict setValue:claims.name forKey:@"name"];
-  [dict setValue:claims.firstName forKey:@"first_name"];
+  [dict setValue:claims.givenName forKey:@"given_name"];
   [dict setValue:claims.middleName forKey:@"middle_name"];
-  [dict setValue:claims.lastName forKey:@"last_name"];
+  [dict setValue:claims.familyName forKey:@"family_name"];
   [dict setValue:claims.email forKey:@"email"];
   [dict setValue:claims.picture forKey:@"picture"];
   [dict setValue:claims.userFriends forKey:@"user_friends"];

@@ -57,9 +57,9 @@ static NSString *const _fakeChallence = @"some_challenge";
                         iat:(long)iat
                         sub:(NSString *)sub
                        name:(nullable NSString *)name
-                  firstName:(nullable NSString *)firstName
+                  givenName:(nullable NSString *)givenName
                  middleName:(nullable NSString *)middleName
-                   lastName:(nullable NSString *)lastName
+                 familyName:(nullable NSString *)familyName
                       email:(nullable NSString *)email
                     picture:(nullable NSString *)picture
                 userFriends:(nullable NSArray<NSString *> *)userFriends
@@ -554,9 +554,9 @@ static NSString *const _fakeChallence = @"some_challenge";
                                                                                           iat:1234
                                                                                           sub:@"some_sub"
                                                                                          name:@"some_name"
-                                                                                    firstName:@"first"
+                                                                                    givenName:@"first"
                                                                                    middleName:@"middle"
-                                                                                     lastName:@"last"
+                                                                                   familyName:@"last"
                                                                                         email:@"example@example.com"
                                                                                       picture:@"www.facebook.com"
                                                                                   userFriends:@[@"123", @"456"]
@@ -579,7 +579,7 @@ static NSString *const _fakeChallence = @"some_challenge";
   );
   XCTAssertEqualObjects(
     factory.capturedFirstName,
-    claim.firstName,
+    claim.givenName,
     "Should request a profile using the first name from the claims"
   );
   XCTAssertEqualObjects(
@@ -589,7 +589,7 @@ static NSString *const _fakeChallence = @"some_challenge";
   );
   XCTAssertEqualObjects(
     factory.capturedLastName,
-    claim.lastName,
+    claim.familyName,
     "Should request a profile using the last name from the claims"
   );
   XCTAssertEqualObjects(

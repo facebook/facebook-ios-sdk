@@ -46,14 +46,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// End-User's full name in displayable form including all name parts.
 @property (nullable, nonatomic, readonly, strong) NSString *name;
 
-/// End-User's first name in displayable form
-@property (nullable, nonatomic, readonly, strong) NSString *firstName;
+/// End-User's given name in displayable form
+@property (nullable, nonatomic, readonly, strong) NSString *givenName;
 
 /// End-User's middle name in displayable form
 @property (nullable, nonatomic, readonly, strong) NSString *middleName;
 
-/// End-User's last name in displayable form
-@property (nullable, nonatomic, readonly, strong) NSString *lastName;
+/// End-User's family name in displayable form
+@property (nullable, nonatomic, readonly, strong) NSString *familyName;
 
 /**
  End-User's preferred e-mail address.
