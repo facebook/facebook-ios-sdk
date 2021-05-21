@@ -131,18 +131,19 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
 
 + (void)setApplicationState:(UIApplicationState)state;
 
-+ (void)configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
-        appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
-           serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
-                  graphRequestProvider:(id<FBSDKGraphRequestProviding>)provider
-                        featureChecker:(id<FBSDKFeatureChecking>)featureChecker
-                                 store:(id<FBSDKDataPersisting>)store
-                                logger:(Class<FBSDKLogging>)logger
-                              settings:(id<FBSDKSettings>)settings
-                       paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
-                     timeSpentRecorder:(id<FBSDKTimeSpentRecording>)timeSpentRecorder
-                   appEventsStateStore:(id<FBSDKAppEventsStatePersisting>)appEventsStateStore
-   eventDeactivationParameterProcessor:(id<FBSDKAppEventsParameterProcessing>)eventDeactivationParameterProcessor;
++ (void)   configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
+           appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
+              serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+                     graphRequestProvider:(id<FBSDKGraphRequestProviding>)provider
+                           featureChecker:(id<FBSDKFeatureChecking>)featureChecker
+                                    store:(id<FBSDKDataPersisting>)store
+                                   logger:(Class<FBSDKLogging>)logger
+                                 settings:(id<FBSDKSettings>)settings
+                          paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
+                        timeSpentRecorder:(id<FBSDKTimeSpentRecording>)timeSpentRecorder
+                      appEventsStateStore:(id<FBSDKAppEventsStatePersisting>)appEventsStateStore
+      eventDeactivationParameterProcessor:(id<FBSDKAppEventsParameterProcessing>)eventDeactivationParameterProcessor
+  restrictiveDataFilterParameterProcessor:(id<FBSDKAppEventsParameterProcessing>)restrictiveDataFilterParameterProcessor;
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;

@@ -48,7 +48,7 @@
 #import "FBSDKLogger+Logging.h"
 #import "FBSDKPaymentObserver.h"
 #import "FBSDKPaymentObserver+PaymentObserving.h"
-#import "FBSDKRestrictiveDataFilterManager.h"
+#import "FBSDKRestrictiveDataFilterManager+AppEventsParameterProcessing.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationManager+ServerConfigurationProviding.h"
 #import "FBSDKSettings+Internal.h"
@@ -513,7 +513,8 @@ static UIApplicationState _applicationState;
                                  paymentObserver:FBSDKPaymentObserver.shared
                                timeSpentRecorder:FBSDKTimeSpentData.shared
                              appEventsStateStore:FBSDKAppEventsStateManager.shared
-             eventDeactivationParameterProcessor:FBSDKEventDeactivationManager.shared];
+             eventDeactivationParameterProcessor:FBSDKEventDeactivationManager.shared
+         restrictiveDataFilterParameterProcessor:FBSDKRestrictiveDataFilterManager.shared];
   [FBSDKInternalUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:FBSDKAccessToken.class];
   [FBSDKAppEventsConfigurationManager configureWithStore:store

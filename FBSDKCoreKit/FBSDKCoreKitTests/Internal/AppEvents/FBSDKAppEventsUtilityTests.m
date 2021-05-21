@@ -84,7 +84,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
                                  paymentObserver:[TestPaymentObserver new]
                                timeSpentRecorder:[TestTimeSpentRecorder new]
                              appEventsStateStore:[TestAppEventsStateStore new]
-             eventDeactivationParameterProcessor:[TestEventDeactivationParameterProcessor new]];
+             eventDeactivationParameterProcessor:[TestAppEventsParameterProcessor new]
+         restrictiveDataFilterParameterProcessor:[TestAppEventsParameterProcessor new]];
 }
 
 - (void)tearDown

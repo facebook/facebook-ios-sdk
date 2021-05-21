@@ -16,22 +16,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import FBSDKCoreKit
-import Foundation
+#import "FBSDKAppEventsParameterProcessing.h"
+#import "FBSDKRestrictiveDataFilterManager.h"
 
-@objcMembers
-class TestEventDeactivationParameterProcessor: NSObject, AppEventsParameterProcessing {
-  var enableWasCalled = false
-  var capturedParameters: [String: Any]?
-  var capturedEventName: String?
+NS_ASSUME_NONNULL_BEGIN
 
-  func enable() {
-    enableWasCalled = true
-  }
+@interface FBSDKRestrictiveDataFilterManager (AppEventsParameterProcessing) <FBSDKAppEventsParameterProcessing>
+@end
 
-  func processParameters(_ parameters: [String: Any]?, eventName: String) -> [String: Any]? {
-    capturedParameters = parameters
-    capturedEventName = eventName
-    return parameters
-  }
-}
+NS_ASSUME_NONNULL_END

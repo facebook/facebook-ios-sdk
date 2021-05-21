@@ -19,17 +19,19 @@
 import FBSDKCoreKit
 import Foundation
 
-class TestAppEventsParametersProcessor: AppEventsParameterProcessing {
-  var wasEnableCalled = false
+@objcMembers
+class TestAppEventsParameterProcessor: NSObject, AppEventsParameterProcessing {
+  var enableWasCalled = false
+  var capturedParameters: [String: Any]?
+  var capturedEventName: String?
 
   func enable() {
-    wasEnableCalled = true
+    enableWasCalled = true
   }
 
-  func processParameters(
-    _ parameters: [String: Any]?,
-    eventName: String
-  ) -> [String: Any]? {
-    return nil
+  func processParameters(_ parameters: [String: Any]?, eventName: String) -> [String: Any]? {
+    capturedParameters = parameters
+    capturedEventName = eventName
+    return parameters
   }
 }

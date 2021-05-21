@@ -33,6 +33,7 @@
 #import "FBSDKEventDeactivationManager+AppEventsParameterProcessing.h"
 #import "FBSDKFeatureManager+FeatureChecking.h"
 #import "FBSDKPaymentObserver.h"
+#import "FBSDKRestrictiveDataFilterManager+AppEventsParameterProcessing.h"
 #import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKTestCase.h"
 #import "FBSDKTimeSpentData.h"
@@ -120,6 +121,7 @@
 + (id<FBSDKAppEventsStatePersisting>)appEventsStateStore;
 + (id<FBSDKMetadataIndexing>)metadataIndexer;
 + (id<FBSDKAppEventsParameterProcessing>)eventDeactivationParameterProcessor;
++ (id<FBSDKAppEventsParameterProcessing>)restrictiveDataFilterParameterProcessor;
 @end
 
 @implementation FBSDKApplicationDelegateTests
@@ -334,6 +336,11 @@
     FBSDKAppEvents.eventDeactivationParameterProcessor,
     FBSDKEventDeactivationManager.shared,
     "Initializing the SDK should set concrete event deactivation parameter processor for event logging"
+  );
+  XCTAssertEqualObjects(
+    FBSDKAppEvents.restrictiveDataFilterParameterProcessor,
+    FBSDKRestrictiveDataFilterManager.shared,
+    "Initializing the SDK should set concrete restrictive data filter parameter processor for event logging"
   );
 }
 

@@ -49,7 +49,6 @@
 #import "FBSDKLogging.h"
 #import "FBSDKMetadataIndexing.h"
 #import "FBSDKPaymentObserving.h"
-#import "FBSDKRestrictiveDataFilterManager.h"
 #import "FBSDKSKAdNetworkReporter.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationProviding.h"
@@ -278,6 +277,7 @@ static id<FBSDKPaymentObserving> g_paymentObserver;
 static id<FBSDKTimeSpentRecording> g_timeSpentRecorder;
 static id<FBSDKAppEventsStatePersisting> g_appEventsStateStore;
 static id<FBSDKAppEventsParameterProcessing> g_eventDeactivationParameterProcessor;
+static id<FBSDKAppEventsParameterProcessing> g_restrictiveDataFilterParameterProcessor;
 
 #if !TARGET_OS_TV
 static id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider> g_onDeviceMLModelManager = nil;
@@ -866,18 +866,19 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 
 #pragma mark - Internal Methods
 
-+ (void)configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
-        appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
-           serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
-                  graphRequestProvider:(id<FBSDKGraphRequestProviding>)provider
-                        featureChecker:(id<FBSDKFeatureChecking>)featureChecker
-                                 store:(id<FBSDKDataPersisting>)store
-                                logger:(Class<FBSDKLogging>)logger
-                              settings:(id<FBSDKSettings>)settings
-                       paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
-                     timeSpentRecorder:(id<FBSDKTimeSpentRecording>)timeSpentRecorder
-                   appEventsStateStore:(id<FBSDKAppEventsStatePersisting>)appEventsStateStore
-   eventDeactivationParameterProcessor:(id<FBSDKAppEventsParameterProcessing>)eventDeactivationParameterProcessor
++ (void)   configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
+           appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
+              serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+                     graphRequestProvider:(id<FBSDKGraphRequestProviding>)provider
+                           featureChecker:(id<FBSDKFeatureChecking>)featureChecker
+                                    store:(id<FBSDKDataPersisting>)store
+                                   logger:(Class<FBSDKLogging>)logger
+                                 settings:(id<FBSDKSettings>)settings
+                          paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
+                        timeSpentRecorder:(id<FBSDKTimeSpentRecording>)timeSpentRecorder
+                      appEventsStateStore:(id<FBSDKAppEventsStatePersisting>)appEventsStateStore
+      eventDeactivationParameterProcessor:(id<FBSDKAppEventsParameterProcessing>)eventDeactivationParameterProcessor
+  restrictiveDataFilterParameterProcessor:(id<FBSDKAppEventsParameterProcessing>)restrictiveDataFilterParameterProcessor
 {
   [FBSDKAppEvents setAppEventsConfigurationProvider:appEventsConfigurationProvider];
   [FBSDKAppEvents setServerConfigurationProvider:serverConfigurationProvider];
@@ -892,6 +893,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   g_timeSpentRecorder = timeSpentRecorder;
   g_appEventsStateStore = appEventsStateStore;
   g_eventDeactivationParameterProcessor = eventDeactivationParameterProcessor;
+  g_restrictiveDataFilterParameterProcessor = restrictiveDataFilterParameterProcessor;
 }
 
 + (void)setFeatureChecker:(id<FBSDKFeatureChecking>)checker
@@ -1251,7 +1253,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
       }
       [g_featureChecker checkFeature:FBSDKFeatureRestrictiveDataFiltering completionBlock:^(BOOL enabled) {
         if (enabled) {
-          [FBSDKRestrictiveDataFilterManager.shared enable];
+          [g_restrictiveDataFilterParameterProcessor enable];
         }
       }];
       [g_featureChecker checkFeature:FBSDKFeatureEventDeactivation completionBlock:^(BOOL enabled) {
@@ -1380,8 +1382,8 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   parameters = [g_onDeviceMLModelManager.integrityParametersProcessor processParameters:parameters eventName:eventName];
 #endif
   // Filter out restrictive keys
-  parameters = [FBSDKRestrictiveDataFilterManager.shared processParameters:parameters
-                                                                 eventName:eventName];
+  parameters = [g_restrictiveDataFilterParameterProcessor processParameters:parameters
+                                                                  eventName:eventName];
 
   NSMutableDictionary<NSString *, id> *eventDictionary = [NSMutableDictionary dictionaryWithDictionary:parameters];
   [FBSDKTypeUtility dictionary:eventDictionary setObject:eventName forKey:FBSDKAppEventParameterEventName];
@@ -1797,6 +1799,11 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 + (id<FBSDKAppEventsParameterProcessing>)eventDeactivationParameterProcessor
 {
   return g_eventDeactivationParameterProcessor;
+}
+
++ (id<FBSDKAppEventsParameterProcessing>)restrictiveDataFilterParameterProcessor
+{
+  return g_restrictiveDataFilterParameterProcessor;
 }
 
  #endif

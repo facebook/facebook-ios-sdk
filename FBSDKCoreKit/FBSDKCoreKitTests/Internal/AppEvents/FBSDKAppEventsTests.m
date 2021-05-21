@@ -119,7 +119,8 @@ static NSString *const _mockUserID = @"mockUserID";
   TestTimeSpentRecorder *_timeSpentRecorder;
   TestAppEventsStateStore *_appEventsStateStore;
   TestMetadataIndexer *_metadataIndexer;
-  TestEventDeactivationParameterProcessor *_eventDeactivationParameterProcessor;
+  TestAppEventsParameterProcessor *_eventDeactivationParameterProcessor;
+  TestAppEventsParameterProcessor *_restrictiveDataFilterParameterProcessor;
 }
 @end
 
@@ -143,6 +144,7 @@ static NSString *const _mockUserID = @"mockUserID";
   _settings.stubbedIsAutoLogAppEventsEnabled = YES;
   [FBSDKInternalUtility reset];
   _onDeviceMLModelManager = [TestOnDeviceMLModelManager new];
+  _onDeviceMLModelManager.integrityParametersProcessor = [TestAppEventsParameterProcessor new];
   _paymentObserver = [TestPaymentObserver new];
   _timeSpentRecorder = [TestTimeSpentRecorder new];
   _metadataIndexer = [TestMetadataIndexer new];
@@ -159,7 +161,8 @@ static NSString *const _mockUserID = @"mockUserID";
   _featureManager = [TestFeatureManager new];
   _paymentObserver = [TestPaymentObserver new];
   _appEventsStateStore = [TestAppEventsStateStore new];
-  _eventDeactivationParameterProcessor = [TestEventDeactivationParameterProcessor new];
+  _eventDeactivationParameterProcessor = [TestAppEventsParameterProcessor new];
+  _restrictiveDataFilterParameterProcessor = [TestAppEventsParameterProcessor new];
 
   [FBSDKAppEvents setLoggingOverrideAppID:_mockAppID];
 
@@ -179,7 +182,8 @@ static NSString *const _mockUserID = @"mockUserID";
                                  paymentObserver:_paymentObserver
                                timeSpentRecorder:_timeSpentRecorder
                              appEventsStateStore:_appEventsStateStore
-             eventDeactivationParameterProcessor:_eventDeactivationParameterProcessor];
+             eventDeactivationParameterProcessor:_eventDeactivationParameterProcessor
+         restrictiveDataFilterParameterProcessor:_restrictiveDataFilterParameterProcessor];
   [FBSDKAppEvents configureNonTVComponentsWithOnDeviceMLModelManager:_onDeviceMLModelManager
                                                      metadataIndexer:_metadataIndexer];
 }
@@ -542,6 +546,26 @@ static NSString *const _mockUserID = @"mockUserID";
     _eventDeactivationParameterProcessor.capturedParameters,
     parameters,
     "AppEvents instance should submit the parameters to event deactivation parameters processor."
+  );
+}
+
+- (void)testInstanceLogEventProcessParametersWithRestrictiveDataFilterParameterProcessor
+{
+  NSDictionary<NSString *, id> *parameters = @{@"key" : @"value"};
+  [FBSDKAppEvents.singleton instanceLogEvent:_mockEventName
+                                  valueToSum:@(_mockPurchaseAmount)
+                                  parameters:parameters
+                          isImplicitlyLogged:NO
+                                 accessToken:nil];
+  XCTAssertEqualObjects(
+    _restrictiveDataFilterParameterProcessor.capturedEventName,
+    _mockEventName,
+    "AppEvents instance should submit the event name to the restrictive data filter parameters processor."
+  );
+  XCTAssertEqualObjects(
+    _restrictiveDataFilterParameterProcessor.capturedParameters,
+    parameters,
+    "AppEvents instance should submit the parameters to the restrictive data filter parameters processor."
   );
 }
 
@@ -917,18 +941,6 @@ static NSString *const _mockUserID = @"mockUserID";
   [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
   TestAppEventsConfigurationProvider.capturedBlock();
   TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
-  XCTAssertTrue(
-    [_featureManager capturedFeaturesContains:FBSDKFeatureRestrictiveDataFiltering],
-    "fetchConfiguration should check if the RestrictiveDataFiltering feature is enabled"
-  );
-  // TODO: Once FBSDKRestrictiveDataFilterManager is injected, similar for all other features
-  //
-  // [TestFeatureManager capturedCompletionBlocks[FBSDKFeatureRestrictiveDataFiltering](YES)
-  //
-  // XCTAssertTrue(
-  // self.restrictiveDataFilterManager.isEnabled,
-  // "Should use the feature manager to determine if features are enabled"
-  // )
 
   XCTAssertTrue(
     [_featureManager capturedFeaturesContains:FBSDKFeatureATELogging],
@@ -960,6 +972,29 @@ static NSString *const _mockUserID = @"mockUserID";
   XCTAssertTrue(
     _eventDeactivationParameterProcessor.enableWasCalled,
     "Fetching a configuration should enable event deactivation parameters processor if event deactivation feature is enabled"
+  );
+}
+
+- (void)testFetchingConfigurationIncludingRestrictiveDataFiltering
+{
+  [FBSDKAppEvents.singleton fetchServerConfiguration:nil];
+  TestAppEventsConfigurationProvider.capturedBlock();
+  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  XCTAssertTrue(
+    [_featureManager capturedFeaturesContains:FBSDKFeatureRestrictiveDataFiltering],
+    "Fetching a configuration should check if the RestrictiveDataFiltering feature is enabled"
+  );
+}
+
+- (void)testFetchingConfigurationEnablingRestrictiveDataFilterParameterProcessorIfRestrictiveDataFilteringEnabled
+{
+  [FBSDKAppEvents.singleton fetchServerConfiguration:nil];
+  TestAppEventsConfigurationProvider.capturedBlock();
+  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  [_featureManager completeCheckForFeature:FBSDKFeatureRestrictiveDataFiltering with:YES];
+  XCTAssertTrue(
+    _restrictiveDataFilterParameterProcessor.enableWasCalled,
+    "Fetching a configuration should enable restrictive data filter parameters processor if event deactivation feature is enabled"
   );
 }
 
