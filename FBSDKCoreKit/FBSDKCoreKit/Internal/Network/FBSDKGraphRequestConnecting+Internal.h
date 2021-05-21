@@ -16,17 +16,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import FBSDKCoreKit
+#if SWIFT_PACKAGE
+ #import "FBSDKGraphRequestConnecting.h"
+#else
+ #import <FBSDKCoreKit/FBSDKGraphRequestConnecting.h>
+#endif
 
-@objcMembers
-class TestGraphRequestPiggybackManager: NSObject, GraphRequestPiggybackManaging {
-  static var capturedConnection: GraphRequestConnecting?
+#import "FBSDKGraphRequestMetadata.h"
 
-  static func addPiggybackRequests(_ connection: GraphRequestConnecting) {
-    capturedConnection = connection
-  }
+@protocol _FBSDKGraphRequestConnecting <FBSDKGraphRequestConnecting>
 
-  static func reset() {
-    capturedConnection = nil
-  }
-}
+@property (nonatomic, readonly) NSMutableArray<FBSDKGraphRequestMetadata *> *requests;
+
+@end

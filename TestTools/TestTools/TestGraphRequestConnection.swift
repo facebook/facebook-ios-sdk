@@ -21,19 +21,31 @@ import FBSDKCoreKit
 @objcMembers
 public class TestGraphRequestConnection: NSObject, GraphRequestConnecting {
 
+  public struct Request {
+    public let request: GraphRequestProtocol
+    public let completion: GraphRequestCompletion
+  }
+
   public var timeout: TimeInterval = 0
+  public var delegate: GraphRequestConnectionDelegate? // swiftlint:disable:this weak_delegate
   public var capturedRequest: GraphRequestProtocol?
-  public var capturedCompletion: GraphRequestBlock?
+  public var capturedRequests = [GraphRequestProtocol]()
+  public var capturedCompletion: GraphRequestCompletion?
   public var startCallCount = 0
   public var cancelCallCount = 0
 
-  public func add(_ request: GraphRequest, completionHandler handler: @escaping GraphRequestBlock) {
-    self.capturedRequest = request
-    self.capturedCompletion = handler
-  }
+  // Enables us to use the internal requests property
+  public var graphRequests = [Request]()
 
-  public func add(_ request: GraphRequestProtocol, completionHandler handler: @escaping GraphRequestBlock) {
+  public func add(_ request: GraphRequestProtocol, completion handler: @escaping GraphRequestCompletion) {
+    graphRequests.append(
+      Request(
+        request: request,
+        completion: handler
+      )
+    )
     capturedRequest = request
+    capturedRequests.append(request)
     capturedCompletion = handler
   }
 

@@ -132,7 +132,7 @@ static dispatch_once_t sharedConfigurationManagerNonce;
                                      }];
     id<FBSDKGraphRequestConnecting> requestConnection = [self.connectionFactory createGraphRequestConnection];
     requestConnection.timeout = kTimeout;
-    [requestConnection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+    [requestConnection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
       [self _processResponse:result error:error];
     }];
     [requestConnection start];

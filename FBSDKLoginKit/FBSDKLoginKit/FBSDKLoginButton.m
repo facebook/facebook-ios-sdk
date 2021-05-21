@@ -411,7 +411,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me?fields=id,name"
                                                                  parameters:nil
                                                                       flags:FBSDKGraphRequestFlagDisableErrorRecovery];
-  [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+  [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     NSString *userID = [FBSDKTypeUtility coercedToStringValue:result[@"id"]];
     if (!error && [FBSDKAccessToken.currentAccessToken.userID isEqualToString:userID]) {
       self->_userName = [FBSDKTypeUtility coercedToStringValue:result[@"name"]];

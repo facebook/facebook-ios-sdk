@@ -206,20 +206,51 @@ static BOOL _canMakeRequests = NO;
 - (void) addRequest:(id<FBSDKGraphRequest>)request
   completionHandler:(FBSDKGraphRequestBlock)handler
 {
-  [self addRequest:request batchEntryName:@"" completionHandler:handler];
+  FBSDKGraphRequestCompletion completion = ^void (id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
+    handler(FBSDK_CAST_TO_CLASS_OR_NIL(connection, FBSDKGraphRequestConnection), result, error);
+  };
+
+  [self addRequest:request completion:completion];
+}
+
+- (void)addRequest:(id<FBSDKGraphRequest>)request completion:(FBSDKGraphRequestCompletion)completion
+{
+  [self addRequest:request name:@"" completion:completion];
 }
 
 - (void) addRequest:(id<FBSDKGraphRequest>)request
      batchEntryName:(NSString *)name
   completionHandler:(FBSDKGraphRequestBlock)handler
 {
+  FBSDKGraphRequestCompletion completion = ^void (id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
+    handler(FBSDK_CAST_TO_CLASS_OR_NIL(connection, FBSDKGraphRequestConnection), result, error);
+  };
+
+  [self addRequest:request name:name completion:completion];
+}
+
+- (void)addRequest:(id<FBSDKGraphRequest>)request
+              name:(NSString *)name
+        completion:(FBSDKGraphRequestCompletion)completion
+{
   NSDictionary<NSString *, id> *batchParams = name.length > 0 ? @{kBatchEntryName : name } : nil;
-  [self addRequest:request batchParameters:batchParams completionHandler:handler];
+  [self addRequest:request parameters:batchParams completion:completion];
 }
 
 - (void) addRequest:(id<FBSDKGraphRequest>)request
     batchParameters:(NSDictionary<NSString *, id> *)batchParameters
   completionHandler:(FBSDKGraphRequestBlock)handler
+{
+  FBSDKGraphRequestCompletion completion = ^void (id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
+    handler(FBSDK_CAST_TO_CLASS_OR_NIL(connection, FBSDKGraphRequestConnection), result, error);
+  };
+
+  [self addRequest:request parameters:batchParameters completion:completion];
+}
+
+- (void)addRequest:(id<FBSDKGraphRequest>)request
+        parameters:(NSDictionary<NSString *, id> *)parameters
+        completion:(FBSDKGraphRequestCompletion)completion
 {
   if (self.state != kStateCreated) {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
@@ -227,8 +258,8 @@ static BOOL _canMakeRequests = NO;
                                  userInfo:nil];
   }
   FBSDKGraphRequestMetadata *metadata = [[FBSDKGraphRequestMetadata alloc] initWithRequest:request
-                                                                         completionHandler:handler
-                                                                           batchParameters:batchParameters];
+                                                                         completionHandler:completion
+                                                                           batchParameters:parameters];
 
   [FBSDKTypeUtility array:self.requests addObject:metadata];
 }
@@ -1226,7 +1257,7 @@ static BOOL _canMakeRequests = NO;
                                                                                   flags:FBSDKGraphRequestFlagDisableErrorRecovery
                                                                       connectionFactory:self.connectionFactory];
       FBSDKGraphRequestMetadata *retryMetadata = [[FBSDKGraphRequestMetadata alloc] initWithRequest:retryRequest completionHandler:_recoveringRequestMetadata.completionHandler batchParameters:_recoveringRequestMetadata.batchParameters];
-      [retryRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *retriedError) {
+      [retryRequest startWithCompletion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *retriedError) {
         [self processResultBody:result error:retriedError metadata:retryMetadata canNotifyDelegate:YES];
         self->_errorRecoveryProcessor = nil;
         self->_recoveringRequestMetadata = nil;

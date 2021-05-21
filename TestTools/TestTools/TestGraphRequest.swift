@@ -29,7 +29,7 @@ public class TestGraphRequest: NSObject, GraphRequestProtocol {
   public var version: String = ""
   public var flags: GraphRequestFlags = []
   public var stubbedConnection = TestGraphRequestConnection()
-  public var capturedCompletionHandler: GraphRequestBlock?
+  public var capturedCompletionHandler: GraphRequestCompletion?
   public var startCallCount = 0
   public var cancelCallCount = 0
 
@@ -122,7 +122,7 @@ public class TestGraphRequest: NSObject, GraphRequestProtocol {
     self.version = version
   }
 
-  public func start(completionHandler handler: GraphRequestBlock? = nil) -> GraphRequestConnecting {
+  public func start(completion handler: GraphRequestCompletion? = nil) -> GraphRequestConnecting {
     capturedCompletionHandler = handler
     startCallCount += 1
 

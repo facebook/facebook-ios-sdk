@@ -105,7 +105,7 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
         FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
                                       initWithGraphPath:[NSString stringWithFormat:@"%@/model_asset", [FBSDKSettings appID]]];
 
-        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+        [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
           if (!error) {
             NSDictionary<NSString *, id> *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
             NSDictionary<NSString *, id> *modelInfo = [self.class convertToDictionary:resultDictionary[MODEL_DATA_KEY]];

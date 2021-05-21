@@ -59,10 +59,6 @@ static NSDictionary<NSString *, NSString *> *const _mockEmptyParameters(void)
 @end
 
 @interface FBSDKGraphRequestTests : XCTestCase
-{
-  FBSDKGraphRequestConnection *_connection;
-}
-
 @end
 
 @implementation FBSDKGraphRequestTests
@@ -71,7 +67,6 @@ static NSDictionary<NSString *, NSString *> *const _mockEmptyParameters(void)
 {
   [super setUp];
 
-  _connection = [FBSDKGraphRequestConnection new];
   [FBSDKAccessToken resetCurrentAccessTokenCache];
   [FBSDKGraphRequest reset];
 }
@@ -112,9 +107,11 @@ static NSDictionary<NSString *, NSString *> *const _mockEmptyParameters(void)
 {
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:_mockGraphPath];
 
-  [_connection addRequest:request
-        completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {}];
-  [self verifyRequest:request expectedGraphPath:_mockGraphPath expectedParameters:_mockParameters() expectedTokenString:nil expectedVersion:_mockDefaultVersion expectedMethod:FBSDKHTTPMethodGET];
+  [self verifyRequest:request expectedGraphPath:_mockGraphPath
+    expectedParameters:_mockParameters()
+   expectedTokenString:nil
+       expectedVersion:_mockDefaultVersion
+        expectedMethod:FBSDKHTTPMethodGET];
 }
 
 - (void)testStartRequestUsesRequestProvidedByFactory
@@ -130,7 +127,7 @@ static NSDictionary<NSString *, NSString *> *const _mockEmptyParameters(void)
                                                                       flags:FBSDKGraphRequestFlagNone
                                                           connectionFactory:fakeConnectionFactory];
 
-  [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *_Nullable potentialConnection, id _Nullable result, NSError *_Nullable error) {
+  [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> _Nullable potentialConnection, id _Nullable result, NSError *_Nullable error) {
     XCTAssertEqualObjects(result, self.name);
     [expectation fulfill];
   }];

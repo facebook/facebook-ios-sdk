@@ -22,6 +22,7 @@
 
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKGraphRequestConnecting.h"
+#import "FBSDKGraphRequestConnection.h"
 #import "FBSDKGraphRequestConnectionFactory.h"
 #import "FBSDKGraphRequestConnectionProviding.h"
 #import "FBSDKGraphRequestDataAttachment.h"
@@ -261,9 +262,18 @@ static Class<FBSDKTokenStringProviding> _currentAccessTokenStringProvider;
 
 - (id<FBSDKGraphRequestConnecting>)startWithCompletionHandler:(FBSDKGraphRequestBlock)handler
 {
+  FBSDKGraphRequestCompletion completion = ^void (id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
+    handler(FBSDK_CAST_TO_CLASS_OR_NIL(connection, FBSDKGraphRequestConnection), result, error);
+  };
+
+  return [self startWithCompletion:completion];
+}
+
+- (id<FBSDKGraphRequestConnecting>)startWithCompletion:(FBSDKGraphRequestCompletion)completion
+{
   id<FBSDKGraphRequestConnecting> connection = [self.connectionFactory createGraphRequestConnection];
   id<FBSDKGraphRequest> request = (id<FBSDKGraphRequest>)self;
-  [connection addRequest:request completionHandler:handler];
+  [connection addRequest:request completion:completion];
   [connection start];
   return connection;
 }

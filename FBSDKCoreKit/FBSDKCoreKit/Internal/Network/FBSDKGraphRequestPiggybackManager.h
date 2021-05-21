@@ -18,14 +18,20 @@
 
 #import "FBSDKCoreKit+Internal.h"
 
+#if SWIFT_PACKAGE
+#import "FBSDKGraphRequestConnection.h"
+#else
+#import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
+#endif
+
 NS_SWIFT_NAME(GraphRequestPiggybackManager)
 @interface FBSDKGraphRequestPiggybackManager : NSObject
 
-+ (void)addPiggybackRequests:(FBSDKGraphRequestConnection *)connection;
++ (void)addPiggybackRequests:(id<FBSDKGraphRequestConnecting>)connection;
 
-+ (void)addRefreshPiggyback:(id<FBSDKGraphRequestConnecting>)connection permissionHandler:(FBSDKGraphRequestBlock)permissionHandler;
++ (void)addRefreshPiggyback:(id<FBSDKGraphRequestConnecting>)connection permissionHandler:(FBSDKGraphRequestCompletion)permissionHandler;
 
-+ (void)addRefreshPiggybackIfStale:(FBSDKGraphRequestConnection *)connection;
++ (void)addRefreshPiggybackIfStale:(id<FBSDKGraphRequestConnecting>)connection;
 
-+ (void)addServerConfigurationPiggyback:(FBSDKGraphRequestConnection *)connection;
++ (void)addServerConfigurationPiggyback:(id<FBSDKGraphRequestConnecting>)connection;
 @end

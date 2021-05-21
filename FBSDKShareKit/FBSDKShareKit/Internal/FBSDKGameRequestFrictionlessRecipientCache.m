@@ -108,7 +108,7 @@
                                                                  parameters:@{@"fields" : @""}
                                                                       flags:(FBSDKGraphRequestFlagDoNotInvalidateTokenOnError
                                                                         | FBSDKGraphRequestFlagDisableErrorRecovery)];
-  [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+  [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     if (!error) {
       NSArray *items = [FBSDKTypeUtility arrayValue:result[@"data"]];
       NSArray *recipientIDs = [items valueForKey:@"recipient_id"];

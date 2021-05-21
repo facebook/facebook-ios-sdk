@@ -111,8 +111,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (nonatomic, strong) TestMacCatalystDeterminator *macCatalystDeterminator;
 @property (nonatomic, strong) FBSDKGraphRequestConnection *connection;
 
-@property (nonatomic, copy) void (^requestConnectionStartingCallback)(FBSDKGraphRequestConnection *connection);
-@property (nonatomic, copy) void (^requestConnectionCallback)(FBSDKGraphRequestConnection *connection, NSError *error);
+@property (nonatomic, copy) void (^requestConnectionStartingCallback)(id<FBSDKGraphRequestConnecting> connection);
+@property (nonatomic, copy) void (^requestConnectionCallback)(id<FBSDKGraphRequestConnecting> connection, NSError *error);
 @property (nonatomic) BOOL didInvokeDelegateRequestConnectionDidSendBodyData;
 @end
 
@@ -171,7 +171,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 // MARK: - FBSDKGraphRequestConnectionDelegate
 
-- (void)requestConnection:(FBSDKGraphRequestConnection *)connection didFailWithError:(NSError *)error
+- (void)requestConnection:(id<FBSDKGraphRequestConnecting>)connection didFailWithError:(NSError *)error
 {
   if (self.requestConnectionCallback) {
     self.requestConnectionCallback(connection, error);
@@ -179,7 +179,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   }
 }
 
-- (void)requestConnectionDidFinishLoading:(FBSDKGraphRequestConnection *)connection
+- (void)requestConnectionDidFinishLoading:(id<FBSDKGraphRequestConnecting>)connection
 {
   if (self.requestConnectionCallback) {
     self.requestConnectionCallback(connection, nil);
@@ -187,7 +187,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   }
 }
 
-- (void)requestConnectionWillBeginLoading:(FBSDKGraphRequestConnection *)connection
+- (void)requestConnectionWillBeginLoading:(id<FBSDKGraphRequestConnecting>)connection
 {
   if (self.requestConnectionStartingCallback) {
     self.requestConnectionStartingCallback(connection);
@@ -195,7 +195,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   }
 }
 
-- (void)  requestConnection:(FBSDKGraphRequestConnection *)connection
+- (void)  requestConnection:(id<FBSDKGraphRequestConnecting>)connection
             didSendBodyData:(NSInteger)bytesWritten
           totalBytesWritten:(NSInteger)totalBytesWritten
   totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite
@@ -461,7 +461,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testAddingRequestWithoutBatchEntryName
 {
   [self.connection addRequest:self.requestForMeWithEmptyFields
-            completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}];
+                   completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {}];
   FBSDKGraphRequestMetadata *metadata = self.connection.requests.firstObject;
   XCTAssertNil(
     metadata.batchParameters,
@@ -472,8 +472,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testAddingRequestWithEmptyBatchEntryName
 {
   [self.connection addRequest:self.requestForMeWithEmptyFields
-               batchEntryName:@""
-            completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}];
+                         name:@""
+                   completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {}];
   FBSDKGraphRequestMetadata *metadata = self.connection.requests.firstObject;
   XCTAssertNil(
     metadata.batchParameters,
@@ -484,8 +484,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testAddingRequestWithValidBatchEntryName
 {
   [self.connection addRequest:self.requestForMeWithEmptyFields
-               batchEntryName:@"foo"
-            completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}];
+                         name:@"foo"
+                   completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {}];
   NSDictionary *expectedParameters = @{ @"name" : @"foo" };
   FBSDKGraphRequestMetadata *metadata = self.connection.requests.firstObject;
   XCTAssertEqualObjects(
@@ -503,8 +503,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
     self.connection.state = state.intValue;
     XCTAssertThrowsSpecificNamed(
       [self.connection addRequest:self.requestForMeWithEmptyFields
-                  batchParameters:@{}
-                completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}],
+                       parameters:@{}
+                       completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {}],
       NSException,
       NSInternalInconsistencyException,
       "Should throw error on request addition when state has raw value: %@",
@@ -515,8 +515,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
   XCTAssertNoThrow(
     [self.connection addRequest:self.requestForMeWithEmptyFields
-                batchParameters:@{}
-              completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}],
+                     parameters:@{}
+                     completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {}],
     "Should not throw an error on request addition when state is 'created'"
   );
 }
@@ -810,19 +810,19 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   __block BOOL completionWasCalled = NO;
   __weak typeof(self) weakSelf = self;
   [self.connection addRequest:self.sampleRequest
-            completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-              XCTAssertEqualObjects(
-                error,
-                expectedError,
-                "Starting a graph request before the SDK is initialized should return an error"
-              );
-              XCTAssertEqual(
-                weakSelf.connection.state,
-                kStateCancelled,
-                "Starting a graph request before the SDK is initialized should update the connection state"
-              );
-              completionWasCalled = YES;
-            }];
+                   completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
+                     XCTAssertEqualObjects(
+                       error,
+                       expectedError,
+                       "Starting a graph request before the SDK is initialized should return an error"
+                     );
+                     XCTAssertEqual(
+                       weakSelf.connection.state,
+                       kStateCancelled,
+                       "Starting a graph request before the SDK is initialized should update the connection state"
+                     );
+                     completionWasCalled = YES;
+                   }];
   [self.connection start];
 
   XCTAssertEqualObjects(
@@ -846,9 +846,9 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   for (NSNumber *state in states) {
     self.connection.state = kStateCreated;
     [self.connection addRequest:self.sampleRequest
-              completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-                XCTFail("Should not be called");
-              }];
+                     completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
+                       XCTFail("Should not be called");
+                     }];
     self.connection.state = state.intValue;
     [self.connection start];
     XCTAssertEqual(
@@ -877,9 +877,9 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   for (NSNumber *state in states) {
     self.connection.state = kStateCreated;
     [self.connection addRequest:self.sampleRequest
-              completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-                XCTFail("Should not be called");
-              }];
+                     completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
+                       XCTFail("Should not be called");
+                     }];
     self.connection.state = state.intValue;
     [self.connection start];
     XCTAssertEqual(
@@ -897,9 +897,9 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   TestOperationQueue *queue = [TestOperationQueue new];
   self.connection.delegateQueue = queue;
   [self.connection addRequest:self.sampleRequest
-            completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-              XCTFail("Should not be called");
-            }];
+                   completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
+                     XCTFail("Should not be called");
+                   }];
   [self.connection start];
   XCTAssertTrue(
     queue.addOperationWithBlockWasCalled,
@@ -912,7 +912,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testStartingInvokesPiggybackManager
 {
   [self.connection addRequest:self.sampleRequest
-            completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}];
+                   completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {}];
   [self.connection start];
 
   XCTAssertEqualObjects(
@@ -1055,11 +1055,11 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
   self.errorConfigurationProvider.configuration = nil;
   [self.connection addRequest:self.requestForMeWithEmptyFields
-            completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
-              // make sure there is no recovery info for client token failures.
-              XCTAssertNil(error.localizedRecoverySuggestion);
-              [expectation fulfill];
-            }];
+                   completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {
+                     // make sure there is no recovery info for client token failures.
+                     XCTAssertNil(error.localizedRecoverySuggestion);
+                     [expectation fulfill];
+                   }];
   [self.connection start];
 
   NSData *data = [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463, \"type\":\"OAuthException\"}}" dataUsingEncoding:NSUTF8StringEncoding];
@@ -1074,7 +1074,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   XCTestExpectation *expectation = [[XCTestExpectation alloc] initWithDescription:self.name];
 
   self.errorConfigurationProvider.configuration = nil;
-  [self.connection addRequest:self.requestForMeWithEmptyFields completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
+  [self.connection addRequest:self.requestForMeWithEmptyFields completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {
     // make sure there is no recovery info for client token failures.
     XCTAssertNil(error.localizedRecoverySuggestion);
     [expectation fulfill];
@@ -1093,17 +1093,17 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
   __block int actualCallbacksCount = 0;
   [self.connection addRequest:[[TestGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
-            completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {
-              XCTAssertEqual(1, actualCallbacksCount++, @"this should have been the second callback");
-            }];
+                   completion:^(id<FBSDKGraphRequestConnecting> conn, id result, NSError *error) {
+                     XCTAssertEqual(1, actualCallbacksCount++, @"this should have been the second callback");
+                   }];
   [self.connection addRequest:[[TestGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
-            completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {
-              XCTAssertEqual(2, actualCallbacksCount++, @"this should have been the third callback");
-            }];
-  self.requestConnectionStartingCallback = ^(FBSDKGraphRequestConnection *conn) {
+                   completion:^(id<FBSDKGraphRequestConnecting> conn, id result, NSError *error) {
+                     XCTAssertEqual(2, actualCallbacksCount++, @"this should have been the third callback");
+                   }];
+  self.requestConnectionStartingCallback = ^(id<FBSDKGraphRequestConnecting> conn) {
     NSCAssert(0 == actualCallbacksCount++, @"this should have been the first callback");
   };
-  self.requestConnectionCallback = ^(FBSDKGraphRequestConnection *conn, NSError *error) {
+  self.requestConnectionCallback = ^(id<FBSDKGraphRequestConnecting> conn, NSError *error) {
     NSCAssert(error == nil, @"unexpected error:%@", error);
     NSCAssert(3 == actualCallbacksCount++, @"this should have been the fourth callback");
     [expectation fulfill];
@@ -1127,17 +1127,17 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
   __block int actualCallbacksCount = 0;
   [self.connection addRequest:[[TestGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
-            completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {
-              XCTAssertEqual(1, actualCallbacksCount++, @"this should have been the second callback");
-            }];
+                   completion:^(id<FBSDKGraphRequestConnecting> conn, id result, NSError *error) {
+                     XCTAssertEqual(1, actualCallbacksCount++, @"this should have been the second callback");
+                   }];
   [self.connection addRequest:[[TestGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
-            completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {
-              XCTAssertEqual(2, actualCallbacksCount++, @"this should have been the third callback");
-            }];
-  self.requestConnectionStartingCallback = ^(FBSDKGraphRequestConnection *conn) {
+                   completion:^(id<FBSDKGraphRequestConnecting> conn, id result, NSError *error) {
+                     XCTAssertEqual(2, actualCallbacksCount++, @"this should have been the third callback");
+                   }];
+  self.requestConnectionStartingCallback = ^(id<FBSDKGraphRequestConnecting> conn) {
     NSCAssert(0 == actualCallbacksCount++, @"this should have been the first callback");
   };
-  self.requestConnectionCallback = ^(FBSDKGraphRequestConnection *conn, NSError *error) {
+  self.requestConnectionCallback = ^(id<FBSDKGraphRequestConnecting> conn, NSError *error) {
     NSCAssert(error == nil, @"unexpected error:%@", error);
     NSCAssert(3 == actualCallbacksCount++, @"this should have been the fourth callback");
     [expectation fulfill];
@@ -1159,8 +1159,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
 
   [self.connection addRequest:[[TestGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""}]
-            completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {}];
-  self.requestConnectionCallback = ^(FBSDKGraphRequestConnection *conn, NSError *error) {
+                   completion:^(id<FBSDKGraphRequestConnecting> conn, id result, NSError *error) {}];
+  self.requestConnectionCallback = ^(id<FBSDKGraphRequestConnecting> conn, NSError *error) {
     NSCAssert(error != nil, @"didFinishLoading shouldn't have been called");
     [expectation fulfill];
   };
@@ -1200,11 +1200,11 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   TestAccessTokenWallet.currentAccessToken = accessToken;
 
   [self.connection addRequest:[self requestWithTokenString:accessToken.tokenString]
-            completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
-              XCTAssertNil(result);
-              XCTAssertEqualObjects(@"Token is broke", error.userInfo[FBSDKErrorDeveloperMessageKey]);
-              [expectation fulfill];
-            }];
+                   completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {
+                     XCTAssertNil(result);
+                     XCTAssertEqualObjects(@"Token is broke", error.userInfo[FBSDKErrorDeveloperMessageKey]);
+                     [expectation fulfill];
+                   }];
   [self.connection start];
 
   NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:NSURL.new statusCode:400 HTTPVersion:nil headerFields:nil];
@@ -1241,7 +1241,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   id<FBSDKGraphRequest> request = [[TestGraphRequest alloc] initWithGraphPath:@"me"
                                                                    parameters:@{@"fields" : @""}
                                                                   tokenString:@"notCurrentToken"];
-  [self.connection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
+  [self.connection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {
     XCTAssertNil(result);
     XCTAssertEqualObjects(@"Token is broke", error.userInfo[FBSDKErrorDeveloperMessageKey]);
     [expectation fulfill];
@@ -1278,7 +1278,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [FBSDKAccessToken setCurrentAccessToken:accessToken];
 
   id<FBSDKGraphRequest> request = [[TestGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @""} flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError];
-  [self.connection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
+  [self.connection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {
     XCTAssertNil(result);
     XCTAssertEqualObjects(@"Token is broke", error.userInfo[FBSDKErrorDeveloperMessageKey]);
     [expectation fulfill];
@@ -1300,7 +1300,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   TestSettings.userAgentSuffix = @"UnitTest.1.0.0";
 
   [self.connection addRequest:self.requestForMeWithEmptyFields
-            completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {}];
+                   completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {}];
   [self.connection start];
 
   NSString *userAgent = [self.session.capturedRequest valueForHTTPHeaderField:@"User-Agent"];
@@ -1313,7 +1313,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   TestSettings.userAgentSuffix = nil;
 
   [self.connection addRequest:self.requestForMeWithEmptyFields
-            completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {}];
+                   completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {}];
   [self.connection start];
 
   NSString *userAgent = [self.session.capturedRequest valueForHTTPHeaderField:@"User-Agent"];
@@ -1327,7 +1327,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   TestSettings.userAgentSuffix = nil;
 
   [self.connection addRequest:self.requestForMeWithEmptyFields
-            completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {}];
+                   completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {}];
   [self.connection start];
 
   NSString *userAgent = [self.session.capturedRequest valueForHTTPHeaderField:@"User-Agent"];
@@ -1339,10 +1339,10 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
 
   [self.connection addRequest:self.requestForMeWithEmptyFields
-            completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
-              // should not crash when receiving something other than a dictionary within the response.
-              [expectation fulfill];
-            }];
+                   completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {
+                     // should not crash when receiving something other than a dictionary within the response.
+                     [expectation fulfill];
+                   }];
   [self.connection start];
 
   NSData *data = [@"{\"error\": \"a-non-dictionary\"}" dataUsingEncoding:NSUTF8StringEncoding];
@@ -1356,7 +1356,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testRequestWithBatchConstructionWithSingleGetRequest
 {
   id<FBSDKGraphRequest> singleRequest = [[TestGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @"with_suffix"}];
-  [self.connection addRequest:singleRequest completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {}];
+  [self.connection addRequest:singleRequest completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {}];
   NSURLRequest *request = [self.connection requestWithBatch:self.connection.requests timeout:0];
 
   NSURLComponents *urlComponents = [NSURLComponents componentsWithString:request.URL.absoluteString];
@@ -1373,7 +1373,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
     @"first_key" : @"first_value",
   };
   id<FBSDKGraphRequest> singleRequest = [[TestGraphRequest alloc] initWithGraphPath:@"activities" parameters:parameters HTTPMethod:FBSDKHTTPMethodPOST];
-  [self.connection addRequest:singleRequest completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {}];
+  [self.connection addRequest:singleRequest completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {}];
   NSURLRequest *request = [self.connection requestWithBatch:self.connection.requests timeout:0];
 
   NSURLComponents *urlComponents = [NSURLComponents componentsWithString:request.URL.absoluteString];
@@ -1439,27 +1439,27 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   self.errorRecoveryConfiguration = self.transientErrorRecoveryConfiguration;
   self.errorConfiguration.stubbedRecoveryConfiguration = self.errorRecoveryConfiguration;
   self.errorConfigurationProvider.configuration = self.errorConfiguration;
-  FBSDKGraphRequestConnection *retryConnection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory
-                                                                                          errorConfigurationProvider:self.errorConfigurationProvider
-                                                                                            piggybackManagerProvider:self.piggybackManagerProvider
-                                                                                                            settings:self.settings
-                                                                                                   connectionFactory:self.connectionFactory
-                                                                                                         eventLogger:self.eventLogger
-                                                                                      operatingSystemVersionComparer:self.processInfo
-                                                                                             macCatalystDeterminator:self.macCatalystDeterminator];
+  id<FBSDKGraphRequestConnecting> retryConnection = [[FBSDKGraphRequestConnection alloc] initWithURLSessionProxyFactory:fakeProxyFactory
+                                                                                             errorConfigurationProvider:self.errorConfigurationProvider
+                                                                                               piggybackManagerProvider:self.piggybackManagerProvider
+                                                                                                               settings:self.settings
+                                                                                                      connectionFactory:self.connectionFactory
+                                                                                                            eventLogger:self.eventLogger
+                                                                                         operatingSystemVersionComparer:self.processInfo
+                                                                                                macCatalystDeterminator:self.macCatalystDeterminator];
   self.connectionFactory.stubbedConnection = retryConnection;
   __block int completionCallCount = 0;
   [self.connection addRequest:self.requestForMeWithEmptyFields
-            completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
-              completionCallCount++;
-              XCTAssertEqual(completionCallCount, 1, "The completion should only be called once");
-              XCTAssertEqual(
-                2,
-                [error.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] integerValue],
-                "The completion should be called with the expected error code"
-              );
-              [expectation fulfill];
-            }];
+                   completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {
+                     completionCallCount++;
+                     XCTAssertEqual(completionCallCount, 1, "The completion should only be called once");
+                     XCTAssertEqual(
+                       2,
+                       [error.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] integerValue],
+                       "The completion should be called with the expected error code"
+                     );
+                     [expectation fulfill];
+                   }];
 
   [self.connection start];
 
@@ -1486,17 +1486,17 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
   __block int completionCallCount = 0;
   [self.connection addRequest:self.requestForMeWithEmptyFields
-            completionHandler:^(FBSDKGraphRequestConnection *potentialConnection, id result, NSError *error) {
-              completionCallCount++;
-              XCTAssertEqual(completionCallCount, 1, "The completion should only be called once");
-              XCTAssertEqual(
-                1,
-                [error.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] integerValue],
-                "The completion should be called with the expected error code"
-              );
+                   completion:^(id<FBSDKGraphRequestConnecting> potentialConnection, id result, NSError *error) {
+                     completionCallCount++;
+                     XCTAssertEqual(completionCallCount, 1, "The completion should only be called once");
+                     XCTAssertEqual(
+                       1,
+                       [error.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] integerValue],
+                       "The completion should be called with the expected error code"
+                     );
 
-              [expectation fulfill];
-            }];
+                     [expectation fulfill];
+                   }];
 
   [self.connection start];
 

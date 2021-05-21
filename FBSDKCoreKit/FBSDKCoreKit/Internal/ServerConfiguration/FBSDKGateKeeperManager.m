@@ -138,7 +138,7 @@ static id<FBSDKDataPersisting> _store;
           // start request with specified timeout instead of the default 180s
           id<FBSDKGraphRequestConnecting> requestConnection = [self.connectionProvider createGraphRequestConnection];
           requestConnection.timeout = kTimeout;
-          [requestConnection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+          [requestConnection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
             _requeryFinishedForAppStart = YES;
             [self processLoadRequestResponse:result error:error];
           }];

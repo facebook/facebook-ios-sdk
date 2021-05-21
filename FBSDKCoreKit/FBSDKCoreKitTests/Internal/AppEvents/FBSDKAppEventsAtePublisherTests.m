@@ -84,7 +84,7 @@ static const int FORTY_EIGHT_HOURS_AGO_IN_SECONDS = -48 * 60 * 60;
 
   [publisher publishATE];
 
-  OCMVerify([graphRequestMock startWithCompletionHandler:[OCMArg any]]);
+  OCMVerify([graphRequestMock startWithCompletion:[OCMArg any]]);
 
   [graphRequestMock stopMocking];
   graphRequestMock = nil;
@@ -120,7 +120,7 @@ static const int FORTY_EIGHT_HOURS_AGO_IN_SECONDS = -48 * 60 * 60;
 
   FBSDKAppEventsAtePublisher *publisher = [[FBSDKAppEventsAtePublisher alloc] initWithAppIdentifier:@"mockAppID" store:self.store];
 
-  OCMReject([graphRequestMock startWithCompletionHandler:[OCMArg any]]);
+  OCMReject([graphRequestMock startWithCompletion:[OCMArg any]]);
 
   [publisher publishATE];
 
@@ -161,7 +161,7 @@ static const int FORTY_EIGHT_HOURS_AGO_IN_SECONDS = -48 * 60 * 60;
 
   [publisher publishATE];
 
-  OCMVerify([graphRequestMock startWithCompletionHandler:[OCMArg any]]);
+  OCMVerify([graphRequestMock startWithCompletion:[OCMArg any]]);
 
   [graphRequestMock stopMocking];
   graphRequestMock = nil;

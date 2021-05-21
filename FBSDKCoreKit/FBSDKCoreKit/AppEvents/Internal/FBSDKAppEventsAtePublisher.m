@@ -91,7 +91,7 @@
                                                                  HTTPMethod:FBSDKHTTPMethodPOST
                                                                       flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
   __block id<FBSDKDataPersisting> weakStore = self.store;
-  [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+  [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     if (!error) {
       [weakStore setObject:[NSDate date] forKey:lastATEPingString];
     }

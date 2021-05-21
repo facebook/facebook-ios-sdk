@@ -46,6 +46,8 @@
 #import "FBSDKErrorReport.h"
 #import "FBSDKErrorReport+Testing.h"
 #import "FBSDKFeatureExtracting.h"
+#import "FBSDKGraphRequestConnecting+Internal.h"
+#import "FBSDKGraphRequestMetadata.h"
 #import "FBSDKHumanSilhouetteIcon.h"
 #import "FBSDKInstrumentManager+Testing.h"
 #import "FBSDKIntegrityManager+Testing.h"

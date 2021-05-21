@@ -358,7 +358,7 @@ static dispatch_once_t setupNonce;
                                      @"metadata" : metadata,
                                    }
                                                                              HTTPMethod:FBSDKHTTPMethodPOST];
-  [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}];
+  [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {}];
   return;
 }
 

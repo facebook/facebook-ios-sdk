@@ -235,27 +235,27 @@ static NSDateFormatter *_dateFormatter;
                                      | FBSDKGraphRequestFlagDisableErrorRecovery];
   __block FBSDKLoginCompletionParameters *parameters = _parameters;
   id<FBSDKGraphRequestConnecting> connection = [_connectionProvider createGraphRequestConnection];
-  [connection addRequest:tokenRequest completionHandler:^(FBSDKGraphRequestConnection *requestConnection,
-                                                          id result,
-                                                          NSError *graphRequestError) {
-                                                            if (!graphRequestError) {
-                                                              parameters.accessTokenString = [FBSDKTypeUtility dictionary:result objectForKey:@"access_token" ofType:NSString.class];
-                                                              parameters.expirationDate = [FBSDKLoginURLCompleter expirationDateFromParameters:result];
-                                                              parameters.dataAccessExpirationDate = [FBSDKLoginURLCompleter dataAccessExpirationDateFromParameters:result];
-                                                              parameters.authenticationTokenString = [FBSDKTypeUtility dictionary:result objectForKey:@"id_token" ofType:NSString.class];
+  [connection addRequest:tokenRequest completion:^(id<FBSDKGraphRequestConnecting> requestConnection,
+                                                   id result,
+                                                   NSError *graphRequestError) {
+                                                     if (!graphRequestError) {
+                                                       parameters.accessTokenString = [FBSDKTypeUtility dictionary:result objectForKey:@"access_token" ofType:NSString.class];
+                                                       parameters.expirationDate = [FBSDKLoginURLCompleter expirationDateFromParameters:result];
+                                                       parameters.dataAccessExpirationDate = [FBSDKLoginURLCompleter dataAccessExpirationDateFromParameters:result];
+                                                       parameters.authenticationTokenString = [FBSDKTypeUtility dictionary:result objectForKey:@"id_token" ofType:NSString.class];
 
-                                                              if (parameters.authenticationTokenString) {
-                                                                [self fetchAndSetPropertiesForParameters:parameters
-                                                                                                   nonce:authenticationNonce
-                                                                                                 handler:handler];
-                                                                return;
-                                                              }
-                                                            } else {
-                                                              parameters.error = graphRequestError;
-                                                            }
+                                                       if (parameters.authenticationTokenString) {
+                                                         [self fetchAndSetPropertiesForParameters:parameters
+                                                                                            nonce:authenticationNonce
+                                                                                          handler:handler];
+                                                         return;
+                                                       }
+                                                     } else {
+                                                       parameters.error = graphRequestError;
+                                                     }
 
-                                                            handler(parameters);
-                                                          }];
+                                                     handler(parameters);
+                                                   }];
 
   [connection start];
 }

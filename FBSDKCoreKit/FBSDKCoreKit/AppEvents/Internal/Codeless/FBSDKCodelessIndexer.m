@@ -201,7 +201,7 @@ static id<FBSDKSettings> _settings;
       }
       id<FBSDKGraphRequestConnecting> requestConnection = [self.connectionProvider createGraphRequestConnection];
       requestConnection.timeout = kTimeout;
-      [requestConnection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *codelessLoadingError) {
+      [requestConnection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *codelessLoadingError) {
         if (codelessLoadingError) {
           return;
         }
@@ -279,7 +279,7 @@ static id<FBSDKSettings> _settings;
                                                                                      CODELESS_INDEXING_SESSION_ENDPOINT]
                                                                          parameters:parameters
                                                                          HTTPMethod:FBSDKHTTPMethodPOST];
-  [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+  [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     _isCheckingSession = NO;
     if ([result isKindOfClass:[NSDictionary class]]) {
       _isCodelessIndexingEnabled = [((NSDictionary *)result)[CODELESS_INDEXING_STATUS_KEY] boolValue];
@@ -407,7 +407,7 @@ static id<FBSDKSettings> _settings;
                                    }
                                                                          HTTPMethod:FBSDKHTTPMethodPOST];
   _isCodelessIndexing = YES;
-  [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+  [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     _isCodelessIndexing = NO;
     if ([result isKindOfClass:[NSDictionary class]]) {
       _isCodelessIndexingEnabled = [result[CODELESS_INDEXING_STATUS_KEY] boolValue];

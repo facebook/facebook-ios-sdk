@@ -74,33 +74,33 @@ static id<FBSDKInfoDictionaryProviding> _infoDictionaryProvider;
                                                                                          tokenString:nil
                                                                                              version:nil
                                                                                           HTTPMethod:FBSDKHTTPMethodPOST];
-    [deferredAppLinkRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection,
-                                                         id result,
-                                                         NSError *error) {
-                                                           NSURL *applinkURL = nil;
-                                                           if (!error) {
-                                                             NSString *appLinkString = result[@"applink_url"];
-                                                             if (appLinkString) {
-                                                               applinkURL = [NSURL URLWithString:appLinkString];
+    [deferredAppLinkRequest startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection,
+                                                  id result,
+                                                  NSError *error) {
+                                                    NSURL *applinkURL = nil;
+                                                    if (!error) {
+                                                      NSString *appLinkString = result[@"applink_url"];
+                                                      if (appLinkString) {
+                                                        applinkURL = [NSURL URLWithString:appLinkString];
 
-                                                               NSString *createTimeUtc = result[@"click_time"];
-                                                               if (createTimeUtc) {
-                                                                 // append/translate the create_time_utc so it can be used by clients
-                                                                 NSString *modifiedURLString = [applinkURL.absoluteString
-                                                                                                stringByAppendingFormat:@"%@fb_click_time_utc=%@",
-                                                                                                (applinkURL.query) ? @"&" : @"?",
-                                                                                                createTimeUtc];
-                                                                 applinkURL = [NSURL URLWithString:modifiedURLString];
-                                                               }
-                                                             }
-                                                           }
+                                                        NSString *createTimeUtc = result[@"click_time"];
+                                                        if (createTimeUtc) {
+                                                          // append/translate the create_time_utc so it can be used by clients
+                                                          NSString *modifiedURLString = [applinkURL.absoluteString
+                                                                                         stringByAppendingFormat:@"%@fb_click_time_utc=%@",
+                                                                                         (applinkURL.query) ? @"&" : @"?",
+                                                                                         createTimeUtc];
+                                                          applinkURL = [NSURL URLWithString:modifiedURLString];
+                                                        }
+                                                      }
+                                                    }
 
-                                                           if (handler) {
-                                                             dispatch_async(dispatch_get_main_queue(), ^{
-                                                               handler(applinkURL, error);
-                                                             });
-                                                           }
-                                                         }];
+                                                    if (handler) {
+                                                      dispatch_async(dispatch_get_main_queue(), ^{
+                                                        handler(applinkURL, error);
+                                                      });
+                                                    }
+                                                  }];
   }];
 }
 

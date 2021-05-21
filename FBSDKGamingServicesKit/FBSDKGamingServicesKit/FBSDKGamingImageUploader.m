@@ -93,7 +93,7 @@
       @"picture" : UIImagePNGRepresentation(configuration.image)
     }
     HTTPMethod:FBSDKHTTPMethodPOST]
-   completionHandler:^(FBSDKGraphRequestConnection *_Nullable graphConnection, id _Nullable result, NSError *_Nullable error) {
+   completion:^(id<FBSDKGraphRequestConnecting> _Nullable graphConnection, id _Nullable result, NSError *_Nullable error) {
      [FBSDKInternalUtility unregisterTransientObject:graphConnection.delegate];
 
      if (error || !result) {

@@ -226,10 +226,10 @@
 - (void)testUploadProgress
 {
   __block id<FBSDKGraphRequestConnectionDelegate> delegate;
-  __block FBSDKGraphRequestBlock completion;
+  __block FBSDKGraphRequestCompletion completion;
   id mockConnection = [self stubGraphRequestWithDelegateCapture:^(id<FBSDKGraphRequestConnectionDelegate> obj) {
                               delegate = obj;
-                            } andCompletionCapture:^(FBSDKGraphRequestBlock obj) {
+                            } andCompletionCapture:^(FBSDKGraphRequestCompletion obj) {
                               completion = obj;
                             }];
 
@@ -269,7 +269,7 @@
 }
 
 - (id)stubGraphRequestWithDelegateCapture:(void (^)(id<FBSDKGraphRequestConnectionDelegate>))delegateCaptureHandler
-                     andCompletionCapture:(void (^)(FBSDKGraphRequestBlock))completionCaptureHandler
+                     andCompletionCapture:(void (^)(FBSDKGraphRequestCompletion))completionCaptureHandler
 {
   id mockRequest = OCMClassMock([FBSDKGraphRequest class]);
   OCMStub([mockRequest alloc]).andReturn(mockRequest);
@@ -284,7 +284,7 @@
     }]]
   );
   OCMStub(
-    [mockConnection addRequest:[OCMArg isEqual:mockRequest] completionHandler:[OCMArg checkWithBlock:^BOOL (id obj) {
+    [mockConnection addRequest:[OCMArg isEqual:mockRequest] completion:[OCMArg checkWithBlock:^BOOL (id obj) {
       completionCaptureHandler(obj);
       return true;
     }]]
@@ -309,8 +309,8 @@
     }]]
   );
   OCMStub(
-    [mockConnection addRequest:[OCMArg isEqual:mockRequest] completionHandler:[OCMArg checkWithBlock:^BOOL (id obj) {
-      ((FBSDKGraphRequestBlock) obj)(nil, result, error);
+    [mockConnection addRequest:[OCMArg isEqual:mockRequest] completion:[OCMArg checkWithBlock:^BOOL (id obj) {
+      ((FBSDKGraphRequestCompletion) obj)(nil, result, error);
       return true;
     }]]
   );

@@ -120,7 +120,7 @@ static NSString *const kAppLinksKey = @"app_links";
 
   id<FBSDKGraphRequest> request = [self.requestBuilder requestForURLs:urls];
 
-  [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+  [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     if (error) {
       handler(@{}, error);
       return;

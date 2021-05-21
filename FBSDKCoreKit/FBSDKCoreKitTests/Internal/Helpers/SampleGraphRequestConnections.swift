@@ -17,21 +17,37 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import Foundation
+import TestTools
 
 @testable import FBSDKCoreKit
 
 @objcMembers
-class SampleGraphRequestConnection: NSObject {
+class SampleGraphRequestConnections: NSObject {
 
-  static var empty: GraphRequestConnection {
-    GraphRequestConnection()
+  static var empty: GraphRequestConnecting {
+    TestGraphRequestConnection()
   }
 
-  static func with(requests: [GraphRequest]) -> GraphRequestConnection {
-    let connection = GraphRequestConnection()
+  static func with(requests: [GraphRequestProtocol]) -> GraphRequestConnecting {
+    let connection = TestGraphRequestConnection()
     requests.forEach {
       connection.add($0) { _, _, _ in }
     }
     return connection
+  }
+}
+
+@objc
+extension TestGraphRequestConnection: _FBSDKGraphRequestConnecting {
+  public var requests: NSMutableArray! {  // swiftlint:disable:this implicitly_unwrapped_optional
+    NSMutableArray(
+      array: graphRequests.compactMap {
+        GraphRequestMetadata(
+          request: $0.request,
+          completionHandler: $0.completion,
+          batchParameters: nil
+        )
+      }
+    )
   }
 }

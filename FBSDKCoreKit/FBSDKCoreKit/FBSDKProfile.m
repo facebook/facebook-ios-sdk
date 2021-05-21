@@ -667,7 +667,7 @@ static id <FBSDKDataPersisting> _store;
     FBSDKProfile *expectedCurrentProfile = g_currentProfile;
 
     [executingRequestConnection cancel];
-    executingRequestConnection = [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+    executingRequestConnection = [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
       if (expectedCurrentProfile != g_currentProfile) {
         // current profile has already changed since request was started. Let's not overwrite.
         if (completion != NULL) {

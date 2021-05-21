@@ -482,7 +482,7 @@ typedef void (^fbsdk_like_action_controller_get_engagement_completion_block)(BOO
                                                                              NSString *socialSentenceWithLike,
                                                                              NSString *socialSentenceWithoutLike);
 static void FBSDKLikeActionControllerAddGetEngagementRequest(FBSDKAccessToken *accessToken,
-                                                             FBSDKGraphRequestConnection *connection,
+                                                             id<FBSDKGraphRequestConnecting> connection,
                                                              NSString *objectID,
                                                              FBSDKLikeObjectType objectType,
                                                              fbsdk_like_action_controller_get_engagement_completion_block completionHandler)
@@ -498,7 +498,7 @@ static void FBSDKLikeActionControllerAddGetEngagementRequest(FBSDKAccessToken *a
                                                                 tokenString:accessToken.tokenString
                                                                  HTTPMethod:@"GET"
                                                                       flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
-  [connection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id result, NSError *error) {
+  [connection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> innerConnection, id result, NSError *error) {
     BOOL success = NO;
     NSString *likeCountStringWithLike = nil;
     NSString *likeCountStringWithoutLike = nil;
@@ -534,7 +534,7 @@ typedef void (^fbsdk_like_action_controller_get_object_id_completion_block)(BOOL
                                                                             NSString *verifiedObjectID,
                                                                             BOOL objectIsPage);
 static void FBSDKLikeActionControllerAddGetObjectIDRequest(FBSDKAccessToken *accessToken,
-                                                           FBSDKGraphRequestConnection *connection,
+                                                           id<FBSDKGraphRequestConnecting> connection,
                                                            NSString *objectID,
                                                            fbsdk_like_action_controller_get_object_id_completion_block completionHandler)
 {
@@ -553,7 +553,7 @@ static void FBSDKLikeActionControllerAddGetObjectIDRequest(FBSDKAccessToken *acc
                                                                  HTTPMethod:@"GET"
                                                                       flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
 
-  [connection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id result, NSError *error) {
+  [connection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> innerConnection, id result, NSError *error) {
     result = [FBSDKTypeUtility dictionaryValue:result];
     NSString *verifiedObjectID = [FBSDKTypeUtility coercedToStringValue:result[@"id"]];
     BOOL objectIsPage = [FBSDKTypeUtility boolValue:[result valueForKeyPath:@"metadata.type"]];
@@ -562,7 +562,7 @@ static void FBSDKLikeActionControllerAddGetObjectIDRequest(FBSDKAccessToken *acc
 }
 
 static void FBSDKLikeActionControllerAddGetObjectIDWithObjectURLRequest(FBSDKAccessToken *accessToken,
-                                                                        FBSDKGraphRequestConnection *connection,
+                                                                        id<FBSDKGraphRequestConnecting> connection,
                                                                         NSString *objectID,
                                                                         fbsdk_like_action_controller_get_object_id_completion_block completionHandler)
 {
@@ -578,7 +578,7 @@ static void FBSDKLikeActionControllerAddGetObjectIDWithObjectURLRequest(FBSDKAcc
                                                                 tokenString:accessToken.tokenString
                                                                  HTTPMethod:@"GET"
                                                                       flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
-  [connection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id result, NSError *error) {
+  [connection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> innerConnection, id result, NSError *error) {
     result = [FBSDKTypeUtility dictionaryValue:result];
     NSString *verifiedObjectID = [FBSDKTypeUtility coercedToStringValue:[result valueForKeyPath:@"og_object.id"]];
     completionHandler(verifiedObjectID != nil, verifiedObjectID, NO);
@@ -589,7 +589,7 @@ typedef void (^fbsdk_like_action_controller_get_og_object_like_completion_block)
                                                                                  FBSDKTriStateBOOL objectIsLiked,
                                                                                  NSString *unlikeToken);
 static void FBSDKLikeActionControllerAddGetOGObjectLikeRequest(FBSDKAccessToken *accessToken,
-                                                               FBSDKGraphRequestConnection *connection,
+                                                               id<FBSDKGraphRequestConnecting> connection,
                                                                NSString *objectID,
                                                                FBSDKLikeObjectType objectType,
                                                                fbsdk_like_action_controller_get_og_object_like_completion_block completionHandler)
@@ -607,7 +607,7 @@ static void FBSDKLikeActionControllerAddGetOGObjectLikeRequest(FBSDKAccessToken 
                                                                  HTTPMethod:@"GET"
                                                                       flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
 
-  [connection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id result, NSError *error) {
+  [connection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> innerConnection, id result, NSError *error) {
     BOOL success = NO;
     FBSDKTriStateBOOL objectIsLiked = FBSDKTriStateBOOLValueUnknown;
     NSString *unlikeToken = nil;
@@ -635,7 +635,7 @@ static void FBSDKLikeActionControllerAddGetOGObjectLikeRequest(FBSDKAccessToken 
 
 typedef void (^fbsdk_like_action_controller_publish_like_completion_block)(BOOL success, NSString *unlikeToken);
 static void FBSDKLikeActionControllerAddPublishLikeRequest(FBSDKAccessToken *accessToken,
-                                                           FBSDKGraphRequestConnection *connection,
+                                                           id<FBSDKGraphRequestConnecting> connection,
                                                            NSString *objectID,
                                                            FBSDKLikeObjectType objectType,
                                                            fbsdk_like_action_controller_publish_like_completion_block completionHandler)
@@ -646,7 +646,7 @@ static void FBSDKLikeActionControllerAddPublishLikeRequest(FBSDKAccessToken *acc
                                                                 tokenString:accessToken.tokenString
                                                                     version:nil
                                                                  HTTPMethod:@"POST"];
-  [connection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id result, NSError *error) {
+  [connection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> innerConnection, id result, NSError *error) {
     BOOL success = NO;
     NSString *unlikeToken = nil;
     if (error) {
@@ -667,7 +667,7 @@ static void FBSDKLikeActionControllerAddPublishLikeRequest(FBSDKAccessToken *acc
 
 typedef void (^fbsdk_like_action_controller_publish_unlike_completion_block)(BOOL success);
 static void FBSDKLikeActionControllerAddPublishUnlikeRequest(FBSDKAccessToken *accessToken,
-                                                             FBSDKGraphRequestConnection *connection,
+                                                             id<FBSDKGraphRequestConnecting> connection,
                                                              NSString *unlikeToken,
                                                              FBSDKLikeObjectType objectType,
                                                              fbsdk_like_action_controller_publish_unlike_completion_block completionHandler)
@@ -677,7 +677,7 @@ static void FBSDKLikeActionControllerAddPublishUnlikeRequest(FBSDKAccessToken *a
                                                                 tokenString:accessToken.tokenString
                                                                     version:nil
                                                                  HTTPMethod:@"DELETE"];
-  [connection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id result, NSError *error) {
+  [connection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> innerConnection, id result, NSError *error) {
     BOOL success = NO;
     if (error) {
       NSString *msg = [NSString stringWithFormat:@"Error unliking object with unlike token %@(%@): %@", unlikeToken, NSStringFromFBSDKLikeObjectType(objectType), error];
@@ -694,7 +694,7 @@ static void FBSDKLikeActionControllerAddPublishUnlikeRequest(FBSDKAccessToken *a
 }
 
 static void FBSDKLikeActionControllerAddRefreshRequests(FBSDKAccessToken *accessToken,
-                                                        FBSDKGraphRequestConnection *connection,
+                                                        id<FBSDKGraphRequestConnecting> connection,
                                                         NSString *objectID,
                                                         FBSDKLikeObjectType objectType,
                                                         fbsdk_like_action_block completionHandler)

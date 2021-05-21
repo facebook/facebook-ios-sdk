@@ -146,7 +146,7 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
                                                                              parameters:@{@"error_reports" : errorData ?: @""}
                                                                              HTTPMethod:FBSDKHTTPMethodPOST];
 
-  [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+  [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     if (!error && [result isKindOfClass:[NSDictionary class]] && result[@"success"]) {
       [self _clearErrorInfo];
     }

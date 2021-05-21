@@ -32,8 +32,31 @@ NS_ASSUME_NONNULL_BEGIN
 FOUNDATION_EXPORT NSString *const FBSDKNonJSONResponseProperty
 NS_SWIFT_NAME(NonJSONResponseProperty);
 
-@protocol FBSDKGraphRequest;
 @class FBSDKGraphRequestConnection;
+@protocol FBSDKGraphRequest;
+@protocol FBSDKGraphRequestConnecting;
+
+/**
+ FBSDKGraphRequestCompletion
+
+  A block that is passed to addRequest to register for a callback with the results of that
+ request once the connection completes.
+
+ Pass a block of this type when calling addRequest.  This will be called once
+ the request completes.  The call occurs on the UI thread.
+
+ @param connection The connection that sent the request.
+
+ @param result The result of the request.  This is a translation of
+ JSON data to `NSDictionary` and `NSArray` objects.  This
+ is nil if there was an error.
+
+ @param error The `NSError` representing any error that occurred.
+
+ */
+typedef void (^FBSDKGraphRequestCompletion)(id<FBSDKGraphRequestConnecting> _Nullable connection,
+                                            id _Nullable result,
+                                            NSError *_Nullable error);
 
 /**
  FBSDKGraphRequestBlock
@@ -44,7 +67,7 @@ NS_SWIFT_NAME(NonJSONResponseProperty);
  Pass a block of this type when calling addRequest.  This will be called once
  the request completes.  The call occurs on the UI thread.
 
- @param connection The `FBSDKGraphRequestConnection` that sent the request.
+ @param connection The connection that sent the request.
 
  @param result The result of the request.  This is a translation of
  JSON data to `NSDictionary` and `NSArray` objects.  This
@@ -56,7 +79,8 @@ NS_SWIFT_NAME(NonJSONResponseProperty);
 typedef void (^FBSDKGraphRequestBlock)(FBSDKGraphRequestConnection *_Nullable connection,
                                        id _Nullable result,
                                        NSError *_Nullable error)
-NS_SWIFT_NAME(GraphRequestBlock);
+NS_SWIFT_NAME(GraphRequestBlock)
+DEPRECATED_MSG_ATTRIBUTE("Please use the methods that use the `GraphRequestConnecting` protocol instead.");
 
 /**
  @protocol
@@ -82,7 +106,7 @@ NS_SWIFT_NAME(GraphRequestConnectionDelegate)
 
  @param connection    The request connection that is starting a network request
  */
-- (void)requestConnectionWillBeginLoading:(FBSDKGraphRequestConnection *)connection;
+- (void)requestConnectionWillBeginLoading:(id<FBSDKGraphRequestConnecting>)connection;
 
 /**
  @method
@@ -100,7 +124,7 @@ NS_SWIFT_NAME(GraphRequestConnectionDelegate)
 
  @param connection    The request connection that successfully completed a network request
  */
-- (void)requestConnectionDidFinishLoading:(FBSDKGraphRequestConnection *)connection;
+- (void)requestConnectionDidFinishLoading:(id<FBSDKGraphRequestConnecting>)connection;
 
 /**
  @method
@@ -118,7 +142,7 @@ NS_SWIFT_NAME(GraphRequestConnectionDelegate)
  in some circumstances. Consult the `NSError` for the <FBSDKGraphRequest> for reliable
  failure information.
  */
-- (void)requestConnection:(FBSDKGraphRequestConnection *)connection
+- (void)requestConnection:(id<FBSDKGraphRequestConnecting>)connection
          didFailWithError:(NSError *)error;
 
 /**
@@ -137,7 +161,7 @@ NS_SWIFT_NAME(GraphRequestConnectionDelegate)
  @param totalBytesWritten         The total number of bytes sent to the remote host
  @param totalBytesExpectedToWrite The total number of bytes expected to send to the remote host
  */
-- (void)requestConnection:(FBSDKGraphRequestConnection *)connection
+- (void)requestConnection:(id<FBSDKGraphRequestConnecting>)connection
           didSendBodyData:(NSInteger)bytesWritten
         totalBytesWritten:(NSInteger)totalBytesWritten
 totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite;
@@ -214,7 +238,22 @@ NS_SWIFT_NAME(GraphRequestConnection)
  completion or cancellation of the connection.
  */
 - (void)addRequest:(id<FBSDKGraphRequest>)request
- completionHandler:(FBSDKGraphRequestBlock)handler;
+ completionHandler:(FBSDKGraphRequestBlock)handler
+DEPRECATED_MSG_ATTRIBUTE("This method is deprecated and will be removed in the next major release. Please use `addRequest:completion:` instead");
+
+/**
+ @method
+
+  This method adds an <FBSDKGraphRequest> object to this connection.
+
+ @param request       A request to be included in the round-trip when start is called.
+ @param completion       A handler to call back when the round-trip completes or times out.
+
+ The completion handler is retained until the block is called upon the
+ completion or cancellation of the connection.
+ */
+- (void)addRequest:(id<FBSDKGraphRequest>)request
+ completion:(FBSDKGraphRequestCompletion)completion;
 
 /**
  @method
@@ -237,7 +276,31 @@ NS_SWIFT_NAME(GraphRequestConnection)
  */
 - (void)addRequest:(id<FBSDKGraphRequest>)request
     batchEntryName:(NSString *)name
- completionHandler:(FBSDKGraphRequestBlock)handler;
+ completionHandler:(FBSDKGraphRequestBlock)handler
+DEPRECATED_MSG_ATTRIBUTE("This method is deprecated and will be removed in the next major release. Please use `addRequest:name:completion:` instead");
+
+/**
+ @method
+
+  This method adds an <FBSDKGraphRequest> object to this connection.
+
+ @param request         A request to be included in the round-trip when start is called.
+
+ @param completion         A handler to call back when the round-trip completes or times out.
+ The handler will be invoked on the main thread.
+
+ @param name            A name for this request.  This can be used to feed
+ the results of one request to the input of another <FBSDKGraphRequest> in the same
+ `FBSDKGraphRequestConnection` as described in
+ [Graph API Batch Requests]( https://developers.facebook.com/docs/reference/api/batch/ ).
+
+ The completion handler is retained until the block is called upon the
+ completion or cancellation of the connection. This request can be named
+ to allow for using the request's response in a subsequent request.
+ */
+- (void)addRequest:(id<FBSDKGraphRequest>)request
+              name:(NSString *)name
+        completion:(FBSDKGraphRequestCompletion)completion;
 
 /**
  @method
@@ -258,7 +321,29 @@ NS_SWIFT_NAME(GraphRequestConnection)
  */
 - (void)addRequest:(id<FBSDKGraphRequest>)request
    batchParameters:(nullable NSDictionary<NSString *, id> *)batchParameters
- completionHandler:(FBSDKGraphRequestBlock)handler;
+ completionHandler:(FBSDKGraphRequestBlock)handler
+DEPRECATED_MSG_ATTRIBUTE("This method is deprecated and will be removed in the next major release. Please use `addRequest:parameters:completion:` instead");
+
+/**
+ @method
+
+  This method adds an <FBSDKGraphRequest> object to this connection.
+
+ @param request         A request to be included in the round-trip when start is called.
+
+ @param completion         A handler to call back when the round-trip completes or times out.
+
+ @param parameters The dictionary of parameters to include for this request
+ as described in [Graph API Batch Requests]( https://developers.facebook.com/docs/reference/api/batch/ ).
+ Examples include "depends_on", "name", or "omit_response_on_success".
+
+ The completion handler is retained until the block is called upon the
+ completion or cancellation of the connection. This request can be named
+ to allow for using the request's response in a subsequent request.
+ */
+- (void)addRequest:(id<FBSDKGraphRequest>)request
+        parameters:(nullable NSDictionary<NSString *, id> *)parameters
+        completion:(FBSDKGraphRequestCompletion)completion;
 
 /**
  @methodgroup Instance methods

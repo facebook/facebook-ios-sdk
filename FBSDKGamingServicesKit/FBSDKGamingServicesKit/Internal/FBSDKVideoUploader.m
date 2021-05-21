@@ -83,7 +83,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
 
 - (void)_postStartRequest
 {
-  FBSDKGraphRequestBlock startRequestCompletionHandler = ^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+  FBSDKGraphRequestCompletion startRequestCompletionHandler = ^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     if (error) {
       [self.delegate videoUploader:self didFailWithError:error];
       return;
@@ -118,7 +118,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
       FBSDK_GAMING_VIDEO_UPLOAD_PHASE : FBSDK_GAMING_VIDEO_UPLOAD_PHASE_START,
       FBSDK_GAMING_VIDEO_SIZE : [NSString stringWithFormat:@"%tu", _videoSize],
     }
-                                     HTTPMethod:@"POST"] startWithCompletionHandler:startRequestCompletionHandler];
+                                     HTTPMethod:@"POST"] startWithCompletion:startRequestCompletionHandler];
 }
 
 - (void)_startTransferRequestWithOffsetDictionary:(NSDictionary *)offsetDictionary
@@ -154,7 +154,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
                                         FBSDK_GAMING_VIDEO_FILE_CHUNK : dataAttachment,
                                       }
                                                                        HTTPMethod:@"POST"];
-        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *innerError) {
+        [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *innerError) {
           if (innerError) {
             [self.delegate videoUploader:self didFailWithError:innerError];
             return;
@@ -182,7 +182,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
   [parameters addEntriesFromDictionary:self.parameters];
   [[[FBSDKGraphRequest alloc] initWithGraphPath:_graphPath
                                      parameters:parameters
-                                     HTTPMethod:@"POST"] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+                                     HTTPMethod:@"POST"] startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
                                        if (error) {
                                          [self.delegate videoUploader:self didFailWithError:error];
                                        } else {

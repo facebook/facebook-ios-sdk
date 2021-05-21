@@ -157,7 +157,7 @@ static Class<FBSDKConversionValueUpdating> _conversionValueUpdatable;
     }
     g_isRequestStarted = YES;
     id<FBSDKGraphRequest> request = [self.requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/ios_skadnetwork_conversion_config", [FBSDKSettings appID]]];
-    [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+    [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
       dispatch_async(serialQueue, ^{
         if (error) {
           g_isRequestStarted = NO;

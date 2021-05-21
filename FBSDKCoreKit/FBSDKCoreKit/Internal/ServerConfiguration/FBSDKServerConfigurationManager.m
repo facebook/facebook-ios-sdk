@@ -25,6 +25,7 @@
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestConnection.h"
+#import "FBSDKGraphRequestConnection+GraphRequestConnecting.h"
 #import "FBSDKImageDownloader.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
@@ -165,9 +166,9 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
           FBSDKGraphRequest *request = [[self class] requestToLoadServerConfiguration:appID];
 
           // start request with specified timeout instead of the default 180s
-          FBSDKGraphRequestConnection *requestConnection = [FBSDKGraphRequestConnection new];
+          id<FBSDKGraphRequestConnecting> requestConnection = [FBSDKGraphRequestConnection new];
           requestConnection.timeout = kTimeout;
-          [requestConnection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+          [requestConnection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
             _requeryFinishedForAppStart = YES;
             [self processLoadRequestResponse:result error:error appID:appID];
           }];

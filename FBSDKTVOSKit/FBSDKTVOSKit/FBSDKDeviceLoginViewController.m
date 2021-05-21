@@ -80,7 +80,7 @@
                                                                        tokenString:token.tokenString
                                                                            version:nil
                                                                         HTTPMethod:@"GET"];
-    [graphRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id graphResult, NSError *graphError) {
+    [graphRequest startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id graphResult, NSError *graphError) {
       dispatch_async(dispatch_get_main_queue(), ^{
         [self _presentConfirmationForDelegate:delegate
                                         token:result.accessToken

@@ -60,11 +60,11 @@ class AccessTokenTests: XCTestCase {
     AccessToken.connectionFactory = factory
 
     AccessToken.current = nil
-    AccessToken.refreshCurrentAccessToken(nil)
+    AccessToken.refreshCurrentAccessToken(completion: nil)
     XCTAssertEqual(testConnection.startCallCount, 0, "Should not start connection if no current access token available")
 
     AccessToken.current = SampleAccessTokens.validToken
-    AccessToken.refreshCurrentAccessToken(nil)
+    AccessToken.refreshCurrentAccessToken(completion: nil)
     XCTAssertEqual(testConnection.startCallCount, 1, "Should start one connection for refreshing")
   }
 

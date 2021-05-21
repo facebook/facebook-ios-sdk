@@ -173,7 +173,7 @@ static id<FBSDKSettings> _settings;
                                                                                parameters:@{@"crash_shield" : disabledFeatureReport}
                                                                                HTTPMethod:FBSDKHTTPMethodPOST];
 
-        [request startWithCompletionHandler:nil];
+        [request startWithCompletion:nil];
       }
     }
   }

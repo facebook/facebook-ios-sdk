@@ -23,9 +23,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FBSDKGraphRequestConnection;
 @protocol FBSDKGraphRequestConnecting;
 
-@class FBSDKGraphRequestConnection;
+typedef void (^FBSDKGraphRequestCompletion)(id<FBSDKGraphRequestConnecting> _Nullable connection,
+                                            id _Nullable result,
+                                            NSError *_Nullable error);
+
 typedef void (^FBSDKGraphRequestBlock)(FBSDKGraphRequestConnection *_Nullable connection,
                                        id _Nullable result,
                                        NSError *_Nullable error);
@@ -76,9 +80,9 @@ NS_SWIFT_NAME(GraphRequestProtocol)
 
 /**
   Starts a connection to the Graph API.
- @param handler The handler block to call when the request completes.
+ @param completion The handler block to call when the request completes.
  */
-- (id<FBSDKGraphRequestConnecting>)startWithCompletionHandler:(nullable FBSDKGraphRequestBlock)handler;
+- (id<FBSDKGraphRequestConnecting>)startWithCompletion:(nullable FBSDKGraphRequestCompletion)completion;
 
 /**
   A formatted description of the graph request
