@@ -89,7 +89,7 @@
 @end
 
 @interface FBSDKRestrictiveDataFilterManager (Testing)
-+ (Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
+- (Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
 @end
 
 @interface FBSDKApplicationDelegateTests : FBSDKTestCase
@@ -451,10 +451,9 @@
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [self.delegate initializeSDKWithLaunchOptions:@{}];
-  NSObject *serverConfigurationProvider = (NSObject *)[FBSDKRestrictiveDataFilterManager serverConfigurationProvider];
 
   XCTAssertEqualObjects(
-    serverConfigurationProvider,
+    FBSDKRestrictiveDataFilterManager.shared.serverConfigurationProvider,
     FBSDKServerConfigurationManager.class,
     "Should be configured with the expected concrete server configuration provider"
   );

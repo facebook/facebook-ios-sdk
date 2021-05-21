@@ -1251,7 +1251,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
       }
       [g_featureChecker checkFeature:FBSDKFeatureRestrictiveDataFiltering completionBlock:^(BOOL enabled) {
         if (enabled) {
-          [FBSDKRestrictiveDataFilterManager enable];
+          [FBSDKRestrictiveDataFilterManager.shared enable];
         }
       }];
       [g_featureChecker checkFeature:FBSDKFeatureEventDeactivation completionBlock:^(BOOL enabled) {
@@ -1380,8 +1380,8 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   parameters = [g_onDeviceMLModelManager.integrityParametersProcessor processParameters:parameters eventName:eventName];
 #endif
   // Filter out restrictive keys
-  parameters = [FBSDKRestrictiveDataFilterManager processParameters:parameters
-                                                          eventName:eventName];
+  parameters = [FBSDKRestrictiveDataFilterManager.shared processParameters:parameters
+                                                                 eventName:eventName];
 
   NSMutableDictionary<NSString *, id> *eventDictionary = [NSMutableDictionary dictionaryWithDictionary:parameters];
   [FBSDKTypeUtility dictionary:eventDictionary setObject:eventName forKey:FBSDKAppEventParameterEventName];

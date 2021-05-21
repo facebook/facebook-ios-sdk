@@ -24,15 +24,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKRestrictiveDataFilterManager : NSObject
 
+@property (class, nonnull, nonatomic, readonly) FBSDKRestrictiveDataFilterManager *shared;
+
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-+ (void)enable;
-+ (void)processEvents:(NSMutableArray<NSDictionary<NSString *, id> *> *)events;
-+ (nullable NSDictionary<NSString *, id> *)processParameters:(nullable NSDictionary<NSString *, id> *)parameters
+- (void)enable;
+- (void)processEvents:(NSMutableArray<NSDictionary<NSString *, id> *> *)events;
+- (nullable NSDictionary<NSString *, id> *)processParameters:(nullable NSDictionary<NSString *, id> *)parameters
                                                    eventName:(NSString *)eventName;
-
-+ (void)configureWithServerConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
++ (void)setDefaultServerConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
 
 @end
 

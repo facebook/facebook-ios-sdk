@@ -40,13 +40,13 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 @end
 
 @interface FBSDKRestrictiveDataFilterManager ()
-
-+ (NSString *)_getMatchedDataTypeWithEventName:(NSString *)eventName
-                                      paramKey:(NSString *)paramKey;
-
+- (instancetype)initWithServerConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
+- (NSString *)getMatchedDataTypeWithEventName:(NSString *)eventName
+                                     paramKey:(NSString *)paramKey;
 @end
 
 @interface FBSDKRestrictiveDataFilterTests : XCTestCase
+@property (nonatomic) FBSDKRestrictiveDataFilterManager *restrictiveDataFilterManager;
 @end
 
 @implementation FBSDKRestrictiveDataFilterTests
@@ -68,12 +68,11 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
                                                      }
                                                    }
                                                  }];
-  [FBSDKRestrictiveDataFilterManager configureWithServerConfigurationProvider:TestServerConfigurationProvider.class];
-
+  self.restrictiveDataFilterManager = [[FBSDKRestrictiveDataFilterManager alloc] initWithServerConfigurationProvider:TestServerConfigurationProvider.class];
   FBSDKServerConfiguration *config = [FBSDKServerConfigurationFixtures configWithDictionary:@{ @"restrictiveParams" : params }];
 
   [TestServerConfigurationProvider setStubbedServerConfiguration:config];
-  [FBSDKRestrictiveDataFilterManager enable];
+  [self.restrictiveDataFilterManager enable];
 }
 
 - (void)testFilterByParams
@@ -83,14 +82,14 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   NSDictionary *expected = @{@"_restrictedParams" : @"{\"dob\":\"4\"}"};
 
   XCTAssertEqualObjects(
-    [FBSDKRestrictiveDataFilterManager processParameters:parameters eventName:eventName],
+    [self.restrictiveDataFilterManager processParameters:parameters eventName:eventName],
     expected
   );
 
   parameters = @{@"test_key" : @66666};
 
   XCTAssertEqualObjects(
-    [FBSDKRestrictiveDataFilterManager processParameters:parameters eventName:eventName],
+    [self.restrictiveDataFilterManager processParameters:parameters eventName:eventName],
     parameters
   );
 }
@@ -98,17 +97,17 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)testGetMatchedDataTypeByParam
 {
   NSString *testEventName = @"test_event_name";
-  NSString *type1 = [FBSDKRestrictiveDataFilterManager _getMatchedDataTypeWithEventName:testEventName paramKey:@"first name"];
+  NSString *type1 = [self.restrictiveDataFilterManager getMatchedDataTypeWithEventName:testEventName paramKey:@"first name"];
   XCTAssertEqualObjects(type1, @"6");
 
-  NSString *type2 = [FBSDKRestrictiveDataFilterManager _getMatchedDataTypeWithEventName:testEventName paramKey:@"reservation number"];
+  NSString *type2 = [self.restrictiveDataFilterManager getMatchedDataTypeWithEventName:testEventName paramKey:@"reservation number"];
   XCTAssertNil(type2);
 }
 
 - (void)testProcessEventCanHandleAnEmptyArray
 {
   NSMutableArray *a = nil;
-  XCTAssertNoThrow([FBSDKRestrictiveDataFilterManager processEvents:a]);
+  XCTAssertNoThrow([self.restrictiveDataFilterManager processEvents:a]);
 }
 
 - (void)testProcessEventCanHandleMissingKeys
@@ -119,7 +118,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   NSMutableArray *eventArray = [[NSMutableArray alloc] initWithObjects:event, nil];
 
   XCTAssertNoThrow(
-    [FBSDKRestrictiveDataFilterManager processEvents:eventArray],
+    [self.restrictiveDataFilterManager processEvents:eventArray],
     "Data filter manager should be able to process events with missing keys"
   );
 }
@@ -133,7 +132,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   };
   NSMutableArray *eventArray = [[NSMutableArray alloc] initWithObjects:event, nil];
 
-  [FBSDKRestrictiveDataFilterManager processEvents:eventArray];
+  [self.restrictiveDataFilterManager processEvents:eventArray];
 
   XCTAssertEqual(
     event[@"event"][@"_eventName"],
