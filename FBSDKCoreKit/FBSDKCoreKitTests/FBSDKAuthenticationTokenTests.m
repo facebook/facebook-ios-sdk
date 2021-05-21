@@ -16,7 +16,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
@@ -24,7 +23,6 @@
 #import "FBSDKAuthenticationToken+Internal.h"
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitTests-Swift.h"
-#import "FBSDKTestCase.h"
 #import "FBSDKTestCoder.h"
 
 @interface FBSDKAuthenticationToken (Testing)
@@ -35,7 +33,7 @@
 
 @end
 
-@interface FBSDKAuthenticationTokenTests : FBSDKTestCase
+@interface FBSDKAuthenticationTokenTests : XCTestCase
 
 @end
 
@@ -50,8 +48,7 @@
 {
   TestTokenCache *cache = [[TestTokenCache alloc] initWithAccessToken:nil authenticationToken:nil];
   _token = SampleAuthenticationToken.validToken;
-  id partialTokenMock = OCMPartialMock(_token);
-  OCMStub([partialTokenMock tokenCache]).andReturn(cache);
+  FBSDKAuthenticationToken.tokenCache = cache;
 
   FBSDKAuthenticationToken.currentAuthenticationToken = _token;
   XCTAssertEqualObjects(
@@ -60,8 +57,7 @@
     "Setting the global authentication token should invoke the cache"
   );
 
-  [partialTokenMock stopMocking];
-  partialTokenMock = nil;
+  [FBSDKAuthenticationToken resetTokenCache];
 }
 
 - (void)testEncoding
