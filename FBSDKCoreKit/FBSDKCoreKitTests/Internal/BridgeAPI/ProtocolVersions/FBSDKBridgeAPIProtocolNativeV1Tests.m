@@ -17,7 +17,6 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
-#import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
@@ -25,9 +24,8 @@
 #import "FBSDKBridgeAPIProtocolNativeV1.h"
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitTests-Swift.h"
-#import "FBSDKTestCase.h"
 
-@interface FBSDKBridgeAPIProtocolNativeV1Tests : FBSDKTestCase
+@interface FBSDKBridgeAPIProtocolNativeV1Tests : XCTestCase
 
 @property (nonatomic, copy) NSString *actionID;
 @property (nonatomic, copy) NSString *methodName;
