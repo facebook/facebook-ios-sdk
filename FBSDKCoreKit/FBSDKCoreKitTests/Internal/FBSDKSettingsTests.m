@@ -1486,13 +1486,13 @@ static NSString *const whiteSpaceToken = @"   ";
     userDefaultsSpy.capturedValues[@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"],
     "Should not persist the value of before setting it"
   );
-  [FBSDKSettings.sharedSettings recordInstall];
+  [FBSDKSettings recordInstall];
   XCTAssertNotNil(
     userDefaultsSpy.capturedValues[@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"],
     "Should persist the value after setting it"
   );
   NSDate *date = userDefaultsSpy.capturedValues[@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"];
-  [FBSDKSettings.sharedSettings recordInstall];
+  [FBSDKSettings recordInstall];
   XCTAssertEqual(date, userDefaultsSpy.capturedValues[@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"], "Should not change the cached install timesstamp");
 }
 
@@ -1510,7 +1510,7 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testIsEventDelayTimerExpired
 {
-  [FBSDKSettings.sharedSettings recordInstall];
+  [FBSDKSettings recordInstall];
   XCTAssertFalse([FBSDKSettings isEventDelayTimerExpired]);
 
   NSDate *today = [NSDate new];
@@ -1526,7 +1526,7 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testIsSetATETimeExceedsInstallTime
 {
-  [FBSDKSettings.sharedSettings recordInstall];
+  [FBSDKSettings recordInstall];
   [FBSDKSettings recordSetAdvertiserTrackingEnabled];
   XCTAssertFalse([FBSDKSettings isSetATETimeExceedsInstallTime]);
   [FBSDKSettings recordSetAdvertiserTrackingEnabled];

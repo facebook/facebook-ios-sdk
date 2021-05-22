@@ -58,7 +58,6 @@
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationManager+ServerConfigurationProviding.h"
 #import "FBSDKSettings+Internal.h"
-#import "FBSDKSettings+SettingsLogging.h"
 #import "FBSDKSettings+SettingsProtocols.h"
 #import "FBSDKSettingsLogging.h"
 #import "FBSDKTimeSpentData.h"
@@ -94,7 +93,7 @@ static UIApplicationState _applicationState;
 
 @property (nonnull, nonatomic, readonly) id<FBSDKFeatureChecking> featureChecker;
 @property (nonnull, nonatomic, readonly) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> tokenWallet;
-@property (nonnull, nonatomic, readonly) id<FBSDKSettingsLogging, FBSDKSettings> settings;
+@property (nonnull, nonatomic, readonly) Class<FBSDKSettingsLogging> settings;
 @property (nonnull, nonatomic, readonly) id<FBSDKNotificationObserving> notificationObserver;
 @property (nonnull, nonatomic, readonly) NSHashTable<id<FBSDKApplicationObserving>> *applicationObservers;
 @property (nonnull, nonatomic, readonly) id<FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging> appEvents;
@@ -136,7 +135,7 @@ static UIApplicationState _applicationState;
 #if TARGET_OS_TV
   return [self initWithNotificationObserver:NSNotificationCenter.defaultCenter
                                 tokenWallet:FBSDKAccessToken.class
-                                   settings:FBSDKSettings.sharedSettings
+                                   settings:FBSDKSettings.class
                              featureChecker:FBSDKFeatureManager.shared
                                   appEvents:FBSDKAppEvents.singleton
                 serverConfigurationProvider:FBSDKServerConfigurationManager.class
@@ -145,7 +144,7 @@ static UIApplicationState _applicationState;
 #else
   return [self initWithNotificationObserver:NSNotificationCenter.defaultCenter
                                 tokenWallet:FBSDKAccessToken.class
-                                   settings:FBSDKSettings.sharedSettings
+                                   settings:FBSDKSettings.class
                              featureChecker:FBSDKFeatureManager.shared
                                   appEvents:FBSDKAppEvents.singleton
                 serverConfigurationProvider:FBSDKServerConfigurationManager.class
@@ -158,7 +157,7 @@ static UIApplicationState _applicationState;
 #if TARGET_OS_TV
 - (instancetype)initWithNotificationObserver:(id<FBSDKNotificationObserving>)observer
                                  tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
-                                    settings:(id<FBSDKSettingsLogging, FBSDKSettings>)settings
+                                    settings:(Class<FBSDKSettingsLogging>)settings
                               featureChecker:(id<FBSDKFeatureChecking>)featureChecker
                                    appEvents:(id<FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents
                  serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
@@ -182,7 +181,7 @@ static UIApplicationState _applicationState;
 #else
 - (instancetype)initWithNotificationObserver:(id<FBSDKNotificationObserving>)observer
                                  tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
-                                    settings:(id<FBSDKSettingsLogging, FBSDKSettings>)settings
+                                    settings:(Class<FBSDKSettingsLogging>)settings
                               featureChecker:(id<FBSDKFeatureChecking>)featureChecker
                                    appEvents:(id<FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents
                  serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
@@ -222,7 +221,7 @@ static UIApplicationState _applicationState;
   //
   [self configureDependencies];
 
-  id<FBSDKSettingsLogging> const settingsLogger = self.settings;
+  Class<FBSDKSettingsLogging> const settingsLogger = self.settings;
   [settingsLogger logWarnings];
   [settingsLogger logIfSDKSettingsChanged];
   [settingsLogger recordInstall];
@@ -364,7 +363,7 @@ static UIApplicationState _applicationState;
   // fetch app settings
   [self.serverConfigurationProvider loadServerConfigurationWithCompletionBlock:NULL];
 
-  if (self.settings.isAutoLogAppEventsEnabled) {
+  if (FBSDKSettings.isAutoLogAppEventsEnabled) {
     [self _logSDKInitialize];
   }
 #if !TARGET_OS_TV
@@ -403,7 +402,7 @@ static UIApplicationState _applicationState;
 {
   [self setApplicationState:UIApplicationStateActive];
   // Auto log basic events in case autoLogAppEventsEnabled is set
-  if (self.settings.isAutoLogAppEventsEnabled) {
+  if (FBSDKSettings.isAutoLogAppEventsEnabled) {
     [self.appEvents activateApp];
   }
 #if !TARGET_OS_TV
@@ -540,7 +539,7 @@ static UIApplicationState _applicationState;
   NSNumber *enabled = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FBSDKAutoAppLinkEnabled"];
   if (enabled.boolValue) {
     NSMutableDictionary<NSString *, NSString *> *params = [NSMutableDictionary new];
-    if (![FBSDKAppLinkUtility isMatchURLScheme:[NSString stringWithFormat:@"fb%@", self.settings.appID]]) {
+    if (![FBSDKAppLinkUtility isMatchURLScheme:[NSString stringWithFormat:@"fb%@", [FBSDKSettings appID]]]) {
       NSString *warning = @"You haven't set the Auto App Link URL scheme: fb<YOUR APP ID>";
       [FBSDKTypeUtility dictionary:params setObject:warning forKey:@"SchemeWarning"];
       NSLog(@"%@", warning);

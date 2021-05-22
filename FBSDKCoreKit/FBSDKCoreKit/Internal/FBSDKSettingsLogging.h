@@ -23,9 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(SettingsLogging)
 @protocol FBSDKSettingsLogging
 
-- (void)logWarnings;
-- (void)logIfSDKSettingsChanged;
-- (void)recordInstall;
++ (void)logWarnings;
++ (void)logIfSDKSettingsChanged;
++ (void)recordInstall;
 
 @end
 
