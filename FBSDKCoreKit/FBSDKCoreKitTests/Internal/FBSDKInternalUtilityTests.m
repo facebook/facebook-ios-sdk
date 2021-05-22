@@ -340,7 +340,7 @@
 - (void)testAppURLSchemeWithMissingAppIdMissingSuffix
 {
   [self stubAppID:nil];
-  [self stubAppUrlSchemeSuffixWith:nil];
+  FBSDKSettings.appURLSchemeSuffix = nil;
   // This is not desired behavior but accurately reflects what is currently written.
   XCTAssertEqualObjects(
     [FBSDKInternalUtility appURLScheme],
@@ -352,7 +352,7 @@
 - (void)testAppURLSchemeWithMissingAppIdInvalidSuffix
 {
   [self stubAppID:nil];
-  [self stubAppUrlSchemeSuffixWith:@"   "];
+  FBSDKSettings.appURLSchemeSuffix = @"   ";
   // This is not desired behavior but accurately reflects what is currently written.
   XCTAssertEqualObjects(
     [FBSDKInternalUtility appURLScheme],
@@ -364,7 +364,7 @@
 - (void)testAppURLSchemeWithMissingAppIdValidSuffix
 {
   [self stubAppID:nil];
-  [self stubAppUrlSchemeSuffixWith:@"foo"];
+  FBSDKSettings.appURLSchemeSuffix = @"foo";
   // This is not desired behavior but accurately reflects what is currently written.
   XCTAssertEqualObjects(
     [FBSDKInternalUtility appURLScheme],
@@ -376,7 +376,7 @@
 - (void)testAppURLSchemeWithInvalidAppIdMissingSuffix
 {
   [self stubAppID:@" "];
-  [self stubAppUrlSchemeSuffixWith:nil];
+  FBSDKSettings.appURLSchemeSuffix = nil;
   NSString *expected = [NSString stringWithFormat:@"fb%@", FBSDKSettings.appID];
 
   // This is not desired behavior but accurately reflects what is currently written.
@@ -390,7 +390,7 @@
 - (void)testAppURLSchemeWithInvalidAppIdInvalidSuffix
 {
   [self stubAppID:@" "];
-  [self stubAppUrlSchemeSuffixWith:@" "];
+  FBSDKSettings.appURLSchemeSuffix = @" ";
   NSString *expected = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.appID, FBSDKSettings.appURLSchemeSuffix];
 
   // This is not desired behavior but accurately reflects what is currently written.
@@ -404,7 +404,7 @@
 - (void)testAppURLSchemeWithInvalidAppIdValidSuffix
 {
   [self stubAppID:@" "];
-  [self stubAppUrlSchemeSuffixWith:@"foo"];
+  FBSDKSettings.appURLSchemeSuffix = @"foo";
   NSString *expected = [NSString stringWithFormat:@"fb %@", FBSDKSettings.appURLSchemeSuffix];
 
   // This is not desired behavior but accurately reflects what is currently written.
@@ -418,7 +418,7 @@
 - (void)testAppURLSchemeWithValidAppIdMissingSuffix
 {
   [self stubAppID:self.appID];
-  [self stubAppUrlSchemeSuffixWith:nil];
+  FBSDKSettings.appURLSchemeSuffix = nil;
   NSString *expected = [NSString stringWithFormat:@"fb%@", FBSDKSettings.appID];
 
   XCTAssertEqualObjects(
@@ -431,7 +431,7 @@
 - (void)testAppURLSchemeWithValidAppIdInvalidSuffix
 {
   [self stubAppID:self.appID];
-  [self stubAppUrlSchemeSuffixWith:@"   "];
+  FBSDKSettings.appURLSchemeSuffix = @"   ";
   NSString *expected = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.appID, FBSDKSettings.appURLSchemeSuffix];
 
   // This is not desired behavior but accurately reflects what is currently written.
@@ -445,7 +445,7 @@
 - (void)testAppURLSchemeWithValidAppIdValidSuffix
 {
   [self stubAppID:self.appID];
-  [self stubAppUrlSchemeSuffixWith:@"foo"];
+  FBSDKSettings.appURLSchemeSuffix = @"foo";
   NSString *expected = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.appID, FBSDKSettings.appURLSchemeSuffix];
 
   XCTAssertEqualObjects(
@@ -460,7 +460,7 @@
 - (void)testAppUrlWithEmptyHost
 {
   [self stubAppID:self.appID];
-  [self stubAppUrlSchemeSuffixWith:@"foo"];
+  FBSDKSettings.appURLSchemeSuffix = @"foo";
 
   NSURL *url = [FBSDKInternalUtility appURLWithHost:@"" path:validPath queryParameters:self.validParameters error:nil];
 
@@ -470,7 +470,7 @@
 - (void)testAppUrlWithValidHost
 {
   [self stubAppID:self.appID];
-  [self stubAppUrlSchemeSuffixWith:@"foo"];
+  FBSDKSettings.appURLSchemeSuffix = @"foo";
 
   NSURL *url = [FBSDKInternalUtility appURLWithHost:@"facebook" path:validPath queryParameters:self.validParameters error:nil];
 
@@ -1034,7 +1034,7 @@
 - (void)testValidatingUrlSchemesWithAppIdMatchingBundleEntry
 {
   [self stubAppID:self.appID];
-  [self stubAppUrlSchemeSuffixWith:nil];
+  FBSDKSettings.appURLSchemeSuffix = nil;
 
   TestBundle *bundle = [self bundleWithRegisteredUrlSchemes:@[@"fbappid"]];
   FBSDKInternalUtility.infoDictionaryProvider = bundle;
@@ -1048,7 +1048,7 @@
 - (void)testValidatingUrlSchemesWithNonAppIdMatchingBundleEntry
 {
   [self stubAppID:self.appID];
-  [self stubAppUrlSchemeSuffixWith:nil];
+  FBSDKSettings.appURLSchemeSuffix = nil;
 
   TestBundle *bundle = [self bundleWithRegisteredUrlSchemes:@[@"fb123"]];
   FBSDKInternalUtility.infoDictionaryProvider = bundle;

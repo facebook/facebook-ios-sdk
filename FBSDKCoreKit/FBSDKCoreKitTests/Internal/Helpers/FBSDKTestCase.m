@@ -473,11 +473,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   }
 }
 
-- (void)stubAppUrlSchemeSuffixWith:(NSString *)suffix
-{
-  OCMStub(ClassMethod([_settingsClassMock appURLSchemeSuffix])).andReturn(suffix);
-}
-
 - (void)stubUserAgentSuffixWith:(nullable NSString *)suffix
 {
   OCMStub(ClassMethod([self.settingsClassMock userAgentSuffix])).andReturn(suffix);
