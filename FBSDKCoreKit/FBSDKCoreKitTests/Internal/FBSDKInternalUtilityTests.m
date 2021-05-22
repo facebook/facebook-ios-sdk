@@ -947,7 +947,7 @@
 - (void)testValidateClientAccessTokenWithoutClientTokenWithoutAppID
 {
   [self stubAppID:nil];
-  [self stubClientTokenWith:nil];
+  FBSDKSettings.clientToken = nil;
 
   XCTAssertThrows([FBSDKInternalUtility validateRequiredClientAccessToken]);
 }
@@ -955,7 +955,7 @@
 - (void)testValidateClientAccessTokenWithClientTokenWithoutAppID
 {
   [self stubAppID:nil];
-  [self stubClientTokenWith:@"client123"];
+  FBSDKSettings.clientToken = @"client123";
 
   XCTAssertEqualObjects(
     [FBSDKInternalUtility validateRequiredClientAccessToken],
@@ -967,7 +967,7 @@
 - (void)testValidateClientAccessTokenWithClientTokenWithAppID
 {
   [self stubAppID:self.appID];
-  [self stubClientTokenWith:@"client123"];
+  FBSDKSettings.clientToken = @"client123";
 
   XCTAssertEqualObjects(
     [FBSDKInternalUtility validateRequiredClientAccessToken],
@@ -979,7 +979,7 @@
 - (void)testValidateClientAccessTokenWithoutClientTokenWithAppID
 {
   [self stubAppID:self.appID];
-  [self stubClientTokenWith:nil];
+  FBSDKSettings.clientToken = nil;
 
   XCTAssertThrows([FBSDKInternalUtility validateRequiredClientAccessToken]);
 }

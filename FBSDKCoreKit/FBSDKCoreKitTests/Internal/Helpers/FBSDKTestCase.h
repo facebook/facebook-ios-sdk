@@ -164,9 +164,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Stubs `FBSDKProfile.fetchCachedProfile`
 - (void)stubCachedProfileWith:(FBSDKProfile *__nullable)profile;
 
-/// Stubs `FBSDKSettings.clientToken` with the provided token string
-- (void)stubClientTokenWith:(nullable NSString *)token;
-
 /// Stubs `FBSDKSettings.getAdvertisingTrackingStatus` with the provided value
 - (void)stubAdvertisingTrackingStatusWith:(FBSDKAdvertisingTrackingStatus)trackingStatus;
 
