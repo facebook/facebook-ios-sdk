@@ -563,7 +563,7 @@ static id <FBSDKDataPersisting> _store;
                                                    error:NULL];
 }
 
-+ (void)loadProfileWithToken:(FBSDKAccessToken *)token completion:(FBSDKProfileBlock)completion
++ (NSString *)graphPathForToken:(FBSDKAccessToken *)token
 {
   NSString *graphPath = @"me?fields=id,first_name,middle_name,last_name,name";
   if ([token.permissions containsObject:@"user_link"]) {
@@ -598,6 +598,12 @@ static id <FBSDKDataPersisting> _store;
     graphPath = [graphPath stringByAppendingString:@",gender"];
   }
 
+  return graphPath;
+}
+
++ (void)loadProfileWithToken:(FBSDKAccessToken *)token completion:(FBSDKProfileBlock)completion
+{
+  NSString *graphPath = [[self class] graphPathForToken:token];
   id<FBSDKGraphRequest> request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
                                                                     parameters:nil
                                                                          flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];

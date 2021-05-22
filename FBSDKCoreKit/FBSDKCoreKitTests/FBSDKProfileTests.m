@@ -16,8 +16,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <OCMock/OCMock.h>
-
 @import TestTools;
 
 #import <XCTest/XCTest.h>
@@ -37,6 +35,7 @@
 + (void)loadProfileWithToken:(FBSDKAccessToken *)token
                   completion:(FBSDKProfileBlock)completion
                 graphRequest:(id<FBSDKGraphRequest>)request;
++ (NSString *)graphPathForToken:(FBSDKAccessToken *)token;
 @end
 
 @interface FBSDKProfileTests : FBSDKTestCase
@@ -352,19 +351,6 @@ NSString *const heightKey = @"height";
 
 - (void)testGraphPathForProfileLoadWithFriendsPermission
 {
-  id profileMock = OCMClassMock([FBSDKProfile class]);
-  FBSDKAccessToken *token = [SampleAccessTokens createWithPermissions:@[@"user_friends"]];
-  NSString *graphPath = @"me?fields=id,first_name,middle_name,last_name,name,friends";
-  __block BOOL graphRequestMethodInvoked = false;
-  OCMStub([profileMock loadProfileWithToken:OCMOCK_ANY completion:OCMOCK_ANY graphRequest:OCMOCK_ANY]).andDo(^(NSInvocation *invocation) {
-    __unsafe_unretained FBSDKGraphRequest *request;
-    [invocation getArgument:&request atIndex:4];
-    graphRequestMethodInvoked = true;
-    XCTAssertEqualObjects(request.graphPath, graphPath);
-  });
-  OCMStub([profileMock loadProfileWithToken:OCMOCK_ANY completion:OCMOCK_ANY]).andForwardToRealObject();
-  [FBSDKProfile loadProfileWithToken:token completion:nil];
-  XCTAssertTrue(graphRequestMethodInvoked);
   [self verifyGraphPath:@"me?fields=id,first_name,middle_name,last_name,name,friends" forPermissions:@[@"user_friends"]];
 }
 
@@ -999,18 +985,9 @@ NSString *const heightKey = @"height";
 - (void)verifyGraphPath:(NSString *)expectedPath
          forPermissions:(NSArray *)permissions
 {
-  id profileMock = OCMClassMock([FBSDKProfile class]);
   FBSDKAccessToken *token = [SampleAccessTokens createWithPermissions:permissions];
-  __block BOOL graphRequestMethodInvoked = false;
-  OCMStub([profileMock loadProfileWithToken:OCMOCK_ANY completion:OCMOCK_ANY graphRequest:OCMOCK_ANY]).andDo(^(NSInvocation *invocation) {
-    __unsafe_unretained FBSDKGraphRequest *request;
-    [invocation getArgument:&request atIndex:4];
-    graphRequestMethodInvoked = true;
-    XCTAssertEqualObjects(request.graphPath, expectedPath);
-  });
-  OCMStub([profileMock loadProfileWithToken:OCMOCK_ANY completion:OCMOCK_ANY]).andForwardToRealObject();
-  [FBSDKProfile loadProfileWithToken:token completion:nil];
-  XCTAssertTrue(graphRequestMethodInvoked);
+  NSString *graphPath = [FBSDKProfile graphPathForToken:token];
+  XCTAssertEqualObjects(graphPath, expectedPath);
 }
 
 @end
