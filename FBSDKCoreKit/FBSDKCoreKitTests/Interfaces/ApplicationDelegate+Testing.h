@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FBSDKApplicationLifecycleObserving;
 @protocol FBSDKApplicationActivating;
 @protocol FBSDKApplicationStateSetting;
+@protocol FBSDKServerConfigurationProviding;
 
 @interface FBSDKApplicationDelegate (Testing)
 
@@ -35,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> tokenWallet;
 @property (nonatomic, readonly, nonnull) id<FBSDKFeatureChecking> featureChecker;
 @property (nonnull, nonatomic, readonly) id<FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging> appEvents;
+@property (nonnull, nonatomic, readonly) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 
 + (void)resetHasInitializeBeenCalled
 NS_SWIFT_NAME(reset());
@@ -43,7 +45,8 @@ NS_SWIFT_NAME(reset());
                                  tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
                                     settings:(Class<FBSDKSettingsLogging>)settings
                               featureChecker:(id<FBSDKFeatureChecking>)featureChecker
-                                   appEvents:(id<FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents;
+                                   appEvents:(id<FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents
+                 serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
 - (void)initializeSDKWithLaunchOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
 - (void)applicationDidEnterBackground:(NSNotification *)notification;
 - (void)applicationDidBecomeActive:(NSNotification *)notification;
