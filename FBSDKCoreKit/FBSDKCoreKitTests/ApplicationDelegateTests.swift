@@ -27,15 +27,6 @@ class ApplicationDelegateTests: XCTestCase {
   var featureChecker = TestFeatureManager()
   var appEvents = TestAppEvents()
 
-  override class func setUp() {
-    super.setUp()
-
-    TestAccessTokenWallet.reset()
-    TestSettings.reset()
-    TestGateKeeperManager.reset()
-    TestServerConfigurationProvider.reset()
-  }
-
   override func setUp() {
     super.setUp()
 
@@ -45,8 +36,7 @@ class ApplicationDelegateTests: XCTestCase {
       tokenWallet: TestAccessTokenWallet.self,
       settings: TestSettings.self,
       featureChecker: featureChecker,
-      appEvents: appEvents,
-      serverConfigurationProvider: TestServerConfigurationProvider.self
+      appEvents: appEvents
     )
   }
 
@@ -56,7 +46,6 @@ class ApplicationDelegateTests: XCTestCase {
     TestAccessTokenWallet.reset()
     TestSettings.reset()
     TestGateKeeperManager.reset()
-    TestServerConfigurationProvider.reset()
   }
 
   func testDefaultDependencies() {
@@ -79,10 +68,6 @@ class ApplicationDelegateTests: XCTestCase {
       AppEvents.singleton,
       "Should use the expected default app events instance"
     )
-    XCTAssertTrue(
-      ApplicationDelegate.shared.serverConfigurationProvider is ServerConfigurationManager.Type,
-      "Should use the expected default server configuration provider"
-    )
   }
 
   func testCreatingWithDependencies() {
@@ -104,13 +89,12 @@ class ApplicationDelegateTests: XCTestCase {
       appEvents,
       "Should be able to create with an app events instance"
     )
-    XCTAssertTrue(
-      delegate.serverConfigurationProvider is TestServerConfigurationProvider.Type,
-      "Should be able to create with a server configuration provider"
-    )
   }
 
-  func testInitializingSdkTriggersApplicationLifecycleNotificationsForAppEvents() {
+  // TODO: Re-enable when FBSDKServerConfigurationManager and FBSDKAuthenticationStatusUtility
+  // are abstracted so that the running tests won't result in network calls
+  // swiftlint:disable:next identifier_name
+  func _testInitializingSdkTriggersApplicationLifecycleNotificationsForAppEvents() {
     delegate.initializeSDK(launchOptions: [:])
 
     XCTAssertTrue(
@@ -119,7 +103,9 @@ class ApplicationDelegateTests: XCTestCase {
     )
   }
 
-  func testInitializingSdkObservesSystemNotifications() {
+  // TODO: Re-enable when FBSDKServerConfigurationManager and FBSDKAuthenticationStatusUtility
+  // are abstracted so that the running tests won't result in network calls
+  func _testInitializingSdkObservesSystemNotifications() { // swiftlint:disable:this identifier_name
     delegate.initializeSDK(launchOptions: [:])
 
     XCTAssertTrue(
@@ -154,15 +140,6 @@ class ApplicationDelegateTests: XCTestCase {
         )
       ),
       "Should start observing application resignation upon initializtion"
-    )
-  }
-
-  func testDidFinishLaunchingLoadsServerConfiguration() {
-    delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
-
-    XCTAssertTrue(
-      TestServerConfigurationProvider.loadServerConfigurationWasCalled,
-      "Should load a server configuration on finishing launching the application"
     )
   }
 
