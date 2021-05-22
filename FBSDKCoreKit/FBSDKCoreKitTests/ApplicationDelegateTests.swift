@@ -19,6 +19,7 @@
 import FBSDKCoreKit
 import XCTest
 
+// swiftlint:disable type_body_length
 class ApplicationDelegateTests: XCTestCase {
 
   // swiftlint:disable:next implicitly_unwrapped_optional weak_delegate
@@ -28,6 +29,7 @@ class ApplicationDelegateTests: XCTestCase {
   var appEvents = TestAppEvents()
   var store = UserDefaultsSpy()
   let observer = TestApplicationDelegateObserver()
+  let settings = TestSettings()
   let bitmaskKey = "com.facebook.sdk.kits.bitmask"
   lazy var profile = Profile(
     userID: name,
@@ -52,7 +54,7 @@ class ApplicationDelegateTests: XCTestCase {
     delegate = ApplicationDelegate(
       notificationObserver: center,
       tokenWallet: TestAccessTokenWallet.self,
-      settings: TestSettings.self,
+      settings: settings,
       featureChecker: featureChecker,
       appEvents: appEvents,
       serverConfigurationProvider: TestServerConfigurationProvider.self,
@@ -110,6 +112,11 @@ class ApplicationDelegateTests: XCTestCase {
       ApplicationDelegate.shared.authenticationTokenWallet is AuthenticationToken.Type,
       "Should use the expected default access token setter"
     )
+    XCTAssertEqual(
+      ApplicationDelegate.shared.settings as? Settings,
+      Settings.shared,
+      "Should use the expected default settings"
+    )
   }
 
   func testCreatingWithDependencies() {
@@ -143,6 +150,11 @@ class ApplicationDelegateTests: XCTestCase {
     XCTAssertTrue(
       delegate.authenticationTokenWallet is TestAuthenticationTokenWallet.Type,
       "Should be able to create with a custom access token setter"
+    )
+    XCTAssertEqual(
+      delegate.settings as? TestSettings,
+      settings,
+      "Should be able to create with custom settings"
     )
   }
 

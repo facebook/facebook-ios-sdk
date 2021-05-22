@@ -62,7 +62,6 @@ NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvi
 
 + (BOOL)isDataProcessingRestricted;
 
-+ (void)recordInstall;
 
 + (void)recordSetAdvertiserTrackingEnabled;
 
@@ -74,8 +73,10 @@ NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvi
 
 + (NSDate *_Nullable)getSetAdvertiserTrackingEnabledTimestamp;
 
-+ (void)logWarnings;
+- (void)recordInstall;
 
-+ (void)logIfSDKSettingsChanged;
+- (void)logWarnings;
+
+- (void)logIfSDKSettingsChanged;
 
 @end

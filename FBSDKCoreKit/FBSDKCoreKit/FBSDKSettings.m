@@ -589,11 +589,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   return NO;
 }
 
-+ (void)logWarnings
-{
-  [self.sharedSettings logWarnings];
-}
-
 - (void)logWarnings
 {
   // Log warnings for App Event Flags
@@ -606,11 +601,6 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   if (!self._advertiserIDCollectionEnabled.boolValue) {
     NSLog(advertiserIDCollectionEnabledFalseWarning);
   }
-}
-
-+ (void)logIfSDKSettingsChanged
-{
-  [self.sharedSettings logIfSDKSettingsChanged];
 }
 
 - (void)logIfSDKSettingsChanged
@@ -645,7 +635,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   }
 }
 
-+ (void)recordInstall
+- (void)recordInstall
 {
   if (![self.store objectForKey:FBSDKSettingsInstallTimestamp]) {
     [self.store setObject:[NSDate date] forKey:FBSDKSettingsInstallTimestamp];

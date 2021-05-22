@@ -23,9 +23,9 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   static var userAgentSuffix: String?
   static var loggingBehaviors = Set<LoggingBehavior>()
   static var sdkVersion: String?
-  static var logWarningsCallCount = 0
-  static var logIfSDKSettingsChangedCallCount = 0
-  static var recordInstallCallCount = 0
+  var logWarningsCallCount = 0
+  var logIfSDKSettingsChangedCallCount = 0
+  var recordInstallCallCount = 0
 
   var appID: String?
 
@@ -72,15 +72,15 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
     stubbedSetAdvertiserTrackingEnabledTimestamp
   }
 
-  static func logWarnings() {
+  func logWarnings() {
     logWarningsCallCount += 1
   }
 
-  static func logIfSDKSettingsChanged() {
+  func logIfSDKSettingsChanged() {
     logIfSDKSettingsChangedCallCount += 1
   }
 
-  static func recordInstall() {
+  func recordInstall() {
     recordInstallCallCount += 1
   }
 
@@ -90,8 +90,5 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
     userAgentSuffix = nil
     loggingBehaviors = []
     sdkVersion = nil
-    logWarningsCallCount = 0
-    logIfSDKSettingsChangedCallCount = 0
-    recordInstallCallCount = 0
   }
 }

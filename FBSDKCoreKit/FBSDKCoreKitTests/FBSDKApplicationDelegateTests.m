@@ -90,15 +90,6 @@
 - (Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
 @end
 
-@interface FBSDKApplicationDelegateTests : FBSDKTestCase
-
-@property (nonatomic) FBSDKApplicationDelegate *delegate;
-@property (nonatomic) TestFeatureManager *featureChecker;
-@property (nonatomic) TestAppEvents *appEvents;
-@property (nonatomic) UserDefaultsSpy *store;
-
-@end
-
 @interface FBSDKAppEvents (ApplicationDelegateTesting)
 + (BOOL)canLogEvents;
 + (Class<FBSDKGateKeeperManaging>)gateKeeperManager;
@@ -118,6 +109,16 @@
 + (id<FBSDKAppEventsParameterProcessing>)restrictiveDataFilterParameterProcessor;
 @end
 
+@interface FBSDKApplicationDelegateTests : XCTestCase
+
+@property (nonatomic) FBSDKApplicationDelegate *delegate;
+@property (nonatomic) TestFeatureManager *featureChecker;
+@property (nonatomic) TestAppEvents *appEvents;
+@property (nonatomic) UserDefaultsSpy *store;
+@property (nonatomic) TestSettings *settings;
+
+@end
+
 @implementation FBSDKApplicationDelegateTests
 
 static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
@@ -129,11 +130,11 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   [self.class resetTestData];
 
   self.appEvents = [TestAppEvents new];
-
+  self.settings = [TestSettings new];
   self.featureChecker = [TestFeatureManager new];
   self.delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationObserver:[TestNotificationCenter new]
                                                                      tokenWallet:TestAccessTokenWallet.class
-                                                                        settings:TestSettings.class
+                                                                        settings:self.settings
                                                                   featureChecker:self.featureChecker
                                                                        appEvents:self.appEvents
                                                      serverConfigurationProvider:TestServerConfigurationProvider.class
@@ -143,9 +144,6 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   self.delegate.isAppLaunched = NO;
 
   [self.delegate resetApplicationObserverCache];
-
-  [self stubLoadingAdNetworkReporterConfiguration];
-  [self stubServerConfigurationFetchingWithConfiguration:FBSDKServerConfigurationFixtures.defaultConfig error:nil];
 }
 
 - (void)tearDown
@@ -569,17 +567,17 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [self.delegate initializeSDKWithLaunchOptions:@{}];
   XCTAssertEqual(
-    TestSettings.logWarningsCallCount,
+    self.settings.logWarningsCallCount,
     1,
     "Should have settings log warnings upon initialization"
   );
   XCTAssertEqual(
-    TestSettings.logIfSDKSettingsChangedCallCount,
+    self.settings.logIfSDKSettingsChangedCallCount,
     1,
     "Should have settings log if there were changes upon initialization"
   );
   XCTAssertEqual(
-    TestSettings.recordInstallCallCount,
+    self.settings.recordInstallCallCount,
     1,
     "Should have settings record installations upon initialization"
   );
@@ -737,7 +735,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 
 - (void)testDidFinishLaunchingWithAutoLogEnabled
 {
-  [self stubIsAutoLogAppEventsEnabled:YES];
+  [self.settings setStubbedIsAutoLogAppEventsEnabled:YES];
 
   [self.store setInteger:1 forKey:bitmaskKey];
 
@@ -752,7 +750,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 
 - (void)testDidFinishLaunchingWithAutoLogDisabled
 {
-  [self stubIsAutoLogAppEventsEnabled:NO];
+  [self.settings setStubbedIsAutoLogAppEventsEnabled:NO];
 
   [self.store setInteger:1 forKey:bitmaskKey];
 
@@ -796,7 +794,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 
 - (void)testAppEventsEnabled
 {
-  [self stubIsAutoLogAppEventsEnabled:YES];
+  [self.settings setStubbedIsAutoLogAppEventsEnabled:YES];
 
   NSNotification *notification = [[NSNotification alloc] initWithName:UIApplicationDidBecomeActiveNotification
                                                                object:self
@@ -817,7 +815,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 
 - (void)testAppEventsDisabled
 {
-  [self stubIsAutoLogAppEventsEnabled:NO];
+  [self.settings setStubbedIsAutoLogAppEventsEnabled:NO];
 
   NSNotification *notification = [[NSNotification alloc] initWithName:UIApplicationDidBecomeActiveNotification
                                                                object:self

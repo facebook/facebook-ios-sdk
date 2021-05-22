@@ -150,7 +150,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [FBSDKSKAdNetworkReporter setConfiguration:defaultConfiguration];
 
   // Case 1: refresh install
-  [FBSDKSettings recordInstall];
+  [FBSDKSettings.sharedSettings recordInstall];
   XCTAssertFalse([FBSDKSKAdNetworkReporter _shouldCutoff]);
 
   // Case 2: timestamp is already expired
