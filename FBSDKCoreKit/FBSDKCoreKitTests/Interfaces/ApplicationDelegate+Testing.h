@@ -37,8 +37,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly, nonnull) id<FBSDKFeatureChecking> featureChecker;
 @property (nonnull, nonatomic, readonly) id<FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging> appEvents;
 @property (nonnull, nonatomic, readonly) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
-@property (nonnull, nonatomic, readonly) id<FBSDKDataPersisting> store;
-@property (nonnull, nonatomic) NSHashTable<id<FBSDKApplicationObserving>> *applicationObservers;
 
 + (void)resetHasInitializeBeenCalled
 NS_SWIFT_NAME(reset());
@@ -48,14 +46,11 @@ NS_SWIFT_NAME(reset());
                                     settings:(Class<FBSDKSettingsLogging>)settings
                               featureChecker:(id<FBSDKFeatureChecking>)featureChecker
                                    appEvents:(id<FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents
-                 serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
-                                       store:(id<FBSDKDataPersisting>)store;
+                 serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
 - (void)initializeSDKWithLaunchOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
 - (void)applicationDidEnterBackground:(NSNotification *)notification;
 - (void)applicationDidBecomeActive:(NSNotification *)notification;
 - (void)applicationWillResignActive:(NSNotification *)notification;
-- (void)_logSDKInitialize;
-
 @end
 
 NS_ASSUME_NONNULL_END

@@ -20,7 +20,6 @@
 class TestApplicationDelegateObserver: NSObject, FBSDKApplicationObserving {
   var didFinishLaunchingCallCount = 0
   var capturedLaunchOptions: [UIApplication.LaunchOptionsKey: Any]?
-  var wasWillResignActiveCalled = false
 
   func application(
     _ application: UIApplication,
@@ -29,9 +28,5 @@ class TestApplicationDelegateObserver: NSObject, FBSDKApplicationObserving {
     didFinishLaunchingCallCount += 1
     capturedLaunchOptions = launchOptions
     return true
-  }
-
-  func applicationWillResignActive(_ application: UIApplication?) {
-    wasWillResignActiveCalled = true
   }
 }
