@@ -164,9 +164,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Stubs `FBSDKProfile.fetchCachedProfile`
 - (void)stubCachedProfileWith:(FBSDKProfile *__nullable)profile;
 
-/// Stubs `FBSDKSettings.graphAPIVersion` with the provided version string
-- (void)stubGraphAPIVersionWith:(NSString *)version;
-
 /// Stubs `FBSDKSettings.clientToken` with the provided token string
 - (void)stubClientTokenWith:(nullable NSString *)token;
 

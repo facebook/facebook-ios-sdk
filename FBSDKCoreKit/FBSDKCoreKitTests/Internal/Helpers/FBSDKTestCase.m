@@ -387,11 +387,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   OCMStub(ClassMethod([_profileClassMock fetchCachedProfile])).andReturn(profile);
 }
 
-- (void)stubGraphAPIVersionWith:(NSString *)version
-{
-  OCMStub(ClassMethod([_settingsClassMock graphAPIVersion])).andReturn(version);
-}
-
 - (void)stubClientTokenWith:(nullable NSString *)token
 {
   OCMStub(ClassMethod([_settingsClassMock clientToken])).andReturn(token);

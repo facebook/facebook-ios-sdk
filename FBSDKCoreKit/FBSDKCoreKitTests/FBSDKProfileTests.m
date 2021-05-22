@@ -69,7 +69,7 @@ NSString *const heightKey = @"height";
   _validSquareSize = CGSizeMake(100, 100);
   _validNonSquareSize = CGSizeMake(10, 20);
 
-  [self stubGraphAPIVersionWith:_sdkVersion];
+  FBSDKSettings.graphAPIVersion = _sdkVersion;
   FBSDKProfile.accessTokenProvider = TestAccessTokenWallet.class;
 }
 

@@ -740,6 +740,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   g_loggingBehaviors = nil;
   g_userAgentSuffix = nil;
   g_dataProcessingOptions = nil;
+  g_defaultGraphAPIVersion = nil;
 }
 
 - (void)reset
