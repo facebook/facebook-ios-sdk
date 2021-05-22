@@ -51,9 +51,7 @@
 
 - (BOOL)isAppLaunched;
 - (void)setIsAppLaunched:(BOOL)isLaunched;
-- (NSHashTable<id<FBSDKApplicationObserving>> *)applicationObservers;
 - (void)resetApplicationObserverCache;
-- (void)_logSDKInitialize;
 - (void)applicationDidBecomeActive:(NSNotification *)notification;
 - (void)applicationWillResignActive:(NSNotification *)notification;
 - (void)setApplicationState:(UIApplicationState)state;
@@ -101,6 +99,7 @@
 @property (nonatomic) FBSDKApplicationDelegate *delegate;
 @property (nonatomic) TestFeatureManager *featureChecker;
 @property (nonatomic) TestAppEvents *appEvents;
+@property (nonatomic) UserDefaultsSpy *store;
 
 @end
 
@@ -125,6 +124,8 @@
 
 @implementation FBSDKApplicationDelegateTests
 
+static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
+
 - (void)setUp
 {
   [super setUp];
@@ -141,7 +142,8 @@
                                                                         settings:TestSettings.class
                                                                   featureChecker:self.featureChecker
                                                                        appEvents:self.appEvents
-                                                     serverConfigurationProvider:TestServerConfigurationProvider.class];
+                                                     serverConfigurationProvider:TestServerConfigurationProvider.class
+                                                                           store:self.store];
   self.delegate.isAppLaunched = NO;
 
   _profile = [[FBSDKProfile alloc] initWithUserID:self.name
@@ -170,67 +172,6 @@
   [TestServerConfigurationProvider reset];
 }
 
-// MARK: - Observers
-
-- (void)testDefaultsObservers
-{
-  XCTAssertEqual(
-    self.delegate.applicationObservers.count,
-    0,
-    "Should have no observers by default"
-  );
-}
-
-- (void)testAddingNewObserver
-{
-  TestApplicationDelegateObserver *observer = [TestApplicationDelegateObserver new];
-  [self.delegate addObserver:observer];
-
-  XCTAssertEqual(
-    [self.delegate applicationObservers].count,
-    1,
-    "Should be able to add a single observer"
-  );
-}
-
-- (void)testAddingDuplicateObservers
-{
-  TestApplicationDelegateObserver *observer = [TestApplicationDelegateObserver new];
-  [self.delegate addObserver:observer];
-  [self.delegate addObserver:observer];
-
-  XCTAssertEqual(
-    [self.delegate applicationObservers].count,
-    1,
-    "Should only add one instance of a given observer"
-  );
-}
-
-- (void)testRemovingObserver
-{
-  TestApplicationDelegateObserver *observer = [TestApplicationDelegateObserver new];
-  [self.delegate addObserver:observer];
-  [self.delegate removeObserver:observer];
-
-  XCTAssertEqual(
-    self.delegate.applicationObservers.count,
-    0,
-    "Should be able to remove observers that are present in the stored list"
-  );
-}
-
-- (void)testRemovingMissingObserver
-{
-  TestApplicationDelegateObserver *observer = [TestApplicationDelegateObserver new];
-  [self.delegate removeObserver:observer];
-
-  XCTAssertEqual(
-    self.delegate.applicationObservers.count,
-    0,
-    "Should not be able to remove absent observers"
-  );
-}
-
 // MARK: - Lifecycle Methods
 
 - (void)testInitializingSdkEnablesGraphRequests
@@ -244,23 +185,6 @@
     [FBSDKGraphRequestConnection canMakeRequests],
     "Initializing the SDK should enable making graph requests"
   );
-}
-
-- (void)testInitializingSDKLogsAppEvent
-{
-  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
-
-  NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-  id userDefaultsMock = OCMPartialMock(userDefaults);
-  OCMStub([userDefaultsMock integerForKey:[OCMArg any]]).andReturn(1);
-
-  [self.delegate _logSDKInitialize];
-
-  XCTAssertEqualObjects(
-    self.appEvents.capturedEventName,
-    @"fb_sdk_initialize"
-  );
-  XCTAssertFalse(self.appEvents.capturedIsImplicitlyLogged);
 }
 
 - (void)testInitializingSdkEnablesAppEvents
@@ -815,10 +739,7 @@
 {
   [self stubIsAutoLogAppEventsEnabled:YES];
 
-  // Temporarily stubbing defaults so that the bitmask is different.
-  NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-  id userDefaultsMock = OCMPartialMock(userDefaults);
-  OCMStub([userDefaultsMock integerForKey:[OCMArg any]]).andReturn(1);
+  [self.store setInteger:1 forKey:bitmaskKey];
 
   [self.delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 
@@ -833,10 +754,7 @@
 {
   [self stubIsAutoLogAppEventsEnabled:NO];
 
-  // Temporarily stubbing defaults so that the bitmask is different.
-  NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-  id userDefaultsMock = OCMPartialMock(userDefaults);
-  OCMStub([userDefaultsMock integerForKey:[OCMArg any]]).andReturn(1);
+  [self.store setInteger:1 forKey:bitmaskKey];
 
   [self.delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 
@@ -900,7 +818,10 @@
 {
   [self stubIsAutoLogAppEventsEnabled:YES];
 
-  id notification = OCMClassMock([NSNotification class]);
+  NSNotification *notification = [[NSNotification alloc] initWithName:UIApplicationDidBecomeActiveNotification
+                                                               object:self
+                                                             userInfo:nil];
+
   [self.delegate applicationDidBecomeActive:notification];
 
   XCTAssertTrue(
@@ -918,7 +839,9 @@
 {
   [self stubIsAutoLogAppEventsEnabled:NO];
 
-  id notification = OCMClassMock([NSNotification class]);
+  NSNotification *notification = [[NSNotification alloc] initWithName:UIApplicationDidBecomeActiveNotification
+                                                               object:self
+                                                             userInfo:nil];
   [self.delegate applicationDidBecomeActive:notification];
 
   XCTAssertFalse(
@@ -930,21 +853,6 @@
     UIApplicationStateActive,
     "Should set the application state to active when the notification is received"
   );
-}
-
-- (void)testAppNotifyObserversWhenAppWillResignActive
-{
-  id observer = OCMStrictProtocolMock(@protocol(FBSDKApplicationObserving));
-  [self.delegate addObserver:observer];
-
-  NSNotification *notification = OCMClassMock([NSNotification class]);
-  id application = OCMClassMock([UIApplication class]);
-  [OCMStub([notification object]) andReturn:application];
-  OCMExpect([observer applicationWillResignActive:application]);
-
-  [self.delegate applicationWillResignActive:notification];
-
-  OCMVerify([observer applicationWillResignActive:application]);
 }
 
 - (void)testSetApplicationState

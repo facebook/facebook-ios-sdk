@@ -96,6 +96,7 @@ static UIApplicationState _applicationState;
 @property (nonnull, nonatomic, readonly) NSHashTable<id<FBSDKApplicationObserving>> *applicationObservers;
 @property (nonnull, nonatomic, readonly) id<FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging> appEvents;
 @property (nonnull, nonatomic, readonly) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
+@property (nonnull, nonatomic, readonly) id<FBSDKDataPersisting> store;
 @property (nonatomic) BOOL isAppLaunched;
 
 @end
@@ -128,7 +129,8 @@ static UIApplicationState _applicationState;
                                    settings:FBSDKSettings.class
                              featureChecker:FBSDKFeatureManager.shared
                                   appEvents:FBSDKAppEvents.singleton
-                serverConfigurationProvider:FBSDKServerConfigurationManager.class];
+                serverConfigurationProvider:FBSDKServerConfigurationManager.class
+                                      store:NSUserDefaults.standardUserDefaults];
 }
 
 - (instancetype)initWithNotificationObserver:(id<FBSDKNotificationObserving>)observer
@@ -137,6 +139,7 @@ static UIApplicationState _applicationState;
                               featureChecker:(id<FBSDKFeatureChecking>)featureChecker
                                    appEvents:(id<FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents
                  serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+                                       store:(id<FBSDKDataPersisting>)store
 {
   if ((self = [super init]) != nil) {
     _applicationObservers = [NSHashTable new];
@@ -146,6 +149,7 @@ static UIApplicationState _applicationState;
     _featureChecker = featureChecker;
     _appEvents = appEvents;
     _serverConfigurationProvider = serverConfigurationProvider;
+    _store = store;
   }
   return self;
 }
@@ -468,9 +472,9 @@ static UIApplicationState _applicationState;
     bit++;
   }
 
-  NSInteger existingBitmask = [[NSUserDefaults standardUserDefaults] integerForKey:FBSDKKitsBitmaskKey];
+  NSInteger existingBitmask = [self.store integerForKey:FBSDKKitsBitmaskKey];
   if (existingBitmask != bitmask) {
-    [[NSUserDefaults standardUserDefaults] setInteger:bitmask forKey:FBSDKKitsBitmaskKey];
+    [self.store setInteger:bitmask forKey:FBSDKKitsBitmaskKey];
     [self.appEvents logInternalEvent:@"fb_sdk_initialize"
                           parameters:params
                   isImplicitlyLogged:NO];
