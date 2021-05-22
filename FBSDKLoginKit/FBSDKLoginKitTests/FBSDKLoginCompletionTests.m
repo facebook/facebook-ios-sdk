@@ -35,7 +35,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 @interface FBSDKLoginURLCompleter (Testing)
 
-@property (class, nonatomic, assign) id<FBSDKProfileCreating> profileFactory;
+@property (class, nonatomic, assign) id<FBSDKProfileProviding> profileFactory;
 
 - (FBSDKLoginCompletionParameters *)parameters;
 
@@ -142,7 +142,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (void)testSettingProfileProvider
 {
-  NSObject<FBSDKProfileCreating> *provider = [[TestProfileFactory alloc] initWithStubbedProfile:SampleUserProfiles.valid];
+  NSObject<FBSDKProfileProviding> *provider = [[TestProfileProvider alloc] initWithStubbedProfile:SampleUserProfiles.valid];
   FBSDKLoginURLCompleter.profileFactory = provider;
 
   XCTAssertEqualObjects(
@@ -544,7 +544,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (void)testCreateProfileWithClaims
 {
-  TestProfileFactory *factory = [[TestProfileFactory alloc] initWithStubbedProfile:SampleUserProfiles.valid];
+  TestProfileProvider *factory = [[TestProfileProvider alloc] initWithStubbedProfile:SampleUserProfiles.valid];
   FBSDKLoginURLCompleter.profileFactory = factory;
   FBSDKAuthenticationTokenClaims *claim = [[FBSDKAuthenticationTokenClaims alloc] initWithJti:@"some_jti"
                                                                                           iss:@"some_iss"

@@ -29,20 +29,14 @@ class ApplicationDelegateTests: XCTestCase {
   var store = UserDefaultsSpy()
   let observer = TestApplicationDelegateObserver()
   let bitmaskKey = "com.facebook.sdk.kits.bitmask"
-  lazy var profile = Profile(
-    userID: name,
-    firstName: nil,
-    middleName: nil,
-    lastName: nil,
-    name: nil,
-    linkURL: nil,
-    refreshDate: nil
-  )
 
   override class func setUp() {
     super.setUp()
 
-    resetTestData()
+    TestAccessTokenWallet.reset()
+    TestSettings.reset()
+    TestGateKeeperManager.reset()
+    TestServerConfigurationProvider.reset()
   }
 
   override func setUp() {
@@ -56,25 +50,17 @@ class ApplicationDelegateTests: XCTestCase {
       featureChecker: featureChecker,
       appEvents: appEvents,
       serverConfigurationProvider: TestServerConfigurationProvider.self,
-      store: store,
-      authenticationTokenWallet: TestAuthenticationTokenWallet.self,
-      profileProvider: TestProfileProvider.self
+      store: store
     )
   }
 
   override func tearDown() {
     super.tearDown()
 
-    ApplicationDelegateTests.resetTestData()
-  }
-
-  static func resetTestData() {
     TestAccessTokenWallet.reset()
-    TestAuthenticationTokenWallet.reset()
-    TestServerConfigurationProvider.reset()
     TestSettings.reset()
     TestGateKeeperManager.reset()
-    TestProfileProvider.reset()
+    TestServerConfigurationProvider.reset()
   }
 
   func testDefaultDependencies() {
@@ -104,11 +90,7 @@ class ApplicationDelegateTests: XCTestCase {
     XCTAssertEqual(
       ApplicationDelegate.shared.store as? UserDefaults,
       UserDefaults.standard,
-      "Should use the expected default persistent store"
-    )
-    XCTAssertTrue(
-      ApplicationDelegate.shared.authenticationTokenWallet is AuthenticationToken.Type,
-      "Should use the expected default access token setter"
+      "Should be able to set a persistent store"
     )
   }
 
@@ -138,11 +120,7 @@ class ApplicationDelegateTests: XCTestCase {
     XCTAssertEqual(
       delegate.store as? UserDefaultsSpy,
       store,
-      "Should be able to create with a persistent store"
-    )
-    XCTAssertTrue(
-      delegate.authenticationTokenWallet is TestAuthenticationTokenWallet.Type,
-      "Should be able to create with a custom access token setter"
+      "Should be able to set a persistent store"
     )
   }
 
@@ -215,32 +193,6 @@ class ApplicationDelegateTests: XCTestCase {
     XCTAssertTrue(
       TestServerConfigurationProvider.loadServerConfigurationWasCalled,
       "Should load a server configuration on finishing launching the application"
-    )
-  }
-
-  func testDidFinishLaunchingSetsProfileWithCache() {
-    TestProfileProvider.stubbedCachedProfile = profile
-
-    delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
-
-    XCTAssertEqual(
-      TestProfileProvider.current,
-      profile,
-      "Should set the current profile to the value fetched from the cache"
-    )
-  }
-
-  func testDidFinishLaunchingSetsProfileWithoutCache() {
-    XCTAssertNil(
-      TestProfileProvider.stubbedCachedProfile,
-      "Setup should nil out the cached profile"
-    )
-
-    delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
-
-    XCTAssertNil(
-      TestProfileProvider.current,
-      "Should set the current profile to nil when the cache is empty"
     )
   }
 

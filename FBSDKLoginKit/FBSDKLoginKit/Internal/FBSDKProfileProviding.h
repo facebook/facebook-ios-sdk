@@ -27,8 +27,8 @@ typedef NSString FBSDKUserIdentifier;
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(ProfileCreating)
-@protocol FBSDKProfileCreating
+NS_SWIFT_NAME(ProfileProviding)
+@protocol FBSDKProfileProviding
 
 - (FBSDKProfile *)createProfileWithUserID:(FBSDKUserIdentifier *)userID
                                 firstName:(nullable NSString *)firstName

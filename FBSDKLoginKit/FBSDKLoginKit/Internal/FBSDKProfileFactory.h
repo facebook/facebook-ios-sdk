@@ -22,14 +22,14 @@
 
  #import <Foundation/Foundation.h>
 
- #import "FBSDKProfileCreating.h"
+ #import "FBSDKProfileProviding.h"
 
 @class FBSDKProfile;
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(ProfileFactory)
-@interface FBSDKProfileFactory : NSObject <FBSDKProfileCreating>
+@interface FBSDKProfileFactory : NSObject <FBSDKProfileProviding>
 
 @end
 

@@ -65,7 +65,7 @@
   id<FBSDKAuthenticationTokenCreating> _authenticationTokenCreator;
 }
 
-static id<FBSDKProfileCreating> _profileFactory;
+static id<FBSDKProfileProviding> _profileFactory;
 static NSDateFormatter *_dateFormatter;
 
 + (void)initialize
@@ -351,12 +351,12 @@ static NSDateFormatter *_dateFormatter;
  #if DEBUG
   #if FBSDKTEST
 
-+ (id<FBSDKProfileCreating>)profileFactory
++ (id<FBSDKProfileProviding>)profileFactory
 {
   return _profileFactory;
 }
 
-+ (void)setProfileFactory:(id<FBSDKProfileCreating>)factory
++ (void)setProfileFactory:(id<FBSDKProfileProviding>)factory
 {
   _profileFactory = factory;
 }

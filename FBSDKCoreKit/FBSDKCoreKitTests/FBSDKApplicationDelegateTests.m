@@ -16,6 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
 @import TestTools;
@@ -91,6 +92,9 @@
 @end
 
 @interface FBSDKApplicationDelegateTests : FBSDKTestCase
+{
+  FBSDKProfile *_profile;
+}
 
 @property (nonatomic) FBSDKApplicationDelegate *delegate;
 @property (nonatomic) TestFeatureManager *featureChecker;
@@ -126,8 +130,10 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 {
   [super setUp];
 
-  [self.class resetTestData];
-
+  [TestAccessTokenWallet reset];
+  [TestSettings reset];
+  [TestGateKeeperManager reset];
+  [TestServerConfigurationProvider reset];
   self.appEvents = [TestAppEvents new];
 
   self.featureChecker = [TestFeatureManager new];
@@ -137,10 +143,16 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
                                                                   featureChecker:self.featureChecker
                                                                        appEvents:self.appEvents
                                                      serverConfigurationProvider:TestServerConfigurationProvider.class
-                                                                           store:self.store
-                                                       authenticationTokenWallet:TestAuthenticationTokenWallet.class
-                                                                 profileProvider:TestProfileProvider.class];
+                                                                           store:self.store];
   self.delegate.isAppLaunched = NO;
+
+  _profile = [[FBSDKProfile alloc] initWithUserID:self.name
+                                        firstName:nil
+                                       middleName:nil
+                                         lastName:nil
+                                             name:nil
+                                          linkURL:nil
+                                      refreshDate:nil];
 
   [self.delegate resetApplicationObserverCache];
 
@@ -153,18 +165,11 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   [super tearDown];
 
   self.delegate = nil;
+  _profile = nil;
 
-  [self.class resetTestData];
-}
-
-+ (void)resetTestData
-{
   [TestAccessTokenWallet reset];
-  [TestAuthenticationTokenWallet reset];
-  [TestGateKeeperManager reset];
-  [TestProfileProvider reset];
-  [TestServerConfigurationProvider reset];
   [TestSettings reset];
+  [TestServerConfigurationProvider reset];
 }
 
 // MARK: - Lifecycle Methods
@@ -712,27 +717,22 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   FBSDKAuthenticationToken *expected = SampleAuthenticationToken.validToken;
   TestTokenCache *cache = [[TestTokenCache alloc] initWithAccessToken:nil
                                                   authenticationToken:expected];
-  [TestAuthenticationTokenWallet setTokenCache:cache];
+  [FBSDKAuthenticationToken setTokenCache:cache];
   [self.delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 
-  XCTAssertEqualObjects(
-    TestAuthenticationTokenWallet.currentAuthenticationToken,
-    expected,
-    "Should set the current authentication token to the cached access token when it exists"
-  );
+  // Should set the current authentication token to the cached access token when it exists
+  OCMVerify(ClassMethod([self.authenticationTokenClassMock setCurrentAuthenticationToken:expected]));
 }
 
 - (void)testDidFinishLaunchingSetsCurrentAuthenticationTokenWithoutCache
 {
   TestTokenCache *cache = [[TestTokenCache alloc] initWithAccessToken:nil authenticationToken:nil];
-  [TestAuthenticationTokenWallet setTokenCache:cache];
+  [FBSDKAuthenticationToken setTokenCache:cache];
 
   [self.delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 
-  XCTAssertNil(
-    TestAuthenticationTokenWallet.currentAuthenticationToken,
-    "Should set the current authentication token to nil access token when there isn't a cached token"
-  );
+  // Should set the current authentication token to nil access token when there isn't a cached token
+  OCMVerify(ClassMethod([self.authenticationTokenClassMock setCurrentAuthenticationToken:nil]));
 }
 
 - (void)testDidFinishLaunchingWithAutoLogEnabled
@@ -762,6 +762,26 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
     self.appEvents.capturedEventName,
     "Should not log initialization when auto log app events are disabled"
   );
+}
+
+- (void)testDidFinishLaunchingSetsProfileWithCache
+{
+  [self stubCachedProfileWith:_profile];
+
+  [self.delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
+
+  // Should set the current profile to the value fetched from the cache
+  OCMVerify([self.profileClassMock setCurrentProfile:_profile]);
+}
+
+- (void)testDidFinishLaunchingSetsProfileWithoutCache
+{
+  [self stubCachedProfileWith:nil];
+
+  [self.delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
+
+  // Should set the current profile to nil when the cache is empty
+  OCMVerify([self.profileClassMock setCurrentProfile:nil]);
 }
 
 - (void)testDidFinishLaunchingWithObservers

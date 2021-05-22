@@ -20,7 +20,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-public class TestProfileFactory: NSObject, ProfileCreating {
+public class TestProfileProvider: NSObject, ProfileProviding {
 
   public var capturedUserID: String?
   public var capturedFirstName: String?
