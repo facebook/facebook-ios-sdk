@@ -1118,19 +1118,19 @@
 
 - (void)testIsUnityWithMissingSuffix
 {
-  [self stubUserAgentSuffixWith:nil];
+  FBSDKSettings.userAgentSuffix = nil;
   XCTAssertFalse([FBSDKInternalUtility isUnity], "User agent should determine whether an app is Unity");
 }
 
 - (void)testIsUnityWithNonUnitySuffix
 {
-  [self stubUserAgentSuffixWith:@"Foo"];
+  FBSDKSettings.userAgentSuffix = @"Foo";
   XCTAssertFalse([FBSDKInternalUtility isUnity], "User agent should determine whether an app is Unity");
 }
 
 - (void)testIsUnityWithUnitySuffix
 {
-  [self stubUserAgentSuffixWith:@"__Unity__"];
+  FBSDKSettings.userAgentSuffix = @"__Unity__";
   XCTAssertTrue([FBSDKInternalUtility isUnity], "User agent should determine whether an app is Unity");
 }
 

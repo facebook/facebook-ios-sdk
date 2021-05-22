@@ -215,9 +215,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 - (void)stubOpenUrlOptionsCompletionHandlerWithPerformCompletion:(BOOL)performCompletion
                                                completionSuccess:(BOOL)completionSuccess;
 
-/// Stubs `FBSDKSettings.userAgentSuffix` and returns the provided value
-- (void)stubUserAgentSuffixWith:(nullable NSString *)suffix;
-
 /// Stubs `FBSDKInternalUtility`'s `appURLScheme` property to return the provided scheme
 - (void)stubAppUrlSchemeWith:(nullable NSString *)scheme;
 
