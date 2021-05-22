@@ -432,23 +432,21 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testLogInitialize
 {
-  TestAppEvents *appEvents = [TestAppEvents new];
-  FBSDKApplicationDelegate *delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationObserver:[TestNotificationCenter new]
-                                                                                          tokenWallet:TestAccessTokenWallet.class
-                                                                                             settings:_settings.class
-                                                                                       featureChecker:_featureManager
-                                                                                            appEvents:appEvents];
+  FBSDKApplicationDelegate *delegate = [FBSDKApplicationDelegate sharedInstance];
+  id delegateMock = OCMPartialMock(delegate);
+
   NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
   id userDefaultsMock = OCMPartialMock(userDefaults);
   OCMStub([userDefaultsMock integerForKey:[OCMArg any]]).andReturn(1);
-
-  [delegate _logSDKInitialize];
-
-  XCTAssertEqualObjects(
-    appEvents.capturedEventName,
-    @"fb_sdk_initialize"
+  OCMExpect(
+    [self.appEventsMock logInternalEvent:@"fb_sdk_initialize"
+                              parameters:[OCMArg any]
+                      isImplicitlyLogged:NO]
   );
-  XCTAssertFalse(appEvents.capturedIsImplicitlyLogged);
+
+  [delegateMock _logSDKInitialize];
+
+  OCMVerifyAll(self.appEventsMock);
 }
 
 - (void)testActivateAppWithInitializedSDK
@@ -458,7 +456,7 @@ static NSString *const _mockUserID = @"mockUserID";
   OCMExpect([self.appEventsMock publishInstall]);
   OCMExpect([self.appEventsMock fetchServerConfiguration:NULL]);
 
-  [FBSDKAppEvents.singleton activateApp];
+  [FBSDKAppEvents activateApp];
 
   OCMVerifyAll(self.appEventsMock);
   XCTAssertTrue(
@@ -520,7 +518,7 @@ static NSString *const _mockUserID = @"mockUserID";
 - (void)testActivateAppWithoutInitializedSDK
 {
   [FBSDKAppEvents reset];
-  [FBSDKAppEvents.singleton activateApp];
+  [FBSDKAppEvents activateApp];
 
   OCMReject([self.appEventsMock publishInstall]);
   OCMReject([self.appEventsMock fetchServerConfiguration:NULL]);
@@ -1141,9 +1139,9 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testApplicationStateValues
 {
-  XCTAssertEqual([FBSDKAppEvents.singleton applicationState], UIApplicationStateInactive, "The default value of applicationState should be UIApplicationStateInactive");
-  [FBSDKAppEvents.singleton setApplicationState:UIApplicationStateBackground];
-  XCTAssertEqual([FBSDKAppEvents.singleton applicationState], UIApplicationStateBackground, "The value of applicationState after calling setApplicationState should be UIApplicationStateBackground");
+  XCTAssertEqual([FBSDKAppEvents applicationState], UIApplicationStateInactive, "The default value of applicationState should be UIApplicationStateInactive");
+  [FBSDKAppEvents setApplicationState:UIApplicationStateBackground];
+  XCTAssertEqual([FBSDKAppEvents applicationState], UIApplicationStateBackground, "The value of applicationState after calling setApplicationState should be UIApplicationStateBackground");
 }
 
 @end

@@ -101,11 +101,11 @@
 
 @property (nonatomic) FBSDKApplicationDelegate *delegate;
 @property (nonatomic) TestFeatureManager *featureChecker;
-@property (nonatomic) TestAppEvents *appEvents;
 
 @end
 
 @interface FBSDKAppEvents (ApplicationDelegateTesting)
++ (UIApplicationState)applicationState;
 + (BOOL)canLogEvents;
 + (Class<FBSDKGateKeeperManaging>)gateKeeperManager;
 + (Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider;
@@ -133,14 +133,12 @@
   [TestAccessTokenWallet reset];
   [TestSettings reset];
   [TestGateKeeperManager reset];
-  self.appEvents = [TestAppEvents new];
 
   self.featureChecker = [TestFeatureManager new];
   self.delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationObserver:[TestNotificationCenter new]
                                                                      tokenWallet:TestAccessTokenWallet.class
                                                                         settings:TestSettings.class
-                                                                  featureChecker:self.featureChecker
-                                                                       appEvents:self.appEvents];
+                                                                  featureChecker:self.featureChecker];
   self.delegate.isAppLaunched = NO;
 
   _profile = [[FBSDKProfile alloc] initWithUserID:self.name
@@ -178,8 +176,10 @@
 
 // MARK: - Observers
 
-- (void)testDefaultsObservers
+- (void)testDefaultObservers
 {
+  // Note: in reality this will have one observer from the BridgeAPI load method.
+  // this needs to be re-architected to avoid this.
   XCTAssertEqual(
     self.delegate.applicationObservers.count,
     0,
@@ -754,13 +754,11 @@
   TestTokenCache *cache = [[TestTokenCache alloc] initWithAccessToken:expected
                                                   authenticationToken:nil];
   [TestAccessTokenWallet setTokenCache:cache];
-  TestAppEvents *appEvents = [TestAppEvents new];
 
   self.delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationObserver:[TestNotificationCenter new]
                                                                      tokenWallet:TestAccessTokenWallet.class
                                                                         settings:TestSettings.class
-                                                                  featureChecker:FBSDKFeatureManager.shared
-                                                                       appEvents:appEvents];
+                                                                  featureChecker:FBSDKFeatureManager.shared];
 
   [self.delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 
@@ -889,37 +887,23 @@
 - (void)testAppEventsEnabled
 {
   [self stubIsAutoLogAppEventsEnabled:YES];
+  OCMStub(ClassMethod([self.appEventsMock activateApp]));
 
   id notification = OCMClassMock([NSNotification class]);
   [self.delegate applicationDidBecomeActive:notification];
 
-  XCTAssertTrue(
-    self.appEvents.wasActivateAppCalled,
-    "Should have app events activate the app when autolog app events is enabled"
-  );
-  XCTAssertEqual(
-    self.appEvents.capturedApplicationState,
-    UIApplicationStateActive,
-    "Should set the application state to active when the notification is received"
-  );
+  OCMVerify([self.appEventsMock activateApp]);
 }
 
 - (void)testAppEventsDisabled
 {
   [self stubIsAutoLogAppEventsEnabled:NO];
 
+  OCMReject([self.appEventsMock activateApp]);
+  OCMStub(ClassMethod([self.appEventsMock activateApp]));
+
   id notification = OCMClassMock([NSNotification class]);
   [self.delegate applicationDidBecomeActive:notification];
-
-  XCTAssertFalse(
-    self.appEvents.wasActivateAppCalled,
-    "Should not have app events activate the app when autolog app events is enabled"
-  );
-  XCTAssertEqual(
-    self.appEvents.capturedApplicationState,
-    UIApplicationStateActive,
-    "Should set the application state to active when the notification is received"
-  );
 }
 
 - (void)testAppNotifyObserversWhenAppWillResignActive
@@ -941,7 +925,7 @@
 {
   [self.delegate setApplicationState:UIApplicationStateBackground];
   XCTAssertEqual(
-    self.appEvents.capturedApplicationState,
+    [FBSDKAppEvents applicationState],
     UIApplicationStateBackground,
     "The value of applicationState after calling setApplicationState should be UIApplicationStateBackground"
   );

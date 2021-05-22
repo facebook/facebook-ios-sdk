@@ -22,15 +22,11 @@
 #import <objc/runtime.h>
 
 #import "FBSDKAccessToken+Internal.h"
-#import "FBSDKAppEvents+ApplicationActivating.h"
-#import "FBSDKAppEvents+ApplicationLifecycleObserving.h"
-#import "FBSDKAppEvents+ApplicationStateSetting.h"
 #import "FBSDKAppEvents+EventLogging.h"
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKAppEventsConfigurationManager.h"
 #import "FBSDKAppEventsStateManager+AppEventsStatePersisting.h"
 #import "FBSDKAppEventsUtility+AdvertiserIDProviding.h"
-#import "FBSDKApplicationLifecycleObserving.h"
 #import "FBSDKAuthenticationStatusUtility.h"
 #import "FBSDKAuthenticationToken+Internal.h"
 #import "FBSDKBridgeAPI+ApplicationObserving.h"
@@ -94,7 +90,6 @@ static UIApplicationState _applicationState;
 @property (nonnull, nonatomic, readonly) Class<FBSDKSettingsLogging> settings;
 @property (nonnull, nonatomic, readonly) id<FBSDKNotificationObserving> notificationObserver;
 @property (nonnull, nonatomic, readonly) NSHashTable<id<FBSDKApplicationObserving>> *applicationObservers;
-@property (nonnull, nonatomic, readonly) id<FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging> appEvents;
 @property (nonatomic) BOOL isAppLaunched;
 
 @end
@@ -125,15 +120,13 @@ static UIApplicationState _applicationState;
   return [self initWithNotificationObserver:NSNotificationCenter.defaultCenter
                                 tokenWallet:FBSDKAccessToken.class
                                    settings:FBSDKSettings.class
-                             featureChecker:FBSDKFeatureManager.shared
-                                  appEvents:FBSDKAppEvents.singleton];
+                             featureChecker:FBSDKFeatureManager.shared];
 }
 
 - (instancetype)initWithNotificationObserver:(id<FBSDKNotificationObserving>)observer
                                  tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
                                     settings:(Class<FBSDKSettingsLogging>)settings
                               featureChecker:(id<FBSDKFeatureChecking>)featureChecker
-                                   appEvents:(id<FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents
 {
   if ((self = [super init]) != nil) {
     _applicationObservers = [NSHashTable new];
@@ -141,7 +134,6 @@ static UIApplicationState _applicationState;
     _tokenWallet = tokenWallet;
     _settings = settings;
     _featureChecker = featureChecker;
-    _appEvents = appEvents;
   }
   return self;
 }
@@ -163,7 +155,7 @@ static UIApplicationState _applicationState;
 
   [self addObservers];
 
-  [self.appEvents startObservingApplicationLifecycleNotifications];
+  [[FBSDKAppEvents singleton] registerNotifications];
 
   [self application:[UIApplication sharedApplication] didFinishLaunchingWithOptions:launchOptions];
 
@@ -338,7 +330,7 @@ static UIApplicationState _applicationState;
   [self setApplicationState:UIApplicationStateActive];
   // Auto log basic events in case autoLogAppEventsEnabled is set
   if (FBSDKSettings.isAutoLogAppEventsEnabled) {
-    [self.appEvents activateApp];
+    [FBSDKAppEvents activateApp];
   }
 #if !TARGET_OS_TV
   [FBSDKSKAdNetworkReporter checkAndRevokeTimer];
@@ -389,7 +381,7 @@ static UIApplicationState _applicationState;
 - (void)setApplicationState:(UIApplicationState)state
 {
   _applicationState = state;
-  [self.appEvents setApplicationState:state];
+  [FBSDKAppEvents setApplicationState:state];
 }
 
 #pragma mark - Helper Methods
@@ -426,7 +418,7 @@ static UIApplicationState _applicationState;
   [FBSDKTypeUtility dictionary:logData setObject:url.absoluteString forKey:@"inputURL"];
   [FBSDKTypeUtility dictionary:logData setObject:url.scheme forKey:@"inputURLScheme"];
 
-  [self.appEvents logInternalEvent:FBSDKAppLinkInboundEvent
+  [FBSDKAppEvents logInternalEvent:FBSDKAppLinkInboundEvent
                         parameters:logData
                 isImplicitlyLogged:YES];
 }
@@ -462,7 +454,7 @@ static UIApplicationState _applicationState;
   NSInteger existingBitmask = [[NSUserDefaults standardUserDefaults] integerForKey:FBSDKKitsBitmaskKey];
   if (existingBitmask != bitmask) {
     [[NSUserDefaults standardUserDefaults] setInteger:bitmask forKey:FBSDKKitsBitmaskKey];
-    [self.appEvents logInternalEvent:@"fb_sdk_initialize"
+    [FBSDKAppEvents logInternalEvent:@"fb_sdk_initialize"
                           parameters:params
                   isImplicitlyLogged:NO];
   }
@@ -479,7 +471,7 @@ static UIApplicationState _applicationState;
       [FBSDKTypeUtility dictionary:params setObject:warning forKey:@"SchemeWarning"];
       NSLog(@"%@", warning);
     }
-    [self.appEvents logInternalEvent:@"fb_auto_applink" parameters:params isImplicitlyLogged:YES];
+    [FBSDKAppEvents logInternalEvent:@"fb_auto_applink" parameters:params isImplicitlyLogged:YES];
   }
 #endif
 }

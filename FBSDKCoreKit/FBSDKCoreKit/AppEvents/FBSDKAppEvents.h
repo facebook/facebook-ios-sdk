@@ -552,9 +552,6 @@ NS_SWIFT_NAME(AppEvents)
                  brand:(nullable NSString *)brand
             parameters:(nullable NSDictionary<NSString *, id> *)parameters;
 
-+ (void)activateApp
-DEPRECATED_MSG_ATTRIBUTE("The class method `activateApp` is deprecated. It is replaced by an instance method of the same name.");
-
 /**
 
   Notifies the events system that the app has launched and, when appropriate, logs an "activated app" event.
@@ -574,7 +571,7 @@ DEPRECATED_MSG_ATTRIBUTE("The class method `activateApp` is deprecated. It is re
  time has elapsed between sessions, and with the number of background/foreground interruptions that session had.  This data
  is all visible in your app's App Events Insights.
  */
-- (void)activateApp;
++ (void)activateApp;
 
 /*
  * Push Notifications Registration and Uninstall Tracking

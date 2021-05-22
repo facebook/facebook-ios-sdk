@@ -290,8 +290,6 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 @property (nonatomic, assign) FBSDKAppEventsFlushBehavior flushBehavior;
 
-@property (nonatomic) UIApplicationState applicationState;
-
 // for testing only.
 @property (nonatomic, assign) BOOL disableTimer;
 
@@ -319,6 +317,8 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 static id<FBSDKDataPersisting> _store;
 static BOOL _canLogEvents = NO;
+
+static UIApplicationState _applicationState = UIApplicationStateInactive;
 
 + (void)initialize
 {
@@ -358,7 +358,6 @@ static BOOL _canLogEvents = NO;
 
     _userID = userID;
     _atePublisher = atePublisher;
-    self.applicationState = UIApplicationStateInactive;
 
     [self fetchServerConfiguration:nil];
   }
@@ -366,7 +365,7 @@ static BOOL _canLogEvents = NO;
   return self;
 }
 
-- (void)startObservingApplicationLifecycleNotifications
+- (void)registerNotifications
 {
   [[NSNotificationCenter defaultCenter]
    addObserver:self
@@ -659,12 +658,7 @@ static BOOL _canLogEvents = NO;
 
 + (void)activateApp
 {
-  [self.singleton activateApp];
-}
-
-- (void)activateApp
-{
-  if (![self.class canLogEvents]) {
+  if (![self canLogEvents]) {
     NSLog(
       @"<Warning> App events cannot be activated before the Facebook SDK is initialized. "
       "Learn more: https://github.com/facebook/facebook-ios-sdk/blob/master/CHANGELOG.md#900"
@@ -672,12 +666,13 @@ static BOOL _canLogEvents = NO;
     return;
   }
 
-  [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass(self.class)];
+  [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass(self)];
 
   // Fetch app settings and register for transaction notifications only if app supports implicit purchase
   // events
-  [self publishInstall];
-  [self fetchServerConfiguration:NULL];
+  FBSDKAppEvents *instance = [FBSDKAppEvents singleton];
+  [instance publishInstall];
+  [instance fetchServerConfiguration:NULL];
 
   // Restore time spent data, indicating that we're being called from "activateApp", which will,
   // when appropriate, result in logging an "activated app" and "deactivated app" (for the
@@ -1213,6 +1208,16 @@ static BOOL _canLogEvents = NO;
   return _canLogEvents;
 }
 
++ (void)setApplicationState:(UIApplicationState)state
+{
+  _applicationState = state;
+}
+
++ (UIApplicationState)applicationState
+{
+  return _applicationState;
+}
+
 #if !TARGET_OS_TV
 - (void)enableCodelessEvents
 {
@@ -1406,7 +1411,7 @@ static BOOL _canLogEvents = NO;
     applicationState = [UIApplication sharedApplication].applicationState;
   } else {
     currentViewControllerName = @"off_thread";
-    applicationState = self.applicationState;
+    applicationState = [self.class applicationState];
   }
   [FBSDKTypeUtility dictionary:eventDictionary setObject:currentViewControllerName forKey:@"_ui"];
 
@@ -1711,7 +1716,7 @@ static BOOL _canLogEvents = NO;
 
 + (void)resetApplicationState
 {
-  self.singleton.applicationState = UIApplicationStateInactive;
+  _applicationState = UIApplicationStateInactive;
 }
 
 + (id<FBSDKFeatureChecking>)featureChecker
