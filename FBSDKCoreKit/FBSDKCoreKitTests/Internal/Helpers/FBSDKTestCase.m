@@ -458,11 +458,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   OCMStub(ClassMethod([_settingsClassMock isDataProcessingRestricted])).andReturn(isRestricted);
 }
 
-- (void)stubFacebookDomainPartWith:(NSString *)domainPart
-{
-  OCMStub(ClassMethod([_settingsClassMock facebookDomainPart])).andReturn(domainPart);
-}
-
 - (void)stubOpenURLWith:(BOOL)openURL
 {
   OCMStub([_sharedApplicationMock openURL:OCMArg.any]).andReturn(openURL);

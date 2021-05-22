@@ -204,9 +204,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Stubs `FBSDKSettings.isDataProcessingRestricted` and returns the provided value
 - (void)stubIsDataProcessingRestricted:(BOOL)isRestricted;
 
-/// Stubs `FBSDKSettings.facebookDomainPart` with the provided value
-- (void)stubFacebookDomainPartWith:(NSString *)domainPart;
-
 /// Stubs `UIApplication.sharedApplication`'s `openURL:` method and returns the provided value
 - (void)stubOpenURLWith:(BOOL)openURL;
 

@@ -75,7 +75,7 @@
 
 - (void)testFacebookURL
 {
-  [self stubFacebookDomainPartWith:@""];
+  FBSDKSettings.facebookDomainPart = @"";
   NSString *URLString;
   NSString *tier = [FBSDKSettings facebookDomainPart];
 
@@ -180,7 +180,7 @@
 
 - (void)testFacebookGamingURL
 {
-  [self stubFacebookDomainPartWith:@""];
+  FBSDKSettings.facebookDomainPart = @"";
   FBSDKAuthenticationToken *authToken = [[FBSDKAuthenticationToken alloc] initWithTokenString:@"token_string"
                                                                                         nonce:@"nonce"
                                                                                   graphDomain:@"gaming"];
