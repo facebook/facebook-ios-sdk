@@ -16,23 +16,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+import FBSDKCoreKit
+import Foundation
 
-#if !TARGET_OS_TV
+@objcMembers
+class TestProfileProvider: NSObject, ProfileProviding {
 
- #import <Foundation/Foundation.h>
+  static var current: Profile?
+  static var stubbedCachedProfile: Profile?
 
- #import "FBSDKProfileCreating.h"
+  static func fetchCachedProfile() -> Profile? {
+    return stubbedCachedProfile
+  }
 
-@class FBSDKProfile;
-
-NS_ASSUME_NONNULL_BEGIN
-
-NS_SWIFT_NAME(ProfileFactory)
-@interface FBSDKProfileFactory : NSObject <FBSDKProfileCreating>
-
-@end
-
-NS_ASSUME_NONNULL_END
-
-#endif
+  static func reset() {
+    current = nil
+    stubbedCachedProfile = nil
+  }
+}

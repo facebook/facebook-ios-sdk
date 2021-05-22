@@ -32,6 +32,7 @@
 #import "FBSDKAppEventsUtility+AdvertiserIDProviding.h"
 #import "FBSDKApplicationLifecycleObserving.h"
 #import "FBSDKAuthenticationStatusUtility.h"
+#import "FBSDKAuthenticationToken+AuthenticationTokenProtocols.h"
 #import "FBSDKAuthenticationToken+Internal.h"
 #import "FBSDKBridgeAPI+ApplicationObserving.h"
 #import "FBSDKButton+Subclass.h"
@@ -52,6 +53,7 @@
 #import "FBSDKLogger+Logging.h"
 #import "FBSDKPaymentObserver.h"
 #import "FBSDKPaymentObserver+PaymentObserving.h"
+#import "FBSDKProfileProtocols.h"
 #import "FBSDKRestrictiveDataFilterManager+AppEventsParameterProcessing.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationManager+ServerConfigurationProviding.h"
@@ -97,6 +99,12 @@ static UIApplicationState _applicationState;
 @property (nonnull, nonatomic, readonly) id<FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging> appEvents;
 @property (nonnull, nonatomic, readonly) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonnull, nonatomic, readonly) id<FBSDKDataPersisting> store;
+@property (nonnull, nonatomic, readonly) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationTokenWallet;
+
+#if !TARGET_OS_TV
+@property (nonnull, nonatomic, readonly) Class<FBSDKProfileProviding> profileProvider;
+#endif
+
 @property (nonatomic) BOOL isAppLaunched;
 
 @end
@@ -124,15 +132,29 @@ static UIApplicationState _applicationState;
 
 - (instancetype)init
 {
+#if TARGET_OS_TV
   return [self initWithNotificationObserver:NSNotificationCenter.defaultCenter
                                 tokenWallet:FBSDKAccessToken.class
                                    settings:FBSDKSettings.class
                              featureChecker:FBSDKFeatureManager.shared
                                   appEvents:FBSDKAppEvents.singleton
                 serverConfigurationProvider:FBSDKServerConfigurationManager.class
-                                      store:NSUserDefaults.standardUserDefaults];
+                                      store:NSUserDefaults.standardUserDefaults
+                  authenticationTokenWallet:FBSDKAuthenticationToken.class];
+#else
+  return [self initWithNotificationObserver:NSNotificationCenter.defaultCenter
+                                tokenWallet:FBSDKAccessToken.class
+                                   settings:FBSDKSettings.class
+                             featureChecker:FBSDKFeatureManager.shared
+                                  appEvents:FBSDKAppEvents.singleton
+                serverConfigurationProvider:FBSDKServerConfigurationManager.class
+                                      store:NSUserDefaults.standardUserDefaults
+                  authenticationTokenWallet:FBSDKAuthenticationToken.class
+                            profileProvider:FBSDKProfile.class];
+#endif
 }
 
+#if TARGET_OS_TV
 - (instancetype)initWithNotificationObserver:(id<FBSDKNotificationObserving>)observer
                                  tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
                                     settings:(Class<FBSDKSettingsLogging>)settings
@@ -140,6 +162,7 @@ static UIApplicationState _applicationState;
                                    appEvents:(id<FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents
                  serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                        store:(id<FBSDKDataPersisting>)store
+                   authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
 {
   if ((self = [super init]) != nil) {
     _applicationObservers = [NSHashTable new];
@@ -150,9 +173,38 @@ static UIApplicationState _applicationState;
     _appEvents = appEvents;
     _serverConfigurationProvider = serverConfigurationProvider;
     _store = store;
+    _authenticationTokenWallet = authenticationTokenWallet;
   }
   return self;
 }
+
+#else
+- (instancetype)initWithNotificationObserver:(id<FBSDKNotificationObserving>)observer
+                                 tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
+                                    settings:(Class<FBSDKSettingsLogging>)settings
+                              featureChecker:(id<FBSDKFeatureChecking>)featureChecker
+                                   appEvents:(id<FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents
+                 serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+                                       store:(id<FBSDKDataPersisting>)store
+                   authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
+                             profileProvider:(Class<FBSDKProfileProviding>)profileProvider
+{
+  if ((self = [super init]) != nil) {
+    _applicationObservers = [NSHashTable new];
+    _notificationObserver = observer;
+    _tokenWallet = tokenWallet;
+    _settings = settings;
+    _featureChecker = featureChecker;
+    _appEvents = appEvents;
+    _serverConfigurationProvider = serverConfigurationProvider;
+    _store = store;
+    _authenticationTokenWallet = authenticationTokenWallet;
+    _profileProvider = profileProvider;
+  }
+  return self;
+}
+
+#endif
 
 - (void)initializeSDKWithLaunchOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions
 {
@@ -315,11 +367,11 @@ static UIApplicationState _applicationState;
     [self _logSDKInitialize];
   }
 #if !TARGET_OS_TV
-  FBSDKProfile *cachedProfile = [FBSDKProfile fetchCachedProfile];
-  [FBSDKProfile setCurrentProfile:cachedProfile];
+  FBSDKProfile *cachedProfile = [self.profileProvider fetchCachedProfile];
+  [self.profileProvider setCurrentProfile:cachedProfile];
 
-  FBSDKAuthenticationToken *cachedAuthToken = FBSDKAuthenticationToken.tokenCache.authenticationToken;
-  [FBSDKAuthenticationToken setCurrentAuthenticationToken:cachedAuthToken];
+  FBSDKAuthenticationToken *cachedAuthToken = [[self.authenticationTokenWallet tokenCache] authenticationToken];
+  [self.authenticationTokenWallet setCurrentAuthenticationToken:cachedAuthToken];
   [FBSDKAuthenticationStatusUtility checkAuthenticationStatus];
 #endif
   NSArray<id<FBSDKApplicationObserving>> *observers = [self.applicationObservers allObjects];

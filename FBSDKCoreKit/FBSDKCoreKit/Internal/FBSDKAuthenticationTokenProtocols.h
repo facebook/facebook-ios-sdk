@@ -16,23 +16,22 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+#import <Foundation/Foundation.h>
 
-#if !TARGET_OS_TV
+@class FBSDKAuthenticationToken;
+@protocol FBSDKTokenCaching;
 
- #import <Foundation/Foundation.h>
+NS_SWIFT_NAME(AuthenticationTokenProviding)
+@protocol FBSDKAuthenticationTokenProviding
 
- #import "FBSDKProfileCreating.h"
-
-@class FBSDKProfile;
-
-NS_ASSUME_NONNULL_BEGIN
-
-NS_SWIFT_NAME(ProfileFactory)
-@interface FBSDKProfileFactory : NSObject <FBSDKProfileCreating>
+@property (class, nonatomic, copy, nullable, readonly) FBSDKAuthenticationToken *currentAuthenticationToken;
+@property (class, nonatomic, copy, nullable) id<FBSDKTokenCaching> tokenCache;
 
 @end
 
-NS_ASSUME_NONNULL_END
+NS_SWIFT_NAME(AuthenticationTokenSetting)
+@protocol FBSDKAuthenticationTokenSetting
 
-#endif
+@property (class, nonatomic, copy, nullable) FBSDKAuthenticationToken *currentAuthenticationToken;
+
+@end

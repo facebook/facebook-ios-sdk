@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKSettingsLogging;
 @protocol FBSDKAccessTokenProviding;
+@protocol FBSDKAuthenticationTokenProviding;
+@protocol FBSDKAuthenticationTokenSetting;
 @protocol FBSDKEventLogging;
 @protocol FBSDKFeatureChecking;
 @protocol FBSDKNotificationObserving;
@@ -29,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FBSDKApplicationActivating;
 @protocol FBSDKApplicationStateSetting;
 @protocol FBSDKServerConfigurationProviding;
+@protocol FBSDKProfileProviding;
 
 @interface FBSDKApplicationDelegate (Testing)
 
@@ -38,6 +41,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonnull, nonatomic, readonly) id<FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging> appEvents;
 @property (nonnull, nonatomic, readonly) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonnull, nonatomic, readonly) id<FBSDKDataPersisting> store;
+@property (nonnull, nonatomic, readonly) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationTokenWallet;
+@property (nonnull, nonatomic, readonly) Class<FBSDKProfileProviding> profileProvider;
 @property (nonnull, nonatomic) NSHashTable<id<FBSDKApplicationObserving>> *applicationObservers;
 
 + (void)resetHasInitializeBeenCalled
@@ -49,7 +54,9 @@ NS_SWIFT_NAME(reset());
                               featureChecker:(id<FBSDKFeatureChecking>)featureChecker
                                    appEvents:(id<FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents
                  serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
-                                       store:(id<FBSDKDataPersisting>)store;
+                                       store:(id<FBSDKDataPersisting>)store
+                   authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
+                             profileProvider:(Class<FBSDKProfileProviding>)profileProvider;
 - (void)initializeSDKWithLaunchOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
 - (void)applicationDidEnterBackground:(NSNotification *)notification;
 - (void)applicationDidBecomeActive:(NSNotification *)notification;
