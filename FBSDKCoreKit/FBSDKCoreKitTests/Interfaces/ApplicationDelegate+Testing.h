@@ -22,24 +22,29 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKSettingsLogging;
 @protocol FBSDKAccessTokenProviding;
+@protocol FBSDKEventLogging;
 @protocol FBSDKFeatureChecking;
 @protocol FBSDKNotificationObserving;
+@protocol FBSDKApplicationLifecycleObserving;
+@protocol FBSDKApplicationActivating;
+@protocol FBSDKApplicationStateSetting;
 
 @interface FBSDKApplicationDelegate (Testing)
 
 @property (nonatomic, assign) id<FBSDKNotificationObserving> notificationObserver;
 @property (nonatomic, nullable) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> tokenWallet;
 @property (nonatomic, readonly, nonnull) id<FBSDKFeatureChecking> featureChecker;
+@property (nonnull, nonatomic, readonly) id<FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging> appEvents;
 
-+ (void)initializeSDKWithApplicationDelegate:(FBSDKApplicationDelegate *)delegate
-                               launchOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
 + (void)resetHasInitializeBeenCalled
 NS_SWIFT_NAME(reset());
 
 - (instancetype)initWithNotificationObserver:(id<FBSDKNotificationObserving>)observer
                                  tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
                                     settings:(Class<FBSDKSettingsLogging>)settings
-                              featureChecker:(id<FBSDKFeatureChecking>)featureChecker;
+                              featureChecker:(id<FBSDKFeatureChecking>)featureChecker
+                                   appEvents:(id<FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents;
+- (void)initializeSDKWithLaunchOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
 - (void)applicationDidEnterBackground:(NSNotification *)notification;
 - (void)applicationDidBecomeActive:(NSNotification *)notification;
 - (void)applicationWillResignActive:(NSNotification *)notification;

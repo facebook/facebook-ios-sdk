@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Added `addRequest:completion` to `FBSDKGraphRequestConnection`. Replaces `addRequest:completionHandler:`.
 - Added `addRequest:name:completion:` to `FBSDKGraphRequestConnection`. Replaces `addRequest:batchEntryName:completionHandler:`.
 - Added `addRequest:parameters:completion:` to `FBSDKGraphRequestConnection`. Replaces `addRequest:batchParameters:completionHandler:`.
+- Added instance method `activateApp` to `AppEvents`.
 
 ### Deprecated
 
@@ -25,6 +26,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - `FBSDKGraphRequestConnection`'s `addRequest:batchEntryName:completionHandler:` replaced by `addRequest:name:completion:`
 - `FBSDKGraphRequestConnection`'s `addRequest:batchParameters:completionHandler:` replaced by `addRequest:parameters:completion:`
 - `FBSDKGraphRequestBlock`
+- Class method `AppEvents.activateApp`. It is replaced by an instance method of the same name.
 
 ### Removed
 

@@ -129,7 +129,7 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
 
 @interface FBSDKAppEvents (Internal)
 
-+ (void)setApplicationState:(UIApplicationState)state;
+@property (nonatomic) UIApplicationState applicationState;
 
 + (void)   configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
            appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
@@ -169,7 +169,7 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
              accessToken:(FBSDKAccessToken *)accessToken;
 
 - (void)flushForReason:(FBSDKAppEventsFlushReason)flushReason;
-- (void)registerNotifications;
+- (void)startObservingApplicationLifecycleNotifications;
 
 #if !TARGET_OS_TV
 
