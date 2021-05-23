@@ -185,7 +185,8 @@ let package = Package(
             path: "FBSDKLoginKit/FBSDKLoginKit/Swift",
             cSettings: [
                 .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil))
-            ]
+            ],
+          swiftSettings: [.define("TARGET_OS_TV", .when(platforms: [.tvOS], configuration: nil))]
         ),
 
         /*
