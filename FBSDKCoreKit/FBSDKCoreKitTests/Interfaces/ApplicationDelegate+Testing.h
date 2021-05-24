@@ -44,6 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonnull, nonatomic, readonly) id<FBSDKDataPersisting> store;
 @property (nonnull, nonatomic, readonly) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationTokenWallet;
 @property (nonnull, nonatomic, readonly) Class<FBSDKProfileProviding> profileProvider;
+@property (nonnull, nonatomic, readonly) id<FBSDKSettingsLogging> settings;
 @property (nonnull, nonatomic) NSHashTable<id<FBSDKApplicationObserving>> *applicationObservers;
 
 + (void)resetHasInitializeBeenCalled
@@ -51,7 +52,7 @@ NS_SWIFT_NAME(reset());
 
 - (instancetype)initWithNotificationObserver:(id<FBSDKNotificationObserving>)observer
                                  tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
-                                    settings:(Class<FBSDKSettingsLogging>)settings
+                                    settings:(id<FBSDKSettingsLogging>)settings
                               featureChecker:(id<FBSDKFeatureChecking>)featureChecker
                                    appEvents:(id<FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents
                  serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
