@@ -319,4 +319,35 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
     XCTAssertEqual(firstCompletionCallCount, 1)
     XCTAssertEqual(secondCompletionCallCount, 1)
   }
+  func testUnarchivesStoredCaptureEvents() {
+    // Validates unarchival from store
+    AppEventsConfigurationManager.loadAppEventsConfiguration {}
+
+    // Confirm default state
+    XCTAssertEqual(AppEventsConfigurationManager.cachedAppEventsConfiguration().advertiserIDCollectionEnabled, true)
+    XCTAssertEqual(AppEventsConfigurationManager.cachedAppEventsConfiguration().eventCollectionEnabled, false)
+    // Capture inverted configurations
+    connection.capturedCompletion?(nil, RawAppEventsConfigurationResponseFixtures.valid, nil)
+    // Copy store state to avoid meaningless test
+    let storeCopy = UserDefaultsSpy()
+    let storeDump = store.dictionaryRepresentation()
+    storeDump.keys.forEach {
+      if $0.hasPrefix("com.facebook") {
+        storeCopy.setValue(storeDump[$0], forKey: $0)
+      }
+    }
+    storeCopy.capturedObjectRetrievalKey = store.capturedObjectRetrievalKey
+    storeCopy.capturedSetObjectKey = store.capturedSetObjectKey
+    storeCopy.capturedValues = store.capturedValues
+    // Configure shared manager with copied store state
+    AppEventsConfigurationManager.configure(
+      store: storeCopy,
+      settings: settings,
+      graphRequestFactory: requestFactory,
+      graphRequestConnectionFactory: connectionFactory
+    )
+    // Confirm configuration is unarchived from store instead of set again from defaults
+    XCTAssertEqual(AppEventsConfigurationManager.cachedAppEventsConfiguration().advertiserIDCollectionEnabled, false)
+    XCTAssertEqual(AppEventsConfigurationManager.cachedAppEventsConfiguration().eventCollectionEnabled, true)
+ }
 }

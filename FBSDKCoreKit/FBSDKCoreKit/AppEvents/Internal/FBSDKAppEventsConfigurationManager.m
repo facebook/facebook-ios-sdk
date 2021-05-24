@@ -84,7 +84,11 @@ static dispatch_once_t sharedConfigurationManagerNonce;
   self.connectionFactory = graphRequestConnectionFactory;
   id data = [self.store objectForKey:FBSDKAppEventsConfigurationKey];
   if ([data isKindOfClass:NSData.class]) {
-    self.configuration = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    if (@available(iOS 11.0, tvOS 11.0, *)) {
+      self.configuration = [NSKeyedUnarchiver unarchivedObjectOfClass:FBSDKAppEventsConfiguration.class fromData:data error:nil];
+    } else {
+      self.configuration = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    }
   }
   if (!self.configuration) {
     self.configuration = [FBSDKAppEventsConfiguration defaultConfiguration];
