@@ -1140,9 +1140,6 @@
 		F4DA3314262E3D89001F5290 /* AccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DA3308262E3D89001F5290 /* AccessToken.swift */; };
 		F4DA3315262E3D89001F5290 /* AccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DA3308262E3D89001F5290 /* AccessToken.swift */; };
 		F4DA3316262E3D89001F5290 /* AccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DA3308262E3D89001F5290 /* AccessToken.swift */; };
-		F4DA3317262E3D89001F5290 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DA3309262E3D89001F5290 /* Settings.swift */; };
-		F4DA3318262E3D89001F5290 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DA3309262E3D89001F5290 /* Settings.swift */; };
-		F4DA3319262E3D89001F5290 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DA3309262E3D89001F5290 /* Settings.swift */; };
 		F4DE31F624DB695100297C18 /* FBSDKTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = F4DE31F524DB695100297C18 /* FBSDKTestCase.m */; };
 		F4E202292647075A006F2763 /* FBSDKRandom.m in Sources */ = {isa = PBXBuildFile; fileRef = F4E20228264706A4006F2763 /* FBSDKRandom.m */; };
 		F4E2022A2647075B006F2763 /* FBSDKRandom.m in Sources */ = {isa = PBXBuildFile; fileRef = F4E20228264706A4006F2763 /* FBSDKRandom.m */; };
@@ -2069,7 +2066,6 @@
 		F4D80C3F2566D856008CCAF0 /* TestAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = TestAssets.xcassets; sourceTree = "<group>"; };
 		F4DA3307262E3D89001F5290 /* Permission.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Permission.swift; sourceTree = "<group>"; };
 		F4DA3308262E3D89001F5290 /* AccessToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessToken.swift; sourceTree = "<group>"; };
-		F4DA3309262E3D89001F5290 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		F4DE31F424DB695100297C18 /* FBSDKTestCase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKTestCase.h; sourceTree = "<group>"; };
 		F4DE31F524DB695100297C18 /* FBSDKTestCase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKTestCase.m; sourceTree = "<group>"; };
 		F4E1EB9F2444E0AB006FB48E /* Analyzer.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Analyzer.xcconfig; path = ../../../Configurations/Analyzer.xcconfig; sourceTree = "<group>"; };
@@ -3407,7 +3403,6 @@
 			children = (
 				F4DA3307262E3D89001F5290 /* Permission.swift */,
 				F4DA3308262E3D89001F5290 /* AccessToken.swift */,
-				F4DA3309262E3D89001F5290 /* Settings.swift */,
 			);
 			name = Swift;
 			path = ../../Sources/FacebookCore/Swift;
@@ -4598,7 +4593,6 @@
 				814AC7F71D1B528900D61E6C /* FBSDKGraphRequestDataAttachment.m in Sources */,
 				814AC7F81D1B528900D61E6C /* FBSDKModalFormPresentationController.m in Sources */,
 				814AC7F91D1B528900D61E6C /* FBSDKIcon.m in Sources */,
-				F4DA3319262E3D89001F5290 /* Settings.swift in Sources */,
 				814AC7FA1D1B528900D61E6C /* FBSDKMath.m in Sources */,
 				5D90CDE22343D4BD00AF326A /* FBSDKCrashShield.m in Sources */,
 				9DC277951DAF4D71004F4AB5 /* FBSDKSmartDeviceDialogView.m in Sources */,
@@ -4764,7 +4758,6 @@
 				F952EA492339405D00B20652 /* FBSDKMetadataIndexer.m in Sources */,
 				81B71D441D19C87400933E93 /* FBSDKHumanSilhouetteIcon.m in Sources */,
 				C5C7B74F22D84F64004A5A0C /* FBSDKFeatureManager.m in Sources */,
-				F4DA3318262E3D89001F5290 /* Settings.swift in Sources */,
 				C554DB0B2304D11200A32E8B /* FBSDKErrorReport.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4894,7 +4887,6 @@
 				F952EA472339403900B20652 /* FBSDKMetadataIndexer.m in Sources */,
 				FD8E438122FBF8F1008B6DD3 /* FBSDKErrorReport.m in Sources */,
 				899C3D031A8C1ED200EA8658 /* FBSDKHumanSilhouetteIcon.m in Sources */,
-				F4DA3317262E3D89001F5290 /* Settings.swift in Sources */,
 				C5C7B74E22D84F64004A5A0C /* FBSDKFeatureManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

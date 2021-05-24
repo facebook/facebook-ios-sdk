@@ -225,4 +225,17 @@ class SettingsTests: XCTestCase {
       "Should not capture the time the status is set to unspecified"
     )
   }
+
+  // MARK: - Logging behaviors
+
+  func testLoggingBehaviors() {
+    let behaviors = Set([LoggingBehavior.accessTokens, .appEvents])
+    Settings.loggingBehaviors = behaviors
+
+    XCTAssertEqual(
+      Settings.loggingBehaviors,
+      behaviors,
+      "Should be able to set and retrieve logging behaviors"
+    )
+  }
 }
