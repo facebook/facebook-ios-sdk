@@ -101,12 +101,14 @@
 
 @property (nonatomic) FBSDKApplicationDelegate *delegate;
 @property (nonatomic) TestFeatureManager *featureChecker;
+@property (nonatomic) TestAppEvents *appEvents;
 
 @end
 
 @interface FBSDKAppEvents (ApplicationDelegateTesting)
-+ (UIApplicationState)applicationState;
-+ (BOOL)canLogEvents;
+
+@property (nonatomic, readonly) id<FBSDKAtePublishing> atePublisher;
+
 + (Class<FBSDKGateKeeperManaging>)gateKeeperManager;
 + (Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider;
 + (Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
@@ -133,12 +135,14 @@
   [TestAccessTokenWallet reset];
   [TestSettings reset];
   [TestGateKeeperManager reset];
+  self.appEvents = [TestAppEvents new];
 
   self.featureChecker = [TestFeatureManager new];
   self.delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationObserver:[TestNotificationCenter new]
                                                                      tokenWallet:TestAccessTokenWallet.class
                                                                         settings:TestSettings.class
-                                                                  featureChecker:self.featureChecker];
+                                                                  featureChecker:self.featureChecker
+                                                                       appEvents:self.appEvents];
   self.delegate.isAppLaunched = NO;
 
   _profile = [[FBSDKProfile alloc] initWithUserID:self.name
@@ -176,10 +180,8 @@
 
 // MARK: - Observers
 
-- (void)testDefaultObservers
+- (void)testDefaultsObservers
 {
-  // Note: in reality this will have one observer from the BridgeAPI load method.
-  // this needs to be re-architected to avoid this.
   XCTAssertEqual(
     self.delegate.applicationObservers.count,
     0,
@@ -259,54 +261,81 @@
 
   [self.delegate initializeSDKWithLaunchOptions:@{}];
 
-  XCTAssertTrue(
-    [FBSDKAppEvents canLogEvents],
-    "Initializing the SDK should enable event logging"
-  );
-
   XCTAssertEqualObjects(
-    FBSDKAppEvents.gateKeeperManager,
+    self.appEvents.capturedConfigureGateKeeperManager,
     FBSDKGateKeeperManager.class,
     "Initializing the SDK should set gate keeper manager for event logging"
   );
-  NSObject *requestProvider = (NSObject *) FBSDKAppEvents.requestProvider;
+  NSObject *requestProvider = (NSObject *) self.appEvents.capturedConfigureGraphRequestProvider;
   XCTAssertEqualObjects(
     requestProvider.class,
     FBSDKGraphRequestFactory.class,
     "Initializing the SDK should set graph request factory for event logging"
   );
-
   XCTAssertEqualObjects(
-    FBSDKAppEvents.appEventsConfigurationProvider,
+    self.appEvents.capturedConfigureAppEventsConfigurationProvider,
     FBSDKAppEventsConfigurationManager.class,
     "Initializing the SDK should set AppEvents configuration provider for event logging"
   );
   XCTAssertEqualObjects(
-    FBSDKAppEvents.serverConfigurationProvider,
+    self.appEvents.capturedConfigureServerConfigurationProvider,
     FBSDKServerConfigurationManager.class,
     "Initializing the SDK should set server configuration provider for event logging"
   );
-  NSObject *store = (NSObject *)FBSDKAppEvents.store;
+  NSObject *store = (NSObject *)self.appEvents.capturedConfigureStore;
   XCTAssertEqualObjects(
     store,
     NSUserDefaults.standardUserDefaults,
     "Should be configured with the expected concrete data store"
   );
   XCTAssertEqualObjects(
-    FBSDKAppEvents.featureChecker,
+    self.appEvents.capturedConfigureFeatureChecker,
     self.delegate.featureChecker,
     "Initializing the SDK should set feature checker for event logging"
   );
   XCTAssertEqualObjects(
-    FBSDKAppEvents.logger,
+    self.appEvents.capturedConfigureLogger,
     FBSDKLogger.class,
     "Initializing the SDK should set concrete logger for event logging"
   );
   XCTAssertEqualObjects(
-    FBSDKAppEvents.settings,
+    self.appEvents.capturedConfigureSettings,
     FBSDKSettings.sharedSettings,
     "Initializing the SDK should set concrete settings for event logging"
   );
+  XCTAssertEqualObjects(
+    self.appEvents.capturedConfigurePaymentObserver,
+    FBSDKPaymentObserver.shared,
+    "Initializing the SDK should set concrete payment observer for event logging"
+  );
+  XCTAssertEqualObjects(
+    self.appEvents.capturedConfigureTimeSpentRecorder,
+    FBSDKTimeSpentData.shared,
+    "Initializing the SDK should set concrete time spent recorder for event logging"
+  );
+  XCTAssertEqualObjects(
+    self.appEvents.capturedConfigureAppEventsStateStore,
+    FBSDKAppEventsStateManager.shared,
+    "Initializing the SDK should set concrete state store for event logging"
+  );
+  XCTAssertEqualObjects(
+    self.appEvents.capturedConfigureEventDeactivationParameterProcessor,
+    FBSDKEventDeactivationManager.shared,
+    "Initializing the SDK should set concrete event deactivation parameter processor for event logging"
+  );
+  XCTAssertEqualObjects(
+    self.appEvents.capturedConfigureRestrictiveDataFilterParameterProcessor,
+    FBSDKRestrictiveDataFilterManager.shared,
+    "Initializing the SDK should set concrete restrictive data filter parameter processor for event logging"
+  );
+  XCTAssertTrue(
+    [(NSObject *)self.appEvents.capturedConfigureAtePublisherFactory isKindOfClass:FBSDKAtePublisherFactory.class],
+    "Initializing the SDK should set concrete ate publisher factory for event logging"
+  );
+}
+
+- (void)testConfiguringNonTVAppEventsDependencies
+{
   XCTAssertEqualObjects(
     FBSDKAppEvents.onDeviceMLModelManager,
     FBSDKModelManager.shared,
@@ -316,31 +345,6 @@
     FBSDKAppEvents.metadataIndexer,
     FBSDKMetadataIndexer.shared,
     "Initializing the SDK should set concrete metadata indexer for event logging"
-  );
-  XCTAssertEqualObjects(
-    FBSDKAppEvents.paymentObserver,
-    FBSDKPaymentObserver.shared,
-    "Initializing the SDK should set concrete payment observer for event logging"
-  );
-  XCTAssertEqualObjects(
-    FBSDKAppEvents.timeSpentRecorder,
-    FBSDKTimeSpentData.shared,
-    "Initializing the SDK should set concrete time spent recorder for event logging"
-  );
-  XCTAssertEqualObjects(
-    FBSDKAppEvents.appEventsStateStore,
-    FBSDKAppEventsStateManager.shared,
-    "Initializing the SDK should set concrete state store for event logging"
-  );
-  XCTAssertEqualObjects(
-    FBSDKAppEvents.eventDeactivationParameterProcessor,
-    FBSDKEventDeactivationManager.shared,
-    "Initializing the SDK should set concrete event deactivation parameter processor for event logging"
-  );
-  XCTAssertEqualObjects(
-    FBSDKAppEvents.restrictiveDataFilterParameterProcessor,
-    FBSDKRestrictiveDataFilterManager.shared,
-    "Initializing the SDK should set concrete restrictive data filter parameter processor for event logging"
   );
 }
 
@@ -754,11 +758,13 @@
   TestTokenCache *cache = [[TestTokenCache alloc] initWithAccessToken:expected
                                                   authenticationToken:nil];
   [TestAccessTokenWallet setTokenCache:cache];
+  TestAppEvents *appEvents = [TestAppEvents new];
 
   self.delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationObserver:[TestNotificationCenter new]
                                                                      tokenWallet:TestAccessTokenWallet.class
                                                                         settings:TestSettings.class
-                                                                  featureChecker:FBSDKFeatureManager.shared];
+                                                                  featureChecker:FBSDKFeatureManager.shared
+                                                                       appEvents:appEvents];
 
   [self.delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 
@@ -887,23 +893,37 @@
 - (void)testAppEventsEnabled
 {
   [self stubIsAutoLogAppEventsEnabled:YES];
-  OCMStub(ClassMethod([self.appEventsMock activateApp]));
 
   id notification = OCMClassMock([NSNotification class]);
   [self.delegate applicationDidBecomeActive:notification];
 
-  OCMVerify([self.appEventsMock activateApp]);
+  XCTAssertTrue(
+    self.appEvents.wasActivateAppCalled,
+    "Should have app events activate the app when autolog app events is enabled"
+  );
+  XCTAssertEqual(
+    self.appEvents.capturedApplicationState,
+    UIApplicationStateActive,
+    "Should set the application state to active when the notification is received"
+  );
 }
 
 - (void)testAppEventsDisabled
 {
   [self stubIsAutoLogAppEventsEnabled:NO];
 
-  OCMReject([self.appEventsMock activateApp]);
-  OCMStub(ClassMethod([self.appEventsMock activateApp]));
-
   id notification = OCMClassMock([NSNotification class]);
   [self.delegate applicationDidBecomeActive:notification];
+
+  XCTAssertFalse(
+    self.appEvents.wasActivateAppCalled,
+    "Should not have app events activate the app when autolog app events is enabled"
+  );
+  XCTAssertEqual(
+    self.appEvents.capturedApplicationState,
+    UIApplicationStateActive,
+    "Should set the application state to active when the notification is received"
+  );
 }
 
 - (void)testAppNotifyObserversWhenAppWillResignActive
@@ -925,7 +945,7 @@
 {
   [self.delegate setApplicationState:UIApplicationStateBackground];
   XCTAssertEqual(
-    [FBSDKAppEvents applicationState],
+    self.appEvents.capturedApplicationState,
     UIApplicationStateBackground,
     "The value of applicationState after calling setApplicationState should be UIApplicationStateBackground"
   );

@@ -16,26 +16,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+@objcMembers
+class TestAtePublisher: NSObject, AtePublishing {
+  var publishAteWasCalled = false
 
-#import "FBSDKAtePublishing.h"
-
-@protocol FBSDKDataPersisting;
-
-NS_ASSUME_NONNULL_BEGIN
-
-NS_SWIFT_NAME(AppEventsAtePublisher)
-@interface FBSDKAppEventsAtePublisher : NSObject <FBSDKAtePublishing>
-
-@property (nonatomic, readonly, assign) NSString *appIdentifier;
-
-+ (instancetype)new NS_UNAVAILABLE;
-- (instancetype)init NS_UNAVAILABLE;
-- (nullable instancetype)initWithAppIdentifier:(NSString *)appIdentifier
-                                         store:(id<FBSDKDataPersisting>)store;
-
-- (void)publishATE;
-
-@end
-
-NS_ASSUME_NONNULL_END
+  func publishATE() {
+    publishAteWasCalled = true
+  }
+}

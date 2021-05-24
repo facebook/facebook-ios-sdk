@@ -26,20 +26,8 @@
 
 #import "FBSDKAppEventsUtility.h"
 
-@protocol FBSDKGateKeeperManaging;
-@protocol FBSDKAppEventsConfigurationProviding;
-@protocol FBSDKServerConfigurationProviding;
-@protocol FBSDKGraphRequestProviding;
-@protocol FBSDKDataPersisting;
-@protocol FBSDKFeatureChecking;
-@protocol FBSDKLogging;
-@protocol FBSDKSettings;
 @protocol FBSDKEventProcessing;
-@protocol FBSDKPaymentObserving;
-@protocol FBSDKTimeSpentRecording;
-@protocol FBSDKAppEventsStatePersisting;
 @protocol FBSDKMetadataIndexing;
-@protocol FBSDKAppEventsParameterProcessing;
 
 // Internally known event names
 
@@ -129,21 +117,7 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
 
 @interface FBSDKAppEvents (Internal)
 
-+ (void)setApplicationState:(UIApplicationState)state;
-
-+ (void)   configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
-           appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
-              serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
-                     graphRequestProvider:(id<FBSDKGraphRequestProviding>)provider
-                           featureChecker:(id<FBSDKFeatureChecking>)featureChecker
-                                    store:(id<FBSDKDataPersisting>)store
-                                   logger:(Class<FBSDKLogging>)logger
-                                 settings:(id<FBSDKSettings>)settings
-                          paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
-                        timeSpentRecorder:(id<FBSDKTimeSpentRecording>)timeSpentRecorder
-                      appEventsStateStore:(id<FBSDKAppEventsStatePersisting>)appEventsStateStore
-      eventDeactivationParameterProcessor:(id<FBSDKAppEventsParameterProcessing>)eventDeactivationParameterProcessor
-  restrictiveDataFilterParameterProcessor:(id<FBSDKAppEventsParameterProcessing>)restrictiveDataFilterParameterProcessor;
+@property (nonatomic) UIApplicationState applicationState;
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
@@ -169,7 +143,7 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
              accessToken:(FBSDKAccessToken *)accessToken;
 
 - (void)flushForReason:(FBSDKAppEventsFlushReason)flushReason;
-- (void)registerNotifications;
+- (void)startObservingApplicationLifecycleNotifications;
 
 #if !TARGET_OS_TV
 

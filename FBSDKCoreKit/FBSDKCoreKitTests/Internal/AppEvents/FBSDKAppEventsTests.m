@@ -122,6 +122,10 @@ static NSString *const _mockUserID = @"mockUserID";
   TestAppEventsParameterProcessor *_eventDeactivationParameterProcessor;
   TestAppEventsParameterProcessor *_restrictiveDataFilterParameterProcessor;
 }
+
+@property (nonnull, nonatomic) TestAtePublisherFactory *atePublisherfactory;
+@property (nonnull, nonatomic) TestAtePublisher *atePublisher;
+
 @end
 
 @implementation FBSDKAppEventsTests
@@ -163,27 +167,34 @@ static NSString *const _mockUserID = @"mockUserID";
   _appEventsStateStore = [TestAppEventsStateStore new];
   _eventDeactivationParameterProcessor = [TestAppEventsParameterProcessor new];
   _restrictiveDataFilterParameterProcessor = [TestAppEventsParameterProcessor new];
+  self.atePublisherfactory = [TestAtePublisherFactory new];
 
   [FBSDKAppEvents setLoggingOverrideAppID:_mockAppID];
 
   // Mock FBSDKAppEventsUtility methods
   [self stubAppEventsUtilityShouldDropAppEventWith:NO];
 
+  // Must be stubbed before the configure method is called
+  self.atePublisher = [TestAtePublisher new];
+  self.atePublisherfactory.stubbedPublisher = self.atePublisher;
+
   // This should be removed when these tests are updated to check the actual requests that are created
   [self stubAllocatingGraphRequestConnection];
-  [FBSDKAppEvents configureWithGateKeeperManager:TestGateKeeperManager.class
-                  appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
-                     serverConfigurationProvider:TestServerConfigurationProvider.class
-                            graphRequestProvider:_graphRequestFactory
-                                  featureChecker:_featureManager
-                                           store:_store
-                                          logger:TestLogger.class
-                                        settings:_settings
-                                 paymentObserver:_paymentObserver
-                               timeSpentRecorder:_timeSpentRecorder
-                             appEventsStateStore:_appEventsStateStore
-             eventDeactivationParameterProcessor:_eventDeactivationParameterProcessor
-         restrictiveDataFilterParameterProcessor:_restrictiveDataFilterParameterProcessor];
+  [FBSDKAppEvents.singleton configureWithGateKeeperManager:TestGateKeeperManager.class
+                            appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
+                               serverConfigurationProvider:TestServerConfigurationProvider.class
+                                      graphRequestProvider:_graphRequestFactory
+                                            featureChecker:_featureManager
+                                                     store:_store
+                                                    logger:TestLogger.class
+                                                  settings:_settings
+                                           paymentObserver:_paymentObserver
+                                         timeSpentRecorder:_timeSpentRecorder
+                                       appEventsStateStore:_appEventsStateStore
+                       eventDeactivationParameterProcessor:_eventDeactivationParameterProcessor
+                   restrictiveDataFilterParameterProcessor:_restrictiveDataFilterParameterProcessor
+                                       atePublisherFactory:self.atePublisherfactory];
+
   [FBSDKAppEvents configureNonTVComponentsWithOnDeviceMLModelManager:_onDeviceMLModelManager
                                                      metadataIndexer:_metadataIndexer];
 }
@@ -205,22 +216,15 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testInitializingCreatesAtePublisher
 {
-  // This is necessary for now because we stub the AppEvents Singleton. Should be able
-  // to move away from this pattern once all the dependencies are manageable but for now
-  // this is a workaround to be able to test that initializing uses the dependencies
-  // configured on the type to create objects.
-  FBSDKAppEvents *events = (FBSDKAppEvents *)[(NSObject *)[FBSDKAppEvents alloc] init];
-  FBSDKAppEventsAtePublisher *publisher = events.atePublisher;
-
   XCTAssertEqualObjects(
-    publisher.store,
-    _store,
-    "Initializing should create an ate publisher with the expected data store"
-  );
-  XCTAssertEqualObjects(
-    publisher.appIdentifier,
+    self.atePublisherfactory.capturedAppID,
     _mockAppID,
     "Initializing should create an ate publisher with the expected app id"
+  );
+  XCTAssertEqualObjects(
+    FBSDKAppEvents.singleton.atePublisher,
+    self.atePublisher,
+    "Should store the publisher created by the publisher factory"
   );
 }
 
@@ -432,21 +436,23 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testLogInitialize
 {
-  FBSDKApplicationDelegate *delegate = [FBSDKApplicationDelegate sharedInstance];
-  id delegateMock = OCMPartialMock(delegate);
-
+  TestAppEvents *appEvents = [TestAppEvents new];
+  FBSDKApplicationDelegate *delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationObserver:[TestNotificationCenter new]
+                                                                                          tokenWallet:TestAccessTokenWallet.class
+                                                                                             settings:_settings.class
+                                                                                       featureChecker:_featureManager
+                                                                                            appEvents:appEvents];
   NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
   id userDefaultsMock = OCMPartialMock(userDefaults);
   OCMStub([userDefaultsMock integerForKey:[OCMArg any]]).andReturn(1);
-  OCMExpect(
-    [self.appEventsMock logInternalEvent:@"fb_sdk_initialize"
-                              parameters:[OCMArg any]
-                      isImplicitlyLogged:NO]
+
+  [delegate _logSDKInitialize];
+
+  XCTAssertEqualObjects(
+    appEvents.capturedEventName,
+    @"fb_sdk_initialize"
   );
-
-  [delegateMock _logSDKInitialize];
-
-  OCMVerifyAll(self.appEventsMock);
+  XCTAssertFalse(appEvents.capturedIsImplicitlyLogged);
 }
 
 - (void)testActivateAppWithInitializedSDK
@@ -456,7 +462,7 @@ static NSString *const _mockUserID = @"mockUserID";
   OCMExpect([self.appEventsMock publishInstall]);
   OCMExpect([self.appEventsMock fetchServerConfiguration:NULL]);
 
-  [FBSDKAppEvents activateApp];
+  [FBSDKAppEvents.singleton activateApp];
 
   OCMVerifyAll(self.appEventsMock);
   XCTAssertTrue(
@@ -518,7 +524,7 @@ static NSString *const _mockUserID = @"mockUserID";
 - (void)testActivateAppWithoutInitializedSDK
 {
   [FBSDKAppEvents reset];
-  [FBSDKAppEvents activateApp];
+  [FBSDKAppEvents.singleton activateApp];
 
   OCMReject([self.appEventsMock publishInstall]);
   OCMReject([self.appEventsMock fetchServerConfiguration:NULL]);
@@ -1139,9 +1145,9 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testApplicationStateValues
 {
-  XCTAssertEqual([FBSDKAppEvents applicationState], UIApplicationStateInactive, "The default value of applicationState should be UIApplicationStateInactive");
-  [FBSDKAppEvents setApplicationState:UIApplicationStateBackground];
-  XCTAssertEqual([FBSDKAppEvents applicationState], UIApplicationStateBackground, "The value of applicationState after calling setApplicationState should be UIApplicationStateBackground");
+  XCTAssertEqual([FBSDKAppEvents.singleton applicationState], UIApplicationStateInactive, "The default value of applicationState should be UIApplicationStateInactive");
+  [FBSDKAppEvents.singleton setApplicationState:UIApplicationStateBackground];
+  XCTAssertEqual([FBSDKAppEvents.singleton applicationState], UIApplicationStateBackground, "The value of applicationState after calling setApplicationState should be UIApplicationStateBackground");
 }
 
 @end

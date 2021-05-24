@@ -62,8 +62,6 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 
   [self stubServerConfigurationFetchingWithConfiguration:[FBSDKServerConfiguration defaultServerConfigurationForAppID:nil] error:nil];
 
-  [FBSDKAppEvents setUserID:@"test-user-id"];
-
   userDefaultsSpy = [UserDefaultsSpy new];
   bundle = [TestBundle new];
   logger = [TestEventLogger new];
@@ -73,19 +71,20 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
      appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
              infoDictionaryProvider:bundle
                         eventLogger:logger];
-  [FBSDKAppEvents configureWithGateKeeperManager:TestGateKeeperManager.self
-                  appEventsConfigurationProvider:TestAppEventsConfigurationProvider.self
-                     serverConfigurationProvider:TestServerConfigurationProvider.self
-                            graphRequestProvider:[TestGraphRequestFactory new]
-                                  featureChecker:[TestFeatureManager new]
-                                           store:userDefaultsSpy
-                                          logger:TestLogger.class
-                                        settings:[TestSettings new]
-                                 paymentObserver:[TestPaymentObserver new]
-                               timeSpentRecorder:[TestTimeSpentRecorder new]
-                             appEventsStateStore:[TestAppEventsStateStore new]
-             eventDeactivationParameterProcessor:[TestAppEventsParameterProcessor new]
-         restrictiveDataFilterParameterProcessor:[TestAppEventsParameterProcessor new]];
+  [FBSDKAppEvents.singleton configureWithGateKeeperManager:TestGateKeeperManager.self
+                            appEventsConfigurationProvider:TestAppEventsConfigurationProvider.self
+                               serverConfigurationProvider:TestServerConfigurationProvider.self
+                                      graphRequestProvider:[TestGraphRequestFactory new]
+                                            featureChecker:[TestFeatureManager new]
+                                                     store:userDefaultsSpy
+                                                    logger:TestLogger.class
+                                                  settings:[TestSettings new]
+                                           paymentObserver:[TestPaymentObserver new]
+                                         timeSpentRecorder:[TestTimeSpentRecorder new]
+                                       appEventsStateStore:[TestAppEventsStateStore new]
+                       eventDeactivationParameterProcessor:[TestAppEventsParameterProcessor new]
+                   restrictiveDataFilterParameterProcessor:[TestAppEventsParameterProcessor new]
+                                       atePublisherFactory:[TestAtePublisherFactory new]];
 }
 
 - (void)tearDown
@@ -129,7 +128,11 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   XCTAssertEqualObjects(@"event", dict[@"event"]);
   XCTAssertNotNil(dict[@"advertiser_id"]);
   XCTAssertEqualObjects(@"1", dict[@"application_tracking_enabled"]);
-  XCTAssertEqualObjects(@"test-user-id", dict[@"app_user_id"]);
+  XCTAssertEqualObjects(
+    @"com.facebook.sdk.appevents.userid",
+    dict[@"app_user_id"],
+    "Parameters should use the user id set on the AppEvents singleton instance"
+  );
   XCTAssertEqualObjects(@"{}", dict[@"ud"]);
 
   NSString *testEmail = @"apptest@fb.com";
@@ -153,7 +156,6 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   XCTAssertEqualObjects(@"event", dict[@"event"]);
   XCTAssertNotNil(dict[@"advertiser_id"]);
   XCTAssertEqualObjects(@"1", dict[@"application_tracking_enabled"]);
-  XCTAssertEqualObjects(@"test-user-id", dict[@"app_user_id"]);
   NSDictionary<NSString *, NSString *> *expectedUserDataDict = @{@"em" : [FBSDKUtility SHA256Hash:testEmail],
                                                                  @"fn" : [FBSDKUtility SHA256Hash:testFirstName],
                                                                  @"ln" : [FBSDKUtility SHA256Hash:testLastName],

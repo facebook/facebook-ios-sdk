@@ -16,25 +16,34 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#import "FBSDKAtePublisherFactory.h"
 
-#import "FBSDKAtePublishing.h"
-
-@protocol FBSDKDataPersisting;
+#import "FBSDKAppEventsAtePublisher.h"
+#import "FBSDKDataPersisting.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(AppEventsAtePublisher)
-@interface FBSDKAppEventsAtePublisher : NSObject <FBSDKAtePublishing>
+@interface FBSDKAtePublisherFactory ()
 
-@property (nonatomic, readonly, assign) NSString *appIdentifier;
+@property (nonnull, nonatomic, readonly) id<FBSDKDataPersisting> store;
 
-+ (instancetype)new NS_UNAVAILABLE;
-- (instancetype)init NS_UNAVAILABLE;
-- (nullable instancetype)initWithAppIdentifier:(NSString *)appIdentifier
-                                         store:(id<FBSDKDataPersisting>)store;
+@end
 
-- (void)publishATE;
+@implementation FBSDKAtePublisherFactory
+
+- (instancetype)initWithStore:(id<FBSDKDataPersisting>)store
+{
+  if ((self = [super init])) {
+    _store = store;
+  }
+  return self;
+}
+
+- (id<FBSDKAtePublishing>)createPublisherWithAppID:(NSString *)appID
+{
+  return [[FBSDKAppEventsAtePublisher alloc] initWithAppIdentifier:appID
+                                                             store:self.store];
+}
 
 @end
 

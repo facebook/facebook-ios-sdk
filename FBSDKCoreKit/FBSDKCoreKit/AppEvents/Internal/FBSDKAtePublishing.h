@@ -18,21 +18,10 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKAtePublishing.h"
-
-@protocol FBSDKDataPersisting;
-
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(AppEventsAtePublisher)
-@interface FBSDKAppEventsAtePublisher : NSObject <FBSDKAtePublishing>
-
-@property (nonatomic, readonly, assign) NSString *appIdentifier;
-
-+ (instancetype)new NS_UNAVAILABLE;
-- (instancetype)init NS_UNAVAILABLE;
-- (nullable instancetype)initWithAppIdentifier:(NSString *)appIdentifier
-                                         store:(id<FBSDKDataPersisting>)store;
+NS_SWIFT_NAME(AtePublishing)
+@protocol FBSDKAtePublishing <NSObject>
 
 - (void)publishATE;
 

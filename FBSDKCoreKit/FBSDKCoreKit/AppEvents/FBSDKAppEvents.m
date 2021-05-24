@@ -26,7 +26,6 @@
 
 #import "FBSDKAEMReporter.h"
 #import "FBSDKAccessToken.h"
-#import "FBSDKAppEventsAtePublisher.h"
 #import "FBSDKAppEventsConfiguration.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsDeviceInfo.h"
@@ -34,6 +33,8 @@
 #import "FBSDKAppEventsState.h"
 #import "FBSDKAppEventsStatePersisting.h"
 #import "FBSDKAppEventsUtility.h"
+#import "FBSDKAtePublisherCreating.h"
+#import "FBSDKAtePublishing.h"
 #import "FBSDKCodelessIndexer.h"
 #import "FBSDKConstants.h"
 #import "FBSDKCoreKitBasicsImport.h"
@@ -286,20 +287,15 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 @interface FBSDKAppEvents ()
 
-@property (class, nullable, assign) id<FBSDKDataPersisting> store;
-
+@property (nullable, nonatomic) id<FBSDKDataPersisting> store;
 @property (nonatomic, assign) FBSDKAppEventsFlushBehavior flushBehavior;
-
-// for testing only.
-@property (nonatomic, assign) BOOL disableTimer;
-
+@property (nonatomic) UIApplicationState applicationState;
 @property (nonatomic, copy) NSString *pushNotificationsDeviceTokenString;
-
 @property (nonatomic, strong) dispatch_source_t flushTimer;
-
 @property (nonatomic, copy) NSString *userID;
-
 @property (nonatomic, strong) id<FBSDKAtePublishing> atePublisher;
+
+@property (nonatomic, assign) BOOL disableTimer; // for testing only.
 
 @end
 
@@ -315,10 +311,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 #pragma mark - Object Lifecycle
 
-static id<FBSDKDataPersisting> _store;
 static BOOL _canLogEvents = NO;
-
-static UIApplicationState _applicationState = UIApplicationStateInactive;
 
 + (void)initialize
 {
@@ -332,19 +325,12 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 
 - (instancetype)init
 {
-  NSString *userID = [self.class.store stringForKey:USER_ID_USER_DEFAULTS_KEY];
-  FBSDKAppEventsAtePublisher *publisher = [[FBSDKAppEventsAtePublisher alloc] initWithAppIdentifier:self.appID
-                                                                                              store:self.class.store];
   return [self initWithFlushBehavior:FBSDKAppEventsFlushBehaviorAuto
-                flushPeriodInSeconds:FLUSH_PERIOD_IN_SECONDS
-                              userID:userID
-                        atePublisher:publisher];
+                flushPeriodInSeconds:FLUSH_PERIOD_IN_SECONDS];
 }
 
 - (instancetype)initWithFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior
                  flushPeriodInSeconds:(int)flushPeriodInSeconds
-                               userID:(nonnull NSString *)userID
-                         atePublisher:(nonnull id<FBSDKAtePublishing>)atePublisher
 {
   self = [super init];
   if (self) {
@@ -356,16 +342,13 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
                                                           [weakSelf flushTimerFired:nil];
                                                         }];
 
-    _userID = userID;
-    _atePublisher = atePublisher;
-
-    [self fetchServerConfiguration:nil];
+    self.applicationState = UIApplicationStateInactive;
   }
 
   return self;
 }
 
-- (void)registerNotifications
+- (void)startObservingApplicationLifecycleNotifications
 {
   [[NSNotificationCenter defaultCenter]
    addObserver:self
@@ -658,7 +641,12 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 
 + (void)activateApp
 {
-  if (![self canLogEvents]) {
+  [self.singleton activateApp];
+}
+
+- (void)activateApp
+{
+  if (![self.class canLogEvents]) {
     NSLog(
       @"<Warning> App events cannot be activated before the Facebook SDK is initialized. "
       "Learn more: https://github.com/facebook/facebook-ios-sdk/blob/master/CHANGELOG.md#900"
@@ -666,13 +654,12 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
     return;
   }
 
-  [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass(self)];
+  [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass(self.class)];
 
   // Fetch app settings and register for transaction notifications only if app supports implicit purchase
   // events
-  FBSDKAppEvents *instance = [FBSDKAppEvents singleton];
-  [instance publishInstall];
-  [instance fetchServerConfiguration:NULL];
+  [self publishInstall];
+  [self fetchServerConfiguration:NULL];
 
   // Restore time spent data, indicating that we're being called from "activateApp", which will,
   // when appropriate, result in logging an "activated app" and "deactivated app" (for the
@@ -739,21 +726,23 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 
 + (void)setUserID:(NSString *)userID
 {
-  if ([[[self class] singleton].userID isEqualToString:userID]) {
-    return;
-  }
-  [[self class] singleton].userID = userID;
+  self.singleton.userID = userID;
+}
+
+- (void)setUserID:(NSString *)userID
+{
+  _userID = [userID copy];
   [self.store setObject:userID forKey:USER_ID_USER_DEFAULTS_KEY];
 }
 
 + (void)clearUserID
 {
-  [self setUserID:nil];
+  self.singleton.userID = nil;
 }
 
 + (NSString *)userID
 {
-  return [[self class] singleton].userID;
+  return self.singleton.userID;
 }
 
 + (void)setUserEmail:(nullable NSString *)email
@@ -866,7 +855,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 
 #pragma mark - Internal Methods
 
-+ (void)   configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
+- (void)   configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
            appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
               serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                      graphRequestProvider:(id<FBSDKGraphRequestProviding>)provider
@@ -879,21 +868,27 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
                       appEventsStateStore:(id<FBSDKAppEventsStatePersisting>)appEventsStateStore
       eventDeactivationParameterProcessor:(id<FBSDKAppEventsParameterProcessing>)eventDeactivationParameterProcessor
   restrictiveDataFilterParameterProcessor:(id<FBSDKAppEventsParameterProcessing>)restrictiveDataFilterParameterProcessor
+                      atePublisherFactory:(id<FBSDKAtePublisherCreating>)atePublisherFactory
 {
   [FBSDKAppEvents setAppEventsConfigurationProvider:appEventsConfigurationProvider];
   [FBSDKAppEvents setServerConfigurationProvider:serverConfigurationProvider];
   g_gateKeeperManager = gateKeeperManager;
-  self.store = store;
   g_logger = logger;
   [FBSDKAppEvents setRequestProvider:provider];
   [FBSDKAppEvents setFeatureChecker:featureChecker];
-  [FBSDKAppEvents setCanLogEvents];
   g_settings = settings;
   g_paymentObserver = paymentObserver;
   g_timeSpentRecorder = timeSpentRecorder;
   g_appEventsStateStore = appEventsStateStore;
   g_eventDeactivationParameterProcessor = eventDeactivationParameterProcessor;
   g_restrictiveDataFilterParameterProcessor = restrictiveDataFilterParameterProcessor;
+
+  self.store = store;
+  self.userID = [store stringForKey:USER_ID_USER_DEFAULTS_KEY];
+  self.atePublisher = [atePublisherFactory createPublisherWithAppID:self.appID];
+  [self fetchServerConfiguration:nil];
+
+  [FBSDKAppEvents setCanLogEvents];
 }
 
 + (void)setFeatureChecker:(id<FBSDKFeatureChecking>)checker
@@ -921,18 +916,6 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 {
   if (g_serverConfigurationProvider != provider) {
     g_serverConfigurationProvider = provider;
-  }
-}
-
-+ (id<FBSDKDataPersisting>)store
-{
-  return _store;
-}
-
-+ (void)setStore:(id<FBSDKDataPersisting>)store
-{
-  if (_store != store) {
-    _store = store;
   }
 }
 
@@ -1141,8 +1124,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
     return;
   }
   NSString *lastAttributionPingString = [NSString stringWithFormat:@"com.facebook.sdk:lastAttributionPing%@", appID];
-  id<FBSDKDataPersisting> defaults = self.class.store;
-  if ([defaults objectForKey:lastAttributionPingString]) {
+  if ([self.store objectForKey:lastAttributionPingString]) {
     return;
   }
   [self fetchServerConfiguration:^{
@@ -1158,11 +1140,12 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
                                                                                 tokenString:nil
                                                                                  HTTPMethod:FBSDKHTTPMethodPOST
                                                                                       flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
+    __block id<FBSDKDataPersisting> weakStore = self.store;
     [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
       if (!error) {
-        [defaults setObject:[NSDate date] forKey:lastAttributionPingString];
+        [weakStore setObject:[NSDate date] forKey:lastAttributionPingString];
         NSString *lastInstallResponseKey = [NSString stringWithFormat:@"com.facebook.sdk:lastInstallResponse%@", appID];
-        [defaults setObject:result forKey:lastInstallResponseKey];
+        [weakStore setObject:result forKey:lastInstallResponseKey];
       }
     }];
   }];
@@ -1173,8 +1156,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   if (self.appID.length == 0) {
     return;
   }
-  self.atePublisher = self.atePublisher ?: [[FBSDKAppEventsAtePublisher alloc] initWithAppIdentifier:self.appID
-                                                                                               store:self.class.store];
+
 #if FBSDKTEST
   [self.atePublisher publishATE];
 #else
@@ -1206,16 +1188,6 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
 + (BOOL)canLogEvents
 {
   return _canLogEvents;
-}
-
-+ (void)setApplicationState:(UIApplicationState)state
-{
-  _applicationState = state;
-}
-
-+ (UIApplicationState)applicationState
-{
-  return _applicationState;
 }
 
 #if !TARGET_OS_TV
@@ -1411,7 +1383,7 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
     applicationState = [UIApplication sharedApplication].applicationState;
   } else {
     currentViewControllerName = @"off_thread";
-    applicationState = [self.class applicationState];
+    applicationState = self.applicationState;
   }
   [FBSDKTypeUtility dictionary:eventDictionary setObject:currentViewControllerName forKey:@"_ui"];
 
@@ -1710,13 +1682,12 @@ static UIApplicationState _applicationState = UIApplicationStateInactive;
   [self resetApplicationState];
   g_gateKeeperManager = nil;
   g_graphRequestProvider = nil;
-  _store = nil;
   _canLogEvents = NO;
 }
 
 + (void)resetApplicationState
 {
-  _applicationState = UIApplicationStateInactive;
+  self.singleton.applicationState = UIApplicationStateInactive;
 }
 
 + (id<FBSDKFeatureChecking>)featureChecker
