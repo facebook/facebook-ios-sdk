@@ -96,7 +96,6 @@
 @interface FBSDKApplicationDelegateTests : FBSDKTestCase
 {
   FBSDKProfile *_profile;
-  id _partialDelegateMock;
 }
 
 @property (nonatomic) FBSDKApplicationDelegate *delegate;
@@ -135,6 +134,7 @@
   [TestAccessTokenWallet reset];
   [TestSettings reset];
   [TestGateKeeperManager reset];
+  [TestServerConfigurationProvider reset];
   self.appEvents = [TestAppEvents new];
 
   self.featureChecker = [TestFeatureManager new];
@@ -142,7 +142,8 @@
                                                                      tokenWallet:TestAccessTokenWallet.class
                                                                         settings:TestSettings.class
                                                                   featureChecker:self.featureChecker
-                                                                       appEvents:self.appEvents];
+                                                                       appEvents:self.appEvents
+                                                     serverConfigurationProvider:TestServerConfigurationProvider.class];
   self.delegate.isAppLaunched = NO;
 
   _profile = [[FBSDKProfile alloc] initWithUserID:self.name
@@ -152,10 +153,6 @@
                                              name:nil
                                           linkURL:nil
                                       refreshDate:nil];
-
-  // Avoid actually calling log initialize b/c of the side effects.
-  _partialDelegateMock = OCMPartialMock(self.delegate);
-  OCMStub([_partialDelegateMock _logSDKInitialize]);
 
   [self.delegate resetApplicationObserverCache];
 
@@ -170,12 +167,9 @@
   self.delegate = nil;
   _profile = nil;
 
-  [_partialDelegateMock stopMocking];
-  _partialDelegateMock = nil;
-
   [TestAccessTokenWallet reset];
   [TestSettings reset];
-  // [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
+  [TestServerConfigurationProvider reset];
 }
 
 // MARK: - Observers
@@ -252,6 +246,23 @@
     [FBSDKGraphRequestConnection canMakeRequests],
     "Initializing the SDK should enable making graph requests"
   );
+}
+
+- (void)testInitializingSDKLogsAppEvent
+{
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
+
+  NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+  id userDefaultsMock = OCMPartialMock(userDefaults);
+  OCMStub([userDefaultsMock integerForKey:[OCMArg any]]).andReturn(1);
+
+  [self.delegate _logSDKInitialize];
+
+  XCTAssertEqualObjects(
+    self.appEvents.capturedEventName,
+    @"fb_sdk_initialize"
+  );
+  XCTAssertFalse(self.appEvents.capturedIsImplicitlyLogged);
 }
 
 - (void)testInitializingSdkEnablesAppEvents
@@ -758,13 +769,6 @@
   TestTokenCache *cache = [[TestTokenCache alloc] initWithAccessToken:expected
                                                   authenticationToken:nil];
   [TestAccessTokenWallet setTokenCache:cache];
-  TestAppEvents *appEvents = [TestAppEvents new];
-
-  self.delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationObserver:[TestNotificationCenter new]
-                                                                     tokenWallet:TestAccessTokenWallet.class
-                                                                        settings:TestSettings.class
-                                                                  featureChecker:FBSDKFeatureManager.shared
-                                                                       appEvents:appEvents];
 
   [self.delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 
@@ -811,33 +815,39 @@
   OCMVerify(ClassMethod([self.authenticationTokenClassMock setCurrentAuthenticationToken:nil]));
 }
 
-- (void)testDidFinishLaunchingLoadsServerConfiguration
-{
-  [self stubAllocatingGraphRequestConnection];
-  [self.delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
-
-  // Should load the server configuration on finishing launching
-  OCMVerify(ClassMethod([self.serverConfigurationManagerClassMock loadServerConfigurationWithCompletionBlock:nil]));
-}
-
 - (void)testDidFinishLaunchingWithAutoLogEnabled
 {
   [self stubIsAutoLogAppEventsEnabled:YES];
 
+  // Temporarily stubbing defaults so that the bitmask is different.
+  NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+  id userDefaultsMock = OCMPartialMock(userDefaults);
+  OCMStub([userDefaultsMock integerForKey:[OCMArg any]]).andReturn(1);
+
   [self.delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 
-  // Should log initialization when auto log app events is enabled
-  OCMVerify([_partialDelegateMock _logSDKInitialize]);
+  XCTAssertEqualObjects(
+    self.appEvents.capturedEventName,
+    @"fb_sdk_initialize",
+    "Should log initialization when auto log app events is enabled"
+  );
 }
 
 - (void)testDidFinishLaunchingWithAutoLogDisabled
 {
-  // Should not log initialization when auto log app events are disabled
-  OCMReject([_partialDelegateMock _logSDKInitialize]);
-
   [self stubIsAutoLogAppEventsEnabled:NO];
 
+  // Temporarily stubbing defaults so that the bitmask is different.
+  NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+  id userDefaultsMock = OCMPartialMock(userDefaults);
+  OCMStub([userDefaultsMock integerForKey:[OCMArg any]]).andReturn(1);
+
   [self.delegate application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
+
+  XCTAssertNil(
+    self.appEvents.capturedEventName,
+    "Should not log initialization when auto log app events are disabled"
+  );
 }
 
 - (void)testDidFinishLaunchingSetsProfileWithCache

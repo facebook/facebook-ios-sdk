@@ -694,7 +694,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     XCTAssertEqual(
       CodelessIndexer.extInfo,
       """
-      ["x86_64","","1","1","en_US"]
+      ["x86_64","\(AppEventsUtility.shared.advertiserID ?? "")","1","1","en_US"]
       """,
       "Should be able to provide extra info as a string representation of an array of strings"
     )

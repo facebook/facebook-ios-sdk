@@ -97,6 +97,7 @@ static UIApplicationState _applicationState;
 @property (nonnull, nonatomic, readonly) id<FBSDKNotificationObserving> notificationObserver;
 @property (nonnull, nonatomic, readonly) NSHashTable<id<FBSDKApplicationObserving>> *applicationObservers;
 @property (nonnull, nonatomic, readonly) id<FBSDKAppEventsConfiguring, FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging> appEvents;
+@property (nonnull, nonatomic, readonly) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonatomic) BOOL isAppLaunched;
 
 @end
@@ -128,7 +129,8 @@ static UIApplicationState _applicationState;
                                 tokenWallet:FBSDKAccessToken.class
                                    settings:FBSDKSettings.class
                              featureChecker:FBSDKFeatureManager.shared
-                                  appEvents:FBSDKAppEvents.singleton];
+                                  appEvents:FBSDKAppEvents.singleton
+                serverConfigurationProvider:FBSDKServerConfigurationManager.class];
 }
 
 - (instancetype)initWithNotificationObserver:(id<FBSDKNotificationObserving>)observer
@@ -136,6 +138,7 @@ static UIApplicationState _applicationState;
                                     settings:(Class<FBSDKSettingsLogging>)settings
                               featureChecker:(id<FBSDKFeatureChecking>)featureChecker
                                    appEvents:(id<FBSDKAppEventsConfiguring, FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents
+                 serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
 {
   if ((self = [super init]) != nil) {
     _applicationObservers = [NSHashTable new];
@@ -144,6 +147,7 @@ static UIApplicationState _applicationState;
     _settings = settings;
     _featureChecker = featureChecker;
     _appEvents = appEvents;
+    _serverConfigurationProvider = serverConfigurationProvider;
   }
   return self;
 }
@@ -156,6 +160,11 @@ static UIApplicationState _applicationState;
   } else {
     hasInitializeBeenCalled = YES;
   }
+
+  //
+  // DO NOT MOVE THIS CALL
+  // Dependencies MUST be configured before they are invoked
+  //
   [self configureDependencies];
 
   Class<FBSDKSettingsLogging> const settingsLogger = self.settings;
@@ -298,7 +307,7 @@ static UIApplicationState _applicationState;
   [self.tokenWallet setCurrentAccessToken:cachedToken];
 
   // fetch app settings
-  [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:NULL];
+  [self.serverConfigurationProvider loadServerConfigurationWithCompletionBlock:NULL];
 
   if (FBSDKSettings.isAutoLogAppEventsEnabled) {
     [self _logSDKInitialize];

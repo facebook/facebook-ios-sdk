@@ -434,27 +434,6 @@ static NSString *const _mockUserID = @"mockUserID";
   XCTAssertEqualObjects([FBSDKAppEvents singleton].pushNotificationsDeviceTokenString, mockDeviceTokenString);
 }
 
-- (void)testLogInitialize
-{
-  TestAppEvents *appEvents = [TestAppEvents new];
-  FBSDKApplicationDelegate *delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationObserver:[TestNotificationCenter new]
-                                                                                          tokenWallet:TestAccessTokenWallet.class
-                                                                                             settings:_settings.class
-                                                                                       featureChecker:_featureManager
-                                                                                            appEvents:appEvents];
-  NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-  id userDefaultsMock = OCMPartialMock(userDefaults);
-  OCMStub([userDefaultsMock integerForKey:[OCMArg any]]).andReturn(1);
-
-  [delegate _logSDKInitialize];
-
-  XCTAssertEqualObjects(
-    appEvents.capturedEventName,
-    @"fb_sdk_initialize"
-  );
-  XCTAssertFalse(appEvents.capturedIsImplicitlyLogged);
-}
-
 - (void)testActivateAppWithInitializedSDK
 {
   [FBSDKAppEvents setCanLogEvents];
