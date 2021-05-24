@@ -18,18 +18,29 @@
 
 #import "FBSDKAppEventsAtePublisher.h"
 
+#if FBSDK_SWIFT_PACKAGE
+ #import "FBSDKGraphRequestFlags.h"
+ #import "FBSDKGraphRequestHTTPMethod.h"
+#else
+ #import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
+ #import <FBSDKCoreKit/FBSDKGraphRequestHTTPMethod.h>
+#endif
+
 #import "FBSDKAppEventsDeviceInfo.h"
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDataPersisting.h"
-#import "FBSDKGraphRequest.h"
-#import "FBSDKGraphRequest+Internal.h"
+#import "FBSDKGraphRequestConnecting.h"
+#import "FBSDKGraphRequestProtocol.h"
+#import "FBSDKGraphRequestProviding.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
-#import "FBSDKSettings+Internal.h"
+#import "FBSDKSettingsProtocol.h"
 
 @interface FBSDKAppEventsAtePublisher ()
 
-@property (nullable, nonatomic, assign) id<FBSDKDataPersisting> store;
+@property (nullable, nonatomic) id<FBSDKGraphRequestProviding> graphRequestFactory;
+@property (nullable, nonatomic) id<FBSDKSettings> settings;
+@property (nullable, nonatomic) id<FBSDKDataPersisting> store;
 @property (nonatomic) BOOL isProcessing;
 
 @end
@@ -37,6 +48,8 @@
 @implementation FBSDKAppEventsAtePublisher
 
 - (nullable instancetype)initWithAppIdentifier:(NSString *)appIdentifier
+                           graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory
+                                      settings:(id<FBSDKSettings>)settings
                                          store:(id<FBSDKDataPersisting>)store
 {
   if ((self = [self init])) {
@@ -46,6 +59,8 @@
       return nil;
     }
     _appIdentifier = identifier;
+    _graphRequestFactory = graphRequestFactory;
+    _settings = settings;
     _store = store;
   }
   return self;
@@ -76,7 +91,7 @@
   NSArray *event = @[
     @{
       @"_eventName" : @"fb_mobile_ate_status",
-      @"ate_status" : @([FBSDKSettings advertisingTrackingStatus]).stringValue,
+      @"ate_status" : @(self.settings.advertisingTrackingStatus).stringValue,
       @"os_version" : osVersion,
     }
   ];
@@ -85,11 +100,11 @@
   [FBSDKAppEventsDeviceInfo extendDictionaryWithDeviceInfo:parameters];
 
   NSString *path = [NSString stringWithFormat:@"%@/activities", self.appIdentifier];
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:path
-                                                                 parameters:parameters
-                                                                tokenString:nil
-                                                                 HTTPMethod:FBSDKHTTPMethodPOST
-                                                                      flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
+  id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:path
+                                                                                 parameters:parameters
+                                                                                tokenString:nil
+                                                                                 HTTPMethod:FBSDKHTTPMethodPOST
+                                                                                      flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
   __block id<FBSDKDataPersisting> weakStore = self.store;
   [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     if (!error) {

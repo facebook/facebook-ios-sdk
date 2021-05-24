@@ -16,42 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKAtePublisherFactory.h"
-
 #import "FBSDKAppEventsAtePublisher.h"
-#import "FBSDKDataPersisting.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKAtePublisherFactory ()
+@interface FBSDKAppEventsAtePublisher (Testing)
 
-@property (nonnull, nonatomic, readonly) id<FBSDKGraphRequestProviding> graphRequestFactory;
-@property (nonnull, nonatomic, readonly) id<FBSDKSettings> settings;
-@property (nonnull, nonatomic, readonly) id<FBSDKDataPersisting> store;
-
-@end
-
-@implementation FBSDKAtePublisherFactory
-
-- (instancetype)initWithStore:(id<FBSDKDataPersisting>)store
-          graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory
-                     settings:(id<FBSDKSettings>)settings
-{
-  if ((self = [super init])) {
-    _store = store;
-    _graphRequestFactory = graphRequestFactory;
-    _settings = settings;
-  }
-  return self;
-}
-
-- (id<FBSDKAtePublishing>)createPublisherWithAppID:(NSString *)appID
-{
-  return [[FBSDKAppEventsAtePublisher alloc] initWithAppIdentifier:appID
-                                               graphRequestFactory:self.graphRequestFactory
-                                                          settings:self.settings
-                                                             store:self.store];
-}
+@property (nonatomic, strong) id<FBSDKDataPersisting> store;
+@property (nonatomic) BOOL isProcessing;
 
 @end
 

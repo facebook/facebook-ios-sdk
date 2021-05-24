@@ -578,7 +578,9 @@ static UIApplicationState _applicationState;
   [FBSDKAccessToken setTokenCache:tokenCache];
   [FBSDKAccessToken setConnectionFactory:connectionProvider];
   [FBSDKAuthenticationToken setTokenCache:tokenCache];
-  FBSDKAtePublisherFactory *atePublisherFactory = [[FBSDKAtePublisherFactory alloc] initWithStore:store];
+  FBSDKAtePublisherFactory *atePublisherFactory = [[FBSDKAtePublisherFactory alloc] initWithStore:store
+                                                                              graphRequestFactory:graphRequestProvider
+                                                                                         settings:sharedSettings];
   [self.appEvents configureWithGateKeeperManager:FBSDKGateKeeperManager.class
                   appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
                      serverConfigurationProvider:FBSDKServerConfigurationManager.class

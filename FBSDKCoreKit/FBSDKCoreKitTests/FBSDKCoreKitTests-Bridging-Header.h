@@ -21,6 +21,7 @@
 
 #import "AEM+Testing.h"
 #import "ApplicationDelegate+Testing.h"
+#import "AppEventsAtePublisher+Testing.h"
 #import "Button+Testing.h"
 #import "CodelessIndexer+Testing.h"
 #import "FBSDKAccessToken+Internal.h"
@@ -355,12 +356,6 @@ NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvi
 @interface FBSDKGraphRequestPiggybackManager (Testing)
 
 @property (class, nonatomic, nullable) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> tokenWallet;
-
-@end
-
-@interface FBSDKAppEventsAtePublisher (Testing)
-
-@property (nonatomic, strong) id<FBSDKDataPersisting> store;
 
 @end
 

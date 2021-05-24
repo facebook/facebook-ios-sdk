@@ -21,17 +21,21 @@
 #import "FBSDKAtePublishing.h"
 
 @protocol FBSDKDataPersisting;
+@protocol FBSDKGraphRequestProviding;
+@protocol FBSDKSettings;
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AppEventsAtePublisher)
 @interface FBSDKAppEventsAtePublisher : NSObject <FBSDKAtePublishing>
 
-@property (nonatomic, readonly, assign) NSString *appIdentifier;
+@property (nonatomic, readonly) NSString *appIdentifier;
 
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
 - (nullable instancetype)initWithAppIdentifier:(NSString *)appIdentifier
+                           graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory
+                                      settings:(id<FBSDKSettings>)settings
                                          store:(id<FBSDKDataPersisting>)store;
 
 - (void)publishATE;
