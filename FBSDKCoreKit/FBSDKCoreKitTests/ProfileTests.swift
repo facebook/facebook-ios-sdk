@@ -17,6 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import FBSDKCoreKit
+import TestTools
 import XCTest
 
 class ProfileTests: XCTestCase {
@@ -75,6 +76,32 @@ class ProfileTests: XCTestCase {
     XCTAssertTrue(
       Profile.accessTokenProvider is TestAccessTokenWallet.Type,
       "Should be able to set a token wallet"
+    )
+  }
+
+  func testHashability() {
+    let profile = SampleUserProfiles.createValid()
+    let profile2 = SampleUserProfiles.createValid(userID: name)
+
+    XCTAssertEqual(
+      profile.hash,
+      profile.hash,
+      "Hashed profiles should be consistent"
+    )
+    XCTAssertNotEqual(
+      profile.hash,
+      profile2.hash,
+      "Hashed profiles should be unique"
+    )
+  }
+
+  func testFetchingCachedProfile() {
+    _ = Profile.fetchCachedProfile()
+
+    XCTAssertEqual(
+      store.capturedObjectRetrievalKey,
+      "com.facebook.sdk.FBSDKProfile.currentProfile",
+      "Fetching a cached profile should query the store with the expected retrieval key"
     )
   }
 }
