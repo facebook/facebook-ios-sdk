@@ -26,6 +26,9 @@ class ApplicationDelegateTests: XCTestCase {
   var center = TestNotificationCenter()
   var featureChecker = TestFeatureManager()
   var appEvents = TestAppEvents()
+  var store = UserDefaultsSpy()
+  let observer = TestApplicationDelegateObserver()
+  let bitmaskKey = "com.facebook.sdk.kits.bitmask"
 
   override class func setUp() {
     super.setUp()
@@ -46,7 +49,8 @@ class ApplicationDelegateTests: XCTestCase {
       settings: TestSettings.self,
       featureChecker: featureChecker,
       appEvents: appEvents,
-      serverConfigurationProvider: TestServerConfigurationProvider.self
+      serverConfigurationProvider: TestServerConfigurationProvider.self,
+      store: store
     )
   }
 
@@ -83,6 +87,11 @@ class ApplicationDelegateTests: XCTestCase {
       ApplicationDelegate.shared.serverConfigurationProvider is ServerConfigurationManager.Type,
       "Should use the expected default server configuration provider"
     )
+    XCTAssertEqual(
+      ApplicationDelegate.shared.store as? UserDefaults,
+      UserDefaults.standard,
+      "Should be able to set a persistent store"
+    )
   }
 
   func testCreatingWithDependencies() {
@@ -108,7 +117,14 @@ class ApplicationDelegateTests: XCTestCase {
       delegate.serverConfigurationProvider is TestServerConfigurationProvider.Type,
       "Should be able to create with a server configuration provider"
     )
+    XCTAssertEqual(
+      delegate.store as? UserDefaultsSpy,
+      store,
+      "Should be able to set a persistent store"
+    )
   }
+
+  // MARK: - Initializing SDK
 
   func testInitializingSdkTriggersApplicationLifecycleNotificationsForAppEvents() {
     delegate.initializeSDK(launchOptions: [:])
@@ -117,6 +133,18 @@ class ApplicationDelegateTests: XCTestCase {
       appEvents.wasStartObservingApplicationLifecycleNotificationsCalled,
       "Should have app events start observing application lifecycle notifications upon initialization"
     )
+  }
+
+  func testInitializingSDKLogsAppEvent() {
+    store.setValue(1, forKey: bitmaskKey)
+
+    delegate._logSDKInitialize()
+
+    XCTAssertEqual(
+      appEvents.capturedEventName,
+      "fb_sdk_initialize"
+    )
+    XCTAssertFalse(appEvents.capturedIsImplicitlyLogged)
   }
 
   func testInitializingSdkObservesSystemNotifications() {
@@ -157,6 +185,8 @@ class ApplicationDelegateTests: XCTestCase {
     )
   }
 
+  // MARK: - DidFinishLaunching
+
   func testDidFinishLaunchingLoadsServerConfiguration() {
     delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
 
@@ -165,6 +195,8 @@ class ApplicationDelegateTests: XCTestCase {
       "Should load a server configuration on finishing launching the application"
     )
   }
+
+  // MARK: - URL Opening
 
   func testOpeningURLChecksAEMFeatureAvailability() {
     delegate.application(
@@ -175,6 +207,74 @@ class ApplicationDelegateTests: XCTestCase {
     XCTAssertTrue(
       featureChecker.capturedFeaturesContains(.AEM),
       "Opening a deep link should check if the AEM feature is enabled"
+    )
+  }
+
+  // MARK: - Application Observers
+
+  func testDefaultsObservers() {
+    XCTAssertEqual(
+      delegate.applicationObservers.count,
+      0,
+      "Should have no observers by default"
+    )
+  }
+
+  func testAddingNewObserver() {
+    delegate.addObserver(observer)
+
+    XCTAssertEqual(
+      delegate.applicationObservers.count,
+      1,
+      "Should be able to add a single observer"
+    )
+  }
+
+  func testAddingDuplicateObservers() {
+    delegate.addObserver(observer)
+    delegate.addObserver(observer)
+
+    XCTAssertEqual(
+      delegate.applicationObservers.count,
+      1,
+      "Should only add one instance of a given observer"
+    )
+  }
+
+  func testRemovingObserver() {
+    delegate.addObserver(observer)
+    delegate.removeObserver(observer)
+
+    XCTAssertEqual(
+      delegate.applicationObservers.count,
+      0,
+      "Should be able to remove observers that are present in the stored list"
+    )
+  }
+
+  func testRemovingMissingObserver() {
+    delegate.removeObserver(observer)
+
+    XCTAssertEqual(
+      delegate.applicationObservers.count,
+      0,
+      "Should not be able to remove absent observers"
+    )
+  }
+
+  func testAppNotifyObserversWhenAppWillResignActive() {
+    delegate.addObserver(observer)
+
+    let notification = Notification(
+      name: UIApplication.willResignActiveNotification,
+      object: UIApplication.shared,
+      userInfo: nil
+    )
+    delegate.applicationWillResignActive(notification)
+
+    XCTAssertTrue(
+      observer.wasWillResignActiveCalled,
+      "Should inform observers when the application will resign active status"
     )
   }
 }
