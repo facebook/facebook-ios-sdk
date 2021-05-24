@@ -34,7 +34,6 @@
 #import "FBSDKBridgeAPI.h"
 #import "FBSDKBridgeAPI+Internal.h"
 #import "FBSDKCoreKit+Internal.h"
-#import "FBSDKCoreKitTestUtility.h"
 #import "FBSDKCrashObserver.h"
 #import "FBSDKCrashShield.h"
 #import "FBSDKErrorReport.h"
@@ -476,7 +475,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)stubStartGCDTimerWithInterval
 {
   // Note: the '5' is arbitrary and ignored but needs to be there for compilation.
-  OCMStubIgnoringNonObjectArgs(ClassMethod([self.utilityClassMock startGCDTimerWithInterval:5 block:OCMArg.any]));
+  OCMStub(ClassMethod([self.utilityClassMock startGCDTimerWithInterval:5 block:OCMArg.any]));
 }
 
 - (void)stubIsAdvertiserTrackingEnabledWith:(BOOL)isAdvertiserTrackingEnabled

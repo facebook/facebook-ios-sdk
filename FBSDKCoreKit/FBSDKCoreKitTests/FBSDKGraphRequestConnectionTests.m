@@ -22,7 +22,6 @@
 #import <TestTools/TestTools-Swift.h>
 
 #import "FBSDKCoreKit.h"
-#import "FBSDKCoreKitTestUtility.h"
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKFeatureManager.h"
 #import "FBSDKGraphRequest+Internal.h"
