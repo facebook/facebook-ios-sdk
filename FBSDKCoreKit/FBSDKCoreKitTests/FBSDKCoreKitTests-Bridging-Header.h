@@ -127,6 +127,9 @@
 // AccessToken
 #import "FBSDKAccessTokenProtocols.h"
 #import "FBSDKAccessToken+AccessTokenProtocols.h"
+// AuthenticationToken
+#import "FBSDKAuthenticationTokenProtocols.h"
+#import "FBSDKAuthenticationToken+AuthenticationTokenProtocols.h"
 // Settings
 #import "FBSDKSettingsLogging.h"
 #import "FBSDKSettingsProtocol.h"
@@ -152,6 +155,9 @@
 #import "FBSDKMetadataIndexing.h"
 // Parameter processors
 #import "FBSDKAppEventsParameterProcessing.h"
+// Profile
+#import "FBSDKProfileProtocols.h"
+#import "FBSDKProfile+ProfileProtocols.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

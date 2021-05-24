@@ -16,23 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+import FBSDKCoreKit
 
-#if !TARGET_OS_TV
+@objcMembers
+class TestAuthenticationTokenWallet: NSObject, AuthenticationTokenProviding, AuthenticationTokenSetting {
+  static var tokenCache: TokenCaching?
+  static var currentAuthenticationToken: AuthenticationToken?
 
- #import <Foundation/Foundation.h>
-
- #import "FBSDKProfileCreating.h"
-
-@class FBSDKProfile;
-
-NS_ASSUME_NONNULL_BEGIN
-
-NS_SWIFT_NAME(ProfileFactory)
-@interface FBSDKProfileFactory : NSObject <FBSDKProfileCreating>
-
-@end
-
-NS_ASSUME_NONNULL_END
-
-#endif
+  static func reset() {
+    tokenCache = nil
+    currentAuthenticationToken = nil
+  }
+}

@@ -16,23 +16,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import "FBSDKProfileProtocols.h"
 #import "TargetConditionals.h"
 
 #if !TARGET_OS_TV
 
- #import <Foundation/Foundation.h>
-
- #import "FBSDKProfileCreating.h"
-
 @class FBSDKProfile;
 
-NS_ASSUME_NONNULL_BEGIN
+NS_SWIFT_NAME(ProfileProviding)
+@protocol FBSDKProfileProviding
 
-NS_SWIFT_NAME(ProfileFactory)
-@interface FBSDKProfileFactory : NSObject <FBSDKProfileCreating>
+@property (class, nonatomic, strong, nullable) FBSDKProfile *currentProfile
+NS_SWIFT_NAME(current);
+
++ (nullable FBSDKProfile *)fetchCachedProfile;
 
 @end
-
-NS_ASSUME_NONNULL_END
 
 #endif
