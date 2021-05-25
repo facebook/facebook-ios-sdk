@@ -19,16 +19,25 @@
 @objcMembers
 class SampleEventBinding: NSObject {
 
-  static func valid(withName name: String) -> EventBinding {
-    // swiftlint:disable:next force_unwrapping
-    EventBinding(json: SampleRawRemoteEventBindings.rawBinding(name: name))!
+  static func createValid(withName name: String) -> EventBinding {
+    let logger = TestEventLogger()
+    return EventBinding(
+      json: SampleRawRemoteEventBindings.rawBinding(name: name),
+      eventLogger: logger
+    )! // swiftlint:disable:this force_unwrapping
   }
 }
 
 @objcMembers
 class SampleEventBindingList: NSObject {
 
+  static func createEventLogger() -> TestEventLogger {
+    return TestEventLogger()
+  }
+
   static var valid: [EventBinding] {
-    SampleRawRemoteEventBindings.bindings.compactMap { EventBinding(json: $0) }
+    SampleRawRemoteEventBindings.bindings.compactMap {
+      EventBinding(json: $0, eventLogger: createEventLogger())
+    }
   }
 }

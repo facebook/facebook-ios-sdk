@@ -259,6 +259,11 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
     [(NSObject *)self.appEvents.capturedConfigureAtePublisherFactory isKindOfClass:FBSDKAtePublisherFactory.class],
     "Initializing the SDK should set concrete ate publisher factory for event logging"
   );
+  XCTAssertEqualObjects(
+    self.appEvents.capturedConfigureSwizzler,
+    FBSDKSwizzler.class,
+    "Initializing the SDK should set concrete swizzler for event logging"
+  );
 }
 
 - (void)testConfiguringNonTVAppEventsDependencies

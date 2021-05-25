@@ -29,6 +29,7 @@ class EventBindingManagerTests: XCTestCase, // swiftlint:disable:this type_body_
 
   var manager: EventBindingManager! // swiftlint:disable:this implicitly_unwrapped_optional
   var bindings = SampleEventBindingList.valid
+  let eventLogger = TestEventLogger()
 
   let expectedEvidenceWithoutReactNative = [
     SwizzleEvidence(selector: #selector(UIControl.didMoveToWindow), class: UIControl.self),
@@ -43,40 +44,32 @@ class EventBindingManagerTests: XCTestCase, // swiftlint:disable:this type_body_
     TestSwizzler.reset()
 
     manager = EventBindingManager(
+      json: SampleRawRemoteEventBindings.sampleDictionary,
       swizzler: TestSwizzler.self,
-      json: SampleRawRemoteEventBindings.sampleDictionary
+      eventLogger: eventLogger
     )
   }
 
   // MARK: - Dependencies
 
-  func testCreatingDefault() {
-    XCTAssertTrue(
-      EventBindingManager().swizzler is Swizzler.Type,
-      "Should be created with the expected concrete swizzling type by default"
-    )
-  }
-
-  func testCreatingDefaultWithJson() {
-    manager = EventBindingManager(json: ["some": "stuff"])
-    XCTAssertTrue(
-      manager.swizzler is Swizzler.Type,
-      "Should be created with the expected concrete swizzling type by default"
-    )
-  }
-
   func testCreatingCustom() {
-    manager = EventBindingManager(swizzler: TestSwizzler.self)
+    manager = EventBindingManager(swizzler: TestSwizzler.self, eventLogger: eventLogger)
     XCTAssertTrue(
       manager.swizzler is TestSwizzler.Type,
       "Should be created with the provided swizzling type"
+    )
+    XCTAssertEqual(
+      manager.eventLogger as? TestEventLogger,
+      eventLogger,
+      "Should be created with the provided event logger"
     )
   }
 
   func testCreatingCustomWithJson() {
     manager = EventBindingManager(
+      json: ["some": "stuff"],
       swizzler: TestSwizzler.self,
-      json: ["some": "stuff"]
+      eventLogger: eventLogger
     )
     XCTAssertTrue(
       manager.swizzler is TestSwizzler.Type,
@@ -85,8 +78,9 @@ class EventBindingManagerTests: XCTestCase, // swiftlint:disable:this type_body_
   }
 
   func testCreatingWithReactNativeUnavailable() {
+    manager = nil
     deregisterReactNativeClasses()
-    manager = EventBindingManager(swizzler: TestSwizzler.self)
+    manager = EventBindingManager(swizzler: TestSwizzler.self, eventLogger: eventLogger)
     XCTAssertFalse(
       manager.hasReactNative,
       "Should detect if react native is in the runtime"
@@ -102,7 +96,7 @@ class EventBindingManagerTests: XCTestCase, // swiftlint:disable:this type_body_
   }
 
   func testCreatingWithReactNativeAvailable() {
-    manager = EventBindingManager(swizzler: TestSwizzler.self)
+    manager = EventBindingManager(swizzler: TestSwizzler.self, eventLogger: eventLogger)
     XCTAssertTrue(
       manager.hasReactNative,
       "Should detect if react native is in the runtime"
@@ -133,6 +127,13 @@ class EventBindingManagerTests: XCTestCase, // swiftlint:disable:this type_body_
   }
 
   func testStartingWithEventsWhenNotStarted() {
+    manager = nil
+    deregisterReactNativeClasses()
+    manager = EventBindingManager(
+      json: SampleRawRemoteEventBindings.sampleDictionary,
+      swizzler: TestSwizzler.self,
+      eventLogger: eventLogger
+    )
     manager.isStarted = false
     manager.start()
 
@@ -159,7 +160,7 @@ class EventBindingManagerTests: XCTestCase, // swiftlint:disable:this type_body_
   }
 
   func testStartingWithReactNativeClasses() {
-    manager = EventBindingManager(swizzler: TestSwizzler.self)
+    manager = EventBindingManager(swizzler: TestSwizzler.self, eventLogger: eventLogger)
 
     // Updating bindings will actually call start if it is not in a started state
     manager.isStarted = true
@@ -193,8 +194,8 @@ class EventBindingManagerTests: XCTestCase, // swiftlint:disable:this type_body_
   // MARK: - Updating Bindings
 
   func testUpdatingEventBindings() {
-    manager = EventBindingManager(swizzler: TestSwizzler.self)
-    manager.reactBindings = ["foo": EventBinding()]
+    manager = EventBindingManager(swizzler: TestSwizzler.self, eventLogger: eventLogger)
+    manager.reactBindings = ["foo": SampleEventBinding.createValid(withName: "foo")]
     manager.updateBindings(bindings)
 
     XCTAssertEqual(
@@ -210,7 +211,7 @@ class EventBindingManagerTests: XCTestCase, // swiftlint:disable:this type_body_
   }
 
   func testUpdatingEventBindingsWithIdenticalBindings() {
-    manager = EventBindingManager(swizzler: TestSwizzler.self)
+    manager = EventBindingManager(swizzler: TestSwizzler.self, eventLogger: eventLogger)
     manager.updateBindings(bindings)
     manager.updateBindings(bindings)
 
@@ -238,7 +239,7 @@ class EventBindingManagerTests: XCTestCase, // swiftlint:disable:this type_body_
   }
 
   func testUpdatingEventBindingsWithDifferentBindingsDifferentNumberOfBindings() {
-    bindings.append(EventBinding())
+    bindings.append(SampleEventBinding.createValid(withName: "foo"))
     manager.updateBindings(bindings)
 
     XCTAssertEqual(
@@ -249,9 +250,9 @@ class EventBindingManagerTests: XCTestCase, // swiftlint:disable:this type_body_
   }
 
   func testUpdatingEventBindingsWithDifferentBindingsSameNumberOfBindings() {
-    let binding = SampleEventBinding.valid(withName: "foo")
-    let binding2 = SampleEventBinding.valid(withName: "bar")
-    let binding3 = SampleEventBinding.valid(withName: "baz")
+    let binding = SampleEventBinding.createValid(withName: "foo")
+    let binding2 = SampleEventBinding.createValid(withName: "bar")
+    let binding3 = SampleEventBinding.createValid(withName: "baz")
 
     manager.updateBindings([binding, binding2])
     manager.updateBindings([binding2, binding3])
@@ -265,7 +266,7 @@ class EventBindingManagerTests: XCTestCase, // swiftlint:disable:this type_body_
 
   func testUpdatingBindingsStarts() {
     manager.isStarted = false
-    manager = EventBindingManager(swizzler: TestSwizzler.self)
+    manager = EventBindingManager(swizzler: TestSwizzler.self, eventLogger: eventLogger)
     manager.updateBindings(bindings)
 
     XCTAssertTrue(

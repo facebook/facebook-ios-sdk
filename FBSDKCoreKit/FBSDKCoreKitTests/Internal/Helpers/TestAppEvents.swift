@@ -57,6 +57,7 @@ class TestAppEvents: TestEventLogger,
   var capturedConfigureEventDeactivationParameterProcessor: AppEventsParameterProcessing?
   var capturedConfigureRestrictiveDataFilterParameterProcessor: AppEventsParameterProcessing?
   var capturedConfigureAtePublisherFactory: AtePublisherCreating?
+  var capturedConfigureSwizzler: Swizzling.Type?
 
   // swiftlint:disable:next function_parameter_count
   func configure(
@@ -73,7 +74,8 @@ class TestAppEvents: TestEventLogger,
     appEventsStateStore: AppEventsStatePersisting,
     eventDeactivationParameterProcessor: AppEventsParameterProcessing,
     restrictiveDataFilterParameterProcessor: AppEventsParameterProcessing,
-    atePublisherFactory: AtePublisherCreating
+    atePublisherFactory: AtePublisherCreating,
+    swizzler: Swizzling.Type
   ) {
     capturedConfigureGateKeeperManager = gateKeeperManager
     capturedConfigureAppEventsConfigurationProvider = appEventsConfigurationProvider
@@ -89,5 +91,6 @@ class TestAppEvents: TestEventLogger,
     capturedConfigureEventDeactivationParameterProcessor = eventDeactivationParameterProcessor
     capturedConfigureRestrictiveDataFilterParameterProcessor = restrictiveDataFilterParameterProcessor
     capturedConfigureAtePublisherFactory = atePublisherFactory
+    capturedConfigureSwizzler = swizzler
   }
 }

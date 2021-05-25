@@ -63,6 +63,7 @@
 #import "FBSDKSettings+SettingsLogging.h"
 #import "FBSDKSettings+SettingsProtocols.h"
 #import "FBSDKSettingsLogging.h"
+#import "FBSDKSwizzler+Swizzling.h"
 #import "FBSDKTimeSpentData.h"
 #import "FBSDKTimeSpentData+TimeSpentRecording.h"
 #import "FBSDKTokenCache.h"
@@ -594,7 +595,8 @@ static UIApplicationState _applicationState;
                              appEventsStateStore:FBSDKAppEventsStateManager.shared
              eventDeactivationParameterProcessor:FBSDKEventDeactivationManager.shared
          restrictiveDataFilterParameterProcessor:FBSDKRestrictiveDataFilterManager.shared
-                             atePublisherFactory:atePublisherFactory];
+                             atePublisherFactory:atePublisherFactory
+                                        swizzler:FBSDKSwizzler.class];
   [FBSDKInternalUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:FBSDKAccessToken.class];
   [FBSDKAppEventsConfigurationManager configureWithStore:store

@@ -16,37 +16,20 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
-#if !TARGET_OS_TV
-
-#import <UIKit/UIKit.h>
-#import "FBSDKAppEventsNumberParser.h"
-#import "FBSDKCodelessParameterComponent.h"
+#import "FBSDKEventBinding.h"
 
 @protocol FBSDKEventLogging;
 
-NS_SWIFT_NAME(EventBinding)
-@interface FBSDKEventBinding : NSObject
+NS_ASSUME_NONNULL_BEGIN
 
-@property (class, nonatomic, readonly) id<FBSDKNumberParsing> numberParser;
-@property (nonatomic, copy, readonly) NSString *eventName;
-@property (nonatomic, copy, readonly) NSString *eventType;
-@property (nonatomic, copy, readonly) NSString *appVersion;
-@property (nonatomic, readonly) NSArray *path;
-@property (nonatomic, copy, readonly) NSString *pathType;
-@property (nonatomic, readonly) NSArray<FBSDKCodelessParameterComponent *> *parameters;
+@interface FBSDKEventBinding (Testing)
 
-+ (instancetype)new NS_UNAVAILABLE;
-- (instancetype)init NS_UNAVAILABLE;
+@property (nonnull, nonatomic) id<FBSDKEventLogging> eventLogger;
 
-+ (BOOL)isViewMatchPath:(UIView *)view path:(NSArray *)path;
-+ (BOOL)isPath:(NSArray *)path matchViewPath:(NSArray *)viewPath;
-- (FBSDKEventBinding *)initWithJSON:(NSDictionary *)dict
-                        eventLogger:(id<FBSDKEventLogging>)eventLogger;
-- (void)trackEvent:(id)sender;
-- (BOOL)isEqualToBinding:(FBSDKEventBinding *)binding;
++ (NSString *)findParameterOfPath:(NSArray *)path
+                         pathType:(NSString *)pathType
+                       sourceView:(UIView *)sourceView;
 
 @end
 
-#endif
+NS_ASSUME_NONNULL_END

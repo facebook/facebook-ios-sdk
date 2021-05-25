@@ -19,9 +19,10 @@
 class TestEventBinding: EventBinding {
   var trackEventWasCalled = false
   var stubbedPath = [Any]()
+  let stubbedEventLogger = TestEventLogger()
 
   init(view potentialView: UIView? = nil) {
-    super.init()
+    super.init(json: [:], eventLogger: stubbedEventLogger)
 
     if let view = potentialView,
        let path = ViewHierarchy.getPath(view) {

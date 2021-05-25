@@ -98,7 +98,8 @@
                         appEventsStateStore:[TestAppEventsStateStore new]
         eventDeactivationParameterProcessor:[TestAppEventsParameterProcessor new]
     restrictiveDataFilterParameterProcessor:[TestAppEventsParameterProcessor new]
-                        atePublisherFactory:factory];
+                        atePublisherFactory:factory
+                                   swizzler:TestSwizzler.class];
 
   [appEvents publishATE];
   XCTAssertTrue(

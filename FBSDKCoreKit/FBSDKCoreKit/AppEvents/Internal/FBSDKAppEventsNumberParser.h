@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+NS_SWIFT_NAME(AppEventsNumberParser)
 @interface FBSDKAppEventsNumberParser : NSObject <FBSDKNumberParsing>
 
 + (instancetype)new NS_UNAVAILABLE;

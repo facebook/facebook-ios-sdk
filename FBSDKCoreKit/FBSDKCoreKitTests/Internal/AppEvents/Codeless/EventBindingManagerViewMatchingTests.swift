@@ -66,7 +66,7 @@ extension EventBindingManagerTests {
     view.stubbedWindow = window
 
     let binding = TestEventBinding(view: view)
-    manager = EventBindingManager(swizzler: TestSwizzler.self)
+    manager = EventBindingManager(swizzler: TestSwizzler.self, eventLogger: eventLogger)
     manager.eventBindings = [TestEventBinding(), binding]
     manager.match(view, delegate: self)
 

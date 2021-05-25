@@ -18,6 +18,7 @@
 
 import TestTools
 
+// swiftlint:disable type_body_length
 class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
 
   let store = UserDefaultsSpy()
@@ -319,6 +320,7 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
     XCTAssertEqual(firstCompletionCallCount, 1)
     XCTAssertEqual(secondCompletionCallCount, 1)
   }
+
   func testUnarchivesStoredCaptureEvents() {
     // Validates unarchival from store
     AppEventsConfigurationManager.loadAppEventsConfiguration {}

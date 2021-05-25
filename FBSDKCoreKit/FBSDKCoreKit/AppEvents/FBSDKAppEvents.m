@@ -17,6 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "FBSDKAppEvents.h"
+#import "FBSDKAppEvents+EventLogging.h"
 #import "FBSDKAppEvents+Internal.h"
 
 #import <StoreKit/StoreKit.h>
@@ -54,6 +55,7 @@
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationProviding.h"
 #import "FBSDKSettingsProtocol.h"
+#import "FBSDKSwizzling.h"
 #import "FBSDKTimeSpentRecording.h"
 #import "FBSDKUtility.h"
 
@@ -294,6 +296,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 @property (nonatomic, strong) dispatch_source_t flushTimer;
 @property (nonatomic, copy) NSString *userID;
 @property (nonatomic, strong) id<FBSDKAtePublishing> atePublisher;
+@property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
 
 @property (nonatomic, assign) BOOL disableTimer; // for testing only.
 
@@ -869,6 +872,7 @@ static BOOL _canLogEvents = NO;
       eventDeactivationParameterProcessor:(id<FBSDKAppEventsParameterProcessing>)eventDeactivationParameterProcessor
   restrictiveDataFilterParameterProcessor:(id<FBSDKAppEventsParameterProcessing>)restrictiveDataFilterParameterProcessor
                       atePublisherFactory:(id<FBSDKAtePublisherCreating>)atePublisherFactory
+                                 swizzler:(Class<FBSDKSwizzling>)swizzler
 {
   [FBSDKAppEvents setAppEventsConfigurationProvider:appEventsConfigurationProvider];
   [FBSDKAppEvents setServerConfigurationProvider:serverConfigurationProvider];
@@ -883,6 +887,7 @@ static BOOL _canLogEvents = NO;
   g_eventDeactivationParameterProcessor = eventDeactivationParameterProcessor;
   g_restrictiveDataFilterParameterProcessor = restrictiveDataFilterParameterProcessor;
 
+  self.swizzler = swizzler;
   self.store = store;
   self.userID = [store stringForKey:USER_ID_USER_DEFAULTS_KEY];
   self.atePublisher = [atePublisherFactory createPublisherWithAppID:self.appID];
@@ -1203,8 +1208,9 @@ static BOOL _canLogEvents = NO;
     if ([FBSDKInternalUtility isUnity]) {
       [FBSDKAppEvents sendEventBindingsToUnity];
     } else {
-      [_eventBindingManager updateBindings:[FBSDKEventBindingManager
-                                            parseArray:_serverConfiguration.eventBindings]];
+      FBSDKEventBindingManager *manager = [[FBSDKEventBindingManager alloc] initWithSwizzler:self.swizzler
+                                                                                 eventLogger:self];
+      [_eventBindingManager updateBindings:[manager parseArray:_serverConfiguration.eventBindings]];
     }
   }
 }

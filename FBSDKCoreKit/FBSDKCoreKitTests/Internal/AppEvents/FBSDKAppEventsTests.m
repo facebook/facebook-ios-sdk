@@ -51,6 +51,7 @@ static NSString *const _mockUserID = @"mockUserID";
 @interface FBSDKAppEvents (Testing)
 @property (nonatomic, copy) NSString *pushNotificationsDeviceTokenString;
 @property (nonatomic, strong) id<FBSDKAtePublishing> atePublisher;
+@property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
 
 - (void)publishInstall;
 - (void)flushForReason:(FBSDKAppEventsFlushReason)flushReason;
@@ -193,7 +194,8 @@ static NSString *const _mockUserID = @"mockUserID";
                                        appEventsStateStore:_appEventsStateStore
                        eventDeactivationParameterProcessor:_eventDeactivationParameterProcessor
                    restrictiveDataFilterParameterProcessor:_restrictiveDataFilterParameterProcessor
-                                       atePublisherFactory:self.atePublisherfactory];
+                                       atePublisherFactory:self.atePublisherfactory
+                                                  swizzler:TestSwizzler.class];
 
   [FBSDKAppEvents configureNonTVComponentsWithOnDeviceMLModelManager:_onDeviceMLModelManager
                                                      metadataIndexer:_metadataIndexer];
@@ -214,12 +216,21 @@ static NSString *const _mockUserID = @"mockUserID";
   [TestLogger reset];
 }
 
-- (void)testInitializingCreatesAtePublisher
+- (void)testConfiguringSetsSwizzlerDependency
+{
+  XCTAssertEqualObjects(
+    FBSDKAppEvents.singleton.swizzler,
+    TestSwizzler.class,
+    "Configuring should set the provided swizzler"
+  );
+}
+
+- (void)testConfiguringCreatesAtePublisher
 {
   XCTAssertEqualObjects(
     self.atePublisherfactory.capturedAppID,
     _mockAppID,
-    "Initializing should create an ate publisher with the expected app id"
+    "Configuring should create an ate publisher with the expected app id"
   );
   XCTAssertEqualObjects(
     FBSDKAppEvents.singleton.atePublisher,

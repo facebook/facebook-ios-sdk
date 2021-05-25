@@ -462,7 +462,7 @@ typedef FBSDKServerConfigurationFixtures Fixtures;
 
 - (void)testCreatingWithEventBindings
 {
-  NSArray *bindings = @[[FBSDKEventBinding new]];
+  NSArray *bindings = @[[SampleEventBinding createValidWithName:self.name]];
   config = [Fixtures configWithDictionary:@{@"eventBindings" : bindings}];
 
   XCTAssertEqualObjects(

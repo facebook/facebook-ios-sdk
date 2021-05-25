@@ -29,8 +29,8 @@
  #import "FBSDKCodelessPathComponent.h"
  #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKEventBinding.h"
- #import "FBSDKSwizzler.h"
- #import "FBSDKSwizzler+Swizzling.h"
+ #import "FBSDKEventLogging.h"
+ #import "FBSDKSwizzling.h"
  #import "FBSDKViewHierarchy.h"
  #import "FBSDKViewHierarchyMacros.h"
 
@@ -43,30 +43,27 @@
  #define ReactNativeClassRCTTouchHandler "RCTTouchHandler"
 
 @interface FBSDKEventBindingManager ()
-{
-  BOOL _isStarted;
-  NSMutableDictionary *_reactBindings;
-  NSSet *_validClasses;
-  BOOL _hasReactNative;
-  NSArray *_eventBindings;
-  Class<FBSDKSwizzling> _swizzler;
-}
+
+@property (nonnull, nonatomic) id<FBSDKEventLogging> eventLogger;
+@property (nonnull, nonatomic) Class<FBSDKSwizzling> swizzler;
+@property (nonatomic) BOOL isStarted;
+@property (nullable, nonatomic) NSMutableDictionary *reactBindings;
+@property (nonnull, nonatomic) NSSet *validClasses;
+@property (nonatomic) BOOL hasReactNative;
+@property (nullable, nonatomic) NSArray *eventBindings;
+
 @end
 
 @implementation FBSDKEventBindingManager
 
-- (instancetype)init
+- (instancetype)initWithSwizzler:(Class<FBSDKSwizzling>)swizzling
+                     eventLogger:(id<FBSDKEventLogging>)eventLogger;
 {
-  return [self initWithSwizzler:FBSDKSwizzler.class];
-}
-
-- (instancetype)initWithSwizzler:(Class<FBSDKSwizzling>)swizzling;
-{
-  self = [super init];
-  if (self) {
+  if ((self = [super init])) {
     _swizzler = swizzling;
-    _isStarted = NO;
+    _eventLogger = eventLogger;
     _hasReactNative = NO;
+    _isStarted = NO;
     _reactBindings = [NSMutableDictionary dictionary];
 
     NSMutableSet *classes = [NSMutableSet set];
@@ -96,19 +93,14 @@
 }
 
 - (instancetype)initWithJSON:(NSDictionary *)dict
+                    swizzler:(Class<FBSDKSwizzling>)swizzler
+                 eventLogger:(id<FBSDKEventLogging>)eventLogger
 {
-  return [self initWithSwizzler:FBSDKSwizzler.class json:dict];
-}
-
-- (instancetype)initWithSwizzler:(Class<FBSDKSwizzling>)swizzling
-                            json:(NSDictionary *)dict
-{
-  if ((self = [super init])) {
-    _swizzler = swizzling;
+  if ((self = [self initWithSwizzler:swizzler eventLogger:eventLogger])) {
     NSArray *eventBindingsDict = [FBSDKTypeUtility arrayValue:dict[@"event_bindings"]];
     NSMutableArray *bindings = [NSMutableArray array];
     for (NSDictionary *d in eventBindingsDict) {
-      FBSDKEventBinding *e = [[FBSDKEventBinding alloc] initWithJSON:d];
+      FBSDKEventBinding *e = [[FBSDKEventBinding alloc] initWithJSON:d eventLogger:eventLogger];
       [FBSDKTypeUtility array:bindings addObject:e];
     }
     _eventBindings = [bindings copy];
@@ -116,12 +108,13 @@
   return self;
 }
 
-+ (NSArray *)parseArray:(NSArray *)array
+- (NSArray *)parseArray:(NSArray *)array
 {
   NSMutableArray *result = [NSMutableArray array];
 
   for (NSDictionary *json in array) {
-    FBSDKEventBinding *binding = [[FBSDKEventBinding alloc] initWithJSON:json];
+    FBSDKEventBinding *binding = [[FBSDKEventBinding alloc] initWithJSON:json
+                                                             eventLogger:self.eventLogger];
     [FBSDKTypeUtility array:result addObject:binding];
   }
 
@@ -481,44 +474,9 @@
   });
 }
 
-- (BOOL)isStarted
-{
-  return _isStarted;
-}
-
-- (void)setIsStarted:(BOOL)isStarted
-{
-  _isStarted = isStarted;
-}
-
-- (Class<FBSDKSwizzling>)swizzler
-{
-  return _swizzler;
-}
-
-- (BOOL)hasReactNative
-{
-  return _hasReactNative;
-}
-
 - (NSSet *)validClasses
 {
   return _validClasses;
-}
-
-- (NSArray<FBSDKEventBinding *> *)eventBindings
-{
-  return _eventBindings;
-}
-
-- (NSMutableDictionary *)reactBindings
-{
-  return _reactBindings;
-}
-
-- (void)setEventBindings:(NSArray<FBSDKEventBinding *> *)bindings
-{
-  _eventBindings = bindings;
 }
 
  #if DEBUG

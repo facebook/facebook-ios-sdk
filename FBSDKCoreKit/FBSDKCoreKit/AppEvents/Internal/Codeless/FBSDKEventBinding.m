@@ -22,10 +22,10 @@
 
  #import "FBSDKEventBinding.h"
 
- #import "FBSDKAppEvents.h"
  #import "FBSDKCodelessParameterComponent.h"
  #import "FBSDKCodelessPathComponent.h"
  #import "FBSDKCoreKitBasicsImport.h"
+ #import "FBSDKEventLogging.h"
  #import "FBSDKInternalUtility.h"
  #import "FBSDKSwizzler.h"
  #import "FBSDKUtility.h"
@@ -36,6 +36,12 @@
  #define CODELESS_PATH_TYPE_RELATIVE  @"relative"
  #define CODELESS_CODELESS_EVENT_KEY  @"_is_fb_codeless"
  #define PARAMETER_NAME_PRICE          @"_valueToSum"
+
+@interface FBSDKEventBinding ()
+
+@property (nonnull, nonatomic) id<FBSDKEventLogging> eventLogger;
+
+@end
 
 @implementation FBSDKEventBinding
 
@@ -57,8 +63,11 @@ static id<FBSDKNumberParsing> _numberParser;
 }
 
 - (FBSDKEventBinding *)initWithJSON:(NSDictionary *)dict
+                        eventLogger:(id<FBSDKEventLogging>)eventLogger
 {
   if ((self = [super init])) {
+    _eventLogger = eventLogger;
+
     _eventName = [dict[CODELESS_MAPPING_EVENT_NAME_KEY] copy];
     _eventType = [dict[CODELESS_MAPPING_EVENT_TYPE_KEY] copy];
     _appVersion = [dict[CODELESS_MAPPING_APP_VERSION_KEY] copy];
@@ -105,7 +114,7 @@ static id<FBSDKNumberParsing> _numberParser;
     }
   }
 
-  [FBSDKAppEvents logEvent:_eventName parameters:[params copy]];
+  [self.eventLogger logEvent:_eventName parameters:[params copy]];
 }
 
 + (BOOL)matchAnyView:(NSArray *)views

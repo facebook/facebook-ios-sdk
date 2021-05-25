@@ -29,6 +29,7 @@
 #import "FBSDKAppEventsAtePublisher.h"
 #import "FBSDKAppEventsConfiguring.h"
 #import "FBSDKAppEventsFlushReason.h"
+#import "FBSDKAppEventsNumberParser.h"
 #import "FBSDKAppEvents+AppEventsConfiguring.h"
 #import "FBSDKAppEvents+ApplicationActivating.h"
 #import "FBSDKAppEvents+ApplicationLifecycleObserving.h"
@@ -49,8 +50,8 @@
 #import "FBSDKCrashObserver+Internal.h"
 #import "FBSDKError.h"
 #import "FBSDKEventDeactivationManager.h"
-#import "FBSDKEventBinding.h"
-#import "FBSDKEventBindingManager.h"
+#import "FBSDKEventBinding+Testing.h"
+#import "FBSDKEventBindingManager+Testing.h"
 #import "FBSDKErrorReport.h"
 #import "FBSDKErrorReport+Testing.h"
 #import "FBSDKFeatureExtracting.h"
@@ -280,38 +281,6 @@ NS_SWIFT_NAME(parse(result:error:));
 
 @property (class, nonatomic, nullable) id<FBSDKGraphRequestProviding> requestProvider;
 @property (class, nonatomic, nullable) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
-
-@end
-
-@interface FBSDKEventBindingManager (Testing)
-
-@property (nonatomic) BOOL isStarted;
-@property (nonatomic, nullable) NSMutableDictionary *reactBindings;
-@property (nonatomic, readonly) NSSet *validClasses;
-@property (nonatomic) BOOL hasReactNative;
-@property (nonatomic, nullable) NSArray<FBSDKEventBinding *> *eventBindings;
-@property (nonatomic, nullable, readonly) Class<FBSDKSwizzling> swizzler;
-
-- (instancetype)initWithSwizzler:(Class<FBSDKSwizzling>)swizzling;
-- (instancetype)initWithSwizzler:(Class<FBSDKSwizzling>)swizzling
-                            json:(NSDictionary *)dict;
-- (void)start;
-- (void)handleReactNativeTouchesWithHandler:(nullable id)handler
-                                    command:(nullable SEL)command
-                                    touches:(id)touches
-                                  eventName:(id)eventName;
-- (void)handleDidSelectRowWithBindings:(NSArray<FBSDKEventBinding *> *)bindings
-                                target:(nullable id)target
-                               command:(nullable SEL)command
-                             tableView:(UITableView *)tableView
-                             indexPath:(NSIndexPath *)indexPath;
-- (void)handleDidSelectItemWithBindings:(NSArray<FBSDKEventBinding *> *)bindings
-                                 target:(nullable id)target
-                                command:(nullable SEL)command
-                         collectionView:(UICollectionView *)collectionView
-                              indexPath:(NSIndexPath *)indexPath;
-- (void)matchView:(UIView *)view
-         delegate:(id)delegate;
 
 @end
 
