@@ -146,9 +146,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Stubs `FBSDKSettings.isAutoLogAppEventsEnabled` and return the provided value
 - (void)stubIsAutoLogAppEventsEnabled:(BOOL)isEnabled;
 
-/// Stubs `FBSDKGateKeeperManager.loadGateKeepers:` to avoid the side effect of a network fetch
-- (void)stubLoadingGateKeepers;
-
 /// Stubs `FBSDKServerConfigurationManager.cachedServerConfiguration` and returns the default server configuration.
 /// Use this when you don't care what the actual configuration is and want to avoid a network call.
 - (void)stubFetchingCachedServerConfiguration;
@@ -173,9 +170,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Stubs `FBSDKAppEventsUtility.shouldDropAppEvent` with the provided value
 - (void)stubAppEventsUtilityShouldDropAppEventWith:(BOOL)shouldDropEvent;
 
-/// Stubs `FBSDKSettings.shouldLimitEventAndDataUsage` with the provided value
-- (void)stubSettingsShouldLimitEventAndDataUsageWith:(BOOL)shouldLimit;
-
 /// Stubs `FBSDKAppEventsUtility.shared.advertiserID` with the provided value
 - (void)stubAppEventsUtilityAdvertiserIDWith:(nullable NSString *)identifier;
 
@@ -194,9 +188,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// This should be used only as needed as a stopgap to keep tests
 /// from hitting the network while proper mocks are being written.
 - (void)stubAllocatingGraphRequestConnection;
-
-/// Stubs `FBSDKSettings.isDataProcessingRestricted` and returns the provided value
-- (void)stubIsDataProcessingRestricted:(BOOL)isRestricted;
 
 /// Stubs `UIApplication.sharedApplication`'s `openURL:` method and returns the provided value
 - (void)stubOpenURLWith:(BOOL)openURL;

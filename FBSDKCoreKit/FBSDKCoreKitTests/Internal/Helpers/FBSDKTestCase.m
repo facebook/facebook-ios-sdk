@@ -360,11 +360,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [OCMStub(ClassMethod([_settingsClassMock appID])) andReturn:appID];
 }
 
-- (void)stubLoadingGateKeepers
-{
-  OCMStub(ClassMethod([_gatekeeperManagerClassMock loadGateKeepers:OCMArg.any]));
-}
-
 - (void)stubFetchingCachedServerConfiguration
 {
   FBSDKServerConfiguration *configuration = [FBSDKServerConfiguration defaultServerConfigurationForAppID:_appID];
@@ -401,11 +396,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   OCMStub(ClassMethod([_adNetworkReporterClassMock _loadConfigurationWithBlock:OCMArg.any]));
 }
 
-- (void)stubSettingsShouldLimitEventAndDataUsageWith:(BOOL)shouldLimit
-{
-  OCMStub(ClassMethod([_settingsClassMock shouldLimitEventAndDataUsage])).andReturn(shouldLimit);
-}
-
 - (void)stubAppEventsUtilityAdvertiserIDWith:(nullable NSString *)identifier
 {
   OCMStub(ClassMethod([_appEventsUtilityClassMock shared])).andReturn(_appEventsUtilityClassMock);
@@ -440,11 +430,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)stubAllocatingGraphRequestConnection
 {
   OCMStub(ClassMethod([_graphRequestConnectionClassMock alloc])).andReturn(_graphRequestConnectionClassMock);
-}
-
-- (void)stubIsDataProcessingRestricted:(BOOL)isRestricted
-{
-  OCMStub(ClassMethod([_settingsClassMock isDataProcessingRestricted])).andReturn(isRestricted);
 }
 
 - (void)stubOpenURLWith:(BOOL)openURL
