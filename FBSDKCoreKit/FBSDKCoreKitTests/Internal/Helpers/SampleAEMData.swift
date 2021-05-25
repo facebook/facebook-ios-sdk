@@ -107,4 +107,19 @@ class SampleAEMData { // swiftlint:disable:this convenience_type
       ],
     ]
   ]
+
+  static let validAdvertiserSingleEntryRule: AEMAdvertiserSingleEntryRule
+    = AEMAdvertiserSingleEntryRule(
+      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorContains,
+      paramKey: "test",
+      linguisticCondition: "hello",
+      numericalCondition: NSNumber(10),
+      arrayCondition: ["abv"]
+    )
+
+  static let validAdvertiserMultiEntryRule: AEMAdvertiserMultiEntryRule
+    = AEMAdvertiserMultiEntryRule(
+      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorAnd,
+      rules: [validAdvertiserSingleEntryRule]
+    )
 }
