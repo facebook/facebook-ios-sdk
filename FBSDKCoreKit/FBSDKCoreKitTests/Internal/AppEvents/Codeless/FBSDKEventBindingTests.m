@@ -22,9 +22,8 @@
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKEventBinding.h"
 #import "FBSDKEventBindingManager.h"
-#import "FBSDKTestCase.h"
 
-@interface FBSDKEventBindingTests : FBSDKTestCase
+@interface FBSDKEventBindingTests : XCTestCase
 {
   UIWindow *window;
   FBSDKEventBindingManager *eventBindingManager;

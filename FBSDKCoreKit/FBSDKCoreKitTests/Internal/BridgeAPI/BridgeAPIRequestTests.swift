@@ -18,7 +18,7 @@
 
 import XCTest
 
-class FBSDKBridgeAPIRequestTests: FBSDKTestCase {
+class FBSDKBridgeAPIRequestTests: XCTestCase {
 
   func testDefaultProtocolConformance() {
     let request: Any = BridgeAPIRequest(

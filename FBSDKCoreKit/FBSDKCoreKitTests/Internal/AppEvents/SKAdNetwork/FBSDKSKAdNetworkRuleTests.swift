@@ -18,7 +18,7 @@
 
 #if !os(tvOS)
 
-class FBSDKSKAdNetworkRuleTests: FBSDKTestCase {
+class FBSDKSKAdNetworkRuleTests: XCTestCase {
   func testValidCase1() {
     let validData: [String: Any] = [
       "conversion_value": 2,

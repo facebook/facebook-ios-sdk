@@ -20,7 +20,6 @@
 
 @import TestTools;
 #import "FBSDKCoreKitTests-Swift.h"
-#import "FBSDKTestCase.h"
 
 @interface FBSDKProfile (Testing)
 
@@ -36,8 +35,7 @@
 
 @end
 
-@interface FBSDKAuthenticationStatusUtilityTests : FBSDKTestCase
-
+@interface FBSDKAuthenticationStatusUtilityTests : XCTestCase
 @end
 
 @implementation FBSDKAuthenticationStatusUtilityTests

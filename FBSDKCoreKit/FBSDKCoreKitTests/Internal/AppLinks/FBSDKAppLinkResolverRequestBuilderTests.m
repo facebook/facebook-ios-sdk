@@ -21,7 +21,6 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKAppLinkResolverRequestBuilder.h"
-#import "FBSDKTestCase.h"
 
 @interface FBSDKAppLinkResolverRequestBuilder (FBSDKAppLinkResolverTests)
 
@@ -29,7 +28,7 @@
 
 @end
 
-@interface FBSDKAppLinkResolverRequestBuilderTests : FBSDKTestCase
+@interface FBSDKAppLinkResolverRequestBuilderTests : XCTestCase
 @end
 
 @implementation FBSDKAppLinkResolverRequestBuilderTests

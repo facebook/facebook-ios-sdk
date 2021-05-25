@@ -20,10 +20,8 @@
 
 #import "FBSDKCoreKit.h"
 #import "FBSDKCoreKitTests-Swift.h"
-#import "FBSDKTestCase.h"
 
-@interface FBSDKUserAgeRangeTests : FBSDKTestCase
-
+@interface FBSDKUserAgeRangeTests : XCTestCase
 @end
 
 @implementation FBSDKUserAgeRangeTests

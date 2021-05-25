@@ -20,7 +20,7 @@
 
 import XCTest
 
-class FBSDKSKAdNetworkEventTests: FBSDKTestCase {
+class FBSDKSKAdNetworkEventTests: XCTestCase {
 
   func testValidCases() {
     var event = FBSDKSKAdNetworkEvent(json: ["event_name": "fb_mobile_purchase"])

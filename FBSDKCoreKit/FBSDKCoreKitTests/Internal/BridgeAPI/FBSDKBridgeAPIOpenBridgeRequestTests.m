@@ -23,9 +23,8 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKCoreKitTests-Swift.h"
-#import "FBSDKTestCase.h"
 
-@interface FBSDKBridgeAPIOpenBridgeRequestTests : FBSDKTestCase
+@interface FBSDKBridgeAPIOpenBridgeRequestTests : XCTestCase
 
 @property FBSDKBridgeAPI *api;
 @property id partialMock;

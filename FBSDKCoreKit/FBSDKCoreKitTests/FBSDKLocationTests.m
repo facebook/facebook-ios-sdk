@@ -20,10 +20,8 @@
 
 #import "FBSDKCoreKit.h"
 #import "FBSDKCoreKitTests-Swift.h"
-#import "FBSDKTestCase.h"
 
-@interface FBSDKLocationTests : FBSDKTestCase
-
+@interface FBSDKLocationTests : XCTestCase
 @end
 
 @implementation FBSDKLocationTests

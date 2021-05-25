@@ -19,10 +19,8 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKAppEventsNumberParser.h"
-#import "FBSDKTestCase.h"
 
-@interface FBSDKAppEventsNumberParserTests : FBSDKTestCase
-
+@interface FBSDKAppEventsNumberParserTests : XCTestCase
 @end
 
 @implementation FBSDKAppEventsNumberParserTests
