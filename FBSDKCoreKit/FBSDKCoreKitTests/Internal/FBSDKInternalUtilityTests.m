@@ -339,7 +339,7 @@
 
 - (void)testAppURLSchemeWithMissingAppIdMissingSuffix
 {
-  [self stubAppID:nil];
+  FBSDKSettings.appID = nil;
   FBSDKSettings.appURLSchemeSuffix = nil;
   // This is not desired behavior but accurately reflects what is currently written.
   XCTAssertEqualObjects(
@@ -351,7 +351,7 @@
 
 - (void)testAppURLSchemeWithMissingAppIdInvalidSuffix
 {
-  [self stubAppID:nil];
+  FBSDKSettings.appID = nil;
   FBSDKSettings.appURLSchemeSuffix = @"   ";
   // This is not desired behavior but accurately reflects what is currently written.
   XCTAssertEqualObjects(
@@ -363,7 +363,7 @@
 
 - (void)testAppURLSchemeWithMissingAppIdValidSuffix
 {
-  [self stubAppID:nil];
+  FBSDKSettings.appID = nil;
   FBSDKSettings.appURLSchemeSuffix = @"foo";
   // This is not desired behavior but accurately reflects what is currently written.
   XCTAssertEqualObjects(
@@ -375,7 +375,7 @@
 
 - (void)testAppURLSchemeWithInvalidAppIdMissingSuffix
 {
-  [self stubAppID:@" "];
+  FBSDKSettings.appID = @" ";
   FBSDKSettings.appURLSchemeSuffix = nil;
   NSString *expected = [NSString stringWithFormat:@"fb%@", FBSDKSettings.appID];
 
@@ -389,7 +389,7 @@
 
 - (void)testAppURLSchemeWithInvalidAppIdInvalidSuffix
 {
-  [self stubAppID:@" "];
+  FBSDKSettings.appID = @" ";
   FBSDKSettings.appURLSchemeSuffix = @" ";
   NSString *expected = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.appID, FBSDKSettings.appURLSchemeSuffix];
 
@@ -403,7 +403,7 @@
 
 - (void)testAppURLSchemeWithInvalidAppIdValidSuffix
 {
-  [self stubAppID:@" "];
+  FBSDKSettings.appID = @" ";
   FBSDKSettings.appURLSchemeSuffix = @"foo";
   NSString *expected = [NSString stringWithFormat:@"fb %@", FBSDKSettings.appURLSchemeSuffix];
 
@@ -417,7 +417,7 @@
 
 - (void)testAppURLSchemeWithValidAppIdMissingSuffix
 {
-  [self stubAppID:self.appID];
+  FBSDKSettings.appID = self.appID;
   FBSDKSettings.appURLSchemeSuffix = nil;
   NSString *expected = [NSString stringWithFormat:@"fb%@", FBSDKSettings.appID];
 
@@ -430,7 +430,7 @@
 
 - (void)testAppURLSchemeWithValidAppIdInvalidSuffix
 {
-  [self stubAppID:self.appID];
+  FBSDKSettings.appID = self.appID;
   FBSDKSettings.appURLSchemeSuffix = @"   ";
   NSString *expected = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.appID, FBSDKSettings.appURLSchemeSuffix];
 
@@ -444,7 +444,7 @@
 
 - (void)testAppURLSchemeWithValidAppIdValidSuffix
 {
-  [self stubAppID:self.appID];
+  FBSDKSettings.appID = self.appID;
   FBSDKSettings.appURLSchemeSuffix = @"foo";
   NSString *expected = [NSString stringWithFormat:@"fb%@%@", FBSDKSettings.appID, FBSDKSettings.appURLSchemeSuffix];
 
@@ -459,7 +459,7 @@
 
 - (void)testAppUrlWithEmptyHost
 {
-  [self stubAppID:self.appID];
+  FBSDKSettings.appID = self.appID;
   FBSDKSettings.appURLSchemeSuffix = @"foo";
 
   NSURL *url = [FBSDKInternalUtility appURLWithHost:@"" path:validPath queryParameters:self.validParameters error:nil];
@@ -469,7 +469,7 @@
 
 - (void)testAppUrlWithValidHost
 {
-  [self stubAppID:self.appID];
+  FBSDKSettings.appID = self.appID;
   FBSDKSettings.appURLSchemeSuffix = @"foo";
 
   NSURL *url = [FBSDKInternalUtility appURLWithHost:@"facebook" path:validPath queryParameters:self.validParameters error:nil];
@@ -939,14 +939,14 @@
 
 - (void)testValidatingAppID
 {
-  [self stubAppID:nil];
+  FBSDKSettings.appID = nil;
 
   XCTAssertThrows([FBSDKInternalUtility validateAppID]);
 }
 
 - (void)testValidateClientAccessTokenWithoutClientTokenWithoutAppID
 {
-  [self stubAppID:nil];
+  FBSDKSettings.appID = nil;
   FBSDKSettings.clientToken = nil;
 
   XCTAssertThrows([FBSDKInternalUtility validateRequiredClientAccessToken]);
@@ -954,7 +954,7 @@
 
 - (void)testValidateClientAccessTokenWithClientTokenWithoutAppID
 {
-  [self stubAppID:nil];
+  FBSDKSettings.appID = nil;
   FBSDKSettings.clientToken = @"client123";
 
   XCTAssertEqualObjects(
@@ -966,7 +966,7 @@
 
 - (void)testValidateClientAccessTokenWithClientTokenWithAppID
 {
-  [self stubAppID:self.appID];
+  FBSDKSettings.appID = self.appID;
   FBSDKSettings.clientToken = @"client123";
 
   XCTAssertEqualObjects(
@@ -978,7 +978,7 @@
 
 - (void)testValidateClientAccessTokenWithoutClientTokenWithAppID
 {
-  [self stubAppID:self.appID];
+  FBSDKSettings.appID = self.appID;
   FBSDKSettings.clientToken = nil;
 
   XCTAssertThrows([FBSDKInternalUtility validateRequiredClientAccessToken]);
@@ -1023,7 +1023,7 @@
 
 - (void)testValidatingUrlSchemesWithoutAppID
 {
-  [self stubAppID:nil];
+  FBSDKSettings.appID = nil;
 
   XCTAssertThrows(
     [FBSDKInternalUtility validateURLSchemes],
@@ -1033,7 +1033,7 @@
 
 - (void)testValidatingUrlSchemesWithAppIdMatchingBundleEntry
 {
-  [self stubAppID:self.appID];
+  FBSDKSettings.appID = self.appID;
   FBSDKSettings.appURLSchemeSuffix = nil;
 
   TestBundle *bundle = [self bundleWithRegisteredUrlSchemes:@[@"fbappid"]];
@@ -1047,7 +1047,7 @@
 
 - (void)testValidatingUrlSchemesWithNonAppIdMatchingBundleEntry
 {
-  [self stubAppID:self.appID];
+  FBSDKSettings.appID = self.appID;
   FBSDKSettings.appURLSchemeSuffix = nil;
 
   TestBundle *bundle = [self bundleWithRegisteredUrlSchemes:@[@"fb123"]];

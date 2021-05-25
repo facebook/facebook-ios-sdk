@@ -355,11 +355,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
 #pragma mark - Public Methods
 
-- (void)stubAppID:(NSString *)appID
-{
-  [OCMStub(ClassMethod([_settingsClassMock appID])) andReturn:appID];
-}
-
 - (void)stubFetchingCachedServerConfiguration
 {
   FBSDKServerConfiguration *configuration = [FBSDKServerConfiguration defaultServerConfigurationForAppID:_appID];

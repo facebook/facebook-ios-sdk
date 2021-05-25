@@ -204,6 +204,8 @@ static NSString *const _mockUserID = @"mockUserID";
 - (void)tearDown
 {
   [super tearDown];
+
+  [FBSDKSettings reset];
   [FBSDKAppEvents reset];
   [TestAppEventsConfigurationProvider reset];
   [TestServerConfigurationProvider reset];
@@ -742,7 +744,7 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testPublishInstall
 {
-  [self stubAppID:self.appID];
+  FBSDKSettings.appID = self.appID;
   OCMExpect([self.appEventsMock fetchServerConfiguration:[OCMArg any]]);
 
   [self.appEventsMock publishInstall];

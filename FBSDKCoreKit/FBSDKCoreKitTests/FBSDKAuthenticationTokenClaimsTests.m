@@ -68,7 +68,9 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
 {
   [super setUp];
 
-  [self stubAppID:_mockAppID];
+  [FBSDKSettings reset];
+
+  FBSDKSettings.appID = _mockAppID;
 
   long currentTime = [[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]] longValue];
 
@@ -95,6 +97,13 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
   ];
 
   _claimsDict = [self dictionaryFromClaims:_claims];
+}
+
+- (void)tearDown
+{
+  [super tearDown];
+
+  [FBSDKSettings reset];
 }
 
 // MARK: - Decoding Claims
