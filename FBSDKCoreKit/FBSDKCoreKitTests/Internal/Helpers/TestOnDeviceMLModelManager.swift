@@ -20,12 +20,24 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-class TestOnDeviceMLModelManager: NSObject, EventProcessing, IntegrityParametersProcessorProvider {
+class TestOnDeviceMLModelManager: NSObject,
+                                  EventProcessing,
+                                  IntegrityParametersProcessorProvider,
+                                  RulesFromKeyProvider {
 
+  var stubbedRules: [AnyHashable: Any] = [:]
   var processSuggestedEventsCallCount = 0
   var stubbedProcessedEvents: String?
   var isEnabled = false
   var integrityParametersProcessor: AppEventsParameterProcessing?
+  var rulesForKey: [AnyHashable: Any] {
+    get {
+      return stubbedRules
+    }
+    set {
+      stubbedRules = newValue
+    }
+  }
 
   func processSuggestedEvents(
     _ textFeature: String,
@@ -38,5 +50,9 @@ class TestOnDeviceMLModelManager: NSObject, EventProcessing, IntegrityParameters
 
   func enable() {
     isEnabled = true
+  }
+
+  func getRulesForKey(_ useCase: String) -> [AnyHashable: Any]? {
+    return stubbedRules
   }
 }

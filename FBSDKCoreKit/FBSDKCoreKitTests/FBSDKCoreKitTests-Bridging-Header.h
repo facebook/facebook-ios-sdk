@@ -64,6 +64,7 @@
 #import "FBSDKMath.h"
 #import "FBSDKModelManager.h"
 #import "FBSDKModelUtility.h"
+#import "FBSDKModelManager+RulesFromKeyProvider.h"
 #import "FBSDKPasteboard.h"
 #import "FBSDKSKAdNetworkEvent.h"
 #import "FBSDKSKAdNetworkRule.h"

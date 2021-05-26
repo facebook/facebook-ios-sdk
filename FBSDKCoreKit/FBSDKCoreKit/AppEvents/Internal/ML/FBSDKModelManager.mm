@@ -128,7 +128,7 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
   }
 }
 
-+ (nullable NSDictionary *)getRulesForKey:(NSString *)useCase
+- (nullable NSDictionary *)getRulesForKey:(NSString *)useCase
 {
   @try {
     NSDictionary<NSString *, id> *model = [FBSDKTypeUtility dictionary:_modelInfo objectForKey:useCase ofType:NSObject.class];

@@ -76,9 +76,12 @@
  #import "FBSDKAppLinkUtility+Internal.h"
  #import "FBSDKCodelessIndexer+Internal.h"
  #import "FBSDKContainerViewController.h"
+ #import "FBSDKFeatureExtractor.h"
+ #import "FBSDKFeatureExtractor+Internal.h"
  #import "FBSDKMeasurementEventListener.h"
  #import "FBSDKMetadataIndexer+MetadataIndexing.h"
  #import "FBSDKModelManager.h"
+ #import "FBSDKModelManager+RulesFromKeyProvider.h"
  #import "FBSDKProfile+Internal.h"
  #import "FBSDKSKAdNetworkReporter+Internal.h"
  #import "FBSDKURLOpener.h"
@@ -605,6 +608,7 @@ static UIApplicationState _applicationState;
                            graphRequestConnectionFactory:connectionProvider];
   [FBSDKButton setApplicationActivationNotifier:self];
 #if !TARGET_OS_TV
+  [FBSDKFeatureExtractor configureWithRulesFromKeyProvider:FBSDKModelManager.shared];
   [FBSDKAppLinkUtility configureWithRequestProvider:graphRequestProvider
                              infoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKCodelessIndexer configureWithRequestProvider:graphRequestProvider

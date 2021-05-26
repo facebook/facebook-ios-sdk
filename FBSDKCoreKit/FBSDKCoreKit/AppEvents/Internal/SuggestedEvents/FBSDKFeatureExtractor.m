@@ -24,6 +24,7 @@
 
  #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKModelManager.h"
+ #import "FBSDKRulesFromKeyProvider.h"
  #import "FBSDKViewHierarchy.h"
  #import "FBSDKViewHierarchyMacros.h"
 
@@ -45,6 +46,15 @@ static NSDictionary *_rules;
 void sum(float *val0, float *val1);
 
 @implementation FBSDKFeatureExtractor
+
+static id<FBSDKRulesFromKeyProvider> _keyProvider;
+
++ (void)configureWithRulesFromKeyProvider:(id<FBSDKRulesFromKeyProvider>)keyProvider
+{
+  if (self == FBSDKFeatureExtractor.class) {
+    _keyProvider = keyProvider;
+  }
+}
 
 + (void)initialize
 {
@@ -75,7 +85,10 @@ void sum(float *val0, float *val1);
 
 + (void)loadRulesForKey:(NSString *)useCaseKey
 {
-  _rules = [FBSDKModelManager getRulesForKey:useCaseKey];
+  BOOL isValid = [useCaseKey isKindOfClass:NSString.class];
+  if (isValid) {
+    _rules = [_keyProvider getRulesForKey:useCaseKey];
+  }
 }
 
 + (NSString *)getTextFeature:(NSString *)text
@@ -350,6 +363,11 @@ void sum(float *val0, float *val1)
     return 0.0;
   }
 
+  NSString *validPattern = [FBSDKTypeUtility coercedToStringValue:pattern];
+  if (!validPattern) {
+    return 0.0;
+  }
+
   NSRegularExpression *re = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:nil];
   NSRange range = NSMakeRange(0, validText.length);
   NSArray<NSTextCheckingResult *> *matched = [re matchesInString:validText options:0 range:range];
@@ -366,6 +384,22 @@ void sum(float *val0, float *val1)
   [@"positiveRules"][_textTypeInfo[textType]];
   return [self regextMatch:pattern text:matchText];
 }
+
+ #if DEBUG
+  #if FBSDKTEST
+
++ (id<FBSDKRulesFromKeyProvider>)keyProvider
+{
+  return _keyProvider;
+}
+
++ (void)reset
+{
+  _keyProvider = nil;
+}
+
+  #endif
+ #endif
 
 @end
 

@@ -29,6 +29,9 @@
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKCrashShield+Internal.h"
 #import "FBSDKEventDeactivationManager+AppEventsParameterProcessing.h"
+#import "FBSDKFeatureExtractor.h"
+#import "FBSDKFeatureExtractor+Internal.h"
+#import "FBSDKFeatureExtractor+Testing.h"
 #import "FBSDKFeatureManager+FeatureChecking.h"
 #import "FBSDKPaymentObserver.h"
 #import "FBSDKRestrictiveDataFilterManager+AppEventsParameterProcessing.h"
@@ -649,6 +652,18 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
     urlOpener,
     UIApplication.sharedApplication,
     "Should be configured with the expected concrete url opener"
+  );
+}
+
+- (void)testInitializingSdkConfiguresFeatureExtractor
+{
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
+  [self.delegate initializeSDKWithLaunchOptions:@{}];
+  NSObject *keyProvider = (NSObject *) FBSDKFeatureExtractor.keyProvider;
+  XCTAssertEqualObjects(
+    keyProvider.class,
+    FBSDKModelManager.class,
+    "Should be configured with the expected concrete web view provider"
   );
 }
 

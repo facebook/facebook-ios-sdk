@@ -22,24 +22,13 @@
 
  #import <Foundation/Foundation.h>
 
- #import "FBSDKEventProcessing.h"
+ #import "FBSDKFeatureExtracting.h"
+ #import "FBSDKRulesFromKeyProvider.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@interface FBSDKFeatureExtractor (Testing)
 
-NS_SWIFT_NAME(ModelManager)
-@interface FBSDKModelManager : NSObject<FBSDKEventProcessing>
-
-+ (instancetype)shared;
-+ (void)enable;
-+ (nullable NSData *)getWeightsForKey:(NSString *)useCase;
-+ (nullable NSArray *)getThresholdsForKey:(NSString *)useCase;
-
-- (BOOL)processIntegrity:(nullable NSString *)param;
-- (NSString *)processSuggestedEvents:(NSString *)textFeature denseData:(nullable float *)denseData;
-- (void)enable;
++ (id<FBSDKRulesFromKeyProvider>)keyProvider;
 
 @end
-
-NS_ASSUME_NONNULL_END
 
 #endif
