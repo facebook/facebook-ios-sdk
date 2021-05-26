@@ -37,6 +37,7 @@
 
 typedef void (^FBSDKAEMReporterBlock)(NSError *);
 
+static NSString *const BUSINESS_ID_KEY = @"advertiser_id";
 static NSString *const BUSINESS_IDS_KEY = @"advertiser_ids";
 static NSString *const AL_APPLINK_DATA_KEY = @"al_applink_data";
 static NSString *const CAMPAIGN_ID_KEY = @"campaign_id";
@@ -342,16 +343,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBSDKAEMRepo
   NSMutableArray<FBSDKAEMInvocation *> *aggregatedInvocations = [NSMutableArray new];
   for (FBSDKAEMInvocation *invocation in g_invocations) {
     if (!invocation.isAggregated) {
-      NSInteger delay = 24 + arc4random_uniform(24);
-      NSMutableDictionary<NSString *, id> *conversionParams = [NSMutableDictionary new];
-      [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.campaignID forKey:CAMPAIGN_ID_KEY];
-      [FBSDKTypeUtility dictionary:conversionParams setObject:@(invocation.conversionValue) forKey:CONVERSION_DATA_KEY];
-      [FBSDKTypeUtility dictionary:conversionParams setObject:@(delay) forKey:CONSUMPTION_HOUR_KEY];
-      [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.ACSToken forKey:TOKEN_KEY];
-      [FBSDKTypeUtility dictionary:conversionParams setObject:@"server" forKey:DELAY_FLOW_KEY];
-      [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.ACSConfigID forKey:CONFIG_ID_KEY];
-      [FBSDKTypeUtility dictionary:conversionParams setObject:[invocation getHMAC:delay] forKey:HMAC_KEY];
-      [FBSDKTypeUtility array:params addObject:[conversionParams copy]];
+      [FBSDKTypeUtility array:params addObject:[self _aggregationRequestParameters:invocation]];
       [FBSDKTypeUtility array:aggregatedInvocations addObject:invocation];
     }
   }
@@ -383,6 +375,22 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBSDKAEMRepo
   } @catch (NSException *exception) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents logEntry:@"Fail to send AEM reports"];
   }
+}
+
++ (NSDictionary<NSString *, id> *)_aggregationRequestParameters:(FBSDKAEMInvocation *)invocation
+{
+  NSInteger delay = 24 + arc4random_uniform(24);
+  NSMutableDictionary<NSString *, id> *conversionParams = [NSMutableDictionary new];
+  [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.campaignID forKey:CAMPAIGN_ID_KEY];
+  [FBSDKTypeUtility dictionary:conversionParams setObject:@(invocation.conversionValue) forKey:CONVERSION_DATA_KEY];
+  [FBSDKTypeUtility dictionary:conversionParams setObject:@(delay) forKey:CONSUMPTION_HOUR_KEY];
+  [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.ACSToken forKey:TOKEN_KEY];
+  [FBSDKTypeUtility dictionary:conversionParams setObject:@"server" forKey:DELAY_FLOW_KEY];
+  [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.ACSConfigID forKey:CONFIG_ID_KEY];
+  [FBSDKTypeUtility dictionary:conversionParams setObject:[invocation getHMAC:delay] forKey:HMAC_KEY];
+  [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.advertiserID forKey:BUSINESS_ID_KEY];
+
+  return [conversionParams copy];
 }
 
 + (void)dispatchOnQueue:(dispatch_queue_t)queue block:(dispatch_block_t)block

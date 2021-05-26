@@ -110,6 +110,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSDictionary<NSString *, id> *)_requestParameters;
 
++ (NSDictionary<NSString *, id> *)_aggregationRequestParameters:(FBSDKAEMInvocation *)invocation;
+
 + (BOOL)_isConfigRefreshTimestampValid;
 
 + (NSMutableDictionary<NSString *, NSMutableArray<FBSDKAEMConfiguration *> *> *)_loadConfigs;

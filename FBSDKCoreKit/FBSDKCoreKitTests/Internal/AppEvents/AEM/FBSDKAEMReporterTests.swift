@@ -32,6 +32,9 @@ class FBSDKAEMReporterTests: XCTestCase {
     static let priority = "priority"
     static let events = "events"
     static let eventName = "event_name"
+    static let advertiserID = "advertiser_id"
+    static let campaignID = "campaign_id"
+    static let token = "token"
   }
 
   enum Values {
@@ -417,6 +420,46 @@ class FBSDKAEMReporterTests: XCTestCase {
       AEMReporter._requestParameters() as NSDictionary,
       ["advertiser_ids": "[\"\(SampleAEMData.invocationWithAdvertiserID1.advertiserID!)\",\"\(SampleAEMData.invocationWithAdvertiserID2.advertiserID!)\"]"], // swiftlint:disable:this force_unwrapping line_length
       "Should have expected advertiserIDs in config request params"
+    )
+  }
+
+  func testGetAggregationRequestParameterWithoutAdvertiserID() {
+    let params: [String: Any] =
+      AEMReporter._aggregationRequestParameters(SampleAEMData.invocationWithoutAdvertiserID)
+
+    XCTAssertEqual(
+      params[Keys.campaignID] as? String,
+      SampleAEMData.invocationWithoutAdvertiserID.campaignID,
+      "Should have expected campaign_id in aggregation request params"
+    )
+    XCTAssertEqual(
+      params[Keys.token] as? String,
+      SampleAEMData.invocationWithoutAdvertiserID.acsToken,
+      "Should have expected ACS token in aggregation request params"
+    )
+    XCTAssertNil(
+      params[Keys.advertiserID],
+      "Should not have unexpected advertiser_id in aggregation request params"
+    )
+  }
+
+  func testGetAggregationRequestParameterWithAdvertiserID() {
+    let params: [String: Any] =
+      AEMReporter._aggregationRequestParameters(SampleAEMData.invocationWithAdvertiserID1)
+
+    XCTAssertEqual(
+      params[Keys.campaignID] as? String,
+      SampleAEMData.invocationWithAdvertiserID1.campaignID,
+      "Should have expected campaign_id in aggregation request params"
+    )
+    XCTAssertEqual(
+      params[Keys.token] as? String,
+      SampleAEMData.invocationWithAdvertiserID1.acsToken,
+      "Should have expected ACS token in aggregation request params"
+    )
+    XCTAssertNotNil(
+      params[Keys.advertiserID],
+      "Should have expected advertiser_id in aggregation request params"
     )
   }
 
