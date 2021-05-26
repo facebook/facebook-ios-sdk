@@ -122,4 +122,34 @@ class SampleAEMData { // swiftlint:disable:this convenience_type
       with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorAnd,
       rules: [validAdvertiserSingleEntryRule]
     )
+
+  static let validAdvertiserSingleEntryRuleJson1: [String: Any] = ["content": ["starts_with": "abc"]]
+
+  static let validAdvertiserSingleEntryRuleJson2: [String: Any] = ["value": ["lt": 10]]
+
+  static let validAdvertiserSingleEntryRuleJson3: [String: Any] = ["content": ["is_any": ["abc"]]]
+
+  static let advertiserSingleEntryRule1 = AEMAdvertiserSingleEntryRule(
+    with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorStartsWith,
+    paramKey: "content",
+    linguisticCondition: "abc",
+    numericalCondition: nil,
+    arrayCondition: nil
+  )
+
+  static let advertiserSingleEntryRule2 = AEMAdvertiserSingleEntryRule(
+    with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorLessThan,
+    paramKey: "value",
+    linguisticCondition: nil,
+    numericalCondition: NSNumber(value: 10),
+    arrayCondition: nil
+  )
+
+  static let advertiserSingleEntryRule3 = AEMAdvertiserSingleEntryRule(
+    with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorIsAny,
+    paramKey: "content",
+    linguisticCondition: nil,
+    numericalCondition: nil,
+    arrayCondition: ["abc"]
+  )
 }

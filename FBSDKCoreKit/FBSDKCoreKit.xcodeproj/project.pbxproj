@@ -1259,6 +1259,8 @@
 		F943113424FB2E67002441F1 /* FBSDKSKAdNetworkEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F943113324FB2E67002441F1 /* FBSDKSKAdNetworkEventTests.swift */; };
 		F9509123265C40400002FFE8 /* FBSDKAEMAdvertiserRuleOperator.h in Headers */ = {isa = PBXBuildFile; fileRef = F9509122265C40400002FFE8 /* FBSDKAEMAdvertiserRuleOperator.h */; };
 		F9509124265C40400002FFE8 /* FBSDKAEMAdvertiserRuleOperator.h in Headers */ = {isa = PBXBuildFile; fileRef = F9509122265C40400002FFE8 /* FBSDKAEMAdvertiserRuleOperator.h */; };
+		F950913E265C57980002FFE8 /* FBSDKAEMAdvertiserRuleProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F950913D265C57980002FFE8 /* FBSDKAEMAdvertiserRuleProviding.h */; };
+		F950913F265C57980002FFE8 /* FBSDKAEMAdvertiserRuleProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = F950913D265C57980002FFE8 /* FBSDKAEMAdvertiserRuleProviding.h */; };
 		F952EA472339403900B20652 /* FBSDKMetadataIndexer.m in Sources */ = {isa = PBXBuildFile; fileRef = F952EA452339403900B20652 /* FBSDKMetadataIndexer.m */; };
 		F952EA482339403900B20652 /* FBSDKMetadataIndexer.h in Headers */ = {isa = PBXBuildFile; fileRef = F952EA462339403900B20652 /* FBSDKMetadataIndexer.h */; };
 		F952EA492339405D00B20652 /* FBSDKMetadataIndexer.m in Sources */ = {isa = PBXBuildFile; fileRef = F952EA452339403900B20652 /* FBSDKMetadataIndexer.m */; };
@@ -2171,6 +2173,7 @@
 		F943112024FB1A54002441F1 /* FBSDKSKAdNetworkEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKSKAdNetworkEvent.m; sourceTree = "<group>"; };
 		F943113324FB2E67002441F1 /* FBSDKSKAdNetworkEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBSDKSKAdNetworkEventTests.swift; sourceTree = "<group>"; };
 		F9509122265C40400002FFE8 /* FBSDKAEMAdvertiserRuleOperator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKAEMAdvertiserRuleOperator.h; sourceTree = "<group>"; };
+		F950913D265C57980002FFE8 /* FBSDKAEMAdvertiserRuleProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKAEMAdvertiserRuleProviding.h; sourceTree = "<group>"; };
 		F952EA452339403900B20652 /* FBSDKMetadataIndexer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKMetadataIndexer.m; sourceTree = "<group>"; };
 		F952EA462339403900B20652 /* FBSDKMetadataIndexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKMetadataIndexer.h; sourceTree = "<group>"; };
 		F952EA4E2339432000B20652 /* FBSDKMetadataIndexerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKMetadataIndexerTests.m; sourceTree = "<group>"; };
@@ -3488,6 +3491,7 @@
 		F91D1B1626328E55005CA2C5 /* AEM */ = {
 			isa = PBXGroup;
 			children = (
+				F950913D265C57980002FFE8 /* FBSDKAEMAdvertiserRuleProviding.h */,
 				F9A167F72650AB4400010528 /* FBSDKAEMAdvertiserRuleFactory.h */,
 				F9A167F82650AB4400010528 /* FBSDKAEMAdvertiserRuleFactory.m */,
 				F9509122265C40400002FFE8 /* FBSDKAEMAdvertiserRuleOperator.h */,
@@ -3804,6 +3808,7 @@
 				81B71D631D19C87400933E93 /* FBSDKProfile+Internal.h in Headers */,
 				58F4B8F0263C721600CD8A93 /* FBSDKConversionValueUpdating.h in Headers */,
 				5D41131F229F27DD002FF65A /* FBSDKRestrictiveDataFilterManager.h in Headers */,
+				F950913F265C57980002FFE8 /* FBSDKAEMAdvertiserRuleProviding.h in Headers */,
 				C5696F7C209BBC35009C931F /* FBSDKEventBindingManager.h in Headers */,
 				81B71D641D19C87400933E93 /* FBSDKBridgeAPIProtocolWebV1.h in Headers */,
 				81B71D651D19C87400933E93 /* FBSDKBridgeAPIRequest.h in Headers */,
@@ -4053,6 +4058,7 @@
 				894C0ACE1A6F0D3F009137EF /* FBSDKApplicationDelegate+Internal.h in Headers */,
 				89D4AE861A7FFEFC00DB8C72 /* FBSDKBridgeAPIRequest+Private.h in Headers */,
 				9D69FC4F1AA66BBF0068EC76 /* FBSDKGraphRequestConnection+Internal.h in Headers */,
+				F950913E265C57980002FFE8 /* FBSDKAEMAdvertiserRuleProviding.h in Headers */,
 				F4AC71DB2600446B00C26157 /* FBSDKGraphRequestConnecting.h in Headers */,
 				52963A8C215992F400C7B252 /* FBSDKAppLink.h in Headers */,
 				891687FE1AB38D2300F55364 /* FBSDKButton+Subclass.h in Headers */,

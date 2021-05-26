@@ -20,15 +20,15 @@
 
 #if !TARGET_OS_TV
 
-#import <Foundation/Foundation.h>
-
-#import "FBSDKAEMAdvertiserRuleMatching.h"
-#import "FBSDKAEMAdvertiserRuleProviding.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(AEMAdvertiserRuleFactory)
-@interface FBSDKAEMAdvertiserRuleFactory : NSObject<FBSDKAEMAdvertiserRuleProviding>
+/// Describes anything that can provide instances of `AEMAdvertiserRuleMatching`
+NS_SWIFT_NAME(AEMAdvertiserRuleProviding)
+@protocol FBSDKAEMAdvertiserRuleProviding
+
+- (nullable id<FBSDKAEMAdvertiserRuleMatching>)createRuleWithJson:(nullable NSString *)json;
+
+- (nullable id<FBSDKAEMAdvertiserRuleMatching>)createRuleWithDict:(NSDictionary<NSString *, id> *)dict;
 
 @end
 

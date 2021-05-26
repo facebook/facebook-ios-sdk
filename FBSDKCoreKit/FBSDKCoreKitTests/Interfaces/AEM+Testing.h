@@ -17,6 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "FBSDKAEMAdvertiserMultiEntryRule.h"
+#import "FBSDKAEMAdvertiserRuleFactory.h"
 #import "FBSDKAEMAdvertiserRuleMatching.h"
 #import "FBSDKAEMAdvertiserSingleEntryRule.h"
 #import "FBSDKAEMConfiguration.h"
@@ -116,6 +117,20 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)_saveReportData;
 
 + (void)_clearCache;
+
+@end
+
+@interface FBSDKAEMAdvertiserRuleFactory (Testing)
+
+- (nullable FBSDKAEMAdvertiserMultiEntryRule *)createMultiEntryRuleWithDict:(NSDictionary<NSString *, id> *)dict;
+
+- (nullable FBSDKAEMAdvertiserSingleEntryRule *)createSingleEntryRuleWithDict:(NSDictionary<NSString *, id> *)dict;
+
+- (nullable NSString *)primaryKeyForRule:(NSDictionary<NSString *, id> *)rule;
+
+- (FBSDKAEMAdvertiserRuleOperator)getOperator:(NSDictionary<NSString *, id> *)rule;
+
+- (BOOL)isOperatorForMultiEntryRule:(FBSDKAEMAdvertiserRuleOperator)op;
 
 @end
 
