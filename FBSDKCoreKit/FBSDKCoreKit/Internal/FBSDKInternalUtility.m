@@ -39,9 +39,15 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift) {
   // FBSDKInternalUtilityPatchVersionShift = 0, // unused
 };
 
+@interface FBSDKInternalUtility ()
+// TODO: Replace this with an instance variable i.e.: @property (nonnull, nonatomic) id<FBSDKLogging> logger;
+@property (class, nonnull, nonatomic) Class<FBSDKLogging> loggerType;
+@end
+
 @implementation FBSDKInternalUtility
 
 static id<FBSDKInfoDictionaryProviding> _infoDictionaryProvider;
+static Class<FBSDKLogging> _loggerType;
 
 // These are stored at the class level so that they can be reset in unit tests
 static dispatch_once_t fetchApplicationQuerySchemesToken;
@@ -83,6 +89,19 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 + (id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
 {
   return _infoDictionaryProvider;
+}
+
++ (void)setLoggerType:(Class<FBSDKLogging>)loggerType
+{
+  _loggerType = loggerType;
+}
+
++ (Class<FBSDKLogging>)loggerType
+{
+  if (_loggerType == nil) {
+    _loggerType = [FBSDKLogger class];
+  }
+  return _loggerType;
 }
 
 + (NSString *)appURLScheme
@@ -234,10 +253,10 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
         && [versionScanner scanInteger:NULL]
         && [versionScanner scanString:@"." intoString:NULL]
         && [versionScanner scanInteger:NULL]) {
-      [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                             logEntry:[NSString stringWithFormat:@"Invalid Graph API version:%@, assuming %@ instead",
-                                       version,
-                                       [FBSDKSettings graphAPIVersion]]];
+      [self.loggerType singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                                 logEntry:[NSString stringWithFormat:@"Invalid Graph API version:%@, assuming %@ instead",
+                                           version,
+                                           [FBSDKSettings graphAPIVersion]]];
       version = nil;
     }
     if (![path hasPrefix:@"/"]) {
@@ -380,8 +399,8 @@ static NSMapTable *_transientObjects;
   } else {
     NSString *msg = [NSString stringWithFormat:@"unregisterTransientObject:%@ count is 0. This may indicate a bug in the FBSDK. Please"
                      " file a report to developers.facebook.com/bugs if you encounter any problems. Thanks!", [object class]];
-    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                           logEntry:msg];
+    [self.loggerType singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                               logEntry:msg];
   }
 }
 
@@ -437,8 +456,8 @@ static NSMapTable *_transientObjects;
     components.scheme = scheme;
   } @catch (NSException *exception) {
     NSString *msg = [NSString stringWithFormat:@"Invalid URL scheme provided: %@", scheme];
-    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                           logEntry:msg];
+    [self.loggerType singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                               logEntry:msg];
     return NO;
   }
 
@@ -527,8 +546,8 @@ static NSMapTable *_transientObjects;
   }
 
   if (topWindow == nil) {
-    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                           logEntry:@"Unable to find a valid UIWindow"];
+    [self.class.loggerType singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                                     logEntry:@"Unable to find a valid UIWindow"];
   }
   return topWindow;
 }
@@ -539,8 +558,8 @@ static NSMapTable *_transientObjects;
   // SDK expects a key window at this point, if it is not, make it one
   if (keyWindow != nil && !keyWindow.isKeyWindow) {
     NSString *msg = [NSString stringWithFormat:@"Unable to obtain a key window, marking %@ as keyWindow", keyWindow.description];
-    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                           logEntry:msg];
+    [self.loggerType singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                               logEntry:msg];
     [keyWindow makeKeyWindow];
   }
 
@@ -614,7 +633,7 @@ static NSMapTable *_transientObjects;
 
   if (![self isRegisteredCanOpenURLScheme:urlScheme]) {
     NSString *reason = [NSString stringWithFormat:@"%@ is missing from your Info.plist under LSApplicationQueriesSchemes and is required.", urlScheme];
-    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:reason];
+    [self.loggerType singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:reason];
   }
 }
 
