@@ -16,7 +16,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <OCMock/OCMock.h>
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
@@ -293,20 +292,16 @@
 
 - (void)testCanOpenUrlSchemeWithMissingScheme
 {
-  // Should not even bother checking a nil scheme
-  OCMReject([self.sharedApplicationMock canOpenURL:OCMArg.any]);
-
   XCTAssertFalse(
     [FBSDKInternalUtility _canOpenURLScheme:nil],
     "Should not be able to open a missing scheme"
   );
+
+  XCTAssertNil(TestLogger.capturedLogEntry, "A developer error should not be logged for a nil scheme");
 }
 
 - (void)testCanOpenUrlSchemeWithInvalidSchemes
 {
-  // Should not even bother checking invalid schemes
-  OCMReject([self.sharedApplicationMock canOpenURL:OCMArg.any]);
-
   NSArray *invalidSchemes = @[
     @"http:",
     @"",
@@ -319,6 +314,9 @@
 
   for (NSString *scheme in invalidSchemes) {
     [FBSDKInternalUtility _canOpenURLScheme:scheme];
+
+    [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
+                                 logEntry:[NSString stringWithFormat:@"Invalid URL scheme provided: %@", scheme]];
   }
 }
 
@@ -335,8 +333,7 @@
   for (NSString *scheme in validSchemes) {
     [FBSDKInternalUtility _canOpenURLScheme:scheme];
 
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@:/", scheme]];
-    OCMVerify([self.sharedApplicationMock canOpenURL:url]);
+    XCTAssertNil(TestLogger.capturedLogEntry, "A developer error should not be logged for valid schemes");
   }
 }
 
