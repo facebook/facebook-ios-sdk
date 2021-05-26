@@ -490,19 +490,24 @@
 
   [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:scheme];
 
-  OCMVerify([self.internalUtilityClassMock isRegisteredCanOpenURLScheme:scheme]);
+  [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
+                               logEntry:@"foo is missing from your Info.plist under LSApplicationQueriesSchemes and is required."];
 }
 
 - (void)testCheckRegisteredCanOpenURLSchemeMultipleTimes
 {
   NSString *scheme = @"foo";
 
-  [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:scheme];
-
-  // Should only check for a scheme a single time.
-  OCMReject([self.internalUtilityClassMock isRegisteredCanOpenURLScheme:scheme]);
+  XCTAssertEqual(TestLogger.capturedLogEntries.count, 0, @"There should not be developer errors logged initially");
 
   [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:scheme];
+
+  XCTAssertEqual(TestLogger.capturedLogEntries.count, 1, @"One developer error should be logged");
+  [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
+                               logEntry:@"foo is missing from your Info.plist under LSApplicationQueriesSchemes and is required."];
+
+  [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:scheme];
+  XCTAssertEqual(TestLogger.capturedLogEntries.count, 1, @"Additional errors should not be logged for the same error");
 }
 
 // MARK: - Dictionary from FBURL
