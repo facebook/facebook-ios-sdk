@@ -36,6 +36,8 @@
 + (void)resetDidCheckOperatingSystemVersion;
 + (void)resetFetchingUrlSchemes;
 
+@property (class, nonnull, nonatomic) Class<FBSDKLogging> loggerType;
+
 @end
 
 @interface FBSDKAuthenticationToken (Testing)
@@ -62,11 +64,14 @@
 
   [FBSDKInternalUtility reset];
   [FBSDKInternalUtility deleteFacebookCookies];
+  FBSDKInternalUtility.loggerType = TestLogger.class;
 }
 
 - (void)tearDown
 {
   [FBSDKSettings reset];
+  [TestLogger reset];
+  FBSDKInternalUtility.loggerType = FBSDKLogger.class;
 
   [super tearDown];
 }
@@ -687,7 +692,8 @@
 
   [FBSDKInternalUtility isFacebookAppInstalled];
 
-  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:facebookUrlSchemeMissingMessage]);
+  [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
+                               logEntry:facebookUrlSchemeMissingMessage];
 }
 
 - (void)testFacebookAppInstalledEmptyQuerySchemes
@@ -698,7 +704,8 @@
 
   [FBSDKInternalUtility isFacebookAppInstalled];
 
-  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:facebookUrlSchemeMissingMessage]);
+  [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
+                               logEntry:facebookUrlSchemeMissingMessage];
 }
 
 - (void)testFacebookAppInstalledMissingQueryScheme
@@ -709,7 +716,8 @@
 
   [FBSDKInternalUtility isFacebookAppInstalled];
 
-  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:facebookUrlSchemeMissingMessage]);
+  [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
+                               logEntry:facebookUrlSchemeMissingMessage];
 }
 
 - (void)testFacebookAppInstalledValidQueryScheme
@@ -718,9 +726,9 @@
   id bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
   FBSDKInternalUtility.infoDictionaryProvider = bundle;
 
-  OCMReject([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:OCMArg.any]);
-
   [FBSDKInternalUtility isFacebookAppInstalled];
+
+  XCTAssertNil(TestLogger.capturedLoggingBehavior);
 }
 
 - (void)testFacebookAppInstalledCache
@@ -728,12 +736,17 @@
   id bundle = [[TestBundle alloc] initWithInfoDictionary:@{}];
   FBSDKInternalUtility.infoDictionaryProvider = bundle;
 
-  [FBSDKInternalUtility isFacebookAppInstalled];
-
-  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:facebookUrlSchemeMissingMessage]);
-  OCMReject([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:OCMArg.any]);
+  XCTAssertEqual(TestLogger.capturedLogEntries.count, 0, @"There should not be developer errors logged initially");
 
   [FBSDKInternalUtility isFacebookAppInstalled];
+
+  XCTAssertEqual(TestLogger.capturedLogEntries.count, 1, @"One developer error should be logged");
+  [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
+                               logEntry:facebookUrlSchemeMissingMessage];
+
+  // Calling it again should not result in an additional call to the singleShotLogEntry method
+  [FBSDKInternalUtility isFacebookAppInstalled];
+  XCTAssertEqual(TestLogger.capturedLogEntries.count, 1, @"Additional errors should not be logged for the same error");
 }
 
 - (void)testMessengerAppInstalledMissingQuerySchemes
@@ -743,7 +756,8 @@
 
   [FBSDKInternalUtility isMessengerAppInstalled];
 
-  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:messengerUrlSchemeMissingMessage]);
+  [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
+                               logEntry:messengerUrlSchemeMissingMessage];
 }
 
 - (void)testMessengerAppInstalledEmptyQuerySchemes
@@ -754,7 +768,8 @@
 
   [FBSDKInternalUtility isMessengerAppInstalled];
 
-  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:messengerUrlSchemeMissingMessage]);
+  [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
+                               logEntry:messengerUrlSchemeMissingMessage];
 }
 
 - (void)testMessengerAppInstalledMissingQueryScheme
@@ -765,7 +780,8 @@
 
   [FBSDKInternalUtility isMessengerAppInstalled];
 
-  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:messengerUrlSchemeMissingMessage]);
+  [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
+                               logEntry:messengerUrlSchemeMissingMessage];
 }
 
 - (void)testMessengerAppInstalledValidQueryScheme
@@ -774,9 +790,9 @@
   id bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
   FBSDKInternalUtility.infoDictionaryProvider = bundle;
 
-  OCMReject([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:OCMArg.any]);
-
   [FBSDKInternalUtility isMessengerAppInstalled];
+
+  XCTAssertNil(TestLogger.capturedLoggingBehavior);
 }
 
 - (void)testMessengerAppInstalledCache
@@ -784,12 +800,17 @@
   id bundle = [[TestBundle alloc] initWithInfoDictionary:@{}];
   FBSDKInternalUtility.infoDictionaryProvider = bundle;
 
-  [FBSDKInternalUtility isMessengerAppInstalled];
-
-  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:messengerUrlSchemeMissingMessage]);
-  OCMReject([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:OCMArg.any]);
+  XCTAssertEqual(TestLogger.capturedLogEntries.count, 0, @"There should not be developer errors logged initially");
 
   [FBSDKInternalUtility isMessengerAppInstalled];
+
+  XCTAssertEqual(TestLogger.capturedLogEntries.count, 1, @"One developer error should be logged");
+  [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
+                               logEntry:messengerUrlSchemeMissingMessage];
+
+  // Calling it again should not result in an additional call to the singleShotLogEntry method
+  [FBSDKInternalUtility isMessengerAppInstalled];
+  XCTAssertEqual(TestLogger.capturedLogEntries.count, 1, @"Additional errors should not be logged for the same error");
 }
 
 - (void)testMSQRDPlayerAppInstalledMissingQuerySchemes
@@ -799,7 +820,8 @@
 
   [FBSDKInternalUtility isMSQRDPlayerAppInstalled];
 
-  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:msqrdPlayerUrlSchemeMissingMessage]);
+  [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
+                               logEntry:msqrdPlayerUrlSchemeMissingMessage];
 }
 
 - (void)testMSQRDPlayerAppInstalledEmptyQuerySchemes
@@ -810,7 +832,8 @@
 
   [FBSDKInternalUtility isMSQRDPlayerAppInstalled];
 
-  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:msqrdPlayerUrlSchemeMissingMessage]);
+  [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
+                               logEntry:msqrdPlayerUrlSchemeMissingMessage];
 }
 
 - (void)testMSQRDPlayerAppInstalledMissingQueryScheme
@@ -821,7 +844,8 @@
 
   [FBSDKInternalUtility isMSQRDPlayerAppInstalled];
 
-  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:msqrdPlayerUrlSchemeMissingMessage]);
+  [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
+                               logEntry:msqrdPlayerUrlSchemeMissingMessage];
 }
 
 - (void)testMSQRDPlayerAppInstalledValidQueryScheme
@@ -830,9 +854,9 @@
   id bundle = [[TestBundle alloc] initWithInfoDictionary:@{@"LSApplicationQueriesSchemes" : querySchemes}];
   FBSDKInternalUtility.infoDictionaryProvider = bundle;
 
-  OCMReject([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:OCMArg.any]);
-
   [FBSDKInternalUtility isMSQRDPlayerAppInstalled];
+
+  XCTAssertNil(TestLogger.capturedLoggingBehavior);
 }
 
 - (void)testMSQRDPlayerAppInstalledCache
@@ -840,15 +864,26 @@
   id bundle = [[TestBundle alloc] initWithInfoDictionary:@{}];
   FBSDKInternalUtility.infoDictionaryProvider = bundle;
 
-  [FBSDKInternalUtility isMSQRDPlayerAppInstalled];
-
-  OCMVerify([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:msqrdPlayerUrlSchemeMissingMessage]);
-  OCMReject([self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:OCMArg.any]);
+  XCTAssertEqual(TestLogger.capturedLogEntries.count, 0, @"There should not be developer errors logged initially");
 
   [FBSDKInternalUtility isMSQRDPlayerAppInstalled];
+
+  XCTAssertEqual(TestLogger.capturedLogEntries.count, 1, @"One developer error should be logged");
+  [self verifyTestLoggerLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors
+                               logEntry:msqrdPlayerUrlSchemeMissingMessage];
+
+  // Calling it again should not result in an additional call to the singleShotLogEntry method
+  [FBSDKInternalUtility isMSQRDPlayerAppInstalled];
+  XCTAssertEqual(TestLogger.capturedLogEntries.count, 1, @"Additional errors should not be logged for the same error");
 }
 
 // MARK: - Random Utility Methods
+
+- (void)verifyTestLoggerLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior logEntry:(NSString *)logEntry
+{
+  XCTAssertEqual(TestLogger.capturedLoggingBehavior, loggingBehavior);
+  XCTAssertEqualObjects(TestLogger.capturedLogEntry, logEntry);
+}
 
 - (void)testIsBrowserURLWithNonBrowserURL
 {
