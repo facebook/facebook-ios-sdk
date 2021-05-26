@@ -21,7 +21,6 @@ import XCTest
 #if !os(tvOS)
 
 class FBSDKAEMAdvertiserRuleFactoryTests: XCTestCase {
-
 }
 
 #endif
