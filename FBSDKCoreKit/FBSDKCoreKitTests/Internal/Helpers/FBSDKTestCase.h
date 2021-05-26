@@ -173,9 +173,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Stubs `FBSDKAppEventsUtility.tokenStringToUseFor:` and returns the provided string
 - (void)stubAppEventsUtilityTokenStringToUseForTokenWith:(NSString *)tokenString;
 
-/// Stubs `FBSDKGraphRequest.startWithCompletionHandler:` and returns the provided result, error and connection
-- (void)stubGraphRequestWithResult:(id)result error:(nullable NSError *)error connection:(nullable FBSDKGraphRequestConnection *)connection;
-
 /// Stubs `FBSDKGraphRequestPiggybackManager._lastRefreshTry` and returns the provided `NSDate`
 - (void)stubGraphRequestPiggybackManagerLastRefreshTryWith:(NSDate *)date;
 

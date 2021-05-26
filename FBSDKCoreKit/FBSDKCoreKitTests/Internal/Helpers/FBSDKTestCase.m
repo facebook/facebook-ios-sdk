@@ -412,11 +412,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   OCMStub(ClassMethod([_serverConfigurationManagerClassMock loadServerConfigurationWithCompletionBlock:OCMArg.isNil]));
 }
 
-- (void)stubGraphRequestWithResult:(id)result error:(nullable NSError *)error connection:(nullable FBSDKGraphRequestConnection *)connection
-{
-  OCMStub([_graphRequestMock startWithCompletion:([OCMArg invokeBlockWithArgs:[self nsNullIfNil:connection], [self nsNullIfNil:result], [self nsNullIfNil:error], nil])]);
-}
-
 - (void)stubGraphRequestPiggybackManagerLastRefreshTryWith:(NSDate *)date
 {
   OCMStub(ClassMethod([_graphRequestPiggybackManagerMock _lastRefreshTry])).andReturn(date);

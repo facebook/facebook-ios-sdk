@@ -111,7 +111,9 @@
 				F4A406E525F4590F00F0E578 /* TestTools */,
 				F4E5F09125F4354900D67852 /* Products */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
+			tabWidth = 2;
 		};
 		F4E5F09125F4354900D67852 /* Products */ = {
 			isa = PBXGroup;
@@ -159,7 +161,7 @@
 		F4E5F08725F4354900D67852 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1240;
+				LastUpgradeCheck = 1250;
 				TargetAttributes = {
 					F4E5F08F25F4354900D67852 = {
 						CreatedOnToolsVersion = 12.4;
