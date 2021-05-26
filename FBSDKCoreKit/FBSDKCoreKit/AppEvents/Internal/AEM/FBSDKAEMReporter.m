@@ -37,6 +37,7 @@
 
 typedef void (^FBSDKAEMReporterBlock)(NSError *);
 
+static NSString *const BUSINESS_IDS_KEY = @"advertiser_ids";
 static NSString *const AL_APPLINK_DATA_KEY = @"al_applink_data";
 static NSString *const CAMPAIGN_ID_KEY = @"campaign_id";
 static NSString *const CONVERSION_DATA_KEY = @"conversion_data";
@@ -188,7 +189,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBSDKAEMRepo
     }
     g_isLoadingConfiguration = YES;
     id<FBSDKGraphRequest> request = [self.requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/aem_conversion_configs", [FBSDKSettings appID]]
-                                                                               parameters:@{}
+                                                                               parameters:[self _requestParameters]
                                                                               tokenString:nil
                                                                                HTTPMethod:FBSDKHTTPMethodGET
                                                                                     flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
@@ -217,6 +218,19 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBSDKAEMRepo
       }];
     }];
   }];
+}
+
++ (NSDictionary<NSString *, id> *)_requestParameters
+{
+  NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary new];
+  // append business ids to the request params
+  NSMutableArray<NSString *> *businessIDs = [NSMutableArray new];
+  for (FBSDKAEMInvocation *invocation in g_invocations) {
+    [FBSDKTypeUtility array:businessIDs addObject:invocation.advertiserID];
+  }
+  NSString *businessIDsString = [FBSDKBasicUtility JSONStringForObject:businessIDs error:nil invalidObjectHandler:nil];
+  [FBSDKTypeUtility dictionary:params setObject:businessIDsString forKey:BUSINESS_IDS_KEY];
+  return [params copy];
 }
 
 + (BOOL)_isConfigRefreshTimestampValid

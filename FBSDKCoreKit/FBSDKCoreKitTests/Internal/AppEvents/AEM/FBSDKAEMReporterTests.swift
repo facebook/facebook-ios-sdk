@@ -390,6 +390,36 @@ class FBSDKAEMReporterTests: XCTestCase {
     }
   }
 
+  func testGetConfigRequestParameterWithoutAdvertiserIDs() {
+    AEMReporter.invocations = NSMutableArray(array: [SampleAEMData.invocationWithoutAdvertiserID])
+
+    XCTAssertEqual(
+      AEMReporter._requestParameters() as NSDictionary,
+      ["advertiser_ids": "[]"],
+      "Should not have unexpected advertiserIDs in config request params"
+    )
+  }
+
+  func testGetConfigRequestParameterWithAdvertiserIDs() {
+    AEMReporter.invocations =
+        NSMutableArray(array: [SampleAEMData.invocationWithAdvertiserID1, SampleAEMData.invocationWithoutAdvertiserID])
+
+    XCTAssertEqual(
+      AEMReporter._requestParameters() as NSDictionary,
+      ["advertiser_ids": "[\"\(SampleAEMData.invocationWithAdvertiserID1.advertiserID!)\"]"], // swiftlint:disable:this force_unwrapping line_length
+      "Should have expected advertiserIDs in config request params"
+    )
+
+    AEMReporter.invocations =
+        NSMutableArray(array: [SampleAEMData.invocationWithAdvertiserID1, SampleAEMData.invocationWithAdvertiserID2, SampleAEMData.invocationWithoutAdvertiserID]) // swiftlint:disable:this line_length
+
+    XCTAssertEqual(
+      AEMReporter._requestParameters() as NSDictionary,
+      ["advertiser_ids": "[\"\(SampleAEMData.invocationWithAdvertiserID1.advertiserID!)\",\"\(SampleAEMData.invocationWithAdvertiserID2.advertiserID!)\"]"], // swiftlint:disable:this force_unwrapping line_length
+      "Should have expected advertiserIDs in config request params"
+    )
+  }
+
   // MARK: - Helpers
 
   func removeReportFile() {

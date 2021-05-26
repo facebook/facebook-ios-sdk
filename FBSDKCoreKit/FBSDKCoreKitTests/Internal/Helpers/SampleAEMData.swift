@@ -152,4 +152,28 @@ class SampleAEMData { // swiftlint:disable:this convenience_type
     numericalCondition: nil,
     arrayCondition: ["abc"]
   )
+
+  static let invocationWithAdvertiserID1 = AEMInvocation(
+    campaignID: "test_campaign_1234",
+    acsToken: "test_token_1234567",
+    acsSharedSecret: "test_shared_secret",
+    acsConfigID: "test_config_id_123",
+    advertiserID: "test_advertiserid_12345"
+  )! // swiftlint:disable:this force_unwrapping
+
+  static let invocationWithAdvertiserID2 = AEMInvocation(
+    campaignID: "test_campaign_1235",
+    acsToken: "test_token_2345678",
+    acsSharedSecret: "test_shared_secret_124",
+    acsConfigID: "test_config_id_124",
+    advertiserID: "test_advertiserid_12346"
+  )! // swiftlint:disable:this force_unwrapping
+
+  static let invocationWithoutAdvertiserID = AEMInvocation(
+    campaignID: "test_campaign_4321",
+    acsToken: "test_token_7654",
+    acsSharedSecret: "test_shared_secret_123",
+    acsConfigID: "test_config_id_333",
+    advertiserID: nil
+  )! // swiftlint:disable:this force_unwrapping
 }
