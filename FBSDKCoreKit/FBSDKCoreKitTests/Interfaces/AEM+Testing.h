@@ -42,6 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSSet<NSString *> *)getCurrencySetFromRules:(NSArray<FBSDKAEMRule *> *)rules;
 
++ (id<FBSDKAEMAdvertiserRuleProviding>)ruleProvider;
+
 @end
 
 @interface FBSDKAEMInvocation (Testing)

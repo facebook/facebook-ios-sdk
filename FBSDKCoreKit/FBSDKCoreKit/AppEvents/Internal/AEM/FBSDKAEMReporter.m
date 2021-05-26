@@ -24,6 +24,7 @@
 
  #include <stdlib.h>
 
+ #import "FBSDKAEMAdvertiserRuleFactory.h"
  #import "FBSDKAEMConfiguration.h"
  #import "FBSDKAEMInvocation.h"
  #import "FBSDKCoreKitBasicsImport.h"
@@ -82,6 +83,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBSDKAEMRepo
   if (@available(iOS 14.0, *)) {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+      [FBSDKAEMConfiguration configureWithRuleProvider:[FBSDKAEMAdvertiserRuleFactory new]];
       g_reportFile = [FBSDKBasicUtility persistenceFilePath:FBSDKAEMReporterFileName];
       g_configFile = [FBSDKBasicUtility persistenceFilePath:FBSDKAEMConfigFileName];
       g_completionBlocks = [NSMutableArray new];

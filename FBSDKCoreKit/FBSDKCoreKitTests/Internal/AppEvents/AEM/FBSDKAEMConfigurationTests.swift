@@ -27,6 +27,8 @@ class AEMConfigurationTests: XCTestCase {
       static let cutoffTime = "cutoff_time"
       static let validFrom = "valid_from"
       static let configMode = "config_mode"
+      static let businessID = "business_id"
+      static let paramRule = "param_rule"
       static let conversionValueRules = "conversion_value_rules"
       static let conversionValue = "conversion_value"
       static let priority = "priority"
@@ -38,6 +40,8 @@ class AEMConfigurationTests: XCTestCase {
   }
 
   enum Values {
+      static let coffeeBrand = "coffeebrand"
+      static let paramRule = "{\"and\":[{\"fb_content[*].brand\":{\"eq\":\"CoffeeShop\"}}]}"
       static let purchase = "fb_mobile_purchase"
       static let donate = "Donate"
       static let defaultMode = "default"
@@ -50,6 +54,8 @@ class AEMConfigurationTests: XCTestCase {
     Keys.cutoffTime: 1,
     Keys.validFrom: 10000,
     Keys.configMode: Values.defaultMode,
+    Keys.businessID: Values.coffeeBrand,
+    Keys.paramRule: Values.paramRule,
     Keys.conversionValueRules: [
       [
         Keys.conversionValue: 2,
@@ -109,6 +115,21 @@ class AEMConfigurationTests: XCTestCase {
     ]
   ]
 
+  let advertiserRuleFactory = AEMAdvertiserRuleFactory()
+
+  override func setUp() {
+    super.setUp()
+
+    AEMConfiguration.configure(withRuleProvider: advertiserRuleFactory)
+  }
+
+  func testConfiguration() {
+    XCTAssertEqual(
+      AEMConfiguration.ruleProvider() as! AEMAdvertiserRuleFactory, // swiftlint:disable:this force_cast
+      advertiserRuleFactory,
+      "Should configure the AEMConfiguration correctly")
+  }
+
   func testValidCases() {
     let config = AEMConfiguration(json: self.sampleData)
 
@@ -128,6 +149,10 @@ class AEMConfigurationTests: XCTestCase {
       config?.configMode,
       Values.defaultMode,
       "Should parse the expected config_mode with the correct value")
+    XCTAssertEqual(
+      config?.businessID,
+      Values.coffeeBrand,
+      "Should parse the expected business_id with the correct value")
     XCTAssertEqual(
       config?.conversionValueRules.count,
       1,
@@ -267,6 +292,15 @@ class AEMConfigurationTests: XCTestCase {
       "Should encode the expected config_mode with the correct key"
     )
     XCTAssertEqual(
+      coder.encodedObject[Keys.businessID] as? String,
+      config?.businessID,
+      "Should encode the expected business_id with the correct key"
+    )
+    XCTAssertTrue(
+      coder.encodedObject[Keys.paramRule] is FBSDKAEMAdvertiserRuleMatching,
+      "Should encode the expected param_rule with the correct key"
+    )
+    XCTAssertEqual(
       coder.encodedObject[Keys.conversionValueRules] as? [FBSDKAEMRule],
       config?.conversionValueRules,
       "Should encode the expected conversion_value_rules with the correct key"
@@ -294,6 +328,15 @@ class AEMConfigurationTests: XCTestCase {
     XCTAssertTrue(
       decoder.decodedObject[Keys.configMode] is NSString.Type,
       "Should decode the expected type for the config_mode key"
+    )
+    XCTAssertTrue(
+      decoder.decodedObject[Keys.businessID] is NSString.Type,
+      "Should decode the expected type for the business_id key"
+    )
+    XCTAssertEqual(
+      decoder.decodedObject[Keys.paramRule] as? NSSet,
+      [NSArray.self, AEMAdvertiserMultiEntryRule.self, AEMAdvertiserSingleEntryRule.self],
+      "Should decode the expected type for the param_rule key"
     )
     XCTAssertEqual(
       decoder.decodedObject[Keys.conversionValueRules] as? NSSet,
