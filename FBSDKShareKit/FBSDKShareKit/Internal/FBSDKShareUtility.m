@@ -266,19 +266,6 @@
   }
 }
 
-+ (BOOL)validateAssetLibraryURLsWithShareMediaContent:(FBSDKShareMediaContent *)mediaContent name:(NSString *)name error:(NSError *__autoreleasing *)errorRef
-{
-  for (id media in mediaContent.media) {
-    if ([media isKindOfClass:[FBSDKShareVideo class]]) {
-      FBSDKShareVideo *video = (FBSDKShareVideo *)media;
-      if (![self _validateAssetLibraryVideoURL:video.videoURL name:name error:errorRef]) {
-        return NO;
-      }
-    }
-  }
-  return YES;
-}
-
 + (BOOL)validateShareContent:(id<FBSDKSharingContent>)shareContent
                bridgeOptions:(FBSDKShareBridgeOptions)bridgeOptions
                        error:(NSError *__autoreleasing *)errorRef
