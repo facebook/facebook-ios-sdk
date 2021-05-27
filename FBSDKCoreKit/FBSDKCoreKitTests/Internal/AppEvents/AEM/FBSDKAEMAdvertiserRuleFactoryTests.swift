@@ -20,7 +20,7 @@ import XCTest
 
 #if !os(tvOS)
 
-class FBSDKAEMAdvertiserRuleFactoryTests: XCTestCase {
+class FBSDKAEMAdvertiserRuleFactoryTests: XCTestCase { // swiftlint:disable:this type_body_length
 
   let factory = AEMAdvertiserRuleFactory()
 

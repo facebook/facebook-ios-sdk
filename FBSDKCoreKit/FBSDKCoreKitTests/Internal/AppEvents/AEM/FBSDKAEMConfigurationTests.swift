@@ -20,7 +20,7 @@ import XCTest
 
 #if !os(tvOS)
 
-class AEMConfigurationTests: XCTestCase {
+class AEMConfigurationTests: XCTestCase { // swiftlint:disable:this type_body_length
 
   enum Keys {
       static let defaultCurrency = "default_currency"

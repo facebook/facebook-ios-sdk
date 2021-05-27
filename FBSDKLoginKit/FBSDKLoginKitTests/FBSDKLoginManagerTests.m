@@ -122,6 +122,10 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 - (void)setUp
 {
   [super setUp];
+
+  [FBSDKApplicationDelegate.sharedInstance application:UIApplication.sharedApplication
+                         didFinishLaunchingWithOptions:@{}];
+
   _mockNSBundle = [FBSDKLoginUtilityTests mainBundleMock];
   [FBSDKSettings setAppID:kFakeAppID];
   [FBSDKAuthenticationToken setCurrentAuthenticationToken:nil];

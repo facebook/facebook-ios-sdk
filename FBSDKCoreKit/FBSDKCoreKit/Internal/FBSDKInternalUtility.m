@@ -40,8 +40,11 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift) {
 };
 
 @interface FBSDKInternalUtility ()
+
 // TODO: Replace this with an instance variable i.e.: @property (nonnull, nonatomic) id<FBSDKLogging> logger;
 @property (class, nonnull, nonatomic) Class<FBSDKLogging> loggerType;
+@property (nonatomic) BOOL isConfigured;
+
 @end
 
 @implementation FBSDKInternalUtility
@@ -83,6 +86,8 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 {
   if (self == FBSDKInternalUtility.class) {
     _infoDictionaryProvider = infoDictionaryProvider;
+
+    self.sharedUtility.isConfigured = YES;
   }
 }
 
@@ -467,6 +472,7 @@ static NSMapTable *_transientObjects;
 
 + (void)validateAppID
 {
+  [self.sharedUtility validateConfiguration];
   if (![FBSDKSettings appID]) {
     NSString *reason = @"App ID not found. Add a string value with your app ID for the key "
     @"FacebookAppID to the Info.plist or call [FBSDKSettings setAppID:].";
@@ -476,6 +482,7 @@ static NSMapTable *_transientObjects;
 
 + (NSString *)validateRequiredClientAccessToken
 {
+  [self.sharedUtility validateConfiguration];
   if (![FBSDKSettings clientToken]) {
     NSString *reason = @"ClientToken is required to be set for this operation. "
     @"Set the FacebookClientToken in the Info.plist or call [FBSDKSettings setClientToken:]. "
@@ -603,6 +610,8 @@ static NSMapTable *_transientObjects;
 
 + (BOOL)isRegisteredURLScheme:(NSString *)urlScheme
 {
+  [self.sharedUtility validateConfiguration];
+
   static NSArray *urlTypes = nil;
   dispatch_once(&fetchUrlSchemesToken, ^{
     urlTypes = [self.infoDictionaryProvider.infoDictionary valueForKey:@"CFBundleURLTypes"];
@@ -665,6 +674,18 @@ static NSMapTable *_transientObjects;
   return NO;
 }
 
+- (void)validateConfiguration
+{
+#if DEBUG
+  if (!self.isConfigured) {
+    static NSString *const reason = @"As of v9.0, you must initialize the SDK prior to calling any methods or setting any properties. "
+    "You can do this by calling `FBSDKApplicationDelegate`'s `application:didFinishLaunchingWithOptions:` method. "
+    "Learn more: https://developers.facebook.com/docs/ios/getting-started";
+    @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
+  }
+#endif
+}
+
 #pragma mark - Testability
 
 #if DEBUG
@@ -697,11 +718,6 @@ static NSMapTable *_transientObjects;
     sharedUtilityNonce = 0;
   }
   _infoDictionaryProvider = nil;
-}
-
-+ (void)setInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)provider
-{
-  _infoDictionaryProvider = provider;
 }
 
  #endif
