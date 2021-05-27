@@ -322,11 +322,13 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
     return [[FBSDKLoginConfiguration alloc] initWithPermissions:self.permissions
                                                        tracking:self.loginTracking
                                                           nonce:self.nonce
-                                                messengerPageId:self.messengerPageId];
+                                                messengerPageId:self.messengerPageId
+                                                       authType:self.authType];
   } else {
     return [[FBSDKLoginConfiguration alloc] initWithPermissions:self.permissions
                                                        tracking:self.loginTracking
-                                                messengerPageId:self.messengerPageId];
+                                                messengerPageId:self.messengerPageId
+                                                       authType:self.authType];
   }
 }
 
@@ -438,6 +440,15 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
 - (BOOL)_isAuthenticated
 {
   return (FBSDKAccessToken.currentAccessToken || FBSDKAuthenticationToken.currentAuthenticationToken);
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+  if (self = [super initWithFrame:frame]) {
+    self.authType = FBSDKLoginAuthTypeRerequest;
+  }
+
+  return self;
 }
 
 // MARK: - Testability

@@ -108,9 +108,13 @@ NS_SWIFT_NAME(FBLoginButton)
  */
 @property (copy, nonatomic, nullable) NSString *nonce;
 /**
-  Gets or sets an optional page id to use for login attempts. Used in conjunction with some Page related permissions.
+  Gets or sets an optional page id to use for login attempts.
  */
 @property (copy, nonatomic, nullable) NSString *messengerPageId;
+/**
+  Gets or sets the auth_type to use in the login request. Defaults to rerequest.
+ */
+@property (nonatomic, nullable) FBSDKLoginAuthType authType;
 
 @end
 

@@ -49,10 +49,6 @@ static NSString *const FBSDKOauthPath = @"/dialog/oauth";
 static NSString *const SFVCCanceledLogin = @"com.apple.SafariServices.Authentication";
 static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebAuthenticationSession";
 
-// constants
-FBSDKLoginAuthType FBSDKLoginAuthTypeRerequest = @"rerequest";
-FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
-
 @implementation FBSDKLoginManager
 {
   FBSDKLoginManagerLoginResultBlock _handler;
@@ -75,7 +71,6 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 {
   self = [super init];
   if (self) {
-    self.authType = FBSDKLoginAuthTypeRerequest;
     NSString *keyChainServiceIdentifier = [NSString stringWithFormat:@"com.facebook.sdk.loginmanager.%@", [NSBundle mainBundle].bundleIdentifier];
     _keychainStore = [[FBSDKKeychainStore alloc] initWithService:keyChainServiceIdentifier accessGroup:nil];
   }
@@ -89,6 +84,16 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   if (![self validateLoginStartState]) {
     return;
   }
+
+  [self logInFromViewControllerImpl:viewController
+                      configuration:configuration
+                         completion:completion];
+}
+
+- (void)logInFromViewControllerImpl:(UIViewController *)viewController
+                      configuration:(FBSDKLoginConfiguration *)configuration
+                         completion:(FBSDKLoginManagerLoginResultBlock)completion
+{
   if (!configuration) {
     NSString *failureMessage = @"Cannot login without a valid login configuration. Please make sure the `LoginConfiguration` provided is non-nil";
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
@@ -123,8 +128,22 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   if (![self validateLoginStartState]) {
     return;
   }
-  self.fromViewController = fromViewController;
-  [self reauthorizeDataAccess:handler];
+
+  if (!FBSDKAccessToken.currentAccessToken) {
+    NSString *errorMessage = @"Must have an access token for which to reauthorize data access";
+    NSError *error = [FBSDKError errorWithDomain:FBSDKLoginErrorDomain
+                                            code:FBSDKLoginErrorMissingAccessToken
+                                         message:errorMessage];
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:errorMessage];
+    handler(nil, error);
+    return;
+  }
+
+  FBSDKLoginConfiguration *config = [[FBSDKLoginConfiguration alloc] initWithPermissions:@[] // Don't need to pass permissions for data reauthorization.
+                                                                                tracking:FBSDKLoginTrackingEnabled
+                                                                         messengerPageId:nil
+                                                                                authType:FBSDKLoginAuthTypeReauthorize];
+  [self logInFromViewControllerImpl:fromViewController configuration:config completion:handler];
 }
 
 - (void)logOut
@@ -327,7 +346,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   [FBSDKTypeUtility dictionary:loginParams setObject:@"true" forKey:@"return_scopes"];
   loginParams[@"sdk_version"] = FBSDK_VERSION_STRING;
   [FBSDKTypeUtility dictionary:loginParams setObject:@([FBSDKInternalUtility isFacebookAppInstalled]) forKey:@"fbapp_pres"];
-  [FBSDKTypeUtility dictionary:loginParams setObject:self.authType forKey:@"auth_type"];
+  [FBSDKTypeUtility dictionary:loginParams setObject:configuration.authType forKey:@"auth_type"];
   [FBSDKTypeUtility dictionary:loginParams setObject:serverConfiguration.loggingToken forKey:@"logging_token"];
   long long cbtInMilliseconds = round(1000 * [NSDate date].timeIntervalSince1970);
   [FBSDKTypeUtility dictionary:loginParams setObject:@(cbtInMilliseconds) forKey:@"cbt"];
@@ -415,29 +434,6 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
   error = error ?: [FBSDKError errorWithCode:FBSDKLoginErrorUnknown message:@"Failed to parse deep link url for login data"];
   [self invokeHandler:nil error:error];
   return nil;
-}
-
-- (void)reauthorizeDataAccess:(FBSDKLoginManagerLoginResultBlock)handler
-{
-  if (!FBSDKAccessToken.currentAccessToken) {
-    NSString *errorMessage = @"Must have an access token for which to reauthorize data access";
-    NSError *error = [FBSDKError errorWithDomain:FBSDKLoginErrorDomain
-                                            code:FBSDKLoginErrorMissingAccessToken
-                                         message:errorMessage];
-    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:errorMessage];
-    handler(nil, error);
-    return;
-  }
-  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager cachedServerConfiguration];
-  _handler = [handler copy];
-  // Don't need to pass permissions for data reauthorization.
-  _requestedPermissions = [NSSet set];
-  _configuration = [[FBSDKLoginConfiguration alloc] initWithTracking:FBSDKLoginTrackingEnabled];
-  _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:serverConfiguration.loggingToken
-                                                         tracking:_configuration.tracking];
-  self.authType = FBSDKLoginAuthTypeReauthorize;
-  [_logger startSessionForLoginManager:self];
-  [self logIn];
 }
 
 - (void)logIn

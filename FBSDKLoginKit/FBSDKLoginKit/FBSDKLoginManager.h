@@ -63,15 +63,6 @@ NS_REFINED_FOR_SWIFT;
 
 @class FBSDKLoginManagerLoginResult;
 
-/// typedef for FBSDKLoginAuthType
-typedef NSString *const FBSDKLoginAuthType NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(LoginAuthType);
-
-/// Rerequest
-FOUNDATION_EXPORT FBSDKLoginAuthType FBSDKLoginAuthTypeRerequest;
-
-/// Reauthorize
-FOUNDATION_EXPORT FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize;
-
 /**
   Describes the call back to the FBSDKLoginManager
  @param result the result of the authorization
@@ -118,10 +109,6 @@ typedef NS_ENUM(NSUInteger, FBSDKDefaultAudience)
 NS_SWIFT_NAME(LoginManager)
 @interface FBSDKLoginManager : NSObject
 
-/**
- Auth type
- */
-@property (strong, nonatomic) FBSDKLoginAuthType authType;
 /**
   the default audience.
 

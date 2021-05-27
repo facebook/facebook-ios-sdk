@@ -665,6 +665,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertNil(params[@"tp"], "Regular login should not send a tracking parameter");
   NSDictionary *state = [FBSDKBasicUtility objectForJSONString:params[@"state"] error:nil];
   XCTAssertEqualObjects(state[@"3_method"], @"sfvc_auth");
+  XCTAssertEqual(params[@"auth_type"], FBSDKLoginAuthTypeRerequest);
 }
 
 - (void)testLoginTrackingLimitedLoginParams
@@ -685,6 +686,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertEqualObjects(params[@"tp"], @"ios_14_do_not_track");
   NSDictionary *state = [FBSDKBasicUtility objectForJSONString:params[@"state"] error:nil];
   XCTAssertEqualObjects(state[@"3_method"], @"browser_auth");
+  XCTAssertEqual(params[@"auth_type"], FBSDKLoginAuthTypeRerequest);
 }
 
 - (void)testLoginParamsWithNilConfiguration
@@ -701,6 +703,50 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
   XCTAssertNil(params);
   XCTAssert(wasCalled);
+}
+
+- (void)testLoginParamsWithNilAuthType
+{
+  FBSDKLoginConfiguration *config = [[FBSDKLoginConfiguration alloc]
+                                     initWithPermissions:@[@"public_profile", @"email"]
+                                     tracking:FBSDKLoginTrackingEnabled
+                                     messengerPageId:nil
+                                     authType:nil];
+  FBSDKLoginManagerLogger *logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:@"123"
+                                                                                 tracking:FBSDKLoginTrackingEnabled];
+
+  NSDictionary *params = [_mockLoginManager logInParametersWithConfiguration:config serverConfiguration:nil logger:logger authMethod:@"sfvc_auth"];
+
+  [self validateCommonLoginParameters:params];
+  XCTAssertEqualObjects(params[@"response_type"], @"id_token,token_or_nonce,signed_request,graph_domain");
+  XCTAssertEqualObjects(params[@"scope"], @"public_profile,email,openid");
+  XCTAssertNotNil(params[@"nonce"]);
+  XCTAssertNil(params[@"tp"], "Regular login should not send a tracking parameter");
+  NSDictionary *state = [FBSDKBasicUtility objectForJSONString:params[@"state"] error:nil];
+  XCTAssertEqualObjects(state[@"3_method"], @"sfvc_auth");
+  XCTAssertEqual(params[@"auth_type"], nil);
+}
+
+- (void)testLoginParamsWithExplicitlySetAuthType
+{
+  FBSDKLoginConfiguration *config = [[FBSDKLoginConfiguration alloc]
+                                     initWithPermissions:@[@"public_profile", @"email"]
+                                     tracking:FBSDKLoginTrackingEnabled
+                                     messengerPageId:nil
+                                     authType:FBSDKLoginAuthTypeReauthorize];
+  FBSDKLoginManagerLogger *logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:@"123"
+                                                                                 tracking:FBSDKLoginTrackingEnabled];
+
+  NSDictionary *params = [_mockLoginManager logInParametersWithConfiguration:config serverConfiguration:nil logger:logger authMethod:@"sfvc_auth"];
+
+  [self validateCommonLoginParameters:params];
+  XCTAssertEqualObjects(params[@"response_type"], @"id_token,token_or_nonce,signed_request,graph_domain");
+  XCTAssertEqualObjects(params[@"scope"], @"public_profile,email,openid");
+  XCTAssertNotNil(params[@"nonce"]);
+  XCTAssertNil(params[@"tp"], "Regular login should not send a tracking parameter");
+  NSDictionary *state = [FBSDKBasicUtility objectForJSONString:params[@"state"] error:nil];
+  XCTAssertEqualObjects(state[@"3_method"], @"sfvc_auth");
+  XCTAssertEqual(params[@"auth_type"], FBSDKLoginAuthTypeReauthorize);
 }
 
 - (void)testLogInParametersFromURL
@@ -1011,7 +1057,6 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertEqualObjects(params[@"display"], @"touch");
   XCTAssertEqualObjects(params[@"sdk"], @"ios");
   XCTAssertEqualObjects(params[@"return_scopes"], @"true");
-  XCTAssertEqual(params[@"auth_type"], FBSDKLoginAuthTypeRerequest);
   XCTAssertEqualObjects(params[@"fbapp_pres"], @0);
   XCTAssertEqualObjects(params[@"ies"], [FBSDKSettings isAutoLogAppEventsEnabled] ? @1 : @0);
   XCTAssertNotNil(params[@"e2e"]);

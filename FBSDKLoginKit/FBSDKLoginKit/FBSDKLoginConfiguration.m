@@ -33,6 +33,13 @@
  #import "FBSDKCoreKitBasicsImportForLoginKit.h"
  #import "FBSDKPermission.h"
 
+FBSDKLoginAuthType FBSDKLoginAuthTypeRerequest = @"rerequest";
+FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
+
+@interface FBSDKLoginConfiguration ()
+@property (nullable, nonatomic, readwrite, copy) FBSDKLoginAuthType authType;
+@end
+
 @implementation FBSDKLoginConfiguration
 
 - (nullable instancetype)initWithTracking:(FBSDKLoginTracking)tracking
@@ -61,6 +68,18 @@
 
 - (nullable instancetype)initWithPermissions:(NSArray<NSString *> *)permissions
                                     tracking:(FBSDKLoginTracking)tracking
+                             messengerPageId:(nullable NSString *)messengerPageId
+                                    authType:(nullable FBSDKLoginAuthType)authType
+{
+  return [[FBSDKLoginConfiguration alloc] initWithPermissions:permissions
+                                                     tracking:tracking
+                                                        nonce:NSUUID.UUID.UUIDString
+                                              messengerPageId:messengerPageId
+                                                     authType:authType];
+}
+
+- (nullable instancetype)initWithPermissions:(NSArray<NSString *> *)permissions
+                                    tracking:(FBSDKLoginTracking)tracking
                                        nonce:(NSString *)nonce
 {
   return [[FBSDKLoginConfiguration alloc] initWithPermissions:permissions
@@ -73,6 +92,19 @@
                                     tracking:(FBSDKLoginTracking)tracking
                                        nonce:(NSString *)nonce
                              messengerPageId:(nullable NSString *)messengerPageId
+{
+  return [[FBSDKLoginConfiguration alloc] initWithPermissions:permissions
+                                                     tracking:tracking
+                                                        nonce:nonce
+                                              messengerPageId:messengerPageId
+                                                     authType:FBSDKLoginAuthTypeRerequest];
+}
+
+- (nullable instancetype)initWithPermissions:(NSArray<NSString *> *)permissions
+                                    tracking:(FBSDKLoginTracking)tracking
+                                       nonce:(NSString *)nonce
+                             messengerPageId:(nullable NSString *)messengerPageId
+                                    authType:(nullable FBSDKLoginAuthType)authType
 {
   if (![FBSDKNonceUtility isValidNonce:nonce]) {
     NSString *msg = [NSString stringWithFormat:@"Invalid nonce:%@ provided to login configuration. Returning nil.", nonce];
@@ -88,11 +120,18 @@
     return nil;
   }
 
+  if (authType != nil && [FBSDKLoginConfiguration authTypeForString:authType] == nil) {
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                           logEntry:@"Invalid auth_type provided to login configuration."];
+    return nil;
+  }
+
   if ((self = [super init])) {
     _requestedPermissions = permissionsSet;
     _tracking = tracking;
     _nonce = nonce;
     _messengerPageId = [FBSDKTypeUtility coercedToStringValue:messengerPageId];
+    self.authType = authType;
   }
 
   return self;
@@ -105,9 +144,20 @@
     _tracking = FBSDKLoginTrackingEnabled;
     _nonce = NSUUID.UUID.UUIDString;
     _messengerPageId = nil;
+    self.authType = FBSDKLoginAuthTypeRerequest;
   }
 
   return self;
+}
+
++ (nullable FBSDKLoginAuthType)authTypeForString:(NSString *)rawValue
+{
+  NSDictionary *map = @{
+    (NSString *)FBSDKLoginAuthTypeRerequest : FBSDKLoginAuthTypeRerequest,
+    (NSString *)FBSDKLoginAuthTypeReauthorize : FBSDKLoginAuthTypeReauthorize
+  };
+
+  return [FBSDKTypeUtility dictionary:map objectForKey:rawValue ofType:NSString.class];
 }
 
 @end
