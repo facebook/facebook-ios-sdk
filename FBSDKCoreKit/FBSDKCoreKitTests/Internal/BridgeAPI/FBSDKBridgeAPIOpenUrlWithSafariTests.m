@@ -27,6 +27,7 @@
 #import "FakeLoginManager.h"
 
 @interface FBSDKBridgeAPI (Testing)
+@property (nonnull, nonatomic) FBSDKLogger *logger;
 - (void)_openURLWithSafariViewController:(NSURL *)url
                                   sender:(id<FBSDKURLOpening>)sender
                       fromViewController:(UIViewController *)fromViewController
@@ -34,7 +35,6 @@
                            dylibResolver:(id<FBSDKDynamicFrameworkResolving>)dylibResolver;
 - (void)openURLWithAuthenticationSession:(NSURL *)url;
 - (void)setSessionCompletionHandlerFromHandler:(void (^)(BOOL, NSError *))handler;
-
 @end
 
 @interface FBSDKBridgeAPIOpenUrlWithSafariTests : FBSDKTestCase
@@ -54,6 +54,7 @@
 
   [FBSDKLoginManager resetTestEvidence];
   _api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]];
+  _api.logger = self.loggerClassMock;
   _partialMock = OCMPartialMock(self.api);
   _urlOpener = [FBSDKLoginManager new];
 
@@ -161,8 +162,7 @@
                                     handler:self.uninvokedSuccessBlock];
 
   OCMVerify(
-    [self.loggerClassMock singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                                    logEntry:@"There are no valid ViewController to present SafariViewController with"]
+    [self.loggerClassMock logEntry:@"There are no valid ViewController to present SafariViewController with"]
   );
   [self assertExpectingBackgroundAndPendingUrlOpener];
 }

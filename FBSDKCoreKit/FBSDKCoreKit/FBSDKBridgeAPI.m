@@ -61,6 +61,8 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 @interface FBSDKBridgeAPI () <FBSDKContainerViewControllerDelegate>
  #endif
 
+@property (nonnull, nonatomic) FBSDKLogger *logger;
+
 @end
 
 @implementation FBSDKBridgeAPI
@@ -93,6 +95,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 {
   if ((self = [super init])) {
     _processInfo = processInfo;
+    _logger = [[FBSDKLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
   }
   return self;
 }
@@ -377,8 +380,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   if (SFSafariViewControllerClass) {
     UIViewController *parent = fromViewController ?: [FBSDKInternalUtility topMostViewController];
     if (parent == nil) {
-      [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                             logEntry:@"There are no valid ViewController to present SafariViewController with"];
+      [self.logger logEntry:@"There are no valid ViewController to present SafariViewController with"];
       return;
     }
 
@@ -427,8 +429,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 
   if (AuthenticationSessionClass != nil) {
     if (_authenticationSession != nil) {
-      [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                             logEntry:@"There is already a request for authenticated session. Cancelling active SFAuthenticationSession before starting the new one."];
+      [self.logger logEntry:@"There is already a request for authenticated session. Cancelling active SFAuthenticationSession before starting the new one."];
       [_authenticationSession cancel];
     }
     _authenticationSession = [[AuthenticationSessionClass alloc] initWithURL:url
@@ -489,8 +490,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 - (void)viewControllerDidDisappear:(FBSDKContainerViewController *)viewController animated:(BOOL)animated
 {
   if (_safariViewController) {
-    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                           logEntry:@"**ERROR**:\n The SFSafariViewController's parent view controller was dismissed.\n"
+    [self.logger logEntry:@"**ERROR**:\n The SFSafariViewController's parent view controller was dismissed.\n"
      "This can happen if you are triggering login from a UIAlertController. Instead, make sure your top most view "
      "controller will not be prematurely dismissed."];
     [self safariViewControllerDidFinish:_safariViewController];
