@@ -562,6 +562,8 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
 - (void)testLoginManagerRetainsItselfForLoginMethod
 {
+  [FBSDKApplicationDelegate.sharedInstance application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
+
   // Mock some methods to force an error callback.
   [[[_mockInternalUtility stub] andReturnValue:@NO] isFacebookAppInstalled];
   NSError *URLError = [[NSError alloc] initWithDomain:FBSDKErrorDomain code:0 userInfo:nil];

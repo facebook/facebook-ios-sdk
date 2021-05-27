@@ -53,6 +53,9 @@ static NSString *const _mockUserID = @"mockUserID";
 @property (nonatomic, strong) id<FBSDKAtePublishing> atePublisher;
 @property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
 
+- (instancetype)initWithFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior
+                 flushPeriodInSeconds:(int)flushPeriodInSeconds;
+
 - (void)publishInstall;
 - (void)flushForReason:(FBSDKAppEventsFlushReason)flushReason;
 - (void)fetchServerConfiguration:(FBSDKCodeBlock)callback;
@@ -68,10 +71,6 @@ static NSString *const _mockUserID = @"mockUserID";
 + (FBSDKAppEvents *)singleton;
 
 + (void)reset;
-
-+ (void)setCanLogEvents;
-
-+ (BOOL)canLogEvents;
 
 + (UIApplicationState)applicationState;
 
@@ -170,8 +169,6 @@ static NSString *const _mockUserID = @"mockUserID";
   _restrictiveDataFilterParameterProcessor = [TestAppEventsParameterProcessor new];
   self.atePublisherfactory = [TestAtePublisherFactory new];
 
-  [FBSDKAppEvents setLoggingOverrideAppID:_mockAppID];
-
   // Mock FBSDKAppEventsUtility methods
   [self stubAppEventsUtilityShouldDropAppEventWith:NO];
 
@@ -199,6 +196,8 @@ static NSString *const _mockUserID = @"mockUserID";
 
   [FBSDKAppEvents configureNonTVComponentsWithOnDeviceMLModelManager:_onDeviceMLModelManager
                                                      metadataIndexer:_metadataIndexer];
+
+  [FBSDKAppEvents setLoggingOverrideAppID:_mockAppID];
 }
 
 - (void)tearDown
@@ -449,8 +448,6 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testActivateAppWithInitializedSDK
 {
-  [FBSDKAppEvents setCanLogEvents];
-
   OCMExpect([self.appEventsMock publishInstall]);
   OCMExpect([self.appEventsMock fetchServerConfiguration:NULL]);
 
@@ -469,7 +466,8 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testApplicationBecomingActiveRestoresTimeSpentRecording
 {
-  FBSDKAppEvents *events = (FBSDKAppEvents *)[(NSObject *)[FBSDKAppEvents alloc] init];
+  FBSDKAppEvents *events = [[FBSDKAppEvents alloc] initWithFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly
+                                                    flushPeriodInSeconds:0];
   [events applicationDidBecomeActive];
   XCTAssertTrue(
     _timeSpentRecorder.restoreWasCalled,
@@ -483,7 +481,8 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testApplicationTerminatingSuspendsTimeSpentRecording
 {
-  FBSDKAppEvents *events = (FBSDKAppEvents *)[(NSObject *)[FBSDKAppEvents alloc] init];
+  FBSDKAppEvents *events = [[FBSDKAppEvents alloc] initWithFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly
+                                                    flushPeriodInSeconds:0];
   [events applicationMovingFromActiveStateOrTerminating];
   XCTAssertTrue(
     _timeSpentRecorder.suspendWasCalled,
@@ -493,19 +492,18 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testApplicationTerminatingPersistingStates
 {
-  FBSDKAppEvents *events = (FBSDKAppEvents *)[(NSObject *)[FBSDKAppEvents alloc] init];
-  [events setFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly];
-  [events instanceLogEvent:_mockEventName
-                valueToSum:@(_mockPurchaseAmount)
-                parameters:nil
-        isImplicitlyLogged:NO
-               accessToken:nil];
-  [events instanceLogEvent:_mockEventName
-                valueToSum:@(_mockPurchaseAmount)
-                parameters:nil
-        isImplicitlyLogged:NO
-               accessToken:nil];
-  [events applicationMovingFromActiveStateOrTerminating];
+  [FBSDKAppEvents.singleton setFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly];
+  [FBSDKAppEvents.singleton instanceLogEvent:_mockEventName
+                                  valueToSum:@(_mockPurchaseAmount)
+                                  parameters:nil
+                          isImplicitlyLogged:NO
+                                 accessToken:nil];
+  [FBSDKAppEvents.singleton instanceLogEvent:_mockEventName
+                                  valueToSum:@(_mockPurchaseAmount)
+                                  parameters:nil
+                          isImplicitlyLogged:NO
+                                 accessToken:nil];
+  [FBSDKAppEvents.singleton applicationMovingFromActiveStateOrTerminating];
 
   XCTAssertTrue(
     _appEventsStateStore.capturedPersistedState.count > 0,
@@ -513,13 +511,85 @@ static NSString *const _mockUserID = @"mockUserID";
   );
 }
 
-- (void)testActivateAppWithoutInitializedSDK
+- (void)testUsingAppEventsWithUninitializedSDK
 {
+  NSString *foo = @"foo";
   [FBSDKAppEvents reset];
-  [FBSDKAppEvents.singleton activateApp];
+  FBSDKAppEvents *events = [[FBSDKAppEvents alloc] initWithFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly
+                                                    flushPeriodInSeconds:0];
+  XCTAssertThrows([FBSDKAppEvents setFlushBehavior:FBSDKAppEventsFlushBehaviorAuto]);
+  XCTAssertThrows([FBSDKAppEvents setLoggingOverrideAppID:self.name]);
+  XCTAssertThrows([FBSDKAppEvents logEvent:FBSDKAppEventNameSearched]);
+  XCTAssertThrows([FBSDKAppEvents logEvent:FBSDKAppEventNameSearched valueToSum:2]);
+  XCTAssertThrows([FBSDKAppEvents logEvent:FBSDKAppEventNameSearched parameters:@{}]);
+  XCTAssertThrows(
+    [FBSDKAppEvents logEvent:FBSDKAppEventNameSearched
+                  valueToSum:2
+                  parameters:@{}]
+  );
+  XCTAssertThrows(
+    [FBSDKAppEvents logEvent:FBSDKAppEventNameSearched
+                  valueToSum:@2
+                  parameters:@{}
+                 accessToken:SampleAccessTokens.validToken]
+  );
+  XCTAssertThrows([FBSDKAppEvents logPurchase:2 currency:foo]);
+  XCTAssertThrows(
+    [FBSDKAppEvents logPurchase:2
+                       currency:foo
+                     parameters:@{}]
+  );
+  XCTAssertThrows(
+    [FBSDKAppEvents logPurchase:2
+                       currency:foo
+                     parameters:@{}
+                    accessToken:SampleAccessTokens.validToken]
+  );
+  XCTAssertThrows([FBSDKAppEvents logPushNotificationOpen:@{}]);
+  XCTAssertThrows([FBSDKAppEvents logPushNotificationOpen:@{} action:foo]);
+  XCTAssertThrows(
+    [FBSDKAppEvents logProductItem:foo
+                      availability:FBSDKProductAvailabilityInStock
+                         condition:FBSDKProductConditionNew
+                       description:foo
+                         imageLink:foo
+                              link:foo
+                             title:foo
+                       priceAmount:1
+                          currency:foo
+                              gtin:nil
+                               mpn:nil
+                             brand:nil
+                        parameters:@{}]
+  );
+  XCTAssertThrows([FBSDKAppEvents setPushNotificationsDeviceToken:[NSData new]]);
+  XCTAssertThrows([FBSDKAppEvents setPushNotificationsDeviceTokenString:foo]);
+  XCTAssertThrows([FBSDKAppEvents flush]);
+  XCTAssertThrows([FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:SampleAccessTokens.validToken]);
+  XCTAssertThrows([FBSDKAppEvents augmentHybridWKWebView:[WKWebView new]]);
+  XCTAssertThrows([FBSDKAppEvents sendEventBindingsToUnity]);
+  XCTAssertThrows([events activateApp]);
+  XCTAssertThrows([FBSDKAppEvents clearUserID]);
+  XCTAssertThrows(FBSDKAppEvents.userID);
+  XCTAssertThrows([FBSDKAppEvents setUserID:foo]);
 
-  OCMReject([self.appEventsMock publishInstall]);
-  OCMReject([self.appEventsMock fetchServerConfiguration:NULL]);
+  XCTAssertNoThrow([FBSDKAppEvents setIsUnityInit:YES]);
+  XCTAssertNoThrow(FBSDKAppEvents.anonymousID);
+  XCTAssertNoThrow([FBSDKAppEvents setUserData:foo forType:foo]);
+  XCTAssertNoThrow(
+    [FBSDKAppEvents setUserEmail:nil
+                       firstName:nil
+                        lastName:nil
+                           phone:nil
+                     dateOfBirth:nil
+                          gender:nil
+                            city:nil
+                           state:nil
+                             zip:nil
+                         country:nil]
+  );
+  XCTAssertNoThrow([FBSDKAppEvents getUserData]);
+  XCTAssertNoThrow([FBSDKAppEvents clearUserDataForType:foo]);
 
   XCTAssertFalse(
     _timeSpentRecorder.restoreWasCalled,
@@ -1126,14 +1196,6 @@ static NSString *const _mockUserID = @"mockUserID";
 }
 
 #pragma mark Test for Singleton Values
-
-- (void)testCanLogEventValues
-{
-  [FBSDKAppEvents reset];
-  XCTAssertFalse([FBSDKAppEvents canLogEvents], "The default value of canLogEvents should be NO");
-  [FBSDKAppEvents setCanLogEvents];
-  XCTAssertTrue([FBSDKAppEvents canLogEvents], "canLogEvents should now have a value of YES");
-}
 
 - (void)testApplicationStateValues
 {

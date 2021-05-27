@@ -336,8 +336,8 @@ NS_SWIFT_NAME(AppEvents)
 
  @param eventName   The name of the event to record.  Limitations on number of events and name length
  are given in the `FBSDKAppEvents` documentation.
-
  */
+
 + (void)logEvent:(FBSDKAppEventName)eventName;
 
 /**
@@ -692,15 +692,6 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
  Clears the current user data of certain type
  */
 + (void)clearUserDataForType:(FBSDKAppEventUserDataType)type;
-
-/*
-  Sends a request to update the properties for the current user, set by `setUserID:`
-
- You must call `FBSDKAppEvents setUserID:` before making this call.
- @param properties the custom user properties
- @param handler the optional completion handler
- */
-+ (void)updateUserProperties:(NSDictionary<NSString *, id> *)properties handler:(nullable FBSDKGraphRequestBlock)handler __attribute__((deprecated("updateUserProperties is deprecated")));
 
 #if !TARGET_OS_TV
 /*

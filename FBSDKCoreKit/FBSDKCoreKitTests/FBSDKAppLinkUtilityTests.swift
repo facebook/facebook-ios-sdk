@@ -36,9 +36,14 @@ class FBSDKAppLinkUtilityTests: XCTestCase {
   override class func tearDown() {
     super.tearDown()
 
-    // This can be removed once AppLinkUtility injects a manager.
+    // These can be removed when AppLinkUtility has all its dependencies provided.
+    AppEvents.reset()
     AppEventsConfigurationManager.reset()
     TestAppEventsConfigurationProvider.reset()
+    TestGateKeeperManager.reset()
+    TestSwizzler.reset()
+    TestAppEventsConfigurationProvider.reset()
+    TestLogger.reset()
   }
 
   func testConfiguringWithRequestProvider() {
@@ -88,11 +93,29 @@ class FBSDKAppLinkUtilityTests: XCTestCase {
   }
 
   func testRequestProviderAfterGraphRequest() {
+    // TODO: Remove these configure calls when both types are injected into the utility
     AppEventsConfigurationManager.configure(
       store: UserDefaultsSpy(),
       settings: TestSettings(),
       graphRequestFactory: TestGraphRequestFactory(),
       graphRequestConnectionFactory: TestGraphRequestConnectionFactory()
+    )
+    AppEvents.singleton.configure(
+      withGateKeeperManager: TestGateKeeperManager.self,
+      appEventsConfigurationProvider: TestAppEventsConfigurationProvider.self,
+      serverConfigurationProvider: TestServerConfigurationProvider.self,
+      graphRequestProvider: TestGraphRequestFactory(),
+      featureChecker: TestFeatureManager(),
+      store: UserDefaultsSpy(),
+      logger: TestLogger.self,
+      settings: TestSettings(),
+      paymentObserver: TestPaymentObserver(),
+      timeSpentRecorder: TestTimeSpentRecorder(),
+      appEventsStateStore: TestAppEventsStateStore(),
+      eventDeactivationParameterProcessor: TestAppEventsParameterProcessor(),
+      restrictiveDataFilterParameterProcessor: TestAppEventsParameterProcessor(),
+      atePublisherFactory: TestAtePublisherFactory(),
+      swizzler: TestSwizzler.self
     )
 
     AppLinkUtility.fetchDeferredAppLink()

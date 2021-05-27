@@ -50,6 +50,8 @@
 @interface FBSDKAppEvents (Testing)
 @property (nonatomic, assign) BOOL disableTimer;
 + (FBSDKAppEvents *)singleton;
+- (instancetype)initWithFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior
+                 flushPeriodInSeconds:(int)flushPeriodInSeconds;
 @end
 
 @interface FBSDKAppEventsConfigurationManager (Testing)
@@ -235,7 +237,10 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
     // Since the `init` method is marked unavailable but just as a measure to prevent creating multiple
     // instances and enforce the singleton pattern, we will circumvent that by casting to a plain `NSObject`
     // after `alloc` in order to call `init`.
-    _appEventsMock = OCMPartialMock([(NSObject *)[FBSDKAppEvents alloc] init]);
+    _appEventsMock = OCMPartialMock(
+      [[FBSDKAppEvents alloc] initWithFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly
+                               flushPeriodInSeconds:0]
+    );
   } else {
     _appEventsMock = OCMClassMock([FBSDKAppEvents class]);
   }

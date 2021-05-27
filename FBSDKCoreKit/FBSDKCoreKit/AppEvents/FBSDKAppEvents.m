@@ -297,6 +297,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 @property (nonatomic, copy) NSString *userID;
 @property (nonatomic, strong) id<FBSDKAtePublishing> atePublisher;
 @property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
+@property (nonatomic) BOOL isConfigured;
 
 @property (nonatomic, assign) BOOL disableTimer; // for testing only.
 
@@ -313,8 +314,6 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 }
 
 #pragma mark - Object Lifecycle
-
-static BOOL _canLogEvents = NO;
 
 + (void)initialize
 {
@@ -487,6 +486,8 @@ static BOOL _canLogEvents = NO;
          parameters:(NSDictionary *)parameters
         accessToken:(FBSDKAccessToken *)accessToken
 {
+  [self.singleton validateConfiguration];
+
   // A purchase event is just a regular logged event with a given event name
   // and treating the currency value as going into the parameters dictionary.
   NSDictionary *newParameters;
@@ -520,6 +521,8 @@ static BOOL _canLogEvents = NO;
 
 + (void)logPushNotificationOpen:(NSDictionary *)payload action:(NSString *)action
 {
+  [self.singleton validateConfiguration];
+
   NSDictionary *facebookPayload = payload[FBSDKAppEventsPushPayloadKey];
   if (!facebookPayload) {
     return;
@@ -555,6 +558,8 @@ static BOOL _canLogEvents = NO;
                  brand:(NSString *)brand
             parameters:(NSDictionary *)parameters
 {
+  [self.singleton validateConfiguration];
+
   if (itemID == nil) {
     [g_logger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                         logEntry:@"itemID cannot be null"];
@@ -649,13 +654,7 @@ static BOOL _canLogEvents = NO;
 
 - (void)activateApp
 {
-  if (![self.class canLogEvents]) {
-    NSLog(
-      @"<Warning> App events cannot be activated before the Facebook SDK is initialized. "
-      "Learn more: https://github.com/facebook/facebook-ios-sdk/blob/master/CHANGELOG.md#900"
-    );
-    return;
-  }
+  [self validateConfiguration];
 
   [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass(self.class)];
 
@@ -672,12 +671,16 @@ static BOOL _canLogEvents = NO;
 
 + (void)setPushNotificationsDeviceToken:(NSData *)deviceToken
 {
+  [self.singleton validateConfiguration];
+
   NSString *deviceTokenString = [FBSDKInternalUtility hexadecimalStringFromData:deviceToken];
   [FBSDKAppEvents setPushNotificationsDeviceTokenString:deviceTokenString];
 }
 
 + (void)setPushNotificationsDeviceTokenString:(NSString *)deviceTokenString
 {
+  [self.singleton validateConfiguration];
+
   if (deviceTokenString == nil) {
     [FBSDKAppEvents singleton].pushNotificationsDeviceTokenString = nil;
     return;
@@ -702,7 +705,9 @@ static BOOL _canLogEvents = NO;
 
 + (void)setFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior
 {
-  [FBSDKAppEvents singleton].flushBehavior = flushBehavior;
+  [self.singleton validateConfiguration];
+
+  self.singleton.flushBehavior = flushBehavior;
 }
 
 + (NSString *)loggingOverrideAppID
@@ -712,6 +717,8 @@ static BOOL _canLogEvents = NO;
 
 + (void)setLoggingOverrideAppID:(NSString *)appID
 {
+  [self.singleton validateConfiguration];
+
   if (![g_overrideAppID isEqualToString:appID]) {
     FBSDKConditionalLog(
       !g_explicitEventsLoggedYet,
@@ -724,7 +731,8 @@ static BOOL _canLogEvents = NO;
 
 + (void)flush
 {
-  [[FBSDKAppEvents singleton] flushForReason:FBSDKAppEventsFlushReasonExplicit];
+  [self.singleton validateConfiguration];
+  [self.singleton flushForReason:FBSDKAppEventsFlushReasonExplicit];
 }
 
 + (void)setUserID:(NSString *)userID
@@ -734,17 +742,27 @@ static BOOL _canLogEvents = NO;
 
 - (void)setUserID:(NSString *)userID
 {
+  [self validateConfiguration];
   _userID = [userID copy];
   [self.store setObject:userID forKey:USER_ID_USER_DEFAULTS_KEY];
 }
 
 + (void)clearUserID
 {
-  self.singleton.userID = nil;
+  [self.singleton clearUserID];
+}
+
+- (void)clearUserID
+{
+  [self validateConfiguration];
+
+  self.userID = nil;
 }
 
 + (NSString *)userID
 {
+  [self.singleton validateConfiguration];
+
   return self.singleton.userID;
 }
 
@@ -793,9 +811,6 @@ static BOOL _canLogEvents = NO;
   [FBSDKUserDataStore clearUserDataForType:type];
 }
 
-+ (void)updateUserProperties:(NSDictionary<NSString *, id> *)properties handler:(FBSDKGraphRequestBlock)handler
-{}
-
 + (NSString *)anonymousID
 {
   return [FBSDKBasicUtility anonymousID];
@@ -804,6 +819,8 @@ static BOOL _canLogEvents = NO;
 #if !TARGET_OS_TV
 + (void)augmentHybridWKWebView:(WKWebView *)webView
 {
+  [self.singleton validateConfiguration];
+
   if ([webView isKindOfClass:WKWebView.class]) {
     if (WKUserScript.class != nil) {
       WKUserContentController *controller = webView.configuration.userContentController;
@@ -837,6 +854,8 @@ static BOOL _canLogEvents = NO;
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 + (void)sendEventBindingsToUnity
 {
+  [self.singleton validateConfiguration];
+
   // Send event bindings to Unity only Unity is initialized
   if ([FBSDKAppEvents singleton]->_isUnityInit
       && [FBSDKAppEvents singleton]->_serverConfiguration
@@ -886,14 +905,14 @@ static BOOL _canLogEvents = NO;
   g_appEventsStateStore = appEventsStateStore;
   g_eventDeactivationParameterProcessor = eventDeactivationParameterProcessor;
   g_restrictiveDataFilterParameterProcessor = restrictiveDataFilterParameterProcessor;
-
   self.swizzler = swizzler;
   self.store = store;
-  self.userID = [store stringForKey:USER_ID_USER_DEFAULTS_KEY];
   self.atePublisher = [atePublisherFactory createPublisherWithAppID:self.appID];
-  [self fetchServerConfiguration:nil];
 
-  [FBSDKAppEvents setCanLogEvents];
+  self.isConfigured = YES;
+
+  self.userID = [store stringForKey:USER_ID_USER_DEFAULTS_KEY];
+  [self fetchServerConfiguration:nil];
 }
 
 + (void)setFeatureChecker:(id<FBSDKFeatureChecking>)checker
@@ -1185,16 +1204,6 @@ static BOOL _canLogEvents = NO;
   }
 }
 
-+ (void)setCanLogEvents
-{
-  _canLogEvents = YES;
-}
-
-+ (BOOL)canLogEvents
-{
-  return _canLogEvents;
-}
-
 #if !TARGET_OS_TV
 - (void)enableCodelessEvents
 {
@@ -1300,6 +1309,8 @@ static BOOL _canLogEvents = NO;
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken
 {
+  [self validateConfiguration];
+
   // Kill events if kill-switch is enabled
   if (!g_gateKeeperManager) {
     [g_logger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
@@ -1637,10 +1648,26 @@ static BOOL _canLogEvents = NO;
   [g_timeSpentRecorder suspend];
 }
 
+#pragma mark - Configuration Validation
+
+- (void)validateConfiguration
+{
+#if DEBUG
+  if (!self.isConfigured) {
+    static NSString *const reason = @"As of v9.0, you must initialize the SDK prior to calling any methods or setting any properties. "
+    "You can do this by calling `FBSDKApplicationDelegate`'s `application:didFinishLaunchingWithOptions:` method. "
+    "Learn more: https://developers.facebook.com/docs/ios/getting-started";
+    @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
+  }
+#endif
+}
+
 #pragma mark - Custom Audience
 
 + (id<FBSDKGraphRequest>)requestForCustomAudienceThirdPartyIDWithAccessToken:(FBSDKAccessToken *)accessToken
 {
+  [self.singleton validateConfiguration];
+
   accessToken = accessToken ?: [FBSDKAccessToken currentAccessToken];
   // Rules for how we use the attribution ID / advertiser ID for an 'custom_audience_third_party_id' Graph API request
   // 1) if the OS tells us that the user has Limited Ad Tracking, then just don't send, and return a nil in the token.
@@ -1685,10 +1712,10 @@ static BOOL _canLogEvents = NO;
 
 + (void)reset
 {
+  self.singleton.isConfigured = NO;
   [self resetApplicationState];
   g_gateKeeperManager = nil;
   g_graphRequestProvider = nil;
-  _canLogEvents = NO;
 }
 
 + (void)resetApplicationState
