@@ -49,6 +49,7 @@
     return _ ## PROPERTY_NAME; \
   } \
   - (void)SETTER:(TYPE *)value { \
+    [self validateConfiguration];  \
     _ ## PROPERTY_NAME = [value copy]; \
     if (ENABLE_CACHE) { \
       if (value != nil) { \
@@ -115,6 +116,7 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
 @property (nullable, nonatomic) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
 @property (nullable, nonatomic) id<FBSDKEventLogging> eventLogger;
 @property (nullable, nonatomic) NSNumber *advertiserTrackingStatusBacking;
+@property (nonatomic) BOOL isConfigured;
 
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_DECL(NSString, appID, setAppID);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_DECL(NSString, appURLSchemeSuffix, setAppURLSchemeSuffix);
@@ -182,6 +184,8 @@ static dispatch_once_t sharedSettingsNonce;
   self.appEventsConfigurationProvider = provider;
   self.infoDictionaryProvider = infoDictionaryProvider;
   self.eventLogger = eventLogger;
+
+  self.isConfigured = YES;
 }
 
 + (void)      configureWithStore:(id<FBSDKDataPersisting>)store
@@ -504,6 +508,20 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 + (NSString *)sdkVersion
 {
   return FBSDK_VERSION_STRING;
+}
+
+#pragma mark - Configuration Validation
+
+- (void)validateConfiguration
+{
+#if DEBUG
+  if (!self.isConfigured) {
+    static NSString *const reason = @"As of v9.0, you must initialize the SDK prior to calling any methods or setting any properties. "
+    "You can do this by calling `FBSDKApplicationDelegate`'s `application:didFinishLaunchingWithOptions:` method."
+    "Learn more: https://developers.facebook.com/docs/ios/getting-started";
+    @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
+  }
+#endif
 }
 
 #pragma mark - Internal

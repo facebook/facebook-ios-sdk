@@ -58,12 +58,17 @@
 {
   [super setUp];
 
+  self.bundle = [TestBundle new];
+
   [FBSDKSettings reset];
+  [FBSDKSettings configureWithStore:[UserDefaultsSpy new]
+     appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
+             infoDictionaryProvider:self.bundle
+                        eventLogger:[TestAppEvents new]];
 
   [FBSDKInternalUtility reset];
   [FBSDKInternalUtility deleteFacebookCookies];
   FBSDKInternalUtility.loggerType = TestLogger.class;
-  self.bundle = [TestBundle new];
 }
 
 - (void)tearDown

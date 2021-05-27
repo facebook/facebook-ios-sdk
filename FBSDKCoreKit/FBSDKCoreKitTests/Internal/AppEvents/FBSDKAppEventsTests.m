@@ -35,7 +35,6 @@
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
 #import "FBSDKServerConfigurationFixtures.h"
-#import "FBSDKSettings.h"
 #import "FBSDKTestCase.h"
 #import "FBSDKUtility.h"
 #import "UserDefaultsSpy.h"
@@ -143,7 +142,6 @@ static NSString *const _mockUserID = @"mockUserID";
 
   [super setUp];
   [self resetTestHelpers];
-  [FBSDKSettings reset];
   _settings = [TestSettings new];
   _settings.stubbedIsAutoLogAppEventsEnabled = YES;
   [FBSDKInternalUtility reset];
@@ -814,7 +812,7 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testPublishInstall
 {
-  FBSDKSettings.appID = self.appID;
+  _settings.appID = self.appID;
   OCMExpect([self.appEventsMock fetchServerConfiguration:[OCMArg any]]);
 
   [self.appEventsMock publishInstall];

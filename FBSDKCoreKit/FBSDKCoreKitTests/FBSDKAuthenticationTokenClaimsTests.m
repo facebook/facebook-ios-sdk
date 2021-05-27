@@ -69,6 +69,11 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
   [super setUp];
 
   [FBSDKSettings reset];
+  [TestAppEventsConfigurationProvider reset];
+  [FBSDKSettings configureWithStore:[UserDefaultsSpy new]
+     appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
+             infoDictionaryProvider:[TestBundle new]
+                        eventLogger:[TestAppEvents new]];
 
   FBSDKSettings.appID = _mockAppID;
 
@@ -104,6 +109,7 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
   [super tearDown];
 
   [FBSDKSettings reset];
+  [TestAppEventsConfigurationProvider reset];
 }
 
 // MARK: - Decoding Claims

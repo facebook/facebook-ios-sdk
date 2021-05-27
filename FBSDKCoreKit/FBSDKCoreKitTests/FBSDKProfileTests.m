@@ -63,6 +63,11 @@ NSString *const heightKey = @"height";
 
   [self resetCaches];
 
+  [FBSDKSettings configureWithStore:[UserDefaultsSpy new]
+     appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
+             infoDictionaryProvider:[TestBundle new]
+                        eventLogger:[TestAppEvents new]];
+
   _sdkVersion = @"100";
   _profile = SampleUserProfiles.valid;
   _validClientToken = @"Foo";

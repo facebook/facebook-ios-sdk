@@ -49,6 +49,10 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [super setUp];
   [self resetCaches];
 
+  [FBSDKSettings configureWithStore:[UserDefaultsSpy new]
+     appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
+             infoDictionaryProvider:[TestBundle new]
+                        eventLogger:[TestAppEvents new]];
   [Manager configureWithTokenWallet:TestAccessTokenWallet.class];
 }
 
