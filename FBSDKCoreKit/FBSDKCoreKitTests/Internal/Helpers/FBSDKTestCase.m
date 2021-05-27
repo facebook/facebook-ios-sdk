@@ -105,7 +105,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self setUpGraphRequestConnectionClassMock];
   [self setUpCrashShieldClassMock];
   [self setUpSharedApplicationMock];
-  [self setUpLoggerClassMock];
   [self setUpTransitionCoordinatorMock];
   [self setUpBridgeApiClassMock];
   [self setUpAppEventsConfigurationManagerClassMock];
@@ -179,9 +178,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   [_sharedApplicationMock stopMocking];
   _sharedApplicationMock = nil;
-
-  [_loggerClassMock stopMocking];
-  _loggerClassMock = nil;
 
   [_transitionCoordinatorMock stopMocking];
   _transitionCoordinatorMock = nil;
@@ -325,11 +321,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 {
   self.sharedApplicationMock = OCMClassMock(UIApplication.class);
   OCMStub(ClassMethod([_sharedApplicationMock sharedApplication])).andReturn(_sharedApplicationMock);
-}
-
-- (void)setUpLoggerClassMock
-{
-  self.loggerClassMock = OCMClassMock(FBSDKLogger.class);
 }
 
 - (void)setUpTransitionCoordinatorMock

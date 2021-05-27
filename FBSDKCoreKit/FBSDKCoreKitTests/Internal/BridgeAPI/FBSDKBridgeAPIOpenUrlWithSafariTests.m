@@ -40,6 +40,7 @@
 @interface FBSDKBridgeAPIOpenUrlWithSafariTests : FBSDKTestCase
 
 @property (nonatomic) FBSDKBridgeAPI *api;
+@property (nonatomic) TestLogger *logger;
 @property (nonatomic) id partialMock;
 @property (nonatomic, readonly) NSURL *sampleUrl;
 @property (nonatomic) FBSDKLoginManager *urlOpener;
@@ -54,7 +55,8 @@
 
   [FBSDKLoginManager resetTestEvidence];
   _api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]];
-  _api.logger = self.loggerClassMock;
+  _logger = [[TestLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
+  _api.logger = _logger;
   _partialMock = OCMPartialMock(self.api);
   _urlOpener = [FBSDKLoginManager new];
 
@@ -70,6 +72,7 @@
 
   [_partialMock stopMocking];
   _partialMock = nil;
+  [TestLogger reset];
 
   [super tearDown];
 }
@@ -161,9 +164,7 @@
                          fromViewController:nil
                                     handler:self.uninvokedSuccessBlock];
 
-  OCMVerify(
-    [self.loggerClassMock logEntry:@"There are no valid ViewController to present SafariViewController with"]
-  );
+  XCTAssertEqualObjects(_logger.capturedContents, @"There are no valid ViewController to present SafariViewController with");
   [self assertExpectingBackgroundAndPendingUrlOpener];
 }
 

@@ -122,9 +122,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing a `UIApplication.sharedApplication` mock between tests
 @property (nullable, nonatomic, assign) id sharedApplicationMock;
 
-/// Used for sharing a `FBSDKLogger` class mock between tests
-@property (nullable, nonatomic, assign) id loggerClassMock;
-
 /// Used for stubbing any instance that conforms to the `UIViewControllerTransitionCoordinator` protocol
 @property (nullable, nonatomic, assign) id transitionCoordinatorMock;
 

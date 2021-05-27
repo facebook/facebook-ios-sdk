@@ -42,6 +42,7 @@
 @interface FBSDKBridgeAPITests : FBSDKTestCase
 
 @property FBSDKBridgeAPI *api;
+@property (nonatomic) TestLogger *logger;
 @property id partialMock;
 @property (readonly) NSURL *sampleUrl;
 @property (readonly) NSError *sampleError;
