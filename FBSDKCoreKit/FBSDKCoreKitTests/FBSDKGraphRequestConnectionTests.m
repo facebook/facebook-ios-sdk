@@ -1398,14 +1398,47 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   XCTAssertEqualObjects(token, expectedToken);
 }
 
+- (void)testAccessTokenWithRequestWithoutFacebookClientToken
+{
+  self.connection.logger = [self createLogger];
+  [self.connection accessTokenWithRequest:self.requestForMeWithEmptyFieldsNoTokenString];
+
+  XCTAssertEqual(
+    TestLogger.capturedLoggingBehavior,
+    FBSDKLoggingBehaviorDeveloperErrors,
+    "Should log a developer error when a request is started with no client token set"
+  );
+  XCTAssertEqualObjects(
+    TestLogger.capturedLogEntry,
+    @"Starting with v12 of the SDK, a client token must be embedded in your client code before making Graph API calls. Visit https://developers.facebook.com/docs/ios/getting-started#step-3---configure-your-project to learn how to implement this change.",
+    "Should log the expected error message when a request is started with no client token set"
+  );
+
+  [TestLogger reset];
+
+  [self.connection accessTokenWithRequest:self.requestForMeWithEmptyFieldsNoTokenString];
+
+  XCTAssertEqual(
+    TestLogger.capturedLoggingBehavior,
+    FBSDKLoggingBehaviorDeveloperErrors,
+    "Should log consistently for requests started with no client token set"
+  );
+}
+
 - (void)testAccessTokenWithRequestWithFacebookClientToken
 {
+  self.connection.logger = [self createLogger];
   NSString *clientToken = @"client_token";
   TestSettings.clientToken = clientToken;
   NSString *token = [self.connection accessTokenWithRequest:self.requestForMeWithEmptyFieldsNoTokenString];
 
   NSString *expectedToken = [NSString stringWithFormat:@"%@|%@", self.appID, clientToken];
   XCTAssertEqualObjects(token, expectedToken);
+
+  XCTAssertNil(
+    TestLogger.capturedLoggingBehavior,
+    "Should not log a developer error when a request is started with a client token set"
+  );
 }
 
 - (void)testAccessTokenWithRequestWithGamingClientToken
