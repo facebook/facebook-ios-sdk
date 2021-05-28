@@ -147,6 +147,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)isMatchedWithStringValue:(nullable NSString *)stringValue
                   numericalValue:(nullable NSNumber *)numericalValue;
 
+- (BOOL)isMatchedWithAsteriskParam:(NSString *)param
+                   eventParameters:(NSDictionary<NSString *, id> *)eventParams
+                         paramPath:(NSArray<NSString *> *)paramPath;
+
 - (BOOL)isRegexMatch:(NSString *)stringValue;
 
 - (BOOL)isAnyOf:(NSArray<NSString *> *)arrayCondition

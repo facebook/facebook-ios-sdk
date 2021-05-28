@@ -30,6 +30,7 @@ static NSString *const STRING_VALUE_KEY = @"string_value";
 static NSString *const NUMBER_VALUE_KEY = @"number_value";
 static NSString *const ARRAY_VALUE_KEY = @"array_value";
 static NSString *const PARAM_DELIMETER = @".";
+static NSString *const ASTERISK_DELIMETER = @"[*]";
 
 @implementation FBSDKAEMAdvertiserSingleEntryRule
 
@@ -54,24 +55,23 @@ static NSString *const PARAM_DELIMETER = @".";
 - (BOOL)isMatchedEventParameters:(nullable NSDictionary<NSString *, id> *)eventParams
 {
   NSArray<NSString *> *paramPath = [_paramKey componentsSeparatedByString:PARAM_DELIMETER];
-  return [self isMatchedEventParameters:eventParams paramPath:paramPath index:0];
+  return [self isMatchedEventParameters:eventParams paramPath:paramPath];
 }
 
 - (BOOL)isMatchedEventParameters:(nullable NSDictionary<NSString *, id> *)eventParams
                        paramPath:(NSArray<NSString *> *)paramPath
-                           index:(NSInteger)index
 {
   eventParams = [FBSDKTypeUtility dictionaryValue:eventParams];
-  if (!eventParams) {
+  if (!eventParams || !paramPath.count) {
     return NO;
   }
-  NSString *param = [FBSDKTypeUtility stringValueOrNil:[FBSDKTypeUtility array:paramPath objectAtIndex:index]];
+  NSString *param = [FBSDKTypeUtility stringValueOrNil:paramPath.firstObject];
   // if data does not contain the key, we should return false directly.
   if (!param || ![[eventParams allKeys] containsObject:param]) {
     return NO;
   }
   // Apply operator rule if the last param is reached
-  if (paramPath.count == index + 1) {
+  if (paramPath.count == 1) {
     NSString *stringValue = nil;
     NSNumber *numericalValue = nil;
     switch (_operator) {
@@ -98,8 +98,34 @@ static NSString *const PARAM_DELIMETER = @".";
     }
     return [self isMatchedWithStringValue:stringValue numericalValue:numericalValue];
   }
+  if ([param hasSuffix:ASTERISK_DELIMETER]) {
+    return [self isMatchedWithAsteriskParam:param eventParameters:eventParams paramPath:paramPath];
+  }
   NSDictionary<NSString *, id> *subParams = [FBSDKTypeUtility dictionary:eventParams objectForKey:param ofType:NSDictionary.class];
-  return [self isMatchedEventParameters:subParams paramPath:paramPath index:index + 1];
+  NSRange range = NSMakeRange(1, paramPath.count - 1);
+  NSArray *subParamPath = [paramPath subarrayWithRange:range];
+  return [self isMatchedEventParameters:subParams paramPath:subParamPath];
+}
+
+- (BOOL)isMatchedWithAsteriskParam:(NSString *)param
+                   eventParameters:(NSDictionary<NSString *, id> *)eventParams
+                         paramPath:(NSArray<NSString *> *)paramPath
+{
+  param = [param substringToIndex:param.length - ASTERISK_DELIMETER.length];
+  NSArray<NSDictionary *> *items = [FBSDKTypeUtility dictionary:eventParams objectForKey:param ofType:NSArray.class];
+  if (!items.count || paramPath.count < 2) {
+    return NO;
+  }
+  BOOL isMatched = NO;
+  NSRange range = NSMakeRange(1, paramPath.count - 1);
+  NSArray *subParamPath = [paramPath subarrayWithRange:range];
+  for (NSDictionary *item in items) {
+    isMatched |= [self isMatchedEventParameters:item paramPath:subParamPath];
+    if (isMatched) {
+      break;
+    }
+  }
+  return isMatched;
 }
 
 - (BOOL)isMatchedWithStringValue:(nullable NSString *)stringValue

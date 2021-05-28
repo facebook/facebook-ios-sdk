@@ -82,6 +82,75 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase {
     )
   }
 
+  func testIsMatchedWithEventParametersAndAsterisk() {
+    let rule = AEMAdvertiserSingleEntryRule(
+      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorContains,
+      paramKey: "fb_content[*].title",
+      linguisticCondition: "hello",
+      numericalCondition: nil,
+      arrayCondition: nil
+    )
+    XCTAssertTrue(
+      rule.isMatched(
+        withAsteriskParam: "fb_content[*]",
+        eventParameters: ["fb_content": [["title": "hello"], ["title", "world"]]],
+        paramPath: ["fb_content[*]", "title"]
+      ),
+      "Should expect the event parameter matched with the rule"
+    )
+    XCTAssertFalse(
+      rule.isMatched(
+        withAsteriskParam: "fb_content[*]",
+        eventParameters: ["fb_content": [["title": "aaaa"], ["title", "world"]]],
+        paramPath: ["fb_content[*]", "title"]
+      ),
+      "Should not expect the event parameter matched with the rule"
+    )
+  }
+
+  func testIsMatchedWithAsteriskParam() {
+    let rule = AEMAdvertiserSingleEntryRule(
+      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorContains,
+      paramKey: "fb_content[*].title",
+      linguisticCondition: "hello",
+      numericalCondition: nil,
+      arrayCondition: nil
+    )
+
+    XCTAssertTrue(
+      rule.isMatched(
+        withAsteriskParam: "fb_content[*]",
+        eventParameters: ["fb_content": [["title": "hello"], ["title", "world"]]],
+        paramPath: ["fb_content[*]", "title"]
+      ),
+      "Should expect the event parameter matched with the rule"
+    )
+    XCTAssertFalse(
+      rule.isMatched(
+        withAsteriskParam: "fb_content[*]",
+        eventParameters: ["fb_content": [["title": "aaaa"], ["title", "world"]]],
+        paramPath: ["fb_content[*]", "title"]
+      ),
+      "Should not expect the event parameter matched with the rule"
+    )
+    XCTAssertFalse(
+      rule.isMatched(
+        withAsteriskParam: "fb_content[*]",
+        eventParameters: ["fb_content_aaa": [["title": "aaaa"], ["title", "world"]]],
+        paramPath: ["fb_content[*]", "title"]
+      ),
+      "Should not expect the event parameter matched with the rule"
+    )
+    XCTAssertFalse(
+      rule.isMatched(
+        withAsteriskParam: "fb_content[*]",
+        eventParameters: ["fb_content_aaa": ["title": "aaaa"]],
+        paramPath: ["fb_content[*]", "title"]
+      ),
+      "Should not expect the event parameter matched with the rule"
+    )
+  }
+
   func testIsMatchedWithStringComparision() { // swiftlint:disable:this function_body_length
     let rule = AEMAdvertiserSingleEntryRule(
       with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorContains,
