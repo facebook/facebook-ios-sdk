@@ -22,11 +22,14 @@
 
  #import "FBSDKAEMAdvertiserSingleEntryRule.h"
 
+ #import "FBSDKCoreKitBasicsImport.h"
+
 static NSString *const OPERATOR_KEY = @"operator";
 static NSString *const PARAMKEY_KEY = @"param_key";
 static NSString *const STRING_VALUE_KEY = @"string_value";
 static NSString *const NUMBER_VALUE_KEY = @"number_value";
 static NSString *const ARRAY_VALUE_KEY = @"array_value";
+static NSString *const PARAM_DELIMETER = @".";
 
 @implementation FBSDKAEMAdvertiserSingleEntryRule
 
@@ -44,6 +47,136 @@ static NSString *const ARRAY_VALUE_KEY = @"array_value";
     _arrayCondition = arrayCondition;
   }
   return self;
+}
+
+ #pragma mark - FBSDKAEMAdvertiserRuleMatching
+
+- (BOOL)isMatchedEventParameters:(nullable NSDictionary<NSString *, id> *)eventParams
+{
+  NSArray<NSString *> *paramPath = [_paramKey componentsSeparatedByString:PARAM_DELIMETER];
+  return [self isMatchedEventParameters:eventParams paramPath:paramPath index:0];
+}
+
+- (BOOL)isMatchedEventParameters:(nullable NSDictionary<NSString *, id> *)eventParams
+                       paramPath:(NSArray<NSString *> *)paramPath
+                           index:(NSInteger)index
+{
+  eventParams = [FBSDKTypeUtility dictionaryValue:eventParams];
+  if (!eventParams) {
+    return NO;
+  }
+  NSString *param = [FBSDKTypeUtility stringValueOrNil:[FBSDKTypeUtility array:paramPath objectAtIndex:index]];
+  // if data does not contain the key, we should return false directly.
+  if (!param || ![[eventParams allKeys] containsObject:param]) {
+    return NO;
+  }
+  // Apply operator rule if the last param is reached
+  if (paramPath.count == index + 1) {
+    NSString *stringValue = nil;
+    NSNumber *numericalValue = nil;
+    switch (_operator) {
+      case FBSDKAEMAdvertiserRuleOperatorContains:
+      case FBSDKAEMAdvertiserRuleOperatorNotContains:
+      case FBSDKAEMAdvertiserRuleOperatorStartsWith:
+      case FBSDKAEMAdvertiserRuleOperatorI_Contains:
+      case FBSDKAEMAdvertiserRuleOperatorI_NotContains:
+      case FBSDKAEMAdvertiserRuleOperatorI_StartsWith:
+      case FBSDKAEMAdvertiserRuleOperatorRegexMatch:
+      case FBSDKAEMAdvertiserRuleOperatorEqual:
+      case FBSDKAEMAdvertiserRuleOperatorNotEqual:
+      case FBSDKAEMAdvertiserRuleOperatorI_IsAny:
+      case FBSDKAEMAdvertiserRuleOperatorI_IsNotAny:
+      case FBSDKAEMAdvertiserRuleOperatorIsAny:
+      case FBSDKAEMAdvertiserRuleOperatorIsNotAny:
+        stringValue = [FBSDKTypeUtility dictionary:eventParams objectForKey:param ofType:NSString.class]; break;
+      case FBSDKAEMAdvertiserRuleOperatorLessThan:
+      case FBSDKAEMAdvertiserRuleOperatorLessThanOrEqual:
+      case FBSDKAEMAdvertiserRuleOperatorGreaterThan:
+      case FBSDKAEMAdvertiserRuleOperatorGreaterThanOrEqual:
+        numericalValue = [FBSDKTypeUtility dictionary:eventParams objectForKey:param ofType:NSNumber.class]; break;
+      default: break;
+    }
+    return [self isMatchedWithStringValue:stringValue numericalValue:numericalValue];
+  }
+  NSDictionary<NSString *, id> *subParams = [FBSDKTypeUtility dictionary:eventParams objectForKey:param ofType:NSDictionary.class];
+  return [self isMatchedEventParameters:subParams paramPath:paramPath index:index + 1];
+}
+
+- (BOOL)isMatchedWithStringValue:(nullable NSString *)stringValue
+                  numericalValue:(nullable NSNumber *)numericalValue
+{
+  BOOL isMatched = NO;
+  switch (_operator) {
+    case FBSDKAEMAdvertiserRuleOperatorContains:
+      isMatched = stringValue && [stringValue containsString:_linguisticCondition]; break;
+    case FBSDKAEMAdvertiserRuleOperatorNotContains:
+      isMatched = !(stringValue && [stringValue containsString:_linguisticCondition]); break;
+    case FBSDKAEMAdvertiserRuleOperatorStartsWith:
+      isMatched = stringValue && [stringValue hasPrefix:_linguisticCondition]; break;
+    case FBSDKAEMAdvertiserRuleOperatorI_Contains:
+      isMatched = stringValue && [stringValue.lowercaseString containsString:_linguisticCondition.lowercaseString]; break;
+    case FBSDKAEMAdvertiserRuleOperatorI_NotContains:
+      isMatched = !(stringValue && [stringValue.lowercaseString containsString:_linguisticCondition.lowercaseString]); break;
+    case FBSDKAEMAdvertiserRuleOperatorI_StartsWith:
+      isMatched = stringValue && [stringValue.lowercaseString hasPrefix:_linguisticCondition.lowercaseString]; break;
+    case FBSDKAEMAdvertiserRuleOperatorRegexMatch:
+      isMatched = stringValue && [self isRegexMatch:stringValue]; break;
+    case FBSDKAEMAdvertiserRuleOperatorEqual:
+      isMatched = stringValue && [stringValue isEqualToString:_linguisticCondition]; break;
+    case FBSDKAEMAdvertiserRuleOperatorNotEqual:
+      isMatched = !(stringValue && [stringValue isEqualToString:_linguisticCondition]); break;
+    case FBSDKAEMAdvertiserRuleOperatorI_IsAny:
+      isMatched = stringValue && [self isAnyOf:_arrayCondition stringValue:stringValue ignoreCase:YES]; break;
+    case FBSDKAEMAdvertiserRuleOperatorI_IsNotAny:
+      isMatched = !(stringValue && [self isAnyOf:_arrayCondition stringValue:stringValue ignoreCase:YES]); break;
+    case FBSDKAEMAdvertiserRuleOperatorIsAny:
+      isMatched = stringValue && [self isAnyOf:_arrayCondition stringValue:stringValue ignoreCase:NO]; break;
+    case FBSDKAEMAdvertiserRuleOperatorIsNotAny:
+      isMatched = !(stringValue && [self isAnyOf:_arrayCondition stringValue:stringValue ignoreCase:NO]); break;
+    case FBSDKAEMAdvertiserRuleOperatorLessThan:
+      isMatched = (numericalValue != nil) && ([numericalValue compare:_numericalCondition] == NSOrderedAscending); break;
+    case FBSDKAEMAdvertiserRuleOperatorLessThanOrEqual:
+      isMatched = (numericalValue != nil) && ([numericalValue compare:_numericalCondition] != NSOrderedDescending); break;
+    case FBSDKAEMAdvertiserRuleOperatorGreaterThan:
+      isMatched = (numericalValue != nil) && ([numericalValue compare:_numericalCondition] == NSOrderedDescending); break;
+    case FBSDKAEMAdvertiserRuleOperatorGreaterThanOrEqual:
+      isMatched = (numericalValue != nil) && ([numericalValue compare:_numericalCondition] != NSOrderedAscending); break;
+    default: break;
+  }
+  return isMatched;
+}
+
+- (BOOL)isRegexMatch:(NSString *)stringValue
+{
+  if (!_linguisticCondition.length) {
+    return NO;
+  }
+  NSError *error = nil;
+  NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:_linguisticCondition options:0 error:&error];
+  if (!regex || error) {
+    return NO;
+  }
+  NSRange searchedRange = NSMakeRange(0, stringValue.length);
+  NSArray *matches = [regex matchesInString:stringValue options:0 range:searchedRange];
+  return matches.count > 0;
+}
+
+- (BOOL)isAnyOf:(NSArray<NSString *> *)arrayCondition
+    stringValue:(NSString *)stringValue
+     ignoreCase:(BOOL)ignoreCase
+{
+  NSMutableSet<NSString *> *set = [NSMutableSet new];
+  for (NSString *item in arrayCondition) {
+    if (ignoreCase) {
+      [set addObject:item.lowercaseString];
+    } else {
+      [set addObject:item];
+    }
+  }
+  if (ignoreCase) {
+    stringValue = stringValue.lowercaseString;
+  }
+  return [set containsObject:stringValue];
 }
 
  #pragma mark - NSCoding
@@ -82,6 +215,17 @@ static NSString *const ARRAY_VALUE_KEY = @"array_value";
 {
   return self;
 }
+
+ #if DEBUG
+  #if FBSDKTEST
+
+- (void)setOperator:(FBSDKAEMAdvertiserRuleOperator)operator
+{
+  _operator = operator;
+}
+
+  #endif
+ #endif
 
 @end
 

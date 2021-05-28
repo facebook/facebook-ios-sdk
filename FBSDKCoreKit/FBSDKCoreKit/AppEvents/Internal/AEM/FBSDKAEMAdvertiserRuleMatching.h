@@ -26,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKAEMAdvertiserRuleMatching <NSObject>
 
+- (BOOL)isMatchedEventParameters:(nullable NSDictionary<NSString *, id> *)eventParams;
+
 @end
 
 NS_ASSUME_NONNULL_END

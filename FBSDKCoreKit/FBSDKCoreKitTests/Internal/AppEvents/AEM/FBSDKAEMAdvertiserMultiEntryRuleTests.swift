@@ -27,6 +27,156 @@ class FBSDKAEMAdvertiserMultiEntryRuleTests: XCTestCase {
       static let rules = "rules"
   }
 
+  func testIsMatchedEventParametersForAnd() {
+    let rule = AEMAdvertiserMultiEntryRule(
+      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorAnd,
+      rules: [SampleAEMSingleEntryRules.cardTypeRule1, SampleAEMSingleEntryRules.valueRule]
+    )
+    XCTAssertTrue(
+      rule.isMatchedEventParameters(
+        [
+          "card_type": "platium",
+          "amount": NSNumber(value: 100)
+        ]
+      ),
+      "Should expect the parameter matched with the rule"
+    )
+    XCTAssertFalse(
+      rule.isMatchedEventParameters(
+        [
+          "card_type": "platium",
+          "amount": NSNumber(value: 1)
+        ]
+      ),
+      "Should not expect the parameter matched with the rule if the amount is low"
+    )
+    XCTAssertFalse(
+      rule.isMatchedEventParameters(
+        [
+          "card_type": "gold",
+          "amount": NSNumber(value: 100)
+        ]
+      ),
+      "Should not expect the parameter matched with the rule if the card type is wrong"
+    )
+  }
+
+  func testIsMatchedEventParametersForOr() {
+    let rule = AEMAdvertiserMultiEntryRule(
+      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorOr,
+      rules: [SampleAEMSingleEntryRules.cardTypeRule1, SampleAEMSingleEntryRules.valueRule]
+    )
+    XCTAssertFalse(
+      rule.isMatchedEventParameters(
+        [
+          "card_type": "gold",
+          "amount": NSNumber(value: 1)
+        ]
+      ),
+      "Should not expect the parameter matched with the rule"
+    )
+    XCTAssertTrue(
+      rule.isMatchedEventParameters(
+        [
+          "card_type": "platium",
+          "amount": NSNumber(value: 1)
+        ]
+      ),
+      "Should expect the parameter matched with the rule if the card type is the same"
+    )
+    XCTAssertTrue(
+      rule.isMatchedEventParameters(
+        [
+          "card_type": "gold",
+          "amount": NSNumber(value: 100)
+        ]
+      ),
+      "Should expect the parameter matched with the rule if amount is high"
+    )
+  }
+
+  func testIsMatchedEventParametersForNot() {
+    let rule = AEMAdvertiserMultiEntryRule(
+      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorNot,
+      rules: [SampleAEMSingleEntryRules.cardTypeRule1, SampleAEMSingleEntryRules.valueRule]
+    )
+    XCTAssertTrue(
+      rule.isMatchedEventParameters(
+        [
+          "card_type": "gold",
+          "amount": NSNumber(value: 1)
+        ]
+      ),
+      "Should expect the parameter matched with the rule"
+    )
+    XCTAssertFalse(
+      rule.isMatchedEventParameters(
+        [
+          "card_type": "platium",
+          "amount": NSNumber(value: 1)
+        ]
+      ),
+      "Should not expect the parameter matched with the rule if the card type is the same"
+    )
+    XCTAssertFalse(
+      rule.isMatchedEventParameters(
+        [
+          "card_type": "gold",
+          "amount": NSNumber(value: 100)
+        ]
+      ),
+      "Should not expect the parameter matched with the rule if amount is high"
+    )
+  }
+
+  func testIsMatchedEventParametersForNestedRules() {
+    let andRule = AEMAdvertiserMultiEntryRule(
+      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorAnd,
+      rules: [SampleAEMSingleEntryRules.cardTypeRule2, SampleAEMSingleEntryRules.valueRule]
+    )
+    let orRule = AEMAdvertiserMultiEntryRule(
+      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorOr,
+      rules: [SampleAEMSingleEntryRules.contentNameRule, SampleAEMSingleEntryRules.contentCategoryRule]
+    )
+    let nestedRule = AEMAdvertiserMultiEntryRule(
+      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorAnd,
+      rules: [andRule, orRule, SampleAEMSingleEntryRules.urlRule]
+    )
+    XCTAssertTrue(
+      nestedRule.isMatchedEventParameters(
+        [
+          "URL": "thankyou.do.com",
+          "content_category": "demand",
+          "card_type": "blue_credit",
+          "amount": NSNumber(value: 100)
+        ]
+      ),
+      "Shoule expect the rule is matched"
+    )
+    XCTAssertFalse(
+      nestedRule.isMatchedEventParameters(
+        [
+          "URL": "thankyou.com",
+          "content_category": "demand",
+          "card_type": "blue_credit",
+          "amount": NSNumber(value: 100)
+        ]
+      ),
+      "Shoule not expect the rule is matched with wrong URL"
+    )
+    XCTAssertFalse(
+      nestedRule.isMatchedEventParameters(
+        [
+          "URL": "thankyou.do.com",
+          "content_category": "required",
+          "card_type": "blue_credit",
+          "amount": NSNumber(value: 100)
+        ]
+      ),
+      "Shoule not expect the rule is matched with wrong content_category"
+    )
+  }
+
   func testSecureCoding() {
     XCTAssertTrue(
       AEMAdvertiserMultiEntryRule.supportsSecureCoding,

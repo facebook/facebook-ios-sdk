@@ -142,4 +142,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FBSDKAEMAdvertiserSingleEntryRule (Testing)
+
+- (BOOL)isMatchedWithStringValue:(nullable NSString *)stringValue
+                  numericalValue:(nullable NSNumber *)numericalValue;
+
+- (BOOL)isRegexMatch:(NSString *)stringValue;
+
+- (BOOL)isAnyOf:(NSArray<NSString *> *)arrayCondition
+    stringValue:(NSString *)stringValue
+     ignoreCase:(BOOL)ignoreCase;
+
+- (void)setOperator:(FBSDKAEMAdvertiserRuleOperator)op;
+
+@end
+
 NS_ASSUME_NONNULL_END

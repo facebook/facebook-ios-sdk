@@ -39,6 +39,26 @@ static NSString *const RULES_KEY = @"rules";
   return self;
 }
 
+ #pragma mark - FBSDKAEMAdvertiserRuleMatching
+
+- (BOOL)isMatchedEventParameters:(nullable NSDictionary<NSString *, id> *)eventParams
+{
+  BOOL isMatched = _operator == FBSDKAEMAdvertiserRuleOperatorOr ? NO : YES;
+  for (id<FBSDKAEMAdvertiserRuleMatching> rule in _rules) {
+    BOOL doesSubruleMatch = [rule isMatchedEventParameters:eventParams];
+    if (_operator == FBSDKAEMAdvertiserRuleOperatorAnd) {
+      isMatched = isMatched & doesSubruleMatch;
+    }
+    if (_operator == FBSDKAEMAdvertiserRuleOperatorOr) {
+      isMatched = isMatched | doesSubruleMatch;
+    }
+    if (_operator == FBSDKAEMAdvertiserRuleOperatorNot) {
+      isMatched = isMatched & !doesSubruleMatch;
+    }
+  }
+  return isMatched;
+}
+
  #pragma mark - NSCoding
 
 + (BOOL)supportsSecureCoding
