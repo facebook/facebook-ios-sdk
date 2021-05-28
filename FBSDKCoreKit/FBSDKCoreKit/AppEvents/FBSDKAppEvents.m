@@ -912,7 +912,6 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
   self.isConfigured = YES;
 
   self.userID = [store stringForKey:USER_ID_USER_DEFAULTS_KEY];
-  [self fetchServerConfiguration:nil];
 }
 
 + (void)setFeatureChecker:(id<FBSDKFeatureChecking>)checker
@@ -1626,6 +1625,9 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 - (void)applicationDidBecomeActive
 {
   [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
+
+  // This must happen here to avoid a race condition with the shared `Settings` object.
+  [self fetchServerConfiguration:nil];
 
   [self checkPersistedEvents];
 
