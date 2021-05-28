@@ -1202,7 +1202,7 @@ static BOOL _canMakeRequests = NO;
 - (void)warnIfMissingClientToken
 {
   if (![self.settings.class clientToken]) {
-    NSString *const message = @"Starting with v12 of the SDK, a client token must be embedded in your client code before making Graph API calls. "
+    NSString *const message = @"Starting with v13 of the SDK, a client token must be embedded in your client code before making Graph API calls. "
     "Visit https://developers.facebook.com/docs/ios/getting-started#step-3---configure-your-project to learn how to implement this change.";
     [self.logger.class singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                                  logEntry:message];

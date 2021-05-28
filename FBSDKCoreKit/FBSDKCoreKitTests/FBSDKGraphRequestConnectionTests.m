@@ -1410,7 +1410,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   );
   XCTAssertEqualObjects(
     TestLogger.capturedLogEntry,
-    @"Starting with v12 of the SDK, a client token must be embedded in your client code before making Graph API calls. Visit https://developers.facebook.com/docs/ios/getting-started#step-3---configure-your-project to learn how to implement this change.",
+    @"Starting with v13 of the SDK, a client token must be embedded in your client code before making Graph API calls. Visit https://developers.facebook.com/docs/ios/getting-started#step-3---configure-your-project to learn how to implement this change.",
     "Should log the expected error message when a request is started with no client token set"
   );
 
