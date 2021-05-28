@@ -33,6 +33,7 @@ class FBSDKAEMReporterTests: XCTestCase {
     static let events = "events"
     static let eventName = "event_name"
     static let advertiserID = "advertiser_id"
+    static let businessID = "advertiser_id"
     static let campaignID = "campaign_id"
     static let token = "token"
   }
@@ -99,12 +100,12 @@ class FBSDKAEMReporterTests: XCTestCase {
     var invocation = AEMReporter.parseURL(url)
     XCTAssertEqual(invocation?.acsToken, "test_token_1234567")
     XCTAssertEqual(invocation?.campaignID, "test_campaign_1234")
-    XCTAssertNil(invocation?.advertiserID)
+    XCTAssertNil(invocation?.businessID)
 
     invocation = AEMReporter.parseURL(urlWithInvocation)
     XCTAssertEqual(invocation?.acsToken, "test_token_1234567")
     XCTAssertEqual(invocation?.campaignID, "test_campaign_1234")
-    XCTAssertEqual(invocation?.advertiserID, "test_advertiserid_12345")
+    XCTAssertEqual(invocation?.businessID, "test_advertiserid_12345")
   }
 
   func testLoadReportData() {
@@ -118,7 +119,7 @@ class FBSDKAEMReporterTests: XCTestCase {
     XCTAssertEqual(data?.count, 1)
     XCTAssertEqual(data?[0].acsToken, "test_token_1234567")
     XCTAssertEqual(data?[0].campaignID, "test_campaign_1234")
-    XCTAssertEqual(data?[0].advertiserID, "test_advertiserid_12345")
+    XCTAssertEqual(data?[0].businessID, "test_advertiserid_12345")
   }
 
   func testLoadConfigs() {
@@ -177,13 +178,13 @@ class FBSDKAEMReporterTests: XCTestCase {
       acsToken: "test_token_1234567",
       acsSharedSecret: "test_shared_secret",
       acsConfigID: "test_config_id_123",
-      advertiserID: "test_advertiserid_12345"
+      businessID: nil
     ), let invocation2 = AEMInvocation(
       campaignID: "test_campaign_1234",
       acsToken: "test_token_1234567",
       acsSharedSecret: "test_shared_secret",
       acsConfigID: "test_config_id_123",
-      advertiserID: "test_advertiserid_12345"
+      businessID: nil
     )
     else { return XCTFail("Unwrapping Error") }
     invocation1.setConfigID(10000)
@@ -298,7 +299,7 @@ class FBSDKAEMReporterTests: XCTestCase {
       acsToken: "test_token_1234567",
       acsSharedSecret: "test_shared_secret",
       acsConfigID: "test_config_id_123",
-      advertiserID: "test_advertiserid_12345"
+      businessID: nil
     )
     else { return XCTFail("Unwrapping Error") }
     guard let config = AEMConfiguration(json: SampleAEMData.validConfigData3)
@@ -409,7 +410,7 @@ class FBSDKAEMReporterTests: XCTestCase {
 
     XCTAssertEqual(
       AEMReporter._requestParameters() as NSDictionary,
-      ["advertiser_ids": "[\"\(SampleAEMData.invocationWithAdvertiserID1.advertiserID!)\"]"], // swiftlint:disable:this force_unwrapping line_length
+      ["advertiser_ids": "[\"\(SampleAEMData.invocationWithAdvertiserID1.businessID!)\"]"], // swiftlint:disable:this force_unwrapping line_length
       "Should have expected advertiserIDs in config request params"
     )
 
@@ -418,7 +419,7 @@ class FBSDKAEMReporterTests: XCTestCase {
 
     XCTAssertEqual(
       AEMReporter._requestParameters() as NSDictionary,
-      ["advertiser_ids": "[\"\(SampleAEMData.invocationWithAdvertiserID1.advertiserID!)\",\"\(SampleAEMData.invocationWithAdvertiserID2.advertiserID!)\"]"], // swiftlint:disable:this force_unwrapping line_length
+      ["advertiser_ids": "[\"\(SampleAEMData.invocationWithAdvertiserID1.businessID!)\",\"\(SampleAEMData.invocationWithAdvertiserID2.businessID!)\"]"], // swiftlint:disable:this force_unwrapping line_length
       "Should have expected advertiserIDs in config request params"
     )
   }
@@ -438,7 +439,7 @@ class FBSDKAEMReporterTests: XCTestCase {
       "Should have expected ACS token in aggregation request params"
     )
     XCTAssertNil(
-      params[Keys.advertiserID],
+      params[Keys.businessID],
       "Should not have unexpected advertiser_id in aggregation request params"
     )
   }
@@ -458,7 +459,7 @@ class FBSDKAEMReporterTests: XCTestCase {
       "Should have expected ACS token in aggregation request params"
     )
     XCTAssertNotNil(
-      params[Keys.advertiserID],
+      params[Keys.businessID],
       "Should have expected advertiser_id in aggregation request params"
     )
   }

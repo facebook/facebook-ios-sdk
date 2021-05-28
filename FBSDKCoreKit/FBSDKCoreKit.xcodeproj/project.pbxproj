@@ -1267,6 +1267,7 @@
 		F952EA4B2339406400B20652 /* FBSDKMetadataIndexer.h in Headers */ = {isa = PBXBuildFile; fileRef = F952EA462339403900B20652 /* FBSDKMetadataIndexer.h */; };
 		F952EA4F2339432100B20652 /* FBSDKMetadataIndexerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F952EA4E2339432000B20652 /* FBSDKMetadataIndexerTests.m */; };
 		F96ADE7A21E6ABB400F6043F /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F96ADE6321E6ABB400F6043F /* StoreKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F96E12C02660480500875DC9 /* SampleAEMConfigurations.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96E12BF2660480500875DC9 /* SampleAEMConfigurations.swift */; };
 		F98D1D5525124FCB00276B68 /* FBSDKAppEventsConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98D1D5425124FCB00276B68 /* FBSDKAppEventsConfigurationTests.swift */; };
 		F98D1D64251295E900276B68 /* RawAppEventsConfigurationResponseFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98D1D63251295E900276B68 /* RawAppEventsConfigurationResponseFixtures.swift */; };
 		F98D1D73251297A900276B68 /* FBSDKAppEventsConfigurationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98D1D72251297A900276B68 /* FBSDKAppEventsConfigurationManagerTests.swift */; };
@@ -2178,6 +2179,7 @@
 		F952EA462339403900B20652 /* FBSDKMetadataIndexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKMetadataIndexer.h; sourceTree = "<group>"; };
 		F952EA4E2339432000B20652 /* FBSDKMetadataIndexerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKMetadataIndexerTests.m; sourceTree = "<group>"; };
 		F96ADE6321E6ABB400F6043F /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		F96E12BF2660480500875DC9 /* SampleAEMConfigurations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAEMConfigurations.swift; sourceTree = "<group>"; };
 		F98D1D5425124FCB00276B68 /* FBSDKAppEventsConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBSDKAppEventsConfigurationTests.swift; sourceTree = "<group>"; };
 		F98D1D63251295E900276B68 /* RawAppEventsConfigurationResponseFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawAppEventsConfigurationResponseFixtures.swift; sourceTree = "<group>"; };
 		F98D1D72251297A900276B68 /* FBSDKAppEventsConfigurationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBSDKAppEventsConfigurationManagerTests.swift; sourceTree = "<group>"; };
@@ -3330,6 +3332,7 @@
 				F40B24C124732DD90059351C /* Fuzzer.swift */,
 				F492C0A024E1F5F600BA21F7 /* KeychainStoreSpy.swift */,
 				F91D1BD82632911B005CA2C5 /* SampleAEMData.swift */,
+				F96E12BF2660480500875DC9 /* SampleAEMConfigurations.swift */,
 				F496E58E24E49DBC006231A2 /* SampleAppEvents.swift */,
 				F4C6510B260CEE8100E95F96 /* SampleAppEventsConfigurations.swift */,
 				F4CEF5BF2623B08F00B4EF6C /* SampleAppLinkResolverData.swift */,
@@ -5037,7 +5040,6 @@
 				F40404A02612782300870E1D /* WebDialogViewTests.swift in Sources */,
 				F4C23D7326261A7000FA79AE /* TestAdvertiserIDProvider.swift in Sources */,
 				BF5D97C3242EC2D10096D7AA /* FBSDKFeatureExtractorTests.m in Sources */,
-				F443A31C25D231460093AB78 /* FBSDKAppEventsAtePublisherTests.m in Sources */,
 				F9A1681D2653952500010528 /* FBSDKAEMAdvertiserRuleFactoryTests.swift in Sources */,
 				5DAB023C23A1BA17005495FB /* FBSDKEventDeactivationTests.swift in Sources */,
 				58E9D15A26165512004818D8 /* TestCrashHandler.swift in Sources */,
@@ -5184,6 +5186,7 @@
 				F943113424FB2E67002441F1 /* FBSDKSKAdNetworkEventTests.swift in Sources */,
 				F98D1D64251295E900276B68 /* RawAppEventsConfigurationResponseFixtures.swift in Sources */,
 				F402AFF3255B4EE400473083 /* AuthenticationSessionSpy.swift in Sources */,
+				F96E12C02660480500875DC9 /* SampleAEMConfigurations.swift in Sources */,
 				164DC6D9260A90DC00640CFA /* TestServerConfigurationProvider.swift in Sources */,
 				F408C6C02563091900372D61 /* FBSDKBridgeAPIOpenBridgeRequestTests.m in Sources */,
 				F4EAC3A725E05CBB00587C32 /* ErrorConfigurationProviderTests.swift in Sources */,

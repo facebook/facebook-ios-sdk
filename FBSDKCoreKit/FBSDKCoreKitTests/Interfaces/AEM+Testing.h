@@ -52,13 +52,13 @@ NS_ASSUME_NONNULL_BEGIN
                                    ACSToken:(NSString *)ACSToken
                             ACSSharedSecret:(nullable NSString *)ACSSharedSecret
                                 ACSConfigID:(nullable NSString *)ACSConfigID
-                               advertiserID:(nullable NSString *)advertiserID;
+                                 businessID:(nullable NSString *)businessID;
 
 - (nullable instancetype)initWithCampaignID:(NSString *)campaignID
                                    ACSToken:(NSString *)ACSToken
                             ACSSharedSecret:(nullable NSString *)ACSSharedSecret
                                 ACSConfigID:(nullable NSString *)ACSConfigID
-                               advertiserID:(nullable NSString *)advertiserID
+                                 businessID:(nullable NSString *)businessID
                                   timestamp:(nullable NSDate *)timestamp
                                  configMode:(nullable NSString *)configMode
                                    configID:(NSInteger)configID
@@ -80,6 +80,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setPriority:(NSInteger)priority;
 
 - (void)setConfigID:(NSInteger)configID;
+
+- (void)setBusinessID:(NSString *_Nullable)businessID;
 
 - (void)setConversionTimestamp:(NSDate *_Nonnull)conversionTimestamp;
 

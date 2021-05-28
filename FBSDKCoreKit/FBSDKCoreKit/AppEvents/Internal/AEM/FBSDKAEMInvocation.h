@@ -37,7 +37,7 @@ NS_SWIFT_NAME(AEMInvocation)
 
 @property (nullable, nonatomic, readonly, copy) NSString *ACSConfigID;
 
-@property (nullable, nonatomic, readonly, copy) NSString *advertiserID;
+@property (nullable, nonatomic, readonly, copy) NSString *businessID;
 
 @property (nonatomic, readonly, copy) NSDate *timestamp;
 

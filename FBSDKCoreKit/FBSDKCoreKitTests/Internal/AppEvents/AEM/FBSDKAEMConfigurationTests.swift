@@ -27,6 +27,7 @@ class AEMConfigurationTests: XCTestCase { // swiftlint:disable:this type_body_le
       static let cutoffTime = "cutoff_time"
       static let validFrom = "valid_from"
       static let configMode = "config_mode"
+      static let advertiserID = "advertiser_id"
       static let businessID = "business_id"
       static let paramRule = "param_rule"
       static let conversionValueRules = "conversion_value_rules"
@@ -54,7 +55,7 @@ class AEMConfigurationTests: XCTestCase { // swiftlint:disable:this type_body_le
     Keys.cutoffTime: 1,
     Keys.validFrom: 10000,
     Keys.configMode: Values.defaultMode,
-    Keys.businessID: Values.coffeeBrand,
+    Keys.advertiserID: Values.coffeeBrand,
     Keys.paramRule: Values.paramRule,
     Keys.conversionValueRules: [
       [
@@ -255,6 +256,68 @@ class AEMConfigurationTests: XCTestCase { // swiftlint:disable:this type_body_le
         _ = AEMConfiguration(json: data)
       }
     }
+  }
+
+  func testIsSameBusinessID() {
+    let configWithBusinessID = SampleAEMConfigurations.createConfigWithBusinessID()
+    let configWithoutBusinessID = SampleAEMConfigurations.createConfigWithoutBusinessID()
+
+    XCTAssertTrue(
+      configWithBusinessID.isSameBusinessID("test_advertiserid_123") == true,
+      "Should return true for the same business ID"
+    )
+    XCTAssertFalse(
+      configWithBusinessID.isSameBusinessID("test_advertiserid_6666") == true,
+      "Should return false for the unexpected business ID"
+    )
+    XCTAssertFalse(
+      configWithBusinessID.isSameBusinessID(nil) == true,
+      "Should return false for nil business ID if the config has business ID"
+    )
+
+    XCTAssertTrue(
+      configWithoutBusinessID.isSameBusinessID(nil) == true,
+      "Should return true for nil business ID if the config doesn't have business ID"
+    )
+    XCTAssertFalse(
+      configWithoutBusinessID.isSameBusinessID("test_advertiserid_123") == true,
+      "Should return false for non-nil business ID if the config has business ID"
+    )
+  }
+
+  func testIsSameValidFromAndBusinessID() {
+    let configWithBusinessID = SampleAEMConfigurations.createConfigWithBusinessID()
+    let configWithoutBusinessID = SampleAEMConfigurations.createConfigWithoutBusinessID()
+
+    XCTAssertTrue(
+      configWithBusinessID.isSameValid(from: 10000, businessID: "test_advertiserid_123") == true,
+      "Should return true for the same validFrom and business ID"
+    )
+    XCTAssertFalse(
+      configWithBusinessID.isSameValid(from: 10000, businessID: "test_advertiserid_6666") == true,
+      "Should return false for the unexpected validFrom and business ID"
+    )
+    XCTAssertFalse(
+      configWithBusinessID.isSameValid(from: 10001, businessID: "test_advertiserid_123") == true,
+      "Should return false for the unexpected validFrom and business ID"
+    )
+    XCTAssertFalse(
+      configWithBusinessID.isSameValid(from: 10000, businessID: nil) == true,
+      "Should return false for the unexpected validFrom and business ID"
+    )
+
+    XCTAssertTrue(
+      configWithoutBusinessID.isSameValid(from: 10000, businessID: nil) == true,
+      "Should return true for nil business ID if the config doesn't have business ID"
+    )
+    XCTAssertFalse(
+      configWithoutBusinessID.isSameValid(from: 10000, businessID: "test_advertiserid_123") == true,
+      "Should return false for the unexpected validFrom and business ID"
+    )
+    XCTAssertFalse(
+      configWithoutBusinessID.isSameValid(from: 10001, businessID: nil) == true,
+      "Should return false for the unexpected validFrom and business ID"
+    )
   }
 
   func testSecureCoding() {

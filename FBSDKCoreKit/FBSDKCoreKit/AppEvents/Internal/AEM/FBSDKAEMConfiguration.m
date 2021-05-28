@@ -32,7 +32,7 @@ static NSString *const CUTOFF_TIME_KEY = @"cutoff_time";
 static NSString *const CONVERSION_RULES_KEY = @"conversion_value_rules";
 static NSString *const VALID_FROM_KEY = @"valid_from";
 static NSString *const CONFIG_MODE_KEY = @"config_mode";
-// The key for bussiness id, e.g. "CoffeeShop"
+static NSString *const CONFIG_BUSINESS_ID_KEY = @"advertiser_id";
 static NSString *const BUSINESS_ID_KEY = @"business_id";
 static NSString *const PARAM_RULE_KEY = @"param_rule";
 
@@ -64,7 +64,7 @@ static id<FBSDKAEMAdvertiserRuleProviding> _ruleProvider;
       NSNumber *cutoffTime = [FBSDKTypeUtility dictionary:dict objectForKey:CUTOFF_TIME_KEY ofType:NSNumber.class];
       NSNumber *validFrom = [FBSDKTypeUtility dictionary:dict objectForKey:VALID_FROM_KEY ofType:NSNumber.class];
       NSString *configMode = [FBSDKTypeUtility dictionary:dict objectForKey:CONFIG_MODE_KEY ofType:NSString.class];
-      NSString *businessID = [FBSDKTypeUtility dictionary:dict objectForKey:BUSINESS_ID_KEY ofType:NSString.class];
+      NSString *businessID = [FBSDKTypeUtility dictionary:dict objectForKey:CONFIG_BUSINESS_ID_KEY ofType:NSString.class];
       NSString *paramRuleJson = [FBSDKTypeUtility dictionary:dict objectForKey:PARAM_RULE_KEY ofType:NSString.class];
       id<FBSDKAEMAdvertiserRuleMatching> matchingRule = [FBSDKAEMConfiguration.ruleProvider createRuleWithJson:paramRuleJson];
       NSArray<FBSDKAEMRule *> *rules = [FBSDKAEMConfiguration parseRules:[FBSDKTypeUtility dictionary:dict objectForKey:CONVERSION_RULES_KEY ofType:NSArray.class]];
@@ -169,6 +169,18 @@ static id<FBSDKAEMAdvertiserRuleProviding> _ruleProvider;
     }
   }
   return [currencySet copy];
+}
+
+- (BOOL)isSameValidFrom:(NSInteger)validFrom
+             businessID:(nullable NSString *)businessID
+{
+  return (_validFrom == validFrom) && [self isSameBusinessID:businessID];
+}
+
+- (BOOL)isSameBusinessID:(nullable NSString *)businessID
+{
+  return (_businessID && [_businessID isEqualToString:businessID])
+  || (!_businessID && !businessID);
 }
 
  #pragma mark - NSCoding

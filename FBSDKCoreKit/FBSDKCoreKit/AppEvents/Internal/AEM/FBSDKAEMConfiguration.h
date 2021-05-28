@@ -54,6 +54,11 @@ NS_SWIFT_NAME(AEMConfiguration)
 
 - (nullable instancetype)initWithJSON:(nullable NSDictionary<NSString *, id> *)dict;
 
+- (BOOL)isSameValidFrom:(NSInteger)validFrom
+             businessID:(nullable NSString *)businessID;
+
+- (BOOL)isSameBusinessID:(nullable NSString *)businessID;
+
 @end
 
 NS_ASSUME_NONNULL_END

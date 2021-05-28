@@ -227,7 +227,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBSDKAEMRepo
   // append business ids to the request params
   NSMutableArray<NSString *> *businessIDs = [NSMutableArray new];
   for (FBSDKAEMInvocation *invocation in g_invocations) {
-    [FBSDKTypeUtility array:businessIDs addObject:invocation.advertiserID];
+    [FBSDKTypeUtility array:businessIDs addObject:invocation.businessID];
   }
   NSString *businessIDsString = [FBSDKBasicUtility JSONStringForObject:businessIDs error:nil invalidObjectHandler:nil];
   [FBSDKTypeUtility dictionary:params setObject:businessIDsString forKey:BUSINESS_IDS_KEY];
@@ -291,10 +291,10 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBSDKAEMRepo
     return;
   }
   NSMutableArray<FBSDKAEMConfiguration *> *configs = [FBSDKTypeUtility dictionary:g_configs objectForKey:config.configMode ofType:NSMutableArray.class];
-  // Remove the config in the array that has the same "validFrom" as the added config
+  // Remove the config in the array that has the same "validFrom" and "businessID" as the added config
   NSMutableArray<FBSDKAEMConfiguration *> *res = [NSMutableArray new];
   for (FBSDKAEMConfiguration *c in configs) {
-    if (c.validFrom == config.validFrom) {
+    if ([config isSameValidFrom:c.validFrom businessID:c.businessID]) {
       continue;
     }
     [FBSDKTypeUtility array:res addObject:c];
@@ -388,7 +388,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBSDKAEMRepo
   [FBSDKTypeUtility dictionary:conversionParams setObject:@"server" forKey:DELAY_FLOW_KEY];
   [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.ACSConfigID forKey:CONFIG_ID_KEY];
   [FBSDKTypeUtility dictionary:conversionParams setObject:[invocation getHMAC:delay] forKey:HMAC_KEY];
-  [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.advertiserID forKey:BUSINESS_ID_KEY];
+  [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.businessID forKey:BUSINESS_ID_KEY];
 
   return [conversionParams copy];
 }
@@ -467,7 +467,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBSDKAEMRepo
         forInvocations:(NSArray<FBSDKAEMInvocation *> *)invocations
 {
   for (FBSDKAEMInvocation *invocation in invocations) {
-    if (invocation.configID == config.validFrom) {
+    if ([config isSameValidFrom:invocation.configID businessID:invocation.businessID]) {
       return YES;
     }
   }
