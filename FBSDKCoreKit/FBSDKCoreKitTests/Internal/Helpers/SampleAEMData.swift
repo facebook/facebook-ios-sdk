@@ -30,6 +30,7 @@ class SampleAEMData { // swiftlint:disable:this convenience_type
       static let priority = "priority"
       static let events = "events"
       static let eventName = "event_name"
+      static let businessID = "advertiser_id"
   }
 
   enum Values {
@@ -158,7 +159,7 @@ class SampleAEMData { // swiftlint:disable:this convenience_type
     acsToken: "test_token_1234567",
     acsSharedSecret: "test_shared_secret",
     acsConfigID: "test_config_id_123",
-    businessID: "test_advertiserid_12345"
+    businessID: "test_advertiserid_123"
   )! // swiftlint:disable:this force_unwrapping
 
   static let invocationWithAdvertiserID2 = AEMInvocation(

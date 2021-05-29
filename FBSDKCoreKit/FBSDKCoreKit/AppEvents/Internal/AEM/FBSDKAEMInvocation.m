@@ -147,10 +147,15 @@ FBSDKAEMInvocationConfigMode FBSDKAEMInvocationConfigBrandMode = @"BRAND";
 - (BOOL)attributeEvent:(NSString *)event
               currency:(nullable NSString *)currency
                  value:(nullable NSNumber *)value
+            parameters:(nullable NSDictionary *)parameters
                configs:(nullable NSDictionary<NSString *, NSArray<FBSDKAEMConfiguration *> *> *)configs
 {
   FBSDKAEMConfiguration *config = [self _findConfig:configs];
   if ([self _isOutOfWindowWithConfig:config] || ![config.eventSet containsObject:event]) {
+    return NO;
+  }
+  // Check advertiser rule matching
+  if (config.matchingRule && ![config.matchingRule isMatchedEventParameters:parameters]) {
     return NO;
   }
   BOOL isAttributed = NO;

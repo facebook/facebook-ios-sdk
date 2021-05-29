@@ -1328,7 +1328,8 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
   // Update conversion value for AEM if needed
   [FBSDKAEMReporter recordAndUpdateEvent:eventName
                                 currency:[FBSDKTypeUtility dictionary:parameters objectForKey:FBSDKAppEventParameterNameCurrency ofType:NSString.class]
-                                   value:valueToSum];
+                                   value:valueToSum
+                              parameters:parameters];
 #endif
 
   if ([FBSDKAppEventsUtility shouldDropAppEvent]) {

@@ -1269,6 +1269,7 @@
 		F96ADE7A21E6ABB400F6043F /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F96ADE6321E6ABB400F6043F /* StoreKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F96E12C02660480500875DC9 /* SampleAEMConfigurations.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96E12BF2660480500875DC9 /* SampleAEMConfigurations.swift */; };
 		F96E12DA2660501800875DC9 /* SampleAEMSingleEntryRules.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96E12D92660501800875DC9 /* SampleAEMSingleEntryRules.swift */; };
+		F96E1304266068BA00875DC9 /* SampleAEMInvocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96E1303266068BA00875DC9 /* SampleAEMInvocations.swift */; };
 		F98D1D5525124FCB00276B68 /* FBSDKAppEventsConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98D1D5425124FCB00276B68 /* FBSDKAppEventsConfigurationTests.swift */; };
 		F98D1D64251295E900276B68 /* RawAppEventsConfigurationResponseFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98D1D63251295E900276B68 /* RawAppEventsConfigurationResponseFixtures.swift */; };
 		F98D1D73251297A900276B68 /* FBSDKAppEventsConfigurationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98D1D72251297A900276B68 /* FBSDKAppEventsConfigurationManagerTests.swift */; };
@@ -2182,6 +2183,7 @@
 		F96ADE6321E6ABB400F6043F /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		F96E12BF2660480500875DC9 /* SampleAEMConfigurations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAEMConfigurations.swift; sourceTree = "<group>"; };
 		F96E12D92660501800875DC9 /* SampleAEMSingleEntryRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAEMSingleEntryRules.swift; sourceTree = "<group>"; };
+		F96E1303266068BA00875DC9 /* SampleAEMInvocations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAEMInvocations.swift; sourceTree = "<group>"; };
 		F98D1D5425124FCB00276B68 /* FBSDKAppEventsConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBSDKAppEventsConfigurationTests.swift; sourceTree = "<group>"; };
 		F98D1D63251295E900276B68 /* RawAppEventsConfigurationResponseFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawAppEventsConfigurationResponseFixtures.swift; sourceTree = "<group>"; };
 		F98D1D72251297A900276B68 /* FBSDKAppEventsConfigurationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBSDKAppEventsConfigurationManagerTests.swift; sourceTree = "<group>"; };
@@ -3336,6 +3338,7 @@
 				F91D1BD82632911B005CA2C5 /* SampleAEMData.swift */,
 				F96E12BF2660480500875DC9 /* SampleAEMConfigurations.swift */,
 				F96E12D92660501800875DC9 /* SampleAEMSingleEntryRules.swift */,
+				F96E1303266068BA00875DC9 /* SampleAEMInvocations.swift */,
 				F496E58E24E49DBC006231A2 /* SampleAppEvents.swift */,
 				F4C6510B260CEE8100E95F96 /* SampleAppEventsConfigurations.swift */,
 				F4CEF5BF2623B08F00B4EF6C /* SampleAppLinkResolverData.swift */,
@@ -5160,6 +5163,7 @@
 				F47AB75C26336CFE005A3333 /* TestFeatureExtractor.swift in Sources */,
 				58E9CAA125FC0E40004818D8 /* ProfileTests.swift in Sources */,
 				F40682F525CF6031003ADDDA /* FBSDKAppEventsNumberParserTests.m in Sources */,
+				F96E1304266068BA00875DC9 /* SampleAEMInvocations.swift in Sources */,
 				F48A9C8725F83D1300A2DBDF /* TestEventBinding.swift in Sources */,
 				E493252D23F7C60E0000B63A /* FBSDKModelParserTests.mm in Sources */,
 				F496E5FE24E5D0D5006231A2 /* TestTokenCache.swift in Sources */,

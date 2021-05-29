@@ -63,6 +63,7 @@ NS_SWIFT_NAME(AEMInvocation)
 - (BOOL)attributeEvent:(NSString *)event
               currency:(nullable NSString *)currency
                  value:(nullable NSNumber *)value
+            parameters:(nullable NSDictionary *)parameters
                configs:(nullable NSDictionary<NSString *, NSArray<FBSDKAEMConfiguration *> *> *)configs;
 
 - (BOOL)updateConversionValueWithConfigs:(nullable NSDictionary<NSString *, NSArray<FBSDKAEMConfiguration *> *> *)configs;

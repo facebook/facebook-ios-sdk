@@ -16,25 +16,26 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@objcMembers
-class TestInvocation: AEMInvocation {
+import Foundation
 
-  var attributionCallCount = 0
-  var updateConversionCallCount = 0
-
-  override func attributeEvent(
-    _ event: String,
-    currency: String?,
-    value: NSNumber?,
-    parameters: [AnyHashable: Any]?,
-    configs: [String: [AEMConfiguration]]?) -> Bool {
-    attributionCallCount += 1
-    return true
+class SampleAEMInvocations { // swiftlint:disable:this convenience_type
+  static func createGeneralInvocation1() -> AEMInvocation {
+    return AEMInvocation(
+      campaignID: "test_campaign_1",
+      acsToken: "test_token_1234567",
+      acsSharedSecret: "test_shared_secret",
+      acsConfigID: "test_config_id_123",
+      businessID: nil
+    )! // swiftlint:disable:this force_unwrapping
   }
 
-  override func updateConversionValue(
-    withConfigs configs: [String: [AEMConfiguration]]?) -> Bool {
-    updateConversionCallCount += 1
-    return true
+  static func createGeneralInvocation2() -> AEMInvocation {
+    return AEMInvocation(
+      campaignID: "test_campaign_2",
+      acsToken: "test_token_1234567",
+      acsSharedSecret: "test_shared_secret",
+      acsConfigID: "test_config_id_123",
+      businessID: nil
+    )! // swiftlint:disable:this force_unwrapping
   }
 }

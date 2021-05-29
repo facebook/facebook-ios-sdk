@@ -296,7 +296,11 @@ class FBSDKAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_
     invocation._setConfig(config1)
 
     var isAttributed = invocation.attributeEvent(
-      Values.test, currency: Values.USD, value: 10, configs: [Values.defaultMode: [config1, config2]]
+      Values.test,
+      currency: Values.USD,
+      value: 10,
+      parameters: nil,
+      configs: [Values.defaultMode: [config1, config2]]
     )
     XCTAssertFalse(isAttributed, "Should not attribute unexpected event")
     XCTAssertFalse(
@@ -306,7 +310,11 @@ class FBSDKAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_
     XCTAssertEqual(invocation.recordedValues.count, 0, "Should not attribute unexpected values")
 
     isAttributed = invocation.attributeEvent(
-      Values.purchase, currency: Values.USD, value: 10, configs: [Values.defaultMode: [config1, config2]]
+      Values.purchase,
+      currency: Values.USD,
+      value: 10,
+      parameters: nil,
+      configs: [Values.defaultMode: [config1, config2]]
     )
     XCTAssertTrue(isAttributed, "Should attribute expected event")
     XCTAssertTrue(
@@ -322,7 +330,7 @@ class FBSDKAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_
     invocation._setConfig(config1)
 
     let isAttributed = invocation.attributeEvent(
-      Values.test, currency: nil, value: nil, configs: [Values.defaultMode: [config1, config2]]
+      Values.test, currency: nil, value: nil, parameters: nil, configs: [Values.defaultMode: [config1, config2]]
     )
     XCTAssertFalse(isAttributed, "Should not attribute unexpected event")
     XCTAssertFalse(invocation.recordedEvents.contains(Values.test))
@@ -335,14 +343,14 @@ class FBSDKAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_
     invocation._setConfig(config1)
 
     var isAttributed = invocation.attributeEvent(
-      Values.purchase, currency: nil, value: nil, configs: [Values.defaultMode: [config1, config2]]
+      Values.purchase, currency: nil, value: nil, parameters: nil, configs: [Values.defaultMode: [config1, config2]]
     )
     XCTAssertTrue(isAttributed, "Should attribute the expected event")
     XCTAssertTrue(invocation.recordedEvents.contains(Values.purchase))
     XCTAssertEqual(invocation.recordedValues.count, 0, "Should not attribute unexpected values")
 
     isAttributed = invocation.attributeEvent(
-      Values.donate, currency: nil, value: nil, configs: [Values.defaultMode: [config1, config2]]
+      Values.donate, currency: nil, value: nil, parameters: nil, configs: [Values.defaultMode: [config1, config2]]
     )
     XCTAssertTrue(isAttributed, "Should attribute the expected event")
     XCTAssertTrue(invocation.recordedEvents.contains(Values.donate))

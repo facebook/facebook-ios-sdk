@@ -145,6 +145,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBSDKAEMRepo
 + (void)recordAndUpdateEvent:(NSString *)event
                     currency:(nullable NSString *)currency
                        value:(nullable NSNumber *)value
+                  parameters:(nullable NSDictionary *)parameters
 {
   if (@available(iOS 14.0, *)) {
     if (!g_isAEMReportEnabled || 0 == event.length) {
@@ -154,15 +155,41 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBSDKAEMRepo
       if (0 == g_configs.count || 0 == g_invocations.count) {
         return;
       }
-      FBSDKAEMInvocation *invocation = g_invocations.lastObject;
-      if ([invocation attributeEvent:event currency:currency value:value configs:g_configs]) {
-        if ([invocation updateConversionValueWithConfigs:g_configs]) {
+
+      FBSDKAEMInvocation *attributedInvocation = [self _attributedInvocation:g_invocations Event:event currency:currency value:value parameters:parameters configs:g_configs];
+      if (attributedInvocation) {
+        if ([attributedInvocation updateConversionValueWithConfigs:g_configs]) {
           [self _sendAggregationRequest];
         }
         [self _saveReportData];
       }
     }];
   }
+}
+
++ (nullable FBSDKAEMInvocation *)_attributedInvocation:(NSArray<FBSDKAEMInvocation *> *)invocations
+                                                 Event:(NSString *)event
+                                              currency:(nullable NSString *)currency
+                                                 value:(nullable NSNumber *)value
+                                            parameters:(nullable NSDictionary *)parameters
+                                               configs:(NSDictionary<NSString *, NSMutableArray<FBSDKAEMConfiguration *> *> *)configs
+{
+  BOOL isGeneralInvocationVisited = NO;
+  FBSDKAEMInvocation *attributedInvocation = nil;
+  for (FBSDKAEMInvocation *invocation in [invocations reverseObjectEnumerator]) {
+    if (!invocation.businessID && isGeneralInvocationVisited) {
+      continue;
+    }
+
+    if ([invocation attributeEvent:event currency:currency value:value parameters:parameters configs:configs]) {
+      attributedInvocation = invocation;
+      break;
+    }
+    if (!invocation.businessID) {
+      isGeneralInvocationVisited = YES;
+    }
+  }
+  return attributedInvocation;
 }
 
 + (void)_appendAndSaveInvocation:(FBSDKAEMInvocation *)invocation

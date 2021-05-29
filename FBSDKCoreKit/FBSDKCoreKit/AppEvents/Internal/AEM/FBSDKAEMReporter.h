@@ -34,7 +34,8 @@ NS_SWIFT_NAME(AEMReporter)
 + (void)recordAndUpdateEvent:(NSString *)event
                     currency:(nullable NSString *)currency
                        value:(nullable NSNumber *)value
-NS_SWIFT_NAME(recordAndUpdate(event:currency:value:));
+                  parameters:(nullable NSDictionary *)parameters
+NS_SWIFT_NAME(recordAndUpdate(event:currency:value:parameters:));
 
 @end
 

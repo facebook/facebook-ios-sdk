@@ -108,6 +108,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)_loadConfigurationWithBlock:(nullable FBSDKAEMReporterBlock)block;
 
++ (nullable FBSDKAEMInvocation *)_attributedInvocation:(NSArray<FBSDKAEMInvocation *> *)invocations
+                                                 Event:(NSString *)event
+                                              currency:(nullable NSString *)currency
+                                                 value:(nullable NSNumber *)value
+                                            parameters:(nullable NSDictionary *)parameters
+                                               configs:(NSDictionary<NSString *, NSMutableArray<FBSDKAEMConfiguration *> *> *)configs;
+
 + (void)_sendAggregationRequest;
 
 + (NSDictionary<NSString *, id> *)_requestParameters;

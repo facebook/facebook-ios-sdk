@@ -42,6 +42,7 @@ class FBSDKAEMReporterTests: XCTestCase {
     static let purchase = "fb_mobile_purchase"
     static let donate = "Donate"
     static let defaultMode = "DEFAULT"
+    static let brandMode = "BRAND"
     static let USD = "USD"
   }
 
@@ -307,7 +308,7 @@ class FBSDKAEMReporterTests: XCTestCase {
 
     AEMReporter.configs = [Values.defaultMode: [config]]
     AEMReporter.invocations = [invocation]
-    AEMReporter.recordAndUpdate(event: Values.purchase, currency: Values.USD, value: 100)
+    AEMReporter.recordAndUpdate(event: Values.purchase, currency: Values.USD, value: 100, parameters: nil)
     // Invocation should be attributed and updated while request should be sent
     XCTAssertTrue(
       self.requestProvider.capturedGraphPath?.hasSuffix("aem_conversions") == true,
@@ -332,7 +333,7 @@ class FBSDKAEMReporterTests: XCTestCase {
     AEMReporter.isEnabled = false
     AEMReporter.timestamp = date
 
-    AEMReporter.recordAndUpdate(event: Values.purchase, currency: Values.USD, value: 100)
+    AEMReporter.recordAndUpdate(event: Values.purchase, currency: Values.USD, value: 100, parameters: nil)
     XCTAssertNil(
       requestProvider.capturedGraphPath,
       "Should not create a request to fetch the config if AEM is disabled"
@@ -342,7 +343,7 @@ class FBSDKAEMReporterTests: XCTestCase {
   func testRecordAndUpdateEventsWithEmptyEvent() {
     AEMReporter.timestamp = self.date
 
-    AEMReporter.recordAndUpdate(event: "", currency: Values.USD, value: 100)
+    AEMReporter.recordAndUpdate(event: "", currency: Values.USD, value: 100, parameters: nil)
 
     XCTAssertNil(
       requestProvider.capturedGraphPath,
@@ -358,7 +359,7 @@ class FBSDKAEMReporterTests: XCTestCase {
     AEMReporter.timestamp = date
     AEMReporter.invocations = [testInvocation]
 
-    AEMReporter.recordAndUpdate(event: Values.purchase, currency: Values.USD, value: 100)
+    AEMReporter.recordAndUpdate(event: Values.purchase, currency: Values.USD, value: 100, parameters: nil)
     guard testInvocation.attributionCallCount == 0,
           testInvocation.updateConversionCallCount == 0 else {
       return XCTFail("Should update attribute and conversions")
@@ -461,6 +462,137 @@ class FBSDKAEMReporterTests: XCTestCase {
     XCTAssertNotNil(
       params[Keys.businessID],
       "Should have expected advertiser_id in aggregation request params"
+    )
+  }
+
+  func testAttributedInvocationWithoutParameters() {
+    let invocations = [
+      SampleAEMData.invocationWithoutAdvertiserID,
+      SampleAEMData.invocationWithAdvertiserID1,
+      SampleAEMData.invocationWithAdvertiserID2
+    ]
+    let configs = [
+      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithoutBusinessID()]),
+      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithBusinessID()])
+    ]
+
+    let attributedInvocation = AEMReporter._attributedInvocation(
+      invocations,
+      event: Values.purchase,
+      currency: nil,
+      value: nil,
+      parameters: nil,
+      configs: configs
+    )
+    XCTAssertNotNil(
+      attributedInvocation,
+      "Should have invocation attributed"
+    )
+    XCTAssertNil(
+      attributedInvocation?.businessID,
+      "The attributed invocation should not have advertiser ID"
+    )
+  }
+
+  func testAttributedInvocationWithParameters() {
+    let invocations = [
+      SampleAEMData.invocationWithoutAdvertiserID,
+      SampleAEMData.invocationWithAdvertiserID1,
+      SampleAEMData.invocationWithAdvertiserID2
+    ]
+    let configs = [
+      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithoutBusinessID()]),
+      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithBusinessID()])
+    ]
+
+    let attributedInvocation = AEMReporter._attributedInvocation(
+      invocations,
+      event: "test",
+      currency: nil,
+      value: nil,
+      parameters: ["values": "abcdefg"],
+      configs: configs
+    )
+    XCTAssertNil(
+      attributedInvocation,
+      "Should not have invocation attributed"
+    )
+  }
+
+  func testAttributedInvocationWithUnmatchedParameters() {
+    let invocations = [
+      SampleAEMData.invocationWithoutAdvertiserID,
+      SampleAEMData.invocationWithAdvertiserID1,
+      SampleAEMData.invocationWithAdvertiserID2
+    ]
+    let configs = [
+      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithoutBusinessID()]),
+      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithBusinessID()])
+    ]
+
+    let attributedInvocation = AEMReporter._attributedInvocation(
+      invocations,
+      event: Values.purchase,
+      currency: nil,
+      value: nil,
+      parameters: ["value": "abcdefg"],
+      configs: configs
+    )
+    XCTAssertNotNil(
+      attributedInvocation,
+      "Should have invocation attributed"
+    )
+    XCTAssertEqual(
+      attributedInvocation?.businessID,
+      SampleAEMData.invocationWithAdvertiserID1.businessID,
+      "The attributed invocation should have advertiser ID"
+    )
+  }
+
+  func testAttributedInvocationWithMultipleGeneralInvocations() {
+    let invocation1 = SampleAEMInvocations.createGeneralInvocation1()
+    let invocation2 = SampleAEMInvocations.createGeneralInvocation2()
+    let invocations = [invocation1, invocation2]
+    let configs = [
+      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithoutBusinessID()]),
+      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithBusinessID()])
+    ]
+
+    let attributedInvocation = AEMReporter._attributedInvocation(
+      invocations,
+      event: Values.purchase,
+      currency: nil,
+      value: nil,
+      parameters: nil,
+      configs: configs
+    )
+    XCTAssertEqual(
+      attributedInvocation?.campaignID,
+      invocation2.campaignID,
+      "Should attribute the event to the latest general invocation"
+    )
+  }
+
+  func testAttributedInvocationWithUnmatchedEvent() {
+    let invocation1 = SampleAEMInvocations.createGeneralInvocation1()
+    let invocation2 = SampleAEMInvocations.createGeneralInvocation2()
+    let invocations = [invocation1, invocation2]
+    let configs = [
+      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithoutBusinessID()]),
+      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithBusinessID()])
+    ]
+
+    let attributedInvocation = AEMReporter._attributedInvocation(
+      invocations,
+      event: "test",
+      currency: nil,
+      value: nil,
+      parameters: nil,
+      configs: configs
+    )
+    XCTAssertNil(
+      attributedInvocation,
+      "Should not attribute the event with incorrect event"
     )
   }
 
