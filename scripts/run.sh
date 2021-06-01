@@ -90,6 +90,7 @@ main() {
     SDK_POD_SPECS=("${SDK_POD_SPECS[@]/%/.podspec}")
 
     SDK_LINT_POD_SPECS=(
+      "FBSDKCoreKit_Basics.podspec"
       "FBSDKCoreKit.podspec"
       "FBSDKLoginKit.podspec"
       "FBSDKShareKit.podspec"
