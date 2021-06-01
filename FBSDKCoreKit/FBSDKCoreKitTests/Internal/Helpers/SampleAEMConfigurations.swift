@@ -18,7 +18,7 @@
 
 import Foundation
 
-class SampleAEMConfigurations {
+enum SampleAEMConfigurations {
 
   enum Keys {
     static let defaultCurrency = "default_currency"

@@ -20,7 +20,7 @@ import XCTest
 
 #if !os(tvOS)
 
-class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase {
+class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
 
   enum Keys {
       static let ruleOperator = "operator"
@@ -485,4 +485,4 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase {
   }
 }
 
-#endif
+#endif // swiftlint:disable:this file_length

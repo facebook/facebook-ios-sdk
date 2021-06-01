@@ -18,7 +18,7 @@
 
 import Foundation
 
-class SampleAEMSingleEntryRules {
+enum SampleAEMSingleEntryRules {
 
   static let urlRule = AEMAdvertiserSingleEntryRule(
     with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorI_Contains,

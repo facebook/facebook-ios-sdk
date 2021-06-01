@@ -409,4 +409,4 @@ class AEMConfigurationTests: XCTestCase { // swiftlint:disable:this type_body_le
   }
 }
 
-#endif
+#endif // swiftlint:disable:this file_length
