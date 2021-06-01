@@ -19,7 +19,7 @@
 import Foundation
 
 class SampleAEMConfigurations {
-  
+
   enum Keys {
     static let defaultCurrency = "default_currency"
     static let cutoffTime = "cutoff_time"
@@ -33,19 +33,19 @@ class SampleAEMConfigurations {
     static let businessID = "advertiser_id"
     static let paramRule = "param_rule"
   }
-  
+
   enum Values {
     static let purchase = "fb_mobile_purchase"
     static let donate = "Donate"
     static let defaultMode = "DEFAULT"
     static let USD = "USD"
   }
-  
+
   static func createConfigWithBusinessID() -> AEMConfiguration {
     let advertiserRuleFactory = AEMAdvertiserRuleFactory()
-    
+
     AEMConfiguration.configure(withRuleProvider: advertiserRuleFactory)
-    
+
     return AEMConfiguration(
       json: [
         Keys.defaultCurrency: Values.USD,
@@ -71,12 +71,12 @@ class SampleAEMConfigurations {
       ]
     )! // swiftlint:disable:this force_unwrapping
   }
-  
+
   static func createConfigWithoutBusinessID() -> AEMConfiguration {
     let advertiserRuleFactory = AEMAdvertiserRuleFactory()
-    
+
     AEMConfiguration.configure(withRuleProvider: advertiserRuleFactory)
-    
+
     return AEMConfiguration(
       json: [
         Keys.defaultCurrency: Values.USD,
