@@ -19,7 +19,6 @@
 #import "FBSDKBridgeAPITests.h"
 
 @interface FBSDKBridgeAPI ()
-@property (nonnull, nonatomic) FBSDKLogger *logger;
 @end
 
 @implementation FBSDKBridgeAPITests
@@ -30,9 +29,8 @@
 
   [FBSDKLoginManager resetTestEvidence];
 
-  _api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]];
-  _logger = [[TestLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
-  _api.logger = _logger;
+  _logger = [TestLogger new];
+  _api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new] logger:_logger];
   _partialMock = OCMPartialMock(_api);
 
   [self stubLoadingAppEventsConfiguration];
@@ -330,7 +328,8 @@
 
   TestProcessInfo *processInfo = [[TestProcessInfo alloc]
                                   initWithStubbedOperatingSystemCheckResult:NO];
-  self.api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:processInfo];
+  self.api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:processInfo
+                                                  logger:_logger];
 
   BOOL applicationOpensSuccessfully = YES;
   [self stubOpenURLWith:applicationOpensSuccessfully];
@@ -357,8 +356,9 @@
 
   TestProcessInfo *processInfo = [[TestProcessInfo alloc]
                                   initWithStubbedOperatingSystemCheckResult:NO];
-  self.api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:processInfo];
 
+  self.api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:processInfo
+                                                  logger:_logger];
   [self.api openURL:self.sampleUrl sender:nil handler:^(BOOL _success, NSError *_Nullable error) {
     XCTAssertEqual(
       _success,

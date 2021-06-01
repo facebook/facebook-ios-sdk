@@ -27,7 +27,6 @@
 #import "FakeLoginManager.h"
 
 @interface FBSDKBridgeAPI (Testing)
-@property (nonnull, nonatomic) FBSDKLogger *logger;
 - (void)_openURLWithSafariViewController:(NSURL *)url
                                   sender:(id<FBSDKURLOpening>)sender
                       fromViewController:(UIViewController *)fromViewController
@@ -54,9 +53,9 @@
   [super setUp];
 
   [FBSDKLoginManager resetTestEvidence];
-  _api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]];
-  _logger = [[TestLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
-  _api.logger = _logger;
+  _logger = [TestLogger new];
+  _api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]
+                                              logger:_logger];
   _partialMock = OCMPartialMock(self.api);
   _urlOpener = [FBSDKLoginManager new];
 

@@ -86,16 +86,17 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   static FBSDKBridgeAPI *_sharedInstance;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    _sharedInstance = [[self alloc] initWithProcessInfo:NSProcessInfo.processInfo];
+    _sharedInstance = [[self alloc] initWithProcessInfo:NSProcessInfo.processInfo
+                                                 logger:[[FBSDKLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors]];
   });
   return _sharedInstance;
 }
 
-- (instancetype)initWithProcessInfo:(id<FBSDKOperatingSystemVersionComparing>)processInfo
+- (instancetype)initWithProcessInfo:(id<FBSDKOperatingSystemVersionComparing>)processInfo logger:(FBSDKLogger *)logger
 {
   if ((self = [super init])) {
     _processInfo = processInfo;
-    _logger = [[FBSDKLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors];
+    _logger = logger;
   }
   return self;
 }

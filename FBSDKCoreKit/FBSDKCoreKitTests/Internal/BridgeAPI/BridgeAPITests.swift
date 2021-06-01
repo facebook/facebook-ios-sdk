@@ -28,7 +28,7 @@ class BridgeAPIRequestTests: XCTestCase {
   }
 
   func testConfiguringWithProcessInfo() {
-    let api = BridgeAPI(processInfo: TestProcessInfo())
+    let api = BridgeAPI(processInfo: TestProcessInfo(), logger: TestLogger())
 
     XCTAssertTrue(
       api.processInfo is TestProcessInfo,
