@@ -7,8 +7,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.0.0...HEAD)
+
+## 11.0.0
+
+ATTENTION: This release of the SDK introduces a few changes to our traditional way of managing dependencies. We have found as we’ve grown over the years that an over-reliance on singletons and tight coupling has made it difficult to move fast and deliver new features without introducing risk. We are in the process of converting existing types to use injected dependencies which means that many types will no longer be usable until the SDK is initialized. We will surface this in most places with an exception in `DEBUG` builds as a reminder to call `FBSDKApplicationDelegate.application:didFinishLaunchingWithOptions:` before using the SDK.
+
+If you are getting or setting any properties or invoking any methods on the SDK prior to calling `didFinishLaunchingWithOptions` you will need to change the order of your calls.
+This will ensure that types are configured correctly before being used. We believe this is the right path towards a more modular, stable, and modern SDK.
+
 ### Added
 
+- Login with Facebook iOS app now populates a shared `AuthenticationToken` instance.
+- Added Limited Login support for `user_hometown`, `user_location`, `user_gender` and `user_link` permissions under public beta.
+- Updated Profile on Limited Login to include first, middle and last name as separate fields.
+- Released `user_messenger_contact` permission to enable Login Connect with Messenger. This new feature allows people to opt in to being contacted by a business on Messenger following the FB Login flow.
 - Added ability to add `messenger_page_id` param to `FBSDKLoginButton` and `FBSDKLoginConfiguration`
 - Added `FBSDKApplicationObserving` - a protocol for describing types that can optional respond to lifecycle events propagated by `ApplicationDelegate`
 - Added `addObserver:` and `removeObserver:` to `FBSDKApplicationDelegate`
@@ -30,13 +43,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Removed
 
-- `AppEvents`' `updateUserProperties:handler:` method.
-- `AppLinkReturnToRefererControllerDelegate`
-- `AppLinkReturnToRefererController`
-- `FBSDKIncludeStatusBarInSize`
-- `AppLinkReturnToRefererViewDelegate`
-- `FBAppLinkReturnToRefererView`
 - `FBSDKApplicationDelegate.initializeSDK:launchOptions:`. The replacement method is `FBSDKApplicationDelegate.application:didFinishLaunchingWithOptions:`
+- `FBSDKAppEvents`' `updateUserProperties:handler:` method.
+- `FBSDKAppEvents`'s `updateUserProperties:handler:` method.
+- `FBSDKAppLinkReturnToRefererControllerDelegate`
+- `FBSDKAppLinkReturnToRefererController`
+- `FBSDKIncludeStatusBarInSize`
+- `FBSDKAppLinkReturnToRefererViewDelegate`
+- `FBAppLinkReturnToRefererView`
 - `FBSDKErrorRecoveryAttempting`'s `attemptRecoveryFromError:optionIndex:delegate:didRecoverSelector:contextInfo:`
 - `FBSDKProfile`'s `initWithUserID:firstName:middleName:lastName:name:linkURL:refreshDate:imageURL:email:`
 - `FBSDKProfile`'s `initWithUserID:firstName:middleName:lastName:name:linkURL:refreshDate:imageURL:email:friendIDs:birthday:ageRange:isLimited:`
@@ -49,7 +63,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - `FBSDKGamingVideoUploader`'s `uploadVideoWithConfiguration:andCompletionHandler:`
 - `FBSDKGamingImageUploader`'s `uploadImageWithConfiguration:andCompletionHandler:`
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.3.0...HEAD)
+[2021-06-01](https://github.com/facebook/facebook-ios-sdk/releases/tag/v11.0.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v9.3.0...v11.0.0)
+
+## 10.0.0 (Release Skipped)
+
+**NOT RELEASED**
+
+Reason: The SDK is primarily a means of interacting with the Graph API. The decision was made to skip this version in order to maintain major version parity. Since Graph API is on v11, it did not make sense to release a v10 then immediately release a v11.
 
 ## 9.3.0
 
