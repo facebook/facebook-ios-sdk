@@ -153,7 +153,6 @@ static NSString *const _mockUserID = @"mockUserID";
   _metadataIndexer = [TestMetadataIndexer new];
 
   [self stubLoadingAdNetworkReporterConfiguration];
-  [self stubServerConfigurationFetchingWithConfiguration:FBSDKServerConfigurationFixtures.defaultConfig error:nil];
 
   _mockEventName = @"fb_mock_event";
   _mockPayload = @{@"fb_push_payload" : @{@"campaign" : @"testCampaign"}};

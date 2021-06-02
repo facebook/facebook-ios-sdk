@@ -398,16 +398,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   OCMStub(ClassMethod([_appEventsUtilityClassMock tokenStringToUseFor:OCMArg.any])).andReturn(tokenString);
 }
 
-- (void)stubServerConfigurationFetchingWithConfiguration:(nullable FBSDKServerConfiguration *)configuration error:(nullable NSError *)error
-{
-  OCMStub(ClassMethod([_serverConfigurationManagerClassMock loadServerConfigurationWithCompletionBlock:OCMArg.isNotNil])).andDo(^(NSInvocation *invocation) {
-    void (^completion)(FBSDKServerConfiguration *serverConfiguration, NSError *error);
-    [invocation getArgument:&completion atIndex:2];
-    completion(configuration, error);
-  });
-  OCMStub(ClassMethod([_serverConfigurationManagerClassMock loadServerConfigurationWithCompletionBlock:OCMArg.isNil]));
-}
-
 - (void)stubGraphRequestPiggybackManagerLastRefreshTryWith:(NSDate *)date
 {
   OCMStub(ClassMethod([_graphRequestPiggybackManagerMock _lastRefreshTry])).andReturn(date);

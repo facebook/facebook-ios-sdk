@@ -60,8 +60,6 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 
   [super setUp];
 
-  [self stubServerConfigurationFetchingWithConfiguration:[FBSDKServerConfiguration defaultServerConfigurationForAppID:nil] error:nil];
-
   userDefaultsSpy = [UserDefaultsSpy new];
   bundle = [TestBundle new];
   logger = [TestEventLogger new];

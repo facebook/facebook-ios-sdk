@@ -147,11 +147,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Stubs `FBSDKServerConfigurationManager.cachedServerConfiguration` with a specific configuration
 - (void)stubCachedServerConfigurationWithServerConfiguration:(FBSDKServerConfiguration *)serverConfiguration;
 
-/// Stubs `FBSDKServerConfiguratinManager.loadServerConfigurationWithCompletionBlock:` with arguments to invoke the completion with.
-/// If the completion is nil then this will ignore any arguments passed to it.
-- (void)stubServerConfigurationFetchingWithConfiguration:(nullable FBSDKServerConfiguration *)configuration
-                                                   error:(nullable NSError *)error;
-
 /// Stubs `FBSDKProfile.fetchCachedProfile`
 - (void)stubCachedProfileWith:(FBSDKProfile *__nullable)profile;
 
