@@ -18,12 +18,12 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKTimeSpentData.h"
-#import "FBSDKTimeSpentRecording.h"
+#import "FBSDKAppEvents.h"
+#import "FBSDKSourceApplicationTracking.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKTimeSpentData (TimeSpentRecording) <FBSDKTimeSpentRecording>
+@interface FBSDKAppEvents () <FBSDKSourceApplicationTracking>
 @end
 
 NS_ASSUME_NONNULL_END

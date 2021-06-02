@@ -110,7 +110,7 @@ class FBSDKAppLinkUtilityTests: XCTestCase {
       logger: TestLogger.self,
       settings: TestSettings(),
       paymentObserver: TestPaymentObserver(),
-      timeSpentRecorder: TestTimeSpentRecorder(),
+      timeSpentRecorderFactory: TestTimeSpentRecorderFactory(),
       appEventsStateStore: TestAppEventsStateStore(),
       eventDeactivationParameterProcessor: TestAppEventsParameterProcessor(),
       restrictiveDataFilterParameterProcessor: TestAppEventsParameterProcessor(),

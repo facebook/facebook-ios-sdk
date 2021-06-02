@@ -148,7 +148,10 @@
 // PaymentObserver
 #import "FBSDKPaymentObserving.h"
 // TimeSpentData abstraction
+#import "FBSDKTimeSpentData+Testing.h"
 #import "FBSDKTimeSpentRecording.h"
+#import "FBSDKTimeSpentRecordingCreating.h"
+#import "FBSDKTimeSpentRecordingFactory.h"
 // Logging
 #import "FBSDKLogging.h"
 #import "FBSDKLogger+Logging.h"

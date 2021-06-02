@@ -16,14 +16,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+@objcMembers
+class TestTimeSpentRecorderFactory: NSObject, TimeSpentRecordingCreating {
+  let recorder = TestTimeSpentRecorder()
 
-#import "FBSDKTimeSpentData.h"
-#import "FBSDKTimeSpentRecording.h"
-
-NS_ASSUME_NONNULL_BEGIN
-
-@interface FBSDKTimeSpentData (TimeSpentRecording) <FBSDKTimeSpentRecording>
-@end
-
-NS_ASSUME_NONNULL_END
+  func createTimeSpentRecorder() -> SourceApplicationTracking & TimeSpentRecording {
+    return recorder
+  }
+}

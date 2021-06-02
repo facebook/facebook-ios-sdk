@@ -219,6 +219,35 @@ class ApplicationDelegateTests: XCTestCase {
     )
   }
 
+  func testInitializingSdkSetsSessionInformation() {
+    delegate.initializeSDK(
+      launchOptions: [
+        UIApplication.LaunchOptionsKey.sourceApplication: name,
+        .url: SampleUrls.valid
+      ]
+    )
+
+    XCTAssertEqual(
+      appEvents.capturedSetSourceApplication,
+      name,
+      "Should set the source application based on the launch options"
+    )
+    XCTAssertEqual(
+      appEvents.capturedSetSourceApplicationURL,
+      SampleUrls.valid,
+      "Should set the source application url based on the launch options"
+    )
+  }
+
+  func testInitializingSdkRegistersForSessionUpdates() {
+    delegate.initializeSDK(launchOptions: [:])
+
+    XCTAssertTrue(
+      appEvents.wasRegisterAutoResetSourceApplicationCalled,
+      "Should have the analytics session register to auto reset the source application"
+    )
+  }
+
   // MARK: - DidFinishLaunching
 
   func testDidFinishLaunchingLoadsServerConfiguration() {

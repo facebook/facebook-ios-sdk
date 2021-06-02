@@ -28,6 +28,7 @@
 #import "FBSDKAppEvents+ApplicationStateSetting.h"
 #import "FBSDKAppEvents+EventLogging.h"
 #import "FBSDKAppEvents+Internal.h"
+#import "FBSDKAppEvents+SourceApplicationTracking.h"
 #import "FBSDKAppEventsConfigurationManager.h"
 #import "FBSDKAppEventsStateManager+AppEventsStatePersisting.h"
 #import "FBSDKAppEventsUtility+AdvertiserIDProviding.h"
@@ -64,8 +65,7 @@
 #import "FBSDKSettings+SettingsProtocols.h"
 #import "FBSDKSettingsLogging.h"
 #import "FBSDKSwizzler+Swizzling.h"
-#import "FBSDKTimeSpentData.h"
-#import "FBSDKTimeSpentData+TimeSpentRecording.h"
+#import "FBSDKTimeSpentRecordingFactory.h"
 #import "FBSDKTokenCache.h"
 #import "GraphAPI/FBSDKGraphRequest.h"
 #import "NSNotificationCenter+Extensions.h"
@@ -103,7 +103,7 @@ static UIApplicationState _applicationState;
 @property (nonnull, nonatomic, readonly) id<FBSDKSettingsLogging, FBSDKSettings> settings;
 @property (nonnull, nonatomic, readonly) id<FBSDKNotificationObserving> notificationObserver;
 @property (nonnull, nonatomic, readonly) NSHashTable<id<FBSDKApplicationObserving>> *applicationObservers;
-@property (nonnull, nonatomic, readonly) id<FBSDKAppEventsConfiguring, FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging> appEvents;
+@property (nonnull, nonatomic, readonly) id<FBSDKSourceApplicationTracking, FBSDKAppEventsConfiguring, FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging> appEvents;
 @property (nonnull, nonatomic, readonly) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonnull, nonatomic, readonly) id<FBSDKDataPersisting> store;
 @property (nonnull, nonatomic, readonly) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationTokenWallet;
@@ -166,7 +166,7 @@ static UIApplicationState _applicationState;
                                  tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
                                     settings:(id<FBSDKSettingsLogging, FBSDKSettings>)settings
                               featureChecker:(id<FBSDKFeatureChecking>)featureChecker
-                                   appEvents:(id<FBSDKAppEventsConfiguring, FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents
+                                   appEvents:(id<FBSDKSourceApplicationTracking, FBSDKAppEventsConfiguring, FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents
                  serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                        store:(id<FBSDKDataPersisting>)store
                    authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
@@ -190,7 +190,7 @@ static UIApplicationState _applicationState;
                                  tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
                                     settings:(id<FBSDKSettingsLogging, FBSDKSettings>)settings
                               featureChecker:(id<FBSDKFeatureChecking>)featureChecker
-                                   appEvents:(id<FBSDKAppEventsConfiguring, FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents
+                                   appEvents:(id<FBSDKSourceApplicationTracking, FBSDKAppEventsConfiguring, FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents
                  serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                        store:(id<FBSDKDataPersisting>)store
                    authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
@@ -258,10 +258,10 @@ static UIApplicationState _applicationState;
   [self _logIfAutoAppLinkEnabled];
 #endif
   // Set the SourceApplication for time spent data. This is not going to update the value if the app has already launched.
-  [FBSDKTimeSpentData setSourceApplication:launchOptions[UIApplicationLaunchOptionsSourceApplicationKey]
-                                   openURL:launchOptions[UIApplicationLaunchOptionsURLKey]];
+  [self.appEvents setSourceApplication:launchOptions[UIApplicationLaunchOptionsSourceApplicationKey]
+                               openURL:launchOptions[UIApplicationLaunchOptionsURLKey]];
   // Register on UIApplicationDidEnterBackgroundNotification events to reset source application data when app backgrounds.
-  [FBSDKTimeSpentData registerAutoResetSourceApplication];
+  [self.appEvents registerAutoResetSourceApplication];
 
   [FBSDKInternalUtility validateFacebookReservedURLSchemes];
 }
@@ -318,7 +318,7 @@ static UIApplicationState _applicationState;
                                    reason:@"Expected 'sourceApplication' to be NSString. Please verify you are passing in 'sourceApplication' from your app delegate (not the UIApplication* parameter). If your app delegate implements iOS 9's application:openURL:options:, you should pass in options[UIApplicationOpenURLOptionsSourceApplicationKey]. "
                                  userInfo:nil];
   }
-  [FBSDKTimeSpentData setSourceApplication:sourceApplication openURL:url];
+  [self.appEvents setSourceApplication:sourceApplication openURL:url];
 
 #if !TARGET_OS_TV
   [self.featureChecker checkFeature:FBSDKFeatureAEM completionBlock:^(BOOL enabled) {
@@ -585,6 +585,9 @@ static UIApplicationState _applicationState;
   FBSDKAtePublisherFactory *atePublisherFactory = [[FBSDKAtePublisherFactory alloc] initWithStore:store
                                                                               graphRequestFactory:graphRequestProvider
                                                                                          settings:sharedSettings];
+  FBSDKTimeSpentRecordingFactory *timeSpentRecordingFactory
+    = [[FBSDKTimeSpentRecordingFactory alloc] initWithEventLogger:self.appEvents
+                                      serverConfigurationProvider:FBSDKServerConfigurationManager.class];
   [self.appEvents configureWithGateKeeperManager:FBSDKGateKeeperManager.class
                   appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
                      serverConfigurationProvider:FBSDKServerConfigurationManager.class
@@ -594,7 +597,7 @@ static UIApplicationState _applicationState;
                                           logger:FBSDKLogger.class
                                         settings:sharedSettings
                                  paymentObserver:FBSDKPaymentObserver.shared
-                               timeSpentRecorder:FBSDKTimeSpentData.shared
+                        timeSpentRecorderFactory:timeSpentRecordingFactory
                              appEventsStateStore:FBSDKAppEventsStateManager.shared
              eventDeactivationParameterProcessor:FBSDKEventDeactivationManager.shared
          restrictiveDataFilterParameterProcessor:FBSDKRestrictiveDataFilterManager.shared

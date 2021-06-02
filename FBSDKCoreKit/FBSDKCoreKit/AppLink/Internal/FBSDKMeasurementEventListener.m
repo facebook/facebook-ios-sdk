@@ -23,6 +23,7 @@
  #import "FBSDKMeasurementEventListener.h"
 
  #import "FBSDKAppEvents+Internal.h"
+ #import "FBSDKAppEvents+SourceApplicationTracking.h"
  #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKMeasurementEvent.h"
  #import "FBSDKTimeSpentData.h"
@@ -54,7 +55,7 @@ static NSString *const FBSDKMeasurementEventPrefix = @"bf_";
   if ([note.userInfo[FBSDKMeasurementEventName] isEqualToString:@"al_nav_in"]) {
     NSString *sourceApplication = note.userInfo[FBSDKMeasurementEventArgs][@"sourceApplication"];
     if (sourceApplication) {
-      [FBSDKTimeSpentData setSourceApplication:sourceApplication isFromAppLink:YES];
+      [FBSDKAppEvents.singleton setSourceApplication:sourceApplication isFromAppLink:YES];
     }
   }
   NSDictionary<NSString *, id> *eventArgs = note.userInfo[FBSDKMeasurementEventArgs];

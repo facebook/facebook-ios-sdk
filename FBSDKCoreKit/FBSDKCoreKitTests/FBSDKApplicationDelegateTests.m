@@ -238,10 +238,10 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
     FBSDKPaymentObserver.shared,
     "Initializing the SDK should set concrete payment observer for event logging"
   );
-  XCTAssertEqualObjects(
-    self.appEvents.capturedConfigureTimeSpentRecorder,
-    FBSDKTimeSpentData.shared,
-    "Initializing the SDK should set concrete time spent recorder for event logging"
+  XCTAssertTrue(
+    [(NSObject *)self.appEvents.capturedConfigureTimeSpentRecorderFactory
+     isKindOfClass:FBSDKTimeSpentRecordingFactory.class],
+    "Initializing the SDK should set concrete time spent recorder factory for event logging"
   );
   XCTAssertEqualObjects(
     self.appEvents.capturedConfigureAppEventsStateStore,

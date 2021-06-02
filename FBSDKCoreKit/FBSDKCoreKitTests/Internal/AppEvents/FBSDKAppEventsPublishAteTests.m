@@ -76,7 +76,6 @@
   FBSDKAppEvents *appEvents = [[FBSDKAppEvents alloc]
                                initWithFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly
                                flushPeriodInSeconds:0];
-
   [appEvents publishATE];
   XCTAssertFalse(
     publisher.publishAteWasCalled,
@@ -93,7 +92,7 @@
                                      logger:TestLogger.class
                                    settings:_settings
                             paymentObserver:[TestPaymentObserver new]
-                          timeSpentRecorder:[TestTimeSpentRecorder new]
+                   timeSpentRecorderFactory:[TestTimeSpentRecorderFactory new]
                         appEventsStateStore:[TestAppEventsStateStore new]
         eventDeactivationParameterProcessor:[TestAppEventsParameterProcessor new]
     restrictiveDataFilterParameterProcessor:[TestAppEventsParameterProcessor new]

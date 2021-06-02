@@ -18,12 +18,22 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKTimeSpentData.h"
-#import "FBSDKTimeSpentRecording.h"
+#import "FBSDKTimeSpentRecordingCreating.h"
+
+@protocol FBSDKEventLogging;
+@protocol FBSDKServerConfigurationProviding;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKTimeSpentData (TimeSpentRecording) <FBSDKTimeSpentRecording>
+NS_SWIFT_NAME(TimeSpentRecordingFactory)
+@interface FBSDKTimeSpentRecordingFactory : NSObject<FBSDKTimeSpentRecordingCreating>
+
++ (instancetype)new NS_UNAVAILABLE;
+- (instancetype)init NS_UNAVAILABLE;
+
+- (instancetype)initWithEventLogger:(id<FBSDKEventLogging>)eventLogger
+        serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
+
 @end
 
 NS_ASSUME_NONNULL_END

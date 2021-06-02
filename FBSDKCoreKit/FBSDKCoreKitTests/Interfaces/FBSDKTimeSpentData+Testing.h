@@ -16,14 +16,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-
 #import "FBSDKTimeSpentData.h"
-#import "FBSDKTimeSpentRecording.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKTimeSpentData (TimeSpentRecording) <FBSDKTimeSpentRecording>
+@interface FBSDKTimeSpentData ()
+
+@property (nonatomic, weak) id<FBSDKEventLogging> eventLogger;
+@property (nonnull, nonatomic) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
+@property (nonatomic) NSString *sourceApplication;
+@property (nonatomic) BOOL isOpenedFromAppLink;
+
+- (NSString *)getSourceApplication;
+- (void)resetSourceApplication;
+- (NSDictionary<NSString *, id> *)appEventsParametersForDeactivate;
+
 @end
 
 NS_ASSUME_NONNULL_END

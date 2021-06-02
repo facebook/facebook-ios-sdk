@@ -51,9 +51,6 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventNameShareTrayDidSelectActivity;
 
 // Internally known event parameters
 
-/** Parameter key used to specify which application launches this application. */
-FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterLaunchSource;
-
 /** Use to log the result of a call to FBDialogs presentShareDialogWithParams: */
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBDialogsPresentShareDialog;
 
@@ -102,8 +99,6 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLiveStreamingButtonImpre
 
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLikeButtonDidTap;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameFBSDKLiveStreamingButtonDidTap;
-
-FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterLogTime;
 
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesHandlerKey;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesActionKey;

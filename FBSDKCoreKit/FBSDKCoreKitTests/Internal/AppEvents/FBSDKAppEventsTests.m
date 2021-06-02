@@ -24,6 +24,7 @@
 #import "FBSDKAccessToken.h"
 #import "FBSDKAppEvents.h"
 #import "FBSDKAppEvents+Internal.h"
+#import "FBSDKAppEvents+SourceApplicationTracking.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsState.h"
 #import "FBSDKAppEventsUtility.h"
@@ -115,7 +116,6 @@ static NSString *const _mockUserID = @"mockUserID";
   TestSettings *_settings;
   TestOnDeviceMLModelManager *_onDeviceMLModelManager;
   TestPaymentObserver *_paymentObserver;
-  TestTimeSpentRecorder *_timeSpentRecorder;
   TestAppEventsStateStore *_appEventsStateStore;
   TestMetadataIndexer *_metadataIndexer;
   TestAppEventsParameterProcessor *_eventDeactivationParameterProcessor;
@@ -124,6 +124,8 @@ static NSString *const _mockUserID = @"mockUserID";
 
 @property (nonnull, nonatomic) TestAtePublisherFactory *atePublisherfactory;
 @property (nonnull, nonatomic) TestAtePublisher *atePublisher;
+@property (nonnull, nonatomic) TestTimeSpentRecorderFactory *timeSpentRecorderFactory;
+@property (nonnull, nonatomic) TestTimeSpentRecorder *timeSpentRecorder;
 
 @end
 
@@ -148,7 +150,6 @@ static NSString *const _mockUserID = @"mockUserID";
   _onDeviceMLModelManager = [TestOnDeviceMLModelManager new];
   _onDeviceMLModelManager.integrityParametersProcessor = [TestAppEventsParameterProcessor new];
   _paymentObserver = [TestPaymentObserver new];
-  _timeSpentRecorder = [TestTimeSpentRecorder new];
   _metadataIndexer = [TestMetadataIndexer new];
 
   [self stubLoadingAdNetworkReporterConfiguration];
@@ -166,6 +167,8 @@ static NSString *const _mockUserID = @"mockUserID";
   _eventDeactivationParameterProcessor = [TestAppEventsParameterProcessor new];
   _restrictiveDataFilterParameterProcessor = [TestAppEventsParameterProcessor new];
   self.atePublisherfactory = [TestAtePublisherFactory new];
+  self.timeSpentRecorderFactory = [TestTimeSpentRecorderFactory new];
+  self.timeSpentRecorder = self.timeSpentRecorderFactory.recorder;
 
   // Mock FBSDKAppEventsUtility methods
   [self stubAppEventsUtilityShouldDropAppEventWith:NO];
@@ -185,7 +188,7 @@ static NSString *const _mockUserID = @"mockUserID";
                                                     logger:TestLogger.class
                                                   settings:_settings
                                            paymentObserver:_paymentObserver
-                                         timeSpentRecorder:_timeSpentRecorder
+                                  timeSpentRecorderFactory:self.timeSpentRecorderFactory
                                        appEventsStateStore:_appEventsStateStore
                        eventDeactivationParameterProcessor:_eventDeactivationParameterProcessor
                    restrictiveDataFilterParameterProcessor:_restrictiveDataFilterParameterProcessor
@@ -453,37 +456,33 @@ static NSString *const _mockUserID = @"mockUserID";
 
   OCMVerifyAll(self.appEventsMock);
   XCTAssertTrue(
-    _timeSpentRecorder.restoreWasCalled,
+    self.timeSpentRecorder.restoreWasCalled,
     "Activating App with initialized SDK should restore recording time spent data."
   );
   XCTAssertTrue(
-    _timeSpentRecorder.capturedCalledFromActivateApp,
+    self.timeSpentRecorder.capturedCalledFromActivateApp,
     "Activating App with initialized SDK should indicate its calling from activateApp when restoring recording time spent data."
   );
 }
 
 - (void)testApplicationBecomingActiveRestoresTimeSpentRecording
 {
-  FBSDKAppEvents *events = [[FBSDKAppEvents alloc] initWithFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly
-                                                    flushPeriodInSeconds:0];
-  [events applicationDidBecomeActive];
+  [FBSDKAppEvents.singleton applicationDidBecomeActive];
   XCTAssertTrue(
-    _timeSpentRecorder.restoreWasCalled,
+    self.timeSpentRecorder.restoreWasCalled,
     "When application did become active, the time spent recording should be restored."
   );
   XCTAssertFalse(
-    _timeSpentRecorder.capturedCalledFromActivateApp,
+    self.timeSpentRecorder.capturedCalledFromActivateApp,
     "When application did become active, the time spent recording restoration should be indicated that it's not activating."
   );
 }
 
 - (void)testApplicationTerminatingSuspendsTimeSpentRecording
 {
-  FBSDKAppEvents *events = [[FBSDKAppEvents alloc] initWithFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly
-                                                    flushPeriodInSeconds:0];
-  [events applicationMovingFromActiveStateOrTerminating];
+  [FBSDKAppEvents.singleton applicationMovingFromActiveStateOrTerminating];
   XCTAssertTrue(
-    _timeSpentRecorder.suspendWasCalled,
+    self.timeSpentRecorder.suspendWasCalled,
     "When application terminates or moves from active state, the time spent recording should be suspended."
   );
 }
@@ -590,7 +589,7 @@ static NSString *const _mockUserID = @"mockUserID";
   XCTAssertNoThrow([FBSDKAppEvents clearUserDataForType:foo]);
 
   XCTAssertFalse(
-    _timeSpentRecorder.restoreWasCalled,
+    self.timeSpentRecorder.restoreWasCalled,
     "Activating App without initialized SDK cannot restore recording time spent data."
   );
 }
@@ -1200,6 +1199,55 @@ static NSString *const _mockUserID = @"mockUserID";
   XCTAssertEqual([FBSDKAppEvents.singleton applicationState], UIApplicationStateInactive, "The default value of applicationState should be UIApplicationStateInactive");
   [FBSDKAppEvents.singleton setApplicationState:UIApplicationStateBackground];
   XCTAssertEqual([FBSDKAppEvents.singleton applicationState], UIApplicationStateBackground, "The value of applicationState after calling setApplicationState should be UIApplicationStateBackground");
+}
+
+#pragma mark Source Application Tracking
+
+- (void)testSetSourceApplicationOpenURL
+{
+  NSURL *url = [NSURL URLWithString:@"www.example.com"];
+  [FBSDKAppEvents.singleton setSourceApplication:self.name openURL:url];
+
+  XCTAssertEqualObjects(
+    self.timeSpentRecorder.capturedSetSourceApplication,
+    self.name,
+    "Should behave as a proxy for tracking the source application"
+  );
+  XCTAssertEqualObjects(
+    self.timeSpentRecorder.capturedSetSourceApplicationURL,
+    url,
+    "Should behave as a proxy for tracking the opened URL"
+  );
+}
+
+- (void)testSetSourceApplicationFromAppLink
+{
+  [FBSDKAppEvents.singleton setSourceApplication:self.name isFromAppLink:YES];
+
+  XCTAssertEqualObjects(
+    self.timeSpentRecorder.capturedSetSourceApplicationFromAppLink,
+    self.name,
+    "Should behave as a proxy for tracking the source application"
+  );
+  XCTAssertTrue(
+    self.timeSpentRecorder.capturedIsFromAppLink,
+    "Should behave as a proxy for tracking whether the source application came from an app link"
+  );
+}
+
+- (void)testRegisterAutoResetSourceApplication
+{
+  [FBSDKAppEvents.singleton registerAutoResetSourceApplication];
+
+  XCTAssertTrue(
+    self.timeSpentRecorder.wasRegisterAutoResetSourceApplicationCalled,
+    "Should have the source application tracker register for auto resetting"
+  );
+}
+
+- (void)registerAutoResetSourceApplication
+{
+  [self.timeSpentRecorder registerAutoResetSourceApplication];
 }
 
 @end

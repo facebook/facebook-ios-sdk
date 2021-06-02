@@ -20,15 +20,18 @@ import UIKit
 
 @objcMembers
 class TestAppEvents: TestEventLogger,
+                     SourceApplicationTracking,
                      AppEventsConfiguring,
                      ApplicationActivating,
                      ApplicationLifecycleObserving,
                      ApplicationStateSetting {
-
+  // swiftlint:disable identifier_name
   var wasActivateAppCalled = false
-  // swiftlint:disable:next identifier_name
   var wasStartObservingApplicationLifecycleNotificationsCalled = false
   var capturedApplicationState: UIApplication.State = .inactive
+  var wasRegisterAutoResetSourceApplicationCalled = false
+  var capturedSetSourceApplication: String?
+  var capturedSetSourceApplicationURL: URL?
 
   func activateApp() {
     wasActivateAppCalled = true
@@ -42,7 +45,6 @@ class TestAppEvents: TestEventLogger,
     capturedApplicationState = state
   }
 
-  // swiftlint:disable identifier_name
   var capturedConfigureGateKeeperManager: GateKeeperManaging.Type?
   var capturedConfigureAppEventsConfigurationProvider: AppEventsConfigurationProviding.Type?
   var capturedConfigureServerConfigurationProvider: ServerConfigurationProviding.Type?
@@ -52,7 +54,7 @@ class TestAppEvents: TestEventLogger,
   var capturedConfigureLogger: Logging.Type?
   var capturedConfigureSettings: SettingsProtocol?
   var capturedConfigurePaymentObserver: PaymentObserving?
-  var capturedConfigureTimeSpentRecorder: TimeSpentRecording?
+  var capturedConfigureTimeSpentRecorderFactory: TimeSpentRecordingCreating?
   var capturedConfigureAppEventsStateStore: AppEventsStatePersisting?
   var capturedConfigureEventDeactivationParameterProcessor: AppEventsParameterProcessing?
   var capturedConfigureRestrictiveDataFilterParameterProcessor: AppEventsParameterProcessing?
@@ -70,7 +72,7 @@ class TestAppEvents: TestEventLogger,
     logger: Logging.Type,
     settings: SettingsProtocol,
     paymentObserver: PaymentObserving,
-    timeSpentRecorder: TimeSpentRecording,
+    timeSpentRecorderFactory: TimeSpentRecordingCreating,
     appEventsStateStore: AppEventsStatePersisting,
     eventDeactivationParameterProcessor: AppEventsParameterProcessing,
     restrictiveDataFilterParameterProcessor: AppEventsParameterProcessing,
@@ -86,11 +88,26 @@ class TestAppEvents: TestEventLogger,
     capturedConfigureLogger = logger
     capturedConfigureSettings = settings
     capturedConfigurePaymentObserver = paymentObserver
-    capturedConfigureTimeSpentRecorder = timeSpentRecorder
+    capturedConfigureTimeSpentRecorderFactory = timeSpentRecorderFactory
     capturedConfigureAppEventsStateStore = appEventsStateStore
     capturedConfigureEventDeactivationParameterProcessor = eventDeactivationParameterProcessor
     capturedConfigureRestrictiveDataFilterParameterProcessor = restrictiveDataFilterParameterProcessor
     capturedConfigureAtePublisherFactory = atePublisherFactory
     capturedConfigureSwizzler = swizzler
+  }
+
+  // MARK: - Source Application Tracking
+
+  func setSourceApplication(_ sourceApplication: String?, open url: URL?) {
+    capturedSetSourceApplication = sourceApplication
+    capturedSetSourceApplicationURL = url
+  }
+
+  func setSourceApplication(_ sourceApplication: String?, isFromAppLink: Bool) {
+    // TODO: Implement when we add coverage for MeasurementEventListener
+  }
+
+  func registerAutoResetSourceApplication() {
+    wasRegisterAutoResetSourceApplicationCalled = true
   }
 }

@@ -16,14 +16,41 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#import "FBSDKTimeSpentRecordingFactory.h"
 
+#import "FBSDKEventLogging.h"
+#import "FBSDKServerConfigurationProviding.h"
 #import "FBSDKTimeSpentData.h"
-#import "FBSDKTimeSpentRecording.h"
+#import "FBSDKTimeSpentData+SourceApplicationTracking.h"
+#import "FBSDKTimeSpentData+TimeSpentRecording.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKTimeSpentData (TimeSpentRecording) <FBSDKTimeSpentRecording>
+@interface FBSDKTimeSpentRecordingFactory ()
+
+@property (nonnull, nonatomic, readonly) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
+@property (nonnull, nonatomic, readonly) id<FBSDKEventLogging> eventLogger;
+
+@end
+
+@implementation FBSDKTimeSpentRecordingFactory
+
+- (instancetype)initWithEventLogger:(id<FBSDKEventLogging>)eventLogger
+        serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+{
+  if ((self = [super init])) {
+    _eventLogger = eventLogger;
+    _serverConfigurationProvider = serverConfigurationProvider;
+  }
+  return self;
+}
+
+- (id<FBSDKSourceApplicationTracking, FBSDKTimeSpentRecording>)createTimeSpentRecorder
+{
+  return [[FBSDKTimeSpentData alloc] initWithEventLogger:self.eventLogger
+                             serverConfigurationProvider:self.serverConfigurationProvider];
+}
+
 @end
 
 NS_ASSUME_NONNULL_END

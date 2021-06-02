@@ -27,7 +27,7 @@
 @protocol FBSDKLogging;
 @protocol FBSDKSettings;
 @protocol FBSDKPaymentObserving;
-@protocol FBSDKTimeSpentRecording;
+@protocol FBSDKTimeSpentRecordingCreating;
 @protocol FBSDKAppEventsStatePersisting;
 @protocol FBSDKAppEventsParameterProcessing;
 @protocol FBSDKAppEventsParameterProcessing;
@@ -48,7 +48,7 @@ NS_SWIFT_NAME(AppEventsConfiguring)
                                    logger:(Class<FBSDKLogging>)logger
                                  settings:(id<FBSDKSettings>)settings
                           paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
-                        timeSpentRecorder:(id<FBSDKTimeSpentRecording>)timeSpentRecorder
+                 timeSpentRecorderFactory:(id<FBSDKTimeSpentRecordingCreating>)timeSpentRecorderFactory
                       appEventsStateStore:(id<FBSDKAppEventsStatePersisting>)appEventsStateStore
       eventDeactivationParameterProcessor:(id<FBSDKAppEventsParameterProcessing>)eventDeactivationParameterProcessor
   restrictiveDataFilterParameterProcessor:(id<FBSDKAppEventsParameterProcessing>)restrictiveDataFilterParameterProcessor
