@@ -16,19 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+@protocol FBSDKServerConfigurationProviding;
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(EventDeactivationManager)
-@interface FBSDKEventDeactivationManager : NSObject
+@interface FBSDKEventDeactivationManager (Testing)
 
-@property (class, nonnull, nonatomic, readonly) FBSDKEventDeactivationManager *shared;
-
-- (void)enable;
-- (void)processEvents:(NSMutableArray<NSDictionary<NSString *, id> *> *)events;
-- (nullable NSDictionary<NSString *, id> *)processParameters:(nullable NSDictionary<NSString *, id> *)parameters
-                                                   eventName:(NSString *)eventName;
+- (instancetype)initWithServerConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
 
 @end
 

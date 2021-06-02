@@ -55,6 +55,7 @@ static NSString *const DEPRECATED_EVENT_KEY = @"is_deprecated_event";
 @property BOOL isEventDeactivationEnabled;
 @property (nonatomic, strong) NSMutableSet<NSString *> *deactivatedEvents;
 @property (nonatomic, strong) NSMutableArray<FBSDKDeactivatedEvent *> *eventsWithDeactivatedParams;
+@property (nonatomic) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 
 @end
 
@@ -64,14 +65,15 @@ static NSString *const DEPRECATED_EVENT_KEY = @"is_deprecated_event";
   static FBSDKEventDeactivationManager *instance;
   static dispatch_once_t nonce;
   dispatch_once(&nonce, ^{
-    instance = [self new];
+    instance = [[self alloc] initWithServerConfigurationProvider:FBSDKServerConfigurationManager.class];
   });
   return instance;
 }
 
-- (instancetype)init
+- (instancetype)initWithServerConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
 {
   self.isEventDeactivationEnabled = NO;
+  self.serverConfigurationProvider = serverConfigurationProvider;
   return self;
 }
 
@@ -80,7 +82,7 @@ static NSString *const DEPRECATED_EVENT_KEY = @"is_deprecated_event";
   @try {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-      NSDictionary<NSString *, id> *restrictiveParams = [FBSDKServerConfigurationManager cachedServerConfiguration].restrictiveParams;
+      NSDictionary<NSString *, id> *restrictiveParams = [self.serverConfigurationProvider cachedServerConfiguration].restrictiveParams;
       if (restrictiveParams) {
         [self _updateDeactivatedEvents:restrictiveParams];
         self.isEventDeactivationEnabled = YES;

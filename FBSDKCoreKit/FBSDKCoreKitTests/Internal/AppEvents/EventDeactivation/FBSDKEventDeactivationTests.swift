@@ -18,9 +18,15 @@
 
 import XCTest
 
-class FBSDKEventDeactivationTests: FBSDKTestCase {
+class FBSDKEventDeactivationTests: XCTestCase {
+  let eventDeactivationManager = EventDeactivationManager(
+    serverConfigurationProvider: TestServerConfigurationProvider.self
+  )
+
   override func setUp() {
     super.setUp()
+
+    TestServerConfigurationProvider.reset()
 
     let events = [
       "fb_mobile_catalog_update": [
@@ -32,9 +38,14 @@ class FBSDKEventDeactivationTests: FBSDKTestCase {
     ]
 
     let serverConfiguration = ServerConfigurationFixtures.config(with: ["restrictiveParams": events])
-    stubCachedServerConfiguration(with: serverConfiguration)
+    TestServerConfigurationProvider.stubbedServerConfiguration = serverConfiguration
+    eventDeactivationManager.enable()
+  }
 
-    FBSDKEventDeactivationManager.shared.enable()
+  override func tearDown() {
+
+    TestServerConfigurationProvider.reset()
+    super.tearDown()
   }
 
   func testProcessParameters() {
@@ -46,7 +57,7 @@ class FBSDKEventDeactivationTests: FBSDKTestCase {
       "deprecated_3": "test",
     ]
 
-    guard let result = FBSDKEventDeactivationManager.shared.processParameters(
+    guard let result = eventDeactivationManager.processParameters(
       parameters,
       eventName: "manual_initiated_checkout"
     ) else {

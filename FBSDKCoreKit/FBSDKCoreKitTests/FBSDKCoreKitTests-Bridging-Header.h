@@ -52,6 +52,7 @@
 #import "FBSDKEventDeactivationManager.h"
 #import "FBSDKEventBinding+Testing.h"
 #import "FBSDKEventBindingManager+Testing.h"
+#import "FBSDKEventDeactivationManager+Testing.h"
 #import "FBSDKErrorReport.h"
 #import "FBSDKErrorReport+Testing.h"
 #import "FBSDKFeatureExtracting.h"

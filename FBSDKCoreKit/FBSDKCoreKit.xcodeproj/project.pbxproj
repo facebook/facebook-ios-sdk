@@ -1567,6 +1567,7 @@
 		58E9D62E2625F76E004818D8 /* FBSDKCrashHandler+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKCrashHandler+Testing.h"; sourceTree = "<group>"; };
 		58F4B899263C6F1100CD8A93 /* SKAdNetwork+ConversionValueUpdating.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SKAdNetwork+ConversionValueUpdating.h"; sourceTree = "<group>"; };
 		58F4BB5F264989EB00CD8A93 /* FBSDKCrashShield+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKCrashShield+Internal.h"; sourceTree = "<group>"; };
+		5C541ABC266739D40088E0BA /* FBSDKEventDeactivationManager+Testing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBSDKEventDeactivationManager+Testing.h"; sourceTree = "<group>"; };
 		5C59531F25548690000D0A3C /* FBSDKCoreKitTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBSDKCoreKitTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		5CD6DB3B255B1D07002C296F /* FBSDKAppEventsUtilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBSDKAppEventsUtilityTests.swift; sourceTree = "<group>"; };
 		5D2165E022264453004952D8 /* FBSDKAppEventsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppEventsTests.m; sourceTree = "<group>"; };
@@ -3320,6 +3321,7 @@
 				F4BDCED62616172A00D3FFF4 /* FBSDKErrorReport+Testing.h */,
 				F45148AC265C4229004ADE74 /* FBSDKEventBindingManager+Testing.h */,
 				F45148C1265C4750004ADE74 /* FBSDKEventBinding+Testing.h */,
+				5C541ABC266739D40088E0BA /* FBSDKEventDeactivationManager+Testing.h */,
 				F4D58EF726210254006FEC6B /* FBSDKHybridAppEventsScriptMessageHandler+Testing.h */,
 				F4C11C962619182D00FB4596 /* FBSDKInstrumentManager+Testing.h */,
 				F49FA9722613D7C300653457 /* FBSDKWebDialog+Testing.h */,
