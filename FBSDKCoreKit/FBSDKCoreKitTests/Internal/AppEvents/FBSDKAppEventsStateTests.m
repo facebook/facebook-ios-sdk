@@ -462,7 +462,7 @@
 
 - (void)testJSONStringForEventsSubmitEventsToProcessors
 {
-  NSString *json = [_fullState JSONStringForEventsIncludingImplicitEvents:YES];
+  [_fullState JSONStringForEventsIncludingImplicitEvents:YES];
   XCTAssertEqualObjects(_fullState.events, _eventsProcessor.capturedEvents, "Should submit events to event processors");
 }
 
