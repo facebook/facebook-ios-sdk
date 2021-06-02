@@ -20,7 +20,6 @@
 
 #import "FBSDKCoreKit.h"
 #import "FBSDKCoreKitTests-Swift.h"
-#import "FBSDKTestCase.h"
 
 static NSString *const _mockAppID = @"4321";
 static NSString *const _mockJTI = @"some_jti";
@@ -54,7 +53,7 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
 
 @end
 
-@interface FBSDKAuthenticationTokenClaimsTests : FBSDKTestCase
+@interface FBSDKAuthenticationTokenClaimsTests : XCTestCase
 
 @end
 
