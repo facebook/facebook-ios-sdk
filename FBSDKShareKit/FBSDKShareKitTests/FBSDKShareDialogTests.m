@@ -69,12 +69,6 @@
   }
 }
 
-- (void)setUp
-{
-  [super setUp];
-  [FBSDKShareKitTestUtility mainBundleMock];
-}
-
 #pragma mark - Native
 
 - (void)testCanShowNativeDialogWithoutShareContent

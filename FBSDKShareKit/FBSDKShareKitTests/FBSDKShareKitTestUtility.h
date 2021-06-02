@@ -20,12 +20,6 @@
 
 @interface FBSDKShareKitTestUtility : NSObject
 
-/**
- *  Mocks the main NSBundle to return the bundle containing this class, instead
- * of the XCTest program bundle.
- */
-+ (id)mainBundleMock;
-
 /*!
  * @abstract Returns a UIImage for sharing.
  */

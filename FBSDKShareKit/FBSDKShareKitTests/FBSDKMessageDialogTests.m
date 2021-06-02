@@ -49,12 +49,6 @@
   }
 }
 
-- (void)setUp
-{
-  [super setUp];
-  [FBSDKShareKitTestUtility mainBundleMock];
-}
-
 - (void)testCanShow
 {
   FBSDKMessageDialog *dialog = [FBSDKMessageDialog new];
