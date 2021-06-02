@@ -153,9 +153,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Stubs `FBSDKSettings.getAdvertisingTrackingStatus` with the provided value
 - (void)stubAdvertisingTrackingStatusWith:(FBSDKAdvertisingTrackingStatus)trackingStatus;
 
-/// Stubs `FBSDKSKAdNetworkReporter._loadConfigurationWithBlock`
-- (void)stubLoadingAdNetworkReporterConfiguration;
-
 /// Stubs `FBSDKAppEventsUtility.shouldDropAppEvent` with the provided value
 - (void)stubAppEventsUtilityShouldDropAppEventWith:(BOOL)shouldDropEvent;
 

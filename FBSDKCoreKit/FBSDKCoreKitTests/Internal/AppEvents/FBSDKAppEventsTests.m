@@ -152,8 +152,6 @@ static NSString *const _mockUserID = @"mockUserID";
   _paymentObserver = [TestPaymentObserver new];
   _metadataIndexer = [TestMetadataIndexer new];
 
-  [self stubLoadingAdNetworkReporterConfiguration];
-
   _mockEventName = @"fb_mock_event";
   _mockPayload = @{@"fb_push_payload" : @{@"campaign" : @"testCampaign"}};
   _mockPurchaseAmount = 1.0;

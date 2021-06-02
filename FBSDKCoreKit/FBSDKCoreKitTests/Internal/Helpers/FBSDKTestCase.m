@@ -382,11 +382,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   OCMStub(ClassMethod([_settingsClassMock advertisingTrackingStatus])).andReturn(trackingStatus);
 }
 
-- (void)stubLoadingAdNetworkReporterConfiguration
-{
-  OCMStub(ClassMethod([_adNetworkReporterClassMock _loadConfigurationWithBlock:OCMArg.any]));
-}
-
 - (void)stubAppEventsUtilityAdvertiserIDWith:(nullable NSString *)identifier
 {
   OCMStub(ClassMethod([_appEventsUtilityClassMock shared])).andReturn(_appEventsUtilityClassMock);
