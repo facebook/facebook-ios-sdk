@@ -40,7 +40,6 @@
 #endif
 
 #import "FBSDKLoginKitTests-Swift.h"
-#import "FBSDKLoginUtilityTests.h"
 
 static NSString *const kFakeAppID = @"7391628439";
 static NSString *const kFakeChallenge = @"a =bcdef";
@@ -105,7 +104,6 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
 @implementation FBSDKLoginManagerTests
 {
-  id _mockNSBundle;
   id _mockInternalUtility;
   id _mockLoginManager;
   id _mockAccessTokenClass;
@@ -126,7 +124,6 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   [FBSDKApplicationDelegate.sharedInstance application:UIApplication.sharedApplication
                          didFinishLaunchingWithOptions:@{}];
 
-  _mockNSBundle = [FBSDKLoginUtilityTests mainBundleMock];
   [FBSDKSettings setAppID:kFakeAppID];
   [FBSDKAuthenticationToken setCurrentAuthenticationToken:nil];
   [FBSDKProfile setCurrentProfile:nil];
