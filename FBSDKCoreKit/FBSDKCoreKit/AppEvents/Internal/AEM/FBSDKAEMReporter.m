@@ -205,7 +205,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBSDKAEMRepo
   [self dispatchOnQueue:g_serialQueue block:^() {
     [FBSDKTypeUtility array:g_completionBlocks addObject:block];
     // Executes blocks if there is cache
-    if ([self _isConfigRefreshTimestampValid] && g_configs.count > 0) {
+    if (![self _shouldRefresh]) {
       for (FBSDKAEMReporterBlock executionBlock in g_completionBlocks) {
         executionBlock(nil);
       }
@@ -264,6 +264,18 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBSDKAEMRepo
 + (BOOL)_isConfigRefreshTimestampValid
 {
   return g_configRefreshTimestamp && [[NSDate date] timeIntervalSinceDate:g_configRefreshTimestamp] < FBSDK_AEM_CONFIG_TIME_OUT;
+}
+
++ (BOOL)_shouldRefresh
+{
+  // Refresh if there exists invocation which has business ID
+  for (FBSDKAEMInvocation *invocation in g_invocations) {
+    if (invocation.businessID) {
+      return YES;
+    }
+  }
+  // Refresh if timestamp is expired or cached config is empty
+  return (![self _isConfigRefreshTimestampValid]) || (0 == g_configs.count);
 }
 
  #pragma mark - Background methods

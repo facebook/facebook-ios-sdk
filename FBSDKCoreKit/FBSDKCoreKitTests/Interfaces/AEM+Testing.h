@@ -123,6 +123,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (BOOL)_isConfigRefreshTimestampValid;
 
++ (BOOL)_shouldRefresh;
+
 + (NSMutableDictionary<NSString *, NSMutableArray<FBSDKAEMConfiguration *> *> *)_loadConfigs;
 
 + (void)_addConfigs:(nullable NSArray<NSDictionary *> *)configs;

@@ -54,8 +54,17 @@ static NSString *const ASTERISK_DELIMETER = @"[*]";
 
 - (BOOL)isMatchedEventParameters:(nullable NSDictionary<NSString *, id> *)eventParams
 {
-  NSArray<NSString *> *paramPath = [_paramKey componentsSeparatedByString:PARAM_DELIMETER];
-  return [self isMatchedEventParameters:eventParams paramPath:paramPath];
+  @try {
+    NSArray<NSString *> *paramPath = [_paramKey componentsSeparatedByString:PARAM_DELIMETER];
+    return [self isMatchedEventParameters:eventParams paramPath:paramPath];
+  } @catch (NSException *exception) {
+  #if DEBUG
+  #if FBSDKTEST
+    @throw exception;
+  #endif
+  #endif
+    return NO;
+  }
 }
 
 - (BOOL)isMatchedEventParameters:(nullable NSDictionary<NSString *, id> *)eventParams
