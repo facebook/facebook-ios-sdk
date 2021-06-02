@@ -1441,7 +1441,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
     [_appEventsState addEvent:eventDictionary isImplicit:isImplicitlyLogged];
     if (!isImplicitlyLogged) {
-      NSString *message = [NSString stringWithFormat:@"FBSDKAppEvents: Recording event @ %ld: %@",
+      NSString *message = [NSString stringWithFormat:@"FBSDKAppEvents: Recording event @ %f: %@",
                            [FBSDKAppEventsUtility unixTimeNow],
                            eventDictionary];
       [g_logger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
@@ -1551,7 +1551,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
       NSMutableDictionary *paramsForPrinting = [postParameters mutableCopy];
       [paramsForPrinting removeObjectForKey:@"custom_events_file"];
 
-      loggingEntry = [NSString stringWithFormat:@"FBSDKAppEvents: Flushed @ %ld, %lu events due to '%@' - %@\nEvents: %@",
+      loggingEntry = [NSString stringWithFormat:@"FBSDKAppEvents: Flushed @ %f, %lu events due to '%@' - %@\nEvents: %@",
                       [FBSDKAppEventsUtility unixTimeNow],
                       (unsigned long)appEventsState.events.count,
                       [FBSDKAppEventsUtility flushReasonToString:reason],

@@ -37,7 +37,7 @@ NS_SWIFT_NAME(AppEventsUtility)
 
 @property (class, nonatomic, readonly) FBSDKAppEventsUtility *shared;
 @property (nonatomic, copy, readonly) NSString *advertiserID;
-@property (class, nonatomic, assign, readonly) long unixTimeNow;
+@property (class, nonatomic, assign, readonly) NSTimeInterval unixTimeNow;
 @property (class, nonatomic, assign, readonly) BOOL isDebugBuild;
 
 + (NSMutableDictionary *)activityParametersDictionaryForEvent:(NSString *)eventCategory
@@ -51,6 +51,6 @@ NS_SWIFT_NAME(AppEventsUtility)
 + (BOOL)shouldDropAppEvent;
 + (BOOL)isSensitiveUserData:(NSString *)text;
 + (BOOL)isStandardEvent:(NSString *)event;
-+ (long)convertToUnixTime:(NSDate *)date;
++ (NSTimeInterval)convertToUnixTime:(NSDate *)date;
 
 @end

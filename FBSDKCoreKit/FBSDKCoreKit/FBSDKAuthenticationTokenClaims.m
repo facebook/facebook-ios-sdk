@@ -21,7 +21,7 @@
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKSettings.h"
 
-static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
+static NSTimeInterval const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
 
 @implementation FBSDKAuthenticationTokenClaims
 
@@ -29,8 +29,8 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
                         iss:(NSString *)iss
                         aud:(NSString *)aud
                       nonce:(NSString *)nonce
-                        exp:(long)exp
-                        iat:(long)iat
+                        exp:(NSTimeInterval)exp
+                        iat:(NSTimeInterval)iat
                         sub:(NSString *)sub
                        name:(nullable NSString *)name
                   givenName:(nullable NSString *)givenName
@@ -80,7 +80,7 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
   if (claimsData) {
     NSDictionary *claimsDict = [FBSDKTypeUtility JSONObjectWithData:claimsData options:0 error:&error];
     if (!error) {
-      long currentTime = [[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]] longValue];
+      NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];
 
       // verify claims
       NSString *jti = [FBSDKTypeUtility coercedToStringValue:claimsDict[@"jti"]];
@@ -93,11 +93,11 @@ static long const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
       BOOL audMatched = [aud isEqualToString:[FBSDKSettings appID]];
 
       NSNumber *expValue = [FBSDKTypeUtility numberValue:claimsDict[@"exp"]];
-      long exp = [expValue doubleValue];
+      NSTimeInterval exp = [expValue doubleValue];
       BOOL isExpired = expValue == nil || exp <= currentTime;
 
       NSNumber *iatValue = [FBSDKTypeUtility numberValue:claimsDict[@"iat"]];
-      long iat = [iatValue doubleValue];
+      NSTimeInterval iat = [iatValue doubleValue];
       BOOL issuedRecently = iatValue != nil && iat >= currentTime - MaxTimeSinceTokenIssued;
 
       NSString *nonce = [FBSDKTypeUtility coercedToStringValue:claimsDict[@"nonce"]];

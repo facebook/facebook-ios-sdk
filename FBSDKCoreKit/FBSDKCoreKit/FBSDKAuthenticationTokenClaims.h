@@ -35,10 +35,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly, strong) NSString *nonce;
 
 /// Expiration time on or after which the ID Token MUST NOT be accepted for processing.
-@property (nonatomic, readonly, assign) long exp;
+@property (nonatomic, readonly, assign) NSTimeInterval exp;
 
 /// Time at which the JWT was issued.
-@property (nonatomic, readonly, assign) long iat;
+@property (nonatomic, readonly, assign) NSTimeInterval iat;
 
 /// Subject - Identifier for the End-User at the Issuer.
 @property (nonatomic, readonly, strong) NSString *sub;

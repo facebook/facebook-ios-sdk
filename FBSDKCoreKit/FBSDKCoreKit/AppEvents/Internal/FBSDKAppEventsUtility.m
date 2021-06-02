@@ -370,14 +370,14 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
   return tokenString;
 }
 
-+ (long)unixTimeNow
++ (NSTimeInterval)unixTimeNow
 {
-  return (long)round([NSDate date].timeIntervalSince1970);
+  return round([NSDate date].timeIntervalSince1970);
 }
 
-+ (time_t)convertToUnixTime:(NSDate *)date
++ (NSTimeInterval)convertToUnixTime:(NSDate *)date
 {
-  return (time_t)round([date timeIntervalSince1970]);
+  return round([date timeIntervalSince1970]);
 }
 
 + (BOOL)isDebugBuild

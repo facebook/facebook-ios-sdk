@@ -32,8 +32,8 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
                         iss:(NSString *)iss
                         aud:(NSString *)aud
                       nonce:(NSString *)nonce
-                        exp:(long)exp
-                        iat:(long)iat
+                        exp:(NSTimeInterval)exp
+                        iat:(NSTimeInterval)iat
                         sub:(NSString *)sub
                        name:(nullable NSString *)name
                   givenName:(nullable NSString *)givenName
@@ -93,7 +93,7 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
                                                         picture:@"https://www.facebook.com/some_picture"
                                                     userFriends:@[@"1122", @"3344", @"5566"]
                                                    userBirthday:@"01/01/1990"
-                                                   userAgeRange:@{@"min" : @((long)21)}
+                                                   userAgeRange:@{@"min" : @(21)}
                                                    userHometown:@{@"id" : @"112724962075996", @"name" : @"Martinez, California"}
                                                    userLocation:@{@"id" : @"110843418940484", @"name" : @"Seattle, Washington"}
                                                      userGender:@"male"
@@ -197,14 +197,14 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
   [self assertDecodeClaimsDropInvalidEntry:@"user_friends" value:@[[NSDictionary new]]];
 
   [self assertDecodeClaimsDropInvalidEntry:@"user_age_range" value:@""];
-  [self assertDecodeClaimsDropInvalidEntry:@"user_age_range" value:@{@"min" : @((long)123), @"max" : @"test"}];
+  [self assertDecodeClaimsDropInvalidEntry:@"user_age_range" value:@{@"min" : @(123), @"max" : @"test"}];
   [self assertDecodeClaimsDropInvalidEntry:@"user_age_range" value:@{}];
 
-  [self assertDecodeClaimsDropInvalidEntry:@"user_hometown" value:@{@"id" : @((long)123), @"name" : @"test"}];
+  [self assertDecodeClaimsDropInvalidEntry:@"user_hometown" value:@{@"id" : @(123), @"name" : @"test"}];
   [self assertDecodeClaimsDropInvalidEntry:@"user_hometown" value:@""];
   [self assertDecodeClaimsDropInvalidEntry:@"user_hometown" value:@{}];
 
-  [self assertDecodeClaimsDropInvalidEntry:@"user_location" value:@{@"id" : @((long)123), @"name" : @"test"}];
+  [self assertDecodeClaimsDropInvalidEntry:@"user_location" value:@{@"id" : @(123), @"name" : @"test"}];
   [self assertDecodeClaimsDropInvalidEntry:@"user_location" value:@""];
   [self assertDecodeClaimsDropInvalidEntry:@"user_location" value:@{}];
 }

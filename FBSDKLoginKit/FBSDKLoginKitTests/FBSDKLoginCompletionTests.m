@@ -53,8 +53,8 @@ static NSString *const _fakeChallence = @"some_challenge";
                         iss:(NSString *)iss
                         aud:(NSString *)aud
                       nonce:(NSString *)nonce
-                        exp:(long)exp
-                        iat:(long)iat
+                        exp:(NSTimeInterval)exp
+                        iat:(NSTimeInterval)iat
                         sub:(NSString *)sub
                        name:(nullable NSString *)name
                   givenName:(nullable NSString *)givenName
@@ -561,7 +561,7 @@ static NSString *const _fakeChallence = @"some_challenge";
                                                                                       picture:@"www.facebook.com"
                                                                                   userFriends:@[@"123", @"456"]
                                                                                  userBirthday:@"01/01/1990"
-                                                                                 userAgeRange:@{@"min" : @((long)21)}
+                                                                                 userAgeRange:@{@"min" : @(21)}
                                                                                  userHometown:@{@"id" : @"112724962075996", @"name" : @"Martinez, California"}
                                                                                  userLocation:@{@"id" : @"110843418940484", @"name" : @"Seattle, Washington"}
                                                                                    userGender:@"male"

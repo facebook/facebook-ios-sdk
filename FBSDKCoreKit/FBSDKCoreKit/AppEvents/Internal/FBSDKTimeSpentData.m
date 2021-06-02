@@ -95,11 +95,11 @@ static const long INACTIVE_SECONDS_QUANTA[] =
   BOOL _isCurrentlyLoaded;
   BOOL _shouldLogActivateEvent;
   BOOL _shouldLogDeactivateEvent;
-  long _secondsSpentInCurrentSession;
-  long _timeSinceLastSuspend;
+  NSTimeInterval _secondsSpentInCurrentSession;
+  NSTimeInterval _timeSinceLastSuspend;
   int _numInterruptionsInCurrentSession;
-  long _lastRestoreTime;
-  long _lastSuspendTime;
+  NSTimeInterval _lastRestoreTime;
+  NSTimeInterval _lastSuspendTime;
   NSString *_sessionID;
 }
 
@@ -131,8 +131,8 @@ static const long INACTIVE_SECONDS_QUANTA[] =
     return;
   }
 
-  long now = (long)round([NSDate date].timeIntervalSince1970);
-  long timeSinceRestore = now - _lastRestoreTime;
+  NSTimeInterval now = round([NSDate date].timeIntervalSince1970);
+  NSTimeInterval timeSinceRestore = now - _lastRestoreTime;
 
   // Can happen if the clock on the device is changed
   if (timeSinceRestore < 0) {
@@ -175,7 +175,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
   // It's possible to call this multiple times during the time the app is in the foreground.  If this is the case,
   // just restore persisted data the first time.
   if (!_isCurrentlyLoaded) {
-    long now = (long)round([NSDate date].timeIntervalSince1970);
+    NSTimeInterval now = round([NSDate date].timeIntervalSince1970);
     NSString *content =
     [[NSString alloc] initWithContentsOfFile:[FBSDKBasicUtility persistenceFilePath:FBSDKTimeSpentFilename]
                                 usedEncoding:nil
