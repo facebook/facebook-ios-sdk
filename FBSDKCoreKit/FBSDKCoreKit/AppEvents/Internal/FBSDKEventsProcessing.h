@@ -16,27 +16,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import FBSDKCoreKit
-import Foundation
+#import <Foundation/Foundation.h>
 
-@objcMembers
-class TestAppEventsParameterProcessor: NSObject, AppEventsParameterProcessing, EventsProcessing {
-  var enableWasCalled = false
-  var capturedParameters: [String: Any]?
-  var capturedEventName: String?
-  var capturedEvents: [[String: Any]]?
+NS_SWIFT_NAME(EventsProcessing)
+@protocol FBSDKEventsProcessing
+- (void)processEvents:(NSMutableArray<NSDictionary<NSString *, id> *> *)events;
+@end
 
-  func enable() {
-    enableWasCalled = true
-  }
-
-  func processParameters(_ parameters: [String: Any]?, eventName: String) -> [String: Any]? {
-    capturedParameters = parameters
-    capturedEventName = eventName
-    return parameters
-  }
-
-  func processEvents(_ events: NSMutableArray?) {
-    self.capturedEvents = events?.copy() as? [[String: Any]]
-  }
-}

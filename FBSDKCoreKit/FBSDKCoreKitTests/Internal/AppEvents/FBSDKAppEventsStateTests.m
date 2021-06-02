@@ -34,6 +34,7 @@
   FBSDKAppEventsState *_state;
   FBSDKAppEventsState *_partiallyFullState;
   FBSDKAppEventsState *_fullState;
+  TestAppEventsParameterProcessor *_eventsProcessor;
 }
 
 - (void)setUp
@@ -42,6 +43,8 @@
 
   _appID = @"appid";
   [self setUpFixtures];
+  _eventsProcessor = [TestAppEventsParameterProcessor new];
+  [FBSDKAppEventsState configureWithEventProcessors:@[_eventsProcessor]];
 }
 
 - (void)setUpFixtures
@@ -455,6 +458,12 @@
   NSString *expected = [FBSDKBasicUtility JSONStringForObject:@[SampleAppEvents.validEvent] error:nil invalidObjectHandler:nil];
 
   XCTAssertEqualObjects(json, expected, "Should represent events as empty json array when there are no events");
+}
+
+- (void)testJSONStringForEventsSubmitEventsToProcessors
+{
+  NSString *json = [_fullState JSONStringForEventsIncludingImplicitEvents:YES];
+  XCTAssertEqualObjects(_fullState.events, _eventsProcessor.capturedEvents, "Should submit events to event processors");
 }
 
 @end

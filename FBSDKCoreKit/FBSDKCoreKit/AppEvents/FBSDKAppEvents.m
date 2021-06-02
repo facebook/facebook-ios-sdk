@@ -42,6 +42,7 @@
 #import "FBSDKDataPersisting.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError.h"
+#import "FBSDKEventsProcessing.h"
 #import "FBSDKFeatureChecking.h"
 #import "FBSDKGateKeeperManaging.h"
 #import "FBSDKGraphRequestProtocol.h"
@@ -277,8 +278,8 @@ static Class<FBSDKLogging> g_logger;
 static id<FBSDKSettings> g_settings;
 static id<FBSDKPaymentObserving> g_paymentObserver;
 static id<FBSDKAppEventsStatePersisting> g_appEventsStateStore;
-static id<FBSDKAppEventsParameterProcessing> g_eventDeactivationParameterProcessor;
-static id<FBSDKAppEventsParameterProcessing> g_restrictiveDataFilterParameterProcessor;
+static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_eventDeactivationParameterProcessor;
+static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiveDataFilterParameterProcessor;
 
 #if !TARGET_OS_TV
 static id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider> g_onDeviceMLModelManager = nil;
@@ -887,8 +888,8 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
                           paymentObserver:(id<FBSDKPaymentObserving>)paymentObserver
                  timeSpentRecorderFactory:(id<FBSDKTimeSpentRecordingCreating>)timeSpentRecorderFactory
                       appEventsStateStore:(id<FBSDKAppEventsStatePersisting>)appEventsStateStore
-      eventDeactivationParameterProcessor:(id<FBSDKAppEventsParameterProcessing>)eventDeactivationParameterProcessor
-  restrictiveDataFilterParameterProcessor:(id<FBSDKAppEventsParameterProcessing>)restrictiveDataFilterParameterProcessor
+      eventDeactivationParameterProcessor:(id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)eventDeactivationParameterProcessor
+  restrictiveDataFilterParameterProcessor:(id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)restrictiveDataFilterParameterProcessor
                       atePublisherFactory:(id<FBSDKAtePublisherCreating>)atePublisherFactory
                                  swizzler:(Class<FBSDKSwizzling>)swizzler
 {
@@ -1814,12 +1815,12 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
   return g_metadataIndexer;
 }
 
-+ (id<FBSDKAppEventsParameterProcessing>)eventDeactivationParameterProcessor
++ (id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)eventDeactivationParameterProcessor
 {
   return g_eventDeactivationParameterProcessor;
 }
 
-+ (id<FBSDKAppEventsParameterProcessing>)restrictiveDataFilterParameterProcessor
++ (id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)restrictiveDataFilterParameterProcessor
 {
   return g_restrictiveDataFilterParameterProcessor;
 }

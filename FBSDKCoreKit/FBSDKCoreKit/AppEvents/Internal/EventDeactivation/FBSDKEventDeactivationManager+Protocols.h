@@ -17,11 +17,8 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "FBSDKAppEventsParameterProcessing.h"
-#import "FBSDKRestrictiveDataFilterManager.h"
+#import "FBSDKEventDeactivationManager.h"
+#import "FBSDKEventsProcessing.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface FBSDKRestrictiveDataFilterManager (AppEventsParameterProcessing) <FBSDKAppEventsParameterProcessing>
+@interface FBSDKEventDeactivationManager (Protocols) <FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>
 @end
-
-NS_ASSUME_NONNULL_END

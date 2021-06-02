@@ -28,13 +28,13 @@
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKCrashShield+Internal.h"
-#import "FBSDKEventDeactivationManager+AppEventsParameterProcessing.h"
+#import "FBSDKEventDeactivationManager+Protocols.h"
 #import "FBSDKFeatureExtractor.h"
 #import "FBSDKFeatureExtractor+Internal.h"
 #import "FBSDKFeatureExtractor+Testing.h"
 #import "FBSDKFeatureManager+FeatureChecking.h"
 #import "FBSDKPaymentObserver.h"
-#import "FBSDKRestrictiveDataFilterManager+AppEventsParameterProcessing.h"
+#import "FBSDKRestrictiveDataFilterManager+Protocols.h"
 #import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKTestCase.h"
 #import "FBSDKTimeSpentData.h"
@@ -111,6 +111,12 @@
 + (id<FBSDKMetadataIndexing>)metadataIndexer;
 + (id<FBSDKAppEventsParameterProcessing>)eventDeactivationParameterProcessor;
 + (id<FBSDKAppEventsParameterProcessing>)restrictiveDataFilterParameterProcessor;
+@end
+
+@interface FBSDKAppEventsState (Testing)
+
+@property (class, nullable, nonatomic) NSArray<id<FBSDKEventsProcessing>> *eventProcessors;
+
 @end
 
 @interface FBSDKApplicationDelegateTests : XCTestCase
@@ -266,6 +272,21 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
     self.appEvents.capturedConfigureSwizzler,
     FBSDKSwizzler.class,
     "Initializing the SDK should set concrete swizzler for event logging"
+  );
+}
+
+- (void)testInitializingSdkConfiguresEventsProcessorsForAppEventsState
+{
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
+  [FBSDKAppEvents reset];
+
+  [self.delegate initializeSDKWithLaunchOptions:@{}];
+
+  NSArray *expected = @[FBSDKEventDeactivationManager.shared, FBSDKRestrictiveDataFilterManager.shared];
+  XCTAssertEqualObjects(
+    FBSDKAppEventsState.eventProcessors,
+    expected,
+    "Initializing the SDK should configure events processors for FBSDKAppEventsState"
   );
 }
 

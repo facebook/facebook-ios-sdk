@@ -30,6 +30,7 @@
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKAppEvents+SourceApplicationTracking.h"
 #import "FBSDKAppEventsConfigurationManager.h"
+#import "FBSDKAppEventsState.h"
 #import "FBSDKAppEventsStateManager+AppEventsStatePersisting.h"
 #import "FBSDKAppEventsUtility+AdvertiserIDProviding.h"
 #import "FBSDKApplicationLifecycleObserving.h"
@@ -45,7 +46,7 @@
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError.h"
 #import "FBSDKEventDeactivationManager.h"
-#import "FBSDKEventDeactivationManager+AppEventsParameterProcessing.h"
+#import "FBSDKEventDeactivationManager+Protocols.h"
 #import "FBSDKFeatureManager+FeatureChecking.h"
 #import "FBSDKFeatureManager+FeatureDisabling.h"
 #import "FBSDKGateKeeperManager.h"
@@ -57,7 +58,7 @@
 #import "FBSDKPaymentObserver.h"
 #import "FBSDKPaymentObserver+PaymentObserving.h"
 #import "FBSDKProfileProtocols.h"
-#import "FBSDKRestrictiveDataFilterManager+AppEventsParameterProcessing.h"
+#import "FBSDKRestrictiveDataFilterManager+Protocols.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationManager+ServerConfigurationProviding.h"
 #import "FBSDKSettings+Internal.h"
@@ -588,6 +589,7 @@ static UIApplicationState _applicationState;
   FBSDKTimeSpentRecordingFactory *timeSpentRecordingFactory
     = [[FBSDKTimeSpentRecordingFactory alloc] initWithEventLogger:self.appEvents
                                       serverConfigurationProvider:FBSDKServerConfigurationManager.class];
+  [FBSDKAppEventsState configureWithEventProcessors:@[FBSDKEventDeactivationManager.shared, FBSDKRestrictiveDataFilterManager.shared]];
   [self.appEvents configureWithGateKeeperManager:FBSDKGateKeeperManager.class
                   appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
                      serverConfigurationProvider:FBSDKServerConfigurationManager.class
