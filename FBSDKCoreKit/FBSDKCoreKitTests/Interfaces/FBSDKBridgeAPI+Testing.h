@@ -53,6 +53,8 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   FBSDKAuthenticationSessionCanceledBySystem,
 };
 
+@protocol FBSDKDynamicFrameworkResolving;
+
 @interface FBSDKBridgeAPI (Testing)
 
 @property (nonatomic, assign, readonly) id<FBSDKOperatingSystemVersionComparing> processInfo;
@@ -96,6 +98,13 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 
 - (void)safariViewControllerDidFinish:(UIViewController *)safariViewController;
 - (void)viewControllerDidDisappear:(FBSDKContainerViewController *)viewController animated:(BOOL)animated;
+- (void)_openURLWithSafariViewController:(NSURL *)url
+                                  sender:(id<FBSDKURLOpening>)sender
+                      fromViewController:(nullable UIViewController *)fromViewController
+                                 handler:(FBSDKSuccessBlock)handler
+                           dylibResolver:(id<FBSDKDynamicFrameworkResolving>)dylibResolver;
+- (void)openURLWithAuthenticationSession:(NSURL *)url;
+- (void)setSessionCompletionHandlerFromHandler:(void (^)(BOOL, NSError *))handler;
 
 @end
 
