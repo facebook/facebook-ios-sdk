@@ -237,6 +237,63 @@ class FBSDKAEMReporterTests: XCTestCase {
     )
   }
 
+  func testShouldRefreshWithoutBusinessID1() {
+    AEMReporter.invocations = [SampleAEMData.invocationWithoutAdvertiserID]
+    AEMReporter.timestamp = Date()
+    AEMReporter.configs = [
+      Values.defaultMode: [SampleAEMConfigurations.createConfigWithoutBusinessID()]
+    ]
+
+    XCTAssertFalse(
+      AEMReporter._shouldRefresh(),
+      "Should not refresh config if timestamp is not expired and there is no business ID"
+    )
+  }
+
+  func testShouldRefreshWithoutBusinessID2() {
+    AEMReporter.invocations = [SampleAEMData.invocationWithoutAdvertiserID]
+    guard let date = Calendar.current.date(byAdding: .day, value: -2, to: Date())
+    else { return XCTFail("Date Creation Error") }
+    AEMReporter.timestamp = date
+    AEMReporter.configs = [
+      Values.defaultMode: [SampleAEMConfigurations.createConfigWithoutBusinessID()]
+    ]
+
+    XCTAssertTrue(
+      AEMReporter._shouldRefresh(),
+      "Should not refresh config if timestamp is expired"
+    )
+  }
+
+  func testShouldRefreshWithoutBusinessID3() {
+    AEMReporter.invocations = [SampleAEMData.invocationWithoutAdvertiserID]
+    guard let date = Calendar.current.date(byAdding: .day, value: -2, to: Date())
+    else { return XCTFail("Date Creation Error") }
+    AEMReporter.timestamp = date
+    AEMReporter.configs = [:]
+
+    XCTAssertTrue(
+      AEMReporter._shouldRefresh(),
+      "Should not refresh config if configs is empty"
+    )
+  }
+
+  func testShouldRefreshWithBusinessID() {
+    AEMReporter.invocations = [
+      SampleAEMData.invocationWithoutAdvertiserID,
+      SampleAEMData.invocationWithAdvertiserID1
+    ]
+    AEMReporter.timestamp = Date()
+    AEMReporter.configs = [
+      Values.defaultMode: [SampleAEMConfigurations.createConfigWithoutBusinessID()]
+    ]
+
+    XCTAssertTrue(
+      AEMReporter._shouldRefresh(),
+      "Should not refresh config if there exists an invocation with business ID"
+    )
+  }
+
   func testSendAggregationRequest() {
     AEMReporter.invocations = []
     AEMReporter._sendAggregationRequest()
