@@ -254,14 +254,17 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
     FBSDKAppEventsStateManager.shared,
     "Initializing the SDK should set concrete state store for event logging"
   );
+  NSObject *capturedConfigureEventDeactivationParameterProcessor = (NSObject *)self.appEvents.capturedConfigureEventDeactivationParameterProcessor;
   XCTAssertEqualObjects(
-    self.appEvents.capturedConfigureEventDeactivationParameterProcessor,
-    FBSDKEventDeactivationManager.shared,
+    capturedConfigureEventDeactivationParameterProcessor.class,
+    FBSDKEventDeactivationManager.class,
     "Initializing the SDK should set concrete event deactivation parameter processor for event logging"
   );
+  NSObject *capturedConfigureRestrictiveDataFilterParameterProcessor = (NSObject *)self.appEvents.capturedConfigureRestrictiveDataFilterParameterProcessor;
+
   XCTAssertEqualObjects(
-    self.appEvents.capturedConfigureRestrictiveDataFilterParameterProcessor,
-    FBSDKRestrictiveDataFilterManager.shared,
+    capturedConfigureRestrictiveDataFilterParameterProcessor.class,
+    FBSDKRestrictiveDataFilterManager.class,
     "Initializing the SDK should set concrete restrictive data filter parameter processor for event logging"
   );
   XCTAssertTrue(
@@ -282,7 +285,10 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 
   [self.delegate initializeSDKWithLaunchOptions:@{}];
 
-  NSArray *expected = @[FBSDKEventDeactivationManager.shared, FBSDKRestrictiveDataFilterManager.shared];
+  NSArray *expected = @[
+    self.appEvents.capturedConfigureEventDeactivationParameterProcessor,
+    self.appEvents.capturedConfigureRestrictiveDataFilterParameterProcessor
+  ];
   XCTAssertEqualObjects(
     FBSDKAppEventsState.eventProcessors,
     expected,
@@ -419,8 +425,9 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [self.delegate initializeSDKWithLaunchOptions:@{}];
 
+  FBSDKRestrictiveDataFilterManager *restrictiveDataFilterManager = (FBSDKRestrictiveDataFilterManager *) self.appEvents.capturedConfigureRestrictiveDataFilterParameterProcessor;
   XCTAssertEqualObjects(
-    FBSDKRestrictiveDataFilterManager.shared.serverConfigurationProvider,
+    restrictiveDataFilterManager.serverConfigurationProvider,
     FBSDKServerConfigurationManager.class,
     "Should be configured with the expected concrete server configuration provider"
   );

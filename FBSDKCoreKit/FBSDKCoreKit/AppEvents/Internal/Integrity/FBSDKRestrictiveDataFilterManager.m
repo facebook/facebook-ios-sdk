@@ -51,7 +51,6 @@
 
 @end
 
-static Class<FBSDKServerConfigurationProviding> _defaultServerConfigurationProvider;
 static FBSDKRestrictiveDataFilterManager *_instance;
 
 @interface FBSDKRestrictiveDataFilterManager ()
@@ -64,15 +63,6 @@ static FBSDKRestrictiveDataFilterManager *_instance;
 @end
 
 @implementation FBSDKRestrictiveDataFilterManager
-
-+ (instancetype)shared
-{
-  static dispatch_once_t nonce;
-  dispatch_once(&nonce, ^{
-    _instance = [[self alloc] initWithServerConfigurationProvider:_defaultServerConfigurationProvider];
-  });
-  return _instance;
-}
 
 - (instancetype)initWithServerConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
 {
@@ -200,14 +190,6 @@ static FBSDKRestrictiveDataFilterManager *_instance;
       self.params = eventFilterArray;
       self.restrictedEvents = restrictedEventSet;
     }
-  }
-}
-
-+ (void)setDefaultServerConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
-{
-  _defaultServerConfigurationProvider = serverConfigurationProvider;
-  if (_instance != nil) {
-    _instance.serverConfigurationProvider = serverConfigurationProvider;
   }
 }
 

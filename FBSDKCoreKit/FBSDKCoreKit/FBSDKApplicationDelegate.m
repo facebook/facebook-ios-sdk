@@ -45,7 +45,6 @@
 #import "FBSDKCrashShield+Internal.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError.h"
-#import "FBSDKEventDeactivationManager.h"
 #import "FBSDKEventDeactivationManager+Protocols.h"
 #import "FBSDKFeatureManager+FeatureChecking.h"
 #import "FBSDKFeatureManager+FeatureDisabling.h"
@@ -568,7 +567,7 @@ static UIApplicationState _applicationState;
   id<FBSDKDataPersisting> store = NSUserDefaults.standardUserDefaults;
   id<FBSDKGraphRequestConnectionProviding> connectionProvider = [FBSDKGraphRequestConnectionFactory new];
   id<FBSDKSettings> sharedSettings = FBSDKSettings.sharedSettings;
-  [FBSDKRestrictiveDataFilterManager setDefaultServerConfigurationProvider:FBSDKServerConfigurationManager.class];
+
   [FBSDKSettings configureWithStore:store
      appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
              infoDictionaryProvider:NSBundle.mainBundle
@@ -589,7 +588,9 @@ static UIApplicationState _applicationState;
   FBSDKTimeSpentRecordingFactory *timeSpentRecordingFactory
     = [[FBSDKTimeSpentRecordingFactory alloc] initWithEventLogger:self.appEvents
                                       serverConfigurationProvider:FBSDKServerConfigurationManager.class];
-  [FBSDKAppEventsState configureWithEventProcessors:@[FBSDKEventDeactivationManager.shared, FBSDKRestrictiveDataFilterManager.shared]];
+  FBSDKEventDeactivationManager *eventDeactivationManager = [FBSDKEventDeactivationManager new];
+  FBSDKRestrictiveDataFilterManager *restrictiveDataFilterManager = [[FBSDKRestrictiveDataFilterManager alloc] initWithServerConfigurationProvider:FBSDKServerConfigurationManager.class];
+  [FBSDKAppEventsState configureWithEventProcessors:@[eventDeactivationManager, restrictiveDataFilterManager]];
   [self.appEvents configureWithGateKeeperManager:FBSDKGateKeeperManager.class
                   appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
                      serverConfigurationProvider:FBSDKServerConfigurationManager.class
@@ -601,8 +602,8 @@ static UIApplicationState _applicationState;
                                  paymentObserver:FBSDKPaymentObserver.shared
                         timeSpentRecorderFactory:timeSpentRecordingFactory
                              appEventsStateStore:FBSDKAppEventsStateManager.shared
-             eventDeactivationParameterProcessor:FBSDKEventDeactivationManager.shared
-         restrictiveDataFilterParameterProcessor:FBSDKRestrictiveDataFilterManager.shared
+             eventDeactivationParameterProcessor:eventDeactivationManager
+         restrictiveDataFilterParameterProcessor:restrictiveDataFilterManager
                              atePublisherFactory:atePublisherFactory
                                         swizzler:FBSDKSwizzler.class];
   [FBSDKInternalUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle];
