@@ -1368,7 +1368,9 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 #if !TARGET_OS_TV
   // Filter out restrictive data with on-device ML
-  parameters = [g_onDeviceMLModelManager.integrityParametersProcessor processParameters:parameters eventName:eventName];
+  if (g_onDeviceMLModelManager.integrityParametersProcessor) {
+    parameters = [g_onDeviceMLModelManager.integrityParametersProcessor processParameters:parameters eventName:eventName];
+  }
 #endif
   // Filter out restrictive keys
   parameters = [g_restrictiveDataFilterParameterProcessor processParameters:parameters
