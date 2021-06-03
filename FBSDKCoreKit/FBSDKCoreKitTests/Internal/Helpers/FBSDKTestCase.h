@@ -18,18 +18,10 @@
 
 #import <XCTest/XCTest.h>
 
-#import "FBSDKAppEvents.h"
 #import "FBSDKAppEventsConfiguration.h"
-#import "FBSDKAppEventsUtility.h"
-#import "FBSDKApplicationDelegate.h"
-#import "FBSDKGraphRequestConnection.h"
-#import "FBSDKKeychainStore.h"
-#import "FBSDKMeasurementEventListener.h"
-#import "FBSDKProfile+Internal.h"
-#import "FBSDKServerConfiguration.h"
-#import "FBSDKServerConfigurationManager.h"
 
-@class TestTokenCache;
+@class FBSDKAppEventsConfiguration;
+@class FBSDKServerConfiguration;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -53,9 +45,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 */
 @interface FBSDKTestCase : XCTestCase
 
-/// Used for sharing an `FBSDKAuthenticationToken` class mock between tests
-@property (nullable, assign) id authenticationTokenClassMock;
-
 /// Used for sharing a common app identifier between tests. This is not a valid FB App ID
 @property (nullable, assign) NSString *appID;
 
@@ -71,35 +60,11 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing a `FBSDKAppEventsUtility` class  mock between tests
 @property (nullable, nonatomic, assign) id appEventsUtilityClassMock;
 
-/// Used for sharing an `FBSDKApplicationDelegate` class mock between tests
-@property (nullable, assign) id fbApplicationDelegateClassMock;
-
-/// Used for sharing an `FBSDKFeatureManager` class mock between tests
-@property (nullable, assign) id featureManagerClassMock;
-
-/// Used for sharing an `FBSDKGatekeeperManager` class mock between tests
-@property (nullable, assign) id gatekeeperManagerClassMock;
-
-/// Used for sharing an `FBSDKGraphRequest` class mock between tests
-@property (nullable, assign) id graphRequestMock;
-
-/// Used for sharing an `FBSDKProfile` class mock between tests
-@property (nullable, assign) id profileClassMock;
-
 /// Used for sharing an `FBSDKServerConfigurationManager` class mock between tests
 @property (nullable, assign) id serverConfigurationManagerClassMock;
 
 /// Used for sharing an `FBSDKSettings` class mock between tests
 @property (nullable, assign) id settingsClassMock;
-
-/// Used for sharing an `SKAdNetwork` class mock between tests
-@property (nullable, nonatomic, assign) id skAdNetworkClassMock;
-
-/// Used for sharing an `FBSDKMeasurementEventListener` class mock between tests
-@property (nullable, nonatomic, assign) id measurementEventListenerClassMock;
-
-/// Used for sharing a `FBSDKTimeSpentData` class mock between tests
-@property (nullable, nonatomic, assign) id timeSpentDataClassMock;
 
 /// Used for sharing a `FBSDKInternalUtility` class mock between tests
 @property (nullable, nonatomic, assign) id internalUtilityClassMock;
@@ -107,17 +72,11 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing a `FBSDKSKAdNetworkReporter` class mock between tests
 @property (nullable, nonatomic, assign) id adNetworkReporterClassMock;
 
-/// Used for sharing a `FBSDKModelManager` class mock between tests
-@property (nullable, nonatomic, assign) id modelManagerClassMock;
-
 /// Used for sharing a `FBSDKGraphRequestPiggybackManager` class mock between tests
 @property (nullable, nonatomic, assign) id graphRequestPiggybackManagerMock;
 
 /// Used for sharing a `FBSDKGraphRequestConnection` class mock between tests
 @property (nullable, nonatomic, assign) id graphRequestConnectionClassMock;
-
-/// Used for sharing a `FBSDKCrashShield` class mock between tests
-@property (nullable, nonatomic, assign) id crashShieldClassMock;
 
 /// Used for sharing a `UIApplication.sharedApplication` mock between tests
 @property (nullable, nonatomic, assign) id sharedApplicationMock;
@@ -137,18 +96,12 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing a `ASIdentifier` class mock between tests
 @property (nullable, nonatomic, assign) id asIdentifierManagerClassMock;
 
-/// Stubs `FBSDKSettings.isAutoLogAppEventsEnabled` and return the provided value
-- (void)stubIsAutoLogAppEventsEnabled:(BOOL)isEnabled;
-
 /// Stubs `FBSDKServerConfigurationManager.cachedServerConfiguration` and returns the default server configuration.
 /// Use this when you don't care what the actual configuration is and want to avoid a network call.
 - (void)stubFetchingCachedServerConfiguration;
 
 /// Stubs `FBSDKServerConfigurationManager.cachedServerConfiguration` with a specific configuration
 - (void)stubCachedServerConfigurationWithServerConfiguration:(FBSDKServerConfiguration *)serverConfiguration;
-
-/// Stubs `FBSDKProfile.fetchCachedProfile`
-- (void)stubCachedProfileWith:(FBSDKProfile *__nullable)profile;
 
 /// Stubs `FBSDKSettings.getAdvertisingTrackingStatus` with the provided value
 - (void)stubAdvertisingTrackingStatusWith:(FBSDKAdvertisingTrackingStatus)trackingStatus;
