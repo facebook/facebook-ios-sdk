@@ -126,6 +126,7 @@ static NSString *const _mockUserID = @"mockUserID";
 @property (nonnull, nonatomic) TestAtePublisher *atePublisher;
 @property (nonnull, nonatomic) TestTimeSpentRecorderFactory *timeSpentRecorderFactory;
 @property (nonnull, nonatomic) TestTimeSpentRecorder *timeSpentRecorder;
+@property (nonnull, nonatomic) TestAppEventsParameterProcessor *integrityParametersProcessor;
 
 @end
 
@@ -147,8 +148,9 @@ static NSString *const _mockUserID = @"mockUserID";
   _settings = [TestSettings new];
   _settings.stubbedIsAutoLogAppEventsEnabled = YES;
   [FBSDKInternalUtility reset];
+  self.integrityParametersProcessor = [TestAppEventsParameterProcessor new];
   _onDeviceMLModelManager = [TestOnDeviceMLModelManager new];
-  _onDeviceMLModelManager.integrityParametersProcessor = [TestAppEventsParameterProcessor new];
+  _onDeviceMLModelManager.integrityParametersProcessor = self.integrityParametersProcessor;
   _paymentObserver = [TestPaymentObserver new];
   _metadataIndexer = [TestMetadataIndexer new];
 
@@ -969,6 +971,32 @@ static NSString *const _mockUserID = @"mockUserID";
   [FBSDKAppEvents logImplicitEvent:_mockEventName valueToSum:@(_mockPurchaseAmount) parameters:@{} accessToken:nil];
 
   OCMVerifyAll(self.appEventsMock);
+}
+
+#pragma mark ParameterProcessing
+
+- (void)testLoggingEventWithoutIntegrityParametersProcessor
+{
+  _onDeviceMLModelManager.integrityParametersProcessor = nil;
+
+  [FBSDKAppEvents.singleton logEvent:@"event" parameters:@{@"foo" : @"bar"}];
+
+  XCTAssertTrue(
+    [TestLogger.capturedLogEntry containsString:@"foo = bar"],
+    "Should not try to use a nil processor to filter the parameters"
+  );
+}
+
+- (void)testLoggingEventWithIntegrityParametersProcessor
+{
+  NSDictionary *parameters = @{@"foo" : @"bar"};
+  [FBSDKAppEvents.singleton logEvent:@"event" parameters:parameters];
+
+  XCTAssertEqualObjects(
+    self.integrityParametersProcessor.capturedParameters,
+    parameters,
+    "Should use the integrity parameters processor to filter the parameters"
+  );
 }
 
 #pragma mark Test for Server Configuration
