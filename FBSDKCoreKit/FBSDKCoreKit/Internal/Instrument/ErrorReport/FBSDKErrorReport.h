@@ -32,7 +32,7 @@ NS_SWIFT_NAME(ErrorReport)
 
 @property (class, nonatomic, readonly) FBSDKErrorReport *shared;
 
-+ (void)saveError:(NSInteger)errorCode
+- (void)saveError:(NSInteger)errorCode
       errorDomain:(NSErrorDomain)errorDomain
           message:(nullable NSString *)message;
 

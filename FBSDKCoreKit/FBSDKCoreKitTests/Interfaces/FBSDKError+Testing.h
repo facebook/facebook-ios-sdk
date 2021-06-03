@@ -16,23 +16,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class TestErrorReport: ErrorReporting {
-  var wasEnableCalled = false
-  var capturedErrorCode: Int?
-  var capturedErrorDomain: String?
-  var capturedMessage: String?
+#import "FBSDKError.h"
 
-  func enable() {
-    wasEnableCalled = true
-  }
+NS_ASSUME_NONNULL_BEGIN
 
-  func saveError(
-    _ errorCode: Int,
-    errorDomain: String,
-    message: String?
-  ) {
-    capturedErrorCode = errorCode
-    capturedErrorDomain = errorDomain
-    capturedMessage = message
-  }
-}
+@protocol FBSDKErrorReporting;
+
+@interface FBSDKError (Testing)
+
+@property (class, nullable, nonatomic, readonly) id<FBSDKErrorReporting> errorReporter;
+
++ (void)reset;
+
+@end
+
+NS_ASSUME_NONNULL_END

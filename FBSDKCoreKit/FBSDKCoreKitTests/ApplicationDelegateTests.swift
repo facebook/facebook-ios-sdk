@@ -248,6 +248,22 @@ class ApplicationDelegateTests: XCTestCase {
     )
   }
 
+  // MARK: - Configuring Dependencies
+
+  func testInitializingConfiguresError() {
+    SDKError.reset()
+    XCTAssertNil(
+      SDKError.errorReporter,
+      "Should not have an error reporter by default"
+    )
+    delegate.initializeSDK(launchOptions: [:])
+
+    XCTAssertEqual(
+      SDKError.errorReporter as? ErrorReport,
+      ErrorReport.shared
+    )
+  }
+
   // MARK: - DidFinishLaunching
 
   func testDidFinishLaunchingLoadsServerConfiguration() {

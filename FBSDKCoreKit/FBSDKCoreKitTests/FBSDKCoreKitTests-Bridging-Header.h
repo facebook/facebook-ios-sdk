@@ -48,7 +48,7 @@
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKCrashObserver.h"
 #import "FBSDKCrashObserver+Internal.h"
-#import "FBSDKError.h"
+#import "FBSDKError+Testing.h"
 #import "FBSDKEventDeactivationManager.h"
 #import "FBSDKEventBinding+Testing.h"
 #import "FBSDKEventBindingManager+Testing.h"
@@ -404,14 +404,6 @@ NS_SWIFT_NAME(cachedAppLinks);
                             requestBuilder:(id<FBSDKAppLinkResolverRequestBuilding>)builder
                        clientTokenProvider:(id<FBSDKClientTokenProviding>)clientTokenProvider
                        accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider;
-
-@end
-
-@interface FBSDKError (Testing)
-
-@property (class, nonatomic, readonly) BOOL isErrorReportEnabled;
-
-+ (void)reset;
 
 @end
 

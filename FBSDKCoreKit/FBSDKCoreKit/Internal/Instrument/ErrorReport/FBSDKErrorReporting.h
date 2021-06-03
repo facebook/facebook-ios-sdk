@@ -26,10 +26,10 @@ NS_SWIFT_NAME(ErrorReporting)
 @protocol FBSDKErrorReporting
 
 - (void)enable;
+- (void)saveError:(NSInteger)errorCode
+      errorDomain:(NSErrorDomain)errorDomain
+          message:(nullable NSString *)message;
 
-@end
-
-@interface FBSDKErrorReport (ErrorReporting) <FBSDKErrorReporting>
 @end
 
 NS_ASSUME_NONNULL_END

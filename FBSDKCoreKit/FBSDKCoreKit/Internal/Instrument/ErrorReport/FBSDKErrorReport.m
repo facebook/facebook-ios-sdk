@@ -39,6 +39,7 @@
 @property (nonatomic, strong) id<FBSDKSettings> settings;
 @property (nonatomic, strong) Class<FBSDKFileDataExtracting> dataExtractor;
 @property (nonatomic, readonly, strong) NSString *directoryPath;
+@property (nonatomic) BOOL isEnabled;
 
 @end
 
@@ -92,7 +93,7 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
   if (![self.settings isDataProcessingRestricted]) {
     [self uploadErrors];
   }
-  [FBSDKError enableErrorReport];
+  self.isEnabled = YES;
 }
 
 + (void)saveError:(NSInteger)errorCode
@@ -108,12 +109,14 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
       errorDomain:(NSErrorDomain)errorDomain
           message:(nullable NSString *)message
 {
-  NSString *timestamp = [NSString stringWithFormat:@"%.0lf", [[NSDate date] timeIntervalSince1970]];
-  [self _saveErrorInfoToDisk:@{
-     kFBSDKErrorCode : @(errorCode),
-     kFBSDKErrorDomain : errorDomain,
-     kFBSDKErrorTimestamp : timestamp,
-   }];
+  if (self.isEnabled) {
+    NSString *timestamp = [NSString stringWithFormat:@"%.0lf", [[NSDate date] timeIntervalSince1970]];
+    [self _saveErrorInfoToDisk:@{
+       kFBSDKErrorCode : @(errorCode),
+       kFBSDKErrorDomain : errorDomain,
+       kFBSDKErrorTimestamp : timestamp,
+     }];
+  }
 }
 
 #pragma mark - Private Methods
@@ -208,5 +211,16 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
   NSString *timestamp = [NSString stringWithFormat:@"%.0lf", [[NSDate date] timeIntervalSince1970]];
   return [self.directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"error_report_%@.json", timestamp]];
 }
+
+#if DEBUG
+ #if FBSDKTEST
+
+- (void)reset
+{
+  _isEnabled = NO;
+}
+
+ #endif
+#endif
 
 @end

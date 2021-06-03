@@ -20,7 +20,7 @@
 
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKCrashObserver.h"
-#import "FBSDKErrorReporting.h"
+#import "FBSDKErrorReport+ErrorReporting.h"
 #import "FBSDKFeatureChecking.h"
 #import "FBSDKFeatureManager+FeatureChecking.h"
 #import "FBSDKSettings+Internal.h"

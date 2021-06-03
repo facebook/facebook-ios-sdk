@@ -20,19 +20,35 @@
 
 #import "FBSDKConstants.h"
 #import "FBSDKCoreKitBasicsImport.h"
-#import "FBSDKErrorReport.h"
+#import "FBSDKErrorReporting.h"
 #import "FBSDKFeatureManager.h"
 #import "FBSDKSettings.h"
 
+@interface FBSDKError ()
+
+@property (class, nullable, nonatomic) id<FBSDKErrorReporting> errorReporter;
+
+@end
+
 @implementation FBSDKError
 
-static BOOL _isErrorReportEnabled = NO;
+static id<FBSDKErrorReporting> _errorReporter;
 
 #pragma mark - Class Methods
 
-+ (BOOL)isErrorReportEnabled
++ (id<FBSDKErrorReporting>)errorReporter
 {
-  return _isErrorReportEnabled;
+  return _errorReporter;
+}
+
++ (void)setErrorReporter:(id<FBSDKErrorReporting>)errorReporter
+{
+  _errorReporter = errorReporter;
+}
+
++ (void)configureWithErrorReporter:(id<FBSDKErrorReporting>)errorReporter
+{
+  self.errorReporter = errorReporter;
 }
 
 + (NSError *)errorWithCode:(NSInteger)code message:(NSString *)message
@@ -80,9 +96,7 @@ static BOOL _isErrorReportEnabled = NO;
   [FBSDKTypeUtility dictionary:fullUserInfo setObject:message forKey:FBSDKErrorDeveloperMessageKey];
   [FBSDKTypeUtility dictionary:fullUserInfo setObject:underlyingError forKey:NSUnderlyingErrorKey];
   userInfo = fullUserInfo.count ? [fullUserInfo copy] : nil;
-  if (self.isErrorReportEnabled) {
-    [FBSDKErrorReport saveError:code errorDomain:domain message:message];
-  }
+  [self.errorReporter saveError:code errorDomain:domain message:message];
 
   return [[NSError alloc] initWithDomain:domain code:code userInfo:userInfo];
 }
@@ -210,17 +224,12 @@ static BOOL _isErrorReportEnabled = NO;
   }
 }
 
-+ (void)enableErrorReport
-{
-  _isErrorReportEnabled = YES;
-}
-
 #if DEBUG
  #if FBSDKTEST
 
 + (void)reset
 {
-  _isErrorReportEnabled = NO;
+  _errorReporter = nil;
 }
 
  #endif

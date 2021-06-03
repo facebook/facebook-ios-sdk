@@ -31,10 +31,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) id<FBSDKSettings> settings;
 @property (nonatomic, strong) Class<FBSDKFileDataExtracting> dataExtractor;
 @property (nonatomic, readonly, strong) NSString *directoryPath;
+@property (nonatomic, readonly) BOOL isEnabled;
 
 - (void)enable;
 - (NSArray<NSDictionary<NSString *, id> *> *)loadErrorReports;
 - (void)uploadErrors;
+- (void)reset;
 
 @end
 

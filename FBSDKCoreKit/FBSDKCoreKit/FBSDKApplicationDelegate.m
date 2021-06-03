@@ -45,6 +45,7 @@
 #import "FBSDKCrashShield+Internal.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError.h"
+#import "FBSDKErrorReport+ErrorReporting.h"
 #import "FBSDKEventDeactivationManager+Protocols.h"
 #import "FBSDKFeatureManager+FeatureChecking.h"
 #import "FBSDKFeatureManager+FeatureDisabling.h"
@@ -613,6 +614,7 @@ static UIApplicationState _applicationState;
                                      graphRequestFactory:graphRequestProvider
                            graphRequestConnectionFactory:connectionProvider];
   [FBSDKButton setApplicationActivationNotifier:self];
+  [FBSDKError configureWithErrorReporter:FBSDKErrorReport.shared];
 #if !TARGET_OS_TV
   [FBSDKFeatureExtractor configureWithRulesFromKeyProvider:FBSDKModelManager.shared];
   [FBSDKAppLinkUtility configureWithRequestProvider:graphRequestProvider

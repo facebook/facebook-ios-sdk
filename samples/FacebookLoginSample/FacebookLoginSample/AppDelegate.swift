@@ -30,6 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             application,
             didFinishLaunchingWithOptions: launchOptions
         )
+        Settings.appID = "foo"
 
         return true
     }
