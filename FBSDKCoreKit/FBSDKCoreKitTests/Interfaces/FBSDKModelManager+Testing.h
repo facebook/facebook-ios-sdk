@@ -16,32 +16,20 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+#import "FBSDKModelManager.h"
 
-#if !TARGET_OS_TV
-
- #import <Foundation/Foundation.h>
-
- #import "FBSDKEventProcessing.h"
-
- @protocol FBSDKFeatureChecking;
+@protocol FBSDKFeatureChecking;
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(ModelManager)
-@interface FBSDKModelManager : NSObject<FBSDKEventProcessing>
+@interface FBSDKModelManager (Testing)
 
-@property (class, nonnull, readonly) FBSDKModelManager *shared;
+@property (nullable, nonatomic) id<FBSDKFeatureChecking> featureChecker;
 
-- (void)enable;
-- (nullable NSData *)getWeightsForKey:(NSString *)useCase;
-- (nullable NSArray *)getThresholdsForKey:(NSString *)useCase;
-- (BOOL)processIntegrity:(nullable NSString *)param;
-- (NSString *)processSuggestedEvents:(NSString *)textFeature denseData:(nullable float *)denseData;
++ (void)reset;
+
 - (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker;
 
 @end
 
 NS_ASSUME_NONNULL_END
-
-#endif

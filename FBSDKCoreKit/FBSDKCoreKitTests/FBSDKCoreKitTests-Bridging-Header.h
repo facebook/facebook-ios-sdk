@@ -63,7 +63,7 @@
 #import "FBSDKIntegrityManager+Testing.h"
 #import "FBSDKModelManager+IntegrityParametersProcessorProvider.h"
 #import "FBSDKMath.h"
-#import "FBSDKModelManager.h"
+#import "FBSDKModelManager+Testing.h"
 #import "FBSDKModelUtility.h"
 #import "FBSDKModelManager+RulesFromKeyProvider.h"
 #import "FBSDKPasteboard.h"

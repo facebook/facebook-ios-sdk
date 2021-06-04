@@ -264,6 +264,21 @@ class ApplicationDelegateTests: XCTestCase {
     )
   }
 
+  func testInitializingConfiguresModelManager() {
+    ModelManager.reset()
+    XCTAssertNil(
+      ModelManager.shared.featureChecker,
+      "Should not have a feature checker by default"
+    )
+    delegate.initializeSDK(launchOptions: [:])
+
+    XCTAssertEqual(
+      ModelManager.shared.featureChecker as? FeatureManager,
+      FeatureManager.shared,
+      "Should configure with the expected concrete feature checker"
+    )
+  }
+
   // MARK: - DidFinishLaunching
 
   func testDidFinishLaunchingLoadsServerConfiguration() {

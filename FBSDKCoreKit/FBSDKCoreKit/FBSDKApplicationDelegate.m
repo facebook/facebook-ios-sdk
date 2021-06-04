@@ -616,6 +616,7 @@ static UIApplicationState _applicationState;
   [FBSDKButton setApplicationActivationNotifier:self];
   [FBSDKError configureWithErrorReporter:FBSDKErrorReport.shared];
 #if !TARGET_OS_TV
+  [FBSDKModelManager.shared configureWithFeatureChecker:FBSDKFeatureManager.shared];
   [FBSDKFeatureExtractor configureWithRulesFromKeyProvider:FBSDKModelManager.shared];
   [FBSDKAppLinkUtility configureWithRequestProvider:graphRequestProvider
                              infoDictionaryProvider:NSBundle.mainBundle];

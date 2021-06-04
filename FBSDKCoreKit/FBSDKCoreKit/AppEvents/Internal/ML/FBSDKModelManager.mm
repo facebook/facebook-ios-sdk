@@ -26,8 +26,8 @@
  #import "FBSDKAppEvents+Internal.h"
  #import "FBSDKAppEventsParameterProcessing.h"
  #import "FBSDKCoreKitBasicsImport.h"
+ #import "FBSDKFeatureChecking.h"
  #import "FBSDKFeatureExtractor.h"
- #import "FBSDKFeatureManager.h"
  #import "FBSDKGateKeeperManager.h"
  #import "FBSDKGraphRequest.h"
  #import "FBSDKGraphRequestConnection.h"
@@ -57,6 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKModelManager ()
 
 @property (nonatomic) id<FBSDKAppEventsParameterProcessing> integrityParametersProcessor;
+@property (nullable, nonatomic) id<FBSDKFeatureChecking> featureChecker;
 
 @end
 
@@ -76,11 +77,14 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
   return instance;
 }
 
- #pragma mark - Public methods
-+ (void)enable
+ #pragma mark - Dependency Management
+
+- (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
 {
-  [[self shared] enable];
+  _featureChecker = featureChecker;
 }
+
+ #pragma mark - Public methods
 
 - (void)enable
 {
@@ -117,10 +121,10 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
               [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:MODEL_REQUEST_TIMESTAMP_KEY];
             }
           }
-          [self.class checkFeaturesAndExecuteForMTML];
+          [self checkFeaturesAndExecuteForMTML];
         }];
       } else {
-        [self.class checkFeaturesAndExecuteForMTML];
+        [self checkFeaturesAndExecuteForMTML];
       }
     });
   } @catch (NSException *exception) {
@@ -146,7 +150,7 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
   return nil;
 }
 
-+ (nullable NSData *)getWeightsForKey:(NSString *)useCase
+- (nullable NSData *)getWeightsForKey:(NSString *)useCase
 {
   if (!_modelInfo || !_directoryPath) {
     return nil;
@@ -167,7 +171,7 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
   return nil;
 }
 
-+ (nullable NSArray *)getThresholdsForKey:(NSString *)useCase
+- (nullable NSArray *)getThresholdsForKey:(NSString *)useCase
 {
   if (!_modelInfo) {
     return nil;
@@ -195,7 +199,7 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
     if ((int)strlen(bytes) == 0) {
       return false;
     }
-    NSArray *thresholds = [FBSDKModelManager getThresholdsForKey:MTMLTaskIntegrityDetectKey];
+    NSArray *thresholds = [FBSDKModelManager.shared getThresholdsForKey:MTMLTaskIntegrityDetectKey];
     if (thresholds.count != integrityMapping.count) {
       return false;
     }
@@ -227,7 +231,7 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
       return SUGGESTED_EVENT_OTHER;
     }
 
-    NSArray *thresholds = [FBSDKModelManager getThresholdsForKey:MTMLTaskAppEventPredKey];
+    NSArray *thresholds = [FBSDKModelManager.shared getThresholdsForKey:MTMLTaskAppEventPredKey];
     if (thresholds.count != eventMapping.count) {
       return SUGGESTED_EVENT_OTHER;
     }
@@ -276,10 +280,10 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
   }
 }
 
-+ (void)checkFeaturesAndExecuteForMTML
+- (void)checkFeaturesAndExecuteForMTML
 {
   [self getModelAndRules:MTMLKey onSuccess:^() {
-    NSData *data = [FBSDKModelManager getWeightsForKey:MTMLKey];
+    NSData *data = [FBSDKModelManager.shared getWeightsForKey:MTMLKey];
     _MTMLWeights = [FBSDKModelParser parseWeightsData:data];
     if (![FBSDKModelParser validateWeights:_MTMLWeights forKey:MTMLKey]) {
       return;
@@ -294,15 +298,15 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
 
     if ([FBSDKFeatureManager.shared isEnabled:FBSDKFeatureIntelligentIntegrity]) {
       [self getModelAndRules:MTMLTaskIntegrityDetectKey onSuccess:^() {
-        [self.shared setIntegrityParametersProcessor:[[FBSDKIntegrityManager alloc] initWithGateKeeperManager:FBSDKGateKeeperManager.class
-                                                                                           integrityProcessor:self.shared]];
-        [[self.shared integrityParametersProcessor] enable];
+        [self setIntegrityParametersProcessor:[[FBSDKIntegrityManager alloc] initWithGateKeeperManager:FBSDKGateKeeperManager.class
+                                                                                    integrityProcessor:self]];
+        [[self integrityParametersProcessor] enable];
       }];
     }
   }];
 }
 
-+ (void)getModelAndRules:(NSString *)useCaseKey
+- (void)getModelAndRules:(NSString *)useCaseKey
                onSuccess:(FBSDKDownloadCompletionBlock)handler
 {
   dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
@@ -347,7 +351,7 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
     });
 }
 
-+ (void)clearCacheForModel:(NSDictionary<NSString *, id> *)model
+- (void)clearCacheForModel:(NSDictionary<NSString *, id> *)model
                     suffix:(NSString *)suffix
 {
   NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -362,7 +366,7 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
   }
 }
 
-+ (void)download:(NSString *)urlString
+- (void)download:(NSString *)urlString
         filePath:(NSString *)filePath
            queue:(dispatch_queue_t)queue
            group:(dispatch_group_t)group
@@ -408,6 +412,15 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
     FBSDKAppEventNamePurchased,
     FBSDKAppEventNameInitiatedCheckout];
 }
+
+ #if DEBUG && FBSDKTEST
+
++ (void)reset
+{
+  self.shared.featureChecker = nil;
+}
+
+ #endif
 
 @end
 
