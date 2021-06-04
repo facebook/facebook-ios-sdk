@@ -23,11 +23,13 @@
 #endif
 
 #ifdef BUCK
+#import <FBSDKCoreKit/FBSDKGraphRequest.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
 #import <FBSDKCoreKit/FBSDKAppEventParameterName.h>
 #import <FBSDKCoreKit/FBSDKAppEventName.h>
 #import <FBSDKCoreKit/FBSDKAppEventsFlushBehavior.h>
 #else
+#import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequestConnection.h"
 #import "FBSDKAppEventParameterName.h"
 #import "FBSDKAppEventName.h"
@@ -37,7 +39,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class FBSDKAccessToken;
-@class FBSDKGraphRequest;
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 

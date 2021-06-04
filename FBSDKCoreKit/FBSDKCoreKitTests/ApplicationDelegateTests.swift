@@ -266,16 +266,19 @@ class ApplicationDelegateTests: XCTestCase {
 
   func testInitializingConfiguresModelManager() {
     ModelManager.reset()
-    XCTAssertNil(
-      ModelManager.shared.featureChecker,
-      "Should not have a feature checker by default"
-    )
+    XCTAssertNil(ModelManager.shared.featureChecker, "Should not have a feature checker by default")
+    XCTAssertNil(ModelManager.shared.graphRequestFactory, "Should not have a request factory by default")
+
     delegate.initializeSDK(launchOptions: [:])
 
     XCTAssertEqual(
       ModelManager.shared.featureChecker as? FeatureManager,
       FeatureManager.shared,
       "Should configure with the expected concrete feature checker"
+    )
+    XCTAssertTrue(
+      ModelManager.shared.graphRequestFactory is GraphRequestFactory,
+      "Should configure with a request factory of the expected type"
     )
   }
 
@@ -397,4 +400,4 @@ class ApplicationDelegateTests: XCTestCase {
       "Should inform observers when the application will resign active status"
     )
   }
-}
+} // swiftlint:disable:this file_length

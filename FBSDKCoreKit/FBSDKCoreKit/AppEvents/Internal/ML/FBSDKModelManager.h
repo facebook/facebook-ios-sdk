@@ -25,6 +25,7 @@
  #import "FBSDKEventProcessing.h"
 
  @protocol FBSDKFeatureChecking;
+ @protocol FBSDKGraphRequestProviding;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -38,7 +39,8 @@ NS_SWIFT_NAME(ModelManager)
 - (nullable NSArray *)getThresholdsForKey:(NSString *)useCase;
 - (BOOL)processIntegrity:(nullable NSString *)param;
 - (NSString *)processSuggestedEvents:(NSString *)textFeature denseData:(nullable float *)denseData;
-- (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker;
+- (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
+                graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory;
 
 @end
 

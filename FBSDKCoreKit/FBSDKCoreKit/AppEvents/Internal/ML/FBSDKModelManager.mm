@@ -29,8 +29,7 @@
  #import "FBSDKFeatureChecking.h"
  #import "FBSDKFeatureExtractor.h"
  #import "FBSDKGateKeeperManager.h"
- #import "FBSDKGraphRequest.h"
- #import "FBSDKGraphRequestConnection.h"
+ #import "FBSDKGraphRequestProviding.h"
  #import "FBSDKIntegrityManager+AppEventsParametersProcessing.h"
  #import "FBSDKMLMacros.h"
  #import "FBSDKModelParser.h"
@@ -58,6 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) id<FBSDKAppEventsParameterProcessing> integrityParametersProcessor;
 @property (nullable, nonatomic) id<FBSDKFeatureChecking> featureChecker;
+@property (nullable, nonatomic) id<FBSDKGraphRequestProviding> graphRequestFactory;
 
 @end
 
@@ -80,8 +80,10 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
  #pragma mark - Dependency Management
 
 - (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
+                graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory
 {
   _featureChecker = featureChecker;
+  _graphRequestFactory = graphRequestFactory;
 }
 
  #pragma mark - Public methods
@@ -418,6 +420,7 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
 + (void)reset
 {
   self.shared.featureChecker = nil;
+  self.shared.graphRequestFactory = nil;
 }
 
  #endif

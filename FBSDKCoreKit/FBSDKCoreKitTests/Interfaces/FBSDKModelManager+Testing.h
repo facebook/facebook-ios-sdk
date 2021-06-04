@@ -25,10 +25,12 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKModelManager (Testing)
 
 @property (nullable, nonatomic) id<FBSDKFeatureChecking> featureChecker;
+@property (nullable, nonatomic) id<FBSDKGraphRequestProviding> graphRequestFactory;
 
 + (void)reset;
 
-- (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker;
+- (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
+                graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory;
 
 @end
 
