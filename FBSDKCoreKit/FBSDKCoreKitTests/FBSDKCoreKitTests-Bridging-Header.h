@@ -22,6 +22,7 @@
 #import "AEM+Testing.h"
 #import "ApplicationDelegate+Testing.h"
 #import "AppEventsAtePublisher+Testing.h"
+#import "BackgroundEventLogger+Testing.h"
 #import "Button+Testing.h"
 #import "CodelessIndexer+Testing.h"
 #import "FBSDKAccessToken+Internal.h"

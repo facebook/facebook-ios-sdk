@@ -30,6 +30,10 @@ class ApplicationDelegateTests: XCTestCase {
   var store = UserDefaultsSpy()
   let observer = TestApplicationDelegateObserver()
   let settings = TestSettings()
+  let backgroundEventLogger = TestBackgroundEventLogger(
+    infoDictionaryProvider: TestBundle(),
+    eventLogger: TestAppEvents()
+  )
   let bitmaskKey = "com.facebook.sdk.kits.bitmask"
   lazy var profile = Profile(
     userID: name,
@@ -60,7 +64,8 @@ class ApplicationDelegateTests: XCTestCase {
       serverConfigurationProvider: TestServerConfigurationProvider.self,
       store: store,
       authenticationTokenWallet: TestAuthenticationTokenWallet.self,
-      profileProvider: TestProfileProvider.self
+      profileProvider: TestProfileProvider.self,
+      backgroundEventLogger: backgroundEventLogger
     )
   }
 
@@ -155,6 +160,11 @@ class ApplicationDelegateTests: XCTestCase {
       delegate.settings as? TestSettings,
       settings,
       "Should be able to create with custom settings"
+    )
+    XCTAssertEqual(
+      delegate.backgroundEventLogger as? TestBackgroundEventLogger,
+      backgroundEventLogger,
+      "Should be able to create with custom background event logger"
     )
   }
 

@@ -126,6 +126,7 @@
 @property (nonatomic) TestAppEvents *appEvents;
 @property (nonatomic) UserDefaultsSpy *store;
 @property (nonatomic) TestSettings *settings;
+@property (nonatomic) TestBackgroundEventLogger *backgroundEventLogger;
 
 @end
 
@@ -142,6 +143,8 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   self.appEvents = [TestAppEvents new];
   self.settings = [TestSettings new];
   self.featureChecker = [TestFeatureManager new];
+  self.backgroundEventLogger = [[TestBackgroundEventLogger alloc] initWithInfoDictionaryProvider:[TestBundle new]
+                                                                                     eventLogger:self.appEvents];
   self.delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationObserver:[TestNotificationCenter new]
                                                                      tokenWallet:TestAccessTokenWallet.class
                                                                         settings:self.settings
@@ -150,7 +153,8 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
                                                      serverConfigurationProvider:TestServerConfigurationProvider.class
                                                                            store:self.store
                                                        authenticationTokenWallet:TestAuthenticationTokenWallet.class
-                                                                 profileProvider:TestProfileProvider.class];
+                                                                 profileProvider:TestProfileProvider.class
+                                                           backgroundEventLogger:self.backgroundEventLogger];
   self.delegate.isAppLaunched = NO;
 
   [self.delegate resetApplicationObserverCache];
@@ -641,6 +645,17 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
     self.settings.recordInstallCallCount,
     1,
     "Should have settings record installations upon initialization"
+  );
+}
+
+- (void)testInitializingSdkPerformsBackgroundEventLogging
+{
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
+  [self.delegate initializeSDKWithLaunchOptions:@{}];
+  XCTAssertEqual(
+    self.backgroundEventLogger.logBackgroundRefresStatusCallCount,
+    1,
+    "Should have background event logger log background refresh status upon initialization"
   );
 }
 

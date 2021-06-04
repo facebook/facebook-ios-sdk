@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FBSDKAccessTokenProviding;
 @protocol FBSDKAuthenticationTokenProviding;
 @protocol FBSDKAuthenticationTokenSetting;
+@protocol FBSDKBackgroundEventLogging;
 @protocol FBSDKEventLogging;
 @protocol FBSDKFeatureChecking;
 @protocol FBSDKNotificationObserving;
@@ -46,6 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonnull, nonatomic, readonly) id<FBSDKDataPersisting> store;
 @property (nonnull, nonatomic, readonly) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationTokenWallet;
 @property (nonnull, nonatomic, readonly) Class<FBSDKProfileProviding> profileProvider;
+@property (nonnull, nonatomic, readonly) id<FBSDKBackgroundEventLogging> backgroundEventLogger;
 @property (nonnull, nonatomic, readonly) id<FBSDKSettingsLogging> settings;
 @property (nonnull, nonatomic) NSHashTable<id<FBSDKApplicationObserving>> *applicationObservers;
 
@@ -60,7 +62,8 @@ NS_SWIFT_NAME(reset());
                  serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                        store:(id<FBSDKDataPersisting>)store
                    authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
-                             profileProvider:(Class<FBSDKProfileProviding>)profileProvider;
+                             profileProvider:(Class<FBSDKProfileProviding>)profileProvider
+                       backgroundEventLogger:(id<FBSDKBackgroundEventLogging>)backgroundEventLogger;
 - (void)initializeSDKWithLaunchOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
 - (void)applicationDidEnterBackground:(NSNotification *)notification;
 - (void)applicationDidBecomeActive:(NSNotification *)notification;

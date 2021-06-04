@@ -75,6 +75,8 @@
 #if !TARGET_OS_TV
  #import "FBSDKAEMReporter+Internal.h"
  #import "FBSDKAppLinkUtility+Internal.h"
+ #import "FBSDKBackgroundEventLogger.h"
+ #import "FBSDKBackgroundEventLogging.h"
  #import "FBSDKCodelessIndexer+Internal.h"
  #import "FBSDKContainerViewController.h"
  #import "FBSDKFeatureExtractor.h"
@@ -111,6 +113,7 @@ static UIApplicationState _applicationState;
 
 #if !TARGET_OS_TV
 @property (nonnull, nonatomic, readonly) Class<FBSDKProfileProviding> profileProvider;
+@property (nonnull, nonatomic, readonly) id<FBSDKBackgroundEventLogging> backgroundEventLogger;
 #endif
 
 @property (nonatomic) BOOL isAppLaunched;
@@ -150,6 +153,8 @@ static UIApplicationState _applicationState;
                                       store:NSUserDefaults.standardUserDefaults
                   authenticationTokenWallet:FBSDKAuthenticationToken.class];
 #else
+  FBSDKBackgroundEventLogger *backgroundEventLogger = [[FBSDKBackgroundEventLogger alloc] initWithInfoDictionaryProvider:NSBundle.mainBundle
+                                                                                                             eventLogger:FBSDKAppEvents.singleton];
   return [self initWithNotificationObserver:NSNotificationCenter.defaultCenter
                                 tokenWallet:FBSDKAccessToken.class
                                    settings:FBSDKSettings.sharedSettings
@@ -158,7 +163,8 @@ static UIApplicationState _applicationState;
                 serverConfigurationProvider:FBSDKServerConfigurationManager.class
                                       store:NSUserDefaults.standardUserDefaults
                   authenticationTokenWallet:FBSDKAuthenticationToken.class
-                            profileProvider:FBSDKProfile.class];
+                            profileProvider:FBSDKProfile.class
+                      backgroundEventLogger:backgroundEventLogger];
 #endif
 }
 
@@ -196,6 +202,7 @@ static UIApplicationState _applicationState;
                                        store:(id<FBSDKDataPersisting>)store
                    authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
                              profileProvider:(Class<FBSDKProfileProviding>)profileProvider
+                       backgroundEventLogger:(id<FBSDKBackgroundEventLogging>)backgroundEventLogger
 {
   if ((self = [super init]) != nil) {
     _applicationObservers = [NSHashTable new];
@@ -208,6 +215,7 @@ static UIApplicationState _applicationState;
     _store = store;
     _authenticationTokenWallet = authenticationTokenWallet;
     _profileProvider = profileProvider;
+    _backgroundEventLogger = backgroundEventLogger;
   }
   return self;
 }
@@ -254,6 +262,7 @@ static UIApplicationState _applicationState;
   }];
 
 #if !TARGET_OS_TV
+  [self.backgroundEventLogger logBackgroundRefresStatus:[UIApplication.sharedApplication backgroundRefreshStatus]];
   // Register Listener for App Link measurement events
   [FBSDKMeasurementEventListener defaultListener];
   [self _logIfAutoAppLinkEnabled];
