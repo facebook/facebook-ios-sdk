@@ -25,6 +25,7 @@ class FBSDKModelManagerTests: XCTestCase {
   let factory = TestGraphRequestFactory()
   let modelDirectoryPath = "\(NSTemporaryDirectory())models"
   lazy var fileManager = TestFileManager(tempDirectoryURL: SampleUrls.valid)
+  let store = UserDefaultsSpy()
 
   override class func setUp() {
     super.setUp()
@@ -39,7 +40,8 @@ class FBSDKModelManagerTests: XCTestCase {
     manager.configure(
       withFeatureChecker: featureChecker,
       graphRequestFactory: factory,
-      fileManager: fileManager
+      fileManager: fileManager,
+      store: store
     )
   }
 
@@ -80,4 +82,18 @@ class FBSDKModelManagerTests: XCTestCase {
     )
   }
 
+  func testEnablingRetrievesCache() throws {
+    manager.enable()
+
+    let keys = try XCTUnwrap(store.capturedObjectRetrievalKeys)
+
+    XCTAssertTrue(
+      keys.contains("com.facebook.sdk:FBSDKModelInfo"),
+      "Enabling should retrieved cached model information"
+    )
+    XCTAssertTrue(
+      keys.contains("com.facebook.sdk:FBSDKModelRequestTimestamp"),
+      "Enabling should retrieved the timestamp of the last request"
+    )
+  }
 }

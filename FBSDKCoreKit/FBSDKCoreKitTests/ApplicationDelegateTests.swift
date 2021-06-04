@@ -269,6 +269,7 @@ class ApplicationDelegateTests: XCTestCase {
     XCTAssertNil(ModelManager.shared.featureChecker, "Should not have a feature checker by default")
     XCTAssertNil(ModelManager.shared.graphRequestFactory, "Should not have a request factory by default")
     XCTAssertNil(ModelManager.shared.fileManager, "Should not have a file manager by default")
+    XCTAssertNil(ModelManager.shared.store, "Should not have a data store by default")
 
     delegate.initializeSDK(launchOptions: [:])
 
@@ -285,6 +286,11 @@ class ApplicationDelegateTests: XCTestCase {
       ModelManager.shared.fileManager as? FileManager,
       FileManager.default,
       "Should configure with the expected concrete file manager"
+    )
+    XCTAssertEqual(
+      ModelManager.shared.store as? UserDefaults,
+      UserDefaults.standard,
+      "Should configure with the expected concrete data store"
     )
   }
 

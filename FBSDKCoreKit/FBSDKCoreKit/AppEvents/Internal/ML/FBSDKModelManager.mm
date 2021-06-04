@@ -26,6 +26,7 @@
  #import "FBSDKAppEvents+Internal.h"
  #import "FBSDKAppEventsParameterProcessing.h"
  #import "FBSDKCoreKitBasicsImport.h"
+ #import "FBSDKDataPersisting.h"
  #import "FBSDKFeatureChecking.h"
  #import "FBSDKFeatureExtractor.h"
  #import "FBSDKGateKeeperManager.h"
@@ -59,6 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic) id<FBSDKFeatureChecking> featureChecker;
 @property (nullable, nonatomic) id<FBSDKGraphRequestProviding> graphRequestFactory;
 @property (nullable, nonatomic) id<FBSDKFileManaging> fileManager;
+@property (nullable, nonatomic) id<FBSDKDataPersisting> store;
 
 @end
 
@@ -83,10 +85,12 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
 - (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
                 graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory
                         fileManager:(id<FBSDKFileManaging>)fileManager
+                              store:(id<FBSDKDataPersisting>)store
 {
   _featureChecker = featureChecker;
   _graphRequestFactory = graphRequestFactory;
   _fileManager = fileManager;
+  _store = store;
 }
 
  #pragma mark - Public methods
@@ -107,8 +111,8 @@ static dispatch_once_t enableNonce;
       if (![self.fileManager fileExistsAtPath:_directoryPath]) {
         [self.fileManager createDirectoryAtPath:_directoryPath withIntermediateDirectories:YES attributes:NULL error:NULL];
       }
-      _modelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
-      NSDate *timestamp = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_REQUEST_TIMESTAMP_KEY];
+      _modelInfo = [self.store objectForKey:MODEL_INFO_KEY];
+      NSDate *timestamp = [self.store objectForKey:MODEL_REQUEST_TIMESTAMP_KEY];
       if ([_modelInfo count] == 0 || ![FBSDKFeatureManager.shared isEnabled:FBSDKFeatureModelRequest] || ![self.class isValidTimestamp:timestamp]) {
         // fetch api
         FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
@@ -430,6 +434,7 @@ static dispatch_once_t enableNonce;
   self.shared.featureChecker = nil;
   self.shared.graphRequestFactory = nil;
   self.shared.fileManager = nil;
+  self.shared.store = nil;
 }
 
  #endif

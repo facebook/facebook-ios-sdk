@@ -618,7 +618,8 @@ static UIApplicationState _applicationState;
 #if !TARGET_OS_TV
   [FBSDKModelManager.shared configureWithFeatureChecker:FBSDKFeatureManager.shared
                                     graphRequestFactory:graphRequestProvider
-                                            fileManager:NSFileManager.defaultManager];
+                                            fileManager:NSFileManager.defaultManager
+                                                  store:store];
   [FBSDKFeatureExtractor configureWithRulesFromKeyProvider:FBSDKModelManager.shared];
   [FBSDKAppLinkUtility configureWithRequestProvider:graphRequestProvider
                              infoDictionaryProvider:NSBundle.mainBundle];
