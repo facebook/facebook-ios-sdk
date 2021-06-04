@@ -120,8 +120,6 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 - (void)testParamsDictionary
 {
   [self stubAppEventsUtilityAdvertiserIDWith:NSUUID.UUID.UUIDString];
-  [self stubIsAdvertiserTrackingEnabledWith:YES];
-  [self stubAppEventsUtilityAdvertiserIDWith:NSUUID.UUID.UUIDString];
   NSDictionary *dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
                                                          shouldAccessAdvertisingID:YES];
   XCTAssertEqualObjects(@"event", dict[@"event"]);
@@ -227,8 +225,6 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 
 - (void)testGetAdvertiserIDOniOS14WithCollectionDisabled
 {
-  [self stubIsAdvertiserTrackingEnabledWith:YES];
-
   FBSDKAppEventsConfiguration *configuration = [SampleAppEventsConfigurations createWithDefaultATEStatus:FBSDKAdvertisingTrackingUnspecified
                                                                            advertiserIDCollectionEnabled:NO
                                                                                   eventCollectionEnabled:YES];

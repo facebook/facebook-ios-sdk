@@ -289,11 +289,6 @@
   OCMStub(ClassMethod([self.utilityClassMock startGCDTimerWithInterval:5 block:OCMArg.any]));
 }
 
-- (void)stubIsAdvertiserTrackingEnabledWith:(BOOL)isAdvertiserTrackingEnabled
-{
-  OCMStub([self.settingsClassMock isAdvertiserTrackingEnabled]).andReturn(isAdvertiserTrackingEnabled);
-}
-
 - (void)stubCachedAppEventsConfigurationWithConfiguration:(FBSDKAppEventsConfiguration *)configuration
 {
   OCMStub(ClassMethod([self.appEventsConfigurationManagerClassMock cachedAppEventsConfiguration])).andReturn(configuration);

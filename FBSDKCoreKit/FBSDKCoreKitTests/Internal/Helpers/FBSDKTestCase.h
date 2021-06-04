@@ -145,9 +145,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Stubs `FBSDKAppEventsConfigurationManager.cachedAppEventsConfiguration` and returns the provided configuration
 - (void)stubCachedAppEventsConfigurationWithConfiguration:(FBSDKAppEventsConfiguration *)configuration;
 
-/// Stubs `FBSDKSettings.isAdvertiserTrackingEnabled` and returns the provided value
-- (void)stubIsAdvertiserTrackingEnabledWith:(BOOL)isAdvertiserTrackingEnabled;
-
 /// Stubs `ASIdentifierManager.sharedManager` and returns the provided identifier manager
 - (void)stubSharedAsIdentifierManagerWithAsIdentifierManager:(id)identifierManager;
 
