@@ -35,6 +35,7 @@ static NSDate *_lastRefreshTry = nil;
 static Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> _tokenWallet = nil;
 static id<FBSDKSettings> _settings;
 static Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading> _serverConfiguration;
+static id<FBSDKGraphRequestProviding> _requestProvider;
 
 + (Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
 {
@@ -51,14 +52,21 @@ static Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>
   return _serverConfiguration;
 }
 
++ (id<FBSDKGraphRequestProviding>)requestProvider
+{
+  return _requestProvider;
+}
+
 + (void)configureWithTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
                         settings:(id<FBSDKSettings>)settings
              serverConfiguration:(Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>)serverConfiguration
+                 requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
 {
   if (self == [FBSDKGraphRequestPiggybackManager class]) {
     _tokenWallet = tokenWallet;
     _settings = settings;
     _serverConfiguration = serverConfiguration;
+    _requestProvider = requestProvider;
   }
 }
 
@@ -130,11 +138,11 @@ static Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>
       }
     }
   };
-  FBSDKGraphRequest *extendRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"oauth/access_token"
-                                                                       parameters:@{@"grant_type" : @"fb_extend_sso_token",
-                                                                                    @"fields" : @"",
-                                                                                    @"client_id" : expectedToken.appID}
-                                                                            flags:FBSDKGraphRequestFlagDisableErrorRecovery];
+  id<FBSDKGraphRequest> extendRequest = [self.requestProvider createGraphRequestWithGraphPath:@"oauth/access_token"
+                                                                                   parameters:@{@"grant_type" : @"fb_extend_sso_token",
+                                                                                                @"fields" : @"",
+                                                                                                @"client_id" : expectedToken.appID}
+                                                                                        flags:FBSDKGraphRequestFlagDisableErrorRecovery];
 
   [connection addRequest:extendRequest completion:^(id<FBSDKGraphRequestConnecting> innerConnection, id result, NSError *error) {
     tokenString = [FBSDKTypeUtility dictionary:result objectForKey:@"access_token" ofType:NSString.class];
@@ -143,9 +151,9 @@ static Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>
     graphDomain = [FBSDKTypeUtility dictionary:result objectForKey:@"graph_domain" ofType:NSString.class];
     expectingCallbackComplete();
   }];
-  FBSDKGraphRequest *permissionsRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/permissions"
-                                                                            parameters:@{@"fields" : @""}
-                                                                                 flags:FBSDKGraphRequestFlagDisableErrorRecovery];
+  id<FBSDKGraphRequest> permissionsRequest = [self.requestProvider createGraphRequestWithGraphPath:@"me/permissions"
+                                                                                        parameters:@{@"fields" : @""}
+                                                                                             flags:FBSDKGraphRequestFlagDisableErrorRecovery];
 
   [connection addRequest:permissionsRequest completion:^(id<FBSDKGraphRequestConnecting> innerConnection, id result, NSError *error) {
     if (!error) {
@@ -197,8 +205,8 @@ static Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>
 
 + (BOOL)_safeForPiggyback:(id<FBSDKGraphRequest>)request
 {
-  BOOL hasAttachments = [request hasAttachments];
   BOOL isVersionSafe = [request.version isEqualToString:[self.settings graphAPIVersion]];
+  BOOL hasAttachments = [(id<FBSDKGraphRequest>)request hasAttachments];
   return isVersionSafe && !hasAttachments;
 }
 

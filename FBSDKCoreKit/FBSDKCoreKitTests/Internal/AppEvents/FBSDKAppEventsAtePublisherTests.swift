@@ -59,7 +59,7 @@ class AppEventsAtePublisherTests: XCTestCase {
     settings.advertisingTrackingStatus = .allowed
 
     publisher.publishATE()
-    let request = try XCTUnwrap(factory.stubbedRequest as? TestGraphRequest)
+    let request = try XCTUnwrap(factory.capturedRequests.first)
     XCTAssertEqual(
       request.startCallCount,
       1,
@@ -85,9 +85,7 @@ class AppEventsAtePublisherTests: XCTestCase {
 
     publisher.publishATE()
 
-    let request = try XCTUnwrap(factory.stubbedRequest as? TestGraphRequest)
-
-    XCTAssertEqual(request.startCallCount, 0)
+    XCTAssertEqual(factory.capturedRequests.count, 0)
     XCTAssertEqual(
       store.capturedObjectRetrievalKey,
       key,
@@ -108,7 +106,7 @@ class AppEventsAtePublisherTests: XCTestCase {
 
     publisher.publishATE()
 
-    let request = try XCTUnwrap(factory.stubbedRequest as? TestGraphRequest)
+    let request = try XCTUnwrap(factory.capturedRequests.first)
 
     XCTAssertEqual(request.startCallCount, 1)
     XCTAssertEqual(

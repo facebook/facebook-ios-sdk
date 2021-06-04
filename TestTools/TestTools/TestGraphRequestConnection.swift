@@ -21,6 +21,8 @@ import FBSDKCoreKit
 @objcMembers
 public class TestGraphRequestConnection: NSObject, GraphRequestConnecting {
 
+  public typealias Completion = @convention(block) (GraphRequestConnecting, AnyObject?, Error?) -> Void
+
   public struct Request {
     public let request: GraphRequestProtocol
     public let completion: GraphRequestCompletion
@@ -31,6 +33,7 @@ public class TestGraphRequestConnection: NSObject, GraphRequestConnecting {
   public var capturedRequest: GraphRequestProtocol?
   public var capturedRequests = [GraphRequestProtocol]()
   public var capturedCompletion: GraphRequestCompletion?
+  public var capturedCompletions = [Completion]()
   public var startCallCount = 0
   public var cancelCallCount = 0
 
@@ -47,6 +50,8 @@ public class TestGraphRequestConnection: NSObject, GraphRequestConnecting {
     capturedRequest = request
     capturedRequests.append(request)
     capturedCompletion = handler
+    capturedCompletions.append(handler)
+
   }
 
   public func start() {

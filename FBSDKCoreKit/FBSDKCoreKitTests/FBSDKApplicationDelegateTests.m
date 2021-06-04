@@ -585,6 +585,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   NSObject *tokenWallet = (NSObject *) FBSDKGraphRequestPiggybackManager.tokenWallet;
   NSObject *settings = (NSObject *) FBSDKGraphRequestPiggybackManager.settings;
   NSObject *serverConfiguration = (NSObject *) FBSDKGraphRequestPiggybackManager.serverConfiguration;
+  NSObject *requestProvider = (NSObject *) FBSDKGraphRequestPiggybackManager.requestProvider;
 
   XCTAssertEqualObjects(
     tokenWallet,
@@ -601,6 +602,13 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
     serverConfiguration,
     FBSDKServerConfigurationManager.class,
     "Should be configured with the expected concrete server configuration"
+  );
+
+  XCTAssertEqualObjects(
+    requestProvider.class,
+    FBSDKGraphRequestFactory.class,
+
+    "Should be configured with the expected concrete graph request provider"
   );
 }
 

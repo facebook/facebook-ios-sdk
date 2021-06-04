@@ -333,6 +333,7 @@ NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvi
 @property (class, nonatomic, nullable) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> tokenWallet;
 + (id<FBSDKSettings>)settings;
 + (Class<FBSDKServerConfigurationProviding>)serverConfiguration;
++ (id<FBSDKGraphRequestProviding>)requestProvider;
 
 @end
 

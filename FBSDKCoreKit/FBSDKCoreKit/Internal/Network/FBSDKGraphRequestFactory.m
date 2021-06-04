@@ -68,4 +68,13 @@
                                            HTTPMethod:method];
 }
 
+- (nonnull id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(nonnull NSString *)graphPath
+                                                      parameters:(nonnull NSDictionary *)parameters
+                                                           flags:(FBSDKGraphRequestFlags)flags
+{
+  return [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
+                                           parameters:parameters
+                                                flags:flags];
+}
+
 @end

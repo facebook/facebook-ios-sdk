@@ -614,7 +614,8 @@ static UIApplicationState _applicationState;
                            graphRequestConnectionFactory:connectionProvider];
   [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:FBSDKAccessToken.class
                                                      settings:sharedSettings
-                                          serverConfiguration:[FBSDKServerConfigurationManager class]];
+                                          serverConfiguration:[FBSDKServerConfigurationManager class]
+                                              requestProvider:graphRequestProvider];
   [FBSDKButton setApplicationActivationNotifier:self];
   [FBSDKError configureWithErrorReporter:FBSDKErrorReport.shared];
 #if !TARGET_OS_TV

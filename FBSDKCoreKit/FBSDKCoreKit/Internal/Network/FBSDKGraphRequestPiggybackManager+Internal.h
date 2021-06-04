@@ -23,11 +23,13 @@
 @protocol FBSDKAccessTokenProviding;
 @protocol FBSDKAccessTokenSetting;
 @protocol FBSDKServerConfigurationProviding;
+@protocol FBSDKGraphRequestProviding;
 
 @interface FBSDKGraphRequestPiggybackManager (Internal)
 
 + (void)configureWithTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
                         settings:(id<FBSDKSettings>)settings
-             serverConfiguration:(Class<FBSDKServerConfigurationProviding>)serverConfiguration;
+             serverConfiguration:(Class<FBSDKServerConfigurationProviding>)serverConfiguration
+                 requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider;
 
 @end

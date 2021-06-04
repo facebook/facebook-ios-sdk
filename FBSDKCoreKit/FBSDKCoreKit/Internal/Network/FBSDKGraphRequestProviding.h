@@ -55,6 +55,10 @@ NS_SWIFT_NAME(GraphRequestProviding)
                            version:(nullable NSString *)version
                            HTTPMethod:(FBSDKHTTPMethod)method;
 
+- (id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
+                                              parameters:(NSDictionary*)parameters
+                                                   flags:(FBSDKGraphRequestFlags)flags;
+
 @end
 
 NS_ASSUME_NONNULL_END

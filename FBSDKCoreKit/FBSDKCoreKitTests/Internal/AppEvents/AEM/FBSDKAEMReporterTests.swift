@@ -46,7 +46,6 @@ class FBSDKAEMReporterTests: XCTestCase {
     static let USD = "USD"
   }
 
-  let request = TestGraphRequest()
   let requestProvider = TestGraphRequestFactory()
   let date = Calendar.current.date(
     byAdding: .day,
@@ -67,7 +66,6 @@ class FBSDKAEMReporterTests: XCTestCase {
     super.setUp()
 
     removeReportFile()
-    requestProvider.stubbedRequest = request
     AEMReporter.configure(withRequestProvider: requestProvider)
     // Actual queue doesn't matter as long as it's not the same as the designated queue name in the class
     AEMReporter.queue = DispatchQueue(label: name, qos: .background)
@@ -313,14 +311,13 @@ class FBSDKAEMReporterTests: XCTestCase {
   }
 
   func testCompletingAggregationRequestWithError() {
-    let request = TestGraphRequest()
-    requestProvider.stubbedRequest = request
+
     guard let invocation = AEMReporter.parseURL(urlWithInvocation) else { return XCTFail("Parsing Error") }
     invocation.isAggregated = false
     AEMReporter.invocations = [invocation]
     AEMReporter._sendAggregationRequest()
 
-    request.capturedCompletionHandler?(nil, nil, SampleError())
+    requestProvider.capturedRequests.first?.capturedCompletionHandler?(nil, nil, SampleError())
     XCTAssertFalse(
       invocation.isAggregated,
       "Completing with an error should not mark the invocation as aggregated"
@@ -332,14 +329,13 @@ class FBSDKAEMReporterTests: XCTestCase {
   }
 
   func testCompletingAggregationRequestWithoutError() {
-    let request = TestGraphRequest()
-    requestProvider.stubbedRequest = request
+
     guard let invocation = AEMReporter.parseURL(urlWithInvocation) else { return XCTFail("Parsing Error") }
     invocation.isAggregated = false
     AEMReporter.invocations = [invocation]
     AEMReporter._sendAggregationRequest()
 
-    request.capturedCompletionHandler?(nil, nil, nil)
+    requestProvider.capturedRequests.first?.capturedCompletionHandler?(nil, nil, nil)
     XCTAssertTrue(
       invocation.isAggregated,
       "Completing with no error should mark the invocation as aggregated"
@@ -380,7 +376,7 @@ class FBSDKAEMReporterTests: XCTestCase {
       "Should save uploaded events to disk"
     )
     XCTAssertEqual(
-      request.startCallCount,
+      requestProvider.capturedRequests.first?.startCallCount,
       1,
       "Should start the graph request to update the conversions"
     )

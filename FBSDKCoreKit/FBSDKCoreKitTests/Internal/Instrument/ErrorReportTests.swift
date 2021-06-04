@@ -25,7 +25,6 @@ class ErrorReportTests: XCTestCase { // swiftlint:disable:this type_body_length
   let code = 2
   let domain = "test"
   let timeInterval = 10.0
-  let request = TestGraphRequest()
   let factory = TestGraphRequestFactory()
   let fileManager = TestFileManager(tempDirectoryURL: SampleUrls.valid)
   let settings = TestSettings()
@@ -43,7 +42,6 @@ class ErrorReportTests: XCTestCase { // swiftlint:disable:this type_body_length
     SDKError.reset()
     TestFileDataExtractor.reset()
 
-    factory.stubbedRequest = request
     report = ErrorReport(
       graphRequestProvider: factory,
       fileManager: fileManager,
@@ -249,7 +247,7 @@ class ErrorReportTests: XCTestCase { // swiftlint:disable:this type_body_length
   func testCompletingUploadWithoutResultWithoutError() {
     seedErrorReportData()
     report.uploadErrors()
-    request.capturedCompletionHandler?(nil, nil, nil)
+    factory.capturedRequests.first?.capturedCompletionHandler?(nil, nil, nil)
 
     XCTAssertFalse(
       fileManager.removeItemAtPathWasCalled,
@@ -260,7 +258,7 @@ class ErrorReportTests: XCTestCase { // swiftlint:disable:this type_body_length
   func testCompletingUploadWithoutResultWithError() {
     seedErrorReportData()
     report.uploadErrors()
-    request.capturedCompletionHandler?(nil, nil, SampleError())
+    factory.capturedRequests.first?.capturedCompletionHandler?(nil, nil, SampleError())
 
     XCTAssertFalse(
       fileManager.removeItemAtPathWasCalled,
@@ -271,7 +269,7 @@ class ErrorReportTests: XCTestCase { // swiftlint:disable:this type_body_length
   func testCompletingUploadWithIncorrectResultTypeWithoutError() {
     seedErrorReportData()
     report.uploadErrors()
-    request.capturedCompletionHandler?(nil, ["foo"], nil)
+    factory.capturedRequests.first?.capturedCompletionHandler?(nil, ["foo"], nil)
 
     XCTAssertFalse(
       fileManager.removeItemAtPathWasCalled,
@@ -282,7 +280,7 @@ class ErrorReportTests: XCTestCase { // swiftlint:disable:this type_body_length
   func testCompletingUploadWithCorrectResultTypeValidKeyWithoutError() {
     seedErrorReportData()
     report.uploadErrors()
-    request.capturedCompletionHandler?(nil, ["success": "foo"], nil)
+    factory.capturedRequests.first?.capturedCompletionHandler?(nil, ["success": "foo"], nil)
 
     XCTAssertTrue(
       fileManager.removeItemAtPathWasCalled,

@@ -109,18 +109,15 @@ class FBSDKBridgeAPIProtocolWebV1Tests: XCTestCase {
     )
   }
 
-  func testCreatingURLWithAllFields() {
-    guard let url = try? bridge.requestURL(
+  func testCreatingURLWithAllFields() throws {
+    let url = try bridge.requestURL(
       withActionID: Values.actionID,
       scheme: Values.scheme,
       methodName: Values.methodName,
       methodVersion: Values.methodVersion,
       parameters: QueryParameters.valid
     )
-    else {
-      return XCTFail("Should create a valid url when an action ID is provided")
-    }
-
+    let expectedGraphVersion = try XCTUnwrap(Settings.shared.graphAPIVersion)
     XCTAssertEqual(
       url.host,
       "m.facebook.com",
@@ -128,7 +125,7 @@ class FBSDKBridgeAPIProtocolWebV1Tests: XCTestCase {
     )
     XCTAssertEqual(
       url.path,
-      "/\(Settings.shared.graphAPIVersion!)/dialog/open", // swiftlint:disable:this force_unwrapping
+      "/\(expectedGraphVersion)/dialog/open",
       "Should create a url with the expected path"
     )
     guard let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems

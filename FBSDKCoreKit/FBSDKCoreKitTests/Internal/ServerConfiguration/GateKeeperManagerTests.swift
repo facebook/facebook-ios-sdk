@@ -259,7 +259,6 @@ class GateKeeperManagerTests: XCTestCase {
   // MARK: - Request Creation
 
   func testCreatingRequest() {
-    requestFactory.stubbedRequest = GraphRequest(graphPath: "me")
     let appIdentifier = "foo"
     let version = "bar"
     TestSettings.appID = appIdentifier

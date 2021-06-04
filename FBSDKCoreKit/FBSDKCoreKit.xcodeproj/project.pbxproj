@@ -173,6 +173,12 @@
 		58533A21265758F80003412C /* FBSDKFeatureExtractor+Testing.h in Headers */ = {isa = PBXBuildFile; fileRef = 58533A15265758EF0003412C /* FBSDKFeatureExtractor+Testing.h */; };
 		58533A22265758F90003412C /* FBSDKFeatureExtractor+Testing.h in Headers */ = {isa = PBXBuildFile; fileRef = 58533A15265758EF0003412C /* FBSDKFeatureExtractor+Testing.h */; };
 		58533A23265758F90003412C /* FBSDKFeatureExtractor+Testing.h in Headers */ = {isa = PBXBuildFile; fileRef = 58533A15265758EF0003412C /* FBSDKFeatureExtractor+Testing.h */; };
+		52D4F0BC1D91A18D0030B7FC /* FBSDKDeviceRequestsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 520223F61D83C8D200CE0AB5 /* FBSDKDeviceRequestsHelper.m */; };
+		52D4F0D11D91A18F0030B7FC /* FBSDKDeviceRequestsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 520223F61D83C8D200CE0AB5 /* FBSDKDeviceRequestsHelper.m */; };
+		52D4F0D21D91A18F0030B7FC /* FBSDKDeviceRequestsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 520223F61D83C8D200CE0AB5 /* FBSDKDeviceRequestsHelper.m */; };
+		52D4F0D31D91A1940030B7FC /* FBSDKDeviceRequestsHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 520223F51D83C8D200CE0AB5 /* FBSDKDeviceRequestsHelper.h */; };
+		52D4F0D41D91A1950030B7FC /* FBSDKDeviceRequestsHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 520223F51D83C8D200CE0AB5 /* FBSDKDeviceRequestsHelper.h */; };
+		52D4F0D51D91A1950030B7FC /* FBSDKDeviceRequestsHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 520223F51D83C8D200CE0AB5 /* FBSDKDeviceRequestsHelper.h */; };
 		5832A6FB2649B6950026B710 /* FBSDKServerConfigurationLoading.h in Headers */ = {isa = PBXBuildFile; fileRef = 5832A6E62649B4910026B710 /* FBSDKServerConfigurationLoading.h */; };
 		5832A7092649B6960026B710 /* FBSDKServerConfigurationLoading.h in Headers */ = {isa = PBXBuildFile; fileRef = 5832A6E62649B4910026B710 /* FBSDKServerConfigurationLoading.h */; };
 		5832A70A2649B6970026B710 /* FBSDKServerConfigurationLoading.h in Headers */ = {isa = PBXBuildFile; fileRef = 5832A6E62649B4910026B710 /* FBSDKServerConfigurationLoading.h */; };

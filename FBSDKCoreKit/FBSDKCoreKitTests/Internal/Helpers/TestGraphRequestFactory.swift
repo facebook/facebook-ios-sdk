@@ -22,12 +22,12 @@ import TestTools
 @objcMembers
 class TestGraphRequestFactory: NSObject, GraphRequestProviding {
 
-  var stubbedRequest: GraphRequestProtocol = TestGraphRequest(graphPath: "me", HTTPMethod: .get)
   var capturedGraphPath: String?
   var capturedParameters = [AnyHashable: Any]()
   var capturedTokenString: String?
   var capturedHttpMethod: HTTPMethod?
   var capturedFlags: GraphRequestFlags = []
+  var capturedRequests = [TestGraphRequest]()
 
   // MARK: - GraphRequestProviding
 
@@ -43,7 +43,16 @@ class TestGraphRequestFactory: NSObject, GraphRequestProviding {
     capturedTokenString = tokenString
     capturedHttpMethod = method
     capturedFlags = flags
-    return stubbedRequest
+
+    let request = TestGraphRequest(
+      graphPath: graphPath,
+      parameters: parameters as? [String: Any] ?? [:],
+      tokenString: tokenString,
+      HTTPMethod: method ?? .get,
+      flags: flags
+    )
+    capturedRequests.append(request)
+    return request
   }
 
   func createGraphRequest(
@@ -54,7 +63,14 @@ class TestGraphRequestFactory: NSObject, GraphRequestProviding {
     capturedGraphPath = graphPath
     capturedParameters = parameters
     capturedHttpMethod = method
-    return stubbedRequest
+
+    let request = TestGraphRequest(
+      graphPath: graphPath,
+      parameters: parameters,
+      HTTPMethod: method
+    )
+    capturedRequests.append(request)
+    return request
   }
 
   func createGraphRequest(
@@ -68,14 +84,26 @@ class TestGraphRequestFactory: NSObject, GraphRequestProviding {
     capturedParameters = parameters
     capturedTokenString = tokenString
     capturedHttpMethod = method
-    return stubbedRequest
+
+    let request = TestGraphRequest(
+      graphPath: graphPath,
+      parameters: parameters,
+      tokenString: tokenString,
+      HTTPMethod: method,
+      flags: []
+    )
+    capturedRequests.append(request)
+    return request
   }
 
   func createGraphRequest(
     withGraphPath graphPath: String
   ) -> GraphRequestProtocol {
     capturedGraphPath = graphPath
-    return stubbedRequest
+
+    let request = TestGraphRequest(graphPath: graphPath, HTTPMethod: .get)
+    capturedRequests.append(request)
+    return request
   }
 
   func createGraphRequest(
@@ -84,6 +112,33 @@ class TestGraphRequestFactory: NSObject, GraphRequestProviding {
   ) -> GraphRequestProtocol {
     capturedGraphPath = graphPath
     capturedParameters = parameters
-    return stubbedRequest
+
+    let request = TestGraphRequest(
+      graphPath: graphPath,
+      parameters: parameters,
+      HTTPMethod: .get
+    )
+    capturedRequests.append(request)
+    return request
+  }
+
+  func createGraphRequest(
+    withGraphPath graphPath: String,
+    parameters: [AnyHashable: Any],
+    flags: GraphRequestFlags
+  ) -> GraphRequestProtocol {
+    capturedGraphPath = graphPath
+    capturedParameters = parameters
+    capturedFlags = flags
+
+    let request = TestGraphRequest(
+      graphPath: graphPath,
+      parameters: parameters as? [String: Any] ?? [:],
+      tokenString: nil,
+      HTTPMethod: .get,
+      flags: flags
+    )
+    capturedRequests.append(request)
+    return request
   }
 }

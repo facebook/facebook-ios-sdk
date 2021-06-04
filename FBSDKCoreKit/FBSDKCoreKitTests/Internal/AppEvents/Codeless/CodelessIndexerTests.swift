@@ -21,7 +21,6 @@ import XCTest
 
 class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_length
 
-  let request = TestGraphRequest()
   let requestFactory = TestGraphRequestFactory()
   let store = UserDefaultsSpy()
   let connection: TestGraphRequestConnection = TestGraphRequestConnection()
@@ -57,7 +56,6 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
 
     CodelessIndexerTests.reset()
 
-    requestFactory.stubbedRequest = request
     settings.appID = name
     codelessSettingStorageKey = "com.facebook.sdk:codelessSetting\(name)"
 
@@ -511,7 +509,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     let sessionID = CodelessIndexer.currentSessionDeviceID
     CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.valid)
 
-    guard let completion = request.capturedCompletionHandler else {
+    guard let completion = requestFactory.capturedRequests.first?.capturedCompletionHandler else {
       return XCTFail("Should start a request with a completion handler")
     }
     completion(nil, nil, nil)
@@ -527,7 +525,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     let sessionID = CodelessIndexer.currentSessionDeviceID
     CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.valid)
 
-    guard let completion = request.capturedCompletionHandler else {
+    guard let completion = requestFactory.capturedRequests.first?.capturedCompletionHandler else {
       return XCTFail("Should start a request with a completion handler")
     }
     completion(nil, nil, SampleError())
@@ -543,7 +541,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     let sessionID = CodelessIndexer.currentSessionDeviceID
     CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.valid)
 
-    guard let completion = request.capturedCompletionHandler else {
+    guard let completion = requestFactory.capturedRequests.first?.capturedCompletionHandler else {
       return XCTFail("Should start a request with a completion handler")
     }
     completion(nil, [Keys.codelessEnabled: true], nil)
@@ -559,7 +557,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     let sessionID = CodelessIndexer.currentSessionDeviceID
     CodelessIndexer.uploadIndexing(SampleViewHierarchyTrees.valid)
 
-    guard let completion = request.capturedCompletionHandler else {
+    guard let completion = requestFactory.capturedRequests.first?.capturedCompletionHandler else {
       return XCTFail("Should start a request with a completion handler")
     }
     completion(nil, [Keys.codelessEnabled: false], nil)
@@ -578,11 +576,11 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
 
   func testCheckingIndexingSessionWhileIndexing() {
     CodelessIndexer.checkCodelessIndexingSession()
-    request.capturedCompletionHandler = nil
+    requestFactory.capturedRequests.first?.capturedCompletionHandler = nil
     CodelessIndexer.checkCodelessIndexingSession()
 
     XCTAssertNil(
-      request.capturedCompletionHandler,
+      requestFactory.capturedRequests.first?.capturedCompletionHandler,
       "Should not create a second request to cehck the indexing status if the first is incomplete"
     )
   }
@@ -619,7 +617,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
   func testCompleteCheckingIndexingSessionWithNoInput() {
     CodelessIndexer.checkCodelessIndexingSession()
 
-    request.capturedCompletionHandler?(nil, nil, nil)
+    requestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, nil, nil)
 
     XCTAssertFalse(
       CodelessIndexer.isCheckingSession,
@@ -634,7 +632,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
   func testCompleteCheckingIndexingSessionWithErrorOnly() {
     CodelessIndexer.checkCodelessIndexingSession()
 
-    request.capturedCompletionHandler?(nil, nil, SampleError())
+    requestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, nil, SampleError())
 
     XCTAssertFalse(CodelessIndexer.isCheckingSession)
     XCTAssertNil(
@@ -647,7 +645,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     CodelessIndexer.checkCodelessIndexingSession()
 
     (1 ... 20).forEach { _ in
-      request.capturedCompletionHandler?(nil, Fuzzer.random, nil)
+      requestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, Fuzzer.random, nil)
 
       XCTAssertNil(
         CodelessIndexer.appIndexingTimer,
@@ -659,7 +657,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
   func testCompletingCheckingIndexingWithCodelessEnabledResult() {
     CodelessIndexer.checkCodelessIndexingSession()
 
-    request.capturedCompletionHandler?(nil, [Keys.codelessEnabled: true], nil)
+    requestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, [Keys.codelessEnabled: true], nil)
 
     XCTAssertFalse(CodelessIndexer.isCheckingSession)
     XCTAssertNotNil(
@@ -674,7 +672,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
     let sessionIdentifier = CodelessIndexer.currentSessionDeviceID
     CodelessIndexer.checkCodelessIndexingSession()
 
-    request.capturedCompletionHandler?(nil, [Keys.codelessEnabled: false], nil)
+    requestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, [Keys.codelessEnabled: false], nil)
 
     XCTAssertFalse(CodelessIndexer.isCheckingSession)
     XCTAssertNil(
