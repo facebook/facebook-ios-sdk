@@ -169,7 +169,7 @@
     @"is_any",
     @"is_not_any"
   ];
-  NSInteger index = [operatorKeys indexOfObject:key];
+  NSInteger index = [operatorKeys indexOfObject:key.lowercaseString];
   return index == NSNotFound ? Unknown : index;
 }
 

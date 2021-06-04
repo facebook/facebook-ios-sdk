@@ -173,8 +173,8 @@ class FBSDKAEMAdvertiserRuleFactoryTests: XCTestCase { // swiftlint:disable:this
       "Should get the expected Unknown operator of the dictionary")
     XCTAssertEqual(
       factory.getOperator(["And": "abc"]),
-      .Unknown,
-      "Should get the expected Unknown operator of the dictionary")
+      AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorAnd,
+      "Should get the expected AND operator of the dictionary")
     XCTAssertEqual(
       factory.getOperator(["and": "abc"]),
       AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorAnd,

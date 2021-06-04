@@ -82,6 +82,29 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase {
     )
   }
 
+  func testIsMatchedWithEventParametersForAsteriskOperator() {
+    let rule = AEMAdvertiserSingleEntryRule(
+      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorContains,
+      paramKey: "fb_content[*].id",
+      linguisticCondition: "coffee",
+      numericalCondition: nil,
+      arrayCondition: nil
+    )
+
+    XCTAssertTrue(
+      rule.isMatchedEventParameters(["fb_content": [["id": "shop"], ["id": "coffeeshop"]]]),
+      "Should expect the event parameter matched with the rule"
+    )
+    XCTAssertFalse(
+      rule.isMatchedEventParameters(["fb_content": ["id": "coffeeshop"]]),
+      "Should not expect the event parameter matched with the rule without expected item"
+    )
+    XCTAssertFalse(
+      rule.isMatchedEventParameters(["fb_content": [["id": "shop"]]]),
+      "Should not expect the event parameter matched with the rule without expected id"
+    )
+  }
+
   func testIsMatchedWithEventParametersAndAsterisk() {
     let rule = AEMAdvertiserSingleEntryRule(
       with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorContains,
