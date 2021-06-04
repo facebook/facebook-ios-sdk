@@ -100,6 +100,7 @@
 // ErrorConfiguration Abstractions
 #import "FBSDKErrorConfigurationProviding.h"
 #import "FBSDKErrorConfigurationProvider.h"
+#import "FBSDKServerConfigurationLoading.h"
 // GraphRequestPiggybackManager Abstractions
 #import "FBSDKGraphRequestPiggybackManaging.h"
 #import "FBSDKGraphRequestPiggybackManagerProviding.h"
@@ -330,6 +331,7 @@ NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvi
 @interface FBSDKGraphRequestPiggybackManager (Testing)
 
 @property (class, nonatomic, nullable) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> tokenWallet;
++ (Class<FBSDKServerConfigurationProviding>)serverConfiguration;
 
 @end
 

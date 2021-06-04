@@ -583,10 +583,18 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [self.delegate initializeSDKWithLaunchOptions:@{}];
   NSObject *tokenWallet = (NSObject *) FBSDKGraphRequestPiggybackManager.tokenWallet;
+  NSObject *serverConfiguration = (NSObject *) FBSDKGraphRequestPiggybackManager.serverConfiguration;
+
   XCTAssertEqualObjects(
     tokenWallet,
     FBSDKAccessToken.class,
     "Should be configured with the expected concrete access token provider"
+  );
+
+  XCTAssertEqualObjects(
+    serverConfiguration,
+    FBSDKServerConfigurationManager.class,
+    "Should be configured with the expected concrete server configuration"
   );
 }
 

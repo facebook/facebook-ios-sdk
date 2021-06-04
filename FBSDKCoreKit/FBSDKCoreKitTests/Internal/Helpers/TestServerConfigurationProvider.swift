@@ -16,12 +16,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import TestTools
+
 @objcMembers
-class TestServerConfigurationProvider: NSObject, ServerConfigurationProviding {
+class TestServerConfigurationProvider: NSObject, ServerConfigurationProviding, ServerConfigurationLoading {
 
   static var capturedCompletionBlock: ServerConfigurationBlock?
   static var loadServerConfigurationWasCalled = false
   static var stubbedServerConfiguration: ServerConfiguration?
+  static var stubbedRequestToLoadServerConfiguration: GraphRequest?
+  static var requestToLoadConfigurationCallWasCalled = false
 
   static func cachedServerConfiguration() -> ServerConfiguration? {
     stubbedServerConfiguration
@@ -33,7 +37,17 @@ class TestServerConfigurationProvider: NSObject, ServerConfigurationProviding {
   }
 
   static func reset() {
+    requestToLoadConfigurationCallWasCalled = false
     loadServerConfigurationWasCalled = false
     capturedCompletionBlock = nil
+  }
+
+  static func processLoadRequestResponse(_ result: Any, error: Error?, appID: String) {
+    return
+  }
+
+  static func request(toLoadServerConfiguration appID: String) -> GraphRequest? {
+    requestToLoadConfigurationCallWasCalled = true
+    return stubbedRequestToLoadServerConfiguration
   }
 }

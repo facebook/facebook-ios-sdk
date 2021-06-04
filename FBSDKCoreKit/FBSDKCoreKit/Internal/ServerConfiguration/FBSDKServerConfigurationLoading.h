@@ -18,15 +18,17 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKGraphRequestPiggybackManager.h"
+@class FBSDKGraphRequest;
 
-@protocol FBSDKAccessTokenProviding;
-@protocol FBSDKAccessTokenSetting;
-@protocol FBSDKServerConfigurationProviding;
+NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKGraphRequestPiggybackManager (Internal)
+NS_SWIFT_NAME(ServerConfigurationLoading)
+@protocol FBSDKServerConfigurationLoading
 
-+ (void)configureWithTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
-             serverConfiguration:(Class<FBSDKServerConfigurationProviding>)serverConfiguration;
++ (void)processLoadRequestResponse:(id)result error:(nullable NSError *)error appID:(NSString *)appID;
+
++ (nullable FBSDKGraphRequest *)requestToLoadServerConfiguration:(NSString *)appID;
 
 @end
+
+NS_ASSUME_NONNULL_END

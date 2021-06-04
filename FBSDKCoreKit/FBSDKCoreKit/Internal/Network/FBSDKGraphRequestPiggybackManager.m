@@ -18,8 +18,11 @@
 
 #import "FBSDKGraphRequestPiggybackManager.h"
 
+#import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKGraphRequestConnecting+Internal.h"
+#import "FBSDKServerConfigurationLoading.h"
+#import "FBSDKServerConfigurationProviding.h"
 
 static int const FBSDKTokenRefreshThresholdSeconds = 24 * 60 * 60; // day
 static int const FBSDKTokenRefreshRetrySeconds = 60 * 60; // hour
@@ -28,16 +31,24 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60; // hour
 
 static NSDate *_lastRefreshTry = nil;
 static Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> _tokenWallet = nil;
+static Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading> _serverConfiguration;
 
 + (Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
 {
   return _tokenWallet;
 }
 
++ (Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>)serverConfiguration
+{
+  return _serverConfiguration;
+}
+
 + (void)configureWithTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
+             serverConfiguration:(Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>)serverConfiguration
 {
   if (self == [FBSDKGraphRequestPiggybackManager class]) {
     _tokenWallet = tokenWallet;
+    _serverConfiguration = serverConfiguration;
   }
 }
 
@@ -161,16 +172,16 @@ static Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> _tokenWallet = 
 
 + (void)addServerConfigurationPiggyback:(id<FBSDKGraphRequestConnecting>)connection
 {
-  if (![FBSDKServerConfigurationManager cachedServerConfiguration].isDefaults
-      && [[NSDate date] timeIntervalSinceDate:[FBSDKServerConfigurationManager cachedServerConfiguration].timestamp]
+  if (![self.serverConfiguration cachedServerConfiguration].isDefaults
+      && [[NSDate date] timeIntervalSinceDate:[self.serverConfiguration cachedServerConfiguration].timestamp]
       < FBSDK_SERVER_CONFIGURATION_MANAGER_CACHE_TIMEOUT) {
     return;
   }
   NSString *appID = [FBSDKSettings appID];
-  FBSDKGraphRequest *serverConfigurationRequest = [FBSDKServerConfigurationManager requestToLoadServerConfiguration:appID];
+  id<FBSDKGraphRequest> serverConfigurationRequest = [self.serverConfiguration requestToLoadServerConfiguration:appID];
   [connection addRequest:serverConfigurationRequest
               completion:^(id<FBSDKGraphRequestConnecting> conn, id result, NSError *error) {
-                [FBSDKServerConfigurationManager processLoadRequestResponse:result error:error appID:appID];
+                [self.serverConfiguration processLoadRequestResponse:result error:error appID:appID];
               }];
 }
 
@@ -215,6 +226,7 @@ static Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> _tokenWallet = 
 + (void)reset
 {
   _tokenWallet = nil;
+  _lastRefreshTry = nil;
 }
 
  #endif
