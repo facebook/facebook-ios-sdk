@@ -613,6 +613,7 @@ static UIApplicationState _applicationState;
                                      graphRequestFactory:graphRequestProvider
                            graphRequestConnectionFactory:connectionProvider];
   [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:FBSDKAccessToken.class
+                                                     settings:sharedSettings
                                           serverConfiguration:[FBSDKServerConfigurationManager class]];
   [FBSDKButton setApplicationActivationNotifier:self];
   [FBSDKError configureWithErrorReporter:FBSDKErrorReport.shared];

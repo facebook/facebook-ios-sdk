@@ -27,6 +27,7 @@
 @interface FBSDKGraphRequestPiggybackManager (Internal)
 
 + (void)configureWithTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
+                        settings:(id<FBSDKSettings>)settings
              serverConfiguration:(Class<FBSDKServerConfigurationProviding>)serverConfiguration;
 
 @end

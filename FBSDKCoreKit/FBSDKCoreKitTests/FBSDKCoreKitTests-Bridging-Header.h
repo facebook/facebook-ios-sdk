@@ -331,6 +331,7 @@ NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvi
 @interface FBSDKGraphRequestPiggybackManager (Testing)
 
 @property (class, nonatomic, nullable) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> tokenWallet;
++ (id<FBSDKSettings>)settings;
 + (Class<FBSDKServerConfigurationProviding>)serverConfiguration;
 
 @end

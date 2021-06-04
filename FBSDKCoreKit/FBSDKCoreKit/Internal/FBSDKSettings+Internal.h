@@ -38,6 +38,8 @@
 
 @property (class, nullable, nonatomic, readonly, copy) NSString *graphAPIDebugParamValue;
 
+@property (nonatomic, copy, null_resettable) NSString *graphAPIVersion;
+
 // used by Unity.
 @property (class, nullable, nonatomic, copy) NSString *userAgentSuffix;
 

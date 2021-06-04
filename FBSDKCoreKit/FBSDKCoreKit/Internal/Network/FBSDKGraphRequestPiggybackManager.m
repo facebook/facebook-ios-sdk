@@ -23,6 +23,8 @@
 #import "FBSDKGraphRequestConnecting+Internal.h"
 #import "FBSDKServerConfigurationLoading.h"
 #import "FBSDKServerConfigurationProviding.h"
+#import "FBSDKSettings+SettingsLogging.h"
+#import "FBSDKSettings+SettingsProtocols.h"
 
 static int const FBSDKTokenRefreshThresholdSeconds = 24 * 60 * 60; // day
 static int const FBSDKTokenRefreshRetrySeconds = 60 * 60; // hour
@@ -31,11 +33,17 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60; // hour
 
 static NSDate *_lastRefreshTry = nil;
 static Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> _tokenWallet = nil;
+static id<FBSDKSettings> _settings;
 static Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading> _serverConfiguration;
 
 + (Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
 {
   return _tokenWallet;
+}
+
++ (id<FBSDKSettings>)settings
+{
+  return _settings;
 }
 
 + (Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>)serverConfiguration
@@ -44,17 +52,19 @@ static Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>
 }
 
 + (void)configureWithTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
+                        settings:(id<FBSDKSettings>)settings
              serverConfiguration:(Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>)serverConfiguration
 {
   if (self == [FBSDKGraphRequestPiggybackManager class]) {
     _tokenWallet = tokenWallet;
+    _settings = settings;
     _serverConfiguration = serverConfiguration;
   }
 }
 
 + (void)addPiggybackRequests:(id<FBSDKGraphRequestConnecting>)connection
 {
-  if ([FBSDKSettings appID].length > 0) {
+  if ([self.settings appID].length > 0) {
     BOOL safeForPiggyback = YES;
     id<_FBSDKGraphRequestConnecting> internalConnection = FBSDK_CAST_TO_PROTOCOL_OR_NIL(connection, _FBSDKGraphRequestConnecting);
 
@@ -177,7 +187,7 @@ static Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>
       < FBSDK_SERVER_CONFIGURATION_MANAGER_CACHE_TIMEOUT) {
     return;
   }
-  NSString *appID = [FBSDKSettings appID];
+  NSString *appID = [self.settings appID];
   id<FBSDKGraphRequest> serverConfigurationRequest = [self.serverConfiguration requestToLoadServerConfiguration:appID];
   [connection addRequest:serverConfigurationRequest
               completion:^(id<FBSDKGraphRequestConnecting> conn, id result, NSError *error) {
@@ -187,8 +197,8 @@ static Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>
 
 + (BOOL)_safeForPiggyback:(id<FBSDKGraphRequest>)request
 {
-  BOOL isVersionSafe = [request.version isEqualToString:[FBSDKSettings graphAPIVersion]];
   BOOL hasAttachments = [request hasAttachments];
+  BOOL isVersionSafe = [request.version isEqualToString:[self.settings graphAPIVersion]];
   return isVersionSafe && !hasAttachments;
 }
 

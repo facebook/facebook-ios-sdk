@@ -128,7 +128,7 @@ class FBSDKBridgeAPIProtocolWebV1Tests: XCTestCase {
     )
     XCTAssertEqual(
       url.path,
-      "/\(Settings.graphAPIVersion!)/dialog/open", // swiftlint:disable:this force_unwrapping
+      "/\(Settings.shared.graphAPIVersion!)/dialog/open", // swiftlint:disable:this force_unwrapping
       "Should create a url with the expected path"
     )
     guard let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems

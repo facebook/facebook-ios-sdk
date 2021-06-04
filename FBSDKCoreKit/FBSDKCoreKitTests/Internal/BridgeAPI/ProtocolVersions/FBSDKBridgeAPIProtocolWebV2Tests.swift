@@ -305,7 +305,7 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
             appVersions: []
           ),
           let requestURL = try? bridge._requestURL(for: configuration),
-          let version = Settings.graphAPIVersion
+          let version = Settings.shared.graphAPIVersion
     else {
       return XCTFail("Should be able to create a configuration with a url")
     }

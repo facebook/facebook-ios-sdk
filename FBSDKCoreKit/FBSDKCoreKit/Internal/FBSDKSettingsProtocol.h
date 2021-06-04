@@ -38,5 +38,6 @@ NS_SWIFT_NAME(SettingsProtocol)
 @property (nonatomic, readonly, nullable) NSDate* advertiserTrackingEnabledTimestamp;
 @property (nonatomic, readonly) BOOL shouldLimitEventAndDataUsage;
 @property (nonatomic) BOOL shouldUseTokenOptimizations;
+@property (nonatomic, readonly) NSString * _Nonnull graphAPIVersion;
 
 @end
