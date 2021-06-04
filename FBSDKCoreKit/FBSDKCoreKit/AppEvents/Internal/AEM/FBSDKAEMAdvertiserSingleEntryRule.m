@@ -75,6 +75,9 @@ static NSString *const ASTERISK_DELIMETER = @"[*]";
     return NO;
   }
   NSString *param = [FBSDKTypeUtility stringValueOrNil:paramPath.firstObject];
+  if ([param hasSuffix:ASTERISK_DELIMETER]) {
+    return [self isMatchedWithAsteriskParam:param eventParameters:eventParams paramPath:paramPath];
+  }
   // if data does not contain the key, we should return false directly.
   if (!param || ![[eventParams allKeys] containsObject:param]) {
     return NO;
@@ -106,9 +109,6 @@ static NSString *const ASTERISK_DELIMETER = @"[*]";
       default: break;
     }
     return [self isMatchedWithStringValue:stringValue numericalValue:numericalValue];
-  }
-  if ([param hasSuffix:ASTERISK_DELIMETER]) {
-    return [self isMatchedWithAsteriskParam:param eventParameters:eventParams paramPath:paramPath];
   }
   NSDictionary<NSString *, id> *subParams = [FBSDKTypeUtility dictionary:eventParams objectForKey:param ofType:NSDictionary.class];
   NSRange range = NSMakeRange(1, paramPath.count - 1);
