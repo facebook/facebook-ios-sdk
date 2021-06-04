@@ -396,7 +396,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [FBSDKAppEvents setLoggingOverrideAppID:nil];
   [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setAppID:@"123"];
+  [FBSDKSettings setAppID:SampleAccessTokens.validToken.appID];
   [FBSDKSettings setClientToken:nil];
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertNil(
@@ -409,12 +409,12 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [FBSDKAppEvents setLoggingOverrideAppID:nil];
   [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setAppID:@"123"];
+  [FBSDKSettings setAppID:@"abc"];
   [FBSDKSettings setClientToken:@"toktok"];
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertEqualObjects(
     tokenString,
-    @"123|toktok",
+    @"abc|toktok",
     "Should provide a token string with the app id and client token"
   );
 }
@@ -428,8 +428,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertEqualObjects(
     tokenString,
-    SampleAccessTokens.validToken.appID,
-    "Should provide a token string with the access token's app id"
+    SampleAccessTokens.validToken.tokenString,
+    "Should provide the token string stored on the current access token"
   );
 }
 
@@ -442,8 +442,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertEqualObjects(
     tokenString,
-    SampleAccessTokens.validToken.appID,
-    "Should provide a token string with the access token's app id"
+    SampleAccessTokens.validToken.tokenString,
+    "Should provide the token string stored on the current access token"
   );
 }
 
@@ -456,8 +456,9 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertEqualObjects(
     tokenString,
-    SampleAccessTokens.validToken.appID,
-    "Should provide a token string with the access token's app id"
+    SampleAccessTokens.validToken.tokenString,
+    "Should provide the token string stored on the current access token when "
+    "the app id on the token does not match the app id in settings"
   );
 }
 
@@ -470,8 +471,9 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertEqualObjects(
     tokenString,
-    SampleAccessTokens.validToken.appID,
-    "Should provide a token string with the access token's app id"
+    SampleAccessTokens.validToken.tokenString,
+    "Should provide the token string stored on the current access token when "
+    "the app id on the token does not match the app id in settings"
   );
 }
 
@@ -484,7 +486,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertNil(
     tokenString,
-    "Should not provide a token string without an app id or client token"
+    "Should not provide a token string without an access token, app id, or client token"
   );
 }
 
@@ -497,7 +499,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertNil(
     tokenString,
-    "Should not provide a token string with the logging app id and client token"
+    "Should not provide a token string without an access token or app id"
   );
 }
 
@@ -505,7 +507,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [FBSDKAppEvents setLoggingOverrideAppID:@"789"];
   [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setAppID:@"123"];
+  [FBSDKSettings setAppID:SampleAccessTokens.validToken.appID];
   [FBSDKSettings setClientToken:nil];
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertNil(
@@ -518,7 +520,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [FBSDKAppEvents setLoggingOverrideAppID:@"789"];
   [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setAppID:@"123"];
+  [FBSDKSettings setAppID:SampleAccessTokens.validToken.appID];
   [FBSDKSettings setClientToken:@"toktok"];
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertNil(
@@ -588,8 +590,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:nil];
   XCTAssertEqualObjects(
     tokenString,
-    SampleAccessTokens.validToken.appID,
-    "Should provide a token string with the access token's app id when the logging override matches it"
+    SampleAccessTokens.validToken.tokenString,
+    "Should provide the token string stored on the access token when the access token's app id matches the logging override"
   );
 }
 

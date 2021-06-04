@@ -354,7 +354,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
   NSString *tokenString = token.tokenString;
   NSString *clientTokenString = [FBSDKSettings clientToken];
 
-  if (!tokenString || ![appID isEqualToString:token.appID]) {
+  if (![appID isEqualToString:token.appID]) {
     // If there's a logging override app id present
     // then we don't want to use the client token since the client token
     // is intended to match up with the primary app id

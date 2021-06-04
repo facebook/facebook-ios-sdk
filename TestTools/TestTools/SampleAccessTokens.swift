@@ -22,8 +22,8 @@ import Foundation
 @objcMembers
 public class SampleAccessTokens: NSObject {
 
-  public static let defaultTokenString = "123"
-  public static let defaultAppID = "123"
+  public static let defaultTokenString = "token123"
+  public static let defaultAppID = "appID123"
   public static let defaultUserID = "user123"
 
   public static var validToken = AccessToken(
