@@ -617,7 +617,8 @@ static UIApplicationState _applicationState;
   [FBSDKError configureWithErrorReporter:FBSDKErrorReport.shared];
 #if !TARGET_OS_TV
   [FBSDKModelManager.shared configureWithFeatureChecker:FBSDKFeatureManager.shared
-                                    graphRequestFactory:graphRequestProvider];
+                                    graphRequestFactory:graphRequestProvider
+                                            fileManager:NSFileManager.defaultManager];
   [FBSDKFeatureExtractor configureWithRulesFromKeyProvider:FBSDKModelManager.shared];
   [FBSDKAppLinkUtility configureWithRequestProvider:graphRequestProvider
                              infoDictionaryProvider:NSBundle.mainBundle];

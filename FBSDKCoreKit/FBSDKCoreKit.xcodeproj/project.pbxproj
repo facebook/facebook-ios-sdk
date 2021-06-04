@@ -922,6 +922,7 @@
 		F44F52F925FAAAFF00D774B7 /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44F52F025FAAAFE00D774B7 /* SettingsTests.swift */; };
 		F44F53DC25FAC63900D774B7 /* TestAppEventsConfigurationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44F53DB25FAC63900D774B7 /* TestAppEventsConfigurationProvider.swift */; };
 		F44F545A25FADACA00D774B7 /* TestAppEventsConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44F545925FADACA00D774B7 /* TestAppEventsConfiguration.swift */; };
+		F44F569E2669757B00EBE1B1 /* FBSDKModelManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44F569D2669757B00EBE1B1 /* FBSDKModelManagerTests.swift */; };
 		F44FAE52262BA75F00E5195E /* FBSDKApplicationLifecycleNotifications.h in Headers */ = {isa = PBXBuildFile; fileRef = F4756E5D262BA1D200C7CF2E /* FBSDKApplicationLifecycleNotifications.h */; };
 		F44FAE60262BA76300E5195E /* FBSDKApplicationLifecycleNotifications.h in Headers */ = {isa = PBXBuildFile; fileRef = F4756E5D262BA1D200C7CF2E /* FBSDKApplicationLifecycleNotifications.h */; };
 		F44FAE6E262BA76600E5195E /* FBSDKApplicationLifecycleNotifications.h in Headers */ = {isa = PBXBuildFile; fileRef = F4756E5D262BA1D200C7CF2E /* FBSDKApplicationLifecycleNotifications.h */; };
@@ -1921,6 +1922,7 @@
 		F44F544B25FACDCB00D774B7 /* FBSDKAppEventsConfigurationManager+AppEventsConfigurationProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKAppEventsConfigurationManager+AppEventsConfigurationProviding.h"; sourceTree = "<group>"; };
 		F44F545925FADACA00D774B7 /* TestAppEventsConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAppEventsConfiguration.swift; sourceTree = "<group>"; };
 		F44F569226696D2100EBE1B1 /* FBSDKModelManager+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKModelManager+Testing.h"; sourceTree = "<group>"; };
+		F44F569D2669757B00EBE1B1 /* FBSDKModelManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBSDKModelManagerTests.swift; sourceTree = "<group>"; };
 		F45148AC265C4229004ADE74 /* FBSDKEventBindingManager+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKEventBindingManager+Testing.h"; sourceTree = "<group>"; };
 		F45148BF265C45DA004ADE74 /* FBSDKEventBindingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBSDKEventBindingTests.swift; sourceTree = "<group>"; };
 		F45148C1265C4750004ADE74 /* FBSDKEventBinding+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKEventBinding+Testing.h"; sourceTree = "<group>"; };
@@ -3287,6 +3289,7 @@
 			children = (
 				E493252C23F7C60E0000B63A /* FBSDKModelParserTests.mm */,
 				E4C2B97923867327002335A4 /* FBSDKModelRuntimeTests.mm */,
+				F44F569D2669757B00EBE1B1 /* FBSDKModelManagerTests.swift */,
 				F4D58F4626220152006FEC6B /* ModelUtilityTests.swift */,
 			);
 			path = ML;
@@ -5210,6 +5213,7 @@
 				F4F6037025D5D3A30053D3E7 /* TestURLSessionProxyFactory.swift in Sources */,
 				F47AB75C26336CFE005A3333 /* TestFeatureExtractor.swift in Sources */,
 				58E9CAA125FC0E40004818D8 /* ProfileTests.swift in Sources */,
+				F44F569E2669757B00EBE1B1 /* FBSDKModelManagerTests.swift in Sources */,
 				F40682F525CF6031003ADDDA /* FBSDKAppEventsNumberParserTests.m in Sources */,
 				F96E1304266068BA00875DC9 /* SampleAEMInvocations.swift in Sources */,
 				F48A9C8725F83D1300A2DBDF /* TestEventBinding.swift in Sources */,

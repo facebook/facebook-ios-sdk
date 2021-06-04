@@ -26,6 +26,7 @@
 
  @protocol FBSDKFeatureChecking;
  @protocol FBSDKGraphRequestProviding;
+ @protocol FBSDKFileManaging;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -40,7 +41,8 @@ NS_SWIFT_NAME(ModelManager)
 - (BOOL)processIntegrity:(nullable NSString *)param;
 - (NSString *)processSuggestedEvents:(NSString *)textFeature denseData:(nullable float *)denseData;
 - (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
-                graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory;
+                graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory
+                        fileManager:(id<FBSDKFileManaging>)fileManager;
 
 @end
 

@@ -58,6 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) id<FBSDKAppEventsParameterProcessing> integrityParametersProcessor;
 @property (nullable, nonatomic) id<FBSDKFeatureChecking> featureChecker;
 @property (nullable, nonatomic) id<FBSDKGraphRequestProviding> graphRequestFactory;
+@property (nullable, nonatomic) id<FBSDKFileManaging> fileManager;
 
 @end
 
@@ -81,29 +82,31 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
 
 - (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
                 graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory
+                        fileManager:(id<FBSDKFileManaging>)fileManager
 {
   _featureChecker = featureChecker;
   _graphRequestFactory = graphRequestFactory;
+  _fileManager = fileManager;
 }
 
  #pragma mark - Public methods
 
+static dispatch_once_t enableNonce;
+
 - (void)enable
 {
   @try {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
+    dispatch_once(&enableNonce, ^{
       NSString *languageCode = [[NSLocale currentLocale] objectForKey:NSLocaleLanguageCode];
       // If the languageCode could not be fetched successfully, it's regarded as "en" by default.
       if (languageCode && ![languageCode isEqualToString:@"en"]) {
         return;
       }
 
-      NSString *dirPath = [NSTemporaryDirectory() stringByAppendingPathComponent:FBSDK_ML_MODEL_PATH];
-      if (![[NSFileManager defaultManager] fileExistsAtPath:dirPath]) {
-        [[NSFileManager defaultManager] createDirectoryAtPath:dirPath withIntermediateDirectories:YES attributes:NULL error:NULL];
+      _directoryPath = [NSTemporaryDirectory() stringByAppendingPathComponent:FBSDK_ML_MODEL_PATH];
+      if (![self.fileManager fileExistsAtPath:_directoryPath]) {
+        [self.fileManager createDirectoryAtPath:_directoryPath withIntermediateDirectories:YES attributes:NULL error:NULL];
       }
-      _directoryPath = dirPath;
       _modelInfo = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_INFO_KEY];
       NSDate *timestamp = [[NSUserDefaults standardUserDefaults] objectForKey:MODEL_REQUEST_TIMESTAMP_KEY];
       if ([_modelInfo count] == 0 || ![FBSDKFeatureManager.shared isEnabled:FBSDKFeatureModelRequest] || ![self.class isValidTimestamp:timestamp]) {
@@ -419,8 +422,14 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
 
 + (void)reset
 {
+  if (enableNonce) {
+    enableNonce = 0;
+  }
+  _directoryPath = nil;
+
   self.shared.featureChecker = nil;
   self.shared.graphRequestFactory = nil;
+  self.shared.fileManager = nil;
 }
 
  #endif

@@ -19,6 +19,7 @@
 #import "FBSDKModelManager.h"
 
 @protocol FBSDKFeatureChecking;
+@protocol FBSDKFileManaging;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,11 +27,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic) id<FBSDKFeatureChecking> featureChecker;
 @property (nullable, nonatomic) id<FBSDKGraphRequestProviding> graphRequestFactory;
+@property (nullable, nonatomic) id<FBSDKFileManaging> fileManager;
 
 + (void)reset;
 
 - (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
-                graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory;
+                graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory
+                        fileManager:(id<FBSDKFileManaging>)fileManager;
 
 @end
 
