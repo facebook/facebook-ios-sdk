@@ -21,7 +21,18 @@ import FBSDKCoreKit
 @objcMembers
 class TestAccessTokenWallet: NSObject, AccessTokenProviding, AccessTokenSetting, TokenStringProviding {
   static var tokenCache: TokenCaching?
-  static var currentAccessToken: AccessToken?
+  static var stubbedCurrentAccessToken: AccessToken?
+  static var wasTokenRead = false
+
+  static var currentAccessToken: AccessToken? {
+        get {
+            wasTokenRead = true
+            return stubbedCurrentAccessToken
+        }
+        set {
+          stubbedCurrentAccessToken = newValue
+        }
+    }
   static var tokenString: String? {
     currentAccessToken?.tokenString
   }
@@ -29,5 +40,6 @@ class TestAccessTokenWallet: NSObject, AccessTokenProviding, AccessTokenSetting,
   static func reset() {
     tokenCache = nil
     currentAccessToken = nil
+    wasTokenRead = false
   }
 }

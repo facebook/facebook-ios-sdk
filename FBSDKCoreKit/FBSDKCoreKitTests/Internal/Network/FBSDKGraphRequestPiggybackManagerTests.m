@@ -16,7 +16,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
 @import TestTools;
@@ -40,7 +39,7 @@
 
 @end
 
-@interface FBSDKGraphRequestPiggybackManagerTests : FBSDKTestCase
+@interface FBSDKGraphRequestPiggybackManagerTests : XCTestCase
 
 @property (nonatomic) id<FBSDKSettings> settings;
 @property (nonatomic) TestGraphRequestFactory *graphRequestFactory;
@@ -160,6 +159,10 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [self.settings setAppID:@""];
 
   [Manager addPiggybackRequests:SampleGraphRequestConnections.empty];
+  XCTAssertFalse(
+    [TestAccessTokenWallet wasTokenRead],
+    "Adding a request without an app identifier should attempt to refresh the access token"
+  );
   XCTAssertFalse([TestServerConfigurationProvider requestToLoadConfigurationCallWasCalled]);
 }
 
@@ -168,9 +171,13 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [self.settings setAppID:@"abc123"];
 
   id<FBSDKGraphRequestConnecting> connection = [SampleGraphRequestConnections withRequests:@[SampleGraphRequests.valid]];
-
+  TestAccessTokenWallet.currentAccessToken = self.twoDayOldToken;
   [Manager addPiggybackRequests:connection];
 
+  XCTAssertTrue(
+    [TestAccessTokenWallet wasTokenRead],
+    "Adding requests with an expired token should attempt to refresh the access token"
+  );
   XCTAssertTrue([TestServerConfigurationProvider requestToLoadConfigurationCallWasCalled]);
 }
 
@@ -179,8 +186,13 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [self.settings setAppID:@"abc123"];
   id<FBSDKGraphRequestConnecting> connection = [SampleGraphRequestConnections withRequests:@[SampleGraphRequests.withAttachment]];
 
+  TestAccessTokenWallet.currentAccessToken = self.twoDayOldToken;
   [Manager addPiggybackRequests:connection];
 
+  XCTAssertFalse(
+    [TestAccessTokenWallet wasTokenRead],
+    "Adding a request without an app identifier should attempt to refresh the access token"
+  );
   XCTAssertFalse([TestServerConfigurationProvider requestToLoadConfigurationCallWasCalled]);
 }
 
@@ -572,8 +584,9 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 // | true                           | false                          | false          |
 - (void)testRefreshIfStaleWithOldLastRefreshWithRecentTokenRefresh
 {
-  TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
   [Manager _setLastRefreshTry:NSDate.distantPast];
+
+  TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken;
   [Manager addRefreshPiggybackIfStale:SampleGraphRequestConnections.empty];
   XCTAssertNil([self.graphRequestFactory capturedGraphPath]);
 }
@@ -583,6 +596,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testRefreshIfStaleWithRecentLastRefreshWithRecentTokenRefresh
 {
   // Used for manipulating the initial value of the method scoped constant `lastRefreshTry`
+  [Manager _setLastRefreshTry:NSDate.distantFuture];
   [Manager addRefreshPiggybackIfStale:SampleGraphRequestConnections.empty];
   [Manager _setLastRefreshTry:NSDate.distantFuture];
   XCTAssertNil([self.graphRequestFactory capturedGraphPath]);
@@ -593,6 +607,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testRefreshIfStaleWithRecentLastRefreshOldTokenRefresh
 {
   // Used for manipulating the initial value of the method scoped constant `lastRefreshTry`
+
   TestAccessTokenWallet.currentAccessToken = self.twoDayOldToken;
   [Manager _setLastRefreshTry:NSDate.distantFuture];
   [Manager addRefreshPiggybackIfStale:SampleGraphRequestConnections.empty];
