@@ -270,6 +270,7 @@ class ApplicationDelegateTests: XCTestCase {
     XCTAssertNil(ModelManager.shared.graphRequestFactory, "Should not have a request factory by default")
     XCTAssertNil(ModelManager.shared.fileManager, "Should not have a file manager by default")
     XCTAssertNil(ModelManager.shared.store, "Should not have a data store by default")
+    XCTAssertNil(ModelManager.shared.settings, "Should not have a settings by default")
 
     delegate.initializeSDK(launchOptions: [:])
 
@@ -291,6 +292,11 @@ class ApplicationDelegateTests: XCTestCase {
       ModelManager.shared.store as? UserDefaults,
       UserDefaults.standard,
       "Should configure with the expected concrete data store"
+    )
+    XCTAssertEqual(
+      ModelManager.shared.settings as? Settings,
+      Settings.shared,
+      "Should configure with the expected concrete settings"
     )
   }
 

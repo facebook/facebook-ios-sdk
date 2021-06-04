@@ -28,6 +28,7 @@
  @protocol FBSDKFeatureChecking;
  @protocol FBSDKFileManaging;
  @protocol FBSDKGraphRequestProviding;
+ @protocol FBSDKSettings;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -44,7 +45,8 @@ NS_SWIFT_NAME(ModelManager)
 - (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
                 graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory
                         fileManager:(id<FBSDKFileManaging>)fileManager
-                              store:(id<FBSDKDataPersisting>)store;
+                              store:(id<FBSDKDataPersisting>)store
+                           settings:(id<FBSDKSettings>)settings;
 
 @end
 

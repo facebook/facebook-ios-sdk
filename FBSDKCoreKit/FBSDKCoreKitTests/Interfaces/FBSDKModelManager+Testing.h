@@ -29,13 +29,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic) id<FBSDKGraphRequestProviding> graphRequestFactory;
 @property (nullable, nonatomic) id<FBSDKFileManaging> fileManager;
 @property (nullable, nonatomic) id<FBSDKDataPersisting> store;
+@property (nullable, nonatomic) id<FBSDKSettings> settings;
 
 + (void)reset;
 
 - (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
                 graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory
                         fileManager:(id<FBSDKFileManaging>)fileManager
-                              store:(id<FBSDKDataPersisting>)store;
+                              store:(id<FBSDKDataPersisting>)store
+                           settings:(id<FBSDKSettings>)settings;
 
 @end
 

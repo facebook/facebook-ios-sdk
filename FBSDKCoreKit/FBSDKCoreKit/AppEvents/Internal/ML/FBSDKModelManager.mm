@@ -36,7 +36,7 @@
  #import "FBSDKModelParser.h"
  #import "FBSDKModelRuntime.hpp"
  #import "FBSDKModelUtility.h"
- #import "FBSDKSettings.h"
+ #import "FBSDKSettingsProtocol.h"
  #import "FBSDKSuggestedEventsIndexer.h"
 
 static NSString *const INTEGRITY_NONE = @"none";
@@ -61,6 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic) id<FBSDKGraphRequestProviding> graphRequestFactory;
 @property (nullable, nonatomic) id<FBSDKFileManaging> fileManager;
 @property (nullable, nonatomic) id<FBSDKDataPersisting> store;
+@property (nullable, nonatomic) id<FBSDKSettings> settings;
 
 @end
 
@@ -86,11 +87,13 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
                 graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory
                         fileManager:(id<FBSDKFileManaging>)fileManager
                               store:(id<FBSDKDataPersisting>)store
+                           settings:(id<FBSDKSettings>)settings
 {
   _featureChecker = featureChecker;
   _graphRequestFactory = graphRequestFactory;
   _fileManager = fileManager;
   _store = store;
+  _settings = settings;
 }
 
  #pragma mark - Public methods
@@ -115,19 +118,19 @@ static dispatch_once_t enableNonce;
       NSDate *timestamp = [self.store objectForKey:MODEL_REQUEST_TIMESTAMP_KEY];
       if ([_modelInfo count] == 0 || ![FBSDKFeatureManager.shared isEnabled:FBSDKFeatureModelRequest] || ![self.class isValidTimestamp:timestamp]) {
         // fetch api
-        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
-                                      initWithGraphPath:[NSString stringWithFormat:@"%@/model_asset", [FBSDKSettings appID]]];
-
+        NSString *graphPath = [NSString stringWithFormat:@"%@/model_asset", self.settings.appID];
+        id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:graphPath];
+        __weak FBSDKModelManager *weakSelf = self;
         [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
           if (!error) {
             NSDictionary<NSString *, id> *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
-            NSDictionary<NSString *, id> *modelInfo = [self.class convertToDictionary:resultDictionary[MODEL_DATA_KEY]];
+            NSDictionary<NSString *, id> *modelInfo = [weakSelf.class convertToDictionary:resultDictionary[MODEL_DATA_KEY]];
             if (modelInfo) {
               _modelInfo = [modelInfo mutableCopy];
-              [self.class processMTML];
+              [weakSelf.class processMTML];
               // update cache for model info and timestamp
-              [[NSUserDefaults standardUserDefaults] setObject:_modelInfo forKey:MODEL_INFO_KEY];
-              [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:MODEL_REQUEST_TIMESTAMP_KEY];
+              [weakSelf.store setObject:_modelInfo forKey:MODEL_INFO_KEY];
+              [weakSelf.store setObject:[NSDate date] forKey:MODEL_REQUEST_TIMESTAMP_KEY];
             }
           }
           [self checkFeaturesAndExecuteForMTML];
@@ -273,8 +276,15 @@ static dispatch_once_t enableNonce;
   NSString *mtmlAssetUri = nil;
   long mtmlVersionId = 0;
   for (NSString *useCase in _modelInfo) {
+    if (![useCase isKindOfClass:NSString.class]) {
+      continue;
+    }
     NSDictionary<NSString *, id> *model = _modelInfo[useCase];
     if ([useCase hasPrefix:MTMLKey]) {
+      if (![model[ASSET_URI_KEY] isKindOfClass:NSString.class]
+          || ![model[VERSION_ID_KEY] isKindOfClass:NSNumber.class]) {
+        continue;
+      }
       mtmlAssetUri = model[ASSET_URI_KEY];
       long thisVersionId = [model[VERSION_ID_KEY] longValue];
       mtmlVersionId = thisVersionId > mtmlVersionId ? thisVersionId : mtmlVersionId;
@@ -400,11 +410,40 @@ static dispatch_once_t enableNonce;
   }
   NSMutableDictionary<NSString *, id> *modelInfo = [NSMutableDictionary dictionary];
   for (NSDictionary<NSString *, id> *model in models) {
-    if (model[USE_CASE_KEY]) {
+    if ([model isKindOfClass:NSDictionary.class]
+        && [model[USE_CASE_KEY] isKindOfClass:NSString.class]
+        && [self isPlistFormatDictionary:model]) {
       [modelInfo addEntriesFromDictionary:@{model[USE_CASE_KEY] : model}];
     }
   }
-  return modelInfo;
+
+  if (modelInfo.allKeys.count > 0) {
+    return modelInfo;
+  } else {
+    return nil;
+  }
+}
+
++ (BOOL)isPlistFormatDictionary:(NSDictionary *)dictionary
+{
+  __block BOOL isPlistFormat = YES;
+  [dictionary enumerateKeysAndObjectsUsingBlock:^(id _Nonnull key, id _Nonnull obj, BOOL *_Nonnull stop) {
+    if (![key isKindOfClass:NSString.class]) {
+      isPlistFormat = NO;
+      *stop = YES;
+    }
+    if (![obj isKindOfClass:NSArray.class]
+        && ![obj isKindOfClass:NSDictionary.class]
+        && ![obj isKindOfClass:NSData.class]
+        && ![obj isKindOfClass:NSDate.class]
+        && ![obj isKindOfClass:NSNumber.class]
+        && ![obj isKindOfClass:NSString.class]) {
+      isPlistFormat = NO;
+      *stop = YES;
+    }
+  }];
+
+  return isPlistFormat;
 }
 
 + (NSArray<NSString *> *)getIntegrityMapping
@@ -435,6 +474,7 @@ static dispatch_once_t enableNonce;
   self.shared.graphRequestFactory = nil;
   self.shared.fileManager = nil;
   self.shared.store = nil;
+  self.shared.settings = nil;
 }
 
  #endif

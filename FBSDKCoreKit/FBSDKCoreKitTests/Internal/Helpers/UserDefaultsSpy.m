@@ -63,6 +63,10 @@
   }
 
   _capturedValues = tmp;
+
+  NSMutableArray *keys = [NSMutableArray arrayWithArray:_capturedSetObjectKeys.copy];
+  [keys addObject:defaultName];
+  _capturedSetObjectKeys = keys;
   _capturedSetObjectKey = defaultName;
 }
 
