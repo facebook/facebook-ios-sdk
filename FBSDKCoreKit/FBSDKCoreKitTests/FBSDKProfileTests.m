@@ -24,7 +24,6 @@
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKProfile.h"
 #import "FBSDKProfile+Internal.h"
-#import "FBSDKTestCase.h"
 
 @interface FBSDKSettings (Testing)
 + (void)resetFacebookClientTokenCache;

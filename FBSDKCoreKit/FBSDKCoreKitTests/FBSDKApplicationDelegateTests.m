@@ -36,7 +36,6 @@
 #import "FBSDKPaymentObserver.h"
 #import "FBSDKRestrictiveDataFilterManager+Protocols.h"
 #import "FBSDKServerConfigurationFixtures.h"
-#import "FBSDKTestCase.h"
 #import "FBSDKTimeSpentData.h"
 
 @interface FBSDKGraphRequestConnection (AppDelegateTesting)

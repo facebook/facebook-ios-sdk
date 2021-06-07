@@ -26,7 +26,6 @@
  #import "FBSDKSKAdNetworkReporter.h"
  #import "FBSDKSKAdNetworkReporter+Internal.h"
  #import "FBSDKSettings+Internal.h"
- #import "FBSDKTestCase.h"
  #import "UserDefaultsSpy.h"
 
 static NSString *const FBSDKSettingsInstallTimestamp = @"com.facebook.sdk:FBSDKSettingsInstallTimestamp";

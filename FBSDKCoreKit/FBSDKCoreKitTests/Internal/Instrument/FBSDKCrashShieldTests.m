@@ -22,7 +22,6 @@
 #import "FBSDKCrashShield.h"
 #import "FBSDKFeatureDisabling.h"
 #import "FBSDKFeatureManager.h"
-#import "FBSDKTestCase.h"
 
 @interface FBSDKCrashShield (Testing)
 

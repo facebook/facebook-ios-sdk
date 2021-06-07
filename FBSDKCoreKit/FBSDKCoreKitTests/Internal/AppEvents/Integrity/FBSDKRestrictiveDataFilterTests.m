@@ -26,7 +26,6 @@
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKServerConfigurationManager.h"
-#import "FBSDKTestCase.h"
 
 @interface FBSDKGraphRequestConnection (RestrictiveDataFilterTesting)
 

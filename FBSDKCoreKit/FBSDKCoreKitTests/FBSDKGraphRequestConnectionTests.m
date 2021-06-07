@@ -27,7 +27,6 @@
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKSettingsProtocol.h"
-#import "FBSDKTestCase.h"
 #import "FBSDKURLSessionProxyFactory.h"
 
 typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {

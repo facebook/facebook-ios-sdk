@@ -23,7 +23,6 @@
 #import "FBSDKGraphRequestPiggybackManager.h"
 #import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKServerConfigurationLoading.h"
-#import "FBSDKTestCase.h"
 
 @interface FBSDKGraphRequestPiggybackManager (FBSDKGraphRequestPiggybackManagerTests)
 
