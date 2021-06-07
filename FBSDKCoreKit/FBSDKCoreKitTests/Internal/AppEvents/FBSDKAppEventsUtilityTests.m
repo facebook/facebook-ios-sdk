@@ -34,6 +34,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 
 @interface FBSDKSettings ()
 + (void)resetAdvertiserTrackingStatusCache;
++ (void)setAdvertiserTrackingStatus:(FBSDKAdvertisingTrackingStatus)status;
 @end
 
 @interface FBSDKAppEventsConfiguration ()
@@ -94,6 +95,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   [TestServerConfigurationProvider reset];
   [TestGateKeeperManager reset];
   FBSDKAppEventsUtility.cachedAdvertiserIdentifierManager = nil;
+  [FBSDKSettings reset];
 
   [super tearDown];
 }
@@ -239,7 +241,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 
 - (void)testShouldDropAppEvent
 {
-  [self stubAdvertisingTrackingStatusWith:FBSDKAdvertisingTrackingDisallowed];
+  [FBSDKSettings setAdvertiserTrackingStatus:FBSDKAdvertisingTrackingDisallowed];
 
   FBSDKAppEventsConfiguration *configuration = [SampleAppEventsConfigurations createWithDefaultATEStatus:FBSDKAdvertisingTrackingUnspecified
                                                                            advertiserIDCollectionEnabled:YES

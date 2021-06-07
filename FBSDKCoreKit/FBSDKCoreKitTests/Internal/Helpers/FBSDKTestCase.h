@@ -60,20 +60,11 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing a `FBSDKAppEventsUtility` class  mock between tests
 @property (nullable, nonatomic, assign) id appEventsUtilityClassMock;
 
-/// Used for sharing an `FBSDKServerConfigurationManager` class mock between tests
-@property (nullable, assign) id serverConfigurationManagerClassMock;
-
 /// Used for sharing an `FBSDKSettings` class mock between tests
 @property (nullable, assign) id settingsClassMock;
 
 /// Used for sharing a `FBSDKInternalUtility` class mock between tests
 @property (nullable, nonatomic, assign) id internalUtilityClassMock;
-
-/// Used for sharing a `FBSDKSKAdNetworkReporter` class mock between tests
-@property (nullable, nonatomic, assign) id adNetworkReporterClassMock;
-
-/// Used for sharing a `FBSDKGraphRequestPiggybackManager` class mock between tests
-@property (nullable, nonatomic, assign) id graphRequestPiggybackManagerMock;
 
 /// Used for sharing a `FBSDKGraphRequestConnection` class mock between tests
 @property (nullable, nonatomic, assign) id graphRequestConnectionClassMock;
@@ -96,16 +87,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing a `ASIdentifier` class mock between tests
 @property (nullable, nonatomic, assign) id asIdentifierManagerClassMock;
 
-/// Stubs `FBSDKServerConfigurationManager.cachedServerConfiguration` and returns the default server configuration.
-/// Use this when you don't care what the actual configuration is and want to avoid a network call.
-- (void)stubFetchingCachedServerConfiguration;
-
-/// Stubs `FBSDKServerConfigurationManager.cachedServerConfiguration` with a specific configuration
-- (void)stubCachedServerConfigurationWithServerConfiguration:(FBSDKServerConfiguration *)serverConfiguration;
-
-/// Stubs `FBSDKSettings.getAdvertisingTrackingStatus` with the provided value
-- (void)stubAdvertisingTrackingStatusWith:(FBSDKAdvertisingTrackingStatus)trackingStatus;
-
 /// Stubs `FBSDKAppEventsUtility.shouldDropAppEvent` with the provided value
 - (void)stubAppEventsUtilityShouldDropAppEventWith:(BOOL)shouldDropEvent;
 
@@ -114,9 +95,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 
 /// Stubs `FBSDKAppEventsUtility.tokenStringToUseFor:` and returns the provided string
 - (void)stubAppEventsUtilityTokenStringToUseForTokenWith:(NSString *)tokenString;
-
-/// Stubs `FBSDKGraphRequestPiggybackManager._lastRefreshTry` and returns the provided `NSDate`
-- (void)stubGraphRequestPiggybackManagerLastRefreshTryWith:(NSDate *)date;
 
 /// Disables creation of graph request connections so that they cannot be started.
 /// This is the nuclear option. It should be removed as soon as possible so that we can test important things

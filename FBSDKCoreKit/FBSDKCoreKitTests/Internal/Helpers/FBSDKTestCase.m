@@ -38,10 +38,6 @@
 + (void)loadAppEventsConfigurationWithBlock:(FBSDKAppEventsConfigurationManagerBlock)block;
 @end
 
-@interface FBSDKGraphRequestPiggybackManager (Testing)
-+ (NSDate *)_lastRefreshTry;
-@end
-
 @implementation FBSDKTestCase
 
 - (void)setUp
@@ -55,13 +51,9 @@
   // anything else since other partial mocks setup below this will create a timer
   [self setUpUtilityClassMock];
   [self stubStartGCDTimerWithInterval];
-
   [self setUpSettingsMock];
-  [self setUpServerConfigurationManagerMock];
   [self setUpAppEventsUtilityMock];
   [self setUpInternalUtilityMock];
-  [self setUpAdNetworkReporterMock];
-  [self setUpGraphRequestPiggybackManagerMock];
   [self setUpGraphRequestConnectionClassMock];
   [self setUpSharedApplicationMock];
   [self setUpTransitionCoordinatorMock];
@@ -84,17 +76,8 @@
   [_appEventsUtilityClassMock stopMocking];
   _appEventsUtilityClassMock = nil;
 
-  [_serverConfigurationManagerClassMock stopMocking];
-  _serverConfigurationManagerClassMock = nil;
-
   [_settingsClassMock stopMocking];
   _settingsClassMock = nil;
-
-  [_adNetworkReporterClassMock stopMocking];
-  _adNetworkReporterClassMock = nil;
-
-  [_graphRequestPiggybackManagerMock stopMocking];
-  _graphRequestPiggybackManagerMock = nil;
 
   [_graphRequestConnectionClassMock stopMocking];
   _graphRequestConnectionClassMock = nil;
@@ -121,11 +104,6 @@
 - (void)setUpSettingsMock
 {
   _settingsClassMock = OCMStrictClassMock(FBSDKSettings.class);
-}
-
-- (void)setUpServerConfigurationManagerMock
-{
-  self.serverConfigurationManagerClassMock = OCMStrictClassMock(FBSDKServerConfigurationManager.class);
 }
 
 - (void)setUpAppEventsMock
@@ -167,16 +145,6 @@
   self.internalUtilityClassMock = OCMStrictClassMock(FBSDKInternalUtility.class);
 }
 
-- (void)setUpAdNetworkReporterMock
-{
-  self.adNetworkReporterClassMock = OCMClassMock(FBSDKSKAdNetworkReporter.class);
-}
-
-- (void)setUpGraphRequestPiggybackManagerMock
-{
-  self.graphRequestPiggybackManagerMock = OCMClassMock(FBSDKGraphRequestPiggybackManager.class);
-}
-
 - (void)setUpGraphRequestConnectionClassMock
 {
   self.graphRequestConnectionClassMock = OCMClassMock(FBSDKGraphRequestConnection.class);
@@ -216,25 +184,9 @@
 
 #pragma mark - Public Methods
 
-- (void)stubFetchingCachedServerConfiguration
-{
-  FBSDKServerConfiguration *configuration = [FBSDKServerConfiguration defaultServerConfigurationForAppID:_appID];
-  OCMStub(ClassMethod([_serverConfigurationManagerClassMock cachedServerConfiguration])).andReturn(configuration);
-}
-
-- (void)stubCachedServerConfigurationWithServerConfiguration:(FBSDKServerConfiguration *)serverConfiguration
-{
-  OCMStub(ClassMethod([_serverConfigurationManagerClassMock cachedServerConfiguration])).andReturn(serverConfiguration);
-}
-
 - (void)stubAppEventsUtilityShouldDropAppEventWith:(BOOL)shouldDropEvent
 {
   OCMStub(ClassMethod([_appEventsUtilityClassMock shouldDropAppEvent])).andReturn(shouldDropEvent);
-}
-
-- (void)stubAdvertisingTrackingStatusWith:(FBSDKAdvertisingTrackingStatus)trackingStatus
-{
-  OCMStub(ClassMethod([_settingsClassMock advertisingTrackingStatus])).andReturn(trackingStatus);
 }
 
 - (void)stubAppEventsUtilityAdvertiserIDWith:(nullable NSString *)identifier
@@ -246,11 +198,6 @@
 - (void)stubAppEventsUtilityTokenStringToUseForTokenWith:(NSString *)tokenString
 {
   OCMStub(ClassMethod([_appEventsUtilityClassMock tokenStringToUseFor:OCMArg.any])).andReturn(tokenString);
-}
-
-- (void)stubGraphRequestPiggybackManagerLastRefreshTryWith:(NSDate *)date
-{
-  OCMStub(ClassMethod([_graphRequestPiggybackManagerMock _lastRefreshTry])).andReturn(date);
 }
 
 - (void)stubAllocatingGraphRequestConnection
