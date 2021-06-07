@@ -51,7 +51,6 @@ public class TestGraphRequestConnection: NSObject, GraphRequestConnecting {
     capturedRequests.append(request)
     capturedCompletion = handler
     capturedCompletions.append(handler)
-
   }
 
   public func start() {

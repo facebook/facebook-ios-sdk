@@ -93,5 +93,4 @@ class BackgroundEventLoggerTests: XCTestCase {
       "Should expect background refresh API is the new one if the identifier exists"
     )
   }
-
 }
