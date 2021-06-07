@@ -32,8 +32,6 @@
   _logger = [TestLogger new];
   _api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new] logger:_logger];
   _partialMock = OCMPartialMock(_api);
-
-  [self stubLoadingAppEventsConfiguration];
 }
 
 - (void)tearDown

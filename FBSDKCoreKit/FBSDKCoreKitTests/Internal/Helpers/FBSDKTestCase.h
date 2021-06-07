@@ -78,9 +78,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing a `FBSDKBridgeAPIResponse` class mock between tests
 @property (nullable, nonatomic, assign) id bridgeApiResponseClassMock;
 
-/// Used for sharing a `FBSDKAppEventsConfigurationManager` class mock between tests
-@property (nullable, nonatomic, assign) id appEventsConfigurationManagerClassMock;
-
 /// Used for sharing a `FBSDKUtility` class mock between tests
 @property (nullable, nonatomic, assign) id utilityClassMock;
 
@@ -116,9 +113,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 
 /// Stubs `FBSDKInternalUtility`'s `appURLScheme` property to return the provided scheme
 - (void)stubAppUrlSchemeWith:(nullable NSString *)scheme;
-
-/// Stubs `FBSDKAppEventsConfigurationManager`'s `loadAppEventsConfigurationWithBlock` method
-- (void)stubLoadingAppEventsConfiguration;
 
 /// Stubs `ASIdentifierManager.sharedManager` and returns the provided identifier manager
 - (void)stubSharedAsIdentifierManagerWithAsIdentifierManager:(id)identifierManager;

@@ -58,7 +58,6 @@
   [self setUpSharedApplicationMock];
   [self setUpTransitionCoordinatorMock];
   [self setUpBridgeApiClassMock];
-  [self setUpAppEventsConfigurationManagerClassMock];
   [self setUpASIdentifierClassMock];
   [self setUpAppEventsMock];
 }
@@ -90,9 +89,6 @@
 
   [_bridgeApiResponseClassMock stopMocking];
   _bridgeApiResponseClassMock = nil;
-
-  [_appEventsConfigurationManagerClassMock stopMocking];
-  _appEventsConfigurationManagerClassMock = nil;
 
   [_utilityClassMock stopMocking];
   _utilityClassMock = nil;
@@ -167,11 +163,6 @@
   _bridgeApiResponseClassMock = OCMClassMock(FBSDKBridgeAPIResponse.class);
 }
 
-- (void)setUpAppEventsConfigurationManagerClassMock
-{
-  _appEventsConfigurationManagerClassMock = OCMClassMock(FBSDKAppEventsConfigurationManager.class);
-}
-
 - (void)setUpUtilityClassMock
 {
   _utilityClassMock = OCMClassMock(FBSDKUtility.class);
@@ -223,11 +214,6 @@
 - (void)stubAppUrlSchemeWith:(nullable NSString *)scheme
 {
   OCMStub([self.internalUtilityClassMock appURLScheme]).andReturn(scheme);
-}
-
-- (void)stubLoadingAppEventsConfiguration
-{
-  OCMStub([self.appEventsConfigurationManagerClassMock loadAppEventsConfigurationWithBlock:OCMArg.any]);
 }
 
 - (void)stubStartGCDTimerWithInterval
