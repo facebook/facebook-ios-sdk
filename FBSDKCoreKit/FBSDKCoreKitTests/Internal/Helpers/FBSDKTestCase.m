@@ -236,11 +236,6 @@
   OCMStub(ClassMethod([self.utilityClassMock startGCDTimerWithInterval:5 block:OCMArg.any]));
 }
 
-- (void)stubCachedAppEventsConfigurationWithConfiguration:(FBSDKAppEventsConfiguration *)configuration
-{
-  OCMStub(ClassMethod([self.appEventsConfigurationManagerClassMock cachedAppEventsConfiguration])).andReturn(configuration);
-}
-
 - (void)stubSharedAsIdentifierManagerWithAsIdentifierManager:(ASIdentifierManager *)identifierManager
 {
   OCMStub([self.asIdentifierManagerClassMock sharedManager]).andReturn(identifierManager);
