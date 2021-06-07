@@ -19,7 +19,6 @@
 #import "FBSDKErrorConfiguration.h"
 
 #import "FBSDKCoreKitBasicsImport.h"
-#import "FBSDKErrorRecoveryConfiguration.h"
 #import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKSettings.h"

@@ -30,7 +30,6 @@
  #import "FBSDKConversionValueUpdating.h"
  #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKDataPersisting.h"
- #import "FBSDKGraphRequestConnection.h"
  #import "FBSDKGraphRequestProtocol.h"
  #import "FBSDKGraphRequestProviding.h"
  #import "FBSDKSKAdNetworkConversionConfiguration.h"

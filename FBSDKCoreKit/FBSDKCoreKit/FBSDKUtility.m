@@ -18,8 +18,6 @@
 
 #import "FBSDKUtility.h"
 
-#import <CommonCrypto/CommonDigest.h>
-
 #import "FBSDKAccessToken.h"
 #import "FBSDKAuthenticationToken.h"
 #import "FBSDKCoreKitBasicsImport.h"

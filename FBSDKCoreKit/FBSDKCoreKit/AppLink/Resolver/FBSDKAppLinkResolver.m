@@ -26,11 +26,9 @@
 
  #import "FBSDKAppLink.h"
  #import "FBSDKAppLinkResolverRequestBuilder.h"
- #import "FBSDKAppLinkTarget.h"
  #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKLogger.h"
  #import "FBSDKSettings+Internal.h"
- #import "FBSDKUtility.h"
 
 // Dependencies
  #import "FBSDKAccessToken+AccessTokenProtocols.h"
@@ -38,7 +36,6 @@
  #import "FBSDKAppLinkResolverRequestBuilder+Protocols.h"
  #import "FBSDKAppLinkResolverRequestBuilding.h"
  #import "FBSDKClientTokenProviding.h"
- #import "FBSDKGraphRequestProtocol.h"
  #import "FBSDKSettings+ClientTokenProviding.h"
 
 static NSString *const kURLKey = @"url";

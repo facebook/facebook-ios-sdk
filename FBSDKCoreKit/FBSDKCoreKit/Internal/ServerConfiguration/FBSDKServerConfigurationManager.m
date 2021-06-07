@@ -30,7 +30,6 @@
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
 #import "FBSDKObjectDecoding.h"
-#import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfiguration+Internal.h"
 #import "FBSDKSettings.h"
 #import "FBSDKUnarchiverProvider.h"

@@ -22,7 +22,6 @@
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequestConnection.h"
 #import "FBSDKGraphRequestFactory.h"
-#import "FBSDKGraphRequestHTTPMethod.h"
 #import "FBSDKGraphRequestProviding.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"

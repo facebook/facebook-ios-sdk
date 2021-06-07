@@ -29,12 +29,10 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import "FBSDKAppEvents+Internal.h"
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKSettings+Internal.h"
-#import "FBSDKUtility.h"
 
 #define FB_ARRAY_COUNT(x) sizeof(x) / sizeof(x[0])
 

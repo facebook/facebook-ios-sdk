@@ -23,7 +23,6 @@
  #import "FBSDKAppLinkNavigation.h"
 
  #import "FBSDKAppLinkEventPosting.h"
- #import "FBSDKAppLinkTarget.h"
  #import "FBSDKAppLink_Internal.h"
  #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKMeasurementEvent+AppLinkEventPosting.h"

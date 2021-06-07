@@ -23,7 +23,6 @@
  #import "FBSDKAEMConfiguration.h"
 
  #import "FBSDKAEMAdvertiserMultiEntryRule.h"
- #import "FBSDKAEMAdvertiserRuleFactory.h"
  #import "FBSDKAEMAdvertiserSingleEntryRule.h"
  #import "FBSDKCoreKitBasicsImport.h"
 

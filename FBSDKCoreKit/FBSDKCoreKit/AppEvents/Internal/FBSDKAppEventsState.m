@@ -19,7 +19,6 @@
 #import "FBSDKAppEventsState.h"
 
 #import "FBSDKCoreKitBasicsImport.h"
-#import "FBSDKEventsProcessing.h"
 
 #define FBSDK_APPEVENTSTATE_ISIMPLICIT_KEY @"isImplicit"
 

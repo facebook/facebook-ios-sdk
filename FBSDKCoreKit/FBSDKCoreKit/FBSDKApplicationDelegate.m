@@ -40,7 +40,6 @@
 #import "FBSDKAuthenticationToken+Internal.h"
 #import "FBSDKBridgeAPI+ApplicationObserving.h"
 #import "FBSDKButton+Subclass.h"
-#import "FBSDKConstants.h"
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKCrashShield+Internal.h"
 #import "FBSDKDynamicFrameworkLoader.h"

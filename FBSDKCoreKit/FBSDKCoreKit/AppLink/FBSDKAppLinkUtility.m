@@ -29,7 +29,6 @@
  #import "FBSDKGraphRequestProviding.h"
  #import "FBSDKSettings.h"
  #import "FBSDKURL.h"
- #import "FBSDKUtility.h"
 
 static NSString *const FBSDKLastDeferredAppLink = @"com.facebook.sdk:lastDeferredAppLink%@";
 static NSString *const FBSDKDeferredAppLinkEvent = @"DEFERRED_APP_LINK";

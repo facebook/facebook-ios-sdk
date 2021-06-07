@@ -22,7 +22,6 @@
 
  #import "FBSDKEventBinding.h"
 
- #import "FBSDKCodelessParameterComponent.h"
  #import "FBSDKCodelessPathComponent.h"
  #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKEventLogging.h"

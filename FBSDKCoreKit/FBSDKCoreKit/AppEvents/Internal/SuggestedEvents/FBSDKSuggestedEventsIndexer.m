@@ -35,8 +35,6 @@
  #import "FBSDKFeatureExtracting.h"
  #import "FBSDKFeatureExtractor.h"
  #import "FBSDKGraphRequestFactory.h"
- #import "FBSDKGraphRequestHTTPMethod.h"
- #import "FBSDKGraphRequestProtocol.h"
  #import "FBSDKInternalUtility.h"
  #import "FBSDKMLMacros.h"
  #import "FBSDKModelManager.h"
