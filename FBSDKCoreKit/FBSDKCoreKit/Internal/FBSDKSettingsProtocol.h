@@ -17,7 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "FBSDKLoggingBehavior.h"
-#import "FBSDKAppEventsUtility.h"
+#import "FBSDKAdvertisingTrackingStatus.h"
 
 NS_SWIFT_NAME(SettingsProtocol)
 @protocol FBSDKSettings

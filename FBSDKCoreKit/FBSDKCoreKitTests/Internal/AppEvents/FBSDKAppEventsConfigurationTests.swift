@@ -27,7 +27,7 @@ class FBSDKAppEventsConfigurationTests: XCTestCase {
   }
 
   func testCreatingWithKnownDefaultATEStatus() {
-    config = SampleAppEventsConfigurations.create(defaultATEStatus: AppEventsUtility.AdvertisingTrackingStatus.allowed)
+    config = SampleAppEventsConfigurations.create(defaultATEStatus: AdvertisingTrackingStatus.allowed)
     XCTAssertEqual(config.defaultATEStatus, .allowed, "Default ATE Status should be settable")
   }
 

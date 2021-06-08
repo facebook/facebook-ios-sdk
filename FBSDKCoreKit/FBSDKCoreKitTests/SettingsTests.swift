@@ -152,7 +152,7 @@ class SettingsTests: XCTestCase {
   func testGettingPersistedFacebookAdvertiserTrackingStatus() {
     let key = "com.facebook.sdk:FBSDKSettingsAdvertisingTrackingStatus"
     store.set(
-      NSNumber(value: AppEventsUtility.AdvertisingTrackingStatus.allowed.rawValue),
+      NSNumber(value: AdvertisingTrackingStatus.allowed.rawValue),
       forKey: key
     )
     XCTAssertEqual(
@@ -174,7 +174,7 @@ class SettingsTests: XCTestCase {
   func testGettingCachedFacebookAdvertiserTrackingStatus() {
     let key = "com.facebook.sdk:FBSDKSettingsAdvertisingTrackingStatus"
     store.set(
-      NSNumber(value: AppEventsUtility.AdvertisingTrackingStatus.allowed.rawValue),
+      NSNumber(value: AdvertisingTrackingStatus.allowed.rawValue),
       forKey: key
     )
     XCTAssertEqual(

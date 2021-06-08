@@ -19,6 +19,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <AdSupport/AdSupport.h>
 
+#import "FBSDKAdvertisingTrackingStatus.h"
 #import "AEM+Testing.h"
 #import "ApplicationDelegate+Testing.h"
 #import "AppEventsAtePublisher+Testing.h"
@@ -32,6 +33,7 @@
 #import "FBSDKAppEventsConfiguring.h"
 #import "FBSDKAppEventsFlushReason.h"
 #import "FBSDKAppEventsNumberParser.h"
+#import "FBSDKAppEventsUtility.h"
 #import "FBSDKAppEvents+AppEventsConfiguring.h"
 #import "FBSDKAppEvents+ApplicationActivating.h"
 #import "FBSDKAppEvents+ApplicationLifecycleObserving.h"

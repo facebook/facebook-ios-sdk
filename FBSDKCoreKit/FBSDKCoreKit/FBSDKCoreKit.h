@@ -21,6 +21,7 @@
 #ifdef BUCK
 
  #import <FBSDKCoreKit/FBSDKAccessToken.h>
+ #import <FBSDKCoreKit/FBSDKAdvertisingTrackingStatus.h>
  #import <FBSDKCoreKit/FBSDKAppEventName.h>
  #import <FBSDKCoreKit/FBSDKAppEventParameterName.h>
  #import <FBSDKCoreKit/FBSDKAppEvents.h>
@@ -46,6 +47,7 @@
  #import <FBSDKCoreKit/FBSDKLocation.h>
  #import <FBSDKCoreKit/FBSDKLoggingBehavior.h>
  #import <FBSDKCoreKit/FBSDKSettings.h>
+ #import <FBSDKCoreKit/FBSDKSettingsLogging.h>
  #import <FBSDKCoreKit/FBSDKUserAgeRange.h>
  #import <FBSDKCoreKit/FBSDKUtility.h>
 
@@ -77,6 +79,7 @@
 #else
 
  #import "FBSDKAccessToken.h"
+ #import "FBSDKAdvertisingTrackingStatus.h"
  #import "FBSDKAppEventName.h"
  #import "FBSDKAppEventParameterName.h"
  #import "FBSDKAppEvents.h"
@@ -104,6 +107,7 @@
  #import "FBSDKLoggingBehavior.h"
  #import "FBSDKRandom.h"
  #import "FBSDKSettings.h"
+ #import "FBSDKSettingsLogging.h"
  #import "FBSDKUserAgeRange.h"
  #import "FBSDKUtility.h"
 

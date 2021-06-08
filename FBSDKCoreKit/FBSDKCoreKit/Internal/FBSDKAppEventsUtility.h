@@ -22,13 +22,6 @@
 
 @class FBSDKAccessToken;
 
-typedef NS_ENUM(NSUInteger, FBSDKAdvertisingTrackingStatus)
-{
-  FBSDKAdvertisingTrackingAllowed,
-  FBSDKAdvertisingTrackingDisallowed,
-  FBSDKAdvertisingTrackingUnspecified
-} NS_SWIFT_NAME(AppEventsUtility.AdvertisingTrackingStatus);
-
 NS_SWIFT_NAME(AppEventsUtility)
 @interface FBSDKAppEventsUtility : NSObject
 

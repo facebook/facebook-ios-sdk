@@ -18,29 +18,19 @@
 
 #import <Foundation/Foundation.h>
 
-#if SWIFT_PACKAGE
-#import "FBSDKAdvertisingTrackingStatus.h"
-#import "FBSDKCopying.h"
-#else
-#import <FBSDKCoreKit/FBSDKAdvertisingTrackingStatus.h>
-#import <FBSDKCoreKit/FBSDKCopying.h>
-#endif
-
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(AppEventsConfiguration)
-@interface FBSDKAppEventsConfiguration : NSObject<FBSDKCopying, NSSecureCoding>
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
 
-@property (nonatomic, readonly, assign) FBSDKAdvertisingTrackingStatus defaultATEStatus;
-
-@property (nonatomic, readonly, assign) BOOL advertiserIDCollectionEnabled;
-
-@property (nonatomic, readonly, assign) BOOL eventCollectionEnabled;
-
-- (instancetype)initWithJSON:(nullable NSDictionary<NSString *, id> *)dict;
-
-+ (instancetype)defaultConfiguration;
-
-@end
+ @warning UNSAFE - DO NOT USE
+ */
+typedef NS_ENUM(NSUInteger, FBSDKAdvertisingTrackingStatus)
+{
+  FBSDKAdvertisingTrackingAllowed,
+  FBSDKAdvertisingTrackingDisallowed,
+  FBSDKAdvertisingTrackingUnspecified
+} NS_SWIFT_NAME(AdvertisingTrackingStatus);
 
 NS_ASSUME_NONNULL_END

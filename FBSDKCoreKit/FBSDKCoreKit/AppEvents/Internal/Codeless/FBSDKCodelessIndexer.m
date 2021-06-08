@@ -29,6 +29,7 @@
  #import <sys/utsname.h>
 
  #import "FBSDKAdvertiserIDProviding.h"
+ #import "FBSDKAppEventsUtility.h"
  #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKDataPersisting.h"
  #import "FBSDKGraphRequestConnecting.h"

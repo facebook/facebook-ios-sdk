@@ -29,6 +29,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#import "FBSDKAppEventsUtility.h"
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKInternalUtility.h"

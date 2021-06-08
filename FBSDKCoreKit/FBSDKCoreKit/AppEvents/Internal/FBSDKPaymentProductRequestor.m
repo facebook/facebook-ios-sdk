@@ -22,6 +22,7 @@
 
 #import "FBSDKAppEventName.h"
 #import "FBSDKAppEventParameterName.h"
+#import "FBSDKAppEventsFlushReason.h"
 #import "FBSDKAppStoreReceiptProviding.h"
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDataPersisting.h"

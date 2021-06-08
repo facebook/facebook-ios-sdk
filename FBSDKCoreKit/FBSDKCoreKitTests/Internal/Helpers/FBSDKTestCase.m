@@ -26,6 +26,7 @@
 #import "FBSDKAppEvents.h"
 #import "FBSDKAppEventsConfigurationManager.h"
 #import "FBSDKAppEventsState.h"
+#import "FBSDKAppEventsUtility.h"
 #import "FBSDKGraphRequestPiggybackManager.h"
 
 @interface FBSDKAppEvents (Testing)

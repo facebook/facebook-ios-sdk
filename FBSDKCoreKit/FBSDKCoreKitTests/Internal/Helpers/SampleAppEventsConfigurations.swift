@@ -25,14 +25,14 @@ class SampleAppEventsConfigurations: NSObject {
 
   static var valid: AppEventsConfiguration {
     create(
-      defaultATEStatus: AppEventsUtility.AdvertisingTrackingStatus.unspecified,
+      defaultATEStatus: AdvertisingTrackingStatus.unspecified,
       advertiserIDCollectionEnabled: true,
       eventCollectionEnabled: false
     )
   }
 
   static func create(
-    defaultATEStatus status: AppEventsUtility.AdvertisingTrackingStatus
+    defaultATEStatus status: AdvertisingTrackingStatus
   ) -> AppEventsConfiguration {
     create(
       defaultATEStatus: status,
@@ -62,7 +62,7 @@ class SampleAppEventsConfigurations: NSObject {
   }
 
   static func create(
-    defaultATEStatus: AppEventsUtility.AdvertisingTrackingStatus?,
+    defaultATEStatus: AdvertisingTrackingStatus?,
     advertiserIDCollectionEnabled: Bool?,
     eventCollectionEnabled: Bool?
   ) -> AppEventsConfiguration {
@@ -74,7 +74,7 @@ class SampleAppEventsConfigurations: NSObject {
   }
 
   static func create(
-    defaultATEStatus: AppEventsUtility.AdvertisingTrackingStatus,
+    defaultATEStatus: AdvertisingTrackingStatus,
     advertiserIDCollectionEnabled: Bool,
     eventCollectionEnabled: Bool
   ) -> AppEventsConfiguration {

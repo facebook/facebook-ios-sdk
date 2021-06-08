@@ -30,6 +30,7 @@
 
  #import "FBSDKAppEvents.h"
  #import "FBSDKAppEvents+EventLogging.h"
+ #import "FBSDKAppEventsUtility.h"
  #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKEventProcessing.h"
  #import "FBSDKFeatureExtracting.h"
