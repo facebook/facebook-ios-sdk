@@ -172,7 +172,7 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024; // bytes
 
 - (BOOL)_isGroup1Expired
 {
-  return ([FBSDKAppEventsUtility unixTimeNow] - _lastGroup1CheckTime) > FB_GROUP1_RECHECK_DURATION;
+  return ([self unixTimeNow] - _lastGroup1CheckTime) > FB_GROUP1_RECHECK_DURATION;
 }
 
 // This data is collected only once every GROUP1_RECHECK_DURATION.
@@ -206,7 +206,7 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024; // bytes
     _isEncodingDirty = YES;
   }
 
-  _lastGroup1CheckTime = [FBSDKAppEventsUtility unixTimeNow];
+  _lastGroup1CheckTime = [self unixTimeNow];
 }
 
 - (NSString *)_generateEncoding
@@ -237,6 +237,11 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024; // bytes
 }
 
 #pragma mark - Helper Methods
+
+- (NSTimeInterval)unixTimeNow
+{
+  return round([NSDate date].timeIntervalSince1970);
+}
 
 + (NSNumber *)_getTotalDiskSpace
 {

@@ -18,68 +18,11 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKFeature.h"
+
 @protocol FBSDKGateKeeperManaging;
 
 NS_ASSUME_NONNULL_BEGIN
-
-/**
- FBSDKFeature enum
- Defines features in SDK
-
- Sample:
- FBSDKFeatureAppEvents = 0x00010000,
-                            ^ ^ ^ ^
-                            | | | |
-                          kit | | |
-                        feature | |
-                      sub-feature |
-                    sub-sub-feature
- 1st byte: kit
- 2nd byte: feature
- 3rd byte: sub-feature
- 4th byte: sub-sub-feature
- */
-typedef NS_ENUM(NSUInteger, FBSDKFeature)
-{
-  FBSDKFeatureNone = 0x00000000,
-  // Features in CoreKit
-  /** Essential of CoreKit */
-  FBSDKFeatureCore = 0x01000000,
-  /** App Events */
-  FBSDKFeatureAppEvents = 0x01010000,
-  FBSDKFeatureCodelessEvents = 0x01010100,
-  FBSDKFeatureRestrictiveDataFiltering = 0x01010200,
-  FBSDKFeatureAAM = 0x01010300,
-  FBSDKFeaturePrivacyProtection = 0x01010400,
-  FBSDKFeatureSuggestedEvents = 0x01010401,
-  FBSDKFeatureIntelligentIntegrity = 0x01010402,
-  FBSDKFeatureModelRequest = 0x01010403,
-  FBSDKFeatureEventDeactivation = 0x01010500,
-  FBSDKFeatureSKAdNetwork = 0x01010600,
-  FBSDKFeatureSKAdNetworkConversionValue = 0x01010601,
-  FBSDKFeatureATELogging = 0x01010700,
-  FBSDKFeatureAEM = 0x01010800,
-  /** Instrument */
-  FBSDKFeatureInstrument = 0x01020000,
-  FBSDKFeatureCrashReport = 0x01020100,
-  FBSDKFeatureCrashShield = 0x01020101,
-  FBSDKFeatureErrorReport = 0x01020200,
-
-  // Features in LoginKit
-  /** Essential of LoginKit */
-  FBSDKFeatureLogin = 0x02000000,
-
-  // Features in ShareKit
-  /** Essential of ShareKit */
-  FBSDKFeatureShare = 0x03000000,
-
-  // Features in GamingServicesKit
-  /** Essential of GamingServicesKit */
-  FBSDKFeatureGamingServices = 0x04000000,
-
-} NS_SWIFT_NAME(SDKFeature);
-
-typedef void (^FBSDKFeatureManagerBlock)(BOOL enabled);
 
 NS_SWIFT_NAME(FeatureManager)
 @interface FBSDKFeatureManager : NSObject

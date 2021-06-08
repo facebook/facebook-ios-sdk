@@ -18,8 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKCrashObserver.h"
 #import "FBSDKFeatureChecking.h"
+#import "FBSDKFeatureManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

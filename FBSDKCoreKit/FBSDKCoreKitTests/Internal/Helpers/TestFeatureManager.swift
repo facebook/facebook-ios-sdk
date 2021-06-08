@@ -25,6 +25,7 @@ class TestFeatureManager: NSObject, FeatureChecking, FeatureDisabling {
   var disabledFeatures = [SDKFeature]()
   var capturedFeatures = [SDKFeature]()
   var capturedCompletionBlocks: [SDKFeature: FBSDKFeatureManagerBlock] = [:]
+  private var stubbedEnabledFeatures = [SDKFeature: Bool]()
 
   func check(_ feature: SDKFeature, completionBlock: @escaping FBSDKFeatureManagerBlock) {
     capturedFeatures.append(feature)
@@ -41,6 +42,15 @@ class TestFeatureManager: NSObject, FeatureChecking, FeatureDisabling {
 
   func disabledFeaturesContains(_ feature: SDKFeature) -> Bool {
     disabledFeatures.contains(feature)
+  }
+
+  /// Stub enabling features so that they pass the `isEnabled` check
+  func enable(feature: SDKFeature) {
+    stubbedEnabledFeatures[feature] = false
+  }
+
+  func isEnabled(_ feature: SDKFeature) -> Bool {
+    stubbedEnabledFeatures[feature] ?? false
   }
 
   func completeCheck(

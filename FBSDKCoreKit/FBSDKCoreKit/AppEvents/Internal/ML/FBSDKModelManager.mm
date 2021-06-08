@@ -116,7 +116,7 @@ static dispatch_once_t enableNonce;
       }
       _modelInfo = [self.store objectForKey:MODEL_INFO_KEY];
       NSDate *timestamp = [self.store objectForKey:MODEL_REQUEST_TIMESTAMP_KEY];
-      if ([_modelInfo count] == 0 || ![FBSDKFeatureManager.shared isEnabled:FBSDKFeatureModelRequest] || ![self.class isValidTimestamp:timestamp]) {
+      if ([_modelInfo count] == 0 || ![self.featureChecker isEnabled:FBSDKFeatureModelRequest] || ![self.class isValidTimestamp:timestamp]) {
         // fetch api
         NSString *graphPath = [NSString stringWithFormat:@"%@/model_asset", self.settings.appID];
         id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:graphPath];
@@ -308,14 +308,14 @@ static dispatch_once_t enableNonce;
       return;
     }
 
-    if ([FBSDKFeatureManager.shared isEnabled:FBSDKFeatureSuggestedEvents]) {
+    if ([self.featureChecker isEnabled:FBSDKFeatureSuggestedEvents]) {
       [self getModelAndRules:MTMLTaskAppEventPredKey onSuccess:^() {
         [FBSDKFeatureExtractor loadRulesForKey:MTMLTaskAppEventPredKey];
         [FBSDKSuggestedEventsIndexer.shared enable];
       }];
     }
 
-    if ([FBSDKFeatureManager.shared isEnabled:FBSDKFeatureIntelligentIntegrity]) {
+    if ([self.featureChecker isEnabled:FBSDKFeatureIntelligentIntegrity]) {
       [self getModelAndRules:MTMLTaskIntegrityDetectKey onSuccess:^() {
         [self setIntegrityParametersProcessor:[[FBSDKIntegrityManager alloc] initWithGateKeeperManager:FBSDKGateKeeperManager.class
                                                                                     integrityProcessor:self]];
