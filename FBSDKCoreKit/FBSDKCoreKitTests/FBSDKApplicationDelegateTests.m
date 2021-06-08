@@ -144,16 +144,16 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   self.featureChecker = [TestFeatureManager new];
   self.backgroundEventLogger = [[TestBackgroundEventLogger alloc] initWithInfoDictionaryProvider:[TestBundle new]
                                                                                      eventLogger:self.appEvents];
-  self.delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationObserver:[TestNotificationCenter new]
-                                                                     tokenWallet:TestAccessTokenWallet.class
-                                                                        settings:self.settings
-                                                                  featureChecker:self.featureChecker
-                                                                       appEvents:self.appEvents
-                                                     serverConfigurationProvider:TestServerConfigurationProvider.class
-                                                                           store:self.store
-                                                       authenticationTokenWallet:TestAuthenticationTokenWallet.class
-                                                                 profileProvider:TestProfileProvider.class
-                                                           backgroundEventLogger:self.backgroundEventLogger];
+  self.delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationCenter:[TestNotificationCenter new]
+                                                                   tokenWallet:TestAccessTokenWallet.class
+                                                                      settings:self.settings
+                                                                featureChecker:self.featureChecker
+                                                                     appEvents:self.appEvents
+                                                   serverConfigurationProvider:TestServerConfigurationProvider.class
+                                                                         store:self.store
+                                                     authenticationTokenWallet:TestAuthenticationTokenWallet.class
+                                                               profileProvider:TestProfileProvider.class
+                                                         backgroundEventLogger:self.backgroundEventLogger];
   self.delegate.isAppLaunched = NO;
 
   [self.delegate resetApplicationObserverCache];

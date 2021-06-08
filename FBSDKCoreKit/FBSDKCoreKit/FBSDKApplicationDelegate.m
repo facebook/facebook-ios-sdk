@@ -22,6 +22,7 @@
 #import <objc/runtime.h>
 
 #import "FBSDKAccessToken+Internal.h"
+#import "FBSDKAccessTokenExpirer.h"
 #import "FBSDKAppEvents+AppEventsConfiguring.h"
 #import "FBSDKAppEvents+ApplicationActivating.h"
 #import "FBSDKAppEvents+ApplicationLifecycleObserving.h"
@@ -109,6 +110,7 @@ static UIApplicationState _applicationState;
 @property (nonnull, nonatomic, readonly) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonnull, nonatomic, readonly) id<FBSDKDataPersisting> store;
 @property (nonnull, nonatomic, readonly) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationTokenWallet;
+@property (nonnull, nonatomic, readonly) FBSDKAccessTokenExpirer *accessTokenExpirer;
 
 #if !TARGET_OS_TV
 @property (nonnull, nonatomic, readonly) Class<FBSDKProfileProviding> profileProvider;
@@ -143,43 +145,43 @@ static UIApplicationState _applicationState;
 - (instancetype)init
 {
 #if TARGET_OS_TV
-  return [self initWithNotificationObserver:NSNotificationCenter.defaultCenter
-                                tokenWallet:FBSDKAccessToken.class
-                                   settings:FBSDKSettings.sharedSettings
-                             featureChecker:FBSDKFeatureManager.shared
-                                  appEvents:FBSDKAppEvents.singleton
-                serverConfigurationProvider:FBSDKServerConfigurationManager.class
-                                      store:NSUserDefaults.standardUserDefaults
-                  authenticationTokenWallet:FBSDKAuthenticationToken.class];
+  return [self initWithNotificationCenter:NSNotificationCenter.defaultCenter
+                              tokenWallet:FBSDKAccessToken.class
+                                 settings:FBSDKSettings.sharedSettings
+                           featureChecker:FBSDKFeatureManager.shared
+                                appEvents:FBSDKAppEvents.singleton
+              serverConfigurationProvider:FBSDKServerConfigurationManager.class
+                                    store:NSUserDefaults.standardUserDefaults
+                authenticationTokenWallet:FBSDKAuthenticationToken.class];
 #else
   FBSDKBackgroundEventLogger *backgroundEventLogger = [[FBSDKBackgroundEventLogger alloc] initWithInfoDictionaryProvider:NSBundle.mainBundle
                                                                                                              eventLogger:FBSDKAppEvents.singleton];
-  return [self initWithNotificationObserver:NSNotificationCenter.defaultCenter
-                                tokenWallet:FBSDKAccessToken.class
-                                   settings:FBSDKSettings.sharedSettings
-                             featureChecker:FBSDKFeatureManager.shared
-                                  appEvents:FBSDKAppEvents.singleton
-                serverConfigurationProvider:FBSDKServerConfigurationManager.class
-                                      store:NSUserDefaults.standardUserDefaults
-                  authenticationTokenWallet:FBSDKAuthenticationToken.class
-                            profileProvider:FBSDKProfile.class
-                      backgroundEventLogger:backgroundEventLogger];
+  return [self initWithNotificationCenter:NSNotificationCenter.defaultCenter
+                              tokenWallet:FBSDKAccessToken.class
+                                 settings:FBSDKSettings.sharedSettings
+                           featureChecker:FBSDKFeatureManager.shared
+                                appEvents:FBSDKAppEvents.singleton
+              serverConfigurationProvider:FBSDKServerConfigurationManager.class
+                                    store:NSUserDefaults.standardUserDefaults
+                authenticationTokenWallet:FBSDKAuthenticationToken.class
+                          profileProvider:FBSDKProfile.class
+                    backgroundEventLogger:backgroundEventLogger];
 #endif
 }
 
 #if TARGET_OS_TV
-- (instancetype)initWithNotificationObserver:(id<FBSDKNotificationObserving>)observer
-                                 tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
-                                    settings:(id<FBSDKSettingsLogging, FBSDKSettings>)settings
-                              featureChecker:(id<FBSDKFeatureChecking>)featureChecker
-                                   appEvents:(id<FBSDKSourceApplicationTracking, FBSDKAppEventsConfiguring, FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents
-                 serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
-                                       store:(id<FBSDKDataPersisting>)store
-                   authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
+- (instancetype)initWithNotificationCenter:(id<FBSDKNotificationObserving, FBSDKNotificationPosting>)notificationCenter
+                               tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
+                                  settings:(id<FBSDKSettingsLogging, FBSDKSettings>)settings
+                            featureChecker:(id<FBSDKFeatureChecking>)featureChecker
+                                 appEvents:(id<FBSDKSourceApplicationTracking, FBSDKAppEventsConfiguring, FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents
+               serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+                                     store:(id<FBSDKDataPersisting>)store
+                 authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
 {
   if ((self = [super init]) != nil) {
     _applicationObservers = [NSHashTable new];
-    _notificationObserver = observer;
+    _notificationObserver = notificationCenter;
     _tokenWallet = tokenWallet;
     _settings = settings;
     _featureChecker = featureChecker;
@@ -187,25 +189,26 @@ static UIApplicationState _applicationState;
     _serverConfigurationProvider = serverConfigurationProvider;
     _store = store;
     _authenticationTokenWallet = authenticationTokenWallet;
+    _accessTokenExpirer = [[FBSDKAccessTokenExpirer alloc] initWithNotificationCenter:notificationCenter];
   }
   return self;
 }
 
 #else
-- (instancetype)initWithNotificationObserver:(id<FBSDKNotificationObserving>)observer
-                                 tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
-                                    settings:(id<FBSDKSettingsLogging, FBSDKSettings>)settings
-                              featureChecker:(id<FBSDKFeatureChecking>)featureChecker
-                                   appEvents:(id<FBSDKSourceApplicationTracking, FBSDKAppEventsConfiguring, FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents
-                 serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
-                                       store:(id<FBSDKDataPersisting>)store
-                   authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
-                             profileProvider:(Class<FBSDKProfileProviding>)profileProvider
-                       backgroundEventLogger:(id<FBSDKBackgroundEventLogging>)backgroundEventLogger
+- (instancetype)initWithNotificationCenter:(id<FBSDKNotificationObserving, FBSDKNotificationPosting>)notificationCenter
+                               tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
+                                  settings:(id<FBSDKSettingsLogging, FBSDKSettings>)settings
+                            featureChecker:(id<FBSDKFeatureChecking>)featureChecker
+                                 appEvents:(id<FBSDKSourceApplicationTracking, FBSDKAppEventsConfiguring, FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents
+               serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+                                     store:(id<FBSDKDataPersisting>)store
+                 authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
+                           profileProvider:(Class<FBSDKProfileProviding>)profileProvider
+                     backgroundEventLogger:(id<FBSDKBackgroundEventLogging>)backgroundEventLogger
 {
   if ((self = [super init]) != nil) {
     _applicationObservers = [NSHashTable new];
-    _notificationObserver = observer;
+    _notificationObserver = notificationCenter;
     _tokenWallet = tokenWallet;
     _settings = settings;
     _featureChecker = featureChecker;
@@ -215,6 +218,7 @@ static UIApplicationState _applicationState;
     _authenticationTokenWallet = authenticationTokenWallet;
     _profileProvider = profileProvider;
     _backgroundEventLogger = backgroundEventLogger;
+    _accessTokenExpirer = [[FBSDKAccessTokenExpirer alloc] initWithNotificationCenter:notificationCenter];
   }
   return self;
 }

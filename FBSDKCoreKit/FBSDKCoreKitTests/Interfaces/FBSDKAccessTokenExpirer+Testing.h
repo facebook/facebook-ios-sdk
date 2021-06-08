@@ -16,17 +16,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#import "FBSDKAccessTokenExpirer.h"
 
-@protocol FBSDKNotificationPosting;
-@protocol FBSDKNotificationObserving;
+NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(AccessTokenExpirer)
-@interface FBSDKAccessTokenExpirer : NSObject
+@interface FBSDKAccessTokenExpirer (Testing)
 
-+ (instancetype)new NS_UNAVAILABLE;
-- (instancetype)init NS_UNAVAILABLE;
+@property (nonnull, nonatomic, readonly) id<FBSDKNotificationPosting, FBSDKNotificationObserving> notificationCenter;
 
-- (instancetype)initWithNotificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter;
+- (void)_timerDidFire;
+- (void)_checkAccessTokenExpirationDate;
 
 @end
+
+NS_ASSUME_NONNULL_END

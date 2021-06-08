@@ -1106,6 +1106,7 @@
 		F4AE657326377A1C00E0B661 /* TestAppStoreReceiptProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE657226377A1C00E0B661 /* TestAppStoreReceiptProvider.swift */; };
 		F4AF97032605246600E53370 /* TestAccessTokenWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AF97022605246600E53370 /* TestAccessTokenWallet.swift */; };
 		F4B81E08266E672300CC02A4 /* FBSDKDialogConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B81E07266E672300CC02A4 /* FBSDKDialogConfigurationTests.swift */; };
+		F4B81E14266E745100CC02A4 /* FBSDKAccessTokenExpirerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B81E13266E745100CC02A4 /* FBSDKAccessTokenExpirerTests.swift */; };
 		F4BD4024241EEDE500B45D39 /* FBSDKTestCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = F4BD4023241EEDE500B45D39 /* FBSDKTestCoder.m */; };
 		F4BDCE0726152DEF00D3FFF4 /* TestWindowFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BDCDFF26152DEF00D3FFF4 /* TestWindowFinder.swift */; };
 		F4BDCEAE261613D300D3FFF4 /* ErrorReportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BDCEA6261613D200D3FFF4 /* ErrorReportTests.swift */; };
@@ -2084,6 +2085,8 @@
 		F4AF976326055D1900E53370 /* FBSDKGraphRequestPiggybackManager+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKGraphRequestPiggybackManager+Internal.h"; sourceTree = "<group>"; };
 		F4AF97FA2606B1CB00E53370 /* FBSDKSettingsLogging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKSettingsLogging.h; sourceTree = "<group>"; };
 		F4B81E07266E672300CC02A4 /* FBSDKDialogConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBSDKDialogConfigurationTests.swift; sourceTree = "<group>"; };
+		F4B81E13266E745100CC02A4 /* FBSDKAccessTokenExpirerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBSDKAccessTokenExpirerTests.swift; sourceTree = "<group>"; };
+		F4B81E15266E74E900CC02A4 /* FBSDKAccessTokenExpirer+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKAccessTokenExpirer+Testing.h"; sourceTree = "<group>"; };
 		F4BD4022241EEDE500B45D39 /* FBSDKTestCoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKTestCoder.h; sourceTree = "<group>"; };
 		F4BD4023241EEDE500B45D39 /* FBSDKTestCoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKTestCoder.m; sourceTree = "<group>"; };
 		F4BDCDFF26152DEF00D3FFF4 /* TestWindowFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestWindowFinder.swift; sourceTree = "<group>"; };
@@ -2673,6 +2676,7 @@
 		893F44A41A644552001DB0B6 /* Internal */ = {
 			isa = PBXGroup;
 			children = (
+				F4B81E13266E745100CC02A4 /* FBSDKAccessTokenExpirerTests.swift */,
 				F4CEF6672623C28000B4EF6C /* FBSDKGraphRequestBodyTests.m */,
 				9D18A8D91A95403F00A41042 /* AppEvents */,
 				7E5557391A8D833800344F86 /* AppLinks */,
@@ -3354,6 +3358,7 @@
 				F4F2FFB52659767C002FA5EC /* AppEventsAtePublisher+Testing.h */,
 				F4C23CFF2625EE7500FA79AE /* CodelessIndexer+Testing.h */,
 				F45296AE262BB0FB00DDA430 /* Button+Testing.h */,
+				F4B81E15266E74E900CC02A4 /* FBSDKAccessTokenExpirer+Testing.h */,
 				F475226E264C323A0076697F /* FBSDKIntegrityManager+Testing.h */,
 				F402AFE4255B4D1C00473083 /* FBSDKBridgeAPI+Testing.h */,
 				F4BDCED62616172A00D3FFF4 /* FBSDKErrorReport+Testing.h */,
@@ -5238,6 +5243,7 @@
 				5DB612A823593AB600150851 /* FBSDKCrashShieldTests.m in Sources */,
 				F44F53DC25FAC63900D774B7 /* TestAppEventsConfigurationProvider.swift in Sources */,
 				F4C29B5B260920E9008818DD /* TestMacCatalystDeterminator.swift in Sources */,
+				F4B81E14266E745100CC02A4 /* FBSDKAccessTokenExpirerTests.swift in Sources */,
 				1613935525F17CD7001F0D31 /* AccessTokenTests.swift in Sources */,
 				F4A25D1C2638A1F10074EE92 /* TestPayment.swift in Sources */,
 				F91D1BFD2632916D005CA2C5 /* FBSDKAEMReporterTests.swift in Sources */,

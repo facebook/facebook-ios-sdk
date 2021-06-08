@@ -56,7 +56,7 @@ class ApplicationDelegateTests: XCTestCase {
 
     ApplicationDelegate.reset()
     delegate = ApplicationDelegate(
-      notificationObserver: center,
+      notificationCenter: center,
       tokenWallet: TestAccessTokenWallet.self,
       settings: settings,
       featureChecker: featureChecker,
@@ -165,6 +165,17 @@ class ApplicationDelegateTests: XCTestCase {
       delegate.backgroundEventLogger as? TestBackgroundEventLogger,
       backgroundEventLogger,
       "Should be able to create with custom background event logger"
+    )
+  }
+
+  func testCreatingSetsExpirer() throws {
+    let delegateCenter = try XCTUnwrap(delegate.notificationObserver as? TestNotificationCenter)
+    let expirerCenter = try XCTUnwrap(delegate.accessTokenExpirer.notificationCenter as? TestNotificationCenter)
+
+    XCTAssertEqual(
+      expirerCenter,
+      delegateCenter,
+      "Should create the token expirer using the delegate's notification center"
     )
   }
 
