@@ -21,6 +21,7 @@ Pod::Spec.new do |s|
 
   s.platform     = :tvos
   s.tvos.deployment_target = '10.0'
+  s.swift_version = '5.0'
 
   s.source       = {
     git: 'https://github.com/facebook/facebook-ios-sdk.git',
