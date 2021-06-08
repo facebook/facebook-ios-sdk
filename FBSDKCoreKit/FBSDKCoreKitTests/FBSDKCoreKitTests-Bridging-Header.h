@@ -37,6 +37,7 @@
 #import "FBSDKAppEvents+ApplicationLifecycleObserving.h"
 #import "FBSDKAppEvents+ApplicationStateSetting.h"
 #import "FBSDKApplicationLifecycleNotifications.h"
+#import "FBSDKAppLinkUtility+Testing.h"
 #import "FBSDKAtePublisherCreating.h"
 #import "FBSDKAtePublisherFactory.h"
 #import "FBSDKAuthenticationStatusUtility.h"
@@ -286,13 +287,6 @@ NS_SWIFT_NAME(parse(result:error:));
 
 @end
 
-@interface FBSDKAppLinkUtility (Testing)
-
-@property (class, nonatomic, nullable) id<FBSDKGraphRequestProviding> requestProvider;
-@property (class, nonatomic, nullable) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
-
-@end
-
 @interface FBSDKSettings (Testing)
 
 @property (class, nonatomic, nullable, readonly) id<FBSDKDataPersisting> store;
@@ -413,5 +407,22 @@ NS_SWIFT_NAME(cachedAppLinks);
                        accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider;
 
 @end
+
+// Hack to be able to test from Swift code that NSExceptions were raised.
+@interface XCTestCase (Testing)
+
+- (void)assertRaisesExceptionWithMessage:(NSString *)message block:(void (^)(void))block
+NS_SWIFT_NAME(assertRaisesException(message:block:));
+
+@end
+
+@implementation XCTestCase (Testing)
+
+- (void)assertRaisesExceptionWithMessage:(NSString *)message block:(void (^)(void))block  {
+  XCTAssertThrows(block(), @"%@", message);
+}
+
+@end
+
 
 NS_ASSUME_NONNULL_END

@@ -122,4 +122,11 @@ class FBSDKAppLinkUtilityTests: XCTestCase {
     XCTAssertEqual(requestFactory.capturedGraphPath, "(null)/activities")
     XCTAssertEqual(requestFactory.capturedHttpMethod, HTTPMethod(rawValue: "POST"))
   }
+
+  func testValidatingConfiguration() {
+    AppLinkUtility.reset()
+    assertRaisesException(message: "Should throw an exception if the utility has not been configured") {
+      AppLinkUtility.validateConfiguration()
+    }
+  }
 }

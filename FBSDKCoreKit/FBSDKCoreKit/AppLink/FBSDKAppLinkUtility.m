@@ -160,6 +160,11 @@ static BOOL _isConfigured;
  #if DEBUG
   #if FBSDKTEST
 
++ (void)reset
+{
+  _isConfigured = NO;
+}
+
 + (id<FBSDKGraphRequestProviding>)requestProvider
 {
   return _requestProvider;
