@@ -11,10 +11,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## 11.0.0
 
-ATTENTION: This release of the SDK introduces a few changes to our traditional way of managing dependencies. We have found as we’ve grown over the years that an over-reliance on singletons and tight coupling has made it difficult to move fast and deliver new features without introducing risk. We are in the process of converting existing types to use injected dependencies which means that many types will no longer be usable until the SDK is initialized. We will surface this in most places with an exception in `DEBUG` builds as a reminder to call `FBSDKApplicationDelegate.application:didFinishLaunchingWithOptions:` before using the SDK.
+ATTENTION: The Platform SDK v11.0 release introduces a few key changes to how dependencies will be managed moving forward.  These changes are being implemented to drive more efficiency in our development process and reduce an over-reliance on singletons and tight coupling.. As part of these changes, we are currently in the process of converting existing types to use injected dependencies. As a result, many types will no longer be usable until the SDK is initialized. In order to ensure that types are configured correctly before being used, you will need to call `FBSDKApplicationDelegate.application:didFinishLaunchingWithOptions:` first before attempting to (i) get or set any properties, or (ii) invoke any methods on the SDK.
 
-If you are getting or setting any properties or invoking any methods on the SDK prior to calling `didFinishLaunchingWithOptions` you will need to change the order of your calls.
-This will ensure that types are configured correctly before being used. We believe this is the right path towards a more modular, stable, and modern SDK.
+The source code has been updated to include reminders in the form of exceptions in `DEBUG` builds across several locations. These reminders will serve as pointers for Developers to call `FBSDKApplicationDelegate.application:didFinishLaunchingWithOptions:` before using the SDK. For more information see: https://github.com/facebook/facebook-ios-sdk/issues/1763.
 
 ### Added
 
