@@ -213,10 +213,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 
 - (void)testGetAdvertiserIDOniOS14WithCollectionEnabled
 {
-  [self stubIsAdvertiserIDCollectionEnabledWith:YES];
-  FBSDKAppEventsConfiguration *configuration = [SampleAppEventsConfigurations createWithDefaultATEStatus:FBSDKAdvertisingTrackingUnspecified
-                                                                           advertiserIDCollectionEnabled:YES
-                                                                                  eventCollectionEnabled:YES];
+  FBSDKAppEventsConfiguration *configuration = [SampleAppEventsConfigurations createWithAdvertiserIDCollectionEnabled:YES];
   FBSDKAppEventsConfigurationManager.shared.configuration = configuration;
   [self stubAdvertisingIdentifierWithIdentifier:NSUUID.UUID];
   [self stubSharedAsIdentifierManagerWithAsIdentifierManager:self.asIdentifierManagerClassMock];

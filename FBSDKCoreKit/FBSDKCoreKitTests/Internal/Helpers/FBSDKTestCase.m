@@ -233,9 +233,4 @@
   OCMStub([self.asIdentifierManagerClassMock advertisingIdentifier]).andReturn(uuid);
 }
 
-- (void)stubIsAdvertiserIDCollectionEnabledWith:(BOOL)isAdvertiserIDCollectionEnabled
-{
-  OCMStub([self.settingsClassMock isAdvertiserIDCollectionEnabled]).andReturn(isAdvertiserIDCollectionEnabled);
-}
-
 @end
