@@ -54,12 +54,14 @@ main() {
     SDK_SCRIPTS_DIR=$(realpath "$(dirname "${BASH_SOURCE[0]}")")
     SDK_DIR="$(dirname "$SDK_SCRIPTS_DIR")"
 
+    CORE_KIT_BASICS="FBSDKCoreKit_Basics"
     CORE_KIT="FBSDKCoreKit"
     LOGIN_KIT="FBSDKLoginKit"
     SHARE_KIT="FBSDKShareKit"
     GAMING_SERVICES_KIT="FBSDKGamingServicesKit"
 
     SDK_BASE_KITS=(
+      "$CORE_KIT_BASICS"
       "$CORE_KIT"
       "$LOGIN_KIT"
       "$SHARE_KIT"
@@ -435,26 +437,6 @@ release_sdk() {
 
     # Release frameworks in static
     release_static() {
-      release_basics() {
-        xcodebuild clean build \
-         -workspace FacebookSDK.xcworkspace \
-         -scheme BuildCoreKitBasics \
-         -configuration Release | xcpretty
-
-        kit="FBSDKCoreKit_Basics"
-        cd build || exit
-
-        mkdir -p Release/"$kit"/iOS
-        mv FBSDKCoreKit.framework Release/"$kit"/iOS
-        mkdir -p Release/"$kit"/tvOS
-        mv tv/FBSDKCoreKit.framework Release/"$kit"/tvOS
-        cd Release || exit
-        zip -r -m "$kit".zip "$kit"
-        cd ..
-
-        cd ..
-      }
-
       xcodebuild clean build \
        -workspace FacebookSDK.xcworkspace \
        -scheme BuildAllKits \
@@ -489,8 +471,6 @@ release_sdk() {
         cd ..
       done
       cd ..
-
-      release_basics
     }
 
     local release_type=${1:-}
