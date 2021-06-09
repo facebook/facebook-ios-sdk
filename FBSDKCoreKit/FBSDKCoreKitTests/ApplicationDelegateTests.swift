@@ -292,6 +292,7 @@ class ApplicationDelegateTests: XCTestCase {
     XCTAssertNil(ModelManager.shared.fileManager, "Should not have a file manager by default")
     XCTAssertNil(ModelManager.shared.store, "Should not have a data store by default")
     XCTAssertNil(ModelManager.shared.settings, "Should not have a settings by default")
+    XCTAssertNil(ModelManager.shared.dataExtractor, "Should not have a data extractor by default")
 
     delegate.initializeSDK(launchOptions: [:])
 
@@ -318,6 +319,10 @@ class ApplicationDelegateTests: XCTestCase {
       ModelManager.shared.settings as? Settings,
       Settings.shared,
       "Should configure with the expected concrete settings"
+    )
+    XCTAssertTrue(
+      ModelManager.shared.dataExtractor is NSData.Type,
+      "Should configure with the expected concrete data extractor"
     )
   }
 

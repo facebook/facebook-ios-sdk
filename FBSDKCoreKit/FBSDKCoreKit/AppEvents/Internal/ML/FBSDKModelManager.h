@@ -29,6 +29,7 @@
  @protocol FBSDKFileManaging;
  @protocol FBSDKGraphRequestProviding;
  @protocol FBSDKSettings;
+ @protocol FBSDKFileDataExtracting;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -46,7 +47,8 @@ NS_SWIFT_NAME(ModelManager)
                 graphRequestFactory:(id<FBSDKGraphRequestProviding>)graphRequestFactory
                         fileManager:(id<FBSDKFileManaging>)fileManager
                               store:(id<FBSDKDataPersisting>)store
-                           settings:(id<FBSDKSettings>)settings;
+                           settings:(id<FBSDKSettings>)settings
+                      dataExtractor:(Class<FBSDKFileDataExtracting>)dataExtractor;
 
 @end
 

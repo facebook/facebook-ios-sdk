@@ -62,6 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic) id<FBSDKFileManaging> fileManager;
 @property (nullable, nonatomic) id<FBSDKDataPersisting> store;
 @property (nullable, nonatomic) id<FBSDKSettings> settings;
+@property (nullable, nonatomic) Class<FBSDKFileDataExtracting> dataExtractor;
 
 @end
 
@@ -88,12 +89,14 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
                         fileManager:(id<FBSDKFileManaging>)fileManager
                               store:(id<FBSDKDataPersisting>)store
                            settings:(id<FBSDKSettings>)settings
+                      dataExtractor:(Class<FBSDKFileDataExtracting>)dataExtractor
 {
   _featureChecker = featureChecker;
   _graphRequestFactory = graphRequestFactory;
   _fileManager = fileManager;
   _store = store;
   _settings = settings;
+  _dataExtractor = dataExtractor;
 }
 
  #pragma mark - Public methods
@@ -124,13 +127,16 @@ static dispatch_once_t enableNonce;
         [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
           if (!error) {
             NSDictionary<NSString *, id> *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
-            NSDictionary<NSString *, id> *modelInfo = [weakSelf.class convertToDictionary:resultDictionary[MODEL_DATA_KEY]];
-            if (modelInfo) {
-              _modelInfo = [modelInfo mutableCopy];
-              [weakSelf.class processMTML];
-              // update cache for model info and timestamp
-              [weakSelf.store setObject:_modelInfo forKey:MODEL_INFO_KEY];
-              [weakSelf.store setObject:[NSDate date] forKey:MODEL_REQUEST_TIMESTAMP_KEY];
+            NSArray *rawModels = resultDictionary[MODEL_DATA_KEY];
+            if ([rawModels isKindOfClass:NSArray.class]) {
+              NSDictionary<NSString *, id> *modelInfo = [weakSelf.class convertToDictionary:rawModels];
+              if (modelInfo) {
+                _modelInfo = [modelInfo mutableCopy];
+                [weakSelf.class processMTML];
+                // update cache for model info and timestamp
+                [weakSelf.store setObject:_modelInfo forKey:MODEL_INFO_KEY];
+                [weakSelf.store setObject:[NSDate date] forKey:MODEL_REQUEST_TIMESTAMP_KEY];
+              }
             }
           }
           [self checkFeaturesAndExecuteForMTML];
@@ -151,8 +157,8 @@ static dispatch_once_t enableNonce;
     if (model && model[VERSION_ID_KEY]) {
       NSString *filePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.rules", useCase, model[VERSION_ID_KEY]]];
       if (filePath) {
-        NSData *ruelsData = [NSData dataWithContentsOfFile:filePath options:NSDataReadingMappedIfSafe error:nil];
-        NSDictionary *rules = [FBSDKTypeUtility JSONObjectWithData:ruelsData options:0 error:nil];
+        NSData *rulesData = [self.dataExtractor dataWithContentsOfFile:filePath options:NSDataReadingMappedIfSafe error:nil];
+        NSDictionary *rules = [FBSDKTypeUtility JSONObjectWithData:rulesData options:0 error:nil];
         return rules;
       }
     }
@@ -469,12 +475,24 @@ static dispatch_once_t enableNonce;
     enableNonce = 0;
   }
   _directoryPath = nil;
+  _modelInfo = nil;
 
   self.shared.featureChecker = nil;
   self.shared.graphRequestFactory = nil;
   self.shared.fileManager = nil;
   self.shared.store = nil;
   self.shared.settings = nil;
+  self.shared.dataExtractor = nil;
+}
+
++ (void)setModelInfo:(NSDictionary<NSString *, id> *)modelInfo
+{
+  _modelInfo = [NSMutableDictionary dictionaryWithDictionary:modelInfo];
+}
+
++ (void)setDirectoryPath:(NSString *)directoryPath
+{
+  _directoryPath = directoryPath;
 }
 
  #endif

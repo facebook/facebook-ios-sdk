@@ -48,12 +48,14 @@ class FBSDKModelManagerTests: XCTestCase {
       graphRequestFactory: factory,
       fileManager: fileManager,
       store: store,
-      settings: settings
+      settings: settings,
+      dataExtractor: TestFileDataExtractor.self
     )
   }
 
   override func tearDown() {
     ModelManager.reset()
+    TestFileDataExtractor.reset()
 
     super.tearDown()
   }
@@ -189,6 +191,108 @@ class FBSDKModelManagerTests: XCTestCase {
       "Should attempt to cache info and creation time of model created from valid results"
     )
   }
+
+  // MARK: - Getting Rules
+
+  func testGettingRulesForKeyWithMissingModelInfo() {
+    ModelManager.directoryPath = "foo"
+
+    XCTAssertNil(
+      manager.getRulesForKey(RawRemoteModelResponse.UseCase.detection),
+      "Should not get rules when there are no models"
+    )
+  }
+
+  func testGettingRulesForKeyWithMismatchedKey() {
+    ModelManager.directoryPath = "foo"
+    ModelManager.setModelInfo(RemoteModelResponse.valid)
+
+    XCTAssertNil(
+      manager.getRulesForKey(RawRemoteModelResponse.UseCase.missing),
+      "Should not get rules when the key does not match any of the stored models."
+    )
+  }
+
+  func testGettingRulesForKeyWithMatchingKeyWithMissingData() throws {
+    ModelManager.directoryPath = "foo"
+    ModelManager.setModelInfo(RemoteModelResponse.valid)
+
+    XCTAssertNil(
+      manager.getRulesForKey(RawRemoteModelResponse.UseCase.detection),
+      "Should not return rules when the data is missing"
+    )
+  }
+
+  func testGettingRulesForKeyWithMatchingKeyWithInvalidData() throws {
+    ModelManager.directoryPath = "foo"
+    ModelManager.setModelInfo(RemoteModelResponse.valid)
+
+    TestFileDataExtractor.stubbedData = name.data(using: .utf8)
+
+    XCTAssertNil(
+      manager.getRulesForKey(RawRemoteModelResponse.UseCase.detection),
+      "Should not return rules when the data cannot be deserialized into a dictionary"
+    )
+
+    XCTAssertEqual(
+      TestFileDataExtractor.capturedFileNames.first,
+      "foo/\(RawRemoteModelResponse.UseCase.detection)_1.rules",
+      "Should read data from the file name matching the use case"
+    )
+  }
+
+  func testGettingRulesForKeyWithMatchingKeyWithValidData() throws {
+    ModelManager.directoryPath = "foo"
+    ModelManager.setModelInfo(RemoteModelResponse.valid)
+
+    TestFileDataExtractor.stubbedData = try JSONSerialization.data(
+      withJSONObject: RawRemoteModelResponse.detectionAsset,
+      options: []
+    )
+
+    XCTAssertNotNil(
+      manager.getRulesForKey(RawRemoteModelResponse.UseCase.detection),
+      "Should return rules when the data can be deserialized"
+    )
+
+    XCTAssertEqual(
+      TestFileDataExtractor.capturedFileNames.first,
+      "foo/\(RawRemoteModelResponse.UseCase.detection)_1.rules",
+      "Should read data from the file name matching the use case"
+    )
+  }
+
+  // MARK: - Mappings
+
+  func testIntegrityMapping() {
+    XCTAssertEqual(
+      ModelManager.getIntegrityMapping(),
+      ["none", "address", "health"]
+    )
+  }
+
+  func testSuggestedEventsMapping() {
+    XCTAssertEqual(
+      ModelManager.getSuggestedEventsMapping(),
+      [
+        "other",
+        "fb_mobile_complete_registration",
+        "fb_mobile_add_to_cart",
+        "fb_mobile_purchase",
+        "fb_mobile_initiated_checkout"
+      ]
+    )
+  }
+}
+
+// The production code restructures the raw response slightly to make
+// it a little more usable. This just captures that structure so it
+// can be used in methods that expect this format.
+private enum RemoteModelResponse {
+  static let valid: [String: Any] = [
+    RawRemoteModelResponse.UseCase.eventPrediction: RawRemoteModelResponse.eventPredictionAsset,
+    RawRemoteModelResponse.UseCase.detection: RawRemoteModelResponse.detectionAsset
+  ]
 }
 
 private enum RawRemoteModelResponse {
@@ -203,6 +307,7 @@ private enum RawRemoteModelResponse {
   enum UseCase {
     static let eventPrediction = "MTML_APP_EVENT_PRED"
     static let detection = "MTML_INTEGRITY_DETECT"
+    static let missing = "missing"
   }
 
   static let valid: [String: Any] = [Keys.data: validAssets]
@@ -215,29 +320,33 @@ private enum RawRemoteModelResponse {
     ]
   ]
 
-  static let validAssets: [[String: Any]] = [
-    [
-      Keys.assetURI: SampleUrls.valid(path: "asset1").absoluteString,
-      Keys.rulesURI: SampleUrls.valid(path: "rules1").absoluteString,
-      Keys.thresholds: [
-        1,
-        "0.68",
-        "0.7",
-        "0.5",
-        "0.84"
-      ],
-      Keys.useCase: UseCase.eventPrediction,
-      Keys.versionID: 4
+  static let eventPredictionAsset: [String: Any] = [
+    Keys.assetURI: SampleUrls.valid(path: "asset1").absoluteString,
+    Keys.rulesURI: SampleUrls.valid(path: "rules1").absoluteString,
+    Keys.thresholds: [
+      1,
+      "0.68",
+      "0.7",
+      "0.5",
+      "0.84"
     ],
-    [
-      Keys.assetURI: SampleUrls.valid(path: "asset2").absoluteString,
-      Keys.thresholds: [
-        1,
-        "0.85",
-        "0.6"
-      ],
-      Keys.useCase: UseCase.detection,
-      Keys.versionID: 1
-    ]
+    Keys.useCase: UseCase.eventPrediction,
+    Keys.versionID: 4
+  ]
+
+  static let detectionAsset: [String: Any] = [
+    Keys.assetURI: SampleUrls.valid(path: "asset2").absoluteString,
+    Keys.thresholds: [
+      1,
+      "0.85",
+      "0.6"
+    ],
+    Keys.useCase: UseCase.detection,
+    Keys.versionID: 1
+  ]
+
+  static let validAssets: [[String: Any]] = [
+    eventPredictionAsset,
+    detectionAsset
   ]
 }
