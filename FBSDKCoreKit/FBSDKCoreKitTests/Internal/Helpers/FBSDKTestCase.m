@@ -187,11 +187,6 @@
   OCMStub([_appEventsUtilityClassMock advertiserID]).andReturn(identifier);
 }
 
-- (void)stubAppEventsUtilityTokenStringToUseForTokenWith:(NSString *)tokenString
-{
-  OCMStub(ClassMethod([_appEventsUtilityClassMock tokenStringToUseFor:OCMArg.any])).andReturn(tokenString);
-}
-
 - (void)stubAllocatingGraphRequestConnection
 {
   OCMStub(ClassMethod([_graphRequestConnectionClassMock alloc])).andReturn(_graphRequestConnectionClassMock);

@@ -90,9 +90,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Stubs `FBSDKAppEventsUtility.shared.advertiserID` with the provided value
 - (void)stubAppEventsUtilityAdvertiserIDWith:(nullable NSString *)identifier;
 
-/// Stubs `FBSDKAppEventsUtility.tokenStringToUseFor:` and returns the provided string
-- (void)stubAppEventsUtilityTokenStringToUseForTokenWith:(NSString *)tokenString;
-
 /// Disables creation of graph request connections so that they cannot be started.
 /// This is the nuclear option. It should be removed as soon as possible so that we can test important things
 /// like whether or not a given method actually started a graph request.
