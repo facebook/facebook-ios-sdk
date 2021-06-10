@@ -169,11 +169,6 @@
 
 #pragma mark - Public Methods
 
-- (void)stubAppEventsUtilityShouldDropAppEventWith:(BOOL)shouldDropEvent
-{
-  OCMStub(ClassMethod([_appEventsUtilityClassMock shouldDropAppEvent])).andReturn(shouldDropEvent);
-}
-
 - (void)stubAppEventsUtilityAdvertiserIDWith:(nullable NSString *)identifier
 {
   OCMStub(ClassMethod([_appEventsUtilityClassMock shared])).andReturn(_appEventsUtilityClassMock);

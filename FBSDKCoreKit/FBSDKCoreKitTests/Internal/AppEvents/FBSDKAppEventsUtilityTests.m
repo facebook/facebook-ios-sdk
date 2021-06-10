@@ -301,21 +301,61 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 
 - (void)testDropAppEvent
 {
-  [FBSDKSettings setAppID:@"123"];
+  // shouldDropAppEvent only when: advertisingTrackingStatus == Disallowed && FBSDKAppEventsConfiguration.eventCollectionEnabled == NO
+  [FBSDKSettings setAdvertiserTrackingStatus:FBSDKAdvertisingTrackingDisallowed];
+  FBSDKAppEventsConfigurationManager.shared.configuration = [SampleAppEventsConfigurations createWithEventCollectionEnabled:NO];
 
-  [self stubAppEventsUtilityShouldDropAppEventWith:YES];
+  [FBSDKSettings setAppID:@"123"];
   [FBSDKAppEvents logEvent:@"event"];
+
   XCTAssertFalse(
     appEventsStateProvider.state.isAddEventCalled,
     "Shouldn't call addEvents on AppEventsState when dropping app event"
   );
 }
 
-- (void)testSendAppEvent
+- (void)testSendAppEventWhenTrackingUnspecified
 {
-  [FBSDKSettings setAppID:@"123"];
+  [FBSDKSettings setAdvertiserTrackingStatus:FBSDKAdvertisingTrackingUnspecified];
+  FBSDKAppEventsConfigurationManager.shared.configuration = [SampleAppEventsConfigurations createWithEventCollectionEnabled:NO];
 
-  [self stubAppEventsUtilityShouldDropAppEventWith:NO];
+  [FBSDKSettings setAppID:@"123"];
+  [FBSDKAppEvents logEvent:@"event"];
+
+  XCTAssertTrue(
+    appEventsStateProvider.state.isAddEventCalled,
+    "Should call addEvents on AppEventsState when sending app event"
+  );
+  XCTAssertFalse(
+    appEventsStateProvider.state.capturedIsImplicit,
+    "Shouldn't implicitly call addEvents on AppEventsState when sending app event"
+  );
+}
+
+- (void)testSendAppEventWhenTrackingAllowed
+{
+  [FBSDKSettings setAdvertiserTrackingStatus:FBSDKAdvertisingTrackingAllowed];
+  FBSDKAppEventsConfigurationManager.shared.configuration = [SampleAppEventsConfigurations createWithEventCollectionEnabled:NO];
+
+  [FBSDKSettings setAppID:@"123"];
+  [FBSDKAppEvents logEvent:@"event"];
+
+  XCTAssertTrue(
+    appEventsStateProvider.state.isAddEventCalled,
+    "Should call addEvents on AppEventsState when sending app event"
+  );
+  XCTAssertFalse(
+    appEventsStateProvider.state.capturedIsImplicit,
+    "Shouldn't implicitly call addEvents on AppEventsState when sending app event"
+  );
+}
+
+- (void)testSendAppEventWhenEventCollectionEnabled
+{
+  [FBSDKSettings setAdvertiserTrackingStatus:FBSDKAdvertisingTrackingDisallowed];
+  FBSDKAppEventsConfigurationManager.shared.configuration = [SampleAppEventsConfigurations createWithEventCollectionEnabled:YES];
+
+  [FBSDKSettings setAppID:@"123"];
   [FBSDKAppEvents logEvent:@"event"];
   XCTAssertTrue(
     appEventsStateProvider.state.isAddEventCalled,

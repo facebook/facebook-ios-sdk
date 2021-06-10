@@ -171,9 +171,6 @@ static NSString *const _mockUserID = @"mockUserID";
   self.timeSpentRecorderFactory = [TestTimeSpentRecorderFactory new];
   self.timeSpentRecorder = self.timeSpentRecorderFactory.recorder;
 
-  // Mock FBSDKAppEventsUtility methods
-  [self stubAppEventsUtilityShouldDropAppEventWith:NO];
-
   // Must be stubbed before the configure method is called
   self.atePublisher = [TestAtePublisher new];
   self.atePublisherfactory.stubbedPublisher = self.atePublisher;

@@ -81,9 +81,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing a `ASIdentifier` class mock between tests
 @property (nullable, nonatomic, assign) id asIdentifierManagerClassMock;
 
-/// Stubs `FBSDKAppEventsUtility.shouldDropAppEvent` with the provided value
-- (void)stubAppEventsUtilityShouldDropAppEventWith:(BOOL)shouldDropEvent;
-
 /// Stubs `FBSDKAppEventsUtility.shared.advertiserID` with the provided value
 - (void)stubAppEventsUtilityAdvertiserIDWith:(nullable NSString *)identifier;
 
