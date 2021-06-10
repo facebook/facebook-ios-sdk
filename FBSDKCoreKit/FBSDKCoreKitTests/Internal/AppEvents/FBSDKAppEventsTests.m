@@ -120,6 +120,7 @@ static NSString *const _mockUserID = @"mockUserID";
   TestMetadataIndexer *_metadataIndexer;
   TestAppEventsParameterProcessor *_eventDeactivationParameterProcessor;
   TestAppEventsParameterProcessor *_restrictiveDataFilterParameterProcessor;
+  TestAppEventsStateProvider *_appEventsStateProvider;
 }
 
 @property (nonnull, nonatomic) TestAtePublisherFactory *atePublisherfactory;
@@ -165,6 +166,7 @@ static NSString *const _mockUserID = @"mockUserID";
   _appEventsStateStore = [TestAppEventsStateStore new];
   _eventDeactivationParameterProcessor = [TestAppEventsParameterProcessor new];
   _restrictiveDataFilterParameterProcessor = [TestAppEventsParameterProcessor new];
+  _appEventsStateProvider = [TestAppEventsStateProvider new];
   self.atePublisherfactory = [TestAtePublisherFactory new];
   self.timeSpentRecorderFactory = [TestTimeSpentRecorderFactory new];
   self.timeSpentRecorder = self.timeSpentRecorderFactory.recorder;
@@ -192,6 +194,7 @@ static NSString *const _mockUserID = @"mockUserID";
                        eventDeactivationParameterProcessor:_eventDeactivationParameterProcessor
                    restrictiveDataFilterParameterProcessor:_restrictiveDataFilterParameterProcessor
                                        atePublisherFactory:self.atePublisherfactory
+                                    appEventsStateProvider:_appEventsStateProvider
                                                   swizzler:TestSwizzler.class];
 
   [FBSDKAppEvents configureNonTVComponentsWithOnDeviceMLModelManager:_onDeviceMLModelManager
@@ -261,12 +264,18 @@ static NSString *const _mockUserID = @"mockUserID";
   OCMExpect([self.appEventsMock logPurchase:_mockPurchaseAmount currency:_mockCurrency parameters:[OCMArg any]]).andForwardToRealObject();
   OCMExpect([self.appEventsMock logPurchase:_mockPurchaseAmount currency:_mockCurrency parameters:[OCMArg any] accessToken:[OCMArg any]]).andForwardToRealObject();
   OCMExpect([self.appEventsMock logEvent:FBSDKAppEventNamePurchased valueToSum:@(_mockPurchaseAmount) parameters:[OCMArg any] accessToken:[OCMArg any]]).andForwardToRealObject();
-  OCMExpect([self.appEventStatesMock addEvent:[OCMArg any] isImplicit:NO]);
 
   [FBSDKAppEvents logPurchase:_mockPurchaseAmount currency:_mockCurrency];
 
   OCMVerifyAll(self.appEventsMock);
-  [self.appEventStatesMock verify];
+  XCTAssertTrue(
+    _appEventsStateProvider.state.isAddEventCalled,
+    "Should add events to AppEventsState when logging purshase"
+  );
+  XCTAssertFalse(
+    _appEventsStateProvider.state.capturedIsImplicit,
+    "Shouldn't implicitly add events to AppEventsState when logging purshase"
+  );
 }
 
 - (void)testFlush
@@ -823,22 +832,25 @@ static NSString *const _mockUserID = @"mockUserID";
 {
   [TestGateKeeperManager setGateKeeperValueWithKey:@"app_events_killswitch" value:NO];
 
-  OCMExpect([self.appEventStatesMock addEvent:[OCMArg any] isImplicit:NO]);
-
   [self.appEventsMock instanceLogEvent:_mockEventName
                             valueToSum:@(_mockPurchaseAmount)
                             parameters:nil
                     isImplicitlyLogged:NO
                            accessToken:nil];
 
-  [self.appEventStatesMock verify];
+  XCTAssertTrue(
+    _appEventsStateProvider.state.isAddEventCalled,
+    "Should add events to AppEventsState when killswitch is disabled"
+  );
+  XCTAssertFalse(
+    _appEventsStateProvider.state.capturedIsImplicit,
+    "Shouldn't implicitly add events to AppEventsState when killswitch is disabled"
+  );
 }
 
 - (void)testAppEventsKillSwitchEnabled
 {
   [TestGateKeeperManager setGateKeeperValueWithKey:@"app_events_killswitch" value:YES];
-
-  OCMReject([self.appEventStatesMock addEvent:[OCMArg any] isImplicit:NO]);
 
   [self.appEventsMock instanceLogEvent:_mockEventName
                             valueToSum:@(_mockPurchaseAmount)
@@ -847,6 +859,10 @@ static NSString *const _mockUserID = @"mockUserID";
                            accessToken:nil];
 
   [TestGateKeeperManager setGateKeeperValueWithKey:@"app_events_killswitch" value:NO];
+  XCTAssertFalse(
+    _appEventsStateProvider.state.isAddEventCalled,
+    "Shouldn't add events to AppEventsState when killswitch is enabled"
+  );
 }
 
 #pragma mark  Tests for log event

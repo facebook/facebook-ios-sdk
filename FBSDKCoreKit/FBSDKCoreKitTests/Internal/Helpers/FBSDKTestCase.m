@@ -70,9 +70,6 @@
   [_appEventsMock stopMocking];
   _appEventsMock = nil;
 
-  [_appEventStatesMock stopMocking];
-  _appEventStatesMock = nil;
-
   [_appEventsUtilityClassMock stopMocking];
   _appEventsUtilityClassMock = nil;
 
@@ -126,10 +123,6 @@
   // Since numerous areas in FBSDK can end up calling `[FBSDKAppEvents singleton]`,
   // we will stub the singleton accessor out for our mock instance.
   OCMStub([_appEventsMock singleton]).andReturn(_appEventsMock);
-
-  _appEventStatesMock = OCMClassMock([FBSDKAppEventsState class]);
-  OCMStub([_appEventStatesMock alloc]).andReturn(_appEventStatesMock);
-  OCMStub([_appEventStatesMock initWithToken:[OCMArg any] appID:[OCMArg any]]).andReturn(_appEventStatesMock);
 }
 
 - (void)setUpAppEventsUtilityMock

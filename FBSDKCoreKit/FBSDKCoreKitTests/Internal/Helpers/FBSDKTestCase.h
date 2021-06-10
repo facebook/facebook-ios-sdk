@@ -54,9 +54,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing an `FBSDKAppEvents` mock between tests
 @property (nullable, assign) id appEventsMock;
 
-/// Used for mocking `FBSDKAppEventState` between tests
-@property (nullable, assign) id appEventStatesMock;
-
 /// Used for sharing a `FBSDKAppEventsUtility` class  mock between tests
 @property (nullable, nonatomic, assign) id appEventsUtilityClassMock;
 

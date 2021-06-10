@@ -97,6 +97,7 @@
         eventDeactivationParameterProcessor:[TestAppEventsParameterProcessor new]
     restrictiveDataFilterParameterProcessor:[TestAppEventsParameterProcessor new]
                         atePublisherFactory:factory
+                     appEventsStateProvider:[TestAppEventsStateProvider new]
                                    swizzler:TestSwizzler.class];
 
   [appEvents publishATE];

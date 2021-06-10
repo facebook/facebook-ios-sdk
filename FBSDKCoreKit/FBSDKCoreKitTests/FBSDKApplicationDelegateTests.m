@@ -21,6 +21,7 @@
 @import TestTools;
 
 #import "FBSDKAppEvents.h"
+#import "FBSDKAppEventsStateFactory.h"
 #import "FBSDKApplicationDelegate+Internal.h"
 #import "FBSDKApplicationObserving.h"
 #import "FBSDKAuthenticationToken+Internal.h"
@@ -274,6 +275,14 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
     [(NSObject *)self.appEvents.capturedConfigureAtePublisherFactory isKindOfClass:FBSDKAtePublisherFactory.class],
     "Initializing the SDK should set concrete ate publisher factory for event logging"
   );
+
+  NSObject *capturedConfigureAppEventsStateProvider = (NSObject *)self.appEvents.capturedConfigureAppEventsStateProvider;
+  XCTAssertEqualObjects(
+    capturedConfigureAppEventsStateProvider.class,
+    FBSDKAppEventsStateFactory.class,
+    "Initializing the SDK should set concrete AppEvents state provider for event logging"
+  );
+
   XCTAssertEqualObjects(
     self.appEvents.capturedConfigureSwizzler,
     FBSDKSwizzler.class,

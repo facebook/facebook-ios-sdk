@@ -32,6 +32,7 @@
 #import "FBSDKAppEvents+SourceApplicationTracking.h"
 #import "FBSDKAppEventsConfigurationManager.h"
 #import "FBSDKAppEventsState.h"
+#import "FBSDKAppEventsStateFactory.h"
 #import "FBSDKAppEventsStateManager+AppEventsStatePersisting.h"
 #import "FBSDKAppEventsUtility+AdvertiserIDProviding.h"
 #import "FBSDKApplicationLifecycleObserving.h"
@@ -618,6 +619,7 @@ static UIApplicationState _applicationState;
              eventDeactivationParameterProcessor:eventDeactivationManager
          restrictiveDataFilterParameterProcessor:restrictiveDataFilterManager
                              atePublisherFactory:atePublisherFactory
+                          appEventsStateProvider:[FBSDKAppEventsStateFactory new]
                                         swizzler:FBSDKSwizzler.class];
   [FBSDKInternalUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKAppEventsConfigurationManager configureWithStore:store

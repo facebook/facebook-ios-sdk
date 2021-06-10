@@ -115,6 +115,7 @@ class FBSDKAppLinkUtilityTests: XCTestCase {
       eventDeactivationParameterProcessor: TestAppEventsParameterProcessor(),
       restrictiveDataFilterParameterProcessor: TestAppEventsParameterProcessor(),
       atePublisherFactory: TestAtePublisherFactory(),
+      appEventsStateProvider: TestAppEventsStateProvider(),
       swizzler: TestSwizzler.self
     )
 

@@ -49,6 +49,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   UserDefaultsSpy *userDefaultsSpy;
   TestBundle *bundle;
   TestEventLogger *logger;
+  TestAppEventsStateProvider *appEventsStateProvider;
 }
 
 + (void)setUp
@@ -67,6 +68,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   userDefaultsSpy = [UserDefaultsSpy new];
   bundle = [TestBundle new];
   logger = [TestEventLogger new];
+  appEventsStateProvider = [TestAppEventsStateProvider new];
   TestAppEventsConfigurationProvider.stubbedConfiguration = SampleAppEventsConfigurations.valid;
 
   [FBSDKSettings configureWithStore:userDefaultsSpy
@@ -87,6 +89,7 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
                        eventDeactivationParameterProcessor:[TestAppEventsParameterProcessor new]
                    restrictiveDataFilterParameterProcessor:[TestAppEventsParameterProcessor new]
                                        atePublisherFactory:[TestAtePublisherFactory new]
+                                    appEventsStateProvider:appEventsStateProvider
                                                   swizzler:TestSwizzler.class];
 }
 
@@ -302,7 +305,10 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 
   [self stubAppEventsUtilityShouldDropAppEventWith:YES];
   [FBSDKAppEvents logEvent:@"event"];
-  OCMReject([self.appEventStatesMock addEvent:OCMArg.any isImplicit:NO]);
+  XCTAssertFalse(
+    appEventsStateProvider.state.isAddEventCalled,
+    "Shouldn't call addEvents on AppEventsState when dropping app event"
+  );
 }
 
 - (void)testSendAppEvent
@@ -311,7 +317,14 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 
   [self stubAppEventsUtilityShouldDropAppEventWith:NO];
   [FBSDKAppEvents logEvent:@"event"];
-  OCMVerify([self.appEventStatesMock addEvent:OCMArg.any isImplicit:NO]);
+  XCTAssertTrue(
+    appEventsStateProvider.state.isAddEventCalled,
+    "Should call addEvents on AppEventsState when sending app event"
+  );
+  XCTAssertFalse(
+    appEventsStateProvider.state.capturedIsImplicit,
+    "Shouldn't implicitly call addEvents on AppEventsState when sending app event"
+  );
 }
 
 - (void)testFlushReasonToString

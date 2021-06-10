@@ -33,6 +33,7 @@
 #import "FBSDKAppEventsParameterProcessing.h"
 #import "FBSDKAppEventsState.h"
 #import "FBSDKAppEventsStatePersisting.h"
+#import "FBSDKAppEventsStateProviding.h"
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKAtePublisherCreating.h"
 #import "FBSDKAtePublishing.h"
@@ -297,6 +298,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 @property (nonatomic, strong) id<FBSDKAtePublishing> atePublisher;
 @property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
 @property (nullable, nonatomic) id<FBSDKSourceApplicationTracking, FBSDKTimeSpentRecording> timeSpentRecorder;
+@property (nonatomic, strong) id<FBSDKAppEventsStateProviding> appEventsStateProvider;
 @property (nonatomic) BOOL isConfigured;
 
 @property (nonatomic, assign) BOOL disableTimer; // for testing only.
@@ -891,6 +893,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
       eventDeactivationParameterProcessor:(id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)eventDeactivationParameterProcessor
   restrictiveDataFilterParameterProcessor:(id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)restrictiveDataFilterParameterProcessor
                       atePublisherFactory:(id<FBSDKAtePublisherCreating>)atePublisherFactory
+                   appEventsStateProvider:(id<FBSDKAppEventsStateProviding>)appEventsStateProvider
                                  swizzler:(Class<FBSDKSwizzling>)swizzler
 {
   [FBSDKAppEvents setAppEventsConfigurationProvider:appEventsConfigurationProvider];
@@ -908,6 +911,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
   self.store = store;
   self.atePublisher = [atePublisherFactory createPublisherWithAppID:self.appID];
   self.timeSpentRecorder = [timeSpentRecorderFactory createTimeSpentRecorder];
+  self.appEventsStateProvider = appEventsStateProvider;
 
   self.isConfigured = YES;
 
@@ -1125,8 +1129,8 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
       return;
     }
     FBSDKAppEventsState *copy = [_appEventsState copy];
-    _appEventsState = [[FBSDKAppEventsState alloc] initWithToken:copy.tokenString
-                                                           appID:copy.appID];
+    _appEventsState = [self.appEventsStateProvider createStateWithToken:copy.tokenString
+                                                                  appID:copy.appID];
     dispatch_async(dispatch_get_main_queue(), ^{
       [self flushOnMainQueue:copy forReason:flushReason];
     });
@@ -1432,14 +1436,14 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
   @synchronized(self) {
     if (!_appEventsState) {
-      _appEventsState = [[FBSDKAppEventsState alloc] initWithToken:tokenString appID:appID];
+      _appEventsState = [self.appEventsStateProvider createStateWithToken:tokenString appID:appID];
     } else if (![_appEventsState isCompatibleWithTokenString:tokenString appID:appID]) {
       if (self.flushBehavior == FBSDKAppEventsFlushBehaviorExplicitOnly) {
         [g_appEventsStateStore persistAppEventsData:_appEventsState];
       } else {
         [self flushForReason:FBSDKAppEventsFlushReasonSessionChange];
       }
-      _appEventsState = [[FBSDKAppEventsState alloc] initWithToken:tokenString appID:appID];
+      _appEventsState = [self.appEventsStateProvider createStateWithToken:tokenString appID:appID];
     }
 
     [_appEventsState addEvent:eventDictionary isImplicit:isImplicitlyLogged];
@@ -1475,8 +1479,8 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
   // reduce lock time by creating a new FBSDKAppEventsState to collect matching persisted events.
   @synchronized(self) {
     if (_appEventsState) {
-      matchingEventsPreviouslySaved = [[FBSDKAppEventsState alloc] initWithToken:_appEventsState.tokenString
-                                                                           appID:_appEventsState.appID];
+      matchingEventsPreviouslySaved = [self.appEventsStateProvider createStateWithToken:_appEventsState.tokenString
+                                                                                  appID:_appEventsState.appID];
     }
   }
   for (FBSDKAppEventsState *saved in existingEventsStates) {
