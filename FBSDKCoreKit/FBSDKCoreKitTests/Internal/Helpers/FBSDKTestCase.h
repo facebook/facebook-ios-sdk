@@ -78,9 +78,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing a `FBSDKUtility` class mock between tests
 @property (nullable, nonatomic, assign) id utilityClassMock;
 
-/// Used for sharing a `ASIdentifier` class mock between tests
-@property (nullable, nonatomic, assign) id asIdentifierManagerClassMock;
-
 /// Stubs `FBSDKAppEventsUtility.shared.advertiserID` with the provided value
 - (void)stubAppEventsUtilityAdvertiserIDWith:(nullable NSString *)identifier;
 
@@ -104,12 +101,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 
 /// Stubs `FBSDKInternalUtility`'s `appURLScheme` property to return the provided scheme
 - (void)stubAppUrlSchemeWith:(nullable NSString *)scheme;
-
-/// Stubs `ASIdentifierManager.sharedManager` and returns the provided identifier manager
-- (void)stubSharedAsIdentifierManagerWithAsIdentifierManager:(id)identifierManager;
-
-/// Stubs `ASIdentifierManager.advertisingIdentifier` and returns the provided value
-- (void)stubAdvertisingIdentifierWithIdentifier:(NSUUID *)uuid;
 
 @end
 

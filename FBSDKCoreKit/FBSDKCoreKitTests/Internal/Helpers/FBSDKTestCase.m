@@ -59,7 +59,6 @@
   [self setUpSharedApplicationMock];
   [self setUpTransitionCoordinatorMock];
   [self setUpBridgeApiClassMock];
-  [self setUpASIdentifierClassMock];
   [self setUpAppEventsMock];
 }
 
@@ -90,9 +89,6 @@
 
   [_utilityClassMock stopMocking];
   _utilityClassMock = nil;
-
-  [_asIdentifierManagerClassMock stopMocking];
-  _asIdentifierManagerClassMock = nil;
 }
 
 - (void)setUpSettingsMock
@@ -162,11 +158,6 @@
   _utilityClassMock = OCMClassMock(FBSDKUtility.class);
 }
 
-- (void)setUpASIdentifierClassMock
-{
-  _asIdentifierManagerClassMock = OCMClassMock(ASIdentifierManager.class);
-}
-
 #pragma mark - Public Methods
 
 - (void)stubAppEventsUtilityAdvertiserIDWith:(nullable NSString *)identifier
@@ -204,16 +195,6 @@
 {
   // Note: the '5' is arbitrary and ignored but needs to be there for compilation.
   OCMStub(ClassMethod([self.utilityClassMock startGCDTimerWithInterval:5 block:OCMArg.any]));
-}
-
-- (void)stubSharedAsIdentifierManagerWithAsIdentifierManager:(ASIdentifierManager *)identifierManager
-{
-  OCMStub([self.asIdentifierManagerClassMock sharedManager]).andReturn(identifierManager);
-}
-
-- (void)stubAdvertisingIdentifierWithIdentifier:(NSUUID *)uuid
-{
-  OCMStub([self.asIdentifierManagerClassMock advertisingIdentifier]).andReturn(uuid);
 }
 
 @end
