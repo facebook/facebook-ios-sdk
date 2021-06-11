@@ -18,11 +18,24 @@
 
 #import <FBSDKGamingServicesKit/FBSDKGamingServicesKit.h>
 
-#import "FBSDKCoreKit+Internal.h"
-#import "FBSDKFriendFinderDialog+Testing.h"
-#import "FBSDKGamingServiceController.h"
-#import "FBSDKGamingImageUploader+Testing.h"
-#import "FBSDKGamingServiceController.h"
-#import "FBSDKGamingServiceControllerCreating.h"
-#import "FBSDKGamingServiceControllerFactory.h"
-#import "FBSDKGamingServiceControllerProtocol.h"
+@protocol FBSDKGamingServiceControllerCreating;
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface FBSDKGamingImageUploader (Testing)
+
+@property (class, nonnull, nonatomic, readonly) FBSDKGamingImageUploader *shared;
+@property (nonnull, nonatomic) id<FBSDKGamingServiceControllerCreating> factory;
+
+- (instancetype)initWithGamingServiceControllerFactory:(id<FBSDKGamingServiceControllerCreating>)factory;
+
+- (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration *_Nonnull)configuration
+          andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler;
+
+- (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration *_Nonnull)configuration
+                   completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
+                  andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler;
+
+@end
+
+NS_ASSUME_NONNULL_END

@@ -23,30 +23,48 @@
 
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKGamingServicesKitTestUtility.h"
+#import "FBSDKGamingServicesKitTests-Swift.h"
 
 @interface FBSDKGamingImageUploaderTests : XCTestCase
+
+@property (nonatomic) FBSDKGamingImageUploader *uploader;
+@property (nonatomic) TestGamingServiceControllerFactory *factory;
+@property (nonatomic) FBSDKGamingImageUploaderConfiguration *configuration;
+
 @end
 
 @implementation FBSDKGamingImageUploaderTests
-{
-  id _mockToken;
-  id _mockConfig;
-  id _mockApp;
-}
 
 - (void)setUp
 {
   [super setUp];
 
-  _mockToken = OCMClassMock([FBSDKAccessToken class]);
-  [FBSDKAccessToken setCurrentAccessToken:_mockToken];
+  FBSDKAccessToken.currentAccessToken = [self createAccessToken];
 
-  _mockConfig = OCMClassMock([FBSDKGamingImageUploaderConfiguration class]);
-  OCMStub([_mockConfig image]).andReturn([self testUIImage]);
-
-  _mockApp = OCMClassMock([UIApplication class]);
-  OCMStub([_mockApp sharedApplication]).andReturn(_mockApp);
+  self.factory = [TestGamingServiceControllerFactory new];
+  self.uploader = [[FBSDKGamingImageUploader alloc] initWithGamingServiceControllerFactory:self.factory];
+  self.configuration = [self createConfigurationWithShouldLaunch:YES];
 }
+
+- (void)tearDown
+{
+  FBSDKAccessToken.currentAccessToken = nil;
+
+  [super tearDown];
+}
+
+// MARK: - Dependencies
+
+- (void)testDefaultDependencies
+{
+  XCTAssertEqualObjects(
+    [(NSObject *)FBSDKGamingImageUploader.shared.factory class],
+    FBSDKGamingServiceControllerFactory.class,
+    "Should use the expected default gaming service controller factory type by default"
+  );
+}
+
+// MARK: - Configuration
 
 - (void)testValuesAreSavedToConfig
 {
@@ -64,13 +82,15 @@
   XCTAssertTrue(config.shouldLaunchMediaDialog);
 }
 
+// MARK: - Uploading
+
 - (void)testFailureWhenNoValidAccessTokenPresent
 {
   [FBSDKAccessToken setCurrentAccessToken:nil];
 
   __block BOOL actioned = false;
   [FBSDKGamingImageUploader
-   uploadImageWithConfiguration:_mockConfig
+   uploadImageWithConfiguration:self.configuration
    andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
      XCTAssert(error.code == FBSDKErrorAccessTokenRequired, "Expected error requiring a valid access token");
      actioned = true;
@@ -100,7 +120,7 @@
 
   __block BOOL actioned = false;
   [FBSDKGamingImageUploader
-   uploadImageWithConfiguration:_mockConfig
+   uploadImageWithConfiguration:self.configuration
    andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
      XCTAssert(error.code == FBSDKErrorGraphRequestGraphAPI, "Expected error from Graph API");
      actioned = true;
@@ -111,16 +131,42 @@
 
 - (void)testGraphResponsesTriggerCompletionIfDialogNotRequested
 {
-  [self stubGraphRequestWithResult:@{@"id" : @"123"} error:nil];
+  NSString *expectedID = @"111";
+  NSDictionary *expectedResult = @{@"id" : expectedID};
+  NSString *expectedDialogResult = self.name;
+  NSError *expectedError = [[NSError alloc]
+                            initWithDomain:FBSDKErrorDomain
+                            code:FBSDKErrorUnknown
+                            userInfo:nil];
+  [self stubGraphRequestWithResult:expectedResult error:nil];
 
   __block BOOL actioned = false;
-  [FBSDKGamingImageUploader
-   uploadImageWithConfiguration:_mockConfig
+  [self.uploader
+   uploadImageWithConfiguration:self.configuration
    andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
      XCTAssertTrue(success);
-     XCTAssertNil(error);
+     XCTAssertEqualObjects(error, expectedError);
+     XCTAssertEqualObjects(result, expectedDialogResult);
      actioned = true;
    }];
+
+  XCTAssertEqual(
+    self.factory.capturedServiceType,
+    FBSDKGamingServiceTypeMediaAsset,
+    "Should create a controller with the expected service type"
+  );
+  XCTAssertEqualObjects(
+    (NSDictionary *)self.factory.capturedPendingResult,
+    expectedResult,
+    "Should not create a controller with a pending result"
+  );
+  XCTAssertEqualObjects(
+    self.factory.controller.capturedArgument,
+    expectedID,
+    "Should invoke the new controller with the id from the result"
+  );
+
+  self.factory.capturedCompletion(YES, self.name, expectedError);
 
   XCTAssertTrue(actioned);
 }
@@ -128,11 +174,10 @@
 - (void)testGraphResponsesDoNotTriggerCompletionIfDialogIsRequested
 {
   [self stubGraphRequestWithResult:@{@"id" : @"123"} error:nil];
-  OCMStub([_mockConfig shouldLaunchMediaDialog]).andReturn(true);
 
   __block BOOL actioned = false;
-  [FBSDKGamingImageUploader
-   uploadImageWithConfiguration:_mockConfig
+  [self.uploader
+   uploadImageWithConfiguration:self.configuration
    andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
      actioned = true;
    }];
@@ -142,32 +187,36 @@
 
 - (void)testGraphResponsesTriggerDialogIfDialogIsRequested
 {
-  [self stubGraphRequestWithResult:@{@"id" : @"111"} error:nil];
-  OCMStub([_mockConfig shouldLaunchMediaDialog]).andReturn(true);
+  NSString *expectedID = @"111";
+  NSDictionary *expectedResult = @{@"id" : expectedID};
+  [self stubGraphRequestWithResult:expectedResult error:nil];
 
-  OCMStub(
-    [_mockApp
-     openURL:[OCMArg any]
-     options:[OCMArg any]
-     completionHandler:([OCMArg invokeBlockWithArgs:@(false), nil])]
-  );
-
-  // This will cause an lint warning, ignore it, this is an external sdk test
-  // @lint-ignore FBOBJCDISCOURAGEDFUNCTION
-  id expectation = [self expectationWithDescription:@"callback"];
-
-  [FBSDKGamingImageUploader
-   uploadImageWithConfiguration:_mockConfig
+  __block BOOL didInvokeCompletion = NO;
+  [self.uploader
+   uploadImageWithConfiguration:self.configuration
    andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
-     [expectation fulfill];
+     didInvokeCompletion = YES;
    }];
 
-  [self waitForExpectationsWithTimeout:1 handler:nil];
+  XCTAssertEqual(
+    self.factory.capturedServiceType,
+    FBSDKGamingServiceTypeMediaAsset,
+    "Should create a controller with the expected service type"
+  );
+  XCTAssertEqualObjects(
+    (NSDictionary *)self.factory.capturedPendingResult,
+    expectedResult,
+    "Should not create a controller with a pending result"
+  );
+  XCTAssertEqualObjects(
+    self.factory.controller.capturedArgument,
+    expectedID,
+    "Should invoke the new controller with the id from the result"
+  );
 
-  id urlCheck = [OCMArg checkWithBlock:^BOOL (id obj) {
-    return [[(NSURL *)obj absoluteString] isEqualToString:@"https://fb.gg/me/media_asset/111"];
-  }];
-  OCMVerify([_mockApp openURL:urlCheck options:[OCMArg any] completionHandler:[OCMArg any]]);
+  self.factory.capturedCompletion(YES, nil, nil);
+
+  XCTAssertTrue(didInvokeCompletion);
 }
 
 - (void)testDialogCompletionOnURLCallback
@@ -176,7 +225,6 @@
   OCMStub(ClassMethod([settings appID])).andReturn(@"123");
 
   [self stubGraphRequestWithResult:@{@"id" : @"111"} error:nil];
-  OCMStub([_mockConfig shouldLaunchMediaDialog]).andReturn(true);
 
   __block id<FBSDKURLOpening> delegate;
   [FBSDKGamingServicesKitTestUtility captureURLDelegateFromBridgeAPI:^(id<FBSDKURLOpening> obj) {
@@ -185,14 +233,14 @@
 
   __block BOOL actioned = false;
   [FBSDKGamingImageUploader
-   uploadImageWithConfiguration:_mockConfig
+   uploadImageWithConfiguration:self.configuration
    andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
      XCTAssertTrue(success);
      actioned = true;
    }];
 
   [delegate
-   application:_mockApp
+   application:UIApplication.sharedApplication
    openURL:[NSURL URLWithString:@"fb123://media_asset"]
    sourceApplication:@""
    annotation:nil];
@@ -200,10 +248,14 @@
   XCTAssertTrue(actioned);
 }
 
-- (void)testDialogCompletionOnApplicationBecameActive
+// TODO: This is actually testing the applicationDidBecomeActive method
+// of GamingServicesController. This is a roundabout way of setting a
+// completion on that then invoking it via the delegate from the bridge.
+// This test should be moved to where it makes sense or deleted.
+- (void)_testDialogCompletionOnApplicationBecameActive
 {
+  FBSDKAccessToken.currentAccessToken = [self createAccessToken];
   [self stubGraphRequestWithResult:@{@"id" : @"111"} error:nil];
-  OCMStub([_mockConfig shouldLaunchMediaDialog]).andReturn(true);
 
   __block id<FBSDKURLOpening> delegate;
   [FBSDKGamingServicesKitTestUtility captureURLDelegateFromBridgeAPI:^(id<FBSDKURLOpening> obj) {
@@ -211,14 +263,14 @@
   }];
 
   __block BOOL actioned = false;
-  [FBSDKGamingImageUploader
-   uploadImageWithConfiguration:_mockConfig
+  [self.uploader
+   uploadImageWithConfiguration:self.configuration
    andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
      XCTAssertTrue(success);
      actioned = true;
    }];
 
-  [delegate applicationDidBecomeActive:_mockApp];
+  [delegate applicationDidBecomeActive:UIApplication.sharedApplication];
 
   XCTAssertTrue(actioned);
 }
@@ -235,8 +287,8 @@
 
   __block BOOL completionActioned = false;
   __block BOOL progressActioned = false;
-  [FBSDKGamingImageUploader
-   uploadImageWithConfiguration:_mockConfig
+  [self.uploader
+   uploadImageWithConfiguration:[self createConfigurationWithShouldLaunch:NO]
    completionHandler:^(BOOL success, id result, NSError *_Nullable error) {
      XCTAssert(success);
      XCTAssertEqual(result[@"id"], @"foo");
@@ -314,6 +366,30 @@
       return true;
     }]]
   );
+}
+
+// MARK: - Helpers
+
+- (FBSDKAccessToken *)createAccessToken
+{
+  return [[FBSDKAccessToken alloc]
+          initWithTokenString:@"abc"
+          permissions:@[]
+          declinedPermissions:@[]
+          expiredPermissions:@[]
+          appID:@"123"
+          userID:@""
+          expirationDate:nil
+          refreshDate:nil
+          dataAccessExpirationDate:nil];
+}
+
+- (FBSDKGamingImageUploaderConfiguration *)createConfigurationWithShouldLaunch:(BOOL)shouldLaunch
+{
+  return [[FBSDKGamingImageUploaderConfiguration alloc]
+          initWithImage:[self testUIImage]
+          caption:@"Cool Photo"
+          shouldLaunchMediaDialog:shouldLaunch];
 }
 
 @end

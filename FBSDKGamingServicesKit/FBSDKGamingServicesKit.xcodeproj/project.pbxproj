@@ -317,6 +317,7 @@
 		F4D1374726725F8F00AEB231 /* FBSDKFriendFinderDialog+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKFriendFinderDialog+Testing.h"; sourceTree = "<group>"; };
 		F4D1374826726C3700AEB231 /* FBSDKGamingServiceController+GamingServiceControllerProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKGamingServiceController+GamingServiceControllerProtocol.h"; sourceTree = "<group>"; };
 		F4D13755267298B200AEB231 /* FBSDKGamingServicesCoreKitImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKGamingServicesCoreKitImport.h; sourceTree = "<group>"; };
+		F4D1374B26728B3900AEB231 /* FBSDKGamingImageUploader+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKGamingImageUploader+Testing.h"; sourceTree = "<group>"; };
 		F4DC056E2519498C0073B380 /* FBSDKCoreKitInternalImport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKCoreKitInternalImport.h; sourceTree = "<group>"; };
 		F4DE318024D9F4A700297C18 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		F4DE31AC24D9FD6000297C18 /* FBSDKVideoUploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKVideoUploader.m; sourceTree = "<group>"; };
@@ -448,6 +449,7 @@
 		F4D1374A26727C0800AEB231 /* Interfaces */ = {
 			isa = PBXGroup;
 			children = (
+				F4D1374B26728B3900AEB231 /* FBSDKGamingImageUploader+Testing.h */,
 				F4D1374726725F8F00AEB231 /* FBSDKFriendFinderDialog+Testing.h */,
 			);
 			path = Interfaces;
