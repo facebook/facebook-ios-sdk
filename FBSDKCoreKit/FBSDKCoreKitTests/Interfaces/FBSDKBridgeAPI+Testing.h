@@ -17,6 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <SafariServices/SafariServices.h>
 #import "FBSDKBridgeAPI.h"
 #import "FBSDKContainerViewController.h"
 #import "FBSDKOperatingSystemVersionComparing.h"
@@ -72,7 +73,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 - (FBSDKAuthenticationCompletionHandler)authenticationSessionCompletionHandler;
 - (BOOL)expectingBackground;
 - (id<FBSDKURLOpening>)pendingUrlOpen;
-- (UIViewController *)safariViewController;
+- (SFSafariViewController *)safariViewController;
 - (BOOL)isDismissingSafariViewController;
 - (NSObject<FBSDKBridgeAPIRequestProtocol> *)pendingRequest;
 - (FBSDKBridgeAPIResponseBlock)pendingRequestCompletionBlock;

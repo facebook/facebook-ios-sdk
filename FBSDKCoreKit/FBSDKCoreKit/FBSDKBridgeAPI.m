@@ -331,7 +331,6 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   FBSDKSuccessBlock handler = [self _bridgeAPIRequestCompletionBlockWithRequest:request
                                                                      completion:completionBlock];
 
-  // TODO: Is this a valid seam? Can it be?
   if (useSafariViewController) {
     [self openURLWithSafariViewController:requestURL sender:nil fromViewController:fromViewController handler:handler];
   } else {
