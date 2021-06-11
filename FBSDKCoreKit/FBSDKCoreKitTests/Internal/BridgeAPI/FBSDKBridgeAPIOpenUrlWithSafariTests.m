@@ -16,7 +16,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <OCMock/OCMock.h>
 #import <SafariServices/SFSafariViewController.h>
 #import <XCTest/XCTest.h>
 
@@ -26,11 +25,10 @@
 #import "FBSDKTestCase.h"
 #import "FakeLoginManager.h"
 
-@interface FBSDKBridgeAPIOpenUrlWithSafariTests : FBSDKTestCase
+@interface FBSDKBridgeAPIOpenUrlWithSafariTests : XCTestCase
 
 @property (nonatomic) FBSDKBridgeAPI *api;
 @property (nonatomic) TestLogger *logger;
-@property (nonatomic) id partialMock;
 @property (nonatomic, readonly) NSURL *sampleUrl;
 @property (nonatomic) FBSDKLoginManager *loginManager;
 @property (nonatomic) TestURLOpener *urlOpener;
@@ -46,33 +44,18 @@
   [super setUp];
 
   [FBSDKLoginManager resetTestEvidence];
-  _logger = [TestLogger new];
-  _urlOpener = [[TestURLOpener alloc] initWithCanOpenUrl:YES];
-  _bridgeAPIResponseFactory = [TestBridgeApiResponseFactory new];
-  _frameworkLoader = [TestDylibResolver new];
-  _api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]
-                                              logger:self.logger
-                                           urlOpener:self.urlOpener
-                            bridgeAPIResponseFactory:self.bridgeAPIResponseFactory
-                                     frameworkLoader:self.frameworkLoader];
-  _partialMock = OCMPartialMock(self.api);
-  _loginManager = [FBSDKLoginManager new];
+  self.logger = [TestLogger new];
+  self.urlOpener = [[TestURLOpener alloc] initWithCanOpenUrl:YES];
+  self.bridgeAPIResponseFactory = [TestBridgeApiResponseFactory new];
+  self.frameworkLoader = [TestDylibResolver new];
+  self.api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]
+                                                  logger:self.logger
+                                               urlOpener:self.urlOpener
+                                bridgeAPIResponseFactory:self.bridgeAPIResponseFactory
+                                         frameworkLoader:self.frameworkLoader];
+  self.loginManager = [FBSDKLoginManager new];
 
-  OCMStub([_partialMock setSessionCompletionHandlerFromHandler:OCMArg.any]);
-  OCMStub([_partialMock openURLWithAuthenticationSession:OCMArg.any]);
-  OCMStub([_partialMock openURL:OCMArg.any sender:OCMArg.any handler:OCMArg.any]);
-}
-
-- (void)tearDown
-{
-  _api = nil;
-  _loginManager = nil;
-
-  [_partialMock stopMocking];
-  _partialMock = nil;
-  [TestLogger reset];
-
-  [super tearDown];
+  self.frameworkLoader.stubSafariViewControllerClass = SFSafariViewController.class;
 }
 
 // MARK: - Url Opening
@@ -86,7 +69,12 @@
                                      sender:nil
                          fromViewController:nil
                                     handler:self.uninvokedSuccessBlock];
-  OCMVerify([_partialMock openURL:url sender:nil handler:self.uninvokedSuccessBlock]);
+
+  XCTAssertEqualObjects(
+    self.urlOpener.capturedOpenUrl,
+    url,
+    "Should try to open a url with a non http scheme"
+  );
   XCTAssertTrue(self.api.expectingBackground, "Should not modify whether the background is expected to change");
   XCTAssertNil(self.api.pendingUrlOpen, "Should not set a pending url opener");
 }
@@ -96,54 +84,62 @@
   self.loginManager.stubbedIsAuthenticationUrl = YES;
   self.api.expectingBackground = YES;
 
-  OCMReject([_partialMock openURL:OCMArg.any sender:OCMArg.any handler:OCMArg.any]);
-
   [self.api openURLWithSafariViewController:self.sampleUrl
                                      sender:self.loginManager
                          fromViewController:nil
                                     handler:self.uninvokedSuccessBlock];
 
-  OCMVerify([_partialMock setSessionCompletionHandlerFromHandler:self.uninvokedSuccessBlock]);
-  OCMVerify([_partialMock openURLWithAuthenticationSession:self.sampleUrl]);
+  XCTAssertNil(
+    self.urlOpener.capturedOpenUrl,
+    "Should not try to open an authentication url when safari controller is specified"
+  );
+  XCTAssertNotNil(self.api.authenticationSessionCompletionHandler);
+  XCTAssertNotNil(self.api.authenticationSession);
   [self assertExpectingBackgroundAndPendingUrlOpener];
 }
 
-- (void)testWithNonAuthenticationURL
+- (void)testWithNonAuthenticationURLWithSafariControllerAvailable
 {
   self.loginManager.stubbedIsAuthenticationUrl = NO;
   self.api.expectingBackground = YES;
 
-  OCMReject([_partialMock openURL:OCMArg.any sender:OCMArg.any handler:OCMArg.any]);
-  OCMReject([_partialMock setSessionCompletionHandlerFromHandler:OCMArg.any]);
-  OCMReject([_partialMock openURLWithAuthenticationSession:OCMArg.any]);
-
   [self.api openURLWithSafariViewController:self.sampleUrl
                                      sender:self.loginManager
                          fromViewController:nil
                                     handler:self.uninvokedSuccessBlock];
 
+  XCTAssertNil(
+    self.urlOpener.capturedOpenUrl,
+    "Should not try to open a url when a safari controller is expected to be used"
+  );
+  XCTAssertNil(self.api.authenticationSessionCompletionHandler);
+  XCTAssertNil(self.api.authenticationSession);
   [self assertExpectingBackgroundAndPendingUrlOpener];
 }
 
 - (void)testWithoutSafariVcAvailable
 {
+  self.frameworkLoader.stubSafariViewControllerClass = nil;
   self.loginManager.stubbedIsAuthenticationUrl = NO;
   self.api.expectingBackground = YES;
-
-  OCMReject([_partialMock setSessionCompletionHandlerFromHandler:OCMArg.any]);
-  OCMReject([_partialMock openURLWithAuthenticationSession:OCMArg.any]);
 
   [self.api openURLWithSafariViewController:self.sampleUrl
                                      sender:self.loginManager
                          fromViewController:nil
                                     handler:self.uninvokedSuccessBlock];
 
-  OCMVerify(
-    [_partialMock openURL:self.sampleUrl
-                   sender:self.loginManager
-                  handler:self.uninvokedSuccessBlock]
+  XCTAssertEqualObjects(
+    self.urlOpener.capturedOpenUrl,
+    self.sampleUrl,
+    "Should try to open a url when a safari controller is not available"
   );
-  [self assertExpectingBackgroundAndPendingUrlOpener];
+  XCTAssertNil(self.api.authenticationSessionCompletionHandler);
+  XCTAssertNil(self.api.authenticationSession);
+  XCTAssertEqualObjects(
+    self.api.pendingUrlOpen,
+    self.loginManager,
+    "Should set the pending url opener to the passed in sender"
+  );
 }
 
 - (void)testWithoutFromViewController
@@ -152,22 +148,24 @@
   self.api.expectingBackground = YES;
   self.frameworkLoader.stubSafariViewControllerClass = SFSafariViewController.class;
 
-  OCMReject([_partialMock setSessionCompletionHandlerFromHandler:OCMArg.any]);
-  OCMReject([_partialMock openURLWithAuthenticationSession:OCMArg.any]);
-  OCMReject([_partialMock openURL:OCMArg.any sender:OCMArg.any handler:OCMArg.any]);
-
   [self.api openURLWithSafariViewController:self.sampleUrl
                                      sender:self.loginManager
                          fromViewController:nil
                                     handler:self.uninvokedSuccessBlock];
 
+  XCTAssertNil(
+    self.urlOpener.capturedOpenUrl,
+    "Should not try to open a url when the request cannot provide one"
+  );
+
+  XCTAssertNil(self.api.authenticationSessionCompletionHandler);
+  XCTAssertNil(self.api.authenticationSession);
   XCTAssertEqualObjects(_logger.capturedContents, @"There are no valid ViewController to present SafariViewController with");
   [self assertExpectingBackgroundAndPendingUrlOpener];
 }
 
 - (void)testWithFromViewControllerMissingTransitionCoordinator
 {
-  self.frameworkLoader.stubSafariViewControllerClass = SFSafariViewController.class;
   ViewControllerSpy *spy = ViewControllerSpy.makeDefaultSpy;
   self.loginManager.stubbedIsAuthenticationUrl = NO;
   self.api.expectingBackground = YES;
@@ -175,10 +173,6 @@
     XCTAssertTrue(success, "Should call the handler with success");
     XCTAssertNil(error, "Should not call the handler with an error");
   };
-
-  OCMReject([_partialMock setSessionCompletionHandlerFromHandler:OCMArg.any]);
-  OCMReject([_partialMock openURLWithAuthenticationSession:OCMArg.any]);
-  OCMReject([_partialMock openURL:OCMArg.any sender:OCMArg.any handler:OCMArg.any]);
 
   [self.api openURLWithSafariViewController:self.sampleUrl
                                      sender:self.loginManager
@@ -203,8 +197,20 @@
     safariVc.parentViewController,
     "Should present the view controller containing the safari view controller"
   );
-  XCTAssertTrue(spy.capturedPresentViewControllerAnimated, "Should animate presenting the safari view controller");
-  XCTAssertNil(spy.capturedPresentViewControllerCompletion, "Should not pass a completion handler to the safari vc presentation");
+  XCTAssertTrue(
+    spy.capturedPresentViewControllerAnimated,
+    "Should animate presenting the safari view controller"
+  );
+  XCTAssertNil(
+    spy.capturedPresentViewControllerCompletion,
+    "Should not pass a completion handler to the safari vc presentation"
+  );
+  XCTAssertNil(
+    self.urlOpener.capturedOpenUrl,
+    "Should not try to open a url when the request cannot provide one"
+  );
+  XCTAssertNil(self.api.authenticationSessionCompletionHandler);
+  XCTAssertNil(self.api.authenticationSession);
   [self assertExpectingBackgroundAndPendingUrlOpener];
 }
 
@@ -212,26 +218,35 @@
 {
   self.frameworkLoader.stubSafariViewControllerClass = SFSafariViewController.class;
   ViewControllerSpy *spy = ViewControllerSpy.makeDefaultSpy;
-  spy.stubbedTransitionCoordinator = self.transitionCoordinatorMock;
+  TestViewControllerTransitionCoordinator *coordinator = [TestViewControllerTransitionCoordinator new];
+  spy.stubbedTransitionCoordinator = coordinator;
   self.loginManager.stubbedIsAuthenticationUrl = NO;
   self.api.expectingBackground = YES;
+  __block BOOL didInvokeHandler = NO;
   FBSDKSuccessBlock handler = ^(BOOL success, NSError *_Nullable error) {
     XCTAssertTrue(success, "Should call the handler with success");
     XCTAssertNil(error, "Should not call the handler with an error");
+    didInvokeHandler = YES;
   };
-
-  OCMReject([_partialMock setSessionCompletionHandlerFromHandler:OCMArg.any]);
-  OCMReject([_partialMock openURLWithAuthenticationSession:OCMArg.any]);
-  OCMReject([_partialMock openURL:OCMArg.any sender:OCMArg.any handler:OCMArg.any]);
-
-  OCMStub([self.transitionCoordinatorMock animateAlongsideTransition:nil completion:[OCMArg invokeBlock]]);
 
   [self.api openURLWithSafariViewController:self.sampleUrl
                                      sender:self.loginManager
                          fromViewController:spy
                                     handler:handler];
 
-  SFSafariViewController *safariVc = (SFSafariViewController *)self.api.safariViewController;
+  coordinator.capturedAnimateAlongsideTransitionCompletion(
+    [TestViewControllerTransitionCoordinatorContext new]
+  );
+
+  XCTAssertNil(
+    self.urlOpener.capturedOpenUrl,
+    "Should not try to open a url when the request cannot provide one"
+  );
+
+  XCTAssertNil(self.api.authenticationSessionCompletionHandler);
+  XCTAssertNil(self.api.authenticationSession);
+
+  SFSafariViewController *safariVc = self.api.safariViewController;
 
   XCTAssertNotNil(safariVc, "Should create and set a safari view controller for display");
   XCTAssertEqual(
@@ -249,9 +264,16 @@
     safariVc.parentViewController,
     "Should present the view controller containing the safari view controller"
   );
-  XCTAssertTrue(spy.capturedPresentViewControllerAnimated, "Should animate presenting the safari view controller");
-  XCTAssertNil(spy.capturedPresentViewControllerCompletion, "Should not pass a completion handler to the safari vc presentation");
+  XCTAssertTrue(
+    spy.capturedPresentViewControllerAnimated,
+    "Should animate presenting the safari view controller"
+  );
+  XCTAssertNil(
+    spy.capturedPresentViewControllerCompletion,
+    "Should not pass a completion handler to the safari vc presentation"
+  );
   [self assertExpectingBackgroundAndPendingUrlOpener];
+  XCTAssertTrue(didInvokeHandler);
 }
 
 // MARK: - Helpers
