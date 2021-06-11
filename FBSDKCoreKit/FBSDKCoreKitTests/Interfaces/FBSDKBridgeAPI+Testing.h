@@ -24,6 +24,7 @@
 
 @protocol FBSDKLogging;
 @protocol FBSDKURLOpener;
+@protocol FBSDKBridgeAPIResponseCreating;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -63,6 +64,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 @property (nonatomic, assign, readonly) id<FBSDKOperatingSystemVersionComparing> processInfo;
 @property (nonatomic, readonly) id<FBSDKURLOpener> urlOpener;
 @property (nonatomic, readonly) id<FBSDKLogging> logger;
+@property (nonatomic, readonly) id<FBSDKBridgeAPIResponseCreating> bridgeAPIResponseFactory;
 
 - (id<FBSDKAuthenticationSession>)authenticationSession;
 - (FBSDKAuthenticationSession)authenticationSessionState;
@@ -120,6 +122,11 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
                                     sourceApplication:(NSString *)sourceApplication
                                     osVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)comparer
                                                 error:(NSError *__autoreleasing *)errorRef;
+
+- (instancetype)initWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
+             responseParameters:(NSDictionary *)responseParameters
+                      cancelled:(BOOL)cancelled
+                          error:(nullable NSError *)error;
 
 @end
 

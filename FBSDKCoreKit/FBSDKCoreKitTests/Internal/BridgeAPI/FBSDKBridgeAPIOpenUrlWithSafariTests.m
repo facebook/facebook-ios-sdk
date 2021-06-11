@@ -34,6 +34,7 @@
 @property (nonatomic, readonly) NSURL *sampleUrl;
 @property (nonatomic) FBSDKLoginManager *loginManager;
 @property (nonatomic) TestURLOpener *urlOpener;
+@property (nonatomic) TestBridgeApiResponseFactory *bridgeAPIResponseFactory;
 
 @end
 
@@ -46,9 +47,11 @@
   [FBSDKLoginManager resetTestEvidence];
   _logger = [TestLogger new];
   _urlOpener = [[TestURLOpener alloc] initWithCanOpenUrl:YES];
+  _bridgeAPIResponseFactory = [TestBridgeApiResponseFactory new];
   _api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]
                                               logger:self.logger
-                                           urlOpener:self.urlOpener];
+                                           urlOpener:self.urlOpener
+                            bridgeAPIResponseFactory:self.bridgeAPIResponseFactory];
   _partialMock = OCMPartialMock(self.api);
   _loginManager = [FBSDKLoginManager new];
 

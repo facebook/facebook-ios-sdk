@@ -30,6 +30,7 @@
 @property id partialMock;
 @property (readonly) NSURL *sampleUrl;
 @property (nonatomic) TestURLOpener *urlOpener;
+@property (nonatomic) TestBridgeApiResponseFactory *bridgeAPIResponseFactory;
 
 @end
 
@@ -40,9 +41,11 @@
   [super setUp];
 
   _urlOpener = [[TestURLOpener alloc] initWithCanOpenUrl:YES];
+  _bridgeAPIResponseFactory = [TestBridgeApiResponseFactory new];
   _api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]
                                               logger:[TestLogger new]
-                                           urlOpener:self.urlOpener];
+                                           urlOpener:self.urlOpener
+                            bridgeAPIResponseFactory:self.bridgeAPIResponseFactory];
   _partialMock = OCMPartialMock(self.api);
 
   OCMStub(

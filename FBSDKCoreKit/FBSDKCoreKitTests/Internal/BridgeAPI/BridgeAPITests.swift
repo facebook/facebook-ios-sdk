@@ -23,6 +23,7 @@ class BridgeAPIRequestTests: XCTestCase {
   let processInfo = TestProcessInfo()
   let logger = TestLogger()
   let urlOpener = TestURLOpener()
+  let responseFactory = TestBridgeApiResponseFactory()
 
   func testDefaults() {
     XCTAssertTrue(
@@ -38,13 +39,18 @@ class BridgeAPIRequestTests: XCTestCase {
       UIApplication.shared,
       "Should use the expected concrete url opener by default"
     )
+    XCTAssertTrue(
+      BridgeAPI.shared.bridgeAPIResponseFactory is BridgeAPIResponseFactory,
+      "Should use and instance of the expected concrete response factory type by default"
+    )
   }
 
   func testConfiguringWithProcessInfo() {
     let api = BridgeAPI(
       processInfo: processInfo,
       logger: logger,
-      urlOpener: urlOpener
+      urlOpener: urlOpener,
+      bridgeAPIResponseFactory: responseFactory
     )
 
     XCTAssertEqual(
@@ -61,6 +67,11 @@ class BridgeAPIRequestTests: XCTestCase {
       api.urlOpener as? TestURLOpener,
       urlOpener,
       "Should be able to create a bridge api with a specific url opener"
+    )
+    XCTAssertEqual(
+      api.bridgeAPIResponseFactory as? TestBridgeApiResponseFactory,
+      responseFactory,
+      "Should be able to create a bridge api with a specific response factory"
     )
   }
 }

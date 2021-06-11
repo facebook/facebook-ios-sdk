@@ -47,6 +47,8 @@
 #import "FBSDKBridgeAPIProtocolWebV1.h"
 #import "FBSDKBridgeAPIProtocolWebV2+Testing.h"
 #import "FBSDKBridgeAPIProtocolNativeV1.h"
+#import "FBSDKBridgeAPIResponseCreating.h"
+#import "FBSDKBridgeAPIResponseFactory.h"
 #import "FBSDKAdvertiserIDProviding.h"
 #import "FBSDKAppLinkEventPosting.h"
 #import "FBSDKBridgeAPI+Testing.h"

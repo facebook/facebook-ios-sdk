@@ -23,6 +23,8 @@
  #import "FBSDKBridgeAPI.h"
 
  #import "FBSDKApplicationLifecycleNotifications.h"
+ #import "FBSDKBridgeAPIResponseCreating.h"
+ #import "FBSDKBridgeAPIResponseFactory.h"
  #import "FBSDKContainerViewController.h"
  #import "FBSDKCoreKit+Internal.h"
  #import "FBSDKOperatingSystemVersionComparing.h"
@@ -64,6 +66,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 
 @property (nonnull, nonatomic) FBSDKLogger *logger;
 @property (nonatomic, readonly) id<FBSDKURLOpener> urlOpener;
+@property (nonatomic, readonly) id<FBSDKBridgeAPIResponseCreating> bridgeAPIResponseFactory;
 
 @end
 
@@ -90,19 +93,22 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   dispatch_once(&onceToken, ^{
     _sharedInstance = [[self alloc] initWithProcessInfo:NSProcessInfo.processInfo
                                                  logger:[[FBSDKLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors]
-                                              urlOpener:UIApplication.sharedApplication];
+                                              urlOpener:UIApplication.sharedApplication
+                               bridgeAPIResponseFactory:[FBSDKBridgeAPIResponseFactory new]];
   });
   return _sharedInstance;
 }
 
 - (instancetype)initWithProcessInfo:(id<FBSDKOperatingSystemVersionComparing>)processInfo
                              logger:(FBSDKLogger *)logger
-                          urlOpener:(id<FBSDKURLOpener>)urlOpener;
+                          urlOpener:(id<FBSDKURLOpener>)urlOpener
+           bridgeAPIResponseFactory:(id<FBSDKBridgeAPIResponseCreating>)bridgeAPIResponseFactory;
 {
   if ((self = [super init])) {
     _processInfo = processInfo;
     _logger = logger;
     _urlOpener = urlOpener;
+    _bridgeAPIResponseFactory = bridgeAPIResponseFactory;
   }
   return self;
 }
@@ -312,7 +318,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   NSError *error;
   NSURL *requestURL = [request requestURL:&error];
   if (!requestURL) {
-    FBSDKBridgeAPIResponse *response = [FBSDKBridgeAPIResponse bridgeAPIResponseWithRequest:request error:error];
+    FBSDKBridgeAPIResponse *response = [self.bridgeAPIResponseFactory createResponseWithRequest:request error:error];
     completionBlock(response);
     return;
   }
@@ -342,8 +348,8 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
         openedURLError = [FBSDKError errorWithCode:FBSDKErrorAppVersionUnsupported
                                            message:@"the app switch failed because the destination app is out of date"];
       }
-      FBSDKBridgeAPIResponse *response = [FBSDKBridgeAPIResponse bridgeAPIResponseWithRequest:request
-                                                                                        error:openedURLError];
+      FBSDKBridgeAPIResponse *response = [self.bridgeAPIResponseFactory createResponseWithRequest:request
+                                                                                            error:openedURLError];
       completionBlock(response);
       return;
     }
@@ -530,17 +536,22 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
     return YES;
   }
   NSError *error;
-  FBSDKBridgeAPIResponse *response = [FBSDKBridgeAPIResponse bridgeAPIResponseWithRequest:request
-                                                                              responseURL:responseURL
-                                                                        sourceApplication:sourceApplication
-                                                                                    error:&error];
+  FBSDKBridgeAPIResponse *response = [self.bridgeAPIResponseFactory createResponseWithRequest:request
+                                                                                  responseURL:responseURL
+                                                                            sourceApplication:sourceApplication
+                                                                                        error:&error];
   if (response) {
     completionBlock(response);
     return YES;
   } else if (error) {
-    completionBlock([FBSDKBridgeAPIResponse bridgeAPIResponseWithRequest:request error:error]);
-    return YES;
+    if (error.code == FBSDKErrorBridgeAPIResponse) {
+      return NO;
+    } else {
+      completionBlock([self.bridgeAPIResponseFactory createResponseWithRequest:request error:error]);
+      return YES;
+    }
   } else {
+    // This should not be reachable anymore.
     return NO;
   }
 }

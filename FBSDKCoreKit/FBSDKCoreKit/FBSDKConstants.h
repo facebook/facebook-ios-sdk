@@ -328,6 +328,11 @@ typedef NS_ERROR_ENUM(FBSDKErrorDomain, FBSDKCoreError)
    Indicates that a bridge api interaction was interrupted.
    */
   FBSDKErrorBridgeAPIInterruption,
+
+  /**
+   Indicates that a bridge api response creation failed.
+   */
+  FBSDKErrorBridgeAPIResponse,
 } NS_SWIFT_NAME(CoreError);
 
 /**
