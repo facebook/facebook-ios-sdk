@@ -30,7 +30,10 @@
   [FBSDKLoginManager resetTestEvidence];
 
   _logger = [TestLogger new];
-  _api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new] logger:_logger];
+  _urlOpener = [[TestURLOpener alloc] initWithCanOpenUrl:YES];
+  _api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]
+                                              logger:self.logger
+                                           urlOpener:self.urlOpener];
   _partialMock = OCMPartialMock(_api);
 }
 
@@ -327,10 +330,11 @@
   TestProcessInfo *processInfo = [[TestProcessInfo alloc]
                                   initWithStubbedOperatingSystemCheckResult:NO];
   self.api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:processInfo
-                                                  logger:_logger];
+                                                  logger:self.logger
+                                               urlOpener:self.urlOpener];
 
   BOOL applicationOpensSuccessfully = YES;
-  [self stubOpenURLWith:applicationOpensSuccessfully];
+  [self.urlOpener stubOpenWithUrl:self.sampleUrl success:applicationOpensSuccessfully];
 
   [self.api openURL:self.sampleUrl sender:nil handler:^(BOOL _success, NSError *_Nullable error) {
     XCTAssertEqual(
@@ -350,13 +354,13 @@
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
 
   BOOL applicationOpensSuccessfully = NO;
-  [self stubOpenURLWith:applicationOpensSuccessfully];
-
   TestProcessInfo *processInfo = [[TestProcessInfo alloc]
                                   initWithStubbedOperatingSystemCheckResult:NO];
 
   self.api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:processInfo
-                                                  logger:_logger];
+                                                  logger:self.logger
+                                               urlOpener:self.urlOpener];
+  [self.urlOpener stubOpenWithUrl:self.sampleUrl success:applicationOpensSuccessfully];
   [self.api openURL:self.sampleUrl sender:nil handler:^(BOOL _success, NSError *_Nullable error) {
     XCTAssertEqual(
       _success,
@@ -372,12 +376,9 @@
 
 - (void)testOpenUrlWhenApplicationOpens
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
-
   BOOL applicationOpensSuccessfully = YES;
-  [self stubOpenUrlOptionsCompletionHandlerWithPerformCompletion:YES
-                                               completionSuccess:applicationOpensSuccessfully];
 
+  __block BOOL didInvokeCompletion = NO;
   [self.api openURL:self.sampleUrl sender:nil handler:^(BOOL _success, NSError *_Nullable error) {
     XCTAssertEqual(
       _success,
@@ -385,20 +386,18 @@
       "Should call the completion handler with the expected value"
     );
     XCTAssertNil(error, "Should not call the completion handler with an error");
-    [expectation fulfill];
+    didInvokeCompletion = YES;
   }];
 
-  [self waitForExpectationsWithTimeout:1 handler:nil];
+  self.urlOpener.capturedOpenUrlCompletion(applicationOpensSuccessfully);
+  XCTAssertTrue(didInvokeCompletion);
 }
 
 - (void)testOpenUrlWhenApplicationDoesNotOpen
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:self.name];
-
   BOOL applicationOpensSuccessfully = NO;
-  [self stubOpenUrlOptionsCompletionHandlerWithPerformCompletion:YES
-                                               completionSuccess:applicationOpensSuccessfully];
 
+  __block BOOL didInvokeCompletion = NO;
   [self.api openURL:self.sampleUrl sender:nil handler:^(BOOL _success, NSError *_Nullable error) {
     XCTAssertEqual(
       _success,
@@ -406,10 +405,11 @@
       "Should call the completion handler with the expected value"
     );
     XCTAssertNil(error, "Should not call the completion handler with an error");
-    [expectation fulfill];
+    didInvokeCompletion = YES;
   }];
 
-  [self waitForExpectationsWithTimeout:1 handler:nil];
+  self.urlOpener.capturedOpenUrlCompletion(applicationOpensSuccessfully);
+  XCTAssertTrue(didInvokeCompletion);
 }
 
 // MARK: - Request completion block

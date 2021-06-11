@@ -20,19 +20,47 @@ import XCTest
 
 class BridgeAPIRequestTests: XCTestCase {
 
-  func testDefaultProcessInfo() {
+  let processInfo = TestProcessInfo()
+  let logger = TestLogger()
+  let urlOpener = TestURLOpener()
+
+  func testDefaults() {
     XCTAssertTrue(
       BridgeAPI.shared.processInfo is ProcessInfo,
       "The shared bridge API should use the system provided process info by default"
     )
+    XCTAssertTrue(
+      BridgeAPI.shared.logger is Logger,
+      "The shared bridge API should use the expected logger type by default"
+    )
+    XCTAssertEqual(
+      BridgeAPI.shared.urlOpener as? UIApplication,
+      UIApplication.shared,
+      "Should use the expected concrete url opener by default"
+    )
   }
 
   func testConfiguringWithProcessInfo() {
-    let api = BridgeAPI(processInfo: TestProcessInfo(), logger: TestLogger())
+    let api = BridgeAPI(
+      processInfo: processInfo,
+      logger: logger,
+      urlOpener: urlOpener
+    )
 
-    XCTAssertTrue(
-      api.processInfo is TestProcessInfo,
+    XCTAssertEqual(
+      api.processInfo as? TestProcessInfo,
+      processInfo,
       "Should be able to create a bridge api with a specific process info"
+    )
+    XCTAssertEqual(
+      api.logger as? TestLogger,
+      logger,
+      "Should be able to create a bridge api with a specific logger"
+    )
+    XCTAssertEqual(
+      api.urlOpener as? TestURLOpener,
+      urlOpener,
+      "Should be able to create a bridge api with a specific url opener"
     )
   }
 }

@@ -22,6 +22,9 @@
 #import "FBSDKOperatingSystemVersionComparing.h"
 #import "NSProcessInfo+Protocols.h"
 
+@protocol FBSDKLogging;
+@protocol FBSDKURLOpener;
+
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackURL, NSError *_Nullable error);
@@ -58,6 +61,8 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 @interface FBSDKBridgeAPI (Testing)
 
 @property (nonatomic, assign, readonly) id<FBSDKOperatingSystemVersionComparing> processInfo;
+@property (nonatomic, readonly) id<FBSDKURLOpener> urlOpener;
+@property (nonatomic, readonly) id<FBSDKLogging> logger;
 
 - (id<FBSDKAuthenticationSession>)authenticationSession;
 - (FBSDKAuthenticationSession)authenticationSessionState;

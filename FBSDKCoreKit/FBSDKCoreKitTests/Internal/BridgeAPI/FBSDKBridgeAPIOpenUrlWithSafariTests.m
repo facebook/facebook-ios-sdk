@@ -32,7 +32,8 @@
 @property (nonatomic) TestLogger *logger;
 @property (nonatomic) id partialMock;
 @property (nonatomic, readonly) NSURL *sampleUrl;
-@property (nonatomic) FBSDKLoginManager *urlOpener;
+@property (nonatomic) FBSDKLoginManager *loginManager;
+@property (nonatomic) TestURLOpener *urlOpener;
 
 @end
 
@@ -44,10 +45,12 @@
 
   [FBSDKLoginManager resetTestEvidence];
   _logger = [TestLogger new];
+  _urlOpener = [[TestURLOpener alloc] initWithCanOpenUrl:YES];
   _api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]
-                                              logger:_logger];
+                                              logger:self.logger
+                                           urlOpener:self.urlOpener];
   _partialMock = OCMPartialMock(self.api);
-  _urlOpener = [FBSDKLoginManager new];
+  _loginManager = [FBSDKLoginManager new];
 
   OCMStub([_partialMock setSessionCompletionHandlerFromHandler:OCMArg.any]);
   OCMStub([_partialMock openURLWithAuthenticationSession:OCMArg.any]);
@@ -57,7 +60,7 @@
 - (void)tearDown
 {
   _api = nil;
-  _urlOpener = nil;
+  _loginManager = nil;
 
   [_partialMock stopMocking];
   _partialMock = nil;
@@ -84,13 +87,13 @@
 
 - (void)testWithAuthenticationURL
 {
-  self.urlOpener.stubbedIsAuthenticationUrl = YES;
+  self.loginManager.stubbedIsAuthenticationUrl = YES;
   self.api.expectingBackground = YES;
 
   OCMReject([_partialMock openURL:OCMArg.any sender:OCMArg.any handler:OCMArg.any]);
 
   [self.api openURLWithSafariViewController:self.sampleUrl
-                                     sender:self.urlOpener
+                                     sender:self.loginManager
                          fromViewController:nil
                                     handler:self.uninvokedSuccessBlock];
 
@@ -101,7 +104,7 @@
 
 - (void)testWithNonAuthenticationURL
 {
-  self.urlOpener.stubbedIsAuthenticationUrl = NO;
+  self.loginManager.stubbedIsAuthenticationUrl = NO;
   self.api.expectingBackground = YES;
 
   OCMReject([_partialMock openURL:OCMArg.any sender:OCMArg.any handler:OCMArg.any]);
@@ -109,7 +112,7 @@
   OCMReject([_partialMock openURLWithAuthenticationSession:OCMArg.any]);
 
   [self.api openURLWithSafariViewController:self.sampleUrl
-                                     sender:self.urlOpener
+                                     sender:self.loginManager
                          fromViewController:nil
                                     handler:self.uninvokedSuccessBlock];
 
@@ -119,21 +122,21 @@
 - (void)testWithoutSafariVcAvailable
 {
   TestDylibResolver *resolver = [TestDylibResolver new];
-  self.urlOpener.stubbedIsAuthenticationUrl = NO;
+  self.loginManager.stubbedIsAuthenticationUrl = NO;
   self.api.expectingBackground = YES;
 
   OCMReject([_partialMock setSessionCompletionHandlerFromHandler:OCMArg.any]);
   OCMReject([_partialMock openURLWithAuthenticationSession:OCMArg.any]);
 
   [self.api _openURLWithSafariViewController:self.sampleUrl
-                                      sender:self.urlOpener
+                                      sender:self.loginManager
                           fromViewController:nil
                                      handler:self.uninvokedSuccessBlock
                                dylibResolver:resolver];
 
   OCMVerify(
     [_partialMock openURL:self.sampleUrl
-                   sender:self.urlOpener
+                   sender:self.loginManager
                   handler:self.uninvokedSuccessBlock]
   );
   [self assertExpectingBackgroundAndPendingUrlOpener];
@@ -141,7 +144,7 @@
 
 - (void)testWithoutFromViewController
 {
-  self.urlOpener.stubbedIsAuthenticationUrl = NO;
+  self.loginManager.stubbedIsAuthenticationUrl = NO;
   self.api.expectingBackground = YES;
 
   OCMReject([_partialMock setSessionCompletionHandlerFromHandler:OCMArg.any]);
@@ -149,7 +152,7 @@
   OCMReject([_partialMock openURL:OCMArg.any sender:OCMArg.any handler:OCMArg.any]);
 
   [self.api openURLWithSafariViewController:self.sampleUrl
-                                     sender:self.urlOpener
+                                     sender:self.loginManager
                          fromViewController:nil
                                     handler:self.uninvokedSuccessBlock];
 
@@ -160,7 +163,7 @@
 - (void)testWithFromViewControllerMissingTransitionCoordinator
 {
   ViewControllerSpy *spy = ViewControllerSpy.makeDefaultSpy;
-  self.urlOpener.stubbedIsAuthenticationUrl = NO;
+  self.loginManager.stubbedIsAuthenticationUrl = NO;
   self.api.expectingBackground = YES;
   FBSDKSuccessBlock handler = ^(BOOL success, NSError *_Nullable error) {
     XCTAssertTrue(success, "Should call the handler with success");
@@ -172,7 +175,7 @@
   OCMReject([_partialMock openURL:OCMArg.any sender:OCMArg.any handler:OCMArg.any]);
 
   [self.api openURLWithSafariViewController:self.sampleUrl
-                                     sender:self.urlOpener
+                                     sender:self.loginManager
                          fromViewController:spy
                                     handler:handler];
 
@@ -203,7 +206,7 @@
 {
   ViewControllerSpy *spy = ViewControllerSpy.makeDefaultSpy;
   spy.stubbedTransitionCoordinator = self.transitionCoordinatorMock;
-  self.urlOpener.stubbedIsAuthenticationUrl = NO;
+  self.loginManager.stubbedIsAuthenticationUrl = NO;
   self.api.expectingBackground = YES;
   FBSDKSuccessBlock handler = ^(BOOL success, NSError *_Nullable error) {
     XCTAssertTrue(success, "Should call the handler with success");
@@ -217,7 +220,7 @@
   OCMStub([self.transitionCoordinatorMock animateAlongsideTransition:nil completion:[OCMArg invokeBlock]]);
 
   [self.api openURLWithSafariViewController:self.sampleUrl
-                                     sender:self.urlOpener
+                                     sender:self.loginManager
                          fromViewController:spy
                                     handler:handler];
 
@@ -249,7 +252,7 @@
 - (void)assertExpectingBackgroundAndPendingUrlOpener
 {
   XCTAssertFalse(self.api.expectingBackground, "Should set expecting background to false");
-  XCTAssertEqualObjects(self.api.pendingUrlOpen, self.urlOpener, "Should set the pending url opener to the passed in sender");
+  XCTAssertEqualObjects(self.api.pendingUrlOpen, self.loginManager, "Should set the pending url opener to the passed in sender");
 }
 
 - (NSURL *)sampleUrl

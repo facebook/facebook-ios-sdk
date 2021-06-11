@@ -35,6 +35,7 @@
 @property id partialMock;
 @property (readonly) NSURL *sampleUrl;
 @property (readonly) NSError *sampleError;
+@property (nonatomic) TestURLOpener *urlOpener;
 
 extern NSString *const sampleSource;
 extern NSString *const sampleAnnotation;

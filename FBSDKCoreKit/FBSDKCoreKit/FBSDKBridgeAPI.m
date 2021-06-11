@@ -27,6 +27,7 @@
  #import "FBSDKCoreKit+Internal.h"
  #import "FBSDKOperatingSystemVersionComparing.h"
  #import "NSProcessInfo+Protocols.h"
+ #import "UIApplication+URLOpener.h"
 
 /**
  Specifies state of FBSDKAuthenticationSession (SFAuthenticationSession (iOS 11) and ASWebAuthenticationSession (iOS 12+))
@@ -62,6 +63,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
  #endif
 
 @property (nonnull, nonatomic) FBSDKLogger *logger;
+@property (nonatomic, readonly) id<FBSDKURLOpener> urlOpener;
 
 @end
 
@@ -87,16 +89,20 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     _sharedInstance = [[self alloc] initWithProcessInfo:NSProcessInfo.processInfo
-                                                 logger:[[FBSDKLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors]];
+                                                 logger:[[FBSDKLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors]
+                                              urlOpener:UIApplication.sharedApplication];
   });
   return _sharedInstance;
 }
 
-- (instancetype)initWithProcessInfo:(id<FBSDKOperatingSystemVersionComparing>)processInfo logger:(FBSDKLogger *)logger
+- (instancetype)initWithProcessInfo:(id<FBSDKOperatingSystemVersionComparing>)processInfo
+                             logger:(FBSDKLogger *)logger
+                          urlOpener:(id<FBSDKURLOpener>)urlOpener;
 {
   if ((self = [super init])) {
     _processInfo = processInfo;
     _logger = logger;
+    _urlOpener = urlOpener;
   }
   return self;
 }
@@ -272,20 +278,25 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   _expectingBackground = YES;
   _pendingURLOpen = sender;
   __block id<FBSDKOperatingSystemVersionComparing> weakProcessInfo = _processInfo;
-  dispatch_async(dispatch_get_main_queue(), ^{
+  dispatch_block_t block = ^{
     // Dispatch openURL calls to prevent hangs if we're inside the current app delegate's openURL flow already
     NSOperatingSystemVersion iOS10Version = { .majorVersion = 10, .minorVersion = 0, .patchVersion = 0 };
     if ([weakProcessInfo isOperatingSystemAtLeastVersion:iOS10Version]) {
       if (@available(iOS 10.0, *)) {
-        [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:^(BOOL success) {
+        [self.urlOpener openURL:url options:@{} completionHandler:^(BOOL success) {
           handler(success, nil);
         }];
       }
     } else if (handler) {
-      BOOL opened = [UIApplication.sharedApplication openURL:url];
+      BOOL opened = [self.urlOpener openURL:url];
       handler(opened, nil);
     }
-  });
+  };
+#if FBSDKTEST
+  block();
+#else
+  dispatch_async(dispatch_get_main_queue(), block);
+#endif
 }
 
  #pragma clang diagnostic pop
