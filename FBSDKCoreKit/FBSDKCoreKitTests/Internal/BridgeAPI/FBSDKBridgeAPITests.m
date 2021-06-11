@@ -35,7 +35,8 @@
   _api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]
                                               logger:self.logger
                                            urlOpener:self.urlOpener
-                            bridgeAPIResponseFactory:self.bridgeAPIResponseFactory];
+                            bridgeAPIResponseFactory:self.bridgeAPIResponseFactory
+                                     frameworkLoader:self.frameworkLoader];
   _partialMock = OCMPartialMock(_api);
 }
 
@@ -351,7 +352,8 @@
   self.api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:processInfo
                                                   logger:self.logger
                                                urlOpener:self.urlOpener
-                                bridgeAPIResponseFactory:self.bridgeAPIResponseFactory];
+                                bridgeAPIResponseFactory:self.bridgeAPIResponseFactory
+                                         frameworkLoader:self.frameworkLoader];
 
   BOOL applicationOpensSuccessfully = YES;
   [self.urlOpener stubOpenWithUrl:self.sampleUrl success:applicationOpensSuccessfully];
@@ -380,7 +382,8 @@
   self.api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:processInfo
                                                   logger:self.logger
                                                urlOpener:self.urlOpener
-                                bridgeAPIResponseFactory:self.bridgeAPIResponseFactory];
+                                bridgeAPIResponseFactory:self.bridgeAPIResponseFactory
+                                         frameworkLoader:self.frameworkLoader];
   [self.urlOpener stubOpenWithUrl:self.sampleUrl success:applicationOpensSuccessfully];
   [self.api openURL:self.sampleUrl sender:nil handler:^(BOOL _success, NSError *_Nullable error) {
     XCTAssertEqual(

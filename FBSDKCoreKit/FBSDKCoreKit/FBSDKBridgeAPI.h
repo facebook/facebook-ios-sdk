@@ -33,6 +33,7 @@
 @protocol FBSDKOperatingSystemVersionComparing;
 @protocol FBSDKURLOpener;
 @protocol FBSDKBridgeAPIResponseCreating;
+@protocol FBSDKDynamicFrameworkResolving;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -73,6 +74,7 @@ NS_SWIFT_NAME(shared);
                              logger:(FBSDKLogger *)logger
                           urlOpener:(id<FBSDKURLOpener>)urlOpener
            bridgeAPIResponseFactory:(id<FBSDKBridgeAPIResponseCreating>)bridgeAPIResponseFactory
+                    frameworkLoader:(id<FBSDKDynamicFrameworkResolving>)frameworkLoader
 NS_DESIGNATED_INITIALIZER;
 
 - (void)openBridgeAPIRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request

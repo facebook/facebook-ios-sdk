@@ -24,6 +24,7 @@ class BridgeAPIRequestTests: XCTestCase {
   let logger = TestLogger()
   let urlOpener = TestURLOpener()
   let responseFactory = TestBridgeApiResponseFactory()
+  let frameworkLoader = TestDylibResolver()
 
   func testDefaults() {
     XCTAssertTrue(
@@ -43,14 +44,20 @@ class BridgeAPIRequestTests: XCTestCase {
       BridgeAPI.shared.bridgeAPIResponseFactory is BridgeAPIResponseFactory,
       "Should use and instance of the expected concrete response factory type by default"
     )
+    XCTAssertEqual(
+      BridgeAPI.shared.frameworkLoader as? DynamicFrameworkLoader,
+      DynamicFrameworkLoader.shared(),
+      "Should use the expected instance of dynamic framework loader"
+    )
   }
 
-  func testConfiguringWithProcessInfo() {
+  func testConfiguringWithDependencies() {
     let api = BridgeAPI(
       processInfo: processInfo,
       logger: logger,
       urlOpener: urlOpener,
-      bridgeAPIResponseFactory: responseFactory
+      bridgeAPIResponseFactory: responseFactory,
+      frameworkLoader: frameworkLoader
     )
 
     XCTAssertEqual(
@@ -72,6 +79,11 @@ class BridgeAPIRequestTests: XCTestCase {
       api.bridgeAPIResponseFactory as? TestBridgeApiResponseFactory,
       responseFactory,
       "Should be able to create a bridge api with a specific response factory"
+    )
+    XCTAssertEqual(
+      api.frameworkLoader as? TestDylibResolver,
+      frameworkLoader,
+      "Should be able to create a bridge api with a specific framework loader"
     )
   }
 }

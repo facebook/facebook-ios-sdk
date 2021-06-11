@@ -31,6 +31,7 @@
 @property (readonly) NSURL *sampleUrl;
 @property (nonatomic) TestURLOpener *urlOpener;
 @property (nonatomic) TestBridgeApiResponseFactory *bridgeAPIResponseFactory;
+@property (nonatomic) TestDylibResolver *frameworkLoader;
 
 @end
 
@@ -42,21 +43,17 @@
 
   _urlOpener = [[TestURLOpener alloc] initWithCanOpenUrl:YES];
   _bridgeAPIResponseFactory = [TestBridgeApiResponseFactory new];
+  _frameworkLoader = [TestDylibResolver new];
   _api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]
                                               logger:[TestLogger new]
                                            urlOpener:self.urlOpener
-                            bridgeAPIResponseFactory:self.bridgeAPIResponseFactory];
+                            bridgeAPIResponseFactory:self.bridgeAPIResponseFactory
+                                     frameworkLoader:self.frameworkLoader];
   _partialMock = OCMPartialMock(self.api);
 
   OCMStub(
     [_partialMock _bridgeAPIRequestCompletionBlockWithRequest:OCMArg.any
                                                    completion:OCMArg.any]
-  );
-  OCMStub(
-    [_partialMock openURLWithSafariViewController:OCMArg.any
-                                           sender:OCMArg.any
-                               fromViewController:OCMArg.any
-                                          handler:OCMArg.any]
   );
   OCMStub([_partialMock openURL:OCMArg.any sender:OCMArg.any handler:OCMArg.any]);
 }
@@ -84,6 +81,8 @@
 
   XCTAssertEqualObjects(self.api.pendingRequest, request);
   XCTAssertEqualObjects(self.api.pendingRequestCompletionBlock, self.uninvokedCompletionHandler);
+
+  XCTAssertNil(self.bridgeAPIResponseFactory.capturedResponseURL, "Should not create a bridge response");
   OCMVerify(
     [_partialMock _bridgeAPIRequestCompletionBlockWithRequest:request
                                                    completion:self.uninvokedCompletionHandler]

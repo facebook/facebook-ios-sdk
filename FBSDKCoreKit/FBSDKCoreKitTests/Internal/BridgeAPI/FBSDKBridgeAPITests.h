@@ -37,6 +37,7 @@
 @property (readonly) NSError *sampleError;
 @property (nonatomic) TestURLOpener *urlOpener;
 @property (nonatomic) TestBridgeApiResponseFactory *bridgeAPIResponseFactory;
+@property (nonatomic) TestDylibResolver *frameworkLoader;
 
 extern NSString *const sampleSource;
 extern NSString *const sampleAnnotation;

@@ -35,6 +35,7 @@
 @property (nonatomic) FBSDKLoginManager *loginManager;
 @property (nonatomic) TestURLOpener *urlOpener;
 @property (nonatomic) TestBridgeApiResponseFactory *bridgeAPIResponseFactory;
+@property (nonatomic) TestDylibResolver *frameworkLoader;
 
 @end
 
@@ -48,10 +49,12 @@
   _logger = [TestLogger new];
   _urlOpener = [[TestURLOpener alloc] initWithCanOpenUrl:YES];
   _bridgeAPIResponseFactory = [TestBridgeApiResponseFactory new];
+  _frameworkLoader = [TestDylibResolver new];
   _api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]
                                               logger:self.logger
                                            urlOpener:self.urlOpener
-                            bridgeAPIResponseFactory:self.bridgeAPIResponseFactory];
+                            bridgeAPIResponseFactory:self.bridgeAPIResponseFactory
+                                     frameworkLoader:self.frameworkLoader];
   _partialMock = OCMPartialMock(self.api);
   _loginManager = [FBSDKLoginManager new];
 
@@ -124,18 +127,16 @@
 
 - (void)testWithoutSafariVcAvailable
 {
-  TestDylibResolver *resolver = [TestDylibResolver new];
   self.loginManager.stubbedIsAuthenticationUrl = NO;
   self.api.expectingBackground = YES;
 
   OCMReject([_partialMock setSessionCompletionHandlerFromHandler:OCMArg.any]);
   OCMReject([_partialMock openURLWithAuthenticationSession:OCMArg.any]);
 
-  [self.api _openURLWithSafariViewController:self.sampleUrl
-                                      sender:self.loginManager
-                          fromViewController:nil
-                                     handler:self.uninvokedSuccessBlock
-                               dylibResolver:resolver];
+  [self.api openURLWithSafariViewController:self.sampleUrl
+                                     sender:self.loginManager
+                         fromViewController:nil
+                                    handler:self.uninvokedSuccessBlock];
 
   OCMVerify(
     [_partialMock openURL:self.sampleUrl
@@ -149,6 +150,7 @@
 {
   self.loginManager.stubbedIsAuthenticationUrl = NO;
   self.api.expectingBackground = YES;
+  self.frameworkLoader.stubSafariViewControllerClass = SFSafariViewController.class;
 
   OCMReject([_partialMock setSessionCompletionHandlerFromHandler:OCMArg.any]);
   OCMReject([_partialMock openURLWithAuthenticationSession:OCMArg.any]);
@@ -165,6 +167,7 @@
 
 - (void)testWithFromViewControllerMissingTransitionCoordinator
 {
+  self.frameworkLoader.stubSafariViewControllerClass = SFSafariViewController.class;
   ViewControllerSpy *spy = ViewControllerSpy.makeDefaultSpy;
   self.loginManager.stubbedIsAuthenticationUrl = NO;
   self.api.expectingBackground = YES;
@@ -207,6 +210,7 @@
 
 - (void)testWithFromViewControllerWithTransitionCoordinator
 {
+  self.frameworkLoader.stubSafariViewControllerClass = SFSafariViewController.class;
   ViewControllerSpy *spy = ViewControllerSpy.makeDefaultSpy;
   spy.stubbedTransitionCoordinator = self.transitionCoordinatorMock;
   self.loginManager.stubbedIsAuthenticationUrl = NO;

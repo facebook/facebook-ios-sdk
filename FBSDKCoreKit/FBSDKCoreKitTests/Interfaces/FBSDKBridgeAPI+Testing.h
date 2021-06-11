@@ -65,6 +65,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 @property (nonatomic, readonly) id<FBSDKURLOpener> urlOpener;
 @property (nonatomic, readonly) id<FBSDKLogging> logger;
 @property (nonatomic, readonly) id<FBSDKBridgeAPIResponseCreating> bridgeAPIResponseFactory;
+@property (nonatomic, readonly) id<FBSDKDynamicFrameworkResolving> frameworkLoader;
 
 - (id<FBSDKAuthenticationSession>)authenticationSession;
 - (FBSDKAuthenticationSession)authenticationSessionState;
@@ -105,11 +106,6 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 
 - (void)safariViewControllerDidFinish:(UIViewController *)safariViewController;
 - (void)viewControllerDidDisappear:(FBSDKContainerViewController *)viewController animated:(BOOL)animated;
-- (void)_openURLWithSafariViewController:(NSURL *)url
-                                  sender:(id<FBSDKURLOpening>)sender
-                      fromViewController:(nullable UIViewController *)fromViewController
-                                 handler:(FBSDKSuccessBlock)handler
-                           dylibResolver:(id<FBSDKDynamicFrameworkResolving>)dylibResolver;
 - (void)openURLWithAuthenticationSession:(NSURL *)url;
 - (void)setSessionCompletionHandlerFromHandler:(void (^)(BOOL, NSError *))handler;
 

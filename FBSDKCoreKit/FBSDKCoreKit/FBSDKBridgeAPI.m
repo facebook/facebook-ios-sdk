@@ -67,6 +67,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 @property (nonnull, nonatomic) FBSDKLogger *logger;
 @property (nonatomic, readonly) id<FBSDKURLOpener> urlOpener;
 @property (nonatomic, readonly) id<FBSDKBridgeAPIResponseCreating> bridgeAPIResponseFactory;
+@property (nonatomic, readonly) id<FBSDKDynamicFrameworkResolving> frameworkLoader;
 
 @end
 
@@ -94,7 +95,8 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
     _sharedInstance = [[self alloc] initWithProcessInfo:NSProcessInfo.processInfo
                                                  logger:[[FBSDKLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors]
                                               urlOpener:UIApplication.sharedApplication
-                               bridgeAPIResponseFactory:[FBSDKBridgeAPIResponseFactory new]];
+                               bridgeAPIResponseFactory:[FBSDKBridgeAPIResponseFactory new]
+                                        frameworkLoader:FBSDKDynamicFrameworkLoader.shared];
   });
   return _sharedInstance;
 }
@@ -102,13 +104,15 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 - (instancetype)initWithProcessInfo:(id<FBSDKOperatingSystemVersionComparing>)processInfo
                              logger:(FBSDKLogger *)logger
                           urlOpener:(id<FBSDKURLOpener>)urlOpener
-           bridgeAPIResponseFactory:(id<FBSDKBridgeAPIResponseCreating>)bridgeAPIResponseFactory;
+           bridgeAPIResponseFactory:(id<FBSDKBridgeAPIResponseCreating>)bridgeAPIResponseFactory
+                    frameworkLoader:(id<FBSDKDynamicFrameworkResolving>)frameworkLoader;
 {
   if ((self = [super init])) {
     _processInfo = processInfo;
     _logger = logger;
     _urlOpener = urlOpener;
     _bridgeAPIResponseFactory = bridgeAPIResponseFactory;
+    _frameworkLoader = frameworkLoader;
   }
   return self;
 }
@@ -326,6 +330,8 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   _pendingRequestCompletionBlock = [completionBlock copy];
   FBSDKSuccessBlock handler = [self _bridgeAPIRequestCompletionBlockWithRequest:request
                                                                      completion:completionBlock];
+
+  // TODO: Is this a valid seam? Can it be?
   if (useSafariViewController) {
     [self openURLWithSafariViewController:requestURL sender:nil fromViewController:fromViewController handler:handler];
   } else {
@@ -361,19 +367,6 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
                      fromViewController:(UIViewController *)fromViewController
                                 handler:(FBSDKSuccessBlock)handler
 {
-  [self _openURLWithSafariViewController:url
-                                  sender:sender
-                      fromViewController:fromViewController
-                                 handler:handler
-                           dylibResolver:FBSDKDynamicFrameworkLoader.shared];
-}
-
-- (void)_openURLWithSafariViewController:(NSURL *)url
-                                  sender:(id<FBSDKURLOpening>)sender
-                      fromViewController:(UIViewController *)fromViewController
-                                 handler:(FBSDKSuccessBlock)handler
-                           dylibResolver:(id<FBSDKDynamicFrameworkResolving>)dylibResolver
-{
   if (![url.scheme hasPrefix:@"http"]) {
     [self openURL:url sender:sender handler:handler];
     return;
@@ -393,7 +386,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   // trying to dynamically load SFSafariViewController class
   // so for the cases when it is available we can send users through Safari View Controller flow
   // in cases it is not available regular flow will be selected
-  Class SFSafariViewControllerClass = dylibResolver.safariViewControllerClass;
+  Class SFSafariViewControllerClass = self.frameworkLoader.safariViewControllerClass;
 
   if (SFSafariViewControllerClass) {
     UIViewController *parent = fromViewController ?: [FBSDKInternalUtility topMostViewController];
