@@ -20,7 +20,6 @@
 
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKFriendFinderDialog+Testing.h"
-#import "FBSDKGamingServiceController.h"
 #import "FBSDKGamingImageUploader+Testing.h"
 #import "FBSDKGamingServiceController.h"
 #import "FBSDKGamingServiceControllerCreating.h"

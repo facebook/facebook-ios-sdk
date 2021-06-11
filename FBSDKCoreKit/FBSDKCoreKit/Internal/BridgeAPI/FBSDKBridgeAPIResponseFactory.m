@@ -21,6 +21,7 @@
 #if !TARGET_OS_TV
 
  #import "FBSDKBridgeAPIResponseFactory.h"
+
  #import "FBSDKBridgeAPIResponse.h"
 
 NS_ASSUME_NONNULL_BEGIN
