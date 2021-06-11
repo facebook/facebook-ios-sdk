@@ -196,7 +196,9 @@ static id<FBSDKGraphRequestConnectionProviding> g_connectionFactory;
 + (void)refreshCurrentAccessToken:(FBSDKGraphRequestBlock)completionHandler
 {
   FBSDKGraphRequestCompletion completion = ^void (id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
-    completionHandler(FBSDK_CAST_TO_CLASS_OR_NIL(connection, FBSDKGraphRequestConnection), result, error);
+    if (completionHandler) {
+      completionHandler(FBSDK_CAST_TO_CLASS_OR_NIL(connection, FBSDKGraphRequestConnection), result, error);
+    }
   };
   [self refreshCurrentAccessTokenWithCompletion:completion];
 }
