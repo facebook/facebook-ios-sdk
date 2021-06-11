@@ -22,132 +22,128 @@
 
 // MARK: - Setting Session Completion Handler
 
+- (NSError *)loginCancellationErrorWithURL:(NSURL *)url
+{
+  NSString *errorMessage = [[NSString alloc]
+                            initWithFormat:@"Login attempt cancelled by alternate call to openURL from: %@",
+                            url];
+  return [[NSError alloc]
+          initWithDomain:FBSDKErrorDomain
+          code:FBSDKErrorBridgeAPIInterruption
+          userInfo:@{FBSDKErrorLocalizedDescriptionKey : errorMessage}];
+}
+
 - (void)testInvokingAuthSessionCompletionHandlerFromHandlerWithValidUrlWithoutError
 {
-  OCMStub(
-    [self.partialMock application:OCMArg.any
-                          openURL:OCMArg.any
-                sourceApplication:OCMArg.any
-                       annotation:OCMArg.any]
-  );
-
+  __block int callCount = 0;
   FBSDKSuccessBlock handler = ^(BOOL success, NSError *_Nullable error) {
-    XCTAssertTrue(success);
-    XCTAssertNil(error);
+    if (callCount == 0) {
+      XCTAssertTrue(success);
+      XCTAssertNil(error);
+    } else {
+      XCTAssertFalse(success, "Should complete with the expected failure status");
+      XCTAssertEqualObjects(
+        error,
+        [self loginCancellationErrorWithURL:self.sampleUrl],
+        "Should complete with the expected error"
+      );
+    }
+    callCount++;
   };
   self.api.authenticationSession = AuthenticationSessionSpy.makeDefaultSpy;
   self.api.authenticationSessionState = FBSDKAuthenticationSessionStarted;
   [self.api setSessionCompletionHandlerFromHandler:handler];
-  self.api.authenticationSessionCompletionHandler(self.sampleUrl, nil);
 
-  OCMVerify(
-    [self.partialMock application:OCMArg.any
-                          openURL:self.sampleUrl
-                sourceApplication:@"com.apple"
-                       annotation:OCMArg.any]
-  );
+  self.api.authenticationSessionCompletionHandler(self.sampleUrl, nil);
+  XCTAssertEqual(callCount, 2, "Should invoke the completion twice");
   [self verifyAuthenticationPropertiesReset];
 }
 
 - (void)testInvokingAuthSessionCompletionHandlerFromHandlerWithInvalidUrlWithoutError
 {
   NSURL *url = [NSURL URLWithString:@" "];
+
+  __block int callCount = 0;
   FBSDKSuccessBlock handler = ^(BOOL success, NSError *_Nullable error) {
     XCTAssertFalse(success);
     XCTAssertNil(error);
+    callCount++;
   };
   self.api.authenticationSession = AuthenticationSessionSpy.makeDefaultSpy;
   self.api.authenticationSessionState = FBSDKAuthenticationSessionStarted;
-
-  OCMReject(
-    [self.partialMock application:OCMArg.any
-                          openURL:OCMArg.any
-                sourceApplication:OCMArg.any
-                       annotation:OCMArg.any]
-  );
   [self.api setSessionCompletionHandlerFromHandler:handler];
   self.api.authenticationSessionCompletionHandler(url, nil);
+  XCTAssertEqual(callCount, 1, "Should only invoke the completion once");
   [self verifyAuthenticationPropertiesReset];
 }
 
 - (void)testInvokingAuthSessionCompletionHandlerFromHandlerWithoutUrlWithoutError
 {
+  __block int callCount = 0;
   FBSDKSuccessBlock handler = ^(BOOL success, NSError *_Nullable error) {
     XCTAssertFalse(success);
     XCTAssertNil(error);
+    callCount++;
   };
   self.api.authenticationSession = AuthenticationSessionSpy.makeDefaultSpy;
   self.api.authenticationSessionState = FBSDKAuthenticationSessionStarted;
-  OCMReject(
-    [self.partialMock application:OCMArg.any
-                          openURL:OCMArg.any
-                sourceApplication:OCMArg.any
-                       annotation:OCMArg.any]
-  );
 
   [self.api setSessionCompletionHandlerFromHandler:handler];
   self.api.authenticationSessionCompletionHandler(nil, nil);
+  XCTAssertEqual(callCount, 1, "Should only invoke the completion once");
   [self verifyAuthenticationPropertiesReset];
 }
 
 - (void)testInvokingAuthSessionCompletionHandlerFromHandlerWithValidUrlWithError
 {
+  __block int callCount = 0;
   FBSDKSuccessBlock handler = ^(BOOL success, NSError *_Nullable error) {
     XCTAssertFalse(success);
     XCTAssertEqualObjects(error, self.sampleError);
+    callCount++;
   };
   self.api.authenticationSession = AuthenticationSessionSpy.makeDefaultSpy;
   self.api.authenticationSessionState = FBSDKAuthenticationSessionStarted;
-  OCMReject(
-    [self.partialMock application:OCMArg.any
-                          openURL:OCMArg.any
-                sourceApplication:OCMArg.any
-                       annotation:OCMArg.any]
-  );
 
   [self.api setSessionCompletionHandlerFromHandler:handler];
   self.api.authenticationSessionCompletionHandler(self.sampleUrl, self.sampleError);
+  XCTAssertEqual(callCount, 1, "Should only invoke the completion once");
   [self verifyAuthenticationPropertiesReset];
 }
 
 - (void)testInvokingAuthSessionCompletionHandlerFromHandlerWithInvalidUrlWithError
 {
   NSURL *url = [NSURL URLWithString:@" "];
+
+  __block int callCount = 0;
   FBSDKSuccessBlock handler = ^(BOOL success, NSError *_Nullable error) {
     XCTAssertFalse(success);
     XCTAssertEqualObjects(error, self.sampleError);
+    callCount++;
   };
   self.api.authenticationSession = AuthenticationSessionSpy.makeDefaultSpy;
   self.api.authenticationSessionState = FBSDKAuthenticationSessionStarted;
 
-  OCMReject(
-    [self.partialMock application:OCMArg.any
-                          openURL:OCMArg.any
-                sourceApplication:OCMArg.any
-                       annotation:OCMArg.any]
-  );
   [self.api setSessionCompletionHandlerFromHandler:handler];
   self.api.authenticationSessionCompletionHandler(url, self.sampleError);
+  XCTAssertEqual(callCount, 1, "Should only invoke the completion once");
   [self verifyAuthenticationPropertiesReset];
 }
 
 - (void)testInvokingAuthSessionCompletionHandlerFromHandlerWithoutUrlWithError
 {
+  __block int callCount = 0;
   FBSDKSuccessBlock handler = ^(BOOL success, NSError *_Nullable error) {
     XCTAssertFalse(success);
     XCTAssertEqualObjects(error, self.sampleError);
+    callCount++;
   };
   self.api.authenticationSession = AuthenticationSessionSpy.makeDefaultSpy;
   self.api.authenticationSessionState = FBSDKAuthenticationSessionStarted;
 
-  OCMReject(
-    [self.partialMock application:OCMArg.any
-                          openURL:OCMArg.any
-                sourceApplication:OCMArg.any
-                       annotation:OCMArg.any]
-  );
   [self.api setSessionCompletionHandlerFromHandler:handler];
   self.api.authenticationSessionCompletionHandler(nil, self.sampleError);
+  XCTAssertEqual(callCount, 1, "Should only invoke the completion once");
   [self verifyAuthenticationPropertiesReset];
 }
 

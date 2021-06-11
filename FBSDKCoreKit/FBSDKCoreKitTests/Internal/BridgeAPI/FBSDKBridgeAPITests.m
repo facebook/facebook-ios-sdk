@@ -29,6 +29,9 @@
   _logger = [TestLogger new];
   _urlOpener = [[TestURLOpener alloc] initWithCanOpenUrl:YES];
   _bridgeAPIResponseFactory = [TestBridgeApiResponseFactory new];
+
+  [self configureSDK];
+
   _api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]
                                               logger:self.logger
                                            urlOpener:self.urlOpener
@@ -45,6 +48,23 @@
   [TestLogger reset];
 
   [super tearDown];
+}
+
+- (void)configureSDK
+{
+  TestBackgroundEventLogger *backgroundEventLogger = [[TestBackgroundEventLogger alloc] initWithInfoDictionaryProvider:[TestBundle new]
+                                                                                                           eventLogger:[TestAppEvents new]];
+  FBSDKApplicationDelegate *delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationCenter:[TestNotificationCenter new]
+                                                                                        tokenWallet:TestAccessTokenWallet.class
+                                                                                           settings:[TestSettings new]
+                                                                                     featureChecker:[TestFeatureManager new]
+                                                                                          appEvents:[TestAppEvents new]
+                                                                        serverConfigurationProvider:TestServerConfigurationProvider.class
+                                                                                              store:[UserDefaultsSpy new]
+                                                                          authenticationTokenWallet:TestAuthenticationTokenWallet.class
+                                                                                    profileProvider:TestProfileProvider.class
+                                                                              backgroundEventLogger:backgroundEventLogger];
+  [delegate initializeSDKWithLaunchOptions:@{}];
 }
 
 // MARK: - Lifecycle Methods
@@ -503,6 +523,9 @@
   self.api.pendingUrlOpen = urlOpener;
   self.api.safariViewController = ViewControllerSpy.makeDefaultSpy;
 
+  // Setting a pending request so we can assert that it's nilled out upon cancellation
+  self.api.pendingRequest = self.sampleTestBridgeApiRequest;
+
   // Funny enough there's no check that the safari view controller from the delegate
   // is the same instance stored in the safariViewController property
   [self.api safariViewControllerDidFinish:self.api.safariViewController];
@@ -513,7 +536,7 @@
     "Should remove the reference to the safari view controller when the delegate method is called"
   );
 
-  OCMVerify([_partialMock _cancelBridgeRequest]);
+  XCTAssertNil(self.api.pendingRequest, "Should cancel the request");
   XCTAssertTrue(urlOpener.openUrlWasCalled, "Should ask the opener to open a url (even though there is not one provided");
   XCTAssertNil(FBSDKLoginManager.capturedOpenUrl, "The url opener should be called with nil arguments");
   XCTAssertNil(FBSDKLoginManager.capturedSourceApplication, "The url opener should be called with nil arguments");
@@ -524,6 +547,9 @@
 {
   self.api.safariViewController = ViewControllerSpy.makeDefaultSpy;
 
+  // Setting a pending request so we can assert that it's nilled out upon cancellation
+  self.api.pendingRequest = self.sampleTestBridgeApiRequest;
+
   // Funny enough there's no check that the safari view controller from the delegate
   // is the same instance stored in the safariViewController property
   [self.api safariViewControllerDidFinish:self.api.safariViewController];
@@ -534,7 +560,7 @@
     "Should remove the reference to the safari view controller when the delegate method is called"
   );
 
-  OCMVerify([_partialMock _cancelBridgeRequest]);
+  XCTAssertNil(self.api.pendingRequest, "Should cancel the request");
   XCTAssertNil(FBSDKLoginManager.capturedOpenUrl, "The url opener should not be called");
   XCTAssertNil(FBSDKLoginManager.capturedSourceApplication, "The url opener should not be called");
   XCTAssertNil(FBSDKLoginManager.capturedAnnotation, "The url opener should not be called");
@@ -548,20 +574,25 @@
   self.api.safariViewController = viewControllerSpy;
   FBSDKContainerViewController *container = [FBSDKContainerViewController new];
 
+  // Setting a pending request so we can assert that it's nilled out upon cancellation
+  self.api.pendingRequest = self.sampleTestBridgeApiRequest;
+
   [self.api viewControllerDidDisappear:container animated:NO];
 
   XCTAssertEqualObjects(_logger.capturedContents, @"**ERROR**:\n The SFSafariViewController's parent view controller was dismissed.\nThis can happen if you are triggering login from a UIAlertController. Instead, make sure your top most view controller will not be prematurely dismissed.");
-  OCMVerify([_partialMock safariViewControllerDidFinish:viewControllerSpy]);
+  XCTAssertNil(self.api.pendingRequest, "Should cancel the request");
 }
 
 - (void)testViewControllerDidDisappearWithoutSafariViewController
 {
   FBSDKContainerViewController *container = [FBSDKContainerViewController new];
 
-  OCMReject([_partialMock safariViewControllerDidFinish:OCMArg.any]);
+  // Setting a pending request so we can assert that it's nilled out upon cancellation
+  self.api.pendingRequest = self.sampleTestBridgeApiRequest;
 
   [self.api viewControllerDidDisappear:container animated:NO];
 
+  XCTAssertNotNil(self.api.pendingRequest, "Should not cancel the request");
   XCTAssertEqualObjects(_logger.capturedContents, @"", @"Expected nothing to be logged");
 }
 
@@ -703,6 +734,13 @@
                                                                            cancelled:NO
                                                                                error:nil];
   self.bridgeAPIResponseFactory.stubbedResponse = response;
+}
+
+- (TestBridgeApiRequest *)sampleTestBridgeApiRequest
+{
+  return [[TestBridgeApiRequest alloc] initWithUrl:self.sampleUrl
+                                      protocolType:FBSDKBridgeAPIProtocolTypeWeb
+                                            scheme:nil];
 }
 
 - (NSURL *)sampleUrl
