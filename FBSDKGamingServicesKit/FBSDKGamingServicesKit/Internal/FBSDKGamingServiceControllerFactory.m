@@ -16,32 +16,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#import "FBSDKGamingServiceControllerFactory.h"
 
-#import "FBSDKGamingServiceCompletionHandler.h"
+#import "FBSDKGamingServiceController+GamingServiceControllerProtocol.h"
 
-#import "FBSDKGamingServicesCoreKitImport.h"
+NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSUInteger, FBSDKGamingServiceType) {
-  FBSDKGamingServiceTypeFriendFinder,
-  FBSDKGamingServiceTypeMediaAsset,
-  FBSDKGamingServiceTypeCommunity,
+@implementation FBSDKGamingServiceControllerFactory
+
+- (nonnull id<FBSDKGamingServiceController>)createWithServiceType:(FBSDKGamingServiceType)serviceType
+                                                completionHandler:(nonnull FBSDKGamingServiceResultCompletionHandler)completionHandler
+                                                    pendingResult:(nullable id)pendingResult
+{
+  return [[FBSDKGamingServiceController alloc]
+          initWithServiceType:serviceType
+          completionHandler:completionHandler
+          pendingResult:pendingResult];
 }
-NS_SWIFT_NAME(GamingServiceType);
-
-@interface FBSDKGamingServiceController : NSObject <FBSDKURLOpening>
-
-/**
-Used to link to gaming services on Facebook.
-
-@param completionHandler a callback that is fired once the user returns to the
- caller app or an error ocurrs
-@param pendingResult an optional object that will be passed to the completion handler as 'result'
-*/
-- (instancetype)initWithServiceType:(FBSDKGamingServiceType)serviceType
-                  completionHandler:(FBSDKGamingServiceResultCompletionHandler)completionHandler
-                      pendingResult:(id)pendingResult;
-
-- (void)callWithArgument:(NSString *)argument;
 
 @end
+
+NS_ASSUME_NONNULL_END

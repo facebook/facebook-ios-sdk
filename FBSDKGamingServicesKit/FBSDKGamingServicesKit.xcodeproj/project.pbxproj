@@ -61,6 +61,13 @@
 		F44AEAD12649900E003B24D7 /* FBSDKCoreKit_Basics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F44AEAC326498FF7003B24D7 /* FBSDKCoreKit_Basics.framework */; };
 		F46A224524D9F14D005878A8 /* FBSDKGamingServicesKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4F7CA1823F4902B0030A346 /* FBSDKGamingServicesKit.framework */; };
 		F46A225024D9F184005878A8 /* FBSDKGamingServicesKitTestUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = F46A224B24D9F184005878A8 /* FBSDKGamingServicesKitTestUtility.m */; };
+		F4D1373F26725E8C00AEB231 /* TestGamingServiceControllerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D1373E26725E8C00AEB231 /* TestGamingServiceControllerFactory.swift */; };
+		F4D1374226725F3800AEB231 /* FBSDKGamingServiceControllerFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = F4D1374026725F3800AEB231 /* FBSDKGamingServiceControllerFactory.h */; };
+		F4D1374326725F3800AEB231 /* FBSDKGamingServiceControllerFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = F4D1374026725F3800AEB231 /* FBSDKGamingServiceControllerFactory.h */; };
+		F4D1374426725F3800AEB231 /* FBSDKGamingServiceControllerFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F4D1374126725F3800AEB231 /* FBSDKGamingServiceControllerFactory.m */; };
+		F4D1374526725F3800AEB231 /* FBSDKGamingServiceControllerFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = F4D1374126725F3800AEB231 /* FBSDKGamingServiceControllerFactory.m */; };
+		F4D13765267298B200AEB231 /* FBSDKGamingServicesCoreKitImport.h in Headers */ = {isa = PBXBuildFile; fileRef = F4D13755267298B200AEB231 /* FBSDKGamingServicesCoreKitImport.h */; };
+		F4D13766267298B200AEB231 /* FBSDKGamingServicesCoreKitImport.h in Headers */ = {isa = PBXBuildFile; fileRef = F4D13755267298B200AEB231 /* FBSDKGamingServicesCoreKitImport.h */; };
 		F4DC057F2519499A0073B380 /* FBSDKCoreKitInternalImport.h in Headers */ = {isa = PBXBuildFile; fileRef = F4DC056E2519498C0073B380 /* FBSDKCoreKitInternalImport.h */; };
 		F4DC05832519499B0073B380 /* FBSDKCoreKitInternalImport.h in Headers */ = {isa = PBXBuildFile; fileRef = F4DC056E2519498C0073B380 /* FBSDKCoreKitInternalImport.h */; };
 		F4DE318124D9F4A700297C18 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4DE318024D9F4A700297C18 /* XCTest.framework */; };
@@ -301,6 +308,15 @@
 		F46A224E24D9F184005878A8 /* FBSDKGamingImageUploaderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKGamingImageUploaderTests.m; sourceTree = "<group>"; };
 		F46A224F24D9F184005878A8 /* FBSDKGamingVideoUploaderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKGamingVideoUploaderTests.m; sourceTree = "<group>"; };
 		F4A54C8A244619630063015F /* FBSDKGamingServicesKit-Common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBSDKGamingServicesKit-Common.xcconfig"; sourceTree = "<group>"; };
+		F4D1373B26725B9E00AEB231 /* FBSDKGamingServiceControllerProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKGamingServiceControllerProtocol.h; sourceTree = "<group>"; };
+		F4D1373C26725BFF00AEB231 /* FBSDKGamingServiceControllerCreating.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKGamingServiceControllerCreating.h; sourceTree = "<group>"; };
+		F4D1373D26725E8B00AEB231 /* FBSDKGamingServicesKitTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKGamingServicesKitTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		F4D1373E26725E8C00AEB231 /* TestGamingServiceControllerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGamingServiceControllerFactory.swift; sourceTree = "<group>"; };
+		F4D1374026725F3800AEB231 /* FBSDKGamingServiceControllerFactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKGamingServiceControllerFactory.h; sourceTree = "<group>"; };
+		F4D1374126725F3800AEB231 /* FBSDKGamingServiceControllerFactory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKGamingServiceControllerFactory.m; sourceTree = "<group>"; };
+		F4D1374726725F8F00AEB231 /* FBSDKFriendFinderDialog+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKFriendFinderDialog+Testing.h"; sourceTree = "<group>"; };
+		F4D1374826726C3700AEB231 /* FBSDKGamingServiceController+GamingServiceControllerProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKGamingServiceController+GamingServiceControllerProtocol.h"; sourceTree = "<group>"; };
+		F4D13755267298B200AEB231 /* FBSDKGamingServicesCoreKitImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKGamingServicesCoreKitImport.h; sourceTree = "<group>"; };
 		F4DC056E2519498C0073B380 /* FBSDKCoreKitInternalImport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKCoreKitInternalImport.h; sourceTree = "<group>"; };
 		F4DE318024D9F4A700297C18 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		F4DE31AC24D9FD6000297C18 /* FBSDKVideoUploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKVideoUploader.m; sourceTree = "<group>"; };
@@ -408,14 +424,33 @@
 		F46A224124D9F14D005878A8 /* FBSDKGamingServicesKitTests */ = {
 			isa = PBXGroup;
 			children = (
+				F4D1373D26725E8B00AEB231 /* FBSDKGamingServicesKitTests-Bridging-Header.h */,
 				F46A224D24D9F184005878A8 /* FBSDKFriendFinderDialogTests.m */,
 				F46A224E24D9F184005878A8 /* FBSDKGamingImageUploaderTests.m */,
 				F46A224C24D9F184005878A8 /* FBSDKGamingServicesKitTestUtility.h */,
 				F46A224B24D9F184005878A8 /* FBSDKGamingServicesKitTestUtility.m */,
 				F46A224F24D9F184005878A8 /* FBSDKGamingVideoUploaderTests.m */,
 				F46A224424D9F14D005878A8 /* Info.plist */,
+				F4D1374626725F6400AEB231 /* Helpers */,
+				F4D1374A26727C0800AEB231 /* Interfaces */,
 			);
 			path = FBSDKGamingServicesKitTests;
+			sourceTree = "<group>";
+		};
+		F4D1374626725F6400AEB231 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				F4D1373E26725E8C00AEB231 /* TestGamingServiceControllerFactory.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		F4D1374A26727C0800AEB231 /* Interfaces */ = {
+			isa = PBXGroup;
+			children = (
+				F4D1374726725F8F00AEB231 /* FBSDKFriendFinderDialog+Testing.h */,
+			);
+			path = Interfaces;
 			sourceTree = "<group>";
 		};
 		F4F7C9A023F48ED80030A346 = {
@@ -435,6 +470,7 @@
 		F4F7C9B523F48F2C0030A346 /* FBSDKGamingServicesKit */ = {
 			isa = PBXGroup;
 			children = (
+				F4D13755267298B200AEB231 /* FBSDKGamingServicesCoreKitImport.h */,
 				3A3B83F2263B5A4700AFBF4F /* FBSDKContextCreateAsyncContent.h */,
 				3A3B83F0263B5A4700AFBF4F /* FBSDKContextCreateAsyncContent.m */,
 				3A3B83DF263B5A4700AFBF4F /* FBSDKContextDialog.h */,
@@ -473,8 +509,13 @@
 				9FC2002C247D8ACF0016A053 /* FBSDKVideoUploader.h */,
 				F4F7CA3523F499600030A346 /* FBSDKCoreKit+Internal.h */,
 				F4DC056E2519498C0073B380 /* FBSDKCoreKitInternalImport.h */,
-				F4F7C9BA23F48F2C0030A346 /* FBSDKGamingServiceController.m */,
+				F4D1373B26725B9E00AEB231 /* FBSDKGamingServiceControllerProtocol.h */,
+				F4D1374826726C3700AEB231 /* FBSDKGamingServiceController+GamingServiceControllerProtocol.h */,
+				F4D1373C26725BFF00AEB231 /* FBSDKGamingServiceControllerCreating.h */,
 				F4F7C9BB23F48F2C0030A346 /* FBSDKGamingServiceController.h */,
+				F4F7C9BA23F48F2C0030A346 /* FBSDKGamingServiceController.m */,
+				F4D1374026725F3800AEB231 /* FBSDKGamingServiceControllerFactory.h */,
+				F4D1374126725F3800AEB231 /* FBSDKGamingServiceControllerFactory.m */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
@@ -583,11 +624,13 @@
 				9FC2002D247D8ACF0016A053 /* FBSDKVideoUploader.h in Headers */,
 				3A3B83F5263B5A4700AFBF4F /* FBSDKContextDialog.h in Headers */,
 				9FB51BA124B8BD4700059B77 /* FBSDKGamingGroupIntegration.h in Headers */,
+				F4D13765267298B200AEB231 /* FBSDKGamingServicesCoreKitImport.h in Headers */,
 				F4F7C9EA23F48F2C0030A346 /* FBSDKFriendFinderDialog.h in Headers */,
 				F4F7C9E423F48F2C0030A346 /* FBSDKGamingServiceCompletionHandler.h in Headers */,
 				F4F7C9E723F48F2C0030A346 /* FBSDKGamingServiceController.h in Headers */,
 				F4F7C9E823F48F2C0030A346 /* FBSDKGamingImageUploader.h in Headers */,
 				9FB2855726014BF300DB99CB /* FBSDKGamingPayload.h in Headers */,
+				F4D1374226725F3800AEB231 /* FBSDKGamingServiceControllerFactory.h in Headers */,
 				F4DC057F2519499A0073B380 /* FBSDKCoreKitInternalImport.h in Headers */,
 				F4F7C9EB23F48F2C0030A346 /* FBSDKGamingServicesKit.h in Headers */,
 				F4F7CA3623F499600030A346 /* FBSDKCoreKit+Internal.h in Headers */,
@@ -607,11 +650,13 @@
 				3A3B83FC263B5A4700AFBF4F /* FBSDKContextCreateAsyncContent.h in Headers */,
 				F4F7CA6F23F49D6F0030A346 /* FBSDKFriendFinderDialog.h in Headers */,
 				3A3B83F6263B5A4700AFBF4F /* FBSDKContextDialog.h in Headers */,
+				F4D13766267298B200AEB231 /* FBSDKGamingServicesCoreKitImport.h in Headers */,
 				9FB51BA224B8BD5400059B77 /* FBSDKGamingGroupIntegration.h in Headers */,
 				F4F7CA7123F49D6F0030A346 /* FBSDKGamingServiceCompletionHandler.h in Headers */,
 				F4F7CA7223F49D6F0030A346 /* FBSDKGamingImageUploader.h in Headers */,
 				F4F7CA7323F49D6F0030A346 /* FBSDKGamingServicesKit.h in Headers */,
 				9FB2855826014BF300DB99CB /* FBSDKGamingPayload.h in Headers */,
+				F4D1374326725F3800AEB231 /* FBSDKGamingServiceControllerFactory.h in Headers */,
 				F4DC05832519499B0073B380 /* FBSDKCoreKitInternalImport.h in Headers */,
 				F4F7CA7423F49D6F0030A346 /* FBSDKCoreKit+Internal.h in Headers */,
 				9FC2002E247D8ACF0016A053 /* FBSDKVideoUploader.h in Headers */,
@@ -697,6 +742,7 @@
 				TargetAttributes = {
 					F46A223F24D9F14D005878A8 = {
 						CreatedOnToolsVersion = 11.6;
+						LastSwiftMigration = 1250;
 					};
 					F4F7C9A923F48ED80030A346 = {
 						CreatedOnToolsVersion = 10.1;
@@ -921,6 +967,7 @@
 				F4DE31A524D9FA6F00297C18 /* FBSDKGamingVideoUploaderTests.m in Sources */,
 				F46A225024D9F184005878A8 /* FBSDKGamingServicesKitTestUtility.m in Sources */,
 				F4DE31A424D9FA6400297C18 /* FBSDKGamingImageUploaderTests.m in Sources */,
+				F4D1373F26725E8C00AEB231 /* TestGamingServiceControllerFactory.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -930,6 +977,7 @@
 			files = (
 				F4F7C9E523F48F2C0030A346 /* FBSDKFriendFinderDialog.m in Sources */,
 				F4F7C9ED23F48F2C0030A346 /* FBSDKGamingImageUploader.m in Sources */,
+				F4D1374426725F3800AEB231 /* FBSDKGamingServiceControllerFactory.m in Sources */,
 				9FC2000E247D82A00016A053 /* FBSDKGamingVideoUploaderConfiguration.m in Sources */,
 				F4F7C9E323F48F2C0030A346 /* FBSDKGamingImageUploaderConfiguration.m in Sources */,
 				F4DE31AD24D9FD6100297C18 /* FBSDKVideoUploader.m in Sources */,
@@ -950,6 +998,7 @@
 			files = (
 				9FC2002A247D83FF0016A053 /* FBSDKGamingVideoUploader.m in Sources */,
 				9FC2002B247D83FF0016A053 /* FBSDKGamingVideoUploaderConfiguration.m in Sources */,
+				F4D1374526725F3800AEB231 /* FBSDKGamingServiceControllerFactory.m in Sources */,
 				F4F7CA7623F49D6F0030A346 /* FBSDKFriendFinderDialog.m in Sources */,
 				F4F7CA7723F49D6F0030A346 /* FBSDKGamingImageUploader.m in Sources */,
 				F4DE31AE24D9FD6100297C18 /* FBSDKVideoUploader.m in Sources */,
@@ -1083,6 +1132,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "FBSDKGamingServicesKitTests/FBSDKGamingServicesKitTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1144,6 +1194,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_BRIDGING_HEADER = "FBSDKGamingServicesKitTests/FBSDKGamingServicesKitTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

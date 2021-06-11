@@ -16,32 +16,34 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+import Foundation
 
-#import "FBSDKGamingServiceCompletionHandler.h"
+@objcMembers
+class TestGamingServiceController: NSObject, GamingServiceControllerProtocol {
+  var capturedArgument: String?
 
-#import "FBSDKGamingServicesCoreKitImport.h"
-
-typedef NS_ENUM(NSUInteger, FBSDKGamingServiceType) {
-  FBSDKGamingServiceTypeFriendFinder,
-  FBSDKGamingServiceTypeMediaAsset,
-  FBSDKGamingServiceTypeCommunity,
+  func call(withArgument argument: String) {
+    capturedArgument = argument
+  }
 }
-NS_SWIFT_NAME(GamingServiceType);
 
-@interface FBSDKGamingServiceController : NSObject <FBSDKURLOpening>
+@objcMembers
+class TestGamingServiceControllerFactory: NSObject, GamingServiceControllerCreating {
 
-/**
-Used to link to gaming services on Facebook.
+  var capturedServiceType: GamingServiceType = .friendFinder
+  var capturedCompletion: GamingServiceResultCompletionHandler = { _, _, _ in }
+  var capturedPendingResult: Any?
+  var controller = TestGamingServiceController()
 
-@param completionHandler a callback that is fired once the user returns to the
- caller app or an error ocurrs
-@param pendingResult an optional object that will be passed to the completion handler as 'result'
-*/
-- (instancetype)initWithServiceType:(FBSDKGamingServiceType)serviceType
-                  completionHandler:(FBSDKGamingServiceResultCompletionHandler)completionHandler
-                      pendingResult:(id)pendingResult;
+  func create(
+    with serviceType: GamingServiceType,
+    completionHandler: @escaping GamingServiceResultCompletionHandler,
+    pendingResult: Any?
+  ) -> GamingServiceControllerProtocol {
+    capturedServiceType = serviceType
+    capturedCompletion = completionHandler
+    capturedPendingResult = pendingResult
 
-- (void)callWithArgument:(NSString *)argument;
-
-@end
+    return controller
+  }
+}

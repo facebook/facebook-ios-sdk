@@ -16,32 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-
-#import "FBSDKGamingServiceCompletionHandler.h"
-
-#import "FBSDKGamingServicesCoreKitImport.h"
-
-typedef NS_ENUM(NSUInteger, FBSDKGamingServiceType) {
-  FBSDKGamingServiceTypeFriendFinder,
-  FBSDKGamingServiceTypeMediaAsset,
-  FBSDKGamingServiceTypeCommunity,
-}
-NS_SWIFT_NAME(GamingServiceType);
-
-@interface FBSDKGamingServiceController : NSObject <FBSDKURLOpening>
-
-/**
-Used to link to gaming services on Facebook.
-
-@param completionHandler a callback that is fired once the user returns to the
- caller app or an error ocurrs
-@param pendingResult an optional object that will be passed to the completion handler as 'result'
-*/
-- (instancetype)initWithServiceType:(FBSDKGamingServiceType)serviceType
-                  completionHandler:(FBSDKGamingServiceResultCompletionHandler)completionHandler
-                      pendingResult:(id)pendingResult;
-
-- (void)callWithArgument:(NSString *)argument;
-
-@end
+// Importing FBSDKCoreKit is tricky due to build variants.
+// SPM require that it is imported as <FBSDKCoreKit.h> while CocoaPods,
+// Carthage, Buck, and xcodebuild require <FBSDKCoreKit/FBSDKCoreKit.h>
+//
+// Even though this file is not available from projects using SPM,
+// it is available when building the packages themselves so we need to include this check.
+#if FBSDK_SWIFT_PACKAGE
+ #import <FBSDKCoreKit.h>
+#else
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#endif

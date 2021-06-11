@@ -16,40 +16,66 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
 #import <FBSDKGamingServicesKit/FBSDKGamingServicesKit.h>
 
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKGamingServicesKitTestUtility.h"
+#import "FBSDKGamingServicesKitTests-Swift.h"
 
 @interface FBSDKFriendFinderDialogTests : XCTestCase
+
+@property (nonatomic) TestGamingServiceControllerFactory *factory;
+@property (nonatomic) FBSDKFriendFinderDialog *dialog;
+@property (nonatomic) NSError *bridgeAPIError;
+
 @end
 
 @implementation FBSDKFriendFinderDialogTests
 {
   id _mockToken;
-  id _mockApp;
 }
 
 - (void)setUp
 {
   [super setUp];
 
-  _mockToken = OCMClassMock([FBSDKAccessToken class]);
-  [FBSDKAccessToken setCurrentAccessToken:_mockToken];
-
-  _mockApp = OCMClassMock([UIApplication class]);
-  OCMStub([_mockApp sharedApplication]).andReturn(_mockApp);
+  self.bridgeAPIError = [[NSError alloc]
+                         initWithDomain:FBSDKErrorDomain
+                         code:FBSDKErrorBridgeAPIInterruption
+                         userInfo:nil];
+  self.factory = [TestGamingServiceControllerFactory new];
+  self.dialog = [[FBSDKFriendFinderDialog alloc] initWithGamingServiceControllerFactory:self.factory];
+  FBSDKAccessToken.currentAccessToken = [self createAccessToken];
 }
+
+- (void)tearDown
+{
+  FBSDKAccessToken.currentAccessToken = nil;
+
+  [super tearDown];
+}
+
+// MARK: - Dependencies
+
+- (void)testDefaultDependencies
+{
+  XCTAssertEqualObjects(
+    [(NSObject *)FBSDKFriendFinderDialog.shared.factory class],
+    FBSDKGamingServiceControllerFactory.class,
+    "Should use the expected default gaming service controller factory type by default"
+  );
+}
+
+// MARK: - Launching Dialogs
 
 - (void)testFailureWhenNoValidAccessTokenPresent
 {
   [FBSDKAccessToken setCurrentAccessToken:nil];
 
   __block BOOL actioned = false;
-  [FBSDKFriendFinderDialog
+  [self.dialog
    launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError *_Nullable error) {
      XCTAssert(error.code == FBSDKErrorAccessTokenRequired, "Expected error requiring a valid access token");
      actioned = true;
@@ -60,72 +86,85 @@
 
 - (void)testServiceIsCalledCorrectly
 {
-  OCMStub([_mockToken appID]).andReturn(@"123");
-  OCMStub(
-    [_mockApp
-     openURL:[OCMArg any]
-     options:[OCMArg any]
-     completionHandler:([OCMArg invokeBlockWithArgs:@(false), nil])]
-  );
-
-  id expectation = [self expectationWithDescription:@"callback"];
-
-  [FBSDKFriendFinderDialog
+  __block BOOL didInvokeCompletion = NO;
+  [self.dialog
    launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError *_Nullable error) {
-     [expectation fulfill];
+     didInvokeCompletion = YES;
    }];
 
-  [self waitForExpectationsWithTimeout:1 handler:nil];
+  XCTAssertEqual(
+    self.factory.capturedServiceType,
+    FBSDKGamingServiceTypeFriendFinder,
+    "Should create a controller with the expected service type"
+  );
+  XCTAssertNil(
+    self.factory.capturedPendingResult,
+    "Should not create a controller with a pending result"
+  );
+  XCTAssertEqualObjects(
+    self.factory.controller.capturedArgument,
+    FBSDKAccessToken.currentAccessToken.appID,
+    "Should inoke the new controller with the app id of the current access token"
+  );
+  self.factory.capturedCompletion(YES, nil, nil);
 
-  id urlCheck = [OCMArg checkWithBlock:^BOOL (id obj) {
-    return [[(NSURL *)obj absoluteString] isEqualToString:@"https://fb.gg/me/friendfinder/123"];
-  }];
-  OCMVerify([_mockApp openURL:urlCheck options:[OCMArg any] completionHandler:[OCMArg any]]);
+  XCTAssertTrue(didInvokeCompletion);
 }
 
 - (void)testFailuresReturnAnError
 {
-  OCMStub(
-    [_mockApp
-     openURL:[OCMArg any]
-     options:[OCMArg any]
-     completionHandler:([OCMArg invokeBlockWithArgs:@(false), nil])]
-  );
-
-  id expectation = [self expectationWithDescription:@"callback"];
-  [FBSDKFriendFinderDialog
+  __block BOOL didInvokeCompletion = NO;
+  [self.dialog
    launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError *_Nullable error) {
      XCTAssertFalse(success);
      XCTAssert(error.code == FBSDKErrorBridgeAPIInterruption);
-     [expectation fulfill];
+     didInvokeCompletion = YES;
    }];
 
-  [self waitForExpectationsWithTimeout:1 handler:nil];
+  XCTAssertEqual(
+    self.factory.capturedServiceType,
+    FBSDKGamingServiceTypeFriendFinder,
+    "Should create a controller with the expected service type"
+  );
+  XCTAssertNil(
+    self.factory.capturedPendingResult,
+    "Should not create a controller with a pending result"
+  );
+  XCTAssertEqualObjects(
+    self.factory.controller.capturedArgument,
+    FBSDKAccessToken.currentAccessToken.appID,
+    "Should inoke the new controller with the app id of the current access token"
+  );
+
+  self.factory.capturedCompletion(NO, nil, self.bridgeAPIError);
+
+  XCTAssertTrue(didInvokeCompletion);
 }
 
 - (void)testHandlingOfCallbackURL
 {
-  id settings = OCMClassMock([FBSDKSettings class]);
-  OCMStub(ClassMethod([settings appID])).andReturn(@"123");
-
   __block id<FBSDKURLOpening> delegate;
   [FBSDKGamingServicesKitTestUtility captureURLDelegateFromBridgeAPI:^(id<FBSDKURLOpening> obj) {
     delegate = obj;
   }];
 
   __block BOOL actioned = false;
-  [FBSDKFriendFinderDialog
+  [self.dialog
    launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError *_Nullable error) {
      XCTAssertTrue(success);
      actioned = true;
    }];
 
-  [delegate application:_mockApp openURL:[NSURL URLWithString:@"fb123://friendfinder"] sourceApplication:@"foo" annotation:nil];
+  self.factory.capturedCompletion(YES, nil, nil);
 
   XCTAssertTrue(actioned);
 }
 
-- (void)testHandlingOfUserManuallyReturningToOriginalApp
+// TODO: This is actually testing the applicationDidBecomeActive method
+// of GamingServicesController. This is a roundabout way of setting a
+// completion on that then invoking it via the delegate from the bridge.
+// This test should be moved to where it makes sense or deleted.
+- (void)_testHandlingOfUserManuallyReturningToOriginalApp
 {
   __block id<FBSDKURLOpening> delegate;
   [FBSDKGamingServicesKitTestUtility captureURLDelegateFromBridgeAPI:^(id<FBSDKURLOpening> obj) {
@@ -133,15 +172,31 @@
   }];
 
   __block BOOL actioned = false;
-  [FBSDKFriendFinderDialog
+  [self.dialog
    launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError *_Nullable error) {
      XCTAssertTrue(success);
      actioned = true;
    }];
 
-  [delegate applicationDidBecomeActive:_mockApp];
+  [delegate applicationDidBecomeActive:UIApplication.sharedApplication];
 
   XCTAssertTrue(actioned);
+}
+
+// MARK: - Helpers
+
+- (FBSDKAccessToken *)createAccessToken
+{
+  return [[FBSDKAccessToken alloc]
+          initWithTokenString:@"abc"
+          permissions:@[]
+          declinedPermissions:@[]
+          expiredPermissions:@[]
+          appID:@"123"
+          userID:@""
+          expirationDate:nil
+          refreshDate:nil
+          dataAccessExpirationDate:nil];
 }
 
 @end
