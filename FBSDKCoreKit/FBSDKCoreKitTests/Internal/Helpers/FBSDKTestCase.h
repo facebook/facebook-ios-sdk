@@ -57,23 +57,8 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing a `FBSDKAppEventsUtility` class  mock between tests
 @property (nullable, nonatomic, assign) id appEventsUtilityClassMock;
 
-/// Used for sharing an `FBSDKSettings` class mock between tests
-@property (nullable, assign) id settingsClassMock;
-
-/// Used for sharing a `FBSDKInternalUtility` class mock between tests
-@property (nullable, nonatomic, assign) id internalUtilityClassMock;
-
 /// Used for sharing a `FBSDKGraphRequestConnection` class mock between tests
 @property (nullable, nonatomic, assign) id graphRequestConnectionClassMock;
-
-/// Used for sharing a `UIApplication.sharedApplication` mock between tests
-@property (nullable, nonatomic, assign) id sharedApplicationMock;
-
-/// Used for stubbing any instance that conforms to the `UIViewControllerTransitionCoordinator` protocol
-@property (nullable, nonatomic, assign) id transitionCoordinatorMock;
-
-/// Used for sharing a `FBSDKBridgeAPIResponse` class mock between tests
-@property (nullable, nonatomic, assign) id bridgeApiResponseClassMock;
 
 /// Used for sharing a `FBSDKUtility` class mock between tests
 @property (nullable, nonatomic, assign) id utilityClassMock;
@@ -87,20 +72,6 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// This should be used only as needed as a stopgap to keep tests
 /// from hitting the network while proper mocks are being written.
 - (void)stubAllocatingGraphRequestConnection;
-
-/// Stubs `UIApplication.sharedApplication`'s `openURL:` method and returns the provided value
-- (void)stubOpenURLWith:(BOOL)openURL;
-
-/// Stubs `UIApplication.sharedApplication`'s `openURL:options:completionHandler:` method
-///
-/// - Parameters:
-/// - performCompletion: Whether to invoke the completion handler
-/// - completionSuccess: The value to pass for the success parameter of the completion handler
-- (void)stubOpenUrlOptionsCompletionHandlerWithPerformCompletion:(BOOL)performCompletion
-                                               completionSuccess:(BOOL)completionSuccess;
-
-/// Stubs `FBSDKInternalUtility`'s `appURLScheme` property to return the provided scheme
-- (void)stubAppUrlSchemeWith:(nullable NSString *)scheme;
 
 @end
 

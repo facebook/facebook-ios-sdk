@@ -40,6 +40,8 @@
 #import "FBSDKAppEvents+ApplicationStateSetting.h"
 #import "FBSDKApplicationLifecycleNotifications.h"
 #import "FBSDKAppLinkUtility+Testing.h"
+#import "FBSDKAppURLSchemeProviding.h"
+#import "FBSDKInternalUtility+AppURLSchemeProviding.h"
 #import "FBSDKAtePublisherCreating.h"
 #import "FBSDKAtePublisherFactory.h"
 #import "FBSDKAuthenticationStatusUtility.h"

@@ -111,6 +111,11 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 
 + (NSString *)appURLScheme
 {
+  return self.sharedUtility.appURLScheme;
+}
+
+- (NSString *)appURLScheme
+{
   NSString *appID = ([FBSDKSettings appID] ?: @"");
   NSString *suffix = ([FBSDKSettings appURLSchemeSuffix] ?: @"");
   return [[NSString alloc] initWithFormat:@"fb%@%@", appID, suffix];

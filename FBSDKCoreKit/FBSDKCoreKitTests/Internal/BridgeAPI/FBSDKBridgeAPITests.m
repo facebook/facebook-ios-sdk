@@ -26,25 +26,23 @@
 
   [FBSDKLoginManager resetTestEvidence];
 
-  _logger = [TestLogger new];
-  _urlOpener = [[TestURLOpener alloc] initWithCanOpenUrl:YES];
-  _bridgeAPIResponseFactory = [TestBridgeApiResponseFactory new];
+  self.appURLSchemeProvider = [TestAppURLSchemeProvider new];
+  self.logger = [TestLogger new];
+  self.urlOpener = [[TestURLOpener alloc] initWithCanOpenUrl:YES];
+  self.bridgeAPIResponseFactory = [TestBridgeApiResponseFactory new];
 
   [self configureSDK];
 
-  _api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]
-                                              logger:self.logger
-                                           urlOpener:self.urlOpener
-                            bridgeAPIResponseFactory:self.bridgeAPIResponseFactory
-                                     frameworkLoader:self.frameworkLoader];
-  _partialMock = OCMPartialMock(_api);
+  self.api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]
+                                                  logger:self.logger
+                                               urlOpener:self.urlOpener
+                                bridgeAPIResponseFactory:self.bridgeAPIResponseFactory
+                                         frameworkLoader:self.frameworkLoader
+                                    appURLSchemeProvider:self.appURLSchemeProvider];
 }
 
 - (void)tearDown
 {
-  _api = nil;
-  [_partialMock stopMocking];
-  _partialMock = nil;
   [FBSDKLoginManager resetTestEvidence];
   [TestLogger reset];
 
@@ -353,7 +351,8 @@
                                                   logger:self.logger
                                                urlOpener:self.urlOpener
                                 bridgeAPIResponseFactory:self.bridgeAPIResponseFactory
-                                         frameworkLoader:self.frameworkLoader];
+                                         frameworkLoader:self.frameworkLoader
+                                    appURLSchemeProvider:self.appURLSchemeProvider];
 
   BOOL applicationOpensSuccessfully = YES;
   [self.urlOpener stubOpenWithUrl:self.sampleUrl success:applicationOpensSuccessfully];
@@ -383,7 +382,8 @@
                                                   logger:self.logger
                                                urlOpener:self.urlOpener
                                 bridgeAPIResponseFactory:self.bridgeAPIResponseFactory
-                                         frameworkLoader:self.frameworkLoader];
+                                         frameworkLoader:self.frameworkLoader
+                                    appURLSchemeProvider:self.appURLSchemeProvider];
   [self.urlOpener stubOpenWithUrl:self.sampleUrl success:applicationOpensSuccessfully];
   [self.api openURL:self.sampleUrl sender:nil handler:^(BOOL _success, NSError *_Nullable error) {
     XCTAssertEqual(
@@ -604,7 +604,7 @@
 - (void)testHandlingBridgeResponseWithInvalidScheme
 {
   [self stubBridgeApiResponseWithUrlCreation];
-  [self stubAppUrlSchemeWith:@"foo"];
+  self.appURLSchemeProvider.stubbedScheme = @"foo";
 
   BOOL result = [self.api _handleBridgeAPIResponseURL:self.sampleUrl sourceApplication:@""];
 
@@ -615,7 +615,7 @@
 - (void)testHandlingBridgeResponseWithInvalidHost
 {
   [self stubBridgeApiResponseWithUrlCreation];
-  [self stubAppUrlSchemeWith:self.sampleUrl.scheme];
+  self.appURLSchemeProvider.stubbedScheme = self.sampleUrl.scheme;
 
   BOOL result = [self.api _handleBridgeAPIResponseURL:self.sampleUrl sourceApplication:@""];
 
@@ -626,7 +626,7 @@
 - (void)testHandlingBridgeResponseWithMissingRequest
 {
   [self stubBridgeApiResponseWithUrlCreation];
-  [self stubAppUrlSchemeWith:self.validBridgeResponseUrl.scheme];
+  self.appURLSchemeProvider.stubbedScheme = self.validBridgeResponseUrl.scheme;
 
   BOOL result = [self.api _handleBridgeAPIResponseURL:self.validBridgeResponseUrl sourceApplication:@""];
 
@@ -637,7 +637,7 @@
 - (void)testHandlingBridgeResponseWithMissingCompletionBlock
 {
   [self stubBridgeApiResponseWithUrlCreation];
-  [self stubAppUrlSchemeWith:self.validBridgeResponseUrl.scheme];
+  self.appURLSchemeProvider.stubbedScheme = self.validBridgeResponseUrl.scheme;
   self.api.pendingRequest = [TestBridgeApiRequest requestWithURL:self.sampleUrl];
 
   BOOL result = [self.api _handleBridgeAPIResponseURL:self.validBridgeResponseUrl sourceApplication:@""];
@@ -653,7 +653,7 @@
                                                                            cancelled:NO
                                                                                error:nil];
   self.bridgeAPIResponseFactory.stubbedResponse = response;
-  [self stubAppUrlSchemeWith:self.validBridgeResponseUrl.scheme];
+  self.appURLSchemeProvider.stubbedScheme = self.validBridgeResponseUrl.scheme;
   self.api.pendingRequest = [TestBridgeApiRequest requestWithURL:self.sampleUrl];
   self.api.pendingRequestCompletionBlock = ^(FBSDKBridgeAPIResponse *_response) {
     XCTAssertEqualObjects(_response, response, "Should invoke the completion with the expected bridge api response");
@@ -672,7 +672,7 @@
                                                                            cancelled:NO
                                                                                error:self.sampleError];
   self.bridgeAPIResponseFactory.stubbedResponse = response;
-  [self stubAppUrlSchemeWith:self.validBridgeResponseUrl.scheme];
+  self.appURLSchemeProvider.stubbedScheme = self.validBridgeResponseUrl.scheme;
   self.api.pendingRequest = [TestBridgeApiRequest requestWithURL:self.sampleUrl];
   self.api.pendingRequestCompletionBlock = ^(FBSDKBridgeAPIResponse *_response) {
     XCTAssertEqualObjects(_response, response, "Should invoke the completion with the expected bridge api response");
@@ -692,8 +692,7 @@
                                                                                error:nil];
   self.bridgeAPIResponseFactory.stubbedResponse = response;
   self.bridgeAPIResponseFactory.shouldFailCreation = YES;
-
-  [self stubAppUrlSchemeWith:self.validBridgeResponseUrl.scheme];
+  self.appURLSchemeProvider.stubbedScheme = self.validBridgeResponseUrl.scheme;
   self.api.pendingRequest = [TestBridgeApiRequest requestWithURL:self.sampleUrl];
   self.api.pendingRequestCompletionBlock = ^(FBSDKBridgeAPIResponse *_response) {
     XCTFail("Should not invoke pending completion handler");

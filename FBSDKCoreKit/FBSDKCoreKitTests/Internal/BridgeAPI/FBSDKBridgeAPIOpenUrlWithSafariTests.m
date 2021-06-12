@@ -34,6 +34,7 @@
 @property (nonatomic) TestURLOpener *urlOpener;
 @property (nonatomic) TestBridgeApiResponseFactory *bridgeAPIResponseFactory;
 @property (nonatomic) TestDylibResolver *frameworkLoader;
+@property (nonatomic) TestAppURLSchemeProvider *appURLSchemeProvider;
 
 @end
 
@@ -48,11 +49,13 @@
   self.urlOpener = [[TestURLOpener alloc] initWithCanOpenUrl:YES];
   self.bridgeAPIResponseFactory = [TestBridgeApiResponseFactory new];
   self.frameworkLoader = [TestDylibResolver new];
+  self.appURLSchemeProvider = [TestAppURLSchemeProvider new];
   self.api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]
                                                   logger:self.logger
                                                urlOpener:self.urlOpener
                                 bridgeAPIResponseFactory:self.bridgeAPIResponseFactory
-                                         frameworkLoader:self.frameworkLoader];
+                                         frameworkLoader:self.frameworkLoader
+                                    appURLSchemeProvider:self.appURLSchemeProvider];
   self.loginManager = [FBSDKLoginManager new];
 
   self.frameworkLoader.stubSafariViewControllerClass = SFSafariViewController.class;

@@ -982,6 +982,7 @@
 		F46989DC25F93FAD00120B09 /* TestTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46989DB25F93FAD00120B09 /* TestTableView.swift */; };
 		F4698A0525F94B1900120B09 /* TestCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4698A0425F94B1900120B09 /* TestCollectionView.swift */; };
 		F469A8932673BB170079E7D0 /* TestViewControllerTransitionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F469A8882673BB170079E7D0 /* TestViewControllerTransitionCoordinator.swift */; };
+		F469A8952673E45B0079E7D0 /* TestAppURLSchemeProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F469A8942673E45B0079E7D0 /* TestAppURLSchemeProvider.swift */; };
 		F46E52A9260D249000BAF55C /* TestMeasurementEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46E52A8260D248F00BAF55C /* TestMeasurementEvent.swift */; };
 		F46E5338260D431200BAF55C /* TestURLOpener.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46E5330260D431200BAF55C /* TestURLOpener.swift */; };
 		F46E5407260E421100BAF55C /* TestAppLinkResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46E5406260E421100BAF55C /* TestAppLinkResolver.swift */; };
@@ -2016,6 +2017,9 @@
 		F46989DB25F93FAD00120B09 /* TestTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTableView.swift; sourceTree = "<group>"; };
 		F4698A0425F94B1900120B09 /* TestCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCollectionView.swift; sourceTree = "<group>"; };
 		F469A8882673BB170079E7D0 /* TestViewControllerTransitionCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewControllerTransitionCoordinator.swift; sourceTree = "<group>"; };
+		F469A8942673E45B0079E7D0 /* TestAppURLSchemeProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAppURLSchemeProvider.swift; sourceTree = "<group>"; };
+		F469A8962673E4A40079E7D0 /* FBSDKAppURLSchemeProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKAppURLSchemeProviding.h; sourceTree = "<group>"; };
+		F469A8972673E4EE0079E7D0 /* FBSDKInternalUtility+AppURLSchemeProviding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKInternalUtility+AppURLSchemeProviding.h"; sourceTree = "<group>"; };
 		F46E528C260D224400BAF55C /* FBSDKAppLinkEventPosting.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKAppLinkEventPosting.h; sourceTree = "<group>"; };
 		F46E529A260D230100BAF55C /* FBSDKMeasurementEvent+AppLinkEventPosting.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKMeasurementEvent+AppLinkEventPosting.h"; sourceTree = "<group>"; };
 		F46E52A8260D248F00BAF55C /* TestMeasurementEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestMeasurementEvent.swift; sourceTree = "<group>"; };
@@ -2613,6 +2617,8 @@
 				F46E5586260FAF7F00BAF55C /* FBSDKAppLinkResolverRequestBuilder+Protocols.h */,
 				F46E5584260FAE4500BAF55C /* FBSDKAppLinkResolverRequestBuilding.h */,
 				58662D7B25F9904D00FC7AD2 /* FBSDKAppLinkUtility+Internal.h */,
+				F469A8962673E4A40079E7D0 /* FBSDKAppURLSchemeProviding.h */,
+				F469A8972673E4EE0079E7D0 /* FBSDKInternalUtility+AppURLSchemeProviding.h */,
 				C6C5CBCB2581871B00AA3BB3 /* FBSDKAuthenticationStatusUtility.h */,
 				C6C5CBCA2581871B00AA3BB3 /* FBSDKAuthenticationStatusUtility.m */,
 				F4F2FF27265849E9002FA5EC /* FBSDKAuthenticationTokenProtocols.h */,
@@ -3502,6 +3508,7 @@
 				F46E5406260E421100BAF55C /* TestAppLinkResolver.swift */,
 				F46E55A1260FB07B00BAF55C /* TestAppLinkResolverRequestBuilder.swift */,
 				F4AE657226377A1C00E0B661 /* TestAppStoreReceiptProvider.swift */,
+				F469A8942673E45B0079E7D0 /* TestAppURLSchemeProvider.swift */,
 				F4F200062659A5F7002FA5EC /* TestAtePublisherFactory.swift */,
 				F4F200122659A7FA002FA5EC /* TestAtePublisher.swift */,
 				F4F2FF3326584C3D002FA5EC /* TestAuthenticationTokenWallet.swift */,
@@ -5236,6 +5243,7 @@
 				E4C2B97A23867327002335A4 /* FBSDKModelRuntimeTests.mm in Sources */,
 				F4A033E325F1545B00D19DE9 /* GraphRequestPiggyBackManagerProviderTests.swift in Sources */,
 				F48AD348257700B80052C056 /* SampleAuthenticationToken.swift in Sources */,
+				F469A8952673E45B0079E7D0 /* TestAppURLSchemeProvider.swift in Sources */,
 				F475226D264C315D0076697F /* FBSDKIntegrityManagerTests.swift in Sources */,
 				58E9D4B9261F7387004818D8 /* CrashHandlerTests.swift in Sources */,
 				F496E61224E6049A006231A2 /* AppDelegateObserverFake.swift in Sources */,

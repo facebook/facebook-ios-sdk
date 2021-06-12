@@ -22,340 +22,27 @@
 
 // MARK: - Url Opening
 
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCanOpenUrlWithoutSafariVcWhileDismissingSafariVcWithoutAuthSessionCompletionHandlerAbleToHandleBridgeApiResponse
+- (void)testOpenUrlShouldStopPropagationWithPendingURL
 {
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:YES
-                   isDismissingSafariViewController:YES
-                 authSessionCompletionHandlerExists:NO
-                         canHandleBridgeApiResponse:YES
-                expectedAuthSessionCompletionExists:NO];
-}
+  FBSDKLoginManager *urlOpener = [FBSDKLoginManager new];
+  [urlOpener stubShouldStopPropagationOfURL:self.sampleUrl withValue:YES];
+  urlOpener.stubbedCanOpenUrl = YES;
 
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCanOpenUrlWithoutSafariVcWhileDismissingSafariVcWithoutAuthSessionCompletionHandlerUnableToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:YES
-                   isDismissingSafariViewController:YES
-                 authSessionCompletionHandlerExists:NO
-                         canHandleBridgeApiResponse:NO
-                expectedAuthSessionCompletionExists:NO];
-}
+  self.api.pendingUrlOpen = urlOpener;
 
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCanOpenUrlWithoutSafariVcWhileDismissingSafariVcWithAuthSessionCompletionHandlerAbleToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:YES
-                   isDismissingSafariViewController:YES
-                 authSessionCompletionHandlerExists:YES
-                         canHandleBridgeApiResponse:YES
-                expectedAuthSessionCompletionExists:YES];
-}
+  BOOL returnValue = [self.api application:UIApplication.sharedApplication
+                                   openURL:self.sampleUrl
+                         sourceApplication:sampleSource
+                                annotation:sampleAnnotation];
+  XCTAssertTrue(
+    returnValue,
+    "Should early exit when the opener stops propagation"
+  );
 
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCanOpenUrlWithoutSafariVcWhileDismissingSafariVcWithAuthSessionCompletionHandlerUnableToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:YES
-                   isDismissingSafariViewController:YES
-                 authSessionCompletionHandlerExists:YES
-                         canHandleBridgeApiResponse:NO
-                expectedAuthSessionCompletionExists:YES];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCanOpenUrlWithoutSafariVcWhilePresentingSafariVcWithoutAuthSessionCompletionHandlerAbleToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:YES
-                   isDismissingSafariViewController:NO
-                 authSessionCompletionHandlerExists:NO
-                         canHandleBridgeApiResponse:YES
-                expectedAuthSessionCompletionExists:NO];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCanOpenUrlWithoutSafariVcWhilePresentingSafariVcWithoutAuthSessionCompletionHandlerUnableToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:YES
-                   isDismissingSafariViewController:NO
-                 authSessionCompletionHandlerExists:NO
-                         canHandleBridgeApiResponse:NO
-                expectedAuthSessionCompletionExists:NO];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCanOpenUrlWithoutSafariVcWhilePresentingSafariVcWithAuthSessionCompletionHandlerAbleToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:YES
-                   isDismissingSafariViewController:NO
-                 authSessionCompletionHandlerExists:YES
-                         canHandleBridgeApiResponse:YES
-                expectedAuthSessionCompletionExists:YES];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCanOpenUrlWithoutSafariVcWhilePresentingSafariVcWithAuthSessionCompletionHandlerUnableToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:YES
-                   isDismissingSafariViewController:NO
-                 authSessionCompletionHandlerExists:YES
-                         canHandleBridgeApiResponse:NO
-                expectedAuthSessionCompletionExists:YES];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCanOpenUrlWithSafariVcWhileDismissingSafariVcWithoutAuthSessionCompletionHandlerAbleToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:YES
-                            hasSafariViewController:YES
-                   isDismissingSafariViewController:YES
-                 authSessionCompletionHandlerExists:NO
-                         canHandleBridgeApiResponse:YES
-                expectedAuthSessionCompletionExists:NO];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCanOpenUrlWithSafariVcWhileDismissingSafariVcWithoutAuthSessionCompletionHandlerUnableToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:YES
-                            hasSafariViewController:YES
-                   isDismissingSafariViewController:YES
-                 authSessionCompletionHandlerExists:NO
-                         canHandleBridgeApiResponse:NO
-                expectedAuthSessionCompletionExists:NO];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCanOpenUrlWithSafariVcWhileDismissingSafariVcWithAuthSessionCompletionHandlerAbleToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:YES
-                            hasSafariViewController:YES
-                   isDismissingSafariViewController:YES
-                 authSessionCompletionHandlerExists:YES
-                         canHandleBridgeApiResponse:YES
-                expectedAuthSessionCompletionExists:YES];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCanOpenUrlWithSafariVcWhileDismissingSafariVcWithAuthSessionCompletionHandlerUnableToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:YES
-                            hasSafariViewController:YES
-                   isDismissingSafariViewController:YES
-                 authSessionCompletionHandlerExists:YES
-                         canHandleBridgeApiResponse:NO
-                expectedAuthSessionCompletionExists:YES];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCanOpenUrlWithSafariVcWhilePresentingSafariVcWithoutAuthSessionCompletionHandlerAbleToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:YES
-                            hasSafariViewController:YES
-                   isDismissingSafariViewController:NO
-                 authSessionCompletionHandlerExists:NO
-                         canHandleBridgeApiResponse:YES
-                expectedAuthSessionCompletionExists:NO];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCanOpenUrlWithSafariVcWhilePresentingSafariVcWithoutAuthSessionCompletionHandlerUnableToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:YES
-                            hasSafariViewController:YES
-                   isDismissingSafariViewController:NO
-                 authSessionCompletionHandlerExists:NO
-                         canHandleBridgeApiResponse:NO
-                expectedAuthSessionCompletionExists:NO];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCanOpenUrlWithSafariVcWhilePresentingSafariVcWithAuthSessionCompletionHandlerAbleToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:YES
-                            hasSafariViewController:YES
-                   isDismissingSafariViewController:NO
-                 authSessionCompletionHandlerExists:YES
-                         canHandleBridgeApiResponse:YES
-                expectedAuthSessionCompletionExists:YES];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCanOpenUrlWithSafariVcWhilePresentingSafariVcWithAuthSessionCompletionHandlerUnableToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:YES
-                            hasSafariViewController:YES
-                   isDismissingSafariViewController:NO
-                 authSessionCompletionHandlerExists:YES
-                         canHandleBridgeApiResponse:NO
-                expectedAuthSessionCompletionExists:YES];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCannotOpenUrlWithoutSafariVcWhileDismissingSafariVcWithoutAuthSessionCompletionHandlerAbleToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:NO
-                   isDismissingSafariViewController:YES
-                 authSessionCompletionHandlerExists:NO
-                         canHandleBridgeApiResponse:YES
-                expectedAuthSessionCompletionExists:NO];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCannotOpenUrlWithoutSafariVcWhileDismissingSafariVcWithoutAuthSessionCompletionHandlerUnableToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:NO
-                   isDismissingSafariViewController:YES
-                 authSessionCompletionHandlerExists:NO
-                         canHandleBridgeApiResponse:NO
-                expectedAuthSessionCompletionExists:NO];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCannotOpenUrlWithoutSafariVcWhileDismissingSafariVcWithAuthSessionCompletionHandlerAbleToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:NO
-                   isDismissingSafariViewController:YES
-                 authSessionCompletionHandlerExists:YES
-                         canHandleBridgeApiResponse:YES
-                expectedAuthSessionCompletionExists:YES];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCannotOpenUrlWithoutSafariVcWhileDismissingSafariVcWithAuthSessionCompletionHandlerUnableToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:NO
-                   isDismissingSafariViewController:YES
-                 authSessionCompletionHandlerExists:YES
-                         canHandleBridgeApiResponse:NO
-                expectedAuthSessionCompletionExists:YES];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCannotOpenUrlWithoutSafariVcWhilePresentingSafariVcWithoutAuthSessionCompletionHandlerAbleToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:NO
-                   isDismissingSafariViewController:NO
-                 authSessionCompletionHandlerExists:NO
-                         canHandleBridgeApiResponse:YES
-                expectedAuthSessionCompletionExists:NO];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCannotOpenUrlWithoutSafariVcWhilePresentingSafariVcWithoutAuthSessionCompletionHandlerUnableToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:NO
-                   isDismissingSafariViewController:NO
-                 authSessionCompletionHandlerExists:NO
-                         canHandleBridgeApiResponse:NO
-                expectedAuthSessionCompletionExists:NO];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCannotOpenUrlWithoutSafariVcWhilePresentingSafariVcWithAuthSessionCompletionHandlerAbleToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:NO
-                   isDismissingSafariViewController:NO
-                 authSessionCompletionHandlerExists:YES
-                         canHandleBridgeApiResponse:YES
-                expectedAuthSessionCompletionExists:YES];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCannotOpenUrlWithoutSafariVcWhilePresentingSafariVcWithAuthSessionCompletionHandlerUnableToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:NO
-                   isDismissingSafariViewController:NO
-                 authSessionCompletionHandlerExists:YES
-                         canHandleBridgeApiResponse:NO
-                expectedAuthSessionCompletionExists:YES];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCannotOpenUrlWithSafariVcWhileDismissingSafariVcWithoutAuthSessionCompletionHandlerAbleToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:NO
-                            hasSafariViewController:YES
-                   isDismissingSafariViewController:YES
-                 authSessionCompletionHandlerExists:NO
-                         canHandleBridgeApiResponse:YES
-                expectedAuthSessionCompletionExists:NO];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCannotOpenUrlWithSafariVcWhileDismissingSafariVcWithoutAuthSessionCompletionHandlerUnableToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:NO
-                            hasSafariViewController:YES
-                   isDismissingSafariViewController:YES
-                 authSessionCompletionHandlerExists:NO
-                         canHandleBridgeApiResponse:NO
-                expectedAuthSessionCompletionExists:NO];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCannotOpenUrlWithSafariVcWhileDismissingSafariVcWithAuthSessionCompletionHandlerAbleToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:NO
-                            hasSafariViewController:YES
-                   isDismissingSafariViewController:YES
-                 authSessionCompletionHandlerExists:YES
-                         canHandleBridgeApiResponse:YES
-                expectedAuthSessionCompletionExists:YES];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCannotOpenUrlWithSafariVcWhileDismissingSafariVcWithAuthSessionCompletionHandlerUnableToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:NO
-                            hasSafariViewController:YES
-                   isDismissingSafariViewController:YES
-                 authSessionCompletionHandlerExists:YES
-                         canHandleBridgeApiResponse:NO
-                expectedAuthSessionCompletionExists:YES];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCannotOpenUrlWithSafariVcWhilePresentingSafariVcWithoutAuthSessionCompletionHandlerAbleToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:NO
-                            hasSafariViewController:YES
-                   isDismissingSafariViewController:NO
-                 authSessionCompletionHandlerExists:NO
-                         canHandleBridgeApiResponse:YES
-                expectedAuthSessionCompletionExists:NO];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCannotOpenUrlWithSafariVcWhilePresentingSafariVcWithoutAuthSessionCompletionHandlerUnableToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:NO
-                            hasSafariViewController:YES
-                   isDismissingSafariViewController:NO
-                 authSessionCompletionHandlerExists:NO
-                         canHandleBridgeApiResponse:NO
-                expectedAuthSessionCompletionExists:NO];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCannotOpenUrlWithSafariVcWhilePresentingSafariVcWithAuthSessionCompletionHandlerAbleToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:NO
-                            hasSafariViewController:YES
-                   isDismissingSafariViewController:NO
-                 authSessionCompletionHandlerExists:YES
-                         canHandleBridgeApiResponse:YES
-                expectedAuthSessionCompletionExists:YES];
-}
-
-- (void)testOpenUrl_ShouldStopPropagationPendingUrlCannotOpenUrlWithSafariVcWhilePresentingSafariVcWithAuthSessionCompletionHandlerUnableToHandleBridgeApiResponse
-{
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:YES
-                               pendingUrlCanOpenUrl:NO
-                            hasSafariViewController:YES
-                   isDismissingSafariViewController:NO
-                 authSessionCompletionHandlerExists:YES
-                         canHandleBridgeApiResponse:NO
-                expectedAuthSessionCompletionExists:YES];
+  XCTAssertNil(
+    urlOpener.capturedCanOpenUrl,
+    "Should not check if a url can be opened when exiting early"
+  );
 }
 
 - (void)testOpenUrl_PendingUrlCanOpenUrlWithoutSafariVcWhileDismissingSafariVcWithoutAuthSessionCompletionHandlerAbleToHandleBridgeApiResponse
@@ -625,28 +312,27 @@
                  expectedIsDismissingSafariVc:(BOOL)expectedIsDismissingSafariVc
           expectedAuthSessionCompletionExists:(BOOL)expectedAuthSessionCompletionExists
 {
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:NO
-                               pendingUrlCanOpenUrl:pendingUrlCanOpenUrl
-                            hasSafariViewController:YES
-                   isDismissingSafariViewController:isDismissingSafariViewController
-                 authSessionCompletionHandlerExists:authSessionCompletionHandlerExists
-                         canHandleBridgeApiResponse:canHandleBridgeApiResponse
-            expectedAuthSessionCompletionHandlerUrl:nil
-          expectedAuthSessionCompletionHandlerError:nil
-          expectAuthSessionCompletionHandlerInvoked:NO
-                        expectedAuthCancelCallCount:0
-                          expectedAuthSessionExists:YES
-                expectedAuthSessionCompletionExists:expectedAuthSessionCompletionExists
-                              expectedCanOpenUrlUrl:self.sampleUrl
-                           expectedCanOpenUrlSource:sampleSource
-                       expectedCanOpenUrlAnnotation:sampleAnnotation
-                                 expectedOpenUrlUrl:nil
-                              expectedOpenUrlSource:nil
-                          expectedOpenUrlAnnotation:nil
-                       expectedPendingUrlOpenExists:YES
-                       expectedIsDismissingSafariVc:expectedIsDismissingSafariVc
-                             expectedSafariVcExists:NO
-                                expectedReturnValue:YES];
+  [self verifyOpenUrlWithPendingUrlCanOpenUrl:pendingUrlCanOpenUrl
+                      hasSafariViewController:YES
+             isDismissingSafariViewController:isDismissingSafariViewController
+           authSessionCompletionHandlerExists:authSessionCompletionHandlerExists
+                   canHandleBridgeApiResponse:canHandleBridgeApiResponse
+      expectedAuthSessionCompletionHandlerUrl:nil
+    expectedAuthSessionCompletionHandlerError:nil
+    expectAuthSessionCompletionHandlerInvoked:NO
+                  expectedAuthCancelCallCount:0
+                    expectedAuthSessionExists:YES
+          expectedAuthSessionCompletionExists:expectedAuthSessionCompletionExists
+                        expectedCanOpenUrlUrl:[self createURLWithCanHandleBridgeApiResponse:canHandleBridgeApiResponse]
+                     expectedCanOpenUrlSource:sampleSource
+                 expectedCanOpenUrlAnnotation:sampleAnnotation
+                           expectedOpenUrlUrl:nil
+                        expectedOpenUrlSource:nil
+                    expectedOpenUrlAnnotation:nil
+                 expectedPendingUrlOpenExists:YES
+                 expectedIsDismissingSafariVc:expectedIsDismissingSafariVc
+                       expectedSafariVcExists:NO
+                          expectedReturnValue:YES];
 }
 
 /// Assumes should not stop propagation of url
@@ -659,28 +345,27 @@
                                     expectedAuthSessionCompletionExists:(BOOL)expectedAuthSessionCompletionExists
                                                     expectedReturnValue:(BOOL)expectedReturnValue
 {
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:NO
-                               pendingUrlCanOpenUrl:NO
-                            hasSafariViewController:NO
-                   isDismissingSafariViewController:isDismissingSafariViewController
-                 authSessionCompletionHandlerExists:authSessionCompletionHandlerExists
-                         canHandleBridgeApiResponse:canHandleBridgeApiResponse
-            expectedAuthSessionCompletionHandlerUrl:self.sampleUrl
-          expectedAuthSessionCompletionHandlerError:self.loginInterruptionError
-          expectAuthSessionCompletionHandlerInvoked:YES
-                        expectedAuthCancelCallCount:1
-                          expectedAuthSessionExists:NO
-                expectedAuthSessionCompletionExists:expectedAuthSessionCompletionExists
-                              expectedCanOpenUrlUrl:self.sampleUrl
-                           expectedCanOpenUrlSource:sampleSource
-                       expectedCanOpenUrlAnnotation:sampleAnnotation
-                                 expectedOpenUrlUrl:self.sampleUrl
-                              expectedOpenUrlSource:sampleSource
-                          expectedOpenUrlAnnotation:sampleAnnotation
-                       expectedPendingUrlOpenExists:NO
-                       expectedIsDismissingSafariVc:expectedIsDismissingSafariVc
-                             expectedSafariVcExists:NO
-                                expectedReturnValue:expectedReturnValue];
+  [self verifyOpenUrlWithPendingUrlCanOpenUrl:NO
+                      hasSafariViewController:NO
+             isDismissingSafariViewController:isDismissingSafariViewController
+           authSessionCompletionHandlerExists:authSessionCompletionHandlerExists
+                   canHandleBridgeApiResponse:canHandleBridgeApiResponse
+      expectedAuthSessionCompletionHandlerUrl:[self createURLWithCanHandleBridgeApiResponse:canHandleBridgeApiResponse]
+    expectedAuthSessionCompletionHandlerError:[self loginInterruptionErrorWithCanHandleBridgeApiResponse:canHandleBridgeApiResponse]
+    expectAuthSessionCompletionHandlerInvoked:YES
+                  expectedAuthCancelCallCount:1
+                    expectedAuthSessionExists:NO
+          expectedAuthSessionCompletionExists:expectedAuthSessionCompletionExists
+                        expectedCanOpenUrlUrl:[self createURLWithCanHandleBridgeApiResponse:canHandleBridgeApiResponse]
+                     expectedCanOpenUrlSource:sampleSource
+                 expectedCanOpenUrlAnnotation:sampleAnnotation
+                           expectedOpenUrlUrl:[self createURLWithCanHandleBridgeApiResponse:canHandleBridgeApiResponse]
+                        expectedOpenUrlSource:sampleSource
+                    expectedOpenUrlAnnotation:sampleAnnotation
+                 expectedPendingUrlOpenExists:NO
+                 expectedIsDismissingSafariVc:expectedIsDismissingSafariVc
+                       expectedSafariVcExists:NO
+                          expectedReturnValue:expectedReturnValue];
 }
 
 /// Assumes should not stop propagation of url
@@ -693,28 +378,27 @@
                  expectedIsDismissingSafariVc:(BOOL)expectedIsDismissingSafariVc
           expectedAuthSessionCompletionExists:(BOOL)expectedAuthSessionCompletionExists
 {
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:NO
-                               pendingUrlCanOpenUrl:pendingUrlCanOpenUrl
-                            hasSafariViewController:hasSafariViewController
-                   isDismissingSafariViewController:isDismissingSafariViewController
-                 authSessionCompletionHandlerExists:authSessionCompletionHandlerExists
-                         canHandleBridgeApiResponse:canHandleBridgeApiResponse
-            expectedAuthSessionCompletionHandlerUrl:nil
-          expectedAuthSessionCompletionHandlerError:nil
-          expectAuthSessionCompletionHandlerInvoked:NO
-                        expectedAuthCancelCallCount:expectedAuthCancelCallCount
-                          expectedAuthSessionExists:NO
-                expectedAuthSessionCompletionExists:expectedAuthSessionCompletionExists
-                              expectedCanOpenUrlUrl:self.sampleUrl
-                           expectedCanOpenUrlSource:sampleSource
-                       expectedCanOpenUrlAnnotation:sampleAnnotation
-                                 expectedOpenUrlUrl:self.sampleUrl
-                              expectedOpenUrlSource:sampleSource
-                          expectedOpenUrlAnnotation:sampleAnnotation
-                       expectedPendingUrlOpenExists:NO
-                       expectedIsDismissingSafariVc:expectedIsDismissingSafariVc
-                             expectedSafariVcExists:hasSafariViewController
-                                expectedReturnValue:YES];
+  [self verifyOpenUrlWithPendingUrlCanOpenUrl:pendingUrlCanOpenUrl
+                      hasSafariViewController:hasSafariViewController
+             isDismissingSafariViewController:isDismissingSafariViewController
+           authSessionCompletionHandlerExists:authSessionCompletionHandlerExists
+                   canHandleBridgeApiResponse:canHandleBridgeApiResponse
+      expectedAuthSessionCompletionHandlerUrl:nil
+    expectedAuthSessionCompletionHandlerError:nil
+    expectAuthSessionCompletionHandlerInvoked:NO
+                  expectedAuthCancelCallCount:expectedAuthCancelCallCount
+                    expectedAuthSessionExists:NO
+          expectedAuthSessionCompletionExists:expectedAuthSessionCompletionExists
+                        expectedCanOpenUrlUrl:[self createURLWithCanHandleBridgeApiResponse:canHandleBridgeApiResponse]
+                     expectedCanOpenUrlSource:sampleSource
+                 expectedCanOpenUrlAnnotation:sampleAnnotation
+                           expectedOpenUrlUrl:[self createURLWithCanHandleBridgeApiResponse:canHandleBridgeApiResponse]
+                        expectedOpenUrlSource:sampleSource
+                    expectedOpenUrlAnnotation:sampleAnnotation
+                 expectedPendingUrlOpenExists:NO
+                 expectedIsDismissingSafariVc:expectedIsDismissingSafariVc
+                       expectedSafariVcExists:hasSafariViewController
+                          expectedReturnValue:YES];
 }
 
 - (void)verifyOpenUrlWithShouldStopPropagationOfUrl:(BOOL)shouldStopPropagationOfURL
@@ -725,28 +409,27 @@
                          canHandleBridgeApiResponse:(BOOL)canHandleBridgeApiResponse
                 expectedAuthSessionCompletionExists:(BOOL)expectedAuthSessionCompletionExists
 {
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:shouldStopPropagationOfURL
-                               pendingUrlCanOpenUrl:pendingUrlCanOpenUrl
-                            hasSafariViewController:hasSafariViewController
-                   isDismissingSafariViewController:isDismissingSafariViewController
-                 authSessionCompletionHandlerExists:authSessionCompletionHandlerExists
-                         canHandleBridgeApiResponse:canHandleBridgeApiResponse
-            expectedAuthSessionCompletionHandlerUrl:nil
-          expectedAuthSessionCompletionHandlerError:nil
-          expectAuthSessionCompletionHandlerInvoked:NO
-                        expectedAuthCancelCallCount:0
-                          expectedAuthSessionExists:YES
-                expectedAuthSessionCompletionExists:expectedAuthSessionCompletionExists
-                              expectedCanOpenUrlUrl:nil
-                           expectedCanOpenUrlSource:nil
-                       expectedCanOpenUrlAnnotation:nil
-                                 expectedOpenUrlUrl:nil
-                              expectedOpenUrlSource:nil
-                          expectedOpenUrlAnnotation:nil
-                       expectedPendingUrlOpenExists:YES
-                       expectedIsDismissingSafariVc:isDismissingSafariViewController // Should not change the value
-                             expectedSafariVcExists:hasSafariViewController
-                                expectedReturnValue:YES];
+  [self verifyOpenUrlWithPendingUrlCanOpenUrl:pendingUrlCanOpenUrl
+                      hasSafariViewController:hasSafariViewController
+             isDismissingSafariViewController:isDismissingSafariViewController
+           authSessionCompletionHandlerExists:authSessionCompletionHandlerExists
+                   canHandleBridgeApiResponse:canHandleBridgeApiResponse
+      expectedAuthSessionCompletionHandlerUrl:nil
+    expectedAuthSessionCompletionHandlerError:nil
+    expectAuthSessionCompletionHandlerInvoked:NO
+                  expectedAuthCancelCallCount:0
+                    expectedAuthSessionExists:YES
+          expectedAuthSessionCompletionExists:expectedAuthSessionCompletionExists
+                        expectedCanOpenUrlUrl:nil
+                     expectedCanOpenUrlSource:nil
+                 expectedCanOpenUrlAnnotation:nil
+                           expectedOpenUrlUrl:nil
+                        expectedOpenUrlSource:nil
+                    expectedOpenUrlAnnotation:nil
+                 expectedPendingUrlOpenExists:YES
+                 expectedIsDismissingSafariVc:isDismissingSafariViewController // Should not change the value
+                       expectedSafariVcExists:hasSafariViewController
+                          expectedReturnValue:YES];
 }
 
 /// Assumes SafariViewController is nil
@@ -757,52 +440,50 @@
                          canHandleBridgeApiResponse:(BOOL)canHandleBridgeApiResponse
                 expectedAuthSessionCompletionExists:(BOOL)expectedAuthSessionCompletionExists
 {
-  [self verifyOpenUrlWithShouldStopPropagationOfUrl:shouldStopPropagationOfURL
-                               pendingUrlCanOpenUrl:pendingUrlCanOpenUrl
-                            hasSafariViewController:NO
-                   isDismissingSafariViewController:isDismissingSafariViewController
-                 authSessionCompletionHandlerExists:authSessionCompletionHandlerExists
-                         canHandleBridgeApiResponse:canHandleBridgeApiResponse
-            expectedAuthSessionCompletionHandlerUrl:nil
-          expectedAuthSessionCompletionHandlerError:nil
-          expectAuthSessionCompletionHandlerInvoked:NO
-                        expectedAuthCancelCallCount:0
-                          expectedAuthSessionExists:YES
-                expectedAuthSessionCompletionExists:expectedAuthSessionCompletionExists
-                              expectedCanOpenUrlUrl:nil
-                           expectedCanOpenUrlSource:nil
-                       expectedCanOpenUrlAnnotation:nil
-                                 expectedOpenUrlUrl:nil
-                              expectedOpenUrlSource:nil
-                          expectedOpenUrlAnnotation:nil
-                       expectedPendingUrlOpenExists:YES
-                       expectedIsDismissingSafariVc:isDismissingSafariViewController // Should not change this value
-                             expectedSafariVcExists:NO
-                                expectedReturnValue:YES];
+  [self verifyOpenUrlWithPendingUrlCanOpenUrl:pendingUrlCanOpenUrl
+                      hasSafariViewController:NO
+             isDismissingSafariViewController:isDismissingSafariViewController
+           authSessionCompletionHandlerExists:authSessionCompletionHandlerExists
+                   canHandleBridgeApiResponse:canHandleBridgeApiResponse
+      expectedAuthSessionCompletionHandlerUrl:nil
+    expectedAuthSessionCompletionHandlerError:nil
+    expectAuthSessionCompletionHandlerInvoked:NO
+                  expectedAuthCancelCallCount:0
+                    expectedAuthSessionExists:YES
+          expectedAuthSessionCompletionExists:expectedAuthSessionCompletionExists
+                        expectedCanOpenUrlUrl:nil
+                     expectedCanOpenUrlSource:nil
+                 expectedCanOpenUrlAnnotation:nil
+                           expectedOpenUrlUrl:nil
+                        expectedOpenUrlSource:nil
+                    expectedOpenUrlAnnotation:nil
+                 expectedPendingUrlOpenExists:YES
+                 expectedIsDismissingSafariVc:isDismissingSafariViewController // Should not change this value
+                       expectedSafariVcExists:NO
+                          expectedReturnValue:YES];
 }
 
-- (void)verifyOpenUrlWithShouldStopPropagationOfUrl:(BOOL)shouldStopPropagationOfURL
-                               pendingUrlCanOpenUrl:(BOOL)pendingUrlCanOpenUrl
-                            hasSafariViewController:(BOOL)hasSafariViewController
-                   isDismissingSafariViewController:(BOOL)isDismissingSafariViewController
-                 authSessionCompletionHandlerExists:(BOOL)authSessionCompletionHandlerExists
-                         canHandleBridgeApiResponse:(BOOL)canHandleBridgeApiResponse
-            expectedAuthSessionCompletionHandlerUrl:(NSURL *)expectedAuthSessionCompletionHandlerUrl
-          expectedAuthSessionCompletionHandlerError:(NSError *)expectedAuthSessionCompletionHandlerError
-          expectAuthSessionCompletionHandlerInvoked:(BOOL)expectAuthSessionCompletionHandlerInvoked
-                        expectedAuthCancelCallCount:(int)expectedAuthCancelCallCount
-                          expectedAuthSessionExists:(BOOL)expectedAuthSessionExists
-                expectedAuthSessionCompletionExists:(BOOL)expectedAuthSessionCompletionExists
-                              expectedCanOpenUrlUrl:(NSURL *)expectedCanOpenUrlCalledWithUrl
-                           expectedCanOpenUrlSource:(NSString *)expectedCanOpenUrlSource
-                       expectedCanOpenUrlAnnotation:(NSString *)expectedCanOpenUrlAnnotation
-                                 expectedOpenUrlUrl:(NSURL *)expectedOpenUrlUrl
-                              expectedOpenUrlSource:(NSString *)expectedOpenUrlSource
-                          expectedOpenUrlAnnotation:(NSString *)expectedOpenUrlAnnotation
-                       expectedPendingUrlOpenExists:(BOOL)expectedPendingUrlOpenExists
-                       expectedIsDismissingSafariVc:(BOOL)expectedIsDismissingSafariVc
-                             expectedSafariVcExists:(BOOL)expectedSafariVcExists
-                                expectedReturnValue:(BOOL)expectedReturnValue
+- (void)verifyOpenUrlWithPendingUrlCanOpenUrl:(BOOL)pendingUrlCanOpenUrl
+                      hasSafariViewController:(BOOL)hasSafariViewController
+             isDismissingSafariViewController:(BOOL)isDismissingSafariViewController
+           authSessionCompletionHandlerExists:(BOOL)authSessionCompletionHandlerExists
+                   canHandleBridgeApiResponse:(BOOL)canHandleBridgeApiResponse
+      expectedAuthSessionCompletionHandlerUrl:(NSURL *)expectedAuthSessionCompletionHandlerUrl
+    expectedAuthSessionCompletionHandlerError:(NSError *)expectedAuthSessionCompletionHandlerError
+    expectAuthSessionCompletionHandlerInvoked:(BOOL)expectAuthSessionCompletionHandlerInvoked
+                  expectedAuthCancelCallCount:(int)expectedAuthCancelCallCount
+                    expectedAuthSessionExists:(BOOL)expectedAuthSessionExists
+          expectedAuthSessionCompletionExists:(BOOL)expectedAuthSessionCompletionExists
+                        expectedCanOpenUrlUrl:(NSURL *)expectedCanOpenUrlCalledWithUrl
+                     expectedCanOpenUrlSource:(NSString *)expectedCanOpenUrlSource
+                 expectedCanOpenUrlAnnotation:(NSString *)expectedCanOpenUrlAnnotation
+                           expectedOpenUrlUrl:(NSURL *)expectedOpenUrlUrl
+                        expectedOpenUrlSource:(NSString *)expectedOpenUrlSource
+                    expectedOpenUrlAnnotation:(NSString *)expectedOpenUrlAnnotation
+                 expectedPendingUrlOpenExists:(BOOL)expectedPendingUrlOpenExists
+                 expectedIsDismissingSafariVc:(BOOL)expectedIsDismissingSafariVc
+                       expectedSafariVcExists:(BOOL)expectedSafariVcExists
+                          expectedReturnValue:(BOOL)expectedReturnValue
 {
   FBSDKLoginManager *urlOpener = [FBSDKLoginManager new];
   AuthenticationSessionSpy *authSessionSpy = [[AuthenticationSessionSpy alloc] initWithURL:self.sampleUrl
@@ -810,7 +491,7 @@
                                                                          completionHandler:^(NSURL *_Nullable callbackURL, NSError *_Nullable error) {
                                                                            XCTFail("Should not invoke the completion for the authentication session");
                                                                          }];
-  [urlOpener stubShouldStopPropagationOfURL:self.sampleUrl withValue:shouldStopPropagationOfURL];
+  [urlOpener stubShouldStopPropagationOfURL:self.sampleUrl withValue:NO];
   urlOpener.stubbedCanOpenUrl = pendingUrlCanOpenUrl;
 
   self.api.pendingUrlOpen = urlOpener;
@@ -843,10 +524,17 @@
   self.api.pendingRequestCompletionBlock = ^(FBSDKBridgeAPIResponse *response) {
     XCTFail("Should not invoke the pending request completion block");
   };
-  [self stubHandleBridgeApiResponseAndReturn:canHandleBridgeApiResponse];
 
+  if (canHandleBridgeApiResponse) {
+    self.appURLSchemeProvider.stubbedScheme = @"http";
+    self.api.pendingRequestCompletionBlock = nil;
+  } else {
+    self.appURLSchemeProvider.stubbedScheme = @"foo";
+  }
+
+  NSURL *urlToOpen = [self createURLWithCanHandleBridgeApiResponse:canHandleBridgeApiResponse];
   BOOL returnValue = [self.api application:UIApplication.sharedApplication
-                                   openURL:self.sampleUrl
+                                   openURL:urlToOpen
                          sourceApplication:sampleSource
                                 annotation:sampleAnnotation];
   XCTAssertEqual(
@@ -913,8 +601,12 @@
     "The url opener's open url method should be called with the expected annotation"
   );
 
-  XCTAssertNotNil(self.api.pendingRequest, "The pending request should not be nil");
-  XCTAssertNotNil(self.api.pendingRequestCompletionBlock, "The pending request completion block should not be nil");
+  if (pendingUrlCanOpenUrl) {
+    XCTAssertNotNil(self.api.pendingRequest, "The pending request should be nil");
+  } else {
+    XCTAssertNil(self.api.pendingRequest, "The pending request should be nil");
+    XCTAssertNil(self.api.pendingRequestCompletionBlock, "The pending request completion block should be nil");
+  }
   if (expectedPendingUrlOpenExists) {
     XCTAssertNotNil(self.api.pendingUrlOpen, "The reference to the url opener should not be nil");
   } else {
@@ -932,10 +624,13 @@
   );
 }
 
-/// Stubs `FBSDKBridgeAPI`'s `_handleBridgeAPIResponseURL:sourceApplication:` method to return the provided value
-- (void)stubHandleBridgeApiResponseAndReturn:(BOOL)value
+- (NSURL *)createURLWithCanHandleBridgeApiResponse:(BOOL)canHandleBridgeApiResponse
 {
-  OCMStub([self.partialMock _handleBridgeAPIResponseURL:OCMArg.any sourceApplication:OCMArg.any]).andReturn(value);
+  if (canHandleBridgeApiResponse) {
+    return [NSURL URLWithString:@"http://bridge"];
+  } else {
+    return self.sampleUrl;
+  }
 }
 
 - (FBSDKBridgeAPIRequest *)sampleBridgeApiRequest
@@ -948,11 +643,12 @@
                                                         userInfo:nil];
 }
 
-- (NSError *)loginInterruptionError
+- (NSError *)loginInterruptionErrorWithCanHandleBridgeApiResponse:(BOOL)canHandleBridgeApiResponse
 {
+  NSURL *url = [self createURLWithCanHandleBridgeApiResponse:canHandleBridgeApiResponse];
   NSString *errorMessage = [[NSString alloc]
                             initWithFormat:@"Login attempt cancelled by alternate call to openURL from: %@",
-                            self.sampleUrl];
+                            url];
   return [[NSError alloc]
           initWithDomain:FBSDKErrorDomain
           code:FBSDKErrorBridgeAPIInterruption

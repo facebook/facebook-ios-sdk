@@ -25,6 +25,7 @@ class BridgeAPIRequestTests: XCTestCase {
   let urlOpener = TestURLOpener()
   let responseFactory = TestBridgeApiResponseFactory()
   let frameworkLoader = TestDylibResolver()
+  let appURLSchemeProvider = TestAppURLSchemeProvider()
 
   func testDefaults() {
     XCTAssertTrue(
@@ -49,6 +50,11 @@ class BridgeAPIRequestTests: XCTestCase {
       DynamicFrameworkLoader.shared(),
       "Should use the expected instance of dynamic framework loader"
     )
+    XCTAssertEqual(
+      BridgeAPI.shared.appURLSchemeProvider as? InternalUtility,
+      InternalUtility.shared,
+      "Should use the expected instance of internal utility"
+    )
   }
 
   func testConfiguringWithDependencies() {
@@ -57,7 +63,8 @@ class BridgeAPIRequestTests: XCTestCase {
       logger: logger,
       urlOpener: urlOpener,
       bridgeAPIResponseFactory: responseFactory,
-      frameworkLoader: frameworkLoader
+      frameworkLoader: frameworkLoader,
+      appURLSchemeProvider: appURLSchemeProvider
     )
 
     XCTAssertEqual(

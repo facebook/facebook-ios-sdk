@@ -17,27 +17,14 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
-#import <XCTest/XCTest.h>
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+NS_ASSUME_NONNULL_BEGIN
 
-#import "FBSDKBridgeAPI+Testing.h"
-#import "FBSDKCoreKitTests-Swift.h"
-#import "FakeLoginManager.h"
+NS_SWIFT_NAME(AppURLSchemeProviding)
+@protocol FBSDKAppURLSchemeProviding
 
-@interface FBSDKBridgeAPITests : XCTestCase
-
-@property FBSDKBridgeAPI *api;
-@property (nonatomic) TestLogger *logger;
-@property (readonly) NSURL *sampleUrl;
-@property (readonly) NSError *sampleError;
-@property (nonatomic) TestURLOpener *urlOpener;
-@property (nonatomic) TestBridgeApiResponseFactory *bridgeAPIResponseFactory;
-@property (nonatomic) TestDylibResolver *frameworkLoader;
-@property (nonatomic) TestAppURLSchemeProvider *appURLSchemeProvider;
-
-extern NSString *const sampleSource;
-extern NSString *const sampleAnnotation;
+- (NSString *)appURLScheme;
 
 @end
+
+NS_ASSUME_NONNULL_END

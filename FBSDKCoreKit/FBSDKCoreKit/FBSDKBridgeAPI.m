@@ -27,6 +27,7 @@
  #import "FBSDKBridgeAPIResponseFactory.h"
  #import "FBSDKContainerViewController.h"
  #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKInternalUtility+AppURLSchemeProviding.h"
  #import "FBSDKOperatingSystemVersionComparing.h"
  #import "NSProcessInfo+Protocols.h"
  #import "UIApplication+URLOpener.h"
@@ -68,6 +69,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 @property (nonatomic, readonly) id<FBSDKURLOpener> urlOpener;
 @property (nonatomic, readonly) id<FBSDKBridgeAPIResponseCreating> bridgeAPIResponseFactory;
 @property (nonatomic, readonly) id<FBSDKDynamicFrameworkResolving> frameworkLoader;
+@property (nonatomic, readonly) id<FBSDKAppURLSchemeProviding> appURLSchemeProvider;
 
 @end
 
@@ -96,7 +98,8 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
                                                  logger:[[FBSDKLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors]
                                               urlOpener:UIApplication.sharedApplication
                                bridgeAPIResponseFactory:[FBSDKBridgeAPIResponseFactory new]
-                                        frameworkLoader:FBSDKDynamicFrameworkLoader.shared];
+                                        frameworkLoader:FBSDKDynamicFrameworkLoader.shared
+                                   appURLSchemeProvider:FBSDKInternalUtility.sharedUtility];
   });
   return _sharedInstance;
 }
@@ -105,7 +108,8 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
                              logger:(FBSDKLogger *)logger
                           urlOpener:(id<FBSDKURLOpener>)urlOpener
            bridgeAPIResponseFactory:(id<FBSDKBridgeAPIResponseCreating>)bridgeAPIResponseFactory
-                    frameworkLoader:(id<FBSDKDynamicFrameworkResolving>)frameworkLoader;
+                    frameworkLoader:(id<FBSDKDynamicFrameworkResolving>)frameworkLoader
+               appURLSchemeProvider:(nonnull id<FBSDKAppURLSchemeProviding>)appURLSchemeProvider;
 {
   if ((self = [super init])) {
     _processInfo = processInfo;
@@ -113,6 +117,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
     _urlOpener = urlOpener;
     _bridgeAPIResponseFactory = bridgeAPIResponseFactory;
     _frameworkLoader = frameworkLoader;
+    _appURLSchemeProvider = appURLSchemeProvider;
   }
   return self;
 }
@@ -443,7 +448,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
       [_authenticationSession cancel];
     }
     _authenticationSession = [[AuthenticationSessionClass alloc] initWithURL:url
-                                                           callbackURLScheme:[FBSDKInternalUtility appURLScheme]
+                                                           callbackURLScheme:self.appURLSchemeProvider.appURLScheme
                                                            completionHandler:_authenticationSessionCompletionHandler];
     if (@available(iOS 13.0, *)) {
       if ([_authenticationSession respondsToSelector:@selector(setPresentationContextProvider:)]) {
@@ -515,7 +520,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   FBSDKBridgeAPIResponseBlock completionBlock = _pendingRequestCompletionBlock;
   _pendingRequest = nil;
   _pendingRequestCompletionBlock = NULL;
-  if (![responseURL.scheme isEqualToString:[FBSDKInternalUtility appURLScheme]]) {
+  if (![responseURL.scheme isEqualToString:[self.appURLSchemeProvider appURLScheme]]) {
     return NO;
   }
   if (![responseURL.host isEqualToString:@"bridge"]) {

@@ -52,13 +52,8 @@
   // anything else since other partial mocks setup below this will create a timer
   [self setUpUtilityClassMock];
   [self stubStartGCDTimerWithInterval];
-  [self setUpSettingsMock];
   [self setUpAppEventsUtilityMock];
-  [self setUpInternalUtilityMock];
   [self setUpGraphRequestConnectionClassMock];
-  [self setUpSharedApplicationMock];
-  [self setUpTransitionCoordinatorMock];
-  [self setUpBridgeApiClassMock];
   [self setUpAppEventsMock];
 }
 
@@ -72,28 +67,11 @@
   [_appEventsUtilityClassMock stopMocking];
   _appEventsUtilityClassMock = nil;
 
-  [_settingsClassMock stopMocking];
-  _settingsClassMock = nil;
-
   [_graphRequestConnectionClassMock stopMocking];
   _graphRequestConnectionClassMock = nil;
 
-  [_sharedApplicationMock stopMocking];
-  _sharedApplicationMock = nil;
-
-  [_transitionCoordinatorMock stopMocking];
-  _transitionCoordinatorMock = nil;
-
-  [_bridgeApiResponseClassMock stopMocking];
-  _bridgeApiResponseClassMock = nil;
-
   [_utilityClassMock stopMocking];
   _utilityClassMock = nil;
-}
-
-- (void)setUpSettingsMock
-{
-  _settingsClassMock = OCMStrictClassMock(FBSDKSettings.class);
 }
 
 - (void)setUpAppEventsMock
@@ -126,31 +104,9 @@
   _appEventsUtilityClassMock = OCMStrictClassMock(FBSDKAppEventsUtility.class);
 }
 
-- (void)setUpInternalUtilityMock
-{
-  self.internalUtilityClassMock = OCMStrictClassMock(FBSDKInternalUtility.class);
-}
-
 - (void)setUpGraphRequestConnectionClassMock
 {
   self.graphRequestConnectionClassMock = OCMClassMock(FBSDKGraphRequestConnection.class);
-}
-
-- (void)setUpSharedApplicationMock
-{
-  self.sharedApplicationMock = OCMClassMock(UIApplication.class);
-  OCMStub(ClassMethod([_sharedApplicationMock sharedApplication])).andReturn(_sharedApplicationMock);
-}
-
-- (void)setUpTransitionCoordinatorMock
-{
-  self.transitionCoordinatorMock = [OCMockObject
-                                    mockForProtocol:@protocol(UIViewControllerTransitionCoordinator)];
-}
-
-- (void)setUpBridgeApiClassMock
-{
-  _bridgeApiResponseClassMock = OCMClassMock(FBSDKBridgeAPIResponse.class);
 }
 
 - (void)setUpUtilityClassMock
@@ -169,26 +125,6 @@
 - (void)stubAllocatingGraphRequestConnection
 {
   OCMStub(ClassMethod([_graphRequestConnectionClassMock alloc])).andReturn(_graphRequestConnectionClassMock);
-}
-
-- (void)stubOpenURLWith:(BOOL)openURL
-{
-  OCMStub([_sharedApplicationMock openURL:OCMArg.any]).andReturn(openURL);
-}
-
-- (void)stubOpenUrlOptionsCompletionHandlerWithPerformCompletion:(BOOL)performCompletion
-                                               completionSuccess:(BOOL)completionSuccess
-{
-  if (performCompletion) {
-    OCMStub([_sharedApplicationMock openURL:OCMArg.any options:OCMArg.any completionHandler:([OCMArg invokeBlockWithArgs:@(completionSuccess), nil])]);
-  } else {
-    OCMStub([_sharedApplicationMock openURL:OCMArg.any options:OCMArg.any completionHandler:OCMArg.any]);
-  }
-}
-
-- (void)stubAppUrlSchemeWith:(nullable NSString *)scheme
-{
-  OCMStub([self.internalUtilityClassMock appURLScheme]).andReturn(scheme);
 }
 
 - (void)stubStartGCDTimerWithInterval

@@ -32,6 +32,7 @@
 @property (nonatomic) TestURLOpener *urlOpener;
 @property (nonatomic) TestBridgeApiResponseFactory *bridgeAPIResponseFactory;
 @property (nonatomic) TestDylibResolver *frameworkLoader;
+@property (nonatomic) TestAppURLSchemeProvider *appURLSchemeProvider;
 
 @end
 
@@ -44,11 +45,13 @@
   _urlOpener = [[TestURLOpener alloc] initWithCanOpenUrl:YES];
   _bridgeAPIResponseFactory = [TestBridgeApiResponseFactory new];
   _frameworkLoader = [TestDylibResolver new];
+  _appURLSchemeProvider = [TestAppURLSchemeProvider new];
   _api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]
                                               logger:[TestLogger new]
                                            urlOpener:self.urlOpener
                             bridgeAPIResponseFactory:self.bridgeAPIResponseFactory
-                                     frameworkLoader:self.frameworkLoader];
+                                     frameworkLoader:self.frameworkLoader
+                                appURLSchemeProvider:self.appURLSchemeProvider];
 }
 
 // MARK: - Url Opening
