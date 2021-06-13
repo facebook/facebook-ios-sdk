@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKInfoDictionaryProviding.h"
+#import <FBSDKCoreKit_Basics/FBSDKInfoDictionaryProviding.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

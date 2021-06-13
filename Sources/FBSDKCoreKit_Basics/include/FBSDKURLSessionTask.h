@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKSessionProviding.h"
+#import <FBSDKCoreKit_Basics/FBSDKSessionProviding.h>
 
 typedef void (^FBSDKURLSessionTaskBlock)(NSData *responseData,
                                          NSURLResponse *response,

@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKCrashObserving.h"
+#import <FBSDKCoreKit_Basics/FBSDKCrashObserving.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

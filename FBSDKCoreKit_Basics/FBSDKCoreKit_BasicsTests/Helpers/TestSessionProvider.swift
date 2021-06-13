@@ -17,50 +17,44 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import FBSDKCoreKit_Basics
-import XCTest
+import Foundation
 
-class UrlSessionTaskTests: XCTestCase {
+@objcMembers
+public class TestSessionDataTask: NSObject, SessionDataTask {
+  public var resumeCallCount = 0
+  public var cancelCallCount = 0
+  public var stubbedState: URLSessionTask.State = .completed
 
-  let dataTask = TestSessionDataTask()
-  let provider = TestSessionProvider()
-  var task: UrlSessionTask! // swiftlint:disable:this implicitly_unwrapped_optional
-
-  override func setUp() {
-    super.setUp()
-
-    provider.stubbedDataTask = dataTask
-    task = UrlSessionTask(
-       request: SampleUrlRequest.valid,
-       fromSession: provider
-     ) { _, _, _ in }
+  public var state: URLSessionTask.State {
+    stubbedState
   }
 
-  func testStarting() {
-    task.start()
-
-    XCTAssertEqual(
-      dataTask.resumeCallCount,
-      1,
-      "Starting a session task should resume the underlying data task"
-    )
+  public func resume() {
+    resumeCallCount += 1
   }
 
-  func testStopping() {
-    task.cancel()
-
-    XCTAssertEqual(
-      dataTask.cancelCallCount,
-      1,
-      "Cancelling a session task should cancel the underlying data task"
-    )
+  public func cancel() {
+    cancelCallCount += 1
   }
+}
 
-  func testState() {
-    dataTask.stubbedState = .running
-    XCTAssertEqual(
-      task.state,
-      .running,
-      "Should return the state of the underlying data task"
-    )
+@objcMembers
+public class TestSessionProvider: NSObject, SessionProviding {
+  /// A data task to return from `dataTask(with:completion:)`
+  public var stubbedDataTask: SessionDataTask?
+  /// The completion handler to be invoked in the test
+  public var capturedCompletion: ((Data?, URLResponse?, Error?) -> Void)?
+  /// The url request for the data task
+  public var capturedRequest: URLRequest?
+  public var dataTaskCallCount = 0
+
+  public func dataTask(
+    with request: URLRequest,
+    completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void
+  ) -> SessionDataTask {
+    dataTaskCallCount += 1
+    capturedRequest = request
+    capturedCompletion = completionHandler
+    return stubbedDataTask ?? TestSessionDataTask()
   }
 }

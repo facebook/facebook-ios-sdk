@@ -1,0 +1,103 @@
+# Made using xcodegen 2.17.0
+
+name: FBSDKCoreKit_Basics
+
+options:
+  deploymentTarget:
+    iOS: "9.0"
+  usesTabs: false
+  tabWidth: 2
+  indentWidth: 2
+  defaultConfig: Debug
+
+targets:
+  FBSDKCoreKit_Basics:
+    type: framework.static
+    platform: [iOS]
+    sources:
+      - ../Sources/FBSDKCoreKit_Basics
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit_Basics.xcconfig
+      Release: Configurations/FBSDKCoreKit_Basics.xcconfig
+  FBSDKCoreKit_Basics-Dynamic:
+    type: framework
+    dependencies:
+      - sdk: UIKit.framework
+      - sdk: libz.tbd
+    platform: [iOS]
+    settings:
+      PRODUCT_NAME: FBSDKCoreKit_Basics
+    sources:
+      - ../Sources/FBSDKCoreKit_Basics
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit_Basics-Dynamic.xcconfig
+      Release: Configurations/FBSDKCoreKit_Basics-Dynamic.xcconfig
+  FBSDKCoreKit_Basics_TV:
+    type: framework
+    platform: [tvOS]
+    sources:
+      - ../Sources/FBSDKCoreKit_Basics
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit_Basics-tvOS.xcconfig
+      Release: Configurations/FBSDKCoreKit_Basics-tvOS.xcconfig
+  FBSDKCoreKit_Basics_TV-Dynamic:
+    type: framework
+    dependencies:
+      - sdk: UIKit.framework
+      - sdk: libz.tbd
+    platform: [tvOS]
+    settings:
+      PRODUCT_NAME: FBSDKCoreKit_Basics
+    sources:
+      - ../Sources/FBSDKCoreKit_Basics
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit_Basics-tvOS-Dynamic.xcconfig
+      Release: Configurations/FBSDKCoreKit_Basics-tvOS-Dynamic.xcconfig
+  FBSDKCoreKit_BasicsTests:
+    type: bundle.unit-test
+    platform: [iOS]
+    sources:
+      - FBSDKCoreKit_BasicsTests
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit_BasicsTests.xcconfig
+      Release: Configurations/FBSDKCoreKit_BasicsTests.xcconfig
+    dependencies:
+      - target: FBSDKCoreKit_Basics-Dynamic_iOS
+
+aggregateTargets:
+  FBSDKCoreKit_Basics-Universal:
+    targets: [FBSDKCoreKit_Basics_iOS]
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit_Basics.xcconfig
+      Release: Configurations/FBSDKCoreKit_Basics.xcconfig
+    buildScripts:
+      postBuildScripts:
+        - path: ../scripts/xcode/build-universal-framework.sh
+  FBSDKCoreKit_Basics_TV-Universal:
+    targets: [FBSDKCoreKit_Basics_TV_tvOS]
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit_Basics-tvOS.xcconfig
+      Release: Configurations/FBSDKCoreKit_Basics-tvOS.xcconfig
+    buildScripts:
+      postBuildScripts:
+        - path: ../scripts/xcode/build-universal-tvos-framework.sh
+
+schemes:
+  BuildCoreKitBasics:
+    build:
+      targets:
+        FBSDKCoreKit_Basics-Universal: [archive, run, profile, analyze]
+        FBSDKCoreKit_Basics_TV-Universal: [archive, run, profile, analyze]
+      parallelizeBuild: false
+  FBSDKCoreKit_Basics-Dynamic:
+    build:
+      targets:
+        FBSDKCoreKit_Basics-Dynamic_iOS: all
+    test:
+      targets: [FBSDKCoreKit_BasicsTests_iOS]
+      coverageTargets:
+        - FBSDKCoreKit_Basics-Dynamic_iOS
+  FBSDKCoreKit_Basics_TV-Dynamic:
+    build:
+      targets:
+        FBSDKCoreKit_Basics_TV-Dynamic_tvOS: all
