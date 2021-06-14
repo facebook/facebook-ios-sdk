@@ -429,6 +429,71 @@ class FBSDKAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_
     )
   }
 
+  func testDecodeBase64UrlSafeString() {
+    let decodedString = self.validInvocation
+        .decodeBase64UrlSafeString(
+            "E_dwjTaF9-SHijRKoD5jrgJoi9pgObKEqrkxgl3iE9-mxpDn-wpseBmtlNFN2HTI5OzzTVqhBwNi2zrwt-TxCw"
+        )
+    XCTAssertEqual(
+      decodedString?.base64EncodedString(),
+      "E/dwjTaF9+SHijRKoD5jrgJoi9pgObKEqrkxgl3iE9+mxpDn+wpseBmtlNFN2HTI5OzzTVqhBwNi2zrwt+TxCw==",
+      "Should decode the base64 url safe string correctly"
+    )
+  }
+
+  func testDecodeBase64UrlSafeStringWithEmptyString() {
+    let decodedString = self.validInvocation.decodeBase64UrlSafeString("")
+    XCTAssertNil(
+      decodedString?.base64EncodedString(),
+      "Should decode the base64 url safe string as nil with empty string"
+    )
+  }
+
+  func testGetHmacWithoutACSSecret() {
+    let invocation = SampleAEMInvocations.createGeneralInvocation1()
+    invocation.acsSharedSecret = nil
+
+    XCTAssertNil(
+      invocation.getHMAC(10),
+      "HMAC should be nil when ACS Shared Secret is nil"
+    )
+  }
+
+  func testGetHmacWithEmptyACSSecret() {
+    let invocation = SampleAEMInvocations.createGeneralInvocation1()
+    invocation.acsSharedSecret = ""
+
+    XCTAssertNil(
+      invocation.getHMAC(10),
+      "HMAC should be nil when ACS Shared Secret is an empty string"
+    )
+  }
+
+  func testGetHmacWithoutACSConfigID() {
+    let invocation = SampleAEMInvocations.createGeneralInvocation1()
+    invocation.acsConfigID = nil
+
+    XCTAssertNil(
+      invocation.getHMAC(10),
+      "HMAC should be nil when ACS config ID is nil"
+    )
+  }
+
+  func testGetHmacWithACSSecretAndACSConfigID() {
+    let invocation = SampleAEMInvocations.createGeneralInvocation1()
+    invocation.campaignID = "aaa"
+    invocation.acsConfigID = "abc"
+    invocation.acsSharedSecret =
+        "E_dwjTaF9-SHijRKoD5jrgJoi9pgObKEqrkxgl3iE9-mxpDn-wpseBmtlNFN2HTI5OzzTVqhBwNi2zrwt-TxCw"
+    invocation.conversionValue = 6
+
+    XCTAssertEqual(
+      invocation.getHMAC(31),
+      "Z65Xxo-IevEwpLYNES9QmWRlx-zPH8zxfIJPw6ofQtpDJvKWuNI93SBHlUapS1_DIVl9Ovwoa5Xo7v63zQ5_HA",
+      "Should generate the expected HMAC"
+    )
+  }
+
   func testSecureCoding() {
     XCTAssertTrue(
       AEMInvocation.supportsSecureCoding,
