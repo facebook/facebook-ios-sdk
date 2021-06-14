@@ -1130,6 +1130,7 @@
 		F4AC722E260044E300C26157 /* FBSDKGraphRequestConnection+GraphRequestConnecting.h in Headers */ = {isa = PBXBuildFile; fileRef = F441DC1625DC91A00092C8F6 /* FBSDKGraphRequestConnection+GraphRequestConnecting.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4AC722F260044E400C26157 /* FBSDKGraphRequestConnection+GraphRequestConnecting.h in Headers */ = {isa = PBXBuildFile; fileRef = F441DC1625DC91A00092C8F6 /* FBSDKGraphRequestConnection+GraphRequestConnecting.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F4AC7230260044E400C26157 /* FBSDKGraphRequestConnection+GraphRequestConnecting.h in Headers */ = {isa = PBXBuildFile; fileRef = F441DC1625DC91A00092C8F6 /* FBSDKGraphRequestConnection+GraphRequestConnecting.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F4ADD6692677A70C00F0EB44 /* XCTestCase+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F4ADD6682677A70C00F0EB44 /* XCTestCase+Extensions.m */; };
 		F4AE435225508FEA00FA9DE6 /* FBSDKProfilePictureView+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = B301910D253622A2001A8DB0 /* FBSDKProfilePictureView+Internal.h */; };
 		F4AE6324263736D400E0B661 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4AE631C263736D300E0B661 /* StoreKit.framework */; };
 		F4AE63332637386B00E0B661 /* PaymentProductRequestorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AE63322637386B00E0B661 /* PaymentProductRequestorTests.swift */; };
@@ -2121,6 +2122,8 @@
 		F4AAAF0C2628AB9E00EDCF06 /* FBSDKFeatureExtracting.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKFeatureExtracting.h; sourceTree = "<group>"; };
 		F4AAAF212628ACFC00EDCF06 /* TestFeatureExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFeatureExtractor.swift; sourceTree = "<group>"; };
 		F4AAAF9B2628EA6F00EDCF06 /* TestOnDeviceMLModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestOnDeviceMLModelManager.swift; sourceTree = "<group>"; };
+		F4ADD6672677A70C00F0EB44 /* XCTestCase+Extensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "XCTestCase+Extensions.h"; sourceTree = "<group>"; };
+		F4ADD6682677A70C00F0EB44 /* XCTestCase+Extensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "XCTestCase+Extensions.m"; sourceTree = "<group>"; };
 		F4AE631C263736D300E0B661 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS14.3.sdk/System/Library/Frameworks/StoreKit.framework; sourceTree = DEVELOPER_DIR; };
 		F4AE63322637386B00E0B661 /* PaymentProductRequestorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProductRequestorTests.swift; sourceTree = "<group>"; };
 		F4AE635B263738AA00E0B661 /* TestPaymentQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPaymentQueue.swift; sourceTree = "<group>"; };
@@ -3119,6 +3122,8 @@
 				5C59531F25548690000D0A3C /* FBSDKCoreKitTests-Bridging-Header.h */,
 				9D2697581A5DF40700143BFC /* Info.plist */,
 				F4D80C3F2566D856008CCAF0 /* TestAssets.xcassets */,
+				F4ADD6672677A70C00F0EB44 /* XCTestCase+Extensions.h */,
+				F4ADD6682677A70C00F0EB44 /* XCTestCase+Extensions.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -5381,6 +5386,7 @@
 				F46989DC25F93FAD00120B09 /* TestTableView.swift in Sources */,
 				F492C0A224E1F5F600BA21F7 /* KeychainStoreSpy.swift in Sources */,
 				F4BE803B2612842D007BAD0D /* WebViewFactoryTests.swift in Sources */,
+				F4ADD6692677A70C00F0EB44 /* XCTestCase+Extensions.m in Sources */,
 				F45148C0265C45DA004ADE74 /* FBSDKEventBindingTests.swift in Sources */,
 				F46EAB6626179595000629F3 /* SampleHTTPUrlResponses.swift in Sources */,
 				F953498F26696278008169B9 /* BackgroundEventLoggerTests.swift in Sources */,

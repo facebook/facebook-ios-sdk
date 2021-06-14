@@ -22,7 +22,6 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKCoreKitTests-Swift.h"
-#import "FBSDKTestCase.h"
 #import "FakeLoginManager.h"
 
 @interface FBSDKBridgeAPIOpenUrlWithSafariTests : XCTestCase
