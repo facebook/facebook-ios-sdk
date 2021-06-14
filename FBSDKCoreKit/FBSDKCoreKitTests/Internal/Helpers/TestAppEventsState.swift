@@ -36,5 +36,7 @@ class TestAppEventsState: AppEventsState {
     capturedEventDictionary = eventDictionary
     capturedIsImplicit = isImplicit
     isAddEventCalled = true
+
+    super.addEvent(eventDictionary, isImplicit: isImplicit)
   }
 }

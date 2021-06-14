@@ -57,21 +57,11 @@ Also, to get a better understanding of mocking, please read the documentation at
 /// Used for sharing a `FBSDKAppEventsUtility` class  mock between tests
 @property (nullable, nonatomic, assign) id appEventsUtilityClassMock;
 
-/// Used for sharing a `FBSDKGraphRequestConnection` class mock between tests
-@property (nullable, nonatomic, assign) id graphRequestConnectionClassMock;
-
 /// Used for sharing a `FBSDKUtility` class mock between tests
 @property (nullable, nonatomic, assign) id utilityClassMock;
 
 /// Stubs `FBSDKAppEventsUtility.shared.advertiserID` with the provided value
 - (void)stubAppEventsUtilityAdvertiserIDWith:(nullable NSString *)identifier;
-
-/// Disables creation of graph request connections so that they cannot be started.
-/// This is the nuclear option. It should be removed as soon as possible so that we can test important things
-/// like whether or not a given method actually started a graph request.
-/// This should be used only as needed as a stopgap to keep tests
-/// from hitting the network while proper mocks are being written.
-- (void)stubAllocatingGraphRequestConnection;
 
 @end
 

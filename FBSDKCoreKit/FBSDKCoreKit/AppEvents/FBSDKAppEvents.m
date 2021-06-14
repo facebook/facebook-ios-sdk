@@ -1131,9 +1131,16 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
     FBSDKAppEventsState *copy = [_appEventsState copy];
     _appEventsState = [self.appEventsStateProvider createStateWithToken:copy.tokenString
                                                                   appID:copy.appID];
-    dispatch_async(dispatch_get_main_queue(), ^{
+
+    dispatch_block_t block = ^{
       [self flushOnMainQueue:copy forReason:flushReason];
-    });
+    };
+
+  #if DEBUG && FBSDKTEST
+    block();
+  #else
+    dispatch_async(dispatch_get_main_queue(), block);
+  #endif
   }
 }
 

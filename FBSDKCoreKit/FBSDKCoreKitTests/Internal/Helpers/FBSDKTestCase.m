@@ -53,7 +53,6 @@
   [self setUpUtilityClassMock];
   [self stubStartGCDTimerWithInterval];
   [self setUpAppEventsUtilityMock];
-  [self setUpGraphRequestConnectionClassMock];
   [self setUpAppEventsMock];
 }
 
@@ -67,9 +66,6 @@
   [_appEventsUtilityClassMock stopMocking];
   _appEventsUtilityClassMock = nil;
 
-  [_graphRequestConnectionClassMock stopMocking];
-  _graphRequestConnectionClassMock = nil;
-
   [_utilityClassMock stopMocking];
   _utilityClassMock = nil;
 }
@@ -77,12 +73,6 @@
 - (void)setUpAppEventsMock
 {
   if (self.shouldAppEventsMockBePartial) {
-    // Partial mocks will try and fetch various configurations upon creation.
-    // This is ham-fisted but preempts accidental network traffic.
-    // We can get rid of this when we refactor to have an injectable dependency
-    // for creating graph requests.
-    [self stubAllocatingGraphRequestConnection];
-
     // Since the `init` method is marked unavailable but just as a measure to prevent creating multiple
     // instances and enforce the singleton pattern, we will circumvent that by casting to a plain `NSObject`
     // after `alloc` in order to call `init`.
@@ -104,11 +94,6 @@
   _appEventsUtilityClassMock = OCMStrictClassMock(FBSDKAppEventsUtility.class);
 }
 
-- (void)setUpGraphRequestConnectionClassMock
-{
-  self.graphRequestConnectionClassMock = OCMClassMock(FBSDKGraphRequestConnection.class);
-}
-
 - (void)setUpUtilityClassMock
 {
   _utilityClassMock = OCMClassMock(FBSDKUtility.class);
@@ -120,11 +105,6 @@
 {
   OCMStub(ClassMethod([_appEventsUtilityClassMock shared])).andReturn(_appEventsUtilityClassMock);
   OCMStub([_appEventsUtilityClassMock advertiserID]).andReturn(identifier);
-}
-
-- (void)stubAllocatingGraphRequestConnection
-{
-  OCMStub(ClassMethod([_graphRequestConnectionClassMock alloc])).andReturn(_graphRequestConnectionClassMock);
 }
 
 - (void)stubStartGCDTimerWithInterval

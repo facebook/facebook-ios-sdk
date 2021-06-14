@@ -22,6 +22,7 @@ import TestTools
 class TestServerConfigurationProvider: NSObject, ServerConfigurationProviding, ServerConfigurationLoading {
 
   static var capturedCompletionBlock: ServerConfigurationBlock?
+  static var secondCapturedCompletionBlock: ServerConfigurationBlock?
   static var loadServerConfigurationWasCalled = false
   static var stubbedServerConfiguration: ServerConfiguration?
   static var stubbedRequestToLoadServerConfiguration: GraphRequest?
@@ -33,6 +34,11 @@ class TestServerConfigurationProvider: NSObject, ServerConfigurationProviding, S
 
   static func loadServerConfiguration(completionBlock: ServerConfigurationBlock?) {
     loadServerConfigurationWasCalled = true
+    guard capturedCompletionBlock == nil else {
+      secondCapturedCompletionBlock = completionBlock
+      return
+    }
+
     capturedCompletionBlock = completionBlock
   }
 
@@ -40,6 +46,7 @@ class TestServerConfigurationProvider: NSObject, ServerConfigurationProviding, S
     requestToLoadConfigurationCallWasCalled = false
     loadServerConfigurationWasCalled = false
     capturedCompletionBlock = nil
+    secondCapturedCompletionBlock = nil
   }
 
   static func processLoadRequestResponse(_ result: Any, error: Error?, appID: String) {

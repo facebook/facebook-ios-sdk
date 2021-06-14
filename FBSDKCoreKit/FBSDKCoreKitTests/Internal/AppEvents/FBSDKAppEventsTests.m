@@ -16,7 +16,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
 @import TestTools;
@@ -174,8 +173,6 @@
   self.atePublisher = [TestAtePublisher new];
   self.atePublisherfactory.stubbedPublisher = self.atePublisher;
 
-  // This should be removed when these tests are updated to check the actual requests that are created
-  [self stubAllocatingGraphRequestConnection];
   [FBSDKAppEvents.singleton configureWithGateKeeperManager:TestGateKeeperManager.class
                             appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
                                serverConfigurationProvider:TestServerConfigurationProvider.class
@@ -201,13 +198,13 @@
 
 - (void)tearDown
 {
-  [super tearDown];
-
   [FBSDKSettings reset];
   [FBSDKAppEvents reset];
   [TestAppEventsConfigurationProvider reset];
   [TestServerConfigurationProvider reset];
   [TestGateKeeperManager reset];
+
+  [super tearDown];
 }
 
 - (void)resetTestHelpers
@@ -244,26 +241,39 @@
   XCTAssertEqual(self.appEventsMock, [FBSDKAppEvents singleton]);
 }
 
-- (void)testLogPurchaseFlush
+- (void)testLogPurchaseFlushesWhenFlushBehaviorIsExplicit
 {
-  OCMExpect([self.appEventsMock flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent]);
-
-  OCMStub([self.appEventsMock flushBehavior]).andReturn(FBSDKAppEventsFlushReasonEagerlyFlushingEvent);
-
+  FBSDKAppEvents.flushBehavior = FBSDKAppEventsFlushBehaviorAuto;
   [FBSDKAppEvents logPurchase:self.purchaseAmount currency:self.currency];
 
-  OCMVerifyAll(self.appEventsMock);
+  // Verifying flush
+  TestAppEventsConfigurationProvider.capturedBlock();
+  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  XCTAssertEqualObjects(
+    self.graphRequestFactory.capturedRequests.firstObject.graphPath,
+    @"mockAppID/activities"
+  );
 }
 
 - (void)testLogPurchase
 {
-  OCMExpect([self.appEventsMock logPurchase:self.purchaseAmount currency:self.currency parameters:[OCMArg any]]).andForwardToRealObject();
-  OCMExpect([self.appEventsMock logPurchase:self.purchaseAmount currency:self.currency parameters:[OCMArg any] accessToken:[OCMArg any]]).andForwardToRealObject();
-  OCMExpect([self.appEventsMock logEvent:FBSDKAppEventNamePurchased valueToSum:@(self.purchaseAmount) parameters:[OCMArg any] accessToken:[OCMArg any]]).andForwardToRealObject();
-
   [FBSDKAppEvents logPurchase:self.purchaseAmount currency:self.currency];
 
-  OCMVerifyAll(self.appEventsMock);
+  XCTAssertEqual(
+    self.appEventsStateProvider.state.capturedEventDictionary[@"_eventName"],
+    FBSDKAppEventNamePurchased,
+    "Should log an event with the expected event name"
+  );
+  XCTAssertEqual(
+    self.appEventsStateProvider.state.capturedEventDictionary[@"_valueToSum"],
+    @(self.purchaseAmount),
+    "Should log an event with the expected purchase amount"
+  );
+  XCTAssertEqualObjects(
+    self.appEventsStateProvider.state.capturedEventDictionary[@"fb_currency"],
+    self.currency,
+    "Should log an event with the expected currency"
+  );
   XCTAssertTrue(
     self.appEventsStateProvider.state.isAddEventCalled,
     "Should add events to AppEventsState when logging purshase"
@@ -276,36 +286,22 @@
 
 - (void)testFlush
 {
-  OCMExpect([self.appEventsMock flushForReason:FBSDKAppEventsFlushReasonExplicit]);
+  NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL (id _Nullable evaluatedObject, NSDictionary<NSString *, id> *_Nullable bindings) {
+    // A not-the-best proxy to determine if a flush occurred.
+    return TestAppEventsConfigurationProvider.capturedBlock != nil;
+  }];
+  XCTNSPredicateExpectation *expectation = [[XCTNSPredicateExpectation alloc] initWithPredicate:predicate object:self];
 
+  [FBSDKAppEvents logEvent:@"foo"];
   [FBSDKAppEvents flush];
 
-  OCMVerifyAll(self.appEventsMock);
+  [self waitForExpectations:@[expectation] timeout:2];
 }
 
 #pragma mark  Tests for log product item
 
 - (void)testLogProductItemNonNil
 {
-  NSDictionary<NSString *, NSString *> *expectedDict = @{
-    @"fb_product_availability" : @"IN_STOCK",
-    @"fb_product_brand" : @"PHILZ",
-    @"fb_product_condition" : @"NEW",
-    @"fb_product_description" : @"description",
-    @"fb_product_gtin" : @"BLUE MOUNTAIN",
-    @"fb_product_image_link" : @"https://www.sample.com",
-    @"fb_product_item_id" : @"F40CEE4E-471E-45DB-8541-1526043F4B21",
-    @"fb_product_link" : @"https://www.sample.com",
-    @"fb_product_mpn" : @"BLUE MOUNTAIN",
-    @"fb_product_price_amount" : @"1.000",
-    @"fb_product_price_currency" : @"USD",
-    @"fb_product_title" : @"title",
-  };
-  OCMExpect(
-    [self.appEventsMock logEvent:@"fb_mobile_catalog_update"
-                      parameters:expectedDict]
-  );
-
   [FBSDKAppEvents logProductItem:@"F40CEE4E-471E-45DB-8541-1526043F4B21"
                     availability:FBSDKProductAvailabilityInStock
                        condition:FBSDKProductConditionNew
@@ -320,27 +316,24 @@
                            brand:@"PHILZ"
                       parameters:@{}];
 
-  OCMVerifyAll(self.appEventsMock);
+  NSDictionary *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
+  XCTAssertEqualObjects(capturedParameters[@"_eventName"], @"fb_mobile_catalog_update");
+  XCTAssertEqualObjects(capturedParameters[@"fb_product_availability"], @"IN_STOCK");
+  XCTAssertEqualObjects(capturedParameters[@"fb_product_brand"], @"PHILZ");
+  XCTAssertEqualObjects(capturedParameters[@"fb_product_condition"], @"NEW");
+  XCTAssertEqualObjects(capturedParameters[@"fb_product_description"], @"description");
+  XCTAssertEqualObjects(capturedParameters[@"fb_product_gtin"], @"BLUE MOUNTAIN");
+  XCTAssertEqualObjects(capturedParameters[@"fb_product_image_link"], @"https://www.sample.com");
+  XCTAssertEqualObjects(capturedParameters[@"fb_product_item_id"], @"F40CEE4E-471E-45DB-8541-1526043F4B21");
+  XCTAssertEqualObjects(capturedParameters[@"fb_product_link"], @"https://www.sample.com");
+  XCTAssertEqualObjects(capturedParameters[@"fb_product_mpn"], @"BLUE MOUNTAIN");
+  XCTAssertEqualObjects(capturedParameters[@"fb_product_price_amount"], @"1.000");
+  XCTAssertEqualObjects(capturedParameters[@"fb_product_price_currency"], @"USD");
+  XCTAssertEqualObjects(capturedParameters[@"fb_product_title"], @"title");
 }
 
 - (void)testLogProductItemNilGtinMpnBrand
 {
-  NSDictionary<NSString *, NSString *> *expectedDict = @{
-    @"fb_product_availability" : @"IN_STOCK",
-    @"fb_product_condition" : @"NEW",
-    @"fb_product_description" : @"description",
-    @"fb_product_image_link" : @"https://www.sample.com",
-    @"fb_product_item_id" : @"F40CEE4E-471E-45DB-8541-1526043F4B21",
-    @"fb_product_link" : @"https://www.sample.com",
-    @"fb_product_price_amount" : @"1.000",
-    @"fb_product_price_currency" : @"USD",
-    @"fb_product_title" : @"title",
-  };
-  OCMReject(
-    [self.appEventsMock logEvent:@"fb_mobile_catalog_update"
-                      parameters:expectedDict]
-  );
-
   [FBSDKAppEvents logProductItem:@"F40CEE4E-471E-45DB-8541-1526043F4B21"
                     availability:FBSDKProductAvailabilityInStock
                        condition:FBSDKProductConditionNew
@@ -355,6 +348,10 @@
                            brand:nil
                       parameters:@{}];
 
+  XCTAssertNil(
+    self.appEventsStateProvider.state.capturedEventDictionary[@"_eventName"],
+    "Should not log a product item when key fields are missing"
+  );
   XCTAssertEqual(
     TestLogger.capturedLoggingBehavior,
     FBSDKLoggingBehaviorDeveloperErrors,
@@ -432,33 +429,19 @@
   NSString *mockDeviceTokenString = @"testDeviceTokenString";
   self.eventName = @"fb_mobile_obtain_push_token";
 
-  OCMExpect([self.appEventsMock logEvent:self.eventName]).andForwardToRealObject();
-  OCMExpect(
-    [self.appEventsMock logEvent:self.eventName
-                      parameters:@{}]
-  ).andForwardToRealObject();
-  OCMExpect(
-    [self.appEventsMock logEvent:self.eventName
-                      valueToSum:nil
-                      parameters:@{}
-                     accessToken:nil]
-  ).andForwardToRealObject();
-
   [FBSDKAppEvents setPushNotificationsDeviceTokenString:mockDeviceTokenString];
 
-  OCMVerifyAll(self.appEventsMock);
-
+  XCTAssertEqualObjects(
+    self.appEventsStateProvider.state.capturedEventDictionary[@"_eventName"],
+    self.eventName
+  );
   XCTAssertEqualObjects([FBSDKAppEvents singleton].pushNotificationsDeviceTokenString, mockDeviceTokenString);
 }
 
 - (void)testActivateAppWithInitializedSDK
 {
-  OCMExpect([self.appEventsMock publishInstall]);
-  OCMExpect([self.appEventsMock fetchServerConfiguration:NULL]);
-
   [FBSDKAppEvents.singleton activateApp];
 
-  OCMVerifyAll(self.appEventsMock);
   XCTAssertTrue(
     self.timeSpentRecorder.restoreWasCalled,
     "Activating App with initialized SDK should restore recording time spent data."
@@ -467,6 +450,15 @@
     self.timeSpentRecorder.capturedCalledFromActivateApp,
     "Activating App with initialized SDK should indicate its calling from activateApp when restoring recording time spent data."
   );
+
+  // The publish call happens after both configs are fetched
+  TestAppEventsConfigurationProvider.capturedBlock();
+  TestAppEventsConfigurationProvider.secondCapturedBlock();
+  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  TestServerConfigurationProvider.secondCapturedCompletionBlock(nil, nil);
+
+  TestGraphRequest *request = self.graphRequestFactory.capturedRequests.firstObject;
+  XCTAssertEqualObjects(request.parameters[@"event"], @"MOBILE_APP_INSTALL");
 }
 
 - (void)testApplicationBecomingActiveRestoresTimeSpentRecording
@@ -643,32 +635,39 @@
 - (void)testLogPushNotificationOpen
 {
   self.eventName = @"fb_mobile_push_opened";
-  // with action and campaign
-  NSDictionary<NSString *, NSString *> *expectedParams1 = @{
-    @"fb_push_action" : @"testAction",
-    @"fb_push_campaign" : @"testCampaign",
-  };
-  OCMExpect([self.appEventsMock logEvent:self.eventName parameters:expectedParams1]);
+
   [FBSDKAppEvents logPushNotificationOpen:self.payload action:@"testAction"];
-  OCMVerifyAll(self.appEventsMock);
+  NSDictionary *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
+  XCTAssertEqualObjects(capturedParameters[@"_eventName"], self.eventName);
+  XCTAssertEqualObjects(capturedParameters[@"fb_push_action"], @"testAction");
+  XCTAssertEqualObjects(capturedParameters[@"fb_push_campaign"], @"testCampaign");
+}
 
-  // empty action
-  NSDictionary<NSString *, NSString *> *expectedParams2 = @{
-    @"fb_push_campaign" : @"testCampaign",
-  };
-  OCMExpect([self.appEventsMock logEvent:self.eventName parameters:expectedParams2]);
+- (void)testLogPushNotificationOpenWithEmptyAction
+{
+  self.eventName = @"fb_mobile_push_opened";
+
   [FBSDKAppEvents logPushNotificationOpen:self.payload];
-  OCMVerifyAll(self.appEventsMock);
 
-  // empty payload
-  OCMReject([self.appEventsMock logEvent:self.eventName parameters:[OCMArg any]]);
+  NSDictionary *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
+  XCTAssertNil(capturedParameters[@"fb_push_action"]);
+  XCTAssertEqualObjects(capturedParameters[@"_eventName"], self.eventName);
+  XCTAssertEqualObjects(capturedParameters[@"fb_push_campaign"], @"testCampaign");
+}
+
+- (void)testLogPushNotificationOpenWithEmptyPayload
+{
   [FBSDKAppEvents logPushNotificationOpen:@{}];
 
-  // empty campaign
+  XCTAssertNil(self.appEventsStateProvider.state.capturedEventDictionary);
+}
+
+- (void)testLogPushNotificationOpenWithEmptyCampaign
+{
   self.payload = @{@"fb_push_payload" : @{@"campaign" : @""}};
-  OCMReject([self.appEventsMock logEvent:self.eventName parameters:[OCMArg any]]);
   [FBSDKAppEvents logPushNotificationOpen:self.payload];
 
+  XCTAssertNil(self.appEventsStateProvider.state.capturedEventDictionary);
   XCTAssertEqual(
     TestLogger.capturedLoggingBehavior,
     FBSDKLoggingBehaviorDeveloperErrors,
@@ -687,11 +686,8 @@
 
 - (void)testCheckPersistedEventsCalledWhenLogEvent
 {
-  OCMStub([self.appEventsMock flushBehavior]).andReturn(FBSDKAppEventsFlushReasonEagerlyFlushingEvent);
-
   [FBSDKAppEvents logEvent:FBSDKAppEventNamePurchased valueToSum:@(self.purchaseAmount) parameters:@{} accessToken:nil];
 
-  OCMVerifyAll(self.appEventsMock);
   XCTAssertTrue(
     self.appEventsStateStore.retrievePersistedAppEventStatesWasCalled,
     "Should retrieve persisted states when logEvent was called and flush behavior was FlushReasonEagerlyFlushingEvent"
@@ -814,12 +810,12 @@
 
 - (void)testPublishInstall
 {
-  self.settings.appID = self.appID;
-  OCMExpect([self.appEventsMock fetchServerConfiguration:[OCMArg any]]);
-
   [self.appEventsMock publishInstall];
 
-  OCMVerifyAll(self.appEventsMock);
+  XCTAssertNotNil(
+    TestAppEventsConfigurationProvider.capturedBlock,
+    "Should fetch a configuration before publishing installs"
+  );
 }
 
 #pragma mark  Tests for Kill Switch
@@ -865,123 +861,60 @@
 
 - (void)testLogEventWithValueToSum
 {
-  OCMExpect(
-    [self.appEventsMock logEvent:self.eventName
-                      valueToSum:self.purchaseAmount
-                      parameters:@{}]
-  ).andForwardToRealObject();
-  OCMExpect(
-    [self.appEventsMock logEvent:self.eventName
-                      valueToSum:@(self.purchaseAmount)
-                      parameters:@{}
-                     accessToken:nil]
-  ).andForwardToRealObject();
-
   [FBSDKAppEvents logEvent:self.eventName valueToSum:self.purchaseAmount];
 
-  OCMVerifyAll(self.appEventsMock);
+  NSDictionary *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
+  XCTAssertEqualObjects(capturedParameters[@"_eventName"], self.eventName);
+  XCTAssertEqualObjects(capturedParameters[@"_valueToSum"], @1);
 }
 
 - (void)testLogInternalEvents
 {
-  OCMExpect(
-    [self.appEventsMock logInternalEvent:self.eventName
-                              parameters:@{}
-                      isImplicitlyLogged:NO]
-  ).andForwardToRealObject();
-  OCMExpect(
-    [self.appEventsMock logInternalEvent:self.eventName
-                              valueToSum:nil
-                              parameters:@{}
-                      isImplicitlyLogged:NO
-                             accessToken:nil]
-  ).andForwardToRealObject();
-
   [FBSDKAppEvents logInternalEvent:self.eventName isImplicitlyLogged:NO];
 
-  OCMVerifyAll(self.appEventsMock);
+  NSDictionary *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
+  XCTAssertEqualObjects(capturedParameters[@"_eventName"], self.eventName);
+  XCTAssertNil(capturedParameters[@"_valueToSum"]);
+  XCTAssertNil(capturedParameters[@"_implicitlyLogged"]);
 }
 
 - (void)testLogInternalEventsWithValue
 {
-  OCMExpect(
-    [self.appEventsMock logInternalEvent:self.eventName
-                              valueToSum:self.purchaseAmount
-                              parameters:@{}
-                      isImplicitlyLogged:NO]
-  ).andForwardToRealObject();
-  OCMExpect(
-    [self.appEventsMock logInternalEvent:self.eventName
-                              valueToSum:@(self.purchaseAmount)
-                              parameters:@{}
-                      isImplicitlyLogged:NO
-                             accessToken:nil]
-  ).andForwardToRealObject();
-
   [FBSDKAppEvents logInternalEvent:self.eventName valueToSum:self.purchaseAmount isImplicitlyLogged:NO];
 
-  OCMVerifyAll(self.appEventsMock);
+  NSDictionary *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
+  XCTAssertEqualObjects(capturedParameters[@"_eventName"], self.eventName);
+  XCTAssertEqualObjects(capturedParameters[@"_valueToSum"], @(self.purchaseAmount));
+  XCTAssertNil(capturedParameters[@"_implicitlyLogged"]);
 }
 
 - (void)testLogInternalEventWithAccessToken
 {
-  id mockAccessToken = [OCMockObject niceMockForClass:[FBSDKAccessToken class]];
-  OCMExpect(
-    [self.appEventsMock logInternalEvent:self.eventName
-                              valueToSum:nil
-                              parameters:@{}
-                      isImplicitlyLogged:NO
-                             accessToken:mockAccessToken]
-  ).andForwardToRealObject();
-  [FBSDKAppEvents logInternalEvent:self.eventName parameters:@{} isImplicitlyLogged:NO accessToken:mockAccessToken];
-  OCMVerifyAll(self.appEventsMock);
+  [FBSDKAppEvents logInternalEvent:self.eventName parameters:@{} isImplicitlyLogged:NO accessToken:SampleAccessTokens.validToken];
 
-  [mockAccessToken stopMocking];
-  mockAccessToken = nil;
+  XCTAssertEqualObjects(self.appEventsStateProvider.capturedAppID, self.mockAppID);
+  NSDictionary *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
+  XCTAssertEqualObjects(capturedParameters[@"_eventName"], self.eventName);
+  XCTAssertNil(capturedParameters[@"_valueToSum"]);
+  XCTAssertNil(capturedParameters[@"_implicitlyLogged"]);
 }
 
 - (void)testInstanceLogEventWhenAutoLogAppEventsDisabled
 {
   self.settings.stubbedIsAutoLogAppEventsEnabled = NO;
-  OCMReject(
-    [self.appEventsMock instanceLogEvent:self.eventName
-                              valueToSum:@(self.purchaseAmount)
-                              parameters:@{}
-                      isImplicitlyLogged:NO
-                             accessToken:nil]
-  );
-
-  [FBSDKAppEvents logInternalEvent:self.eventName valueToSum:self.purchaseAmount isImplicitlyLogged:NO];
-}
-
-- (void)testInstanceLogEventWhenAutoLogAppEventsEnabled
-{
-  OCMExpect(
-    [self.appEventsMock instanceLogEvent:self.eventName
-                              valueToSum:@(self.purchaseAmount)
-                              parameters:@{}
-                      isImplicitlyLogged:NO
-                             accessToken:nil]
-  ).andForwardToRealObject();
-
   [FBSDKAppEvents logInternalEvent:self.eventName valueToSum:self.purchaseAmount isImplicitlyLogged:NO];
 
-  OCMVerifyAll(self.appEventsMock);
+  XCTAssertNil(self.appEventsStateProvider.state.capturedEventDictionary);
 }
 
 - (void)testLogImplicitEvent
 {
-  OCMExpect(
-    [self.appEventsMock instanceLogEvent:self.eventName
-                              valueToSum:@(self.purchaseAmount)
-                              parameters:@{}
-                      isImplicitlyLogged:YES
-                             accessToken:nil]
-  );
-
   [FBSDKAppEvents logImplicitEvent:self.eventName valueToSum:@(self.purchaseAmount) parameters:@{} accessToken:nil];
 
-  OCMVerifyAll(self.appEventsMock);
+  NSDictionary *capturedParameters = self.appEventsStateProvider.state.capturedEventDictionary;
+  XCTAssertEqualObjects(capturedParameters[@"_eventName"], self.eventName);
+  XCTAssertEqualObjects(capturedParameters[@"_valueToSum"], @(self.purchaseAmount));
+  XCTAssertEqualObjects(capturedParameters[@"_implicitlyLogged"], @"1");
 }
 
 #pragma mark ParameterProcessing
