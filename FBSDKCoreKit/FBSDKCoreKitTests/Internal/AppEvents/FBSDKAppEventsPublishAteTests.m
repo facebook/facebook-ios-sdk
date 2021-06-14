@@ -98,7 +98,8 @@
     restrictiveDataFilterParameterProcessor:[TestAppEventsParameterProcessor new]
                         atePublisherFactory:factory
                      appEventsStateProvider:[TestAppEventsStateProvider new]
-                                   swizzler:TestSwizzler.class];
+                                   swizzler:TestSwizzler.class
+                       advertiserIDProvider:[TestAdvertiserIDProvider new]];
 
   [appEvents publishATE];
   XCTAssertTrue(

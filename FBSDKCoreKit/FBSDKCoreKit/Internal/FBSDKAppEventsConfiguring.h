@@ -34,6 +34,7 @@
 @protocol FBSDKAtePublisherCreating;
 @protocol FBSDKAppEventsStateProviding;
 @protocol FBSDKSwizzling;
+@protocol FBSDKAdvertiserIDProviding;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -55,7 +56,8 @@ NS_SWIFT_NAME(AppEventsConfiguring)
   restrictiveDataFilterParameterProcessor:(id<FBSDKAppEventsParameterProcessing>)restrictiveDataFilterParameterProcessor
                       atePublisherFactory:(id<FBSDKAtePublisherCreating>)atePublisherFactory
                    appEventsStateProvider:(id<FBSDKAppEventsStateProviding>)appEventsStateProvider
-                                 swizzler:(Class<FBSDKSwizzling>)swizzler;
+                                 swizzler:(Class<FBSDKSwizzling>)swizzler
+                     advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider;
 
 @end
 

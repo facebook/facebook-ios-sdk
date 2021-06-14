@@ -45,20 +45,8 @@ Also, to get a better understanding of mocking, please read the documentation at
 */
 @interface FBSDKTestCase : XCTestCase
 
-/// Used for sharing a common app identifier between tests. This is not a valid FB App ID
-@property (nullable, assign) NSString *appID;
-
-/// Used during `-setUp` to determine the type of mock for `appEventsMock` (partial or nice), default is `NO`
-@property (assign) BOOL shouldAppEventsMockBePartial;
-
-/// Used for sharing an `FBSDKAppEvents` mock between tests
-@property (nullable, assign) id appEventsMock;
-
 /// Used for sharing a `FBSDKAppEventsUtility` class  mock between tests
 @property (nullable, nonatomic, assign) id appEventsUtilityClassMock;
-
-/// Used for sharing a `FBSDKUtility` class mock between tests
-@property (nullable, nonatomic, assign) id utilityClassMock;
 
 /// Stubs `FBSDKAppEventsUtility.shared.advertiserID` with the provided value
 - (void)stubAppEventsUtilityAdvertiserIDWith:(nullable NSString *)identifier;

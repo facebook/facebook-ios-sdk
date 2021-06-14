@@ -65,7 +65,7 @@
 - (void)setFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior;
 
 + (FBSDKAppEvents *)singleton;
-
++ (void)setSingletonInstanceToInstance:(FBSDKAppEvents *)appEvents;
 + (void)reset;
 
 + (UIApplicationState)applicationState;
@@ -100,7 +100,7 @@
 
 @end
 
-@interface FBSDKAppEventsTests : FBSDKTestCase
+@interface FBSDKAppEventsTests : XCTestCase
 
 @property (nonnull, nonatomic) NSString *const mockAppID;
 @property (nonnull, nonatomic) NSString *const mockUserID;
@@ -124,6 +124,7 @@
 @property (nonnull, nonatomic) TestAppEventsParameterProcessor *eventDeactivationParameterProcessor;
 @property (nonnull, nonatomic) TestAppEventsParameterProcessor *restrictiveDataFilterParameterProcessor;
 @property (nonnull, nonatomic) TestAppEventsStateProvider *appEventsStateProvider;
+@property (nonnull, nonatomic) TestAdvertiserIDProvider *advertiserIDProvider;
 
 @end
 
@@ -138,9 +139,12 @@
 
 - (void)setUp
 {
-  self.shouldAppEventsMockBePartial = YES;
-
   [super setUp];
+
+  FBSDKAppEvents *appEvents = [[FBSDKAppEvents alloc] initWithFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly
+                                                       flushPeriodInSeconds:0];
+  [FBSDKAppEvents setSingletonInstanceToInstance:appEvents];
+
   [self resetTestHelpers];
   self.settings = [TestSettings new];
   self.settings.stubbedIsAutoLogAppEventsEnabled = YES;
@@ -168,6 +172,7 @@
   self.atePublisherfactory = [TestAtePublisherFactory new];
   self.timeSpentRecorderFactory = [TestTimeSpentRecorderFactory new];
   self.timeSpentRecorder = self.timeSpentRecorderFactory.recorder;
+  self.advertiserIDProvider = [TestAdvertiserIDProvider new];
 
   // Must be stubbed before the configure method is called
   self.atePublisher = [TestAtePublisher new];
@@ -188,7 +193,8 @@
                    restrictiveDataFilterParameterProcessor:self.restrictiveDataFilterParameterProcessor
                                        atePublisherFactory:self.atePublisherfactory
                                     appEventsStateProvider:self.appEventsStateProvider
-                                                  swizzler:TestSwizzler.class];
+                                                  swizzler:TestSwizzler.class
+                                      advertiserIDProvider:self.advertiserIDProvider];
 
   [FBSDKAppEvents configureNonTVComponentsWithOnDeviceMLModelManager:self.onDeviceMLModelManager
                                                      metadataIndexer:self.metadataIndexer];
@@ -234,11 +240,6 @@
     self.atePublisher,
     "Should store the publisher created by the publisher factory"
   );
-}
-
-- (void)testAppEventsMockIsSingleton
-{
-  XCTAssertEqual(self.appEventsMock, [FBSDKAppEvents singleton]);
 }
 
 - (void)testLogPurchaseFlushesWhenFlushBehaviorIsExplicit
@@ -727,7 +728,6 @@
 {
   self.settings.stubbedLimitEventAndDataUsage = NO;
   self.settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
-  [self stubAppEventsUtilityAdvertiserIDWith:nil];
 
   XCTAssertNil(
     [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:nil],
@@ -740,7 +740,7 @@
   NSString *advertiserID = @"abc123";
   self.settings.stubbedLimitEventAndDataUsage = NO;
   self.settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
-  [self stubAppEventsUtilityAdvertiserIDWith:advertiserID];
+  self.advertiserIDProvider.advertiserID = advertiserID;
 
   [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:nil];
   XCTAssertEqualObjects(
@@ -755,7 +755,7 @@
   FBSDKAccessToken *token = SampleAccessTokens.validToken;
   self.settings.stubbedLimitEventAndDataUsage = NO;
   self.settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
-  [self stubAppEventsUtilityAdvertiserIDWith:nil];
+
   [FBSDKAppEvents setLoggingOverrideAppID:token.appID];
 
   [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:token];
@@ -778,7 +778,7 @@
   NSString *advertiserID = @"abc123";
   self.settings.stubbedLimitEventAndDataUsage = NO;
   self.settings.advertisingTrackingStatus = FBSDKAdvertisingTrackingAllowed;
-  [self stubAppEventsUtilityAdvertiserIDWith:advertiserID];
+  self.advertiserIDProvider.advertiserID = advertiserID;
 
   [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:token];
 
@@ -810,7 +810,7 @@
 
 - (void)testPublishInstall
 {
-  [self.appEventsMock publishInstall];
+  [FBSDKAppEvents.singleton publishInstall];
 
   XCTAssertNotNil(
     TestAppEventsConfigurationProvider.capturedBlock,
@@ -824,11 +824,11 @@
 {
   [TestGateKeeperManager setGateKeeperValueWithKey:@"app_events_killswitch" value:NO];
 
-  [self.appEventsMock instanceLogEvent:self.eventName
-                            valueToSum:@(self.purchaseAmount)
-                            parameters:nil
-                    isImplicitlyLogged:NO
-                           accessToken:nil];
+  [FBSDKAppEvents.singleton instanceLogEvent:self.eventName
+                                  valueToSum:@(self.purchaseAmount)
+                                  parameters:nil
+                          isImplicitlyLogged:NO
+                                 accessToken:nil];
 
   XCTAssertTrue(
     self.appEventsStateProvider.state.isAddEventCalled,
@@ -844,11 +844,11 @@
 {
   [TestGateKeeperManager setGateKeeperValueWithKey:@"app_events_killswitch" value:YES];
 
-  [self.appEventsMock instanceLogEvent:self.eventName
-                            valueToSum:@(self.purchaseAmount)
-                            parameters:nil
-                    isImplicitlyLogged:NO
-                           accessToken:nil];
+  [FBSDKAppEvents.singleton instanceLogEvent:self.eventName
+                                  valueToSum:@(self.purchaseAmount)
+                                  parameters:nil
+                          isImplicitlyLogged:NO
+                                 accessToken:nil];
 
   [TestGateKeeperManager setGateKeeperValueWithKey:@"app_events_killswitch" value:NO];
   XCTAssertFalse(

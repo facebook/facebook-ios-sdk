@@ -18,6 +18,7 @@
 
 import FBSDKCoreKit
 
-class TestAdvertiserIDProvider: AdvertiserIDProviding {
+@objcMembers
+class TestAdvertiserIDProvider: NSObject, AdvertiserIDProviding {
   var advertiserID: String?
 }

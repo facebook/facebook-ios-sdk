@@ -620,7 +620,8 @@ static UIApplicationState _applicationState;
          restrictiveDataFilterParameterProcessor:restrictiveDataFilterManager
                              atePublisherFactory:atePublisherFactory
                           appEventsStateProvider:[FBSDKAppEventsStateFactory new]
-                                        swizzler:FBSDKSwizzler.class];
+                                        swizzler:FBSDKSwizzler.class
+                            advertiserIDProvider:FBSDKAppEventsUtility.shared];
   [FBSDKInternalUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKAppEventsConfigurationManager configureWithStore:store
                                                 settings:sharedSettings

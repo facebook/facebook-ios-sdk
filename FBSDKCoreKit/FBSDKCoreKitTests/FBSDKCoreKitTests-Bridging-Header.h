@@ -34,6 +34,7 @@
 #import "FBSDKAppEventsFlushReason.h"
 #import "FBSDKAppEventsNumberParser.h"
 #import "FBSDKAppEventsUtility.h"
+#import "FBSDKAppEventsUtility+AdvertiserIDProviding.h"
 #import "FBSDKAppEvents+AppEventsConfiguring.h"
 #import "FBSDKAppEvents+ApplicationActivating.h"
 #import "FBSDKAppEvents+ApplicationLifecycleObserving.h"

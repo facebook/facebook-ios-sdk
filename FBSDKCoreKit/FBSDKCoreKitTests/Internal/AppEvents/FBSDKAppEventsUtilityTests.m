@@ -31,6 +31,14 @@
 static NSString *const FBSDKSettingsInstallTimestamp = @"com.facebook.sdk:FBSDKSettingsInstallTimestamp";
 static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.sdk:FBSDKSettingsAdvertisingTrackingStatus";
 
+@interface FBSDKAppEvents (Testing)
+
++ (void)setSingletonInstanceToInstance:(FBSDKAppEvents *)appEvents;
+- (instancetype)initWithFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior
+                 flushPeriodInSeconds:(int)flushPeriodInSeconds;
+
+@end
+
 @interface FBSDKSettings ()
 + (void)resetAdvertiserTrackingStatusCache;
 + (void)setAdvertiserTrackingStatus:(FBSDKAdvertisingTrackingStatus)status;
@@ -61,8 +69,6 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 
 - (void)setUp
 {
-  self.shouldAppEventsMockBePartial = YES;
-
   [super setUp];
 
   userDefaultsSpy = [UserDefaultsSpy new];
@@ -75,6 +81,10 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
      appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
              infoDictionaryProvider:bundle
                         eventLogger:logger];
+
+  FBSDKAppEvents *appEvents = [[FBSDKAppEvents alloc] initWithFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly
+                                                       flushPeriodInSeconds:0];
+  [FBSDKAppEvents setSingletonInstanceToInstance:appEvents];
   [FBSDKAppEvents.singleton configureWithGateKeeperManager:TestGateKeeperManager.self
                             appEventsConfigurationProvider:TestAppEventsConfigurationProvider.self
                                serverConfigurationProvider:TestServerConfigurationProvider.self
@@ -90,7 +100,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
                    restrictiveDataFilterParameterProcessor:[TestAppEventsParameterProcessor new]
                                        atePublisherFactory:[TestAtePublisherFactory new]
                                     appEventsStateProvider:appEventsStateProvider
-                                                  swizzler:TestSwizzler.class];
+                                                  swizzler:TestSwizzler.class
+                                      advertiserIDProvider:FBSDKAppEventsUtility.shared];
 }
 
 - (void)tearDown

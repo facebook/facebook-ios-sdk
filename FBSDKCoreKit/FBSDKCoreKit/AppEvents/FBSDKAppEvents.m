@@ -27,6 +27,7 @@
 
 #import "FBSDKAEMReporter.h"
 #import "FBSDKAccessToken.h"
+#import "FBSDKAdvertiserIDProviding.h"
 #import "FBSDKAppEventsConfiguration.h"
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsDeviceInfo.h"
@@ -268,6 +269,7 @@ NSString *const FBSDKAPPEventsWKWebViewMessagesProtocolKey = @"fbmq-0.1";
 #define FBUnityUtilityClassName "FBUnityUtility"
 #define FBUnityUtilityUpdateBindingsSelector @"triggerUpdateBindings:"
 
+static FBSDKAppEvents *shared = nil;
 static NSString *g_overrideAppID = nil;
 static BOOL g_explicitEventsLoggedYet;
 static Class<FBSDKGateKeeperManaging> g_gateKeeperManager;
@@ -299,6 +301,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 @property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
 @property (nullable, nonatomic) id<FBSDKSourceApplicationTracking, FBSDKTimeSpentRecording> timeSpentRecorder;
 @property (nonatomic, strong) id<FBSDKAppEventsStateProviding> appEventsStateProvider;
+@property (nonatomic) id<FBSDKAdvertiserIDProviding> advertiserIDProvider;
 @property (nonatomic) BOOL isConfigured;
 
 @property (nonatomic, assign) BOOL disableTimer; // for testing only.
@@ -895,6 +898,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
                       atePublisherFactory:(id<FBSDKAtePublisherCreating>)atePublisherFactory
                    appEventsStateProvider:(id<FBSDKAppEventsStateProviding>)appEventsStateProvider
                                  swizzler:(Class<FBSDKSwizzling>)swizzler
+                     advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
 {
   [FBSDKAppEvents setAppEventsConfigurationProvider:appEventsConfigurationProvider];
   [FBSDKAppEvents setServerConfigurationProvider:serverConfigurationProvider];
@@ -912,6 +916,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
   self.atePublisher = [atePublisherFactory createPublisherWithAppID:self.appID];
   self.timeSpentRecorder = [timeSpentRecorderFactory createTimeSpentRecorder];
   self.appEventsStateProvider = appEventsStateProvider;
+  self.advertiserIDProvider = advertiserIDProvider;
 
   self.isConfigured = YES;
 
@@ -1112,7 +1117,6 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 + (FBSDKAppEvents *)singleton
 {
   static dispatch_once_t onceToken;
-  static FBSDKAppEvents *shared = nil;
   dispatch_once(&onceToken, ^{
     shared = [self new];
   });
@@ -1717,7 +1721,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
   if (!accessToken) {
     // We don't have a logged in user, so we need some form of udid representation. Prefer advertiser ID if
     // available. Note that this function only makes sense to be called in the context of advertising.
-    udid = [FBSDKAppEventsUtility.shared advertiserID];
+    udid = [self.singleton.advertiserIDProvider advertiserID];
     if (!udid) {
       // No udid, and no user token.  No point in making the request.
       return nil;
@@ -1741,7 +1745,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 #pragma mark - Testability
 
-#if DEBUG
+#if DEBUG && FBSDKTEST
 
 + (void)reset
 {
@@ -1749,6 +1753,11 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
   [self resetApplicationState];
   g_gateKeeperManager = nil;
   g_graphRequestProvider = nil;
+}
+
++ (void)setSingletonInstanceToInstance:(FBSDKAppEvents *)appEvents
+{
+  shared = appEvents;
 }
 
 + (void)resetApplicationState

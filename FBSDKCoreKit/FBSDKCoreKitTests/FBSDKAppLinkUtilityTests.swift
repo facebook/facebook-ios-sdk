@@ -116,7 +116,8 @@ class FBSDKAppLinkUtilityTests: XCTestCase {
       restrictiveDataFilterParameterProcessor: TestAppEventsParameterProcessor(),
       atePublisherFactory: TestAtePublisherFactory(),
       appEventsStateProvider: TestAppEventsStateProvider(),
-      swizzler: TestSwizzler.self
+      swizzler: TestSwizzler.self,
+      advertiserIDProvider: TestAdvertiserIDProvider()
     )
 
     AppLinkUtility.fetchDeferredAppLink()

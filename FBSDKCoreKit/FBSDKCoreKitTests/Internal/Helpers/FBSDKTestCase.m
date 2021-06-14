@@ -23,21 +23,7 @@
 // For mocking ASIdentifier
 #import <AdSupport/AdSupport.h>
 
-#import "FBSDKAppEvents.h"
-#import "FBSDKAppEventsConfigurationManager.h"
-#import "FBSDKAppEventsState.h"
 #import "FBSDKAppEventsUtility.h"
-#import "FBSDKGraphRequestPiggybackManager.h"
-
-@interface FBSDKAppEvents (Testing)
-+ (FBSDKAppEvents *)singleton;
-- (instancetype)initWithFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior
-                 flushPeriodInSeconds:(int)flushPeriodInSeconds;
-@end
-
-@interface FBSDKAppEventsConfigurationManager (Testing)
-+ (void)loadAppEventsConfigurationWithBlock:(FBSDKAppEventsConfigurationManagerBlock)block;
-@end
 
 @implementation FBSDKTestCase
 
@@ -45,58 +31,20 @@
 {
   [super setUp];
 
-  _appID = @"appid";
-
-  // Using timers with async unit tests is a recipe for unexpected behavior.
-  // We need to create the UtilityMock and stub the timer method before we do
-  // anything else since other partial mocks setup below this will create a timer
-  [self setUpUtilityClassMock];
-  [self stubStartGCDTimerWithInterval];
   [self setUpAppEventsUtilityMock];
-  [self setUpAppEventsMock];
 }
 
 - (void)tearDown
 {
   [super tearDown];
 
-  [_appEventsMock stopMocking];
-  _appEventsMock = nil;
-
   [_appEventsUtilityClassMock stopMocking];
   _appEventsUtilityClassMock = nil;
-
-  [_utilityClassMock stopMocking];
-  _utilityClassMock = nil;
-}
-
-- (void)setUpAppEventsMock
-{
-  if (self.shouldAppEventsMockBePartial) {
-    // Since the `init` method is marked unavailable but just as a measure to prevent creating multiple
-    // instances and enforce the singleton pattern, we will circumvent that by casting to a plain `NSObject`
-    // after `alloc` in order to call `init`.
-    _appEventsMock = OCMPartialMock(
-      [[FBSDKAppEvents alloc] initWithFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly
-                               flushPeriodInSeconds:0]
-    );
-  } else {
-    _appEventsMock = OCMClassMock([FBSDKAppEvents class]);
-  }
-
-  // Since numerous areas in FBSDK can end up calling `[FBSDKAppEvents singleton]`,
-  // we will stub the singleton accessor out for our mock instance.
-  OCMStub([_appEventsMock singleton]).andReturn(_appEventsMock);
 }
 
 - (void)setUpAppEventsUtilityMock
 {
   _appEventsUtilityClassMock = OCMStrictClassMock(FBSDKAppEventsUtility.class);
-}
-
-- (void)setUpUtilityClassMock
-{
-  _utilityClassMock = OCMClassMock(FBSDKUtility.class);
 }
 
 #pragma mark - Public Methods
@@ -105,12 +53,6 @@
 {
   OCMStub(ClassMethod([_appEventsUtilityClassMock shared])).andReturn(_appEventsUtilityClassMock);
   OCMStub([_appEventsUtilityClassMock advertiserID]).andReturn(identifier);
-}
-
-- (void)stubStartGCDTimerWithInterval
-{
-  // Note: the '5' is arbitrary and ignored but needs to be there for compilation.
-  OCMStub(ClassMethod([self.utilityClassMock startGCDTimerWithInterval:5 block:OCMArg.any]));
 }
 
 @end

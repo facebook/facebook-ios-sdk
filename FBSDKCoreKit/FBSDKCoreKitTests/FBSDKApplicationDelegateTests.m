@@ -288,6 +288,12 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
     FBSDKSwizzler.class,
     "Initializing the SDK should set concrete swizzler for event logging"
   );
+
+  XCTAssertEqualObjects(
+    self.appEvents.capturedAdvertiserIDProvider,
+    FBSDKAppEventsUtility.shared,
+    "Initializing the SDK should set concrete advertiser ID provider"
+  );
 }
 
 - (void)testInitializingSdkConfiguresEventsProcessorsForAppEventsState
