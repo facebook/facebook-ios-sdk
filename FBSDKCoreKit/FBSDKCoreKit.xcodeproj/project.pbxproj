@@ -664,7 +664,6 @@
 		9DA81B2A1AA65FA200B9FE0B /* FBSDKGraphRequestPiggybackManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DA81B281AA65FA200B9FE0B /* FBSDKGraphRequestPiggybackManager.m */; };
 		9DA8303C1A6999EC00770955 /* FBSDKSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = 9DA8303A1A6999EC00770955 /* FBSDKSettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9DA8303D1A6999EC00770955 /* FBSDKSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DA8303B1A6999EC00770955 /* FBSDKSettings.m */; };
-		9DAD87761A8AA75700FFA324 /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DAD87751A8AA75700FFA324 /* libOCMock.a */; };
 		9DB0FA811BC1CB64005EB8B1 /* FBSDKAccessToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D3029081A65C4420086B9ED /* FBSDKAccessToken.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9DB0FA821BC1CB93005EB8B1 /* FBSDKCopying.h in Headers */ = {isa = PBXBuildFile; fileRef = 890414861A64893100617215 /* FBSDKCopying.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9DB0FA871BC1CDA7005EB8B1 /* FBSDKGraphRequestConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 9DC6589C1A6EE7D800B85AAF /* FBSDKGraphRequestConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1209,7 +1208,6 @@
 		F4DA3314262E3D89001F5290 /* AccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DA3308262E3D89001F5290 /* AccessToken.swift */; };
 		F4DA3315262E3D89001F5290 /* AccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DA3308262E3D89001F5290 /* AccessToken.swift */; };
 		F4DA3316262E3D89001F5290 /* AccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DA3308262E3D89001F5290 /* AccessToken.swift */; };
-		F4DE31F624DB695100297C18 /* FBSDKTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = F4DE31F524DB695100297C18 /* FBSDKTestCase.m */; };
 		F4E202292647075A006F2763 /* FBSDKRandom.m in Sources */ = {isa = PBXBuildFile; fileRef = F4E20228264706A4006F2763 /* FBSDKRandom.m */; };
 		F4E2022A2647075B006F2763 /* FBSDKRandom.m in Sources */ = {isa = PBXBuildFile; fileRef = F4E20228264706A4006F2763 /* FBSDKRandom.m */; };
 		F4E2022B2647075C006F2763 /* FBSDKRandom.m in Sources */ = {isa = PBXBuildFile; fileRef = F4E20228264706A4006F2763 /* FBSDKRandom.m */; };
@@ -1826,7 +1824,6 @@
 		9DA8303A1A6999EC00770955 /* FBSDKSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKSettings.h; sourceTree = "<group>"; };
 		9DA8303B1A6999EC00770955 /* FBSDKSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKSettings.m; sourceTree = "<group>"; };
 		9DA830421A699A2200770955 /* FBSDKSettings+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKSettings+Internal.h"; sourceTree = "<group>"; };
-		9DAD87751A8AA75700FFA324 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOCMock.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DB0FA731BC1CA71005EB8B1 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKCoreKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9DC2777A1DAF4CCD004F4AB5 /* FBSDKSmartDeviceDialogView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKSmartDeviceDialogView.m; sourceTree = "<group>"; };
 		9DC2777B1DAF4CCD004F4AB5 /* FBSDKSmartDeviceDialogView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKSmartDeviceDialogView.h; sourceTree = "<group>"; };
@@ -2203,8 +2200,6 @@
 		F4D80C3F2566D856008CCAF0 /* TestAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = TestAssets.xcassets; sourceTree = "<group>"; };
 		F4DA3307262E3D89001F5290 /* Permission.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Permission.swift; sourceTree = "<group>"; };
 		F4DA3308262E3D89001F5290 /* AccessToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessToken.swift; sourceTree = "<group>"; };
-		F4DE31F424DB695100297C18 /* FBSDKTestCase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKTestCase.h; sourceTree = "<group>"; };
-		F4DE31F524DB695100297C18 /* FBSDKTestCase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKTestCase.m; sourceTree = "<group>"; };
 		F4E1EB9F2444E0AB006FB48E /* Analyzer.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Analyzer.xcconfig; path = ../../../Configurations/Analyzer.xcconfig; sourceTree = "<group>"; };
 		F4E20227264704DE006F2763 /* FBSDKRandom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKRandom.h; sourceTree = "<group>"; };
 		F4E20228264706A4006F2763 /* FBSDKRandom.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKRandom.m; sourceTree = "<group>"; };
@@ -2377,7 +2372,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				FDB2B4F32398D73D00AE087E /* Accelerate.framework in Frameworks */,
-				9DAD87761A8AA75700FFA324 /* libOCMock.a in Frameworks */,
 				9DEE5C8C1A67199700D750E1 /* Foundation.framework in Frameworks */,
 				9DEE5C8B1A67199000D750E1 /* XCTest.framework in Frameworks */,
 				893F44A21A644512001DB0B6 /* CoreGraphics.framework in Frameworks */,
@@ -2723,7 +2717,6 @@
 				4AF47CFE1F424A8700A57A67 /* CoreImage.framework */,
 				521726A621CDBF5000BC1840 /* AuthenticationServices.framework */,
 				9894BFFA1B73D8B300FBA6DB /* SafariServices.framework */,
-				9DAD87751A8AA75700FFA324 /* libOCMock.a */,
 				9DEE5C891A67189800D750E1 /* XCTest.framework */,
 				9DEE5C841A67171D00D750E1 /* Foundation.framework */,
 				9DEE5C821A67170A00D750E1 /* QuartzCore.framework */,
@@ -3475,8 +3468,6 @@
 				F402B061255C645600473083 /* FakeLoginManager.m */,
 				F4E50152243648A100C99262 /* FBSDKServerConfigurationFixtures.h */,
 				F4E50153243648A100C99262 /* FBSDKServerConfigurationFixtures.m */,
-				F4DE31F424DB695100297C18 /* FBSDKTestCase.h */,
-				F4DE31F524DB695100297C18 /* FBSDKTestCase.m */,
 				F4BD4022241EEDE500B45D39 /* FBSDKTestCoder.h */,
 				F4BD4023241EEDE500B45D39 /* FBSDKTestCoder.m */,
 				F40B24C124732DD90059351C /* Fuzzer.swift */,
@@ -5281,7 +5272,6 @@
 				F46E56FA260FE86F00BAF55C /* TestPasteboard.swift in Sources */,
 				F91D1BFE2632916D005CA2C5 /* FBSDKAEMEventTests.swift in Sources */,
 				2A3DA4161CB4C0F600339BD4 /* FBSDKAppLinkUtilityTests.swift in Sources */,
-				F4DE31F624DB695100297C18 /* FBSDKTestCase.m in Sources */,
 				F469A8932673BB170079E7D0 /* TestViewControllerTransitionCoordinator.swift in Sources */,
 				F4AE63D72637398D00E0B661 /* TestPaymentProductRequestorFactory.swift in Sources */,
 				F43D7EF42603A7FA005AE003 /* ApplicationDelegateTests.swift in Sources */,

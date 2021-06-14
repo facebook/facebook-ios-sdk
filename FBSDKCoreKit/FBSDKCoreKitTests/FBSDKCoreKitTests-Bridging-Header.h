@@ -82,7 +82,6 @@
 #import "FBSDKSKAdNetworkRule.h"
 #import "FBSDKSKAdNetworkReporter.h"
 #import "FBSDKServerConfigurationFixtures.h"
-#import "FBSDKTestCase.h"
 #import "FBSDKTestCoder.h"
 #import "FBSDKURLOpener.h"
 #import "FBSDKViewHierarchy.h"
@@ -184,7 +183,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 // Interfaces for Swift extensions on Objective-C Test classes
-@interface FBSDKAppEventsUtilityTests : FBSDKTestCase
+@interface FBSDKAppEventsUtilityTests : XCTestCase
 @end
 
 // Categories needed to expose private methods to Swift

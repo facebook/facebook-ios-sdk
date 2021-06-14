@@ -20,7 +20,6 @@
 @import TestTools;
 
 #import <AdSupport/AdSupport.h>
-#import <OCMock/OCMock.h>
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
@@ -30,6 +29,21 @@
 
 static NSString *const FBSDKSettingsInstallTimestamp = @"com.facebook.sdk:FBSDKSettingsInstallTimestamp";
 static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.sdk:FBSDKSettingsAdvertisingTrackingStatus";
+
+@interface TestASIdentifierManager : ASIdentifierManager
+
+@property (nonatomic) NSUUID *stubbedAdvertisingIdentifier;
+
+@end
+
+@implementation TestASIdentifierManager
+
+- (NSUUID *)advertisingIdentifier
+{
+  return self.stubbedAdvertisingIdentifier;
+}
+
+@end
 
 @interface FBSDKAppEvents (Testing)
 
@@ -106,7 +120,6 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 
 - (void)tearDown
 {
-  [self.appEventsUtilityClassMock stopMocking];
   [FBSDKAppEvents reset];
   [TestAppEventsConfigurationProvider reset];
   [TestServerConfigurationProvider reset];
@@ -139,7 +152,14 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 
 - (void)testParamsDictionary
 {
-  [self stubAppEventsUtilityAdvertiserIDWith:NSUUID.UUID.UUIDString];
+  FBSDKSettings.shouldUseCachedValuesForExpensiveMetadata = YES;
+  FBSDKAppEventsConfigurationManager.shared.configuration = [SampleAppEventsConfigurations createWithAdvertiserIDCollectionEnabled:YES];
+
+  NSString *identifier = @"68753A44-4D6F-1226-9C60-0050E4C00067";
+  NSUUID *uuid = [[NSUUID alloc] initWithUUIDString:identifier];
+  TestASIdentifierManager *identifierManager = [TestASIdentifierManager new];
+  identifierManager.stubbedAdvertisingIdentifier = uuid;
+  FBSDKAppEventsUtility.cachedAdvertiserIdentifierManager = identifierManager;
   NSDictionary *dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
                                                          shouldAccessAdvertisingID:YES];
   XCTAssertEqualObjects(@"event", dict[@"event"]);
