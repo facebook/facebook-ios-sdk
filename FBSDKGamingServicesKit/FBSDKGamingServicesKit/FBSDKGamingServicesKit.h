@@ -22,6 +22,7 @@
  #import <FBSDKGamingServicesKit/FBSDKContextDialog.h>
  #import <FBSDKGamingServicesKit/FBSDKContextSwitchAsyncContent.h>
  #import <FBSDKGamingServicesKit/FBSDKFriendFinderDialog.h>
+ #import <FBSDKGamingServicesKit/FBSDKGamingContext.h>
  #import <FBSDKGamingServicesKit/FBSDKGamingGroupIntegration.h>
  #import <FBSDKGamingServicesKit/FBSDKGamingImageUploader.h>
  #import <FBSDKGamingServicesKit/FBSDKGamingImageUploaderConfiguration.h>
@@ -37,6 +38,7 @@
  #import "FBSDKContextDialog.h"
  #import "FBSDKContextSwitchAsyncContent.h"
  #import "FBSDKFriendFinderDialog.h"
+ #import "FBSDKGamingContext.h"
  #import "FBSDKGamingGroupIntegration.h"
  #import "FBSDKGamingImageUploader.h"
  #import "FBSDKGamingImageUploaderConfiguration.h"
@@ -45,5 +47,4 @@
  #import "FBSDKGamingServiceCompletionHandler.h"
  #import "FBSDKGamingVideoUploader.h"
  #import "FBSDKGamingVideoUploaderConfiguration.h"
-
 #endif

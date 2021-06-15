@@ -23,6 +23,7 @@
  #import "FBSDKContextDialog.h"
 
  #import "FBSDKCoreKitInternalImport.h"
+ #import "FBSDKGamingServicesKit.h"
 
 @interface FBSDKContextDialog () <FBSDKWebDialogDelegate>
 
@@ -33,6 +34,7 @@
 @implementation FBSDKContextDialog
 
  #define FBSDK_CONTEXT_METHOD_NAME @"context"
+ #define FBSDK_WEB_RESULT_CONTEXT_TOKEN_ID @"context_token"
 
  #pragma mark - Class Methods
 
@@ -103,9 +105,7 @@
     [FBSDKTypeUtility dictionary:parameters setObject:switchAsyncContent.contextToken forKey:@"context_token"];
   }
 
-  self.webDialog = [FBSDKWebDialog showWithName:FBSDK_CONTEXT_METHOD_NAME
-                                     parameters:parameters
-                                       delegate:self];
+  _webDialog = [FBSDKWebDialog showWithName:FBSDK_CONTEXT_METHOD_NAME parameters:parameters delegate:self];
   [FBSDKInternalUtility registerTransientObject:self];
   return YES;
 }
@@ -182,6 +182,10 @@
   }
   switch (error.code) {
     case 0: {
+      NSString *ContextTokenID = results[FBSDK_WEB_RESULT_CONTEXT_TOKEN_ID];
+      if ([results isKindOfClass:[NSDictionary class]] && ContextTokenID != nil && [ContextTokenID isKindOfClass:[NSString class]]) {
+        [FBSDKGamingContext.currentContext setIdentifier:ContextTokenID];
+      }
       [_delegate contextDialog:self didCompleteWithResults:results];
       break;
     }
