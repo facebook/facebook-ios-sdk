@@ -29,6 +29,8 @@
 
 #import "FBSDKCoreKitBasicsImportForLoginKit.h"
 #import "FBSDKDeviceLoginCodeInfo+Internal.h"
+#import "FBSDKDevicePoller.h"
+#import "FBSDKDevicePolling.h"
 #import "FBSDKDeviceRequestsHelper.h"
 #import "FBSDKLoginConstants.h"
 
@@ -40,7 +42,8 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
   BOOL _isCancelled;
   NSNetService *_loginAdvertisementService;
   BOOL _isSmartLoginEnabled;
-  id<FBSDKGraphRequestConnectionProviding> _connectionProvider;
+  id<FBSDKGraphRequestProviding> _graphRequestFactory;
+  id<FBSDKDevicePolling> _poller;
 }
 
 + (void)initialize
@@ -52,20 +55,24 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 
 - (instancetype)initWithPermissions:(NSArray<NSString *> *)permissions
                    enableSmartLogin:(BOOL)enableSmartLogin
-                 connectionProvider:(nonnull id<FBSDKGraphRequestConnectionProviding>)connectionProvider
+                graphRequestFactory:(nonnull id<FBSDKGraphRequestProviding>)graphRequestFactory
+                       devicePoller:(id<FBSDKDevicePolling>)poller
 {
   self = [self initWithPermissions:permissions enableSmartLogin:enableSmartLogin];
-  _connectionProvider = connectionProvider;
+  _graphRequestFactory = graphRequestFactory;
+  _poller = poller;
   return self;
 }
 
 - (instancetype)initWithPermissions:(NSArray<NSString *> *)permissions enableSmartLogin:(BOOL)enableSmartLogin
 {
-  id<FBSDKGraphRequestConnectionProviding> provider = FBSDKGraphRequestConnectionFactory.new;
+  id<FBSDKGraphRequestProviding> factory = FBSDKGraphRequestFactory.new;
+  FBSDKDevicePoller *poller = FBSDKDevicePoller.new;
   if ((self = [super init])) {
     _permissions = [permissions copy];
     _isSmartLoginEnabled = enableSmartLogin;
-    _connectionProvider = provider;
+    _graphRequestFactory = factory;
+    _poller = poller;
   }
   return self;
 }
@@ -80,12 +87,11 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
     @"redirect_uri" : self.redirectURL.absoluteString ?: @"",
     FBSDK_DEVICE_INFO_PARAM : [FBSDKDeviceRequestsHelper getDeviceInfo],
   };
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"device/login"
-                                                                 parameters:parameters
-                                                                tokenString:[FBSDKInternalUtility validateRequiredClientAccessToken]
-                                                                 HTTPMethod:@"POST"
-                                                                      flags:FBSDKGraphRequestFlagNone
-                                                          connectionFactory:_connectionProvider];
+  id<FBSDKGraphRequest> request = [_graphRequestFactory createGraphRequestWithGraphPath:@"device/login"
+                                                                             parameters:parameters
+                                                                            tokenString:[FBSDKInternalUtility validateRequiredClientAccessToken]
+                                                                             HTTPMethod:@"POST"
+                                                                                  flags:FBSDKGraphRequestFlagNone];
   [request setGraphErrorRecoveryDisabled:YES];
   FBSDKGraphRequestCompletion completion = ^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     if (error) {
@@ -229,48 +235,47 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 
 - (void)_schedulePoll:(NSUInteger)interval
 {
-  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(interval * NSEC_PER_SEC)),
-    dispatch_get_main_queue(), ^{
-      if (self->_isCancelled) {
-        return;
-      }
+  [_poller scheduleBlock:^{
+             if (self->_isCancelled) {
+               return;
+             }
 
-      NSDictionary *parameters = @{ @"code" : self->_codeInfo.identifier };
-      FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"device/login_status"
-                                                                     parameters:parameters
-                                                                    tokenString:[FBSDKInternalUtility validateRequiredClientAccessToken]
-                                                                     HTTPMethod:@"POST"
-                                                                          flags:FBSDKGraphRequestFlagNone];
-      [request setGraphErrorRecoveryDisabled:YES];
-      [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
-        if (self->_isCancelled) {
-          return;
-        }
-        if (error) {
-          [self _processError:error];
-        } else {
-          NSString *tokenString = result[@"access_token"];
-          NSDate *expirationDate = [NSDate distantFuture];
-          if ([result[@"expires_in"] integerValue] > 0) {
-            expirationDate = [NSDate dateWithTimeIntervalSinceNow:[result[@"expires_in"] integerValue]];
-          }
+             NSDictionary *parameters = @{ @"code" : self->_codeInfo.identifier };
+             FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"device/login_status"
+                                                                            parameters:parameters
+                                                                           tokenString:[FBSDKInternalUtility validateRequiredClientAccessToken]
+                                                                            HTTPMethod:@"POST"
+                                                                                 flags:FBSDKGraphRequestFlagNone];
+             [request setGraphErrorRecoveryDisabled:YES];
+             [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
+               if (self->_isCancelled) {
+                 return;
+               }
+               if (error) {
+                 [self _processError:error];
+               } else {
+                 NSString *tokenString = result[@"access_token"];
+                 NSDate *expirationDate = [NSDate distantFuture];
+                 if ([result[@"expires_in"] integerValue] > 0) {
+                   expirationDate = [NSDate dateWithTimeIntervalSinceNow:[result[@"expires_in"] integerValue]];
+                 }
 
-          NSDate *dataAccessExpirationDate = [NSDate distantFuture];
-          if ([result[@"data_access_expiration_time"] integerValue] > 0) {
-            dataAccessExpirationDate = [NSDate dateWithTimeIntervalSince1970:[result[@"data_access_expiration_time"] integerValue]];
-          }
+                 NSDate *dataAccessExpirationDate = [NSDate distantFuture];
+                 if ([result[@"data_access_expiration_time"] integerValue] > 0) {
+                   dataAccessExpirationDate = [NSDate dateWithTimeIntervalSince1970:[result[@"data_access_expiration_time"] integerValue]];
+                 }
 
-          if (tokenString) {
-            [self _notifyToken:tokenString withExpirationDate:expirationDate withDataAccessExpirationDate:dataAccessExpirationDate];
-          } else {
-            NSError *unknownError = [FBSDKError errorWithDomain:FBSDKLoginErrorDomain
-                                                           code:FBSDKErrorUnknown
-                                                        message:@"Device Login poll failed. No token nor error was found."];
-            [self _notifyError:unknownError];
-          }
-        }
-      }];
-    });
+                 if (tokenString) {
+                   [self _notifyToken:tokenString withExpirationDate:expirationDate withDataAccessExpirationDate:dataAccessExpirationDate];
+                 } else {
+                   NSError *unknownError = [FBSDKError errorWithDomain:FBSDKLoginErrorDomain
+                                                                  code:FBSDKErrorUnknown
+                                                               message:@"Device Login poll failed. No token nor error was found."];
+                   [self _notifyError:unknownError];
+                 }
+               }
+             }];
+           } interval:dispatch_time(DISPATCH_TIME_NOW, (int64_t)(interval * NSEC_PER_SEC))];
 }
 
 - (void)netService:(NSNetService *)sender

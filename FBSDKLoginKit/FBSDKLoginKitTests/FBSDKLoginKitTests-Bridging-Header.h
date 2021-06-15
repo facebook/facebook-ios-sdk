@@ -24,6 +24,7 @@
  #import <FBSDKLoginKit+Internal/FBSDKAuthenticationTokenCreating.h>
  #import <FBSDKLoginKit+Internal/FBSDKAuthenticationTokenFactory.h>
  #import <FBSDKLoginKit+Internal/FBSDKAuthenticationTokenHeader.h>
+ #import <FBSDKLoginKit+Internal/FBSDKDevicePolling.h>
  #import <FBSDKLoginKit+Internal/FBSDKLoginCompletion+Internal.h>
  #import <FBSDKLoginKit+Internal/FBSDKNonceUtility.h>
  #import <FBSDKLoginKit+Internal/FBSDKPermission.h>
@@ -32,11 +33,15 @@
  #import "FBSDKAuthenticationTokenCreating.h"
  #import "FBSDKAuthenticationTokenFactory.h"
  #import "FBSDKAuthenticationTokenHeader.h"
+ #import "FBSDKDevicePolling.h"
  #import "FBSDKLoginCompletion+Internal.h"
  #import "FBSDKNonceUtility.h"
  #import "FBSDKPermission.h"
  #import "FBSDKProfileFactory.h"
 #endif
+
+#import "FBSDKInternalUtility+Testing.h"
+#import "FBSDKSettings+Testing.h"
 
 @class FBSDKAuthenticationTokenClaims;
 
@@ -92,7 +97,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKDeviceLoginManager (Testing)
 
 - (instancetype)initWithPermissions:(NSArray<NSString *> *)permissions enableSmartLogin:(BOOL)enableSmartLogin
-                 connectionProvider:(nonnull id<FBSDKGraphRequestConnectionProviding>)connectionProvider;
+                graphRequestFactory:(nonnull id<FBSDKGraphRequestProviding>)connectionProvider
+                       devicePoller:(id<FBSDKDevicePolling>)poller;
 
 - (void)setCodeInfo:(FBSDKDeviceLoginCodeInfo *)codeInfo;
 
@@ -105,19 +111,6 @@ NS_ASSUME_NONNULL_BEGIN
                    verificationURL:(NSURL *)verificationURL
                     expirationDate:(NSDate *)expirationDate
                    pollingInterval:(NSUInteger)pollingInterval;
-
-@end
-
-@interface FBSDKSettings (Testing)
-
-+ (void)reset;
-
-@end
-
-@interface FBSDKApplicationDelegate (Testing)
-
-+ (void)resetHasInitializeBeenCalled
-NS_SWIFT_NAME(reset());
 
 @end
 

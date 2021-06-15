@@ -25,72 +25,96 @@ import XCTest
 
 class DeviceLoginManagerTests: XCTestCase {
 
-  let connection = TestGraphRequestConnection()
   let fakeAppID = "123"
   let fakeClientToken = "abc"
   let permissions = ["email", "public_profile"]
   let redirectURL = URL(string: "https://www.example.com")
+  let poller = TestDevicePoller()
   private let delegate = TestDeviceLoginManagerDelegate()
+  lazy var factory = TestGraphRequestFactory()
+  lazy var manager = DeviceLoginManager(
+    permissions: permissions,
+    enableSmartLogin: false,
+    graphRequestFactory: factory,
+    devicePoller: poller
+  )
 
   override func setUp() {
     super.setUp()
 
-    ApplicationDelegate.shared.application(UIApplication.shared, didFinishLaunchingWithOptions: [:])
+    // This is a temporary hack to account for the fact that types need to be
+    // initialized before being used, but doing that on the shared ApplicationDelegate
+    // will create a host of 'real' types that will do things like start timers
+    // and make network requests, and generally pollute the test environment.
+    // This is mimicking the behavior of calling `didFinishLaunching` by configuring
+    // the types that are needed for these test cases.
+    GraphRequestConnection.setCanMakeRequests()
+    InternalUtility.shared.isConfigured = true
+    Settings.shared.isConfigured = true
 
     Settings.appID = fakeAppID
     Settings.clientToken = fakeClientToken
+
+    manager.redirectURL = redirectURL
+    manager.delegate = delegate
+    manager.setCodeInfo(sampleCodeInfo())
+  }
+
+  override func tearDown() {
+    Settings.reset()
+
+    super.tearDown()
   }
 
   // MARK: Start
 
-  func testStartGraphRequestCreation() {
-    self.manager().start()
+  func testStartGraphRequestCreation() throws {
+    manager.start()
 
-    let capturedRequest = connection.capturedRequest
+    let request = try XCTUnwrap(factory.capturedRequests.first)
+
     XCTAssertEqual(
-      capturedRequest?.graphPath,
+      request.graphPath,
       "device/login",
       "Should create a graph request with the expected graph path"
     )
-    let capturedParameter = capturedRequest?.parameters
     XCTAssertEqual(
-      capturedParameter?["scope"] as? String,
+      request.parameters["scope"] as? String,
       permissions.joined(separator: ","),
       "Should create a graph request with the expected scope"
     )
     XCTAssertEqual(
-      capturedParameter?["redirect_uri"] as? String,
+      request.parameters["redirect_uri"] as? String,
       redirectURL?.absoluteString,
       "Should create a graph request with the expected redirect URL"
     )
     XCTAssertNotNil(
-      capturedParameter?["device_info"],
+      request.parameters["device_info"],
       "Should create a graph request with device info"
     )
   }
 
-  func testStartGraphRequestCompleteWithError() {
-    let manager = self.manager()
+  func testStartGraphRequestCompleteWithError() throws {
     manager.start()
 
-    connection.capturedCompletion?(nil, nil, NSError(domain: "foo", code: 0, userInfo: nil))
+    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
+    completion(nil, nil, NSError(domain: "foo", code: 0, userInfo: nil))
 
     XCTAssertEqual(delegate.capturedLoginManager, manager)
     XCTAssertNotNil(delegate.capturedError)
   }
 
-  func testStartGraphRequestCompleteWithEmptyResponse() {
-    let manager = self.manager()
+  func testStartGraphRequestCompleteWithEmptyResponse() throws {
     manager.start()
 
-    connection.capturedCompletion?(nil, [], nil)
+    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
+    completion(nil, [], nil)
 
     XCTAssertEqual(delegate.capturedLoginManager, manager)
     XCTAssertNotNil(delegate.capturedError)
   }
 
-  func testStartGraphRequestCompleteWithCodeInfo() {
-    let manager = self.manager()
+  func testStartGraphRequestCompleteWithCodeInfo() throws {
     manager.start()
     let expectedCodeInfo = sampleCodeInfo()
     let result = [
@@ -101,19 +125,15 @@ class DeviceLoginManagerTests: XCTestCase {
       "interval": String(expectedCodeInfo.pollingInterval)
     ]
 
-    connection.capturedCompletion?(
-      nil,
-      result,
-      nil
-    )
+    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
+    completion(nil, result, nil)
 
     XCTAssertEqual(delegate.capturedLoginManager, manager)
     XCTAssertNil(delegate.capturedError)
     XCTAssertNil(delegate.capturedResult)
-    guard let codeInfo = delegate.capturedCodeInfo else {
-      XCTFail("Should receive an CodeInfo")
-      return
-    }
+
+    let codeInfo = try XCTUnwrap(delegate.capturedCodeInfo, "Should receive code info")
+
     XCTAssertEqual(codeInfo.identifier, expectedCodeInfo.identifier)
     XCTAssertEqual(codeInfo.loginCode, expectedCodeInfo.loginCode)
     XCTAssertEqual(codeInfo.verificationURL, expectedCodeInfo.verificationURL)
@@ -135,18 +155,5 @@ class DeviceLoginManagerTests: XCTestCase {
       expirationDate: Date.distantFuture,
       pollingInterval: 0
     )
-  }
-
-  func manager() -> DeviceLoginManager {
-    let factory = TestGraphRequestConnectionFactory.create(withStubbedConnection: connection)
-    let manager = DeviceLoginManager(
-      permissions: permissions,
-      enableSmartLogin: false,
-      connectionProvider: factory
-    )
-    manager.redirectURL = redirectURL
-    manager.delegate = delegate
-    manager.setCodeInfo(sampleCodeInfo())
-    return manager
   }
 }
