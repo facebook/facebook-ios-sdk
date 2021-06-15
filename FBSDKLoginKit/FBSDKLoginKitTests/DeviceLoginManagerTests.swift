@@ -373,6 +373,70 @@ class DeviceLoginManagerTests: XCTestCase {
     XCTAssertNil(loginResult.accessToken)
   }
 
+  // MARK: _processError
+
+  func testProcessErrorAuthorizationPending() throws {
+    manager._processError(
+      NSError(
+        domain: "foo",
+        code: 0,
+        userInfo: [GraphRequestErrorGraphErrorSubcodeKey: DeviceLoginError.authorizationPending.rawValue]
+      )
+    )
+
+    let request = try XCTUnwrap(factory.capturedRequests.first)
+    XCTAssertEqual(
+      request.graphPath,
+      "device/login_status",
+      "Should create a graph request with the expected graph path"
+    )
+  }
+
+  func testProcessErrorCodeExpired() {
+    manager._processError(
+      NSError(
+        domain: "foo",
+        code: 0,
+        userInfo: [GraphRequestErrorGraphErrorSubcodeKey: DeviceLoginError.codeExpired.rawValue]
+      )
+    )
+
+    XCTAssertEqual(delegate.capturedLoginManager, manager)
+    XCTAssertNil(factory.capturedRequests.first)
+    self.assertCancelResult()
+  }
+
+  func testProcessErrorAuthorizationDeclined() {
+    manager._processError(
+      NSError(
+        domain: "foo",
+        code: 0,
+        userInfo: [GraphRequestErrorGraphErrorSubcodeKey: DeviceLoginError.authorizationDeclined.rawValue]
+      )
+    )
+
+    XCTAssertEqual(delegate.capturedLoginManager, manager)
+    XCTAssertNil(factory.capturedRequests.first)
+    self.assertCancelResult()
+  }
+
+  func testProcessErrorExcessivePolling() throws {
+    manager._processError(
+      NSError(
+        domain: "foo",
+        code: 0,
+        userInfo: [GraphRequestErrorGraphErrorSubcodeKey: DeviceLoginError.excessivePolling.rawValue]
+      )
+    )
+
+      let request = try XCTUnwrap(factory.capturedRequests.first)
+      XCTAssertEqual(
+        request.graphPath,
+        "device/login_status",
+        "Should create a graph request with the expected graph path"
+      )
+  }
+
   // MARK: Helpers
 
   func sampleCodeInfo() -> DeviceLoginCodeInfo {
@@ -383,5 +447,14 @@ class DeviceLoginManagerTests: XCTestCase {
       expirationDate: Date.distantFuture,
       pollingInterval: 0
     )
+  }
+
+  func assertCancelResult() {
+    guard let loginResult = delegate.capturedResult else {
+      XCTFail("Should receive an login result")
+      return
+    }
+    XCTAssert(loginResult.isCancelled)
+    XCTAssertNil(loginResult.accessToken)
   }
 }

@@ -108,6 +108,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)_notifyToken:(nullable NSString *)tokenString withExpirationDate:(nullable NSDate *)expirationDate withDataAccessExpirationDate:(nullable NSDate *)dataAccessExpirationDate;
 
+- (void)_processError:(NSError *)error;
+
 @end
 
 @interface FBSDKDeviceLoginCodeInfo (Testing)
