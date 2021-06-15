@@ -89,4 +89,36 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FBSDKDeviceLoginManager (Testing)
+
+- (instancetype)initWithPermissions:(NSArray<NSString *> *)permissions enableSmartLogin:(BOOL)enableSmartLogin
+                 connectionProvider:(nonnull id<FBSDKGraphRequestConnectionProviding>)connectionProvider;
+
+- (void)setCodeInfo:(FBSDKDeviceLoginCodeInfo *)codeInfo;
+
+@end
+
+@interface FBSDKDeviceLoginCodeInfo (Testing)
+
+- (instancetype)initWithIdentifier:(NSString *)identifier
+                         loginCode:(NSString *)loginCode
+                   verificationURL:(NSURL *)verificationURL
+                    expirationDate:(NSDate *)expirationDate
+                   pollingInterval:(NSUInteger)pollingInterval;
+
+@end
+
+@interface FBSDKSettings (Testing)
+
++ (void)reset;
+
+@end
+
+@interface FBSDKApplicationDelegate (Testing)
+
++ (void)resetHasInitializeBeenCalled
+NS_SWIFT_NAME(reset());
+
+@end
+
 NS_ASSUME_NONNULL_END

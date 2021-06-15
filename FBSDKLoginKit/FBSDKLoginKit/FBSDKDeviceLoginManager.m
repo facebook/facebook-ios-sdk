@@ -40,6 +40,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
   BOOL _isCancelled;
   NSNetService *_loginAdvertisementService;
   BOOL _isSmartLoginEnabled;
+  id<FBSDKGraphRequestConnectionProviding> _connectionProvider;
 }
 
 + (void)initialize
@@ -49,11 +50,22 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
   }
 }
 
+- (instancetype)initWithPermissions:(NSArray<NSString *> *)permissions
+                   enableSmartLogin:(BOOL)enableSmartLogin
+                 connectionProvider:(nonnull id<FBSDKGraphRequestConnectionProviding>)connectionProvider
+{
+  self = [self initWithPermissions:permissions enableSmartLogin:enableSmartLogin];
+  _connectionProvider = connectionProvider;
+  return self;
+}
+
 - (instancetype)initWithPermissions:(NSArray<NSString *> *)permissions enableSmartLogin:(BOOL)enableSmartLogin
 {
+  id<FBSDKGraphRequestConnectionProviding> provider = FBSDKGraphRequestConnectionFactory.new;
   if ((self = [super init])) {
     _permissions = [permissions copy];
     _isSmartLoginEnabled = enableSmartLogin;
+    _connectionProvider = provider;
   }
   return self;
 }
@@ -72,30 +84,42 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
                                                                  parameters:parameters
                                                                 tokenString:[FBSDKInternalUtility validateRequiredClientAccessToken]
                                                                  HTTPMethod:@"POST"
-                                                                      flags:FBSDKGraphRequestFlagNone];
+                                                                      flags:FBSDKGraphRequestFlagNone
+                                                          connectionFactory:_connectionProvider];
   [request setGraphErrorRecoveryDisabled:YES];
-  [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
+  FBSDKGraphRequestCompletion completion = ^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     if (error) {
       [self _processError:error];
       return;
     }
 
-    self->_codeInfo = [[FBSDKDeviceLoginCodeInfo alloc]
-                       initWithIdentifier:result[@"code"]
-                       loginCode:result[@"user_code"]
-                       verificationURL:[NSURL URLWithString:result[@"verification_uri"]]
-                       expirationDate:[[NSDate date] dateByAddingTimeInterval:[result[@"expires_in"] doubleValue]]
-                       pollingInterval:[result[@"interval"] integerValue]];
+    NSString *identifier = [FBSDKTypeUtility dictionary:result objectForKey:@"code" ofType:NSString.class];
+    if (identifier) {
+      NSString *loginCode = [FBSDKTypeUtility dictionary:result objectForKey:@"user_code" ofType:NSString.class];
+      NSString *verificationURL = [FBSDKTypeUtility dictionary:result objectForKey:@"verification_uri" ofType:NSString.class];
+      double expiresIn = [[FBSDKTypeUtility dictionary:result objectForKey:@"expires_in" ofType:NSString.class] doubleValue];
+      long interval = [[FBSDKTypeUtility dictionary:result objectForKey:@"verification_uri" ofType:NSString.class] integerValue];
 
-    if (self->_isSmartLoginEnabled) {
-      [FBSDKDeviceRequestsHelper startAdvertisementService:self->_codeInfo.loginCode
-                                              withDelegate:self
-      ];
+      self->_codeInfo = [[FBSDKDeviceLoginCodeInfo alloc]
+                         initWithIdentifier:identifier
+                         loginCode:loginCode
+                         verificationURL:[NSURL URLWithString:verificationURL]
+                         expirationDate:[NSDate.date dateByAddingTimeInterval:expiresIn]
+                         pollingInterval:interval];
+
+      if (self->_isSmartLoginEnabled) {
+        [FBSDKDeviceRequestsHelper startAdvertisementService:self->_codeInfo.loginCode
+                                                withDelegate:self
+        ];
+      }
+
+      [self.delegate deviceLoginManager:self startedWithCodeInfo:self->_codeInfo];
+      [self _schedulePoll:self->_codeInfo.pollingInterval];
+    } else {
+      [self _notifyError:[FBSDKError errorWithCode:FBSDKErrorUnknown message:@"Unable to create a login request"]];
     }
-
-    [self.delegate deviceLoginManager:self startedWithCodeInfo:self->_codeInfo];
-    [self _schedulePoll:self->_codeInfo.pollingInterval];
-  }];
+  };
+  [request startWithCompletion:completion];
 }
 
 - (void)cancel
@@ -256,6 +280,13 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
   if ([FBSDKDeviceRequestsHelper isDelegate:self forAdvertisementService:sender]) {
     [FBSDKDeviceRequestsHelper cleanUpAdvertisementService:self];
   }
+}
+
+// MARK: Test Helpers
+
+- (void)setCodeInfo:(FBSDKDeviceLoginCodeInfo *)codeInfo
+{
+  _codeInfo = codeInfo;
 }
 
 @end
