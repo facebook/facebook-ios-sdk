@@ -145,6 +145,234 @@ class DeviceLoginManagerTests: XCTestCase {
     XCTAssertEqual(codeInfo.pollingInterval, expectedCodeInfo.pollingInterval)
   }
 
+  // MARK: _schedulePoll
+
+  func testStatusGraphRequestCreation() throws {
+    manager._schedulePoll(sampleCodeInfo().pollingInterval)
+
+    let request = try XCTUnwrap(factory.capturedRequests.first)
+    XCTAssertEqual(
+      request.graphPath,
+      "device/login_status",
+      "Should create a graph request with the expected graph path"
+    )
+    let parameters = request.parameters
+    XCTAssertEqual(
+      parameters["code"] as? String,
+      self.sampleCodeInfo().identifier,
+      "Should create a graph request with the expected code"
+    )
+    XCTAssertEqual(
+      request.tokenString,
+      self.fakeAppID + "|" + self.fakeClientToken
+    )
+  }
+
+  func testStatusGraphRequestCompleteWithError() throws {
+    manager._schedulePoll(sampleCodeInfo().pollingInterval)
+
+    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
+    completion(nil, nil, NSError(domain: "foo", code: 0, userInfo: nil))
+    XCTAssertEqual(self.delegate.capturedLoginManager, manager)
+    XCTAssertNotNil(self.delegate.capturedError)
+  }
+
+  func testStatusGraphRequestCompleteWithNoToken() throws {
+    manager._schedulePoll(sampleCodeInfo().pollingInterval)
+    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
+      completion(nil, [], nil)
+    XCTAssertEqual(self.delegate.capturedLoginManager, self.manager)
+    XCTAssertNotNil(self.delegate.capturedError)
+  }
+
+  func testStatusGraphRequestCompleteWithAccessToken() throws {
+    manager._schedulePoll(sampleCodeInfo().pollingInterval)
+
+    let result: [String: String] = [
+      "access_token": SampleAccessTokens.validToken.tokenString,
+      "expires_in": String(SampleAccessTokens.validToken.expirationDate.timeIntervalSinceNow),
+      "data_access_expiration_time": String(
+        SampleAccessTokens.validToken.dataAccessExpirationDate.timeIntervalSince1970
+      )
+    ]
+    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
+      completion(nil, result, nil)
+
+    let request = try XCTUnwrap(factory.capturedRequests.last)
+    XCTAssertEqual(request.tokenString, SampleAccessTokens.validToken.tokenString)
+    XCTAssertEqual(request.graphPath, "me")
+  }
+
+  func testSchedulePollAfterCancel() throws {
+    manager._schedulePoll(sampleCodeInfo().pollingInterval)
+
+    self.manager.cancel()
+    let result: [String: String] = [
+      "access_token": SampleAccessTokens.validToken.tokenString,
+    ]
+    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
+    completion(nil, result, nil)
+
+    XCTAssertNil(self.delegate.capturedError)
+    XCTAssertEqual(
+      factory.capturedRequests.count,
+      1,
+      "Should not be making another graph request to fetch permissions"
+    )
+  }
+
+  // MARK: _notifyToken
+
+  func testNotifyTokenGraphRequestCreation() throws {
+    manager._notifyToken(
+      SampleAccessTokens.validToken.tokenString,
+      withExpirationDate: SampleAccessTokens.validToken.expirationDate,
+      withDataAccessExpirationDate: SampleAccessTokens.validToken.dataAccessExpirationDate
+    )
+
+    let request = try XCTUnwrap(factory.capturedRequests.last)
+    XCTAssertEqual(
+      request.graphPath,
+      "me",
+      "Should create a graph request with the expected graph path"
+    )
+    let parameters = request.parameters
+    XCTAssertEqual(
+      parameters["fields"] as? String,
+      "id,permissions",
+      "Should create a graph request with the expected fields"
+    )
+    XCTAssertEqual(
+      request.tokenString,
+      SampleAccessTokens.validToken.tokenString,
+      "Should create a graph request with the expected token string"
+    )
+  }
+
+  func testNotifyTokenGraphRequestCompleteWithError() throws {
+    manager._notifyToken(
+      SampleAccessTokens.validToken.tokenString,
+      withExpirationDate: SampleAccessTokens.validToken.expirationDate,
+      withDataAccessExpirationDate: SampleAccessTokens.validToken.dataAccessExpirationDate
+    )
+    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
+    completion(nil, nil, NSError(domain: "foo", code: 0, userInfo: nil))
+
+    XCTAssertEqual(delegate.capturedLoginManager, manager)
+    XCTAssertNotNil(delegate.capturedError)
+  }
+
+  func testNotifyTokenGraphRequestCompleteWithNoUserID() throws {
+    let result: [String: Any] = [
+      "permissions": ["data": []],
+    ]
+
+    manager._notifyToken(
+      SampleAccessTokens.validToken.tokenString,
+      withExpirationDate: SampleAccessTokens.validToken.expirationDate,
+      withDataAccessExpirationDate: SampleAccessTokens.validToken.dataAccessExpirationDate
+    )
+    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
+    completion(
+      nil,
+      result,
+      nil
+    )
+
+    XCTAssertEqual(delegate.capturedLoginManager, manager)
+    XCTAssertNotNil(delegate.capturedError)
+  }
+
+  func testNotifyTokenGraphRequestCompleteWithNoPermissions() throws {
+    manager._notifyToken(
+      SampleAccessTokens.validToken.tokenString,
+      withExpirationDate: SampleAccessTokens.validToken.expirationDate,
+      withDataAccessExpirationDate: SampleAccessTokens.validToken.dataAccessExpirationDate
+    )
+
+    let result: [String: Any] = [
+      "id": "123"
+    ]
+    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
+    completion(
+      nil,
+      result,
+      nil
+    )
+
+    XCTAssertEqual(delegate.capturedLoginManager, manager)
+    XCTAssertNotNil(delegate.capturedError)
+  }
+
+  func testNotifyTokenGraphRequestCompleteWithPermissionsAndUserID() throws {
+    manager._notifyToken(
+      SampleAccessTokens.validToken.tokenString,
+      withExpirationDate: SampleAccessTokens.validToken.expirationDate,
+      withDataAccessExpirationDate: SampleAccessTokens.validToken.dataAccessExpirationDate
+    )
+
+    let result: [String: Any] = [
+      "id": "123",
+      "permissions": [
+        "data": [
+          [
+            "permission": "public_profile",
+            "status": "granted"
+          ],
+          [
+            "permission": "email",
+            "status": "granted"
+          ],
+          [
+            "permission": "user_friends",
+            "status": "declined"
+          ],
+          [
+            "permission": "user_birthday",
+            "status": "expired"
+          ]
+        ]
+      ]
+    ]
+    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
+    completion(
+      nil,
+      result,
+      nil
+    )
+
+    guard let loginResult = delegate.capturedResult else {
+      XCTFail("Should receive a login result")
+      return
+    }
+    XCTAssertFalse(loginResult.isCancelled)
+    guard let token = loginResult.accessToken else {
+      XCTFail("Should receive an AccessToken within login result")
+      return
+    }
+    XCTAssertEqual(token.userID, "123")
+    XCTAssertEqual(token.permissions, ["public_profile", "email"])
+    XCTAssertEqual(token.declinedPermissions, ["user_friends"])
+    XCTAssertEqual(token.expiredPermissions, ["user_birthday"])
+    XCTAssertEqual(token, AccessToken.current)
+  }
+
+  func testNotifyTokenWithNoTokenString() {
+    manager._notifyToken(
+      nil,
+      withExpirationDate: nil,
+      withDataAccessExpirationDate: nil
+    )
+
+    XCTAssertEqual(factory.capturedRequests.count, 0)
+    guard let loginResult = delegate.capturedResult else {
+      XCTFail("Should receive an login result")
+      return
+    }
+    XCTAssert(loginResult.isCancelled)
+    XCTAssertNil(loginResult.accessToken)
+  }
+
   // MARK: Helpers
 
   func sampleCodeInfo() -> DeviceLoginCodeInfo {

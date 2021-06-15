@@ -100,7 +100,13 @@ NS_ASSUME_NONNULL_BEGIN
                 graphRequestFactory:(nonnull id<FBSDKGraphRequestProviding>)connectionProvider
                        devicePoller:(id<FBSDKDevicePolling>)poller;
 
+- (void)_schedulePoll:(NSUInteger)interval;
+
 - (void)setCodeInfo:(FBSDKDeviceLoginCodeInfo *)codeInfo;
+
+- (void)_notifyError:(NSError *)error;
+
+- (void)_notifyToken:(nullable NSString *)tokenString withExpirationDate:(nullable NSDate *)expirationDate withDataAccessExpirationDate:(nullable NSDate *)dataAccessExpirationDate;
 
 @end
 
