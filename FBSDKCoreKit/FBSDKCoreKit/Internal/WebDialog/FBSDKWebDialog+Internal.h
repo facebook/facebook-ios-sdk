@@ -20,6 +20,7 @@
 
 #if !TARGET_OS_TV
 
+ #import <CoreGraphics/CoreGraphics.h>
  #import <Foundation/Foundation.h>
 
  #if SWIFT_PACKAGE
@@ -41,6 +42,7 @@
 @property (nonatomic, weak) id<FBSDKWebDialogDelegate> delegate;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSDictionary *parameters;
+@property CGRect webViewFrame;
 
 - (BOOL)show;
 

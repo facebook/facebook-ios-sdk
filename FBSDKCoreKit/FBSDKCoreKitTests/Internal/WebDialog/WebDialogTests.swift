@@ -60,15 +60,6 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
     )
   }
 
-  func testShowWithValidUrlFromParametersWithWindow() {
-    createAndShowDialog()
-
-    XCTAssertFalse(
-      self.webDialogDidFailWasCalled,
-      "Should not fail to show if it can locate a window to present in"
-    )
-  }
-
   // MARK: - Delegate Methods
 
   func testDidCompleteWithResults() {
@@ -124,7 +115,6 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
     WebDialog.show(
       withName: name,
       parameters: parameters ?? self.parameters,
-      windowFinder: windowFinder,
       delegate: delegate ?? self
     )
   }

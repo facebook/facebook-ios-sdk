@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
     tag: "v#{s.version}"
   }
 
-  s.weak_frameworks = 'Accounts', 'Social', 'Security', 'Foundation'
+  s.weak_frameworks = 'Accounts', 'Social', 'Security', 'Foundation', 'CoreGraphics'
 
   s.requires_arc = true
   s.pod_target_xcconfig = { 'DEFINES_MODULE': 'YES' }

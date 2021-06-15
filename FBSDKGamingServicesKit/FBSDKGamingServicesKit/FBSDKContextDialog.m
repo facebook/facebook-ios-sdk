@@ -19,8 +19,9 @@
 #import "TargetConditionals.h"
 
 #if !TARGET_OS_TV
-
  #import "FBSDKContextDialog.h"
+
+ #import <CoreGraphics/CoreGraphics.h>
 
  #import "FBSDKCoreKitInternalImport.h"
  #import "FBSDKGamingServicesKit.h"
@@ -35,6 +36,8 @@
 
  #define FBSDK_CONTEXT_METHOD_NAME @"context"
  #define FBSDK_WEB_RESULT_CONTEXT_TOKEN_ID @"context_token"
+ #define FBSDKWEBDIALOGFRAMEWIDTH 300.0
+ #define FBSDKWEBDIALOGFRAMEHEIGHT 170.0
 
  #pragma mark - Class Methods
 
@@ -104,8 +107,9 @@
   } else {
     [FBSDKTypeUtility dictionary:parameters setObject:switchAsyncContent.contextToken forKey:@"context_token"];
   }
+  CGRect frame = [self createWebDialogFrame];
+  self.webDialog = [FBSDKWebDialog createAndShow:FBSDK_CONTEXT_METHOD_NAME parameters:parameters frame:frame delegate:self];
 
-  _webDialog = [FBSDKWebDialog showWithName:FBSDK_CONTEXT_METHOD_NAME parameters:parameters delegate:self];
   [FBSDKInternalUtility registerTransientObject:self];
   return YES;
 }
@@ -139,6 +143,14 @@
   }
 
   return NO;
+}
+
+- (CGRect)createWebDialogFrame
+{
+  CGRect windowFrame = [FBSDKInternalUtility.sharedUtility findWindow].frame;
+  CGFloat xPoint = CGRectGetMidX(windowFrame) - (FBSDKWEBDIALOGFRAMEWIDTH / 2);
+  CGFloat yPoint = CGRectGetMidY(windowFrame) - (FBSDKWEBDIALOGFRAMEHEIGHT / 2);
+  return CGRectMake(xPoint, yPoint, FBSDKWEBDIALOGFRAMEWIDTH, FBSDKWEBDIALOGFRAMEHEIGHT);
 }
 
  #pragma mark - FBSDKWebDialogDelegate

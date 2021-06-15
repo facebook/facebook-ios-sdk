@@ -71,15 +71,26 @@ static FBSDKWebDialog *g_currentDialog = nil;
                windowFinder:FBSDKInternalUtility.sharedUtility
                    delegate:delegate];
 }
-
 + (instancetype)showWithName:(NSString *)name
                   parameters:(NSDictionary *)parameters
                 windowFinder:(id<FBSDKWindowFinding>)windowFinder
                     delegate:(id<FBSDKWebDialogDelegate>)delegate
 {
+  return [self createAndShow:name
+                 parameters:parameters
+                      frame:CGRectZero
+                   delegate:delegate];
+}
+
++ (instancetype)createAndShow:(NSString *)name
+                  parameters:(NSDictionary *)parameters
+                       frame:(CGRect)frame
+                    delegate:(id<FBSDKWebDialogDelegate>)delegate
+{
   FBSDKWebDialog *dialog = [self dialogWithName:name delegate:delegate];
-  dialog.windowFinder = windowFinder;
+  dialog.windowFinder = FBSDKInternalUtility.sharedUtility;
   dialog.parameters = parameters;
+  dialog.webViewFrame = frame;
   [dialog show];
   return dialog;
 }
@@ -120,7 +131,7 @@ static FBSDKWebDialog *g_currentDialog = nil;
     return NO;
   }
 
-  CGRect frame = [self _applicationFrameForOrientation];
+  CGRect frame = !CGRectIsEmpty(self.webViewFrame) ? self.webViewFrame : [self _applicationFrameForOrientation];
   _dialogView = [[FBSDKWebDialogView alloc] initWithFrame:frame];
 
   _dialogView.delegate = self;
@@ -322,7 +333,7 @@ static FBSDKWebDialog *g_currentDialog = nil;
                    completion:(FBSDKBoolBlock)completion
 {
   CGAffineTransform transform = _dialogView.transform;
-  CGRect applicationFrame = [self _applicationFrameForOrientation];
+  CGRect applicationFrame = !CGRectIsEmpty(self.webViewFrame) ? self.webViewFrame : [self _applicationFrameForOrientation];
   if (scale == 1.0) {
     _dialogView.transform = CGAffineTransformIdentity;
     _dialogView.frame = applicationFrame;
