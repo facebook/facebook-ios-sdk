@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1250"
+   LastUpgradeVersion = "1200"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C5C4B4012276BA1200CA3706"
+               BlueprintIdentifier = "563D03839E2E11C7E6A47941"
                BuildableName = "FBSDKCoreKit_Basics.framework"
                BlueprintName = "FBSDKCoreKit_Basics-Dynamic"
                ReferencedContainer = "container:FBSDKCoreKit_Basics.xcodeproj">
@@ -27,13 +27,31 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
-      codeCoverageEnabled = "YES">
+      onlyGenerateCoverageForSpecifiedTargets = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "563D03839E2E11C7E6A47941"
+            BuildableName = "FBSDKCoreKit_Basics.framework"
+            BlueprintName = "FBSDKCoreKit_Basics-Dynamic"
+            ReferencedContainer = "container:FBSDKCoreKit_Basics.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
+      <CodeCoverageTargets>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "563D03839E2E11C7E6A47941"
+            BuildableName = "FBSDKCoreKit_Basics.framework"
+            BlueprintName = "FBSDKCoreKit_Basics-Dynamic"
+            ReferencedContainer = "container:FBSDKCoreKit_Basics.xcodeproj">
+         </BuildableReference>
+      </CodeCoverageTargets>
       <Testables>
          <TestableReference
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9D2697511A5DF40700143BFC"
+               BlueprintIdentifier = "9CB0B0DE34B638602F559C29"
                BuildableName = "FBSDKCoreKit_BasicsTests.xctest"
                BlueprintName = "FBSDKCoreKit_BasicsTests"
                ReferencedContainer = "container:FBSDKCoreKit_Basics.xcodeproj">
@@ -51,6 +69,15 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "563D03839E2E11C7E6A47941"
+            BuildableName = "FBSDKCoreKit_Basics.framework"
+            BlueprintName = "FBSDKCoreKit_Basics-Dynamic"
+            ReferencedContainer = "container:FBSDKCoreKit_Basics.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -58,15 +85,16 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C5C4B4012276BA1200CA3706"
+            BlueprintIdentifier = "563D03839E2E11C7E6A47941"
             BuildableName = "FBSDKCoreKit_Basics.framework"
             BlueprintName = "FBSDKCoreKit_Basics-Dynamic"
             ReferencedContainer = "container:FBSDKCoreKit_Basics.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
