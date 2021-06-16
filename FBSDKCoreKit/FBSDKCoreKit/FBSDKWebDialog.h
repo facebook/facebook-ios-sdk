@@ -20,6 +20,7 @@
 
 #if !TARGET_OS_TV
 
+#import <CoreGraphics/CGGeometry.h>
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
