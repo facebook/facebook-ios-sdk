@@ -57,6 +57,7 @@ disabled_rules:
   - prefixed_toplevel_constant
   - statement_position
   - switch_case_on_newline
+  - weak_delegate
   # TODO: All below to move to Opt In
   - discouraged_optional_boolean
   - discouraged_optional_collection
@@ -178,6 +179,5 @@ opt_in_rules:
   - vertical_parameter_alignment_on_call
   - vertical_whitespace
   - void_return
-  - weak_delegate
   - xctfail_message
   - yoda_condition
