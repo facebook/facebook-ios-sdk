@@ -62,7 +62,7 @@
 
 - (void)launchFriendFinderDialogWithCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
 {
-  if ([FBSDKAccessToken currentAccessToken] == nil) {
+  if (![FBSDKSettings appID] && ![FBSDKAccessToken currentAccessToken]) {
     completionHandler(
       false,
       [FBSDKError
@@ -72,6 +72,7 @@
 
     return;
   }
+  NSString *appID = [FBSDKSettings appID] ? [FBSDKSettings appID] : [FBSDKAccessToken currentAccessToken] ? FBSDKAccessToken.currentAccessToken.appID : @"";
 
   id<FBSDKGamingServiceController> const controller =
   [self.factory
@@ -83,7 +84,7 @@
    }
    pendingResult:nil];
 
-  [controller callWithArgument:FBSDKAccessToken.currentAccessToken.appID];
+  [controller callWithArgument:appID];
 }
 
 @end

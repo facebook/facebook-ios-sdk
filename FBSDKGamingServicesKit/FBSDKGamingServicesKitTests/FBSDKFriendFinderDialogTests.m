@@ -21,6 +21,7 @@
 #import <FBSDKGamingServicesKit/FBSDKGamingServicesKit.h>
 
 #import "FBSDKCoreKit+Internal.h"
+#include "FBSDKCoreKit/FBSDKSettings.h"
 #import "FBSDKGamingServicesKitTestUtility.h"
 #import "FBSDKGamingServicesKitTests-Swift.h"
 
@@ -40,7 +41,7 @@
 - (void)setUp
 {
   [super setUp];
-
+  [[FBSDKApplicationDelegate sharedInstance] application:[UIApplication sharedApplication] didFinishLaunchingWithOptions:[NSMutableDictionary dictionary]];
   self.bridgeAPIError = [[NSError alloc]
                          initWithDomain:FBSDKErrorDomain
                          code:FBSDKErrorBridgeAPIInterruption
@@ -70,9 +71,10 @@
 
 // MARK: - Launching Dialogs
 
-- (void)testFailureWhenNoValidAccessTokenPresent
+- (void)testFailureWhenNoValidAccessTokenPresentAndAppIDIsNull
 {
   [FBSDKAccessToken setCurrentAccessToken:nil];
+  [FBSDKSettings setAppID:nil];
 
   __block BOOL actioned = false;
   [self.dialog
@@ -84,8 +86,30 @@
   XCTAssertTrue(actioned);
 }
 
-- (void)testServiceIsCalledCorrectly
+- (void)testPresentationWhenTokenIsNilAndAppIDIsSet
 {
+  [FBSDKAccessToken setCurrentAccessToken:nil];
+  [FBSDKSettings setAppID:@"appID"];
+
+  __block BOOL didInvokeCompletion = false;
+  [self.dialog
+   launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError *_Nullable error) {
+     XCTAssertTrue(success);
+     didInvokeCompletion = YES;
+   }];
+  XCTAssertEqualObjects(
+    self.factory.controller.capturedArgument,
+    [FBSDKSettings appID],
+    "Should inoke the new controller with the app id in the sdk setting"
+  );
+  self.factory.capturedCompletion(YES, nil, nil);
+  XCTAssertTrue(didInvokeCompletion);
+}
+
+- (void)testPresentationWhenTokenIsSetAndAppIDIsNil
+{
+  [FBSDKSettings setAppID:nil];
+
   __block BOOL didInvokeCompletion = NO;
   [self.dialog
    launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError *_Nullable error) {
