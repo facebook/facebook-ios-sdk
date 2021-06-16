@@ -71,21 +71,22 @@ static FBSDKWebDialog *g_currentDialog = nil;
                windowFinder:FBSDKInternalUtility.sharedUtility
                    delegate:delegate];
 }
+
 + (instancetype)showWithName:(NSString *)name
                   parameters:(NSDictionary *)parameters
                 windowFinder:(id<FBSDKWindowFinding>)windowFinder
                     delegate:(id<FBSDKWebDialogDelegate>)delegate
 {
   return [self createAndShow:name
-                 parameters:parameters
-                      frame:CGRectZero
-                   delegate:delegate];
+                  parameters:parameters
+                       frame:CGRectZero
+                    delegate:delegate];
 }
 
 + (instancetype)createAndShow:(NSString *)name
-                  parameters:(NSDictionary *)parameters
-                       frame:(CGRect)frame
-                    delegate:(id<FBSDKWebDialogDelegate>)delegate
+                   parameters:(NSDictionary *)parameters
+                        frame:(CGRect)frame
+                     delegate:(id<FBSDKWebDialogDelegate>)delegate
 {
   FBSDKWebDialog *dialog = [self dialogWithName:name delegate:delegate];
   dialog.windowFinder = FBSDKInternalUtility.sharedUtility;
