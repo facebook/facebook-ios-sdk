@@ -38,7 +38,9 @@
 		3A3B83FE263B5A4700AFBF4F /* FBSDKContextSwitchAsyncContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A3B83F3263B5A4700AFBF4F /* FBSDKContextSwitchAsyncContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A3B83FF263B5A4700AFBF4F /* FBSDKContextSwitchAsyncContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A3B83F4263B5A4700AFBF4F /* FBSDKContextSwitchAsyncContent.m */; };
 		3A3B8400263B5A4700AFBF4F /* FBSDKContextSwitchAsyncContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A3B83F4263B5A4700AFBF4F /* FBSDKContextSwitchAsyncContent.m */; };
-		3AE05BBE267011CE006B1AE2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE05BAA267010F7006B1AE2 /* CoreGraphics.framework */; };
+		3A5427C1265453E10089B6A2 /* FBSDKDialogProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A5427B6265453E10089B6A2 /* FBSDKDialogProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A5427C2265453E10089B6A2 /* FBSDKDialogProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A5427B6265453E10089B6A2 /* FBSDKDialogProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3AE05C0F26702707006B1AE2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE05C0426702707006B1AE2 /* CoreGraphics.framework */; };
 		9FB2855526014BF300DB99CB /* FBSDKGamingPayloadObserver.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FB2854126014BF300DB99CB /* FBSDKGamingPayloadObserver.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9FB2855626014BF300DB99CB /* FBSDKGamingPayloadObserver.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FB2854126014BF300DB99CB /* FBSDKGamingPayloadObserver.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9FB2855726014BF300DB99CB /* FBSDKGamingPayload.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FB2855226014BF300DB99CB /* FBSDKGamingPayload.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -294,7 +296,8 @@
 		3A3B83F2263B5A4700AFBF4F /* FBSDKContextCreateAsyncContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKContextCreateAsyncContent.h; sourceTree = "<group>"; };
 		3A3B83F3263B5A4700AFBF4F /* FBSDKContextSwitchAsyncContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKContextSwitchAsyncContent.h; sourceTree = "<group>"; };
 		3A3B83F4263B5A4700AFBF4F /* FBSDKContextSwitchAsyncContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKContextSwitchAsyncContent.m; sourceTree = "<group>"; };
-		3AE05BAA267010F7006B1AE2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		3A5427B6265453E10089B6A2 /* FBSDKDialogProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKDialogProtocol.h; sourceTree = "<group>"; };
+		3AE05C0426702707006B1AE2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		9FB2854126014BF300DB99CB /* FBSDKGamingPayloadObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKGamingPayloadObserver.h; sourceTree = "<group>"; };
 		9FB2855226014BF300DB99CB /* FBSDKGamingPayload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKGamingPayload.h; sourceTree = "<group>"; };
 		9FB2855326014BF300DB99CB /* FBSDKGamingPayload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKGamingPayload.m; sourceTree = "<group>"; };
@@ -396,7 +399,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3AE05BBE267011CE006B1AE2 /* CoreGraphics.framework in Frameworks */,
+				3AE05C0F26702707006B1AE2 /* CoreGraphics.framework in Frameworks */,
 				F44AEAD12649900E003B24D7 /* FBSDKCoreKit_Basics.framework in Frameworks */,
 				9FC20034247D8D170016A053 /* FBSDKShareKit.framework in Frameworks */,
 				F4F7CAA323F4A1470030A346 /* UIKit.framework in Frameworks */,
@@ -491,6 +494,7 @@
 				3A25B30B2641B36200196256 /* FBSDKGamingContext.m */,
 				9FB2855226014BF300DB99CB /* FBSDKGamingPayload.h */,
 				9FB2855326014BF300DB99CB /* FBSDKGamingPayload.m */,
+				3A5427B6265453E10089B6A2 /* FBSDKDialogProtocol.h */,
 				9FB2854126014BF300DB99CB /* FBSDKGamingPayloadObserver.h */,
 				9FB2855426014BF300DB99CB /* FBSDKGamingPayloadObserver.m */,
 				9FC2000C247D82A00016A053 /* FBSDKGamingVideoUploader.h */,
@@ -600,7 +604,7 @@
 		F4F7CA3223F498ED0030A346 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				3AE05BAA267010F7006B1AE2 /* CoreGraphics.framework */,
+				3AE05C0426702707006B1AE2 /* CoreGraphics.framework */,
 				F4DE31CF24DA0DD400297C18 /* OCMock.framework */,
 				F4F7CA6823F49D1B0030A346 /* Accelerate.framework */,
 				F4F7CA3D23F49C110030A346 /* FBSDKCoreKit.xcodeproj */,
@@ -641,6 +645,7 @@
 				F469A8D226746FA00079E7D0 /* FBSDKGamingServicesCoreKitImport.h in Headers */,
 				F4F7C9EA23F48F2C0030A346 /* FBSDKFriendFinderDialog.h in Headers */,
 				F4F7C9E423F48F2C0030A346 /* FBSDKGamingServiceCompletionHandler.h in Headers */,
+				3A5427C1265453E10089B6A2 /* FBSDKDialogProtocol.h in Headers */,
 				F4F7C9E723F48F2C0030A346 /* FBSDKGamingServiceController.h in Headers */,
 				F4F7C9E823F48F2C0030A346 /* FBSDKGamingImageUploader.h in Headers */,
 				3A25B30C2641B36300196256 /* FBSDKGamingContext.h in Headers */,
@@ -668,6 +673,7 @@
 				F469A8D326746FA00079E7D0 /* FBSDKGamingServicesCoreKitImport.h in Headers */,
 				9FB51BA224B8BD5400059B77 /* FBSDKGamingGroupIntegration.h in Headers */,
 				F4F7CA7123F49D6F0030A346 /* FBSDKGamingServiceCompletionHandler.h in Headers */,
+				3A5427C2265453E10089B6A2 /* FBSDKDialogProtocol.h in Headers */,
 				F4F7CA7223F49D6F0030A346 /* FBSDKGamingImageUploader.h in Headers */,
 				F4F7CA7323F49D6F0030A346 /* FBSDKGamingServicesKit.h in Headers */,
 				3A25B30D2641B36300196256 /* FBSDKGamingContext.h in Headers */,
