@@ -100,6 +100,7 @@ targets:
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
       FB_BITCODE_FLAG[sdk=iphoneos11.0]: -fembed-bitcode
+
   FBSDKCoreKit-Dynamic:
     type: framework
     platform: [iOS]
@@ -178,3 +179,202 @@ targets:
       CLANG_WARN_STRICT_PROTOTYPES: NO
       PRODUCT_NAME: FBSDKCoreKit
       ENABLE_NS_ASSERTIONS: YES
+
+  FBSDKCoreKit_TV:
+    type: framework
+    platform: [tvOS]
+    platformSuffix: ""
+    sources:
+      - path: FBSDKCoreKit/AppEvents
+        createIntermediateGroups: true
+        excludes:
+          - Internal
+        headerVisibility: public
+      - path: FBSDKCoreKit/AppEvents/Internal
+        headerVisibility: project
+        createIntermediateGroups: true
+        excludes:
+          - AAM
+          - AEM
+          - Codeless
+          - SKAdNetwork
+          - SuggestedEvents
+          - SuggestedEvents
+          - Integrity/FBSDKIntegrityManager*
+          - Integrity/FBSDKIntegrityManager+AppEventsParametersProcessing.h
+          - ML
+          - Codeless
+          - ViewHierarchy
+          - FBSDKFeatureExtracting*
+          - FBSDKHybridAppEventsScriptMessageHandler*
+          - FBSDKAppEventsNumberParser*
+      - path: FBSDKCoreKit/GraphAPI
+        createIntermediateGroups: true
+        excludes:
+          - FBSDKGraphErrorRecoveryProcessor*
+      - path: FBSDKCoreKit/Internal
+        createIntermediateGroups: true
+        headerVisibility: project
+        excludes:
+          - FBSDKAuthenticationStatusUtility*
+          - FBSDKBackgroundEventLogger*
+          - FBSDKContainerViewController*
+          - FBSDKInternalUtility+WindowFinding*
+          - FBSDKRulesFromKeyProvider.h
+          - FBSDKProfile+Internal*
+          - FBSDKProfile+ProfileProtocols*
+          - FBSDKProfilePictureView+Internal*
+          - FBSDKProfileProtocols*
+          - FBSDKMeasurementEvent_Internal*
+          - FBSDKMacCatalystDetermining*
+          - FBSDKURL_Internal.h
+          - FBSDKWindowFinding.h
+          - FBSDKAppLink*
+          - UIApplication+URLOpener.h
+          - BridgeAPI
+          - UI/FBSDKCloseIcon*
+          - UI/FBSDKHumanSilhouette*
+          - WebDialog
+      - path: FBSDKCoreKit
+        headerVisibility: public
+        excludes:
+          - AppEvents
+          - AppLink
+          - BridgeAPI
+          - GraphAPI
+          - Internal
+          - include
+          - FBSDKBridgeAPI*
+          - FBSDKMeasurementEvent*
+          - FBSDKMutableCopying*
+          - FBSDKProfile*
+          - FBSDKURL*
+          - FBSDKURLOpening*
+          - FBSDKWebDialog*
+          - Info.plist
+      - path: FBSDKCoreKit/Info.plist
+        group: FBSDKCoreKit/Supporting Files
+        createIntermediateGroups: true
+      - path: "../Sources/FacebookCore/Swift"
+        group: FBSDKCoreKit
+        excludes:
+          - Exports.swift
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit-tvOS.xcconfig
+      Release: Configurations/FBSDKCoreKit-tvOS.xcconfig
+    dependencies:
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV
+        link: false
+    preBuildScripts:
+      - name: Run Swiftlint
+        script: |
+          # Type a script or drag a script file from your workspace to insert its path.
+          if which swiftlint >/dev/null; then
+            swiftlint --config ../.swiftlint.yml
+          else
+            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
+          fi
+    settings:
+      PRODUCT_NAME: FBSDKCoreKit
+
+  FBSDKCoreKit_TV-Dynamic:
+    type: framework
+    platform: [tvOS]
+    platformSuffix: ""
+    sources:
+      - path: FBSDKCoreKit/AppEvents
+        createIntermediateGroups: true
+        excludes:
+          - Internal
+        headerVisibility: public
+      - path: FBSDKCoreKit/AppEvents/Internal
+        headerVisibility: project
+        createIntermediateGroups: true
+        excludes:
+          - AAM
+          - AEM
+          - Codeless
+          - SKAdNetwork
+          - SuggestedEvents
+          - SuggestedEvents
+          - Integrity/FBSDKIntegrityManager*
+          - Integrity/FBSDKIntegrityManager+AppEventsParametersProcessing.h
+          - ML
+          - Codeless
+          - ViewHierarchy
+          - FBSDKFeatureExtracting*
+          - FBSDKHybridAppEventsScriptMessageHandler*
+          - FBSDKAppEventsNumberParser*
+      - path: FBSDKCoreKit/GraphAPI
+        createIntermediateGroups: true
+        excludes:
+          - FBSDKGraphErrorRecoveryProcessor*
+      - path: FBSDKCoreKit/Internal
+        createIntermediateGroups: true
+        headerVisibility: project
+        excludes:
+          - FBSDKAuthenticationStatusUtility*
+          - FBSDKBackgroundEventLogger*
+          - FBSDKContainerViewController*
+          - FBSDKInternalUtility+WindowFinding*
+          - FBSDKRulesFromKeyProvider.h
+          - FBSDKProfile+Internal*
+          - FBSDKProfile+ProfileProtocols*
+          - FBSDKProfilePictureView+Internal*
+          - FBSDKProfileProtocols*
+          - FBSDKMeasurementEvent_Internal*
+          - FBSDKMacCatalystDetermining*
+          - FBSDKURL_Internal.h
+          - FBSDKWindowFinding.h
+          - FBSDKAppLink*
+          - UIApplication+URLOpener.h
+          - BridgeAPI
+          - UI/FBSDKCloseIcon*
+          - UI/FBSDKHumanSilhouette*
+          - WebDialog
+      - path: FBSDKCoreKit
+        headerVisibility: public
+        excludes:
+          - AppEvents
+          - AppLink
+          - BridgeAPI
+          - GraphAPI
+          - Internal
+          - include
+          - FBSDKBridgeAPI*
+          - FBSDKMeasurementEvent*
+          - FBSDKMutableCopying*
+          - FBSDKProfile*
+          - FBSDKURL*
+          - FBSDKURLOpening*
+          - FBSDKWebDialog*
+          - Info.plist
+      - path: FBSDKCoreKit/Info.plist
+        group: FBSDKCoreKit/Supporting Files
+        createIntermediateGroups: true
+      - path: "../Sources/FacebookCore/Swift"
+        group: FBSDKCoreKit
+        excludes:
+          - Exports.swift
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit-tvOS-Dynamic.xcconfig
+      Release: Configurations/FBSDKCoreKit-tvOS-Dynamic.xcconfig
+    dependencies:
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Dynamic
+      - sdk: AdSupport.framework
+      - sdk: CoreGraphics.framework
+      - sdk: CoreImage.framework
+      - sdk: libz.tbd
+      - sdk: StoreKit.framework
+      - sdk: UIKit.framework
+    preBuildScripts:
+      - name: Run Swiftlint
+        script: |
+          # Type a script or drag a script file from your workspace to insert its path.
+          if which swiftlint >/dev/null; then
+            swiftlint --config ../.swiftlint.yml
+          else
+            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
+          fi
+    settings:
+      PRODUCT_NAME: FBSDKCoreKit
