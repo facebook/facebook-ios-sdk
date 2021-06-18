@@ -1,0 +1,32 @@
+# Made using xcodegen 2.17.0
+
+name: TestTools
+
+projectReferences:
+  FBSDKCoreKit:
+    path: ../FBSDKCoreKit/FBSDKCoreKit.xcodeproj
+
+options:
+  usesTabs: false
+  deploymentTarget:
+    iOS: "9.0"
+  tabWidth: 2
+  indentWidth: 2
+  defaultConfig: Debug
+
+settings:
+  base:
+    PRODUCT_BUNDLE_IDENTIFIER: com.facebook.TestTools
+
+targets:
+  TestTools:
+    type: framework
+    platform: [iOS]
+    platformSuffix: ""
+    sources:
+      - path: TestTools
+        excludes:
+          - Info.plist
+    dependencies:
+      - target: FBSDKCoreKit/FBSDKCoreKit-Dynamic
+        link: false
