@@ -378,3 +378,21 @@ targets:
           fi
     settings:
       PRODUCT_NAME: FBSDKCoreKit
+
+aggregateTargets:
+  FBSDKCoreKit-Universal:
+    targets: [FBSDKCoreKit]
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit.xcconfig
+      Release: Configurations/FBSDKCoreKit.xcconfig
+    buildScripts:
+      - name: ShellScript
+        path: ../scripts/xcode/build-universal-framework.sh
+  FBSDKCoreKit_TV-Universal:
+    targets: [FBSDKCoreKit_TV]
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit-tvOS.xcconfig
+      Release: Configurations/FBSDKCoreKit-tvOS.xcconfig
+    buildScripts:
+      - name: ShellScript
+        path: ../scripts/xcode/build-universal-tvos-framework.sh
