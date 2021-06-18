@@ -183,8 +183,6 @@
 		5832A7852649BD920026B710 /* FBSDKFeatureDisabling.h in Headers */ = {isa = PBXBuildFile; fileRef = 5832A7602649BD620026B710 /* FBSDKFeatureDisabling.h */; };
 		585339FD2655E02B0003412C /* FBSDKFeatureExtractor+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 585339FC2655DFEC0003412C /* FBSDKFeatureExtractor+Internal.h */; };
 		585339FE2655E02C0003412C /* FBSDKFeatureExtractor+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 585339FC2655DFEC0003412C /* FBSDKFeatureExtractor+Internal.h */; };
-		585339FF2656CC530003412C /* FBSDKFeatureExtractor+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 585339FC2655DFEC0003412C /* FBSDKFeatureExtractor+Internal.h */; };
-		58533A002656CC540003412C /* FBSDKFeatureExtractor+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 585339FC2655DFEC0003412C /* FBSDKFeatureExtractor+Internal.h */; };
 		58533A062656CD7B0003412C /* FBSDKModelManager+RulesFromKeyProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 585339FB2655D5260003412C /* FBSDKModelManager+RulesFromKeyProvider.h */; };
 		58533A072656CD7B0003412C /* FBSDKModelManager+RulesFromKeyProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 585339FB2655D5260003412C /* FBSDKModelManager+RulesFromKeyProvider.h */; };
 		58533A20265758F70003412C /* FBSDKFeatureExtractor+Testing.h in Headers */ = {isa = PBXBuildFile; fileRef = 58533A15265758EF0003412C /* FBSDKFeatureExtractor+Testing.h */; };
@@ -3190,7 +3188,6 @@
 				BFC02443237B6A9900A596EE /* FBSDKFeatureExtractor.h */,
 				BFC02444237B6A9900A596EE /* FBSDKFeatureExtractor.m */,
 				585339FC2655DFEC0003412C /* FBSDKFeatureExtractor+Internal.h */,
-				58533A15265758EF0003412C /* FBSDKFeatureExtractor+Testing.h */,
 			);
 			path = SuggestedEvents;
 			sourceTree = "<group>";
@@ -3425,6 +3422,7 @@
 		F4C11B012617C61F00FB4596 /* Interfaces */ = {
 			isa = PBXGroup;
 			children = (
+				58533A15265758EF0003412C /* FBSDKFeatureExtractor+Testing.h */,
 				F4F2FFB52659767C002FA5EC /* AppEventsAtePublisher+Testing.h */,
 				F4C23CFF2625EE7500FA79AE /* CodelessIndexer+Testing.h */,
 				F45296AE262BB0FB00DDA430 /* Button+Testing.h */,
@@ -3788,7 +3786,6 @@
 				9E5D8787260A30120064F8AC /* FBSDKUnarchiverProvider.h in Headers */,
 				F462DBF123B94C1000FFCECA /* FBSDKCrypto.h in Headers */,
 				160B679D2671464600DD309A /* FBSDKAppEventsStateProviding.h in Headers */,
-				58533A002656CC540003412C /* FBSDKFeatureExtractor+Internal.h in Headers */,
 				164BE278265EC88500542419 /* FBSDKEventsProcessing.h in Headers */,
 				F44E71062630C40600BF26C0 /* NSURLSession+Protocols.h in Headers */,
 				814AC8271D1B528900D61E6C /* FBSDKDeviceButton.h in Headers */,
@@ -4356,7 +4353,6 @@
 				9E5D8786260A30120064F8AC /* FBSDKUnarchiverProvider.h in Headers */,
 				5DB7B07E230363190012E8CB /* FBSDKInstrumentManager.h in Headers */,
 				160B679C2671464600DD309A /* FBSDKAppEventsStateProviding.h in Headers */,
-				585339FF2656CC530003412C /* FBSDKFeatureExtractor+Internal.h in Headers */,
 				164BE277265EC88500542419 /* FBSDKEventsProcessing.h in Headers */,
 				F44E71052630C40600BF26C0 /* NSURLSession+Protocols.h in Headers */,
 				F4818E5B264A126500542054 /* FBSDKTokenCaching.h in Headers */,
