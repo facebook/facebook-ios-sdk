@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1250"
+   LastUpgradeVersion = "1200"
    version = "1.3">
    <BuildAction
-      parallelizeBuildables = "YES"
-      buildImplicitDependencies = "YES">
+      parallelizeBuildables = "NO"
+      buildImplicitDependencies = "YES"
+      runPostActionsOnFailure = "NO">
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"
@@ -14,7 +15,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9D6DEEFA1BC2E546001A94ED"
+               BlueprintIdentifier = "84CA78C589511DE74143F9CE"
                BuildableName = "FBSDKCoreKit_TV-Universal"
                BlueprintName = "FBSDKCoreKit_TV-Universal"
                ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
@@ -26,9 +27,19 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      onlyGenerateCoverageForSpecifiedTargets = "NO"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "84CA78C589511DE74143F9CE"
+            BuildableName = "FBSDKCoreKit_TV-Universal"
+            BlueprintName = "FBSDKCoreKit_TV-Universal"
+            ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -43,7 +54,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9D6DEEFA1BC2E546001A94ED"
+            BlueprintIdentifier = "84CA78C589511DE74143F9CE"
             BuildableName = "FBSDKCoreKit_TV-Universal"
             BlueprintName = "FBSDKCoreKit_TV-Universal"
             ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
@@ -56,15 +67,16 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9D6DEEFA1BC2E546001A94ED"
+            BlueprintIdentifier = "84CA78C589511DE74143F9CE"
             BuildableName = "FBSDKCoreKit_TV-Universal"
             BlueprintName = "FBSDKCoreKit_TV-Universal"
             ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

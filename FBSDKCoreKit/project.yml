@@ -437,3 +437,13 @@ schemes:
     build:
       targets:
         FBSDKCoreKit_TV-Dynamic: all
+  FBSDKCoreKit-Universal:
+    build:
+      targets:
+        FBSDKCoreKit-Universal: all
+      parallelizeBuild: false
+  FBSDKCoreKit_TV-Universal:
+    build:
+      targets:
+        FBSDKCoreKit_TV-Universal: all
+      parallelizeBuild: false
