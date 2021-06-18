@@ -21,14 +21,30 @@ tagFilters: &onlyRunOnTags
 
 commands:
   setup:
-    description: Runs before each job and checks out the source code
+    description: Runs before each job and checks out the source code and installs dependencies
     steps:
       - checkout
+      - install_xcodegen
+      - generate_projects
       - install_gems
       - persist_to_workspace:
           root: .
           paths:
             - .
+
+  install_xcodegen:
+    description: Installs xcodegen
+    steps:
+      - run:
+          name: Install Xcodegen
+          command: brew install xcodegen
+
+  generate_projects:
+    description: Generates xcode projects
+    steps:
+      - run:
+          name: Generate projects
+          command: cd FBSDKCoreKit_Basics && xcodegen generate
 
   install_gems:
     description: Installs ruby gems in the Gemfile
