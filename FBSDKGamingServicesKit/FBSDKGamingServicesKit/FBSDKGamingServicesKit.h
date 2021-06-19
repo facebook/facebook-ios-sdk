@@ -21,6 +21,7 @@
  #import <FBSDKGamingServicesKit/FBSDKContextCreateAsyncContent.h>
  #import <FBSDKGamingServicesKit/FBSDKContextDialog.h>
  #import <FBSDKGamingServicesKit/FBSDKContextSwitchAsyncContent.h>
+ #import <FBSDKGamingServicesKit/FBSDKContextWebDialog.h>
  #import <FBSDKGamingServicesKit/FBSDKDialogProtocol.h>
  #import <FBSDKGamingServicesKit/FBSDKFriendFinderDialog.h>
  #import <FBSDKGamingServicesKit/FBSDKGamingContext.h>
@@ -38,6 +39,7 @@
  #import "FBSDKContextCreateAsyncContent.h"
  #import "FBSDKContextDialog.h"
  #import "FBSDKContextSwitchAsyncContent.h"
+ #import "FBSDKContextWebDialog.h"
  #import "FBSDKDialogProtocol.h"
  #import "FBSDKFriendFinderDialog.h"
  #import "FBSDKGamingContext.h"
