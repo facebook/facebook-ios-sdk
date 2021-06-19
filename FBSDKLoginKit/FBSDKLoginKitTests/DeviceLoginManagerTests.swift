@@ -122,8 +122,8 @@ class DeviceLoginManagerTests: XCTestCase {
       "user_code": expectedCodeInfo.loginCode,
       "verification_uri": expectedCodeInfo.verificationURL.absoluteString,
       "expires_in": String(expectedCodeInfo.expirationDate.timeIntervalSinceNow),
-      "interval": String(expectedCodeInfo.pollingInterval)
-    ]
+      "interval": expectedCodeInfo.pollingInterval
+    ] as [String: Any]
 
     let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
     completion(nil, result, nil)
@@ -148,7 +148,10 @@ class DeviceLoginManagerTests: XCTestCase {
   // MARK: _schedulePoll
 
   func testStatusGraphRequestCreation() throws {
-    manager._schedulePoll(sampleCodeInfo().pollingInterval)
+    let codeInfo = sampleCodeInfo()
+    manager._schedulePoll(codeInfo.pollingInterval)
+
+    XCTAssertEqual(poller.capturedInterval, codeInfo.pollingInterval)
 
     let request = try XCTUnwrap(factory.capturedRequests.first)
     XCTAssertEqual(
@@ -445,7 +448,7 @@ class DeviceLoginManagerTests: XCTestCase {
       loginCode: "loginCode",
       verificationURL: URL(string: "https://www.facebook.com")!,
       expirationDate: Date.distantFuture,
-      pollingInterval: 0
+      pollingInterval: 10
     )
   }
 

@@ -16,11 +16,23 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class TestDevicePoller: DevicePolling {
-  var capturedInterval: UInt = 0
+#if BUCK
+import FacebookCore
+#endif
 
-  func scheduleBlock(_ block: @escaping () -> Void, interval: UInt) {
-    capturedInterval = interval
-    block()
+import XCTest
+
+class DevicePollerTests: XCTestCase {
+  func testScheduleBlock() {
+    let poller = DevicePoller()
+    let expectation = self.expectation(description: name)
+
+    func block() {
+      expectation.fulfill()
+    }
+
+    poller.scheduleBlock(block, interval: 1)
+
+    waitForExpectations(timeout: 1, handler: nil)
   }
 }

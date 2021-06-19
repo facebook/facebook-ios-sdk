@@ -20,6 +20,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+NS_SWIFT_NAME(DevicePoller)
 @interface FBSDKDevicePoller : NSObject <FBSDKDevicePolling>
 
 @end

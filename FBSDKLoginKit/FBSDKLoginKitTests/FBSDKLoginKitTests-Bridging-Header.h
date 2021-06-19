@@ -24,6 +24,7 @@
  #import <FBSDKLoginKit+Internal/FBSDKAuthenticationTokenCreating.h>
  #import <FBSDKLoginKit+Internal/FBSDKAuthenticationTokenFactory.h>
  #import <FBSDKLoginKit+Internal/FBSDKAuthenticationTokenHeader.h>
+ #import <FBSDKLoginKit+Internal/FBSDKDevicePoller.h>
  #import <FBSDKLoginKit+Internal/FBSDKDevicePolling.h>
  #import <FBSDKLoginKit+Internal/FBSDKLoginCompletion+Internal.h>
  #import <FBSDKLoginKit+Internal/FBSDKNonceUtility.h>
@@ -33,6 +34,7 @@
  #import "FBSDKAuthenticationTokenCreating.h"
  #import "FBSDKAuthenticationTokenFactory.h"
  #import "FBSDKAuthenticationTokenHeader.h"
+ #import "FBSDKDevicePoller.h"
  #import "FBSDKDevicePolling.h"
  #import "FBSDKLoginCompletion+Internal.h"
  #import "FBSDKNonceUtility.h"
