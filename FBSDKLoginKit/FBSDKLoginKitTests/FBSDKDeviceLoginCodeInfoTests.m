@@ -33,7 +33,7 @@ static NSString *const _validLoginCode2 = @"123";
 static NSString *const _validLoginCode3 = @"123abc";
 static NSURL *_validVerifictationURL;
 static NSDate *_validexpirationDate;
-static NSUInteger const _validPollingInterval = 1;
+static NSUInteger const _validPollingInterval = 5;
 
 @interface FBSDKDeviceLoginCodeInfo (Testing)
 

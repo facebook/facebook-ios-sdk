@@ -104,7 +104,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
       NSString *loginCode = [FBSDKTypeUtility dictionary:result objectForKey:@"user_code" ofType:NSString.class];
       NSString *verificationURL = [FBSDKTypeUtility dictionary:result objectForKey:@"verification_uri" ofType:NSString.class];
       double expiresIn = [[FBSDKTypeUtility dictionary:result objectForKey:@"expires_in" ofType:NSString.class] doubleValue];
-      long interval = [[FBSDKTypeUtility dictionary:result objectForKey:@"verification_uri" ofType:NSString.class] integerValue];
+      long interval = [[FBSDKTypeUtility dictionary:result objectForKey:@"interval" ofType:NSNumber.class] longValue];
 
       self->_codeInfo = [[FBSDKDeviceLoginCodeInfo alloc]
                          initWithIdentifier:identifier
@@ -279,7 +279,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
                }
              };
              [request startWithCompletion:completion];
-           } interval:dispatch_time(DISPATCH_TIME_NOW, (int64_t)(interval * NSEC_PER_SEC))];
+           } interval:interval];
 }
 
 - (void)netService:(NSNetService *)sender

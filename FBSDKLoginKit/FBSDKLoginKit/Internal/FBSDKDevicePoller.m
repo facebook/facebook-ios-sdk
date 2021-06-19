@@ -20,7 +20,7 @@
 
 @implementation FBSDKDevicePoller
 
-- (void)scheduleBlock:(dispatch_block_t)block interval:(NSTimeInterval)interval
+- (void)scheduleBlock:(dispatch_block_t)block interval:(NSUInteger)interval
 {
   dispatch_after(
     dispatch_time(DISPATCH_TIME_NOW, (int64_t)(interval * NSEC_PER_SEC)),

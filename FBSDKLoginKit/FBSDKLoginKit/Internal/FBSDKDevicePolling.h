@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(DevicePolling)
 @protocol FBSDKDevicePolling
 
-- (void)scheduleBlock:(dispatch_block_t)block interval:(NSTimeInterval)interval;
+- (void)scheduleBlock:(dispatch_block_t)block interval:(NSUInteger)interval;
 
 @end
 

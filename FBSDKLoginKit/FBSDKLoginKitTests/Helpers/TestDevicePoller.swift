@@ -17,7 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class TestDevicePoller: DevicePolling {
-  func scheduleBlock(_ block: @escaping () -> Void, interval: TimeInterval) {
+  func scheduleBlock(_ block: @escaping () -> Void, interval: UInt) {
    block()
   }
 }
