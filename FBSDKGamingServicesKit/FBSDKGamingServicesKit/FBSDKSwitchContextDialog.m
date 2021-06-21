@@ -53,7 +53,7 @@
 
   if ([self.dialogContent isKindOfClass:[FBSDKContextSwitchAsyncContent class]] && self.dialogContent) {
     FBSDKContextSwitchAsyncContent *content = (FBSDKContextSwitchAsyncContent *)self.dialogContent;
-    [FBSDKTypeUtility dictionary:parameters setObject:content.contextToken forKey:@"context_token"];
+    [FBSDKTypeUtility dictionary:parameters setObject:content.contextToken forKey:@"context_id"];
   }
 
   CGRect frame = [self createWebDialogFrameWithWidth:FBSDKWEBDIALOGFRAMEWIDTH height:FBSDKWEBDIALOGFRAMEHEIGHT];

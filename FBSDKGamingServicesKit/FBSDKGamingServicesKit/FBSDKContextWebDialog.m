@@ -82,8 +82,8 @@
   }
   switch (error.code) {
     case 0: {
-      if ([results isKindOfClass:[NSDictionary class]] && results[@"context_token"] != nil) {
-        [FBSDKGamingContext.currentContext setIdentifier:results[@"context_token"]];
+      if ([results isKindOfClass:[NSDictionary class]] && results[@"context_id"] != nil) {
+        [FBSDKGamingContext.currentContext setIdentifier:results[@"context_id"]];
       }
       [self.delegate contextDialog:self didCompleteWithResults:results];
       break;
