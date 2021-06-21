@@ -19,9 +19,14 @@ tagFilters: &onlyRunOnTags
     tags:
       only: /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
 
+requiresProjectGeneration: &requiresProjectGeneration
+  requires:
+    - install_xcodegen
+    - generate_projects
+
 commands:
   setup:
-    description: Runs before each job and checks out the source code
+    description: Runs before each job and checks out the source code and installs dependencies
     steps:
       - checkout
       - install_gems
@@ -29,6 +34,20 @@ commands:
           root: .
           paths:
             - .
+
+  install_xcodegen:
+    description: Installs xcodegen
+    steps:
+      - run:
+          name: Install Xcodegen
+          command: brew install xcodegen
+
+  generate_projects:
+    description: Generates xcode projects
+    steps:
+      - run:
+          name: Generate Projects
+          command: ./generate-projects.sh
 
   install_gems:
     description: Installs ruby gems in the Gemfile
@@ -289,10 +308,13 @@ workflows:
           <<: *requiresSetup
       - build-xcode-debug:
           <<: *requiresSetup
+          <<: *requiresProjectGeneration
       - build-xcode-release:
           <<: *requiresSetup
+          <<: *requiresProjectGeneration
       - build-carthage:
           <<: *requiresSetup
+          <<: *requiresProjectGeneration
       - integrate-spm:
           <<: *requiresSetup
       - lint-cocoapods:
@@ -303,6 +325,7 @@ workflows:
           <<: *requiresSetup
       - verify-xcode-integration:
           <<: *requiresSetup
+          <<: *requiresProjectGeneration
   release:
     jobs:
       - setup:
@@ -310,6 +333,7 @@ workflows:
       - build-for-release:
           <<: *onlyRunOnTags
           <<: *requiresSetup
+          <<: *requiresProjectGeneration
       - publish-to-github:
           <<: *onlyRunOnTags
           requires:
