@@ -23,6 +23,7 @@
 #import <Foundation/Foundation.h>
 @protocol FBSDKValidatable;
 @protocol FBSDKContextDialogDelegate;
+@class FBSDKContextWebDialog;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -55,6 +56,37 @@ NS_SWIFT_NAME(DialogProtocol)
 - (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef;
 @end
 
+/**
+  A delegate for context dialogs to communicate with the dialog handler.
+
+ The delegate is notified with the results of the cross play request as long as the application has permissions to
+ receive the information.  For example, if the person is not signed into the containing app, the shower may not be able
+ to distinguish between completion of a cross play request and cancellation.
+ */
+NS_SWIFT_NAME(ContextDialogDelegate)
+@protocol FBSDKContextDialogDelegate <NSObject>
+
+/**
+  Sent to the delegate when the context dialog completes without error.
+ @param contextDialog The FBSDKContextDialog that completed.
+ @param results The results from the dialog.  This may be nil or empty.
+ */
+- (void)contextDialog:(FBSDKContextWebDialog*)contextDialog didCompleteWithResults:(NSDictionary<NSString *, id> *)results;
+
+/**
+  Sent to the delegate when the context dialog encounters an error.
+ @param contextDialog The FBSDKContextDialog that completed.
+ @param error The error.
+ */
+- (void)contextDialog:(FBSDKContextWebDialog*)contextDialog didFailWithError:(NSError *)error;
+
+/**
+  Sent to the delegate when the cross play request dialog is cancelled.
+ @param contextDialog The FBSDKContextDialog that completed.
+ */
+- (void)contextDialogDidCancel:(FBSDKContextWebDialog*)contextDialog;
+
+@end
 
 /**
   A protocol that a content object must conform to be used in a Gaming Services dialog

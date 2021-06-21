@@ -18,7 +18,7 @@
 
 #import "FBSDKGamingServiceController.h"
 
-#import "FBSDKCoreKitInternalImport.h"
+#import "FBSDKCoreKit+Internal.h"
 
 static NSString *const kServiceTypeStringFriendFinder = @"friendfinder";
 static NSString *const kServiceTypeStringMediaAsset = @"media_asset";

@@ -24,7 +24,6 @@
 
  #import "FBSDKSwitchContextDialog.h"
 
- #import "FBSDKContextDialog.h"
  #import "FBSDKContextSwitchAsyncContent.h"
  #import "FBSDKCoreKitInternalImport.h"
 
@@ -66,6 +65,9 @@
 
 - (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef
 {
+  if (errorRef == NULL) {
+    return NO;
+  }
   if (!self.dialogContent) {
     *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKErrorDomain
                                                       name:@"content"

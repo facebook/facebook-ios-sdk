@@ -22,7 +22,8 @@
 
  #import "FBSDKContextCreateAsyncContent.h"
 
- #import "FBSDKCoreKitInternalImport.h"
+ #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKGamingServicesCoreKitImport.h"
 
  #define FBSDK_APP_REQUEST_CONTENT_PLAYER_ID_KEY @"playerID"
 @interface FBSDKContextCreateAsyncContent () <FBSDKCopying>

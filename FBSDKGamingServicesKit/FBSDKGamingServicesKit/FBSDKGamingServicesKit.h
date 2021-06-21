@@ -19,9 +19,10 @@
 #if defined FBSDKCOCOAPODS || defined BUCK
 
  #import <FBSDKGamingServicesKit/FBSDKContextCreateAsyncContent.h>
- #import <FBSDKGamingServicesKit/FBSDKContextDialog.h>
+ #import <FBSDKGamingServicesKit/FBSDKContextDialogPresenter.h>
  #import <FBSDKGamingServicesKit/FBSDKContextSwitchAsyncContent.h>
  #import <FBSDKGamingServicesKit/FBSDKContextWebDialog.h>
+ #import <FBSDKGamingServicesKit/FBSDKCreateContextDialog.h>
  #import <FBSDKGamingServicesKit/FBSDKDialogProtocol.h>
  #import <FBSDKGamingServicesKit/FBSDKFriendFinderDialog.h>
  #import <FBSDKGamingServicesKit/FBSDKGamingContext.h>
@@ -31,15 +32,18 @@
  #import <FBSDKGamingServicesKit/FBSDKGamingPayload.h>
  #import <FBSDKGamingServicesKit/FBSDKGamingPayloadObserver.h>
  #import <FBSDKGamingServicesKit/FBSDKGamingServiceCompletionHandler.h>
+ #import <FBSDKGamingServicesKit/FBSDKGamingServicesCoreKitImport.h>
  #import <FBSDKGamingServicesKit/FBSDKGamingVideoUploader.h>
  #import <FBSDKGamingServicesKit/FBSDKGamingVideoUploaderConfiguration.h>
+ #import <FBSDKGamingServicesKit/FBSDKSwitchContextDialog.h>
 
 #else
 
  #import "FBSDKContextCreateAsyncContent.h"
- #import "FBSDKContextDialog.h"
+ #import "FBSDKContextDialogPresenter.h"
  #import "FBSDKContextSwitchAsyncContent.h"
  #import "FBSDKContextWebDialog.h"
+ #import "FBSDKCreateContextDialog.h"
  #import "FBSDKDialogProtocol.h"
  #import "FBSDKFriendFinderDialog.h"
  #import "FBSDKGamingContext.h"
@@ -49,6 +53,8 @@
  #import "FBSDKGamingPayload.h"
  #import "FBSDKGamingPayloadObserver.h"
  #import "FBSDKGamingServiceCompletionHandler.h"
+ #import "FBSDKGamingServicesCoreKitImport.h"
  #import "FBSDKGamingVideoUploader.h"
  #import "FBSDKGamingVideoUploaderConfiguration.h"
+ #import "FBSDKSwitchContextDialog.h"
 #endif

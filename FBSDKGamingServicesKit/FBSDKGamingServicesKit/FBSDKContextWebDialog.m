@@ -23,11 +23,23 @@
  #import <Foundation/Foundation.h>
  #import <UIKit/UIKit.h>
 
- #import "FBSDKContextDialog.h"
  #import "FBSDKCoreKitInternalImport.h"
  #import "FBSDKGamingContext.h"
 
 @implementation FBSDKContextWebDialog
+
+@synthesize delegate = _delegate;
+@synthesize dialogContent = _dialogContent;
+
+- (BOOL)show
+{
+  return false;
+}
+
+- (BOOL)validateWithError:(NSError *__autoreleasing _Nullable *_Nullable)errorRef
+{
+  return false;
+}
 
  #pragma mark - FBSDKWebDialogDelegate
 

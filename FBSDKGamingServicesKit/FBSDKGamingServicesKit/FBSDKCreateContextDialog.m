@@ -25,7 +25,6 @@
  #import "FBSDKCreateContextDialog.h"
 
  #import "FBSDKContextCreateAsyncContent.h"
- #import "FBSDKContextDialog.h"
  #import "FBSDKCoreKitInternalImport.h"
 
  #define FBSDK_CONTEXT_METHOD_NAME @"context"
@@ -65,6 +64,9 @@
 
 - (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef
 {
+  if (errorRef == NULL) {
+    return NO;
+  }
   if (!self.dialogContent) {
     *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKErrorDomain
                                                       name:@"content"

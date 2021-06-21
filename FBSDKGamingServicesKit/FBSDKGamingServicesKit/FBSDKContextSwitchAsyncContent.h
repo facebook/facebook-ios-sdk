@@ -21,6 +21,7 @@
 #if !TARGET_OS_TV
 
 #import <Foundation/Foundation.h>
+#import "FBSDKDialogProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -28,15 +29,13 @@ NS_ASSUME_NONNULL_BEGIN
  A model for an instant games switchAsync cross play request.
  */
 NS_SWIFT_NAME(ContextSwitchAsyncContent)
-@interface FBSDKContextSwitchAsyncContent : NSObject <NSSecureCoding>
+@interface FBSDKContextSwitchAsyncContent : NSObject <NSSecureCoding,FBSDKValidatable>
 
 /**
  The context token of the existing context for which this request is being made.
  @return The context token of the existing context
  */
 @property (nonatomic, copy) NSString *contextToken;
-
-- (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -20,8 +20,8 @@
 
 #import <FBSDKGamingServicesKit/FBSDKGamingServicesKit.h>
 
-#import "FBSDKCoreKit+Internal.h"
 #include "FBSDKCoreKit/FBSDKSettings.h"
+#import "FBSDKGamingServicesCoreKitImport.h"
 #import "FBSDKGamingServicesKitTestUtility.h"
 #import "FBSDKGamingServicesKitTests-Swift.h"
 
