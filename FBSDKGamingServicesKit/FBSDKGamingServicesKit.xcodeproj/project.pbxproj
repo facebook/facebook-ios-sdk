@@ -50,6 +50,10 @@
 		3A3B83FE263B5A4700AFBF4F /* FBSDKContextSwitchAsyncContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A3B83F3263B5A4700AFBF4F /* FBSDKContextSwitchAsyncContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A3B83FF263B5A4700AFBF4F /* FBSDKContextSwitchAsyncContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A3B83F4263B5A4700AFBF4F /* FBSDKContextSwitchAsyncContent.m */; };
 		3A3B8400263B5A4700AFBF4F /* FBSDKContextSwitchAsyncContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A3B83F4263B5A4700AFBF4F /* FBSDKContextSwitchAsyncContent.m */; };
+		3A47CF4D267BBB5200F99959 /* FBSDKChooseContextContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A47CF41267BBB5200F99959 /* FBSDKChooseContextContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A47CF4E267BBB5200F99959 /* FBSDKChooseContextContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A47CF41267BBB5200F99959 /* FBSDKChooseContextContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3A47CF4F267BBB5200F99959 /* FBSDKChooseContextContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A47CF4C267BBB5200F99959 /* FBSDKChooseContextContent.m */; };
+		3A47CF50267BBB5200F99959 /* FBSDKChooseContextContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A47CF4C267BBB5200F99959 /* FBSDKChooseContextContent.m */; };
 		3A5427C1265453E10089B6A2 /* FBSDKDialogProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A5427B6265453E10089B6A2 /* FBSDKDialogProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A5427C2265453E10089B6A2 /* FBSDKDialogProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A5427B6265453E10089B6A2 /* FBSDKDialogProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A7CA13F267A7AA8004BC735 /* FBSDKGamingServiceControllerFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7CA134267A7AA8004BC735 /* FBSDKGamingServiceControllerFactory.m */; };
@@ -65,6 +69,10 @@
 		3AC1B82C267955DF0016A4E8 /* FBSDKGamingServiceControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC1B829267955DF0016A4E8 /* FBSDKGamingServiceControllerProtocol.h */; };
 		3AC1B82D267955DF0016A4E8 /* FBSDKGamingServiceControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AC1B829267955DF0016A4E8 /* FBSDKGamingServiceControllerProtocol.h */; };
 		3AE05C0F26702707006B1AE2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AE05C0426702707006B1AE2 /* CoreGraphics.framework */; };
+		3AEB11072680FD7E002FF00A /* FBSDKChooseContextDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AEB10FB2680FD7E002FF00A /* FBSDKChooseContextDialog.m */; };
+		3AEB11082680FD7E002FF00A /* FBSDKChooseContextDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AEB10FB2680FD7E002FF00A /* FBSDKChooseContextDialog.m */; };
+		3AEB11092680FD7E002FF00A /* FBSDKChooseContextDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AEB11062680FD7E002FF00A /* FBSDKChooseContextDialog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3AEB110A2680FD7E002FF00A /* FBSDKChooseContextDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AEB11062680FD7E002FF00A /* FBSDKChooseContextDialog.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3AFFACF2267C18AF00613542 /* FBSDKContextWebDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AFFACE7267C18AF00613542 /* FBSDKContextWebDialog.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3AFFACF3267C18AF00613542 /* FBSDKContextWebDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AFFACE7267C18AF00613542 /* FBSDKContextWebDialog.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9FB2855526014BF300DB99CB /* FBSDKGamingPayloadObserver.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FB2854126014BF300DB99CB /* FBSDKGamingPayloadObserver.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -245,7 +253,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = F4F7CA3D23F49C110030A346 /* FBSDKCoreKit.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 81B71CFC1D19C87400933E93;
+			remoteGlobalIDString = 95463755E22142396C3ADC06;
 			remoteInfo = "FBSDKCoreKit-Dynamic";
 		};
 		F4F7CA2823F497410030A346 /* PBXContainerItemProxy */ = {
@@ -294,14 +302,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = F4F7CA3D23F49C110030A346 /* FBSDKCoreKit.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 9D2697461A5DF40700143BFC;
+			remoteGlobalIDString = 545FE7AE134DC5FC8078FFE5;
 			remoteInfo = FBSDKCoreKit;
 		};
 		F4F7CA9F23F4A0490030A346 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F4F7CA3D23F49C110030A346 /* FBSDKCoreKit.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 81B71CFC1D19C87400933E93;
+			remoteGlobalIDString = 95463755E22142396C3ADC06;
 			remoteInfo = "FBSDKCoreKit-Dynamic";
 		};
 /* End PBXContainerItemProxy section */
@@ -321,6 +329,8 @@
 		3A3B83F2263B5A4700AFBF4F /* FBSDKContextCreateAsyncContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKContextCreateAsyncContent.h; sourceTree = "<group>"; };
 		3A3B83F3263B5A4700AFBF4F /* FBSDKContextSwitchAsyncContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKContextSwitchAsyncContent.h; sourceTree = "<group>"; };
 		3A3B83F4263B5A4700AFBF4F /* FBSDKContextSwitchAsyncContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKContextSwitchAsyncContent.m; sourceTree = "<group>"; };
+		3A47CF41267BBB5200F99959 /* FBSDKChooseContextContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKChooseContextContent.h; sourceTree = "<group>"; };
+		3A47CF4C267BBB5200F99959 /* FBSDKChooseContextContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKChooseContextContent.m; sourceTree = "<group>"; };
 		3A5427B6265453E10089B6A2 /* FBSDKDialogProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKDialogProtocol.h; sourceTree = "<group>"; };
 		3A7CA134267A7AA8004BC735 /* FBSDKGamingServiceControllerFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKGamingServiceControllerFactory.m; sourceTree = "<group>"; };
 		3A8AD5BF2679298C003AC57E /* FBSDKContextDialogPresenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKContextDialogPresenter.h; sourceTree = "<group>"; };
@@ -329,6 +339,8 @@
 		3AC1B828267955DF0016A4E8 /* FBSDKGamingServiceControllerFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKGamingServiceControllerFactory.h; sourceTree = "<group>"; };
 		3AC1B829267955DF0016A4E8 /* FBSDKGamingServiceControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKGamingServiceControllerProtocol.h; sourceTree = "<group>"; };
 		3AE05C0426702707006B1AE2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		3AEB10FB2680FD7E002FF00A /* FBSDKChooseContextDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKChooseContextDialog.m; sourceTree = "<group>"; };
+		3AEB11062680FD7E002FF00A /* FBSDKChooseContextDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKChooseContextDialog.h; sourceTree = "<group>"; };
 		3AFFACE7267C18AF00613542 /* FBSDKContextWebDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKContextWebDialog.h; sourceTree = "<group>"; };
 		9FB2854126014BF300DB99CB /* FBSDKGamingPayloadObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKGamingPayloadObserver.h; sourceTree = "<group>"; };
 		9FB2855226014BF300DB99CB /* FBSDKGamingPayload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKGamingPayload.h; sourceTree = "<group>"; };
@@ -488,6 +500,10 @@
 			children = (
 				3A8AD5BF2679298C003AC57E /* FBSDKContextDialogPresenter.h */,
 				3A8AD5C02679298C003AC57E /* FBSDKContextDialogPresenter.m */,
+				3A47CF41267BBB5200F99959 /* FBSDKChooseContextContent.h */,
+				3A47CF4C267BBB5200F99959 /* FBSDKChooseContextContent.m */,
+				3AEB11062680FD7E002FF00A /* FBSDKChooseContextDialog.h */,
+				3AEB10FB2680FD7E002FF00A /* FBSDKChooseContextDialog.m */,
 				3A3B83F2263B5A4700AFBF4F /* FBSDKContextCreateAsyncContent.h */,
 				3A3B83F0263B5A4700AFBF4F /* FBSDKContextCreateAsyncContent.m */,
 				3A3B83F3263B5A4700AFBF4F /* FBSDKContextSwitchAsyncContent.h */,
@@ -628,10 +644,10 @@
 			isa = PBXGroup;
 			children = (
 				F4F7CA5123F49C110030A346 /* FBSDKCoreKit.framework */,
-				F4F7CA5323F49C110030A346 /* FBSDKCoreKit.framework */,
+				F4F7CA5323F49C110030A346 /* FBSDKCoreKit-Dynamic.framework */,
 				F4F7CA5523F49C110030A346 /* FBSDKCoreKitTests.xctest */,
-				F4F7CA5723F49C110030A346 /* FBSDKCoreKit.framework */,
-				F4F7CA5923F49C110030A346 /* FBSDKCoreKit.framework */,
+				F4F7CA5723F49C110030A346 /* FBSDKCoreKit_TV.framework */,
+				F4F7CA5923F49C110030A346 /* FBSDKCoreKit_TV-Dynamic.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -643,6 +659,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A47CF4D267BBB5200F99959 /* FBSDKChooseContextContent.h in Headers */,
 				3A3B83FD263B5A4700AFBF4F /* FBSDKContextSwitchAsyncContent.h in Headers */,
 				3A01BEF926716CBE008C8610 /* FBSDKCreateContextDialog.h in Headers */,
 				9FC20010247D82A00016A053 /* FBSDKGamingVideoUploader.h in Headers */,
@@ -666,6 +683,7 @@
 				F4DC057F2519499A0073B380 /* FBSDKCoreKitInternalImport.h in Headers */,
 				3A230DC2267DADF70044746A /* FBSDKGamingServicesCoreKitImport.h in Headers */,
 				3AFFACF2267C18AF00613542 /* FBSDKContextWebDialog.h in Headers */,
+				3AEB11092680FD7E002FF00A /* FBSDKChooseContextDialog.h in Headers */,
 				3AC1B8262679558D0016A4E8 /* FBSDKGamingServiceControllerCreating.h in Headers */,
 				F4F7C9EB23F48F2C0030A346 /* FBSDKGamingServicesKit.h in Headers */,
 				3A01BF1126716FB1008C8610 /* FBSDKContextWebDialog.h in Headers */,
@@ -678,6 +696,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A47CF4E267BBB5200F99959 /* FBSDKChooseContextContent.h in Headers */,
 				F4F7CA6E23F49D6F0030A346 /* FBSDKGamingServiceController.h in Headers */,
 				3A01BEFA26716CBE008C8610 /* FBSDKCreateContextDialog.h in Headers */,
 				3A3B83FE263B5A4700AFBF4F /* FBSDKContextSwitchAsyncContent.h in Headers */,
@@ -701,6 +720,7 @@
 				F4DC05832519499B0073B380 /* FBSDKCoreKitInternalImport.h in Headers */,
 				3A230DC3267DADF70044746A /* FBSDKGamingServicesCoreKitImport.h in Headers */,
 				3AFFACF3267C18AF00613542 /* FBSDKContextWebDialog.h in Headers */,
+				3AEB110A2680FD7E002FF00A /* FBSDKChooseContextDialog.h in Headers */,
 				3AC1B8272679558D0016A4E8 /* FBSDKGamingServiceControllerCreating.h in Headers */,
 				F4F7CA7423F49D6F0030A346 /* FBSDKCoreKit+Internal.h in Headers */,
 				3A01BF1226716FB1008C8610 /* FBSDKContextWebDialog.h in Headers */,
@@ -909,9 +929,10 @@
 			remoteRef = F4F7CA5023F49C110030A346 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		F4F7CA5323F49C110030A346 /* FBSDKCoreKit.framework */ = {
+		F4F7CA5323F49C110030A346 /* FBSDKCoreKit-Dynamic.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
+			name = "FBSDKCoreKit-Dynamic.framework";
 			path = FBSDKCoreKit.framework;
 			remoteRef = F4F7CA5223F49C110030A346 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
@@ -923,16 +944,18 @@
 			remoteRef = F4F7CA5423F49C110030A346 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		F4F7CA5723F49C110030A346 /* FBSDKCoreKit.framework */ = {
+		F4F7CA5723F49C110030A346 /* FBSDKCoreKit_TV.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
+			name = FBSDKCoreKit_TV.framework;
 			path = FBSDKCoreKit.framework;
 			remoteRef = F4F7CA5623F49C110030A346 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		F4F7CA5923F49C110030A346 /* FBSDKCoreKit.framework */ = {
+		F4F7CA5923F49C110030A346 /* FBSDKCoreKit_TV-Dynamic.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
+			name = "FBSDKCoreKit_TV-Dynamic.framework";
 			path = FBSDKCoreKit.framework;
 			remoteRef = F4F7CA5823F49C110030A346 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
@@ -1023,9 +1046,11 @@
 				F4F7C9ED23F48F2C0030A346 /* FBSDKGamingImageUploader.m in Sources */,
 				3A01BEEF26716C5C008C8610 /* FBSDKSwitchContextDialog.m in Sources */,
 				9FC2000E247D82A00016A053 /* FBSDKGamingVideoUploaderConfiguration.m in Sources */,
+				3A47CF4F267BBB5200F99959 /* FBSDKChooseContextContent.m in Sources */,
 				F4F7C9E323F48F2C0030A346 /* FBSDKGamingImageUploaderConfiguration.m in Sources */,
 				F4DE31AD24D9FD6100297C18 /* FBSDKVideoUploader.m in Sources */,
 				3A3B83F7263B5A4700AFBF4F /* FBSDKContextCreateAsyncContent.m in Sources */,
+				3AEB11072680FD7E002FF00A /* FBSDKChooseContextDialog.m in Sources */,
 				3A01BEFB26716CBE008C8610 /* FBSDKCreateContextDialog.m in Sources */,
 				9FB51BA024B8BD4700059B77 /* FBSDKGamingGroupIntegration.m in Sources */,
 				F4F7C9E623F48F2C0030A346 /* FBSDKGamingServiceController.m in Sources */,
@@ -1048,9 +1073,11 @@
 				9FC2002B247D83FF0016A053 /* FBSDKGamingVideoUploaderConfiguration.m in Sources */,
 				3A01BEF026716C5C008C8610 /* FBSDKSwitchContextDialog.m in Sources */,
 				F4F7CA7623F49D6F0030A346 /* FBSDKFriendFinderDialog.m in Sources */,
+				3A47CF50267BBB5200F99959 /* FBSDKChooseContextContent.m in Sources */,
 				F4F7CA7723F49D6F0030A346 /* FBSDKGamingImageUploader.m in Sources */,
 				F4DE31AE24D9FD6100297C18 /* FBSDKVideoUploader.m in Sources */,
 				3A3B83F8263B5A4700AFBF4F /* FBSDKContextCreateAsyncContent.m in Sources */,
+				3AEB11082680FD7E002FF00A /* FBSDKChooseContextDialog.m in Sources */,
 				3A01BEFC26716CBE008C8610 /* FBSDKCreateContextDialog.m in Sources */,
 				9FB51BA324B8BD6100059B77 /* FBSDKGamingGroupIntegration.m in Sources */,
 				F4F7CA7823F49D6F0030A346 /* FBSDKGamingImageUploaderConfiguration.m in Sources */,

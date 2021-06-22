@@ -23,14 +23,14 @@
 
 #import <Foundation/Foundation.h>
 #import "FBSDKDialogProtocol.h"
-
+#import "FBSDKContextWebDialog.h"
 
 NS_ASSUME_NONNULL_BEGIN
 /**
   A dialog for the choose context through app switch
  */
 NS_SWIFT_NAME(ChooseContextDialog)
-@interface FBSDKChooseContextDialog : NSObject <FBSDKDialog>
+@interface FBSDKChooseContextDialog : FBSDKContextWebDialog
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

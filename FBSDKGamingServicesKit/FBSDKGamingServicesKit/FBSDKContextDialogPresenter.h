@@ -24,10 +24,11 @@
 
 #import "FBSDKContextCreateAsyncContent.h"
 #import "FBSDKContextSwitchAsyncContent.h"
-
+#import "FBSDKChooseContextContent.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKContextDialogDelegate;
+@class FBSDKChooseContextDialog;
 @class FBSDKCreateContextDialog;
 @class FBSDKSwitchContextDialog;
 
@@ -76,6 +77,12 @@ NS_SWIFT_NAME(init(switchContextDialogWithContent:delegate:));
                        delegate:(nullable id<FBSDKContextDialogDelegate>)delegate
 NS_SWIFT_UNAVAILABLE("Use init(switchContextDialogWithContent:delegate:).show() instead");
 
+/**
+ Convenience method to build up and show an instant games choose context dialog with content and a delegate.
+ @param content The content for the cross play request.
+ @param delegate The receiver's delegate.
+ */
++ (FBSDKChooseContextDialog *)showChooseContextDialogWithContent:(FBSDKChooseContextContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate;
 @end
 
 
