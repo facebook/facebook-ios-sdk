@@ -139,6 +139,13 @@ commands:
           pod repo update
       - run: sh scripts/run.sh release cocoapods FacebookSDK
 
+  publish_corekit_basics:
+    description: Pushes Corekit_Basics to trunk
+    steps:
+      - attach_workspace:
+          at: .
+      - run: sh scripts/run.sh release cocoapods FBSDKCoreKit_Basics
+
   publish_base_cocoapods:
     description: Pushes Core to trunk
     steps:
@@ -251,6 +258,10 @@ jobs:
     <<: *useMacOS
     steps:
       - publish_aggregate_cocoapod
+  publish-corekit-basics:
+    <<: *useMacOS
+    steps:
+      - publish_corekit_basics
   publish-base-cocoapods:
     <<: *useMacOS
     steps:
@@ -314,9 +325,13 @@ workflows:
           <<: *onlyRunOnTags
           requires:
             - build-for-release
-      - publish-base-cocoapods:
+      - publish-corekit-basics:
           <<: *onlyRunOnTags
           <<: *requiresSetup
+      - publish-base-cocoapods:
+          <<: *onlyRunOnTags
+          requires:
+            - publish-corekit-basics
       - publish-dependent-cocoapods:
           <<: *onlyRunOnTags
           requires:
