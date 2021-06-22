@@ -7,7 +7,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.0.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.0.1...HEAD)
+
+## 11.0.1
+
+### Added
+
+- Add background refresh status logging
+
+### Changed
+
+- No longer automatically showing UI for GraphErrorRecoveryProcessor
+
+### Fixed
+
+- Fix nil completion handler crash - ([@revolter](https://github.com/revolter) in [#1768](https://github.com/facebook/facebook-ios-sdk/pull/1768))
+- Fix AEM HMAC generation issue
+
+[2021-06-22](https://github.com/facebook/facebook-ios-sdk/releases/tag/v11.0.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.0.0...v11.0.1)
 
 ## 11.0.0
 
