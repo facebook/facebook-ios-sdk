@@ -23,6 +23,7 @@ import FacebookCore
 import TestTools
 import XCTest
 
+// swiftlint:disable:next type_body_length
 class DeviceLoginManagerTests: XCTestCase {
 
   let fakeAppID = "123"
@@ -446,7 +447,7 @@ class DeviceLoginManagerTests: XCTestCase {
     return DeviceLoginCodeInfo(
       identifier: "identifier",
       loginCode: "loginCode",
-      verificationURL: URL(string: "https://www.facebook.com")!,
+      verificationURL: URL(string: "https://www.facebook.com")!, // swiftlint:disable:this force_unwrapping
       expirationDate: Date.distantFuture,
       pollingInterval: 10
     )
@@ -460,4 +461,4 @@ class DeviceLoginManagerTests: XCTestCase {
     XCTAssert(loginResult.isCancelled)
     XCTAssertNil(loginResult.accessToken)
   }
-}
+} // swiftlint:disable:this file_length
