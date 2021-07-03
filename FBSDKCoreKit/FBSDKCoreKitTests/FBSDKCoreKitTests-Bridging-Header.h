@@ -17,7 +17,6 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <AdSupport/AdSupport.h>
 
 #import "FBSDKAdvertisingTrackingStatus.h"
 #import "AEM+Testing.h"
@@ -188,13 +187,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 // Categories needed to expose private methods to Swift
 @interface FBSDKAppEventsUtility (Testing)
-
-@property (nullable, class, nonatomic) ASIdentifierManager *cachedAdvertiserIdentifierManager;
-
-- (ASIdentifierManager *)_asIdentifierManagerWithShouldUseCachedManager:(BOOL)useCachedManagerIfAvailable
-                                               dynamicFrameworkResolver:(id<FBSDKDynamicFrameworkResolving>)dynamicFrameworkResolver
-NS_SWIFT_NAME(asIdentifierManager(shouldUseCachedManager:dynamicFrameworkResolver:));
-
 @end
 
 @interface FBSDKAppEventsConfigurationManager (Testing)

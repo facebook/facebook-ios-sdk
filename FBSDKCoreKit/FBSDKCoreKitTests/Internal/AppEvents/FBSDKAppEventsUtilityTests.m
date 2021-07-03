@@ -19,7 +19,6 @@
 // @lint-ignore-every CLANGTIDY
 @import TestTools;
 
-#import <AdSupport/AdSupport.h>
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
@@ -29,21 +28,6 @@
 
 static NSString *const FBSDKSettingsInstallTimestamp = @"com.facebook.sdk:FBSDKSettingsInstallTimestamp";
 static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.sdk:FBSDKSettingsAdvertisingTrackingStatus";
-
-@interface TestASIdentifierManager : ASIdentifierManager
-
-@property (nonatomic) NSUUID *stubbedAdvertisingIdentifier;
-
-@end
-
-@implementation TestASIdentifierManager
-
-- (NSUUID *)advertisingIdentifier
-{
-  return self.stubbedAdvertisingIdentifier;
-}
-
-@end
 
 @interface FBSDKAppEvents (Testing)
 

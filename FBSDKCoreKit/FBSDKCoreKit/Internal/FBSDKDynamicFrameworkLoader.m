@@ -130,7 +130,7 @@ _fbsdkdfl_handle_get_impl_(Security)
 
 - (Class)asIdentifierManagerClass
 {
-  return fbsdkdfl_ASIdentifierManagerClass();
+  return nil;
 }
 
 #define _fbsdkdfl_Security_get_k(SYMBOL) _fbsdkdfl_symbol_get_k(Security, SYMBOL, CFTypeRef *)
