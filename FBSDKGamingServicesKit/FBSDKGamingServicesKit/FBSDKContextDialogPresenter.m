@@ -22,6 +22,8 @@
 
  #import "FBSDKContextDialogPresenter.h"
 
+ #import "FBSDKChooseContextContent.h"
+ #import "FBSDKChooseContextDialog.h"
  #import "FBSDKCoreKitInternalImport.h"
  #import "FBSDKCreateContextDialog.h"
  #import "FBSDKDialogProtocol.h"
@@ -60,6 +62,19 @@
 + (FBSDKSwitchContextDialog *)showSwitchContextDialogWithContent:(FBSDKContextSwitchAsyncContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
 {
   FBSDKSwitchContextDialog *dialog = [self switchContextDialogWithContent:content delegate:delegate];
+  [dialog show];
+  return dialog;
+}
+
++ (FBSDKChooseContextDialog *)chooseContextDialogWithContent:(FBSDKChooseContextContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
+{
+  FBSDKChooseContextDialog *dialog = [FBSDKChooseContextDialog dialogWithContent:content delegate:delegate];
+  return dialog;
+}
+
++ (FBSDKChooseContextDialog *)showChooseContextDialogWithContent:(FBSDKChooseContextContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
+{
+  FBSDKChooseContextDialog *dialog = [self chooseContextDialogWithContent:content delegate:delegate];
   [dialog show];
   return dialog;
 }

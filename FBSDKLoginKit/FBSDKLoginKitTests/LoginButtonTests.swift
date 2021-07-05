@@ -445,4 +445,4 @@ private class TestButton: FBLoginButton {
   override func _fetchAndSetContent() {
     fetchAndSetContentCallCount += 1
   }
-}
+} // swiftlint:disable:this file_length

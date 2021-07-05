@@ -148,7 +148,7 @@
 		13B2BD7D4C742E8E84B195FD /* FBSDKRandom.h in Headers */ = {isa = PBXBuildFile; fileRef = B98D8DE921807B1F4DE80551 /* FBSDKRandom.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		142C1D5F2AC1EF067A7D6C9A /* FBSDKApplicationDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 667CF55749992353FB2429C1 /* FBSDKApplicationDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		144365EF0F2664ADA4D655DE /* GraphRequestConnectionFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A21CDAC0F8F00FFED249ABC2 /* GraphRequestConnectionFactoryTests.swift */; };
-		1447571B0E6DDA34DA49B9AF /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5868537F395B2ADFBD317725 /* WebKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		1447571B0E6DDA34DA49B9AF /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5868537F395B2ADFBD317725 /* WebKit.framework */; };
 		145EE233B20212576270525D /* MathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E88FBC46C6A40C7D168F77 /* MathTests.swift */; };
 		14E4A548C878D327C6B787ED /* FBSDKGraphRequestBody.m in Sources */ = {isa = PBXBuildFile; fileRef = 39B4873AE0CCD13B175E643D /* FBSDKGraphRequestBody.m */; };
 		1591CB701455EBA283CB702B /* FBSDKSettings+ClientTokenProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EB64775CF7B2AA4603B267E /* FBSDKSettings+ClientTokenProviding.h */; };
@@ -1523,7 +1523,7 @@
 		E12C3A37632169BABB34C238 /* FBSDKApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 656A6209A1153248810BC161 /* FBSDKApplicationDelegate.m */; };
 		E135F97EED2DFCC64F01D465 /* FBSDKGraphRequestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00B6B32A9CFD6E1BAB3BE0CC /* FBSDKGraphRequestTests.m */; };
 		E14CAAD59E62866F4A2439D4 /* FBSDKMeasurementEventListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 6661C833A74976B280188652 /* FBSDKMeasurementEventListener.m */; };
-		E15E527289A7DA142C82EF2A /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B20E622F6F67CBE0075448E3 /* SafariServices.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		E15E527289A7DA142C82EF2A /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B20E622F6F67CBE0075448E3 /* SafariServices.framework */; };
 		E1E63C9C086104F89AACF451 /* FBSDKGateKeeperManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7625B42B7C57B9A0E1035B8E /* FBSDKGateKeeperManager.m */; };
 		E21927F3976C1B688443AF29 /* FBSDKImpressionTrackingButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4037F923EDACEDA2A28DBA53 /* FBSDKImpressionTrackingButton.m */; };
 		E23132E73AAB3DDBDB9DEC50 /* FBSDKAppEventsUtilityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B9C9F58848BCE0039C247DC /* FBSDKAppEventsUtilityTests.m */; };

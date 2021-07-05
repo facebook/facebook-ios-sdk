@@ -21,6 +21,7 @@
 #if !TARGET_OS_TV
 
 #import <Foundation/Foundation.h>
+#import "FBSDKDialogProtocol.h"
 
 typedef NS_ENUM(NSInteger, FBSDKChooseContextFilter) {
   FBSDKChooseContextFilterNewContextOnly = 0,
@@ -35,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
  A model for an instant games choose context app switch dialog
  */
 NS_SWIFT_NAME(ContextSwitchAsyncContent)
-@interface FBSDKChooseContextContent : NSObject <NSSecureCoding>
+@interface FBSDKChooseContextContent : NSObject <FBSDKValidatable>
 
 /**
   This sets the filter which determines which context will show when the user is app switched to the choose context dialog.
@@ -44,7 +45,6 @@ NS_SWIFT_NAME(ContextSwitchAsyncContent)
 
 + (NSString *)filtersNameForFilters:(FBSDKChooseContextFilter)filter;
 
-- (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -106,5 +106,25 @@
   return parameters;
 }
 
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+  return NO;
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+  return;
+}
+
+- (BOOL)canOpenURL:(NSURL *)url forApplication:(UIApplication *)application sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+  return NO;
+}
+
+- (BOOL)isAuthenticationURL:(NSURL *)url
+{
+  return NO;
+}
+
 @end
 #endif

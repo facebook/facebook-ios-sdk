@@ -15,10 +15,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "547233CE2DF51E547A32CF7B"
-               BuildableName = "FBSDKLoginKit_TV-Universal"
-               BlueprintName = "FBSDKLoginKit_TV-Universal"
-               ReferencedContainer = "container:FBSDKLoginKit.xcodeproj">
+               BlueprintIdentifier = "18F0A70E3EECCDEAD656F2DF"
+               BuildableName = "FBSDKGamingServicesKit-Universal"
+               BlueprintName = "FBSDKGamingServicesKit-Universal"
+               ReferencedContainer = "container:FBSDKGamingServicesKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -34,10 +34,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "547233CE2DF51E547A32CF7B"
-            BuildableName = "FBSDKLoginKit_TV-Universal"
-            BlueprintName = "FBSDKLoginKit_TV-Universal"
-            ReferencedContainer = "container:FBSDKLoginKit.xcodeproj">
+            BlueprintIdentifier = "18F0A70E3EECCDEAD656F2DF"
+            BuildableName = "FBSDKGamingServicesKit-Universal"
+            BlueprintName = "FBSDKGamingServicesKit-Universal"
+            ReferencedContainer = "container:FBSDKGamingServicesKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -54,10 +54,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "547233CE2DF51E547A32CF7B"
-            BuildableName = "FBSDKLoginKit_TV-Universal"
-            BlueprintName = "FBSDKLoginKit_TV-Universal"
-            ReferencedContainer = "container:FBSDKLoginKit.xcodeproj">
+            BlueprintIdentifier = "18F0A70E3EECCDEAD656F2DF"
+            BuildableName = "FBSDKGamingServicesKit-Universal"
+            BlueprintName = "FBSDKGamingServicesKit-Universal"
+            ReferencedContainer = "container:FBSDKGamingServicesKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </LaunchAction>
@@ -71,10 +71,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "547233CE2DF51E547A32CF7B"
-            BuildableName = "FBSDKLoginKit_TV-Universal"
-            BlueprintName = "FBSDKLoginKit_TV-Universal"
-            ReferencedContainer = "container:FBSDKLoginKit.xcodeproj">
+            BlueprintIdentifier = "18F0A70E3EECCDEAD656F2DF"
+            BuildableName = "FBSDKGamingServicesKit-Universal"
+            BlueprintName = "FBSDKGamingServicesKit-Universal"
+            ReferencedContainer = "container:FBSDKGamingServicesKit.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

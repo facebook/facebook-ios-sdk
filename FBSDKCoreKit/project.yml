@@ -102,9 +102,7 @@ targets:
       - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics
         link: false
       - sdk: SafariServices.framework
-        weak: true
       - sdk: WebKit.framework
-        weak: true
     preBuildScripts:
       - name: Run Swiftlint
         script: |

@@ -18,6 +18,7 @@
 
 #if defined FBSDKCOCOAPODS || defined BUCK
 
+ #import <FBSDKGamingServicesKit/FBSDKChooseContextDialog.h>
  #import <FBSDKGamingServicesKit/FBSDKContextCreateAsyncContent.h>
  #import <FBSDKGamingServicesKit/FBSDKContextDialogPresenter.h>
  #import <FBSDKGamingServicesKit/FBSDKContextSwitchAsyncContent.h>
@@ -39,6 +40,7 @@
 
 #else
 
+ #import "FBSDKChooseContextDialog.h"
  #import "FBSDKContextCreateAsyncContent.h"
  #import "FBSDKContextDialogPresenter.h"
  #import "FBSDKContextSwitchAsyncContent.h"
@@ -57,4 +59,5 @@
  #import "FBSDKGamingVideoUploader.h"
  #import "FBSDKGamingVideoUploaderConfiguration.h"
  #import "FBSDKSwitchContextDialog.h"
+
 #endif

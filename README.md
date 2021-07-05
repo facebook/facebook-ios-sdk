@@ -67,6 +67,10 @@ join the [Facebook Developers Group on Facebook](https://www.facebook.com/groups
 ask questions on [Stack Overflow](http://facebook.stackoverflow.com),
 or open an issue in this repository.
 
+## CONTRIBUTE
+
+Facebook welcomes contributions to our SDKs. Please see the [CONTRIBUTING](CONTRIBUTING) file.
+
 ## LICENSE
 
 See the [LICENSE](LICENSE) file.

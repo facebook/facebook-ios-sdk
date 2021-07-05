@@ -27,6 +27,21 @@ if command -v xcodegen >/dev/null; then
 
     cd FBSDKCoreKit || exit
     xcodegen generate
+
+    cd ..
+
+    cd FBSDKLoginKit || exit
+    xcodegen generate
+
+    cd ..
+
+    cd FBSDKShareKit || exit
+    xcodegen generate
+
+    cd ..
+
+    cd FBSDKGamingServicesKit || exit
+    xcodegen generate
 else
     echo "WARNING: Xcodegen not installed, run 'brew install xcodegen' or visit https://github.com/yonaskolb/XcodeGen"
 fi
