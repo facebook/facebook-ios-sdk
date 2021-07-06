@@ -19,13 +19,8 @@
 #import <Foundation/Foundation.h>
 
 #import "FBSDKCopying.h"
-#import "FBSDKTokenCaching.h"
-
-#ifdef BUCK
-#import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
-#else
 #import "FBSDKGraphRequestConnection.h"
-#endif
+#import "FBSDKTokenCaching.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
