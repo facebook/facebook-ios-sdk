@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Deprecated
 
-- Building the frameworks using [Carthage](https://github.com/Carthage/Carthage). Carthage is a dependency manager that typically works by building a third party framework using Xcode schemes shared from a `.xcodeproj` file. We are planning to remove the `.xcodeproj` files in the next major release as they will be generated on an as needed basis using [Xcodegen](https://github.com/yonaskolb/XcodeGen). There is a strong likelihood that this change will break several integrations that use Carthage. You will still be able to use Carthage by pulling the pre-built binaries directly from the release. If this does not work for your use case, we recommend checking out Swift Package Manager as an alternative.
+- Building the frameworks using [Carthage](https://github.com/Carthage/Carthage). Carthage is a dependency manager that typically works by building a third party framework using Xcode schemes shared from a `.xcodeproj` file. We are planning to remove the `.xcodeproj` files in the next major release as they will be generated on an as needed basis using [Xcodegen](https://github.com/yonaskolb/XcodeGen). There is a strong likelihood that this change will break several integrations that use Carthage. You will still be able to use Carthage by pulling the pre-built binaries or XCFrameworks directly from the release. If this does not work for your use case, we recommend checking out Swift Package Manager as an alternative.
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.0.1...HEAD)
 
