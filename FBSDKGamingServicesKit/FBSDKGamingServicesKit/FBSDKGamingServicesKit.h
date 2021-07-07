@@ -37,7 +37,6 @@
  #import <FBSDKGamingServicesKit/FBSDKGamingVideoUploader.h>
  #import <FBSDKGamingServicesKit/FBSDKGamingVideoUploaderConfiguration.h>
  #import <FBSDKGamingServicesKit/FBSDKSwitchContextDialog.h>
-
 #else
 
  #import "FBSDKChooseContextDialog.h"
@@ -59,5 +58,4 @@
  #import "FBSDKGamingVideoUploader.h"
  #import "FBSDKGamingVideoUploaderConfiguration.h"
  #import "FBSDKSwitchContextDialog.h"
-
 #endif
