@@ -69,9 +69,8 @@ NS_SWIFT_NAME(ContextDialogDelegate)
 /**
   Sent to the delegate when the context dialog completes without error.
  @param contextDialog The FBSDKContextDialog that completed.
- @param results The results from the dialog.  This may be nil or empty.
  */
-- (void)contextDialog:(FBSDKContextWebDialog*)contextDialog didCompleteWithResults:(NSDictionary<NSString *, id> *)results;
+- (void)contextDialogDidComplete:(FBSDKContextWebDialog*)contextDialog;
 
 /**
   Sent to the delegate when the context dialog encounters an error.

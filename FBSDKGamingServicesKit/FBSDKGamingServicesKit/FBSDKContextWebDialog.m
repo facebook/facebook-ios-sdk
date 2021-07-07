@@ -85,7 +85,7 @@
       if ([results isKindOfClass:[NSDictionary class]] && results[@"context_id"] != nil) {
         [FBSDKGamingContext.currentContext setIdentifier:results[@"context_id"]];
       }
-      [self.delegate contextDialog:self didCompleteWithResults:results];
+      [self.delegate contextDialogDidComplete:self];
       break;
     }
     case 4201: {

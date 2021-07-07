@@ -27,6 +27,10 @@
 
  #define FBSDK_CONTEXT_DIALOG_URL_SCHEME @"https"
  #define FBSDK_CONTEXT_DIALOG_URL_HOST @"fb.gg"
+ #define FBSDK_CONTEXT_DIALOG_URL_PATH @"/dialog/choosecontext/"
+
+ #define FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_FILTER_KEY @"filter"
+ #define FBSDK_CONTEXT_DIALOG_DEEPLINK_QUERY_CONTEXT_KEY @"context_id"
 
 @interface FBSDKChooseContextDialog () <FBSDKURLOpening>
 @end
