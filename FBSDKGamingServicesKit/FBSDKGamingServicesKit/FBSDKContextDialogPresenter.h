@@ -46,7 +46,7 @@ NS_SWIFT_NAME(ContextDialogPresenter)
  @param content The content for the create context dialog
  @param delegate The receiver's delegate.
  */
-+ (FBSDKCreateContextDialog*)createContextDialogWithContent:(FBSDKContextCreateAsyncContent *)content
++ (nullable FBSDKCreateContextDialog*)createContextDialogWithContent:(FBSDKContextCreateAsyncContent *)content
                          delegate:(nullable id<FBSDKContextDialogDelegate>)delegate
 NS_SWIFT_NAME(init(createContextDialogWithContent:delegate:));
 
@@ -55,7 +55,7 @@ NS_SWIFT_NAME(init(createContextDialogWithContent:delegate:));
  @param content The content for create context dialog
  @param delegate The receiver's delegate.
  */
-+ (FBSDKCreateContextDialog*)showCreateContextDialogWithContent:(FBSDKContextCreateAsyncContent *)content
++ (nullable NSError *)showCreateContextDialogWithContent:(FBSDKContextCreateAsyncContent *)content
                        delegate:(nullable id<FBSDKContextDialogDelegate>)delegate
 NS_SWIFT_UNAVAILABLE("Use init(createContextDialogWithContent:delegate:).show() instead");
 
@@ -64,7 +64,7 @@ NS_SWIFT_UNAVAILABLE("Use init(createContextDialogWithContent:delegate:).show() 
  @param content The content for the switch context dialog
  @param delegate The receiver's delegate.
  */
-+ (FBSDKSwitchContextDialog*)switchContextDialogWithContent:(FBSDKContextSwitchAsyncContent *)content
++ (nullable FBSDKSwitchContextDialog*)switchContextDialogWithContent:(FBSDKContextSwitchAsyncContent *)content
                          delegate:(nullable id<FBSDKContextDialogDelegate>)delegate
 NS_SWIFT_NAME(init(switchContextDialogWithContent:delegate:));
 
@@ -73,7 +73,7 @@ NS_SWIFT_NAME(init(switchContextDialogWithContent:delegate:));
  @param content The content for the switch context dialog
  @param delegate The receiver's delegate.
  */
-+ (FBSDKSwitchContextDialog*)showSwitchContextDialogWithContent:(FBSDKContextSwitchAsyncContent *)content
++ (nullable NSError *)showSwitchContextDialogWithContent:(FBSDKContextSwitchAsyncContent *)content
                        delegate:(nullable id<FBSDKContextDialogDelegate>)delegate
 NS_SWIFT_UNAVAILABLE("Use init(switchContextDialogWithContent:delegate:).show() instead");
 

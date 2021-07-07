@@ -40,30 +40,48 @@
 
  #pragma mark - Class Methods
 
-+ (FBSDKCreateContextDialog *)createContextDialogWithContent:(FBSDKContextCreateAsyncContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
++ (nullable FBSDKCreateContextDialog *)createContextDialogWithContent:(FBSDKContextCreateAsyncContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
 {
+  if (![FBSDKAccessToken currentAccessToken]) {
+    return nil;
+  }
   FBSDKCreateContextDialog *dialog = [FBSDKCreateContextDialog dialogWithContent:content delegate:delegate];
   return dialog;
 }
 
-+ (FBSDKCreateContextDialog *)showCreateContextDialogWithContent:(FBSDKContextCreateAsyncContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
++ (nullable NSError *)showCreateContextDialogWithContent:(FBSDKContextCreateAsyncContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
 {
   FBSDKCreateContextDialog *dialog = [self createContextDialogWithContent:content delegate:delegate];
-  [dialog show];
-  return dialog;
+  if (dialog) {
+    [dialog show];
+    return nil;
+  }
+  NSError *tokenError = [FBSDKError
+                         errorWithCode:FBSDKErrorAccessTokenRequired
+                         message:@"A valid access token is required to launch the Dialog"];
+  return tokenError;
 }
 
-+ (FBSDKSwitchContextDialog *)switchContextDialogWithContent:(FBSDKContextSwitchAsyncContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
++ (nullable FBSDKSwitchContextDialog *)switchContextDialogWithContent:(FBSDKContextSwitchAsyncContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
 {
+  if (![FBSDKAccessToken currentAccessToken]) {
+    return nil;
+  }
   FBSDKSwitchContextDialog *dialog = [FBSDKSwitchContextDialog dialogWithContent:content delegate:delegate];
   return dialog;
 }
 
-+ (FBSDKSwitchContextDialog *)showSwitchContextDialogWithContent:(FBSDKContextSwitchAsyncContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
++ (nullable NSError *)showSwitchContextDialogWithContent:(FBSDKContextSwitchAsyncContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
 {
   FBSDKSwitchContextDialog *dialog = [self switchContextDialogWithContent:content delegate:delegate];
-  [dialog show];
-  return dialog;
+  if (dialog) {
+    [dialog show];
+    return nil;
+  }
+  NSError *tokenError = [FBSDKError
+                         errorWithCode:FBSDKErrorAccessTokenRequired
+                         message:@"A valid access token is required to launch the Dialog"];
+  return tokenError;
 }
 
 + (FBSDKChooseContextDialog *)chooseContextDialogWithContent:(FBSDKChooseContextContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
