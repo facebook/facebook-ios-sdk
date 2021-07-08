@@ -26,6 +26,8 @@
 @protocol FBSDKWebViewProviding;
 @protocol FBSDKURLOpener;
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(FBWebDialogView)
 @interface FBSDKWebDialogView : UIView
 
@@ -49,4 +51,7 @@ NS_SWIFT_NAME(WebDialogViewDelegate)
 
 @end
 
+NS_ASSUME_NONNULL_END
+
 #endif
+

@@ -88,7 +88,7 @@ FBSDKAEMInvocationConfigMode FBSDKAEMInvocationConfigBrandMode = @"BRAND";
                       ACSConfigID:ACSConfigID
                        businessID:businessID
                         timestamp:nil
-                       configMode:nil
+                       configMode:@"DEFAULT"
                          configID:-1
                    recordedEvents:nil
                    recordedValues:nil
@@ -104,7 +104,7 @@ FBSDKAEMInvocationConfigMode FBSDKAEMInvocationConfigBrandMode = @"BRAND";
                                 ACSConfigID:(nullable NSString *)ACSConfigID
                                  businessID:(nullable NSString *)businessID
                                   timestamp:(nullable NSDate *)timestamp
-                                 configMode:(nullable NSString *)configMode
+                                 configMode:(NSString *)configMode
                                    configID:(NSInteger)configID
                              recordedEvents:(nullable NSMutableSet<NSString *> *)recordedEvents
                              recordedValues:(nullable NSMutableDictionary<NSString *, NSMutableDictionary *> *)recordedValues

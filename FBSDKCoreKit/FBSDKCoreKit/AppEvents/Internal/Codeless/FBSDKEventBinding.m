@@ -130,6 +130,9 @@ static id<FBSDKNumberParsing> _numberParser;
 + (BOOL)  match:(NSObject *)view
   pathComponent:(FBSDKCodelessPathComponent *)component
 {
+  if (!view) {
+    return NO;
+  }
   NSString *className = NSStringFromClass([view class]);
   if (![className isEqualToString:component.className]) {
     return NO;
