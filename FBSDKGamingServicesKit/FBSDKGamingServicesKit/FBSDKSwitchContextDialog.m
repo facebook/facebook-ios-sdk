@@ -31,6 +31,10 @@
  #define FBSDKWEBDIALOGFRAMEWIDTH 300.0
  #define FBSDKWEBDIALOGFRAMEHEIGHT 170.0
 
+@interface FBSDKSwitchContextDialog ()
+@property id<FBSDKWindowFinding> windowFinder;
+@end
+
 @implementation FBSDKSwitchContextDialog
 
 + (instancetype)dialogWithContent:(FBSDKContextSwitchAsyncContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
@@ -53,11 +57,17 @@
 
   if ([self.dialogContent isKindOfClass:[FBSDKContextSwitchAsyncContent class]] && self.dialogContent) {
     FBSDKContextSwitchAsyncContent *content = (FBSDKContextSwitchAsyncContent *)self.dialogContent;
-    [FBSDKTypeUtility dictionary:parameters setObject:content.contextToken forKey:@"context_id"];
+    [FBSDKTypeUtility dictionary:parameters
+                       setObject:content.contextToken
+                          forKey:@"context_id"];
   }
 
   CGRect frame = [self createWebDialogFrameWithWidth:FBSDKWEBDIALOGFRAMEWIDTH height:FBSDKWEBDIALOGFRAMEHEIGHT];
-  self.currentWebDialog = [FBSDKWebDialog createAndShow:FBSDK_CONTEXT_METHOD_NAME parameters:parameters frame:frame delegate:self];
+  self.currentWebDialog = [FBSDKWebDialog createAndShow:FBSDK_CONTEXT_METHOD_NAME
+                                             parameters:parameters
+                                                  frame:frame
+                                               delegate:self
+                                           windowFinder:self.windowFinder];
 
   [FBSDKInternalUtility.sharedUtility registerTransientObject:self];
   return YES;

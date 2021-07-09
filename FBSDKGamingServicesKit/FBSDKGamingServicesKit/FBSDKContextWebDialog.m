@@ -101,7 +101,10 @@
 
 - (CGRect)createWebDialogFrameWithWidth:(float)width height:(float)height
 {
-  CGRect windowFrame = [FBSDKInternalUtility.sharedUtility findWindow].frame;
+  if (!self.currentWebDialog) {
+    return CGRectZero;
+  }
+  CGRect windowFrame = [self.currentWebDialog.windowFinder findWindow].frame;
   CGFloat xPoint = CGRectGetMidX(windowFrame) - (width / 2);
   CGFloat yPoint = CGRectGetMidY(windowFrame) - (height / 2);
   return CGRectMake(xPoint, yPoint, width, height);

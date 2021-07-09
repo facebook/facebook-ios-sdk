@@ -35,7 +35,7 @@ NS_SWIFT_NAME(ContextWebDialog)
 /**
  The current web dialog that shows the web content
 */
-@property FBSDKWebDialog* currentWebDialog;
+@property (nonatomic, strong, nullable) FBSDKWebDialog* currentWebDialog;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

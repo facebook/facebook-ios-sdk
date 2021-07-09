@@ -40,9 +40,6 @@ typedef void (^FBSDKBoolBlock)(BOOL finished);
 static FBSDKWebDialog *g_currentDialog = nil;
 
 @interface FBSDKWebDialog () <FBSDKWebDialogViewDelegate>
-
-@property (nonatomic, strong) id<FBSDKWindowFinding> windowFinder;
-
 @end
 
 @implementation FBSDKWebDialog
@@ -66,32 +63,23 @@ static FBSDKWebDialog *g_currentDialog = nil;
                   parameters:(NSDictionary *)parameters
                     delegate:(id<FBSDKWebDialogDelegate>)delegate
 {
-  return [self showWithName:name
-                 parameters:parameters
-               windowFinder:FBSDKInternalUtility.sharedUtility
-                   delegate:delegate];
-}
-
-+ (instancetype)showWithName:(NSString *)name
-                  parameters:(NSDictionary *)parameters
-                windowFinder:(id<FBSDKWindowFinding>)windowFinder
-                    delegate:(id<FBSDKWebDialogDelegate>)delegate
-{
   return [self createAndShow:name
                   parameters:parameters
                        frame:CGRectZero
-                    delegate:delegate];
+                    delegate:delegate
+                windowFinder:FBSDKInternalUtility.sharedUtility];
 }
 
 + (instancetype)createAndShow:(NSString *)name
                    parameters:(NSDictionary *)parameters
                         frame:(CGRect)frame
                      delegate:(id<FBSDKWebDialogDelegate>)delegate
+                 windowFinder:(id<FBSDKWindowFinding>)windowFinder
 {
   FBSDKWebDialog *dialog = [self dialogWithName:name delegate:delegate];
-  dialog.windowFinder = FBSDKInternalUtility.sharedUtility;
   dialog.parameters = parameters;
   dialog.webViewFrame = frame;
+  dialog.windowFinder = windowFinder;
   [dialog show];
   return dialog;
 }
