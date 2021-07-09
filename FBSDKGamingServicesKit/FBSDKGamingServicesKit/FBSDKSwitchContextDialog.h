@@ -39,11 +39,11 @@ NS_SWIFT_NAME(SwitchContextDialog)
 /**
  Builds a switch context web dialog with content and a delegate.
  @param content The content for the switch context dialog
+ @param windowFinder The application window finder that provides the window to display the dialog
  @param delegate The receiver's delegate used to let the receiver know a context was switch was successful or failure
  */
-+ (instancetype)dialogWithContent:(FBSDKContextSwitchAsyncContent *)content
-                         delegate:(nullable id<FBSDKContextDialogDelegate>)delegate
-NS_SWIFT_NAME(init(content:delegate:));
++ (instancetype)dialogWithContent:(FBSDKContextSwitchAsyncContent *)content windowFinder:(id<FBSDKWindowFinding>)windowFinder delegate:(id<FBSDKContextDialogDelegate>)delegate
+NS_SWIFT_NAME(init(content:windowFinder:delegate:));
 
 @end
 NS_ASSUME_NONNULL_END

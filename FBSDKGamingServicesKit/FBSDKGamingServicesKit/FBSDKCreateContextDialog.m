@@ -37,11 +37,14 @@
 
 @implementation FBSDKCreateContextDialog
 
-+ (instancetype)dialogWithContent:(FBSDKContextCreateAsyncContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
++ (instancetype)dialogWithContent:(FBSDKContextCreateAsyncContent *)content
+                     windowFinder:(id<FBSDKWindowFinding>)windowFinder
+                         delegate:(id<FBSDKContextDialogDelegate>)delegate
 {
   FBSDKCreateContextDialog *dialog = [self new];
   dialog.dialogContent = content;
   dialog.delegate = delegate;
+  dialog.windowFinder = windowFinder;
   return dialog;
 }
 

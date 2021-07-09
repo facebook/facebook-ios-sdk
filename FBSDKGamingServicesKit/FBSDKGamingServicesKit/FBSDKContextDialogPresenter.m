@@ -45,7 +45,9 @@
   if (![FBSDKAccessToken currentAccessToken]) {
     return nil;
   }
-  FBSDKCreateContextDialog *dialog = [FBSDKCreateContextDialog dialogWithContent:content delegate:delegate];
+  FBSDKCreateContextDialog *dialog = [FBSDKCreateContextDialog dialogWithContent:content
+                                                                    windowFinder:FBSDKInternalUtility.sharedUtility
+                                                                        delegate:delegate];
   return dialog;
 }
 
@@ -67,7 +69,7 @@
   if (![FBSDKAccessToken currentAccessToken]) {
     return nil;
   }
-  FBSDKSwitchContextDialog *dialog = [FBSDKSwitchContextDialog dialogWithContent:content delegate:delegate];
+  FBSDKSwitchContextDialog *dialog = [FBSDKSwitchContextDialog dialogWithContent:content windowFinder:FBSDKInternalUtility.sharedUtility delegate:delegate];
   return dialog;
 }
 

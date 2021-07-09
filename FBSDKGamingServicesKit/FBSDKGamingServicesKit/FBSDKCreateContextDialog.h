@@ -38,11 +38,13 @@ NS_SWIFT_NAME(CreateContextDialog)
 /**
   Builds a context creation web dialog with content and a delegate.
  @param content The content for the create context dialog
+ @param windowFinder The application window finder that provides the window to display the dialog
  @param delegate The receiver's delegate used to let the receiver know a context was created or failure
  */
 + (instancetype)dialogWithContent:(FBSDKContextCreateAsyncContent *)content
-                         delegate:(nullable id<FBSDKContextDialogDelegate>)delegate
-NS_SWIFT_NAME(init(content:delegate:));
+                     windowFinder:(id<FBSDKWindowFinding>)windowFinder
+                         delegate:(id<FBSDKContextDialogDelegate>)delegate
+NS_SWIFT_NAME(init(content:windowFinder:delegate:));
 
 @end
 NS_ASSUME_NONNULL_END

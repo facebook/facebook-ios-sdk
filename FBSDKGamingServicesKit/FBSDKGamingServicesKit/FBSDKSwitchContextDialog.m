@@ -37,11 +37,12 @@
 
 @implementation FBSDKSwitchContextDialog
 
-+ (instancetype)dialogWithContent:(FBSDKContextSwitchAsyncContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
++ (instancetype)dialogWithContent:(FBSDKContextSwitchAsyncContent *)content windowFinder:(id<FBSDKWindowFinding>)windowFinder delegate:(id<FBSDKContextDialogDelegate>)delegate
 {
   FBSDKSwitchContextDialog *dialog = [self new];
   dialog.dialogContent = content;
   dialog.delegate = delegate;
+  dialog.windowFinder = windowFinder;
   return dialog;
 }
 
