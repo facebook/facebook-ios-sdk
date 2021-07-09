@@ -53,7 +53,6 @@
  #import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
  #import <FBSDKCoreKit/FBSDKUserAgeRange.h>
  #import <FBSDKCoreKit/FBSDKUtility.h>
- #import <FBSDKCoreKit/FBSDKWindowFinding.h>
 
  #if !TARGET_OS_TV
   #import <FBSDKCoreKit/FBSDKAppLink.h>
@@ -78,6 +77,7 @@
   #import <FBSDKCoreKit/FBSDKURLOpening.h>
   #import <FBSDKCoreKit/FBSDKWebDialog.h>
   #import <FBSDKCoreKit/FBSDKWebViewAppLinkResolver.h>
+  #import <FBSDKCoreKit/FBSDKWindowFinding.h>
  #endif
 
 #else
@@ -117,7 +117,6 @@
  #import "FBSDKSettingsProtocol.h"
  #import "FBSDKUserAgeRange.h"
  #import "FBSDKUtility.h"
- #import "FBSDKWindowFinding.h"
 
  #if !TARGET_OS_TV
   #import "FBSDKAppLink.h"
@@ -141,6 +140,7 @@
   #import "FBSDKURLOpening.h"
   #import "FBSDKWebDialog.h"
   #import "FBSDKWebViewAppLinkResolver.h"
+  #import "FBSDKWindowFinding.h"
  #endif
 
 #endif

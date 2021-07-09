@@ -241,7 +241,6 @@ targets:
           - FBSDKMeasurementEvent_Internal*
           - FBSDKMacCatalystDetermining*
           - FBSDKURL_Internal.h
-          - FBSDKWindowFinding.h
           - FBSDKAppLink*
           - UIApplication+URLOpener.h
           - BridgeAPI
@@ -264,6 +263,7 @@ targets:
           - FBSDKURL*
           - FBSDKURLOpening*
           - FBSDKWebDialog*
+          - FBSDKWindowFinding.h
           - Info.plist
       - path: FBSDKCoreKit/Info.plist
         group: FBSDKCoreKit/Supporting Files
@@ -337,7 +337,6 @@ targets:
           - FBSDKMeasurementEvent_Internal*
           - FBSDKMacCatalystDetermining*
           - FBSDKURL_Internal.h
-          - FBSDKWindowFinding.h
           - FBSDKAppLink*
           - UIApplication+URLOpener.h
           - BridgeAPI
@@ -360,6 +359,7 @@ targets:
           - FBSDKURL*
           - FBSDKURLOpening*
           - FBSDKWebDialog*
+          - FBSDKWindowFinding.h
           - Info.plist
       - path: FBSDKCoreKit/Info.plist
         group: FBSDKCoreKit/Supporting Files
