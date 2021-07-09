@@ -62,6 +62,8 @@ class TestAppEvents: TestEventLogger,
   var capturedConfigureAppEventsStateProvider: AppEventsStateProviding?
   var capturedConfigureSwizzler: Swizzling.Type?
   var capturedAdvertiserIDProvider: AdvertiserIDProviding?
+  var capturedOnDeviceMLModelManager: EventProcessing?
+  var capturedMetadataIndexer: MetadataIndexing?
 
   // swiftlint:disable:next function_parameter_count
   func configure(
@@ -100,6 +102,14 @@ class TestAppEvents: TestEventLogger,
     capturedConfigureAppEventsStateProvider = appEventsStateProvider
     capturedConfigureSwizzler = swizzler
     capturedAdvertiserIDProvider = advertiserIDProvider
+  }
+
+  func configureNonTVComponentsWith(
+    onDeviceMLModelManager modelManager: EventProcessing,
+    metadataIndexer: MetadataIndexing
+  ) {
+    capturedOnDeviceMLModelManager = modelManager
+    capturedMetadataIndexer = metadataIndexer
   }
 
   // MARK: - Source Application Tracking

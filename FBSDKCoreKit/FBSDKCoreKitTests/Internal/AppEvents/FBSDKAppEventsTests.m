@@ -195,8 +195,8 @@
                                                   swizzler:TestSwizzler.class
                                       advertiserIDProvider:self.advertiserIDProvider];
 
-  [FBSDKAppEvents configureNonTVComponentsWithOnDeviceMLModelManager:self.onDeviceMLModelManager
-                                                     metadataIndexer:self.metadataIndexer];
+  [FBSDKAppEvents.singleton configureNonTVComponentsWithOnDeviceMLModelManager:self.onDeviceMLModelManager
+                                                               metadataIndexer:self.metadataIndexer];
 
   [FBSDKAppEvents setLoggingOverrideAppID:self.mockAppID];
 }

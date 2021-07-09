@@ -36,6 +36,11 @@
 @protocol FBSDKSwizzling;
 @protocol FBSDKAdvertiserIDProviding;
 
+#if !TARGET_OS_TV
+@protocol FBSDKEventProcessing;
+@protocol FBSDKMetadataIndexing;
+#endif
+
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AppEventsConfiguring)
@@ -58,6 +63,13 @@ NS_SWIFT_NAME(AppEventsConfiguring)
                    appEventsStateProvider:(id<FBSDKAppEventsStateProviding>)appEventsStateProvider
                                  swizzler:(Class<FBSDKSwizzling>)swizzler
                      advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider;
+
+#if !TARGET_OS_TV
+
+-(void)configureNonTVComponentsWithOnDeviceMLModelManager:(id<FBSDKEventProcessing>)modelManager
+                                           metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer;
+
+#endif
 
 @end
 

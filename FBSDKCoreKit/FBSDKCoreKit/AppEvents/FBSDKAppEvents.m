@@ -284,11 +284,6 @@ static id<FBSDKAppEventsStatePersisting> g_appEventsStateStore;
 static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_eventDeactivationParameterProcessor;
 static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiveDataFilterParameterProcessor;
 
-#if !TARGET_OS_TV
-static id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider> g_onDeviceMLModelManager = nil;
-static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
-#endif
-
 @interface FBSDKAppEvents ()
 
 @property (nullable, nonatomic) id<FBSDKDataPersisting> store;
@@ -303,6 +298,11 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 @property (nonatomic, strong) id<FBSDKAppEventsStateProviding> appEventsStateProvider;
 @property (nonatomic) id<FBSDKAdvertiserIDProviding> advertiserIDProvider;
 @property (nonatomic) BOOL isConfigured;
+
+#if !TARGET_OS_TV
+@property (nonatomic) id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider> onDeviceMLModelManager;
+@property (nonatomic) id<FBSDKMetadataIndexing> metadataIndexer;
+#endif
 
 @property (nonatomic, assign) BOOL disableTimer; // for testing only.
 
@@ -953,11 +953,11 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 #if !TARGET_OS_TV
 
-+ (void)configureNonTVComponentsWithOnDeviceMLModelManager:(id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>)modelManager
+- (void)configureNonTVComponentsWithOnDeviceMLModelManager:(id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>)modelManager
                                            metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer
 {
-  g_onDeviceMLModelManager = modelManager;
-  g_metadataIndexer = metadataIndexer;
+  self.onDeviceMLModelManager = modelManager;
+  self.metadataIndexer = metadataIndexer;
 }
 
 #endif
@@ -1295,12 +1295,12 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
       }];
       [g_featureChecker checkFeature:FBSDKFeatureAAM completionBlock:^(BOOL enabled) {
         if (enabled) {
-          [g_metadataIndexer enable];
+          [self.metadataIndexer enable];
         }
       }];
       [g_featureChecker checkFeature:FBSDKFeaturePrivacyProtection completionBlock:^(BOOL enabled) {
         if (enabled) {
-          [g_onDeviceMLModelManager enable];
+          [self.onDeviceMLModelManager enable];
         }
       }];
       if (@available(iOS 11.3, *)) {
@@ -1400,8 +1400,8 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 
 #if !TARGET_OS_TV
   // Filter out restrictive data with on-device ML
-  if (g_onDeviceMLModelManager.integrityParametersProcessor) {
-    parameters = [g_onDeviceMLModelManager.integrityParametersProcessor processParameters:parameters eventName:eventName];
+  if (self.onDeviceMLModelManager.integrityParametersProcessor) {
+    parameters = [self.onDeviceMLModelManager.integrityParametersProcessor processParameters:parameters eventName:eventName];
   }
 #endif
   // Filter out restrictive keys
@@ -1826,16 +1826,6 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 }
 
  #if !TARGET_OS_TV
-
-+ (id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>)onDeviceMLModelManager
-{
-  return g_onDeviceMLModelManager;
-}
-
-+ (id<FBSDKMetadataIndexing>)metadataIndexer
-{
-  return g_metadataIndexer;
-}
 
 + (id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing>)eventDeactivationParameterProcessor
 {

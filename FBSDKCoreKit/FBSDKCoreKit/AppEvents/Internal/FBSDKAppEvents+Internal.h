@@ -26,9 +26,6 @@
 
 #import "FBSDKAppEventsUtility.h"
 
-@protocol FBSDKEventProcessing;
-@protocol FBSDKMetadataIndexing;
-
 // Internally known event names
 
 /** Use to log that the share dialog was launched */
@@ -139,12 +136,5 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
 
 - (void)flushForReason:(FBSDKAppEventsFlushReason)flushReason;
 - (void)startObservingApplicationLifecycleNotifications;
-
-#if !TARGET_OS_TV
-
-+ (void)configureNonTVComponentsWithOnDeviceMLModelManager:(id<FBSDKEventProcessing>)modelManager
-                                           metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer;
-
-#endif
 
 @end

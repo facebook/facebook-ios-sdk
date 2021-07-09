@@ -104,11 +104,9 @@
 + (id<FBSDKDataPersisting>)store;
 + (Class<FBSDKLogging>)logger;
 + (id<FBSDKSettings>)settings;
-+ (id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>)onDeviceMLModelManager;
 + (id<FBSDKPaymentObserving>)paymentObserver;
 + (id<FBSDKTimeSpentRecording>)timeSpentRecorder;
 + (id<FBSDKAppEventsStatePersisting>)appEventsStateStore;
-+ (id<FBSDKMetadataIndexing>)metadataIndexer;
 + (id<FBSDKAppEventsParameterProcessing>)eventDeactivationParameterProcessor;
 + (id<FBSDKAppEventsParameterProcessing>)restrictiveDataFilterParameterProcessor;
 @end
@@ -316,13 +314,18 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 
 - (void)testConfiguringNonTVAppEventsDependencies
 {
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
+  [FBSDKAppEvents reset];
+
+  [self.delegate initializeSDKWithLaunchOptions:@{}];
+
   XCTAssertEqualObjects(
-    FBSDKAppEvents.onDeviceMLModelManager,
+    self.appEvents.capturedOnDeviceMLModelManager,
     FBSDKModelManager.shared,
     "Initializing the SDK should set concrete on device model manager for event logging"
   );
   XCTAssertEqualObjects(
-    FBSDKAppEvents.metadataIndexer,
+    self.appEvents.capturedMetadataIndexer,
     FBSDKMetadataIndexer.shared,
     "Initializing the SDK should set concrete metadata indexer for event logging"
   );
