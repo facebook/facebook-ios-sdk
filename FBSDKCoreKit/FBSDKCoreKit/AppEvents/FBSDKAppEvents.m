@@ -678,7 +678,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
 {
   [self.singleton validateConfiguration];
 
-  NSString *deviceTokenString = [FBSDKInternalUtility hexadecimalStringFromData:deviceToken];
+  NSString *deviceTokenString = [FBSDKInternalUtility.sharedUtility hexadecimalStringFromData:deviceToken];
   [FBSDKAppEvents setPushNotificationsDeviceTokenString:deviceTokenString];
 }
 
@@ -1245,7 +1245,7 @@ static id<FBSDKMetadataIndexing> g_metadataIndexer = nil;
       _eventBindingManager = [FBSDKEventBindingManager new];
     }
 
-    if ([FBSDKInternalUtility isUnity]) {
+    if ([FBSDKInternalUtility.sharedUtility isUnity]) {
       [FBSDKAppEvents sendEventBindingsToUnity];
     } else {
       FBSDKEventBindingManager *manager = [[FBSDKEventBindingManager alloc] initWithSwizzler:self.swizzler

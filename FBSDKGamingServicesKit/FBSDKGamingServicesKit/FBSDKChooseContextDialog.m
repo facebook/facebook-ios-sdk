@@ -61,11 +61,11 @@
     [self _handleDialogError:error];
     return NO;
   }
-  NSURL *appSwitchDeeplink = [FBSDKInternalUtility URLWithScheme:FBSDK_CONTEXT_DIALOG_URL_SCHEME
-                                                            host:FBSDK_CONTEXT_DIALOG_URL_HOST
-                                                            path:[NSString stringWithFormat:@"/dialog/choosecontext/%@/", FBSDKSettings.appID]
-                                                 queryParameters:[self queryParameters]
-                                                           error:&error];
+  NSURL *appSwitchDeeplink = [FBSDKInternalUtility.sharedUtility URLWithScheme:FBSDK_CONTEXT_DIALOG_URL_SCHEME
+                                                                          host:FBSDK_CONTEXT_DIALOG_URL_HOST
+                                                                          path:[NSString stringWithFormat:@"/dialog/choosecontext/%@/", FBSDKSettings.appID]
+                                                               queryParameters:[self queryParameters]
+                                                                         error:&error];
 
   [[FBSDKBridgeAPI sharedInstance]
    openURL:appSwitchDeeplink

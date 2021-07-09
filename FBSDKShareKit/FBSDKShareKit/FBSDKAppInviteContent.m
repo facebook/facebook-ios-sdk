@@ -127,10 +127,10 @@
 - (BOOL)isEqualToAppInviteContent:(FBSDKAppInviteContent *)content
 {
   return (content
-    && [FBSDKInternalUtility object:_appLinkURL isEqualToObject:content.appLinkURL]
-    && [FBSDKInternalUtility object:_appInvitePreviewImageURL isEqualToObject:content.appInvitePreviewImageURL]
-    && [FBSDKInternalUtility object:_promotionText isEqualToObject:content.promotionText]
-    && [FBSDKInternalUtility object:_promotionCode isEqualToObject:content.promotionText]
+    && [FBSDKInternalUtility.sharedUtility object:_appLinkURL isEqualToObject:content.appLinkURL]
+    && [FBSDKInternalUtility.sharedUtility object:_appInvitePreviewImageURL isEqualToObject:content.appInvitePreviewImageURL]
+    && [FBSDKInternalUtility.sharedUtility object:_promotionText isEqualToObject:content.promotionText]
+    && [FBSDKInternalUtility.sharedUtility object:_promotionCode isEqualToObject:content.promotionText]
     && _destination == content.destination
   );
 }

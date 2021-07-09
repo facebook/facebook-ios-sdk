@@ -60,7 +60,7 @@ static inline void FBSDKShareDialogValidateAPISchemeRegisteredForCanOpenUrl()
 {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FBAPI];
+    [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FBAPI];
   });
 }
 
@@ -68,7 +68,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
 {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_SHARE_EXTENSION];
+    [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_SHARE_EXTENSION];
   });
 }
 
@@ -86,7 +86,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
 + (void)initialize
 {
   if ([FBSDKShareDialog class] == self) {
-    [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
+    [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
     [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:NULL];
   }
 }
@@ -202,7 +202,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
     [self _invokeDelegateDidFailWithError:error ?: validationError];
   } else {
     [self _logDialogShow];
-    [FBSDKInternalUtility registerTransientObject:self];
+    [FBSDKInternalUtility.sharedUtility registerTransientObject:self];
   }
   return didShow;
 }
@@ -236,7 +236,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
     // not all web dialogs report cancellation, so assume that the share has completed with no additional information
     [self _handleWebResponseParameters:results error:nil cancelled:NO];
   }
-  [FBSDKInternalUtility unregisterTransientObject:self];
+  [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
 }
 
 - (void)webDialog:(FBSDKWebDialog *)webDialog didFailWithError:(NSError *)error
@@ -246,7 +246,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   }
   [self _cleanUpWebDialog];
   [self _invokeDelegateDidFailWithError:error];
-  [FBSDKInternalUtility unregisterTransientObject:self];
+  [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
 }
 
 - (void)webDialogDidCancel:(FBSDKWebDialog *)webDialog
@@ -256,7 +256,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   }
   [self _cleanUpWebDialog];
   [self _invokeDelegateDidCancel];
-  [FBSDKInternalUtility unregisterTransientObject:self];
+  [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
 }
 
  #pragma mark - Helper Methods
@@ -325,12 +325,12 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
 
 - (BOOL)_canShowNative
 {
-  return [FBSDKInternalUtility isFacebookAppInstalled];
+  return [FBSDKInternalUtility.sharedUtility isFacebookAppInstalled];
 }
 
 - (BOOL)_canShowShareSheet
 {
-  if (![FBSDKInternalUtility isFacebookAppInstalled]) {
+  if (![FBSDKInternalUtility.sharedUtility isFacebookAppInstalled]) {
     return NO;
   }
 
@@ -516,7 +516,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
       if (successfullyBuilt) {
         FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
           [self _handleWebResponseParameters:response.responseParameters error:response.error cancelled:response.isCancelled];
-          [FBSDKInternalUtility unregisterTransientObject:self];
+          [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
         };
         FBSDKBridgeAPIRequest *request;
         request = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
@@ -545,7 +545,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
     }
     FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
       [self _handleWebResponseParameters:response.responseParameters error:response.error cancelled:response.isCancelled];
-      [FBSDKInternalUtility unregisterTransientObject:self];
+      [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
     };
     FBSDKBridgeAPIRequest *request;
     request = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
@@ -571,7 +571,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   NSDictionary *parameters = [FBSDKShareUtility feedShareDictionaryForContent:shareContent];
   FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
     [self _handleWebResponseParameters:response.responseParameters error:response.error cancelled:response.isCancelled];
-    [FBSDKInternalUtility unregisterTransientObject:self];
+    [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
   };
   FBSDKBridgeAPIRequest *request;
   request = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
@@ -655,7 +655,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
                             forKey:FBSDK_SHARE_RESULT_POST_ID_KEY];
       [self _invokeDelegateDidCompleteWithResults:results];
     }
-    [FBSDKInternalUtility unregisterTransientObject:self];
+    [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
   };
   [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:request
                                 useSafariViewController:[self _useSafariViewController]
@@ -730,7 +730,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
       }
     }
     dispatch_async(dispatch_get_main_queue(), ^{
-      [FBSDKInternalUtility unregisterTransientObject:self];
+      [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
     });
   };
   [fromViewController presentViewController:composeViewController animated:YES completion:nil];

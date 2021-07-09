@@ -79,7 +79,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 
 - (void)start
 {
-  [FBSDKInternalUtility validateAppID];
+  [FBSDKInternalUtility.sharedUtility validateAppID];
   [FBSDKTypeUtility array:g_loginManagerInstances addObject:self];
 
   NSDictionary *parameters = @{
@@ -89,7 +89,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
   };
   id<FBSDKGraphRequest> request = [_graphRequestFactory createGraphRequestWithGraphPath:@"device/login"
                                                                              parameters:parameters
-                                                                            tokenString:[FBSDKInternalUtility validateRequiredClientAccessToken]
+                                                                            tokenString:[FBSDKInternalUtility.sharedUtility validateRequiredClientAccessToken]
                                                                              HTTPMethod:@"POST"
                                                                                   flags:FBSDKGraphRequestFlagNone];
   [request setGraphErrorRecoveryDisabled:YES];
@@ -170,10 +170,10 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
           NSMutableSet<NSString *> *declinedPermissions = [NSMutableSet set];
           NSMutableSet<NSString *> *expiredPermissions = [NSMutableSet set];
 
-          [FBSDKInternalUtility extractPermissionsFromResponse:permissionResult
-                                            grantedPermissions:permissions
-                                           declinedPermissions:declinedPermissions
-                                            expiredPermissions:expiredPermissions];
+          [FBSDKInternalUtility.sharedUtility extractPermissionsFromResponse:permissionResult
+                                                          grantedPermissions:permissions
+                                                         declinedPermissions:declinedPermissions
+                                                          expiredPermissions:expiredPermissions];
           #pragma clang diagnostic push
           #pragma clang diagnostic ignored "-Wdeprecated-declarations"
           FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:tokenString
@@ -244,7 +244,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
              NSDictionary *parameters = @{ @"code" : self->_codeInfo.identifier };
              id<FBSDKGraphRequest> request = [self->_graphRequestFactory createGraphRequestWithGraphPath:@"device/login_status"
                                                                                               parameters:parameters
-                                                                                             tokenString:[FBSDKInternalUtility validateRequiredClientAccessToken]
+                                                                                             tokenString:[FBSDKInternalUtility.sharedUtility validateRequiredClientAccessToken]
                                                                                               HTTPMethod:@"POST"
                                                                                                    flags:FBSDKGraphRequestFlagNone];
              [request setGraphErrorRecoveryDisabled:YES];

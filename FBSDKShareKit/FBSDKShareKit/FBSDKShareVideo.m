@@ -134,10 +134,10 @@ NSString *const kFBSDKShareVideoURLKey = @"videoURL";
 - (BOOL)isEqualToShareVideo:(FBSDKShareVideo *)video
 {
   return (video
-    && [FBSDKInternalUtility object:_data isEqualToObject:video.data]
-    && [FBSDKInternalUtility object:_videoAsset isEqualToObject:video.videoAsset]
-    && [FBSDKInternalUtility object:_videoURL isEqualToObject:video.videoURL]
-    && [FBSDKInternalUtility object:_previewPhoto isEqualToObject:video.previewPhoto]);
+    && [FBSDKInternalUtility.sharedUtility object:_data isEqualToObject:video.data]
+    && [FBSDKInternalUtility.sharedUtility object:_videoAsset isEqualToObject:video.videoAsset]
+    && [FBSDKInternalUtility.sharedUtility object:_videoURL isEqualToObject:video.videoURL]
+    && [FBSDKInternalUtility.sharedUtility object:_previewPhoto isEqualToObject:video.previewPhoto]);
 }
 
 #pragma mark - FBSDKSharingValidation

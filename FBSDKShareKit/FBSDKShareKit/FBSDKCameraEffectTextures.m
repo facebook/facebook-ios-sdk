@@ -83,7 +83,7 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
 
 - (BOOL)isEqualToCameraEffectTextures:(FBSDKCameraEffectTextures *)object
 {
-  return [FBSDKInternalUtility object:_textures isEqualToObject:[object allTextures]];
+  return [FBSDKInternalUtility.sharedUtility object:_textures isEqualToObject:[object allTextures]];
 }
 
  #pragma mark - NSCoding

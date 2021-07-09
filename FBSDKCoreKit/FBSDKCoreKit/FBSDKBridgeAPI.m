@@ -393,7 +393,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   Class SFSafariViewControllerClass = self.frameworkLoader.safariViewControllerClass;
 
   if (SFSafariViewControllerClass) {
-    UIViewController *parent = fromViewController ?: [FBSDKInternalUtility topMostViewController];
+    UIViewController *parent = fromViewController ?: [FBSDKInternalUtility.sharedUtility topMostViewController];
     if (parent == nil) {
       [self.logger logEntry:@"There are no valid ViewController to present SafariViewController with"];
       return;

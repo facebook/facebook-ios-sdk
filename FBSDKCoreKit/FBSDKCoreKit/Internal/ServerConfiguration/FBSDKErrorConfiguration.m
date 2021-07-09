@@ -45,7 +45,7 @@ static NSString *const kErrorCategoryLogin = @"login";
       NSLocalizedStringWithDefaultValue(
         @"ErrorRecovery.OK",
         @"FacebookSDK",
-        [FBSDKInternalUtility bundleForStrings],
+        [FBSDKInternalUtility.sharedUtility bundleForStrings],
         @"OK",
         @"The title of the label to start attempting error recovery"
       );
@@ -53,7 +53,7 @@ static NSString *const kErrorCategoryLogin = @"login";
       NSLocalizedStringWithDefaultValue(
         @"ErrorRecovery.Cancel",
         @"FacebookSDK",
-        [FBSDKInternalUtility bundleForStrings],
+        [FBSDKInternalUtility.sharedUtility bundleForStrings],
         @"Cancel",
         @"The title of the label to decline attempting error recovery"
       );
@@ -61,7 +61,7 @@ static NSString *const kErrorCategoryLogin = @"login";
       NSLocalizedStringWithDefaultValue(
         @"ErrorRecovery.Transient.Suggestion",
         @"FacebookSDK",
-        [FBSDKInternalUtility bundleForStrings],
+        [FBSDKInternalUtility.sharedUtility bundleForStrings],
         @"The server is temporarily busy, please try again.",
         @"The fallback message to display to retry transient errors"
       );
@@ -69,7 +69,7 @@ static NSString *const kErrorCategoryLogin = @"login";
       NSLocalizedStringWithDefaultValue(
         @"ErrorRecovery.Login.Suggestion",
         @"FacebookSDK",
-        [FBSDKInternalUtility bundleForStrings],
+        [FBSDKInternalUtility.sharedUtility bundleForStrings],
         @"Please log into this app again to reconnect your Facebook account.",
         @"The fallback message to display to recover invalidated tokens"
       );

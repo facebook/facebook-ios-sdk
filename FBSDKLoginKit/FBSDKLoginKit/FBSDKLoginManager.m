@@ -337,7 +337,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
     return nil;
   }
 
-  [FBSDKInternalUtility validateURLSchemes];
+  [FBSDKInternalUtility.sharedUtility validateURLSchemes];
 
   NSMutableDictionary *loginParams = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKSettings appID] forKey:@"client_id"];
@@ -345,7 +345,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   [FBSDKTypeUtility dictionary:loginParams setObject:@"ios" forKey:@"sdk"];
   [FBSDKTypeUtility dictionary:loginParams setObject:@"true" forKey:@"return_scopes"];
   loginParams[@"sdk_version"] = FBSDK_VERSION_STRING;
-  [FBSDKTypeUtility dictionary:loginParams setObject:@([FBSDKInternalUtility isFacebookAppInstalled]) forKey:@"fbapp_pres"];
+  [FBSDKTypeUtility dictionary:loginParams setObject:@([FBSDKInternalUtility.sharedUtility isFacebookAppInstalled]) forKey:@"fbapp_pres"];
   [FBSDKTypeUtility dictionary:loginParams setObject:configuration.authType forKey:@"auth_type"];
   [FBSDKTypeUtility dictionary:loginParams setObject:serverConfiguration.loggingToken forKey:@"logging_token"];
   long long cbtInMilliseconds = round(1000 * [NSDate date].timeIntervalSince1970);
@@ -362,7 +362,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   }
 
   NSError *error;
-  NSURL *redirectURL = [FBSDKInternalUtility appURLWithHost:@"authorize" path:@"" queryParameters:@{} error:&error];
+  NSURL *redirectURL = [FBSDKInternalUtility.sharedUtility appURLWithHost:@"authorize" path:@"" queryParameters:@{} error:&error];
   if (!error) {
     [FBSDKTypeUtility dictionary:loginParams
                        setObject:redirectURL.absoluteString
@@ -532,10 +532,10 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   NSError *error;
   NSURL *authURL = nil;
   if (loginParams[@"redirect_uri"]) {
-    authURL = [FBSDKInternalUtility facebookURLWithHostPrefix:@"m."
-                                                         path:FBSDKOauthPath
-                                              queryParameters:loginParams
-                                                        error:&error];
+    authURL = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m."
+                                                                       path:FBSDKOauthPath
+                                                            queryParameters:loginParams
+                                                                      error:&error];
   }
 
   [_logger startAuthMethod:authMethod];

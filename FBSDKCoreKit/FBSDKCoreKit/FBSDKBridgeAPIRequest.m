@@ -115,7 +115,7 @@ NSString *const FBSDKBridgeAPIVersionKey = @"version";
     return nil;
   }
 
-  [FBSDKInternalUtility validateURLSchemes];
+  [FBSDKInternalUtility.sharedUtility validateURLSchemes];
 
   NSDictionary<NSString *, NSString *> *requestQueryParameters = [FBSDKBasicUtility dictionaryWithQueryString:requestURL.query];
   NSMutableDictionary *queryParameters = [[NSMutableDictionary alloc] initWithDictionary:requestQueryParameters];
@@ -123,11 +123,11 @@ NSString *const FBSDKBridgeAPIVersionKey = @"version";
   [FBSDKTypeUtility dictionary:queryParameters
                      setObject:[FBSDKSettings appURLSchemeSuffix]
                         forKey:FBSDKBridgeAPISchemeSuffixKey];
-  requestURL = [FBSDKInternalUtility URLWithScheme:requestURL.scheme
-                                              host:requestURL.host
-                                              path:requestURL.path
-                                   queryParameters:queryParameters
-                                             error:errorRef];
+  requestURL = [FBSDKInternalUtility.sharedUtility URLWithScheme:requestURL.scheme
+                                                            host:requestURL.host
+                                                            path:requestURL.path
+                                                 queryParameters:queryParameters
+                                                           error:errorRef];
   return requestURL;
 }
 

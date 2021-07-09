@@ -65,7 +65,7 @@
     }
     case FBSDKGameRequestFilterEverybody: {
       NSString *graphDomain = [FBSDKUtility getGraphDomainFromToken];
-      if ([graphDomain isEqualToString:@"gaming"] && [FBSDKInternalUtility isFacebookAppInstalled]) {
+      if ([graphDomain isEqualToString:@"gaming"] && [FBSDKInternalUtility.sharedUtility isFacebookAppInstalled]) {
         return @"everybody";
       }
       return nil;

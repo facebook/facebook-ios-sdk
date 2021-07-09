@@ -43,6 +43,7 @@
 #import "FBSDKAppLinkUtility+Testing.h"
 #import "FBSDKAppURLSchemeProviding.h"
 #import "FBSDKInternalUtility+AppURLSchemeProviding.h"
+#import "FBSDKInternalUtility+Testing.h"
 #import "FBSDKAtePublisherCreating.h"
 #import "FBSDKAtePublisherFactory.h"
 #import "FBSDKAuthenticationStatusUtility.h"
@@ -322,15 +323,6 @@ NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvi
                               settings:(id<FBSDKSettings>)settings;
 
 - (instancetype)init;
-
-@end
-
-@interface FBSDKInternalUtility (Testing)
-
-@property (class, nonatomic, nullable) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
-
-+ (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider;
-+ (void)reset;
 
 @end
 

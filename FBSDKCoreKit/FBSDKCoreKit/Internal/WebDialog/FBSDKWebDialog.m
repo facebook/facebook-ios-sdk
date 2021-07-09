@@ -268,10 +268,10 @@ static FBSDKWebDialog *g_currentDialog = nil;
                      setObject:[FBSDKAccessToken currentAccessToken].tokenString
                         forKey:@"access_token"];
   [parameters addEntriesFromDictionary:self.parameters];
-  return [FBSDKInternalUtility facebookURLWithHostPrefix:@"m"
-                                                    path:[@"/dialog/" stringByAppendingString:self.name]
-                                         queryParameters:parameters
-                                                   error:errorRef];
+  return [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
+                                                                  path:[@"/dialog/" stringByAppendingString:self.name]
+                                                       queryParameters:parameters
+                                                                 error:errorRef];
 }
 
 - (BOOL)_showWebView

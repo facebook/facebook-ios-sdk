@@ -2410,6 +2410,7 @@
 		C2157C5C61F550D4408ED956 /* TestApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestApplicationDelegate.swift; sourceTree = "<group>"; };
 		C263BA1D87C6E551559AC073 /* FBSDKAEMEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKAEMEvent.m; sourceTree = "<group>"; };
 		C274C2FA090C45D01E1CE240 /* FBSDKDynamicFrameworkLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKDynamicFrameworkLoader.m; sourceTree = "<group>"; };
+		C2B0EFB18D05ADB46299655A /* FBSDKInternalUtility+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKInternalUtility+Testing.h"; sourceTree = "<group>"; };
 		C2CD5D852EB69739C85A34FB /* FBSDKMeasurementEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKMeasurementEvent.h; sourceTree = "<group>"; };
 		C2DFB9259F157EC96EE202B5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		C3B456BD4A928BFA7FF83B92 /* FBSDKAuthenticationTokenProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKAuthenticationTokenProtocols.h; sourceTree = "<group>"; };
@@ -3720,6 +3721,7 @@
 				6CECC45CF62657D8D9416536 /* FBSDKHybridAppEventsScriptMessageHandler+Testing.h */,
 				A1D11BCDA226F563635E449F /* FBSDKInstrumentManager+Testing.h */,
 				AF5D8DC4A213C842F080AA83 /* FBSDKIntegrityManager+Testing.h */,
+				C2B0EFB18D05ADB46299655A /* FBSDKInternalUtility+Testing.h */,
 				EA1F955242C94AEB0B7DE5BB /* FBSDKModelManager+Testing.h */,
 				2EC548717331CB5DB41621B4 /* FBSDKTimeSpentData+Testing.h */,
 				07801B4112AC9857B8250BF2 /* FBSDKWebDialog+Testing.h */,

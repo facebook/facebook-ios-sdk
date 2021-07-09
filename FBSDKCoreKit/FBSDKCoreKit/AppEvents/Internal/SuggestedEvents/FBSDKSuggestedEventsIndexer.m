@@ -276,7 +276,7 @@ static dispatch_once_t setupNonce;
     NSMutableDictionary<NSString *, id> *viewTree = [NSMutableDictionary dictionary];
 
     NSString *screenName = nil;
-    UIViewController *topMostViewController = [FBSDKInternalUtility topMostViewController];
+    UIViewController *topMostViewController = [FBSDKInternalUtility.sharedUtility topMostViewController];
     if (topMostViewController) {
       screenName = NSStringFromClass([topMostViewController class]);
     }

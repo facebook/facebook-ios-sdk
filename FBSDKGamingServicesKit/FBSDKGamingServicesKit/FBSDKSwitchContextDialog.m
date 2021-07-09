@@ -59,7 +59,7 @@
   CGRect frame = [self createWebDialogFrameWithWidth:FBSDKWEBDIALOGFRAMEWIDTH height:FBSDKWEBDIALOGFRAMEHEIGHT];
   self.currentWebDialog = [FBSDKWebDialog createAndShow:FBSDK_CONTEXT_METHOD_NAME parameters:parameters frame:frame delegate:self];
 
-  [FBSDKInternalUtility registerTransientObject:self];
+  [FBSDKInternalUtility.sharedUtility registerTransientObject:self];
   return YES;
 }
 

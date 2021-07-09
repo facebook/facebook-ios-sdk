@@ -52,7 +52,7 @@
   NSError *error = [FBSDKError errorWithCode:[FBSDKTypeUtility unsignedIntegerValue:results[@"error_code"]]
                                      message:[FBSDKTypeUtility coercedToStringValue:results[@"error_message"]]];
   [self _handleCompletionWithDialogResults:results error:error];
-  [FBSDKInternalUtility unregisterTransientObject:self];
+  [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
 }
 
 - (void)webDialog:(FBSDKWebDialog *)webDialog didFailWithError:(NSError *)error
@@ -61,7 +61,7 @@
     return;
   }
   [self _handleCompletionWithDialogResults:nil error:error];
-  [FBSDKInternalUtility unregisterTransientObject:self];
+  [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
 }
 
 - (void)webDialogDidCancel:(FBSDKWebDialog *)webDialog
@@ -70,7 +70,7 @@
     return;
   }
   [self.delegate contextDialogDidCancel:self];
-  [FBSDKInternalUtility unregisterTransientObject:self];
+  [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
 }
 
  #pragma mark - Helper Methods

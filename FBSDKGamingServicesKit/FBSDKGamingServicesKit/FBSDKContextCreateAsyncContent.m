@@ -72,7 +72,7 @@
 - (BOOL)isEqualToContextCreateAsyncContent:(FBSDKContextCreateAsyncContent *)content
 {
   return (content
-    && [FBSDKInternalUtility object:self.playerID isEqualToObject:content.playerID]);
+    && [FBSDKInternalUtility.sharedUtility object:self.playerID isEqualToObject:content.playerID]);
 }
 
  #pragma mark - NSCoding

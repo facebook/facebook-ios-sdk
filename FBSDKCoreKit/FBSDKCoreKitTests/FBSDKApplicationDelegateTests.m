@@ -588,7 +588,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [self.delegate initializeSDKWithLaunchOptions:@{}];
-  NSObject *infoDictionaryProvider = (NSObject *)[FBSDKInternalUtility infoDictionaryProvider];
+  NSObject *infoDictionaryProvider = (NSObject *)[FBSDKInternalUtility.sharedUtility infoDictionaryProvider];
   XCTAssertEqualObjects(
     infoDictionaryProvider,
     NSBundle.mainBundle,

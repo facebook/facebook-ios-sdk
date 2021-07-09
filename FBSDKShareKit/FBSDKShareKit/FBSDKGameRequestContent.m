@@ -198,12 +198,12 @@
   return (content
     && _actionType == content.actionType
     && _filters == content.filters
-    && [FBSDKInternalUtility object:_data isEqualToObject:content.data]
-    && [FBSDKInternalUtility object:_message isEqualToObject:content.message]
-    && [FBSDKInternalUtility object:_objectID isEqualToObject:content.objectID]
-    && [FBSDKInternalUtility object:_recipientSuggestions isEqualToObject:content.recipientSuggestions]
-    && [FBSDKInternalUtility object:_title isEqualToObject:content.title]
-    && [FBSDKInternalUtility object:_recipients isEqualToObject:content.recipients]);
+    && [FBSDKInternalUtility.sharedUtility object:_data isEqualToObject:content.data]
+    && [FBSDKInternalUtility.sharedUtility object:_message isEqualToObject:content.message]
+    && [FBSDKInternalUtility.sharedUtility object:_objectID isEqualToObject:content.objectID]
+    && [FBSDKInternalUtility.sharedUtility object:_recipientSuggestions isEqualToObject:content.recipientSuggestions]
+    && [FBSDKInternalUtility.sharedUtility object:_title isEqualToObject:content.title]
+    && [FBSDKInternalUtility.sharedUtility object:_recipients isEqualToObject:content.recipients]);
 }
 
  #pragma mark - NSCoding

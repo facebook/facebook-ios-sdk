@@ -72,7 +72,7 @@
 - (BOOL)isEqualToContextSwitchAsyncContent:(FBSDKContextSwitchAsyncContent *)content
 {
   return (content
-    && [FBSDKInternalUtility object:self.contextToken isEqualToObject:content.contextToken]);
+    && [FBSDKInternalUtility.sharedUtility object:self.contextToken isEqualToObject:content.contextToken]);
 }
 
  #pragma mark - NSCoding

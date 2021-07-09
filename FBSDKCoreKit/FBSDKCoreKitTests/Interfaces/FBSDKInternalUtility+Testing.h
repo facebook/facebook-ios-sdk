@@ -16,31 +16,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import FBSDKCoreKit
-import XCTest
+#import "FBSDKCoreKit+Internal.h"
 
-class InternalUtilityTests: XCTestCase {
+NS_ASSUME_NONNULL_BEGIN
 
-  override func setUp() {
-    super.setUp()
+@interface FBSDKInternalUtility (Testing)
 
-    InternalUtility.reset()
-  }
+@property (class, nonnull, nonatomic) Class<FBSDKLogging> loggerType;
+@property (nullable, nonatomic) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
+@property (nonatomic) BOOL isConfigured;
 
-  func testDefaultInfoDictionaryProvider() {
-    XCTAssertNil(
-      InternalUtility.shared.infoDictionaryProvider,
-      "Should not have an info dictionary provider by default"
-    )
-  }
++ (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider;
++ (void)reset;
 
-  func testConfiguringWithInfoDictionaryProvider() {
-    let bundle = TestBundle()
-    InternalUtility.configure(withInfoDictionaryProvider: bundle)
+- (BOOL)_canOpenURLScheme:(nullable NSString *)scheme;
 
-    XCTAssertTrue(
-      InternalUtility.shared.infoDictionaryProvider === bundle,
-      "Should be able to provide an info dictionary provider"
-    )
-  }
-}
+@end
+
+NS_ASSUME_NONNULL_END

@@ -79,7 +79,7 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonDidTap = @"fb_send_button_did_
   NSLocalizedStringWithDefaultValue(
     @"SendButton.Send",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"Send",
     @"The label for FBSDKSendButton"
   );

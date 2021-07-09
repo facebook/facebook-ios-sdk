@@ -277,7 +277,7 @@ static UIApplicationState _applicationState;
   // Register on UIApplicationDidEnterBackgroundNotification events to reset source application data when app backgrounds.
   [self.appEvents registerAutoResetSourceApplication];
 
-  [FBSDKInternalUtility validateFacebookReservedURLSchemes];
+  [FBSDKInternalUtility.sharedUtility validateFacebookReservedURLSchemes];
 }
 
 - (void)addObservers

@@ -100,7 +100,7 @@
   return (other != nil
     && (_imageShouldFit == other->_imageShouldFit)
     && (_pictureMode == other->_pictureMode)
-    && [FBSDKInternalUtility object:_profileID isEqualToObject:other->_profileID]);
+    && [FBSDKInternalUtility.sharedUtility object:_profileID isEqualToObject:other->_profileID]);
 }
 
 @end
@@ -193,7 +193,7 @@
 
 - (void)setProfileID:(NSString *)profileID
 {
-  if (![FBSDKInternalUtility object:_profileID isEqualToObject:profileID]) {
+  if (![FBSDKInternalUtility.sharedUtility object:_profileID isEqualToObject:profileID]) {
     _profileID = [profileID copy];
     _placeholderImageIsValid = NO;
     [self setNeedsImageUpdate];

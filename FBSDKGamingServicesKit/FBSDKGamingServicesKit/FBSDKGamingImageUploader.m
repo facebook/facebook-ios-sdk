@@ -129,7 +129,7 @@
    initWithProgressHandler:progressHandler];
 
   connection.delegate = uploader;
-  [FBSDKInternalUtility registerTransientObject:connection.delegate];
+  [FBSDKInternalUtility.sharedUtility registerTransientObject:connection.delegate];
 
   __weak typeof(self) weakSelf = self;
   [connection
@@ -142,7 +142,7 @@
     }
     HTTPMethod:FBSDKHTTPMethodPOST]
    completion:^(id<FBSDKGraphRequestConnecting> _Nullable graphConnection, id _Nullable result, NSError *_Nullable error) {
-     [FBSDKInternalUtility unregisterTransientObject:graphConnection.delegate];
+     [FBSDKInternalUtility.sharedUtility unregisterTransientObject:graphConnection.delegate];
 
      if (error || !result) {
        completionHandler(

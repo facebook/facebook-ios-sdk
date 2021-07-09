@@ -103,7 +103,7 @@
    completionHandler:completionHandler
    progressHandler:progressHandler];
 
-  [FBSDKInternalUtility registerTransientObject:uploader];
+  [FBSDKInternalUtility.sharedUtility registerTransientObject:uploader];
 
   FBSDKVideoUploader *const videoUploader =
   [[FBSDKVideoUploader alloc]
@@ -146,7 +146,7 @@
     _completionHandler(success, result, finalError);
   }
 
-  [FBSDKInternalUtility unregisterTransientObject:self];
+  [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
 }
 
 - (void)safeProgressWithTotalBytesSent:(NSUInteger)totalBytesSent

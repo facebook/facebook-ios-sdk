@@ -239,7 +239,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
       NSLocalizedStringWithDefaultValue(
         @"LoginButton.LoggedInAs",
         @"FacebookSDK",
-        [FBSDKInternalUtility bundleForStrings],
+        [FBSDKInternalUtility.sharedUtility bundleForStrings],
         @"Logged in as %@",
         @"The format string for the FBSDKLoginButton label when the user is logged in"
       );
@@ -249,7 +249,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
       NSLocalizedStringWithDefaultValue(
         @"LoginButton.LoggedIn",
         @"FacebookSDK",
-        [FBSDKInternalUtility bundleForStrings],
+        [FBSDKInternalUtility.sharedUtility bundleForStrings],
         @"Logged in using Facebook",
         @"The fallback string for the FBSDKLoginButton label when the user name is not available yet"
       );
@@ -259,7 +259,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
     NSLocalizedStringWithDefaultValue(
       @"LoginButton.CancelLogout",
       @"FacebookSDK",
-      [FBSDKInternalUtility bundleForStrings],
+      [FBSDKInternalUtility.sharedUtility bundleForStrings],
       @"Cancel",
       @"The label for the FBSDKLoginButton action sheet to cancel logging out"
     );
@@ -267,7 +267,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
     NSLocalizedStringWithDefaultValue(
       @"LoginButton.ConfirmLogOut",
       @"FacebookSDK",
-      [FBSDKInternalUtility bundleForStrings],
+      [FBSDKInternalUtility.sharedUtility bundleForStrings],
       @"Log Out",
       @"The label for the FBSDKLoginButton action sheet to confirm logging out"
     );
@@ -287,7 +287,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
                                                    }];
     [alertController addAction:cancel];
     [alertController addAction:logout];
-    UIViewController *topMostViewController = [FBSDKInternalUtility topMostViewController];
+    UIViewController *topMostViewController = [FBSDKInternalUtility.sharedUtility topMostViewController];
     [topMostViewController presentViewController:alertController
                                         animated:YES
                                       completion:nil];
@@ -310,7 +310,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
       [self logTapEventWithEventName:FBSDKAppEventNameFBSDKLoginButtonDidTap parameters:nil];
     }
 
-    [_loginManager logInFromViewController:[FBSDKInternalUtility viewControllerForView:self]
+    [_loginManager logInFromViewController:[FBSDKInternalUtility.sharedUtility viewControllerForView:self]
                              configuration:loginConfig
                                 completion:handler];
   }
@@ -337,7 +337,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   return NSLocalizedStringWithDefaultValue(
     @"LoginButton.LogOut",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"Log out",
     @"The label for the FBSDKLoginButton when the user is currently logged in"
   );
@@ -348,7 +348,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   return NSLocalizedStringWithDefaultValue(
     @"LoginButton.LogInContinue",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"Continue with Facebook",
     @"The long label for the FBSDKLoginButton when the user is currently logged out"
   );
@@ -359,7 +359,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   return NSLocalizedStringWithDefaultValue(
     @"LoginButton.LogIn",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"Log in",
     @"The short label for the FBSDKLoginButton when the user is currently logged out"
   );
