@@ -21,6 +21,7 @@ tagFilters: &onlyRunOnTags
 
 requiresProjectGeneration: &requiresProjectGeneration
   requires:
+    - setup
     - install_xcodegen
     - generate_projects
 
@@ -307,13 +308,10 @@ workflows:
       - build-swift-packages:
           <<: *requiresSetup
       - build-xcode-debug:
-          <<: *requiresSetup
           <<: *requiresProjectGeneration
       - build-xcode-release:
-          <<: *requiresSetup
           <<: *requiresProjectGeneration
       - build-carthage:
-          <<: *requiresSetup
           <<: *requiresProjectGeneration
       - integrate-spm:
           <<: *requiresSetup
@@ -324,7 +322,6 @@ workflows:
       - verify-spm-headers:
           <<: *requiresSetup
       - verify-xcode-integration:
-          <<: *requiresSetup
           <<: *requiresProjectGeneration
   release:
     jobs:
@@ -332,7 +329,6 @@ workflows:
           <<: *onlyRunOnTags
       - build-for-release:
           <<: *onlyRunOnTags
-          <<: *requiresSetup
           <<: *requiresProjectGeneration
       - publish-to-github:
           <<: *onlyRunOnTags
