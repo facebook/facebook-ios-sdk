@@ -196,7 +196,8 @@
                                       advertiserIDProvider:self.advertiserIDProvider];
 
   [FBSDKAppEvents.singleton configureNonTVComponentsWithOnDeviceMLModelManager:self.onDeviceMLModelManager
-                                                               metadataIndexer:self.metadataIndexer];
+                                                               metadataIndexer:self.metadataIndexer
+                                                           skAdNetworkReporter:nil];
 
   [FBSDKAppEvents setLoggingOverrideAppID:self.mockAppID];
 }

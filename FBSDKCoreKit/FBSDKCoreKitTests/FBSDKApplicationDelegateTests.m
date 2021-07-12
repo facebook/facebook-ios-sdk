@@ -57,6 +57,7 @@
 - (void)applicationWillResignActive:(NSNotification *)notification;
 - (void)setApplicationState:(UIApplicationState)state;
 - (void)initializeSDKWithLaunchOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
+- (FBSDKSKAdNetworkReporter *)skAdNetworkReporter;
 
 @end
 
@@ -68,9 +69,9 @@
 @end
 
 @interface FBSDKSKAdNetworkReporter (Testing)
-+ (id<FBSDKGraphRequestProviding>)requestProvider;
-+ (id<FBSDKDataPersisting>)store;
-+ (Class<FBSDKConversionValueUpdating>)conversionValueUpdatable;
+- (id<FBSDKGraphRequestProviding>)requestProvider;
+- (id<FBSDKDataPersisting>)store;
+- (Class<FBSDKConversionValueUpdating>)conversionValueUpdatable;
 @end
 
 @interface FBSDKAppLinkUtility (Testing)
@@ -329,6 +330,11 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
     FBSDKMetadataIndexer.shared,
     "Initializing the SDK should set concrete metadata indexer for event logging"
   );
+  XCTAssertEqualObjects(
+    self.appEvents.capturedSKAdNetworkReporter,
+    [self.delegate skAdNetworkReporter],
+    "Initializing the SDK should set concrete SKAdNetworkReporter for event logging"
+  );
 }
 
 - (void)testInitializingSdkConfiguresGateKeeperManager
@@ -476,9 +482,9 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [self.delegate initializeSDKWithLaunchOptions:@{}];
-  NSObject *requestProvider = (NSObject *)[FBSDKSKAdNetworkReporter requestProvider];
-  NSObject *store = (NSObject *)[FBSDKSKAdNetworkReporter store];
-  NSObject *conversionValueUpdatable = (NSObject *)[FBSDKSKAdNetworkReporter conversionValueUpdatable];
+  NSObject *requestProvider = (NSObject *)[[self.delegate skAdNetworkReporter] requestProvider];
+  NSObject *store = (NSObject *)[[self.delegate skAdNetworkReporter] store];
+  NSObject *conversionValueUpdatable = (NSObject *)[[self.delegate skAdNetworkReporter] conversionValueUpdatable];
   XCTAssertEqualObjects(
     requestProvider.class,
     FBSDKGraphRequestFactory.class,

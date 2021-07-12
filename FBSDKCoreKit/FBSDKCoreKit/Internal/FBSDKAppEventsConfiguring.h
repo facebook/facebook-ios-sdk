@@ -39,6 +39,7 @@
 #if !TARGET_OS_TV
 @protocol FBSDKEventProcessing;
 @protocol FBSDKMetadataIndexing;
+@class FBSDKSKAdNetworkReporter;
 #endif
 
 NS_ASSUME_NONNULL_BEGIN
@@ -67,7 +68,8 @@ NS_SWIFT_NAME(AppEventsConfiguring)
 #if !TARGET_OS_TV
 
 -(void)configureNonTVComponentsWithOnDeviceMLModelManager:(id<FBSDKEventProcessing>)modelManager
-                                           metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer;
+                                          metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer
+                                      skAdNetworkReporter:(nullable FBSDKSKAdNetworkReporter*)skAdNetworkReporter;
 
 #endif
 

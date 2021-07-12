@@ -116,6 +116,7 @@ static UIApplicationState _applicationState;
 #if !TARGET_OS_TV
 @property (nonnull, nonatomic, readonly) Class<FBSDKProfileProviding> profileProvider;
 @property (nonnull, nonatomic, readonly) id<FBSDKBackgroundEventLogging> backgroundEventLogger;
+@property (nonatomic) FBSDKSKAdNetworkReporter *skAdNetworkReporter;
 #endif
 
 @property (nonatomic) BOOL isAppLaunched;
@@ -427,7 +428,7 @@ static UIApplicationState _applicationState;
     [self.appEvents activateApp];
   }
 #if !TARGET_OS_TV
-  [FBSDKSKAdNetworkReporter checkAndRevokeTimer];
+  [self.skAdNetworkReporter checkAndRevokeTimer];
 #endif
 
   NSArray<id<FBSDKApplicationObserving>> *observers = [self.applicationObservers copy];
@@ -653,10 +654,11 @@ static UIApplicationState _applicationState;
   [FBSDKCrashShield configureWithSettings:sharedSettings
                           requestProvider:[FBSDKGraphRequestFactory new]
                           featureChecking:FBSDKFeatureManager.shared];
+  self.skAdNetworkReporter = nil;
   if (@available(iOS 14.0, *)) {
-    [FBSDKSKAdNetworkReporter configureWithRequestProvider:graphRequestProvider
-                                                     store:store
-                                  conversionValueUpdatable:SKAdNetwork.class];
+    self.skAdNetworkReporter = [[FBSDKSKAdNetworkReporter alloc] initWithRequestProvider:graphRequestProvider
+                                                                                   store:store
+                                                                conversionValueUpdatable:SKAdNetwork.class];
     [FBSDKAEMReporter configureWithRequestProvider:graphRequestProvider];
   }
   [FBSDKProfile configureWithStore:store
@@ -665,7 +667,8 @@ static UIApplicationState _applicationState;
   [FBSDKWebDialogView configureWithWebViewProvider:[FBSDKWebViewFactory new]
                                          urlOpener:UIApplication.sharedApplication];
   [self.appEvents configureNonTVComponentsWithOnDeviceMLModelManager:FBSDKModelManager.shared
-                                                     metadataIndexer:FBSDKMetadataIndexer.shared];
+                                                     metadataIndexer:FBSDKMetadataIndexer.shared
+                                                 skAdNetworkReporter:self.skAdNetworkReporter];
 #endif
 }
 

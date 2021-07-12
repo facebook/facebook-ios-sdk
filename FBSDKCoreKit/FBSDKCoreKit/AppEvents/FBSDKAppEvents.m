@@ -302,6 +302,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 #if !TARGET_OS_TV
 @property (nonatomic) id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider> onDeviceMLModelManager;
 @property (nonatomic) id<FBSDKMetadataIndexing> metadataIndexer;
+@property (nonatomic) FBSDKSKAdNetworkReporter *skAdNetworkReporter;
 #endif
 
 @property (nonatomic, assign) BOOL disableTimer; // for testing only.
@@ -955,9 +956,11 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 - (void)configureNonTVComponentsWithOnDeviceMLModelManager:(id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>)modelManager
                                            metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer
+                                       skAdNetworkReporter:(nullable FBSDKSKAdNetworkReporter *)skAdNetworkReporter;
 {
   self.onDeviceMLModelManager = modelManager;
   self.metadataIndexer = metadataIndexer;
+  self.skAdNetworkReporter = skAdNetworkReporter;
 }
 
 #endif
@@ -1310,7 +1313,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
               [SKAdNetwork registerAppForAdNetworkAttribution];
               [g_featureChecker checkFeature:FBSDKFeatureSKAdNetworkConversionValue completionBlock:^(BOOL SKAdNetworkConversionValueEnabled) {
                 if (SKAdNetworkConversionValueEnabled) {
-                  [FBSDKSKAdNetworkReporter enable];
+                  [self.skAdNetworkReporter enable];
                 }
               }];
             }
@@ -1356,7 +1359,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   }
 #if !TARGET_OS_TV
   // Update conversion value for SKAdNetwork if needed
-  [FBSDKSKAdNetworkReporter recordAndUpdateEvent:eventName currency:[FBSDKTypeUtility dictionary:parameters objectForKey:FBSDKAppEventParameterNameCurrency ofType:NSString.class] value:valueToSum];
+  [self.skAdNetworkReporter recordAndUpdateEvent:eventName currency:[FBSDKTypeUtility dictionary:parameters objectForKey:FBSDKAppEventParameterNameCurrency ofType:NSString.class] value:valueToSum];
   // Update conversion value for AEM if needed
   [FBSDKAEMReporter recordAndUpdateEvent:eventName
                                 currency:[FBSDKTypeUtility dictionary:parameters objectForKey:FBSDKAppEventParameterNameCurrency ofType:NSString.class]
