@@ -16,37 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+import FacebookGamingServices
+import XCTest
 
-@class FBSDKContextCreateAsyncContent;
-#if !TARGET_OS_TV
+class SymbolVisibilityTests: XCTestCase {
 
-#import <Foundation/Foundation.h>
-#import "FBSDKContextWebDialog.h"
+  func testCanSeeReexportedSymbol() {
+    _ = Mirror(reflecting: FriendFinderDialog.self)
+  }
 
-
-NS_ASSUME_NONNULL_BEGIN
-/**
-  A dialog to create a context through a web view
- */
-NS_SWIFT_NAME(CreateContextDialog)
-@interface FBSDKCreateContextDialog : FBSDKContextWebDialog
-
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
-
-/**
-  Builds a context creation web dialog with content and a delegate.
- @param content The content for the create context dialog
- @param windowFinder The application window finder that provides the window to display the dialog
- @param delegate The receiver's delegate used to let the receiver know a context was created or failure
- */
-+ (instancetype)dialogWithContent:(FBSDKContextCreateAsyncContent *)content
-                     windowFinder:(id<FBSDKWindowFinding>)windowFinder
-                         delegate:(id<FBSDKContextDialogDelegate>)delegate
-NS_SWIFT_NAME(init(content:windowFinder:delegate:));
-
-@end
-NS_ASSUME_NONNULL_END
-
-#endif
+}

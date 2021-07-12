@@ -19,6 +19,12 @@
 
 killall Xcode || true
 
+if [ ! -d "Carthage/checkouts/ocmock" ]
+then
+    echo "OCMock is required to run some tests. Run the command 'carthage bootstrap --no-build' and try again."
+    exit
+fi
+
 if command -v xcodegen >/dev/null; then
     cd FBSDKCoreKit_Basics || exit
     xcodegen generate

@@ -16,17 +16,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-PRODUCT_NAME = FBSDKGamingServicesKit
-PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBSDKGamingServicesKit
+#if BUCK
+ #import <FBSDKGamingServicesKit/FBSDKGamingServicesKit.h>
+#else
+ #import <LegacyGamingServices/FBSDKGamingServicesKit.h>
+#endif
 
-CURRENT_PROJECT_VERSION = $(FBSDK_PROJECT_VERSION)
-
-INFOPLIST_FILE = Info.plist
-
-SDKROOT = iphoneos
-
-GCC_C_LANGUAGE_STANDARD = gnu11
-
-CLANG_CXX_LANGUAGE_STANDARD = "gnu++14"
-
-SKIP_INSTALL = YES
+#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKFriendFinderDialog+Testing.h"
+#import "FBSDKGamingImageUploader+Testing.h"
+#import "FBSDKGamingServiceController.h"
+#import "FBSDKGamingServiceControllerCreating.h"
+#import "FBSDKGamingServiceControllerFactory.h"
+#import "FBSDKGamingServiceControllerProtocol.h"

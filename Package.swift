@@ -68,7 +68,7 @@ let package = Package(
         */
         .library(
             name: "FacebookGamingServices",
-            targets: ["FacebookGamingServices"]
+            targets: ["FacebookGamingServices", "FBSDKGamingServicesKit"]
         )
     ],
     targets: [
@@ -84,7 +84,7 @@ let package = Package(
           This will not contain interfaces for new features written in Swift.
         */
         .target(
-            name: "LegacyCoreKit",
+            name: "LegacyCore",
             dependencies: ["FBSDKCoreKit_Basics"],
             path: "FBSDKCoreKit/FBSDKCoreKit",
             exclude: ["Swift"],
@@ -132,7 +132,7 @@ let package = Package(
         */
         .target(
             name: "FacebookCore",
-            dependencies: ["LegacyCoreKit"],
+            dependencies: ["LegacyCore"],
             cSettings: [
                 .headerSearchPath("../../FBSDKCoreKit/FBSDKCoreKit/Internal"),
                 .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil))
@@ -150,7 +150,7 @@ let package = Package(
         */
         .target(
             name: "FBSDKCoreKit",
-            dependencies: ["LegacyCoreKit", "FacebookCore"],
+            dependencies: ["LegacyCore", "FacebookCore"],
             cSettings: [
                 .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil))
             ]
@@ -222,10 +222,9 @@ let package = Package(
           This will not contain interfaces for new features written in Swift.
         */
         .target(
-            name: "FBSDKGamingServicesKit",
-            dependencies: ["FBSDKCoreKit"],
-            path: "FBSDKGamingServicesKit/FBSDKGamingServicesKit",
-            exclude: ["Swift"],
+            name: "LegacyGamingServices",
+            dependencies: ["LegacyCore"],
+            path: "FBSDKGamingServicesKit/LegacyGamingServices",
             cSettings: [
                 .headerSearchPath("Internal"),
                 .headerSearchPath("../../FBSDKCoreKit/FBSDKCoreKit/Internal"),
@@ -243,12 +242,28 @@ let package = Package(
         */
         .target(
             name: "FacebookGamingServices",
-            dependencies: ["FacebookCore", "FBSDKGamingServicesKit"],
-            path: "FBSDKGamingServicesKit/FBSDKGamingServicesKit/Swift",
+            dependencies: ["FacebookCore", "LegacyGamingServices"],
             cSettings: [
                 .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil))
+            ],
+            swiftSettings: [
+                .define("FBSDK_SWIFT_PACKAGE")
             ]
-        )
+        ),
+
+        /*
+          The legacy Objective-C interface that will be used to maintain
+          backwards compatibility with types that have been converted to Swift.
+
+          This will not contain interfaces for new features written in Swift.
+        */
+        .target(
+            name: "FBSDKGamingServicesKit",
+            dependencies: ["FacebookGamingServices"],
+            swiftSettings: [
+                .define("FBSDK_SWIFT_PACKAGE")
+            ]
+        ),
     ],
     cxxLanguageStandard: CXXLanguageStandard.cxx11
 )

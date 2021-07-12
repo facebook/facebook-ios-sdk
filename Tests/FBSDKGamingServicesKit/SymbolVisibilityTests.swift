@@ -16,21 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKGamingServicesKit/FBSDKGamingServicesKit.h>
+import FBSDKGamingServicesKit
+import XCTest
 
-@protocol FBSDKGamingServiceControllerCreating;
+class SymbolVisibilityTests: XCTestCase {
 
-NS_ASSUME_NONNULL_BEGIN
+  func testCanSeeReexportedSymbol() {
+    _ = Mirror(reflecting: FriendFinderDialog.self)
+    _ = Mirror(reflecting: Sample.self)
+  }
 
-@interface FBSDKFriendFinderDialog (Testing)
-
-@property (class, nonnull, nonatomic, readonly) FBSDKFriendFinderDialog *shared;
-@property (nonnull, nonatomic) id<FBSDKGamingServiceControllerCreating> factory;
-
-- (instancetype)initWithGamingServiceControllerFactory:(id<FBSDKGamingServiceControllerCreating>)factory;
-
-- (void)launchFriendFinderDialogWithCompletionHandler:(FBSDKGamingServiceCompletionHandler)completionHandler;
-
-@end
-
-NS_ASSUME_NONNULL_END
+}

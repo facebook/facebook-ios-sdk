@@ -1,4 +1,4 @@
-framework module FBSDKGamingServicesKit {
+framework module LegacyGamingServices {
     umbrella header "FBSDKGamingServicesKit.h"
 
     export *
