@@ -22,8 +22,7 @@ tagFilters: &onlyRunOnTags
 requiresProjectGeneration: &requiresProjectGeneration
   requires:
     - setup
-    - install_xcodegen
-    - generate_projects
+    - generate-projects
 
 commands:
   setup:
@@ -46,6 +45,11 @@ commands:
   generate_projects:
     description: Generates xcode projects
     steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Bootstrap Carthage
+          command: carthage bootstrap --no-build
       - run:
           name: Generate Projects
           command: ./generate-projects.sh
@@ -234,6 +238,11 @@ jobs:
     <<: *useMacOS
     steps:
       - setup
+  generate-projects:
+    <<: *useMacOS
+    steps:
+      - install_xcodegen
+      - generate_projects
   build-for-release:
     <<: *useMacOS
     steps:
@@ -305,6 +314,8 @@ workflows:
   test:
     jobs:
       - setup
+      - generate-projects:
+          <<: *requiresSetup
       - build-swift-packages:
           <<: *requiresSetup
       - build-xcode-debug:
@@ -327,6 +338,8 @@ workflows:
     jobs:
       - setup:
           <<: *onlyRunOnTags
+      - generate-projects:
+          <<: *requiresSetup
       - build-for-release:
           <<: *onlyRunOnTags
           <<: *requiresProjectGeneration
