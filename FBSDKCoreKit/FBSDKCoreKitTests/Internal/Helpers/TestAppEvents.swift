@@ -64,7 +64,7 @@ class TestAppEvents: TestEventLogger,
   var capturedAdvertiserIDProvider: AdvertiserIDProviding?
   var capturedOnDeviceMLModelManager: EventProcessing?
   var capturedMetadataIndexer: MetadataIndexing?
-  var capturedSKAdNetworkReporter: SKAdNetworkReporter?
+  var capturedSKAdNetworkReporter: AppEventsReporter?
 
   // swiftlint:disable:next function_parameter_count
   func configure(
@@ -108,7 +108,7 @@ class TestAppEvents: TestEventLogger,
   func configureNonTVComponentsWith(
     onDeviceMLModelManager modelManager: EventProcessing,
     metadataIndexer: MetadataIndexing,
-    skAdNetworkReporter: SKAdNetworkReporter?
+    skAdNetworkReporter: AppEventsReporter?
   ) {
     capturedOnDeviceMLModelManager = modelManager
     capturedMetadataIndexer = metadataIndexer

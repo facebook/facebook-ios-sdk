@@ -87,6 +87,7 @@
  #import "FBSDKModelManager.h"
  #import "FBSDKModelManager+RulesFromKeyProvider.h"
  #import "FBSDKProfile+Internal.h"
+ #import "FBSDKSKAdNetworkReporter+AppEventsReporter.h"
  #import "FBSDKSKAdNetworkReporter+Internal.h"
  #import "FBSDKURLOpener.h"
  #import "FBSDKWebDialogView.h"
@@ -655,10 +656,12 @@ static UIApplicationState _applicationState;
                           requestProvider:[FBSDKGraphRequestFactory new]
                           featureChecking:FBSDKFeatureManager.shared];
   self.skAdNetworkReporter = nil;
-  if (@available(iOS 14.0, *)) {
+  if (@available(iOS 11.3, *)) {
     self.skAdNetworkReporter = [[FBSDKSKAdNetworkReporter alloc] initWithRequestProvider:graphRequestProvider
                                                                                    store:store
                                                                 conversionValueUpdatable:SKAdNetwork.class];
+  }
+  if (@available(iOS 14.0, *)) {
     [FBSDKAEMReporter configureWithRequestProvider:graphRequestProvider];
   }
   [FBSDKProfile configureWithStore:store

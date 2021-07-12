@@ -124,6 +124,7 @@
 @property (nonnull, nonatomic) TestAppEventsParameterProcessor *restrictiveDataFilterParameterProcessor;
 @property (nonnull, nonatomic) TestAppEventsStateProvider *appEventsStateProvider;
 @property (nonnull, nonatomic) TestAdvertiserIDProvider *advertiserIDProvider;
+@property (nonnull, nonatomic) TestAppEventsReporter *skAdNetworkReporter;
 
 @end
 
@@ -172,6 +173,7 @@
   self.timeSpentRecorderFactory = [TestTimeSpentRecorderFactory new];
   self.timeSpentRecorder = self.timeSpentRecorderFactory.recorder;
   self.advertiserIDProvider = [TestAdvertiserIDProvider new];
+  self.skAdNetworkReporter = [TestAppEventsReporter new];
 
   // Must be stubbed before the configure method is called
   self.atePublisher = [TestAtePublisher new];
@@ -197,7 +199,7 @@
 
   [FBSDKAppEvents.singleton configureNonTVComponentsWithOnDeviceMLModelManager:self.onDeviceMLModelManager
                                                                metadataIndexer:self.metadataIndexer
-                                                           skAdNetworkReporter:nil];
+                                                           skAdNetworkReporter:self.skAdNetworkReporter];
 
   [FBSDKAppEvents setLoggingOverrideAppID:self.mockAppID];
 }
@@ -907,6 +909,23 @@
   XCTAssertNil(self.appEventsStateProvider.state.capturedEventDictionary);
 }
 
+- (void)testLogEventWillRecordAndUpdateWithSKAdNetworkReporter
+{
+  if (@available(iOS 11.3, *)) {
+    [FBSDKAppEvents logEvent:self.eventName valueToSum:self.purchaseAmount];
+    XCTAssertEqualObjects(
+      self.eventName,
+      self.skAdNetworkReporter.capturedEvent,
+      "Logging a event should invoke the SKAdNetwork reporter with the expected event name"
+    );
+    XCTAssertEqualObjects(
+      @(self.purchaseAmount),
+      self.skAdNetworkReporter.capturedValue,
+      "Logging a event should invoke the SKAdNetwork reporter with the expected event value"
+    );
+  }
+}
+
 - (void)testLogImplicitEvent
 {
   [FBSDKAppEvents logImplicitEvent:self.eventName valueToSum:@(self.purchaseAmount) parameters:@{} accessToken:nil];
@@ -1116,6 +1135,42 @@
     [self.featureManager capturedFeaturesContains:FBSDKFeatureSKAdNetwork],
     "fetchConfiguration should check if the SKAdNetwork feature is enabled when SKAdNetworkReport is enabled"
   );
+}
+
+- (void)testFetchingConfigurationEnablesSKAdNetworkReporterWhenSKAdNetworkReportAndConversionValueEnabled
+{
+  self.settings.stubbedIsSKAdNetworkReportEnabled = YES;
+  [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
+  TestAppEventsConfigurationProvider.capturedBlock();
+  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  if (@available(iOS 11.3, *)) {
+    [self.featureManager completeCheckForFeature:FBSDKFeatureSKAdNetwork
+                                            with:YES];
+    [self.featureManager completeCheckForFeature:FBSDKFeatureSKAdNetworkConversionValue
+                                            with:YES];
+    XCTAssertTrue(
+      [self.skAdNetworkReporter enableWasCalled],
+      "Fetching a configuration should enable SKAdNetworkReporter when SKAdNetworkReport and SKAdNetworkConversionValue are enabled"
+    );
+  }
+}
+
+- (void)testFetchingConfigurationDoesNotEnableSKAdNetworkReporterWhenSKAdNetworkConversionValueIsDisabled
+{
+  self.settings.stubbedIsSKAdNetworkReportEnabled = YES;
+  [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
+  TestAppEventsConfigurationProvider.capturedBlock();
+  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  if (@available(iOS 11.3, *)) {
+    [self.featureManager completeCheckForFeature:FBSDKFeatureSKAdNetwork
+                                            with:YES];
+    [self.featureManager completeCheckForFeature:FBSDKFeatureSKAdNetworkConversionValue
+                                            with:NO];
+    XCTAssertFalse(
+      [self.skAdNetworkReporter enableWasCalled],
+      "Fetching a configuration should NOT enable SKAdNetworkReporter if SKAdNetworkConversionValue is disabled"
+    );
+  }
 }
 
 - (void)testFetchingConfigurationNotIncludingSKAdNetworkIfSKAdNetworkReportDisabled

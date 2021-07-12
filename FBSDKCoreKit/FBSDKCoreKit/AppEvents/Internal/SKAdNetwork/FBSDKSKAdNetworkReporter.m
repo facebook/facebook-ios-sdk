@@ -107,6 +107,14 @@ static NSString *const FBSDKSKAdNetworkReporterKey = @"com.facebook.sdk:FBSDKSKA
 - (void)recordAndUpdateEvent:(NSString *)event
                     currency:(nullable NSString *)currency
                        value:(nullable NSNumber *)value
+                  parameters:(nullable NSDictionary *)parameters
+{
+  [self recordAndUpdateEvent:event currency:currency value:value];
+}
+
+- (void)recordAndUpdateEvent:(NSString *)event
+                    currency:(nullable NSString *)currency
+                       value:(nullable NSNumber *)value
 {
   if (@available(iOS 14.0, *)) {
     if (!self.isSKAdNetworkReportEnabled) {

@@ -32,6 +32,7 @@
 #import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKAppEventsDeviceInfo.h"
 #import "FBSDKAppEventsParameterProcessing.h"
+#import "FBSDKAppEventsReporter.h"
 #import "FBSDKAppEventsState.h"
 #import "FBSDKAppEventsStatePersisting.h"
 #import "FBSDKAppEventsStateProviding.h"
@@ -54,7 +55,6 @@
 #import "FBSDKLogging.h"
 #import "FBSDKMetadataIndexing.h"
 #import "FBSDKPaymentObserving.h"
-#import "FBSDKSKAdNetworkReporter.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationProviding.h"
 #import "FBSDKSettingsProtocol.h"
@@ -302,7 +302,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 #if !TARGET_OS_TV
 @property (nonatomic) id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider> onDeviceMLModelManager;
 @property (nonatomic) id<FBSDKMetadataIndexing> metadataIndexer;
-@property (nonatomic) FBSDKSKAdNetworkReporter *skAdNetworkReporter;
+@property (nonatomic) id<FBSDKAppEventsReporter> skAdNetworkReporter;
 #endif
 
 @property (nonatomic, assign) BOOL disableTimer; // for testing only.
@@ -956,7 +956,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 - (void)configureNonTVComponentsWithOnDeviceMLModelManager:(id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>)modelManager
                                            metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer
-                                       skAdNetworkReporter:(nullable FBSDKSKAdNetworkReporter *)skAdNetworkReporter;
+                                       skAdNetworkReporter:(nullable id<FBSDKAppEventsReporter>)skAdNetworkReporter;
 {
   self.onDeviceMLModelManager = modelManager;
   self.metadataIndexer = metadataIndexer;
@@ -1359,7 +1359,10 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   }
 #if !TARGET_OS_TV
   // Update conversion value for SKAdNetwork if needed
-  [self.skAdNetworkReporter recordAndUpdateEvent:eventName currency:[FBSDKTypeUtility dictionary:parameters objectForKey:FBSDKAppEventParameterNameCurrency ofType:NSString.class] value:valueToSum];
+  [self.skAdNetworkReporter recordAndUpdateEvent:eventName
+                                        currency:[FBSDKTypeUtility dictionary:parameters objectForKey:FBSDKAppEventParameterNameCurrency ofType:NSString.class]
+                                           value:valueToSum
+                                      parameters:parameters];
   // Update conversion value for AEM if needed
   [FBSDKAEMReporter recordAndUpdateEvent:eventName
                                 currency:[FBSDKTypeUtility dictionary:parameters objectForKey:FBSDKAppEventParameterNameCurrency ofType:NSString.class]

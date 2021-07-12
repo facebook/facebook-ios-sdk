@@ -180,6 +180,8 @@
 // Profile
 #import "FBSDKProfileProtocols.h"
 #import "FBSDKProfile+ProfileProtocols.h"
+// AppEvents Reporter
+#import "FBSDKAppEventsReporter.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
