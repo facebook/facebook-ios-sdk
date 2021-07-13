@@ -17,20 +17,13 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <OCMock/OCMock.h>
-#import <XCTest/XCTest.h>
 
-#if BUCK
- #import <FBSDKGamingServicesKit/FBSDKGamingServicesKit.h>
-
- #import "FBSDKGamingServicesKitTests-Swift.h"
-#else
- #import <LegacyGamingServices/FBSDKGamingServicesKit.h>
-
- #import "LegacyGamingServicesTests-Swift.h"
-#endif
+@import LegacyGamingServices;
+@import XCTest;
 
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKGamingServicesKitTestUtility.h"
+#import "LegacyGamingServicesTests-Swift.h"
 
 @interface FBSDKGamingImageUploaderTests : XCTestCase
 

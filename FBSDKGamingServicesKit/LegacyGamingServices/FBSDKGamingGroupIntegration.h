@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#if defined FBSDKCOCOAPODS || defined BUCK
+#if defined FBSDKCOCOAPODS
 #import <FBSDKGamingServicesKit/FBSDKGamingServiceCompletionHandler.h>
 #else
 #import "FBSDKGamingServiceCompletionHandler.h"

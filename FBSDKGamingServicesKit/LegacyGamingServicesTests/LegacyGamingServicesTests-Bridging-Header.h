@@ -16,11 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if BUCK
- #import <FBSDKGamingServicesKit/FBSDKGamingServicesKit.h>
-#else
- #import <LegacyGamingServices/FBSDKGamingServicesKit.h>
-#endif
+@import LegacyGamingServices;
 
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKFriendFinderDialog+Testing.h"

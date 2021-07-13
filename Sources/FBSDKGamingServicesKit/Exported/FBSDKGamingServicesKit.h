@@ -16,26 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@import LegacyGamingServices;
+// Used from BUCK and Xcodebuild to maintain backwards compatibility for current users
+// of FBSDKGamingServicesKit but will be excluded from Swift Package Manager.
 
-@protocol FBSDKGamingServiceControllerCreating;
-
-NS_ASSUME_NONNULL_BEGIN
-
-@interface FBSDKGamingImageUploader (Testing)
-
-@property (class, nonnull, nonatomic, readonly) FBSDKGamingImageUploader *shared;
-@property (nonnull, nonatomic) id<FBSDKGamingServiceControllerCreating> factory;
-
-- (instancetype)initWithGamingServiceControllerFactory:(id<FBSDKGamingServiceControllerCreating>)factory;
-
-- (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration *_Nonnull)configuration
-          andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler;
-
-- (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration *_Nonnull)configuration
-                   completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
-                  andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler;
-
-@end
-
-NS_ASSUME_NONNULL_END
+#import <LegacyGamingServices/FBSDKGamingServicesKit.h>

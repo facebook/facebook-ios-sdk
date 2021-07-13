@@ -260,6 +260,7 @@ let package = Package(
         .target(
             name: "FBSDKGamingServicesKit",
             dependencies: ["FacebookGamingServices"],
+            exclude: ["Exported"],
             swiftSettings: [
                 .define("FBSDK_SWIFT_PACKAGE")
             ]

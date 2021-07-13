@@ -16,21 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <XCTest/XCTest.h>
-
-#if BUCK
- #import <FBSDKGamingServicesKit/FBSDKGamingServicesKit.h>
-
- #import "FBSDKGamingServicesKitTests-Swift.h"
-#else
- #import <LegacyGamingServices/FBSDKGamingServicesKit.h>
-
- #import "LegacyGamingServicesTests-Swift.h"
-#endif
+@import LegacyGamingServices;
+@import XCTest;
 
 #include "FBSDKCoreKit/FBSDKSettings.h"
 #import "FBSDKGamingServicesCoreKitImport.h"
 #import "FBSDKGamingServicesKitTestUtility.h"
+#import "LegacyGamingServicesTests-Swift.h"
 
 @interface FBSDKFriendFinderDialogTests : XCTestCase
 
