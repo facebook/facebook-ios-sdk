@@ -242,7 +242,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 {
   id<FBSDKGraphRequestProviding> requestProvider = [FBSDKGraphRequestFactory new];
   id<FBSDKDataPersisting> store = [UserDefaultsSpy new];
-  Class<FBSDKConversionValueUpdating> conversionValueUpdatable = TestConversionValueUpdating.class;
   FBSDKSKAdNetworkReporter *reporter = [[FBSDKSKAdNetworkReporter alloc] initWithRequestProvider:requestProvider
                                                                                            store:store
                                                                         conversionValueUpdatable:TestConversionValueUpdating.class];

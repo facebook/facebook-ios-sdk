@@ -1,4 +1,4 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+// Copyright (c) 2016-present, Facebook, Inc. All rights reserved.
 //
 // You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
 // copy, modify, and distribute this software in source code or binary form for use
@@ -16,17 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-PRODUCT_NAME = FBSDKGamingServicesKit
-PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBSDKGamingServicesKit
+// Need to treat ObjC as separate dependency for SPM because it does not
+// support mixed Swift and ObjC sources. In order to expose the dependent
+// interface we need to pass through the import of the `FBSDKCoreKitObjC`
+// target defined in Package.swift.
+// See: https://forums.swift.org/t/16648/2 for more details
+//
 
-CURRENT_PROJECT_VERSION = $(FBSDK_PROJECT_VERSION)
+#if FBSDK_SWIFT_PACKAGE
+@_exported import FacebookCore
+#endif
 
-INFOPLIST_FILE = Info.plist
-
-SDKROOT = iphoneos
-
-GCC_C_LANGUAGE_STANDARD = gnu11
-
-CLANG_CXX_LANGUAGE_STANDARD = "gnu++14"
-
-SKIP_INSTALL = YES
+@_exported import FacebookGamingServices

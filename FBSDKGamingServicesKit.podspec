@@ -34,8 +34,8 @@ Pod::Spec.new do |s|
     'OTHER_SWIFT_FLAGS': '$(inherited) -Xcc -DFBSDKCOCOAPODS',
   }
 
-  s.source_files   = 'FBSDKGamingServicesKit/FBSDKGamingServicesKit/**/*.{h,m}'
-  s.public_header_files = 'FBSDKGamingServicesKit/FBSDKGamingServicesKit/*.{h}'
+  s.source_files   = 'FBSDKGamingServicesKit/LegacyGamingServices/**/*.{h,m}'
+  s.public_header_files = 'FBSDKGamingServicesKit/LegacyGamingServices/*.{h}'
 
   s.dependency 'FBSDKCoreKit_Basics', "~> #{s.version}"
   s.dependency 'FBSDKCoreKit', "~> #{s.version}"

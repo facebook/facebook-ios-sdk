@@ -34,6 +34,26 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CDD523753C329C9295584A25"
+               BuildableName = "LegacyGamingServicesTests.xctest"
+               BlueprintName = "LegacyGamingServicesTests"
+               ReferencedContainer = "container:FBSDKGamingServicesKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "8F6454CB8412AB078EEFD0FC"
+               BuildableName = "FacebookGamingServicesTests.xctest"
+               BlueprintName = "FacebookGamingServicesTests"
+               ReferencedContainer = "container:FBSDKGamingServicesKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "F3B470A001EAF28A5D3AC81C"
                BuildableName = "FBSDKGamingServicesKitTests.xctest"
                BlueprintName = "FBSDKGamingServicesKitTests"

@@ -19,11 +19,18 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
-#import <FBSDKGamingServicesKit/FBSDKGamingServicesKit.h>
+#if BUCK
+ #import <FBSDKGamingServicesKit/FBSDKGamingServicesKit.h>
+
+ #import "FBSDKGamingServicesKitTests-Swift.h"
+#else
+ #import <LegacyGamingServices/FBSDKGamingServicesKit.h>
+
+ #import "LegacyGamingServicesTests-Swift.h"
+#endif
 
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKGamingServicesKitTestUtility.h"
-#import "FBSDKGamingServicesKitTests-Swift.h"
 
 @interface FBSDKGamingImageUploaderTests : XCTestCase
 

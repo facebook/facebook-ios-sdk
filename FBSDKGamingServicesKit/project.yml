@@ -52,107 +52,11 @@ settings:
     CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: NO
     SWIFT_OPTIMIZATION_LEVEL: -O
     ENABLE_NS_ASSERTIONS: YES
-    PRODUCT_NAME: FBSDKGamingServicesKit
 
-targets:
-  FBSDKGamingServicesKit:
-    type: framework
-    platform: iOS
-    sources:
-      - path: ../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h
-        headerVisibility: project
-        group: FBSDKGamingServicesKit/Internal
-      - path: FBSDKGamingServicesKit
-        headerVisibility: public
-        excludes:
-          - Internal
-          - include
-          - Info.plist
-          - Swift
-      - path: FBSDKGamingServicesKit/Internal
-        headerVisibility: project
-        createIntermediateGroups: true
-      - path: FBSDKGamingServicesKit/Swift
-        excludes:
-          - Exports.swift
-        createIntermediateGroups: true
-    configFiles:
-      Debug: Configurations/FBSDKGamingServicesKit.xcconfig
-      Release: Configurations/FBSDKGamingServicesKit.xcconfig
-    dependencies:
-      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics
-        link: false
-      - target: FBSDKCoreKit/FBSDKCoreKit
-        link: false
-    preBuildScripts:
-      - name: Run Swiftlint
-        script: |
-          # Type a script or drag a script file from your workspace to insert its path.
-          if which swiftlint >/dev/null; then
-            swiftlint --config ../.swiftlint.yml
-          else
-            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
-          fi
-    settings:
-      CLANG_WARN_STRICT_PROTOTYPES: NO
-  FBSDKGamingServicesKit-Dynamic:
-    type: framework
-    platform: iOS
-    productName: FBSDKGamingServicesKit
-    sources:
-      - path: ../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h
-        headerVisibility: project
-        group: FBSDKGamingServicesKit/Internal
-      - path: FBSDKGamingServicesKit
-        headerVisibility: public
-        excludes:
-          - Internal
-          - include
-          - Info.plist
-          - Swift
-      - path: FBSDKGamingServicesKit/Internal
-        headerVisibility: project
-        createIntermediateGroups: true
-      - path: FBSDKGamingServicesKit/Swift
-        excludes:
-          - Exports.swift
-        createIntermediateGroups: true
-    configFiles:
-      Debug: Configurations/FBSDKGamingServicesKit-Dynamic.xcconfig
-      Release: Configurations/FBSDKGamingServicesKit-Dynamic.xcconfig
-    dependencies:
-      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Dynamic
-      - target: FBSDKCoreKit/FBSDKCoreKit-Dynamic
-      - target: FBSDKShareKit/FBSDKShareKit-Dynamic
-      - sdk: UIKit.framework
-      - sdk: CoreGraphics.framework
-    preBuildScripts:
-      - name: Run Swiftlint
-        script: |
-          # Type a script or drag a script file from your workspace to insert its path.
-          if which swiftlint >/dev/null; then
-            swiftlint --config ../.swiftlint.yml
-          else
-            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
-          fi
-    settings:
-      CLANG_WARN_STRICT_PROTOTYPES: NO
-      PRODUCT_NAME: FBSDKGamingServicesKit
-  FBSDKGamingServicesKitTests:
-    type: bundle.unit-test
-    platform: iOS
-    sources:
-      - FBSDKGamingServicesKitTests
-    configFiles:
-      Debug: Configurations/FBSDKGamingServicesKitTests.xcconfig
-      Release: Configurations/FBSDKGamingServicesKitTests.xcconfig
-    dependencies:
-      - target: FBSDKGamingServicesKit-Dynamic
-        embed: false
-      - target: OCMock/OCMock iOS
-        embed: false
-    settings:
-      GCC_WARN_UNUSED_FUNCTION: NO
+include:
+  - static.yml
+  - dynamic.yml
+  - tests.yml
 
 aggregateTargets:
   FBSDKGamingServicesKit-Universal:
@@ -165,6 +69,14 @@ aggregateTargets:
         path: ../scripts/xcode/build-universal-framework.sh
 
 schemes:
+  LegacyGamingServices-Dynamic:
+    build:
+      targets:
+        LegacyGamingServices-Dynamic: all
+  FacebookGamingServices-Dynamic:
+    build:
+      targets:
+        FacebookGamingServices-Dynamic: all
   FBSDKGamingServicesKit:
     build:
       targets:
@@ -175,6 +87,8 @@ schemes:
         FBSDKGamingServicesKit-Dynamic: all
     test:
       targets:
+        - LegacyGamingServicesTests
+        - FacebookGamingServicesTests
         - FBSDKGamingServicesKitTests
         - FBSDKCoreKit/FBSDKCoreKitTests
       coverageTargets:

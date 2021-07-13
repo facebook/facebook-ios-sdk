@@ -16,17 +16,30 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-PRODUCT_NAME = FBSDKGamingServicesKit
-PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBSDKGamingServicesKit
+#if BUCK
+ #import <FBSDKGamingServicesKit/FBSDKGamingServicesKit.h>
+#else
+ #import <LegacyGamingServices/FBSDKGamingServicesKit.h>
+#endif
 
-CURRENT_PROJECT_VERSION = $(FBSDK_PROJECT_VERSION)
+@protocol FBSDKGamingServiceControllerCreating;
 
-INFOPLIST_FILE = Info.plist
+NS_ASSUME_NONNULL_BEGIN
 
-SDKROOT = iphoneos
+@interface FBSDKGamingImageUploader (Testing)
 
-GCC_C_LANGUAGE_STANDARD = gnu11
+@property (class, nonnull, nonatomic, readonly) FBSDKGamingImageUploader *shared;
+@property (nonnull, nonatomic) id<FBSDKGamingServiceControllerCreating> factory;
 
-CLANG_CXX_LANGUAGE_STANDARD = "gnu++14"
+- (instancetype)initWithGamingServiceControllerFactory:(id<FBSDKGamingServiceControllerCreating>)factory;
 
-SKIP_INSTALL = YES
+- (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration *_Nonnull)configuration
+          andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler;
+
+- (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration *_Nonnull)configuration
+                   completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
+                  andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler;
+
+@end
+
+NS_ASSUME_NONNULL_END
