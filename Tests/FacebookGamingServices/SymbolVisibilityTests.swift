@@ -24,5 +24,4 @@ class SymbolVisibilityTests: XCTestCase {
   func testCanSeeReexportedSymbol() {
     _ = Mirror(reflecting: FriendFinderDialog.self)
   }
-
 }

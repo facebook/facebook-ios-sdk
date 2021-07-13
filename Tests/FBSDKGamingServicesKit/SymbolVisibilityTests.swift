@@ -25,5 +25,4 @@ class SymbolVisibilityTests: XCTestCase {
     _ = Mirror(reflecting: FriendFinderDialog.self)
     _ = Mirror(reflecting: Sample.self)
   }
-
 }
