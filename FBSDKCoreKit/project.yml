@@ -263,7 +263,7 @@ targets:
           - FBSDKURL*
           - FBSDKURLOpening*
           - FBSDKWebDialog*
-          - FBSDKWindowFinding.h
+          - FBSDKWindowFinding*
           - Info.plist
       - path: FBSDKCoreKit/Info.plist
         group: FBSDKCoreKit/Supporting Files
@@ -359,7 +359,7 @@ targets:
           - FBSDKURL*
           - FBSDKURLOpening*
           - FBSDKWebDialog*
-          - FBSDKWindowFinding.h
+          - FBSDKWindowFinding*
           - Info.plist
       - path: FBSDKCoreKit/Info.plist
         group: FBSDKCoreKit/Supporting Files
