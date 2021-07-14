@@ -17,6 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @import LegacyGamingServices;
+@import XCTest;
 
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKFriendFinderDialog+Testing.h"

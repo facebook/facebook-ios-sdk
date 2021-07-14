@@ -19,9 +19,6 @@
 @import LegacyGamingServices;
 @import XCTest;
 
-#include "FBSDKCoreKit/FBSDKSettings.h"
-#import "FBSDKGamingServicesCoreKitImport.h"
-#import "FBSDKGamingServicesKitTestUtility.h"
 #import "LegacyGamingServicesTests-Swift.h"
 
 @interface FBSDKFriendFinderDialogTests : XCTestCase
@@ -33,9 +30,6 @@
 @end
 
 @implementation FBSDKFriendFinderDialogTests
-{
-  id _mockToken;
-}
 
 - (void)setUp
 {
@@ -99,7 +93,7 @@
   XCTAssertEqualObjects(
     self.factory.controller.capturedArgument,
     [FBSDKSettings appID],
-    "Should inoke the new controller with the app id in the sdk setting"
+    "Should invoke the new controller with the app id in the sdk setting"
   );
   self.factory.capturedCompletion(YES, nil, nil);
   XCTAssertTrue(didInvokeCompletion);
@@ -127,7 +121,7 @@
   XCTAssertEqualObjects(
     self.factory.controller.capturedArgument,
     FBSDKAccessToken.currentAccessToken.appID,
-    "Should inoke the new controller with the app id of the current access token"
+    "Should invoke the new controller with the app id of the current access token"
   );
   self.factory.capturedCompletion(YES, nil, nil);
 
@@ -156,7 +150,7 @@
   XCTAssertEqualObjects(
     self.factory.controller.capturedArgument,
     FBSDKAccessToken.currentAccessToken.appID,
-    "Should inoke the new controller with the app id of the current access token"
+    "Should invoke the new controller with the app id of the current access token"
   );
 
   self.factory.capturedCompletion(NO, nil, self.bridgeAPIError);
@@ -166,11 +160,6 @@
 
 - (void)testHandlingOfCallbackURL
 {
-  __block id<FBSDKURLOpening> delegate;
-  [FBSDKGamingServicesKitTestUtility captureURLDelegateFromBridgeAPI:^(id<FBSDKURLOpening> obj) {
-    delegate = obj;
-  }];
-
   __block BOOL actioned = false;
   [self.dialog
    launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError *_Nullable error) {
@@ -179,29 +168,6 @@
    }];
 
   self.factory.capturedCompletion(YES, nil, nil);
-
-  XCTAssertTrue(actioned);
-}
-
-// TODO: This is actually testing the applicationDidBecomeActive method
-// of GamingServicesController. This is a roundabout way of setting a
-// completion on that then invoking it via the delegate from the bridge.
-// This test should be moved to where it makes sense or deleted.
-- (void)_testHandlingOfUserManuallyReturningToOriginalApp
-{
-  __block id<FBSDKURLOpening> delegate;
-  [FBSDKGamingServicesKitTestUtility captureURLDelegateFromBridgeAPI:^(id<FBSDKURLOpening> obj) {
-    delegate = obj;
-  }];
-
-  __block BOOL actioned = false;
-  [self.dialog
-   launchFriendFinderDialogWithCompletionHandler:^(BOOL success, NSError *_Nullable error) {
-     XCTAssertTrue(success);
-     actioned = true;
-   }];
-
-  [delegate applicationDidBecomeActive:UIApplication.sharedApplication];
 
   XCTAssertTrue(actioned);
 }
