@@ -75,6 +75,7 @@
  #import "FBSDKURL.h"
  #import "FBSDKURLOpening.h"
  #import "FBSDKWebDialog.h"
+ #import "FBSDKWebDialogView.h"
  #import "FBSDKWebViewAppLinkResolver.h"
  #import "FBSDKWindowFinding.h"
 #endif

@@ -124,9 +124,11 @@
 		C4A4E33655E811BE402E731C /* FBSDKGamingServiceControllerFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB935AEF2E1668CF380662D /* FBSDKGamingServiceControllerFactory.m */; };
 		C584482E15B99908078318A5 /* OCMock iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B495552AE2FDB3E4C4DCFDD /* OCMock iOS.framework */; };
 		CC0B947775FABE7C482B7283 /* FBSDKChooseContextContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 25498E7D0E4C8B4F7CFE4F67 /* FBSDKChooseContextContent.m */; };
+		CDFC4CB4162B96F2220F4588 /* CreateContextDialogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C508F08ADDDC150A830DA7C /* CreateContextDialogTests.swift */; };
 		D0E0C9A4EFA904A6672DF526 /* LegacyGamingServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C616257150748B1481AFE94 /* LegacyGamingServices.framework */; };
 		D34A667A8FA8A2B7881521B5 /* FBSDKFriendFinderDialogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAD082B23BCAB5D797806CC /* FBSDKFriendFinderDialogTests.m */; };
 		D37F4A6727295D8A5E5AC86F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A640B85CB0EE1DE6580A89B9 /* CoreGraphics.framework */; };
+		D3F1E94BB38C010268E4FEC1 /* TestWindowFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80CC8BE4604EA9EF297F5BCF /* TestWindowFinder.swift */; };
 		D63F3C3ACC04535E794C2FBE /* FBSDKGamingServicesKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BCB5D48057FF355ECBA6CB1 /* FBSDKGamingServicesKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DDB691004F0199E245C11EF1 /* FBSDKContextSwitchAsyncContent.h in Headers */ = {isa = PBXBuildFile; fileRef = A54A70877F59E4D64E1C8691 /* FBSDKContextSwitchAsyncContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E3192CF10DE615C8B010C20C /* FBSDKSwitchContextDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B208D3CD259A65A482DC79 /* FBSDKSwitchContextDialog.m */; };
@@ -332,6 +334,7 @@
 		63FFC503A963F92D0B4DC4B3 /* FBSDKVideoUploader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKVideoUploader.h; sourceTree = "<group>"; };
 		642C3CD2551A245AB3E923EB /* FacebookGamingServices-Dynamic.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FacebookGamingServices-Dynamic.xcconfig"; sourceTree = "<group>"; };
 		6AAD082B23BCAB5D797806CC /* FBSDKFriendFinderDialogTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKFriendFinderDialogTests.m; sourceTree = "<group>"; };
+		6C508F08ADDDC150A830DA7C /* CreateContextDialogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateContextDialogTests.swift; sourceTree = "<group>"; };
 		6FB935AEF2E1668CF380662D /* FBSDKGamingServiceControllerFactory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKGamingServiceControllerFactory.m; sourceTree = "<group>"; };
 		6FC0DE03AC6165027DFC0B2D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		7269C0BEB8B8E36FECB27A99 /* FBSDKGamingContext.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKGamingContext.m; sourceTree = "<group>"; };
@@ -343,6 +346,7 @@
 		7B9DAF954ACF253EFCFA93EE /* FBSDKGamingServicesKit.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = FBSDKGamingServicesKit.xcconfig; sourceTree = "<group>"; };
 		7CAF3912E406646E958F831E /* FBSDKGamingGroupIntegration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKGamingGroupIntegration.m; sourceTree = "<group>"; };
 		8098C7BDC61CC141648373E6 /* FBSDKGamingServiceControllerCreating.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKGamingServiceControllerCreating.h; sourceTree = "<group>"; };
+		80CC8BE4604EA9EF297F5BCF /* TestWindowFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestWindowFinder.swift; sourceTree = "<group>"; };
 		81537F7D1C3DE683D31457C2 /* FBSDKGamingPayload.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKGamingPayload.m; sourceTree = "<group>"; };
 		860FEBF0CFBA67F89C0C4293 /* FBSDKGamingImageUploaderTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKGamingImageUploaderTests.m; sourceTree = "<group>"; };
 		88F10C3D17FABA065933B239 /* FacebookGamingServicesTests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = FacebookGamingServicesTests.xcconfig; sourceTree = "<group>"; };
@@ -558,12 +562,14 @@
 		7195A49DACBB4DA34A21C22D /* LegacyGamingServicesTests */ = {
 			isa = PBXGroup;
 			children = (
+				6C508F08ADDDC150A830DA7C /* CreateContextDialogTests.swift */,
 				6AAD082B23BCAB5D797806CC /* FBSDKFriendFinderDialogTests.m */,
 				860FEBF0CFBA67F89C0C4293 /* FBSDKGamingImageUploaderTests.m */,
 				460F098A14924DB23B3FFB8F /* FBSDKGamingServicesKitTestUtility.h */,
 				A94A5A0AF00C2E5FB216F82E /* FBSDKGamingServicesKitTestUtility.m */,
 				240926CF8489283CB6137DAA /* FBSDKGamingVideoUploaderTests.m */,
 				D7A3EF62060CF4F34194CF86 /* LegacyGamingServicesTests-Bridging-Header.h */,
+				80CC8BE4604EA9EF297F5BCF /* TestWindowFinder.swift */,
 				C0C61F6AFE3FEB4A528E36BA /* Helpers */,
 				8AE2791C565E922D0DBBF777 /* Interfaces */,
 			);
@@ -1245,11 +1251,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CDFC4CB4162B96F2220F4588 /* CreateContextDialogTests.swift in Sources */,
 				D34A667A8FA8A2B7881521B5 /* FBSDKFriendFinderDialogTests.m in Sources */,
 				5B89D812681D75D812049076 /* FBSDKGamingImageUploaderTests.m in Sources */,
 				0F2B39768CD222CDF4A44A1B /* FBSDKGamingServicesKitTestUtility.m in Sources */,
 				BFA3279BB6D1DC0E44A0D8A3 /* FBSDKGamingVideoUploaderTests.m in Sources */,
 				5F6090D36589DA76E9312E26 /* TestGamingServiceControllerFactory.swift in Sources */,
+				D3F1E94BB38C010268E4FEC1 /* TestWindowFinder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
