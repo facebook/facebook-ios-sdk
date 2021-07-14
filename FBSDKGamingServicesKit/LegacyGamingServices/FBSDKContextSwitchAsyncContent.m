@@ -35,7 +35,7 @@
 
 - (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef
 {
-  BOOL hasContextToken = self.contextToken.length > 0;
+  BOOL hasContextToken = self.contextTokenID.length > 0;
   if (!hasContextToken) {
     if (errorRef != NULL) {
       NSString *message = @"The contextToken is required.";
@@ -53,7 +53,7 @@
 - (NSUInteger)hash
 {
   NSUInteger subhashes[] = {
-    self.contextToken.hash,
+    self.contextTokenID.hash,
   };
   return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
 }
@@ -72,7 +72,7 @@
 - (BOOL)isEqualToContextSwitchAsyncContent:(FBSDKContextSwitchAsyncContent *)content
 {
   return (content
-    && [FBSDKInternalUtility.sharedUtility object:self.contextToken isEqualToObject:content.contextToken]);
+    && [FBSDKInternalUtility.sharedUtility object:self.contextTokenID isEqualToObject:content.contextTokenID]);
 }
 
  #pragma mark - NSCoding
@@ -85,14 +85,14 @@
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [self init])) {
-    self.contextToken = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_APP_REQUEST_CONTENT_CONTEXT_TOKEN_KEY];
+    self.contextTokenID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_APP_REQUEST_CONTENT_CONTEXT_TOKEN_KEY];
   }
   return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)encoder
 {
-  [encoder encodeObject:self.contextToken forKey:FBSDK_APP_REQUEST_CONTENT_CONTEXT_TOKEN_KEY];
+  [encoder encodeObject:self.contextTokenID forKey:FBSDK_APP_REQUEST_CONTENT_CONTEXT_TOKEN_KEY];
 }
 
  #pragma mark - NSCopying
@@ -100,7 +100,7 @@
 - (id)copyWithZone:(NSZone *)zone
 {
   FBSDKContextSwitchAsyncContent *copy = [FBSDKContextSwitchAsyncContent new];
-  copy.contextToken = [self.contextToken copy];
+  copy.contextTokenID = [self.contextTokenID copy];
   return copy;
 }
 

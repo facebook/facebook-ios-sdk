@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  A model for an instant games choose context app switch dialog
  */
-NS_SWIFT_NAME(ContextSwitchAsyncContent)
+NS_SWIFT_NAME(ChooseContextContent)
 @interface FBSDKChooseContextContent : NSObject <FBSDKValidatable>
 
 /**

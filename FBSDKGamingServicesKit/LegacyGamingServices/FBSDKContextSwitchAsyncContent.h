@@ -35,7 +35,7 @@ NS_SWIFT_NAME(ContextSwitchAsyncContent)
  The context token of the existing context for which this request is being made.
  @return The context token of the existing context
  */
-@property (nonatomic, copy) NSString *contextToken;
+@property (nonatomic, copy) NSString *contextTokenID;
 @end
 
 NS_ASSUME_NONNULL_END

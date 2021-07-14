@@ -59,7 +59,7 @@
   if ([self.dialogContent isKindOfClass:[FBSDKContextSwitchAsyncContent class]] && self.dialogContent) {
     FBSDKContextSwitchAsyncContent *content = (FBSDKContextSwitchAsyncContent *)self.dialogContent;
     [FBSDKTypeUtility dictionary:parameters
-                       setObject:content.contextToken
+                       setObject:content.contextTokenID
                           forKey:@"context_id"];
   }
 
