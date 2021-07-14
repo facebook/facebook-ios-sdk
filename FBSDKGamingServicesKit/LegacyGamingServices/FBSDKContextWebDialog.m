@@ -99,12 +99,9 @@
   }
 }
 
-- (CGRect)createWebDialogFrameWithWidth:(float)width height:(float)height
+- (CGRect)createWebDialogFrameWithWidth:(float)width height:(float)height windowFinder:(id<FBSDKWindowFinding>)windowFinder
 {
-  if (!self.currentWebDialog) {
-    return CGRectZero;
-  }
-  CGRect windowFrame = [self.currentWebDialog.windowFinder findWindow].frame;
+  CGRect windowFrame = [windowFinder findWindow].frame;
   CGFloat xPoint = CGRectGetMidX(windowFrame) - (width / 2);
   CGFloat yPoint = CGRectGetMidY(windowFrame) - (height / 2);
   return CGRectMake(xPoint, yPoint, width, height);

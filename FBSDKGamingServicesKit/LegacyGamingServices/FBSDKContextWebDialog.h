@@ -43,7 +43,7 @@ NS_SWIFT_NAME(ContextWebDialog)
 /**
  Depending on the content size within the browser, this method allows for the resizing of web dialog
 */
-- (CGRect)createWebDialogFrameWithWidth:(float)width height:(float)height;
+- (CGRect)createWebDialogFrameWithWidth:(float)width height:(float)height windowFinder:(id<FBSDKWindowFinding>)windowFinder;
 
 @end
 NS_ASSUME_NONNULL_END

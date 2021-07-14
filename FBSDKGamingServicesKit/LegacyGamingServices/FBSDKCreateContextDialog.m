@@ -63,7 +63,7 @@
     [FBSDKTypeUtility dictionary:parameters setObject:content.playerID forKey:@"player_id"];
   }
 
-  CGRect frame = [self createWebDialogFrameWithWidth:FBSDKWEBDIALOGFRAMEWIDTH height:FBSDKWEBDIALOGFRAMEHEIGHT];
+  CGRect frame = [self createWebDialogFrameWithWidth:FBSDKWEBDIALOGFRAMEWIDTH height:FBSDKWEBDIALOGFRAMEHEIGHT windowFinder:self.windowFinder];
   self.currentWebDialog = [FBSDKWebDialog createAndShow:FBSDK_CONTEXT_METHOD_NAME
                                              parameters:parameters
                                                   frame:frame
