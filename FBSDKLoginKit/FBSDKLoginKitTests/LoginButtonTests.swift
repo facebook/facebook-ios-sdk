@@ -16,7 +16,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import FBSDKCoreKit
+#if BUCK
+import FacebookCore
+#endif
+
 import TestTools
 import XCTest
 
@@ -25,10 +28,13 @@ import XCTest
 class LoginButtonTests: XCTestCase {
 
   let validNonce: String = "abc123"
-  var button: FBLoginButton! // swiftlint:disable:this implicitly_unwrapped_optional
+  let loginProvider = TestLoginProvider()
+  lazy var factory = TestGraphRequestFactory()
+  lazy var button = FBLoginButton()
   var sampleToken: AuthenticationToken {
     return AuthenticationToken(tokenString: "abc", nonce: "123")
   }
+  private let delegate = TestLoginButtonDelegate()
 
   override func setUp() {
     super.setUp()
@@ -37,9 +43,12 @@ class LoginButtonTests: XCTestCase {
     AuthenticationToken.setCurrent(nil)
     Profile.current = nil
 
-    button = FBLoginButton()
+    button.delegate = delegate
+    button.setLoginProvider(loginProvider)
+    button.setGraphRequestFactory(factory)
   }
 
+  // MARK: Nonce
   func testDefaultNonce() {
     XCTAssertNil(FBLoginButton().nonce, "Should not have a default nonce")
   }
@@ -76,6 +85,16 @@ class LoginButtonTests: XCTestCase {
     XCTAssertNotNil(
       button.loginConfiguration(),
       "Should not create a login configuration with an invalid nonce"
+    )
+  }
+
+  func testLoginConfigurationWithValidNonce() {
+    button.nonce = validNonce
+
+    XCTAssertEqual(
+      button.loginConfiguration().nonce,
+      validNonce,
+      "Should create a login configuration with valid nonce"
     )
   }
 
@@ -348,6 +367,90 @@ class LoginButtonTests: XCTestCase {
     )
   }
 
+  // MARK: - Fetching Content
+
+  func testFetchContentGraphRequestCreation() throws {
+    button._fetchAndSetContent()
+
+    let request = try XCTUnwrap(factory.capturedRequests.first)
+    XCTAssertEqual(request.graphPath, "me")
+    XCTAssertEqual(request.parameters["fields"] as? String, "id,name")
+  }
+
+  func testFetchContentCompleteWithError() throws {
+    AccessToken.current = SampleAccessTokens.validToken
+    button._fetchAndSetContent()
+
+    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
+    completion(
+      nil,
+      [
+        "id": SampleAccessTokens.validToken.userID,
+        "name": SampleUserProfiles.defaultName,
+      ],
+      NSError(domain: "foo", code: 0, userInfo: nil)
+    )
+
+    XCTAssertNil(button.userID())
+    XCTAssertNil(button.userName())
+  }
+
+  func testFetchContentCompleteWithNilResponse() throws {
+    button._fetchAndSetContent()
+
+    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
+    completion(nil, nil, nil)
+
+    XCTAssertNil(button.userID())
+    XCTAssertNil(button.userName())
+  }
+
+  func testFetchContentCompleteWithEmptyResponse() throws {
+    button._fetchAndSetContent()
+
+    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
+    completion(nil, [], nil)
+
+    XCTAssertNil(button.userID())
+    XCTAssertNil(button.userName())
+  }
+
+  func testFetchContentCompleteWithMatchingUID() throws {
+    AccessToken.current = SampleAccessTokens.validToken
+    button._fetchAndSetContent()
+
+    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
+    completion(
+      nil,
+      [
+        "id": SampleAccessTokens.validToken.userID,
+        "name": SampleUserProfiles.defaultName,
+      ],
+      nil
+    )
+
+    XCTAssertEqual(button.userID(), SampleAccessTokens.validToken.userID)
+    XCTAssertEqual(button.userName(), SampleUserProfiles.defaultName)
+  }
+
+  func testFetchContentCompleteWithNonmatchingUID() throws {
+    AccessToken.current = SampleAccessTokens.validToken
+    button._fetchAndSetContent()
+
+    let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
+    completion(
+      nil,
+      [
+        "id": self.name,
+        "name": SampleUserProfiles.defaultName,
+      ],
+      nil
+    )
+
+    XCTAssertNil(button.userID())
+    XCTAssertNil(button.userName())
+  }
+
   // MARK: - Setting Messenger Page ID
 
   func testDefaultMessengerPageId() {
@@ -422,6 +525,94 @@ class LoginButtonTests: XCTestCase {
     )
     XCTAssertEqual(button.loginConfiguration().authType,
                    .rerequest)
+  }
+
+  // MARK: default audience
+
+  func testDefaultAudience() {
+    XCTAssertEqual(
+      button.defaultAudience,
+      .friends,
+      "Should have a default audience of friends"
+    )
+  }
+
+  func testSettingDefaultAudience() {
+    button.defaultAudience = .onlyMe
+    XCTAssertEqual(
+      button.defaultAudience,
+      .onlyMe,
+      "Should set the default audience to only me"
+    )
+    XCTAssertEqual(
+      loginProvider.defaultAudience,
+      .onlyMe,
+      "Should set the default audience of the underlying login provider to only me"
+    )
+  }
+
+  // MARK: login tracking
+
+  func testDefaultLoginTracking() {
+    XCTAssertEqual(
+      button.loginTracking,
+      .enabled,
+      "Should set the default login tracking to be enabled"
+    )
+  }
+
+  func testSettingLoginTracking() {
+    button.loginTracking = .limited
+    XCTAssertEqual(
+      button.loginTracking,
+      .limited,
+      "Should set the login tracking to limited"
+    )
+    XCTAssertEqual(
+      button.loginConfiguration().tracking,
+      .limited,
+      "Should created a login configuration with the expected tracking"
+    )
+  }
+
+  // MARK: Button Press
+
+  func testButtonPressNotAuthenticatedLoginNotAllowed() throws {
+    delegate.shouldLogin = false
+
+    button._buttonPressed(self)
+
+    XCTAssert(delegate.willLogin)
+
+    XCTAssertNil(loginProvider.capturedCompletion)
+    XCTAssertNil(loginProvider.capturedConfiguration)
+  }
+
+  func testButtonPressNotAuthenticatedLoginAllowed() throws {
+    button._buttonPressed(self)
+
+    XCTAssert(delegate.willLogin)
+
+    XCTAssertNotNil(loginProvider.capturedConfiguration)
+    let completion = try XCTUnwrap(loginProvider.capturedCompletion)
+    let granted = Set(SampleAccessTokens.validToken.permissions.map { $0.name })
+    let declined = Set(SampleAccessTokens.validToken.declinedPermissions.map { $0.name })
+    let result = LoginManagerLoginResult(
+      token: SampleAccessTokens.validToken,
+      authenticationToken: sampleToken,
+      isCancelled: false,
+      grantedPermissions: granted,
+      declinedPermissions: declined
+    )
+    completion(result, nil)
+
+    XCTAssertEqual(delegate.capturedResult, result)
+  }
+
+  func testLogout() {
+    button._logout()
+    XCTAssert(loginProvider.didLogout)
+    XCTAssert(delegate.didLoggedOut)
   }
 }
 
