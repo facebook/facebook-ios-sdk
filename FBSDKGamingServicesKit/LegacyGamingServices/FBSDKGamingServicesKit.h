@@ -20,7 +20,6 @@
 
  #import <FBSDKGamingServicesKit/FBSDKChooseContextDialog.h>
  #import <FBSDKGamingServicesKit/FBSDKContextDialogPresenter.h>
- #import <FBSDKGamingServicesKit/FBSDKContextSwitchAsyncContent.h>
  #import <FBSDKGamingServicesKit/FBSDKContextWebDialog.h>
  #import <FBSDKGamingServicesKit/FBSDKCreateContextContent.h>
  #import <FBSDKGamingServicesKit/FBSDKCreateContextDialog.h>
@@ -36,12 +35,12 @@
  #import <FBSDKGamingServicesKit/FBSDKGamingServicesCoreKitImport.h>
  #import <FBSDKGamingServicesKit/FBSDKGamingVideoUploader.h>
  #import <FBSDKGamingServicesKit/FBSDKGamingVideoUploaderConfiguration.h>
+ #import <FBSDKGamingServicesKit/FBSDKSwitchContextContent.h>
  #import <FBSDKGamingServicesKit/FBSDKSwitchContextDialog.h>
 #else
 
  #import "FBSDKChooseContextDialog.h"
  #import "FBSDKContextDialogPresenter.h"
- #import "FBSDKContextSwitchAsyncContent.h"
  #import "FBSDKContextWebDialog.h"
  #import "FBSDKCreateContextContent.h"
  #import "FBSDKCreateContextDialog.h"
@@ -57,5 +56,6 @@
  #import "FBSDKGamingServicesCoreKitImport.h"
  #import "FBSDKGamingVideoUploader.h"
  #import "FBSDKGamingVideoUploaderConfiguration.h"
+ #import "FBSDKSwitchContextContent.h"
  #import "FBSDKSwitchContextDialog.h"
 #endif

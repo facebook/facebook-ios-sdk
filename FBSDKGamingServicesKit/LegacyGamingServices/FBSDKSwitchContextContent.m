@@ -20,16 +20,16 @@
 
 #if !TARGET_OS_TV
 
- #import "FBSDKContextSwitchAsyncContent.h"
+ #import "FBSDKSwitchContextContent.h"
 
  #import "FBSDKCoreKitInternalImport.h"
 
  #define FBSDK_APP_REQUEST_CONTENT_CONTEXT_TOKEN_KEY @"contextToken"
 
-@interface FBSDKContextSwitchAsyncContent () <FBSDKCopying>
+@interface FBSDKSwitchContextContent () <FBSDKCopying>
 @end
 
-@implementation FBSDKContextSwitchAsyncContent
+@implementation FBSDKSwitchContextContent
 
  #pragma mark - FBSDKSharingValidation
 
@@ -63,13 +63,13 @@
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKContextSwitchAsyncContent class]]) {
+  if (![object isKindOfClass:[FBSDKSwitchContextContent class]]) {
     return NO;
   }
-  return [self isEqualToContextSwitchAsyncContent:(FBSDKContextSwitchAsyncContent *)object];
+  return [self isEqualToContextSwitchAsyncContent:(FBSDKSwitchContextContent *)object];
 }
 
-- (BOOL)isEqualToContextSwitchAsyncContent:(FBSDKContextSwitchAsyncContent *)content
+- (BOOL)isEqualToContextSwitchAsyncContent:(FBSDKSwitchContextContent *)content
 {
   return (content
     && [FBSDKInternalUtility.sharedUtility object:self.contextTokenID isEqualToObject:content.contextTokenID]);
@@ -99,7 +99,7 @@
 
 - (id)copyWithZone:(NSZone *)zone
 {
-  FBSDKContextSwitchAsyncContent *copy = [FBSDKContextSwitchAsyncContent new];
+  FBSDKSwitchContextContent *copy = [FBSDKSwitchContextContent new];
   copy.contextTokenID = [self.contextTokenID copy];
   return copy;
 }

@@ -18,7 +18,7 @@
 
 #import "TargetConditionals.h"
 
-@class FBSDKContextSwitchAsyncContent;
+@class FBSDKSwitchContextContent;
 #if !TARGET_OS_TV
 
 #import <Foundation/Foundation.h>
@@ -42,7 +42,9 @@ NS_SWIFT_NAME(SwitchContextDialog)
  @param windowFinder The application window finder that provides the window to display the dialog
  @param delegate The receiver's delegate used to let the receiver know a context was switch was successful or failure
  */
-+ (instancetype)dialogWithContent:(FBSDKContextSwitchAsyncContent *)content windowFinder:(id<FBSDKWindowFinding>)windowFinder delegate:(id<FBSDKContextDialogDelegate>)delegate
++ (instancetype)dialogWithContent:(FBSDKSwitchContextContent *)content
+                     windowFinder:(id<FBSDKWindowFinding>)windowFinder
+                         delegate:(id<FBSDKContextDialogDelegate>)delegate
 NS_SWIFT_NAME(init(content:windowFinder:delegate:));
 
 @end

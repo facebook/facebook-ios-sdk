@@ -18,7 +18,7 @@
 
 enum SampleContextDialogs {
   static func showSwitchContextDialog(withDelegate delegate: ContextDialogDelegate) -> SwitchContextDialog? {
-    let content = ContextSwitchAsyncContent()
+    let content = SwitchContextContent()
     content.contextTokenID = "1234567890"
     let dialog = SwitchContextDialog(content: content,
                                      windowFinder: TestWindowFinder(),

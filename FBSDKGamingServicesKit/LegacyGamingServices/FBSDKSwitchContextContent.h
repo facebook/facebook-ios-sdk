@@ -28,8 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  A model for an instant games switchAsync cross play request.
  */
-NS_SWIFT_NAME(ContextSwitchAsyncContent)
-@interface FBSDKContextSwitchAsyncContent : NSObject <NSSecureCoding,FBSDKValidatable>
+NS_SWIFT_NAME(SwitchContextContent)
+@interface FBSDKSwitchContextContent : NSObject <NSSecureCoding,FBSDKValidatable>
 
 /**
  The context token of the existing context for which this request is being made.

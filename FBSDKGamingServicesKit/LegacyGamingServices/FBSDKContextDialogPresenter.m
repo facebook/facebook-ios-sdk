@@ -64,7 +64,7 @@
   return tokenError;
 }
 
-+ (nullable FBSDKSwitchContextDialog *)switchContextDialogWithContent:(FBSDKContextSwitchAsyncContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
++ (nullable FBSDKSwitchContextDialog *)switchContextDialogWithContent:(FBSDKSwitchContextContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
 {
   if (![FBSDKAccessToken currentAccessToken]) {
     return nil;
@@ -73,7 +73,7 @@
   return dialog;
 }
 
-+ (nullable NSError *)showSwitchContextDialogWithContent:(FBSDKContextSwitchAsyncContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
++ (nullable NSError *)showSwitchContextDialogWithContent:(FBSDKSwitchContextContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
 {
   FBSDKSwitchContextDialog *dialog = [self switchContextDialogWithContent:content delegate:delegate];
   if (dialog) {
