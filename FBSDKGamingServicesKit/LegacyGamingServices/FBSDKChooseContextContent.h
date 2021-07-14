@@ -41,7 +41,18 @@ NS_SWIFT_NAME(ChooseContextContent)
 /**
   This sets the filter which determines which context will show when the user is app switched to the choose context dialog.
  */
-@property (nonatomic, assign) FBSDKChooseContextFilter filter;
+@property (nonatomic) FBSDKChooseContextFilter filter;
+
+/**
+  This sets the maximum number of participants that the suggested context(s) shown in the dialog should have. If not set or set to 0, it will default to 1.
+ */
+@property (nonatomic) int maxParticipants;
+
+/**
+  This sets the minimum number of participants that the suggested context(s) shown in the dialog should have. If not set or set to 0, it will default to 1.
+ */
+@property (nonatomic) int minParticipants;
+
 
 + (NSString *)filtersNameForFilters:(FBSDKChooseContextFilter)filter;
 

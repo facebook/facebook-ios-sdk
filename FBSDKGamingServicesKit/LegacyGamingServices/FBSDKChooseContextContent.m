@@ -31,6 +31,23 @@
 
 - (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef
 {
+  if (!self.minParticipants) {
+    self.minParticipants = 1;
+  }
+  if (!self.maxParticipants) {
+    self.maxParticipants = 1;
+  }
+
+  BOOL minimumGreaterThanMaximum = self.minParticipants > self.maxParticipants;
+  if (minimumGreaterThanMaximum) {
+    if (errorRef != NULL) {
+      NSString *message = @"The minimum size cannot be greater than the maximum size";
+      *errorRef = [FBSDKError requiredArgumentErrorWithDomain:FBSDKErrorDomain
+                                                         name:@"minParticipants"
+                                                      message:message];
+    }
+    return NO;
+  }
   return YES;
 }
 
@@ -58,6 +75,8 @@
 {
   FBSDKChooseContextContent *copy = [FBSDKChooseContextContent new];
   copy.filter = self.filter;
+  copy.minParticipants = self.minParticipants;
+  copy.maxParticipants = self.maxParticipants;
   return copy;
 }
 
