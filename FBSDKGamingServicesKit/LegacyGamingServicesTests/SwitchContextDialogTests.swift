@@ -18,64 +18,65 @@
 
 import XCTest
 
-class CreateContextDialogTest: XCTestCase, ContextDialogDelegate {
+class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
 
-    var dialogDidCompleteSuccessfully = false
-    var dialogDidCancel = false
+    var dialogDidCompleteSuccessfully: Bool = false
+    var dialogDidCancel: Bool = false
     var dialogError: NSError?
 
     override func setUp() {
-        super.setUp()
+      super.setUp()
+      self.dialogDidCompleteSuccessfully = false
+      self.dialogDidCancel = false
+      self.dialogError = nil
+    }
 
-        self.dialogDidCompleteSuccessfully = false
-        self.dialogDidCancel = false
-        self.dialogError = nil
+    override func tearDown() {
+      super.tearDown()
     }
 
     func testShowDialogWithInvalidContent() {
-        let content = ContextCreateAsyncContent()
-        let dialog = CreateContextDialog(content: content, windowFinder: TestWindowFinder(), delegate: self)
+        let content = ContextSwitchAsyncContent()
+        let dialog = SwitchContextDialog(content: content, windowFinder: TestWindowFinder(), delegate: self)
         dialog.show()
-
         XCTAssertNotNil(dialog)
         XCTAssertNotNil(dialogError)
         XCTAssertNil(dialog.currentWebDialog)
     }
 
     func testShowDialogWithValidContent() {
-        let dialog = SampleContextDialogs.showCreateContextDialog(withDelegate: self)
-
+        let dialog = SampleContextDialogs.showSwitchContextDialog(withDelegate: self)
         XCTAssertNotNil(dialog)
         XCTAssertNil(dialogError)
         XCTAssertNotNil(dialog?.currentWebDialog)
     }
 
-    func testDialogSuccessfullyCompletes() throws {
-        let dialog = SampleContextDialogs.showCreateContextDialog(withDelegate: self)
+    func testDialogSuccessfullyCompletes() {
+        let dialog = SampleContextDialogs.showSwitchContextDialog(withDelegate: self)
+        guard let webDialogDelegate = dialog?.currentWebDialog as? WebDialogViewDelegate else {
+            return XCTFail("Web dialog should be a web dialog view delegate")
+        }
 
-        let webDialogDelegate = try XCTUnwrap(dialog?.currentWebDialog as? WebDialogViewDelegate)
-        let testWindowFinder = try XCTUnwrap(dialog?.currentWebDialog?.windowFinder as? TestWindowFinder)
         let results = ["foo": name]
         webDialogDelegate.webDialogView(FBWebDialogView(), didCompleteWithResults: results)
 
         XCTAssertNotNil(webDialogDelegate)
-        XCTAssertTrue(testWindowFinder.wasFindWindowCalled)
         XCTAssertTrue(dialogDidCompleteSuccessfully)
         XCTAssertFalse(dialogDidCancel)
         XCTAssertNil(dialogError)
     }
 
-    func testDialogSuccessfullyUpdatesGamingContext() throws {
-        let dialog = SampleContextDialogs.showCreateContextDialog(withDelegate: self)
-        let webDialogDelegate = try XCTUnwrap(dialog?.currentWebDialog as? WebDialogViewDelegate)
-        let testWindowFinder = try XCTUnwrap(dialog?.currentWebDialog?.windowFinder as? TestWindowFinder)
+    func testDialogSuccessfullyUpdatesGamingContext() {
+        let dialog = SampleContextDialogs.showSwitchContextDialog(withDelegate: self)
+        guard let webDialogDelegate = dialog?.currentWebDialog as? WebDialogViewDelegate else {
+            return XCTFail("Web dialog should be a web dialog view delegate")
+        }
         let resultContextIDKey = "context_id"
         let resultContextID = "1234"
         let results = [resultContextIDKey: resultContextID]
         webDialogDelegate.webDialogView(FBWebDialogView(), didCompleteWithResults: results)
 
         XCTAssertNotNil(webDialogDelegate)
-        XCTAssertTrue(testWindowFinder.wasFindWindowCalled)
         XCTAssertNotNil(GamingContext.current().identifier)
         XCTAssertEqual(resultContextID, GamingContext.current().identifier)
         XCTAssertTrue(dialogDidCompleteSuccessfully)
@@ -84,9 +85,8 @@ class CreateContextDialogTest: XCTestCase, ContextDialogDelegate {
     }
 
     func testDialogCompletesWithServerError() throws {
-        let dialog = SampleContextDialogs.showCreateContextDialog(withDelegate: self)
+        let dialog = SampleContextDialogs.showSwitchContextDialog(withDelegate: self)
         let webDialogDelegate = try XCTUnwrap(dialog?.currentWebDialog as? WebDialogViewDelegate)
-        let testWindowFinder = try XCTUnwrap(dialog?.currentWebDialog?.windowFinder as? TestWindowFinder)
         let resultErrorCodeKey = "error_code"
         let resultErrorCode = 1234
         let resultErrorMessageKey = "error_message"
@@ -96,8 +96,6 @@ class CreateContextDialogTest: XCTestCase, ContextDialogDelegate {
         let error = try XCTUnwrap(dialogError)
 
         XCTAssertNotNil(webDialogDelegate)
-        XCTAssertTrue(testWindowFinder.wasFindWindowCalled)
-        XCTAssertNil(GamingContext.current().identifier)
         XCTAssertEqual(resultErrorCode, error.code)
         XCTAssertEqual(resultErrorMessage, error.userInfo.values.first as? String)
         XCTAssertFalse(dialogDidCompleteSuccessfully)
@@ -105,33 +103,31 @@ class CreateContextDialogTest: XCTestCase, ContextDialogDelegate {
     }
 
     func testDialogCancels() throws {
-        let dialog = SampleContextDialogs.showCreateContextDialog(withDelegate: self)
+        let dialog = SampleContextDialogs.showSwitchContextDialog(withDelegate: self)
         let webDialogDelegate = try XCTUnwrap(dialog?.currentWebDialog as? WebDialogViewDelegate)
-        let testWindowFinder = try XCTUnwrap(dialog?.currentWebDialog?.windowFinder as? TestWindowFinder)
 
         webDialogDelegate.webDialogViewDidCancel(FBWebDialogView())
 
         XCTAssertNotNil(webDialogDelegate)
-        XCTAssertTrue(testWindowFinder.wasFindWindowCalled)
         XCTAssertFalse(dialogDidCompleteSuccessfully)
         XCTAssertTrue(dialogDidCancel)
         XCTAssertNil(dialogError)
     }
 
     func testDialogFailsWithError() throws {
-        let dialog = SampleContextDialogs.showCreateContextDialog(withDelegate: self)
-        let webDialogDelegate = try XCTUnwrap(dialog?.currentWebDialog as? WebDialogViewDelegate)
-        let testWindowFinder = try XCTUnwrap(dialog?.currentWebDialog?.windowFinder as? TestWindowFinder)
+      let dialog = SampleContextDialogs.showSwitchContextDialog(withDelegate: self)
+      let webDialogDelegate = try XCTUnwrap(dialog?.currentWebDialog as? WebDialogViewDelegate)
 
         let error = NSError(domain: "Test", code: 1, userInfo: nil)
         webDialogDelegate.webDialogView(FBWebDialogView(), didFailWithError: error)
 
         XCTAssertNotNil(webDialogDelegate)
-        XCTAssertTrue(testWindowFinder.wasFindWindowCalled)
         XCTAssertFalse(dialogDidCompleteSuccessfully)
         XCTAssertFalse(dialogDidCancel)
         XCTAssertNotNil(dialogError)
     }
+
+    // MARK: - Delegate Methods
 
     func contextDialogDidComplete(_ contextDialog: ContextWebDialog) {
         dialogDidCompleteSuccessfully = true
