@@ -19,10 +19,10 @@
 #if defined FBSDKCOCOAPODS
 
  #import <FBSDKGamingServicesKit/FBSDKChooseContextDialog.h>
- #import <FBSDKGamingServicesKit/FBSDKContextCreateAsyncContent.h>
  #import <FBSDKGamingServicesKit/FBSDKContextDialogPresenter.h>
  #import <FBSDKGamingServicesKit/FBSDKContextSwitchAsyncContent.h>
  #import <FBSDKGamingServicesKit/FBSDKContextWebDialog.h>
+ #import <FBSDKGamingServicesKit/FBSDKCreateContextContent.h>
  #import <FBSDKGamingServicesKit/FBSDKCreateContextDialog.h>
  #import <FBSDKGamingServicesKit/FBSDKDialogProtocol.h>
  #import <FBSDKGamingServicesKit/FBSDKFriendFinderDialog.h>
@@ -40,10 +40,10 @@
 #else
 
  #import "FBSDKChooseContextDialog.h"
- #import "FBSDKContextCreateAsyncContent.h"
  #import "FBSDKContextDialogPresenter.h"
  #import "FBSDKContextSwitchAsyncContent.h"
  #import "FBSDKContextWebDialog.h"
+ #import "FBSDKCreateContextContent.h"
  #import "FBSDKCreateContextDialog.h"
  #import "FBSDKDialogProtocol.h"
  #import "FBSDKFriendFinderDialog.h"

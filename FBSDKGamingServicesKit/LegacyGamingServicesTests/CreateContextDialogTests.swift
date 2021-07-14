@@ -33,7 +33,7 @@ class CreateContextDialogTest: XCTestCase, ContextDialogDelegate {
     }
 
     func testShowDialogWithInvalidContent() {
-        let content = ContextCreateAsyncContent()
+        let content = CreateContextContent()
         let dialog = CreateContextDialog(content: content, windowFinder: TestWindowFinder(), delegate: self)
         dialog.show()
 

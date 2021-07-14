@@ -24,8 +24,8 @@
 
  #import "FBSDKCreateContextDialog.h"
 
- #import "FBSDKContextCreateAsyncContent.h"
  #import "FBSDKCoreKitInternalImport.h"
+ #import "FBSDKCreateContextContent.h"
 
  #define FBSDK_CONTEXT_METHOD_NAME @"context"
  #define FBSDKWEBDIALOGFRAMEWIDTH 300
@@ -37,7 +37,7 @@
 
 @implementation FBSDKCreateContextDialog
 
-+ (instancetype)dialogWithContent:(FBSDKContextCreateAsyncContent *)content
++ (instancetype)dialogWithContent:(FBSDKCreateContextContent *)content
                      windowFinder:(id<FBSDKWindowFinding>)windowFinder
                          delegate:(id<FBSDKContextDialogDelegate>)delegate
 {
@@ -58,8 +58,8 @@
 
   NSMutableDictionary *parameters = [NSMutableDictionary new];
 
-  if ([self.dialogContent isKindOfClass:[FBSDKContextCreateAsyncContent class]] && self.dialogContent) {
-    FBSDKContextCreateAsyncContent *content = (FBSDKContextCreateAsyncContent *)self.dialogContent;
+  if ([self.dialogContent isKindOfClass:[FBSDKCreateContextContent class]] && self.dialogContent) {
+    FBSDKCreateContextContent *content = (FBSDKCreateContextContent *)self.dialogContent;
     [FBSDKTypeUtility dictionary:parameters setObject:content.playerID forKey:@"player_id"];
   }
 

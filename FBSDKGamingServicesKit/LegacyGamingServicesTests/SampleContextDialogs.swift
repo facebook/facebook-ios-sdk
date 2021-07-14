@@ -28,7 +28,7 @@ enum SampleContextDialogs {
   }
 
   static func showCreateContextDialog(withDelegate delegate: ContextDialogDelegate) -> CreateContextDialog? {
-    let content = ContextCreateAsyncContent()
+    let content = CreateContextContent()
     content.playerID = "1234567890"
     let dialog = CreateContextDialog(content: content,
                                      windowFinder: TestWindowFinder(),

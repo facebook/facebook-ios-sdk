@@ -28,8 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  A model for an instant games createAsync cross play request.
  */
-NS_SWIFT_NAME(ContextCreateAsyncContent)
-@interface FBSDKContextCreateAsyncContent : NSObject <NSSecureCoding, FBSDKValidatable>
+NS_SWIFT_NAME(CreateContextContent)
+@interface FBSDKCreateContextContent : NSObject <NSSecureCoding, FBSDKValidatable>
 
 /**
  The ID of the player that is being challenged.

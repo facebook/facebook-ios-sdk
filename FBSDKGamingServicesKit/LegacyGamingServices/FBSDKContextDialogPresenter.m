@@ -40,7 +40,7 @@
 
  #pragma mark - Class Methods
 
-+ (nullable FBSDKCreateContextDialog *)createContextDialogWithContent:(FBSDKContextCreateAsyncContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
++ (nullable FBSDKCreateContextDialog *)createContextDialogWithContent:(FBSDKCreateContextContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
 {
   if (![FBSDKAccessToken currentAccessToken]) {
     return nil;
@@ -51,7 +51,7 @@
   return dialog;
 }
 
-+ (nullable NSError *)showCreateContextDialogWithContent:(FBSDKContextCreateAsyncContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
++ (nullable NSError *)showCreateContextDialogWithContent:(FBSDKCreateContextContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
 {
   FBSDKCreateContextDialog *dialog = [self createContextDialogWithContent:content delegate:delegate];
   if (dialog) {

@@ -20,16 +20,16 @@
 
 #if !TARGET_OS_TV
 
- #import "FBSDKContextCreateAsyncContent.h"
+ #import "FBSDKCreateContextContent.h"
 
- #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKCoreKitInternalImport.h"
  #import "FBSDKGamingServicesCoreKitImport.h"
 
  #define FBSDK_APP_REQUEST_CONTENT_PLAYER_ID_KEY @"playerID"
-@interface FBSDKContextCreateAsyncContent () <FBSDKCopying>
+@interface FBSDKCreateContextContent () <FBSDKCopying>
 @end
 
-@implementation FBSDKContextCreateAsyncContent
+@implementation FBSDKCreateContextContent
 
  #pragma mark - FBSDKSharingValidation
 
@@ -63,13 +63,13 @@
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKContextCreateAsyncContent class]]) {
+  if (![object isKindOfClass:[FBSDKCreateContextContent class]]) {
     return NO;
   }
-  return [self isEqualToContextCreateAsyncContent:(FBSDKContextCreateAsyncContent *)object];
+  return [self isEqualToContextCreateAsyncContent:(FBSDKCreateContextContent *)object];
 }
 
-- (BOOL)isEqualToContextCreateAsyncContent:(FBSDKContextCreateAsyncContent *)content
+- (BOOL)isEqualToContextCreateAsyncContent:(FBSDKCreateContextContent *)content
 {
   return (content
     && [FBSDKInternalUtility.sharedUtility object:self.playerID isEqualToObject:content.playerID]);
@@ -99,7 +99,7 @@
 
 - (id)copyWithZone:(NSZone *)zone
 {
-  FBSDKContextCreateAsyncContent *contentCopy = [FBSDKContextCreateAsyncContent new];
+  FBSDKCreateContextContent *contentCopy = [FBSDKCreateContextContent new];
   contentCopy.playerID = [self.playerID copy];
   return contentCopy;
 }
