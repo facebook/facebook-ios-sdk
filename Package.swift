@@ -87,7 +87,6 @@ let package = Package(
             name: "LegacyCore",
             dependencies: ["FBSDKCoreKit_Basics"],
             path: "FBSDKCoreKit/FBSDKCoreKit",
-            exclude: ["Swift"],
             cSettings: [
                 .headerSearchPath("AppEvents"),
                 .headerSearchPath("AppEvents/Internal"),
