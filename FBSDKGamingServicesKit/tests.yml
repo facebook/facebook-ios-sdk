@@ -16,6 +16,10 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+projectReferences:
+  TestTools:
+    path: ../TestTools/TestTools.xcodeproj
+
 targets:
   LegacyGamingServicesTests:
     type: bundle.unit-test
@@ -28,6 +32,9 @@ targets:
       - target: LegacyGamingServices-Dynamic
         embed: false
       - target: OCMock/OCMock iOS
+        embed: false
+      - target: TestTools/TestTools
+        link: false
         embed: false
     settings:
       GCC_WARN_UNUSED_FUNCTION: NO

@@ -19,6 +19,7 @@
 #import <OCMock/OCMock.h>
 
 @import LegacyGamingServices;
+@import TestTools;
 @import XCTest;
 
 #import "FBSDKCoreKit+Internal.h"
@@ -26,82 +27,22 @@
 #import "FBSDKVideoUploader.h"
 
 @interface FBSDKGamingVideoUploaderTests : XCTestCase
+
+@property (nonatomic) NSURL *const videoURL;
+@property (nonatomic) FBSDKGamingVideoUploaderConfiguration *configuration;
+
 @end
 
 @implementation FBSDKGamingVideoUploaderTests
-{
-  id _mockToken;
-  id _mockConfig;
-}
 
 - (void)setUp
 {
   [super setUp];
 
-  _mockToken = OCMClassMock([FBSDKAccessToken class]);
-  [FBSDKAccessToken setCurrentAccessToken:_mockToken];
+  FBSDKAccessToken.currentAccessToken = SampleAccessTokens.validToken;
 
-  _mockConfig = OCMClassMock([FBSDKGamingVideoUploaderConfiguration class]);
-  OCMStub([_mockConfig videoURL]).andReturn([NSURL URLWithString:@"file://video.mp4"]);
-}
-
-- (void)testValuesAreSavedToConfig
-{
-  NSURL *const videoURL = [NSURL URLWithString:@"file://video.mp4"];
-
-  FBSDKGamingVideoUploaderConfiguration *config =
-  [[FBSDKGamingVideoUploaderConfiguration alloc]
-   initWithVideoURL:videoURL
-   caption:@"Cool Video"];
-
-  XCTAssertEqual(config.caption, @"Cool Video");
-  XCTAssertEqual(config.videoURL, videoURL);
-}
-
-- (void)testFailureWhenNoValidAccessTokenPresent
-{
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-
-  __block BOOL actioned = false;
-  [FBSDKGamingVideoUploader
-   uploadVideoWithConfiguration:_mockConfig
-   andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
-     XCTAssert(error.code == FBSDKErrorAccessTokenRequired, "Expected error requiring a valid access token");
-     actioned = true;
-   }];
-
-  XCTAssertTrue(actioned);
-}
-
-- (void)testNilVideoURLFails
-{
-  id nilVideoConfig = OCMClassMock([FBSDKGamingVideoUploaderConfiguration class]);
-
-  __block BOOL actioned = false;
-  [FBSDKGamingVideoUploader
-   uploadVideoWithConfiguration:nilVideoConfig
-   andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
-     XCTAssert(error.code == FBSDKErrorInvalidArgument, "Expected error requiring a non nil video url");
-     actioned = true;
-   }];
-
-  XCTAssertTrue(actioned);
-}
-
-- (void)testBadVideoURLFails
-{
-  id badVideoConfig = OCMClassMock([FBSDKGamingVideoUploaderConfiguration class]);
-  OCMStub([badVideoConfig videoURL]).andReturn([NSURL URLWithString:@"file://not-a-video.mp4"]);
-
-  __block BOOL actioned = false;
-  [FBSDKGamingVideoUploader
-   uploadVideoWithConfiguration:badVideoConfig
-   andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
-     XCTAssert(error.code == FBSDKErrorInvalidArgument, "Expected error requiring a non nil video url");
-     actioned = true;
-   }];
-
-  XCTAssertTrue(actioned);
+  self.videoURL = [NSURL URLWithString:@"file://video.mp4"];
+  self.configuration = [self createConfigurationWithURL:self.videoURL];
 }
 
 - (void)testVideoUploaderErrorsAreHandled
@@ -115,7 +56,7 @@
 
   __block BOOL actioned = false;
   [FBSDKGamingVideoUploader
-   uploadVideoWithConfiguration:_mockConfig
+   uploadVideoWithConfiguration:self.configuration
    andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
      XCTAssert(error.code == expectedError.code);
      actioned = true;
@@ -135,7 +76,7 @@
 
   __block BOOL actioned = false;
   [FBSDKGamingVideoUploader
-   uploadVideoWithConfiguration:_mockConfig
+   uploadVideoWithConfiguration:self.configuration
    andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
      XCTAssert(error.code == FBSDKErrorUnknown);
      actioned = true;
@@ -159,7 +100,7 @@
 
   __block BOOL actioned = false;
   [FBSDKGamingVideoUploader
-   uploadVideoWithConfiguration:_mockConfig
+   uploadVideoWithConfiguration:self.configuration
    andResultCompletionHandler:^(BOOL success, id result, NSError *_Nullable error) {
      XCTAssertTrue(success);
      actioned = true;
@@ -191,7 +132,7 @@
   };
 
   [FBSDKGamingVideoUploader
-   uploadVideoWithConfiguration:_mockConfig
+   uploadVideoWithConfiguration:self.configuration
    completionHandler:^(BOOL success, id result, NSError *_Nullable error) {}
    andProgressHandler:^(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
      ProgressCheck(bytesSent, totalBytesSent, totalBytesExpectedToSend);
@@ -266,6 +207,15 @@
   .andReturn(mockVideoUploader);
 
   return mockVideoUploader;
+}
+
+// MARK: - Helpers
+
+- (FBSDKGamingVideoUploaderConfiguration *)createConfigurationWithURL:(NSURL *)url
+{
+  return [[FBSDKGamingVideoUploaderConfiguration alloc]
+          initWithVideoURL:url
+          caption:@"Cool Video"];
 }
 
 @end

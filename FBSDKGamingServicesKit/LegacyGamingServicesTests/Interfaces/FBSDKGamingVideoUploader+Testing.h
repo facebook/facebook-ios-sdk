@@ -17,16 +17,21 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @import LegacyGamingServices;
-@import XCTest;
 
-#import "FBSDKCoreKit+Internal.h"
-#import "FBSDKFileHandleCreating.h"
-#import "FBSDKFileHandleFactory.h"
-#import "FBSDKFileHandling.h"
-#import "FBSDKFriendFinderDialog+Testing.h"
-#import "FBSDKGamingImageUploader+Testing.h"
-#import "FBSDKGamingServiceController.h"
-#import "FBSDKGamingServiceControllerCreating.h"
-#import "FBSDKGamingServiceControllerFactory.h"
-#import "FBSDKGamingServiceControllerProtocol.h"
-#import "FBSDKGamingVideoUploader+Testing.h"
+@protocol FBSDKFileHandleCreating;
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface FBSDKGamingVideoUploader (Testing)
+
+@property (class, nonatomic, readonly) FBSDKGamingVideoUploader *shared;
+@property (nonatomic) id<FBSDKFileHandleCreating> fileHandleFactory;
+
+- (instancetype)initWithFileHandleFactory:(id<FBSDKFileHandleCreating>)fileHandleFactory;
+
+- (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration *_Nonnull)configuration
+          andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler;
+
+@end
+
+NS_ASSUME_NONNULL_END

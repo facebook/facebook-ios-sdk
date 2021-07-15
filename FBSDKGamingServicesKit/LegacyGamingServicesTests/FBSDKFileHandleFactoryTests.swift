@@ -16,17 +16,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@import LegacyGamingServices;
-@import XCTest;
+import LegacyGamingServices
+import XCTest
 
-#import "FBSDKCoreKit+Internal.h"
-#import "FBSDKFileHandleCreating.h"
-#import "FBSDKFileHandleFactory.h"
-#import "FBSDKFileHandling.h"
-#import "FBSDKFriendFinderDialog+Testing.h"
-#import "FBSDKGamingImageUploader+Testing.h"
-#import "FBSDKGamingServiceController.h"
-#import "FBSDKGamingServiceControllerCreating.h"
-#import "FBSDKGamingServiceControllerFactory.h"
-#import "FBSDKGamingServiceControllerProtocol.h"
-#import "FBSDKGamingVideoUploader+Testing.h"
+class FBSDKFileHandleFactoryTests: XCTestCase {
+
+  func testCreatingFileHandle() throws {
+    let data = "foo".data(using: .utf8)
+    let url = URL(
+      fileURLWithPath: NSTemporaryDirectory(),
+      isDirectory: true
+    ).appendingPathComponent(name)
+
+    FileManager.default.createFile(atPath: url.path, contents: data, attributes: nil)
+
+    XCTAssertNotNil(
+      try? FileHandleFactory().fileHandleForReading(from: url),
+      "A file handle factory should be able to return a handle to a valid file"
+    )
+  }
+
+}

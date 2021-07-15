@@ -19,30 +19,64 @@
 #import "FBSDKGamingVideoUploader.h"
 
 #import "FBSDKCoreKitInternalImport.h"
+#import "FBSDKFileHandleFactory.h"
+#import "FBSDKFileHandling.h"
 #import "FBSDKGamingVideoUploaderConfiguration.h"
 #import "FBSDKVideoUploader.h"
 
 @interface FBSDKGamingVideoUploader () <FBSDKVideoUploaderDelegate>
 {
-  NSFileHandle *_fileHandle;
   FBSDKGamingServiceResultCompletionHandler _completionHandler;
   FBSDKGamingServiceProgressHandler _progressHandler;
   NSUInteger _totalBytesSent;
   NSUInteger _totalBytesExpectedToSend;
 }
+
+@property (nonatomic) id<FBSDKFileHandling> fileHandle;
+@property (nonatomic) id<FBSDKFileHandleCreating> fileHandleFactory;
+
 @end
 
 @implementation FBSDKGamingVideoUploader
 
+// Transitional singleton introduced as a way to change the usage semantics
+// from a type-based interface to an instance-based interface.
+// The goal is to move from:
+// ClassWithoutUnderlyingInstance -> ClassRelyingOnUnderlyingInstance -> Instance
++ (FBSDKGamingVideoUploader *)shared
+{
+  static dispatch_once_t nonce;
+  static FBSDKGamingVideoUploader *instance;
+  dispatch_once(&nonce, ^{
+    instance = [self new];
+  });
+  return instance;
+}
+
 - (instancetype)init
 {
-  return [super init];
+  return [self initWithFileHandleFactory:[FBSDKFileHandleFactory new]];
+}
+
+- (instancetype)initWithFileHandleFactory:(id<FBSDKFileHandleCreating>)fileHandleFactory
+{
+  if ((self = [super init])) {
+    _fileHandleFactory = fileHandleFactory;
+  }
+
+  return self;
 }
 
 + (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration *_Nonnull)configuration
           andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
 {
-  return
+  [self.shared uploadVideoWithConfiguration:configuration
+                 andResultCompletionHandler:completionHandler];
+}
+
+- (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration *_Nonnull)configuration
+          andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
+{
   [self
    uploadVideoWithConfiguration:configuration
    completionHandler:completionHandler
@@ -53,7 +87,16 @@
                    completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
                   andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
 {
-  if ([FBSDKAccessToken currentAccessToken] == nil) {
+  [self.shared uploadVideoWithConfiguration:configuration
+                          completionHandler:completionHandler
+                         andProgressHandler:progressHandler];
+}
+
+- (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration *_Nonnull)configuration
+                   completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
+                  andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
+{
+  if (FBSDKAccessToken.currentAccessToken == nil) {
     completionHandler(
       false,
       nil,
@@ -77,10 +120,9 @@
     return;
   }
 
-  NSFileHandle *const fileHandle =
-  [NSFileHandle
-   fileHandleForReadingFromURL:configuration.videoURL
-   error:nil];
+  id<FBSDKFileHandling> const fileHandle =
+  [self.fileHandleFactory fileHandleForReadingFromURL:configuration.videoURL
+                                                error:nil];
 
   if ((unsigned long)[fileHandle seekToEndOfFile] == 0) {
     completionHandler(
@@ -115,7 +157,7 @@
   [videoUploader start];
 }
 
-- (instancetype)initWithFileHandle:(NSFileHandle *)fileHandle
+- (instancetype)initWithFileHandle:(id<FBSDKFileHandling>)fileHandle
                   totalBytesToSend:(NSUInteger)totalBytes
                  completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
                    progressHandler:(FBSDKGamingServiceProgressHandler _Nonnull)progressHandler

@@ -16,17 +16,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@import LegacyGamingServices;
-@import XCTest;
+import LegacyGamingServices
+import XCTest
 
-#import "FBSDKCoreKit+Internal.h"
-#import "FBSDKFileHandleCreating.h"
-#import "FBSDKFileHandleFactory.h"
-#import "FBSDKFileHandling.h"
-#import "FBSDKFriendFinderDialog+Testing.h"
-#import "FBSDKGamingImageUploader+Testing.h"
-#import "FBSDKGamingServiceController.h"
-#import "FBSDKGamingServiceControllerCreating.h"
-#import "FBSDKGamingServiceControllerFactory.h"
-#import "FBSDKGamingServiceControllerProtocol.h"
-#import "FBSDKGamingVideoUploader+Testing.h"
+class FBSDKGamingVideoUploaderConfigurationTests: XCTestCase { // swiftlint:disable:this type_name
+
+  let url = URL(string: "file://video.mp4")! // swiftlint:disable:this force_unwrapping
+  let caption = "Cool Video"
+  lazy var configuration = GamingVideoUploaderConfiguration(videoURL: url, caption: caption)
+
+  func testValuesAreSavedToConfig() {
+    XCTAssertEqual(configuration.caption, caption)
+    XCTAssertEqual(configuration.videoURL, url)
+  }
+
+}
