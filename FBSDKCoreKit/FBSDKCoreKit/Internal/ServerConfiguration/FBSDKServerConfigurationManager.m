@@ -341,7 +341,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
       _serverConfigurationError = nil;
       _serverConfigurationErrorTimestamp = nil;
 
-    #ifdef DEBUG
+    #if DEBUG
       NSString *updateMessage = _serverConfiguration.updateMessage;
       if (updateMessage && updateMessage.length > 0 && !_printedUpdateMessage) {
         _printedUpdateMessage = YES;
