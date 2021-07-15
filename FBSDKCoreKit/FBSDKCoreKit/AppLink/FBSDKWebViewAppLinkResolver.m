@@ -212,10 +212,11 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
             };
             webView.navigationDelegate = listener;
             webView.hidden = YES;
-            [webView loadData:responseData
-                     MIMEType:response.MIMEType
-        characterEncodingName:response.textEncodingName
-                      baseURL:response.URL];
+//            [webView loadData:responseData
+//                     MIMEType:response.MIMEType
+//        characterEncodingName:response.textEncodingName
+//                      baseURL:response.URL];
+            [webView loadRequest:[NSURLRequest requestWithURL:response.URL]];
             UIWindow *window = [UIApplication sharedApplication].windows.firstObject;
             [window addSubview:webView];
         });
