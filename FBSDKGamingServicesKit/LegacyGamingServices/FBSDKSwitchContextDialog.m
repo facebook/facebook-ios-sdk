@@ -50,7 +50,9 @@
 {
   NSError *error;
   if (![self validateWithError:&error]) {
-    [self.delegate contextDialog:self didFailWithError:error];
+    if (error) {
+      [self.delegate contextDialog:self didFailWithError:error];
+    }
     return NO;
   }
 

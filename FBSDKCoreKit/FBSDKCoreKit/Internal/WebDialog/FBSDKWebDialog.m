@@ -25,6 +25,7 @@
  #import "FBSDKAccessToken.h"
  #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKDynamicFrameworkLoader.h"
+ #import "FBSDKError.h"
  #import "FBSDKInternalUtility.h"
  #import "FBSDKInternalUtility+WindowFinding.h"
  #import "FBSDKLogger.h"
@@ -116,7 +117,8 @@ static FBSDKWebDialog *g_currentDialog = nil;
   if (!window) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                            logEntry:@"There are no valid ViewController to present FBSDKWebDialog"];
-    [self _failWithError:nil];
+    error = [FBSDKError unknownErrorWithMessage:@"There are no valid ViewController to present FBSDKWebDialog"];
+    [self _failWithError:error];
     return NO;
   }
 
@@ -268,7 +270,8 @@ static FBSDKWebDialog *g_currentDialog = nil;
   if (!window) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                            logEntry:@"There are no valid ViewController to present FBSDKWebDialog"];
-    [self _failWithError:nil];
+    NSError *error = [FBSDKError unknownErrorWithMessage:@"There are no valid ViewController to present FBSDKWebDialog"];
+    [self _failWithError:error];
     return NO;
   }
 

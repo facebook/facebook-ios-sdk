@@ -109,10 +109,11 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
                                             code:FBSDKShareErrorUnknown
                                          message:@"Facebook app did not return a url"];
     [self handleDialogError:error];
-  }
-  NSDictionary *parsedResults = [self parsedPayloadFromURL:url];
-  if (parsedResults) {
-    [_delegate gameRequestDialog:self didCompleteWithResults:parsedResults];
+  } else {
+    NSDictionary *parsedResults = [self parsedPayloadFromURL:url];
+    if (parsedResults) {
+      [_delegate gameRequestDialog:self didCompleteWithResults:parsedResults];
+    }
   }
 }
 
@@ -188,7 +189,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   && [url.host isEqualToString:FBSDK_GAME_REQUEST_URL_HOST];
 }
 
-- (NSDictionary<NSString *, NSString *> *_Nullable)parsedPayloadFromURL:(NSURL *)url
+- (NSDictionary<NSString *, NSString *> *_Nullable)parsedPayloadFromURL:(nonnull NSURL *)url
 {
   NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
   if (!urlComponents.queryItems) {
