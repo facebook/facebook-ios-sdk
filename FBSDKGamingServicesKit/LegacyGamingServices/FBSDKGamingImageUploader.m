@@ -126,8 +126,8 @@
     return;
   }
 
-  FBSDKGraphRequestConnection *const connection =
-  [FBSDKGraphRequestConnection new];
+  id<FBSDKGraphRequestConnecting> const connection =
+  [self.graphRequestConnectionFactory createGraphRequestConnection];
 
   FBSDKGamingImageUploader *const uploader =
   [[FBSDKGamingImageUploader alloc]

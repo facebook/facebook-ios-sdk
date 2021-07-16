@@ -22,7 +22,9 @@ import FBSDKCoreKit
 public class TestGraphRequestConnectionFactory: NSObject, GraphRequestConnectionProviding {
   public var stubbedConnection: GraphRequestConnecting?
 
-  public static func create(withStubbedConnection connection: GraphRequestConnecting) -> TestGraphRequestConnectionFactory {
+  public static func create(
+    withStubbedConnection connection: GraphRequestConnecting
+  ) -> TestGraphRequestConnectionFactory {
     let factory = TestGraphRequestConnectionFactory()
     factory.stubbedConnection = connection
     return factory

@@ -31,8 +31,6 @@ targets:
     dependencies:
       - target: LegacyGamingServices-Dynamic
         embed: false
-      - target: OCMock/OCMock iOS
-        embed: false
       - target: TestTools/TestTools
         link: false
         embed: false
