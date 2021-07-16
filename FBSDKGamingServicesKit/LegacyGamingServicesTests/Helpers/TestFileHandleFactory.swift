@@ -29,5 +29,4 @@ class TestFileHandleFactory: FileHandleCreating {
 
     return stubbedFileHandle
   }
-
 }

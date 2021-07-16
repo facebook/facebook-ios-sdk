@@ -29,5 +29,4 @@ class FBSDKGamingVideoUploaderConfigurationTests: XCTestCase { // swiftlint:disa
     XCTAssertEqual(configuration.caption, caption)
     XCTAssertEqual(configuration.videoURL, url)
   }
-
 }

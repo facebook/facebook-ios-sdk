@@ -27,5 +27,4 @@ class TestVideoUploader: VideoUploading {
   func start() {
     wasStartCalled = true
   }
-
 }

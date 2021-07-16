@@ -36,5 +36,4 @@ class TestFileHandler: FileHandling {
   func readData(ofLength length: UInt) -> Data {
     stubbedReadData
   }
-
 }

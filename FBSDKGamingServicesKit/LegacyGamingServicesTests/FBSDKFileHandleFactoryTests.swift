@@ -35,5 +35,4 @@ class FBSDKFileHandleFactoryTests: XCTestCase {
       "A file handle factory should be able to return a handle to a valid file"
     )
   }
-
 }

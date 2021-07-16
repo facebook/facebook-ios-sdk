@@ -49,5 +49,4 @@ class FBSDKVideoUploaderFactoryTests: XCTestCase, VideoUploaderDelegate {
   }
   func videoUploader(_ videoUploader: VideoUploader!, didCompleteWithResults results: [String: Any]!) {}
   func videoUploader(_ videoUploader: VideoUploader!, didFailWithError error: Error!) {}
-
 }
