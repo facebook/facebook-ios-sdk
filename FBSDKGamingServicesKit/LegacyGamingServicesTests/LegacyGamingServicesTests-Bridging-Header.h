@@ -30,3 +30,7 @@
 #import "FBSDKGamingServiceControllerFactory.h"
 #import "FBSDKGamingServiceControllerProtocol.h"
 #import "FBSDKGamingVideoUploader+Testing.h"
+#import "FBSDKVideoUploader.h"
+#import "FBSDKVideoUploaderCreating.h"
+#import "FBSDKVideoUploaderFactory.h"
+#import "FBSDKVideoUploading.h"

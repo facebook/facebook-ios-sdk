@@ -19,6 +19,7 @@
 @import LegacyGamingServices;
 
 @protocol FBSDKFileHandleCreating;
+@protocol FBSDKVideoUploaderCreating;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,8 +27,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (class, nonatomic, readonly) FBSDKGamingVideoUploader *shared;
 @property (nonatomic) id<FBSDKFileHandleCreating> fileHandleFactory;
+@property (nonatomic) id<FBSDKVideoUploaderCreating> videoUploaderFactory;
 
-- (instancetype)initWithFileHandleFactory:(id<FBSDKFileHandleCreating>)fileHandleFactory;
+- (instancetype)initWithFileHandleFactory:(id<FBSDKFileHandleCreating>)fileHandleFactory
+                     videoUploaderFactory:(id<FBSDKVideoUploaderCreating>)videoUploaderFactory;
 
 - (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration *_Nonnull)configuration
           andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler;

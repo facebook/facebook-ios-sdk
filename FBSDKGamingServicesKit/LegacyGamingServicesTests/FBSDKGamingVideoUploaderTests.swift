@@ -24,11 +24,21 @@ class GamingVideoUploaderTests: XCTestCase {
 
   var videoURL = URL(string: "file://video.mp4")! // swiftlint:disable:this force_unwrapping
   lazy var configuration = createConfiguration(url: videoURL)
+  let fileHandle = TestFileHandler()
   let fileHandleFactory = TestFileHandleFactory()
-  lazy var uploader = GamingVideoUploader(fileHandleFactory: fileHandleFactory)
+  let videoUploader = TestVideoUploader()
+  let videoUploaderFactory = TestVideoUploaderFactory()
+  lazy var uploader = GamingVideoUploader(
+    fileHandleFactory: fileHandleFactory,
+    videoUploaderFactory: videoUploaderFactory
+  )
 
   override func setUp() {
     super.setUp()
+
+    fileHandle.stubbedSeekToEndOfFile = UInt64.random(in: 1 ... 1000)
+    fileHandleFactory.stubbedFileHandle = fileHandle
+    videoUploaderFactory.stubbedVideoUploader = videoUploader
 
     AccessToken.current = SampleAccessTokens.validToken
   }
@@ -38,58 +48,110 @@ class GamingVideoUploaderTests: XCTestCase {
       GamingVideoUploader.shared.fileHandleFactory is FileHandleFactory,
       "Should have the expected file handle factory by default"
     )
+    XCTAssertTrue(
+      GamingVideoUploader.shared.videoUploaderFactory is VideoUploaderFactory,
+      "Should have the expected video uploader factory by default"
+    )
   }
 
   func testCreatingWithDependencies() {
     XCTAssertEqual(
       ObjectIdentifier(uploader.fileHandleFactory),
       ObjectIdentifier(fileHandleFactory),
-      "Should be able to create a configuration with a custom file handle factory"
+      "Should be able to create an uploader with a custom file handle factory"
+    )
+    XCTAssertEqual(
+      ObjectIdentifier(uploader.videoUploaderFactory),
+      ObjectIdentifier(videoUploaderFactory),
+      "Should be able to create an uploader with a custom video uploader factory"
     )
   }
 
   func testFailureWhenNoValidAccessTokenPresent() {
     AccessToken.current = nil
 
-    var actioned = false
+    var wasCompletionCalled = false
     GamingVideoUploader.uploadVideo(with: configuration) { _, _, error in
       XCTAssertEqual(
         (error as NSError?)?.code,
         CoreError.errorAccessTokenRequired.rawValue,
         "Expected error requiring a valid access token"
       )
-      actioned = true
+      wasCompletionCalled = true
     }
 
-    XCTAssertTrue(actioned)
+    XCTAssertTrue(wasCompletionCalled)
   }
 
   func testBadVideoURLFails() {
     videoURL = URL(string: "file://not-a-video.mp4")! // swiftlint:disable:this force_unwrapping
 
-    var actioned = false
+    var wasCompletionCalled = false
     GamingVideoUploader.uploadVideo(with: configuration) { _, _, error in
       XCTAssertEqual(
         (error as NSError?)?.code,
         CoreError.errorInvalidArgument.rawValue,
         "Expected error requiring a non nil video url"
       )
-      actioned = true
+      wasCompletionCalled = true
     }
-    XCTAssertTrue(actioned)
+    XCTAssertTrue(wasCompletionCalled)
   }
 
   func testCreatesFileHandle() {
-    var actioned = false
     uploader.uploadVideo(with: configuration) { _, _, _ in
-      XCTAssertEqual(
-        self.fileHandleFactory.capturedURL,
-        self.videoURL,
-        "Should create a file handle with the url from the configuration"
-      )
-      actioned = true
+      XCTFail("Should not invoke the completion handler")
     }
-    XCTAssertTrue(actioned)
+
+    XCTAssertEqual(
+      fileHandleFactory.capturedURL,
+      videoURL,
+      "Should create a file handle with the url from the configuration"
+    )
+  }
+
+  func testUploadingEmptyFile() {
+    fileHandle.stubbedSeekToEndOfFile = 0
+    fileHandleFactory.stubbedFileHandle = fileHandle
+
+    var wasCompletionCalled = false
+    uploader.uploadVideo(with: configuration) { _, _, error in
+      XCTAssertEqual(
+        (error as NSError?)?.code,
+        CoreError.errorInvalidArgument.rawValue,
+        "Expected error requiring a non empty video file"
+      )
+      wasCompletionCalled = true
+    }
+    XCTAssertTrue(wasCompletionCalled)
+  }
+
+  func testCreatesAndStartsUploader() {
+    uploader.uploadVideo(with: configuration) { _, _, _ in
+      XCTFail("Should not invoke the completion handler")
+    }
+    XCTAssertTrue(
+      self.videoUploaderFactory.capturedDelegate is GamingVideoUploader,
+      "Should create an uploader with the expected delegate type"
+    )
+    XCTAssertEqual(
+      self.videoUploaderFactory.capturedVideoName,
+      self.videoURL.lastPathComponent,
+      "Should use the video url to derive the video name"
+    )
+    XCTAssertTrue(
+      self.videoUploaderFactory.capturedParameters.isEmpty,
+      "Should not create an uploader with parameters"
+    )
+    XCTAssertEqual(
+      self.videoUploaderFactory.capturedVideoSize,
+      UInt(self.fileHandle.seekToEndOfFile()),
+      "Should create an uploader with the size of the video being uploaded"
+    )
+    XCTAssertTrue(
+      self.videoUploader.wasStartCalled,
+      "Should start the upload"
+    )
   }
 
   // MARK: - Helpers

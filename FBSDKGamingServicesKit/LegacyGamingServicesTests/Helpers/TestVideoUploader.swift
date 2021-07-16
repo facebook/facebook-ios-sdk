@@ -19,15 +19,13 @@
 import Foundation
 import LegacyGamingServices
 
-class TestFileHandleFactory: FileHandleCreating {
+class TestVideoUploader: VideoUploading {
 
-  var stubbedFileHandle = TestFileHandler()
-  var capturedURL: URL?
+  var delegate: VideoUploaderDelegate?
+  var wasStartCalled = false
 
-  func fileHandleForReading(from url: URL) throws -> FileHandling {
-    capturedURL = url
-
-    return stubbedFileHandle
+  func start() {
+    wasStartCalled = true
   }
 
 }

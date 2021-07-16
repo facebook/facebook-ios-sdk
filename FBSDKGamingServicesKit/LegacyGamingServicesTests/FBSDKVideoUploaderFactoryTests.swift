@@ -16,18 +16,38 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import Foundation
 import LegacyGamingServices
+import XCTest
 
-class TestFileHandleFactory: FileHandleCreating {
+class FBSDKVideoUploaderFactoryTests: XCTestCase, VideoUploaderDelegate {
 
-  var stubbedFileHandle = TestFileHandler()
-  var capturedURL: URL?
+  func testCreatingVideoUploader() {
+    let uploader = VideoUploaderFactory().create(
+      videoName: name,
+      videoSize: 5,
+      parameters: ["foo": "bar"],
+      delegate: self
+    )
 
-  func fileHandleForReading(from url: URL) throws -> FileHandling {
-    capturedURL = url
+    XCTAssertTrue(
+      uploader is VideoUploader,
+      "Should create the expected concrete video uploader"
+    )
 
-    return stubbedFileHandle
+    XCTAssertTrue(
+      uploader.delegate === self,
+      "Should set the expected delegate on the uploader"
+    )
   }
+
+  // MARK: - VideoUploaderDelegate conformance
+
+  // swiftlint:disable implicitly_unwrapped_optional
+
+  func videoChunkData(for videoUploader: VideoUploader!, startOffset: UInt, endOffset: UInt) -> Data! {
+    Data()
+  }
+  func videoUploader(_ videoUploader: VideoUploader!, didCompleteWithResults results: [String: Any]!) {}
+  func videoUploader(_ videoUploader: VideoUploader!, didFailWithError error: Error!) {}
 
 }

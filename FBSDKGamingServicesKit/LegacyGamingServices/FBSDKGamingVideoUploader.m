@@ -23,6 +23,7 @@
 #import "FBSDKFileHandling.h"
 #import "FBSDKGamingVideoUploaderConfiguration.h"
 #import "FBSDKVideoUploader.h"
+#import "FBSDKVideoUploaderFactory.h"
 
 @interface FBSDKGamingVideoUploader () <FBSDKVideoUploaderDelegate>
 {
@@ -34,6 +35,11 @@
 
 @property (nonatomic) id<FBSDKFileHandling> fileHandle;
 @property (nonatomic) id<FBSDKFileHandleCreating> fileHandleFactory;
+@property (nonatomic) id<FBSDKVideoUploaderCreating> videoUploaderFactory;
+
+@property (nonatomic) NSUInteger totalBytesExpectedToSend;
+@property (nullable, nonatomic) FBSDKGamingServiceResultCompletionHandler completionHandler;
+@property (nullable, nonatomic) FBSDKGamingServiceProgressHandler progressHandler;
 
 @end
 
@@ -55,16 +61,33 @@
 
 - (instancetype)init
 {
-  return [self initWithFileHandleFactory:[FBSDKFileHandleFactory new]];
+  return [self initWithFileHandleFactory:[FBSDKFileHandleFactory new]
+                    videoUploaderFactory:[FBSDKVideoUploaderFactory new]];
 }
 
 - (instancetype)initWithFileHandleFactory:(id<FBSDKFileHandleCreating>)fileHandleFactory
+                     videoUploaderFactory:(id<FBSDKVideoUploaderCreating>)videoUploaderFactory
 {
   if ((self = [super init])) {
     _fileHandleFactory = fileHandleFactory;
+    _videoUploaderFactory = videoUploaderFactory;
   }
 
   return self;
+}
+
++ (FBSDKGamingVideoUploader *)createWithFileHandle:(id<FBSDKFileHandling>)fileHandle
+                                  totalBytesToSend:(NSUInteger)totalBytes
+                                 completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
+                                   progressHandler:(FBSDKGamingServiceProgressHandler _Nonnull)progressHandler
+{
+  FBSDKGamingVideoUploader *uploader = [FBSDKGamingVideoUploader new];
+  uploader.fileHandle = fileHandle;
+  uploader.totalBytesExpectedToSend = totalBytes;
+  uploader.completionHandler = completionHandler;
+  uploader.progressHandler = progressHandler;
+
+  return uploader;
 }
 
 + (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration *_Nonnull)configuration
@@ -139,36 +162,22 @@
   const NSUInteger fileSize = (unsigned long)[fileHandle seekToEndOfFile];
 
   FBSDKGamingVideoUploader *const uploader =
-  [[FBSDKGamingVideoUploader alloc]
-   initWithFileHandle:fileHandle
+  [FBSDKGamingVideoUploader
+   createWithFileHandle:fileHandle
    totalBytesToSend:fileSize
    completionHandler:completionHandler
    progressHandler:progressHandler];
 
   [FBSDKInternalUtility.sharedUtility registerTransientObject:uploader];
 
-  FBSDKVideoUploader *const videoUploader =
-  [[FBSDKVideoUploader alloc]
-   initWithVideoName:[configuration.videoURL lastPathComponent]
+  id<FBSDKVideoUploading> const videoUploader =
+  [self.videoUploaderFactory
+   createWithVideoName:[configuration.videoURL lastPathComponent]
    videoSize:fileSize
    parameters:@{}
    delegate:uploader];
 
   [videoUploader start];
-}
-
-- (instancetype)initWithFileHandle:(id<FBSDKFileHandling>)fileHandle
-                  totalBytesToSend:(NSUInteger)totalBytes
-                 completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
-                   progressHandler:(FBSDKGamingServiceProgressHandler _Nonnull)progressHandler
-{
-  if (self = [super init]) {
-    _fileHandle = fileHandle;
-    _totalBytesExpectedToSend = totalBytes;
-    _completionHandler = completionHandler;
-    _progressHandler = progressHandler;
-  }
-  return self;
 }
 
 - (void)safeCompleteWithSuccess:(BOOL)success

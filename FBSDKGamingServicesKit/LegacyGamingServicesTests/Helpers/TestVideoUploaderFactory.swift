@@ -19,15 +19,25 @@
 import Foundation
 import LegacyGamingServices
 
-class TestFileHandleFactory: FileHandleCreating {
+class TestVideoUploaderFactory: VideoUploaderCreating {
 
-  var stubbedFileHandle = TestFileHandler()
-  var capturedURL: URL?
+  var capturedVideoName: String?
+  var capturedVideoSize: UInt?
+  var capturedParameters = [AnyHashable: Any]()
+  var capturedDelegate: VideoUploaderDelegate?
+  var stubbedVideoUploader = TestVideoUploader()
 
-  func fileHandleForReading(from url: URL) throws -> FileHandling {
-    capturedURL = url
+  func create(
+    videoName: String,
+    videoSize: UInt,
+    parameters: [AnyHashable: Any],
+    delegate: VideoUploaderDelegate
+  ) -> VideoUploading {
+    capturedVideoName = videoName
+    capturedVideoSize = videoSize
+    capturedParameters = parameters
+    capturedDelegate = delegate
 
-    return stubbedFileHandle
+    return stubbedVideoUploader
   }
-
 }

@@ -16,18 +16,23 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import Foundation
-import LegacyGamingServices
+#import <Foundation/Foundation.h>
 
-class TestFileHandleFactory: FileHandleCreating {
+#import "FBSDKVideoUploading.h"
 
-  var stubbedFileHandle = TestFileHandler()
-  var capturedURL: URL?
+@protocol FBSDKVideoUploaderDelegate;
 
-  func fileHandleForReading(from url: URL) throws -> FileHandling {
-    capturedURL = url
+NS_ASSUME_NONNULL_BEGIN
 
-    return stubbedFileHandle
-  }
+NS_SWIFT_NAME(VideoUploaderCreating)
+@protocol FBSDKVideoUploaderCreating
 
-}
+- (id<FBSDKVideoUploading>)createWithVideoName:(NSString *)videoName
+                                     videoSize:(NSUInteger)videoSize
+                                    parameters:(NSDictionary *)parameters
+                                      delegate:(id<FBSDKVideoUploaderDelegate>)delegate
+NS_SWIFT_NAME(create(videoName:videoSize:parameters:delegate:));
+
+@end
+
+NS_ASSUME_NONNULL_END
