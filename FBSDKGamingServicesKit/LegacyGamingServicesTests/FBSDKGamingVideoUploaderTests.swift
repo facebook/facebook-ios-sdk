@@ -154,6 +154,102 @@ class GamingVideoUploaderTests: XCTestCase {
     )
   }
 
+  // MARK: Delegate methods
+
+  func testUploadErrorsHandled() throws {
+    var wasCompletionCalled = false
+    uploader.uploadVideo(with: configuration) { _, _, error in
+      XCTAssertTrue(error is SampleError)
+
+      wasCompletionCalled = true
+    }
+
+    let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate as? GamingVideoUploader)
+
+    delegate.videoUploader(nil, didFailWithError: SampleError())
+
+    XCTAssertTrue(wasCompletionCalled)
+  }
+
+  func testVideoUploaderErrorOnUnsuccessful() throws {
+    var wasCompletionCalled = false
+    uploader.uploadVideo(with: configuration) { _, _, error in
+      XCTAssertEqual(
+        (error as NSError?)?.code,
+        CoreError.errorUnknown.rawValue,
+        "Should callback with an unknown error when the result indicates failure"
+      )
+      wasCompletionCalled = true
+    }
+
+    let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate as? GamingVideoUploader)
+
+    delegate.videoUploader(nil, didCompleteWithResults: ["success": false])
+
+    XCTAssertTrue(wasCompletionCalled)
+  }
+
+  func testVideoUploaderSucceeds() throws {
+    var wasCompletionCalled = false
+    uploader.uploadVideo(with: configuration) { success, _, error in
+      XCTAssertNil(error, "Should not receive an error when the uploader succeeds")
+      XCTAssertTrue(success, "Should indicate success in the completion")
+      wasCompletionCalled = true
+    }
+
+    let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate as? GamingVideoUploader)
+
+    delegate.videoUploader(nil, didCompleteWithResults: ["success": "1"])
+
+    XCTAssertTrue(wasCompletionCalled)
+  }
+
+  func testVideoUploaderProgress() throws {
+    var expectedBytesSent: Int64 = 0
+    var expectedTotalSent: Int64 = 0
+    var expectedTotalExpected: Int64 = 999
+    var completionCallCount = 0
+
+    let verifyProgress: GamingServiceProgressHandler = { bytesSent, totalSent, totalExpected in
+      XCTAssertEqual(bytesSent, expectedBytesSent)
+      XCTAssertEqual(totalSent, expectedTotalSent)
+      XCTAssertEqual(totalExpected, expectedTotalExpected)
+      completionCallCount += 1
+    }
+    fileHandle.stubbedSeekToEndOfFile = 999
+    fileHandle.stubbedReadData = Data(Array(repeating: 1, count: 500))
+
+    uploader.uploadVideo(
+      with: configuration,
+      completionHandler: { _, _, _ in },
+      andProgressHandler: verifyProgress
+    )
+    let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate as? GamingVideoUploader)
+
+    // Send first chunk of data
+    delegate.videoChunkData(for: nil, startOffset: 0, endOffset: 500)
+
+    // Set expectations
+    expectedBytesSent = 500
+    expectedTotalSent = 500
+    expectedTotalExpected = 999
+
+    fileHandle.stubbedReadData = Data(Array(repeating: 1, count: 499))
+
+    // Send second chunk of data
+    delegate.videoChunkData(for: nil, startOffset: 500, endOffset: 999)
+
+    // Set expectations
+    expectedBytesSent = 499
+    expectedTotalSent = 999
+    expectedTotalExpected = 999
+
+    // Completing calls the progress handler with the final total bytes
+    delegate.videoUploader(nil, didCompleteWithResults: ["success": true])
+
+    XCTAssertEqual(completionCallCount, 3)
+  }
+
   // MARK: - Helpers
 
   func createConfiguration(url: URL) -> GamingVideoUploaderConfiguration {

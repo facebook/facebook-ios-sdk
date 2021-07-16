@@ -21,9 +21,11 @@
 @protocol FBSDKFileHandleCreating;
 @protocol FBSDKVideoUploaderCreating;
 
+#import "FBSDKVideoUploader.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKGamingVideoUploader (Testing)
+@interface FBSDKGamingVideoUploader (Testing) <FBSDKVideoUploaderDelegate>
 
 @property (class, nonatomic, readonly) FBSDKGamingVideoUploader *shared;
 @property (nonatomic) id<FBSDKFileHandleCreating> fileHandleFactory;
@@ -34,6 +36,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration *_Nonnull)configuration
           andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler;
+
+- (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration * _Nonnull)configuration
+                   completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
+                  andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler;
 
 @end
 

@@ -27,10 +27,7 @@
 
 @interface FBSDKGamingVideoUploader () <FBSDKVideoUploaderDelegate>
 {
-  FBSDKGamingServiceResultCompletionHandler _completionHandler;
-  FBSDKGamingServiceProgressHandler _progressHandler;
   NSUInteger _totalBytesSent;
-  NSUInteger _totalBytesExpectedToSend;
 }
 
 @property (nonatomic) id<FBSDKFileHandling> fileHandle;
@@ -194,7 +191,7 @@
   }
 
   if (_completionHandler != nil) {
-    _completionHandler(success, result, finalError);
+    self.completionHandler(success, result, finalError);
   }
 
   [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
@@ -235,8 +232,13 @@
 {
   [self safeProgressWithTotalBytesSent:_totalBytesExpectedToSend];
 
+  BOOL serverSuccess = NO;
+  id success = results[@"success"];
+  if ([success isKindOfClass:NSString.class] || [success isKindOfClass:NSNumber.class]) {
+    serverSuccess = [success boolValue];
+  }
   [self
-   safeCompleteWithSuccess:[results[@"success"] boolValue]
+   safeCompleteWithSuccess:serverSuccess
    error:nil
    result:@{@"video_id" : results[@"video_id"] ?: @""}];
 }

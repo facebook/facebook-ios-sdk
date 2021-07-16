@@ -133,7 +133,7 @@
 {
   NSString *expectedID = @"111";
   NSDictionary *expectedResult = @{@"id" : expectedID};
-  NSString *expectedDialogResult = self.name;
+  NSDictionary *expectedDialogResult = @{};
   NSError *expectedError = [[NSError alloc]
                             initWithDomain:FBSDKErrorDomain
                             code:FBSDKErrorUnknown
@@ -166,7 +166,7 @@
     "Should invoke the new controller with the id from the result"
   );
 
-  self.factory.capturedCompletion(YES, self.name, expectedError);
+  self.factory.capturedCompletion(YES, @{}, expectedError);
 
   XCTAssertTrue(actioned);
 }

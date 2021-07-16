@@ -35,7 +35,7 @@ Main completion handling of any Gaming Service (Friend Finder, Image/Video Uploa
 @param result the result that was returned by the service, if any.
 @param error the error that occured during the service call, if any.
 */
-typedef void (^FBSDKGamingServiceResultCompletionHandler)(BOOL success, NSString * _Nullable result, NSError * _Nullable error)
+typedef void (^FBSDKGamingServiceResultCompletionHandler)(BOOL success, NSDictionary * _Nullable result, NSError * _Nullable error)
 NS_SWIFT_NAME(GamingServiceResultCompletionHandler);
 
 /**
