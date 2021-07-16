@@ -16,23 +16,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import Foundation
+import FBSDKCoreKit
 
 @objcMembers
-class TestGraphRequestConnectionFactory: NSObject, GraphRequestConnectionProviding {
-  let stubbedConnection: GraphRequestConnecting
+public class TestGraphRequestConnectionFactory: NSObject, GraphRequestConnectionProviding {
+  public var stubbedConnection: GraphRequestConnecting?
 
-  private init(stubbedConnection: GraphRequestConnecting) {
-    self.stubbedConnection = stubbedConnection
-  }
-
-  static func create(withStubbedConnection connection: GraphRequestConnecting) -> TestGraphRequestConnectionFactory {
-    return TestGraphRequestConnectionFactory(stubbedConnection: connection)
+  public static func create(withStubbedConnection connection: GraphRequestConnecting) -> TestGraphRequestConnectionFactory {
+    let factory = TestGraphRequestConnectionFactory()
+    factory.stubbedConnection = connection
+    return factory
   }
 
   // MARK: - GraphRequestConnectionProviding
 
-  func createGraphRequestConnection() -> GraphRequestConnecting {
-    return stubbedConnection
+  public func createGraphRequestConnection() -> GraphRequestConnecting {
+    guard let connection = stubbedConnection else {
+      fatalError("Must stub a connection for a test connection factory")
+    }
+    return connection
   }
 }

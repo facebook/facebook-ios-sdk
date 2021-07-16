@@ -29,6 +29,7 @@
 }
 
 @property (nonnull, nonatomic) id<FBSDKGamingServiceControllerCreating> factory;
+@property (nonnull, nonatomic) id<FBSDKGraphRequestConnectionProviding> graphRequestConnectionFactory;
 
 @end
 
@@ -48,21 +49,25 @@
 
 - (instancetype)init
 {
-  return [self initWithGamingServiceControllerFactory:[FBSDKGamingServiceControllerFactory new]];
+  return [self initWithGamingServiceControllerFactory:[FBSDKGamingServiceControllerFactory new]
+                        graphRequestConnectionFactory:[FBSDKGraphRequestConnectionFactory new]];
 }
 
 - (instancetype)initWithProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
 {
-  if ((self = [self initWithGamingServiceControllerFactory:[FBSDKGamingServiceControllerFactory new]])) {
+  if ((self = [self initWithGamingServiceControllerFactory:[FBSDKGamingServiceControllerFactory new]
+                             graphRequestConnectionFactory:[FBSDKGraphRequestConnectionFactory new]])) {
     _progressHandler = progressHandler;
   }
   return self;
 }
 
 - (instancetype)initWithGamingServiceControllerFactory:(id<FBSDKGamingServiceControllerCreating>)factory
+                         graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionProviding>)graphRequestConnectionFactory
 {
   if ((self = [super init])) {
     _factory = factory;
+    _graphRequestConnectionFactory = graphRequestConnectionFactory;
   }
   return self;
 }

@@ -12,6 +12,7 @@
 		B9300B57F130CADA2FA635E3 /* TestSessionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8640C198FCE46662467AD22C /* TestSessionProvider.swift */; };
 		BD38E8A36C58EBF74120120C /* SampleAccessTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8946DC7A460B75F7B65F5BE5 /* SampleAccessTokens.swift */; };
 		BF1AFE1973B52493C7B6D03C /* SampleUserProfiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD0C12E3DCAF88D1A6D0E0A /* SampleUserProfiles.swift */; };
+		F4A6E82426A1DF4400687E83 /* TestGraphRequestConnectionFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A6E81526A1DF4400687E83 /* TestGraphRequestConnectionFactory.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +30,34 @@
 			remoteGlobalIDString = 2DA6329335CC5D6AFDDA8E93;
 			remoteInfo = "FBSDKCoreKit-Dynamic";
 		};
+		F4A6E81C26A1DF4400687E83 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FD2991A4DB25EA6EF6D6494A /* FBSDKCoreKit */;
+			proxyType = 2;
+			remoteGlobalIDString = 2A58EC65C0FFD878D338CE29;
+			remoteInfo = FBSDKCoreKit;
+		};
+		F4A6E81E26A1DF4400687E83 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FD2991A4DB25EA6EF6D6494A /* FBSDKCoreKit */;
+			proxyType = 2;
+			remoteGlobalIDString = FBFBBBC36F01F601C00FB614;
+			remoteInfo = FBSDKCoreKitTests;
+		};
+		F4A6E82026A1DF4400687E83 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FD2991A4DB25EA6EF6D6494A /* FBSDKCoreKit */;
+			proxyType = 2;
+			remoteGlobalIDString = 7E1FF4A7217544E3BABCEDF5;
+			remoteInfo = FBSDKCoreKit_TV;
+		};
+		F4A6E82226A1DF4400687E83 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FD2991A4DB25EA6EF6D6494A /* FBSDKCoreKit */;
+			proxyType = 2;
+			remoteGlobalIDString = 8295F44EEB238FCCD30BEABA;
+			remoteInfo = "FBSDKCoreKit_TV-Dynamic";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +66,7 @@
 		8640C198FCE46662467AD22C /* TestSessionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSessionProvider.swift; sourceTree = "<group>"; };
 		8946DC7A460B75F7B65F5BE5 /* SampleAccessTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAccessTokens.swift; sourceTree = "<group>"; };
 		E40113A8B281C6A908AEFA21 /* TestTools.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TestTools.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F4A6E81526A1DF4400687E83 /* TestGraphRequestConnectionFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestGraphRequestConnectionFactory.swift; sourceTree = "<group>"; };
 		FAD0C12E3DCAF88D1A6D0E0A /* SampleUserProfiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleUserProfiles.swift; sourceTree = "<group>"; };
 		FD2991A4DB25EA6EF6D6494A /* FBSDKCoreKit */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSDKCoreKit; path = ../FBSDKCoreKit/FBSDKCoreKit.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -45,7 +75,11 @@
 		5ED934C23270354BC542BB8F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A724E3E7191A3A84AE498C7C /* FBSDKCoreKit-Dynamic.framework */,
+				F4A6E81D26A1DF4400687E83 /* FBSDKCoreKit.framework */,
+				A724E3E7191A3A84AE498C7C /* FBSDKCoreKit.framework */,
+				F4A6E81F26A1DF4400687E83 /* FBSDKCoreKitTests.xctest */,
+				F4A6E82126A1DF4400687E83 /* FBSDKCoreKit.framework */,
+				F4A6E82326A1DF4400687E83 /* FBSDKCoreKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -61,6 +95,7 @@
 		8D0A9F8F0A540BDAE761EE52 /* TestTools */ = {
 			isa = PBXGroup;
 			children = (
+				F4A6E81526A1DF4400687E83 /* TestGraphRequestConnectionFactory.swift */,
 				8946DC7A460B75F7B65F5BE5 /* SampleAccessTokens.swift */,
 				FAD0C12E3DCAF88D1A6D0E0A /* SampleUserProfiles.swift */,
 				3D5B18A936EE4E827325688A /* TestGraphRequest.swift */,
@@ -116,8 +151,6 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 1200;
-				TargetAttributes = {
-				};
 			};
 			buildConfigurationList = 15ED1802B47B87C85B3D2818 /* Build configuration list for PBXProject "TestTools" */;
 			compatibilityVersion = "Xcode 10.0";
@@ -143,11 +176,39 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		A724E3E7191A3A84AE498C7C /* FBSDKCoreKit-Dynamic.framework */ = {
+		A724E3E7191A3A84AE498C7C /* FBSDKCoreKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = "FBSDKCoreKit-Dynamic.framework";
+			path = FBSDKCoreKit.framework;
 			remoteRef = CBB8303DD684E0F36CCA0373 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F4A6E81D26A1DF4400687E83 /* FBSDKCoreKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKCoreKit.framework;
+			remoteRef = F4A6E81C26A1DF4400687E83 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F4A6E81F26A1DF4400687E83 /* FBSDKCoreKitTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = FBSDKCoreKitTests.xctest;
+			remoteRef = F4A6E81E26A1DF4400687E83 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F4A6E82126A1DF4400687E83 /* FBSDKCoreKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKCoreKit.framework;
+			remoteRef = F4A6E82026A1DF4400687E83 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F4A6E82326A1DF4400687E83 /* FBSDKCoreKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKCoreKit.framework;
+			remoteRef = F4A6E82226A1DF4400687E83 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -162,6 +223,7 @@
 				2442EF2D3F79CF0FC9C005DB /* TestGraphRequest.swift in Sources */,
 				ABAAE5DF3C5E29E2C9421FED /* TestGraphRequestConnection.swift in Sources */,
 				B9300B57F130CADA2FA635E3 /* TestSessionProvider.swift in Sources */,
+				F4A6E82426A1DF4400687E83 /* TestGraphRequestConnectionFactory.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

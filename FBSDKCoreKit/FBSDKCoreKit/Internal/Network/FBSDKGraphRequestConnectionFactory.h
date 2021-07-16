@@ -18,7 +18,11 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKGraphRequestConnectionProviding.h"
+#if SWIFT_PACKAGE
+ #import "FBSDKGraphRequestConnectionProviding.h"
+#else
+ #import <FBSDKCoreKit/FBSDKGraphRequestConnectionProviding.h>
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 

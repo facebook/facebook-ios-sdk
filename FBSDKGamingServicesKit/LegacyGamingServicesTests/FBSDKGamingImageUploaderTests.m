@@ -19,6 +19,7 @@
 #import <OCMock/OCMock.h>
 
 @import LegacyGamingServices;
+@import TestTools;
 @import XCTest;
 
 #import "FBSDKCoreKit+Internal.h"
@@ -30,6 +31,7 @@
 @property (nonatomic) FBSDKGamingImageUploader *uploader;
 @property (nonatomic) TestGamingServiceControllerFactory *factory;
 @property (nonatomic) FBSDKGamingImageUploaderConfiguration *configuration;
+@property (nonatomic) TestGraphRequestConnectionFactory *graphRequestConnectionFactory;
 
 @end
 
@@ -42,7 +44,10 @@
   FBSDKAccessToken.currentAccessToken = [self createAccessToken];
 
   self.factory = [TestGamingServiceControllerFactory new];
-  self.uploader = [[FBSDKGamingImageUploader alloc] initWithGamingServiceControllerFactory:self.factory];
+  self.graphRequestConnectionFactory = [TestGraphRequestConnectionFactory new];
+  self.uploader = [[FBSDKGamingImageUploader alloc]
+                   initWithGamingServiceControllerFactory:self.factory
+                   graphRequestConnectionFactory:self.graphRequestConnectionFactory];
   self.configuration = [self createConfigurationWithShouldLaunch:YES];
 }
 
