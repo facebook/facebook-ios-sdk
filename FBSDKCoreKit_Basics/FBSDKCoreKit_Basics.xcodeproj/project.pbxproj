@@ -618,7 +618,7 @@
 		77D077E9E35532487FD50070 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1200;
+				LastUpgradeCheck = 1250;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 				};

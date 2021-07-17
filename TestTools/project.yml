@@ -13,6 +13,7 @@ options:
   tabWidth: 2
   indentWidth: 2
   defaultConfig: Debug
+  xcodeVersion: "12.5"
 
 settings:
   base:
