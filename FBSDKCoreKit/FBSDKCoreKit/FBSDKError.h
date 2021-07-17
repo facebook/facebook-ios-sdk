@@ -25,8 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(SDKError)
 @interface FBSDKError : NSObject
 
-+ (void)configureWithErrorReporter:(id<FBSDKErrorReporting>)errorReporter;
-
 + (NSError *)errorWithCode:(NSInteger)code message:(nullable NSString *)message;
 
 + (NSError *)errorWithDomain:(NSErrorDomain)domain code:(NSInteger)code message:(nullable NSString *)message;
@@ -39,11 +37,6 @@ NS_SWIFT_NAME(SDKError)
                         code:(NSInteger)code
                      message:(nullable NSString *)message
              underlyingError:(nullable NSError *)underlyingError;
-
-+ (NSError *)errorWithCode:(NSInteger)code
-                  userInfo:(nullable NSDictionary<NSErrorUserInfoKey, id> *)userInfo
-                   message:(nullable NSString *)message
-           underlyingError:(nullable NSError *)underlyingError;
 
 + (NSError *)errorWithDomain:(NSErrorDomain)domain
                         code:(NSInteger)code
@@ -60,37 +53,15 @@ NS_SWIFT_NAME(SDKError)
                                       value:(nullable id)value
                                     message:(nullable NSString *)message;
 
-+ (NSError *)invalidArgumentErrorWithName:(NSString *)name
-                                    value:(nullable id)value
-                                  message:(nullable NSString *)message
-                          underlyingError:(nullable NSError *)underlyingError;
-
 + (NSError *)invalidArgumentErrorWithDomain:(NSErrorDomain)domain
                                        name:(NSString *)name
                                       value:(nullable id)value
                                     message:(nullable NSString *)message
                             underlyingError:(nullable NSError *)underlyingError;
 
-+ (NSError *)invalidCollectionErrorWithName:(NSString *)name
-                                 collection:(id<NSFastEnumeration>)collection
-                                       item:(id)item
-                                    message:(nullable NSString *)message;
-
-+ (NSError *)invalidCollectionErrorWithName:(NSString *)name
-                                 collection:(id<NSFastEnumeration>)collection
-                                       item:(id)item
-                                    message:(nullable NSString *)message
-                            underlyingError:(nullable NSError *)underlyingError;
-
-+ (NSError *)requiredArgumentErrorWithName:(NSString *)name message:(nullable NSString *)message;
-
 + (NSError *)requiredArgumentErrorWithDomain:(NSErrorDomain)domain
                                         name:(NSString *)name
                                      message:(nullable NSString *)message;
-
-+ (NSError *)requiredArgumentErrorWithName:(NSString *)name
-                                   message:(nullable NSString *)message
-                           underlyingError:(nullable NSError *)underlyingError;
 
 + (NSError *)unknownErrorWithMessage:(NSString *)message;
 

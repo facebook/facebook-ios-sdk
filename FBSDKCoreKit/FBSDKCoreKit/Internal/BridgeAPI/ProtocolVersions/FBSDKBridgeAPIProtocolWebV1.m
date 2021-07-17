@@ -25,7 +25,7 @@
  #import <UIKit/UIKit.h>
 
  #import "FBSDKCoreKitBasicsImport.h"
- #import "FBSDKError.h"
+ #import "FBSDKError+Internal.h"
  #import "FBSDKInternalUtility.h"
 
  #define FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_ACTION_ID_KEY @"action_id"

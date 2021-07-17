@@ -35,6 +35,7 @@
 #import "FBSDKCoreKitVersions.h"
 #import "FBSDKDeviceButton.h"
 #import "FBSDKDeviceViewControllerBase.h"
+#import "FBSDKError.h"
 #import "FBSDKFeatureChecking.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequestConnecting.h"

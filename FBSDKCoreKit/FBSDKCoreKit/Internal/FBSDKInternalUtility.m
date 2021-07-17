@@ -23,7 +23,7 @@
 
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitBasicsImport.h"
-#import "FBSDKError.h"
+#import "FBSDKError+Internal.h"
 #import "FBSDKSettings.h"
 #import "FBSDKSettings+Internal.h"
 

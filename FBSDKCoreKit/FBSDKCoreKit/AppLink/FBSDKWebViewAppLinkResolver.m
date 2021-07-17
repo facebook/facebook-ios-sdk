@@ -27,7 +27,7 @@
 
 #import "FBSDKAppLink.h"
 #import "FBSDKCoreKitBasicsImport.h"
-#import "FBSDKError.h"
+#import "FBSDKError+Internal.h"
 #import "NSURLSession+Protocols.h"
 
 /**

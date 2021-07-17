@@ -30,7 +30,7 @@
 #import "FBSDKConstants.h"
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDynamicFrameworkLoader.h"
-#import "FBSDKError.h"
+#import "FBSDKError+Internal.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"

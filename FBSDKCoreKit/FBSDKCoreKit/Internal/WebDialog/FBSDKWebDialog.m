@@ -25,7 +25,7 @@
  #import "FBSDKAccessToken.h"
  #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKDynamicFrameworkLoader.h"
- #import "FBSDKError.h"
+ #import "FBSDKError+Internal.h"
  #import "FBSDKInternalUtility.h"
  #import "FBSDKInternalUtility+WindowFinding.h"
  #import "FBSDKLogger.h"

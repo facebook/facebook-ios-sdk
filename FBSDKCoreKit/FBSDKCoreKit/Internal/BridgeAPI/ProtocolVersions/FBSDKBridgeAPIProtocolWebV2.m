@@ -25,7 +25,7 @@
  #import "FBSDKBridgeAPIProtocolNativeV1.h"
  #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKDialogConfiguration.h"
- #import "FBSDKError.h"
+ #import "FBSDKError+Internal.h"
  #import "FBSDKInternalUtility.h"
  #import "FBSDKServerConfigurationManager.h"
  #import "FBSDKServerConfigurationProviding.h"

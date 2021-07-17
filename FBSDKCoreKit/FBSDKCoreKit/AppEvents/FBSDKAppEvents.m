@@ -44,7 +44,7 @@
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKDynamicFrameworkLoader.h"
-#import "FBSDKError.h"
+#import "FBSDKError+Internal.h"
 #import "FBSDKEventsProcessing.h"
 #import "FBSDKFeatureChecking.h"
 #import "FBSDKGateKeeperManaging.h"

@@ -21,7 +21,7 @@
 #import "FBSDKAppEvents+EventLogging.h"
 #import "FBSDKConstants.h"
 #import "FBSDKCoreKit+Internal.h"
-#import "FBSDKError.h"
+#import "FBSDKError+Internal.h"
 #import "FBSDKErrorConfigurationProvider.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestBody.h"

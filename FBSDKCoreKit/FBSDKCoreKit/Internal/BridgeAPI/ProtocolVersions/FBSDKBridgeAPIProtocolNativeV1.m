@@ -28,7 +28,7 @@
  #import "FBSDKBridgeAPIRequest.h"
  #import "FBSDKConstants.h"
  #import "FBSDKCoreKitBasicsImport.h"
- #import "FBSDKError.h"
+ #import "FBSDKError+Internal.h"
  #import "FBSDKInternalUtility.h"
  #import "FBSDKPasteboard.h"
  #import "FBSDKSettings.h"

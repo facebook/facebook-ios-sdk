@@ -45,7 +45,7 @@
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKCrashShield+Internal.h"
 #import "FBSDKDynamicFrameworkLoader.h"
-#import "FBSDKError.h"
+#import "FBSDKError+Internal.h"
 #import "FBSDKErrorReport+ErrorReporting.h"
 #import "FBSDKEventDeactivationManager+Protocols.h"
 #import "FBSDKFeatureManager+FeatureChecking.h"
