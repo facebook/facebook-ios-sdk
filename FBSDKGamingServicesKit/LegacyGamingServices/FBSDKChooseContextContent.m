@@ -24,7 +24,7 @@
 
  #import "FBSDKCoreKitInternalImport.h"
 
-@interface FBSDKChooseContextContent () <FBSDKCopying>
+@interface FBSDKChooseContextContent () <NSCopying, NSObject>
 @end
 
 @implementation FBSDKChooseContextContent

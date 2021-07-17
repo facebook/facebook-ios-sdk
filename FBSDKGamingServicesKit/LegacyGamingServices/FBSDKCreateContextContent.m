@@ -26,7 +26,7 @@
  #import "FBSDKGamingServicesCoreKitImport.h"
 
  #define FBSDK_APP_REQUEST_CONTENT_PLAYER_ID_KEY @"playerID"
-@interface FBSDKCreateContextContent () <FBSDKCopying>
+@interface FBSDKCreateContextContent () <NSCopying, NSObject>
 @end
 
 @implementation FBSDKCreateContextContent

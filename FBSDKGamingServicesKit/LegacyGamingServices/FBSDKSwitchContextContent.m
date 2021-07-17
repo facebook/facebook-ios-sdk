@@ -26,7 +26,7 @@
 
  #define FBSDK_APP_REQUEST_CONTENT_CONTEXT_TOKEN_KEY @"contextToken"
 
-@interface FBSDKSwitchContextContent () <FBSDKCopying>
+@interface FBSDKSwitchContextContent () <NSCopying, NSObject>
 @end
 
 @implementation FBSDKSwitchContextContent

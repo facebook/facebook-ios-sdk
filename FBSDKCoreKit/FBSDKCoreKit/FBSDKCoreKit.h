@@ -32,7 +32,6 @@
 #import "FBSDKButton.h"
 #import "FBSDKButtonImpressionTracking.h"
 #import "FBSDKConstants.h"
-#import "FBSDKCopying.h"
 #import "FBSDKCoreKitVersions.h"
 #import "FBSDKDeviceButton.h"
 #import "FBSDKDeviceViewControllerBase.h"
