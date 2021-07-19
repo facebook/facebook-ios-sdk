@@ -33,7 +33,7 @@ static NSString *const _validLoginCode2 = @"123";
 static NSString *const _validLoginCode3 = @"123abc";
 static NSURL *_validVerifictationURL;
 static NSDate *_validexpirationDate;
-static NSUInteger *const _validPollingInterval = 1;
+static NSUInteger const _validPollingInterval = 10;
 
 @interface FBSDKDeviceLoginCodeInfo (Testing)
 
@@ -41,7 +41,7 @@ static NSUInteger *const _validPollingInterval = 1;
                          loginCode:(NSString *)loginCode
                    verificationURL:(NSURL *)verificationURL
                     expirationDate:(NSDate *)expirationDate
-                   pollingInterval:(NSUInteger *)pollingInterval;
+                   pollingInterval:(NSUInteger)pollingInterval;
 
 @end
 
@@ -74,6 +74,16 @@ static NSUInteger *const _validPollingInterval = 1;
   NSString *stringCastLoginCode = (NSString *)@123;
   [self assertCreationSucceedWithIdentifier:stringCastIdentifier
                                   loginCode:stringCastLoginCode];
+}
+
+- (void)testMinimumPollingInterval
+{
+  FBSDKDeviceLoginCodeInfo *deviceLoginCodeInfo = [[FBSDKDeviceLoginCodeInfo alloc] initWithIdentifier:_validIdentifier
+                                                                                             loginCode:_validLoginCode
+                                                                                       verificationURL:_validVerifictationURL
+                                                                                        expirationDate:_validexpirationDate
+                                                                                       pollingInterval:4];
+  XCTAssertEqual(deviceLoginCodeInfo.pollingInterval, 5);
 }
 
 - (void)assertCreationSucceedWithIdentifier:(NSString *)identifier loginCode:(NSString *)loginCode

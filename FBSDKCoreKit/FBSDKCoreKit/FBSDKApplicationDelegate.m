@@ -45,7 +45,7 @@
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKCrashShield+Internal.h"
 #import "FBSDKDynamicFrameworkLoader.h"
-#import "FBSDKError.h"
+#import "FBSDKError+Internal.h"
 #import "FBSDKErrorReport+ErrorReporting.h"
 #import "FBSDKEventDeactivationManager+Protocols.h"
 #import "FBSDKFeatureManager+FeatureChecking.h"
@@ -87,6 +87,7 @@
  #import "FBSDKModelManager.h"
  #import "FBSDKModelManager+RulesFromKeyProvider.h"
  #import "FBSDKProfile+Internal.h"
+ #import "FBSDKSKAdNetworkReporter+AppEventsReporter.h"
  #import "FBSDKSKAdNetworkReporter+Internal.h"
  #import "FBSDKURLOpener.h"
  #import "FBSDKWebDialogView.h"
@@ -116,6 +117,7 @@ static UIApplicationState _applicationState;
 #if !TARGET_OS_TV
 @property (nonnull, nonatomic, readonly) Class<FBSDKProfileProviding> profileProvider;
 @property (nonnull, nonatomic, readonly) id<FBSDKBackgroundEventLogging> backgroundEventLogger;
+@property (nonatomic) FBSDKSKAdNetworkReporter *skAdNetworkReporter;
 #endif
 
 @property (nonatomic) BOOL isAppLaunched;
@@ -277,7 +279,7 @@ static UIApplicationState _applicationState;
   // Register on UIApplicationDidEnterBackgroundNotification events to reset source application data when app backgrounds.
   [self.appEvents registerAutoResetSourceApplication];
 
-  [FBSDKInternalUtility validateFacebookReservedURLSchemes];
+  [FBSDKInternalUtility.sharedUtility validateFacebookReservedURLSchemes];
 }
 
 - (void)addObservers
@@ -427,7 +429,7 @@ static UIApplicationState _applicationState;
     [self.appEvents activateApp];
   }
 #if !TARGET_OS_TV
-  [FBSDKSKAdNetworkReporter checkAndRevokeTimer];
+  [self.skAdNetworkReporter checkAndRevokeTimer];
 #endif
 
   NSArray<id<FBSDKApplicationObserving>> *observers = [self.applicationObservers copy];
@@ -620,7 +622,8 @@ static UIApplicationState _applicationState;
          restrictiveDataFilterParameterProcessor:restrictiveDataFilterManager
                              atePublisherFactory:atePublisherFactory
                           appEventsStateProvider:[FBSDKAppEventsStateFactory new]
-                                        swizzler:FBSDKSwizzler.class];
+                                        swizzler:FBSDKSwizzler.class
+                            advertiserIDProvider:FBSDKAppEventsUtility.shared];
   [FBSDKInternalUtility configureWithInfoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKAppEventsConfigurationManager configureWithStore:store
                                                 settings:sharedSettings
@@ -652,10 +655,13 @@ static UIApplicationState _applicationState;
   [FBSDKCrashShield configureWithSettings:sharedSettings
                           requestProvider:[FBSDKGraphRequestFactory new]
                           featureChecking:FBSDKFeatureManager.shared];
+  self.skAdNetworkReporter = nil;
+  if (@available(iOS 11.3, *)) {
+    self.skAdNetworkReporter = [[FBSDKSKAdNetworkReporter alloc] initWithRequestProvider:graphRequestProvider
+                                                                                   store:store
+                                                                conversionValueUpdatable:SKAdNetwork.class];
+  }
   if (@available(iOS 14.0, *)) {
-    [FBSDKSKAdNetworkReporter configureWithRequestProvider:graphRequestProvider
-                                                     store:store
-                                  conversionValueUpdatable:SKAdNetwork.class];
     [FBSDKAEMReporter configureWithRequestProvider:graphRequestProvider];
   }
   [FBSDKProfile configureWithStore:store
@@ -663,8 +669,9 @@ static UIApplicationState _applicationState;
                 notificationCenter:NSNotificationCenter.defaultCenter];
   [FBSDKWebDialogView configureWithWebViewProvider:[FBSDKWebViewFactory new]
                                          urlOpener:UIApplication.sharedApplication];
-  [FBSDKAppEvents configureNonTVComponentsWithOnDeviceMLModelManager:FBSDKModelManager.shared
-                                                     metadataIndexer:FBSDKMetadataIndexer.shared];
+  [self.appEvents configureNonTVComponentsWithOnDeviceMLModelManager:FBSDKModelManager.shared
+                                                     metadataIndexer:FBSDKMetadataIndexer.shared
+                                                 skAdNetworkReporter:self.skAdNetworkReporter];
 #endif
 }
 

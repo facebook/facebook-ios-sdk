@@ -48,6 +48,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKAEMInvocation (Testing)
 
+@property (nonatomic, copy) NSString *campaignID;
+@property (nonatomic, assign) NSInteger conversionValue;
+@property (nullable, nonatomic, copy) NSString *ACSSharedSecret;
+@property (nullable, nonatomic, copy) NSString *ACSConfigID;
+
 - (nullable instancetype)initWithCampaignID:(NSString *)campaignID
                                    ACSToken:(NSString *)ACSToken
                             ACSSharedSecret:(nullable NSString *)ACSSharedSecret
@@ -70,6 +75,10 @@ NS_ASSUME_NONNULL_BEGIN
                                isAggregated:(BOOL)isAggregated;
 
 - (nullable FBSDKAEMConfiguration *)_findConfig:(nullable NSDictionary<NSString *, NSArray<FBSDKAEMConfiguration *> *> *)configs;
+
+- (nullable NSString *)getHMAC:(NSInteger)delay;
+
+- (nullable NSData *)decodeBase64UrlSafeString:(NSString *)base64UrlSafeString;
 
 - (void)_setConfig:(FBSDKAEMConfiguration *)config;
 

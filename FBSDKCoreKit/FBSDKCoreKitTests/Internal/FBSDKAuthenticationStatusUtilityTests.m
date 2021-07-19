@@ -69,7 +69,7 @@
   XCTAssertEqualObjects(url.host, @"m.facebook.com");
   XCTAssertEqualObjects(url.path, @"/platform/oidc/status");
 
-  NSDictionary *params = [FBSDKInternalUtility parametersFromFBURL:url];
+  NSDictionary *params = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
   XCTAssertEqualObjects(params[@"id_token"], FBSDKAuthenticationToken.currentAuthenticationToken.tokenString, @"Incorrect ID token parameter in request url");
 }
 

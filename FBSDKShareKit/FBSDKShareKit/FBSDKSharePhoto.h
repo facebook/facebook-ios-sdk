@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
   A photo for sharing.
  */
 NS_SWIFT_NAME(SharePhoto)
-@interface FBSDKSharePhoto : NSObject <NSSecureCoding, FBSDKCopying, FBSDKShareMedia, FBSDKSharingValidation>
+@interface FBSDKSharePhoto : NSObject <NSSecureCoding, NSCopying, NSObject, FBSDKShareMedia, FBSDKSharingValidation>
 
 /**
   Convenience method to build a new photo object with an image.

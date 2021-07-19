@@ -93,7 +93,7 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
 
 - (BOOL)isEqualToCameraEffectArguments:(FBSDKCameraEffectArguments *)object
 {
-  return [FBSDKInternalUtility object:_arguments isEqualToObject:[object allArguments]];
+  return [FBSDKInternalUtility.sharedUtility object:_arguments isEqualToObject:[object allArguments]];
 }
 
  #pragma mark - NSCoding

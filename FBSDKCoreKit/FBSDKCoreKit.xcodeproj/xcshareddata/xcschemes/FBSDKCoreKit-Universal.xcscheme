@@ -4,7 +4,8 @@
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "NO"
-      buildImplicitDependencies = "YES">
+      buildImplicitDependencies = "YES"
+      runPostActionsOnFailure = "NO">
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"
@@ -14,37 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9D2697701A5DF56700143BFC"
+               BlueprintIdentifier = "BA4D3C5299B8A0D66E526A41"
                BuildableName = "FBSDKCoreKit-Universal"
                BlueprintName = "FBSDKCoreKit-Universal"
-               ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "030EF0DB14632FF700B04273"
-               BuildableName = "libOCMock.a"
-               BlueprintName = "OCMockLib"
-               ReferencedContainer = "container:../Carthage/Checkouts/ocmock/Source/OCMock.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "NO"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9D2697511A5DF40700143BFC"
-               BuildableName = "FBSDKCoreKitTests.xctest"
-               BlueprintName = "FBSDKCoreKitTests"
                ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -54,28 +27,19 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      onlyGenerateCoverageForSpecifiedTargets = "NO"
       shouldUseLaunchSchemeArgsEnv = "YES">
+      <Testables>
+      </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9D2697701A5DF56700143BFC"
+            BlueprintIdentifier = "BA4D3C5299B8A0D66E526A41"
             BuildableName = "FBSDKCoreKit-Universal"
             BlueprintName = "FBSDKCoreKit-Universal"
             ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9D2697511A5DF40700143BFC"
-               BuildableName = "FBSDKCoreKitTests.xctest"
-               BlueprintName = "FBSDKCoreKitTests"
-               ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -90,7 +54,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9D2697701A5DF56700143BFC"
+            BlueprintIdentifier = "BA4D3C5299B8A0D66E526A41"
             BuildableName = "FBSDKCoreKit-Universal"
             BlueprintName = "FBSDKCoreKit-Universal"
             ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
@@ -103,15 +67,16 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9D2697701A5DF56700143BFC"
+            BlueprintIdentifier = "BA4D3C5299B8A0D66E526A41"
             BuildableName = "FBSDKCoreKit-Universal"
             BlueprintName = "FBSDKCoreKit-Universal"
             ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

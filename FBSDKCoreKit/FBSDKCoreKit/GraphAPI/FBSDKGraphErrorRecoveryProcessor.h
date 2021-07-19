@@ -22,11 +22,7 @@
 
 #import <Foundation/Foundation.h>
 
-#ifdef BUCK
-#import <FBSDKCoreKit/FBSDKConstants.h>
-#else
 #import "FBSDKConstants.h"
-#endif
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -57,6 +57,7 @@
 - (void)applicationWillResignActive:(NSNotification *)notification;
 - (void)setApplicationState:(UIApplicationState)state;
 - (void)initializeSDKWithLaunchOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
+- (FBSDKSKAdNetworkReporter *)skAdNetworkReporter;
 
 @end
 
@@ -68,9 +69,9 @@
 @end
 
 @interface FBSDKSKAdNetworkReporter (Testing)
-+ (id<FBSDKGraphRequestProviding>)requestProvider;
-+ (id<FBSDKDataPersisting>)store;
-+ (Class<FBSDKConversionValueUpdating>)conversionValueUpdatable;
+- (id<FBSDKGraphRequestProviding>)requestProvider;
+- (id<FBSDKDataPersisting>)store;
+- (Class<FBSDKConversionValueUpdating>)conversionValueUpdatable;
 @end
 
 @interface FBSDKAppLinkUtility (Testing)
@@ -104,11 +105,9 @@
 + (id<FBSDKDataPersisting>)store;
 + (Class<FBSDKLogging>)logger;
 + (id<FBSDKSettings>)settings;
-+ (id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>)onDeviceMLModelManager;
 + (id<FBSDKPaymentObserving>)paymentObserver;
 + (id<FBSDKTimeSpentRecording>)timeSpentRecorder;
 + (id<FBSDKAppEventsStatePersisting>)appEventsStateStore;
-+ (id<FBSDKMetadataIndexing>)metadataIndexer;
 + (id<FBSDKAppEventsParameterProcessing>)eventDeactivationParameterProcessor;
 + (id<FBSDKAppEventsParameterProcessing>)restrictiveDataFilterParameterProcessor;
 @end
@@ -288,6 +287,12 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
     FBSDKSwizzler.class,
     "Initializing the SDK should set concrete swizzler for event logging"
   );
+
+  XCTAssertEqualObjects(
+    self.appEvents.capturedAdvertiserIDProvider,
+    FBSDKAppEventsUtility.shared,
+    "Initializing the SDK should set concrete advertiser ID provider"
+  );
 }
 
 - (void)testInitializingSdkConfiguresEventsProcessorsForAppEventsState
@@ -310,15 +315,25 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 
 - (void)testConfiguringNonTVAppEventsDependencies
 {
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
+  [FBSDKAppEvents reset];
+
+  [self.delegate initializeSDKWithLaunchOptions:@{}];
+
   XCTAssertEqualObjects(
-    FBSDKAppEvents.onDeviceMLModelManager,
+    self.appEvents.capturedOnDeviceMLModelManager,
     FBSDKModelManager.shared,
     "Initializing the SDK should set concrete on device model manager for event logging"
   );
   XCTAssertEqualObjects(
-    FBSDKAppEvents.metadataIndexer,
+    self.appEvents.capturedMetadataIndexer,
     FBSDKMetadataIndexer.shared,
     "Initializing the SDK should set concrete metadata indexer for event logging"
+  );
+  XCTAssertEqualObjects(
+    self.appEvents.capturedSKAdNetworkReporter,
+    [self.delegate skAdNetworkReporter],
+    "Initializing the SDK should set concrete SKAdNetworkReporter for event logging"
   );
 }
 
@@ -467,9 +482,9 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [self.delegate initializeSDKWithLaunchOptions:@{}];
-  NSObject *requestProvider = (NSObject *)[FBSDKSKAdNetworkReporter requestProvider];
-  NSObject *store = (NSObject *)[FBSDKSKAdNetworkReporter store];
-  NSObject *conversionValueUpdatable = (NSObject *)[FBSDKSKAdNetworkReporter conversionValueUpdatable];
+  NSObject *requestProvider = (NSObject *)[[self.delegate skAdNetworkReporter] requestProvider];
+  NSObject *store = (NSObject *)[[self.delegate skAdNetworkReporter] store];
+  NSObject *conversionValueUpdatable = (NSObject *)[[self.delegate skAdNetworkReporter] conversionValueUpdatable];
   XCTAssertEqualObjects(
     requestProvider.class,
     FBSDKGraphRequestFactory.class,
@@ -582,7 +597,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
 {
   [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
   [self.delegate initializeSDKWithLaunchOptions:@{}];
-  NSObject *infoDictionaryProvider = (NSObject *)[FBSDKInternalUtility infoDictionaryProvider];
+  NSObject *infoDictionaryProvider = (NSObject *)[FBSDKInternalUtility.sharedUtility infoDictionaryProvider];
   XCTAssertEqualObjects(
     infoDictionaryProvider,
     NSBundle.mainBundle,

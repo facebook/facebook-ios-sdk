@@ -24,5 +24,5 @@
 //
 
 #if !BUCK
-@_exported import LegacyCoreKit
+@_exported import LegacyCore
 #endif

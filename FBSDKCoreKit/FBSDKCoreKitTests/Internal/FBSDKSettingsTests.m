@@ -125,7 +125,7 @@ static NSString *const whiteSpaceToken = @"   ";
 
 - (void)testSettingBehaviorsFromPlistWithValidEntry
 {
-  NSBundle *realBundle = [NSBundle bundleForClass:FBSDKTestCase.class];
+  NSBundle *realBundle = [NSBundle bundleForClass:self.class];
   FBSDKSettings.infoDictionaryProvider = realBundle;
 
   NSSet<FBSDKLoggingBehavior> *expected = [NSSet setWithArray:@[FBSDKLoggingBehaviorInformational]];

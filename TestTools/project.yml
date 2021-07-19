@@ -1,0 +1,27 @@
+# Made using xcodegen 2.17.0
+
+name: TestTools
+
+include:
+  - ../xcodegen_project_common.yml
+
+projectReferences:
+  FBSDKCoreKit:
+    path: ../FBSDKCoreKit/FBSDKCoreKit.xcodeproj
+
+settings:
+  base:
+    PRODUCT_BUNDLE_IDENTIFIER: com.facebook.TestTools
+
+targets:
+  TestTools:
+    type: framework
+    platform: [iOS]
+    platformSuffix: ""
+    sources:
+      - path: TestTools
+        excludes:
+          - Info.plist
+    dependencies:
+      - target: FBSDKCoreKit/FBSDKCoreKit-Dynamic
+        link: false

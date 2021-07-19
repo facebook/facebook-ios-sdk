@@ -223,7 +223,7 @@ static NSDictionary<NSString *, NSString *> *const emptyParameters(void)
 
 - (void)testSerializeURL
 {
-  NSString *baseURL = [FBSDKInternalUtility
+  NSString *baseURL = [FBSDKInternalUtility.sharedUtility
                        facebookURLWithHostPrefix:prefix
                        path:path
                        queryParameters:emptyParameters()

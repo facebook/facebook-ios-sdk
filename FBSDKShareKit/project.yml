@@ -1,0 +1,339 @@
+# Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+#
+# You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
+# copy, modify, and distribute this software in source code or binary form for use
+# in connection with the web services and APIs provided by Facebook.
+#
+# As with any software that integrates with the Facebook platform, your use of
+# this software is subject to the Facebook Developer Principles and Policies
+# [http://developers.facebook.com/policy/]. This copyright notice shall be
+# included in all copies or substantial portions of the software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+name: FBSDKShareKit
+
+include:
+  - ../xcodegen_project_common.yml
+
+projectReferences:
+  FBSDKCoreKit_Basics:
+    path: ../FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcodeproj
+  FBSDKCoreKit:
+    path: ../FBSDKCoreKit/FBSDKCoreKit.xcodeproj
+  TestTools:
+    path: ../TestTools/TestTools.xcodeproj
+  OCMock:
+    path: ../Carthage/Checkouts/ocmock/Source/OCMock.xcodeproj
+
+options:
+  deploymentTarget:
+    tvOS: "10.0"
+
+configFiles:
+  Debug: Configurations/Shared/Configuration/Debug.xcconfig
+  Release: Configurations/Shared/Configuration/Release.xcconfig
+
+settings:
+  base:
+    # Some iOS defaults will be overridden by Xcodegen.
+    # We need to explicitly set them to maintain parity with
+    # the project file being replaced
+    CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: NO
+    SWIFT_OPTIMIZATION_LEVEL: -O
+    ENABLE_NS_ASSERTIONS: YES
+    PRODUCT_NAME: FBSDKShareKit
+
+targets:
+  FBSDKShareKit:
+    type: framework
+    platform: iOS
+    sources:
+      - path: ../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h
+        headerVisibility: project
+        group: FBSDKShareKit/Internal
+      - path: FBSDKShareKit
+        headerVisibility: public
+        excludes:
+          - Internal
+          - include
+          - Info.plist
+          - Swift
+      - path: FBSDKShareKit/Internal
+        headerVisibility: project
+        createIntermediateGroups: true
+      - path: FBSDKShareKit/Swift
+        excludes:
+          - Exports.swift
+        createIntermediateGroups: true
+    configFiles:
+      Debug: Configurations/FBSDKShareKit.xcconfig
+      Release: Configurations/FBSDKShareKit.xcconfig
+    dependencies:
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics
+        link: false
+      - target: FBSDKCoreKit/FBSDKCoreKit
+        link: false
+    preBuildScripts:
+      - name: Run Swiftlint
+        script: |
+          # Type a script or drag a script file from your workspace to insert its path.
+          if which swiftlint >/dev/null; then
+            swiftlint --config ../.swiftlint.yml
+          else
+            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
+          fi
+    settings:
+      CLANG_ENABLE_MODULES: YES
+      DEFINES_MODULE: YES
+  FBSDKShareKit-Dynamic:
+    type: framework
+    platform: iOS
+    productName: FBSDKShareKit
+    sources:
+      - path: ../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h
+        headerVisibility: project
+        group: FBSDKShareKit/Internal
+      - path: FBSDKShareKit
+        headerVisibility: public
+        excludes:
+          - Internal
+          - include
+          - Info.plist
+          - Swift
+      - path: FBSDKShareKit/Internal
+        headerVisibility: project
+        createIntermediateGroups: true
+      - path: FBSDKShareKit/Swift
+        excludes:
+          - Exports.swift
+        createIntermediateGroups: true
+    configFiles:
+      Debug: Configurations/FBSDKShareKit-Dynamic.xcconfig
+      Release: Configurations/FBSDKShareKit-Dynamic.xcconfig
+    dependencies:
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Dynamic
+      - target: FBSDKCoreKit/FBSDKCoreKit-Dynamic
+      - sdk: UIKit.framework
+      - sdk: CoreGraphics.framework
+      - sdk: Photos.framework
+    preBuildScripts:
+      - name: Run Swiftlint
+        script: |
+          # Type a script or drag a script file from your workspace to insert its path.
+          if which swiftlint >/dev/null; then
+            swiftlint --config ../.swiftlint.yml
+          else
+            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
+          fi
+    settings:
+      CLANG_ENABLE_MODULES: YES
+      DEFINES_MODULE: YES
+      PRODUCT_NAME: FBSDKShareKit
+  FBSDKShareKit_TV:
+    type: framework
+    platform: tvOS
+    productName: FBSDKShareKit
+    sources:
+      - path: ../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h
+        headerVisibility: project
+        group: FBSDKShareKit/Internal
+      - path: FBSDKShareKit
+        headerVisibility: public
+        excludes:
+          - FBSDKAppGroupContent*
+          - FBSDKAppInviteContent*
+          - FBSDKCameraEffectArguments*
+          - FBSDKCameraEffectTextures*
+          - FBSDKGameRequestContent*
+          - FBSDKGameRequestDialog*
+          - FBSDKGameRequestURLProvider*
+          - FBSDKLikeObjectType*
+          - FBSDKLiking*
+          - FBSDKMessageDialog*
+          - FBSDKSendButton*
+          - FBSDKShareButton*
+          - FBSDKShareCameraEffectContent*
+          - FBSDKShareDialog*
+          - FBSDKShareDialogMode*
+          - FBSDKSharingButton*
+          - FBSDKSharingScheme*
+          - Internal
+          - include
+          - Info.plist
+          - Swift/*.swift
+      - path: FBSDKShareKit/Internal
+        headerVisibility: project
+        excludes:
+          - FBSDKCameraEffectArguments+Internal*
+          - FBSDKCameraEffectTextures+Internal*
+          - FBSDKCheckmarkIcon*
+          - FBSDKGameRequestFrictionlessRecipientCache*
+          - FBSDKLikeActionController*
+          - FBSDKLikeActionControllerCache*
+          - FBSDKLikeBoxBorderView*
+          - FBSDKLikeBoxView*
+          - FBSDKLikeButton+Internal*
+          - FBSDKLikeDialog*
+          - FBSDKMessengerIcon*
+          - FBSDKShareAppEventNames*
+          - FBSDKShareExtension*
+          - FBSDKShareKit+Internal*
+        createIntermediateGroups: true
+    configFiles:
+      Debug: Configurations/FBSDKShareKit-tvOS.xcconfig
+      Release: Configurations/FBSDKShareKit-tvOS.xcconfig
+    dependencies:
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV
+        link: false
+      - target: FBSDKCoreKit/FBSDKCoreKit_TV
+        link: false
+    preBuildScripts:
+      - name: Run Swiftlint
+        script: |
+          # Type a script or drag a script file from your workspace to insert its path.
+          if which swiftlint >/dev/null; then
+            swiftlint --config ../.swiftlint.yml
+          else
+            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
+          fi
+    settings:
+      PRODUCT_NAME: FBSDKShareKit
+  FBSDKShareKit_TV-Dynamic:
+    type: framework
+    platform: tvOS
+    productName: FBSDKShareKit
+    sources:
+      - path: ../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h
+        headerVisibility: project
+        group: FBSDKShareKit/Internal
+      - path: FBSDKShareKit
+        headerVisibility: public
+        excludes:
+          - FBSDKAppGroupContent*
+          - FBSDKAppInviteContent*
+          - FBSDKCameraEffectArguments*
+          - FBSDKCameraEffectTextures*
+          - FBSDKGameRequestContent*
+          - FBSDKGameRequestDialog*
+          - FBSDKGameRequestURLProvider*
+          - FBSDKLikeObjectType*
+          - FBSDKLiking*
+          - FBSDKMessageDialog*
+          - FBSDKSendButton*
+          - FBSDKShareButton*
+          - FBSDKShareCameraEffectContent*
+          - FBSDKShareDialog*
+          - FBSDKShareDialogMode*
+          - FBSDKSharingButton*
+          - FBSDKSharingScheme*
+          - Internal
+          - include
+          - Info.plist
+          - Swift/*.swift
+      - path: FBSDKShareKit/Internal
+        headerVisibility: project
+        excludes:
+          - FBSDKCameraEffectArguments+Internal*
+          - FBSDKCameraEffectTextures+Internal*
+          - FBSDKCheckmarkIcon*
+          - FBSDKGameRequestFrictionlessRecipientCache*
+          - FBSDKLikeActionController*
+          - FBSDKLikeActionControllerCache*
+          - FBSDKLikeBoxBorderView*
+          - FBSDKLikeBoxView*
+          - FBSDKLikeButton+Internal*
+          - FBSDKLikeDialog*
+          - FBSDKMessengerIcon*
+          - FBSDKShareAppEventNames*
+          - FBSDKShareExtension*
+          - FBSDKShareKit+Internal*
+        createIntermediateGroups: true
+    configFiles:
+      Debug: Configurations/FBSDKShareKit-tvOS-Dynamic.xcconfig
+      Release: Configurations/FBSDKShareKit-tvOS-Dynamic.xcconfig
+    dependencies:
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Dynamic
+      - target: FBSDKCoreKit/FBSDKCoreKit_TV-Dynamic
+      - sdk: UIKit.framework
+      - sdk: CoreGraphics.framework
+      - sdk: Photos.framework
+    preBuildScripts:
+      - name: Run Swiftlint
+        script: |
+          # Type a script or drag a script file from your workspace to insert its path.
+          if which swiftlint >/dev/null; then
+            swiftlint --config ../.swiftlint.yml
+          else
+            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
+          fi
+    settings:
+      PRODUCT_NAME: FBSDKShareKit
+  FBSDKShareKitTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - FBSDKShareKitTests
+    configFiles:
+      Debug: Configurations/FBSDKShareKitTests.xcconfig
+      Release: Configurations/FBSDKShareKitTests.xcconfig
+    dependencies:
+      - target: FBSDKShareKit-Dynamic
+        embed: false
+      - target: TestTools/TestTools
+        embed: false
+      - target: OCMock/OCMock iOS
+        embed: false
+    settings:
+      ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES
+      GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS: NO
+
+aggregateTargets:
+  FBSDKShareKit-Universal:
+    targets: [FBSDKShareKit]
+    configFiles:
+      Debug: Configurations/FBSDKShareKit.xcconfig
+      Release: Configurations/FBSDKShareKit.xcconfig
+    buildScripts:
+      - name: ShellScript
+        path: ../scripts/xcode/build-universal-framework.sh
+  FBSDKShareKit_TV-Universal:
+    targets: [FBSDKShareKit_TV]
+    configFiles:
+      Debug: Configurations/FBSDKShareKit-tvOS.xcconfig
+      Release: Configurations/FBSDKShareKit-tvOS.xcconfig
+    buildScripts:
+      - name: ShellScript
+        path: ../scripts/xcode/build-universal-tvos-framework.sh
+
+schemes:
+  FBSDKShareKit:
+    build:
+      targets:
+        FBSDKShareKit: all
+  FBSDKShareKit-Dynamic:
+    build:
+      targets:
+        FBSDKShareKit-Dynamic: all
+    test:
+      targets:
+        - FBSDKShareKitTests
+  FBSDKShareKit_TV-Dynamic:
+    build:
+      targets:
+        FBSDKShareKit_TV-Dynamic: all
+  FBSDKShareKit-Universal:
+    build:
+      targets:
+        FBSDKShareKit-Universal: all
+      parallelizeBuild: false
+  FBSDKShareKit_TV-Universal:
+    build:
+      targets:
+        FBSDKShareKit_TV-Universal: all
+      parallelizeBuild: false

@@ -51,7 +51,7 @@ NS_SWIFT_NAME(InternalUtility)
 /**
   Constructs the scheme for apps that come to the current app through the bridge.
  */
-@property (class, nonatomic, copy, readonly) NSString *appURLScheme;
+@property (nonatomic, copy, readonly) NSString *appURLScheme;
 
 /**
  Returns bundle for returning localized strings
@@ -59,7 +59,7 @@ NS_SWIFT_NAME(InternalUtility)
  We assume a convention of a bundle named FBSDKStrings.bundle, otherwise we
  return the main bundle.
  */
-@property (class, nonatomic, strong, readonly) NSBundle *bundleForStrings;
+@property (nonatomic, strong, readonly) NSBundle *bundleForStrings;
 
 /**
  Gets the milliseconds since the Unix Epoch.
@@ -67,17 +67,17 @@ NS_SWIFT_NAME(InternalUtility)
  Changes in the system clock will affect this value.
  @return The number of milliseconds since the Unix Epoch.
  */
-@property (class, nonatomic, assign, readonly) uint64_t currentTimeInMilliseconds;
+@property (nonatomic, assign, readonly) uint64_t currentTimeInMilliseconds;
 
 /**
  The version of the operating system on which the process is executing.
  */
-@property (class, nonatomic, assign, readonly) NSOperatingSystemVersion operatingSystemVersion;
+@property (nonatomic, assign, readonly) NSOperatingSystemVersion operatingSystemVersion;
 
 /*
  Checks if the app is Unity.
  */
-@property (class, nonatomic, assign, readonly) BOOL isUnity;
+@property (nonatomic, assign, readonly) BOOL isUnity;
 
 /**
   Constructs an URL for the current app.
@@ -87,7 +87,7 @@ NS_SWIFT_NAME(InternalUtility)
  @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
  @return The app URL.
  */
-+ (NSURL *)appURLWithHost:(NSString *)host
+- (NSURL *)appURLWithHost:(NSString *)host
                      path:(NSString *)path
           queryParameters:(NSDictionary<NSString *, NSString *> *)queryParameters
                     error:(NSError *__autoreleasing *)errorRef;
@@ -97,7 +97,7 @@ NS_SWIFT_NAME(InternalUtility)
  @param url The FB url.
  @return A dictionary with the key/value pairs.
  */
-+ (NSDictionary *)parametersFromFBURL:(NSURL *)url;
+- (NSDictionary *)parametersFromFBURL:(NSURL *)url;
 
 /**
   Constructs a Facebook URL.
@@ -107,7 +107,7 @@ NS_SWIFT_NAME(InternalUtility)
  @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
  @return The Facebook URL.
  */
-+ (NSURL *)facebookURLWithHostPrefix:(NSString *)hostPrefix
+- (NSURL *)facebookURLWithHostPrefix:(NSString *)hostPrefix
                                 path:(NSString *)path
                      queryParameters:(NSDictionary<NSString *, NSString *> *)queryParameters
                                error:(NSError *__autoreleasing *)errorRef;
@@ -121,7 +121,7 @@ NS_SWIFT_NAME(InternalUtility)
  @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
  @return The Facebook URL.
  */
-+ (NSURL *)facebookURLWithHostPrefix:(NSString *)hostPrefix
+- (NSURL *)facebookURLWithHostPrefix:(NSString *)hostPrefix
                                 path:(NSString *)path
                      queryParameters:(NSDictionary<NSString *, NSString *> *)queryParameters
                       defaultVersion:(NSString *)defaultVersion
@@ -135,7 +135,7 @@ NS_SWIFT_NAME(InternalUtility)
  @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
  @return The Facebook URL.
  */
-+ (NSURL *)unversionedFacebookURLWithHostPrefix:(NSString *)hostPrefix
+- (NSURL *)unversionedFacebookURLWithHostPrefix:(NSString *)hostPrefix
                                            path:(NSString *)path
                                 queryParameters:(NSDictionary *)queryParameters
                                           error:(NSError *__autoreleasing *)errorRef;
@@ -145,21 +145,21 @@ NS_SWIFT_NAME(InternalUtility)
  @param URL The URL to test.
  @return YES if the URL refers to an http or https resource, otherwise NO.
  */
-+ (BOOL)isBrowserURL:(NSURL *)URL;
+- (BOOL)isBrowserURL:(NSURL *)URL;
 
 /**
   Tests whether the supplied bundle identifier references a Facebook app.
  @param bundleIdentifier The bundle identifier to test.
  @return YES if the bundle identifier refers to a Facebook app, otherwise NO.
  */
-+ (BOOL)isFacebookBundleIdentifier:(NSString *)bundleIdentifier;
+- (BOOL)isFacebookBundleIdentifier:(NSString *)bundleIdentifier;
 
 /**
   Tests whether the supplied bundle identifier references the Safari app.
  @param bundleIdentifier The bundle identifier to test.
  @return YES if the bundle identifier refers to the Safari app, otherwise NO.
  */
-+ (BOOL)isSafariBundleIdentifier:(NSString *)bundleIdentifier;
+- (BOOL)isSafariBundleIdentifier:(NSString *)bundleIdentifier;
 
 /**
   Checks equality between 2 objects.
@@ -169,7 +169,7 @@ NS_SWIFT_NAME(InternalUtility)
  @param other The second object to compare.
  @return YES if the objects are equal, otherwise NO.
  */
-+ (BOOL)object:(id)object isEqualToObject:(id)other;
+- (BOOL)object:(id)object isEqualToObject:(id)other;
 
 /**
   Constructs an NSURL.
@@ -180,7 +180,7 @@ NS_SWIFT_NAME(InternalUtility)
  @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
  @return The URL.
  */
-+ (nullable NSURL *)URLWithScheme:(NSString *)scheme
+- (nullable NSURL *)URLWithScheme:(NSString *)scheme
                              host:(NSString *)host
                              path:(NSString *)path
                   queryParameters:(NSDictionary *)queryParameters
@@ -189,7 +189,7 @@ NS_SWIFT_NAME(InternalUtility)
 /**
  *  Deletes all the cookies in the NSHTTPCookieStorage for Facebook web dialogs
  */
-+ (void)deleteFacebookCookies;
+- (void)deleteFacebookCookies;
 
 /**
   Extracts permissions from a response fetched from me/permissions
@@ -197,7 +197,7 @@ NS_SWIFT_NAME(InternalUtility)
  @param grantedPermissions the set to add granted permissions to
  @param declinedPermissions the set to add declined permissions to.
  */
-+ (void)extractPermissionsFromResponse:(NSDictionary *)responseObject
+- (void)extractPermissionsFromResponse:(NSDictionary *)responseObject
                     grantedPermissions:(NSMutableSet *)grantedPermissions
                    declinedPermissions:(NSMutableSet *)declinedPermissions
                     expiredPermissions:(NSMutableSet *)expiredPermissions;
@@ -206,44 +206,44 @@ NS_SWIFT_NAME(InternalUtility)
   Registers a transient object so that it will not be deallocated until unregistered
  @param object The transient object
  */
-+ (void)registerTransientObject:(id)object;
+- (void)registerTransientObject:(id)object;
 
 /**
   Unregisters a transient object that was previously registered with registerTransientObject:
  @param object The transient object
  */
-+ (void)unregisterTransientObject:(__weak id)object;
+- (void)unregisterTransientObject:(__weak id)object;
 
 /**
   validates that the app ID is non-nil, throws an NSException if nil.
  */
-+ (void)validateAppID;
+- (void)validateAppID;
 
 /**
  Validates that the client access token is non-nil, otherwise - throws an NSException otherwise.
  Returns the composed client access token.
  */
-+ (NSString *)validateRequiredClientAccessToken;
+- (NSString *)validateRequiredClientAccessToken;
 
 /**
   validates that the right URL schemes are registered, throws an NSException if not.
  */
-+ (void)validateURLSchemes;
+- (void)validateURLSchemes;
 
 /**
   validates that Facebook reserved URL schemes are not registered, throws an NSException if they are.
  */
-+ (void)validateFacebookReservedURLSchemes;
+- (void)validateFacebookReservedURLSchemes;
 
 /**
   Attempts to find the first UIViewController in the view's responder chain. Returns nil if not found.
  */
-+ (nullable UIViewController *)viewControllerForView:(UIView *)view;
+- (nullable UIViewController *)viewControllerForView:(UIView *)view;
 
 /**
   returns true if the url scheme is registered in the CFBundleURLTypes
  */
-+ (BOOL)isRegisteredURLScheme:(NSString *)urlScheme;
+- (BOOL)isRegisteredURLScheme:(NSString *)urlScheme;
 
 /**
  returns the current key window
@@ -253,33 +253,33 @@ NS_SWIFT_NAME(InternalUtility)
 /**
   returns currently displayed top view controller.
  */
-+ (nullable UIViewController *)topMostViewController;
+- (nullable UIViewController *)topMostViewController;
 
 #if !TARGET_OS_TV
 /**
   returns interface orientation for the key window.
  */
-+ (UIInterfaceOrientation)statusBarOrientation;
+- (UIInterfaceOrientation)statusBarOrientation;
 #endif
 
 /**
   Converts NSData to a hexadecimal UTF8 String.
  */
-+ (nullable NSString *)hexadecimalStringFromData:(NSData *)data;
+- (nullable NSString *)hexadecimalStringFromData:(NSData *)data;
 
 /*
   Checks if the permission is a publish permission.
  */
-+ (BOOL)isPublishPermission:(NSString *)permission;
+- (BOOL)isPublishPermission:(NSString *)permission;
 
 #pragma mark - FB Apps Installed
 
-@property (class, nonatomic, assign, readonly) BOOL isFacebookAppInstalled;
-@property (class, nonatomic, assign, readonly) BOOL isMessengerAppInstalled;
-@property (class, nonatomic, assign, readonly) BOOL isMSQRDPlayerAppInstalled;
+@property (nonatomic, assign, readonly) BOOL isFacebookAppInstalled;
+@property (nonatomic, assign, readonly) BOOL isMessengerAppInstalled;
+@property (nonatomic, assign, readonly) BOOL isMSQRDPlayerAppInstalled;
 
-+ (void)checkRegisteredCanOpenURLScheme:(NSString *)urlScheme;
-+ (BOOL)isRegisteredCanOpenURLScheme:(NSString *)urlScheme;
+- (void)checkRegisteredCanOpenURLScheme:(NSString *)urlScheme;
+- (BOOL)isRegisteredCanOpenURLScheme:(NSString *)urlScheme;
 
 #define FBSDKConditionalLog(condition, loggingBehavior, desc, ...) \
 { \

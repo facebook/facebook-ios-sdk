@@ -25,7 +25,7 @@
  #import <UIKit/UIKit.h>
 
  #import "FBSDKCoreKitBasicsImport.h"
- #import "FBSDKError.h"
+ #import "FBSDKError+Internal.h"
  #import "FBSDKInternalUtility.h"
 
  #define FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_ACTION_ID_KEY @"action_id"
@@ -51,16 +51,16 @@
                                                           error:NULL
                                            invalidObjectHandler:NULL];
   NSDictionary *redirectQueryParameters = @{ FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_BRIDGE_ARGS_KEY : bridgeArgs };
-  NSURL *redirectURL = [FBSDKInternalUtility appURLWithHost:@"bridge"
-                                                       path:methodName
-                                            queryParameters:redirectQueryParameters
-                                                      error:NULL];
+  NSURL *redirectURL = [FBSDKInternalUtility.sharedUtility appURLWithHost:@"bridge"
+                                                                     path:methodName
+                                                          queryParameters:redirectQueryParameters
+                                                                    error:NULL];
   [FBSDKTypeUtility dictionary:queryParameters setObject:redirectURL forKey:@"redirect_uri"];
   [queryParameters addEntriesFromDictionary:parameters];
-  return [FBSDKInternalUtility facebookURLWithHostPrefix:@"m"
-                                                    path:[@"/dialog/" stringByAppendingString:methodName]
-                                         queryParameters:queryParameters
-                                                   error:NULL];
+  return [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
+                                                                  path:[@"/dialog/" stringByAppendingString:methodName]
+                                                       queryParameters:queryParameters
+                                                                 error:NULL];
 }
 
 - (NSDictionary *)responseParametersForActionID:(NSString *)actionID

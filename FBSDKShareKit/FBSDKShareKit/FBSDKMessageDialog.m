@@ -50,7 +50,7 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
 + (void)initialize
 {
   if ([FBSDKMessageDialog class] == self) {
-    [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_MESSENGER];
+    [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_MESSENGER];
     [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:NULL];
   }
 }
@@ -117,7 +117,7 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
   BOOL useSafariViewController = [configuration useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameMessage];
   FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
     [self _handleCompletionWithDialogResults:response.responseParameters response:response];
-    [FBSDKInternalUtility unregisterTransientObject:self];
+    [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
   };
   [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:request
                                 useSafariViewController:useSafariViewController
@@ -125,7 +125,7 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
                                         completionBlock:completionBlock];
 
   [self _logDialogShow];
-  [FBSDKInternalUtility registerTransientObject:self];
+  [FBSDKInternalUtility.sharedUtility registerTransientObject:self];
   return YES;
 }
 
@@ -156,7 +156,7 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
 {
   FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
   BOOL useNativeDialog = [configuration useNativeDialogForDialogName:FBSDKDialogConfigurationNameMessage];
-  return (useNativeDialog && [FBSDKInternalUtility isMessengerAppInstalled]);
+  return (useNativeDialog && [FBSDKInternalUtility.sharedUtility isMessengerAppInstalled]);
 }
 
 - (void)_handleCompletionWithDialogResults:(NSDictionary *)results response:(FBSDKBridgeAPIResponse *)response

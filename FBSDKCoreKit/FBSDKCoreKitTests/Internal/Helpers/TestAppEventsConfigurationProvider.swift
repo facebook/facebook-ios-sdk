@@ -21,6 +21,7 @@ class TestAppEventsConfigurationProvider: NSObject, AppEventsConfigurationProvid
   static var stubbedConfiguration: AppEventsConfigurationProtocol?
   static var didRetrieveCachedConfiguration = false
   static var capturedBlock: AppEventsConfigurationProvidingBlock?
+  static var secondCapturedBlock: AppEventsConfigurationProvidingBlock?
 
   static func cachedAppEventsConfiguration() -> AppEventsConfigurationProtocol {
     guard let configuration = stubbedConfiguration else {
@@ -33,9 +34,16 @@ class TestAppEventsConfigurationProvider: NSObject, AppEventsConfigurationProvid
   static func reset() {
     stubbedConfiguration = nil
     didRetrieveCachedConfiguration = false
+    capturedBlock = nil
+    secondCapturedBlock = nil
   }
 
   static func loadAppEventsConfiguration(_ block: @escaping AppEventsConfigurationProvidingBlock) {
+    guard capturedBlock == nil else {
+      secondCapturedBlock = block
+      return
+    }
+
     capturedBlock = block
   }
 }

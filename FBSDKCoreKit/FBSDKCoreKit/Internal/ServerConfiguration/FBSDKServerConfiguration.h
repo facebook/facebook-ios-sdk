@@ -18,12 +18,6 @@
 
 #import <Foundation/Foundation.h>
 
-#if SWIFT_PACKAGE
-#import "FBSDKCopying.h"
-#else
-#import <FBSDKCoreKit/FBSDKCopying.h>
-#endif
-
 #import "FBSDKDialogConfiguration.h"
 #import "FBSDKErrorConfiguration.h"
 
@@ -48,7 +42,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationSmartLoginOptions)
 };
 
 NS_SWIFT_NAME(ServerConfiguration)
-@interface FBSDKServerConfiguration : NSObject <FBSDKCopying, NSSecureCoding>
+@interface FBSDKServerConfiguration : NSObject <NSCopying, NSObject, NSSecureCoding>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

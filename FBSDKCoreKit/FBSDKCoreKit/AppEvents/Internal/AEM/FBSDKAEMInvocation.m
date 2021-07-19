@@ -88,7 +88,7 @@ FBSDKAEMInvocationConfigMode FBSDKAEMInvocationConfigBrandMode = @"BRAND";
                       ACSConfigID:ACSConfigID
                        businessID:businessID
                         timestamp:nil
-                       configMode:nil
+                       configMode:@"DEFAULT"
                          configID:-1
                    recordedEvents:nil
                    recordedValues:nil
@@ -104,7 +104,7 @@ FBSDKAEMInvocationConfigMode FBSDKAEMInvocationConfigBrandMode = @"BRAND";
                                 ACSConfigID:(nullable NSString *)ACSConfigID
                                  businessID:(nullable NSString *)businessID
                                   timestamp:(nullable NSDate *)timestamp
-                                 configMode:(nullable NSString *)configMode
+                                 configMode:(NSString *)configMode
                                    configID:(NSInteger)configID
                              recordedEvents:(nullable NSMutableSet<NSString *> *)recordedEvents
                              recordedValues:(nullable NSMutableDictionary<NSString *, NSMutableDictionary *> *)recordedValues
@@ -215,8 +215,11 @@ FBSDKAEMInvocationConfigMode FBSDKAEMInvocationConfigBrandMode = @"BRAND";
     return nil;
   }
   @try {
+    NSData *secretData = [self decodeBase64UrlSafeString:_ACSSharedSecret];
+    if (!secretData) {
+      return nil;
+    }
     NSMutableData *hmac = [NSMutableData dataWithLength:CC_SHA512_DIGEST_LENGTH];
-    NSData *secretData = [_ACSSharedSecret dataUsingEncoding:NSUTF8StringEncoding];
     NSString *text = [NSString stringWithFormat:@"%@|%@|%@|%@", _campaignID, @(_conversionValue), @(delay), @"server"];
     NSData *clearTextData = [text dataUsingEncoding:NSUTF8StringEncoding];
     CCHmac(kCCHmacAlgSHA512, [secretData bytes], [secretData length], [clearTextData bytes], [clearTextData length], hmac.mutableBytes);
@@ -231,6 +234,20 @@ FBSDKAEMInvocationConfigMode FBSDKAEMInvocationConfigBrandMode = @"BRAND";
   } @catch (NSException *exception) {
     return nil;
   }
+}
+
+- (nullable NSData *)decodeBase64UrlSafeString:(NSString *)base64UrlSafeString
+{
+  if (!base64UrlSafeString.length) {
+    return nil;
+  }
+  NSString *base64String = [base64UrlSafeString stringByReplacingOccurrencesOfString:@"-" withString:@"+"];
+  base64String = [base64String stringByReplacingOccurrencesOfString:@"_" withString:@"/"];
+  base64String = [base64String stringByReplacingOccurrencesOfString:@"-" withString:@"+"];
+  NSString *padding = [@"" stringByPaddingToLength:(4 - base64String.length % 4) withString:@"=" startingAtIndex:0];
+  base64String = [base64String stringByAppendingString:padding];
+  NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:base64String options:0];
+  return decodedData;
 }
 
 - (BOOL)_isOutOfWindowWithConfig:(nullable FBSDKAEMConfiguration *)config
@@ -374,6 +391,26 @@ FBSDKAEMInvocationConfigMode FBSDKAEMInvocationConfigBrandMode = @"BRAND";
 - (void)setConversionTimestamp:(NSDate *_Nonnull)conversionTimestamp
 {
   _conversionTimestamp = conversionTimestamp;
+}
+
+- (void)setConversionValue:(NSInteger)conversionValue
+{
+  _conversionValue = conversionValue;
+}
+
+- (void)setCampaignID:(NSString *_Nonnull)campaignID
+{
+  _campaignID = campaignID;
+}
+
+- (void)setACSSharedSecret:(NSString *_Nullable)ACSSharedSecret
+{
+  _ACSSharedSecret = ACSSharedSecret;
+}
+
+- (void)setACSConfigID:(NSString *_Nullable)ACSConfigID
+{
+  _ACSConfigID = ACSConfigID;
 }
 
 - (void)reset

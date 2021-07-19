@@ -82,7 +82,7 @@
   NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:parameters setObject:@"CUSTOM_APP_EVENTS" forKey:@"event"];
 
-  NSOperatingSystemVersion operatingSystemVersion = [FBSDKInternalUtility operatingSystemVersion];
+  NSOperatingSystemVersion operatingSystemVersion = [FBSDKInternalUtility.sharedUtility operatingSystemVersion];
   NSString *osVersion = [NSString stringWithFormat:@"%ti.%ti.%ti",
                          operatingSystemVersion.majorVersion,
                          operatingSystemVersion.minorVersion,

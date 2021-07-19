@@ -61,6 +61,10 @@ class TestAppEvents: TestEventLogger,
   var capturedConfigureAtePublisherFactory: AtePublisherCreating?
   var capturedConfigureAppEventsStateProvider: AppEventsStateProviding?
   var capturedConfigureSwizzler: Swizzling.Type?
+  var capturedAdvertiserIDProvider: AdvertiserIDProviding?
+  var capturedOnDeviceMLModelManager: EventProcessing?
+  var capturedMetadataIndexer: MetadataIndexing?
+  var capturedSKAdNetworkReporter: AppEventsReporter?
 
   // swiftlint:disable:next function_parameter_count
   func configure(
@@ -79,7 +83,8 @@ class TestAppEvents: TestEventLogger,
     restrictiveDataFilterParameterProcessor: AppEventsParameterProcessing,
     atePublisherFactory: AtePublisherCreating,
     appEventsStateProvider: AppEventsStateProviding,
-    swizzler: Swizzling.Type
+    swizzler: Swizzling.Type,
+    advertiserIDProvider: AdvertiserIDProviding
   ) {
     capturedConfigureGateKeeperManager = gateKeeperManager
     capturedConfigureAppEventsConfigurationProvider = appEventsConfigurationProvider
@@ -97,6 +102,17 @@ class TestAppEvents: TestEventLogger,
     capturedConfigureAtePublisherFactory = atePublisherFactory
     capturedConfigureAppEventsStateProvider = appEventsStateProvider
     capturedConfigureSwizzler = swizzler
+    capturedAdvertiserIDProvider = advertiserIDProvider
+  }
+
+  func configureNonTVComponentsWith(
+    onDeviceMLModelManager modelManager: EventProcessing,
+    metadataIndexer: MetadataIndexing,
+    skAdNetworkReporter: AppEventsReporter?
+  ) {
+    capturedOnDeviceMLModelManager = modelManager
+    capturedMetadataIndexer = metadataIndexer
+    capturedSKAdNetworkReporter = skAdNetworkReporter
   }
 
   // MARK: - Source Application Tracking

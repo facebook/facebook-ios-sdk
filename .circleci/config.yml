@@ -19,9 +19,14 @@ tagFilters: &onlyRunOnTags
     tags:
       only: /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
 
+requiresProjectGeneration: &requiresProjectGeneration
+  requires:
+    - setup
+    - generate-projects
+
 commands:
   setup:
-    description: Runs before each job and checks out the source code
+    description: Runs before each job and checks out the source code and installs dependencies
     steps:
       - checkout
       - install_gems
@@ -29,6 +34,25 @@ commands:
           root: .
           paths:
             - .
+
+  install_xcodegen:
+    description: Installs xcodegen
+    steps:
+      - run:
+          name: Install Xcodegen
+          command: brew install xcodegen
+
+  generate_projects:
+    description: Generates xcode projects
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Bootstrap Carthage
+          command: carthage bootstrap --no-build
+      - run:
+          name: Generate Projects
+          command: ./generate-projects.sh
 
   install_gems:
     description: Installs ruby gems in the Gemfile
@@ -214,6 +238,11 @@ jobs:
     <<: *useMacOS
     steps:
       - setup
+  generate-projects:
+    <<: *useMacOS
+    steps:
+      - install_xcodegen
+      - generate_projects
   build-for-release:
     <<: *useMacOS
     steps:
@@ -285,14 +314,16 @@ workflows:
   test:
     jobs:
       - setup
+      - generate-projects:
+          <<: *requiresSetup
       - build-swift-packages:
           <<: *requiresSetup
       - build-xcode-debug:
-          <<: *requiresSetup
+          <<: *requiresProjectGeneration
       - build-xcode-release:
-          <<: *requiresSetup
+          <<: *requiresProjectGeneration
       - build-carthage:
-          <<: *requiresSetup
+          <<: *requiresProjectGeneration
       - integrate-spm:
           <<: *requiresSetup
       - lint-cocoapods:
@@ -302,14 +333,16 @@ workflows:
       - verify-spm-headers:
           <<: *requiresSetup
       - verify-xcode-integration:
-          <<: *requiresSetup
+          <<: *requiresProjectGeneration
   release:
     jobs:
       - setup:
           <<: *onlyRunOnTags
+      - generate-projects:
+          <<: *requiresSetup
       - build-for-release:
           <<: *onlyRunOnTags
-          <<: *requiresSetup
+          <<: *requiresProjectGeneration
       - publish-to-github:
           <<: *onlyRunOnTags
           requires:

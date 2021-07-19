@@ -20,8 +20,12 @@
 
 #if !TARGET_OS_TV
 
+ #if FBSDK_SWIFT_PACKAGE
+  #import "FBSDKWindowFinding.h"
+ #else
+  #import <FBSDKCoreKit/FBSDKWindowFinding.h>
+ #endif
  #import "FBSDKInternalUtility.h"
- #import "FBSDKWindowFinding.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -18,7 +18,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKCopying.h"
 
 @class FBSDKAuthenticationTokenClaims;
 @protocol FBSDKTokenCaching;
@@ -29,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
  Represent an AuthenticationToken used for a login attempt
 */
 NS_SWIFT_NAME(AuthenticationToken)
-@interface FBSDKAuthenticationToken : NSObject<FBSDKCopying, NSSecureCoding>
+@interface FBSDKAuthenticationToken : NSObject<NSCopying, NSObject, NSSecureCoding>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

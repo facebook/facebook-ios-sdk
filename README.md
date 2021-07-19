@@ -16,29 +16,13 @@ Please take a moment and [subscribe to releases](https://docs.github.com/en/ente
 
 ## TRY IT OUT
 
-### Swift Package Manager (available Xcode 11.2 and forward)
+### Swift Package Manager
 
 1. In Xcode, select File > Swift Packages > Add Package Dependency.
-2. Follow the prompts using the URL for this repository and a minimum semantic version of v5.10.0
-3. Check-out the tutorials available online at: <https://developers.facebook.com/docs/ios/getting-started>
-4. Start coding! Visit <https://developers.facebook.com/docs/ios> for tutorials and reference documentation.
-
-**Note for Swift Package Manager Users:**
-
-If you explicitly **DO NOT** want to include Swift, import `FBSDKCoreKit` `FBSDKLoginKit` and `FBSDKShareKit`
-</br>For projects that include Swift, use `FacebookCore`, `FacebookLogin`, and `FacebookShare`
-
-### CocoaPods
-
-1. Add the following to your `Podfile`:
-
-        pod 'FBSDKCoreKit'
-        pod 'FBSDKLoginKit'
-        pod 'FBSDKShareKit'
-
-2. Test your install by adding `import FBSDKCoreKit` to your `AppDelegate`
-3. Check-out the tutorials available online at: <https://developers.facebook.com/docs/ios/getting-started>
-4. Start coding! Visit <https://developers.facebook.com/docs/ios> for tutorials and reference documentation.
+1. Follow the prompts using the URL for this repository
+1. Select the `Facebook`-prefixed libraries you want to use
+1. Check-out the tutorials available online at: <https://developers.facebook.com/docs/ios/getting-started>
+1. Start coding! Visit <https://developers.facebook.com/docs/ios> for tutorials and reference documentation.
 
 ## iOS 14 CHANGES
 
@@ -66,6 +50,10 @@ You can also visit our [Facebook Developer Community Forum](https://developers.f
 join the [Facebook Developers Group on Facebook](https://www.facebook.com/groups/fbdevelopers/),
 ask questions on [Stack Overflow](http://facebook.stackoverflow.com),
 or open an issue in this repository.
+
+## CONTRIBUTE
+
+Facebook welcomes contributions to our SDKs. Please see the [CONTRIBUTING](CONTRIBUTING) file.
 
 ## LICENSE
 

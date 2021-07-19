@@ -68,7 +68,7 @@
 - (void)setPeopleIDs:(NSArray *)peopleIDs
 {
   [FBSDKShareUtility assertCollection:peopleIDs ofClass:[NSString class] name:@"peopleIDs"];
-  if (![FBSDKInternalUtility object:_peopleIDs isEqualToObject:peopleIDs]) {
+  if (![FBSDKInternalUtility.sharedUtility object:_peopleIDs isEqualToObject:peopleIDs]) {
     _peopleIDs = [peopleIDs copy];
   }
 }
@@ -76,7 +76,7 @@
 - (void)setPhotos:(NSArray *)photos
 {
   [FBSDKShareUtility assertCollection:photos ofClass:[FBSDKSharePhoto class] name:@"photos"];
-  if (![FBSDKInternalUtility object:_photos isEqualToObject:photos]) {
+  if (![FBSDKInternalUtility.sharedUtility object:_photos isEqualToObject:photos]) {
     _photos = [photos copy];
   }
 }
@@ -174,14 +174,14 @@
 - (BOOL)isEqualToSharePhotoContent:(FBSDKSharePhotoContent *)content
 {
   return (content
-    && [FBSDKInternalUtility object:_contentURL isEqualToObject:content.contentURL]
-    && [FBSDKInternalUtility object:_hashtag isEqualToObject:content.hashtag]
-    && [FBSDKInternalUtility object:_peopleIDs isEqualToObject:content.peopleIDs]
-    && [FBSDKInternalUtility object:_photos isEqualToObject:content.photos]
-    && [FBSDKInternalUtility object:_placeID isEqualToObject:content.placeID]
-    && [FBSDKInternalUtility object:_ref isEqualToObject:content.ref]
-    && [FBSDKInternalUtility object:_shareUUID isEqualToObject:content.shareUUID]
-    && [FBSDKInternalUtility object:_pageID isEqualToObject:content.pageID]);
+    && [FBSDKInternalUtility.sharedUtility object:_contentURL isEqualToObject:content.contentURL]
+    && [FBSDKInternalUtility.sharedUtility object:_hashtag isEqualToObject:content.hashtag]
+    && [FBSDKInternalUtility.sharedUtility object:_peopleIDs isEqualToObject:content.peopleIDs]
+    && [FBSDKInternalUtility.sharedUtility object:_photos isEqualToObject:content.photos]
+    && [FBSDKInternalUtility.sharedUtility object:_placeID isEqualToObject:content.placeID]
+    && [FBSDKInternalUtility.sharedUtility object:_ref isEqualToObject:content.ref]
+    && [FBSDKInternalUtility.sharedUtility object:_shareUUID isEqualToObject:content.shareUUID]
+    && [FBSDKInternalUtility.sharedUtility object:_pageID isEqualToObject:content.pageID]);
 }
 
 #pragma mark - NSCoding

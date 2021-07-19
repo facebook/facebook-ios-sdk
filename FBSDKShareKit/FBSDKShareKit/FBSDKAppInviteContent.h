@@ -44,7 +44,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAppInviteDestination)
   A model for app invite.
  */
 NS_SWIFT_NAME(AppInviteContent)
-@interface FBSDKAppInviteContent : NSObject <FBSDKCopying, FBSDKSharingValidation, NSSecureCoding>
+@interface FBSDKAppInviteContent : NSObject <NSCopying, NSObject, FBSDKSharingValidation, NSSecureCoding>
 
 /**
   A URL to a preview image that will be displayed with the app invite

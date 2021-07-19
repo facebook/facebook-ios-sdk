@@ -62,8 +62,8 @@ static NSString *const _mockChallenge = @"mockChallenge";
 
 - (void)mockURLScheme
 {
-  id FBSDKInternalUtilityMock = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
-  OCMStub(ClassMethod([FBSDKInternalUtilityMock validateURLSchemes])).andDo(^(NSInvocation *invocation) {
+  id FBSDKInternalUtilityMock = OCMPartialMock(FBSDKInternalUtility.sharedUtility);
+  OCMStub([FBSDKInternalUtilityMock validateURLSchemes]).andDo(^(NSInvocation *invocation) {
     // Nothing
   });
 }
@@ -82,11 +82,11 @@ static NSString *const _mockChallenge = @"mockChallenge";
 
   XCTAssertTrue([url.path hasSuffix:@"dialog/share_referral"]);
 
-  NSDictionary *params = [FBSDKInternalUtility parametersFromFBURL:url];
+  NSDictionary *params = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
   NSString *appID = params[@"app_id"];
   NSString *redirectURI = params[@"redirect_uri"];
   NSString *challenge = params[@"state"];
-  NSString *expectedUrlPrefix = [FBSDKInternalUtility
+  NSString *expectedUrlPrefix = [FBSDKInternalUtility.sharedUtility
                                  appURLWithHost:@"authorize"
                                  path:@""
                                  queryParameters:@{}
@@ -190,7 +190,7 @@ static NSString *const _mockChallenge = @"mockChallenge";
 - (void)testReferralErrorWithInvalidURLSchemes
 {
   id FBSDKInternalUtilityMock = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
-  [OCMStub(ClassMethod([FBSDKInternalUtilityMock validateURLSchemes])) andThrow:[NSException exceptionWithName:@"InvalidOperationException" reason:nil userInfo:nil]];
+  [OCMStub([FBSDKInternalUtilityMock validateURLSchemes]) andThrow:[NSException exceptionWithName:@"InvalidOperationException" reason:nil userInfo:nil]];
 
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
   FBSDKReferralManagerResultBlock completionHandler = ^(FBSDKReferralManagerResult *result, NSError *referralError) {

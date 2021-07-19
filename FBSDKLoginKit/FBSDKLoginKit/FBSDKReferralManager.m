@@ -22,6 +22,8 @@
 
  #import "FBSDKReferralManager+Internal.h"
 
+ #import "FBSDKCoreKitImport.h"
+
  #ifdef FBSDKCOCOAPODS
   #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
  #else
@@ -67,7 +69,7 @@ static int const FBClientStateChallengeLength = 20;
   [_logger logReferralStart];
 
   @try {
-    [FBSDKInternalUtility validateURLSchemes];
+    [FBSDKInternalUtility.sharedUtility validateURLSchemes];
   } @catch (NSException *exception) {
     NSError *error = [FBSDKError errorWithCode:FBSDKLoginErrorUnknown
                                        message:[NSString stringWithFormat:@"%@: %@", exception.name, exception.reason]];
@@ -99,14 +101,14 @@ static int const FBClientStateChallengeLength = 20;
   _expectedChallenge = [self stringForChallenge];
   [FBSDKTypeUtility dictionary:params setObject:_expectedChallenge forKey:@"state"];
 
-  NSURL *redirectURL = [FBSDKInternalUtility appURLWithHost:@"authorize" path:@"" queryParameters:@{} error:&error];
+  NSURL *redirectURL = [FBSDKInternalUtility.sharedUtility appURLWithHost:@"authorize" path:@"" queryParameters:@{} error:&error];
   if (!error) {
     [FBSDKTypeUtility dictionary:params setObject:redirectURL forKey:@"redirect_uri"];
 
-    url = [FBSDKInternalUtility facebookURLWithHostPrefix:@"m."
-                                                     path:FBSDKReferralPath
-                                          queryParameters:params
-                                                    error:&error];
+    url = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m."
+                                                                   path:FBSDKReferralPath
+                                                        queryParameters:params
+                                                                  error:&error];
   }
 
   if (error || !url) {
@@ -185,7 +187,7 @@ static int const FBClientStateChallengeLength = 20;
 
   if (isFacebookURL) {
     NSError *error;
-    NSDictionary *params = [FBSDKInternalUtility parametersFromFBURL:url];
+    NSDictionary *params = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
 
     if (![self validateChallenge:params[ChalllengeKey]]) {
       error = [FBSDKError errorWithCode:FBSDKLoginErrorBadChallengeString

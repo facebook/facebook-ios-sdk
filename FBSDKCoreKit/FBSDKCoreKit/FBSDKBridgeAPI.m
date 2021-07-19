@@ -27,6 +27,7 @@
  #import "FBSDKBridgeAPIResponseFactory.h"
  #import "FBSDKContainerViewController.h"
  #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKError+Internal.h"
  #import "FBSDKInternalUtility+AppURLSchemeProviding.h"
  #import "FBSDKOperatingSystemVersionComparing.h"
  #import "NSProcessInfo+Protocols.h"
@@ -393,7 +394,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   Class SFSafariViewControllerClass = self.frameworkLoader.safariViewControllerClass;
 
   if (SFSafariViewControllerClass) {
-    UIViewController *parent = fromViewController ?: [FBSDKInternalUtility topMostViewController];
+    UIViewController *parent = fromViewController ?: [FBSDKInternalUtility.sharedUtility topMostViewController];
     if (parent == nil) {
       [self.logger logEntry:@"There are no valid ViewController to present SafariViewController with"];
       return;

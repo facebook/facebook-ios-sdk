@@ -75,7 +75,7 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKShareButtonDidTap = @"fb_share_button_di
   NSLocalizedStringWithDefaultValue(
     @"ShareButton.Share",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"Share",
     @"The label for FBSDKShareButton"
   );

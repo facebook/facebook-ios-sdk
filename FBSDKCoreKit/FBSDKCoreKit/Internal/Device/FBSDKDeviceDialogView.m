@@ -163,7 +163,7 @@
   NSString *localizedFormatString = NSLocalizedStringWithDefaultValue(
     @"DeviceLogin.LogInPrompt",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"Visit %@ and enter your code.",
     @"The format string for device login instructions"
   );
@@ -210,7 +210,7 @@
   [button setTitle:NSLocalizedStringWithDefaultValue(
     @"LoginButton.CancelLogout",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"Cancel",
     @"The label for the FBSDKLoginButton action sheet to cancel logging out"
   )

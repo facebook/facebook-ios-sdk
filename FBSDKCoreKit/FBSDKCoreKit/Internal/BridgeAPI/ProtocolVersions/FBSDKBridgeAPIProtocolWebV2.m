@@ -25,7 +25,7 @@
  #import "FBSDKBridgeAPIProtocolNativeV1.h"
  #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKDialogConfiguration.h"
- #import "FBSDKError.h"
+ #import "FBSDKError+Internal.h"
  #import "FBSDKInternalUtility.h"
  #import "FBSDKServerConfigurationManager.h"
  #import "FBSDKServerConfigurationProviding.h"
@@ -72,18 +72,18 @@
                                                    invalidObjectHandler:NULL];
     queryParameters = @{ FBSDKBridgeAPIProtocolNativeV1InputKeys.bridgeArgs : bridgeArgsString };
   }
-  return [FBSDKInternalUtility appURLWithHost:@"bridge" path:methodName queryParameters:queryParameters error:errorRef];
+  return [FBSDKInternalUtility.sharedUtility appURLWithHost:@"bridge" path:methodName queryParameters:queryParameters error:errorRef];
 }
 
 - (NSURL *)_requestURLForDialogConfiguration:(FBSDKDialogConfiguration *)dialogConfiguration error:(NSError **)errorRef
 {
   NSURL *requestURL = dialogConfiguration.URL;
   if (!requestURL.scheme) {
-    requestURL = [FBSDKInternalUtility facebookURLWithHostPrefix:@"m"
-                                                            path:requestURL.path
-                                                 queryParameters:@{}
-                                                  defaultVersion:@""
-                                                           error:errorRef];
+    requestURL = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
+                                                                          path:requestURL.path
+                                                               queryParameters:@{}
+                                                                defaultVersion:@""
+                                                                         error:errorRef];
   }
   return requestURL;
 }
@@ -125,11 +125,11 @@
   if (!requestURL) {
     return nil;
   }
-  return [FBSDKInternalUtility URLWithScheme:requestURL.scheme
-                                        host:requestURL.host
-                                        path:requestURL.path
-                             queryParameters:queryParameters
-                                       error:errorRef];
+  return [FBSDKInternalUtility.sharedUtility URLWithScheme:requestURL.scheme
+                                                      host:requestURL.host
+                                                      path:requestURL.path
+                                           queryParameters:queryParameters
+                                                     error:errorRef];
 }
 
 - (NSDictionary *)responseParametersForActionID:(NSString *)actionID

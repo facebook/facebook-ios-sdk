@@ -97,10 +97,10 @@
                                 queryParameters:(NSDictionary *)queryParameters
                                           error:(NSError *__autoreleasing *)errorRef
 {
-  return [FBSDKInternalUtility unversionedFacebookURLWithHostPrefix:hostPrefix
-                                                               path:path
-                                                    queryParameters:queryParameters
-                                                              error:errorRef];
+  return [FBSDKInternalUtility.sharedUtility unversionedFacebookURLWithHostPrefix:hostPrefix
+                                                                             path:path
+                                                                  queryParameters:queryParameters
+                                                                            error:errorRef];
 }
 
 @end

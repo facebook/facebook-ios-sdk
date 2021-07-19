@@ -25,6 +25,7 @@
  #import "FBSDKAccessToken.h"
  #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKDynamicFrameworkLoader.h"
+ #import "FBSDKError+Internal.h"
  #import "FBSDKInternalUtility.h"
  #import "FBSDKInternalUtility+WindowFinding.h"
  #import "FBSDKLogger.h"
@@ -40,9 +41,6 @@ typedef void (^FBSDKBoolBlock)(BOOL finished);
 static FBSDKWebDialog *g_currentDialog = nil;
 
 @interface FBSDKWebDialog () <FBSDKWebDialogViewDelegate>
-
-@property (nonatomic, strong) id<FBSDKWindowFinding> windowFinder;
-
 @end
 
 @implementation FBSDKWebDialog
@@ -66,20 +64,23 @@ static FBSDKWebDialog *g_currentDialog = nil;
                   parameters:(NSDictionary *)parameters
                     delegate:(id<FBSDKWebDialogDelegate>)delegate
 {
-  return [self showWithName:name
-                 parameters:parameters
-               windowFinder:FBSDKInternalUtility.sharedUtility
-                   delegate:delegate];
+  return [self createAndShow:name
+                  parameters:parameters
+                       frame:CGRectZero
+                    delegate:delegate
+                windowFinder:FBSDKInternalUtility.sharedUtility];
 }
 
-+ (instancetype)showWithName:(NSString *)name
-                  parameters:(NSDictionary *)parameters
-                windowFinder:(id<FBSDKWindowFinding>)windowFinder
-                    delegate:(id<FBSDKWebDialogDelegate>)delegate
++ (instancetype)createAndShow:(NSString *)name
+                   parameters:(NSDictionary *)parameters
+                        frame:(CGRect)frame
+                     delegate:(id<FBSDKWebDialogDelegate>)delegate
+                 windowFinder:(id<FBSDKWindowFinding>)windowFinder
 {
   FBSDKWebDialog *dialog = [self dialogWithName:name delegate:delegate];
-  dialog.windowFinder = windowFinder;
   dialog.parameters = parameters;
+  dialog.webViewFrame = frame;
+  dialog.windowFinder = windowFinder;
   [dialog show];
   return dialog;
 }
@@ -116,11 +117,12 @@ static FBSDKWebDialog *g_currentDialog = nil;
   if (!window) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                            logEntry:@"There are no valid ViewController to present FBSDKWebDialog"];
-    [self _failWithError:nil];
+    error = [FBSDKError unknownErrorWithMessage:@"There are no valid ViewController to present FBSDKWebDialog"];
+    [self _failWithError:error];
     return NO;
   }
 
-  CGRect frame = [self _applicationFrameForOrientation];
+  CGRect frame = !CGRectIsEmpty(self.webViewFrame) ? self.webViewFrame : [self _applicationFrameForOrientation];
   _dialogView = [[FBSDKWebDialogView alloc] initWithFrame:frame];
 
   _dialogView.delegate = self;
@@ -256,10 +258,10 @@ static FBSDKWebDialog *g_currentDialog = nil;
                      setObject:[FBSDKAccessToken currentAccessToken].tokenString
                         forKey:@"access_token"];
   [parameters addEntriesFromDictionary:self.parameters];
-  return [FBSDKInternalUtility facebookURLWithHostPrefix:@"m"
-                                                    path:[@"/dialog/" stringByAppendingString:self.name]
-                                         queryParameters:parameters
-                                                   error:errorRef];
+  return [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
+                                                                  path:[@"/dialog/" stringByAppendingString:self.name]
+                                                       queryParameters:parameters
+                                                                 error:errorRef];
 }
 
 - (BOOL)_showWebView
@@ -268,7 +270,8 @@ static FBSDKWebDialog *g_currentDialog = nil;
   if (!window) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                            logEntry:@"There are no valid ViewController to present FBSDKWebDialog"];
-    [self _failWithError:nil];
+    NSError *error = [FBSDKError unknownErrorWithMessage:@"There are no valid ViewController to present FBSDKWebDialog"];
+    [self _failWithError:error];
     return NO;
   }
 
@@ -322,7 +325,7 @@ static FBSDKWebDialog *g_currentDialog = nil;
                    completion:(FBSDKBoolBlock)completion
 {
   CGAffineTransform transform = _dialogView.transform;
-  CGRect applicationFrame = [self _applicationFrameForOrientation];
+  CGRect applicationFrame = !CGRectIsEmpty(self.webViewFrame) ? self.webViewFrame : [self _applicationFrameForOrientation];
   if (scale == 1.0) {
     _dialogView.transform = CGAffineTransformIdentity;
     _dialogView.frame = applicationFrame;

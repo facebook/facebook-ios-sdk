@@ -22,19 +22,11 @@
 #import <WebKit/WebKit.h>
 #endif
 
-#ifdef BUCK
-#import <FBSDKCoreKit/FBSDKGraphRequest.h>
-#import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
-#import <FBSDKCoreKit/FBSDKAppEventParameterName.h>
-#import <FBSDKCoreKit/FBSDKAppEventName.h>
-#import <FBSDKCoreKit/FBSDKAppEventsFlushBehavior.h>
-#else
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequestConnection.h"
 #import "FBSDKAppEventParameterName.h"
 #import "FBSDKAppEventName.h"
 #import "FBSDKAppEventsFlushBehavior.h"
-#endif
 
 NS_ASSUME_NONNULL_BEGIN
 

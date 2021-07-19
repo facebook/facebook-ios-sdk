@@ -457,7 +457,7 @@
 
 + (BOOL)validateNetworkURL:(NSURL *)URL name:(NSString *)name error:(NSError *__autoreleasing *)errorRef
 {
-  if (!URL || [FBSDKInternalUtility isBrowserURL:URL]) {
+  if (!URL || [FBSDKInternalUtility.sharedUtility isBrowserURL:URL]) {
     if (errorRef != NULL) {
       *errorRef = nil;
     }

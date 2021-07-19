@@ -34,6 +34,13 @@
 @protocol FBSDKAtePublisherCreating;
 @protocol FBSDKAppEventsStateProviding;
 @protocol FBSDKSwizzling;
+@protocol FBSDKAdvertiserIDProviding;
+
+#if !TARGET_OS_TV
+@protocol FBSDKEventProcessing;
+@protocol FBSDKMetadataIndexing;
+@protocol FBSDKAppEventsReporter;
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -55,7 +62,16 @@ NS_SWIFT_NAME(AppEventsConfiguring)
   restrictiveDataFilterParameterProcessor:(id<FBSDKAppEventsParameterProcessing>)restrictiveDataFilterParameterProcessor
                       atePublisherFactory:(id<FBSDKAtePublisherCreating>)atePublisherFactory
                    appEventsStateProvider:(id<FBSDKAppEventsStateProviding>)appEventsStateProvider
-                                 swizzler:(Class<FBSDKSwizzling>)swizzler;
+                                 swizzler:(Class<FBSDKSwizzling>)swizzler
+                     advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider;
+
+#if !TARGET_OS_TV
+
+-(void)configureNonTVComponentsWithOnDeviceMLModelManager:(id<FBSDKEventProcessing>)modelManager
+                                          metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer
+                                      skAdNetworkReporter:(nullable id<FBSDKAppEventsReporter>)skAdNetworkReporter;
+
+#endif
 
 @end
 

@@ -1027,11 +1027,11 @@ static void FBSDKLikeActionControllerAddRefreshRequests(FBSDKAccessToken *access
   BOOL objectIsLikedChanged = (objectIsLikedTriState != FBSDKTriStateBOOLValueUnknown) && (self.objectIsLiked != objectIsLiked);
 
   if (!objectIsLikedChanged
-      && [FBSDKInternalUtility object:_likeCountStringWithLike isEqualToObject:likeCountStringWithLike]
-      && [FBSDKInternalUtility object:_likeCountStringWithoutLike isEqualToObject:likeCountStringWithoutLike]
-      && [FBSDKInternalUtility object:_socialSentenceWithLike isEqualToObject:socialSentenceWithLike]
-      && [FBSDKInternalUtility object:_socialSentenceWithoutLike isEqualToObject:socialSentenceWithoutLike]
-      && [FBSDKInternalUtility object:_unlikeToken isEqualToObject:unlikeToken]) {
+      && [FBSDKInternalUtility.sharedUtility object:_likeCountStringWithLike isEqualToObject:likeCountStringWithLike]
+      && [FBSDKInternalUtility.sharedUtility object:_likeCountStringWithoutLike isEqualToObject:likeCountStringWithoutLike]
+      && [FBSDKInternalUtility.sharedUtility object:_socialSentenceWithLike isEqualToObject:socialSentenceWithLike]
+      && [FBSDKInternalUtility.sharedUtility object:_socialSentenceWithoutLike isEqualToObject:socialSentenceWithoutLike]
+      && [FBSDKInternalUtility.sharedUtility object:_unlikeToken isEqualToObject:unlikeToken]) {
     // check if the like state changed and only animate if it did
     return;
   }

@@ -29,6 +29,7 @@
  #endif
 
  #import "FBSDKCoreKitBasicsImportForLoginKit.h"
+ #import "FBSDKLoginManager+Internal.h"
  #import "FBSDKLoginTooltipView.h"
  #import "FBSDKNonceUtility.h"
 
@@ -43,9 +44,10 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
 @implementation FBSDKLoginButton
 {
   BOOL _hasShownTooltipBubble;
-  FBSDKLoginManager *_loginManager;
+  id<FBSDKLoginProviding> _loginProvider;
   NSString *_userID;
   NSString *_userName;
+  id<FBSDKGraphRequestProviding> _graphRequestFactory;
 }
 
  #pragma mark - Object Lifecycle
@@ -59,12 +61,12 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
 
 - (FBSDKDefaultAudience)defaultAudience
 {
-  return _loginManager.defaultAudience;
+  return _loginProvider.defaultAudience;
 }
 
 - (void)setDefaultAudience:(FBSDKDefaultAudience)defaultAudience
 {
-  _loginManager.defaultAudience = defaultAudience;
+  _loginProvider.defaultAudience = defaultAudience;
 }
 
 - (void)setLoginTracking:(FBSDKLoginTracking)loginTracking
@@ -166,7 +168,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
 
 - (void)configureButton
 {
-  _loginManager = [FBSDKLoginManager new];
+  _loginProvider = [FBSDKLoginManager new];
 
   NSString *logInTitle = [self _shortLogInTitle];
   NSString *logOutTitle = [self _logOutTitle];
@@ -239,7 +241,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
       NSLocalizedStringWithDefaultValue(
         @"LoginButton.LoggedInAs",
         @"FacebookSDK",
-        [FBSDKInternalUtility bundleForStrings],
+        [FBSDKInternalUtility.sharedUtility bundleForStrings],
         @"Logged in as %@",
         @"The format string for the FBSDKLoginButton label when the user is logged in"
       );
@@ -249,7 +251,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
       NSLocalizedStringWithDefaultValue(
         @"LoginButton.LoggedIn",
         @"FacebookSDK",
-        [FBSDKInternalUtility bundleForStrings],
+        [FBSDKInternalUtility.sharedUtility bundleForStrings],
         @"Logged in using Facebook",
         @"The fallback string for the FBSDKLoginButton label when the user name is not available yet"
       );
@@ -259,7 +261,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
     NSLocalizedStringWithDefaultValue(
       @"LoginButton.CancelLogout",
       @"FacebookSDK",
-      [FBSDKInternalUtility bundleForStrings],
+      [FBSDKInternalUtility.sharedUtility bundleForStrings],
       @"Cancel",
       @"The label for the FBSDKLoginButton action sheet to cancel logging out"
     );
@@ -267,7 +269,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
     NSLocalizedStringWithDefaultValue(
       @"LoginButton.ConfirmLogOut",
       @"FacebookSDK",
-      [FBSDKInternalUtility bundleForStrings],
+      [FBSDKInternalUtility.sharedUtility bundleForStrings],
       @"Log Out",
       @"The label for the FBSDKLoginButton action sheet to confirm logging out"
     );
@@ -282,12 +284,11 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
     UIAlertAction *logout = [UIAlertAction actionWithTitle:logOutTitle
                                                      style:UIAlertActionStyleDestructive
                                                    handler:^(UIAlertAction *_Nonnull action) {
-                                                     [self->_loginManager logOut];
-                                                     [self.delegate loginButtonDidLogOut:self];
+                                                     [self _logout];
                                                    }];
     [alertController addAction:cancel];
     [alertController addAction:logout];
-    UIViewController *topMostViewController = [FBSDKInternalUtility topMostViewController];
+    UIViewController *topMostViewController = [FBSDKInternalUtility.sharedUtility topMostViewController];
     [topMostViewController presentViewController:alertController
                                         animated:YES
                                       completion:nil];
@@ -310,9 +311,9 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
       [self logTapEventWithEventName:FBSDKAppEventNameFBSDKLoginButtonDidTap parameters:nil];
     }
 
-    [_loginManager logInFromViewController:[FBSDKInternalUtility viewControllerForView:self]
-                             configuration:loginConfig
-                                completion:handler];
+    [_loginProvider logInFromViewController:[FBSDKInternalUtility.sharedUtility viewControllerForView:self]
+                              configuration:loginConfig
+                                 completion:handler];
   }
 }
 
@@ -337,7 +338,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   return NSLocalizedStringWithDefaultValue(
     @"LoginButton.LogOut",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"Log out",
     @"The label for the FBSDKLoginButton when the user is currently logged in"
   );
@@ -348,7 +349,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   return NSLocalizedStringWithDefaultValue(
     @"LoginButton.LogInContinue",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"Continue with Facebook",
     @"The long label for the FBSDKLoginButton when the user is currently logged out"
   );
@@ -359,7 +360,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   return NSLocalizedStringWithDefaultValue(
     @"LoginButton.LogIn",
     @"FacebookSDK",
-    [FBSDKInternalUtility bundleForStrings],
+    [FBSDKInternalUtility.sharedUtility bundleForStrings],
     @"Log in",
     @"The short label for the FBSDKLoginButton when the user is currently logged out"
   );
@@ -410,13 +411,13 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
 
 - (void)_fetchAndSetContent
 {
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me?fields=id,name"
-                                                                 parameters:nil
-                                                                      flags:FBSDKGraphRequestFlagDisableErrorRecovery];
+  id<FBSDKGraphRequest> request = [[self graphRequestFactory] createGraphRequestWithGraphPath:@"me"
+                                                                                   parameters:@{@"fields" : @"id,name"}
+                                                                                        flags:FBSDKGraphRequestFlagDisableErrorRecovery];
   [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
-    NSString *userID = [FBSDKTypeUtility coercedToStringValue:result[@"id"]];
+    NSString *userID = [FBSDKTypeUtility dictionary:result objectForKey:@"id" ofType:NSString.class];
     if (!error && [FBSDKAccessToken.currentAccessToken.userID isEqualToString:userID]) {
-      self->_userName = [FBSDKTypeUtility coercedToStringValue:result[@"name"]];
+      self->_userName = [FBSDKTypeUtility dictionary:result objectForKey:@"name" ofType:NSString.class];
       self->_userID = userID;
     }
   }];
@@ -451,6 +452,20 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
   return self;
 }
 
+- (void)_logout
+{
+  [self->_loginProvider logOut];
+  [self.delegate loginButtonDidLogOut:self];
+}
+
+- (id<FBSDKGraphRequestProviding>)graphRequestFactory
+{
+  if (!_graphRequestFactory) {
+    _graphRequestFactory = FBSDKGraphRequestFactory.new;
+  }
+  return _graphRequestFactory;
+}
+
 // MARK: - Testability
 
  #if DEBUG
@@ -464,6 +479,16 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
 - (NSString *)userID
 {
   return _userID;
+}
+
+- (void)setLoginProvider:(id<FBSDKLoginProviding>)loginProvider
+{
+  _loginProvider = loginProvider;
+}
+
+- (void)setGraphRequestFactory:(nonnull id<FBSDKGraphRequestProviding>)graphRequestFactory
+{
+  _graphRequestFactory = graphRequestFactory;
 }
 
   #endif

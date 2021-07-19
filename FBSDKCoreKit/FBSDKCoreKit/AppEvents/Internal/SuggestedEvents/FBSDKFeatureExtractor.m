@@ -314,7 +314,11 @@ void sum(float *val0, float *val1)
 
 + (BOOL)isButton:(NSDictionary *)node
 {
-  int classtypebitmask = [[FBSDKTypeUtility dictionary:node
+  NSDictionary *dictionary = node;
+  if (!dictionary) {
+    dictionary = [NSMutableDictionary new];
+  }
+  int classtypebitmask = [[FBSDKTypeUtility dictionary:dictionary
                                           objectForKey:VIEW_HIERARCHY_CLASS_TYPE_BITMASK_KEY
                                                 ofType:NSString.class] intValue];
   return (classtypebitmask & FBCodelessClassBitmaskUIButton) > 0;

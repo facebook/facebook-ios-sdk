@@ -44,70 +44,58 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 static NSString *const FBSDKSKAdNetworkConversionConfigurationKey = @"com.facebook.sdk:FBSDKSKAdNetworkConversionConfiguration";
 static NSString *const FBSDKSKAdNetworkReporterKey = @"com.facebook.sdk:FBSDKSKAdNetworkReporter";
 
-static BOOL g_isSKAdNetworkReportEnabled = NO;
-static NSMutableArray<FBSDKSKAdNetworkReporterBlock> *g_completionBlocks;
-static BOOL g_isRequestStarted = NO;
-static dispatch_queue_t serialQueue;
-static FBSDKSKAdNetworkConversionConfiguration *config;
-static NSDate *g_configRefreshTimestamp;
-static NSInteger g_conversionValue = 0;
-static NSDate *g_timestamp = nil;
-static NSMutableSet<NSString *> *g_recordedEvents;
-static NSMutableDictionary<NSString *, NSMutableDictionary *> *g_recordedValues;
-static id<FBSDKGraphRequestProviding> _requestProvider;
-static id<FBSDKDataPersisting> _store;
-static Class<FBSDKConversionValueUpdating> _conversionValueUpdatable;
+@interface FBSDKSKAdNetworkReporter ()
+
+@property BOOL isSKAdNetworkReportEnabled;
+@property (nonnull, nonatomic) NSMutableArray<FBSDKSKAdNetworkReporterBlock> *completionBlocks;
+@property BOOL isRequestStarted;
+@property (nonnull, nonatomic) dispatch_queue_t serialQueue;
+@property (nonnull, nonatomic) FBSDKSKAdNetworkConversionConfiguration *config;
+@property (nonnull, nonatomic) NSDate *configRefreshTimestamp;
+@property (nonatomic) NSInteger conversionValue;
+@property (nonatomic) NSDate *timestamp;
+@property (nonnull, nonatomic) NSMutableSet<NSString *> *recordedEvents;
+@property (nonnull, nonatomic) NSMutableDictionary<NSString *, NSMutableDictionary *> *recordedValues;
+@property (nonnull, nonatomic) id<FBSDKGraphRequestProviding> requestProvider;
+@property (nonnull, nonatomic) id<FBSDKDataPersisting> store;
+@property (nonnull, nonatomic) Class<FBSDKConversionValueUpdating> conversionValueUpdatable;
+
+@end
 
 @implementation FBSDKSKAdNetworkReporter
 
-+ (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-                               store:(id<FBSDKDataPersisting>)store
-            conversionValueUpdatable:(Class<FBSDKConversionValueUpdating>)conversionValueUpdatable
+- (instancetype)initWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+                                  store:(id<FBSDKDataPersisting>)store
+               conversionValueUpdatable:(Class<FBSDKConversionValueUpdating>)conversionValueUpdatable
 {
-  if (self == [FBSDKSKAdNetworkReporter class]) {
-    _requestProvider = requestProvider;
-    _store = store;
-    _conversionValueUpdatable = conversionValueUpdatable;
-  }
+  self.requestProvider = requestProvider;
+  self.store = store;
+  self.conversionValueUpdatable = conversionValueUpdatable;
+  return self;
 }
 
-+ (id<FBSDKGraphRequestProviding>)requestProvider
-{
-  return _requestProvider;
-}
-
-+ (id<FBSDKDataPersisting>)store
-{
-  return _store;
-}
-
-+ (Class<FBSDKConversionValueUpdating>)conversionValueUpdatable
-{
-  return _conversionValueUpdatable;
-}
-
-+ (void)enable
+- (void)enable
 {
   if (@available(iOS 14.0, *)) {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
       [SKAdNetwork registerAppForAdNetworkAttribution];
       [self _loadReportData];
-      g_completionBlocks = [NSMutableArray new];
-      serialQueue = dispatch_queue_create("com.facebook.appevents.SKAdNetwork.FBSDKSKAdNetworkReporter", DISPATCH_QUEUE_SERIAL);
+      self.completionBlocks = [NSMutableArray new];
+      self.serialQueue = dispatch_queue_create("com.facebook.appevents.SKAdNetwork.FBSDKSKAdNetworkReporter", DISPATCH_QUEUE_SERIAL);
       [self _loadConfigurationWithBlock:^{
         [self _checkAndUpdateConversionValue];
         [self _checkAndRevokeTimer];
       }];
-      g_isSKAdNetworkReportEnabled = YES;
+      self.isSKAdNetworkReportEnabled = YES;
     });
   }
 }
 
-+ (void)checkAndRevokeTimer
+- (void)checkAndRevokeTimer
 {
   if (@available(iOS 14.0, *)) {
-    if (!g_isSKAdNetworkReportEnabled) {
+    if (!self.isSKAdNetworkReportEnabled) {
       return;
     }
     [self _loadConfigurationWithBlock:^() {
@@ -116,12 +104,20 @@ static Class<FBSDKConversionValueUpdating> _conversionValueUpdatable;
   }
 }
 
-+ (void)recordAndUpdateEvent:(NSString *)event
+- (void)recordAndUpdateEvent:(NSString *)event
+                    currency:(nullable NSString *)currency
+                       value:(nullable NSNumber *)value
+                  parameters:(nullable NSDictionary *)parameters
+{
+  [self recordAndUpdateEvent:event currency:currency value:value];
+}
+
+- (void)recordAndUpdateEvent:(NSString *)event
                     currency:(nullable NSString *)currency
                        value:(nullable NSNumber *)value
 {
   if (@available(iOS 14.0, *)) {
-    if (!g_isSKAdNetworkReportEnabled) {
+    if (!self.isSKAdNetworkReportEnabled) {
       return;
     }
     if (!event.length) {
@@ -133,96 +129,96 @@ static Class<FBSDKConversionValueUpdating> _conversionValueUpdatable;
   }
 }
 
-+ (void)_loadConfigurationWithBlock:(FBSDKSKAdNetworkReporterBlock)block
+- (void)_loadConfigurationWithBlock:(FBSDKSKAdNetworkReporterBlock)block
 {
-  if (!serialQueue) {
+  if (!self.serialQueue) {
     return;
   }
   // Executes block if there is cache
   if ([self _isConfigRefreshTimestampValid] && [self.store objectForKey:FBSDKSKAdNetworkConversionConfigurationKey]) {
-    dispatch_async(serialQueue, ^() {
-      [FBSDKTypeUtility array:g_completionBlocks addObject:block];
-      for (FBSDKSKAdNetworkReporterBlock executionBlock in g_completionBlocks) {
+    dispatch_async(self.serialQueue, ^() {
+      [FBSDKTypeUtility array:self.completionBlocks addObject:block];
+      for (FBSDKSKAdNetworkReporterBlock executionBlock in self.completionBlocks) {
         executionBlock();
       }
-      [g_completionBlocks removeAllObjects];
+      [self.completionBlocks removeAllObjects];
     });
     return;
   }
-  dispatch_async(serialQueue, ^{
-    [FBSDKTypeUtility array:g_completionBlocks addObject:block];
-    if (g_isRequestStarted) {
+  dispatch_async(self.serialQueue, ^{
+    [FBSDKTypeUtility array:self.completionBlocks addObject:block];
+    if (self.isRequestStarted) {
       return;
     }
-    g_isRequestStarted = YES;
+    self.isRequestStarted = YES;
     id<FBSDKGraphRequest> request = [self.requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/ios_skadnetwork_conversion_config", [FBSDKSettings appID]]];
     [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
-      dispatch_async(serialQueue, ^{
+      dispatch_async(self.serialQueue, ^{
         if (error) {
-          g_isRequestStarted = NO;
+          self.isRequestStarted = NO;
           return;
         }
         NSDictionary<NSString *, id> *json = [FBSDKTypeUtility dictionaryValue:result];
         if (json) {
           [self.store setObject:json forKey:FBSDKSKAdNetworkConversionConfigurationKey];
-          g_configRefreshTimestamp = [NSDate date];
-          config = [[FBSDKSKAdNetworkConversionConfiguration alloc] initWithJSON:json];
-          for (FBSDKSKAdNetworkReporterBlock executionBlock in g_completionBlocks) {
+          self.configRefreshTimestamp = [NSDate date];
+          self.config = [[FBSDKSKAdNetworkConversionConfiguration alloc] initWithJSON:json];
+          for (FBSDKSKAdNetworkReporterBlock executionBlock in self.completionBlocks) {
             executionBlock();
           }
-          [g_completionBlocks removeAllObjects];
-          g_isRequestStarted = NO;
+          [self.completionBlocks removeAllObjects];
+          self.isRequestStarted = NO;
         }
       });
     }];
   });
 }
 
-+ (void)_checkAndRevokeTimer
+- (void)_checkAndRevokeTimer
 {
-  if (!config) {
+  if (!self.config) {
     return;
   }
   if ([self _shouldCutoff]) {
     return;
   }
-  if (g_conversionValue > config.timerBuckets) {
+  if (self.conversionValue > self.config.timerBuckets) {
     return;
   }
-  if (g_timestamp && [[NSDate date] timeIntervalSinceDate:g_timestamp] < config.timerInterval) {
+  if (self.timestamp && [[NSDate date] timeIntervalSinceDate:self.timestamp] < self.config.timerInterval) {
     return;
   }
-  [FBSDKSKAdNetworkReporter _updateConversionValue:g_conversionValue];
+  [self _updateConversionValue:self.conversionValue];
 }
 
-+ (void)_recordAndUpdateEvent:(NSString *)event
+- (void)_recordAndUpdateEvent:(NSString *)event
                      currency:(nullable NSString *)currency
                         value:(nullable NSNumber *)value
 {
-  if (!config) {
+  if (!self.config) {
     return;
   }
   if ([self _shouldCutoff]) {
     return;
   }
-  if (![config.eventSet containsObject:event] && ![FBSDKAppEventsUtility isStandardEvent:event]) {
+  if (![self.config.eventSet containsObject:event] && ![FBSDKAppEventsUtility isStandardEvent:event]) {
     return;
   }
   BOOL isCacheUpdated = false;
-  if (![g_recordedEvents containsObject:event]) {
-    [g_recordedEvents addObject:event];
+  if (![self.recordedEvents containsObject:event]) {
+    [self.recordedEvents addObject:event];
     isCacheUpdated = true;
   }
   // Change currency to default currency if currency is not found in currencySet
   NSString *valueCurrency = [currency uppercaseString];
-  if (![config.currencySet containsObject:valueCurrency]) {
-    valueCurrency = config.defaultCurrency;
+  if (![self.config.currencySet containsObject:valueCurrency]) {
+    valueCurrency = self.config.defaultCurrency;
   }
   if (value != nil) {
-    NSMutableDictionary *mapping = [[FBSDKTypeUtility dictionary:g_recordedValues objectForKey:event ofType:NSDictionary.class] mutableCopy] ?: [NSMutableDictionary new];
+    NSMutableDictionary *mapping = [[FBSDKTypeUtility dictionary:self.recordedValues objectForKey:event ofType:NSDictionary.class] mutableCopy] ?: [NSMutableDictionary new];
     NSNumber *valueInMapping = [FBSDKTypeUtility dictionary:mapping objectForKey:valueCurrency ofType:NSNumber.class] ?: [NSNumber numberWithDouble:0];
     [FBSDKTypeUtility dictionary:mapping setObject:[NSNumber numberWithDouble:(valueInMapping.doubleValue + value.doubleValue)] forKey:valueCurrency];
-    [FBSDKTypeUtility dictionary:g_recordedValues setObject:mapping forKey:event];
+    [FBSDKTypeUtility dictionary:self.recordedValues setObject:mapping forKey:event];
     isCacheUpdated = true;
   }
   if (isCacheUpdated) {
@@ -231,51 +227,51 @@ static Class<FBSDKConversionValueUpdating> _conversionValueUpdatable;
   }
 }
 
-+ (void)_checkAndUpdateConversionValue
+- (void)_checkAndUpdateConversionValue
 {
   // Update conversion value if a rule is matched
-  for (FBSDKSKAdNetworkRule *rule in config.conversionValueRules) {
-    if (rule.conversionValue < g_conversionValue) {
+  for (FBSDKSKAdNetworkRule *rule in self.config.conversionValueRules) {
+    if (rule.conversionValue < self.conversionValue) {
       break;
     }
-    if ([rule isMatchedWithRecordedEvents:g_recordedEvents recordedValues:g_recordedValues]) {
+    if ([rule isMatchedWithRecordedEvents:self.recordedEvents recordedValues:self.recordedValues]) {
       [self _updateConversionValue:rule.conversionValue];
       break;
     }
   }
 }
 
-+ (void)_updateConversionValue:(NSInteger)value
+- (void)_updateConversionValue:(NSInteger)value
 {
   if (@available(iOS 14.0, *)) {
     if ([self _shouldCutoff]) {
       return;
     }
-    [_conversionValueUpdatable updateConversionValue:value];
-    g_conversionValue = value + 1;
-    g_timestamp = [NSDate date];
+    [self.conversionValueUpdatable updateConversionValue:value];
+    self.conversionValue = value + 1;
+    self.timestamp = [NSDate date];
     [self _saveReportData];
   }
 }
 
-+ (BOOL)_shouldCutoff
+- (BOOL)_shouldCutoff
 {
-  if (!config.cutoffTime) {
+  if (!self.config.cutoffTime) {
     return true;
   }
   NSDate *installTimestamp = [self.store objectForKey:@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"];
-  return [installTimestamp isKindOfClass:NSDate.class] && [[NSDate date] timeIntervalSinceDate:installTimestamp] > config.cutoffTime * 86400;
+  return [installTimestamp isKindOfClass:NSDate.class] && [[NSDate date] timeIntervalSinceDate:installTimestamp] > self.config.cutoffTime * 86400;
 }
 
  #pragma clang diagnostic push
  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-+ (void)_loadReportData
+- (void)_loadReportData
 {
   id cachedJSON = [self.store objectForKey:FBSDKSKAdNetworkConversionConfigurationKey];
-  config = [[FBSDKSKAdNetworkConversionConfiguration alloc] initWithJSON:cachedJSON];
+  self.config = [[FBSDKSKAdNetworkConversionConfiguration alloc] initWithJSON:cachedJSON];
   NSData *cachedReportData = [self.store objectForKey:FBSDKSKAdNetworkReporterKey];
-  g_recordedEvents = [NSMutableSet new];
-  g_recordedValues = [NSMutableDictionary new];
+  self.recordedEvents = [NSMutableSet new];
+  self.recordedValues = [NSMutableDictionary new];
   if ([cachedReportData isKindOfClass:[NSData class]]) {
     NSDictionary<NSString *, id> *data;
     if (@available(iOS 11.0, *)) {
@@ -292,21 +288,21 @@ static Class<FBSDKConversionValueUpdating> _conversionValueUpdatable;
       data = [FBSDKTypeUtility dictionaryValue:[NSKeyedUnarchiver unarchiveObjectWithData:cachedReportData]];
     }
     if (data) {
-      g_conversionValue = [FBSDKTypeUtility integerValue:data[@"conversion_value"]];
-      g_timestamp = [FBSDKTypeUtility dictionary:data objectForKey:@"timestamp" ofType:NSDate.class];
-      g_recordedEvents = [[FBSDKTypeUtility dictionary:data objectForKey:@"recorded_events" ofType:NSSet.class] mutableCopy] ?: [NSMutableSet new];
-      g_recordedValues = [[FBSDKTypeUtility dictionary:data objectForKey:@"recorded_values" ofType:NSDictionary.class] mutableCopy] ?: [NSMutableDictionary new];
+      self.conversionValue = [FBSDKTypeUtility integerValue:data[@"conversion_value"]];
+      self.timestamp = [FBSDKTypeUtility dictionary:data objectForKey:@"timestamp" ofType:NSDate.class];
+      self.recordedEvents = [[FBSDKTypeUtility dictionary:data objectForKey:@"recorded_events" ofType:NSSet.class] mutableCopy] ?: [NSMutableSet new];
+      self.recordedValues = [[FBSDKTypeUtility dictionary:data objectForKey:@"recorded_values" ofType:NSDictionary.class] mutableCopy] ?: [NSMutableDictionary new];
     }
   }
 }
 
-+ (void)_saveReportData
+- (void)_saveReportData
 {
   NSMutableDictionary<NSString *, id> *reportData = [NSMutableDictionary new];
-  [FBSDKTypeUtility dictionary:reportData setObject:@(g_conversionValue) forKey:@"conversion_value"];
-  [FBSDKTypeUtility dictionary:reportData setObject:g_timestamp forKey:@"timestamp"];
-  [FBSDKTypeUtility dictionary:reportData setObject:g_recordedEvents forKey:@"recorded_events"];
-  [FBSDKTypeUtility dictionary:reportData setObject:g_recordedValues forKey:@"recorded_values"];
+  [FBSDKTypeUtility dictionary:reportData setObject:@(self.conversionValue) forKey:@"conversion_value"];
+  [FBSDKTypeUtility dictionary:reportData setObject:self.timestamp forKey:@"timestamp"];
+  [FBSDKTypeUtility dictionary:reportData setObject:self.recordedEvents forKey:@"recorded_events"];
+  [FBSDKTypeUtility dictionary:reportData setObject:self.recordedValues forKey:@"recorded_values"];
   NSData *cache = [NSKeyedArchiver archivedDataWithRootObject:reportData];
   if (cache) {
     [self.store setObject:cache forKey:FBSDKSKAdNetworkReporterKey];
@@ -315,9 +311,9 @@ static Class<FBSDKConversionValueUpdating> _conversionValueUpdatable;
 
  #pragma clang diagnostic pop
 
-+ (BOOL)_isConfigRefreshTimestampValid
+- (BOOL)_isConfigRefreshTimestampValid
 {
-  return g_configRefreshTimestamp && [[NSDate date] timeIntervalSinceDate:g_configRefreshTimestamp] < FBSDK_SKADNETWORK_CONFIG_TIME_OUT;
+  return self.configRefreshTimestamp && [[NSDate date] timeIntervalSinceDate:self.configRefreshTimestamp] < FBSDK_SKADNETWORK_CONFIG_TIME_OUT;
 }
 
  #pragma mark - Testability
@@ -325,23 +321,14 @@ static Class<FBSDKConversionValueUpdating> _conversionValueUpdatable;
  #if DEBUG
   #if FBSDKTEST
 
-+ (void)reset
+- (void)setConfiguration:(FBSDKSKAdNetworkConversionConfiguration *)configuration
 {
-  _store = nil;
-  _requestProvider = nil;
-  _conversionValueUpdatable = nil;
-  [self setConfiguration:nil];
-  [self setSKAdNetworkReportEnabled:false];
+  self.config = configuration;
 }
 
-+ (void)setConfiguration:(FBSDKSKAdNetworkConversionConfiguration *)configuration
+- (void)setSKAdNetworkReportEnabled:(BOOL)enabled
 {
-  config = configuration;
-}
-
-+ (void)setSKAdNetworkReportEnabled:(BOOL)enabled
-{
-  g_isSKAdNetworkReportEnabled = enabled;
+  self.isSKAdNetworkReportEnabled = enabled;
 }
 
   #endif

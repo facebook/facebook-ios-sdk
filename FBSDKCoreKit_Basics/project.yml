@@ -1,0 +1,132 @@
+# Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+#
+# You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
+# copy, modify, and distribute this software in source code or binary form for use
+# in connection with the web services and APIs provided by Facebook.
+#
+# As with any software that integrates with the Facebook platform, your use of
+# this software is subject to the Facebook Developer Principles and Policies
+# [http://developers.facebook.com/policy/]. This copyright notice shall be
+# included in all copies or substantial portions of the software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+name: FBSDKCoreKit_Basics
+
+include:
+  - ../xcodegen_project_common.yml
+
+configFiles:
+  Debug: Configurations/Shared/Configuration/Debug.xcconfig
+  Release: Configurations/Shared/Configuration/Release.xcconfig
+
+settings:
+  base:
+    # Some iOS defaults will be overridden by Xcodegen.
+    # We need to explicitly set them to maintain parity with
+    # the project file being replaced
+    CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: false
+    SWIFT_OPTIMIZATION_LEVEL: -O
+    PRODUCT_NAME: FBSDKCoreKit_Basics
+
+targets:
+  FBSDKCoreKit_Basics:
+    type: framework
+    platform: iOS
+    sources:
+      - ../Sources/FBSDKCoreKit_Basics
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit_Basics.xcconfig
+      Release: Configurations/FBSDKCoreKit_Basics.xcconfig
+  FBSDKCoreKit_Basics-Dynamic:
+    type: framework
+    dependencies:
+      - sdk: UIKit.framework
+      - sdk: libz.tbd
+    platform: iOS
+    productName: FBSDKCoreKit_Basics
+    sources:
+      - ../Sources/FBSDKCoreKit_Basics
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit_Basics-Dynamic.xcconfig
+      Release: Configurations/FBSDKCoreKit_Basics-Dynamic.xcconfig
+    settings:
+      PRODUCT_NAME: FBSDKCoreKit_Basics
+  FBSDKCoreKit_Basics_TV:
+    type: framework
+    platform: tvOS
+    productName: FBSDKCoreKit_Basics
+    sources:
+      - ../Sources/FBSDKCoreKit_Basics
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit_Basics-tvOS.xcconfig
+      Release: Configurations/FBSDKCoreKit_Basics-tvOS.xcconfig
+    settings:
+      PRODUCT_NAME: FBSDKCoreKit_Basics
+  FBSDKCoreKit_Basics_TV-Dynamic:
+    type: framework
+    dependencies:
+      - sdk: UIKit.framework
+      - sdk: libz.tbd
+    platform: tvOS
+    productName: FBSDKCoreKit_Basics
+    sources:
+      - ../Sources/FBSDKCoreKit_Basics
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit_Basics-tvOS-Dynamic.xcconfig
+      Release: Configurations/FBSDKCoreKit_Basics-tvOS-Dynamic.xcconfig
+    settings:
+      PRODUCT_NAME: FBSDKCoreKit_Basics
+  FBSDKCoreKit_BasicsTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - FBSDKCoreKit_BasicsTests
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit_BasicsTests.xcconfig
+      Release: Configurations/FBSDKCoreKit_BasicsTests.xcconfig
+    dependencies:
+      - target: FBSDKCoreKit_Basics-Dynamic
+
+aggregateTargets:
+  FBSDKCoreKit_Basics-Universal:
+    targets: [FBSDKCoreKit_Basics]
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit_Basics.xcconfig
+      Release: Configurations/FBSDKCoreKit_Basics.xcconfig
+    buildScripts:
+      - name: ShellScript
+        path: ../scripts/xcode/build-universal-framework.sh
+  FBSDKCoreKit_Basics_TV-Universal:
+    targets: [FBSDKCoreKit_Basics_TV]
+    configFiles:
+      Debug: Configurations/FBSDKCoreKit_Basics-tvOS.xcconfig
+      Release: Configurations/FBSDKCoreKit_Basics-tvOS.xcconfig
+    buildScripts:
+      - name: ShellScript
+        path: ../scripts/xcode/build-universal-tvos-framework.sh
+
+schemes:
+  BuildCoreKitBasics:
+    build:
+      targets:
+        FBSDKCoreKit_Basics-Universal: [archive, run, profile, analyze]
+        FBSDKCoreKit_Basics_TV-Universal: [archive, run, profile, analyze]
+      parallelizeBuild: false
+  FBSDKCoreKit_Basics-Dynamic:
+    build:
+      targets:
+        FBSDKCoreKit_Basics-Dynamic: all
+    test:
+      targets: [FBSDKCoreKit_BasicsTests]
+      coverageTargets:
+        - FBSDKCoreKit_Basics-Dynamic
+  FBSDKCoreKit_Basics_TV-Dynamic:
+    build:
+      targets:
+        FBSDKCoreKit_Basics_TV-Dynamic: all

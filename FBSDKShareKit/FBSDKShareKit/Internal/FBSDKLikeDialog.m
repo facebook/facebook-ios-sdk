@@ -22,6 +22,8 @@
 
  #import "FBSDKLikeDialog.h"
 
+ #import "FBSDKCoreKitImport.h"
+
  #ifdef FBSDKCOCOAPODS
   #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
  #else
@@ -152,7 +154,7 @@
 {
   FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
   BOOL useNativeDialog = [configuration useNativeDialogForDialogName:FBSDKDialogConfigurationNameLike];
-  return (useNativeDialog && [FBSDKInternalUtility isFacebookAppInstalled]);
+  return (useNativeDialog && [FBSDKInternalUtility.sharedUtility isFacebookAppInstalled]);
 }
 
 - (void)_handleCompletionWithDialogResults:(NSDictionary *)results error:(NSError *)error

@@ -92,7 +92,7 @@ static NSRegularExpression *HashtagRegularExpression()
 - (BOOL)isEqualToHashtag:(FBSDKHashtag *)hashtag
 {
   return (hashtag
-    && [FBSDKInternalUtility object:_stringRepresentation isEqualToObject:hashtag.stringRepresentation]);
+    && [FBSDKInternalUtility.sharedUtility object:_stringRepresentation isEqualToObject:hashtag.stringRepresentation]);
 }
 
 #pragma mark - NSCoding

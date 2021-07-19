@@ -75,7 +75,7 @@
   } else {
     switch (protocolType) {
       case FBSDKBridgeAPIProtocolTypeNative: {
-        if (![FBSDKInternalUtility isFacebookBundleIdentifier:sourceApplication]) {
+        if (![FBSDKInternalUtility.sharedUtility isFacebookBundleIdentifier:sourceApplication]) {
           if (errorRef != NULL) {
             *errorRef = [[NSError alloc] initWithDomain:FBSDKErrorDomain
                                                    code:FBSDKErrorBridgeAPIResponse
@@ -86,7 +86,7 @@
         break;
       }
       case FBSDKBridgeAPIProtocolTypeWeb: {
-        if (![FBSDKInternalUtility isSafariBundleIdentifier:sourceApplication]) {
+        if (![FBSDKInternalUtility.sharedUtility isSafariBundleIdentifier:sourceApplication]) {
           if (errorRef != NULL) {
             *errorRef = [[NSError alloc] initWithDomain:FBSDKErrorDomain
                                                    code:FBSDKErrorBridgeAPIResponse

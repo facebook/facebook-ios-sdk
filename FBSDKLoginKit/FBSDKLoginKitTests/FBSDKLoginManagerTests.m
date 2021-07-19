@@ -129,8 +129,8 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   [FBSDKProfile setCurrentProfile:nil];
   [FBSDKAccessToken setCurrentAccessToken:nil];
 
-  _mockInternalUtility = OCMClassMock(FBSDKInternalUtility.class);
-  OCMStub(ClassMethod([_mockInternalUtility validateURLSchemes]));
+  _mockInternalUtility = OCMPartialMock(FBSDKInternalUtility.sharedUtility);
+  OCMStub([_mockInternalUtility validateURLSchemes]);
 
   _mockLoginManager = OCMPartialMock([FBSDKLoginManager new]);
   OCMStub([_mockLoginManager loadExpectedChallenge]).andReturn(kFakeChallenge);
@@ -564,10 +564,12 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   // Mock some methods to force an error callback.
   [[[_mockInternalUtility stub] andReturnValue:@NO] isFacebookAppInstalled];
   NSError *URLError = [[NSError alloc] initWithDomain:FBSDKErrorDomain code:0 userInfo:nil];
-  [[_mockInternalUtility stub] appURLWithHost:OCMOCK_ANY
-                                         path:OCMOCK_ANY
-                              queryParameters:OCMOCK_ANY
-                                        error:((NSError __autoreleasing **)[OCMArg setTo:URLError])];
+  OCMStub(
+    [_mockInternalUtility appURLWithHost:OCMOCK_ANY
+                                    path:OCMOCK_ANY
+                         queryParameters:OCMOCK_ANY
+                                   error:((NSError __autoreleasing **)[OCMArg setTo:URLError])]
+  );
 
   __block BOOL handlerCalled;
   FBSDKLoginManager *manager = [FBSDKLoginManager new];

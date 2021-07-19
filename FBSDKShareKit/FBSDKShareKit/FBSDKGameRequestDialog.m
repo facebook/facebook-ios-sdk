@@ -70,7 +70,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 {
   FBSDKGameRequestDialog *dialog = [self dialogWithContent:content delegate:delegate];
   NSString *graphDomain = [FBSDKUtility getGraphDomainFromToken];
-  if ([graphDomain isEqualToString:@"gaming"] && [FBSDKInternalUtility isFacebookAppInstalled]) {
+  if ([graphDomain isEqualToString:@"gaming"] && [FBSDKInternalUtility.sharedUtility isFacebookAppInstalled]) {
     [dialog launchGameRequestDialogWithGameRequestContent:content delegate:delegate];
   } else {
     [dialog show];
@@ -109,10 +109,11 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
                                             code:FBSDKShareErrorUnknown
                                          message:@"Facebook app did not return a url"];
     [self handleDialogError:error];
-  }
-  NSDictionary *parsedResults = [self parsedPayloadFromURL:url];
-  if (parsedResults) {
-    [_delegate gameRequestDialog:self didCompleteWithResults:parsedResults];
+  } else {
+    NSDictionary *parsedResults = [self parsedPayloadFromURL:url];
+    if (parsedResults) {
+      [_delegate gameRequestDialog:self didCompleteWithResults:parsedResults];
+    }
   }
 }
 
@@ -188,7 +189,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   && [url.host isEqualToString:FBSDK_GAME_REQUEST_URL_HOST];
 }
 
-- (NSDictionary<NSString *, NSString *> *_Nullable)parsedPayloadFromURL:(NSURL *)url
+- (NSDictionary<NSString *, NSString *> *_Nullable)parsedPayloadFromURL:(nonnull NSURL *)url
 {
   NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
   if (!urlComponents.queryItems) {
@@ -268,7 +269,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 
   [self _launchDialogViaBridgeAPIWithParameters:parameters];
 
-  [FBSDKInternalUtility registerTransientObject:self];
+  [FBSDKInternalUtility.sharedUtility registerTransientObject:self];
   return YES;
 }
 
@@ -352,7 +353,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 
 - (BOOL)_launchDialogViaBridgeAPIWithParameters:(NSDictionary *)parameters
 {
-  UIViewController *topMostViewController = [FBSDKInternalUtility topMostViewController];
+  UIViewController *topMostViewController = [FBSDKInternalUtility.sharedUtility topMostViewController];
   if (!topMostViewController) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                            logEntry:@"There are no valid ViewController to present FBSDKWebDialog"];
@@ -369,7 +370,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
    parameters:parameters
    userInfo:nil];
 
-  [FBSDKInternalUtility registerTransientObject:self];
+  [FBSDKInternalUtility.sharedUtility registerTransientObject:self];
 
   __weak typeof(self) weakSelf = self;
   [[FBSDKBridgeAPI sharedInstance]
@@ -435,21 +436,21 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
     }
   }
   [self _handleCompletionWithDialogResults:results error:error];
-  [FBSDKInternalUtility unregisterTransientObject:self];
+  [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
 }
 
 - (void)_didFailWithError:(NSError *)error
 {
   [self _cleanUp];
   [self _handleCompletionWithDialogResults:nil error:error];
-  [FBSDKInternalUtility unregisterTransientObject:self];
+  [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
 }
 
 - (void)_didCancel
 {
   [self _cleanUp];
   [_delegate gameRequestDialogDidCancel:self];
-  [FBSDKInternalUtility unregisterTransientObject:self];
+  [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
 }
 
  #pragma mark - Helper Methods

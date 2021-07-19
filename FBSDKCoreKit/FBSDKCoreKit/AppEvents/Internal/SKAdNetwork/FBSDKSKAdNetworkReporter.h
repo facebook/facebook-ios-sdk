@@ -27,11 +27,11 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(SKAdNetworkReporter)
 @interface FBSDKSKAdNetworkReporter : NSObject
 
-+ (void)enable;
+- (void)enable;
 
-+ (void)checkAndRevokeTimer;
+- (void)checkAndRevokeTimer;
 
-+ (void)recordAndUpdateEvent:(NSString *)event
+- (void)recordAndUpdateEvent:(NSString *)event
                     currency:(nullable NSString *)currency
                        value:(nullable NSNumber *)value;
 
