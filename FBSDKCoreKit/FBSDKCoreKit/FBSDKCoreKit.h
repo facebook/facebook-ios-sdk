@@ -46,6 +46,7 @@
 #import "FBSDKGraphRequestFlags.h"
 #import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKImpressionTrackingButton.h"
+#import "FBSDKInternalUtility.h"
 #import "FBSDKLocation.h"
 #import "FBSDKLoggingBehavior.h"
 #import "FBSDKRandom.h"

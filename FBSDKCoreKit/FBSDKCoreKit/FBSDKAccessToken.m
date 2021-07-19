@@ -23,7 +23,7 @@
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKError+Internal.h"
 #import "FBSDKGraphRequestPiggybackManager.h"
-#import "FBSDKInternalUtility.h"
+#import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKMath.h"
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0

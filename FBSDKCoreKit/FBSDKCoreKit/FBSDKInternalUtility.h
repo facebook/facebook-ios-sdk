@@ -27,31 +27,13 @@ NS_ASSUME_NONNULL_BEGIN
 #define FBSDK_CANOPENURL_MSQRD_PLAYER @"msqrdplayer"
 #define FBSDK_CANOPENURL_SHARE_EXTENSION @"fbshareextension"
 
-@protocol FBSDKInfoDictionaryProviding;
-
-/**
- Describes the callback for appLinkFromURLInBackground.
- @param object the FBSDKAppLink representing the deferred App Link
- @param stop the error during the request, if any
-
- */
-typedef id _Nullable (^FBSDKInvalidObjectHandler)(id object, BOOL *stop)
-NS_SWIFT_NAME(InvalidObjectHandler);
-
 NS_SWIFT_NAME(InternalUtility)
 @interface FBSDKInternalUtility : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-+ (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider;
-
 @property (class, nonnull, readonly) FBSDKInternalUtility *sharedUtility;
-
-/**
-  Constructs the scheme for apps that come to the current app through the bridge.
- */
-@property (nonatomic, copy, readonly) NSString *appURLScheme;
 
 /**
  Returns bundle for returning localized strings
@@ -60,24 +42,6 @@ NS_SWIFT_NAME(InternalUtility)
  return the main bundle.
  */
 @property (nonatomic, strong, readonly) NSBundle *bundleForStrings;
-
-/**
- Gets the milliseconds since the Unix Epoch.
-
- Changes in the system clock will affect this value.
- @return The number of milliseconds since the Unix Epoch.
- */
-@property (nonatomic, assign, readonly) uint64_t currentTimeInMilliseconds;
-
-/**
- The version of the operating system on which the process is executing.
- */
-@property (nonatomic, assign, readonly) NSOperatingSystemVersion operatingSystemVersion;
-
-/*
- Checks if the app is Unity.
- */
-@property (nonatomic, assign, readonly) BOOL isUnity;
 
 /**
   Constructs an URL for the current app.
@@ -113,53 +77,11 @@ NS_SWIFT_NAME(InternalUtility)
                                error:(NSError *__autoreleasing *)errorRef;
 
 /**
-  Constructs a Facebook URL.
- @param hostPrefix The prefix for the host, such as 'm', 'graph', etc.
- @param path The path for the URL.  This may or may not include a version.
- @param queryParameters The query parameters for the URL.  This will be converted into a query string.
- @param defaultVersion A version to add to the URL if none is found in the path.
- @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
- @return The Facebook URL.
- */
-- (NSURL *)facebookURLWithHostPrefix:(NSString *)hostPrefix
-                                path:(NSString *)path
-                     queryParameters:(NSDictionary<NSString *, NSString *> *)queryParameters
-                      defaultVersion:(NSString *)defaultVersion
-                               error:(NSError *__autoreleasing *)errorRef;
-
-/**
-  Constructs a Facebook URL that doesn't need to specify an API version.
- @param hostPrefix The prefix for the host, such as 'm', 'graph', etc.
- @param path The path for the URL.  This may or may not include a version.
- @param queryParameters The query parameters for the URL.  This will be converted into a query string.
- @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
- @return The Facebook URL.
- */
-- (NSURL *)unversionedFacebookURLWithHostPrefix:(NSString *)hostPrefix
-                                           path:(NSString *)path
-                                queryParameters:(NSDictionary *)queryParameters
-                                          error:(NSError *__autoreleasing *)errorRef;
-
-/**
   Tests whether the supplied URL is a valid URL for opening in the browser.
  @param URL The URL to test.
  @return YES if the URL refers to an http or https resource, otherwise NO.
  */
 - (BOOL)isBrowserURL:(NSURL *)URL;
-
-/**
-  Tests whether the supplied bundle identifier references a Facebook app.
- @param bundleIdentifier The bundle identifier to test.
- @return YES if the bundle identifier refers to a Facebook app, otherwise NO.
- */
-- (BOOL)isFacebookBundleIdentifier:(NSString *)bundleIdentifier;
-
-/**
-  Tests whether the supplied bundle identifier references the Safari app.
- @param bundleIdentifier The bundle identifier to test.
- @return YES if the bundle identifier refers to the Safari app, otherwise NO.
- */
-- (BOOL)isSafariBundleIdentifier:(NSString *)bundleIdentifier;
 
 /**
   Checks equality between 2 objects.
@@ -185,11 +107,6 @@ NS_SWIFT_NAME(InternalUtility)
                              path:(NSString *)path
                   queryParameters:(NSDictionary *)queryParameters
                             error:(NSError *__autoreleasing *)errorRef;
-
-/**
- *  Deletes all the cookies in the NSHTTPCookieStorage for Facebook web dialogs
- */
-- (void)deleteFacebookCookies;
 
 /**
   Extracts permissions from a response fetched from me/permissions
@@ -231,11 +148,6 @@ NS_SWIFT_NAME(InternalUtility)
 - (void)validateURLSchemes;
 
 /**
-  validates that Facebook reserved URL schemes are not registered, throws an NSException if they are.
- */
-- (void)validateFacebookReservedURLSchemes;
-
-/**
   Attempts to find the first UIViewController in the view's responder chain. Returns nil if not found.
  */
 - (nullable UIViewController *)viewControllerForView:(UIView *)view;
@@ -246,31 +158,10 @@ NS_SWIFT_NAME(InternalUtility)
 - (BOOL)isRegisteredURLScheme:(NSString *)urlScheme;
 
 /**
- returns the current key window
- */
-- (nullable UIWindow *)findWindow;
-
-/**
   returns currently displayed top view controller.
  */
 - (nullable UIViewController *)topMostViewController;
 
-#if !TARGET_OS_TV
-/**
-  returns interface orientation for the key window.
- */
-- (UIInterfaceOrientation)statusBarOrientation;
-#endif
-
-/**
-  Converts NSData to a hexadecimal UTF8 String.
- */
-- (nullable NSString *)hexadecimalStringFromData:(NSData *)data;
-
-/*
-  Checks if the permission is a publish permission.
- */
-- (BOOL)isPublishPermission:(NSString *)permission;
 
 #pragma mark - FB Apps Installed
 
@@ -280,16 +171,6 @@ NS_SWIFT_NAME(InternalUtility)
 
 - (void)checkRegisteredCanOpenURLScheme:(NSString *)urlScheme;
 - (BOOL)isRegisteredCanOpenURLScheme:(NSString *)urlScheme;
-
-#define FBSDKConditionalLog(condition, loggingBehavior, desc, ...) \
-{ \
-  if (!(condition)) { \
-    NSString *msg = [NSString stringWithFormat:(desc), ##__VA_ARGS__]; \
-    [FBSDKLogger singleShotLogEntry:loggingBehavior logEntry:msg]; \
-  } \
-}
-
-#define FB_BASE_URL @"facebook.com"
 
 @end
 

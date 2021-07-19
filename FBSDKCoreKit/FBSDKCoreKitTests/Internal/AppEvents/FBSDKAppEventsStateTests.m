@@ -20,7 +20,7 @@
 
 #import "FBSDKAppEventsState.h"
 #import "FBSDKCoreKitTests-Swift.h"
-#import "FBSDKInternalUtility.h"
+#import "FBSDKInternalUtility+Internal.h"
 
 #define FBSDK_APPEVENTSSTATE_MAX_EVENTS 1000
 

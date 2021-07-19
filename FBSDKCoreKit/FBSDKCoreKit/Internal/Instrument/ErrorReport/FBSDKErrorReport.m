@@ -23,7 +23,7 @@
 #import "FBSDKGraphRequestConnection.h"
 #import "FBSDKGraphRequestFactory.h"
 #import "FBSDKGraphRequestProviding.h"
-#import "FBSDKInternalUtility.h"
+#import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKSettings+SettingsProtocols.h"

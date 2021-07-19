@@ -26,7 +26,7 @@
  #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKDialogConfiguration.h"
  #import "FBSDKError+Internal.h"
- #import "FBSDKInternalUtility.h"
+ #import "FBSDKInternalUtility+Internal.h"
  #import "FBSDKServerConfigurationManager.h"
  #import "FBSDKServerConfigurationProviding.h"
 

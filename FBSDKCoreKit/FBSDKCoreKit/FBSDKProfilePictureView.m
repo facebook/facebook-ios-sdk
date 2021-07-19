@@ -25,7 +25,7 @@
 
  #import "FBSDKAccessToken.h"
  #import "FBSDKHumanSilhouetteIcon.h"
- #import "FBSDKInternalUtility.h"
+ #import "FBSDKInternalUtility+Internal.h"
  #import "FBSDKMath.h"
  #import "FBSDKProfile+Internal.h"
 

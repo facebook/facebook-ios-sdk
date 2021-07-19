@@ -20,7 +20,7 @@
 
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKGraphRequestProtocol.h"
-#import "FBSDKInternalUtility.h"
+#import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKSettings.h"
 
 static NSString *const kErrorCategoryOther = @"other";

@@ -22,7 +22,7 @@
 #import "FBSDKAppEventsFlushReason.h"
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKEventLogging.h"
-#import "FBSDKInternalUtility.h"
+#import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationProviding.h"
