@@ -22,7 +22,7 @@
 
  #import "FBSDKChooseContextContent.h"
 
- #import "FBSDKCoreKitInternalImport.h"
+ #import "FBSDKGamingServicesCoreKitImport.h"
 
 @interface FBSDKChooseContextContent () <NSCopying, NSObject>
 @end
