@@ -35,10 +35,10 @@ NS_ASSUME_NONNULL_BEGIN
                      videoUploaderFactory:(id<FBSDKVideoUploaderCreating>)videoUploaderFactory;
 
 - (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration *_Nonnull)configuration
-          andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler;
+                 andResultCompletion:(FBSDKGamingServiceResultCompletion _Nonnull)completion;
 
 - (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration *_Nonnull)configuration
-                   completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
+                          completion:(FBSDKGamingServiceResultCompletion _Nonnull)completion
                   andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler;
 
 @end

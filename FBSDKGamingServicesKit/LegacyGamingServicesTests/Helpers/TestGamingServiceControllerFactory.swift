@@ -31,17 +31,17 @@ class TestGamingServiceController: NSObject, GamingServiceControllerProtocol {
 class TestGamingServiceControllerFactory: NSObject, GamingServiceControllerCreating {
 
   var capturedServiceType: GamingServiceType = .friendFinder
-  var capturedCompletion: GamingServiceResultCompletionHandler = { _, _, _ in }
+  var capturedCompletion: GamingServiceResultCompletion = { _, _, _ in }
   var capturedPendingResult: Any?
   var controller = TestGamingServiceController()
 
   func create(
     with serviceType: GamingServiceType,
-    completionHandler: @escaping GamingServiceResultCompletionHandler,
+    completion: @escaping GamingServiceResultCompletion,
     pendingResult: Any?
   ) -> GamingServiceControllerProtocol {
     capturedServiceType = serviceType
-    capturedCompletion = completionHandler
+    capturedCompletion = completion
     capturedPendingResult = pendingResult
 
     return controller

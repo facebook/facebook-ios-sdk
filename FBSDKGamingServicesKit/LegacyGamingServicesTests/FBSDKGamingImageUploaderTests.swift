@@ -225,7 +225,7 @@ class GamingImageUploaderTests: XCTestCase {
     var wasProgressHandlerInvoked = false
     uploader.uploadImage(
       with: configuration,
-      completionHandler: { success, result, error in
+      completion: { success, result, error in
         XCTAssertTrue(success)
         XCTAssertEqual(
           result?["id"] as? String,

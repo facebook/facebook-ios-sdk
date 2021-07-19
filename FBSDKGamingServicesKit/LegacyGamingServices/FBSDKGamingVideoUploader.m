@@ -35,7 +35,7 @@
 @property (nonatomic) id<FBSDKVideoUploaderCreating> videoUploaderFactory;
 
 @property (nonatomic) NSUInteger totalBytesExpectedToSend;
-@property (nullable, nonatomic) FBSDKGamingServiceResultCompletionHandler completionHandler;
+@property (nullable, nonatomic) FBSDKGamingServiceResultCompletion completionHandler;
 @property (nullable, nonatomic) FBSDKGamingServiceProgressHandler progressHandler;
 
 @end
@@ -75,7 +75,7 @@
 
 + (FBSDKGamingVideoUploader *)createWithFileHandle:(id<FBSDKFileHandling>)fileHandle
                                   totalBytesToSend:(NSUInteger)totalBytes
-                                 completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
+                                 completionHandler:(FBSDKGamingServiceResultCompletion _Nonnull)completionHandler
                                    progressHandler:(FBSDKGamingServiceProgressHandler _Nonnull)progressHandler
 {
   FBSDKGamingVideoUploader *uploader = [FBSDKGamingVideoUploader new];
@@ -90,16 +90,27 @@
 + (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration *_Nonnull)configuration
           andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
 {
+  FBSDKGamingServiceResultCompletion completion = ^void (BOOL success, NSDictionary *result, NSError *error) {
+    completionHandler(success, result.debugDescription, error);
+  };
+
   [self.shared uploadVideoWithConfiguration:configuration
-                 andResultCompletionHandler:completionHandler];
+                        andResultCompletion:completion];
+}
+
++ (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration *_Nonnull)configuration
+                 andResultCompletion:(FBSDKGamingServiceResultCompletion _Nonnull)completion
+{
+  [self.shared uploadVideoWithConfiguration:configuration
+                        andResultCompletion:completion];
 }
 
 - (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration *_Nonnull)configuration
-          andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
+                 andResultCompletion:(FBSDKGamingServiceResultCompletion _Nonnull)completion
 {
   [self
    uploadVideoWithConfiguration:configuration
-   completionHandler:completionHandler
+   completion:completion
    andProgressHandler:nil];
 }
 
@@ -107,17 +118,30 @@
                    completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
                   andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
 {
+  FBSDKGamingServiceResultCompletion completion = ^void (BOOL success, NSDictionary *result, NSError *error) {
+    completionHandler(success, result.debugDescription, error);
+  };
+
   [self.shared uploadVideoWithConfiguration:configuration
-                          completionHandler:completionHandler
+                                 completion:completion
+                         andProgressHandler:progressHandler];
+}
+
++ (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration *_Nonnull)configuration
+                          completion:(FBSDKGamingServiceResultCompletion _Nonnull)completion
+                  andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
+{
+  [self.shared uploadVideoWithConfiguration:configuration
+                                 completion:completion
                          andProgressHandler:progressHandler];
 }
 
 - (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration *_Nonnull)configuration
-                   completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
+                          completion:(FBSDKGamingServiceResultCompletion _Nonnull)completion
                   andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
 {
   if (FBSDKAccessToken.currentAccessToken == nil) {
-    completionHandler(
+    completion(
       false,
       nil,
       [FBSDKError
@@ -129,7 +153,7 @@
   }
 
   if (configuration.videoURL == nil) {
-    completionHandler(
+    completion(
       false,
       nil,
       [FBSDKError
@@ -145,7 +169,7 @@
                                                 error:nil];
 
   if ((unsigned long)[fileHandle seekToEndOfFile] == 0) {
-    completionHandler(
+    completion(
       false,
       nil,
       [FBSDKError
@@ -162,7 +186,7 @@
   [FBSDKGamingVideoUploader
    createWithFileHandle:fileHandle
    totalBytesToSend:fileSize
-   completionHandler:completionHandler
+   completionHandler:completion
    progressHandler:progressHandler];
 
   [FBSDKInternalUtility.sharedUtility registerTransientObject:uploader];

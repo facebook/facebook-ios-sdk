@@ -26,7 +26,7 @@ NS_SWIFT_NAME(GamingServiceControllerCreating)
 @protocol FBSDKGamingServiceControllerCreating
 
 - (id<FBSDKGamingServiceController>)createWithServiceType:(FBSDKGamingServiceType)serviceType
-                                        completionHandler:(FBSDKGamingServiceResultCompletionHandler)completionHandler
+                                               completion:(FBSDKGamingServiceResultCompletion)completion
                                             pendingResult:(nullable id)pendingResult;
 
 @end

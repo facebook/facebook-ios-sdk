@@ -40,7 +40,19 @@ Runs an upload to a users Gaming Media Library with the given configuration
  after the media dialog is shown.
  */
 + (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration * _Nonnull)configuration
-          andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler;
+          andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
+DEPRECATED_MSG_ATTRIBUTE("`uploadImageWithConfiguration:andResultCompletionHandler` is deprecated and will be removed in the next major release. It is replaced by `uploadImageWithConfiguration:andResultCompletion`.");
+
+/**
+Runs an upload to a users Gaming Media Library with the given configuration
+
+@param configuration model object contain the content that will be uploaded
+@param completion a callback that is fired dependent on the configuration.
+ Fired when the upload completes or when the users returns to the caller app
+ after the media dialog is shown.
+ */
++ (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration * _Nonnull)configuration
+                 andResultCompletion:(FBSDKGamingServiceResultCompletion _Nonnull)completion;
 
 /**
 Runs an upload to a users Gaming Media Library with the given configuration
@@ -54,6 +66,21 @@ Runs an upload to a users Gaming Media Library with the given configuration
 */
 + (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration * _Nonnull)configuration
                    completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
+                  andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
+DEPRECATED_MSG_ATTRIBUTE("`uploadImageWithConfiguration:completionHandler:andProgressHandler` is deprecated and will be removed in the next major release. It is replaced by `uploadImageWithConfiguration:completion:andProgressHandler:`.");
+
+/**
+Runs an upload to a users Gaming Media Library with the given configuration
+
+@param configuration model object contain the content that will be uploaded
+@param completion a callback that is fired dependent on the configuration.
+ Fired when the upload completes or when the users returns to the caller app
+ after the media dialog is shown.
+@param progressHandler an optional callback that is fired multiple times as
+ bytes are transferred to Facebook.
+*/
++ (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration * _Nonnull)configuration
+                          completion:(FBSDKGamingServiceResultCompletion _Nonnull)completion
                   andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler;
 
 @end
