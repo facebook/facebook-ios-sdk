@@ -70,7 +70,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F4F7CA2323F497200030A346"
+               BlueprintIdentifier = "18F0A70E3EECCDEAD656F2DF"
                BuildableName = "FBSDKGamingServicesKit-Universal"
                BlueprintName = "FBSDKGamingServicesKit-Universal"
                ReferencedContainer = "container:FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj">
