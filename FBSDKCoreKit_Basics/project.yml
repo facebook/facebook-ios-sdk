@@ -18,17 +18,8 @@
 
 name: FBSDKCoreKit_Basics
 
-options:
-  deploymentTarget:
-    iOS: "9.0"
-  usesTabs: false
-  tabWidth: 2
-  indentWidth: 2
-  defaultConfig: Debug
-  xcodeVersion: "12.5"
-
-attributes:
-  ORGANIZATIONNAME: Facebook
+include:
+  - ../xcodegen_project_common.yml
 
 configFiles:
   Debug: Configurations/Shared/Configuration/Debug.xcconfig

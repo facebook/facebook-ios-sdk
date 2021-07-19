@@ -2,18 +2,12 @@
 
 name: TestTools
 
+include:
+  - ../xcodegen_project_common.yml
+
 projectReferences:
   FBSDKCoreKit:
     path: ../FBSDKCoreKit/FBSDKCoreKit.xcodeproj
-
-options:
-  usesTabs: false
-  deploymentTarget:
-    iOS: "9.0"
-  tabWidth: 2
-  indentWidth: 2
-  defaultConfig: Debug
-  xcodeVersion: "12.5"
 
 settings:
   base:
