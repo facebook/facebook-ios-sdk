@@ -41,6 +41,7 @@
 		23EDD30D11C339297BCB9145 /* FBSDKVideoUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 60B890218241AC57891FF761 /* FBSDKVideoUploader.m */; };
 		25F824C844D47895664A9B42 /* FBSDKChooseContextContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 25498E7D0E4C8B4F7CFE4F67 /* FBSDKChooseContextContent.m */; };
 		28E5CAFC17299EB6553600F8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FC0DE03AC6165027DFC0B2D /* UIKit.framework */; };
+		29E1F4FACB6619E98C4ABE1A /* LegacyGamingServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B4B8A5EED608AD1A392D557 /* LegacyGamingServices.framework */; };
 		2AD912C0B0CDA3E7F461EB98 /* FBSDKFileHandleFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F5BA57F0CFD712C4B866FF /* FBSDKFileHandleFactoryTests.swift */; };
 		2E331421314CAEC8840B7791 /* FBSDKGamingImageUploaderConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 32CC7FEFB414C29683D830EB /* FBSDKGamingImageUploaderConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2E75F7D22C994B870640C970 /* FBSDKGamingVideoUploaderConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF2B515FFABC122B9E52C3EF /* FBSDKGamingVideoUploaderConfigurationTests.swift */; };
@@ -198,6 +199,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = E40113A8B281C6A908AEFA21;
 			remoteInfo = TestTools;
+		};
+		262423AE618361AFE40A6A95 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AD918022918A9CDD1DDC29D5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7521DEAAC6BFC1C24983CA32;
+			remoteInfo = "LegacyGamingServices-Dynamic";
 		};
 		3188401A429077178589DB5E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -483,6 +491,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29E1F4FACB6619E98C4ABE1A /* LegacyGamingServices.framework in Frameworks */,
 				42841E460388D394C60DCE06 /* FacebookGamingServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -993,6 +1002,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				6FDB765C27093F066F5B9095 /* PBXTargetDependency */,
 				737A8CBF4BFFE89A4EB49B4A /* PBXTargetDependency */,
 			);
 			name = FacebookGamingServicesTests;
@@ -1478,6 +1488,11 @@
 			isa = PBXTargetDependency;
 			name = "FBSDKCoreKit-Dynamic";
 			targetProxy = 9D6DCD95D0B7E5B356D44CBB /* PBXContainerItemProxy */;
+		};
+		6FDB765C27093F066F5B9095 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7521DEAAC6BFC1C24983CA32 /* LegacyGamingServices-Dynamic */;
+			targetProxy = 262423AE618361AFE40A6A95 /* PBXContainerItemProxy */;
 		};
 		737A8CBF4BFFE89A4EB49B4A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
