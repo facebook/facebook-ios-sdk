@@ -18,9 +18,9 @@
 
 #import "FBSDKGamingVideoUploader.h"
 
-#import "FBSDKCoreKitInternalImport.h"
 #import "FBSDKFileHandleFactory.h"
 #import "FBSDKFileHandling.h"
+#import "FBSDKGamingServicesCoreKitImport.h"
 #import "FBSDKGamingVideoUploaderConfiguration.h"
 #import "FBSDKVideoUploader.h"
 #import "FBSDKVideoUploaderFactory.h"
