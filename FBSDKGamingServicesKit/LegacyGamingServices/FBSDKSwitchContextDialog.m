@@ -24,7 +24,6 @@
 
  #import "FBSDKSwitchContextDialog.h"
 
- #import "FBSDKCoreKitInternalImport.h"
  #import "FBSDKSwitchContextContent.h"
 
  #define FBSDK_CONTEXT_METHOD_NAME @"context"
@@ -60,9 +59,9 @@
 
   if ([self.dialogContent isKindOfClass:[FBSDKSwitchContextContent class]] && self.dialogContent) {
     FBSDKSwitchContextContent *content = (FBSDKSwitchContextContent *)self.dialogContent;
-    [FBSDKTypeUtility dictionary:parameters
-                       setObject:content.contextTokenID
-                          forKey:@"context_id"];
+    if (content.contextTokenID) {
+      parameters[@"context_id"] = content.contextTokenID;
+    }
   }
 
   CGRect frame = [self createWebDialogFrameWithWidth:FBSDKWEBDIALOGFRAMEWIDTH height:FBSDKWEBDIALOGFRAMEHEIGHT windowFinder:self.windowFinder];
