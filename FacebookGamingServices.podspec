@@ -2,13 +2,15 @@
 
 Pod::Spec.new do |s|
 
-  s.name         = 'FBSDKGamingServicesKit'
+  s.name         = 'FacebookGamingServices'
   s.version      = '11.0.1'
   s.summary      = 'Official Facebook SDK for iOS to access Facebook Gaming Services'
 
   s.description  = <<-DESC
-                   The Facebook SDK for iOS GamingKit framework provides:
-                   * Friend Finder.
+                   The official Facebook SDK for iOS Gaming Services.
+
+                   See full documentation at:
+                   https://developers.facebook.com/docs/games/gaming-services/sdk-ios
                    DESC
 
   s.homepage     = 'https://developers.facebook.com/docs/ios/'
@@ -31,11 +33,12 @@ Pod::Spec.new do |s|
   s.pod_target_xcconfig = {
     'GCC_PREPROCESSOR_DEFINITIONS': '$(inherited) FBSDKCOCOAPODS=1',
     'OTHER_SWIFT_FLAGS': '$(inherited) -Xcc -DFBSDKCOCOAPODS',
-    'DEFINES_MODULE': 'YES'
+    'DEFINES_MODULE': 'YES',
   }
 
-  s.source_files   = 'Sources/FBSDKGamingServicesKit/**/*.{h,swift}'
-  s.public_header_files = 'Sources/FBSDKGamingServicesKit/**/*.h'
-  s.dependency 'FacebookGamingServices', "~> #{s.version}"
+  s.source_files   = 'Sources/FacebookGamingServices/**/*.{h,swift}'
 
+  s.dependency 'FBSDKCoreKit_Basics', "~> #{s.version}"
+  s.dependency 'FBSDKCoreKit', "~> #{s.version}"
+  s.dependency 'LegacyGamingServices', "~> #{s.version}"
 end

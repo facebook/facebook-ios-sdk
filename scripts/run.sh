@@ -96,6 +96,8 @@ main() {
       "FBSDKCoreKit.podspec"
       "FBSDKLoginKit.podspec"
       "FBSDKShareKit.podspec"
+      "LegacyGamingServices.podspec"
+      "FacebookGamingServices.podspec"
       "FBSDKGamingServicesKit.podspec"
       "FBSDKTVOSKit.podspec"
     )
@@ -376,8 +378,16 @@ lint_sdk() {
         dependent_spec="--include-podspecs=FBSDK{CoreKit,ShareKit,LoginKit,CoreKit_Basics}.podspec"
       fi
 
+      if [ "$spec" == LegacyGamingServices.podspec ]; then
+        dependent_spec="--include-podspecs=FBSDK{CoreKit_Basics,CoreKit,ShareKit}.podspec"
+      fi
+
+      if [ "$spec" == FacebookGamingServices.podspec ]; then
+        dependent_spec="--include-podspecs={FBSDKCoreKit_Basics,FBSDKCoreKit,FBSDKShareKit,LegacyGamingServices}.podspec"
+      fi
+
       if [ "$spec" == FBSDKGamingServicesKit.podspec ]; then
-        dependent_spec="--include-podspecs=FBSDK{CoreKit,ShareKit,CoreKit_Basics}.podspec"
+        dependent_spec="--include-podspecs={FBSDKCoreKit_Basics,FBSDKCoreKit,FBSDKShareKit,LegacyGamingServices,FacebookGamingServices}.podspec"
       fi
 
       echo ""

@@ -19,11 +19,7 @@
 #import <Foundation/Foundation.h>
 #import <AvailabilityMacros.h>
 
-#if defined FBSDKCOCOAPODS
-#import <FBSDKGamingServicesKit/FBSDKGamingServiceCompletionHandler.h>
-#else
 #import "FBSDKGamingServiceCompletionHandler.h"
-#endif
 
 @class FBSDKGamingVideoUploaderConfiguration;
 

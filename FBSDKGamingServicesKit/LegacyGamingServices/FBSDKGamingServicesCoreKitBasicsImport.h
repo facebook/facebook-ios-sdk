@@ -16,22 +16,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-
-#import "FBSDKGamingServiceCompletionHandler.h"
-
-NS_SWIFT_NAME(FriendFinderDialog)
-@interface FBSDKFriendFinderDialog : NSObject
-
-- (instancetype _Nonnull )init NS_SWIFT_UNAVAILABLE("Should not create instances of this class");
-
-/**
- Opens the Friend Finder dialog inside the Facebook app if it's installed, otherwise
- mobile web will be opened.
-
- @param completionHandler a callback that is fired once the user returns to the
-  caller app or an error ocurrs
- */
-+ (void)launchFriendFinderDialogWithCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler;
-
-@end
+#if defined FBSDK_SWIFT_PACKAGE
+@import FBSDKCoreKit_Basics;
+#else
+ #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#endif

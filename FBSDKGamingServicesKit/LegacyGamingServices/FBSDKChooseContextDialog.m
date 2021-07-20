@@ -23,8 +23,8 @@
  #import "FBSDKChooseContextDialog.h"
 
  #import "FBSDKChooseContextContent.h"
- #import "FBSDKCoreKitInternalImport.h"
  #import "FBSDKGamingContext.h"
+ #import "FBSDKGamingServicesCoreKitBasicsImport.h"
 
 // Deeplink url constants
  #define FBSDK_CONTEXT_DIALOG_URL_SCHEME @"https"
