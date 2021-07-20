@@ -171,7 +171,6 @@ targets:
         weak: true
       - sdk: SafariServices.framework
         weak: true
-      - sdk: AdSupport.framework
       - sdk: CoreGraphics.framework
       - sdk: FBSDKCoreKit_Basics.framework
       - sdk: StoreKit.framework
@@ -373,7 +372,6 @@ targets:
       Release: Configurations/FBSDKCoreKit-tvOS-Dynamic.xcconfig
     dependencies:
       - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Dynamic
-      - sdk: AdSupport.framework
       - sdk: CoreGraphics.framework
       - sdk: CoreImage.framework
       - sdk: libz.tbd
