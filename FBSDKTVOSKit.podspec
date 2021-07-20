@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'FBSDKTVOSKit'
-  s.version      = '11.0.1'
+  s.version      = '11.0.2c'
   s.summary      = 'Official Facebook SDK for tvOS to access Facebook Platform with features like Login and Graph API.'
 
   s.description  = <<-DESC
@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
   s.swift_version = '5.0'
 
   s.source       = {
-    git: 'https://github.com/facebook/facebook-ios-sdk.git',
+    git: 'https://github.com/Cambly/facebook-ios-sdk',
     tag: "v#{s.version}"
   }
 
