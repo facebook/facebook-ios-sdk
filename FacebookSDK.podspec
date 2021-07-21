@@ -41,7 +41,12 @@ Pod::Spec.new do |s|
     ss.ios.vendored_framework = 'FBSDKCoreKit_Basics.framework'
     ss.tvos.vendored_framework = 'tv/FBSDKCoreKit_Basics.framework'
   end
+  s.subspec 'AEMKit' do |ss|
+    ss.ios.dependency 'FacebookSDK/Basics'
+    ss.ios.vendored_framework = 'FBAEMKit.framework'
+  end
   s.subspec 'CoreKit' do |ss|
+    ss.ios.dependency 'FacebookSDK/AEMKit'
     ss.ios.dependency 'FacebookSDK/Basics'
     ss.ios.vendored_framework = 'FBSDKCoreKit.framework'
 

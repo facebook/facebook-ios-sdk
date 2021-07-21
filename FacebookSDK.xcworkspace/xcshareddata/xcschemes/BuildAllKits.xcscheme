@@ -28,6 +28,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "96EC9BE57A56F1C89382894F"
+               BuildableName = "FBAEMKit-Universal"
+               BlueprintName = "FBAEMKit-Universal"
+               ReferencedContainer = "container:FBAEMKit/FBAEMKit.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "BA4D3C5299B8A0D66E526A41"
                BuildableName = "FBSDKCoreKit-Universal"
                BlueprintName = "FBSDKCoreKit-Universal"

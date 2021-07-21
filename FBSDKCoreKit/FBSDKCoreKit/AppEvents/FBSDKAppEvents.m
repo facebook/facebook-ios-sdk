@@ -25,7 +25,6 @@
 
 #import <objc/runtime.h>
 
-#import "FBSDKAEMReporter.h"
 #import "FBSDKAccessToken.h"
 #import "FBSDKAdvertiserIDProviding.h"
 #import "FBSDKAppEventsConfiguration.h"
@@ -64,6 +63,7 @@
 
 #if !TARGET_OS_TV
 
+ #import "FBSDKCoreKitAEMImport.h"
  #import "FBSDKEventBindingManager.h"
  #import "FBSDKEventProcessing.h"
  #import "FBSDKHybridAppEventsScriptMessageHandler.h"
@@ -1323,7 +1323,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
       if (@available(iOS 14.0, *)) {
         [g_featureChecker checkFeature:FBSDKFeatureAEM completionBlock:^(BOOL AEMEnabled) {
           if (AEMEnabled) {
-            [FBSDKAEMReporter enable];
+            [FBAEMReporter enable];
           }
         }];
       }
@@ -1364,10 +1364,10 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
                                            value:valueToSum
                                       parameters:parameters];
   // Update conversion value for AEM if needed
-  [FBSDKAEMReporter recordAndUpdateEvent:eventName
-                                currency:[FBSDKTypeUtility dictionary:parameters objectForKey:FBSDKAppEventParameterNameCurrency ofType:NSString.class]
-                                   value:valueToSum
-                              parameters:parameters];
+  [FBAEMReporter recordAndUpdateEvent:eventName
+                             currency:[FBSDKTypeUtility dictionary:parameters objectForKey:FBSDKAppEventParameterNameCurrency ofType:NSString.class]
+                                value:valueToSum
+                           parameters:parameters];
 #endif
 
   if ([FBSDKAppEventsUtility shouldDropAppEvent]) {
