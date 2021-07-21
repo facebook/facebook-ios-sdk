@@ -20,7 +20,6 @@ framework module FBAEMKit {
 
     private header "FBAEMKitVersions.h"
     private header "FBAEMRequestBody.h"
-    private header "FBAEMSettings.h"
     private header "FBAEMNetworker.h"
     private header "FBCoreKitBasicsImportForAEMKit.h"
 }

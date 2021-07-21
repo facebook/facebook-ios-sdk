@@ -16,13 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import "TargetConditionals.h"
+
 #if !TARGET_OS_TV
 
-#if defined FBSDK_SWIFT_PACKAGE
+ #if defined FBSDK_SWIFT_PACKAGE
 @import FBAEMKit;
-#else
- #import <FBAEMKit/FBAEMNetworking.h>
- #import <FBAEMKit/FBAEMReporter.h>
-#endif
+ #else
+  #import <FBAEMKit/FBAEMNetworking.h>
+  #import <FBAEMKit/FBAEMReporter.h>
+ #endif
 
 #endif
