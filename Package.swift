@@ -68,7 +68,15 @@ let package = Package(
         */
         .library(
             name: "FacebookGamingServices",
-            targets: ["FacebookGamingServices", "FBSDKGamingServicesKit"]
+            targets: ["FacebookGamingServices"]
+        ),
+
+        /*
+          The Facebook AEM Kit
+        */
+        .library(
+            name: "FacebookAEM",
+            targets: ["FBAEMKit"]
         )
     ],
     targets: [
@@ -80,12 +88,23 @@ let package = Package(
         ),
 
         /*
+          The kernel of AEM Kit
+        */
+        .target(
+            name: "FBAEMKit",
+            dependencies: ["FBSDKCoreKit_Basics"],
+            cSettings: [
+              .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil))
+            ]
+        ),
+
+        /*
           The legacy Objective-C implementation that will be converted to Swift.
           This will not contain interfaces for new features written in Swift.
         */
         .target(
             name: "LegacyCore",
-            dependencies: ["FBSDKCoreKit_Basics"],
+            dependencies: ["FBSDKCoreKit_Basics", "FBAEMKit"],
             path: "FBSDKCoreKit/FBSDKCoreKit",
             exclude: ["Swift"],
             cSettings: [
