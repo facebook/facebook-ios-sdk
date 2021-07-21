@@ -77,6 +77,15 @@ static const long INACTIVE_SECONDS_QUANTA[] =
 @property (nonnull, nonatomic) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonatomic) NSString *sourceApplication;
 @property (nonatomic) BOOL isOpenedFromAppLink;
+@property BOOL isCurrentlyLoaded;
+@property (nonatomic) NSTimeInterval lastRestoreTime;
+@property (nonatomic) NSTimeInterval secondsSpentInCurrentSession;
+@property (nonatomic) NSTimeInterval timeSinceLastSuspend;
+@property int numInterruptionsInCurrentSession;
+@property (nonatomic) NSString *sessionID;
+@property (nonatomic) NSTimeInterval lastSuspendTime;
+@property BOOL shouldLogActivateEvent;
+@property BOOL shouldLogDeactivateEvent;
 
 @end
 
@@ -91,17 +100,6 @@ static const long INACTIVE_SECONDS_QUANTA[] =
  * interruptions from that previous session as an event parameter.
  */
 @implementation FBSDKTimeSpentData
-{
-  BOOL _isCurrentlyLoaded;
-  BOOL _shouldLogActivateEvent;
-  BOOL _shouldLogDeactivateEvent;
-  NSTimeInterval _secondsSpentInCurrentSession;
-  NSTimeInterval _timeSinceLastSuspend;
-  int _numInterruptionsInCurrentSession;
-  NSTimeInterval _lastRestoreTime;
-  NSTimeInterval _lastSuspendTime;
-  NSString *_sessionID;
-}
 
 - (instancetype)initWithEventLogger:(id<FBSDKEventLogging>)eventLogger
         serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
@@ -114,25 +112,23 @@ static const long INACTIVE_SECONDS_QUANTA[] =
   return self;
 }
 
-- (void)ensureOnMainThread:(NSString *)methodName className:(NSString *)className
-{
-  if (!NSThread.isMainThread) {
-    NSString *msg = [NSString stringWithFormat:@"*** <%@, %@> is not called on the main thread. This can lead to errors.", methodName, className];
-    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:msg];
-  }
-}
-
 // Calculate and persist time spent data for this instance of the app activation.
 - (void)suspend
 {
-  [self ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
-  if (!_isCurrentlyLoaded) {
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [self suspendTimeSpentData];
+  });
+}
+
+- (void)suspendTimeSpentData
+{
+  if (!self.isCurrentlyLoaded) {
     FBSDKConditionalLog(YES, FBSDKLoggingBehaviorInformational, @"[FBSDKTimeSpentData suspend] invoked without corresponding restore");
     return;
   }
 
   NSTimeInterval now = round([NSDate date].timeIntervalSince1970);
-  NSTimeInterval timeSinceRestore = now - _lastRestoreTime;
+  NSTimeInterval timeSinceRestore = now - self.lastRestoreTime;
 
   // Can happen if the clock on the device is changed
   if (timeSinceRestore < 0) {
@@ -141,14 +137,14 @@ static const long INACTIVE_SECONDS_QUANTA[] =
     timeSinceRestore = 0;
   }
 
-  _secondsSpentInCurrentSession += timeSinceRestore;
+  self.secondsSpentInCurrentSession += timeSinceRestore;
 
   NSDictionary *timeSpentData =
   @{
-    FBSDKTimeSpentPersistKeySessionSecondsSpent : @(_secondsSpentInCurrentSession),
-    FBSDKTimeSpentPersistKeySessionNumInterruptions : @(_numInterruptionsInCurrentSession),
+    FBSDKTimeSpentPersistKeySessionSecondsSpent : @(self.secondsSpentInCurrentSession),
+    FBSDKTimeSpentPersistKeySessionNumInterruptions : @(self.numInterruptionsInCurrentSession),
     FBSDKTimeSpentPersistKeyLastSuspendTime : @(now),
-    FBSDKTimeSpentPersistKeySessionID : _sessionID,
+    FBSDKTimeSpentPersistKeySessionID : self.sessionID,
   };
 
   NSString *content = [FBSDKBasicUtility JSONStringForObject:timeSpentData error:NULL invalidObjectHandler:NULL];
@@ -162,7 +158,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
   [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
                          logEntry:msg];
 
-  _isCurrentlyLoaded = NO;
+  self.isCurrentlyLoaded = NO;
 }
 
 // Called during activation - either through an explicit 'activateApp' call or implicitly when the app is foregrounded.
@@ -170,11 +166,16 @@ static const long INACTIVE_SECONDS_QUANTA[] =
 // event if there's been enough time between the last deactivation and now.
 - (void)restore:(BOOL)calledFromActivateApp
 {
-  [self ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [self restoreTimeSpendDataWithCalledFromActivateApp:calledFromActivateApp];
+  });
+}
 
+- (void)restoreTimeSpendDataWithCalledFromActivateApp:(BOOL)isCalledFromActivateApp
+{
   // It's possible to call this multiple times during the time the app is in the foreground.  If this is the case,
   // just restore persisted data the first time.
-  if (!_isCurrentlyLoaded) {
+  if (!self.isCurrentlyLoaded) {
     NSTimeInterval now = round([NSDate date].timeIntervalSince1970);
     NSString *content =
     [[NSString alloc] initWithContentsOfFile:[FBSDKBasicUtility persistenceFilePath:FBSDKTimeSpentFilename]
@@ -183,52 +184,52 @@ static const long INACTIVE_SECONDS_QUANTA[] =
 
     if (!content) {
       // Nothing persisted, so this is the first launch.
-      _sessionID = [NSUUID UUID].UUIDString;
-      _secondsSpentInCurrentSession = 0;
-      _numInterruptionsInCurrentSession = 0;
-      _lastSuspendTime = 0;
+      self.sessionID = [NSUUID UUID].UUIDString;
+      self.secondsSpentInCurrentSession = 0;
+      self.numInterruptionsInCurrentSession = 0;
+      self.lastSuspendTime = 0;
 
       // We want to log the app activation event on the first launch, but not the deactivate event
-      _shouldLogActivateEvent = YES;
-      _shouldLogDeactivateEvent = NO;
+      self.shouldLogActivateEvent = YES;
+      self.shouldLogDeactivateEvent = NO;
     } else {
       NSDictionary<id, id> *results = [FBSDKBasicUtility objectForJSONString:content error:NULL];
 
-      _lastSuspendTime = [results[FBSDKTimeSpentPersistKeyLastSuspendTime] longValue];
+      self.lastSuspendTime = [results[FBSDKTimeSpentPersistKeyLastSuspendTime] longValue];
 
-      _timeSinceLastSuspend = now - _lastSuspendTime;
-      _secondsSpentInCurrentSession = [results[FBSDKTimeSpentPersistKeySessionSecondsSpent] intValue];
-      _sessionID = results[FBSDKTimeSpentPersistKeySessionID] ?: [NSUUID UUID].UUIDString;
-      _numInterruptionsInCurrentSession = [results[FBSDKTimeSpentPersistKeySessionNumInterruptions] intValue];
-      _shouldLogActivateEvent = (_timeSinceLastSuspend > [[self.serverConfigurationProvider cachedServerConfiguration] sessionTimoutInterval]);
+      self.timeSinceLastSuspend = now - self.lastSuspendTime;
+      self.secondsSpentInCurrentSession = [results[FBSDKTimeSpentPersistKeySessionSecondsSpent] intValue];
+      self.sessionID = results[FBSDKTimeSpentPersistKeySessionID] ?: [NSUUID UUID].UUIDString;
+      self.numInterruptionsInCurrentSession = [results[FBSDKTimeSpentPersistKeySessionNumInterruptions] intValue];
+      self.shouldLogActivateEvent = (self.timeSinceLastSuspend > [[self.serverConfigurationProvider cachedServerConfiguration] sessionTimoutInterval]);
 
       // Other than the first launch, we always log the last session's deactivate with this session's activate.
-      _shouldLogDeactivateEvent = _shouldLogActivateEvent;
+      self.shouldLogDeactivateEvent = self.shouldLogActivateEvent;
 
-      if (!_shouldLogDeactivateEvent) {
+      if (!self.shouldLogDeactivateEvent) {
         // If we're not logging, then the time we spent deactivated is considered another interruption.  But cap it
         // so errant or test uses doesn't blow out the cardinality on the backend processing
-        _numInterruptionsInCurrentSession = MIN(_numInterruptionsInCurrentSession + 1, 200);
+        self.numInterruptionsInCurrentSession = MIN(self.numInterruptionsInCurrentSession + 1, 200);
       }
     }
 
-    _lastRestoreTime = now;
-    _isCurrentlyLoaded = YES;
+    self.lastRestoreTime = now;
+    self.isCurrentlyLoaded = YES;
 
-    if (calledFromActivateApp) {
+    if (isCalledFromActivateApp) {
       // It's important to log deactivate first to reset sessionID
-      if (_shouldLogDeactivateEvent) {
+      if (self.shouldLogDeactivateEvent) {
         [self.eventLogger logEvent:FBSDKAppEventNameDeactivatedApp
-                        valueToSum:_secondsSpentInCurrentSession
+                        valueToSum:self.secondsSpentInCurrentSession
                         parameters:[self appEventsParametersForDeactivate]];
 
         // We've logged the session stats, now reset.
-        _secondsSpentInCurrentSession = 0;
-        _numInterruptionsInCurrentSession = 0;
-        _sessionID = [NSUUID UUID].UUIDString;
+        self.secondsSpentInCurrentSession = 0;
+        self.numInterruptionsInCurrentSession = 0;
+        self.sessionID = [NSUUID UUID].UUIDString;
       }
 
-      if (_shouldLogActivateEvent) {
+      if (self.shouldLogActivateEvent) {
         [self.eventLogger logEvent:FBSDKAppEventNameActivatedApp
                         parameters:[self appEventsParametersForActivate]];
         // Unless the behavior is set to only allow explicit flushing, we go ahead and flush. App launch
@@ -245,7 +246,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
 {
   return @{
     FBSDKAppEventParameterLaunchSource : [self getSourceApplication],
-    FBSDKAppEventParameterNameSessionID : _sessionID,
+    FBSDKAppEventParameterNameSessionID : self.sessionID,
   };
 }
 
@@ -256,10 +257,10 @@ static const long INACTIVE_SECONDS_QUANTA[] =
     quantaIndex++;
   }
 
-  NSMutableDictionary *params = [@{ FBSDKAppEventParameterNameSessionInterruptions : @(_numInterruptionsInCurrentSession),
+  NSMutableDictionary *params = [@{ FBSDKAppEventParameterNameSessionInterruptions : @(self.numInterruptionsInCurrentSession),
                                     FBSDKAppEventParameterNameTimeBetweenSessions : [NSString stringWithFormat:@"session_quanta_%d", quantaIndex],
                                     FBSDKAppEventParameterLaunchSource : [self getSourceApplication],
-                                    FBSDKAppEventParameterNameSessionID : _sessionID ?: @"", } mutableCopy];
+                                    FBSDKAppEventParameterNameSessionID : self.sessionID ?: @"", } mutableCopy];
   if (_lastSuspendTime) {
     [FBSDKTypeUtility dictionary:params setObject:@(_lastSuspendTime) forKey:@"_logTime"];
   }
