@@ -16,11 +16,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import FBAEMKit
 import XCTest
 
 #if !os(tvOS)
 
-class FBSDKAEMEventTests: XCTestCase {
+class FBAEMEventTests: XCTestCase {
 
     enum Keys {
         static let eventName = "event_name"
@@ -51,7 +52,7 @@ class FBSDKAEMEventTests: XCTestCase {
           ]
         ]
     ]
-    var validEventWithValues: FBSDKAEMEvent? = FBSDKAEMEvent(json: [
+    var validEventWithValues: FBAEMEvent? = FBAEMEvent(json: [
         Keys.eventName: Values.purchase,
         Keys.values: [
           [
@@ -65,7 +66,7 @@ class FBSDKAEMEventTests: XCTestCase {
         ]
     ])
 
-    var validEventWithoutValues: FBSDKAEMEvent? = FBSDKAEMEvent(json: [
+    var validEventWithoutValues: FBAEMEvent? = FBAEMEvent(json: [
         Keys.eventName: Values.purchase,
     ])
 
@@ -99,7 +100,7 @@ class FBSDKAEMEventTests: XCTestCase {
 
     func testInvalidCases() {
       var invalidData: [String: Any] = [:]
-      XCTAssertNil(FBSDKAEMEvent(json: invalidData))
+      XCTAssertNil(FBAEMEvent(json: invalidData))
       invalidData = [
         Keys.values: [
           [
@@ -112,7 +113,7 @@ class FBSDKAEMEventTests: XCTestCase {
           ]
         ]
       ]
-      XCTAssertNil(FBSDKAEMEvent(json: invalidData))
+      XCTAssertNil(FBAEMEvent(json: invalidData))
       invalidData = [
         Keys.eventName: Values.purchase,
         Keys.values: [
@@ -126,7 +127,7 @@ class FBSDKAEMEventTests: XCTestCase {
           ]
         ]
       ]
-      XCTAssertNil(FBSDKAEMEvent(json: invalidData))
+      XCTAssertNil(FBAEMEvent(json: invalidData))
         invalidData = [
           Keys.eventName: [Values.purchase, Values.subscribe],
           Keys.values: [
@@ -140,20 +141,20 @@ class FBSDKAEMEventTests: XCTestCase {
             ]
           ]
         ]
-        XCTAssertNil(FBSDKAEMEvent(json: invalidData))
+        XCTAssertNil(FBAEMEvent(json: invalidData))
     }
 
     func testParsing() {
         (1 ... 100).forEach { _ in
             if let data = (Fuzzer.randomize(json: self.sampleData) as? [String: Any]) {
-                _ = FBSDKAEMEvent(json: data)
+                _ = FBAEMEvent(json: data)
             }
         }
     }
 
     func testSecureCoding() {
       XCTAssertTrue(
-        FBSDKAEMEvent.supportsSecureCoding,
+        FBAEMEvent.supportsSecureCoding,
         "AEM Events should support secure coding"
       )
     }
@@ -193,7 +194,7 @@ class FBSDKAEMEventTests: XCTestCase {
 
     func testDecoding() {
       let decoder = TestCoder()
-      _ = FBSDKAEMEvent(coder: decoder)
+      _ = FBAEMEvent(coder: decoder)
 
       XCTAssertTrue(
         decoder.decodedObject[Keys.eventName] is NSString.Type,

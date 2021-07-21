@@ -16,9 +16,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import FBAEMKit
 import XCTest
 
-class FBSDKAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_length
+class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_length
 
     enum Keys {
         static let campaignID = "campaign_ids"

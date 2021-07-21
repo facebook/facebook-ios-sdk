@@ -88,7 +88,7 @@ let package = Package(
         ),
 
         /*
-          The kernel of AEM Kit
+          The AEM Kit
         */
         .target(
             name: "FBAEMKit",

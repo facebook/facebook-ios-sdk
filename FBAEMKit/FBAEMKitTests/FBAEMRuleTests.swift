@@ -16,11 +16,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import FBAEMKit
 import XCTest
 
 #if !os(tvOS)
 
-class FBSDKAEMRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
+class FBAEMRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
 
   enum Keys {
       static let conversionValue = "conversion_value"
@@ -58,7 +59,7 @@ class FBSDKAEMRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
     ],
   ]
 
-  var validRule: FBSDKAEMRule? = FBSDKAEMRule(json: [
+  var validRule: FBAEMRule? = FBAEMRule(json: [
     Keys.conversionValue: 10,
     Keys.priority: 7,
     Keys.events: [
@@ -88,7 +89,7 @@ class FBSDKAEMRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
       ],
     ]
 
-    guard let rule = FBSDKAEMRule(json: validData) else { return XCTFail("Unwraping Error") }
+    guard let rule = FBAEMRule(json: validData) else { return XCTFail("Unwraping Error") }
     XCTAssertEqual(2, rule.conversionValue)
     XCTAssertEqual(10, rule.priority)
     XCTAssertEqual(2, rule.events.count)
@@ -103,7 +104,7 @@ class FBSDKAEMRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
   }
 
   func testValidCase2() {
-    guard let rule = FBSDKAEMRule(json: self.sampleData) else { return XCTFail("Unwraping Error") }
+    guard let rule = FBAEMRule(json: self.sampleData) else { return XCTFail("Unwraping Error") }
     XCTAssertEqual(2, rule.conversionValue)
     XCTAssertEqual(7, rule.priority)
     XCTAssertEqual(1, rule.events.count)
@@ -115,13 +116,13 @@ class FBSDKAEMRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
 
   func testInvalidCases() {
     var invalidData: [String: Any] = [:]
-    XCTAssertNil(FBSDKAEMRule(json: invalidData))
+    XCTAssertNil(FBAEMRule(json: invalidData))
 
     invalidData = [Keys.conversionValue: 2]
-    XCTAssertNil(FBSDKAEMRule(json: invalidData))
+    XCTAssertNil(FBAEMRule(json: invalidData))
 
     invalidData = [Keys.priority: 7]
-    XCTAssertNil(FBSDKAEMRule(json: invalidData))
+    XCTAssertNil(FBAEMRule(json: invalidData))
 
     invalidData = [
       Keys.events: [
@@ -136,7 +137,7 @@ class FBSDKAEMRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
         ],
       ],
     ]
-    XCTAssertNil(FBSDKAEMRule(json: invalidData))
+    XCTAssertNil(FBAEMRule(json: invalidData))
 
     invalidData = [
       Keys.conversionValue: 2,
@@ -152,7 +153,7 @@ class FBSDKAEMRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
         ],
       ],
     ]
-    XCTAssertNil(FBSDKAEMRule(json: invalidData))
+    XCTAssertNil(FBAEMRule(json: invalidData))
 
     invalidData = [
       Keys.priority: 2,
@@ -168,20 +169,20 @@ class FBSDKAEMRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
         ],
       ],
     ]
-    XCTAssertNil(FBSDKAEMRule(json: invalidData))
+    XCTAssertNil(FBAEMRule(json: invalidData))
   }
 
   func testParsing() {
     (1 ... 100).forEach { _ in
       if let data = (Fuzzer.randomize(json: self.sampleData) as? [String: Any]) {
-        _ = FBSDKAEMRule(json: data)
+        _ = FBAEMRule(json: data)
       }
     }
   }
 
   func testSecureCoding() {
     XCTAssertTrue(
-      FBSDKAEMRule.supportsSecureCoding,
+      FBAEMRule.supportsSecureCoding,
       "AEM Rule should support secure coding"
     )
   }
@@ -204,7 +205,7 @@ class FBSDKAEMRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
       "Should encode the expected priority with the correct key"
     )
     XCTAssertEqual(
-      coder.encodedObject[Keys.events] as? [FBSDKAEMEvent],
+      coder.encodedObject[Keys.events] as? [FBAEMEvent],
       rule?.events,
       "Should encode the expected events with the correct key"
     )
@@ -212,7 +213,7 @@ class FBSDKAEMRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
 
   func testDecoding() {
     let decoder = TestCoder()
-    _ = FBSDKAEMRule(coder: decoder)
+    _ = FBAEMRule(coder: decoder)
 
     XCTAssertEqual(
       decoder.decodedObject[Keys.conversionValue] as? String,
@@ -226,13 +227,13 @@ class FBSDKAEMRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
     )
     XCTAssertEqual(
       decoder.decodedObject[Keys.events] as? NSSet,
-      [NSArray.self, FBSDKAEMEvent.self],
+      [NSArray.self, FBAEMEvent.self],
       "Should decode the expected type for the events key"
     )
   }
 
   func testRuleMatch() {
-    guard let rule = FBSDKAEMRule(json: [
+    guard let rule = FBAEMRule(json: [
       Keys.conversionValue: 10,
       Keys.priority: 7,
       Keys.events: [
@@ -284,7 +285,7 @@ class FBSDKAEMRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
   }
 
   func testRuleMatchWithEventBundle() {
-    guard let rule = FBSDKAEMRule(json: [
+    guard let rule = FBAEMRule(json: [
       Keys.conversionValue: 10,
       Keys.priority: 7,
       Keys.events: [
@@ -338,7 +339,7 @@ class FBSDKAEMRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
   }
 
   func testRuleMatchWithoutValue() {
-    guard let rule = FBSDKAEMRule(json: [
+    guard let rule = FBAEMRule(json: [
       Keys.conversionValue: 10,
       Keys.priority: 7,
       Keys.events: [

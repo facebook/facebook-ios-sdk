@@ -16,6 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import FBAEMKit
 import XCTest
 
 #if !os(tvOS)
@@ -224,21 +225,21 @@ class AEMConfigurationTests: XCTestCase { // swiftlint:disable:this type_body_le
   }
 
   func testGetEventSet() {
-    guard let parsedRules: [FBSDKAEMRule] = AEMConfiguration.parseRules(rulesData)
+    guard let parsedRules: [FBAEMRule] = AEMConfiguration.parseRules(rulesData)
       else { return XCTFail("Unwrapping Error") }
     let eventSet = AEMConfiguration.getEventSet(from: parsedRules)
     XCTAssertEqual(eventSet, [Values.purchase, Values.donate], "Should get the expected event set")
   }
 
   func testGetCurrencySet() {
-    guard let parsedRules: [FBSDKAEMRule] = AEMConfiguration.parseRules(rulesData)
+    guard let parsedRules: [FBAEMRule] = AEMConfiguration.parseRules(rulesData)
       else { return XCTFail("Unwrapping Error") }
     let eventSet = AEMConfiguration.getCurrencySet(from: parsedRules)
     XCTAssertEqual(eventSet, [Values.USD, Values.JPY], "Should get the expected event set")
   }
 
   func testParseRules() {
-    let parsedRules: [FBSDKAEMRule]? = AEMConfiguration.parseRules(rulesData)
+    let parsedRules: [FBAEMRule]? = AEMConfiguration.parseRules(rulesData)
     XCTAssertEqual(
       parsedRules?[0].priority, 15, "Shoule parse the rules in descending priority order"
     )
@@ -360,11 +361,11 @@ class AEMConfigurationTests: XCTestCase { // swiftlint:disable:this type_body_le
       "Should encode the expected business_id with the correct key"
     )
     XCTAssertTrue(
-      coder.encodedObject[Keys.paramRule] is FBSDKAEMAdvertiserRuleMatching,
+      coder.encodedObject[Keys.paramRule] is FBAEMAdvertiserRuleMatching,
       "Should encode the expected param_rule with the correct key"
     )
     XCTAssertEqual(
-      coder.encodedObject[Keys.conversionValueRules] as? [FBSDKAEMRule],
+      coder.encodedObject[Keys.conversionValueRules] as? [FBAEMRule],
       config?.conversionValueRules,
       "Should encode the expected conversion_value_rules with the correct key"
     )
@@ -403,7 +404,7 @@ class AEMConfigurationTests: XCTestCase { // swiftlint:disable:this type_body_le
     )
     XCTAssertEqual(
       decoder.decodedObject[Keys.conversionValueRules] as? NSSet,
-      [NSArray.self, FBSDKAEMEvent.self, FBSDKAEMRule.self],
+      [NSArray.self, FBAEMEvent.self, FBAEMRule.self],
       "Should decode the expected type for the conversion_value_rules key"
     )
   }

@@ -3,4 +3,24 @@ framework module FBAEMKit {
 
     export *
     module * { export * }
+
+    header "FBAEMKit.h"
+    header "FBAEMReporter.h"
+    header "FBAEMNetworking.h"
+    header "FBAEMAdvertiserMultiEntryRule.h"
+    header "FBAEMAdvertiserRuleFactory.h"
+    header "FBAEMAdvertiserRuleMatching.h"
+    header "FBAEMAdvertiserRuleOperator.h"
+    header "FBAEMAdvertiserRuleProviding.h"
+    header "FBAEMAdvertiserSingleEntryRule.h"
+    header "FBAEMConfiguration.h"
+    header "FBAEMEvent.h"
+    header "FBAEMInvocation.h"
+    header "FBAEMRule.h"
+
+    private header "FBAEMKitVersions.h"
+    private header "FBAEMRequestBody.h"
+    private header "FBAEMSettings.h"
+    private header "FBAEMNetworker.h"
+    private header "FBCoreKitBasicsImportForAEMKit.h"
 }

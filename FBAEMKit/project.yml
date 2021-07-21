@@ -21,6 +21,8 @@ name: FBAEMKit
 projectReferences:
   FBSDKCoreKit_Basics:
     path: ../FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcodeproj
+  TestTools:
+    path: ../TestTools/TestTools.xcodeproj
 
 options:
   deploymentTarget:
@@ -76,6 +78,19 @@ targets:
       Release: Configurations/FBAEMKit-Dynamic.xcconfig
     settings:
       PRODUCT_NAME: FBAEMKit
+  FBAEMKitTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - FBAEMKitTests
+    configFiles:
+      Debug: Configurations/FBAEMKitTests.xcconfig
+      Release: Configurations/FBAEMKitTests.xcconfig
+    dependencies:
+      - target: FBAEMKit-Dynamic
+      - target: TestTools/TestTools
+        link: false
+        embed: false
 
 aggregateTargets:
   FBAEMKit-Universal:
@@ -101,3 +116,7 @@ schemes:
     build:
       targets:
         FBAEMKit-Dynamic: all
+    test:
+      targets: [FBAEMKitTests]
+      coverageTargets:
+        - FBAEMKit-Dynamic

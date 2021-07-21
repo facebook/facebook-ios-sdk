@@ -16,11 +16,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import FBAEMKit
 import XCTest
 
 #if !os(tvOS)
 
-class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
+class FBAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
 
   enum Keys {
       static let ruleOperator = "operator"
@@ -32,7 +33,7 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:
 
   func testIsMatchedWithEventParameters() {
     var rule = AEMAdvertiserSingleEntryRule(
-      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorContains,
+      with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorContains,
       paramKey: "fb_content.title",
       linguisticCondition: "hello",
       numericalCondition: nil,
@@ -55,7 +56,7 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:
       "Should not expect the event parameter matched with the rule"
     )
 
-    rule.setOperator(AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorNotEqual)
+    rule.setOperator(AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorNotEqual)
     XCTAssertTrue(
       rule.isMatchedEventParameters(["fb_content": ["title": "helloworld"]]),
       "Should expect the event parameter matched with the rule"
@@ -66,7 +67,7 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:
     )
 
     rule = AEMAdvertiserSingleEntryRule(
-      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorGreaterThan,
+      with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorGreaterThan,
       paramKey: "fb_content.product1.quantity",
       linguisticCondition: nil,
       numericalCondition: NSNumber(value: 10),
@@ -84,7 +85,7 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:
 
   func testIsMatchedWithEventParametersForAsteriskOperator() {
     let rule = AEMAdvertiserSingleEntryRule(
-      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorContains,
+      with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorContains,
       paramKey: "fb_content[*].id",
       linguisticCondition: "coffee",
       numericalCondition: nil,
@@ -107,7 +108,7 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:
 
   func testIsMatchedWithEventParametersAndAsterisk() {
     let rule = AEMAdvertiserSingleEntryRule(
-      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorContains,
+      with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorContains,
       paramKey: "fb_content[*].title",
       linguisticCondition: "hello",
       numericalCondition: nil,
@@ -133,7 +134,7 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:
 
   func testIsMatchedWithAsteriskParam() {
     let rule = AEMAdvertiserSingleEntryRule(
-      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorContains,
+      with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorContains,
       paramKey: "fb_content[*].title",
       linguisticCondition: "hello",
       numericalCondition: nil,
@@ -176,7 +177,7 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:
 
   func testIsMatchedWithStringComparision() { // swiftlint:disable:this function_body_length
     let rule = AEMAdvertiserSingleEntryRule(
-      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorContains,
+      with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorContains,
       paramKey: "fb_content.title",
       linguisticCondition: "hello",
       numericalCondition: nil,
@@ -191,7 +192,7 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:
       "Shoule not expect parameter matched with the value"
     )
 
-    rule.setOperator(AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorNotContains)
+    rule.setOperator(AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorNotContains)
     XCTAssertFalse(
       rule.isMatched(withStringValue: "worldhelloworld", numericalValue: nil),
       "Shoule not expect parameter matched with the value"
@@ -201,7 +202,7 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:
       "Shoule expect parameter matched with the value"
     )
 
-    rule.setOperator(AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorStartsWith)
+    rule.setOperator(AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorStartsWith)
     XCTAssertTrue(
       rule.isMatched(withStringValue: "helloworld", numericalValue: nil),
       "Shoule expect parameter matched with the value"
@@ -211,7 +212,7 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:
       "Shoule not expect parameter matched with the value"
     )
 
-    rule.setOperator(AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorI_Contains)
+    rule.setOperator(AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorI_Contains)
     XCTAssertTrue(
       rule.isMatched(withStringValue: "worldHELLOworld", numericalValue: nil),
       "Shoule expect parameter matched with the value"
@@ -221,7 +222,7 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:
       "Shoule not expect parameter matched with the value"
     )
 
-    rule.setOperator(AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorI_NotContains)
+    rule.setOperator(AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorI_NotContains)
     XCTAssertFalse(
       rule.isMatched(withStringValue: "worldHELLOworld", numericalValue: nil),
       "Shoule not expect parameter matched with the value"
@@ -231,7 +232,7 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:
       "Shoule expect parameter matched with the value"
     )
 
-    rule.setOperator(AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorI_StartsWith)
+    rule.setOperator(AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorI_StartsWith)
     XCTAssertTrue(
       rule.isMatched(withStringValue: "HELLOworld", numericalValue: nil),
       "Shoule expect parameter matched with the value"
@@ -241,7 +242,7 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:
       "Shoule not expect parameter matched with the value"
     )
 
-    rule.setOperator(AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorEqual)
+    rule.setOperator(AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorEqual)
     XCTAssertTrue(
       rule.isMatched(withStringValue: "hello", numericalValue: nil),
       "Shoule expect parameter matched with the value"
@@ -251,7 +252,7 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:
       "Shoule not expect parameter matched with the value"
     )
 
-    rule.setOperator(AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorNotEqual)
+    rule.setOperator(AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorNotEqual)
     XCTAssertFalse(
       rule.isMatched(withStringValue: "hello", numericalValue: nil),
       "Shoule not expect parameter matched with the value"
@@ -264,7 +265,7 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:
 
   func testIsMatchedWithNumberComparision() { // swiftlint:disable:this function_body_length
     let rule = AEMAdvertiserSingleEntryRule(
-      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorLessThan,
+      with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorLessThan,
       paramKey: "fb_content.title",
       linguisticCondition: nil,
       numericalCondition: NSNumber(value: 100),
@@ -283,7 +284,7 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:
       "Shoule not expect parameter matched with value"
     )
 
-    rule.setOperator(AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorLessThanOrEqual)
+    rule.setOperator(AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorLessThanOrEqual)
     XCTAssertTrue(
       rule.isMatched(withStringValue: nil, numericalValue: NSNumber(value: 99)),
       "Shoule expect parameter matched with value"
@@ -297,7 +298,7 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:
       "Shoule not expect parameter matched with value"
     )
 
-    rule.setOperator(AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorGreaterThan)
+    rule.setOperator(AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorGreaterThan)
     XCTAssertTrue(
       rule.isMatched(withStringValue: nil, numericalValue: NSNumber(value: 101.5)),
       "Shoule expect parameter matched with value"
@@ -311,7 +312,7 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:
       "Shoule not expect parameter matched with value"
     )
 
-    rule.setOperator(AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorGreaterThanOrEqual)
+    rule.setOperator(AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorGreaterThanOrEqual)
     XCTAssertTrue(
       rule.isMatched(withStringValue: nil, numericalValue: NSNumber(value: 101.5)),
       "Shoule expect parameter matched with value"
@@ -328,7 +329,7 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:
 
   func testIsMatchedWithArrayComparision() {
     let rule = AEMAdvertiserSingleEntryRule(
-      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorIsAny,
+      with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorIsAny,
       paramKey: "fb_content.title",
       linguisticCondition: nil,
       numericalCondition: nil,
@@ -343,19 +344,19 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:
       "Shoule not expect parameter matched with item in the array"
     )
 
-    rule.setOperator(AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorI_IsAny)
+    rule.setOperator(AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorI_IsAny)
     XCTAssertTrue(
       rule.isMatched(withStringValue: "abc", numericalValue: nil),
       "Shoule expect parameter matched with item in the array"
     )
 
-    rule.setOperator(AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorIsNotAny)
+    rule.setOperator(AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorIsNotAny)
     XCTAssertTrue(
       rule.isMatched(withStringValue: "xxxx", numericalValue: nil),
       "Shoule expect parameter matched with item in the array"
     )
 
-    rule.setOperator(AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorI_IsNotAny)
+    rule.setOperator(AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorI_IsNotAny)
     XCTAssertTrue(
       rule.isMatched(withStringValue: "ab", numericalValue: nil),
       "Shoule expect parameter matched with item in the array"
@@ -364,7 +365,7 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:
 
   func testIsRegexMatch() {
     let rule = AEMAdvertiserSingleEntryRule(
-      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorIsAny,
+      with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorIsAny,
       paramKey: "fb_content.title",
       linguisticCondition: "eylea.us/support/?$|eylea.us/support/?",
       numericalCondition: nil,
@@ -382,7 +383,7 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:
 
   func testIsRegexMatchWithEmtpyString() {
     let rule = AEMAdvertiserSingleEntryRule(
-      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorIsAny,
+      with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorIsAny,
       paramKey: "fb_content.title",
       linguisticCondition: "",
       numericalCondition: nil,
@@ -396,7 +397,7 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:
 
   func testIsRegexMatchWithNullableString() {
     let rule = AEMAdvertiserSingleEntryRule(
-      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorIsAny,
+      with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorIsAny,
       paramKey: "fb_content.title",
       linguisticCondition: nil,
       numericalCondition: nil,
@@ -410,7 +411,7 @@ class FBSDKAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:
 
   func testIsAnyOf() {
     let rule = AEMAdvertiserSingleEntryRule(
-      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorIsAny,
+      with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorIsAny,
       paramKey: "fb_content.title",
       linguisticCondition: nil,
       numericalCondition: nil,

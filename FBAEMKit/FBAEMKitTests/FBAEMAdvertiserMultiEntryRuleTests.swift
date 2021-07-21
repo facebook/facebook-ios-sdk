@@ -16,11 +16,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import FBAEMKit
 import XCTest
 
 #if !os(tvOS)
 
-class FBSDKAEMAdvertiserMultiEntryRuleTests: XCTestCase {
+class FBAEMAdvertiserMultiEntryRuleTests: XCTestCase {
 
   enum Keys {
       static let ruleOperator = "operator"
@@ -29,7 +30,7 @@ class FBSDKAEMAdvertiserMultiEntryRuleTests: XCTestCase {
 
   func testIsMatchedEventParametersForAnd() {
     let rule = AEMAdvertiserMultiEntryRule(
-      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorAnd,
+      with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorAnd,
       rules: [SampleAEMSingleEntryRules.cardTypeRule1, SampleAEMSingleEntryRules.valueRule]
     )
     XCTAssertTrue(
@@ -63,7 +64,7 @@ class FBSDKAEMAdvertiserMultiEntryRuleTests: XCTestCase {
 
   func testIsMatchedEventParametersForOr() {
     let rule = AEMAdvertiserMultiEntryRule(
-      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorOr,
+      with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorOr,
       rules: [SampleAEMSingleEntryRules.cardTypeRule1, SampleAEMSingleEntryRules.valueRule]
     )
     XCTAssertFalse(
@@ -97,7 +98,7 @@ class FBSDKAEMAdvertiserMultiEntryRuleTests: XCTestCase {
 
   func testIsMatchedEventParametersForNot() {
     let rule = AEMAdvertiserMultiEntryRule(
-      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorNot,
+      with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorNot,
       rules: [SampleAEMSingleEntryRules.cardTypeRule1, SampleAEMSingleEntryRules.valueRule]
     )
     XCTAssertTrue(
@@ -131,15 +132,15 @@ class FBSDKAEMAdvertiserMultiEntryRuleTests: XCTestCase {
 
   func testIsMatchedEventParametersForNestedRules() {
     let andRule = AEMAdvertiserMultiEntryRule(
-      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorAnd,
+      with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorAnd,
       rules: [SampleAEMSingleEntryRules.cardTypeRule2, SampleAEMSingleEntryRules.valueRule]
     )
     let orRule = AEMAdvertiserMultiEntryRule(
-      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorOr,
+      with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorOr,
       rules: [SampleAEMSingleEntryRules.contentNameRule, SampleAEMSingleEntryRules.contentCategoryRule]
     )
     let nestedRule = AEMAdvertiserMultiEntryRule(
-      with: AEMAdvertiserRuleOperator.FBSDKAEMAdvertiserRuleOperatorAnd,
+      with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorAnd,
       rules: [andRule, orRule, SampleAEMSingleEntryRules.urlRule]
     )
     XCTAssertTrue(
@@ -195,7 +196,7 @@ class FBSDKAEMAdvertiserMultiEntryRuleTests: XCTestCase {
       entryRule.operator.rawValue,
       "Should encode the expected operator with the correct key"
     )
-    let rules = try XCTUnwrap(coder.encodedObject[Keys.rules] as? [FBSDKAEMAdvertiserRuleMatching])
+    let rules = try XCTUnwrap(coder.encodedObject[Keys.rules] as? [FBAEMAdvertiserRuleMatching])
     let rule = try XCTUnwrap(rules[0] as? AEMAdvertiserSingleEntryRule)
     let expectedRule = try XCTUnwrap(entryRule.rules[0] as? AEMAdvertiserSingleEntryRule)
     XCTAssertEqual(
