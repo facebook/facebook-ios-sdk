@@ -20,7 +20,6 @@
 #import <AdSupport/AdSupport.h>
 
 #import "FBSDKAdvertisingTrackingStatus.h"
-#import "AEM+Testing.h"
 #import "ApplicationDelegate+Testing.h"
 #import "AppEventsAtePublisher+Testing.h"
 #import "BackgroundEventLogger+Testing.h"

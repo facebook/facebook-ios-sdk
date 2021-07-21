@@ -29,6 +29,7 @@
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKApplicationDelegate.h"
 #import "FBSDKConstants.h"
+#import "FBSDKCoreKitAEMImport.h"
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKGateKeeperManager.h"
 #import "FBSDKGraphRequestProtocol.h"
@@ -1188,7 +1189,6 @@
 - (void)testFetchingConfigurationIncludingAEM
 {
   if (@available(iOS 14.0, *)) {
-    FBSDKAEMReporter.isEnabled = NO;
     [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
     TestAppEventsConfigurationProvider.capturedBlock();
     TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);

@@ -36,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FBSDKSourceApplicationTracking;
 @protocol FBSDKProfileProviding;
 @protocol FBSDKTimeSpentRecording;
+@protocol FBSDKDataPersisting;
 @class FBSDKAccessTokenExpirer;
 
 @interface FBSDKApplicationDelegate (Testing)

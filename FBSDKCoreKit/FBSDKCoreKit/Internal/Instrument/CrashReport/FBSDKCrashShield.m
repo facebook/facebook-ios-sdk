@@ -76,15 +76,15 @@ static id<FBSDKSettings> _settings;
   if (self == [FBSDKCrashShield class]) {
     _featureMapping =
     @{
-      @"AEM" : @ [
-        @"FBSDKAEMConfiguration",
-        @"FBSDKAEMEvent",
-        @"FBSDKAEMInvocation",
-        @"FBSDKAEMReporter",
-        @"FBSDKAEMRule",
-      ],
       @"AAM" : @[
         @"FBSDKMetadataIndexer",
+      ],
+      @"AEM" : @ [
+        @"FBAEMConfiguration",
+        @"FBAEMEvent",
+        @"FBAEMInvocation",
+        @"FBAEMReporter",
+        @"FBAEMRule",
       ],
       @"CodelessEvents" : @[
         @"FBSDKCodelessIndexer",
