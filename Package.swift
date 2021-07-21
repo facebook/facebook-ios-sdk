@@ -94,7 +94,7 @@ let package = Package(
             name: "FBAEMKit",
             dependencies: ["FBSDKCoreKit_Basics"],
             cSettings: [
-              .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil))
+              .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS], configuration: nil))
             ]
         ),
 
