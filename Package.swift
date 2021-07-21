@@ -76,7 +76,7 @@ let package = Package(
         */
         .library(
             name: "FacebookAEM",
-            targets: ["FBAEMKit"]
+            targets: ["FacebookAEM"]
         )
     ],
     targets: [
@@ -88,14 +88,25 @@ let package = Package(
         ),
 
         /*
-          The AEM Kit
+          The legacy Objective-C implementation of AEM Kit
         */
         .target(
             name: "FBAEMKit",
             dependencies: ["FBSDKCoreKit_Basics"],
             cSettings: [
-              .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS], configuration: nil))
+                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS], configuration: nil))
+            ],
+            swiftSettings: [
+                .define("FBSDK_SWIFT_PACKAGE")
             ]
+        ),
+
+        /*
+          The main AEM module
+         */
+        .target(
+          name: "FacebookAEM",
+          dependencies: ["FBAEMKit"]
         ),
 
         /*
