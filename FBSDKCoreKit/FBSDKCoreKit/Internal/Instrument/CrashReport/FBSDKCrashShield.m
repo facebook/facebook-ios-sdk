@@ -21,12 +21,8 @@
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKFeatureChecking.h"
 #import "FBSDKFeatureDisabling.h"
-#import "FBSDKGraphRequestFactory.h"
-#import "FBSDKGraphRequestHTTPMethod.h"
 #import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKGraphRequestProviding.h"
-#import "FBSDKInternalUtility+Internal.h"
-#import "FBSDKSettings+Internal.h"
 #import "FBSDKSettingsProtocol.h"
 
 @interface FBSDKCrashShield ()
