@@ -116,13 +116,21 @@
   NSMutableDictionary *parameters = [NSMutableDictionary new];
   if (self.dialogContent && [self.dialogContent isKindOfClass:[FBSDKChooseContextContent class]]) {
     FBSDKChooseContextContent *content = (FBSDKChooseContextContent *)self.dialogContent;
-    [FBSDKTypeUtility dictionary:parameters
-                       setObject:[FBSDKChooseContextContent filtersNameForFilters:content.filter]
-                          forKey:FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_FILTER_KEY];
-    [FBSDKTypeUtility dictionary:parameters
-                       setObject:[NSNumber numberWithInteger:content.minParticipants] forKey:FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_MIN_SIZE_KEY];
-    [FBSDKTypeUtility dictionary:parameters
-                       setObject:[NSNumber numberWithInteger:content.maxParticipants] forKey:FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_MAX_SIZE_KEY];
+
+    NSString *filtersName = [FBSDKChooseContextContent filtersNameForFilters:content.filter];
+    if (filtersName) {
+      parameters[FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_FILTER_KEY] = filtersName;
+    }
+
+    NSNumber *minParticipants = [NSNumber numberWithInteger:content.minParticipants];
+    if (minParticipants != nil) {
+      parameters[FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_MIN_SIZE_KEY] = minParticipants;
+    }
+
+    NSNumber *maxParticipants = [NSNumber numberWithInteger:content.maxParticipants];
+    if (maxParticipants != nil) {
+      parameters[FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_MAX_SIZE_KEY] = maxParticipants;
+    }
   }
   return parameters;
 }
