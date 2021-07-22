@@ -18,10 +18,10 @@
 
 @objcMembers
 class TestAtePublisherFactory: NSObject, AtePublisherCreating {
-  var stubbedPublisher: AtePublishing = TestAtePublisher()
+  var stubbedPublisher: AtePublishing? = TestAtePublisher()
   var capturedAppID: String?
 
-  func createPublisher(appID: String) -> AtePublishing {
+  func createPublisher(appID: String) -> AtePublishing? {
     capturedAppID = appID
     return stubbedPublisher
   }

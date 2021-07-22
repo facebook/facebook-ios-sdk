@@ -297,6 +297,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 @property (nullable, nonatomic) id<FBSDKSourceApplicationTracking, FBSDKTimeSpentRecording> timeSpentRecorder;
 @property (nonatomic, strong) id<FBSDKAppEventsStateProviding> appEventsStateProvider;
 @property (nonatomic) id<FBSDKAdvertiserIDProviding> advertiserIDProvider;
+@property (nonatomic) id<FBSDKAtePublisherCreating> atePublisherFactory;
 @property (nonatomic) BOOL isConfigured;
 
 #if !TARGET_OS_TV
@@ -914,7 +915,8 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   g_restrictiveDataFilterParameterProcessor = restrictiveDataFilterParameterProcessor;
   self.swizzler = swizzler;
   self.store = store;
-  self.atePublisher = [atePublisherFactory createPublisherWithAppID:self.appID];
+  self.atePublisherFactory = atePublisherFactory;
+  self.atePublisher = [self.atePublisherFactory createPublisherWithAppID:self.appID];
   self.timeSpentRecorder = [timeSpentRecorderFactory createTimeSpentRecorder];
   self.appEventsStateProvider = appEventsStateProvider;
   self.advertiserIDProvider = advertiserIDProvider;
@@ -1214,6 +1216,8 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
   if (self.appID.length == 0) {
     return;
   }
+
+  self.atePublisher = self.atePublisher ?: [self.atePublisherFactory createPublisherWithAppID:self.appID];
 
 #if FBSDKTEST
   [self.atePublisher publishATE];
