@@ -53,7 +53,12 @@ targets:
     type: framework
     platform: iOS
     sources:
-      - ../Sources/FBAEMKit
+      - path: ../Sources/FBAEMKit
+        headerVisibility: project
+        excludes:
+          - include
+      - path: ../Sources/FBAEMKit/include
+        headerVisibility: public
     dependencies:
       - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics
         link: false
@@ -62,17 +67,21 @@ targets:
       Release: Configurations/FBAEMKit.xcconfig
   FBAEMKit-Dynamic:
     type: framework
-    dependencies:
-      - sdk: UIKit.framework
-      - sdk: libz.tbd
     platform: iOS
     productName: FBAEMKit
     sources:
-      - ../Sources/FBAEMKit
+      - path: ../Sources/FBAEMKit
+        headerVisibility: project
+        excludes:
+          - include
+      - path: ../Sources/FBAEMKit/include
+        headerVisibility: public
     dependencies:
       - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Dynamic
         link: false
       - sdk: FBSDKCoreKit_Basics.framework
+      - sdk: UIKit.framework
+      - sdk: libz.tbd
     configFiles:
       Debug: Configurations/FBAEMKit-Dynamic.xcconfig
       Release: Configurations/FBAEMKit-Dynamic.xcconfig

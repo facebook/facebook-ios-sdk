@@ -1,4 +1,4 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+// Copyright (c) 2016-present, Facebook, Inc. All rights reserved.
 //
 // You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
 // copy, modify, and distribute this software in source code or binary form for use
@@ -16,22 +16,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "../Common.xcconfig"
+import FacebookAEM
 
-// Architectures
-ONLY_ACTIVE_ARCH = YES
-
-// Deployment
-COPY_PHASE_STRIP = NO
-
-// Code Generation
-GCC_OPTIMIZATION_LEVEL = 0
-
-// Preprocessor
-GCC_PREPROCESSOR_DEFINITIONS = DEBUG=1 FBAEMTEST=1 $(inherited)
-
-// Swift Testability
-ENABLE_TESTABILITY = YES
-
-// MTL
-MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE
+struct VerifyFacebookAEM {
+    func verifySymbols() {
+      _ = AEMReporter()
+    }
+}

@@ -34,12 +34,7 @@
 
 #if !TARGET_OS_TV
 
-#if defined FBSDK_SWIFT_PACKAGE || FBSDKCOCOAPODS
- #import "FBAEMNetworking.h"
- #import "FBAEMReporter.h"
-#else
- #import <FBAEMKit/FBAEMNetworking.h>
- #import <FBAEMKit/FBAEMReporter.h>
-#endif
+#import "FBAEMNetworking.h"
+#import "FBAEMReporter.h"
 
 #endif

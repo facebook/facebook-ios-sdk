@@ -16,22 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "../Common.xcconfig"
+#import "VerifyAEM.h"
 
-// Architectures
-ONLY_ACTIVE_ARCH = YES
+@import FBAEMKit;
 
-// Deployment
-COPY_PHASE_STRIP = NO
+@implementation VerifyAEM
 
-// Code Generation
-GCC_OPTIMIZATION_LEVEL = 0
+- (void)verifyAEM
+{
+  [FBAEMReporter new];
+}
 
-// Preprocessor
-GCC_PREPROCESSOR_DEFINITIONS = DEBUG=1 FBAEMTEST=1 $(inherited)
-
-// Swift Testability
-ENABLE_TESTABILITY = YES
-
-// MTL
-MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE
+@end
