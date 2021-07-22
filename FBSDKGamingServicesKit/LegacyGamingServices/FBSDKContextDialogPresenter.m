@@ -24,11 +24,14 @@
 
  #import "FBSDKChooseContextContent.h"
  #import "FBSDKChooseContextDialog.h"
- #import "FBSDKCoreKitInternalImport.h"
  #import "FBSDKCreateContextDialog.h"
  #import "FBSDKDialogProtocol.h"
  #import "FBSDKGamingContext.h"
+ #import "FBSDKGamingServicesCoreKitImport.h"
  #import "FBSDKSwitchContextDialog.h"
+
+@interface FBSDKInternalUtility () <FBSDKWindowFinding>
+@end
 
 @interface FBSDKContextDialogPresenter ()
 
