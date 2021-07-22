@@ -62,7 +62,9 @@
 
   if ([self.dialogContent isKindOfClass:[FBSDKCreateContextContent class]] && self.dialogContent) {
     FBSDKCreateContextContent *content = (FBSDKCreateContextContent *)self.dialogContent;
-    [FBSDKTypeUtility dictionary:parameters setObject:content.playerID forKey:@"player_id"];
+    if (content.playerID) {
+      parameters[@"player_id"] = content.playerID;
+    }
   }
 
   CGRect frame = [self createWebDialogFrameWithWidth:FBSDKWEBDIALOGFRAMEWIDTH height:FBSDKWEBDIALOGFRAMEHEIGHT windowFinder:self.windowFinder];
