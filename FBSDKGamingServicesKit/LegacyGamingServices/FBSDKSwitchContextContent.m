@@ -22,7 +22,7 @@
 
  #import "FBSDKSwitchContextContent.h"
 
- #import "FBSDKCoreKitInternalImport.h"
+ #import "FBSDKGamingServicesCoreKitImport.h"
 
  #define FBSDK_APP_REQUEST_CONTENT_CONTEXT_TOKEN_KEY @"contextToken"
 
@@ -55,7 +55,38 @@
   NSUInteger subhashes[] = {
     self.contextTokenID.hash,
   };
-  return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
+  return [self hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
+}
+
+// TODO - delete when we convert to Swift and can use Hashable
+- (NSUInteger)hashWithInteger:(NSUInteger)value1 andInteger:(NSUInteger)value2
+{
+  return [self hashWithLong:(((unsigned long long)value1) << 32 | value2)];
+}
+
+// TODO - delete when we convert to Swift and can use Hashable
+- (NSUInteger)hashWithIntegerArray:(NSUInteger *)values count:(NSUInteger)count
+{
+  if (count == 0) {
+    return 0;
+  }
+  NSUInteger hash = values[0];
+  for (NSUInteger i = 1; i < count; ++i) {
+    hash = [self hashWithInteger:hash andInteger:values[i]];
+  }
+  return hash;
+}
+
+// TODO - delete when we convert to Swift and can use Hashable
+- (NSUInteger)hashWithLong:(unsigned long long)value
+{
+  value = (~value) + (value << 18); // key = (key << 18) - key - 1;
+  value ^= (value >> 31);
+  value *= 21; // key = (key + (key << 2)) + (key << 4);
+  value ^= (value >> 11);
+  value += (value << 6);
+  value ^= (value >> 22);
+  return (NSUInteger)value;
 }
 
 - (BOOL)isEqual:(id)object
