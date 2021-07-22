@@ -18,10 +18,10 @@
 
 #import "FBSDKGamingImageUploader.h"
 
-#import "FBSDKCoreKitInternalImport.h"
 #import "FBSDKGamingImageUploaderConfiguration.h"
 #import "FBSDKGamingServiceControllerCreating.h"
 #import "FBSDKGamingServiceControllerFactory.h"
+#import "FBSDKGamingServicesCoreKitImport.h"
 
 @interface FBSDKGamingImageUploader () <FBSDKGraphRequestConnectionDelegate>
 {

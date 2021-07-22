@@ -18,15 +18,15 @@
 
 #import <Foundation/Foundation.h>
 
-#if SWIFT_PACKAGE
- #import "FBSDKGraphRequestConnectionProviding.h"
-#else
- #import <FBSDKCoreKit/FBSDKGraphRequestConnectionProviding.h>
-#endif
+#import "FBSDKGraphRequestConnectionProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// A factory for providing objects that conform to `GraphRequestConnecting`
+/**
+ Internal type not intended for use outside of the SDKs.
+
+ A factory for providing objects that conform to `GraphRequestConnecting`.
+ */
 NS_SWIFT_NAME(GraphRequestConnectionFactory)
 @interface FBSDKGraphRequestConnectionFactory : NSObject <FBSDKGraphRequestConnectionProviding>
 @end
