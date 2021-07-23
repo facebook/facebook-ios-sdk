@@ -24,6 +24,7 @@
 
  #import "FBSDKSwitchContextDialog.h"
 
+ #import "FBSDKCoreKitInternalImport.h"
  #import "FBSDKSwitchContextContent.h"
 
  #define FBSDK_CONTEXT_METHOD_NAME @"context"
@@ -49,9 +50,7 @@
 {
   NSError *error;
   if (![self validateWithError:&error]) {
-    if (error) {
-      [self.delegate contextDialog:self didFailWithError:error];
-    }
+    [self.delegate contextDialog:self didFailWithError:error];
     return NO;
   }
 

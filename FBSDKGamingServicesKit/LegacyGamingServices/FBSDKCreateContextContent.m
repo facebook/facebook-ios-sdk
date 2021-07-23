@@ -30,6 +30,14 @@
 
 @implementation FBSDKCreateContextContent
 
+- (instancetype)initDialogContentWithPlayerID:(NSString *)playerID;
+{
+  if ((self = [super init])) {
+    self.playerID = playerID;
+  }
+  return self;
+}
+
  #pragma mark - FBSDKSharingValidation
 
 - (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef

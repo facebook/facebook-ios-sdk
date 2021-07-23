@@ -31,6 +31,14 @@
 
 @implementation FBSDKSwitchContextContent
 
+- (instancetype)initDialogContentWithContextID:(NSString *)contextID;
+{
+  if ((self = [super init])) {
+    self.contextTokenID = contextID;
+  }
+  return self;
+}
+
  #pragma mark - FBSDKSharingValidation
 
 - (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef

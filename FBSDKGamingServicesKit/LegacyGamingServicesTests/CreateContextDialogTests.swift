@@ -33,7 +33,7 @@ class CreateContextDialogTest: XCTestCase, ContextDialogDelegate {
     }
 
     func testShowDialogWithInvalidContent() {
-        let content = CreateContextContent()
+        let content = CreateContextContent(playerID: "")
         let dialog = CreateContextDialog(content: content, windowFinder: TestWindowFinder(), delegate: self)
         dialog.show()
 
@@ -102,6 +102,7 @@ class CreateContextDialogTest: XCTestCase, ContextDialogDelegate {
         XCTAssertEqual(resultErrorMessage, error.userInfo.values.first as? String)
         XCTAssertFalse(dialogDidCompleteSuccessfully)
         XCTAssertFalse(dialogDidCancel)
+        XCTAssertNotNil(dialogError)
     }
 
     func testDialogCancels() throws {

@@ -18,8 +18,7 @@
 
 enum SampleContextDialogs {
   static func showSwitchContextDialog(withDelegate delegate: ContextDialogDelegate) -> SwitchContextDialog? {
-    let content = SwitchContextContent()
-    content.contextTokenID = "1234567890"
+    let content = SwitchContextContent(contextID: "1234567890")
     let dialog = SwitchContextDialog(content: content,
                                      windowFinder: TestWindowFinder(),
                                      delegate: delegate)
@@ -28,8 +27,7 @@ enum SampleContextDialogs {
   }
 
   static func showCreateContextDialog(withDelegate delegate: ContextDialogDelegate) -> CreateContextDialog? {
-    let content = CreateContextContent()
-    content.playerID = "1234567890"
+    let content = CreateContextContent(playerID: "1234567890")
     let dialog = CreateContextDialog(content: content,
                                      windowFinder: TestWindowFinder(),
                                      delegate: delegate)

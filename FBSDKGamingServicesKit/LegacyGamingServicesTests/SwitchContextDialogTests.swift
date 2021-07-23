@@ -36,7 +36,7 @@ class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
     }
 
     func testShowDialogWithInvalidContent() {
-        let content = SwitchContextContent()
+        let content = SwitchContextContent(contextID: "")
         let dialog = SwitchContextDialog(content: content, windowFinder: TestWindowFinder(), delegate: self)
         dialog.show()
         XCTAssertNotNil(dialog)
