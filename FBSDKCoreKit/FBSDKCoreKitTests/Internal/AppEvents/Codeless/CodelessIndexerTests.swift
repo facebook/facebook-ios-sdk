@@ -30,7 +30,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
   let settings = TestSettings()
   let advertiserIDProvider = TestAdvertiserIDProvider()
   let appID = "123"
-  let enabledConfiguration = ServerConfigurationFixtures.config(with: ["codelessEventsEnabled": true])
+  let enabledConfiguration = ServerConfigurationFixtures.config(withDictionary: ["codelessEventsEnabled": true])
   var codelessSettingStorageKey: String! // swiftlint:disable:this implicitly_unwrapped_optional
   var capturedIsEnabled = false
   var capturedError: Error?
@@ -236,7 +236,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
       XCTFail("Should not load a codeless setting when codeless events are disabled")
     }
     TestServerConfigurationProvider.capturedCompletionBlock?(
-      ServerConfigurationFixtures.defaultConfig(),
+      ServerConfigurationFixtures.defaultConfig,
       nil
     )
     XCTAssertNil(

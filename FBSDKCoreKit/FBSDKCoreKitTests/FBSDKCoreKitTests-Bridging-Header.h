@@ -81,7 +81,6 @@
 #import "FBSDKSKAdNetworkEvent.h"
 #import "FBSDKSKAdNetworkRule.h"
 #import "FBSDKSKAdNetworkReporter.h"
-#import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKTestCoder.h"
 #import "FBSDKURLOpener.h"
 #import "FBSDKViewHierarchy.h"
@@ -412,6 +411,12 @@ NS_SWIFT_NAME(cachedAppLinks);
 // Needed to expose this private method to AppLinkResolverRequestBuilderTests
 @interface FBSDKAppLinkResolverRequestBuilder (FBSDKAppLinkResolverTests)
 - (instancetype)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom;
+@end
+
+// Needed to expose private methods to the ServerConfigurationFixtures class
+@interface FBSDKServerConfiguration (ServerConfigurationFixtures)
+- (nullable NSDictionary *)dialogConfigurations;
+- (nullable NSDictionary *)dialogFlows;
 @end
 
 NS_ASSUME_NONNULL_END

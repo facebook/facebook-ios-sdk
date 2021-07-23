@@ -37,7 +37,7 @@ class FBSDKEventDeactivationTests: XCTestCase {
       ]
     ]
 
-    let serverConfiguration = ServerConfigurationFixtures.config(with: ["restrictiveParams": events])
+    let serverConfiguration = ServerConfigurationFixtures.config(withDictionary: ["restrictiveParams": events])
     TestServerConfigurationProvider.stubbedServerConfiguration = serverConfiguration
     eventDeactivationManager.enable()
   }

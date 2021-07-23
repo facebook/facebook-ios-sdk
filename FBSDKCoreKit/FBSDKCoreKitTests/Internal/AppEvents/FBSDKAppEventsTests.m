@@ -35,7 +35,6 @@
 #import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"
-#import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKUtility.h"
 
 // An extension that redeclares a private method so that it can be mocked
@@ -1100,7 +1099,7 @@
 - (void)testFetchingConfigurationStartsPaymentObservingIfConfigurationAllowed
 {
   self.settings.stubbedIsAutoLogAppEventsEnabled = YES;
-  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationFixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @YES}];
+  FBSDKServerConfiguration *serverConfiguration = [ServerConfigurationFixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @YES}];
   [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
   TestAppEventsConfigurationProvider.capturedBlock();
   TestServerConfigurationProvider.capturedCompletionBlock(serverConfiguration, nil);
@@ -1117,7 +1116,7 @@
 - (void)testFetchingConfigurationStopsPaymentObservingIfConfigurationDisallowed
 {
   self.settings.stubbedIsAutoLogAppEventsEnabled = YES;
-  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationFixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @NO}];
+  FBSDKServerConfiguration *serverConfiguration = [ServerConfigurationFixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @NO}];
   [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
   TestAppEventsConfigurationProvider.capturedBlock();
   TestServerConfigurationProvider.capturedCompletionBlock(serverConfiguration, nil);
@@ -1134,7 +1133,7 @@
 - (void)testFetchingConfigurationStopPaymentObservingIfAutoLogAppEventsDisabled
 {
   self.settings.stubbedIsAutoLogAppEventsEnabled = NO;
-  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationFixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @YES}];
+  FBSDKServerConfiguration *serverConfiguration = [ServerConfigurationFixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @YES}];
   [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
   TestAppEventsConfigurationProvider.capturedBlock();
   TestServerConfigurationProvider.capturedCompletionBlock(serverConfiguration, nil);

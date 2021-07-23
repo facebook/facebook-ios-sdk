@@ -21,7 +21,6 @@
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKEventBinding.h"
-#import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKTestCoder.h"
 
 @interface FBSDKServerConfiguration (Testing)
@@ -39,7 +38,7 @@
   FBSDKServerConfiguration *config;
 }
 
-typedef FBSDKServerConfigurationFixtures Fixtures;
+typedef ServerConfigurationFixtures Fixtures;
 
 - (void)setUp
 {

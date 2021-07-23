@@ -21,7 +21,6 @@
 @import TestTools;
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKGraphRequestPiggybackManager.h"
-#import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKServerConfigurationLoading.h"
 
 @interface FBSDKGraphRequestPiggybackManager (FBSDKGraphRequestPiggybackManagerTests)
@@ -626,7 +625,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
 - (void)testAddingServerConfigurationPiggybackWithDefaultConfigurationExpiredCache
 {
-  FBSDKServerConfiguration *config = [FBSDKServerConfigurationFixtures configWithDictionary:@{
+  FBSDKServerConfiguration *config = [ServerConfigurationFixtures configWithDictionary:@{
                                         @"defaults" : @YES,
                                         @"timestamp" : self.twoDaysAgo
                                       }];
@@ -647,7 +646,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
 - (void)testAddingServerConfigurationPiggybackWithDefaultConfigurationNonExpiredCache
 {
-  FBSDKServerConfiguration *config = [FBSDKServerConfigurationFixtures configWithDictionary:@{
+  FBSDKServerConfiguration *config = [ServerConfigurationFixtures configWithDictionary:@{
                                         @"defaults" : @YES,
                                         @"timestamp" : NSDate.date
                                       }];
@@ -665,7 +664,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
 - (void)testAddingServerConfigurationPiggybackWithCustomConfigurationExpiredCache
 {
-  FBSDKServerConfiguration *config = [FBSDKServerConfigurationFixtures configWithDictionary:@{
+  FBSDKServerConfiguration *config = [ServerConfigurationFixtures configWithDictionary:@{
                                         @"defaults" : @YES,
                                         @"timestamp" : self.twoDaysAgo
                                       }];
@@ -683,7 +682,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
 - (void)testAddingServerConfigurationPiggybackWithCustomConfigurationNonExpiredCache
 {
-  FBSDKServerConfiguration *config = [FBSDKServerConfigurationFixtures configWithDictionary:@{
+  FBSDKServerConfiguration *config = [ServerConfigurationFixtures configWithDictionary:@{
                                         @"defaults" : @NO,
                                         @"timestamp" : NSDate.date
                                       }];
@@ -704,7 +703,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testAddingServerConfigurationPiggybackWithCustomConfigurationMissingTimeout
 {
   // Esoterica - the default timeout is nil in the default configuration
-  FBSDKServerConfiguration *config = [FBSDKServerConfigurationFixtures configWithDictionary:@{
+  FBSDKServerConfiguration *config = [ServerConfigurationFixtures configWithDictionary:@{
                                         @"defaults" : @NO
                                       }];
   [TestServerConfigurationProvider setStubbedServerConfiguration:config];
@@ -722,7 +721,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testAddingServerConfigurationPiggybackWithDefaultConfigurationMissingTimeout
 {
   // Esoterica - the default timeout is nil in the default configuration
-  FBSDKServerConfiguration *config = [FBSDKServerConfigurationFixtures configWithDictionary:@{
+  FBSDKServerConfiguration *config = [ServerConfigurationFixtures configWithDictionary:@{
                                         @"defaults" : @YES
                                       }];
   [TestServerConfigurationProvider setStubbedServerConfiguration:config];
