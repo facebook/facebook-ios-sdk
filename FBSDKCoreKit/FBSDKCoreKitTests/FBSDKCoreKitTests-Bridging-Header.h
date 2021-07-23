@@ -409,4 +409,9 @@ NS_SWIFT_NAME(cachedAppLinks);
 
 @end
 
+// Needed to expose this private method to AppLinkResolverRequestBuilderTests
+@interface FBSDKAppLinkResolverRequestBuilder (FBSDKAppLinkResolverTests)
+- (instancetype)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom;
+@end
+
 NS_ASSUME_NONNULL_END
