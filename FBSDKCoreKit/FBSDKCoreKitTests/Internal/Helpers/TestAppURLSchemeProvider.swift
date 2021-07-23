@@ -22,6 +22,6 @@ class TestAppURLSchemeProvider: NSObject, AppURLSchemeProviding {
   var stubbedScheme = "No stub app url scheme provided"
 
   func appURLScheme() -> String {
-    return stubbedScheme
+    stubbedScheme
   }
 }

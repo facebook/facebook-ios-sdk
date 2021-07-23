@@ -32,7 +32,7 @@ class TestOnDeviceMLModelManager: NSObject,
   var integrityParametersProcessor: AppEventsParameterProcessing?
   var rulesForKey: [AnyHashable: Any] {
     get {
-      return stubbedRules
+      stubbedRules
     }
     set {
       stubbedRules = newValue
@@ -53,6 +53,6 @@ class TestOnDeviceMLModelManager: NSObject,
   }
 
   func getRulesForKey(_ useCase: String) -> [AnyHashable: Any]? {
-    return stubbedRules
+    stubbedRules
   }
 }

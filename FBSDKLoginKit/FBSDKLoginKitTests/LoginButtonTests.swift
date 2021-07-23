@@ -32,7 +32,7 @@ class LoginButtonTests: XCTestCase {
   lazy var factory = TestGraphRequestFactory()
   lazy var button = FBLoginButton()
   var sampleToken: AuthenticationToken {
-    return AuthenticationToken(tokenString: "abc", nonce: "123")
+    AuthenticationToken(tokenString: "abc", nonce: "123")
   }
   private let delegate = TestLoginButtonDelegate()
 

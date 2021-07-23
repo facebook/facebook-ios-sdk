@@ -26,7 +26,7 @@ class TestProfileProvider: NSObject, ProfileProviding {
   static var stubbedCachedProfile: Profile?
 
   static func fetchCachedProfile() -> Profile? {
-    return stubbedCachedProfile
+    stubbedCachedProfile
   }
 
   static func reset() {

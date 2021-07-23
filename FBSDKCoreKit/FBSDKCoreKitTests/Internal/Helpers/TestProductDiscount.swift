@@ -40,14 +40,14 @@ class TestProductDiscount: SKProductDiscount {
   }
 
   override var paymentMode: SKProductDiscount.PaymentMode {
-    return stubbedPaymentMode
+    stubbedPaymentMode
   }
 
   override var price: NSDecimalNumber {
-    return stubbedPrice
+    stubbedPrice
   }
 
   override var subscriptionPeriod: SKProductSubscriptionPeriod {
-    return stubbedSubscriptionPeriod
+    stubbedSubscriptionPeriod
   }
 }

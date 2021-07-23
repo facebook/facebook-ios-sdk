@@ -701,7 +701,7 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
   }
 
   var encodedAppName: Data {
-    return Values.appName.data(using: .utf8)! // swiftlint:disable:this force_unwrapping
+    Values.appName.data(using: .utf8)! // swiftlint:disable:this force_unwrapping
   }
 
   func seedReceiptData() throws {

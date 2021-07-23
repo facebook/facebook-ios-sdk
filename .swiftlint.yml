@@ -105,6 +105,7 @@ opt_in_rules:
   - generic_type_name
   - identifier_name
   - implicit_getter
+  - implicit_return
   - implicitly_unwrapped_optional
   - is_disjoint
   - joined_default_parameter
