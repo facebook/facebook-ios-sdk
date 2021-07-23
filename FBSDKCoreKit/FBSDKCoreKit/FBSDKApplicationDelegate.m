@@ -590,6 +590,7 @@ static UIApplicationState _applicationState;
              infoDictionaryProvider:NSBundle.mainBundle
                         eventLogger:FBSDKAppEvents.singleton];
   [FBSDKGraphRequest setCurrentAccessTokenStringProvider:FBSDKAccessToken.class];
+  [FBSDKGraphRequest setSettings:sharedSettings];
   [FBSDKGraphRequestConnection setCanMakeRequests];
   [FBSDKGateKeeperManager configureWithSettings:FBSDKSettings.class
                                 requestProvider:graphRequestProvider

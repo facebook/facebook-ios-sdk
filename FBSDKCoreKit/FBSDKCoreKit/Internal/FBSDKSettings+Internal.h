@@ -37,14 +37,13 @@
 @interface FBSDKSettings (Internal)
 
 @property (class, nullable, nonatomic, readonly, copy) NSString *graphAPIDebugParamValue;
-
-@property (nonatomic, copy, null_resettable) NSString *graphAPIVersion;
-
 // used by Unity.
 @property (class, nullable, nonatomic, copy) NSString *userAgentSuffix;
-
 @property (class, nonnull, readonly) FBSDKSettings *sharedSettings;
+
 @property (nonatomic) BOOL shouldUseTokenOptimizations;
+@property (nonatomic, copy, null_resettable) NSString *graphAPIVersion;
+@property (nonatomic, nonatomic, readonly) BOOL graphErrorRecoveryEnabled;
 
 + (void)configureWithStore:(nonnull id<FBSDKDataPersisting>)store
 appEventsConfigurationProvider:(nonnull Class<FBSDKAppEventsConfigurationProviding>)provider

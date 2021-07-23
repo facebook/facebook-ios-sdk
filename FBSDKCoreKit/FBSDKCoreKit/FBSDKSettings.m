@@ -234,6 +234,11 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   return !g_disableErrorRecovery;
 }
 
+- (BOOL)isGraphErrorRecoveryEnabled
+{
+  return [[self class] isGraphErrorRecoveryEnabled];
+}
+
 + (void)setGraphErrorRecoveryEnabled:(BOOL)graphErrorRecoveryEnabled
 {
   g_disableErrorRecovery = !graphErrorRecoveryEnabled;
@@ -732,6 +737,11 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   }
 
   return nil;
+}
+
+- (NSString *)graphAPIDebugParamValue
+{
+  return [[self class] graphAPIDebugParamValue];
 }
 
 #pragma mark - Testability

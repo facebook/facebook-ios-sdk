@@ -27,6 +27,7 @@ NS_SWIFT_NAME(SettingsProtocol)
 @property (class, nullable, nonatomic, copy) NSString *userAgentSuffix;
 @property (class, nullable, nonatomic, copy) NSString *sdkVersion;
 @property (class, nonatomic, copy, nonnull) NSSet<FBSDKLoggingBehavior> *loggingBehaviors;
+
 @property (nonatomic, copy, nullable) NSString *appID;
 @property (nonatomic, readonly) BOOL isDataProcessingRestricted;
 @property (nonatomic, readonly) BOOL isAutoLogAppEventsEnabled;
@@ -39,5 +40,7 @@ NS_SWIFT_NAME(SettingsProtocol)
 @property (nonatomic, readonly) BOOL shouldLimitEventAndDataUsage;
 @property (nonatomic) BOOL shouldUseTokenOptimizations;
 @property (nonatomic, readonly) NSString * _Nonnull graphAPIVersion;
+@property (nonatomic, readonly) BOOL isGraphErrorRecoveryEnabled;
+@property (nonatomic, readonly, copy, nullable) NSString *graphAPIDebugParamValue;
 
 @end
