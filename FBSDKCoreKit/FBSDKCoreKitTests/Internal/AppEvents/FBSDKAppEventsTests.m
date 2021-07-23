@@ -37,7 +37,6 @@
 #import "FBSDKLogger.h"
 #import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKUtility.h"
-#import "UserDefaultsSpy.h"
 
 // An extension that redeclares a private method so that it can be mocked
 @interface FBSDKApplicationDelegate (Testing)

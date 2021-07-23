@@ -98,7 +98,6 @@
 #import "FBSDKProductRequestFactory.h"
 #import "SuggestedEventsIndexer+Testing.h"
 #import "UIApplication+URLOpener.h"
-#import "UserDefaultsSpy.h"
 #import "WebViewAppLinkResolver+Testing.h"
 #import "FBSDKConversionValueUpdating.h"
 #import "XCTestCase+Extensions.h"

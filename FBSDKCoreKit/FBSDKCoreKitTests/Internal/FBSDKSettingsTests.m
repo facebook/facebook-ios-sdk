@@ -25,7 +25,6 @@
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKSettingsProtocol.h"
 #import "NSUserDefaults+FBSDKDataPersisting.h"
-#import "UserDefaultsSpy.h"
 
 @interface FBSDKSettings ()
 + (void)reset;

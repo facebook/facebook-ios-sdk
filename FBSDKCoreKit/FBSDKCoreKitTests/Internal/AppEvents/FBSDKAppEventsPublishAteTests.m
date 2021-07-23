@@ -23,7 +23,6 @@
 #import "FBSDKAppEvents+AppEventsConfiguring.h"
 #import "FBSDKAppEventsAtePublisher.h"
 #import "FBSDKCoreKitTests-Swift.h"
-#import "UserDefaultsSpy.h"
 
 @interface FBSDKAppEvents (Testing)
 @property (nullable, nonatomic) id<FBSDKAtePublishing> atePublisher;

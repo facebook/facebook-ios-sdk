@@ -16,19 +16,29 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+@objcMembers
+class UserDefaultsSpy: UserDefaults {
+  var capturedObjectRetrievalKeys = [String]()
+  var capturedSetObjectKeys = [String]()
+  var capturedObjectRetrievalKey: String?
+  var capturedSetObjectKey: String?
+  var capturedValues = [String: Any]()
 
-NS_ASSUME_NONNULL_BEGIN
+  var stringForKeyCallback: ((String) -> String)? = { $0 }
 
-@interface UserDefaultsSpy : NSUserDefaults
+  override func string(forKey defaultName: String) -> String? {
+    stringForKeyCallback?(defaultName)
+  }
 
-@property (nullable, nonatomic, copy) NSArray<NSString *> *capturedObjectRetrievalKeys;
-@property (nullable, nonatomic, copy) NSArray<NSString *> *capturedSetObjectKeys;
-@property (nullable, nonatomic, copy) NSString *capturedObjectRetrievalKey;
-@property (nullable, nonatomic, copy) NSString *capturedSetObjectKey;
-@property (nonatomic, copy) NSDictionary<NSString *, id> *capturedValues;
-@property (nonatomic, strong) NSString *(^stringForKeyCallback)(NSString *);
+  override func object(forKey defaultName: String) -> Any? {
+    capturedObjectRetrievalKey = defaultName
+    capturedObjectRetrievalKeys.append(defaultName)
+    return capturedValues[defaultName]
+  }
 
-@end
-
-NS_ASSUME_NONNULL_END
+  override func set(_ value: Any?, forKey defaultName: String) {
+    capturedValues[defaultName] = value
+    capturedSetObjectKeys.append(defaultName)
+    capturedSetObjectKey = defaultName
+  }
+}
