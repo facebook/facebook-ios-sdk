@@ -37,7 +37,7 @@
  #import "FBSDKGraphRequestHTTPMethod.h"
  #import "FBSDKGraphRequestProtocol.h"
  #import "FBSDKGraphRequestProviding.h"
- #import "FBSDKInternalUtility.h"
+ #import "FBSDKInternalUtility+Internal.h"
  #import "FBSDKObjectDecoding.h"
  #import "FBSDKServerConfiguration.h"
  #import "FBSDKServerConfigurationManager.h"

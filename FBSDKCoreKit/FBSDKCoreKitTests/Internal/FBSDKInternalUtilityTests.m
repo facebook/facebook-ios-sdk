@@ -21,7 +21,7 @@
 
 #import "FBSDKCoreKit.h"
 #import "FBSDKCoreKitTests-Swift.h"
-#import "FBSDKInternalUtility.h"
+#import "FBSDKInternalUtility+Internal.h"
 
 @interface FBSDKAuthenticationToken (Testing)
 

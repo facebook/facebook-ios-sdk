@@ -34,12 +34,12 @@ NS_SWIFT_NAME(GamingServiceType);
 /**
 Used to link to gaming services on Facebook.
 
-@param completionHandler a callback that is fired once the user returns to the
+@param completion a callback that is fired once the user returns to the
  caller app or an error ocurrs
 @param pendingResult an optional object that will be passed to the completion handler as 'result'
 */
 - (instancetype)initWithServiceType:(FBSDKGamingServiceType)serviceType
-                  completionHandler:(FBSDKGamingServiceResultCompletionHandler)completionHandler
+                  completionHandler:(FBSDKGamingServiceResultCompletion)completion
                       pendingResult:(id)pendingResult;
 
 - (void)callWithArgument:(NSString *)argument;

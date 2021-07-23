@@ -28,7 +28,7 @@
 #import "FBSDKGraphRequestConnectionProviding.h"
 #import "FBSDKGraphRequestDataAttachment.h"
 #import "FBSDKGraphRequestMetadata.h"
-#import "FBSDKInternalUtility.h"
+#import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKUtility.h"
 
 static NSString *const path = @"me";

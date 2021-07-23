@@ -29,14 +29,14 @@
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKApplicationDelegate.h"
 #import "FBSDKConstants.h"
+#import "FBSDKCoreKitAEMImport.h"
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKGateKeeperManager.h"
 #import "FBSDKGraphRequestProtocol.h"
-#import "FBSDKInternalUtility.h"
+#import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"
 #import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKUtility.h"
-#import "UserDefaultsSpy.h"
 
 // An extension that redeclares a private method so that it can be mocked
 @interface FBSDKApplicationDelegate (Testing)
@@ -62,6 +62,7 @@
 - (void)applicationDidBecomeActive;
 - (void)applicationMovingFromActiveStateOrTerminating;
 - (void)setFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior;
+- (void)publishATE;
 
 + (FBSDKAppEvents *)singleton;
 + (void)setSingletonInstanceToInstance:(FBSDKAppEvents *)appEvents;
@@ -107,7 +108,7 @@
 @property (nonnull, nonatomic) NSDictionary<NSString *, id> *payload;
 @property (nonatomic) double purchaseAmount;
 @property (nonnull, nonatomic) NSString *currency;
-@property (nonnull, nonatomic) TestAtePublisherFactory *atePublisherfactory;
+@property (nonnull, nonatomic) TestAtePublisherFactory *atePublisherFactory;
 @property (nonnull, nonatomic) TestAtePublisher *atePublisher;
 @property (nonnull, nonatomic) TestTimeSpentRecorderFactory *timeSpentRecorderFactory;
 @property (nonnull, nonatomic) TestTimeSpentRecorder *timeSpentRecorder;
@@ -169,7 +170,7 @@
   self.eventDeactivationParameterProcessor = [TestAppEventsParameterProcessor new];
   self.restrictiveDataFilterParameterProcessor = [TestAppEventsParameterProcessor new];
   self.appEventsStateProvider = [TestAppEventsStateProvider new];
-  self.atePublisherfactory = [TestAtePublisherFactory new];
+  self.atePublisherFactory = [TestAtePublisherFactory new];
   self.timeSpentRecorderFactory = [TestTimeSpentRecorderFactory new];
   self.timeSpentRecorder = self.timeSpentRecorderFactory.recorder;
   self.advertiserIDProvider = [TestAdvertiserIDProvider new];
@@ -177,29 +178,9 @@
 
   // Must be stubbed before the configure method is called
   self.atePublisher = [TestAtePublisher new];
-  self.atePublisherfactory.stubbedPublisher = self.atePublisher;
+  self.atePublisherFactory.stubbedPublisher = self.atePublisher;
 
-  [FBSDKAppEvents.singleton configureWithGateKeeperManager:TestGateKeeperManager.class
-                            appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
-                               serverConfigurationProvider:TestServerConfigurationProvider.class
-                                      graphRequestProvider:self.graphRequestFactory
-                                            featureChecker:self.featureManager
-                                                     store:self.store
-                                                    logger:TestLogger.class
-                                                  settings:self.settings
-                                           paymentObserver:self.paymentObserver
-                                  timeSpentRecorderFactory:self.timeSpentRecorderFactory
-                                       appEventsStateStore:self.appEventsStateStore
-                       eventDeactivationParameterProcessor:self.eventDeactivationParameterProcessor
-                   restrictiveDataFilterParameterProcessor:self.restrictiveDataFilterParameterProcessor
-                                       atePublisherFactory:self.atePublisherfactory
-                                    appEventsStateProvider:self.appEventsStateProvider
-                                                  swizzler:TestSwizzler.class
-                                      advertiserIDProvider:self.advertiserIDProvider];
-
-  [FBSDKAppEvents.singleton configureNonTVComponentsWithOnDeviceMLModelManager:self.onDeviceMLModelManager
-                                                               metadataIndexer:self.metadataIndexer
-                                                           skAdNetworkReporter:self.skAdNetworkReporter];
+  [self configureAppEventsSingleton];
 
   [FBSDKAppEvents setLoggingOverrideAppID:self.mockAppID];
 }
@@ -221,6 +202,31 @@
   [TestLogger reset];
 }
 
+- (void)configureAppEventsSingleton
+{
+  [FBSDKAppEvents.singleton configureWithGateKeeperManager:TestGateKeeperManager.class
+                            appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
+                               serverConfigurationProvider:TestServerConfigurationProvider.class
+                                      graphRequestProvider:self.graphRequestFactory
+                                            featureChecker:self.featureManager
+                                                     store:self.store
+                                                    logger:TestLogger.class
+                                                  settings:self.settings
+                                           paymentObserver:self.paymentObserver
+                                  timeSpentRecorderFactory:self.timeSpentRecorderFactory
+                                       appEventsStateStore:self.appEventsStateStore
+                       eventDeactivationParameterProcessor:self.eventDeactivationParameterProcessor
+                   restrictiveDataFilterParameterProcessor:self.restrictiveDataFilterParameterProcessor
+                                       atePublisherFactory:self.atePublisherFactory
+                                    appEventsStateProvider:self.appEventsStateProvider
+                                                  swizzler:TestSwizzler.class
+                                      advertiserIDProvider:self.advertiserIDProvider];
+
+  [FBSDKAppEvents.singleton configureNonTVComponentsWithOnDeviceMLModelManager:self.onDeviceMLModelManager
+                                                               metadataIndexer:self.metadataIndexer
+                                                           skAdNetworkReporter:self.skAdNetworkReporter];
+}
+
 - (void)testConfiguringSetsSwizzlerDependency
 {
   XCTAssertEqualObjects(
@@ -233,7 +239,7 @@
 - (void)testConfiguringCreatesAtePublisher
 {
   XCTAssertEqualObjects(
-    self.atePublisherfactory.capturedAppID,
+    self.atePublisherFactory.capturedAppID,
     self.mockAppID,
     "Configuring should create an ate publisher with the expected app id"
   );
@@ -241,6 +247,23 @@
     FBSDKAppEvents.singleton.atePublisher,
     self.atePublisher,
     "Should store the publisher created by the publisher factory"
+  );
+}
+
+- (void)testPublishingATEWithNilPublisher
+{
+  self.atePublisherFactory.stubbedPublisher = nil;
+  [self configureAppEventsSingleton];
+
+  XCTAssertNil(FBSDKAppEvents.singleton.atePublisher);
+
+  // Make sure the factory can create a publisher
+  self.atePublisherFactory.stubbedPublisher = self.atePublisher;
+  [FBSDKAppEvents.singleton publishATE];
+
+  XCTAssertNotNil(
+    FBSDKAppEvents.singleton.atePublisher,
+    "Will lazily create an ate publisher when needed"
   );
 }
 
@@ -1188,7 +1211,6 @@
 - (void)testFetchingConfigurationIncludingAEM
 {
   if (@available(iOS 14.0, *)) {
-    FBSDKAEMReporter.isEnabled = NO;
     [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
     TestAppEventsConfigurationProvider.capturedBlock();
     TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);

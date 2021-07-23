@@ -18,10 +18,10 @@
 
 #import "FBSDKGamingImageUploader.h"
 
-#import "FBSDKCoreKitInternalImport.h"
 #import "FBSDKGamingImageUploaderConfiguration.h"
 #import "FBSDKGamingServiceControllerCreating.h"
 #import "FBSDKGamingServiceControllerFactory.h"
+#import "FBSDKGamingServicesCoreKitImport.h"
 
 @interface FBSDKGamingImageUploader () <FBSDKGraphRequestConnectionDelegate>
 {
@@ -75,17 +75,27 @@
 + (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration *_Nonnull)configuration
           andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
 {
+  FBSDKGamingServiceResultCompletion completion = ^void (BOOL success, NSDictionary *result, NSError *error) {
+    completionHandler(success, result.debugDescription, error);
+  };
+
+  [self.shared uploadImageWithConfiguration:configuration andResultCompletion:completion];
+}
+
++ (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration *_Nonnull)configuration
+                 andResultCompletion:(FBSDKGamingServiceResultCompletion _Nonnull)completion
+{
   [self.shared uploadImageWithConfiguration:configuration
-                 andResultCompletionHandler:completionHandler];
+                        andResultCompletion:completion];
 }
 
 - (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration *_Nonnull)configuration
-          andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
+                 andResultCompletion:(FBSDKGamingServiceResultCompletion _Nonnull)completion
 {
   return
   [self
    uploadImageWithConfiguration:configuration
-   completionHandler:completionHandler
+   completion:completion
    andProgressHandler:nil];
 }
 
@@ -93,13 +103,26 @@
                    completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
                   andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
 {
+  FBSDKGamingServiceResultCompletion completion = ^void (BOOL success, NSDictionary *result, NSError *error) {
+    completionHandler(success, result.debugDescription, error);
+  };
+
   [self.shared uploadImageWithConfiguration:configuration
-                          completionHandler:completionHandler
+                                 completion:completion
+                         andProgressHandler:progressHandler];
+}
+
++ (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration *_Nonnull)configuration
+                          completion:(FBSDKGamingServiceResultCompletion _Nonnull)completion
+                  andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
+{
+  [self.shared uploadImageWithConfiguration:configuration
+                                 completion:completion
                          andProgressHandler:progressHandler];
 }
 
 - (void)uploadImageWithConfiguration:(FBSDKGamingImageUploaderConfiguration *_Nonnull)configuration
-                   completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
+                          completion:(FBSDKGamingServiceResultCompletion _Nonnull)completionHandler
                   andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
 {
   if ([FBSDKAccessToken currentAccessToken] == nil) {
@@ -169,7 +192,7 @@
      id<FBSDKGamingServiceController> const controller =
      [weakSelf.factory
       createWithServiceType:FBSDKGamingServiceTypeMediaAsset
-      completionHandler:completionHandler
+      completion:completionHandler
       pendingResult:result];
 
      [controller callWithArgument:result[@"id"]];

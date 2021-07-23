@@ -91,10 +91,10 @@ class FBSDKModelManagerTests: XCTestCase {
     )
   }
 
-  func testEnablingRetrievesCache() throws {
+  func testEnablingRetrievesCache() {
     manager.enable()
 
-    let keys = try XCTUnwrap(store.capturedObjectRetrievalKeys)
+    let keys = store.capturedObjectRetrievalKeys
 
     XCTAssertTrue(
       keys.contains("com.facebook.sdk:FBSDKModelInfo"),

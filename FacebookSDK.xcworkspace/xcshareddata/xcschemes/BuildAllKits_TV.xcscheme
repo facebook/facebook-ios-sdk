@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C5FCE332228E08D400867DFD"
+               BlueprintIdentifier = "B916D6D8D267ED69FABFA398"
                BuildableName = "FBSDKCoreKit_Basics_TV-Universal"
                BlueprintName = "FBSDKCoreKit_Basics_TV-Universal"
                ReferencedContainer = "container:FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcodeproj">
@@ -28,7 +28,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9D6DEEFA1BC2E546001A94ED"
+               BlueprintIdentifier = "84CA78C589511DE74143F9CE"
                BuildableName = "FBSDKCoreKit_TV-Universal"
                BlueprintName = "FBSDKCoreKit_TV-Universal"
                ReferencedContainer = "container:FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
@@ -42,7 +42,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9D2D99BE1BC456B200929E76"
+               BlueprintIdentifier = "A64144663F926DBF142BE9C3"
                BuildableName = "FBSDKShareKit_TV-Universal"
                BlueprintName = "FBSDKShareKit_TV-Universal"
                ReferencedContainer = "container:FBSDKShareKit/FBSDKShareKit.xcodeproj">
@@ -70,7 +70,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0B9DBF6E207C0B5C00662776"
+               BlueprintIdentifier = "547233CE2DF51E547A32CF7B"
                BuildableName = "FBSDKLoginKit_TV-Universal"
                BlueprintName = "FBSDKLoginKit_TV-Universal"
                ReferencedContainer = "container:FBSDKLoginKit/FBSDKLoginKit.xcodeproj">
@@ -100,7 +100,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9D6DEEFA1BC2E546001A94ED"
+            BlueprintIdentifier = "84CA78C589511DE74143F9CE"
             BuildableName = "FBSDKCoreKit_TV-Universal"
             BlueprintName = "FBSDKCoreKit_TV-Universal"
             ReferencedContainer = "container:FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
@@ -122,7 +122,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9D6DEEFA1BC2E546001A94ED"
+            BlueprintIdentifier = "84CA78C589511DE74143F9CE"
             BuildableName = "FBSDKCoreKit_TV-Universal"
             BlueprintName = "FBSDKCoreKit_TV-Universal"
             ReferencedContainer = "container:FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
@@ -138,7 +138,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C5FCE332228E08D400867DFD"
+            BlueprintIdentifier = "B916D6D8D267ED69FABFA398"
             BuildableName = "FBSDKCoreKit_Basics_TV-Universal"
             BlueprintName = "FBSDKCoreKit_Basics_TV-Universal"
             ReferencedContainer = "container:FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcodeproj">

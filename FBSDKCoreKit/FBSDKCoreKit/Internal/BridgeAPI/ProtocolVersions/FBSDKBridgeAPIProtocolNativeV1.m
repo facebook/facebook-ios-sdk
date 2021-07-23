@@ -29,7 +29,7 @@
  #import "FBSDKConstants.h"
  #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKError+Internal.h"
- #import "FBSDKInternalUtility.h"
+ #import "FBSDKInternalUtility+Internal.h"
  #import "FBSDKPasteboard.h"
  #import "FBSDKSettings.h"
  #import "UIPasteboard+Pasteboard.h"

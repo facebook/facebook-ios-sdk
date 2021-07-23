@@ -54,7 +54,7 @@
 #import "FBSDKGraphRequestFactory.h"
 #import "FBSDKGraphRequestPiggybackManager+Internal.h"
 #import "FBSDKInstrumentManager.h"
-#import "FBSDKInternalUtility.h"
+#import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger+Logging.h"
 #import "FBSDKPaymentObserver.h"
 #import "FBSDKPaymentObserver+PaymentObserving.h"
@@ -74,12 +74,13 @@
 #import "NSUserDefaults+FBSDKDataPersisting.h"
 
 #if !TARGET_OS_TV
- #import "FBSDKAEMReporter+Internal.h"
+ #import "FBSDKAEMNetworker.h"
  #import "FBSDKAppLinkUtility+Internal.h"
  #import "FBSDKBackgroundEventLogger.h"
  #import "FBSDKBackgroundEventLogging.h"
  #import "FBSDKCodelessIndexer+Internal.h"
  #import "FBSDKContainerViewController.h"
+ #import "FBSDKCoreKitAEMImport.h"
  #import "FBSDKFeatureExtractor.h"
  #import "FBSDKFeatureExtractor+Internal.h"
  #import "FBSDKMeasurementEventListener.h"
@@ -339,8 +340,8 @@ static UIApplicationState _applicationState;
 #if !TARGET_OS_TV
   [self.featureChecker checkFeature:FBSDKFeatureAEM completionBlock:^(BOOL enabled) {
     if (enabled) {
-      [FBSDKAEMReporter enable];
-      [FBSDKAEMReporter handleURL:url];
+      [FBAEMReporter enable];
+      [FBAEMReporter handleURL:url];
     }
   }];
 #endif
@@ -662,7 +663,7 @@ static UIApplicationState _applicationState;
                                                                 conversionValueUpdatable:SKAdNetwork.class];
   }
   if (@available(iOS 14.0, *)) {
-    [FBSDKAEMReporter configureWithRequestProvider:graphRequestProvider];
+    [FBAEMReporter configureWithNetworker:[FBSDKAEMNetworker new] appID:[FBSDKSettings appID]];
   }
   [FBSDKProfile configureWithStore:store
                accessTokenProvider:FBSDKAccessToken.class

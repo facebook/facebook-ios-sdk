@@ -25,7 +25,7 @@
  #import "FBSDKBridgeAPIRequest+Private.h"
  #import "FBSDKConstants.h"
  #import "FBSDKCoreKitBasicsImport.h"
- #import "FBSDKInternalUtility.h"
+ #import "FBSDKInternalUtility+Internal.h"
  #import "FBSDKOperatingSystemVersionComparing.h"
  #import "NSProcessInfo+Protocols.h"
 

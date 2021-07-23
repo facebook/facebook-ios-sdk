@@ -47,6 +47,8 @@ targets:
       Debug: Configurations/FacebookGamingServicesTests.xcconfig
       Release: Configurations/FacebookGamingServicesTests.xcconfig
     dependencies:
+      - target: LegacyGamingServices-Dynamic
+        embed: false
       - target: FacebookGamingServices-Dynamic
         embed: false
     settings:
@@ -62,6 +64,10 @@ targets:
       Debug: Configurations/FBSDKGamingServicesKitTests.xcconfig
       Release: Configurations/FBSDKGamingServicesKitTests.xcconfig
     dependencies:
+      - target: LegacyGamingServices-Dynamic
+        embed: false
+      - target: FacebookGamingServices-Dynamic
+        embed: false
       - target: FBSDKGamingServicesKit-Dynamic
         embed: false
     settings:

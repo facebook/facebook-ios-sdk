@@ -21,7 +21,7 @@
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKFeatureExtractor.h"
 #import "FBSDKFeatureExtractor+Internal.h"
-#import "FBSDKInternalUtility.h"
+#import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKModelManager.h"
 #import "FBSDKViewHierarchyMacros.h"
 

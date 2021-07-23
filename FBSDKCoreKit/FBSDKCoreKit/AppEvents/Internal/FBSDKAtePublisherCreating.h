@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AtePublisherCreating)
 @protocol FBSDKAtePublisherCreating
 
-- (id<FBSDKAtePublishing>)createPublisherWithAppID:(NSString *)appID
+- (nullable id<FBSDKAtePublishing>)createPublisherWithAppID:(NSString *)appID
 NS_SWIFT_NAME(createPublisher(appID:));
 
 @end

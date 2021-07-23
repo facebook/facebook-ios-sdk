@@ -16,46 +16,22 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if defined FBSDKCOCOAPODS
-
- #import <FBSDKGamingServicesKit/FBSDKChooseContextDialog.h>
- #import <FBSDKGamingServicesKit/FBSDKContextDialogPresenter.h>
- #import <FBSDKGamingServicesKit/FBSDKContextWebDialog.h>
- #import <FBSDKGamingServicesKit/FBSDKCreateContextContent.h>
- #import <FBSDKGamingServicesKit/FBSDKCreateContextDialog.h>
- #import <FBSDKGamingServicesKit/FBSDKDialogProtocol.h>
- #import <FBSDKGamingServicesKit/FBSDKFriendFinderDialog.h>
- #import <FBSDKGamingServicesKit/FBSDKGamingContext.h>
- #import <FBSDKGamingServicesKit/FBSDKGamingGroupIntegration.h>
- #import <FBSDKGamingServicesKit/FBSDKGamingImageUploader.h>
- #import <FBSDKGamingServicesKit/FBSDKGamingImageUploaderConfiguration.h>
- #import <FBSDKGamingServicesKit/FBSDKGamingPayload.h>
- #import <FBSDKGamingServicesKit/FBSDKGamingPayloadObserver.h>
- #import <FBSDKGamingServicesKit/FBSDKGamingServiceCompletionHandler.h>
- #import <FBSDKGamingServicesKit/FBSDKGamingServicesCoreKitImport.h>
- #import <FBSDKGamingServicesKit/FBSDKGamingVideoUploader.h>
- #import <FBSDKGamingServicesKit/FBSDKGamingVideoUploaderConfiguration.h>
- #import <FBSDKGamingServicesKit/FBSDKSwitchContextContent.h>
- #import <FBSDKGamingServicesKit/FBSDKSwitchContextDialog.h>
-#else
-
- #import "FBSDKChooseContextDialog.h"
- #import "FBSDKContextDialogPresenter.h"
- #import "FBSDKContextWebDialog.h"
- #import "FBSDKCreateContextContent.h"
- #import "FBSDKCreateContextDialog.h"
- #import "FBSDKDialogProtocol.h"
- #import "FBSDKFriendFinderDialog.h"
- #import "FBSDKGamingContext.h"
- #import "FBSDKGamingGroupIntegration.h"
- #import "FBSDKGamingImageUploader.h"
- #import "FBSDKGamingImageUploaderConfiguration.h"
- #import "FBSDKGamingPayload.h"
- #import "FBSDKGamingPayloadObserver.h"
- #import "FBSDKGamingServiceCompletionHandler.h"
- #import "FBSDKGamingServicesCoreKitImport.h"
- #import "FBSDKGamingVideoUploader.h"
- #import "FBSDKGamingVideoUploaderConfiguration.h"
- #import "FBSDKSwitchContextContent.h"
- #import "FBSDKSwitchContextDialog.h"
-#endif
+#import "FBSDKChooseContextDialog.h"
+#import "FBSDKContextDialogPresenter.h"
+#import "FBSDKContextWebDialog.h"
+#import "FBSDKCreateContextContent.h"
+#import "FBSDKCreateContextDialog.h"
+#import "FBSDKDialogProtocol.h"
+#import "FBSDKFriendFinderDialog.h"
+#import "FBSDKGamingContext.h"
+#import "FBSDKGamingGroupIntegration.h"
+#import "FBSDKGamingImageUploader.h"
+#import "FBSDKGamingImageUploaderConfiguration.h"
+#import "FBSDKGamingPayload.h"
+#import "FBSDKGamingPayloadObserver.h"
+#import "FBSDKGamingServiceCompletionHandler.h"
+#import "FBSDKGamingServicesCoreKitImport.h"
+#import "FBSDKGamingVideoUploader.h"
+#import "FBSDKGamingVideoUploaderConfiguration.h"
+#import "FBSDKSwitchContextContent.h"
+#import "FBSDKSwitchContextDialog.h"

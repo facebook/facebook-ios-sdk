@@ -25,18 +25,17 @@ Pod::Spec.new do |s|
     tag: "v#{s.version}"
   }
 
-  s.weak_frameworks = 'Accounts', 'Social', 'Security', 'Foundation', 'CoreGraphics'
+  s.weak_frameworks = 'Foundation', 'CoreGraphics'
 
   s.requires_arc = true
-  s.pod_target_xcconfig = { 'DEFINES_MODULE': 'YES' }
   s.pod_target_xcconfig = {
     'GCC_PREPROCESSOR_DEFINITIONS': '$(inherited) FBSDKCOCOAPODS=1',
     'OTHER_SWIFT_FLAGS': '$(inherited) -Xcc -DFBSDKCOCOAPODS',
+    'DEFINES_MODULE': 'YES'
   }
 
-  s.source_files   = 'FBSDKGamingServicesKit/LegacyGamingServices/**/*.{h,m}'
-  s.public_header_files = 'FBSDKGamingServicesKit/LegacyGamingServices/*.{h}'
+  s.source_files   = 'Sources/FBSDKGamingServicesKit/**/*.{h,swift}'
+  s.public_header_files = 'Sources/FBSDKGamingServicesKit/**/*.h'
+  s.dependency 'FacebookGamingServices', "~> #{s.version}"
 
-  s.dependency 'FBSDKCoreKit_Basics', "~> #{s.version}"
-  s.dependency 'FBSDKCoreKit', "~> #{s.version}"
 end

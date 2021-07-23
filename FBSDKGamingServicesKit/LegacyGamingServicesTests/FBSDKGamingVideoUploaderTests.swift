@@ -71,7 +71,7 @@ class GamingVideoUploaderTests: XCTestCase {
     AccessToken.current = nil
 
     var wasCompletionCalled = false
-    GamingVideoUploader.uploadVideo(with: configuration) { _, _, error in
+    GamingVideoUploader.uploadVideo(configuration: configuration) { _, _, error in
       XCTAssertEqual(
         (error as NSError?)?.code,
         CoreError.errorAccessTokenRequired.rawValue,
@@ -87,7 +87,7 @@ class GamingVideoUploaderTests: XCTestCase {
     videoURL = URL(string: "file://not-a-video.mp4")! // swiftlint:disable:this force_unwrapping
 
     var wasCompletionCalled = false
-    GamingVideoUploader.uploadVideo(with: configuration) { _, _, error in
+    GamingVideoUploader.uploadVideo(configuration: configuration) { _, _, error in
       XCTAssertEqual(
         (error as NSError?)?.code,
         CoreError.errorInvalidArgument.rawValue,
@@ -221,7 +221,7 @@ class GamingVideoUploaderTests: XCTestCase {
 
     uploader.uploadVideo(
       with: configuration,
-      completionHandler: { _, _, _ in },
+      completion: { _, _, _ in },
       andProgressHandler: verifyProgress
     )
     let delegate = try XCTUnwrap(videoUploaderFactory.capturedDelegate as? GamingVideoUploader)

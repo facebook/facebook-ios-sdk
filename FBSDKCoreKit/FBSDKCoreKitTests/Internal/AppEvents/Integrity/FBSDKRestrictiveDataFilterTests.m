@@ -21,7 +21,7 @@
 #import "FBSDKAppEvents.h"
 #import "FBSDKAppEventsState.h"
 #import "FBSDKCoreKitTests-Swift.h"
-#import "FBSDKInternalUtility.h"
+#import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKRestrictiveDataFilterManager.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationFixtures.h"

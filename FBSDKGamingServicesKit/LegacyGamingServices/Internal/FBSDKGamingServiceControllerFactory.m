@@ -25,12 +25,12 @@ NS_ASSUME_NONNULL_BEGIN
 @implementation FBSDKGamingServiceControllerFactory
 
 - (nonnull id<FBSDKGamingServiceController>)createWithServiceType:(FBSDKGamingServiceType)serviceType
-                                                completionHandler:(nonnull FBSDKGamingServiceResultCompletionHandler)completionHandler
+                                                       completion:(nonnull FBSDKGamingServiceResultCompletion)completion
                                                     pendingResult:(nullable id)pendingResult
 {
   return [[FBSDKGamingServiceController alloc]
           initWithServiceType:serviceType
-          completionHandler:completionHandler
+          completionHandler:completion
           pendingResult:pendingResult];
 }
 
