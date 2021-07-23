@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+### Added
+
+- Reintroduces `initializeSDK` method to `FBSDKApplicationDelegate`
+
 ### Changed
 
 - Introduced [Xcodegen](https://github.com/yonaskolb/XcodeGen) for generating project files. Moving forward, We will now use Xcodegen to generate the project files that are used to build the SDK releases. There should be no impact to SDK users. However, some build settings were restored to Xcode defaults as a result of this change, and output binaries may be affected in unpredictable ways. Contributors to the SDK should run the new, top-level script `generate-projects.sh` to ensure that the project files they are using are the same as those being used in CI and for releases. The next major version will remove the project files from version control. If you experience any of these issues, please open an [issue](https://github.com/facebook/facebook-ios-sdk/issues/new/choose) and we will look into it.
@@ -20,6 +24,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - `uploadVideoWithConfiguration:completionHandler:andProgressHandler:` is replaced by `uploadVideoWithConfiguration:completion:andProgressHandler:`
   - `uploadVideoWithConfiguration:andResultCompletionHandler` is replaced by `uploadVideoWithConfiguration:andResultCompletion`
 - `FBSDKGamingPayloadObserver`'s `shared` instance. Going forward a user should create and retain their own instance of a payload observer for as long as they'd like to receive callbacks from its delegate.
+
+### Fixed
+
+- Initializing the SDK in when UIApplication is unavailable [#1748](https://github.com/facebook/facebook-ios-sdk/issues/1748)
+- Issue caused by `initializeSDK` deprecation [#1731](https://github.com/facebook/facebook-ios-sdk/issues/1731)
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.0.1...HEAD)
 

@@ -229,10 +229,14 @@ static UIApplicationState _applicationState;
 
 #endif
 
+- (void)initializeSDK
+{
+  [self initializeSDKWithLaunchOptions:@{}];
+}
+
 - (void)initializeSDKWithLaunchOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions
 {
   if (hasInitializeBeenCalled) {
-    // Do nothing if initialized already
     return;
   } else {
     hasInitializeBeenCalled = YES;
@@ -244,43 +248,77 @@ static UIApplicationState _applicationState;
   //
   [self configureDependencies];
 
-  id<FBSDKSettingsLogging> const settingsLogger = self.settings;
-  [settingsLogger logWarnings];
-  [settingsLogger logIfSDKSettingsChanged];
-  [settingsLogger recordInstall];
-
+  [self logInitialization];
   [self addObservers];
-
   [self.appEvents startObservingApplicationLifecycleNotifications];
-
   [self application:[UIApplication sharedApplication] didFinishLaunchingWithOptions:launchOptions];
+  [self handleDeferredActivationIfNeeded];
+  [self enableInstrumentation];
 
-  // In case of sdk autoInit enabled sdk expects one appDidBecomeActive notification after app launch and has some logic to ignore it.
-  // if sdk autoInit disabled app won't receive appDidBecomeActive on app launch and will ignore the first one it gets instead of handling it.
-  // Send first applicationDidBecomeActive notification manually
+#if !TARGET_OS_TV
+  [self logBackgroundRefreshStatus];
+  [self initializeAppLink];
+#endif
+
+  [self configureSourceApplicationWithLaunchOptions:launchOptions];
+}
+
+#if !TARGET_OS_TV
+- (void)initializeAppLink
+{
+  [self initializeMeasurementListener];
+  [self _logIfAutoAppLinkEnabled];
+}
+#endif
+
+- (void)handleDeferredActivationIfNeeded
+{
+  // If sdk initialization is deferred until after the applicationDidBecomeActive notification is received, then we need to manually perform this work in case it hasn't happened at all.
   if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
     [self applicationDidBecomeActive:nil];
   }
+}
 
-  [self.featureChecker checkFeature:FBSDKFeatureInstrument completionBlock:^(BOOL enabled) {
-    if (enabled) {
-      [FBSDKInstrumentManager.shared enable];
-    }
-  }];
-
-#if !TARGET_OS_TV
-  [self.backgroundEventLogger logBackgroundRefresStatus:[UIApplication.sharedApplication backgroundRefreshStatus]];
-  // Register Listener for App Link measurement events
-  [FBSDKMeasurementEventListener defaultListener];
-  [self _logIfAutoAppLinkEnabled];
-#endif
+- (void)configureSourceApplicationWithLaunchOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions
+{
   // Set the SourceApplication for time spent data. This is not going to update the value if the app has already launched.
   [self.appEvents setSourceApplication:launchOptions[UIApplicationLaunchOptionsSourceApplicationKey]
                                openURL:launchOptions[UIApplicationLaunchOptionsURLKey]];
   // Register on UIApplicationDidEnterBackgroundNotification events to reset source application data when app backgrounds.
   [self.appEvents registerAutoResetSourceApplication];
-
   [FBSDKInternalUtility.sharedUtility validateFacebookReservedURLSchemes];
+}
+
+#if !TARGET_OS_TV
+- (void)initializeMeasurementListener
+{
+  // Register Listener for App Link measurement events
+  [FBSDKMeasurementEventListener defaultListener];
+}
+#endif
+
+#if !TARGET_OS_TV
+- (void)logBackgroundRefreshStatus
+{
+  [self.backgroundEventLogger logBackgroundRefresStatus:[UIApplication.sharedApplication backgroundRefreshStatus]];
+}
+#endif
+
+- (void)logInitialization
+{
+  id<FBSDKSettingsLogging> const settingsLogger = self.settings;
+  [settingsLogger logWarnings];
+  [settingsLogger logIfSDKSettingsChanged];
+  [settingsLogger recordInstall];
+}
+
+- (void)enableInstrumentation
+{
+  [self.featureChecker checkFeature:FBSDKFeatureInstrument completionBlock:^(BOOL enabled) {
+    if (enabled) {
+      [FBSDKInstrumentManager.shared enable];
+    }
+  }];
 }
 
 - (void)addObservers
@@ -368,6 +406,8 @@ static UIApplicationState _applicationState;
   return NO;
 }
 
+// MARK: Finish Launching
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   if (self.isAppLaunched) {
@@ -380,36 +420,68 @@ static UIApplicationState _applicationState;
 
   self.isAppLaunched = YES;
 
-  // Retrieve cached tokens
-  FBSDKAccessToken *cachedToken = [[self.tokenWallet tokenCache] accessToken];
-  [self.tokenWallet setCurrentAccessToken:cachedToken];
-
-  // fetch app settings
-  [self.serverConfigurationProvider loadServerConfigurationWithCompletionBlock:NULL];
+  [self initializeTokenCache];
+  [self fetchServerConfiguration];
 
   if (self.settings.isAutoLogAppEventsEnabled) {
     [self _logSDKInitialize];
   }
+
 #if !TARGET_OS_TV
+  [self initializeProfile];
+  [self checkAuthentication];
+#endif
+
+  return [self notifyLaunchObserversWithApplication:application
+                                      launchOptions:launchOptions];
+}
+
+- (void)initializeTokenCache
+{
+  FBSDKAccessToken *cachedToken = [[self.tokenWallet tokenCache] accessToken];
+  [self.tokenWallet setCurrentAccessToken:cachedToken];
+}
+
+- (void)fetchServerConfiguration
+{
+  [self.serverConfigurationProvider loadServerConfigurationWithCompletionBlock:NULL];
+}
+
+#if !TARGET_OS_TV
+- (void)initializeProfile
+{
   FBSDKProfile *cachedProfile = [self.profileProvider fetchCachedProfile];
   [self.profileProvider setCurrentProfile:cachedProfile];
+}
+#endif
 
+#if !TARGET_OS_TV
+- (void)checkAuthentication
+{
   FBSDKAuthenticationToken *cachedAuthToken = [[self.authenticationTokenWallet tokenCache] authenticationToken];
   [self.authenticationTokenWallet setCurrentAuthenticationToken:cachedAuthToken];
+
   [FBSDKAuthenticationStatusUtility checkAuthenticationStatus];
+}
 #endif
+
+- (BOOL)notifyLaunchObserversWithApplication:(UIApplication *)application
+                               launchOptions:(NSDictionary *)launchOptions
+{
   NSArray<id<FBSDKApplicationObserving>> *observers = [self.applicationObservers allObjects];
-  BOOL handled = NO;
+  BOOL someObserverHandledLaunch = NO;
   for (id<FBSDKApplicationObserving> observer in observers) {
     if ([observer respondsToSelector:@selector(application:didFinishLaunchingWithOptions:)]) {
       if ([observer application:application didFinishLaunchingWithOptions:launchOptions]) {
-        handled = YES;
+        someObserverHandledLaunch = YES;
       }
     }
   }
 
-  return handled;
+  return someObserverHandledLaunch;
 }
+
+// MARK: Entering Background
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification
 {
