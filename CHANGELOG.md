@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - `uploadImageWithConfiguration:completionHandler:andProgressHandler` is replaced by `uploadImageWithConfiguration:completion:andProgressHandler:`
   - `uploadVideoWithConfiguration:completionHandler:andProgressHandler:` is replaced by `uploadVideoWithConfiguration:completion:andProgressHandler:`
   - `uploadVideoWithConfiguration:andResultCompletionHandler` is replaced by `uploadVideoWithConfiguration:andResultCompletion`
+- `FBSDKGamingPayloadObserver`'s `shared` instance. Going forward a user should create and retain their own instance of a payload observer for as long as they'd like to receive callbacks from its delegate.
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.0.1...HEAD)
 

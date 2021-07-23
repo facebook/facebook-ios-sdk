@@ -26,26 +26,39 @@
 
 @implementation FBSDKGamingPayloadObserver
 
-static FBSDKGamingPayloadObserver *shared = nil;
+static FBSDKGamingPayloadObserver *sharedInstance = nil;
 
 + (instancetype)shared
 {
-  if (!shared) {
-    shared = [FBSDKGamingPayloadObserver new];
+  if (!sharedInstance) {
+    sharedInstance = [FBSDKGamingPayloadObserver new];
   }
-  return shared;
+  return sharedInstance;
+}
+
+- (instancetype)initWithDelegate:(id<FBSDKGamingPayloadDelegate>)delegate
+{
+  if ((self = [super init])) {
+    _delegate = delegate;
+    [FBSDKApplicationDelegate.sharedInstance addObserver:self];
+  }
+
+  return self;
 }
 
 - (void)setDelegate:(id<FBSDKGamingPayloadDelegate>)delegate
 {
-  if (!delegate) {
-    [[FBSDKApplicationDelegate sharedInstance] removeObserver:shared];
-    shared = nil;
+  if (sharedInstance) {
+    if (!delegate) {
+      [FBSDKApplicationDelegate.sharedInstance removeObserver:sharedInstance];
+      sharedInstance = nil;
+    }
+
+    if (!_delegate) {
+      [FBSDKApplicationDelegate.sharedInstance addObserver:sharedInstance];
+    }
   }
 
-  if (!_delegate) {
-    [[FBSDKApplicationDelegate sharedInstance] addObserver:[FBSDKGamingPayloadObserver shared]];
-  }
   _delegate = delegate;
 }
 
@@ -61,13 +74,13 @@ static FBSDKGamingPayloadObserver *shared = nil;
     return false;
   }
 
-  if ([_delegate respondsToSelector:@selector(updatedURLContaining:)]) {
-    FBSDKGamingPayload *payload = [[FBSDKGamingPayload alloc] initWithURL:sdkURL];
-    [_delegate updatedURLContaining:payload];
-    return true;
+  if (![(NSObject *)self.delegate respondsToSelector:@selector(updatedURLContaining:)]) {
+    return false;
   }
 
-  return false;
+  FBSDKGamingPayload *payload = [[FBSDKGamingPayload alloc] initWithURL:sdkURL];
+  [_delegate updatedURLContaining:payload];
+  return true;
 }
 
 @end
