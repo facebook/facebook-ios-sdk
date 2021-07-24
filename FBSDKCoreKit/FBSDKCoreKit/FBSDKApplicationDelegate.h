@@ -100,6 +100,17 @@ controlled via 'FacebookAutoLogAppEventsEnabled' key in the project info plist f
 didFinishLaunchingWithOptions:(nullable NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
 
 /**
+ Initializes the SDK.
+
+ If you are using the SDK within the context of the UIApplication lifecycle, do not use this method.
+ Instead use `application: didFinishLaunchingWithOptions:`.
+
+ As part of SDK initialization basic auto logging of app events will occur, this can be
+ controlled via 'FacebookAutoLogAppEventsEnabled' key in the project info plist file.
+ */
+- (void)initializeSDK;
+
+/**
   Adds an observer that will be informed about application lifecycle events.
 
   @note Observers are weakly held
