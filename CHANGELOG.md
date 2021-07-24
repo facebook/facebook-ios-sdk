@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.1.0...HEAD)
+
+## 11.1.0
+
 ### Added
 
 - Reintroduces `initializeSDK` method to `FBSDKApplicationDelegate`
@@ -30,7 +34,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Initializing the SDK in when UIApplication is unavailable [#1748](https://github.com/facebook/facebook-ios-sdk/issues/1748)
 - Issue caused by `initializeSDK` deprecation [#1731](https://github.com/facebook/facebook-ios-sdk/issues/1731)
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.0.1...HEAD)
+[2021-07-23](https://github.com/facebook/facebook-ios-sdk/releases/tag/v11.1.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.0.1...v11.1.0)
 
 ## 11.0.1
 
