@@ -26,7 +26,7 @@ public class SampleUserProfiles: NSObject {
   public static let defaultUserID = "123"
 
   public class var valid: Profile {
-    return Profile(
+    Profile(
       userID: defaultUserID,
       firstName: "John",
       middleName: "K",
@@ -52,11 +52,11 @@ public class SampleUserProfiles: NSObject {
   public static var validLimited = createValid(isLimited: true)
 
   public static func createValid(userID: String) -> Profile {
-    return createValid(userID: userID, name: defaultName)
+    createValid(userID: userID, name: defaultName)
   }
 
   public static func createValid(isExpired: Bool) -> Profile {
-    return createValid(name: defaultName, isExpired: isExpired)
+    createValid(name: defaultName, isExpired: isExpired)
   }
 
   public static func createValid(
@@ -66,7 +66,7 @@ public class SampleUserProfiles: NSObject {
     isExpired: Bool = false,
     isLimited: Bool = false
   ) -> Profile {
-    return Profile(
+    Profile(
       userID: userID,
       firstName: "John",
       middleName: "K",
