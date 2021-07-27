@@ -24,7 +24,6 @@
 
  #import "FBSDKSwitchContextDialog.h"
 
- #import "FBSDKCoreKitInternalImport.h"
  #import "FBSDKSwitchContextContent.h"
 
  #define FBSDK_CONTEXT_METHOD_NAME @"context"
