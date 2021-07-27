@@ -55,6 +55,7 @@
 #import "FBSDKBridgeAPIResponseFactory.h"
 #import "FBSDKAdvertiserIDProviding.h"
 #import "FBSDKAppLinkEventPosting.h"
+#import "FBSDKAppEvents+Testing.h"
 #import "FBSDKBridgeAPI+Testing.h"
 #import "FBSDKCloseIcon.h"
 #import "FBSDKCoreKitBasicsImport.h"
@@ -332,12 +333,6 @@ NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvi
 + (id<FBSDKSettings>)settings;
 + (Class<FBSDKServerConfigurationProviding>)serverConfiguration;
 + (id<FBSDKGraphRequestProviding>)requestProvider;
-
-@end
-
-@interface FBSDKAppEvents (Testing)
-
-+ (void)reset;
 
 @end
 
