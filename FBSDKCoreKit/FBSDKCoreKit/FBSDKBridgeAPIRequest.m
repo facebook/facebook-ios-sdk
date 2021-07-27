@@ -34,6 +34,7 @@ NSString *const FBSDKBridgeAPIAppIDKey = @"app_id";
 NSString *const FBSDKBridgeAPISchemeSuffixKey = @"scheme_suffix";
 NSString *const FBSDKBridgeAPIVersionKey = @"version";
 
+NS_EXTENSION_UNAVAILABLE("")
 @implementation FBSDKBridgeAPIRequest
 
  #pragma mark - Class Methods

@@ -36,6 +36,7 @@
 
 @end
 
+NS_EXTENSION_UNAVAILABLE("")
 @implementation FBSDKViewImpressionTracker
 {
   NSMutableSet *_trackedImpressions;

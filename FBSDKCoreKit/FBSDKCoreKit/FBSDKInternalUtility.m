@@ -48,6 +48,7 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift) {
 
 @end
 
+NS_EXTENSION_UNAVAILABLE("")
 @implementation FBSDKInternalUtility
 
 static Class<FBSDKLogging> _loggerType;

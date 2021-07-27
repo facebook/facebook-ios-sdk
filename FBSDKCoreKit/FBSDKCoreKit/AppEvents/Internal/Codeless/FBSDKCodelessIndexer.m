@@ -62,6 +62,7 @@
 
 @end
 
+NS_EXTENSION_UNAVAILABLE("")
 @implementation FBSDKCodelessIndexer
 
 static BOOL _isCodelessIndexing;

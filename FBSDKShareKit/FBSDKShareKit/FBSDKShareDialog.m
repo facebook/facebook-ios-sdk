@@ -75,6 +75,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
 @interface FBSDKShareDialog () <FBSDKWebDialogDelegate>
 @end
 
+NS_EXTENSION_UNAVAILABLE("")
 @implementation FBSDKShareDialog
 {
   FBSDKWebDialog *_webDialog;

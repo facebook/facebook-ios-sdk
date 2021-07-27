@@ -54,6 +54,7 @@
 
 @end
 
+NS_EXTENSION_UNAVAILABLE("")
 @implementation FBSDKEventBindingManager
 
 - (instancetype)initWithSwizzler:(Class<FBSDKSwizzling>)swizzling

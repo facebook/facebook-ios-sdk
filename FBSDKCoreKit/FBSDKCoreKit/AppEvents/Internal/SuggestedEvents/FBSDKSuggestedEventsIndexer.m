@@ -65,6 +65,7 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
 
 @end
 
+NS_EXTENSION_UNAVAILABLE("")
 @implementation FBSDKSuggestedEventsIndexer
 
 - (instancetype)init

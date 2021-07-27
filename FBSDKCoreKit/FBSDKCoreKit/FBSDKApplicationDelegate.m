@@ -125,6 +125,7 @@ static UIApplicationState _applicationState;
 
 @end
 
+NS_EXTENSION_UNAVAILABLE("")
 @implementation FBSDKApplicationDelegate
 
 #pragma mark - Class Methods

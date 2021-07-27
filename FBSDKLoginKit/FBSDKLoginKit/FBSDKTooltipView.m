@@ -49,6 +49,7 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
 
  #pragma mark -
 
+NS_EXTENSION_UNAVAILABLE("")
 @implementation FBSDKTooltipView
 {
   CGPoint _positionInView;

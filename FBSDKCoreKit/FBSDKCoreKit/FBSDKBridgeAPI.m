@@ -74,6 +74,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 
 @end
 
+NS_EXTENSION_UNAVAILABLE("")
 @implementation FBSDKBridgeAPI
 {
   NSObject<FBSDKBridgeAPIRequestProtocol> *_pendingRequest;

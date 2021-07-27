@@ -77,6 +77,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
 
 @end
 
+NS_EXTENSION_UNAVAILABLE("")
 @implementation FBSDKWebViewAppLinkResolverWebViewDelegate
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
@@ -112,6 +113,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
 
 @end
 
+NS_EXTENSION_UNAVAILABLE("")
 @implementation FBSDKWebViewAppLinkResolver
 
 - (instancetype)init

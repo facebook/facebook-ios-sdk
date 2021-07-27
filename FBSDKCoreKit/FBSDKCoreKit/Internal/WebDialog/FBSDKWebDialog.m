@@ -43,6 +43,7 @@ static FBSDKWebDialog *g_currentDialog = nil;
 @interface FBSDKWebDialog () <FBSDKWebDialogViewDelegate>
 @end
 
+NS_EXTENSION_UNAVAILABLE("")
 @implementation FBSDKWebDialog
 {
   UIView *_backgroundView;

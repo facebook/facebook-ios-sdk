@@ -310,6 +310,7 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 
 @end
 
+NS_EXTENSION_UNAVAILABLE("")
 @implementation FBSDKAppEvents
 {
   FBSDKServerConfiguration *_serverConfiguration;
