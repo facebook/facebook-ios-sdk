@@ -86,12 +86,8 @@
 
 - (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef
 {
-  if (!errorRef) {
-    return NO;
-  }
-
   if (!FBSDKSettings.appID) {
-    *errorRef = [FBSDKError errorWithCode:FBSDKErrorInvalidArgument message:@"App ID is not set in settings"];
+    *errorRef = [FBSDKError errorWithCode:FBSDKErrorUnknown message:@"App ID is not set in settings"];
     return NO;
   }
   if (![self.dialogContent respondsToSelector:@selector(validateWithError:)]) {
@@ -106,6 +102,7 @@
 }
 
  #pragma mark - Helpers
+
 - (void)_handleDialogError:(NSError *)dialogError
 {
   [self.delegate contextDialog:self didFailWithError:dialogError];
@@ -135,6 +132,23 @@
   return parameters;
 }
 
+- (FBSDKGamingContext *_Nullable)_gamingContextFromURL:(NSURL *)url
+{
+  NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
+
+  if (!urlComponents.queryItems || !urlComponents.queryItems.count) {
+    return nil;
+  }
+  NSURLQueryItem *contextIDQueryItem = urlComponents.queryItems.firstObject;
+  if (![contextIDQueryItem.name isEqual:FBSDK_CONTEXT_DIALOG_DEEPLINK_QUERY_CONTEXT_KEY]) {
+    return nil;
+  }
+  NSString *contextID = contextIDQueryItem.value;
+  [[FBSDKGamingContext currentContext] setIdentifier:contextID];
+
+  return [FBSDKGamingContext currentContext];
+}
+
  #pragma mark - FBSDKURLOpening
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
@@ -152,7 +166,7 @@
     return isGamingUrl;
   }
 
-  FBSDKGamingContext *context = [self _parseURLForGamingContext:url];
+  FBSDKGamingContext *context = [self _gamingContextFromURL:url];
   if (context) {
     [self.delegate contextDialogDidComplete:self];
   }
@@ -176,23 +190,6 @@
 - (BOOL)isAuthenticationURL:(NSURL *)url
 {
   return false;
-}
-
-- (FBSDKGamingContext *_Nullable)_parseURLForGamingContext:(NSURL *)url
-{
-  NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
-
-  if (!urlComponents.queryItems || !urlComponents.queryItems.count) {
-    return nil;
-  }
-  NSURLQueryItem *contextIDQueryItem = urlComponents.queryItems.firstObject;
-  if (![contextIDQueryItem.name isEqual:FBSDK_CONTEXT_DIALOG_DEEPLINK_QUERY_CONTEXT_KEY]) {
-    return nil;
-  }
-  NSString *contextID = contextIDQueryItem.value;
-  [[FBSDKGamingContext currentContext] setIdentifier:contextID];
-
-  return [FBSDKGamingContext currentContext];
 }
 
 @end

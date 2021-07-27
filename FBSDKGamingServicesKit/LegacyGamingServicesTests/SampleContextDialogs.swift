@@ -34,4 +34,22 @@ enum SampleContextDialogs {
     dialog.show()
     return dialog
   }
+
+  static func showChooseContextDialogWithInvalidSizes(delegate: ContextDialogDelegate) -> ChooseContextDialog? {
+    Settings.appID = "abc123"
+    let content = ChooseContextContent()
+    content.minParticipants = 2
+    content.maxParticipants = 1
+    let dialog = ChooseContextDialog(content: content, delegate: delegate)
+    dialog.show()
+    return dialog
+  }
+
+ static func chooseContextDialogWithoutContentValues(delegate: ContextDialogDelegate) -> ChooseContextDialog? {
+    let content = ChooseContextContent()
+    let dialog = ChooseContextDialog(content: content, delegate: delegate)
+
+    return dialog
+  }
+
 }
