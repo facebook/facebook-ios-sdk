@@ -64,6 +64,8 @@ targets:
       Debug: Configurations/FBSDKGamingServicesKitTests.xcconfig
       Release: Configurations/FBSDKGamingServicesKitTests.xcconfig
     dependencies:
+      - target: TestTools/TestTools
+        embed: false
       - target: LegacyGamingServices-Dynamic
         embed: false
       - target: FacebookGamingServices-Dynamic

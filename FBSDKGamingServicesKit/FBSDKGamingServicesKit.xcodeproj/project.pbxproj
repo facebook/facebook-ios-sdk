@@ -88,6 +88,7 @@
 		74CD7B1EC2951FEE3C77755E /* FBSDKContextWebDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 225ACBF3A941E600F8B3EA5B /* FBSDKContextWebDialog.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		76BFE1AF9A21DF523C1E3306 /* FBSDKGamingServiceControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = A3732411A7C50B9E89063331 /* FBSDKGamingServiceControllerProtocol.h */; };
 		77AAECB8A8F60F457C050570 /* FBSDKSwitchContextContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 57D210D19D7783A2CA2A486D /* FBSDKSwitchContextContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7816E570625D8DED51948954 /* TestTools.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2718D04A5B5FCAB7CE09F8B1 /* TestTools.framework */; };
 		78604B23C78BD3359DB04192 /* FBSDKGamingServiceControllerFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = D8FF0B16FFB581E722B6C109 /* FBSDKGamingServiceControllerFactory.h */; };
 		7866942F2E6ABC55DB068F36 /* FBSDKCreateContextContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 65222B7B4D82466B6B2C5ED6 /* FBSDKCreateContextContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		79CC1FB47EA48B77491662EB /* FBSDKGamingVideoUploaderConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AFE43729179205DF73F39CA /* FBSDKGamingVideoUploaderConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -240,6 +241,13 @@
 			remoteGlobalIDString = E503762E6371E38D1BD77A42;
 			remoteInfo = "FBSDKGamingServicesKit-Dynamic";
 		};
+		590022CA0B7A7BB10A15F80D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2770DFC56EE70A485C7EE503 /* TestTools */;
+			proxyType = 2;
+			remoteGlobalIDString = E40113A8B281C6A908AEFA21;
+			remoteInfo = TestTools;
+		};
 		74CF1D66C9846903EF71B914 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = AD918022918A9CDD1DDC29D5 /* Project object */;
@@ -351,6 +359,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 02661F9FD193A8A6DD7A19BF;
 			remoteInfo = LegacyGamingServices;
+		};
+		F6462C41943F5DEC22AEF66F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2770DFC56EE70A485C7EE503 /* TestTools */;
+			proxyType = 1;
+			remoteGlobalIDString = 7EE1BFF550650C49854D563A;
+			remoteInfo = TestTools;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -479,6 +494,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7816E570625D8DED51948954 /* TestTools.framework in Frameworks */,
 				65D53370AB6BB332902A757C /* LegacyGamingServices.framework in Frameworks */,
 				9C22CA23DA66B62F06B56B1E /* FacebookGamingServices.framework in Frameworks */,
 				93587C8EA8CC71647233BC63 /* FBSDKGamingServicesKit.framework in Frameworks */,
@@ -757,6 +773,7 @@
 			isa = PBXGroup;
 			children = (
 				2718D04A5B5FCAB7CE09F8B1 /* TestTools.framework */,
+				6CAB32434C70B3CAD2D106CD /* TestTools.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1124,6 +1141,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DAA416226D080D1C8878D811 /* PBXTargetDependency */,
 				0CB166B202C571B99016239C /* PBXTargetDependency */,
 				144185DF3DFA49873D7B6D31 /* PBXTargetDependency */,
 				C4A815C5D2B4D7A139C801D1 /* PBXTargetDependency */,
@@ -1208,6 +1226,13 @@
 			fileType = wrapper.framework;
 			path = TestTools.framework;
 			remoteRef = 2211C555AC9CDC45D1BCE0B9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6CAB32434C70B3CAD2D106CD /* TestTools.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = TestTools.framework;
+			remoteRef = 590022CA0B7A7BB10A15F80D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		A311CE2FB74148E1F5A30138 /* FBSDKShareKit-Dynamic.framework */ = {
@@ -1569,6 +1594,11 @@
 			isa = PBXTargetDependency;
 			target = BAC146DEC49878F3206EDE53 /* FacebookGamingServices-Dynamic */;
 			targetProxy = 3188401A429077178589DB5E /* PBXContainerItemProxy */;
+		};
+		DAA416226D080D1C8878D811 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TestTools;
+			targetProxy = F6462C41943F5DEC22AEF66F /* PBXContainerItemProxy */;
 		};
 		E77AF3C7616094DD09455D95 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
