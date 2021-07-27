@@ -32,6 +32,12 @@ class CreateContextDialogTest: XCTestCase, ContextDialogDelegate {
         self.dialogError = nil
     }
 
+    override func tearDown() {
+        super.tearDown()
+
+        GamingContext.current().identifier = nil
+    }
+
     func testShowDialogWithInvalidContent() {
         let content = CreateContextContent(playerID: "")
         let dialog = CreateContextDialog(content: content, windowFinder: TestWindowFinder(), delegate: self)
