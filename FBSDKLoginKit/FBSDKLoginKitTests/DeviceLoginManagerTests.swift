@@ -444,7 +444,7 @@ class DeviceLoginManagerTests: XCTestCase {
   // MARK: Helpers
 
   func sampleCodeInfo() -> DeviceLoginCodeInfo {
-    return DeviceLoginCodeInfo(
+    DeviceLoginCodeInfo(
       identifier: "identifier",
       loginCode: "loginCode",
       verificationURL: URL(string: "https://www.facebook.com")!, // swiftlint:disable:this force_unwrapping

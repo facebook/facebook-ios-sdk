@@ -134,6 +134,6 @@ public class TestGraphRequest: NSObject, GraphRequestProtocol {
   }
 
   public func formattedDescription() -> String {
-    return "Test graph request"
+    "Test graph request"
   }
 }

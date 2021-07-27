@@ -27,7 +27,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import "FBSDKCoreKit+Internal.h"
 #import "FBSDKMessageDialog.h"
 #import "FBSDKShareKitTestUtility.h"
 #import "FBSDKShareModelTestUtility.h"

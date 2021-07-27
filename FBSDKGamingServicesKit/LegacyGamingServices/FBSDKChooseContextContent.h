@@ -35,13 +35,24 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  A model for an instant games choose context app switch dialog
  */
-NS_SWIFT_NAME(ContextSwitchAsyncContent)
+NS_SWIFT_NAME(ChooseContextContent)
 @interface FBSDKChooseContextContent : NSObject <FBSDKValidatable>
 
 /**
   This sets the filter which determines which context will show when the user is app switched to the choose context dialog.
  */
-@property (nonatomic, assign) FBSDKChooseContextFilter filter;
+@property (nonatomic) FBSDKChooseContextFilter filter;
+
+/**
+  This sets the maximum number of participants that the suggested context(s) shown in the dialog should have.
+ */
+@property (nonatomic) int maxParticipants;
+
+/**
+  This sets the minimum number of participants that the suggested context(s) shown in the dialog should have. 
+ */
+@property (nonatomic) int minParticipants;
+
 
 + (NSString *)filtersNameForFilters:(FBSDKChooseContextFilter)filter;
 

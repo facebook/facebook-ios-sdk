@@ -24,11 +24,14 @@
 
  #import "FBSDKChooseContextContent.h"
  #import "FBSDKChooseContextDialog.h"
- #import "FBSDKCoreKitInternalImport.h"
  #import "FBSDKCreateContextDialog.h"
  #import "FBSDKDialogProtocol.h"
  #import "FBSDKGamingContext.h"
+ #import "FBSDKGamingServicesCoreKitImport.h"
  #import "FBSDKSwitchContextDialog.h"
+
+@interface FBSDKInternalUtility () <FBSDKWindowFinding>
+@end
 
 @interface FBSDKContextDialogPresenter ()
 
@@ -40,7 +43,7 @@
 
  #pragma mark - Class Methods
 
-+ (nullable FBSDKCreateContextDialog *)createContextDialogWithContent:(FBSDKContextCreateAsyncContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
++ (nullable FBSDKCreateContextDialog *)createContextDialogWithContent:(FBSDKCreateContextContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
 {
   if (![FBSDKAccessToken currentAccessToken]) {
     return nil;
@@ -51,7 +54,7 @@
   return dialog;
 }
 
-+ (nullable NSError *)showCreateContextDialogWithContent:(FBSDKContextCreateAsyncContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
++ (nullable NSError *)showCreateContextDialogWithContent:(FBSDKCreateContextContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
 {
   FBSDKCreateContextDialog *dialog = [self createContextDialogWithContent:content delegate:delegate];
   if (dialog) {
@@ -64,7 +67,7 @@
   return tokenError;
 }
 
-+ (nullable FBSDKSwitchContextDialog *)switchContextDialogWithContent:(FBSDKContextSwitchAsyncContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
++ (nullable FBSDKSwitchContextDialog *)switchContextDialogWithContent:(FBSDKSwitchContextContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
 {
   if (![FBSDKAccessToken currentAccessToken]) {
     return nil;
@@ -73,7 +76,7 @@
   return dialog;
 }
 
-+ (nullable NSError *)showSwitchContextDialogWithContent:(FBSDKContextSwitchAsyncContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
++ (nullable NSError *)showSwitchContextDialogWithContent:(FBSDKSwitchContextContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
 {
   FBSDKSwitchContextDialog *dialog = [self switchContextDialogWithContent:content delegate:delegate];
   if (dialog) {

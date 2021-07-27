@@ -35,8 +35,19 @@ Main completion handling of any Gaming Service (Friend Finder, Image/Video Uploa
 @param result the result that was returned by the service, if any.
 @param error the error that occured during the service call, if any.
 */
-typedef void (^FBSDKGamingServiceResultCompletionHandler)(BOOL success, NSString * _Nullable result, NSError * _Nullable error)
+typedef void (^FBSDKGamingServiceResultCompletionHandler)(BOOL success, NSString *_Nullable result, NSError *_Nullable error)
+DEPRECATED_MSG_ATTRIBUTE("`GamingServiceResultCompletionHandler` is deprecated and will be removed in the next major release. It is replaced by `GamingServiceResultCompletion`.")
 NS_SWIFT_NAME(GamingServiceResultCompletionHandler);
+
+/**
+Main completion handling of any Gaming Service (Friend Finder, Image/Video Upload).
+
+@param success whether the call to the service was considered a success.
+@param result the result that was returned by the service, if any.
+@param error the error that occured during the service call, if any.
+*/
+typedef void (^FBSDKGamingServiceResultCompletion)(BOOL success, NSDictionary *_Nullable result, NSError *_Nullable error)
+NS_SWIFT_NAME(GamingServiceResultCompletion);
 
 /**
 Main completion handling of any Gaming Service (Friend Finder, Image/Video Upload).

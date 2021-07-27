@@ -20,7 +20,7 @@
 
 @import FBSDKCoreKit_Basics;
 
-#import "FBSDKInternalUtility.h"
+#import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKRestrictiveData.h"
 
 @interface FBSDKRestrictiveDataTests : XCTestCase

@@ -97,7 +97,7 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
   }
 
   func testRequestURLWithoutDialog() {
-    TestServerConfigurationProvider.stubbedServerConfiguration = ServerConfigurationFixtures.defaultConfig()
+    TestServerConfigurationProvider.stubbedServerConfiguration = ServerConfigurationFixtures.defaultConfig
     let url = try? bridge.requestURL(
       withActionID: nil,
       scheme: nil,
@@ -372,7 +372,9 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
       url: url,
       appVersions: []
     )
-    let configuration = ServerConfigurationFixtures.config(with: ["dialogConfigurations": [name: dialogConfiguration]])
+    let configuration = ServerConfigurationFixtures.config(
+      withDictionary: ["dialogConfigurations": [name: dialogConfiguration]]
+    )
     TestServerConfigurationProvider.stubbedServerConfiguration = configuration
   }
 

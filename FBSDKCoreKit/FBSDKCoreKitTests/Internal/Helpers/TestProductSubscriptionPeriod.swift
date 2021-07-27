@@ -25,6 +25,6 @@ class TestProductSubscriptionPeriod: SKProductSubscriptionPeriod {
   }
 
   override var numberOfUnits: Int {
-    return stubbedNumberOfUnits
+    stubbedNumberOfUnits
   }
 }

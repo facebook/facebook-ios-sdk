@@ -22,15 +22,29 @@
 
  #import "FBSDKChooseContextContent.h"
 
- #import "FBSDKCoreKitInternalImport.h"
+ #import "FBSDKGamingServicesCoreKitImport.h"
 
-@interface FBSDKChooseContextContent () <FBSDKCopying>
+@interface FBSDKChooseContextContent () <NSCopying, NSObject>
 @end
 
 @implementation FBSDKChooseContextContent
 
 - (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef
 {
+  if (!self.minParticipants && !self.maxParticipants) {
+    return YES;
+  }
+
+  BOOL minimumGreaterThanMaximum = self.minParticipants > self.maxParticipants;
+  if (minimumGreaterThanMaximum) {
+    if (errorRef != NULL) {
+      NSString *message = @"The minimum size cannot be greater than the maximum size";
+      *errorRef = [FBSDKError requiredArgumentErrorWithDomain:FBSDKErrorDomain
+                                                         name:@"minParticipants"
+                                                      message:message];
+    }
+    return NO;
+  }
   return YES;
 }
 
@@ -58,6 +72,8 @@
 {
   FBSDKChooseContextContent *copy = [FBSDKChooseContextContent new];
   copy.filter = self.filter;
+  copy.minParticipants = self.minParticipants;
+  copy.maxParticipants = self.maxParticipants;
   return copy;
 }
 

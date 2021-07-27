@@ -18,11 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#if defined FBSDKCOCOAPODS
-#import <FBSDKGamingServicesKit/FBSDKGamingServiceCompletionHandler.h>
-#else
 #import "FBSDKGamingServiceCompletionHandler.h"
-#endif
 
 NS_SWIFT_NAME(FriendFinderDialog)
 @interface FBSDKFriendFinderDialog : NSObject

@@ -20,15 +20,16 @@
 
 #if SWIFT_PACKAGE
  #import "FBSDKGraphRequest.h"
+ #import "FBSDKGraphRequestConnectionProviding.h"
  #import "FBSDKGraphRequestFlags.h"
 #else
  #import <FBSDKCoreKit/FBSDKGraphRequest.h>
+ #import <FBSDKCoreKit/FBSDKGraphRequestConnectionProviding.h>
  #import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
 #endif
 
-#import "FBSDKGraphRequestConnectionProviding.h"
-
 @protocol FBSDKCurrentAccessTokenStringProviding;
+@protocol FBSDKSettings;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -69,6 +70,7 @@ NS_ASSUME_NONNULL_BEGIN
                   forBatch:(BOOL)forBatch;
 
 + (void)setCurrentAccessTokenStringProvider:(Class<FBSDKCurrentAccessTokenStringProviding>)provider;
++ (void)setSettings:(id<FBSDKSettings>)settings;
 
 @end
 

@@ -70,7 +70,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 0B9DBF54207C080600662776 /* FBSDKLoginKit.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 0B9DBF40207C07C600662776;
+			remoteGlobalIDString = E53936AD30027E37E10349FA;
 			remoteInfo = "FBSDKLoginKit_TV-Dynamic";
 		};
 		0B9DBF5D207C080600662776 /* PBXContainerItemProxy */ = {
@@ -112,7 +112,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 0B9DBF54207C080600662776 /* FBSDKLoginKit.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 0B9DBF2B207C05CD00662776;
+			remoteGlobalIDString = 3D13B63017300A370DC3C598;
 			remoteInfo = FBSDKLoginKit_TV;
 		};
 		8117C2391D302F6900784D79 /* PBXContainerItemProxy */ = {
@@ -147,7 +147,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 8118B6081D0A45F000962084 /* FBSDKCoreKit.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 814AC7E11D1B528900D61E6C;
+			remoteGlobalIDString = 9B3DC93C05C131CAD9C2148A;
 			remoteInfo = "FBSDKCoreKit_TV-Dynamic";
 		};
 		8118B6101D0A45F000962084 /* PBXContainerItemProxy */ = {
@@ -175,7 +175,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 8118B6081D0A45F000962084 /* FBSDKCoreKit.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 9DB0FA721BC1CA71005EB8B1;
+			remoteGlobalIDString = 796E2623932EEB6D87BB62AC;
 			remoteInfo = FBSDKCoreKit_TV;
 		};
 		8118B6281D0A462B00962084 /* PBXContainerItemProxy */ = {
@@ -203,7 +203,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 8118B6081D0A45F000962084 /* FBSDKCoreKit.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 9DB0FA721BC1CA71005EB8B1;
+			remoteGlobalIDString = 796E2623932EEB6D87BB62AC;
 			remoteInfo = FBSDKCoreKit_TV;
 		};
 		9DEC558F1BBA636A00C7DB4A /* PBXContainerItemProxy */ = {
@@ -696,7 +696,7 @@
 		9DEC557A1BBA636A00C7DB4A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1250;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					9DEC55821BBA636A00C7DB4A = {

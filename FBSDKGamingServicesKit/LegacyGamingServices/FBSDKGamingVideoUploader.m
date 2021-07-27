@@ -18,34 +18,99 @@
 
 #import "FBSDKGamingVideoUploader.h"
 
-#import "FBSDKCoreKitInternalImport.h"
+#import "FBSDKFileHandleFactory.h"
+#import "FBSDKFileHandling.h"
+#import "FBSDKGamingServicesCoreKitImport.h"
 #import "FBSDKGamingVideoUploaderConfiguration.h"
 #import "FBSDKVideoUploader.h"
+#import "FBSDKVideoUploaderFactory.h"
 
 @interface FBSDKGamingVideoUploader () <FBSDKVideoUploaderDelegate>
 {
-  NSFileHandle *_fileHandle;
-  FBSDKGamingServiceResultCompletionHandler _completionHandler;
-  FBSDKGamingServiceProgressHandler _progressHandler;
   NSUInteger _totalBytesSent;
-  NSUInteger _totalBytesExpectedToSend;
 }
+
+@property (nonatomic) id<FBSDKFileHandling> fileHandle;
+@property (nonatomic) id<FBSDKFileHandleCreating> fileHandleFactory;
+@property (nonatomic) id<FBSDKVideoUploaderCreating> videoUploaderFactory;
+
+@property (nonatomic) NSUInteger totalBytesExpectedToSend;
+@property (nullable, nonatomic) FBSDKGamingServiceResultCompletion completionHandler;
+@property (nullable, nonatomic) FBSDKGamingServiceProgressHandler progressHandler;
+
 @end
 
 @implementation FBSDKGamingVideoUploader
 
+// Transitional singleton introduced as a way to change the usage semantics
+// from a type-based interface to an instance-based interface.
+// The goal is to move from:
+// ClassWithoutUnderlyingInstance -> ClassRelyingOnUnderlyingInstance -> Instance
++ (FBSDKGamingVideoUploader *)shared
+{
+  static dispatch_once_t nonce;
+  static FBSDKGamingVideoUploader *instance;
+  dispatch_once(&nonce, ^{
+    instance = [self new];
+  });
+  return instance;
+}
+
 - (instancetype)init
 {
-  return [super init];
+  return [self initWithFileHandleFactory:[FBSDKFileHandleFactory new]
+                    videoUploaderFactory:[FBSDKVideoUploaderFactory new]];
+}
+
+- (instancetype)initWithFileHandleFactory:(id<FBSDKFileHandleCreating>)fileHandleFactory
+                     videoUploaderFactory:(id<FBSDKVideoUploaderCreating>)videoUploaderFactory
+{
+  if ((self = [super init])) {
+    _fileHandleFactory = fileHandleFactory;
+    _videoUploaderFactory = videoUploaderFactory;
+  }
+
+  return self;
+}
+
++ (FBSDKGamingVideoUploader *)createWithFileHandle:(id<FBSDKFileHandling>)fileHandle
+                                  totalBytesToSend:(NSUInteger)totalBytes
+                                 completionHandler:(FBSDKGamingServiceResultCompletion _Nonnull)completionHandler
+                                   progressHandler:(FBSDKGamingServiceProgressHandler _Nonnull)progressHandler
+{
+  FBSDKGamingVideoUploader *uploader = [FBSDKGamingVideoUploader new];
+  uploader.fileHandle = fileHandle;
+  uploader.totalBytesExpectedToSend = totalBytes;
+  uploader.completionHandler = completionHandler;
+  uploader.progressHandler = progressHandler;
+
+  return uploader;
 }
 
 + (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration *_Nonnull)configuration
           andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
 {
-  return
+  FBSDKGamingServiceResultCompletion completion = ^void (BOOL success, NSDictionary *result, NSError *error) {
+    completionHandler(success, result.debugDescription, error);
+  };
+
+  [self.shared uploadVideoWithConfiguration:configuration
+                        andResultCompletion:completion];
+}
+
++ (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration *_Nonnull)configuration
+                 andResultCompletion:(FBSDKGamingServiceResultCompletion _Nonnull)completion
+{
+  [self.shared uploadVideoWithConfiguration:configuration
+                        andResultCompletion:completion];
+}
+
+- (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration *_Nonnull)configuration
+                 andResultCompletion:(FBSDKGamingServiceResultCompletion _Nonnull)completion
+{
   [self
    uploadVideoWithConfiguration:configuration
-   completionHandler:completionHandler
+   completion:completion
    andProgressHandler:nil];
 }
 
@@ -53,8 +118,30 @@
                    completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
                   andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
 {
-  if ([FBSDKAccessToken currentAccessToken] == nil) {
-    completionHandler(
+  FBSDKGamingServiceResultCompletion completion = ^void (BOOL success, NSDictionary *result, NSError *error) {
+    completionHandler(success, result.debugDescription, error);
+  };
+
+  [self.shared uploadVideoWithConfiguration:configuration
+                                 completion:completion
+                         andProgressHandler:progressHandler];
+}
+
++ (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration *_Nonnull)configuration
+                          completion:(FBSDKGamingServiceResultCompletion _Nonnull)completion
+                  andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
+{
+  [self.shared uploadVideoWithConfiguration:configuration
+                                 completion:completion
+                         andProgressHandler:progressHandler];
+}
+
+- (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration *_Nonnull)configuration
+                          completion:(FBSDKGamingServiceResultCompletion _Nonnull)completion
+                  andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
+{
+  if (FBSDKAccessToken.currentAccessToken == nil) {
+    completion(
       false,
       nil,
       [FBSDKError
@@ -66,7 +153,7 @@
   }
 
   if (configuration.videoURL == nil) {
-    completionHandler(
+    completion(
       false,
       nil,
       [FBSDKError
@@ -77,13 +164,12 @@
     return;
   }
 
-  NSFileHandle *const fileHandle =
-  [NSFileHandle
-   fileHandleForReadingFromURL:configuration.videoURL
-   error:nil];
+  id<FBSDKFileHandling> const fileHandle =
+  [self.fileHandleFactory fileHandleForReadingFromURL:configuration.videoURL
+                                                error:nil];
 
   if ((unsigned long)[fileHandle seekToEndOfFile] == 0) {
-    completionHandler(
+    completion(
       false,
       nil,
       [FBSDKError
@@ -97,36 +183,22 @@
   const NSUInteger fileSize = (unsigned long)[fileHandle seekToEndOfFile];
 
   FBSDKGamingVideoUploader *const uploader =
-  [[FBSDKGamingVideoUploader alloc]
-   initWithFileHandle:fileHandle
+  [FBSDKGamingVideoUploader
+   createWithFileHandle:fileHandle
    totalBytesToSend:fileSize
-   completionHandler:completionHandler
+   completionHandler:completion
    progressHandler:progressHandler];
 
   [FBSDKInternalUtility.sharedUtility registerTransientObject:uploader];
 
-  FBSDKVideoUploader *const videoUploader =
-  [[FBSDKVideoUploader alloc]
-   initWithVideoName:[configuration.videoURL lastPathComponent]
+  id<FBSDKVideoUploading> const videoUploader =
+  [self.videoUploaderFactory
+   createWithVideoName:[configuration.videoURL lastPathComponent]
    videoSize:fileSize
    parameters:@{}
    delegate:uploader];
 
   [videoUploader start];
-}
-
-- (instancetype)initWithFileHandle:(NSFileHandle *)fileHandle
-                  totalBytesToSend:(NSUInteger)totalBytes
-                 completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
-                   progressHandler:(FBSDKGamingServiceProgressHandler _Nonnull)progressHandler
-{
-  if (self = [super init]) {
-    _fileHandle = fileHandle;
-    _totalBytesExpectedToSend = totalBytes;
-    _completionHandler = completionHandler;
-    _progressHandler = progressHandler;
-  }
-  return self;
 }
 
 - (void)safeCompleteWithSuccess:(BOOL)success
@@ -143,7 +215,7 @@
   }
 
   if (_completionHandler != nil) {
-    _completionHandler(success, result, finalError);
+    self.completionHandler(success, result, finalError);
   }
 
   [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
@@ -184,8 +256,13 @@
 {
   [self safeProgressWithTotalBytesSent:_totalBytesExpectedToSend];
 
+  BOOL serverSuccess = NO;
+  id success = results[@"success"];
+  if ([success isKindOfClass:NSString.class] || [success isKindOfClass:NSNumber.class]) {
+    serverSuccess = [success boolValue];
+  }
   [self
-   safeCompleteWithSuccess:[results[@"success"] boolValue]
+   safeCompleteWithSuccess:serverSuccess
    error:nil
    result:@{@"video_id" : results[@"video_id"] ?: @""}];
 }

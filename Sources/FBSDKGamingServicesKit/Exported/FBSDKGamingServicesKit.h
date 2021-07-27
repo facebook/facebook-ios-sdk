@@ -16,7 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Used from BUCK and Xcodebuild to maintain backwards compatibility for current users
-// of FBSDKGamingServicesKit but will be excluded from Swift Package Manager.
+// Used from BUCK, CocoaPods, and Xcodebuild to maintain backwards compatibility
+// for current users of FBSDKGamingServicesKit.
 
 #import <LegacyGamingServices/FBSDKGamingServicesKit.h>

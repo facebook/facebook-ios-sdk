@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'FacebookSDK'
-  s.version      = '11.0.1'
+  s.version      = '11.1.0'
   s.summary      = 'Official Facebook SDK for iOS to access Facebook Platform'
 
   s.description  = <<-DESC
@@ -41,7 +41,12 @@ Pod::Spec.new do |s|
     ss.ios.vendored_framework = 'FBSDKCoreKit_Basics.framework'
     ss.tvos.vendored_framework = 'tv/FBSDKCoreKit_Basics.framework'
   end
+  s.subspec 'AEMKit' do |ss|
+    ss.ios.dependency 'FacebookSDK/Basics'
+    ss.ios.vendored_framework = 'FBAEMKit.framework'
+  end
   s.subspec 'CoreKit' do |ss|
+    ss.ios.dependency 'FacebookSDK/AEMKit'
     ss.ios.dependency 'FacebookSDK/Basics'
     ss.ios.vendored_framework = 'FBSDKCoreKit.framework'
 

@@ -52,17 +52,17 @@ static NSURL *FBSDKGamingServicesUrl(FBSDKGamingServiceType serviceType, NSStrin
 @implementation FBSDKGamingServiceController
 {
   FBSDKGamingServiceType _serviceType;
-  FBSDKGamingServiceResultCompletionHandler _completionHandler;
+  FBSDKGamingServiceResultCompletion _completionHandler;
   id _pendingResult;
 }
 
 - (instancetype)initWithServiceType:(FBSDKGamingServiceType)serviceType
-                  completionHandler:(FBSDKGamingServiceResultCompletionHandler)completionHandler
+                  completionHandler:(FBSDKGamingServiceResultCompletion)completion
                       pendingResult:(id)pendingResult
 {
   if (self = [super init]) {
     _serviceType = serviceType;
-    _completionHandler = completionHandler;
+    _completionHandler = completion;
     _pendingResult = pendingResult;
   }
   return self;

@@ -1,0 +1,123 @@
+# Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+#
+# You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
+# copy, modify, and distribute this software in source code or binary form for use
+# in connection with the web services and APIs provided by Facebook.
+#
+# As with any software that integrates with the Facebook platform, your use of
+# this software is subject to the Facebook Developer Principles and Policies
+# [http://developers.facebook.com/policy/]. This copyright notice shall be
+# included in all copies or substantial portions of the software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+name: FBAEMKit
+
+include:
+  - ../xcodegen_project_common.yml
+
+projectReferences:
+  FBSDKCoreKit_Basics:
+    path: ../FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcodeproj
+  TestTools:
+    path: ../TestTools/TestTools.xcodeproj
+
+configFiles:
+  Debug: Configurations/Shared/Configuration/Debug.xcconfig
+  Release: Configurations/Shared/Configuration/Release.xcconfig
+
+settings:
+  base:
+    # Some iOS defaults will be overridden by Xcodegen.
+    # We need to explicitly set them to maintain parity with
+    # the project file being replaced
+    CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: false
+    SWIFT_OPTIMIZATION_LEVEL: -O
+    PRODUCT_NAME: FBAEMKit
+
+targets:
+  FBAEMKit:
+    type: framework
+    platform: iOS
+    sources:
+      - path: ../Sources/FBAEMKit
+        headerVisibility: project
+        excludes:
+          - include
+      - path: ../Sources/FBAEMKit/include
+        headerVisibility: public
+    dependencies:
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics
+        link: false
+    configFiles:
+      Debug: Configurations/FBAEMKit.xcconfig
+      Release: Configurations/FBAEMKit.xcconfig
+  FBAEMKit-Dynamic:
+    type: framework
+    platform: iOS
+    productName: FBAEMKit
+    sources:
+      - path: ../Sources/FBAEMKit
+        headerVisibility: project
+        excludes:
+          - include
+      - path: ../Sources/FBAEMKit/include
+        headerVisibility: public
+    dependencies:
+      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Dynamic
+        link: false
+      - sdk: FBSDKCoreKit_Basics.framework
+      - sdk: UIKit.framework
+      - sdk: libz.tbd
+    configFiles:
+      Debug: Configurations/FBAEMKit-Dynamic.xcconfig
+      Release: Configurations/FBAEMKit-Dynamic.xcconfig
+    settings:
+      PRODUCT_NAME: FBAEMKit
+  FBAEMKitTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - FBAEMKitTests
+    configFiles:
+      Debug: Configurations/FBAEMKitTests.xcconfig
+      Release: Configurations/FBAEMKitTests.xcconfig
+    dependencies:
+      - target: FBAEMKit-Dynamic
+      - target: TestTools/TestTools
+        link: false
+        embed: false
+
+aggregateTargets:
+  FBAEMKit-Universal:
+    targets: [FBAEMKit]
+    configFiles:
+      Debug: Configurations/FBAEMKit.xcconfig
+      Release: Configurations/FBAEMKit.xcconfig
+    buildScripts:
+      - name: ShellScript
+        path: ../scripts/xcode/build-universal-framework.sh
+
+schemes:
+  FBAEMKit-Universal:
+    build:
+      targets:
+        FBAEMKit-Universal: [archive, run, profile, analyze]
+      parallelizeBuild: false
+  FBAEMKit:
+    build:
+      targets:
+        FBAEMKit: all
+  FBAEMKit-Dynamic:
+    build:
+      targets:
+        FBAEMKit-Dynamic: all
+    test:
+      targets: [FBAEMKitTests]
+      coverageTargets:
+        - FBAEMKit-Dynamic

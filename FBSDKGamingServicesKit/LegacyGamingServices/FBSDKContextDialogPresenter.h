@@ -22,8 +22,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKContextCreateAsyncContent.h"
-#import "FBSDKContextSwitchAsyncContent.h"
+#import "FBSDKCreateContextContent.h"
+#import "FBSDKSwitchContextContent.h"
 #import "FBSDKChooseContextContent.h"
 NS_ASSUME_NONNULL_BEGIN
 
@@ -46,8 +46,8 @@ NS_SWIFT_NAME(ContextDialogPresenter)
  @param content The content for the create context dialog
  @param delegate The receiver's delegate.
  */
-+ (nullable FBSDKCreateContextDialog*)createContextDialogWithContent:(FBSDKContextCreateAsyncContent *)content
-                         delegate:(nullable id<FBSDKContextDialogDelegate>)delegate
++ (nullable FBSDKCreateContextDialog*)createContextDialogWithContent:(FBSDKCreateContextContent *)content
+                                                            delegate:(nullable id<FBSDKContextDialogDelegate>)delegate
 NS_SWIFT_NAME(init(createContextDialogWithContent:delegate:));
 
 /**
@@ -55,8 +55,8 @@ NS_SWIFT_NAME(init(createContextDialogWithContent:delegate:));
  @param content The content for create context dialog
  @param delegate The receiver's delegate.
  */
-+ (nullable NSError *)showCreateContextDialogWithContent:(FBSDKContextCreateAsyncContent *)content
-                       delegate:(nullable id<FBSDKContextDialogDelegate>)delegate
++ (nullable NSError *)showCreateContextDialogWithContent:(FBSDKCreateContextContent *)content
+                                                delegate:(nullable id<FBSDKContextDialogDelegate>)delegate
 NS_SWIFT_UNAVAILABLE("Use init(createContextDialogWithContent:delegate:).show() instead");
 
 /**
@@ -64,8 +64,8 @@ NS_SWIFT_UNAVAILABLE("Use init(createContextDialogWithContent:delegate:).show() 
  @param content The content for the switch context dialog
  @param delegate The receiver's delegate.
  */
-+ (nullable FBSDKSwitchContextDialog*)switchContextDialogWithContent:(FBSDKContextSwitchAsyncContent *)content
-                         delegate:(nullable id<FBSDKContextDialogDelegate>)delegate
++ (nullable FBSDKSwitchContextDialog*)switchContextDialogWithContent:(FBSDKSwitchContextContent *)content
+                                                            delegate:(nullable id<FBSDKContextDialogDelegate>)delegate
 NS_SWIFT_NAME(init(switchContextDialogWithContent:delegate:));
 
 /**
@@ -73,8 +73,8 @@ NS_SWIFT_NAME(init(switchContextDialogWithContent:delegate:));
  @param content The content for the switch context dialog
  @param delegate The receiver's delegate.
  */
-+ (nullable NSError *)showSwitchContextDialogWithContent:(FBSDKContextSwitchAsyncContent *)content
-                       delegate:(nullable id<FBSDKContextDialogDelegate>)delegate
++ (nullable NSError *)showSwitchContextDialogWithContent:(FBSDKSwitchContextContent *)content
+                                                delegate:(nullable id<FBSDKContextDialogDelegate>)delegate
 NS_SWIFT_UNAVAILABLE("Use init(switchContextDialogWithContent:delegate:).show() instead");
 
 /**
@@ -82,7 +82,8 @@ NS_SWIFT_UNAVAILABLE("Use init(switchContextDialogWithContent:delegate:).show() 
  @param content The content for the cross play request.
  @param delegate The receiver's delegate.
  */
-+ (FBSDKChooseContextDialog *)showChooseContextDialogWithContent:(FBSDKChooseContextContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate;
++ (FBSDKChooseContextDialog *)showChooseContextDialogWithContent:(FBSDKChooseContextContent *)content
+                                                        delegate:(id<FBSDKContextDialogDelegate>)delegate;
 @end
 
 

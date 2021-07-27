@@ -22,7 +22,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKCopying.h"
 #import "FBSDKBridgeAPIProtocol.h"
 #import "FBSDKBridgeAPIProtocolType.h"
 
@@ -51,7 +50,7 @@
  @warning UNSAFE - DO NOT USE
  */
 NS_SWIFT_NAME(BridgeAPIRequest)
-@interface FBSDKBridgeAPIRequest : NSObject <FBSDKCopying, FBSDKBridgeAPIRequestProtocol>
+@interface FBSDKBridgeAPIRequest : NSObject <NSCopying, NSObject, FBSDKBridgeAPIRequestProtocol>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

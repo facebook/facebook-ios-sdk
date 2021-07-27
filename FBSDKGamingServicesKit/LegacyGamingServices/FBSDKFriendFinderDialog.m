@@ -18,9 +18,9 @@
 
 #import "FBSDKFriendFinderDialog.h"
 
-#import "FBSDKCoreKitInternalImport.h"
 #import "FBSDKGamingServiceControllerCreating.h"
 #import "FBSDKGamingServiceControllerFactory.h"
+#import "FBSDKGamingServicesCoreKitImport.h"
 
 @interface FBSDKFriendFinderDialog ()
 
@@ -77,7 +77,7 @@
   id<FBSDKGamingServiceController> const controller =
   [self.factory
    createWithServiceType:FBSDKGamingServiceTypeFriendFinder
-   completionHandler:^(BOOL success, id _Nullable result, NSError *_Nullable error) {
+   completion:^(BOOL success, id _Nullable result, NSError *_Nullable error) {
      if (completionHandler) {
        completionHandler(success, error);
      }

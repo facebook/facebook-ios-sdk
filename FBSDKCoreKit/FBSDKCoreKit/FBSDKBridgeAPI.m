@@ -27,6 +27,7 @@
  #import "FBSDKBridgeAPIResponseFactory.h"
  #import "FBSDKContainerViewController.h"
  #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKError+Internal.h"
  #import "FBSDKInternalUtility+AppURLSchemeProviding.h"
  #import "FBSDKOperatingSystemVersionComparing.h"
  #import "NSProcessInfo+Protocols.h"

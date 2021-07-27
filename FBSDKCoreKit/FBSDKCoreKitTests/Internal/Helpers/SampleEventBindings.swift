@@ -32,7 +32,7 @@ class SampleEventBinding: NSObject {
 class SampleEventBindingList: NSObject {
 
   static func createEventLogger() -> TestEventLogger {
-    return TestEventLogger()
+    TestEventLogger()
   }
 
   static var valid: [EventBinding] {

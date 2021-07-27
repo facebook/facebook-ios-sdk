@@ -18,9 +18,7 @@
 
 #import "TargetConditionals.h"
 
-@class FBSDKContextCreateAsyncContent;
-@protocol FBSDKWindowFinding;
-
+@class FBSDKCreateContextContent;
 #if !TARGET_OS_TV
 
 #import <Foundation/Foundation.h>
@@ -43,7 +41,7 @@ NS_SWIFT_NAME(CreateContextDialog)
  @param windowFinder The application window finder that provides the window to display the dialog
  @param delegate The receiver's delegate used to let the receiver know a context was created or failure
  */
-+ (instancetype)dialogWithContent:(FBSDKContextCreateAsyncContent *)content
++ (instancetype)dialogWithContent:(FBSDKCreateContextContent *)content
                      windowFinder:(id<FBSDKWindowFinding>)windowFinder
                          delegate:(id<FBSDKContextDialogDelegate>)delegate
 NS_SWIFT_NAME(init(content:windowFinder:delegate:));

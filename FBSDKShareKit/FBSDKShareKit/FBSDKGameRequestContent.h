@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
   A model for a game request.
  */
 NS_SWIFT_NAME(GameRequestContent)
-@interface FBSDKGameRequestContent : NSObject <FBSDKCopying, FBSDKSharingValidation, NSSecureCoding>
+@interface FBSDKGameRequestContent : NSObject <NSCopying, NSObject, FBSDKSharingValidation, NSSecureCoding>
 
 /**
   Used when defining additional context about the nature of the request.

@@ -18,22 +18,16 @@
 
 name: FBSDKCoreKit
 
+include:
+  - ../xcodegen_project_common.yml
+
 projectReferences:
   FBSDKCoreKit_Basics:
     path: ../FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcodeproj
+  FBAEMKit:
+    path: ../FBAEMKit/FBAEMKit.xcodeproj
   TestTools:
     path: ../TestTools/TestTools.xcodeproj
-
-options:
-  deploymentTarget:
-    iOS: "9.0"
-  usesTabs: false
-  tabWidth: 2
-  indentWidth: 2
-  defaultConfig: Debug
-
-attributes:
-  ORGANIZATIONNAME: Facebook
 
 configFiles:
   Debug: Configurations/Shared/Configuration/Debug.xcconfig
@@ -99,6 +93,8 @@ targets:
       Debug: Configurations/FBSDKCoreKit.xcconfig
       Release: Configurations/FBSDKCoreKit.xcconfig
     dependencies:
+      - target: FBAEMKit/FBAEMKit
+        link: false
       - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics
         link: false
       - sdk: SafariServices.framework
@@ -165,6 +161,7 @@ targets:
       Debug: Configurations/FBSDKCoreKit-Dynamic.xcconfig
       Release: Configurations/FBSDKCoreKit-Dynamic.xcconfig
     dependencies:
+      - target: FBAEMKit/FBAEMKit-Dynamic
       - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Dynamic
         link: false
       - sdk: Accelerate.framework

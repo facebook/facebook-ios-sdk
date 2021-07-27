@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'FBSDKCoreKit'
-  s.version      = '11.0.1'
+  s.version      = '11.1.0'
   s.summary      = 'Official Facebook SDK for iOS to access Facebook Platform core features'
 
   s.description  = <<-DESC
@@ -42,6 +42,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'Core' do |ss|
     ss.dependency 'FBSDKCoreKit_Basics', "~> #{s.version}"
+    ss.dependency 'FBAEMKit', "~> #{s.version}"
     ss.exclude_files = 'Sources/FacebookCore/Exports.swift',
                        'FBSDKCoreKit/FBSDKCoreKit/include/**/*',
                        'FBSDKCoreKit/FBSDKCoreKit/Swift/Exports.swift'

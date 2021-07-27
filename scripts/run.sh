@@ -55,13 +55,17 @@ main() {
     SDK_DIR="$(dirname "$SDK_SCRIPTS_DIR")"
 
     CORE_KIT_BASICS="FBSDKCoreKit_Basics"
+    AEM_KIT="FBAEMKit"
     CORE_KIT="FBSDKCoreKit"
     LOGIN_KIT="FBSDKLoginKit"
     SHARE_KIT="FBSDKShareKit"
+    LEGACY_GAMING_SERVICES="LegacyGamingServices"
+    FACEBOOK_GAMING_SERVICES="FacebookGamingServices"
     GAMING_SERVICES_KIT="FBSDKGamingServicesKit"
 
     SDK_BASE_KITS=(
       "$CORE_KIT_BASICS"
+      "$AEM_KIT"
       "$CORE_KIT"
       "$LOGIN_KIT"
       "$SHARE_KIT"
@@ -69,6 +73,8 @@ main() {
 
     SDK_KITS=(
       "${SDK_BASE_KITS[@]}"
+      "$LEGACY_GAMING_SERVICES"
+      "$FACEBOOK_GAMING_SERVICES"
       "$GAMING_SERVICES_KIT"
       "FBSDKTVOSKit"
     )
@@ -93,9 +99,12 @@ main() {
 
     SDK_LINT_POD_SPECS=(
       "FBSDKCoreKit_Basics.podspec"
+      "FBAEMKit.podspec"
       "FBSDKCoreKit.podspec"
       "FBSDKLoginKit.podspec"
       "FBSDKShareKit.podspec"
+      "LegacyGamingServices.podspec"
+      "FacebookGamingServices.podspec"
       "FBSDKGamingServicesKit.podspec"
       "FBSDKTVOSKit.podspec"
     )
@@ -106,6 +115,7 @@ main() {
     SDK_GIT_REMOTE="https://github.com/facebook/facebook-ios-sdk"
 
     SWIFT_PACKAGE_SCHEMES=(
+      "FacebookAEM"
       "FacebookCore"
       "FacebookLogin"
       "FacebookShare"
@@ -367,17 +377,25 @@ lint_sdk() {
       set +e
 
       if [ "$spec" == FBSDKCoreKit.podspec ]; then
-        dependent_spec="--include-podspecs=FBSDKCoreKit_Basics.podspec"
+        dependent_spec="--include-podspecs={FBAEMKit,FBSDKCoreKit_Basics}.podspec"
       else
-        dependent_spec="--include-podspecs=FBSDK{CoreKit,CoreKit_Basics}.podspec"
+        dependent_spec="--include-podspecs={FBAEMKit,FBSDKCoreKit,FBSDKCoreKit_Basics}.podspec"
       fi
 
       if [ "$spec" == FBSDKTVOSKit.podspec ]; then
-        dependent_spec="--include-podspecs=FBSDK{CoreKit,ShareKit,LoginKit,CoreKit_Basics}.podspec"
+        dependent_spec="--include-podspecs={FBAEMKit,FBSDKCoreKit,FBSDKShareKit,FBSDKLoginKit,FBSDKCoreKit_Basics}.podspec"
+      fi
+
+      if [ "$spec" == LegacyGamingServices.podspec ]; then
+        dependent_spec="--include-podspecs={FBAEMKit,FBSDKCoreKit_Basics,FBSDKCoreKit,FBSDKShareKit}.podspec"
+      fi
+
+      if [ "$spec" == FacebookGamingServices.podspec ]; then
+        dependent_spec="--include-podspecs={FBAEMKit,FBSDKCoreKit_Basics,FBSDKCoreKit,FBSDKShareKit,LegacyGamingServices}.podspec"
       fi
 
       if [ "$spec" == FBSDKGamingServicesKit.podspec ]; then
-        dependent_spec="--include-podspecs=FBSDK{CoreKit,ShareKit,CoreKit_Basics}.podspec"
+        dependent_spec="--include-podspecs={FBAEMKit,FBSDKCoreKit_Basics,FBSDKCoreKit,FBSDKShareKit,LegacyGamingServices,FacebookGamingServices}.podspec"
       fi
 
       echo ""

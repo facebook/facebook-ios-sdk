@@ -50,8 +50,7 @@ class TestServerConfigurationProvider: NSObject, ServerConfigurationProviding, S
   }
 
   static func processLoadRequestResponse(_ result: Any, error: Error?, appID: String) {
-    return
-  }
+    }
 
   static func request(toLoadServerConfiguration appID: String) -> GraphRequest? {
     requestToLoadConfigurationCallWasCalled = true

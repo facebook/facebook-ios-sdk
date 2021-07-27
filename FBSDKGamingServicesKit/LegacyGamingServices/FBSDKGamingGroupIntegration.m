@@ -18,7 +18,6 @@
 
 #import "FBSDKGamingGroupIntegration.h"
 
-#import "FBSDKCoreKitInternalImport.h"
 #import "FBSDKGamingServiceController.h"
 
 @implementation FBSDKGamingGroupIntegration

@@ -24,8 +24,7 @@
 
  #import "FBSDKSwitchContextDialog.h"
 
- #import "FBSDKContextSwitchAsyncContent.h"
- #import "FBSDKCoreKitInternalImport.h"
+ #import "FBSDKSwitchContextContent.h"
 
  #define FBSDK_CONTEXT_METHOD_NAME @"context"
  #define FBSDKWEBDIALOGFRAMEWIDTH 300.0
@@ -37,7 +36,7 @@
 
 @implementation FBSDKSwitchContextDialog
 
-+ (instancetype)dialogWithContent:(FBSDKContextSwitchAsyncContent *)content windowFinder:(id<FBSDKWindowFinding>)windowFinder delegate:(id<FBSDKContextDialogDelegate>)delegate
++ (instancetype)dialogWithContent:(FBSDKSwitchContextContent *)content windowFinder:(id<FBSDKWindowFinding>)windowFinder delegate:(id<FBSDKContextDialogDelegate>)delegate
 {
   FBSDKSwitchContextDialog *dialog = [self new];
   dialog.dialogContent = content;
@@ -56,14 +55,14 @@
 
   NSMutableDictionary *parameters = [NSMutableDictionary new];
 
-  if ([self.dialogContent isKindOfClass:[FBSDKContextSwitchAsyncContent class]] && self.dialogContent) {
-    FBSDKContextSwitchAsyncContent *content = (FBSDKContextSwitchAsyncContent *)self.dialogContent;
-    [FBSDKTypeUtility dictionary:parameters
-                       setObject:content.contextToken
-                          forKey:@"context_id"];
+  if ([self.dialogContent isKindOfClass:[FBSDKSwitchContextContent class]] && self.dialogContent) {
+    FBSDKSwitchContextContent *content = (FBSDKSwitchContextContent *)self.dialogContent;
+    if (content.contextTokenID) {
+      parameters[@"context_id"] = content.contextTokenID;
+    }
   }
 
-  CGRect frame = [self createWebDialogFrameWithWidth:FBSDKWEBDIALOGFRAMEWIDTH height:FBSDKWEBDIALOGFRAMEHEIGHT];
+  CGRect frame = [self createWebDialogFrameWithWidth:FBSDKWEBDIALOGFRAMEWIDTH height:FBSDKWEBDIALOGFRAMEHEIGHT windowFinder:self.windowFinder];
   self.currentWebDialog = [FBSDKWebDialog createAndShow:FBSDK_CONTEXT_METHOD_NAME
                                              parameters:parameters
                                                   frame:frame

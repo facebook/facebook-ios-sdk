@@ -24,7 +24,7 @@
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKEventLogging.h"
 #import "FBSDKGraphRequestProviding.h"
-#import "FBSDKInternalUtility.h"
+#import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKNotificationProtocols.h"
 
 @interface FBSDKViewImpressionTracker ()

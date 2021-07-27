@@ -46,6 +46,6 @@ class TestURLSessionProxyFactory: NSObject, URLSessionProxyProviding {
   // MARK: - UrlSessionProxyProviding
 
   func createSessionProxy(with delegate: URLSessionDataDelegate?, queue: OperationQueue?) -> URLSessionProxying {
-    return stubbedSessions.count > 1 ? stubbedSessions.removeFirst() : stubbedSessions[0]
+    stubbedSessions.count > 1 ? stubbedSessions.removeFirst() : stubbedSessions[0]
   }
 }

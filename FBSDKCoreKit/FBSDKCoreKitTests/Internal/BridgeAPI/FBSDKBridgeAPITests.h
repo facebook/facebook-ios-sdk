@@ -24,7 +24,6 @@
 
 #import "FBSDKBridgeAPI+Testing.h"
 #import "FBSDKCoreKitTests-Swift.h"
-#import "FakeLoginManager.h"
 
 @interface FBSDKBridgeAPITests : XCTestCase
 

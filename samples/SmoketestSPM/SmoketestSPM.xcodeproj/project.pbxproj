@@ -13,10 +13,14 @@
 		F43C34EC2370F948005145DD /* VerifyFacebookLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43C34E92370F948005145DD /* VerifyFacebookLogin.swift */; };
 		F43FBA9F2649D79300FDCB82 /* VerifyFacebookGamingServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43FBA9E2649D79300FDCB82 /* VerifyFacebookGamingServices.swift */; };
 		F43C34EE2370F957005145DD /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = F43C34ED2370F957005145DD /* README.md */; };
+		F47BEED926A8BA5C00AABF90 /* FacebookAEM in Frameworks */ = {isa = PBXBuildFile; productRef = F47BEED826A8BA5C00AABF90 /* FacebookAEM */; };
 		F4CEA54023C29C9E0086EB16 /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = F4CEA53F23C29C9E0086EB16 /* FacebookShare */; };
 		F4CEA54223C29C9E0086EB16 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = F4CEA54123C29C9E0086EB16 /* FacebookLogin */; };
 		F4CEA54423C29C9E0086EB16 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = F4CEA54323C29C9E0086EB16 /* FacebookCore */; };
 		F43FBA972649CEA800FDCB82 /* FacebookGamingServices in Frameworks */ = {isa = PBXBuildFile; productRef = F43FBA962649CEA800FDCB82 /* FacebookGamingServices */; };
+		F47BEEE326A8BA6500AABF90 /* VerifyFacebookAEM.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47BEEE226A8BA6500AABF90 /* VerifyFacebookAEM.swift */; };
+		F47BEEE626A8CA4E00AABF90 /* VerifyAEM.h in Headers */ = {isa = PBXBuildFile; fileRef = F47BEEE426A8CA4E00AABF90 /* VerifyAEM.h */; };
+		F47BEEE726A8CA4E00AABF90 /* VerifyAEM.m in Sources */ = {isa = PBXBuildFile; fileRef = F47BEEE526A8CA4E00AABF90 /* VerifyAEM.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +32,9 @@
 		F43C34E92370F948005145DD /* VerifyFacebookLogin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyFacebookLogin.swift; sourceTree = "<group>"; };
 		F43FBA9E2649D79300FDCB82 /* VerifyFacebookGamingServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyFacebookGamingServices.swift; sourceTree = "<group>"; };
 		F43C34ED2370F957005145DD /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		F47BEEE226A8BA6500AABF90 /* VerifyFacebookAEM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyFacebookAEM.swift; sourceTree = "<group>"; };
+		F47BEEE426A8CA4E00AABF90 /* VerifyAEM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VerifyAEM.h; sourceTree = "<group>"; };
+		F47BEEE526A8CA4E00AABF90 /* VerifyAEM.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VerifyAEM.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +42,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F47BEED926A8BA5C00AABF90 /* FacebookAEM in Frameworks */,
 				F4CEA54223C29C9E0086EB16 /* FacebookLogin in Frameworks */,
 				F4CEA54423C29C9E0086EB16 /* FacebookCore in Frameworks */,
 				F4CEA54023C29C9E0086EB16 /* FacebookShare in Frameworks */,
@@ -51,6 +59,7 @@
 				F43C34ED2370F957005145DD /* README.md */,
 				F43C34D62370F8BD005145DD /* SmoketestSPM */,
 				F43C34D52370F8BD005145DD /* Products */,
+				F47BEED726A8BA5B00AABF90 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -65,12 +74,15 @@
 		F43C34D62370F8BD005145DD /* SmoketestSPM */ = {
 			isa = PBXGroup;
 			children = (
+				F47BEEE226A8BA6500AABF90 /* VerifyFacebookAEM.swift */,
 				F43C34E72370F947005145DD /* VerifyFacebookCore.swift */,
 				F43C34E92370F948005145DD /* VerifyFacebookLogin.swift */,
 				F43C34E82370F948005145DD /* VerifyFacebookShare.swift */,
 				F43FBA9E2649D79300FDCB82 /* VerifyFacebookGamingServices.swift */,
 				F43C34D72370F8BD005145DD /* SmoketestSPM.h */,
 				F43C34D82370F8BD005145DD /* Info.plist */,
+				F47BEEE426A8CA4E00AABF90 /* VerifyAEM.h */,
+				F47BEEE526A8CA4E00AABF90 /* VerifyAEM.m */,
 			);
 			path = SmoketestSPM;
 			sourceTree = "<group>";
@@ -83,6 +95,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F43C34D92370F8BD005145DD /* SmoketestSPM.h in Headers */,
+				F47BEEE626A8CA4E00AABF90 /* VerifyAEM.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,6 +117,7 @@
 			);
 			name = SmoketestSPM;
 			packageProductDependencies = (
+				F47BEED826A8BA5C00AABF90 /* FacebookAEM */,
 				F4CEA53F23C29C9E0086EB16 /* FacebookShare */,
 				F4CEA54123C29C9E0086EB16 /* FacebookLogin */,
 				F4CEA54323C29C9E0086EB16 /* FacebookCore */,
@@ -124,7 +138,7 @@
 				TargetAttributes = {
 					F43C34D32370F8BD005145DD = {
 						CreatedOnToolsVersion = 11.2;
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1250;
 					};
 				};
 			};
@@ -165,10 +179,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F47BEEE726A8CA4E00AABF90 /* VerifyAEM.m in Sources */,
 				F43FBA9F2649D79300FDCB82 /* VerifyFacebookGamingServices.swift in Sources */,
 				F43C34EB2370F948005145DD /* VerifyFacebookShare.swift in Sources */,
 				F43C34EC2370F948005145DD /* VerifyFacebookLogin.swift in Sources */,
 				F43C34EA2370F948005145DD /* VerifyFacebookCore.swift in Sources */,
+				F47BEEE326A8BA6500AABF90 /* VerifyFacebookAEM.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -379,6 +395,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		F47BEED826A8BA5C00AABF90 /* FacebookAEM */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F4CEA53E23C29C9E0086EB16 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookAEM;
+		};
 		F43FBA962649CEA800FDCB82 /* FacebookGamingServices */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F4CEA53E23C29C9E0086EB16 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;

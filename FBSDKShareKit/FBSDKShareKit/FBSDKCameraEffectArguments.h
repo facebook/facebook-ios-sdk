@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
  * An argument is a NSString identified by a NSString key.
  */
 NS_SWIFT_NAME(CameraEffectArguments)
-@interface FBSDKCameraEffectArguments : NSObject <FBSDKCopying, NSSecureCoding>
+@interface FBSDKCameraEffectArguments : NSObject <NSCopying, NSObject, NSSecureCoding>
 
 /**
  Sets a string argument in the container.

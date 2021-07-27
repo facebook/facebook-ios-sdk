@@ -32,10 +32,12 @@ static FBSDKGamingContext *currentContext = nil;
   return instance;
 }
 
-- (void)setIdentifer:(NSString *)identifer
+- (void)setIdentifer:(NSString *_Nullable)identifer
 {
-  if (identifer != NULL) {
-    _identifier = identifer;
+  self.identifier = identifer;
+  if (!self.identifier) {
+    currentContext = nil;
+    return;
   }
 }
 

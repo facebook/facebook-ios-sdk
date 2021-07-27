@@ -199,7 +199,9 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
     }
   }
   if (!didShow) {
-    [self _invokeDelegateDidFailWithError:error ?: validationError];
+    if (error || validationError) {
+      [self _invokeDelegateDidFailWithError:error ?: validationError];
+    }
   } else {
     [self _logDialogShow];
     [FBSDKInternalUtility.sharedUtility registerTransientObject:self];
@@ -1086,7 +1088,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   [_delegate sharer:self didCompleteWithResults:[results copy]];
 }
 
-- (void)_invokeDelegateDidFailWithError:(NSError *)error
+- (void)_invokeDelegateDidFailWithError:(nonnull NSError *)error
 {
   NSDictionary *parameters = @{
     FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Failed,

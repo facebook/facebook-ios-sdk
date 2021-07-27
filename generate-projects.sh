@@ -43,6 +43,11 @@ xcodegen generate
 
 cd ..
 
+cd FBAEMKit || exit
+xcodegen generate
+
+cd ..
+
 cd FBSDKCoreKit || exit
 xcodegen generate
 

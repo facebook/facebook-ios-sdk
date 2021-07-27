@@ -18,7 +18,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKCopying.h"
 #import "FBSDKGraphRequestConnection.h"
 #import "FBSDKTokenCaching.h"
 
@@ -93,7 +92,7 @@ NS_SWIFT_NAME(AccessTokenDidExpireKey);
   Represents an immutable access token for using Facebook services.
  */
 NS_SWIFT_NAME(AccessToken)
-@interface FBSDKAccessToken : NSObject<FBSDKCopying, NSSecureCoding>
+@interface FBSDKAccessToken : NSObject<NSCopying, NSObject, NSSecureCoding>
 
 
 /**

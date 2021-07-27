@@ -21,10 +21,9 @@
 #import "FBSDKAppEvents.h"
 #import "FBSDKAppEventsState.h"
 #import "FBSDKCoreKitTests-Swift.h"
-#import "FBSDKInternalUtility.h"
+#import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKRestrictiveDataFilterManager.h"
 #import "FBSDKServerConfiguration.h"
-#import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKServerConfigurationManager.h"
 
 @interface FBSDKGraphRequestConnection (RestrictiveDataFilterTesting)
@@ -68,7 +67,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
                                                    }
                                                  }];
   self.restrictiveDataFilterManager = [[FBSDKRestrictiveDataFilterManager alloc] initWithServerConfigurationProvider:TestServerConfigurationProvider.class];
-  FBSDKServerConfiguration *config = [FBSDKServerConfigurationFixtures configWithDictionary:@{ @"restrictiveParams" : params }];
+  FBSDKServerConfiguration *config = [ServerConfigurationFixtures configWithDictionary:@{ @"restrictiveParams" : params }];
 
   [TestServerConfigurationProvider setStubbedServerConfiguration:config];
   [self.restrictiveDataFilterManager enable];

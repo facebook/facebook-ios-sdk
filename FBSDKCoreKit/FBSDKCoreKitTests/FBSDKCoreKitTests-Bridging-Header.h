@@ -20,7 +20,6 @@
 #import <AdSupport/AdSupport.h>
 
 #import "FBSDKAdvertisingTrackingStatus.h"
-#import "AEM+Testing.h"
 #import "ApplicationDelegate+Testing.h"
 #import "AppEventsAtePublisher+Testing.h"
 #import "BackgroundEventLogger+Testing.h"
@@ -47,6 +46,7 @@
 #import "FBSDKAtePublisherCreating.h"
 #import "FBSDKAtePublisherFactory.h"
 #import "FBSDKAuthenticationStatusUtility.h"
+#import "FBSDKAuthenticationToken+Internal.h"
 #import "FBSDKHybridAppEventsScriptMessageHandler+Testing.h"
 #import "FBSDKBridgeAPIProtocolWebV1.h"
 #import "FBSDKBridgeAPIProtocolWebV2+Testing.h"
@@ -55,6 +55,7 @@
 #import "FBSDKBridgeAPIResponseFactory.h"
 #import "FBSDKAdvertiserIDProviding.h"
 #import "FBSDKAppLinkEventPosting.h"
+#import "FBSDKAppEvents+Testing.h"
 #import "FBSDKBridgeAPI+Testing.h"
 #import "FBSDKCloseIcon.h"
 #import "FBSDKCoreKitBasicsImport.h"
@@ -82,7 +83,6 @@
 #import "FBSDKSKAdNetworkEvent.h"
 #import "FBSDKSKAdNetworkRule.h"
 #import "FBSDKSKAdNetworkReporter.h"
-#import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKTestCoder.h"
 #import "FBSDKURLOpener.h"
 #import "FBSDKViewHierarchy.h"
@@ -99,7 +99,6 @@
 #import "FBSDKProductRequestFactory.h"
 #import "SuggestedEventsIndexer+Testing.h"
 #import "UIApplication+URLOpener.h"
-#import "UserDefaultsSpy.h"
 #import "WebViewAppLinkResolver+Testing.h"
 #import "FBSDKConversionValueUpdating.h"
 #import "XCTestCase+Extensions.h"
@@ -337,12 +336,6 @@ NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvi
 
 @end
 
-@interface FBSDKAppEvents (Testing)
-
-+ (void)reset;
-
-@end
-
 @interface FBSDKAppEventsConfiguration (Testing)
 
 + (FBSDKAppEventsConfiguration *)defaultConfiguration;
@@ -409,6 +402,25 @@ NS_SWIFT_NAME(cachedAppLinks);
                        clientTokenProvider:(id<FBSDKClientTokenProviding>)clientTokenProvider
                        accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider;
 
+@end
+
+// Needed to expose this private method to AppLinkResolverRequestBuilderTests
+@interface FBSDKAppLinkResolverRequestBuilder (FBSDKAppLinkResolverTests)
+- (instancetype)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom;
+@end
+
+// Needed to expose private methods to the ServerConfigurationFixtures class
+@interface FBSDKServerConfiguration (ServerConfigurationFixtures)
+- (nullable NSDictionary *)dialogConfigurations;
+- (nullable NSDictionary *)dialogFlows;
+@end
+
+// Defined in FBSDKViewHierarchy and needed in ViewHierarchyTests.swift
+id getVariableFromInstance(NSObject *_Nullable instance, NSString *_Nullable variableName);
+
+// Adding ObjCTestObject interface directly since ObjCTestObject.h doesn't get picked up
+// from within Internal dir with BUCK due to error: 'ObjCTestObject.h' file not found
+@interface ObjCTestObject : NSObject
 @end
 
 NS_ASSUME_NONNULL_END

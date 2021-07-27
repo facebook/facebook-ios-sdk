@@ -24,8 +24,8 @@
 
  #import "FBSDKCreateContextDialog.h"
 
- #import "FBSDKContextCreateAsyncContent.h"
- #import "FBSDKCoreKitInternalImport.h"
+ #import "FBSDKCreateContextContent.h"
+ #import "FBSDKGamingServicesCoreKitBasicsImport.h"
 
  #define FBSDK_CONTEXT_METHOD_NAME @"context"
  #define FBSDKWEBDIALOGFRAMEWIDTH 300
@@ -37,7 +37,7 @@
 
 @implementation FBSDKCreateContextDialog
 
-+ (instancetype)dialogWithContent:(FBSDKContextCreateAsyncContent *)content
++ (instancetype)dialogWithContent:(FBSDKCreateContextContent *)content
                      windowFinder:(id<FBSDKWindowFinding>)windowFinder
                          delegate:(id<FBSDKContextDialogDelegate>)delegate
 {
@@ -52,18 +52,22 @@
 {
   NSError *error;
   if (![self validateWithError:&error]) {
-    [self.delegate contextDialog:self didFailWithError:error];
+    if (error) {
+      [self.delegate contextDialog:self didFailWithError:error];
+    }
     return NO;
   }
 
   NSMutableDictionary *parameters = [NSMutableDictionary new];
 
-  if ([self.dialogContent isKindOfClass:[FBSDKContextCreateAsyncContent class]] && self.dialogContent) {
-    FBSDKContextCreateAsyncContent *content = (FBSDKContextCreateAsyncContent *)self.dialogContent;
-    [FBSDKTypeUtility dictionary:parameters setObject:content.playerID forKey:@"player_id"];
+  if ([self.dialogContent isKindOfClass:[FBSDKCreateContextContent class]] && self.dialogContent) {
+    FBSDKCreateContextContent *content = (FBSDKCreateContextContent *)self.dialogContent;
+    if (content.playerID) {
+      parameters[@"player_id"] = content.playerID;
+    }
   }
 
-  CGRect frame = [self createWebDialogFrameWithWidth:FBSDKWEBDIALOGFRAMEWIDTH height:FBSDKWEBDIALOGFRAMEHEIGHT];
+  CGRect frame = [self createWebDialogFrameWithWidth:FBSDKWEBDIALOGFRAMEWIDTH height:FBSDKWEBDIALOGFRAMEHEIGHT windowFinder:self.windowFinder];
   self.currentWebDialog = [FBSDKWebDialog createAndShow:FBSDK_CONTEXT_METHOD_NAME
                                              parameters:parameters
                                                   frame:frame

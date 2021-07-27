@@ -52,7 +52,7 @@ class TestViewControllerTransitionCoordinator: NSObject,
     animation: ((UIViewControllerTransitionCoordinatorContext) -> Void)?,
     completion: ((UIViewControllerTransitionCoordinatorContext) -> Void)? = nil
   ) -> Bool {
-    return true
+    true
   }
 
   func notifyWhenInteractionEnds(

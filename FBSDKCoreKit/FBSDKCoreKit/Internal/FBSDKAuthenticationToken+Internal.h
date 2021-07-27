@@ -27,6 +27,9 @@
 
 @interface FBSDKAuthenticationToken (Internal)
 
+- (instancetype)initWithTokenString:(NSString *)tokenString
+                              nonce:(NSString *)nonce
+                        graphDomain:(NSString *)graphDomain;
 + (void)resetTokenCache;
 
 @end
