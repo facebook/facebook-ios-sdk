@@ -420,4 +420,12 @@ NS_SWIFT_NAME(cachedAppLinks);
 - (nullable NSDictionary *)dialogFlows;
 @end
 
+// Defined in FBSDKViewHierarchy and needed in ViewHierarchyTests.swift
+id getVariableFromInstance(NSObject *_Nullable instance, NSString *_Nullable variableName);
+
+// Adding ObjCTestObject interface directly since ObjCTestObject.h doesn't get picked up
+// from within Internal dir with BUCK due to error: 'ObjCTestObject.h' file not found
+@interface ObjCTestObject : NSObject
+@end
+
 NS_ASSUME_NONNULL_END
