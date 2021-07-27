@@ -24,8 +24,8 @@ class TestTokenCache: NSObject, TokenCaching {
   var authenticationToken: AuthenticationToken?
 
   init(
-    accessToken: AccessToken?,
-    authenticationToken: AuthenticationToken?
+    accessToken: AccessToken? = nil,
+    authenticationToken: AuthenticationToken? = nil
   ) {
     self.accessToken = accessToken
     self.authenticationToken = authenticationToken

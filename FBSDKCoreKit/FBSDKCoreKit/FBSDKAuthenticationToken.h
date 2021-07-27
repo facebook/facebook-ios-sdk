@@ -67,7 +67,7 @@ NS_SWIFT_NAME(AuthenticationToken)
 
  @warning UNSAFE - DO NOT USE
  */
-@property (class, nonatomic, copy) id<FBSDKTokenCaching> tokenCache;
+@property (nullable, class, nonatomic, copy) id<FBSDKTokenCaching> tokenCache;
 
 @end
 

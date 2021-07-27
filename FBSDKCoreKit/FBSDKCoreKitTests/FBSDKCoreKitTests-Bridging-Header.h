@@ -46,6 +46,7 @@
 #import "FBSDKAtePublisherCreating.h"
 #import "FBSDKAtePublisherFactory.h"
 #import "FBSDKAuthenticationStatusUtility.h"
+#import "FBSDKAuthenticationToken+Internal.h"
 #import "FBSDKHybridAppEventsScriptMessageHandler+Testing.h"
 #import "FBSDKBridgeAPIProtocolWebV1.h"
 #import "FBSDKBridgeAPIProtocolWebV2+Testing.h"
