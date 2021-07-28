@@ -181,6 +181,23 @@
 #import "FBSDKProfile+ProfileProtocols.h"
 // AppEvents Reporter
 #import "FBSDKAppEventsReporter.h"
+// Testing
+#import "FBSDKAccessToken+Testing.h"
+#import "FBSDKAppEventsConfiguration+Testing.h"
+#import "FBSDKAppEventsConfigurationManager+Testing.h"
+#import "FBSDKAppEventsUtility+Testing.h"
+#import "FBSDKAppLink+Testing.h"
+#import "FBSDKAppLinkNavigation+Testing.h"
+#import "FBSDKAppLinkResolver+Testing.h"
+#import "FBSDKAuthenticationToken+Testing.h"
+#import "FBSDKCloseIcon+Testing.h"
+#import "FBSDKCrashObserver+Testing.h"
+#import "FBSDKGateKeeperManager+Testing.h"
+#import "FBSDKGraphRequestPiggybackManager+Testing.h"
+#import "FBSDKProfile+Testing.h"
+#import "FBSDKProfilePictureView+Testing.h"
+#import "FBSDKSettings+Testing.h"
+#import "FBSDKViewImpressionTracker+Testing.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -189,219 +206,9 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 // Categories needed to expose private methods to Swift
-@interface FBSDKAppEventsUtility (Testing)
-
-@property (nullable, class, nonatomic) ASIdentifierManager *cachedAdvertiserIdentifierManager;
-
-- (ASIdentifierManager *)_asIdentifierManagerWithShouldUseCachedManager:(BOOL)useCachedManagerIfAvailable
-                                               dynamicFrameworkResolver:(id<FBSDKDynamicFrameworkResolving>)dynamicFrameworkResolver
-NS_SWIFT_NAME(asIdentifierManager(shouldUseCachedManager:dynamicFrameworkResolver:));
-
-@end
-
-@interface FBSDKAppEventsConfigurationManager (Testing)
-
-@property (class, nonatomic) FBSDKAppEventsConfigurationManager *shared;
-@property (nonatomic, nullable) id<FBSDKDataPersisting> store;
-@property (nullable, nonatomic) id<FBSDKSettings> settings;
-@property (nullable, nonatomic) id<FBSDKGraphRequestProviding> requestFactory;
-@property (nullable, nonatomic) id<FBSDKGraphRequestConnectionProviding> connectionFactory;
-@property (nonatomic) BOOL hasRequeryFinishedForAppStart;
-@property (nullable, nonatomic) NSDate *timestamp;
-
-+ (void)_processResponse:(id)response error:(nullable NSError *)error;
-+ (void)reset;
-
-@end
-
-@interface FBSDKCloseIcon (Testing)
-
-- (nullable UIImage *)imageWithSize:(CGSize)size
-                       primaryColor:(UIColor *)primaryColor
-                     secondaryColor:(UIColor *)secondaryColor
-                              scale:(CGFloat)scale;
-
-@end
 
 NS_SWIFT_NAME(FBProfilePictureViewState)
 @interface FBSDKProfilePictureViewState
-@end
-
-@interface FBSDKProfilePictureView (Testing)
-
-- (void)_accessTokenDidChangeNotification:(NSNotification *)notification;
-- (void)_profileDidChangeNotification:(NSNotification *)notification;
-- (void)_updateImageWithProfile;
-- (void)_updateImageWithAccessToken;
-- (void)_updateImage;
-- (void)_fetchAndSetImageWithURL:(NSURL *)imageURL state:(FBSDKProfilePictureViewState *)state;
-- (nullable FBSDKProfilePictureViewState *)lastState;
-
-@end
-
-@interface FBSDKAccessToken (Testing)
-
-+ (void)setCurrentAccessToken:(nullable FBSDKAccessToken *)token
-          shouldDispatchNotif:(BOOL)shouldDispatchNotif;
-
-@end
-
-@interface FBSDKProfile (Testing)
-
-@property (class, nonatomic, nullable) id<FBSDKDataPersisting> store;
-@property (class, nonatomic, nullable) Class<FBSDKAccessTokenProviding> accessTokenProvider;
-@property (class, nonatomic, nullable) id<FBSDKNotificationPosting, FBSDKNotificationObserving> notificationCenter;
-
-
-+ (void)setCurrentProfile:(nullable FBSDKProfile *)profile
-   shouldPostNotification:(BOOL)shouldPostNotification;
-
-+ (void)reset;
-
-@end
-
-@interface FBSDKAuthenticationToken (Testing)
-
-- (instancetype)initWithTokenString:(NSString *)tokenString
-                              nonce:(NSString *)nonce;
-
-+ (void)setCurrentAuthenticationToken:(nullable FBSDKAuthenticationToken *)token
-               shouldPostNotification:(BOOL)shouldPostNotification;
-
-@end
-
-@interface FBSDKGateKeeperManager (Testing)
-
-@property (class, nonatomic, readonly) BOOL canLoadGateKeepers;
-@property (class, nonatomic, nullable) FBSDKLogger *logger;
-@property (class, nonatomic, nullable) Class<FBSDKSettings> settings;
-@property (class, nonatomic, nullable) id<FBSDKGraphRequestProviding> requestProvider;
-@property (class, nonatomic, nullable) id<FBSDKGraphRequestConnectionProviding> connectionProvider;
-@property (class, nonatomic, nullable) id<FBSDKDataPersisting> store;
-
-@property (class, nonatomic, nullable) NSDictionary *gateKeepers;
-@property (class, nonatomic) BOOL requeryFinishedForAppStart;
-@property (class, nonatomic, nullable) NSDate *timestamp;
-@property (class, nonatomic) BOOL isLoadingGateKeepers;
-
-+ (void)configureWithSettings:(Class<FBSDKSettings>)settings
-              requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-           connectionProvider:(nonnull id<FBSDKGraphRequestConnectionProviding>)connectionProvider
-                        store:(id<FBSDKDataPersisting>)store
-NS_SWIFT_NAME(configure(settings:requestProvider:connectionProvider:store:));
-+ (id<FBSDKGraphRequest>)requestToLoadGateKeepers;
-+ (void)processLoadRequestResponse:(nullable id)result error:(nullable NSError *)error
-NS_SWIFT_NAME(parse(result:error:));
-+ (BOOL)_gateKeeperIsValid;
-+ (void)reset;
-+ (id<FBSDKGraphRequestProviding>)requestProvider;
-
-@end
-
-@interface FBSDKSettings (Testing)
-
-@property (class, nonatomic, nullable, readonly) id<FBSDKDataPersisting> store;
-@property (class, nonatomic, nullable, readonly) id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
-@property (class, nonatomic, nullable) id<FBSDKInfoDictionaryProviding> infoDictionaryProvider;
-@property (class, nonatomic, nullable) id<FBSDKEventLogging> eventLogger;
-
-+ (void)configureWithStore:(id<FBSDKDataPersisting>)store
-appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)provider
-    infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
-               eventLogger:(id<FBSDKEventLogging>)eventLogger
-NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvider:eventLogger:));
-
-+ (void)reset;
-
-@end
-
-@interface FBSDKCrashObserver (Testing)
-
-@property (nonatomic, nullable) id<FBSDKSettings> settings;
-
-- (instancetype)initWithFeatureChecker:(id<FBSDKFeatureChecking, FBSDKFeatureDisabling>)featureChecker
-                  graphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-                              settings:(id<FBSDKSettings>)settings;
-
-- (instancetype)init;
-
-@end
-
-@interface FBSDKGraphRequestPiggybackManager (Testing)
-
-@property (class, nonatomic, nullable) Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> tokenWallet;
-+ (id<FBSDKSettings>)settings;
-+ (Class<FBSDKServerConfigurationProviding>)serverConfiguration;
-+ (id<FBSDKGraphRequestProviding>)requestProvider;
-
-@end
-
-@interface FBSDKAppEventsConfiguration (Testing)
-
-+ (FBSDKAppEventsConfiguration *)defaultConfiguration;
-
-- (instancetype)initWithDefaultATEStatus:(FBSDKAdvertisingTrackingStatus)defaultATEStatus
-           advertiserIDCollectionEnabled:(BOOL)advertiserIDCollectionEnabled
-                  eventCollectionEnabled:(BOOL)eventCollectionEnabled
-NS_SWIFT_NAME(init(defaultATEStatus:advertiserIDCollectionEnabled:eventCollectionEnabled:));
-
-@end
-
-@interface FBSDKAppLink (Testing)
-
-+ (instancetype)appLinkWithSourceURL:(nullable NSURL *)sourceURL
-                             targets:(nullable NSArray<FBSDKAppLinkTarget *> *)targets
-                              webURL:(nullable NSURL *)webURL
-                    isBackToReferrer:(BOOL)isBackToReferrer;
-
-@end
-
-@interface FBSDKAppLinkNavigation (Testing)
-
-+ (void)reset;
-
-- (nullable NSURL *)appLinkURLWithTargetURL:(NSURL *)targetUrl error:(NSError **)error;
-- (void)postAppLinkNavigateEventNotificationWithTargetURL:(nullable NSURL *)outputURL
-                                                    error:(nullable NSError *)error
-                                                     type:(FBSDKAppLinkNavigationType)type
-                                              eventPoster:(id<FBSDKAppLinkEventPosting>)eventPoster;
-- (FBSDKAppLinkNavigationType)navigationTypeForTargets:(NSArray<FBSDKAppLinkTarget *> *)targets
-                                             urlOpener:(id<FBSDKURLOpener>)urlOpener;
-- (FBSDKAppLinkNavigationType)navigateWithUrlOpener:(id<FBSDKURLOpener>)urlOpener
-                                        eventPoster:(id<FBSDKAppLinkEventPosting>)eventPoster
-                                              error:(NSError **)error
-NS_SWIFT_NAME(navigate(urlOpener:eventPoster:error:));
-
-@end
-
-@interface FBSDKViewImpressionTracker(Testing)
-
-@property (nonatomic, assign) id<FBSDKGraphRequestProviding> graphRequestProvider;
-@property (nonatomic, assign) id<FBSDKEventLogging> eventLogger;
-@property (nonatomic, strong) id<FBSDKNotificationObserving> notificationObserver;
-@property (nonatomic, strong) Class<FBSDKAccessTokenProviding> tokenWallet;
-
-+ (void)reset;
-- (NSSet *)trackedImpressions;
-- (void)_applicationDidEnterBackgroundNotification:(NSNotification *)notification;
-
-@end
-
-@interface FBSDKAppLinkResolver (Testing)
-
-@property (nonatomic, strong) NSMutableDictionary<NSURL *, FBSDKAppLink *> *cachedFBSDKAppLinks
-NS_SWIFT_NAME(cachedAppLinks);
-@property (nonatomic, strong) id<FBSDKAppLinkResolverRequestBuilding> requestBuilder;
-@property (nonatomic, strong) id<FBSDKClientTokenProviding> clientTokenProvider;
-@property (nonatomic, strong) Class<FBSDKAccessTokenProviding> accessTokenProvider;
-
-- (instancetype)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom;
-
-- (instancetype)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom
-                            requestBuilder:(id<FBSDKAppLinkResolverRequestBuilding>)builder
-                       clientTokenProvider:(id<FBSDKClientTokenProviding>)clientTokenProvider
-                       accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider;
-
 @end
 
 // Needed to expose this private method to AppLinkResolverRequestBuilderTests
