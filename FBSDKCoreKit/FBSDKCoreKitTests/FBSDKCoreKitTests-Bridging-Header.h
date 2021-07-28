@@ -92,6 +92,7 @@
 #import "ImageDownloader+Testing.h"
 #import "FeatureManager+Testing.h"
 #import "FBSDKCrashHandler+Testing.h"
+#import "FBSDKSKAdNetworkConversionConfiguration.h"
 #import "PaymentObserver+Testing.h"
 #import "FBSDKPaymentProductRequestor.h"
 #import "PaymentProductRequestor+Testing.h"
@@ -229,5 +230,15 @@ id getVariableFromInstance(NSObject *_Nullable instance, NSString *_Nullable var
 // from within Internal dir with BUCK due to error: 'ObjCTestObject.h' file not found
 @interface ObjCTestObject : NSObject
 @end
+
+@interface FBSDKSKAdNetworkConversionConfiguration ()
+
++ (nullable NSArray<FBSDKSKAdNetworkRule *> *)parseRules:(nullable NSArray<id> *)rules;
+
+@end
+
+@interface FBSDKSKAdNetworkConversionConfigurationTests : XCTestCase
+@end
+
 
 NS_ASSUME_NONNULL_END
