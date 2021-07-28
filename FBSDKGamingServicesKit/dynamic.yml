@@ -74,7 +74,7 @@ targets:
         script: |
           # Type a script or drag a script file from your workspace to insert its path.
           if which swiftlint >/dev/null; then
-            swiftlint --config ../.swiftlint.yml
+            swiftlint --config ../.swiftlint.yml ../Sources/FacebookGamingServices ../Tests/FacebookGamingServices
           else
             echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
           fi
@@ -100,7 +100,7 @@ targets:
         script: |
           # Type a script or drag a script file from your workspace to insert its path.
           if which swiftlint >/dev/null; then
-            swiftlint --config ../.swiftlint.yml
+            swiftlint --config ../.swiftlint.yml ../Sources/FBSDKGamingServicesKit ../Tests/FBSDKGamingServicesKit
           else
             echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
           fi
