@@ -51,5 +51,4 @@ enum SampleContextDialogs {
 
     return dialog
   }
-
 }
