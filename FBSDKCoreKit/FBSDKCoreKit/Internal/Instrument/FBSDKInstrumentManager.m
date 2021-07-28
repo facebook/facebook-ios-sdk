@@ -23,6 +23,7 @@
 #import "FBSDKErrorReport+ErrorReporting.h"
 #import "FBSDKFeatureChecking.h"
 #import "FBSDKFeatureManager+FeatureChecking.h"
+#import "FBSDKGraphRequestFactory.h"
 #import "FBSDKSettings+Internal.h"
 
 #if defined FBSDK_SWIFT_PACKAGE
@@ -47,9 +48,13 @@
 
 - (instancetype)init
 {
+  FBSDKCrashObserver *crashObserver = [[FBSDKCrashObserver alloc] initWithFeatureChecker:FBSDKFeatureManager.shared
+                                                                    graphRequestProvider:[FBSDKGraphRequestFactory new]
+                                                                                settings:FBSDKSettings.sharedSettings];
+  
   return [self initWithFeatureCheckerProvider:FBSDKFeatureManager.shared
                                      settings:FBSDKSettings.sharedSettings
-                                crashObserver:FBSDKCrashObserver.shared
+                                crashObserver:crashObserver
                                   errorReport:FBSDKErrorReport.shared
                                  crashHandler:FBSDKCrashHandler.shared];
 }

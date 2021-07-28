@@ -38,13 +38,6 @@ class CrashObserversTest: XCTestCase {
     )
   }
 
-  func testDefaultCrashObserverSettings() {
-     XCTAssertTrue(
-       CrashObserver().settings is Settings,
-       "Should use the shared settings instance by default"
-     )
-   }
-
   func testCreatingWithCustomSettings() {
     XCTAssertTrue(
       crashObserver.settings is TestSettings,
