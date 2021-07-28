@@ -20,7 +20,6 @@
 @import XCTest;
 
 #import "FBSDKApplicationDelegate+Testing.h"
-#import "FBSDKCoreKit+Internal.h"
 #import "FBSDKFileHandleCreating.h"
 #import "FBSDKFileHandleFactory.h"
 #import "FBSDKFileHandling.h"

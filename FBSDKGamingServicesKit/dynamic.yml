@@ -22,9 +22,6 @@ targets:
     platform: iOS
     productName: LegacyGamingServices
     sources:
-      - path: ../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h
-        headerVisibility: project
-        group: LegacyGamingServices/Internal
       - path: LegacyGamingServices
         headerVisibility: public
         excludes:

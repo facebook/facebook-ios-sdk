@@ -21,9 +21,6 @@ targets:
     type: framework
     platform: iOS
     sources:
-      - path: ../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h
-        headerVisibility: project
-        group: LegacyGamingServices/Internal
       - path: LegacyGamingServices
         headerVisibility: public
         excludes:
