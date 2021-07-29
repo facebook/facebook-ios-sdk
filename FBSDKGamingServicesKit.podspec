@@ -36,6 +36,7 @@ Pod::Spec.new do |s|
 
   s.source_files   = 'Sources/FBSDKGamingServicesKit/**/*.{h,swift}'
   s.public_header_files = 'Sources/FBSDKGamingServicesKit/**/*.h'
+  s.dependency 'LegacyGamingServices', "~> #{s.version}"
   s.dependency 'FacebookGamingServices', "~> #{s.version}"
 
 end

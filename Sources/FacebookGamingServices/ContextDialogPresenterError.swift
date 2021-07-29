@@ -16,29 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKChooseContextDialog.h"
-#import "FBSDKContextWebDialog.h"
-#import "FBSDKCreateContextContent.h"
-#import "FBSDKCreateContextDialog.h"
-#import "FBSDKDialogProtocol.h"
-#import "FBSDKFriendFinderDialog.h"
-#import "FBSDKGamingContext.h"
-#import "FBSDKGamingGroupIntegration.h"
-#import "FBSDKGamingImageUploader.h"
-#import "FBSDKGamingImageUploaderConfiguration.h"
-#import "FBSDKGamingPayload.h"
-#import "FBSDKGamingPayloadObserver.h"
-#import "FBSDKGamingServiceCompletionHandler.h"
-#import "FBSDKGamingServicesCoreKitImport.h"
-#import "FBSDKGamingVideoUploader.h"
-#import "FBSDKGamingVideoUploaderConfiguration.h"
-#import "FBSDKSwitchContextContent.h"
-#import "FBSDKSwitchContextDialog.h"
+import Foundation
 
-// Types exposed for rewrite but not re-exported
-#import "FBSDKChooseContextDialogFactory.h"
-#import "FBSDKContextDialogFactoryProtocols.h"
-#import "FBSDKContextDialogs+Showable.h"
-#import "FBSDKCreateContextDialogFactory.h"
-#import "FBSDKShowable.h"
-#import "FBSDKSwitchContextDialogFactory.h"
+/**
+ Errors representing a failure to present a context dialog
+ */
+public enum ContextDialogPresenterError: Error {
+  case showCreateContext
+  case showSwitchContext
+  case showChooseContext
+}

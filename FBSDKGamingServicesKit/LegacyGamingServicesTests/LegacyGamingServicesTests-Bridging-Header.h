@@ -20,9 +20,6 @@
 @import XCTest;
 
 #import "FBSDKApplicationDelegate+Testing.h"
-#import "FBSDKChooseContextDialogFactory.h"
-#import "FBSDKContextDialogFactoryProtocols.h"
-#import "FBSDKCreateContextDialogFactory.h"
 #import "FBSDKFileHandleCreating.h"
 #import "FBSDKFileHandleFactory.h"
 #import "FBSDKFileHandling.h"
@@ -34,11 +31,8 @@
 #import "FBSDKGamingServiceControllerFactory.h"
 #import "FBSDKGamingServiceControllerProtocol.h"
 #import "FBSDKGamingVideoUploader+Testing.h"
-#import "FBSDKShowable.h"
-#import "FBSDKSwitchContextDialogFactory.h"
 #import "FBSDKVideoUploader.h"
 #import "FBSDKVideoUploader+Testing.h"
 #import "FBSDKVideoUploaderCreating.h"
 #import "FBSDKVideoUploaderFactory.h"
 #import "FBSDKVideoUploading.h"
-#import "LegacyContextDialogPresenter+Testing.h"
