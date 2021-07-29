@@ -35,6 +35,9 @@
 
 @end
 
+#if FBSDK_SWIFT_PACKAGE
+NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in extensions")
+#endif
 @implementation FBSDKViewImpressionTracker
 {
   NSMutableSet *_trackedImpressions;

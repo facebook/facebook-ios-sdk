@@ -48,6 +48,9 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift) {
 
 @end
 
+#if FBSDK_SWIFT_PACKAGE
+NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in extensions")
+#endif
 @implementation FBSDKInternalUtility
 
 static Class<FBSDKLogging> _loggerType;

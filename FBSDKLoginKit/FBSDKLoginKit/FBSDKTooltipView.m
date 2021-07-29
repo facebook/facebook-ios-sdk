@@ -49,6 +49,9 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
 
  #pragma mark -
 
+ #if FBSDK_SWIFT_PACKAGE
+NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in extensions")
+ #endif
 @implementation FBSDKTooltipView
 {
   CGPoint _positionInView;
