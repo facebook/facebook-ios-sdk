@@ -74,6 +74,7 @@
 #import "FBSDKHumanSilhouetteIcon.h"
 #import "FBSDKInstrumentManager+Testing.h"
 #import "FBSDKIntegrityManager+Testing.h"
+#import "FBSDKRestrictiveData.h"
 #import "FBSDKModelManager+IntegrityParametersProcessorProvider.h"
 #import "FBSDKMath.h"
 #import "FBSDKModelManager+Testing.h"
