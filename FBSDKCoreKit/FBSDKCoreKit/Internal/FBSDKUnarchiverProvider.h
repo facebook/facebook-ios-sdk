@@ -18,6 +18,7 @@
 
 #import "FBSDKUnarchiverProviding.h"
 
+NS_SWIFT_NAME(UnarchiverProvider)
 @interface FBSDKUnarchiverProvider : NSObject <FBSDKUnarchiverProviding>
 
 @end

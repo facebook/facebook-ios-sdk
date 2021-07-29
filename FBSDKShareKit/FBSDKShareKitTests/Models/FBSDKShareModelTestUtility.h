@@ -28,6 +28,7 @@
 #import "FBSDKShareVideo.h"
 #import "FBSDKShareVideoContent.h"
 
+NS_SWIFT_NAME(ShareModelTestUtility)
 @interface FBSDKShareModelTestUtility : NSObject
 
 + (NSURL *)contentURL;

@@ -26,6 +26,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+NS_SWIFT_NAME(FeatureExtractor)
 @interface FBSDKFeatureExtractor : NSObject
 
 + (void)loadRulesForKey:(NSString *)useCaseKey;

@@ -121,10 +121,10 @@ class SKAdNetworkConversionConfigurationTests: XCTestCase {
     ]
 
     let conversionBitRules = try XCTUnwrap(SKAdNetworkConversionConfiguration.parseRules(rules))
-    var expectedRules = [FBSDKSKAdNetworkRule]()
+    var expectedRules = [SKAdNetworkRule]()
 
     expectedRules.append(try XCTUnwrap(
-      FBSDKSKAdNetworkRule(json: [
+      SKAdNetworkRule(json: [
         "conversion_value": 4,
         "events": [
           [
@@ -141,7 +141,7 @@ class SKAdNetworkConversionConfigurationTests: XCTestCase {
     ))
 
     expectedRules.append(try XCTUnwrap(
-      FBSDKSKAdNetworkRule(json: [
+      SKAdNetworkRule(json: [
         "conversion_value": 3,
         "events": [
           [
@@ -162,7 +162,7 @@ class SKAdNetworkConversionConfigurationTests: XCTestCase {
     ))
 
     expectedRules.append(try XCTUnwrap(
-      FBSDKSKAdNetworkRule(json: [
+      SKAdNetworkRule(json: [
         "conversion_value": 2,
         "events": [
           [

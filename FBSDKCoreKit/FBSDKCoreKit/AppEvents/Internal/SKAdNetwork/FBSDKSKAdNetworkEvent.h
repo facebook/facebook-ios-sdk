@@ -24,6 +24,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+NS_SWIFT_NAME(SKAdNetworkEvent)
 @interface FBSDKSKAdNetworkEvent : NSObject
 
 @property (nonatomic, readonly, copy) NSString *eventName;

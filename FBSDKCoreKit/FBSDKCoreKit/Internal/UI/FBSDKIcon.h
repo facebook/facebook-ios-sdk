@@ -19,7 +19,6 @@
 #import <UIKit/UIKit.h>
 
 NS_SWIFT_NAME(Icon)
-
 @interface FBSDKIcon : NSObject
 
 - (UIImage *)imageWithSize:(CGSize)size

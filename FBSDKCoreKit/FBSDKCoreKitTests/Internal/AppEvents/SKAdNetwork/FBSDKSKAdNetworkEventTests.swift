@@ -23,10 +23,10 @@ import XCTest
 class FBSDKSKAdNetworkEventTests: XCTestCase {
 
   func testValidCases() {
-    var event = FBSDKSKAdNetworkEvent(json: ["event_name": "fb_mobile_purchase"])
+    var event = SKAdNetworkEvent(json: ["event_name": "fb_mobile_purchase"])
     XCTAssertTrue(event?.eventName == "fb_mobile_purchase")
     XCTAssertNil(event?.values)
-    event = FBSDKSKAdNetworkEvent(
+    event = SKAdNetworkEvent(
       json: [
         "event_name": "fb_mobile_purchase",
         "values": [
@@ -51,7 +51,7 @@ class FBSDKSKAdNetworkEventTests: XCTestCase {
 
   func testInvalidCases() {
     var invalidData: [String: Any] = [:]
-    XCTAssertNil(FBSDKSKAdNetworkEvent(json: invalidData))
+    XCTAssertNil(SKAdNetworkEvent(json: invalidData))
     invalidData = [
       "values": [
         [
@@ -64,7 +64,7 @@ class FBSDKSKAdNetworkEventTests: XCTestCase {
         ]
       ]
     ]
-    XCTAssertNil(FBSDKSKAdNetworkEvent(json: invalidData))
+    XCTAssertNil(SKAdNetworkEvent(json: invalidData))
     invalidData = [
       "event_name": "fb_mobile_purchase",
       "values": [
@@ -78,7 +78,7 @@ class FBSDKSKAdNetworkEventTests: XCTestCase {
         ]
       ]
     ]
-    XCTAssertNil(FBSDKSKAdNetworkEvent(json: invalidData))
+    XCTAssertNil(SKAdNetworkEvent(json: invalidData))
   }
 }
 

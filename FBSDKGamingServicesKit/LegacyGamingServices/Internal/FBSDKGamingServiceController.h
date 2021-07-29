@@ -29,6 +29,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGamingServiceType) {
 }
 NS_SWIFT_NAME(GamingServiceType);
 
+NS_SWIFT_NAME(GamingServiceController)
 @interface FBSDKGamingServiceController : NSObject <FBSDKURLOpening>
 
 /**

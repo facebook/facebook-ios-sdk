@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKServerConfigurationProviding;
 
+NS_SWIFT_NAME(RestrictiveDataFilterManager)
 @interface FBSDKRestrictiveDataFilterManager : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;

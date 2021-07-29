@@ -20,6 +20,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+NS_SWIFT_NAME(AuthenticationTokenClaims)
 @interface FBSDKAuthenticationTokenClaims : NSObject
 
 /// A unique identifier for the token.
