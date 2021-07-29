@@ -68,7 +68,7 @@ let package = Package(
         */
         .library(
             name: "FacebookGamingServices",
-            targets: ["FacebookGamingServices"]
+            targets: ["FacebookGamingServices", "FBSDKGamingServicesKit"]
         ),
 
         /*
