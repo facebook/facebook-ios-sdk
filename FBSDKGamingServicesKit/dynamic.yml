@@ -104,3 +104,4 @@ targets:
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
       PRODUCT_NAME: FBSDKGamingServicesKit
+    transitivelyLinkDependencies: true
