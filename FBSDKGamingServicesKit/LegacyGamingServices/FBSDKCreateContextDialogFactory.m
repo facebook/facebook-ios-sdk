@@ -18,15 +18,40 @@
 
 #import "FBSDKCreateContextDialogFactory.h"
 
+#if FBSDK_SWIFT_PACKAGE
+@import LegacyCore;
+#else
+ #import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
+#endif
+
 #import "FBSDKContextDialogs+Showable.h"
 #import "FBSDKCreateContextDialog.h"
 
+@interface FBSDKCreateContextDialogFactory ()
+
+@property (nonatomic) Class<FBSDKAccessTokenProviding> tokenProvider;
+
+@end
+
 @implementation FBSDKCreateContextDialogFactory
+
+- (instancetype)initWithTokenProvider:(Class<FBSDKAccessTokenProviding>)tokenProvider
+{
+  if ((self = [super init])) {
+    _tokenProvider = tokenProvider;
+  }
+
+  return self;
+}
 
 - (id<FBSDKShowable>)makeCreateContextDialogWithContent:(FBSDKCreateContextContent *)content
                                            windowFinder:(id<FBSDKWindowFinding>)windowFinder
                                                delegate:(id<FBSDKContextDialogDelegate>)delegate
 {
+  if ([self.tokenProvider currentAccessToken] == nil) {
+    return nil;
+  }
+
   return [FBSDKCreateContextDialog dialogWithContent:content
                                         windowFinder:windowFinder
                                             delegate:delegate];

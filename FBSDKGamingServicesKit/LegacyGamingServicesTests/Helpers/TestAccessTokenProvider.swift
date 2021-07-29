@@ -16,22 +16,19 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+import LegacyGamingServices
+import XCTest
 
-#import "FBSDKContextDialogFactoryProtocols.h"
+class TestAccessTokenProvider: AccessTokenProviding {
 
-@protocol FBSDKAccessTokenProviding;
+  static var stubbedAccessToken: AccessToken?
+  static var tokenCache: TokenCaching?
+  static var currentAccessToken: AccessToken? {
+    stubbedAccessToken
+  }
 
-NS_ASSUME_NONNULL_BEGIN
-
-NS_SWIFT_NAME(SwitchContextDialogFactory)
-@interface FBSDKSwitchContextDialogFactory : NSObject<FBSDKSwitchContextDialogMaking>
-
-+ (instancetype)new NS_UNAVAILABLE;
-- (instancetype)init NS_UNAVAILABLE;
-
-- (instancetype)initWithTokenProvider:(Class<FBSDKAccessTokenProviding>)tokenProvider;
-
-@end
-
-NS_ASSUME_NONNULL_END
+  static func reset() {
+    tokenCache = nil
+    stubbedAccessToken = nil
+  }
+}

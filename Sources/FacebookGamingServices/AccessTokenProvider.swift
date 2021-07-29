@@ -16,22 +16,23 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#if FBSDK_SWIFT_PACKAGE
+import FacebookCore
+#else
+import FBSDKCoreKit
+#endif
 
-#import "FBSDKContextDialogFactoryProtocols.h"
+class AccessTokenProvider: AccessTokenProviding {
+  static var tokenCache: TokenCaching? {
+    get {
+      AccessToken.tokenCache
+    }
+    set {
+      AccessToken.tokenCache = newValue
+    }
+  }
 
-@protocol FBSDKAccessTokenProviding;
-
-NS_ASSUME_NONNULL_BEGIN
-
-NS_SWIFT_NAME(SwitchContextDialogFactory)
-@interface FBSDKSwitchContextDialogFactory : NSObject<FBSDKSwitchContextDialogMaking>
-
-+ (instancetype)new NS_UNAVAILABLE;
-- (instancetype)init NS_UNAVAILABLE;
-
-- (instancetype)initWithTokenProvider:(Class<FBSDKAccessTokenProviding>)tokenProvider;
-
-@end
-
-NS_ASSUME_NONNULL_END
+  static var currentAccessToken: AccessToken? {
+    AccessToken.current
+  }
+}

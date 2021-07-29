@@ -36,18 +36,18 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(CreateContextDialogMaking)
 @protocol FBSDKCreateContextDialogMaking
 
-- (id<FBSDKShowable>)makeCreateContextDialogWithContent:(FBSDKCreateContextContent *)content
-                                           windowFinder:(id<FBSDKWindowFinding>)windowFinder
-                                               delegate:(id<FBSDKContextDialogDelegate>)delegate;
+- (nullable id<FBSDKShowable>)makeCreateContextDialogWithContent:(FBSDKCreateContextContent *)content
+                                                    windowFinder:(id<FBSDKWindowFinding>)windowFinder
+                                                        delegate:(id<FBSDKContextDialogDelegate>)delegate;
 
 @end
 
 NS_SWIFT_NAME(SwitchContextDialogMaking)
 @protocol FBSDKSwitchContextDialogMaking
 
-- (id<FBSDKShowable>)makeSwitchContextDialogWithContent:(FBSDKSwitchContextContent *)content
-                                           windowFinder:(id<FBSDKWindowFinding>)windowFinder
-                                               delegate:(id<FBSDKContextDialogDelegate>)delegate;
+- (nullable id<FBSDKShowable>)makeSwitchContextDialogWithContent:(FBSDKSwitchContextContent *)content
+                                                    windowFinder:(id<FBSDKWindowFinding>)windowFinder
+                                                        delegate:(id<FBSDKContextDialogDelegate>)delegate;
 
 @end
 

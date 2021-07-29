@@ -18,15 +18,40 @@
 
 #import "FBSDKSwitchContextDialogFactory.h"
 
+#if FBSDK_SWIFT_PACKAGE
+@import LegacyCore;
+#else
+ #import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
+#endif
+
 #import "FBSDKContextDialogs+Showable.h"
 #import "FBSDKSwitchContextDialog.h"
 
+@interface FBSDKSwitchContextDialogFactory ()
+
+@property (nonatomic) Class<FBSDKAccessTokenProviding> tokenProvider;
+
+@end
+
 @implementation FBSDKSwitchContextDialogFactory
 
-- (nonnull id<FBSDKShowable>)makeSwitchContextDialogWithContent:(nonnull FBSDKSwitchContextContent *)content
-                                                   windowFinder:(nonnull id<FBSDKWindowFinding>)windowFinder
-                                                       delegate:(nonnull id<FBSDKContextDialogDelegate>)delegate
+- (instancetype)initWithTokenProvider:(Class<FBSDKAccessTokenProviding>)tokenProvider
 {
+  if ((self = [super init])) {
+    _tokenProvider = tokenProvider;
+  }
+
+  return self;
+}
+
+- (nullable id<FBSDKShowable>)makeSwitchContextDialogWithContent:(nonnull FBSDKSwitchContextContent *)content
+                                                    windowFinder:(nonnull id<FBSDKWindowFinding>)windowFinder
+                                                        delegate:(nonnull id<FBSDKContextDialogDelegate>)delegate
+{
+  if ([self.tokenProvider currentAccessToken] == nil) {
+    return nil;
+  }
+
   return [FBSDKSwitchContextDialog dialogWithContent:content
                                         windowFinder:windowFinder
                                             delegate:delegate];

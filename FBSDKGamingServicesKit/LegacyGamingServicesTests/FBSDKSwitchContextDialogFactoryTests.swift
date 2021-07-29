@@ -16,6 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import TestTools
 import XCTest
 
 class FBSDKSwitchContextDialogFactoryTests: XCTestCase {
@@ -23,10 +24,26 @@ class FBSDKSwitchContextDialogFactoryTests: XCTestCase {
   let content = SwitchContextContent(contextID: "123")
   let windowFinder = TestWindowFinder()
   let delegate = TestContextDialogDelegate()
+  let tokenProvider = TestAccessTokenProvider()
 
-  func testCreatingDialog() throws {
+  override func setUp() {
+    super.setUp()
+
+    TestAccessTokenProvider.reset()
+  }
+
+  override func tearDown() {
+    TestAccessTokenProvider.reset()
+
+    super.tearDown()
+  }
+
+  func testCreatingDialogWithAccessToken() throws {
+    TestAccessTokenProvider.stubbedAccessToken = SampleAccessTokens.validToken
+    let factory = SwitchContextDialogFactory(tokenProvider: TestAccessTokenProvider.self)
+
     let dialog = try XCTUnwrap(
-      SwitchContextDialogFactory().makeSwitchContextDialog(
+      factory.makeSwitchContextDialog(
         with: content,
         windowFinder: windowFinder,
         delegate: delegate
@@ -42,6 +59,18 @@ class FBSDKSwitchContextDialogFactoryTests: XCTestCase {
     XCTAssertTrue(
       dialog.delegate === delegate,
       "Should create the dialog with the expected delegate"
+    )
+  }
+
+  func testCreatingDialogWithMissingAccessToken() throws {
+    let factory = SwitchContextDialogFactory(tokenProvider: TestAccessTokenProvider.self)
+    XCTAssertNil(
+      factory.makeSwitchContextDialog(
+        with: content,
+        windowFinder: windowFinder,
+        delegate: delegate
+      ),
+      "Should not create a dialog with a missing access token"
     )
   }
 

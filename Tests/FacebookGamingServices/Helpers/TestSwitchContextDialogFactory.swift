@@ -22,15 +22,16 @@ class TestSwitchContextDialogFactory: SwitchContextDialogMaking {
   let dialog = TestShowable()
   var wasMakeSwitchContextDialogCalled = false
   var capturedDelegate: ContextDialogDelegate?
+  var shouldCreateDialog = true
 
   func makeSwitchContextDialog(
     with content: SwitchContextContent,
     windowFinder: WindowFinding,
     delegate: ContextDialogDelegate
-  ) -> Showable {
+  ) -> Showable? {
     wasMakeSwitchContextDialogCalled = true
     capturedDelegate = delegate
 
-    return dialog
+    return shouldCreateDialog ? dialog : nil
   }
 }

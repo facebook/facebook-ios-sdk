@@ -30,19 +30,28 @@ import LegacyGamingServices
  */
 public class ContextDialogPresenter {
 
-  let createContextDialogFactory: CreateContextDialogMaking
-  let switchContextDialogFactory: SwitchContextDialogMaking
-  let chooseContextDialogFactory: ChooseContextDialogMaking
+  private(set) var createContextDialogFactory: CreateContextDialogMaking
+  private(set) var switchContextDialogFactory: SwitchContextDialogMaking
+  private(set) var chooseContextDialogFactory: ChooseContextDialogMaking
 
-  public init(
-    createContextDialogFactory: CreateContextDialogMaking = CreateContextDialogFactory(),
-    switchContextDialogFactory: SwitchContextDialogMaking = SwitchContextDialogFactory(),
-    chooseContextDialogFactory: ChooseContextDialogMaking = ChooseContextDialogFactory()
+  public init() {
+    self.createContextDialogFactory = CreateContextDialogFactory(tokenProvider: AccessTokenProvider.self)
+    self.switchContextDialogFactory = SwitchContextDialogFactory(tokenProvider: AccessTokenProvider.self)
+    self.chooseContextDialogFactory = ChooseContextDialogFactory()
+  }
+
+  convenience init(
+    createContextDialogFactory: CreateContextDialogMaking,
+    switchContextDialogFactory: SwitchContextDialogMaking,
+    chooseContextDialogFactory: ChooseContextDialogMaking
   ) {
+    self.init()
+
     self.createContextDialogFactory = createContextDialogFactory
     self.switchContextDialogFactory = switchContextDialogFactory
     self.chooseContextDialogFactory = chooseContextDialogFactory
   }
+  // swiftlint:enable line_length
 
   /**
    Convenience method to build up and show an instant games create context dialog with content and delegate.
@@ -114,11 +123,7 @@ public class ContextDialogPresenter {
     content: CreateContextContent,
     delegate: ContextDialogDelegate
   ) -> Showable? {
-    guard AccessToken.current != nil else {
-      return nil
-    }
-
-    return createContextDialogFactory.makeCreateContextDialog(
+    createContextDialogFactory.makeCreateContextDialog(
       with: content,
       windowFinder: InternalUtility.shared,
       delegate: delegate
@@ -129,11 +134,7 @@ public class ContextDialogPresenter {
     content: SwitchContextContent,
     delegate: ContextDialogDelegate
   ) -> Showable? {
-    guard AccessToken.current != nil else {
-      return nil
-    }
-
-    return switchContextDialogFactory.makeSwitchContextDialog(
+    switchContextDialogFactory.makeSwitchContextDialog(
       with: content,
       windowFinder: InternalUtility.shared,
       delegate: delegate

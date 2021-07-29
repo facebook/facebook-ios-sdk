@@ -38,12 +38,6 @@ class ContextDialogPresenterTests: XCTestCase {
     chooseContextDialogFactory: chooseContextDialogFactory
   )
 
-  override func tearDown() {
-    AccessToken.current = nil
-
-    super.tearDown()
-  }
-
   func testDefaults() {
     let presenter = ContextDialogPresenter()
 
@@ -76,22 +70,7 @@ class ContextDialogPresenterTests: XCTestCase {
     )
   }
 
-  func testMakingCreateContextDialogWithoutAccessToken() {
-    AccessToken.current = nil
-    let dialog = presenter.makeCreateContextDialog(
-      content: createContextContent,
-      delegate: delegate
-    )
-
-    XCTAssertFalse(
-      createContextDialogFactory.wasMakeCreateContextDialogCalled,
-      "Should not use the factory to make a create context dialog when there is no access token available"
-    )
-    XCTAssertNil(dialog, "Should not create a dialog when there is no access token available")
-  }
-
   func testMakingCreateContextDialog() {
-    AccessToken.current = SampleAccessTokens.validToken
     _ = presenter.makeCreateContextDialog(
       content: createContextContent,
       delegate: delegate
@@ -108,7 +87,6 @@ class ContextDialogPresenterTests: XCTestCase {
   }
 
   func testShowingCreateContextDialog() throws {
-    AccessToken.current = SampleAccessTokens.validToken
     _ = try XCTUnwrap(
       presenter.makeAndShowCreateContextDialog(
         content: createContextContent,
@@ -128,7 +106,7 @@ class ContextDialogPresenterTests: XCTestCase {
   }
 
   func testShowingCreateContextDialogWithFailedDialogCreation() throws {
-    AccessToken.current = nil // will fail to create if this is nil
+    createContextDialogFactory.shouldCreateDialog = false
 
     do {
       try presenter.makeAndShowCreateContextDialog(
@@ -150,22 +128,7 @@ class ContextDialogPresenterTests: XCTestCase {
     )
   }
 
-  func testMakingSwitchContextDialogWithoutAccessToken() {
-    AccessToken.current = nil
-    let dialog = presenter.makeSwitchContextDialog(
-      content: switchContextContent,
-      delegate: delegate
-    )
-
-    XCTAssertFalse(
-      switchContextDialogFactory.wasMakeSwitchContextDialogCalled,
-      "Should not use the factory to make a switch context dialog when there is no access token available"
-    )
-    XCTAssertNil(dialog, "Should not create a dialog when there is no access token available")
-  }
-
   func testMakingSwitchContextDialog() {
-    AccessToken.current = SampleAccessTokens.validToken
     _ = presenter.makeSwitchContextDialog(
       content: switchContextContent,
       delegate: delegate
@@ -182,7 +145,6 @@ class ContextDialogPresenterTests: XCTestCase {
   }
 
   func testShowingSwitchContextDialog() throws {
-    AccessToken.current = SampleAccessTokens.validToken
     _ = try XCTUnwrap(
       presenter.makeAndShowSwitchContextDialog(
         content: switchContextContent,
@@ -202,7 +164,8 @@ class ContextDialogPresenterTests: XCTestCase {
   }
 
   func testShowingSwitchContextDialogWithFailedDialogCreation() throws {
-    AccessToken.current = nil // will fail to create if this is nil
+    switchContextDialogFactory.shouldCreateDialog = false
+
     do {
       try
         presenter.makeAndShowSwitchContextDialog(
