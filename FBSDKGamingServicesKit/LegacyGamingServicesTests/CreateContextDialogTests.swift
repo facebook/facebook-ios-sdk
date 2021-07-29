@@ -18,7 +18,7 @@
 
 import XCTest
 
-class CreateContextDialogTest: XCTestCase, ContextDialogDelegate {
+class CreateContextDialogTests: XCTestCase, ContextDialogDelegate {
 
     var dialogDidCompleteSuccessfully = false
     var dialogDidCancel = false
@@ -27,9 +27,9 @@ class CreateContextDialogTest: XCTestCase, ContextDialogDelegate {
     override func setUp() {
         super.setUp()
 
-        self.dialogDidCompleteSuccessfully = false
-        self.dialogDidCancel = false
-        self.dialogError = nil
+        dialogDidCompleteSuccessfully = false
+        dialogDidCancel = false
+        dialogError = nil
     }
 
     override func tearDown() {

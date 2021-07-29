@@ -16,48 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
-#if !TARGET_OS_TV
-
 #import <Foundation/Foundation.h>
-#import "FBSDKDialogProtocol.h"
 
-typedef NS_ENUM(NSInteger, FBSDKChooseContextFilter) {
-  FBSDKChooseContextFilterNewContextOnly = 0,
-  FBSDKChooseContextFilterExistingChallenges,
-  FBSDKChooseContextFilterNewPlayersOnly,
-}NS_SWIFT_NAME(ChooseContextFilter);
-
+#import "FBSDKContextDialogFactoryProtocols.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- A model for an instant games choose context app switch dialog
- */
-NS_SWIFT_NAME(ChooseContextContent)
-@interface FBSDKChooseContextContent : NSObject <FBSDKValidatable>
-
-/**
-  This sets the filter which determines which context will show when the user is app switched to the choose context dialog.
- */
-@property (nonatomic) FBSDKChooseContextFilter filter;
-
-/**
-  This sets the maximum number of participants that the suggested context(s) shown in the dialog should have.
- */
-@property (nonatomic) int maxParticipants;
-
-/**
-  This sets the minimum number of participants that the suggested context(s) shown in the dialog should have. 
- */
-@property (nonatomic) int minParticipants;
-
-
-+ (NSString *)filtersNameForFilters:(FBSDKChooseContextFilter)filter;
-
+NS_SWIFT_NAME(SwitchContextDialogFactory)
+@interface FBSDKSwitchContextDialogFactory : NSObject<FBSDKSwitchContextDialogMaking>
 @end
 
 NS_ASSUME_NONNULL_END
-
-#endif

@@ -16,29 +16,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@import LegacyGamingServices;
-@import XCTest;
+import LegacyGamingServices
 
-#import "FBSDKApplicationDelegate+Testing.h"
-#import "FBSDKChooseContextDialogFactory.h"
-#import "FBSDKContextDialogFactoryProtocols.h"
-#import "FBSDKCreateContextDialogFactory.h"
-#import "FBSDKFileHandleCreating.h"
-#import "FBSDKFileHandleFactory.h"
-#import "FBSDKFileHandling.h"
-#import "FBSDKFriendFinderDialog+Testing.h"
-#import "FBSDKGamingImageUploader+Testing.h"
-#import "FBSDKGamingPayloadObserver+Testing.h"
-#import "FBSDKGamingServiceController.h"
-#import "FBSDKGamingServiceControllerCreating.h"
-#import "FBSDKGamingServiceControllerFactory.h"
-#import "FBSDKGamingServiceControllerProtocol.h"
-#import "FBSDKGamingVideoUploader+Testing.h"
-#import "FBSDKShowable.h"
-#import "FBSDKSwitchContextDialogFactory.h"
-#import "FBSDKVideoUploader.h"
-#import "FBSDKVideoUploader+Testing.h"
-#import "FBSDKVideoUploaderCreating.h"
-#import "FBSDKVideoUploaderFactory.h"
-#import "FBSDKVideoUploading.h"
-#import "LegacyContextDialogPresenter+Testing.h"
+class TestCreateContextDialogFactory: CreateContextDialogMaking {
+  let dialog = TestShowable()
+  var wasMakeCreateContextDialogCalled = false
+  var capturedDelegate: ContextDialogDelegate?
+
+  func makeCreateContextDialog(
+    with content: CreateContextContent,
+    windowFinder: WindowFinding,
+    delegate: ContextDialogDelegate
+  ) -> Showable {
+    wasMakeCreateContextDialogCalled = true
+    capturedDelegate = delegate
+
+    return dialog
+  }
+}

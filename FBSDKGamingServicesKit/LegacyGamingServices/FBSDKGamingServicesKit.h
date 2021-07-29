@@ -17,7 +17,6 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "FBSDKChooseContextDialog.h"
-#import "FBSDKContextDialogPresenter.h"
 #import "FBSDKContextWebDialog.h"
 #import "FBSDKCreateContextContent.h"
 #import "FBSDKCreateContextDialog.h"
@@ -35,3 +34,4 @@
 #import "FBSDKGamingVideoUploaderConfiguration.h"
 #import "FBSDKSwitchContextContent.h"
 #import "FBSDKSwitchContextDialog.h"
+#import "LegacyContextDialogPresenter.h"

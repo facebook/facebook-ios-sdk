@@ -16,29 +16,33 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@import LegacyGamingServices;
-@import XCTest;
+import XCTest
 
-#import "FBSDKApplicationDelegate+Testing.h"
-#import "FBSDKChooseContextDialogFactory.h"
-#import "FBSDKContextDialogFactoryProtocols.h"
-#import "FBSDKCreateContextDialogFactory.h"
-#import "FBSDKFileHandleCreating.h"
-#import "FBSDKFileHandleFactory.h"
-#import "FBSDKFileHandling.h"
-#import "FBSDKFriendFinderDialog+Testing.h"
-#import "FBSDKGamingImageUploader+Testing.h"
-#import "FBSDKGamingPayloadObserver+Testing.h"
-#import "FBSDKGamingServiceController.h"
-#import "FBSDKGamingServiceControllerCreating.h"
-#import "FBSDKGamingServiceControllerFactory.h"
-#import "FBSDKGamingServiceControllerProtocol.h"
-#import "FBSDKGamingVideoUploader+Testing.h"
-#import "FBSDKShowable.h"
-#import "FBSDKSwitchContextDialogFactory.h"
-#import "FBSDKVideoUploader.h"
-#import "FBSDKVideoUploader+Testing.h"
-#import "FBSDKVideoUploaderCreating.h"
-#import "FBSDKVideoUploaderFactory.h"
-#import "FBSDKVideoUploading.h"
-#import "LegacyContextDialogPresenter+Testing.h"
+class FBSDKCreateContextDialogFactoryTests: XCTestCase {
+
+  let content = CreateContextContent(playerID: "123")
+  let windowFinder = TestWindowFinder()
+  let delegate = TestContextDialogDelegate()
+
+  func testCreatingDialog() throws {
+    let dialog = try XCTUnwrap(
+      CreateContextDialogFactory().makeCreateContextDialog(
+        with: content,
+        windowFinder: windowFinder,
+        delegate: delegate
+      ) as? CreateContextDialog,
+      "Should create a context dialog of the expected concrete type"
+    )
+
+    XCTAssertEqual(
+      dialog.dialogContent as? CreateContextContent,
+      content,
+      "Should create the dialog with the expected content"
+    )
+    XCTAssertTrue(
+      dialog.delegate === delegate,
+      "Should create the dialog with the expected delegate"
+    )
+  }
+
+}

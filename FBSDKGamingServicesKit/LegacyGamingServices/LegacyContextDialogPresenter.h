@@ -35,8 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
   A dialog presenter responsible for creating and showing all the dialogs that create, switch, choose and otherwise manipulate the gaming context.
  */
-NS_SWIFT_NAME(ContextDialogPresenter)
-@interface FBSDKContextDialogPresenter : NSObject
+@interface LegacyContextDialogPresenter : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -48,7 +47,7 @@ NS_SWIFT_NAME(ContextDialogPresenter)
  */
 + (nullable FBSDKCreateContextDialog*)createContextDialogWithContent:(FBSDKCreateContextContent *)content
                                                             delegate:(nullable id<FBSDKContextDialogDelegate>)delegate
-NS_SWIFT_NAME(init(createContextDialogWithContent:delegate:));
+NS_SWIFT_NAME(makeCreateContextDialog(content:delegate:));
 
 /**
  Convenience method to build up and show an instant games create context dialog with content and delegate.
@@ -57,7 +56,7 @@ NS_SWIFT_NAME(init(createContextDialogWithContent:delegate:));
  */
 + (nullable NSError *)showCreateContextDialogWithContent:(FBSDKCreateContextContent *)content
                                                 delegate:(nullable id<FBSDKContextDialogDelegate>)delegate
-NS_SWIFT_UNAVAILABLE("Use init(createContextDialogWithContent:delegate:).show() instead");
+NS_SWIFT_NAME(showCreateContextDialog(content:delegate:));
 
 /**
  Convenience method to build up an instant games switch context dialog with the giving content and delegate.
@@ -66,7 +65,7 @@ NS_SWIFT_UNAVAILABLE("Use init(createContextDialogWithContent:delegate:).show() 
  */
 + (nullable FBSDKSwitchContextDialog*)switchContextDialogWithContent:(FBSDKSwitchContextContent *)content
                                                             delegate:(nullable id<FBSDKContextDialogDelegate>)delegate
-NS_SWIFT_NAME(init(switchContextDialogWithContent:delegate:));
+NS_SWIFT_NAME(makeSwitchContextDialog(content:delegate:));
 
 /**
  Convenience method to build up and show an instant games switch context dialog with the giving content and delegate.
@@ -75,7 +74,7 @@ NS_SWIFT_NAME(init(switchContextDialogWithContent:delegate:));
  */
 + (nullable NSError *)showSwitchContextDialogWithContent:(FBSDKSwitchContextContent *)content
                                                 delegate:(nullable id<FBSDKContextDialogDelegate>)delegate
-NS_SWIFT_UNAVAILABLE("Use init(switchContextDialogWithContent:delegate:).show() instead");
+NS_SWIFT_NAME(showSwitchContextDialog(content:delegate:));
 
 /**
  Convenience method to build up and show an instant games choose context dialog with content and a delegate.
@@ -83,9 +82,11 @@ NS_SWIFT_UNAVAILABLE("Use init(switchContextDialogWithContent:delegate:).show() 
  @param delegate The receiver's delegate.
  */
 + (FBSDKChooseContextDialog *)showChooseContextDialogWithContent:(FBSDKChooseContextContent *)content
-                                                        delegate:(id<FBSDKContextDialogDelegate>)delegate;
+                                                        delegate:(id<FBSDKContextDialogDelegate>)delegate
+NS_SWIFT_NAME(showChooseContextDialog(content:delegate:));
+
 @end
 
-
 NS_ASSUME_NONNULL_END
+
 #endif

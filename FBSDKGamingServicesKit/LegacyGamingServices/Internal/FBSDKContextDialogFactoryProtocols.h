@@ -21,40 +21,41 @@
 #if !TARGET_OS_TV
 
 #import <Foundation/Foundation.h>
-#import "FBSDKDialogProtocol.h"
 
-typedef NS_ENUM(NSInteger, FBSDKChooseContextFilter) {
-  FBSDKChooseContextFilterNewContextOnly = 0,
-  FBSDKChooseContextFilterExistingChallenges,
-  FBSDKChooseContextFilterNewPlayersOnly,
-}NS_SWIFT_NAME(ChooseContextFilter);
+#import "FBSDKCreateContextContent.h"
+#import "FBSDKSwitchContextContent.h"
+#import "FBSDKChooseContextContent.h"
+
+@protocol FBSDKShowable;
+@protocol FBSDKWindowFinding;
+@protocol FBSDKContextDialogDelegate;
 
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- A model for an instant games choose context app switch dialog
- */
-NS_SWIFT_NAME(ChooseContextContent)
-@interface FBSDKChooseContextContent : NSObject <FBSDKValidatable>
+NS_SWIFT_NAME(CreateContextDialogMaking)
+@protocol FBSDKCreateContextDialogMaking
 
-/**
-  This sets the filter which determines which context will show when the user is app switched to the choose context dialog.
- */
-@property (nonatomic) FBSDKChooseContextFilter filter;
+- (id<FBSDKShowable>)makeCreateContextDialogWithContent:(FBSDKCreateContextContent *)content
+                                           windowFinder:(id<FBSDKWindowFinding>)windowFinder
+                                               delegate:(id<FBSDKContextDialogDelegate>)delegate;
 
-/**
-  This sets the maximum number of participants that the suggested context(s) shown in the dialog should have.
- */
-@property (nonatomic) int maxParticipants;
+@end
 
-/**
-  This sets the minimum number of participants that the suggested context(s) shown in the dialog should have. 
- */
-@property (nonatomic) int minParticipants;
+NS_SWIFT_NAME(SwitchContextDialogMaking)
+@protocol FBSDKSwitchContextDialogMaking
 
+- (id<FBSDKShowable>)makeSwitchContextDialogWithContent:(FBSDKSwitchContextContent *)content
+                                           windowFinder:(id<FBSDKWindowFinding>)windowFinder
+                                               delegate:(id<FBSDKContextDialogDelegate>)delegate;
 
-+ (NSString *)filtersNameForFilters:(FBSDKChooseContextFilter)filter;
+@end
+
+NS_SWIFT_NAME(ChooseContextDialogMaking)
+@protocol FBSDKChooseContextDialogMaking
+
+- (id<FBSDKShowable>)makeChooseContextDialogWithContent:(FBSDKChooseContextContent *)content
+                                               delegate:(id<FBSDKContextDialogDelegate>)delegate;
 
 @end
 
