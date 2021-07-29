@@ -78,6 +78,7 @@ targets:
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
       PRODUCT_NAME: FacebookGamingServices
+    transitivelyLinkDependencies: true
   FBSDKGamingServicesKit-Dynamic:
     type: framework
     platform: iOS
