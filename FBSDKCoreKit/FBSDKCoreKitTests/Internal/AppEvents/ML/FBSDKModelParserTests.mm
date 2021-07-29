@@ -31,9 +31,9 @@ using std::vector;
 @end
 
 @interface FBSDKModelParserTests : XCTestCase
-{
-  NSMutableDictionary<NSString *, NSArray *> *_mockWeightsInfoDict;
-}
+
+@property (nonatomic) NSMutableDictionary<NSString *, NSArray *> *mockWeightsInfoDict;
+
 @end
 
 @implementation FBSDKModelParserTests

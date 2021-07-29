@@ -45,15 +45,15 @@
 @end
 
 @interface FBSDKMetadataIndexerTests : XCTestCase
-{
-  FBSDKMetadataIndexer *_metadataIndexer;
-  UITextField *_emailField;
-  UITextView *_emailView;
-  UITextField *_phoneField;
-  UITextView *_phoneView;
-  UITextField *_pwdField;
-  UITextView *_pwdView;
-}
+
+@property (nonatomic) FBSDKMetadataIndexer *metadataIndexer;
+@property (nonatomic) UITextField *emailField;
+@property (nonatomic) UITextView *emailView;
+@property (nonatomic) UITextField *phoneField;
+@property (nonatomic) UITextView *phoneView;
+@property (nonatomic) UITextField *pwdField;
+@property (nonatomic) UITextView *pwdView;
+
 @end
 
 @implementation FBSDKMetadataIndexerTests

@@ -45,9 +45,8 @@ static NSString *const _mockChallenge = @"mockChallenge";
 @end
 
 @interface FBSDKReferralManagerTests : XCTestCase
-{
-  FBSDKReferralManager *_manager;
-}
+
+@property (nonatomic) FBSDKReferralManager *manager;
 
 @end
 

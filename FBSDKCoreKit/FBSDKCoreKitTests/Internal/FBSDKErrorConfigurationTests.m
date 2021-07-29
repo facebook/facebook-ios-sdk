@@ -23,18 +23,17 @@
 
 @interface FBSDKErrorConfigurationTests : XCTestCase
 
+@property (nonatomic) NSArray *rawErrorCodeConfiguration;
+
 @end
 
 @implementation FBSDKErrorConfigurationTests
-{
-  NSArray *rawErrorCodeConfiguration;
-}
 
 - (void)setUp
 {
   [super setUp];
 
-  rawErrorCodeConfiguration = @[
+  self.rawErrorCodeConfiguration = @[
     @{ @"name" : @"other",
        @"items" : @[@{ @"code" : @190, @"subcodes" : @[@459] }], },
     @{ @"name" : @"login",
@@ -62,7 +61,7 @@
 - (void)testErrorConfigurationAdditonalArray
 {
   FBSDKErrorConfiguration *intermediaryConfiguration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
-  [intermediaryConfiguration updateWithArray:rawErrorCodeConfiguration];
+  [intermediaryConfiguration updateWithArray:self.rawErrorCodeConfiguration];
 
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:intermediaryConfiguration];
   FBSDKErrorConfiguration *configuration;
@@ -253,7 +252,7 @@
 - (void)testParsingRandomEntries
 {
   for (int i = 0; i < 100; i++) {
-    NSArray *array = [Fuzzer randomizeWithJson:rawErrorCodeConfiguration];
+    NSArray *array = [Fuzzer randomizeWithJson:self.rawErrorCodeConfiguration];
 
     FBSDKErrorConfiguration *configuration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
     [configuration updateWithArray:array];

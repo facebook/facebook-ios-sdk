@@ -80,9 +80,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 @end
 
 @interface FBSDKLoginCompletionTests : XCTestCase
-{
-  NSDictionary *_parameters;
-}
+@property (nonatomic) NSDictionary *parameters;
 
 @property TestGraphRequestConnection *graphConnection;
 

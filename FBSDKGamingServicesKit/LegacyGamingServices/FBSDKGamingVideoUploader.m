@@ -26,9 +26,8 @@
 #import "FBSDKVideoUploaderFactory.h"
 
 @interface FBSDKGamingVideoUploader () <FBSDKVideoUploaderDelegate>
-{
-  NSUInteger _totalBytesSent;
-}
+
+@property (nonatomic) NSUInteger totalBytesSent;
 
 @property (nonatomic) id<FBSDKFileHandling> fileHandle;
 @property (nonatomic) id<FBSDKFileHandleCreating> fileHandleFactory;

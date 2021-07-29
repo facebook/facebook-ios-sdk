@@ -24,9 +24,8 @@
 #import "FBSDKGamingServicesCoreKitImport.h"
 
 @interface FBSDKGamingImageUploader () <FBSDKGraphRequestConnectionDelegate>
-{
-  FBSDKGamingServiceProgressHandler _progressHandler;
-}
+
+@property (nonatomic) FBSDKGamingServiceProgressHandler progressHandler;
 
 @property (nonnull, nonatomic) id<FBSDKGamingServiceControllerCreating> factory;
 @property (nonnull, nonatomic) id<FBSDKGraphRequestConnectionProviding> graphRequestConnectionFactory;
