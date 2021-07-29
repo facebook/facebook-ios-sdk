@@ -29,8 +29,8 @@ class BackgroundEventLoggerTests: XCTestCase {
     super.setUp()
 
     backgroundEventLogger = BackgroundEventLogger(
-        infoDictionaryProvider: bundleWithIdentifier,
-        eventLogger: logger
+      infoDictionaryProvider: bundleWithIdentifier,
+      eventLogger: logger
     )
   }
 
@@ -84,8 +84,8 @@ class BackgroundEventLoggerTests: XCTestCase {
 
   func testIsNewBackgroundRefreshWithoutIdentifiers() {
     backgroundEventLogger = BackgroundEventLogger(
-        infoDictionaryProvider: bundleWithoutIdentifier,
-        eventLogger: logger
+      infoDictionaryProvider: bundleWithoutIdentifier,
+      eventLogger: logger
     )
 
     XCTAssertFalse(

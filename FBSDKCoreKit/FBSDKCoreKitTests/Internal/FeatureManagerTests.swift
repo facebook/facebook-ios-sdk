@@ -154,9 +154,9 @@ class FeatureManagerTests: XCTestCase {
       XCTAssertTrue(
         TestGateKeeperManager.capturedBoolForGateKeeperKeys.contains(key),
         """
-          Checking if top-level feature: \(data.parentFeatureName) is enabled
-          should check for the feature name: \(data.name) in the loaded gatekeepers
-          """
+        Checking if top-level feature: \(data.parentFeatureName) is enabled
+        should check for the feature name: \(data.name) in the loaded gatekeepers
+        """
       )
       TestGateKeeperManager.reset()
     }

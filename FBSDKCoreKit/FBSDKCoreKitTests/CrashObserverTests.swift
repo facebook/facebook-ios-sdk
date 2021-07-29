@@ -60,9 +60,11 @@ class CrashObserversTest: XCTestCase {
   }
 
   static func getCrashLogs() -> [[String: Any]] {
-    let callstack = ["(4 DEV METHODS)",
-    "+[FBSDKCodelessIndexer crash]+84",
-    "(22 DEV METHODS)"]
+    let callstack = [
+      "(4 DEV METHODS)",
+      "+[FBSDKCodelessIndexer crash]+84",
+      "(22 DEV METHODS)"
+    ]
 
     let crashLogs = [[
       "callstack": callstack,

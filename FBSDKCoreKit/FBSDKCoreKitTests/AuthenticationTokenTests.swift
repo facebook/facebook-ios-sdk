@@ -83,7 +83,7 @@ class AuthenticationTokenTests: XCTestCase {
     XCTAssertTrue(
       coder.decodedObject["FBSDKAuthenticationTokenTokenStringCodingKey"] as? Any.Type == NSString.self,
       "Initializing from a decoder should attempt to decode a String for the token string key"
-      )
+    )
     XCTAssertTrue(
       coder.decodedObject["FBSDKAuthenticationTokenNonceCodingKey"] as? Any.Type == NSString.self,
       "Initializing from a decoder should attempt to decode a String for the nonce key"

@@ -351,5 +351,5 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
     // Confirm configuration is unarchived from store instead of set again from defaults
     XCTAssertEqual(AppEventsConfigurationManager.cachedAppEventsConfiguration().advertiserIDCollectionEnabled, false)
     XCTAssertEqual(AppEventsConfigurationManager.cachedAppEventsConfiguration().eventCollectionEnabled, true)
- }
+  }
 }

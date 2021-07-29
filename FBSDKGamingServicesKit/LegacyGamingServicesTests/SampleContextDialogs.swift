@@ -45,7 +45,7 @@ enum SampleContextDialogs {
     return dialog
   }
 
- static func chooseContextDialogWithoutContentValues(delegate: ContextDialogDelegate) -> ChooseContextDialog? {
+  static func chooseContextDialogWithoutContentValues(delegate: ContextDialogDelegate) -> ChooseContextDialog? {
     let content = ChooseContextContent()
     let dialog = ChooseContextDialog(content: content, delegate: delegate)
 

@@ -25,31 +25,31 @@ import XCTest
 class AEMConfigurationTests: XCTestCase { // swiftlint:disable:this type_body_length
 
   enum Keys {
-      static let defaultCurrency = "default_currency"
-      static let cutoffTime = "cutoff_time"
-      static let validFrom = "valid_from"
-      static let configMode = "config_mode"
-      static let advertiserID = "advertiser_id"
-      static let businessID = "business_id"
-      static let paramRule = "param_rule"
-      static let conversionValueRules = "conversion_value_rules"
-      static let conversionValue = "conversion_value"
-      static let priority = "priority"
-      static let events = "events"
-      static let eventName = "event_name"
-      static let values = "values"
-      static let currency = "currency"
-      static let amount = "amount"
+    static let defaultCurrency = "default_currency"
+    static let cutoffTime = "cutoff_time"
+    static let validFrom = "valid_from"
+    static let configMode = "config_mode"
+    static let advertiserID = "advertiser_id"
+    static let businessID = "business_id"
+    static let paramRule = "param_rule"
+    static let conversionValueRules = "conversion_value_rules"
+    static let conversionValue = "conversion_value"
+    static let priority = "priority"
+    static let events = "events"
+    static let eventName = "event_name"
+    static let values = "values"
+    static let currency = "currency"
+    static let amount = "amount"
   }
 
   enum Values {
-      static let coffeeBrand = "coffeebrand"
-      static let paramRule = "{\"and\":[{\"fb_content[*].brand\":{\"eq\":\"CoffeeShop\"}}]}"
-      static let purchase = "fb_mobile_purchase"
-      static let donate = "Donate"
-      static let defaultMode = "default"
-      static let USD = "USD"
-      static let JPY = "JPY"
+    static let coffeeBrand = "coffeebrand"
+    static let paramRule = "{\"and\":[{\"fb_content[*].brand\":{\"eq\":\"CoffeeShop\"}}]}"
+    static let purchase = "fb_mobile_purchase"
+    static let donate = "Donate"
+    static let defaultMode = "default"
+    static let USD = "USD"
+    static let JPY = "JPY"
   }
 
   var sampleData: [String: Any] = [
@@ -227,14 +227,14 @@ class AEMConfigurationTests: XCTestCase { // swiftlint:disable:this type_body_le
 
   func testGetEventSet() {
     guard let parsedRules: [FBAEMRule] = AEMConfiguration.parseRules(rulesData)
-      else { return XCTFail("Unwrapping Error") }
+    else { return XCTFail("Unwrapping Error") }
     let eventSet = AEMConfiguration.getEventSet(from: parsedRules)
     XCTAssertEqual(eventSet, [Values.purchase, Values.donate], "Should get the expected event set")
   }
 
   func testGetCurrencySet() {
     guard let parsedRules: [FBAEMRule] = AEMConfiguration.parseRules(rulesData)
-      else { return XCTFail("Unwrapping Error") }
+    else { return XCTFail("Unwrapping Error") }
     let eventSet = AEMConfiguration.getCurrencySet(from: parsedRules)
     XCTAssertEqual(eventSet, [Values.USD, Values.JPY], "Should get the expected event set")
   }

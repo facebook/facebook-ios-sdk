@@ -19,11 +19,13 @@
 import FBSDKCoreKit
 import Foundation
 
+// swiftformat:disable indent
 @objcMembers
 class TestOnDeviceMLModelManager: NSObject,
                                   EventProcessing,
                                   IntegrityParametersProcessorProvider,
                                   RulesFromKeyProvider {
+  // swiftformat:enable indent
 
   var stubbedRules: [AnyHashable: Any] = [:]
   var processSuggestedEventsCallCount = 0

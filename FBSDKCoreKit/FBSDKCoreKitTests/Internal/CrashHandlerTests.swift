@@ -59,8 +59,8 @@ class CrashHandlersTest: XCTestCase {
 
   func testGetFBSDKVersion() {
     XCTAssertEqual(
-        CrashHandler.getFBSDKVersion(),
-        Settings.sdkVersion
+      CrashHandler.getFBSDKVersion(),
+      Settings.sdkVersion
     )
   }
 
@@ -86,8 +86,8 @@ class CrashHandlersTest: XCTestCase {
 
   func testGettingFileNamesFromEmptyList() {
     XCTAssertTrue(
-        crashHandler._getCrashLogFileNames([]).isEmpty,
-        "Should not get file names from an empty list of names"
+      crashHandler._getCrashLogFileNames([]).isEmpty,
+      "Should not get file names from an empty list of names"
     )
   }
 
@@ -110,11 +110,11 @@ class CrashHandlersTest: XCTestCase {
     ]
 
     XCTAssertTrue(
-        crashHandler._callstack(callStack1, containsPrefix: prefixList),
-        """
-        A callstack should be considered to contain a prefix if the first
-        item in the stack begins with any of the provided prefixes
-        """
+      crashHandler._callstack(callStack1, containsPrefix: prefixList),
+      """
+      A callstack should be considered to contain a prefix if the first
+      item in the stack begins with any of the provided prefixes
+      """
     )
 
     let callStack2 = [
@@ -124,11 +124,11 @@ class CrashHandlersTest: XCTestCase {
     ]
 
     XCTAssertFalse(
-       crashHandler._callstack(callStack2, containsPrefix: prefixList),
-       """
-       A callstack should be considered to contain a prefix if the first
-       item in the stack begins with any of the provided prefixes
-       """
+      crashHandler._callstack(callStack2, containsPrefix: prefixList),
+      """
+      A callstack should be considered to contain a prefix if the first
+      item in the stack begins with any of the provided prefixes
+      """
     )
   }
 
@@ -140,7 +140,7 @@ class CrashHandlersTest: XCTestCase {
     else {
       XCTFail("Loading a crash log should check the provided path for crashlog data")
       return
-      }
+    }
   }
 
   func testSaveCrashLogs() {
@@ -150,34 +150,37 @@ class CrashHandlersTest: XCTestCase {
 
   func testFilterCrashLogs() {
     let filteredCrashLogs = crashHandler._filterCrashLogs(
-    ["FBSDK", "_FBSDK"],
-    processedCrashLogs: self.processedCrashLogs()
-  )
+      ["FBSDK", "_FBSDK"],
+      processedCrashLogs: self.processedCrashLogs()
+    )
     XCTAssertEqual(1, filteredCrashLogs.count)
   }
 
   func processedCrashLogs() -> [[String: Any]] {
-    let crashLog1 = ["app_version": "4.16(4)",
-                          "callstack": [
-                            "(2 DEV METHODS)",
-                            "-[FBSDKWebViewAppLinkResolver appLinkFromALData:destination:]+2110632",
-                            "-[FBSDKWebViewAppLinkResolver appLinkFromALData:destination:]+10540",
-                            "(14 DEV METHODS)",
-                          ],
-                          "reason": "InvalidOperationException",
-                          "timestamp": "1585764970",
-                          "device_model": "iPhone7,2",
-                          "device_os_version": "12.4.1"] as [String: Any]
+    let crashLog1 = [
+      "app_version": "4.16(4)",
+      "callstack": [
+        "(2 DEV METHODS)",
+        "-[FBSDKWebViewAppLinkResolver appLinkFromALData:destination:]+2110632",
+        "-[FBSDKWebViewAppLinkResolver appLinkFromALData:destination:]+10540",
+        "(14 DEV METHODS)",
+      ],
+      "reason": "InvalidOperationException",
+      "timestamp": "1585764970",
+      "device_model": "iPhone7,2",
+      "device_os_version": "12.4.1"
+    ] as [String: Any]
 
-    let crashLog2 = ["app_version": "1.173.0(2)",
-                     "callstack": [
-                            "(3 DEV METHODS)",
-                            "-[SettingsItemViewController imageWithImage:destination:]+2110632",
-                            "(6 DEV METHODS)"],
-                          "reason": "NSInvalidArgumentException",
-                          "timestamp": "1585764970",
-                          "device_model": "iPad4,1",
-                          "device_os_version": "12.4.5"
+    let crashLog2 = [
+      "app_version": "1.173.0(2)",
+      "callstack": [
+        "(3 DEV METHODS)",
+        "-[SettingsItemViewController imageWithImage:destination:]+2110632",
+        "(6 DEV METHODS)"],
+      "reason": "NSInvalidArgumentException",
+      "timestamp": "1585764970",
+      "device_model": "iPad4,1",
+      "device_os_version": "12.4.5"
     ] as [String: Any]
 
     return [crashLog1, crashLog2]

@@ -110,7 +110,7 @@ class Fuzzer: NSObject {
       if var value = json[key] as? [String: Any] {
         json[key] = Bool.random() ? random : randomizeInPlace(json: &value)
       }
-        // randomize array values if they are dictionaries
+      // randomize array values if they are dictionaries
       else if var values = json[key] as? [Any] {
         json[key] = Bool.random() ? values : randomizeInPlace(array: &values)
       }

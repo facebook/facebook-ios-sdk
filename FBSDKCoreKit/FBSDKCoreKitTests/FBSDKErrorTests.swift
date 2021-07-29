@@ -323,9 +323,9 @@ class FBSDKErrorTests: XCTestCase {
   // MARK: - Helpers
 
   func createNSError(
-      withCode code: Int,
-      userInfo: [String: Any] = ["foo": "bar"]
-    ) -> NSError {
-      NSError(domain: "sample.ns.error", code: code, userInfo: userInfo)
-    }
+    withCode code: Int,
+    userInfo: [String: Any] = ["foo": "bar"]
+  ) -> NSError {
+    NSError(domain: "sample.ns.error", code: code, userInfo: userInfo)
+  }
 }

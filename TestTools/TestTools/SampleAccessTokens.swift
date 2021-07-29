@@ -39,15 +39,15 @@ public class SampleAccessTokens: NSObject {
   )
 
   public static var expiredToken = AccessToken(
-      tokenString: defaultTokenString,
-      permissions: [],
-      declinedPermissions: [],
-      expiredPermissions: [],
-      appID: defaultAppID,
-      userID: defaultUserID,
-      expirationDate: .distantPast,
-      refreshDate: nil,
-      dataAccessExpirationDate: nil
+    tokenString: defaultTokenString,
+    permissions: [],
+    declinedPermissions: [],
+    expiredPermissions: [],
+    appID: defaultAppID,
+    userID: defaultUserID,
+    expirationDate: .distantPast,
+    refreshDate: nil,
+    dataAccessExpirationDate: nil
   )
 
   public static func create(withRefreshDate date: Date?) -> AccessToken {

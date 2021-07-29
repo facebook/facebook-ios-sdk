@@ -21,14 +21,14 @@ import UIKit
 
 class TestApplicationDelegate: NSObject, UIApplicationDelegate {
 
-    var applicationOpenURLCallCount = 0
+  var applicationOpenURLCallCount = 0
 
-    dynamic func application(
-        _ app: UIApplication,
-        open url: URL,
-        options: [UIApplication.OpenURLOptionsKey: Any] = [:]
-    ) -> Bool {
-        self.applicationOpenURLCallCount += 1
-        return true
-    }
+  dynamic func application(
+    _ app: UIApplication,
+    open url: URL,
+    options: [UIApplication.OpenURLOptionsKey: Any] = [:]
+  ) -> Bool {
+    self.applicationOpenURLCallCount += 1
+    return true
+  }
 }

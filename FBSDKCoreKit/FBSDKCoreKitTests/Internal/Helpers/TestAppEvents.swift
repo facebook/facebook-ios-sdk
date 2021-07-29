@@ -18,6 +18,7 @@
 
 import UIKit
 
+// swiftformat:disable indent
 @objcMembers
 class TestAppEvents: TestEventLogger,
                      SourceApplicationTracking,
@@ -25,6 +26,7 @@ class TestAppEvents: TestEventLogger,
                      ApplicationActivating,
                      ApplicationLifecycleObserving,
                      ApplicationStateSetting {
+  // swiftformat:enable indent
   // swiftlint:disable identifier_name
   var wasActivateAppCalled = false
   var wasStartObservingApplicationLifecycleNotificationsCalled = false

@@ -17,10 +17,10 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class TestWindowFinder: WindowFinding {
-    var wasFindWindowCalled = false
+  var wasFindWindowCalled = false
 
-    func findWindow() -> UIWindow? {
-        wasFindWindowCalled = true
-        return UIWindow()
-    }
+  func findWindow() -> UIWindow? {
+    wasFindWindowCalled = true
+    return UIWindow()
+  }
 }

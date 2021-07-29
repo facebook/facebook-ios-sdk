@@ -184,7 +184,7 @@ class DeviceLoginManagerTests: XCTestCase {
   func testStatusGraphRequestCompleteWithNoToken() throws {
     manager._schedulePoll(sampleCodeInfo().pollingInterval)
     let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
-      completion(nil, [], nil)
+    completion(nil, [], nil)
     XCTAssertEqual(self.delegate.capturedLoginManager, self.manager)
     XCTAssertNotNil(self.delegate.capturedError)
   }
@@ -200,7 +200,7 @@ class DeviceLoginManagerTests: XCTestCase {
       )
     ]
     let completion = try XCTUnwrap(factory.capturedRequests.first?.capturedCompletionHandler)
-      completion(nil, result, nil)
+    completion(nil, result, nil)
 
     let request = try XCTUnwrap(factory.capturedRequests.last)
     XCTAssertEqual(request.tokenString, SampleAccessTokens.validToken.tokenString)
@@ -433,12 +433,12 @@ class DeviceLoginManagerTests: XCTestCase {
       )
     )
 
-      let request = try XCTUnwrap(factory.capturedRequests.first)
-      XCTAssertEqual(
-        request.graphPath,
-        "device/login_status",
-        "Should create a graph request with the expected graph path"
-      )
+    let request = try XCTUnwrap(factory.capturedRequests.first)
+    XCTAssertEqual(
+      request.graphPath,
+      "device/login_status",
+      "Should create a graph request with the expected graph path"
+    )
   }
 
   // MARK: Helpers

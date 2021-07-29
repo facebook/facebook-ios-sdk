@@ -19,9 +19,7 @@
 import UIKit
 
 @objcMembers
-class TestViewControllerTransitionCoordinator: NSObject,
-  UIViewControllerTransitionCoordinator {
-
+class TestViewControllerTransitionCoordinator: NSObject, UIViewControllerTransitionCoordinator {
   var isAnimated = false
   var presentationStyle = UIModalPresentationStyle.none
   var initiallyInteractive = false
@@ -72,7 +70,7 @@ class TestViewControllerTransitionCoordinator: NSObject,
 
 @objcMembers
 class TestViewControllerTransitionCoordinatorContext: NSObject, // swiftlint:disable:this type_name
-                                                      UIViewControllerTransitionCoordinatorContext {
+UIViewControllerTransitionCoordinatorContext {
   var isAnimated = false
   var presentationStyle = UIModalPresentationStyle.fullScreen
   var initiallyInteractive = false

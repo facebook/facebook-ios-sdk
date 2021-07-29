@@ -319,11 +319,11 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
 
   func testRequestURLForDialogConfigurationWithScheme() {
     guard let configuration = DialogConfiguration(
-            name: name,
-            url: SampleUrls.valid(path: name),
-            appVersions: []
-          ),
-          let requestURL = try? bridge._requestURL(for: configuration)
+      name: name,
+      url: SampleUrls.valid(path: name),
+      appVersions: []
+    ),
+      let requestURL = try? bridge._requestURL(for: configuration)
     else {
       return XCTFail("Should be able to create a configuration with a url")
     }

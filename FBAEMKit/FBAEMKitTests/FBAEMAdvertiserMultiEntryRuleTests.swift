@@ -24,8 +24,8 @@ import XCTest
 class FBAEMAdvertiserMultiEntryRuleTests: XCTestCase {
 
   enum Keys {
-      static let ruleOperator = "operator"
-      static let rules = "rules"
+    static let ruleOperator = "operator"
+    static let rules = "rules"
   }
 
   func testIsMatchedEventParametersForAnd() {
