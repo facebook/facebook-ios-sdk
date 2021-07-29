@@ -32,9 +32,11 @@
 // Swift Package Manager - it can be imported with `@import FBAEMKit` which allows us to reference
 // public headers without bracket import syntax.
 
+#import "TargetConditionals.h"
+
 #if !TARGET_OS_TV
 
-#import "FBAEMNetworking.h"
-#import "FBAEMReporter.h"
+ #import "FBAEMNetworking.h"
+ #import "FBAEMReporter.h"
 
 #endif
