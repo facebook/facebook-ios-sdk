@@ -31,12 +31,10 @@
 @end
 
 @interface FBSDKServerConfigurationTests : XCTestCase
+@property (nonatomic) FBSDKServerConfiguration *config;
 @end
 
 @implementation FBSDKServerConfigurationTests
-{
-  FBSDKServerConfiguration *config;
-}
 
 typedef ServerConfigurationFixtures Fixtures;
 
@@ -44,34 +42,34 @@ typedef ServerConfigurationFixtures Fixtures;
 {
   [super setUp];
 
-  config = [Fixtures defaultConfig];
+  self.config = [Fixtures defaultConfig];
 }
 
 - (void)tearDown
 {
   [super tearDown];
 
-  config = nil;
+  self.config = nil;
 }
 
 - (void)testUsingDefaults
 {
-  XCTAssertTrue(config.defaults, "Should assume defaults are being used unless otherwise expressed");
+  XCTAssertTrue(self.config.defaults, "Should assume defaults are being used unless otherwise expressed");
 
-  config = [Fixtures configWithDictionary:@{@"defaults" : @NO}];
-  XCTAssertFalse(config.defaults, "Should store whether or not defaults are being used");
+  self.config = [Fixtures configWithDictionary:@{@"defaults" : @NO}];
+  XCTAssertFalse(self.config.defaults, "Should store whether or not defaults are being used");
 }
 
 - (void)testCreatingWithoutAppID
 {
-  XCTAssertNil(config.appID, "Should not use a default value for app identifier");
+  XCTAssertNil(self.config.appID, "Should not use a default value for app identifier");
 }
 
 - (void)testCreatingWithEmptyAppID
 {
-  config = [Fixtures configWithDictionary:@{@"appID" : @""}];
+  self.config = [Fixtures configWithDictionary:@{@"appID" : @""}];
   XCTAssertEqualObjects(
-    config.appID,
+    self.config.appID,
     @"",
     "Should use the given app identifier regardless of value"
   );
@@ -80,16 +78,16 @@ typedef ServerConfigurationFixtures Fixtures;
 - (void)testCreatingWithDefaultAdvertisingIdEnabled
 {
   XCTAssertFalse(
-    config.isAdvertisingIDEnabled,
+    self.config.isAdvertisingIDEnabled,
     "Advertising identifier enabled should default to false"
   );
 }
 
 - (void)testCreatingWithKnownAdvertisingIdEnabled
 {
-  config = [Fixtures configWithDictionary:@{@"advertisingIDEnabled" : @YES}];
+  self.config = [Fixtures configWithDictionary:@{@"advertisingIDEnabled" : @YES}];
   XCTAssertTrue(
-    config.isAdvertisingIDEnabled,
+    self.config.isAdvertisingIDEnabled,
     "Advertising identifier enabled should be settable"
   );
 }
@@ -97,16 +95,16 @@ typedef ServerConfigurationFixtures Fixtures;
 - (void)testCreatingWithDefaultImplicitPurchaseLoggingEnabled
 {
   XCTAssertFalse(
-    config.implicitPurchaseLoggingEnabled,
+    self.config.implicitPurchaseLoggingEnabled,
     "Implicit purchase logging enabled should default to false"
   );
 }
 
 - (void)testCreatingWithKnownImplicitPurchaseLoggingEnabled
 {
-  config = [Fixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @YES}];
+  self.config = [Fixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @YES}];
   XCTAssertTrue(
-    config.implicitPurchaseLoggingEnabled,
+    self.config.implicitPurchaseLoggingEnabled,
     "Implicit purchase logging enabled should be settable"
   );
 }
@@ -114,16 +112,16 @@ typedef ServerConfigurationFixtures Fixtures;
 - (void)testCreatingWithDefaultImplicitLoggingEnabled
 {
   XCTAssertFalse(
-    config.implicitLoggingEnabled,
+    self.config.implicitLoggingEnabled,
     "Implicit logging enabled should default to false"
   );
 }
 
 - (void)testCreatingWithKnownImplicitLoggingEnabled
 {
-  config = [Fixtures configWithDictionary:@{@"implicitLoggingEnabled" : @YES}];
+  self.config = [Fixtures configWithDictionary:@{@"implicitLoggingEnabled" : @YES}];
   XCTAssertTrue(
-    config.implicitLoggingEnabled,
+    self.config.implicitLoggingEnabled,
     "Implicit logging enabled should be settable"
   );
 }
@@ -131,16 +129,16 @@ typedef ServerConfigurationFixtures Fixtures;
 - (void)testCreatingWithDefaultCodelessEventsEnabled
 {
   XCTAssertFalse(
-    config.codelessEventsEnabled,
+    self.config.codelessEventsEnabled,
     "Codeless events enabled should default to false"
   );
 }
 
 - (void)testCreatingWithKnownCodelessEventsEnabled
 {
-  config = [Fixtures configWithDictionary:@{@"codelessEventsEnabled" : @YES}];
+  self.config = [Fixtures configWithDictionary:@{@"codelessEventsEnabled" : @YES}];
   XCTAssertTrue(
-    config.codelessEventsEnabled,
+    self.config.codelessEventsEnabled,
     "Codeless events enabled should be settable"
   );
 }
@@ -148,30 +146,30 @@ typedef ServerConfigurationFixtures Fixtures;
 - (void)testCreatingWithDefaultUninstallTrackingEnabled
 {
   XCTAssertFalse(
-    config.uninstallTrackingEnabled,
+    self.config.uninstallTrackingEnabled,
     "Uninstall tracking enabled should default to false"
   );
 }
 
 - (void)testCreatingWithKnownUninstallTrackingEnabled
 {
-  config = [Fixtures configWithDictionary:@{@"uninstallTrackingEnabled" : @YES}];
+  self.config = [Fixtures configWithDictionary:@{@"uninstallTrackingEnabled" : @YES}];
   XCTAssertTrue(
-    config.uninstallTrackingEnabled,
+    self.config.uninstallTrackingEnabled,
     "Uninstall tracking enabled should be settable"
   );
 }
 
 - (void)testCreatingWithoutAppName
 {
-  XCTAssertNil(config.appName, "Should not use a default value for app name");
+  XCTAssertNil(self.config.appName, "Should not use a default value for app name");
 }
 
 - (void)testCreatingWithEmptyAppName
 {
-  config = [Fixtures configWithDictionary:@{@"appName" : @""}];
+  self.config = [Fixtures configWithDictionary:@{@"appName" : @""}];
   XCTAssertEqualObjects(
-    config.appName,
+    self.config.appName,
     @"",
     "Should use the given app name regardless of value"
   );
@@ -179,9 +177,9 @@ typedef ServerConfigurationFixtures Fixtures;
 
 - (void)testCreatingWithKnownAppName
 {
-  config = [Fixtures configWithDictionary:@{@"appName" : @"foo"}];
+  self.config = [Fixtures configWithDictionary:@{@"appName" : @"foo"}];
   XCTAssertEqual(
-    config.appName,
+    self.config.appName,
     @"foo",
     "App name should be settable"
   );
@@ -190,16 +188,16 @@ typedef ServerConfigurationFixtures Fixtures;
 - (void)testCreatingWithoutDefaultShareMode
 {
   XCTAssertNil(
-    config.defaultShareMode,
+    self.config.defaultShareMode,
     "Should not provide a default for the default share mode"
   );
 }
 
 - (void)testCreatingWithKnownDefaultShareMode
 {
-  config = [Fixtures configWithDictionary:@{@"defaultShareMode" : @"native"}];
+  self.config = [Fixtures configWithDictionary:@{@"defaultShareMode" : @"native"}];
   XCTAssertEqual(
-    config.defaultShareMode,
+    self.config.defaultShareMode,
     @"native",
     "Default share mode should be settable"
   );
@@ -207,9 +205,9 @@ typedef ServerConfigurationFixtures Fixtures;
 
 - (void)testCreatingWithEmptyDefaultShareMode
 {
-  config = [Fixtures configWithDictionary:@{@"defaultShareMode" : @""}];
+  self.config = [Fixtures configWithDictionary:@{@"defaultShareMode" : @""}];
   XCTAssertEqual(
-    config.defaultShareMode,
+    self.config.defaultShareMode,
     @"",
     "Should use the given share mode regardless of value"
   );
@@ -218,30 +216,30 @@ typedef ServerConfigurationFixtures Fixtures;
 - (void)testCreatingWithDefaultLoginTooltipEnabled
 {
   XCTAssertFalse(
-    config.loginTooltipEnabled,
+    self.config.loginTooltipEnabled,
     "Login tooltip enabled should default to false"
   );
 }
 
 - (void)testCreatingWithKnownLoginTooltipEnabled
 {
-  config = [Fixtures configWithDictionary:@{@"loginTooltipEnabled" : @YES}];
+  self.config = [Fixtures configWithDictionary:@{@"loginTooltipEnabled" : @YES}];
   XCTAssertTrue(
-    config.loginTooltipEnabled,
+    self.config.loginTooltipEnabled,
     "Login tooltip enabled should be settable"
   );
 }
 
 - (void)testCreatingWithoutLoginTooltipText
 {
-  XCTAssertNil(config.loginTooltipText, "Should not use a default value for the login tooltip text");
+  XCTAssertNil(self.config.loginTooltipText, "Should not use a default value for the login tooltip text");
 }
 
 - (void)testCreatingWithEmptyLoginTooltipText
 {
-  config = [Fixtures configWithDictionary:@{@"loginTooltipText" : @""}];
+  self.config = [Fixtures configWithDictionary:@{@"loginTooltipText" : @""}];
   XCTAssertEqualObjects(
-    config.loginTooltipText,
+    self.config.loginTooltipText,
     @"",
     "Should use the given login tooltip text regardless of value"
   );
@@ -249,9 +247,9 @@ typedef ServerConfigurationFixtures Fixtures;
 
 - (void)testCreatingWithKnownLoginTooltipText
 {
-  config = [Fixtures configWithDictionary:@{@"loginTooltipText" : @"foo"}];
+  self.config = [Fixtures configWithDictionary:@{@"loginTooltipText" : @"foo"}];
   XCTAssertEqual(
-    config.loginTooltipText,
+    self.config.loginTooltipText,
     @"foo",
     "Login tooltip text should be settable"
   );
@@ -259,15 +257,15 @@ typedef ServerConfigurationFixtures Fixtures;
 
 - (void)testCreatingWithoutTimestamp
 {
-  XCTAssertNil(config.timestamp, "Should not have a timestamp by default");
+  XCTAssertNil(self.config.timestamp, "Should not have a timestamp by default");
 }
 
 - (void)testCreatingWithTimestamp
 {
   NSDate *date = [NSDate date];
-  config = [Fixtures configWithDictionary:@{@"timestamp" : date}];
+  self.config = [Fixtures configWithDictionary:@{@"timestamp" : date}];
   XCTAssertEqualObjects(
-    config.timestamp,
+    self.config.timestamp,
     date,
     "Should use the timestamp given during creation"
   );
@@ -276,7 +274,7 @@ typedef ServerConfigurationFixtures Fixtures;
 - (void)testCreatingWithDefaultSessionTimeoutInterval
 {
   XCTAssertEqual(
-    config.sessionTimoutInterval,
+    self.config.sessionTimoutInterval,
     60,
     "Should set the correct default timeout interval"
   );
@@ -284,9 +282,9 @@ typedef ServerConfigurationFixtures Fixtures;
 
 - (void)testCreatingWithSessionTimeoutInterval
 {
-  config = [Fixtures configWithDictionary:@{@"sessionTimeoutInterval" : @200}];
+  self.config = [Fixtures configWithDictionary:@{@"sessionTimeoutInterval" : @200}];
   XCTAssertEqual(
-    config.sessionTimoutInterval,
+    self.config.sessionTimoutInterval,
     200,
     "Should set the session timeout interval from the remote"
   );
@@ -295,16 +293,16 @@ typedef ServerConfigurationFixtures Fixtures;
 - (void)testCreatingWithoutLoggingToken
 {
   XCTAssertNil(
-    config.loggingToken,
+    self.config.loggingToken,
     "Should not provide a default for the logging token"
   );
 }
 
 - (void)testCreatingWithEmptyLoggingToken
 {
-  config = [Fixtures configWithDictionary:@{@"loggingToken" : @""}];
+  self.config = [Fixtures configWithDictionary:@{@"loggingToken" : @""}];
   XCTAssertEqualObjects(
-    config.loggingToken,
+    self.config.loggingToken,
     @"",
     "Should use the logging token given during creation"
   );
@@ -312,9 +310,9 @@ typedef ServerConfigurationFixtures Fixtures;
 
 - (void)testCreatingWithKnownLoggingToken
 {
-  config = [Fixtures configWithDictionary:@{@"loggingToken" : @"foo"}];
+  self.config = [Fixtures configWithDictionary:@{@"loggingToken" : @"foo"}];
   XCTAssertEqualObjects(
-    config.loggingToken,
+    self.config.loggingToken,
     @"foo",
     "Should use the logging token given during creation"
   );
@@ -323,16 +321,16 @@ typedef ServerConfigurationFixtures Fixtures;
 - (void)testCreatingWithoutSmartLoginBookmarkUrl
 {
   XCTAssertNil(
-    config.smartLoginBookmarkIconURL,
+    self.config.smartLoginBookmarkIconURL,
     "Should not provide a default url for the smart login bookmark icon"
   );
 }
 
 - (void)testCreatingWithInvalidSmartLoginBookmarkUrl
 {
-  config = [Fixtures configWithDictionary:@{@"smartLoginBookmarkIconURL" : [NSURL URLWithString:@""]}];
+  self.config = [Fixtures configWithDictionary:@{@"smartLoginBookmarkIconURL" : [NSURL URLWithString:@""]}];
   XCTAssertEqualObjects(
-    config.smartLoginBookmarkIconURL,
+    self.config.smartLoginBookmarkIconURL,
     [NSURL URLWithString:@""],
     "Should use the url given during creation"
   );
@@ -340,9 +338,9 @@ typedef ServerConfigurationFixtures Fixtures;
 
 - (void)testCreatingWithValidSmartBookmarkUrl
 {
-  config = [Fixtures configWithDictionary:@{@"smartLoginBookmarkIconURL" : [NSURL URLWithString:@"http://www.example.com"]}];
+  self.config = [Fixtures configWithDictionary:@{@"smartLoginBookmarkIconURL" : [NSURL URLWithString:@"http://www.example.com"]}];
   XCTAssertEqualObjects(
-    config.smartLoginBookmarkIconURL,
+    self.config.smartLoginBookmarkIconURL,
     [NSURL URLWithString:@"http://www.example.com"],
     "Should use the url given during creation"
   );
@@ -351,7 +349,7 @@ typedef ServerConfigurationFixtures Fixtures;
 - (void)testCreatingWithSmartLoginOptionsDefault
 {
   XCTAssertEqual(
-    config.smartLoginOptions,
+    self.config.smartLoginOptions,
     FBSDKServerConfigurationSmartLoginOptionsUnknown,
     "Should default smart login options to unknown"
   );
@@ -359,9 +357,9 @@ typedef ServerConfigurationFixtures Fixtures;
 
 - (void)testCreatingWithSmartLoginOptionsEnabled
 {
-  config = [Fixtures configWithDictionary:@{@"smartLoginOptions" : [NSNumber numberWithInt:FBSDKServerConfigurationSmartLoginOptionsEnabled]}];
+  self.config = [Fixtures configWithDictionary:@{@"smartLoginOptions" : [NSNumber numberWithInt:FBSDKServerConfigurationSmartLoginOptionsEnabled]}];
   XCTAssertEqual(
-    config.smartLoginOptions,
+    self.config.smartLoginOptions,
     FBSDKServerConfigurationSmartLoginOptionsEnabled,
     "Should use the smartLoginOptions given during creation"
   );
@@ -369,16 +367,16 @@ typedef ServerConfigurationFixtures Fixtures;
 
 - (void)testCreatingWithoutErrorConfiguration
 {
-  XCTAssertNil(config.errorConfiguration, "Should not have an error configuration by default");
+  XCTAssertNil(self.config.errorConfiguration, "Should not have an error configuration by default");
 }
 
 - (void)testCreatingWithErrorConfiguration
 {
   FBSDKErrorConfiguration *errorConfig = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
-  config = [Fixtures configWithDictionary:@{@"errorConfiguration" : errorConfig}];
+  self.config = [Fixtures configWithDictionary:@{@"errorConfiguration" : errorConfig}];
 
   XCTAssertEqualObjects(
-    config.errorConfiguration,
+    self.config.errorConfiguration,
     errorConfig,
     @"Error configuration should be settable"
   );
@@ -387,16 +385,16 @@ typedef ServerConfigurationFixtures Fixtures;
 - (void)testCreatingWithoutSmartLoginMenuUrl
 {
   XCTAssertNil(
-    config.smartLoginMenuIconURL,
+    self.config.smartLoginMenuIconURL,
     "Should not provide a default url for the smart login menu icon"
   );
 }
 
 - (void)testCreatingWithInvalidSmartLoginMenuUrl
 {
-  config = [Fixtures configWithDictionary:@{@"smartLoginMenuIconURL" : [NSURL URLWithString:@""]}];
+  self.config = [Fixtures configWithDictionary:@{@"smartLoginMenuIconURL" : [NSURL URLWithString:@""]}];
   XCTAssertEqualObjects(
-    config.smartLoginMenuIconURL,
+    self.config.smartLoginMenuIconURL,
     [NSURL URLWithString:@""],
     "Should use the url given during creation"
   );
@@ -404,9 +402,9 @@ typedef ServerConfigurationFixtures Fixtures;
 
 - (void)testCreatingWithValidSmartLoginMenuUrl
 {
-  config = [Fixtures configWithDictionary:@{@"smartLoginMenuIconURL" : [NSURL URLWithString:@"http://www.example.com"]}];
+  self.config = [Fixtures configWithDictionary:@{@"smartLoginMenuIconURL" : [NSURL URLWithString:@"http://www.example.com"]}];
   XCTAssertEqualObjects(
-    config.smartLoginMenuIconURL,
+    self.config.smartLoginMenuIconURL,
     [NSURL URLWithString:@"http://www.example.com"],
     "Should use the url given during creation"
   );
@@ -415,16 +413,16 @@ typedef ServerConfigurationFixtures Fixtures;
 - (void)testCreatingWithoutUpdateMessage
 {
   XCTAssertNil(
-    config.updateMessage,
+    self.config.updateMessage,
     "Should not provide a default for the update message"
   );
 }
 
 - (void)testCreatingWithEmptyUpdateMessage
 {
-  config = [Fixtures configWithDictionary:@{@"updateMessage" : @""}];
+  self.config = [Fixtures configWithDictionary:@{@"updateMessage" : @""}];
   XCTAssertEqualObjects(
-    config.updateMessage,
+    self.config.updateMessage,
     @"",
     "Should use the update message given during creation"
   );
@@ -432,9 +430,9 @@ typedef ServerConfigurationFixtures Fixtures;
 
 - (void)testCreatingWithKnownUpdateMessage
 {
-  config = [Fixtures configWithDictionary:@{@"updateMessage" : @"foo"}];
+  self.config = [Fixtures configWithDictionary:@{@"updateMessage" : @"foo"}];
   XCTAssertEqualObjects(
-    config.updateMessage,
+    self.config.updateMessage,
     @"foo",
     "Should use the update message given during creation"
   );
@@ -443,17 +441,17 @@ typedef ServerConfigurationFixtures Fixtures;
 - (void)testCreatingWithoutEventBindings
 {
   XCTAssertNil(
-    config.eventBindings,
+    self.config.eventBindings,
     "Should not provide default event bindings"
   );
 }
 
 - (void)testCreatingWithEmptyEventBindings
 {
-  config = [Fixtures configWithDictionary:@{@"eventBindings" : @[]}];
-  XCTAssertNotNil(config.eventBindings, "Should use the empty list of event bindings it was created with");
+  self.config = [Fixtures configWithDictionary:@{@"eventBindings" : @[]}];
+  XCTAssertNotNil(self.config.eventBindings, "Should use the empty list of event bindings it was created with");
   XCTAssertEqual(
-    config.eventBindings.count,
+    self.config.eventBindings.count,
     0,
     "Should use the empty list of event bindings it was created with"
   );
@@ -462,10 +460,10 @@ typedef ServerConfigurationFixtures Fixtures;
 - (void)testCreatingWithEventBindings
 {
   NSArray *bindings = @[[SampleEventBinding createValidWithName:self.name]];
-  config = [Fixtures configWithDictionary:@{@"eventBindings" : bindings}];
+  self.config = [Fixtures configWithDictionary:@{@"eventBindings" : bindings}];
 
   XCTAssertEqualObjects(
-    config.eventBindings,
+    self.config.eventBindings,
     bindings,
     @"Event binding should be settable"
   );
@@ -474,7 +472,7 @@ typedef ServerConfigurationFixtures Fixtures;
 - (void)testCreatingWithoutDialogConfigurations
 {
   XCTAssertNil(
-    config.dialogConfigurations,
+    self.config.dialogConfigurations,
     @"Should not have dialog configurations by default"
   );
 }
@@ -486,9 +484,9 @@ typedef ServerConfigurationFixtures Fixtures;
     @"dialog2" : @"World"
   };
 
-  config = [Fixtures configWithDictionary:@{@"dialogConfigurations" : dialogConfigurations}];
+  self.config = [Fixtures configWithDictionary:@{@"dialogConfigurations" : dialogConfigurations}];
   XCTAssertEqualObjects(
-    config.dialogConfigurations,
+    self.config.dialogConfigurations,
     dialogConfigurations,
     "Should set the exact dialog configurations it was created with"
   );
@@ -497,7 +495,7 @@ typedef ServerConfigurationFixtures Fixtures;
 - (void)testCreatingWithoutDialogFlows
 {
   // Need to recreate with a new appID to invalidate cache of default configuration
-  config = [FBSDKServerConfiguration defaultServerConfigurationForAppID:self.name];
+  self.config = [FBSDKServerConfiguration defaultServerConfigurationForAppID:self.name];
 
   NSDictionary *expectedDefaultDialogFlows = @{
     FBSDKDialogConfigurationNameDefault : @{
@@ -510,7 +508,7 @@ typedef ServerConfigurationFixtures Fixtures;
   };
 
   XCTAssertEqualObjects(
-    config.dialogFlows,
+    self.config.dialogFlows,
     expectedDefaultDialogFlows,
     "Should use the expected default dialog flow"
   );
@@ -528,10 +526,10 @@ typedef ServerConfigurationFixtures Fixtures;
     }
   };
 
-  config = [Fixtures configWithDictionary:@{@"dialogFlows" : dialogFlows}];
+  self.config = [Fixtures configWithDictionary:@{@"dialogFlows" : dialogFlows}];
 
   XCTAssertEqualObjects(
-    config.dialogFlows,
+    self.config.dialogFlows,
     dialogFlows,
     "Should set the exact dialog flows it was created with"
   );
@@ -540,7 +538,7 @@ typedef ServerConfigurationFixtures Fixtures;
 - (void)testCreatingWithoutAAMRules
 {
   XCTAssertNil(
-    config.AAMRules,
+    self.config.AAMRules,
     @"Should not have aam rules by default"
   );
 }
@@ -549,10 +547,10 @@ typedef ServerConfigurationFixtures Fixtures;
 {
   NSDictionary *rules = @{ @"foo" : @"bar" };
 
-  config = [Fixtures configWithDictionary:@{@"aamRules" : rules}];
+  self.config = [Fixtures configWithDictionary:@{@"aamRules" : rules}];
 
   XCTAssertEqualObjects(
-    config.AAMRules,
+    self.config.AAMRules,
     rules,
     "Should set the exact aam rules it was created with"
   );
@@ -561,7 +559,7 @@ typedef ServerConfigurationFixtures Fixtures;
 - (void)testCreatingWithoutRestrictiveParams
 {
   XCTAssertNil(
-    config.restrictiveParams,
+    self.config.restrictiveParams,
     @"Should not have restrictive params by default"
   );
 }
@@ -570,10 +568,10 @@ typedef ServerConfigurationFixtures Fixtures;
 {
   NSDictionary *params = @{ @"foo" : @"bar" };
 
-  config = [Fixtures configWithDictionary:@{@"restrictiveParams" : params}];
+  self.config = [Fixtures configWithDictionary:@{@"restrictiveParams" : params}];
 
   XCTAssertEqualObjects(
-    config.restrictiveParams,
+    self.config.restrictiveParams,
     params,
     "Should set the exact restrictive params it was created with"
   );
@@ -582,7 +580,7 @@ typedef ServerConfigurationFixtures Fixtures;
 - (void)testCreatingWithoutSuggestedEventSetting
 {
   XCTAssertNil(
-    config.suggestedEventsSetting,
+    self.config.suggestedEventsSetting,
     @"Should not have a suggested events setting by default"
   );
 }
@@ -591,10 +589,10 @@ typedef ServerConfigurationFixtures Fixtures;
 {
   NSDictionary *setting = @{ @"foo" : @"bar" };
 
-  config = [Fixtures configWithDictionary:@{@"suggestedEventsSetting" : setting}];
+  self.config = [Fixtures configWithDictionary:@{@"suggestedEventsSetting" : setting}];
 
   XCTAssertEqualObjects(
-    config.suggestedEventsSetting,
+    self.config.suggestedEventsSetting,
     setting,
     "Should set the exact suggested events setting it was created with"
   );
@@ -605,68 +603,68 @@ typedef ServerConfigurationFixtures Fixtures;
   FBSDKTestCoder *coder = [FBSDKTestCoder new];
   FBSDKErrorConfiguration *errorConfig = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
 
-  config = [Fixtures configWithDictionary:@{
-              @"appID" : @"appID",
-              @"appName" : @"appName",
-              @"loginTooltipEnabled" : @YES,
-              @"loginTooltipText" : @"loginTooltipText",
-              @"defaultShareMode" : @"defaultShareMode",
-              @"advertisingIDEnabled" : @YES,
-              @"implicitLoggingEnabled" : @YES,
-              @"implicitPurchaseLoggingEnabled" : @YES,
-              @"codelessEventsEnabled" : @YES,
-              @"uninstallTrackingEnabled" : @YES,
-              @"dialogFlows" : @{@"Foo" : @"Bar"},
-              @"timestamp" : [NSDate date],
-              @"errorConfiguration" : errorConfig,
-              @"sessionTimeoutInterval" : @100,
-              @"defaults" : @NO,
-              @"loggingToken" : @"loggingToken",
-              @"smartLoginOptions" : [NSNumber numberWithInt:FBSDKServerConfigurationSmartLoginOptionsEnabled],
-              @"smartLoginBookmarkIconURL" : [NSURL URLWithString:@"https://example.com"],
-              @"smartLoginMenuIconURL" : [NSURL URLWithString:@"https://example.com"],
-              @"updateMessage" : @"updateMessage",
-              @"eventBindings" : @{ @"foo" : @"bar" },
-              @"restrictiveParams" : @{ @"restrictiveParams" : @"foo" },
-              @"AAMRules" : @{ @"AAMRules" : @"foo" },
-              @"suggestedEventsSetting" : @{ @"suggestedEventsSetting" : @"foo" },
-            }];
+  self.config = [Fixtures configWithDictionary:@{
+                   @"appID" : @"appID",
+                   @"appName" : @"appName",
+                   @"loginTooltipEnabled" : @YES,
+                   @"loginTooltipText" : @"loginTooltipText",
+                   @"defaultShareMode" : @"defaultShareMode",
+                   @"advertisingIDEnabled" : @YES,
+                   @"implicitLoggingEnabled" : @YES,
+                   @"implicitPurchaseLoggingEnabled" : @YES,
+                   @"codelessEventsEnabled" : @YES,
+                   @"uninstallTrackingEnabled" : @YES,
+                   @"dialogFlows" : @{@"Foo" : @"Bar"},
+                   @"timestamp" : [NSDate date],
+                   @"errorConfiguration" : errorConfig,
+                   @"sessionTimeoutInterval" : @100,
+                   @"defaults" : @NO,
+                   @"loggingToken" : @"loggingToken",
+                   @"smartLoginOptions" : [NSNumber numberWithInt:FBSDKServerConfigurationSmartLoginOptionsEnabled],
+                   @"smartLoginBookmarkIconURL" : [NSURL URLWithString:@"https://example.com"],
+                   @"smartLoginMenuIconURL" : [NSURL URLWithString:@"https://example.com"],
+                   @"updateMessage" : @"updateMessage",
+                   @"eventBindings" : @{ @"foo" : @"bar" },
+                   @"restrictiveParams" : @{ @"restrictiveParams" : @"foo" },
+                   @"AAMRules" : @{ @"AAMRules" : @"foo" },
+                   @"suggestedEventsSetting" : @{ @"suggestedEventsSetting" : @"foo" },
+                 }];
 
-  [config encodeWithCoder:coder];
+  [self.config encodeWithCoder:coder];
 
-  XCTAssertEqualObjects(coder.encodedObject[@"appID"], config.appID);
-  XCTAssertEqualObjects(coder.encodedObject[@"appName"], config.appName);
-  XCTAssertEqual([coder.encodedObject[@"loginTooltipEnabled"] boolValue], config.loginTooltipEnabled);
-  XCTAssertEqualObjects(coder.encodedObject[@"loginTooltipText"], config.loginTooltipText);
-  XCTAssertEqualObjects(coder.encodedObject[@"defaultShareMode"], config.defaultShareMode);
-  XCTAssertEqual([coder.encodedObject[@"advertisingIDEnabled"] boolValue], config.advertisingIDEnabled);
-  XCTAssertEqual([coder.encodedObject[@"implicitLoggingEnabled"] boolValue], config.implicitLoggingEnabled);
-  XCTAssertEqual([coder.encodedObject[@"implicitPurchaseLoggingEnabled"] boolValue], config.implicitPurchaseLoggingEnabled);
-  XCTAssertEqual([coder.encodedObject[@"codelessEventsEnabled"] boolValue], config.codelessEventsEnabled);
-  XCTAssertEqual([coder.encodedObject[@"trackAppUninstallEnabled"] boolValue], config.uninstallTrackingEnabled);
-  XCTAssertEqualObjects(coder.encodedObject[@"dialogFlows"], config.dialogFlows);
-  XCTAssertEqualObjects(coder.encodedObject[@"timestamp"], config.timestamp);
-  XCTAssertEqualObjects(coder.encodedObject[@"errorConfigs"], config.errorConfiguration);
-  XCTAssertEqual([coder.encodedObject[@"sessionTimeoutInterval"] intValue], config.sessionTimoutInterval);
+  XCTAssertEqualObjects(coder.encodedObject[@"appID"], self.config.appID);
+  XCTAssertEqualObjects(coder.encodedObject[@"appName"], self.config.appName);
+  XCTAssertEqual([coder.encodedObject[@"loginTooltipEnabled"] boolValue], self.config.loginTooltipEnabled);
+  XCTAssertEqualObjects(coder.encodedObject[@"loginTooltipText"], self.config.loginTooltipText);
+  XCTAssertEqualObjects(coder.encodedObject[@"defaultShareMode"], self.config.defaultShareMode);
+  XCTAssertEqual([coder.encodedObject[@"advertisingIDEnabled"] boolValue], self.config.advertisingIDEnabled);
+  XCTAssertEqual([coder.encodedObject[@"implicitLoggingEnabled"] boolValue], self.config.implicitLoggingEnabled);
+  XCTAssertEqual([coder.encodedObject[@"implicitPurchaseLoggingEnabled"] boolValue], self.config.implicitPurchaseLoggingEnabled);
+  XCTAssertEqual([coder.encodedObject[@"codelessEventsEnabled"] boolValue], self.config.codelessEventsEnabled);
+  XCTAssertEqual([coder.encodedObject[@"trackAppUninstallEnabled"] boolValue], self.config.uninstallTrackingEnabled);
+  XCTAssertEqualObjects(coder.encodedObject[@"dialogFlows"], self.config.dialogFlows);
+  XCTAssertEqualObjects(coder.encodedObject[@"timestamp"], self.config.timestamp);
+  XCTAssertEqualObjects(coder.encodedObject[@"errorConfigs"], self.config.errorConfiguration);
+  XCTAssertEqual([coder.encodedObject[@"sessionTimeoutInterval"] intValue], self.config.sessionTimoutInterval);
   XCTAssertNil(
     coder.encodedObject[@"defaults"],
     @"Should not encode whether default values were used to create server configuration"
   );
-  XCTAssertEqualObjects(coder.encodedObject[@"loggingToken"], config.loggingToken);
-  XCTAssertEqual([coder.encodedObject[@"smartLoginEnabled"] intValue], config.smartLoginOptions);
-  XCTAssertEqualObjects(coder.encodedObject[@"smarstLoginBookmarkIconURL"], config.smartLoginBookmarkIconURL);
-  XCTAssertEqualObjects(coder.encodedObject[@"smarstLoginBookmarkMenuURL"], config.smartLoginMenuIconURL);
-  XCTAssertEqualObjects(coder.encodedObject[@"SDKUpdateMessage"], config.updateMessage);
-  XCTAssertEqualObjects(coder.encodedObject[@"eventBindings"], config.eventBindings);
-  XCTAssertEqualObjects(coder.encodedObject[@"restrictiveParams"], config.restrictiveParams);
-  XCTAssertEqualObjects(coder.encodedObject[@"AAMRules"], config.AAMRules);
-  XCTAssertEqualObjects(coder.encodedObject[@"suggestedEventsSetting"], config.suggestedEventsSetting);
+  XCTAssertEqualObjects(coder.encodedObject[@"loggingToken"], self.config.loggingToken);
+  XCTAssertEqual([coder.encodedObject[@"smartLoginEnabled"] intValue], self.config.smartLoginOptions);
+  XCTAssertEqualObjects(coder.encodedObject[@"smarstLoginBookmarkIconURL"], self.config.smartLoginBookmarkIconURL);
+  XCTAssertEqualObjects(coder.encodedObject[@"smarstLoginBookmarkMenuURL"], self.config.smartLoginMenuIconURL);
+  XCTAssertEqualObjects(coder.encodedObject[@"SDKUpdateMessage"], self.config.updateMessage);
+  XCTAssertEqualObjects(coder.encodedObject[@"eventBindings"], self.config.eventBindings);
+  XCTAssertEqualObjects(coder.encodedObject[@"restrictiveParams"], self.config.restrictiveParams);
+  XCTAssertEqualObjects(coder.encodedObject[@"AAMRules"], self.config.AAMRules);
+  XCTAssertEqualObjects(coder.encodedObject[@"suggestedEventsSetting"], self.config.suggestedEventsSetting);
 }
 
 - (void)testDecoding
 {
   FBSDKTestCoder *decoder = [FBSDKTestCoder new];
-  config = [config initWithCoder:decoder];
+  self.config = [self.config initWithCoder:decoder];
 
   NSSet *dialogFlowsClasses = [[NSSet alloc] initWithObjects:
                                [NSDictionary class],
@@ -743,14 +741,14 @@ typedef ServerConfigurationFixtures Fixtures;
 
 - (void)testRetrievingInvalidDialogConfigurationForDialogName
 {
-  config = [Fixtures configWithDictionary:@{
-              @"dialogConfigurations" : @{
-                @"foo" : @"bar"
-              }
-            }];
+  self.config = [Fixtures configWithDictionary:@{
+                   @"dialogConfigurations" : @{
+                     @"foo" : @"bar"
+                   }
+                 }];
 
   XCTAssertEqualObjects(
-    [config dialogConfigurationForDialogName:@"foo"],
+    [self.config dialogConfigurationForDialogName:@"foo"],
     @"bar",
     @"Should be able to retrieve an invalid dialog configuration by name"
   );
@@ -762,14 +760,14 @@ typedef ServerConfigurationFixtures Fixtures;
                                                                                    URL:nil
                                                                            appVersions:nil];
 
-  config = [Fixtures configWithDictionary:@{
-              @"dialogConfigurations" : @{
-                @"foo" : fooConfig
-              }
-            }];
+  self.config = [Fixtures configWithDictionary:@{
+                   @"dialogConfigurations" : @{
+                     @"foo" : fooConfig
+                   }
+                 }];
 
   XCTAssertEqualObjects(
-    [config dialogConfigurationForDialogName:@"foo"],
+    [self.config dialogConfigurationForDialogName:@"foo"],
     fooConfig,
     @"Should be able to retrieve a valid dialog configuration by name"
   );
@@ -1992,7 +1990,7 @@ typedef ServerConfigurationFixtures Fixtures;
     };
   }
 
-  config = [Fixtures configWithDictionary:@{ @"dialogFlows" : dialogFlows }];
+  self.config = [Fixtures configWithDictionary:@{ @"dialogFlows" : dialogFlows }];
 }
 
 - (void)assertSafariVcIs:(BOOL)expected
@@ -2007,7 +2005,7 @@ typedef ServerConfigurationFixtures Fixtures;
                         defaultValue:defaultValue];
 
   XCTAssertEqual(
-    [config useSafariViewControllerForDialogName:name],
+    [self.config useSafariViewControllerForDialogName:name],
     expected,
     "Use safari view controller for dialog name: %@, should return true when the feature value is: %@, the sharing value is: %@, and the default value is: %@",
     name,
@@ -2030,7 +2028,7 @@ typedef ServerConfigurationFixtures Fixtures;
                         defaultValue:defaultValue];
 
   XCTAssertEqual(
-    [config useNativeDialogForDialogName:name],
+    [self.config useNativeDialogForDialogName:name],
     expected,
     "Use native dialog for dialog name: %@, should return true when the feature value is: %@, the sharing value is: %@, and the default value is: %@",
     name,

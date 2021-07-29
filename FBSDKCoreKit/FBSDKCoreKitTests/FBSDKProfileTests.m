@@ -38,18 +38,15 @@
 @end
 
 @interface FBSDKProfileTests : XCTestCase
-
+@property (nonatomic) FBSDKProfile *profile;
+@property (nonatomic, copy) NSString *sdkVersion;
+@property (nonatomic, assign) CGSize validNonSquareSize;
+@property (nonatomic, assign) CGSize validSquareSize;
+@property (nonatomic, copy) NSString *validClientToken;
+@property (nonatomic) TestGraphRequest *testGraphRequest;
 @end
 
 @implementation FBSDKProfileTests
-{
-  FBSDKProfile *_profile;
-  NSString *_sdkVersion;
-  CGSize _validNonSquareSize;
-  CGSize _validSquareSize;
-  NSString *_validClientToken;
-  TestGraphRequest *_testGraphRequest;
-}
 
 NSString *const accessTokenKey = @"access_token";
 NSString *const pictureModeKey = @"type";

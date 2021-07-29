@@ -54,14 +54,11 @@ static NSString *const _facebookURL = @"https://facebook.com/dialog/oauth";
 @end
 
 @interface FBSDKAuthenticationTokenClaimsTests : XCTestCase
-
+@property (nonatomic) FBSDKAuthenticationTokenClaims *claims;
+@property (nonatomic) NSDictionary *claimsDict;
 @end
 
 @implementation FBSDKAuthenticationTokenClaimsTests
-{
-  FBSDKAuthenticationTokenClaims *_claims;
-  NSDictionary *_claimsDict;
-}
 
 - (void)setUp
 {
