@@ -17,6 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import FBAEMKit
+import TestTools
 import XCTest
 
 #if !os(tvOS)

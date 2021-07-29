@@ -23,7 +23,6 @@
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKEventLogging.h"
-#import "FBSDKGraphRequestProviding.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKNotificationProtocols.h"
 

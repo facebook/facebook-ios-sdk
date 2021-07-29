@@ -18,11 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#if SWIFT_PACKAGE
- #import "FBSDKGraphRequestFlags.h"
-#else
- #import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
-#endif
+#import "FBSDKGraphRequestFlags.h"
 
 @protocol FBSDKGraphRequest;
 
@@ -30,7 +26,11 @@ typedef NSString *const FBSDKHTTPMethod NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(H
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// Describes anything that can provide instances of `GraphRequestProtocol`
+/**
+ Internal type not intended for use outside of the SDKs.
+
+Describes anything that can provide instances of `GraphRequestProtocol`
+ */
 NS_SWIFT_NAME(GraphRequestProviding)
 @protocol FBSDKGraphRequestProviding
 

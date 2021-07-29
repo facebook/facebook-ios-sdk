@@ -20,6 +20,7 @@
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+@import TestTools;
 #import "FBSDKLoginKitTests-Swift.h"
 
 @interface FBSDKAuthenticationTokenHeader (Testing)

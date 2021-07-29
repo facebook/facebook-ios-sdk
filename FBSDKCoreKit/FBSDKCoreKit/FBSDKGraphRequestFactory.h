@@ -16,23 +16,19 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@import LegacyGamingServices;
-@import XCTest;
+#import <Foundation/Foundation.h>
 
-#import "FBSDKApplicationDelegate+Testing.h"
-#import "FBSDKFileHandleCreating.h"
-#import "FBSDKFileHandleFactory.h"
-#import "FBSDKFileHandling.h"
-#import "FBSDKFriendFinderDialog+Testing.h"
-#import "FBSDKGamingImageUploader+Testing.h"
-#import "FBSDKGamingPayloadObserver+Testing.h"
-#import "FBSDKGamingServiceController.h"
-#import "FBSDKGamingServiceControllerCreating.h"
-#import "FBSDKGamingServiceControllerFactory.h"
-#import "FBSDKGamingServiceControllerProtocol.h"
-#import "FBSDKGamingVideoUploader+Testing.h"
-#import "FBSDKVideoUploader.h"
-#import "FBSDKVideoUploader+Testing.h"
-#import "FBSDKVideoUploaderCreating.h"
-#import "FBSDKVideoUploaderFactory.h"
-#import "FBSDKVideoUploading.h"
+#import "FBSDKGraphRequestProviding.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+/**
+ Internal type not intended for use outside of the SDKs.
+
+ A factory for providing objects that conform to `GraphRequest`
+*/
+NS_SWIFT_NAME(GraphRequestFactory)
+@interface FBSDKGraphRequestFactory : NSObject <FBSDKGraphRequestProviding>
+@end
+
+NS_ASSUME_NONNULL_END

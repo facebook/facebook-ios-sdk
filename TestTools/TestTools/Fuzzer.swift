@@ -18,7 +18,7 @@
 
 import Foundation
 
-@objc
+@objcMembers
 public class Fuzzer: NSObject {
 
   private static let values: [Any] = [
@@ -70,7 +70,6 @@ public class Fuzzer: NSObject {
     ["Foo": ["a", 1, [:]]]
   ]
 
-  @objc
   public class var random: Any {
     values.randomElement() ?? values[0]
   }
@@ -78,7 +77,6 @@ public class Fuzzer: NSObject {
   /// Randomizes the values of a JSON object
   /// Will not replace keys. Will either change their values or trim them entirely.
   /// Will be called recursively on dictionaries and arrays
-  @objc
   public class func randomize(json: Any) -> Any {
     if var dictionary = json as? [String: Any] {
       return randomizeInPlace(json: &dictionary)

@@ -68,7 +68,6 @@
 		A250E741B08F53944E2E66BD /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 606DB09FE9B9C5CFA3A71DA7 /* libz.tbd */; };
 		A2989D9E4ACBD01674F27C75 /* FBAEMInvocation.h in Headers */ = {isa = PBXBuildFile; fileRef = CD92E131DC450BD5A3ADC03E /* FBAEMInvocation.h */; };
 		AAD557FAF558CAA8C0778452 /* FBAEMAdvertiserRuleFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = DB9A8EAE427EDA8C514E9F2D /* FBAEMAdvertiserRuleFactory.h */; };
-		B1974EFD95D486DA0357A294 /* Fuzzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C333E362F2A32F96A998482E /* Fuzzer.swift */; };
 		B3CD5E0EB8287EF16619F04D /* FBCoreKitBasicsImportForAEMKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 0954C8A4F08D670E5928AA17 /* FBCoreKitBasicsImportForAEMKit.h */; };
 		B911B75F65AE33D9C53354BD /* FBAEMAdvertiserMultiEntryRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B0E5D3B1EF8C9BA530BC3D /* FBAEMAdvertiserMultiEntryRule.m */; };
 		C4DC4EF7F5DCA619C7E218EA /* FBAEMEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = C2368B332ED43BBAF2493859 /* FBAEMEvent.m */; };
@@ -212,7 +211,6 @@
 		BF14F7D688B16F470687F043 /* FBAEMInvocation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBAEMInvocation.m; sourceTree = "<group>"; };
 		BF4A048D5C10956A4A1995EE /* FBAEMConfiguration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBAEMConfiguration.m; sourceTree = "<group>"; };
 		C2368B332ED43BBAF2493859 /* FBAEMEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBAEMEvent.m; sourceTree = "<group>"; };
-		C333E362F2A32F96A998482E /* Fuzzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fuzzer.swift; sourceTree = "<group>"; };
 		C93D185ADDA6920863429EAB /* FBAEMKitTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = FBAEMKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CAAE2115CC5A03D37FABC343 /* FBAEMConfiguration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBAEMConfiguration.h; sourceTree = "<group>"; };
 		CD92E131DC450BD5A3ADC03E /* FBAEMInvocation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBAEMInvocation.h; sourceTree = "<group>"; };
@@ -289,7 +287,6 @@
 			isa = PBXGroup;
 			children = (
 				F22E3CFC1F85C9D03D782784 /* FBAEMTestCoder.m */,
-				C333E362F2A32F96A998482E /* Fuzzer.swift */,
 				4BA128CAAC00A5F44E3FACEF /* SampleAEMConfigurations.swift */,
 				4177A5533D7CFF825F97ECA0 /* SampleAEMData.swift */,
 				2D50412F133CE2A6A7D5150D /* SampleAEMInvocations.swift */,
@@ -653,7 +650,6 @@
 				677A4D72D37B1C16EA5E981E /* FBAEMInvocationTests.swift in Sources */,
 				0C507DD67E7431FDAB46F042 /* FBAEMRuleTests.swift in Sources */,
 				2F97BA1F343801E61B9A7E6B /* FBAEMTestCoder.m in Sources */,
-				B1974EFD95D486DA0357A294 /* Fuzzer.swift in Sources */,
 				E4C2B6C43C21201696C7A0A2 /* SampleAEMConfigurations.swift in Sources */,
 				5630949F273EEA4D536894D9 /* SampleAEMData.swift in Sources */,
 				C740173B9ABE8084261AF3A8 /* SampleAEMInvocations.swift in Sources */,

@@ -17,21 +17,20 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import FBSDKCoreKit
-import TestTools
 
 @objcMembers
-class TestGraphRequestFactory: NSObject, GraphRequestProviding {
+public class TestGraphRequestFactory: NSObject, GraphRequestProviding {
 
-  var capturedGraphPath: String?
-  var capturedParameters = [AnyHashable: Any]()
-  var capturedTokenString: String?
-  var capturedHttpMethod: HTTPMethod?
-  var capturedFlags: GraphRequestFlags = []
-  var capturedRequests = [TestGraphRequest]()
+  public var capturedGraphPath: String?
+  public var capturedParameters = [AnyHashable: Any]()
+  public var capturedTokenString: String?
+  public var capturedHttpMethod: HTTPMethod?
+  public var capturedFlags: GraphRequestFlags = []
+  public var capturedRequests = [TestGraphRequest]()
 
   // MARK: - GraphRequestProviding
 
-  func createGraphRequest(
+  public func createGraphRequest(
     withGraphPath graphPath: String,
     parameters: [AnyHashable: Any],
     tokenString: String?,
@@ -55,7 +54,7 @@ class TestGraphRequestFactory: NSObject, GraphRequestProviding {
     return request
   }
 
-  func createGraphRequest(
+  public func createGraphRequest(
     withGraphPath graphPath: String,
     parameters: [String: Any],
     httpMethod method: HTTPMethod
@@ -73,7 +72,7 @@ class TestGraphRequestFactory: NSObject, GraphRequestProviding {
     return request
   }
 
-  func createGraphRequest(
+  public func createGraphRequest(
     withGraphPath graphPath: String,
     parameters: [String: Any],
     tokenString: String?,
@@ -96,7 +95,7 @@ class TestGraphRequestFactory: NSObject, GraphRequestProviding {
     return request
   }
 
-  func createGraphRequest(
+  public func createGraphRequest(
     withGraphPath graphPath: String
   ) -> GraphRequestProtocol {
     capturedGraphPath = graphPath
@@ -106,7 +105,7 @@ class TestGraphRequestFactory: NSObject, GraphRequestProviding {
     return request
   }
 
-  func createGraphRequest(
+  public func createGraphRequest(
     withGraphPath graphPath: String,
     parameters: [String: Any]
   ) -> GraphRequestProtocol {
@@ -122,7 +121,7 @@ class TestGraphRequestFactory: NSObject, GraphRequestProviding {
     return request
   }
 
-  func createGraphRequest(
+  public func createGraphRequest(
     withGraphPath graphPath: String,
     parameters: [AnyHashable: Any],
     flags: GraphRequestFlags

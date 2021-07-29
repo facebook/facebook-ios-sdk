@@ -16,15 +16,37 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-
-#import "FBSDKGraphRequestProviding.h"
+@import LegacyGamingServices;
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// A factory for providing objects that conform to `GraphRequest`
-NS_SWIFT_NAME(GraphRequestFactory)
-@interface FBSDKGraphRequestFactory : NSObject <FBSDKGraphRequestProviding>
+@protocol FBSDKVideoUploaderDelegate;
+@protocol FBSDKGraphRequestProviding;
+
+@interface FBSDKVideoUploader (Testing)
+
+@property (nonatomic, copy) NSNumber *uploadSessionID;
+
+- (void)start;
+
+- (instancetype)initWithVideoName:(NSString *)videoName
+                        videoSize:(NSUInteger)videoSize
+                       parameters:(NSDictionary *)parameters
+                         delegate:(id<FBSDKVideoUploaderDelegate>)delegate
+                  requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+NS_SWIFT_NAME(init(videoName:videoSize:parameters:delegate:requestProvider:));
+
+- (void)_postFinishRequest;
+
+- (void)_startTransferRequestWithOffsetDictionary:(NSDictionary *)offsetDictionary;
+
+- (NSNumberFormatter *)numberFormatter;
+
+- (NSDictionary *)_extractOffsetsFromResultDictionary:(id)result;
+
+- (void)_startTransferRequestWithNewOffset:(NSDictionary *)offsetDictionary
+                                                data:(NSData *)data;
+
 @end
 
 NS_ASSUME_NONNULL_END

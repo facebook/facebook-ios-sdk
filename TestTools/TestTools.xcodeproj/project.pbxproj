@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		2442EF2D3F79CF0FC9C005DB /* TestGraphRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5B18A936EE4E827325688A /* TestGraphRequest.swift */; };
+		585A2F7726AB535A00A86539 /* TestGraphRequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585A2F7626AB535A00A86539 /* TestGraphRequestFactory.swift */; };
+		5866912526AB44F70097B1AD /* Fuzzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5866912426AB44F70097B1AD /* Fuzzer.swift */; };
 		ABAAE5DF3C5E29E2C9421FED /* TestGraphRequestConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6EAAFF5FD98DE8A3459008 /* TestGraphRequestConnection.swift */; };
 		B9300B57F130CADA2FA635E3 /* TestSessionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8640C198FCE46662467AD22C /* TestSessionProvider.swift */; };
 		BD38E8A36C58EBF74120120C /* SampleAccessTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8946DC7A460B75F7B65F5BE5 /* SampleAccessTokens.swift */; };
@@ -63,6 +65,8 @@
 /* Begin PBXFileReference section */
 		0E6EAAFF5FD98DE8A3459008 /* TestGraphRequestConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestConnection.swift; sourceTree = "<group>"; };
 		3D5B18A936EE4E827325688A /* TestGraphRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequest.swift; sourceTree = "<group>"; };
+		585A2F7626AB535A00A86539 /* TestGraphRequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestFactory.swift; sourceTree = "<group>"; };
+		5866912426AB44F70097B1AD /* Fuzzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fuzzer.swift; sourceTree = "<group>"; };
 		8640C198FCE46662467AD22C /* TestSessionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSessionProvider.swift; sourceTree = "<group>"; };
 		8946DC7A460B75F7B65F5BE5 /* SampleAccessTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAccessTokens.swift; sourceTree = "<group>"; };
 		E40113A8B281C6A908AEFA21 /* TestTools.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TestTools.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -101,6 +105,8 @@
 				3D5B18A936EE4E827325688A /* TestGraphRequest.swift */,
 				0E6EAAFF5FD98DE8A3459008 /* TestGraphRequestConnection.swift */,
 				8640C198FCE46662467AD22C /* TestSessionProvider.swift */,
+				5866912426AB44F70097B1AD /* Fuzzer.swift */,
+				585A2F7626AB535A00A86539 /* TestGraphRequestFactory.swift */,
 			);
 			path = TestTools;
 			sourceTree = "<group>";
@@ -221,8 +227,10 @@
 				BD38E8A36C58EBF74120120C /* SampleAccessTokens.swift in Sources */,
 				BF1AFE1973B52493C7B6D03C /* SampleUserProfiles.swift in Sources */,
 				2442EF2D3F79CF0FC9C005DB /* TestGraphRequest.swift in Sources */,
+				585A2F7726AB535A00A86539 /* TestGraphRequestFactory.swift in Sources */,
 				ABAAE5DF3C5E29E2C9421FED /* TestGraphRequestConnection.swift in Sources */,
 				B9300B57F130CADA2FA635E3 /* TestSessionProvider.swift in Sources */,
+				5866912526AB44F70097B1AD /* Fuzzer.swift in Sources */,
 				F4A6E82426A1DF4400687E83 /* TestGraphRequestConnectionFactory.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
