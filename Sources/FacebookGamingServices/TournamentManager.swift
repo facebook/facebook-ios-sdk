@@ -17,9 +17,9 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #if FBSDK_SWIFT_PACKAGE
-  import FacebookCore
+import FacebookCore
 #else
-  import FBSDKCoreKit
+import FBSDKCoreKit
 #endif
 
 import Foundation

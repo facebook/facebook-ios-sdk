@@ -382,41 +382,41 @@ class AppEventsStateTests: XCTestCase { // swiftlint:disable:this type_body_leng
   }
 
   func testAddEventsFromFullStateToFullState() {
-      let otherFullState = AppEventsState(token: name, appID: appId)
+    let otherFullState = AppEventsState(token: name, appID: appId)
 
-      for _ in 0..<(appEventsStateMaxEvents * 2) {
-        otherFullState?.addEvent(SampleAppEvents.validEvent, isImplicit: false)
-      }
+    for _ in 0..<(appEventsStateMaxEvents * 2) {
+      otherFullState?.addEvent(SampleAppEvents.validEvent, isImplicit: false)
+    }
 
-      fullState.addEvents(fromAppEventState: otherFullState)
+    fullState.addEvents(fromAppEventState: otherFullState)
 
-      XCTAssertEqual(
-        appEventsStateMaxEvents,
-        fullState.events.count,
-        "Should not add additional events to a full state"
-      )
-      XCTAssertEqual(
-        appEventsStateMaxEvents,
-        fullState.events.count,
-        "Adding to a full state should have no effect on the event count")
+    XCTAssertEqual(
+      appEventsStateMaxEvents,
+      fullState.events.count,
+      "Should not add additional events to a full state"
+    )
+    XCTAssertEqual(
+      appEventsStateMaxEvents,
+      fullState.events.count,
+      "Adding to a full state should have no effect on the event count")
   }
 
   func testAddEventsToPreviouslyOverflownState() {
-      // Fills
-      state.addEvents(fromAppEventState: fullState)
-      // Overflows
-      state.addEvents(fromAppEventState: fullState)
-      // Double overflows
-      state.addEvents(fromAppEventState: fullState)
+    // Fills
+    state.addEvents(fromAppEventState: fullState)
+    // Overflows
+    state.addEvents(fromAppEventState: fullState)
+    // Double overflows
+    state.addEvents(fromAppEventState: fullState)
 
-      XCTAssertEqual(
-        2000, // appEventsStateMaxEvents * 2
-        state.numSkipped,
-        "Should keep a running count of skipped states")
-      XCTAssertEqual(
-        appEventsStateMaxEvents,
-        state.events.count,
-        "Should not add additional events to a full state")
+    XCTAssertEqual(
+      2000, // appEventsStateMaxEvents * 2
+      state.numSkipped,
+      "Should keep a running count of skipped states")
+    XCTAssertEqual(
+      appEventsStateMaxEvents,
+      state.events.count,
+      "Should not add additional events to a full state")
   }
 
   func testCompatibilityWithMatchingTokenMatchingAppID() {

@@ -19,9 +19,9 @@
 @testable import FacebookGamingServices
 
 #if FBSDK_SWIFT_PACKAGE
-  import FacebookCore
+import FacebookCore
 #else
-  import FBSDKCoreKit
+import FBSDKCoreKit
 #endif
 
 import TestTools
