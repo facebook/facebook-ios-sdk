@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		08B795EE26AF36E300F68878 /* TestGraphRequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B795E726AF36E300F68878 /* TestGraphRequestFactory.swift */; };
 		2442EF2D3F79CF0FC9C005DB /* TestGraphRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5B18A936EE4E827325688A /* TestGraphRequest.swift */; };
 		585A2F7726AB535A00A86539 /* TestGraphRequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585A2F7626AB535A00A86539 /* TestGraphRequestFactory.swift */; };
 		5866912526AB44F70097B1AD /* Fuzzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5866912426AB44F70097B1AD /* Fuzzer.swift */; };
@@ -63,6 +64,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		08B795E726AF36E300F68878 /* TestGraphRequestFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestGraphRequestFactory.swift; sourceTree = "<group>"; };
 		0E6EAAFF5FD98DE8A3459008 /* TestGraphRequestConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestConnection.swift; sourceTree = "<group>"; };
 		3D5B18A936EE4E827325688A /* TestGraphRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequest.swift; sourceTree = "<group>"; };
 		585A2F7626AB535A00A86539 /* TestGraphRequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestFactory.swift; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 		8D0A9F8F0A540BDAE761EE52 /* TestTools */ = {
 			isa = PBXGroup;
 			children = (
+				08B795E726AF36E300F68878 /* TestGraphRequestFactory.swift */,
 				F4A6E81526A1DF4400687E83 /* TestGraphRequestConnectionFactory.swift */,
 				8946DC7A460B75F7B65F5BE5 /* SampleAccessTokens.swift */,
 				FAD0C12E3DCAF88D1A6D0E0A /* SampleUserProfiles.swift */,
@@ -226,6 +229,7 @@
 			files = (
 				BD38E8A36C58EBF74120120C /* SampleAccessTokens.swift in Sources */,
 				BF1AFE1973B52493C7B6D03C /* SampleUserProfiles.swift in Sources */,
+				08B795EE26AF36E300F68878 /* TestGraphRequestFactory.swift in Sources */,
 				2442EF2D3F79CF0FC9C005DB /* TestGraphRequest.swift in Sources */,
 				585A2F7726AB535A00A86539 /* TestGraphRequestFactory.swift in Sources */,
 				ABAAE5DF3C5E29E2C9421FED /* TestGraphRequestConnection.swift in Sources */,
