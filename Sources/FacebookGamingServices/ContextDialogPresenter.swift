@@ -150,5 +150,4 @@ public class ContextDialogPresenter {
       delegate: delegate
     )
   }
-
 }

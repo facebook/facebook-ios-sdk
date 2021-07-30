@@ -73,5 +73,4 @@ class FBSDKSwitchContextDialogFactoryTests: XCTestCase {
       "Should not create a dialog with a missing access token"
     )
   }
-
 }

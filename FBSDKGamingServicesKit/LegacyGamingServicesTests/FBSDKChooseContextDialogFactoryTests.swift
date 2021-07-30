@@ -50,7 +50,6 @@ class FBSDKChooseContextDialogFactoryTests: XCTestCase {
       "Should create the dialog with the expected delegate"
     )
   }
-
 }
 
 // swiftlint:disable override_in_extension

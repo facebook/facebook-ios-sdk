@@ -245,5 +245,4 @@ class VideoUploaderTests: XCTestCase, VideoUploaderDelegate {
       "Should return empty dictionary if end is smaller than start"
     )
   }
-
 }

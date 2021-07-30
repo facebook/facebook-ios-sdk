@@ -71,5 +71,4 @@ class AccessTokenProviderTests: XCTestCase {
       "Should set the provided token cache on the underlying access token type"
     )
   }
-
 }

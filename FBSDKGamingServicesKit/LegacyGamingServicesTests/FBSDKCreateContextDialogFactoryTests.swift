@@ -73,5 +73,4 @@ class FBSDKCreateContextDialogFactoryTests: XCTestCase {
       "Should not create a context dialog with a missing access token"
     )
   }
-
 }

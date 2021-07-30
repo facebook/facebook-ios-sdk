@@ -146,5 +146,4 @@ open class FBSDKContextDialogPresenter: NSObject {
 
     return dialog
   }
-
 }
