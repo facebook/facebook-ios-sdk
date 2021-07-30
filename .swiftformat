@@ -10,6 +10,7 @@
 # Rules to run
 --rules indent
 --rules spaceAroundParens
+--rules wrapArguments
 
 # Options
 --swiftversion 5

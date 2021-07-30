@@ -64,6 +64,7 @@ class FBSDKUtilityTests: XCTestCase {
       value as CFString,
       nil,
       ":!*();@/&?+$,='" as CFString,
-      CFStringBuiltInEncodings.UTF8.rawValue) as String
+      CFStringBuiltInEncodings.UTF8.rawValue
+    ) as String
   }
 }

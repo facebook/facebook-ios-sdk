@@ -176,7 +176,8 @@ class CrashHandlersTest: XCTestCase {
       "callstack": [
         "(3 DEV METHODS)",
         "-[SettingsItemViewController imageWithImage:destination:]+2110632",
-        "(6 DEV METHODS)"],
+        "(6 DEV METHODS)"
+      ],
       "reason": "NSInvalidArgumentException",
       "timestamp": "1585764970",
       "device_model": "iPad4,1",

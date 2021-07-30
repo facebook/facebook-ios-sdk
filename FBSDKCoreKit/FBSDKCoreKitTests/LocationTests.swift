@@ -74,9 +74,11 @@ class LocationTests: XCTestCase {
     XCTAssertNotNil(location)
     XCTAssertTrue(
       coder.decodedObject["FBSDKLocationIdCodingKey"] as? Any.Type == NSString.self,
-      "Should decode a string for the id key")
+      "Should decode a string for the id key"
+    )
     XCTAssertTrue(
       coder.decodedObject["FBSDKLocationNameCodingKey"] as? Any.Type == NSString.self,
-      "Should decode a string for the name key")
+      "Should decode a string for the name key"
+    )
   }
 }

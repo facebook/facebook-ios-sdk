@@ -84,7 +84,8 @@ class VideoUploaderTests: XCTestCase, VideoUploaderDelegate {
     XCTAssertEqual(
       videoUploader.graphNode,
       "me",
-      "VideoUploader should have a default graph path upon initialization")
+      "VideoUploader should have a default graph path upon initialization"
+    )
   }
 
   func testGraphRequestPostFinishRequest() {
@@ -140,7 +141,8 @@ class VideoUploaderTests: XCTestCase, VideoUploaderDelegate {
     )
     XCTAssertNotNil(
       uploadError,
-      "Should have error if result object doesn't have FBSDK_GAMING_VIDEO_UPLOAD_SUCCESS as key")
+      "Should have error if result object doesn't have FBSDK_GAMING_VIDEO_UPLOAD_SUCCESS as key"
+    )
   }
 
   func testTransferRequestFailWithErrorWhenEndOffsetNil() {

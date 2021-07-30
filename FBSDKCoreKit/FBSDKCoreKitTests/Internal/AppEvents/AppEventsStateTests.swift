@@ -398,7 +398,8 @@ class AppEventsStateTests: XCTestCase { // swiftlint:disable:this type_body_leng
     XCTAssertEqual(
       appEventsStateMaxEvents,
       fullState.events.count,
-      "Adding to a full state should have no effect on the event count")
+      "Adding to a full state should have no effect on the event count"
+    )
   }
 
   func testAddEventsToPreviouslyOverflownState() {
@@ -412,25 +413,29 @@ class AppEventsStateTests: XCTestCase { // swiftlint:disable:this type_body_leng
     XCTAssertEqual(
       2000, // appEventsStateMaxEvents * 2
       state.numSkipped,
-      "Should keep a running count of skipped states")
+      "Should keep a running count of skipped states"
+    )
     XCTAssertEqual(
       appEventsStateMaxEvents,
       state.events.count,
-      "Should not add additional events to a full state")
+      "Should not add additional events to a full state"
+    )
   }
 
   func testCompatibilityWithMatchingTokenMatchingAppID() {
     let state2 = AppEventsState(token: self.name, appID: appId)
     XCTAssertTrue(
       state.is(compatibleWith: state2),
-      "States with matching tokens and matching app ids should be compatible")
+      "States with matching tokens and matching app ids should be compatible"
+    )
   }
 
   func testMatchingTokenNonMatchingAppID() {
     let state2 = AppEventsState(token: self.name, appID: self.name)
     XCTAssertFalse(
       state.is(compatibleWith: state2),
-      "States with matching tokens and non-matching app ids should not be compatible")
+      "States with matching tokens and non-matching app ids should not be compatible"
+    )
   }
 
   func testNonMatchingTokenMatchingAppID() {

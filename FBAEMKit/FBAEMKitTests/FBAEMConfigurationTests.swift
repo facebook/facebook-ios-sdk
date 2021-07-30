@@ -130,7 +130,8 @@ class AEMConfigurationTests: XCTestCase { // swiftlint:disable:this type_body_le
     XCTAssertEqual(
       AEMConfiguration.ruleProvider() as! AEMAdvertiserRuleFactory, // swiftlint:disable:this force_cast
       advertiserRuleFactory,
-      "Should configure the AEMConfiguration correctly")
+      "Should configure the AEMConfiguration correctly"
+    )
   }
 
   func testValidCases() {
@@ -139,27 +140,33 @@ class AEMConfigurationTests: XCTestCase { // swiftlint:disable:this type_body_le
     XCTAssertEqual(
       config?.defaultCurrency,
       Values.USD,
-      "Should parse the expected default_currency with the correct value")
+      "Should parse the expected default_currency with the correct value"
+    )
     XCTAssertEqual(
       config?.cutoffTime,
       1,
-      "Should parse the expected cutoff_time with the correct value")
+      "Should parse the expected cutoff_time with the correct value"
+    )
     XCTAssertEqual(
       config?.validFrom,
       10000,
-      "Should parse the expected valid_from with the correct value")
+      "Should parse the expected valid_from with the correct value"
+    )
     XCTAssertEqual(
       config?.configMode,
       Values.defaultMode,
-      "Should parse the expected config_mode with the correct value")
+      "Should parse the expected config_mode with the correct value"
+    )
     XCTAssertEqual(
       config?.businessID,
       Values.coffeeBrand,
-      "Should parse the expected business_id with the correct value")
+      "Should parse the expected business_id with the correct value"
+    )
     XCTAssertEqual(
       config?.conversionValueRules.count,
       1,
-      "Should parse the expected conversion_value_rules with the correct value")
+      "Should parse the expected conversion_value_rules with the correct value"
+    )
   }
 
   func testInvalidCases() {
