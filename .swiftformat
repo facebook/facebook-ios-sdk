@@ -9,6 +9,7 @@
 
 # Rules to run
 --rules indent
+--rules spaceAroundParens
 
 # Options
 --swiftversion 5
