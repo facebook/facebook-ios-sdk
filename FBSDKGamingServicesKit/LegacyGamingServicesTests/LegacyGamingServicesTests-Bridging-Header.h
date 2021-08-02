@@ -19,6 +19,8 @@
 @import LegacyGamingServices;
 @import XCTest;
 
+#import <TestTools/FBSDKTestCoder.h>
+
 #import "FBSDKApplicationDelegate+Testing.h"
 #import "FBSDKFileHandleCreating.h"
 #import "FBSDKFileHandleFactory.h"
