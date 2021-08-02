@@ -25,18 +25,6 @@ class GamingPayloadObserverTests: XCTestCase, GamingPayloadDelegate {
   var capturedPayload: GamingPayload?
   var wasUpdatedURLContainingCalled = false
 
-  enum AppLinkKeys {
-    static let data = "al_applink_data"
-    static let extras = "extras"
-    static let payload = "payload"
-    static let gameRequestId = "game_request_id"
-  }
-
-  enum Values {
-    static let payload = "payload"
-    static let gameRequestID = "123"
-  }
-
   func testCreating() {
     XCTAssertTrue(
       observer.delegate === self,
@@ -68,8 +56,7 @@ class GamingPayloadObserverTests: XCTestCase, GamingPayloadDelegate {
   }
 
   func testOpeningURLWithMissingKeys() throws {
-    let payload = createAppLinkExtras(payload: nil, gameRequestID: nil)
-    let url = try createAppLinkUrl(payload: payload)
+    let url = try SampleUnparsedAppLinkURLs.missingKeys()
 
     XCTAssertFalse(
       observer.application(
@@ -88,9 +75,7 @@ class GamingPayloadObserverTests: XCTestCase, GamingPayloadDelegate {
   }
 
   func testOpeningURLWithMissingGameRequestID() throws {
-    let payload = createAppLinkExtras(gameRequestID: nil)
-    let url = try createAppLinkUrl(payload: payload)
-
+    let url = try SampleUnparsedAppLinkURLs.create(gameRequestID: nil)
     XCTAssertTrue(
       observer.application(
         UIApplication.shared,
@@ -107,9 +92,7 @@ class GamingPayloadObserverTests: XCTestCase, GamingPayloadDelegate {
   }
 
   func testOpeningURLWithMissingPayload() throws {
-    let payload = createAppLinkExtras(payload: nil)
-    let url = try createAppLinkUrl(payload: payload)
-
+    let url = try SampleUnparsedAppLinkURLs.create(payload: nil)
     XCTAssertTrue(
       observer.application(
         UIApplication.shared,
@@ -126,9 +109,7 @@ class GamingPayloadObserverTests: XCTestCase, GamingPayloadDelegate {
   }
 
   func testOpeningWithValidURL() throws {
-    let payload = createAppLinkExtras()
-    let url = try createAppLinkUrl(payload: payload)
-
+    let url = try SampleUnparsedAppLinkURLs.valid()
     XCTAssertTrue(
       observer.application(
         UIApplication.shared,
@@ -145,44 +126,14 @@ class GamingPayloadObserverTests: XCTestCase, GamingPayloadDelegate {
     )
     XCTAssertEqual(
       capturedPayload?.payload,
-      Values.payload,
+      SampleUnparsedAppLinkURLs.Values.payload,
       "Should invoke the delegate with the expected payload"
     )
     XCTAssertEqual(
       capturedPayload?.gameRequestID,
-      Values.gameRequestID,
+      SampleUnparsedAppLinkURLs.Values.gameRequestID,
       "Should invoke the delegate with the expected game request ID"
     )
-  }
-
-  // MARK: - Helpers
-
-  func createAppLinkUrl(payload: [String: Any]) throws -> URL {
-    let data = try JSONSerialization.data(withJSONObject: payload, options: [])
-    let json = try XCTUnwrap(String(data: data, encoding: .utf8))
-    var components = try XCTUnwrap(URLComponents(url: SampleUrls.valid, resolvingAgainstBaseURL: false))
-
-    components.queryItems = [
-      URLQueryItem(name: AppLinkKeys.data, value: json)
-    ]
-
-    return try XCTUnwrap(components.url)
-  }
-
-  func createAppLinkExtras(
-    payload potentialPayload: String? = Values.payload,
-    gameRequestID potentialGameRequestID: String? = Values.gameRequestID
-  ) -> [String: Any] {
-    var extras = [String: Any]()
-
-    if let payload = potentialPayload {
-      extras[AppLinkKeys.payload] = payload
-    }
-    if let gameRequestID = potentialGameRequestID {
-      extras[AppLinkKeys.gameRequestId] = gameRequestID
-    }
-
-    return [AppLinkKeys.extras: extras]
   }
 
   // MARK: - GamingPayload Delegate

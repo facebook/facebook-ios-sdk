@@ -17,26 +17,16 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @import LegacyGamingServices;
-@import XCTest;
 
-#import <TestTools/FBSDKTestCoder.h>
+@interface FBSDKGamingPayload (Testing)
 
-#import "FBSDKApplicationDelegate+Testing.h"
-#import "FBSDKFileHandleCreating.h"
-#import "FBSDKFileHandleFactory.h"
-#import "FBSDKFileHandling.h"
-#import "FBSDKFriendFinderDialog+Testing.h"
-#import "FBSDKGamingGroupIntegration+Testing.h"
-#import "FBSDKGamingImageUploader+Testing.h"
-#import "FBSDKGamingPayload+Testing.h"
-#import "FBSDKGamingPayloadObserver+Testing.h"
-#import "FBSDKGamingServiceController.h"
-#import "FBSDKGamingServiceControllerCreating.h"
-#import "FBSDKGamingServiceControllerFactory.h"
-#import "FBSDKGamingServiceControllerProtocol.h"
-#import "FBSDKGamingVideoUploader+Testing.h"
-#import "FBSDKVideoUploader.h"
-#import "FBSDKVideoUploader+Testing.h"
-#import "FBSDKVideoUploaderCreating.h"
-#import "FBSDKVideoUploaderFactory.h"
-#import "FBSDKVideoUploading.h"
+NS_ASSUME_NONNULL_BEGIN
+
+@property (nonatomic, readonly) NSString *gameRequestID;
+@property (nonatomic, readonly) NSString *payload;
+
+- (instancetype)initWithURL:(FBSDKURL *_Nonnull)url;
+
+@end
+
+NS_ASSUME_NONNULL_END
