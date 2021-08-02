@@ -24,12 +24,12 @@ import FBSDKCoreKit
 
 import Foundation
 
-public enum TournamentManagerError: Error {
+public enum TournamentFetchError: Error {
   case server(Error)
   case decoding
 }
 
-public class TournamentManager {
+public class TournamentFetcher {
 
   let graphRequestFactory: GraphRequestProviding
 
@@ -37,7 +37,7 @@ public class TournamentManager {
     self.graphRequestFactory = graphRequestFactory
   }
 
-  public func fetchTournaments(completionHandler: @escaping (Result<Tournament, TournamentManagerError>) -> Void) {
+  public func fetchTournaments(completionHandler: @escaping (Result<Tournament, TournamentFetchError>) -> Void) {
     let params = ["fields": "tournaments"]
     let request = graphRequestFactory.createGraphRequest(withGraphPath: "me", parameters: params)
     request.start { _, result, error in

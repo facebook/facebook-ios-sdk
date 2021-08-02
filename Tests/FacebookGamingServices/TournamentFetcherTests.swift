@@ -29,10 +29,10 @@ import XCTest
 
 struct SampleError: Error {}
 
-class TournamentManagerTests: XCTestCase {
+class TournamentFetcherTests: XCTestCase {
 
   let factory = TestGraphRequestFactory()
-  lazy var manager = TournamentManager(graphRequestFactory: factory)
+  lazy var fetcher = TournamentFetcher(graphRequestFactory: factory)
 
   enum Keys {
     static let tournamentID = "id"
@@ -50,23 +50,23 @@ class TournamentManagerTests: XCTestCase {
   }
 
   func testDependencies() {
-    let manager = TournamentManager()
+    let fetcher = TournamentFetcher()
     XCTAssertTrue(
-      manager.graphRequestFactory is GraphRequestFactory,
+      fetcher.graphRequestFactory is GraphRequestFactory,
       "Should have a default GraphRequestFactory of the expected type"
     )
   }
 
   func testCustomDependencies() {
     XCTAssertEqual(
-      manager.graphRequestFactory as? TestGraphRequestFactory,
+      fetcher.graphRequestFactory as? TestGraphRequestFactory,
       factory,
       "Should be able to create with a custom graph request factory"
     )
   }
 
   func testFetchTournaments() throws {
-    manager.fetchTournaments { _ in
+    fetcher.fetchTournaments { _ in
       XCTFail("Should not reach here")
     }
 
@@ -91,7 +91,7 @@ class TournamentManagerTests: XCTestCase {
 
   func testHandlingTournamentFetchError() throws {
     var completionWasInvoked = false
-    manager.fetchTournaments { result in
+    fetcher.fetchTournaments { result in
       switch result {
       case .failure(let error):
         guard case let .server(serverError) = error else {
@@ -113,7 +113,7 @@ class TournamentManagerTests: XCTestCase {
 
   func testHandlingTournamentFetchResultAndError() throws {
     var completionWasInvoked = false
-    manager.fetchTournaments { result in
+    fetcher.fetchTournaments { result in
       switch result {
       case .failure(let error):
         guard case let .server(serverError) = error else {
@@ -135,7 +135,7 @@ class TournamentManagerTests: XCTestCase {
 
   func testHandlingTournamentFetchInvalidResult() throws {
     var completionWasInvoked = false
-    manager.fetchTournaments { result in
+    fetcher.fetchTournaments { result in
       switch result {
       case .failure(let error):
         guard case .decoding = error else {
@@ -164,7 +164,7 @@ class TournamentManagerTests: XCTestCase {
     )
 
     var completionWasInvoked = false
-    manager.fetchTournaments { result in
+    fetcher.fetchTournaments { result in
       switch result {
       case .failure(let error):
         XCTFail("Unexpected error received: \(error)")
