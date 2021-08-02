@@ -7,15 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		08B795EE26AF36E300F68878 /* TestGraphRequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B795E726AF36E300F68878 /* TestGraphRequestFactory.swift */; };
+		154D1DA4D7C1132B20433E71 /* TestGraphRequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCFB16AD8A9E8D19987885E4 /* TestGraphRequestFactory.swift */; };
 		2442EF2D3F79CF0FC9C005DB /* TestGraphRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5B18A936EE4E827325688A /* TestGraphRequest.swift */; };
-		585A2F7726AB535A00A86539 /* TestGraphRequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585A2F7626AB535A00A86539 /* TestGraphRequestFactory.swift */; };
-		5866912526AB44F70097B1AD /* Fuzzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5866912426AB44F70097B1AD /* Fuzzer.swift */; };
+		41C52BAE31CD81FE7B97C928 /* TestGraphRequestConnectionFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07160C9DDB965A64C22AE60 /* TestGraphRequestConnectionFactory.swift */; };
+		9A4ABF0D3E4E13CE761A0B61 /* FBSDKTestCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = A6A4922697A11B50B06F8282 /* FBSDKTestCoder.m */; };
 		ABAAE5DF3C5E29E2C9421FED /* TestGraphRequestConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6EAAFF5FD98DE8A3459008 /* TestGraphRequestConnection.swift */; };
 		B9300B57F130CADA2FA635E3 /* TestSessionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8640C198FCE46662467AD22C /* TestSessionProvider.swift */; };
 		BD38E8A36C58EBF74120120C /* SampleAccessTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8946DC7A460B75F7B65F5BE5 /* SampleAccessTokens.swift */; };
 		BF1AFE1973B52493C7B6D03C /* SampleUserProfiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD0C12E3DCAF88D1A6D0E0A /* SampleUserProfiles.swift */; };
-		F4A6E82426A1DF4400687E83 /* TestGraphRequestConnectionFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A6E81526A1DF4400687E83 /* TestGraphRequestConnectionFactory.swift */; };
+		E9F7C901C033B4975EA0AB2A /* Fuzzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A8D4BE357D16D0721EE967 /* Fuzzer.swift */; };
+		F8EBFCABCA0ED72EAC933EFD /* FBSDKTestCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 339256DAFAA306B6900BB4E8 /* FBSDKTestCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,49 +31,22 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = FD2991A4DB25EA6EF6D6494A /* FBSDKCoreKit */;
 			proxyType = 2;
-			remoteGlobalIDString = 2DA6329335CC5D6AFDDA8E93;
+			remoteGlobalIDString = 0F241E5E11B84E3DFB437AF1;
 			remoteInfo = "FBSDKCoreKit-Dynamic";
-		};
-		F4A6E81C26A1DF4400687E83 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FD2991A4DB25EA6EF6D6494A /* FBSDKCoreKit */;
-			proxyType = 2;
-			remoteGlobalIDString = 2A58EC65C0FFD878D338CE29;
-			remoteInfo = FBSDKCoreKit;
-		};
-		F4A6E81E26A1DF4400687E83 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FD2991A4DB25EA6EF6D6494A /* FBSDKCoreKit */;
-			proxyType = 2;
-			remoteGlobalIDString = FBFBBBC36F01F601C00FB614;
-			remoteInfo = FBSDKCoreKitTests;
-		};
-		F4A6E82026A1DF4400687E83 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FD2991A4DB25EA6EF6D6494A /* FBSDKCoreKit */;
-			proxyType = 2;
-			remoteGlobalIDString = 7E1FF4A7217544E3BABCEDF5;
-			remoteInfo = FBSDKCoreKit_TV;
-		};
-		F4A6E82226A1DF4400687E83 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FD2991A4DB25EA6EF6D6494A /* FBSDKCoreKit */;
-			proxyType = 2;
-			remoteGlobalIDString = 8295F44EEB238FCCD30BEABA;
-			remoteInfo = "FBSDKCoreKit_TV-Dynamic";
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		08B795E726AF36E300F68878 /* TestGraphRequestFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestGraphRequestFactory.swift; sourceTree = "<group>"; };
+		03A8D4BE357D16D0721EE967 /* Fuzzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fuzzer.swift; sourceTree = "<group>"; };
 		0E6EAAFF5FD98DE8A3459008 /* TestGraphRequestConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestConnection.swift; sourceTree = "<group>"; };
+		339256DAFAA306B6900BB4E8 /* FBSDKTestCoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKTestCoder.h; sourceTree = "<group>"; };
 		3D5B18A936EE4E827325688A /* TestGraphRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequest.swift; sourceTree = "<group>"; };
-		585A2F7626AB535A00A86539 /* TestGraphRequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestFactory.swift; sourceTree = "<group>"; };
-		5866912426AB44F70097B1AD /* Fuzzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fuzzer.swift; sourceTree = "<group>"; };
 		8640C198FCE46662467AD22C /* TestSessionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSessionProvider.swift; sourceTree = "<group>"; };
 		8946DC7A460B75F7B65F5BE5 /* SampleAccessTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAccessTokens.swift; sourceTree = "<group>"; };
+		A6A4922697A11B50B06F8282 /* FBSDKTestCoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKTestCoder.m; sourceTree = "<group>"; };
+		BCFB16AD8A9E8D19987885E4 /* TestGraphRequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestFactory.swift; sourceTree = "<group>"; };
+		D07160C9DDB965A64C22AE60 /* TestGraphRequestConnectionFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestConnectionFactory.swift; sourceTree = "<group>"; };
 		E40113A8B281C6A908AEFA21 /* TestTools.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TestTools.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F4A6E81526A1DF4400687E83 /* TestGraphRequestConnectionFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestGraphRequestConnectionFactory.swift; sourceTree = "<group>"; };
 		FAD0C12E3DCAF88D1A6D0E0A /* SampleUserProfiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleUserProfiles.swift; sourceTree = "<group>"; };
 		FD2991A4DB25EA6EF6D6494A /* FBSDKCoreKit */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSDKCoreKit; path = ../FBSDKCoreKit/FBSDKCoreKit.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -81,11 +55,7 @@
 		5ED934C23270354BC542BB8F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F4A6E81D26A1DF4400687E83 /* FBSDKCoreKit.framework */,
-				A724E3E7191A3A84AE498C7C /* FBSDKCoreKit.framework */,
-				F4A6E81F26A1DF4400687E83 /* FBSDKCoreKitTests.xctest */,
-				F4A6E82126A1DF4400687E83 /* FBSDKCoreKit.framework */,
-				F4A6E82326A1DF4400687E83 /* FBSDKCoreKit.framework */,
+				A724E3E7191A3A84AE498C7C /* FBSDKCoreKit-Dynamic.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -101,15 +71,16 @@
 		8D0A9F8F0A540BDAE761EE52 /* TestTools */ = {
 			isa = PBXGroup;
 			children = (
-				08B795E726AF36E300F68878 /* TestGraphRequestFactory.swift */,
-				F4A6E81526A1DF4400687E83 /* TestGraphRequestConnectionFactory.swift */,
+				339256DAFAA306B6900BB4E8 /* FBSDKTestCoder.h */,
+				A6A4922697A11B50B06F8282 /* FBSDKTestCoder.m */,
+				03A8D4BE357D16D0721EE967 /* Fuzzer.swift */,
 				8946DC7A460B75F7B65F5BE5 /* SampleAccessTokens.swift */,
 				FAD0C12E3DCAF88D1A6D0E0A /* SampleUserProfiles.swift */,
 				3D5B18A936EE4E827325688A /* TestGraphRequest.swift */,
 				0E6EAAFF5FD98DE8A3459008 /* TestGraphRequestConnection.swift */,
+				D07160C9DDB965A64C22AE60 /* TestGraphRequestConnectionFactory.swift */,
+				BCFB16AD8A9E8D19987885E4 /* TestGraphRequestFactory.swift */,
 				8640C198FCE46662467AD22C /* TestSessionProvider.swift */,
-				5866912426AB44F70097B1AD /* Fuzzer.swift */,
-				585A2F7626AB535A00A86539 /* TestGraphRequestFactory.swift */,
 			);
 			path = TestTools;
 			sourceTree = "<group>";
@@ -136,11 +107,23 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		8DB9EAC958C8DBE41CFBE228 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F8EBFCABCA0ED72EAC933EFD /* FBSDKTestCoder.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		7EE1BFF550650C49854D563A /* TestTools */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8484440B93FEF66A21A7D2E1 /* Build configuration list for PBXNativeTarget "TestTools" */;
 			buildPhases = (
+				8DB9EAC958C8DBE41CFBE228 /* Headers */,
 				514FB552E0988BBC0743E3FC /* Sources */,
 			);
 			buildRules = (
@@ -159,7 +142,10 @@
 		37E54EEFC92A215F0352C118 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1200;
+				LastUpgradeCheck = 1250;
+				ORGANIZATIONNAME = Facebook;
+				TargetAttributes = {
+				};
 			};
 			buildConfigurationList = 15ED1802B47B87C85B3D2818 /* Build configuration list for PBXProject "TestTools" */;
 			compatibilityVersion = "Xcode 10.0";
@@ -185,39 +171,11 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		A724E3E7191A3A84AE498C7C /* FBSDKCoreKit.framework */ = {
+		A724E3E7191A3A84AE498C7C /* FBSDKCoreKit-Dynamic.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = FBSDKCoreKit.framework;
+			path = "FBSDKCoreKit-Dynamic.framework";
 			remoteRef = CBB8303DD684E0F36CCA0373 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F4A6E81D26A1DF4400687E83 /* FBSDKCoreKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKCoreKit.framework;
-			remoteRef = F4A6E81C26A1DF4400687E83 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F4A6E81F26A1DF4400687E83 /* FBSDKCoreKitTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = FBSDKCoreKitTests.xctest;
-			remoteRef = F4A6E81E26A1DF4400687E83 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F4A6E82126A1DF4400687E83 /* FBSDKCoreKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKCoreKit.framework;
-			remoteRef = F4A6E82026A1DF4400687E83 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F4A6E82326A1DF4400687E83 /* FBSDKCoreKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = FBSDKCoreKit.framework;
-			remoteRef = F4A6E82226A1DF4400687E83 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -227,15 +185,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A4ABF0D3E4E13CE761A0B61 /* FBSDKTestCoder.m in Sources */,
+				E9F7C901C033B4975EA0AB2A /* Fuzzer.swift in Sources */,
 				BD38E8A36C58EBF74120120C /* SampleAccessTokens.swift in Sources */,
 				BF1AFE1973B52493C7B6D03C /* SampleUserProfiles.swift in Sources */,
-				08B795EE26AF36E300F68878 /* TestGraphRequestFactory.swift in Sources */,
 				2442EF2D3F79CF0FC9C005DB /* TestGraphRequest.swift in Sources */,
-				585A2F7726AB535A00A86539 /* TestGraphRequestFactory.swift in Sources */,
 				ABAAE5DF3C5E29E2C9421FED /* TestGraphRequestConnection.swift in Sources */,
+				41C52BAE31CD81FE7B97C928 /* TestGraphRequestConnectionFactory.swift in Sources */,
+				154D1DA4D7C1132B20433E71 /* TestGraphRequestFactory.swift in Sources */,
 				B9300B57F130CADA2FA635E3 /* TestSessionProvider.swift in Sources */,
-				5866912526AB44F70097B1AD /* Fuzzer.swift in Sources */,
-				F4A6E82426A1DF4400687E83 /* TestGraphRequestConnectionFactory.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,7 +223,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_NAME = TestTools;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -345,7 +302,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_NAME = TestTools;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";

@@ -18,6 +18,7 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <AdSupport/AdSupport.h>
+#import <TestTools/FBSDKTestCoder.h>
 
 #import "FBSDKAdvertisingTrackingStatus.h"
 #import "ApplicationDelegate+Testing.h"
@@ -84,7 +85,6 @@
 #import "FBSDKSKAdNetworkEvent.h"
 #import "FBSDKSKAdNetworkRule.h"
 #import "FBSDKSKAdNetworkReporter.h"
-#import "FBSDKTestCoder.h"
 #import "FBSDKURLOpener.h"
 #import "FBSDKViewHierarchy.h"
 #import "FBSDKWebDialog+Testing.h"

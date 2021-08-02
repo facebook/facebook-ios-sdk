@@ -21,7 +21,6 @@
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKEventBinding.h"
-#import "FBSDKTestCoder.h"
 
 @interface FBSDKServerConfiguration (Testing)
 
