@@ -1553,7 +1553,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint --config ../.swiftlint.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = ../scripts/build_phase_swiftlint.sh;
 		};
 		48376ABDCE1A1CAAC2259D27 /* Run Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1571,7 +1571,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint --config ../.swiftlint.yml ../Sources/FBSDKGamingServicesKit ../Tests/FBSDKGamingServicesKit\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "../scripts/build_phase_swiftlint.sh ../Sources/FacebookGamingServices ../Tests/FacebookGamingServices";
 		};
 		6BB6FD9B68FB768A880877E1 /* Run Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1589,7 +1589,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint --config ../.swiftlint.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = ../scripts/build_phase_swiftlint.sh;
 		};
 		A34CD1677D5430237896249C /* Run Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1607,7 +1607,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint --config ../.swiftlint.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = ../scripts/build_phase_swiftlint.sh;
 		};
 		AF852B126C70EF4294583A97 /* Run Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1625,7 +1625,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint --config ../.swiftlint.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = ../scripts/build_phase_swiftlint.sh;
 		};
 		C106F229692AA4825FEB8097 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1661,7 +1661,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint --config ../.swiftlint.yml ../Sources/FacebookGamingServices ../Tests/FacebookGamingServices\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "../scripts/build_phase_swiftlint.sh ../Sources/FacebookGamingServices ../Tests/FacebookGamingServices";
 		};
 /* End PBXShellScriptBuildPhase section */
 

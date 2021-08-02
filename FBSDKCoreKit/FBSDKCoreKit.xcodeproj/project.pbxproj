@@ -5150,7 +5150,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint --config ../.swiftlint.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = ../scripts/build_phase_swiftlint.sh;
 		};
 		321EA6A22E20257316C8C965 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -5204,7 +5204,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint --config ../.swiftlint.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = ../scripts/build_phase_swiftlint.sh;
 		};
 		AA3FD058BCE92567303CD6F9 /* Run Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -5222,7 +5222,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint --config ../.swiftlint.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = ../scripts/build_phase_swiftlint.sh;
 		};
 		FCF2C4294C52F2812DCAAB2A /* Run Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -5240,7 +5240,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint --config ../.swiftlint.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = ../scripts/build_phase_swiftlint.sh;
 		};
 /* End PBXShellScriptBuildPhase section */
 

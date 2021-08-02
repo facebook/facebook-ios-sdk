@@ -33,7 +33,7 @@ projectReferences:
 
 options:
   deploymentTarget:
-    tvOS: "10.0"
+    tvOS: '10.0'
 
 configFiles:
   Debug: Configurations/Shared/Configuration/Debug.xcconfig
@@ -81,13 +81,7 @@ targets:
         link: false
     preBuildScripts:
       - name: Run Swiftlint
-        script: |
-          # Type a script or drag a script file from your workspace to insert its path.
-          if which swiftlint >/dev/null; then
-            swiftlint --config ../.swiftlint.yml
-          else
-            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
-          fi
+        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_ENABLE_MODULES: YES
       DEFINES_MODULE: YES
@@ -124,13 +118,7 @@ targets:
       - sdk: Photos.framework
     preBuildScripts:
       - name: Run Swiftlint
-        script: |
-          # Type a script or drag a script file from your workspace to insert its path.
-          if which swiftlint >/dev/null; then
-            swiftlint --config ../.swiftlint.yml
-          else
-            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
-          fi
+        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_ENABLE_MODULES: YES
       DEFINES_MODULE: YES
@@ -195,13 +183,7 @@ targets:
         link: false
     preBuildScripts:
       - name: Run Swiftlint
-        script: |
-          # Type a script or drag a script file from your workspace to insert its path.
-          if which swiftlint >/dev/null; then
-            swiftlint --config ../.swiftlint.yml
-          else
-            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
-          fi
+        script: ../scripts/build_phase_swiftlint.sh
     settings:
       PRODUCT_NAME: FBSDKShareKit
   FBSDKShareKit_TV-Dynamic:
@@ -265,13 +247,7 @@ targets:
       - sdk: Photos.framework
     preBuildScripts:
       - name: Run Swiftlint
-        script: |
-          # Type a script or drag a script file from your workspace to insert its path.
-          if which swiftlint >/dev/null; then
-            swiftlint --config ../.swiftlint.yml
-          else
-            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
-          fi
+        script: ../scripts/build_phase_swiftlint.sh
     settings:
       PRODUCT_NAME: FBSDKShareKit
   FBSDKShareKitTests:

@@ -1247,7 +1247,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint --config ../.swiftlint.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = ../scripts/build_phase_swiftlint.sh;
 		};
 		98CF42776D5628725979C6F2 /* Run Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1265,7 +1265,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint --config ../.swiftlint.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = ../scripts/build_phase_swiftlint.sh;
 		};
 		AE9A4489F008673AD9A4F2B7 /* Run Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1283,7 +1283,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint --config ../.swiftlint.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = ../scripts/build_phase_swiftlint.sh;
 		};
 		D1A39474F5ACDB6E14940A23 /* Run Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1301,7 +1301,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint --config ../.swiftlint.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = ../scripts/build_phase_swiftlint.sh;
 		};
 		D518880239377FC3315EE9D1 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;

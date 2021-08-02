@@ -42,13 +42,7 @@ targets:
       - sdk: CoreGraphics.framework
     preBuildScripts:
       - name: Run Swiftlint
-        script: |
-          # Type a script or drag a script file from your workspace to insert its path.
-          if which swiftlint >/dev/null; then
-            swiftlint --config ../.swiftlint.yml
-          else
-            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
-          fi
+        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
       PRODUCT_NAME: LegacyGamingServices
@@ -68,13 +62,7 @@ targets:
       - sdk: CoreGraphics.framework
     preBuildScripts:
       - name: Run Swiftlint
-        script: |
-          # Type a script or drag a script file from your workspace to insert its path.
-          if which swiftlint >/dev/null; then
-            swiftlint --config ../.swiftlint.yml ../Sources/FacebookGamingServices ../Tests/FacebookGamingServices
-          else
-            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
-          fi
+        script: ../scripts/build_phase_swiftlint.sh ../Sources/FacebookGamingServices ../Tests/FacebookGamingServices
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
       PRODUCT_NAME: FacebookGamingServices
@@ -95,13 +83,7 @@ targets:
       - sdk: CoreGraphics.framework
     preBuildScripts:
       - name: Run Swiftlint
-        script: |
-          # Type a script or drag a script file from your workspace to insert its path.
-          if which swiftlint >/dev/null; then
-            swiftlint --config ../.swiftlint.yml ../Sources/FBSDKGamingServicesKit ../Tests/FBSDKGamingServicesKit
-          else
-            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
-          fi
+        script: ../scripts/build_phase_swiftlint.sh ../Sources/FacebookGamingServices ../Tests/FacebookGamingServices
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
       PRODUCT_NAME: FBSDKGamingServicesKit
