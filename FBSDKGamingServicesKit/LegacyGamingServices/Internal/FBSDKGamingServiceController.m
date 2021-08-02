@@ -66,7 +66,7 @@ static NSURL *FBSDKGamingServicesUrl(FBSDKGamingServiceType serviceType, NSStrin
   return self;
 }
 
-- (void)callWithArgument:(NSString *)argument
+- (void)callWithArgument:(nullable NSString *)argument
 {
   __weak typeof(self) weakSelf = self;
   [[FBSDKBridgeAPI sharedInstance]

@@ -42,7 +42,6 @@
  #import "FBSDKModelUtility.h"
  #import "FBSDKServerConfigurationManager+ServerConfigurationProviding.h"
  #import "FBSDKSettings+Internal.h"
- #import "FBSDKSettings+SettingsProtocols.h"
  #import "FBSDKSwizzler+Swizzling.h"
  #import "FBSDKSwizzling.h"
  #import "FBSDKViewHierarchy.h"

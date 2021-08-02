@@ -16,16 +16,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+@import LegacyGamingServices;
 
-#import "FBSDKGamingServiceController.h"
+#import "FBSDKGamingGroupIntegration.h"
+
+@protocol FBSDKGamingServiceControllerCreating;
+@protocol FBSDKSettings;
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(GamingServiceControllerProtocol)
-@protocol FBSDKGamingServiceController
+@interface FBSDKGamingGroupIntegration (Testing)
 
-- (void)callWithArgument:(nullable NSString *)argument;
+@property (nonatomic) id<FBSDKSettings> settings;
+@property (nonatomic) id<FBSDKGamingServiceControllerCreating> serviceControllerFactory;
+
+- (instancetype)initWithSettings:(id<FBSDKSettings>)settings
+        serviceControllerFactory:(id<FBSDKGamingServiceControllerCreating>)factory;
+
+- (void)openGroupPageWithCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler;
 
 @end
 

@@ -16,15 +16,29 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+import FBSDKCoreKit
+import LegacyGamingServices
+import XCTest
 
-#import "FBSDKSettings.h"
-#import "FBSDKSettingsProtocol.h"
+class TestSettings: SettingsProtocol {
+  static var appID: String?
+  static var clientToken: String?
+  static var userAgentSuffix: String?
+  static var sdkVersion: String?
+  static var loggingBehaviors = Set<LoggingBehavior>()
 
-NS_ASSUME_NONNULL_BEGIN
-
-/// Default conformance to the settings protocol
-@interface FBSDKSettings (SettingsProtocol) <FBSDKSettings>
-@end
-
-NS_ASSUME_NONNULL_END
+  var appID: String?
+  var isDataProcessingRestricted = false
+  var isAutoLogAppEventsEnabled = false
+  var isSetATETimeExceedsInstallTime = false
+  var isSKAdNetworkReportEnabled = false
+  var loggingBehaviors = Set<LoggingBehavior>()
+  var advertisingTrackingStatus = AdvertisingTrackingStatus.unspecified
+  var installTimestamp: Date?
+  var advertiserTrackingEnabledTimestamp: Date?
+  var shouldLimitEventAndDataUsage = false
+  var shouldUseTokenOptimizations = false
+  var graphAPIVersion = ""
+  var isGraphErrorRecoveryEnabled = false
+  var graphAPIDebugParamValue: String?
+}

@@ -304,15 +304,14 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
             url: url,
             appVersions: []
           ),
-          let requestURL = try? bridge._requestURL(for: configuration),
-          let version = Settings.shared.graphAPIVersion
+          let requestURL = try? bridge._requestURL(for: configuration)
     else {
       return XCTFail("Should be able to create a configuration with a url")
     }
 
     XCTAssertEqual(
       requestURL.absoluteString,
-      "https://m.facebook.com/\(version)/",
+      "https://m.facebook.com/\(Settings.shared.graphAPIVersion)/",
       "Should provide a request url for a dialog configuration without a scheme"
     )
   }

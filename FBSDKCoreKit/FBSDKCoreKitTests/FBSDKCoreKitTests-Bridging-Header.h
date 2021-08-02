@@ -153,7 +153,6 @@
 // Settings
 #import "FBSDKSettingsLogging.h"
 #import "FBSDKSettingsProtocol.h"
-#import "FBSDKSettings+SettingsProtocols.h"
 // FeatureManager abstraction
 #import "FBSDKFeatureChecking.h"
 #import "FBSDKFeatureManager.h"
