@@ -449,8 +449,7 @@ release_sdk() {
     # Release frameworks in dynamic (mostly for Carthage)
     release_dynamic() {
       CARTHAGE_BIN_PATH=$( which carthage ) sh scripts/carthage.sh build --no-skip-current
-      CARTHAGE_BIN_PATH=$( which carthage ) sh scripts/carthage.sh archive --output build/Release/
-      mv build/Release/FBSDKCoreKit.framework.zip build/Release/FacebookSDK_Dynamic.framework.zip
+      CARTHAGE_BIN_PATH=$( which carthage ) sh scripts/carthage.sh archive --output build/Release/FacebookSDK_Dynamic.framework.zip
     }
 
     # Release frameworks in static
