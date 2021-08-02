@@ -206,6 +206,5 @@ class TournamentManagerTests: XCTestCase {
       Keys.tournamentTitle: Values.tournamentTitle,
       Keys.tournamentEndTime: Values.tournamentEndTime
     ]
-
   }
 }
