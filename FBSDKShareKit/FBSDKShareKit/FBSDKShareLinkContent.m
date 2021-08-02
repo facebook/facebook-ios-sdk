@@ -18,13 +18,8 @@
 
 #import "FBSDKShareLinkContent.h"
 
-#ifdef FBSDKCOCOAPODS
- #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
- #import "FBSDKCoreKit+Internal.h"
-#endif
-
 #import "FBSDKCoreKitBasicsImportForShareKit.h"
+#import "FBSDKHasher.h"
 #import "FBSDKHashtag.h"
 #import "FBSDKShareUtility.h"
 
@@ -111,7 +106,7 @@
     _quote.hash,
     _shareUUID.hash,
   };
-  return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
+  return [FBSDKHasher hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
 }
 
 - (BOOL)isEqual:(id)object

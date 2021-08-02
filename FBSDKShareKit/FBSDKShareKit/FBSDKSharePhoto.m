@@ -20,11 +20,7 @@
 
 #import <Photos/Photos.h>
 
-#ifdef FBSDKCOCOAPODS
- #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
- #import "FBSDKCoreKit+Internal.h"
-#endif
+#import "FBSDKHasher.h"
 #import "FBSDKShareConstants.h"
 
 NSString *const kFBSDKSharePhotoAssetKey = @"photoAsset";
@@ -95,7 +91,7 @@ NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
     _caption.hash,
     (_userGenerated ? 1u : 0u)
   };
-  return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
+  return [FBSDKHasher hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
 }
 
 - (BOOL)isEqual:(id)object

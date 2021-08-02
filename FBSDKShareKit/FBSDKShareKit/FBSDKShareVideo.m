@@ -18,11 +18,7 @@
 
 #import "FBSDKShareVideo.h"
 
-#ifdef FBSDKCOCOAPODS
- #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
- #import "FBSDKCoreKit+Internal.h"
-#endif
+#import "FBSDKHasher.h"
 #import "FBSDKShareConstants.h"
 #import "FBSDKSharePhoto.h"
 #import "FBSDKShareUtility.h"
@@ -117,7 +113,7 @@ NSString *const kFBSDKShareVideoURLKey = @"videoURL";
     _videoURL.hash,
     _previewPhoto.hash,
   };
-  return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
+  return [FBSDKHasher hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
 }
 
 - (BOOL)isEqual:(id)object

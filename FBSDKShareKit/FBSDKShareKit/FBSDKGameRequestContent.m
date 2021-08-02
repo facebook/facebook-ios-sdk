@@ -22,11 +22,7 @@
 
  #import "FBSDKGameRequestContent.h"
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
+ #import "FBSDKHasher.h"
  #import "FBSDKShareConstants.h"
  #import "FBSDKShareUtility.h"
 
@@ -170,16 +166,16 @@
 - (NSUInteger)hash
 {
   NSUInteger subhashes[] = {
-    [FBSDKMath hashWithInteger:_actionType],
+    [FBSDKHasher hashWithInteger:_actionType],
     _data.hash,
-    [FBSDKMath hashWithInteger:_filters],
+    [FBSDKHasher hashWithInteger:_filters],
     _message.hash,
     _objectID.hash,
     _recipientSuggestions.hash,
     _title.hash,
     _recipients.hash,
   };
-  return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
+  return [FBSDKHasher hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
 }
 
 - (BOOL)isEqual:(id)object
