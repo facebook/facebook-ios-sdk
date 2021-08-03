@@ -1,8 +1,10 @@
 excluded:
-  - Pods
   - Carthage
-  - Vendor
+  - ads
+  - internal
   - samples
+  - testing
+  - Package.swift
 
 cyclomatic_complexity: 11
 file_header:
