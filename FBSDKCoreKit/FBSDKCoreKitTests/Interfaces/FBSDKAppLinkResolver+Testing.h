@@ -20,6 +20,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol FBSDKAppLinkResolverRequestBuilding;
+@protocol FBSDKClientTokenProviding;
+
 @interface FBSDKAppLinkResolver (Testing)
 
 @property (nonatomic, strong) NSMutableDictionary<NSURL *, FBSDKAppLink *> *cachedFBSDKAppLinks

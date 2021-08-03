@@ -20,6 +20,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol FBSDKFeatureDisabling;
+
 @interface FBSDKCrashObserver (Testing)
 
 @property (nullable, nonatomic) id<FBSDKSettings> settings;
