@@ -17,9 +17,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => 'Facebook Platform License', :file => 'LICENSE' }
   s.author       = 'Facebook'
 
-  s.platform     = :ios, :tvos
-  s.ios.deployment_target = '9.0'
-  s.tvos.deployment_target = '10.0'
+  s.platform = :ios, '9.0'
 
   s.source       = { :http => "https://github.com/facebook/facebook-ios-sdk/releases/download/v#{s.version}/FacebookSDK_Static.zip" }
 
@@ -38,33 +36,48 @@ Pod::Spec.new do |s|
   }
 
   s.subspec 'Basics' do |ss|
+    ss.platform = :ios, :tvos
+    ss.ios.deployment_target = '9.0'
+
     ss.ios.vendored_framework = 'FBSDKCoreKit_Basics.framework'
     ss.tvos.vendored_framework = 'tv/FBSDKCoreKit_Basics.framework'
+    ss.tvos.deployment_target = '10.0'
   end
+
   s.subspec 'AEMKit' do |ss|
     ss.ios.dependency 'FacebookSDK/Basics'
     ss.ios.vendored_framework = 'FBAEMKit.framework'
   end
+
   s.subspec 'CoreKit' do |ss|
     ss.ios.dependency 'FacebookSDK/AEMKit'
     ss.ios.dependency 'FacebookSDK/Basics'
     ss.ios.vendored_framework = 'FBSDKCoreKit.framework'
 
+    ss.tvos.deployment_target = '10.0'
     ss.tvos.dependency 'FacebookSDK/Basics'
     ss.tvos.vendored_framework = 'tv/FBSDKCoreKit.framework'
   end
+
   s.subspec 'LoginKit' do |ss|
     ss.dependency 'FacebookSDK/CoreKit'
     ss.ios.vendored_framework = 'FBSDKLoginKit.framework'
+
+    ss.tvos.deployment_target = '10.0'
     ss.tvos.vendored_framework = 'tv/FBSDKLoginKit.framework'
   end
+
   s.subspec 'ShareKit' do |ss|
     ss.dependency 'FacebookSDK/CoreKit'
     ss.ios.vendored_framework = 'FBSDKShareKit.framework'
+
+    ss.tvos.deployment_target = '10.0'
     ss.tvos.vendored_framework = 'tv/FBSDKShareKit.framework'
   end
+
   s.subspec 'TVOSKit' do |ss|
     ss.platform = :tvos
+    ss.tvos.deployment_target = '10.0'
     ss.dependency 'FacebookSDK/CoreKit'
     ss.dependency 'FacebookSDK/ShareKit'
     ss.dependency 'FacebookSDK/LoginKit'
