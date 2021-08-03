@@ -103,5 +103,4 @@ class FBSDKSwitchContextContentTests: XCTestCase {
       "Should attempt to decode a string for the context token"
     )
   }
-
 }
