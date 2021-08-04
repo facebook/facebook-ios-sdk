@@ -9,6 +9,7 @@
 
 # Rules to run
 --rules indent
+--rules spaceAroundOperators
 --rules spaceAroundParens
 --rules wrapArguments
 
@@ -17,3 +18,4 @@
 --indent 2
 --ifdef no-indent
 --xcodeindentation enabled
+--ranges no-space

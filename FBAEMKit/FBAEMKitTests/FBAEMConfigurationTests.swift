@@ -260,7 +260,7 @@ class AEMConfigurationTests: XCTestCase { // swiftlint:disable:this type_body_le
   }
 
   func testParsing() {
-    (1 ... 100).forEach { _ in
+    (1...100).forEach { _ in
       if let data = (Fuzzer.randomize(json: self.sampleData) as? [String: Any]) {
         _ = AEMConfiguration(json: data)
       }

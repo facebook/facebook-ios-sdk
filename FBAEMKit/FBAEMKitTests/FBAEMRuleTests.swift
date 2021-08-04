@@ -174,7 +174,7 @@ class FBAEMRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
   }
 
   func testParsing() {
-    (1 ... 100).forEach { _ in
+    (1...100).forEach { _ in
       if let data = (Fuzzer.randomize(json: self.sampleData) as? [String: Any]) {
         _ = FBAEMRule(json: data)
       }

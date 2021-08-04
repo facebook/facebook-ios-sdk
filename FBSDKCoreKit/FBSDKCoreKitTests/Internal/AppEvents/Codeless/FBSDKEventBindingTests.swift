@@ -119,7 +119,7 @@ class FBSDKEventBindingTests: XCTestCase {
   }
 
   func testParsing() {
-    (0 ... 100).forEach { _ in
+    (0...100).forEach { _ in
       let sampleData = SampleRawRemoteEventBindings.sampleDictionary
       eventBindingManager.parseArray(Fuzzer.randomize(json: sampleData) as? Array ?? [])
     }

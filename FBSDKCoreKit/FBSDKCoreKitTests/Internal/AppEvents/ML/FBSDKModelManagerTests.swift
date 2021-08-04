@@ -159,7 +159,7 @@ class FBSDKModelManagerTests: XCTestCase {
       factory.capturedRequests.first?.capturedCompletionHandler
     )
 
-    (0 ... 100).forEach { _ in
+    (0...100).forEach { _ in
       completion(nil, Fuzzer.randomize(json: RawRemoteModelResponse.valid), nil)
     }
   }

@@ -22,7 +22,7 @@ import XCTest
 class FBSDKErrorTests: XCTestCase {
 
   let errorReporter = TestErrorReport()
-  let code = Int.random(in: 1 ... 500)
+  let code = Int.random(in: 1...500)
   let defaultDomain = "com.facebook.sdk.core"
   let customDomain = "foo"
   let userInfo = ["some": "info"]
