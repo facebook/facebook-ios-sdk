@@ -53,7 +53,7 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
 @interface FBSDKSuggestedEventsIndexer ()
 
 @property (nonatomic, readonly) id<FBSDKGraphRequestProviding> requestProvider;
-@property (nonatomic, readonly) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
+@property (nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonatomic, readonly) Class<FBSDKSwizzling> swizzler;
 @property (nonatomic, readonly) id<FBSDKSettings> settings;
 @property (nonatomic, readonly) id<FBSDKEventLogging> eventLogger;
@@ -72,7 +72,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 - (instancetype)init
 {
   return [self initWithGraphRequestProvider:[FBSDKGraphRequestFactory new]
-                serverConfigurationProvider:FBSDKServerConfigurationManager.class
+                serverConfigurationProvider:FBSDKServerConfigurationManager.shared
                                    swizzler:FBSDKSwizzler.class
                                    settings:FBSDKSettings.sharedSettings
                                 eventLogger:FBSDKAppEvents.singleton
@@ -81,7 +81,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 }
 
 - (instancetype)initWithGraphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-                 serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+                 serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                     swizzler:(Class<FBSDKSwizzling>)swizzler
                                     settings:(id<FBSDKSettings>)settings
                                  eventLogger:(id<FBSDKEventLogging>)eventLogger

@@ -27,12 +27,12 @@
  #import "FBSDKDialogConfiguration.h"
  #import "FBSDKError+Internal.h"
  #import "FBSDKInternalUtility+Internal.h"
- #import "FBSDKServerConfigurationManager.h"
+ #import "FBSDKServerConfigurationManager+ServerConfigurationProviding.h"
  #import "FBSDKServerConfigurationProviding.h"
 
 @interface FBSDKBridgeAPIProtocolWebV2 ()
 
-@property (nonatomic, readonly) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
+@property (nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonatomic, readonly) id<FBSDKBridgeAPIProtocol> nativeBridge;
 
 @end
@@ -43,14 +43,14 @@
 
 - (instancetype)init
 {
-  return [self initWithServerConfigurationProvider:FBSDKServerConfigurationManager.class
+  return [self initWithServerConfigurationProvider:FBSDKServerConfigurationManager.shared
                                       nativeBridge:[[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:nil
                                                                                                   pasteboard:nil
                                                                                          dataLengthThreshold:0
                                                                                               includeAppIcon:NO]];
 }
 
-- (instancetype)initWithServerConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+- (instancetype)initWithServerConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                        nativeBridge:(id<FBSDKBridgeAPIProtocol>)nativeBridge
 {
   if ((self = [super init])) {

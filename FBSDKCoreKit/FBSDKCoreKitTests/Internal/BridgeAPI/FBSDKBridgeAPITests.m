@@ -53,12 +53,14 @@
 {
   TestBackgroundEventLogger *backgroundEventLogger = [[TestBackgroundEventLogger alloc] initWithInfoDictionaryProvider:[TestBundle new]
                                                                                                            eventLogger:[TestAppEvents new]];
+  TestServerConfigurationProvider *serverConfigurationProvider = [[TestServerConfigurationProvider alloc]
+                                                                  initWithConfiguration:ServerConfigurationFixtures.defaultConfig];
   FBSDKApplicationDelegate *delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationCenter:[TestNotificationCenter new]
                                                                                         tokenWallet:TestAccessTokenWallet.class
                                                                                            settings:[TestSettings new]
                                                                                      featureChecker:[TestFeatureManager new]
                                                                                           appEvents:[TestAppEvents new]
-                                                                        serverConfigurationProvider:TestServerConfigurationProvider.class
+                                                                        serverConfigurationProvider:serverConfigurationProvider
                                                                                               store:[UserDefaultsSpy new]
                                                                           authenticationTokenWallet:TestAuthenticationTokenWallet.class
                                                                                     profileProvider:TestProfileProvider.class

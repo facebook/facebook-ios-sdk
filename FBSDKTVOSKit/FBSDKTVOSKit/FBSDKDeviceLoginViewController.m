@@ -71,7 +71,7 @@
   self.delegate = nil;
 
   FBSDKAccessToken *token = result.accessToken;
-  BOOL requireConfirm = (([FBSDKServerConfigurationManager cachedServerConfiguration].smartLoginOptions & FBSDKServerConfigurationSmartLoginOptionsRequireConfirmation)
+  BOOL requireConfirm = ((FBSDKServerConfigurationManager.shared.cachedServerConfiguration.smartLoginOptions & FBSDKServerConfigurationSmartLoginOptionsRequireConfirmation)
     && (token != nil)
     && !_isRetry);
   if (requireConfirm) {
@@ -218,7 +218,7 @@
   _loginManager = nil;
 
   BOOL enableSmartLogin = (!_isRetry
-    && ([FBSDKServerConfigurationManager cachedServerConfiguration].smartLoginOptions & FBSDKServerConfigurationSmartLoginOptionsEnabled));
+    && (FBSDKServerConfigurationManager.shared.cachedServerConfiguration.smartLoginOptions & FBSDKServerConfigurationSmartLoginOptionsEnabled));
   _loginManager = [[FBSDKDeviceLoginManager alloc] initWithPermissions:_permissions
                                                       enableSmartLogin:enableSmartLogin];
   _loginManager.delegate = self;

@@ -109,7 +109,7 @@ static UIApplicationState _applicationState;
 @property (nonnull, nonatomic, readonly) id<FBSDKNotificationObserving> notificationObserver;
 @property (nonnull, nonatomic, readonly) NSHashTable<id<FBSDKApplicationObserving>> *applicationObservers;
 @property (nonnull, nonatomic, readonly) id<FBSDKSourceApplicationTracking, FBSDKAppEventsConfiguring, FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging> appEvents;
-@property (nonnull, nonatomic, readonly) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
+@property (nonnull, nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonnull, nonatomic, readonly) id<FBSDKDataPersisting> store;
 @property (nonnull, nonatomic, readonly) Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> authenticationTokenWallet;
 @property (nonnull, nonatomic, readonly) FBSDKAccessTokenExpirer *accessTokenExpirer;
@@ -156,7 +156,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
                                  settings:FBSDKSettings.sharedSettings
                            featureChecker:FBSDKFeatureManager.shared
                                 appEvents:FBSDKAppEvents.singleton
-              serverConfigurationProvider:FBSDKServerConfigurationManager.class
+              serverConfigurationProvider:FBSDKServerConfigurationManager.shared
                                     store:NSUserDefaults.standardUserDefaults
                 authenticationTokenWallet:FBSDKAuthenticationToken.class];
 #else
@@ -167,7 +167,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
                                  settings:FBSDKSettings.sharedSettings
                            featureChecker:FBSDKFeatureManager.shared
                                 appEvents:FBSDKAppEvents.singleton
-              serverConfigurationProvider:FBSDKServerConfigurationManager.class
+              serverConfigurationProvider:FBSDKServerConfigurationManager.shared
                                     store:NSUserDefaults.standardUserDefaults
                 authenticationTokenWallet:FBSDKAuthenticationToken.class
                           profileProvider:FBSDKProfile.class
@@ -181,7 +181,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
                                   settings:(id<FBSDKSettingsLogging, FBSDKSettings>)settings
                             featureChecker:(id<FBSDKFeatureChecking>)featureChecker
                                  appEvents:(id<FBSDKSourceApplicationTracking, FBSDKAppEventsConfiguring, FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents
-               serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+               serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                      store:(id<FBSDKDataPersisting>)store
                  authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
 {
@@ -206,7 +206,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
                                   settings:(id<FBSDKSettingsLogging, FBSDKSettings>)settings
                             featureChecker:(id<FBSDKFeatureChecking>)featureChecker
                                  appEvents:(id<FBSDKSourceApplicationTracking, FBSDKAppEventsConfiguring, FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents
-               serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+               serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                      store:(id<FBSDKDataPersisting>)store
                  authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
                            profileProvider:(Class<FBSDKProfileProviding>)profileProvider
@@ -663,6 +663,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   id<FBSDKDataPersisting> store = NSUserDefaults.standardUserDefaults;
   id<FBSDKGraphRequestConnectionProviding> connectionProvider = [FBSDKGraphRequestConnectionFactory new];
   id<FBSDKSettings> sharedSettings = FBSDKSettings.sharedSettings;
+  id<FBSDKServerConfigurationProviding> serverConfigurationProvider = FBSDKServerConfigurationManager.shared;
 
   [FBSDKSettings configureWithStore:store
      appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
@@ -684,13 +685,13 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
                                                                                          settings:sharedSettings];
   FBSDKTimeSpentRecordingFactory *timeSpentRecordingFactory
     = [[FBSDKTimeSpentRecordingFactory alloc] initWithEventLogger:self.appEvents
-                                      serverConfigurationProvider:FBSDKServerConfigurationManager.class];
+                                      serverConfigurationProvider:serverConfigurationProvider];
   FBSDKEventDeactivationManager *eventDeactivationManager = [FBSDKEventDeactivationManager new];
-  FBSDKRestrictiveDataFilterManager *restrictiveDataFilterManager = [[FBSDKRestrictiveDataFilterManager alloc] initWithServerConfigurationProvider:FBSDKServerConfigurationManager.class];
+  FBSDKRestrictiveDataFilterManager *restrictiveDataFilterManager = [[FBSDKRestrictiveDataFilterManager alloc] initWithServerConfigurationProvider:serverConfigurationProvider];
   [FBSDKAppEventsState configureWithEventProcessors:@[eventDeactivationManager, restrictiveDataFilterManager]];
   [self.appEvents configureWithGateKeeperManager:FBSDKGateKeeperManager.class
                   appEventsConfigurationProvider:FBSDKAppEventsConfigurationManager.class
-                     serverConfigurationProvider:FBSDKServerConfigurationManager.class
+                     serverConfigurationProvider:serverConfigurationProvider
                             graphRequestProvider:graphRequestProvider
                                   featureChecker:self.featureChecker
                                            store:store
@@ -712,7 +713,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
                            graphRequestConnectionFactory:connectionProvider];
   [FBSDKGraphRequestPiggybackManager configureWithTokenWallet:FBSDKAccessToken.class
                                                      settings:sharedSettings
-                                          serverConfiguration:[FBSDKServerConfigurationManager class]
+                                          serverConfiguration:serverConfigurationProvider
                                               requestProvider:graphRequestProvider];
   [FBSDKButton setApplicationActivationNotifier:self];
   [FBSDKError configureWithErrorReporter:FBSDKErrorReport.shared];
@@ -727,7 +728,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   [FBSDKAppLinkUtility configureWithRequestProvider:graphRequestProvider
                              infoDictionaryProvider:NSBundle.mainBundle];
   [FBSDKCodelessIndexer configureWithRequestProvider:graphRequestProvider
-                         serverConfigurationProvider:FBSDKServerConfigurationManager.class
+                         serverConfigurationProvider:serverConfigurationProvider
                                                store:store
                                   connectionProvider:connectionProvider
                                             swizzler:FBSDKSwizzler.class

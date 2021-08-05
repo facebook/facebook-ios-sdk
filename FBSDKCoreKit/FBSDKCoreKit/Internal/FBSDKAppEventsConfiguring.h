@@ -49,7 +49,7 @@ NS_SWIFT_NAME(AppEventsConfiguring)
 
 - (void)   configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
            appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
-              serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+              serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                      graphRequestProvider:(id<FBSDKGraphRequestProviding>)provider
                            featureChecker:(id<FBSDKFeatureChecking>)featureChecker
                                     store:(id<FBSDKDataPersisting>)store

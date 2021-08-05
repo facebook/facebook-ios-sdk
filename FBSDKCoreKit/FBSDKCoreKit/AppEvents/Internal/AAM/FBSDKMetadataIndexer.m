@@ -89,7 +89,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
 
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-      NSDictionary<NSString *, id> *AAMRules = [FBSDKServerConfigurationManager cachedServerConfiguration].AAMRules;
+      NSDictionary<NSString *, id> *AAMRules = FBSDKServerConfigurationManager.shared.cachedServerConfiguration.AAMRules;
       if (AAMRules) {
         [self setupWithRules:AAMRules];
       }

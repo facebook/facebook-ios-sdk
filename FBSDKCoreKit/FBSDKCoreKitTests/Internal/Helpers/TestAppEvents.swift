@@ -49,7 +49,7 @@ class TestAppEvents: TestEventLogger,
 
   var capturedConfigureGateKeeperManager: GateKeeperManaging.Type?
   var capturedConfigureAppEventsConfigurationProvider: AppEventsConfigurationProviding.Type?
-  var capturedConfigureServerConfigurationProvider: ServerConfigurationProviding.Type?
+  var capturedConfigureServerConfigurationProvider: ServerConfigurationProviding?
   var capturedConfigureGraphRequestProvider: GraphRequestProviding?
   var capturedConfigureFeatureChecker: FeatureChecking?
   var capturedConfigureStore: DataPersisting?
@@ -72,7 +72,7 @@ class TestAppEvents: TestEventLogger,
   func configure(
     withGateKeeperManager gateKeeperManager: GateKeeperManaging.Type,
     appEventsConfigurationProvider: AppEventsConfigurationProviding.Type,
-    serverConfigurationProvider: ServerConfigurationProviding.Type,
+    serverConfigurationProvider: ServerConfigurationProviding,
     graphRequestProvider provider: GraphRequestProviding,
     featureChecker: FeatureChecking,
     store: DataPersisting,

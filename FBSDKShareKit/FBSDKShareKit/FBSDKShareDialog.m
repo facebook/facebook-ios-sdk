@@ -90,7 +90,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 {
   if ([FBSDKShareDialog class] == self) {
     [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
-    [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:NULL];
+    [FBSDKServerConfigurationManager.shared loadServerConfigurationWithCompletionBlock:NULL];
   }
 }
 
@@ -271,7 +271,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   if ([self.shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
     return NO;
   }
-  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
+  FBSDKServerConfiguration *configuration = FBSDKServerConfigurationManager.shared.cachedServerConfiguration;
   return [configuration.defaultShareMode isEqualToString:@"share_sheet"];
 }
 
@@ -767,7 +767,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   if ([self.shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
     return YES;
   }
-  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
+  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager.shared cachedServerConfiguration];
   return [configuration useNativeDialogForDialogName:FBSDKDialogConfigurationNameShare];
 }
 
@@ -776,7 +776,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   if ([self.shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
     return NO;
   }
-  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
+  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager.shared cachedServerConfiguration];
   return [configuration useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameShare];
 }
 

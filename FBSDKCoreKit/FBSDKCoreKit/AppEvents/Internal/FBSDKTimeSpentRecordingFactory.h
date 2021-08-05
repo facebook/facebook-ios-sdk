@@ -32,7 +32,7 @@ NS_SWIFT_NAME(TimeSpentRecordingFactory)
 - (instancetype)init NS_UNAVAILABLE;
 
 - (instancetype)initWithEventLogger:(id<FBSDKEventLogging>)eventLogger
-        serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
+        serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
 
 @end
 

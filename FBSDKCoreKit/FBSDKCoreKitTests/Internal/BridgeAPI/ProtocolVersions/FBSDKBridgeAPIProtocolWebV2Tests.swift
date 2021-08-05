@@ -36,31 +36,18 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
   }
 
   let validQueryParameters = ["Foo": "Bar"]
-  var bridge: BridgeAPIProtocolWebV2! // swiftlint:disable:this implicitly_unwrapped_optional
-  var nativeBridge = TestBridgeApiProtocol()
-
-  override func setUp() {
-    super.setUp()
-
-    TestServerConfigurationProvider.reset()
-
-    bridge = BridgeAPIProtocolWebV2(
-      serverConfigurationProvider: TestServerConfigurationProvider.self,
-      nativeBridge: nativeBridge
-    )
-  }
-
-  override class func tearDown() {
-    super.tearDown()
-
-    TestServerConfigurationProvider.reset()
-  }
+  var serverConfigurationProvider = TestServerConfigurationProvider()
+  let nativeBridge = TestBridgeApiProtocol()
+  lazy var bridge = BridgeAPIProtocolWebV2(
+    serverConfigurationProvider: serverConfigurationProvider,
+    nativeBridge: nativeBridge
+  )
 
   func testDefaultDependencies() {
     bridge = BridgeAPIProtocolWebV2()
 
     XCTAssertTrue(
-      bridge.serverConfigurationProvider is ServerConfigurationManager.Type,
+      bridge.serverConfigurationProvider is ServerConfigurationManager,
       "Should use the expected default server configuration provider"
     )
     XCTAssertTrue(
@@ -71,7 +58,7 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
 
   func testCreatingWithCustomDependencies() {
     XCTAssertTrue(
-      bridge.serverConfigurationProvider is TestServerConfigurationProvider.Type,
+      bridge.serverConfigurationProvider is TestServerConfigurationProvider,
       "Should be able to create with a custom server configuration provider"
     )
     XCTAssertEqual(
@@ -97,7 +84,6 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
   }
 
   func testRequestURLWithoutDialog() {
-    TestServerConfigurationProvider.stubbedServerConfiguration = ServerConfigurationFixtures.defaultConfig
     let url = try? bridge.requestURL(
       withActionID: nil,
       scheme: nil,
@@ -374,7 +360,11 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
     let configuration = ServerConfigurationFixtures.config(
       withDictionary: ["dialogConfigurations": [name: dialogConfiguration]]
     )
-    TestServerConfigurationProvider.stubbedServerConfiguration = configuration
+    serverConfigurationProvider = TestServerConfigurationProvider(configuration: configuration)
+    bridge = BridgeAPIProtocolWebV2(
+      serverConfigurationProvider: serverConfigurationProvider,
+      nativeBridge: nativeBridge
+    )
   }
 
   func queryItems(from url: URL) -> [URLQueryItem] {

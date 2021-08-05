@@ -74,7 +74,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
 @interface FBSDKTimeSpentData ()
 
 @property (nonatomic, weak) id<FBSDKEventLogging> eventLogger;
-@property (nonnull, nonatomic) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
+@property (nonnull, nonatomic) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonatomic) NSString *sourceApplication;
 @property (nonatomic) BOOL isOpenedFromAppLink;
 @property BOOL isCurrentlyLoaded;
@@ -102,7 +102,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
 @implementation FBSDKTimeSpentData
 
 - (instancetype)initWithEventLogger:(id<FBSDKEventLogging>)eventLogger
-        serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+        serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
 {
   if ((self = [super init])) {
     _eventLogger = eventLogger;

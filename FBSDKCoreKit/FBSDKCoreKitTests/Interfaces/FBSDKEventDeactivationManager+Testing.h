@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKEventDeactivationManager (Testing)
 
-- (instancetype)initWithServerConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
+- (instancetype)initWithServerConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
 
 @end
 

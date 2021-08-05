@@ -24,10 +24,10 @@
 
 @interface FBSDKServerConfigurationManager ()
 
-+ (void)processLoadRequestResponse:(id)result error:(NSError *)error appID:(NSString *)appID;
+- (void)processLoadRequestResponse:(id)result error:(NSError *)error appID:(NSString *)appID;
 
-+ (FBSDKGraphRequest *)requestToLoadServerConfiguration:(NSString *)appID;
+- (FBSDKGraphRequest *)requestToLoadServerConfiguration:(NSString *)appID;
 
-+ (void)clearCache;
+- (void)clearCache;
 
 @end

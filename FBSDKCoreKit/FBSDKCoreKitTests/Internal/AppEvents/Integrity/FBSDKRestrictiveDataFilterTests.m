@@ -38,13 +38,16 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 @end
 
 @interface FBSDKRestrictiveDataFilterManager ()
-- (instancetype)initWithServerConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
+- (instancetype)initWithServerConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
 - (NSString *)getMatchedDataTypeWithEventName:(NSString *)eventName
                                      paramKey:(NSString *)paramKey;
 @end
 
 @interface FBSDKRestrictiveDataFilterTests : XCTestCase
+
 @property (nonatomic) FBSDKRestrictiveDataFilterManager *restrictiveDataFilterManager;
+@property (nonatomic) TestServerConfigurationProvider *serverConfigurationProvider;
+
 @end
 
 @implementation FBSDKRestrictiveDataFilterTests
@@ -66,10 +69,10 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
                                                      }
                                                    }
                                                  }];
-  self.restrictiveDataFilterManager = [[FBSDKRestrictiveDataFilterManager alloc] initWithServerConfigurationProvider:TestServerConfigurationProvider.class];
   FBSDKServerConfiguration *config = [ServerConfigurationFixtures configWithDictionary:@{ @"restrictiveParams" : params }];
-
-  [TestServerConfigurationProvider setStubbedServerConfiguration:config];
+  self.serverConfigurationProvider = [[TestServerConfigurationProvider alloc] initWithConfiguration:config];
+  self.restrictiveDataFilterManager = [[FBSDKRestrictiveDataFilterManager alloc]
+                                       initWithServerConfigurationProvider:self.serverConfigurationProvider];
   [self.restrictiveDataFilterManager enable];
 }
 

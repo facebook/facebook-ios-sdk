@@ -51,7 +51,7 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
 {
   if ([FBSDKMessageDialog class] == self) {
     [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_MESSENGER];
-    [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:NULL];
+    [FBSDKServerConfigurationManager.shared loadServerConfigurationWithCompletionBlock:NULL];
   }
 }
 
@@ -113,7 +113,7 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
                                                       methodVersion:nil
                                                          parameters:parameters
                                                            userInfo:nil];
-  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
+  FBSDKServerConfiguration *configuration = FBSDKServerConfigurationManager.shared.cachedServerConfiguration;
   BOOL useSafariViewController = [configuration useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameMessage];
   FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
     [self _handleCompletionWithDialogResults:response.responseParameters response:response];
@@ -154,7 +154,7 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
 
 - (BOOL)_canShowNative
 {
-  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
+  FBSDKServerConfiguration *configuration = FBSDKServerConfigurationManager.shared.cachedServerConfiguration;
   BOOL useNativeDialog = [configuration useNativeDialogForDialogName:FBSDKDialogConfigurationNameMessage];
   return (useNativeDialog && [FBSDKInternalUtility.sharedUtility isMessengerAppInstalled]);
 }

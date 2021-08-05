@@ -274,7 +274,7 @@ static NSString *g_overrideAppID = nil;
 static BOOL g_explicitEventsLoggedYet;
 static Class<FBSDKGateKeeperManaging> g_gateKeeperManager;
 static Class<FBSDKAppEventsConfigurationProviding> g_appEventsConfigurationProvider;
-static Class<FBSDKServerConfigurationProviding> g_serverConfigurationProvider;
+static id<FBSDKServerConfigurationProviding> g_serverConfigurationProvider;
 static id<FBSDKGraphRequestProviding> g_graphRequestProvider;
 static id<FBSDKFeatureChecking> g_featureChecker;
 static Class<FBSDKLogging> g_logger;
@@ -889,7 +889,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 - (void)   configureWithGateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
            appEventsConfigurationProvider:(Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
-              serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+              serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                      graphRequestProvider:(id<FBSDKGraphRequestProviding>)provider
                            featureChecker:(id<FBSDKFeatureChecking>)featureChecker
                                     store:(id<FBSDKDataPersisting>)store
@@ -950,7 +950,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   }
 }
 
-+ (void)setServerConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)provider
++ (void)setServerConfigurationProvider:(id<FBSDKServerConfigurationProviding>)provider
 {
   if (g_serverConfigurationProvider != provider) {
     g_serverConfigurationProvider = provider;
@@ -1789,7 +1789,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   return g_graphRequestProvider;
 }
 
-+ (Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
++ (id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
 {
   return g_serverConfigurationProvider;
 }

@@ -33,7 +33,7 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60; // hour
 static NSDate *_lastRefreshTry = nil;
 static Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> _tokenWallet = nil;
 static id<FBSDKSettings> _settings;
-static Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading> _serverConfiguration;
+static id<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading> _serverConfiguration;
 static id<FBSDKGraphRequestProviding> _requestProvider;
 
 + (Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
@@ -46,7 +46,7 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
   return _settings;
 }
 
-+ (Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>)serverConfiguration
++ (id<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>)serverConfiguration
 {
   return _serverConfiguration;
 }
@@ -58,7 +58,7 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
 
 + (void)configureWithTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
                         settings:(id<FBSDKSettings>)settings
-             serverConfiguration:(Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>)serverConfiguration
+             serverConfiguration:(id<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>)serverConfiguration
                  requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
 {
   if (self == [FBSDKGraphRequestPiggybackManager class]) {

@@ -122,7 +122,6 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
 {
   [FBSDKAppEvents reset];
   [TestAppEventsConfigurationProvider reset];
-  [TestServerConfigurationProvider reset];
   [TestGateKeeperManager reset];
   FBSDKAppEventsUtility.cachedAdvertiserIdentifierManager = nil;
   [FBSDKSettings reset];

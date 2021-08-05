@@ -33,9 +33,9 @@ NS_SWIFT_NAME(ServerConfigurationProviding)
 
  This method will use a cached configuration if it is valid and not expired.
  */
-+ (void)loadServerConfigurationWithCompletionBlock:(nullable FBSDKServerConfigurationBlock)completionBlock;
+- (void)loadServerConfigurationWithCompletionBlock:(nullable FBSDKServerConfigurationBlock)completionBlock;
 
-+ (nullable FBSDKServerConfiguration *)cachedServerConfiguration;
+- (FBSDKServerConfiguration *)cachedServerConfiguration;
 
 @end
 

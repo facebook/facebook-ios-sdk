@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKSuggestedEventsIndexer (Testing)
 
 @property (nonatomic, readonly) id<FBSDKGraphRequestProviding> requestProvider;
-@property (nonatomic, readonly) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
+@property (nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonatomic, readonly) Class<FBSDKSwizzling> swizzler;
 @property (nonatomic, readonly) id<FBSDKSettings> settings;
 @property (nonatomic, readonly) id<FBSDKEventLogging> eventLogger;
@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)reset;
 
 - (instancetype)initWithGraphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-                 serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+                 serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                     swizzler:(Class<FBSDKSwizzling>)swizzler
                                     settings:(id<FBSDKSettings>)settings
                                  eventLogger:(id<FBSDKEventLogging>)eventLogger

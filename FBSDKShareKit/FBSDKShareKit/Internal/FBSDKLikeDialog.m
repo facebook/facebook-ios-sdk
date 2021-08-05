@@ -45,7 +45,7 @@
 + (void)initialize
 {
   if ([FBSDKLikeDialog class] == self) {
-    [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:NULL];
+    [FBSDKServerConfigurationManager.shared loadServerConfigurationWithCompletionBlock:NULL];
   }
 }
 
@@ -98,7 +98,7 @@
     [self _handleCompletionWithDialogResults:response.responseParameters error:response.error];
   };
 
-  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
+  FBSDKServerConfiguration *configuration = FBSDKServerConfigurationManager.shared.cachedServerConfiguration;
   BOOL useSafariViewController = [configuration useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameLike];
   if ([self _canLikeNative]) {
     FBSDKBridgeAPIRequest *nativeRequest = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeNative
@@ -151,7 +151,7 @@
 
 - (BOOL)_canLikeNative
 {
-  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
+  FBSDKServerConfiguration *configuration = FBSDKServerConfigurationManager.shared.cachedServerConfiguration;
   BOOL useNativeDialog = [configuration useNativeDialogForDialogName:FBSDKDialogConfigurationNameLike];
   return (useNativeDialog && [FBSDKInternalUtility.sharedUtility isFacebookAppInstalled]);
 }
