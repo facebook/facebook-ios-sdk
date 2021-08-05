@@ -90,7 +90,6 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 {
   if ([FBSDKShareDialog class] == self) {
     [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
-    [FBSDKServerConfigurationManager.shared loadServerConfigurationWithCompletionBlock:NULL];
   }
 }
 
@@ -271,8 +270,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   if ([self.shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
     return NO;
   }
-  FBSDKServerConfiguration *configuration = FBSDKServerConfigurationManager.shared.cachedServerConfiguration;
-  return [configuration.defaultShareMode isEqualToString:@"share_sheet"];
+  return [[[FBSDKShareDialogConfiguration new] defaultShareMode] isEqualToString:@"share_sheet"];
 }
 
 - (BOOL)_showAutomatic:(NSError **)errorRef
@@ -767,8 +765,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   if ([self.shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
     return YES;
   }
-  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager.shared cachedServerConfiguration];
-  return [configuration useNativeDialogForDialogName:FBSDKDialogConfigurationNameShare];
+  return [[FBSDKShareDialogConfiguration new] shouldUseNativeDialogForDialogName:FBSDKDialogConfigurationNameShare];
 }
 
 - (BOOL)_useSafariViewController
@@ -776,8 +773,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   if ([self.shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
     return NO;
   }
-  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager.shared cachedServerConfiguration];
-  return [configuration useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameShare];
+  return [[FBSDKShareDialogConfiguration new] shouldUseSafariViewControllerForDialogName:FBSDKDialogConfigurationNameShare];
 }
 
 - (BOOL)_validateWithError:(NSError **)errorRef

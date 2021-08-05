@@ -245,6 +245,7 @@ targets:
           - FBSDKMeasurementEvent*
           - FBSDKMutableCopying*
           - FBSDKProfile*
+          - FBSDKShareDialogConfiguration*
           - FBSDKURL*
           - FBSDKURLOpening*
           - FBSDKWebDialog*
@@ -335,6 +336,7 @@ targets:
           - FBSDKMeasurementEvent*
           - FBSDKMutableCopying*
           - FBSDKProfile*
+          - FBSDKShareDialogConfiguration*
           - FBSDKURL*
           - FBSDKURLOpening*
           - FBSDKWebDialog*

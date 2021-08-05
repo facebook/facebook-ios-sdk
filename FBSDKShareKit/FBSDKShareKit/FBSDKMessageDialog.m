@@ -22,13 +22,8 @@
 
  #import "FBSDKMessageDialog.h"
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
-
  #import "FBSDKCoreKitBasicsImportForShareKit.h"
+ #import "FBSDKCoreKitImport.h"
  #import "FBSDKShareAppEventNames.h"
  #import "FBSDKShareCameraEffectContent.h"
  #import "FBSDKShareConstants.h"
@@ -51,7 +46,6 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
 {
   if ([FBSDKMessageDialog class] == self) {
     [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_MESSENGER];
-    [FBSDKServerConfigurationManager.shared loadServerConfigurationWithCompletionBlock:NULL];
   }
 }
 
@@ -113,8 +107,8 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
                                                       methodVersion:nil
                                                          parameters:parameters
                                                            userInfo:nil];
-  FBSDKServerConfiguration *configuration = FBSDKServerConfigurationManager.shared.cachedServerConfiguration;
-  BOOL useSafariViewController = [configuration useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameMessage];
+  BOOL useSafariViewController = [[FBSDKShareDialogConfiguration new]
+                                  shouldUseSafariViewControllerForDialogName:FBSDKDialogConfigurationNameMessage];
   FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
     [self _handleCompletionWithDialogResults:response.responseParameters response:response];
     [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
@@ -154,8 +148,8 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
 
 - (BOOL)_canShowNative
 {
-  FBSDKServerConfiguration *configuration = FBSDKServerConfigurationManager.shared.cachedServerConfiguration;
-  BOOL useNativeDialog = [configuration useNativeDialogForDialogName:FBSDKDialogConfigurationNameMessage];
+  BOOL useNativeDialog = [[FBSDKShareDialogConfiguration new]
+                          shouldUseNativeDialogForDialogName:FBSDKDialogConfigurationNameMessage];
   return (useNativeDialog && [FBSDKInternalUtility.sharedUtility isMessengerAppInstalled]);
 }
 

@@ -21,7 +21,7 @@ import XCTest
 class FBSDKEventDeactivationTests: XCTestCase {
 
   enum Keys {
-    static let ui = "_ui"
+    static let ui = "_ui" // swiftlint:disable:this identifier_name
     static let logTime = "_logTime"
     static let sessionID = "_session_id"
     static let launchSource = "fb_mobile_launch_source"

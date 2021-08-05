@@ -27,13 +27,15 @@ class TestServerConfigurationProvider: NSObject, ServerConfigurationProviding, S
   var stubbedRequestToLoadServerConfiguration: GraphRequest?
   var stubbedServerConfiguration: ServerConfiguration
   var requestToLoadConfigurationCallWasCalled = false
+  var didRetrieveCachedServerConfiguration = false
 
   init(configuration: ServerConfiguration = ServerConfigurationFixtures.defaultConfig) {
     stubbedServerConfiguration = configuration
   }
 
   func cachedServerConfiguration() -> ServerConfiguration {
-    stubbedServerConfiguration
+    didRetrieveCachedServerConfiguration = true
+    return stubbedServerConfiguration
   }
 
   func loadServerConfiguration(completionBlock: ServerConfigurationBlock?) {

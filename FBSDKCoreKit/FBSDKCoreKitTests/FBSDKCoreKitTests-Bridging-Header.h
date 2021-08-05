@@ -142,6 +142,7 @@
 #import "FBSDKProfilePictureView+Testing.h"
 #import "FBSDKProfileProtocols.h"
 #import "FBSDKRestrictiveData.h"
+#import "FBSDKShareDialogConfiguration+Testing.h"
 #import "FBSDKSKAdNetworkConversionConfiguration.h"
 #import "FBSDKSKAdNetworkEvent.h"
 #import "FBSDKSKAdNetworkReporter.h"

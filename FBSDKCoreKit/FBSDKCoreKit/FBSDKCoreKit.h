@@ -78,6 +78,7 @@
  #import "FBSDKMutableCopying.h"
  #import "FBSDKProfile.h"
  #import "FBSDKProfilePictureView.h"
+ #import "FBSDKShareDialogConfiguration.h"
  #import "FBSDKURL.h"
  #import "FBSDKURLOpening.h"
  #import "FBSDKWebDialog.h"
