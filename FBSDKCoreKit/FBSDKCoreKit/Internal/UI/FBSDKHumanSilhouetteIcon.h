@@ -22,7 +22,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "FBSDKIcon.h"
+#import "FBSDKIcon+Internal.h"
 
 NS_SWIFT_NAME(HumanSilhouetteIcon)
 @interface FBSDKHumanSilhouetteIcon : FBSDKIcon

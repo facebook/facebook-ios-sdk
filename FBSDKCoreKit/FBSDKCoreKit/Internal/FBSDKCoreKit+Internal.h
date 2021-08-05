@@ -54,7 +54,6 @@
  #import "FBSDKGraphRequestFactory.h"
  #import "FBSDKGraphRequestMetadata.h"
  #import "FBSDKGraphRequestPiggybackManager.h"
- #import "FBSDKIcon.h"
  #import "FBSDKImageDownloader.h"
  #import "FBSDKKeychainStore.h"
  #import "FBSDKLogger.h"
@@ -123,7 +122,6 @@
  #import "TokenCaching/FBSDKKeychainStore.h"
  #import "TokenCaching/FBSDKTokenCache.h"
  #import "UI/FBSDKButton+Subclass.h"
- #import "UI/FBSDKIcon.h"
  #import "UI/FBSDKLogo.h"
 
 #endif

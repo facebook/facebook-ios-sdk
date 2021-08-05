@@ -18,21 +18,19 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
 NS_SWIFT_NAME(Icon)
 @interface FBSDKIcon : NSObject
 
-- (UIImage *)imageWithSize:(CGSize)size
-NS_SWIFT_NAME(image(size:));
-
-- (UIImage *)imageWithSize:(CGSize)size scale:(CGFloat)scale
-NS_SWIFT_NAME(image(size:scale:));
-
-- (UIImage *)imageWithSize:(CGSize)size color:(UIColor *)color
-NS_SWIFT_NAME(image(size:color:));
-
-- (UIImage *)imageWithSize:(CGSize)size scale:(CGFloat)scale color:(UIColor *)color
-NS_SWIFT_NAME(image(size:scale:color:));
-
-- (CGPathRef)pathWithSize:(CGSize)size;
+- (nullable CGPathRef)pathWithSize:(CGSize)size;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -20,17 +20,10 @@
 
 #if !TARGET_OS_TV
 
-#import <UIKit/UIKit.h>
-
-#ifdef FBSDKCOCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
-#import "FBSDKCoreKit+Internal.h"
-#endif
+#import "FBSDKCoreKitImport.h"
 
 NS_SWIFT_NAME(MessengerIcon)
 @interface FBSDKMessengerIcon : FBSDKIcon
-
 @end
 
 #endif

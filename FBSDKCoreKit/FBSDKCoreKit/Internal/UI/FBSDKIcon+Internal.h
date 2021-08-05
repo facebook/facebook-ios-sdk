@@ -16,11 +16,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+#if FBSDK_SWIFT_PACKAGE
+ #import "FBSDKIcon.h"
+#else
+ #import <FBSDKCoreKit/FBSDKIcon.h>
+#endif
 
-#import "FBSDKIcon+Internal.h"
+@interface FBSDKIcon (Internal)
 
-NS_SWIFT_NAME(FBLogo)
-@interface FBSDKLogo : FBSDKIcon
+- (UIImage *)imageWithSize:(CGSize)size
+NS_SWIFT_NAME(image(size:));
+
+- (UIImage *)imageWithSize:(CGSize)size scale:(CGFloat)scale
+NS_SWIFT_NAME(image(size:scale:));
+
+- (UIImage *)imageWithSize:(CGSize)size color:(UIColor *)color
+NS_SWIFT_NAME(image(size:color:));
+
+- (UIImage *)imageWithSize:(CGSize)size scale:(CGFloat)scale color:(UIColor *)color
+NS_SWIFT_NAME(image(size:scale:color:));
 
 @end
