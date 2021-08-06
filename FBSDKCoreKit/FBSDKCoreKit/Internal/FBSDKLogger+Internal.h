@@ -18,46 +18,39 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKLogger.h"
 #if FBSDK_SWIFT_PACKAGE
-#import "FBSDKLoggingBehavior.h"
+ #import "FBSDKLoggingBehavior.h"
 #else
-#import <FBSDKCoreKit/FBSDKLoggingBehavior.h>
+ #import <FBSDKCoreKit/FBSDKLoggingBehavior.h>
 #endif
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
+@interface FBSDKLogger (Internal)
 
-  Simple logging utility for conditionally logging strings and then emitting them
- via NSLog().
-
- @unsorted
- */
-NS_SWIFT_NAME(Logger)
-@interface FBSDKLogger : NSObject
+// MARK: - Properties
 
 // Access current accumulated contents of the logger.
-@property (copy, nonatomic, readonly) NSString *contents;
+@property (nonatomic, readonly, copy) NSString *contents;
 
 // Each FBSDKLogger gets a unique serial number to allow the client to log these numbers and, for instance, correlation of Request/Response
 @property (nonatomic, readonly) NSUInteger loggerSerialNumber;
 
 // The logging behavior of this logger.
-@property (copy, nonatomic, readonly) FBSDKLoggingBehavior loggingBehavior;
+@property (nonatomic, readonly, copy) FBSDKLoggingBehavior loggingBehavior;
 
 // Is the current logger instance active, based on its loggingBehavior?
-@property (nonatomic, readonly, getter=isActive) BOOL active;
+@property (nonatomic, readonly, getter = isActive) BOOL active;
 
-//
-// Instance methods
-//
+// MARK: - Instance Methods
 
 // Create with specified logging behavior
 - (instancetype)initWithLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior;
 
 // Append string, or key/value pair
 - (void)appendString:(NSString *)string;
-- (void)appendFormat:(NSString *)formatString, ... NS_FORMAT_FUNCTION(1,2);
+- (void)appendFormat:(NSString *)formatString, ... NS_FORMAT_FUNCTION(1, 2);
 - (void)appendKey:(NSString *)key value:(NSString *)value;
 
 /// Logs entry if the current Settings contains the logging behavior for this logger instance
@@ -66,22 +59,15 @@ NS_SWIFT_NAME(Logger)
 // Emit log, clearing out the logger contents.
 - (void)emitToNSLog;
 
-//
-// Class methods
-//
+// MARK: - Class Methods
 
-//
 // Return a globally unique serial number to be used for correlating multiple output from the same logger.
 //
 + (NSUInteger)generateSerialNumber;
 
-// Simple helper to write a single log entry, based upon whether the behavior matches a specified on.
-+ (void)singleShotLogEntry:(FBSDKLoggingBehavior)loggingBehavior
-                  logEntry:(NSString *)logEntry;
-
 + (void)singleShotLogEntry:(FBSDKLoggingBehavior)loggingBehavior
               timestampTag:(NSObject *)timestampTag
-              formatString:(NSString *)formatString, ... NS_FORMAT_FUNCTION(3,4);
+              formatString:(NSString *)formatString, ... NS_FORMAT_FUNCTION(3, 4);
 
 // Register a timestamp label with the "current" time, to then be retrieved by singleShotLogEntry
 // to include a duration.
@@ -91,7 +77,6 @@ NS_SWIFT_NAME(Logger)
 // When logging strings, replace all instances of 'replace' with instances of 'replaceWith'.
 + (void)registerStringToReplace:(NSString *)replace
                     replaceWith:(NSString *)replaceWith;
-
 @end
 
 NS_ASSUME_NONNULL_END

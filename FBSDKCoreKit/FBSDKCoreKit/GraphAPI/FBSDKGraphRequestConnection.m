@@ -30,7 +30,7 @@
 #import "FBSDKGraphRequestMetadata.h"
 #import "FBSDKGraphRequestPiggybackManagerProvider.h"
 #import "FBSDKInternalUtility+Internal.h"
-#import "FBSDKLogger.h"
+#import "FBSDKLogger+Internal.h"
 #import "FBSDKOperatingSystemVersionComparing.h"
 #import "FBSDKSettingsProtocol.h"
 #import "FBSDKURLSession+URLSessionProxying.h"

@@ -98,7 +98,6 @@
  #import "ErrorRecovery/FBSDKErrorRecoveryAttempter.h"
  #import "FBSDKDynamicFrameworkLoader.h"
  #import "FBSDKImageDownloader.h"
- #import "FBSDKLogger.h"
  #import "FBSDKLogger+Logging.h"
  #import "FBSDKLogging.h"
  #import "FBSDKMath.h"

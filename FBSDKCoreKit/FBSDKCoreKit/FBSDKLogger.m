@@ -17,6 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "FBSDKLogger.h"
+#import "FBSDKLogger+Internal.h"
 
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKInternalUtility+Internal.h"
@@ -29,10 +30,12 @@ static NSMutableDictionary *g_startTimesWithTags = nil;
 @interface FBSDKLogger ()
 
 @property (nonatomic, readonly, strong) NSMutableString *internalContents;
-
 @end
 
 @implementation FBSDKLogger
+NSUInteger _loggerSerialNumber;
+FBSDKLoggingBehavior _loggingBehavior;
+BOOL _active;
 
 // Lifetime
 
@@ -62,6 +65,21 @@ static NSMutableDictionary *g_startTimesWithTags = nil;
   if (_active) {
     _internalContents = [NSMutableString stringWithString:contents];
   }
+}
+
+- (NSUInteger)loggerSerialNumber
+{
+  return _loggerSerialNumber;
+}
+
+- (FBSDKLoggingBehavior)loggingBehavior
+{
+  return _loggingBehavior;
+}
+
+- (BOOL)isActive
+{
+  return _active;
 }
 
 // Public instance methods
