@@ -120,7 +120,7 @@ static FBSDKRestrictiveDataFilterManager *_instance;
   return nil;
 }
 
-- (void)processEvents:(NSMutableArray<NSMutableDictionary<NSString *, id> *> *)events
+- (void)processEvents:(NSArray<NSMutableDictionary<NSString *, id> *> *)events
 {
   @try {
     if (!self.isRestrictiveEventFilterEnabled) {

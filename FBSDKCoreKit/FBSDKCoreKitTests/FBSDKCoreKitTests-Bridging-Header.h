@@ -217,5 +217,10 @@ id getVariableFromInstance(NSObject *_Nullable instance, NSString *_Nullable var
 @interface FBSDKSKAdNetworkConversionConfigurationTests : XCTestCase
 @end
 
+@interface FBSDKRestrictiveDataFilterManager (Testing)
+- (nullable NSString *)getMatchedDataTypeWithEventName:(NSString *)eventName
+                                              paramKey:(NSString *)paramKey;
+@end
+
 
 NS_ASSUME_NONNULL_END
