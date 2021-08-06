@@ -92,6 +92,7 @@
 #import "FBSDKCrashObserver.h"
 #import "FBSDKDataPersisting.h"
 #import "FBSDKError+Testing.h"
+#import "FBSDKErrorConfiguration.h"
 #import "FBSDKErrorConfigurationProvider.h"
 #import "FBSDKErrorConfigurationProviding.h"
 #import "FBSDKErrorReport+Testing.h"
