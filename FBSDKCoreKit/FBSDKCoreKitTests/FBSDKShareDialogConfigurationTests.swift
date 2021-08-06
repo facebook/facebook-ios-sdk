@@ -77,5 +77,4 @@ class FBSDKShareDialogConfigurationTests: XCTestCase {
       "Should delegate to the underlying server configuration"
     )
   }
-
 }
