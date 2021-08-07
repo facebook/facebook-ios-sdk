@@ -23,7 +23,11 @@
  #import "FBSDKMetadataIndexer.h"
  #import "FBSDKMetadataIndexing.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FBSDKMetadataIndexer (MetadataIndexing) <FBSDKMetadataIndexing>
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

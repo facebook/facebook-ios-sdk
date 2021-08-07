@@ -23,9 +23,12 @@
 #import <Foundation/Foundation.h>
 #import <WebKit/WebKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(HybridAppEventsScriptMessageHandler)
 @interface FBSDKHybridAppEventsScriptMessageHandler : NSObject <WKScriptMessageHandler>
-
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

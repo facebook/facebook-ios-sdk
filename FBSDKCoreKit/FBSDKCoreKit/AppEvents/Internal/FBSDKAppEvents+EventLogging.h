@@ -24,5 +24,9 @@
 
 #import "FBSDKEventLogging.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FBSDKAppEvents (EventLogging) <FBSDKEventLogging>
 @end
+
+NS_ASSUME_NONNULL_END
