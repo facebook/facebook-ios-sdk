@@ -532,6 +532,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 99508709B4D9891041ECA524 /* Build configuration list for PBXNativeTarget "FBSDKCoreKit_Basics" */;
 			buildPhases = (
+				3633B7A38CDA61B14A20A057 /* Run Swiftlint */,
 				35500F6E80E377375261C74C /* Headers */,
 				FD1E1BF25309B3CF2B72A84E /* Sources */,
 			);
@@ -548,6 +549,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F42FD0B35B40901A75E0D24E /* Build configuration list for PBXNativeTarget "FBSDKCoreKit_Basics-Dynamic" */;
 			buildPhases = (
+				3DD8A9DA71E732A5DE3089CF /* Run Swiftlint */,
 				81D7A5312DF19D4DD3A72A1B /* Headers */,
 				0D904B7C25858C35F1AF3C61 /* Sources */,
 				8C503A0F4DA503D30E170D76 /* Frameworks */,
@@ -565,6 +567,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D4CCF155D99D149BE64710DA /* Build configuration list for PBXNativeTarget "FBSDKCoreKit_Basics_TV-Dynamic" */;
 			buildPhases = (
+				664A0A23E2EAC69D02CFEA5E /* Run Swiftlint */,
 				BF49C97005CA0BEEFE3A8C61 /* Headers */,
 				C014CB029ADA5EEEBB4C70F4 /* Sources */,
 				B56B66886800BB5D2DFCED03 /* Frameworks */,
@@ -600,6 +603,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8DA134424FE2C2BC2FD71A3E /* Build configuration list for PBXNativeTarget "FBSDKCoreKit_Basics_TV" */;
 			buildPhases = (
+				AC80AAC06FFE305504124381 /* Run Swiftlint */,
 				1439A7CFF3B789FBAF870B12 /* Headers */,
 				7F576FB878B13F9F5B9730B5 /* Sources */,
 			);
@@ -682,6 +686,78 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "#!/bin/sh\n# Copyright (c) 2014-present, Facebook, Inc. All rights reserved.\n#\n# You are hereby granted a non-exclusive, worldwide, royalty-free license to use,\n# copy, modify, and distribute this software in source code or binary form for use\n# in connection with the web services and APIs provided by Facebook.\n#\n# As with any software that integrates with the Facebook platform, your use of\n# this software is subject to the Facebook Developer Principles and Policies\n# [http://developers.facebook.com/policy/]. This copyright notice shall be\n# included in all copies or substantial portions of the software.\n#\n# THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS\n# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR\n# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER\n# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN\n# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n\n# --------------\n# Main Script\n# --------------\n\n# shellcheck disable=SC1091\n# shellcheck source=exclude-architectures.sh\n. \"${SOURCE_ROOT}/../scripts/exclude-architectures.sh\"\n\nUNIVERSAL_TV_BUILD_FOLDER=../build/tv/\n\n# make the output directory and delete the framework directory\nmkdir -p \"${UNIVERSAL_TV_BUILD_FOLDER}\"\nrm -rf \"${UNIVERSAL_TV_BUILD_FOLDER}/${PROJECT_NAME}.framework\"\n\n# get target by removing '-Universal' from $TARGET_NAME\nTARGET=${TARGET_NAME%-Universal}\n\n# Step 1. Build Device and Simulator versions\nxcodebuild -target \"${TARGET}\" \\\n  ONLY_ACTIVE_ARCH=NO \\\n  -configuration \"${CONFIGURATION}\" \\\n  -sdk appletvos \\\n  BUILD_DIR=\"${BUILD_DIR}\" \\\n  BUILD_ROOT=\"${BUILD_ROOT}\" \\\n  BUILD_LIBRARY_FOR_DISTRIBUTION=YES \\\n  clean build\n\nxcodebuild -target \"${TARGET}\" \\\n  ONLY_ACTIVE_ARCH=NO \\\n  -configuration \"${CONFIGURATION}\" \\\n  -sdk appletvsimulator \\\n  BUILD_DIR=\"${BUILD_DIR}\" \\\n  BUILD_ROOT=\"${BUILD_ROOT}\" \\\n  BUILD_LIBRARY_FOR_DISTRIBUTION=YES \\\n  clean build\n\n# Step 2. Copy the framework structure to the universal folder\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-appletvos/${PROJECT_NAME}.framework\" \"${UNIVERSAL_TV_BUILD_FOLDER}/\"\n\n# Step 3. Create universal binary file using lipo and place the combined executable in the copied framework directory\nlipo -create -output \"${UNIVERSAL_TV_BUILD_FOLDER}/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \\\n  \"${BUILD_DIR}/${CONFIGURATION}-appletvsimulator/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \\\n  \"${BUILD_DIR}/${CONFIGURATION}-appletvos/${PROJECT_NAME}.framework/${PROJECT_NAME}\"\n";
+		};
+		3633B7A38CDA61B14A20A057 /* Run Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Swiftlint";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../scripts/build_phase_swiftlint.sh;
+		};
+		3DD8A9DA71E732A5DE3089CF /* Run Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Swiftlint";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../scripts/build_phase_swiftlint.sh;
+		};
+		664A0A23E2EAC69D02CFEA5E /* Run Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Swiftlint";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../scripts/build_phase_swiftlint.sh;
+		};
+		AC80AAC06FFE305504124381 /* Run Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Swiftlint";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../scripts/build_phase_swiftlint.sh;
 		};
 /* End PBXShellScriptBuildPhase section */
 
