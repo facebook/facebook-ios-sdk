@@ -16,31 +16,22 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKGamingContext.h"
+import LegacyGamingServices
+import XCTest
 
-@implementation FBSDKGamingContext
+class FBSDKGamingContextTests: XCTestCase {
 
-static FBSDKGamingContext *_currentContext;
-
-+ (instancetype)createContextWithIdentifier:(NSString *)identifier
-{
-  if (!identifier || (identifier.length == 0)) {
-    return nil;
+  func testCreating() {
+    XCTAssertNotNil(
+      GamingContext.createContext(withIdentifier: name),
+      "Should be able to create a context with a valid identifier"
+    )
   }
-  FBSDKGamingContext *context = [FBSDKGamingContext new];
-  context.identifier = identifier;
 
-  return context;
+  func testCreatingWithEmptyIdentifier() {
+    XCTAssertNil(
+      GamingContext.createContext(withIdentifier: ""),
+      "Should not create a context with an empty identifier"
+    )
+  }
 }
-
-+ (FBSDKGamingContext *)currentContext
-{
-  return _currentContext;
-}
-
-+ (void)setCurrentContext:(FBSDKGamingContext *)context
-{
-  _currentContext = context;
-}
-
-@end

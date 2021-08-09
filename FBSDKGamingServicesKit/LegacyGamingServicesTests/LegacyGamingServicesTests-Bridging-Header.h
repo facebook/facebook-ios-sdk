@@ -26,6 +26,7 @@
 #import "FBSDKFileHandleFactory.h"
 #import "FBSDKFileHandling.h"
 #import "FBSDKFriendFinderDialog+Testing.h"
+#import "FBSDKGamingContext+Internal.h"
 #import "FBSDKGamingGroupIntegration+Testing.h"
 #import "FBSDKGamingImageUploader+Testing.h"
 #import "FBSDKGamingPayload+Testing.h"

@@ -41,10 +41,10 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
   override func tearDown() {
     super.tearDown()
 
-    GamingContext.current().identifier = nil
+    GamingContext.current = nil
   }
 
-  func testDialogCompletesSucessfully() throws {
+  func testDialogCompletingWithValidContextID() throws {
     let dialog = try XCTUnwrap(SampleContextDialogs.chooseContextDialogWithoutContentValues(delegate: self))
     dialog.show()
     let dialogURLOpenerDelegate = try XCTUnwrap(dialog as? URLOpening)
@@ -55,6 +55,27 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
     XCTAssertTrue(dialogDidCompleteSuccessfully)
     XCTAssertFalse(dialogDidCancel)
     XCTAssertNil(dialogError)
+  }
+
+  func testCompletingWithEmptyContextID() throws {
+    GamingContext.current = GamingContext.createContext(withIdentifier: name)
+
+    let url = URL(string: "fbabc123://gaming/contextchoose/?context_id=")
+
+    let dialog = try XCTUnwrap(SampleContextDialogs.chooseContextDialogWithoutContentValues(delegate: self))
+    dialog.show()
+    let dialogURLOpenerDelegate = try XCTUnwrap(dialog as? URLOpening)
+    dialogURLOpenerDelegate
+      .application(UIApplication.shared, open: url, sourceApplication: "", annotation: nil)
+
+    XCTAssertTrue(
+      dialogDidCancel,
+      "Should cancel if a context cannot be created from the URL"
+    )
+    XCTAssertNil(
+      GamingContext.current,
+      "Should clear the current context when completing with an invalid url"
+    )
   }
 
   func testDialogCancels() throws {

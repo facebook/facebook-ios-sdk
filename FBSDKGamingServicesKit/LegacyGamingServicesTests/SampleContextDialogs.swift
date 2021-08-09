@@ -17,14 +17,6 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 enum SampleContextDialogs {
-  static func showSwitchContextDialog(withDelegate delegate: ContextDialogDelegate) -> SwitchContextDialog? {
-    let content = SwitchContextContent(contextID: "1234567890")
-    let dialog = SwitchContextDialog(content: content,
-                                     windowFinder: TestWindowFinder(),
-                                     delegate: delegate)
-    dialog.show()
-    return dialog
-  }
 
   static func showCreateContextDialog(withDelegate delegate: ContextDialogDelegate) -> CreateContextDialog? {
     let content = CreateContextContent(playerID: "1234567890")

@@ -23,18 +23,26 @@ class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
   var dialogDidCompleteSuccessfully: Bool = false
   var dialogDidCancel: Bool = false
   var dialogError: NSError?
+  let windowFinder = TestWindowFinder()
+  let content = SwitchContextContent(contextID: "1234567890")
+  lazy var dialog = SwitchContextDialog(
+    content: content,
+    windowFinder: windowFinder,
+    delegate: self
+  )
 
   override func setUp() {
     super.setUp()
+
     self.dialogDidCompleteSuccessfully = false
     self.dialogDidCancel = false
     self.dialogError = nil
   }
 
   override func tearDown() {
-    super.tearDown()
+    GamingContext.current = nil
 
-    GamingContext.current().identifier = nil
+    super.tearDown()
   }
 
   func testShowDialogWithInvalidContent() {
@@ -47,15 +55,17 @@ class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
   }
 
   func testShowDialogWithValidContent() {
-    let dialog = SampleContextDialogs.showSwitchContextDialog(withDelegate: self)
+    dialog.show()
+
     XCTAssertNotNil(dialog)
     XCTAssertNil(dialogError)
-    XCTAssertNotNil(dialog?.currentWebDialog)
+    XCTAssertNotNil(dialog.currentWebDialog)
   }
 
   func testDialogSuccessfullyCompletes() {
-    let dialog = SampleContextDialogs.showSwitchContextDialog(withDelegate: self)
-    guard let webDialogDelegate = dialog?.currentWebDialog as? WebDialogViewDelegate else {
+    dialog.show()
+
+    guard let webDialogDelegate = dialog.currentWebDialog as? WebDialogViewDelegate else {
       return XCTFail("Web dialog should be a web dialog view delegate")
     }
 
@@ -68,27 +78,56 @@ class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
     XCTAssertNil(dialogError)
   }
 
-  func testDialogSuccessfullyUpdatesGamingContext() {
-    let dialog = SampleContextDialogs.showSwitchContextDialog(withDelegate: self)
-    guard let webDialogDelegate = dialog?.currentWebDialog as? WebDialogViewDelegate else {
-      return XCTFail("Web dialog should be a web dialog view delegate")
-    }
+  func testDialogSuccessfullyCreatesGamingContext() throws {
+    XCTAssertNil(GamingContext.current, "Should not have a context by default")
+
+    dialog.show()
+
+    let webDialogDelegate = try XCTUnwrap(dialog.currentWebDialog as? WebDialogViewDelegate)
     let resultContextIDKey = "context_id"
     let resultContextID = "1234"
     let results = [resultContextIDKey: resultContextID]
     webDialogDelegate.webDialogView(FBWebDialogView(), didCompleteWithResults: results)
 
+    XCTAssertEqual(
+      resultContextID,
+      GamingContext.current?.identifier,
+      "Should create a gaming context using the identifier from the web dialog result"
+    )
     XCTAssertNotNil(webDialogDelegate)
-    XCTAssertNotNil(GamingContext.current().identifier)
-    XCTAssertEqual(resultContextID, GamingContext.current().identifier)
+    XCTAssertNotNil(GamingContext.current?.identifier)
+    XCTAssertTrue(dialogDidCompleteSuccessfully)
+    XCTAssertFalse(dialogDidCancel)
+    XCTAssertNil(dialogError)
+  }
+
+  func testDialogSuccessfullyUpdatesGamingContext() throws {
+    GamingContext.current = GamingContext.createContext(withIdentifier: "foo")
+
+    dialog.show()
+
+    let webDialogDelegate = try XCTUnwrap(dialog.currentWebDialog as? WebDialogViewDelegate)
+    let resultContextIDKey = "context_id"
+    let resultContextID = "1234"
+    let results = [resultContextIDKey: resultContextID]
+    webDialogDelegate.webDialogView(FBWebDialogView(), didCompleteWithResults: results)
+
+    XCTAssertEqual(
+      resultContextID,
+      GamingContext.current?.identifier,
+      "Should update the current gaming context to use the identifer from the web dialog result"
+    )
+    XCTAssertNotNil(webDialogDelegate)
+    XCTAssertNotNil(GamingContext.current?.identifier)
     XCTAssertTrue(dialogDidCompleteSuccessfully)
     XCTAssertFalse(dialogDidCancel)
     XCTAssertNil(dialogError)
   }
 
   func testDialogCompletesWithServerError() throws {
-    let dialog = SampleContextDialogs.showSwitchContextDialog(withDelegate: self)
-    let webDialogDelegate = try XCTUnwrap(dialog?.currentWebDialog as? WebDialogViewDelegate)
+    dialog.show()
+
+    let webDialogDelegate = try XCTUnwrap(dialog.currentWebDialog as? WebDialogViewDelegate)
     let resultErrorCodeKey = "error_code"
     let resultErrorCode = 1234
     let resultErrorMessageKey = "error_message"
@@ -105,8 +144,8 @@ class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
   }
 
   func testDialogCancels() throws {
-    let dialog = SampleContextDialogs.showSwitchContextDialog(withDelegate: self)
-    let webDialogDelegate = try XCTUnwrap(dialog?.currentWebDialog as? WebDialogViewDelegate)
+    dialog.show()
+    let webDialogDelegate = try XCTUnwrap(dialog.currentWebDialog as? WebDialogViewDelegate)
 
     webDialogDelegate.webDialogViewDidCancel(FBWebDialogView())
 
@@ -117,8 +156,8 @@ class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
   }
 
   func testDialogFailsWithError() throws {
-    let dialog = SampleContextDialogs.showSwitchContextDialog(withDelegate: self)
-    let webDialogDelegate = try XCTUnwrap(dialog?.currentWebDialog as? WebDialogViewDelegate)
+    dialog.show()
+    let webDialogDelegate = try XCTUnwrap(dialog.currentWebDialog as? WebDialogViewDelegate)
 
     let error = NSError(domain: "Test", code: 1, userInfo: nil)
     webDialogDelegate.webDialogView(FBWebDialogView(), didFailWithError: error)

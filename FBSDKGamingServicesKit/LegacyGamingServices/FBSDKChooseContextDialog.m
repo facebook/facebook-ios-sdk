@@ -24,6 +24,7 @@
 
  #import "FBSDKChooseContextContent.h"
  #import "FBSDKGamingContext.h"
+ #import "FBSDKGamingContext+Internal.h"
  #import "FBSDKGamingServicesCoreKitBasicsImport.h"
 
 // Deeplink url constants
@@ -144,9 +145,13 @@
     return nil;
   }
   NSString *contextID = contextIDQueryItem.value;
-  [[FBSDKGamingContext currentContext] setIdentifier:contextID];
+  if (contextID && (contextID.length > 0)) {
+    FBSDKGamingContext.currentContext = [FBSDKGamingContext createContextWithIdentifier:contextID];
+  } else {
+    FBSDKGamingContext.currentContext = nil;
+  }
 
-  return [FBSDKGamingContext currentContext];
+  return FBSDKGamingContext.currentContext;
 }
 
  #pragma mark - FBSDKURLOpening
@@ -169,6 +174,8 @@
   FBSDKGamingContext *context = [self _gamingContextFromURL:url];
   if (context) {
     [self.delegate contextDialogDidComplete:self];
+  } else {
+    [self.delegate contextDialogDidCancel:self];
   }
   return isGamingUrl;
 }

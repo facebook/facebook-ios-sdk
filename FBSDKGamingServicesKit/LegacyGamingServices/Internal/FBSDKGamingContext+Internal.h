@@ -16,31 +16,19 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import <Foundation/Foundation.h>
+
 #import "FBSDKGamingContext.h"
 
-@implementation FBSDKGamingContext
+NS_ASSUME_NONNULL_BEGIN
 
-static FBSDKGamingContext *_currentContext;
+@interface FBSDKGamingContext (Internal)
 
-+ (instancetype)createContextWithIdentifier:(NSString *)identifier
-{
-  if (!identifier || (identifier.length == 0)) {
-    return nil;
-  }
-  FBSDKGamingContext *context = [FBSDKGamingContext new];
-  context.identifier = identifier;
-
-  return context;
-}
-
-+ (FBSDKGamingContext *)currentContext
-{
-  return _currentContext;
-}
-
-+ (void)setCurrentContext:(FBSDKGamingContext *)context
-{
-  _currentContext = context;
-}
+/**
+ Creates a context with an identifier. If the identifier is nil or empty, a context will not be created.
+ */
++ (nullable instancetype)createContextWithIdentifier:(NSString *)identifier;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -20,10 +20,10 @@
 typedef NS_ENUM(NSInteger, FBSDKGamingContextType) {
   FBSDKGamingContextGeneric = 0,
   FBSDKGamingContextLink,
-  FBSDKGamingContextSolo,
 };
 
 NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(GamingContext)
 @interface FBSDKGamingContext : NSObject
 
@@ -31,22 +31,22 @@ NS_SWIFT_NAME(GamingContext)
 + (instancetype)new NS_UNAVAILABLE;
 
 /**
-A shared object that holds data about the current user's  game instance wihich could be solo game or multiplayer game with other users.
+A shared object that holds data about the current user's  game instance which could be solo game or multiplayer game with other users.
 */
-+ (instancetype)currentContext;
+@property (nullable, class, nonatomic) FBSDKGamingContext *currentContext;
 
 /**
- A unique identifier for the current game context. This represents a specific game instance that the user is playing in. The identifier will be null if game is being played in a solo context.
+ A unique identifier for the current game context. This represents a specific game instance that the user is playing in.
  */
-@property (nullable) NSString* identifier;
+@property (nonatomic) NSString* identifier;
 
 /**
   The context type which identifies the source of the user's game instance.
     * GENERIC -
-    * LiINK -
-    * SOLO - Default context, where the player is the only participant
+    * LINK -
  */
-@property (readonly, nullable) FBSDKGamingContextType* type;
+@property (readonly, nullable) FBSDKGamingContextType* type
+DEPRECATED_MSG_ATTRIBUTE("The Type property is deprecated and will be removed in the next major release. If you believe it's useful please give us feedback.");
 
 /**
   The number of players in the current user's  game instance
@@ -54,4 +54,5 @@ A shared object that holds data about the current user's  game instance wihich c
 @property (readonly, nullable) NSInteger* size;
 
 @end
+
 NS_ASSUME_NONNULL_END

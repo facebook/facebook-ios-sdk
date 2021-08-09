@@ -35,7 +35,7 @@ class CreateContextDialogTests: XCTestCase, ContextDialogDelegate {
   override func tearDown() {
     super.tearDown()
 
-    GamingContext.current().identifier = nil
+    GamingContext.current = nil
   }
 
   func testShowDialogWithInvalidContent() {
@@ -71,19 +71,51 @@ class CreateContextDialogTests: XCTestCase, ContextDialogDelegate {
     XCTAssertNil(dialogError)
   }
 
-  func testDialogSuccessfullyUpdatesGamingContext() throws {
+  func testDialogSuccessfullyCreatesGamingContext() throws {
+    XCTAssertNil(GamingContext.current, "Should not have a context by default")
+
     let dialog = SampleContextDialogs.showCreateContextDialog(withDelegate: self)
     let webDialogDelegate = try XCTUnwrap(dialog?.currentWebDialog as? WebDialogViewDelegate)
     let testWindowFinder = try XCTUnwrap(dialog?.currentWebDialog?.windowFinder as? TestWindowFinder)
     let resultContextIDKey = "context_id"
     let resultContextID = "1234"
     let results = [resultContextIDKey: resultContextID]
+
     webDialogDelegate.webDialogView(FBWebDialogView(), didCompleteWithResults: results)
 
+    XCTAssertEqual(
+      resultContextID,
+      GamingContext.current?.identifier,
+      "Should create a gaming context using the identifier from the web dialog result"
+    )
     XCTAssertNotNil(webDialogDelegate)
     XCTAssertTrue(testWindowFinder.wasFindWindowCalled)
-    XCTAssertNotNil(GamingContext.current().identifier)
-    XCTAssertEqual(resultContextID, GamingContext.current().identifier)
+    XCTAssertNotNil(GamingContext.current?.identifier)
+    XCTAssertTrue(dialogDidCompleteSuccessfully)
+    XCTAssertFalse(dialogDidCancel)
+    XCTAssertNil(dialogError)
+  }
+
+  func testDialogSuccessfullyUpdatesGamingContext() throws {
+    GamingContext.current = GamingContext.createContext(withIdentifier: "foo")
+
+    let dialog = SampleContextDialogs.showCreateContextDialog(withDelegate: self)
+    let webDialogDelegate = try XCTUnwrap(dialog?.currentWebDialog as? WebDialogViewDelegate)
+    let testWindowFinder = try XCTUnwrap(dialog?.currentWebDialog?.windowFinder as? TestWindowFinder)
+    let resultContextIDKey = "context_id"
+    let resultContextID = "1234"
+    let results = [resultContextIDKey: resultContextID]
+
+    webDialogDelegate.webDialogView(FBWebDialogView(), didCompleteWithResults: results)
+
+    XCTAssertEqual(
+      resultContextID,
+      GamingContext.current?.identifier,
+      "Should update the current gaming context to use the identifer from the web dialog result"
+    )
+    XCTAssertNotNil(webDialogDelegate)
+    XCTAssertTrue(testWindowFinder.wasFindWindowCalled)
+    XCTAssertNotNil(GamingContext.current?.identifier)
     XCTAssertTrue(dialogDidCompleteSuccessfully)
     XCTAssertFalse(dialogDidCancel)
     XCTAssertNil(dialogError)
@@ -103,7 +135,7 @@ class CreateContextDialogTests: XCTestCase, ContextDialogDelegate {
 
     XCTAssertNotNil(webDialogDelegate)
     XCTAssertTrue(testWindowFinder.wasFindWindowCalled)
-    XCTAssertNil(GamingContext.current().identifier)
+    XCTAssertNil(GamingContext.current?.identifier)
     XCTAssertEqual(resultErrorCode, error.code)
     XCTAssertEqual(resultErrorMessage, error.userInfo.values.first as? String)
     XCTAssertFalse(dialogDidCompleteSuccessfully)
