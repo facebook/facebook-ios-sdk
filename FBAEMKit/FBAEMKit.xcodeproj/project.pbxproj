@@ -481,6 +481,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3DAE5E55E94C00A3298C4D18 /* Build configuration list for PBXNativeTarget "FBAEMKit" */;
 			buildPhases = (
+				3D36D35F641258BC03083377 /* Run Swiftlint */,
 				7B6D0A88A00E7A3755EDC0CB /* Headers */,
 				0A69EF2154EA15D60FB62FDF /* Sources */,
 			);
@@ -498,6 +499,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F389663682B682610CDA9CC3 /* Build configuration list for PBXNativeTarget "FBAEMKit-Dynamic" */;
 			buildPhases = (
+				A83F2AEF7D2252DC7046DED2 /* Run Swiftlint */,
 				169DC68E6A20F7245E56EA82 /* Headers */,
 				0CABBA55CDC3EFFD30009D0A /* Sources */,
 				C93AF827E0B10D0FD8B9F8FD /* Frameworks */,
@@ -578,6 +580,42 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		3D36D35F641258BC03083377 /* Run Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Swiftlint";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../scripts/build_phase_swiftlint.sh;
+		};
+		A83F2AEF7D2252DC7046DED2 /* Run Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Swiftlint";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../scripts/build_phase_swiftlint.sh;
+		};
 		E5D02A1544AEC11F2913500D /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

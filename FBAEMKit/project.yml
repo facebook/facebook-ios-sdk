@@ -57,6 +57,9 @@ targets:
     configFiles:
       Debug: Configurations/FBAEMKit.xcconfig
       Release: Configurations/FBAEMKit.xcconfig
+    preBuildScripts:
+      - name: Run Swiftlint
+        script: ../scripts/build_phase_swiftlint.sh
   FBAEMKit-Dynamic:
     type: framework
     platform: iOS
@@ -79,6 +82,9 @@ targets:
       Release: Configurations/FBAEMKit-Dynamic.xcconfig
     settings:
       PRODUCT_NAME: FBAEMKit
+    preBuildScripts:
+      - name: Run Swiftlint
+        script: ../scripts/build_phase_swiftlint.sh
   FBAEMKitTests:
     type: bundle.unit-test
     platform: iOS
