@@ -22,11 +22,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKAuthenticationToken (Testing)
 
+@property (class, nonatomic) FBSDKAuthenticationToken *currentAuthenticationToken;
+
 - (instancetype)initWithTokenString:(NSString *)tokenString
                               nonce:(NSString *)nonce;
-
-+ (void)setCurrentAuthenticationToken:(nullable FBSDKAuthenticationToken *)token
-               shouldPostNotification:(BOOL)shouldPostNotification;
 
 @end
 

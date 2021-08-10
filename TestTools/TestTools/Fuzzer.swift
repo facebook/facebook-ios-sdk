@@ -70,8 +70,8 @@ public class Fuzzer: NSObject {
     ["Foo": ["a", 1, [:]]]
   ]
 
-  public class var random: Any {
-    values.randomElement() ?? values[0]
+  public class var random: AnyObject {
+    values.randomElement() as AnyObject
   }
 
   /// Randomizes the values of a JSON object
