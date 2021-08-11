@@ -28,7 +28,7 @@
 
   self.appURLSchemeProvider = [TestAppURLSchemeProvider new];
   self.logger = [TestLogger new];
-  self.urlOpener = [[TestURLOpener alloc] initWithCanOpenUrl:YES];
+  self.urlOpener = [[TestInternalURLOpener alloc] initWithCanOpenUrl:YES];
   self.bridgeAPIResponseFactory = [TestBridgeApiResponseFactory new];
 
   [self configureSDK];

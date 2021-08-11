@@ -16,44 +16,20 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import FBSDKCoreKit
-import Foundation
+#import <Foundation/Foundation.h>
+#import <UIKit/UIApplication.h>
 
-@objcMembers
-class TestURLOpener: NSObject, URLOpener {
-  var capturedOpenUrl: URL?
-  var capturedCanOpenUrl: URL?
-  var openUrlStubs = [URL: Bool]()
-  let canOpenUrl: Bool
-  var capturedOpenUrlCompletion: ((Bool) -> Void)?
+NS_ASSUME_NONNULL_BEGIN
 
-  init(canOpenUrl: Bool = false) {
-    self.canOpenUrl = canOpenUrl
-  }
+NS_SWIFT_NAME(InternalURLOpener)
+@protocol FBSDKInternalURLOpener
 
-  func stubOpen(url: URL, success: Bool) {
-    openUrlStubs[url] = success
-  }
+- (BOOL)canOpenURL:(NSURL *)url;
+- (BOOL)openURL:(NSURL *)url;
+- (void)openURL:(NSURL *)url
+        options:(NSDictionary<UIApplicationOpenExternalURLOptionsKey, id> *)options
+completionHandler:(nullable void (^)(BOOL success))completion;
 
-  func canOpen(_ url: URL) -> Bool {
-    capturedCanOpenUrl = url
-    return canOpenUrl
-  }
+@end
 
-  func open(_ url: URL) -> Bool {
-    capturedOpenUrl = url
-    guard let didOpen = openUrlStubs[url] else {
-      fatalError("Must stub whether \(url.absoluteString) can be opened")
-    }
-    return didOpen
-  }
-
-  func open(
-    _ url: URL,
-    options: [UIApplication.OpenExternalURLOptionsKey: Any] = [:],
-    completionHandler completion: ((Bool) -> Void)?
-  ) {
-    capturedOpenUrl = url
-    capturedOpenUrlCompletion = completion
-  }
-}
+NS_ASSUME_NONNULL_END

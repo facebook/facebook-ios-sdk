@@ -67,7 +67,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
  #endif
 
 @property (nonnull, nonatomic) FBSDKLogger *logger;
-@property (nonatomic, readonly) id<FBSDKURLOpener> urlOpener;
+@property (nonatomic, readonly) id<FBSDKInternalURLOpener> urlOpener;
 @property (nonatomic, readonly) id<FBSDKBridgeAPIResponseCreating> bridgeAPIResponseFactory;
 @property (nonatomic, readonly) id<FBSDKDynamicFrameworkResolving> frameworkLoader;
 @property (nonatomic, readonly) id<FBSDKAppURLSchemeProviding> appURLSchemeProvider;
@@ -110,7 +110,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 - (instancetype)initWithProcessInfo:(id<FBSDKOperatingSystemVersionComparing>)processInfo
                              logger:(FBSDKLogger *)logger
-                          urlOpener:(id<FBSDKURLOpener>)urlOpener
+                          urlOpener:(id<FBSDKInternalURLOpener>)urlOpener
            bridgeAPIResponseFactory:(id<FBSDKBridgeAPIResponseCreating>)bridgeAPIResponseFactory
                     frameworkLoader:(id<FBSDKDynamicFrameworkResolving>)frameworkLoader
                appURLSchemeProvider:(nonnull id<FBSDKAppURLSchemeProviding>)appURLSchemeProvider;

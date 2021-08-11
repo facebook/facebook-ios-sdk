@@ -16,26 +16,44 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKAppLinkNavigation.h"
+import FBSDKCoreKit
+import Foundation
 
-NS_ASSUME_NONNULL_BEGIN
+@objcMembers
+class TestInternalURLOpener: NSObject, InternalURLOpener {
+  var capturedOpenUrl: URL?
+  var capturedCanOpenUrl: URL?
+  var openUrlStubs = [URL: Bool]()
+  let canOpenUrl: Bool
+  var capturedOpenUrlCompletion: ((Bool) -> Void)?
 
-@interface FBSDKAppLinkNavigation (Testing)
+  init(canOpenUrl: Bool = false) {
+    self.canOpenUrl = canOpenUrl
+  }
 
-+ (void)reset;
+  func stubOpen(url: URL, success: Bool) {
+    openUrlStubs[url] = success
+  }
 
-- (nullable NSURL *)appLinkURLWithTargetURL:(NSURL *)targetUrl error:(NSError **)error;
-- (void)postAppLinkNavigateEventNotificationWithTargetURL:(nullable NSURL *)outputURL
-                                                    error:(nullable NSError *)error
-                                                     type:(FBSDKAppLinkNavigationType)type
-                                              eventPoster:(id<FBSDKAppLinkEventPosting>)eventPoster;
-- (FBSDKAppLinkNavigationType)navigationTypeForTargets:(NSArray<FBSDKAppLinkTarget *> *)targets
-                                             urlOpener:(id<FBSDKInternalURLOpener>)urlOpener;
-- (FBSDKAppLinkNavigationType)navigateWithUrlOpener:(id<FBSDKInternalURLOpener>)urlOpener
-                                        eventPoster:(id<FBSDKAppLinkEventPosting>)eventPoster
-                                              error:(NSError **)error
-NS_SWIFT_NAME(navigate(urlOpener:eventPoster:error:));
+  func canOpen(_ url: URL) -> Bool {
+    capturedCanOpenUrl = url
+    return canOpenUrl
+  }
 
-@end
+  func open(_ url: URL) -> Bool {
+    capturedOpenUrl = url
+    guard let didOpen = openUrlStubs[url] else {
+      fatalError("Must stub whether \(url.absoluteString) can be opened")
+    }
+    return didOpen
+  }
 
-NS_ASSUME_NONNULL_END
+  func open(
+    _ url: URL,
+    options: [UIApplication.OpenExternalURLOptionsKey: Any] = [:],
+    completionHandler completion: ((Bool) -> Void)?
+  ) {
+    capturedOpenUrl = url
+    capturedOpenUrlCompletion = completion
+  }
+}

@@ -24,7 +24,7 @@
 
 @protocol FBSDKWebDialogViewDelegate;
 @protocol FBSDKWebViewProviding;
-@protocol FBSDKURLOpener;
+@protocol FBSDKInternalURLOpener;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -34,7 +34,7 @@ NS_SWIFT_NAME(FBWebDialogView)
 @property (nonatomic, weak) id<FBSDKWebDialogViewDelegate> delegate;
 
 + (void)configureWithWebViewProvider:(id<FBSDKWebViewProviding>)provider
-                           urlOpener:(id<FBSDKURLOpener>)urlOpener;
+                           urlOpener:(id<FBSDKInternalURLOpener>)urlOpener;
 
 - (void)loadURL:(NSURL *)URL;
 - (void)stopLoading;

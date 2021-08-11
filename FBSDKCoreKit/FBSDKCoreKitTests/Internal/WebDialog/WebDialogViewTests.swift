@@ -30,7 +30,7 @@ class WebDialogViewTests: XCTestCase, WebDialogViewDelegate { // swiftlint:disab
   var capturedDidCompleteResults: [String: String]?
   var webDialogViewDidCancelWasCalled = false
   var webDialogViewDidFinishLoadWasCalled = false
-  var urlOpener = TestURLOpener()
+  var urlOpener = TestInternalURLOpener()
 
   override func setUp() {
     super.setUp()

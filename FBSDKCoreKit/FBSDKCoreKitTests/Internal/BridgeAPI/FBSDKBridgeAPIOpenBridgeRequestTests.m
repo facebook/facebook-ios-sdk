@@ -29,7 +29,7 @@
 @property FBSDKBridgeAPI *api;
 @property id partialMock;
 @property (readonly) NSURL *sampleUrl;
-@property (nonatomic) TestURLOpener *urlOpener;
+@property (nonatomic) TestInternalURLOpener *urlOpener;
 @property (nonatomic) TestBridgeApiResponseFactory *bridgeAPIResponseFactory;
 @property (nonatomic) TestDylibResolver *frameworkLoader;
 @property (nonatomic) TestAppURLSchemeProvider *appURLSchemeProvider;
@@ -42,7 +42,7 @@
 {
   [super setUp];
 
-  _urlOpener = [[TestURLOpener alloc] initWithCanOpenUrl:YES];
+  _urlOpener = [[TestInternalURLOpener alloc] initWithCanOpenUrl:YES];
   _bridgeAPIResponseFactory = [TestBridgeApiResponseFactory new];
   _frameworkLoader = [TestDylibResolver new];
   _appURLSchemeProvider = [TestAppURLSchemeProvider new];

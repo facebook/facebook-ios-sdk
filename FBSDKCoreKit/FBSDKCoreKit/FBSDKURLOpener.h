@@ -16,26 +16,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKAppLinkNavigation.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKAppLinkNavigation (Testing)
+@protocol FBSDKURLOpening;
 
-+ (void)reset;
+NS_SWIFT_NAME(URLOpener)
+@protocol FBSDKURLOpener
 
-- (nullable NSURL *)appLinkURLWithTargetURL:(NSURL *)targetUrl error:(NSError **)error;
-- (void)postAppLinkNavigateEventNotificationWithTargetURL:(nullable NSURL *)outputURL
-                                                    error:(nullable NSError *)error
-                                                     type:(FBSDKAppLinkNavigationType)type
-                                              eventPoster:(id<FBSDKAppLinkEventPosting>)eventPoster;
-- (FBSDKAppLinkNavigationType)navigationTypeForTargets:(NSArray<FBSDKAppLinkTarget *> *)targets
-                                             urlOpener:(id<FBSDKInternalURLOpener>)urlOpener;
-- (FBSDKAppLinkNavigationType)navigateWithUrlOpener:(id<FBSDKInternalURLOpener>)urlOpener
-                                        eventPoster:(id<FBSDKAppLinkEventPosting>)eventPoster
-                                              error:(NSError **)error
-NS_SWIFT_NAME(navigate(urlOpener:eventPoster:error:));
+- (void)openURL:(NSURL *)url
+         sender:(nullable id<FBSDKURLOpening>)sender
+        handler:(FBSDKSuccessBlock)handler;
 
 @end
 
 NS_ASSUME_NONNULL_END
+ 

@@ -161,6 +161,7 @@
 #import "FBSDKURLOpener.h"
 #import "FBSDKURLSessionProxyFactory.h"
 #import "FBSDKURLSessionProxyProviding.h"
+#import "FBSDKInternalURLOpener.h"
 #import "FBSDKViewHierarchy.h"
 #import "FBSDKViewImpressionTracker+Testing.h"
 #import "FBSDKWebDialog+Testing.h"

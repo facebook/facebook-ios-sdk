@@ -22,7 +22,7 @@ class BridgeAPIRequestTests: XCTestCase {
 
   let processInfo = TestProcessInfo()
   let logger = TestLogger()
-  let urlOpener = TestURLOpener()
+  let urlOpener = TestInternalURLOpener()
   let responseFactory = TestBridgeApiResponseFactory()
   let frameworkLoader = TestDylibResolver()
   let appURLSchemeProvider = TestAppURLSchemeProvider()
@@ -78,7 +78,7 @@ class BridgeAPIRequestTests: XCTestCase {
       "Should be able to create a bridge api with a specific logger"
     )
     XCTAssertEqual(
-      api.urlOpener as? TestURLOpener,
+      api.urlOpener as? TestInternalURLOpener,
       urlOpener,
       "Should be able to create a bridge api with a specific url opener"
     )

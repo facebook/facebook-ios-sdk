@@ -16,19 +16,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#if !TARGET_OS_TV
 #import <Foundation/Foundation.h>
+
+#import "FBSDKBridgeAPI.h"
+#import "FBSDKURLOpener.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(URLOpener)
-@protocol FBSDKURLOpener
-
-- (BOOL)canOpenURL:(NSURL *)url;
-- (BOOL)openURL:(NSURL *)url;
-- (void)openURL:(NSURL *)url
-        options:(NSDictionary<UIApplicationOpenExternalURLOptionsKey, id> *)options
-completionHandler:(nullable void (^)(BOOL success))completion;
-
+@interface FBSDKBridgeAPI () <FBSDKURLOpener>
 @end
 
 NS_ASSUME_NONNULL_END
+#endif

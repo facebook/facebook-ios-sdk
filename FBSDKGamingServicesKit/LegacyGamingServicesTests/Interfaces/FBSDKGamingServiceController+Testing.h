@@ -16,25 +16,34 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKAppLinkNavigation.h"
+@import LegacyGamingServices;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKAppLinkNavigation (Testing)
+@interface FBSDKGamingServiceController (Testing)
 
-+ (void)reset;
+- (instancetype)initWithServiceType:(FBSDKGamingServiceType)serviceType
+                  completionHandler:(FBSDKGamingServiceResultCompletion)completion
+                      pendingResult:(id)pendingResult
+                          urlOpener:(id<FBSDKURLOpener>)urlOpener
+                           settings:(id<FBSDKSettings>)settings;
 
-- (nullable NSURL *)appLinkURLWithTargetURL:(NSURL *)targetUrl error:(NSError **)error;
-- (void)postAppLinkNavigateEventNotificationWithTargetURL:(nullable NSURL *)outputURL
-                                                    error:(nullable NSError *)error
-                                                     type:(FBSDKAppLinkNavigationType)type
-                                              eventPoster:(id<FBSDKAppLinkEventPosting>)eventPoster;
-- (FBSDKAppLinkNavigationType)navigationTypeForTargets:(NSArray<FBSDKAppLinkTarget *> *)targets
-                                             urlOpener:(id<FBSDKInternalURLOpener>)urlOpener;
-- (FBSDKAppLinkNavigationType)navigateWithUrlOpener:(id<FBSDKInternalURLOpener>)urlOpener
-                                        eventPoster:(id<FBSDKAppLinkEventPosting>)eventPoster
-                                              error:(NSError **)error
-NS_SWIFT_NAME(navigate(urlOpener:eventPoster:error:));
+- (id<FBSDKSettings>)settings;
+
+- (void)callWithArgument:(nullable NSString *)argument;
+
+- (void)applicationDidBecomeActive:(UIApplication *)application;
+
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation;
+
+- (BOOL)isValidCallbackURL:(NSURL *)url forService:(NSString *)service;
+
+- (BOOL)isAuthenticationURL:(NSURL *)url;
+
+- (void)handleBridgeAPIError:(NSError *)error;
 
 @end
 
