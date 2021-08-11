@@ -19,7 +19,16 @@
 
 EXPECTED_XCODEGEN_VERSION="2.24.0"
 
-killall Xcode || true
+RESET='\033[0m'
+YELLOW='\033[1;33m'
+
+pgrep -f '/Applications/Xcode.*\.app/Contents/MacOS/Xcode' > /dev/null
+if [ $? -eq 0 ]; then
+    XCODE_WAS_OPEN="true"
+    echo "⚠️  ${YELLOW}Closing Xcode!${RESET}"
+    killall Xcode || true
+fi
+
 
 if [ ! -d "Carthage/checkouts/ocmock" ]; then
     echo "OCMock is required to run some tests. Run the command 'carthage bootstrap --no-build' and try again."
@@ -70,3 +79,10 @@ cd ..
 
 cd FBSDKGamingServicesKit || exit
 xcodegen generate
+
+cd ..
+
+if [ $XCODE_WAS_OPEN ]; then
+    echo "${YELLOW}Reopening FacebookSDK.xcworkspace${RESET}"
+    open FacebookSDK.xcworkspace
+fi
