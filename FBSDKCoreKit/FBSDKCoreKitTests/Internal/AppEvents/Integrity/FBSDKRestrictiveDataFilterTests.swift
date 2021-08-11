@@ -17,9 +17,9 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class FBSDKRestrictiveDataFilterTests: XCTestCase {
-    var restrictiveDataFilterManager: RestrictiveDataFilterManager = createTestRestrictiveDataFilterManager()
+  var restrictiveDataFilterManager: RestrictiveDataFilterManager = createTestRestrictiveDataFilterManager()
 
-    private static func createTestRestrictiveDataFilterManager() -> RestrictiveDataFilterManager {
+  private static func createTestRestrictiveDataFilterManager() -> RestrictiveDataFilterManager {
     let params = [
       "test_event_name": [
         "restrictive_param": [

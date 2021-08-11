@@ -30,10 +30,10 @@ open class FBSDKContextDialogPresenter: NSObject {
   /**
    Convenience method to build up an instant games create context dialog with content and delegate.
 
-   - Parameters:
-      - content: The content for the create context dialog
-      - delegate: The receiver's delegate.
-   */
+      - Parameters:
+         - content: The content for the create context dialog
+         - delegate: The receiver's delegate.
+      */
   public class func createContextDialog(
     withContent content: CreateContextContent,
     delegate: ContextDialogDelegate?
@@ -85,8 +85,9 @@ open class FBSDKContextDialogPresenter: NSObject {
     withContent content: SwitchContextContent,
     delegate: ContextDialogDelegate?
   ) -> SwitchContextDialog? {
-    guard let delegate = delegate,
-          AccessToken.current != nil
+    guard
+      let delegate = delegate,
+      AccessToken.current != nil
     else {
       return nil
     }
@@ -109,8 +110,9 @@ open class FBSDKContextDialogPresenter: NSObject {
     withContent content: SwitchContextContent,
     delegate: ContextDialogDelegate?
   ) -> NSError? {
-    guard let delegate = delegate,
-          AccessToken.current != nil
+    guard
+      let delegate = delegate,
+      AccessToken.current != nil
     else {
       return nil
     }

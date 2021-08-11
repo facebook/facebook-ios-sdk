@@ -225,9 +225,10 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
   }
 
   func testRedirectUrlWithActionIdOnly() {
-    guard let url = try? bridge._redirectURL(withActionID: name, methodName: nil),
-          let bridgeArgsData = try? JSONSerialization.data(withJSONObject: [Keys.actionID: name], options: []),
-          let bridgeArgsString = String(data: bridgeArgsData, encoding: .utf8)
+    guard
+      let url = try? bridge._redirectURL(withActionID: name, methodName: nil),
+      let bridgeArgsData = try? JSONSerialization.data(withJSONObject: [Keys.actionID: name], options: []),
+      let bridgeArgsString = String(data: bridgeArgsData, encoding: .utf8)
     else {
       return XCTFail("Should be able to generate test data")
     }
@@ -251,9 +252,10 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
   }
 
   func testRedirectUrlWithMethodNameAndActionID() {
-    guard let url = try? bridge._redirectURL(withActionID: name, methodName: Values.methodName),
-          let bridgeArgsData = try? JSONSerialization.data(withJSONObject: [Keys.actionID: name], options: []),
-          let bridgeArgsString = String(data: bridgeArgsData, encoding: .utf8)
+    guard
+      let url = try? bridge._redirectURL(withActionID: name, methodName: Values.methodName),
+      let bridgeArgsData = try? JSONSerialization.data(withJSONObject: [Keys.actionID: name], options: []),
+      let bridgeArgsString = String(data: bridgeArgsData, encoding: .utf8)
     else {
       return XCTFail("Should be able to generate test data")
     }
@@ -284,13 +286,10 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
   // MARK: - Request URL for DialogConfiguration
 
   func testRequestURLForDialogConfigurationWithoutScheme() {
-    guard let url = URL(string: "/"),
-          let configuration = DialogConfiguration(
-            name: name,
-            url: url,
-            appVersions: []
-          ),
-          let requestURL = try? bridge._requestURL(for: configuration)
+    guard
+      let url = URL(string: "/"),
+      let configuration = DialogConfiguration(name: name, url: url, appVersions: []),
+      let requestURL = try? bridge._requestURL(for: configuration)
     else {
       return XCTFail("Should be able to create a configuration with a url")
     }
@@ -334,8 +333,9 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
       Values.actionID,
       "Should pass through to the native bridge"
     )
-    guard let parameters = nativeBridge.capturedResponseQueryParameters as? [String: String],
-          parameters == validQueryParameters
+    guard
+      let parameters = nativeBridge.capturedResponseQueryParameters as? [String: String],
+      parameters == validQueryParameters
     else {
       return XCTFail("Should pass through to the native bridge")
     }

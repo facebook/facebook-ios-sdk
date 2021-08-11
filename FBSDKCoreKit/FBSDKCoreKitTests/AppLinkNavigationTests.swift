@@ -125,8 +125,9 @@ class FBSDKAppLinkNavigationTests: XCTestCase { // swiftlint:disable:this type_b
     do {
       let url = try navigation.appLinkURL(withTargetURL: SampleUrls.valid)
 
-      guard let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems,
-            let appLinkItem = queryItems.first(where: { $0.name == "al_applink_data" })
+      guard
+        let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems,
+        let appLinkItem = queryItems.first(where: { $0.name == "al_applink_data" })
       else {
         return XCTFail("Should have a query item for app link data")
       }
@@ -561,10 +562,11 @@ class FBSDKAppLinkNavigationTests: XCTestCase { // swiftlint:disable:this type_b
     file: StaticString = #file,
     line: UInt = #line
   ) -> AppLinkUrlPayload? {
-    guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
-          let queryItems = components.queryItems,
-          let data = queryItems.first?.value?.data(using: .utf8),
-          let payload = try? JSONDecoder().decode(AppLinkUrlPayload.self, from: data)
+    guard
+      let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+      let queryItems = components.queryItems,
+      let data = queryItems.first?.value?.data(using: .utf8),
+      let payload = try? JSONDecoder().decode(AppLinkUrlPayload.self, from: data)
     else {
       XCTFail("Could not decode the payload from the query item", file: file, line: line)
       return nil

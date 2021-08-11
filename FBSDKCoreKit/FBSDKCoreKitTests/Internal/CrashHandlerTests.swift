@@ -135,8 +135,9 @@ class CrashHandlersTest: XCTestCase {
   func testLoadCrashLogs() {
     let fileName = "dance_with_animals.txt"
     crashHandler._loadCrashLog(fileName)
-    guard let path = TestFileDataExtractor.capturedFileNames.first,
-          path.contains("dance_with_animals.txt")
+    guard
+      let path = TestFileDataExtractor.capturedFileNames.first,
+      path.contains("dance_with_animals.txt")
     else {
       XCTFail("Loading a crash log should check the provided path for crashlog data")
       return

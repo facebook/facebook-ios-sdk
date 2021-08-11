@@ -300,9 +300,10 @@ class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UICollection
     )
 
     let expectedMetadata = [Keys.dense: Values.denseFeature, Keys.buttonText: Values.buttonText]
-    guard let parameter = requestProvider.capturedParameters[Keys.metadata] as? String,
-          let data = parameter.data(using: .utf8),
-          let decodedMetadata = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: String]
+    guard
+      let parameter = requestProvider.capturedParameters[Keys.metadata] as? String,
+      let data = parameter.data(using: .utf8),
+      let decodedMetadata = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: String]
     else {
       return XCTFail("Should capture the metadata in the parameters")
     }

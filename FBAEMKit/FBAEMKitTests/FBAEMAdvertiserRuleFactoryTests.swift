@@ -114,9 +114,11 @@ class FBAEMAdvertiserRuleFactoryTests: XCTestCase { // swiftlint:disable:this ty
   func testCreateMultiEntryRuleWithValidDict() {
     zip(
       ["and", "or", "not"],
-      [AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorAnd,
-       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorOr,
-       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorNot]
+      [
+        AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorAnd,
+        AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorOr,
+        AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorNot
+      ]
     ).forEach { opString, expectedOperator in
       let rule: AEMAdvertiserMultiEntryRule? = factory.createMultiEntryRule(
         withDict: [opString: [SampleAEMData.validAdvertiserSingleEntryRuleJson1, SampleAEMData.validAdvertiserSingleEntryRuleJson2]]) // swiftlint:disable:this line_length

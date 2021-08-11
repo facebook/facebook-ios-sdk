@@ -85,8 +85,7 @@ class DrawableTests: XCTestCase {
   // MARK: Human Silhouette Icon
 
   func testImageWithInvalidSize() {
-    XCTAssertNil(HumanSilhouetteIcon().image(size: .zero),
-                 "An image must have a non-zero size")
+    XCTAssertNil(HumanSilhouetteIcon().image(size: .zero), "An image must have a non-zero size")
   }
 
   func testPlaceholderImageColor() {

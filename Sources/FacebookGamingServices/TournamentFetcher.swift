@@ -45,9 +45,10 @@ public class TournamentFetcher {
         completionHandler(.failure(.server(error)))
         return
       }
-      guard let result = result,
-            let data = try? JSONSerialization.data(withJSONObject: result, options: []),
-            let tournament = try? JSONDecoder().decode(Tournament.self, from: data)
+      guard
+        let result = result,
+        let data = try? JSONSerialization.data(withJSONObject: result, options: []),
+        let tournament = try? JSONDecoder().decode(Tournament.self, from: data)
       else {
         completionHandler(.failure(.decoding))
         return

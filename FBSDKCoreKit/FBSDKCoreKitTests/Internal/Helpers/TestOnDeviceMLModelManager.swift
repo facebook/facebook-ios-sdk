@@ -22,7 +22,7 @@ import Foundation
 // swiftformat:disable indent
 @objcMembers
 class TestOnDeviceMLModelManager: NSObject,
-                                  EventProcessing,
+                                  EventProcessing, // swiftlint:disable:this indentation_width
                                   IntegrityParametersProcessorProvider,
                                   RulesFromKeyProvider {
   // swiftformat:enable indent

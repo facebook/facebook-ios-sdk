@@ -32,8 +32,8 @@ class GamingServiceControllerTests: XCTestCase {
   lazy var gamingService = GamingServiceController(
     serviceType: .community,
     completionHandler: { success, _, error in
-        self.capturedSuccess = success
-        self.serviceError = error
+      self.capturedSuccess = success
+      self.serviceError = error
     },
     pendingResult: [:],
     urlOpener: urlOpener,

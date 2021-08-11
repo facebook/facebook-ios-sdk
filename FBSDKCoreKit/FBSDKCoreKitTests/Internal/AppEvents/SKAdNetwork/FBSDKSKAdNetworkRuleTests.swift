@@ -133,18 +133,20 @@ class FBSDKSKAdNetworkRuleTests: XCTestCase {
     let matchedEventSet: Set = ["fb_mobile_purchase", "fb_skadnetwork_test1", "fb_adnetwork_test2"]
     let unmatchedEventSet: Set = ["fb_mobile_purchase", "fb_skadnetwork_test2"]
 
-    XCTAssertTrue(rule.isMatched(withRecordedEvents: matchedEventSet,
-                                 recordedValues: ["fb_mobile_purchase": ["USD": 1000]]))
-    XCTAssertFalse(rule.isMatched(withRecordedEvents: [],
-                                  recordedValues: [:]))
-    XCTAssertFalse(rule.isMatched(withRecordedEvents: matchedEventSet,
-                                  recordedValues: [:]))
-    XCTAssertFalse(rule.isMatched(withRecordedEvents: matchedEventSet,
-                                  recordedValues: ["fb_mobile_purchase": ["USD": 50]]))
-    XCTAssertFalse(rule.isMatched(withRecordedEvents: matchedEventSet,
-                                  recordedValues: ["fb_mobile_purchase": ["JPY": 1000]]))
-    XCTAssertFalse(rule.isMatched(withRecordedEvents: unmatchedEventSet,
-                                  recordedValues: ["fb_mobile_purchase": ["USD": 1000]]))
+    XCTAssertTrue(
+      rule.isMatched(withRecordedEvents: matchedEventSet, recordedValues: ["fb_mobile_purchase": ["USD": 1000]])
+    )
+    XCTAssertFalse(rule.isMatched(withRecordedEvents: [], recordedValues: [:]))
+    XCTAssertFalse(rule.isMatched(withRecordedEvents: matchedEventSet, recordedValues: [:]))
+    XCTAssertFalse(
+      rule.isMatched(withRecordedEvents: matchedEventSet, recordedValues: ["fb_mobile_purchase": ["USD": 50]])
+    )
+    XCTAssertFalse(
+      rule.isMatched(withRecordedEvents: matchedEventSet, recordedValues: ["fb_mobile_purchase": ["JPY": 1000]])
+    )
+    XCTAssertFalse(
+      rule.isMatched(withRecordedEvents: unmatchedEventSet, recordedValues: ["fb_mobile_purchase": ["USD": 1000]])
+    )
   }
 }
 

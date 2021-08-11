@@ -38,9 +38,11 @@ class TournamentTests: XCTestCase {
   }
 
   func testCreatingWithMissingID() throws {
-    let tournamentInfo: [String: Any] = [Keys.tournamentEndTime: Values.tournamentEndTime,
-                                         Keys.tournamentTitle: Values.tournamentTitle,
-                                         Keys.tournamentPayload: Values.tournamentPayload]
+    let tournamentInfo: [String: Any] = [
+      Keys.tournamentEndTime: Values.tournamentEndTime,
+      Keys.tournamentTitle: Values.tournamentTitle,
+      Keys.tournamentPayload: Values.tournamentPayload
+    ]
     let data = try JSONSerialization.data(withJSONObject: tournamentInfo, options: [])
     do {
       _ = try JSONDecoder().decode(Tournament.self, from: data)
@@ -55,10 +57,12 @@ class TournamentTests: XCTestCase {
   }
 
   func testCreatingWithInvalidID() throws {
-    let tournamentInfo: [String: Any] = [Keys.tournamentID: 123,
-                                         Keys.tournamentEndTime: Values.tournamentEndTime,
-                                         Keys.tournamentTitle: Values.tournamentTitle,
-                                         Keys.tournamentPayload: Values.tournamentPayload]
+    let tournamentInfo: [String: Any] = [
+      Keys.tournamentID: 123,
+      Keys.tournamentEndTime: Values.tournamentEndTime,
+      Keys.tournamentTitle: Values.tournamentTitle,
+      Keys.tournamentPayload: Values.tournamentPayload
+    ]
     let data = try JSONSerialization.data(withJSONObject: tournamentInfo, options: [])
     do {
       _ = try JSONDecoder().decode(Tournament.self, from: data)
@@ -70,9 +74,11 @@ class TournamentTests: XCTestCase {
   }
 
   func testCreatingWithMissingEndTime() throws {
-    let tournamentInfo: [String: Any] = [Keys.tournamentID: Values.tournamentID,
-                                         Keys.tournamentTitle: Values.tournamentTitle,
-                                         Keys.tournamentPayload: Values.tournamentPayload]
+    let tournamentInfo: [String: Any] = [
+      Keys.tournamentID: Values.tournamentID,
+      Keys.tournamentTitle: Values.tournamentTitle,
+      Keys.tournamentPayload: Values.tournamentPayload
+    ]
     let data = try JSONSerialization.data(withJSONObject: tournamentInfo, options: [])
     do {
       _ = try JSONDecoder().decode(Tournament.self, from: data)
@@ -84,10 +90,12 @@ class TournamentTests: XCTestCase {
   }
 
   func testCreatingWithInvalidEndTime() throws {
-    let tournamentInfo: [String: Any] = [Keys.tournamentID: Values.tournamentID,
-                                         Keys.tournamentEndTime: 123,
-                                         Keys.tournamentTitle: Values.tournamentTitle,
-                                         Keys.tournamentPayload: Values.tournamentPayload]
+    let tournamentInfo: [String: Any] = [
+      Keys.tournamentID: Values.tournamentID,
+      Keys.tournamentEndTime: 123,
+      Keys.tournamentTitle: Values.tournamentTitle,
+      Keys.tournamentPayload: Values.tournamentPayload
+    ]
     let data = try JSONSerialization.data(withJSONObject: tournamentInfo, options: [])
     do {
       _ = try JSONDecoder().decode(Tournament.self, from: data)
@@ -99,9 +107,11 @@ class TournamentTests: XCTestCase {
   }
 
   func testCreatingWithMissingTitle() throws {
-    let tournamentInfo: [String: Any] = [Keys.tournamentID: Values.tournamentID,
-                                         Keys.tournamentEndTime: Values.tournamentEndTime,
-                                         Keys.tournamentPayload: Values.tournamentPayload]
+    let tournamentInfo: [String: Any] = [
+      Keys.tournamentID: Values.tournamentID,
+      Keys.tournamentEndTime: Values.tournamentEndTime,
+      Keys.tournamentPayload: Values.tournamentPayload
+    ]
     let data = try JSONSerialization.data(withJSONObject: tournamentInfo, options: [])
     do {
       let tournament = try JSONDecoder().decode(Tournament.self, from: data)
@@ -113,10 +123,12 @@ class TournamentTests: XCTestCase {
   }
 
   func testCreatingWithInvalidTitle() throws {
-    let tournamentInfo: [String: Any] = [Keys.tournamentID: Values.tournamentID,
-                                         Keys.tournamentEndTime: Values.tournamentEndTime,
-                                         Keys.tournamentTitle: 123,
-                                         Keys.tournamentPayload: Values.tournamentPayload]
+    let tournamentInfo: [String: Any] = [
+      Keys.tournamentID: Values.tournamentID,
+      Keys.tournamentEndTime: Values.tournamentEndTime,
+      Keys.tournamentTitle: 123,
+      Keys.tournamentPayload: Values.tournamentPayload
+    ]
     let data = try JSONSerialization.data(withJSONObject: tournamentInfo, options: [])
     do {
       _ = try JSONDecoder().decode(Tournament.self, from: data)
@@ -128,9 +140,11 @@ class TournamentTests: XCTestCase {
   }
 
   func testCreatingWithMissingPayload() throws {
-    let tournamentInfo: [String: Any] = [Keys.tournamentID: Values.tournamentID,
-                                         Keys.tournamentEndTime: Values.tournamentEndTime,
-                                         Keys.tournamentTitle: Values.tournamentTitle]
+    let tournamentInfo: [String: Any] = [
+      Keys.tournamentID: Values.tournamentID,
+      Keys.tournamentEndTime: Values.tournamentEndTime,
+      Keys.tournamentTitle: Values.tournamentTitle
+    ]
     let data = try JSONSerialization.data(withJSONObject: tournamentInfo, options: [])
     do {
       let tournament = try JSONDecoder().decode(Tournament.self, from: data)
@@ -142,10 +156,12 @@ class TournamentTests: XCTestCase {
   }
 
   func testCreatingWithInvalidPayload() throws {
-    let tournamentInfo: [String: Any] = [Keys.tournamentID: Values.tournamentID,
-                                         Keys.tournamentEndTime: Values.tournamentEndTime,
-                                         Keys.tournamentTitle: Values.tournamentTitle,
-                                         Keys.tournamentPayload: 123]
+    let tournamentInfo: [String: Any] = [
+      Keys.tournamentID: Values.tournamentID,
+      Keys.tournamentEndTime: Values.tournamentEndTime,
+      Keys.tournamentTitle: Values.tournamentTitle,
+      Keys.tournamentPayload: 123
+    ]
     let data = try JSONSerialization.data(withJSONObject: tournamentInfo, options: [])
     do {
       _ = try JSONDecoder().decode(Tournament.self, from: data)
@@ -157,10 +173,12 @@ class TournamentTests: XCTestCase {
   }
 
   func testCreatingWithValidInfo() throws {
-    let tournamentInfo: [String: Any] = [Keys.tournamentID: Values.tournamentID,
-                                         Keys.tournamentEndTime: Values.tournamentEndTime,
-                                         Keys.tournamentTitle: Values.tournamentTitle,
-                                         Keys.tournamentPayload: Values.tournamentPayload]
+    let tournamentInfo: [String: Any] = [
+      Keys.tournamentID: Values.tournamentID,
+      Keys.tournamentEndTime: Values.tournamentEndTime,
+      Keys.tournamentTitle: Values.tournamentTitle,
+      Keys.tournamentPayload: Values.tournamentPayload
+    ]
     let data = try JSONSerialization.data(withJSONObject: tournamentInfo, options: [])
     do {
       let tournament = try JSONDecoder().decode(Tournament.self, from: data)
