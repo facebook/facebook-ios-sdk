@@ -26,8 +26,8 @@
 
 @interface FBSDKBridgeAPIOpenBridgeRequestTests : XCTestCase
 
-@property FBSDKBridgeAPI *api;
-@property id partialMock;
+@property (nonatomic) FBSDKBridgeAPI *api;
+@property (nonatomic) id partialMock;
 @property (readonly) NSURL *sampleUrl;
 @property (nonatomic) TestInternalURLOpener *urlOpener;
 @property (nonatomic) TestBridgeApiResponseFactory *bridgeAPIResponseFactory;

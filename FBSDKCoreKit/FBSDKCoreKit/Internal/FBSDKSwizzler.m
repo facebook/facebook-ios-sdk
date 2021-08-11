@@ -49,8 +49,8 @@
 
 @interface FBSDKSwizzlingOnClass : NSObject
 
-@property FBSDKSwizzle *bindingSwizzle;
-@property Class bindingClass;
+@property (nonatomic) FBSDKSwizzle *bindingSwizzle;
+@property (nonatomic) Class bindingClass;
 
 - (instancetype)initWithSwizzle:(FBSDKSwizzle *)aSwizzle
                           class:(Class)aClass;

@@ -77,15 +77,15 @@ static const long INACTIVE_SECONDS_QUANTA[] =
 @property (nonnull, nonatomic) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonatomic) NSString *sourceApplication;
 @property (nonatomic) BOOL isOpenedFromAppLink;
-@property BOOL isCurrentlyLoaded;
+@property (nonatomic) BOOL isCurrentlyLoaded;
 @property (nonatomic) NSTimeInterval lastRestoreTime;
 @property (nonatomic) NSTimeInterval secondsSpentInCurrentSession;
 @property (nonatomic) NSTimeInterval timeSinceLastSuspend;
-@property int numInterruptionsInCurrentSession;
+@property (nonatomic) int numInterruptionsInCurrentSession;
 @property (nonatomic) NSString *sessionID;
 @property (nonatomic) NSTimeInterval lastSuspendTime;
-@property BOOL shouldLogActivateEvent;
-@property BOOL shouldLogDeactivateEvent;
+@property (nonatomic) BOOL shouldLogActivateEvent;
+@property (nonatomic) BOOL shouldLogDeactivateEvent;
 
 @end
 

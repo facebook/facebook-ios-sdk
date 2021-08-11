@@ -37,7 +37,7 @@
 @property (nonatomic, weak) id<FBSDKWebDialogDelegate> delegate;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSDictionary *parameters;
-@property CGRect webViewFrame;
+@property (nonatomic) CGRect webViewFrame;
 
 - (BOOL)show;
 

@@ -80,8 +80,8 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
 @interface TestFBSDKBridgeAPI : FBSDKBridgeAPI
 
-@property int openURLWithSFVCCount;
-@property int openURLCount;
+@property (nonatomic) int openURLWithSFVCCount;
+@property (nonatomic) int openURLCount;
 
 @end
 

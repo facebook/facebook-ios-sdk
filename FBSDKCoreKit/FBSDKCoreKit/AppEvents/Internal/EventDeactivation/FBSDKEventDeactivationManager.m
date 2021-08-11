@@ -52,7 +52,7 @@ static NSString *const DEPRECATED_EVENT_KEY = @"is_deprecated_event";
 
 @interface FBSDKEventDeactivationManager ()
 
-@property BOOL isEventDeactivationEnabled;
+@property (nonatomic) BOOL isEventDeactivationEnabled;
 @property (nonatomic, strong) NSMutableSet<NSString *> *deactivatedEvents;
 @property (nonatomic, strong) NSMutableArray<FBSDKDeactivatedEvent *> *eventsWithDeactivatedParams;
 @property (nonatomic) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;

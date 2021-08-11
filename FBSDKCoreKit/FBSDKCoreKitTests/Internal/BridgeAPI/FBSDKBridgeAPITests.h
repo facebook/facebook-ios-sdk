@@ -27,7 +27,7 @@
 
 @interface FBSDKBridgeAPITests : XCTestCase
 
-@property FBSDKBridgeAPI *api;
+@property (nonatomic) FBSDKBridgeAPI *api;
 @property (nonatomic) TestLogger *logger;
 @property (readonly) NSURL *sampleUrl;
 @property (readonly) NSError *sampleError;

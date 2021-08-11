@@ -82,9 +82,9 @@ static NSString *const _fakeChallence = @"some_challenge";
 @interface FBSDKLoginCompletionTests : XCTestCase
 @property (nonatomic) NSDictionary *parameters;
 
-@property TestGraphRequestConnection *graphConnection;
+@property (nonatomic) TestGraphRequestConnection *graphConnection;
 
-@property TestAuthenticationTokenFactory *authenticationTokenFactory;
+@property (nonatomic) TestAuthenticationTokenFactory *authenticationTokenFactory;
 
 @end
 

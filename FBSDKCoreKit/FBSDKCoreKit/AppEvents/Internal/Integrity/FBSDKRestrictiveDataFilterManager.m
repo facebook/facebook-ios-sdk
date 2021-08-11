@@ -55,7 +55,7 @@ static FBSDKRestrictiveDataFilterManager *_instance;
 
 @interface FBSDKRestrictiveDataFilterManager ()
 
-@property BOOL isRestrictiveEventFilterEnabled;
+@property (nonatomic) BOOL isRestrictiveEventFilterEnabled;
 @property (nonatomic) NSMutableArray<FBSDKRestrictiveEventFilter *> *params;
 @property (nonatomic) NSMutableSet<NSString *> *restrictedEvents;
 @property (nonatomic) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
