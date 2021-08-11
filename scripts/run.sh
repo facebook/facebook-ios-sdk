@@ -500,18 +500,6 @@ release_sdk() {
     esac
   }
 
-  # Release Cocoapods
-  release_cocoapods() {
-    for spec in "$@"; do
-      if [ ! -f "$spec".podspec ]; then
-        echo "*** ERROR: unable to release $spec"
-        continue
-      fi
-
-      pod trunk push --allow-warnings "$spec".podspec || { echo "Failed to push $spec"; exit 1; }
-    done
-  }
-
   release_docs() {
     for kit in "${SDK_KITS[@]}"; do
       rm -rf "$kit/build" || true
@@ -533,7 +521,6 @@ release_sdk() {
 
   case "$release_type" in
   "github") release_github "$@" ;;
-  "cocoapods") release_cocoapods "$@" ;;
   "docs" | "documentation") release_docs "$@" ;;
   *) echo "Unsupported Release: $release_type" ;;
   esac

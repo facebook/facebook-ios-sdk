@@ -152,45 +152,12 @@ commands:
           at: .
       - run: sh scripts/run.sh lint cocoapods << parameters.arguments >>
 
-  publish_aggregate_cocoapod:
-    description: Pushes aggregate pod FacebookSDK to trunk
+  publish_cocoapods:
+    description: Pushes all CocoaPods to trunk
     steps:
       - attach_workspace:
           at: .
-      - run: |
-          rm -rf ~/Library/Caches/Cocoapods && \
-          rm -rf ~/.cocoapods/repos && \
-          pod repo update
-      - run: sh scripts/run.sh release cocoapods FacebookSDK
-
-  publish_base_cocoapods:
-    description: Pushes Core to trunk
-    steps:
-      - attach_workspace:
-          at: .
-      - run: sh scripts/run.sh release cocoapods FBSDKCoreKit
-
-  publish_dependent_cocoapods:
-    description: Pushes Login and Share to trunk
-    steps:
-      - attach_workspace:
-          at: .
-      - run: |
-          rm -rf ~/Library/Caches/Cocoapods && \
-          rm -rf ~/.cocoapods/repos && \
-          pod repo update
-      - run: sh scripts/run.sh release cocoapods FBSDKLoginKit FBSDKShareKit
-
-  publish_top_level_cocoapods:
-    description: Pushes GamingServices and tvOS to trunk
-    steps:
-      - attach_workspace:
-          at: .
-      - run: |
-          rm -rf ~/Library/Caches/Cocoapods && \
-          rm -rf ~/.cocoapods/repos && \
-          pod repo update
-      - run: sh scripts/run.sh release cocoapods FBSDKGamingServicesKit FBSDKTVOSKit
+      - run: sh scripts/publish_cocoapods.sh
 
   publish_to_github:
     description: Creates a draft for a release on github
@@ -276,22 +243,10 @@ jobs:
     steps:
       - lint_cocoapods:
           arguments: --use-libraries
-  publish-aggregate-cocoapod:
+  publish-cocoapods:
     <<: *useMacOS
     steps:
-      - publish_aggregate_cocoapod
-  publish-base-cocoapods:
-    <<: *useMacOS
-    steps:
-      - publish_base_cocoapods
-  publish-dependent-cocoapods:
-    <<: *useMacOS
-    steps:
-      - publish_dependent_cocoapods
-  publish-top-level-cocoapods:
-    <<: *useMacOS
-    steps:
-      - publish_top_level_cocoapods
+      - publish_cocoapods
   publish-to-github:
     docker:
       - image: cibuilds/github:0.13
@@ -347,23 +302,11 @@ workflows:
           <<: *onlyRunOnTags
           requires:
             - build-for-release
-      - publish-base-cocoapods:
+      - publish-cocoapods:
           <<: *onlyRunOnTags
           <<: *requiresSetup
-      - publish-dependent-cocoapods:
-          <<: *onlyRunOnTags
-          requires:
-            - publish-base-cocoapods
-      - publish-top-level-cocoapods:
-          <<: *onlyRunOnTags
-          requires:
-            - publish-dependent-cocoapods
-      - publish-aggregate-cocoapod:
-          <<: *onlyRunOnTags
-          requires:
-            - publish-top-level-cocoapods
       - verify-release:
           <<: *onlyRunOnTags
           requires:
-            - publish-aggregate-cocoapod
+            - publish-cocoapods
             - publish-to-github
