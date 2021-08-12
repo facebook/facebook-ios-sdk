@@ -16,17 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@import FBSDKCoreKit;
+@objcMembers
+class TestAppEvents: AppEvents {
+  var capturedParameters = [AnyHashable: Any]()
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface FBSDKSettings (Testing)
-
-@property (nonatomic) BOOL isConfigured;
-
-+ (void)reset;
-+ (void)setAutoLogAppEventsEnabled:(BOOL)autoLogAppEventsEnabled;
-
-@end
-
-NS_ASSUME_NONNULL_END
+  override func logInternalEvent(_ eventName: AppEvents.Name,
+                                 parameters: [AnyHashable: Any],
+                                 isImplicitlyLogged: Bool) {
+    self.capturedParameters = parameters
+  }
+}

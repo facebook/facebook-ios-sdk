@@ -81,6 +81,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FBSDKAppEvents (Testing)
+
++ (void)setSingletonInstanceToInstance:(FBSDKAppEvents *)appEvents;
+- (void)logInternalEvent:(FBSDKAppEventName)eventName
+              parameters:(NSDictionary *)parameters
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged;
+- (instancetype)initWithFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior
+                 flushPeriodInSeconds:(int)flushPeriodInSeconds; // expose this since init is NS_UNAVAILABLE
+
+@end
+
 @interface FBSDKProfile (Testing)
 
 + (void)setCurrentProfile:(nullable FBSDKProfile *)profile
