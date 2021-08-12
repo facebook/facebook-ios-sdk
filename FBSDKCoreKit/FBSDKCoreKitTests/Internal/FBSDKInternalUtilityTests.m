@@ -78,33 +78,33 @@
                path:@""
                queryParameters:@{}
                error:NULL].absoluteString;
-  XCTAssertEqualObjects(URLString, @"https://facebook.com/" FBSDK_TARGET_PLATFORM_VERSION);
+  XCTAssertEqualObjects(URLString, @"https://facebook.com/" FBSDK_DEFAULT_GRAPH_API_VERSION);
 
   URLString = [FBSDKInternalUtility.sharedUtility
                facebookURLWithHostPrefix:@"m."
                path:@""
                queryParameters:@{}
                error:NULL].absoluteString;
-  XCTAssertEqualObjects(URLString, @"https://m.facebook.com/" FBSDK_TARGET_PLATFORM_VERSION);
+  XCTAssertEqualObjects(URLString, @"https://m.facebook.com/" FBSDK_DEFAULT_GRAPH_API_VERSION);
 
   URLString = [FBSDKInternalUtility.sharedUtility
                facebookURLWithHostPrefix:@"m"
                path:@""
                queryParameters:@{}
                error:NULL].absoluteString;
-  XCTAssertEqualObjects(URLString, @"https://m.facebook.com/" FBSDK_TARGET_PLATFORM_VERSION);
+  XCTAssertEqualObjects(URLString, @"https://m.facebook.com/" FBSDK_DEFAULT_GRAPH_API_VERSION);
 
   URLString = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
                                                                        path:@"/dialog/share"
                                                             queryParameters:@{}
                                                                       error:NULL].absoluteString;
-  XCTAssertEqualObjects(URLString, @"https://m.facebook.com/" FBSDK_TARGET_PLATFORM_VERSION @"/dialog/share");
+  XCTAssertEqualObjects(URLString, @"https://m.facebook.com/" FBSDK_DEFAULT_GRAPH_API_VERSION @"/dialog/share");
 
   URLString = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
                                                                        path:@"dialog/share"
                                                             queryParameters:@{}
                                                                       error:NULL].absoluteString;
-  XCTAssertEqualObjects(URLString, @"https://m.facebook.com/" FBSDK_TARGET_PLATFORM_VERSION @"/dialog/share");
+  XCTAssertEqualObjects(URLString, @"https://m.facebook.com/" FBSDK_DEFAULT_GRAPH_API_VERSION @"/dialog/share");
 
   URLString = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
                                                                        path:@"dialog/share"
@@ -112,7 +112,7 @@
                                                                       error:NULL].absoluteString;
   XCTAssertEqualObjects(
     URLString,
-    @"https://m.facebook.com/" FBSDK_TARGET_PLATFORM_VERSION @"/dialog/share?key=value"
+    @"https://m.facebook.com/" FBSDK_DEFAULT_GRAPH_API_VERSION @"/dialog/share?key=value"
   );
 
   URLString = [FBSDKInternalUtility.sharedUtility facebookURLWithHostPrefix:@"m"
@@ -169,7 +169,7 @@
                                                             queryParameters:@{}
                                                              defaultVersion:@""
                                                                       error:NULL].absoluteString;
-  XCTAssertEqualObjects(URLString, @"https://m.facebook.com/" FBSDK_TARGET_PLATFORM_VERSION @"/dialog/share");
+  XCTAssertEqualObjects(URLString, @"https://m.facebook.com/" FBSDK_DEFAULT_GRAPH_API_VERSION @"/dialog/share");
 }
 
 - (void)testFacebookGamingURL
@@ -186,14 +186,14 @@
                path:@""
                queryParameters:@{}
                error:NULL].absoluteString;
-  XCTAssertEqualObjects(URLString, @"https://graph.fb.gg/" FBSDK_TARGET_PLATFORM_VERSION);
+  XCTAssertEqualObjects(URLString, @"https://graph.fb.gg/" FBSDK_DEFAULT_GRAPH_API_VERSION);
 
   URLString = [FBSDKInternalUtility.sharedUtility
                facebookURLWithHostPrefix:@"graph-video"
                path:@""
                queryParameters:@{}
                error:NULL].absoluteString;
-  XCTAssertEqualObjects(URLString, @"https://graph-video.fb.gg/" FBSDK_TARGET_PLATFORM_VERSION);
+  XCTAssertEqualObjects(URLString, @"https://graph-video.fb.gg/" FBSDK_DEFAULT_GRAPH_API_VERSION);
 }
 
 // MARK: - Extracting Permissions

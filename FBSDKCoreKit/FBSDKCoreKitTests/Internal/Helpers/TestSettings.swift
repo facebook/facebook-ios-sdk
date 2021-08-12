@@ -30,7 +30,7 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
 
   var appID: String?
 
-  var stubbedGraphAPIVersion = FBSDK_TARGET_PLATFORM_VERSION
+  var stubbedGraphAPIVersion = FBSDK_DEFAULT_GRAPH_API_VERSION
   var advertisingTrackingStatus: AdvertisingTrackingStatus = .unspecified
   var stubbedIsDataProcessingRestricted = false
   var stubbedIsAutoLogAppEventsEnabled = false

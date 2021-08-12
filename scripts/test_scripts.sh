@@ -108,7 +108,7 @@ test_main_setup() {
   test_current_version=$(grep -Eo 'FBSDK_VERSION_STRING @".*"' "$PWD/$test_main_version_file" | awk -F'"' '{print $2}')
 
   local test_sdk_current_graph_api_version
-  test_sdk_current_graph_api_version=$(grep -Eo 'FBSDK_TARGET_PLATFORM_VERSION @".*"' "$PWD/$test_main_version_file" | awk -F'"' '{print $2}')
+  test_sdk_current_graph_api_version=$(grep -Eo 'FBSDK_DEFAULT_GRAPH_API_VERSION @".*"' "$PWD/$test_main_version_file" | awk -F'"' '{print $2}')
 
   if [ ! -f "$PWD/scripts/run.sh" ]; then
     test_failure "You're not in the correct working directory. Please change to the scripts/ parent directory"

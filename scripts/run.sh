@@ -110,7 +110,7 @@ main() {
     )
 
     SDK_CURRENT_VERSION=$(grep -Eo 'FBSDK_VERSION_STRING @".*"' "$SDK_DIR/$SDK_MAIN_VERSION_FILE" | awk -F'"' '{print $2}')
-    SDK_CURRENT_GRAPH_API_VERSION=$(grep -Eo 'FBSDK_TARGET_PLATFORM_VERSION @".*"' "$SDK_DIR/$SDK_MAIN_VERSION_FILE" | awk -F'"' '{print $2}')
+    SDK_CURRENT_GRAPH_API_VERSION=$(grep -Eo 'FBSDK_DEFAULT_GRAPH_API_VERSION @".*"' "$SDK_DIR/$SDK_MAIN_VERSION_FILE" | awk -F'"' '{print $2}')
 
     SDK_GIT_REMOTE="https://github.com/facebook/facebook-ios-sdk"
 
