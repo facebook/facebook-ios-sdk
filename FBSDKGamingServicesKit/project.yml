@@ -50,6 +50,22 @@ settings:
     ENABLE_NS_ASSERTIONS: YES
 
 aggregateTargets:
+  LegacyGamingServices-Universal:
+    targets: [LegacyGamingServices]
+    configFiles:
+      Debug: Configurations/LegacyGamingServices.xcconfig
+      Release: Configurations/LegacyGamingServices.xcconfig
+    buildScripts:
+      - name: ShellScript
+        path: ../scripts/xcode/build-universal-framework.sh
+  FacebookGamingServices-Universal:
+    targets: [FacebookGamingServices]
+    configFiles:
+      Debug: Configurations/FacebookGamingServices.xcconfig
+      Release: Configurations/FacebookGamingServices.xcconfig
+    buildScripts:
+      - name: ShellScript
+        path: ../scripts/xcode/build-universal-framework.sh
   FBSDKGamingServicesKit-Universal:
     targets: [FBSDKGamingServicesKit]
     configFiles:
