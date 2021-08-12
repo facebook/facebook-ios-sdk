@@ -178,6 +178,8 @@
 #import "UIApplication+URLOpener.h"
 #import "WebViewAppLinkResolver+Testing.h"
 #import "XCTestCase+Extensions.h"
+#import "FBSDKCrashShield.h"
+#import "FBSDKFeature.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -223,6 +225,16 @@ id getVariableFromInstance(NSObject *_Nullable instance, NSString *_Nullable var
 @interface FBSDKRestrictiveDataFilterManager (Testing)
 - (nullable NSString *)getMatchedDataTypeWithEventName:(NSString *)eventName
                                               paramKey:(NSString *)paramKey;
+@end
+
+@interface FBSDKCrashShield (Testing)
++ (void)configureWithSettings:(id<FBSDKSettings>)settings
+              requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
+              featureChecking:(id<FBSDKFeatureChecking, FBSDKFeatureDisabling>)featureChecking;
++ (nullable NSString *)_getFeature:(id)callstack; // Using id instead of NSArray<NSString *> * for testing in Swift
++ (nullable NSString *)_getClassName:(id)entry; // Using id instead of NSString for testing in Swift
++ (void)reset;
++ (FBSDKFeature)featureForString:(NSString *)featureName;
 @end
 
 
