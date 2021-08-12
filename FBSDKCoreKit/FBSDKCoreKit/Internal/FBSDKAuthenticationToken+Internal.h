@@ -25,6 +25,8 @@
 
 #import "FBSDKCoreKit+Internal.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FBSDKAuthenticationToken (Internal)
 
 - (instancetype)initWithTokenString:(NSString *)tokenString
@@ -33,3 +35,5 @@
 + (void)resetTokenCache;
 
 @end
+
+NS_ASSUME_NONNULL_END

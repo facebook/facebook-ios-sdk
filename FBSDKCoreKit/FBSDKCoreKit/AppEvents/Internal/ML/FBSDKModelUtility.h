@@ -22,11 +22,15 @@
 
  #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(ModelUtility)
 @interface FBSDKModelUtility : NSObject
 
 + (NSString *)normalizedText:(NSString *)text;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

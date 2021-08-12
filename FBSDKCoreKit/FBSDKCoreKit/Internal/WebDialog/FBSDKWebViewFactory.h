@@ -24,11 +24,15 @@
 
 #import "FBSDKWebViewProviding.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(WebViewFactory)
 @interface FBSDKWebViewFactory : NSObject<FBSDKWebViewProviding>
 
 - (id<FBSDKWebView>)createWebViewWithFrame:(CGRect)frame;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif
