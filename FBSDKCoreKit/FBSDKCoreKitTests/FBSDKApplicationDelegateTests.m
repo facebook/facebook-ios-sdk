@@ -44,7 +44,7 @@
 @end
 
 @interface FBSDKGraphRequest (AppDelegateTesting)
-+ (Class<FBSDKCurrentAccessTokenStringProviding>)currentAccessTokenStringProvider;
++ (Class<FBSDKTokenStringProviding>)currentAccessTokenStringProvider;
 + (id<FBSDKSettings>)currentSettings;
 + (void)resetSettings;
 @end
