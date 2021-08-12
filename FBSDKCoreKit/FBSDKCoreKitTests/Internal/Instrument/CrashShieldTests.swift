@@ -48,7 +48,6 @@ class CrashShieldTests: XCTestCase {
 
     let featureName1 = CrashShield._getFeature(callstack1)
     XCTAssertEqual(featureName1, "AAM")
-
   }
 
   func testGetFeatureForCodelessEvents() {
