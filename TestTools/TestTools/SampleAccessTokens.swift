@@ -39,19 +39,19 @@ public class SampleAccessTokens: NSObject {
   )
 
   public static var expiredToken = AccessToken(
-      tokenString: defaultTokenString,
-      permissions: [],
-      declinedPermissions: [],
-      expiredPermissions: [],
-      appID: defaultAppID,
-      userID: defaultUserID,
-      expirationDate: .distantPast,
-      refreshDate: nil,
-      dataAccessExpirationDate: nil
+    tokenString: defaultTokenString,
+    permissions: [],
+    declinedPermissions: [],
+    expiredPermissions: [],
+    appID: defaultAppID,
+    userID: defaultUserID,
+    expirationDate: .distantPast,
+    refreshDate: nil,
+    dataAccessExpirationDate: nil
   )
 
   public static func create(withRefreshDate date: Date?) -> AccessToken {
-    return AccessToken(
+    AccessToken(
       tokenString: defaultTokenString,
       permissions: [],
       declinedPermissions: [],
@@ -65,7 +65,7 @@ public class SampleAccessTokens: NSObject {
   }
 
   public static func create(dataAccessExpirationDate date: Date) -> AccessToken {
-    return AccessToken(
+    AccessToken(
       tokenString: defaultTokenString,
       permissions: [],
       declinedPermissions: [],
@@ -79,7 +79,7 @@ public class SampleAccessTokens: NSObject {
   }
 
   public static func create(withPermissions permissions: [String]) -> AccessToken {
-    return AccessToken(
+    AccessToken(
       tokenString: defaultTokenString,
       permissions: permissions,
       declinedPermissions: [],
@@ -97,7 +97,7 @@ public class SampleAccessTokens: NSObject {
     declinedPermissions: [String] = [],
     expiredPermissions: [String] = []
   ) -> AccessToken {
-    return AccessToken(
+    AccessToken(
       tokenString: defaultTokenString,
       permissions: permissions,
       declinedPermissions: declinedPermissions,

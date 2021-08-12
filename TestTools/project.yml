@@ -16,10 +16,10 @@ settings:
 targets:
   TestTools:
     type: framework
-    platform: [iOS]
-    platformSuffix: ""
+    platform: iOS
     sources:
       - path: TestTools
+        headerVisibility: public
         excludes:
           - Info.plist
     dependencies:

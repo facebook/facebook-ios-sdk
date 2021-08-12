@@ -16,6 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import TestTools
 import XCTest
 
 // swiftlint:disable implicitly_unwrapped_optional
@@ -118,7 +119,7 @@ class FBSDKEventBindingTests: XCTestCase {
   }
 
   func testParsing() {
-    (0 ... 100).forEach { _ in
+    (0...100).forEach { _ in
       let sampleData = SampleRawRemoteEventBindings.sampleDictionary
       eventBindingManager.parseArray(Fuzzer.randomize(json: sampleData) as? Array ?? [])
     }

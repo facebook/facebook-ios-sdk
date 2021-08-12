@@ -22,11 +22,15 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(FBCloseIcon)
 @interface FBSDKCloseIcon : NSObject
 
 - (UIImage *)imageWithSize:(CGSize)size;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

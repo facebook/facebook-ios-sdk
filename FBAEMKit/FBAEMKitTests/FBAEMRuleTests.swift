@@ -17,6 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import FBAEMKit
+import TestTools
 import XCTest
 
 #if !os(tvOS)
@@ -24,23 +25,23 @@ import XCTest
 class FBAEMRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
 
   enum Keys {
-      static let conversionValue = "conversion_value"
-      static let priority = "priority"
-      static let events = "events"
-      static let eventName = "event_name"
-      static let values = "values"
-      static let currency = "currency"
-      static let amount = "amount"
+    static let conversionValue = "conversion_value"
+    static let priority = "priority"
+    static let events = "events"
+    static let eventName = "event_name"
+    static let values = "values"
+    static let currency = "currency"
+    static let amount = "amount"
   }
 
   enum Values {
-      static let purchase = "fb_mobile_purchase"
-      static let donate = "Donate"
-      static let activateApp = "fb_activate_app"
-      static let testEvent = "fb_test_event"
-      static let USD = "USD"
-      static let EU = "EU" // swiftlint:disable:this identifier_name
-      static let JPY = "JPY"
+    static let purchase = "fb_mobile_purchase"
+    static let donate = "Donate"
+    static let activateApp = "fb_activate_app"
+    static let testEvent = "fb_test_event"
+    static let USD = "USD"
+    static let EU = "EU" // swiftlint:disable:this identifier_name
+    static let JPY = "JPY"
   }
 
   var sampleData: [String: Any] = [
@@ -173,7 +174,7 @@ class FBAEMRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
   }
 
   func testParsing() {
-    (1 ... 100).forEach { _ in
+    (1...100).forEach { _ in
       if let data = (Fuzzer.randomize(json: self.sampleData) as? [String: Any]) {
         _ = FBAEMRule(json: data)
       }

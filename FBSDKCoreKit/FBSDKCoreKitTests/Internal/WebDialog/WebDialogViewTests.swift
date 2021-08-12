@@ -30,7 +30,7 @@ class WebDialogViewTests: XCTestCase, WebDialogViewDelegate { // swiftlint:disab
   var capturedDidCompleteResults: [String: String]?
   var webDialogViewDidCancelWasCalled = false
   var webDialogViewDidFinishLoadWasCalled = false
-  var urlOpener = TestURLOpener()
+  var urlOpener = TestInternalURLOpener()
 
   override func setUp() {
     super.setUp()
@@ -266,9 +266,10 @@ class WebDialogViewTests: XCTestCase, WebDialogViewDelegate { // swiftlint:disab
       delegateDidFailWithErrorWasCalled,
       "Should invoke the delegate with failure when the url is cancelled and contains an error"
     )
-    guard let error = capturedDelegateDidFailError as NSError?,
-          error.domain == "com.facebook.sdk.core",
-          error.code == 999
+    guard
+      let error = capturedDelegateDidFailError as NSError?,
+      error.domain == "com.facebook.sdk.core",
+      error.code == 999
     else {
       return XCTFail("Should create an error from the URL and call the delegate with it")
     }

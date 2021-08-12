@@ -36,7 +36,6 @@
 #import "FBSDKFeatureManager+FeatureChecking.h"
 #import "FBSDKPaymentObserver.h"
 #import "FBSDKRestrictiveDataFilterManager+Protocols.h"
-#import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKTimeSpentData.h"
 
 @interface FBSDKGraphRequestConnection (AppDelegateTesting)
@@ -46,6 +45,8 @@
 
 @interface FBSDKGraphRequest (AppDelegateTesting)
 + (Class<FBSDKCurrentAccessTokenStringProviding>)currentAccessTokenStringProvider;
++ (id<FBSDKSettings>)currentSettings;
++ (void)resetSettings;
 @end
 
 @interface FBSDKApplicationDelegate (Testing)
@@ -90,7 +91,7 @@
 @end
 
 @interface FBSDKRestrictiveDataFilterManager (Testing)
-- (Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
+- (id<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
 @end
 
 @interface FBSDKAppEvents (ApplicationDelegateTesting)
@@ -99,7 +100,7 @@
 
 + (Class<FBSDKGateKeeperManaging>)gateKeeperManager;
 + (Class<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider;
-+ (Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
++ (id<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
 + (id<FBSDKGraphRequestProviding>)requestProvider;
 + (id<FBSDKFeatureChecking>)featureChecker;
 + (id<FBSDKDataPersisting>)store;
@@ -144,12 +145,14 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   self.featureChecker = [TestFeatureManager new];
   self.backgroundEventLogger = [[TestBackgroundEventLogger alloc] initWithInfoDictionaryProvider:[TestBundle new]
                                                                                      eventLogger:self.appEvents];
+  TestServerConfigurationProvider *serverConfigurationProvider = [[TestServerConfigurationProvider alloc]
+                                                                  initWithConfiguration:ServerConfigurationFixtures.defaultConfig];
   self.delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationCenter:[TestNotificationCenter new]
                                                                    tokenWallet:TestAccessTokenWallet.class
                                                                       settings:self.settings
                                                                 featureChecker:self.featureChecker
                                                                      appEvents:self.appEvents
-                                                   serverConfigurationProvider:TestServerConfigurationProvider.class
+                                                   serverConfigurationProvider:serverConfigurationProvider
                                                                          store:self.store
                                                      authenticationTokenWallet:TestAuthenticationTokenWallet.class
                                                                profileProvider:TestProfileProvider.class
@@ -174,7 +177,6 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   [TestAuthenticationTokenWallet reset];
   [TestGateKeeperManager reset];
   [TestProfileProvider reset];
-  [TestServerConfigurationProvider reset];
   [TestSettings reset];
 }
 
@@ -218,7 +220,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   );
   XCTAssertEqualObjects(
     self.appEvents.capturedConfigureServerConfigurationProvider,
-    FBSDKServerConfigurationManager.class,
+    FBSDKServerConfigurationManager.shared,
     "Initializing the SDK should set server configuration provider for event logging"
   );
   NSObject *store = (NSObject *)self.appEvents.capturedConfigureStore;
@@ -393,7 +395,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   );
   XCTAssertEqualObjects(
     serverConfigurationProvider,
-    FBSDKServerConfigurationManager.class,
+    FBSDKServerConfigurationManager.shared,
     "Should be configured with the expected concrete server configuration provider"
   );
   XCTAssertEqualObjects(
@@ -455,7 +457,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   FBSDKRestrictiveDataFilterManager *restrictiveDataFilterManager = (FBSDKRestrictiveDataFilterManager *) self.appEvents.capturedConfigureRestrictiveDataFilterParameterProcessor;
   XCTAssertEqualObjects(
     restrictiveDataFilterManager.serverConfigurationProvider,
-    FBSDKServerConfigurationManager.class,
+    FBSDKServerConfigurationManager.shared,
     "Should be configured with the expected concrete server configuration provider"
   );
 }
@@ -627,7 +629,7 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   );
   XCTAssertEqualObjects(
     serverConfiguration,
-    FBSDKServerConfigurationManager.class,
+    FBSDKServerConfigurationManager.shared,
     "Should be configured with the expected concrete server configuration"
   );
 
@@ -774,6 +776,18 @@ static NSString *bitmaskKey = @"com.facebook.sdk.kits.bitmask";
   XCTAssert(
     [self.featureChecker capturedFeaturesContains:FBSDKFeatureInstrument],
     "Should check if the instrument feature is enabled on initialization"
+  );
+}
+
+- (void)testInitializingSdkSetsSharedSettingsForGraphRequest
+{
+  [FBSDKGraphRequest resetSettings];
+  [FBSDKApplicationDelegate resetHasInitializeBeenCalled];
+  [self.delegate initializeSDKWithLaunchOptions:@{}];
+  XCTAssertEqualObjects(
+    FBSDKGraphRequest.currentSettings,
+    FBSDKSettings.sharedSettings,
+    "Should have set the shared settings instance for FBSDKGraphRequest"
   );
 }
 

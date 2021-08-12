@@ -31,6 +31,16 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(CreateContextContent)
 @interface FBSDKCreateContextContent : NSObject <NSSecureCoding, FBSDKValidatable>
 
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
+/**
+  Builds a content object that will be use to display a create context dialog
+ @param playerID The player ID of the user being challenged which will be used  to create a game context
+ */
+- (instancetype)initDialogContentWithPlayerID:(NSString*)playerID
+NS_SWIFT_NAME(init(playerID:));
+
 /**
  The ID of the player that is being challenged.
  @return The ID for the player being challenged

@@ -54,19 +54,17 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
 @interface FBSDKSKAdNetworkReporterTests : XCTestCase
 @property (nonnull, nonatomic) FBSDKSKAdNetworkReporter *skAdNetworkReporter;
+@property (nonatomic) UserDefaultsSpy *userDefaultsSpy;
+@property (nonatomic) FBSDKSKAdNetworkConversionConfiguration *defaultConfiguration;
 @end
 
 @implementation FBSDKSKAdNetworkReporterTests
-{
-  UserDefaultsSpy *userDefaultsSpy;
-  FBSDKSKAdNetworkConversionConfiguration *defaultConfiguration;
-}
 
 - (void)setUp
 {
   [super setUp];
   [TestConversionValueUpdating reset];
-  userDefaultsSpy = [UserDefaultsSpy new];
+  self.userDefaultsSpy = [UserDefaultsSpy new];
 
   NSDictionary *json = @{
     @"data" : @[@{
@@ -77,10 +75,10 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
                   @"conversion_value_rules" : @[],
     }]
   };
-  defaultConfiguration = [[FBSDKSKAdNetworkConversionConfiguration alloc] initWithJSON:json];
+  self.defaultConfiguration = [[FBSDKSKAdNetworkConversionConfiguration alloc] initWithJSON:json];
 
   TestGraphRequestFactory *requestProvider = [TestGraphRequestFactory new];
-  self.skAdNetworkReporter = [[FBSDKSKAdNetworkReporter alloc] initWithRequestProvider:requestProvider store:userDefaultsSpy conversionValueUpdatable:TestConversionValueUpdating.class];
+  self.skAdNetworkReporter = [[FBSDKSKAdNetworkReporter alloc] initWithRequestProvider:requestProvider store:self.userDefaultsSpy conversionValueUpdatable:TestConversionValueUpdating.class];
   [self.skAdNetworkReporter _loadReportData];
   [self.skAdNetworkReporter setSKAdNetworkReportEnabled:YES];
 }
@@ -97,19 +95,19 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
 - (void)testShouldCutoffWithoutTimestampWithCutoffTime
 {
-  [self.skAdNetworkReporter setConfiguration:defaultConfiguration];
+  [self.skAdNetworkReporter setConfiguration:self.defaultConfiguration];
 
   XCTAssertFalse([self.skAdNetworkReporter _shouldCutoff], "Should not cut off reporting when there is no install timestamp");
 }
 
 - (void)testShouldCutoffWithTimestampWithoutCutoffTime
 {
-  [userDefaultsSpy setObject:NSDate.distantPast forKey:FBSDKSettingsInstallTimestamp];
+  [self.userDefaultsSpy setObject:NSDate.distantPast forKey:FBSDKSettingsInstallTimestamp];
   XCTAssertTrue(
     [self.skAdNetworkReporter _shouldCutoff],
     "Should cut off reporting when when the timestamp is earlier than the current date and there's no cutoff date provided"
   );
-  [userDefaultsSpy setObject:NSDate.distantFuture forKey:FBSDKSettingsInstallTimestamp];
+  [self.userDefaultsSpy setObject:NSDate.distantFuture forKey:FBSDKSettingsInstallTimestamp];
   XCTAssertTrue(
     [self.skAdNetworkReporter _shouldCutoff],
     "Should cut off reporting when the timestamp is later than the current date and there's no cutoff date provided"
@@ -118,8 +116,8 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
 - (void)testShouldCutoffWhenTimestampEarlierThanCutoffTime
 {
-  [self.skAdNetworkReporter setConfiguration:defaultConfiguration];
-  [userDefaultsSpy setObject:NSDate.distantPast forKey:FBSDKSettingsInstallTimestamp];
+  [self.skAdNetworkReporter setConfiguration:self.defaultConfiguration];
+  [self.userDefaultsSpy setObject:NSDate.distantPast forKey:FBSDKSettingsInstallTimestamp];
 
   XCTAssertTrue(
     [self.skAdNetworkReporter _shouldCutoff],
@@ -129,8 +127,8 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
 - (void)testShouldCutoffWhenTimestampLaterThanCutoffTime
 {
-  [self.skAdNetworkReporter setConfiguration:defaultConfiguration];
-  [userDefaultsSpy setObject:NSDate.distantFuture forKey:FBSDKSettingsInstallTimestamp];
+  [self.skAdNetworkReporter setConfiguration:self.defaultConfiguration];
+  [self.userDefaultsSpy setObject:NSDate.distantFuture forKey:FBSDKSettingsInstallTimestamp];
 
   XCTAssertFalse(
     [self.skAdNetworkReporter _shouldCutoff],
@@ -140,7 +138,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
 - (void)testShouldCutoff
 {
-  [self.skAdNetworkReporter setConfiguration:defaultConfiguration];
+  [self.skAdNetworkReporter setConfiguration:self.defaultConfiguration];
 
   // Case 1: refresh install
   [FBSDKSettings.sharedSettings recordInstall];
@@ -151,34 +149,34 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   NSDateComponents *addComponents = [NSDateComponents new];
   addComponents.day = -2;
   NSDate *expiredDate = [calendar dateByAddingComponents:addComponents toDate:[NSDate date] options:0];
-  [userDefaultsSpy setObject:expiredDate forKey:FBSDKSettingsInstallTimestamp];
+  [self.userDefaultsSpy setObject:expiredDate forKey:FBSDKSettingsInstallTimestamp];
   XCTAssertTrue([self.skAdNetworkReporter _shouldCutoff]);
 
-  [userDefaultsSpy removeObjectForKey:FBSDKSettingsInstallTimestamp];
+  [self.userDefaultsSpy removeObjectForKey:FBSDKSettingsInstallTimestamp];
 }
 
 - (void)testCutoffWhenTimeBucketIsAvailable
 {
   if (@available(iOS 14, *)) {
-    [self.skAdNetworkReporter setConfiguration:defaultConfiguration];
+    [self.skAdNetworkReporter setConfiguration:self.defaultConfiguration];
     NSDate *today = [NSDate date];
     NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSDateComponents *addComponents = [NSDateComponents new];
     addComponents.day = -2;
     NSDate *expiredDate = [calendar dateByAddingComponents:addComponents toDate:today options:0];
-    [userDefaultsSpy setObject:expiredDate forKey:FBSDKSettingsInstallTimestamp];
+    [self.userDefaultsSpy setObject:expiredDate forKey:FBSDKSettingsInstallTimestamp];
 
     XCTAssertTrue([self.skAdNetworkReporter _shouldCutoff]);
     [self.skAdNetworkReporter checkAndRevokeTimer];
-    XCTAssertNil([userDefaultsSpy objectForKey:FBSDKSKAdNetworkReporterKey]);
+    XCTAssertNil([self.userDefaultsSpy objectForKey:FBSDKSKAdNetworkReporterKey]);
     XCTAssertFalse([TestConversionValueUpdating wasUpdateVersionValueCalled]);
-    [userDefaultsSpy removeObjectForKey:FBSDKSettingsInstallTimestamp];
+    [self.userDefaultsSpy removeObjectForKey:FBSDKSettingsInstallTimestamp];
   }
 }
 
 - (void)testUpdateConversionValue
 {
-  [self.skAdNetworkReporter setConfiguration:defaultConfiguration];
+  [self.skAdNetworkReporter setConfiguration:self.defaultConfiguration];
   [self.skAdNetworkReporter _updateConversionValue:2];
   XCTAssertTrue(
     [TestConversionValueUpdating wasUpdateVersionValueCalled],
@@ -212,7 +210,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
     [self.skAdNetworkReporter _recordAndUpdateEvent:@"fb_mobile_purchase" currency:@"USD" value:@100];
     [self.skAdNetworkReporter _recordAndUpdateEvent:@"fb_mobile_purchase" currency:@"USD" value:@201];
     [self.skAdNetworkReporter _recordAndUpdateEvent:@"test" currency:nil value:nil];
-    NSData *cache = [userDefaultsSpy objectForKey:FBSDKSKAdNetworkReporterKey];
+    NSData *cache = [self.userDefaultsSpy objectForKey:FBSDKSKAdNetworkReporterKey];
     XCTAssertNotNil(cache);
     // cannot adopt NSKeyedUnarchiver.unarchivedDictionaryWithKeysOfClasses::: due to nested collections
     NSDictionary<NSString *, id> *data = [FBSDKTypeUtility dictionaryValue:[NSKeyedUnarchiver

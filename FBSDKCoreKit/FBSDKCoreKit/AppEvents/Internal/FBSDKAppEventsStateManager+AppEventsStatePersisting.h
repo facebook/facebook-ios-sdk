@@ -21,5 +21,9 @@
 #import "FBSDKAppEventsStateManager.h"
 #import "FBSDKAppEventsStatePersisting.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FBSDKAppEventsStateManager (AppEventsStatePersisting) <FBSDKAppEventsStatePersisting>
 @end
+
+NS_ASSUME_NONNULL_END

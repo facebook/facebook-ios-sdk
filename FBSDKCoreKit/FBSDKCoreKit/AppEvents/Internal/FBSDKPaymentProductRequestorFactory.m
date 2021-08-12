@@ -27,7 +27,6 @@
 #import "FBSDKProductRequestFactory.h"
 #import "FBSDKProductsRequestProtocols.h"
 #import "FBSDKSettings+Internal.h"
-#import "FBSDKSettings+SettingsProtocols.h"
 #import "NSUserDefaults+FBSDKDataPersisting.h"
 
 @interface FBSDKPaymentProductRequestorFactory ()

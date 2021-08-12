@@ -31,7 +31,7 @@
  #define FBSDKWEBDIALOGFRAMEHEIGHT 170.0
 
 @interface FBSDKSwitchContextDialog ()
-@property id<FBSDKWindowFinding> windowFinder;
+@property (nonatomic) id<FBSDKWindowFinding> windowFinder;
 @end
 
 @implementation FBSDKSwitchContextDialog
@@ -49,9 +49,7 @@
 {
   NSError *error;
   if (![self validateWithError:&error]) {
-    if (error) {
-      [self.delegate contextDialog:self didFailWithError:error];
-    }
+    [self.delegate contextDialog:self didFailWithError:error];
     return NO;
   }
 

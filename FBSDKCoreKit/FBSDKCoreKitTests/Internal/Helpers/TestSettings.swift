@@ -23,6 +23,7 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   static var userAgentSuffix: String?
   static var loggingBehaviors = Set<LoggingBehavior>()
   static var sdkVersion: String?
+
   var logWarningsCallCount = 0
   var logIfSDKSettingsChangedCallCount = 0
   var recordInstallCallCount = 0
@@ -40,6 +41,8 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   var stubbedIsSKAdNetworkReportEnabled = false
   var stubbedLimitEventAndDataUsage = false
   var shouldUseTokenOptimizations = true
+  var isGraphErrorRecoveryEnabled = false
+  var graphAPIDebugParamValue: String?
 
   var isDataProcessingRestricted: Bool {
     stubbedIsDataProcessingRestricted

@@ -18,14 +18,6 @@
 
 #import "FBSDKShareKitTestUtility.h"
 
-#import <MessageUI/MessageUI.h>
-#import <Social/Social.h>
-
-#import <objc/runtime.h>
-
-#import "FBSDKCoreKit+Internal.h"
-#import "FBSDKShareDialog.h"
-
 @implementation FBSDKShareKitTestUtility
 
 + (UIImage *)testImage

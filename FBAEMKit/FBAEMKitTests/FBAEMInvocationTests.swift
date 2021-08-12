@@ -21,173 +21,173 @@ import XCTest
 
 class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_length
 
-    enum Keys {
-        static let campaignID = "campaign_ids"
-        static let ACSToken = "acs_token"
-        static let ACSSharedSecret = "shared_secret"
-        static let ACSConfigID = "acs_config_id"
-        static let advertiserID = "advertiser_id"
-        static let businessID = "advertiser_id"
-        static let timestamp = "timestamp"
-        static let configMode = "config_mode"
-        static let configID = "config_id"
-        static let recordedEvents = "recorded_events"
-        static let recordedValues = "recorded_values"
-        static let conversionValues = "conversion_values"
-        static let priority = "priority"
-        static let conversionTimestamp = "conversion_timestamp"
-        static let isAggregated = "is_aggregated"
-        static let defaultCurrency = "default_currency"
-        static let cutoffTime = "cutoff_time"
-        static let validFrom = "valid_from"
-        static let conversionValueRules = "conversion_value_rules"
-        static let conversionValue = "conversion_value"
-        static let events = "events"
-        static let eventName = "event_name"
-        static let values = "values"
-        static let currency = "currency"
-        static let amount = "amount"
-        static let paramRule = "param_rule"
-    }
+  enum Keys {
+    static let campaignID = "campaign_ids"
+    static let ACSToken = "acs_token"
+    static let ACSSharedSecret = "shared_secret"
+    static let ACSConfigID = "acs_config_id"
+    static let advertiserID = "advertiser_id"
+    static let businessID = "advertiser_id"
+    static let timestamp = "timestamp"
+    static let configMode = "config_mode"
+    static let configID = "config_id"
+    static let recordedEvents = "recorded_events"
+    static let recordedValues = "recorded_values"
+    static let conversionValues = "conversion_values"
+    static let priority = "priority"
+    static let conversionTimestamp = "conversion_timestamp"
+    static let isAggregated = "is_aggregated"
+    static let defaultCurrency = "default_currency"
+    static let cutoffTime = "cutoff_time"
+    static let validFrom = "valid_from"
+    static let conversionValueRules = "conversion_value_rules"
+    static let conversionValue = "conversion_value"
+    static let events = "events"
+    static let eventName = "event_name"
+    static let values = "values"
+    static let currency = "currency"
+    static let amount = "amount"
+    static let paramRule = "param_rule"
+  }
 
-    enum Values {
-        static let purchase = "fb_mobile_purchase"
-        static let donate = "Donate"
-        static let unlock = "fb_unlock_level"
-        static let test = "fb_test_event"
-        static let defaultMode = "DEFAULT"
-        static let brandMode = "BRAND"
-        static let USD = "USD"
-    }
+  enum Values {
+    static let purchase = "fb_mobile_purchase"
+    static let donate = "Donate"
+    static let unlock = "fb_unlock_level"
+    static let test = "fb_test_event"
+    static let defaultMode = "DEFAULT"
+    static let brandMode = "BRAND"
+    static let USD = "USD"
+  }
 
-    var validInvocation: AEMInvocation! // swiftlint:disable:this implicitly_unwrapped_optional
-      = AEMInvocation(
-        campaignID: "test_campaign_1234",
-        acsToken: "test_token_12345",
-        acsSharedSecret: "test_shared_secret",
-        acsConfigID: "test_config_123",
-        businessID: "test_advertiserid_coffee",
-        timestamp: Date(timeIntervalSince1970: 1618383600),
-        configMode: "DEFAULT",
-        configID: 10,
-        recordedEvents: nil,
-        recordedValues: nil,
-        conversionValue: -1,
-        priority: -1,
-        conversionTimestamp: Date(timeIntervalSince1970: 1618383700),
-        isAggregated: false
-      )
-    var config1: AEMConfiguration!  // swiftlint:disable:this implicitly_unwrapped_optional
-      = AEMConfiguration(json: [
-        Keys.defaultCurrency: Values.USD,
-        Keys.cutoffTime: 1,
-        Keys.validFrom: 10000,
-        Keys.configMode: Values.defaultMode,
-        Keys.conversionValueRules: [
-          [
-            Keys.conversionValue: 2,
-            Keys.priority: 10,
-            Keys.events: [
-              [
-                Keys.eventName: Values.purchase,
-              ],
-              [
-                Keys.eventName: Values.donate,
-              ],
+  var validInvocation: AEMInvocation! // swiftlint:disable:this implicitly_unwrapped_optional
+    = AEMInvocation(
+      campaignID: "test_campaign_1234",
+      acsToken: "test_token_12345",
+      acsSharedSecret: "test_shared_secret",
+      acsConfigID: "test_config_123",
+      businessID: "test_advertiserid_coffee",
+      timestamp: Date(timeIntervalSince1970: 1618383600),
+      configMode: "DEFAULT",
+      configID: 10,
+      recordedEvents: nil,
+      recordedValues: nil,
+      conversionValue: -1,
+      priority: -1,
+      conversionTimestamp: Date(timeIntervalSince1970: 1618383700),
+      isAggregated: false
+    )
+  var config1: AEMConfiguration!  // swiftlint:disable:this implicitly_unwrapped_optional
+    = AEMConfiguration(json: [
+      Keys.defaultCurrency: Values.USD,
+      Keys.cutoffTime: 1,
+      Keys.validFrom: 10000,
+      Keys.configMode: Values.defaultMode,
+      Keys.conversionValueRules: [
+        [
+          Keys.conversionValue: 2,
+          Keys.priority: 10,
+          Keys.events: [
+            [
+              Keys.eventName: Values.purchase,
+            ],
+            [
+              Keys.eventName: Values.donate,
             ],
           ],
-          [
-            Keys.conversionValue: 1,
-            Keys.priority: 11,
-            Keys.events: [
-              [
-                Keys.eventName: Values.purchase,
-                Keys.values: [
-                  [
-                    Keys.currency: Values.USD,
-                    Keys.amount: 100
-                  ]
+        ],
+        [
+          Keys.conversionValue: 1,
+          Keys.priority: 11,
+          Keys.events: [
+            [
+              Keys.eventName: Values.purchase,
+              Keys.values: [
+                [
+                  Keys.currency: Values.USD,
+                  Keys.amount: 100
                 ]
-              ],
-              [
-                Keys.eventName: Values.unlock,
-              ],
+              ]
             ],
-          ]
-        ]
-      ])
-    var config2: AEMConfiguration! // swiftlint:disable:this implicitly_unwrapped_optional
-      = AEMConfiguration(json: [
-        Keys.defaultCurrency: Values.USD,
-        Keys.cutoffTime: 1,
-        Keys.validFrom: 20000,
-        Keys.configMode: Values.defaultMode,
-        Keys.conversionValueRules: [
-          [
-            Keys.conversionValue: 2,
-            Keys.priority: 10,
-            Keys.events: [
-              [
-                Keys.eventName: Values.purchase,
-              ],
-              [
-                Keys.eventName: Values.donate,
-              ],
+            [
+              Keys.eventName: Values.unlock,
             ],
-          ]
+          ],
         ]
-      ])
-
-    func testInvocationWithInvalidAppLinkData() {
-        var invalidData: [String: Any] = [:]
-
-        XCTAssertNil(AEMInvocation(appLinkData: nil))
-
-        invalidData = [
-          "acs_token": "test_token_12345",
+      ]
+    ])
+  var config2: AEMConfiguration! // swiftlint:disable:this implicitly_unwrapped_optional
+    = AEMConfiguration(json: [
+      Keys.defaultCurrency: Values.USD,
+      Keys.cutoffTime: 1,
+      Keys.validFrom: 20000,
+      Keys.configMode: Values.defaultMode,
+      Keys.conversionValueRules: [
+        [
+          Keys.conversionValue: 2,
+          Keys.priority: 10,
+          Keys.events: [
+            [
+              Keys.eventName: Values.purchase,
+            ],
+            [
+              Keys.eventName: Values.donate,
+            ],
+          ],
         ]
-        XCTAssertNil(AEMInvocation(appLinkData: invalidData))
+      ]
+    ])
 
-        invalidData = [
-          "campaign_ids": "test_campaign_1234",
-        ]
-        XCTAssertNil(AEMInvocation(appLinkData: invalidData))
+  func testInvocationWithInvalidAppLinkData() {
+    var invalidData: [String: Any] = [:]
 
-        invalidData = [
-          "advertiser_id": "test_advertiserid_coffee",
-        ]
-        XCTAssertNil(AEMInvocation(appLinkData: invalidData))
+    XCTAssertNil(AEMInvocation(appLinkData: nil))
 
-        invalidData = [
-          "acs_token": 123,
-          "campaign_ids": 123,
-        ]
-        XCTAssertNil(AEMInvocation(appLinkData: invalidData))
-    }
+    invalidData = [
+      "acs_token": "test_token_12345",
+    ]
+    XCTAssertNil(AEMInvocation(appLinkData: invalidData))
 
-    func testInvocationWithValidAppLinkData() {
-        var validData: [String: Any] = [:]
-        var invocation: AEMInvocation?
+    invalidData = [
+      "campaign_ids": "test_campaign_1234",
+    ]
+    XCTAssertNil(AEMInvocation(appLinkData: invalidData))
 
-        validData = [
-          "acs_token": "test_token_12345",
-          "campaign_ids": "test_campaign_1234",
-        ]
-        invocation = AEMInvocation(appLinkData: validData)
-        XCTAssertEqual(invocation?.acsToken, "test_token_12345")
-        XCTAssertEqual(invocation?.campaignID, "test_campaign_1234")
-        XCTAssertNil(invocation?.businessID)
+    invalidData = [
+      "advertiser_id": "test_advertiserid_coffee",
+    ]
+    XCTAssertNil(AEMInvocation(appLinkData: invalidData))
 
-        validData = [
-          "acs_token": "test_token_12345",
-          "campaign_ids": "test_campaign_1234",
-          "advertiser_id": "test_advertiserid_coffee",
-        ]
-        invocation = AEMInvocation(appLinkData: validData)
-        XCTAssertEqual(invocation?.acsToken, "test_token_12345")
-        XCTAssertEqual(invocation?.campaignID, "test_campaign_1234")
-        XCTAssertEqual(invocation?.businessID, "test_advertiserid_coffee")
-    }
+    invalidData = [
+      "acs_token": 123,
+      "campaign_ids": 123,
+    ]
+    XCTAssertNil(AEMInvocation(appLinkData: invalidData))
+  }
+
+  func testInvocationWithValidAppLinkData() {
+    var validData: [String: Any] = [:]
+    var invocation: AEMInvocation?
+
+    validData = [
+      "acs_token": "test_token_12345",
+      "campaign_ids": "test_campaign_1234",
+    ]
+    invocation = AEMInvocation(appLinkData: validData)
+    XCTAssertEqual(invocation?.acsToken, "test_token_12345")
+    XCTAssertEqual(invocation?.campaignID, "test_campaign_1234")
+    XCTAssertNil(invocation?.businessID)
+
+    validData = [
+      "acs_token": "test_token_12345",
+      "campaign_ids": "test_campaign_1234",
+      "advertiser_id": "test_advertiserid_coffee",
+    ]
+    invocation = AEMInvocation(appLinkData: validData)
+    XCTAssertEqual(invocation?.acsToken, "test_token_12345")
+    XCTAssertEqual(invocation?.campaignID, "test_campaign_1234")
+    XCTAssertEqual(invocation?.businessID, "test_advertiserid_coffee")
+  }
 
   func testFindConfig() {
     var invocation: AEMInvocation? = self.validInvocation
@@ -432,9 +432,9 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
 
   func testDecodeBase64UrlSafeString() {
     let decodedString = self.validInvocation
-        .decodeBase64UrlSafeString(
-            "E_dwjTaF9-SHijRKoD5jrgJoi9pgObKEqrkxgl3iE9-mxpDn-wpseBmtlNFN2HTI5OzzTVqhBwNi2zrwt-TxCw"
-        )
+      .decodeBase64UrlSafeString(
+        "E_dwjTaF9-SHijRKoD5jrgJoi9pgObKEqrkxgl3iE9-mxpDn-wpseBmtlNFN2HTI5OzzTVqhBwNi2zrwt-TxCw"
+      )
     XCTAssertEqual(
       decodedString?.base64EncodedString(),
       "E/dwjTaF9+SHijRKoD5jrgJoi9pgObKEqrkxgl3iE9+mxpDn+wpseBmtlNFN2HTI5OzzTVqhBwNi2zrwt+TxCw==",
@@ -485,7 +485,7 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     invocation.campaignID = "aaa"
     invocation.acsConfigID = "abc"
     invocation.acsSharedSecret =
-        "E_dwjTaF9-SHijRKoD5jrgJoi9pgObKEqrkxgl3iE9-mxpDn-wpseBmtlNFN2HTI5OzzTVqhBwNi2zrwt-TxCw"
+      "E_dwjTaF9-SHijRKoD5jrgJoi9pgObKEqrkxgl3iE9-mxpDn-wpseBmtlNFN2HTI5OzzTVqhBwNi2zrwt-TxCw"
     invocation.conversionValue = 6
 
     XCTAssertEqual(

@@ -694,14 +694,14 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
 
   func createDiscount(mode: SKProductDiscount.PaymentMode) -> TestProductDiscount {
     TestProductDiscount(
-     paymentMode: mode,
-     price: 100.0,
-     subscriptionPeriod: TestProductSubscriptionPeriod(numberOfUnits: 5)
-   )
+      paymentMode: mode,
+      price: 100.0,
+      subscriptionPeriod: TestProductSubscriptionPeriod(numberOfUnits: 5)
+    )
   }
 
   var encodedAppName: Data {
-    return Values.appName.data(using: .utf8)! // swiftlint:disable:this force_unwrapping
+    Values.appName.data(using: .utf8)! // swiftlint:disable:this force_unwrapping
   }
 
   func seedReceiptData() throws {

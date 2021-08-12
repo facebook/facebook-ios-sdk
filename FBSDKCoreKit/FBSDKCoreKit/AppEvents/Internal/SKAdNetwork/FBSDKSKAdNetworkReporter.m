@@ -46,9 +46,9 @@ static NSString *const FBSDKSKAdNetworkReporterKey = @"com.facebook.sdk:FBSDKSKA
 
 @interface FBSDKSKAdNetworkReporter ()
 
-@property BOOL isSKAdNetworkReportEnabled;
+@property (nonatomic) BOOL isSKAdNetworkReportEnabled;
 @property (nonnull, nonatomic) NSMutableArray<FBSDKSKAdNetworkReporterBlock> *completionBlocks;
-@property BOOL isRequestStarted;
+@property (nonatomic) BOOL isRequestStarted;
 @property (nonnull, nonatomic) dispatch_queue_t serialQueue;
 @property (nonnull, nonatomic) FBSDKSKAdNetworkConversionConfiguration *config;
 @property (nonnull, nonatomic) NSDate *configRefreshTimestamp;

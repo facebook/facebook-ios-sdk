@@ -20,23 +20,27 @@
 
 @implementation FBSDKGamingContext
 
-static FBSDKGamingContext *currentContext = nil;
+static FBSDKGamingContext *_currentContext;
 
-+ (instancetype)currentContext
++ (instancetype)createContextWithIdentifier:(NSString *)identifier
 {
-  static dispatch_once_t nonce;
-  static FBSDKGamingContext *instance;
-  dispatch_once(&nonce, ^{
-    instance = [self new];
-  });
-  return instance;
+  if (!identifier || (identifier.length == 0)) {
+    return nil;
+  }
+  FBSDKGamingContext *context = [FBSDKGamingContext new];
+  context.identifier = identifier;
+
+  return context;
 }
 
-- (void)setIdentifer:(NSString *)identifer
++ (FBSDKGamingContext *)currentContext
 {
-  if (identifer != NULL) {
-    _identifier = identifer;
-  }
+  return _currentContext;
+}
+
++ (void)setCurrentContext:(FBSDKGamingContext *)context
+{
+  _currentContext = context;
 }
 
 @end

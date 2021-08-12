@@ -20,8 +20,7 @@
 
 @import TestTools;
 #import "FBSDKCoreKitTests-Swift.h"
-#import "FBSDKGraphRequestPiggybackManager.h"
-#import "FBSDKServerConfigurationFixtures.h"
+#import "FBSDKGraphRequestPiggybackManager+Internal.h"
 #import "FBSDKServerConfigurationLoading.h"
 
 @interface FBSDKGraphRequestPiggybackManager (FBSDKGraphRequestPiggybackManagerTests)
@@ -30,10 +29,6 @@
 + (int)_tokenRefreshRetryInSeconds;
 + (BOOL)_safeForPiggyback:(FBSDKGraphRequest *)request;
 + (void)_setLastRefreshTry:(NSDate *)date;
-+ (void)configureWithTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
-                        settings:(id<FBSDKSettings>)settings
-             serverConfiguration:(Class<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>)serverConfiguration
-                 requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider;
 + (void)reset;
 
 @end
@@ -42,6 +37,7 @@
 
 @property (nonatomic) id<FBSDKSettings> settings;
 @property (nonatomic) TestGraphRequestFactory *graphRequestFactory;
+@property (nonatomic) TestServerConfigurationProvider *serverConfigurationProvider;
 
 @end
 
@@ -54,11 +50,12 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [super setUp];
   [self resetCaches];
   self.graphRequestFactory = [TestGraphRequestFactory new];
+  self.serverConfigurationProvider = [[TestServerConfigurationProvider alloc] initWithConfiguration:ServerConfigurationFixtures.defaultConfig];
   self.settings = [TestSettings new];
   self.settings.appID = @"abc123";
   [Manager configureWithTokenWallet:TestAccessTokenWallet.class
                            settings:self.settings
-                serverConfiguration:TestServerConfigurationProvider.class
+                serverConfiguration:self.serverConfigurationProvider
                     requestProvider:self.graphRequestFactory];
 }
 
@@ -74,7 +71,6 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   [TestAccessTokenWallet reset];
   [FBSDKGraphRequestPiggybackManager reset];
   [FBSDKSettings reset];
-  [TestServerConfigurationProvider reset];
 }
 
 // MARK: - Defaults
@@ -162,7 +158,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
     [TestAccessTokenWallet wasTokenRead],
     "Adding a request without an app identifier should attempt to refresh the access token"
   );
-  XCTAssertFalse([TestServerConfigurationProvider requestToLoadConfigurationCallWasCalled]);
+  XCTAssertFalse(self.serverConfigurationProvider.requestToLoadConfigurationCallWasCalled);
 }
 
 - (void)testAddingRequestsForConnectionWithSafeRequests
@@ -177,7 +173,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
     [TestAccessTokenWallet wasTokenRead],
     "Adding requests with an expired token should attempt to refresh the access token"
   );
-  XCTAssertTrue([TestServerConfigurationProvider requestToLoadConfigurationCallWasCalled]);
+  XCTAssertTrue(self.serverConfigurationProvider.requestToLoadConfigurationCallWasCalled);
 }
 
 - (void)testAddingRequestsForConnectionWithUnsafeRequests
@@ -192,7 +188,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
     [TestAccessTokenWallet wasTokenRead],
     "Adding a request without an app identifier should attempt to refresh the access token"
   );
-  XCTAssertFalse([TestServerConfigurationProvider requestToLoadConfigurationCallWasCalled]);
+  XCTAssertFalse(self.serverConfigurationProvider.requestToLoadConfigurationCallWasCalled);
 }
 
 - (void)testAddingRequestsForConnectionWithSafeAndUnsafeRequests
@@ -202,7 +198,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
     SampleGraphRequests.withAttachment
                                                 ]];
   [Manager addPiggybackRequests:connection];
-  XCTAssertFalse([TestServerConfigurationProvider requestToLoadConfigurationCallWasCalled]);
+  XCTAssertFalse(self.serverConfigurationProvider.requestToLoadConfigurationCallWasCalled);
 }
 
 // MARK: - Adding Token Extension Piggyback
@@ -626,20 +622,21 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
 - (void)testAddingServerConfigurationPiggybackWithDefaultConfigurationExpiredCache
 {
-  FBSDKServerConfiguration *config = [FBSDKServerConfigurationFixtures configWithDictionary:@{
+  FBSDKServerConfiguration *config = [ServerConfigurationFixtures configWithDictionary:@{
                                         @"defaults" : @YES,
                                         @"timestamp" : self.twoDaysAgo
                                       }];
 
   FBSDKGraphRequest *graphRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:self.name];
-  [TestServerConfigurationProvider setStubbedRequestToLoadServerConfiguration:graphRequest];
-  [TestServerConfigurationProvider setStubbedServerConfiguration:config];
+  self.serverConfigurationProvider.stubbedRequestToLoadServerConfiguration = graphRequest;
+  self.serverConfigurationProvider.stubbedServerConfiguration = config;
+
   [self.settings setAppID:config.appID];
 
   TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
   [Manager addServerConfigurationPiggyback:connection];
   id<FBSDKGraphRequest> request = connection.capturedRequests.firstObject;
-  FBSDKGraphRequest *expectedServerConfigurationRequest = [TestServerConfigurationProvider requestToLoadServerConfiguration:@""];
+  FBSDKGraphRequest *expectedServerConfigurationRequest = [self.serverConfigurationProvider requestToLoadServerConfiguration:@""];
 
   [self validateServerConfigurationRequest:request
                                  isEqualTo:expectedServerConfigurationRequest];
@@ -647,11 +644,11 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
 - (void)testAddingServerConfigurationPiggybackWithDefaultConfigurationNonExpiredCache
 {
-  FBSDKServerConfiguration *config = [FBSDKServerConfigurationFixtures configWithDictionary:@{
+  FBSDKServerConfiguration *config = [ServerConfigurationFixtures configWithDictionary:@{
                                         @"defaults" : @YES,
                                         @"timestamp" : NSDate.date
                                       }];
-  [TestServerConfigurationProvider setStubbedServerConfiguration:config];
+  self.serverConfigurationProvider.stubbedServerConfiguration = config;
 
   TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
   [Manager addServerConfigurationPiggyback:connection];
@@ -665,11 +662,11 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
 - (void)testAddingServerConfigurationPiggybackWithCustomConfigurationExpiredCache
 {
-  FBSDKServerConfiguration *config = [FBSDKServerConfigurationFixtures configWithDictionary:@{
+  FBSDKServerConfiguration *config = [ServerConfigurationFixtures configWithDictionary:@{
                                         @"defaults" : @YES,
                                         @"timestamp" : self.twoDaysAgo
                                       }];
-  [TestServerConfigurationProvider setStubbedServerConfiguration:config];
+  self.serverConfigurationProvider.stubbedServerConfiguration = config;
 
   TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
   [Manager addServerConfigurationPiggyback:connection];
@@ -683,13 +680,13 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 
 - (void)testAddingServerConfigurationPiggybackWithCustomConfigurationNonExpiredCache
 {
-  FBSDKServerConfiguration *config = [FBSDKServerConfigurationFixtures configWithDictionary:@{
+  FBSDKServerConfiguration *config = [ServerConfigurationFixtures configWithDictionary:@{
                                         @"defaults" : @NO,
                                         @"timestamp" : NSDate.date
                                       }];
   FBSDKGraphRequest *graphRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:self.name];
-  [TestServerConfigurationProvider setStubbedRequestToLoadServerConfiguration:graphRequest];
-  [TestServerConfigurationProvider setStubbedServerConfiguration:config];
+  self.serverConfigurationProvider.stubbedRequestToLoadServerConfiguration = graphRequest;
+  self.serverConfigurationProvider.stubbedServerConfiguration = config;
 
   TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
   [Manager addServerConfigurationPiggyback:connection];
@@ -704,10 +701,10 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testAddingServerConfigurationPiggybackWithCustomConfigurationMissingTimeout
 {
   // Esoterica - the default timeout is nil in the default configuration
-  FBSDKServerConfiguration *config = [FBSDKServerConfigurationFixtures configWithDictionary:@{
+  FBSDKServerConfiguration *config = [ServerConfigurationFixtures configWithDictionary:@{
                                         @"defaults" : @NO
                                       }];
-  [TestServerConfigurationProvider setStubbedServerConfiguration:config];
+  self.serverConfigurationProvider.stubbedServerConfiguration = config;
 
   TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
   [Manager addServerConfigurationPiggyback:connection];
@@ -722,10 +719,10 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 - (void)testAddingServerConfigurationPiggybackWithDefaultConfigurationMissingTimeout
 {
   // Esoterica - the default timeout is nil in the default configuration
-  FBSDKServerConfiguration *config = [FBSDKServerConfigurationFixtures configWithDictionary:@{
+  FBSDKServerConfiguration *config = [ServerConfigurationFixtures configWithDictionary:@{
                                         @"defaults" : @YES
                                       }];
-  [TestServerConfigurationProvider setStubbedServerConfiguration:config];
+  self.serverConfigurationProvider.stubbedServerConfiguration = config;
 
   TestGraphRequestConnection *connection = [TestGraphRequestConnection new];
   [Manager addServerConfigurationPiggyback:connection];

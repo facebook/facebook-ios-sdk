@@ -31,7 +31,7 @@
 
 @class FBSDKLogger;
 @protocol FBSDKOperatingSystemVersionComparing;
-@protocol FBSDKURLOpener;
+@protocol FBSDKInternalURLOpener;
 @protocol FBSDKBridgeAPIResponseCreating;
 @protocol FBSDKDynamicFrameworkResolving;
 @protocol FBSDKAppURLSchemeProviding;
@@ -73,7 +73,7 @@ NS_SWIFT_NAME(shared);
 
 - (instancetype)initWithProcessInfo:(id<FBSDKOperatingSystemVersionComparing>)processInfo
                              logger:(FBSDKLogger *)logger
-                          urlOpener:(id<FBSDKURLOpener>)urlOpener
+                          urlOpener:(id<FBSDKInternalURLOpener>)urlOpener
            bridgeAPIResponseFactory:(id<FBSDKBridgeAPIResponseCreating>)bridgeAPIResponseFactory
                     frameworkLoader:(id<FBSDKDynamicFrameworkResolving>)frameworkLoader
                appURLSchemeProvider:(id<FBSDKAppURLSchemeProviding>)appURLSchemeProvider

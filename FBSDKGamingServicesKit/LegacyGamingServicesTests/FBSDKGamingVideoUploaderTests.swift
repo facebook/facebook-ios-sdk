@@ -36,7 +36,7 @@ class GamingVideoUploaderTests: XCTestCase {
   override func setUp() {
     super.setUp()
 
-    fileHandle.stubbedSeekToEndOfFile = UInt64.random(in: 1 ... 1000)
+    fileHandle.stubbedSeekToEndOfFile = UInt64.random(in: 1...1000)
     fileHandleFactory.stubbedFileHandle = fileHandle
     videoUploaderFactory.stubbedVideoUploader = videoUploader
 

@@ -53,12 +53,12 @@
 @end
 
 @interface FBSDKFeatureExtractorTests : XCTestCase
-{
-  NSDictionary *_rules;
-  NSDictionary *_viewHierarchy;
-  NSDictionary *_interactedNode;
-  NSArray *_siblings;
-}
+
+@property (nonatomic) NSDictionary *rules;
+@property (nonatomic) NSDictionary *viewHierarchy;
+@property (nonatomic) NSDictionary *interactedNode;
+@property (nonatomic) NSArray *siblings;
+
 @property (nonatomic) TestOnDeviceMLModelManager *modelManager;
 @end
 

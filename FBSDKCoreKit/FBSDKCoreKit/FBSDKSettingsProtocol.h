@@ -25,19 +25,22 @@ NS_SWIFT_NAME(SettingsProtocol)
 @property (class, nonatomic, copy, nullable) NSString *appID;
 @property (class, nonatomic, copy, nullable) NSString *clientToken;
 @property (class, nullable, nonatomic, copy) NSString *userAgentSuffix;
-@property (class, nullable, nonatomic, copy) NSString *sdkVersion;
+@property (class, nullable, nonatomic, readonly, copy) NSString *sdkVersion;
 @property (class, nonatomic, copy, nonnull) NSSet<FBSDKLoggingBehavior> *loggingBehaviors;
+
 @property (nonatomic, copy, nullable) NSString *appID;
 @property (nonatomic, readonly) BOOL isDataProcessingRestricted;
 @property (nonatomic, readonly) BOOL isAutoLogAppEventsEnabled;
 @property (nonatomic, readonly) BOOL isSetATETimeExceedsInstallTime;
 @property (nonatomic, readonly) BOOL isSKAdNetworkReportEnabled;
 @property (nonatomic, readonly, nonnull) NSSet<FBSDKLoggingBehavior> *loggingBehaviors;
-@property (nonatomic) FBSDKAdvertisingTrackingStatus advertisingTrackingStatus;
+@property (nonatomic, readonly) FBSDKAdvertisingTrackingStatus advertisingTrackingStatus;
 @property (nonatomic, readonly, nullable) NSDate* installTimestamp;
 @property (nonatomic, readonly, nullable) NSDate* advertiserTrackingEnabledTimestamp;
 @property (nonatomic, readonly) BOOL shouldLimitEventAndDataUsage;
 @property (nonatomic) BOOL shouldUseTokenOptimizations;
-@property (nonatomic, readonly) NSString * _Nonnull graphAPIVersion;
+@property (nonatomic, copy, readonly) NSString * _Nonnull graphAPIVersion;
+@property (nonatomic, readonly) BOOL isGraphErrorRecoveryEnabled;
+@property (nonatomic, readonly, copy, nullable) NSString *graphAPIDebugParamValue;
 
 @end

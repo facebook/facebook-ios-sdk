@@ -34,7 +34,7 @@ projectReferences:
 
 options:
   deploymentTarget:
-    tvOS: "10.0"
+    tvOS: '10.0'
 
 configFiles:
   Debug: Configurations/Shared/Configuration/Debug.xcconfig
@@ -77,12 +77,16 @@ schemes:
       targets:
         FBSDKGamingServicesKit-Dynamic: all
     test:
+      gatherCoverageData: true
       targets:
         - LegacyGamingServicesTests
         - FacebookGamingServicesTests
         - FBSDKGamingServicesKitTests
         - FBSDKCoreKit/FBSDKCoreKitTests
       coverageTargets:
+        - LegacyGamingServices-Dynamic
+        - FacebookGamingServices-Dynamic
+        - FBSDKGamingServicesKit-Dynamic
         - FBSDKGamingServicesKit
         - FBSDKCoreKit/FBSDKCoreKit
   FBSDKGamingServicesKit-Universal:

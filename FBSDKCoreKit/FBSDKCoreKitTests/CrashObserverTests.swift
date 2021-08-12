@@ -38,13 +38,6 @@ class CrashObserversTest: XCTestCase {
     )
   }
 
-  func testDefaultCrashObserverSettings() {
-     XCTAssertTrue(
-       CrashObserver().settings is Settings,
-       "Should use the shared settings instance by default"
-     )
-   }
-
   func testCreatingWithCustomSettings() {
     XCTAssertTrue(
       crashObserver.settings is TestSettings,
@@ -67,9 +60,11 @@ class CrashObserversTest: XCTestCase {
   }
 
   static func getCrashLogs() -> [[String: Any]] {
-    let callstack = ["(4 DEV METHODS)",
-    "+[FBSDKCodelessIndexer crash]+84",
-    "(22 DEV METHODS)"]
+    let callstack = [
+      "(4 DEV METHODS)",
+      "+[FBSDKCodelessIndexer crash]+84",
+      "(22 DEV METHODS)"
+    ]
 
     let crashLogs = [[
       "callstack": callstack,

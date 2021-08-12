@@ -29,7 +29,7 @@
 
 + (void)configureWithTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
                         settings:(id<FBSDKSettings>)settings
-             serverConfiguration:(Class<FBSDKServerConfigurationProviding>)serverConfiguration
+             serverConfiguration:(id<FBSDKServerConfigurationProviding>)serverConfiguration
                  requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider;
 
 @end

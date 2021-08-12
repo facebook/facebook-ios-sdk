@@ -25,7 +25,7 @@ class TestEventBinding: EventBinding {
     super.init(json: [:], eventLogger: stubbedEventLogger)
 
     if let view = potentialView,
-       let path = ViewHierarchy.getPath(view) {
+       let path = ViewHierarchy.getPath(view) { // swiftlint:disable:this indentation_width
       stubbedPath = path
     }
   }

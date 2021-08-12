@@ -68,7 +68,7 @@ let package = Package(
         */
         .library(
             name: "FacebookGamingServices",
-            targets: ["FacebookGamingServices"]
+            targets: ["FacebookGamingServices", "FBSDKGamingServicesKit"]
         ),
 
         /*
@@ -290,6 +290,9 @@ let package = Package(
             name: "FBSDKGamingServicesKit",
             dependencies: ["FacebookGamingServices"],
             exclude: ["Exported"],
+            cSettings: [
+                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil))
+            ],
             swiftSettings: [
                 .define("FBSDK_SWIFT_PACKAGE")
             ]

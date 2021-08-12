@@ -19,11 +19,13 @@
 import FBSDKCoreKit
 import Foundation
 
+// swiftformat:disable indent
 @objcMembers
 class TestOnDeviceMLModelManager: NSObject,
-                                  EventProcessing,
+                                  EventProcessing, // swiftlint:disable:this indentation_width
                                   IntegrityParametersProcessorProvider,
                                   RulesFromKeyProvider {
+  // swiftformat:enable indent
 
   var stubbedRules: [AnyHashable: Any] = [:]
   var processSuggestedEventsCallCount = 0
@@ -32,7 +34,7 @@ class TestOnDeviceMLModelManager: NSObject,
   var integrityParametersProcessor: AppEventsParameterProcessing?
   var rulesForKey: [AnyHashable: Any] {
     get {
-      return stubbedRules
+      stubbedRules
     }
     set {
       stubbedRules = newValue
@@ -53,6 +55,6 @@ class TestOnDeviceMLModelManager: NSObject,
   }
 
   func getRulesForKey(_ useCase: String) -> [AnyHashable: Any]? {
-    return stubbedRules
+    stubbedRules
   }
 }

@@ -24,11 +24,11 @@ import XCTest
 class FBAEMAdvertiserSingleEntryRuleTests: XCTestCase { // swiftlint:disable:this type_body_length
 
   enum Keys {
-      static let ruleOperator = "operator"
-      static let ruleParamKey = "param_key"
-      static let ruleStringValue = "string_value"
-      static let ruleNumberValue = "number_value"
-      static let ruleArrayValue = "array_value"
+    static let ruleOperator = "operator"
+    static let ruleParamKey = "param_key"
+    static let ruleStringValue = "string_value"
+    static let ruleNumberValue = "number_value"
+    static let ruleArrayValue = "array_value"
   }
 
   func testIsMatchedWithEventParameters() {

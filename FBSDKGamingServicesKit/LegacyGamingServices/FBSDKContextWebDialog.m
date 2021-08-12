@@ -24,6 +24,7 @@
  #import <UIKit/UIKit.h>
 
  #import "FBSDKGamingContext.h"
+ #import "FBSDKGamingContext+Internal.h"
  #import "FBSDKGamingServicesCoreKitBasicsImport.h"
 
 @implementation FBSDKContextWebDialog
@@ -83,7 +84,12 @@
   switch (error.code) {
     case 0: {
       if ([results isKindOfClass:[NSDictionary class]] && results[@"context_id"] != nil) {
-        [FBSDKGamingContext.currentContext setIdentifier:results[@"context_id"]];
+        NSString *const identifier = results[@"context_id"];
+        if (FBSDKGamingContext.currentContext) {
+          FBSDKGamingContext.currentContext.identifier = identifier;
+        } else {
+          FBSDKGamingContext.currentContext = [FBSDKGamingContext createContextWithIdentifier:identifier];
+        }
       }
       [self.delegate contextDialogDidComplete:self];
       break;

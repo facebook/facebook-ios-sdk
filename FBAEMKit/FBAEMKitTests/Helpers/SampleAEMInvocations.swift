@@ -21,7 +21,7 @@ import Foundation
 
 class SampleAEMInvocations { // swiftlint:disable:this convenience_type
   static func createGeneralInvocation1() -> AEMInvocation {
-    return AEMInvocation(
+    AEMInvocation(
       campaignID: "test_campaign_1",
       acsToken: "test_token_1234567",
       acsSharedSecret: "test_shared_secret",
@@ -31,7 +31,7 @@ class SampleAEMInvocations { // swiftlint:disable:this convenience_type
   }
 
   static func createGeneralInvocation2() -> AEMInvocation {
-    return AEMInvocation(
+    AEMInvocation(
       campaignID: "test_campaign_2",
       acsToken: "test_token_1234567",
       acsSharedSecret: "test_shared_secret",

@@ -22,7 +22,7 @@ import Foundation
 class TestGamingServiceController: NSObject, GamingServiceControllerProtocol {
   var capturedArgument: String?
 
-  func call(withArgument argument: String) {
+  func call(withArgument argument: String?) {
     capturedArgument = argument
   }
 }

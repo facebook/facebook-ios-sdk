@@ -26,10 +26,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKBridgeAPIProtocolWebV2 (Testing)
 
-@property (nullable, nonatomic, readonly) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
+@property (nullable, nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonatomic, readonly) id<FBSDKBridgeAPIProtocol> nativeBridge;
 
-- (instancetype)initWithServerConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+- (instancetype)initWithServerConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                        nativeBridge:(id<FBSDKBridgeAPIProtocol>)nativeBridge;
 
 - (nullable NSURL *)_redirectURLWithActionID:(nullable NSString *)actionID

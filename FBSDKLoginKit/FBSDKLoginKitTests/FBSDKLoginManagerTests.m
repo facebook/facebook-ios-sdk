@@ -72,10 +72,16 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
 @end
 
+@interface FBSDKServerConfigurationManager ()
+
++ (FBSDKServerConfigurationManager *)shared;
+
+@end
+
 @interface TestFBSDKBridgeAPI : FBSDKBridgeAPI
 
-@property int openURLWithSFVCCount;
-@property int openURLCount;
+@property (nonatomic) int openURLWithSFVCCount;
+@property (nonatomic) int openURLCount;
 
 @end
 
@@ -595,6 +601,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   FBSDKServerConfiguration *mockConfig = [OCMockObject niceMockForClass:FBSDKServerConfiguration.class];
   OCMStub([mockConfig useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameLogin]).andReturn(NO);
   id mockConfigManagerClass = OCMClassMock(FBSDKServerConfigurationManager.class);
+  OCMStub([mockConfigManagerClass shared]).andReturn(mockConfigManagerClass);
   OCMStub([mockConfigManagerClass cachedServerConfiguration]).andReturn(mockConfig);
 
   FBSDKLoginManager *manager = [FBSDKLoginManager new];

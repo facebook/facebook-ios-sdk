@@ -31,11 +31,8 @@
 
 - (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef
 {
-  if (!self.minParticipants) {
-    self.minParticipants = 1;
-  }
-  if (!self.maxParticipants) {
-    self.maxParticipants = 1;
+  if (!self.minParticipants && !self.maxParticipants) {
+    return YES;
   }
 
   BOOL minimumGreaterThanMaximum = self.minParticipants > self.maxParticipants;

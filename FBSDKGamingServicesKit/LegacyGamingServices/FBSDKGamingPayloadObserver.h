@@ -20,8 +20,11 @@
 
 @class FBSDKGamingPayload;
 
-@protocol FBSDKGamingPayloadDelegate <NSObject>
+NS_SWIFT_NAME(GamingPayloadDelegate)
+@protocol FBSDKGamingPayloadDelegate
+
 - (void)updatedURLContaining:(FBSDKGamingPayload* _Nonnull)payload;
+
 @end
 
 NS_ASSUME_NONNULL_BEGIN
@@ -29,9 +32,15 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(GamingPayloadObserver)
 @interface FBSDKGamingPayloadObserver : NSObject
 
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
-+ (instancetype)shared;
 @property (nonatomic, weak) id<FBSDKGamingPayloadDelegate> delegate;
+
++ (instancetype)new NS_UNAVAILABLE;
+- (instancetype)init NS_UNAVAILABLE;
+
++ (instancetype)shared DEPRECATED_MSG_ATTRIBUTE("The shared instance of the gaming payload observer is deprecated and will be removed in the next major release. Please create and use instances of this object directly as needed.");
+
+- (instancetype)initWithDelegate:(id<FBSDKGamingPayloadDelegate>)delegate;
+
 @end
+
 NS_ASSUME_NONNULL_END

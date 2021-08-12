@@ -35,7 +35,6 @@
 #import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"
-#import "FBSDKServerConfigurationFixtures.h"
 #import "FBSDKUtility.h"
 
 // An extension that redeclares a private method so that it can be mocked
@@ -45,7 +44,6 @@
 
 @interface FBSDKAppEvents (Testing)
 @property (nonatomic, copy) NSString *pushNotificationsDeviceTokenString;
-@property (nonatomic, strong) id<FBSDKAtePublishing> atePublisher;
 @property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
 
 - (instancetype)initWithFlushBehavior:(FBSDKAppEventsFlushBehavior)flushBehavior
@@ -126,6 +124,7 @@
 @property (nonnull, nonatomic) TestAppEventsStateProvider *appEventsStateProvider;
 @property (nonnull, nonatomic) TestAdvertiserIDProvider *advertiserIDProvider;
 @property (nonnull, nonatomic) TestAppEventsReporter *skAdNetworkReporter;
+@property (nonnull, nonatomic) TestServerConfigurationProvider *serverConfigurationProvider;
 
 @end
 
@@ -175,6 +174,8 @@
   self.timeSpentRecorder = self.timeSpentRecorderFactory.recorder;
   self.advertiserIDProvider = [TestAdvertiserIDProvider new];
   self.skAdNetworkReporter = [TestAppEventsReporter new];
+  self.serverConfigurationProvider = [[TestServerConfigurationProvider alloc]
+                                      initWithConfiguration:ServerConfigurationFixtures.defaultConfig];
 
   // Must be stubbed before the configure method is called
   self.atePublisher = [TestAtePublisher new];
@@ -190,7 +191,6 @@
   [FBSDKSettings reset];
   [FBSDKAppEvents reset];
   [TestAppEventsConfigurationProvider reset];
-  [TestServerConfigurationProvider reset];
   [TestGateKeeperManager reset];
 
   [super tearDown];
@@ -206,7 +206,7 @@
 {
   [FBSDKAppEvents.singleton configureWithGateKeeperManager:TestGateKeeperManager.class
                             appEventsConfigurationProvider:TestAppEventsConfigurationProvider.class
-                               serverConfigurationProvider:TestServerConfigurationProvider.class
+                               serverConfigurationProvider:self.serverConfigurationProvider
                                       graphRequestProvider:self.graphRequestFactory
                                             featureChecker:self.featureManager
                                                      store:self.store
@@ -274,7 +274,7 @@
 
   // Verifying flush
   TestAppEventsConfigurationProvider.capturedBlock();
-  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   XCTAssertEqualObjects(
     self.graphRequestFactory.capturedRequests.firstObject.graphPath,
     @"mockAppID/activities"
@@ -480,8 +480,8 @@
   // The publish call happens after both configs are fetched
   TestAppEventsConfigurationProvider.capturedBlock();
   TestAppEventsConfigurationProvider.secondCapturedBlock();
-  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
-  TestServerConfigurationProvider.secondCapturedCompletionBlock(nil, nil);
+  self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
+  self.serverConfigurationProvider.secondCapturedCompletionBlock(nil, nil);
 
   TestGraphRequest *request = self.graphRequestFactory.capturedRequests.firstObject;
   XCTAssertEqualObjects(request.parameters[@"event"], @"MOBILE_APP_INSTALL");
@@ -1002,10 +1002,10 @@
   );
   TestAppEventsConfigurationProvider.capturedBlock();
   XCTAssertNotNil(
-    TestServerConfigurationProvider.capturedCompletionBlock,
+    self.serverConfigurationProvider.capturedCompletionBlock,
     "The expected block should be captured by the ServerConfiguration provider"
   );
-  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   XCTAssertTrue(
     didRunCallback,
     "fetchServerConfiguration should call the callback block"
@@ -1016,7 +1016,7 @@
 {
   [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
   TestAppEventsConfigurationProvider.capturedBlock();
-  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
 
   XCTAssertTrue(
     [self.featureManager capturedFeaturesContains:FBSDKFeatureATELogging],
@@ -1032,7 +1032,7 @@
 {
   [FBSDKAppEvents.singleton fetchServerConfiguration:nil];
   TestAppEventsConfigurationProvider.capturedBlock();
-  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   XCTAssertTrue(
     [self.featureManager capturedFeaturesContains:FBSDKFeatureEventDeactivation],
     "Fetching a configuration should check if the EventDeactivation feature is enabled"
@@ -1043,7 +1043,7 @@
 {
   [FBSDKAppEvents.singleton fetchServerConfiguration:nil];
   TestAppEventsConfigurationProvider.capturedBlock();
-  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   [self.featureManager completeCheckForFeature:FBSDKFeatureEventDeactivation with:YES];
   XCTAssertTrue(
     self.eventDeactivationParameterProcessor.enableWasCalled,
@@ -1055,7 +1055,7 @@
 {
   [FBSDKAppEvents.singleton fetchServerConfiguration:nil];
   TestAppEventsConfigurationProvider.capturedBlock();
-  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   XCTAssertTrue(
     [self.featureManager capturedFeaturesContains:FBSDKFeatureRestrictiveDataFiltering],
     "Fetching a configuration should check if the RestrictiveDataFiltering feature is enabled"
@@ -1066,7 +1066,7 @@
 {
   [FBSDKAppEvents.singleton fetchServerConfiguration:nil];
   TestAppEventsConfigurationProvider.capturedBlock();
-  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   [self.featureManager completeCheckForFeature:FBSDKFeatureRestrictiveDataFiltering with:YES];
   XCTAssertTrue(
     self.restrictiveDataFilterParameterProcessor.enableWasCalled,
@@ -1078,7 +1078,7 @@
 {
   [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
   TestAppEventsConfigurationProvider.capturedBlock();
-  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   XCTAssertTrue(
     [self.featureManager capturedFeaturesContains:FBSDKFeatureAAM],
     "Fetch a configuration should check if the AAM feature is enabled"
@@ -1089,7 +1089,7 @@
 {
   [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
   TestAppEventsConfigurationProvider.capturedBlock();
-  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   [self.featureManager completeCheckForFeature:FBSDKFeatureAAM with:YES];
   XCTAssertTrue(
     self.metadataIndexer.enableWasCalled,
@@ -1100,10 +1100,10 @@
 - (void)testFetchingConfigurationStartsPaymentObservingIfConfigurationAllowed
 {
   self.settings.stubbedIsAutoLogAppEventsEnabled = YES;
-  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationFixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @YES}];
+  FBSDKServerConfiguration *serverConfiguration = [ServerConfigurationFixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @YES}];
   [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
   TestAppEventsConfigurationProvider.capturedBlock();
-  TestServerConfigurationProvider.capturedCompletionBlock(serverConfiguration, nil);
+  self.serverConfigurationProvider.capturedCompletionBlock(serverConfiguration, nil);
   XCTAssertTrue(
     self.paymentObserver.didStartObservingTransactions,
     "fetchConfiguration should start payment observing if the configuration allows it"
@@ -1117,10 +1117,10 @@
 - (void)testFetchingConfigurationStopsPaymentObservingIfConfigurationDisallowed
 {
   self.settings.stubbedIsAutoLogAppEventsEnabled = YES;
-  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationFixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @NO}];
+  FBSDKServerConfiguration *serverConfiguration = [ServerConfigurationFixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @NO}];
   [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
   TestAppEventsConfigurationProvider.capturedBlock();
-  TestServerConfigurationProvider.capturedCompletionBlock(serverConfiguration, nil);
+  self.serverConfigurationProvider.capturedCompletionBlock(serverConfiguration, nil);
   XCTAssertFalse(
     self.paymentObserver.didStartObservingTransactions,
     "Fetching a configuration shouldn't start payment observing if the configuration disallows it"
@@ -1134,10 +1134,10 @@
 - (void)testFetchingConfigurationStopPaymentObservingIfAutoLogAppEventsDisabled
 {
   self.settings.stubbedIsAutoLogAppEventsEnabled = NO;
-  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationFixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @YES}];
+  FBSDKServerConfiguration *serverConfiguration = [ServerConfigurationFixtures configWithDictionary:@{@"implicitPurchaseLoggingEnabled" : @YES}];
   [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
   TestAppEventsConfigurationProvider.capturedBlock();
-  TestServerConfigurationProvider.capturedCompletionBlock(serverConfiguration, nil);
+  self.serverConfigurationProvider.capturedCompletionBlock(serverConfiguration, nil);
   XCTAssertFalse(
     self.paymentObserver.didStartObservingTransactions,
     "Fetching a configuration shouldn't start payment observing if auto log app events is disabled"
@@ -1153,7 +1153,7 @@
   self.settings.stubbedIsSKAdNetworkReportEnabled = YES;
   [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
   TestAppEventsConfigurationProvider.capturedBlock();
-  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   XCTAssertTrue(
     [self.featureManager capturedFeaturesContains:FBSDKFeatureSKAdNetwork],
     "fetchConfiguration should check if the SKAdNetwork feature is enabled when SKAdNetworkReport is enabled"
@@ -1165,7 +1165,7 @@
   self.settings.stubbedIsSKAdNetworkReportEnabled = YES;
   [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
   TestAppEventsConfigurationProvider.capturedBlock();
-  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   if (@available(iOS 11.3, *)) {
     [self.featureManager completeCheckForFeature:FBSDKFeatureSKAdNetwork
                                             with:YES];
@@ -1183,7 +1183,7 @@
   self.settings.stubbedIsSKAdNetworkReportEnabled = YES;
   [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
   TestAppEventsConfigurationProvider.capturedBlock();
-  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   if (@available(iOS 11.3, *)) {
     [self.featureManager completeCheckForFeature:FBSDKFeatureSKAdNetwork
                                             with:YES];
@@ -1201,7 +1201,7 @@
   self.settings.stubbedIsSKAdNetworkReportEnabled = NO;
   [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
   TestAppEventsConfigurationProvider.capturedBlock();
-  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   XCTAssertFalse(
     [self.featureManager capturedFeaturesContains:FBSDKFeatureSKAdNetwork],
     "fetchConfiguration should NOT check if the SKAdNetwork feature is disabled when SKAdNetworkReport is disabled"
@@ -1213,7 +1213,7 @@
   if (@available(iOS 14.0, *)) {
     [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
     TestAppEventsConfigurationProvider.capturedBlock();
-    TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+    self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
     XCTAssertTrue(
       [self.featureManager capturedFeaturesContains:FBSDKFeatureAEM],
       "Fetching a configuration should check if the AEM feature is enabled"
@@ -1225,7 +1225,7 @@
 {
   [[FBSDKAppEvents singleton] fetchServerConfiguration:nil];
   TestAppEventsConfigurationProvider.capturedBlock();
-  TestServerConfigurationProvider.capturedCompletionBlock(nil, nil);
+  self.serverConfigurationProvider.capturedCompletionBlock(nil, nil);
   XCTAssertTrue(
     [self.featureManager capturedFeaturesContains:FBSDKFeaturePrivacyProtection],
     "Fetching a configuration should check if the PrivacyProtection feature is enabled"

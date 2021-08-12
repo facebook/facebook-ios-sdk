@@ -17,23 +17,32 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 enum SampleContextDialogs {
-  static func showSwitchContextDialog(withDelegate delegate: ContextDialogDelegate) -> SwitchContextDialog? {
-    let content = SwitchContextContent()
-    content.contextTokenID = "1234567890"
-    let dialog = SwitchContextDialog(content: content,
-                                     windowFinder: TestWindowFinder(),
-                                     delegate: delegate)
+
+  static func showCreateContextDialog(withDelegate delegate: ContextDialogDelegate) -> CreateContextDialog? {
+    let content = CreateContextContent(playerID: "1234567890")
+    let dialog = CreateContextDialog(
+      content: content,
+      windowFinder: TestWindowFinder(),
+      delegate: delegate
+    )
     dialog.show()
     return dialog
   }
 
-  static func showCreateContextDialog(withDelegate delegate: ContextDialogDelegate) -> CreateContextDialog? {
-    let content = CreateContextContent()
-    content.playerID = "1234567890"
-    let dialog = CreateContextDialog(content: content,
-                                     windowFinder: TestWindowFinder(),
-                                     delegate: delegate)
+  static func showChooseContextDialogWithInvalidSizes(delegate: ContextDialogDelegate) -> ChooseContextDialog? {
+    Settings.appID = "abc123"
+    let content = ChooseContextContent()
+    content.minParticipants = 2
+    content.maxParticipants = 1
+    let dialog = ChooseContextDialog(content: content, delegate: delegate)
     dialog.show()
+    return dialog
+  }
+
+  static func chooseContextDialogWithoutContentValues(delegate: ContextDialogDelegate) -> ChooseContextDialog? {
+    let content = ChooseContextContent()
+    let dialog = ChooseContextDialog(content: content, delegate: delegate)
+
     return dialog
   }
 }

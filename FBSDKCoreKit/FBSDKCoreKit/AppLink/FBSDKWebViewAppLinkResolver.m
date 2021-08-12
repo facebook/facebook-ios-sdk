@@ -77,8 +77,10 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
 
 @end
 
+#if FBSDK_SWIFT_PACKAGE
+NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in extensions")
+#endif
 @implementation FBSDKWebViewAppLinkResolverWebViewDelegate
-
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
   if (self.didFinishLoad) {
@@ -112,6 +114,9 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
 
 @end
 
+#if FBSDK_SWIFT_PACKAGE
+NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in extensions")
+#endif
 @implementation FBSDKWebViewAppLinkResolver
 
 - (instancetype)init
@@ -179,17 +184,17 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
 {
     [self followRedirects:url handler:^(NSDictionary<NSString *,id> *result, NSError * _Nullable error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            
+
             if (error) {
                 handler(nil, error);
                 return;
             }
-            
+
             NSData *responseData = result[@"data"];
             NSHTTPURLResponse *response = result[@"response"];
-            
+
             WKWebView *webView = [WKWebView new];
-            
+
             FBSDKWebViewAppLinkResolverWebViewDelegate *listener = [FBSDKWebViewAppLinkResolverWebViewDelegate new];
             __block FBSDKWebViewAppLinkResolverWebViewDelegate *retainedListener = listener;
             listener.didFinishLoad = ^(WKWebView *view) {

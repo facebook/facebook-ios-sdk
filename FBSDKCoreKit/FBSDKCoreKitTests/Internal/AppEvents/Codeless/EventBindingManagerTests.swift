@@ -23,9 +23,11 @@ protocol WindowMoving {
   func didMoveToWindow()
 }
 
+// swiftformat:disable indent
 class EventBindingManagerTests: XCTestCase, // swiftlint:disable:this type_body_length
-                                UITableViewDelegate,
+                                UITableViewDelegate, // swiftlint:disable:this indentation_width
                                 UICollectionViewDelegate {
+  // swiftformat:enable indent
 
   var manager: EventBindingManager! // swiftlint:disable:this implicitly_unwrapped_optional
   var bindings = SampleEventBindingList.valid
@@ -183,7 +185,7 @@ class EventBindingManagerTests: XCTestCase, // swiftlint:disable:this type_body_
         ]
         .joined(separator: ", ")
       )
-    .appending("]")
+      .appending("]")
 
     XCTAssertEqual(
       TestSwizzler.evidence.description,
@@ -277,13 +279,14 @@ class EventBindingManagerTests: XCTestCase, // swiftlint:disable:this type_body_
 
   // MARK: - Helpers
 
+  // swiftlint:disable indentation_width
   func registerReactNativeClasses() {
     if objc_lookUpClass("RCTRootView") == nil,
-      let touchHandler: AnyClass = objc_allocateClassPair(NSObject.self, "RCTTouchHandler", 0),
-      let reactRootView: AnyClass = objc_allocateClassPair(NSObject.self, "RCTRootView", 0),
-      let imageView: AnyClass = objc_allocateClassPair(NSObject.self, "RCTImageView", 0),
-      let textView: AnyClass = objc_allocateClassPair(NSObject.self, "RCTTextView", 0),
-      let view: AnyClass = objc_allocateClassPair(NSObject.self, "RCTView", 0) {
+       let touchHandler: AnyClass = objc_allocateClassPair(NSObject.self, "RCTTouchHandler", 0),
+       let reactRootView: AnyClass = objc_allocateClassPair(NSObject.self, "RCTRootView", 0),
+       let imageView: AnyClass = objc_allocateClassPair(NSObject.self, "RCTImageView", 0),
+       let textView: AnyClass = objc_allocateClassPair(NSObject.self, "RCTTextView", 0),
+       let view: AnyClass = objc_allocateClassPair(NSObject.self, "RCTView", 0) {
       objc_registerClassPair(touchHandler)
       objc_registerClassPair(reactRootView)
       objc_registerClassPair(imageView)
@@ -305,6 +308,7 @@ class EventBindingManagerTests: XCTestCase, // swiftlint:disable:this type_body_
       objc_disposeClassPair(view)
     }
   }
+  // swiftlint:enable indentation_width
 
   enum ViewHierarchies {
 

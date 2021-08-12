@@ -55,16 +55,16 @@ static FBSDKRestrictiveDataFilterManager *_instance;
 
 @interface FBSDKRestrictiveDataFilterManager ()
 
-@property BOOL isRestrictiveEventFilterEnabled;
+@property (nonatomic) BOOL isRestrictiveEventFilterEnabled;
 @property (nonatomic) NSMutableArray<FBSDKRestrictiveEventFilter *> *params;
 @property (nonatomic) NSMutableSet<NSString *> *restrictedEvents;
-@property (nonatomic) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
+@property (nonatomic) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 
 @end
 
 @implementation FBSDKRestrictiveDataFilterManager
 
-- (instancetype)initWithServerConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+- (instancetype)initWithServerConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
 {
   self.serverConfigurationProvider = serverConfigurationProvider;
   return self;
@@ -120,7 +120,7 @@ static FBSDKRestrictiveDataFilterManager *_instance;
   return nil;
 }
 
-- (void)processEvents:(NSMutableArray<NSMutableDictionary<NSString *, id> *> *)events
+- (void)processEvents:(NSArray<NSMutableDictionary<NSString *, id> *> *)events
 {
   @try {
     if (!self.isRestrictiveEventFilterEnabled) {

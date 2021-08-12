@@ -19,22 +19,54 @@
 #import "FBSDKGamingGroupIntegration.h"
 
 #import "FBSDKGamingServiceController.h"
+#import "FBSDKGamingServiceControllerCreating.h"
+#import "FBSDKGamingServiceControllerFactory.h"
+
+@interface FBSDKGamingGroupIntegration ()
+
+@property (nonatomic) id<FBSDKGamingServiceControllerCreating> serviceControllerFactory;
+@property (nonatomic) id<FBSDKSettings> settings;
+
+@end
 
 @implementation FBSDKGamingGroupIntegration
 
+- (instancetype)init
+{
+  return [self initWithSettings:FBSDKSettings.sharedSettings
+          serviceControllerFactory:[FBSDKGamingServiceControllerFactory new]];
+}
+
+- (instancetype)initWithSettings:(id<FBSDKSettings>)settings
+        serviceControllerFactory:(id<FBSDKGamingServiceControllerCreating>)factory
+{
+  if ((self = [super init])) {
+    _settings = settings;
+    _serviceControllerFactory = factory;
+  }
+
+  return self;
+}
+
 + (void)openGroupPageWithCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
 {
-  FBSDKGamingServiceController *const controller =
-  [[FBSDKGamingServiceController alloc]
-   initWithServiceType:FBSDKGamingServiceTypeCommunity
-   completionHandler:^(BOOL success, id _Nullable result, NSError *_Nullable error) {
+  FBSDKGamingGroupIntegration *integration = [FBSDKGamingGroupIntegration new];
+  [integration openGroupPageWithCompletionHandler:completionHandler];
+}
+
+- (void)openGroupPageWithCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler
+{
+  id<FBSDKGamingServiceController> const controller =
+  [self.serviceControllerFactory
+   createWithServiceType:FBSDKGamingServiceTypeCommunity
+   completion:^(BOOL success, id _Nullable result, NSError *_Nullable error) {
      if (completionHandler) {
        completionHandler(success, error);
      }
    }
    pendingResult:nil];
 
-  [controller callWithArgument:FBSDKSettings.appID];
+  [controller callWithArgument:self.settings.appID];
 }
 
 @end

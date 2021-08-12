@@ -18,9 +18,13 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(AppEventsDeviceInfo)
 @interface FBSDKAppEventsDeviceInfo : NSObject
 
 + (void)extendDictionaryWithDeviceInfo:(NSMutableDictionary *)dictionary;
 
 @end
+
+NS_ASSUME_NONNULL_END

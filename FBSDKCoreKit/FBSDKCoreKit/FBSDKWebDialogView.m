@@ -27,7 +27,7 @@
  #import "FBSDKCloseIcon.h"
  #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKError+Internal.h"
- #import "FBSDKURLOpener.h"
+ #import "FBSDKInternalURLOpener.h"
  #import "FBSDKWebViewProviding.h"
 
  #define FBSDK_WEB_DIALOG_VIEW_BORDER_WIDTH 10.0
@@ -43,21 +43,21 @@
 @implementation FBSDKWebDialogView
 
 static id<FBSDKWebViewProviding> _webViewProvider;
-static id<FBSDKURLOpener> _urlOpener;
+static id<FBSDKInternalURLOpener> _urlOpener;
 
 + (void)configureWithWebViewProvider:(id<FBSDKWebViewProviding>)provider
-                           urlOpener:(id<FBSDKURLOpener>)urlOpener;
+                           urlOpener:(id<FBSDKInternalURLOpener>)urlOpener;
 {
   _webViewProvider = provider;
   _urlOpener = urlOpener;
 }
 
-+ (id<FBSDKURLOpener>)urlOpener
++ (id<FBSDKInternalURLOpener>)urlOpener
 {
   return _urlOpener;
 }
 
-- (id<FBSDKURLOpener>)urlOpener
+- (id<FBSDKInternalURLOpener>)urlOpener
 {
   return FBSDKWebDialogView.urlOpener;
 }

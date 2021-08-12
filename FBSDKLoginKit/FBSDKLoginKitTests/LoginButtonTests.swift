@@ -32,7 +32,7 @@ class LoginButtonTests: XCTestCase {
   lazy var factory = TestGraphRequestFactory()
   lazy var button = FBLoginButton()
   var sampleToken: AuthenticationToken {
-    return AuthenticationToken(tokenString: "abc", nonce: "123")
+    AuthenticationToken(tokenString: "abc", nonce: "123")
   }
   private let delegate = TestLoginButtonDelegate()
 
@@ -503,8 +503,7 @@ class LoginButtonTests: XCTestCase {
       button.loginConfiguration(),
       "Should be able to create a configuration with auth type"
     )
-    XCTAssertEqual(button.loginConfiguration().authType,
-                   .reauthorize)
+    XCTAssertEqual(button.loginConfiguration().authType, .reauthorize)
   }
 
   func testLoginConfigurationWithNilAuthType() {
@@ -514,8 +513,7 @@ class LoginButtonTests: XCTestCase {
       button.loginConfiguration(),
       "Should be able to create a configuration with nil auth type"
     )
-    XCTAssertEqual(button.loginConfiguration().authType,
-                   nil)
+    XCTAssertEqual(button.loginConfiguration().authType, nil)
   }
 
   func testLoginConfigurationWithNoAuthType() {
@@ -523,8 +521,7 @@ class LoginButtonTests: XCTestCase {
       button.loginConfiguration(),
       "Should be able to create a configuration with default auth type"
     )
-    XCTAssertEqual(button.loginConfiguration().authType,
-                   .rerequest)
+    XCTAssertEqual(button.loginConfiguration().authType, .rerequest)
   }
 
   // MARK: default audience

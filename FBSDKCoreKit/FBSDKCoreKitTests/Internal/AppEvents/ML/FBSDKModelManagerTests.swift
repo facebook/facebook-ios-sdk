@@ -16,6 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import TestTools
 import XCTest
 
 class FBSDKModelManagerTests: XCTestCase {
@@ -158,7 +159,7 @@ class FBSDKModelManagerTests: XCTestCase {
       factory.capturedRequests.first?.capturedCompletionHandler
     )
 
-    (0 ... 100).forEach { _ in
+    (0...100).forEach { _ in
       completion(nil, Fuzzer.randomize(json: RawRemoteModelResponse.valid), nil)
     }
   }

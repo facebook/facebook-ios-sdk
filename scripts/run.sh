@@ -59,6 +59,8 @@ main() {
     CORE_KIT="FBSDKCoreKit"
     LOGIN_KIT="FBSDKLoginKit"
     SHARE_KIT="FBSDKShareKit"
+    LEGACY_GAMING_SERVICES="LegacyGamingServices"
+    FACEBOOK_GAMING_SERVICES="FacebookGamingServices"
     GAMING_SERVICES_KIT="FBSDKGamingServicesKit"
 
     SDK_BASE_KITS=(
@@ -71,6 +73,8 @@ main() {
 
     SDK_KITS=(
       "${SDK_BASE_KITS[@]}"
+      "$LEGACY_GAMING_SERVICES"
+      "$FACEBOOK_GAMING_SERVICES"
       "$GAMING_SERVICES_KIT"
       "FBSDKTVOSKit"
     )
@@ -445,8 +449,7 @@ release_sdk() {
     # Release frameworks in dynamic (mostly for Carthage)
     release_dynamic() {
       CARTHAGE_BIN_PATH=$( which carthage ) sh scripts/carthage.sh build --no-skip-current
-      CARTHAGE_BIN_PATH=$( which carthage ) sh scripts/carthage.sh archive --output build/Release/
-      mv build/Release/FBSDKCoreKit.framework.zip build/Release/FacebookSDK_Dynamic.framework.zip
+      CARTHAGE_BIN_PATH=$( which carthage ) sh scripts/carthage.sh archive --output build/Release/FacebookSDK_Dynamic.framework.zip
     }
 
     # Release frameworks in static
@@ -497,18 +500,6 @@ release_sdk() {
     esac
   }
 
-  # Release Cocoapods
-  release_cocoapods() {
-    for spec in "$@"; do
-      if [ ! -f "$spec".podspec ]; then
-        echo "*** ERROR: unable to release $spec"
-        continue
-      fi
-
-      pod trunk push --allow-warnings "$spec".podspec || { echo "Failed to push $spec"; exit 1; }
-    done
-  }
-
   release_docs() {
     for kit in "${SDK_KITS[@]}"; do
       rm -rf "$kit/build" || true
@@ -530,7 +521,6 @@ release_sdk() {
 
   case "$release_type" in
   "github") release_github "$@" ;;
-  "cocoapods") release_cocoapods "$@" ;;
   "docs" | "documentation") release_docs "$@" ;;
   *) echo "Unsupported Release: $release_type" ;;
   esac

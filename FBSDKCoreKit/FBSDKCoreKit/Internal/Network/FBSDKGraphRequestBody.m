@@ -23,6 +23,7 @@
 #import "FBSDKCrypto.h"
 #import "FBSDKGraphRequestDataAttachment.h"
 #import "FBSDKLogger.h"
+#import "FBSDKLogger+Internal.h"
 #import "FBSDKSettings.h"
 
 #define kNewline @"\r\n"

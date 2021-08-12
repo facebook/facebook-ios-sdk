@@ -29,11 +29,7 @@ NSString *NSStringFromFBSDKAppGroupPrivacy(AppGroupPrivacy privacy)
 
 #else
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
+ #import "FBSDKHasher.h"
  #import "FBSDKShareUtility.h"
 
  #define FBSDK_APP_GROUP_CONTENT_GROUP_DESCRIPTION_KEY @"groupDescription"
@@ -63,7 +59,7 @@ NSString *NSStringFromFBSDKAppGroupPrivacy(FBSDKAppGroupPrivacy privacy)
     _name.hash,
     _privacy,
   };
-  return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
+  return [FBSDKHasher hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
 }
 
 - (BOOL)isEqual:(id)object
@@ -81,8 +77,8 @@ NSString *NSStringFromFBSDKAppGroupPrivacy(FBSDKAppGroupPrivacy privacy)
 {
   return (content
     && (_privacy == content.privacy)
-    && [FBSDKInternalUtility.sharedUtility object:_name isEqualToObject:content.name]
-    && [FBSDKInternalUtility.sharedUtility object:_groupDescription isEqualToObject:content.groupDescription]);
+    && [_name isEqual:content.name]
+    && [_groupDescription isEqual:content.groupDescription]);
 }
 
  #pragma mark - NSCoding

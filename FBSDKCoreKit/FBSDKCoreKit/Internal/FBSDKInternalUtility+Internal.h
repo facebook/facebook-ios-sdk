@@ -114,11 +114,6 @@ NS_SWIFT_NAME(InvalidObjectHandler);
  */
 - (void)validateFacebookReservedURLSchemes;
 
-/**
- returns the current key window
- */
-- (nullable UIWindow *)findWindow;
-
 #if !TARGET_OS_TV
 /**
   returns interface orientation for the key window.

@@ -26,7 +26,6 @@
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings+Internal.h"
-#import "FBSDKSettings+SettingsProtocols.h"
 #import "FBSDKSettingsProtocol.h"
 
 #define FBSDK_MAX_ERROR_REPORT_LOGS 1000

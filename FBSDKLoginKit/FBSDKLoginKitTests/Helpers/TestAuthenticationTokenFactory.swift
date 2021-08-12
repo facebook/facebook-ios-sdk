@@ -24,7 +24,7 @@ class TestAuthenticationTokenFactory: NSObject, AuthenticationTokenCreating {
   var capturedNonce: String?
   var capturedCompletion: AuthenticationTokenBlock?
 
-  func createToken (
+  func createToken(
     tokenString: String,
     nonce: String,
     graphDomain: String,

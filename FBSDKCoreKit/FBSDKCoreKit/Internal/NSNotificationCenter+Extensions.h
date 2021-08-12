@@ -20,6 +20,10 @@
 
 #import "FBSDKNotificationProtocols.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 // Default conformance to NotificationPosting and NotificationObserving
 @interface NSNotificationCenter (NotificationProtocolsConformance) <FBSDKNotificationPosting, FBSDKNotificationObserving>
 @end
+
+NS_ASSUME_NONNULL_END

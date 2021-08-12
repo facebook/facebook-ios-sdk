@@ -25,14 +25,14 @@ class TestAccessTokenWallet: NSObject, AccessTokenProviding, AccessTokenSetting,
   static var wasTokenRead = false
 
   static var currentAccessToken: AccessToken? {
-        get {
-            wasTokenRead = true
-            return stubbedCurrentAccessToken
-        }
-        set {
-          stubbedCurrentAccessToken = newValue
-        }
+    get {
+      wasTokenRead = true
+      return stubbedCurrentAccessToken
     }
+    set {
+      stubbedCurrentAccessToken = newValue
+    }
+  }
   static var tokenString: String? {
     currentAccessToken?.tokenString
   }

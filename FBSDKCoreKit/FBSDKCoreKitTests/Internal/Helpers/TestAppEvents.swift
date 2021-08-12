@@ -18,13 +18,15 @@
 
 import UIKit
 
+// swiftformat:disable indent
 @objcMembers
 class TestAppEvents: TestEventLogger,
-                     SourceApplicationTracking,
+                     SourceApplicationTracking, // swiftlint:disable:this indentation_width
                      AppEventsConfiguring,
                      ApplicationActivating,
                      ApplicationLifecycleObserving,
                      ApplicationStateSetting {
+  // swiftformat:enable indent
   // swiftlint:disable identifier_name
   var wasActivateAppCalled = false
   var wasStartObservingApplicationLifecycleNotificationsCalled = false
@@ -47,7 +49,7 @@ class TestAppEvents: TestEventLogger,
 
   var capturedConfigureGateKeeperManager: GateKeeperManaging.Type?
   var capturedConfigureAppEventsConfigurationProvider: AppEventsConfigurationProviding.Type?
-  var capturedConfigureServerConfigurationProvider: ServerConfigurationProviding.Type?
+  var capturedConfigureServerConfigurationProvider: ServerConfigurationProviding?
   var capturedConfigureGraphRequestProvider: GraphRequestProviding?
   var capturedConfigureFeatureChecker: FeatureChecking?
   var capturedConfigureStore: DataPersisting?
@@ -70,7 +72,7 @@ class TestAppEvents: TestEventLogger,
   func configure(
     withGateKeeperManager gateKeeperManager: GateKeeperManaging.Type,
     appEventsConfigurationProvider: AppEventsConfigurationProviding.Type,
-    serverConfigurationProvider: ServerConfigurationProviding.Type,
+    serverConfigurationProvider: ServerConfigurationProviding,
     graphRequestProvider provider: GraphRequestProviding,
     featureChecker: FeatureChecking,
     store: DataPersisting,

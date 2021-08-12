@@ -162,6 +162,10 @@ NS_SWIFT_NAME(InternalUtility)
  */
 - (nullable UIViewController *)topMostViewController;
 
+/**
+ returns the current key window
+ */
+- (nullable UIWindow *)findWindow;
 
 #pragma mark - FB Apps Installed
 

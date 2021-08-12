@@ -75,6 +75,9 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
 @interface FBSDKShareDialog () <FBSDKWebDialogDelegate>
 @end
 
+ #if FBSDK_SWIFT_PACKAGE
+NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in extensions")
+ #endif
 @implementation FBSDKShareDialog
 {
   FBSDKWebDialog *_webDialog;
@@ -87,7 +90,6 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
 {
   if ([FBSDKShareDialog class] == self) {
     [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
-    [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:NULL];
   }
 }
 
@@ -268,8 +270,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   if ([self.shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
     return NO;
   }
-  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
-  return [configuration.defaultShareMode isEqualToString:@"share_sheet"];
+  return [[[FBSDKShareDialogConfiguration new] defaultShareMode] isEqualToString:@"share_sheet"];
 }
 
 - (BOOL)_showAutomatic:(NSError **)errorRef
@@ -764,8 +765,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   if ([self.shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
     return YES;
   }
-  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
-  return [configuration useNativeDialogForDialogName:FBSDKDialogConfigurationNameShare];
+  return [[FBSDKShareDialogConfiguration new] shouldUseNativeDialogForDialogName:FBSDKDialogConfigurationNameShare];
 }
 
 - (BOOL)_useSafariViewController
@@ -773,8 +773,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   if ([self.shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
     return NO;
   }
-  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
-  return [configuration useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameShare];
+  return [[FBSDKShareDialogConfiguration new] shouldUseSafariViewControllerForDialogName:FBSDKDialogConfigurationNameShare];
 }
 
 - (BOOL)_validateWithError:(NSError **)errorRef

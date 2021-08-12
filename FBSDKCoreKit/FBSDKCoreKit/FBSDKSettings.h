@@ -19,14 +19,20 @@
 #import <UIKit/UIKit.h>
 
 #import "FBSDKLoggingBehavior.h"
+#import "FBSDKSettingsProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(Settings)
-@interface FBSDKSettings : NSObject
+@interface FBSDKSettings : NSObject<FBSDKSettings>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
+
+/**
+ The shared settings instance. Prefer this and the exposed instance methods over the class variants.
+ */
+@property (class, nonatomic, readonly) FBSDKSettings *sharedSettings;
 
 /**
  Retrieve the current iOS SDK version.
@@ -164,7 +170,7 @@ NS_SWIFT_NAME(jpegCompressionQuality);
 
 /**
 Set the advertiser_tracking_enabled flag. It only works in iOS14 and above.
- 
+
 @param advertiserTrackingEnabled the value of the flag
 @return Whether the the value is set successfully. It will always return NO in iOS 13 and below.
  */

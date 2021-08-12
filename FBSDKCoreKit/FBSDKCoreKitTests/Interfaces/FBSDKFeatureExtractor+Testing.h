@@ -25,10 +25,14 @@
  #import "FBSDKFeatureExtracting.h"
  #import "FBSDKRulesFromKeyProvider.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FBSDKFeatureExtractor (Testing)
 
-+ (id<FBSDKRulesFromKeyProvider>)keyProvider;
++ (nullable id<FBSDKRulesFromKeyProvider>)keyProvider;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

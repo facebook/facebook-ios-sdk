@@ -69,6 +69,7 @@ static NSDictionary<NSString *, NSString *> *const emptyParameters(void)
 
   [FBSDKAccessToken resetCurrentAccessTokenCache];
   [FBSDKGraphRequest reset];
+  [FBSDKGraphRequest setSettings:FBSDKSettings.sharedSettings];
 }
 
 #pragma mark - Tests
@@ -310,6 +311,47 @@ static NSDictionary<NSString *, NSString *> *const emptyParameters(void)
     [metadata.description containsString:@"request: "],
     "Request metadata should include information about the request"
   );
+}
+
+- (void)testSetSettingsWithCertainVersion
+{
+  TestSettings *testSettings = [TestSettings new];
+  NSString *testVersion = @"v123";
+  testSettings.stubbedGraphAPIVersion = testVersion;
+  [FBSDKGraphRequest setSettings:testSettings];
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:path];
+  XCTAssertEqualObjects(request.version, testVersion);
+}
+
+- (void)testSetSettingsWithGraphErrorRecoveryEnabled
+{
+  TestSettings *testSettings = [TestSettings new];
+  testSettings.isGraphErrorRecoveryEnabled = YES;
+  [FBSDKGraphRequest setSettings:testSettings];
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:path];
+  XCTAssertFalse(request.isGraphErrorRecoveryDisabled);
+}
+
+- (void)testSetSettingsWithDebugParamValue
+{
+  TestSettings *testSettings = [TestSettings new];
+  testSettings.graphAPIDebugParamValue = @"TestValue";
+  [FBSDKGraphRequest setSettings:testSettings];
+  NSString *baseURL = [FBSDKInternalUtility.sharedUtility
+                       facebookURLWithHostPrefix:prefix
+                       path:path
+                       queryParameters:emptyParameters()
+                       defaultVersion:version
+                       error:NULL].absoluteString;
+  NSString *url = [FBSDKGraphRequest serializeURL:baseURL
+                                           params:@{}
+                                       httpMethod:FBSDKHTTPMethodPOST
+                                         forBatch:YES];
+  NSString *expectedURL = [NSString stringWithFormat:
+                           @"https://graph.facebook.com/%@/me?debug=%@",
+                           version,
+                           testSettings.graphAPIDebugParamValue];
+  XCTAssertEqualObjects(url, expectedURL);
 }
 
 #pragma mark - helper function

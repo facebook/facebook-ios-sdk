@@ -25,9 +25,9 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(ServerConfigurationLoading)
 @protocol FBSDKServerConfigurationLoading
 
-+ (void)processLoadRequestResponse:(id)result error:(nullable NSError *)error appID:(NSString *)appID;
+- (void)processLoadRequestResponse:(id)result error:(nullable NSError *)error appID:(NSString *)appID;
 
-+ (nullable FBSDKGraphRequest *)requestToLoadServerConfiguration:(NSString *)appID;
+- (nullable FBSDKGraphRequest *)requestToLoadServerConfiguration:(NSString *)appID;
 
 @end
 

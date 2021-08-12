@@ -42,7 +42,6 @@
  #import "FBSDKModelUtility.h"
  #import "FBSDKServerConfigurationManager+ServerConfigurationProviding.h"
  #import "FBSDKSettings+Internal.h"
- #import "FBSDKSettings+SettingsProtocols.h"
  #import "FBSDKSwizzler+Swizzling.h"
  #import "FBSDKSwizzling.h"
  #import "FBSDKViewHierarchy.h"
@@ -54,7 +53,7 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
 @interface FBSDKSuggestedEventsIndexer ()
 
 @property (nonatomic, readonly) id<FBSDKGraphRequestProviding> requestProvider;
-@property (nonatomic, readonly) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
+@property (nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonatomic, readonly) Class<FBSDKSwizzling> swizzler;
 @property (nonatomic, readonly) id<FBSDKSettings> settings;
 @property (nonatomic, readonly) id<FBSDKEventLogging> eventLogger;
@@ -65,12 +64,15 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
 
 @end
 
+ #if FBSDK_SWIFT_PACKAGE
+NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in extensions")
+ #endif
 @implementation FBSDKSuggestedEventsIndexer
 
 - (instancetype)init
 {
   return [self initWithGraphRequestProvider:[FBSDKGraphRequestFactory new]
-                serverConfigurationProvider:FBSDKServerConfigurationManager.class
+                serverConfigurationProvider:FBSDKServerConfigurationManager.shared
                                    swizzler:FBSDKSwizzler.class
                                    settings:FBSDKSettings.sharedSettings
                                 eventLogger:FBSDKAppEvents.singleton
@@ -79,7 +81,7 @@ NSString *const UnconfirmedEvents = @"eligible_for_prediction_events";
 }
 
 - (instancetype)initWithGraphRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-                 serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+                 serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                     swizzler:(Class<FBSDKSwizzling>)swizzler
                                     settings:(id<FBSDKSettings>)settings
                                  eventLogger:(id<FBSDKEventLogging>)eventLogger

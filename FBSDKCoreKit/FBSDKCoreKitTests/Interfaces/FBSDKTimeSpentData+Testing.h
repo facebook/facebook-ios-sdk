@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKTimeSpentData ()
 
 @property (nonatomic, weak) id<FBSDKEventLogging> eventLogger;
-@property (nonnull, nonatomic) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
+@property (nonnull, nonatomic) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (nonatomic) NSString *sourceApplication;
 @property (nonatomic) BOOL isOpenedFromAppLink;
 

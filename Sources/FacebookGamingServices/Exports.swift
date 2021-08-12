@@ -20,4 +20,22 @@
 @_exported import FacebookCore
 #endif
 
-@_exported import LegacyGamingServices
+@_exported import class LegacyGamingServices.ChooseContextContent
+@_exported import class LegacyGamingServices.ChooseContextDialog
+@_exported import class LegacyGamingServices.ContextWebDialog
+@_exported import class LegacyGamingServices.CreateContextContent
+@_exported import class LegacyGamingServices.CreateContextDialog
+@_exported import class LegacyGamingServices.FriendFinderDialog
+@_exported import class LegacyGamingServices.GamingContext
+@_exported import class LegacyGamingServices.GamingGroupIntegration
+@_exported import class LegacyGamingServices.GamingImageUploader
+@_exported import class LegacyGamingServices.GamingImageUploaderConfiguration
+@_exported import class LegacyGamingServices.GamingPayload
+@_exported import class LegacyGamingServices.GamingPayloadObserver
+@_exported import class LegacyGamingServices.GamingVideoUploader
+@_exported import class LegacyGamingServices.GamingVideoUploaderConfiguration
+@_exported import class LegacyGamingServices.SwitchContextContent
+@_exported import class LegacyGamingServices.SwitchContextDialog
+@_exported import protocol LegacyGamingServices.ContextDialogDelegate
+@_exported import protocol LegacyGamingServices.DialogProtocol
+@_exported import typealias LegacyGamingServices.GamingServiceCompletionHandler

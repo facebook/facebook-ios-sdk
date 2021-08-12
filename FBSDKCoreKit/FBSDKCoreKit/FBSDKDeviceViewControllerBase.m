@@ -47,7 +47,7 @@ Subclasses should generally:
 - (void)loadView
 {
   CGRect frame = [UIScreen mainScreen].bounds;
-  BOOL smartLoginEnabled = ([FBSDKServerConfigurationManager cachedServerConfiguration].smartLoginOptions & FBSDKServerConfigurationSmartLoginOptionsEnabled);
+  BOOL smartLoginEnabled = (FBSDKServerConfigurationManager.shared.cachedServerConfiguration.smartLoginOptions & FBSDKServerConfigurationSmartLoginOptionsEnabled);
   FBSDKDeviceDialogView *deviceView =
   (smartLoginEnabled
     ? [[FBSDKSmartDeviceDialogView alloc] initWithFrame:frame]

@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(GamingServiceControllerProtocol)
 @protocol FBSDKGamingServiceController
 
-- (void)callWithArgument:(NSString *)argument;
+- (void)callWithArgument:(nullable NSString *)argument;
 
 @end
 

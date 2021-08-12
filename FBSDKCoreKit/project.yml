@@ -101,13 +101,7 @@ targets:
       - sdk: WebKit.framework
     preBuildScripts:
       - name: Run Swiftlint
-        script: |
-          # Type a script or drag a script file from your workspace to insert its path.
-          if which swiftlint >/dev/null; then
-            swiftlint --config ../.swiftlint.yml
-          else
-            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
-          fi
+        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
       FB_BITCODE_FLAG[sdk=iphoneos11.0]: -fembed-bitcode
@@ -179,13 +173,7 @@ targets:
       - sdk: libz.tbd
     preBuildScripts:
       - name: Run Swiftlint
-        script: |
-          # Type a script or drag a script file from your workspace to insert its path.
-          if which swiftlint >/dev/null; then
-            swiftlint --config ../.swiftlint.yml
-          else
-            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
-          fi
+        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
       PRODUCT_NAME: FBSDKCoreKit
@@ -257,6 +245,7 @@ targets:
           - FBSDKMeasurementEvent*
           - FBSDKMutableCopying*
           - FBSDKProfile*
+          - FBSDKShareDialogConfiguration*
           - FBSDKURL*
           - FBSDKURLOpening*
           - FBSDKWebDialog*
@@ -277,13 +266,7 @@ targets:
         link: false
     preBuildScripts:
       - name: Run Swiftlint
-        script: |
-          # Type a script or drag a script file from your workspace to insert its path.
-          if which swiftlint >/dev/null; then
-            swiftlint --config ../.swiftlint.yml
-          else
-            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
-          fi
+        script: ../scripts/build_phase_swiftlint.sh
     settings:
       PRODUCT_NAME: FBSDKCoreKit
   FBSDKCoreKit_TV-Dynamic:
@@ -353,6 +336,7 @@ targets:
           - FBSDKMeasurementEvent*
           - FBSDKMutableCopying*
           - FBSDKProfile*
+          - FBSDKShareDialogConfiguration*
           - FBSDKURL*
           - FBSDKURLOpening*
           - FBSDKWebDialog*
@@ -378,13 +362,7 @@ targets:
       - sdk: UIKit.framework
     preBuildScripts:
       - name: Run Swiftlint
-        script: |
-          # Type a script or drag a script file from your workspace to insert its path.
-          if which swiftlint >/dev/null; then
-            swiftlint --config ../.swiftlint.yml
-          else
-            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
-          fi
+        script: ../scripts/build_phase_swiftlint.sh
     settings:
       PRODUCT_NAME: FBSDKCoreKit
   FBSDKCoreKitTests:

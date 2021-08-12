@@ -35,7 +35,7 @@
 @interface FBSDKCodelessIndexer (Internal)
 
 + (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-         serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+         serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                store:(id<FBSDKDataPersisting>)store
                   connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
                             swizzler:(Class<FBSDKSwizzling>)swizzler

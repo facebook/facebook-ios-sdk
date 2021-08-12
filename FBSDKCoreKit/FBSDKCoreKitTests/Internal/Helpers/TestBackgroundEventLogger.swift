@@ -21,7 +21,8 @@ class TestBackgroundEventLogger: NSObject, BackgroundEventLogging {
 
   required init(
     infoDictionaryProvider: InfoDictionaryProviding?,
-    eventLogger: EventLogging?) {
+    eventLogger: EventLogging?
+  ) {
   }
 
   var logBackgroundRefresStatusCallCount = 0

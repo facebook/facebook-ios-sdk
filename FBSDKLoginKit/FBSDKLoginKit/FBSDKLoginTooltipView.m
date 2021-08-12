@@ -51,7 +51,7 @@
   if (self.forceDisplay) {
     [super presentInView:view withArrowPosition:arrowPosition direction:arrowDirection];
   } else {
-    [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
+    [FBSDKServerConfigurationManager.shared loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
       self.message = serverConfiguration.loginTooltipText;
       BOOL shouldDisplay = serverConfiguration.loginTooltipEnabled;
       if ([self.delegate respondsToSelector:@selector(loginTooltipView:shouldAppear:)]) {

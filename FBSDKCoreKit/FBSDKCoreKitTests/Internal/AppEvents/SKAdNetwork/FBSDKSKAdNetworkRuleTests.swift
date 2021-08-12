@@ -32,7 +32,7 @@ class FBSDKSKAdNetworkRuleTests: XCTestCase {
       ],
     ]
 
-    guard let rule = FBSDKSKAdNetworkRule(json: validData) else { return XCTFail("Unwraping Error") }
+    guard let rule = SKAdNetworkRule(json: validData) else { return XCTFail("Unwraping Error") }
     XCTAssertEqual(2, rule.conversionValue)
     XCTAssertEqual(2, rule.events.count)
 
@@ -61,7 +61,7 @@ class FBSDKSKAdNetworkRuleTests: XCTestCase {
       ],
     ]
 
-    guard let rule = FBSDKSKAdNetworkRule(json: validData) else { return XCTFail("Unwraping Error") }
+    guard let rule = SKAdNetworkRule(json: validData) else { return XCTFail("Unwraping Error") }
     XCTAssertEqual(2, rule.conversionValue)
     XCTAssertEqual(1, rule.events.count)
     XCTAssertEqual(1, rule.events.count)
@@ -73,10 +73,10 @@ class FBSDKSKAdNetworkRuleTests: XCTestCase {
 
   func testInvalidCases() {
     var invalidData: [String: Any] = [:]
-    XCTAssertNil(FBSDKSKAdNetworkRule(json: invalidData))
+    XCTAssertNil(SKAdNetworkRule(json: invalidData))
 
     invalidData = ["conversion_value": 2]
-    XCTAssertNil(FBSDKSKAdNetworkRule(json: invalidData))
+    XCTAssertNil(SKAdNetworkRule(json: invalidData))
 
     invalidData = [
       "events": [
@@ -91,7 +91,7 @@ class FBSDKSKAdNetworkRuleTests: XCTestCase {
         ],
       ],
     ]
-    XCTAssertNil(FBSDKSKAdNetworkRule(json: invalidData))
+    XCTAssertNil(SKAdNetworkRule(json: invalidData))
 
     invalidData = [
       "conversion_value": 2,
@@ -107,7 +107,7 @@ class FBSDKSKAdNetworkRuleTests: XCTestCase {
         ],
       ],
     ]
-    XCTAssertNil(FBSDKSKAdNetworkRule(json: invalidData))
+    XCTAssertNil(SKAdNetworkRule(json: invalidData))
   }
 
   func testRuleMatch() {
@@ -129,22 +129,24 @@ class FBSDKSKAdNetworkRuleTests: XCTestCase {
       ],
     ]
 
-    guard let rule = FBSDKSKAdNetworkRule(json: ruleData) else { return XCTFail("Unwraping Error") }
+    guard let rule = SKAdNetworkRule(json: ruleData) else { return XCTFail("Unwraping Error") }
     let matchedEventSet: Set = ["fb_mobile_purchase", "fb_skadnetwork_test1", "fb_adnetwork_test2"]
     let unmatchedEventSet: Set = ["fb_mobile_purchase", "fb_skadnetwork_test2"]
 
-    XCTAssertTrue(rule.isMatched(withRecordedEvents: matchedEventSet,
-                                 recordedValues: ["fb_mobile_purchase": ["USD": 1000]]))
-    XCTAssertFalse(rule.isMatched(withRecordedEvents: [],
-                                  recordedValues: [:]))
-    XCTAssertFalse(rule.isMatched(withRecordedEvents: matchedEventSet,
-                                  recordedValues: [:]))
-    XCTAssertFalse(rule.isMatched(withRecordedEvents: matchedEventSet,
-                                  recordedValues: ["fb_mobile_purchase": ["USD": 50]]))
-    XCTAssertFalse(rule.isMatched(withRecordedEvents: matchedEventSet,
-                                  recordedValues: ["fb_mobile_purchase": ["JPY": 1000]]))
-    XCTAssertFalse(rule.isMatched(withRecordedEvents: unmatchedEventSet,
-                                  recordedValues: ["fb_mobile_purchase": ["USD": 1000]]))
+    XCTAssertTrue(
+      rule.isMatched(withRecordedEvents: matchedEventSet, recordedValues: ["fb_mobile_purchase": ["USD": 1000]])
+    )
+    XCTAssertFalse(rule.isMatched(withRecordedEvents: [], recordedValues: [:]))
+    XCTAssertFalse(rule.isMatched(withRecordedEvents: matchedEventSet, recordedValues: [:]))
+    XCTAssertFalse(
+      rule.isMatched(withRecordedEvents: matchedEventSet, recordedValues: ["fb_mobile_purchase": ["USD": 50]])
+    )
+    XCTAssertFalse(
+      rule.isMatched(withRecordedEvents: matchedEventSet, recordedValues: ["fb_mobile_purchase": ["JPY": 1000]])
+    )
+    XCTAssertFalse(
+      rule.isMatched(withRecordedEvents: unmatchedEventSet, recordedValues: ["fb_mobile_purchase": ["USD": 1000]])
+    )
   }
 }
 

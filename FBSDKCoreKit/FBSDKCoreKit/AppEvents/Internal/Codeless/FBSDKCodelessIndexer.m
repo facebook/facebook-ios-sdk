@@ -53,7 +53,7 @@
 @interface FBSDKCodelessIndexer ()
 
 @property (class, nullable, nonatomic, readonly) id<FBSDKGraphRequestProviding> requestProvider;
-@property (class, nullable, nonatomic, readonly) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
+@property (class, nullable, nonatomic, readonly) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 @property (class, nullable, nonatomic, readonly) id<FBSDKDataPersisting> store;
 @property (class, nullable, nonatomic, readonly, copy) id<FBSDKGraphRequestConnectionProviding> connectionProvider;
 @property (class, nullable, nonatomic, readonly, copy) Class<FBSDKSwizzling> swizzler;
@@ -62,6 +62,9 @@
 
 @end
 
+ #if FBSDK_SWIFT_PACKAGE
+NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in extensions")
+ #endif
 @implementation FBSDKCodelessIndexer
 
 static BOOL _isCodelessIndexing;
@@ -76,7 +79,7 @@ static NSString *_deviceSessionID;
 static NSTimer *_appIndexingTimer;
 static NSString *_lastTreeHash;
 static id<FBSDKGraphRequestProviding> _requestProvider;
-static Class<FBSDKServerConfigurationProviding> _serverConfigurationProvider;
+static id<FBSDKServerConfigurationProviding> _serverConfigurationProvider;
 static id<FBSDKDataPersisting> _store;
 static id<FBSDKGraphRequestConnectionProviding> _connectionProvider;
 static Class<FBSDKSwizzling> _swizzler;
@@ -85,7 +88,7 @@ static id<FBSDKAdvertiserIDProviding> _advertiserIDProvider;
 static id<FBSDKSettings> _settings;
 
 + (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
-         serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+         serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
                                store:(id<FBSDKDataPersisting>)store
                   connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
                             swizzler:(Class<FBSDKSwizzling>)swizzler
@@ -108,7 +111,7 @@ static id<FBSDKSettings> _settings;
   return _requestProvider;
 }
 
-+ (Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
++ (id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
 {
   return _serverConfigurationProvider;
 }
@@ -257,7 +260,7 @@ static id<FBSDKSettings> _settings;
   [self.swizzler swizzleSelector:@selector(motionBegan:withEvent:)
                          onClass:class
                        withBlock:^{
-                         if ([FBSDKServerConfigurationManager cachedServerConfiguration].isCodelessEventsEnabled) {
+                         if (FBSDKServerConfigurationManager.shared.cachedServerConfiguration.isCodelessEventsEnabled) {
                            [self checkCodelessIndexingSession];
                          }
                        }

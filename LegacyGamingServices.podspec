@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'LegacyGamingServices'
-  s.version      = '11.0.1'
+  s.version      = '11.1.0'
   s.summary      = 'The legacy Objective-C implementation of FBSDKGamingServicesKit that will be converted to Swift.'
 
   s.description  = <<-DESC

@@ -31,7 +31,7 @@ class TestNotificationCenter: NSObject, NotificationObserving, NotificationPosti
       lhs: TestNotificationCenter.ObserverEvidence,
       rhs: TestNotificationCenter.ObserverEvidence
     ) -> Bool {
-      return lhs.observer as AnyObject === rhs.observer as AnyObject &&
+      lhs.observer as AnyObject === rhs.observer as AnyObject &&
         lhs.name == rhs.name &&
         lhs.selector == rhs.selector &&
         lhs.object as AnyObject === rhs.object as AnyObject

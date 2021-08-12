@@ -1,8 +1,10 @@
 excluded:
-  - Pods
   - Carthage
-  - Vendor
+  - ads
+  - internal
   - samples
+  - testing
+  - Package.swift
 
 cyclomatic_complexity: 11
 file_header:
@@ -27,7 +29,9 @@ file_header:
 identifier_name:
   excluded:
     - ok
-indentation: 2
+indentation_width:
+  indentation_width: 2
+  include_comments: false
 large_tuple: 3
 line_length: 120
 nesting:
@@ -105,7 +109,9 @@ opt_in_rules:
   - generic_type_name
   - identifier_name
   - implicit_getter
+  - implicit_return
   - implicitly_unwrapped_optional
+  - indentation_width
   - is_disjoint
   - joined_default_parameter
   - large_tuple

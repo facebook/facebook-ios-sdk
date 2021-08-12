@@ -19,7 +19,7 @@
 #import "FBSDKEventDeactivationManager.h"
 
 #import "FBSDKCoreKitBasicsImport.h"
-#import "FBSDKServerConfigurationManager.h"
+#import "FBSDKServerConfigurationManager+ServerConfigurationProviding.h"
 
 static NSString *const DEPRECATED_PARAM_KEY = @"deprecated_param";
 static NSString *const DEPRECATED_EVENT_KEY = @"is_deprecated_event";
@@ -52,10 +52,10 @@ static NSString *const DEPRECATED_EVENT_KEY = @"is_deprecated_event";
 
 @interface FBSDKEventDeactivationManager ()
 
-@property BOOL isEventDeactivationEnabled;
+@property (nonatomic) BOOL isEventDeactivationEnabled;
 @property (nonatomic, strong) NSMutableSet<NSString *> *deactivatedEvents;
 @property (nonatomic, strong) NSMutableArray<FBSDKDeactivatedEvent *> *eventsWithDeactivatedParams;
-@property (nonatomic) Class<FBSDKServerConfigurationProviding> serverConfigurationProvider;
+@property (nonatomic) id<FBSDKServerConfigurationProviding> serverConfigurationProvider;
 
 @end
 
@@ -65,12 +65,12 @@ static NSString *const DEPRECATED_EVENT_KEY = @"is_deprecated_event";
   static FBSDKEventDeactivationManager *instance;
   static dispatch_once_t nonce;
   dispatch_once(&nonce, ^{
-    instance = [[self alloc] initWithServerConfigurationProvider:FBSDKServerConfigurationManager.class];
+    instance = [[self alloc] initWithServerConfigurationProvider:FBSDKServerConfigurationManager.shared];
   });
   return instance;
 }
 
-- (instancetype)initWithServerConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider
+- (instancetype)initWithServerConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
 {
   self.isEventDeactivationEnabled = NO;
   self.serverConfigurationProvider = serverConfigurationProvider;

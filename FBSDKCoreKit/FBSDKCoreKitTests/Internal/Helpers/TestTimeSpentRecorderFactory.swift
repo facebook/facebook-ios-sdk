@@ -21,6 +21,6 @@ class TestTimeSpentRecorderFactory: NSObject, TimeSpentRecordingCreating {
   let recorder = TestTimeSpentRecorder()
 
   func createTimeSpentRecorder() -> SourceApplicationTracking & TimeSpentRecording {
-    return recorder
+    recorder
   }
 }

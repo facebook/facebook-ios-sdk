@@ -24,9 +24,12 @@
 
 #import "FBSDKBridgeAPIProtocol.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(BridgeAPIProtocolWebV2)
 @interface FBSDKBridgeAPIProtocolWebV2 : NSObject <FBSDKBridgeAPIProtocol>
-
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

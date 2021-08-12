@@ -54,7 +54,6 @@
 		0C21252B8E687D4F09CA6D61 /* FBSDKLoginUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 07658CBD88E9B85A318A2C7B /* FBSDKLoginUtility.h */; };
 		0C8E9B823BCF3EBC3BF7FF95 /* FBSDKDeviceLoginManagerResultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C80B0C6F6B39D3E7A09BAE0 /* FBSDKDeviceLoginManagerResultTests.swift */; };
 		0D70249A63E7864EEFB00909 /* FBSDKMonotonicTime.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B1C7642B879509C5BFE97DA /* FBSDKMonotonicTime.h */; };
-		0E0680A24DEF2C9A5537E608 /* Fuzzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B913D031D6908956B23F21 /* Fuzzer.swift */; };
 		0E416BF66D1CFC0E72D48F61 /* FBSDKCoreKit+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C32BDD8E419610D79FEF3E4 /* FBSDKCoreKit+Internal.h */; };
 		0E41B49C993A975C6596A1FF /* FBSDKDeviceLoginCodeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 901015B40BCB59F38B17DF6E /* FBSDKDeviceLoginCodeInfo.m */; };
 		0EBBF4BDC28ED5765BE7A136 /* FBSDKDevicePoller.h in Headers */ = {isa = PBXBuildFile; fileRef = 65FE51AE36E4757C21F7E8C3 /* FBSDKDevicePoller.h */; };
@@ -92,7 +91,6 @@
 		3B2859D7DD0E6FB82A8A0DE4 /* FBSDKCoreKit+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C32BDD8E419610D79FEF3E4 /* FBSDKCoreKit+Internal.h */; };
 		3DBFA5F990318B7634359686 /* FBSDKReferralManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 94D757B571661019CE7205E2 /* FBSDKReferralManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3FBC8A5AC7A2DC79F877D1D3 /* FBSDKDeviceLoginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FD29D8763E982D6AD9B698C /* FBSDKDeviceLoginManager.m */; };
-		4224AF0B0C9A8091B5F56933 /* TestGraphRequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3A9CAD593156498EFF47BF /* TestGraphRequestFactory.swift */; };
 		428C5505B8DB319BD4164877 /* FBSDKDeviceLoginManager.h in Headers */ = {isa = PBXBuildFile; fileRef = EE69F0BA348C662F6C4B140D /* FBSDKDeviceLoginManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42EFE00EEA19ACB4E1C2FCB4 /* FBSDKLoginButton.h in Headers */ = {isa = PBXBuildFile; fileRef = F5344F80C527A029A77EEA86 /* FBSDKLoginButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		442553F878F5F8AAD37D1A9E /* FBSDKCoreKitBasicsImportForLoginKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 69E74581E96FF9B0EC285984 /* FBSDKCoreKitBasicsImportForLoginKit.h */; };
@@ -528,7 +526,6 @@
 		D47B542D0ED26B7D4BF14F61 /* FBSDKLoginManager+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKLoginManager+Internal.h"; sourceTree = "<group>"; };
 		D798D4D9AF2B9FE855C2615B /* FBSDKLoginTooltipView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKLoginTooltipView.m; sourceTree = "<group>"; };
 		DC537CCE49534CB5C21FC030 /* FBSDKLoginKit-tvOS-Dynamic.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBSDKLoginKit-tvOS-Dynamic.xcconfig"; sourceTree = "<group>"; };
-		DD3A9CAD593156498EFF47BF /* TestGraphRequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestFactory.swift; sourceTree = "<group>"; };
 		E0E6A39520FF5A42A7DCC80D /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKLoginKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E131FB2AEEAA6E87E025823C /* FBSDKReferralManagerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKReferralManagerTests.m; sourceTree = "<group>"; };
 		E2E14558B926D63868EAE9E9 /* TestLoginButtonDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestLoginButtonDelegate.swift; sourceTree = "<group>"; };
@@ -545,7 +542,6 @@
 		F6A4761DA8FA03C5178B3C7D /* FBSDKProfileFactory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKProfileFactory.m; sourceTree = "<group>"; };
 		F6DD4EBC3A5C8E5046B15A04 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		F6F2B69280E56FEF96759A72 /* FBSDKLoginManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKLoginManager.h; sourceTree = "<group>"; };
-		F7B913D031D6908956B23F21 /* Fuzzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fuzzer.swift; sourceTree = "<group>"; };
 		F830166A1087C275C27D63FB /* FBSDKLoginManagerLoginResult.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKLoginManagerLoginResult.m; sourceTree = "<group>"; };
 		F90F66686BA4F9F8C12EFA6F /* TestDevicePoller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDevicePoller.swift; sourceTree = "<group>"; };
 		FE03652DBDADCAA794E5915F /* FBSDKAuthenticationTokenHeader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKAuthenticationTokenHeader.m; sourceTree = "<group>"; };
@@ -590,11 +586,9 @@
 		07A73488BC776C8EAD413CAC /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				F7B913D031D6908956B23F21 /* Fuzzer.swift */,
 				BE713DDA263C05442A4A9FA6 /* TestAuthenticationTokenFactory.swift */,
 				1A8D4A4A95F3613AB08FE04E /* TestDeviceLoginManagerDelegate.swift */,
 				F90F66686BA4F9F8C12EFA6F /* TestDevicePoller.swift */,
-				DD3A9CAD593156498EFF47BF /* TestGraphRequestFactory.swift */,
 				E2E14558B926D63868EAE9E9 /* TestLoginButtonDelegate.swift */,
 				8637D9E87483FC4DEDC82E99 /* TestLoginProvider.swift */,
 				3C89F84FAFD52C318BBD12D1 /* TestProfileFactory.swift */,
@@ -1253,7 +1247,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint --config ../.swiftlint.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = ../scripts/build_phase_swiftlint.sh;
 		};
 		98CF42776D5628725979C6F2 /* Run Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1271,7 +1265,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint --config ../.swiftlint.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = ../scripts/build_phase_swiftlint.sh;
 		};
 		AE9A4489F008673AD9A4F2B7 /* Run Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1289,7 +1283,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint --config ../.swiftlint.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = ../scripts/build_phase_swiftlint.sh;
 		};
 		D1A39474F5ACDB6E14940A23 /* Run Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1307,7 +1301,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint --config ../.swiftlint.yml\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = ../scripts/build_phase_swiftlint.sh;
 		};
 		D518880239377FC3315EE9D1 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1360,7 +1354,6 @@
 				A58DF888E5F93B69A40654A0 /* FBSDKPermissionTests.m in Sources */,
 				BC9823E1E1F05596BC914AA0 /* FBSDKReferralCodeTests.m in Sources */,
 				F8A6B37DD6DB14A650CFBE29 /* FBSDKReferralManagerTests.m in Sources */,
-				0E0680A24DEF2C9A5537E608 /* Fuzzer.swift in Sources */,
 				12591E093705DCC1D34A2D71 /* LoginButtonTests.swift in Sources */,
 				71476FDC80838FCD7B0D2C5E /* LoginConfigurationTests.swift in Sources */,
 				DB4355F8C647A390949EA160 /* NonceTests.swift in Sources */,
@@ -1368,7 +1361,6 @@
 				56E3FF56AC455F8FEA87BD01 /* TestAuthenticationTokenFactory.swift in Sources */,
 				D0F66478E44813B1C13844FD /* TestDeviceLoginManagerDelegate.swift in Sources */,
 				13D58453540ECB6A9E4B82F2 /* TestDevicePoller.swift in Sources */,
-				4224AF0B0C9A8091B5F56933 /* TestGraphRequestFactory.swift in Sources */,
 				9AF469132CBD4F5FDB1C1E66 /* TestLoginButtonDelegate.swift in Sources */,
 				AEF4F57733363B15A33CFF79 /* TestLoginProvider.swift in Sources */,
 				ADA5C65BB6A9EBCFBDEDF4C8 /* TestProfileFactory.swift in Sources */,

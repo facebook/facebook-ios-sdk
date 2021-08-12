@@ -63,7 +63,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 {
   if (self == [FBSDKLoginManager class]) {
     [_FBSDKLoginRecoveryAttempter class];
-    [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:NULL];
+    [FBSDKServerConfigurationManager.shared loadServerConfigurationWithCompletionBlock:NULL];
   }
 }
 
@@ -156,7 +156,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 - (void)logInWithURL:(NSURL *)url
              handler:(nullable FBSDKLoginManagerLoginResultBlock)handler
 {
-  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager cachedServerConfiguration];
+  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager.shared cachedServerConfiguration];
   _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:serverConfiguration.loggingToken
                                                          tracking:FBSDKLoginTrackingEnabled];
   _handler = [handler copy];
@@ -405,7 +405,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 
 - (void)logInWithPermissions:(NSSet *)permissions handler:(FBSDKLoginManagerLoginResultBlock)handler
 {
-  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager cachedServerConfiguration];
+  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager.shared cachedServerConfiguration];
 
   if (_configuration) {
     _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:serverConfiguration.loggingToken
@@ -521,7 +521,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 {
   [_logger willAttemptAppSwitchingBehavior];
 
-  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager cachedServerConfiguration];
+  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager.shared cachedServerConfiguration];
   BOOL useSafariViewController = [serverConfiguration useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameLogin];
   NSString *authMethod = (useSafariViewController ? FBSDKLoginManagerLoggerAuthMethod_SFVC : FBSDKLoginManagerLoggerAuthMethod_Browser);
 

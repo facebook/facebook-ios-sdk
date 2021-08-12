@@ -22,23 +22,23 @@ import Foundation
 class SampleAEMData { // swiftlint:disable:this convenience_type
 
   enum Keys {
-      static let defaultCurrency = "default_currency"
-      static let cutoffTime = "cutoff_time"
-      static let validFrom = "valid_from"
-      static let configMode = "config_mode"
-      static let conversionValueRules = "conversion_value_rules"
-      static let conversionValue = "conversion_value"
-      static let priority = "priority"
-      static let events = "events"
-      static let eventName = "event_name"
-      static let businessID = "advertiser_id"
+    static let defaultCurrency = "default_currency"
+    static let cutoffTime = "cutoff_time"
+    static let validFrom = "valid_from"
+    static let configMode = "config_mode"
+    static let conversionValueRules = "conversion_value_rules"
+    static let conversionValue = "conversion_value"
+    static let priority = "priority"
+    static let events = "events"
+    static let eventName = "event_name"
+    static let businessID = "advertiser_id"
   }
 
   enum Values {
-      static let purchase = "fb_mobile_purchase"
-      static let donate = "Donate"
-      static let defaultMode = "DEFAULT"
-      static let USD = "USD"
+    static let purchase = "fb_mobile_purchase"
+    static let donate = "Donate"
+    static let defaultMode = "DEFAULT"
+    static let USD = "USD"
   }
 
   static let validConfigData1: [String: Any] = [

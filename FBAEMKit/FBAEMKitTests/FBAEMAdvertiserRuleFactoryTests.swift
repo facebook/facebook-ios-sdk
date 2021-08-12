@@ -114,9 +114,11 @@ class FBAEMAdvertiserRuleFactoryTests: XCTestCase { // swiftlint:disable:this ty
   func testCreateMultiEntryRuleWithValidDict() {
     zip(
       ["and", "or", "not"],
-      [AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorAnd,
-       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorOr,
-       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorNot]
+      [
+        AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorAnd,
+        AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorOr,
+        AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorNot
+      ]
     ).forEach { opString, expectedOperator in
       let rule: AEMAdvertiserMultiEntryRule? = factory.createMultiEntryRule(
         withDict: [opString: [SampleAEMData.validAdvertiserSingleEntryRuleJson1, SampleAEMData.validAdvertiserSingleEntryRuleJson2]]) // swiftlint:disable:this line_length
@@ -160,101 +162,125 @@ class FBAEMAdvertiserRuleFactoryTests: XCTestCase { // swiftlint:disable:this ty
     XCTAssertEqual(
       factory.primaryKey(forRule: ["test_key": "abc"]),
       "test_key",
-      "Should get the expected key of the dictionary")
+      "Should get the expected key of the dictionary"
+    )
     XCTAssertNil(
       factory.primaryKey(forRule: [:]),
-      "Should not get the unexpected key while the dictionay is empty")
+      "Should not get the unexpected key while the dictionay is empty"
+    )
   }
 
   func testGetOperator() { // swiftlint:disable:this function_body_length
     XCTAssertEqual(
       factory.getOperator(["test_key": "abc"]),
       .Unknown,
-      "Should get the expected Unknown operator of the dictionary")
+      "Should get the expected Unknown operator of the dictionary"
+    )
     XCTAssertEqual(
       factory.getOperator(["And": "abc"]),
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorAnd,
-      "Should get the expected AND operator of the dictionary")
+      "Should get the expected AND operator of the dictionary"
+    )
     XCTAssertEqual(
       factory.getOperator(["and": "abc"]),
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorAnd,
-      "Should get the expected AND operator of the dictionary")
+      "Should get the expected AND operator of the dictionary"
+    )
     XCTAssertEqual(
       factory.getOperator(["or": "abc"]),
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorOr,
-      "Should get the expected OR operator of the dictionary")
+      "Should get the expected OR operator of the dictionary"
+    )
     XCTAssertEqual(
       factory.getOperator(["not": "abc"]),
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorNot,
-      "Should get the expected NOT operator of the dictionary")
+      "Should get the expected NOT operator of the dictionary"
+    )
     XCTAssertEqual(
       factory.getOperator(["contains": "abc"]),
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorContains,
-      "Should get the expected Contains operator of the dictionary")
+      "Should get the expected Contains operator of the dictionary"
+    )
     XCTAssertEqual(
       factory.getOperator(["not_contains": "abc"]),
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorNotContains,
-      "Should get the expected NotContains operator of the dictionary")
+      "Should get the expected NotContains operator of the dictionary"
+    )
     XCTAssertEqual(
       factory.getOperator(["starts_with": "abc"]),
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorStartsWith,
-      "Should get the expected StartsWith operator of the dictionary")
+      "Should get the expected StartsWith operator of the dictionary"
+    )
     XCTAssertEqual(
       factory.getOperator(["i_contains": "abc"]),
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorI_Contains,
-      "Should get the expected I_Contains operator of the dictionary")
+      "Should get the expected I_Contains operator of the dictionary"
+    )
     XCTAssertEqual(
       factory.getOperator(["i_not_contains": "abc"]),
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorI_NotContains,
-      "Should get the expected I_NotContains operator of the dictionary")
+      "Should get the expected I_NotContains operator of the dictionary"
+    )
     XCTAssertEqual(
       factory.getOperator(["i_starts_with": "abc"]),
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorI_StartsWith,
-      "Should get the expected I_StartsWith operator of the dictionary")
+      "Should get the expected I_StartsWith operator of the dictionary"
+    )
     XCTAssertEqual(
       factory.getOperator(["regex_match": "abc"]),
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorRegexMatch,
-      "Should get the expected REGEX_MATCH operator of the dictionary")
+      "Should get the expected REGEX_MATCH operator of the dictionary"
+    )
     XCTAssertEqual(
       factory.getOperator(["eq": "abc"]),
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorEqual,
-      "Should get the expected EQ operator of the dictionary")
+      "Should get the expected EQ operator of the dictionary"
+    )
     XCTAssertEqual(
       factory.getOperator(["neq": "abc"]),
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorNotEqual,
-      "Should get the expected NEQ operator of the dictionary")
+      "Should get the expected NEQ operator of the dictionary"
+    )
     XCTAssertEqual(
       factory.getOperator(["lt": 10]),
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorLessThan,
-      "Should get the expected LT operator of the dictionary")
+      "Should get the expected LT operator of the dictionary"
+    )
     XCTAssertEqual(
       factory.getOperator(["lte": 10]),
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorLessThanOrEqual,
-      "Should get the expected LTE operator of the dictionary")
+      "Should get the expected LTE operator of the dictionary"
+    )
     XCTAssertEqual(
       factory.getOperator(["gt": 10]),
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorGreaterThan,
-      "Should get the expected GT operator of the dictionary")
+      "Should get the expected GT operator of the dictionary"
+    )
     XCTAssertEqual(
       factory.getOperator(["gte": 10]),
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorGreaterThanOrEqual,
-      "Should get the expected GTE operator of the dictionary")
+      "Should get the expected GTE operator of the dictionary"
+    )
     XCTAssertEqual(
       factory.getOperator(["i_is_any": ["abc"]]),
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorI_IsAny,
-      "Should get the expected I_IsAny operator of the dictionary")
+      "Should get the expected I_IsAny operator of the dictionary"
+    )
     XCTAssertEqual(
       factory.getOperator(["i_is_not_any": ["abc"]]),
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorI_IsNotAny,
-      "Should get the expected I_IsNotAny operator of the dictionary")
+      "Should get the expected I_IsNotAny operator of the dictionary"
+    )
     XCTAssertEqual(
       factory.getOperator(["is_any": ["abc"]]),
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorIsAny,
-      "Should get the expected IsAny operator of the dictionary")
+      "Should get the expected IsAny operator of the dictionary"
+    )
     XCTAssertEqual(
       factory.getOperator(["is_not_any": ["abc"]]),
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorIsNotAny,
-      "Should get the expected IsNotAny operator of the dictionary")
+      "Should get the expected IsNotAny operator of the dictionary"
+    )
   }
 
   func testIsOperatorForMultiEntryRule() {
@@ -265,7 +291,8 @@ class FBAEMAdvertiserRuleFactoryTests: XCTestCase { // swiftlint:disable:this ty
     ] {
       XCTAssertTrue(
         factory.isOperator(forMultiEntryRule: ruleOperator),
-        "Should expect the operator for multi entry rule")
+        "Should expect the operator for multi entry rule"
+      )
     }
     for ruleOperator in [
       AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorContains,
@@ -288,7 +315,8 @@ class FBAEMAdvertiserRuleFactoryTests: XCTestCase { // swiftlint:disable:this ty
     ] {
       XCTAssertFalse(
         factory.isOperator(forMultiEntryRule: ruleOperator),
-        "Should expect the operator not for multi entry rule")
+        "Should expect the operator not for multi entry rule"
+      )
     }
   }
 }

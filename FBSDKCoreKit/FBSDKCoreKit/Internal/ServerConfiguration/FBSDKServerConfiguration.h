@@ -28,9 +28,6 @@ FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationNameLogin;
 FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationNameAppInvite;
 FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationNameGameRequest;
 FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationNameGroup;
-FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationNameLike;
-FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationNameMessage;
-FOUNDATION_EXPORT NSString *const FBSDKDialogConfigurationNameShare;
 
 FOUNDATION_EXPORT const NSInteger FBSDKServerConfigurationVersion;
 

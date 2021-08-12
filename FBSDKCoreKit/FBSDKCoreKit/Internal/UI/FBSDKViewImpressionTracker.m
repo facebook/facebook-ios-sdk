@@ -23,7 +23,6 @@
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKEventLogging.h"
-#import "FBSDKGraphRequestProviding.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKNotificationProtocols.h"
 
@@ -36,6 +35,9 @@
 
 @end
 
+#if FBSDK_SWIFT_PACKAGE
+NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in extensions")
+#endif
 @implementation FBSDKViewImpressionTracker
 {
   NSMutableSet *_trackedImpressions;

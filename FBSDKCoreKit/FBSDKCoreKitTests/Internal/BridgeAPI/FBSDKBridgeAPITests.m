@@ -28,7 +28,7 @@
 
   self.appURLSchemeProvider = [TestAppURLSchemeProvider new];
   self.logger = [TestLogger new];
-  self.urlOpener = [[TestURLOpener alloc] initWithCanOpenUrl:YES];
+  self.urlOpener = [[TestInternalURLOpener alloc] initWithCanOpenUrl:YES];
   self.bridgeAPIResponseFactory = [TestBridgeApiResponseFactory new];
 
   [self configureSDK];
@@ -53,12 +53,14 @@
 {
   TestBackgroundEventLogger *backgroundEventLogger = [[TestBackgroundEventLogger alloc] initWithInfoDictionaryProvider:[TestBundle new]
                                                                                                            eventLogger:[TestAppEvents new]];
+  TestServerConfigurationProvider *serverConfigurationProvider = [[TestServerConfigurationProvider alloc]
+                                                                  initWithConfiguration:ServerConfigurationFixtures.defaultConfig];
   FBSDKApplicationDelegate *delegate = [[FBSDKApplicationDelegate alloc] initWithNotificationCenter:[TestNotificationCenter new]
                                                                                         tokenWallet:TestAccessTokenWallet.class
                                                                                            settings:[TestSettings new]
                                                                                      featureChecker:[TestFeatureManager new]
                                                                                           appEvents:[TestAppEvents new]
-                                                                        serverConfigurationProvider:TestServerConfigurationProvider.class
+                                                                        serverConfigurationProvider:serverConfigurationProvider
                                                                                               store:[UserDefaultsSpy new]
                                                                           authenticationTokenWallet:TestAuthenticationTokenWallet.class
                                                                                     profileProvider:TestProfileProvider.class

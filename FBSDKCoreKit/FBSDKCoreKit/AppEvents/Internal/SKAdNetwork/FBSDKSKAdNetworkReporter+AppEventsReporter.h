@@ -23,7 +23,11 @@
  #import "FBSDKAppEventsReporter.h"
  #import "FBSDKSKAdNetworkReporter.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FBSDKSKAdNetworkReporter (AppEventsReporter) <FBSDKAppEventsReporter>
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

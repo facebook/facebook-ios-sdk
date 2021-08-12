@@ -32,7 +32,7 @@ NS_SWIFT_NAME(TimeSpentData)
 - (instancetype)init NS_UNAVAILABLE;
 
 - (instancetype)initWithEventLogger:(id<FBSDKEventLogging>)eventLogger
-        serverConfigurationProvider:(Class<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
+        serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider;
 
 - (void)setSourceApplication:(nullable NSString *)sourceApplication openURL:(nullable NSURL *)url;
 - (void)setSourceApplication:(nullable NSString *)sourceApplication isFromAppLink:(BOOL)isFromAppLink;

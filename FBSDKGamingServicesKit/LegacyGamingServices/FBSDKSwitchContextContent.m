@@ -31,6 +31,14 @@
 
 @implementation FBSDKSwitchContextContent
 
+- (instancetype)initDialogContentWithContextID:(NSString *)contextID;
+{
+  if ((self = [super init])) {
+    self.contextTokenID = contextID;
+  }
+  return self;
+}
+
  #pragma mark - FBSDKSharingValidation
 
 - (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef
@@ -59,34 +67,12 @@
 }
 
 // TODO - delete when we convert to Swift and can use Hashable
-- (NSUInteger)hashWithInteger:(NSUInteger)value1 andInteger:(NSUInteger)value2
-{
-  return [self hashWithLong:(((unsigned long long)value1) << 32 | value2)];
-}
-
-// TODO - delete when we convert to Swift and can use Hashable
 - (NSUInteger)hashWithIntegerArray:(NSUInteger *)values count:(NSUInteger)count
 {
   if (count == 0) {
     return 0;
   }
-  NSUInteger hash = values[0];
-  for (NSUInteger i = 1; i < count; ++i) {
-    hash = [self hashWithInteger:hash andInteger:values[i]];
-  }
-  return hash;
-}
-
-// TODO - delete when we convert to Swift and can use Hashable
-- (NSUInteger)hashWithLong:(unsigned long long)value
-{
-  value = (~value) + (value << 18); // key = (key << 18) - key - 1;
-  value ^= (value >> 31);
-  value *= 21; // key = (key + (key << 2)) + (key << 4);
-  value ^= (value >> 11);
-  value += (value << 6);
-  value ^= (value >> 22);
-  return (NSUInteger)value;
+  return values[0];
 }
 
 - (BOOL)isEqual:(id)object
@@ -97,11 +83,7 @@
   if (![object isKindOfClass:[FBSDKSwitchContextContent class]]) {
     return NO;
   }
-  return [self isEqualToContextSwitchAsyncContent:(FBSDKSwitchContextContent *)object];
-}
-
-- (BOOL)isEqualToContextSwitchAsyncContent:(FBSDKSwitchContextContent *)content
-{
+  FBSDKSwitchContextContent *content = object;
   return (content
     && [FBSDKInternalUtility.sharedUtility object:self.contextTokenID isEqualToObject:content.contextTokenID]);
 }

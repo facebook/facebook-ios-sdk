@@ -26,7 +26,7 @@
  #import <FBSDKCoreKit/FBSDKButtonImpressionTracking.h>
 #endif
 
-#import "FBSDKIcon.h"
+#import "FBSDKIcon+Internal.h"
 
 @interface FBSDKButton ()
 

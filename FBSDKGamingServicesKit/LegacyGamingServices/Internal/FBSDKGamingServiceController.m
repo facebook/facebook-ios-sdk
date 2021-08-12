@@ -18,7 +18,7 @@
 
 #import "FBSDKGamingServiceController.h"
 
-#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKGamingServicesCoreKitImport.h"
 
 static NSString *const kServiceTypeStringFriendFinder = @"friendfinder";
 static NSString *const kServiceTypeStringMediaAsset = @"media_asset";
@@ -49,36 +49,55 @@ static NSURL *FBSDKGamingServicesUrl(FBSDKGamingServiceType serviceType, NSStrin
     argument]];
 }
 
+@interface FBSDKGamingServiceController ()
+
+@property (nonatomic) FBSDKGamingServiceType serviceType;
+@property (nonatomic) FBSDKGamingServiceResultCompletion completionHandler;
+@property (nonatomic) id pendingResult;
+@property (nonatomic) id<FBSDKURLOpener> urlOpener;
+@property (nonatomic) id<FBSDKSettings> settings;
+
+@end
+
 @implementation FBSDKGamingServiceController
-{
-  FBSDKGamingServiceType _serviceType;
-  FBSDKGamingServiceResultCompletion _completionHandler;
-  id _pendingResult;
-}
 
 - (instancetype)initWithServiceType:(FBSDKGamingServiceType)serviceType
                   completionHandler:(FBSDKGamingServiceResultCompletion)completion
                       pendingResult:(id)pendingResult
 {
+  return [self initWithServiceType:serviceType
+                 completionHandler:completion
+                     pendingResult:pendingResult
+                         urlOpener:FBSDKBridgeAPI.sharedInstance
+                          settings:FBSDKSettings.sharedSettings];
+}
+
+- (instancetype)initWithServiceType:(FBSDKGamingServiceType)serviceType
+                  completionHandler:(FBSDKGamingServiceResultCompletion)completion
+                      pendingResult:(id)pendingResult
+                          urlOpener:(id<FBSDKURLOpener>)urlOpener
+                           settings:(id<FBSDKSettings>)settings
+{
   if (self = [super init]) {
     _serviceType = serviceType;
     _completionHandler = completion;
     _pendingResult = pendingResult;
+    _urlOpener = urlOpener;
+    _settings = settings;
   }
   return self;
 }
 
-- (void)callWithArgument:(NSString *)argument
+- (void)callWithArgument:(nullable NSString *)argument
 {
   __weak typeof(self) weakSelf = self;
-  [[FBSDKBridgeAPI sharedInstance]
-   openURL:FBSDKGamingServicesUrl(_serviceType, argument)
-   sender:weakSelf
-   handler:^(BOOL success, NSError *_Nullable error) {
-     if (!success) {
-       [weakSelf handleBridgeAPIError:error];
-     }
-   }];
+  [self.urlOpener openURL:FBSDKGamingServicesUrl(_serviceType, argument)
+                   sender:weakSelf
+                  handler:^(BOOL success, NSError *_Nullable error) {
+                    if (!success) {
+                      [weakSelf handleBridgeAPIError:error];
+                    }
+                  }];
 }
 
 - (void)handleBridgeAPIError:(NSError *)error
@@ -164,8 +183,13 @@ static NSURL *FBSDKGamingServicesUrl(FBSDKGamingServiceType serviceType, NSStrin
 {
   // verify the URL is intended as a callback for the SDK's friend finder
   return
-  [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", [FBSDKSettings appID]]]
+  [url.scheme hasPrefix:[NSString stringWithFormat:@"fb%@", self.settings.appID]]
   && [url.host isEqualToString:service];
+}
+
+- (id<FBSDKSettings>)settings
+{
+  return _settings;
 }
 
 @end
