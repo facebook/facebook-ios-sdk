@@ -22,7 +22,6 @@
 
 #import "FBSDKAppEvents.h"
 #import "FBSDKAppEventsStateFactory.h"
-#import "FBSDKApplicationDelegate+Internal.h"
 #import "FBSDKApplicationObserving.h"
 #import "FBSDKAuthenticationToken+Internal.h"
 #import "FBSDKConversionValueUpdating.h"

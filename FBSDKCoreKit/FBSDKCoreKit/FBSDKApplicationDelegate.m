@@ -17,7 +17,6 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "FBSDKApplicationDelegate.h"
-#import "FBSDKApplicationDelegate+Internal.h"
 
 #import <objc/runtime.h>
 
@@ -549,11 +548,6 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   }
 }
 
-+ (UIApplicationState)applicationState
-{
-  return _applicationState;
-}
-
 - (void)setApplicationState:(UIApplicationState)state
 {
   _applicationState = state;
@@ -650,11 +644,6 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
     [self.appEvents logInternalEvent:@"fb_auto_applink" parameters:params isImplicitlyLogged:YES];
   }
 #endif
-}
-
-+ (BOOL)isSDKInitialized
-{
-  return hasInitializeBeenCalled;
 }
 
 - (void)configureDependencies
