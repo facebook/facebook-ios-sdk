@@ -98,13 +98,11 @@ schemes:
         - LegacyGamingServicesTests
         - FacebookGamingServicesTests
         - FBSDKGamingServicesKitTests
-        - FBSDKCoreKit/FBSDKCoreKitTests
       coverageTargets:
         - LegacyGamingServices-Dynamic
         - FacebookGamingServices-Dynamic
         - FBSDKGamingServicesKit-Dynamic
         - FBSDKGamingServicesKit
-        - FBSDKCoreKit/FBSDKCoreKit
   FBSDKGamingServicesKit-Universal:
     build:
       targets:

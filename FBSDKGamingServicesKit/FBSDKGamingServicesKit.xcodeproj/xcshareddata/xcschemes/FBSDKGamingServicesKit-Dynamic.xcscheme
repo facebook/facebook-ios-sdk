@@ -61,16 +61,6 @@
                ReferencedContainer = "container:FBSDKGamingServicesKit.xcodeproj">
             </BuildableReference>
          </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0AFAA4AA80A855D463672CB9"
-               BuildableName = "FBSDKCoreKitTests.xctest"
-               BlueprintName = "FBSDKCoreKitTests"
-               ReferencedContainer = "container:../FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
@@ -111,13 +101,6 @@
             BuildableName = "FBSDKGamingServicesKit.framework"
             BlueprintName = "FBSDKGamingServicesKit"
             ReferencedContainer = "container:FBSDKGamingServicesKit.xcodeproj">
-         </BuildableReference>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "545FE7AE134DC5FC8078FFE5"
-            BuildableName = "FBSDKCoreKit.framework"
-            BlueprintName = "FBSDKCoreKit"
-            ReferencedContainer = "container:../FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
          </BuildableReference>
       </CodeCoverageTargets>
    </TestAction>
