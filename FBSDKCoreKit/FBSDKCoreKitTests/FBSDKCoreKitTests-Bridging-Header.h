@@ -107,6 +107,7 @@
 #import "FBSDKFeatureExtracting.h"
 #import "FBSDKFeatureManager.h"
 #import "FBSDKGateKeeperManager+Testing.h"
+#import "FBSDKGraphErrorRecoveryProcessor.h"
 #import "FBSDKGraphRequestConnecting+Internal.h"
 #import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKGraphRequestConnectionFactory.h"
