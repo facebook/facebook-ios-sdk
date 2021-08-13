@@ -88,8 +88,16 @@ NS_ASSUME_NONNULL_BEGIN
  the `[FBSDKAccessToken currentAccessToken]` might still have been updated.
  .
  */
-NS_SWIFT_UNAVAILABLE("")
+NS_SWIFT_NAME(GraphErrorRecoveryProcessor)
 @interface FBSDKGraphErrorRecoveryProcessor : NSObject
+
++ (instancetype)new DEPRECATED_MSG_ATTRIBUTE("Creating instances of FBSDKGraphErrorRecoveryProcessor using `new` is deprecated and will be removed in the next major release");
+- (instancetype)init DEPRECATED_MSG_ATTRIBUTE("Creating instances of FBSDKGraphErrorRecoveryProcessor using `init` is deprecated and will be removed in the next major release");
+
+/**
+ Initializes a GraphErrorRecoveryProcessor with an access token string.
+ */
+- (instancetype)initWithAccessTokenString:(NSString *)accessTokenString;
 
 /**
   Attempts to process the error, return YES if the error can be processed.

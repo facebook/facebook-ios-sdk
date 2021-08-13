@@ -887,7 +887,8 @@ static BOOL _canMakeRequests = NO;
     BOOL isRecoveryDisabled = [metadata.request isGraphErrorRecoveryDisabled];
     if (resultError && !isRecoveryDisabled && isSingleRequestToRecover) {
       self->_recoveringRequestMetadata = metadata;
-      self->_errorRecoveryProcessor = [FBSDKGraphErrorRecoveryProcessor new];
+      self->_errorRecoveryProcessor = [[FBSDKGraphErrorRecoveryProcessor alloc]
+                                       initWithAccessTokenString:FBSDKAccessToken.currentAccessToken.tokenString];
       if ([self->_errorRecoveryProcessor processError:resultError request:metadata.request delegate:self]) {
         return;
       }
