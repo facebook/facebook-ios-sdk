@@ -272,10 +272,8 @@ schemes:
     test:
       targets:
         - FBSDKLoginKitTests
-        - FBSDKCoreKit/FBSDKCoreKitTests
       coverageTargets:
         - FBSDKLoginKit
-        - FBSDKCoreKit/FBSDKCoreKit
   FBSDKLoginKit_TV-Dynamic:
     build:
       targets:
