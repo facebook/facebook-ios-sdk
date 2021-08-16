@@ -81,7 +81,6 @@ class FBSDKGraphErrorRecoveryProcessorTests: XCTestCase {
         ]
       )
     }
-
   }
 
   let processor = GraphErrorRecoveryProcessor(accessTokenString: "Foo")
