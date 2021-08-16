@@ -16,18 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class TestWindowFinder: WindowFinding {
-  var wasFindWindowCalled = false
-  var window = UIWindow()
+@import LegacyGamingServices;
 
-  convenience init(window: UIWindow) {
-    self.init()
+NS_ASSUME_NONNULL_BEGIN
+@interface FBSDKContextWebDialog (Testing)
 
-    self.window = window
-  }
+- (instancetype)initWithDelegate:(id<FBSDKContextDialogDelegate>)delegate
+NS_SWIFT_NAME(init(delegate:));
 
-  func findWindow() -> UIWindow? {
-    wasFindWindowCalled = true
-    return window
-  }
-}
+@end
+NS_ASSUME_NONNULL_END
+

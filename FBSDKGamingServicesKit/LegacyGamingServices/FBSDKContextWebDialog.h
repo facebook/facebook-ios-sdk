@@ -18,8 +18,6 @@
 
 #import "TargetConditionals.h"
 
-#if !TARGET_OS_TV
-
 #import <Foundation/Foundation.h>
 #import "FBSDKGamingServicesCoreKitImport.h"
 #import "FBSDKDialogProtocol.h"
@@ -27,7 +25,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
-  Context web dialog is for the all context api dialogs excuted in browser
+ Context web dialog for the all context api dialogs executed in a browser
  */
 NS_SWIFT_NAME(ContextWebDialog)
 @interface FBSDKContextWebDialog : NSObject <FBSDKWebDialogDelegate, FBSDKDialog>
@@ -43,9 +41,9 @@ NS_SWIFT_NAME(ContextWebDialog)
 /**
  Depending on the content size within the browser, this method allows for the resizing of web dialog
 */
-- (CGRect)createWebDialogFrameWithWidth:(float)width height:(float)height windowFinder:(id<FBSDKWindowFinding>)windowFinder;
+- (CGRect)createWebDialogFrameWithWidth:(CGFloat)width height:(CGFloat)height windowFinder:(id<FBSDKWindowFinding>)windowFinder;
 
 @end
 NS_ASSUME_NONNULL_END
 
-#endif
+

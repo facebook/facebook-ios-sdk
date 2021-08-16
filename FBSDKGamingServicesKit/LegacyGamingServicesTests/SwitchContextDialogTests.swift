@@ -62,7 +62,7 @@ class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
     XCTAssertNotNil(dialog.currentWebDialog)
   }
 
-  func testDialogSuccessfullyCompletes() {
+  func testDialogCancelsWhenResultDoesNotContainContextID() {
     dialog.show()
 
     guard let webDialogDelegate = dialog.currentWebDialog as? WebDialogViewDelegate else {
@@ -73,8 +73,8 @@ class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
     webDialogDelegate.webDialogView(FBWebDialogView(), didCompleteWithResults: results)
 
     XCTAssertNotNil(webDialogDelegate)
-    XCTAssertTrue(dialogDidCompleteSuccessfully)
-    XCTAssertFalse(dialogDidCancel)
+    XCTAssertFalse(dialogDidCompleteSuccessfully)
+    XCTAssertTrue(dialogDidCancel)
     XCTAssertNil(dialogError)
   }
 

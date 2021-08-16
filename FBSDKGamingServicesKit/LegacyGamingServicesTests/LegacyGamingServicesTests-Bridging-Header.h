@@ -22,6 +22,7 @@
 #import <TestTools/FBSDKTestCoder.h>
 
 #import "FBSDKApplicationDelegate+Testing.h"
+#import "FBSDKContextWebDialog+Testing.h"
 #import "FBSDKFileHandleCreating.h"
 #import "FBSDKFileHandleFactory.h"
 #import "FBSDKFileHandling.h"

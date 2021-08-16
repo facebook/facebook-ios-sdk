@@ -67,7 +67,7 @@
     }
   }
 
-  CGRect frame = [self createWebDialogFrameWithWidth:FBSDKWEBDIALOGFRAMEWIDTH height:FBSDKWEBDIALOGFRAMEHEIGHT windowFinder:self.windowFinder];
+  CGRect frame = [self createWebDialogFrameWithWidth:(CGFloat)FBSDKWEBDIALOGFRAMEWIDTH height:(CGFloat)FBSDKWEBDIALOGFRAMEHEIGHT windowFinder:self.windowFinder];
   self.currentWebDialog = [FBSDKWebDialog createAndShow:FBSDK_CONTEXT_METHOD_NAME
                                              parameters:parameters
                                                   frame:frame

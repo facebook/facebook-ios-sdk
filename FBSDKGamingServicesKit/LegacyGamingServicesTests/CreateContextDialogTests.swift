@@ -56,7 +56,7 @@ class CreateContextDialogTests: XCTestCase, ContextDialogDelegate {
     XCTAssertNotNil(dialog?.currentWebDialog)
   }
 
-  func testDialogSuccessfullyCompletes() throws {
+  func testDialogCancelsWhenResultDoesNotContainContextID() throws {
     let dialog = SampleContextDialogs.showCreateContextDialog(withDelegate: self)
 
     let webDialogDelegate = try XCTUnwrap(dialog?.currentWebDialog as? WebDialogViewDelegate)
@@ -66,8 +66,8 @@ class CreateContextDialogTests: XCTestCase, ContextDialogDelegate {
 
     XCTAssertNotNil(webDialogDelegate)
     XCTAssertTrue(testWindowFinder.wasFindWindowCalled)
-    XCTAssertTrue(dialogDidCompleteSuccessfully)
-    XCTAssertFalse(dialogDidCancel)
+    XCTAssertFalse(dialogDidCompleteSuccessfully)
+    XCTAssertTrue(dialogDidCancel)
     XCTAssertNil(dialogError)
   }
 

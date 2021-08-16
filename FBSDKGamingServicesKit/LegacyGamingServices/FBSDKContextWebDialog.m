@@ -32,6 +32,14 @@
 @synthesize delegate = _delegate;
 @synthesize dialogContent = _dialogContent;
 
+- (instancetype)initWithDelegate:(id<FBSDKContextDialogDelegate>)delegate;
+{
+  if ((self = [super init])) {
+    _delegate = delegate;
+  }
+  return self;
+}
+
 - (BOOL)show
 {
   return false;
@@ -90,8 +98,10 @@
         } else {
           FBSDKGamingContext.currentContext = [FBSDKGamingContext createContextWithIdentifier:identifier];
         }
+        [self.delegate contextDialogDidComplete:self];
+      } else {
+        [self.delegate contextDialogDidCancel:self];
       }
-      [self.delegate contextDialogDidComplete:self];
       break;
     }
     case 4201: {
@@ -105,12 +115,15 @@
   }
 }
 
-- (CGRect)createWebDialogFrameWithWidth:(float)width height:(float)height windowFinder:(id<FBSDKWindowFinding>)windowFinder
+- (CGRect)createWebDialogFrameWithWidth:(CGFloat)width height:(CGFloat)height windowFinder:(id<FBSDKWindowFinding>)windowFinder
 {
   CGRect windowFrame = [windowFinder findWindow].frame;
-  CGFloat xPoint = CGRectGetMidX(windowFrame) - (width / 2);
-  CGFloat yPoint = CGRectGetMidY(windowFrame) - (height / 2);
-  return CGRectMake(xPoint, yPoint, width, height);
+  CGFloat xPoint = windowFrame.size.width < width ? 0 : CGRectGetMidX(windowFrame) - (width / 2);
+  CGFloat yPoint = windowFrame.size.height < height ? 0 : CGRectGetMidY(windowFrame) - (height / 2);
+  CGFloat dialogWidth = windowFrame.size.width < width ? windowFrame.size.width : width;
+  CGFloat dialogHeight = windowFrame.size.height < height ? windowFrame.size.height : height;
+
+  return CGRectMake(xPoint, yPoint, dialogWidth, dialogHeight);
 }
 
 @end
