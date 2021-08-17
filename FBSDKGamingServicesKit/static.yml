@@ -50,6 +50,11 @@ targets:
     sources:
       - path: ../Sources/FacebookGamingServices
         group: Sources
+        excludes:
+          - Internal
+      - path: ../Sources/FacebookGamingServices/Internal
+        headerVisibility: project
+        createIntermediateGroups: true
     configFiles:
       Debug: Configurations/FacebookGamingServices.xcconfig
       Release: Configurations/FacebookGamingServices.xcconfig
