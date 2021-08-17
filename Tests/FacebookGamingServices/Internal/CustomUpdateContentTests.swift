@@ -94,5 +94,4 @@ class CustomUpdateContentTests: XCTestCase {
     XCTAssertEqual(localization, content.messageLocalization)
     XCTAssertEqual(localization, content.ctaLocalization)
   }
-
 }

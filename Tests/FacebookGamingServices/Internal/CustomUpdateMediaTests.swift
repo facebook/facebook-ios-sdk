@@ -41,7 +41,6 @@ class CustomUpdateMediaTests: XCTestCase {
     XCTAssertNil(media.gif)
     XCTAssertEqual(video.url, fakeVideo.url)
   }
-
 }
 
 extension CustomUpdateMedia {
@@ -52,5 +51,4 @@ extension CustomUpdateMedia {
     }
     return true
   }
-
 }

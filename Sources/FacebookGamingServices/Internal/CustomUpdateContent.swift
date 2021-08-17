@@ -85,7 +85,6 @@ public class CustomUpdateContentImage {
     self.messageLocalization = [:]
     self.ctaLocalization = [:]
   }
-
 }
 
 public class CustomUpdateContentMedia {
@@ -155,5 +154,4 @@ public class CustomUpdateContentMedia {
     self.messageLocalization = [:]
     self.ctaLocalization = [:]
   }
-
 }

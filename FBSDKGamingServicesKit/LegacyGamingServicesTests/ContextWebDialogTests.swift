@@ -42,7 +42,6 @@ class ContextWebDialogTests: XCTestCase, ContextDialogDelegate {
       "Since ContextWebDialog is just a superclass, its show method should always return false")
     XCTAssertFalse(dialogCompleted)
     XCTAssertFalse(dialogCanceled)
-
   }
 
   func testDialogCompletesAndUpdatesContext() throws {
@@ -131,5 +130,4 @@ class ContextWebDialogTests: XCTestCase, ContextDialogDelegate {
   func contextDialogDidCancel(_ contextDialog: ContextWebDialog) {
     dialogCanceled = true
   }
-
 }

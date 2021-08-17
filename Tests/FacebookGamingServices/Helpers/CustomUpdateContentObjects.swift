@@ -91,7 +91,6 @@ enum CustomUpdateContentObjects {
       message: validMessage,
       media: gifMedia)
   }
-
 }
 
 enum CustomUpdateContentObjectsParameters {

@@ -39,5 +39,4 @@ public class TestAEMNetworker: NSObject, AEMNetworking {
     capturedCompletionHandler = completion
     startCallCount += 1
   }
-
 }

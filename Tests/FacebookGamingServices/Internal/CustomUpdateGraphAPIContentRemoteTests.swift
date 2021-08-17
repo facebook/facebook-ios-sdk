@@ -76,5 +76,4 @@ class CustomUpdateGraphAPIContentRemoteTests: XCTestCase {
 
     XCTAssertNil(remoteContent)
   }
-
 }
