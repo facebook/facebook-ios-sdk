@@ -18,7 +18,7 @@
 
 import XCTest
 
-class AppEventsStateTests: XCTestCase { // swiftlint:disable:this type_body_length
+class AppEventsStateTests: XCTestCase {
 
   let appEventsStateMaxEvents = 1000
   let appId = "appid"

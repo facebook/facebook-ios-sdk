@@ -18,7 +18,6 @@
 
 import TestTools
 
-// swiftlint:disable type_body_length
 class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
 
   let store = UserDefaultsSpy()

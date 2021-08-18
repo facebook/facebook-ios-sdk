@@ -18,7 +18,7 @@
 
 import XCTest
 
-class RestrictiveDataTests: XCTestCase { // swiftlint:disable:this type_body_length
+class RestrictiveDataTests: XCTestCase {
 
   let restrictiveParam1 = [
     "restrictive_key_1": "restrictive_value_1",

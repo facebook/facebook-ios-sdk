@@ -19,7 +19,7 @@
 import TestTools
 import XCTest
 
-class ErrorConfigurationTests: XCTestCase { // swiftlint:disable:this type_body_length
+class ErrorConfigurationTests: XCTestCase {
 
   let graphRequest = TestGraphRequest()
   let rawErrorCodeConfiguration = [

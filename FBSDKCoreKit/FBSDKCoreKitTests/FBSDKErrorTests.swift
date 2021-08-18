@@ -18,7 +18,6 @@
 
 import XCTest
 
-// swiftlint:disable type_body_length
 class FBSDKErrorTests: XCTestCase {
 
   let errorReporter = TestErrorReport()

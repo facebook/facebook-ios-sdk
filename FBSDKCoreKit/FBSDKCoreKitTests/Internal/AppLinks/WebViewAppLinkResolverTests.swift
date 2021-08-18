@@ -21,7 +21,7 @@ import TestTools
 import XCTest
 
 // swiftlint:disable force_unwrapping
-class WebViewAppLinkResolverTests: XCTestCase { // swiftlint:disable:this type_body_length
+class WebViewAppLinkResolverTests: XCTestCase {
 
   var result: [AnyHashable: Any]?
   var error: Error?

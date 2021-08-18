@@ -19,7 +19,6 @@
 import FBSDKCoreKit
 import XCTest
 
-// swiftlint:disable type_body_length
 class ApplicationDelegateTests: XCTestCase {
 
   // swiftlint:disable:next implicitly_unwrapped_optional weak_delegate

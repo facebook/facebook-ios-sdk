@@ -20,7 +20,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class AppLinkResolverTests: XCTestCase { // swiftlint:disable:this type_body_length
+class AppLinkResolverTests: XCTestCase {
   enum Keys {
     static let appLinkURL = URL(string: "http://example.com/1234567890")! // swiftlint:disable:this force_unwrapping
     static let appLinkURL2 = URL(string: "http://example.com/0987654321")! // swiftlint:disable:this force_unwrapping

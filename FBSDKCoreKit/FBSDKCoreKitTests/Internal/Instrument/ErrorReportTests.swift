@@ -20,7 +20,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class ErrorReportTests: XCTestCase { // swiftlint:disable:this type_body_length
+class ErrorReportTests: XCTestCase {
 
   let code = 2
   let domain = "test"

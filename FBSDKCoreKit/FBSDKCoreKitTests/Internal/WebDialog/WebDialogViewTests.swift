@@ -19,7 +19,7 @@
 import FBSDKCoreKit
 import XCTest
 
-class WebDialogViewTests: XCTestCase, WebDialogViewDelegate { // swiftlint:disable:this type_body_length
+class WebDialogViewTests: XCTestCase, WebDialogViewDelegate {
 
   var dialog: FBWebDialogView! // swiftlint:disable:this implicitly_unwrapped_optional
   var webView = TestWebView()

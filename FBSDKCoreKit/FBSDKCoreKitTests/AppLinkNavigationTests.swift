@@ -18,7 +18,7 @@
 
 import FBSDKCoreKit
 
-class FBSDKAppLinkNavigationTests: XCTestCase { // swiftlint:disable:this type_body_length
+class FBSDKAppLinkNavigationTests: XCTestCase {
 
   struct AppLinkUrlPayload: Codable {
     let userAgent: String

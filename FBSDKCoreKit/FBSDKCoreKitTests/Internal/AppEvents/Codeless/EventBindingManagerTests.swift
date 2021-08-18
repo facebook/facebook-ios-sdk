@@ -24,7 +24,7 @@ protocol WindowMoving {
 }
 
 // swiftformat:disable indent
-class EventBindingManagerTests: XCTestCase, // swiftlint:disable:this type_body_length
+class EventBindingManagerTests: XCTestCase,
                                 UITableViewDelegate, // swiftlint:disable:this indentation_width
                                 UICollectionViewDelegate {
   // swiftformat:enable indent
