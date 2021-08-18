@@ -25,3 +25,6 @@ targets:
     dependencies:
       - target: FBSDKCoreKit/FBSDKCoreKit-Dynamic
         link: false
+    preBuildScripts:
+      - name: Run Swiftlint
+        script: ../scripts/build_phase_swiftlint.sh

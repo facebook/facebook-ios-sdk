@@ -123,6 +123,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8484440B93FEF66A21A7D2E1 /* Build configuration list for PBXNativeTarget "TestTools" */;
 			buildPhases = (
+				DC1ECA2D21D9A8B0E51DB831 /* Run Swiftlint */,
 				8DB9EAC958C8DBE41CFBE228 /* Headers */,
 				514FB552E0988BBC0743E3FC /* Sources */,
 			);
@@ -179,6 +180,27 @@
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		DC1ECA2D21D9A8B0E51DB831 /* Run Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Swiftlint";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../scripts/build_phase_swiftlint.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		514FB552E0988BBC0743E3FC /* Sources */ = {
