@@ -49,26 +49,26 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 @interface FBSDKAuthenticationTokenClaims (Testing)
 
-- (instancetype)initWithJti:(NSString *)jti
-                        iss:(NSString *)iss
-                        aud:(NSString *)aud
-                      nonce:(NSString *)nonce
-                        exp:(NSTimeInterval)exp
-                        iat:(NSTimeInterval)iat
-                        sub:(NSString *)sub
-                       name:(nullable NSString *)name
-                  givenName:(nullable NSString *)givenName
-                 middleName:(nullable NSString *)middleName
-                 familyName:(nullable NSString *)familyName
-                      email:(nullable NSString *)email
-                    picture:(nullable NSString *)picture
-                userFriends:(nullable NSArray<NSString *> *)userFriends
-               userBirthday:(nullable NSString *)userBirthday
-               userAgeRange:(nullable NSDictionary *)userAgeRange
-               userHometown:(nullable NSDictionary *)userHometown
-               userLocation:(nullable NSDictionary *)userLocation
-                 userGender:(nullable NSString *)userGender
-                   userLink:(nullable NSString *)userLink;
+- (nullable instancetype)initWithJti:(nonnull NSString *)jti
+                                 iss:(nonnull NSString *)iss
+                                 aud:(nonnull NSString *)aud
+                               nonce:(nonnull NSString *)nonce
+                                 exp:(NSTimeInterval)exp
+                                 iat:(NSTimeInterval)iat
+                                 sub:(nonnull NSString *)sub
+                                name:(nullable NSString *)name
+                           givenName:(nullable NSString *)givenName
+                          middleName:(nullable NSString *)middleName
+                          familyName:(nullable NSString *)familyName
+                               email:(nullable NSString *)email
+                             picture:(nullable NSString *)picture
+                         userFriends:(nullable NSArray<NSString *> *)userFriends
+                        userBirthday:(nullable NSString *)userBirthday
+                        userAgeRange:(nullable NSDictionary *)userAgeRange
+                        userHometown:(nullable NSDictionary *)userHometown
+                        userLocation:(nullable NSDictionary *)userLocation
+                          userGender:(nullable NSString *)userGender
+                            userLink:(nullable NSString *)userLink;
 
 @end
 

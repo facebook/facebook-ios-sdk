@@ -19,7 +19,7 @@
 #import "FBSDKAuthenticationToken.h"
 #import "FBSDKAuthenticationToken+Internal.h"
 
-#import "FBSDKAuthenticationTokenClaims.h"
+#import "FBSDKAuthenticationTokenClaims+Internal.h"
 #import "FBSDKCoreKitBasicsImport.h"
 
 static FBSDKAuthenticationToken *g_currentAuthenticationToken;
@@ -28,12 +28,6 @@ static id<FBSDKTokenCaching> g_tokenCache;
 NSString *const FBSDKAuthenticationTokenTokenStringCodingKey = @"FBSDKAuthenticationTokenTokenStringCodingKey";
 NSString *const FBSDKAuthenticationTokenNonceCodingKey = @"FBSDKAuthenticationTokenNonceCodingKey";
 NSString *const FBSDKAuthenticationTokenGraphDomainCodingKey = @"FBSDKAuthenticationTokenGraphDomainCodingKey";
-
-@interface FBSDKAuthenticationTokenClaims (Internal)
-
-+ (nullable FBSDKAuthenticationTokenClaims *)claimsFromEncodedString:(NSString *)encodedClaims nonce:(NSString *)expectedNonce;
-
-@end
 
 @implementation FBSDKAuthenticationToken
 {

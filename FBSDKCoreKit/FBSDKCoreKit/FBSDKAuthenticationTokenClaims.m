@@ -16,7 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKAuthenticationTokenClaims.h"
+#import "FBSDKAuthenticationTokenClaims+Internal.h"
 
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKSettings.h"
@@ -25,26 +25,26 @@ static NSTimeInterval const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
 
 @implementation FBSDKAuthenticationTokenClaims
 
-- (instancetype)initWithJti:(NSString *)jti
-                        iss:(NSString *)iss
-                        aud:(NSString *)aud
-                      nonce:(NSString *)nonce
-                        exp:(NSTimeInterval)exp
-                        iat:(NSTimeInterval)iat
-                        sub:(NSString *)sub
-                       name:(nullable NSString *)name
-                  givenName:(nullable NSString *)givenName
-                 middleName:(nullable NSString *)middleName
-                 familyName:(nullable NSString *)familyName
-                      email:(nullable NSString *)email
-                    picture:(nullable NSString *)picture
-                userFriends:(nullable NSArray<NSString *> *)userFriends
-               userBirthday:(nullable NSString *)userBirthday
-               userAgeRange:(nullable NSDictionary<NSString *, NSNumber *> *)userAgeRange
-               userHometown:(nullable NSDictionary<NSString *, NSString *> *)userHometown
-               userLocation:(nullable NSDictionary<NSString *, NSString *> *)userLocation
-                 userGender:(nullable NSString *)userGender
-                   userLink:(nullable NSString *)userLink
+- (nullable instancetype)initWithJti:(nonnull NSString *)jti
+                                 iss:(nonnull NSString *)iss
+                                 aud:(nonnull NSString *)aud
+                               nonce:(nonnull NSString *)nonce
+                                 exp:(NSTimeInterval)exp
+                                 iat:(NSTimeInterval)iat
+                                 sub:(nonnull NSString *)sub
+                                name:(nullable NSString *)name
+                           givenName:(nullable NSString *)givenName
+                          middleName:(nullable NSString *)middleName
+                          familyName:(nullable NSString *)familyName
+                               email:(nullable NSString *)email
+                             picture:(nullable NSString *)picture
+                         userFriends:(nullable NSArray<NSString *> *)userFriends
+                        userBirthday:(nullable NSString *)userBirthday
+                        userAgeRange:(nullable NSDictionary<NSString *, NSNumber *> *)userAgeRange
+                        userHometown:(nullable NSDictionary<NSString *, NSString *> *)userHometown
+                        userLocation:(nullable NSDictionary<NSString *, NSString *> *)userLocation
+                          userGender:(nullable NSString *)userGender
+                            userLink:(nullable NSString *)userLink
 {
   if (self = [super init]) {
     _jti = jti;
@@ -72,7 +72,8 @@ static NSTimeInterval const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
   return self;
 }
 
-+ (nullable FBSDKAuthenticationTokenClaims *)claimsFromEncodedString:(NSString *)encodedClaims nonce:(NSString *)expectedNonce
++ (nullable FBSDKAuthenticationTokenClaims *)claimsFromEncodedString:(nonnull NSString *)encodedClaims
+                                                               nonce:(nonnull NSString *)expectedNonce
 {
   NSError *error;
   NSData *claimsData = [FBSDKBase64 decodeAsData:[FBSDKBase64 base64FromBase64Url:encodedClaims]];

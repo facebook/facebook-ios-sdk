@@ -46,7 +46,8 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 @interface FBSDKAuthenticationTokenClaims (Internal)
 
-+ (nullable FBSDKAuthenticationTokenClaims *)claimsFromEncodedString:(NSString *)encodedClaims nonce:(NSString *)expectedNonce;
++ (nullable FBSDKAuthenticationTokenClaims *)claimsFromEncodedString:(nonnull NSString *)encodedClaims
+                                                               nonce:(nonnull NSString *)expectedNonce;
 
 @end
 
