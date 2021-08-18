@@ -49,6 +49,7 @@
 		1267A4161046FC1DFCF57E3D /* FBSDKUserDataStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C3C84D4D150A60B41F0AC93 /* FBSDKUserDataStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1328C9ACFD6BF0DC04D0C61D /* FBSDKCrashHandler+CrashHandlerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 513D182BCE95A86D16F1E1DE /* FBSDKCrashHandler+CrashHandlerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		14456960659D0852CDCB30CB /* FBSDKFileManaging.h in Headers */ = {isa = PBXBuildFile; fileRef = D90BB03AF4155CF1A3B7CECC /* FBSDKFileManaging.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		170D1663119FE2752806132E /* LibAnalyzerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C2531DF93479A60D3B43E2 /* LibAnalyzerTests.swift */; };
 		171D3C2BA36D7F14209C9B33 /* FBSDKSafeCast.m in Sources */ = {isa = PBXBuildFile; fileRef = 752C7E0BF4ED848E416116B6 /* FBSDKSafeCast.m */; };
 		1F86B32565DE8336862CB24A /* FBSDKURLSessionTask.m in Sources */ = {isa = PBXBuildFile; fileRef = E8427E470792F88163240033 /* FBSDKURLSessionTask.m */; };
 		20AB731F11F38E778D4BB682 /* FBSDKCrashHandler+CrashHandlerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 513D182BCE95A86D16F1E1DE /* FBSDKCrashHandler+CrashHandlerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -100,7 +101,6 @@
 		8221C8F530AB1C0FE914E4D1 /* FBSDKSafeCast.m in Sources */ = {isa = PBXBuildFile; fileRef = 752C7E0BF4ED848E416116B6 /* FBSDKSafeCast.m */; };
 		850B8A282B2A33B2F855BBFC /* FBSDKUserDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 11F21400C7BADB77755DBE33 /* FBSDKUserDataStore.m */; };
 		87DC7A223CAD5F6247804D17 /* FBSDKCoreKit_Basics.h in Headers */ = {isa = PBXBuildFile; fileRef = 12402FF8B49BD2D3186A1808 /* FBSDKCoreKit_Basics.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		88209DAC32F1B4C0B49E9670 /* FBSDKLibAnalyzerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 942ACF08ABF6099367F4DDE9 /* FBSDKLibAnalyzerTests.m */; };
 		91AA97671718A59F3E78807A /* FBSDKSafeCast.h in Headers */ = {isa = PBXBuildFile; fileRef = 8E8D2BD47E01ABE112AF6D94 /* FBSDKSafeCast.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9330E157F00663C33ABBA7C5 /* FBSDKInfoDictionaryProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = A66804798D3A91DAD2AE3F5E /* FBSDKInfoDictionaryProviding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		95C7748EAB0E234C1F917727 /* FBSDKCrashHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = A2429F0BD6C9914B1900295C /* FBSDKCrashHandler.m */; };
@@ -232,7 +232,6 @@
 		8D3F70EC5A2B98C58797B432 /* UrlSessionTaskTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlSessionTaskTests.swift; sourceTree = "<group>"; };
 		8E8D2BD47E01ABE112AF6D94 /* FBSDKSafeCast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKSafeCast.h; sourceTree = "<group>"; };
 		93EE7D29E9DA46C80F556CB4 /* FBSDKCoreKit_BasicsTests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = FBSDKCoreKit_BasicsTests.xcconfig; sourceTree = "<group>"; };
-		942ACF08ABF6099367F4DDE9 /* FBSDKLibAnalyzerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKLibAnalyzerTests.m; sourceTree = "<group>"; };
 		949E24E68452BED9238AAF62 /* FBSDKTypeUtility.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKTypeUtility.m; sourceTree = "<group>"; };
 		965C52DD6A9F94E127D20DE8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		975984BCE2EEDD1B520591B1 /* FBSDKJSONValue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKJSONValue.h; sourceTree = "<group>"; };
@@ -252,6 +251,7 @@
 		D1485939D17BD267BCCEF40E /* FBSDKTypeUtilityTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKTypeUtilityTests.m; sourceTree = "<group>"; };
 		D90BB03AF4155CF1A3B7CECC /* FBSDKFileManaging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKFileManaging.h; sourceTree = "<group>"; };
 		D96F2ECFFD4513F1AEDAECB2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E1C2531DF93479A60D3B43E2 /* LibAnalyzerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibAnalyzerTests.swift; sourceTree = "<group>"; };
 		E5A456972A3C40FBE09284A2 /* FBSDKLibAnalyzer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKLibAnalyzer.m; sourceTree = "<group>"; };
 		E723F2F226EFAB93F0B62C6B /* FBSDKCoreKit_Basics-Dynamic.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBSDKCoreKit_Basics-Dynamic.xcconfig"; sourceTree = "<group>"; };
 		E8427E470792F88163240033 /* FBSDKURLSessionTask.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKURLSessionTask.m; sourceTree = "<group>"; };
@@ -320,10 +320,10 @@
 			children = (
 				2DFF94E44EC1722848A5B198 /* BasicUtilityTests.swift */,
 				B3DA52CF984CE29229402E1A /* FBSDKCoreKit_BasicsTests-Bridging-Header.h */,
-				942ACF08ABF6099367F4DDE9 /* FBSDKLibAnalyzerTests.m */,
 				88D14D1060B027EF3745B35F /* FBSDKSafeCastTests.m */,
 				D1485939D17BD267BCCEF40E /* FBSDKTypeUtilityTests.m */,
 				D96F2ECFFD4513F1AEDAECB2 /* Info.plist */,
+				E1C2531DF93479A60D3B43E2 /* LibAnalyzerTests.swift */,
 				8D3F70EC5A2B98C58797B432 /* UrlSessionTaskTests.swift */,
 				5C82557CABE14A91C19D0A12 /* Helpers */,
 			);
@@ -818,10 +818,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A52293673E7D328C1FD05E9 /* BasicUtilityTests.swift in Sources */,
-				88209DAC32F1B4C0B49E9670 /* FBSDKLibAnalyzerTests.m in Sources */,
 				C3576B7E49D294491E31BB7B /* FBSDKSafeCastTests.m in Sources */,
 				71D0C8031FB3E6BAA509C32F /* FBSDKTypeUtilityTests.m in Sources */,
 				A1900EDD24D62D0BD9158EAA /* Fuzzer.swift in Sources */,
+				170D1663119FE2752806132E /* LibAnalyzerTests.swift in Sources */,
 				3115AD5D355AEBDC3F726A73 /* SampleUrls.swift in Sources */,
 				C6C2948F633A684ECB1047EE /* TestSessionProvider.swift in Sources */,
 				D03B514A06D9E70EA069791C /* UrlSessionTaskTests.swift in Sources */,
