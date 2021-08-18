@@ -19,7 +19,9 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 if which swiftlint >/dev/null; then
-  swiftlint --config ../.swiftlint.yml "$@"
+  KIT_DIR=${PWD##*/} # The name of the current dir
+  cd .. # Use ../.swiftlint.yml
+  swiftlint "$KIT_DIR" "$@"
 else
   echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
 fi

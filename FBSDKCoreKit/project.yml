@@ -369,7 +369,9 @@ targets:
     type: bundle.unit-test
     platform: iOS
     sources:
-      - FBSDKCoreKitTests
+      - path: FBSDKCoreKitTests
+        excludes:
+          - .swiftlint.yml
     configFiles:
       Debug: Configurations/FBSDKCoreKitTests.xcconfig
       Release: Configurations/FBSDKCoreKitTests.xcconfig
