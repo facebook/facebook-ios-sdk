@@ -33,7 +33,8 @@ class CustomUpdateGraphAPIContentRemote: Codable {
       !customUpdateContentMedia.contextTokenID.isEmpty,
       let message = CustomUpdateLocalizedText(
         defaultString: customUpdateContentMedia.message,
-        localizations: customUpdateContentMedia.messageLocalization),
+        localizations: customUpdateContentMedia.messageLocalization
+      ),
       let media = customUpdateContentMedia.media,
       let customUpdateMedia = CustomUpdateMedia(media: media)
     else {
@@ -44,7 +45,8 @@ class CustomUpdateGraphAPIContentRemote: Codable {
     self.text = message
     self.cta = CustomUpdateLocalizedText(
       defaultString: customUpdateContentMedia.ctaText ?? "",
-      localizations: customUpdateContentMedia.ctaLocalization)
+      localizations: customUpdateContentMedia.ctaLocalization
+    )
     self.data = customUpdateContentMedia.payload
     self.media = customUpdateMedia
   }
@@ -54,7 +56,8 @@ class CustomUpdateGraphAPIContentRemote: Codable {
       !customUpdateContentImage.contextTokenID.isEmpty,
       let message = CustomUpdateLocalizedText(
         defaultString: customUpdateContentImage.message,
-        localizations: customUpdateContentImage.messageLocalization),
+        localizations: customUpdateContentImage.messageLocalization
+      ),
       let imageData = customUpdateContentImage.image?.pngData()
     else {
       return nil
@@ -63,7 +66,8 @@ class CustomUpdateGraphAPIContentRemote: Codable {
     self.text = message
     self.cta = CustomUpdateLocalizedText(
       defaultString: customUpdateContentImage.ctaText ?? "",
-      localizations: customUpdateContentImage.ctaLocalization)
+      localizations: customUpdateContentImage.ctaLocalization
+    )
     self.data = customUpdateContentImage.payload
     self.image = imageData
   }

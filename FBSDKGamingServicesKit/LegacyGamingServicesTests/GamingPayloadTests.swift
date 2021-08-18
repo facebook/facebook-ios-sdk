@@ -29,14 +29,14 @@ class GamingPayloadTests: XCTestCase {
   }
 
   func testGamingPayloadWithNonAlphanumericStrings() throws {
-    let url = try SampleUnparsedAppLinkURLs.create(payload: "{}{}{}", gameRequestID: "{}{}{}"
-    )
+    let url = try SampleUnparsedAppLinkURLs.create(payload: "{}{}{}", gameRequestID: "{}{}{}")
     let appLink = AppLinkURL(url: url)
     let gamingPayload = GamingPayload(url: appLink)
     XCTAssertEqual(
       "{}{}{}",
       gamingPayload.gameRequestID,
-      "Should be able to return a gameRequestID with non alphanumeric values")
+      "Should be able to return a gameRequestID with non alphanumeric values"
+    )
     XCTAssertEqual(
       "{}{}{}",
       gamingPayload.payload,
@@ -51,7 +51,8 @@ class GamingPayloadTests: XCTestCase {
     XCTAssertEqual(
       "123",
       gamingPayload.gameRequestID,
-      "Should be able to return a gameRequestID with nil payload")
+      "Should be able to return a gameRequestID with nil payload"
+    )
     XCTAssertEqual("", gamingPayload.payload)
   }
 

@@ -161,7 +161,7 @@ class FBSDKGraphErrorRecoveryProcessorTests: XCTestCase {
     )
   }
 
-// MARK: - Helpers
+  // MARK: - Helpers
 
   func createGraphRequest(tokenString: String) -> GraphRequestProtocol {
     TestGraphRequest(

@@ -30,14 +30,16 @@ enum CustomUpdateContentObjects {
   static var validImage = UIImage(
     named: "customColorSilhouette",
     in: Bundle(for: CustomUpdateGraphAPIContentRemoteTests.self),
-    with: nil)!
+    with: nil
+  )!
 
   @available(iOS 13.0, *)
   static let imageContentInvalidContextID = {
     return CustomUpdateContentImage(
       contextTokenID: "",
       message: validMessage,
-      image: validImage)
+      image: validImage
+    )
   }
 
   @available(iOS 13.0, *)
@@ -45,7 +47,8 @@ enum CustomUpdateContentObjects {
     return CustomUpdateContentImage(
       contextTokenID: validID,
       message: "",
-      image: validImage)
+      image: validImage
+    )
   }
 
   static let imageContentInvalidImage = {
@@ -61,35 +64,40 @@ enum CustomUpdateContentObjects {
     return CustomUpdateContentImage(
       contextTokenID: validID,
       message: validMessage,
-      image: validImage)
+      image: validImage
+    )
   }
 
   static let mediaContentInvalidContextID = {
     return CustomUpdateContentMedia(
       contextTokenID: "",
       message: validMessage,
-      media: gifMedia)
+      media: gifMedia
+    )
   }
 
   static let mediaContentInvalidMessage = {
     return CustomUpdateContentMedia(
       contextTokenID: validID,
       message: "",
-      media: gifMedia)
+      media: gifMedia
+    )
   }
 
   static let mediaContentInvalidMedia = {
     return CustomUpdateContentMedia(
       contextTokenID: validID,
       message: validMessage,
-      media: gifMedia)
+      media: gifMedia
+    )
   }
 
   static let mediaContentValid = {
     return CustomUpdateContentMedia(
       contextTokenID: validID,
       message: validMessage,
-      media: gifMedia)
+      media: gifMedia
+    )
   }
 }
 

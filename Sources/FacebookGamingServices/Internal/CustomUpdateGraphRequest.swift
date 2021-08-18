@@ -65,7 +65,8 @@ public class CustomUpdateGraphRequest {
    */
   public func request(
     content: CustomUpdateContentMedia,
-    completionHandler: @escaping(Result<Bool, CustomUpdateGraphRequestError>) -> Void)
+    completionHandler: @escaping (Result<Bool, CustomUpdateGraphRequestError>) -> Void
+  )
   throws {
     guard let remoteContent = CustomUpdateGraphAPIContentRemote(customUpdateContentMedia: content) else {
       return completionHandler(.failure(.contentParsing))
@@ -75,7 +76,8 @@ public class CustomUpdateGraphRequest {
     let request = graphRequestFactory.createGraphRequest(
       withGraphPath: graphPath,
       parameters: parameters,
-      httpMethod: HTTPMethod.post)
+      httpMethod: HTTPMethod.post
+    )
 
     try start(request: request, completion: completionHandler)
   }
@@ -89,7 +91,8 @@ public class CustomUpdateGraphRequest {
    */
   public func request(
     content: CustomUpdateContentImage,
-    completionHandler: @escaping(Result<Bool, CustomUpdateGraphRequestError>) -> Void)
+    completionHandler: @escaping (Result<Bool, CustomUpdateGraphRequestError>) -> Void
+  )
   throws {
     guard let remoteContent = CustomUpdateGraphAPIContentRemote(customUpdateContentImage: content) else {
       return completionHandler(.failure(.contentParsing))
@@ -98,14 +101,16 @@ public class CustomUpdateGraphRequest {
     let request = graphRequestFactory.createGraphRequest(
       withGraphPath: graphPath,
       parameters: parameters,
-      httpMethod: HTTPMethod.post)
+      httpMethod: HTTPMethod.post
+    )
 
     try start(request: request, completion: completionHandler)
   }
 
   private func start(
     request: GraphRequestProtocol,
-    completion: @escaping(Result<Bool, CustomUpdateGraphRequestError>) -> Void)
+    completion: @escaping (Result<Bool, CustomUpdateGraphRequestError>) -> Void
+  )
   throws {
     request.start { _, result, error in
       if let error = error {
@@ -131,23 +136,27 @@ public class CustomUpdateGraphRequest {
       throw SDKError.invalidArgumentError(
         withName: "CustomUpdateContent",
         value: content,
-        message: "Custom Update Content is invalid please check parameters.")
+        message: "Custom Update Content is invalid please check parameters."
+      )
     }
 
     parameters["text"] = try NSString(
       data: JSONEncoder().encode(content.text),
-      encoding: String.Encoding.utf8.rawValue)
+      encoding: String.Encoding.utf8.rawValue
+    )
 
     if let cta = content.cta {
       parameters["cta"] = try NSString(
         data: JSONEncoder().encode(cta),
-        encoding: String.Encoding.utf8.rawValue)
+        encoding: String.Encoding.utf8.rawValue
+      )
     }
 
     if let media = content.media {
       parameters["media"] = try NSString(
         data: JSONEncoder().encode(media),
-        encoding: String.Encoding.utf8.rawValue)
+        encoding: String.Encoding.utf8.rawValue
+      )
     }
 
     if let imageData = content.image {

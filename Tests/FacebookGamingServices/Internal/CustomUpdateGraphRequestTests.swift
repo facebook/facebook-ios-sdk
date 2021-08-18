@@ -34,7 +34,8 @@ class CustomUpdateGraphRequestTests: XCTestCase {
   let validMediaContentParameterDictionary = [
     CustomUpdateContentObjectsParameters.contextKEY: CustomUpdateContentObjectsParameters.contextValue,
     CustomUpdateContentObjectsParameters.textKey: CustomUpdateContentObjectsParameters.textValue,
-    CustomUpdateContentObjectsParameters.mediaKey: CustomUpdateContentObjectsParameters.mediaValue]
+    CustomUpdateContentObjectsParameters.mediaKey: CustomUpdateContentObjectsParameters.mediaValue
+  ]
 
   let validImageContentParameterDictionary = [
     CustomUpdateContentObjectsParameters.contextKEY: CustomUpdateContentObjectsParameters.contextValue,
@@ -104,7 +105,7 @@ class CustomUpdateGraphRequestTests: XCTestCase {
         guard case let .server(serverError) = error else {
           return XCTFail("Should not be a decoding error")
         }
-      XCTAssertTrue(serverError is SampleError)
+        XCTAssertTrue(serverError is SampleError)
       case .success:
         XCTFail("Should not succeed")
       }
@@ -232,7 +233,7 @@ class CustomUpdateGraphRequestTests: XCTestCase {
         guard case let .server(serverError) = error else {
           return XCTFail("Should not be a decoding error")
         }
-      XCTAssertTrue(serverError is SampleError)
+        XCTAssertTrue(serverError is SampleError)
       case .success:
         XCTFail("Should not succeed")
       }

@@ -21,10 +21,10 @@ public struct FacebookVideo: Codable, Equatable, URLMedia {
   var url: URL
 
   /**
-  Initializer for a video url media
+   Initializer for a video url media
 
    - Parameters:
-    - url: The url that represents the video on the facebook platform
+   - url: The url that represents the video on the facebook platform
    */
   public init(withUrl url: URL) {
     self.url = url

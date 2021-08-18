@@ -62,7 +62,7 @@ enum URLConstants {
       return "/dialog/choosecontext/"
     case .appSwitch(let appID):
       return String(format: "/dialog/choosecontext/%@/", appID)
-      }
+    }
   }
   static let queryParameterFilter = "filter"
   static let queryParameterMinSize = "min_size"

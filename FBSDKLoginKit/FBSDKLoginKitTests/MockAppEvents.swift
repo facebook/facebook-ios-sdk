@@ -20,9 +20,11 @@
 class TestAppEvents: AppEvents {
   var capturedParameters = [AnyHashable: Any]()
 
-  override func logInternalEvent(_ eventName: AppEvents.Name,
-                                 parameters: [AnyHashable: Any],
-                                 isImplicitlyLogged: Bool) {
+  override func logInternalEvent(
+    _ eventName: AppEvents.Name,
+    parameters: [AnyHashable: Any],
+    isImplicitlyLogged: Bool
+  ) {
     self.capturedParameters = parameters
   }
 }

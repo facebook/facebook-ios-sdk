@@ -48,7 +48,8 @@ enum SampleContextDialogs {
 
   static func chooseContextDialog(
     utility: InternalUtilityProtocol,
-    delegate: ContextDialogDelegate) -> ChooseContextDialog? {
+    delegate: ContextDialogDelegate
+  ) -> ChooseContextDialog? {
     let content = ChooseContextContent()
     let dialog = ChooseContextDialog(content: content, delegate: delegate, internalUtility: utility)
 

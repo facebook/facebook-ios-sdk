@@ -20,12 +20,12 @@ import Foundation
 public struct FacebookGIF: Codable, Equatable, URLMedia {
   var url: URL
 
-/**
-  Initializer for a gif url media
+  /**
+   Initializer for a gif url media
 
-   - Parameters:
-    - url: The url that represents the gif on the facebook platform
-   */
+    - Parameters:
+     - url: The url that represents the gif on the facebook platform
+    */
   public init(withUrl url: URL) {
     self.url = url
   }

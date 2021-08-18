@@ -21,10 +21,11 @@ import XCTest
 
 @available(iOS 13.0, *)
 class CustomUpdateGraphAPIContentRemoteTests: XCTestCase {
-  // swiftlint:disable indentation_width
+
   func testImageContentInitWithValidValues() throws {
     let remoteContent = try XCTUnwrap(CustomUpdateGraphAPIContentRemote(
-                                        customUpdateContentImage: CustomUpdateContentObjects.imageContentValid()))
+      customUpdateContentImage: CustomUpdateContentObjects.imageContentValid())
+    )
     let image = try XCTUnwrap(remoteContent.image)
 
     XCTAssertEqual(remoteContent.contextTokenID, CustomUpdateContentObjects.validID)
@@ -41,7 +42,8 @@ class CustomUpdateGraphAPIContentRemoteTests: XCTestCase {
 
   func testImageContentInitWithInvalidMessage() {
     let remoteContent = CustomUpdateGraphAPIContentRemote(
-      customUpdateContentImage: CustomUpdateContentObjects.imageContentInvalidMessage())
+      customUpdateContentImage: CustomUpdateContentObjects.imageContentInvalidMessage()
+    )
 
     XCTAssertNil(remoteContent)
   }
@@ -55,7 +57,7 @@ class CustomUpdateGraphAPIContentRemoteTests: XCTestCase {
 
   func testMediaContentInitWithValidValues() throws {
     let remoteContent = try XCTUnwrap(CustomUpdateGraphAPIContentRemote(
-                                        customUpdateContentMedia: CustomUpdateContentObjects.mediaContentValid()))
+      customUpdateContentMedia: CustomUpdateContentObjects.mediaContentValid()))
     let media = try XCTUnwrap(remoteContent.media)
 
     XCTAssertEqual(remoteContent.contextTokenID, CustomUpdateContentObjects.validID)

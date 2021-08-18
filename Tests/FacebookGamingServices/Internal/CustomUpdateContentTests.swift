@@ -28,17 +28,19 @@ class CustomUpdateContentTests: XCTestCase {
   var payload = "data123"
   var localization = ["data123": "test"]
 
-  var gif = FacebookGIF(withUrl: URL(string: "www.test.com")!)// swiftlint:disable:this force_unwrapping
+  var gif = FacebookGIF(withUrl: URL(string: "www.test.com")!) // swiftlint:disable:this force_unwrapping
   var validImage = UIImage(
     named: "customColorSilhouette",
     in: Bundle(for: CustomUpdateContentTests.self),
-    with: nil)!// swiftlint:disable:this force_unwrapping
+    with: nil
+  )! // swiftlint:disable:this force_unwrapping
 
   func testCustomUpdateContentMediaInitWithOnlyRequiredValues() throws {
     let content = try XCTUnwrap(CustomUpdateContentMedia(
-                                  contextTokenID: contextToken, // swiftlint:disable:this indentation_width
-                                  message: validMessage,
-                                  media: gif))
+      contextTokenID: contextToken,
+      message: validMessage,
+      media: gif
+    ))
 
     XCTAssertEqual(content.contextTokenID, contextToken)
     XCTAssertEqual(validMessage, content.message)
@@ -47,13 +49,14 @@ class CustomUpdateContentTests: XCTestCase {
 
   func testCustomUpdateContentMediaInitWithAllValues() throws {
     let content = try XCTUnwrap(CustomUpdateContentMedia(
-                                  contextTokenID: contextToken, // swiftlint:disable:this indentation_width
-                                  message: validMessage,
-                                  media: gif,
-                                  cta: ctaText,
-                                  payload: payload,
-                                  messageLocalization: localization,
-                                  ctaLocalization: localization))
+      contextTokenID: contextToken,
+      message: validMessage,
+      media: gif,
+      cta: ctaText,
+      payload: payload,
+      messageLocalization: localization,
+      ctaLocalization: localization
+    ))
 
     XCTAssertEqual(content.contextTokenID, contextToken)
     XCTAssertEqual(validMessage, content.message)
@@ -78,13 +81,14 @@ class CustomUpdateContentTests: XCTestCase {
 
   func testCustomUpdateContentImageInitWithAllValues() throws {
     let content = try XCTUnwrap(CustomUpdateContentImage(
-                                  contextTokenID: contextToken, // swiftlint:disable:this indentation_width
-                                  message: validMessage,
-                                  image: validImage,
-                                  cta: ctaText,
-                                  payload: payload,
-                                  messageLocalization: localization,
-                                  ctaLocalization: localization))
+      contextTokenID: contextToken,
+      message: validMessage,
+      image: validImage,
+      cta: ctaText,
+      payload: payload,
+      messageLocalization: localization,
+      ctaLocalization: localization
+    ))
 
     XCTAssertEqual(content.contextTokenID, contextToken)
     XCTAssertEqual(validMessage, content.message)

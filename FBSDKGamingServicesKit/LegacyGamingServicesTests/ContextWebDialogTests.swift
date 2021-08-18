@@ -39,7 +39,8 @@ class ContextWebDialogTests: XCTestCase, ContextDialogDelegate {
 
     XCTAssertFalse(
       dialog.show(),
-      "Since ContextWebDialog is just a superclass, its show method should always return false")
+      "Since ContextWebDialog is just a superclass, its show method should always return false"
+    )
     XCTAssertFalse(dialogCompleted)
     XCTAssertFalse(dialogCanceled)
   }

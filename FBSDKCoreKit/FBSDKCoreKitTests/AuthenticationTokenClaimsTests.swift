@@ -144,7 +144,7 @@ final class AuthenticationTokenClaimsTests: XCTestCase {
   func testDecodeRandomClaims() throws {
     try XCTSkipIf(true) // see T98167812
 
-    try (0 ..< 100).forEach { _ in
+    try (0..<100).forEach { _ in
       let randomized = Fuzzer.randomize(json: claimsValues)
       let data = try TypeUtility.data(withJSONObject: randomized, options: [])
       let encoded = base64URLEncodeData(data)
