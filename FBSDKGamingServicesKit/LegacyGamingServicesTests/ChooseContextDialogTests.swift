@@ -24,6 +24,8 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
   var dialogDidCancel = false
   var dialogError: NSError?
   let validCallbackURL = URL(string: "fbabc123://gaming/contextchoose/?context_id=123456789")
+  let defaultAppID = "abc123"
+  let msiteParamsQueryString = "{\"filter\":\"NEW_CONTEXT_ONLY\",\"min_size\":0,\"max_size\":0,\"app_id\":\"abc123\"}"
 
   override func setUp() {
     super.setUp()
@@ -35,7 +37,7 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
       UIApplication.shared,
       didFinishLaunchingWithOptions: [:]
     )
-    Settings.appID = "abc123"
+    Settings.appID = defaultAppID
   }
 
   override func tearDown() {
@@ -88,6 +90,40 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
     XCTAssertFalse(dialogDidCompleteSuccessfully)
     XCTAssertTrue(dialogDidCancel)
     XCTAssertNil(dialogError)
+  }
+
+  func testShowDialogThroughAppSwitch() throws {
+    let util = TestInternalUtility(isFacebookAppInstalled: true)
+    let dialog = try XCTUnwrap(SampleContextDialogs.chooseContextDialog(utility: util, delegate: self))
+
+    dialog.show()
+    let filterQuery = try XCTUnwrap(util.queryParameters?[URLConstants.queryParameterFilter] as? String)
+    let maxSizeQuery  = try XCTUnwrap(util.queryParameters?[URLConstants.queryParameterMaxSize] as? Int)
+    let minSizeQuery  = try XCTUnwrap(util.queryParameters?[URLConstants.queryParameterMinSize] as? Int)
+
+    XCTAssertNotNil(dialog)
+    XCTAssertEqual(util.scheme, URLConstants.scheme)
+    XCTAssertEqual(util.host, URLConstants.host)
+    XCTAssertEqual(util.path, URLConstants.appSwitch(appID: defaultAppID).path)
+    XCTAssertEqual(filterQuery, "NEW_CONTEXT_ONLY")
+    XCTAssertEqual(maxSizeQuery, 0)
+    XCTAssertEqual(minSizeQuery, 0)
+  }
+
+  func testShowDialogThroughMSite() throws {
+    let util = TestInternalUtility(isFacebookAppInstalled: false)
+    let dialog = try XCTUnwrap(SampleContextDialogs.chooseContextDialog(utility: util, delegate: self))
+
+    dialog.show()
+    let pathQuery = try XCTUnwrap(util.queryParameters?[URLConstants.mSiteQueryParameterPath] as? String)
+    let paramsQuery = try XCTUnwrap(util.queryParameters?[URLConstants.mSiteQueryParameterParams] as? String)
+
+    XCTAssertNotNil(dialog)
+    XCTAssertEqual(util.scheme, URLConstants.scheme)
+    XCTAssertEqual(util.host, URLConstants.host)
+    XCTAssertEqual(util.path, URLConstants.mSite.path)
+    XCTAssertEqual(pathQuery, "/path")
+    XCTAssertEqual(paramsQuery, msiteParamsQueryString)
   }
 
   func testShowDialogWithoutSettingAppID() throws {

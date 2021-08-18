@@ -18,6 +18,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "FBSDKInternalUtilityProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -28,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define FBSDK_CANOPENURL_SHARE_EXTENSION @"fbshareextension"
 
 NS_SWIFT_NAME(InternalUtility)
-@interface FBSDKInternalUtility : NSObject
+@interface FBSDKInternalUtility : NSObject <FBSDKInternalUtilityProtocol>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

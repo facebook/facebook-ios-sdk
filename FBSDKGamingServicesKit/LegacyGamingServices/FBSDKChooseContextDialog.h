@@ -19,6 +19,7 @@
 #import "TargetConditionals.h"
 
 @class FBSDKChooseContextContent;
+@protocol FBSDKInternalUtilityProtocol;
 #if !TARGET_OS_TV
 
 #import <Foundation/Foundation.h>
@@ -43,6 +44,15 @@ NS_SWIFT_NAME(ChooseContextDialog)
 + (instancetype)dialogWithContent:(FBSDKChooseContextContent *)content
                          delegate:(nullable id<FBSDKContextDialogDelegate>)delegate
 NS_SWIFT_NAME(init(content:delegate:));
+
+/**
+ Convenience method to build up a choose context app switch with content , a delegate and a utility object.
+ @param content The content for the choose context dialog
+ @param delegate The receiver's delegate.
+ @param internalUtility The dialog's utility used to build the url and decide how to display the dialog
+ */
++ (instancetype)dialogWithContent:(FBSDKChooseContextContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate internalUtility: (id<FBSDKInternalUtilityProtocol>)internalUtility
+NS_SWIFT_NAME(init(content:delegate:internalUtility:));
 
 
 @end

@@ -76,6 +76,7 @@
  #import "FBSDKBridgeAPIRequest.h"
  #import "FBSDKBridgeAPIResponse.h"
  #import "FBSDKGraphErrorRecoveryProcessor.h"
+ #import "FBSDKInternalUtilityProtocol.h"
  #import "FBSDKMeasurementEvent.h"
  #import "FBSDKMutableCopying.h"
  #import "FBSDKProfile.h"

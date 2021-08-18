@@ -24,6 +24,7 @@
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKError+Internal.h"
+#import "FBSDKInternalUtilityProtocol.h"
 #import "FBSDKSettings.h"
 #import "FBSDKSettings+Internal.h"
 

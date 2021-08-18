@@ -35,13 +35,22 @@ enum SampleContextDialogs {
     content.minParticipants = 2
     content.maxParticipants = 1
     let dialog = ChooseContextDialog(content: content, delegate: delegate)
-    dialog.show()
+
     return dialog
   }
 
   static func chooseContextDialogWithoutContentValues(delegate: ContextDialogDelegate) -> ChooseContextDialog? {
     let content = ChooseContextContent()
     let dialog = ChooseContextDialog(content: content, delegate: delegate)
+
+    return dialog
+  }
+
+  static func chooseContextDialog(
+    utility: InternalUtilityProtocol,
+    delegate: ContextDialogDelegate) -> ChooseContextDialog? {
+    let content = ChooseContextContent()
+    let dialog = ChooseContextDialog(content: content, delegate: delegate, internalUtility: utility)
 
     return dialog
   }

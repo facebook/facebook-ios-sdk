@@ -30,26 +30,42 @@
 // Deeplink url constants
  #define FBSDK_CONTEXT_DIALOG_URL_SCHEME @"https"
  #define FBSDK_CONTEXT_DIALOG_URL_HOST @"fb.gg"
- #define FBSDK_CONTEXT_DIALOG_URL_PATH @"/dialog/choosecontext/"
+ #define FBSDK_CONTEXT_DIALOG_DEEPLINK_PATH @"/dialog/choosecontext/%@/"
+ #define FBSDK_CONTEXT_DIALOG_MSITE_URL_PATH @"/dialog/choosecontext/"
 
  #define FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_FILTER_KEY @"filter"
  #define FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_MIN_SIZE_KEY @"min_size"
  #define FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_MAX_SIZE_KEY @"max_size"
+ #define FBSDK_CONTEXT_DIALOG_MSITE_QUERY_PARAMETER_APP_ID_KEY @"app_id"
+ #define FBSDK_CONTEXT_DIALOG_MSITE_QUERY_PARAMETER_PARAM_KEY @"params"
+ #define FBSDK_CONTEXT_DIALOG_MSITE_QUERY_PARAMETER_PATH_KEY @"path"
  #define FBSDK_CONTEXT_DIALOG_DEEPLINK_QUERY_CONTEXT_KEY @"context_id"
 
 @interface FBSDKChooseContextDialog () <FBSDKURLOpening>
 @end
 
 @implementation FBSDKChooseContextDialog
+{
+  id<FBSDKInternalUtilityProtocol> _internalUtility;
+}
 
 @synthesize dialogContent = _dialogContent;
 @synthesize delegate = _delegate;
 
 + (instancetype)dialogWithContent:(FBSDKChooseContextContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate
 {
+  FBSDKChooseContextDialog *dialog = [FBSDKChooseContextDialog dialogWithContent:content
+                                                                        delegate:delegate
+                                                                 internalUtility:[FBSDKInternalUtility sharedUtility]];
+  return dialog;
+}
+
++ (instancetype)dialogWithContent:(FBSDKChooseContextContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate internalUtility:(id<FBSDKInternalUtilityProtocol>)internalUtility
+{
   FBSDKChooseContextDialog *dialog = [self new];
   dialog.dialogContent = content;
   dialog.delegate = delegate;
+  dialog->_internalUtility = internalUtility;
   return dialog;
 }
 
@@ -64,14 +80,10 @@
     [self _handleDialogError:error];
     return NO;
   }
-  NSURL *appSwitchDeeplink = [FBSDKInternalUtility.sharedUtility URLWithScheme:FBSDK_CONTEXT_DIALOG_URL_SCHEME
-                                                                          host:FBSDK_CONTEXT_DIALOG_URL_HOST
-                                                                          path:[NSString stringWithFormat:@"/dialog/choosecontext/%@/", FBSDKSettings.appID]
-                                                               queryParameters:[self queryParameters]
-                                                                         error:&error];
+  NSURL *dialogURL = [self _generateURL];
 
   [[FBSDKBridgeAPI sharedInstance]
-   openURL:appSwitchDeeplink
+   openURL:dialogURL
    sender:weakSelf
    handler:^(BOOL success, NSError *_Nullable bridgeError) {
      if (!success && bridgeError) {
@@ -109,28 +121,58 @@
   [self.delegate contextDialog:self didFailWithError:dialogError];
 }
 
+- (NSURL *)_generateURL
+{
+  NSMutableDictionary *parametersDictionary = [self queryParameters];
+  NSError *error;
+  if (_internalUtility.isFacebookAppInstalled) {
+    return [_internalUtility URLWithScheme:FBSDK_CONTEXT_DIALOG_URL_SCHEME
+                                      host:FBSDK_CONTEXT_DIALOG_URL_HOST
+                                      path:[NSString stringWithFormat:FBSDK_CONTEXT_DIALOG_DEEPLINK_PATH, FBSDKSettings.appID]
+                           queryParameters:parametersDictionary
+                                     error:&error];
+  }
+  return [_internalUtility URLWithScheme:FBSDK_CONTEXT_DIALOG_URL_SCHEME
+                                    host:FBSDK_CONTEXT_DIALOG_URL_HOST
+                                    path:FBSDK_CONTEXT_DIALOG_MSITE_URL_PATH
+                         queryParameters:parametersDictionary
+                                   error:&error];
+}
+
 - (NSMutableDictionary *)queryParameters
 {
-  NSMutableDictionary *parameters = [NSMutableDictionary new];
+  NSMutableDictionary *appSwitchParameters = [NSMutableDictionary new];
   if (self.dialogContent && [self.dialogContent isKindOfClass:[FBSDKChooseContextContent class]]) {
     FBSDKChooseContextContent *content = (FBSDKChooseContextContent *)self.dialogContent;
 
     NSString *filtersName = [FBSDKChooseContextContent filtersNameForFilters:content.filter];
     if (filtersName) {
-      parameters[FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_FILTER_KEY] = filtersName;
+      appSwitchParameters[FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_FILTER_KEY] = filtersName;
     }
 
     NSNumber *minParticipants = [NSNumber numberWithInteger:content.minParticipants];
     if (minParticipants != nil) {
-      parameters[FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_MIN_SIZE_KEY] = minParticipants;
+      appSwitchParameters[FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_MIN_SIZE_KEY] = minParticipants;
     }
 
     NSNumber *maxParticipants = [NSNumber numberWithInteger:content.maxParticipants];
     if (maxParticipants != nil) {
-      parameters[FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_MAX_SIZE_KEY] = maxParticipants;
+      appSwitchParameters[FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_MAX_SIZE_KEY] = maxParticipants;
     }
   }
-  return parameters;
+  if (_internalUtility.isFacebookAppInstalled) {
+    return appSwitchParameters;
+  }
+
+  appSwitchParameters[FBSDK_CONTEXT_DIALOG_MSITE_QUERY_PARAMETER_APP_ID_KEY] = [FBSDKSettings appID];
+  NSString *parameterJSONString = [FBSDKBasicUtility JSONStringForObject:appSwitchParameters
+                                                                   error:NULL
+                                                    invalidObjectHandler:NULL];
+
+  NSMutableDictionary *mSiteParameters = [NSMutableDictionary new];
+  mSiteParameters[FBSDK_CONTEXT_DIALOG_MSITE_QUERY_PARAMETER_PATH_KEY] = @"/path";
+  mSiteParameters[FBSDK_CONTEXT_DIALOG_MSITE_QUERY_PARAMETER_PARAM_KEY] = parameterJSONString;
+  return mSiteParameters;
 }
 
 - (FBSDKGamingContext *_Nullable)_gamingContextFromURL:(NSURL *)url
