@@ -16,17 +16,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "Shared/Platform/iOS.xcconfig"
-#include "Shared/Target/LogicTests.xcconfig"
+#import <FBSDKShareKit/FBSDKShareKit.h>
 
-PRODUCT_NAME = FBSDKShareKitTests
-PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBSDKShareKitTests
-
-INFOPLIST_FILE = $(SRCROOT)/FBSDKShareKitTests/Info.plist
-
-IPHONEOS_DEPLOYMENT_TARGET = 9.0
-
-HEADER_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)
-LIBRARY_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)
-
-SWIFT_OBJC_BRIDGING_HEADER = FBSDKShareKitTests/FBSDKShareKitTests-Bridging-Header.h
+#import "FBSDKShareDialog.h"

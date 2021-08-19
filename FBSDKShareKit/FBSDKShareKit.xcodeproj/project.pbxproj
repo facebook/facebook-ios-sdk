@@ -471,6 +471,7 @@
 		1061E2C7E3933B364D3EDEEC /* FBSDKSharePhoto.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKSharePhoto.h; sourceTree = "<group>"; };
 		11B2FC5C1A7AB6BB53B1804E /* FBSDKHashtagTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKHashtagTests.m; sourceTree = "<group>"; };
 		19A9475B92CE2C6CC16C9090 /* FBSDKHasher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKHasher.m; sourceTree = "<group>"; };
+		1BAF96C7AEFBDD10F23F9A6C /* FBSDKShareKitTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKShareKitTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		1C4E36200D4C8A069FD03BDB /* FBSDKShareVideoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKShareVideoTests.m; sourceTree = "<group>"; };
 		20F7ABEAA225D497EA0453F6 /* FBSDKShareExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKShareExtension.h; sourceTree = "<group>"; };
 		227EEAA2262AD634B42FD444 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKShareKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -835,6 +836,7 @@
 				C66B896B75DB793A393EC51D /* FakeSharingDelegate.m */,
 				07B99159174F0C6DC372D969 /* FBSDKMessageDialogTests.m */,
 				F2667A67F58B045AAA39D003 /* FBSDKShareDialogTests.m */,
+				1BAF96C7AEFBDD10F23F9A6C /* FBSDKShareKitTests-Bridging-Header.h */,
 				CAC74C1B0E5DA2F06DC61047 /* FBSDKShareKitTestUtility.h */,
 				FBA4A201777524A27F5EEAED /* FBSDKShareKitTestUtility.m */,
 				FD6D358432BCF817AF2C513C /* Info.plist */,

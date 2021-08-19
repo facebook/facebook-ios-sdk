@@ -16,17 +16,20 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "Shared/Platform/iOS.xcconfig"
-#include "Shared/Target/LogicTests.xcconfig"
+#import <Foundation/Foundation.h>
 
-PRODUCT_NAME = FBSDKShareKitTests
-PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBSDKShareKitTests
+NS_ASSUME_NONNULL_BEGIN
 
-INFOPLIST_FILE = $(SRCROOT)/FBSDKShareKitTests/Info.plist
+#pragma mark - Social Constants
 
-IPHONEOS_DEPLOYMENT_TARGET = 9.0
+/**
+ Dynamically loaded constant for SLServiceTypeFacebook
 
-HEADER_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)
-LIBRARY_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)
+ */
+FOUNDATION_EXPORT NSString *fbsdkdfl_SLServiceTypeFacebook(void);
 
-SWIFT_OBJC_BRIDGING_HEADER = FBSDKShareKitTests/FBSDKShareKitTests-Bridging-Header.h
+#pragma mark - Social Classes
+
+FOUNDATION_EXPORT Class fbsdkdfl_SLComposeViewControllerClass(void);
+
+NS_ASSUME_NONNULL_END
