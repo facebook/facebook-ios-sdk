@@ -47,7 +47,6 @@ class TestInternalUtility: InternalUtilityProtocol {
     let appInstalled = isFBAppInstalled
     return appInstalled
   }
-
 }
 
 enum URLConstants {
