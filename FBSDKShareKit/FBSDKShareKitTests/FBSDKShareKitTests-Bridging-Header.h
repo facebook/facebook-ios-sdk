@@ -19,3 +19,4 @@
 #import <FBSDKShareKit/FBSDKShareKit.h>
 
 #import "FBSDKShareDialog.h"
+#import "FBSDKShareModelTestUtility.h"
