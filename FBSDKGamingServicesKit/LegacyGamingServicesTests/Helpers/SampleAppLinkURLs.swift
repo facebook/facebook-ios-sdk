@@ -41,7 +41,7 @@ enum SampleUnparsedAppLinkURLs {
     return url
   }
 
-  static func valid() throws -> URL {
+  static func validGameRequestUrl() throws -> URL {
     let payload = createAppLinkExtras()
     let url = try XCTUnwrap(createUrl(payload: payload))
     return url

@@ -30,7 +30,8 @@ NS_SWIFT_NAME(GamingPayload)
 
 @property (nonatomic, strong, nonnull) FBSDKURL *URL;
 @property (nonatomic, strong, readonly) NSString *payload;
-@property (nonatomic, strong, readonly) NSString *gameRequestID;
+@property (nonatomic, strong, readonly) NSString *gameRequestID
+DEPRECATED_MSG_ATTRIBUTE("The gameRequestID property will be removed from GamingPayload in the next major release. Use the GamingPayloadDelegate delegate method `parsedGameRequestURLContaining:gameRequestID:` instead.");
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

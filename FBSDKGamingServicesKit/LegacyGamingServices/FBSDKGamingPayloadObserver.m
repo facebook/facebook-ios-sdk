@@ -70,17 +70,26 @@ static FBSDKGamingPayloadObserver *sharedInstance = nil;
          annotation:(id)annotation
 {
   FBSDKURL *sdkURL = [FBSDKURL URLWithURL:url];
-  if (!sdkURL.appLinkExtras[kGamingPayload] && !sdkURL.appLinkExtras[kGamingPayloadGameRequestID]) {
-    return false;
-  }
+  BOOL urlContainsGamingPayload = sdkURL.appLinkExtras[kGamingPayload] != nil;
+  BOOL urlContainsGameRequestID = sdkURL.appLinkExtras[kGamingPayloadGameRequestID] != nil;
 
-  if (![(NSObject *)self.delegate respondsToSelector:@selector(updatedURLContaining:)]) {
+  if (!urlContainsGamingPayload || !urlContainsGameRequestID) {
     return false;
   }
 
   FBSDKGamingPayload *payload = [[FBSDKGamingPayload alloc] initWithURL:sdkURL];
-  [_delegate updatedURLContaining:payload];
-  return true;
+  if (urlContainsGameRequestID && [(NSObject *)self.delegate respondsToSelector:@selector(parsedGameRequestURLContaining:gameRequestID:)]) {
+    [_delegate parsedGameRequestURLContaining:payload gameRequestID:sdkURL.appLinkExtras[kGamingPayloadGameRequestID]];
+    return true;
+  }
+
+  if (urlContainsGameRequestID && [(NSObject *)self.delegate respondsToSelector:@selector(updatedURLContaining:)]) {
+    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    [_delegate updatedURLContaining:payload];
+    #pragma clange diagnostic pop
+    return true;
+  }
+  return false;
 }
 
 @end

@@ -23,7 +23,18 @@
 NS_SWIFT_NAME(GamingPayloadDelegate)
 @protocol FBSDKGamingPayloadDelegate
 
-- (void)updatedURLContaining:(FBSDKGamingPayload* _Nonnull)payload;
+// MARK: Game Request
+@optional
+- (void)updatedURLContaining:(FBSDKGamingPayload* _Nonnull)payload
+DEPRECATED_MSG_ATTRIBUTE("This method is deprecated and will be removed in the next major release. Please use `parsedGameRequestURLContaining:gameRequestID:` instead");
+
+/**
+  Delegate method will be triggered when a `GamingPayloadObserver` parses a url with a payload and game request ID
+ @param payload The payload recieved in the url
+ @param gameRequestID The game request ID recieved in the url
+ */
+@optional
+- (void)parsedGameRequestURLContaining:(FBSDKGamingPayload* _Nonnull)payload gameRequestID:(NSString* _Nonnull)gameRequestID;
 
 @end
 

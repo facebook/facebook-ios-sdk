@@ -21,7 +21,7 @@ import XCTest
 class GamingPayloadTests: XCTestCase {
 
   func testGamePayloadWithValidValues() throws {
-    let url = try SampleUnparsedAppLinkURLs.valid()
+    let url = try SampleUnparsedAppLinkURLs.validGameRequestUrl()
     let appLink = AppLinkURL(url: url)
     let gamingPayload = GamingPayload(url: appLink)
     XCTAssertEqual("123", gamingPayload.gameRequestID)
