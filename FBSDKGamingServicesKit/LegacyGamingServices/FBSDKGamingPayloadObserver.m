@@ -18,6 +18,7 @@
 
 #import "FBSDKGamingPayloadObserver.h"
 
+#import "FBSDKGamingContext+Internal.h"
 #import "FBSDKGamingPayload.h"
 #import "FBSDKGamingServicesCoreKitImport.h"
 
@@ -72,8 +73,9 @@ static FBSDKGamingPayloadObserver *sharedInstance = nil;
   FBSDKURL *sdkURL = [FBSDKURL URLWithURL:url];
   BOOL urlContainsGamingPayload = sdkURL.appLinkExtras[kGamingPayload] != nil;
   BOOL urlContainsGameRequestID = sdkURL.appLinkExtras[kGamingPayloadGameRequestID] != nil;
+  BOOL urlContainsGameContextTokenID = sdkURL.appLinkExtras[kGamingPayloadContextTokenID] != nil;
 
-  if (!urlContainsGamingPayload || !urlContainsGameRequestID) {
+  if (!urlContainsGamingPayload || (urlContainsGameContextTokenID && urlContainsGameRequestID)) {
     return false;
   }
 
@@ -87,6 +89,13 @@ static FBSDKGamingPayloadObserver *sharedInstance = nil;
     #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [_delegate updatedURLContaining:payload];
     #pragma clange diagnostic pop
+    return true;
+  }
+
+  if (urlContainsGameContextTokenID
+      && [(NSObject *)self.delegate respondsToSelector:@selector(parsedGamingContextURLContaining:)]) {
+    [FBSDKGamingContext createContextWithIdentifier:sdkURL.appLinkExtras[kGamingPayloadContextTokenID]];
+    [_delegate parsedGamingContextURLContaining:payload];
     return true;
   }
   return false;

@@ -22,27 +22,37 @@ enum SampleUnparsedAppLinkURLs {
     static let extras = "extras"
     static let payload = "payload"
     static let gameRequestId = "game_request_id"
+    static let contextTokenID = "context_token_id"
   }
 
   enum Values {
     static let payload = "payload"
     static let gameRequestID = "123"
+    static let contextTokenID = "123"
   }
 
   static func create(
     payload potentialPayload: String? = Values.payload,
-    gameRequestID potentialGameRequestID: String? = Values.gameRequestID
+    gameRequestID potentialGameRequestID: String? = Values.gameRequestID,
+    contextTokenID potentialContextTokenID: String? = Values.contextTokenID
   ) throws -> URL {
     let payload = createAppLinkExtras(
       payload: potentialPayload,
-      gameRequestID: potentialGameRequestID
+      gameRequestID: potentialGameRequestID,
+      contextTokenID: potentialContextTokenID
     )
     let url = try XCTUnwrap(createUrl(payload: payload))
     return url
   }
 
   static func validGameRequestUrl() throws -> URL {
-    let payload = createAppLinkExtras()
+    let payload = createAppLinkExtras(contextTokenID: nil)
+    let url = try XCTUnwrap(createUrl(payload: payload))
+    return url
+  }
+
+  static func validGamingContextUrl() throws -> URL {
+    let payload = createAppLinkExtras(gameRequestID: nil)
     let url = try XCTUnwrap(createUrl(payload: payload))
     return url
   }
@@ -72,7 +82,8 @@ enum SampleUnparsedAppLinkURLs {
 
   static func createAppLinkExtras(
     payload potentialPayload: String? = Values.payload,
-    gameRequestID potentialGameRequestID: String? = Values.gameRequestID
+    gameRequestID potentialGameRequestID: String? = Values.gameRequestID,
+    contextTokenID potentialContextTokenID: String? = Values.contextTokenID
   ) -> [String: Any] {
     var extras = [String: Any]()
 
@@ -81,6 +92,9 @@ enum SampleUnparsedAppLinkURLs {
     }
     if let gameRequestID = potentialGameRequestID {
       extras[AppLinkKeys.gameRequestId] = gameRequestID
+    }
+    if let contextTokenID = potentialContextTokenID {
+      extras[AppLinkKeys.contextTokenID] = contextTokenID
     }
 
     return [AppLinkKeys.extras: extras]

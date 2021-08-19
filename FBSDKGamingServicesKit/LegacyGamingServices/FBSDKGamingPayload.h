@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *const kGamingPayload;
 extern NSString *const kGamingPayloadGameRequestID;
+extern NSString *const kGamingPayloadContextTokenID;
 
 NS_SWIFT_NAME(GamingPayload)
 @interface FBSDKGamingPayload : NSObject

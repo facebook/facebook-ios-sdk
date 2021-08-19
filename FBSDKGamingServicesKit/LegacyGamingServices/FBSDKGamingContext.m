@@ -29,6 +29,7 @@ static FBSDKGamingContext *_currentContext;
   }
   FBSDKGamingContext *context = [FBSDKGamingContext new];
   context.identifier = identifier;
+  _currentContext = context;
 
   return context;
 }

@@ -36,7 +36,15 @@ DEPRECATED_MSG_ATTRIBUTE("This method is deprecated and will be removed in the n
 @optional
 - (void)parsedGameRequestURLContaining:(FBSDKGamingPayload* _Nonnull)payload gameRequestID:(NSString* _Nonnull)gameRequestID;
 
+/**
+ Delegate method will be triggered when a `GamingPayloadObserver` parses a gaming context url with a payload and game context token ID. The current gaming context will be update with the context ID.
+ @param payload The payload recieved in the url
+ */
+@optional
+- (void)parsedGamingContextURLContaining:(FBSDKGamingPayload* _Nonnull)payload;
+
 @end
+
 
 NS_ASSUME_NONNULL_BEGIN
 
