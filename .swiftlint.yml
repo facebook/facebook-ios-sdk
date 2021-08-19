@@ -129,6 +129,7 @@ opt_in_rules:
   - multiline_arguments
   - multiline_function_chains
   - multiline_parameters
+  - multiline_parameters_brackets
   - multiple_closures_with_trailing_closure
   - nesting
   - nimble_operator

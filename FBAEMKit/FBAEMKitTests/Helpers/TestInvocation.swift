@@ -36,7 +36,8 @@ class TestInvocation: AEMInvocation {
   }
 
   override func updateConversionValue(
-    withConfigs configs: [String: [AEMConfiguration]]?) -> Bool {
+    withConfigs configs: [String: [AEMConfiguration]]?
+  ) -> Bool {
     updateConversionCallCount += 1
     return true
   }
