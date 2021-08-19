@@ -39,14 +39,12 @@ nesting:
 private_outlet:
   allow_private_set: true
 type_name:
-  excluded: [
-    RawAppEventsConfigurationResponseFixtures,
-    GraphRequestPiggybackManagerProviderTests
-  ]
+  excluded: [RawAppEventsConfigurationResponseFixtures, GraphRequestPiggybackManagerProviderTests]
 
 # Xcode fixits insert these as "public override" vs "override public" so overriding Swiftlint's defaullt of "override, acl, ..." to "acl, override, ..."
 modifier_order:
-  preferred_modifier_order: [acl, override, setterACL, dynamic, mutators, lazy, final, required, convenience, typeMethods, owned]
+  preferred_modifier_order:
+    [acl, override, setterACL, dynamic, mutators, lazy, final, required, convenience, typeMethods, owned]
 
 disabled_rules:
   - attributes
@@ -134,7 +132,6 @@ opt_in_rules:
   - nesting
   - nimble_operator
   - no_fallthrough_only
-  - no_grouping_extension
   - notification_center_detachment
   - object_literal
   - opening_brace

@@ -50,7 +50,7 @@ class FBSDKLoginManager: NSObject {
 
 // MARK: - FBSDKURLOpening
 
-extension FBSDKLoginManager: URLOpening { // swiftlint:disable:this no_grouping_extension
+extension FBSDKLoginManager: URLOpening {
   public func application(
     _ application: UIApplication?,
     open url: URL?,

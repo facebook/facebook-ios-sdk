@@ -156,7 +156,6 @@ final class AuthenticationTokenClaimsTests: XCTestCase {
 
 // MARK: - Helpers
 
-// swiftlint:disable:next no_grouping_extension
 extension AuthenticationTokenClaimsTests {
   func makeClaims() -> AuthenticationTokenClaims {
     AuthenticationTokenClaims(
