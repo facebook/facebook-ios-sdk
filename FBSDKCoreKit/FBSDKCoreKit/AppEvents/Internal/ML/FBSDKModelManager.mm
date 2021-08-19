@@ -467,7 +467,7 @@ static dispatch_once_t enableNonce;
     FBSDKAppEventNameInitiatedCheckout];
 }
 
- #if DEBUG && FBSDKTEST
+ #if DEBUG && FBTEST
 
 + (void)reset
 {

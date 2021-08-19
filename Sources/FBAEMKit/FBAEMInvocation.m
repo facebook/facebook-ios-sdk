@@ -361,7 +361,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
 }
 
  #if DEBUG
-  #if FBAEMTEST
+  #if FBTEST
 
 - (void)setRecordedEvents:(NSMutableSet<NSString *> *)recordedEvents
 {

@@ -530,7 +530,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
  #pragma mark - Testability
 
  #if DEBUG
-  #if FBAEMTEST
+  #if FBTEST
 
 + (NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)configs
 {

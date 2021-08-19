@@ -196,7 +196,7 @@ static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
 }
 
 #ifdef DEBUG
- #ifdef FBSDKTEST
+ #if FBTEST
 + (NSArray<id<FBSDKEventsProcessing>> *)eventProcessors
 {
   return _eventProcessors;

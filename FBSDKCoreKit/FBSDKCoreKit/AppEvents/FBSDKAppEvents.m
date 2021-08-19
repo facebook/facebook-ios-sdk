@@ -1148,7 +1148,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
       [self flushOnMainQueue:copy forReason:flushReason];
     };
 
-  #if DEBUG && FBSDKTEST
+  #if DEBUG && FBTEST
     block();
   #else
     dispatch_async(dispatch_get_main_queue(), block);
@@ -1222,7 +1222,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
   self.atePublisher = self.atePublisher ?: [self.atePublisherFactory createPublisherWithAppID:self.appID];
 
-#if FBSDKTEST
+#if FBTEST
   [self.atePublisher publishATE];
 #else
   __weak FBSDKAppEvents *weakSelf = self;
@@ -1759,7 +1759,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 #pragma mark - Testability
 
-#if DEBUG && FBSDKTEST
+#if DEBUG && FBTEST
 
 + (void)reset
 {

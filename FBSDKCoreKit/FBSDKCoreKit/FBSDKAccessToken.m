@@ -347,7 +347,7 @@ static id<FBSDKGraphRequestConnectionProviding> g_connectionFactory;
 #pragma mark - Testability
 
 #if DEBUG
- #if FBSDKTEST
+ #if FBTEST
 
 + (void)resetCurrentAccessTokenCache
 {

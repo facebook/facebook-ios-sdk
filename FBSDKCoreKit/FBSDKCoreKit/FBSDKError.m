@@ -225,7 +225,7 @@ static id<FBSDKErrorReporting> _errorReporter;
 }
 
 #if DEBUG
- #if FBSDKTEST
+ #if FBTEST
 
 + (void)reset
 {

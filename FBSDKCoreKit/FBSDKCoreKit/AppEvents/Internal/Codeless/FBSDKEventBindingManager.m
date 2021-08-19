@@ -327,7 +327,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
                                     named:@"handle_table_view"];
           }
         };
-      #if FBSDKTEST
+      #if FBTEST
         tableViewBlock();
       #else
         fb_dispatch_on_default_thread(tableViewBlock);
@@ -357,7 +357,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
                                     named:@"handle_collection_view"];
           }
         };
-      #if FBSDKTEST
+      #if FBTEST
         collectionViewBlock();
       #else
         fb_dispatch_on_default_thread(collectionViewBlock);
@@ -365,7 +365,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
       }
     };
 
-  #if FBSDKTEST
+  #if FBTEST
     matchBlock();
   #else
     fb_dispatch_on_default_thread(matchBlock);
@@ -483,7 +483,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 }
 
  #if DEBUG
-  #if FBSDKTEST
+  #if FBTEST
 
 - (void)setReactBindings:(NSMutableDictionary *)bindings
 {

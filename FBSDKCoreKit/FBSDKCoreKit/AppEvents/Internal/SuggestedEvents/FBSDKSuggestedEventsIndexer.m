@@ -306,7 +306,7 @@ static dispatch_once_t setupNonce;
       free(denseData);
     };
 
-  #ifdef FBSDKTEST
+  #if FBTEST
     predictAndLogBlock();
   #else
     fb_dispatch_on_default_thread(predictAndLogBlock);
@@ -365,7 +365,7 @@ static dispatch_once_t setupNonce;
 
  #pragma mark - Testability
 
- #ifdef FBSDKTEST
+ #if FBTEST
 
 + (void)reset
 {

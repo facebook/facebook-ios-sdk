@@ -390,7 +390,7 @@ void sum(float *val0, float *val1)
 }
 
  #if DEBUG
-  #if FBSDKTEST
+  #if FBTEST
 
 + (id<FBSDKRulesFromKeyProvider>)keyProvider
 {

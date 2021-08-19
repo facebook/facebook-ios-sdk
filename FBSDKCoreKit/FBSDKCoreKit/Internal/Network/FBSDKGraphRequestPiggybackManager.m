@@ -233,7 +233,7 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
 }
 
 #if DEBUG
- #if FBSDKTEST
+ #if FBTEST
 
 + (void)setTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
 {

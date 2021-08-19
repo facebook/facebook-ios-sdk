@@ -159,7 +159,7 @@ static BOOL _isConfigured;
 }
 
  #if DEBUG
-  #if FBSDKTEST
+  #if FBTEST
 
 + (void)reset
 {

@@ -133,7 +133,7 @@ static dispatch_once_t token;
 }
 
 #if DEBUG
- #if FBSDKTEST
+ #if FBTEST
 
 + (void)reset
 {

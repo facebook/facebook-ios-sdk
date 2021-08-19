@@ -469,7 +469,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
 // MARK: - Testability
 
  #if DEBUG
-  #if FBSDKTEST
+  #if FBTEST
 
 - (NSString *)userName
 {

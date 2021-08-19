@@ -508,7 +508,7 @@ static id<FBSDKSettings> _settings;
 }
 
  #if DEBUG
-  #if FBSDKTEST
+  #if FBTEST
 
 + (void)reset
 {

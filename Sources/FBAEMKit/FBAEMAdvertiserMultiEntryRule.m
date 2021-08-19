@@ -60,7 +60,7 @@ static NSString *const RULES_KEY = @"rules";
     return isMatched;
   } @catch (NSException *exception) {
   #if DEBUG
-  #if FBAEMTEST
+  #if FBTEST
     @throw exception;
   #endif
   #endif

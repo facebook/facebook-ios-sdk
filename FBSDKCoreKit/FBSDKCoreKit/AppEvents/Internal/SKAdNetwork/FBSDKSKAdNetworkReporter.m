@@ -319,7 +319,7 @@ static NSString *const FBSDKSKAdNetworkReporterKey = @"com.facebook.sdk:FBSDKSKA
  #pragma mark - Testability
 
  #if DEBUG
-  #if FBSDKTEST
+  #if FBTEST
 
 - (void)setConfiguration:(FBSDKSKAdNetworkConversionConfiguration *)configuration
 {

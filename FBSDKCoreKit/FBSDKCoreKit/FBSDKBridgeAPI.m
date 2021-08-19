@@ -311,7 +311,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
       handler(opened, nil);
     }
   };
-#if FBSDKTEST
+#if FBTEST
   block();
 #else
   dispatch_async(dispatch_get_main_queue(), block);
@@ -582,7 +582,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
  #pragma mark - Testability
 
  #if DEBUG
-  #if FBSDKTEST
+  #if FBTEST
 
 - (id<FBSDKAuthenticationSession>)authenticationSession
 {

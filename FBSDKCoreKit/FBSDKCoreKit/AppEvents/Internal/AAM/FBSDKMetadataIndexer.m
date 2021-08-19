@@ -295,7 +295,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
     [FBSDKUserDataStore setInternalHashData:[weakStore[key] componentsJoinedByString:FIELD_K_DELIMITER]
                                     forType:key];
   };
-#ifdef FBSDKTEST
+#if FBTEST
   checkAndAppendDataBlock();
 #else
   dispatch_async(_serialQueue, checkAndAppendDataBlock);

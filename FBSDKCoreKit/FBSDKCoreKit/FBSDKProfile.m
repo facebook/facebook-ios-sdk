@@ -730,7 +730,7 @@ static id <FBSDKDataPersisting> _store;
  #pragma clang diagnostic pop
 
  #if DEBUG
-  #if FBSDKTEST
+  #if FBTEST
 
 + (void)resetCurrentProfileCache
 {

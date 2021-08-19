@@ -245,7 +245,7 @@ static id<FBSDKInternalURLOpener> _urlOpener;
 }
 
  #if DEBUG
-  #if FBSDKTEST
+  #if FBTEST
 
 + (void)reset
 {

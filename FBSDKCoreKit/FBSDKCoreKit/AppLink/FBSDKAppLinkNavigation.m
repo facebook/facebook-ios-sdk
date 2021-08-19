@@ -346,7 +346,7 @@ static id<FBSDKAppLinkResolving> defaultResolver;
 }
 
  #if DEBUG
-  #if FBSDKTEST
+  #if FBTEST
 
 + (void)reset
 {

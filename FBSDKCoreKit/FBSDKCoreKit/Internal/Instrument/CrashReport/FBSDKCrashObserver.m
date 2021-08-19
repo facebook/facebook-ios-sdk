@@ -88,7 +88,7 @@
 }
 
 #if DEBUG
- #if FBSDKTEST
+ #if FBTEST
 - (id<FBSDKSettings>)settings
 {
   return _settings;

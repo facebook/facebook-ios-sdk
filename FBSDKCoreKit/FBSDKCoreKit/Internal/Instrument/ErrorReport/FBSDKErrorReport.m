@@ -211,7 +211,7 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
 }
 
 #if DEBUG
- #if FBSDKTEST
+ #if FBTEST
 
 - (void)reset
 {

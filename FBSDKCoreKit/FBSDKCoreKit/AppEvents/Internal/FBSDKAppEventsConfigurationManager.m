@@ -181,7 +181,7 @@ static dispatch_once_t sharedConfigurationManagerNonce;
 }
 
 #if DEBUG
- #if FBSDKTEST
+ #if FBTEST
 
 + (void)reset
 {

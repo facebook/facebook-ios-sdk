@@ -140,7 +140,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
              completion:(FBSDKVerifySignatureCompletionBlock)completion
 {
 #if DEBUG
-#if FBSDKTEST
+#if FBTEST
   // skip signature checking for tests
   if (_skipSignatureVerification && completion) {
     completion(YES);
@@ -253,7 +253,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 #pragma mark - Test methods
 
 #if DEBUG
- #if FBSDKTEST
+ #if FBTEST
 
 static BOOL _skipSignatureVerification;
 

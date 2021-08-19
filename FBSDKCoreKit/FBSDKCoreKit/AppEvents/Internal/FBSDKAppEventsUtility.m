@@ -472,7 +472,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 }
 
 #if DEBUG
- #if FBSDKTEST
+ #if FBTEST
 
 + (ASIdentifierManager *)cachedAdvertiserIdentifierManager
 {
