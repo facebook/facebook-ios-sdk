@@ -106,22 +106,19 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
 @interface FBSDKLoginManagerTests : XCTestCase
 
+@property (nonatomic) id mockInternalUtility;
+@property (nonatomic) id mockLoginManager;
+@property (nonatomic) id mockAccessTokenClass;
+@property (nonatomic) id mockAuthenticationTokenClass;
+@property (nonatomic) id mockProfileClass;
+@property (nonatomic) id mockBridgeAPIClass;
+@property (nonatomic) TestFBSDKBridgeAPI *testBridgeAPI;
+@property (nonatomic) NSDictionary *claims;
+@property (nonatomic) NSDictionary *header;
+
 @end
 
 @implementation FBSDKLoginManagerTests
-{
-  id _mockInternalUtility;
-  id _mockLoginManager;
-  id _mockAccessTokenClass;
-  id _mockAuthenticationTokenClass;
-  id _mockProfileClass;
-  id _mockBridgeAPIClass;
-
-  TestFBSDKBridgeAPI *_testBridgeAPI;
-
-  NSDictionary *_claims;
-  NSDictionary *_header;
-}
 
 - (void)setUp
 {

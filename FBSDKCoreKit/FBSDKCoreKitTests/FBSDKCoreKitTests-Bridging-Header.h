@@ -57,6 +57,7 @@
 #import "FBSDKAppEventsUtility+AdvertiserIDProviding.h"
 #import "FBSDKAppEventsUtility+Testing.h"
 #import "FBSDKAppEventsUtility.h"
+#import "FBSDKAppEventsUtilityTests.h"
 #import "FBSDKAppLink+Testing.h"
 #import "FBSDKAppLinkEventPosting.h"
 #import "FBSDKAppLinkNavigation+Testing.h"
@@ -187,10 +188,6 @@
 
 
 NS_ASSUME_NONNULL_BEGIN
-
-// Interfaces for Swift extensions on Objective-C Test classes
-@interface FBSDKAppEventsUtilityTests : XCTestCase
-@end
 
 // Categories needed to expose private methods to Swift
 
