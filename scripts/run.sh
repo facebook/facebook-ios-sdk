@@ -81,13 +81,17 @@ main() {
 
     SDK_VERSION_FILES=(
       "Configurations/Version.xcconfig"
+      "FBAEMKit/Configurations/Shared/Version.xcconfig"
       "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKitVersions.h"
+      "Sources/FBAEMKit/FBAEMKitVersions.h"
       "Sources/FBSDKCoreKit_Basics/FBSDKCrashHandler.m"
     )
 
     SDK_GRAPH_API_VERSION_FILES=(
       "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKitVersions.h"
-      "FBSDKCoreKit/FBSDKCoreKitTests/FBSDKGraphRequestTests.m"
+      "FBSDKCoreKit/FBSDKCoreKitTests/GraphRequestTests.swift"
+      "Sources/FBAEMKit/FBAEMKitVersions.h"
+      "Sources/FBAEMKit/FBAEMNetworker.m"
     )
 
     SDK_MAIN_VERSION_FILE="FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKitVersions.h"
@@ -204,6 +208,12 @@ bump_version() {
     mv "$temp_file" "$full_file_path"
   done
 
+  FILES_WITH_OLD_VERSION=$(grep -rF "$SDK_CURRENT_VERSION" * | grep -v "CHANGELOG.md" | grep -v "Carthage/Build")
+  if [ ! -z "$FILES_WITH_OLD_VERSION" ]; then
+    echo "ERROR: Grep found the old $SDK_CURRENT_VERSION version in $FILES_WITH_OLD_VERSION" 1>&2;
+    exit 1
+  fi
+
   bump_changelog "$new_version"
 }
 
@@ -238,6 +248,12 @@ bump_api_version() {
 
     mv "$temp_file" "$full_file_path"
   done
+
+  FILES_WITH_OLD_VERSION=$(grep -rF "$SDK_CURRENT_GRAPH_API_VERSION" * | grep -v "CHANGELOG.md" | grep -v "Carthage/Build")
+  if [ ! -z "$FILES_WITH_OLD_VERSION" ]; then
+    echo "ERROR: Grep found the old $SDK_CURRENT_GRAPH_API_VERSION version in $FILES_WITH_OLD_VERSION" 1>&2;
+    exit 1
+  fi
 }
 
 bump_changelog() {

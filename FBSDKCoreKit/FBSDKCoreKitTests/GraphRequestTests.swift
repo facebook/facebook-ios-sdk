@@ -201,12 +201,12 @@ final class GraphRequestTests: XCTestCase {
       forBatch: true
     )
 
-    let expectedURL = "https://graph.facebook.com/v11.0/me?fields="
+    let expectedURL = "https://graph.facebook.com/\(version)/me?fields="
     XCTAssertEqual(url, expectedURL)
 
     let encodedURL = Utility.encode(urlString: expectedURL)
 
-    XCTAssertEqual(encodedURL, "https%3A%2F%2Fgraph.facebook.com%2Fv11.0%2Fme%3Ffields%3D")
+    XCTAssertEqual(encodedURL, "https%3A%2F%2Fgraph.facebook.com%2F\(version)%2Fme%3Ffields%3D")
     XCTAssertEqual(Utility.decode(urlString: encodedURL), expectedURL)
   }
 
