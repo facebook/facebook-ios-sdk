@@ -36,7 +36,7 @@ CLANG_ENABLE_OBJC_WEAK = YES
 GCC_VERSION = com.apple.compilers.llvm.clang.1_0
 
 // Whether to run the static analyzer during builds
-RUN_CLANG_STATIC_ANALYZER = YES
+RUN_CLANG_STATIC_ANALYZER = NO
 
 // Whether to strip out code that isn't called from anywhere
 DEAD_CODE_STRIPPING = NO
