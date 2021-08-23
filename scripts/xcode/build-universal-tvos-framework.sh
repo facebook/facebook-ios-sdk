@@ -41,8 +41,7 @@ xcodebuild -target "${TARGET}" \
   -sdk appletvos \
   BUILD_DIR="${BUILD_DIR}" \
   BUILD_ROOT="${BUILD_ROOT}" \
-  BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
-  clean build
+  BUILD_LIBRARY_FOR_DISTRIBUTION=YES
 
 xcodebuild -target "${TARGET}" \
   ONLY_ACTIVE_ARCH=NO \
@@ -50,8 +49,7 @@ xcodebuild -target "${TARGET}" \
   -sdk appletvsimulator \
   BUILD_DIR="${BUILD_DIR}" \
   BUILD_ROOT="${BUILD_ROOT}" \
-  BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
-  clean build
+  BUILD_LIBRARY_FOR_DISTRIBUTION=YES
 
 # Step 2. Copy the framework structure to the universal folder
 cp -R "${BUILD_DIR}/${CONFIGURATION}-appletvos/${PROJECT_NAME}.framework" "${UNIVERSAL_TV_BUILD_FOLDER}/"
