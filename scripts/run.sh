@@ -165,6 +165,19 @@ setup_sdk() {
   } >>"$SDK_DIR"/Configurations/TestAppIdAndSecret.xcconfig
 }
 
+grep_for_old_version() {
+  local old_version=${1:-}
+
+  RED='\033[1;31m'
+  RESET='\033[0m'
+
+  FILES_WITH_OLD_VERSION=$(grep -rF "$old_version" -- * | grep -Ev '(CHANGELOG.md|\bbuild/|Carthage/Build)')
+  if [ -n "$FILES_WITH_OLD_VERSION" ]; then
+    echo "${RED}ERROR: Grep found the old $old_version version in ${FILES_WITH_OLD_VERSION}${RESET}" 1>&2;
+    exit 1
+  fi
+}
+
 # Bump Version
 bump_version() {
   local new_version=${1:-}
@@ -208,11 +221,7 @@ bump_version() {
     mv "$temp_file" "$full_file_path"
   done
 
-  FILES_WITH_OLD_VERSION=$(grep -rF "$SDK_CURRENT_VERSION" * | grep -v "CHANGELOG.md" | grep -v "Carthage/Build")
-  if [ ! -z "$FILES_WITH_OLD_VERSION" ]; then
-    echo "ERROR: Grep found the old $SDK_CURRENT_VERSION version in $FILES_WITH_OLD_VERSION" 1>&2;
-    exit 1
-  fi
+  grep_for_old_version "$SDK_CURRENT_VERSION"
 
   bump_changelog "$new_version"
 }
@@ -249,11 +258,7 @@ bump_api_version() {
     mv "$temp_file" "$full_file_path"
   done
 
-  FILES_WITH_OLD_VERSION=$(grep -rF "$SDK_CURRENT_GRAPH_API_VERSION" * | grep -v "CHANGELOG.md" | grep -v "Carthage/Build")
-  if [ ! -z "$FILES_WITH_OLD_VERSION" ]; then
-    echo "ERROR: Grep found the old $SDK_CURRENT_GRAPH_API_VERSION version in $FILES_WITH_OLD_VERSION" 1>&2;
-    exit 1
-  fi
+  grep_for_old_version "$SDK_CURRENT_GRAPH_API_VERSION"
 }
 
 bump_changelog() {
