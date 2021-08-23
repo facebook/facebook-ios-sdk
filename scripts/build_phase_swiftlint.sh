@@ -18,10 +18,13 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-if which swiftlint >/dev/null; then
-  KIT_DIR=${PWD##*/} # The name of the current dir
-  cd .. # Use ../.swiftlint.yml
-  swiftlint "$KIT_DIR" "$@"
+IOS_SDK_KIT_DIR=${PWD##*/} # The name of the current dir
+cd .. # to use .swiftlint.yml from the parent directory
+
+if [ -f ../Tools/swiftlint/swiftlint ]; then
+  ../Tools/swiftlint/swiftlint lint "$IOS_SDK_KIT_DIR" "$@"
+elif which swiftlint >/dev/null; then
+  swiftlint lint "$IOS_SDK_KIT_DIR" "$@"
 else
   echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
 fi
