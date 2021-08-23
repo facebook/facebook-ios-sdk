@@ -46,27 +46,7 @@ modifier_order:
   preferred_modifier_order:
     [acl, override, setterACL, dynamic, mutators, lazy, final, required, convenience, typeMethods, owned]
 
-disabled_rules:
-  - attributes
-  - conditional_returns_on_newline
-  - discouraged_object_literal
-  - discouraged_optional_boolean
-  - discouraged_optional_collection
-  - explicit_acl
-  - explicit_enum_raw_value
-  - explicit_top_level_acl
-  - explicit_type_interface
-  - function_default_parameter_at_end
-  - no_extension_access_modifier
-  - number_separator
-  - prefixed_toplevel_constant
-  - statement_position
-  - switch_case_on_newline
-  - todo
-  - trailing_comma
-  - weak_delegate
-
-opt_in_rules:
+only_rules:
   - array_init
   - block_based_kvo
   - class_delegate_protocol
@@ -76,13 +56,18 @@ opt_in_rules:
   - closure_spacing
   - colon
   - comma
+  - comment_spacing
   - compiler_protocol_init
+  - computed_accessors_order
   - contains_over_first_not_nil
   - control_statement
   - convenience_type
   - cyclomatic_complexity
+  - deployment_target
   - discarded_notification_center_observer
   - discouraged_direct_init
+  - duplicate_enum_cases
+  - duplicate_imports
   - dynamic_inline
   - empty_count
   - empty_enum_arguments
@@ -108,7 +93,9 @@ opt_in_rules:
   - implicit_getter
   - implicit_return
   - implicitly_unwrapped_optional
+  - inclusive_language
   - indentation_width
+  - inert_defer
   - is_disjoint
   - joined_default_parameter
   - large_tuple
@@ -116,6 +103,7 @@ opt_in_rules:
   - legacy_cggeometry_functions
   - legacy_constant
   - legacy_constructor
+  - legacy_hashing
   - legacy_nsgeometry_functions
   - let_var_whitespace
   - line_length
@@ -131,11 +119,14 @@ opt_in_rules:
   - nesting
   - nimble_operator
   - no_fallthrough_only
+  - no_space_in_method_call
   - notification_center_detachment
+  - nsobject_prefer_isequal
   - object_literal
   - opening_brace
   - operator_usage_whitespace
   - operator_whitespace
+  - orphaned_doc_comment
   - overridden_super_call
   - override_in_extension
   - pattern_matching_keywords
@@ -148,8 +139,10 @@ opt_in_rules:
   - quick_discouraged_call
   - quick_discouraged_focused_test
   - quick_discouraged_pending_test
+  - reduce_boolean
   - redundant_discardable_let
   - redundant_nil_coalescing
+  - redundant_objc_attribute
   - redundant_optional_initialization
   - redundant_set_access_control
   - redundant_string_enum_value
@@ -174,9 +167,12 @@ opt_in_rules:
   - unneeded_break_in_switch
   - unneeded_parentheses_in_closure_argument
   - untyped_error_in_catch
+  - unused_capture_list
   - unused_closure_parameter
+  - unused_control_flow_label
   - unused_enumerated
   - unused_optional_binding
+  - unused_setter_value
   - valid_ibinspectable
   - vertical_parameter_alignment
   - vertical_parameter_alignment_on_call
