@@ -857,7 +857,6 @@
 				3DD7E2B3D1B06CBE59A584EB /* GamingTestAssets.xcassets */,
 				184D5179C7E31AB29E289948 /* FacebookGamingServices */,
 				36FB94C589E45620F557760A /* FBSDKGamingServicesKit */,
-				B66CFD203B056FBD33616BDC /* Internal */,
 			);
 			name = Tests;
 			sourceTree = "<group>";
@@ -1093,8 +1092,7 @@
 				ED9AD5F86D4A8FFA5B27764A /* CustomUpdateLocalizedTextTests.swift */,
 				B9EABD48C9A6CA8B88950B9D /* CustomUpdateMediaTests.swift */,
 			);
-			name = Internal;
-			path = ../Tests/FacebookGamingServices/Internal;
+			path = Internal;
 			sourceTree = "<group>";
 		};
 		BA879E6DCF5AB53F8BDAFD71 /* Projects */ = {

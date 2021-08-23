@@ -43,9 +43,6 @@ targets:
       - path: ../Tests/FacebookGamingServices
         group: Tests
         createIntermediateGroups: false
-      - path: ../Tests/FacebookGamingServices/Internal
-        group: Tests
-        createIntermediateGroups: false
       - path: ../Tests/GamingTestAssets.xcassets
         group: Tests
         createIntermediateGroups: false
