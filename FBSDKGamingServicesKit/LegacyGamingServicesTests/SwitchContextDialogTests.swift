@@ -20,8 +20,8 @@ import XCTest
 
 class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
 
-  var dialogDidCompleteSuccessfully: Bool = false
-  var dialogDidCancel: Bool = false
+  var dialogDidCompleteSuccessfully = false
+  var dialogDidCancel = false
   var dialogError: NSError?
   let windowFinder = TestWindowFinder()
   let content = SwitchContextContent(contextID: "1234567890")

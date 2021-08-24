@@ -22,7 +22,7 @@ import XCTest
 @objcMembers
 class TestConversionValueUpdating: NSObject, ConversionValueUpdating {
 
-  static var wasUpdateVersionValueCalled: Bool = false
+  static var wasUpdateVersionValueCalled = false
 
   static func updateConversionValue(_ conversionValue: Int) {
     wasUpdateVersionValueCalled = true

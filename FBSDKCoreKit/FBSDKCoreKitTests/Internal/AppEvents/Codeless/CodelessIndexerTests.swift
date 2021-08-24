@@ -23,7 +23,7 @@ class CodelessIndexerTests: XCTestCase { // swiftlint:disable:this type_body_len
 
   let requestFactory = TestGraphRequestFactory()
   let store = UserDefaultsSpy()
-  let connection: TestGraphRequestConnection = TestGraphRequestConnection()
+  let connection = TestGraphRequestConnection()
   lazy var connectionFactory: TestGraphRequestConnectionFactory = {
     TestGraphRequestConnectionFactory.create(withStubbedConnection: connection)
   }()
