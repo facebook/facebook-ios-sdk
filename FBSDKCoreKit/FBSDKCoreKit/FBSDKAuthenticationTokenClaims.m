@@ -23,7 +23,71 @@
 
 static NSTimeInterval const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
 
+@interface FBSDKAuthenticationTokenClaims ()
+
+@property (class, nonatomic) BOOL hasBeenConfigured;
+
+@property (class, nullable, nonatomic, readonly) id<FBSDKSettings> settings;
+
+@end
+
 @implementation FBSDKAuthenticationTokenClaims
+
+#pragma mark - Class Properties
+
+static BOOL _hasBeenConfigured;
+
++ (BOOL)hasBeenConfigured
+{
+  return _hasBeenConfigured;
+}
+
++ (void)setHasBeenConfigured:(BOOL)hasBeenConfigured
+{
+  _hasBeenConfigured = hasBeenConfigured;
+}
+
+static _Nullable id<FBSDKSettings> _settings;
+
++ (nullable id<FBSDKSettings>)settings
+{
+  return _settings;
+}
+
++ (void)setSettings:(nullable id<FBSDKSettings>)settings
+{
+  _settings = settings;
+}
+
+#pragma mark - Class Configuration
+
++ (void)configureWithSettings:(nonnull id<FBSDKSettings>)settings
+{
+  self.settings = settings;
+}
+
++ (void)configureClassDependencies
+{
+  if (self.hasBeenConfigured) {
+    return;
+  }
+
+  [self configureWithSettings:FBSDKSettings.sharedSettings];
+
+  self.hasBeenConfigured = YES;
+}
+
+#if FBTEST
+
++ (void)resetClassDependencies
+{
+  self.settings = nil;
+  self.hasBeenConfigured = NO;
+}
+
+#endif
+
+#pragma mark - Creating Claims
 
 - (nullable instancetype)initWithJti:(nonnull NSString *)jti
                                  iss:(nonnull NSString *)iss
@@ -75,6 +139,8 @@ static NSTimeInterval const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
 + (nullable FBSDKAuthenticationTokenClaims *)claimsFromEncodedString:(nonnull NSString *)encodedClaims
                                                                nonce:(nonnull NSString *)expectedNonce
 {
+  [self configureClassDependencies];
+
   NSError *error;
   NSData *claimsData = [FBSDKBase64 decodeAsData:[FBSDKBase64 base64FromBase64Url:encodedClaims]];
 
@@ -91,7 +157,7 @@ static NSTimeInterval const MaxTimeSinceTokenIssued = 10 * 60; // 10 mins
       BOOL isFacebook = iss.length > 0 && [[[NSURL URLWithString:iss] host] isEqualToString:@"facebook.com"];
 
       NSString *aud = [FBSDKTypeUtility coercedToStringValue:claimsDict[@"aud"]];
-      BOOL audMatched = [aud isEqualToString:[FBSDKSettings appID]];
+      BOOL audMatched = [aud isEqualToString:self.class.settings.appID];
 
       NSNumber *expValue = [FBSDKTypeUtility numberValue:claimsDict[@"exp"]];
       NSTimeInterval exp = [expValue doubleValue];

@@ -18,7 +18,18 @@
 
 #import "FBSDKAuthenticationTokenClaims+Internal.h"
 
+@protocol FBSDKSettings;
+
 @interface FBSDKAuthenticationTokenClaims (Testing)
+
+@property (class, nullable, nonatomic, readonly) id<FBSDKSettings> settings;
+
++ (void)configureWithSettings:(nonnull id<FBSDKSettings>)settings
+NS_SWIFT_NAME(configure(settings:));
+
++ (void)configureClassDependencies;
+
++ (void)resetClassDependencies;
 
 - (nullable instancetype)initWithJti:(nonnull NSString *)jti
                                  iss:(nonnull NSString *)iss

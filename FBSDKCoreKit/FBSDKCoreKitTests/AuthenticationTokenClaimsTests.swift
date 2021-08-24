@@ -26,6 +26,7 @@ final class AuthenticationTokenClaimsTests: XCTestCase {
   let nonce = "some_nonce"
   let facebookURL = "https://facebook.com/dialog/oauth"
   let currentTime = Date().timeIntervalSince1970
+  let settings = TestSettings()
 
   lazy var claims = makeClaims()
   lazy var claimsValues = getClaimsValues(from: claims)
@@ -33,22 +34,31 @@ final class AuthenticationTokenClaimsTests: XCTestCase {
   override func setUp() {
     super.setUp()
 
-    Settings.reset()
-    TestAppEventsConfigurationProvider.reset()
-    Settings.configure(
-      store: UserDefaultsSpy(),
-      appEventsConfigurationProvider: TestAppEventsConfigurationProvider.self,
-      infoDictionaryProvider: TestBundle(),
-      eventLogger: TestAppEvents()
-    )
-    Settings.appID = appID
+    // Calling the configuration method here ensures that subsequent calls in
+    // the production code will be ignored and our test doubles from below
+    // will be used
+    AuthenticationTokenClaims.configureClassDependencies()
+
+    settings.appID = appID
+    AuthenticationTokenClaims.configure(settings: settings)
   }
 
   override func tearDown() {
-    Settings.reset()
-    TestAppEventsConfigurationProvider.reset()
+    AuthenticationTokenClaims.resetClassDependencies()
 
     super.tearDown()
+  }
+
+  // MARK: - Class Dependencies
+
+  func testDefaultClassDependencies() {
+    AuthenticationTokenClaims.resetClassDependencies()
+    AuthenticationTokenClaims.configureClassDependencies()
+
+    XCTAssertTrue(
+      AuthenticationTokenClaims.settings === Settings.shared,
+      "The class should use the shared settings by default"
+    )
   }
 
   // MARK: - Decoding Claims
