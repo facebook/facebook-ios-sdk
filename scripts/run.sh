@@ -81,7 +81,6 @@ main() {
 
     SDK_VERSION_FILES=(
       "Configurations/Version.xcconfig"
-      "FBAEMKit/Configurations/Shared/Version.xcconfig"
       "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKitVersions.h"
       "Sources/FBAEMKit/FBAEMKitVersions.h"
       "Sources/FBSDKCoreKit_Basics/FBSDKCrashHandler.m"
