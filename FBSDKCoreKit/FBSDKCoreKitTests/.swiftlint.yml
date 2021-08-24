@@ -4,3 +4,10 @@
 type_body_length:
   warning: 400 # default 200
   error: 700 # default 350
+
+# Duplicating some settings from the base .swiftlint.yml since nested configurations don't work recursively
+# See: https://github.com/realm/SwiftLint#nested-configurations
+
+modifier_order:
+  preferred_modifier_order:
+    [acl, override, setterACL, dynamic, mutators, lazy, final, required, convenience, typeMethods, owned]

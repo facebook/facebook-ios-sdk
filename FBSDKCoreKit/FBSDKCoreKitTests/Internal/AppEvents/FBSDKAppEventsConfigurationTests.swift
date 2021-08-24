@@ -171,7 +171,7 @@ class FBSDKAppEventsConfigurationTests: XCTestCase {
 
 extension AppEventsConfiguration {
   // swiftlint:disable:next override_in_extension
-  override open func isEqual(_ object: Any?) -> Bool {
+  open override func isEqual(_ object: Any?) -> Bool {
     if let other = object as? AppEventsConfiguration {
       return advertiserIDCollectionEnabled == other.advertiserIDCollectionEnabled &&
         eventCollectionEnabled == other.eventCollectionEnabled &&
