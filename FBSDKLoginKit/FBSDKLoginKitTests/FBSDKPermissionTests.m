@@ -93,4 +93,28 @@
   XCTAssertNil(permissions);
 }
 
+- (void)testDescription
+{
+  FBSDKPermission *permission = [[FBSDKPermission alloc] initWithString:@"test_permission"];
+  XCTAssertEqualObjects(permission.description, permission.value, @"A permission's description should be equal to its value");
+}
+
+- (void)testEquality
+{
+  FBSDKPermission *permission1 = [[FBSDKPermission alloc] initWithString:@"test_permission"];
+  XCTAssertTrue([permission1 isEqual:permission1], @"A permission should be equal to itself");
+
+  FBSDKPermission *permission2 = [[FBSDKPermission alloc] initWithString:@"test_permission"];
+  XCTAssertTrue([permission1 isEqual:permission2], @"Permissions with equal string values should be equal");
+}
+
+- (void)testInequality
+{
+  FBSDKPermission *permission1 = [[FBSDKPermission alloc] initWithString:@"test_permission"];
+  XCTAssertFalse([permission1 isEqual:@"test_permission"], @"Permissions are not equal to objects of other types");
+
+  FBSDKPermission *permission2 = [[FBSDKPermission alloc] initWithString:@"different_permission"];
+  XCTAssertFalse([permission1 isEqual:permission2], @"Permissions with unequal string values should be unequal");
+}
+
 @end
