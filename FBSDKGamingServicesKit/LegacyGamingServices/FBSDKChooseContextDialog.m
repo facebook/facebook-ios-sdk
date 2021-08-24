@@ -100,14 +100,18 @@
 - (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef
 {
   if (!FBSDKSettings.appID) {
-    *errorRef = [FBSDKError errorWithCode:FBSDKErrorUnknown message:@"App ID is not set in settings"];
+    if (errorRef != NULL) {
+      *errorRef = [FBSDKError errorWithCode:FBSDKErrorUnknown message:@"App ID is not set in settings"];
+    }
     return NO;
   }
   if (![self.dialogContent respondsToSelector:@selector(validateWithError:)]) {
-    *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKErrorDomain
-                                                      name:@"content"
-                                                     value:self.dialogContent
-                                                   message:nil];
+    if (errorRef != NULL) {
+      *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKErrorDomain
+                                                        name:@"content"
+                                                       value:self.dialogContent
+                                                     message:nil];
+    }
 
     return NO;
   }
@@ -150,12 +154,12 @@
       appSwitchParameters[FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_FILTER_KEY] = filtersName;
     }
 
-    NSNumber *minParticipants = [NSNumber numberWithInteger:content.minParticipants];
+    NSNumber *minParticipants = @(content.minParticipants);
     if (minParticipants != nil) {
       appSwitchParameters[FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_MIN_SIZE_KEY] = minParticipants;
     }
 
-    NSNumber *maxParticipants = [NSNumber numberWithInteger:content.maxParticipants];
+    NSNumber *maxParticipants = @(content.maxParticipants);
     if (maxParticipants != nil) {
       appSwitchParameters[FBSDK_CONTEXT_DIALOG_QUERY_PARAMETER_MAX_SIZE_KEY] = maxParticipants;
     }

@@ -154,8 +154,9 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
       NSData *data = [self.delegate videoChunkDataForVideoUploader:self startOffset:startOffset endOffset:endOffset];
       if (data == nil || data.length != chunkSize) {
         [self failVideoUploadForChunkSizeOffset:startOffset endOffset:endOffset];
+      } else {
+        [self _startTransferRequestWithNewOffset:offsetDictionary data:data];
       }
-      [self _startTransferRequestWithNewOffset:offsetDictionary data:data];
     });
   }
 }
@@ -237,7 +238,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
   return shareResults;
 }
 
-- (void)_startTransferRequestWithNewOffset:(NSDictionary *)offsetDictionary data:(NSData *)data
+- (void)_startTransferRequestWithNewOffset:(NSDictionary *)offsetDictionary data:(nonnull NSData *)data
 {
   FBSDKGraphRequestDataAttachment *dataAttachment = [[FBSDKGraphRequestDataAttachment alloc] initWithData:data
                                                                                                  filename:_videoName
