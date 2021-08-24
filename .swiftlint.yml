@@ -66,6 +66,7 @@ only_rules:
   - deployment_target
   - discarded_notification_center_observer
   - discouraged_direct_init
+  - discouraged_optional_boolean
   - duplicate_enum_cases
   - duplicate_imports
   - dynamic_inline
