@@ -178,5 +178,6 @@ only_rules:
   - vertical_parameter_alignment_on_call
   - vertical_whitespace
   - void_return
+  - xct_specific_matcher
   - xctfail_message
   - yoda_condition

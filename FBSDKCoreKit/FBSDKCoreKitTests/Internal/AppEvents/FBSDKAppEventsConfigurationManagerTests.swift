@@ -325,8 +325,8 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
     AppEventsConfigurationManager.loadAppEventsConfiguration {}
 
     // Confirm default state
-    XCTAssertEqual(AppEventsConfigurationManager.cachedAppEventsConfiguration().advertiserIDCollectionEnabled, true)
-    XCTAssertEqual(AppEventsConfigurationManager.cachedAppEventsConfiguration().eventCollectionEnabled, false)
+    XCTAssertTrue(AppEventsConfigurationManager.cachedAppEventsConfiguration().advertiserIDCollectionEnabled)
+    XCTAssertFalse(AppEventsConfigurationManager.cachedAppEventsConfiguration().eventCollectionEnabled)
     // Capture inverted configurations
     connection.capturedCompletion?(nil, RawAppEventsConfigurationResponseFixtures.valid, nil)
     // Copy store state to avoid meaningless test
@@ -348,7 +348,7 @@ class FBSDKAppEventsConfigurationManagerTests: XCTestCase {
       graphRequestConnectionFactory: connectionFactory
     )
     // Confirm configuration is unarchived from store instead of set again from defaults
-    XCTAssertEqual(AppEventsConfigurationManager.cachedAppEventsConfiguration().advertiserIDCollectionEnabled, false)
-    XCTAssertEqual(AppEventsConfigurationManager.cachedAppEventsConfiguration().eventCollectionEnabled, true)
+    XCTAssertFalse(AppEventsConfigurationManager.cachedAppEventsConfiguration().advertiserIDCollectionEnabled)
+    XCTAssertTrue(AppEventsConfigurationManager.cachedAppEventsConfiguration().eventCollectionEnabled)
   }
 }
