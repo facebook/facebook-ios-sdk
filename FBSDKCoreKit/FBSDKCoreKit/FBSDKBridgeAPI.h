@@ -25,6 +25,7 @@
 #import "FBSDKBridgeAPIProtocol.h"
 #import "FBSDKBridgeAPIProtocolType.h"
 #import "FBSDKBridgeAPIRequest.h"
+#import "FBSDKBridgeAPIRequestOpening.h"
 #import "FBSDKBridgeAPIResponse.h"
 #import "FBSDKConstants.h"
 #import "FBSDKURLOpening.h"
@@ -44,15 +45,6 @@ NS_ASSUME_NONNULL_BEGIN
 
  @warning UNSAFE - DO NOT USE
  */
-typedef void (^FBSDKBridgeAPIResponseBlock)(FBSDKBridgeAPIResponse *response)
-NS_SWIFT_NAME(BridgeAPIResponseBlock);
-
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning UNSAFE - DO NOT USE
- */
 typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackURL, NSError *_Nullable error);
 
 /**
@@ -62,7 +54,7 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
  @warning UNSAFE - DO NOT USE
  */
 NS_SWIFT_NAME(BridgeAPI)
-@interface FBSDKBridgeAPI : NSObject
+@interface FBSDKBridgeAPI : NSObject <FBSDKBridgeAPIRequestOpening>
 
 @property (class, nonatomic, readonly, strong) FBSDKBridgeAPI *sharedInstance
 NS_SWIFT_NAME(shared);
@@ -78,11 +70,6 @@ NS_SWIFT_NAME(shared);
                     frameworkLoader:(id<FBSDKDynamicFrameworkResolving>)frameworkLoader
                appURLSchemeProvider:(id<FBSDKAppURLSchemeProviding>)appURLSchemeProvider
 NS_DESIGNATED_INITIALIZER;
-
-- (void)openBridgeAPIRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
-     useSafariViewController:(BOOL)useSafariViewController
-          fromViewController:(nullable UIViewController *)fromViewController
-             completionBlock:(FBSDKBridgeAPIResponseBlock)completionBlock;
 
 - (void)openURLWithSafariViewController:(NSURL *)url
                                  sender:(nullable id<FBSDKURLOpening>)sender

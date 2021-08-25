@@ -1,4 +1,3 @@
-
 // Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
 //
 // You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
@@ -22,15 +21,41 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(InternalUtilityProtocol)
-@protocol FBSDKInternalUtilityProtocol
+@protocol FBSDKInternalUtility
 
+#pragma mark - FB Apps Installed
+
+@property (nonatomic, readonly) BOOL isFacebookAppInstalled;
+
+/**
+  Constructs an NSURL.
+ @param scheme The scheme for the URL.
+ @param host The host for the URL.
+ @param path The path for the URL.
+ @param queryParameters The query parameters for the URL.  This will be converted into a query string.
+ @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
+ @return The URL.
+ */
 - (nullable NSURL *)URLWithScheme:(NSString *)scheme
                              host:(NSString *)host
                              path:(NSString *)path
-                  queryParameters:(NSDictionary<NSString *, id> *)queryParameters
+                  queryParameters:(NSDictionary *)queryParameters
                             error:(NSError *__autoreleasing *)errorRef;
 
-- (BOOL)isFacebookAppInstalled;
+/**
+  Registers a transient object so that it will not be deallocated until unregistered
+ @param object The transient object
+ */
+- (void)registerTransientObject:(id)object;
+
+/**
+  Unregisters a transient object that was previously registered with registerTransientObject:
+ @param object The transient object
+ */
+- (void)unregisterTransientObject:(__weak id)object;
+
+- (void)checkRegisteredCanOpenURLScheme:(NSString *)urlScheme;
+
 @end
 
 NS_ASSUME_NONNULL_END

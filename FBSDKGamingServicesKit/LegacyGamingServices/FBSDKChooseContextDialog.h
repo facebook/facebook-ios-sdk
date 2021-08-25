@@ -19,7 +19,8 @@
 #import "TargetConditionals.h"
 
 @class FBSDKChooseContextContent;
-@protocol FBSDKInternalUtilityProtocol;
+@protocol FBSDKInternalUtility;
+
 #if !TARGET_OS_TV
 
 #import <Foundation/Foundation.h>
@@ -51,7 +52,9 @@ NS_SWIFT_NAME(init(content:delegate:));
  @param delegate The receiver's delegate.
  @param internalUtility The dialog's utility used to build the url and decide how to display the dialog
  */
-+ (instancetype)dialogWithContent:(FBSDKChooseContextContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate internalUtility: (id<FBSDKInternalUtilityProtocol>)internalUtility
++ (instancetype)dialogWithContent:(FBSDKChooseContextContent *)content
+                         delegate:(id<FBSDKContextDialogDelegate>)delegate
+                  internalUtility:(id<FBSDKInternalUtility>)internalUtility
 NS_SWIFT_NAME(init(content:delegate:internalUtility:));
 
 

@@ -20,9 +20,12 @@
 
 #if !TARGET_OS_TV
 
- #import "FBSDKShareDialog.h"
+ #import "FBSDKShareDialog+Internal.h"
 
  #import <Social/Social.h>
+ #import <UIKit/UIApplication.h>
+
+ #import <objc/runtime.h>
 
  #import "FBSDKCoreKitBasicsImportForShareKit.h"
  #import "FBSDKCoreKitImport.h"
@@ -31,13 +34,16 @@
  #import "FBSDKShareConstants.h"
  #import "FBSDKShareDefines.h"
  #import "FBSDKShareExtension.h"
+ #import "FBSDKShareInternalURLOpening.h"
  #import "FBSDKShareLinkContent.h"
  #import "FBSDKShareMediaContent.h"
  #import "FBSDKSharePhoto.h"
  #import "FBSDKSharePhotoContent.h"
  #import "FBSDKShareUtility.h"
+ #import "FBSDKShareUtilityProtocol.h"
  #import "FBSDKShareVideo.h"
  #import "FBSDKShareVideoContent.h"
+ #import "UIApplication+ShareInternalURLOpening.h"
 
  #define FBSDK_SHARE_FEED_METHOD_NAME @"feed"
  #define FBSDK_SHARE_METHOD_CAMERA_MIN_VERSION @"20170417"
@@ -51,23 +57,10 @@
 FBSDKAppEventName FBSDKAppEventNameFBSDKEventShareDialogShow = @"fb_dialog_share_show";
 FBSDKAppEventName FBSDKAppEventNameFBSDKEventShareDialogResult = @"fb_dialog_share_result";
 
-static inline void FBSDKShareDialogValidateAPISchemeRegisteredForCanOpenUrl()
-{
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FBAPI];
-  });
-}
-
-static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanOpenUrl()
-{
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_SHARE_EXTENSION];
-  });
-}
-
 @interface FBSDKShareDialog () <FBSDKWebDialogDelegate>
+
+@property (class, nonatomic) BOOL hasBeenConfigured;
+
 @end
 
  #if FBSDK_SWIFT_PACKAGE
@@ -79,14 +72,144 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   NSMutableArray<NSURL *> *_temporaryFiles;
 }
 
- #pragma mark - Class Methods
+ #pragma mark - Class Properties
 
-+ (void)initialize
+static BOOL _hasBeenConfigured;
+
++ (BOOL)hasBeenConfigured
 {
-  if ([FBSDKShareDialog class] == self) {
-    [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
-  }
+  return _hasBeenConfigured;
 }
+
++ (void)setHasBeenConfigured:(BOOL)hasBeenConfigured
+{
+  _hasBeenConfigured = hasBeenConfigured;
+}
+
+static _Nullable id<FBSDKShareInternalURLOpening> _internalURLOpener;
+
++ (nullable id<FBSDKShareInternalURLOpening>)internalURLOpener
+{
+  return _internalURLOpener;
+}
+
++ (void)setInternalURLOpener:(nullable id<FBSDKShareInternalURLOpening>)internalURLOpener
+{
+  _internalURLOpener = internalURLOpener;
+}
+
+static _Nullable id<FBSDKInternalUtility> _internalUtility;
+
++ (nullable id<FBSDKInternalUtility>)internalUtility
+{
+  return _internalUtility;
+}
+
++ (void)setInternalUtility:(nullable id<FBSDKInternalUtility>)internalUtility
+{
+  _internalUtility = internalUtility;
+  [_internalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
+}
+
+static _Nullable id<FBSDKSettings> _settings;
+
++ (nullable id<FBSDKSettings>)settings
+{
+  return _settings;
+}
+
++ (void)setSettings:(nullable id<FBSDKSettings>)settings
+{
+  _settings = settings;
+}
+
+static _Nullable Class<FBSDKShareUtility> _shareUtility;
+
++ (nullable Class<FBSDKShareUtility>)shareUtility
+{
+  return _shareUtility;
+}
+
++ (void)setShareUtility:(nullable Class<FBSDKShareUtility>)shareUtility
+{
+  _shareUtility = shareUtility;
+}
+
+static _Nullable id<FBSDKBridgeAPIRequestOpening> _bridgeAPIRequestOpener;
+
++ (nullable id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener
+{
+  return _bridgeAPIRequestOpener;
+}
+
++ (void)setBridgeAPIRequestOpener:(nullable id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener
+{
+  _bridgeAPIRequestOpener = bridgeAPIRequestOpener;
+}
+
+ #pragma mark - Class Configuration
+
++ (void)configureWithInternalURLOpener:(nonnull id<FBSDKShareInternalURLOpening>)internalURLOpener
+                       internalUtility:(nonnull id<FBSDKInternalUtility>)internalUtility
+                              settings:(nonnull id<FBSDKSettings>)settings
+                          shareUtility:(nonnull Class<FBSDKShareUtility>)shareUtility
+                bridgeAPIRequestOpener:(nonnull id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener
+{
+  self.internalURLOpener = internalURLOpener;
+  self.internalUtility = internalUtility;
+  self.settings = settings;
+  self.shareUtility = shareUtility;
+  self.bridgeAPIRequestOpener = bridgeAPIRequestOpener;
+
+  self.hasBeenConfigured = YES;
+}
+
++ (void)configureClassDependencies
+{
+  if (self.hasBeenConfigured) {
+    return;
+  }
+
+  [self configureWithInternalURLOpener:UIApplication.sharedApplication
+                       internalUtility:FBSDKInternalUtility.sharedUtility
+                              settings:FBSDKSettings.sharedSettings
+                          shareUtility:[FBSDKShareUtility self]
+                bridgeAPIRequestOpener:FBSDKBridgeAPI.sharedInstance];
+}
+
+static dispatch_once_t validateAPIURLSchemeRegisteredToken;
+
++ (void)validateAPIURLSchemeRegistered
+{
+  dispatch_once(&validateAPIURLSchemeRegisteredToken, ^{
+    [self.class.internalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FBAPI];
+  });
+}
+
+static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
+
++ (void)validateShareExtensionURLSchemeRegistered
+{
+  dispatch_once(&validateShareExtensionURLSchemeRegisteredToken, ^{
+    [self.class.internalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_SHARE_EXTENSION];
+  });
+}
+
++ (void)resetClassDependencies
+{
+  self.internalURLOpener = nil;
+  self.internalUtility = nil;
+  self.settings = nil;
+  self.shareUtility = nil;
+  self.bridgeAPIRequestOpener = nil;
+
+  validateAPIURLSchemeRegisteredToken = 0;
+  validateShareExtensionURLSchemeRegisteredToken = 0;
+
+  self.hasBeenConfigured = NO;
+}
+
+ #pragma mark - Factory Methods
 
 + (instancetype)dialogWithViewController:(nullable UIViewController *)viewController
                              withContent:(id<FBSDKSharingContent>)content
@@ -111,6 +234,14 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 }
 
  #pragma mark - Object Lifecycle
+
+- (instancetype)init
+{
+  [self.class configureClassDependencies];
+
+  self = [super init];
+  return self;
+}
 
 - (void)dealloc
 {
@@ -201,7 +332,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
     }
   } else {
     [self _logDialogShow];
-    [FBSDKInternalUtility.sharedUtility registerTransientObject:self];
+    [self.class.internalUtility registerTransientObject:self];
   }
   return didShow;
 }
@@ -235,7 +366,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
     // not all web dialogs report cancellation, so assume that the share has completed with no additional information
     [self _handleWebResponseParameters:results error:nil cancelled:NO];
   }
-  [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
+  [self.class.internalUtility unregisterTransientObject:self];
 }
 
 - (void)webDialog:(FBSDKWebDialog *)webDialog didFailWithError:(NSError *)error
@@ -245,7 +376,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   }
   [self _cleanUpWebDialog];
   [self _invokeDelegateDidFailWithError:error];
-  [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
+  [self.class.internalUtility unregisterTransientObject:self];
 }
 
 - (void)webDialogDidCancel:(FBSDKWebDialog *)webDialog
@@ -255,7 +386,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   }
   [self _cleanUpWebDialog];
   [self _invokeDelegateDidCancel];
-  [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
+  [self.class.internalUtility unregisterTransientObject:self];
 }
 
  #pragma mark - Helper Methods
@@ -323,12 +454,12 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 - (BOOL)_canShowNative
 {
-  return [FBSDKInternalUtility.sharedUtility isFacebookAppInstalled];
+  return [self.class.internalUtility isFacebookAppInstalled];
 }
 
 - (BOOL)_canShowShareSheet
 {
-  if (![FBSDKInternalUtility.sharedUtility isFacebookAppInstalled]) {
+  if (![self.class.internalUtility isFacebookAppInstalled]) {
     return NO;
   }
 
@@ -341,23 +472,23 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 - (BOOL)_canAttributeThroughShareSheet
 {
-  FBSDKShareDialogValidateAPISchemeRegisteredForCanOpenUrl();
+  [self.class validateAPIURLSchemeRegistered];
   NSString *scheme = FBSDK_CANOPENURL_FBAPI;
   NSString *minimumVersion = FBSDK_SHARE_METHOD_ATTRIBUTED_SHARE_SHEET_MIN_VERSION;
   NSURLComponents *components = [NSURLComponents new];
   components.scheme = [scheme stringByAppendingString:minimumVersion];
   components.path = @"/";
-  return ([[UIApplication sharedApplication] canOpenURL:components.URL]
+  return ([self.class.internalURLOpener canOpenURL:components.URL]
     || [self _canUseFBShareSheet]);
 }
 
 - (BOOL)_canUseFBShareSheet
 {
-  FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanOpenUrl();
+  [self.class validateShareExtensionURLSchemeRegistered];
   NSURLComponents *components = [NSURLComponents new];
   components.scheme = FBSDK_CANOPENURL_SHARE_EXTENSION;
   components.path = @"/";
-  return [[UIApplication sharedApplication] canOpenURL:components.URL];
+  return [self.class.internalURLOpener canOpenURL:components.URL];
 }
 
 - (BOOL)_canUseQuoteInShareSheet
@@ -372,12 +503,12 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 - (BOOL)_supportsShareSheetMinimumVersion:(NSString *)minimumVersion
 {
-  FBSDKShareDialogValidateAPISchemeRegisteredForCanOpenUrl();
+  [self.class validateAPIURLSchemeRegistered];
   NSString *scheme = FBSDK_CANOPENURL_FBAPI;
   NSURLComponents *components = [NSURLComponents new];
   components.scheme = [scheme stringByAppendingString:minimumVersion];
   components.path = @"/";
-  return [[UIApplication sharedApplication] canOpenURL:components.URL];
+  return [self.class.internalURLOpener canOpenURL:components.URL];
 }
 
 - (void)_cleanUpWebDialog
@@ -508,7 +639,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
       if (successfullyBuilt) {
         FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
           [self _handleWebResponseParameters:response.responseParameters error:response.error cancelled:response.isCancelled];
-          [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
+          [self.class.internalUtility unregisterTransientObject:self];
         };
         FBSDKBridgeAPIRequest *request;
         request = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
@@ -517,27 +648,27 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
                                                             methodVersion:nil
                                                                parameters:cParameters
                                                                  userInfo:nil];
-        [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:request
-                                      useSafariViewController:[self _useSafariViewController]
-                                           fromViewController:self.fromViewController
-                                              completionBlock:completionBlock];
+        [self.class.bridgeAPIRequestOpener openBridgeAPIRequest:request
+                                        useSafariViewController:[self _useSafariViewController]
+                                             fromViewController:self.fromViewController
+                                                completionBlock:completionBlock];
       }
     };
 
-    [FBSDKShareUtility buildAsyncWebPhotoContent:shareContent
-                               completionHandler:completion];
+    [self.class.shareUtility buildAsyncWebPhotoContent:shareContent
+                                     completionHandler:completion];
   } else {
     NSString *methodName;
     NSDictionary<NSString *, id> *parameters;
-    if (![FBSDKShareUtility buildWebShareContent:shareContent
-                                      methodName:&methodName
-                                      parameters:&parameters
-                                           error:errorRef]) {
+    if (![self.class.shareUtility buildWebShareContent:shareContent
+                                            methodName:&methodName
+                                            parameters:&parameters
+                                                 error:errorRef]) {
       return NO;
     }
     FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
       [self _handleWebResponseParameters:response.responseParameters error:response.error cancelled:response.isCancelled];
-      [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
+      [self.class.internalUtility unregisterTransientObject:self];
     };
     FBSDKBridgeAPIRequest *request;
     request = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
@@ -546,10 +677,10 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
                                                         methodVersion:nil
                                                            parameters:parameters
                                                              userInfo:nil];
-    [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:request
-                                  useSafariViewController:[self _useSafariViewController]
-                                       fromViewController:self.fromViewController
-                                          completionBlock:completionBlock];
+    [self.class.bridgeAPIRequestOpener openBridgeAPIRequest:request
+                                    useSafariViewController:[self _useSafariViewController]
+                                         fromViewController:self.fromViewController
+                                            completionBlock:completionBlock];
   }
   return YES;
 }
@@ -560,10 +691,10 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
     return NO;
   }
   id<FBSDKSharingContent> shareContent = self.shareContent;
-  NSDictionary *parameters = [FBSDKShareUtility feedShareDictionaryForContent:shareContent];
+  NSDictionary *parameters = [self.class.shareUtility feedShareDictionaryForContent:shareContent];
   FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
     [self _handleWebResponseParameters:response.responseParameters error:response.error cancelled:response.isCancelled];
-    [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
+    [self.class.internalUtility unregisterTransientObject:self];
   };
   FBSDKBridgeAPIRequest *request;
   request = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
@@ -572,10 +703,10 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
                                                       methodVersion:nil
                                                          parameters:parameters
                                                            userInfo:nil];
-  [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:request
-                                useSafariViewController:[self _useSafariViewController]
-                                     fromViewController:self.fromViewController
-                                        completionBlock:completionBlock];
+  [self.class.bridgeAPIRequestOpener openBridgeAPIRequest:request
+                                  useSafariViewController:[self _useSafariViewController]
+                                       fromViewController:self.fromViewController
+                                          completionBlock:completionBlock];
   return YES;
 }
 
@@ -585,7 +716,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
     return NO;
   }
   id<FBSDKSharingContent> shareContent = self.shareContent;
-  NSDictionary *parameters = [FBSDKShareUtility feedShareDictionaryForContent:shareContent];
+  NSDictionary *parameters = [self.class.shareUtility feedShareDictionaryForContent:shareContent];
   _webDialog = [FBSDKWebDialog showWithName:FBSDK_SHARE_FEED_METHOD_NAME
                                  parameters:parameters
                                    delegate:self];
@@ -615,9 +746,9 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   NSString *methodName;
   NSString *methodVersion;
   [self _loadNativeMethodName:&methodName methodVersion:&methodVersion];
-  NSDictionary *parameters = [FBSDKShareUtility parametersForShareContent:self.shareContent
-                                                            bridgeOptions:FBSDKShareBridgeOptionsDefault
-                                                    shouldFailOnDataError:self.shouldFailOnDataError];
+  NSDictionary *parameters = [self.class.shareUtility parametersForShareContent:self.shareContent
+                                                                  bridgeOptions:FBSDKShareBridgeOptionsDefault
+                                                          shouldFailOnDataError:self.shouldFailOnDataError];
   FBSDKBridgeAPIRequest *request;
   request = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeNative
                                                              scheme:scheme
@@ -647,12 +778,12 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
                             forKey:FBSDK_SHARE_RESULT_POST_ID_KEY];
       [self _invokeDelegateDidCompleteWithResults:results];
     }
-    [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
+    [self.class.internalUtility unregisterTransientObject:self];
   };
-  [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:request
-                                useSafariViewController:[self _useSafariViewController]
-                                     fromViewController:self.fromViewController
-                                        completionBlock:completionBlock];
+  [self.class.bridgeAPIRequestOpener openBridgeAPIRequest:request
+                                  useSafariViewController:[self _useSafariViewController]
+                                       fromViewController:self.fromViewController
+                                          completionBlock:completionBlock];
   return YES;
 }
 
@@ -719,7 +850,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
       }
     }
     dispatch_async(dispatch_get_main_queue(), ^{
-      [FBSDKInternalUtility.sharedUtility unregisterTransientObject:self];
+      [self.class.internalUtility unregisterTransientObject:self];
     });
   };
   [fromViewController presentViewController:composeViewController animated:YES completion:nil];
@@ -734,10 +865,10 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   id<FBSDKSharingContent> shareContent = self.shareContent;
   NSString *methodName;
   NSDictionary *parameters;
-  if (![FBSDKShareUtility buildWebShareContent:shareContent
-                                    methodName:&methodName
-                                    parameters:&parameters
-                                         error:errorRef]) {
+  if (![self.class.shareUtility buildWebShareContent:shareContent
+                                          methodName:&methodName
+                                          parameters:&parameters
+                                               error:errorRef]) {
     return NO;
   }
   _webDialog = [FBSDKWebDialog showWithName:methodName
@@ -768,12 +899,14 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
     *errorRef = nil;
   }
 
+  /* UNCRUSTIFY_FORMAT_OFF */
   if (self.shareContent) {
     if ([self.shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]
         || [self.shareContent isKindOfClass:[FBSDKShareLinkContent class]]
         || [self.shareContent isKindOfClass:[FBSDKShareMediaContent class]]
         || [self.shareContent isKindOfClass:[FBSDKSharePhotoContent class]]
-        || [self.shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {} else {
+        || [self.shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
+    } else {
       if (errorRef != NULL) {
         NSString *message = [NSString stringWithFormat:@"Share dialog does not support %@.",
                              NSStringFromClass(self.shareContent.class)];
@@ -784,10 +917,11 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
       return NO;
     }
   }
+  /* UNCRUSTIFY_FORMAT_ON */
 
-  if (![FBSDKShareUtility validateShareContent:self.shareContent
-                                 bridgeOptions:FBSDKShareBridgeOptionsDefault
-                                         error:errorRef]) {
+  if (![self.class.shareUtility validateShareContent:self.shareContent
+                                       bridgeOptions:FBSDKShareBridgeOptionsDefault
+                                               error:errorRef]) {
     return NO;
   }
 
@@ -885,7 +1019,10 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   BOOL containsMedia;
   BOOL containsPhotos;
   BOOL containsVideos;
-  [FBSDKShareUtility testShareContent:shareContent containsMedia:&containsMedia containsPhotos:&containsPhotos containsVideos:&containsVideos];
+  [self.class.shareUtility testShareContent:shareContent
+                              containsMedia:&containsMedia
+                             containsPhotos:&containsPhotos
+                             containsVideos:&containsVideos];
   if (containsPhotos) {
     if ([FBSDKAccessToken currentAccessToken] == nil) {
       if ((errorRef != NULL) && !*errorRef) {
@@ -971,7 +1108,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 {
   id<FBSDKSharingContent> shareContent = self.shareContent;
   if ([shareContent isKindOfClass:[FBSDKShareMediaContent class]]) {
-    if ([FBSDKShareUtility shareMediaContentContainsPhotosAndVideos:(FBSDKShareMediaContent *)shareContent]) {
+    if ([self.class.shareUtility shareMediaContentContainsPhotosAndVideos:(FBSDKShareMediaContent *)shareContent]) {
       if ((errorRef != NULL) && !*errorRef) {
         *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
                                                           name:@"shareContent"
@@ -1031,7 +1168,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 - (BOOL)_validateShareMediaContentAvailability:(FBSDKShareMediaContent *)shareContent error:(NSError **)errorRef
 {
-  if ([FBSDKShareUtility shareMediaContentContainsPhotosAndVideos:shareContent]
+  if ([self.class.shareUtility shareMediaContentContainsPhotosAndVideos:shareContent]
       && self.mode == FBSDKShareDialogModeShareSheet
       && ![self _canUseMMPInShareSheet]) {
     if ((errorRef != NULL) && !*errorRef) {
@@ -1119,12 +1256,12 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 - (NSString *)_calculateInitialText
 {
   NSString *initialText;
-  NSString *const hashtag = [FBSDKShareUtility hashtagStringFromHashtag:self.shareContent.hashtag];
+  NSString *const hashtag = [self.class.shareUtility hashtagStringFromHashtag:self.shareContent.hashtag];
   if ([self _canAttributeThroughShareSheet]) {
     NSMutableDictionary<NSString *, id> *const parameters = [NSMutableDictionary new];
-    NSString *const appID = [FBSDKSettings appID];
+    NSString *const appID = self.class.settings.appID;
     if (appID.length > 0) {
-      [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKSettings appID] forKey:FBSDKShareExtensionParamAppID];
+      [FBSDKTypeUtility dictionary:parameters setObject:appID forKey:FBSDKShareExtensionParamAppID];
     }
     if (hashtag.length > 0) {
       [FBSDKTypeUtility dictionary:parameters setObject:@[hashtag] forKey:FBSDKShareExtensionParamHashtags];

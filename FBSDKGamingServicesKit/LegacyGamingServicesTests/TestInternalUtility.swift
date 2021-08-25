@@ -19,18 +19,17 @@
 import FBSDKCoreKit
 
 class TestInternalUtility: InternalUtilityProtocol {
-
   var scheme: String?
   var host: String?
   var path: String?
   var queryParameters: [AnyHashable: Any]?
-  var isFBAppInstalled: Bool
+  var isFacebookAppInstalled = false
 
   init(isFacebookAppInstalled: Bool) {
-    isFBAppInstalled = isFacebookAppInstalled
+    self.isFacebookAppInstalled = isFacebookAppInstalled
   }
 
-  func url(withScheme scheme: String, host: String, path: String, queryParameters: [String: Any]) throws -> URL {
+  func url(withScheme scheme: String, host: String, path: String, queryParameters: [AnyHashable: Any]) throws -> URL {
     self.scheme = scheme
     self.host = host
     self.path = path
@@ -43,10 +42,11 @@ class TestInternalUtility: InternalUtilityProtocol {
     return returnUrlComponents.url ?? URL(string: "www.facebook.com")!// swiftlint:disable:this force_unwrapping
   }
 
-  func isFacebookAppInstalled() -> Bool {
-    let appInstalled = isFBAppInstalled
-    return appInstalled
-  }
+  func registerTransientObject(_ object: Any) {}
+
+  func unregisterTransientObject(_ object: Any) {}
+
+  func checkRegisteredCanOpenURLScheme(_ urlScheme: String) {}
 }
 
 enum URLConstants {

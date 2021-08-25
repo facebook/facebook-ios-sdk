@@ -71,7 +71,7 @@
 
 + (BOOL)buildWebShareContent:(id<FBSDKSharingContent>)content
                   methodName:(NSString *__autoreleasing *)methodNameRef
-                  parameters:(NSDictionary *__autoreleasing *)parametersRef
+                  parameters:(NSDictionary<NSString *, id> *__autoreleasing *)parametersRef
                        error:(NSError *__autoreleasing *)errorRef
 {
   NSString *methodName = @"share";

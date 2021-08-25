@@ -18,6 +18,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+
 #import "FBSDKInternalUtilityProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -29,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define FBSDK_CANOPENURL_SHARE_EXTENSION @"fbshareextension"
 
 NS_SWIFT_NAME(InternalUtility)
-@interface FBSDKInternalUtility : NSObject <FBSDKInternalUtilityProtocol>
+@interface FBSDKInternalUtility : NSObject <FBSDKInternalUtility>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -95,21 +96,6 @@ NS_SWIFT_NAME(InternalUtility)
 - (BOOL)object:(id)object isEqualToObject:(id)other;
 
 /**
-  Constructs an NSURL.
- @param scheme The scheme for the URL.
- @param host The host for the URL.
- @param path The path for the URL.
- @param queryParameters The query parameters for the URL.  This will be converted into a query string.
- @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
- @return The URL.
- */
-- (nullable NSURL *)URLWithScheme:(NSString *)scheme
-                             host:(NSString *)host
-                             path:(NSString *)path
-                  queryParameters:(NSDictionary *)queryParameters
-                            error:(NSError *__autoreleasing *)errorRef;
-
-/**
   Extracts permissions from a response fetched from me/permissions
  @param responseObject the response
  @param grantedPermissions the set to add granted permissions to
@@ -119,18 +105,6 @@ NS_SWIFT_NAME(InternalUtility)
                     grantedPermissions:(NSMutableSet *)grantedPermissions
                    declinedPermissions:(NSMutableSet *)declinedPermissions
                     expiredPermissions:(NSMutableSet *)expiredPermissions;
-
-/**
-  Registers a transient object so that it will not be deallocated until unregistered
- @param object The transient object
- */
-- (void)registerTransientObject:(id)object;
-
-/**
-  Unregisters a transient object that was previously registered with registerTransientObject:
- @param object The transient object
- */
-- (void)unregisterTransientObject:(__weak id)object;
 
 /**
   validates that the app ID is non-nil, throws an NSException if nil.
@@ -170,11 +144,9 @@ NS_SWIFT_NAME(InternalUtility)
 
 #pragma mark - FB Apps Installed
 
-@property (nonatomic, assign, readonly) BOOL isFacebookAppInstalled;
 @property (nonatomic, assign, readonly) BOOL isMessengerAppInstalled;
 @property (nonatomic, assign, readonly) BOOL isMSQRDPlayerAppInstalled;
 
-- (void)checkRegisteredCanOpenURLScheme:(NSString *)urlScheme;
 - (BOOL)isRegisteredCanOpenURLScheme:(NSString *)urlScheme;
 
 @end

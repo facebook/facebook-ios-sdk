@@ -16,19 +16,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-#import <UIKit/UIApplication.h>
-
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(InternalURLOpener)
-@protocol FBSDKInternalURLOpener
+@protocol FBSDKShareInternalURLOpening
 
 - (BOOL)canOpenURL:(NSURL *)url;
-- (BOOL)openURL:(NSURL *)url;
-- (void)  openURL:(NSURL *)url
-          options:(NSDictionary<UIApplicationOpenExternalURLOptionsKey, id> *)options
-completionHandler:(nullable void (^)(BOOL success))completion;
 
 @end
 

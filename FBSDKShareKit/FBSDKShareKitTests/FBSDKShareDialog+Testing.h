@@ -16,20 +16,30 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-#import <UIKit/UIApplication.h>
+#import "TargetConditionals.h"
+
+#if !TARGET_OS_TV
+
+ #import "FBSDKShareDialog+Internal.h"
+
+@protocol FBSDKShareUtility;
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(InternalURLOpener)
-@protocol FBSDKInternalURLOpener
+@interface FBSDKShareDialog (Testing)
 
-- (BOOL)canOpenURL:(NSURL *)url;
-- (BOOL)openURL:(NSURL *)url;
-- (void)  openURL:(NSURL *)url
-          options:(NSDictionary<UIApplicationOpenExternalURLOptionsKey, id> *)options
-completionHandler:(nullable void (^)(BOOL success))completion;
++ (void)configureWithInternalURLOpener:(id<FBSDKShareInternalURLOpening>)internalURLOpener
+                       internalUtility:(id<FBSDKInternalUtility>)internalUtility
+                              settings:(id<FBSDKSettings>)settings
+                          shareUtility:(Class<FBSDKShareUtility>)shareUtility
+                bridgeAPIRequestOpener:(id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener;
+
++ (void)configureClassDependencies;
+
++ (void)resetClassDependencies;
 
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

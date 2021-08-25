@@ -46,7 +46,7 @@
 
 @implementation FBSDKChooseContextDialog
 {
-  id<FBSDKInternalUtilityProtocol> _internalUtility;
+  id<FBSDKInternalUtility> _internalUtility;
 }
 
 @synthesize dialogContent = _dialogContent;
@@ -60,7 +60,9 @@
   return dialog;
 }
 
-+ (instancetype)dialogWithContent:(FBSDKChooseContextContent *)content delegate:(id<FBSDKContextDialogDelegate>)delegate internalUtility:(id<FBSDKInternalUtilityProtocol>)internalUtility
++ (instancetype)dialogWithContent:(FBSDKChooseContextContent *)content
+                         delegate:(id<FBSDKContextDialogDelegate>)delegate
+                  internalUtility:(id<FBSDKInternalUtility>)internalUtility
 {
   FBSDKChooseContextDialog *dialog = [self new];
   dialog.dialogContent = content;

@@ -146,7 +146,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
   return [FBSDKTypeUtility JSONObjectWithData:data options:NSJSONReadingAllowFragments error:errorRef];
 }
 
-+ (nullable NSString *)queryStringWithDictionary:(NSDictionary<id, id> *)dictionary
++ (nullable NSString *)queryStringWithDictionary:(NSDictionary<NSString *, id> *)dictionary
                                            error:(NSError *__autoreleasing *)errorRef
                             invalidObjectHandler:(FBSDKInvalidObjectHandler)invalidObjectHandler
 {

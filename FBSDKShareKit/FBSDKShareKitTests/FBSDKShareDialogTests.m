@@ -29,17 +29,31 @@
 @import FBSDKCoreKit;
 #endif
 
-// #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKHashtag.h"
 #import "FBSDKShareDefines.h"
-#import "FBSDKShareDialog.h"
+#import "FBSDKShareDialog+Testing.h"
 #import "FBSDKShareKitTestUtility.h"
 #import "FBSDKShareModelTestUtility.h"
+#import "FBSDKShareUtility.h"
 
 @interface FBSDKShareDialogTests : XCTestCase
 @end
 
 @implementation FBSDKShareDialogTests
+
+- (void)setUp
+{
+  [super setUp];
+
+  [FBSDKShareDialog resetClassDependencies];
+}
+
+- (void)tearDown
+{
+  [FBSDKShareDialog resetClassDependencies];
+
+  [super tearDown];
+}
 
 - (void)_mockApplicationForURL:(NSURL *)URL canOpen:(BOOL)canOpen usingBlock:(void (^)(void))block
 {
@@ -57,6 +71,37 @@
 }
 
 #pragma mark - Native
+
+- (void)testClassDependencies
+{
+  [FBSDKShareDialog new];
+
+  XCTAssertEqualObjects(
+    FBSDKShareDialog.internalURLOpener,
+    UIApplication.sharedApplication,
+    @"FBSDKShareDialog should use the shared application for its default internal URL opener dependency"
+  );
+  XCTAssertEqualObjects(
+    FBSDKShareDialog.internalUtility,
+    FBSDKInternalUtility.sharedUtility,
+    @"FBSDKShareDialog should use the shared utility for its default internal utility dependency"
+  );
+  XCTAssertEqualObjects(
+    FBSDKShareDialog.settings,
+    FBSDKSettings.sharedSettings,
+    @"FBSDKShareDialog should use the shared settings for its default settings dependency"
+  );
+  XCTAssertEqualObjects(
+    FBSDKShareDialog.shareUtility,
+    FBSDKShareUtility.self,
+    @"FBSDKShareDialog should use the share utility class for its default share utility dependency"
+  );
+  XCTAssertEqualObjects(
+    FBSDKShareDialog.bridgeAPIRequestOpener,
+    FBSDKBridgeAPI.sharedInstance,
+    @"FBSDKShareDialog should use the shared bridge API for its default bridge API request opening dependency"
+  );
+}
 
 - (void)testCanShowNativeDialogWithoutShareContent
 {
@@ -563,8 +608,9 @@
   [[[mockApplication stub] andReturn:mockApplication] sharedApplication];
   [[[mockApplication stub] andReturnValue:@YES] canOpenURL:OCMOCK_ANY];
   id mockInternalUtility = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
-  id settingsClassMock = [OCMockObject niceMockForClass:[FBSDKSettings class]];
-  OCMStub(ClassMethod([settingsClassMock appID])).andReturn(appID);
+  id settingsMock = [OCMockObject niceMockForClass:FBSDKSettings.class];
+  [[[settingsMock stub] andReturn:settingsMock] sharedSettings];
+  [[[settingsMock stub] andReturn:appID] appID];
 
   id mockSLController = [OCMockObject niceMockForClass:[SLComposeViewController class]];
   [[[mockSLController stub] andReturn:mockSLController] composeViewControllerForServiceType:OCMOCK_ANY];
@@ -584,6 +630,9 @@
     && ((expectedJSON == nil && json == nil) || [expectedJSON isEqual:json]);
   }]];
 
+  [FBSDKShareDialog resetClassDependencies];
+  [FBSDKShareDialog configureClassDependencies];
+
   UIViewController *vc = [UIViewController new];
   dialog.fromViewController = vc;
   dialog.mode = FBSDKShareDialogModeShareSheet;
@@ -591,7 +640,7 @@
   [mockSLController verify];
 
   [mockSLController stopMocking];
-  [settingsClassMock stopMocking];
+  [settingsMock stopMocking];
   [mockApplication stopMocking];
   [mockInternalUtility stopMocking];
 }
@@ -622,6 +671,9 @@
                           useSafariViewController:(BOOL)OCMOCK_ANY
                                fromViewController:OCMOCK_ANY
                                   completionBlock:OCMOCK_ANY];
+
+  [FBSDKShareDialog resetClassDependencies];
+  [FBSDKShareDialog configureClassDependencies];
 
   UIViewController *vc = [UIViewController new];
   dialog.fromViewController = vc;

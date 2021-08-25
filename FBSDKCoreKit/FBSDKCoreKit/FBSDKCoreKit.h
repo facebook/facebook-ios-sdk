@@ -52,6 +52,7 @@
 #import "FBSDKIcon.h"
 #import "FBSDKImpressionTrackingButton.h"
 #import "FBSDKInternalUtility.h"
+#import "FBSDKInternalUtilityProtocol.h"
 #import "FBSDKLocation.h"
 #import "FBSDKLogger.h"
 #import "FBSDKLoggingBehavior.h"

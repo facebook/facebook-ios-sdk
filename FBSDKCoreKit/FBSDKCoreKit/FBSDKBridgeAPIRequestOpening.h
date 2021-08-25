@@ -21,10 +21,11 @@
 #if !TARGET_OS_TV
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIViewController.h>
 
-#import "FBSDKBridgeAPIRequest.h"
+#import "FBSDKBridgeAPIResponse.h"
 
-@class FBSDKBridgeAPIResponse;
+@protocol FBSDKBridgeAPIRequestProtocol;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -34,32 +35,13 @@ NS_ASSUME_NONNULL_BEGIN
 
  @warning UNSAFE - DO NOT USE
  */
-typedef void (^FBSDKBridgeAPIResponseBlock)(FBSDKBridgeAPIResponse *response)
-NS_SWIFT_NAME(BridgeAPIResponseBlock);
+NS_SWIFT_NAME(BridgeAPIRequestOpening)
+@protocol FBSDKBridgeAPIRequestOpening <NSObject>
 
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning UNSAFE - DO NOT USE
- */
-NS_SWIFT_NAME(BridgeAPIResponse)
-@interface FBSDKBridgeAPIResponse : NSObject <NSCopying, NSObject>
-
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
-
-+ (instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request error:(NSError *)error;
-+ (nullable instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
-                                 responseURL:(NSURL *)responseURL
-                           sourceApplication:(nullable NSString *)sourceApplication
-                                       error:(NSError *__autoreleasing *)errorRef;
-+ (instancetype)bridgeAPIResponseCancelledWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request;
-
-@property (nonatomic, assign, readonly, getter=isCancelled) BOOL cancelled;
-@property (nullable, nonatomic, copy, readonly) NSError *error;
-@property (nonatomic, copy, readonly) NSObject<FBSDKBridgeAPIRequestProtocol> *request;
-@property (nullable, nonatomic, copy, readonly) NSDictionary *responseParameters;
+- (void)openBridgeAPIRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
+     useSafariViewController:(BOOL)useSafariViewController
+          fromViewController:(nullable UIViewController *)fromViewController
+             completionBlock:(FBSDKBridgeAPIResponseBlock)completionBlock;
 
 @end
 
