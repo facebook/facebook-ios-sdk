@@ -332,17 +332,11 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
     return NO;
   }
 
-  Class composeViewControllerClass = [fbsdkdfl_SLComposeViewControllerClass() class];
-  if (!composeViewControllerClass) {
-    return NO;
-  }
   // iOS 11 returns NO for `isAvailableForServiceType` but it will still work
-  NSString *facebookServiceType = fbsdkdfl_SLServiceTypeFacebook();
   NSOperatingSystemVersion iOS11Version = { .majorVersion = 11, .minorVersion = 0, .patchVersion = 0 };
-  if (![NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:iOS11Version] && ![composeViewControllerClass isAvailableForServiceType:facebookServiceType]) {
-    return NO;
-  }
-  return YES;
+  BOOL operatingSystemIsAdequate = [NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:iOS11Version];
+  BOOL composerIsAvailable = [SLComposeViewController isAvailableForServiceType:fbsdkdfl_SLServiceTypeFacebook()];
+  return operatingSystemIsAdequate || composerIsAvailable;
 }
 
 - (BOOL)_canAttributeThroughShareSheet
@@ -688,10 +682,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   NSArray *URLs = [self _contentURLs];
   NSArray *videoURLs = [self _contentVideoURLs];
 
-  Class composeViewControllerClass = [fbsdkdfl_SLComposeViewControllerClass() class];
-  NSString *facebookServiceType = fbsdkdfl_SLServiceTypeFacebook();
-  SLComposeViewController *composeViewController;
-  composeViewController = [composeViewControllerClass composeViewControllerForServiceType:facebookServiceType];
+  SLComposeViewController *composeViewController = [SLComposeViewController composeViewControllerForServiceType:fbsdkdfl_SLServiceTypeFacebook()];
 
   if (!composeViewController) {
     if (canShowErrorRef != NULL) {

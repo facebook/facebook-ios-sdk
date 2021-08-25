@@ -159,6 +159,7 @@
 		75D3E693E55E5005B285EC82 /* FBSDKLikeButton+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C53EF64CE01F5F2A2EA7D52 /* FBSDKLikeButton+Internal.h */; };
 		798881D315DBF95E85F54382 /* FBSDKCameraEffectTextures.m in Sources */ = {isa = PBXBuildFile; fileRef = A7D79B2CCDE4AD588545029B /* FBSDKCameraEffectTextures.m */; };
 		7D9F4B0438F4301D040D5E50 /* FBSDKShareDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = BCC72A288EBA55181A7ADEB7 /* FBSDKShareDefines.h */; };
+		7DADADE2C958240373756E33 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 100E91BD16BA1AB00C2E0AD4 /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		7E67B4915C1E34A51F979C49 /* FBSDKShareCameraEffectContent.m in Sources */ = {isa = PBXBuildFile; fileRef = B27012FE44483B0D6DBCEC05 /* FBSDKShareCameraEffectContent.m */; };
 		7F1CC4470F945C4006F8BA73 /* FBSDKSharePhotoContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 94D49E91B5AE45E036246AD6 /* FBSDKSharePhotoContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80D6EBAAC66EE6482525E421 /* FBSDKShareVideo.h in Headers */ = {isa = PBXBuildFile; fileRef = A6CBE1FA6105EA2716F7F026 /* FBSDKShareVideo.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -467,6 +468,7 @@
 		0D034C19B57361B3418C2B70 /* FBSDKGameRequestURLProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKGameRequestURLProvider.h; sourceTree = "<group>"; };
 		0EB733743CB884A69C1A962B /* FBSDKShareKit-tvOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBSDKShareKit-tvOS.xcconfig"; sourceTree = "<group>"; };
 		0F380D49BA81782D2CCC6AD2 /* FBSDKLikeObjectType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKLikeObjectType.h; sourceTree = "<group>"; };
+		100E91BD16BA1AB00C2E0AD4 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		1061E2C7E3933B364D3EDEEC /* FBSDKSharePhoto.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKSharePhoto.h; sourceTree = "<group>"; };
 		11B2FC5C1A7AB6BB53B1804E /* FBSDKHashtagTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKHashtagTests.m; sourceTree = "<group>"; };
 		19A9475B92CE2C6CC16C9090 /* FBSDKHasher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKHasher.m; sourceTree = "<group>"; };
@@ -589,6 +591,7 @@
 				0A14E1D9DFD664414ADA30C7 /* UIKit.framework in Frameworks */,
 				86145DC2500C376797EE1555 /* CoreGraphics.framework in Frameworks */,
 				97CF3F5E44B2EED511BE74F0 /* Photos.framework in Frameworks */,
+				7DADADE2C958240373756E33 /* Social.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -709,6 +712,7 @@
 			children = (
 				DA93E28CFC5D7742BB0542D4 /* CoreGraphics.framework */,
 				09D2609E6E872DEE21F325E1 /* Photos.framework */,
+				100E91BD16BA1AB00C2E0AD4 /* Social.framework */,
 				EF41DC65FA8F3AE2A363971C /* UIKit.framework */,
 			);
 			name = Frameworks;

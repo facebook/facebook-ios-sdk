@@ -116,6 +116,8 @@ targets:
       - sdk: UIKit.framework
       - sdk: CoreGraphics.framework
       - sdk: Photos.framework
+      - sdk: Social.framework
+        weak: true
     preBuildScripts:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh
