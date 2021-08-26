@@ -31,7 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 NS_SWIFT_NAME(FBDeviceButton)
 @interface FBSDKDeviceButton : FBSDKButton
-
+- (CGSize)sizeThatFits:(CGSize)size attributedTitle:(NSAttributedString *)title;
+- (NSAttributedString *)attributedTitleStringFromString:(NSString *)string;
 @end
 
 NS_ASSUME_NONNULL_END

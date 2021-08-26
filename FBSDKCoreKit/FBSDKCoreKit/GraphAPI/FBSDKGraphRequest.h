@@ -97,6 +97,15 @@ NS_SWIFT_NAME(GraphRequest)
 NS_DESIGNATED_INITIALIZER;
 
 /**
+  Initializes a new instance.
+ @param graphPath the graph path (e.g., @"me").
+ @param parameters the optional parameters dictionary.
+ @param requestFlags  flags that indicate how a graph request should be treated in various scenarios
+ */
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(nullable NSDictionary<NSString *, id> *)parameters
+                            flags:(FBSDKGraphRequestFlags)requestFlags;
+/**
   The request parameters.
  */
 @property (nonatomic, copy) NSDictionary<NSString *, id> *parameters;

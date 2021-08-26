@@ -36,6 +36,22 @@ NS_SWIFT_NAME(FBButton)
                     title:(nullable NSString *)title
           backgroundColor:(nullable UIColor *)backgroundColor
          highlightedColor:(nullable UIColor *)highlightedColor;
+
+/** 
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
+- (void) configureWithIcon:(nullable FBSDKIcon *)icon
+                     title:(nullable NSString *)title
+           backgroundColor:(nullable UIColor *)backgroundColor
+          highlightedColor:(nullable UIColor *)highlightedColor
+             selectedTitle:(nullable NSString *)selectedTitle
+              selectedIcon:(nullable FBSDKIcon *)selectedIcon
+             selectedColor:(nullable UIColor *)selectedColor
+  selectedHighlightedColor:(nullable UIColor *)selectedHighlightedColor;
+- (UIColor *)defaultBackgroundColor;
 @end
 
 NS_ASSUME_NONNULL_END

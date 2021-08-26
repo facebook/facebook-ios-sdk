@@ -18,12 +18,6 @@
 
 #import "FBSDKDeviceLoginButton.h"
 
-#ifdef FBSDKCOCOAPODS
- #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
- #import "FBSDKCoreKit+Internal.h"
-#endif
-
 #if defined FBSDK_SWIFT_PACKAGE
 @import FBSDKCoreKit_Basics;
 #else
