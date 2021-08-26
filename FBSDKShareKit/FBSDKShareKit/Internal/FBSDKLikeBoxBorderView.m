@@ -22,12 +22,6 @@
 
  #import "FBSDKLikeBoxBorderView.h"
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
-
  #define FBSDK_LIKE_BOX_BORDER_CARET_WIDTH 6.0
  #define FBSDK_LIKE_BOX_BORDER_CARET_HEIGHT 3.0
  #define FBSDK_LIKE_BOX_BORDER_CARET_PADDING 3.0
@@ -132,7 +126,7 @@
 
 - (CGSize)intrinsicContentSize
 {
-  return FBSDKEdgeInsetsOutsetSize(self.contentView.intrinsicContentSize, self.contentInsets);
+  return [self _outsetSizeForSize:self.contentView.intrinsicContentSize andInsets:self.contentInsets];
 }
 
 - (void)layoutSubviews
@@ -145,9 +139,9 @@
 - (CGSize)sizeThatFits:(CGSize)size
 {
   UIEdgeInsets contentInsets = self.contentInsets;
-  size = FBSDKEdgeInsetsInsetSize(size, contentInsets);
+  size = [self _outsetSizeForSize:size andInsets:contentInsets];
   size = [self.contentView sizeThatFits:size];
-  size = FBSDKEdgeInsetsOutsetSize(size, contentInsets);
+  size = [self _outsetSizeForSize:size andInsets:contentInsets];
   return size;
 }
 
@@ -319,6 +313,14 @@ static inline CGFloat FBSDKPointsForScreenPixels(FBSDKLimitFunctionType limitFun
                                                  CGFloat pointValue)
 {
   return limitFunction(pointValue * screenScale) / screenScale;
+}
+
+- (CGSize)_outsetSizeForSize:(CGSize)size andInsets:(UIEdgeInsets)insets
+{
+  return CGSizeMake(
+    insets.left + size.width + insets.right,
+    insets.top + size.height + insets.bottom
+  );
 }
 
 - (UIEdgeInsets)_borderInsets

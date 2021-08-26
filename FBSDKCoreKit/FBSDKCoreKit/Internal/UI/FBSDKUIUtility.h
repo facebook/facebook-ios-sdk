@@ -28,17 +28,6 @@ static inline CGSize FBSDKEdgeInsetsInsetSize(CGSize size, UIEdgeInsets insets)
   return UIEdgeInsetsInsetRect(rect, insets).size;
 }
 
-/**
-  Outsets a CGSize with the insets in a UIEdgeInsets.
- */
-static inline CGSize FBSDKEdgeInsetsOutsetSize(CGSize size, UIEdgeInsets insets)
-{
-  return CGSizeMake(
-    insets.left + size.width + insets.right,
-    insets.top + size.height + insets.bottom
-  );
-}
-
 static inline CGSize FBSDKTextSize(NSString *text,
                                    UIFont *font,
                                    CGSize constrainedSize,
