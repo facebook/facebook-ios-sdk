@@ -510,6 +510,7 @@
 		3FBAD12649E7C5956B01316C /* FBSDKLikeActionController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKLikeActionController.m; sourceTree = "<group>"; };
 		41B4A9DA50733DF7DB505049 /* FBSDKGameRequestContent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKGameRequestContent.m; sourceTree = "<group>"; };
 		436C852AC42922873B1ADF9F /* FBSDKSharePhotoContent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKSharePhotoContent.m; sourceTree = "<group>"; };
+		44315CF4392A02226BB28A73 /* FBSDKMessageDialog+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKMessageDialog+Testing.h"; sourceTree = "<group>"; };
 		453A72AE7ECF29B721108B9F /* FBSDKShareKitTests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = FBSDKShareKitTests.xcconfig; sourceTree = "<group>"; };
 		476361D501517937DBD9A9E3 /* FBSDKShareVideoContent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKShareVideoContent.m; sourceTree = "<group>"; };
 		4B0CA6FAF7EEEB5DEF7CDBE9 /* bicycle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bicycle.png; sourceTree = "<group>"; };
@@ -871,6 +872,7 @@
 				FBA4A201777524A27F5EEAED /* FBSDKShareKitTestUtility.m */,
 				FD6D358432BCF817AF2C513C /* Info.plist */,
 				3DE1ABD032A00EEB79912995 /* test-image.jpeg */,
+				CDF1744FC11463AAF688078E /* Interfaces */,
 				85FD5B9197B1F1E349250D6F /* Internal */,
 				FBE23EFEC87671089B28BB70 /* Models */,
 			);
@@ -887,6 +889,14 @@
 				C2F9CFE8D8E4BEF1F596541C /* FBSDKShareKitTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		CDF1744FC11463AAF688078E /* Interfaces */ = {
+			isa = PBXGroup;
+			children = (
+				44315CF4392A02226BB28A73 /* FBSDKMessageDialog+Testing.h */,
+			);
+			path = Interfaces;
 			sourceTree = "<group>";
 		};
 		FBE23EFEC87671089B28BB70 /* Models */ = {

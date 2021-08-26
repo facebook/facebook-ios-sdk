@@ -16,9 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKShareKit/FBSDKShareKit.h>
+#import "FBSDKInternalUtility.h"
 
-#import "FBSDKMessageDialog.h"
-#import "FBSDKMessageDialog+Testing.h"
-#import "FBSDKShareDialog.h"
-#import "FBSDKShareModelTestUtility.h"
+NS_ASSUME_NONNULL_BEGIN
+
+NS_SWIFT_NAME(AppAvailabilityChecker)
+@protocol FBSDKAppAvailabilityChecker
+
+@property (nonatomic, assign, readonly) BOOL isMessengerAppInstalled;
+
+@end
+
+NS_ASSUME_NONNULL_END

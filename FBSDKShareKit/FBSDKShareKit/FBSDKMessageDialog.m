@@ -33,6 +33,12 @@
 
  #define FBSDK_MESSAGE_DIALOG_APP_SCHEME @"fb-messenger-share-api"
 
+@interface FBSDKMessageDialog ()
+
+@property (nonatomic) id<FBSDKAppAvailabilityChecker> appAvailabilityChecker;
+
+@end
+
 @implementation FBSDKMessageDialog
 
 FBSDKAppEventName FBSDKAppEventNameFBSDKEventMessengerShareDialogShow = @"fb_messenger_dialog_share_show";
@@ -52,16 +58,30 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
 + (instancetype)dialogWithContent:(id<FBSDKSharingContent>)content
                          delegate:(nullable id<FBSDKSharingDelegate>)delegate
 {
-  FBSDKMessageDialog *dialog = [self new];
-  dialog.shareContent = content;
-  dialog.delegate = delegate;
-  return dialog;
+  return [self dialogWithContent:content
+                        delegate:delegate
+          appAvailabilityChecker:FBSDKInternalUtility.sharedUtility
+  ];
 }
 
 + (instancetype)showWithContent:(id<FBSDKSharingContent>)content delegate:(id<FBSDKSharingDelegate>)delegate
 {
-  FBSDKMessageDialog *dialog = [self dialogWithContent:content delegate:delegate];
+  FBSDKMessageDialog *dialog = [self dialogWithContent:content
+                                              delegate:delegate
+                                appAvailabilityChecker:FBSDKInternalUtility.sharedUtility
+  ];
   [dialog show];
+  return dialog;
+}
+
++ (instancetype)dialogWithContent:(id<FBSDKSharingContent>)content
+                         delegate:(id<FBSDKSharingDelegate>)delegate
+           appAvailabilityChecker:(id<FBSDKAppAvailabilityChecker>)appAvailabilityChecker
+{
+  FBSDKMessageDialog *dialog = [self new];
+  dialog.shareContent = content;
+  dialog.delegate = delegate;
+  dialog.appAvailabilityChecker = appAvailabilityChecker;
   return dialog;
 }
 
@@ -150,7 +170,8 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
 {
   BOOL useNativeDialog = [[FBSDKShareDialogConfiguration new]
                           shouldUseNativeDialogForDialogName:FBSDKDialogConfigurationNameMessage];
-  return (useNativeDialog && [FBSDKInternalUtility.sharedUtility isMessengerAppInstalled]);
+
+  return (useNativeDialog && [self.appAvailabilityChecker isMessengerAppInstalled]);
 }
 
 - (void)_handleCompletionWithDialogResults:(NSDictionary *)results response:(FBSDKBridgeAPIResponse *)response

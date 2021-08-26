@@ -16,9 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKShareKit/FBSDKShareKit.h>
+@protocol FBSDKAppInstallCheck;
 
-#import "FBSDKMessageDialog.h"
-#import "FBSDKMessageDialog+Testing.h"
-#import "FBSDKShareDialog.h"
-#import "FBSDKShareModelTestUtility.h"
+@interface FBSDKMessageDialog (Testing)
+
+@property (nonatomic) id<FBSDKAppAvailabilityChecker> appAvailabilityChecker;
+
++ (instancetype)dialogWithContent:(id<FBSDKSharingContent>)content
+                         delegate:(id<FBSDKSharingDelegate>)delegate
+           appAvailabilityChecker:(id<FBSDKAppAvailabilityChecker>)appAvailabilityChecker
+NS_SWIFT_NAME(init(content:delegate:appAvailabilityChecker:));
+
+@end
