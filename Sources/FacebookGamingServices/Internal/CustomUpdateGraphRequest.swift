@@ -25,12 +25,6 @@ import Foundation
 
 struct ServerResult: Codable {
   var success: Bool
-
-  init(from decoder: Decoder) throws {
-    let container = try decoder.container(keyedBy: CodingKeys.self)
-    let succesvalue = try container.decode(Int.self, forKey: .success)
-    success = succesvalue == 1 ? true : false
-  }
 }
 
 /**
@@ -117,7 +111,7 @@ public class CustomUpdateGraphRequest {
         return completion(.failure(.server(error)))
       }
       guard
-        let result = result,
+        let result = result as? [String: Bool],
         let data = try? JSONSerialization.data(withJSONObject: result, options: []),
         let serverResult = try? JSONDecoder().decode(ServerResult.self, from: data)
       else {
