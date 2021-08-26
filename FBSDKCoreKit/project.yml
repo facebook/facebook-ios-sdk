@@ -48,39 +48,15 @@ targets:
     type: framework
     platform: iOS
     sources:
-      - path: FBSDKCoreKit/AppEvents
-        createIntermediateGroups: true
-        excludes:
-          - Internal
+      - path: FBSDKCoreKit/include
         headerVisibility: public
-      - path: FBSDKCoreKit/AppEvents/Internal
-        headerVisibility: project
-        createIntermediateGroups: true
-      - path: FBSDKCoreKit/AppLink
-        createIntermediateGroups: true
-        excludes:
-          - Internal
-        headerVisibility: public
-      - path: FBSDKCoreKit/AppLink/Internal
-        headerVisibility: project
-        createIntermediateGroups: true
-      - path: FBSDKCoreKit/GraphAPI
-        createIntermediateGroups: true
-      - path: FBSDKCoreKit/Internal
-        createIntermediateGroups: true
-        excludes:
-          - Device/*.[h,m]
-        headerVisibility: project
       - path: FBSDKCoreKit
-        headerVisibility: public
+        createIntermediateGroups: true
+        headerVisibility: project
         excludes:
-          - AppEvents
-          - AppLink
-          - GraphAPI
-          - Internal
           - include
-          - FBSDKDeviceButton.m
-          - FBSDKDeviceViewControllerBase.m
+          - FBSDKCoreKit.modulemap
+          - Device/*.[h,m]
           - Info.plist
       - path: FBSDKCoreKit/Info.plist
         group: FBSDKCoreKit/Supporting Files
@@ -110,38 +86,15 @@ targets:
     platform: iOS
     productName: FBSDKCoreKit
     sources:
-      - path: FBSDKCoreKit/AppEvents
-        createIntermediateGroups: true
-        excludes:
-          - Internal
+      - path: FBSDKCoreKit/include
         headerVisibility: public
-      - path: FBSDKCoreKit/AppEvents/Internal
+      - path: FBSDKCoreKit
         headerVisibility: project
-        createIntermediateGroups: true
-      - path: FBSDKCoreKit/AppLink
-        createIntermediateGroups: true
-        excludes:
-          - Internal
-        headerVisibility: public
-      - path: FBSDKCoreKit/AppLink/Internal
-        headerVisibility: project
-        createIntermediateGroups: true
-      - path: FBSDKCoreKit/GraphAPI
-        createIntermediateGroups: true
-      - path: FBSDKCoreKit/Internal
         createIntermediateGroups: true
         excludes:
           - Device/*.[h,m]
-        headerVisibility: project
-      - path: FBSDKCoreKit
-        headerVisibility: public
-        excludes:
-          - AppEvents
-          - AppLink
-          - GraphAPI
-          - Internal
           - include
-          - FBSDKDeviceButton.m
+          - FBSDKCoreKit.modulemap
           - FBSDKDeviceViewControllerBase.m
           - Info.plist
       - path: FBSDKCoreKit/Info.plist
@@ -184,11 +137,6 @@ targets:
     productName: FBSDKCoreKit
     sources:
       - path: FBSDKCoreKit/AppEvents
-        createIntermediateGroups: true
-        excludes:
-          - Internal
-        headerVisibility: public
-      - path: FBSDKCoreKit/AppEvents/Internal
         headerVisibility: project
         createIntermediateGroups: true
         excludes:
@@ -233,7 +181,7 @@ targets:
           - UI/FBSDKHumanSilhouette*
           - WebDialog
       - path: FBSDKCoreKit
-        headerVisibility: public
+        headerVisibility: project
         excludes:
           - AppEvents
           - AppLink
@@ -249,8 +197,24 @@ targets:
           - FBSDKURL*
           - FBSDKURLOpening*
           - FBSDKWebDialog*
-          - FBSDKWindowFinding*
+          - FBSDKCoreKit.modulemap
           - Info.plist
+      - path: FBSDKCoreKit/include
+        headerVisibility: public
+        excludes:
+          - FBSDKAppLink*
+          - FBSDKBridgeAPI*
+          - FBSDKGraphErrorRecoveryProcessor*
+          - FBSDKBridgeAPI*
+          - FBSDKMeasurementEvent*
+          - FBSDKMutableCopying*
+          - FBSDKProfile*
+          - FBSDKShareDialogConfiguration*
+          - FBSDKURL*
+          - FBSDKURLOpening*
+          - FBSDKWebDialog*
+          - FBSDKWebViewAppLinkResolver*
+          - FBSDKWindowFinding*
       - path: FBSDKCoreKit/Info.plist
         group: FBSDKCoreKit/Supporting Files
         createIntermediateGroups: true
@@ -275,11 +239,6 @@ targets:
     productName: FBSDKCoreKit
     sources:
       - path: FBSDKCoreKit/AppEvents
-        createIntermediateGroups: true
-        excludes:
-          - Internal
-        headerVisibility: public
-      - path: FBSDKCoreKit/AppEvents/Internal
         headerVisibility: project
         createIntermediateGroups: true
         excludes:
@@ -324,7 +283,7 @@ targets:
           - UI/FBSDKHumanSilhouette*
           - WebDialog
       - path: FBSDKCoreKit
-        headerVisibility: public
+        headerVisibility: project
         excludes:
           - AppEvents
           - AppLink
@@ -333,6 +292,7 @@ targets:
           - Internal
           - include
           - FBSDKBridgeAPI*
+          - FBSDKCoreKit.modulemap
           - FBSDKMeasurementEvent*
           - FBSDKMutableCopying*
           - FBSDKProfile*
@@ -340,6 +300,23 @@ targets:
           - FBSDKURL*
           - FBSDKURLOpening*
           - FBSDKWebDialog*
+          - FBSDKWindowFinding*
+          - Info.plist
+      - path: FBSDKCoreKit/include
+        headerVisibility: public
+        excludes:
+          - FBSDKAppLink*
+          - FBSDKBridgeAPI*
+          - FBSDKGraphErrorRecoveryProcessor*
+          - FBSDKBridgeAPI*
+          - FBSDKMeasurementEvent*
+          - FBSDKMutableCopying*
+          - FBSDKProfile*
+          - FBSDKShareDialogConfiguration*
+          - FBSDKURL*
+          - FBSDKURLOpening*
+          - FBSDKWebDialog*
+          - FBSDKWebViewAppLinkResolver*
           - FBSDKWindowFinding*
           - Info.plist
       - path: FBSDKCoreKit/Info.plist

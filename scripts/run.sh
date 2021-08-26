@@ -81,19 +81,19 @@ main() {
 
     SDK_VERSION_FILES=(
       "Configurations/Version.xcconfig"
-      "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKitVersions.h"
+      "FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
       "Sources/FBAEMKit/FBAEMKitVersions.h"
       "Sources/FBSDKCoreKit_Basics/FBSDKCrashHandler.m"
     )
 
     SDK_GRAPH_API_VERSION_FILES=(
-      "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKitVersions.h"
+      "FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
       "FBSDKCoreKit/FBSDKCoreKitTests/GraphRequestTests.swift"
       "Sources/FBAEMKit/FBAEMKitVersions.h"
       "Sources/FBAEMKit/FBAEMNetworker.m"
     )
 
-    SDK_MAIN_VERSION_FILE="FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKitVersions.h"
+    SDK_MAIN_VERSION_FILE="FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
 
     SDK_FRAMEWORK_NAME="FacebookSDK"
 
