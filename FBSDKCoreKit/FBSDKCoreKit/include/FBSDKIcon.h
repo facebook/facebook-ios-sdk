@@ -1,1 +1,0 @@
-../FBSDKIcon.h

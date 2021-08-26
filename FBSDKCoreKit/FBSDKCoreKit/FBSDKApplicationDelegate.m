@@ -67,7 +67,7 @@
 #import "FBSDKSwizzler+Swizzling.h"
 #import "FBSDKTimeSpentRecordingFactory.h"
 #import "FBSDKTokenCache.h"
-#import "GraphAPI/FBSDKGraphRequest.h"
+#import "FBSDKGraphRequest.h"
 #import "NSNotificationCenter+Extensions.h"
 #import "NSUserDefaults+FBSDKDataPersisting.h"
 

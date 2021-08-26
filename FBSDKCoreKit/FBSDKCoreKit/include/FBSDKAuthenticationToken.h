@@ -1,1 +1,0 @@
-../FBSDKAuthenticationToken.h
