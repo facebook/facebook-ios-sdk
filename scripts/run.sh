@@ -638,10 +638,15 @@ verify_xcode_integration() {
 }
 
 verify_spm_headers() {
+  KITS=(
+      "$LOGIN_KIT"
+      "$SHARE_KIT"
+    )
+
   # Verifies that all public headers exist as symlinks in the 'include' dir
   # of the SDK they belong to.
   verify_inclusion() {
-    for kit in "${SDK_BASE_KITS[@]}"; do
+    for kit in "${KITS[@]}"; do
       cd "$kit/$kit"
 
       echo "Verifying the following public headers are exposed to SPM for $kit:"
@@ -689,7 +694,7 @@ verify_spm_headers() {
     echo ""
     echo "Verifying that the symlinks used for exposing public headers to SPM are pointing to valid source files."
 
-    for kit in "${SDK_BASE_KITS[@]}"; do
+    for kit in "${KITS[@]}"; do
       cd "$kit"
 
       find . -type l ! -exec test -e {} \; -print >| ../BadSymlinks.txt
