@@ -75,7 +75,8 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       conversionValue: -1,
       priority: -1,
       conversionTimestamp: Date(timeIntervalSince1970: 1618383700),
-      isAggregated: false
+      isAggregated: false,
+      isTestMode: false
     )
   var config1: AEMConfiguration!  // swiftlint:disable:this implicitly_unwrapped_optional
     = AEMConfiguration(json: [
@@ -189,6 +190,31 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     XCTAssertEqual(invocation?.businessID, "test_advertiserid_coffee")
   }
 
+  func testInvocationWithDebuggingAppLinkData() throws {
+    let data = [
+      "acs_token": "debuggingtoken",
+      "campaign_ids": "test_campaign_1234",
+      "advertiser_id": "test_advertiserid_coffee",
+      "test_deeplink": 1
+    ] as [String: Any]
+    let invocation = try XCTUnwrap(AEMInvocation(appLinkData: data))
+
+    XCTAssertTrue(
+      invocation.isTestMode,
+      "Invocation is expected to be test mode when test_deeplink is true"
+    )
+    XCTAssertEqual(
+      invocation.acsToken,
+      "debuggingtoken",
+      "Invocations's acsToken is not expected"
+    )
+    XCTAssertEqual(
+      invocation.campaignID,
+      "test_campaign_1234",
+      "Invocations's campaignID is not expected"
+    )
+  }
+
   func testFindConfig() {
     var invocation: AEMInvocation? = self.validInvocation
     invocation?.reset()
@@ -203,7 +229,8 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       acsToken: "test_token_12345",
       acsSharedSecret: nil,
       acsConfigID: nil,
-      businessID: nil
+      businessID: nil,
+      isTestMode: false
     )
     let config = invocation?._findConfig([Values.defaultMode: [config1, config2]])
     XCTAssertEqual(invocation?.configID, 20000, "Should set the invocation with expected configID")
@@ -266,7 +293,8 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       acsToken: "test_token_12345",
       acsSharedSecret: nil,
       acsConfigID: nil,
-      businessID: "test_advertiserid_123"
+      businessID: "test_advertiserid_123",
+      isTestMode: false
     )
     let config = invocation?._findConfig([
       Values.defaultMode: [configWithoutBusinessID],

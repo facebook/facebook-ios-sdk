@@ -33,6 +33,7 @@ static NSString *const ACS_TOKEN_KEY = @"acs_token";
 static NSString *const ACS_SHARED_SECRET_KEY = @"shared_secret";
 static NSString *const ACS_CONFIG_ID_KEY = @"acs_config_id";
 static NSString *const BUSINESS_ID_KEY = @"advertiser_id";
+static NSString *const TEST_DEEPLINK_KEY = @"test_deeplink";
 static NSString *const TIMESTAMP_KEY = @"timestamp";
 static NSString *const CONFIG_MODE_KEY = @"config_mode";
 static NSString *const CONFIG_ID_KEY = @"config_id";
@@ -63,6 +64,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
     NSString *ACSSharedSecret = [FBSDKTypeUtility dictionary:applinkData objectForKey:ACS_SHARED_SECRET_KEY ofType:NSString.class];
     NSString *ACSConfigID = [FBSDKTypeUtility dictionary:applinkData objectForKey:CONFIG_ID_KEY ofType:NSString.class];
     NSString *businessID = [FBSDKTypeUtility dictionary:applinkData objectForKey:BUSINESS_ID_KEY ofType:NSString.class];
+    NSNumber *isTestMode = [FBSDKTypeUtility dictionary:applinkData objectForKey:TEST_DEEPLINK_KEY ofType:NSNumber.class] ?: [NSNumber numberWithBool:NO];
     if (campaignID == nil || ACSToken == nil) {
       return nil;
     }
@@ -70,7 +72,8 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
                                               ACSToken:ACSToken
                                        ACSSharedSecret:ACSSharedSecret
                                            ACSConfigID:ACSConfigID
-                                            businessID:businessID];
+                                            businessID:businessID
+                                            isTestMode:isTestMode.boolValue];
   } @catch (NSException *exception) {
     return nil;
   }
@@ -81,6 +84,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
                             ACSSharedSecret:(nullable NSString *)ACSSharedSecret
                                 ACSConfigID:(nullable NSString *)ACSConfigID
                                  businessID:(nullable NSString *)businessID
+                                 isTestMode:(BOOL)isTestMode
 {
   return [self initWithCampaignID:campaignID
                          ACSToken:ACSToken
@@ -95,7 +99,8 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
                   conversionValue:-1
                          priority:-1
               conversionTimestamp:nil
-                     isAggregated:YES];
+                     isAggregated:YES
+                       isTestMode:isTestMode];
 }
 
 - (nullable instancetype)initWithCampaignID:(NSString *)campaignID
@@ -112,6 +117,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
                                    priority:(NSInteger)priority
                         conversionTimestamp:(nullable NSDate *)conversionTimestamp
                                isAggregated:(BOOL)isAggregated
+                                 isTestMode:(BOOL)isTestMode
 {
   if ((self = [super init])) {
     _campaignID = campaignID;
@@ -140,6 +146,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
     _priority = priority;
     _conversionTimestamp = conversionTimestamp;
     _isAggregated = isAggregated;
+    _isTestMode = isTestMode;
   }
   return self;
 }
@@ -332,7 +339,8 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
                   conversionValue:conversionValue
                          priority:priority
               conversionTimestamp:conversionTimestamp
-                     isAggregated:isAggregated];
+                     isAggregated:isAggregated
+                       isTestMode:NO];
 }
 
 - (void)encodeWithCoder:(NSCoder *)encoder

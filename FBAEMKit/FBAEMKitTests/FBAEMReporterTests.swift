@@ -178,13 +178,15 @@ class FBAEMReporterTests: XCTestCase {
       acsToken: "test_token_1234567",
       acsSharedSecret: "test_shared_secret",
       acsConfigID: "test_config_id_123",
-      businessID: nil
+      businessID: nil,
+      isTestMode: false
     ), let invocation2 = AEMInvocation(
       campaignID: "test_campaign_1234",
       acsToken: "test_token_1234567",
       acsSharedSecret: "test_shared_secret",
       acsConfigID: "test_config_id_123",
-      businessID: nil
+      businessID: nil,
+      isTestMode: false
     )
     else { return XCTFail("Unwrapping Error") }
     invocation1.setConfigID(10000)
@@ -209,14 +211,28 @@ class FBAEMReporterTests: XCTestCase {
     XCTAssertEqual(configList?[1].validFrom, 20000, "Should keep the expected config")
   }
 
-  func testHandleURL() {
-    guard let url = URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22test_token_1234567%22%2C+%22campaign_ids%22%3A+%22test_campaign_1234%22%7D") // swiftlint:disable:this line_length
-    else { return XCTFail("Unwrapping Error") }
+  func testHandleURL() throws {
+    let url = try XCTUnwrap(
+      URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22test_token_1234567%22%2C+%22campaign_ids%22%3A+%22test_campaign_1234%22%7D"), // swiftlint:disable:this line_length
+      "Should be able to create URL with valid deeplink"
+    )
     AEMReporter.handle(url)
     let invocations = AEMReporter.invocations
     XCTAssertTrue(
       invocations.count > 0, // swiftlint:disable:this empty_count
       "Handling a url that contains invocations should set the invocations on the reporter"
+    )
+  }
+
+  func testHandleDebuggingURL() {
+    guard let url = URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22debugging_token%22%2C+%22campaign_ids%22%3A+%2210%22%2C+%22test_deeplink%22%3A+1%7D") // swiftlint:disable:this line_length
+    else { return XCTFail("Unwrapping Error") }
+    AEMReporter.invocations = []
+    AEMReporter.handle(url)
+    XCTAssertEqual(
+      AEMReporter.invocations.count,
+      0,
+      "Handling a debugging url should not affect production traffic"
     )
   }
 
@@ -293,6 +309,34 @@ class FBAEMReporterTests: XCTestCase {
     )
   }
 
+  func testSendDebuggingRequest() {
+    AEMReporter._sendDebuggingRequest(SampleAEMInvocations.createDebuggingInvocation())
+
+    XCTAssertTrue(
+      networker.capturedGraphPath?.hasSuffix("aem_conversions") == true,
+      "GraphRequst should be created because of there is a debugging invocation"
+    )
+    XCTAssertEqual(
+      networker.startCallCount,
+      1,
+      "Should start the graph request to update the test mode"
+    )
+  }
+
+  func testDebuggingRequestParameters() {
+    XCTAssertEqual(
+      AEMReporter._debuggingRequestParameters(SampleAEMInvocations.createDebuggingInvocation()) as NSDictionary,
+      [
+        "campaign_id": "debugging_campaign",
+        "conversion_data": 0,
+        "consumption_hour": 0,
+        "token": "debugging_token",
+        "delay_flow": "server"
+      ],
+      "Should have expected request parameters for debugging invocation"
+    )
+  }
+
   func testSendAggregationRequest() {
     AEMReporter.invocations = []
     AEMReporter._sendAggregationRequest()
@@ -354,7 +398,8 @@ class FBAEMReporterTests: XCTestCase {
       acsToken: "test_token_1234567",
       acsSharedSecret: "test_shared_secret",
       acsConfigID: "test_config_id_123",
-      businessID: nil
+      businessID: nil,
+      isTestMode: false
     )
     else { return XCTFail("Unwrapping Error") }
     guard let config = AEMConfiguration(json: SampleAEMData.validConfigData3)

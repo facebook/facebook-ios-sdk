@@ -132,6 +132,10 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
   if (!invocation) {
     return;
   }
+  if (invocation.isTestMode) {
+    [self _sendDebuggingRequest:invocation];
+    return;
+  }
 
   [self _appendAndSaveInvocation:invocation];
 }
@@ -290,6 +294,47 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
   }
   // Refresh if timestamp is expired or cached config is empty
   return (![self _isConfigRefreshTimestampValid]) || (0 == g_configs.count);
+}
+
+ #pragma mark - Deeplink debugging methods
+
++ (void)_sendDebuggingRequest:(FBAEMInvocation *)invocation
+{
+  NSMutableArray<NSDictionary *> *params = [NSMutableArray new];
+  [FBSDKTypeUtility array:params addObject:[self _debuggingRequestParameters:invocation]];
+  if (0 == params.count) {
+    return;
+  }
+  @try {
+    NSData *jsonData = [FBSDKTypeUtility dataWithJSONObject:params options:0 error:nil];
+    if (jsonData) {
+      NSString *reports = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+
+      [self.networker startGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/aem_conversions", _appId]
+                                          parameters:@{@"aem_conversions" : reports}
+                                         tokenString:nil
+                                          HTTPMethod:FBAEMHTTPMethodPOST
+                                          completion:^(id _Nullable result, NSError *_Nullable error) {
+                                            if (error) {
+                                              NSLog(@"Fail to send AEM debugging request with error: %@", error);
+                                            }
+                                          }];
+    }
+  } @catch (NSException *exception) {
+    NSLog(@"Fail to send AEM debugging request");
+  }
+}
+
++ (NSDictionary<NSString *, id> *)_debuggingRequestParameters:(FBAEMInvocation *)invocation
+{
+  NSMutableDictionary<NSString *, id> *conversionParams = [NSMutableDictionary new];
+  [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.campaignID forKey:CAMPAIGN_ID_KEY];
+  [FBSDKTypeUtility dictionary:conversionParams setObject:@(0) forKey:CONVERSION_DATA_KEY];
+  [FBSDKTypeUtility dictionary:conversionParams setObject:@(0) forKey:CONSUMPTION_HOUR_KEY];
+  [FBSDKTypeUtility dictionary:conversionParams setObject:invocation.ACSToken forKey:TOKEN_KEY];
+  [FBSDKTypeUtility dictionary:conversionParams setObject:@"server" forKey:DELAY_FLOW_KEY];
+
+  return [conversionParams copy];
 }
 
  #pragma mark - Background methods

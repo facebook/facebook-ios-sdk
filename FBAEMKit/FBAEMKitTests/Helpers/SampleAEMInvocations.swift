@@ -26,7 +26,8 @@ class SampleAEMInvocations { // swiftlint:disable:this convenience_type
       acsToken: "test_token_1234567",
       acsSharedSecret: "test_shared_secret",
       acsConfigID: "test_config_id_123",
-      businessID: nil
+      businessID: nil,
+      isTestMode: false
     )! // swiftlint:disable:this force_unwrapping
   }
 
@@ -36,7 +37,19 @@ class SampleAEMInvocations { // swiftlint:disable:this convenience_type
       acsToken: "test_token_1234567",
       acsSharedSecret: "test_shared_secret",
       acsConfigID: "test_config_id_123",
-      businessID: nil
+      businessID: nil,
+      isTestMode: false
+    )! // swiftlint:disable:this force_unwrapping
+  }
+
+  static func createDebuggingInvocation() -> AEMInvocation {
+    AEMInvocation(
+      campaignID: "debugging_campaign",
+      acsToken: "debugging_token",
+      acsSharedSecret: "debugging_shared_secret",
+      acsConfigID: "debugging_config_id_123",
+      businessID: nil,
+      isTestMode: true
     )! // swiftlint:disable:this force_unwrapping
   }
 }

@@ -160,7 +160,8 @@ class SampleAEMData { // swiftlint:disable:this convenience_type
     acsToken: "test_token_1234567",
     acsSharedSecret: "test_shared_secret",
     acsConfigID: "test_config_id_123",
-    businessID: "test_advertiserid_123"
+    businessID: "test_advertiserid_123",
+    isTestMode: false
   )! // swiftlint:disable:this force_unwrapping
 
   static let invocationWithAdvertiserID2 = AEMInvocation(
@@ -168,7 +169,8 @@ class SampleAEMData { // swiftlint:disable:this convenience_type
     acsToken: "test_token_2345678",
     acsSharedSecret: "test_shared_secret_124",
     acsConfigID: "test_config_id_124",
-    businessID: "test_advertiserid_12346"
+    businessID: "test_advertiserid_12346",
+    isTestMode: false
   )! // swiftlint:disable:this force_unwrapping
 
   static let invocationWithoutAdvertiserID = AEMInvocation(
@@ -176,6 +178,7 @@ class SampleAEMData { // swiftlint:disable:this convenience_type
     acsToken: "test_token_7654",
     acsSharedSecret: "test_shared_secret_123",
     acsConfigID: "test_config_id_333",
-    businessID: nil
+    businessID: nil,
+    isTestMode: false
   )! // swiftlint:disable:this force_unwrapping
 }
