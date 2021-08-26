@@ -38,7 +38,7 @@ A shared object that holds data about the current user's  game instance which co
 /**
  A unique identifier for the current game context. This represents a specific game instance that the user is playing in.
  */
-@property (nonatomic) NSString* identifier;
+@property (readonly, nonatomic) NSString* identifier;
 
 /**
   The context type which identifies the source of the user's game instance.
@@ -51,7 +51,7 @@ DEPRECATED_MSG_ATTRIBUTE("The Type property is deprecated and will be removed in
 /**
   The number of players in the current user's  game instance
  */
-@property (readonly, nullable) NSInteger* size;
+@property (readonly) NSInteger size;
 
 @end
 

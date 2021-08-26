@@ -24,10 +24,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKGamingContext (Internal)
 
+@property (nonatomic) NSString *identifier;
+@property (nonatomic) NSInteger size;
+
 /**
  Creates a context with an identifier. If the identifier is nil or empty, a context will not be created.
  */
-+ (nullable instancetype)createContextWithIdentifier:(NSString *)identifier;
++ (nullable instancetype)createContextWithIdentifier:(NSString *)identifier size:(NSInteger)size;
 
 @end
 

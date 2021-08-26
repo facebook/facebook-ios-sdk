@@ -97,7 +97,7 @@ class CreateContextDialogTests: XCTestCase, ContextDialogDelegate {
   }
 
   func testDialogSuccessfullyUpdatesGamingContext() throws {
-    GamingContext.current = GamingContext.createContext(withIdentifier: "foo")
+    GamingContext.current = GamingContext.createContext(withIdentifier: "foo", size: 2)
 
     let dialog = SampleContextDialogs.showCreateContextDialog(withDelegate: self)
     let webDialogDelegate = try XCTUnwrap(dialog?.currentWebDialog as? WebDialogViewDelegate)

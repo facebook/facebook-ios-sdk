@@ -93,10 +93,13 @@
     case 0: {
       if ([results isKindOfClass:[NSDictionary class]] && results[@"context_id"] != nil) {
         NSString *const identifier = results[@"context_id"];
+        NSString *const sizeString = results[@"context_size"];
+        NSInteger size = [sizeString isKindOfClass:[NSString class]] ? [sizeString integerValue] : 0;
         if (FBSDKGamingContext.currentContext) {
           FBSDKGamingContext.currentContext.identifier = identifier;
+          FBSDKGamingContext.currentContext.size = size;
         } else {
-          FBSDKGamingContext.currentContext = [FBSDKGamingContext createContextWithIdentifier:identifier];
+          FBSDKGamingContext.currentContext = [FBSDKGamingContext createContextWithIdentifier:identifier size:size];
         }
         [self.delegate contextDialogDidComplete:self];
       } else {

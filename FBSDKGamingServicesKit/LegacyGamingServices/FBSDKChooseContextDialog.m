@@ -40,6 +40,7 @@
  #define FBSDK_CONTEXT_DIALOG_MSITE_QUERY_PARAMETER_PARAM_KEY @"params"
  #define FBSDK_CONTEXT_DIALOG_MSITE_QUERY_PARAMETER_PATH_KEY @"path"
  #define FBSDK_CONTEXT_DIALOG_DEEPLINK_QUERY_CONTEXT_KEY @"context_id"
+ #define FBSDK_CONTEXT_DIALOG_DEEPLINK_QUERY_CONTEXT_SIZE_KEY @"context_size"
 
 @interface FBSDKChooseContextDialog () <FBSDKURLOpening>
 @end
@@ -183,18 +184,24 @@
 
 - (FBSDKGamingContext *_Nullable)_gamingContextFromURL:(NSURL *)url
 {
+  NSString *contextID;
+  NSInteger contextSize = 0;
   NSURLComponents *urlComponents = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
 
   if (!urlComponents.queryItems || !urlComponents.queryItems.count) {
     return nil;
   }
-  NSURLQueryItem *contextIDQueryItem = urlComponents.queryItems.firstObject;
-  if (![contextIDQueryItem.name isEqual:FBSDK_CONTEXT_DIALOG_DEEPLINK_QUERY_CONTEXT_KEY]) {
-    return nil;
+
+  for (NSURLQueryItem *queryItem in urlComponents.queryItems) {
+    if ([queryItem.name isEqual:FBSDK_CONTEXT_DIALOG_DEEPLINK_QUERY_CONTEXT_KEY]) {
+      contextID = queryItem.value;
+    }
+    if ([queryItem.name isEqual:FBSDK_CONTEXT_DIALOG_DEEPLINK_QUERY_CONTEXT_SIZE_KEY]) {
+      contextSize = [queryItem.value integerValue];
+    }
   }
-  NSString *contextID = contextIDQueryItem.value;
-  if (contextID && (contextID.length > 0)) {
-    FBSDKGamingContext.currentContext = [FBSDKGamingContext createContextWithIdentifier:contextID];
+  if (contextID && contextID.length > 0) {
+    FBSDKGamingContext.currentContext = [FBSDKGamingContext createContextWithIdentifier:contextID size:contextSize];
   } else {
     FBSDKGamingContext.currentContext = nil;
   }

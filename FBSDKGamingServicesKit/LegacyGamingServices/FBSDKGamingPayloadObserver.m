@@ -94,7 +94,7 @@ static FBSDKGamingPayloadObserver *sharedInstance = nil;
 
   if (urlContainsGameContextTokenID
       && [(NSObject *)self.delegate respondsToSelector:@selector(parsedGamingContextURLContaining:)]) {
-    [FBSDKGamingContext createContextWithIdentifier:sdkURL.appLinkExtras[kGamingPayloadContextTokenID]];
+    [FBSDKGamingContext createContextWithIdentifier:sdkURL.appLinkExtras[kGamingPayloadContextTokenID] size:0];
     [_delegate parsedGamingContextURLContaining:payload];
     return true;
   }

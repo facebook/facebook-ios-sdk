@@ -23,7 +23,6 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
   var dialogDidCompleteSuccessfully = false
   var dialogDidCancel = false
   var dialogError: NSError?
-  let validCallbackURL = URL(string: "fbabc123://gaming/contextchoose/?context_id=123456789")
   let defaultAppID = "abc123"
   let msiteParamsQueryString = "{\"filter\":\"NEW_CONTEXT_ONLY\",\"min_size\":0,\"max_size\":0,\"app_id\":\"abc123\"}"
 
@@ -47,6 +46,8 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
   }
 
   func testDialogCompletingWithValidContextID() throws {
+    let validCallbackURL = URL(string: "fbabc123://gaming/contextchoose/?context_id=123456789&context_size=3")
+
     let dialog = try XCTUnwrap(SampleContextDialogs.chooseContextDialogWithoutContentValues(delegate: self))
     dialog.show()
     let dialogURLOpenerDelegate = try XCTUnwrap(dialog as? URLOpening)
@@ -57,10 +58,12 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
     XCTAssertTrue(dialogDidCompleteSuccessfully)
     XCTAssertFalse(dialogDidCancel)
     XCTAssertNil(dialogError)
+    XCTAssertEqual(GamingContext.current?.size, 3)
+    XCTAssertEqual(GamingContext.current?.identifier, "123456789")
   }
 
   func testCompletingWithEmptyContextID() throws {
-    GamingContext.current = GamingContext.createContext(withIdentifier: name)
+    GamingContext.current = GamingContext.createContext(withIdentifier: name, size: 2)
 
     let url = URL(string: "fbabc123://gaming/contextchoose/?context_id=")
 

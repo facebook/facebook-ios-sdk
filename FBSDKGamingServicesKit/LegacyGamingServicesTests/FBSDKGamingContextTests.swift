@@ -21,17 +21,47 @@ import XCTest
 
 class FBSDKGamingContextTests: XCTestCase {
 
-  func testCreating() {
+  func testCreating() throws {
+    let context = try XCTUnwrap(GamingContext.createContext(withIdentifier: name, size: 2))
     XCTAssertNotNil(
-      GamingContext.createContext(withIdentifier: name),
+      context,
       "Should be able to create a context with a valid identifier"
+    )
+    XCTAssertEqual(
+      context.identifier,
+      name,
+      "Should be able to create a context with a valid identifier"
+    )
+    XCTAssertEqual(
+      context.size,
+      2,
+      "Should be able to create a context with a valid size"
+    )
+  }
+
+  func testCreatingWithSizeLessThanZero() throws {
+    let context = try XCTUnwrap(GamingContext.createContext(withIdentifier: name, size: -2))
+    XCTAssertNotNil(
+      context,
+      "Should be able to create a context with a valid identifier"
+    )
+    XCTAssertEqual(
+      context.identifier,
+      name,
+      "Should be able to create a context with a valid identifier"
+    )
+    XCTAssertEqual(
+      context.size,
+      0,
+      "Should not set size less than 0"
     )
   }
 
   func testCreatingWithEmptyIdentifier() {
+    let context = GamingContext.createContext(withIdentifier: "", size: 2)
     XCTAssertNil(
-      GamingContext.createContext(withIdentifier: ""),
-      "Should not create a context with an empty identifier"
+      context,
+      "Should not be able to create a context with a invalid identifier"
     )
   }
 }

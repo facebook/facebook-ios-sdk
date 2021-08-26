@@ -18,11 +18,18 @@
 
 #import "FBSDKGamingContext.h"
 
+@interface FBSDKGamingContext ()
+
+@property (nonatomic) NSString *identifier;
+@property (nonatomic) NSInteger size;
+
+@end
+
 @implementation FBSDKGamingContext
 
 static FBSDKGamingContext *_currentContext;
 
-+ (instancetype)createContextWithIdentifier:(NSString *)identifier
++ (nullable instancetype)createContextWithIdentifier:(NSString *)identifier size:(NSInteger)size
 {
   if (!identifier || (identifier.length == 0)) {
     return nil;
@@ -30,6 +37,10 @@ static FBSDKGamingContext *_currentContext;
   FBSDKGamingContext *context = [FBSDKGamingContext new];
   context.identifier = identifier;
   _currentContext = context;
+
+  if (size > 0) {
+    context.size = size;
+  }
 
   return context;
 }
