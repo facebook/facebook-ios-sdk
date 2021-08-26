@@ -57,7 +57,7 @@
   return YES;
 }
 
-- (id)initWithCoder:(NSCoder *)decoder
+- (instancetype)initWithCoder:(NSCoder *)decoder
 {
   NSString *accessTokenString = [decoder decodeObjectOfClass:[NSString class]
                                                       forKey:FBSDK_LIKE_ACTION_CONTROLLER_CACHE_ACCESS_TOKEN_KEY];

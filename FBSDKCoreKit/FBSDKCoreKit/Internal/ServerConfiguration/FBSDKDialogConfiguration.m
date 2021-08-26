@@ -43,7 +43,7 @@
   return YES;
 }
 
-- (id)initWithCoder:(NSCoder *)decoder
+- (instancetype)initWithCoder:(NSCoder *)decoder
 {
   NSString *name = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_DIALOG_CONFIGURATION_NAME_KEY];
   NSURL *URL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDK_DIALOG_CONFIGURATION_URL_KEY];
