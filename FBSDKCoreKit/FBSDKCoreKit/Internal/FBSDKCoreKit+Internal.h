@@ -37,7 +37,6 @@
   #import "FBSDKViewImpressionTracker.h"
  #else
   #import "FBSDKDeviceButton+Internal.h"
-  #import "FBSDKDeviceDialogView.h"
   #import "FBSDKDeviceViewControllerBase+Internal.h"
   #import "FBSDKModalFormPresentationController.h"
   #import "FBSDKSmartDeviceDialogView.h"
@@ -88,7 +87,6 @@
   #import "UI/FBSDKViewImpressionTracker.h"
  #else
   #import "Device/FBSDKDeviceButton+Internal.h"
-  #import "Device/FBSDKDeviceDialogView.h"
   #import "Device/FBSDKDeviceViewControllerBase+Internal.h"
   #import "Device/FBSDKModalFormPresentationController.h"
   #import "Device/FBSDKSmartDeviceDialogView.h"

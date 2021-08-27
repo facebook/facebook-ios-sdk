@@ -16,34 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+#import "FBSDKServerConfigurationProvider.h"
 
-#if TARGET_OS_TV
+#import "FBSDKServerConfigurationManager.h"
 
- #if SWIFT_PACKAGE
-  #import "FBSDKDeviceViewControllerBase.h"
- #else
-  #import <FBSDKCoreKit/FBSDKDeviceViewControllerBase.h>
- #endif
+@implementation FBSDKServerConfigurationProvider
 
-@class FBSDKDeviceDialogView;
-
-NS_ASSUME_NONNULL_BEGIN
-
-/*
-  An internal base class for device related flows.
-
- This is an internal API that should not be used directly and is subject to change.
-*/
-@interface FBSDKDeviceViewControllerBase () <
-  UIViewControllerAnimatedTransitioning,
-  UIViewControllerTransitioningDelegate
->
-
-@property (nonatomic, readonly, strong) FBSDKDeviceDialogView *deviceDialogView;
++ (NSUInteger)cachedSmartLoginOptions
+{
+  return FBSDKServerConfigurationManager.shared.cachedServerConfiguration.smartLoginOptions;
+}
 
 @end
-
-NS_ASSUME_NONNULL_END
-
-#endif

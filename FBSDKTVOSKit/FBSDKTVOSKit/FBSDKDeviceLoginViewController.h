@@ -18,7 +18,11 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKDeviceViewControllerBase.h>
+#if SWIFT_PACKAGE
+ #import "FBSDKCoreKit.h"
+#else
+ #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
