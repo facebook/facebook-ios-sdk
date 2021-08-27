@@ -18,12 +18,6 @@
 
 #import "FBSDKHashtag.h"
 
-#ifdef FBSDKCOCOAPODS
- #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
- #import "FBSDKCoreKit+Internal.h"
-#endif
-
 #define FBSDK_HASHTAG_STRING_KEY @"hashtag"
 
 static NSRegularExpression *HashtagRegularExpression()
