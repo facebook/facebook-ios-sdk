@@ -84,7 +84,6 @@
 		D175879013592F781F627ED5 /* FBAEMEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = C2368B332ED43BBAF2493859 /* FBAEMEvent.m */; };
 		D5636656757EDC3E1CD3560D /* FBAEMAdvertiserRuleFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 931238348E95CD28C59333BD /* FBAEMAdvertiserRuleFactoryTests.swift */; };
 		DED74AFF50400EC6B3881482 /* FBAEMEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06D636174F633A8977B80DC4 /* FBAEMEventTests.swift */; };
-		DF20154C2A3FA8F188837E0D /* FBAEMConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4F38A15F348DAA9161D987 /* FBAEMConfigurationTests.swift */; };
 		E246773F0FECC373A76F35F7 /* FBAEMAdvertiserRuleFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 308D372D24FA9EC87811E74C /* FBAEMAdvertiserRuleFactory.m */; };
 		E4C2B6C43C21201696C7A0A2 /* SampleAEMConfigurations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BA128CAAC00A5F44E3FACEF /* SampleAEMConfigurations.swift */; };
 		E56F6A9D5E198F0A8F50367B /* FBAEMAdvertiserMultiEntryRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 27B0E5D3B1EF8C9BA530BC3D /* FBAEMAdvertiserMultiEntryRule.m */; };
@@ -94,6 +93,7 @@
 		F317CC64B9EA550F74510E37 /* FBAEMAdvertiserRuleFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 308D372D24FA9EC87811E74C /* FBAEMAdvertiserRuleFactory.m */; };
 		FB2ED4B8A9D7F7BEFA0891DA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55624583B4F08EB7CA742BFA /* UIKit.framework */; };
 		FC81960674090AD38CABBA41 /* FBAEMReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F9CB68BCAEA3667ED30FF01A /* FBAEMReporter.m */; };
+		FC96D3627E3CC140C8B64E37 /* AEMConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDCF97D130F84518CF735123 /* AEMConfigurationTests.swift */; };
 		FD4B28C43AB0724019C84126 /* FBSDKCoreKit_Basics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A84B4C7B14445ABABBDF148 /* FBSDKCoreKit_Basics.framework */; };
 		FE073523D3A2BA2AE06D14F0 /* FBAEMAdvertiserRuleProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = 60E30C51678F81517E269DCA /* FBAEMAdvertiserRuleProviding.h */; };
 /* End PBXBuildFile section */
@@ -197,7 +197,6 @@
 		6A38C63E41E0EE7CAF14DF59 /* FBAEMKit-Dynamic.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBAEMKit-Dynamic.xcconfig"; sourceTree = "<group>"; };
 		72D758E9D11261F32C07B772 /* FBAEMKit.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = FBAEMKit.xcconfig; sourceTree = "<group>"; };
 		7BE582199B8FBA1789FEC3E0 /* SampleAEMSingleEntryRules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAEMSingleEntryRules.swift; sourceTree = "<group>"; };
-		7E4F38A15F348DAA9161D987 /* FBAEMConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBAEMConfigurationTests.swift; sourceTree = "<group>"; };
 		8060F398EB7F033AD9F1D6AA /* FBAEMNetworking.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBAEMNetworking.h; sourceTree = "<group>"; };
 		816D772D131FFEC2F22D8EBD /* FBAEMAdvertiserMultiEntryRule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBAEMAdvertiserMultiEntryRule.h; sourceTree = "<group>"; };
 		84BA838B1CCC49062E1C49DB /* FBAEM+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBAEM+Testing.h"; sourceTree = "<group>"; };
@@ -229,6 +228,7 @@
 		F9ACAD4216D72E4122034CB9 /* FBAEMRule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBAEMRule.h; sourceTree = "<group>"; };
 		F9CB68BCAEA3667ED30FF01A /* FBAEMReporter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBAEMReporter.m; sourceTree = "<group>"; };
 		FC34B255947902579C7BEFE9 /* SampleAEMError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAEMError.swift; sourceTree = "<group>"; };
+		FDCF97D130F84518CF735123 /* AEMConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AEMConfigurationTests.swift; sourceTree = "<group>"; };
 		FF23CF218E761473F27418AA /* FBAEMRuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBAEMRuleTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -357,11 +357,11 @@
 		9D457979EE82184412FC7F96 /* FBAEMKitTests */ = {
 			isa = PBXGroup;
 			children = (
+				FDCF97D130F84518CF735123 /* AEMConfigurationTests.swift */,
 				84BA838B1CCC49062E1C49DB /* FBAEM+Testing.h */,
 				D6B69DC092D144860111A050 /* FBAEMAdvertiserMultiEntryRuleTests.swift */,
 				931238348E95CD28C59333BD /* FBAEMAdvertiserRuleFactoryTests.swift */,
 				CFFE52E67F6C9B86D8007B67 /* FBAEMAdvertiserSingleEntryRuleTests.swift */,
-				7E4F38A15F348DAA9161D987 /* FBAEMConfigurationTests.swift */,
 				06D636174F633A8977B80DC4 /* FBAEMEventTests.swift */,
 				ACE0FAFF797BA7EDD4BACD50 /* FBAEMInvocationTests.swift */,
 				EFB06378A831A1CECD818177 /* FBAEMKitTests-Bridging-Header.h */,
@@ -684,10 +684,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC96D3627E3CC140C8B64E37 /* AEMConfigurationTests.swift in Sources */,
 				1BE86627D64C70351E770A14 /* FBAEMAdvertiserMultiEntryRuleTests.swift in Sources */,
 				D5636656757EDC3E1CD3560D /* FBAEMAdvertiserRuleFactoryTests.swift in Sources */,
 				C84D825AA4EB1D50219E259B /* FBAEMAdvertiserSingleEntryRuleTests.swift in Sources */,
-				DF20154C2A3FA8F188837E0D /* FBAEMConfigurationTests.swift in Sources */,
 				DED74AFF50400EC6B3881482 /* FBAEMEventTests.swift in Sources */,
 				677A4D72D37B1C16EA5E981E /* FBAEMInvocationTests.swift in Sources */,
 				84238CBEE70824E825FD09F9 /* FBAEMReporterTests.swift in Sources */,

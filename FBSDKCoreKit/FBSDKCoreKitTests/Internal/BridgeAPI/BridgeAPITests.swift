@@ -18,7 +18,7 @@
 
 import XCTest
 
-class BridgeAPIRequestTests: XCTestCase {
+class BridgeAPITests: XCTestCase {
 
   let processInfo = TestProcessInfo()
   let logger = TestLogger()

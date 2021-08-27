@@ -20,7 +20,7 @@ import FBSDKCoreKit
 import TestTools
 import XCTest
 
-class CrashObserversTest: XCTestCase {
+class CrashObserverTests: XCTestCase {
 
   var requestProvider: TestGraphRequestFactory! // swiftlint:disable:this implicitly_unwrapped_optional
   var crashObserver: CrashObserver! // swiftlint:disable:this implicitly_unwrapped_optional
@@ -49,7 +49,7 @@ class CrashObserversTest: XCTestCase {
     crashObserver.didReceiveCrashLogs([])
     XCTAssertEqual(featureManager.capturedFeatures, [])
 
-    let processedCrashLogs = CrashObserversTest.getCrashLogs()
+    let processedCrashLogs = CrashObserverTests.getCrashLogs()
 
     crashObserver.didReceiveCrashLogs(processedCrashLogs)
 

@@ -18,7 +18,7 @@
 
 import FBSDKCoreKit
 
-class FBSDKAppLinkNavigationTests: XCTestCase {
+class AppLinkNavigationTests: XCTestCase {
 
   struct AppLinkUrlPayload: Codable {
     let userAgent: String

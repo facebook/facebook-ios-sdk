@@ -19,7 +19,7 @@
 import FBSDKCoreKit
 import XCTest
 
-class CrashHandlersTest: XCTestCase {
+class CrashHandlerTests: XCTestCase {
 
   var crashHandler: CrashHandler! // swiftlint:disable:this implicitly_unwrapped_optional
   var testFileManager: FileManaging! // swiftlint:disable:this implicitly_unwrapped_optional
