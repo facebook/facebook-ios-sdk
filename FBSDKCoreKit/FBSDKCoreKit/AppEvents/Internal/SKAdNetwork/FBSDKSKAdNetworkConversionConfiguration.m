@@ -103,7 +103,7 @@
     if (obj1.conversionValue < obj2.conversionValue) {
       return NSOrderedDescending;
     }
-    if (obj1.conversionValue < obj2.conversionValue) {
+    if (obj1.conversionValue > obj2.conversionValue) {
       return NSOrderedAscending;
     }
     return NSOrderedSame;

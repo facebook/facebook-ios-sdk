@@ -217,6 +217,29 @@ class SKAdNetworkConversionConfigurationTests: XCTestCase {
     XCTAssertEqual(1, SKAdNetworkConversionConfiguration.parseRules(invalidData)?.count)
   }
 
+  func testParseShuffledRules() throws {
+    let data: NSMutableArray = []
+    for conv in 0...10 {
+      data.add([
+        "conversion_value": conv,
+        "events": [
+          [
+            "event_name": "fb_mobile_purchase"
+          ]
+        ]
+      ])
+    }
+    let expectedConvs = [Int](0...10)
+    for _ in 0...1000 {
+      let res = try XCTUnwrap(SKAdNetworkConversionConfiguration.parseRules(data.shuffled()))
+      var convs: [Int] = []
+      for item in res {
+        convs.append(item.conversionValue)
+      }
+      XCTAssertEqual(convs.reversed(), expectedConvs)
+    }
+  }
+
   func testEventSet() {
     let data: [String: Any] = [
       "data": [
