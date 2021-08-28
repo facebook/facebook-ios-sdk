@@ -20,25 +20,31 @@
 
 #if !TARGET_OS_TV
 
- #import "FBSDKShareDialog.h"
- #import "FBSDKShareInternalURLOpening.h"
+ #import "FBSDKSocialComposeViewControllerFactory.h"
 
-@protocol FBSDKShareUtility;
-@protocol FBSDKSocialComposeViewControllerFactory;
+ #import <Social/SLComposeViewController.h>
 
-NS_ASSUME_NONNULL_BEGIN
+ #import "FBSDKSocialComposeViewController.h"
 
-@interface FBSDKShareDialog ()
-
-@property (class, nullable, nonatomic) id<FBSDKShareInternalURLOpening> internalURLOpener;
-@property (class, nullable, nonatomic) id<FBSDKInternalUtility> internalUtility;
-@property (class, nullable, nonatomic) id<FBSDKSettings> settings;
-@property (class, nullable, nonatomic) Class<FBSDKShareUtility> shareUtility;
-@property (class, nullable, nonatomic) id<FBSDKBridgeAPIRequestOpening> bridgeAPIRequestOpener;
-@property (class, nullable, nonatomic) id<FBSDKSocialComposeViewControllerFactory> socialComposeViewControllerFactory;
-
+@interface SLComposeViewController (FBSDKSocialComposeViewController) <FBSDKSocialComposeViewController>
 @end
 
-NS_ASSUME_NONNULL_END
+@implementation FBSDKSocialComposeViewControllerFactory
+
+- (BOOL)canMakeSocialComposeViewController
+{
+  return [SLComposeViewController isAvailableForServiceType:FBSDKSocialComposeServiceType];
+}
+
+- (nullable id<FBSDKSocialComposeViewController>)makeSocialComposeViewController
+{
+  if (self.canMakeSocialComposeViewController) {
+    return [SLComposeViewController composeViewControllerForServiceType:FBSDKSocialComposeServiceType];
+  } else {
+    return nil;
+  }
+}
+
+@end
 
 #endif

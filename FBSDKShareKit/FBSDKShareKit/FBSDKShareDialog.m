@@ -43,6 +43,8 @@
  #import "FBSDKShareUtilityProtocol.h"
  #import "FBSDKShareVideo.h"
  #import "FBSDKShareVideoContent.h"
+ #import "FBSDKSocialComposeViewController.h"
+ #import "FBSDKSocialComposeViewControllerFactory.h"
  #import "UIApplication+ShareInternalURLOpening.h"
 
  #define FBSDK_SHARE_FEED_METHOD_NAME @"feed"
@@ -147,6 +149,18 @@ static _Nullable id<FBSDKBridgeAPIRequestOpening> _bridgeAPIRequestOpener;
   _bridgeAPIRequestOpener = bridgeAPIRequestOpener;
 }
 
+static _Nullable id<FBSDKSocialComposeViewControllerFactory> _socialComposeViewControllerFactory;
+
++ (nullable id<FBSDKSocialComposeViewControllerFactory>)socialComposeViewControllerFactory
+{
+  return _socialComposeViewControllerFactory;
+}
+
++ (void)setSocialComposeViewControllerFactory:(nullable id<FBSDKSocialComposeViewControllerFactory>)socialComposeViewControllerFactory
+{
+  _socialComposeViewControllerFactory = socialComposeViewControllerFactory;
+}
+
  #pragma mark - Class Configuration
 
 + (void)configureWithInternalURLOpener:(nonnull id<FBSDKShareInternalURLOpening>)internalURLOpener
@@ -154,12 +168,14 @@ static _Nullable id<FBSDKBridgeAPIRequestOpening> _bridgeAPIRequestOpener;
                               settings:(nonnull id<FBSDKSettings>)settings
                           shareUtility:(nonnull Class<FBSDKShareUtility>)shareUtility
                 bridgeAPIRequestOpener:(nonnull id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener
+    socialComposeViewControllerFactory:(nonnull id<FBSDKSocialComposeViewControllerFactory>)socialComposeViewControllerFactory
 {
   self.internalURLOpener = internalURLOpener;
   self.internalUtility = internalUtility;
   self.settings = settings;
   self.shareUtility = shareUtility;
   self.bridgeAPIRequestOpener = bridgeAPIRequestOpener;
+  self.socialComposeViewControllerFactory = socialComposeViewControllerFactory;
 
   self.hasBeenConfigured = YES;
 }
@@ -173,8 +189,9 @@ static _Nullable id<FBSDKBridgeAPIRequestOpening> _bridgeAPIRequestOpener;
   [self configureWithInternalURLOpener:UIApplication.sharedApplication
                        internalUtility:FBSDKInternalUtility.sharedUtility
                               settings:FBSDKSettings.sharedSettings
-                          shareUtility:[FBSDKShareUtility self]
-                bridgeAPIRequestOpener:FBSDKBridgeAPI.sharedInstance];
+                          shareUtility:FBSDKShareUtility.self
+                bridgeAPIRequestOpener:FBSDKBridgeAPI.sharedInstance
+    socialComposeViewControllerFactory:[FBSDKSocialComposeViewControllerFactory new]];
 }
 
 static dispatch_once_t validateAPIURLSchemeRegisteredToken;
@@ -202,6 +219,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   self.settings = nil;
   self.shareUtility = nil;
   self.bridgeAPIRequestOpener = nil;
+  self.socialComposeViewControllerFactory = nil;
 
   validateAPIURLSchemeRegisteredToken = 0;
   validateShareExtensionURLSchemeRegisteredToken = 0;
@@ -466,7 +484,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   // iOS 11 returns NO for `isAvailableForServiceType` but it will still work
   NSOperatingSystemVersion iOS11Version = { .majorVersion = 11, .minorVersion = 0, .patchVersion = 0 };
   BOOL operatingSystemIsAdequate = [NSProcessInfo.processInfo isOperatingSystemAtLeastVersion:iOS11Version];
-  BOOL composerIsAvailable = [SLComposeViewController isAvailableForServiceType:fbsdkdfl_SLServiceTypeFacebook()];
+  BOOL composerIsAvailable = [self.class.socialComposeViewControllerFactory canMakeSocialComposeViewController];
   return operatingSystemIsAdequate || composerIsAvailable;
 }
 
@@ -813,13 +831,13 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   NSArray *URLs = [self _contentURLs];
   NSArray *videoURLs = [self _contentVideoURLs];
 
-  SLComposeViewController *composeViewController = [SLComposeViewController composeViewControllerForServiceType:fbsdkdfl_SLServiceTypeFacebook()];
+  id<FBSDKSocialComposeViewController> composeViewController = [self.class.socialComposeViewControllerFactory makeSocialComposeViewController];
 
-  if (!composeViewController) {
+  if (!composeViewController || ![composeViewController isKindOfClass:UIViewController.class]) {
     if (canShowErrorRef != NULL) {
       *canShowErrorRef = [FBSDKError errorWithDomain:FBSDKShareErrorDomain
                                                 code:FBSDKShareErrorDialogNotAvailable
-                                             message:@"Error creating SLComposeViewController."];
+                                             message:@"Error creating social compose view controller."];
     }
     return NO;
   }
@@ -838,13 +856,13 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   for (NSURL *videoURL in videoURLs) {
     [composeViewController addURL:videoURL];
   }
-  composeViewController.completionHandler = ^(SLComposeViewControllerResult result) {
+  composeViewController.completionHandler = ^(FBSDKSocialComposeViewControllerResult result) {
     switch (result) {
-      case SLComposeViewControllerResultCancelled: {
+      case FBSDKSocialComposeViewControllerResultCancelled: {
         [self _invokeDelegateDidCancel];
         break;
       }
-      case SLComposeViewControllerResultDone: {
+      case FBSDKSocialComposeViewControllerResultDone: {
         [self _invokeDelegateDidCompleteWithResults:@{}];
         break;
       }
@@ -853,7 +871,10 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
       [self.class.internalUtility unregisterTransientObject:self];
     });
   };
-  [fromViewController presentViewController:composeViewController animated:YES completion:nil];
+
+  [fromViewController presentViewController:(UIViewController *)composeViewController
+                                   animated:YES
+                                 completion:nil];
   return YES;
 }
 

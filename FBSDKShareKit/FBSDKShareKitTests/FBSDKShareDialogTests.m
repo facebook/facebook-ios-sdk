@@ -35,6 +35,7 @@
 #import "FBSDKShareKitTestUtility.h"
 #import "FBSDKShareModelTestUtility.h"
 #import "FBSDKShareUtility.h"
+#import "FBSDKSocialComposeViewControllerFactory.h"
 
 @interface FBSDKShareDialogTests : XCTestCase
 @end
@@ -100,6 +101,10 @@
     FBSDKShareDialog.bridgeAPIRequestOpener,
     FBSDKBridgeAPI.sharedInstance,
     @"FBSDKShareDialog should use the shared bridge API for its default bridge API request opening dependency"
+  );
+  XCTAssertTrue(
+    [(NSObject *)FBSDKShareDialog.socialComposeViewControllerFactory isMemberOfClass:FBSDKSocialComposeViewControllerFactory.class],
+    @"FBSDKShareDialog should create a new factory for its social compose view controller factory dependency by default"
   );
 }
 
@@ -579,6 +584,11 @@
     return ![url.absoluteString isEqualToString:nonSupportedScheme];
   }]];
   id mockInternalUtility = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
+  id mockSocialComposeViewController = [OCMockObject niceMockForClass:[SLComposeViewController class]];
+  [[[mockSocialComposeViewController stub] andReturnValue:@YES] isAvailableForServiceType:OCMOCK_ANY];
+
+  [FBSDKShareDialog resetClassDependencies];
+  [FBSDKShareDialog configureClassDependencies];
 
   UIViewController *vc = [UIViewController new];
   FBSDKShareDialog *const dialog = [FBSDKShareDialog new];
@@ -597,6 +607,7 @@
 
   [mockApplication stopMocking];
   [mockInternalUtility stopMocking];
+  [mockSocialComposeViewController stopMocking];
 }
 
 - (void)  _showDialog:(FBSDKShareDialog *)dialog
