@@ -58,11 +58,11 @@ class WebViewAppLinkResolverTests: XCTestCase {
   func testFollowRedirectsURL() {
     let task = TestSessionDataTask()
     provider.stubbedDataTask = task
-    resolver.followRedirects(SampleUrls.valid) { _, _ in }
+    resolver.followRedirects(SampleURLs.valid) { _, _ in }
 
     XCTAssertEqual(
       provider.capturedRequest?.url,
-      SampleUrls.valid,
+      SampleURLs.valid,
       "Should create a url request with the provided url"
     )
     XCTAssertEqual(
@@ -80,7 +80,7 @@ class WebViewAppLinkResolverTests: XCTestCase {
   }
 
   func testFollowRedirectsWithErrorOnly() {
-    resolver.followRedirects(SampleUrls.valid) { potentialResult, potentialError in
+    resolver.followRedirects(SampleURLs.valid) { potentialResult, potentialError in
       self.result = potentialResult
       self.error = potentialError
     }
@@ -98,7 +98,7 @@ class WebViewAppLinkResolverTests: XCTestCase {
   }
 
   func testFollowRedirectWithHTTPResponseOnly() {
-    resolver.followRedirects(SampleUrls.valid) { potentialResult, potentialError in
+    resolver.followRedirects(SampleURLs.valid) { potentialResult, potentialError in
       self.result = potentialResult
       self.error = potentialError
     }
@@ -123,7 +123,7 @@ class WebViewAppLinkResolverTests: XCTestCase {
   }
 
   func testFollowRedirectsWithValidHTTPResponse() {
-    resolver.followRedirects(SampleUrls.valid) { potentialResult, potentialError in
+    resolver.followRedirects(SampleURLs.valid) { potentialResult, potentialError in
       self.result = potentialResult
       self.error = potentialError
     }
@@ -146,7 +146,7 @@ class WebViewAppLinkResolverTests: XCTestCase {
     // Just testing the upper and lower bounds
     [300, 399].forEach { code in
       provider.dataTaskCallCount = 0
-      resolver.followRedirects(SampleUrls.valid) { potentialResult, potentialError in
+      resolver.followRedirects(SampleURLs.valid) { potentialResult, potentialError in
         self.result = potentialResult
         self.error = potentialError
       }
@@ -166,8 +166,8 @@ class WebViewAppLinkResolverTests: XCTestCase {
   }
 
   func testFollowRedirectsWithRedirectingHTTPResponseIncludingLocationURL() {
-    let redirectURL = SampleUrls.valid(path: "redirected")
-    resolver.followRedirects(SampleUrls.valid) { potentialResult, potentialError in
+    let redirectURL = SampleURLs.valid(path: "redirected")
+    resolver.followRedirects(SampleURLs.valid) { potentialResult, potentialError in
       self.result = potentialResult
       self.error = potentialError
     }
@@ -198,16 +198,16 @@ class WebViewAppLinkResolverTests: XCTestCase {
   func testBuildingLinkFromEmptyData() {
     let link = resolver.appLink(
       fromALData: [:],
-      destination: SampleUrls.valid
+      destination: SampleURLs.valid
     )
     XCTAssertEqual(
       link.sourceURL,
-      SampleUrls.valid,
+      SampleURLs.valid,
       "Should use the destination as the source url for the app link"
     )
     XCTAssertEqual(
       link.webURL,
-      SampleUrls.valid,
+      SampleURLs.valid,
       "The web url should default to the destination"
     )
     XCTAssertTrue(link.targets.isEmpty, "Should not have any targets by default")
@@ -216,16 +216,16 @@ class WebViewAppLinkResolverTests: XCTestCase {
   func testBuildingLinkWithInvalidAppLinkData() {
     let link = resolver.appLink(
       fromALData: SampleAppLinkResolverData.invalid,
-      destination: SampleUrls.valid
+      destination: SampleURLs.valid
     )
     XCTAssertEqual(
       link.sourceURL,
-      SampleUrls.valid,
+      SampleURLs.valid,
       "Should use the destination as the source url for the app link"
     )
     XCTAssertEqual(
       link.webURL,
-      SampleUrls.valid,
+      SampleURLs.valid,
       "The web url should default to the destination"
     )
     XCTAssertEqual(
@@ -254,11 +254,11 @@ class WebViewAppLinkResolverTests: XCTestCase {
     ["no", "false", "0"].forEach { fallbackValue in
       let link = resolver.appLink(
         fromALData: SampleAppLinkResolverData.withShouldFallback(fallbackValue),
-        destination: SampleUrls.valid
+        destination: SampleURLs.valid
       )
       XCTAssertEqual(
         link.sourceURL,
-        SampleUrls.valid,
+        SampleURLs.valid,
         "Should use the destination as the source url for the app link"
       )
       XCTAssertNil(
@@ -276,11 +276,11 @@ class WebViewAppLinkResolverTests: XCTestCase {
     ["yes", "true", "1"].forEach { fallbackValue in
       let link = resolver.appLink(
         fromALData: SampleAppLinkResolverData.withShouldFallback(fallbackValue),
-        destination: SampleUrls.valid
+        destination: SampleURLs.valid
       )
       XCTAssertEqual(
         link.sourceURL,
-        SampleUrls.valid,
+        SampleURLs.valid,
         "Should use the destination as the source url for the app link"
       )
       XCTAssertEqual(

@@ -94,11 +94,11 @@ class WebDialogViewTests: XCTestCase, WebDialogViewDelegate {
   }
 
   func testLoadingURL() {
-    dialog.load(SampleUrls.valid)
+    dialog.load(SampleURLs.valid)
 
     XCTAssertEqual(
       webView.capturedRequest,
-      URLRequest(url: SampleUrls.valid),
+      URLRequest(url: SampleURLs.valid),
       "Should attempt to load the request in the webview"
     )
     XCTAssertTrue(
@@ -108,7 +108,7 @@ class WebDialogViewTests: XCTestCase, WebDialogViewDelegate {
   }
 
   func testStopLoadingURL() {
-    dialog.load(SampleUrls.valid)
+    dialog.load(SampleURLs.valid)
     dialog.stopLoading()
 
     XCTAssertEqual(
@@ -280,14 +280,14 @@ class WebDialogViewTests: XCTestCase, WebDialogViewDelegate {
     dialog.webView(
       WKWebView(),
       decidePolicyFor: TestWebKitNavigationAction(
-        stubbedRequest: URLRequest(url: SampleUrls.valid),
+        stubbedRequest: URLRequest(url: SampleURLs.valid),
         navigationType: .linkActivated
       )
     ) {
       policy = $0
     }
 
-    XCTAssertEqual(urlOpener.capturedOpenUrl, SampleUrls.valid)
+    XCTAssertEqual(urlOpener.capturedOpenUrl, SampleURLs.valid)
     urlOpener.capturedOpenUrlCompletion?(true)
     XCTAssertEqual(
       policy,
@@ -310,7 +310,7 @@ class WebDialogViewTests: XCTestCase, WebDialogViewDelegate {
     dialog.webView(
       WKWebView(),
       decidePolicyFor: TestWebKitNavigationAction(
-        stubbedRequest: URLRequest(url: SampleUrls.valid),
+        stubbedRequest: URLRequest(url: SampleURLs.valid),
         navigationType: .other
       )
     ) {

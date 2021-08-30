@@ -71,7 +71,7 @@ enum SampleUnparsedAppLinkURLs {
   static func createUrl(payload: [String: Any]) throws -> URL {
     let data = try JSONSerialization.data(withJSONObject: payload, options: [])
     let json = try XCTUnwrap(String(data: data, encoding: .utf8))
-    var components = try XCTUnwrap(URLComponents(url: SampleUrls.valid, resolvingAgainstBaseURL: false))
+    var components = try XCTUnwrap(URLComponents(url: SampleURLs.valid, resolvingAgainstBaseURL: false))
 
     components.queryItems = [
       URLQueryItem(name: AppLinkKeys.data, value: json)

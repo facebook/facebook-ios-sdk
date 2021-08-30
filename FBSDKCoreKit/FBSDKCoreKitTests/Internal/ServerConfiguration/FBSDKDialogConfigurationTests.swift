@@ -39,7 +39,7 @@ class FBSDKDialogConfigurationTests: XCTestCase {
   func testEncoding() {
     let dialog = DialogConfiguration(
       name: name,
-      url: SampleUrls.valid,
+      url: SampleURLs.valid,
       appVersions: versions
     )
 
@@ -52,7 +52,7 @@ class FBSDKDialogConfigurationTests: XCTestCase {
     )
     XCTAssertEqual(
       coder.encodedObject[Keys.url] as? URL,
-      SampleUrls.valid,
+      SampleURLs.valid,
       "Should encode the dialog url with the expected key"
     )
     XCTAssertEqual(

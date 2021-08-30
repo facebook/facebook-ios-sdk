@@ -19,7 +19,7 @@
 import Foundation
 
 // swiftlint:disable force_unwrapping
-enum SampleUrls {
+enum SampleURLs {
   static let valid = URL(string: "https://www.example.com")!
   static let validApp = URL(string: "fb://test.com")!
 
@@ -34,9 +34,9 @@ enum SampleUrls {
   }
 }
 
-enum SampleUrlRequest {
+enum SampleURLRequest {
 
   static let valid: URLRequest = {
-    URLRequest(url: SampleUrls.valid)
+    URLRequest(url: SampleURLs.valid)
   }()
 }

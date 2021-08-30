@@ -25,7 +25,7 @@ class FBSDKModelManagerTests: XCTestCase {
   let featureChecker = TestFeatureManager()
   let factory = TestGraphRequestFactory()
   let modelDirectoryPath = "\(NSTemporaryDirectory())models"
-  lazy var fileManager = TestFileManager(tempDirectoryURL: SampleUrls.valid)
+  lazy var fileManager = TestFileManager(tempDirectoryURL: SampleURLs.valid)
   let store = UserDefaultsSpy()
   let settings = TestSettings()
 
@@ -322,8 +322,8 @@ private enum RawRemoteModelResponse {
   ]
 
   static let eventPredictionAsset: [String: Any] = [
-    Keys.assetURI: SampleUrls.valid(path: "asset1").absoluteString,
-    Keys.rulesURI: SampleUrls.valid(path: "rules1").absoluteString,
+    Keys.assetURI: SampleURLs.valid(path: "asset1").absoluteString,
+    Keys.rulesURI: SampleURLs.valid(path: "rules1").absoluteString,
     Keys.thresholds: [
       1,
       "0.68",
@@ -336,7 +336,7 @@ private enum RawRemoteModelResponse {
   ]
 
   static let detectionAsset: [String: Any] = [
-    Keys.assetURI: SampleUrls.valid(path: "asset2").absoluteString,
+    Keys.assetURI: SampleURLs.valid(path: "asset2").absoluteString,
     Keys.thresholds: [
       1,
       "0.85",

@@ -19,6 +19,6 @@
 import Foundation
 
 // swiftlint:disable force_unwrapping
-enum SampleUrls {
+enum SampleURLs {
   static let valid = URL(string: "https://www.example.com")!
 }

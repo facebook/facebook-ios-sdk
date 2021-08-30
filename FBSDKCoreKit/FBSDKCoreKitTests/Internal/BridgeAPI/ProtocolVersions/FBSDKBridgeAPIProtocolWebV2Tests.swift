@@ -132,7 +132,7 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
 
   func testRequestUrlUsesQueryParametersFromNativeBridge() {
     let queryItem = URLQueryItem(name: "somethingUnique", value: UUID().uuidString)
-    let urlWithParams = SampleUrls.valid(queryItems: [queryItem])
+    let urlWithParams = SampleURLs.valid(queryItems: [queryItem])
     nativeBridge.stubbedRequestURL = urlWithParams
     stubServerConfigurationWithDialog(
       named: Values.methodName
@@ -160,7 +160,7 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
   }
 
   func testRequestURL() {
-    let expectedURL = SampleUrls.valid(path: "foo")
+    let expectedURL = SampleURLs.valid(path: "foo")
     stubServerConfigurationWithDialog(
       named: Values.methodName,
       url: expectedURL
@@ -303,7 +303,7 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
   func testRequestURLForDialogConfigurationWithScheme() {
     guard let configuration = DialogConfiguration(
       name: name,
-      url: SampleUrls.valid(path: name),
+      url: SampleURLs.valid(path: name),
       appVersions: []
     ),
       let requestURL = try? bridge._requestURL(for: configuration)
@@ -313,7 +313,7 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
 
     XCTAssertEqual(
       requestURL.absoluteString,
-      SampleUrls.valid(path: name).absoluteString,
+      SampleURLs.valid(path: name).absoluteString,
       "Should use the url from the dialog configuration if it has a scheme"
     )
   }
@@ -349,7 +349,7 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
 
   func stubServerConfigurationWithDialog(
     named name: String,
-    url: URL = SampleUrls.valid
+    url: URL = SampleURLs.valid
   ) {
     let dialogConfiguration = DialogConfiguration(
       name: name,

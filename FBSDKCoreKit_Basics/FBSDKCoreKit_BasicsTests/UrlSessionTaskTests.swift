@@ -30,7 +30,7 @@ class UrlSessionTaskTests: XCTestCase {
 
     provider.stubbedDataTask = dataTask
     task = UrlSessionTask(
-      request: SampleUrlRequest.valid,
+      request: SampleURLRequest.valid,
       fromSession: provider
     ) { _, _, _ in }
   }

@@ -36,7 +36,7 @@ class AppLinkNavigationTests: XCTestCase {
 
   var error: NSError?
   var navigation: AppLinkNavigation! // swiftlint:disable:this implicitly_unwrapped_optional
-  let target = AppLinkTarget(url: SampleUrls.valid, appStoreId: "123", appName: "ExampleApp")
+  let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: "123", appName: "ExampleApp")
   let emptyAppLink = AppLink(sourceURL: nil, targets: [], webURL: nil)
   let eventPoster = TestMeasurementEvent()
   let resolver = TestAppLinkResolver()
@@ -83,7 +83,7 @@ class AppLinkNavigationTests: XCTestCase {
 
   func testAppLinkWithTargetUrl() {
     do {
-      let url = try navigation.appLinkURL(withTargetURL: SampleUrls.valid)
+      let url = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
       let payload = decodedPayload(url: url)
 
       XCTAssertEqual(payload?.userAgent, "FBSDK \(FBSDK_VERSION_STRING)")
@@ -99,18 +99,18 @@ class AppLinkNavigationTests: XCTestCase {
   }
 
   func testAppLinkWithTargetUrlWithValidStartingAppLink() {
-    let appLink = AppLink(sourceURL: SampleUrls.valid, targets: [target], webURL: SampleUrls.valid)
+    let appLink = AppLink(sourceURL: SampleURLs.valid, targets: [target], webURL: SampleURLs.valid)
     navigation = AppLinkNavigation(
       appLink: appLink, extras: [:], appLinkData: [:]
     )
     do {
-      let url = try navigation.appLinkURL(withTargetURL: SampleUrls.valid)
+      let url = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
       let payload = decodedPayload(url: url)
 
       XCTAssertEqual(payload?.userAgent, "FBSDK \(FBSDK_VERSION_STRING)")
       XCTAssertEqual(payload?.version, "1.0")
       XCTAssertEqual(payload?.extras, [:])
-      XCTAssertEqual(payload?.targetUrl, SampleUrls.valid)
+      XCTAssertEqual(payload?.targetUrl, SampleURLs.valid)
     } catch {
       XCTAssertNil(
         error,
@@ -123,7 +123,7 @@ class AppLinkNavigationTests: XCTestCase {
     navigation = AppLinkNavigation(appLink: emptyAppLink, extras: [:], appLinkData: ["foo": Any.self])
 
     do {
-      let url = try navigation.appLinkURL(withTargetURL: SampleUrls.valid)
+      let url = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
 
       guard
         let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems,
@@ -150,7 +150,7 @@ class AppLinkNavigationTests: XCTestCase {
     navigation = AppLinkNavigation(appLink: emptyAppLink, extras: ["some": "extra"], appLinkData: appLinkData)
 
     do {
-      let url = try navigation.appLinkURL(withTargetURL: SampleUrls.valid)
+      let url = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
       let payload = decodedPayload(url: url)
 
       XCTAssertEqual(payload?.userAgent, "foo")
@@ -174,7 +174,7 @@ class AppLinkNavigationTests: XCTestCase {
     navigation = AppLinkNavigation(appLink: emptyAppLink, extras: [:], appLinkData: appLinkData)
 
     do {
-      let url = try navigation.appLinkURL(withTargetURL: SampleUrls.valid)
+      let url = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
       let payload = decodedPayload(url: url)
       XCTAssertEqual(payload?.userAgent, "foo")
       XCTAssertEqual(payload?.version, "bar")
@@ -249,7 +249,7 @@ class AppLinkNavigationTests: XCTestCase {
   }
 
   func testPostingNavigationEventWithAppLink() {
-    let appLink = AppLink(sourceURL: SampleUrls.valid, targets: [target], webURL: SampleUrls.valid)
+    let appLink = AppLink(sourceURL: SampleURLs.valid, targets: [target], webURL: SampleURLs.valid)
     navigation = AppLinkNavigation(
       appLink: appLink, extras: [:], appLinkData: [:]
     )
@@ -267,17 +267,17 @@ class AppLinkNavigationTests: XCTestCase {
     )
     XCTAssertEqual(
       eventPoster.capturedArgs["sourceHost"],
-      SampleUrls.valid.host,
+      SampleURLs.valid.host,
       "A navigation event notification should include information about the app link"
     )
     XCTAssertEqual(
       eventPoster.capturedArgs["sourceScheme"],
-      SampleUrls.valid.scheme,
+      SampleURLs.valid.scheme,
       "A navigation event notification should include information about the app link"
     )
     XCTAssertEqual(
       eventPoster.capturedArgs["sourceURL"],
-      SampleUrls.valid.absoluteString,
+      SampleURLs.valid.absoluteString,
       "A navigation event notification should include information about the app link"
     )
   }
@@ -337,7 +337,7 @@ class AppLinkNavigationTests: XCTestCase {
   }
 
   func testNavigationTypeWithInvalidTargetWithoutWebUrl() {
-    let target = AppLinkTarget(url: SampleUrls.valid, appStoreId: nil, appName: name)
+    let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: nil)
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
 
@@ -349,7 +349,7 @@ class AppLinkNavigationTests: XCTestCase {
   }
 
   func testNavigationTypeWithValidTargetWithoutWebUrl() {
-    let target = AppLinkTarget(url: SampleUrls.valid, appStoreId: nil, appName: name)
+    let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: nil)
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
 
@@ -361,8 +361,8 @@ class AppLinkNavigationTests: XCTestCase {
   }
 
   func testNavigationTypeWithValidTargetWithWebUrl() {
-    let target = AppLinkTarget(url: SampleUrls.valid, appStoreId: nil, appName: name)
-    let appLink = AppLink(sourceURL: nil, targets: [target], webURL: SampleUrls.valid)
+    let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
+    let appLink = AppLink(sourceURL: nil, targets: [target], webURL: SampleURLs.valid)
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
 
     XCTAssertEqual(
@@ -373,8 +373,8 @@ class AppLinkNavigationTests: XCTestCase {
   }
 
   func testNavigationTypeWithInvalidTargetWithWebUrl() {
-    let target = AppLinkTarget(url: SampleUrls.valid, appStoreId: nil, appName: name)
-    let appLink = AppLink(sourceURL: nil, targets: [target], webURL: SampleUrls.valid)
+    let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
+    let appLink = AppLink(sourceURL: nil, targets: [target], webURL: SampleURLs.valid)
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
 
     XCTAssertEqual(
@@ -409,13 +409,13 @@ class AppLinkNavigationTests: XCTestCase {
   // MARK: - Navigating
 
   func testSuccessfullyNavigatingWithTargetWithoutWebUrl() {
-    let target = AppLinkTarget(url: SampleUrls.valid, appStoreId: nil, appName: name)
+    let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: nil)
     let opener = TestInternalURLOpener(canOpenUrl: true)
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
 
     do {
-      let targetUrl = try navigation.appLinkURL(withTargetURL: SampleUrls.valid)
+      let targetUrl = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
 
       opener.stubOpen(url: targetUrl, success: true)
 
@@ -440,14 +440,14 @@ class AppLinkNavigationTests: XCTestCase {
   }
 
   func testUnsuccessfullyNavigatingWithTargetWithWebUrl() {
-    let target = AppLinkTarget(url: SampleUrls.valid, appStoreId: nil, appName: name)
-    let appLink = AppLink(sourceURL: nil, targets: [target], webURL: SampleUrls.valid(path: name))
+    let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
+    let appLink = AppLink(sourceURL: nil, targets: [target], webURL: SampleURLs.valid(path: name))
     let opener = TestInternalURLOpener(canOpenUrl: true)
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
 
     do {
-      let targetUrl = try navigation.appLinkURL(withTargetURL: SampleUrls.valid)
-      let webUrl = try navigation.appLinkURL(withTargetURL: SampleUrls.valid(path: name))
+      let targetUrl = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
+      let webUrl = try navigation.appLinkURL(withTargetURL: SampleURLs.valid(path: name))
 
       opener.stubOpen(url: targetUrl, success: false)
       opener.stubOpen(url: webUrl, success: true)
@@ -474,7 +474,7 @@ class AppLinkNavigationTests: XCTestCase {
 
   func testNavigatingToUrlWithoutAppLink() {
     let expectation = self.expectation(description: name)
-    AppLinkNavigation.navigate(to: SampleUrls.valid) { _, _ in
+    AppLinkNavigation.navigate(to: SampleURLs.valid) { _, _ in
       expectation.fulfill()
     }
 
@@ -492,13 +492,13 @@ class AppLinkNavigationTests: XCTestCase {
     var callbackNavigationType: AppLinkNavigation.`Type`?
     var callbackError: Error?
 
-    AppLinkNavigation.navigate(to: SampleUrls.valid) { potentialNavigationType, potentialError in
+    AppLinkNavigation.navigate(to: SampleURLs.valid) { potentialNavigationType, potentialError in
       callbackNavigationType = potentialNavigationType
       callbackError = potentialError
       expectation.fulfill()
     }
 
-    let appLink = AppLink(sourceURL: SampleUrls.valid, targets: [], webURL: nil)
+    let appLink = AppLink(sourceURL: SampleURLs.valid, targets: [], webURL: nil)
 
     // The captured completion itself is dispatched asynchronously to the main thread
     // so we can delay a tick here to make sure it's complete
@@ -516,13 +516,13 @@ class AppLinkNavigationTests: XCTestCase {
     var callbackNavigationType: AppLinkNavigation.`Type`?
     var callbackError: Error?
 
-    AppLinkNavigation.navigate(to: SampleUrls.valid) { potentialNavigationType, potentialError in
+    AppLinkNavigation.navigate(to: SampleURLs.valid) { potentialNavigationType, potentialError in
       callbackNavigationType = potentialNavigationType
       callbackError = potentialError
       expectation.fulfill()
     }
 
-    let appLink = AppLink(sourceURL: SampleUrls.valid, targets: [], webURL: nil)
+    let appLink = AppLink(sourceURL: SampleURLs.valid, targets: [], webURL: nil)
 
     // The captured completion itself is dispatched asynchronously to the main thread
     // so we can delay a tick here to make sure it's complete
@@ -542,14 +542,14 @@ class AppLinkNavigationTests: XCTestCase {
 
   func testResolvingAppLinkWithMissingDestination() {
     var didInvokeCompletion = false
-    AppLinkNavigation.resolveAppLink(SampleUrls.valid) { _, _ in
+    AppLinkNavigation.resolveAppLink(SampleURLs.valid) { _, _ in
       didInvokeCompletion = true
     }
     resolver.capturedCompletion?(nil, nil)
 
     XCTAssertEqual(
       resolver.capturedUrl,
-      SampleUrls.valid,
+      SampleURLs.valid,
       "Should resolve using the provided url"
     )
     XCTAssertTrue(didInvokeCompletion)

@@ -429,6 +429,7 @@
 		39B339F380CFBA8CECE1141B /* FBSDKConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = D64C4AA13BDE544E68E260D9 /* FBSDKConstants.m */; };
 		39C4910C8DD762A44E9ABEDF /* FBSDKProfile+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 045AA7077E3AFADE4D0120A9 /* FBSDKProfile+Internal.h */; };
 		39D2B35F6D7EDE2952AEAB05 /* FBSDKFeatureManager.h in Headers */ = {isa = PBXBuildFile; fileRef = E42103CC0C2721F5FE115DD9 /* FBSDKFeatureManager.h */; };
+		3A01CBAF06C346E8BFA5635A /* SampleURLs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1540AB5F8639C2F5D1BF505 /* SampleURLs.swift */; };
 		3A46E320578D6F041CF7E87A /* FBSDKMeasurementEvent+AppLinkEventPosting.h in Headers */ = {isa = PBXBuildFile; fileRef = 65EE2B220DDA3BBFF85E72D9 /* FBSDKMeasurementEvent+AppLinkEventPosting.h */; };
 		3A5B1096C32CA9C8E0C12A7E /* FBSDKAppLinkResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE4920923AF0B73AA752884 /* FBSDKAppLinkResolver.m */; };
 		3A5C7D769E6CC3049A361F8A /* FBSDKAEMNetworker.h in Headers */ = {isa = PBXBuildFile; fileRef = BCAA0A71E6088DB80720F9C6 /* FBSDKAEMNetworker.h */; };
@@ -993,7 +994,6 @@
 		84928E108FF6B272585DFDEE /* FBSDKSKAdNetworkReporter+AppEventsReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 5CC4B792A9251BE0331F40AE /* FBSDKSKAdNetworkReporter+AppEventsReporter.h */; };
 		84A59B6549CF0B8D7994328C /* FBSDKInstrumentManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 08FB04975E971FE16558B424 /* FBSDKInstrumentManager.h */; };
 		84A81DC3F45DF29B010F4E1D /* FBSDKLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A338C1485A403E794F1B8DD /* FBSDKLocation.m */; };
-		85070B6F4F6F57D7ED9C9D6B /* SampleUrls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F24B99DA14C5ADF157AC667 /* SampleUrls.swift */; };
 		8522DBA8D2A4AF260973E09C /* FBSDKSettings+ClientTokenProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EB64775CF7B2AA4603B267E /* FBSDKSettings+ClientTokenProviding.h */; };
 		856F62C472E52B28B315FBB6 /* FBSDKErrorConfigurationProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = B1E27D8EAEDF9C5E0C7F0CF4 /* FBSDKErrorConfigurationProvider.m */; };
 		85CB8C28070D4CC1313E143B /* FBSDKGraphRequestConnectionFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F3AD12792B6B00CE322292E /* FBSDKGraphRequestConnectionFactory.m */; };
@@ -2048,7 +2048,6 @@
 		0EADB2C5ECA8E42D8566D6AF /* FBSDKViewImpressionTracker+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKViewImpressionTracker+Testing.h"; sourceTree = "<group>"; };
 		0F1239606F030318BD9FB5AE /* FBSDKCoreKit-Dynamic.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBSDKCoreKit-Dynamic.xcconfig"; sourceTree = "<group>"; };
 		0F241E5E11B84E3DFB437AF1 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKCoreKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		0F24B99DA14C5ADF157AC667 /* SampleUrls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleUrls.swift; sourceTree = "<group>"; };
 		0F884BC7E20B0EA593CE5FD0 /* FBSDKCoreKitBasicsImport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKCoreKitBasicsImport.h; sourceTree = "<group>"; };
 		0FA0354AA0E650AAA2539C22 /* FBSDKUserAgeRange.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKUserAgeRange.m; sourceTree = "<group>"; };
 		0FEF51365258C976101CADD7 /* FBSDKButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKButton.m; sourceTree = "<group>"; };
@@ -2637,6 +2636,7 @@
 		CF5B94A8B326FCBDA4FFDBB3 /* ImageDownloaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloaderTests.swift; sourceTree = "<group>"; };
 		D04A6E4B3EC3401B67E02DC2 /* FBSDKFeatureChecking.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKFeatureChecking.h; sourceTree = "<group>"; };
 		D081276FA1DF393B7A8B0BC8 /* TestFileDataExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFileDataExtractor.swift; sourceTree = "<group>"; };
+		D1540AB5F8639C2F5D1BF505 /* SampleURLs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleURLs.swift; sourceTree = "<group>"; };
 		D1571AD16E93D76620F69543 /* FBSDKModelRuntimeTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = FBSDKModelRuntimeTests.mm; sourceTree = "<group>"; };
 		D197A23401FFFB69BDD1E3F5 /* GraphRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphRequestTests.swift; sourceTree = "<group>"; };
 		D1B89F2F194143DC03CD8C83 /* UserAgeRangeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAgeRangeTests.swift; sourceTree = "<group>"; };
@@ -3021,7 +3021,7 @@
 				27E0552F0BB1AC0675830664 /* SampleRawRemoteGateKeeper.swift */,
 				69E24BD65BD1FDF40D9D1B35 /* SampleRawRemoteGateKeeperList.swift */,
 				717FA22BE101340EC352ABD8 /* SampleRawRemotePermissionList.swift */,
-				0F24B99DA14C5ADF157AC667 /* SampleUrls.swift */,
+				D1540AB5F8639C2F5D1BF505 /* SampleURLs.swift */,
 				15E8258D64B6C055B6FA9907 /* ServerConfigurationFixtures.swift */,
 				C02F9A5BE270A6B039B24F26 /* TestAccessTokenWallet.swift */,
 				4B690E6E7E4BA0EB36A167F4 /* TestAdvertiserIDProvider.swift */,
@@ -6092,7 +6092,7 @@
 				36F1F09602D9708EC609D498 /* SampleRawRemoteGateKeeper.swift in Sources */,
 				EAB0FDAAFD3C5FEC25CBD0BB /* SampleRawRemoteGateKeeperList.swift in Sources */,
 				DC1AA6A125E7F7AF7E52E9AA /* SampleRawRemotePermissionList.swift in Sources */,
-				85070B6F4F6F57D7ED9C9D6B /* SampleUrls.swift in Sources */,
+				3A01CBAF06C346E8BFA5635A /* SampleURLs.swift in Sources */,
 				3EC465DA50458D459E976476 /* ServerConfigurationFixtures.swift in Sources */,
 				17AD39BECEEC5059157DBD9B /* SettingsTests.swift in Sources */,
 				651726C3A0BE398BB9EF4938 /* SuggestedEventsIndexerTests.swift in Sources */,

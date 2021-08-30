@@ -17,7 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class TestBridgeApiProtocol: NSObject, BridgeAPIProtocol {
-  var stubbedRequestURL = SampleUrls.valid
+  var stubbedRequestURL = SampleURLs.valid
   var stubbedRequestURLError: Error?
   var stubbedResponseParameters = [AnyHashable: Any]()
   var capturedRequestUrlActionID: String?

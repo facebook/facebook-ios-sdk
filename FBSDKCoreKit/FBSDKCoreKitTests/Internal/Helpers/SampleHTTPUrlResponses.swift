@@ -32,35 +32,35 @@ enum SampleHTTPURLResponses {
   }
 
   static let valid = HTTPURLResponse(
-    url: SampleUrls.valid,
+    url: SampleURLs.valid,
     mimeType: MimeType.applicationJSON.description,
     expectedContentLength: 0,
     textEncodingName: nil
   )
 
   static let missingMimeType = HTTPURLResponse(
-    url: SampleUrls.valid,
+    url: SampleURLs.valid,
     mimeType: nil,
     expectedContentLength: 0,
     textEncodingName: nil
   )
 
   static let pngMimeType = HTTPURLResponse(
-    url: SampleUrls.valid,
+    url: SampleURLs.valid,
     mimeType: MimeType.png.description,
     expectedContentLength: 0,
     textEncodingName: nil
   )
 
   static let invalidStatusCode = HTTPURLResponse(
-    url: SampleUrls.valid,
+    url: SampleURLs.valid,
     statusCode: 500,
     httpVersion: nil,
     headerFields: nil
   )
 
   static let validStatusCode = HTTPURLResponse(
-    url: SampleUrls.valid,
+    url: SampleURLs.valid,
     statusCode: 200,
     httpVersion: nil,
     headerFields: nil
@@ -71,7 +71,7 @@ enum SampleHTTPURLResponses {
     headerFields: [String: String]? = nil
   ) -> HTTPURLResponse {
     HTTPURLResponse(
-      url: SampleUrls.valid,
+      url: SampleURLs.valid,
       statusCode: statusCode,
       httpVersion: nil,
       headerFields: headerFields

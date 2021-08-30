@@ -243,7 +243,7 @@ class ApplicationDelegateTests: XCTestCase {
     delegate.initializeSDK(
       launchOptions: [
         UIApplication.LaunchOptionsKey.sourceApplication: name,
-        .url: SampleUrls.valid
+        .url: SampleURLs.valid
       ]
     )
 
@@ -254,7 +254,7 @@ class ApplicationDelegateTests: XCTestCase {
     )
     XCTAssertEqual(
       appEvents.capturedSetSourceApplicationURL,
-      SampleUrls.valid,
+      SampleURLs.valid,
       "Should set the source application url based on the launch options"
     )
   }
@@ -367,7 +367,7 @@ class ApplicationDelegateTests: XCTestCase {
   func testOpeningURLChecksAEMFeatureAvailability() {
     delegate.application(
       UIApplication.shared,
-      open: SampleUrls.validApp,
+      open: SampleURLs.validApp,
       options: [:]
     )
     XCTAssertTrue(

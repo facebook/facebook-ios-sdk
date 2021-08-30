@@ -26,7 +26,7 @@ class ErrorReportTests: XCTestCase {
   let domain = "test"
   let timeInterval = 10.0
   let factory = TestGraphRequestFactory()
-  let fileManager = TestFileManager(tempDirectoryURL: SampleUrls.valid)
+  let fileManager = TestFileManager(tempDirectoryURL: SampleURLs.valid)
   let settings = TestSettings()
   let validReportNames = [
     "error_report_1.json",
