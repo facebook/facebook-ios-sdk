@@ -88,6 +88,17 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [super tearDown];
 }
 
+- (void)testEnable
+{
+  [self.skAdNetworkReporter setSKAdNetworkReportEnabled:NO];
+  [self.skAdNetworkReporter enable];
+
+  XCTAssertTrue(
+    self.skAdNetworkReporter.isSKAdNetworkReportEnabled,
+    "SKAdNetwork report should be enabled"
+  );
+}
+
 - (void)testShouldCutoffWithoutTimestampWithoutCutoffTime
 {
   XCTAssertTrue([self.skAdNetworkReporter _shouldCutoff], "Should cut off reporting when there is no install timestamp or cutoff time");

@@ -153,6 +153,7 @@
 #import "FBSDKSKAdNetworkConversionConfiguration.h"
 #import "FBSDKSKAdNetworkEvent.h"
 #import "FBSDKSKAdNetworkReporter.h"
+#import "FBSDKSKAdNetworkReporter+Testing.h"
 #import "FBSDKSKAdNetworkRule.h"
 #import "FBSDKServerConfigurationLoading.h"
 #import "FBSDKSettings+Testing.h"
