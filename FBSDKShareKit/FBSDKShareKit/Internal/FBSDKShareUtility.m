@@ -18,15 +18,8 @@
 
 #import "FBSDKShareUtility.h"
 
-#import "FBSDKHashtag.h"
-
-#ifdef FBSDKCOCOAPODS
- #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
- #import "FBSDKCoreKit+Internal.h"
-#endif
-
 #import "FBSDKCoreKitBasicsImportForShareKit.h"
+#import "FBSDKHashtag.h"
 #import "FBSDKShareConstants.h"
 #import "FBSDKShareLinkContent.h"
 
