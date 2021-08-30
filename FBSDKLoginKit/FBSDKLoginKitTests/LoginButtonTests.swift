@@ -513,7 +513,7 @@ class LoginButtonTests: XCTestCase {
       button.loginConfiguration(),
       "Should be able to create a configuration with nil auth type"
     )
-    XCTAssertEqual(button.loginConfiguration().authType, nil)
+    XCTAssertNil(button.loginConfiguration().authType)
   }
 
   func testLoginConfigurationWithNoAuthType() {

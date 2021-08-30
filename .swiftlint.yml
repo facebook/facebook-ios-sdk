@@ -82,7 +82,6 @@ only_rules:
   - fatal_error_message
   - file_header
   - file_length
-  - file_name
   - first_where
   - for_where
   - force_cast
