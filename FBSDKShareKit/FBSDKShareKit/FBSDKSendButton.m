@@ -22,11 +22,6 @@
 
  #import "FBSDKSendButton.h"
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
  #import "FBSDKMessageDialog.h"
  #import "FBSDKMessengerIcon.h"
 
@@ -105,8 +100,16 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonDidTap = @"fb_send_button_did_
 
 - (void)_share:(id)sender
 {
-  [self logTapEventWithEventName:FBSDKAppEventNameFBSDKSendButtonDidTap parameters:self.analyticsParameters];
+  [self _logTapEventWithEventName:FBSDKAppEventNameFBSDKSendButtonDidTap parameters:self.analyticsParameters];
   [_dialog show];
+}
+
+- (void)_logTapEventWithEventName:(NSString *)eventName parameters:(NSDictionary *)parameters
+{
+  [FBSDKAppEvents logInternalEvent:eventName
+                        parameters:parameters
+                isImplicitlyLogged:YES
+                       accessToken:[FBSDKAccessToken currentAccessToken]];
 }
 
 @end
