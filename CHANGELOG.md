@@ -7,11 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.2.0...HEAD)
+
+## 11.2.0
+
+### Added
+
+- Added AEM Deeplink handling debugging support
+
 ### Fixed
 
 - Support for building with Xcode 13 beta 4 due to change in optionality for NS_EXTENSION_UNAVAILABLE. More information in the [Xcode release notes](https://developer.apple.com/documentation/xcode-release-notes/xcode-13-beta-release-notes) and in issue [#1799](https://github.com/facebook/facebook-ios-sdk/issues/1799). Resolved by [@S2Ler](https://github.com/S2Ler) in [#1768](https://github.com/facebook/facebook-ios-sdk/pull/1811)
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.1.0...HEAD)
+[2021-08-30](https://github.com/facebook/facebook-ios-sdk/releases/tag/v11.2.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v11.1.0...v11.2.0)
 
 ## 11.1.0
 
