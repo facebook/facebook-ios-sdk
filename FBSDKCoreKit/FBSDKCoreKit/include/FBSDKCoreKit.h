@@ -58,6 +58,7 @@
 #import "FBSDKInternalUtilityProtocol.h"
 #import "FBSDKLocation.h"
 #import "FBSDKLogger.h"
+#import "FBSDKLogging.h"
 #import "FBSDKLoggingBehavior.h"
 #import "FBSDKRandom.h"
 #import "FBSDKServerConfigurationProvider.h"

@@ -21,10 +21,13 @@
 #import <mach-o/dyld.h>
 #import <sys/time.h>
 
-#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKApplicationDelegate.h"
+#import "FBSDKAuthenticationToken.h"
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKError+Internal.h"
 #import "FBSDKInternalUtilityProtocol.h"
+#import "FBSDKLogger.h"
+#import "FBSDKLogging.h"
 #import "FBSDKSettings.h"
 #import "FBSDKSettings+Internal.h"
 
