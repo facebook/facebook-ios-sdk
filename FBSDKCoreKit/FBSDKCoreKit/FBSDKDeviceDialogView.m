@@ -22,8 +22,14 @@
 
  #import "FBSDKDeviceDialogView.h"
 
- #import "FBSDKCoreKit+Internal.h"
  #import "FBSDKDeviceUtilities.h"
+ #import "FBSDKLogo.h"
+
+ #if FBSDK_SWIFT_PACKAGE
+  #import "FBSDKInternalUtility.h"
+ #else
+  #import <FBSDKCoreKit/FBSDKInternalUtility.h>
+ #endif
 
 @implementation FBSDKDeviceDialogView
 {
