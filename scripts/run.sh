@@ -220,9 +220,9 @@ bump_version() {
     mv "$temp_file" "$full_file_path"
   done
 
-  grep_for_old_version "$SDK_CURRENT_VERSION"
-
   bump_changelog "$new_version"
+
+  grep_for_old_version "$SDK_CURRENT_VERSION"
 }
 
 # Bump Version
