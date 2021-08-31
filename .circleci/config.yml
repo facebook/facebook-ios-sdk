@@ -115,8 +115,6 @@ commands:
     description: Builds the Debug configuration for all schemes using xcodebuild
     steps:
       - build_xcode:
-          scheme: BuildCoreKitBasics
-      - build_xcode:
           scheme: BuildAllKits
       - build_xcode:
           scheme: BuildAllKits_TV
@@ -124,9 +122,6 @@ commands:
   build_xcode_release:
     description: Builds the Release configuration for all schemes using xcodebuild
     steps:
-      - build_xcode:
-          scheme: BuildCoreKitBasics
-          configuration: Release
       - build_xcode:
           scheme: BuildAllKits
           configuration: Release

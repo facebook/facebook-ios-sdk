@@ -124,12 +124,6 @@ aggregateTargets:
         path: ../scripts/xcode/build-universal-tvos-framework.sh
 
 schemes:
-  BuildCoreKitBasics:
-    build:
-      targets:
-        FBSDKCoreKit_Basics-Universal: [archive, run, profile, analyze]
-        FBSDKCoreKit_Basics_TV-Universal: [archive, run, profile, analyze]
-      parallelizeBuild: false
   FBSDKCoreKit_Basics-Dynamic:
     build:
       targets:
