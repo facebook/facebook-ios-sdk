@@ -23,6 +23,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKSKAdNetworkReporter (Testing)
 
 @property (nonatomic) BOOL isSKAdNetworkReportEnabled;
+@property (nonatomic) NSInteger conversionValue;
+@property (nonatomic) NSDate *timestamp;
+@property (nonnull, nonatomic) NSMutableSet<NSString *> *recordedEvents;
+@property (nonnull, nonatomic) NSMutableDictionary<NSString *, id> *recordedValues;
 
 @end
 

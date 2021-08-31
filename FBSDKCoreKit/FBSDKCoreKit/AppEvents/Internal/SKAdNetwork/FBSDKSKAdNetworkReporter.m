@@ -280,6 +280,7 @@ static NSString *const FBSDKSKAdNetworkReporterKey = @"com.facebook.sdk:FBSDKSKA
                                                                            @[NSString.class,
                                                                              NSNumber.class,
                                                                              NSArray.class,
+                                                                             NSDate.class,
                                                                              NSDictionary.class,
                                                                              NSSet.class]]
                                                 fromData:cachedReportData
