@@ -16,7 +16,7 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class TestBridgeApiProtocol: NSObject, BridgeAPIProtocol {
+class TestBridgeAPIProtocol: NSObject, BridgeAPIProtocol {
   var stubbedRequestURL = SampleURLs.valid
   var stubbedRequestURLError: Error?
   var stubbedResponseParameters = [AnyHashable: Any]()

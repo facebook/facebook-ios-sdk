@@ -29,7 +29,7 @@ class BridgeAPIRequestTests: XCTestCase {
       parameters: [:],
       userInfo: [:]
     ) as Any
-    let conformedRequest = request as? FBSDKBridgeAPIRequestProtocol
+    let conformedRequest = request as? BridgeAPIRequestProtocol
 
     XCTAssertNotNil(conformedRequest, "BridgeAPIRequest should conform to the expected protocol")
   }

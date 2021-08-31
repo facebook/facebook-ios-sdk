@@ -21,13 +21,10 @@
 #if !TARGET_OS_TV
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIViewController.h>
 
-#import "FBSDKBridgeAPIResponse.h"
+#import "FBSDKBridgeAPIProtocolType.h"
 
-@protocol FBSDKBridgeAPIRequest;
-
-NS_ASSUME_NONNULL_BEGIN
+@protocol FBSDKBridgeAPIProtocol;
 
 /**
  Internal Type exposed to facilitate transition to Swift.
@@ -35,16 +32,17 @@ NS_ASSUME_NONNULL_BEGIN
 
  @warning UNSAFE - DO NOT USE
  */
-NS_SWIFT_NAME(BridgeAPIRequestOpening)
-@protocol FBSDKBridgeAPIRequestOpening <NSObject>
+NS_SWIFT_NAME(BridgeAPIRequestProtocol)
+@protocol FBSDKBridgeAPIRequest <NSObject, NSCopying>
 
-- (void)openBridgeAPIRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
-     useSafariViewController:(BOOL)useSafariViewController
-          fromViewController:(nullable UIViewController *)fromViewController
-             completionBlock:(FBSDKBridgeAPIResponseBlock)completionBlock;
+@property (nonatomic, copy, readonly) NSString *scheme;
+@property (nonatomic, copy, readonly) NSString *actionID;
+@property (nonatomic, copy, readonly) NSString *methodName;
+@property (nonatomic, assign, readonly) FBSDKBridgeAPIProtocolType protocolType;
+@property (nonatomic, readonly, strong) id<FBSDKBridgeAPIProtocol> protocol;
+
+- (NSURL *)requestURL:(NSError *__autoreleasing *)errorRef;
 
 @end
-
-NS_ASSUME_NONNULL_END
 
 #endif

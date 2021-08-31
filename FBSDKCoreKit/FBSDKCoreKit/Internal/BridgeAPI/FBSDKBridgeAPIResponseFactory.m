@@ -22,25 +22,26 @@
 
  #import "FBSDKBridgeAPIResponseFactory.h"
 
+ #import "FBSDKBridgeAPIRequestProtocol.h"
  #import "FBSDKBridgeAPIResponse.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @implementation FBSDKBridgeAPIResponseFactory
 
-- (FBSDKBridgeAPIResponse *)createResponseCancelledWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
+- (FBSDKBridgeAPIResponse *)createResponseCancelledWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
 {
   return [FBSDKBridgeAPIResponse bridgeAPIResponseCancelledWithRequest:request];
 }
 
-- (FBSDKBridgeAPIResponse *)createResponseWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
+- (FBSDKBridgeAPIResponse *)createResponseWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
                                                 error:(NSError *)error
 {
   return [FBSDKBridgeAPIResponse bridgeAPIResponseWithRequest:request
                                                         error:error];
 }
 
-- (nullable FBSDKBridgeAPIResponse *)createResponseWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
+- (nullable FBSDKBridgeAPIResponse *)createResponseWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
                                                    responseURL:(NSURL *)responseURL
                                              sourceApplication:(nullable NSString *)sourceApplication
                                                          error:(NSError *__autoreleasing _Nullable *_Nullable)errorRef

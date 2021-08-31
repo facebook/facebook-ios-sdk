@@ -17,7 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @objcMembers
-class TestBridgeApiRequest: NSObject, FBSDKBridgeAPIRequestProtocol {
+class TestBridgeAPIRequest: NSObject, BridgeAPIRequestProtocol {
   var actionID: String?
   var methodName: String?
   var protocolType: FBSDKBridgeAPIProtocolType
@@ -38,19 +38,19 @@ class TestBridgeApiRequest: NSObject, FBSDKBridgeAPIRequestProtocol {
 
   func requestURL() throws -> URL {
     guard let url = url else {
-      throw FakeBridgeApiRequestError(domain: "tests", code: 0, userInfo: [:])
+      throw FakeBridgeAPIRequestError(domain: "tests", code: 0, userInfo: [:])
     }
     return url
   }
 
-  static func request(withURL url: URL?) -> TestBridgeApiRequest {
-    TestBridgeApiRequest(url: url)
+  static func request(withURL url: URL?) -> TestBridgeAPIRequest {
+    TestBridgeAPIRequest(url: url)
   }
 
-  static func request(withURL url: URL, scheme: String) -> TestBridgeApiRequest {
-    TestBridgeApiRequest(url: url, scheme: scheme)
+  static func request(withURL url: URL, scheme: String) -> TestBridgeAPIRequest {
+    TestBridgeAPIRequest(url: url, scheme: scheme)
   }
 }
 
 @objc
-class FakeBridgeApiRequestError: NSError {}
+class FakeBridgeAPIRequestError: NSError {}

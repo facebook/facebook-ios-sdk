@@ -22,27 +22,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKBridgeAPIProtocol.h"
 #import "FBSDKBridgeAPIProtocolType.h"
-
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning UNSAFE - DO NOT USE
- */
-@protocol FBSDKBridgeAPIRequestProtocol <NSObject, NSCopying>
-
-@property (nonatomic, copy, readonly) NSString *scheme;
-@property (nonatomic, copy, readonly) NSString *actionID;
-@property (nonatomic, copy, readonly) NSString *methodName;
-@property (nonatomic, assign, readonly) FBSDKBridgeAPIProtocolType protocolType;
-@property (nonatomic, readonly, strong) id<FBSDKBridgeAPIProtocol> protocol;
-
-- (NSURL *)requestURL:(NSError *__autoreleasing *)errorRef;
-
-@end
-
+#import "FBSDKBridgeAPIRequest.h"
+#import "FBSDKBridgeAPIRequestProtocol.h"
 /**
  Internal Type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
@@ -50,7 +32,7 @@
  @warning UNSAFE - DO NOT USE
  */
 NS_SWIFT_NAME(BridgeAPIRequest)
-@interface FBSDKBridgeAPIRequest : NSObject <NSCopying, NSObject, FBSDKBridgeAPIRequestProtocol>
+@interface FBSDKBridgeAPIRequest : NSObject <NSCopying, FBSDKBridgeAPIRequest>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

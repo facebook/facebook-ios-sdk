@@ -76,7 +76,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 - (id<FBSDKURLOpening>)pendingUrlOpen;
 - (SFSafariViewController *)safariViewController;
 - (BOOL)isDismissingSafariViewController;
-- (NSObject<FBSDKBridgeAPIRequestProtocol> *)pendingRequest;
+- (NSObject<FBSDKBridgeAPIRequest> *)pendingRequest;
 - (FBSDKBridgeAPIResponseBlock)pendingRequestCompletionBlock;
 
 - (void)applicationWillResignActive:(UIApplication *)application;
@@ -98,11 +98,11 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 - (void)setPendingUrlOpen:(id<FBSDKURLOpening>)opening;
 - (void)setSafariViewController:(nullable UIViewController *)controller;
 - (void)setIsDismissingSafariViewController:(BOOL)isDismissing;
-- (void)setPendingRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)newValue;
+- (void)setPendingRequest:(NSObject<FBSDKBridgeAPIRequest> *)newValue;
 - (void)setPendingRequestCompletionBlock:(nullable FBSDKBridgeAPIResponseBlock)newValue;
 
 - (BOOL)_handleBridgeAPIResponseURL:(NSURL *)responseURL sourceApplication:(NSString *)sourceApplication;
-- (FBSDKSuccessBlock)_bridgeAPIRequestCompletionBlockWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
+- (FBSDKSuccessBlock)_bridgeAPIRequestCompletionBlockWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
                                                                                completion:(FBSDKBridgeAPIResponseBlock)completionBlock;
 - (void)_cancelBridgeRequest;
 
@@ -115,13 +115,13 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 
 @interface FBSDKBridgeAPIResponse (Testing)
 
-+ (nullable instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
++ (nullable instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
                                           responseURL:(NSURL *)responseURL
                                     sourceApplication:(NSString *)sourceApplication
                                     osVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)comparer
                                                 error:(NSError *__autoreleasing *)errorRef;
 
-- (instancetype)initWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
+- (instancetype)initWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
              responseParameters:(NSDictionary *)responseParameters
                       cancelled:(BOOL)cancelled
                           error:(nullable NSError *)error;

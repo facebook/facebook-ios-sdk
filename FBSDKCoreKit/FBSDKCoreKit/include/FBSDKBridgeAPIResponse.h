@@ -22,8 +22,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKBridgeAPIRequest.h"
-
+@protocol FBSDKBridgeAPIRequest;
 @class FBSDKBridgeAPIResponse;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -49,16 +48,16 @@ NS_SWIFT_NAME(BridgeAPIResponse)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-+ (instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request error:(NSError *)error;
-+ (nullable instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
-                                 responseURL:(NSURL *)responseURL
-                           sourceApplication:(nullable NSString *)sourceApplication
-                                       error:(NSError *__autoreleasing *)errorRef;
-+ (instancetype)bridgeAPIResponseCancelledWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request;
++ (instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request error:(NSError *)error;
++ (nullable instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
+                                          responseURL:(NSURL *)responseURL
+                                    sourceApplication:(nullable NSString *)sourceApplication
+                                                error:(NSError *__autoreleasing *)errorRef;
++ (instancetype)bridgeAPIResponseCancelledWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request;
 
 @property (nonatomic, assign, readonly, getter=isCancelled) BOOL cancelled;
 @property (nullable, nonatomic, copy, readonly) NSError *error;
-@property (nonatomic, copy, readonly) NSObject<FBSDKBridgeAPIRequestProtocol> *request;
+@property (nonatomic, copy, readonly) NSObject<FBSDKBridgeAPIRequest> *request;
 @property (nullable, nonatomic, copy, readonly) NSDictionary *responseParameters;
 
 @end

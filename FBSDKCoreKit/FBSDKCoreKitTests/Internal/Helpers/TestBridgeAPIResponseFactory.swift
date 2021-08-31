@@ -17,26 +17,26 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 @objcMembers
-class TestBridgeApiResponseFactory: NSObject, BridgeAPIResponseCreating {
+class TestBridgeAPIResponseFactory: NSObject, BridgeAPIResponseCreating {
 
   var capturedResponseURL: URL?
   var capturedSourceApplication: String?
   var stubbedResponse: BridgeAPIResponse?
   var shouldFailCreation = false
 
-  func createResponseCancelled(withRequest request: FBSDKBridgeAPIRequestProtocol) -> BridgeAPIResponse {
+  func createResponseCancelled(with request: BridgeAPIRequestProtocol) -> BridgeAPIResponse {
     stubbedResponse ?? createResponse(request: request, cancelled: true)
   }
 
   func createResponse(
-    withRequest request: FBSDKBridgeAPIRequestProtocol,
+    with request: BridgeAPIRequestProtocol,
     error: Error
   ) -> BridgeAPIResponse {
     stubbedResponse ?? createResponse(request: request, error: error)
   }
 
   func createResponse(
-    withRequest request: FBSDKBridgeAPIRequestProtocol,
+    with request: BridgeAPIRequestProtocol,
     responseURL: URL,
     sourceApplication: String?
   ) throws -> BridgeAPIResponse {
@@ -51,7 +51,7 @@ class TestBridgeApiResponseFactory: NSObject, BridgeAPIResponseCreating {
   }
 
   private func createResponse(
-    request: FBSDKBridgeAPIRequestProtocol,
+    request: BridgeAPIRequestProtocol,
     error: Error? = nil,
     cancelled: Bool = false
   ) -> BridgeAPIResponse {

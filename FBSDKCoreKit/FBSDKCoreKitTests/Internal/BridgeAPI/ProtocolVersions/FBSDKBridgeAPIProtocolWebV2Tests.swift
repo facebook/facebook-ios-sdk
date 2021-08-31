@@ -36,7 +36,7 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
 
   let validQueryParameters = ["Foo": "Bar"]
   var serverConfigurationProvider = TestServerConfigurationProvider()
-  let nativeBridge = TestBridgeApiProtocol()
+  let nativeBridge = TestBridgeAPIProtocol()
   lazy var bridge = BridgeAPIProtocolWebV2(
     serverConfigurationProvider: serverConfigurationProvider,
     nativeBridge: nativeBridge
@@ -61,7 +61,7 @@ class FBSDKBridgeAPIProtocolWebV2Tests: XCTestCase {
       "Should be able to create with a custom server configuration provider"
     )
     XCTAssertEqual(
-      bridge.nativeBridge as? TestBridgeApiProtocol,
+      bridge.nativeBridge as? TestBridgeAPIProtocol,
       nativeBridge,
       "Should be able to create with a custom native bridge"
     )

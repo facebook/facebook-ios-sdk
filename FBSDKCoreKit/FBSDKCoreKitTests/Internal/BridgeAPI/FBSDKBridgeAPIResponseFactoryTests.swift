@@ -21,17 +21,17 @@ import XCTest
 class FBSDKBridgeAPIResponseFactoryTests: XCTestCase {
 
   let factory = BridgeAPIResponseFactory()
-  let request = TestBridgeApiRequest(url: SampleURLs.valid)
+  let request = TestBridgeAPIRequest(url: SampleURLs.valid)
   let error = SampleError()
   var response: BridgeAPIResponse! // swiftlint:disable:this implicitly_unwrapped_optional
 
   func testCreatingResponseWithError() {
     response = factory.createResponse(
-      withRequest: request,
+      with: request,
       error: error
     )
     XCTAssertEqual(
-      response.request as? TestBridgeApiRequest,
+      response.request as? TestBridgeAPIRequest,
       request,
       "Should set the request on the response"
     )
@@ -42,10 +42,10 @@ class FBSDKBridgeAPIResponseFactoryTests: XCTestCase {
   }
 
   func testCreatingCancelledResponse() {
-    response = factory.createResponseCancelled(withRequest: request)
+    response = factory.createResponseCancelled(with: request)
 
     XCTAssertEqual(
-      response.request as? TestBridgeApiRequest,
+      response.request as? TestBridgeAPIRequest,
       request,
       "Should set the request on the response"
     )
@@ -56,15 +56,15 @@ class FBSDKBridgeAPIResponseFactoryTests: XCTestCase {
   }
 
   func testCreatingWithRequestResponseAndSourceApplication() throws {
-    request.protocol = TestBridgeApiProtocol()
+    request.protocol = TestBridgeAPIProtocol()
     response = try factory.createResponse(
-      withRequest: request,
+      with: request,
       responseURL: SampleURLs.valid,
       sourceApplication: "foo"
     )
 
     XCTAssertEqual(
-      response.request as? TestBridgeApiRequest,
+      response.request as? TestBridgeAPIRequest,
       request,
       "Should set the request on the response"
     )

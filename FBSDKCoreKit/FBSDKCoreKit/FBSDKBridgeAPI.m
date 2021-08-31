@@ -79,7 +79,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
  #endif
 @implementation FBSDKBridgeAPI
 {
-  NSObject<FBSDKBridgeAPIRequestProtocol> *_pendingRequest;
+  NSObject<FBSDKBridgeAPIRequest> *_pendingRequest;
   FBSDKBridgeAPIResponseBlock _pendingRequestCompletionBlock;
   id<FBSDKURLOpening> _pendingURLOpen;
   id<FBSDKAuthenticationSession> _authenticationSession NS_AVAILABLE_IOS(11_0);
@@ -320,7 +320,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
  #pragma clang diagnostic pop
 
-- (void)openBridgeAPIRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
+- (void)openBridgeAPIRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
      useSafariViewController:(BOOL)useSafariViewController
           fromViewController:(UIViewController *)fromViewController
              completionBlock:(FBSDKBridgeAPIResponseBlock)completionBlock
@@ -347,7 +347,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   }
 }
 
-- (FBSDKSuccessBlock)_bridgeAPIRequestCompletionBlockWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
+- (FBSDKSuccessBlock)_bridgeAPIRequestCompletionBlockWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
                                                       completion:(FBSDKBridgeAPIResponseBlock)completionBlock
 {
   return ^(BOOL openedURL, NSError *anError) {
@@ -520,7 +520,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 - (BOOL)_handleBridgeAPIResponseURL:(NSURL *)responseURL sourceApplication:(NSString *)sourceApplication
 {
-  NSObject<FBSDKBridgeAPIRequestProtocol> *request = _pendingRequest;
+  NSObject<FBSDKBridgeAPIRequest> *request = _pendingRequest;
   FBSDKBridgeAPIResponseBlock completionBlock = _pendingRequestCompletionBlock;
   _pendingRequest = nil;
   _pendingRequestCompletionBlock = NULL;
@@ -659,12 +659,12 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   _isDismissingSafariViewController = isDismissing;
 }
 
-- (NSObject<FBSDKBridgeAPIRequestProtocol> *)pendingRequest
+- (NSObject<FBSDKBridgeAPIRequest> *)pendingRequest
 {
   return _pendingRequest;
 }
 
-- (void)setPendingRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)newValue
+- (void)setPendingRequest:(NSObject<FBSDKBridgeAPIRequest> *)newValue
 {
   _pendingRequest = newValue;
 }

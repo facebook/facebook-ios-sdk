@@ -30,7 +30,7 @@
  #import "NSProcessInfo+Protocols.h"
 
 @interface FBSDKBridgeAPIResponse ()
-- (instancetype)initWithRequest:(id<FBSDKBridgeAPIRequestProtocol>)request
+- (instancetype)initWithRequest:(id<FBSDKBridgeAPIRequest>)request
              responseParameters:(NSDictionary *)responseParameters
                       cancelled:(BOOL)cancelled
                           error:(NSError *)error
@@ -41,7 +41,7 @@
 
  #pragma mark - Class Methods
 
-+ (instancetype)bridgeAPIResponseWithRequest:(id<FBSDKBridgeAPIRequestProtocol>)request error:(NSError *)error
++ (instancetype)bridgeAPIResponseWithRequest:(id<FBSDKBridgeAPIRequest>)request error:(NSError *)error
 {
   return [[self alloc] initWithRequest:request
                     responseParameters:nil
@@ -49,7 +49,7 @@
                                  error:error];
 }
 
-+ (instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
++ (instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
                                  responseURL:(NSURL *)responseURL
                            sourceApplication:(NSString *)sourceApplication
                                        error:(NSError *__autoreleasing *)errorRef
@@ -61,7 +61,7 @@
                                       error:errorRef];
 }
 
-+ (instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
++ (instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
                                  responseURL:(NSURL *)responseURL
                            sourceApplication:(NSString *)sourceApplication
                            osVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)comparer
@@ -121,7 +121,7 @@
                                  error:error];
 }
 
-+ (instancetype)bridgeAPIResponseCancelledWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
++ (instancetype)bridgeAPIResponseCancelledWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
 {
   return [[self alloc] initWithRequest:request
                     responseParameters:nil
@@ -131,7 +131,7 @@
 
  #pragma mark - Object Lifecycle
 
-- (instancetype)initWithRequest:(NSObject<FBSDKBridgeAPIRequestProtocol> *)request
+- (instancetype)initWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
              responseParameters:(NSDictionary *)responseParameters
                       cancelled:(BOOL)cancelled
                           error:(NSError *)error

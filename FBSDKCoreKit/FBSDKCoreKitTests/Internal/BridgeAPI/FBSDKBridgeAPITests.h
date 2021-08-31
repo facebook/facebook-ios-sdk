@@ -32,7 +32,7 @@
 @property (readonly) NSURL *sampleUrl;
 @property (readonly) NSError *sampleError;
 @property (nonatomic) TestInternalURLOpener *urlOpener;
-@property (nonatomic) TestBridgeApiResponseFactory *bridgeAPIResponseFactory;
+@property (nonatomic) TestBridgeAPIResponseFactory *bridgeAPIResponseFactory;
 @property (nonatomic) TestDylibResolver *frameworkLoader;
 @property (nonatomic) TestAppURLSchemeProvider *appURLSchemeProvider;
 
