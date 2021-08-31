@@ -30,7 +30,6 @@
 
  #import "FBSDKCoreKitBasicsImportForShareKit.h"
  #import "FBSDKGameRequestFrictionlessRecipientCache.h"
- #import "FBSDKGameRequestURLProvider.h"
  #import "FBSDKShareConstants.h"
  #import "FBSDKShareUtility.h"
 

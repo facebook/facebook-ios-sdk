@@ -22,8 +22,6 @@
 
  #import "FBSDKReferralManager+Internal.h"
 
- #import "FBSDKCoreKitImport.h"
-
  #ifdef FBSDKCOCOAPODS
   #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
  #else

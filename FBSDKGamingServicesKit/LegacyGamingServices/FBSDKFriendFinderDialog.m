@@ -20,7 +20,6 @@
 
 #import "FBSDKGamingServiceControllerCreating.h"
 #import "FBSDKGamingServiceControllerFactory.h"
-#import "FBSDKGamingServicesCoreKitImport.h"
 
 @interface FBSDKFriendFinderDialog ()
 

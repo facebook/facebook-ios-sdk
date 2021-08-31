@@ -23,7 +23,6 @@
 #import "FBSDKAccessToken+AccessTokenProtocols.h"
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKApplicationLifecycleNotifications.h"
-#import "FBSDKGraphRequestFactory.h"
 #import "FBSDKLogo.h"
 #import "FBSDKUIUtility.h"
 #import "FBSDKViewImpressionTracker.h"

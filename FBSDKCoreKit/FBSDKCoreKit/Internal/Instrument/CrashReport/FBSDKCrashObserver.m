@@ -23,7 +23,6 @@
 #import "FBSDKFeatureManager+FeatureChecking.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequestFactory.h"
-#import "FBSDKGraphRequestProviding.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKSettingsProtocol.h"
 

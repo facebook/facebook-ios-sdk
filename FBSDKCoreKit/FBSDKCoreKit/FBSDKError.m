@@ -22,7 +22,6 @@
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKErrorReporting.h"
 #import "FBSDKFeatureManager.h"
-#import "FBSDKSettings.h"
 
 @interface FBSDKError ()
 

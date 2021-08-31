@@ -47,7 +47,6 @@
 #import "FBSDKEventsProcessing.h"
 #import "FBSDKFeatureChecking.h"
 #import "FBSDKGateKeeperManaging.h"
-#import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKGraphRequestProviding.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"

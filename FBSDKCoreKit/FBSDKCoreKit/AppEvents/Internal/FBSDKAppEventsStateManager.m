@@ -24,7 +24,6 @@
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKCoreKitBasicsImport.h"
 #import "FBSDKLogger.h"
-#import "FBSDKSettings.h"
 #import "FBSDKUnarchiverProvider.h"
 
 @interface FBSDKAppEventsStateManager (Internal)

@@ -20,9 +20,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKBasicUtility.h"
-#import "FBSDKURLSessionTask.h"
-
 // At some point this default conformance declaration needs to be moved out of
 // this class and treated like the dependency it is.
 @interface NSURLSession (SessionProviding) <FBSDKSessionProviding>

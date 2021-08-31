@@ -32,7 +32,6 @@
 #import "FBSDKGraphRequestProviding.h"
 #import "FBSDKObjectDecoding.h"
 #import "FBSDKSettings.h"
-#import "FBSDKSettingsProtocol.h"
 #import "FBSDKUnarchiverProvider.h"
 
 #define FBSDK_GATEKEEPERS_USER_DEFAULTS_KEY @"com.facebook.sdk:GateKeepers%@"

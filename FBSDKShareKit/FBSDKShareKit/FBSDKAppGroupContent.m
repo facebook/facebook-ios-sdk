@@ -18,8 +18,6 @@
 
 #import "FBSDKAppGroupContent.h"
 
-#import "TargetConditionals.h"
-
 #if TARGET_OS_TV
 
 NSString *NSStringFromFBSDKAppGroupPrivacy(AppGroupPrivacy privacy)

@@ -25,7 +25,6 @@
 #endif
 
 #import "FBSDKContextDialogs+Showable.h"
-#import "FBSDKSwitchContextDialog.h"
 
 @interface FBSDKSwitchContextDialogFactory ()
 

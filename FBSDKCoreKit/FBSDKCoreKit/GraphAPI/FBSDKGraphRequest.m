@@ -24,7 +24,6 @@
 #import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKGraphRequestConnection.h"
 #import "FBSDKGraphRequestConnectionFactory.h"
-#import "FBSDKGraphRequestConnectionProviding.h"
 #import "FBSDKGraphRequestDataAttachment.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"

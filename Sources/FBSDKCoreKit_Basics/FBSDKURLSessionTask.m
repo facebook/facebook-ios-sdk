@@ -18,8 +18,6 @@
 
 #import "FBSDKURLSessionTask.h"
 
-#import "FBSDKSessionProviding.h"
-
 @implementation FBSDKURLSessionTask
 
 - (instancetype)init
