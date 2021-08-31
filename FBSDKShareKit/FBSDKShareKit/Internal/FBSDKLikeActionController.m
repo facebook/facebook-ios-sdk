@@ -31,9 +31,9 @@
  #endif
 
  #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+  #import <FBSDKCoreKit/FBSDKCoreKit.h>
  #else
-  #import "FBSDKCoreKit+Internal.h"
+  #import "FBSDKCoreKitImport.h"
  #endif
 
  #import "FBSDKCoreKitBasicsImportForShareKit.h"

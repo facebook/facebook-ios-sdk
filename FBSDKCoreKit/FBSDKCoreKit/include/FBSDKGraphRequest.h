@@ -18,8 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKGraphRequestHTTPMethod.h"
+#import "FBSDKGraphRequestProtocol.h"
 
 @protocol FBSDKGraphRequestConnecting;
 
@@ -94,7 +94,7 @@ NS_SWIFT_NAME(GraphRequest)
                       tokenString:(nullable NSString *)tokenString
                           version:(nullable NSString *)version
                        HTTPMethod:(FBSDKHTTPMethod)method
-NS_DESIGNATED_INITIALIZER;
+  NS_DESIGNATED_INITIALIZER;
 
 /**
   Initializes a new instance.
@@ -105,6 +105,21 @@ NS_DESIGNATED_INITIALIZER;
 - (instancetype)initWithGraphPath:(NSString *)graphPath
                        parameters:(nullable NSDictionary<NSString *, id> *)parameters
                             flags:(FBSDKGraphRequestFlags)requestFlags;
+
+/**
+  Initializes a new instance.
+ @param graphPath the graph path (e.g., @"me").
+ @param parameters the optional parameters dictionary.
+ @param tokenString the token string to use. Specifying nil will cause no token to be used.
+ @param HTTPMethod  the HTTP method. Empty String defaults to @"GET".
+ @param flags  flags that indicate how a graph request should be treated in various scenarios
+ */
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(nullable NSDictionary<NSString *, id> *)parameters
+                      tokenString:(nullable NSString *)tokenString
+                       HTTPMethod:(nullable NSString *)HTTPMethod
+                            flags:(FBSDKGraphRequestFlags)flags;
+
 /**
   The request parameters.
  */
@@ -113,22 +128,22 @@ NS_DESIGNATED_INITIALIZER;
 /**
   The access token string used by the request.
  */
-@property (nonatomic, copy, readonly, nullable) NSString *tokenString;
+@property (nullable, nonatomic, readonly, copy) NSString *tokenString;
 
 /**
   The Graph API endpoint to use for the request, for example "me".
  */
-@property (nonatomic, copy, readonly) NSString *graphPath;
+@property (nonatomic, readonly, copy) NSString *graphPath;
 
 /**
   The HTTPMethod to use for the request, for example "GET" or "POST".
  */
-@property (nonatomic, copy, readonly) FBSDKHTTPMethod HTTPMethod;
+@property (nonatomic, readonly, copy) FBSDKHTTPMethod HTTPMethod;
 
 /**
   The Graph API version to use (e.g., "v2.0")
  */
-@property (nonatomic, copy, readonly) NSString *version;
+@property (nonatomic, readonly, copy) NSString *version;
 
 /**
   If set, disables the automatic error recovery mechanism.
@@ -142,14 +157,14 @@ NS_DESIGNATED_INITIALIZER;
  This will override [FBSDKSettings setGraphErrorRecoveryDisabled:].
  */
 - (void)setGraphErrorRecoveryDisabled:(BOOL)disable
-NS_SWIFT_NAME(setGraphErrorRecovery(disabled:));
+  NS_SWIFT_NAME(setGraphErrorRecovery(disabled:));
 
 /**
   Starts a connection to the Graph API.
  @param handler The handler block to call when the request completes.
  */
 - (id<FBSDKGraphRequestConnecting>)startWithCompletionHandler:(nullable FBSDKGraphRequestBlock)handler
-DEPRECATED_MSG_ATTRIBUTE("This method is deprecated and will be removed in the next major release. Please use `startWithCompletion:` instead`");
+    DEPRECATED_MSG_ATTRIBUTE("This method is deprecated and will be removed in the next major release. Please use `startWithCompletion:` instead`");
 
 /**
   Starts a connection to the Graph API.

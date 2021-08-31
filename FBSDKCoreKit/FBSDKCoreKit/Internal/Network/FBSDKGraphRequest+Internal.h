@@ -42,12 +42,6 @@ NS_ASSUME_NONNULL_BEGIN
                        parameters:(nullable NSDictionary *)parameters
                       tokenString:(nullable NSString *)tokenString
                        HTTPMethod:(nullable NSString *)HTTPMethod
-                            flags:(FBSDKGraphRequestFlags)flags;
-
-- (instancetype)initWithGraphPath:(NSString *)graphPath
-                       parameters:(nullable NSDictionary *)parameters
-                      tokenString:(nullable NSString *)tokenString
-                       HTTPMethod:(nullable NSString *)HTTPMethod
                             flags:(FBSDKGraphRequestFlags)flags
                 connectionFactory:(id<FBSDKGraphRequestConnectionProviding>)factory;
 
