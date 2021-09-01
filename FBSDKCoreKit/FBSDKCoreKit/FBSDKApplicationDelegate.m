@@ -595,18 +595,14 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 - (void)_logSDKInitialize
 {
-  NSDictionary<NSString *, id> *metaInfo = [NSDictionary<NSString *, id> dictionaryWithObjects:@[@"login_lib_included",
-                                                                                                 @"marketing_lib_included",
-                                                                                                 @"messenger_lib_included",
-                                                                                                 @"places_lib_included",
-                                                                                                 @"share_lib_included",
-                                                                                                 @"tv_lib_included"]
-                                                                                       forKeys:@[@"FBSDKLoginManager",
-                                                                                                 @"FBSDKAutoLog",
-                                                                                                 @"FBSDKMessengerButton",
-                                                                                                 @"FBSDKPlacesManager",
-                                                                                                 @"FBSDKShareDialog",
-                                                                                                 @"FBSDKTVInterfaceFactory"]];
+  NSDictionary<NSString *, id> *metaInfo = @{
+    @"FBSDKLoginManager" : @"login_lib_included",
+    @"FBSDKAutoLog" : @"marketing_lib_included",
+    @"FBSDKMessengerButton" : @"messenger_lib_included",
+    @"FBSDKPlacesManager" : @"places_lib_included",
+    @"FBSDKShareDialog" : @"share_lib_included",
+    @"FBSDKTVInterfaceFactory" : @"tv_lib_included",
+  };
 
   NSInteger bitmask = 0;
   NSInteger bit = 0;

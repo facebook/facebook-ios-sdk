@@ -30,7 +30,7 @@
 + (nullable id)array:(NSArray *)array objectAtIndex:(NSUInteger)index
 {
   if ([self arrayValue:array] && index < array.count) {
-    return [array objectAtIndex:index];
+    return array[index];
   }
 
   return nil;
@@ -74,7 +74,7 @@
 
 + (id)dictionary:(NSDictionary<NSString *, id> *)dictionary objectForKey:(NSString *)key ofType:(Class)type
 {
-  id potentialValue = [[self dictionaryValue:dictionary] objectForKey:key];
+  id potentialValue = [self dictionaryValue:dictionary][key];
 
   if ([potentialValue isKindOfClass:type]) {
     return potentialValue;

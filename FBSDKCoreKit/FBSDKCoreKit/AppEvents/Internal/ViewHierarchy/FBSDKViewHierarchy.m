@@ -544,7 +544,7 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName)
     [FBSDKTypeUtility dictionary:result setObject:[childrenTrees copy] forKey:VIEW_HIERARCHY_CHILD_VIEWS_KEY];
   }
   if (targetNode && currentNode == targetNode) {
-    [FBSDKTypeUtility dictionary:result setObject:[NSNumber numberWithBool:YES] forKey:VIEW_HIERARCHY_IS_INTERACTED_KEY];
+    [FBSDKTypeUtility dictionary:result setObject:@YES forKey:VIEW_HIERARCHY_IS_INTERACTED_KEY];
   }
   return [result copy];
 }

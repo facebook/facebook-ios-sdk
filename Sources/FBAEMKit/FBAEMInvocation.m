@@ -64,7 +64,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
     NSString *ACSSharedSecret = [FBSDKTypeUtility dictionary:applinkData objectForKey:ACS_SHARED_SECRET_KEY ofType:NSString.class];
     NSString *ACSConfigID = [FBSDKTypeUtility dictionary:applinkData objectForKey:CONFIG_ID_KEY ofType:NSString.class];
     NSString *businessID = [FBSDKTypeUtility dictionary:applinkData objectForKey:BUSINESS_ID_KEY ofType:NSString.class];
-    NSNumber *isTestMode = [FBSDKTypeUtility dictionary:applinkData objectForKey:TEST_DEEPLINK_KEY ofType:NSNumber.class] ?: [NSNumber numberWithBool:NO];
+    NSNumber *isTestMode = [FBSDKTypeUtility dictionary:applinkData objectForKey:TEST_DEEPLINK_KEY ofType:NSNumber.class] ?: @NO;
     if (campaignID == nil || ACSToken == nil) {
       return nil;
     }
@@ -177,10 +177,10 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
   }
   if (value != nil) {
     NSMutableDictionary *mapping = [[FBSDKTypeUtility dictionary:_recordedValues objectForKey:event ofType:NSDictionary.class] mutableCopy] ?: [NSMutableDictionary new];
-    NSNumber *valueInMapping = [FBSDKTypeUtility dictionary:mapping objectForKey:valueCurrency ofType:NSNumber.class] ?: [NSNumber numberWithDouble:0];
+    NSNumber *valueInMapping = [FBSDKTypeUtility dictionary:mapping objectForKey:valueCurrency ofType:NSNumber.class] ?: @0.0;
     // Overwrite values when the incoming event's value is greater than the cached one
     if (value.doubleValue > valueInMapping.doubleValue) {
-      [FBSDKTypeUtility dictionary:mapping setObject:[NSNumber numberWithDouble:value.doubleValue] forKey:valueCurrency];
+      [FBSDKTypeUtility dictionary:mapping setObject:@(value.doubleValue) forKey:valueCurrency];
       [FBSDKTypeUtility dictionary:_recordedValues setObject:mapping forKey:event];
       isAttributed = YES;
     }

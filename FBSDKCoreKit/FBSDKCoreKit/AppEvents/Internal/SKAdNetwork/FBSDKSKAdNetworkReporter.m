@@ -216,8 +216,8 @@ static NSString *const FBSDKSKAdNetworkReporterKey = @"com.facebook.sdk:FBSDKSKA
   }
   if (value != nil) {
     NSMutableDictionary *mapping = [[FBSDKTypeUtility dictionary:self.recordedValues objectForKey:event ofType:NSDictionary.class] mutableCopy] ?: [NSMutableDictionary new];
-    NSNumber *valueInMapping = [FBSDKTypeUtility dictionary:mapping objectForKey:valueCurrency ofType:NSNumber.class] ?: [NSNumber numberWithDouble:0];
-    [FBSDKTypeUtility dictionary:mapping setObject:[NSNumber numberWithDouble:(valueInMapping.doubleValue + value.doubleValue)] forKey:valueCurrency];
+    NSNumber *valueInMapping = [FBSDKTypeUtility dictionary:mapping objectForKey:valueCurrency ofType:NSNumber.class] ?: @0.0;
+    [FBSDKTypeUtility dictionary:mapping setObject:@(valueInMapping.doubleValue + value.doubleValue) forKey:valueCurrency];
     [FBSDKTypeUtility dictionary:self.recordedValues setObject:mapping forKey:event];
     isCacheUpdated = true;
   }

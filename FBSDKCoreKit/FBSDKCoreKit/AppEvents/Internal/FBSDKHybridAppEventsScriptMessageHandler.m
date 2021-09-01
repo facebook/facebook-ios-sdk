@@ -78,7 +78,7 @@ NSString *const FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey = @"_fb_pix
       }
       if (jsonParseError != nil || ![params isKindOfClass:[NSDictionary<NSString *, id> class]] || params == nil) {
         [FBSDKAppEventsUtility logAndNotify:@"Could not find parameters for your Pixel request. Check your webview Pixel configuration."];
-        params = [[NSMutableDictionary alloc] initWithObjectsAndKeys:pixelID, FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey, nil];
+        params = [@{FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey : pixelID} mutableCopy];
       } else {
         [FBSDKTypeUtility dictionary:params setObject:pixelID forKey:FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey];
       }

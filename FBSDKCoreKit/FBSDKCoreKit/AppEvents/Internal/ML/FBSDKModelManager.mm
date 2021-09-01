@@ -300,7 +300,7 @@ static dispatch_once_t enableNonce;
     [FBSDKTypeUtility dictionary:_modelInfo setObject:@{
        USE_CASE_KEY : MTMLKey,
        ASSET_URI_KEY : mtmlAssetUri,
-       VERSION_ID_KEY : [NSNumber numberWithLong:mtmlVersionId],
+       VERSION_ID_KEY : @(mtmlVersionId),
      } forKey:MTMLKey];
   }
 }

@@ -93,7 +93,7 @@ static NSString *const kAppLinksKey = @"app_links";
 
 - (NSArray<NSString *> *)getUISpecificFields
 {
-  NSMutableArray<NSString *> *fields = [NSMutableArray arrayWithObject:kIOSKey];
+  NSMutableArray<NSString *> *fields = [@[kIOSKey] mutableCopy];
   NSString *idiomSpecificField = [self getIdiomSpecificField];
 
   if (idiomSpecificField) {

@@ -222,7 +222,7 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
 
 - (void)_invokeDelegateDidFailWithError:(NSError *)error
 {
-  NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:FBSDKAppEventsDialogOutcomeValue_Failed, FBSDKAppEventParameterDialogOutcome, nil];
+  NSMutableDictionary *parameters = [@{FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Failed} mutableCopy];
   if (error) {
     [FBSDKTypeUtility dictionary:parameters setObject:[NSString stringWithFormat:@"%@", error] forKey:FBSDKAppEventParameterDialogErrorMessage];
 
