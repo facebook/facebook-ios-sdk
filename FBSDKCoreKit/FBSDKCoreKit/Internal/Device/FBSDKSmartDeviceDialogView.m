@@ -22,8 +22,9 @@
 
  #import "FBSDKSmartDeviceDialogView.h"
 
- #import "FBSDKCoreKit+Internal.h"
  #import "FBSDKDeviceUtilities.h"
+ #import "FBSDKInternalUtility.h"
+ #import "FBSDKLogo.h"
 
 @implementation FBSDKSmartDeviceDialogView
 {
