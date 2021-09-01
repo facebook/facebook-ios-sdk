@@ -32,7 +32,7 @@
 @property (nonatomic) TestInternalURLOpener *urlOpener;
 @property (nonatomic) TestBridgeAPIResponseFactory *bridgeAPIResponseFactory;
 @property (nonatomic) TestDylibResolver *frameworkLoader;
-@property (nonatomic) TestAppURLSchemeProvider *appURLSchemeProvider;
+@property (nonatomic) TestInternalUtility *appURLSchemeProvider;
 
 @end
 
@@ -47,7 +47,7 @@
   self.urlOpener = [[TestInternalURLOpener alloc] initWithCanOpenUrl:YES];
   self.bridgeAPIResponseFactory = [TestBridgeAPIResponseFactory new];
   self.frameworkLoader = [TestDylibResolver new];
-  self.appURLSchemeProvider = [TestAppURLSchemeProvider new];
+  self.appURLSchemeProvider = [TestInternalUtility new];
   self.api = [[FBSDKBridgeAPI alloc] initWithProcessInfo:[TestProcessInfo new]
                                                   logger:self.logger
                                                urlOpener:self.urlOpener

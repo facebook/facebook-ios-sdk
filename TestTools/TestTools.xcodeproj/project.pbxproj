@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0FADADFC71CD56F7FFA83757 /* TestAppAvailabilityChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF811225A2D02CF176D0B1C /* TestAppAvailabilityChecker.swift */; };
 		154D1DA4D7C1132B20433E71 /* TestGraphRequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCFB16AD8A9E8D19987885E4 /* TestGraphRequestFactory.swift */; };
 		2442EF2D3F79CF0FC9C005DB /* TestGraphRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5B18A936EE4E827325688A /* TestGraphRequest.swift */; };
 		41C52BAE31CD81FE7B97C928 /* TestGraphRequestConnectionFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07160C9DDB965A64C22AE60 /* TestGraphRequestConnectionFactory.swift */; };
+		8D939CDB5ED7890B6DD2EB54 /* TestInternalUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44853480B9144B4E2A10493 /* TestInternalUtility.swift */; };
 		9A4ABF0D3E4E13CE761A0B61 /* FBSDKTestCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = A6A4922697A11B50B06F8282 /* FBSDKTestCoder.m */; };
 		ABAAE5DF3C5E29E2C9421FED /* TestGraphRequestConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6EAAFF5FD98DE8A3459008 /* TestGraphRequestConnection.swift */; };
 		B9300B57F130CADA2FA635E3 /* TestSessionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8640C198FCE46662467AD22C /* TestSessionProvider.swift */; };
@@ -40,7 +40,6 @@
 /* Begin PBXFileReference section */
 		03A8D4BE357D16D0721EE967 /* Fuzzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fuzzer.swift; sourceTree = "<group>"; };
 		0E6EAAFF5FD98DE8A3459008 /* TestGraphRequestConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestConnection.swift; sourceTree = "<group>"; };
-		2FF811225A2D02CF176D0B1C /* TestAppAvailabilityChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAppAvailabilityChecker.swift; sourceTree = "<group>"; };
 		339256DAFAA306B6900BB4E8 /* FBSDKTestCoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKTestCoder.h; sourceTree = "<group>"; };
 		3D5B18A936EE4E827325688A /* TestGraphRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequest.swift; sourceTree = "<group>"; };
 		8640C198FCE46662467AD22C /* TestSessionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSessionProvider.swift; sourceTree = "<group>"; };
@@ -48,6 +47,7 @@
 		A6A4922697A11B50B06F8282 /* FBSDKTestCoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKTestCoder.m; sourceTree = "<group>"; };
 		BCFB16AD8A9E8D19987885E4 /* TestGraphRequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestFactory.swift; sourceTree = "<group>"; };
 		D07160C9DDB965A64C22AE60 /* TestGraphRequestConnectionFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestConnectionFactory.swift; sourceTree = "<group>"; };
+		D44853480B9144B4E2A10493 /* TestInternalUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestInternalUtility.swift; sourceTree = "<group>"; };
 		E40113A8B281C6A908AEFA21 /* TestTools.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TestTools.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAD0C12E3DCAF88D1A6D0E0A /* SampleUserProfiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleUserProfiles.swift; sourceTree = "<group>"; };
 		FD2991A4DB25EA6EF6D6494A /* FBSDKCoreKit */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSDKCoreKit; path = ../FBSDKCoreKit/FBSDKCoreKit.xcodeproj; sourceTree = "<group>"; };
@@ -78,11 +78,11 @@
 				03A8D4BE357D16D0721EE967 /* Fuzzer.swift */,
 				8946DC7A460B75F7B65F5BE5 /* SampleAccessTokens.swift */,
 				FAD0C12E3DCAF88D1A6D0E0A /* SampleUserProfiles.swift */,
-				2FF811225A2D02CF176D0B1C /* TestAppAvailabilityChecker.swift */,
 				3D5B18A936EE4E827325688A /* TestGraphRequest.swift */,
 				0E6EAAFF5FD98DE8A3459008 /* TestGraphRequestConnection.swift */,
 				D07160C9DDB965A64C22AE60 /* TestGraphRequestConnectionFactory.swift */,
 				BCFB16AD8A9E8D19987885E4 /* TestGraphRequestFactory.swift */,
+				D44853480B9144B4E2A10493 /* TestInternalUtility.swift */,
 				8640C198FCE46662467AD22C /* TestSessionProvider.swift */,
 			);
 			path = TestTools;
@@ -214,11 +214,11 @@
 				E9F7C901C033B4975EA0AB2A /* Fuzzer.swift in Sources */,
 				BD38E8A36C58EBF74120120C /* SampleAccessTokens.swift in Sources */,
 				BF1AFE1973B52493C7B6D03C /* SampleUserProfiles.swift in Sources */,
-				0FADADFC71CD56F7FFA83757 /* TestAppAvailabilityChecker.swift in Sources */,
 				2442EF2D3F79CF0FC9C005DB /* TestGraphRequest.swift in Sources */,
 				ABAAE5DF3C5E29E2C9421FED /* TestGraphRequestConnection.swift in Sources */,
 				41C52BAE31CD81FE7B97C928 /* TestGraphRequestConnectionFactory.swift in Sources */,
 				154D1DA4D7C1132B20433E71 /* TestGraphRequestFactory.swift in Sources */,
+				8D939CDB5ED7890B6DD2EB54 /* TestInternalUtility.swift in Sources */,
 				B9300B57F130CADA2FA635E3 /* TestSessionProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

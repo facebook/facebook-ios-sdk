@@ -215,6 +215,7 @@ targets:
           - FBSDKWebDialog*
           - FBSDKWebViewAppLinkResolver*
           - FBSDKWindowFinding*
+          - FBSDKInternalUtility+URLHosting*
       - path: FBSDKCoreKit/Info.plist
         group: FBSDKCoreKit/Supporting Files
         createIntermediateGroups: true
@@ -319,6 +320,7 @@ targets:
           - FBSDKWebViewAppLinkResolver*
           - FBSDKWindowFinding*
           - Info.plist
+          - FBSDKInternalUtility+URLHosting*
       - path: FBSDKCoreKit/Info.plist
         group: FBSDKCoreKit/Supporting Files
         createIntermediateGroups: true

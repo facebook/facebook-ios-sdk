@@ -23,7 +23,20 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AppAvailabilityChecker)
 @protocol FBSDKAppAvailabilityChecker
 
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
 @property (nonatomic, assign, readonly) BOOL isMessengerAppInstalled;
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
+@property (nonatomic, assign, readonly) BOOL isFacebookAppInstalled;
 
 @end
 

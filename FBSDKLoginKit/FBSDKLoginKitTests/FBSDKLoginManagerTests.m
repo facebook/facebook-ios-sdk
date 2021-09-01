@@ -64,6 +64,14 @@ static NSString *const kFakeJTI = @"a jti is just any string";
                                                          withToken:(FBSDKAccessToken *)currentToken
                                                         withResult:(FBSDKLoginManagerLoginResult *)loginResult;
 
+- (NSDictionary *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration;
+
+- (void)logInWithPermissions:(NSArray<NSString *> *)permissions
+          fromViewController:(UIViewController *)viewController
+                     handler:(FBSDKLoginManagerLoginResultBlock)handler;
+
+- (instancetype)initWithInternalUtility:(id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker>)internalUtility;
+
 @end
 
 @interface FBSDKAuthenticationTokenFactory (Testing)
@@ -115,6 +123,8 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 @property (nonatomic) TestFBSDKBridgeAPI *testBridgeAPI;
 @property (nonatomic) NSDictionary<NSString *, id> *claims;
 @property (nonatomic) NSDictionary<NSString *, id> *header;
+@property (nonatomic) TestInternalUtility *internalUtility;
+@property (nonatomic) FBSDKLoginManager *loginManager;
 
 @end
 
@@ -127,15 +137,22 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   [FBSDKApplicationDelegate.sharedInstance application:UIApplication.sharedApplication
                          didFinishLaunchingWithOptions:@{}];
 
-  [FBSDKSettings setAppID:kFakeAppID];
-  [FBSDKAuthenticationToken setCurrentAuthenticationToken:nil];
-  [FBSDKProfile setCurrentProfile:nil];
-  [FBSDKAccessToken setCurrentAccessToken:nil];
+  self.internalUtility = [TestInternalUtility new];
+
+  self.loginManager = [[FBSDKLoginManager alloc] initWithInternalUtility:self.internalUtility];
 
   _mockInternalUtility = OCMPartialMock(FBSDKInternalUtility.sharedUtility);
   OCMStub([_mockInternalUtility validateURLSchemes]);
 
   _mockLoginManager = OCMPartialMock([FBSDKLoginManager new]);
+
+  [FBSDKSettings setAppID:kFakeAppID];
+  [FBSDKAuthenticationToken setCurrentAuthenticationToken:nil];
+  [FBSDKProfile setCurrentProfile:nil];
+  [FBSDKAccessToken setCurrentAccessToken:nil];
+
+  [self.internalUtility validateURLSchemes];
+  _mockLoginManager = OCMPartialMock(self.loginManager);
   OCMStub([_mockLoginManager loadExpectedChallenge]).andReturn(kFakeChallenge);
   OCMStub([_mockLoginManager loadExpectedNonce]).andReturn(kFakeNonce);
 
@@ -564,9 +581,11 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 {
   [FBSDKApplicationDelegate.sharedInstance application:UIApplication.sharedApplication didFinishLaunchingWithOptions:nil];
 
-  // Mock some methods to force an error callback.
-  [[[_mockInternalUtility stub] andReturnValue:@NO] isFacebookAppInstalled];
   NSError *URLError = [[NSError alloc] initWithDomain:FBSDKErrorDomain code:0 userInfo:nil];
+
+  // Mock some methods to force an error callback.
+  self.internalUtility.isFacebookAppInstalled = NO;
+
   OCMStub(
     [_mockInternalUtility appURLWithHost:OCMOCK_ANY
                                     path:OCMOCK_ANY
@@ -575,19 +594,17 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   );
 
   __block BOOL handlerCalled;
-  FBSDKLoginManager *manager = [FBSDKLoginManager new];
-  [manager logInWithPermissions:@[@"public_profile"] fromViewController:nil handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+  [self.loginManager logInWithPermissions:@[@"public_profile"] fromViewController:nil handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
     handlerCalled = YES;
   }];
   // This makes sure that FBSDKLoginManager is retaining itself for the duration of the call
-  manager = nil;
+  self.loginManager = nil;
   XCTAssertTrue(handlerCalled, "Should invoke completion synchronously");
 }
 
 - (void)testLoginWithSFVC
 {
-  FBSDKLoginManager *manager = [FBSDKLoginManager new];
-  [manager logInWithPermissions:@[@"public_profile"] fromViewController:nil handler:nil];
+  [self.loginManager logInWithPermissions:@[@"public_profile"] fromViewController:nil handler:nil];
 
   XCTAssertEqual(_testBridgeAPI.openURLWithSFVCCount, 1, "openURLWithSafariViewController should be called");
   XCTAssertEqual(_testBridgeAPI.openURLCount, 0, "openURL should not be called");
@@ -601,8 +618,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   OCMStub([mockConfigManagerClass shared]).andReturn(mockConfigManagerClass);
   OCMStub([mockConfigManagerClass cachedServerConfiguration]).andReturn(mockConfig);
 
-  FBSDKLoginManager *manager = [FBSDKLoginManager new];
-  [manager logInWithPermissions:@[@"public_profile"] fromViewController:nil handler:nil];
+  [self.loginManager logInWithPermissions:@[@"public_profile"] fromViewController:nil handler:nil];
 
   XCTAssertEqual(_testBridgeAPI.openURLCount, 1, "openURL should be called");
   XCTAssertEqual(_testBridgeAPI.openURLWithSFVCCount, 0, "openURLWithSafariViewController should not be called");
@@ -612,8 +628,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
 - (void)testCallingLoginWhileAnotherLoginHasNotFinishedNoOps
 {
-  // Mock some methods to force a SafariVC load
-  [[[_mockInternalUtility stub] andReturnValue:@NO] isFacebookAppInstalled];
+  self.internalUtility.isFacebookAppInstalled = NO;
 
   __block int loginCount = 0;
   FBSDKLoginManager *manager = _mockLoginManager;
@@ -661,7 +676,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   FBSDKLoginManagerLogger *logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:@"123"
                                                                                  tracking:FBSDKLoginTrackingEnabled];
 
-  NSDictionary<NSString *, id> *params = [_mockLoginManager logInParametersWithConfiguration:config serverConfiguration:nil logger:logger authMethod:@"sfvc_auth"];
+  NSDictionary<NSString *, id> *params = [self.loginManager logInParametersWithConfiguration:config serverConfiguration:nil logger:logger authMethod:@"sfvc_auth"];
 
   [self validateCommonLoginParameters:params];
   XCTAssertEqualObjects(params[@"response_type"], @"id_token,token_or_nonce,signed_request,graph_domain");
@@ -682,7 +697,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   FBSDKLoginManagerLogger *logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:@"123"
                                                                                  tracking:FBSDKLoginTrackingLimited];
 
-  NSDictionary<NSString *, id> *params = [_mockLoginManager logInParametersWithConfiguration:config serverConfiguration:nil logger:logger authMethod:@"browser_auth"];
+  NSDictionary<NSString *, id> *params = [self.loginManager logInParametersWithConfiguration:config serverConfiguration:nil logger:logger authMethod:@"browser_auth"];
 
   [self validateCommonLoginParameters:params];
   XCTAssertEqualObjects(params[@"response_type"], @"id_token,graph_domain");
@@ -720,7 +735,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   FBSDKLoginManagerLogger *logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:@"123"
                                                                                  tracking:FBSDKLoginTrackingEnabled];
 
-  NSDictionary<NSString *, id> *params = [_mockLoginManager logInParametersWithConfiguration:config serverConfiguration:nil logger:logger authMethod:@"sfvc_auth"];
+  NSDictionary<NSString *, id> *params = [self.loginManager logInParametersWithConfiguration:config serverConfiguration:nil logger:logger authMethod:@"sfvc_auth"];
 
   [self validateCommonLoginParameters:params];
   XCTAssertEqualObjects(params[@"response_type"], @"id_token,token_or_nonce,signed_request,graph_domain");
@@ -742,7 +757,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   FBSDKLoginManagerLogger *logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:@"123"
                                                                                  tracking:FBSDKLoginTrackingEnabled];
 
-  NSDictionary<NSString *, id> *params = [_mockLoginManager logInParametersWithConfiguration:config serverConfiguration:nil logger:logger authMethod:@"sfvc_auth"];
+  NSDictionary<NSString *, id> *params = [self.loginManager logInParametersWithConfiguration:config serverConfiguration:nil logger:logger authMethod:@"sfvc_auth"];
 
   [self validateCommonLoginParameters:params];
   XCTAssertEqualObjects(params[@"response_type"], @"id_token,token_or_nonce,signed_request,graph_domain");

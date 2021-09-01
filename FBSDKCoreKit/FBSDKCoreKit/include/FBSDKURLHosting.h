@@ -16,11 +16,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import FBSDKCoreKit
+#import "FBSDKInternalUtility.h"
 
-@objcMembers
-public class TestAppAvailabilityChecker: NSObject, AppAvailabilityChecker {
+NS_ASSUME_NONNULL_BEGIN
 
-  public var isMessengerAppInstalled = false
+NS_SWIFT_NAME(URLHosting)
+@protocol FBSDKURLHosting
 
-}
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning UNSAFE - DO NOT USE
+ */
+- (NSURL *)appURLWithHost:(NSString *)host
+                     path:(NSString *)path
+          queryParameters:(NSDictionary<NSString *, id> *)queryParameters
+                    error:(NSError *__autoreleasing *)errorRef;
+
+@end
+
+NS_ASSUME_NONNULL_END

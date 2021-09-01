@@ -16,12 +16,32 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import FBSDKCoreKit
+
 @objcMembers
-class TestAppURLSchemeProvider: NSObject, AppURLSchemeProviding {
+public class TestInternalUtility: NSObject, AppAvailabilityChecker, URLHosting, AppURLSchemeProviding {
 
-  var stubbedScheme = "No stub app url scheme provided"
+  public var stubbedScheme = "No stub app url scheme provided"
+  public var validateURLSchemesCalled = false
 
-  func appURLScheme() -> String {
+  public var isFacebookAppInstalled = false
+
+  public var isMessengerAppInstalled = false
+
+  public func appURL(
+    withHost host: String,
+    path: String,
+    queryParameters: [String: Any],
+    error errorRef: NSErrorPointer
+  ) -> URL {
+    return URL(string: "test")! // swiftlint:disable:this all
+  }
+
+  public func appURLScheme() -> String {
     stubbedScheme
+  }
+
+  public func validateURLSchemes() {
+    validateURLSchemesCalled = true
   }
 }

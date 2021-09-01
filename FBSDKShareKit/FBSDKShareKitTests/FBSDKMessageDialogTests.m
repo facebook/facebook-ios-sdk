@@ -37,7 +37,7 @@
 
 @interface FBSDKMessageDialogTests : XCTestCase
 
-@property (nonatomic) TestAppAvailabilityChecker *appAvailabilityChecker;
+@property (nonatomic) TestInternalUtility *appAvailabilityChecker;
 @property (nonatomic) FakeSharingDelegate *delegate;
 @property (nonatomic) FBSDKMessageDialog *dialog;
 
@@ -49,7 +49,7 @@
 {
   [super setUp];
 
-  self.appAvailabilityChecker = [TestAppAvailabilityChecker new];
+  self.appAvailabilityChecker = [TestInternalUtility new];
   self.delegate = [FakeSharingDelegate new];
   self.dialog = [FBSDKMessageDialog
                  dialogWithContent:nil

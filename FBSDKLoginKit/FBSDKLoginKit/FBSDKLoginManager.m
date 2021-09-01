@@ -56,6 +56,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   FBSDKLoginManagerState _state;
   FBSDKKeychainStore *_keychainStore;
   FBSDKLoginConfiguration *_configuration;
+  id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker> _internalUtility;
   BOOL _usedSFAuthSession;
 }
 
@@ -69,8 +70,13 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 
 - (instancetype)init
 {
-  self = [super init];
-  if (self) {
+  return [self initWithInternalUtility:FBSDKInternalUtility.sharedUtility];
+}
+
+- (instancetype)initWithInternalUtility:(id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker>)internalUtility
+{
+  if ((self = [super init])) {
+    _internalUtility = internalUtility;
     NSString *keyChainServiceIdentifier = [NSString stringWithFormat:@"com.facebook.sdk.loginmanager.%@", [NSBundle mainBundle].bundleIdentifier];
     _keychainStore = [[FBSDKKeychainStore alloc] initWithService:keyChainServiceIdentifier accessGroup:nil];
   }

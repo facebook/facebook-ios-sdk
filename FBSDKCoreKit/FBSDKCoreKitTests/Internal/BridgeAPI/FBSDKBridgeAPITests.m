@@ -26,7 +26,7 @@
 
   [FBSDKLoginManager resetTestEvidence];
 
-  self.appURLSchemeProvider = [TestAppURLSchemeProvider new];
+  self.appURLSchemeProvider = [TestInternalUtility new];
   self.logger = [TestLogger new];
   self.urlOpener = [[TestInternalURLOpener alloc] initWithCanOpenUrl:YES];
   self.bridgeAPIResponseFactory = [TestBridgeAPIResponseFactory new];

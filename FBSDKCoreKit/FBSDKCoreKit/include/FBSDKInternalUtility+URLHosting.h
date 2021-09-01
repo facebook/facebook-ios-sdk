@@ -16,27 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
-#import <XCTest/XCTest.h>
+#if !TARGET_OS_TV
+#import "FBSDKURLHosting.h"
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+NS_ASSUME_NONNULL_BEGIN
 
-#import "FBSDKBridgeAPI+Testing.h"
-#import "FBSDKCoreKitTests-Swift.h"
-
-@interface FBSDKBridgeAPITests : XCTestCase
-
-@property (nonatomic) FBSDKBridgeAPI *api;
-@property (nonatomic) TestLogger *logger;
-@property (readonly) NSURL *sampleUrl;
-@property (readonly) NSError *sampleError;
-@property (nonatomic) TestInternalURLOpener *urlOpener;
-@property (nonatomic) TestBridgeAPIResponseFactory *bridgeAPIResponseFactory;
-@property (nonatomic) TestDylibResolver *frameworkLoader;
-@property (nonatomic) TestInternalUtility *appURLSchemeProvider;
-
-extern NSString *const sampleSource;
-extern NSString *const sampleAnnotation;
-
+@interface FBSDKInternalUtility (URLHosting) <FBSDKURLHosting>
 @end
+
+NS_ASSUME_NONNULL_END
+
+#endif
