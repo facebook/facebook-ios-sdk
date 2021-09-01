@@ -24,7 +24,7 @@
 
  #import <UIKit/UIKit.h>
 
- #import "FBSDKCoreKit+Internal.h"
+ #import "FBSDKMath.h"
 
 static const CGFloat kFBLogoSize = 54.0;
 static const CGFloat kFBLogoLeftMargin = 36.0;
