@@ -24,8 +24,8 @@
 #import "FBSDKSettings.h"
 
 static NSUInteger g_serialNumberCounter = 1111;
-static NSMutableDictionary *g_stringsToReplace = nil;
-static NSMutableDictionary *g_startTimesWithTags = nil;
+static NSMutableDictionary<NSString *, id> *g_stringsToReplace = nil;
+static NSMutableDictionary<NSNumber *, id> *g_startTimesWithTags = nil;
 
 @interface FBSDKLogger ()
 

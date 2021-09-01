@@ -77,7 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
                                  configMode:(nullable NSString *)configMode
                                    configID:(NSInteger)configID
                              recordedEvents:(nullable NSMutableSet<NSString *> *)recordedEvents
-                             recordedValues:(nullable NSMutableDictionary<NSString *, NSMutableDictionary *> *)recordedValues
+                             recordedValues:(nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *)recordedValues
                             conversionValue:(NSInteger)conversionValue
                                    priority:(NSInteger)priority
                         conversionTimestamp:(nullable NSDate *)conversionTimestamp
@@ -94,7 +94,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setRecordedEvents:(NSMutableSet<NSString *> *)recordedEvents;
 
-- (void)setRecordedValues:(NSMutableDictionary<NSString *, NSMutableDictionary *> *)recordedValues;
+- (void)setRecordedValues:(NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *)recordedValues;
 
 - (void)setPriority:(NSInteger)priority;
 

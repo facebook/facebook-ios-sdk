@@ -50,7 +50,7 @@ NS_SWIFT_NAME(AEMInvocation)
 
 @property (nonatomic, readonly) NSMutableSet<NSString *> *recordedEvents;
 
-@property (nonatomic, readonly) NSMutableDictionary<NSString *, NSMutableDictionary *> *recordedValues;
+@property (nonatomic, readonly) NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *recordedValues;
 
 @property (nonatomic, readonly, assign) NSInteger conversionValue;
 

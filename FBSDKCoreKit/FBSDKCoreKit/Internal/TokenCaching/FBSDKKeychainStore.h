@@ -38,6 +38,6 @@ NS_SWIFT_NAME(KeychainStore)
 - (NSData *)dataForKey:(NSString *)key;
 
 // hook for subclasses to override keychain query construction.
-- (NSMutableDictionary *)queryForKey:(NSString *)key;
+- (NSMutableDictionary<NSString *, id> *)queryForKey:(NSString *)key;
 
 @end

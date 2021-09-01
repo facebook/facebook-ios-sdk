@@ -575,7 +575,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   NSString *targetURLString = applinkData[@"target_url"];
   NSURL *targetURL = [targetURLString isKindOfClass:[NSString class]] ? [NSURL URLWithString:targetURLString] : nil;
 
-  NSMutableDictionary *logData = [NSMutableDictionary new];
+  NSMutableDictionary<NSString *, id> *logData = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:logData setObject:targetURL.absoluteString forKey:@"targetURL"];
   [FBSDKTypeUtility dictionary:logData setObject:targetURL.host forKey:@"targetURLHost"];
 

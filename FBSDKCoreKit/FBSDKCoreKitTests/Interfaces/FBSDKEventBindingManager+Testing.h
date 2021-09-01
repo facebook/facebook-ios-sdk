@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKEventBindingManager (Testing)
 
 @property (nonatomic) BOOL isStarted;
-@property (nullable, nonatomic) NSMutableDictionary *reactBindings;
+@property (nullable, nonatomic) NSMutableDictionary<NSString *, id> *reactBindings;
 @property (nonatomic, readonly) NSSet *validClasses;
 @property (nonatomic) BOOL hasReactNative;
 @property (nullable, nonatomic) NSArray<FBSDKEventBinding *> *eventBindings;

@@ -543,7 +543,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
     return;
   }
 
-  NSMutableDictionary *parameters = [@{FBSDKAppEventParameterPushCampaign : campaign} mutableCopy];
+  NSMutableDictionary<NSString *, id>* parameters = [@{FBSDKAppEventParameterPushCampaign : campaign} mutableCopy];
   if (action && action.length > 0) {
     [FBSDKTypeUtility dictionary:parameters setObject:action forKey:FBSDKAppEventParameterPushAction];
   }
@@ -599,7 +599,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
     return;
   }
 
-  NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *dict = [NSMutableDictionary dictionary];
   if (nil != parameters) {
     [dict setValuesForKeysWithDictionary:parameters];
   }
@@ -1193,8 +1193,8 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
     if ([FBSDKAppEventsUtility shouldDropAppEvent]) {
       return;
     }
-    NSMutableDictionary *params = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"MOBILE_APP_INSTALL"
-                                                                    shouldAccessAdvertisingID:self->_serverConfiguration.isAdvertisingIDEnabled];
+    NSMutableDictionary<NSString *, id> *params = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"MOBILE_APP_INSTALL"
+                                                                                    shouldAccessAdvertisingID:self->_serverConfiguration.isAdvertisingIDEnabled];
     [self appendInstallTimestamp:params];
     NSString *path = [NSString stringWithFormat:@"%@/activities", appID];
     id<FBSDKGraphRequest> request = [g_graphRequestProvider createGraphRequestWithGraphPath:path
@@ -1231,7 +1231,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 #endif
 }
 
-- (void)appendInstallTimestamp:(NSMutableDictionary *)parameters
+- (void)appendInstallTimestamp:(NSMutableDictionary<NSString *, id> *)parameters
 {
   if (@available(iOS 14.0, *)) {
     if ([g_settings isSetATETimeExceedsInstallTime]) {
@@ -1554,9 +1554,9 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
                           logEntry:@"FBSDKAppEvents: Flushing skipped - no events after removing implicitly logged ones.\n"];
       return;
     }
-    NSMutableDictionary *postParameters = [FBSDKAppEventsUtility
-                                           activityParametersDictionaryForEvent:@"CUSTOM_APP_EVENTS"
-                                           shouldAccessAdvertisingID:self->_serverConfiguration.advertisingIDEnabled];
+    NSMutableDictionary<NSString *, id> *postParameters = [FBSDKAppEventsUtility
+                                                           activityParametersDictionaryForEvent:@"CUSTOM_APP_EVENTS"
+                                                           shouldAccessAdvertisingID:self->_serverConfiguration.advertisingIDEnabled];
     NSInteger length = receipt_data.length;
     if (length > 0) {
       [FBSDKTypeUtility dictionary:postParameters setObject:receipt_data forKey:@"receipt_data"];
@@ -1578,7 +1578,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
       NSString *prettyPrintedJsonEvents = [[NSString alloc] initWithData:prettyJSONData
                                                                 encoding:NSUTF8StringEncoding];
       // Remove this param -- just an encoding of the events which we pretty print later.
-      NSMutableDictionary *paramsForPrinting = [postParameters mutableCopy];
+      NSMutableDictionary<NSString *, id> *paramsForPrinting = [postParameters mutableCopy];
       [paramsForPrinting removeObjectForKey:@"custom_events_file"];
 
       loggingEntry = [NSString stringWithFormat:@"FBSDKAppEvents: Flushed @ %f, %lu events due to '%@' - %@\nEvents: %@",

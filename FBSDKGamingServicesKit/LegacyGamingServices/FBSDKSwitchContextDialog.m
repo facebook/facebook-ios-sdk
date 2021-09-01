@@ -55,7 +55,7 @@
     return NO;
   }
 
-  NSMutableDictionary *parameters = [NSMutableDictionary new];
+  NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary new];
 
   if ([self.dialogContent isKindOfClass:[FBSDKSwitchContextContent class]] && self.dialogContent) {
     FBSDKSwitchContextContent *content = (FBSDKSwitchContextContent *)self.dialogContent;

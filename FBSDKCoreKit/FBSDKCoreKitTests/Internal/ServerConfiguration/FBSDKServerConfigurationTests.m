@@ -1971,7 +1971,7 @@ typedef ServerConfigurationFixtures Fixtures;
                         sharingValue:(NSNumber *)sharingValue
                         defaultValue:(NSNumber *)defaultValue
 {
-  NSMutableDictionary *dialogFlows = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *dialogFlows = [NSMutableDictionary dictionary];
   if (featureValue != nil) {
     dialogFlows[name] = @{
       flowKey : featureValue

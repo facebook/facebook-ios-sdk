@@ -68,7 +68,7 @@ FBSDKAppEventUserDataType FBSDKAppEventExternalId = @"external_id";
              country:(nullable NSString *)country
           externalId:(nullable NSString *)externalId
 {
-  NSMutableDictionary *ud = [NSMutableDictionary new];
+  NSMutableDictionary<NSString *, NSString *> *ud = [NSMutableDictionary new];
   if (email) {
     [FBSDKTypeUtility dictionary:ud setObject:[FBSDKUserDataStore encryptData:email type:FBSDKAppEventEmail] forKey:FBSDKAppEventEmail];
   }

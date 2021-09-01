@@ -36,7 +36,7 @@
 @implementation FBSDKLikeActionControllerCache
 {
   NSString *_accessTokenString;
-  NSMutableDictionary *_items;
+  NSMutableDictionary<NSString *, id> *_items;
 }
 
  #pragma mark - Object Lifecycle

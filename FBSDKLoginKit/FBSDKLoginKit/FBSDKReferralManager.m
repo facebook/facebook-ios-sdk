@@ -86,7 +86,7 @@ static int const FBClientStateChallengeLength = 20;
 {
   NSError *error;
   NSURL *url;
-  NSMutableDictionary *params = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionary];
 
   [FBSDKTypeUtility dictionary:params setObject:FBSDKSettings.appID forKey:@"app_id"];
 

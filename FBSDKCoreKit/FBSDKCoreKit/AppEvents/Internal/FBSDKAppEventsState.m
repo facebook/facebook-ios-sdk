@@ -131,8 +131,8 @@ static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
 {
   NSMutableString *receipts_string = [NSMutableString string];
   NSInteger transactionId = 1;
-  for (NSMutableDictionary *events in _mutableEvents) {
-    NSMutableDictionary *event = events[@"event"];
+  for (NSMutableDictionary<NSString *, id> *events in _mutableEvents) {
+    NSMutableDictionary<NSString *, id> *event = events[@"event"];
 
     NSString *receipt = event[@"receipt_data"];
     // Add receipt id as the identifier for receipt data in event parameter.
@@ -185,7 +185,7 @@ static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
     if (!includeImplicitEvents && isImplicitEvent) {
       continue;
     }
-    NSMutableDictionary *event = eventAndImplicitFlag[@"event"];
+    NSMutableDictionary<NSString *, id> *event = eventAndImplicitFlag[@"event"];
     NSAssert(event != nil, @"event cannot be nil");
     [event removeObjectForKey:FBSDK_APPEVENTSTATE_RECEIPTDATA_KEY];
 

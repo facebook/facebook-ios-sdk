@@ -339,7 +339,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 
   [FBSDKInternalUtility.sharedUtility validateURLSchemes];
 
-  NSMutableDictionary *loginParams = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *loginParams = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:loginParams setObject:[FBSDKSettings appID] forKey:@"client_id"];
   [FBSDKTypeUtility dictionary:loginParams setObject:@"touch" forKey:@"display"];
   [FBSDKTypeUtility dictionary:loginParams setObject:@"ios" forKey:@"sdk"];
@@ -502,7 +502,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
       [FBSDKAccessToken setCurrentAccessToken:loginResult.token];
       [self invokeHandler:loginResult error:nil];
     } else {
-      NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+      NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary dictionary];
       [FBSDKTypeUtility dictionary:userInfo setObject:error forKey:NSUnderlyingErrorKey];
       NSError *resultError = [NSError errorWithDomain:FBSDKLoginErrorDomain
                                                  code:FBSDKLoginErrorUserMismatch

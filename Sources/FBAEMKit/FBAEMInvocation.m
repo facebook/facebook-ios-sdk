@@ -112,7 +112,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
                                  configMode:(NSString *)configMode
                                    configID:(NSInteger)configID
                              recordedEvents:(nullable NSMutableSet<NSString *> *)recordedEvents
-                             recordedValues:(nullable NSMutableDictionary<NSString *, NSMutableDictionary *> *)recordedValues
+                             recordedValues:(nullable NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *)recordedValues
                             conversionValue:(NSInteger)conversionValue
                                    priority:(NSInteger)priority
                         conversionTimestamp:(nullable NSDate *)conversionTimestamp
@@ -176,7 +176,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
     valueCurrency = config.defaultCurrency;
   }
   if (value != nil) {
-    NSMutableDictionary *mapping = [[FBSDKTypeUtility dictionary:_recordedValues objectForKey:event ofType:NSDictionary.class] mutableCopy] ?: [NSMutableDictionary new];
+    NSMutableDictionary<NSString *, id> *mapping = [[FBSDKTypeUtility dictionary:_recordedValues objectForKey:event ofType:NSDictionary.class] mutableCopy] ?: [NSMutableDictionary new];
     NSNumber *valueInMapping = [FBSDKTypeUtility dictionary:mapping objectForKey:valueCurrency ofType:NSNumber.class] ?: @0.0;
     // Overwrite values when the incoming event's value is greater than the cached one
     if (value.doubleValue > valueInMapping.doubleValue) {
@@ -321,7 +321,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
   NSString *configMode = [decoder decodeObjectOfClass:NSString.class forKey:CONFIG_MODE_KEY];
   NSInteger configID = [decoder decodeIntegerForKey:CONFIG_ID_KEY];
   NSMutableSet<NSString *> *recordedEvents = [decoder decodeObjectOfClass:NSMutableSet.class forKey:RECORDED_EVENTS_KEY];
-  NSMutableDictionary<NSString *, NSMutableDictionary *> *recordedValues = [decoder decodeObjectOfClass:NSMutableDictionary.class forKey:RECORDED_VALUES_KEY];
+  NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *recordedValues = [decoder decodeObjectOfClass:NSMutableDictionary.class forKey:RECORDED_VALUES_KEY];
   NSInteger conversionValue = [decoder decodeIntegerForKey:CONVERSION_VALUE_KEY];
   NSInteger priority = [decoder decodeIntegerForKey:PRIORITY_KEY];
   NSDate *conversionTimestamp = [decoder decodeObjectOfClass:NSDate.class forKey:CONVERSION_TIMESTAMP_KEY];
@@ -376,7 +376,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
   _recordedEvents = recordedEvents;
 }
 
-- (void)setRecordedValues:(NSMutableDictionary<NSString *, NSMutableDictionary *> *)recordedValues
+- (void)setRecordedValues:(NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *)recordedValues
 {
   _recordedValues = recordedValues;
 }

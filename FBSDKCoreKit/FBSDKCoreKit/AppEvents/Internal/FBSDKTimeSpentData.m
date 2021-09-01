@@ -257,10 +257,10 @@ static const long INACTIVE_SECONDS_QUANTA[] =
     quantaIndex++;
   }
 
-  NSMutableDictionary *params = [@{ FBSDKAppEventParameterNameSessionInterruptions : @(self.numInterruptionsInCurrentSession),
-                                    FBSDKAppEventParameterNameTimeBetweenSessions : [NSString stringWithFormat:@"session_quanta_%d", quantaIndex],
-                                    FBSDKAppEventParameterLaunchSource : [self getSourceApplication],
-                                    FBSDKAppEventParameterNameSessionID : self.sessionID ?: @"", } mutableCopy];
+  NSMutableDictionary<NSString *, id> *params = [@{ FBSDKAppEventParameterNameSessionInterruptions : @(self.numInterruptionsInCurrentSession),
+                                                    FBSDKAppEventParameterNameTimeBetweenSessions : [NSString stringWithFormat:@"session_quanta_%d", quantaIndex],
+                                                    FBSDKAppEventParameterLaunchSource : [self getSourceApplication],
+                                                    FBSDKAppEventParameterNameSessionID : self.sessionID ?: @"", } mutableCopy];
   if (_lastSuspendTime) {
     [FBSDKTypeUtility dictionary:params setObject:@(_lastSuspendTime) forKey:@"_logTime"];
   }

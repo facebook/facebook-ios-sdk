@@ -79,7 +79,7 @@
     return;
   }
 
-  NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:parameters setObject:@"CUSTOM_APP_EVENTS" forKey:@"event"];
 
   NSOperatingSystemVersion operatingSystemVersion = [FBSDKInternalUtility.sharedUtility operatingSystemVersion];

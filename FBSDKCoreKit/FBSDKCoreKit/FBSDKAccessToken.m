@@ -163,7 +163,7 @@ static id<FBSDKGraphRequestConnectionProviding> g_connectionFactory;
           shouldDispatchNotif:(BOOL)shouldDispatchNotif
 {
   if (token != g_currentAccessToken) {
-    NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+    NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary dictionary];
     [FBSDKTypeUtility dictionary:userInfo setObject:token forKey:FBSDKAccessTokenChangeNewKey];
     [FBSDKTypeUtility dictionary:userInfo setObject:g_currentAccessToken forKey:FBSDKAccessTokenChangeOldKey];
     // We set this flag also when the current Access Token was not valid, since there might be legacy code relying on it

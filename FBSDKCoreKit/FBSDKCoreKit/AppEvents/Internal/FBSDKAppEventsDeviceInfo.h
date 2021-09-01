@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(AppEventsDeviceInfo)
 @interface FBSDKAppEventsDeviceInfo : NSObject
 
-+ (void)extendDictionaryWithDeviceInfo:(NSMutableDictionary *)dictionary;
++ (void)extendDictionaryWithDeviceInfo:(NSMutableDictionary<NSString *, id> *)dictionary;
 
 @end
 

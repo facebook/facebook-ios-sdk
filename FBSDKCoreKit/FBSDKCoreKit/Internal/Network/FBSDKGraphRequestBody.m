@@ -31,7 +31,7 @@
 @implementation FBSDKGraphRequestBody
 {
   NSMutableData *_data;
-  NSMutableDictionary *_json;
+  NSMutableDictionary<NSString *, id> *_json;
   NSString *_stringBoundary;
 }
 

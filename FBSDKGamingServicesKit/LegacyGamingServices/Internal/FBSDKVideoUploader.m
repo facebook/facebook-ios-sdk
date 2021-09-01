@@ -163,7 +163,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
 
 - (void)_postFinishRequest
 {
-  NSMutableDictionary *parameters = [NSMutableDictionary new];
+  NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary new];
   parameters[FBSDK_GAMING_VIDEO_UPLOAD_PHASE] = FBSDK_GAMING_VIDEO_UPLOAD_PHASE_FINISH;
   if (_uploadSessionID != nil) {
     parameters[FBSDK_GAMING_VIDEO_UPLOAD_SESSION_ID] = _uploadSessionID;
@@ -183,7 +183,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
                                                                          message:@"Failed to finish uploading."]];
                                                     return;
                                                   }
-                                                  NSMutableDictionary *shareResult = [NSMutableDictionary new];
+                                                  NSMutableDictionary<NSString *, id> *shareResult = [NSMutableDictionary new];
                                                   if (result[FBSDK_GAMING_VIDEO_UPLOAD_SUCCESS]) {
                                                     shareResult[FBSDK_GAMING_VIDEO_UPLOAD_SUCCESS] = result[FBSDK_GAMING_VIDEO_UPLOAD_SUCCESS];
                                                   }
@@ -225,7 +225,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
     return nil;
   }
 
-  NSMutableDictionary *shareResults = [NSMutableDictionary new];
+  NSMutableDictionary<NSString *, id> *shareResults = [NSMutableDictionary new];
 
   if (startNum != nil) {
     shareResults[FBSDK_GAMING_VIDEO_START_OFFSET] = startNum;

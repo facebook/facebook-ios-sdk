@@ -92,11 +92,11 @@
 
   return [[NSUserDefaults standardUserDefaults] synchronize];
 #else
-  NSMutableDictionary *query = [self queryForKey:key];
+  NSMutableDictionary<NSString *, id> *query = [self queryForKey:key];
 
   OSStatus status;
   if (value) {
-    NSMutableDictionary *attributesToUpdate = [NSMutableDictionary dictionary];
+    NSMutableDictionary<NSString *, id> *attributesToUpdate = [NSMutableDictionary dictionary];
     [attributesToUpdate setObject:value forKey:[FBSDKDynamicFrameworkLoader loadkSecValueData]];
 
     status = fbsdkdfl_SecItemUpdate((__bridge CFDictionaryRef)query, (__bridge CFDictionaryRef)attributesToUpdate);
@@ -134,7 +134,7 @@
                          logEntry:@"Falling back to loading access token from NSUserDefaults because of simulator bug"];
   return [[NSUserDefaults standardUserDefaults] dataForKey:key];
 #else
-  NSMutableDictionary *query = [self queryForKey:key];
+  NSMutableDictionary<NSString *, id> *query = [self queryForKey:key];
   [query setObject:(id)kCFBooleanTrue forKey:[FBSDKDynamicFrameworkLoader loadkSecReturnData]];
   [query setObject:[FBSDKDynamicFrameworkLoader loadkSecMatchLimitOne] forKey:[FBSDKDynamicFrameworkLoader loadkSecMatchLimit]];
 
@@ -155,9 +155,9 @@
 #endif
 }
 
-- (NSMutableDictionary *)queryForKey:(NSString *)key
+- (NSMutableDictionary<NSString *, id> *)queryForKey:(NSString *)key
 {
-  NSMutableDictionary *query = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *query = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:query setObject:[FBSDKDynamicFrameworkLoader loadkSecClassGenericPassword] forKey:[FBSDKDynamicFrameworkLoader loadkSecClass]];
   [FBSDKTypeUtility dictionary:query setObject:_service forKey:[FBSDKDynamicFrameworkLoader loadkSecAttrService]];
   [FBSDKTypeUtility dictionary:query setObject:key forKey:[FBSDKDynamicFrameworkLoader loadkSecAttrAccount]];

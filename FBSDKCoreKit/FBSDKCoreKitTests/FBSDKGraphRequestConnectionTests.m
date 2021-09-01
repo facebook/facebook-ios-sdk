@@ -65,7 +65,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
                                   timeout:(NSTimeInterval)timeout;
 - (void)addRequest:(FBSDKGraphRequestMetadata *)metadata
            toBatch:(NSMutableArray *)batch
-       attachments:(NSMutableDictionary *)attachments
+       attachments:(NSMutableDictionary<NSString *, id> *)attachments
         batchToken:(NSString *)batchToken;
 - (void)appendAttachments:(NSDictionary<NSString *, id> *)attachments
                    toBody:(FBSDKGraphRequestBody *)body
@@ -597,7 +597,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   FBSDKGraphRequestMetadata *metadata2 = [self metadataWithRequest:request2];
 
   NSMutableArray *batch = [NSMutableArray array];
-  NSMutableDictionary *attachments = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *attachments = [NSMutableDictionary dictionary];
   [self.connection addRequest:metadata1
                       toBatch:batch
                   attachments:attachments

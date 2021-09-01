@@ -192,11 +192,11 @@ static NSMutableArray *_pendingRequestors;
     default: break;
   }
   SKPayment *payment = transaction.payment;
-  NSMutableDictionary *eventParameters = [NSMutableDictionary dictionaryWithDictionary:@{
-                                            FBSDKAppEventParameterNameContentID : payment.productIdentifier ?: @"",
-                                            FBSDKAppEventParameterNameNumItems : @(payment.quantity),
-                                            FBSDKAppEventParameterNameTransactionDate : transactionDate ?: @"",
-                                          }];
+  NSMutableDictionary<NSString *, id> *eventParameters = [NSMutableDictionary dictionaryWithDictionary:@{
+                                                            FBSDKAppEventParameterNameContentID : payment.productIdentifier ?: @"",
+                                                            FBSDKAppEventParameterNameNumItems : @(payment.quantity),
+                                                            FBSDKAppEventParameterNameTransactionDate : transactionDate ?: @"",
+                                                          }];
   if (product) {
     [eventParameters addEntriesFromDictionary:@{
        FBSDKAppEventParameterNameNumItems : @(payment.quantity),
@@ -430,7 +430,7 @@ static NSMutableArray *_pendingRequestors;
                          valueToSum:(double)valueToSum
                          parameters:(NSDictionary<NSString *, id> *)parameters
 {
-  NSMutableDictionary *eventParameters = [NSMutableDictionary dictionaryWithDictionary:parameters];
+  NSMutableDictionary<NSString *, id> *eventParameters = [NSMutableDictionary dictionaryWithDictionary:parameters];
 
   if ([_eventsWithReceipt containsObject:eventName]) {
     NSData *receipt = [self fetchDeviceReceipt];

@@ -112,7 +112,7 @@
 
 - (void)assertDecodeHeaderFailWithInvalidEntry:(NSString *)key value:(id)value
 {
-  NSMutableDictionary *invalidHeader = [_headerDict mutableCopy];
+  NSMutableDictionary<NSString *, id> *invalidHeader = [_headerDict mutableCopy];
   if (value) {
     [FBSDKTypeUtility dictionary:invalidHeader setObject:value forKey:key];
   } else {

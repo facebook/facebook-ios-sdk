@@ -214,7 +214,7 @@ _Nullable id getVariableFromInstance(NSObject *instance, NSString *variableName)
 
 + (NSDictionary<NSString *, id> *)getAttributesOf:(NSObject *)obj parent:(NSObject *_Nullable)parent
 {
-  NSMutableDictionary *componentInfo = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *componentInfo = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:componentInfo setObject:NSStringFromClass([obj class]) forKey:CODELESS_MAPPING_CLASS_NAME_KEY];
 
   if (![FBSDKViewHierarchy isUserInputView:obj]) {
@@ -268,7 +268,7 @@ _Nullable id getVariableFromInstance(NSObject *instance, NSString *variableName)
 
   NSDictionary<NSString *, id> *simpleAttributes = [FBSDKViewHierarchy getAttributesOf:obj parent:parent];
 
-  NSMutableDictionary *result = [NSMutableDictionary dictionaryWithDictionary:simpleAttributes];
+  NSMutableDictionary<NSString *, id> *result = [NSMutableDictionary dictionaryWithDictionary:simpleAttributes];
 
   NSString *className = NSStringFromClass([obj class]);
   [FBSDKTypeUtility dictionary:result setObject:className forKey:VIEW_HIERARCHY_CLASS_NAME_KEY];

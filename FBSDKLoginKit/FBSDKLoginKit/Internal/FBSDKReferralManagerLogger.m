@@ -50,7 +50,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBReferralEnd = @"fb_referral_end";
 {
   @private
   NSString *_identifier;
-  NSMutableDictionary *_extras;
+  NSMutableDictionary<NSString *, id> *_extras;
   NSString *_loggingToken;
 }
 
@@ -83,7 +83,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBReferralEnd = @"fb_referral_end";
     resultString = FBSDKReferralManagerLoggerResultSuccessString;
   }
 
-  NSMutableDictionary *params = [self _parametersForNewEvent];
+  NSMutableDictionary<NSString *, id> *params = [self _parametersForNewEvent];
   [FBSDKTypeUtility dictionary:params setObject:resultString forKey:FBSDKReferralManagerLoggerParamResultKey];
 
   if ([error.domain isEqualToString:FBSDKErrorDomain] || [error.domain isEqualToString:FBSDKLoginErrorDomain]) {
@@ -121,9 +121,9 @@ FBSDKAppEventName const FBSDKAppEventNameFBReferralEnd = @"fb_referral_end";
   [self logEvent:FBSDKAppEventNameFBReferralEnd params:params];
 }
 
-- (NSMutableDictionary *)_parametersForNewEvent
+- (NSMutableDictionary<NSString *, id> *)_parametersForNewEvent
 {
-  NSMutableDictionary *eventParameters = [NSMutableDictionary new];
+  NSMutableDictionary<NSString *, id> *eventParameters = [NSMutableDictionary new];
 
   // NOTE: We ALWAYS add all params to each event, to ensure predictable mapping on the backend.
   [FBSDKTypeUtility dictionary:eventParameters
@@ -151,7 +151,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBReferralEnd = @"fb_referral_end";
   return eventParameters;
 }
 
-- (void)logEvent:(NSString *)eventName params:(NSMutableDictionary *)params
+- (void)logEvent:(NSString *)eventName params:(NSMutableDictionary<NSString *, id> *)params
 {
   if (_identifier) {
     NSString *extrasJSONString = [FBSDKBasicUtility JSONStringForObject:_extras

@@ -80,7 +80,7 @@ static BOOL _isConfigured;
     // Deferred app links are only currently used for engagement ads, thus we consider the app to be an advertising one.
     // If this is considered for organic, non-ads scenarios, we'll need to retrieve the FBAppEventsUtility.shouldAccessAdvertisingID
     // before we make this call.
-    NSMutableDictionary *deferredAppLinkParameters =
+    NSMutableDictionary<NSString *, id> *deferredAppLinkParameters =
     [FBSDKAppEventsUtility activityParametersDictionaryForEvent:FBSDKDeferredAppLinkEvent
                                       shouldAccessAdvertisingID:YES];
     id<FBSDKGraphRequest> deferredAppLinkRequest = [_requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/activities", appID, nil]

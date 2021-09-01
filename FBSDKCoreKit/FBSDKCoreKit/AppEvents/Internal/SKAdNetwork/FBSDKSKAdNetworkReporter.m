@@ -55,7 +55,7 @@ static NSString *const FBSDKSKAdNetworkReporterKey = @"com.facebook.sdk:FBSDKSKA
 @property (nonatomic) NSInteger conversionValue;
 @property (nonatomic) NSDate *timestamp;
 @property (nonnull, nonatomic) NSMutableSet<NSString *> *recordedEvents;
-@property (nonnull, nonatomic) NSMutableDictionary<NSString *, NSMutableDictionary *> *recordedValues;
+@property (nonnull, nonatomic) NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, id> *> *recordedValues;
 @property (nonnull, nonatomic) id<FBSDKGraphRequestProviding> requestProvider;
 @property (nonnull, nonatomic) id<FBSDKDataPersisting> store;
 @property (nonnull, nonatomic) Class<FBSDKConversionValueUpdating> conversionValueUpdatable;
@@ -215,7 +215,7 @@ static NSString *const FBSDKSKAdNetworkReporterKey = @"com.facebook.sdk:FBSDKSKA
     valueCurrency = self.config.defaultCurrency;
   }
   if (value != nil) {
-    NSMutableDictionary *mapping = [[FBSDKTypeUtility dictionary:self.recordedValues objectForKey:event ofType:NSDictionary.class] mutableCopy] ?: [NSMutableDictionary new];
+    NSMutableDictionary<NSString *, id> *mapping = [[FBSDKTypeUtility dictionary:self.recordedValues objectForKey:event ofType:NSDictionary.class] mutableCopy] ?: [NSMutableDictionary new];
     NSNumber *valueInMapping = [FBSDKTypeUtility dictionary:mapping objectForKey:valueCurrency ofType:NSNumber.class] ?: @0.0;
     [FBSDKTypeUtility dictionary:mapping setObject:@(valueInMapping.doubleValue + value.doubleValue) forKey:valueCurrency];
     [FBSDKTypeUtility dictionary:self.recordedValues setObject:mapping forKey:event];

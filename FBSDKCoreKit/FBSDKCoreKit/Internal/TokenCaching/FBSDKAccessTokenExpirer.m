@@ -66,7 +66,7 @@
 - (void)_timerDidFire
 {
   FBSDKAccessToken *accessToken = FBSDKAccessToken.currentAccessToken;
-  NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:userInfo setObject:accessToken forKey:FBSDKAccessTokenChangeNewKey];
   [FBSDKTypeUtility dictionary:userInfo setObject:accessToken forKey:FBSDKAccessTokenChangeOldKey];
   userInfo[FBSDKAccessTokenDidExpireKey] = @YES;

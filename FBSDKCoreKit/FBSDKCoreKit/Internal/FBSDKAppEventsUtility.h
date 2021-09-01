@@ -33,7 +33,7 @@ NS_SWIFT_NAME(AppEventsUtility)
 @property (class, nonatomic, assign, readonly) NSTimeInterval unixTimeNow;
 @property (class, nonatomic, assign, readonly) BOOL isDebugBuild;
 
-+ (NSMutableDictionary *)activityParametersDictionaryForEvent:(NSString *)eventCategory
++ (NSMutableDictionary<NSString *, id> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
                                     shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID;
 + (void)ensureOnMainThread:(NSString *)methodName className:(NSString *)className;
 + (NSString *)flushReasonToString:(FBSDKAppEventsFlushReason)flushReason;

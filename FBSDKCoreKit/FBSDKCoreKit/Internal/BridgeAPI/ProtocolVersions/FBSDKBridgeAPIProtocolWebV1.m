@@ -45,7 +45,7 @@
   if (![FBSDKTypeUtility coercedToStringValue:actionID] || ![FBSDKTypeUtility coercedToStringValue:methodName]) {
     return nil;
   }
-  NSMutableDictionary *queryParameters = [[NSMutableDictionary alloc] initWithDictionary:parameters];
+  NSMutableDictionary<NSString *, id> *queryParameters = [[NSMutableDictionary alloc] initWithDictionary:parameters];
   [FBSDKTypeUtility dictionary:queryParameters setObject:@"touch" forKey:@"display"];
   NSString *bridgeArgs = [FBSDKBasicUtility JSONStringForObject:@{ FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_ACTION_ID_KEY : actionID }
                                                           error:NULL
@@ -108,7 +108,7 @@
   if (![responseActionID isEqualToString:actionID]) {
     return nil;
   }
-  NSMutableDictionary *resultParameters = [queryParameters mutableCopy];
+  NSMutableDictionary<NSString *, id> *resultParameters = [queryParameters mutableCopy];
   [resultParameters removeObjectForKey:FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_BRIDGE_ARGS_KEY];
   resultParameters[@"didComplete"] = @YES;
   return resultParameters;

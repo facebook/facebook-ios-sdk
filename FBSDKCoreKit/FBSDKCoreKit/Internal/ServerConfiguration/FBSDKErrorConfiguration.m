@@ -31,7 +31,7 @@ static NSString *const kErrorCategoryLogin = @"login";
 
 @implementation FBSDKErrorConfiguration
 {
-  NSMutableDictionary *_configurationDictionary;
+  NSMutableDictionary<NSString *, id> *_configurationDictionary;
 }
 
 - (instancetype)initWithDictionary:(NSDictionary<NSString *, id> *)dictionary
@@ -141,7 +141,7 @@ static NSString *const kErrorCategoryLogin = @"login";
           return;
         }
 
-        NSMutableDictionary *currentSubcodes = self->_configurationDictionary[code];
+        NSMutableDictionary<NSString *, id> *currentSubcodes = self->_configurationDictionary[code];
         if (!currentSubcodes) {
           currentSubcodes = [NSMutableDictionary dictionary];
           [FBSDKTypeUtility dictionary:self->_configurationDictionary setObject:currentSubcodes forKey:code];

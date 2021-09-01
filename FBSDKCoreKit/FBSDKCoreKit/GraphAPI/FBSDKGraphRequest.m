@@ -245,7 +245,7 @@ static id<FBSDKSettings> _settings;
 {
   NSString *debugValue = _settings.graphAPIDebugParamValue;
   if (debugValue) {
-    NSMutableDictionary *mutableParams = [NSMutableDictionary dictionaryWithDictionary:params];
+    NSMutableDictionary<NSString *, id> *mutableParams = [NSMutableDictionary dictionaryWithDictionary:params];
     [FBSDKTypeUtility dictionary:mutableParams setObject:debugValue forKey:@"debug"];
     return mutableParams;
   }

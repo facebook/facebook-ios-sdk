@@ -376,10 +376,10 @@ static BOOL _canMakeRequests = NO;
 //
 - (void)addRequest:(FBSDKGraphRequestMetadata *)metadata
            toBatch:(NSMutableArray *)batch
-       attachments:(NSMutableDictionary *)attachments
+       attachments:(NSMutableDictionary<NSString *, id> *)attachments
         batchToken:(NSString *)batchToken
 {
-  NSMutableDictionary *requestElement = [NSMutableDictionary new];
+  NSMutableDictionary<NSString *, id> *requestElement = [NSMutableDictionary new];
 
   if (metadata.batchParameters) {
     [requestElement addEntriesFromDictionary:metadata.batchParameters];
@@ -450,7 +450,7 @@ static BOOL _canMakeRequests = NO;
 //
 - (void)appendJSONRequests:(NSArray *)requests
                     toBody:(FBSDKGraphRequestBody *)body
-        andNameAttachments:(NSMutableDictionary *)attachments
+        andNameAttachments:(NSMutableDictionary<NSString *, id> *)attachments
                     logger:(FBSDKLogger *)logger
 {
   NSMutableArray *batch = [NSMutableArray new];
@@ -561,7 +561,7 @@ static BOOL _canMakeRequests = NO;
 
     [body appendWithKey:@"batch_app_id" formValue:batchAppID logger:bodyLogger];
 
-    NSMutableDictionary *attachments = [NSMutableDictionary new];
+    NSMutableDictionary<NSString *, id> *attachments = [NSMutableDictionary new];
 
     [self appendJSONRequests:requests
                       toBody:body
@@ -790,7 +790,7 @@ static BOOL _canMakeRequests = NO;
       if (![item isKindOfClass:[NSDictionary<NSString *, id> class]]) {
         [FBSDKTypeUtility array:results addObject:item];
       } else {
-        NSMutableDictionary *result = [((NSDictionary<NSString *, id> *)item) mutableCopy];
+        NSMutableDictionary<NSString *, id> *result = [((NSDictionary<NSString *, id> *)item) mutableCopy];
         if (result[@"body"]) {
           [FBSDKTypeUtility dictionary:result setObject:[self parseJSONOrOtherwise:result[@"body"] error:&batchResultError] forKey:@"body"];
         }
@@ -993,7 +993,7 @@ static BOOL _canMakeRequests = NO;
     return nil;
   }
 
-  NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:userInfo setObject:errorDictionary[@"code"] forKey:FBSDKGraphRequestErrorGraphErrorCodeKey];
   [FBSDKTypeUtility dictionary:userInfo setObject:errorDictionary[@"error_subcode"] forKey:FBSDKGraphRequestErrorGraphErrorSubcodeKey];
   // "message" is preferred over error_msg or error_reason.
@@ -1038,7 +1038,7 @@ static BOOL _canMakeRequests = NO;
                  innerError:(NSError *)innerError
                     message:(NSString *)message
 {
-  NSMutableDictionary *const userInfo = [NSMutableDictionary new];
+  NSMutableDictionary<NSString *, id> *const userInfo = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:userInfo setObject:@(statusCode) forKey:FBSDKGraphRequestErrorHTTPStatusCodeKey];
 
   if (response) {

@@ -94,7 +94,7 @@ static id<FBSDKNumberParsing> _numberParser;
 - (void)trackEvent:(id)sender
 {
   UIView *sourceView = [sender isKindOfClass:[UIView class]] ? (UIView *)sender : nil;
-  NSMutableDictionary *params = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:params setObject:@"1" forKey:CODELESS_CODELESS_EVENT_KEY];
   for (FBSDKCodelessParameterComponent *component in self.parameters) {
     NSString *text = component.value;

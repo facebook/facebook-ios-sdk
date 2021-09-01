@@ -450,7 +450,7 @@ static id<FBSDKSettings> _settings;
   NSData *data = UIImageJPEGRepresentation([FBSDKCodelessIndexer screenshot], 0.5);
   NSString *screenshot = [data base64EncodedStringWithOptions:0];
 
-  NSMutableDictionary *treeInfo = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *treeInfo = [NSMutableDictionary dictionary];
 
   [FBSDKTypeUtility dictionary:treeInfo setObject:viewTrees forKey:@"view"];
   [FBSDKTypeUtility dictionary:treeInfo setObject:screenshot ?: @"" forKey:@"screenshot"];

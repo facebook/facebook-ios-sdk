@@ -75,7 +75,7 @@
     return NO;
   }
 
-  NSMutableDictionary *parameters = [NSMutableDictionary new];
+  NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:parameters setObject:self.objectID forKey:@"object_id"];
   [FBSDKTypeUtility dictionary:parameters
                      setObject:NSStringFromFBSDKLikeObjectType(self.objectType)

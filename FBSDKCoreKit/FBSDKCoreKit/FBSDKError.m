@@ -91,7 +91,7 @@ static id<FBSDKErrorReporting> _errorReporter;
                      message:(NSString *)message
              underlyingError:(NSError *)underlyingError
 {
-  NSMutableDictionary *fullUserInfo = [[NSMutableDictionary alloc] initWithDictionary:userInfo];
+  NSMutableDictionary<NSString *, id> *fullUserInfo = [[NSMutableDictionary alloc] initWithDictionary:userInfo];
   [FBSDKTypeUtility dictionary:fullUserInfo setObject:message forKey:FBSDKErrorDeveloperMessageKey];
   [FBSDKTypeUtility dictionary:fullUserInfo setObject:underlyingError forKey:NSUnderlyingErrorKey];
   userInfo = fullUserInfo.count ? [fullUserInfo copy] : nil;
@@ -134,7 +134,7 @@ static id<FBSDKErrorReporting> _errorReporter;
   if (!message) {
     message = [[NSString alloc] initWithFormat:@"Invalid value for %@: %@", name, value];
   }
-  NSMutableDictionary *userInfo = [NSMutableDictionary new];
+  NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:userInfo setObject:name forKey:FBSDKErrorArgumentNameKey];
   [FBSDKTypeUtility dictionary:userInfo setObject:value forKey:FBSDKErrorArgumentValueKey];
   return [self errorWithDomain:domain
@@ -162,7 +162,7 @@ static id<FBSDKErrorReporting> _errorReporter;
     message =
     [[NSString alloc] initWithFormat:@"Invalid item (%@) found in collection for %@: %@", item, name, collection];
   }
-  NSMutableDictionary *userInfo = [NSMutableDictionary new];
+  NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:userInfo setObject:name forKey:FBSDKErrorArgumentNameKey];
   [FBSDKTypeUtility dictionary:userInfo setObject:item forKey:FBSDKErrorArgumentValueKey];
   [FBSDKTypeUtility dictionary:userInfo setObject:collection forKey:FBSDKErrorArgumentCollectionKey];

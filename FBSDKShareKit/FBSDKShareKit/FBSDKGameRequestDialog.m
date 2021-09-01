@@ -191,7 +191,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
     return nil;
   }
 
-  NSMutableDictionary *parsedURLQuery = [NSMutableDictionary new];
+  NSMutableDictionary<NSString *, id> *parsedURLQuery = [NSMutableDictionary new];
   for (NSURLQueryItem *query in urlComponents.queryItems) {
     if ([query.name isEqual:@"request_id"]) {
       [FBSDKTypeUtility dictionary:parsedURLQuery setObject:query.value forKey:query.name];
@@ -243,7 +243,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
     return NO;
   }
 
-  NSMutableDictionary *parameters = [self _convertGameRequestContentToDictionaryV1:content];
+  NSMutableDictionary<NSString *, id> *parameters = [self _convertGameRequestContentToDictionaryV1:content];
 
   // check if we are sending to a specific set of recipients.  if we are and they are all frictionless recipients, we
   // can perform this action without displaying the web dialog
@@ -283,9 +283,9 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   return NO;
 }
 
-- (NSMutableDictionary *)_convertGameRequestContentToDictionaryV1:(FBSDKGameRequestContent *)content
+- (NSMutableDictionary<NSString *, id> *)_convertGameRequestContentToDictionaryV1:(FBSDKGameRequestContent *)content
 {
-  NSMutableDictionary *parameters = [NSMutableDictionary new];
+  NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:parameters setObject:[content.recipients componentsJoinedByString:@","] forKey:@"to"];
   [FBSDKTypeUtility dictionary:parameters setObject:content.message forKey:@"message"];
   [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKGameRequestURLProvider actionTypeNameForActionType:content.actionType] forKey:@"action_type"];
@@ -298,9 +298,9 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   return parameters;
 }
 
-- (NSMutableDictionary *)_convertGameRequestContentToDictionaryV2:(FBSDKGameRequestContent *)content
+- (NSMutableDictionary<NSString *, id> *)_convertGameRequestContentToDictionaryV2:(FBSDKGameRequestContent *)content
 {
-  NSMutableDictionary *parameters = [NSMutableDictionary new];
+  NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:parameters setObject:[content.recipientSuggestions componentsJoinedByString:@","] forKey:@"to"];
   [FBSDKTypeUtility dictionary:parameters setObject:content.message forKey:@"message"];
   [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKGameRequestURLProvider actionTypeNameForActionType:content.actionType] forKey:@"action_type"];
@@ -423,7 +423,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
       }
     }
     if (toArray.count) {
-      NSMutableDictionary *mutableResults = [results mutableCopy];
+      NSMutableDictionary<NSString *, id> *mutableResults = [results mutableCopy];
       [FBSDKTypeUtility dictionary:mutableResults setObject:toArray forKey:@"to"];
       results = mutableResults;
     }

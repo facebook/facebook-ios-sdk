@@ -77,7 +77,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
 {
   @private
   NSString *_identifier;
-  NSMutableDictionary *_extras;
+  NSMutableDictionary<NSString *, id> *_extras;
 
   NSString *_lastResult;
   NSError *_lastError;
@@ -193,7 +193,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
                                                           forAuthMethod:(NSString *)authMethod
                                                                  logger:(FBSDKLoginManagerLogger *)logger
 {
-  NSMutableDictionary *params = [loginParams mutableCopy];
+  NSMutableDictionary<NSString *, id> *params = [loginParams mutableCopy];
 
   NSTimeInterval timeValue = (NSTimeInterval)FBSDKMonotonicTimeGetCurrentSeconds();
   NSString *e2eTimestampString = [FBSDKBasicUtility JSONStringForObject:@{ @"init" : @(timeValue) }
@@ -258,7 +258,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
   };
 
   if (existingState) {
-    NSMutableDictionary *mutableState = [clientState mutableCopy];
+    NSMutableDictionary<NSString *, id> *mutableState = [clientState mutableCopy];
     [mutableState addEntriesFromDictionary:existingState];
     clientState = mutableState;
   }
@@ -266,9 +266,9 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
   return [FBSDKBasicUtility JSONStringForObject:clientState error:NULL invalidObjectHandler:NULL];
 }
 
-- (NSMutableDictionary *)_parametersForNewEvent
+- (NSMutableDictionary<NSString *, id> *)_parametersForNewEvent
 {
-  NSMutableDictionary *eventParameters = [NSMutableDictionary new];
+  NSMutableDictionary<NSString *, id> *eventParameters = [NSMutableDictionary new];
 
   // NOTE: We ALWAYS add all params to each event, to ensure predictable mapping on the backend.
   [FBSDKTypeUtility dictionary:eventParameters setObject:_identifier ?: FBSDKLoginManagerLoggerValueEmpty forKey:FBSDKLoginManagerLoggerParamIdentifierKey];
@@ -283,7 +283,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
   return eventParameters;
 }
 
-- (void)logEvent:(NSString *)eventName params:(NSMutableDictionary *)params
+- (void)logEvent:(NSString *)eventName params:(NSMutableDictionary<NSString *, id> *)params
 {
   if (_identifier) {
     NSString *extrasJSONString = [FBSDKBasicUtility JSONStringForObject:_extras
@@ -302,7 +302,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
 
 - (void)logEvent:(NSString *)eventName result:(NSString *)result error:(NSError *)error
 {
-  NSMutableDictionary *params = [self _parametersForNewEvent];
+  NSMutableDictionary<NSString *, id> *params = [self _parametersForNewEvent];
 
   [FBSDKTypeUtility dictionary:params setObject:result forKey:FBSDKLoginManagerLoggerParamResultKey];
 

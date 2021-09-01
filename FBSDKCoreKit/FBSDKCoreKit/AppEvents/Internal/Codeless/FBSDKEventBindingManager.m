@@ -47,7 +47,7 @@
 @property (nonnull, nonatomic) id<FBSDKEventLogging> eventLogger;
 @property (nonnull, nonatomic) Class<FBSDKSwizzling> swizzler;
 @property (nonatomic) BOOL isStarted;
-@property (nullable, nonatomic) NSMutableDictionary *reactBindings;
+@property (nullable, nonatomic) NSMutableDictionary<NSNumber *, id> *reactBindings;
 @property (nonnull, nonatomic) NSSet *validClasses;
 @property (nonatomic) BOOL hasReactNative;
 @property (nullable, nonatomic) NSArray *eventBindings;
@@ -485,7 +485,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
  #if DEBUG
   #if FBTEST
 
-- (void)setReactBindings:(NSMutableDictionary *)bindings
+- (void)setReactBindings:(NSMutableDictionary<NSNumber *, id> *)bindings
 {
   _reactBindings = bindings;
 }

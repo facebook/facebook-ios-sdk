@@ -315,7 +315,7 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
 {
   if (profile != g_currentProfile && ![profile isEqualToProfile:g_currentProfile]) {
     [[self class] cacheProfile:profile];
-    NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+    NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary dictionary];
 
     [FBSDKTypeUtility dictionary:userInfo setObject:profile forKey:FBSDKProfileChangeNewKey];
     [FBSDKTypeUtility dictionary:userInfo setObject:g_currentProfile forKey:FBSDKProfileChangeOldKey];
@@ -541,7 +541,7 @@ static id <FBSDKDataPersisting> _store;
     default: type = @"normal";
   }
 
-  NSMutableDictionary *queryParameters = [NSMutableDictionary dictionary];
+  NSMutableDictionary<NSString *, id> *queryParameters = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:queryParameters setObject:type forKey:pictureModeKey];
   [FBSDKTypeUtility dictionary:queryParameters setObject:@(roundf(size.width)) forKey:widthKey];
   [FBSDKTypeUtility dictionary:queryParameters setObject:@(roundf(size.height)) forKey:heightKey];

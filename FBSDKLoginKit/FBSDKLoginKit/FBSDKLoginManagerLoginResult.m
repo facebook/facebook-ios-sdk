@@ -27,7 +27,7 @@
 
 @implementation FBSDKLoginManagerLoginResult
 {
-  NSMutableDictionary *_mutableLoggingExtras;
+  NSMutableDictionary<NSString *, id> *_mutableLoggingExtras;
 }
 
 - (instancetype)initWithToken:(FBSDKAccessToken *)token

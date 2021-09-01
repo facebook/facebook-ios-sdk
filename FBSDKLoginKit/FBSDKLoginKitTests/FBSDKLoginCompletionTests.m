@@ -152,7 +152,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (void)testInitWithAccessTokenWithIDToken
 {
-  NSMutableDictionary *parameters = self.parametersWithIDtoken.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = self.parametersWithIDtoken.mutableCopy;
   [parameters addEntriesFromDictionary:self.parametersWithAccessToken];
   FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
 
@@ -208,7 +208,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (void)testInitWithIDTokenAndNonce
 {
-  NSMutableDictionary *parameters = self.parametersWithIDtoken.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = self.parametersWithIDtoken.mutableCopy;
   [parameters addEntriesFromDictionary:self.parametersWithNonce];
   FBSDKLoginURLCompleter *completer = [self loginCompleterWithParameters:parameters appID:_fakeAppID];
 
@@ -652,42 +652,42 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (NSDictionary<NSString *, id> *)rawParametersWithMissingNonce
 {
-  NSMutableDictionary *parameters = _parameters.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = _parameters.mutableCopy;
   [parameters removeObjectsForKeys:@[@"nonce"]];
   return parameters;
 }
 
 - (NSDictionary<NSString *, id> *)parametersWithNonce
 {
-  NSMutableDictionary *parameters = _parameters.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = _parameters.mutableCopy;
   [parameters removeObjectsForKeys:@[@"id_token", @"access_token", @"error", @"error_message"]];
   return parameters;
 }
 
 - (NSDictionary<NSString *, id> *)parametersWithAccessToken
 {
-  NSMutableDictionary *parameters = _parameters.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = _parameters.mutableCopy;
   [parameters removeObjectsForKeys:@[@"id_token", @"nonce", @"error", @"error_message"]];
   return parameters;
 }
 
 - (NSDictionary<NSString *, id> *)parametersWithIDtoken
 {
-  NSMutableDictionary *parameters = _parameters.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = _parameters.mutableCopy;
   [parameters removeObjectsForKeys:@[@"access_token", @"nonce", @"error", @"error_message"]];
   return parameters;
 }
 
 - (NSDictionary<NSString *, id> *)parametersWithoutAccessTokenWithoutIDTokenWithoutNonce
 {
-  NSMutableDictionary *parameters = _parameters.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = _parameters.mutableCopy;
   [parameters removeObjectsForKeys:@[@"id_token", @"access_token", @"nonce", @"error", @"error_message"]];
   return parameters;
 }
 
 - (NSDictionary<NSString *, id> *)parametersWithEmptyAccessTokenWithEmptyIDTokenWithEmptyNonce
 {
-  NSMutableDictionary *parameters = _parameters.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = _parameters.mutableCopy;
   [parameters removeObjectsForKeys:@[@"error", @"error_message"]];
   [parameters setValue:@"" forKey:@"access_token"];
   [parameters setValue:@"" forKey:@"id_token"];
@@ -697,7 +697,7 @@ static NSString *const _fakeChallence = @"some_challenge";
 
 - (NSDictionary<NSString *, id> *)parametersWithError
 {
-  NSMutableDictionary *parameters = _parameters.mutableCopy;
+  NSMutableDictionary<NSString *, id> *parameters = _parameters.mutableCopy;
   [parameters removeObjectsForKeys:@[@"id_token", @"access_token", @"nonce"]];
   return parameters;
 }

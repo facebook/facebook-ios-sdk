@@ -305,7 +305,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 }
 
 - (void)saveEvents:(NSMutableSet *)events
-            values:(NSMutableDictionary *)values
+            values:(NSMutableDictionary<NSString *, NSMutableDictionary *> *)values
    conversionValue:(NSInteger)conversionValue
          timestamp:(NSDate *)timestamp
 {

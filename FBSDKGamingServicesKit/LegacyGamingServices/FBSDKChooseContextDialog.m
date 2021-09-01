@@ -130,7 +130,7 @@
 
 - (NSURL *)_generateURL
 {
-  NSMutableDictionary *parametersDictionary = [self queryParameters];
+  NSMutableDictionary<NSString *, id> *parametersDictionary = [self queryParameters];
   NSError *error;
   if (_internalUtility.isFacebookAppInstalled) {
     return [_internalUtility URLWithScheme:FBSDK_CONTEXT_DIALOG_URL_SCHEME
@@ -146,9 +146,9 @@
                                    error:&error];
 }
 
-- (NSMutableDictionary *)queryParameters
+- (NSMutableDictionary<NSString *, id> *)queryParameters
 {
-  NSMutableDictionary *appSwitchParameters = [NSMutableDictionary new];
+  NSMutableDictionary<NSString *, id> *appSwitchParameters = [NSMutableDictionary new];
   if (self.dialogContent && [self.dialogContent isKindOfClass:[FBSDKChooseContextContent class]]) {
     FBSDKChooseContextContent *content = (FBSDKChooseContextContent *)self.dialogContent;
 
@@ -176,7 +176,7 @@
                                                                    error:NULL
                                                     invalidObjectHandler:NULL];
 
-  NSMutableDictionary *mSiteParameters = [NSMutableDictionary new];
+  NSMutableDictionary<NSString *, id> *mSiteParameters = [NSMutableDictionary new];
   mSiteParameters[FBSDK_CONTEXT_DIALOG_MSITE_QUERY_PARAMETER_PATH_KEY] = @"/path";
   mSiteParameters[FBSDK_CONTEXT_DIALOG_MSITE_QUERY_PARAMETER_PARAM_KEY] = parameterJSONString;
   return mSiteParameters;
