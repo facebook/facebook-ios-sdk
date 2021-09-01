@@ -70,7 +70,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
           fromViewController:(UIViewController *)viewController
                      handler:(FBSDKLoginManagerLoginResultBlock)handler;
 
-- (instancetype)initWithInternalUtility:(id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker>)internalUtility;
+- (instancetype)initWithInternalUtility:(id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker>)internalUtility keychainStore:(id<FBSDKKeychainStoreProviding>)keychainStore;
 
 @end
 
@@ -125,6 +125,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 @property (nonatomic) NSDictionary<NSString *, id> *header;
 @property (nonatomic) TestInternalUtility *internalUtility;
 @property (nonatomic) FBSDKLoginManager *loginManager;
+@property (nonatomic) TestKeychainStoreFactory *keychainStore;
 
 @end
 
@@ -138,8 +139,9 @@ static NSString *const kFakeJTI = @"a jti is just any string";
                          didFinishLaunchingWithOptions:@{}];
 
   self.internalUtility = [TestInternalUtility new];
+  self.keychainStore = [TestKeychainStoreFactory new];
 
-  self.loginManager = [[FBSDKLoginManager alloc] initWithInternalUtility:self.internalUtility];
+  self.loginManager = [[FBSDKLoginManager alloc] initWithInternalUtility:self.internalUtility keychainStore:self.keychainStore];
 
   _mockInternalUtility = OCMPartialMock(FBSDKInternalUtility.sharedUtility);
   OCMStub([_mockInternalUtility validateURLSchemes]);

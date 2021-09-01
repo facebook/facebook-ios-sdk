@@ -115,7 +115,6 @@
  #import "ServerConfiguration/FBSDKServerConfiguration+Internal.h"
  #import "ServerConfiguration/FBSDKServerConfigurationManager.h"
  #import "ServerConfiguration/FBSDKServerConfigurationManager+Internal.h"
- #import "TokenCaching/FBSDKKeychainStore.h"
  #import "TokenCaching/FBSDKTokenCache.h"
  #import "UI/FBSDKButton+Subclass.h"
  #import "UI/FBSDKLogo.h"

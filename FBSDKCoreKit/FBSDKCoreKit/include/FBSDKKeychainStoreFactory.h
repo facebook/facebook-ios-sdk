@@ -18,26 +18,17 @@
 
 #import <Foundation/Foundation.h>
 
-NS_SWIFT_NAME(KeychainStore)
-@interface FBSDKKeychainStore : NSObject
+#import "FBSDKKeychainStoreProviding.h"
 
-@property (nonatomic, readonly, copy) NSString *service;
-@property (nonatomic, readonly, copy) NSString *accessGroup;
+NS_ASSUME_NONNULL_BEGIN
 
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
-- (instancetype)initWithService:(NSString *)service accessGroup:(NSString *)accessGroup NS_DESIGNATED_INITIALIZER;
+/**
+ Internal type not intended for use outside of the SDKs.
 
-- (BOOL)setDictionary:(NSDictionary<NSString *, id> *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility;
-- (NSDictionary<NSString *, id> *)dictionaryForKey:(NSString *)key;
-
-- (BOOL)setString:(NSString *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility;
-- (NSString *)stringForKey:(NSString *)key;
-
-- (BOOL)setData:(NSData *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility;
-- (NSData *)dataForKey:(NSString *)key;
-
-// hook for subclasses to override keychain query construction.
-- (NSMutableDictionary<NSString *, id> *)queryForKey:(NSString *)key;
-
+ A factory for providing objects that conform to `KeychainStore`
+*/
+NS_SWIFT_NAME(KeychainStoreFactory)
+@interface FBSDKKeychainStoreFactory : NSObject <FBSDKKeychainStoreProviding>
 @end
+
+NS_ASSUME_NONNULL_END

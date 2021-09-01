@@ -54,7 +54,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   FBSDKLoginManagerLoginResultBlock _handler;
   FBSDKLoginManagerLogger *_logger;
   FBSDKLoginManagerState _state;
-  FBSDKKeychainStore *_keychainStore;
+  id<FBSDKKeychainStore> _keychainStore;
   FBSDKLoginConfiguration *_configuration;
   id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker> _internalUtility;
   BOOL _usedSFAuthSession;
@@ -70,15 +70,17 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 
 - (instancetype)init
 {
-  return [self initWithInternalUtility:FBSDKInternalUtility.sharedUtility];
+  return [self initWithInternalUtility:FBSDKInternalUtility.sharedUtility keychainStore:[FBSDKKeychainStoreFactory new]];
 }
 
-- (instancetype)initWithInternalUtility:(id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker>)internalUtility
+- (instancetype)initWithInternalUtility:(id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker>)internalUtility keychainStore:(id<FBSDKKeychainStoreProviding>)keychainStore
 {
   if ((self = [super init])) {
     _internalUtility = internalUtility;
     NSString *keyChainServiceIdentifier = [NSString stringWithFormat:@"com.facebook.sdk.loginmanager.%@", [NSBundle mainBundle].bundleIdentifier];
-    _keychainStore = [[FBSDKKeychainStore alloc] initWithService:keyChainServiceIdentifier accessGroup:nil];
+
+    _keychainStore = [keychainStore createKeychainStoreWithService:keyChainServiceIdentifier
+                                                       accessGroup:nil];
   }
   return self;
 }
@@ -473,7 +475,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
               accessibility:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
 }
 
-- (void)storeExpectedNonce:(NSString *)nonceExpected keychainStore:(FBSDKKeychainStore *)keychainStore
+- (void)storeExpectedNonce:(NSString *)nonceExpected keychainStore:(id<FBSDKKeychainStore>)keychainStore
 {
   [keychainStore setString:nonceExpected
                     forKey:FBSDKExpectedNonceKey
