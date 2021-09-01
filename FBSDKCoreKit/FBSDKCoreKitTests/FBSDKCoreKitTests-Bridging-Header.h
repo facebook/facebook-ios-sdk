@@ -107,6 +107,7 @@
 #import "FBSDKFeatureChecking.h"
 #import "FBSDKFeatureDisabling.h"
 #import "FBSDKFeatureExtracting.h"
+#import "FBSDKFeatureExtractor+Testing.h"
 #import "FBSDKFeatureManager.h"
 #import "FBSDKGateKeeperManager+Testing.h"
 #import "FBSDKGraphErrorRecoveryProcessor.h"
@@ -186,7 +187,6 @@
 #import "XCTestCase+Extensions.h"
 #import "FBSDKCrashShield.h"
 #import "FBSDKFeature.h"
-
 
 NS_ASSUME_NONNULL_BEGIN
 

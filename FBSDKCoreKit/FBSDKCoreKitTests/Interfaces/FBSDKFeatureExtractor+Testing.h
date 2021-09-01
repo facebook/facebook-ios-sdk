@@ -23,6 +23,7 @@
  #import <Foundation/Foundation.h>
 
  #import "FBSDKFeatureExtracting.h"
+ #import "FBSDKFeatureExtractor.h"
  #import "FBSDKRulesFromKeyProvider.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -30,6 +31,34 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKFeatureExtractor (Testing)
 
 + (nullable id<FBSDKRulesFromKeyProvider>)keyProvider;
+
++ (void)configureWithRulesFromKeyProvider:(id<FBSDKRulesFromKeyProvider>)keyProvider;
+
++ (void)reset;
+
++ (nullable float *)getDenseFeatures:(NSDictionary<NSString *, id> *)viewHierarchy;
+
++ (BOOL)pruneTree:(NSMutableDictionary<NSString *, id> *)node
+         siblings:(NSMutableArray *)siblings;
+
++ (float *)nonparseFeatures:(NSMutableDictionary<NSString *, id> *)node
+                   siblings:(NSMutableArray *)siblings
+                 screenname:(NSString *)screenname
+             viewTreeString:(NSString *)viewTreeString;
+
++ (BOOL)isButton:(NSDictionary<NSString *, id> *)node;
+
++ (void)update:(NSDictionary<NSString *, id> *)node
+          text:(NSMutableString *)buttonTextString
+          hint:(NSMutableString *)buttonHintString;
+
++ (BOOL)foundIndicators:(NSArray *)indicators
+               inValues:(NSArray *)values;
+
++ (float)regextMatch:(NSString *)pattern
+                text:(NSString *)text;
+
++ (float *)parseFeatures:(NSMutableDictionary<NSString *, id> *)node;
 
 @end
 
