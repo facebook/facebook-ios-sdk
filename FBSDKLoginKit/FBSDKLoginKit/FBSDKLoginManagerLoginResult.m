@@ -22,13 +22,8 @@
 
  #import "FBSDKLoginManagerLoginResult+Internal.h"
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
-
  #import "FBSDKCoreKitBasicsImportForLoginKit.h"
+ #import "FBSDKCoreKitImport.h"
 
 @implementation FBSDKLoginManagerLoginResult
 {
