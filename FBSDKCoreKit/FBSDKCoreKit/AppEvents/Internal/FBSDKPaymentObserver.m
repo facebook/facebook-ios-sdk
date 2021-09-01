@@ -20,7 +20,6 @@
 
 #import <StoreKit/StoreKit.h>
 
-#import "FBSDKCoreKit+Internal.h"
 #import "FBSDKPaymentProductRequestor.h"
 #import "FBSDKPaymentProductRequestorCreating.h"
 #import "FBSDKPaymentProductRequestorFactory.h"

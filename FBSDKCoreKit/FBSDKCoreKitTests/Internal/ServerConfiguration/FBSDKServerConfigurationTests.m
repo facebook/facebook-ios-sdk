@@ -18,7 +18,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKEventBinding.h"
 

@@ -25,7 +25,6 @@
 #import "FBSDKApplicationObserving.h"
 #import "FBSDKAuthenticationToken+Internal.h"
 #import "FBSDKConversionValueUpdating.h"
-#import "FBSDKCoreKit+Internal.h"
 #import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKCrashShield+Internal.h"
 #import "FBSDKEventDeactivationManager+Protocols.h"
