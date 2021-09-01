@@ -29,7 +29,7 @@ NS_SWIFT_NAME(VideoUploaderCreating)
 
 - (id<FBSDKVideoUploading>)createWithVideoName:(NSString *)videoName
                                      videoSize:(NSUInteger)videoSize
-                                    parameters:(NSDictionary *)parameters
+                                    parameters:(NSDictionary<NSString *, id> *)parameters
                                       delegate:(id<FBSDKVideoUploaderDelegate>)delegate
 NS_SWIFT_NAME(create(videoName:videoSize:parameters:delegate:));
 

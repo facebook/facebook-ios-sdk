@@ -56,7 +56,7 @@ NSString *const FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey = @"_fb_pix
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message
 {
   if ([message.name isEqualToString:FBSDKAppEventsWKWebViewMessagesHandlerKey]) {
-    NSDictionary *body = [FBSDKTypeUtility dictionaryValue:message.body];
+    NSDictionary<NSString *, id> *body = [FBSDKTypeUtility dictionaryValue:message.body];
     if (!body) {
       return;
     }
@@ -76,7 +76,7 @@ NSString *const FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey = @"_fb_pix
         [FBSDKAppEventsUtility logAndNotify:@"Can't bridge an event without a referral Pixel ID. Check your webview Pixel configuration."];
         return;
       }
-      if (jsonParseError != nil || ![params isKindOfClass:[NSDictionary class]] || params == nil) {
+      if (jsonParseError != nil || ![params isKindOfClass:[NSDictionary<NSString *, id> class]] || params == nil) {
         [FBSDKAppEventsUtility logAndNotify:@"Could not find parameters for your Pixel request. Check your webview Pixel configuration."];
         params = [[NSMutableDictionary alloc] initWithObjectsAndKeys:pixelID, FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey, nil];
       } else {

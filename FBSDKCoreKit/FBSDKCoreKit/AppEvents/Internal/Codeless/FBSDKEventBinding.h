@@ -42,7 +42,7 @@ NS_SWIFT_NAME(EventBinding)
 
 + (BOOL)isViewMatchPath:(UIView *)view path:(NSArray *)path;
 + (BOOL)isPath:(NSArray *)path matchViewPath:(NSArray *)viewPath;
-- (FBSDKEventBinding *)initWithJSON:(NSDictionary *)dict
+- (FBSDKEventBinding *)initWithJSON:(NSDictionary<NSString *, id> *)dict
                         eventLogger:(id<FBSDKEventLogging>)eventLogger;
 - (void)trackEvent:(id)sender;
 - (BOOL)isEqualToBinding:(FBSDKEventBinding *)binding;

@@ -104,7 +104,7 @@ void fb_dispatch_on_default_thread(dispatch_block_t block)
     // good to go, keep the object
   } else if ([object isKindOfClass:[NSURL class]]) {
     object = ((NSURL *)object).absoluteString;
-  } else if ([object isKindOfClass:[NSDictionary class]]) {
+  } else if ([object isKindOfClass:[NSDictionary<NSString *, id> class]]) {
     NSMutableDictionary<NSString *, id> *dictionary = [NSMutableDictionary new];
     [FBSDKTypeUtility dictionary:(NSDictionary<id, id> *) object enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *dictionaryStop) {
       [FBSDKTypeUtility dictionary:dictionary

@@ -25,8 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKDecodableErrorConfiguration <NSObject>
 
-- (instancetype)initWithDictionary:(NSDictionary *)dictionary;
-- (void)updateWithArray:(NSArray<NSDictionary *> *)array;
+- (instancetype)initWithDictionary:(NSDictionary<NSString *, id> *)dictionary;
+- (void)updateWithArray:(NSArray<NSDictionary<NSString *, id> *> *)array;
 
 @end
 
@@ -42,10 +42,10 @@ FBSDKDecodableErrorConfiguration
 + (instancetype)new NS_UNAVAILABLE;
 
 // initialize from optional dictionary of existing configurations. If not supplied a fallback will be created.
-- (instancetype)initWithDictionary:(nullable NSDictionary *)dictionary NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithDictionary:(nullable NSDictionary<NSString *, id> *)dictionary NS_DESIGNATED_INITIALIZER;
 
 // parses the array (supplied from app settings endpoint)
-- (void)updateWithArray:(NSArray<NSDictionary *> *)array;
+- (void)updateWithArray:(NSArray<NSDictionary<NSString *, id> *> *)array;
 
 // NSString "code" instances support "*" wildcard semantics (nil is treated as "*" also)
 // 'request' is optional, typically for identifying special graph request semantics (e.g., no recovery for client token)

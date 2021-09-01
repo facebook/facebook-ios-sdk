@@ -26,7 +26,7 @@ class TestFeatureExtractor: FeatureExtracting {
     stubbedDenseFeatures = denseFeatures
   }
 
-  static func getDenseFeatures(_ viewHierarchy: [AnyHashable: Any]) -> UnsafeMutablePointer<Float>? {
+  static func getDenseFeatures(_ viewHierarchy: [String: Any]) -> UnsafeMutablePointer<Float>? {
     stubbedDenseFeatures
   }
 

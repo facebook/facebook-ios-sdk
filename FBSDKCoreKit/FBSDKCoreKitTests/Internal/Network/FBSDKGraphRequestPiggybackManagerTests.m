@@ -219,7 +219,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
     @"oauth/access_token",
     "Should add a request with the correct graph path for refreshing a token"
   );
-  NSDictionary *expectedParameters = @{
+  NSDictionary<NSString *, id> *expectedParameters = @{
     @"grant_type" : @"fb_extend_sso_token",
     @"fields" : @"",
     @"client_id" : SampleAccessTokens.validToken.appID
@@ -373,7 +373,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
     @"me/permissions",
     "Should add a request with the correct graph path for refreshing permissions"
   );
-  NSDictionary *expectedParameters = @{@"fields" : @""};
+  NSDictionary<NSString *, id> *expectedParameters = @{@"fields" : @""};
   XCTAssertTrue(
     [permissionRequest.parameters isEqualToDictionary:expectedParameters],
     "Should add a request with the correct parameters for refreshing permissions"
@@ -418,7 +418,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
                                                   declinedPermissions:@[@"publish"]
                                                    expiredPermissions:@[@"friends"]];
 
-  NSDictionary *results = [SampleRawRemotePermissionList withGranted:@[@"foo"] declined:@[] expired:@[]];
+  NSDictionary<NSString *, id> *results = [SampleRawRemotePermissionList withGranted:@[@"foo"] declined:@[] expired:@[]];
 
   [self completePermissionsRefreshForAccessToken:token results:results];
 
@@ -436,7 +436,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
                                                   declinedPermissions:@[@"publish"]
                                                    expiredPermissions:@[@"friends"]];
 
-  NSDictionary *results = [SampleRawRemotePermissionList withGranted:@[] declined:@[@"foo"] expired:@[]];
+  NSDictionary<NSString *, id> *results = [SampleRawRemotePermissionList withGranted:@[] declined:@[@"foo"] expired:@[]];
 
   [self completePermissionsRefreshForAccessToken:token results:results];
 
@@ -454,7 +454,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
                                                                    declinedPermissions:@[@"publish"]
                                                                     expiredPermissions:@[@"friends"]];
 
-  NSDictionary *results = [SampleRawRemotePermissionList withGranted:@[] declined:@[] expired:@[@"foo"]];
+  NSDictionary<NSString *, id> *results = [SampleRawRemotePermissionList withGranted:@[] declined:@[] expired:@[@"foo"]];
 
   [self completePermissionsRefreshForAccessToken:SampleAccessTokens.validToken results:results];
 
@@ -472,9 +472,9 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
                                                   declinedPermissions:@[@"publish"]
                                                    expiredPermissions:@[@"friends"]];
 
-  NSDictionary *results = [SampleRawRemotePermissionList withGranted:@[@"foo"]
-                                                            declined:@[@"bar"]
-                                                             expired:@[@"baz"]];
+  NSDictionary<NSString *, id> *results = [SampleRawRemotePermissionList withGranted:@[@"foo"]
+                                                                            declined:@[@"bar"]
+                                                                             expired:@[@"baz"]];
 
   [self completePermissionsRefreshForAccessToken:token results:results];
 
@@ -493,9 +493,9 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
                                                                    declinedPermissions:@[@"publish"]
                                                                     expiredPermissions:@[@"friends"]];
 
-  NSDictionary *results = [SampleRawRemotePermissionList withGranted:@[@"foo"]
-                                                            declined:@[@"bar"]
-                                                             expired:@[@"baz"]];
+  NSDictionary<NSString *, id> *results = [SampleRawRemotePermissionList withGranted:@[@"foo"]
+                                                                            declined:@[@"bar"]
+                                                                             expired:@[@"baz"]];
 
   [self completePermissionsRefreshForAccessToken:SampleAccessTokens.validToken
                                          results:results
@@ -522,9 +522,9 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
                                                                    declinedPermissions:@[@"publish"]
                                                                     expiredPermissions:@[@"friends"]];
 
-  NSDictionary *results = [SampleRawRemotePermissionList withGranted:@[@"foo"]
-                                                            declined:@[@"bar"]
-                                                             expired:@[@"baz"]];
+  NSDictionary<NSString *, id> *results = [SampleRawRemotePermissionList withGranted:@[@"foo"]
+                                                                            declined:@[@"bar"]
+                                                                             expired:@[@"baz"]];
   NSError *expectedError = [self createSampleError];
 
   [self completePermissionsRefreshForAccessToken:SampleAccessTokens.validToken
@@ -884,7 +884,7 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
   XCTAssertEqualObjects(token.expiredPermissions.allObjects, expectedExpiredPermissions, "A refreshed token should have the expected expired permissions");
 }
 
-- (void)completeTokenRefreshForAccessToken:(FBSDKAccessToken *)token results:(NSDictionary *)results
+- (void)completeTokenRefreshForAccessToken:(FBSDKAccessToken *)token results:(NSDictionary<NSString *, id> *)results
 {
   [self.settings setAppID:token.appID];
   TestAccessTokenWallet.currentAccessToken = token;
@@ -900,27 +900,27 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
 }
 
 - (void)completePermissionsRefreshForAccessToken:(FBSDKAccessToken *)token
-                                         results:(NSDictionary *)results
+                                         results:(NSDictionary<NSString *, id> *)results
 {
   [self completePermissionsRefreshForAccessToken:token results:results error:nil];
 }
 
 - (void)completePermissionsRefreshForAccessToken:(FBSDKAccessToken *)token
-                                         results:(NSDictionary *)results
+                                         results:(NSDictionary<NSString *, id> *)results
                                            error:(NSError *)error
 {
   [self completePermissionsRefreshForAccessToken:token results:results error:error permissionHandler:nil];
 }
 
 - (void)completePermissionsRefreshForAccessToken:(FBSDKAccessToken *)token
-                                         results:(NSDictionary *)results
+                                         results:(NSDictionary<NSString *, id> *)results
                                permissionHandler:(FBSDKGraphRequestCompletion)permissionHandler
 {
   [self completePermissionsRefreshForAccessToken:token results:results error:nil permissionHandler:permissionHandler];
 }
 
 - (void)completePermissionsRefreshForAccessToken:(FBSDKAccessToken *)token
-                                         results:(NSDictionary *)results
+                                         results:(NSDictionary<NSString *, id> *)results
                                            error:(NSError *)error
                                permissionHandler:(FBSDKGraphRequestCompletion)permissionHandler
 {

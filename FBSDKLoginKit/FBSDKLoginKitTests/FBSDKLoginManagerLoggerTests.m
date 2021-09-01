@@ -174,11 +174,11 @@
   [logger startSessionForLoginManager:loginManager];
 
   NSString *extras = [FBSDKTypeUtility dictionary:testAppEvents.capturedParameters objectForKey:@"6_extras" ofType:NSString.class];
-  NSDictionary *extrasDictionary = [FBSDKBasicUtility objectForJSONString:extras error:nil];
+  NSDictionary<NSString *, id> *extrasDictionary = [FBSDKBasicUtility objectForJSONString:extras error:nil];
   XCTAssertEqualObjects([FBSDKTypeUtility dictionary:extrasDictionary objectForKey:@"test_extra_key" ofType:NSString.class], @"test_extra_value");
 }
 
-- (NSDictionary *)validParameters
+- (NSDictionary<NSString *, id> *)validParameters
 {
   return @{@"state" : @"{\"challenge\":\"ibUuyvhzJW36TvC7BBYpasPHrXk%3D\",\"0_auth_logger_id\":\"A48F8D79-F2DF-4E04-B893-B29879A9A37B\",\"com.facebook.sdk_client_state\":true,\"3_method\":\"sfvc_auth\"}"};
 }

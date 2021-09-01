@@ -111,9 +111,9 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
   }
 
   id<FBSDKSharingContent> shareContent = self.shareContent;
-  NSDictionary *parameters = [FBSDKShareUtility parametersForShareContent:shareContent
-                                                            bridgeOptions:FBSDKShareBridgeOptionsDefault
-                                                    shouldFailOnDataError:self.shouldFailOnDataError];
+  NSDictionary<NSString *, id> *parameters = [FBSDKShareUtility parametersForShareContent:shareContent
+                                                                            bridgeOptions:FBSDKShareBridgeOptionsDefault
+                                                                    shouldFailOnDataError:self.shouldFailOnDataError];
   NSString *methodName = ([shareContent isKindOfClass:NSClassFromString(@"FBSDKShareOpenGraphContent")]
     ? FBSDK_SHARE_OPEN_GRAPH_METHOD_NAME
     : FBSDK_SHARE_METHOD_NAME);
@@ -171,7 +171,7 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
   return (useNativeDialog && [self.appAvailabilityChecker isMessengerAppInstalled]);
 }
 
-- (void)_handleCompletionWithDialogResults:(NSDictionary *)results response:(FBSDKBridgeAPIResponse *)response
+- (void)_handleCompletionWithDialogResults:(NSDictionary<NSString *, id> *)results response:(FBSDKBridgeAPIResponse *)response
 {
   NSString *completionGesture = results[FBSDK_SHARE_RESULT_COMPLETION_GESTURE_KEY];
   if ([completionGesture isEqualToString:FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_CANCEL]
@@ -186,7 +186,7 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
 
 - (void)_invokeDelegateDidCancel
 {
-  NSDictionary *parameters = @{
+  NSDictionary<NSString *, id> *parameters = @{
     FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Cancelled,
   };
 
@@ -202,9 +202,9 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
   [_delegate sharerDidCancel:self];
 }
 
-- (void)_invokeDelegateDidCompleteWithResults:(NSDictionary *)results
+- (void)_invokeDelegateDidCompleteWithResults:(NSDictionary<NSString *, id> *)results
 {
-  NSDictionary *parameters = @{
+  NSDictionary<NSString *, id> *parameters = @{
     FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Completed,
   };
 
@@ -252,9 +252,9 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
     contentType = FBSDKAppEventsDialogShareContentTypeUnknown;
   }
 
-  NSDictionary *parameters = @{FBSDKAppEventParameterDialogShareContentType : contentType,
-                               FBSDKAppEventParameterDialogShareContentUUID : self.shareContent.shareUUID ?: [NSNull null],
-                               FBSDKAppEventParameterDialogShareContentPageID : self.shareContent.pageID ?: [NSNull null]};
+  NSDictionary<NSString *, id> *parameters = @{FBSDKAppEventParameterDialogShareContentType : contentType,
+                                               FBSDKAppEventParameterDialogShareContentUUID : self.shareContent.shareUUID ?: [NSNull null],
+                                               FBSDKAppEventParameterDialogShareContentPageID : self.shareContent.pageID ?: [NSNull null]};
 
   [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKEventMessengerShareDialogShow
                         parameters:parameters

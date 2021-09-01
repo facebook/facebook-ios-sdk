@@ -39,7 +39,7 @@ NS_SWIFT_NAME(InternalUtilityProtocol)
 - (nullable NSURL *)URLWithScheme:(NSString *)scheme
                              host:(NSString *)host
                              path:(NSString *)path
-                  queryParameters:(NSDictionary *)queryParameters
+                  queryParameters:(NSDictionary<NSString *, id> *)queryParameters
                             error:(NSError *__autoreleasing *)errorRef;
 
 /**

@@ -709,7 +709,8 @@ class PaymentProductRequestorTests: XCTestCase { // swiftlint:disable:this type_
   }
 
   func decodedEventParameters() throws -> PaymentProductParameters {
-    guard let rawParameters = eventLogger.capturedParameters as? [String: Any] else {
+    let rawParameters = eventLogger.capturedParameters
+    guard !rawParameters.isEmpty else {
       throw MissingEventParametersError()
     }
     let data = try JSONSerialization.data(withJSONObject: rawParameters, options: [])

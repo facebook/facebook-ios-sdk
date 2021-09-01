@@ -362,7 +362,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
 
  #pragma mark - FBSDKWebDialogDelegate
 
-- (void)webDialog:(FBSDKWebDialog *)webDialog didCompleteWithResults:(NSDictionary *)results
+- (void)webDialog:(FBSDKWebDialog *)webDialog didCompleteWithResults:(NSDictionary<NSString *, id> *)results
 {
   if (_webDialog != webDialog) {
     return;
@@ -613,7 +613,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   return URLs;
 }
 
-- (void)_handleWebResponseParameters:(NSDictionary *)webResponseParameters
+- (void)_handleWebResponseParameters:(NSDictionary<NSString *, id> *)webResponseParameters
                                error:(NSError *)error
                            cancelled:(BOOL)isCancelled
 {
@@ -653,7 +653,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   }
   id<FBSDKSharingContent> shareContent = self.shareContent;
   if ([shareContent isKindOfClass:[FBSDKSharePhotoContent class]] && [self _photoContentHasAtLeastOneImage:(FBSDKSharePhotoContent *)shareContent]) {
-    void (^completion)(BOOL, NSString *, NSDictionary *) = ^(BOOL successfullyBuilt, NSString *cMethodName, NSDictionary *cParameters) {
+    void (^completion)(BOOL, NSString *, NSDictionary<NSString *, id> *) = ^(BOOL successfullyBuilt, NSString *cMethodName, NSDictionary<NSString *, id> *cParameters) {
       if (successfullyBuilt) {
         FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
           [self _handleWebResponseParameters:response.responseParameters error:response.error cancelled:response.isCancelled];
@@ -709,7 +709,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
     return NO;
   }
   id<FBSDKSharingContent> shareContent = self.shareContent;
-  NSDictionary *parameters = [self.class.shareUtility feedShareDictionaryForContent:shareContent];
+  NSDictionary<NSString *, id> *parameters = [self.class.shareUtility feedShareDictionaryForContent:shareContent];
   FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
     [self _handleWebResponseParameters:response.responseParameters error:response.error cancelled:response.isCancelled];
     [self.class.internalUtility unregisterTransientObject:self];
@@ -734,7 +734,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
     return NO;
   }
   id<FBSDKSharingContent> shareContent = self.shareContent;
-  NSDictionary *parameters = [self.class.shareUtility feedShareDictionaryForContent:shareContent];
+  NSDictionary<NSString *, id> *parameters = [self.class.shareUtility feedShareDictionaryForContent:shareContent];
   _webDialog = [FBSDKWebDialog showWithName:FBSDK_SHARE_FEED_METHOD_NAME
                                  parameters:parameters
                                    delegate:self];
@@ -764,9 +764,9 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   NSString *methodName;
   NSString *methodVersion;
   [self _loadNativeMethodName:&methodName methodVersion:&methodVersion];
-  NSDictionary *parameters = [self.class.shareUtility parametersForShareContent:self.shareContent
-                                                                  bridgeOptions:FBSDKShareBridgeOptionsDefault
-                                                          shouldFailOnDataError:self.shouldFailOnDataError];
+  NSDictionary<NSString *, id> *parameters = [self.class.shareUtility parametersForShareContent:self.shareContent
+                                                                                  bridgeOptions:FBSDKShareBridgeOptionsDefault
+                                                                          shouldFailOnDataError:self.shouldFailOnDataError];
   FBSDKBridgeAPIRequest *request;
   request = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeNative
                                                              scheme:scheme
@@ -782,7 +782,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
         return;
       }
     }
-    NSDictionary *responseParameters = response.responseParameters;
+    NSDictionary<NSString *, id> *responseParameters = response.responseParameters;
     NSString *completionGesture = responseParameters[FBSDK_SHARE_RESULT_COMPLETION_GESTURE_KEY];
     if ([completionGesture isEqualToString:FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_CANCEL]
         || response.isCancelled) {
@@ -885,7 +885,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   }
   id<FBSDKSharingContent> shareContent = self.shareContent;
   NSString *methodName;
-  NSDictionary *parameters;
+  NSDictionary<NSString *, id> *parameters;
   if (![self.class.shareUtility buildWebShareContent:shareContent
                                           methodName:&methodName
                                           parameters:&parameters
@@ -1205,7 +1205,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
 
 - (void)_invokeDelegateDidCancel
 {
-  NSDictionary *parameters = @{
+  NSDictionary<NSString *, id> *parameters = @{
     FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Cancelled,
   };
 
@@ -1217,9 +1217,9 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   [_delegate sharerDidCancel:self];
 }
 
-- (void)_invokeDelegateDidCompleteWithResults:(NSDictionary *)results
+- (void)_invokeDelegateDidCompleteWithResults:(NSDictionary<NSString *, id> *)results
 {
-  NSDictionary *parameters = @{
+  NSDictionary<NSString *, id> *parameters = @{
     FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Completed
   };
 
@@ -1233,7 +1233,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
 
 - (void)_invokeDelegateDidFailWithError:(nonnull NSError *)error
 {
-  NSDictionary *parameters = @{
+  NSDictionary<NSString *, id> *parameters = @{
     FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Failed,
     FBSDKAppEventParameterDialogErrorMessage : [NSString stringWithFormat:@"%@", error]
   };
@@ -1263,7 +1263,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
     contentType = FBSDKAppEventsDialogShareContentTypeUnknown;
   }
 
-  NSDictionary *parameters = @{
+  NSDictionary<NSString *, id> *parameters = @{
     FBSDKAppEventParameterDialogMode : shareMode,
     FBSDKAppEventParameterDialogShareContentType : contentType,
   };

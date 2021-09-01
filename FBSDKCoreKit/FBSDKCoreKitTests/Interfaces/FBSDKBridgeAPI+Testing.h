@@ -122,7 +122,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
                                                 error:(NSError *__autoreleasing *)errorRef;
 
 - (instancetype)initWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
-             responseParameters:(NSDictionary *)responseParameters
+             responseParameters:(NSDictionary<NSString *, id> *)responseParameters
                       cancelled:(BOOL)cancelled
                           error:(nullable NSError *)error;
 

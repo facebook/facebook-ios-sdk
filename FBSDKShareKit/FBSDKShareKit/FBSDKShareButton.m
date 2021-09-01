@@ -47,7 +47,7 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKShareButtonDidTap = @"fb_share_button_di
 
  #pragma mark - FBSDKButtonImpressionTracking
 
-- (NSDictionary *)analyticsParameters
+- (NSDictionary<NSString *, id> *)analyticsParameters
 {
   return nil;
 }
@@ -97,7 +97,7 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKShareButtonDidTap = @"fb_share_button_di
   [_dialog show];
 }
 
-- (void)_logTapEventWithEventName:(NSString *)eventName parameters:(NSDictionary *)parameters
+- (void)_logTapEventWithEventName:(NSString *)eventName parameters:(NSDictionary<NSString *, id> *)parameters
 {
   [FBSDKAppEvents logInternalEvent:eventName
                         parameters:parameters

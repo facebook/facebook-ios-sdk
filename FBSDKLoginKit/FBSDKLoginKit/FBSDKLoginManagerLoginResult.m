@@ -58,7 +58,7 @@
   [FBSDKTypeUtility dictionary:_mutableLoggingExtras setObject:object forKey:key];
 }
 
-- (NSDictionary *)loggingExtras
+- (NSDictionary<NSString *, id> *)loggingExtras
 {
   return [_mutableLoggingExtras copy];
 }

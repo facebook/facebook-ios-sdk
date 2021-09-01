@@ -134,7 +134,7 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
     queryParameters = stubEncodeQueryParameters(queryParameters)
 
     do {
-      let response: [AnyHashable: Any] = try protocolNativeV1.responseParameters(
+      let response: [String: Any] = try protocolNativeV1.responseParameters(
         forActionID: actionID,
         queryParameters: queryParameters,
         cancelled: &cancelled

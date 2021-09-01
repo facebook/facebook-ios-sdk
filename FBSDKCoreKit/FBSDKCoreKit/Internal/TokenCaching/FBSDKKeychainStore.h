@@ -28,8 +28,8 @@ NS_SWIFT_NAME(KeychainStore)
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)initWithService:(NSString *)service accessGroup:(NSString *)accessGroup NS_DESIGNATED_INITIALIZER;
 
-- (BOOL)setDictionary:(NSDictionary *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility;
-- (NSDictionary *)dictionaryForKey:(NSString *)key;
+- (BOOL)setDictionary:(NSDictionary<NSString *, id> *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility;
+- (NSDictionary<NSString *, id> *)dictionaryForKey:(NSString *)key;
 
 - (BOOL)setString:(NSString *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility;
 - (NSString *)stringForKey:(NSString *)key;

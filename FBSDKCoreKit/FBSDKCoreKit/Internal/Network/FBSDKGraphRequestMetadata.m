@@ -24,7 +24,7 @@
 
 - (instancetype)initWithRequest:(id<FBSDKGraphRequest>)request
               completionHandler:(FBSDKGraphRequestCompletion)handler
-                batchParameters:(NSDictionary *)batchParameters
+                batchParameters:(NSDictionary<NSString *, id> *)batchParameters
 {
   if ((self = [super init])) {
     _request = request;

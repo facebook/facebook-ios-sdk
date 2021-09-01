@@ -67,7 +67,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
            toBatch:(NSMutableArray *)batch
        attachments:(NSMutableDictionary *)attachments
         batchToken:(NSString *)batchToken;
-- (void)appendAttachments:(NSDictionary *)attachments
+- (void)appendAttachments:(NSDictionary<NSString *, id> *)attachments
                    toBody:(FBSDKGraphRequestBody *)body
               addFormData:(BOOL)addFormData
                    logger:(FBSDKLogger *)logger;
@@ -77,7 +77,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (NSArray *)parseJSONResponse:(NSData *)data
                          error:(NSError **)error
                     statusCode:(NSInteger)statusCode;
-- (void)processResultBody:(NSDictionary *)body
+- (void)processResultBody:(NSDictionary<NSString *, id> *)body
                     error:(NSError *)error
                  metadata:(FBSDKGraphRequestMetadata *)metadata
         canNotifyDelegate:(BOOL)canNotifyDelegate;
@@ -484,7 +484,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   [self.connection addRequest:self.requestForMeWithEmptyFields
                          name:@"foo"
                    completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {}];
-  NSDictionary *expectedParameters = @{ @"name" : @"foo" };
+  NSDictionary<NSString *, id> *expectedParameters = @{ @"name" : @"foo" };
   FBSDKGraphRequestMetadata *metadata = self.connection.requests.firstObject;
   XCTAssertEqualObjects(
     metadata.batchParameters,
@@ -521,7 +521,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testAddingRequestToBatchWithBatchParameters
 {
-  NSDictionary *batchParameters = @{
+  NSDictionary<NSString *, id> *batchParameters = @{
     self.name : @"Foo",
     @"Bar" : @"Baz"
   };
@@ -534,7 +534,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
                   attachments:[NSMutableDictionary dictionary]
                    batchToken:nil];
 
-  NSDictionary *first = batch.firstObject;
+  NSDictionary<NSString *, id> *first = batch.firstObject;
   XCTAssertEqualObjects(
     first[self.name],
     @"Foo",
@@ -614,7 +614,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
       "Should store retrieval keys for the attachments taken from the graph requests"
     );
   }];
-  NSDictionary *expectedAttachments = @{
+  NSDictionary<NSString *, id> *expectedAttachments = @{
     @"file0" : data,
     @"file1" : data2
   };
@@ -945,7 +945,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testErrorFromResultWithMissingErrorInInputBody
 {
-  NSDictionary *result = @{
+  NSDictionary<NSString *, id> *result = @{
     @"body" : @{}
   };
 
@@ -1002,7 +1002,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testErrorFromResultMessagePriority
 {
-  NSDictionary *response = @{
+  NSDictionary<NSString *, id> *response = @{
     @"body" : @{
       @"error" : @{ @"error_msg" : @"error_msg" }
     }
@@ -1367,7 +1367,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 
 - (void)testRequestWithBatchConstructionWithSinglePostRequest
 {
-  NSDictionary *parameters = @{
+  NSDictionary<NSString *, id> *parameters = @{
     @"first_key" : @"first_value",
   };
   id<FBSDKGraphRequest> singleRequest = [[TestGraphRequest alloc] initWithGraphPath:@"activities" parameters:parameters HTTPMethod:FBSDKHTTPMethodPOST];
@@ -1578,7 +1578,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 - (void)testProcessingResultBodyWithRandomizedDebugDictionary
 {
   for (int i = 1; i < 100; i++) {
-    NSDictionary *body = [Fuzzer randomizeWithJson:self.debugResponse];
+    NSDictionary<NSString *, id> *body = [Fuzzer randomizeWithJson:self.debugResponse];
     [self.connection processResultBody:body error:nil metadata:nil canNotifyDelegate:NO];
   }
 }
@@ -1665,7 +1665,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   return self.requestForMeWithEmptyFields;
 }
 
-- (id<FBSDKGraphRequest>)sampleRequestWithParameters:(NSDictionary *)parameters
+- (id<FBSDKGraphRequest>)sampleRequestWithParameters:(NSDictionary<NSString *, id> *)parameters
 {
   return [[TestGraphRequest alloc] initWithGraphPath:@"me" parameters:parameters];
 }
@@ -1701,7 +1701,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   return [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
 }
 
-- (NSDictionary *)sampleErrorDictionary
+- (NSDictionary<NSString *, id> *)sampleErrorDictionary
 {
   return @{
     @"code" : @200,
@@ -1736,7 +1736,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
                                                            recoveryActionName:@"Recovery Action"];
 }
 
-- (NSDictionary *)debugResponse
+- (NSDictionary<NSString *, id> *)debugResponse
 {
   return @{
     @"__debug__" : @{

@@ -52,7 +52,7 @@
 
  #pragma mark - FBSDKWebDialogDelegate
 
-- (void)webDialog:(FBSDKWebDialog *)webDialog didCompleteWithResults:(NSDictionary *)results
+- (void)webDialog:(FBSDKWebDialog *)webDialog didCompleteWithResults:(NSDictionary<NSString *, id> *)results
 {
   if (self.currentWebDialog != webDialog) {
     return;
@@ -84,14 +84,14 @@
 
  #pragma mark - Helper Methods
 
-- (void)_handleCompletionWithDialogResults:(NSDictionary *)results error:(NSError *)error
+- (void)_handleCompletionWithDialogResults:(NSDictionary<NSString *, id> *)results error:(NSError *)error
 {
   if (!self.delegate) {
     return;
   }
   switch (error.code) {
     case 0: {
-      if ([results isKindOfClass:[NSDictionary class]] && results[@"context_id"] != nil) {
+      if ([results isKindOfClass:[NSDictionary<NSString *, id> class]] && results[@"context_id"] != nil) {
         NSString *const identifier = results[@"context_id"];
         NSString *const sizeString = results[@"context_size"];
         NSInteger size = [sizeString isKindOfClass:[NSString class]] ? [sizeString integerValue] : 0;

@@ -82,7 +82,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
   [FBSDKInternalUtility.sharedUtility validateAppID];
   [FBSDKTypeUtility array:g_loginManagerInstances addObject:self];
 
-  NSDictionary *parameters = @{
+  NSDictionary<NSString *, id> *parameters = @{
     @"scope" : [self.permissions componentsJoinedByString:@","] ?: @"",
     @"redirect_uri" : self.redirectURL.absoluteString ?: @"",
     FBSDK_DEVICE_INFO_PARAM : [FBSDKDeviceRequestsHelper getDeviceInfo],
@@ -161,10 +161,10 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
                                                                                HTTPMethod:@"GET"
                                                                                     flags:FBSDKGraphRequestFlagDisableErrorRecovery];
     FBSDKGraphRequestCompletion completion = ^(id<FBSDKGraphRequestConnecting> connection, id rawResult, NSError *error) {
-      NSDictionary *graphResult = [FBSDKTypeUtility dictionaryValue:rawResult];
+      NSDictionary<NSString *, id> *graphResult = [FBSDKTypeUtility dictionaryValue:rawResult];
       if (!error && graphResult) {
         NSString *userID = [FBSDKTypeUtility dictionary:graphResult objectForKey:@"id" ofType:NSString.class];
-        NSDictionary *permissionResult = [FBSDKTypeUtility dictionary:graphResult objectForKey:@"permissions" ofType:NSDictionary.class];
+        NSDictionary<NSString *, id> *permissionResult = [FBSDKTypeUtility dictionary:graphResult objectForKey:@"permissions" ofType:NSDictionary.class];
         if (userID && permissionResult) {
           NSMutableSet<NSString *> *permissions = [NSMutableSet set];
           NSMutableSet<NSString *> *declinedPermissions = [NSMutableSet set];
@@ -241,7 +241,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
                return;
              }
 
-             NSDictionary *parameters = @{ @"code" : self->_codeInfo.identifier };
+             NSDictionary<NSString *, id> *parameters = @{ @"code" : self->_codeInfo.identifier };
              id<FBSDKGraphRequest> request = [self->_graphRequestFactory createGraphRequestWithGraphPath:@"device/login_status"
                                                                                               parameters:parameters
                                                                                              tokenString:[FBSDKInternalUtility.sharedUtility validateRequiredClientAccessToken]

@@ -58,7 +58,7 @@ NS_SWIFT_NAME(BridgeAPIResponse)
 @property (nonatomic, assign, readonly, getter=isCancelled) BOOL cancelled;
 @property (nullable, nonatomic, copy, readonly) NSError *error;
 @property (nonatomic, copy, readonly) NSObject<FBSDKBridgeAPIRequest> *request;
-@property (nullable, nonatomic, copy, readonly) NSDictionary *responseParameters;
+@property (nullable, nonatomic, copy, readonly) NSDictionary<NSString *, id> *responseParameters;
 
 @end
 

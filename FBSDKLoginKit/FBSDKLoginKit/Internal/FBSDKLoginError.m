@@ -146,7 +146,7 @@ typedef NS_ERROR_ENUM(FBSDKLoginErrorDomain, FBSDKLoginErrorSubcode)
                          userInfo:userInfo];
 }
 
-+ (NSError *)fbErrorFromReturnURLParameters:(NSDictionary *)parameters
++ (NSError *)fbErrorFromReturnURLParameters:(NSDictionary<NSString *, id> *)parameters
 {
   NSError *error = nil;
 
@@ -176,9 +176,9 @@ typedef NS_ERROR_ENUM(FBSDKLoginErrorDomain, FBSDKLoginErrorSubcode)
   NSError *loginError = nil;
 
   if ([serverError.domain isEqualToString:FBSDKErrorDomain]) {
-    NSDictionary *response = [FBSDKTypeUtility dictionaryValue:serverError.userInfo[FBSDKGraphRequestErrorParsedJSONResponseKey]];
-    NSDictionary *body = [FBSDKTypeUtility dictionaryValue:response[@"body"]];
-    NSDictionary *error = [FBSDKTypeUtility dictionaryValue:body[@"error"]];
+    NSDictionary<NSString *, id> *response = [FBSDKTypeUtility dictionaryValue:serverError.userInfo[FBSDKGraphRequestErrorParsedJSONResponseKey]];
+    NSDictionary<NSString *, id> *body = [FBSDKTypeUtility dictionaryValue:response[@"body"]];
+    NSDictionary<NSString *, id> *error = [FBSDKTypeUtility dictionaryValue:body[@"error"]];
     NSInteger subcode = [FBSDKTypeUtility integerValue:error[@"error_subcode"]];
 
     switch (subcode) {

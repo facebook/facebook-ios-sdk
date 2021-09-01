@@ -29,7 +29,7 @@ NS_SWIFT_NAME(AEMNetworker)
 @interface FBAEMNetworker : NSObject <FBAEMNetworking, NSURLSessionDataDelegate>
 
 - (void)startGraphRequestWithGraphPath:(NSString *)graphPath
-                          parameters:(NSDictionary *)parameters
+                          parameters:(NSDictionary<NSString *, id> *)parameters
                           tokenString:(nullable NSString *)tokenString
                           HTTPMethod:(nullable NSString *)method
                           completion:(FBGraphRequestCompletion)completion;

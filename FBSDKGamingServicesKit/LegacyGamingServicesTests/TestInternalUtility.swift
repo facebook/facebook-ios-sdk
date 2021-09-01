@@ -22,14 +22,14 @@ class TestInternalUtility: InternalUtilityProtocol {
   var scheme: String?
   var host: String?
   var path: String?
-  var queryParameters: [AnyHashable: Any]?
+  var queryParameters: [String: Any]?
   var isFacebookAppInstalled = false
 
   init(isFacebookAppInstalled: Bool) {
     self.isFacebookAppInstalled = isFacebookAppInstalled
   }
 
-  func url(withScheme scheme: String, host: String, path: String, queryParameters: [AnyHashable: Any]) throws -> URL {
+  func url(withScheme scheme: String, host: String, path: String, queryParameters: [String: Any]) throws -> URL {
     self.scheme = scheme
     self.host = host
     self.path = path

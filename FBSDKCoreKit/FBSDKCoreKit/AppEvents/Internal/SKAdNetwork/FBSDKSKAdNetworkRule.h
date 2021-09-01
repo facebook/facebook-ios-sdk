@@ -36,7 +36,7 @@ NS_SWIFT_NAME(SKAdNetworkRule)
 - (nullable instancetype)initWithJSON:(NSDictionary<NSString *, id> *)dict;
 
 - (BOOL)isMatchedWithRecordedEvents:(NSSet<NSString *> *)recordedEvents
-                     recordedValues:(NSDictionary<NSString *, NSDictionary *> *)recordedValues;
+                     recordedValues:(NSDictionary<NSString *, NSDictionary<NSString *, id> *> *)recordedValues;
 
 @end
 

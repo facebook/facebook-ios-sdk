@@ -67,12 +67,12 @@
   }
 }
 
-+ (NSDictionary *)dictionaryValue:(id)object
++ (NSDictionary<NSString *, id> *)dictionaryValue:(id)object
 {
-  return (NSDictionary *)[self _objectValue:object ofClass:[NSDictionary class]];
+  return (NSDictionary<NSString *, id> *)[self _objectValue: object ofClass:[NSDictionary<NSString *, id> class]];
 }
 
-+ (id)dictionary:(NSDictionary *)dictionary objectForKey:(NSString *)key ofType:(Class)type
++ (id)dictionary:(NSDictionary<NSString *, id> *)dictionary objectForKey:(NSString *)key ofType:(Class)type
 {
   id potentialValue = [[self dictionaryValue:dictionary] objectForKey:key];
 
@@ -90,9 +90,9 @@
   }
 }
 
-+ (void)dictionary:(NSDictionary *)dictionary enumerateKeysAndObjectsUsingBlock:(void(NS_NOESCAPE ^)(id key, id obj, BOOL *stop))block
++ (void)dictionary:(NSDictionary<NSString *, id> *)dictionary enumerateKeysAndObjectsUsingBlock:(void(NS_NOESCAPE ^)(id key, id obj, BOOL *stop))block
 {
-  NSDictionary *validDictionary = [self dictionaryValue:dictionary];
+  NSDictionary<NSString *, id> *validDictionary = [self dictionaryValue:dictionary];
   if (validDictionary) {
     [validDictionary enumerateKeysAndObjectsUsingBlock:block];
   }

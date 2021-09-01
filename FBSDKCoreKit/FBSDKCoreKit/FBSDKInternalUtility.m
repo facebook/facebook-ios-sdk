@@ -120,7 +120,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 
 - (NSURL *)appURLWithHost:(NSString *)host
                      path:(NSString *)path
-          queryParameters:(NSDictionary *)queryParameters
+          queryParameters:(NSDictionary<NSString *, id> *)queryParameters
                     error:(NSError *__autoreleasing *)errorRef
 {
   return [self URLWithScheme:[self appURLScheme]
@@ -130,7 +130,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
                        error:errorRef];
 }
 
-- (NSDictionary *)parametersFromFBURL:(NSURL *)url
+- (NSDictionary<NSString *, id> *)parametersFromFBURL:(NSURL *)url
 {
   // version 3.2.3 of the Facebook app encodes the parameters in the query but
   // version 3.3 and above encode the parameters in the fragment;
@@ -165,14 +165,14 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
   return ((uint64_t)time.tv_sec * 1000) + (time.tv_usec / 1000);
 }
 
-- (void)extractPermissionsFromResponse:(NSDictionary *)responseObject
+- (void)extractPermissionsFromResponse:(NSDictionary<NSString *, id> *)responseObject
                     grantedPermissions:(NSMutableSet *)grantedPermissions
                    declinedPermissions:(NSMutableSet *)declinedPermissions
                     expiredPermissions:(NSMutableSet *)expiredPermissions
 {
   NSArray *resultData = [FBSDKTypeUtility dictionary:responseObject objectForKey:@"data" ofType:NSArray.class];
   if (resultData.count > 0) {
-    for (NSDictionary *permissionsDictionary in resultData) {
+    for (NSDictionary<NSString *, id> *permissionsDictionary in resultData) {
       NSString *permissionName = [FBSDKTypeUtility dictionary:permissionsDictionary objectForKey:@"permission" ofType:NSString.class];
       NSString *status = [FBSDKTypeUtility dictionary:permissionsDictionary objectForKey:@"status" ofType:NSString.class];
 
@@ -193,7 +193,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 
 - (NSURL *)facebookURLWithHostPrefix:(NSString *)hostPrefix
                                 path:(NSString *)path
-                     queryParameters:(NSDictionary *)queryParameters
+                     queryParameters:(NSDictionary<NSString *, id> *)queryParameters
                                error:(NSError *__autoreleasing *)errorRef
 {
   return [self facebookURLWithHostPrefix:hostPrefix
@@ -205,7 +205,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 
 - (NSURL *)facebookURLWithHostPrefix:(NSString *)hostPrefix
                                 path:(NSString *)path
-                     queryParameters:(NSDictionary *)queryParameters
+                     queryParameters:(NSDictionary<NSString *, id> *)queryParameters
                       defaultVersion:(NSString *)defaultVersion
                                error:(NSError *__autoreleasing *)errorRef
 {
@@ -223,7 +223,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 
 - (NSURL *)unversionedFacebookURLWithHostPrefix:(NSString *)hostPrefix
                                            path:(NSString *)path
-                                queryParameters:(NSDictionary *)queryParameters
+                                queryParameters:(NSDictionary<NSString *, id> *)queryParameters
                                           error:(NSError *__autoreleasing *)errorRef
 {
   return [self _facebookURLWithHostPrefix:hostPrefix
@@ -235,7 +235,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 
 - (NSURL *)_facebookURLWithHostPrefix:(NSString *)hostPrefix
                                  path:(NSString *)path
-                      queryParameters:(NSDictionary *)queryParameters
+                      queryParameters:(NSDictionary<NSString *, id> *)queryParameters
                        defaultVersion:(NSString *)version
                                 error:(NSError *__autoreleasing *)errorRef
 {
@@ -325,7 +325,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 - (NSURL *)URLWithScheme:(NSString *)scheme
                     host:(NSString *)host
                     path:(NSString *)path
-         queryParameters:(NSDictionary *)queryParameters
+         queryParameters:(NSDictionary<NSString *, id> *)queryParameters
                    error:(NSError *__autoreleasing *)errorRef
 {
   if (![path hasPrefix:@"/"]) {
@@ -619,7 +619,7 @@ static NSMapTable *_transientObjects;
   dispatch_once(&fetchUrlSchemesToken, ^{
     urlTypes = [self.infoDictionaryProvider.infoDictionary valueForKey:@"CFBundleURLTypes"];
   });
-  for (NSDictionary *urlType in urlTypes) {
+  for (NSDictionary<NSString *, id> *urlType in urlTypes) {
     NSArray *urlSchemes = [urlType valueForKey:@"CFBundleURLSchemes"];
     if ([urlSchemes containsObject:urlScheme]) {
       return YES;

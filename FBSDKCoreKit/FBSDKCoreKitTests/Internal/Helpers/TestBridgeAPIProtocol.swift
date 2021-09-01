@@ -19,14 +19,14 @@
 class TestBridgeAPIProtocol: NSObject, BridgeAPIProtocol {
   var stubbedRequestURL = SampleURLs.valid
   var stubbedRequestURLError: Error?
-  var stubbedResponseParameters = [AnyHashable: Any]()
+  var stubbedResponseParameters = [String: Any]()
   var capturedRequestUrlActionID: String?
   var capturedRequestUrlScheme: String?
   var capturedRequestUrlMethodName: String?
   var capturedRequestUrlMethodVersion: String?
-  var capturedRequestUrlParameters: [AnyHashable: Any]?
+  var capturedRequestUrlParameters: [String: Any]?
   var capturedResponseActionID: String?
-  var capturedResponseQueryParameters: [AnyHashable: Any]?
+  var capturedResponseQueryParameters: [String: Any]?
   var capturedResponseCancelledRef: UnsafeMutablePointer<ObjCBool>?
 
   func requestURL(
@@ -34,7 +34,7 @@ class TestBridgeAPIProtocol: NSObject, BridgeAPIProtocol {
     scheme: String,
     methodName: String,
     methodVersion: String,
-    parameters: [AnyHashable: Any]
+    parameters: [String: Any]
   ) throws -> URL {
     capturedRequestUrlActionID = actionID
     capturedRequestUrlScheme = scheme
@@ -51,9 +51,9 @@ class TestBridgeAPIProtocol: NSObject, BridgeAPIProtocol {
 
   func responseParameters(
     forActionID actionID: String,
-    queryParameters: [AnyHashable: Any],
+    queryParameters: [String: Any],
     cancelled cancelledRef: UnsafeMutablePointer<ObjCBool>
-  ) throws -> [AnyHashable: Any] {
+  ) throws -> [String: Any] {
     capturedResponseActionID = actionID
     capturedResponseQueryParameters = queryParameters
     capturedResponseCancelledRef = cancelledRef

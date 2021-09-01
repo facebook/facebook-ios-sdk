@@ -274,7 +274,7 @@ static id<FBSDKSettings> _settings;
   }
 
   _isCheckingSession = YES;
-  NSDictionary *parameters = @{
+  NSDictionary<NSString *, id> *parameters = @{
     CODELESS_INDEXING_SESSION_ID_KEY : [self currentSessionDeviceID],
     CODELESS_INDEXING_EXT_INFO_KEY : [self extInfo]
   };
@@ -285,8 +285,8 @@ static id<FBSDKSettings> _settings;
                                                                          HTTPMethod:FBSDKHTTPMethodPOST];
   [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     _isCheckingSession = NO;
-    if ([result isKindOfClass:[NSDictionary class]]) {
-      _isCodelessIndexingEnabled = [((NSDictionary *)result)[CODELESS_INDEXING_STATUS_KEY] boolValue];
+    if ([result isKindOfClass:[NSDictionary<NSString *, id> class]]) {
+      _isCodelessIndexingEnabled = [((NSDictionary<NSString *, id> *)result)[CODELESS_INDEXING_STATUS_KEY] boolValue];
       if (_isCodelessIndexingEnabled) {
         _lastTreeHash = nil;
         if (!_appIndexingTimer) {
@@ -413,7 +413,7 @@ static id<FBSDKSettings> _settings;
   _isCodelessIndexing = YES;
   [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     _isCodelessIndexing = NO;
-    if ([result isKindOfClass:[NSDictionary class]]) {
+    if ([result isKindOfClass:[NSDictionary<NSString *, id> class]]) {
       _isCodelessIndexingEnabled = [result[CODELESS_INDEXING_STATUS_KEY] boolValue];
       if (!_isCodelessIndexingEnabled) {
         _deviceSessionID = nil;
@@ -428,10 +428,10 @@ static id<FBSDKSettings> _settings;
 
   NSArray *windows = [UIApplication sharedApplication].windows;
   for (UIWindow *window in windows) {
-    NSDictionary *tree = [FBSDKViewHierarchy recursiveCaptureTreeWithCurrentNode:window
-                                                                      targetNode:nil
-                                                                   objAddressSet:nil
-                                                                            hash:YES];
+    NSDictionary<NSString *, id> *tree = [FBSDKViewHierarchy recursiveCaptureTreeWithCurrentNode:window
+                                                                                      targetNode:nil
+                                                                                   objAddressSet:nil
+                                                                                            hash:YES];
     if (tree) {
       if (window.isKeyWindow) {
         [trees insertObject:tree atIndex:0];

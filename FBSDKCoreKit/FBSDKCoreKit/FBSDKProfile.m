@@ -706,7 +706,7 @@ static id <FBSDKDataPersisting> _store;
   NSArray *rawFriends = [FBSDKTypeUtility arrayValue:result[@"data"]];
   NSMutableArray *friendIDs = NSMutableArray.new;
 
-  for (NSDictionary *rawFriend in rawFriends) {
+  for (NSDictionary<NSString *, id> *rawFriend in rawFriends) {
     if ([FBSDKTypeUtility dictionaryValue:rawFriend]) {
       FBSDKUserIdentifier *friendID = [FBSDKTypeUtility coercedToStringValue:rawFriend[@"id"]];
       [FBSDKTypeUtility array:friendIDs addObject:friendID];

@@ -23,7 +23,7 @@
 @implementation FBSDKGraphRequestFactory
 
 - (nonnull id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
-                                                      parameters:(NSDictionary *)parameters
+                                                      parameters:(NSDictionary<NSString *, id> *)parameters
                                                      tokenString:(NSString *)tokenString
                                                       HTTPMethod:(FBSDKHTTPMethod)method
                                                            flags:(FBSDKGraphRequestFlags)flags
@@ -56,7 +56,7 @@
 }
 
 - (nonnull id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
-                                                      parameters:(NSDictionary *)parameters
+                                                      parameters:(NSDictionary<NSString *, id> *)parameters
                                                      tokenString:(NSString *)tokenString
                                                          version:(nullable NSString *)version
                                                       HTTPMethod:(FBSDKHTTPMethod)method
@@ -69,7 +69,7 @@
 }
 
 - (nonnull id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(nonnull NSString *)graphPath
-                                                      parameters:(nonnull NSDictionary *)parameters
+                                                      parameters:(nonnull NSDictionary<NSString *, id> *)parameters
                                                            flags:(FBSDKGraphRequestFlags)flags
 {
   return [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath

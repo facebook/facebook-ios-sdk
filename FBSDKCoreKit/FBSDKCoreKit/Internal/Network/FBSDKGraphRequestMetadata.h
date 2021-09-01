@@ -34,14 +34,14 @@ NS_SWIFT_NAME(GraphRequestMetadata)
 
 @property (nonatomic, retain) id<FBSDKGraphRequest> request;
 @property (nonatomic, copy) FBSDKGraphRequestCompletion completionHandler;
-@property (nonatomic, copy) NSDictionary *batchParameters;
+@property (nonatomic, copy) NSDictionary<NSString *, id> *batchParameters;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
 - (instancetype)initWithRequest:(id<FBSDKGraphRequest>)request
               completionHandler:(FBSDKGraphRequestCompletion)handler
-                batchParameters:(NSDictionary *)batchParameters
+                batchParameters:(NSDictionary<NSString *, id> *)batchParameters
 NS_DESIGNATED_INITIALIZER;
 
 - (void)invokeCompletionHandlerForConnection:(id<FBSDKGraphRequestConnecting>)connection

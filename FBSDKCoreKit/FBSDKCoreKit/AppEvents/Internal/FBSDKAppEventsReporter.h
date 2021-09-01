@@ -27,7 +27,7 @@ NS_SWIFT_NAME(AppEventsReporter)
 - (void)recordAndUpdateEvent:(NSString *)event
                     currency:(nullable NSString *)currency
                        value:(nullable NSNumber *)value
-                  parameters:(nullable NSDictionary *)parameters
+                  parameters:(nullable NSDictionary<NSString *, id> *)parameters
 NS_SWIFT_NAME(recordAndUpdate(event:currency:value:parameters:));
 
 @end

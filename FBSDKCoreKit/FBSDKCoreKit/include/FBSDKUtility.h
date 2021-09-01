@@ -99,7 +99,7 @@ NS_SWIFT_NAME(sha256Hash(_:));
  */
 + (NSURL *)unversionedFacebookURLWithHostPrefix:(NSString *)hostPrefix
                                            path:(NSString *)path
-                                queryParameters:(NSDictionary *)queryParameters
+                                queryParameters:(NSDictionary<NSString *, id> *)queryParameters
                                           error:(NSError *__autoreleasing *)errorRef;
 
 @end

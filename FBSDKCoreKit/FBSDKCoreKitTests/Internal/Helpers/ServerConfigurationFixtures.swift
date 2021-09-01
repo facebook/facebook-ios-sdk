@@ -27,7 +27,7 @@ class ServerConfigurationFixtures: NSObject {
 
   /// A default configuration with custom values passed by dictionary.
   /// To use: Include a dictionary with the keys and values you want to override on the default configuration
-  class func config(withDictionary dict: [AnyHashable: Any]) -> ServerConfiguration {
+  class func config(withDictionary dict: [String: Any]) -> ServerConfiguration {
     var loginTooltipEnabled = defaultConfig.isLoginTooltipEnabled
     if dict["loginTooltipEnabled"] != nil {
       loginTooltipEnabled = dict["loginTooltipEnabled"] as? Int != 0
@@ -67,8 +67,8 @@ class ServerConfigurationFixtures: NSObject {
     let appName = dict["appName"] as? String ?? defaultConfig.appName
     let loginTooltipText = dict["loginTooltipText"] as? String ?? defaultConfig.loginTooltipText
     let defaultShareMode = dict["defaultShareMode"] as? String ?? defaultConfig.defaultShareMode
-    let dialogConfigurations = defaultConfig.dialogConfigurations() ?? dict["dialogConfigurations"] as? [AnyHashable: Any]
-    let dialogFlows = dict["dialogFlows"] as? [AnyHashable: Any] ?? defaultConfig.dialogFlows()
+    let dialogConfigurations = defaultConfig.dialogConfigurations() ?? dict["dialogConfigurations"] as? [String: Any]
+    let dialogFlows = dict["dialogFlows"] as? [String: Any] ?? defaultConfig.dialogFlows()
     let timestamp = dict["timestamp"] as? Date ?? defaultConfig.timestamp
     let errorConfiguration = dict["errorConfiguration"] as? ErrorConfiguration ?? defaultConfig.errorConfiguration
     let sessionTimeoutInterval = TimeInterval(dict["sessionTimeoutInterval"] as? Double ?? defaultConfig.sessionTimoutInterval)

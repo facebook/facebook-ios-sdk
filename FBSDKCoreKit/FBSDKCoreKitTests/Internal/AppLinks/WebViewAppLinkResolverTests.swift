@@ -23,7 +23,7 @@ import XCTest
 // swiftlint:disable force_unwrapping
 class WebViewAppLinkResolverTests: XCTestCase {
 
-  var result: [AnyHashable: Any]?
+  var result: [String: Any]?
   var error: Error?
   let data = "foo".data(using: .utf8)!
   var resolver: WebViewAppLinkResolver! // swiftlint:disable:this implicitly_unwrapped_optional
@@ -298,7 +298,7 @@ class WebViewAppLinkResolverTests: XCTestCase {
   // MARK: - Helpers
 
   func validateResult(
-    result: [AnyHashable: Any]?,
+    result: [String: Any]?,
     data: Data,
     response: HTTPURLResponse,
     error: Error?,

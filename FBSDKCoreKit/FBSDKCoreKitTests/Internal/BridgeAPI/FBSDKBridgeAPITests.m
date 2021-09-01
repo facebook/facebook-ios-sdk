@@ -284,7 +284,7 @@
 
 - (void)testDidFinishLaunchingWithoutLaunchedUrlWithSourceApplication
 {
-  NSDictionary *options = @{ UIApplicationLaunchOptionsSourceApplicationKey : @"com.example" };
+  NSDictionary<NSString *, id> *options = @{ UIApplicationLaunchOptionsSourceApplicationKey : @"com.example" };
   XCTAssertFalse(
     [self.api application:UIApplication.sharedApplication didFinishLaunchingWithOptions:options],
     "Should not consider it a successful launch if there is no launch url"
@@ -293,7 +293,7 @@
 
 - (void)testDidFinishLaunchingWithLaunchedUrlWithoutSourceApplication
 {
-  NSDictionary *options = @{ UIApplicationLaunchOptionsURLKey : self.sampleUrl };
+  NSDictionary<NSString *, id> *options = @{ UIApplicationLaunchOptionsURLKey : self.sampleUrl };
   XCTAssertFalse(
     [self.api application:UIApplication.sharedApplication didFinishLaunchingWithOptions:options],
     "Should not consider it a successful launch if there is no source application"
@@ -302,7 +302,7 @@
 
 - (void)testDidFinishLaunchingWithLaunchedUrlWithSourceApplication
 {
-  NSDictionary *options = @{
+  NSDictionary<NSString *, id> *options = @{
     UIApplicationLaunchOptionsURLKey : self.sampleUrl,
     UIApplicationLaunchOptionsSourceApplicationKey : sampleSource,
     UIApplicationLaunchOptionsAnnotationKey : sampleAnnotation

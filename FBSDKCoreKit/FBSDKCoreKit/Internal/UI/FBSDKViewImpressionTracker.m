@@ -105,12 +105,12 @@ static dispatch_once_t token;
 
 #pragma mark - Public API
 
-- (void)logImpressionWithIdentifier:(NSString *)identifier parameters:(NSDictionary *)parameters
+- (void)logImpressionWithIdentifier:(NSString *)identifier parameters:(NSDictionary<NSString *, id> *)parameters
 {
   NSMutableDictionary *keys = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:keys setObject:identifier forKey:@"__view_impression_identifier__"];
   [keys addEntriesFromDictionary:parameters];
-  NSDictionary *impressionKey = [keys copy];
+  NSDictionary<NSString *, id> *impressionKey = [keys copy];
   // Ensure that each impression is only tracked once
   if ([_trackedImpressions containsObject:impressionKey]) {
     return;

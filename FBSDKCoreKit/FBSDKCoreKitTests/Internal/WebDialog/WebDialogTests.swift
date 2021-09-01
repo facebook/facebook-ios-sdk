@@ -120,7 +120,7 @@ class WebDialogTests: XCTestCase, WebDialogDelegate {
     )
   }
 
-  func webDialog(_ webDialog: WebDialog, didCompleteWithResults results: [AnyHashable: Any]) {
+  func webDialog(_ webDialog: WebDialog, didCompleteWithResults results: [String: Any]) {
     capturedDidCompleteResults = results as? [String: String]
   }
 

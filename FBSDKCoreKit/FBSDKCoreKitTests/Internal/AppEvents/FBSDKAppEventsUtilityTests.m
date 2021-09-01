@@ -154,8 +154,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
   TestASIdentifierManager *identifierManager = [TestASIdentifierManager new];
   identifierManager.stubbedAdvertisingIdentifier = uuid;
   FBSDKAppEventsUtility.cachedAdvertiserIdentifierManager = identifierManager;
-  NSDictionary *dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
-                                                         shouldAccessAdvertisingID:YES];
+  NSDictionary<NSString *, id> *dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
+                                                                         shouldAccessAdvertisingID:YES];
   XCTAssertEqualObjects(@"event", dict[@"event"]);
   XCTAssertNotNil(dict[@"advertiser_id"]);
   XCTAssertEqualObjects(@"1", dict[@"application_tracking_enabled"]);
@@ -301,8 +301,8 @@ static NSString *const FBSDKSettingsAdvertisingTrackingStatus = @"com.facebook.s
       if ([status unsignedIntegerValue] != FBSDKAdvertisingTrackingUnspecified) {
         [FBSDKSettings setAdvertiserTrackingStatus:[status unsignedIntegerValue]];
       }
-      NSDictionary *dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
-                                                             shouldAccessAdvertisingID:YES];
+      NSDictionary<NSString *, id> *dict = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"event"
+                                                                             shouldAccessAdvertisingID:YES];
       if (@available(iOS 14.0, *)) {
         // If status is unspecified, ATE will be defaultATEStatus
         if ([status unsignedIntegerValue] == FBSDKAdvertisingTrackingUnspecified) {

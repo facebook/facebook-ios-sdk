@@ -51,7 +51,7 @@
   }
 }
 
-+ (NSDictionary *)queryParamsFromLoginURL:(NSURL *)url
++ (NSDictionary<NSString *, id> *)queryParamsFromLoginURL:(NSURL *)url
 {
   NSString *expectedUrlPrefix = [FBSDKInternalUtility.sharedUtility
                                  appURLWithHost:@"authorize"
@@ -87,7 +87,7 @@
   if (signatureAndPayload.count == 2) {
     NSData *data = [FBSDKBase64 decodeAsData:[FBSDKTypeUtility array:signatureAndPayload objectAtIndex:1]];
     if (data) {
-      NSDictionary *dictionary = [FBSDKTypeUtility JSONObjectWithData:data options:0 error:nil];
+      NSDictionary<NSString *, id> *dictionary = [FBSDKTypeUtility JSONObjectWithData:data options:0 error:nil];
       userID = dictionary[@"user_id"];
     }
   }

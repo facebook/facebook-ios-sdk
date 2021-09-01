@@ -48,11 +48,11 @@ NS_SWIFT_NAME(EventLogging)
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 
 - (void)logInternalEvent:(NSString *)eventName
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 
 - (void)logInternalEvent:(NSString *)eventName
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken;
 

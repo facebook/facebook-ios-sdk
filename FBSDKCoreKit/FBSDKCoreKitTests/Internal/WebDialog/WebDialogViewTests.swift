@@ -362,7 +362,7 @@ class WebDialogViewTests: XCTestCase, WebDialogViewDelegate {
 
   func webDialogView(
     _ webDialogView: FBWebDialogView,
-    didCompleteWithResults results: [AnyHashable: Any]
+    didCompleteWithResults results: [String: Any]
   ) {
     capturedDidCompleteResults = results as? [String: String]
   }

@@ -63,7 +63,7 @@ static NSString *const EVENTS_KEY = @"events";
 }
 
 - (BOOL)isMatchedWithRecordedEvents:(nullable NSSet<NSString *> *)recordedEvents
-                     recordedValues:(nullable NSDictionary<NSString *, NSDictionary *> *)recordedValues
+                     recordedValues:(nullable NSDictionary<NSString *, NSDictionary<NSString *, id> *> *)recordedValues
 {
   for (FBAEMEvent *event in self.events) {
     // Check if event name matches

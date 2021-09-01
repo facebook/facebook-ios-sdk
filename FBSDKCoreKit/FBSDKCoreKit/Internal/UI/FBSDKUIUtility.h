@@ -39,7 +39,7 @@ static inline CGSize FBSDKTextSize(NSString *text,
 
   NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
   paragraphStyle.lineBreakMode = lineBreakMode;
-  NSDictionary *attributes = @{
+  NSDictionary<NSString *, id> *attributes = @{
     NSFontAttributeName : font,
     NSParagraphStyleAttributeName : paragraphStyle,
   };

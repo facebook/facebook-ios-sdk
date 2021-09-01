@@ -302,7 +302,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
         platformData = @[ appLinkDict[FBSDKWebViewAppLinkResolverIOSKey] ?: @{} ];
     }
 
-    for (NSArray<NSDictionary *> *platformObjects in platformData) {
+    for (NSArray<NSDictionary<NSString *, id> *> *platformObjects in platformData) {
         for (NSDictionary<NSString *, NSArray *> *platformDict in platformObjects) {
             // The schema requires a single url/app store id/app name,
             // but we could find multiple of them. We'll make a best effort

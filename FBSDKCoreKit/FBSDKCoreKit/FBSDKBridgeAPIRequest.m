@@ -45,8 +45,8 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
                                           scheme:(NSString *)scheme
                                       methodName:(NSString *)methodName
                                    methodVersion:(NSString *)methodVersion
-                                      parameters:(NSDictionary *)parameters
-                                        userInfo:(NSDictionary *)userInfo
+                                      parameters:(NSDictionary<NSString *, id> *)parameters
+                                        userInfo:(NSDictionary<NSString *, id> *)userInfo
 {
   return [[self alloc] initWithProtocol:[self _protocolForType:protocolType scheme:scheme]
                            protocolType:protocolType
@@ -57,9 +57,9 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
                                userInfo:userInfo];
 }
 
-+ (NSDictionary *)protocolMap
++ (NSDictionary<NSNumber *, id> *)protocolMap
 {
-  static NSDictionary *_protocolMap;
+  static NSDictionary<NSNumber *, id> *_protocolMap;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     _protocolMap = @{
@@ -84,8 +84,8 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
                           scheme:(NSString *)scheme
                       methodName:(NSString *)methodName
                    methodVersion:(NSString *)methodVersion
-                      parameters:(NSDictionary *)parameters
-                        userInfo:(NSDictionary *)userInfo
+                      parameters:(NSDictionary<NSString *, id> *)parameters
+                        userInfo:(NSDictionary<NSString *, id> *)userInfo
 {
   if (!protocol) {
     return nil;

@@ -121,14 +121,14 @@ static NSString *const ASTERISK_DELIMETER = @"[*]";
                          paramPath:(NSArray<NSString *> *)paramPath
 {
   param = [param substringToIndex:param.length - ASTERISK_DELIMETER.length];
-  NSArray<NSDictionary *> *items = [FBSDKTypeUtility dictionary:eventParams objectForKey:param ofType:NSArray.class];
+  NSArray<NSDictionary<NSString *, id> *> *items = [FBSDKTypeUtility dictionary:eventParams objectForKey:param ofType:NSArray.class];
   if (!items.count || paramPath.count < 2) {
     return NO;
   }
   BOOL isMatched = NO;
   NSRange range = NSMakeRange(1, paramPath.count - 1);
   NSArray *subParamPath = [paramPath subarrayWithRange:range];
-  for (NSDictionary *item in items) {
+  for (NSDictionary<NSString *, id> *item in items) {
     isMatched |= [self isMatchedEventParameters:item paramPath:subParamPath];
     if (isMatched) {
       break;

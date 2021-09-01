@@ -74,8 +74,8 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
 
 @implementation FBSDKServerConfiguration
 {
-  NSDictionary *_dialogConfigurations;
-  NSDictionary *_dialogFlows;
+  NSDictionary<NSString *, id> *_dialogConfigurations;
+  NSDictionary<NSString *, id> *_dialogFlows;
   NSInteger _version;
 }
 
@@ -91,8 +91,8 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
   implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
            codelessEventsEnabled:(BOOL)codelessEventsEnabled
         uninstallTrackingEnabled:(BOOL)uninstallTrackingEnabled
-            dialogConfigurations:(NSDictionary *)dialogConfigurations
-                     dialogFlows:(NSDictionary *)dialogFlows
+            dialogConfigurations:(NSDictionary<NSString *, id> *)dialogConfigurations
+                     dialogFlows:(NSDictionary<NSString *, id> *)dialogFlows
                        timestamp:(NSDate *)timestamp
               errorConfiguration:(FBSDKErrorConfiguration *)errorConfiguration
           sessionTimeoutInterval:(NSTimeInterval)sessionTimeoutInterval
@@ -146,7 +146,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
   static FBSDKServerConfiguration *_defaultServerConfiguration = nil;
   if (![_defaultServerConfiguration.appID isEqualToString:appID]) {
     // Enable SFSafariViewController by default.
-    NSDictionary *dialogFlows = @{
+    NSDictionary<NSString *, id> *dialogFlows = @{
       FBSDKDialogConfigurationNameDefault : @{
         FBSDKDialogConfigurationFeatureUseNativeFlow : @NO,
         FBSDKDialogConfigurationFeatureUseSafariViewController : @YES,
@@ -243,18 +243,18 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
   FBSDKServerConfigurationSmartLoginOptions smartLoginOptions = [decoder decodeIntegerForKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_OPTIONS_KEY];
   NSDate *timestamp = [decoder decodeObjectOfClass:[NSDate class] forKey:FBSDK_SERVER_CONFIGURATION_TIMESTAMP_KEY];
   NSSet *dialogConfigurationsClasses = [[NSSet alloc] initWithObjects:
-                                        [NSDictionary class],
+                                        [NSDictionary<NSString *, id> class],
                                         [FBSDKDialogConfiguration class],
                                         nil];
-  NSDictionary *dialogConfigurations = [decoder decodeObjectOfClasses:dialogConfigurationsClasses
-                                                               forKey:FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGS_KEY];
+  NSDictionary<NSString *, id> *dialogConfigurations = [decoder decodeObjectOfClasses:dialogConfigurationsClasses
+                                                                               forKey:FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGS_KEY];
   NSSet *dialogFlowsClasses = [[NSSet alloc] initWithObjects:
-                               [NSDictionary class],
+                               [NSDictionary<NSString *, id> class],
                                [NSString class],
                                [NSNumber class],
                                nil];
-  NSDictionary *dialogFlows = [decoder decodeObjectOfClasses:dialogFlowsClasses
-                                                      forKey:FBSDK_SERVER_CONFIGURATION_DIALOG_FLOWS_KEY];
+  NSDictionary<NSString *, id> *dialogFlows = [decoder decodeObjectOfClasses:dialogFlowsClasses
+                                                                      forKey:FBSDK_SERVER_CONFIGURATION_DIALOG_FLOWS_KEY];
   FBSDKErrorConfiguration *errorConfiguration = [decoder decodeObjectOfClass:[FBSDKErrorConfiguration class] forKey:FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGS_KEY];
   NSTimeInterval sessionTimeoutInterval = [decoder decodeDoubleForKey:FBSDK_SERVER_CONFIGURATION_SESSION_TIMEOUT_INTERVAL];
   NSString *loggingToken = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SERVER_CONFIGURATION_LOGGING_TOKEN];
@@ -263,7 +263,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
   NSString *updateMessage = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_KEY];
   NSArray *eventBindings = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS];
   NSSet *dictionaryClasses = [NSSet setWithObjects:
-                              [NSDictionary class],
+                              [NSDictionary<NSString *, id> class],
                               [NSArray class],
                               [NSData class],
                               [NSString class],
@@ -343,12 +343,12 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
 }
 
 // Private accessors for unit tests
-- (NSDictionary *)dialogConfigurations
+- (NSDictionary<NSString *, id> *)dialogConfigurations
 {
   return _dialogConfigurations;
 }
 
-- (NSDictionary *)dialogFlows
+- (NSDictionary<NSString *, id> *)dialogFlows
 {
   return _dialogFlows;
 }

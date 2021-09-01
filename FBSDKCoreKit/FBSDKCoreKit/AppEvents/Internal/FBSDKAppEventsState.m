@@ -114,7 +114,7 @@ static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
   [_mutableEvents addObjectsFromArray:toAdd];
 }
 
-- (void)addEvent:(NSDictionary *)eventDictionary
+- (void)addEvent:(NSDictionary<NSString *, id> *)eventDictionary
       isImplicit:(BOOL)isImplicit
 {
   if (_mutableEvents.count >= FBSDK_APPEVENTSSTATE_MAX_EVENTS) {
@@ -150,7 +150,7 @@ static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
 
 - (BOOL)areAllEventsImplicit
 {
-  for (NSDictionary *event in _mutableEvents) {
+  for (NSDictionary<NSString *, id> *event in _mutableEvents) {
     if (![[event valueForKey:FBSDK_APPEVENTSTATE_ISIMPLICIT_KEY] boolValue]) {
       return NO;
     }
@@ -180,7 +180,7 @@ static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
     }
   }
   NSMutableArray *events = [[NSMutableArray alloc] initWithCapacity:_mutableEvents.count];
-  for (NSDictionary *eventAndImplicitFlag in _mutableEvents) {
+  for (NSDictionary<NSString *, id> *eventAndImplicitFlag in _mutableEvents) {
     const BOOL isImplicitEvent = [eventAndImplicitFlag[FBSDK_APPEVENTSTATE_ISIMPLICIT_KEY] boolValue];
     if (!includeImplicitEvents && isImplicitEvent) {
       continue;

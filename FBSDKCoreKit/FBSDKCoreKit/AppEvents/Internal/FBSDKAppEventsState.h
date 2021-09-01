@@ -33,7 +33,7 @@ NS_SWIFT_NAME(AppEventsState)
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)initWithToken:(NSString *)tokenString appID:(NSString *)appID NS_DESIGNATED_INITIALIZER;
 
-- (void)addEvent:(NSDictionary *)eventDictionary isImplicit:(BOOL)isImplicit;
+- (void)addEvent:(NSDictionary<NSString *, id> *)eventDictionary isImplicit:(BOOL)isImplicit;
 - (void)addEventsFromAppEventState:(FBSDKAppEventsState *)appEventsState;
 - (BOOL)isCompatibleWithAppEventsState:(FBSDKAppEventsState *)appEventsState;
 - (BOOL)isCompatibleWithTokenString:(NSString *)tokenString appID:(NSString *)appID;

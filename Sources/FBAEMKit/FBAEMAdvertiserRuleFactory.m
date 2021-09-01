@@ -73,9 +73,9 @@
   if (![self isOperatorForMultiEntryRule:operator]) {
     return nil;
   }
-  NSArray<NSDictionary *> *subrules = [FBSDKTypeUtility dictionary:dict objectForKey:opString ofType:NSArray.class];
+  NSArray<NSDictionary<NSString *, id> *> *subrules = [FBSDKTypeUtility dictionary:dict objectForKey:opString ofType:NSArray.class];
   NSMutableArray<id<FBAEMAdvertiserRuleMatching>> *rules = [NSMutableArray new];
-  for (NSDictionary *subrule in subrules) {
+  for (NSDictionary<NSString *, id> *subrule in subrules) {
     id<FBAEMAdvertiserRuleMatching> entryRule = [self createRuleWithDict:subrule];
     if (!entryRule) {
       return nil;

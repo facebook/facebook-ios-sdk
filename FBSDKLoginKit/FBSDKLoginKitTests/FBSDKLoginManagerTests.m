@@ -48,7 +48,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
 @interface FBSDKLoginManager (Testing)
 
-- (NSDictionary *)logInParametersFromURL:(NSURL *)url;
+- (NSDictionary<NSString *, id> *)logInParametersFromURL:(NSURL *)url;
 
 - (NSString *)loadExpectedNonce;
 
@@ -113,8 +113,8 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 @property (nonatomic) id mockProfileClass;
 @property (nonatomic) id mockBridgeAPIClass;
 @property (nonatomic) TestFBSDKBridgeAPI *testBridgeAPI;
-@property (nonatomic) NSDictionary *claims;
-@property (nonatomic) NSDictionary *header;
+@property (nonatomic) NSDictionary<NSString *, id> *claims;
+@property (nonatomic) NSDictionary<NSString *, id> *header;
 
 @end
 
@@ -661,14 +661,14 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   FBSDKLoginManagerLogger *logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:@"123"
                                                                                  tracking:FBSDKLoginTrackingEnabled];
 
-  NSDictionary *params = [_mockLoginManager logInParametersWithConfiguration:config serverConfiguration:nil logger:logger authMethod:@"sfvc_auth"];
+  NSDictionary<NSString *, id> *params = [_mockLoginManager logInParametersWithConfiguration:config serverConfiguration:nil logger:logger authMethod:@"sfvc_auth"];
 
   [self validateCommonLoginParameters:params];
   XCTAssertEqualObjects(params[@"response_type"], @"id_token,token_or_nonce,signed_request,graph_domain");
   XCTAssertEqualObjects(params[@"scope"], @"public_profile,email,openid");
   XCTAssertNotNil(params[@"nonce"]);
   XCTAssertNil(params[@"tp"], "Regular login should not send a tracking parameter");
-  NSDictionary *state = [FBSDKBasicUtility objectForJSONString:params[@"state"] error:nil];
+  NSDictionary<NSString *, id> *state = [FBSDKBasicUtility objectForJSONString:params[@"state"] error:nil];
   XCTAssertEqualObjects(state[@"3_method"], @"sfvc_auth");
   XCTAssertEqual(params[@"auth_type"], FBSDKLoginAuthTypeRerequest);
 }
@@ -682,14 +682,14 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   FBSDKLoginManagerLogger *logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:@"123"
                                                                                  tracking:FBSDKLoginTrackingLimited];
 
-  NSDictionary *params = [_mockLoginManager logInParametersWithConfiguration:config serverConfiguration:nil logger:logger authMethod:@"browser_auth"];
+  NSDictionary<NSString *, id> *params = [_mockLoginManager logInParametersWithConfiguration:config serverConfiguration:nil logger:logger authMethod:@"browser_auth"];
 
   [self validateCommonLoginParameters:params];
   XCTAssertEqualObjects(params[@"response_type"], @"id_token,graph_domain");
   XCTAssertEqualObjects(params[@"scope"], @"public_profile,email,openid");
   XCTAssertEqualObjects(params[@"nonce"], @"some_nonce");
   XCTAssertEqualObjects(params[@"tp"], @"ios_14_do_not_track");
-  NSDictionary *state = [FBSDKBasicUtility objectForJSONString:params[@"state"] error:nil];
+  NSDictionary<NSString *, id> *state = [FBSDKBasicUtility objectForJSONString:params[@"state"] error:nil];
   XCTAssertEqualObjects(state[@"3_method"], @"browser_auth");
   XCTAssertEqual(params[@"auth_type"], FBSDKLoginAuthTypeRerequest);
 }
@@ -704,7 +704,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   };
   [_mockLoginManager setHandler:handler];
 
-  NSDictionary *params = [_mockLoginManager logInParametersWithConfiguration:nil serverConfiguration:nil logger:nil authMethod:@"sfvc_auth"];
+  NSDictionary<NSString *, id> *params = [_mockLoginManager logInParametersWithConfiguration:nil serverConfiguration:nil logger:nil authMethod:@"sfvc_auth"];
 
   XCTAssertNil(params);
   XCTAssert(wasCalled);
@@ -720,14 +720,14 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   FBSDKLoginManagerLogger *logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:@"123"
                                                                                  tracking:FBSDKLoginTrackingEnabled];
 
-  NSDictionary *params = [_mockLoginManager logInParametersWithConfiguration:config serverConfiguration:nil logger:logger authMethod:@"sfvc_auth"];
+  NSDictionary<NSString *, id> *params = [_mockLoginManager logInParametersWithConfiguration:config serverConfiguration:nil logger:logger authMethod:@"sfvc_auth"];
 
   [self validateCommonLoginParameters:params];
   XCTAssertEqualObjects(params[@"response_type"], @"id_token,token_or_nonce,signed_request,graph_domain");
   XCTAssertEqualObjects(params[@"scope"], @"public_profile,email,openid");
   XCTAssertNotNil(params[@"nonce"]);
   XCTAssertNil(params[@"tp"], "Regular login should not send a tracking parameter");
-  NSDictionary *state = [FBSDKBasicUtility objectForJSONString:params[@"state"] error:nil];
+  NSDictionary<NSString *, id> *state = [FBSDKBasicUtility objectForJSONString:params[@"state"] error:nil];
   XCTAssertEqualObjects(state[@"3_method"], @"sfvc_auth");
   XCTAssertEqual(params[@"auth_type"], nil);
 }
@@ -742,14 +742,14 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   FBSDKLoginManagerLogger *logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:@"123"
                                                                                  tracking:FBSDKLoginTrackingEnabled];
 
-  NSDictionary *params = [_mockLoginManager logInParametersWithConfiguration:config serverConfiguration:nil logger:logger authMethod:@"sfvc_auth"];
+  NSDictionary<NSString *, id> *params = [_mockLoginManager logInParametersWithConfiguration:config serverConfiguration:nil logger:logger authMethod:@"sfvc_auth"];
 
   [self validateCommonLoginParameters:params];
   XCTAssertEqualObjects(params[@"response_type"], @"id_token,token_or_nonce,signed_request,graph_domain");
   XCTAssertEqualObjects(params[@"scope"], @"public_profile,email,openid");
   XCTAssertNotNil(params[@"nonce"]);
   XCTAssertNil(params[@"tp"], "Regular login should not send a tracking parameter");
-  NSDictionary *state = [FBSDKBasicUtility objectForJSONString:params[@"state"] error:nil];
+  NSDictionary<NSString *, id> *state = [FBSDKBasicUtility objectForJSONString:params[@"state"] error:nil];
   XCTAssertEqualObjects(state[@"3_method"], @"sfvc_auth");
   XCTAssertEqual(params[@"auth_type"], FBSDKLoginAuthTypeReauthorize);
 }
@@ -758,7 +758,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 {
   NSURL *url = [NSURL URLWithString:@"myapp://somelink/?al_applink_data=%7B%22target_url%22%3Anull%2C%22extras%22%3A%7B%22fb_login%22%3A%22%7B%5C%22granted_scopes%5C%22%3A%5C%22public_profile%5C%22%2C%5C%22denied_scopes%5C%22%3A%5C%22%5C%22%2C%5C%22signed_request%5C%22%3A%5C%22ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0%5C%22%2C%5C%22nonce%5C%22%3A%5C%22someNonce%5C%22%2C%5C%22data_access_expiration_time%5C%22%3A%5C%221607374566%5C%22%2C%5C%22expires_in%5C%22%3A%5C%225183401%5C%22%7D%22%7D%2C%22referer_app_link%22%3A%7B%22url%22%3A%22fb%3A%5C%2F%5C%2F%5C%2F%22%2C%22app_name%22%3A%22Facebook%22%7D%7D"];
 
-  NSDictionary *params = [_mockLoginManager logInParametersFromURL:url];
+  NSDictionary<NSString *, id> *params = [_mockLoginManager logInParametersFromURL:url];
 
   XCTAssertNotNil(params);
   XCTAssertEqualObjects(params[@"nonce"], @"someNonce");
@@ -1056,7 +1056,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
                               dataAccessExpirationDate:nil];
 }
 
-- (void)validateCommonLoginParameters:(NSDictionary *)params
+- (void)validateCommonLoginParameters:(NSDictionary<NSString *, id> *)params
 {
   XCTAssertEqualObjects(params[@"client_id"], kFakeAppID);
   XCTAssertEqualObjects(params[@"display"], @"touch");
@@ -1066,7 +1066,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   XCTAssertEqualObjects(params[@"ies"], [FBSDKSettings isAutoLogAppEventsEnabled] ? @1 : @0);
   XCTAssertNotNil(params[@"e2e"]);
 
-  NSDictionary *state = [FBSDKBasicUtility objectForJSONString:params[@"state"] error:nil];
+  NSDictionary<NSString *, id> *state = [FBSDKBasicUtility objectForJSONString:params[@"state"] error:nil];
   XCTAssertNotNil(state[@"challenge"]);
   XCTAssertNotNil(state[@"0_auth_logger_id"]);
 

@@ -495,7 +495,7 @@ NS_SWIFT_NAME(AppEvents)
 
  @param payload Notification payload received via `UIApplicationDelegate`.
  */
-+ (void)logPushNotificationOpen:(NSDictionary *)payload;
++ (void)logPushNotificationOpen:(NSDictionary<NSString *, id> *)payload;
 
 /**
   Log an app event that tracks that a custom action was taken from a push notification.
@@ -503,7 +503,7 @@ NS_SWIFT_NAME(AppEvents)
  @param payload Notification payload received via `UIApplicationDelegate`.
  @param action  Name of the action that was taken.
  */
-+ (void)logPushNotificationOpen:(NSDictionary *)payload action:(NSString *)action;
++ (void)logPushNotificationOpen:(NSDictionary<NSString *, id> *)payload action:(NSString *)action;
 
 /**
   Uploads product catalog product item as an app event
@@ -729,7 +729,7 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
  @warning UNSAFE - DO NOT USE
  */
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 
 /**
@@ -739,7 +739,7 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
  @warning UNSAFE - DO NOT USE
  */
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken;
 

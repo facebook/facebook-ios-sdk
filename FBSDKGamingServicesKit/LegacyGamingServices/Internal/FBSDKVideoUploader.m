@@ -66,7 +66,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
 #pragma mark Public Method
 - (instancetype)initWithVideoName:(NSString *)videoName
                         videoSize:(NSUInteger)videoSize
-                       parameters:(NSDictionary *)parameters
+                       parameters:(NSDictionary<NSString *, id> *)parameters
                          delegate:(id<FBSDKVideoUploaderDelegate>)delegate
 {
   return [self initWithVideoName:videoName
@@ -78,7 +78,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
 
 - (instancetype)initWithVideoName:(NSString *)videoName
                         videoSize:(NSUInteger)videoSize
-                       parameters:(NSDictionary *)parameters
+                       parameters:(NSDictionary<NSString *, id> *)parameters
                          delegate:(id<FBSDKVideoUploaderDelegate>)delegate
                   requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
 {
@@ -112,7 +112,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
       result = [self dictionaryValue:result];
       NSNumber *uploadSessionID = [self.numberFormatter numberFromString:result[FBSDK_GAMING_VIDEO_UPLOAD_SESSION_ID]];
       NSNumber *videoID = [self.numberFormatter numberFromString:result[FBSDK_GAMING_VIDEO_ID]];
-      NSDictionary *offsetDictionary = [self _extractOffsetsFromResultDictionary:result];
+      NSDictionary<NSString *, id> *offsetDictionary = [self _extractOffsetsFromResultDictionary:result];
       if (uploadSessionID == nil || videoID == nil) {
         [self.delegate videoUploader:self didFailWithError:
          [FBSDKError errorWithDomain:FBSDKGamingVideoUploadErrorDomain
@@ -141,7 +141,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
                                               HTTPMethod:@"POST"] startWithCompletion:startRequestCompletionHandler];
 }
 
-- (void)_startTransferRequestWithOffsetDictionary:(NSDictionary *)offsetDictionary
+- (void)_startTransferRequestWithOffsetDictionary:(NSDictionary<NSString *, id> *)offsetDictionary
 {
   NSUInteger startOffset = [offsetDictionary[FBSDK_GAMING_VIDEO_START_OFFSET] unsignedIntegerValue];
   NSUInteger endOffset = [offsetDictionary[FBSDK_GAMING_VIDEO_END_OFFSET] unsignedIntegerValue];
@@ -199,7 +199,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
                                               }];
 }
 
-- (NSDictionary *)_extractOffsetsFromResultDictionary:(id)result
+- (NSDictionary<NSString *, id> *)_extractOffsetsFromResultDictionary:(id)result
 {
   result = [self dictionaryValue:result];
   if (![result[FBSDK_GAMING_VIDEO_START_OFFSET] isKindOfClass:[NSString class]]) {
@@ -238,7 +238,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
   return shareResults;
 }
 
-- (void)_startTransferRequestWithNewOffset:(NSDictionary *)offsetDictionary data:(nonnull NSData *)data
+- (void)_startTransferRequestWithNewOffset:(NSDictionary<NSString *, id> *)offsetDictionary data:(nonnull NSData *)data
 {
   FBSDKGraphRequestDataAttachment *dataAttachment = [[FBSDKGraphRequestDataAttachment alloc] initWithData:data
                                                                                                  filename:_videoName
@@ -256,7 +256,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
       [self.delegate videoUploader:self didFailWithError:innerError];
       return;
     }
-    NSDictionary *innerOffsetDictionary = [self _extractOffsetsFromResultDictionary:result];
+    NSDictionary<NSString *, id> *innerOffsetDictionary = [self _extractOffsetsFromResultDictionary:result];
     if (innerOffsetDictionary == nil) {
       return;
     }
@@ -297,9 +297,9 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
   return graphPath;
 }
 
-- (NSDictionary *)dictionaryValue:(id)object
+- (NSDictionary<NSString *, id> *)dictionaryValue:(id)object
 {
-  return [object isKindOfClass:[NSDictionary class]] ? object : nil;
+  return [object isKindOfClass:[NSDictionary<NSString *, id> class]] ? object : nil;
 }
 
 @end

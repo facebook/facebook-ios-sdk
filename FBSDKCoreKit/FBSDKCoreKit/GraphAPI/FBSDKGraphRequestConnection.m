@@ -416,7 +416,7 @@ static BOOL _canMakeRequests = NO;
   [FBSDKTypeUtility array:batch addObject:requestElement];
 }
 
-- (void)appendAttachments:(NSDictionary *)attachments
+- (void)appendAttachments:(NSDictionary<NSString *, id> *)attachments
                    toBody:(FBSDKGraphRequestBody *)body
               addFormData:(BOOL)addFormData
                    logger:(FBSDKLogger *)logger
@@ -765,7 +765,7 @@ static BOOL _canMakeRequests = NO;
     }
   }
 
-  NSDictionary *responseError = nil;
+  NSDictionary<NSString *, id> *responseError = nil;
   if (!response) {
     if ((error != NULL) && (*error == nil)) {
       *error = [self _errorWithCode:FBSDKErrorUnknown
@@ -787,10 +787,10 @@ static BOOL _canMakeRequests = NO;
     for (id item in response) {
       // Don't let errors parsing one response stop us from parsing another.
       NSError *batchResultError = nil;
-      if (![item isKindOfClass:[NSDictionary class]]) {
+      if (![item isKindOfClass:[NSDictionary<NSString *, id> class]]) {
         [FBSDKTypeUtility array:results addObject:item];
       } else {
-        NSMutableDictionary *result = [((NSDictionary *)item) mutableCopy];
+        NSMutableDictionary *result = [((NSDictionary<NSString *, id> *)item) mutableCopy];
         if (result[@"body"]) {
           [FBSDKTypeUtility dictionary:result setObject:[self parseJSONOrOtherwise:result[@"body"] error:&batchResultError] forKey:@"body"];
         }
@@ -801,12 +801,12 @@ static BOOL _canMakeRequests = NO;
         *error = batchResultError;
       }
     }
-  } else if ([response isKindOfClass:[NSDictionary class]]
+  } else if ([response isKindOfClass:[NSDictionary<NSString *, id> class]]
              && (responseError = [FBSDKTypeUtility dictionaryValue:response[@"error"]]) != nil
              && [responseError[@"type"] isEqualToString:@"OAuthException"]) {
     // if there was one request then return the only result. if there were multiple requests
     // but only one error then the server rejected the batch access token
-    NSDictionary *result = @{
+    NSDictionary<NSString *, id> *result = @{
       @"code" : @(statusCode),
       @"body" : response
     };
@@ -877,8 +877,8 @@ static BOOL _canMakeRequests = NO;
     NSError *const resultError = networkError ?: [self errorFromResult:result request:metadata.request];
 
     id body = nil;
-    if (!resultError && [result isKindOfClass:[NSDictionary class]]) {
-      NSDictionary *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
+    if (!resultError && [result isKindOfClass:[NSDictionary<NSString *, id> class]]) {
+      NSDictionary<NSString *, id> *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
       body = [FBSDKTypeUtility dictionaryValue:resultDictionary[@"body"]];
     }
 
@@ -904,11 +904,11 @@ static BOOL _canMakeRequests = NO;
   }
 }
 
-- (void)processResultBody:(NSDictionary *)body error:(NSError *)error metadata:(FBSDKGraphRequestMetadata *)metadata canNotifyDelegate:(BOOL)canNotifyDelegate
+- (void)processResultBody:(NSDictionary<NSString *, id> *)body error:(NSError *)error metadata:(FBSDKGraphRequestMetadata *)metadata canNotifyDelegate:(BOOL)canNotifyDelegate
 {
   void (^finishAndInvokeCompletionHandler)(void) = ^{
     NSDictionary<NSString *, id> *graphDebugDict = body[@"__debug__"];
-    if ([graphDebugDict isKindOfClass:[NSDictionary class]]) {
+    if ([graphDebugDict isKindOfClass:[NSDictionary<NSString *, id> class]]) {
       [self processResultDebugDictionary:graphDebugDict];
     }
     [metadata invokeCompletionHandlerForConnection:self withResults:body error:error];
@@ -948,7 +948,7 @@ static BOOL _canMakeRequests = NO;
   finishAndInvokeCompletionHandler();
 }
 
-- (void)processResultDebugDictionary:(NSDictionary *)dict
+- (void)processResultDebugDictionary:(NSDictionary<NSString *, id> *)dict
 {
   NSArray *messages = [FBSDKTypeUtility arrayValue:dict[@"messages"]];
   if (!messages.count) {
@@ -956,7 +956,7 @@ static BOOL _canMakeRequests = NO;
   }
 
   [messages enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-    NSDictionary *messageDict = [FBSDKTypeUtility dictionaryValue:obj];
+    NSDictionary<NSString *, id> *messageDict = [FBSDKTypeUtility dictionaryValue:obj];
     NSString *message = [FBSDKTypeUtility coercedToStringValue:messageDict[@"message"]];
     NSString *type = [FBSDKTypeUtility coercedToStringValue:messageDict[@"type"]];
     NSString *link = [FBSDKTypeUtility coercedToStringValue:messageDict[@"link"]];
@@ -978,17 +978,17 @@ static BOOL _canMakeRequests = NO;
 
 - (NSError *_Nullable)errorFromResult:(id)untypedParam request:(id<FBSDKGraphRequest>)request
 {
-  NSDictionary *const result = FBSDK_CAST_TO_CLASS_OR_NIL(untypedParam, NSDictionary);
+  NSDictionary<NSString *, id> *const result = FBSDK_CAST_TO_CLASS_OR_NIL(untypedParam, NSDictionary);
   if (!result) {
     return nil;
   }
 
-  NSDictionary *const body = FBSDK_CAST_TO_CLASS_OR_NIL(result[@"body"], NSDictionary);
+  NSDictionary<NSString *, id> *const body = FBSDK_CAST_TO_CLASS_OR_NIL(result[@"body"], NSDictionary);
   if (!body) {
     return nil;
   }
 
-  NSDictionary *const errorDictionary = FBSDK_CAST_TO_CLASS_OR_NIL(body[@"error"], NSDictionary);
+  NSDictionary<NSString *, id> *const errorDictionary = FBSDK_CAST_TO_CLASS_OR_NIL(body[@"error"], NSDictionary);
   if (!errorDictionary) {
     return nil;
   }

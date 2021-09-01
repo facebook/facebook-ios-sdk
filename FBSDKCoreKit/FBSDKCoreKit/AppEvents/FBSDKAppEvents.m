@@ -415,7 +415,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 }
 
 + (void)logEvent:(FBSDKAppEventName)eventName
-      parameters:(NSDictionary *)parameters
+      parameters:(NSDictionary<NSString *, id> *)parameters
 {
   [self.singleton logEvent:eventName
                 parameters:parameters];
@@ -432,7 +432,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 + (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(double)valueToSum
-      parameters:(NSDictionary *)parameters
+      parameters:(NSDictionary<NSString *, id> *)parameters
 {
   [self.singleton logEvent:eventName
                 valueToSum:valueToSum
@@ -441,7 +441,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 - (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(double)valueToSum
-      parameters:(NSDictionary *)parameters
+      parameters:(NSDictionary<NSString *, id> *)parameters
 {
   [FBSDKAppEvents logEvent:eventName
                 valueToSum:@(valueToSum)
@@ -451,7 +451,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 + (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(NSNumber *)valueToSum
-      parameters:(NSDictionary *)parameters
+      parameters:(NSDictionary<NSString *, id> *)parameters
      accessToken:(FBSDKAccessToken *)accessToken
 {
   [self.singleton logEvent:eventName
@@ -462,7 +462,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 - (void)logEvent:(FBSDKAppEventName)eventName
       valueToSum:(NSNumber *)valueToSum
-      parameters:(NSDictionary *)parameters
+      parameters:(NSDictionary<NSString *, id> *)parameters
      accessToken:(FBSDKAccessToken *)accessToken
 {
   [self instanceLogEvent:eventName
@@ -482,7 +482,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 + (void)logPurchase:(double)purchaseAmount
            currency:(NSString *)currency
-         parameters:(NSDictionary *)parameters
+         parameters:(NSDictionary<NSString *, id> *)parameters
 {
   [FBSDKAppEvents logPurchase:purchaseAmount
                      currency:currency
@@ -492,14 +492,14 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 + (void)logPurchase:(double)purchaseAmount
            currency:(NSString *)currency
-         parameters:(NSDictionary *)parameters
+         parameters:(NSDictionary<NSString *, id> *)parameters
         accessToken:(FBSDKAccessToken *)accessToken
 {
   [self.singleton validateConfiguration];
 
   // A purchase event is just a regular logged event with a given event name
   // and treating the currency value as going into the parameters dictionary.
-  NSDictionary *newParameters;
+  NSDictionary<NSString *, id> *newParameters;
   if (!parameters) {
     newParameters = @{ FBSDKAppEventParameterNameCurrency : currency };
   } else {
@@ -523,16 +523,16 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
  * Push Notifications Logging
  */
 
-+ (void)logPushNotificationOpen:(NSDictionary *)payload
++ (void)logPushNotificationOpen:(NSDictionary<NSString *, id> *)payload
 {
   [self logPushNotificationOpen:payload action:@""];
 }
 
-+ (void)logPushNotificationOpen:(NSDictionary *)payload action:(NSString *)action
++ (void)logPushNotificationOpen:(NSDictionary<NSString *, id> *)payload action:(NSString *)action
 {
   [self.singleton validateConfiguration];
 
-  NSDictionary *facebookPayload = payload[FBSDKAppEventsPushPayloadKey];
+  NSDictionary<NSString *, id> *facebookPayload = payload[FBSDKAppEventsPushPayloadKey];
   if (!facebookPayload) {
     return;
   }
@@ -565,7 +565,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
                   gtin:(NSString *)gtin
                    mpn:(NSString *)mpn
                  brand:(NSString *)brand
-            parameters:(NSDictionary *)parameters
+            parameters:(NSDictionary<NSString *, id> *)parameters
 {
   [self.singleton validateConfiguration];
 
@@ -1004,7 +1004,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 }
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
   [self.singleton logInternalEvent:eventName
@@ -1013,7 +1013,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 }
 
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
   [self logInternalEvent:eventName
@@ -1024,7 +1024,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 }
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken
 {
@@ -1035,7 +1035,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 }
 
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken
 {
@@ -1048,7 +1048,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
               valueToSum:(double)valueToSum
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
   [self.singleton logInternalEvent:eventName
@@ -1059,7 +1059,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 - (void)logInternalEvent:(FBSDKAppEventName)eventName
               valueToSum:(double)valueToSum
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
   [self logInternalEvent:eventName
@@ -1071,7 +1071,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 + (void)logInternalEvent:(NSString *)eventName
               valueToSum:(NSNumber *)valueToSum
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken
 {
@@ -1084,7 +1084,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 - (void)logInternalEvent:(NSString *)eventName
               valueToSum:(NSNumber *)valueToSum
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken
 {
@@ -1099,7 +1099,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 + (void)logImplicitEvent:(NSString *)eventName
               valueToSum:(NSNumber *)valueToSum
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
              accessToken:(FBSDKAccessToken *)accessToken
 {
   [self.singleton instanceLogEvent:eventName
@@ -1111,7 +1111,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 - (void)logImplicitEvent:(NSString *)eventName
               valueToSum:(NSNumber *)valueToSum
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
              accessToken:(FBSDKAccessToken *)accessToken
 {
   [self instanceLogEvent:eventName
@@ -1345,7 +1345,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)instanceLogEvent:(FBSDKAppEventName)eventName
               valueToSum:(NSNumber *)valueToSum
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken
 {
@@ -1741,7 +1741,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
     }
   }
 
-  NSDictionary *parameters = @{};
+  NSDictionary<NSString *, id> *parameters = @{};
   if (udid) {
     parameters = @{ @"udid" : udid };
   }

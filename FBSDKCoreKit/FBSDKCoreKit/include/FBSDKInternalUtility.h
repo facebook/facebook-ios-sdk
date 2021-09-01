@@ -63,7 +63,7 @@ NS_SWIFT_NAME(InternalUtility)
  @param url The FB url.
  @return A dictionary with the key/value pairs.
  */
-- (NSDictionary *)parametersFromFBURL:(NSURL *)url;
+- (NSDictionary<NSString *, id> *)parametersFromFBURL:(NSURL *)url;
 
 /**
   Constructs a Facebook URL.
@@ -101,7 +101,7 @@ NS_SWIFT_NAME(InternalUtility)
  @param grantedPermissions the set to add granted permissions to
  @param declinedPermissions the set to add declined permissions to.
  */
-- (void)extractPermissionsFromResponse:(NSDictionary *)responseObject
+- (void)extractPermissionsFromResponse:(NSDictionary<NSString *, id> *)responseObject
                     grantedPermissions:(NSMutableSet *)grantedPermissions
                    declinedPermissions:(NSMutableSet *)declinedPermissions
                     expiredPermissions:(NSMutableSet *)expiredPermissions;

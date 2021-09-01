@@ -66,7 +66,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [TestConversionValueUpdating reset];
   self.userDefaultsSpy = [UserDefaultsSpy new];
 
-  NSDictionary *json = @{
+  NSDictionary<NSString *, id> *json = @{
     @"data" : @[@{
                   @"timer_buckets" : @1,
                   @"timer_interval" : @1000,

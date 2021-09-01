@@ -29,7 +29,7 @@
 @implementation FBSDKAEMNetworker
 
 - (void)startGraphRequestWithGraphPath:(NSString *)graphPath
-                            parameters:(NSDictionary *)parameters
+                            parameters:(NSDictionary<NSString *, id> *)parameters
                            tokenString:(nullable NSString *)tokenString
                             HTTPMethod:(nullable NSString *)method
                             completion:(FBGraphRequestCompletion)completion

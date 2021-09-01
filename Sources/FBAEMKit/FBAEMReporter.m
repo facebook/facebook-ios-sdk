@@ -163,7 +163,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
 + (void)recordAndUpdateEvent:(NSString *)event
                     currency:(nullable NSString *)currency
                        value:(nullable NSNumber *)value
-                  parameters:(nullable NSDictionary *)parameters
+                  parameters:(nullable NSDictionary<NSString *, id> *)parameters
 {
   if (@available(iOS 14.0, *)) {
     if (!g_isAEMReportEnabled || 0 == event.length) {
@@ -189,7 +189,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
                                               Event:(NSString *)event
                                            currency:(nullable NSString *)currency
                                               value:(nullable NSNumber *)value
-                                         parameters:(nullable NSDictionary *)parameters
+                                         parameters:(nullable NSDictionary<NSString *, id> *)parameters
                                             configs:(NSDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)configs
 {
   BOOL isGeneralInvocationVisited = NO;
@@ -300,7 +300,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
 
 + (void)_sendDebuggingRequest:(FBAEMInvocation *)invocation
 {
-  NSMutableArray<NSDictionary *> *params = [NSMutableArray new];
+  NSMutableArray<NSDictionary<NSString *, id> *> *params = [NSMutableArray new];
   [FBSDKTypeUtility array:params addObject:[self _debuggingRequestParameters:invocation]];
   if (0 == params.count) {
     return;
@@ -372,12 +372,12 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
   }
 }
 
-+ (void)_addConfigs:(nullable NSArray<NSDictionary *> *)configs
++ (void)_addConfigs:(nullable NSArray<NSDictionary<NSString *, id> *> *)configs
 {
   if (0 == configs.count) {
     return;
   }
-  for (NSDictionary *config in configs) {
+  for (NSDictionary<NSString *, id> *config in configs) {
     [self _addConfig:[[FBAEMConfiguration alloc] initWithJSON:config]];
   }
   [self _saveConfigs];
@@ -437,7 +437,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
 
 + (void)_sendAggregationRequest
 {
-  NSMutableArray<NSDictionary *> *params = [NSMutableArray new];
+  NSMutableArray<NSDictionary<NSString *, id> *> *params = [NSMutableArray new];
   NSMutableArray<FBAEMInvocation *> *aggregatedInvocations = [NSMutableArray new];
   for (FBAEMInvocation *invocation in g_invocations) {
     if (!invocation.isAggregated) {

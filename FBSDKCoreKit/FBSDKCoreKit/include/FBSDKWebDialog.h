@@ -73,7 +73,7 @@ NS_SWIFT_NAME(WebDialog)
  @warning UNSAFE - DO NOT USE
  */
 + (instancetype)showWithName:(NSString *)name
-                  parameters:(NSDictionary *)parameters
+                  parameters:(NSDictionary<NSString *, id> *)parameters
                     delegate:(id<FBSDKWebDialogDelegate>)delegate;
 
 /**
@@ -83,7 +83,7 @@ NS_SWIFT_NAME(WebDialog)
  @warning UNSAFE - DO NOT USE
  */
 + (instancetype)createAndShow:(NSString *)name
-                   parameters:(NSDictionary *)parameters
+                   parameters:(NSDictionary<NSString *, id> *)parameters
                         frame:(CGRect)frame
                      delegate:(id<FBSDKWebDialogDelegate>)delegate
                  windowFinder:(id<FBSDKWindowFinding>)windowFinder;
@@ -105,7 +105,7 @@ NS_SWIFT_NAME(WebDialogDelegate)
 
  @warning UNSAFE - DO NOT USE
  */
-- (void)webDialog:(FBSDKWebDialog *)webDialog didCompleteWithResults:(NSDictionary *)results;
+- (void)webDialog:(FBSDKWebDialog *)webDialog didCompleteWithResults:(NSDictionary<NSString *, id> *)results;
 
 /**
  Internal Type exposed to facilitate transition to Swift.

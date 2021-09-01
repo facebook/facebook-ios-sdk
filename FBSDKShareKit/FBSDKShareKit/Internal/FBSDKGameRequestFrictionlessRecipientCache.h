@@ -26,7 +26,7 @@ NS_SWIFT_NAME(GameRequestFrictionlessRecipientCache)
 @interface FBSDKGameRequestFrictionlessRecipientCache : NSObject
 
 - (BOOL)recipientsAreFrictionless:(id)recipients;
-- (void)updateWithResults:(NSDictionary *)results;
+- (void)updateWithResults:(NSDictionary<NSString *, id> *)results;
 
 @end
 

@@ -19,7 +19,7 @@
 public class TestAEMNetworker: NSObject, AEMNetworking {
 
   public var capturedGraphPath: String?
-  public var capturedParameters = [AnyHashable: Any]()
+  public var capturedParameters = [String: Any]()
   public var capturedTokenString: String?
   public var capturedHttpMethod: String?
   public var capturedCompletionHandler: FBGraphRequestCompletion?
@@ -27,7 +27,7 @@ public class TestAEMNetworker: NSObject, AEMNetworking {
 
   public func startGraphRequest(
     withGraphPath graphPath: String,
-    parameters: [AnyHashable: Any],
+    parameters: [String: Any],
     tokenString: String?,
     httpMethod method: String?,
     completion: @escaping FBGraphRequestCompletion

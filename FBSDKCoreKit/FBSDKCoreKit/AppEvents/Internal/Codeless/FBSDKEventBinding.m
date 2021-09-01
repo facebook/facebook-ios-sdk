@@ -61,7 +61,7 @@ static id<FBSDKNumberParsing> _numberParser;
   _numberParser = [[FBSDKAppEventsNumberParser alloc] initWithLocale:NSLocale.currentLocale];
 }
 
-- (FBSDKEventBinding *)initWithJSON:(NSDictionary *)dict
+- (FBSDKEventBinding *)initWithJSON:(NSDictionary<NSString *, id> *)dict
                         eventLogger:(id<FBSDKEventLogging>)eventLogger
 {
   if ((self = [super init])) {
@@ -74,7 +74,7 @@ static id<FBSDKNumberParsing> _numberParser;
 
     NSArray *pathComponents = dict[CODELESS_MAPPING_PATH_KEY];
     NSMutableArray *mut = [NSMutableArray array];
-    for (NSDictionary *info in pathComponents) {
+    for (NSDictionary<NSString *, id> *info in pathComponents) {
       FBSDKCodelessPathComponent *component = [[FBSDKCodelessPathComponent alloc] initWithJSON:info];
       [FBSDKTypeUtility array:mut addObject:component];
     }
@@ -82,7 +82,7 @@ static id<FBSDKNumberParsing> _numberParser;
 
     NSArray *parameters = dict[CODELESS_MAPPING_PARAMETERS_KEY];
     mut = [NSMutableArray array];
-    for (NSDictionary *info in parameters) {
+    for (NSDictionary<NSString *, id> *info in parameters) {
       FBSDKCodelessParameterComponent *component = [[FBSDKCodelessParameterComponent alloc] initWithJSON:info];
       [FBSDKTypeUtility array:mut addObject:component];
     }

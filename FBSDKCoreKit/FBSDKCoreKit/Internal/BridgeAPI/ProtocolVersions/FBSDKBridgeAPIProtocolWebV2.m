@@ -64,9 +64,9 @@
 
 - (NSURL *)_redirectURLWithActionID:(NSString *)actionID methodName:(NSString *)methodName error:(NSError **)errorRef
 {
-  NSDictionary *queryParameters = nil;
+  NSDictionary<NSString *, id> *queryParameters = nil;
   if (actionID) {
-    NSDictionary *bridgeArgs = @{ FBSDKBridgeAPIProtocolNativeV1BridgeParameterInputKeys.actionID : actionID };
+    NSDictionary<NSString *, id> *bridgeArgs = @{ FBSDKBridgeAPIProtocolNativeV1BridgeParameterInputKeys.actionID : actionID };
     NSString *bridgeArgsString = [FBSDKBasicUtility JSONStringForObject:bridgeArgs
                                                                   error:NULL
                                                    invalidObjectHandler:NULL];
@@ -92,7 +92,7 @@
                            scheme:(NSString *)scheme
                        methodName:(NSString *)methodName
                     methodVersion:(NSString *)methodVersion
-                       parameters:(NSDictionary *)parameters
+                       parameters:(NSDictionary<NSString *, id> *)parameters
                             error:(NSError *__autoreleasing *)errorRef
 {
   FBSDKServerConfiguration *serverConfiguration = [self.serverConfigurationProvider cachedServerConfiguration];
@@ -132,10 +132,10 @@
                                                      error:errorRef];
 }
 
-- (NSDictionary *)responseParametersForActionID:(NSString *)actionID
-                                queryParameters:(NSDictionary *)queryParameters
-                                      cancelled:(BOOL *)cancelledRef
-                                          error:(NSError *__autoreleasing *)errorRef
+- (NSDictionary<NSString *, id> *)responseParametersForActionID:(NSString *)actionID
+                                                queryParameters:(NSDictionary<NSString *, id> *)queryParameters
+                                                      cancelled:(BOOL *)cancelledRef
+                                                          error:(NSError *__autoreleasing *)errorRef
 {
   return [_nativeBridge responseParametersForActionID:actionID
                                       queryParameters:queryParameters

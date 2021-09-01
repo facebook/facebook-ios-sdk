@@ -147,7 +147,7 @@
   return (useNativeDialog && [FBSDKInternalUtility.sharedUtility isFacebookAppInstalled]);
 }
 
-- (void)_handleCompletionWithDialogResults:(NSDictionary *)results error:(NSError *)error
+- (void)_handleCompletionWithDialogResults:(NSDictionary<NSString *, id> *)results error:(NSError *)error
 {
   if (!_delegate) {
     return;

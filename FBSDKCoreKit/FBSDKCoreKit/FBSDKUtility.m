@@ -25,7 +25,7 @@
 
 @implementation FBSDKUtility
 
-+ (NSDictionary *)dictionaryWithQueryString:(NSString *)queryString
++ (NSDictionary<NSString *, id> *)dictionaryWithQueryString:(NSString *)queryString
 {
   return [FBSDKBasicUtility dictionaryWithQueryString:queryString];
 }
@@ -94,7 +94,7 @@
 
 + (NSURL *)unversionedFacebookURLWithHostPrefix:(NSString *)hostPrefix
                                            path:(NSString *)path
-                                queryParameters:(NSDictionary *)queryParameters
+                                queryParameters:(NSDictionary<NSString *, id> *)queryParameters
                                           error:(NSError *__autoreleasing *)errorRef
 {
   return [FBSDKInternalUtility.sharedUtility unversionedFacebookURLWithHostPrefix:hostPrefix

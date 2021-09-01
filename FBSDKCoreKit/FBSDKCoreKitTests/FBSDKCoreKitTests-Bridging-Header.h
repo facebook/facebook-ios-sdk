@@ -203,8 +203,8 @@ NS_SWIFT_NAME(FBProfilePictureViewState)
 
 // Needed to expose private methods to the ServerConfigurationFixtures class
 @interface FBSDKServerConfiguration (ServerConfigurationFixtures)
-- (nullable NSDictionary *)dialogConfigurations;
-- (nullable NSDictionary *)dialogFlows;
+- (nullable NSDictionary<NSString *, id> *)dialogConfigurations;
+- (nullable NSDictionary<NSString *, id> *)dialogFlows;
 @end
 
 // Defined in FBSDKViewHierarchy and needed in ViewHierarchyTests.swift

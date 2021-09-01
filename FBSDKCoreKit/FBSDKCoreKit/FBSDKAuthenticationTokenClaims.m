@@ -145,7 +145,7 @@ static _Nullable id<FBSDKSettings> _settings;
   NSData *claimsData = [FBSDKBase64 decodeAsData:[FBSDKBase64 base64FromBase64Url:encodedClaims]];
 
   if (claimsData) {
-    NSDictionary *claimsDict = [FBSDKTypeUtility JSONObjectWithData:claimsData options:0 error:&error];
+    NSDictionary<NSString *, id> *claimsDict = [FBSDKTypeUtility JSONObjectWithData:claimsData options:0 error:&error];
     if (!error) {
       NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];
 
@@ -182,7 +182,7 @@ static _Nullable id<FBSDKSettings> _settings;
       NSString *userBirthday = [FBSDKTypeUtility coercedToStringValue:claimsDict[@"user_birthday"]];
 
       NSMutableDictionary<NSString *, NSNumber *> *userAgeRange;
-      NSDictionary *rawUserAgeRange = [FBSDKTypeUtility dictionaryValue:claimsDict[@"user_age_range"]];
+      NSDictionary<NSString *, id> *rawUserAgeRange = [FBSDKTypeUtility dictionaryValue:claimsDict[@"user_age_range"]];
       if (rawUserAgeRange.count > 0) {
         userAgeRange = NSMutableDictionary.new;
         for (NSString *key in rawUserAgeRange) {
@@ -238,9 +238,9 @@ static _Nullable id<FBSDKSettings> _settings;
   return nil;
 }
 
-+ (nullable NSMutableDictionary<NSString *, NSString *> *)extractLocationDictFromClaims:(NSDictionary *)claimsDict key:(NSString *)keyName
++ (nullable NSMutableDictionary<NSString *, NSString *> *)extractLocationDictFromClaims:(NSDictionary<NSString *, id> *)claimsDict key:(NSString *)keyName
 {
-  NSDictionary *rawLocationData = [FBSDKTypeUtility dictionaryValue:claimsDict[keyName]];
+  NSDictionary<NSString *, id> *rawLocationData = [FBSDKTypeUtility dictionaryValue:claimsDict[keyName]];
   NSMutableDictionary<NSString *, NSString *> *location;
   if (rawLocationData.count > 0) {
     location = NSMutableDictionary.new;

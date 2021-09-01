@@ -122,7 +122,7 @@ static BOOL _isConfigured;
 {
   [self validateConfiguration];
   FBSDKURL *parsedUrl = [FBSDKURL URLWithURL:url];
-  NSDictionary *extras = parsedUrl.appLinkExtras;
+  NSDictionary<NSString *, id> *extras = parsedUrl.appLinkExtras;
   if (extras) {
     NSString *deeplinkContextString = extras[@"deeplink_context"];
 
@@ -130,7 +130,7 @@ static BOOL _isConfigured;
     if (deeplinkContextString.length > 0) {
       NSError *error = nil;
       NSDictionary<id, id> *deeplinkContextData = [FBSDKBasicUtility objectForJSONString:deeplinkContextString error:&error];
-      if (!error && [deeplinkContextData isKindOfClass:[NSDictionary class]]) {
+      if (!error && [deeplinkContextData isKindOfClass:[NSDictionary<NSString *, id> class]]) {
         return deeplinkContextData[@"promo_code"];
       }
     }
@@ -145,7 +145,7 @@ static BOOL _isConfigured;
     return NO;
   }
   [self validateConfiguration];
-  for (NSDictionary *urlType in [_infoDictionaryProvider objectForInfoDictionaryKey:@"CFBundleURLTypes"]) {
+  for (NSDictionary<NSString *, id> *urlType in [_infoDictionaryProvider objectForInfoDictionaryKey:@"CFBundleURLTypes"]) {
     for (NSString *urlScheme in urlType[@"CFBundleURLSchemes"]) {
       if ([urlScheme caseInsensitiveCompare:scheme] == NSOrderedSame) {
         return YES;

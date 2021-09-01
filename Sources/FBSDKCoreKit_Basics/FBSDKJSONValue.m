@@ -50,7 +50,7 @@ static NSArray<FBSDKJSONField *> *createArray(id obj)
 
 static NSDictionary<NSString *, FBSDKJSONField *> *createDictionary(id obj)
 {
-  NSDictionary *const original = FBSDK_CAST_TO_CLASS_OR_NIL(obj, NSDictionary);
+  NSDictionary<NSString *, id> *const original = FBSDK_CAST_TO_CLASS_OR_NIL(obj, NSDictionary);
   if (!original) {
     return @{};
   }
@@ -93,7 +93,7 @@ static NSDictionary<NSString *, FBSDKJSONField *> *createDictionary(id obj)
 {
   if (arrayMatcher && [_rawObject isKindOfClass:[NSArray class]]) {
     arrayMatcher(createArray(_rawObject));
-  } else if (dictMatcher && [_rawObject isKindOfClass:[NSDictionary class]]) {
+  } else if (dictMatcher && [_rawObject isKindOfClass:[NSDictionary<NSString *, id> class]]) {
     dictMatcher(createDictionary(_rawObject));
   }
 }

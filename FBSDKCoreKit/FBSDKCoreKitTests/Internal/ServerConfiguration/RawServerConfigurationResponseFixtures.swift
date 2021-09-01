@@ -46,7 +46,7 @@ class RawServerConfigurationResponseFixtures: NSObject {
   }
 
   /// Provides a dictionary with well-known keys and random values for a network provided server configuration
-  class var random: [AnyHashable: Any] {
+  class var random: [String: Any] {
     [
       Keys.appEventsFeatureBitmask: Fuzzer.random,
       Keys.appName: Fuzzer.random,

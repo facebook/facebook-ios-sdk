@@ -203,7 +203,7 @@ _Nullable id getVariableFromInstance(NSObject *instance, NSString *variableName)
     path = [NSMutableArray array];
   }
 
-  NSDictionary *componentInfo = [FBSDKViewHierarchy getAttributesOf:obj parent:parent];
+  NSDictionary<NSString *, id> *componentInfo = [FBSDKViewHierarchy getAttributesOf:obj parent:parent];
 
   FBSDKCodelessPathComponent *pathComponent = [[FBSDKCodelessPathComponent alloc]
                                                initWithJSON:componentInfo];
@@ -266,7 +266,7 @@ _Nullable id getVariableFromInstance(NSObject *instance, NSString *variableName)
 
   NSObject *parent = [FBSDKViewHierarchy getParent:obj];
 
-  NSDictionary *simpleAttributes = [FBSDKViewHierarchy getAttributesOf:obj parent:parent];
+  NSDictionary<NSString *, id> *simpleAttributes = [FBSDKViewHierarchy getAttributesOf:obj parent:parent];
 
   NSMutableDictionary *result = [NSMutableDictionary dictionaryWithDictionary:simpleAttributes];
 

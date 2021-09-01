@@ -34,7 +34,7 @@ static NSString *const kErrorCategoryLogin = @"login";
   NSMutableDictionary *_configurationDictionary;
 }
 
-- (instancetype)initWithDictionary:(NSDictionary *)dictionary
+- (instancetype)initWithDictionary:(NSDictionary<NSString *, id> *)dictionary
 {
   if ((self = [super init])) {
     if (dictionary) {
@@ -112,9 +112,9 @@ static NSString *const kErrorCategoryLogin = @"login";
   return configuration;
 }
 
-- (void)updateWithArray:(NSArray<NSDictionary *> *)array
+- (void)updateWithArray:(NSArray<NSDictionary<NSString *, id> *> *)array
 {
-  for (NSDictionary *dictionary in [FBSDKTypeUtility arrayValue:array]) {
+  for (NSDictionary<NSString *, id> *dictionary in [FBSDKTypeUtility arrayValue:array]) {
     [FBSDKTypeUtility dictionary:dictionary enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
       FBSDKGraphRequestError category;
       NSString *action = [FBSDKTypeUtility coercedToStringValue:dictionary[@"name"]];
@@ -129,8 +129,8 @@ static NSString *const kErrorCategoryLogin = @"login";
       NSArray *options = dictionary[@"recovery_options"];
 
       NSArray *validItems = [FBSDKTypeUtility dictionary:dictionary objectForKey:@"items" ofType:NSArray.class];
-      for (NSDictionary *codeSubcodesDictionary in validItems) {
-        NSDictionary *validCodeSubcodesDictionary = [FBSDKTypeUtility dictionaryValue:codeSubcodesDictionary];
+      for (NSDictionary<NSString *, id> *codeSubcodesDictionary in validItems) {
+        NSDictionary<NSString *, id> *validCodeSubcodesDictionary = [FBSDKTypeUtility dictionaryValue:codeSubcodesDictionary];
         if (!validCodeSubcodesDictionary) {
           continue;
         }
@@ -181,9 +181,9 @@ static NSString *const kErrorCategoryLogin = @"login";
 
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
-  NSSet *classes = [[NSSet alloc] initWithObjects:[NSDictionary class], [FBSDKErrorRecoveryConfiguration class], nil];
-  NSDictionary *configurationDictionary = [decoder decodeObjectOfClasses:classes
-                                                                  forKey:FBSDKERRORCONFIGURATION_DICTIONARY_KEY];
+  NSSet *classes = [[NSSet alloc] initWithObjects:[NSDictionary<NSString *, id> class], [FBSDKErrorRecoveryConfiguration class], nil];
+  NSDictionary<NSString *, id> *configurationDictionary = [decoder decodeObjectOfClasses:classes
+                                                                                  forKey:FBSDKERRORCONFIGURATION_DICTIONARY_KEY];
   return [self initWithDictionary:configurationDictionary];
 }
 

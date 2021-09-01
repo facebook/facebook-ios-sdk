@@ -74,7 +74,7 @@
                                                                            HTTPMethod:FBSDKHTTPMethodPOST];
 
     [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
-      if (!error && [result isKindOfClass:[NSDictionary class]] && result[@"success"]) {
+      if (!error && [result isKindOfClass:[NSDictionary<NSString *, id> class]] && result[@"success"]) {
         [FBSDKCrashHandler clearCrashReportFiles];
       }
     }];

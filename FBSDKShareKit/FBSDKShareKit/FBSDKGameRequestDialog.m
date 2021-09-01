@@ -75,7 +75,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 {
   NSError *error;
   __weak typeof(self) weakSelf = self;
-  NSDictionary *contentDictionary = [self _convertGameRequestContentToDictionaryV2:_content];
+  NSDictionary<NSString *, id> *contentDictionary = [self _convertGameRequestContentToDictionaryV2:_content];
 
   [self validateWithError:&error];
   if (error) {
@@ -103,7 +103,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
                                          message:@"Facebook app did not return a url"];
     [self handleDialogError:error];
   } else {
-    NSDictionary *parsedResults = [self parsedPayloadFromURL:url];
+    NSDictionary<NSString *, id> *parsedResults = [self parsedPayloadFromURL:url];
     if (parsedResults) {
       [_delegate gameRequestDialog:self didCompleteWithResults:parsedResults];
     }
@@ -315,7 +315,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 
  #pragma mark - FBSDKWebDialogDelegate
 
-- (void)webDialog:(FBSDKWebDialog *)webDialog didCompleteWithResults:(NSDictionary *)results
+- (void)webDialog:(FBSDKWebDialog *)webDialog didCompleteWithResults:(NSDictionary<NSString *, id> *)results
 {
   if (_webDialog != webDialog) {
     return;
@@ -344,7 +344,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 
  #pragma mark - FBSDKBridgeAPI
 
-- (BOOL)_launchDialogViaBridgeAPIWithParameters:(NSDictionary *)parameters
+- (BOOL)_launchDialogViaBridgeAPIWithParameters:(NSDictionary<NSString *, id> *)parameters
 {
   UIViewController *topMostViewController = [FBSDKInternalUtility.sharedUtility topMostViewController];
   if (!topMostViewController) {
@@ -394,7 +394,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 
  #pragma mark - Response Handling
 
-- (void)_didCompleteWithResults:(NSDictionary *)results
+- (void)_didCompleteWithResults:(NSDictionary<NSString *, id> *)results
 {
   if (!results) {
     NSError *error = [NSError errorWithDomain:FBSDKShareErrorDomain
@@ -454,7 +454,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   _isAwaitingResult = NO;
 }
 
-- (void)_handleCompletionWithDialogResults:(NSDictionary *)results error:(NSError *)error
+- (void)_handleCompletionWithDialogResults:(NSDictionary<NSString *, id> *)results error:(NSError *)error
 {
   if (!_delegate) {
     return;

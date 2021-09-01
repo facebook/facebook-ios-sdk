@@ -31,7 +31,7 @@
 
 @interface FBSDKBridgeAPIResponse ()
 - (instancetype)initWithRequest:(id<FBSDKBridgeAPIRequest>)request
-             responseParameters:(NSDictionary *)responseParameters
+             responseParameters:(NSDictionary<NSString *, id> *)responseParameters
                       cancelled:(BOOL)cancelled
                           error:(NSError *)error
   NS_DESIGNATED_INITIALIZER;
@@ -102,10 +102,10 @@
   id<FBSDKBridgeAPIProtocol> protocol = request.protocol;
   BOOL cancelled;
   NSError *error;
-  NSDictionary *responseParameters = [protocol responseParametersForActionID:request.actionID
-                                                             queryParameters:queryParameters
-                                                                   cancelled:&cancelled
-                                                                       error:&error];
+  NSDictionary<NSString *, id> *responseParameters = [protocol responseParametersForActionID:request.actionID
+                                                                             queryParameters:queryParameters
+                                                                                   cancelled:&cancelled
+                                                                                       error:&error];
   if (errorRef != NULL) {
     *errorRef = error;
   }
@@ -132,7 +132,7 @@
  #pragma mark - Object Lifecycle
 
 - (instancetype)initWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
-             responseParameters:(NSDictionary *)responseParameters
+             responseParameters:(NSDictionary<NSString *, id> *)responseParameters
                       cancelled:(BOOL)cancelled
                           error:(NSError *)error
 {

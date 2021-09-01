@@ -38,13 +38,13 @@
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-- (BOOL)setDictionary:(NSDictionary *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility
+- (BOOL)setDictionary:(NSDictionary<NSString *, id> *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility
 {
   NSData *data = value == nil ? nil : [NSKeyedArchiver archivedDataWithRootObject:value];
   return [self setData:data forKey:key accessibility:accessibility];
 }
 
-- (NSDictionary *)dictionaryForKey:(NSString *)key
+- (NSDictionary<NSString *, id> *)dictionaryForKey:(NSString *)key
 {
   NSData *data = [self dataForKey:key];
   if (!data) {

@@ -86,7 +86,7 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
   NSString *_loggingToken;
 }
 
-+ (FBSDKLoginManagerLogger *)loggerFromParameters:(NSDictionary *)parameters
++ (FBSDKLoginManagerLogger *)loggerFromParameters:(NSDictionary<NSString *, id> *)parameters
                                          tracking:(FBSDKLoginTracking)tracking
 {
   NSDictionary<id, id> *clientState = [FBSDKBasicUtility objectForJSONString:parameters[FBSDKLoginManagerLoggingClientStateKey] error:NULL];
@@ -189,9 +189,9 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
   [self logEvent:FBSDKAppEventNameFBSessionAuthHeartbeat result:_lastResult error:_lastError];
 }
 
-+ (NSDictionary *)parametersWithTimeStampAndClientState:(NSDictionary *)loginParams
-                                          forAuthMethod:(NSString *)authMethod
-                                                 logger:(FBSDKLoginManagerLogger *)logger
++ (NSDictionary<NSString *, id> *)parametersWithTimeStampAndClientState:(NSDictionary<NSString *, id> *)loginParams
+                                                          forAuthMethod:(NSString *)authMethod
+                                                                 logger:(FBSDKLoginManagerLogger *)logger
 {
   NSMutableDictionary *params = [loginParams mutableCopy];
 
@@ -248,10 +248,10 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_lo
 }
 
 + (NSString *)clientStateForAuthMethod:(NSString *)authMethod
-                      andExistingState:(NSDictionary *)existingState
+                      andExistingState:(NSDictionary<NSString *, id> *)existingState
                                 logger:(FBSDKLoginManagerLogger *)logger
 {
-  NSDictionary *clientState = @{
+  NSDictionary<NSString *, id> *clientState = @{
     FBSDKLoginManagerLoggerParamAuthMethodKey : authMethod ?: @"",
     FBSDKLoginManagerLoggerParamIdentifierKey : logger.identifier ?: NSUUID.UUID.UUIDString,
     FBSDKLoginManagerLoggingClientStateIsClientState : @YES,

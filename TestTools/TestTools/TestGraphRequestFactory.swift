@@ -22,7 +22,7 @@ import FBSDKCoreKit
 public class TestGraphRequestFactory: NSObject, GraphRequestProviding {
 
   public var capturedGraphPath: String?
-  public var capturedParameters = [AnyHashable: Any]()
+  public var capturedParameters = [String: Any]()
   public var capturedTokenString: String?
   public var capturedHttpMethod: HTTPMethod?
   public var capturedFlags: GraphRequestFlags = []
@@ -32,7 +32,7 @@ public class TestGraphRequestFactory: NSObject, GraphRequestProviding {
 
   public func createGraphRequest(
     withGraphPath graphPath: String,
-    parameters: [AnyHashable: Any],
+    parameters: [String: Any],
     tokenString: String?,
     httpMethod method: HTTPMethod?,
     flags: GraphRequestFlags
@@ -45,7 +45,7 @@ public class TestGraphRequestFactory: NSObject, GraphRequestProviding {
 
     let request = TestGraphRequest(
       graphPath: graphPath,
-      parameters: parameters as? [String: Any] ?? [:],
+      parameters: parameters,
       tokenString: tokenString,
       HTTPMethod: method ?? .get,
       flags: flags
@@ -123,7 +123,7 @@ public class TestGraphRequestFactory: NSObject, GraphRequestProviding {
 
   public func createGraphRequest(
     withGraphPath graphPath: String,
-    parameters: [AnyHashable: Any],
+    parameters: [String: Any],
     flags: GraphRequestFlags
   ) -> GraphRequestProtocol {
     capturedGraphPath = graphPath
@@ -132,7 +132,7 @@ public class TestGraphRequestFactory: NSObject, GraphRequestProviding {
 
     let request = TestGraphRequest(
       graphPath: graphPath,
-      parameters: parameters as? [String: Any] ?? [:],
+      parameters: parameters,
       tokenString: nil,
       HTTPMethod: .get,
       flags: flags

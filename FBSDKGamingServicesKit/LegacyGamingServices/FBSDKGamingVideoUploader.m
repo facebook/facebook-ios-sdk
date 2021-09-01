@@ -89,7 +89,7 @@
 + (void)uploadVideoWithConfiguration:(FBSDKGamingVideoUploaderConfiguration *_Nonnull)configuration
           andResultCompletionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
 {
-  FBSDKGamingServiceResultCompletion completion = ^void (BOOL success, NSDictionary *result, NSError *error) {
+  FBSDKGamingServiceResultCompletion completion = ^void (BOOL success, NSDictionary<NSString *, id> *result, NSError *error) {
     completionHandler(success, result.debugDescription, error);
   };
 
@@ -117,7 +117,7 @@
                    completionHandler:(FBSDKGamingServiceResultCompletionHandler _Nonnull)completionHandler
                   andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler
 {
-  FBSDKGamingServiceResultCompletion completion = ^void (BOOL success, NSDictionary *result, NSError *error) {
+  FBSDKGamingServiceResultCompletion completion = ^void (BOOL success, NSDictionary<NSString *, id> *result, NSError *error) {
     completionHandler(success, result.debugDescription, error);
   };
 

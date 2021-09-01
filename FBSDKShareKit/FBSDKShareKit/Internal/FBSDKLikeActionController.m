@@ -392,7 +392,7 @@ static FBSDKLikeActionControllerCache *_cache = nil;
 
  #pragma mark - FBSDKLikeDialogDelegate
 
-- (void)likeDialog:(FBSDKLikeDialog *)likeDialog didCompleteWithResults:(NSDictionary *)results
+- (void)likeDialog:(FBSDKLikeDialog *)likeDialog didCompleteWithResults:(NSDictionary<NSString *, id> *)results
 {
   FBSDKTriStateBOOL objectIsLiked = FBSDKTriStateBOOLFromNSNumber(results[@"object_is_liked"]);
   NSString *likeCountString = [FBSDKTypeUtility coercedToStringValue:results[@"like_count_string"]];
@@ -461,7 +461,7 @@ static void FBSDKLikeActionControllerLogError(NSString *currentAction,
                                               FBSDKAccessToken *accessToken,
                                               NSError *error)
 {
-  NSDictionary *parameters = @{
+  NSDictionary<NSString *, id> *parameters = @{
     @"object_id" : objectID,
     @"object_type" : NSStringFromFBSDKLikeObjectType(objectType),
     @"current_action" : currentAction,
@@ -620,7 +620,7 @@ static void FBSDKLikeActionControllerAddGetOGObjectLikeRequest(FBSDKAccessToken 
       success = YES;
       result = [FBSDKTypeUtility dictionaryValue:result];
       NSArray *dataSet = [FBSDKTypeUtility arrayValue:result[@"data"]];
-      for (NSDictionary *data in dataSet) {
+      for (NSDictionary<NSString *, id> *data in dataSet) {
         objectIsLiked = FBSDKTriStateBOOLValueYES;
         NSString *applicationID = [FBSDKTypeUtility coercedToStringValue:[data valueForKeyPath:@"application.id"]];
         if ([accessToken.appID isEqualToString:applicationID]) {
@@ -805,7 +805,7 @@ static void FBSDKLikeActionControllerAddRefreshRequests(FBSDKAccessToken *access
 }
 
 - (void)_presentLikeDialogWithUpdateBlock:(fbsdk_like_action_block)updateBlock
-                      analyticsParameters:(NSDictionary *)analyticsParameters
+                      analyticsParameters:(NSDictionary<NSString *, id> *)analyticsParameters
                        fromViewController:(UIViewController *)fromViewController
 {
   [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKLikeControlDidPresentDialog
@@ -825,7 +825,7 @@ static void FBSDKLikeActionControllerAddRefreshRequests(FBSDKAccessToken *access
 }
 
 - (void)_publishIfNeededWithUpdateBlock:(fbsdk_like_action_block)updateBlock
-                    analyticsParameters:(NSDictionary *)analyticsParameters
+                    analyticsParameters:(NSDictionary<NSString *, id> *)analyticsParameters
                      fromViewController:(UIViewController *)fromViewController
 {
   BOOL objectIsLiked = _objectIsLiked;
@@ -839,7 +839,7 @@ static void FBSDKLikeActionControllerAddRefreshRequests(FBSDKAccessToken *access
 }
 
 - (void)_publishLikeWithUpdateBlock:(fbsdk_like_action_block)updateBlock
-                analyticsParameters:(NSDictionary *)analyticsParameters
+                analyticsParameters:(NSDictionary<NSString *, id> *)analyticsParameters
                  fromViewController:(UIViewController *)fromViewController
 {
   _objectIsLikedIsPending = YES;
@@ -885,7 +885,7 @@ static void FBSDKLikeActionControllerAddRefreshRequests(FBSDKAccessToken *access
 }
 
 - (void)_publishUnlikeWithUpdateBlock:(fbsdk_like_action_block)updateBlock
-                  analyticsParameters:(NSDictionary *)analyticsParameters
+                  analyticsParameters:(NSDictionary<NSString *, id> *)analyticsParameters
                    fromViewController:(UIViewController *)fromViewController
 {
   _objectIsLikedIsPending = YES;
@@ -1058,7 +1058,7 @@ static void FBSDKLikeActionControllerAddRefreshRequests(FBSDKAccessToken *access
     }
 
     void (^notificationBlock)(void) = ^{
-      NSDictionary *userInfo = @{FBSDKLikeActionControllerAnimatedKey : @(animated)};
+      NSDictionary<NSString *, id> *userInfo = @{FBSDKLikeActionControllerAnimatedKey : @(animated)};
       [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKLikeActionControllerDidUpdateNotification
                                                           object:self
                                                         userInfo:userInfo];

@@ -164,7 +164,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   [_logger startSessionForLoginManager:self];
   [_logger startAuthMethod:FBSDKLoginManagerLoggerAuthMethod_Applink];
 
-  NSDictionary *params = [self logInParametersFromURL:url];
+  NSDictionary<NSString *, id> *params = [self logInParametersFromURL:url];
   if (params) {
     id<FBSDKLoginCompleting> completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:params
                                                                                          appID:FBSDKSettings.appID
@@ -323,10 +323,10 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   return [_keychainStore stringForKey:FBSDKExpectedNonceKey];
 }
 
-- (NSDictionary *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration
-                               serverConfiguration:(FBSDKServerConfiguration *)serverConfiguration
-                                            logger:(FBSDKLoginManagerLogger *)logger
-                                        authMethod:(NSString *)authMethod
+- (NSDictionary<NSString *, id> *)logInParametersWithConfiguration:(FBSDKLoginConfiguration *)configuration
+                                               serverConfiguration:(FBSDKServerConfiguration *)serverConfiguration
+                                                            logger:(FBSDKLoginManagerLogger *)logger
+                                                        authMethod:(NSString *)authMethod
 {
   // Making sure configuration is not nil in case this method gets called
   // internally without specifying a cofiguration.
@@ -370,7 +370,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   }
 
   NSString *expectedChallenge = [FBSDKLoginManager stringForChallenge];
-  NSDictionary *state = @{@"challenge" : [FBSDKUtility URLEncode:expectedChallenge]};
+  NSDictionary<NSString *, id> *state = @{@"challenge" : [FBSDKUtility URLEncode:expectedChallenge]};
   NSString *clientState = [FBSDKLoginManagerLogger clientStateForAuthMethod:authMethod andExistingState:state logger:logger];
   [FBSDKTypeUtility dictionary:loginParams setObject:clientState forKey:@"state"];
   [self storeExpectedChallenge:expectedChallenge];
@@ -418,11 +418,11 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   [self logIn];
 }
 
-- (NSDictionary *)logInParametersFromURL:(NSURL *)url
+- (NSDictionary<NSString *, id> *)logInParametersFromURL:(NSURL *)url
 {
   NSError *error = nil;
   FBSDKURL *parsedUrl = [FBSDKURL URLWithURL:url];
-  NSDictionary *extras = parsedUrl.appLinkExtras;
+  NSDictionary<NSString *, id> *extras = parsedUrl.appLinkExtras;
 
   if (extras) {
     NSString *fbLoginDataString = extras[@"fb_login"];
@@ -525,10 +525,10 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   BOOL useSafariViewController = [serverConfiguration useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameLogin];
   NSString *authMethod = (useSafariViewController ? FBSDKLoginManagerLoggerAuthMethod_SFVC : FBSDKLoginManagerLoggerAuthMethod_Browser);
 
-  NSDictionary *loginParams = [self logInParametersWithConfiguration:_configuration
-                                                 serverConfiguration:serverConfiguration
-                                                              logger:_logger
-                                                          authMethod:authMethod];
+  NSDictionary<NSString *, id> *loginParams = [self logInParametersWithConfiguration:_configuration
+                                                                 serverConfiguration:serverConfiguration
+                                                                              logger:_logger
+                                                                          authMethod:authMethod];
   NSError *error;
   NSURL *authURL = nil;
   if (loginParams[@"redirect_uri"]) {
@@ -677,7 +677,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   }
 
   if (isFacebookURL) {
-    NSDictionary *urlParameters = [FBSDKLoginUtility queryParamsFromLoginURL:url];
+    NSDictionary<NSString *, id> *urlParameters = [FBSDKLoginUtility queryParamsFromLoginURL:url];
     id<FBSDKLoginCompleting> completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:urlParameters
                                                                                          appID:FBSDKSettings.appID
                                                                             connectionProvider:FBSDKGraphRequestConnectionFactory.new

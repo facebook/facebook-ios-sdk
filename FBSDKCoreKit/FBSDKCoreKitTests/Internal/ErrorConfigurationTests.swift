@@ -317,7 +317,7 @@ class ErrorConfigurationTests: XCTestCase {
   func testParsingRandomEntries() {
     for _ in 0..<100 {
       // swiftlint:disable:next force_cast
-      let array = Fuzzer.randomize(json: rawErrorCodeConfiguration) as! [[AnyHashable: Any]]
+      let array = Fuzzer.randomize(json: rawErrorCodeConfiguration) as! [[String: Any]]
       let configuration = ErrorConfiguration(dictionary: nil)
       configuration.update(with: array)
     }

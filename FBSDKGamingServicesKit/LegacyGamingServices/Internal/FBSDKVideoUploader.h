@@ -39,12 +39,12 @@ NS_SWIFT_NAME(VideoUploader)
  @param parameters Optional parameters for video uploads. See Graph API documentation for the full list of parameters https://developers.facebook.com/docs/graph-api/reference/video
  @param delegate Receiver's delegate
  */
-- (instancetype)initWithVideoName:(NSString *)videoName videoSize:(NSUInteger)videoSize parameters:(NSDictionary *)parameters delegate:(id<FBSDKVideoUploaderDelegate>)delegate;
+- (instancetype)initWithVideoName:(NSString *)videoName videoSize:(NSUInteger)videoSize parameters:(NSDictionary<NSString *, id> *)parameters delegate:(id<FBSDKVideoUploaderDelegate>)delegate;
 
 /**
   Optional parameters for video uploads. See Graph API documentation for the full list of parameters https://developers.facebook.com/docs/graph-api/reference/video
  */
-@property (copy, nonatomic) NSDictionary *parameters;
+@property (copy, nonatomic) NSDictionary<NSString *, id> *parameters;
 
 /**
   The graph node to which video should be uploaded

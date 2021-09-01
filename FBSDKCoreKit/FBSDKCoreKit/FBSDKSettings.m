@@ -567,7 +567,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
         g_dataProcessingOptions = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[NSString.class, NSNumber.class, NSArray.class, NSDictionary.class, NSSet.class]] fromData:data error:nil];
       } else {
         NSDictionary<NSString *, id> *dataProcessingOptions = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-        if (dataProcessingOptions && [dataProcessingOptions isKindOfClass:[NSDictionary class]]) {
+        if (dataProcessingOptions && [dataProcessingOptions isKindOfClass:[NSDictionary<NSString *, id> class]]) {
           g_dataProcessingOptions = dataProcessingOptions;
         }
       }

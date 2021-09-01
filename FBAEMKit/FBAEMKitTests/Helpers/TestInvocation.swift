@@ -28,7 +28,7 @@ class TestInvocation: AEMInvocation {
     _ event: String,
     currency: String?,
     value: NSNumber?,
-    parameters: [AnyHashable: Any]?,
+    parameters: [String: Any]?,
     configs: [String: [AEMConfiguration]]?
   ) -> Bool {
     attributionCallCount += 1

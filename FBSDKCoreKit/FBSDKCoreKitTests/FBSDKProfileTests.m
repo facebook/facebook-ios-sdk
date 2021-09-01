@@ -797,7 +797,7 @@ NSString *const heightKey = @"height";
 - (void)testLoadProfileWithRandomData
 {
   for (int i = 0; i < 100; i++) {
-    NSDictionary *randomizedResult = [Fuzzer randomizeWithJson:self.sampleGraphResult];
+    NSDictionary<NSString *, id> *randomizedResult = [Fuzzer randomizeWithJson:self.sampleGraphResult];
     __block BOOL completed = NO;
     [FBSDKProfile loadProfileWithToken:SampleAccessTokens.validToken
                             completion:^(FBSDKProfile *_Nullable profile, NSError *_Nullable error) {
@@ -989,7 +989,7 @@ NSString *const heightKey = @"height";
 
 // MARK: Helper
 
-- (NSDictionary *)sampleGraphResult
+- (NSDictionary<NSString *, id> *)sampleGraphResult
 {
   return @{
     @"id" : SampleUserProfiles.valid.userID,

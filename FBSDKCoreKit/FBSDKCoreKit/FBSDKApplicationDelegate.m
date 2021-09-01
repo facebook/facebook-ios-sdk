@@ -412,7 +412,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 // MARK: Finish Launching
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary<NSString *, id> *)launchOptions
 {
   if (self.isAppLaunched) {
     return NO;
@@ -472,7 +472,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 #endif
 
 - (BOOL)notifyLaunchObserversWithApplication:(UIApplication *)application
-                               launchOptions:(NSDictionary *)launchOptions
+                               launchOptions:(NSDictionary<NSString *, id> *)launchOptions
 {
   NSArray<id<FBSDKApplicationObserving>> *observers = [self.applicationObservers allObjects];
   BOOL someObserverHandledLaunch = NO;
@@ -579,7 +579,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   [FBSDKTypeUtility dictionary:logData setObject:targetURL.absoluteString forKey:@"targetURL"];
   [FBSDKTypeUtility dictionary:logData setObject:targetURL.host forKey:@"targetURLHost"];
 
-  NSDictionary *refererData = applinkData[@"referer_data"];
+  NSDictionary<NSString *, id> *refererData = applinkData[@"referer_data"];
   if (refererData) {
     [FBSDKTypeUtility dictionary:logData setObject:refererData[@"target_url"] forKey:@"referralTargetURL"];
     [FBSDKTypeUtility dictionary:logData setObject:refererData[@"url"] forKey:@"referralURL"];
@@ -595,18 +595,18 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 - (void)_logSDKInitialize
 {
-  NSDictionary *metaInfo = [NSDictionary dictionaryWithObjects:@[@"login_lib_included",
-                                                                 @"marketing_lib_included",
-                                                                 @"messenger_lib_included",
-                                                                 @"places_lib_included",
-                                                                 @"share_lib_included",
-                                                                 @"tv_lib_included"]
-                                                       forKeys:@[@"FBSDKLoginManager",
-                                                                 @"FBSDKAutoLog",
-                                                                 @"FBSDKMessengerButton",
-                                                                 @"FBSDKPlacesManager",
-                                                                 @"FBSDKShareDialog",
-                                                                 @"FBSDKTVInterfaceFactory"]];
+  NSDictionary<NSString *, id> *metaInfo = [NSDictionary<NSString *, id> dictionaryWithObjects:@[@"login_lib_included",
+                                                                                                 @"marketing_lib_included",
+                                                                                                 @"messenger_lib_included",
+                                                                                                 @"places_lib_included",
+                                                                                                 @"share_lib_included",
+                                                                                                 @"tv_lib_included"]
+                                                                                       forKeys:@[@"FBSDKLoginManager",
+                                                                                                 @"FBSDKAutoLog",
+                                                                                                 @"FBSDKMessengerButton",
+                                                                                                 @"FBSDKPlacesManager",
+                                                                                                 @"FBSDKShareDialog",
+                                                                                                 @"FBSDKTVInterfaceFactory"]];
 
   NSInteger bitmask = 0;
   NSInteger bit = 0;

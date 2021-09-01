@@ -95,14 +95,14 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   return self;
 }
 
-- (instancetype)initWithJSON:(NSDictionary *)dict
+- (instancetype)initWithJSON:(NSDictionary<NSString *, id> *)dict
                     swizzler:(Class<FBSDKSwizzling>)swizzler
                  eventLogger:(id<FBSDKEventLogging>)eventLogger
 {
   if ((self = [self initWithSwizzler:swizzler eventLogger:eventLogger])) {
     NSArray *eventBindingsDict = [FBSDKTypeUtility arrayValue:dict[@"event_bindings"]];
     NSMutableArray *bindings = [NSMutableArray array];
-    for (NSDictionary *d in eventBindingsDict) {
+    for (NSDictionary<NSString *, id> *d in eventBindingsDict) {
       FBSDKEventBinding *e = [[FBSDKEventBinding alloc] initWithJSON:d eventLogger:eventLogger];
       [FBSDKTypeUtility array:bindings addObject:e];
     }
@@ -115,7 +115,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 {
   NSMutableArray *result = [NSMutableArray array];
 
-  for (NSDictionary *json in array) {
+  for (NSDictionary<NSString *, id> *json in array) {
     FBSDKEventBinding *binding = [[FBSDKEventBinding alloc] initWithJSON:json
                                                              eventLogger:self.eventLogger];
     [FBSDKTypeUtility array:result addObject:binding];

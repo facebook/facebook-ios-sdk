@@ -22,13 +22,13 @@ class TestAppEventsReporter: NSObject, AppEventsReporter {
   var capturedEvent: String?
   var capturedCurrency: String?
   var capturedValue: NSNumber?
-  var capturedParameters: [AnyHashable: Any]?
+  var capturedParameters: [String: Any]?
 
   func enable() {
     enableWasCalled = true
   }
 
-  func recordAndUpdate(event: String, currency: String?, value: NSNumber?, parameters: [AnyHashable: Any]?) {
+  func recordAndUpdate(event: String, currency: String?, value: NSNumber?, parameters: [String: Any]?) {
     capturedEvent = event
     capturedCurrency = currency
     capturedValue = value

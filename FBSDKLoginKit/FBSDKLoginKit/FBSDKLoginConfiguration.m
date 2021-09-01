@@ -152,7 +152,7 @@ FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
 
 + (nullable FBSDKLoginAuthType)authTypeForString:(NSString *)rawValue
 {
-  NSDictionary *map = @{
+  NSDictionary<NSString *, id> *map = @{
     (NSString *)FBSDKLoginAuthTypeRerequest : FBSDKLoginAuthTypeRerequest,
     (NSString *)FBSDKLoginAuthTypeReauthorize : FBSDKLoginAuthTypeReauthorize
   };

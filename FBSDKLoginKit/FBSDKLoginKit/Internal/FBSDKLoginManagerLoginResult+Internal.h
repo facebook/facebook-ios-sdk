@@ -26,7 +26,7 @@
 
 @interface FBSDKLoginManagerLoginResult ()
 
-@property (nonatomic, readonly) NSDictionary *loggingExtras;
+@property (nonatomic, readonly) NSDictionary<NSString *, id> *loggingExtras;
 
 // legacy flag indicating this is an intermediary result only for logging purposes.
 @property (nonatomic, assign) BOOL isSkipped;

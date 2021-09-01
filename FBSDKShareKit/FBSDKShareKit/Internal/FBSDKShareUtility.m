@@ -323,7 +323,7 @@
   for (FBSDKSharePhoto *photo in content.photos) {
     if (photo.image != nil) {
       dispatch_group_enter(group);
-      NSDictionary *stagingParameters = @{
+      NSDictionary<NSString *, id> *stagingParameters = @{
         @"file" : photo.image,
       };
       FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/staging_resources"
@@ -471,7 +471,7 @@
   if (!value
       || ([value isKindOfClass:[NSString class]] && !((NSString *)value).length)
       || ([value isKindOfClass:[NSArray class]] && !((NSArray *)value).count)
-      || ([value isKindOfClass:[NSDictionary class]] && !((NSDictionary *)value).count)) {
+      || ([value isKindOfClass:[NSDictionary<NSString *, id> class]] && !((NSDictionary<NSString *, id> *)value).count)) {
     if (errorRef != NULL) {
       *errorRef = [FBSDKError requiredArgumentErrorWithDomain:FBSDKShareErrorDomain
                                                          name:name

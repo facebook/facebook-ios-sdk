@@ -129,7 +129,7 @@ NS_ASSUME_NONNULL_BEGIN
                                               Event:(NSString *)event
                                            currency:(nullable NSString *)currency
                                               value:(nullable NSNumber *)value
-                                         parameters:(nullable NSDictionary *)parameters
+                                         parameters:(nullable NSDictionary<NSString *, id> *)parameters
                                             configs:(NSDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)configs;
 
 + (void)_sendDebuggingRequest:(FBAEMInvocation *)invocation;
@@ -148,7 +148,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)_loadConfigs;
 
-+ (void)_addConfigs:(nullable NSArray<NSDictionary *> *)configs;
++ (void)_addConfigs:(nullable NSArray<NSDictionary<NSString *, id> *> *)configs;
 
 + (NSMutableArray<FBAEMInvocation *> *)_loadReportData;
 

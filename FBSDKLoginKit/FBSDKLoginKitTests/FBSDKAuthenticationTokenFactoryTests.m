@@ -42,7 +42,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
                  claims:(NSString *)claims
          certificateKey:(NSString *)key
              completion:(FBSDKVerifySignatureCompletionBlock)completion;
-- (NSDictionary *)claims;
+- (NSDictionary<NSString *, id> *)claims;
 - (NSURL *)_certificateEndpoint;
 
 @end
@@ -289,7 +289,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
   FBSDKAuthenticationTokenFactory *factory = [[FBSDKAuthenticationTokenFactory alloc] initWithSessionProvider:session];
 
   for (int i = 0; i < 100; i++) {
-    NSDictionary *randomizedCertificates = [Fuzzer randomizeWithJson:self.validRawCertificateResponse];
+    NSDictionary<NSString *, id> *randomizedCertificates = [Fuzzer randomizeWithJson:self.validRawCertificateResponse];
     __block BOOL wasCalled = NO;
     [factory verifySignature:_signature
                       header:_encodedHeader
@@ -309,7 +309,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 // MARK: - Helpers
 
-- (NSDictionary *)validRawCertificateResponse
+- (NSDictionary<NSString *, id> *)validRawCertificateResponse
 {
   return @{
     _certificateKey : _certificate,
@@ -320,7 +320,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 - (NSData *)mangledCertificateData
 {
   NSString *mangledCertificate = [_certificate stringByReplacingOccurrencesOfString:@"a" withString:@"b"];
-  NSDictionary *certificates = @{
+  NSDictionary<NSString *, id> *certificates = @{
     _certificateKey : mangledCertificate
   };
 
@@ -334,7 +334,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 - (NSData *)validIncorrectCertificateData
 {
-  NSDictionary *certificates = @{
+  NSDictionary<NSString *, id> *certificates = @{
     _certificateKey : _incorrectCertificate
   };
 

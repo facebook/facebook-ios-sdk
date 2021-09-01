@@ -179,7 +179,7 @@ static int const FBClientStateChallengeLength = 20;
 
   if (isFacebookURL) {
     NSError *error;
-    NSDictionary *params = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
+    NSDictionary<NSString *, id> *params = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
 
     if (![self validateChallenge:params[ChalllengeKey]]) {
       error = [FBSDKError errorWithCode:FBSDKLoginErrorBadChallengeString

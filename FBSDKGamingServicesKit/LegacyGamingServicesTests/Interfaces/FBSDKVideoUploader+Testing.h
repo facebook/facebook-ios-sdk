@@ -31,20 +31,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithVideoName:(NSString *)videoName
                         videoSize:(NSUInteger)videoSize
-                       parameters:(NSDictionary *)parameters
+                       parameters:(NSDictionary<NSString *, id> *)parameters
                          delegate:(id<FBSDKVideoUploaderDelegate>)delegate
                   requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
 NS_SWIFT_NAME(init(videoName:videoSize:parameters:delegate:requestProvider:));
 
 - (void)_postFinishRequest;
 
-- (void)_startTransferRequestWithOffsetDictionary:(NSDictionary *)offsetDictionary;
+- (void)_startTransferRequestWithOffsetDictionary:(NSDictionary<NSString *, id> *)offsetDictionary;
 
 - (NSNumberFormatter *)numberFormatter;
 
-- (NSDictionary *)_extractOffsetsFromResultDictionary:(id)result;
+- (NSDictionary<NSString *, id> *)_extractOffsetsFromResultDictionary:(id)result;
 
-- (void)_startTransferRequestWithNewOffset:(NSDictionary *)offsetDictionary
+- (void)_startTransferRequestWithNewOffset:(NSDictionary<NSString *, id> *)offsetDictionary
                                                 data:(NSData *)data;
 
 @end

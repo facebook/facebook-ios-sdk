@@ -245,15 +245,15 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024; // bytes
 
 + (NSNumber *)_getTotalDiskSpace
 {
-  NSDictionary *attrs = [[NSFileManager new] attributesOfFileSystemForPath:NSHomeDirectory()
-                                                                     error:nil];
+  NSDictionary<NSString *, id> *attrs = [[NSFileManager new] attributesOfFileSystemForPath:NSHomeDirectory()
+                                                                                     error:nil];
   return attrs[NSFileSystemSize];
 }
 
 + (NSNumber *)_getRemainingDiskSpace
 {
-  NSDictionary *attrs = [[NSFileManager new] attributesOfFileSystemForPath:NSHomeDirectory()
-                                                                     error:nil];
+  NSDictionary<NSString *, id> *attrs = [[NSFileManager new] attributesOfFileSystemForPath:NSHomeDirectory()
+                                                                                     error:nil];
   return attrs[NSFileSystemFreeSize];
 }
 

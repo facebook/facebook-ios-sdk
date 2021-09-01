@@ -154,7 +154,7 @@ FBAEMInvocationConfigMode FBAEMInvocationConfigBrandMode = @"BRAND";
 - (BOOL)attributeEvent:(NSString *)event
               currency:(nullable NSString *)currency
                  value:(nullable NSNumber *)value
-            parameters:(nullable NSDictionary *)parameters
+            parameters:(nullable NSDictionary<NSString *, id> *)parameters
                configs:(nullable NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configs
 {
   FBAEMConfiguration *config = [self _findConfig:configs];

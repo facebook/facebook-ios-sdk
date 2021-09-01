@@ -51,7 +51,7 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonDidTap = @"fb_send_button_did_
 
  #pragma mark - FBSDKButtonImpressionTracking
 
-- (NSDictionary *)analyticsParameters
+- (NSDictionary<NSString *, id> *)analyticsParameters
 {
   return nil;
 }
@@ -104,7 +104,7 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonDidTap = @"fb_send_button_did_
   [_dialog show];
 }
 
-- (void)_logTapEventWithEventName:(NSString *)eventName parameters:(NSDictionary *)parameters
+- (void)_logTapEventWithEventName:(NSString *)eventName parameters:(NSDictionary<NSString *, id> *)parameters
 {
   [FBSDKAppEvents logInternalEvent:eventName
                         parameters:parameters

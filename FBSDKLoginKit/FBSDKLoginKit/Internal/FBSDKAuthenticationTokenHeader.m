@@ -41,7 +41,7 @@
   NSData *headerData = [FBSDKBase64 decodeAsData:[FBSDKBase64 base64FromBase64Url:encodedHeader]];
 
   if (headerData) {
-    NSDictionary *header = [FBSDKTypeUtility JSONObjectWithData:headerData options:0 error:&error];
+    NSDictionary<NSString *, id> *header = [FBSDKTypeUtility JSONObjectWithData:headerData options:0 error:&error];
     NSString *alg = [FBSDKTypeUtility dictionary:header objectForKey:@"alg" ofType:NSString.class];
     NSString *typ = [FBSDKTypeUtility dictionary:header objectForKey:@"typ" ofType:NSString.class];
     NSString *kid = [FBSDKTypeUtility dictionary:header objectForKey:@"kid" ofType:NSString.class];

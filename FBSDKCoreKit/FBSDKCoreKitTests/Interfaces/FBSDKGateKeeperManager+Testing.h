@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nonatomic, nullable) id<FBSDKGraphRequestConnectionProviding> connectionProvider;
 @property (class, nonatomic, nullable) id<FBSDKDataPersisting> store;
 
-@property (class, nonatomic, nullable) NSDictionary *gateKeepers;
+@property (class, nonatomic, nullable) NSDictionary<NSString *, id> *gateKeepers;
 @property (class, nonatomic) BOOL requeryFinishedForAppStart;
 @property (class, nonatomic, nullable) NSDate *timestamp;
 @property (class, nonatomic) BOOL isLoadingGateKeepers;

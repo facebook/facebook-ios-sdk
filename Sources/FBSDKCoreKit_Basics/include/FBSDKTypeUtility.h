@@ -55,11 +55,11 @@ NS_SWIFT_NAME(TypeUtility)
 /// Returns a BOOL if the provided object is a BOOL, otherwise returns nil.
 + (BOOL)boolValue:(id)object;
 
-/// Returns an NSDictionary if the provided object is an NSDictionary, otherwise returns nil.
-+ (nullable NSDictionary *)dictionaryValue:(id)object;
+/// Returns an NSDictionary<NSString *, id> if the provided object is an NSDictionary, otherwise returns nil.
++ (nullable NSDictionary<NSString *, id> *)dictionaryValue:(id)object;
 
 /// Returns an object for a given key in the provided dictionary if it matches the stated type
-+ (nullable id)dictionary:(NSDictionary *)dictionary objectForKey:(NSString *)key ofType:(Class)type;
++ (nullable id)dictionary:(NSDictionary<NSString *, id> *)dictionary objectForKey:(NSString *)key ofType:(Class)type;
 
 /**
  Sets an object for a key in a dictionary if it is not nil.
@@ -72,7 +72,7 @@ NS_SWIFT_NAME(TypeUtility)
             forKey:(nullable id<NSCopying>)key;
 
 /// Checks if an object is a valid dictionary type before enumerating its keys and objects
-+ (void)dictionary:(NSDictionary *)dictionary enumerateKeysAndObjectsUsingBlock:(void (NS_NOESCAPE ^)(id key, id obj, BOOL *stop))block;
++ (void)dictionary:(NSDictionary<NSString *, id> *)dictionary enumerateKeysAndObjectsUsingBlock:(void (NS_NOESCAPE ^)(id key, id obj, BOOL *stop))block;
 
 /// Returns an NSInteger if the provided object is an NSInteger, otherwise returns nil.
 + (NSInteger)integerValue:(id)object;

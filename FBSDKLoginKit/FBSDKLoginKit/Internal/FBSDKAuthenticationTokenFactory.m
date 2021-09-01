@@ -224,7 +224,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
                          }
 
                          SecCertificateRef result = NULL;
-                         NSDictionary *certs = [FBSDKTypeUtility JSONObjectWithData:data options:0 error:nil];
+                         NSDictionary<NSString *, id> *certs = [FBSDKTypeUtility JSONObjectWithData:data options:0 error:nil];
                          NSString *certString = [FBSDKTypeUtility dictionary:certs objectForKey:certificateKey ofType:NSString.class];
                          if (!certString) {
                            return completion(nil);

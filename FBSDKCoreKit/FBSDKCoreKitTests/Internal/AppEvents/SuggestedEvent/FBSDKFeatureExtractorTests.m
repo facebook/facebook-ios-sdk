@@ -36,9 +36,9 @@
 
 + (float *)parseFeatures:(NSMutableDictionary *)node;
 
-+ (BOOL)isButton:(NSDictionary *)node;
++ (BOOL)isButton:(NSDictionary<NSString *, id> *)node;
 
-+ (void)update:(NSDictionary *)node
++ (void)update:(NSDictionary<NSString *, id> *)node
           text:(NSMutableString *)buttonTextString
           hint:(NSMutableString *)buttonHintString;
 
@@ -54,9 +54,9 @@
 
 @interface FBSDKFeatureExtractorTests : XCTestCase
 
-@property (nonatomic) NSDictionary *rules;
-@property (nonatomic) NSDictionary *viewHierarchy;
-@property (nonatomic) NSDictionary *interactedNode;
+@property (nonatomic) NSDictionary<NSString *, id> *rules;
+@property (nonatomic) NSDictionary<NSString *, id> *viewHierarchy;
+@property (nonatomic) NSDictionary<NSString *, id> *interactedNode;
 @property (nonatomic) NSArray *siblings;
 
 @property (nonatomic) TestOnDeviceMLModelManager *modelManager;
@@ -276,7 +276,7 @@
 - (void)testGetDenseFeatureParsing
 {
   for (int i = 0; i < 100; i++) {
-    NSDictionary *viewHierarchy = [_viewHierarchy copy];
+    NSDictionary<NSString *, id> *viewHierarchy = [_viewHierarchy copy];
     [FBSDKFeatureExtractor getDenseFeatures:[Fuzzer randomizeWithJson:viewHierarchy]];
   }
 }
@@ -338,7 +338,7 @@
 
 - (void)testIsButton
 {
-  NSDictionary *labelNode = @{
+  NSDictionary<NSString *, id> *labelNode = @{
     @"classname" : @"UILabel",
     @"classtypebitmask" : @"1024",
     @"text" : @"Coffee 5",

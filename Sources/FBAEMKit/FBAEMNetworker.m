@@ -38,7 +38,7 @@ static NSString *const FB_GRAPH_API_CONTENT_TYPE = @"application/json";
 NSErrorDomain const FBAEMErrorDomain = @"com.facebook.aemkit";
 
 - (void)startGraphRequestWithGraphPath:(NSString *)graphPath
-                            parameters:(NSDictionary *)parameters
+                            parameters:(NSDictionary<NSString *, id> *)parameters
                            tokenString:(nullable NSString *)tokenString
                             HTTPMethod:(nullable NSString *)method
                             completion:(FBGraphRequestCompletion)completion
@@ -73,18 +73,18 @@ NSErrorDomain const FBAEMErrorDomain = @"com.facebook.aemkit";
 
   [session executeURLRequest:request completionHandler:^(NSData *responseData, NSURLResponse *response, NSError *error) {
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-    NSDictionary *result = [self parseJSONResponse:responseData error:&error statusCode:httpResponse.statusCode];
+    NSDictionary<NSString *, id> *result = [self parseJSONResponse:responseData error:&error statusCode:httpResponse.statusCode];
     completion(result, error);
   }];
 }
 
-- (NSDictionary *)parseJSONResponse:(NSData *)data
-                              error:(NSError **)error
-                         statusCode:(NSInteger)statusCode
+- (NSDictionary<NSString *, id> *)parseJSONResponse:(NSData *)data
+                                              error:(NSError **)error
+                                         statusCode:(NSInteger)statusCode
 {
   NSString *responseUTF8 = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
   id response = [self parseJSONOrOtherwise:responseUTF8 error:error];
-  NSDictionary *result;
+  NSDictionary<NSString *, id> *result;
 
   if (responseUTF8 == nil) {
     NSString *base64Data = data.length != 0 ? [data base64EncodedStringWithOptions:0] : @"";
@@ -97,7 +97,7 @@ NSErrorDomain const FBAEMErrorDomain = @"com.facebook.aemkit";
     if ((error != NULL) && (*error == nil)) {
       *error = [[NSError alloc] initWithDomain:FBAEMErrorDomain code:statusCode userInfo:nil];
     }
-  } else if ([response isKindOfClass:[NSDictionary class]]) {
+  } else if ([response isKindOfClass:[NSDictionary<NSString *, id> class]]) {
     result = response;
   }
 
@@ -115,7 +115,7 @@ NSErrorDomain const FBAEMErrorDomain = @"com.facebook.aemkit";
   return parsed;
 }
 
-- (void)appendAttachments:(NSDictionary *)attachments
+- (void)appendAttachments:(NSDictionary<NSString *, id> *)attachments
                    toBody:(FBAEMRequestBody *)body
               addFormData:(BOOL)addFormData
 {

@@ -39,7 +39,7 @@ NS_SWIFT_NAME(ViewImpressionTracker)
 
 @property (nonatomic, copy, readonly) NSString *eventName;
 
-- (void)logImpressionWithIdentifier:(NSString *)identifier parameters:(NSDictionary *)parameters;
+- (void)logImpressionWithIdentifier:(NSString *)identifier parameters:(NSDictionary<NSString *, id> *)parameters;
 
 @end
 

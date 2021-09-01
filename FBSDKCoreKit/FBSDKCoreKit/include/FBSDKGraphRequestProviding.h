@@ -35,7 +35,7 @@ NS_SWIFT_NAME(GraphRequestProviding)
 @protocol FBSDKGraphRequestProviding
 
 - (id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
-                                                      parameters:(NSDictionary *)parameters
+                                                      parameters:(NSDictionary<NSString *, id> *)parameters
                                                      tokenString:(nullable NSString *)tokenString
                                                       HTTPMethod:(nullable FBSDKHTTPMethod)method
                                                            flags:(FBSDKGraphRequestFlags)flags;
@@ -56,7 +56,7 @@ NS_SWIFT_NAME(GraphRequestProviding)
                            HTTPMethod:(FBSDKHTTPMethod)method;
 
 - (id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
-                                              parameters:(NSDictionary*)parameters
+                                              parameters:(NSDictionary<NSString *, id> *)parameters
                                                    flags:(FBSDKGraphRequestFlags)flags;
 
 @end

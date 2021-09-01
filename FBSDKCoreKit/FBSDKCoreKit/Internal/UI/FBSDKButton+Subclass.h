@@ -33,7 +33,7 @@
 + (void)setApplicationActivationNotifier:(id)notifier;
 
 - (void)logTapEventWithEventName:(NSString *)eventName
-                      parameters:(NSDictionary *)parameters;
+                      parameters:(NSDictionary<NSString *, id> *)parameters;
 - (void)configureButton;
 - (void) configureWithIcon:(FBSDKIcon *)icon
                      title:(NSString *)title

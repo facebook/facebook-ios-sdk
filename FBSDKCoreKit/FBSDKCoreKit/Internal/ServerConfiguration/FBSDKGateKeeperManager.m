@@ -254,7 +254,7 @@ static id<FBSDKDataPersisting> _store;
   return _connectionProvider;
 }
 
-+ (NSDictionary *)gateKeepers
++ (NSDictionary<NSString *, id> *)gateKeepers
 {
   return _gateKeepers;
 }
@@ -273,7 +273,7 @@ static id<FBSDKDataPersisting> _store;
   return _canLoadGateKeepers;
 }
 
-+ (void)setGateKeepers:(NSDictionary *)gateKeepers
++ (void)setGateKeepers:(NSDictionary<NSString *, id> *)gateKeepers
 {
   _gateKeepers = gateKeepers;
 }

@@ -43,10 +43,10 @@ NS_SWIFT_NAME(BridgeAPIProtocol)
                            scheme:(NSString *)scheme
                        methodName:(NSString *)methodName
                     methodVersion:(NSString *)methodVersion
-                       parameters:(NSDictionary *)parameters
+                       parameters:(NSDictionary<NSString *, id> *)parameters
                             error:(NSError *__autoreleasing *)errorRef;
-- (NSDictionary *)responseParametersForActionID:(NSString *)actionID
-                                queryParameters:(NSDictionary *)queryParameters
+- (NSDictionary<NSString *, id> *)responseParametersForActionID:(NSString *)actionID
+                                queryParameters:(NSDictionary<NSString *, id> *)queryParameters
                                       cancelled:(BOOL *)cancelledRef
                                           error:(NSError *__autoreleasing *)errorRef;
 

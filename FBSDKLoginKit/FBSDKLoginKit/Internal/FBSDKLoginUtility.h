@@ -35,7 +35,7 @@ NS_SWIFT_NAME(LoginUtility)
 + (instancetype)new NS_UNAVAILABLE;
 
 + (NSString *)stringForAudience:(FBSDKDefaultAudience)audience;
-+ (NSDictionary *)queryParamsFromLoginURL:(NSURL *)url;
++ (NSDictionary<NSString *, id> *)queryParamsFromLoginURL:(NSURL *)url;
 
 + (NSString *)userIDFromSignedRequest:(NSString *)signedRequest;
 

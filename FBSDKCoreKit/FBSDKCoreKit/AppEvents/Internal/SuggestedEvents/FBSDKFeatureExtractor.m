@@ -38,10 +38,10 @@
  #define REGEX_ADD_TO_CART_BUTTON_TEXT @"(?i)add to(\\s|\\Z)|update(\\s|\\Z)|cart"
  #define REGEX_ADD_TO_CART_PAGE_TITLE @"(?i)add to(\\s|\\Z)|update(\\s|\\Z)|cart|shop|buy"
 
-static NSDictionary *_languageInfo;
-static NSDictionary *_eventInfo;
-static NSDictionary *_textTypeInfo;
-static NSDictionary *_rules;
+static NSDictionary<NSString *, id> *_languageInfo;
+static NSDictionary<NSString *, id> *_eventInfo;
+static NSDictionary<NSString *, id> *_textTypeInfo;
+static NSDictionary<NSString *, id> *_rules;
 
 void sum(float *val0, float *val1);
 
@@ -99,7 +99,7 @@ static id<FBSDKRulesFromKeyProvider> _keyProvider;
   return [[NSString stringWithFormat:@"%@ | %@, %@", appName, screenName, text] lowercaseString];
 }
 
-+ (nullable float *)getDenseFeatures:(NSDictionary *)viewHierarchy
++ (nullable float *)getDenseFeatures:(NSDictionary<NSString *, id> *)viewHierarchy
 {
   if (!_rules) {
     return nil;
@@ -312,9 +312,9 @@ void sum(float *val0, float *val1)
   }
 }
 
-+ (BOOL)isButton:(NSDictionary *)node
++ (BOOL)isButton:(NSDictionary<NSString *, id> *)node
 {
-  NSDictionary *dictionary = node;
+  NSDictionary<NSString *, id> *dictionary = node;
   if (!dictionary) {
     dictionary = [NSMutableDictionary new];
   }
@@ -324,7 +324,7 @@ void sum(float *val0, float *val1)
   return (classtypebitmask & FBCodelessClassBitmaskUIButton) > 0;
 }
 
-+ (void)update:(NSDictionary *)node
++ (void)update:(NSDictionary<NSString *, id> *)node
           text:(NSMutableString *)buttonTextString
           hint:(NSMutableString *)buttonHintString
 {

@@ -65,7 +65,7 @@ static id<FBSDKSettings> _settings;
 }
 
 - (instancetype)initWithGraphPath:(NSString *)graphPath
-                       parameters:(NSDictionary *)parameters
+                       parameters:(NSDictionary<NSString *, id> *)parameters
 {
   return [self initWithGraphPath:graphPath
                       parameters:parameters
@@ -73,7 +73,7 @@ static id<FBSDKSettings> _settings;
 }
 
 - (instancetype)initWithGraphPath:(NSString *)graphPath
-                       parameters:(NSDictionary *)parameters
+                       parameters:(NSDictionary<NSString *, id> *)parameters
                        HTTPMethod:(FBSDKHTTPMethod)method
 {
   return [self initWithGraphPath:graphPath
@@ -84,7 +84,7 @@ static id<FBSDKSettings> _settings;
 }
 
 - (instancetype)initWithGraphPath:(NSString *)graphPath
-                       parameters:(NSDictionary *)parameters
+                       parameters:(NSDictionary<NSString *, id> *)parameters
                             flags:(FBSDKGraphRequestFlags)requestFlags
 {
   return [self initWithGraphPath:graphPath
@@ -95,7 +95,7 @@ static id<FBSDKSettings> _settings;
 }
 
 - (instancetype)initWithGraphPath:(NSString *)graphPath
-                       parameters:(NSDictionary *)parameters
+                       parameters:(NSDictionary<NSString *, id> *)parameters
                       tokenString:(NSString *)tokenString
                        HTTPMethod:(FBSDKHTTPMethod)method
                             flags:(FBSDKGraphRequestFlags)requestFlags
@@ -111,7 +111,7 @@ static id<FBSDKSettings> _settings;
 }
 
 - (instancetype)initWithGraphPath:(NSString *)graphPath
-                       parameters:(NSDictionary *)parameters
+                       parameters:(NSDictionary<NSString *, id> *)parameters
                       tokenString:(NSString *)tokenString
                        HTTPMethod:(NSString *)method
                             flags:(FBSDKGraphRequestFlags)requestFlags
@@ -127,7 +127,7 @@ static id<FBSDKSettings> _settings;
 }
 
 - (instancetype)initWithGraphPath:(NSString *)graphPath
-                       parameters:(NSDictionary *)parameters
+                       parameters:(NSDictionary<NSString *, id> *)parameters
                       tokenString:(NSString *)tokenString
                        HTTPMethod:(NSString *)method
                           version:(NSString *)version
@@ -146,7 +146,7 @@ static id<FBSDKSettings> _settings;
 }
 
 - (instancetype)initWithGraphPath:(NSString *)graphPath
-                       parameters:(NSDictionary *)parameters
+                       parameters:(NSDictionary<NSString *, id> *)parameters
                       tokenString:(NSString *)tokenString
                           version:(NSString *)version
                        HTTPMethod:(FBSDKHTTPMethod)method
@@ -199,20 +199,20 @@ static id<FBSDKSettings> _settings;
 }
 
 + (NSString *)serializeURL:(NSString *)baseUrl
-                    params:(NSDictionary *)params
+                    params:(NSDictionary<NSString *, id> *)params
 {
   return [self serializeURL:baseUrl params:params httpMethod:FBSDKHTTPMethodGET];
 }
 
 + (NSString *)serializeURL:(NSString *)baseUrl
-                    params:(NSDictionary *)params
+                    params:(NSDictionary<NSString *, id> *)params
                 httpMethod:(NSString *)httpMethod
 {
   return [self serializeURL:baseUrl params:params httpMethod:httpMethod forBatch:NO];
 }
 
 + (NSString *)serializeURL:(NSString *)baseUrl
-                    params:(NSDictionary *)params
+                    params:(NSDictionary<NSString *, id> *)params
                 httpMethod:(NSString *)httpMethod
                   forBatch:(BOOL)forBatch
 {
@@ -241,7 +241,7 @@ static id<FBSDKSettings> _settings;
   return [NSString stringWithFormat:@"%@%@%@", baseUrl, queryPrefix, query];
 }
 
-+ (NSDictionary *)preprocessParams:(NSDictionary *)params
++ (NSDictionary<NSString *, id> *)preprocessParams:(NSDictionary<NSString *, id> *)params
 {
   NSString *debugValue = _settings.graphAPIDebugParamValue;
   if (debugValue) {

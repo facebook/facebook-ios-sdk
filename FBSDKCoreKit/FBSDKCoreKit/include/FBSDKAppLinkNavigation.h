@@ -98,7 +98,7 @@ NS_SWIFT_NAME(default);
 NS_SWIFT_NAME(init(appLink:extras:appLinkData:));
 
 /**
- Creates an NSDictionary with the correct format for iOS callback URLs,
+ Creates an NSDictionary<NSString *, id> with the correct format for iOS callback URLs,
  to be used as 'appLinkData' argument in the call to navigationWithAppLink:extras:appLinkData:
  */
 + (NSDictionary<NSString *, NSDictionary<NSString *, NSString *> *> *)callbackAppLinkDataForAppWithName:(NSString *)appName

@@ -139,7 +139,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
 
   self.secondsSpentInCurrentSession += timeSinceRestore;
 
-  NSDictionary *timeSpentData =
+  NSDictionary<NSString *, id> *timeSpentData =
   @{
     FBSDKTimeSpentPersistKeySessionSecondsSpent : @(self.secondsSpentInCurrentSession),
     FBSDKTimeSpentPersistKeySessionNumInterruptions : @(self.numInterruptionsInCurrentSession),
@@ -242,7 +242,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
   }
 }
 
-- (NSDictionary *)appEventsParametersForActivate
+- (NSDictionary<NSString *, id> *)appEventsParametersForActivate
 {
   return @{
     FBSDKAppEventParameterLaunchSource : [self getSourceApplication],
@@ -250,7 +250,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
   };
 }
 
-- (NSDictionary *)appEventsParametersForDeactivate
+- (NSDictionary<NSString *, id> *)appEventsParametersForDeactivate
 {
   int quantaIndex = 0;
   while (_timeSinceLastSuspend > INACTIVE_SECONDS_QUANTA[quantaIndex]) {

@@ -54,8 +54,8 @@ NS_SWIFT_NAME(ServerConfiguration)
 implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
         codelessEventsEnabled:(BOOL)codelessEventsEnabled
      uninstallTrackingEnabled:(BOOL)uninstallTrackingEnabled
-         dialogConfigurations:(NSDictionary *)dialogConfigurations
-                  dialogFlows:(NSDictionary *)dialogFlows
+         dialogConfigurations:(NSDictionary<NSString *, id> *)dialogConfigurations
+                  dialogFlows:(NSDictionary<NSString *, id> *)dialogFlows
                     timestamp:(NSDate *)timestamp
            errorConfiguration:(FBSDKErrorConfiguration *)errorConfiguration
        sessionTimeoutInterval:(NSTimeInterval) sessionTimeoutInterval

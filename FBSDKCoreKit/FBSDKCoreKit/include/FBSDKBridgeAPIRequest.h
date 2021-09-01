@@ -40,16 +40,16 @@ NS_SWIFT_NAME(BridgeAPIRequest)
                                           scheme:(NSString *)scheme
                                       methodName:(NSString *)methodName
                                    methodVersion:(NSString *)methodVersion
-                                      parameters:(NSDictionary *)parameters
-                                        userInfo:(NSDictionary *)userInfo;
+                                      parameters:(NSDictionary<NSString *, id> *)parameters
+                                        userInfo:(NSDictionary<NSString *, id> *)userInfo;
 
 @property (nonatomic, copy, readonly) NSString *actionID;
 @property (nonatomic, copy, readonly) NSString *methodName;
 @property (nonatomic, copy, readonly) NSString *methodVersion;
-@property (nonatomic, copy, readonly) NSDictionary *parameters;
+@property (nonatomic, copy, readonly) NSDictionary<NSString *, id> *parameters;
 @property (nonatomic, assign, readonly) FBSDKBridgeAPIProtocolType protocolType;
 @property (nonatomic, copy, readonly) NSString *scheme;
-@property (nonatomic, copy, readonly) NSDictionary *userInfo;
+@property (nonatomic, copy, readonly) NSDictionary<NSString *, id> *userInfo;
 
 - (NSURL *)requestURL:(NSError *__autoreleasing *)errorRef;
 

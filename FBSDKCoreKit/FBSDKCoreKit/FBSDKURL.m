@@ -55,7 +55,7 @@ NSString *const AutoAppLinkFlagKey = @"is_auto_applink";
     [FBSDKTypeUtility JSONObjectWithData:[appLinkDataString dataUsingEncoding:NSUTF8StringEncoding]
                                  options:0
                                    error:&error];
-    if (!error && [applinkData isKindOfClass:[NSDictionary class]]) {
+    if (!error && [applinkData isKindOfClass:[NSDictionary<NSString *, id> class]]) {
       // If the version is not specified, assume it is 1.
       NSString *version = applinkData[FBSDKAppLinkVersionKeyName] ?: @"1.0";
       NSString *target = applinkData[FBSDKAppLinkTargetKeyName];
@@ -64,7 +64,7 @@ NSString *const AutoAppLinkFlagKey = @"is_auto_applink";
         // There's applink data!  The target should actually be the applink target.
         _appLinkData = applinkData;
         id applinkExtras = applinkData[FBSDKAppLinkExtrasKeyName];
-        if (applinkExtras && [applinkExtras isKindOfClass:[NSDictionary class]]) {
+        if (applinkExtras && [applinkExtras isKindOfClass:[NSDictionary<NSString *, id> class]]) {
           _appLinkExtras = applinkExtras;
         }
         _targetURL = ([target isKindOfClass:[NSString class]] ? [NSURL URLWithString:target] : url);
@@ -164,7 +164,7 @@ NSString *const AutoAppLinkFlagKey = @"is_auto_applink";
       [FBSDKTypeUtility dictionary:parameters setObject:value forKey:key];
     }
   }
-  return [NSDictionary dictionaryWithDictionary:parameters];
+  return [NSDictionary<NSString *, id> dictionaryWithDictionary:parameters];
 }
 
 @end

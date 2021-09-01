@@ -150,7 +150,7 @@ static dispatch_once_t enableNonce;
   }
 }
 
-- (nullable NSDictionary *)getRulesForKey:(NSString *)useCase
+- (nullable NSDictionary<NSString *, id> *)getRulesForKey:(NSString *)useCase
 {
   @try {
     NSDictionary<NSString *, id> *model = [FBSDKTypeUtility dictionary:_modelInfo objectForKey:useCase ofType:NSObject.class];
@@ -158,7 +158,7 @@ static dispatch_once_t enableNonce;
       NSString *filePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.rules", useCase, model[VERSION_ID_KEY]]];
       if (filePath) {
         NSData *rulesData = [self.dataExtractor dataWithContentsOfFile:filePath options:NSDataReadingMappedIfSafe error:nil];
-        NSDictionary *rules = [FBSDKTypeUtility JSONObjectWithData:rulesData options:0 error:nil];
+        NSDictionary<NSString *, id> *rules = [FBSDKTypeUtility JSONObjectWithData:rulesData options:0 error:nil];
         return rules;
       }
     }
@@ -430,7 +430,7 @@ static dispatch_once_t enableNonce;
   }
 }
 
-+ (BOOL)isPlistFormatDictionary:(NSDictionary *)dictionary
++ (BOOL)isPlistFormatDictionary:(NSDictionary<NSString *, id> *)dictionary
 {
   __block BOOL isPlistFormat = YES;
   [dictionary enumerateKeysAndObjectsUsingBlock:^(id _Nonnull key, id _Nonnull obj, BOOL *_Nonnull stop) {

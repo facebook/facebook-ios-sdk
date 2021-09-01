@@ -26,7 +26,7 @@
 
 @implementation FBSDKGameRequestURLProvider
 
-+ (NSMutableArray *_Nonnull)_getQueryArrayFromGameRequestDictionary:(NSDictionary *_Nonnull)content
++ (NSMutableArray *_Nonnull)_getQueryArrayFromGameRequestDictionary:(NSDictionary<NSString *, id> *_Nonnull)content
 {
   NSMutableArray *queryItems = [NSMutableArray array];
   for (NSString *key in content) {
@@ -35,7 +35,7 @@
   return queryItems;
 }
 
-+ (nullable NSURL *)createDeepLinkURLWithQueryDictionary:(NSDictionary *)queryDictionary
++ (nullable NSURL *)createDeepLinkURLWithQueryDictionary:(NSDictionary<NSString *, id> *)queryDictionary
 {
   NSURLComponents *components = [NSURLComponents new];
   components.scheme = FBSDK_GAME_REQUEST_URL_SCHEME;

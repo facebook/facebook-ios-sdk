@@ -131,7 +131,7 @@ static const struct {
                            scheme:(NSString *)scheme
                        methodName:(NSString *)methodName
                     methodVersion:(NSString *)methodVersion
-                       parameters:(NSDictionary *)parameters
+                       parameters:(NSDictionary<NSString *, id> *)parameters
                             error:(NSError *__autoreleasing *)errorRef
 {
   NSString *const host = @"dialog";
@@ -177,10 +177,10 @@ static const struct {
                                                      error:errorRef];
 }
 
-- (NSDictionary *)responseParametersForActionID:(NSString *)actionID
-                                queryParameters:(NSDictionary *)queryParameters
-                                      cancelled:(BOOL *)cancelledRef
-                                          error:(NSError *__autoreleasing *)errorRef
+- (NSDictionary<NSString *, id> *)responseParametersForActionID:(NSString *)actionID
+                                                queryParameters:(NSDictionary<NSString *, id> *)queryParameters
+                                                      cancelled:(BOOL *)cancelledRef
+                                                          error:(NSError *__autoreleasing *)errorRef
 {
   if (cancelledRef != NULL) {
     *cancelledRef = NO;
@@ -206,7 +206,7 @@ static const struct {
   if (![responseActionID isEqualToString:actionID]) {
     return nil;
   }
-  NSDictionary *errorDictionary = bridgeParameters[FBSDKBridgeAPIProtocolNativeV1BridgeParameterInputKeys.error];
+  NSDictionary<NSString *, id> *errorDictionary = bridgeParameters[FBSDKBridgeAPIProtocolNativeV1BridgeParameterInputKeys.error];
   errorDictionary = [FBSDKTypeUtility dictionaryValue:errorDictionary];
   if (errorDictionary) {
     error = [self _errorWithDictionary:errorDictionary];
@@ -249,7 +249,7 @@ static const struct {
   return [UIImage imageNamed:[FBSDKTypeUtility array:files objectAtIndex:0]];
 }
 
-- (NSDictionary *)_bridgeParametersWithActionID:(NSString *)actionID error:(NSError *__autoreleasing *)errorRef
+- (NSDictionary<NSString *, id> *)_bridgeParametersWithActionID:(NSString *)actionID error:(NSError *__autoreleasing *)errorRef
 {
   NSMutableDictionary *bridgeParameters = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:bridgeParameters setObject:actionID
@@ -263,7 +263,7 @@ static const struct {
   return bridgeParameters;
 }
 
-- (NSError *)_errorWithDictionary:(NSDictionary *)dictionary
+- (NSError *)_errorWithDictionary:(NSDictionary<NSString *, id> *)dictionary
 {
   if (!dictionary) {
     return nil;
@@ -272,7 +272,7 @@ static const struct {
   ?: FBSDKErrorDomain;
   NSInteger code = [FBSDKTypeUtility integerValue:dictionary[FBSDKBridgeAPIProtocolNativeV1ErrorKeys.code]]
   ?: FBSDKErrorUnknown;
-  NSDictionary *userInfo = [FBSDKTypeUtility dictionaryValue:dictionary[FBSDKBridgeAPIProtocolNativeV1ErrorKeys.userInfo]];
+  NSDictionary<NSString *, id> *userInfo = [FBSDKTypeUtility dictionaryValue:dictionary[FBSDKBridgeAPIProtocolNativeV1ErrorKeys.userInfo]];
   return [NSError errorWithDomain:domain code:code userInfo:userInfo];
 }
 

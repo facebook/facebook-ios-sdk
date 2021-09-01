@@ -75,7 +75,7 @@ static NSDateFormatter *_dateFormatter;
   }
 }
 
-- (instancetype)initWithURLParameters:(NSDictionary *)parameters
+- (instancetype)initWithURLParameters:(NSDictionary<NSString *, id> *)parameters
                                 appID:(NSString *)appID
                    connectionProvider:(id<FBSDKGraphRequestConnectionProviding>)connectionProvider
            authenticationTokenCreator:(id<FBSDKAuthenticationTokenCreating>)authenticationTokenCreator
@@ -156,7 +156,7 @@ static NSDateFormatter *_dateFormatter;
                                                completion:completion];
 }
 
-- (void)setParametersWithDictionary:(NSDictionary *)parameters appID:(NSString *)appID
+- (void)setParametersWithDictionary:(NSDictionary<NSString *, id> *)parameters appID:(NSString *)appID
 {
   NSString *grantedPermissionsString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"granted_scopes" ofType:NSString.class];
   NSString *declinedPermissionsString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"denied_scopes" ofType:NSString.class];
@@ -195,7 +195,7 @@ static NSDateFormatter *_dateFormatter;
   _parameters.challenge = [FBSDKLoginURLCompleter challengeFromParameters:parameters];
 }
 
-- (void)setErrorWithDictionary:(NSDictionary *)parameters
+- (void)setErrorWithDictionary:(NSDictionary<NSString *, id> *)parameters
 {
   NSString *legacyErrorReason = [FBSDKTypeUtility dictionary:parameters objectForKey:@"error" ofType:NSString.class];
 
@@ -295,7 +295,7 @@ static NSDateFormatter *_dateFormatter;
                                         isLimited:YES];
 }
 
-+ (NSDate *)expirationDateFromParameters:(NSDictionary *)parameters
++ (NSDate *)expirationDateFromParameters:(NSDictionary<NSString *, id> *)parameters
 {
   NSString *expiresString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"expires" ofType:NSString.class];
   NSString *expiresAtString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"expires_at" ofType:NSString.class];
@@ -311,7 +311,7 @@ static NSDateFormatter *_dateFormatter;
   }
 }
 
-+ (NSDate *)dataAccessExpirationDateFromParameters:(NSDictionary *)parameters
++ (NSDate *)dataAccessExpirationDateFromParameters:(NSDictionary<NSString *, id> *)parameters
 {
   NSString *dataAccessExpirationDateString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"data_access_expiration_time" ofType:NSString.class];
   if (dataAccessExpirationDateString.integerValue > 0) {
@@ -321,7 +321,7 @@ static NSDateFormatter *_dateFormatter;
   }
 }
 
-+ (NSString *)challengeFromParameters:(NSDictionary *)parameters
++ (NSString *)challengeFromParameters:(NSDictionary<NSString *, id> *)parameters
 {
   NSString *stateString = [FBSDKTypeUtility dictionary:parameters objectForKey:@"state" ofType:NSString.class];
   if (stateString.length > 0) {

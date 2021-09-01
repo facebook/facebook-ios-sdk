@@ -23,8 +23,8 @@
 
 @interface FBSDKServerConfiguration (Testing)
 
-- (NSDictionary *)dialogConfigurations;
-- (NSDictionary *)dialogFlows;
+- (NSDictionary<NSString *, id> *)dialogConfigurations;
+- (NSDictionary<NSString *, id> *)dialogFlows;
 
 @end
 
@@ -477,7 +477,7 @@ typedef ServerConfigurationFixtures Fixtures;
 
 - (void)testCreatingWithDialogConfigurations
 {
-  NSDictionary *dialogConfigurations = @{
+  NSDictionary<NSString *, id> *dialogConfigurations = @{
     @"dialog" : @"Hello",
     @"dialog2" : @"World"
   };
@@ -495,7 +495,7 @@ typedef ServerConfigurationFixtures Fixtures;
   // Need to recreate with a new appID to invalidate cache of default configuration
   self.config = [FBSDKServerConfiguration defaultServerConfigurationForAppID:self.name];
 
-  NSDictionary *expectedDefaultDialogFlows = @{
+  NSDictionary<NSString *, id> *expectedDefaultDialogFlows = @{
     FBSDKDialogConfigurationNameDefault : @{
       FBSDKDialogConfigurationFeatureUseNativeFlow : @NO,
       FBSDKDialogConfigurationFeatureUseSafariViewController : @YES,
@@ -514,7 +514,7 @@ typedef ServerConfigurationFixtures Fixtures;
 
 - (void)testCreatingWithDialogFlows
 {
-  NSDictionary *dialogFlows = @{
+  NSDictionary<NSString *, id> *dialogFlows = @{
     @"foo" : @{
       FBSDKDialogConfigurationFeatureUseNativeFlow : @YES,
       FBSDKDialogConfigurationFeatureUseSafariViewController : @YES,
@@ -543,7 +543,7 @@ typedef ServerConfigurationFixtures Fixtures;
 
 - (void)testCreatingWithAAMRules
 {
-  NSDictionary *rules = @{ @"foo" : @"bar" };
+  NSDictionary<NSString *, id> *rules = @{ @"foo" : @"bar" };
 
   self.config = [Fixtures configWithDictionary:@{@"aamRules" : rules}];
 
@@ -564,7 +564,7 @@ typedef ServerConfigurationFixtures Fixtures;
 
 - (void)testCreatingWithRestrictiveParams
 {
-  NSDictionary *params = @{ @"foo" : @"bar" };
+  NSDictionary<NSString *, id> *params = @{ @"foo" : @"bar" };
 
   self.config = [Fixtures configWithDictionary:@{@"restrictiveParams" : params}];
 
@@ -585,7 +585,7 @@ typedef ServerConfigurationFixtures Fixtures;
 
 - (void)testCreatingWithSuggestedEventSetting
 {
-  NSDictionary *setting = @{ @"foo" : @"bar" };
+  NSDictionary<NSString *, id> *setting = @{ @"foo" : @"bar" };
 
   self.config = [Fixtures configWithDictionary:@{@"suggestedEventsSetting" : setting}];
 
@@ -665,12 +665,12 @@ typedef ServerConfigurationFixtures Fixtures;
   self.config = [self.config initWithCoder:decoder];
 
   NSSet *dialogFlowsClasses = [[NSSet alloc] initWithObjects:
-                               [NSDictionary class],
+                               [NSDictionary<NSString *, id> class],
                                [NSString class],
                                [NSNumber class],
                                nil];
   NSSet *dictionaryClasses = [NSSet setWithObjects:
-                              [NSDictionary class],
+                              [NSDictionary<NSString *, id> class],
                               [NSArray class],
                               [NSData class],
                               [NSString class],

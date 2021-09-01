@@ -502,7 +502,7 @@
 - (void)testWithAuthorizeHostNoParameters
 {
   NSURL *url = [[NSURL alloc] initWithString:@"foo://authorize"];
-  NSDictionary *parameters = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
+  NSDictionary<NSString *, id> *parameters = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
 
   XCTAssertEqualObjects(
     parameters,
@@ -514,7 +514,7 @@
 - (void)testWithAuthorizeHostNoFragment
 {
   NSURL *url = [[NSURL alloc] initWithString:@"foo://authorize?foo=bar"];
-  NSDictionary *parameters = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
+  NSDictionary<NSString *, id> *parameters = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
 
   XCTAssertEqualObjects(
     parameters,
@@ -526,8 +526,8 @@
 - (void)testWithAuthorizeHostAndFragment
 {
   NSURL *url = [[NSURL alloc] initWithString:@"foo://authorize?foo=bar#param1=value1&param2=value2"];
-  NSDictionary *parameters = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
-  NSDictionary *expectedParameters = @{
+  NSDictionary<NSString *, id> *parameters = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
+  NSDictionary<NSString *, id> *expectedParameters = @{
     @"foo" : @"bar",
     @"param1" : @"value1",
     @"param2" : @"value2"
@@ -543,7 +543,7 @@
 - (void)testWithoutAuthorizeHostNoParameters
 {
   NSURL *url = [[NSURL alloc] initWithString:@"foo://example"];
-  NSDictionary *parameters = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
+  NSDictionary<NSString *, id> *parameters = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
 
   XCTAssertEqualObjects(
     parameters,
@@ -555,7 +555,7 @@
 - (void)testWithoutAuthorizeHostNoFragment
 {
   NSURL *url = [[NSURL alloc] initWithString:@"foo://example?foo=bar"];
-  NSDictionary *parameters = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
+  NSDictionary<NSString *, id> *parameters = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
 
   XCTAssertEqualObjects(
     parameters,
@@ -567,8 +567,8 @@
 - (void)testWithoutAuthorizeHostWithFragment
 {
   NSURL *url = [[NSURL alloc] initWithString:@"foo://example?foo=bar#param1=value1&param2=value2"];
-  NSDictionary *parameters = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
-  NSDictionary *expectedParameters = @{ @"foo" : @"bar" };
+  NSDictionary<NSString *, id> *parameters = [FBSDKInternalUtility.sharedUtility parametersFromFBURL:url];
+  NSDictionary<NSString *, id> *expectedParameters = @{ @"foo" : @"bar" };
 
   XCTAssertEqualObjects(
     parameters,
@@ -1243,7 +1243,7 @@
 {
   NSError *error = [NSError errorWithDomain:@"test" code:1 userInfo:nil];
 
-  [FBSDKInternalUtility.sharedUtility URLWithScheme:@"https" host:@"example" path:@"/foo" queryParameters:@{@[] : @"foo"} error:&error];
+  [FBSDKInternalUtility.sharedUtility URLWithScheme:@"https" host:@"example" path:@"/foo" queryParameters:(id) @{@[] : @"foo"} error:&error];
 
   XCTAssertEqualObjects(
     error.domain,
@@ -1295,7 +1295,7 @@
   return [self cookieForUrl:url name:@"MyCookie"];
 }
 
-- (NSDictionary *)validParameters
+- (NSDictionary<NSString *, id> *)validParameters
 {
   return @{@"foo" : @"bar"};
 }

@@ -80,7 +80,7 @@
   }
 }
 
-- (void)updateWithResults:(NSDictionary *)results
+- (void)updateWithResults:(NSDictionary<NSString *, id> *)results
 {
   if ([FBSDKTypeUtility boolValue:results[@"updated_frictionless"]]) {
     [self _updateCache];

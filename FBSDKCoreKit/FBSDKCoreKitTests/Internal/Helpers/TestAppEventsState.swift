@@ -20,7 +20,7 @@ import Foundation
 
 @objcMembers
 class TestAppEventsState: AppEventsState {
-  var capturedEventDictionary: [AnyHashable: Any]?
+  var capturedEventDictionary: [String: Any]?
   var capturedIsImplicit = false
   var isAddEventCalled = false
 
@@ -32,7 +32,7 @@ class TestAppEventsState: AppEventsState {
     super.init(coder: coder)
   }
 
-  override func addEvent(_ eventDictionary: [AnyHashable: Any], isImplicit: Bool) {
+  override func addEvent(_ eventDictionary: [String: Any], isImplicit: Bool) {
     capturedEventDictionary = eventDictionary
     capturedIsImplicit = isImplicit
     isAddEventCalled = true

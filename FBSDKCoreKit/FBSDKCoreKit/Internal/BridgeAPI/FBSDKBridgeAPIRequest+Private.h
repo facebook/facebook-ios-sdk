@@ -30,8 +30,8 @@
                           scheme:(NSString *)scheme
                       methodName:(NSString *)methodName
                    methodVersion:(NSString *)methodVersion
-                      parameters:(NSDictionary *)parameters
-                        userInfo:(NSDictionary *)userInfo
+                      parameters:(NSDictionary<NSString *, id> *)parameters
+                        userInfo:(NSDictionary<NSString *, id> *)userInfo
   NS_DESIGNATED_INITIALIZER;
 
 @property (nonatomic, readwrite, strong) id<FBSDKBridgeAPIProtocol> protocol;

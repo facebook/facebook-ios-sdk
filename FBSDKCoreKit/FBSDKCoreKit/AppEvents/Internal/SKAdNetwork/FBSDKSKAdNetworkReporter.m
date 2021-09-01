@@ -107,7 +107,7 @@ static NSString *const FBSDKSKAdNetworkReporterKey = @"com.facebook.sdk:FBSDKSKA
 - (void)recordAndUpdateEvent:(NSString *)event
                     currency:(nullable NSString *)currency
                        value:(nullable NSNumber *)value
-                  parameters:(nullable NSDictionary *)parameters
+                  parameters:(nullable NSDictionary<NSString *, id> *)parameters
 {
   [self recordAndUpdateEvent:event currency:currency value:value];
 }

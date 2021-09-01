@@ -446,7 +446,7 @@
   content.quote = @"a quote";
   dialog.shareContent = content;
 
-  NSDictionary *expectedJSON = @{@"app_id" : @"appID", @"hashtags" : @[@"#hashtag"], @"quotes" : @[@"a quote"]};
+  NSDictionary<NSString *, id> *expectedJSON = @{@"app_id" : @"appID", @"hashtags" : @[@"#hashtag"], @"quotes" : @[@"a quote"]};
   [self _showDialog:dialog
                  appID:@"appID"
    expectedPreJSONtext:@"fb-app-id:appID #hashtag"
@@ -613,7 +613,7 @@
 - (void)  _showDialog:(FBSDKShareDialog *)dialog
                 appID:(NSString *)appID
   expectedPreJSONtext:(NSString *)expectedPreJSONText
-         expectedJSON:(NSDictionary *)expectedJSON
+         expectedJSON:(NSDictionary<NSString *, id> *)expectedJSON
 {
   id mockApplication = [OCMockObject niceMockForClass:[UIApplication class]];
   [[[mockApplication stub] andReturn:mockApplication] sharedApplication];
@@ -629,7 +629,7 @@
   [[mockSLController expect] setInitialText:[OCMArg checkWithBlock:^BOOL (NSString *text) {
     NSRange JSONDelimiterRange = [text rangeOfString:@"|"];
     NSString *preJSONText;
-    NSDictionary *json;
+    NSDictionary<NSString *, id> *json;
     if (JSONDelimiterRange.location == NSNotFound) {
       preJSONText = text;
     } else {

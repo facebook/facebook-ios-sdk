@@ -26,7 +26,7 @@ NS_SWIFT_NAME(NotificationPosting)
 
 - (void)postNotificationName:(NSNotificationName)aName
                       object:(nullable id)anObject
-                    userInfo:(nullable NSDictionary *)aUserInfo
+                    userInfo:(nullable NSDictionary<NSString *, id> *)aUserInfo
 NS_SWIFT_NAME(post(name:object:userInfo:));
 
 @end

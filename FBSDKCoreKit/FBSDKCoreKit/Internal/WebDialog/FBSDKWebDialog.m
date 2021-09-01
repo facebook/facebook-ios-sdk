@@ -64,7 +64,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 }
 
 + (instancetype)showWithName:(NSString *)name
-                  parameters:(NSDictionary *)parameters
+                  parameters:(NSDictionary<NSString *, id> *)parameters
                     delegate:(id<FBSDKWebDialogDelegate>)delegate
 {
   return [self createAndShow:name
@@ -75,7 +75,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 }
 
 + (instancetype)createAndShow:(NSString *)name
-                   parameters:(NSDictionary *)parameters
+                   parameters:(NSDictionary<NSString *, id> *)parameters
                         frame:(CGRect)frame
                      delegate:(id<FBSDKWebDialogDelegate>)delegate
                  windowFinder:(id<FBSDKWindowFinding>)windowFinder
@@ -140,7 +140,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
  #pragma mark - FBSDKWebDialogViewDelegate
 
-- (void)webDialogView:(FBSDKWebDialogView *)webDialogView didCompleteWithResults:(NSDictionary *)results
+- (void)webDialogView:(FBSDKWebDialogView *)webDialogView didCompleteWithResults:(NSDictionary<NSString *, id> *)results
 {
   [self _completeWithResults:results];
 }
@@ -205,7 +205,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   [_delegate webDialogDidCancel:dialog];
 }
 
-- (void)_completeWithResults:(NSDictionary *)results
+- (void)_completeWithResults:(NSDictionary<NSString *, id> *)results
 {
   FBSDKWebDialog *dialog = self;
   [self _dismissAnimated:YES]; // may cause the receiver to be released

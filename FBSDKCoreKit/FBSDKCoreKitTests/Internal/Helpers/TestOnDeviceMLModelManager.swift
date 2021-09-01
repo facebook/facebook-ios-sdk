@@ -27,12 +27,12 @@ class TestOnDeviceMLModelManager: NSObject,
                                   RulesFromKeyProvider {
   // swiftformat:enable indent
 
-  var stubbedRules: [AnyHashable: Any] = [:]
+  var stubbedRules: [String: Any] = [:]
   var processSuggestedEventsCallCount = 0
   var stubbedProcessedEvents: String?
   var isEnabled = false
   var integrityParametersProcessor: AppEventsParameterProcessing?
-  var rulesForKey: [AnyHashable: Any] {
+  var rulesForKey: [String: Any] {
     get {
       stubbedRules
     }
@@ -54,7 +54,7 @@ class TestOnDeviceMLModelManager: NSObject,
     isEnabled = true
   }
 
-  func getRulesForKey(_ useCase: String) -> [AnyHashable: Any]? {
+  func getRulesForKey(_ useCase: String) -> [String: Any]? {
     stubbedRules
   }
 }
