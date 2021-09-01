@@ -285,7 +285,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   NSString *challengeReceived = parameters.challenge;
   NSString *challengeExpected = [[self loadExpectedChallenge] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
   if (![challengeExpected isEqualToString:challengeReceived]) {
-    return [NSError fbErrorForFailedLoginWithCode:FBSDKLoginErrorBadChallengeString];
+    return [FBSDKLoginErrorFactory fbErrorForFailedLoginWithCode:FBSDKLoginErrorBadChallengeString];
   } else {
     return nil;
   }
