@@ -46,6 +46,21 @@ static int const FBClientStateChallengeLength = 20;
   BOOL _isPerformingReferral;
 }
 
+static _Nullable id<FBSDKBridgeAPIRequestOpening> _bridgeAPIRequestOpener;
+
+- (id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener
+{
+  if (!_bridgeAPIRequestOpener) {
+    _bridgeAPIRequestOpener = FBSDKBridgeAPI.sharedInstance;
+  }
+  return _bridgeAPIRequestOpener;
+}
+
++ (void)setBridgeAPIRequestOpener:(nullable id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener
+{
+  _bridgeAPIRequestOpener = bridgeAPIRequestOpener;
+}
+
 - (instancetype)initWithViewController:(UIViewController *)viewController
 {
   self = [super init];
@@ -78,10 +93,10 @@ static int const FBClientStateChallengeLength = 20;
       [self handleOpenURLComplete:didOpen error:error];
     };
 
-    [[FBSDKBridgeAPI sharedInstance] openURLWithSafariViewController:referralURL
-                                                              sender:self
-                                                  fromViewController:_viewController
-                                                             handler:completionHandler];
+    [self.bridgeAPIRequestOpener openURLWithSafariViewController:referralURL
+                                                          sender:self
+                                              fromViewController:_viewController
+                                                         handler:completionHandler];
   }
 }
 

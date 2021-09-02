@@ -18,10 +18,11 @@
 
 @import TestTools;
 
-#import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+
+#import "FBSDKLoginKitTests-Swift.h"
 
 #ifdef BUCK
  #import <FBSDKLoginKit+Internal/FBSDKLoginUtility.h>
@@ -45,6 +46,7 @@ static NSString *const _mockChallenge = @"mockChallenge";
 - (void)handleOpenURLComplete:(BOOL)didOpen error:(NSError *)error;
 
 - (BOOL)validateChallenge:(NSString *)challenge;
++ (void)setBridgeAPIRequestOpener:(nullable id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener;
 
 @end
 
@@ -88,14 +90,6 @@ static NSString *const _mockChallenge = @"mockChallenge";
   [FBSDKInternalUtility configureWithInfoDictionaryProvider:bundle];
 }
 
-- (void)mockBridgeAPI
-{
-  id partialBridgeAPIMock = OCMPartialMock([FBSDKBridgeAPI sharedInstance]);
-  OCMStub([partialBridgeAPIMock openURLWithSafariViewController:OCMArg.any sender:OCMArg.any fromViewController:OCMArg.any handler:OCMArg.any]).andDo(^(NSInvocation *invocation) {
-    // Nothing
-  });
-}
-
 - (void)testReferralURL
 {
   NSURL *url = [_manager referralURL];
@@ -121,16 +115,16 @@ static NSString *const _mockChallenge = @"mockChallenge";
 {
   [self mockURLScheme];
 
-  id partialBridgeAPIMock = OCMPartialMock([FBSDKBridgeAPI sharedInstance]);
+  TestBridgeAPIReqestOpener *testBridgeAPI = [TestBridgeAPIReqestOpener new];
+  [FBSDKReferralManager setBridgeAPIRequestOpener:testBridgeAPI];
 
   [_manager startReferralWithCompletionHandler:nil];
-  OCMVerify([partialBridgeAPIMock openURLWithSafariViewController:OCMArg.any sender:OCMArg.any fromViewController:OCMArg.any handler:OCMArg.any]);
+  XCTAssertEqual(testBridgeAPI.openURLWithSFVCCount, 1, "openURLWithSafariViewController should be called");
 }
 
 - (void)testReferralSuccess
 {
   [self mockURLScheme];
-  [self mockBridgeAPI];
 
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
   FBSDKReferralManagerResultBlock completionHandler = ^(FBSDKReferralManagerResult *result, NSError *referralError) {
@@ -160,7 +154,6 @@ static NSString *const _mockChallenge = @"mockChallenge";
 - (void)testReferralCancelWithOpenURLCompletionHandler
 {
   [self mockURLScheme];
-  [self mockBridgeAPI];
 
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
   NSError *cancelError = [[NSError alloc]initWithDomain:@"com.apple.SafariServices.Authentication" code:0 userInfo:nil];
@@ -185,7 +178,6 @@ static NSString *const _mockChallenge = @"mockChallenge";
 - (void)testReferralCancelWithAppDelegate
 {
   [self mockURLScheme];
-  [self mockBridgeAPI];
 
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
   NSURL *fakeURL = [NSURL URLWithString:@"https://www.facebook.com"];
@@ -231,7 +223,6 @@ static NSString *const _mockChallenge = @"mockChallenge";
 - (void)testReferralErrorWithOpenURLCompletionHandler
 {
   [self mockURLScheme];
-  [self mockBridgeAPI];
 
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
   NSError *fakeError = [[NSError alloc]initWithDomain:FBSDKErrorDomain code:FBSDKErrorBridgeAPIInterruption userInfo:nil];
@@ -255,7 +246,6 @@ static NSString *const _mockChallenge = @"mockChallenge";
 - (void)testReferralErrorWithAppDelegate
 {
   [self mockURLScheme];
-  [self mockBridgeAPI];
   _manager.expectedChallenge = @"mockChallenge";
 
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
@@ -281,7 +271,6 @@ static NSString *const _mockChallenge = @"mockChallenge";
 - (void)testReferralErrorWithBadChallenge
 {
   [self mockURLScheme];
-  [self mockBridgeAPI];
   _manager.expectedChallenge = @"mockChallenge";;
 
   NSString *badChallenge = @"badChallenge";
@@ -308,7 +297,6 @@ static NSString *const _mockChallenge = @"mockChallenge";
 - (void)testReferralSuccessWithInvalidReferralCode
 {
   [self mockURLScheme];
-  [self mockBridgeAPI];
 
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
   FBSDKReferralManagerResultBlock completionHandler = ^(FBSDKReferralManagerResult *result, NSError *referralError) {

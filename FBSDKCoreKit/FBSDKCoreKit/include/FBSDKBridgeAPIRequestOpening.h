@@ -24,8 +24,10 @@
 #import <UIKit/UIViewController.h>
 
 #import "FBSDKBridgeAPIResponse.h"
+#import "FBSDKConstants.h"
 
 @protocol FBSDKBridgeAPIRequest;
+@protocol FBSDKURLOpening;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -42,6 +44,11 @@ NS_SWIFT_NAME(BridgeAPIRequestOpening)
      useSafariViewController:(BOOL)useSafariViewController
           fromViewController:(nullable UIViewController *)fromViewController
              completionBlock:(FBSDKBridgeAPIResponseBlock)completionBlock;
+
+- (void)openURLWithSafariViewController:(NSURL *)url
+                                 sender:(id<FBSDKURLOpening>)sender
+                     fromViewController:(UIViewController *)fromViewController
+                                handler:(FBSDKSuccessBlock)handler;
 
 @end
 
