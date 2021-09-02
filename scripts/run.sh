@@ -142,7 +142,6 @@ main() {
   "release") release_sdk "$@" ;;
   "setup") setup_sdk "$@" ;;
   "tag-current-version") tag_current_version "$@" ;;
-  "lint") lint_sdk "$@" ;;
   "verify-spm-headers") verify_spm_headers "$@" ;;
   "verify-xcode-integration") verify_xcode_integration "$@" ;;
   "--help" | "help") echo "Check main() for supported commands" ;;
@@ -378,11 +377,6 @@ build_sdk() {
   "xcode") build_xcode_workspace "$@" ;;
   *) echo "Unsupported Build: $build_type" ;;
   esac
-}
-
-# Lint
-lint_sdk() {
-  echo "TODO: Need to remove CI Jobs that call this."
 }
 
 # Release

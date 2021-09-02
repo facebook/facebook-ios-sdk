@@ -136,17 +136,6 @@ commands:
           at: .
       - run: sh scripts/run.sh build spm-integration
 
-  lint_cocoapods:
-    description: Lints CocoaPods using `pod lib lint` command
-    parameters:
-      arguments:
-        default: ''
-        type: string
-    steps:
-      - attach_workspace:
-          at: .
-      - run: sh scripts/run.sh lint cocoapods << parameters.arguments >>
-
   publish_cocoapods:
     description: Pushes all CocoaPods to trunk
     steps:
@@ -229,15 +218,6 @@ jobs:
     <<: *useMacOS
     steps:
       - integrate_spm
-  lint-cocoapods:
-    <<: *useMacOS
-    steps:
-      - lint_cocoapods
-  lint-cocoapods-static:
-    <<: *useMacOS
-    steps:
-      - lint_cocoapods:
-          arguments: --use-libraries
   publish-cocoapods:
     <<: *useMacOS
     steps:
@@ -275,10 +255,6 @@ workflows:
       - build-carthage:
           <<: *requiresProjectGeneration
       - integrate-spm:
-          <<: *requiresSetup
-      - lint-cocoapods:
-          <<: *requiresSetup
-      - lint-cocoapods-static:
           <<: *requiresSetup
       - verify-spm-headers:
           <<: *requiresSetup
