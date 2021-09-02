@@ -18,17 +18,10 @@
 
 #import "FBSDKDeviceLoginManager.h"
 
-#import "FBSDKDeviceLoginManagerResult+Internal.h"
-
-#ifdef FBSDKCOCOAPODS
- #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
- #import "FBSDKCoreKit+Internal.h"
-#endif
-
 #import "FBSDKCoreKitBasicsImportForLoginKit.h"
+#import "FBSDKCoreKitImport.h"
 #import "FBSDKDeviceLoginCodeInfo+Internal.h"
+#import "FBSDKDeviceLoginManagerResult+Internal.h"
 #import "FBSDKDevicePoller.h"
 #import "FBSDKDevicePolling.h"
 #import "FBSDKDeviceRequestsHelper.h"
