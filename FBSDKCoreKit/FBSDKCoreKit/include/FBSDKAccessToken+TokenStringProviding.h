@@ -16,30 +16,22 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import FBSDKCoreKit
+#import <Foundation/Foundation.h>
 
-@objcMembers
-class TestAccessTokenWallet: NSObject, AccessTokenProviding, AccessTokenSetting, TokenStringProviding {
-  static var tokenCache: TokenCaching?
-  static var stubbedCurrentAccessToken: AccessToken?
-  static var wasTokenRead = false
+#import "FBSDKAccessToken.h"
+#import "FBSDKTokenStringProviding.h"
 
-  static var currentAccessToken: AccessToken? {
-    get {
-      wasTokenRead = true
-      return stubbedCurrentAccessToken
-    }
-    set {
-      stubbedCurrentAccessToken = newValue
-    }
-  }
-  static var tokenString: String? {
-    currentAccessToken?.tokenString
-  }
+NS_ASSUME_NONNULL_BEGIN
 
-  static func reset() {
-    tokenCache = nil
-    currentAccessToken = nil
-    wasTokenRead = false
-  }
-}
+/**
+
+  Internal Type exposed to facilitate transition to Swift.
+  API Subject to change or removal without warning. Do not use.
+
+  @warning UNSAFE - DO NOT USE
+*/
+
+@interface FBSDKAccessToken (TokenStringProviding) <FBSDKTokenStringProviding>
+@end
+
+NS_ASSUME_NONNULL_END

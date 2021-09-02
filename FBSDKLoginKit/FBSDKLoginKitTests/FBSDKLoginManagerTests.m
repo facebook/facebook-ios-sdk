@@ -70,7 +70,8 @@ static NSString *const kFakeJTI = @"a jti is just any string";
           fromViewController:(UIViewController *)viewController
                      handler:(FBSDKLoginManagerLoginResultBlock)handler;
 
-- (instancetype)initWithInternalUtility:(id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker>)internalUtility keychainStore:(id<FBSDKKeychainStoreProviding>)keychainStore;
+- (instancetype)initWithInternalUtility:(id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker>)internalUtility keychainStore:(id<FBSDKKeychainStoreProviding>)keychainStore
+                            tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet;
 
 @end
 
@@ -141,7 +142,9 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   self.internalUtility = [TestInternalUtility new];
   self.keychainStore = [TestKeychainStoreFactory new];
 
-  self.loginManager = [[FBSDKLoginManager alloc] initWithInternalUtility:self.internalUtility keychainStore:self.keychainStore];
+  self.loginManager = [[FBSDKLoginManager alloc] initWithInternalUtility:self.internalUtility
+                                                           keychainStore:self.keychainStore
+                                                             tokenWallet:TestAccessTokenWallet.class];
 
   _mockInternalUtility = OCMPartialMock(FBSDKInternalUtility.sharedUtility);
   OCMStub([_mockInternalUtility validateURLSchemes]);
@@ -151,14 +154,13 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   [FBSDKSettings setAppID:kFakeAppID];
   [FBSDKAuthenticationToken setCurrentAuthenticationToken:nil];
   [FBSDKProfile setCurrentProfile:nil];
-  [FBSDKAccessToken setCurrentAccessToken:nil];
+  TestAccessTokenWallet.currentAccessToken = nil;
 
   [self.internalUtility validateURLSchemes];
   _mockLoginManager = OCMPartialMock(self.loginManager);
   OCMStub([_mockLoginManager loadExpectedChallenge]).andReturn(kFakeChallenge);
   OCMStub([_mockLoginManager loadExpectedNonce]).andReturn(kFakeNonce);
 
-  _mockAccessTokenClass = OCMClassMock(FBSDKAccessToken.class);
   _mockAuthenticationTokenClass = OCMClassMock(FBSDKAuthenticationToken.class);
   _mockProfileClass = OCMClassMock(FBSDKProfile.class);
 
@@ -207,9 +209,6 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   [_mockLoginManager stopMocking];
   _mockLoginManager = nil;
 
-  [_mockAccessTokenClass stopMocking];
-  _mockAccessTokenClass = nil;
-
   [_mockAuthenticationTokenClass stopMocking];
   _mockAuthenticationTokenClass = nil;
 
@@ -234,7 +233,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
     handlerCalled = YES;
 
     XCTAssertFalse(result.isCancelled);
-    tokenAfterAuth = [FBSDKAccessToken currentAccessToken];
+    tokenAfterAuth = TestAccessTokenWallet.currentAccessToken;
     XCTAssertEqualObjects(tokenAfterAuth, result.token);
     XCTAssertTrue([tokenAfterAuth.userID isEqualToString:@"123"], @"failed to parse userID");
     XCTAssertTrue([tokenAfterAuth.permissions isEqualToSet:[NSSet setWithObject:@"public_profile"]], @"unexpected permissions");
@@ -254,7 +253,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   // now test a cancel and make sure the current token is not touched.
   url = [self authorizeURLWithParameters:@"error=access_denied&error_code=200&error_description=Permissions+error&error_reason=user_denied#_=_" joinedBy:@"?"];
   XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
-  FBSDKAccessToken *actualTokenAfterCancel = [FBSDKAccessToken currentAccessToken];
+  FBSDKAccessToken *actualTokenAfterCancel = TestAccessTokenWallet.currentAccessToken;
   XCTAssertEqualObjects(tokenAfterAuth, actualTokenAfterCancel);
 }
 
@@ -264,7 +263,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
   NSURL *url = [self authorizeURLWithFragment:@"granted_scopes=public_profile&denied_scopes=&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949"];
   FBSDKLoginManager *target = _mockLoginManager;
   XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
-  FBSDKAccessToken *actualToken = [FBSDKAccessToken currentAccessToken];
+  FBSDKAccessToken *actualToken = TestAccessTokenWallet.currentAccessToken;
   XCTAssertTrue([actualToken.userID isEqualToString:@"123"], @"failed to parse userID");
   XCTAssertTrue([actualToken.permissions isEqualToSet:[NSSet setWithObject:@"public_profile"]], @"unexpected permissions");
   NSSet *expectedDeclined = [NSSet set];
@@ -468,7 +467,6 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
     [self validateProfile:FBSDKProfile.currentProfile];
 
-    OCMReject([self->_mockAccessTokenClass setCurrentAccessToken:OCMOCK_ANY]);
     XCTAssertNil(result.token);
   }];
 
@@ -487,7 +485,6 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
   [target setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
     XCTAssertNotNil(error);
-    OCMReject([self->_mockAccessTokenClass setCurrentAccessToken:OCMOCK_ANY]);
     OCMReject([self->_mockAuthenticationTokenClass setCurrentAuthenticationToken:OCMOCK_ANY]);
     OCMReject([self->_mockProfileClass setCurrentProfile:OCMOCK_ANY]);
     resultBlockInvoked = YES;
@@ -521,7 +518,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
     [self validateProfile:FBSDKProfile.currentProfile];
 
-    FBSDKAccessToken *accessToken = [FBSDKAccessToken currentAccessToken];
+    FBSDKAccessToken *accessToken = TestAccessTokenWallet.currentAccessToken;
     XCTAssertEqualObjects(accessToken, result.token);
     XCTAssertEqualObjects(accessToken.userID, @"123", @"failed to parse userID");
     NSSet *permissions = [NSSet setWithObjects:@"public_profile", @"email", @"user_friends", nil];
@@ -826,8 +823,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 - (void)testLogout
 {
   [_mockLoginManager logOut];
-
-  OCMVerify(ClassMethod([_mockAccessTokenClass setCurrentAccessToken:nil]));
+  XCTAssertNil(TestAccessTokenWallet.currentAccessToken);
   OCMVerify(ClassMethod([_mockAuthenticationTokenClass setCurrentAuthenticationToken:nil]));
   OCMVerify(ClassMethod([_mockProfileClass setCurrentProfile:nil]));
 }
@@ -849,7 +845,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
 - (void)testReauthorizingWithoutAccessToken
 {
-  [FBSDKAccessToken setCurrentAccessToken:nil shouldDispatchNotif:NO];
+  TestAccessTokenWallet.currentAccessToken = nil;
 
   __block BOOL handlerCalled;
   [_mockLoginManager reauthorizeDataAccess:[UIViewController new]
@@ -864,7 +860,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 
 - (void)testReauthorizingWithAccessToken
 {
-  [FBSDKAccessToken setCurrentAccessToken:self.sampleAccessToken shouldDispatchNotif:NO];
+  [TestAccessTokenWallet setCurrentAccessToken:self.sampleAccessToken];
   FBSDKLoginManager *manager = _mockLoginManager;
   OCMStub([manager logIn]);
 
@@ -904,7 +900,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 - (void)testRecentlyGrantedPermissionsWithPreviouslyGrantedPermissions
 {
   NSSet *grantedPermissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:@[@"email", @"user_friends"]]];
-  [FBSDKAccessToken setCurrentAccessToken:self.sampleAccessToken shouldDispatchNotif:NO];
+  [TestAccessTokenWallet setCurrentAccessToken:self.sampleAccessToken];
 
   NSSet *recentlyGrantedPermissions = [_mockLoginManager recentlyGrantedPermissionsFromGrantedPermissions:grantedPermissions];
   XCTAssertEqualObjects(recentlyGrantedPermissions, grantedPermissions);
@@ -922,7 +918,7 @@ static NSString *const kFakeJTI = @"a jti is just any string";
 - (void)testRecentlyGrantedPermissionsWithPreviouslyGrantedAndRequestedPermissions
 {
   NSSet *grantedPermissions = [FBSDKPermission permissionsFromRawPermissions:[NSSet setWithArray:@[@"email", @"user_friends"]]];
-  [FBSDKAccessToken setCurrentAccessToken:self.sampleAccessToken shouldDispatchNotif:NO];
+  [TestAccessTokenWallet setCurrentAccessToken:self.sampleAccessToken];
   [_mockLoginManager setRequestedPermissions:[NSSet setWithArray:@[@"user_friends"]]];
 
   NSSet *recentlyGrantedPermissions = [_mockLoginManager recentlyGrantedPermissionsFromGrantedPermissions:grantedPermissions];

@@ -18,12 +18,18 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKAccessToken.h"
-#import "FBSDKTokenStringProviding.h"
+NS_SWIFT_NAME(TokenStringProviding)
+@protocol FBSDKTokenStringProviding
 
-NS_ASSUME_NONNULL_BEGIN
+/**
+  Return the token string of the current access token.
 
-@interface FBSDKAccessToken (TokenStringProviding) <FBSDKTokenStringProviding>
+  Internal Type exposed to facilitate transition to Swift.
+  API Subject to change or removal without warning. Do not use.
+
+  @warning UNSAFE - DO NOT USE
+*/
+
+@property (class, nonatomic, copy, nullable, readonly) NSString * tokenString;
+
 @end
-
-NS_ASSUME_NONNULL_END

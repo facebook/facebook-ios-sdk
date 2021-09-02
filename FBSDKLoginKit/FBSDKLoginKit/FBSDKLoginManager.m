@@ -56,6 +56,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   FBSDKLoginManagerState _state;
   id<FBSDKKeychainStore> _keychainStore;
   FBSDKLoginConfiguration *_configuration;
+  Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> _tokenWallet;
   id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker> _internalUtility;
   BOOL _usedSFAuthSession;
 }
@@ -70,13 +71,19 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 
 - (instancetype)init
 {
-  return [self initWithInternalUtility:FBSDKInternalUtility.sharedUtility keychainStore:[FBSDKKeychainStoreFactory new]];
+  return [self initWithInternalUtility:FBSDKInternalUtility.sharedUtility
+                         keychainStore:[FBSDKKeychainStoreFactory new]
+                           tokenWallet:FBSDKAccessToken.class
+  ];
 }
 
-- (instancetype)initWithInternalUtility:(id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker>)internalUtility keychainStore:(id<FBSDKKeychainStoreProviding>)keychainStore
+- (instancetype)initWithInternalUtility:(id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker>)internalUtility
+                          keychainStore:(id<FBSDKKeychainStoreProviding>)keychainStore
+                            tokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)tokenWallet
 {
   if ((self = [super init])) {
     _internalUtility = internalUtility;
+    _tokenWallet = tokenWallet;
     NSString *keyChainServiceIdentifier = [NSString stringWithFormat:@"com.facebook.sdk.loginmanager.%@", [NSBundle mainBundle].bundleIdentifier];
 
     _keychainStore = [keychainStore createKeychainStoreWithService:keyChainServiceIdentifier
@@ -137,7 +144,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
     return;
   }
 
-  if (!FBSDKAccessToken.currentAccessToken) {
+  if (![_tokenWallet currentAccessToken]) {
     NSString *errorMessage = @"Must have an access token for which to reauthorize data access";
     NSError *error = [FBSDKError errorWithDomain:FBSDKLoginErrorDomain
                                             code:FBSDKLoginErrorMissingAccessToken
@@ -156,7 +163,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 
 - (void)logOut
 {
-  [FBSDKAccessToken setCurrentAccessToken:nil];
+  [_tokenWallet setCurrentAccessToken:nil];
   [FBSDKAuthenticationToken setCurrentAuthenticationToken:nil];
   [FBSDKProfile setCurrentProfile:nil];
 }
@@ -247,8 +254,8 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
     if (!cancelled) {
       result = [self successResultFromParameters:parameters];
 
-      if (result.token && FBSDKAccessToken.currentAccessToken) {
-        [self validateReauthentication:FBSDKAccessToken.currentAccessToken withResult:result];
+      if (result.token && [_tokenWallet currentAccessToken]) {
+        [self validateReauthentication:[_tokenWallet currentAccessToken] withResult:result];
         // in a reauth, short circuit and let the login handler be called when the validation finishes.
         return;
       }
@@ -283,7 +290,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
                               profile:(FBSDKProfile *_Nullable)profile
 {
   FBSDKAuthenticationToken.currentAuthenticationToken = authToken;
-  FBSDKAccessToken.currentAccessToken = accessToken;
+  [_tokenWallet setCurrentAccessToken:accessToken];
   FBSDKProfile.currentProfile = profile;
 }
 
@@ -507,7 +514,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   FBSDKGraphRequestCompletion handler = ^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     NSString *actualID = result[@"id"];
     if ([currentToken.userID isEqualToString:actualID]) {
-      [FBSDKAccessToken setCurrentAccessToken:loginResult.token];
+      [self->_tokenWallet setCurrentAccessToken:loginResult.token];
       [self invokeHandler:loginResult error:nil];
     } else {
       NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary dictionary];
@@ -576,7 +583,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 - (FBSDKLoginManagerLoginResult *)cancelledResultFromParameters:(FBSDKLoginCompletionParameters *)parameters
 {
   NSSet *declinedPermissions = nil;
-  if (FBSDKAccessToken.currentAccessToken != nil) {
+  if ([_tokenWallet currentAccessToken] != nil) {
     // Always include the list of declined permissions from this login request
     // if an access token is already cached by the SDK
     declinedPermissions = [FBSDKPermission rawPermissionsFromPermissions:parameters.declinedPermissions];
@@ -640,7 +647,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
 - (NSSet<FBSDKPermission *> *)recentlyGrantedPermissionsFromGrantedPermissions:(NSSet<FBSDKPermission *> *)grantedPermissions
 {
   NSMutableSet *recentlyGrantedPermissions = grantedPermissions.mutableCopy;
-  NSSet *previouslyGrantedPermissions = FBSDKAccessToken.currentAccessToken.permissions;
+  NSSet *previouslyGrantedPermissions = [[_tokenWallet currentAccessToken] permissions];
 
   // If there were no requested permissions for this auth, or no previously granted permissions - treat all permissions as recently granted.
   // Otherwise this is a reauth, so recentlyGranted should be a subset of what was requested.

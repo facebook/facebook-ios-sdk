@@ -19,6 +19,7 @@
 #import <UIKit/UIKit.h>
 
 #import "FBSDKAccessToken.h"
+#import "FBSDKAccessToken+TokenStringProviding.h"
 #import "FBSDKAccessTokenProtocols.h"
 #import "FBSDKAdvertisingTrackingStatus.h"
 #import "FBSDKAppAvailabilityChecker.h"
@@ -71,6 +72,7 @@
 #import "FBSDKSettings.h"
 #import "FBSDKSettingsLogging.h"
 #import "FBSDKSettingsProtocol.h"
+#import "FBSDKTokenStringProviding.h"
 #import "FBSDKUserAgeRange.h"
 #import "FBSDKUtility.h"
 
