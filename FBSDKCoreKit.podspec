@@ -14,43 +14,35 @@ Pod::Spec.new do |s|
                    DESC
 
   s.homepage     = 'https://developers.facebook.com/docs/ios/'
-  s.license      = { type: 'Facebook Platform License', file: 'LICENSE' }
+  s.license      = {
+    type: 'Facebook Platform License',
+    text: <<-LICENSE
+    Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+
+    You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
+    copy, modify, and distribute this software in source code or binary form for use
+    in connection with the web services and APIs provided by Facebook.
+
+    As with any software that integrates with the Facebook platform, your use of
+    this software is subject to the Facebook Developer Principles and Policies
+    [http://developers.facebook.com/policy/]. This copyright notice shall be
+    included in all copies or substantial portions of the software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+    FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+    COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+    IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+    CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    LICENSE
+  }
   s.author       = 'Facebook'
 
   s.platform     = :ios, :tvos
   s.ios.deployment_target = '9.0'
   s.tvos.deployment_target = '10.0'
 
-  s.source       = {
-    git: 'https://github.com/facebook/facebook-ios-sdk.git',
-    tag: "v#{s.version}"
-  }
-
-  s.ios.weak_frameworks = 'Accelerate', 'Accounts', 'AdSupport', 'Social', 'Security', 'StoreKit', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
-  s.tvos.weak_frameworks = 'CoreLocation', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
-
-  s.default_subspecs = 'Core'
-  s.swift_version = '5.0'
-  s.pod_target_xcconfig = {
-    'GCC_PREPROCESSOR_DEFINITIONS': '$(inherited) FBSDKCOCOAPODS=1',
-    'DEFINES_MODULE': 'YES',
-  }
-  s.user_target_xcconfig = {
-    'GCC_PREPROCESSOR_DEFINITIONS': '$(inherited) FBSDKCOCOAPODS=1'
-  }
-  s.library = 'c++', 'stdc++'
-
-  s.subspec 'Core' do |ss|
-    ss.dependency 'FBSDKCoreKit_Basics', "~> #{s.version}"
-    ss.dependency 'FBAEMKit', "~> #{s.version}"
-    ss.exclude_files = 'Sources/FacebookCore/Exports.swift',
-                       'FBSDKCoreKit/FBSDKCoreKit/Swift/Exports.swift'
-    ss.source_files = 'FBSDKCoreKit/FBSDKCoreKit/**/*.{h,hpp,m,mm}',
-                      'Sources/FacebookCore/**/*.swift'
-    ss.public_header_files = 'FBSDKCoreKit/FBSDKCoreKit/include/*.h'
-    ss.private_header_files = 'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.h',
-                              'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/**/*.h'
-    ss.resource_bundles = { 'FacebookSDKStrings' => ['FacebookSDKStrings.bundle/**/*.strings'] }
-    ss.library = 'c++', 'stdc++'
-  end
+  s.source = { http: "https://github.com/facebook/facebook-ios-sdk/releases/download/v#{s.version}/FacebookSDK.xcframework.zip" }
+  s.vendored_frameworks = 'XCFrameworks/FBSDKCoreKit.xcframework'
+  s.dependency 'FBSDKCoreKit_Basics', "#{s.version}"
 end

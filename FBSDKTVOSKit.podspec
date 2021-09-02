@@ -15,7 +15,25 @@ Pod::Spec.new do |s|
   s.homepage     = 'https://developers.facebook.com/docs/tvos'
   s.license      = {
     type: 'Facebook Platform License',
-    file: 'LICENSE'
+    text: <<-LICENSE
+    Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+
+    You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
+    copy, modify, and distribute this software in source code or binary form for use
+    in connection with the web services and APIs provided by Facebook.
+
+    As with any software that integrates with the Facebook platform, your use of
+    this software is subject to the Facebook Developer Principles and Policies
+    [http://developers.facebook.com/policy/]. This copyright notice shall be
+    included in all copies or substantial portions of the software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+    FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+    COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+    IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+    CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    LICENSE
   }
   s.author       = 'Facebook'
 
@@ -23,20 +41,11 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '10.0'
   s.swift_version = '5.0'
 
-  s.source       = {
-    git: 'https://github.com/facebook/facebook-ios-sdk.git',
-    tag: "v#{s.version}"
-  }
+  s.source = { http: "https://github.com/facebook/facebook-ios-sdk/releases/download/v#{s.version}/FacebookSDK.xcframework.zip" }
+  s.vendored_frameworks = 'XCFrameworks/FBSDKTVOSKit.xcframework'
 
-  s.source_files   = 'FBSDKTVOSKit/FBSDKTVOSKit/**/*.{h,m}'
-  s.public_header_files = 'FBSDKTVOSKit/FBSDKTVOSKit/*.h'
-  s.header_dir = 'FBSDKTVOSKit'
-  s.pod_target_xcconfig = {
-    'GCC_PREPROCESSOR_DEFINITIONS': '$(inherited) FBSDKCOCOAPODS=1'
-  }
-
-  s.dependency 'FBSDKCoreKit_Basics', "~> #{s.version}"
-  s.dependency 'FBSDKCoreKit', "~> #{s.version}"
-  s.dependency 'FBSDKShareKit', "~> #{s.version}"
-  s.dependency 'FBSDKLoginKit', "~> #{s.version}"
+  s.dependency 'FBSDKCoreKit_Basics', "#{s.version}"
+  s.dependency 'FBSDKCoreKit', "#{s.version}"
+  s.dependency 'FBSDKShareKit', "#{s.version}"
+  s.dependency 'FBSDKLoginKit', "#{s.version}"
 end
