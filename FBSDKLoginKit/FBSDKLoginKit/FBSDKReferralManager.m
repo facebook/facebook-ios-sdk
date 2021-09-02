@@ -34,13 +34,16 @@ static NSString *const SFVCCanceledLogin = @"com.apple.SafariServices.Authentica
 static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebAuthenticationSession";
 static int const FBClientStateChallengeLength = 20;
 
+@interface FBSDKReferralManager ()
+@property (nonatomic) NSString *expectedChallenge;
+@end
+
 @implementation FBSDKReferralManager
 {
   UIViewController *_viewController;
   FBSDKReferralManagerResultBlock _handler;
   FBSDKReferralManagerLogger *_logger;
   BOOL _isPerformingReferral;
-  NSString *_expectedChallenge;
 }
 
 - (instancetype)initWithViewController:(UIViewController *)viewController

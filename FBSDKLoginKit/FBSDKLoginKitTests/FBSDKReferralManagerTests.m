@@ -36,6 +36,8 @@ static NSString *const _mockChallenge = @"mockChallenge";
 
 @interface FBSDKReferralManager (Testing)
 
+@property (nonatomic) NSString *expectedChallenge;
+
 - (NSURL *)referralURL;
 
 - (void)handleOpenURLComplete:(BOOL)didOpen error:(NSError *)error;
@@ -55,7 +57,10 @@ static NSString *const _mockChallenge = @"mockChallenge";
 - (void)setUp
 {
   [super setUp];
-  _manager = OCMPartialMock([FBSDKReferralManager new]);
+  [FBSDKApplicationDelegate.sharedInstance application:UIApplication.sharedApplication
+                         didFinishLaunchingWithOptions:@{}];
+
+  _manager = [FBSDKReferralManager new];
   [FBSDKSettings setAppID:_mockAppID];
 }
 
@@ -110,10 +115,7 @@ static NSString *const _mockChallenge = @"mockChallenge";
 {
   [self mockURLScheme];
   [self mockBridgeAPI];
-  OCMStub([_manager validateChallenge:_mockChallenge]).andReturn(YES);
 
-  NSString *queryString = [@"?fb_referral_codes=%5B%22abc%22%2C%22def%22%5D&state=" stringByAppendingString:_mockChallenge];
-  NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fb%@://authorize/%@", _mockAppID, queryString]];
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
   FBSDKReferralManagerResultBlock completionHandler = ^(FBSDKReferralManagerResult *result, NSError *referralError) {
     if (referralError) {
@@ -128,6 +130,10 @@ static NSString *const _mockChallenge = @"mockChallenge";
   };
 
   [_manager startReferralWithCompletionHandler:completionHandler];
+
+  NSString *queryString = [@"?fb_referral_codes=%5B%22abc%22%2C%22def%22%5D&state=" stringByAppendingString:_manager.expectedChallenge];
+  NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fb%@://authorize/%@", _mockAppID, queryString]];
+
   XCTAssertTrue([_manager application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
   [self waitForExpectationsWithTimeout:1 handler:^(NSError *_Nullable error) {
@@ -235,7 +241,7 @@ static NSString *const _mockChallenge = @"mockChallenge";
 {
   [self mockURLScheme];
   [self mockBridgeAPI];
-  OCMStub([_manager validateChallenge:_mockChallenge]).andReturn(YES);
+  _manager.expectedChallenge = @"mockChallenge";
 
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
   NSString *invalidQueryString = @"?fb_referral_codes=%5B%22abc%2C%22def";
@@ -261,7 +267,7 @@ static NSString *const _mockChallenge = @"mockChallenge";
 {
   [self mockURLScheme];
   [self mockBridgeAPI];
-  OCMStub([_manager validateChallenge:_mockChallenge]).andReturn(YES);
+  _manager.expectedChallenge = @"mockChallenge";;
 
   NSString *badChallenge = @"badChallenge";
   NSString *queryString = [@"?fb_referral_codes=%5B%22abc%22%2C%22def%22%5D&state=" stringByAppendingString:badChallenge];
@@ -288,14 +294,11 @@ static NSString *const _mockChallenge = @"mockChallenge";
 {
   [self mockURLScheme];
   [self mockBridgeAPI];
-  OCMStub([_manager validateChallenge:_mockChallenge]).andReturn(YES);
 
-  NSString *queryStringWithInvalidCode = [@"?fb_referral_codes=%5B%22abc%22%2C%22def?%22%5D&state=" stringByAppendingString:_mockChallenge];
-  NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fb%@://authorize/%@", _mockAppID, queryStringWithInvalidCode]];
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
   FBSDKReferralManagerResultBlock completionHandler = ^(FBSDKReferralManagerResult *result, NSError *referralError) {
     if (referralError) {
-      XCTFail(@"Should not have error");
+      XCTFail(@"Should not have error: %@", referralError);
     } else {
       NSArray<FBSDKReferralCode *> *referralCodes = result.referralCodes;
       NSArray<FBSDKReferralCode *> *expectedReferralCodes = @[[FBSDKReferralCode initWithString:@"abc"]];
@@ -306,6 +309,10 @@ static NSString *const _mockChallenge = @"mockChallenge";
   };
 
   [_manager startReferralWithCompletionHandler:completionHandler];
+
+  NSString *queryStringWithInvalidCode = [@"?fb_referral_codes=%5B%22abc%22%2C%22def?%22%5D&state=" stringByAppendingString:_manager.expectedChallenge];
+  NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fb%@://authorize/%@", _mockAppID, queryStringWithInvalidCode]];
+
   XCTAssertTrue([_manager application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
   [self waitForExpectationsWithTimeout:1 handler:^(NSError *_Nullable error) {
