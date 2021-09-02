@@ -134,10 +134,10 @@ typedef NS_ERROR_ENUM(FBSDKLoginErrorDomain, FBSDKLoginErrorSubcode)
     @"Your Facebook password has changed. To confirm your password, open Settings > Facebook and tap your name.",
     @"The user facing error message when the device Facebook account password is incorrect and login fails."
   );
-  NSMutableDictionary<NSString *, id>* userInfo = [@{
-    FBSDKErrorLocalizedDescriptionKey : failureReasonAndDescription,
-    NSLocalizedDescriptionKey : failureReasonAndDescription
-  } mutableCopy];
+  NSMutableDictionary<NSString *, id> *userInfo = [@{
+                                                     FBSDKErrorLocalizedDescriptionKey : failureReasonAndDescription,
+                                                     NSLocalizedDescriptionKey : failureReasonAndDescription
+                                                   } mutableCopy];
 
   [FBSDKTypeUtility dictionary:userInfo setObject:innerError forKey:NSUnderlyingErrorKey];
 

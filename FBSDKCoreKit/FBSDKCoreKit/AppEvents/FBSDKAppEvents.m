@@ -543,7 +543,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
     return;
   }
 
-  NSMutableDictionary<NSString *, id>* parameters = [@{FBSDKAppEventParameterPushCampaign : campaign} mutableCopy];
+  NSMutableDictionary<NSString *, id> *parameters = [@{FBSDKAppEventParameterPushCampaign : campaign} mutableCopy];
   if (action && action.length > 0) {
     [FBSDKTypeUtility dictionary:parameters setObject:action forKey:FBSDKAppEventParameterPushAction];
   }
