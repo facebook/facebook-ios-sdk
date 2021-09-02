@@ -16,6 +16,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+@import TestTools;
+
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
@@ -52,6 +54,11 @@ static NSString *const _mockChallenge = @"mockChallenge";
 
 @end
 
+@interface FBSDKInternalUtility (Testing)
++ (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider;
++ (void)reset;
+@end
+
 @implementation FBSDKReferralManagerTests
 
 - (void)setUp
@@ -66,10 +73,19 @@ static NSString *const _mockChallenge = @"mockChallenge";
 
 - (void)mockURLScheme
 {
-  id FBSDKInternalUtilityMock = OCMPartialMock(FBSDKInternalUtility.sharedUtility);
-  OCMStub([FBSDKInternalUtilityMock validateURLSchemes]).andDo(^(NSInvocation *invocation) {
-    // Nothing
-  });
+  [self mockURLSchemesWith:@"fbmockAppID"];
+}
+
+- (void)mockURLSchemesWith:(NSString *)urlScheme
+{
+  TestBundle *bundle = [[TestBundle alloc] initWithInfoDictionary:@{
+                          @"CFBundleURLTypes" : @[
+                            @{ @"CFBundleURLSchemes" : @[urlScheme] }
+                          ]
+                        }];
+
+  [FBSDKInternalUtility reset]; // need to reset fetchUrlSchemesToken nonce
+  [FBSDKInternalUtility configureWithInfoDictionaryProvider:bundle];
 }
 
 - (void)mockBridgeAPI
@@ -194,8 +210,7 @@ static NSString *const _mockChallenge = @"mockChallenge";
 
 - (void)testReferralErrorWithInvalidURLSchemes
 {
-  id FBSDKInternalUtilityMock = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
-  [OCMStub([FBSDKInternalUtilityMock validateURLSchemes]) andThrow:[NSException exceptionWithName:@"InvalidOperationException" reason:nil userInfo:nil]];
+  [self mockURLSchemesWith:@"invalid url scheme"];
 
   XCTestExpectation *expectation = [self expectationWithDescription:self.name];
   FBSDKReferralManagerResultBlock completionHandler = ^(FBSDKReferralManagerResult *result, NSError *referralError) {

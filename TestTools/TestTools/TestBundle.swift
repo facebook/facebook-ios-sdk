@@ -17,16 +17,17 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import FBSDKCoreKit
+import FBSDKCoreKit_Basics
 import Foundation
 
 @objcMembers
-class TestBundle: NSObject, InfoDictionaryProviding {
+public class TestBundle: NSObject, InfoDictionaryProviding {
   private var stubbedInfoDictionary: [String: Any]?
   var lastCapturedKey: String?
-  var capturedKeys = [String]()
-  var didAccessInfoDictionary = false
+  public var capturedKeys = [String]()
+  public var didAccessInfoDictionary = false
 
-  var infoDictionary: [String: Any]? {
+  public var infoDictionary: [String: Any]? {
     get {
       didAccessInfoDictionary = true
       return stubbedInfoDictionary
@@ -36,21 +37,21 @@ class TestBundle: NSObject, InfoDictionaryProviding {
     }
   }
 
-  override convenience init() {
+  public override convenience init() {
     self.init(infoDictionary: [:])
   }
 
-  init(infoDictionary: [String: Any] = [:]) {
+  public init(infoDictionary: [String: Any] = [:]) {
     self.stubbedInfoDictionary = infoDictionary
   }
 
-  func object(forInfoDictionaryKey key: String) -> Any? {
+  public func object(forInfoDictionaryKey key: String) -> Any? {
     lastCapturedKey = key
     capturedKeys.append(key)
     return infoDictionary?[key] as Any?
   }
 
-  func reset() {
+  public func reset() {
     capturedKeys = []
     lastCapturedKey = nil
     stubbedInfoDictionary = nil
