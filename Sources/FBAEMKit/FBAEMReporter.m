@@ -62,6 +62,7 @@ static NSMutableArray<FBAEMInvocation *> *g_invocations;
 static NSDate *g_configRefreshTimestamp;
 static NSMutableArray<FBAEMReporterBlock> *g_completionBlocks;
 static _Nullable id<FBAEMNetworking> _networker = nil;
+static _Nullable id<FBSKAdNetworkReporting> _reporter = nil;
 static NSString *_appId;
 
 @implementation FBAEMReporter
@@ -71,15 +72,28 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
 + (void)configureWithNetworker:(nullable id<FBAEMNetworking>)networker
                          appID:(NSString *)appID
 {
+  [self configureWithNetworker:networker appID:appID reporter:nil];
+}
+
++ (void)configureWithNetworker:(nullable id<FBAEMNetworking>)networker
+                         appID:(NSString *)appID
+                      reporter:(nullable id<FBSKAdNetworkReporting>)reporter
+{
   if (self == [FBAEMReporter class]) {
     _networker = networker;
     _appId = appID;
+    _reporter = reporter;
   }
 }
 
 + (id<FBAEMNetworking>)networker
 {
   return _networker;
+}
+
++ (id<FBSKAdNetworkReporting>)reporter
+{
+  return _reporter;
 }
 
 + (void)enable

@@ -22,6 +22,7 @@
 
  #import <Foundation/Foundation.h>
  #import "FBAEMNetworking.h"
+ #import "FBSKAdNetworkReporting.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -41,6 +42,23 @@ NS_SWIFT_NAME(AEMReporter)
  */
 + (void)configureWithNetworker:(nullable id<FBAEMNetworking>)networker
                          appID:(NSString *)appID;
+
+/**
+
+ Configure networker used for calling Facebook AEM Graph API endpoint
+ and Facebook App ID
+
+ This function should be called in application(_:open:options:) from ApplicationDelegate
+ and BEFORE [FBAEMReporter enable] function. We will use SKAdNetwork reporter to prevent
+ double counting.
+ 
+ @param networker   An optional networker conforms to FBAEMNetworking which handles Graph API request
+ @param appID   The Facebook app ID
+ @param reporter   The SKAdNetwork repoter
+ */
++ (void)configureWithNetworker:(nullable id<FBAEMNetworking>)networker
+                         appID:(NSString *)appID
+                      reporter:(nullable id<FBSKAdNetworkReporting>)reporter;
 
 /**
 

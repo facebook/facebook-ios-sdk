@@ -733,7 +733,9 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
                                                                 conversionValueUpdatable:SKAdNetwork.class];
   }
   if (@available(iOS 14.0, *)) {
-    [FBAEMReporter configureWithNetworker:[FBSDKAEMNetworker new] appID:[FBSDKSettings appID]];
+    [FBAEMReporter configureWithNetworker:[FBSDKAEMNetworker new]
+                                    appID:[FBSDKSettings appID]
+                                 reporter:self.skAdNetworkReporter];
   }
   [FBSDKProfile configureWithStore:store
                accessTokenProvider:FBSDKAccessToken.class

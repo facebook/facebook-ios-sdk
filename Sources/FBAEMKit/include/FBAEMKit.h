@@ -38,5 +38,6 @@
 
  #import "FBAEMNetworking.h"
  #import "FBAEMReporter.h"
+ #import "FBSKAdNetworkReporting.h"
 
 #endif

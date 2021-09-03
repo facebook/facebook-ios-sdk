@@ -22,10 +22,16 @@
 
  #import <Foundation/Foundation.h>
 
+#if defined FBSDKCOCOAPODS || defined BUCK
+ #import "FBSDKCoreKitAEMImport.h"
+#else
+ #import "../../../Internal/FBSDKCoreKitAEMImport.h"
+#endif
+
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(SKAdNetworkReporter)
-@interface FBSDKSKAdNetworkReporter : NSObject
+@interface FBSDKSKAdNetworkReporter : NSObject <FBSKAdNetworkReporting>
 
 - (void)enable;
 

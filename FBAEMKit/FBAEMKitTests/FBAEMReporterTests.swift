@@ -48,6 +48,7 @@ class FBAEMReporterTests: XCTestCase {
   }
 
   let networker = TestAEMNetworker()
+  let reporter = TestSKAdNetworkReporter()
   let date = Calendar.current.date(
     byAdding: .day,
     value: -2,
@@ -67,7 +68,7 @@ class FBAEMReporterTests: XCTestCase {
     super.setUp()
 
     removeReportFile()
-    AEMReporter.configure(withNetworker: networker, appID: "123")
+    AEMReporter.configure(withNetworker: networker, appID: "123", reporter: reporter)
     // Actual queue doesn't matter as long as it's not the same as the designated queue name in the class
     AEMReporter.queue = DispatchQueue(label: name, qos: .background)
     AEMReporter.isEnabled = true
@@ -87,6 +88,19 @@ class FBAEMReporterTests: XCTestCase {
     AEMReporter.enable()
 
     XCTAssertTrue(AEMReporter.isEnabled, "AEM Report should be enabled")
+  }
+
+  func testConfigure() {
+    XCTAssertEqual(
+      networker,
+      AEMReporter.networker as? TestAEMNetworker,
+      "Should configure with the expected AEM networker"
+    )
+    XCTAssertEqual(
+      reporter,
+      AEMReporter.reporter as? TestSKAdNetworkReporter,
+      "Should configure with the expected SKAdNetwork reporter"
+    )
   }
 
   func testParseURL() {

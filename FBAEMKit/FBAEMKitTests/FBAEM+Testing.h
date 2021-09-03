@@ -118,6 +118,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nonatomic) NSMutableArray<FBAEMInvocation *> *invocations;
 @property (class, nonatomic) NSMutableArray<FBAEMReporterBlock> *completionBlocks;
 @property (class, nonatomic) NSString *reportFilePath;
+@property (class, nonatomic) id<FBAEMNetworking> networker;
+@property (class, nonatomic) id<FBSKAdNetworkReporting> reporter;
 
 + (void)enable;
 
