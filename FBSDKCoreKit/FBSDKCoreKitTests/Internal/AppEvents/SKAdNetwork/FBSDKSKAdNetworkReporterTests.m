@@ -99,6 +99,39 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   );
 }
 
+- (void)testLoadReportData
+{
+  NSMutableSet<NSString *> *recordedEvents = [NSMutableSet setWithObject:@"fb_mobile_puchase"];
+  NSMutableDictionary<NSString *, NSMutableDictionary *> *recordedValues = [NSMutableDictionary dictionaryWithDictionary:@{
+                                                                              @"fb_mobile_purchase" : [NSMutableDictionary dictionaryWithDictionary:@{@"USD" : @(10)}]
+                                                                            }];
+  NSInteger conversionValue = 10;
+  NSDate *timestamp = [NSDate date];
+  [self saveEvents:recordedEvents values:recordedValues conversionValue:conversionValue timestamp:timestamp];
+
+  [self.skAdNetworkReporter _loadReportData];
+  XCTAssertEqualObjects(
+    recordedEvents,
+    self.skAdNetworkReporter.recordedEvents,
+    @"Should load the expected recorded events"
+  );
+  XCTAssertEqualObjects(
+    recordedValues,
+    self.skAdNetworkReporter.recordedValues,
+    @"Should load the expected recorded values"
+  );
+  XCTAssertEqual(
+    conversionValue,
+    self.skAdNetworkReporter.conversionValue,
+    @"Should load the expected conversion value"
+  );
+  XCTAssertEqual(
+    timestamp.timeIntervalSince1970,
+    self.skAdNetworkReporter.timestamp.timeIntervalSince1970,
+    @"Should load the expected timestamp"
+  );
+}
+
 - (void)testShouldCutoffWithoutTimestampWithoutCutoffTime
 {
   XCTAssertTrue([self.skAdNetworkReporter _shouldCutoff], "Should cut off reporting when there is no install timestamp or cutoff time");
@@ -269,6 +302,20 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
     reporter.conversionValueUpdatable,
     "Should be able to configure a reporter with a Conversion Value Updater"
   );
+}
+
+- (void)saveEvents:(NSMutableSet *)events
+            values:(NSMutableDictionary *)values
+   conversionValue:(NSInteger)conversionValue
+         timestamp:(NSDate *)timestamp
+{
+  NSMutableDictionary<NSString *, id> *reportData = [NSMutableDictionary new];
+  [FBSDKTypeUtility dictionary:reportData setObject:@(conversionValue) forKey:@"conversion_value"];
+  [FBSDKTypeUtility dictionary:reportData setObject:timestamp forKey:@"timestamp"];
+  [FBSDKTypeUtility dictionary:reportData setObject:events forKey:@"recorded_events"];
+  [FBSDKTypeUtility dictionary:reportData setObject:values forKey:@"recorded_values"];
+  NSData *cache = [NSKeyedArchiver archivedDataWithRootObject:reportData];
+  [self.userDefaultsSpy setObject:cache forKey:@"com.facebook.sdk:FBSDKSKAdNetworkReporter"];
 }
 
 @end
