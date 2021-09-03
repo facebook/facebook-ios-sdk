@@ -55,6 +55,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 @interface FBSDKSKAdNetworkReporterTests : XCTestCase
 @property (nonnull, nonatomic) FBSDKSKAdNetworkReporter *skAdNetworkReporter;
 @property (nonatomic) UserDefaultsSpy *userDefaultsSpy;
+@property (nonatomic) TestGraphRequestFactory *requestProvider;
 @property (nonatomic) FBSDKSKAdNetworkConversionConfiguration *defaultConfiguration;
 @end
 
@@ -65,6 +66,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [super setUp];
   [TestConversionValueUpdating reset];
   self.userDefaultsSpy = [UserDefaultsSpy new];
+  self.requestProvider = [TestGraphRequestFactory new];
 
   NSDictionary *json = @{
     @"data" : @[@{
@@ -77,8 +79,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   };
   self.defaultConfiguration = [[FBSDKSKAdNetworkConversionConfiguration alloc] initWithJSON:json];
 
-  TestGraphRequestFactory *requestProvider = [TestGraphRequestFactory new];
-  self.skAdNetworkReporter = [[FBSDKSKAdNetworkReporter alloc] initWithRequestProvider:requestProvider store:self.userDefaultsSpy conversionValueUpdatable:TestConversionValueUpdating.class];
+  self.skAdNetworkReporter = [[FBSDKSKAdNetworkReporter alloc] initWithRequestProvider:self.requestProvider store:self.userDefaultsSpy conversionValueUpdatable:TestConversionValueUpdating.class];
   [self.skAdNetworkReporter _loadReportData];
   [self.skAdNetworkReporter setSKAdNetworkReportEnabled:YES];
 }
@@ -130,6 +131,21 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
     self.skAdNetworkReporter.timestamp.timeIntervalSince1970,
     @"Should load the expected timestamp"
   );
+}
+
+- (void)testLoadConfigurationWithValidCache
+{
+  self.skAdNetworkReporter.serialQueue = dispatch_queue_create(self.name.UTF8String, DISPATCH_QUEUE_SERIAL);
+  self.skAdNetworkReporter.completionBlocks = [NSMutableArray new];
+  self.skAdNetworkReporter.configRefreshTimestamp = [NSDate date];
+  [self.userDefaultsSpy setObject:SampleSKAdNetworkConversionConfiguration.configJson forKey:@"com.facebook.sdk:FBSDKSKAdNetworkConversionConfiguration"];
+
+  __block int count = 0;
+  [self.skAdNetworkReporter _loadConfigurationWithBlock:^{
+    count += 1;
+  }];
+  XCTAssertEqual(count, 1, @"Should expect the execution block to be called once");
+  XCTAssertEqual(self.requestProvider.capturedRequests.count, 0, "Should not have graph request with valid cache");
 }
 
 - (void)testShouldCutoffWithoutTimestampWithoutCutoffTime
@@ -231,24 +247,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 - (void)testRecord
 {
   if (@available(iOS 14, *)) {
-    NSDictionary<NSString *, id> *json = @{
-      @"data" : @[@{
-                    @"timer_buckets" : @1,
-                    @"timer_interval" : @1000,
-                    @"cutoff_time" : @1,
-                    @"default_currency" : @"USD",
-                    @"conversion_value_rules" : @[
-                      @{
-                        @"conversion_value" : @2,
-                        @"events" : @[
-                          @{
-                            @"event_name" : @"fb_test",
-                          }
-                        ],
-                    }],
-      }]
-    };
-    FBSDKSKAdNetworkConversionConfiguration *config = [[FBSDKSKAdNetworkConversionConfiguration alloc] initWithJSON:json];
+    FBSDKSKAdNetworkConversionConfiguration *config = [[FBSDKSKAdNetworkConversionConfiguration alloc] initWithJSON:SampleSKAdNetworkConversionConfiguration.configJson];
     [self.skAdNetworkReporter setConfiguration:config];
     [self.skAdNetworkReporter _recordAndUpdateEvent:@"fb_test" currency:nil value:nil];
     [self.skAdNetworkReporter _recordAndUpdateEvent:@"fb_mobile_purchase" currency:@"USD" value:@100];
