@@ -43,6 +43,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
 static NSString *const FBSDKSKAdNetworkConversionConfigurationKey = @"com.facebook.sdk:FBSDKSKAdNetworkConversionConfiguration";
 static NSString *const FBSDKSKAdNetworkReporterKey = @"com.facebook.sdk:FBSDKSKAdNetworkReporter";
+static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKSKAdNetworkReporter";
 
 @interface FBSDKSKAdNetworkReporter ()
 
@@ -82,7 +83,7 @@ static NSString *const FBSDKSKAdNetworkReporterKey = @"com.facebook.sdk:FBSDKSKA
       [SKAdNetwork registerAppForAdNetworkAttribution];
       [self _loadReportData];
       self.completionBlocks = [NSMutableArray new];
-      self.serialQueue = dispatch_queue_create("com.facebook.appevents.SKAdNetwork.FBSDKSKAdNetworkReporter", DISPATCH_QUEUE_SERIAL);
+      self.serialQueue = dispatch_queue_create(serialQueueLabel, DISPATCH_QUEUE_SERIAL);
       [self _loadConfigurationWithBlock:^{
         [self _checkAndUpdateConversionValue];
         [self _checkAndRevokeTimer];
@@ -136,16 +137,16 @@ static NSString *const FBSDKSKAdNetworkReporterKey = @"com.facebook.sdk:FBSDKSKA
   }
   // Executes block if there is cache
   if ([self _isConfigRefreshTimestampValid] && [self.store objectForKey:FBSDKSKAdNetworkConversionConfigurationKey]) {
-    dispatch_async(self.serialQueue, ^() {
+    [self dispatchOnQueue:self.serialQueue block:^() {
       [FBSDKTypeUtility array:self.completionBlocks addObject:block];
       for (FBSDKSKAdNetworkReporterBlock executionBlock in self.completionBlocks) {
         executionBlock();
       }
       [self.completionBlocks removeAllObjects];
-    });
+    }];
     return;
   }
-  dispatch_async(self.serialQueue, ^{
+  [self dispatchOnQueue:self.serialQueue block:^{
     [FBSDKTypeUtility array:self.completionBlocks addObject:block];
     if (self.isRequestStarted) {
       return;
@@ -153,7 +154,7 @@ static NSString *const FBSDKSKAdNetworkReporterKey = @"com.facebook.sdk:FBSDKSKA
     self.isRequestStarted = YES;
     id<FBSDKGraphRequest> request = [self.requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/ios_skadnetwork_conversion_config", [FBSDKSettings appID]]];
     [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
-      dispatch_async(self.serialQueue, ^{
+      [self dispatchOnQueue:self.serialQueue block:^{
         if (error) {
           self.isRequestStarted = NO;
           return;
@@ -169,9 +170,9 @@ static NSString *const FBSDKSKAdNetworkReporterKey = @"com.facebook.sdk:FBSDKSKA
           [self.completionBlocks removeAllObjects];
           self.isRequestStarted = NO;
         }
-      });
+      }];
     }];
-  });
+  }];
 }
 
 - (void)_checkAndRevokeTimer
@@ -307,6 +308,17 @@ static NSString *const FBSDKSKAdNetworkReporterKey = @"com.facebook.sdk:FBSDKSKA
   NSData *cache = [NSKeyedArchiver archivedDataWithRootObject:reportData];
   if (cache) {
     [self.store setObject:cache forKey:FBSDKSKAdNetworkReporterKey];
+  }
+}
+
+- (void)dispatchOnQueue:(dispatch_queue_t)queue block:(dispatch_block_t)block
+{
+  if (block != nil) {
+    if (strcmp(dispatch_queue_get_label(queue), serialQueueLabel) == 0) {
+      dispatch_async(queue, block);
+    } else {
+      block();
+    }
   }
 }
 

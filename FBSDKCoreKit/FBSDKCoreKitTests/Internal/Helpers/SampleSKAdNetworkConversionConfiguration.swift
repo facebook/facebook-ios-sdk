@@ -16,25 +16,29 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKSKAdNetworkReporter.h"
+import Foundation
 
-typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
+@objcMembers
+class SampleSKAdNetworkConversionConfiguration: NSObject {
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface FBSDKSKAdNetworkReporter (Testing)
-
-@property (nonatomic) BOOL isSKAdNetworkReportEnabled;
-@property (nonnull, nonatomic) NSMutableArray<FBSDKSKAdNetworkReporterBlock> *completionBlocks;
-@property (nonnull, nonatomic) dispatch_queue_t serialQueue;
-@property (nonnull, nonatomic) NSDate *configRefreshTimestamp;
-@property (nonatomic) NSInteger conversionValue;
-@property (nonatomic) NSDate *timestamp;
-@property (nonnull, nonatomic) NSMutableSet<NSString *> *recordedEvents;
-@property (nonnull, nonatomic) NSMutableDictionary<NSString *, id> *recordedValues;
-
-- (void)_loadConfigurationWithBlock:(FBSDKSKAdNetworkReporterBlock)block;
-
-@end
-
-NS_ASSUME_NONNULL_END
+  static var configJson: [String: Any] {
+    [
+      "data": [[
+                  "timer_buckets": 1,
+                  "timer_interval": 1000,
+                  "cutoff_time": 1,
+                  "default_currency": "USD",
+                  "conversion_value_rules": [
+                    [
+                      "conversion_value": 2,
+                      "events": [
+                        [
+                          "event_name": "fb_test"
+                        ]
+                      ]
+                    ]
+                  ]
+      ]]
+    ]
+  }
+}

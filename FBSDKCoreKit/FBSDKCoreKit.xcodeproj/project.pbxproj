@@ -902,6 +902,7 @@
 		75DB0B33308E3A06BBE04EE3 /* FBSDKServerConfigurationManager+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 6880848529D36652A9FE00F1 /* FBSDKServerConfigurationManager+Internal.h */; };
 		7618850072FDDB48C92CA658 /* FBSDKHumanSilhouetteIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E5C76D2D0D62F19B3B3B481 /* FBSDKHumanSilhouetteIcon.m */; };
 		76531589C4EADC7E2DBD9F49 /* FBSDKErrorConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = B7A83A66BC7FD59C4BA314E9 /* FBSDKErrorConfiguration.h */; };
+		765F83D369784EFAD3D7F72C /* SampleSKAdNetworkConversionConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E27C0F4BD0FEBF16FA036703 /* SampleSKAdNetworkConversionConfiguration.swift */; };
 		766713DF248AAC76CF3B23B1 /* FBSDKAppURLSchemeProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FF2ECAF9663F46531404919 /* FBSDKAppURLSchemeProviding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		767C583B1323DF830057A73F /* FBSDKDeviceDialogView.m in Sources */ = {isa = PBXBuildFile; fileRef = 873D6F30C920F1053ED885C9 /* FBSDKDeviceDialogView.m */; };
 		76DF7FE82F3B31909802C803 /* FBSDKLogo.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BC1411559CFDCD861BC50F4 /* FBSDKLogo.m */; };
@@ -2701,6 +2702,7 @@
 		E1D757E2E073DA2DF86C2876 /* FBSDKAuthenticationToken+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKAuthenticationToken+Internal.h"; sourceTree = "<group>"; };
 		E2001E102B6CDD4EAADF7926 /* FBSDKGraphRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKGraphRequest.h; sourceTree = "<group>"; };
 		E233BB99A5F1D5E80F0CE123 /* FBSDKBackgroundEventLogging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKBackgroundEventLogging.h; sourceTree = "<group>"; };
+		E27C0F4BD0FEBF16FA036703 /* SampleSKAdNetworkConversionConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleSKAdNetworkConversionConfiguration.swift; sourceTree = "<group>"; };
 		E292C6B9607D10A1C73A1FB2 /* FBSDKAtePublisherFactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKAtePublisherFactory.h; sourceTree = "<group>"; };
 		E2CF59EDDB9479AAE64FF93A /* ErrorConfigurationProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorConfigurationProviderTests.swift; sourceTree = "<group>"; };
 		E2DD69FF1B9C2DD7AFFE9BF9 /* TestGateKeeperManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGateKeeperManager.swift; sourceTree = "<group>"; };
@@ -3044,6 +3046,7 @@
 				E70213005E43A9C98FA6D1BB /* SampleRawRemoteGatekeeper.swift */,
 				B2AF9F643E2BC6975EE8A23E /* SampleRawRemoteGatekeeperList.swift */,
 				717FA22BE101340EC352ABD8 /* SampleRawRemotePermissionList.swift */,
+				E27C0F4BD0FEBF16FA036703 /* SampleSKAdNetworkConversionConfiguration.swift */,
 				D1540AB5F8639C2F5D1BF505 /* SampleURLs.swift */,
 				15E8258D64B6C055B6FA9907 /* ServerConfigurationFixtures.swift */,
 				4B690E6E7E4BA0EB36A167F4 /* TestAdvertiserIDProvider.swift */,
@@ -6140,6 +6143,7 @@
 				7F273A68DD474E279634230B /* SampleRawRemoteGatekeeper.swift in Sources */,
 				A8E221ADA7EA6D6E966DB3F1 /* SampleRawRemoteGatekeeperList.swift in Sources */,
 				DC1AA6A125E7F7AF7E52E9AA /* SampleRawRemotePermissionList.swift in Sources */,
+				765F83D369784EFAD3D7F72C /* SampleSKAdNetworkConversionConfiguration.swift in Sources */,
 				3A01CBAF06C346E8BFA5635A /* SampleURLs.swift in Sources */,
 				3EC465DA50458D459E976476 /* ServerConfigurationFixtures.swift in Sources */,
 				17AD39BECEEC5059157DBD9B /* SettingsTests.swift in Sources */,
