@@ -209,6 +209,9 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
   BOOL isGeneralInvocationVisited = NO;
   FBAEMInvocation *attributedInvocation = nil;
   for (FBAEMInvocation *invocation in [invocations reverseObjectEnumerator]) {
+    if ([self _isDoubleCounting:invocation event:event]) {
+      break;
+    }
     if (!invocation.businessID && isGeneralInvocationVisited) {
       continue;
     }
@@ -222,6 +225,18 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
     }
   }
   return attributedInvocation;
+}
+
++ (BOOL)_isDoubleCounting:(FBAEMInvocation *)invocation
+                    event:(NSString *)event
+{
+  // We consider it as double counting if following conditions meet simultaneously
+  // 1. The field hasSKAN is true
+  // 2. The conversion happens before SKAdNetwork cutoff
+  // 3. The event is also being reported by SKAdNetwork
+  return invocation.hasSKAN
+  && ![_reporter shouldCutoff]
+  && [_reporter isReportingEvent:event];
 }
 
 + (void)_appendAndSaveInvocation:(FBAEMInvocation *)invocation

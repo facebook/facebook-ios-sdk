@@ -37,6 +37,7 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     static let priority = "priority"
     static let conversionTimestamp = "conversion_timestamp"
     static let isAggregated = "is_aggregated"
+    static let hasSKAN = "has_skan"
     static let defaultCurrency = "default_currency"
     static let cutoffTime = "cutoff_time"
     static let validFrom = "valid_from"
@@ -76,7 +77,8 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       priority: -1,
       conversionTimestamp: Date(timeIntervalSince1970: 1618383700),
       isAggregated: false,
-      isTestMode: false
+      isTestMode: false,
+      hasSKAN: false
     )
   var config1: AEMConfiguration!  // swiftlint:disable:this implicitly_unwrapped_optional
     = AEMConfiguration(json: [
@@ -215,6 +217,31 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
     )
   }
 
+  func testInvocationWithSKANInfoAppLinkData() throws {
+    let data = [
+      "acs_token": "debuggingtoken",
+      "campaign_ids": "test_campaign_1234",
+      "advertiser_id": "test_advertiserid_coffee",
+      "has_skan": true
+    ] as [String: Any]
+    let invocation = try XCTUnwrap(AEMInvocation(appLinkData: data))
+
+    XCTAssertTrue(
+      invocation.hasSKAN,
+      "Invocation's hasSKAN is expected to be true when has_skan is true"
+    )
+    XCTAssertEqual(
+      invocation.acsToken,
+      "debuggingtoken",
+      "Invocations's acsToken is not expected"
+    )
+    XCTAssertEqual(
+      invocation.campaignID,
+      "test_campaign_1234",
+      "Invocations's campaignID is not expected"
+    )
+  }
+
   func testFindConfig() {
     var invocation: AEMInvocation? = self.validInvocation
     invocation?.reset()
@@ -230,7 +257,8 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       acsSharedSecret: nil,
       acsConfigID: nil,
       businessID: nil,
-      isTestMode: false
+      isTestMode: false,
+      hasSKAN: false
     )
     let config = invocation?._findConfig([Values.defaultMode: [config1, config2]])
     XCTAssertEqual(invocation?.configID, 20000, "Should set the invocation with expected configID")
@@ -294,7 +322,8 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       acsSharedSecret: nil,
       acsConfigID: nil,
       businessID: "test_advertiserid_123",
-      isTestMode: false
+      isTestMode: false,
+      hasSKAN: false
     )
     let config = invocation?._findConfig([
       Values.defaultMode: [configWithoutBusinessID],
@@ -604,6 +633,12 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       invocation.isAggregated,
       "Should encode the expected isAggregated with the correct key"
     )
+    let hasSKAN = coder.encodedObject[Keys.hasSKAN] as? NSNumber
+    XCTAssertEqual(
+      hasSKAN?.boolValue,
+      invocation.hasSKAN,
+      "Should encode the expected hasSKAN with the correct key"
+    )
   }
 
   func testDecoding() { // swiftlint:disable:this function_body_length
@@ -669,6 +704,11 @@ class FBAEMInvocationTests: XCTestCase { // swiftlint:disable:this type_body_len
       decoder.decodedObject[Keys.isAggregated] as? String,
       "decodeBoolForKey",
       "Should decode the expected type for the is_aggregated key"
+    )
+    XCTAssertEqual(
+      decoder.decodedObject[Keys.hasSKAN] as? String,
+      "decodeBoolForKey",
+      "Should decode the expected type for the has_skan key"
     )
   }
 } // swiftlint:disable:this file_length

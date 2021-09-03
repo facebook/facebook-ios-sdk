@@ -66,7 +66,8 @@ NS_ASSUME_NONNULL_BEGIN
                             ACSSharedSecret:(nullable NSString *)ACSSharedSecret
                                 ACSConfigID:(nullable NSString *)ACSConfigID
                                  businessID:(nullable NSString *)businessID
-                                 isTestMode:(BOOL)isTestMode;
+                                 isTestMode:(BOOL)isTestMode
+                                    hasSKAN:(BOOL)hasSKAN;
 
 - (nullable instancetype)initWithCampaignID:(NSString *)campaignID
                                    ACSToken:(NSString *)ACSToken
@@ -82,7 +83,8 @@ NS_ASSUME_NONNULL_BEGIN
                                    priority:(NSInteger)priority
                         conversionTimestamp:(nullable NSDate *)conversionTimestamp
                                isAggregated:(BOOL)isAggregated
-                                 isTestMode:(BOOL)isTestMode;
+                                 isTestMode:(BOOL)isTestMode
+                                    hasSKAN:(BOOL)hasSKAN;
 
 - (nullable FBAEMConfiguration *)_findConfig:(nullable NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configs;
 
@@ -133,6 +135,9 @@ NS_ASSUME_NONNULL_BEGIN
                                               value:(nullable NSNumber *)value
                                          parameters:(nullable NSDictionary<NSString *, id> *)parameters
                                             configs:(NSDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)configs;
+
++ (BOOL)_isDoubleCounting:(FBAEMInvocation *)invocation
+                    event:(NSString *)event;
 
 + (void)_sendDebuggingRequest:(FBAEMInvocation *)invocation;
 
