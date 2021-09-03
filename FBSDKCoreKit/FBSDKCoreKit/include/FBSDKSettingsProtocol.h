@@ -29,6 +29,7 @@ NS_SWIFT_NAME(SettingsProtocol)
 @property (class, nonatomic, copy, nonnull) NSSet<FBSDKLoggingBehavior> *loggingBehaviors;
 
 @property (nonatomic, copy, nullable) NSString *appID;
+@property (nonatomic, copy, nullable) NSString *appURLSchemeSuffix;
 @property (nonatomic, readonly) BOOL isDataProcessingRestricted;
 @property (nonatomic, readonly) BOOL isAutoLogAppEventsEnabled;
 @property (nonatomic, readonly) BOOL isSetATETimeExceedsInstallTime;

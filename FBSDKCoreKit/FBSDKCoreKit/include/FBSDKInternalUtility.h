@@ -118,11 +118,6 @@ NS_SWIFT_NAME(InternalUtility)
 - (NSString *)validateRequiredClientAccessToken;
 
 /**
-  validates that the right URL schemes are registered, throws an NSException if not.
- */
-- (void)validateURLSchemes;
-
-/**
   Attempts to find the first UIViewController in the view's responder chain. Returns nil if not found.
  */
 - (nullable UIViewController *)viewControllerForView:(UIView *)view;

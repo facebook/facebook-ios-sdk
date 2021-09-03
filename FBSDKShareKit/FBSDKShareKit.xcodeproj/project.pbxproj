@@ -513,6 +513,7 @@
 		20F7ABEAA225D497EA0453F6 /* FBSDKShareExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKShareExtension.h; sourceTree = "<group>"; };
 		227EEAA2262AD634B42FD444 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKShareKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		228218E3765DFDEBDF07DA43 /* FBSDKSendButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKSendButton.h; sourceTree = "<group>"; };
+		25355608062A32EED78EB9EE /* FBSDKBridgeAPIRequest+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKBridgeAPIRequest+Testing.h"; sourceTree = "<group>"; };
 		2931BBF6624C21AD56984829 /* FBSDKHashtag.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKHashtag.h; sourceTree = "<group>"; };
 		29810843CCD277CA80254381 /* FBSDKMessageDialog.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKMessageDialog.m; sourceTree = "<group>"; };
 		2B21D94F9CD86DD22E0B75B7 /* FBSDKShareCameraEffectContent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKShareCameraEffectContent.h; sourceTree = "<group>"; };
@@ -924,6 +925,7 @@
 		CDF1744FC11463AAF688078E /* Interfaces */ = {
 			isa = PBXGroup;
 			children = (
+				25355608062A32EED78EB9EE /* FBSDKBridgeAPIRequest+Testing.h */,
 				44315CF4392A02226BB28A73 /* FBSDKMessageDialog+Testing.h */,
 			);
 			path = Interfaces;

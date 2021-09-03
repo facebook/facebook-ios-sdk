@@ -2564,6 +2564,7 @@
 		AE62DF4A2A3B0CEEDAF65A7E /* FBSDKProfilePictureView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKProfilePictureView.m; sourceTree = "<group>"; };
 		AE8DA69C32BFD7D6E24B6183 /* FBSDKSKAdNetworkRule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKSKAdNetworkRule.h; sourceTree = "<group>"; };
 		AE975C6C705C1563079F2B98 /* FBSDKIntegrityParametersProcessorProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKIntegrityParametersProcessorProvider.h; sourceTree = "<group>"; };
+		AEBFDC611F67800A8B25199D /* FBSDKBridgeAPIRequest+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKBridgeAPIRequest+Testing.h"; sourceTree = "<group>"; };
 		AF125E1CA1BBDD9C4460ABB6 /* FBSDKBackgroundEventLogger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKBackgroundEventLogger.m; sourceTree = "<group>"; };
 		AF5D8DC4A213C842F080AA83 /* FBSDKIntegrityManager+Testing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKIntegrityManager+Testing.h"; sourceTree = "<group>"; };
 		AF6D4FB6C377DC845F8656E1 /* SampleHTTPURLResponses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleHTTPURLResponses.swift; sourceTree = "<group>"; };
@@ -3189,6 +3190,7 @@
 				36886D249FF181AA49CA8CB5 /* FBSDKBridgeAPI+SessionCompletionHandlerTests.m */,
 				A257DAB877B3A90EC709C8B9 /* FBSDKBridgeAPIOpenBridgeRequestTests.m */,
 				743C9FD15F6C6A20A705F657 /* FBSDKBridgeAPIOpenUrlWithSafariTests.m */,
+				AEBFDC611F67800A8B25199D /* FBSDKBridgeAPIRequest+Testing.h */,
 				FC3CD6CBEE0509509D687B02 /* FBSDKBridgeAPIResponseFactoryTests.swift */,
 				79F8A164F971364A7301CF77 /* FBSDKBridgeAPITests.h */,
 				207C2472F7CDB17176B11F37 /* FBSDKBridgeAPITests.m */,

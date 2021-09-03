@@ -29,6 +29,7 @@
 @import FBSDKCoreKit;
 #endif
 
+#import "FBSDKBridgeAPIRequest+Testing.h"
 #import "FBSDKHashtag.h"
 #import "FBSDKShareDefines.h"
 #import "FBSDKShareDialog+Testing.h"
@@ -46,11 +47,13 @@
 {
   [super setUp];
 
+  [FBSDKBridgeAPIRequest resetClassDependencies];
   [FBSDKShareDialog resetClassDependencies];
 }
 
 - (void)tearDown
 {
+  [FBSDKBridgeAPIRequest resetClassDependencies];
   [FBSDKShareDialog resetClassDependencies];
 
   [super tearDown];
@@ -682,9 +685,6 @@
                           useSafariViewController:(BOOL)OCMOCK_ANY
                                fromViewController:OCMOCK_ANY
                                   completionBlock:OCMOCK_ANY];
-
-  [FBSDKShareDialog resetClassDependencies];
-  [FBSDKShareDialog configureClassDependencies];
 
   UIViewController *vc = [UIViewController new];
   dialog.fromViewController = vc;

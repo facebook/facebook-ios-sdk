@@ -29,6 +29,7 @@ class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   var recordInstallCallCount = 0
 
   var appID: String?
+  var appURLSchemeSuffix: String?
 
   var stubbedGraphAPIVersion = FBSDK_DEFAULT_GRAPH_API_VERSION
   var advertisingTrackingStatus: AdvertisingTrackingStatus = .unspecified

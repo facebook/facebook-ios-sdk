@@ -23,12 +23,15 @@
  #import "FBSDKBridgeAPIRequest.h"
  #import "FBSDKBridgeAPIRequest+Private.h"
 
+ #import <UIKit/UIApplication.h>
+
  #import "FBSDKBridgeAPIProtocolNativeV1.h"
  #import "FBSDKBridgeAPIProtocolWebV1.h"
  #import "FBSDKBridgeAPIProtocolWebV2.h"
  #import "FBSDKCoreKitBasicsImport.h"
  #import "FBSDKInternalUtility+Internal.h"
  #import "FBSDKSettings.h"
+ #import "UIApplication+URLOpener.h"
 
 NSString *const FBSDKBridgeAPIAppIDKey = @"app_id";
 NSString *const FBSDKBridgeAPISchemeSuffixKey = @"scheme_suffix";
@@ -38,6 +41,93 @@ NSString *const FBSDKBridgeAPIVersionKey = @"version";
 NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in extensions")
  #endif
 @implementation FBSDKBridgeAPIRequest
+
+ #pragma mark - Class dependencies
+
+static BOOL _hasBeenConfigured;
+
++ (BOOL)hasBeenConfigured
+{
+  return _hasBeenConfigured;
+}
+
++ (void)setHasBeenConfigured:(BOOL)hasBeenConfigured
+{
+  _hasBeenConfigured = hasBeenConfigured;
+}
+
+static _Nullable id<FBSDKInternalURLOpener> _internalURLOpener;
+
++ (nullable id<FBSDKInternalURLOpener>)internalURLOpener
+{
+  return _internalURLOpener;
+}
+
++ (void)setInternalURLOpener:(nullable id<FBSDKInternalURLOpener>)internalURLOpener
+{
+  _internalURLOpener = internalURLOpener;
+}
+
+static _Nullable id<FBSDKInternalUtility> _internalUtility;
+
++ (nullable id<FBSDKInternalUtility>)internalUtility
+{
+  return _internalUtility;
+}
+
++ (void)setInternalUtility:(nullable id<FBSDKInternalUtility>)internalUtility
+{
+  _internalUtility = internalUtility;
+}
+
+static _Nullable id<FBSDKSettings> _settings;
+
++ (nullable id<FBSDKSettings>)settings
+{
+  return _settings;
+}
+
++ (void)setSettings:(nullable id<FBSDKSettings>)settings
+{
+  _settings = settings;
+}
+
+ #pragma mark - Class Configuration
+
++ (void)configureWithInternalURLOpener:(nonnull id<FBSDKInternalURLOpener>)internalURLOpener
+                       internalUtility:(nonnull id<FBSDKInternalUtility>)internalUtility
+                              settings:(nonnull id<FBSDKSettings>)settings
+{
+  self.internalURLOpener = internalURLOpener;
+  self.internalUtility = internalUtility;
+  self.settings = settings;
+
+  self.hasBeenConfigured = YES;
+}
+
++ (void)configureClassDependencies
+{
+  if (self.hasBeenConfigured) {
+    return;
+  }
+
+  [self configureWithInternalURLOpener:UIApplication.sharedApplication
+                       internalUtility:FBSDKInternalUtility.sharedUtility
+                              settings:FBSDKSettings.sharedSettings];
+}
+
+ #if FBTEST
+
++ (void)resetClassDependencies
+{
+  self.internalURLOpener = nil;
+  self.internalUtility = nil;
+  self.settings = nil;
+
+  self.hasBeenConfigured = NO;
+}
+
+ #endif
 
  #pragma mark - Class Methods
 
@@ -79,14 +169,16 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
  #pragma mark - Object Lifecycle
 
-- (instancetype)initWithProtocol:(id<FBSDKBridgeAPIProtocol>)protocol
-                    protocolType:(FBSDKBridgeAPIProtocolType)protocolType
-                          scheme:(NSString *)scheme
-                      methodName:(NSString *)methodName
-                   methodVersion:(NSString *)methodVersion
-                      parameters:(NSDictionary<NSString *, id> *)parameters
-                        userInfo:(NSDictionary<NSString *, id> *)userInfo
+- (nullable instancetype)initWithProtocol:(nullable id<FBSDKBridgeAPIProtocol>)protocol
+                             protocolType:(FBSDKBridgeAPIProtocolType)protocolType
+                                   scheme:(nonnull NSString *)scheme
+                               methodName:(nullable NSString *)methodName
+                            methodVersion:(nullable NSString *)methodVersion
+                               parameters:(nullable NSDictionary<NSString *, id> *)parameters
+                                 userInfo:(nullable NSDictionary<NSString *, id> *)userInfo
 {
+  [self.class configureClassDependencies];
+
   if (!protocol) {
     return nil;
   }
@@ -118,19 +210,19 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
     return nil;
   }
 
-  [FBSDKInternalUtility.sharedUtility validateURLSchemes];
+  [self.class.internalUtility validateURLSchemes];
 
   NSDictionary<NSString *, NSString *> *requestQueryParameters = [FBSDKBasicUtility dictionaryWithQueryString:requestURL.query];
   NSMutableDictionary<NSString *, id> *queryParameters = [[NSMutableDictionary alloc] initWithDictionary:requestQueryParameters];
-  [FBSDKTypeUtility dictionary:queryParameters setObject:[FBSDKSettings appID] forKey:FBSDKBridgeAPIAppIDKey];
+  [FBSDKTypeUtility dictionary:queryParameters setObject:self.class.settings forKey:FBSDKBridgeAPIAppIDKey];
   [FBSDKTypeUtility dictionary:queryParameters
-                     setObject:[FBSDKSettings appURLSchemeSuffix]
+                     setObject:self.class.settings.appURLSchemeSuffix
                         forKey:FBSDKBridgeAPISchemeSuffixKey];
-  requestURL = [FBSDKInternalUtility.sharedUtility URLWithScheme:requestURL.scheme
-                                                            host:requestURL.host
-                                                            path:requestURL.path
-                                                 queryParameters:queryParameters
-                                                           error:errorRef];
+  requestURL = [self.class.internalUtility URLWithScheme:requestURL.scheme
+                                                    host:requestURL.host
+                                                    path:requestURL.path
+                                         queryParameters:queryParameters
+                                                   error:errorRef];
   return requestURL;
 }
 
@@ -150,7 +242,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   NSURLComponents *components = [NSURLComponents new];
   components.scheme = scheme;
   components.path = @"/";
-  if ([[UIApplication sharedApplication] canOpenURL:components.URL]) {
+  if ([self.class.internalURLOpener canOpenURL:components.URL]) {
     return protocol;
   }
   return nil;

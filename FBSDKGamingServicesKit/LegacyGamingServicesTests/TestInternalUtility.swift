@@ -47,6 +47,8 @@ class TestInternalUtility: InternalUtilityProtocol {
   func unregisterTransientObject(_ object: Any) {}
 
   func checkRegisteredCanOpenURLScheme(_ urlScheme: String) {}
+
+  func validateURLSchemes() {}
 }
 
 enum URLConstants {

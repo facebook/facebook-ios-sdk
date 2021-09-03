@@ -56,6 +56,11 @@ NS_SWIFT_NAME(InternalUtilityProtocol)
 
 - (void)checkRegisteredCanOpenURLScheme:(NSString *)urlScheme;
 
+/**
+  Validates that the right URL schemes are registered, throws an NSException if not.
+ */
+- (void)validateURLSchemes;
+
 @end
 
 NS_ASSUME_NONNULL_END
