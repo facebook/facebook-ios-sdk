@@ -43,7 +43,7 @@ typedef NS_ERROR_ENUM(FBSDKLoginErrorDomain, FBSDKLoginErrorSubcode)
   FBSDKLoginErrorSubcodeUnconfirmedUser = 464,
 };
 
-@implementation NSError (FBSDKLoginError)
+@implementation FBSDKLoginErrorFactory
 
 + (NSError *)fbErrorForFailedLoginWithCode:(FBSDKLoginError)code
 {
