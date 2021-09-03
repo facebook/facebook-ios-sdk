@@ -180,7 +180,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
   if (!self.config) {
     return;
   }
-  if ([self _shouldCutoff]) {
+  if ([self shouldCutoff]) {
     return;
   }
   if (self.conversionValue > self.config.timerBuckets) {
@@ -199,7 +199,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
   if (!self.config) {
     return;
   }
-  if ([self _shouldCutoff]) {
+  if ([self shouldCutoff]) {
     return;
   }
   if (![self.config.eventSet containsObject:event] && ![FBSDKAppEventsUtility isStandardEvent:event]) {
@@ -245,7 +245,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
 - (void)_updateConversionValue:(NSInteger)value
 {
   if (@available(iOS 14.0, *)) {
-    if ([self _shouldCutoff]) {
+    if ([self shouldCutoff]) {
       return;
     }
     [self.conversionValueUpdatable updateConversionValue:value];
@@ -255,13 +255,18 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
   }
 }
 
-- (BOOL)_shouldCutoff
+- (BOOL)shouldCutoff
 {
   if (!self.config.cutoffTime) {
     return true;
   }
   NSDate *installTimestamp = [self.store objectForKey:@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"];
   return [installTimestamp isKindOfClass:NSDate.class] && [[NSDate date] timeIntervalSinceDate:installTimestamp] > self.config.cutoffTime * 86400;
+}
+
+- (BOOL)isReportingEvent:(NSString *)event
+{
+  return (self.config && [self.config.eventSet containsObject:event]);
 }
 
  #pragma clang diagnostic push

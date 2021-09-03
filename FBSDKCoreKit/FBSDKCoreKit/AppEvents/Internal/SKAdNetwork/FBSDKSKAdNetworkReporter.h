@@ -35,6 +35,10 @@ NS_SWIFT_NAME(SKAdNetworkReporter)
                     currency:(nullable NSString *)currency
                        value:(nullable NSNumber *)value;
 
+- (BOOL)shouldCutoff;
+
+- (BOOL)isReportingEvent:(NSString *)event;
+
 @end
 
 NS_ASSUME_NONNULL_END

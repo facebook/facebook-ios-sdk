@@ -38,7 +38,6 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
 - (void)setConfiguration:(FBSDKSKAdNetworkConversionConfiguration *)configuration;
 - (void)_loadReportData;
-- (BOOL)_shouldCutoff;
 - (void)_recordAndUpdateEvent:(NSString *)event
                      currency:(nullable NSString *)currency
                         value:(nullable NSNumber *)value;
@@ -192,26 +191,26 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
 - (void)testShouldCutoffWithoutTimestampWithoutCutoffTime
 {
-  XCTAssertTrue([self.skAdNetworkReporter _shouldCutoff], "Should cut off reporting when there is no install timestamp or cutoff time");
+  XCTAssertTrue([self.skAdNetworkReporter shouldCutoff], "Should cut off reporting when there is no install timestamp or cutoff time");
 }
 
 - (void)testShouldCutoffWithoutTimestampWithCutoffTime
 {
   [self.skAdNetworkReporter setConfiguration:self.defaultConfiguration];
 
-  XCTAssertFalse([self.skAdNetworkReporter _shouldCutoff], "Should not cut off reporting when there is no install timestamp");
+  XCTAssertFalse([self.skAdNetworkReporter shouldCutoff], "Should not cut off reporting when there is no install timestamp");
 }
 
 - (void)testShouldCutoffWithTimestampWithoutCutoffTime
 {
   [self.userDefaultsSpy setObject:NSDate.distantPast forKey:FBSDKSettingsInstallTimestamp];
   XCTAssertTrue(
-    [self.skAdNetworkReporter _shouldCutoff],
+    [self.skAdNetworkReporter shouldCutoff],
     "Should cut off reporting when when the timestamp is earlier than the current date and there's no cutoff date provided"
   );
   [self.userDefaultsSpy setObject:NSDate.distantFuture forKey:FBSDKSettingsInstallTimestamp];
   XCTAssertTrue(
-    [self.skAdNetworkReporter _shouldCutoff],
+    [self.skAdNetworkReporter shouldCutoff],
     "Should cut off reporting when the timestamp is later than the current date and there's no cutoff date provided"
   );
 }
@@ -222,7 +221,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self.userDefaultsSpy setObject:NSDate.distantPast forKey:FBSDKSettingsInstallTimestamp];
 
   XCTAssertTrue(
-    [self.skAdNetworkReporter _shouldCutoff],
+    [self.skAdNetworkReporter shouldCutoff],
     "Should cut off reporting when the install timestamp is one day before the cutoff date"
   );
 }
@@ -233,7 +232,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   [self.userDefaultsSpy setObject:NSDate.distantFuture forKey:FBSDKSettingsInstallTimestamp];
 
   XCTAssertFalse(
-    [self.skAdNetworkReporter _shouldCutoff],
+    [self.skAdNetworkReporter shouldCutoff],
     "Should not cut off reporting when the install timestamp is more than one day later than the cutoff date"
   );
 }
@@ -244,7 +243,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
   // Case 1: refresh install
   [FBSDKSettings.sharedSettings recordInstall];
-  XCTAssertFalse([self.skAdNetworkReporter _shouldCutoff]);
+  XCTAssertFalse([self.skAdNetworkReporter shouldCutoff]);
 
   // Case 2: timestamp is already expired
   NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
@@ -252,7 +251,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   addComponents.day = -2;
   NSDate *expiredDate = [calendar dateByAddingComponents:addComponents toDate:[NSDate date] options:0];
   [self.userDefaultsSpy setObject:expiredDate forKey:FBSDKSettingsInstallTimestamp];
-  XCTAssertTrue([self.skAdNetworkReporter _shouldCutoff]);
+  XCTAssertTrue([self.skAdNetworkReporter shouldCutoff]);
 
   [self.userDefaultsSpy removeObjectForKey:FBSDKSettingsInstallTimestamp];
 }
@@ -268,12 +267,37 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
     NSDate *expiredDate = [calendar dateByAddingComponents:addComponents toDate:today options:0];
     [self.userDefaultsSpy setObject:expiredDate forKey:FBSDKSettingsInstallTimestamp];
 
-    XCTAssertTrue([self.skAdNetworkReporter _shouldCutoff]);
+    XCTAssertTrue([self.skAdNetworkReporter shouldCutoff]);
     [self.skAdNetworkReporter checkAndRevokeTimer];
     XCTAssertNil([self.userDefaultsSpy objectForKey:FBSDKSKAdNetworkReporterKey]);
     XCTAssertFalse([TestConversionValueUpdating wasUpdateVersionValueCalled]);
     [self.userDefaultsSpy removeObjectForKey:FBSDKSettingsInstallTimestamp];
   }
+}
+
+- (void)testIsReportingEventWithConfig
+{
+  [self.skAdNetworkReporter setConfiguration:
+   [[FBSDKSKAdNetworkConversionConfiguration alloc] initWithJSON:SampleSKAdNetworkConversionConfiguration.configJson]];
+
+  XCTAssertTrue(
+    [self.skAdNetworkReporter isReportingEvent:@"fb_test"],
+    @"Should expect to be true for event in the config"
+  );
+  XCTAssertFalse(
+    [self.skAdNetworkReporter isReportingEvent:@"test"],
+    @"Should expect to be false for event not in the config"
+  );
+}
+
+- (void)testIsReportingEventWithoutConfig
+{
+  [self.skAdNetworkReporter setConfiguration:nil];
+
+  XCTAssertFalse(
+    [self.skAdNetworkReporter isReportingEvent:@"fb_test"],
+    @"Should not be considered to be reporting an event when there is no configuration"
+  );
 }
 
 - (void)testUpdateConversionValue
