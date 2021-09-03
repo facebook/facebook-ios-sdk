@@ -20,12 +20,19 @@
 
 #if !TARGET_OS_TV
 
- #if defined FBSDK_SWIFT_PACKAGE
-@import FBAEMKit;
- #else
-  #import <FBAEMKit/FBAEMNetworking.h>
-  #import <FBAEMKit/FBAEMReporter.h>
-  #import <FBAEMKit/FBSKAdNetworkReporting.h>
- #endif
+#import <Foundation/Foundation.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
+NS_SWIFT_NAME(SKAdNetworkReporting)
+@protocol FBSKAdNetworkReporting
+
+- (BOOL)shouldCutoff;
+
+- (BOOL)isReportingEvent:(NSString *)event;
+
+@end
+
+NS_ASSUME_NONNULL_END
 
 #endif

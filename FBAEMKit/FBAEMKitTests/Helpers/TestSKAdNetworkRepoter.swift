@@ -16,16 +16,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+public class TestSKAdNetworkReporter: NSObject, SKAdNetworkReporting {
 
-#if !TARGET_OS_TV
+  public var cutOff: Bool = false
+  public var reportingEvents: Set<String> = []
 
- #if defined FBSDK_SWIFT_PACKAGE
-@import FBAEMKit;
- #else
-  #import <FBAEMKit/FBAEMNetworking.h>
-  #import <FBAEMKit/FBAEMReporter.h>
-  #import <FBAEMKit/FBSKAdNetworkReporting.h>
- #endif
+  public func shouldCutoff() -> Bool {
+    cutOff
+  }
 
-#endif
+  public func isReportingEvent(_ event: String) -> Bool {
+    reportingEvents.contains(event)
+  }
+}
