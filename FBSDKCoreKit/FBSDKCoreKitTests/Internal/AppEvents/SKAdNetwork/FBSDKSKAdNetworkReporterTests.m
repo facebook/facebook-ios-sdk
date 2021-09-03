@@ -148,6 +148,48 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
   XCTAssertEqual(self.requestProvider.capturedRequests.count, 0, "Should not have graph request with valid cache");
 }
 
+- (void)testLoadConfigurationWithoutValidCacheAndWithoutNetworkError
+{
+  self.skAdNetworkReporter.config = nil;
+  self.skAdNetworkReporter.serialQueue = dispatch_queue_create(self.name.UTF8String, DISPATCH_QUEUE_SERIAL);
+  self.skAdNetworkReporter.completionBlocks = [NSMutableArray new];
+
+  __block int count = 0;
+  [self.skAdNetworkReporter _loadConfigurationWithBlock:^{
+    count += 1;
+  }];
+  TestGraphRequest *request = self.requestProvider.capturedRequests.firstObject;
+  request.capturedCompletionHandler(nil, SampleSKAdNetworkConversionConfiguration.configJson, nil);
+  XCTAssertEqual(count, 1, @"Should expect the execution block to be called once");
+  XCTAssertEqual(self.requestProvider.capturedRequests.count, 1, "Should have graph request without valid cache");
+  XCTAssertTrue(
+    [self.requestProvider.capturedGraphPath containsString:@"ios_skadnetwork_conversion_config"],
+    "Should have graph request for config without valid cache"
+  );
+  XCTAssertNotNil(self.skAdNetworkReporter.config, @"Should have expected config");
+}
+
+- (void)testLoadConfigurationWithoutValidCacheAndWithNetworkError
+{
+  self.skAdNetworkReporter.config = nil;
+  self.skAdNetworkReporter.serialQueue = dispatch_queue_create(self.name.UTF8String, DISPATCH_QUEUE_SERIAL);
+  self.skAdNetworkReporter.completionBlocks = [NSMutableArray new];
+
+  __block int count = 0;
+  [self.skAdNetworkReporter _loadConfigurationWithBlock:^{
+    count += 1;
+  }];
+  TestGraphRequest *request = self.requestProvider.capturedRequests.firstObject;
+  request.capturedCompletionHandler(nil, SampleSKAdNetworkConversionConfiguration.configJson, [NSError errorWithDomain:@"test" code:0 userInfo:nil]);
+  XCTAssertEqual(count, 0, @"Should not expect the execution block to be called");
+  XCTAssertEqual(self.requestProvider.capturedRequests.count, 1, "Should have graph request without valid cache");
+  XCTAssertTrue(
+    [self.requestProvider.capturedGraphPath containsString:@"ios_skadnetwork_conversion_config"],
+    "Should have graph request for config without valid cache"
+  );
+  XCTAssertNil(self.skAdNetworkReporter.config, @"Should not have config with network error");
+}
+
 - (void)testShouldCutoffWithoutTimestampWithoutCutoffTime
 {
   XCTAssertTrue([self.skAdNetworkReporter _shouldCutoff], "Should cut off reporting when there is no install timestamp or cutoff time");
