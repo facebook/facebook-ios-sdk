@@ -22,19 +22,8 @@
 
  #import "FBSDKLoginUtility.h"
 
- #if SWIFT_PACKAGE
-@import FBSDKCoreKit;
- #else
-  #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #endif
-
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
-
  #import "FBSDKCoreKitBasicsImportForLoginKit.h"
+ #import "FBSDKCoreKitImport.h"
  #import "FBSDKLoginConstants.h"
 
 @implementation FBSDKLoginUtility
