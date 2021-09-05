@@ -89,6 +89,7 @@
  #import "FBSDKBridgeAPIProtocol.h"
  #import "FBSDKBridgeAPIProtocolType.h"
  #import "FBSDKBridgeAPIRequest.h"
+ #import "FBSDKBridgeAPIRequestCreating.h"
  #import "FBSDKBridgeAPIResponse.h"
  #import "FBSDKGraphErrorRecoveryProcessor.h"
  #import "FBSDKInternalUtility+URLHosting.h"
