@@ -193,14 +193,16 @@ class FBAEMReporterTests: XCTestCase {
       acsSharedSecret: "test_shared_secret",
       acsConfigID: "test_config_id_123",
       businessID: nil,
-      isTestMode: false
+      isTestMode: false,
+      hasSKAN: false
     ), let invocation2 = AEMInvocation(
       campaignID: "test_campaign_1234",
       acsToken: "test_token_1234567",
       acsSharedSecret: "test_shared_secret",
       acsConfigID: "test_config_id_123",
       businessID: nil,
-      isTestMode: false
+      isTestMode: false,
+      hasSKAN: false
     )
     else { return XCTFail("Unwrapping Error") }
     invocation1.setConfigID(10000)
@@ -413,7 +415,8 @@ class FBAEMReporterTests: XCTestCase {
       acsSharedSecret: "test_shared_secret",
       acsConfigID: "test_config_id_123",
       businessID: nil,
-      isTestMode: false
+      isTestMode: false,
+      hasSKAN: false
     )
     else { return XCTFail("Unwrapping Error") }
     guard let config = AEMConfiguration(json: SampleAEMData.validConfigData3)
@@ -706,6 +709,109 @@ class FBAEMReporterTests: XCTestCase {
     XCTAssertNil(
       attributedInvocation,
       "Should not attribute the event with incorrect event"
+    )
+  }
+
+  func testAttributedInvocationWithDoubleCounting() {
+    self.reporter.cutOff = false
+    self.reporter.reportingEvents = [Values.purchase]
+    let invocation = SampleAEMInvocations.createSKANOverlappedInvocation()
+
+    let configs = [
+      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithoutBusinessID()])
+    ]
+
+    let attributedInvocation = AEMReporter._attributedInvocation(
+      [invocation],
+      event: Values.purchase,
+      currency: Values.USD,
+      value: 10,
+      parameters: ["value": "abcdefg"],
+      configs: configs
+    )
+    XCTAssertNil(
+      attributedInvocation,
+      "Should not have invocation attributed with double counting"
+    )
+    XCTAssertEqual(
+      invocation.recordedEvents,
+      [],
+      "Should not expect invocation's recorded events to be changed with double counting"
+    )
+    XCTAssertEqual(
+      invocation.recordedValues,
+      [:],
+      "Should not expect invocation's recorded values to be changed with double counting"
+    )
+  }
+
+  func testAttributedInvocationWithoutDoubleCounting() {
+    self.reporter.cutOff = false
+    self.reporter.reportingEvents = [Values.purchase]
+    let invocation = SampleAEMInvocations.createGeneralInvocation1()
+
+    let configs = [
+      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigWithoutBusinessID()])
+    ]
+
+    let attributedInvocation = AEMReporter._attributedInvocation(
+      [invocation],
+      event: Values.purchase,
+      currency: Values.USD,
+      value: 10,
+      parameters: ["value": "abcdefg"],
+      configs: configs
+    )
+    XCTAssertNotNil(
+      attributedInvocation,
+      "Should have invocation attributed without double counting"
+    )
+    XCTAssertEqual(
+      invocation.recordedEvents,
+      [Values.purchase],
+      "Should expect invocation's recorded events to be changed with double counting"
+    )
+    XCTAssertEqual(
+      invocation.recordedValues,
+      [Values.purchase: [Values.USD: 10]],
+      "Should expect invocation's recorded values to be changed with double counting"
+    )
+  }
+
+  func testIsDoubleCounting() {
+    self.reporter.cutOff = false
+    self.reporter.reportingEvents = ["fb_test"]
+    let invocation = SampleAEMInvocations.createSKANOverlappedInvocation()
+
+    XCTAssertTrue(
+      AEMReporter._isDoubleCounting(invocation, event: "fb_test"),
+      "Should expect double counting"
+    )
+    XCTAssertFalse(
+      AEMReporter._isDoubleCounting(invocation, event: "test"),
+      "Should not expect double counting"
+    )
+  }
+
+  func testIsDoubleCountingWithCutOff() {
+    self.reporter.cutOff = true
+    self.reporter.reportingEvents = ["fb_test"]
+    let invocation = SampleAEMInvocations.createSKANOverlappedInvocation()
+
+    XCTAssertFalse(
+      AEMReporter._isDoubleCounting(invocation, event: "fb_test"),
+      "Should not expect double counting with SKAN cutoff"
+    )
+  }
+
+  func testIsDoubleCountingWithoutSKANClick() {
+    self.reporter.cutOff = false
+    self.reporter.reportingEvents = ["fb_test"]
+    let invocation = SampleAEMInvocations.createGeneralInvocation1()
+
+    XCTAssertFalse(
+      AEMReporter._isDoubleCounting(invocation, event: "fb_test"),
+      "Should not expect double counting without SKAN click"
     )
   }
 

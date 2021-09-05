@@ -41,6 +41,8 @@ NS_SWIFT_NAME(AEMInvocation)
 
 @property (nonatomic, readonly, assign) BOOL isTestMode;
 
+@property (nonatomic, readonly, assign) BOOL hasSKAN;
+
 @property (nonatomic, readonly, copy) NSDate *timestamp;
 
 @property (nonatomic, readonly, copy) NSString *configMode;
