@@ -16,39 +16,20 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
+import FBSDKCoreKit
 
-#import <Foundation/Foundation.h>
-#import "FBSDKGamingServicesCoreKitImport.h"
-#import "FBSDKDialogProtocol.h"
+public class TestAccessTokenProvider: AccessTokenProviding {
 
-NS_ASSUME_NONNULL_BEGIN
+  public static var stubbedAccessToken: AccessToken?
+  public static var tokenCache: TokenCaching?
+  public static var currentAccessToken: AccessToken? {
+    stubbedAccessToken
+  }
 
-/**
- Context web dialog for the all context api dialogs executed in a browser
- */
-NS_SWIFT_NAME(ContextWebDialog)
-@interface FBSDKContextWebDialog : NSObject <FBSDKWebDialogDelegate, FBSDKDialog>
+  public init() {}
 
-/**
- The current web dialog that shows the web content
-*/
-@property (nonatomic, strong, nullable) FBSDKWebDialog* currentWebDialog;
-
-+ (instancetype)new NS_UNAVAILABLE;
-
-/**
- Initializer to be used by subclasses.
- */
-- (instancetype)initWithDelegate:(id<FBSDKContextDialogDelegate>)delegate
-NS_SWIFT_NAME(init(delegate:));
-
-/**
- Depending on the content size within the browser, this method allows for the resizing of web dialog
-*/
-- (CGRect)createWebDialogFrameWithWidth:(CGFloat)width height:(CGFloat)height windowFinder:(id<FBSDKWindowFinding>)windowFinder;
-
-@end
-NS_ASSUME_NONNULL_END
-
-
+  public static func reset() {
+    tokenCache = nil
+    stubbedAccessToken = nil
+  }
+}

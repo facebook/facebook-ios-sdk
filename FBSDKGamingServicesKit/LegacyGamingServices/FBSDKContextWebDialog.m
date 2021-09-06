@@ -24,7 +24,6 @@
  #import <UIKit/UIKit.h>
 
  #import "FBSDKGamingContext.h"
- #import "FBSDKGamingContext+Internal.h"
  #import "FBSDKGamingServicesCoreKitBasicsImport.h"
 
 @implementation FBSDKContextWebDialog
@@ -95,12 +94,8 @@
         NSString *const identifier = results[@"context_id"];
         NSString *const sizeString = results[@"context_size"];
         NSInteger size = [sizeString isKindOfClass:[NSString class]] ? [sizeString integerValue] : 0;
-        if (FBSDKGamingContext.currentContext) {
-          FBSDKGamingContext.currentContext.identifier = identifier;
-          FBSDKGamingContext.currentContext.size = size;
-        } else {
-          FBSDKGamingContext.currentContext = [FBSDKGamingContext createContextWithIdentifier:identifier size:size];
-        }
+
+        FBSDKGamingContext.currentContext = [FBSDKGamingContext createContextWithIdentifier:identifier size:size];
         [self.delegate contextDialogDidComplete:self];
       } else {
         [self.delegate contextDialogDidCancel:self];

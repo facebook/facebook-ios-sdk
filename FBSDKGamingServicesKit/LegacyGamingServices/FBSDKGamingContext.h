@@ -53,6 +53,17 @@ DEPRECATED_MSG_ATTRIBUTE("The Type property is deprecated and will be removed in
  */
 @property (readonly) NSInteger size;
 
+
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ Creates a context with an identifier. If the identifier is nil or empty, a context will not be created.
+
+ @warning UNSAFE - DO NOT USE
+ */
++ (nullable instancetype)createContextWithIdentifier:(NSString *)identifier size:(NSInteger)size;
+
 @end
 
 NS_ASSUME_NONNULL_END

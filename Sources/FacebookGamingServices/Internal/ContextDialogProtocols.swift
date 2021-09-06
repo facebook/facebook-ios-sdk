@@ -16,38 +16,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "TargetConditionals.h"
-
-@class FBSDKSwitchContextContent;
-#if !TARGET_OS_TV
-
-#import <Foundation/Foundation.h>
-#import "FBSDKDialogProtocol.h"
-#import "FBSDKContextWebDialog.h"
-
-
-NS_ASSUME_NONNULL_BEGIN
-/**
-  A dialog to switch context through web view
- */
-NS_SWIFT_NAME(SwitchContextDialog)
-@interface FBSDKSwitchContextDialog : FBSDKContextWebDialog
-
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
-
-/**
- Builds a switch context web dialog with content and a delegate.
- @param content The content for the switch context dialog
- @param windowFinder The application window finder that provides the window to display the dialog
- @param delegate The receiver's delegate used to let the receiver know a context was switch was successful or failure
- */
-+ (instancetype)dialogWithContent:(FBSDKSwitchContextContent *)content
-                     windowFinder:(id<FBSDKWindowFinding>)windowFinder
-                         delegate:(id<FBSDKContextDialogDelegate>)delegate
-NS_SWIFT_NAME(init(content:windowFinder:delegate:));
-
-@end
-NS_ASSUME_NONNULL_END
-
+#if FBSDK_SWIFT_PACKAGE
+import FacebookCore
+#else
+import FBSDKCoreKit
 #endif
+
+import LegacyGamingServices
+
+protocol SwitchContextDialogMaking {
+  func makeSwitchContextDialog(
+    content: SwitchContextContent,
+    windowFinder: WindowFinding,
+    delegate: ContextDialogDelegate
+  ) -> Showable?
+}

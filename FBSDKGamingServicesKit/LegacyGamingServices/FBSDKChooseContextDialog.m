@@ -24,7 +24,6 @@
 
  #import "FBSDKChooseContextContent.h"
  #import "FBSDKGamingContext.h"
- #import "FBSDKGamingContext+Internal.h"
  #import "FBSDKGamingServicesCoreKitBasicsImport.h"
 
 // Deeplink url constants

@@ -20,8 +20,11 @@ import LegacyGamingServices
 
 class TestShowable: Showable {
   var wasShowCalled = false
+  var canShow = false
 
-  func show() {
+  func show() -> Bool {
     wasShowCalled = true
+
+    return canShow
   }
 }

@@ -36,6 +36,7 @@ targets:
         embed: false
     settings:
       GCC_WARN_UNUSED_FUNCTION: NO
+    transitivelyLinkDependencies: true
   FacebookGamingServicesTests:
     type: bundle.unit-test
     platform: iOS
@@ -56,6 +57,7 @@ targets:
         embed: false
     settings:
       GCC_WARN_UNUSED_FUNCTION: NO
+    transitivelyLinkDependencies: true
   FBSDKGamingServicesKitTests:
     type: bundle.unit-test
     platform: iOS
@@ -77,3 +79,4 @@ targets:
         embed: false
     settings:
       GCC_WARN_UNUSED_FUNCTION: NO
+    transitivelyLinkDependencies: true

@@ -16,6 +16,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import LegacyGamingServices
+import FacebookGamingServices
+import TestTools
 import XCTest
 
 class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
@@ -47,15 +50,26 @@ class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
 
   func testShowDialogWithInvalidContent() {
     let content = SwitchContextContent(contextID: "")
-    let dialog = SwitchContextDialog(content: content, windowFinder: TestWindowFinder(), delegate: self)
-    dialog.show()
+    let dialog = SwitchContextDialog(content: content, windowFinder: windowFinder, delegate: self)
+    _ = dialog.show()
     XCTAssertNotNil(dialog)
     XCTAssertNotNil(dialogError)
     XCTAssertNil(dialog.currentWebDialog)
   }
 
+  func testShowingDialogWithInvalidContentType() throws {
+    let invalidContent = ChooseContextContent()
+    let dialog = SwitchContextDialog(content: content, windowFinder: windowFinder, delegate: self)
+    dialog.dialogContent = invalidContent
+    _ = dialog.show()
+    XCTAssertNotNil(dialog)
+    let error = try XCTUnwrap(dialogError as? GamingServicesDialogError)
+    XCTAssertEqual(error, .invalidContentType)
+    XCTAssertNil(dialog.currentWebDialog)
+  }
+
   func testShowDialogWithValidContent() {
-    dialog.show()
+    _ = dialog.show()
 
     XCTAssertNotNil(dialog)
     XCTAssertNil(dialogError)
@@ -63,7 +77,7 @@ class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
   }
 
   func testDialogCancelsWhenResultDoesNotContainContextID() {
-    dialog.show()
+    _ = dialog.show()
 
     guard let webDialogDelegate = dialog.currentWebDialog as? WebDialogViewDelegate else {
       return XCTFail("Web dialog should be a web dialog view delegate")
@@ -81,7 +95,7 @@ class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
   func testDialogSuccessfullyCreatesGamingContext() throws {
     XCTAssertNil(GamingContext.current, "Should not have a context by default")
 
-    dialog.show()
+    _ = dialog.show()
 
     let webDialogDelegate = try XCTUnwrap(dialog.currentWebDialog as? WebDialogViewDelegate)
     let resultContextIDKey = "context_id"
@@ -104,7 +118,7 @@ class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
   func testDialogSuccessfullyUpdatesGamingContext() throws {
     GamingContext.current = GamingContext.createContext(withIdentifier: "foo", size: 2)
 
-    dialog.show()
+    _ = dialog.show()
 
     let webDialogDelegate = try XCTUnwrap(dialog.currentWebDialog as? WebDialogViewDelegate)
     let resultContextIDKey = "context_id"
@@ -125,7 +139,7 @@ class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
   }
 
   func testDialogCompletesWithServerError() throws {
-    dialog.show()
+    _ = dialog.show()
 
     let webDialogDelegate = try XCTUnwrap(dialog.currentWebDialog as? WebDialogViewDelegate)
     let resultErrorCodeKey = "error_code"
@@ -144,7 +158,7 @@ class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
   }
 
   func testDialogCancels() throws {
-    dialog.show()
+    _ = dialog.show()
     let webDialogDelegate = try XCTUnwrap(dialog.currentWebDialog as? WebDialogViewDelegate)
 
     webDialogDelegate.webDialogViewDidCancel(FBWebDialogView())
@@ -156,7 +170,7 @@ class SwitchContextDialogTests: XCTestCase, ContextDialogDelegate {
   }
 
   func testDialogFailsWithError() throws {
-    dialog.show()
+    _ = dialog.show()
     let webDialogDelegate = try XCTUnwrap(dialog.currentWebDialog as? WebDialogViewDelegate)
 
     let error = NSError(domain: "Test", code: 1, userInfo: nil)

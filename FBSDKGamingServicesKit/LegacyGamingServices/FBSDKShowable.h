@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(Showable)
 @protocol FBSDKShowable
 
-- (void)show;
+- (BOOL)show;
 
 @end
 

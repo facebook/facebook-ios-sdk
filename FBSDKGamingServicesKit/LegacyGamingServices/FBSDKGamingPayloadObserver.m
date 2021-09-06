@@ -18,7 +18,7 @@
 
 #import "FBSDKGamingPayloadObserver.h"
 
-#import "FBSDKGamingContext+Internal.h"
+#import "FBSDKGamingContext.h"
 #import "FBSDKGamingPayload.h"
 #import "FBSDKGamingServicesCoreKitImport.h"
 

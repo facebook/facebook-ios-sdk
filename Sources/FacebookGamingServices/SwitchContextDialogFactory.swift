@@ -16,19 +16,36 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#if FBSDK_SWIFT_PACKAGE
+import FacebookCore
+#else
+import FBSDKCoreKit
+#endif
+
 import LegacyGamingServices
-import XCTest
 
-class TestAccessTokenProvider: AccessTokenProviding {
+struct SwitchContextDialogFactory: SwitchContextDialogMaking {
 
-  static var stubbedAccessToken: AccessToken?
-  static var tokenCache: TokenCaching?
-  static var currentAccessToken: AccessToken? {
-    stubbedAccessToken
+  let tokenProvider: AccessTokenProviding.Type
+
+  init(tokenProvider: AccessTokenProviding.Type) {
+    self.tokenProvider = tokenProvider
   }
 
-  static func reset() {
-    tokenCache = nil
-    stubbedAccessToken = nil
+  func makeSwitchContextDialog(
+    content: SwitchContextContent,
+    windowFinder: WindowFinding,
+    delegate: ContextDialogDelegate
+  ) -> Showable? {
+    guard tokenProvider.currentAccessToken != nil else {
+      return nil
+    }
+
+    return SwitchContextDialog(
+      content: content,
+      windowFinder: windowFinder,
+      delegate: delegate
+    )
   }
+
 }

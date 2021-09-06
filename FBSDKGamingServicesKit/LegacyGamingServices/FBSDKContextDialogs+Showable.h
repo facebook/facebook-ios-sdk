@@ -19,7 +19,6 @@
 #import "FBSDKChooseContextDialog.h"
 #import "FBSDKCreateContextDialog.h"
 #import "FBSDKShowable.h"
-#import "FBSDKSwitchContextDialog.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -27,9 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface FBSDKChooseContextDialog (Showable) <FBSDKShowable>
-@end
-
-@interface FBSDKSwitchContextDialog (Showable) <FBSDKShowable>
 @end
 
 NS_ASSUME_NONNULL_END

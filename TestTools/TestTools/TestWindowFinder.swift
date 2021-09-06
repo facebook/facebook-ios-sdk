@@ -16,22 +16,22 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+import FBSDKCoreKit
 
-#import "FBSDKContextDialogFactoryProtocols.h"
+public class TestWindowFinder: WindowFinding {
+  public var wasFindWindowCalled = false
+  public var window = UIWindow()
 
-@protocol FBSDKAccessTokenProviding;
+  public init() {}
 
-NS_ASSUME_NONNULL_BEGIN
+  public convenience init(window: UIWindow) {
+    self.init()
 
-NS_SWIFT_NAME(SwitchContextDialogFactory)
-@interface FBSDKSwitchContextDialogFactory : NSObject<FBSDKSwitchContextDialogMaking>
+    self.window = window
+  }
 
-+ (instancetype)new NS_UNAVAILABLE;
-- (instancetype)init NS_UNAVAILABLE;
-
-- (instancetype)initWithTokenProvider:(Class<FBSDKAccessTokenProviding>)tokenProvider;
-
-@end
-
-NS_ASSUME_NONNULL_END
+  public func findWindow() -> UIWindow? {
+    wasFindWindowCalled = true
+    return window
+  }
+}

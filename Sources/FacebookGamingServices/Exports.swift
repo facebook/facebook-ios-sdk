@@ -35,7 +35,6 @@
 @_exported import class LegacyGamingServices.GamingVideoUploader
 @_exported import class LegacyGamingServices.GamingVideoUploaderConfiguration
 @_exported import class LegacyGamingServices.SwitchContextContent
-@_exported import class LegacyGamingServices.SwitchContextDialog
 @_exported import protocol LegacyGamingServices.ContextDialogDelegate
 @_exported import protocol LegacyGamingServices.DialogProtocol
 @_exported import typealias LegacyGamingServices.GamingServiceCompletionHandler

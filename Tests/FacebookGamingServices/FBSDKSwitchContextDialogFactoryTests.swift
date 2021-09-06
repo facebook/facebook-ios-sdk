@@ -18,8 +18,10 @@
 
 import TestTools
 import XCTest
+import LegacyGamingServices
+@testable import FacebookGamingServices
 
-class FBSDKSwitchContextDialogFactoryTests: XCTestCase {
+class SwitchContextDialogFactoryTests: XCTestCase {
 
   let content = SwitchContextContent(contextID: "123")
   let windowFinder = TestWindowFinder()
@@ -44,7 +46,7 @@ class FBSDKSwitchContextDialogFactoryTests: XCTestCase {
 
     let dialog = try XCTUnwrap(
       factory.makeSwitchContextDialog(
-        with: content,
+        content: content,
         windowFinder: windowFinder,
         delegate: delegate
       ) as? SwitchContextDialog,
@@ -66,7 +68,7 @@ class FBSDKSwitchContextDialogFactoryTests: XCTestCase {
     let factory = SwitchContextDialogFactory(tokenProvider: TestAccessTokenProvider.self)
     XCTAssertNil(
       factory.makeSwitchContextDialog(
-        with: content,
+        content: content,
         windowFinder: windowFinder,
         delegate: delegate
       ),

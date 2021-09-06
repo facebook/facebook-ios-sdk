@@ -16,18 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class TestWindowFinder: WindowFinding {
-  var wasFindWindowCalled = false
-  var window = UIWindow()
+import Foundation
 
-  convenience init(window: UIWindow) {
-    self.init()
+/**
+ Errors to describe what went wrong with a GamingServicesDialog
+ */
+public enum GamingServicesDialogError: Error {
+  /// Indicates an invalid content type was used with a given dialog
+  case invalidContentType
 
-    self.window = window
-  }
-
-  func findWindow() -> UIWindow? {
-    wasFindWindowCalled = true
-    return window
-  }
+  /// Indicates a failure based on missing dialog content
+  case missingContent
 }

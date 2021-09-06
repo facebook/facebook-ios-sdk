@@ -33,7 +33,6 @@
 #import "FBSDKGamingVideoUploader.h"
 #import "FBSDKGamingVideoUploaderConfiguration.h"
 #import "FBSDKSwitchContextContent.h"
-#import "FBSDKSwitchContextDialog.h"
 
 // Types exposed for rewrite but not re-exported
 #import "FBSDKChooseContextDialogFactory.h"
@@ -41,4 +40,3 @@
 #import "FBSDKContextDialogs+Showable.h"
 #import "FBSDKCreateContextDialogFactory.h"
 #import "FBSDKShowable.h"
-#import "FBSDKSwitchContextDialogFactory.h"
