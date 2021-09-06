@@ -97,7 +97,7 @@ NS_SWIFT_NAME(WebDialog)
  @warning UNSAFE - DO NOT USE
  */
 NS_SWIFT_NAME(WebDialogDelegate)
-@protocol FBSDKWebDialogDelegate <NSObject>
+@protocol FBSDKWebDialogDelegate
 
 /**
  Internal Type exposed to facilitate transition to Swift.
@@ -128,3 +128,4 @@ NS_SWIFT_NAME(WebDialogDelegate)
 NS_ASSUME_NONNULL_END
 
 #endif
+

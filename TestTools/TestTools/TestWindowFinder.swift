@@ -18,11 +18,10 @@
 
 import FBSDKCoreKit
 
-public class TestWindowFinder: WindowFinding {
+@objcMembers
+public class TestWindowFinder: NSObject, WindowFinding {
   public var wasFindWindowCalled = false
   public var window = UIWindow()
-
-  public init() {}
 
   public convenience init(window: UIWindow) {
     self.init()

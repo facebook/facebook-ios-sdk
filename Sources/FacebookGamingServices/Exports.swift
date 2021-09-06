@@ -37,4 +37,6 @@
 @_exported import class LegacyGamingServices.SwitchContextContent
 @_exported import protocol LegacyGamingServices.ContextDialogDelegate
 @_exported import protocol LegacyGamingServices.DialogProtocol
+@_exported import protocol LegacyGamingServices.Showable
+@_exported import protocol LegacyGamingServices.ValidatableProtocol
 @_exported import typealias LegacyGamingServices.GamingServiceCompletionHandler

@@ -16,22 +16,25 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+import FacebookGamingServices
 
-#import "FBSDKGamingContext.h"
+#if FBSDK_SWIFT_PACKAGE
+import LegacyCore
+#else
+import FBSDKCoreKit
+#endif
 
-NS_ASSUME_NONNULL_BEGIN
+// Internal protocol to enable us to verify that the underlying pure Swift type is
+// exercised correctly by the wrapper class
+protocol SwitchContextDialogProtocol: WebDialogDelegate, DialogProtocol {
 
-@interface FBSDKGamingContext (Internal)
+  var currentWebDialog: WebDialog? { get set }
 
-@property (nonatomic) NSString *identifier;
-@property (nonatomic) NSInteger size;
+  func createWebDialogFrame(
+    withWidth: CGFloat,
+    height: CGFloat,
+    windowFinder: WindowFinding
+  ) -> CGRect
+}
 
-/**
- Creates a context with an identifier. If the identifier is nil or empty, a context will not be created.
- */
-+ (nullable instancetype)createContextWithIdentifier:(NSString *)identifier size:(NSInteger)size;
-
-@end
-
-NS_ASSUME_NONNULL_END
+extension SwitchContextDialog: SwitchContextDialogProtocol {}

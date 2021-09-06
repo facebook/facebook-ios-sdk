@@ -178,7 +178,7 @@ class FBAEMReporterTests: XCTestCase {
     )
   }
 
-  func testClearCache() {
+  func testClearCache() { // swiftlint:disable:this function_body_length
     AEMReporter._addConfigs([SampleAEMData.validConfigData1])
     AEMReporter._addConfigs([SampleAEMData.validConfigData1, SampleAEMData.validConfigData2])
 

@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
   The protocol sdk dialogs must conform to and implement all the following methods.
  */
 NS_SWIFT_NAME(DialogProtocol)
-@protocol FBSDKDialog <NSObject>
+@protocol FBSDKDialog
 /**
   The receiver's delegate or nil if it doesn't have a delegate.
  */
