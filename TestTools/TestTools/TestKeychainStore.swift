@@ -36,7 +36,7 @@ public class TestKeychainStore: NSObject, KeychainStoreProtocol {
     ""
   }
 
-  public func setString(_ value: String, forKey key: String, accessibility: CFTypeRef) -> Bool {
+  public func setString(_ value: String?, forKey key: String, accessibility: CFTypeRef) -> Bool {
     true
   }
 }

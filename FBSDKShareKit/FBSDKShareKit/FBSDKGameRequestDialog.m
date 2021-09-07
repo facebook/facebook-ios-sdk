@@ -454,14 +454,16 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   _isAwaitingResult = NO;
 }
 
-- (void)_handleCompletionWithDialogResults:(NSDictionary<NSString *, id> *)results error:(NSError *)error
+- (void)_handleCompletionWithDialogResults:(nullable NSDictionary<NSString *, id> *)results error:(NSError *)error
 {
   if (!_delegate) {
     return;
   }
   switch (error.code) {
     case 0: {
-      [_delegate gameRequestDialog:self didCompleteWithResults:results];
+      if (results) {
+        [_delegate gameRequestDialog:self didCompleteWithResults:results];
+      }
       break;
     }
     case 4201: {

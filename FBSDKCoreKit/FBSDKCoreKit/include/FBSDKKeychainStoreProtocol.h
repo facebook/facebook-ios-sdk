@@ -23,7 +23,7 @@ NS_SWIFT_NAME(KeychainStoreProtocol)
 
 - (NSString *)stringForKey:(NSString *)key;
 
-- (BOOL)setString:(NSString *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility;
+- (BOOL)setString:(nullable NSString *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility;
 
 @end
 
