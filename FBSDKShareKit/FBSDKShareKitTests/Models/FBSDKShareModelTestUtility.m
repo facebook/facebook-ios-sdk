@@ -286,13 +286,13 @@
 {
   UIGraphicsBeginImageContext(CGSizeMake(10.0, 10.0));
   CGContextRef context = UIGraphicsGetCurrentContext();
-  [[UIColor redColor] setFill];
+  [UIColor.redColor setFill];
   CGContextFillRect(context, CGRectMake(0.0, 0.0, 5.0, 5.0));
-  [[UIColor greenColor] setFill];
+  [UIColor.greenColor setFill];
   CGContextFillRect(context, CGRectMake(5.0, 0.0, 5.0, 5.0));
-  [[UIColor blueColor] setFill];
+  [UIColor.blueColor setFill];
   CGContextFillRect(context, CGRectMake(5.0, 5.0, 5.0, 5.0));
-  [[UIColor yellowColor] setFill];
+  [UIColor.yellowColor setFill];
   CGContextFillRect(context, CGRectMake(0.0, 5.0, 5.0, 5.0));
   CGImageRef imageRef = CGBitmapContextCreateImage(context);
   UIGraphicsEndImageContext();

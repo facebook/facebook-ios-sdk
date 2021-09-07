@@ -127,7 +127,7 @@ static const CGFloat kPreferredPaddingBetweenLogoTitle = 44.0;
                                          attributes:@{
      NSParagraphStyleAttributeName : style,
      NSFontAttributeName : [self defaultFont],
-     NSForegroundColorAttributeName : [UIColor whiteColor]
+     NSForegroundColorAttributeName : UIColor.whiteColor
    }];
   // Now find all the spaces and widen their kerning.
   NSRange range = NSMakeRange(0, string.length);

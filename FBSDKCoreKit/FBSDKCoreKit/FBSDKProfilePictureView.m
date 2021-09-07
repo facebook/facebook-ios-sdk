@@ -233,7 +233,7 @@
   [self addSubview:_imageView];
 
   _profileID = @"me";
-  self.backgroundColor = [UIColor whiteColor];
+  self.backgroundColor = UIColor.whiteColor;
   self.contentMode = UIViewContentModeScaleAspectFit;
   self.userInteractionEnabled = NO;
   [[NSNotificationCenter defaultCenter] addObserver:self

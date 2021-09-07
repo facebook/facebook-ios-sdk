@@ -31,18 +31,18 @@ static const int frameHeight = 30;
 {
   [super viewDidLoad];
 
-  self.view.backgroundColor = [UIColor whiteColor];
+  self.view.backgroundColor = UIColor.whiteColor;
   UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:self.view.frame];
   int frameWidth = scrollView.frame.size.width - paddingLen * 2;
 
   UILabel *labelName = [[UILabel alloc] initWithFrame:CGRectMake(paddingLen, 50, frameWidth, frameHeight)];
   labelName.font = [UIFont boldSystemFontOfSize:24];
-  labelName.textColor = [UIColor grayColor];
+  labelName.textColor = UIColor.grayColor;
   labelName.text = @"Auto Applink Debug Tool";
 
   UILabel *labelDesc = [[UILabel alloc] initWithFrame:CGRectMake(paddingLen, 100, frameWidth, frameHeight + 10)];
   labelDesc.font = [UIFont systemFontOfSize:14];
-  labelDesc.textColor = [UIColor lightGrayColor];
+  labelDesc.textColor = UIColor.lightGrayColor;
   labelDesc.text = @"Enter your FB App ID and product ID to get your auto applink";
   labelDesc.numberOfLines = 0;
 
@@ -53,7 +53,7 @@ static const int frameHeight = 30;
   self.productIDView.frame = CGRectMake(paddingLen, 200, frameWidth, frameHeight);
 
   UIButton *sendButton = [[UIButton alloc] initWithFrame:CGRectMake(paddingLen, 250, frameWidth, frameHeight + 10)];
-  [sendButton setBackgroundColor:[[UIColor blueColor] colorWithAlphaComponent:0.4]];
+  [sendButton setBackgroundColor:[UIColor.blueColor colorWithAlphaComponent:0.4]];
   [sendButton setTitle:@"Send" forState:UIControlStateNormal];
   [sendButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
   [sendButton addTarget:self action:@selector(sendAutoAppLink:) forControlEvents:UIControlEventTouchUpInside];
@@ -71,7 +71,7 @@ static const int frameHeight = 30;
 {
   UITextField *textField;
   textField = [[UITextField alloc] init];
-  textField.layer.borderColor = [UIColor lightGrayColor].CGColor;
+  textField.layer.borderColor = UIColor.lightGrayColor.CGColor;
   textField.layer.borderWidth = 1;
   [textField setKeyboardType:type];
   textField.placeholder = text;

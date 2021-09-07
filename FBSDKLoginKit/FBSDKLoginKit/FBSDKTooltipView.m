@@ -82,7 +82,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   if (self) {
     // Define style
     _textLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    _textLabel.backgroundColor = [UIColor clearColor];
+    _textLabel.backgroundColor = UIColor.clearColor;
     _textLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
     _textLabel.numberOfLines = 0;
     _textLabel.font = [UIFont boldSystemFontOfSize:kNUXFontSize];
@@ -104,9 +104,9 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
     [self addGestureRecognizer:_insideTapGestureRecognizer];
 
     self.opaque = NO;
-    self.backgroundColor = [UIColor clearColor];
+    self.backgroundColor = UIColor.clearColor;
     self.layer.needsDisplayOnBoundsChange = YES;
-    self.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.layer.shadowColor = UIColor.blackColor.CGColor;
     self.layer.shadowOpacity = 0.5f;
     self.layer.shadowOffset = CGSizeMake(0.0f, 2.0f);
     self.layer.shadowRadius = 5.0f;
@@ -230,7 +230,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
     break;
   }
 
-  _textLabel.textColor = [UIColor whiteColor];
+  _textLabel.textColor = UIColor.whiteColor;
 }
 
  #pragma mark - Private Methods
@@ -604,7 +604,7 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
 
   UIFont *font = [UIFont boldSystemFontOfSize:kNUXFontSize];
   [attrString addAttribute:NSFontAttributeName value:font range:fullRange];
-  [attrString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:fullRange];
+  [attrString addAttribute:NSForegroundColorAttributeName value:UIColor.whiteColor range:fullRange];
   if (tagline.length) {
     UIColor *color = [UIColor colorWithRed:(0x6D / 255.0)
                                      green:(0x87 / 255.0)

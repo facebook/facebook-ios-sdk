@@ -95,7 +95,7 @@
   dialogView.layer.cornerRadius = 3;
   dialogView.translatesAutoresizingMaskIntoConstraints = NO;
   dialogView.clipsToBounds = YES;
-  dialogView.backgroundColor = [UIColor whiteColor];
+  dialogView.backgroundColor = UIColor.whiteColor;
   [self addSubview:dialogView];
   [NSLayoutConstraint constraintWithItem:dialogView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0].active = YES;;
   [NSLayoutConstraint constraintWithItem:dialogView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0].active = YES;

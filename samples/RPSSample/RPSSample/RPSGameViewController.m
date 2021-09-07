@@ -153,14 +153,14 @@ typedef void (^RPSBlock)(void);
     [self.againButton.layer setBorderColor:fontColor.CGColor];
 
     [self.computerHand.layer setCornerRadius:8.0];
-    self.computerHand.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.computerHand.layer.shadowColor = UIColor.blackColor.CGColor;
     self.computerHand.layer.shadowOpacity = 0.5;
     self.computerHand.layer.shadowRadius = 8;
     self.computerHand.layer.shadowOffset = CGSizeMake(12.0f, 12.0f);
     self.computerHand.clipsToBounds = YES;
 
     [self.playerHand.layer setCornerRadius:8.0];
-    self.playerHand.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.playerHand.layer.shadowColor = UIColor.blackColor.CGColor;
     self.playerHand.layer.shadowOpacity = 0.5;
     self.playerHand.layer.shadowRadius = 8;
     self.playerHand.layer.shadowOffset = CGSizeMake(12.0f, 12.0f);

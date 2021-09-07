@@ -361,7 +361,7 @@ static id _applicationActivationNotifier;
   self.adjustsImageWhenHighlighted = NO;
   self.contentHorizontalAlignment = UIControlContentHorizontalAlignmentFill;
   self.contentVerticalAlignment = UIControlContentVerticalAlignmentFill;
-  self.tintColor = [UIColor whiteColor];
+  self.tintColor = UIColor.whiteColor;
 
   BOOL forceSizeToFit = CGRectIsEmpty(self.bounds);
 
@@ -393,7 +393,7 @@ static id _applicationActivationNotifier;
   #endif
   }
 
-  [self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+  [self setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
   [self setTitleColor:[self highlightedContentColor] forState:UIControlStateHighlighted | UIControlStateSelected];
 
   [self setTitle:title forState:UIControlStateNormal];

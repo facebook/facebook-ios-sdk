@@ -67,7 +67,7 @@ static id<FBSDKInternalURLOpener> _urlOpener;
 - (instancetype)initWithFrame:(CGRect)frame
 {
   if ((self = [super initWithFrame:frame])) {
-    self.backgroundColor = [UIColor clearColor];
+    self.backgroundColor = UIColor.clearColor;
     self.opaque = NO;
 
     _webView = [_webViewProvider createWebViewWithFrame:CGRectZero];
@@ -89,7 +89,7 @@ static id<FBSDKInternalURLOpener> _urlOpener;
                                                 green:184.0 / 255.0
                                                  blue:216.0 / 255.0
                                                 alpha:1.0] forState:UIControlStateNormal];
-    [_closeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    [_closeButton setTitleColor:UIColor.whiteColor forState:UIControlStateHighlighted];
     _closeButton.showsTouchWhenHighlighted = YES;
     [_closeButton sizeToFit];
     [self addSubview:_closeButton];
@@ -105,7 +105,7 @@ static id<FBSDKInternalURLOpener> _urlOpener;
       #pragma clang diagnostic pop
     }
     _loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:style];
-    _loadingView.color = [UIColor grayColor];
+    _loadingView.color = UIColor.grayColor;
     _loadingView.hidesWhenStopped = YES;
     [webView addSubview:_loadingView];
   }
@@ -139,7 +139,7 @@ static id<FBSDKInternalURLOpener> _urlOpener;
   CGContextSaveGState(context);
   [self.backgroundColor setFill];
   CGContextFillRect(context, self.bounds);
-  [[UIColor blackColor] setStroke];
+  [UIColor.blackColor setStroke];
   CGContextSetLineWidth(context, 1.0 / self.layer.contentsScale);
   CGContextStrokeRect(context, self.webView.frame);
   CGContextRestoreGState(context);
