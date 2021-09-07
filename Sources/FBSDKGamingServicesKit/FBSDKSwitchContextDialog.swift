@@ -60,7 +60,7 @@ open class FBSDKSwitchContextDialog: NSObject, WebDialogDelegate, DialogProtocol
 
   // MARK: - WebDialogDelegate
 
-  public func webDialog(_ webDialog: WebDialog, didCompleteWithResults results: [String : Any]) {
+  public func webDialog(_ webDialog: WebDialog, didCompleteWithResults results: [String: Any]) {
     dialog.webDialog(webDialog, didCompleteWithResults: results)
   }
 
