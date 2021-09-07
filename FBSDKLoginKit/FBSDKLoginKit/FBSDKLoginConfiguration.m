@@ -22,15 +22,9 @@
 
  #import "FBSDKLoginConfiguration.h"
 
- #import "FBSDKNonceUtility.h"
-
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
-
  #import "FBSDKCoreKitBasicsImportForLoginKit.h"
+ #import "FBSDKCoreKitImport.h"
+ #import "FBSDKNonceUtility.h"
  #import "FBSDKPermission.h"
 
 FBSDKLoginAuthType FBSDKLoginAuthTypeRerequest = @"rerequest";
