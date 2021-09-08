@@ -476,8 +476,10 @@ class FBAEMReporterTests: XCTestCase {
     AEMReporter.invocations = [testInvocation]
 
     AEMReporter.recordAndUpdate(event: Values.purchase, currency: Values.USD, value: 100, parameters: nil)
-    guard testInvocation.attributionCallCount == 0,
-      testInvocation.updateConversionCallCount == 0 else {
+    guard
+      testInvocation.attributionCallCount == 0,
+      testInvocation.updateConversionCallCount == 0
+    else {
       return XCTFail("Should update attribute and conversions")
     }
   }
@@ -504,7 +506,8 @@ class FBAEMReporterTests: XCTestCase {
 
     AEMReporter.isLoadingConfiguration = false
     AEMReporter._loadConfiguration(block: nil)
-    guard let path = networker.capturedGraphPath,
+    guard
+      let path = networker.capturedGraphPath,
       path.hasSuffix("aem_conversion_configs")
     else {
       return XCTFail("Should not require a completion block to load a configuration")

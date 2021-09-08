@@ -122,7 +122,8 @@ final class PermissionTests: XCTestCase {
       XCTAssertEqual(
         Permission(stringLiteral: mapping.name),
         mapping.permission,
-        "Should be able to create the \(mapping.permission) permission with the string literal \"\(mapping.name)\"")
+        "Should be able to create the \(mapping.permission) permission with the string literal \"\(mapping.name)\""
+      )
     }
 
     XCTAssertEqual(
@@ -137,7 +138,8 @@ final class PermissionTests: XCTestCase {
       XCTAssertEqual(
         mapping.permission.name,
         mapping.name,
-        "The name of the \(mapping.permission) permission should be \"\(mapping.name)\"")
+        "The name of the \(mapping.permission) permission should be \"\(mapping.name)\""
+      )
     }
 
     XCTAssertEqual(

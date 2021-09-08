@@ -18,7 +18,7 @@
 
 public class TestSKAdNetworkReporter: NSObject, SKAdNetworkReporting {
 
-  public var cutOff: Bool = false
+  public var cutOff = false
   public var reportingEvents: Set<String> = []
 
   public func shouldCutoff() -> Bool {

@@ -340,8 +340,8 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
       do {
         let methodArgs = try BasicUtility.object(forJSONString: queryParameters["method_args"] ?? "") as? [String: Any]
         XCTAssertEqual(methodArgs as NSObject?, expectedMethodArgs as NSObject)
-        if let parseMethodData = methodArgs?["data"] as? [String: Any],
-          let decodedData = parseMethodData["fbAppBridgeType_jsonReadyValue"] {
+        if let parseMethodData = methodArgs?["data"] as? [String: Any], // swiftlint:disable:next indentation_width
+           let decodedData = parseMethodData["fbAppBridgeType_jsonReadyValue"] {
           let baseDecodedData = Base64.decode(asData: decodedData as? String)
           XCTAssertNotNil(baseDecodedData)
           XCTAssertEqual(baseDecodedData, parameters["data"] as? Data)
@@ -392,8 +392,8 @@ class FBSDKBridgeAPIProtocolNativeV1Tests: XCTestCase {
         let methodArgs = try BasicUtility.object(
           forJSONString: queryParameters["method_args"] ?? "") as? [String: Any]
         XCTAssertEqual(methodArgs as NSObject?, expectedMethodArgs as NSObject)
-        if let parseMethodData = methodArgs?["image"] as? [String: Any],
-          let decodedData = parseMethodData["fbAppBridgeType_jsonReadyValue"] {
+        if let parseMethodData = methodArgs?["image"] as? [String: Any], // swiftlint:disable:next indentation_width
+           let decodedData = parseMethodData["fbAppBridgeType_jsonReadyValue"] {
           guard let baseDecodedData = Base64.decode(asData: decodedData as? String) else {
             return XCTAssertNil("Failed to decode data from Base64")
           }
