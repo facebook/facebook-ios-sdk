@@ -20,7 +20,7 @@ import TestTools
 import XCTest
 
 @objcMembers
-class TestBridgeAPIReqestOpener: NSObject, BridgeAPIRequestOpening {
+class TestBridgeAPIRequestOpener: NSObject, BridgeAPIRequestOpening {
   var openURLWithSFVCCount = 0
 
   func openURL(

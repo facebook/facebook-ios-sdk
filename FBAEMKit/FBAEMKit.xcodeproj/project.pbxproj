@@ -42,6 +42,7 @@
 		3B1C163B678F993A41843FB8 /* FBAEMNetworker.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F60F57E8A966C73543C6E7 /* FBAEMNetworker.m */; };
 		474EFD6AB5988C7361FA0E15 /* FBAEMRule.h in Headers */ = {isa = PBXBuildFile; fileRef = F9ACAD4216D72E4122034CB9 /* FBAEMRule.h */; };
 		499A9AE9074800B75AAA76E5 /* FBAEMRequestBody.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F89ACD1C21793D31565351 /* FBAEMRequestBody.m */; };
+		53E8F535EA776A4C33DF76C7 /* TestSKAdNetworkReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24036BAE1BECE8771F20C0A7 /* TestSKAdNetworkReporter.swift */; };
 		5630949F273EEA4D536894D9 /* SampleAEMData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4177A5533D7CFF825F97ECA0 /* SampleAEMData.swift */; };
 		565CE9AC0313BEDA111FA043 /* FBSKAdNetworkReporting.h in Headers */ = {isa = PBXBuildFile; fileRef = 153B4C403EFEC54B3E5A0203 /* FBSKAdNetworkReporting.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		567D930E785504CA4A62B0ED /* FBAEMAdvertiserSingleEntryRule.h in Headers */ = {isa = PBXBuildFile; fileRef = EA8FABFB4D409A28FC534768 /* FBAEMAdvertiserSingleEntryRule.h */; };
@@ -81,7 +82,6 @@
 		CB0B635973208B511A062FB5 /* FBAEMReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 8554100C2E72F8997D18A1D1 /* FBAEMReporter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CC7B4787404ACCEE7D6B6E8F /* FBAEMKit.h in Headers */ = {isa = PBXBuildFile; fileRef = BDDBCE1CDBD3488598FE265C /* FBAEMKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CF815EBD130A652187ED6DA7 /* FBAEMRequestBody.m in Sources */ = {isa = PBXBuildFile; fileRef = 69F89ACD1C21793D31565351 /* FBAEMRequestBody.m */; };
-		D006673B24F89813D040D9E6 /* TestSKAdNetworkRepoter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B11CF6827A713779EB0D1E /* TestSKAdNetworkRepoter.swift */; };
 		D14F628136A6491B9258692D /* FBAEMNetworker.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F60F57E8A966C73543C6E7 /* FBAEMNetworker.m */; };
 		D175879013592F781F627ED5 /* FBAEMEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = C2368B332ED43BBAF2493859 /* FBAEMEvent.m */; };
 		D5636656757EDC3E1CD3560D /* FBAEMAdvertiserRuleFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 931238348E95CD28C59333BD /* FBAEMAdvertiserRuleFactoryTests.swift */; };
@@ -175,7 +175,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		02B11CF6827A713779EB0D1E /* TestSKAdNetworkRepoter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSKAdNetworkRepoter.swift; sourceTree = "<group>"; };
 		0485B2A82D1087BAD40DEF28 /* TestAEMNetworker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAEMNetworker.swift; sourceTree = "<group>"; };
 		06D636174F633A8977B80DC4 /* FBAEMEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBAEMEventTests.swift; sourceTree = "<group>"; };
 		08EA45F62800A6094DE6FE23 /* FBAEMKitTests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = FBAEMKitTests.xcconfig; sourceTree = "<group>"; };
@@ -183,6 +182,7 @@
 		0B2DB862A2534E9BCF64D92F /* TestTools */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TestTools; path = ../TestTools/TestTools.xcodeproj; sourceTree = "<group>"; };
 		153B4C403EFEC54B3E5A0203 /* FBSKAdNetworkReporting.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSKAdNetworkReporting.h; sourceTree = "<group>"; };
 		200CAFDF7052329542187DCB /* FBSDKCoreKit_Basics */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSDKCoreKit_Basics; path = ../FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcodeproj; sourceTree = "<group>"; };
+		24036BAE1BECE8771F20C0A7 /* TestSKAdNetworkReporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSKAdNetworkReporter.swift; sourceTree = "<group>"; };
 		27B0E5D3B1EF8C9BA530BC3D /* FBAEMAdvertiserMultiEntryRule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBAEMAdvertiserMultiEntryRule.m; sourceTree = "<group>"; };
 		2D50412F133CE2A6A7D5150D /* SampleAEMInvocations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAEMInvocations.swift; sourceTree = "<group>"; };
 		308D372D24FA9EC87811E74C /* FBAEMAdvertiserRuleFactory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBAEMAdvertiserRuleFactory.m; sourceTree = "<group>"; };
@@ -301,7 +301,7 @@
 				7BE582199B8FBA1789FEC3E0 /* SampleAEMSingleEntryRules.swift */,
 				0485B2A82D1087BAD40DEF28 /* TestAEMNetworker.swift */,
 				8D1A8648B7AF86852325E167 /* TestInvocation.swift */,
-				02B11CF6827A713779EB0D1E /* TestSKAdNetworkRepoter.swift */,
+				24036BAE1BECE8771F20C0A7 /* TestSKAdNetworkReporter.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -708,7 +708,7 @@
 				7C15398E0B92F0A99548AA17 /* SampleAEMSingleEntryRules.swift in Sources */,
 				C31C49F965C147E171E9F7AF /* TestAEMNetworker.swift in Sources */,
 				92A75FC874F8470A8B25D944 /* TestInvocation.swift in Sources */,
-				D006673B24F89813D040D9E6 /* TestSKAdNetworkRepoter.swift in Sources */,
+				53E8F535EA776A4C33DF76C7 /* TestSKAdNetworkReporter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -115,7 +115,7 @@ static NSString *const _mockChallenge = @"mockChallenge";
 {
   [self mockURLScheme];
 
-  TestBridgeAPIReqestOpener *testBridgeAPI = [TestBridgeAPIReqestOpener new];
+  TestBridgeAPIRequestOpener *testBridgeAPI = [TestBridgeAPIRequestOpener new];
   [FBSDKReferralManager setBridgeAPIRequestOpener:testBridgeAPI];
 
   [_manager startReferralWithCompletionHandler:nil];
