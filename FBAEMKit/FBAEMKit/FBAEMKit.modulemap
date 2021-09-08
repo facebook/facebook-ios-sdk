@@ -1,6 +1,0 @@
-framework module FBAEMKit {
-    umbrella header "FBAEMKit.h"
-
-    export *
-    module * { export * }
-}
