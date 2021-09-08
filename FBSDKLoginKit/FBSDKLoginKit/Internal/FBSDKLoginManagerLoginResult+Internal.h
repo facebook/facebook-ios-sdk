@@ -24,6 +24,8 @@
 
  #import "FBSDKLoginManagerLoginResult.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FBSDKLoginManagerLoginResult ()
 
 @property (nonatomic, readonly) NSDictionary<NSString *, id> *loggingExtras;
@@ -34,5 +36,7 @@
 // adds additional logging entry to extras - only sent as part of `endLoginWithResult:`
 - (void)addLoggingExtra:(id)object forKey:(id<NSCopying>)key;
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

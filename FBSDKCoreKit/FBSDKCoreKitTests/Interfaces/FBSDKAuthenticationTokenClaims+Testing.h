@@ -18,6 +18,8 @@
 
 #import "FBSDKAuthenticationTokenClaims+Internal.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol FBSDKSettings;
 
 @interface FBSDKAuthenticationTokenClaims (Testing)
@@ -53,3 +55,5 @@ NS_SWIFT_NAME(configure(settings:));
                             userLink:(nullable NSString *)userLink;
 
 @end
+
+NS_ASSUME_NONNULL_END

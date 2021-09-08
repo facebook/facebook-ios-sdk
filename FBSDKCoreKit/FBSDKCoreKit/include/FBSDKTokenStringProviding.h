@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(TokenStringProviding)
 @protocol FBSDKTokenStringProviding
 
@@ -33,3 +35,5 @@ NS_SWIFT_NAME(TokenStringProviding)
 @property (class, nonatomic, copy, nullable, readonly) NSString * tokenString;
 
 @end
+
+NS_ASSUME_NONNULL_END

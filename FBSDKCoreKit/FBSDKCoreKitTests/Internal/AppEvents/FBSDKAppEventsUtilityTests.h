@@ -18,6 +18,8 @@
 
 #import <XCTest/XCTest.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class TestAppEventsStateProvider;
 @class TestBundle;
 @class TestEventLogger;
@@ -33,3 +35,5 @@
 @property (nonatomic) TestAppEventsStateProvider *appEventsStateProvider;
 
 @end
+
+NS_ASSUME_NONNULL_END

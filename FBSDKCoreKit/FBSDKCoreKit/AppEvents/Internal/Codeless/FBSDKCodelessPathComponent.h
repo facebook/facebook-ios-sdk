@@ -22,6 +22,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_OPTIONS(int, FBSDKCodelessMatchBitmaskField)
 {
   FBSDKCodelessMatchBitmaskFieldID = 1,
@@ -48,5 +50,7 @@ NS_SWIFT_NAME(CodelessPathComponent)
 - (BOOL)isEqualToPath:(FBSDKCodelessPathComponent *)path;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

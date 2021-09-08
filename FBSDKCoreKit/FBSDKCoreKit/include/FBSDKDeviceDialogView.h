@@ -22,6 +22,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(DeviceDialogViewDelegate)
 @protocol FBSDKDeviceDialogViewDelegate;
 
@@ -49,5 +51,7 @@ NS_SWIFT_NAME(DeviceDialogViewDelegate)
 - (void)deviceDialogViewDidCancel:(FBSDKDeviceDialogView *)deviceDialogView;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

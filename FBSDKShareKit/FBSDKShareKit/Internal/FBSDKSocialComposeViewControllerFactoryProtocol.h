@@ -22,6 +22,8 @@
 
 #import "FBSDKSocialComposeViewController.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(SocialComposeViewControllerFactoryProtocol)
 @protocol FBSDKSocialComposeViewControllerFactory
 
@@ -30,5 +32,7 @@ NS_SWIFT_NAME(SocialComposeViewControllerFactoryProtocol)
 - (nullable id<FBSDKSocialComposeViewController>)makeSocialComposeViewController;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

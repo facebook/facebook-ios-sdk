@@ -20,6 +20,8 @@
 
 #import "FBSDKGamingServiceCompletionHandler.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class FBSDKGamingImageUploaderConfiguration;
 
 NS_SWIFT_NAME(GamingImageUploader)
@@ -80,3 +82,5 @@ Runs an upload to a users Gaming Media Library with the given configuration
                   andProgressHandler:(FBSDKGamingServiceProgressHandler _Nullable)progressHandler;
 
 @end
+
+NS_ASSUME_NONNULL_END

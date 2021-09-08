@@ -28,6 +28,8 @@
 #define DATA_PROCESSING_OPTIONS_COUNTRY @"data_processing_options_country"
 #define DATA_PROCESSING_OPTIONS_STATE   @"data_processing_options_state"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol FBSDKTokenCaching;
 @protocol FBSDKDataPersisting;
 @protocol FBSDKAppEventsConfigurationProviding;
@@ -81,3 +83,5 @@ NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvi
 - (void)logIfSDKSettingsChanged;
 
 @end
+
+NS_ASSUME_NONNULL_END

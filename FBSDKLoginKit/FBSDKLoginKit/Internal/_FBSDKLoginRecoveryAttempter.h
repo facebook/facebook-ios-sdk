@@ -26,8 +26,12 @@
   #import "FBSDKCoreKit+Internal.h"
  #endif
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface _FBSDKLoginRecoveryAttempter : FBSDKErrorRecoveryAttempter
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

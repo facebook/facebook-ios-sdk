@@ -18,9 +18,13 @@
 
 #import "FBSDKFeatureManager.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(FeatureDisabling)
 @protocol FBSDKFeatureDisabling
 
 - (void)disableFeature:(FBSDKFeature)feature;
 
 @end
+
+NS_ASSUME_NONNULL_END

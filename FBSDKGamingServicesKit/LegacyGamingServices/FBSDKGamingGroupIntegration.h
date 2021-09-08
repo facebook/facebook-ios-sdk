@@ -20,9 +20,13 @@
 
 #import "FBSDKGamingServiceCompletionHandler.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(GamingGroupIntegration)
 @interface FBSDKGamingGroupIntegration : NSObject
 
 + (void)openGroupPageWithCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler;
 
 @end
+
+NS_ASSUME_NONNULL_END

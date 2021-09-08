@@ -29,6 +29,8 @@
   #import <FBSDKCoreKit/FBSDKWebDialog.h>
  #endif
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol FBSDKWebDialogDelegate;
 @protocol FBSDKWindowFinding;
 
@@ -42,5 +44,7 @@
 - (BOOL)show;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

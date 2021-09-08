@@ -20,7 +20,11 @@
 
 #import "FBSDKVideoUploader.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol FBSDKVideoUploading;
 
 @interface FBSDKVideoUploader (VideoUploading) <FBSDKVideoUploading>
 @end
+
+NS_ASSUME_NONNULL_END

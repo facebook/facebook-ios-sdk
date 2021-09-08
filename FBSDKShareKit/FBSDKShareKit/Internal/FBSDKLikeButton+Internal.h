@@ -25,10 +25,14 @@
  #import "FBSDKLikeActionController.h"
  #import "FBSDKLikeButton.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FBSDKLikeButton () <FBSDKButtonImpressionTracking>
 
 @property (nonatomic, strong) FBSDKLikeActionController *likeActionController;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

@@ -20,6 +20,8 @@
 
 #import "FBSDKGraphRequestPiggybackManager.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol FBSDKAccessTokenProviding;
 @protocol FBSDKAccessTokenSetting;
 @protocol FBSDKServerConfigurationProviding;
@@ -33,3 +35,5 @@
                  requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider;
 
 @end
+
+NS_ASSUME_NONNULL_END

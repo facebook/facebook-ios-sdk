@@ -22,6 +22,8 @@
 
 #import "FBSDKTokenCaching.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(AuthenticationTokenProviding)
 @protocol FBSDKAuthenticationTokenProviding
 
@@ -36,3 +38,5 @@ NS_SWIFT_NAME(AuthenticationTokenSetting)
 @property (class, nonatomic, copy, nullable) FBSDKAuthenticationToken *currentAuthenticationToken;
 
 @end
+
+NS_ASSUME_NONNULL_END

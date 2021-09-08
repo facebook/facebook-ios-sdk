@@ -22,8 +22,12 @@
 
 #import "FBSDKCoreKitImport.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(MessengerIcon)
 @interface FBSDKMessengerIcon : FBSDKIcon
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

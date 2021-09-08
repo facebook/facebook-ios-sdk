@@ -22,6 +22,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(LikeActionControllerCache)
 @interface FBSDKLikeActionControllerCache : NSObject <NSSecureCoding>
 
@@ -36,5 +38,7 @@ NS_SWIFT_NAME(LikeActionControllerCache)
 - (void)setObject:(id)object forKeyedSubscript:(id)key;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

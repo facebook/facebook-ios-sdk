@@ -19,6 +19,8 @@
 #import "FBSDKLoggingBehavior.h"
 #import "FBSDKAdvertisingTrackingStatus.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(SettingsProtocol)
 @protocol FBSDKSettings
 
@@ -45,3 +47,5 @@ NS_SWIFT_NAME(SettingsProtocol)
 @property (nonatomic, readonly, copy, nullable) NSString *graphAPIDebugParamValue;
 
 @end
+
+NS_ASSUME_NONNULL_END

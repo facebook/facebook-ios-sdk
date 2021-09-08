@@ -21,6 +21,8 @@
 
 #if !TARGET_OS_TV
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class FBSDKProfile;
 
 NS_SWIFT_NAME(ProfileProviding)
@@ -32,5 +34,7 @@ NS_SWIFT_NAME(current);
 + (nullable FBSDKProfile *)fetchCachedProfile;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

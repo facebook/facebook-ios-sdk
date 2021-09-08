@@ -26,6 +26,8 @@
 
 #import "FBSDKAppEventsUtility.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 // Internally known event names
 
 /** Use to log that the share dialog was launched */
@@ -138,3 +140,5 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
 - (void)startObservingApplicationLifecycleNotifications;
 
 @end
+
+NS_ASSUME_NONNULL_END

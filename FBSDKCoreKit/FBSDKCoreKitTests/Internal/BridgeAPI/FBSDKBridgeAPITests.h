@@ -25,6 +25,8 @@
 #import "FBSDKBridgeAPI+Testing.h"
 #import "FBSDKCoreKitTests-Swift.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FBSDKBridgeAPITests : XCTestCase
 
 @property (nonatomic) FBSDKBridgeAPI *api;
@@ -40,3 +42,5 @@ extern NSString *const sampleSource;
 extern NSString *const sampleAnnotation;
 
 @end
+
+NS_ASSUME_NONNULL_END

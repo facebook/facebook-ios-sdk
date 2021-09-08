@@ -26,6 +26,8 @@
  #import "FBSDKInternalUtility.h"
  #import "FBSDKSettings.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FBSDKBridgeAPIRequest ()
 
 @property (class, nullable, nonatomic) id<FBSDKInternalURLOpener> internalURLOpener;
@@ -44,5 +46,7 @@
   NS_DESIGNATED_INITIALIZER;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

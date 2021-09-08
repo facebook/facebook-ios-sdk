@@ -18,6 +18,8 @@
 
 #import "FBSDKGraphRequestPiggybackManaging.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(GraphRequestPiggybackManagerProviding)
 @protocol FBSDKGraphRequestPiggybackManagerProviding
 
@@ -25,3 +27,5 @@ NS_SWIFT_NAME(GraphRequestPiggybackManagerProviding)
 + (Class<FBSDKGraphRequestPiggybackManaging>)piggybackManager;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -20,6 +20,8 @@
 
 #import "FBSDKGamingServiceCompletionHandler.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(FriendFinderDialog)
 @interface FBSDKFriendFinderDialog : NSObject
 
@@ -35,3 +37,5 @@ NS_SWIFT_NAME(FriendFinderDialog)
 + (void)launchFriendFinderDialogWithCompletionHandler:(FBSDKGamingServiceCompletionHandler _Nonnull)completionHandler;
 
 @end
+
+NS_ASSUME_NONNULL_END

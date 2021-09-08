@@ -24,7 +24,11 @@
 
  #import "FBSDKSocialComposeViewControllerFactoryProtocol.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FBSDKSocialComposeViewControllerFactory : NSObject <FBSDKSocialComposeViewControllerFactory>
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

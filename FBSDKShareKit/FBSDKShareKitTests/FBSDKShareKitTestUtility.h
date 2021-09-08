@@ -18,6 +18,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(ShareKitTestUtility)
 @interface FBSDKShareKitTestUtility : NSObject
 
@@ -37,3 +39,5 @@ NS_SWIFT_NAME(ShareKitTestUtility)
 + (NSURL *)testPNGImageURL;
 
 @end
+
+NS_ASSUME_NONNULL_END

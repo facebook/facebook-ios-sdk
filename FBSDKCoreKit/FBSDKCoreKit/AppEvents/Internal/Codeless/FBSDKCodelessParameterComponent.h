@@ -22,6 +22,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(CodelessParameterComponent)
 @interface FBSDKCodelessParameterComponent : NSObject
 
@@ -34,5 +36,7 @@ NS_SWIFT_NAME(CodelessParameterComponent)
 - (BOOL)isEqualToParameter:(FBSDKCodelessParameterComponent *)parameter;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

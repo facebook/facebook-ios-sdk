@@ -32,6 +32,8 @@
  #import "FBSDKSettingsProtocol.h"
  #import "FBSDKSwizzling.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FBSDKCodelessIndexer (Internal)
 
 + (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
@@ -43,5 +45,7 @@
                 advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertisingIDProvider;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

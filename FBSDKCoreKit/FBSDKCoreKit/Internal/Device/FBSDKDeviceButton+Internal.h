@@ -28,6 +28,8 @@
   #import <FBSDKCoreKit/FBSDKDeviceButton.h>
  #endif
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface FBSDKDeviceButton ()
 
 - (NSAttributedString *)attributedTitleStringFromString:(NSString *)string;
@@ -35,5 +37,7 @@
 - (CGSize)sizeThatFits:(CGSize)size attributedTitle:(NSAttributedString *)title;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif

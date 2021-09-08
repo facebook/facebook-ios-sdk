@@ -24,6 +24,8 @@
 
 #import "FBSDKLikeBoxView.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 NS_SWIFT_NAME(FBLikeBoxBorderView)
 @interface FBSDKLikeBoxBorderView : UIView
 
@@ -36,5 +38,7 @@ NS_SWIFT_NAME(FBLikeBoxBorderView)
 @property (nonatomic, strong) UIColor *foregroundColor;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif
