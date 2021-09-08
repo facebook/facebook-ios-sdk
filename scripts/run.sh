@@ -77,6 +77,13 @@ main() {
       "FBSDKTVOSKit"
     )
 
+    DOCUMENTATION_KITS=(
+      "$CORE_KIT"
+      "$LOGIN_KIT"
+      "$SHARE_KIT"
+      "$GAMING_SERVICES_KIT"
+    )
+
     SDK_VERSION_FILES=(
       "Configurations/Version.xcconfig"
       "FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
@@ -428,7 +435,7 @@ release_sdk() {
   }
 
   release_docs() {
-    for kit in "${SDK_KITS[@]}"; do
+    for kit in "${DOCUMENTATION_KITS[@]}"; do
       rm -rf "$kit/build" || true
 
       ruby "$SDK_SCRIPTS_DIR"/genDocs.rb "$kit"

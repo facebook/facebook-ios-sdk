@@ -29,6 +29,13 @@ LOGIN_KIT = 'FBSDKLoginKit'
 SHARE_KIT = 'FBSDKShareKit'
 GAMING_SERVICES_KIT = 'FBSDKGamingServicesKit'
 
+HEADER_PATHS = {
+  CORE_KIT => "FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKit.h",
+  LOGIN_KIT => "FBSDKLoginKit/FBSDKLoginKit/FBSDKLoginKit.h",
+  SHARE_KIT => "FBSDKShareKit/FBSDKShareKit/FBSDKShareKit.h",
+  GAMING_SERVICES_KIT => "FBSDKGamingServicesKit/LegacyGamingServices/FBSDKGamingServicesKit.h",
+}
+
 def base_path
   Pathname.getwd
 end
@@ -38,7 +45,7 @@ def path_name(kit)
 end
 
 def headerPathFor(kit)
-  header_path = base_path + "#{kit}/#{kit}/#{kit}.h"
+  header_path = base_path + HEADER_PATHS[kit]
 
   if !header_path.exist?
     abort "*** ERROR: unable to document #{kit}. Missing header at #{header_path.to_s}"
@@ -56,7 +63,7 @@ def rec_path(path)
 end
 
 def sdk_version
-  "$(grep -Eo 'FBSDK_VERSION_STRING @\".*\"' \"FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h\" | awk -F'\"' '{print $2}')"
+  "$(grep -Eo 'FBSDK_VERSION_STRING @\".*\"' \"FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h\" | awk -F'\"' '{print $2}')"
 end
 
 def generateSourceKittenOutputForObjC(kit)
