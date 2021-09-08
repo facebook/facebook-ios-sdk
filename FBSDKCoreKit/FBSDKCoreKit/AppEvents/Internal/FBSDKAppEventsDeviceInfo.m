@@ -83,7 +83,7 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024; // bytes
 
 + (void)initialize
 {
-  if (self == [FBSDKAppEventsDeviceInfo class]) {
+  if (self == FBSDKAppEventsDeviceInfo.class) {
     [[self sharedDeviceInfo] _collectPersistentData];
   }
 }

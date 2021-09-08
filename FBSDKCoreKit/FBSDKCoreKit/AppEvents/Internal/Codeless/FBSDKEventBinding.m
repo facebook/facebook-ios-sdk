@@ -93,7 +93,7 @@ static id<FBSDKNumberParsing> _numberParser;
 
 - (void)trackEvent:(id)sender
 {
-  UIView *sourceView = [sender isKindOfClass:[UIView class]] ? (UIView *)sender : nil;
+  UIView *sourceView = [sender isKindOfClass:UIView.class] ? (UIView *)sender : nil;
   NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionary];
   [FBSDKTypeUtility dictionary:params setObject:@"1" forKey:CODELESS_CODELESS_EVENT_KEY];
   for (FBSDKCodelessParameterComponent *component in self.parameters) {
@@ -133,7 +133,7 @@ static id<FBSDKNumberParsing> _numberParser;
   if (!view) {
     return NO;
   }
-  NSString *className = NSStringFromClass([view class]);
+  NSString *className = NSStringFromClass(view.class);
   if (![className isEqualToString:component.className]) {
     return NO;
   }
@@ -163,7 +163,7 @@ static id<FBSDKNumberParsing> _numberParser;
   }
 
   if ((component.matchBitmask & FBSDKCodelessMatchBitmaskFieldTag) > 0
-      && [view isKindOfClass:[UIView class]]
+      && [view isKindOfClass:UIView.class]
       && component.tag != ((UIView *)view).tag) {
     return NO;
   }

@@ -56,7 +56,7 @@ static id<FBSDKDataPersisting> _store;
 #pragma mark - Public Class Methods
 + (void)initialize
 {
-  if (self == [FBSDKGateKeeperManager class]) {
+  if (self == FBSDKGateKeeperManager.class) {
     _completionBlocks = [NSMutableArray array];
     _store = nil;
     _requestProvider = nil;
@@ -110,7 +110,7 @@ static id<FBSDKDataPersisting> _store;
         NSString *defaultKey = [NSString stringWithFormat:FBSDK_GATEKEEPERS_USER_DEFAULTS_KEY,
                                 appID];
         NSData *data = [self.store objectForKey:defaultKey];
-        if ([data isKindOfClass:[NSData class]]) {
+        if ([data isKindOfClass:NSData.class]) {
           id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createSecureUnarchiverFor:data];
           @try {
             _gateKeepers = [FBSDKTypeUtility dictionaryValue:
@@ -132,7 +132,7 @@ static id<FBSDKDataPersisting> _store;
         [FBSDKTypeUtility array:_completionBlocks addObject:completionBlock];
         if (!_loadingGateKeepers) {
           _loadingGateKeepers = YES;
-          id<FBSDKGraphRequest> request = [[self class] requestToLoadGateKeepers];
+          id<FBSDKGraphRequest> request = [self.class requestToLoadGateKeepers];
 
           // start request with specified timeout instead of the default 180s
           id<FBSDKGraphRequestConnecting> requestConnection = [self.connectionProvider createGraphRequestConnection];

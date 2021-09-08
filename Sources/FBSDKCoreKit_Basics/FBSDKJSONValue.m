@@ -91,7 +91,7 @@ static NSDictionary<NSString *, FBSDKJSONField *> *createDictionary(id obj)
 - (void)matchArray:(void (^)(NSArray<FBSDKJSONField *> *))arrayMatcher
         dictionary:(void (^)(NSDictionary<NSString *, FBSDKJSONField *> *))dictMatcher
 {
-  if (arrayMatcher && [_rawObject isKindOfClass:[NSArray class]]) {
+  if (arrayMatcher && [_rawObject isKindOfClass:NSArray.class]) {
     arrayMatcher(createArray(_rawObject));
   } else if (dictMatcher && [_rawObject isKindOfClass:[NSDictionary<NSString *, id> class]]) {
     dictMatcher(createDictionary(_rawObject));

@@ -151,7 +151,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
       return;
     }
 
-    if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+    if ([response isKindOfClass:NSHTTPURLResponse.class]) {
       NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
 
       // NSURLConnection usually follows redirects automatically, but the
@@ -236,7 +236,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
     NSMutableDictionary<NSString *, id> *al = [NSMutableDictionary dictionary];
     for (NSDictionary<NSString *, id> *tag in dataArray) {
         NSString *name = tag[@"property"];
-        if (![name isKindOfClass:[NSString class]]) {
+        if (![name isKindOfClass:NSString.class]) {
             continue;
         }
         NSArray<NSString *> *nameComponents = [name componentsSeparatedByString:@":"];
@@ -270,7 +270,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   // Run some JavaScript in the webview to fetch the meta tags.
   [webView evaluateJavaScript:FBSDKWebViewAppLinkResolverTagExtractionJavaScript
             completionHandler:^(id _Nullable evaluateResult, NSError * _Nullable error) {
-    NSString *jsonString = [evaluateResult isKindOfClass:[NSString class]] ? evaluateResult : nil;
+    NSString *jsonString = [evaluateResult isKindOfClass:NSString.class] ? evaluateResult : nil;
     error = nil;
     NSData *encodedJSON = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
     if (encodedJSON) {

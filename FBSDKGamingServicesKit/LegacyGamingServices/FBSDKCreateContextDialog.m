@@ -60,7 +60,7 @@
 
   NSMutableDictionary<NSString *, id> *parameters = [NSMutableDictionary new];
 
-  if ([self.dialogContent isKindOfClass:[FBSDKCreateContextContent class]] && self.dialogContent) {
+  if ([self.dialogContent isKindOfClass:FBSDKCreateContextContent.class] && self.dialogContent) {
     FBSDKCreateContextContent *content = (FBSDKCreateContextContent *)self.dialogContent;
     if (content.playerID) {
       parameters[@"player_id"] = content.playerID;

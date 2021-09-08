@@ -68,7 +68,7 @@
     return NO;
   }
   NSArray *recipientIDArray = [FBSDKTypeUtility arrayValue:recipients];
-  if (!recipientIDArray && [recipients isKindOfClass:[NSString class]]) {
+  if (!recipientIDArray && [recipients isKindOfClass:NSString.class]) {
     recipientIDArray = [recipients componentsSeparatedByString:@","];
   }
   if (recipientIDArray) {

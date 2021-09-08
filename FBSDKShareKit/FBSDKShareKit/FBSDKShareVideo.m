@@ -121,7 +121,7 @@ NSString *const kFBSDKShareVideoURLKey = @"videoURL";
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKShareVideo class]]) {
+  if (![object isKindOfClass:FBSDKShareVideo.class]) {
     return NO;
   }
   return [self isEqualToShareVideo:(FBSDKShareVideo *)object];
@@ -233,13 +233,13 @@ NSString *const kFBSDKShareVideoURLKey = @"videoURL";
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [self init])) {
-    _data = [decoder decodeObjectOfClass:[NSData class] forKey:kFBSDKShareVideoDataKey];
-    NSString *localIdentifier = [decoder decodeObjectOfClass:[NSString class] forKey:kFBSDKShareVideoAssetKey];
+    _data = [decoder decodeObjectOfClass:NSData.class forKey:kFBSDKShareVideoDataKey];
+    NSString *localIdentifier = [decoder decodeObjectOfClass:NSString.class forKey:kFBSDKShareVideoAssetKey];
     if (localIdentifier && (PHAuthorizationStatusAuthorized == [PHPhotoLibrary authorizationStatus])) {
       _videoAsset = [PHAsset fetchAssetsWithLocalIdentifiers:@[localIdentifier] options:nil].firstObject;
     }
-    _videoURL = [decoder decodeObjectOfClass:[NSURL class] forKey:kFBSDKShareVideoURLKey];
-    _previewPhoto = [decoder decodeObjectOfClass:[FBSDKSharePhoto class] forKey:kFBSDKShareVideoPreviewPhotoKey];
+    _videoURL = [decoder decodeObjectOfClass:NSURL.class forKey:kFBSDKShareVideoURLKey];
+    _previewPhoto = [decoder decodeObjectOfClass:FBSDKSharePhoto.class forKey:kFBSDKShareVideoPreviewPhotoKey];
   }
   return self;
 }

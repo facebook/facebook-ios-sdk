@@ -41,7 +41,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 
 + (void)initialize
 {
-  if (self == [FBSDKDeviceLoginManager class]) {
+  if (self == FBSDKDeviceLoginManager.class) {
     g_loginManagerInstances = [NSMutableArray array];
   }
 }

@@ -24,7 +24,7 @@
 {
   static UIImage *image = nil;
   if (image == nil) {
-    NSData *imageData = [NSData dataWithContentsOfURL:[[self class] testImageURL]];
+    NSData *imageData = [NSData dataWithContentsOfURL:[self.class testImageURL]];
     image = [UIImage imageWithData:imageData];
   }
   return image;
@@ -32,14 +32,14 @@
 
 + (NSURL *)testImageURL
 {
-  NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+  NSBundle *bundle = [NSBundle bundleForClass:self.class];
   NSURL *imageURL = [bundle URLForResource:@"test-image" withExtension:@"jpeg"];
   return imageURL;
 }
 
 + (NSURL *)testPNGImageURL
 {
-  NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+  NSBundle *bundle = [NSBundle bundleForClass:self.class];
   NSURL *imageURL = [bundle URLForResource:@"bicycle" withExtension:@"png"];
   return imageURL;
 }

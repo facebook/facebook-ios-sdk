@@ -114,7 +114,7 @@
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKAppInviteContent class]]) {
+  if (![object isKindOfClass:FBSDKAppInviteContent.class]) {
     return NO;
   }
   return [self isEqualToAppInviteContent:(FBSDKAppInviteContent *)object];
@@ -141,11 +141,11 @@
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [self init])) {
-    _appLinkURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDK_APP_INVITE_CONTENT_APP_LINK_URL_KEY];
-    _appInvitePreviewImageURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDK_APP_INVITE_CONTENT_PREVIEW_IMAGE_KEY];
-    _promotionCode = [decoder decodeObjectOfClass:[NSString class] forKey:
+    _appLinkURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_APP_INVITE_CONTENT_APP_LINK_URL_KEY];
+    _appInvitePreviewImageURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_APP_INVITE_CONTENT_PREVIEW_IMAGE_KEY];
+    _promotionCode = [decoder decodeObjectOfClass:NSString.class forKey:
                       FBSDK_APP_INVITE_CONTENT_PROMO_CODE_KEY];
-    _promotionText = [decoder decodeObjectOfClass:[NSString class] forKey:
+    _promotionText = [decoder decodeObjectOfClass:NSString.class forKey:
                       FBSDK_APP_INVITE_CONTENT_PROMO_TEXT_KEY];
     _destination = [decoder decodeIntegerForKey:
                     FBSDK_APP_INVITE_CONTENT_DESTINATION_KEY];

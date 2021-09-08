@@ -72,7 +72,7 @@
   userInfo[FBSDKAccessTokenDidExpireKey] = @YES;
 
   [self.notificationCenter postNotificationName:FBSDKAccessTokenDidChangeNotification
-                                         object:[FBSDKAccessToken class]
+                                         object:FBSDKAccessToken.class
                                        userInfo:userInfo];
 }
 

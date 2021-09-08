@@ -193,9 +193,9 @@ static id<FBSDKSettings> _settings;
 
 + (BOOL)isAttachment:(id)item
 {
-  return ([item isKindOfClass:[UIImage class]]
-    || [item isKindOfClass:[NSData class]]
-    || [item isKindOfClass:[FBSDKGraphRequestDataAttachment class]]);
+  return ([item isKindOfClass:UIImage.class]
+    || [item isKindOfClass:NSData.class]
+    || [item isKindOfClass:FBSDKGraphRequestDataAttachment.class]);
 }
 
 + (NSString *)serializeURL:(NSString *)baseUrl
@@ -293,7 +293,7 @@ static id<FBSDKSettings> _settings;
 - (NSString *)formattedDescription
 {
   NSMutableString *result = [NSMutableString stringWithFormat:@"<%@: %p",
-                             NSStringFromClass([self class]),
+                             NSStringFromClass(self.class),
                              self];
   if (self.graphPath) {
     [result appendFormat:@", graphPath: %@", self.graphPath];

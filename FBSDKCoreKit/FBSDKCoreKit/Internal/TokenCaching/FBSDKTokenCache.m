@@ -74,12 +74,12 @@ static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
     }
   }
 
-  if ([dict[kFBSDKTokenUUIDKey] isKindOfClass:[NSString class]]) {
+  if ([dict[kFBSDKTokenUUIDKey] isKindOfClass:NSString.class]) {
     // there is a bug while running on simulator that the uuid stored in dict can be NSData,
     // do a type check to make sure it is NSString
     if ([dict[kFBSDKTokenUUIDKey] isEqualToString:uuid]) {
       id tokenData = dict[kFBSDKTokenEncodedKey];
-      if ([tokenData isKindOfClass:[NSData class]]) {
+      if ([tokenData isKindOfClass:NSData.class]) {
         id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createSecureUnarchiverFor:tokenData];
 
         FBSDKAccessToken *unarchivedToken = nil;
@@ -143,7 +143,7 @@ static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
     }
   }
 
-  if ([dict[kFBSDKTokenUUIDKey] isKindOfClass:[NSString class]]) {
+  if ([dict[kFBSDKTokenUUIDKey] isKindOfClass:NSString.class]) {
     // there is a bug while running on simulator that the uuid stored in dict can be NSData,
     // do a type check to make sure it is NSString
     if ([dict[kFBSDKTokenUUIDKey] isEqualToString:uuid]) {

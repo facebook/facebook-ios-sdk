@@ -95,7 +95,7 @@ static id<FBSDKSettings> _settings;
                             settings:(id<FBSDKSettings>)settings
                 advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
 {
-  if (self == [FBSDKCodelessIndexer class]) {
+  if (self == FBSDKCodelessIndexer.class) {
     _requestProvider = requestProvider;
     _serverConfigurationProvider = serverConfigurationProvider;
     _store = store;
@@ -179,7 +179,7 @@ static id<FBSDKSettings> _settings;
     // load the defaults
     NSString *defaultKey = [NSString stringWithFormat:CODELESS_SETTING_KEY, appID];
     NSData *data = [self.store objectForKey:defaultKey];
-    if ([data isKindOfClass:[NSData class]]) {
+    if ([data isKindOfClass:NSData.class]) {
       NSMutableDictionary<NSString *, id> *codelessSetting = nil;
       id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createInsecureUnarchiverFor:data];
       @try {
@@ -255,7 +255,7 @@ static id<FBSDKSettings> _settings;
 {
   _isGestureSet = YES;
   [UIApplication sharedApplication].applicationSupportsShakeToEdit = YES;
-  Class class = [UIApplication class];
+  Class class = UIApplication.class;
 
   [self.swizzler swizzleSelector:@selector(motionBegan:withEvent:)
                          onClass:class
@@ -483,16 +483,16 @@ static id<FBSDKSettings> _settings;
 {
   UIView *view = nil;
 
-  if ([obj isKindOfClass:[UIView class]]) {
+  if ([obj isKindOfClass:UIView.class]) {
     view = (UIView *)obj;
-  } else if ([obj isKindOfClass:[UIViewController class]]) {
+  } else if ([obj isKindOfClass:UIViewController.class]) {
     view = ((UIViewController *)obj).view;
   }
 
   CGRect frame = view.frame;
   CGPoint offset = CGPointZero;
 
-  if ([view isKindOfClass:[UIScrollView class]]) {
+  if ([view isKindOfClass:UIScrollView.class]) {
     offset = ((UIScrollView *)view).contentOffset;
   }
 

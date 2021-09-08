@@ -314,7 +314,7 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
    shouldPostNotification:(BOOL)shouldPostNotification
 {
   if (profile != g_currentProfile && ![profile isEqualToProfile:g_currentProfile]) {
-    [[self class] cacheProfile:profile];
+    [self.class cacheProfile:profile];
     NSMutableDictionary<NSString *, id> *userInfo = [NSMutableDictionary dictionary];
 
     [FBSDKTypeUtility dictionary:userInfo setObject:profile forKey:FBSDKProfileChangeNewKey];
@@ -323,7 +323,7 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
 
     if (shouldPostNotification) {
       [_notificationCenter postNotificationName:FBSDKProfileDidChangeNotification
-                                         object:[self class]
+                                         object:self.class
                                        userInfo:userInfo];
     }
   }
@@ -389,7 +389,7 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKProfile class]]) {
+  if (![object isKindOfClass:FBSDKProfile.class]) {
     return NO;
   }
   return [self isEqualToProfile:object];
@@ -425,21 +425,21 @@ static id<FBSDKNotificationPosting, FBSDKNotificationObserving> _notificationCen
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   FBSDKUserIdentifier *userID = [decoder decodeObjectOfClass:[FBSDKUserIdentifier class] forKey:FBSDKPROFILE_USERID_KEY];
-  NSString *firstName = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKPROFILE_FIRSTNAME_KEY];
-  NSString *middleName = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKPROFILE_MIDDLENAME_KEY];
-  NSString *lastName = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKPROFILE_LASTNAME_KEY];
-  NSString *name = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKPROFILE_NAME_KEY];
-  NSURL *linkURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDKPROFILE_LINKURL_KEY];
-  NSDate *refreshDate = [decoder decodeObjectOfClass:[NSDate class] forKey:FBSDKPROFILE_REFRESHDATE_KEY];
-  NSURL *imageURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDKPROFILE_IMAGEURL_KEY];
-  NSString *email = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKPROFILE_EMAIL_KEY];
-  NSArray<FBSDKUserIdentifier *> *friendIDs = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDKPROFILE_FRIENDIDS_KEY];
+  NSString *firstName = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKPROFILE_FIRSTNAME_KEY];
+  NSString *middleName = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKPROFILE_MIDDLENAME_KEY];
+  NSString *lastName = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKPROFILE_LASTNAME_KEY];
+  NSString *name = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKPROFILE_NAME_KEY];
+  NSURL *linkURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDKPROFILE_LINKURL_KEY];
+  NSDate *refreshDate = [decoder decodeObjectOfClass:NSDate.class forKey:FBSDKPROFILE_REFRESHDATE_KEY];
+  NSURL *imageURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDKPROFILE_IMAGEURL_KEY];
+  NSString *email = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKPROFILE_EMAIL_KEY];
+  NSArray<FBSDKUserIdentifier *> *friendIDs = [decoder decodeObjectOfClass:NSArray.class forKey:FBSDKPROFILE_FRIENDIDS_KEY];
   BOOL isLimited = [decoder decodeBoolForKey:FBSDKPROFILE_IS_LIMITED_KEY];
-  NSDate *birthday = [decoder decodeObjectOfClass:[NSDate class] forKey:FBSDKPROFILE_BIRTHDAY_KEY];
-  FBSDKUserAgeRange *ageRange = [decoder decodeObjectOfClass:[FBSDKUserAgeRange class] forKey:FBSDKPROFILE_AGERANGE_KEY];
-  FBSDKLocation *hometown = [decoder decodeObjectOfClass:[FBSDKLocation class] forKey:FBSDKPROFILE_HOMETOWN_KEY];
-  FBSDKLocation *location = [decoder decodeObjectOfClass:[FBSDKLocation class] forKey:FBSDKPROFILE_LOCATION_KEY];
-  NSString *gender = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDKPROFILE_GENDER_KEY];
+  NSDate *birthday = [decoder decodeObjectOfClass:NSDate.class forKey:FBSDKPROFILE_BIRTHDAY_KEY];
+  FBSDKUserAgeRange *ageRange = [decoder decodeObjectOfClass:FBSDKUserAgeRange.class forKey:FBSDKPROFILE_AGERANGE_KEY];
+  FBSDKLocation *hometown = [decoder decodeObjectOfClass:FBSDKLocation.class forKey:FBSDKPROFILE_HOMETOWN_KEY];
+  FBSDKLocation *location = [decoder decodeObjectOfClass:FBSDKLocation.class forKey:FBSDKPROFILE_LOCATION_KEY];
+  NSString *gender = [decoder decodeObjectOfClass:NSString.class forKey:FBSDKPROFILE_GENDER_KEY];
   return [self initWithUserID:userID
                     firstName:firstName
                    middleName:middleName
@@ -488,7 +488,7 @@ static id <FBSDKDataPersisting> _store;
        accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
         notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
 {
-  if (self == [FBSDKProfile class]) {
+  if (self == FBSDKProfile.class) {
     _store = store;
     _accessTokenProvider = accessTokenProvider;
     _notificationCenter = notificationCenter;
@@ -514,7 +514,7 @@ static id <FBSDKDataPersisting> _store;
     id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createSecureUnarchiverFor:data];
 
     @try {
-      return [unarchiver decodeObjectOfClass:[FBSDKProfile class] forKey:NSKeyedArchiveRootObjectKey];
+      return [unarchiver decodeObjectOfClass:FBSDKProfile.class forKey:NSKeyedArchiveRootObjectKey];
     } @catch (NSException *exception) {
       // Ignore decode error
     }
@@ -603,11 +603,11 @@ static id <FBSDKDataPersisting> _store;
 
 + (void)loadProfileWithToken:(FBSDKAccessToken *)token completion:(FBSDKProfileBlock)completion
 {
-  NSString *graphPath = [[self class] graphPathForToken:token];
+  NSString *graphPath = [self.class graphPathForToken:token];
   id<FBSDKGraphRequest> request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
                                                                     parameters:nil
                                                                          flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
-  [[self class] loadProfileWithToken:token completion:completion graphRequest:request];
+  [self.class loadProfileWithToken:token completion:completion graphRequest:request];
 }
 
 + (void)loadProfileWithToken:(FBSDKAccessToken *)token
@@ -654,10 +654,10 @@ static id <FBSDKDataPersisting> _store;
                                                           gender:gender];
     *profileRef = [profile copy];
   };
-  [[self class] loadProfileWithToken:token
-                          completion:completion
-                        graphRequest:request
-                          parseBlock:parseBlock];
+  [self.class loadProfileWithToken:token
+                        completion:completion
+                      graphRequest:request
+                        parseBlock:parseBlock];
 }
 
 + (void)loadProfileWithToken:(FBSDKAccessToken *)token
@@ -685,7 +685,7 @@ static id <FBSDKDataPersisting> _store;
       if (!error) {
         parseBlock(result, &profile);
       }
-      [[self class] setCurrentProfile:profile];
+      [self.class setCurrentProfile:profile];
       if (completion != NULL) {
         completion(profile, error);
       }

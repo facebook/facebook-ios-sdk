@@ -102,7 +102,7 @@ static void fbsdkdfl_load_symbol_once(void *context)
 // convenience macro for getting a pointer to a named NSString, verifying it loaded correctly, and returning it
 #define _fbsdkdfl_get_and_return_NSString(LIBRARY, SYMBOL) \
   _fbsdkdfl_symbol_get_k(LIBRARY, SYMBOL, NSString **); \
-  NSCAssert([*k isKindOfClass:[NSString class]], @"Loaded symbol %@ is not of type NSString *", @#SYMBOL); \
+  NSCAssert([*k isKindOfClass:NSString.class], @"Loaded symbol %@ is not of type NSString *", @#SYMBOL); \
   _fbsdkdfl_return_k(LIBRARY, SYMBOL)
 
 #pragma mark - Security Framework

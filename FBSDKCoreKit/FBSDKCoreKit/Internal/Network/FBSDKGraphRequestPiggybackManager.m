@@ -61,7 +61,7 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
              serverConfiguration:(id<FBSDKServerConfigurationProviding, FBSDKServerConfigurationLoading>)serverConfiguration
                  requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
 {
-  if (self == [FBSDKGraphRequestPiggybackManager class]) {
+  if (self == FBSDKGraphRequestPiggybackManager.class) {
     _tokenWallet = tokenWallet;
     _settings = settings;
     _serverConfiguration = serverConfiguration;
@@ -82,8 +82,8 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
       }
     }
     if (safeForPiggyback) {
-      [[self class] addRefreshPiggybackIfStale:connection];
-      [[self class] addServerConfigurationPiggyback:connection];
+      [self.class addRefreshPiggybackIfStale:connection];
+      [self.class addServerConfigurationPiggyback:connection];
     }
   }
 }

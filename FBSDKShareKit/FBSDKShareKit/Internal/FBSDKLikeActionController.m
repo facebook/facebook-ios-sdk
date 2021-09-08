@@ -64,7 +64,7 @@ FBSDKTriStateBOOL FBSDKTriStateBOOLFromBOOL(BOOL value)
 
 FBSDKTriStateBOOL FBSDKTriStateBOOLFromNSNumber(NSNumber *value)
 {
-  return ([value isKindOfClass:[NSNumber class]]
+  return ([value isKindOfClass:NSNumber.class]
     ? FBSDKTriStateBOOLFromBOOL(value.boolValue)
     : FBSDKTriStateBOOLValueUnknown);
 }
@@ -174,7 +174,7 @@ static FBSDKLikeActionControllerCache *_cache = nil;
 
 + (void)initialize
 {
-  if (self == [FBSDKLikeActionController class]) {
+  if (self == FBSDKLikeActionController.class) {
     NSString *accessTokenString = [FBSDKAccessToken currentAccessToken].tokenString;
     if (accessTokenString) {
       NSURL *fileURL = [self _cacheFileURL];
@@ -187,7 +187,7 @@ static FBSDKLikeActionControllerCache *_cache = nil;
       #endif
         unarchiver.requiresSecureCoding = YES;
         @try {
-          _cache = [unarchiver decodeObjectOfClass:[FBSDKLikeActionControllerCache class]
+          _cache = [unarchiver decodeObjectOfClass:FBSDKLikeActionControllerCache.class
                                             forKey:NSKeyedArchiveRootObjectKey];
         } @catch (NSException *ex) {
           // ignore decoding exceptions from previous versions of the archive, etc
@@ -303,7 +303,7 @@ static FBSDKLikeActionControllerCache *_cache = nil;
     return nil;
   }
 
-  NSString *objectID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_LIKE_ACTION_CONTROLLER_OBJECT_ID_KEY];
+  NSString *objectID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_LIKE_ACTION_CONTROLLER_OBJECT_ID_KEY];
   if (!objectID) {
     return nil;
   }
@@ -312,18 +312,18 @@ static FBSDKLikeActionControllerCache *_cache = nil;
     _objectID = [objectID copy];
     _accessToken = [FBSDKAccessToken currentAccessToken];
 
-    _lastUpdateTime = [[decoder decodeObjectOfClass:[NSDate class] forKey:FBSDK_LIKE_ACTION_CONTROLLER_LAST_UPDATE_TIME_KEY] copy];
-    _likeCountStringWithLike = [[decoder decodeObjectOfClass:[NSString class]
+    _lastUpdateTime = [[decoder decodeObjectOfClass:NSDate.class forKey:FBSDK_LIKE_ACTION_CONTROLLER_LAST_UPDATE_TIME_KEY] copy];
+    _likeCountStringWithLike = [[decoder decodeObjectOfClass:NSString.class
                                                       forKey:FBSDK_LIKE_ACTION_CONTROLLER_LIKE_COUNT_STRING_WITH_LIKE_KEY] copy];
-    _likeCountStringWithoutLike = [[decoder decodeObjectOfClass:[NSString class]
+    _likeCountStringWithoutLike = [[decoder decodeObjectOfClass:NSString.class
                                                          forKey:FBSDK_LIKE_ACTION_CONTROLLER_LIKE_COUNT_STRING_WITHOUT_LIKE_KEY] copy];
     _objectIsLiked = [decoder decodeBoolForKey:FBSDK_LIKE_ACTION_CONTROLLER_OBJECT_IS_LIKED_KEY];
     _objectType = [decoder decodeIntegerForKey:FBSDK_LIKE_ACTION_CONTROLLER_OBJECT_TYPE_KEY];
-    _socialSentenceWithLike = [[decoder decodeObjectOfClass:[NSString class]
+    _socialSentenceWithLike = [[decoder decodeObjectOfClass:NSString.class
                                                      forKey:FBSDK_LIKE_ACTION_CONTROLLER_SOCIAL_SENTENCE_WITH_LIKE_KEY] copy];
-    _socialSentenceWithoutLike = [[decoder decodeObjectOfClass:[NSString class]
+    _socialSentenceWithoutLike = [[decoder decodeObjectOfClass:NSString.class
                                                         forKey:FBSDK_LIKE_ACTION_CONTROLLER_SOCIAL_SENTENCE_WITHOUT_LIKE_KEY] copy];
-    _unlikeToken = [[decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_LIKE_ACTION_CONTROLLER_UNLIKE_TOKEN_KEY] copy];
+    _unlikeToken = [[decoder decodeObjectOfClass:NSString.class forKey:FBSDK_LIKE_ACTION_CONTROLLER_UNLIKE_TOKEN_KEY] copy];
 
     [self _configure];
   }

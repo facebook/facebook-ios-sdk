@@ -81,7 +81,7 @@
 
 - (BOOL)isEqual:(id)object
 {
-  if (![object isKindOfClass:[FBSDKProfilePictureViewState class]]) {
+  if (![object isKindOfClass:FBSDKProfilePictureViewState.class]) {
     return NO;
   }
   FBSDKProfilePictureViewState *other = (FBSDKProfilePictureViewState *)object;

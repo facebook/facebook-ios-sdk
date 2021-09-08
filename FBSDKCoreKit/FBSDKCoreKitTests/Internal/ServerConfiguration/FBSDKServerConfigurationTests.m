@@ -666,15 +666,15 @@ typedef ServerConfigurationFixtures Fixtures;
 
   NSSet *dialogFlowsClasses = [[NSSet alloc] initWithObjects:
                                [NSDictionary<NSString *, id> class],
-                               [NSString class],
-                               [NSNumber class],
+                               NSString.class,
+                               NSNumber.class,
                                nil];
   NSSet *dictionaryClasses = [NSSet setWithObjects:
                               [NSDictionary<NSString *, id> class],
-                              [NSArray class],
-                              [NSData class],
-                              [NSString class],
-                              [NSNumber class],
+                              NSArray.class,
+                              NSData.class,
+                              NSString.class,
+                              NSNumber.class,
                               nil];
   XCTAssertEqualObjects(decoder.decodedObject[@"appID"], NSString.class);
   XCTAssertEqualObjects(decoder.decodedObject[@"appName"], NSString.class);

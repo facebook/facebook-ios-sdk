@@ -76,7 +76,7 @@ static NSMutableArray *_pendingRequestors;
 
 + (void)initialize
 {
-  if ([self class] == [FBSDKPaymentProductRequestor class]) {
+  if (self.class == FBSDKPaymentProductRequestor.class) {
     _pendingRequestors = [NSMutableArray new];
   }
 }
@@ -304,7 +304,7 @@ static NSMutableArray *_pendingRequestors;
 #if !TARGET_OS_TV
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_1
   if (@available(iOS 11.2, *)) {
-    if (subcriptionPeriod && [subcriptionPeriod isKindOfClass:[SKProductSubscriptionPeriod class]]) {
+    if (subcriptionPeriod && [subcriptionPeriod isKindOfClass:SKProductSubscriptionPeriod.class]) {
       SKProductSubscriptionPeriod *period = (SKProductSubscriptionPeriod *)subcriptionPeriod;
       NSString *unit = nil;
       switch (period.unit) {

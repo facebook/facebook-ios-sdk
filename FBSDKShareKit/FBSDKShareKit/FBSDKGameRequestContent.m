@@ -41,7 +41,7 @@
 
 - (void)setRecipients:(NSArray *)recipients
 {
-  [FBSDKShareUtility assertCollection:recipients ofClass:[NSString class] name:@"recipients"];
+  [FBSDKShareUtility assertCollection:recipients ofClass:NSString.class name:@"recipients"];
   if (![_recipients isEqual:recipients]) {
     _recipients = [recipients copy];
   }
@@ -49,7 +49,7 @@
 
 - (void)setRecipientSuggestions:(NSArray *)recipientSuggestions
 {
-  [FBSDKShareUtility assertCollection:recipientSuggestions ofClass:[NSString class] name:@"recipientSuggestions"];
+  [FBSDKShareUtility assertCollection:recipientSuggestions ofClass:NSString.class name:@"recipientSuggestions"];
   if (![_recipientSuggestions isEqual:recipientSuggestions]) {
     _recipientSuggestions = [recipientSuggestions copy];
   }
@@ -183,7 +183,7 @@
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKGameRequestContent class]]) {
+  if (![object isKindOfClass:FBSDKGameRequestContent.class]) {
     return NO;
   }
   return [self isEqualToGameRequestContent:(FBSDKGameRequestContent *)object];
@@ -213,13 +213,13 @@
 {
   if ((self = [self init])) {
     _actionType = [decoder decodeIntegerForKey:FBSDK_APP_REQUEST_CONTENT_ACTION_TYPE_KEY];
-    _data = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_APP_REQUEST_CONTENT_DATA_KEY];
+    _data = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_APP_REQUEST_CONTENT_DATA_KEY];
     _filters = [decoder decodeIntegerForKey:FBSDK_APP_REQUEST_CONTENT_FILTERS_KEY];
-    _message = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_APP_REQUEST_CONTENT_MESSAGE_KEY];
-    _objectID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_APP_REQUEST_CONTENT_OBJECT_ID_KEY];
-    _recipientSuggestions = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDK_APP_REQUEST_CONTENT_SUGGESTIONS_KEY];
-    _title = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_APP_REQUEST_CONTENT_TITLE_KEY];
-    _recipients = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDK_APP_REQUEST_CONTENT_TO_KEY];
+    _message = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_APP_REQUEST_CONTENT_MESSAGE_KEY];
+    _objectID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_APP_REQUEST_CONTENT_OBJECT_ID_KEY];
+    _recipientSuggestions = [decoder decodeObjectOfClass:NSArray.class forKey:FBSDK_APP_REQUEST_CONTENT_SUGGESTIONS_KEY];
+    _title = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_APP_REQUEST_CONTENT_TITLE_KEY];
+    _recipients = [decoder decodeObjectOfClass:NSArray.class forKey:FBSDK_APP_REQUEST_CONTENT_TO_KEY];
   }
   return self;
 }

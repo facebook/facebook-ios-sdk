@@ -221,7 +221,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 - (BOOL)isGraphErrorRecoveryEnabled
 {
-  return [[self class] isGraphErrorRecoveryEnabled];
+  return [self.class isGraphErrorRecoveryEnabled];
 }
 
 + (void)setGraphErrorRecoveryEnabled:(BOOL)graphErrorRecoveryEnabled
@@ -550,7 +550,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
                                     defaultValue:(NSNumber *)defaultValue
 {
   NSData *data = [self.store objectForKey:userDefaultsKey];
-  if ([data isKindOfClass:[NSNumber class]]) {
+  if ([data isKindOfClass:NSNumber.class]) {
     return (NSNumber *)data;
   }
   return defaultValue;
@@ -562,7 +562,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 {
   if (!g_dataProcessingOptions) {
     NSData *data = [self.store objectForKey:FBSDKSettingsDataProcessingOptions];
-    if ([data isKindOfClass:[NSData class]]) {
+    if ([data isKindOfClass:NSData.class]) {
       if (@available(iOS 11.0, tvOS 11.0, *)) {
         g_dataProcessingOptions = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[NSString.class, NSNumber.class, NSArray.class, NSDictionary.class, NSSet.class]] fromData:data error:nil];
       } else {
@@ -727,7 +727,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 - (NSString *)graphAPIDebugParamValue
 {
-  return [[self class] graphAPIDebugParamValue];
+  return [self.class graphAPIDebugParamValue];
 }
 
 #pragma mark - Testability

@@ -56,7 +56,7 @@
   }
   NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionaryWithDictionary:[FBSDKInternalUtility.sharedUtility parametersFromFBURL:url]];
 
-  NSString *userID = [[self class] userIDFromSignedRequest:params[@"signed_request"]];
+  NSString *userID = [self.class userIDFromSignedRequest:params[@"signed_request"]];
   if (userID) {
     [FBSDKTypeUtility dictionary:params setObject:userID forKey:@"user_id"];
   }

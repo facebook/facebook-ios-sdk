@@ -202,10 +202,10 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
 - (NSDictionary<NSString *, id> *)_extractOffsetsFromResultDictionary:(id)result
 {
   result = [self dictionaryValue:result];
-  if (![result[FBSDK_GAMING_VIDEO_START_OFFSET] isKindOfClass:[NSString class]]) {
+  if (![result[FBSDK_GAMING_VIDEO_START_OFFSET] isKindOfClass:NSString.class]) {
     return nil;
   }
-  if (![result[FBSDK_GAMING_VIDEO_END_OFFSET] isKindOfClass:[NSString class]]) {
+  if (![result[FBSDK_GAMING_VIDEO_END_OFFSET] isKindOfClass:NSString.class]) {
     return nil;
   }
   NSNumber *startNum = [self.numberFormatter numberFromString:result[FBSDK_GAMING_VIDEO_START_OFFSET]];

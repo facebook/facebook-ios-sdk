@@ -49,7 +49,7 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
 
 - (NSString *)stringForKey:(NSString *)key
 {
-  return [self _valueOfClass:[NSString class] forKey:key];
+  return [self _valueOfClass:NSString.class forKey:key];
 }
 
 - (void)setArray:(NSArray<NSString *> *)array forKey:(NSString *)key
@@ -59,7 +59,7 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
 
 - (NSArray<NSString *> *)arrayForKey:(NSString *)key
 {
-  return [self _valueOfClass:[NSArray class] forKey:key];
+  return [self _valueOfClass:NSArray.class forKey:key];
 }
 
 - (NSDictionary<NSString *, id> *)allArguments;
@@ -79,7 +79,7 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKCameraEffectArguments class]]) {
+  if (![object isKindOfClass:FBSDKCameraEffectArguments.class]) {
     return NO;
   }
   return [self isEqualToCameraEffectArguments:(FBSDKCameraEffectArguments *)object];
@@ -100,7 +100,7 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [self init])) {
-    _arguments = [decoder decodeObjectOfClass:[NSMutableDictionary class]
+    _arguments = [decoder decodeObjectOfClass:NSMutableDictionary.class
                                        forKey:FBSDKCameraEffectArgumentsArgumentsKey];
   }
   return self;
@@ -147,7 +147,7 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
 
 + (void)assertKey:(id)key
 {
-  if ([key isKindOfClass:[NSString class]]) {
+  if ([key isKindOfClass:NSString.class]) {
     return;
   }
   NSString *reason = [NSString stringWithFormat:@"Invalid key found in CameraEffectArguments: %@", key];
@@ -157,12 +157,12 @@ static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
 + (void)assertValue:(id)value
 {
   BOOL isInvalid = NO;
-  if ([value isKindOfClass:[NSString class]]) {
+  if ([value isKindOfClass:NSString.class]) {
     // Strings are always valid.
-  } else if ([value isKindOfClass:[NSArray class]]) {
+  } else if ([value isKindOfClass:NSArray.class]) {
     // Allow only string arrays.
     for (id subValue in (NSArray *)value) {
-      if (![subValue isKindOfClass:[NSString class]]) {
+      if (![subValue isKindOfClass:NSString.class]) {
         isInvalid = YES;
         break;
       }

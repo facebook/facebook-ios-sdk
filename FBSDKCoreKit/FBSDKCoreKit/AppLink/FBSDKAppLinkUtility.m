@@ -42,7 +42,7 @@ static BOOL _isConfigured;
 + (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
               infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
 {
-  if (self == [FBSDKAppLinkUtility class]) {
+  if (self == FBSDKAppLinkUtility.class) {
     _requestProvider = requestProvider;
     _infoDictionaryProvider = infoDictionaryProvider;
     _isConfigured = YES;

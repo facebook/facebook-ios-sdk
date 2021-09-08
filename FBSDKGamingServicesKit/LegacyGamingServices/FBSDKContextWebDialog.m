@@ -93,7 +93,7 @@
       if ([results isKindOfClass:[NSDictionary<NSString *, id> class]] && results[@"context_id"] != nil) {
         NSString *const identifier = results[@"context_id"];
         NSString *const sizeString = results[@"context_size"];
-        NSInteger size = [sizeString isKindOfClass:[NSString class]] ? [sizeString integerValue] : 0;
+        NSInteger size = [sizeString isKindOfClass:NSString.class] ? [sizeString integerValue] : 0;
         FBSDKGamingContext.currentContext = [FBSDKGamingContext createContextWithIdentifier:identifier size:size];
         [self.delegate contextDialogDidComplete:self];
       } else {

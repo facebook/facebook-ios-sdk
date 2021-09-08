@@ -182,7 +182,7 @@ static id<FBSDKGraphRequestConnectionProviding> g_connectionFactory;
     self.tokenCache.accessToken = token;
     if (shouldDispatchNotif) {
       [NSNotificationCenter.defaultCenter postNotificationName:FBSDKAccessTokenDidChangeNotification
-                                                        object:[self class]
+                                                        object:self.class
                                                       userInfo:userInfo];
     }
   }
@@ -261,7 +261,7 @@ static id<FBSDKGraphRequestConnectionProviding> g_connectionFactory;
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKAccessToken class]]) {
+  if (![object isKindOfClass:FBSDKAccessToken.class]) {
     return NO;
   }
   return [self isEqualToAccessToken:(FBSDKAccessToken *)object];
@@ -302,16 +302,16 @@ static id<FBSDKGraphRequestConnectionProviding> g_connectionFactory;
 
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
-  NSString *appID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_ACCESSTOKEN_APPID_KEY];
-  NSSet *declinedPermissions = [decoder decodeObjectOfClass:[NSSet class] forKey:FBSDK_ACCESSTOKEN_DECLINEDPERMISSIONS_KEY];
-  NSSet *expiredPermissions = [decoder decodeObjectOfClass:[NSSet class] forKey:FBSDK_ACCESSTOKEN_EXPIREDPERMISSIONS_KEY];
-  NSSet *permissions = [decoder decodeObjectOfClass:[NSSet class] forKey:FBSDK_ACCESSTOKEN_PERMISSIONS_KEY];
-  NSString *tokenString = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_ACCESSTOKEN_TOKENSTRING_KEY];
-  NSString *userID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_ACCESSTOKEN_USERID_KEY];
-  NSDate *refreshDate = [decoder decodeObjectOfClass:[NSDate class] forKey:FBSDK_ACCESSTOKEN_REFRESHDATE_KEY];
-  NSDate *expirationDate = [decoder decodeObjectOfClass:[NSDate class] forKey:FBSDK_ACCESSTOKEN_EXPIRATIONDATE_KEY];
-  NSDate *dataAccessExpirationDate = [decoder decodeObjectOfClass:[NSDate class] forKey:FBSDK_ACCESSTOKEN_DATA_EXPIRATIONDATE_KEY];
-  NSString *graphDomain = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_ACCESSTOKEN_GRAPH_DOMAIN_KEY];
+  NSString *appID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_ACCESSTOKEN_APPID_KEY];
+  NSSet *declinedPermissions = [decoder decodeObjectOfClass:NSSet.class forKey:FBSDK_ACCESSTOKEN_DECLINEDPERMISSIONS_KEY];
+  NSSet *expiredPermissions = [decoder decodeObjectOfClass:NSSet.class forKey:FBSDK_ACCESSTOKEN_EXPIREDPERMISSIONS_KEY];
+  NSSet *permissions = [decoder decodeObjectOfClass:NSSet.class forKey:FBSDK_ACCESSTOKEN_PERMISSIONS_KEY];
+  NSString *tokenString = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_ACCESSTOKEN_TOKENSTRING_KEY];
+  NSString *userID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_ACCESSTOKEN_USERID_KEY];
+  NSDate *refreshDate = [decoder decodeObjectOfClass:NSDate.class forKey:FBSDK_ACCESSTOKEN_REFRESHDATE_KEY];
+  NSDate *expirationDate = [decoder decodeObjectOfClass:NSDate.class forKey:FBSDK_ACCESSTOKEN_EXPIRATIONDATE_KEY];
+  NSDate *dataAccessExpirationDate = [decoder decodeObjectOfClass:NSDate.class forKey:FBSDK_ACCESSTOKEN_DATA_EXPIRATIONDATE_KEY];
+  NSString *graphDomain = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_ACCESSTOKEN_GRAPH_DOMAIN_KEY];
 
   return
   [self

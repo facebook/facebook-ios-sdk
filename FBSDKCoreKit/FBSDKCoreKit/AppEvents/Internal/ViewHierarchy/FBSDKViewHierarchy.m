@@ -42,14 +42,14 @@ _Nullable id getVariableFromInstance(NSObject *instance, NSString *variableName)
 
 + (nullable NSArray *)getChildren:(NSObject *)obj
 {
-  if ([obj isKindOfClass:[UIControl class]]) {
+  if ([obj isKindOfClass:UIControl.class]) {
     return nil;
   }
 
   NSMutableArray *children = [NSMutableArray array];
 
   // children of window should be viewcontroller
-  if ([obj isKindOfClass:[UIWindow class]]) {
+  if ([obj isKindOfClass:UIWindow.class]) {
     UIViewController *rootVC = ((UIWindow *)obj).rootViewController;
     NSArray<UIView *> *subviews = ((UIWindow *)obj).subviews;
     for (UIView *child in subviews) {
@@ -66,7 +66,7 @@ _Nullable id getVariableFromInstance(NSObject *instance, NSString *variableName)
         }
       }
     }
-  } else if ([obj isKindOfClass:[UIView class]]) {
+  } else if ([obj isKindOfClass:UIView.class]) {
     NSArray<UIView *> *subviews = [((UIView *)obj).subviews copy];
     for (UIView *child in subviews) {
       UIViewController *vc = [FBSDKViewHierarchy getParentViewController:child];
@@ -76,7 +76,7 @@ _Nullable id getVariableFromInstance(NSObject *instance, NSString *variableName)
         [FBSDKTypeUtility array:children addObject:child];
       }
     }
-  } else if ([obj isKindOfClass:[UINavigationController class]]) {
+  } else if ([obj isKindOfClass:UINavigationController.class]) {
     UIViewController *vc = ((UINavigationController *)obj).visibleViewController;
     UIViewController *tc = ((UINavigationController *)obj).topViewController;
     NSArray *nextChildren = [FBSDKViewHierarchy getChildren:((UIViewController *)obj).view];
@@ -101,7 +101,7 @@ _Nullable id getVariableFromInstance(NSObject *instance, NSString *variableName)
     if (vc && ![children containsObject:vc]) {
       [FBSDKTypeUtility array:children addObject:vc];
     }
-  } else if ([obj isKindOfClass:[UITabBarController class]]) {
+  } else if ([obj isKindOfClass:UITabBarController.class]) {
     UIViewController *vc = ((UITabBarController *)obj).selectedViewController;
     NSArray *nextChildren = [FBSDKViewHierarchy getChildren:((UIViewController *)obj).view];
     for (NSObject *child in nextChildren) {
@@ -119,7 +119,7 @@ _Nullable id getVariableFromInstance(NSObject *instance, NSString *variableName)
     if (vc && ![children containsObject:vc]) {
       [FBSDKTypeUtility array:children addObject:vc];
     }
-  } else if ([obj isKindOfClass:[UIViewController class]]) {
+  } else if ([obj isKindOfClass:UIViewController.class]) {
     UIViewController *vc = (UIViewController *)obj;
     if (vc.isViewLoaded) {
       NSArray *nextChildren = [FBSDKViewHierarchy getChildren:vc.view];
@@ -140,7 +140,7 @@ _Nullable id getVariableFromInstance(NSObject *instance, NSString *variableName)
 
 + (nullable NSObject *)getParent:(nullable NSObject *)obj
 {
-  if ([obj isKindOfClass:[UIView class]]) {
+  if ([obj isKindOfClass:UIView.class]) {
     UIView *superview = ((UIView *)obj).superview;
     UIViewController *superviewViewController = [FBSDKViewHierarchy
                                                  getParentViewController:superview];
@@ -150,7 +150,7 @@ _Nullable id getVariableFromInstance(NSObject *instance, NSString *variableName)
     if (superview && superview != obj) {
       return superview;
     }
-  } else if ([obj isKindOfClass:[UIViewController class]]) {
+  } else if ([obj isKindOfClass:UIViewController.class]) {
     UIViewController *vc = (UIViewController *)obj;
     UIViewController *parentVC = vc.parentViewController;
     UIViewController *presentingVC = vc.presentingViewController;
@@ -215,7 +215,7 @@ _Nullable id getVariableFromInstance(NSObject *instance, NSString *variableName)
 + (NSDictionary<NSString *, id> *)getAttributesOf:(NSObject *)obj parent:(NSObject *_Nullable)parent
 {
   NSMutableDictionary<NSString *, id> *componentInfo = [NSMutableDictionary dictionary];
-  [FBSDKTypeUtility dictionary:componentInfo setObject:NSStringFromClass([obj class]) forKey:CODELESS_MAPPING_CLASS_NAME_KEY];
+  [FBSDKTypeUtility dictionary:componentInfo setObject:NSStringFromClass(obj.class) forKey:CODELESS_MAPPING_CLASS_NAME_KEY];
 
   if (![FBSDKViewHierarchy isUserInputView:obj]) {
     NSString *text = [FBSDKViewHierarchy getText:obj];
@@ -270,13 +270,13 @@ _Nullable id getVariableFromInstance(NSObject *instance, NSString *variableName)
 
   NSMutableDictionary<NSString *, id> *result = [NSMutableDictionary dictionaryWithDictionary:simpleAttributes];
 
-  NSString *className = NSStringFromClass([obj class]);
+  NSString *className = NSStringFromClass(obj.class);
   [FBSDKTypeUtility dictionary:result setObject:className forKey:VIEW_HIERARCHY_CLASS_NAME_KEY];
 
   NSUInteger classBitmask = [FBSDKViewHierarchy getClassBitmask:obj];
   [FBSDKTypeUtility dictionary:result setObject:[NSString stringWithFormat:@"%lu", (unsigned long)classBitmask] forKey:VIEW_HIERARCHY_CLASS_TYPE_BITMASK_KEY];
 
-  if ([obj isKindOfClass:[UIControl class]]) {
+  if ([obj isKindOfClass:UIControl.class]) {
     // Get actions of UIControl
     UIControl *control = (UIControl *)obj;
     NSMutableSet *actions = [NSMutableSet set];
@@ -312,10 +312,10 @@ _Nullable id getVariableFromInstance(NSObject *instance, NSString *variableName)
 {
   NSIndexPath *indexPath = nil;
 
-  if ([obj isKindOfClass:[UITableViewCell class]]) {
+  if ([obj isKindOfClass:UITableViewCell.class]) {
     UITableView *tableView = [FBSDKViewHierarchy getParentTableView:(UIView *)obj];
     indexPath = [tableView indexPathForCell:(UITableViewCell *)obj];
-  } else if ([obj isKindOfClass:[UICollectionViewCell class]]) {
+  } else if ([obj isKindOfClass:UICollectionViewCell.class]) {
     UICollectionView *collectionView = [FBSDKViewHierarchy getParentCollectionView:(UIView *)obj];
     indexPath = [collectionView indexPathForCell:(UICollectionViewCell *)obj];
   }
@@ -330,7 +330,7 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName)
     return [NSNull null];
   }
 
-  Ivar ivar = class_getInstanceVariable([instance class], variableName.UTF8String);
+  Ivar ivar = class_getInstanceVariable(instance.class, variableName.UTF8String);
   if (ivar != NULL) {
     const char *encoding = ivar_getTypeEncoding(ivar);
     if (encoding != NULL && encoding[0] == '@') {
@@ -345,13 +345,13 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName)
 {
   NSString *text = nil;
 
-  if ([obj isKindOfClass:[UIButton class]]) {
+  if ([obj isKindOfClass:UIButton.class]) {
     text = ((UIButton *)obj).currentTitle;
-  } else if ([obj isKindOfClass:[UITextView class]]
-             || [obj isKindOfClass:[UITextField class]]
-             || [obj isKindOfClass:[UILabel class]]) {
+  } else if ([obj isKindOfClass:UITextView.class]
+             || [obj isKindOfClass:UITextField.class]
+             || [obj isKindOfClass:UILabel.class]) {
     text = ((UILabel *)obj).text;
-  } else if ([obj isKindOfClass:[UIPickerView class]]) {
+  } else if ([obj isKindOfClass:UIPickerView.class]) {
     UIPickerView *picker = (UIPickerView *)obj;
     NSInteger sections = picker.numberOfComponents;
     NSMutableArray *titles = [NSMutableArray array];
@@ -380,7 +380,7 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName)
                                               error:NULL
                                invalidObjectHandler:NULL];
     }
-  } else if ([obj isKindOfClass:[UIDatePicker class]]) {
+  } else if ([obj isKindOfClass:UIDatePicker.class]) {
     UIDatePicker *picker = (UIDatePicker *)obj;
     NSDateFormatter *const formatter = [NSDateFormatter new];
     formatter.dateFormat = @"yyyy-MM-dd HH:mm:ssZ";
@@ -403,13 +403,13 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName)
 + (nullable NSDictionary<NSString *, id> *)getTextStyle:(NSObject *)obj
 {
   UIFont *font = nil;
-  if ([obj isKindOfClass:[UIButton class]]) {
+  if ([obj isKindOfClass:UIButton.class]) {
     font = ((UIButton *)obj).titleLabel.font;
-  } else if ([obj isKindOfClass:[UILabel class]]) {
+  } else if ([obj isKindOfClass:UILabel.class]) {
     font = ((UILabel *)obj).font;
-  } else if ([obj isKindOfClass:[UITextField class]]) {
+  } else if ([obj isKindOfClass:UITextField.class]) {
     font = ((UITextField *)obj).font;
-  } else if ([obj isKindOfClass:[UITextView class]]) {
+  } else if ([obj isKindOfClass:UITextView.class]) {
     font = ((UITextView *)obj).font;
   }
 
@@ -433,14 +433,14 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName)
 {
   NSString *hint = nil;
 
-  if ([obj isKindOfClass:[UITextField class]]) {
+  if ([obj isKindOfClass:UITextField.class]) {
     UITextField *textField = (UITextField *)obj;
     hint = textField.placeholder ?: @"";
     hint = [hint stringByAppendingString:[self recursiveGetLabelsFromView:textField]];
-  } else if ([obj isKindOfClass:[UINavigationController class]]) {
+  } else if ([obj isKindOfClass:UINavigationController.class]) {
     UIViewController *top = ((UINavigationController *)obj).topViewController;
     if (top) {
-      hint = NSStringFromClass([top class]);
+      hint = NSStringFromClass(top.class);
     }
   }
 
@@ -451,23 +451,23 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName)
 {
   NSUInteger bitmask = 0;
 
-  if ([obj isKindOfClass:[UIView class]]) {
-    if ([obj isKindOfClass:[UIControl class]]) {
+  if ([obj isKindOfClass:UIView.class]) {
+    if ([obj isKindOfClass:UIControl.class]) {
       bitmask |= FBCodelessClassBitmaskUIControl;
-      if ([obj isKindOfClass:[UIButton class]]) {
+      if ([obj isKindOfClass:UIButton.class]) {
         bitmask |= FBCodelessClassBitmaskUIButton;
-      } else if ([obj isKindOfClass:[UISwitch class]]) {
+      } else if ([obj isKindOfClass:UISwitch.class]) {
         bitmask |= FBCodelessClassBitmaskSwitch;
-      } else if ([obj isKindOfClass:[UIDatePicker class]]) {
+      } else if ([obj isKindOfClass:UIDatePicker.class]) {
         bitmask |= FBCodelessClassBitmaskPicker;
       }
-    } else if ([obj isKindOfClass:[UITableViewCell class]]) {
+    } else if ([obj isKindOfClass:UITableViewCell.class]) {
       bitmask |= FBCodelessClassBitmaskUITableViewCell;
-    } else if ([obj isKindOfClass:[UICollectionViewCell class]]) {
+    } else if ([obj isKindOfClass:UICollectionViewCell.class]) {
       bitmask |= FBCodelessClassBitmaskUICollectionViewCell;
-    } else if ([obj isKindOfClass:[UIPickerView class]]) {
+    } else if ([obj isKindOfClass:UIPickerView.class]) {
       bitmask |= FBCodelessClassBitmaskPicker;
-    } else if ([obj isKindOfClass:[UILabel class]]) {
+    } else if ([obj isKindOfClass:UILabel.class]) {
       bitmask |= FBCodelessClassBitmaskLabel;
     }
 
@@ -479,7 +479,7 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName)
     if ([obj respondsToSelector:@selector(textInRange:)]) {
       bitmask |= FBCodelessClassBitmaskInput;
     }
-  } else if ([obj isKindOfClass:[UIViewController class]]) {
+  } else if ([obj isKindOfClass:UIViewController.class]) {
     bitmask |= FBCodelessClassBitmaskUIViewController;
   }
 
@@ -582,7 +582,7 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName)
 {
   if (view != nil && [view respondsToSelector:@selector(reactTag)]) {
     NSNumber *reactTag = [view performSelector:@selector(reactTag)];
-    if (reactTag != nil && [reactTag isKindOfClass:[NSNumber class]]) {
+    if (reactTag != nil && [reactTag isKindOfClass:NSNumber.class]) {
       return reactTag;
     }
   }
@@ -594,8 +594,8 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName)
 
 + (BOOL)isView:(NSObject *)obj1 superViewOfView:(UIView *)obj2
 {
-  if (![obj1 isKindOfClass:[UIView class]]
-      || ![obj2 isKindOfClass:[UIView class]]) {
+  if (![obj1 isKindOfClass:UIView.class]
+      || ![obj2 isKindOfClass:UIView.class]) {
     return NO;
   }
   UIView *view1 = (UIView *)obj1;
@@ -617,7 +617,7 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName)
 
   while (parentResponder) {
     parentResponder = parentResponder.nextResponder;
-    if ([parentResponder isKindOfClass:[UIViewController class]]) {
+    if ([parentResponder isKindOfClass:UIViewController.class]) {
       return (UIViewController *)parentResponder;
     }
   }
@@ -629,7 +629,7 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName)
 {
   UIView *superview = cell.superview;
   while (superview) {
-    if ([superview isKindOfClass:[UITableView class]]) {
+    if ([superview isKindOfClass:UITableView.class]) {
       return (UITableView *)superview;
     }
     superview = superview.superview;
@@ -641,7 +641,7 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName)
 {
   UIView *superview = cell.superview;
   while (superview) {
-    if ([superview isKindOfClass:[UICollectionView class]]) {
+    if ([superview isKindOfClass:UICollectionView.class]) {
       return (UICollectionView *)superview;
     }
     superview = superview.superview;
@@ -651,9 +651,9 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName)
 
 + (NSInteger)getTag:(NSObject *)obj
 {
-  if ([obj isKindOfClass:[UIView class]]) {
+  if ([obj isKindOfClass:UIView.class]) {
     return ((UIView *)obj).tag;
-  } else if ([obj isKindOfClass:[UIViewController class]]) {
+  } else if ([obj isKindOfClass:UIViewController.class]) {
     UIViewController *vc = (UIViewController *)obj;
     if (vc.isViewLoaded) {
       return ((UIViewController *)obj).view.tag;
@@ -667,16 +667,16 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName)
 {
   UIView *view = nil;
 
-  if ([obj isKindOfClass:[UIView class]]) {
+  if ([obj isKindOfClass:UIView.class]) {
     view = (UIView *)obj;
-  } else if ([obj isKindOfClass:[UIViewController class]]) {
+  } else if ([obj isKindOfClass:UIViewController.class]) {
     view = ((UIViewController *)obj).view;
   }
 
   CGRect frame = view.frame;
   CGPoint offset = CGPointZero;
 
-  if ([view isKindOfClass:[UIScrollView class]]) {
+  if ([view isKindOfClass:UIScrollView.class]) {
     offset = ((UIScrollView *)view).contentOffset;
   }
 
@@ -697,7 +697,7 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName)
   for (UIView *subview in view.subviews) {
     str = [str stringByAppendingString:[self recursiveGetLabelsFromView:subview]];
   }
-  if ([view isKindOfClass:[UILabel class]] && ((UILabel *)view).text.length > 0) {
+  if ([view isKindOfClass:UILabel.class] && ((UILabel *)view).text.length > 0) {
     str = [str stringByAppendingFormat:@" %@", ((UILabel *)view).text];
   }
   return str;

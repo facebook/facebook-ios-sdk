@@ -168,7 +168,7 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
+  if (![object isKindOfClass:FBSDKShareCameraEffectContent.class]) {
     return NO;
   }
   return [self isEqualToShareCameraEffectContent:(FBSDKShareCameraEffectContent *)object];
@@ -199,16 +199,16 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [self init])) {
-    _effectID = [decoder decodeObjectOfClass:[NSString class] forKey:kFBSDKShareCameraEffectContentEffectIDKey];
-    _effectArguments = [decoder decodeObjectOfClass:[FBSDKCameraEffectArguments class] forKey:kFBSDKShareCameraEffectContentEffectArgumentsKey];
-    _effectTextures = [decoder decodeObjectOfClass:[FBSDKCameraEffectTextures class] forKey:kFBSDKShareCameraEffectContentEffectTexturesKey];
-    _contentURL = [decoder decodeObjectOfClass:[NSURL class] forKey:kFBSDKShareCameraEffectContentContentURLKey];
-    _hashtag = [decoder decodeObjectOfClass:[FBSDKHashtag class] forKey:kFBSDKShareCameraEffectContentHashtagKey];
-    _peopleIDs = [decoder decodeObjectOfClass:[NSArray class] forKey:kFBSDKShareCameraEffectContentPeopleIDsKey];
-    _placeID = [decoder decodeObjectOfClass:[NSString class] forKey:kFBSDKShareCameraEffectContentPlaceIDKey];
-    _ref = [decoder decodeObjectOfClass:[NSString class] forKey:kFBSDKShareCameraEffectContentRefKey];
-    _pageID = [decoder decodeObjectOfClass:[NSString class] forKey:kFBSDKShareCameraEffectContentPageIDKey];
-    _shareUUID = [decoder decodeObjectOfClass:[NSString class] forKey:kFBSDKShareCameraEffectContentUUIDKey];
+    _effectID = [decoder decodeObjectOfClass:NSString.class forKey:kFBSDKShareCameraEffectContentEffectIDKey];
+    _effectArguments = [decoder decodeObjectOfClass:FBSDKCameraEffectArguments.class forKey:kFBSDKShareCameraEffectContentEffectArgumentsKey];
+    _effectTextures = [decoder decodeObjectOfClass:FBSDKCameraEffectTextures.class forKey:kFBSDKShareCameraEffectContentEffectTexturesKey];
+    _contentURL = [decoder decodeObjectOfClass:NSURL.class forKey:kFBSDKShareCameraEffectContentContentURLKey];
+    _hashtag = [decoder decodeObjectOfClass:FBSDKHashtag.class forKey:kFBSDKShareCameraEffectContentHashtagKey];
+    _peopleIDs = [decoder decodeObjectOfClass:NSArray.class forKey:kFBSDKShareCameraEffectContentPeopleIDsKey];
+    _placeID = [decoder decodeObjectOfClass:NSString.class forKey:kFBSDKShareCameraEffectContentPlaceIDKey];
+    _ref = [decoder decodeObjectOfClass:NSString.class forKey:kFBSDKShareCameraEffectContentRefKey];
+    _pageID = [decoder decodeObjectOfClass:NSString.class forKey:kFBSDKShareCameraEffectContentPageIDKey];
+    _shareUUID = [decoder decodeObjectOfClass:NSString.class forKey:kFBSDKShareCameraEffectContentUUIDKey];
   }
   return self;
 }

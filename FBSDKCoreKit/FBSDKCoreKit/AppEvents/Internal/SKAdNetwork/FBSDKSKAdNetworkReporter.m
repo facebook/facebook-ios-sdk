@@ -278,7 +278,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
   NSData *cachedReportData = [self.store objectForKey:FBSDKSKAdNetworkReporterKey];
   self.recordedEvents = [NSMutableSet new];
   self.recordedValues = [NSMutableDictionary new];
-  if ([cachedReportData isKindOfClass:[NSData class]]) {
+  if ([cachedReportData isKindOfClass:NSData.class]) {
     NSDictionary<NSString *, id> *data;
     if (@available(iOS 11.0, *)) {
       data = [FBSDKTypeUtility dictionaryValue:[NSKeyedUnarchiver

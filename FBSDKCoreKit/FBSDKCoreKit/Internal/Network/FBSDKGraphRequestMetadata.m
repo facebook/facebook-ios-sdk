@@ -46,7 +46,7 @@
 - (NSString *)description
 {
   return [NSString stringWithFormat:@"<%@: %p, batchParameters: %@, completionHandler: %@, request: %@>",
-          NSStringFromClass([self class]),
+          NSStringFromClass(self.class),
           self,
           self.batchParameters,
           self.completionHandler,

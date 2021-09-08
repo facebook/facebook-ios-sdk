@@ -423,15 +423,15 @@ static BOOL _canMakeRequests = NO;
 {
   [FBSDKTypeUtility dictionary:attachments enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
     value = [FBSDKBasicUtility convertRequestValue:value];
-    if ([value isKindOfClass:[NSString class]]) {
+    if ([value isKindOfClass:NSString.class]) {
       if (addFormData) {
         [body appendWithKey:key formValue:(NSString *)value logger:logger];
       }
-    } else if ([value isKindOfClass:[UIImage class]]) {
+    } else if ([value isKindOfClass:UIImage.class]) {
       [body appendWithKey:key imageValue:(UIImage *)value logger:logger];
-    } else if ([value isKindOfClass:[NSData class]]) {
+    } else if ([value isKindOfClass:NSData.class]) {
       [body appendWithKey:key dataValue:(NSData *)value logger:logger];
-    } else if ([value isKindOfClass:[FBSDKGraphRequestDataAttachment class]]) {
+    } else if ([value isKindOfClass:FBSDKGraphRequestDataAttachment.class]) {
       [body appendWithKey:key dataAttachmentValue:(FBSDKGraphRequestDataAttachment *)value logger:logger];
     } else {
       NSString *msg = [NSString stringWithFormat:@"Unsupported FBSDKGraphRequest attachment:%@, skipping.", value];
@@ -688,7 +688,7 @@ static BOOL _canMakeRequests = NO;
   _urlResponse = (NSHTTPURLResponse *)response;
   if (response) {
     NSAssert(
-      [response isKindOfClass:[NSHTTPURLResponse class]],
+      [response isKindOfClass:NSHTTPURLResponse.class],
       @"Expected NSHTTPURLResponse, got %@",
       response
     );
@@ -781,7 +781,7 @@ static BOOL _canMakeRequests = NO;
        @"code" : @(statusCode),
        @"body" : response
      }];
-  } else if ([response isKindOfClass:[NSArray class]]) {
+  } else if ([response isKindOfClass:NSArray.class]) {
     // response is the array of responses, but the body element of each needs
     // to be decoded from JSON.
     for (id item in response) {
@@ -1288,7 +1288,7 @@ static BOOL _canMakeRequests = NO;
 - (NSString *)description
 {
   NSMutableString *result = [NSMutableString stringWithFormat:@"<%@: %p, %lu request(s): (\n",
-                             NSStringFromClass([self class]),
+                             NSStringFromClass(self.class),
                              self,
                              (unsigned long)self.requests.count];
   BOOL comma = NO;

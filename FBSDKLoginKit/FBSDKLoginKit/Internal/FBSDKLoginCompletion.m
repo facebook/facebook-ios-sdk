@@ -70,7 +70,7 @@ static NSDateFormatter *_dateFormatter;
 
 + (void)initialize
 {
-  if (self == [FBSDKLoginURLCompleter class]) {
+  if (self == FBSDKLoginURLCompleter.class) {
     _profileFactory = [FBSDKProfileFactory new];
   }
 }

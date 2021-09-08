@@ -123,7 +123,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
     }
 
     NSDictionary<NSString *, id> *suggestedEventsSetting = serverConfiguration.suggestedEventsSetting;
-    if ([suggestedEventsSetting isKindOfClass:[NSNull class]] || !suggestedEventsSetting[OptInEvents] || !suggestedEventsSetting[UnconfirmedEvents]) {
+    if ([suggestedEventsSetting isKindOfClass:NSNull.class] || !suggestedEventsSetting[OptInEvents] || !suggestedEventsSetting[UnconfirmedEvents]) {
       return;
     }
 
@@ -145,9 +145,9 @@ static dispatch_once_t setupNonce;
   dispatch_once(&setupNonce, ^{
     // swizzle UIButton
     [self.swizzler swizzleSelector:@selector(didMoveToWindow)
-                           onClass:[UIControl class]
+                           onClass:UIControl.class
                          withBlock:^(UIControl *control) {
-                           if (control.window && [control isKindOfClass:[UIButton class]]) {
+                           if (control.window && [control isKindOfClass:UIButton.class]) {
                              [((UIButton *)control) addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchDown];
                            }
                          }
@@ -161,7 +161,7 @@ static dispatch_once_t setupNonce;
       [self handleView:tableView withDelegate:delegate];
     };
     [self.swizzler swizzleSelector:@selector(setDelegate:)
-                           onClass:[UITableView class]
+                           onClass:UITableView.class
                          withBlock:tableViewBlock
                              named:@"suggested_events"];
 
@@ -173,7 +173,7 @@ static dispatch_once_t setupNonce;
       [self handleView:collectionView withDelegate:delegate];
     };
     [self.swizzler swizzleSelector:@selector(setDelegate:)
-                           onClass:[UICollectionView class]
+                           onClass:UICollectionView.class
                          withBlock:collectionViewBlock
                              named:@"suggested_events"];
 
@@ -198,17 +198,17 @@ static dispatch_once_t setupNonce;
   }
 
   for (UIView *subview in view.subviews) {
-    if ([subview isKindOfClass:[UITableView class]]) {
+    if ([subview isKindOfClass:UITableView.class]) {
       UITableView *tableView = (UITableView *)subview;
       [self handleView:tableView withDelegate:tableView.delegate];
-    } else if ([subview isKindOfClass:[UICollectionView class]]) {
+    } else if ([subview isKindOfClass:UICollectionView.class]) {
       UICollectionView *collectionView = (UICollectionView *)subview;
       [self handleView:collectionView withDelegate:collectionView.delegate];
-    } else if ([subview isKindOfClass:[UIButton class]]) {
+    } else if ([subview isKindOfClass:UIButton.class]) {
       [(UIButton *)subview addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchDown];
     }
 
-    if (![subview isKindOfClass:[UIControl class]]) {
+    if (![subview isKindOfClass:UIControl.class]) {
       [self matchSubviewsIn:subview];
     }
   }
@@ -226,7 +226,7 @@ static dispatch_once_t setupNonce;
     return;
   }
 
-  if ([view isKindOfClass:[UITableView class]]
+  if ([view isKindOfClass:UITableView.class]
       && [delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]) {
     void (^block)(id, SEL, id, id) = ^(id target, SEL command, UITableView *tableView, NSIndexPath *indexPath) {
       UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
@@ -237,7 +237,7 @@ static dispatch_once_t setupNonce;
                            onClass:[delegate class]
                          withBlock:block
                              named:@"suggested_events"];
-  } else if ([view isKindOfClass:[UICollectionView class]]
+  } else if ([view isKindOfClass:UICollectionView.class]
              && [delegate respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)]) {
     void (^block)(id, SEL, id, id) = ^(id target, SEL command, UICollectionView *collectionView, NSIndexPath *indexPath) {
       UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
@@ -280,7 +280,7 @@ static dispatch_once_t setupNonce;
     NSString *screenName = nil;
     UIViewController *topMostViewController = [FBSDKInternalUtility.sharedUtility topMostViewController];
     if (topMostViewController) {
-      screenName = NSStringFromClass([topMostViewController class]);
+      screenName = NSStringFromClass(topMostViewController.class);
     }
 
     [FBSDKTypeUtility dictionary:viewTree setObject:trees forKey:VIEW_HIERARCHY_VIEW_KEY];

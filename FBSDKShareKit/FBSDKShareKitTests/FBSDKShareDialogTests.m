@@ -62,11 +62,11 @@
 - (void)_mockApplicationForURL:(NSURL *)URL canOpen:(BOOL)canOpen usingBlock:(void (^)(void))block
 {
   if (block != NULL) {
-    id applicationMock = [OCMockObject mockForClass:[UIApplication class]];
+    id applicationMock = [OCMockObject mockForClass:UIApplication.class];
     [[[applicationMock stub] andReturnValue:@(canOpen)] canOpenURL:URL];
     [[[applicationMock stub] andReturn:nil] keyWindow];
     [[[applicationMock stub] andReturnValue:@0] applicationState];
-    id applicationClassMock = [OCMockObject mockForClass:[UIApplication class]];
+    id applicationClassMock = [OCMockObject mockForClass:UIApplication.class];
     [[[[applicationClassMock stub] classMethod] andReturn:applicationMock] sharedApplication];
     block();
     [applicationClassMock stopMocking];
@@ -581,13 +581,13 @@
                              mode:(FBSDKShareDialogMode)mode
                nonSupportedScheme:(NSString *)nonSupportedScheme
 {
-  id mockApplication = [OCMockObject niceMockForClass:[UIApplication class]];
+  id mockApplication = [OCMockObject niceMockForClass:UIApplication.class];
   [[[mockApplication stub] andReturn:mockApplication] sharedApplication];
   [[[mockApplication stub] andReturnValue:@YES] canOpenURL:[OCMArg checkWithBlock:^BOOL (NSURL *url) {
     return ![url.absoluteString isEqualToString:nonSupportedScheme];
   }]];
-  id mockInternalUtility = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
-  id mockSocialComposeViewController = [OCMockObject niceMockForClass:[SLComposeViewController class]];
+  id mockInternalUtility = [OCMockObject niceMockForClass:FBSDKInternalUtility.class];
+  id mockSocialComposeViewController = [OCMockObject niceMockForClass:SLComposeViewController.class];
   [[[mockSocialComposeViewController stub] andReturnValue:@YES] isAvailableForServiceType:OCMOCK_ANY];
 
   [FBSDKShareDialog resetClassDependencies];
@@ -618,15 +618,15 @@
   expectedPreJSONtext:(NSString *)expectedPreJSONText
          expectedJSON:(NSDictionary<NSString *, id> *)expectedJSON
 {
-  id mockApplication = [OCMockObject niceMockForClass:[UIApplication class]];
+  id mockApplication = [OCMockObject niceMockForClass:UIApplication.class];
   [[[mockApplication stub] andReturn:mockApplication] sharedApplication];
   [[[mockApplication stub] andReturnValue:@YES] canOpenURL:OCMOCK_ANY];
-  id mockInternalUtility = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
+  id mockInternalUtility = [OCMockObject niceMockForClass:FBSDKInternalUtility.class];
   id settingsMock = [OCMockObject niceMockForClass:FBSDKSettings.class];
   [[[settingsMock stub] andReturn:settingsMock] sharedSettings];
   [[[settingsMock stub] andReturn:appID] appID];
 
-  id mockSLController = [OCMockObject niceMockForClass:[SLComposeViewController class]];
+  id mockSLController = [OCMockObject niceMockForClass:SLComposeViewController.class];
   [[[mockSLController stub] andReturn:mockSLController] composeViewControllerForServiceType:OCMOCK_ANY];
   [[[mockSLController stub] andReturnValue:@YES] isAvailableForServiceType:OCMOCK_ANY];
   [[mockSLController expect] setInitialText:[OCMArg checkWithBlock:^BOOL (NSString *text) {
@@ -664,17 +664,17 @@
       expectRequestScheme:(NSString *)scheme
                methodName:(NSString *)methodName
 {
-  id mockApplication = [OCMockObject niceMockForClass:[UIApplication class]];
+  id mockApplication = [OCMockObject niceMockForClass:UIApplication.class];
   [[[mockApplication stub] andReturn:mockApplication] sharedApplication];
   [[[mockApplication stub] andReturnValue:@YES] canOpenURL:[OCMArg checkWithBlock:^BOOL (NSURL *url) {
     return ![url.absoluteString isEqualToString:nonSupportedScheme];
   }]];
-  id settingsClassMock = [OCMockObject niceMockForClass:[FBSDKSettings class]];
+  id settingsClassMock = [OCMockObject niceMockForClass:FBSDKSettings.class];
   [[[settingsClassMock stub] andReturn:@"AppID"] appID];
-  id mockInternalUtility = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
+  id mockInternalUtility = [OCMockObject niceMockForClass:FBSDKInternalUtility.class];
   [[mockInternalUtility stub] validateURLSchemes];
 
-  id mockSDKBridgeAPI = [OCMockObject niceMockForClass:[FBSDKBridgeAPI class]];
+  id mockSDKBridgeAPI = [OCMockObject niceMockForClass:FBSDKBridgeAPI.class];
   [[[mockSDKBridgeAPI stub] andReturn:mockSDKBridgeAPI] sharedInstance];
   // Check API bridge request
   [[mockSDKBridgeAPI expect] openBridgeAPIRequest:[OCMArg checkWithBlock:^BOOL (FBSDKBridgeAPIRequest *request) {

@@ -69,7 +69,7 @@ NSString *const FBSDKLocationNameCodingKey = @"FBSDKLocationNameCodingKey";
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKLocation class]]) {
+  if (![object isKindOfClass:FBSDKLocation.class]) {
     return NO;
   }
   return [self isEqualToLocation:object];

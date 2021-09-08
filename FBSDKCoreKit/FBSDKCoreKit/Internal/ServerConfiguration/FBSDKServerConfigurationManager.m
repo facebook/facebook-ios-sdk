@@ -149,12 +149,12 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSString *defaultsKey = [NSString stringWithFormat:FBSDK_SERVER_CONFIGURATION_USER_DEFAULTS_KEY, appID];
         NSData *data = [defaults objectForKey:defaultsKey];
-        if ([data isKindOfClass:[NSData class]]) {
+        if ([data isKindOfClass:NSData.class]) {
           // decode the configuration
           id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createSecureUnarchiverFor:data];
           FBSDKServerConfiguration *serverConfiguration = nil;
           @try {
-            serverConfiguration = [unarchiver decodeObjectOfClass:[FBSDKServerConfiguration class] forKey:NSKeyedArchiveRootObjectKey];
+            serverConfiguration = [unarchiver decodeObjectOfClass:FBSDKServerConfiguration.class forKey:NSKeyedArchiveRootObjectKey];
           } @catch (NSException *ex) {
             // Ignore decoding error
           } @finally {

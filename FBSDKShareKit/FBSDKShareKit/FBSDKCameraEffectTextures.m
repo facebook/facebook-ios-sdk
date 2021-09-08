@@ -49,7 +49,7 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
 
 - (UIImage *)imageForKey:(NSString *)key
 {
-  return [self _valueOfClass:[UIImage class] forKey:key];
+  return [self _valueOfClass:UIImage.class forKey:key];
 }
 
 - (NSDictionary<NSString *, UIImage *> *)allTextures
@@ -69,7 +69,7 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKCameraEffectTextures class]]) {
+  if (![object isKindOfClass:FBSDKCameraEffectTextures.class]) {
     return NO;
   }
   return [self isEqualToCameraEffectTextures:(FBSDKCameraEffectTextures *)object];
@@ -90,7 +90,7 @@ static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [self init])) {
-    _textures = [decoder decodeObjectOfClass:[NSMutableDictionary class]
+    _textures = [decoder decodeObjectOfClass:NSMutableDictionary.class
                                       forKey:FBSDKCameraEffectTexturesTexturesKey];
   }
   return self;

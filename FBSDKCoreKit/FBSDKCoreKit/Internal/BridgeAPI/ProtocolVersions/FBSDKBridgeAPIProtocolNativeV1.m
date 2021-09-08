@@ -281,13 +281,13 @@ static const struct {
   __block BOOL didAddToPasteboard = NO;
   return [FBSDKBasicUtility JSONStringForObject:object error:errorRef invalidObjectHandler:^id (id invalidObject, BOOL *stop) {
     NSString *dataTag = FBSDKBridgeAPIProtocolNativeV1DataTypeTags.data;
-    if ([invalidObject isKindOfClass:[UIImage class]]) {
+    if ([invalidObject isKindOfClass:UIImage.class]) {
       UIImage *image = (UIImage *)invalidObject;
       // due to backward compatibility, we must send UIImage as NSData even though UIPasteboard can handle UIImage
       invalidObject = UIImageJPEGRepresentation(image, [FBSDKSettings JPEGCompressionQuality]);
       dataTag = FBSDKBridgeAPIProtocolNativeV1DataTypeTags.image;
     }
-    if ([invalidObject isKindOfClass:[NSData class]]) {
+    if ([invalidObject isKindOfClass:NSData.class]) {
       NSData *data = (NSData *)invalidObject;
       NSMutableDictionary<NSString *, id> *dictionary = [NSMutableDictionary new];
       if (didAddToPasteboard || !enablePasteboard || !self->_pasteboard || (data.length < self->_dataLengthThreshold)) {
@@ -308,11 +308,11 @@ static const struct {
         // the Facebook app will not clear the value with this version of the protocol, so we should do it when the app
         // becomes active again
         if (self->_pasteboard._isGeneralPasteboard || self->_pasteboard._isFindPasteboard) {
-          [[self class] clearData:data fromPasteboardOnApplicationDidBecomeActive:self->_pasteboard];
+          [self.class clearData:data fromPasteboardOnApplicationDidBecomeActive:self->_pasteboard];
         }
       }
       return dictionary;
-    } else if ([invalidObject isKindOfClass:[NSURL class]]) {
+    } else if ([invalidObject isKindOfClass:NSURL.class]) {
       return ((NSURL *)invalidObject).absoluteString;
     }
     return invalidObject;

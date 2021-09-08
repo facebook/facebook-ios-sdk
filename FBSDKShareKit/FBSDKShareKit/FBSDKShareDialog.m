@@ -411,7 +411,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
 
 - (BOOL)_isDefaultToShareSheet
 {
-  if ([self.shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
+  if ([self.shareContent isKindOfClass:FBSDKShareCameraEffectContent.class]) {
     return NO;
   }
   return [[[FBSDKShareDialogConfiguration new] defaultShareMode] isEqualToString:@"share_sheet"];
@@ -449,14 +449,14 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   // for an app that can handle the native share dialog
   NSString *methodName = nil;
   NSString *methodVersion = nil;
-  if ([shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
+  if ([shareContent isKindOfClass:FBSDKShareCameraEffectContent.class]) {
     methodName = FBSDK_SHARE_CAMERA_METHOD_NAME;
     methodVersion = FBSDK_SHARE_METHOD_CAMERA_MIN_VERSION;
   } else {
     methodName = FBSDK_SHARE_METHOD_NAME;
-    if ([shareContent isKindOfClass:[FBSDKSharePhotoContent class]]) {
+    if ([shareContent isKindOfClass:FBSDKSharePhotoContent.class]) {
       methodVersion = FBSDK_SHARE_METHOD_PHOTOS_MIN_VERSION;
-    } else if ([shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
+    } else if ([shareContent isKindOfClass:FBSDKShareVideoContent.class]) {
       methodVersion = FBSDK_SHARE_METHOD_VIDEO_MIN_VERSION;
     } else {
       methodVersion = FBSDK_SHARE_METHOD_MIN_VERSION;
@@ -538,11 +538,11 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
 {
   NSMutableArray *ret = [NSMutableArray new];
   id<FBSDKSharingContent> shareContent = self.shareContent;
-  if ([shareContent isKindOfClass:[FBSDKSharePhotoContent class]]) {
+  if ([shareContent isKindOfClass:FBSDKSharePhotoContent.class]) {
     [ret addObjectsFromArray:[((FBSDKSharePhotoContent *)shareContent).photos valueForKeyPath:@"@distinctUnionOfObjects.image"]];
-  } else if ([shareContent isKindOfClass:[FBSDKShareMediaContent class]]) {
+  } else if ([shareContent isKindOfClass:FBSDKShareMediaContent.class]) {
     for (id media in ((FBSDKShareMediaContent *)shareContent).media) {
-      if ([media isKindOfClass:[FBSDKSharePhoto class]]) {
+      if ([media isKindOfClass:FBSDKSharePhoto.class]) {
         UIImage *image = ((FBSDKSharePhoto *)media).image;
         if (image != nil) {
           [FBSDKTypeUtility array:ret addObject:image];
@@ -581,14 +581,14 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
 {
   NSMutableArray<NSURL *> *const ret = [NSMutableArray new];
   const id<FBSDKSharingContent> shareContent = self.shareContent;
-  if ([shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
+  if ([shareContent isKindOfClass:FBSDKShareVideoContent.class]) {
     NSURL *const videoURL = [self _contentVideoURL:[(FBSDKShareVideoContent *)shareContent video]];
     if (videoURL != nil) {
       [FBSDKTypeUtility array:ret addObject:videoURL];
     }
-  } else if ([shareContent isKindOfClass:[FBSDKShareMediaContent class]]) {
+  } else if ([shareContent isKindOfClass:FBSDKShareMediaContent.class]) {
     for (const id media in ((FBSDKShareMediaContent *)shareContent).media) {
-      if ([media isKindOfClass:[FBSDKShareVideo class]]) {
+      if ([media isKindOfClass:FBSDKShareVideo.class]) {
         NSURL *const videoURL = [self _contentVideoURL:(FBSDKShareVideo *)media];
         if (videoURL != nil) {
           [FBSDKTypeUtility array:ret addObject:videoURL];
@@ -603,10 +603,10 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
 {
   NSArray *URLs = nil;
   id<FBSDKSharingContent> shareContent = self.shareContent;
-  if ([shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
+  if ([shareContent isKindOfClass:FBSDKShareLinkContent.class]) {
     FBSDKShareLinkContent *linkContent = (FBSDKShareLinkContent *)shareContent;
     URLs = (linkContent.contentURL ? @[linkContent.contentURL] : nil);
-  } else if ([shareContent isKindOfClass:[FBSDKSharePhotoContent class]]) {
+  } else if ([shareContent isKindOfClass:FBSDKSharePhotoContent.class]) {
     FBSDKSharePhotoContent *photoContent = (FBSDKSharePhotoContent *)shareContent;
     URLs = (photoContent.contentURL ? @[photoContent.contentURL] : nil);
   }
@@ -652,7 +652,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
     return NO;
   }
   id<FBSDKSharingContent> shareContent = self.shareContent;
-  if ([shareContent isKindOfClass:[FBSDKSharePhotoContent class]] && [self _photoContentHasAtLeastOneImage:(FBSDKSharePhotoContent *)shareContent]) {
+  if ([shareContent isKindOfClass:FBSDKSharePhotoContent.class] && [self _photoContentHasAtLeastOneImage:(FBSDKSharePhotoContent *)shareContent]) {
     void (^completion)(BOOL, NSString *, NSDictionary<NSString *, id> *) = ^(BOOL successfullyBuilt, NSString *cMethodName, NSDictionary<NSString *, id> *cParameters) {
       if (successfullyBuilt) {
         FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
@@ -900,7 +900,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
 
 - (BOOL)_useNativeDialog
 {
-  if ([self.shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
+  if ([self.shareContent isKindOfClass:FBSDKShareCameraEffectContent.class]) {
     return YES;
   }
   return [[FBSDKShareDialogConfiguration new] shouldUseNativeDialogForDialogName:FBSDKDialogConfigurationNameShare];
@@ -908,7 +908,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
 
 - (BOOL)_useSafariViewController
 {
-  if ([self.shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
+  if ([self.shareContent isKindOfClass:FBSDKShareCameraEffectContent.class]) {
     return NO;
   }
   return [[FBSDKShareDialogConfiguration new] shouldUseSafariViewControllerForDialogName:FBSDKDialogConfigurationNameShare];
@@ -922,11 +922,11 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
 
   /* UNCRUSTIFY_FORMAT_OFF */
   if (self.shareContent) {
-    if ([self.shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]
-        || [self.shareContent isKindOfClass:[FBSDKShareLinkContent class]]
-        || [self.shareContent isKindOfClass:[FBSDKShareMediaContent class]]
-        || [self.shareContent isKindOfClass:[FBSDKSharePhotoContent class]]
-        || [self.shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
+    if ([self.shareContent isKindOfClass:FBSDKShareCameraEffectContent.class]
+        || [self.shareContent isKindOfClass:FBSDKShareLinkContent.class]
+        || [self.shareContent isKindOfClass:FBSDKShareMediaContent.class]
+        || [self.shareContent isKindOfClass:FBSDKSharePhotoContent.class]
+        || [self.shareContent isKindOfClass:FBSDKShareVideoContent.class]) {
     } else {
       if (errorRef != NULL) {
         NSString *message = [NSString stringWithFormat:@"Share dialog does not support %@.",
@@ -995,7 +995,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
 - (BOOL)_validateFullyCompatibleWithError:(NSError **)errorRef
 {
   id<FBSDKSharingContent> shareContent = self.shareContent;
-  if ([shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
+  if ([shareContent isKindOfClass:FBSDKShareLinkContent.class]) {
     FBSDKShareLinkContent *shareLinkContent = (FBSDKShareLinkContent *)shareContent;
     if (shareLinkContent.quote.length > 0
         && self.mode == FBSDKShareDialogModeShareSheet
@@ -1015,7 +1015,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
 - (BOOL)_validateShareContentForBrowserWithOptions:(FBSDKShareBridgeOptions)bridgeOptions error:(NSError **)errorRef
 {
   id<FBSDKSharingContent> shareContent = self.shareContent;
-  if ([shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
+  if ([shareContent isKindOfClass:FBSDKShareLinkContent.class]) {
     // The parameter 'href' or 'media' is required
     FBSDKShareLinkContent *const linkContent = shareContent;
     if (!linkContent.contentURL) {
@@ -1028,7 +1028,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
       return NO;
     }
   }
-  if ([shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
+  if ([shareContent isKindOfClass:FBSDKShareCameraEffectContent.class]) {
     if ((errorRef != NULL) && !*errorRef) {
       *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
                                                         name:@"shareContent"
@@ -1054,7 +1054,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
       }
       return NO;
     }
-    if ([shareContent isKindOfClass:[FBSDKSharePhotoContent class]]) {
+    if ([shareContent isKindOfClass:FBSDKSharePhotoContent.class]) {
       if (![shareContent validateWithOptions:bridgeOptions error:errorRef]) {
         return NO;
       }
@@ -1078,7 +1078,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
       }
       return NO;
     }
-    if ([shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
+    if ([shareContent isKindOfClass:FBSDKShareVideoContent.class]) {
       if (![shareContent validateWithOptions:bridgeOptions error:errorRef]) {
         return NO;
       }
@@ -1101,7 +1101,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
 - (BOOL)_validateShareContentForFeed:(NSError **)errorRef
 {
   id<FBSDKSharingContent> shareContent = self.shareContent;
-  if ([shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
+  if ([shareContent isKindOfClass:FBSDKShareLinkContent.class]) {
     // The parameter 'href' or 'media' is required
     FBSDKShareLinkContent *const linkContent = shareContent;
     if (!linkContent.contentURL) {
@@ -1128,7 +1128,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
 - (BOOL)_validateShareContentForNative:(NSError **)errorRef
 {
   id<FBSDKSharingContent> shareContent = self.shareContent;
-  if ([shareContent isKindOfClass:[FBSDKShareMediaContent class]]) {
+  if ([shareContent isKindOfClass:FBSDKShareMediaContent.class]) {
     if ([self.class.shareUtility shareMediaContentContainsPhotosAndVideos:(FBSDKShareMediaContent *)shareContent]) {
       if ((errorRef != NULL) && !*errorRef) {
         *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
@@ -1139,7 +1139,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
       return NO;
     }
   }
-  if (![shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
+  if (![shareContent isKindOfClass:FBSDKShareVideoContent.class]) {
     return YES;
   }
   return [(FBSDKShareVideoContent *)shareContent validateWithOptions:FBSDKShareBridgeOptionsDefault
@@ -1150,7 +1150,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
 {
   id<FBSDKSharingContent> shareContent = self.shareContent;
   if (shareContent) {
-    if ([shareContent isKindOfClass:[FBSDKSharePhotoContent class]]) {
+    if ([shareContent isKindOfClass:FBSDKSharePhotoContent.class]) {
       if ([self _contentImages].count != 0) {
         return YES;
       } else {
@@ -1163,14 +1163,14 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
         }
         return NO;
       }
-    } else if ([shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
+    } else if ([shareContent isKindOfClass:FBSDKShareVideoContent.class]) {
       return ([self _canUseFBShareSheet]
         && [(FBSDKShareVideoContent *)shareContent validateWithOptions:FBSDKShareBridgeOptionsDefault error:errorRef]);
-    } else if ([shareContent isKindOfClass:[FBSDKShareMediaContent class]]) {
+    } else if ([shareContent isKindOfClass:FBSDKShareMediaContent.class]) {
       return ([self _canUseFBShareSheet]
         && [self _validateShareMediaContentAvailability:shareContent error:errorRef]
         && [(FBSDKShareMediaContent *)shareContent validateWithOptions:FBSDKShareBridgeOptionsDefault error:errorRef]);
-    } else if ([shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
+    } else if ([shareContent isKindOfClass:FBSDKShareLinkContent.class]) {
       return YES;
     } else {
       if ((errorRef != NULL) && !*errorRef) {
@@ -1251,13 +1251,13 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   NSString *shareMode = NSStringFromFBSDKShareDialogMode(self.mode);
 
   NSString *contentType;
-  if ([self.shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
+  if ([self.shareContent isKindOfClass:FBSDKShareLinkContent.class]) {
     contentType = FBSDKAppEventsDialogShareContentTypeStatus;
-  } else if ([self.shareContent isKindOfClass:[FBSDKSharePhotoContent class]]) {
+  } else if ([self.shareContent isKindOfClass:FBSDKSharePhotoContent.class]) {
     contentType = FBSDKAppEventsDialogShareContentTypePhoto;
-  } else if ([self.shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
+  } else if ([self.shareContent isKindOfClass:FBSDKShareVideoContent.class]) {
     contentType = FBSDKAppEventsDialogShareContentTypeVideo;
-  } else if ([self.shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
+  } else if ([self.shareContent isKindOfClass:FBSDKShareCameraEffectContent.class]) {
     contentType = FBSDKAppEventsDialogShareContentTypeCamera;
   } else {
     contentType = FBSDKAppEventsDialogShareContentTypeUnknown;
@@ -1287,7 +1287,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
     if (hashtag.length > 0) {
       [FBSDKTypeUtility dictionary:parameters setObject:@[hashtag] forKey:FBSDKShareExtensionParamHashtags];
     }
-    if ([self.shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
+    if ([self.shareContent isKindOfClass:FBSDKShareLinkContent.class]) {
       NSString *const quote = ((FBSDKShareLinkContent *)self.shareContent).quote;
       if (quote.length > 0) {
         [FBSDKTypeUtility dictionary:parameters setObject:@[quote] forKey:FBSDKShareExtensionParamQuotes];

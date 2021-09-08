@@ -62,7 +62,7 @@
 
 - (void)setPeopleIDs:(NSArray *)peopleIDs
 {
-  [FBSDKShareUtility assertCollection:peopleIDs ofClass:[NSString class] name:@"peopleIDs"];
+  [FBSDKShareUtility assertCollection:peopleIDs ofClass:NSString.class name:@"peopleIDs"];
   if (![FBSDKInternalUtility.sharedUtility object:_peopleIDs isEqualToObject:peopleIDs]) {
     _peopleIDs = [peopleIDs copy];
   }
@@ -70,7 +70,7 @@
 
 - (void)setPhotos:(NSArray *)photos
 {
-  [FBSDKShareUtility assertCollection:photos ofClass:[FBSDKSharePhoto class] name:@"photos"];
+  [FBSDKShareUtility assertCollection:photos ofClass:FBSDKSharePhoto.class name:@"photos"];
   if (![FBSDKInternalUtility.sharedUtility object:_photos isEqualToObject:photos]) {
     _photos = [photos copy];
   }
@@ -160,7 +160,7 @@
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKSharePhotoContent class]]) {
+  if (![object isKindOfClass:FBSDKSharePhotoContent.class]) {
     return NO;
   }
   return [self isEqualToSharePhotoContent:(FBSDKSharePhotoContent *)object];
@@ -189,15 +189,15 @@
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [self init])) {
-    _contentURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDK_SHARE_PHOTO_CONTENT_CONTENT_URL_KEY];
-    _hashtag = [decoder decodeObjectOfClass:[FBSDKHashtag class] forKey:FBSDK_SHARE_PHOTO_CONTENT_HASHTAG_KEY];
-    _peopleIDs = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDK_SHARE_PHOTO_CONTENT_PEOPLE_IDS_KEY];
-    NSSet *classes = [NSSet setWithObjects:[NSArray class], [FBSDKSharePhoto class], nil];
+    _contentURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_SHARE_PHOTO_CONTENT_CONTENT_URL_KEY];
+    _hashtag = [decoder decodeObjectOfClass:FBSDKHashtag.class forKey:FBSDK_SHARE_PHOTO_CONTENT_HASHTAG_KEY];
+    _peopleIDs = [decoder decodeObjectOfClass:NSArray.class forKey:FBSDK_SHARE_PHOTO_CONTENT_PEOPLE_IDS_KEY];
+    NSSet *classes = [NSSet setWithObjects:NSArray.class, FBSDKSharePhoto.class, nil];
     _photos = [decoder decodeObjectOfClasses:classes forKey:FBSDK_SHARE_PHOTO_CONTENT_PHOTOS_KEY];
-    _placeID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_PHOTO_CONTENT_PLACE_ID_KEY];
-    _ref = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_PHOTO_CONTENT_REF_KEY];
-    _pageID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_PHOTO_CONTENT_PAGE_ID_KEY];
-    _shareUUID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_PHOTO_CONTENT_UUID_KEY];
+    _placeID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SHARE_PHOTO_CONTENT_PLACE_ID_KEY];
+    _ref = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SHARE_PHOTO_CONTENT_REF_KEY];
+    _pageID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SHARE_PHOTO_CONTENT_PAGE_ID_KEY];
+    _shareUUID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SHARE_PHOTO_CONTENT_UUID_KEY];
   }
   return self;
 }

@@ -66,7 +66,7 @@
     return YES;
   }
 
-  if (![object isKindOfClass:[FBSDKAuthenticationTokenHeader class]]) {
+  if (![object isKindOfClass:FBSDKAuthenticationTokenHeader.class]) {
     return NO;
   }
 

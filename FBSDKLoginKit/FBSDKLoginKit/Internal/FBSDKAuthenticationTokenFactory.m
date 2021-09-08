@@ -216,7 +216,7 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
                            return completion(nil);
                          }
 
-                         if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+                         if ([response isKindOfClass:NSHTTPURLResponse.class]) {
                            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
                            if (httpResponse.statusCode != 200) {
                              return completion(nil);

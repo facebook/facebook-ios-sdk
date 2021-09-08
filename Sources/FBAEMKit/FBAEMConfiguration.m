@@ -41,7 +41,7 @@ static id<FBAEMAdvertiserRuleProviding> _ruleProvider;
 
 + (void)configureWithRuleProvider:(id<FBAEMAdvertiserRuleProviding>)ruleProvider
 {
-  if (self == [FBAEMConfiguration class]) {
+  if (self == FBAEMConfiguration.class) {
     _ruleProvider = ruleProvider;
   }
 }

@@ -79,7 +79,7 @@ static char *const dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporte
                          appID:(NSString *)appID
                       reporter:(nullable id<FBSKAdNetworkReporting>)reporter
 {
-  if (self == [FBAEMReporter class]) {
+  if (self == FBAEMReporter.class) {
     _networker = networker;
     _appId = appID;
     _reporter = reporter;

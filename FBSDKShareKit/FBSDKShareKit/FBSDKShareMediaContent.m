@@ -61,7 +61,7 @@
 
 - (void)setPeopleIDs:(NSArray *)peopleIDs
 {
-  [FBSDKShareUtility assertCollection:peopleIDs ofClass:[NSString class] name:@"peopleIDs"];
+  [FBSDKShareUtility assertCollection:peopleIDs ofClass:NSString.class name:@"peopleIDs"];
   if (![FBSDKInternalUtility.sharedUtility object:_peopleIDs isEqualToObject:peopleIDs]) {
     _peopleIDs = [peopleIDs copy];
   }
@@ -69,7 +69,7 @@
 
 - (void)setMedia:(NSArray<id<FBSDKShareMedia>> *)media
 {
-  [FBSDKShareUtility assertCollection:media ofClassStrings:@[NSStringFromClass([FBSDKSharePhoto class]), NSStringFromClass([FBSDKShareVideo class])] name:@"media"];
+  [FBSDKShareUtility assertCollection:media ofClassStrings:@[NSStringFromClass(FBSDKSharePhoto.class), NSStringFromClass(FBSDKShareVideo.class)] name:@"media"];
   if (![FBSDKInternalUtility.sharedUtility object:_media isEqualToObject:media]) {
     _media = [media copy];
   }
@@ -93,7 +93,7 @@
   }
   int videoCount = 0;
   for (id media in _media) {
-    if ([media isKindOfClass:[FBSDKSharePhoto class]]) {
+    if ([media isKindOfClass:FBSDKSharePhoto.class]) {
       FBSDKSharePhoto *photo = (FBSDKSharePhoto *)media;
       if (![photo validateWithOptions:bridgeOptions error:NULL]) {
         if (errorRef != NULL) {
@@ -104,7 +104,7 @@
         }
         return NO;
       }
-    } else if ([media isKindOfClass:[FBSDKShareVideo class]]) {
+    } else if ([media isKindOfClass:FBSDKShareVideo.class]) {
       if (videoCount > 0) {
         if (errorRef != NULL) {
           *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
@@ -157,7 +157,7 @@
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKShareMediaContent class]]) {
+  if (![object isKindOfClass:FBSDKShareMediaContent.class]) {
     return NO;
   }
   return [self isEqualToShareMediaContent:(FBSDKShareMediaContent *)object];
@@ -186,15 +186,15 @@
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [self init])) {
-    _contentURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDK_SHARE_MEDIA_CONTENT_CONTENT_URL_KEY];
-    _hashtag = [decoder decodeObjectOfClass:[FBSDKHashtag class] forKey:FBSDK_SHARE_MEDIA_CONTENT_HASHTAG_KEY];
-    _peopleIDs = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDK_SHARE_MEDIA_CONTENT_PEOPLE_IDS_KEY];
-    NSSet *classes = [NSSet setWithObjects:[NSArray class], [FBSDKSharePhoto class], nil];
+    _contentURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_SHARE_MEDIA_CONTENT_CONTENT_URL_KEY];
+    _hashtag = [decoder decodeObjectOfClass:FBSDKHashtag.class forKey:FBSDK_SHARE_MEDIA_CONTENT_HASHTAG_KEY];
+    _peopleIDs = [decoder decodeObjectOfClass:NSArray.class forKey:FBSDK_SHARE_MEDIA_CONTENT_PEOPLE_IDS_KEY];
+    NSSet *classes = [NSSet setWithObjects:NSArray.class, FBSDKSharePhoto.class, nil];
     _media = [decoder decodeObjectOfClasses:classes forKey:FBSDK_SHARE_MEDIA_CONTENT_MEDIA_KEY];
-    _placeID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_MEDIA_CONTENT_PLACE_ID_KEY];
-    _ref = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_MEDIA_CONTENT_REF_KEY];
-    _pageID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_MEDIA_CONTENT_PAGE_ID_KEY];
-    _shareUUID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_MEDIA_CONTENT_UUID_KEY];
+    _placeID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SHARE_MEDIA_CONTENT_PLACE_ID_KEY];
+    _ref = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SHARE_MEDIA_CONTENT_REF_KEY];
+    _pageID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SHARE_MEDIA_CONTENT_PAGE_ID_KEY];
+    _shareUUID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SHARE_MEDIA_CONTENT_UUID_KEY];
   }
   return self;
 }

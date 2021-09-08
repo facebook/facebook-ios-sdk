@@ -72,7 +72,7 @@ NSString *const FBSDKUserAgeRangeMaxCodingKey = @"FBSDKUserAgeRangeMaxCodingKey"
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKUserAgeRange class]]) {
+  if (![object isKindOfClass:FBSDKUserAgeRange.class]) {
     return NO;
   }
   return [self isEqualToUserAgeRange:object];

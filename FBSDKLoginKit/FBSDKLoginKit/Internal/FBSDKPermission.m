@@ -72,7 +72,7 @@
     return YES;
   }
 
-  if (![object isKindOfClass:[FBSDKPermission class]]) {
+  if (![object isKindOfClass:FBSDKPermission.class]) {
     return NO;
   }
 

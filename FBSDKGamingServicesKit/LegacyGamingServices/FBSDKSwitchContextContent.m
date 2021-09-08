@@ -80,7 +80,7 @@
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKSwitchContextContent class]]) {
+  if (![object isKindOfClass:FBSDKSwitchContextContent.class]) {
     return NO;
   }
   FBSDKSwitchContextContent *content = object;
@@ -98,7 +98,7 @@
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [self init])) {
-    self.contextTokenID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_APP_REQUEST_CONTENT_CONTEXT_TOKEN_KEY];
+    self.contextTokenID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_APP_REQUEST_CONTENT_CONTEXT_TOKEN_KEY];
   }
   return self;
 }

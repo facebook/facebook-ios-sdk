@@ -148,7 +148,7 @@
 - (NSMutableDictionary<NSString *, id> *)queryParameters
 {
   NSMutableDictionary<NSString *, id> *appSwitchParameters = [NSMutableDictionary new];
-  if (self.dialogContent && [self.dialogContent isKindOfClass:[FBSDKChooseContextContent class]]) {
+  if (self.dialogContent && [self.dialogContent isKindOfClass:FBSDKChooseContextContent.class]) {
     FBSDKChooseContextContent *content = (FBSDKChooseContextContent *)self.dialogContent;
 
     NSString *filtersName = [FBSDKChooseContextContent filtersNameForFilters:content.filter];

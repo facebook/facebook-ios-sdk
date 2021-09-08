@@ -60,7 +60,7 @@ static id<FBSDKSettings> _settings;
               requestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
               featureChecking:(id<FBSDKFeatureChecking, FBSDKFeatureDisabling>)featureChecking
 {
-  if (self == [FBSDKCrashShield class]) {
+  if (self == FBSDKCrashShield.class) {
     _settings = settings;
     _requestProvider = requestProvider;
     _featureChecking = featureChecking;
@@ -69,7 +69,7 @@ static id<FBSDKSettings> _settings;
 
 + (void)initialize
 {
-  if (self == [FBSDKCrashShield class]) {
+  if (self == FBSDKCrashShield.class) {
     _featureMapping =
     @{
       @"AAM" : @[

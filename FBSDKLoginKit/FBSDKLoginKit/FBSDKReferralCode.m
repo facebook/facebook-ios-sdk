@@ -46,7 +46,7 @@
 
 - (BOOL)isEqual:(id)obj
 {
-  if (![obj isKindOfClass:[FBSDKReferralCode class]]) {
+  if (![obj isKindOfClass:FBSDKReferralCode.class]) {
     return NO;
   }
 

@@ -101,7 +101,7 @@
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKCreateContextContent class]]) {
+  if (![object isKindOfClass:FBSDKCreateContextContent.class]) {
     return NO;
   }
   return [self isEqualToContextCreateAsyncContent:(FBSDKCreateContextContent *)object];
@@ -123,7 +123,7 @@
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [self init])) {
-    self.playerID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_APP_REQUEST_CONTENT_PLAYER_ID_KEY];
+    self.playerID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_APP_REQUEST_CONTENT_PLAYER_ID_KEY];
   }
   return self;
 }

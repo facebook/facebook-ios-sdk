@@ -290,7 +290,7 @@ static _Nullable id<FBSDKSettings> _settings;
     return YES;
   }
 
-  if (![object isKindOfClass:[FBSDKAuthenticationTokenClaims class]]) {
+  if (![object isKindOfClass:FBSDKAuthenticationTokenClaims.class]) {
     return NO;
   }
 

@@ -46,7 +46,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 
 + (void)initialize
 {
-  if (self == [FBSDKGameRequestDialog class]) {
+  if (self == FBSDKGameRequestDialog.class) {
     _recipientCache = [FBSDKGameRequestFrictionlessRecipientCache new];
   }
 }

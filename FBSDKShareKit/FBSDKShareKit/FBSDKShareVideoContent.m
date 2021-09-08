@@ -62,7 +62,7 @@
 
 - (void)setPeopleIDs:(NSArray *)peopleIDs
 {
-  [FBSDKShareUtility assertCollection:peopleIDs ofClass:[NSString class] name:@"peopleIDs"];
+  [FBSDKShareUtility assertCollection:peopleIDs ofClass:NSString.class name:@"peopleIDs"];
   if (![FBSDKInternalUtility.sharedUtility object:_peopleIDs isEqualToObject:peopleIDs]) {
     _peopleIDs = [peopleIDs copy];
   }
@@ -157,7 +157,7 @@
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKShareVideoContent class]]) {
+  if (![object isKindOfClass:FBSDKShareVideoContent.class]) {
     return NO;
   }
   return [self isEqualToShareVideoContent:(FBSDKShareVideoContent *)object];
@@ -186,14 +186,14 @@
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [self init])) {
-    _contentURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDK_SHARE_VIDEO_CONTENT_CONTENT_URL_KEY];
-    _hashtag = [decoder decodeObjectOfClass:[FBSDKHashtag class] forKey:FBSDK_SHARE_VIDEO_CONTENT_HASHTAG_KEY];
-    _peopleIDs = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDK_SHARE_VIDEO_CONTENT_PEOPLE_IDS_KEY];
-    _placeID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_VIDEO_CONTENT_PLACE_ID_KEY];
-    _ref = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_VIDEO_CONTENT_REF_KEY];
-    _pageID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_VIDEO_CONTENT_PAGE_ID_KEY];
-    _video = [decoder decodeObjectOfClass:[FBSDKShareVideo class] forKey:FBSDK_SHARE_VIDEO_CONTENT_VIDEO_KEY];
-    _shareUUID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_VIDEO_CONTENT_UUID_KEY];
+    _contentURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_SHARE_VIDEO_CONTENT_CONTENT_URL_KEY];
+    _hashtag = [decoder decodeObjectOfClass:FBSDKHashtag.class forKey:FBSDK_SHARE_VIDEO_CONTENT_HASHTAG_KEY];
+    _peopleIDs = [decoder decodeObjectOfClass:NSArray.class forKey:FBSDK_SHARE_VIDEO_CONTENT_PEOPLE_IDS_KEY];
+    _placeID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SHARE_VIDEO_CONTENT_PLACE_ID_KEY];
+    _ref = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SHARE_VIDEO_CONTENT_REF_KEY];
+    _pageID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SHARE_VIDEO_CONTENT_PAGE_ID_KEY];
+    _video = [decoder decodeObjectOfClass:FBSDKShareVideo.class forKey:FBSDK_SHARE_VIDEO_CONTENT_VIDEO_KEY];
+    _shareUUID = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SHARE_VIDEO_CONTENT_UUID_KEY];
   }
   return self;
 }

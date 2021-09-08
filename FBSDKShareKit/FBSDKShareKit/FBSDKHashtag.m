@@ -77,7 +77,7 @@ static NSRegularExpression *HashtagRegularExpression()
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKHashtag class]]) {
+  if (![object isKindOfClass:FBSDKHashtag.class]) {
     return NO;
   }
   return [self isEqualToHashtag:(FBSDKHashtag *)object];
@@ -99,7 +99,7 @@ static NSRegularExpression *HashtagRegularExpression()
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
   if ((self = [self init])) {
-    _stringRepresentation = [aDecoder decodeObjectOfClass:[NSString class] forKey:FBSDK_HASHTAG_STRING_KEY];
+    _stringRepresentation = [aDecoder decodeObjectOfClass:NSString.class forKey:FBSDK_HASHTAG_STRING_KEY];
   }
   return self;
 }

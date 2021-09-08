@@ -625,7 +625,7 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
 
 - (void)scheduleAutomaticFadeout
 {
-  [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(scheduleFadeoutRespectingMinimumDisplayDuration) object:nil];
+  [self.class cancelPreviousPerformRequestsWithTarget:self selector:@selector(scheduleFadeoutRespectingMinimumDisplayDuration) object:nil];
 
   if (_displayDuration > 0.0 && self.superview) {
     CFTimeInterval intervalAlreadyDisplaying = CFAbsoluteTimeGetCurrent() - _displayTime;
@@ -651,8 +651,8 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
 
 - (void)cancelAllScheduledFadeOutMethods
 {
-  [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(scheduleFadeoutRespectingMinimumDisplayDuration) object:nil];
-  [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismiss) object:nil];
+  [self.class cancelPreviousPerformRequestsWithTarget:self selector:@selector(scheduleFadeoutRespectingMinimumDisplayDuration) object:nil];
+  [self.class cancelPreviousPerformRequestsWithTarget:self selector:@selector(dismiss) object:nil];
 }
 
 @end

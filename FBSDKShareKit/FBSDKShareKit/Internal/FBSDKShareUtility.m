@@ -69,7 +69,7 @@
 {
   NSString *methodName = @"share";
   NSMutableDictionary<NSString *, id> *parameters = nil;
-  if ([content isKindOfClass:[FBSDKShareLinkContent class]]) {
+  if ([content isKindOfClass:FBSDKShareLinkContent.class]) {
     FBSDKShareLinkContent *const linkContent = (FBSDKShareLinkContent *)content;
     if (linkContent.contentURL != nil) {
       parameters = [NSMutableDictionary new];
@@ -139,7 +139,7 @@
 + (NSDictionary<NSString *, id> *)feedShareDictionaryForContent:(id<FBSDKSharingContent>)content
 {
   NSMutableDictionary<NSString *, id> *parameters = nil;
-  if ([content isKindOfClass:[FBSDKShareLinkContent class]]) {
+  if ([content isKindOfClass:FBSDKShareLinkContent.class]) {
     FBSDKShareLinkContent *linkContent = (FBSDKShareLinkContent *)content;
     parameters = [NSMutableDictionary new];
     [FBSDKTypeUtility dictionary:parameters setObject:linkContent.contentURL forKey:@"link"];
@@ -228,20 +228,20 @@
   BOOL containsMedia = NO;
   BOOL containsPhotos = NO;
   BOOL containsVideos = NO;
-  if ([shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
+  if ([shareContent isKindOfClass:FBSDKShareLinkContent.class]) {
     containsMedia = NO;
     containsPhotos = NO;
     containsVideos = NO;
-  } else if ([shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
+  } else if ([shareContent isKindOfClass:FBSDKShareVideoContent.class]) {
     containsMedia = YES;
     containsVideos = YES;
     containsPhotos = NO;
-  } else if ([shareContent isKindOfClass:[FBSDKSharePhotoContent class]]) {
+  } else if ([shareContent isKindOfClass:FBSDKSharePhotoContent.class]) {
     [self _testObject:((FBSDKSharePhotoContent *)shareContent).photos
         containsMedia:&containsMedia
        containsPhotos:&containsPhotos
        containsVideos:&containsVideos];
-  } else if ([shareContent isKindOfClass:[FBSDKShareMediaContent class]]) {
+  } else if ([shareContent isKindOfClass:FBSDKShareMediaContent.class]) {
     [self _testObject:((FBSDKShareMediaContent *)shareContent).media
         containsMedia:&containsMedia
        containsPhotos:&containsPhotos
@@ -290,9 +290,9 @@
 
 + (id)_convertObject:(id)object
 {
-  if ([object isKindOfClass:[FBSDKSharePhoto class]]) {
+  if ([object isKindOfClass:FBSDKSharePhoto.class]) {
     object = [self convertPhoto:(FBSDKSharePhoto *)object];
-  } else if ([object isKindOfClass:[NSArray class]]) {
+  } else if ([object isKindOfClass:NSArray.class]) {
     NSMutableArray *array = [NSMutableArray new];
     for (id item in (NSArray *)object) {
       [FBSDKTypeUtility array:array addObject:[self _convertObject:item]];
@@ -352,13 +352,13 @@
   BOOL containsMedia = NO;
   BOOL containsPhotos = NO;
   BOOL containsVideos = NO;
-  if ([object isKindOfClass:[FBSDKSharePhoto class]]) {
+  if ([object isKindOfClass:FBSDKSharePhoto.class]) {
     containsMedia = (((FBSDKSharePhoto *)object).image != nil);
     containsPhotos = YES;
-  } else if ([object isKindOfClass:[FBSDKShareVideo class]]) {
+  } else if ([object isKindOfClass:FBSDKShareVideo.class]) {
     containsMedia = YES;
     containsVideos = YES;
-  } else if ([object isKindOfClass:[NSArray class]]) {
+  } else if ([object isKindOfClass:NSArray.class]) {
     for (id item in (NSArray *)object) {
       BOOL itemContainsMedia = NO;
       BOOL itemContainsPhotos = NO;
@@ -469,8 +469,8 @@
 + (BOOL)validateRequiredValue:(id)value name:(NSString *)name error:(NSError *__autoreleasing *)errorRef
 {
   if (!value
-      || ([value isKindOfClass:[NSString class]] && !((NSString *)value).length)
-      || ([value isKindOfClass:[NSArray class]] && !((NSArray *)value).count)
+      || ([value isKindOfClass:NSString.class] && !((NSString *)value).length)
+      || ([value isKindOfClass:NSArray.class] && !((NSArray *)value).count)
       || ([value isKindOfClass:[NSDictionary<NSString *, id> class]] && !((NSDictionary<NSString *, id> *)value).count)) {
     if (errorRef != NULL) {
       *errorRef = [FBSDKError requiredArgumentErrorWithDomain:FBSDKShareErrorDomain

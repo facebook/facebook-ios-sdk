@@ -99,7 +99,7 @@ NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKSharePhoto class]]) {
+  if (![object isKindOfClass:FBSDKSharePhoto.class]) {
     return NO;
   }
   return [self isEqualToSharePhoto:(FBSDKSharePhoto *)object];
@@ -192,14 +192,14 @@ NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [self init])) {
-    _image = [decoder decodeObjectOfClass:[UIImage class] forKey:kFBSDKSharePhotoImageKey];
-    _imageURL = [decoder decodeObjectOfClass:[NSURL class] forKey:kFBSDKSharePhotoImageURLKey];
-    NSString *localIdentifier = [decoder decodeObjectOfClass:[NSString class] forKey:kFBSDKSharePhotoAssetKey];
+    _image = [decoder decodeObjectOfClass:UIImage.class forKey:kFBSDKSharePhotoImageKey];
+    _imageURL = [decoder decodeObjectOfClass:NSURL.class forKey:kFBSDKSharePhotoImageURLKey];
+    NSString *localIdentifier = [decoder decodeObjectOfClass:NSString.class forKey:kFBSDKSharePhotoAssetKey];
     if (localIdentifier && (PHAuthorizationStatusAuthorized == [PHPhotoLibrary authorizationStatus])) {
       _photoAsset = [PHAsset fetchAssetsWithLocalIdentifiers:@[localIdentifier] options:nil].firstObject;
     }
     _userGenerated = [decoder decodeBoolForKey:kFBSDKSharePhotoUserGeneratedKey];
-    _caption = [decoder decodeObjectOfClass:[NSString class] forKey:kFBSDKSharePhotoCaptionKey];
+    _caption = [decoder decodeObjectOfClass:NSString.class forKey:kFBSDKSharePhotoCaptionKey];
   }
   return self;
 }

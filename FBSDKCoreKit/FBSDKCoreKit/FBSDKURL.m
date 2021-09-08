@@ -59,7 +59,7 @@ NSString *const AutoAppLinkFlagKey = @"is_auto_applink";
       // If the version is not specified, assume it is 1.
       NSString *version = applinkData[FBSDKAppLinkVersionKeyName] ?: @"1.0";
       NSString *target = applinkData[FBSDKAppLinkTargetKeyName];
-      if ([version isKindOfClass:[NSString class]]
+      if ([version isKindOfClass:NSString.class]
           && [version isEqual:FBSDKAppLinkVersion]) {
         // There's applink data!  The target should actually be the applink target.
         _appLinkData = applinkData;
@@ -67,7 +67,7 @@ NSString *const AutoAppLinkFlagKey = @"is_auto_applink";
         if (applinkExtras && [applinkExtras isKindOfClass:[NSDictionary<NSString *, id> class]]) {
           _appLinkExtras = applinkExtras;
         }
-        _targetURL = ([target isKindOfClass:[NSString class]] ? [NSURL URLWithString:target] : url);
+        _targetURL = ([target isKindOfClass:NSString.class] ? [NSURL URLWithString:target] : url);
         _targetQueryParameters = [FBSDKURL queryParametersForURL:_targetURL];
 
         NSDictionary<NSString *, id> *refererAppLink = _appLinkData[FBSDKAppLinkRefererAppLink];

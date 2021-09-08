@@ -70,9 +70,9 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
     _reactBindings = [NSMutableDictionary dictionary];
 
     NSMutableSet *classes = [NSMutableSet set];
-    [classes addObject:[UIControl class]];
-    [classes addObject:[UITableView class]];
-    [classes addObject:[UICollectionView class]];
+    [classes addObject:UIControl.class];
+    [classes addObject:UITableView.class];
+    [classes addObject:UICollectionView.class];
     // ReactNative
     Class classRCTRootView = objc_lookUpClass(ReactNativeClassRCTRootView);
     if (classRCTRootView != nil) {
@@ -143,7 +143,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
   };
 
   [self.swizzler swizzleSelector:@selector(didMoveToWindow)
-                         onClass:[UIControl class]
+                         onClass:UIControl.class
                        withBlock:blockToWindow
                            named:@"map_control"];
 
@@ -189,7 +189,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
     [self matchView:tableView delegate:delegate];
   };
   [self.swizzler swizzleSelector:@selector(setDelegate:)
-                         onClass:[UITableView class]
+                         onClass:UITableView.class
                        withBlock:tableViewBlock
                            named:@"match_table_view"];
   // UICollectionView
@@ -204,7 +204,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
     [self matchView:collectionView delegate:delegate];
   };
   [self.swizzler swizzleSelector:@selector(setDelegate:)
-                         onClass:[UICollectionView class]
+                         onClass:UICollectionView.class
                        withBlock:collectionViewBlock
                            named:@"handle_collection_view"];
 }
@@ -237,12 +237,12 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
     }
 
     if (isValidClass) {
-      if ([subview isKindOfClass:[UITableView class]]) {
+      if ([subview isKindOfClass:UITableView.class]) {
         UITableView *tableView = (UITableView *)subview;
         if (tableView.delegate) {
           [self matchView:subview delegate:tableView.delegate];
         }
-      } else if ([subview isKindOfClass:[UICollectionView class]]) {
+      } else if ([subview isKindOfClass:UICollectionView.class]) {
         UICollectionView *collectionView = (UICollectionView *)subview;
         if (collectionView.delegate) {
           [self matchView:subview delegate:collectionView.delegate];
@@ -252,7 +252,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
       }
     }
 
-    if (![subview isKindOfClass:[UIControl class]]) {
+    if (![subview isKindOfClass:UIControl.class]) {
       [self matchSubviewsIn:subview];
     }
   }
@@ -275,7 +275,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
     NSArray *path = [FBSDKViewHierarchy getPath:view];
 
     void (^matchBlock)(void) = ^void () {
-      if ([view isKindOfClass:[UIControl class]]) {
+      if ([view isKindOfClass:UIControl.class]) {
         UIControl *control = (UIControl *)view;
         for (FBSDKEventBinding *binding in self->_eventBindings) {
           if ([FBSDKEventBinding isPath:binding.path matchViewPath:path]) {
@@ -302,7 +302,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
             break;
           }
         }
-      } else if ([view isKindOfClass:[UITableView class]]
+      } else if ([view isKindOfClass:UITableView.class]
                  && [delegate conformsToProtocol:@protocol(UITableViewDelegate)]) {
         void (^tableViewBlock)(void) = ^void () {
           NSMutableSet *matchedBindings = [NSMutableSet set];
@@ -332,7 +332,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
       #else
         fb_dispatch_on_default_thread(tableViewBlock);
       #endif
-      } else if ([view isKindOfClass:[UICollectionView class]]
+      } else if ([view isKindOfClass:UICollectionView.class]
                  && [delegate conformsToProtocol:@protocol(UICollectionViewDelegate)]) {
         void (^collectionViewBlock)(void) = ^void () {
           NSMutableSet *matchedBindings = [NSMutableSet set];
@@ -409,7 +409,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
                                     touches:(id)touches
                                   eventName:(id)eventName
 {
-  if ([touches isKindOfClass:[NSSet class]] && [eventName isKindOfClass:[NSString class]]) {
+  if ([touches isKindOfClass:NSSet.class] && [eventName isKindOfClass:NSString.class]) {
     @try {
       NSString *reactEventName = (NSString *)eventName;
       NSSet<UITouch *> *reactTouches = (NSSet<UITouch *> *)touches;

@@ -59,10 +59,10 @@
 
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
-  NSString *accessTokenString = [decoder decodeObjectOfClass:[NSString class]
+  NSString *accessTokenString = [decoder decodeObjectOfClass:NSString.class
                                                       forKey:FBSDK_LIKE_ACTION_CONTROLLER_CACHE_ACCESS_TOKEN_KEY];
   if ((self = [self initWithAccessTokenString:accessTokenString])) {
-    NSSet *allowedClasses = [NSSet setWithObjects:[NSDictionary<NSString *, id> class], [FBSDKLikeActionController class], nil];
+    NSSet *allowedClasses = [NSSet setWithObjects:[NSDictionary<NSString *, id> class], FBSDKLikeActionController.class, nil];
     NSDictionary<NSString *, id> *items = [decoder decodeObjectOfClasses:allowedClasses
                                                                   forKey:FBSDK_LIKE_ACTION_CONTROLLER_CACHE_ITEMS_KEY];
     _items = [[NSMutableDictionary alloc] initWithDictionary:items];

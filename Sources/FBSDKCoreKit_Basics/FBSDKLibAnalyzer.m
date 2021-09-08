@@ -173,7 +173,7 @@ static NSMutableDictionary<NSString *, NSString *> *_methodMapping;
 
 + (nullable NSString *)_getAddress:(nullable NSString *)callstackEntry
 {
-  if ([callstackEntry isKindOfClass:[NSString class]]) {
+  if ([callstackEntry isKindOfClass:NSString.class]) {
     NSArray<NSString *> *components = [callstackEntry componentsSeparatedByString:@" "];
     for (NSString *component in components) {
       if ([component containsString:@"0x"]) {

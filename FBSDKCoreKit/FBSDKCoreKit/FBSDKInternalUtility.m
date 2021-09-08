@@ -106,7 +106,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 + (Class<FBSDKLogging>)loggerType
 {
   if (_loggerType == nil) {
-    _loggerType = [FBSDKLogger class];
+    _loggerType = FBSDKLogger.class;
   }
   return _loggerType;
 }
@@ -150,7 +150,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
   static NSBundle *bundle;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    NSString *stringsBundlePath = [[NSBundle bundleForClass:[FBSDKApplicationDelegate class]]
+    NSString *stringsBundlePath = [[NSBundle bundleForClass:FBSDKApplicationDelegate.class]
                                    pathForResource:@"FacebookSDKStrings"
                                    ofType:@"bundle"];
     bundle = [NSBundle bundleWithPath:stringsBundlePath] ?: [NSBundle mainBundle];
@@ -416,7 +416,7 @@ static NSMapTable *_transientObjects;
 {
   UIResponder *responder = view.nextResponder;
   while (responder) {
-    if ([responder isKindOfClass:[UIViewController class]]) {
+    if ([responder isKindOfClass:UIViewController.class]) {
       return (UIViewController *)responder;
     }
     responder = responder.nextResponder;

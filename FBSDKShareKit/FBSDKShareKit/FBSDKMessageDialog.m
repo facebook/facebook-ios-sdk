@@ -47,7 +47,7 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
 
 + (void)initialize
 {
-  if ([FBSDKMessageDialog class] == self) {
+  if (FBSDKMessageDialog.class == self) {
     [FBSDKInternalUtility.sharedUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_MESSENGER];
   }
 }
@@ -143,9 +143,9 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
 - (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef
 {
   if (self.shareContent) {
-    if ([self.shareContent isKindOfClass:[FBSDKShareLinkContent class]]
-        || [self.shareContent isKindOfClass:[FBSDKSharePhotoContent class]]
-        || [self.shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {} else {
+    if ([self.shareContent isKindOfClass:FBSDKShareLinkContent.class]
+        || [self.shareContent isKindOfClass:FBSDKSharePhotoContent.class]
+        || [self.shareContent isKindOfClass:FBSDKShareVideoContent.class]) {} else {
       if (errorRef != NULL) {
         NSString *message = [NSString stringWithFormat:@"Message dialog does not support %@.",
                              NSStringFromClass(self.shareContent.class)];
@@ -242,11 +242,11 @@ NSString *const FBSDKAppEventParameterDialogShareContentUUID = @"fb_dialog_share
 - (void)_logDialogShow
 {
   NSString *contentType;
-  if ([self.shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
+  if ([self.shareContent isKindOfClass:FBSDKShareLinkContent.class]) {
     contentType = FBSDKAppEventsDialogShareContentTypeStatus;
-  } else if ([self.shareContent isKindOfClass:[FBSDKSharePhotoContent class]]) {
+  } else if ([self.shareContent isKindOfClass:FBSDKSharePhotoContent.class]) {
     contentType = FBSDKAppEventsDialogShareContentTypePhoto;
-  } else if ([self.shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
+  } else if ([self.shareContent isKindOfClass:FBSDKShareVideoContent.class]) {
     contentType = FBSDKAppEventsDialogShareContentTypeVideo;
   } else {
     contentType = FBSDKAppEventsDialogShareContentTypeUnknown;

@@ -121,7 +121,7 @@ NSErrorDomain const FBAEMErrorDomain = @"com.facebook.aemkit";
 {
   [FBSDKTypeUtility dictionary:attachments enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
     value = [FBSDKBasicUtility convertRequestValue:value];
-    if ([value isKindOfClass:[NSString class]]) {
+    if ([value isKindOfClass:NSString.class]) {
       if (addFormData) {
         [body appendWithKey:key formValue:(NSString *)value];
       }

@@ -155,7 +155,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
 {
   void (^block)(UIView *) = ^(UIView *view) {
     // Indexing when the view is removed from window and conforms to UITextInput, and skip UIFieldEditor, which is an internval view of UITextField
-    if (![view window] && ![NSStringFromClass([view class]) isEqualToString:@"UIFieldEditor"] && [view conformsToProtocol:@protocol(UITextInput)]) {
+    if (![view window] && ![NSStringFromClass(view.class) isEqualToString:@"UIFieldEditor"] && [view conformsToProtocol:@protocol(UITextInput)]) {
       NSString *text = [FBSDKViewHierarchy getText:view];
       NSString *placeholder = [FBSDKViewHierarchy getHint:view];
       BOOL secureTextEntry = [self checkSecureTextEntry:view];
@@ -171,13 +171,13 @@ static NSString *const FIELD_K_DELIMITER = @",";
     }
   };
 
-  [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:[UIView class] withBlock:block named:@"metadataIndexingUIView"];
+  [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:UIView.class withBlock:block named:@"metadataIndexingUIView"];
 
   // iOS 12: UITextField implements didMoveToWindow without calling parent implementation
   if (@available(iOS 12, *)) {
-    [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:[UITextField class] withBlock:block named:@"metadataIndexingUITextField"];
+    [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:UITextField.class withBlock:block named:@"metadataIndexingUITextField"];
   } else {
-    [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:[UIControl class] withBlock:block named:@"metadataIndexingUIControl"];
+    [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow) onClass:UIControl.class withBlock:block named:@"metadataIndexingUIControl"];
   }
 }
 
@@ -206,7 +206,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
 
   NSArray<id> *siblingViews = [self getSiblingViewsOfView:view];
   for (id sibling in siblingViews) {
-    if ([sibling isKindOfClass:[UILabel class]]) {
+    if ([sibling isKindOfClass:UILabel.class]) {
       NSString *text = [self normalizeField:[FBSDKViewHierarchy getText:sibling]];
       if (text.length > 0) {
         [FBSDKTypeUtility array:labels addObject:text];
@@ -218,10 +218,10 @@ static NSString *const FIELD_K_DELIMITER = @",";
 
 - (BOOL)checkSecureTextEntry:(UIView *)view
 {
-  if ([view isKindOfClass:[UITextField class]]) {
+  if ([view isKindOfClass:UITextField.class]) {
     return ((UITextField *)view).secureTextEntry;
   }
-  if ([view isKindOfClass:[UITextView class]]) {
+  if ([view isKindOfClass:UITextView.class]) {
     return ((UITextView *)view).secureTextEntry;
   }
 
@@ -230,10 +230,10 @@ static NSString *const FIELD_K_DELIMITER = @",";
 
 - (UIKeyboardType)getKeyboardType:(UIView *)view
 {
-  if ([view isKindOfClass:[UITextField class]]) {
+  if ([view isKindOfClass:UITextField.class]) {
     return ((UITextField *)view).keyboardType;
   }
-  if ([view isKindOfClass:[UITextView class]]) {
+  if ([view isKindOfClass:UITextView.class]) {
     return ((UITextView *)view).keyboardType;
   }
 

@@ -65,7 +65,7 @@ NSString *NSStringFromFBSDKAppGroupPrivacy(FBSDKAppGroupPrivacy privacy)
   if (self == object) {
     return YES;
   }
-  if (![object isKindOfClass:[FBSDKAppGroupContent class]]) {
+  if (![object isKindOfClass:FBSDKAppGroupContent.class]) {
     return NO;
   }
   return [self isEqualToAppGroupContent:(FBSDKAppGroupContent *)object];
@@ -89,9 +89,9 @@ NSString *NSStringFromFBSDKAppGroupPrivacy(FBSDKAppGroupPrivacy privacy)
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [self init])) {
-    _groupDescription = [decoder decodeObjectOfClass:[NSString class]
+    _groupDescription = [decoder decodeObjectOfClass:NSString.class
                                               forKey:FBSDK_APP_GROUP_CONTENT_GROUP_DESCRIPTION_KEY];
-    _name = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_APP_GROUP_CONTENT_PRIVACY_KEY];
+    _name = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_APP_GROUP_CONTENT_PRIVACY_KEY];
     _privacy = [decoder decodeIntegerForKey:FBSDK_APP_GROUP_CONTENT_PRIVACY_KEY];
   }
   return self;
