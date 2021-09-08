@@ -22,11 +22,7 @@
 
 #import <UIKit/UIKit.h>
 
-#ifdef FBSDKCOCOAPODS
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-#else
 #import "FBSDKCoreKit+Internal.h"
-#endif
 
 #if SWIFT_PACKAGE
 #import "FBSDKLoginManager.h"

@@ -16,7 +16,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// Used from BUCK, CocoaPods, and Xcodebuild to maintain backwards compatibility
-// for current users of FBSDKGamingServicesKit.
+// Used to maintain backwards compatibility for current users of FBSDKGamingServicesKit.
 
 #import <FacebookGamingServices/FacebookGamingServices.h>

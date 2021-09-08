@@ -22,19 +22,8 @@
 
  #import "FBSDKGameRequestFrictionlessRecipientCache.h"
 
- #if defined BUCK || defined FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #else
-@import FBSDKCoreKit;
- #endif
-
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #else
-  #import "FBSDKCoreKitImport.h"
- #endif
-
  #import "FBSDKCoreKitBasicsImportForShareKit.h"
+ #import "FBSDKCoreKitImport.h"
 
 @implementation FBSDKGameRequestFrictionlessRecipientCache
 {

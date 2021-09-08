@@ -16,22 +16,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// This deserves some explanation.
-// Cocoapods - we define FBAEMKit as a subspec so to import it we need to use
-// the name of the module produced by the podspec which is FBSDKCoreKit. To be able
-// to reference it as <FBAEMKit> we need to publish a separate pod.
-// Because of the way files in the subspec are made available to the pod, we do not need
-// to use the bracket import syntax.
-//
-// BUCK - we define FBAEMKit as a separate library so we must import it as
-// <FBAEMKit>
-//
-// Xcodeproj - we define FBAEMKit as a distinct module with its own project
-// so that we can import it as <FBAEMKit>
-//
-// Swift Package Manager - it can be imported with `@import FBAEMKit` which allows us to reference
-// public headers without bracket import syntax.
-
 #import "TargetConditionals.h"
 
 #if !TARGET_OS_TV

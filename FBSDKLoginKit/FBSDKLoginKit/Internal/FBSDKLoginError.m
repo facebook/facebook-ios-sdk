@@ -22,6 +22,7 @@
 
  #import "FBSDKLoginError.h"
 
+ #import "FBSDKCoreKit+Internal.h"
  #import "FBSDKCoreKitBasicsImportForLoginKit.h"
  #import "FBSDKCoreKitImport.h"
 

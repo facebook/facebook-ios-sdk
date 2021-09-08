@@ -24,19 +24,8 @@
 
  #import <QuartzCore/QuartzCore.h>
 
- #if defined BUCK || defined FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #else
-@import FBSDKCoreKit;
- #endif
-
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #else
-  #import "FBSDKCoreKitImport.h"
- #endif
-
  #import "FBSDKCoreKitBasicsImportForShareKit.h"
+ #import "FBSDKCoreKitImport.h"
  #import "FBSDKLikeActionControllerCache.h"
  #import "FBSDKLikeDialog.h"
 

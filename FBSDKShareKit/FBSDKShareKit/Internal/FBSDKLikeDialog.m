@@ -22,13 +22,8 @@
 
  #import "FBSDKLikeDialog.h"
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit.h>
- #else
-  #import "FBSDKCoreKitImport.h"
- #endif
-
  #import "FBSDKCoreKitBasicsImportForShareKit.h"
+ #import "FBSDKCoreKitImport.h"
  #import "FBSDKShareConstants.h"
  #import "FBSDKShareDefines.h"
 

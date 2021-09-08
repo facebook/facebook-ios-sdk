@@ -24,11 +24,7 @@
 
  #import <CoreText/CoreText.h>
 
- #ifdef FBSDKCOCOAPODS
-  #import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
- #else
-  #import "FBSDKCoreKit+Internal.h"
- #endif
+ #import "FBSDKCoreKit+Internal.h"
 
 static const CGFloat kTransitionDuration = 0.3;
 static const CGFloat kZoomOutScale = 0.001f;
