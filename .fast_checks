@@ -1,5 +1,0 @@
-InheritParentConfig: true
-Checks: '
--idfa-usage,
--ad-tracking-usage
-'
