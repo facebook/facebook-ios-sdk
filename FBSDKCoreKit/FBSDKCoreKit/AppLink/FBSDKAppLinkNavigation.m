@@ -72,7 +72,7 @@ static id<FBSDKAppLinkResolving> defaultResolver;
 
 - (NSString *)stringByEscapingQueryString:(NSString *)string
 {
-  return [string stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+  return [string stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
 }
 
 - (NSURL *)appLinkURLWithTargetURL:(NSURL *)targetUrl error:(NSError **)error

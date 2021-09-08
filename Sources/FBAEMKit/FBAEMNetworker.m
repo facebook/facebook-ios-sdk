@@ -69,7 +69,7 @@ NSErrorDomain const FBAEMErrorDomain = @"com.facebook.aemkit";
     request.HTTPBody = body.data;
   }
 
-  FBSDKURLSession *session = [[FBSDKURLSession alloc] initWithDelegate:self delegateQueue:[NSOperationQueue currentQueue]];
+  FBSDKURLSession *session = [[FBSDKURLSession alloc] initWithDelegate:self delegateQueue:NSOperationQueue.currentQueue];
 
   [session executeURLRequest:request completionHandler:^(NSData *responseData, NSURLResponse *response, NSError *error) {
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;

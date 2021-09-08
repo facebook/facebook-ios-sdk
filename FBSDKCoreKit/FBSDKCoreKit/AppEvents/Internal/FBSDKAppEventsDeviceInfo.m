@@ -142,13 +142,13 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024; // bytes
 - (void)_collectPersistentData
 {
   // Bundle stuff
-  NSBundle *mainBundle = [NSBundle mainBundle];
+  NSBundle *mainBundle = NSBundle.mainBundle;
   _bundleIdentifier = mainBundle.bundleIdentifier;
   _longVersion = [mainBundle objectForInfoDictionaryKey:@"CFBundleVersion"];
   _shortVersion = [mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
 
   // Locale stuff
-  _language = [NSLocale currentLocale].localeIdentifier;
+  _language = NSLocale.currentLocale.localeIdentifier;
 
   // Device stuff
   UIDevice *device = [UIDevice currentDevice];
@@ -189,7 +189,7 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024; // bytes
   }
 
   if (!_timeZoneName || !_timeZoneAbbrev || !shouldUseCachedValues) {
-    NSTimeZone *timeZone = [NSTimeZone systemTimeZone];
+    NSTimeZone *timeZone = NSTimeZone.systemTimeZone;
     NSString *timeZoneName = timeZone.name;
     if (!_timeZoneName || ![timeZoneName isEqualToString:_timeZoneName]) {
       _timeZoneName = timeZoneName;

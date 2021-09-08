@@ -249,13 +249,13 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
                  [self _processError:error];
                } else {
                  NSString *tokenString = [FBSDKTypeUtility dictionary:result objectForKey:@"access_token" ofType:NSString.class];
-                 NSDate *expirationDate = [NSDate distantFuture];
+                 NSDate *expirationDate = NSDate.distantFuture;
                  NSInteger expiresIn = [[FBSDKTypeUtility dictionary:result objectForKey:@"expires_in" ofType:NSString.class] integerValue];
                  if (expiresIn > 0) {
                    expirationDate = [NSDate dateWithTimeIntervalSinceNow:expiresIn];
                  }
 
-                 NSDate *dataAccessExpirationDate = [NSDate distantFuture];
+                 NSDate *dataAccessExpirationDate = NSDate.distantFuture;
                  NSInteger dataAccessExpirationTime = [[FBSDKTypeUtility dictionary:result objectForKey:@"data_access_expiration_time" ofType:NSString.class] integerValue];
                  if (dataAccessExpirationTime > 0) {
                    dataAccessExpirationDate = [NSDate dateWithTimeIntervalSince1970:dataAccessExpirationTime];

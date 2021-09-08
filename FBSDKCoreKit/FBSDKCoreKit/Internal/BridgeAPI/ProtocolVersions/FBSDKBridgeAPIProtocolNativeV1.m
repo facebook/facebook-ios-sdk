@@ -240,7 +240,7 @@ static const struct {
   if (!_includeAppIcon) {
     return nil;
   }
-  NSArray *files = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIcons"]
+  NSArray *files = [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleIcons"]
   [@"CFBundlePrimaryIcon"]
   [@"CFBundleIconFiles"];
   if (!files.count) {

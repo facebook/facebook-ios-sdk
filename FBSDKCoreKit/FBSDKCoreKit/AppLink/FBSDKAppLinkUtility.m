@@ -52,7 +52,7 @@ static BOOL _isConfigured;
 + (void)fetchDeferredAppLink:(FBSDKURLBlock)handler
 {
   [self validateConfiguration];
-  NSAssert([NSThread isMainThread], @"FBSDKAppLink fetchDeferredAppLink: must be invoked from main thread.");
+  NSAssert(NSThread.isMainThread, @"FBSDKAppLink fetchDeferredAppLink: must be invoked from main thread.");
 
   [FBSDKAppEventsConfigurationManager loadAppEventsConfigurationWithBlock:^{
     if ([FBSDKAppEventsUtility shouldDropAppEvent]) {

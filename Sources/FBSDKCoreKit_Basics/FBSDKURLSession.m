@@ -54,7 +54,7 @@
 - (void)updateSessionWithBlock:(dispatch_block_t)block
 {
   if (!self.valid) {
-    self.session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]
+    self.session = [NSURLSession sessionWithConfiguration:NSURLSessionConfiguration.defaultSessionConfiguration
                                                  delegate:_delegate
                                             delegateQueue:_delegateQueue];
   }

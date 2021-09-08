@@ -109,13 +109,13 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
       if (expirationDateNumber != nil) {
         expirationDate = (expirationDateNumber.doubleValue > 0
           ? [NSDate dateWithTimeIntervalSince1970:expirationDateNumber.doubleValue]
-          : [NSDate distantFuture]);
+          : NSDate.distantFuture);
       }
       NSDate *dataExpirationDate = currentToken.dataAccessExpirationDate;
       if (dataAccessExpirationDateNumber != nil) {
         dataExpirationDate = (dataAccessExpirationDateNumber.doubleValue > 0
           ? [NSDate dateWithTimeIntervalSince1970:dataAccessExpirationDateNumber.doubleValue]
-          : [NSDate distantFuture]);
+          : NSDate.distantFuture);
       }
 
       #pragma clang diagnostic push
@@ -222,7 +222,7 @@ static id<FBSDKGraphRequestProviding> _requestProvider;
 + (NSDate *)_lastRefreshTry
 {
   if (!_lastRefreshTry) {
-    _lastRefreshTry = [NSDate distantPast];
+    _lastRefreshTry = NSDate.distantPast;
   }
   return _lastRefreshTry;
 }

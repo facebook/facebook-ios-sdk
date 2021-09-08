@@ -295,7 +295,7 @@ static id<FBSDKSettings> _settings;
                                                     selector:@selector(startIndexing)
                                                     userInfo:nil
                                                      repeats:YES];
-          [[NSRunLoop mainRunLoop] addTimer:_appIndexingTimer forMode:NSDefaultRunLoopMode];
+          [NSRunLoop.mainRunLoop addTimer:_appIndexingTimer forMode:NSDefaultRunLoopMode];
         }
       } else {
         _deviceSessionID = nil;
@@ -325,7 +325,7 @@ static id<FBSDKSettings> _settings;
 #else
   NSString *isSimulator = @"0";
 #endif
-  NSLocale *locale = [NSLocale currentLocale];
+  NSLocale *locale = NSLocale.currentLocale;
   NSString *languageCode = [locale objectForKey:NSLocaleLanguageCode];
   NSString *countryCode = [locale objectForKey:NSLocaleCountryCode];
   NSString *localeString = locale.localeIdentifier;
@@ -398,7 +398,7 @@ static id<FBSDKSettings> _settings;
 
   _lastTreeHash = currentTreeHash;
 
-  NSBundle *mainBundle = [NSBundle mainBundle];
+  NSBundle *mainBundle = NSBundle.mainBundle;
   NSString *version = [mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
   id<FBSDKGraphRequest> request = [_requestProvider createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/%@",
                                                                                      [self.settings appID],

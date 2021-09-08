@@ -82,7 +82,7 @@ static NSMapTable *g_mdnsAdvertisementServices;
     // Dots in the version will mess up the bonjour DNS record parsing
     sdkVersion = [[FBSDKSettings sdkVersion] stringByReplacingOccurrencesOfString:@"." withString:@"|"];
     if (sdkVersion.length > 10
-        || ![[NSCharacterSet decimalDigitCharacterSet] characterIsMember:[sdkVersion characterAtIndex:0]]) {
+        || ![NSCharacterSet.decimalDigitCharacterSet characterIsMember:[sdkVersion characterAtIndex:0]]) {
       sdkVersion = @"dev";
     }
   });

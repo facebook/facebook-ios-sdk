@@ -75,9 +75,9 @@ static id<FBSDKGraphRequestConnectionProviding> g_connectionFactory;
     _expiredPermissions = [NSSet setWithArray:expiredPermissions];
     _appID = [appID copy];
     _userID = [userID copy];
-    _expirationDate = [expirationDate copy] ?: [NSDate distantFuture];
+    _expirationDate = [expirationDate copy] ?: NSDate.distantFuture;
     _refreshDate = [refreshDate copy] ?: [NSDate date];
-    _dataAccessExpirationDate = [dataAccessExpirationDate copy] ?: [NSDate distantFuture];
+    _dataAccessExpirationDate = [dataAccessExpirationDate copy] ?: NSDate.distantFuture;
   }
   return self;
 }

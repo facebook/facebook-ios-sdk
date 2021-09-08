@@ -327,7 +327,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 + (void)initialize
 {
   if (self == FBSDKAppEvents.class) {
-    g_overrideAppID = [[[NSBundle mainBundle] objectForInfoDictionaryKey:FBSDKAppEventsOverrideAppIDBundleKey] copy];
+    g_overrideAppID = [[NSBundle.mainBundle objectForInfoDictionaryKey:FBSDKAppEventsOverrideAppIDBundleKey] copy];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void) {
       [FBSDKBasicUtility anonymousID];
     });
@@ -1432,7 +1432,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
   NSString *currentViewControllerName;
   UIApplicationState applicationState;
-  if ([NSThread isMainThread]) {
+  if (NSThread.isMainThread) {
     // We only collect the view controller when on the main thread, as the behavior off
     // the main thread is unpredictable.  Besides, UI state for off-main-thread computations
     // isn't really relevant anyhow.

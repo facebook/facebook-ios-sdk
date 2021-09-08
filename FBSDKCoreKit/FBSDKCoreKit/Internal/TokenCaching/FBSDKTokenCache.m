@@ -42,7 +42,7 @@ static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
 - (instancetype)initWithSettings:(id<FBSDKSettings>)settings
 {
   if ((self = [super init])) {
-    NSString *keyChainServiceIdentifier = [NSString stringWithFormat:@"com.facebook.sdk.tokencache.%@", [NSBundle mainBundle].bundleIdentifier];
+    NSString *keyChainServiceIdentifier = [NSString stringWithFormat:@"com.facebook.sdk.tokencache.%@", NSBundle.mainBundle.bundleIdentifier];
     _keychainStore = [[FBSDKKeychainStore alloc] initWithService:keyChainServiceIdentifier accessGroup:nil];
     _settings = settings;
   }
@@ -54,7 +54,7 @@ static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
 
 - (FBSDKAccessToken *)accessToken
 {
-  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
   NSString *uuid = [defaults objectForKey:kFBSDKAccessTokenUserDefaultsKey];
   NSDictionary<NSString *, id> *dict = [_keychainStore dictionaryForKey:kFBSDKAccessTokenKeychainKey];
 
@@ -104,7 +104,7 @@ static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
     [self clearAccessTokenCache];
     return;
   }
-  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
   NSString *uuid = [defaults objectForKey:kFBSDKAccessTokenUserDefaultsKey];
   if (!uuid) {
     uuid = [NSUUID UUID].UUIDString;
@@ -197,7 +197,7 @@ static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
   [_keychainStore setDictionary:nil
                          forKey:kFBSDKAuthenticationTokenKeychainKey
                   accessibility:NULL];
-  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
   [defaults removeObjectForKey:kFBSDKAuthenticationTokenUserDefaultsKey];
   [defaults synchronize];
 }
@@ -207,7 +207,7 @@ static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
   [_keychainStore setDictionary:nil
                          forKey:kFBSDKAccessTokenKeychainKey
                   accessibility:NULL];
-  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
   [defaults removeObjectForKey:kFBSDKAccessTokenUserDefaultsKey];
   [defaults synchronize];
 }

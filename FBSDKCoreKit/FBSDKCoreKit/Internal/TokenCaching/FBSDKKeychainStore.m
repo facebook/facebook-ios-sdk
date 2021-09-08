@@ -28,7 +28,7 @@
 - (instancetype)initWithService:(NSString *)service accessGroup:(NSString *)accessGroup
 {
   if ((self = [super init])) {
-    _service = service ? [service copy] : [NSBundle mainBundle].bundleIdentifier;
+    _service = service ? [service copy] : NSBundle.mainBundle.bundleIdentifier;
     _accessGroup = [accessGroup copy];
     NSAssert(_service, @"Keychain must be initialized with service");
   }
@@ -88,9 +88,9 @@
 #if TARGET_OS_SIMULATOR
   [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational
                          logEntry:@"Falling back to storing access token in NSUserDefaults because of simulator bug"];
-  [[NSUserDefaults standardUserDefaults] setObject:value forKey:key];
+  [NSUserDefaults.standardUserDefaults setObject:value forKey:key];
 
-  return [[NSUserDefaults standardUserDefaults] synchronize];
+  return [NSUserDefaults.standardUserDefaults synchronize];
 #else
   NSMutableDictionary<NSString *, id> *query = [self queryForKey:key];
 
@@ -132,7 +132,7 @@
 #if TARGET_OS_SIMULATOR
   [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational
                          logEntry:@"Falling back to loading access token from NSUserDefaults because of simulator bug"];
-  return [[NSUserDefaults standardUserDefaults] dataForKey:key];
+  return [NSUserDefaults.standardUserDefaults dataForKey:key];
 #else
   NSMutableDictionary<NSString *, id> *query = [self queryForKey:key];
   [query setObject:(id)kCFBooleanTrue forKey:[FBSDKDynamicFrameworkLoader loadkSecReturnData]];

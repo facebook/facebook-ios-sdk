@@ -321,7 +321,7 @@
 {
   __weak FBSDKProfilePictureView *weakSelf = self;
   NSURLRequest *request = [[NSURLRequest alloc] initWithURL:imageURL];
-  NSURLSession *session = [NSURLSession sharedSession];
+  NSURLSession *session = NSURLSession.sharedSession;
   [[session
     dataTaskWithRequest:request
     completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {

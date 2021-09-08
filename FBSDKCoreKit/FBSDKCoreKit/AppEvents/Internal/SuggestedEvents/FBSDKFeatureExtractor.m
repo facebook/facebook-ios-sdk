@@ -95,7 +95,7 @@ static id<FBSDKRulesFromKeyProvider> _keyProvider;
               withScreenName:(NSString *)screenName
 {
   // use "|" and "," to separate different text based on the rule of how text processed during training
-  NSString *appName = [FBSDKTypeUtility dictionary:[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleNameKey ofType:NSObject.class];
+  NSString *appName = [FBSDKTypeUtility dictionary:[NSBundle.mainBundle infoDictionary] objectForKey:(NSString *)kCFBundleNameKey ofType:NSObject.class];
   return [[NSString stringWithFormat:@"%@ | %@, %@", appName, screenName, text] lowercaseString];
 }
 

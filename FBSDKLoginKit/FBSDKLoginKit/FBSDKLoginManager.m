@@ -84,7 +84,7 @@ static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebA
   if ((self = [super init])) {
     _internalUtility = internalUtility;
     _tokenWallet = tokenWallet;
-    NSString *keyChainServiceIdentifier = [NSString stringWithFormat:@"com.facebook.sdk.loginmanager.%@", [NSBundle mainBundle].bundleIdentifier];
+    NSString *keyChainServiceIdentifier = [NSString stringWithFormat:@"com.facebook.sdk.loginmanager.%@", NSBundle.mainBundle.bundleIdentifier];
 
     _keychainStore = [keychainStore createKeychainStoreWithService:keyChainServiceIdentifier
                                                        accessGroup:nil];

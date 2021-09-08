@@ -358,7 +358,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
   if (value.length == 0) {
     return @"";
   }
-  return [value stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].lowercaseString;
+  return [value stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceCharacterSet].lowercaseString;
 }
 
 - (NSString *)pruneValue:(NSString *)value forKey:(NSString *)key
@@ -373,7 +373,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
       value = @"f";
     }
   } else if ([key isEqualToString:@"r4"] || [key isEqualToString:@"r5"]) {
-    value = [[value componentsSeparatedByCharactersInSet:[[NSCharacterSet letterCharacterSet] invertedSet]] componentsJoinedByString:@""];
+    value = [[value componentsSeparatedByCharactersInSet:[NSCharacterSet.letterCharacterSet invertedSet]] componentsJoinedByString:@""];
   } else if ([key isEqualToString:@"r6"]) {
     value = [FBSDKTypeUtility array:[value componentsSeparatedByString:@"-"] objectAtIndex:0];
   }

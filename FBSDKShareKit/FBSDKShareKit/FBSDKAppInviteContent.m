@@ -56,8 +56,8 @@
 - (BOOL)_validatePromoCodeWithError:(NSError *__autoreleasing *)errorRef
 {
   if (_promotionText.length > 0 || _promotionCode.length > 0) {
-    NSMutableCharacterSet *alphanumericWithSpaces = [NSMutableCharacterSet alphanumericCharacterSet];
-    [alphanumericWithSpaces formUnionWithCharacterSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSMutableCharacterSet *alphanumericWithSpaces = NSMutableCharacterSet.alphanumericCharacterSet;
+    [alphanumericWithSpaces formUnionWithCharacterSet:NSCharacterSet.whitespaceCharacterSet];
 
     // Check for validity of promo text and promo code.
     if (!(_promotionText.length > 0 && _promotionText.length <= 80)) {

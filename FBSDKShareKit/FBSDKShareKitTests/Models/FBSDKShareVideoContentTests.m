@@ -151,7 +151,7 @@
 
 - (void)testValidationWithValidFileVideoURLWhenBridgeOptionIsDefault
 {
-  NSURL *videoURL = [[NSBundle mainBundle].resourceURL URLByAppendingPathComponent:@"video.mp4"];
+  NSURL *videoURL = [NSBundle.mainBundle.resourceURL URLByAppendingPathComponent:@"video.mp4"];
   FBSDKShareVideo *video = [FBSDKShareVideo videoWithVideoURL:videoURL];
   XCTAssertNotNil(video);
   FBSDKShareVideoContent *content = [FBSDKShareVideoContent new];
@@ -169,7 +169,7 @@
 
 - (void)testValidationWithValidFileVideoURLWhenBridgeOptionIsVideoData
 {
-  NSURL *videoURL = [[NSBundle mainBundle].resourceURL URLByAppendingPathComponent:@"video.mp4"];
+  NSURL *videoURL = [NSBundle.mainBundle.resourceURL URLByAppendingPathComponent:@"video.mp4"];
   FBSDKShareVideo *video = [FBSDKShareVideo videoWithVideoURL:videoURL];
   XCTAssertNotNil(video);
   FBSDKShareVideoContent *content = [FBSDKShareVideoContent new];

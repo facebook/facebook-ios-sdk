@@ -96,7 +96,7 @@ static NSMutableDictionary<NSString *, NSString *> *_methodMapping;
 {
   NSMutableArray<NSString *> *classNames = [NSMutableArray new];
   // from main bundle
-  [classNames addObjectsFromArray:[self _getClassesFrom:[[NSBundle mainBundle] executablePath]
+  [classNames addObjectsFromArray:[self _getClassesFrom:[NSBundle.mainBundle executablePath]
                                                prefixes:prefixes]];
   // from dynamic libraries
   if (frameworks.count > 0) {

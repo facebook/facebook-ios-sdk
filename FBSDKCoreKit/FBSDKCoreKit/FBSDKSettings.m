@@ -543,7 +543,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 + (NSNumber *)appEventSettingsForPlistKey:(NSString *)plistKey
                              defaultValue:(NSNumber *)defaultValue
 {
-  return [[[NSBundle mainBundle] objectForInfoDictionaryKey:plistKey] copy] ?: defaultValue;
+  return [[NSBundle.mainBundle objectForInfoDictionaryKey:plistKey] copy] ?: defaultValue;
 }
 
 + (NSNumber *)appEventSettingsForUserDefaultsKey:(NSString *)userDefaultsKey

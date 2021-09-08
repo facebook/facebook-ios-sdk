@@ -418,7 +418,7 @@ static void FBSDKExceptionHandler(NSException *exception)
   if (observer.prefixes.count == 0) {
     return;
   }
-  [[NSUserDefaults standardUserDefaults] setObject:mappingTableIdentifier forKey:kFBSDKMappingTableIdentifier];
+  [NSUserDefaults.standardUserDefaults setObject:mappingTableIdentifier forKey:kFBSDKMappingTableIdentifier];
   NSDictionary<NSString *, NSString *> *methodMapping = [FBSDKLibAnalyzer getMethodsTable:observer.prefixes
                                                                                frameworks:observer.frameworks];
   if (methodMapping.count > 0) {
@@ -471,7 +471,7 @@ static void FBSDKExceptionHandler(NSException *exception)
 #if TARGET_OS_SIMULATOR
   return YES;
 #else
-  NSString *identifier = [[NSUserDefaults standardUserDefaults] objectForKey:kFBSDKMappingTableIdentifier];
+  NSString *identifier = [NSUserDefaults.standardUserDefaults objectForKey:kFBSDKMappingTableIdentifier];
   // first app start
   if (!identifier) {
     return YES;

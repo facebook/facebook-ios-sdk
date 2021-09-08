@@ -629,7 +629,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 - (void)_logIfAutoAppLinkEnabled
 {
 #if !TARGET_OS_TV
-  NSNumber *enabled = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FBSDKAutoAppLinkEnabled"];
+  NSNumber *enabled = [NSBundle.mainBundle objectForInfoDictionaryKey:@"FBSDKAutoAppLinkEnabled"];
   if (enabled.boolValue) {
     NSMutableDictionary<NSString *, NSString *> *params = [NSMutableDictionary new];
     if (![FBSDKAppLinkUtility isMatchURLScheme:[NSString stringWithFormat:@"fb%@", self.settings.appID]]) {

@@ -34,7 +34,7 @@
 
 + (NSURL *)fileURL
 {
-  return [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask].lastObject;
+  return [NSFileManager.defaultManager URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask].lastObject;
 }
 
 + (FBSDKShareLinkContent *)linkContent

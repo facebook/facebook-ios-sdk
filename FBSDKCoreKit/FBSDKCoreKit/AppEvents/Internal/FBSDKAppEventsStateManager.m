@@ -67,8 +67,8 @@
 {
   [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
                          logEntry:@"FBSDKAppEvents Persist: Clearing"];
-  [[NSFileManager defaultManager] removeItemAtPath:[self filePath]
-                                             error:NULL];
+  [NSFileManager.defaultManager removeItemAtPath:[self filePath]
+                                           error:NULL];
   self.canSkipDiskCheck = YES;
 }
 

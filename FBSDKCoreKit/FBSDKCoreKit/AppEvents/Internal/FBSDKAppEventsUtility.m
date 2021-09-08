@@ -142,7 +142,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
   static NSMutableArray *urlSchemes;
 
   dispatch_once(&fetchBundleOnce, ^{
-    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSBundle *mainBundle = NSBundle.mainBundle;
     urlSchemes = [NSMutableArray new];
     for (NSDictionary<NSString *, id> *fields in [mainBundle objectForInfoDictionaryKey:@"CFBundleURLTypes"]) {
       NSArray<NSString *> *schemesForType = fields[@"CFBundleURLSchemes"];
@@ -214,16 +214,16 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 
 + (void)clearLibraryFiles
 {
-  [[NSFileManager defaultManager] removeItemAtPath:[self.class persistenceFilePath:FBSDK_APPEVENTSUTILITY_ANONYMOUSIDFILENAME]
-                                             error:NULL];
-  [[NSFileManager defaultManager] removeItemAtPath:[self.class persistenceFilePath:@"com-facebook-sdk-AppEventsTimeSpent.json"]
-                                             error:NULL];
+  [NSFileManager.defaultManager removeItemAtPath:[self.class persistenceFilePath:FBSDK_APPEVENTSUTILITY_ANONYMOUSIDFILENAME]
+                                           error:NULL];
+  [NSFileManager.defaultManager removeItemAtPath:[self.class persistenceFilePath:@"com-facebook-sdk-AppEventsTimeSpent.json"]
+                                           error:NULL];
 }
 
 + (void)ensureOnMainThread:(NSString *)methodName className:(NSString *)className
 {
   FBSDKConditionalLog(
-    [NSThread isMainThread],
+    NSThread.isMainThread,
     FBSDKLoggingBehaviorDeveloperErrors,
     @"*** <%@, %@> is not called on the main thread. This can lead to errors.",
     methodName,
@@ -306,7 +306,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
   static dispatch_once_t onceToken;
   static NSMutableSet *cachedIdentifiers;
   dispatch_once(&onceToken, ^{
-    NSMutableCharacterSet *mutableSet = [NSMutableCharacterSet alphanumericCharacterSet];
+    NSMutableCharacterSet *mutableSet = NSMutableCharacterSet.alphanumericCharacterSet;
     [mutableSet addCharactersInString:@"_"];
     firstCharacterSet = [mutableSet copy];
 

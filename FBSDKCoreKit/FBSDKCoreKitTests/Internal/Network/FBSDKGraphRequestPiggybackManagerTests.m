@@ -783,9 +783,9 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
         expectedExpirationDate:NSDate.distantFuture
     expectedDataExpirationDate:NSDate.distantFuture
            expectedGraphDomain:SampleAccessTokens.validToken.graphDomain
-           expectedPermissions:[NSArray array]
-   expectedDeclinedPermissions:[NSArray array]
-    expectedExpiredPermissions:[NSArray array]];
+           expectedPermissions:@[]
+   expectedDeclinedPermissions:@[]
+    expectedExpiredPermissions:@[]];
   #pragma clange diagnostic pop
 }
 
@@ -800,9 +800,9 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
         expectedExpirationDate:NSDate.distantFuture
     expectedDataExpirationDate:NSDate.distantFuture
            expectedGraphDomain:SampleAccessTokens.validToken.graphDomain
-           expectedPermissions:[NSArray array]
-   expectedDeclinedPermissions:[NSArray array]
-    expectedExpiredPermissions:[NSArray array]];
+           expectedPermissions:@[]
+   expectedDeclinedPermissions:@[]
+    expectedExpiredPermissions:@[]];
   #pragma clange diagnostic pop
 }
 
@@ -815,9 +815,9 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
         expectedExpirationDate:expectedExpirationDate
     expectedDataExpirationDate:NSDate.distantFuture
            expectedGraphDomain:SampleAccessTokens.validToken.graphDomain
-           expectedPermissions:[NSArray array]
-   expectedDeclinedPermissions:[NSArray array]
-    expectedExpiredPermissions:[NSArray array]];
+           expectedPermissions:@[]
+   expectedDeclinedPermissions:@[]
+    expectedExpiredPermissions:@[]];
 }
 
 - (void)validateRefreshedToken:(FBSDKAccessToken *)token
@@ -829,9 +829,9 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
         expectedExpirationDate:NSDate.distantFuture
     expectedDataExpirationDate:expectedDataExpirationDate
            expectedGraphDomain:SampleAccessTokens.validToken.graphDomain
-           expectedPermissions:[NSArray array]
-   expectedDeclinedPermissions:[NSArray array]
-    expectedExpiredPermissions:[NSArray array]];
+           expectedPermissions:@[]
+   expectedDeclinedPermissions:@[]
+    expectedExpiredPermissions:@[]];
 }
 
 - (void)validateRefreshedToken:(FBSDKAccessToken *)token
@@ -843,9 +843,9 @@ typedef FBSDKGraphRequestPiggybackManager Manager;
         expectedExpirationDate:NSDate.distantFuture
     expectedDataExpirationDate:NSDate.distantFuture
            expectedGraphDomain:expectedGraphDomain
-           expectedPermissions:[NSArray array]
-   expectedDeclinedPermissions:[NSArray array]
-    expectedExpiredPermissions:[NSArray array]];
+           expectedPermissions:@[]
+   expectedDeclinedPermissions:@[]
+    expectedExpiredPermissions:@[]];
 }
 
 - (void)validateRefreshedToken:(FBSDKAccessToken *)token

@@ -153,7 +153,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
     NSString *stringsBundlePath = [[NSBundle bundleForClass:FBSDKApplicationDelegate.class]
                                    pathForResource:@"FacebookSDKStrings"
                                    ofType:@"bundle"];
-    bundle = [NSBundle bundleWithPath:stringsBundlePath] ?: [NSBundle mainBundle];
+    bundle = [NSBundle bundleWithPath:stringsBundlePath] ?: NSBundle.mainBundle;
   });
   return bundle;
 }
@@ -317,7 +317,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
     .patchVersion = 0,
   };
   dispatch_once(&checkOperatingSystemVersionToken, ^{
-    operatingSystemVersion = [NSProcessInfo processInfo].operatingSystemVersion;
+    operatingSystemVersion = NSProcessInfo.processInfo.operatingSystemVersion;
   });
   return operatingSystemVersion;
 }
@@ -370,7 +370,7 @@ static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 
 - (void)deleteFacebookCookies
 {
-  NSHTTPCookieStorage *cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+  NSHTTPCookieStorage *cookies = NSHTTPCookieStorage.sharedHTTPCookieStorage;
   NSArray *facebookCookies = [cookies cookiesForURL:[self facebookURLWithHostPrefix:@"m."
                                                                                path:@"/dialog/"
                                                                     queryParameters:@{}
@@ -385,7 +385,7 @@ static NSMapTable *_transientObjects;
 
 - (void)registerTransientObject:(id)object
 {
-  NSAssert([NSThread isMainThread], @"Must be called from the main thread!");
+  NSAssert(NSThread.isMainThread, @"Must be called from the main thread!");
   if (!_transientObjects) {
     _transientObjects = [NSMapTable new];
   }
@@ -398,7 +398,7 @@ static NSMapTable *_transientObjects;
   if (!object) {
     return;
   }
-  NSAssert([NSThread isMainThread], @"Must be called from the main thread!");
+  NSAssert(NSThread.isMainThread, @"Must be called from the main thread!");
   NSUInteger count = ((NSNumber *)[_transientObjects objectForKey:object]).unsignedIntegerValue;
   if (count == 1) {
     [_transientObjects removeObjectForKey:object];

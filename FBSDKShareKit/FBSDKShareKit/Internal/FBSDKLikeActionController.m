@@ -494,7 +494,7 @@ static void FBSDKLikeActionControllerAddGetEngagementRequest(FBSDKAccessToken *a
   @"social_sentence_without_like)";
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:objectID
                                                                  parameters:@{ @"fields" : fields,
-                                                                               @"locale" : [NSLocale currentLocale].localeIdentifier}
+                                                                               @"locale" : NSLocale.currentLocale.localeIdentifier}
                                                                 tokenString:accessToken.tokenString
                                                                  HTTPMethod:@"GET"
                                                                       flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
@@ -547,7 +547,7 @@ static void FBSDKLikeActionControllerAddGetObjectIDRequest(FBSDKAccessToken *acc
                                   @"id" : objectID,
                                   @"metadata" : @"1",
                                   @"type" : @"og",
-                                  @"locale" : [NSLocale currentLocale].localeIdentifier
+                                  @"locale" : NSLocale.currentLocale.localeIdentifier
                                 }
                                                                 tokenString:accessToken.tokenString
                                                                  HTTPMethod:@"GET"
@@ -573,7 +573,7 @@ static void FBSDKLikeActionControllerAddGetObjectIDWithObjectURLRequest(FBSDKAcc
                                                                  parameters:@{
                                   @"fields" : @"og_object.fields(id)",
                                   @"id" : objectID,
-                                  @"locale" : [NSLocale currentLocale].localeIdentifier
+                                  @"locale" : NSLocale.currentLocale.localeIdentifier
                                 }
                                                                 tokenString:accessToken.tokenString
                                                                  HTTPMethod:@"GET"
@@ -601,7 +601,7 @@ static void FBSDKLikeActionControllerAddGetOGObjectLikeRequest(FBSDKAccessToken 
                                                                  parameters:@{
                                   @"fields" : @"id,application",
                                   @"object" : objectID,
-                                  @"locale" : [NSLocale currentLocale].localeIdentifier
+                                  @"locale" : NSLocale.currentLocale.localeIdentifier
                                 }
                                                                 tokenString:accessToken.tokenString
                                                                  HTTPMethod:@"GET"
@@ -642,7 +642,7 @@ static void FBSDKLikeActionControllerAddPublishLikeRequest(FBSDKAccessToken *acc
 {
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/og.likes"
                                                                  parameters:@{ @"object" : objectID,
-                                                                               @"locale" : [NSLocale currentLocale].localeIdentifier}
+                                                                               @"locale" : NSLocale.currentLocale.localeIdentifier}
                                                                 tokenString:accessToken.tokenString
                                                                     version:nil
                                                                  HTTPMethod:@"POST"];

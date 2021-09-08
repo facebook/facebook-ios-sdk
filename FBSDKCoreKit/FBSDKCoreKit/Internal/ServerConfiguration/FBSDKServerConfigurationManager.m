@@ -110,7 +110,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   self.serverConfiguration = nil;
   self.serverConfigurationError = nil;
   self.serverConfigurationErrorTimestamp = nil;
-  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
   NSString *defaultsKey = [NSString stringWithFormat:FBSDK_SERVER_CONFIGURATION_USER_DEFAULTS_KEY, [FBSDKSettings appID]];
   [defaults removeObjectForKey:defaultsKey];
   [defaults synchronize];
@@ -146,7 +146,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
       // load the configuration from NSUserDefaults
       if (!self.serverConfiguration) {
         // load the defaults
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
         NSString *defaultsKey = [NSString stringWithFormat:FBSDK_SERVER_CONFIGURATION_USER_DEFAULTS_KEY, appID];
         NSData *data = [defaults objectForKey:defaultsKey];
         if ([data isKindOfClass:NSData.class]) {
@@ -367,7 +367,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
     }
 
     // update the cached copy in NSUserDefaults
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
     NSString *defaultsKey = [NSString stringWithFormat:FBSDK_SERVER_CONFIGURATION_USER_DEFAULTS_KEY, appID];
     if (serverConfiguration) {
       #pragma clang diagnostic push

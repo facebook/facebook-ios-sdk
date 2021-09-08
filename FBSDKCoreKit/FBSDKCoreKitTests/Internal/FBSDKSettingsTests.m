@@ -1518,7 +1518,7 @@ static NSString *const whiteSpaceToken = @"   ";
   [self.userDefaultsSpy setObject:expiredDate forKey:@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"];
   XCTAssertTrue([FBSDKSettings isEventDelayTimerExpired]);
 
-  [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"];
+  [NSUserDefaults.standardUserDefaults removeObjectForKey:@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"];
 }
 
 - (void)testIsSetATETimeExceedsInstallTime

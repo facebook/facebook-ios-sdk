@@ -31,7 +31,7 @@ static NSString *const FBSDK_BASICUTILITY_ANONYMOUSID_KEY = @"anon_id";
 void fb_dispatch_on_main_thread(dispatch_block_t block)
 {
   if (block != nil) {
-    if ([NSThread isMainThread]) {
+    if (NSThread.isMainThread) {
       block();
     } else {
       dispatch_async(dispatch_get_main_queue(), block);

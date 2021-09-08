@@ -191,7 +191,7 @@ static _Nullable id<FBSDKInternalUtility> _internalUtility;
 - (BOOL)validateWithOptions:(FBSDKShareBridgeOptions)bridgeOptions error:(NSError *__autoreleasing *)errorRef
 {
   if (_effectID.length > 0) {
-    NSCharacterSet *nonDigitCharacters = [NSCharacterSet decimalDigitCharacterSet].invertedSet;
+    NSCharacterSet *nonDigitCharacters = NSCharacterSet.decimalDigitCharacterSet.invertedSet;
     if ([_effectID rangeOfCharacterFromSet:nonDigitCharacters].location != NSNotFound) {
       if (errorRef != NULL) {
         *errorRef = [FBSDKError invalidArgumentErrorWithName:@"effectID"

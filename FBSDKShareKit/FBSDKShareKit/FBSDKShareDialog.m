@@ -281,7 +281,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
 - (void)dealloc
 {
   if (_temporaryFiles) {
-    NSFileManager *const fileManager = [NSFileManager defaultManager];
+    NSFileManager *const fileManager = NSFileManager.defaultManager;
     for (NSURL *temporaryFile in _temporaryFiles) {
       [fileManager removeItemAtURL:temporaryFile error:nil];
     }
