@@ -16,9 +16,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKShareKit/FBSDKShareKit.h>
+#import "TargetConditionals.h"
 
-#import "FBSDKMessageDialog.h"
-#import "FBSDKMessageDialog+Testing.h"
-#import "FBSDKShareBridgeAPIRequestFactory.h"
-#import "FBSDKShareModelTestUtility.h"
+#if !TARGET_OS_TV
+
+#import <Foundation/Foundation.h>
+
+#if FBSDK_SWIFT_PACKAGE
+  #import <FBSDKBridgeAPIRequestCreating.h>
+#else
+  #import <FBSDKCoreKit/FBSDKBridgeAPIRequestCreating.h>
+#endif
+
+NS_ASSUME_NONNULL_BEGIN
+
+NS_SWIFT_NAME(ShareBridgeAPIRequestFactory)
+@interface FBSDKShareBridgeAPIRequestFactory : NSObject <FBSDKBridgeAPIRequestCreating>
+@end
+
+NS_ASSUME_NONNULL_END
+
+#endif

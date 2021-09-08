@@ -16,9 +16,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKShareKit/FBSDKShareKit.h>
+import XCTest
 
-#import "FBSDKMessageDialog.h"
-#import "FBSDKMessageDialog+Testing.h"
-#import "FBSDKShareBridgeAPIRequestFactory.h"
-#import "FBSDKShareModelTestUtility.h"
+final class ShareBridgeAPIRequestFactoryTests: XCTestCase {
+  let factory = ShareBridgeAPIRequestFactory()
+
+  func testFactoryMakesRequests() {
+    XCTAssertNotNil(
+      factory.bridgeAPIRequest(
+        with: .web,
+        scheme: "https",
+        methodName: nil,
+        methodVersion: nil,
+        parameters: nil,
+        userInfo: nil
+      )
+    )
+  }
+}

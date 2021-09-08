@@ -30,6 +30,7 @@
  #import "FBSDKCoreKitBasicsImportForShareKit.h"
  #import "FBSDKCoreKitImport.h"
  #import "FBSDKShareAppEventNames.h"
+ #import "FBSDKShareBridgeAPIRequestFactory.h"
  #import "FBSDKShareCameraEffectContent.h"
  #import "FBSDKShareConstants.h"
  #import "FBSDKShareDefines.h"
@@ -137,6 +138,18 @@ static _Nullable Class<FBSDKShareUtility> _shareUtility;
   _shareUtility = shareUtility;
 }
 
+static _Nullable id<FBSDKBridgeAPIRequestCreating> _bridgeAPIRequestFactory;
+
++ (nullable id<FBSDKBridgeAPIRequestCreating>)bridgeAPIRequestFactory
+{
+  return _bridgeAPIRequestFactory;
+}
+
++ (void)setBridgeAPIRequestFactory:(nullable id<FBSDKBridgeAPIRequestCreating>)bridgeAPIRequestFactory
+{
+  _bridgeAPIRequestFactory = bridgeAPIRequestFactory;
+}
+
 static _Nullable id<FBSDKBridgeAPIRequestOpening> _bridgeAPIRequestOpener;
 
 + (nullable id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener
@@ -167,6 +180,7 @@ static _Nullable id<FBSDKSocialComposeViewControllerFactory> _socialComposeViewC
                        internalUtility:(nonnull id<FBSDKInternalUtility>)internalUtility
                               settings:(nonnull id<FBSDKSettings>)settings
                           shareUtility:(nonnull Class<FBSDKShareUtility>)shareUtility
+               bridgeAPIRequestFactory:(nonnull id<FBSDKBridgeAPIRequestCreating>)bridgeAPIRequestFactory
                 bridgeAPIRequestOpener:(nonnull id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener
     socialComposeViewControllerFactory:(nonnull id<FBSDKSocialComposeViewControllerFactory>)socialComposeViewControllerFactory
 {
@@ -174,6 +188,7 @@ static _Nullable id<FBSDKSocialComposeViewControllerFactory> _socialComposeViewC
   self.internalUtility = internalUtility;
   self.settings = settings;
   self.shareUtility = shareUtility;
+  self.bridgeAPIRequestFactory = bridgeAPIRequestFactory;
   self.bridgeAPIRequestOpener = bridgeAPIRequestOpener;
   self.socialComposeViewControllerFactory = socialComposeViewControllerFactory;
 
@@ -190,6 +205,7 @@ static _Nullable id<FBSDKSocialComposeViewControllerFactory> _socialComposeViewC
                        internalUtility:FBSDKInternalUtility.sharedUtility
                               settings:FBSDKSettings.sharedSettings
                           shareUtility:FBSDKShareUtility.self
+               bridgeAPIRequestFactory:[FBSDKShareBridgeAPIRequestFactory new]
                 bridgeAPIRequestOpener:FBSDKBridgeAPI.sharedInstance
     socialComposeViewControllerFactory:[FBSDKSocialComposeViewControllerFactory new]];
 }
@@ -218,6 +234,7 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   self.internalUtility = nil;
   self.settings = nil;
   self.shareUtility = nil;
+  self.bridgeAPIRequestFactory = nil;
   self.bridgeAPIRequestOpener = nil;
   self.socialComposeViewControllerFactory = nil;
 
@@ -659,13 +676,13 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
           [self _handleWebResponseParameters:response.responseParameters error:response.error cancelled:response.isCancelled];
           [self.class.internalUtility unregisterTransientObject:self];
         };
-        FBSDKBridgeAPIRequest *request;
-        request = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
-                                                                   scheme:FBSDK_SHARE_WEB_SCHEME
-                                                               methodName:cMethodName
-                                                            methodVersion:nil
-                                                               parameters:cParameters
-                                                                 userInfo:nil];
+        id<FBSDKBridgeAPIRequest> request;
+        request = [self.class.bridgeAPIRequestFactory bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
+                                                                                scheme:FBSDK_SHARE_WEB_SCHEME
+                                                                            methodName:cMethodName
+                                                                         methodVersion:nil
+                                                                            parameters:cParameters
+                                                                              userInfo:nil];
         [self.class.bridgeAPIRequestOpener openBridgeAPIRequest:request
                                         useSafariViewController:[self _useSafariViewController]
                                              fromViewController:self.fromViewController
@@ -688,13 +705,13 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
       [self _handleWebResponseParameters:response.responseParameters error:response.error cancelled:response.isCancelled];
       [self.class.internalUtility unregisterTransientObject:self];
     };
-    FBSDKBridgeAPIRequest *request;
-    request = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
-                                                               scheme:FBSDK_SHARE_WEB_SCHEME
-                                                           methodName:methodName
-                                                        methodVersion:nil
-                                                           parameters:parameters
-                                                             userInfo:nil];
+    id<FBSDKBridgeAPIRequest> request;
+    request = [self.class.bridgeAPIRequestFactory bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
+                                                                            scheme:FBSDK_SHARE_WEB_SCHEME
+                                                                        methodName:methodName
+                                                                     methodVersion:nil
+                                                                        parameters:parameters
+                                                                          userInfo:nil];
     [self.class.bridgeAPIRequestOpener openBridgeAPIRequest:request
                                     useSafariViewController:[self _useSafariViewController]
                                          fromViewController:self.fromViewController
@@ -714,13 +731,13 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
     [self _handleWebResponseParameters:response.responseParameters error:response.error cancelled:response.isCancelled];
     [self.class.internalUtility unregisterTransientObject:self];
   };
-  FBSDKBridgeAPIRequest *request;
-  request = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
-                                                             scheme:FBSDK_SHARE_WEB_SCHEME
-                                                         methodName:FBSDK_SHARE_FEED_METHOD_NAME
-                                                      methodVersion:nil
-                                                         parameters:parameters
-                                                           userInfo:nil];
+  id<FBSDKBridgeAPIRequest> request;
+  request = [self.class.bridgeAPIRequestFactory bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
+                                                                          scheme:FBSDK_SHARE_WEB_SCHEME
+                                                                      methodName:FBSDK_SHARE_FEED_METHOD_NAME
+                                                                   methodVersion:nil
+                                                                      parameters:parameters
+                                                                        userInfo:nil];
   [self.class.bridgeAPIRequestOpener openBridgeAPIRequest:request
                                   useSafariViewController:[self _useSafariViewController]
                                        fromViewController:self.fromViewController
@@ -767,13 +784,13 @@ static dispatch_once_t validateShareExtensionURLSchemeRegisteredToken;
   NSDictionary<NSString *, id> *parameters = [self.class.shareUtility parametersForShareContent:self.shareContent
                                                                                   bridgeOptions:FBSDKShareBridgeOptionsDefault
                                                                           shouldFailOnDataError:self.shouldFailOnDataError];
-  FBSDKBridgeAPIRequest *request;
-  request = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeNative
-                                                             scheme:scheme
-                                                         methodName:methodName
-                                                      methodVersion:methodVersion
-                                                         parameters:parameters
-                                                           userInfo:nil];
+  id<FBSDKBridgeAPIRequest> request;
+  request = [self.class.bridgeAPIRequestFactory bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeNative
+                                                                          scheme:scheme
+                                                                      methodName:methodName
+                                                                   methodVersion:methodVersion
+                                                                      parameters:parameters
+                                                                        userInfo:nil];
   FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
     if (response.error.code == FBSDKErrorAppVersionUnsupported) {
       NSError *fallbackError;

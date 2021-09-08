@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
                        internalUtility:(id<FBSDKInternalUtility>)internalUtility
                               settings:(id<FBSDKSettings>)settings
                           shareUtility:(Class<FBSDKShareUtility>)shareUtility
+               bridgeAPIRequestFactory:(id<FBSDKBridgeAPIRequestCreating>)bridgeAPIRequestFactory
                 bridgeAPIRequestOpener:(id<FBSDKBridgeAPIRequestOpening>)bridgeAPIRequestOpener
     socialComposeViewControllerFactory:(id<FBSDKSocialComposeViewControllerFactory>)socialComposeViewControllerFactory;
 

@@ -31,6 +31,7 @@
 
 #import "FBSDKBridgeAPIRequest+Testing.h"
 #import "FBSDKHashtag.h"
+#import "FBSDKShareBridgeAPIRequestFactory.h"
 #import "FBSDKShareDefines.h"
 #import "FBSDKShareDialog+Testing.h"
 #import "FBSDKShareKitTestUtility.h"
@@ -99,6 +100,10 @@
     FBSDKShareDialog.shareUtility,
     FBSDKShareUtility.self,
     @"FBSDKShareDialog should use the share utility class for its default share utility dependency"
+  );
+  XCTAssertTrue(
+    [(NSObject *)FBSDKShareDialog.bridgeAPIRequestFactory isMemberOfClass:FBSDKShareBridgeAPIRequestFactory.class],
+    @"FBSDKShareDialog should create a new factory for its default bridge API request factory dependency"
   );
   XCTAssertEqualObjects(
     FBSDKShareDialog.bridgeAPIRequestOpener,

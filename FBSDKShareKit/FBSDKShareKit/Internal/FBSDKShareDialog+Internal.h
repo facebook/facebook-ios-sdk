@@ -34,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic) id<FBSDKInternalUtility> internalUtility;
 @property (class, nullable, nonatomic) id<FBSDKSettings> settings;
 @property (class, nullable, nonatomic) Class<FBSDKShareUtility> shareUtility;
+@property (class, nullable, nonatomic) id<FBSDKBridgeAPIRequestCreating> bridgeAPIRequestFactory;
 @property (class, nullable, nonatomic) id<FBSDKBridgeAPIRequestOpening> bridgeAPIRequestOpener;
 @property (class, nullable, nonatomic) id<FBSDKSocialComposeViewControllerFactory> socialComposeViewControllerFactory;
 
