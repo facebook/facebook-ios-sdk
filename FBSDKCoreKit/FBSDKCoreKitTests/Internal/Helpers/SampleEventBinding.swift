@@ -26,16 +26,12 @@ class SampleEventBinding: NSObject {
       eventLogger: logger
     )! // swiftlint:disable:this force_unwrapping
   }
-}
-
-@objcMembers
-class SampleEventBindingList: NSObject {
 
   static func createEventLogger() -> TestEventLogger {
     TestEventLogger()
   }
 
-  static var valid: [EventBinding] {
+  static var validEventBindings: [EventBinding] {
     SampleRawRemoteEventBindings.bindings.compactMap {
       EventBinding(json: $0, eventLogger: createEventLogger())
     }

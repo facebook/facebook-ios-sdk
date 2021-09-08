@@ -38,6 +38,8 @@ nesting:
   type_level: 2
 private_outlet:
   allow_private_set: true
+file_name:
+  excluded: [Enums+Extensions.swift]
 type_name:
   excluded: [RawAppEventsConfigurationResponseFixtures, GraphRequestPiggybackManagerProviderTests]
 
@@ -82,6 +84,7 @@ only_rules:
   - fatal_error_message
   - file_header
   - file_length
+  - file_name
   - first_where
   - for_where
   - force_cast

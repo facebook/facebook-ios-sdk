@@ -30,7 +30,7 @@ class EventBindingManagerTests: XCTestCase,
   // swiftformat:enable indent
 
   var manager: EventBindingManager! // swiftlint:disable:this implicitly_unwrapped_optional
-  var bindings = SampleEventBindingList.valid
+  var bindings = SampleEventBinding.validEventBindings
   let eventLogger = TestEventLogger()
 
   let expectedEvidenceWithoutReactNative = [
