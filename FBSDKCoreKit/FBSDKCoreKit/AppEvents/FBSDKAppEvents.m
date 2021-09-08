@@ -361,19 +361,19 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 - (void)startObservingApplicationLifecycleNotifications
 {
-  [[NSNotificationCenter defaultCenter]
+  [NSNotificationCenter.defaultCenter
    addObserver:self
    selector:@selector(applicationMovingFromActiveStateOrTerminating)
    name:UIApplicationWillResignActiveNotification
    object:NULL];
 
-  [[NSNotificationCenter defaultCenter]
+  [NSNotificationCenter.defaultCenter
    addObserver:self
    selector:@selector(applicationMovingFromActiveStateOrTerminating)
    name:UIApplicationWillTerminateNotification
    object:NULL];
 
-  [[NSNotificationCenter defaultCenter]
+  [NSNotificationCenter.defaultCenter
    addObserver:self
    selector:@selector(applicationDidBecomeActive)
    name:UIApplicationDidBecomeActiveNotification
@@ -382,7 +382,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 - (void)dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
+  [NSNotificationCenter.defaultCenter removeObserver:self];
   [FBSDKUtility stopGCDTimer:self.flushTimer];
 }
 

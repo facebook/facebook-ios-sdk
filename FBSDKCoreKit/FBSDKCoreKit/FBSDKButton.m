@@ -79,7 +79,7 @@ static id _applicationActivationNotifier;
 
 - (void)dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
+  [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
 #pragma mark - Properties
@@ -435,10 +435,10 @@ static id _applicationActivationNotifier;
   if (forceSizeToFit) {
     [self sizeToFit];
   }
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(_applicationDidBecomeActiveNotification:)
-                                               name:FBSDKApplicationDidBecomeActiveNotification
-                                             object:self.class.applicationActivationNotifier];
+  [NSNotificationCenter.defaultCenter addObserver:self
+                                         selector:@selector(_applicationDidBecomeActiveNotification:)
+                                             name:FBSDKApplicationDidBecomeActiveNotification
+                                           object:self.class.applicationActivationNotifier];
 }
 
 - (CGFloat)_fontSizeForHeight:(CGFloat)height

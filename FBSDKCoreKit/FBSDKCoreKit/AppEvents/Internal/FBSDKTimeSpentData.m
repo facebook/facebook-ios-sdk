@@ -298,10 +298,10 @@ static const long INACTIVE_SECONDS_QUANTA[] =
 
 - (void)registerAutoResetSourceApplication
 {
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(resetSourceApplication)
-                                               name:UIApplicationDidEnterBackgroundNotification
-                                             object:nil];
+  [NSNotificationCenter.defaultCenter addObserver:self
+                                         selector:@selector(resetSourceApplication)
+                                             name:UIApplicationDidEnterBackgroundNotification
+                                           object:nil];
 }
 
 @end

@@ -150,7 +150,7 @@
 
 - (void)dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
+  [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
  #pragma mark - Properties
@@ -236,14 +236,14 @@
   self.backgroundColor = UIColor.whiteColor;
   self.contentMode = UIViewContentModeScaleAspectFit;
   self.userInteractionEnabled = NO;
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(_accessTokenDidChangeNotification:)
-                                               name:FBSDKAccessTokenDidChangeNotification
-                                             object:nil];
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(_profileDidChangeNotification:)
-                                               name:FBSDKProfileDidChangeNotification
-                                             object:nil];
+  [NSNotificationCenter.defaultCenter addObserver:self
+                                         selector:@selector(_accessTokenDidChangeNotification:)
+                                             name:FBSDKAccessTokenDidChangeNotification
+                                           object:nil];
+  [NSNotificationCenter.defaultCenter addObserver:self
+                                         selector:@selector(_profileDidChangeNotification:)
+                                             name:FBSDKProfileDidChangeNotification
+                                           object:nil];
 }
 
  #pragma mark - Notifications

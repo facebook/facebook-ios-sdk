@@ -164,7 +164,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
     [_pendingURLOpen applicationDidBecomeActive:application];
     [self _cancelBridgeRequest];
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKApplicationDidBecomeActiveNotification object:self];
+    [NSNotificationCenter.defaultCenter postNotificationName:FBSDKApplicationDidBecomeActiveNotification object:self];
   }
 }
 

@@ -274,7 +274,7 @@ static ASIdentifierManager *_cachedAdvertiserIdentifierManager;
 
   [FBSDKLogger singleShotLogEntry:behaviorToLog logEntry:msg];
   NSError *error = [FBSDKError errorWithCode:FBSDKErrorAppEventsFlush message:msg];
-  [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKAppEventsLoggingResultNotification object:error];
+  [NSNotificationCenter.defaultCenter postNotificationName:FBSDKAppEventsLoggingResultNotification object:error];
 }
 
 + (BOOL)       matchString:(NSString *)string

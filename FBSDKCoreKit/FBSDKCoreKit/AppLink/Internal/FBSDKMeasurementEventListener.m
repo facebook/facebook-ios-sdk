@@ -40,7 +40,7 @@ static NSString *const FBSDKMeasurementEventPrefix = @"bf_";
   static FBSDKMeasurementEventListener *defaultListener = nil;
   dispatch_once(&dispatchOnceLocker, ^{
     defaultListener = [self new];
-    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    NSNotificationCenter *center = NSNotificationCenter.defaultCenter;
     [center addObserver:defaultListener
                selector:@selector(logFBAppEventForNotification:)
                    name:FBSDKMeasurementEventNotification
@@ -77,7 +77,7 @@ static NSString *const FBSDKMeasurementEventPrefix = @"bf_";
 
 - (void)dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
+  [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
 @end

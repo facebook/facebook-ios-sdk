@@ -92,7 +92,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 - (void)dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
+  [NSNotificationCenter.defaultCenter removeObserver:self];
   _dialogView.delegate = nil;
   [_dialogView removeFromSuperview];
   [_backgroundView removeFromSuperview];
@@ -171,7 +171,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 - (void)_addObservers
 {
-  NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+  NSNotificationCenter *nc = NSNotificationCenter.defaultCenter;
   [nc addObserver:self
          selector:@selector(_deviceOrientationDidChangeNotification:)
              name:UIDeviceOrientationDidChangeNotification
@@ -192,7 +192,7 @@ NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in ext
 
 - (void)_removeObservers
 {
-  NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+  NSNotificationCenter *nc = NSNotificationCenter.defaultCenter;
   [nc removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 

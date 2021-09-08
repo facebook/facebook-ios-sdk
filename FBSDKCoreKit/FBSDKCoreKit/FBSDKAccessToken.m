@@ -181,9 +181,9 @@ static id<FBSDKGraphRequestConnectionProviding> g_connectionFactory;
 
     self.tokenCache.accessToken = token;
     if (shouldDispatchNotif) {
-      [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKAccessTokenDidChangeNotification
-                                                          object:[self class]
-                                                        userInfo:userInfo];
+      [NSNotificationCenter.defaultCenter postNotificationName:FBSDKAccessTokenDidChangeNotification
+                                                        object:[self class]
+                                                      userInfo:userInfo];
     }
   }
 }

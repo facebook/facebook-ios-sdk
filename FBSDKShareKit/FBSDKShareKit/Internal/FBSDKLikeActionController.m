@@ -200,7 +200,7 @@ static FBSDKLikeActionControllerCache *_cache = nil;
     if (!_cache) {
       _cache = [[FBSDKLikeActionControllerCache alloc] initWithAccessTokenString:accessTokenString];
     }
-    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    NSNotificationCenter *nc = NSNotificationCenter.defaultCenter;
     [nc addObserver:self
            selector:@selector(_accessTokenDidChangeNotification:)
                name:FBSDKAccessTokenDidChangeNotification
@@ -219,7 +219,7 @@ static FBSDKLikeActionControllerCache *_cache = nil;
     return;
   }
   [_cache resetForAccessTokenString:accessTokenString];
-  [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKLikeActionControllerDidResetNotification object:nil];
+  [NSNotificationCenter.defaultCenter postNotificationName:FBSDKLikeActionControllerDidResetNotification object:nil];
 }
 
 + (void)_applicationWillResignActiveNotification:(NSNotification *)notification
@@ -432,9 +432,9 @@ static FBSDKLikeActionControllerCache *_cache = nil;
                   isImplicitlyLogged:YES
                          accessToken:_accessToken];
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKLikeActionControllerDidDisableNotification
-                                                        object:self
-                                                      userInfo:nil];
+    [NSNotificationCenter.defaultCenter postNotificationName:FBSDKLikeActionControllerDidDisableNotification
+                                                      object:self
+                                                    userInfo:nil];
   } else {
     FBSDKLikeActionControllerLogError(@"present_dialog", _objectID, _objectType, _accessToken, error);
   }
@@ -1059,9 +1059,9 @@ static void FBSDKLikeActionControllerAddRefreshRequests(FBSDKAccessToken *access
 
     void (^notificationBlock)(void) = ^{
       NSDictionary<NSString *, id> *userInfo = @{FBSDKLikeActionControllerAnimatedKey : @(animated)};
-      [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKLikeActionControllerDidUpdateNotification
-                                                          object:self
-                                                        userInfo:userInfo];
+      [NSNotificationCenter.defaultCenter postNotificationName:FBSDKLikeActionControllerDidUpdateNotification
+                                                        object:self
+                                                      userInfo:userInfo];
     };
 
     notificationBlock();

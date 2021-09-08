@@ -194,19 +194,19 @@ FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_but
 
 - (void)_unsubscribeFromNotifications
 {
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
+  [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
 - (void)_updateNotificationObservers
 {
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(_profileDidChangeNotification:)
-                                               name:FBSDKProfileDidChangeNotification
-                                             object:nil];
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(_accessTokenDidChangeNotification:)
-                                               name:FBSDKAccessTokenDidChangeNotification
-                                             object:nil];
+  [NSNotificationCenter.defaultCenter addObserver:self
+                                         selector:@selector(_profileDidChangeNotification:)
+                                             name:FBSDKProfileDidChangeNotification
+                                           object:nil];
+  [NSNotificationCenter.defaultCenter addObserver:self
+                                         selector:@selector(_accessTokenDidChangeNotification:)
+                                             name:FBSDKAccessTokenDidChangeNotification
+                                           object:nil];
 }
 
 - (void)_accessTokenDidChangeNotification:(NSNotification *)notification

@@ -46,10 +46,10 @@
 - (instancetype)init
 {
   if ((self = [super init])) {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(_accessTokenDidChangeNotification:)
-                                                 name:FBSDKAccessTokenDidChangeNotification
-                                               object:nil];
+    [NSNotificationCenter.defaultCenter addObserver:self
+                                           selector:@selector(_accessTokenDidChangeNotification:)
+                                               name:FBSDKAccessTokenDidChangeNotification
+                                             object:nil];
     [self _updateCache];
   }
   return self;
@@ -57,7 +57,7 @@
 
 - (void)dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
+  [NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
  #pragma mark - Public API
