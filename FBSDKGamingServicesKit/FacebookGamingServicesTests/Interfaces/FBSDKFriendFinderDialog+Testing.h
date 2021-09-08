@@ -16,18 +16,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if FBSDK_SWIFT_PACKAGE
-import FacebookCore
-#else
-import FBSDKCoreKit
-#endif
+@import FacebookGamingServices;
 
-import FacebookGamingServices
+@protocol FBSDKGamingServiceControllerCreating;
 
-protocol SwitchContextDialogMaking {
-  func makeSwitchContextDialog(
-    content: SwitchContextContent,
-    windowFinder: WindowFinding,
-    delegate: ContextDialogDelegate
-  ) -> Showable?
-}
+NS_ASSUME_NONNULL_BEGIN
+
+@interface FBSDKFriendFinderDialog (Testing)
+
+@property (class, nonnull, nonatomic, readonly) FBSDKFriendFinderDialog *shared;
+@property (nonnull, nonatomic) id<FBSDKGamingServiceControllerCreating> factory;
+
+- (instancetype)initWithGamingServiceControllerFactory:(id<FBSDKGamingServiceControllerCreating>)factory;
+
+- (void)launchFriendFinderDialogWithCompletionHandler:(FBSDKGamingServiceCompletionHandler)completionHandler;
+
+@end
+
+NS_ASSUME_NONNULL_END

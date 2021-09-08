@@ -84,20 +84,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "7F30358A3F8D24AFE2929746"
-               BuildableName = "LegacyGamingServices-Universal"
-               BlueprintName = "LegacyGamingServices-Universal"
-               ReferencedContainer = "container:FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "NO"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "1DE0CAD4DD359F7382F52801"
                BuildableName = "FacebookGamingServices-Universal"
                BlueprintName = "FacebookGamingServices-Universal"

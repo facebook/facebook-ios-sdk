@@ -16,18 +16,30 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if FBSDK_SWIFT_PACKAGE
-import FacebookCore
-#else
-import FBSDKCoreKit
-#endif
+#import "FBSDKChooseContextDialog.h"
+#import "FBSDKContextWebDialog.h"
+#import "FBSDKCreateContextContent.h"
+#import "FBSDKCreateContextDialog.h"
+#import "FBSDKDialogProtocol.h"
+#import "FBSDKFriendFinderDialog.h"
+#import "FBSDKGamingContext.h"
+#import "FBSDKGamingGroupIntegration.h"
+#import "FBSDKGamingImageUploader.h"
+#import "FBSDKGamingImageUploaderConfiguration.h"
+#import "FBSDKGamingPayload.h"
+#import "FBSDKGamingPayloadObserver.h"
+#import "FBSDKGamingServiceCompletionHandler.h"
+#import "FBSDKGamingServicesCoreKitImport.h"
+#import "FBSDKGamingVideoUploader.h"
+#import "FBSDKGamingVideoUploaderConfiguration.h"
+#import "FBSDKSwitchContextContent.h"
 
-import FacebookGamingServices
+// The headers below need to be public since they're used in the Swift files
+// but they probably shouldn't be actually public.
+// Not sure what the correct approach here is...
 
-protocol SwitchContextDialogMaking {
-  func makeSwitchContextDialog(
-    content: SwitchContextContent,
-    windowFinder: WindowFinding,
-    delegate: ContextDialogDelegate
-  ) -> Showable?
-}
+#import "FBSDKChooseContextDialogFactory.h"
+#import "FBSDKContextDialogFactoryProtocols.h"
+#import "FBSDKContextDialogs+Showable.h"
+#import "FBSDKCreateContextDialogFactory.h"
+#import "FBSDKShowable.h"

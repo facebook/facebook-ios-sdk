@@ -17,22 +17,21 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 targets:
-  LegacyGamingServices:
+  FacebookGamingServices:
     type: framework
     platform: iOS
     sources:
-      - path: LegacyGamingServices
+      - path: FacebookGamingServices
         headerVisibility: public
         excludes:
           - Internal
           - include
-          - Info.plist
-      - path: LegacyGamingServices/Internal
+      - path: FacebookGamingServices/Internal
         headerVisibility: project
         createIntermediateGroups: true
     configFiles:
-      Debug: Configurations/LegacyGamingServices.xcconfig
-      Release: Configurations/LegacyGamingServices.xcconfig
+      Debug: Configurations/FacebookGamingServices.xcconfig
+      Release: Configurations/FacebookGamingServices.xcconfig
     dependencies:
       - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics
         link: false
@@ -40,29 +39,7 @@ targets:
         link: false
     preBuildScripts:
       - name: Run Swiftlint
-        script: ../scripts/build_phase_swiftlint.sh
-    settings:
-      CLANG_WARN_STRICT_PROTOTYPES: NO
-      PRODUCT_NAME: LegacyGamingServices
-  FacebookGamingServices:
-    type: framework
-    platform: iOS
-    sources:
-      - path: ../Sources/FacebookGamingServices
-        group: Sources
-        excludes:
-          - Internal
-      - path: ../Sources/FacebookGamingServices/Internal
-        headerVisibility: project
-        createIntermediateGroups: true
-    configFiles:
-      Debug: Configurations/FacebookGamingServices.xcconfig
-      Release: Configurations/FacebookGamingServices.xcconfig
-    dependencies:
-      - target: LegacyGamingServices
-    preBuildScripts:
-      - name: Run Swiftlint
-        script: ../scripts/build_phase_swiftlint.sh
+        script: ../scripts/build_phase_swiftlint.sh FacebookGamingServices
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
       PRODUCT_NAME: FacebookGamingServices
@@ -79,7 +56,7 @@ targets:
       - target: FacebookGamingServices
     preBuildScripts:
       - name: Run Swiftlint
-        script: ../scripts/build_phase_swiftlint.sh
+        script: ../scripts/build_phase_swiftlint.sh FacebookGamingServices ../Sources/FBSDKGamingServicesKit
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
       PRODUCT_NAME: FBSDKGamingServicesKit

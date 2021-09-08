@@ -16,18 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if FBSDK_SWIFT_PACKAGE
-import FacebookCore
-#else
-import FBSDKCoreKit
-#endif
+@import FacebookGamingServices;
 
-import FacebookGamingServices
+NS_ASSUME_NONNULL_BEGIN
 
-protocol SwitchContextDialogMaking {
-  func makeSwitchContextDialog(
-    content: SwitchContextContent,
-    windowFinder: WindowFinding,
-    delegate: ContextDialogDelegate
-  ) -> Showable?
-}
+@interface FBSDKApplicationDelegate (Testing)
+
+@property (nonnull, nonatomic) NSHashTable<id<FBSDKApplicationObserving>> *applicationObservers;
+
+@end
+
+NS_ASSUME_NONNULL_END

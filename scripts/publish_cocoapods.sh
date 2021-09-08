@@ -49,14 +49,14 @@ push_specs_and_update FBAEMKit
 # 3. FBSDKCoreKit (dependencies: FBSDKCoreKit_Basics, FBAEMKit)
 push_specs_and_update FBSDKCoreKit
 
-# 4. FBSDKLoginKit, FBSDKShareKit, LegacyGamingServices (dependencies: FBSDKCoreKit_Basics, FBSDKCoreKit)
-push_specs_and_update FBSDKLoginKit FBSDKShareKit LegacyGamingServices
+# 4. FBSDKLoginKit, FBSDKShareKit (dependencies: FBSDKCoreKit_Basics, FBSDKCoreKit)
+push_specs_and_update FBSDKLoginKit FBSDKShareKit
 
 # 5a. FBSDKTVOSKit (dependencies: FBSDKCoreKit_Basics, FBSDKLoginKit, FBSDKShareKit)
-# 5b. FacebookGamingServices (dependencies: FBSDKCoreKit_Basics, FBSDKCoreKit, LegacyGamingServices)
+# 5b. FacebookGamingServices (dependencies: FBSDKCoreKit_Basics, FBSDKCoreKit)
 push_specs_and_update FBSDKTVOSKit FacebookGamingServices
 
-# 6. FBSDKGamingServicesKit (dependencies: LegacyGamingServices, FacebookGamingServices)
+# 6. FBSDKGamingServicesKit (dependencies: FacebookGamingServices)
 push_specs_and_update FBSDKGamingServicesKit
 
 # NOTE: The release might need to be published before publishing FacebookSDK will work since it tries to access a FacebookSDK_Static.zip from a release that hasn't been published

@@ -16,18 +16,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if FBSDK_SWIFT_PACKAGE
-import FacebookCore
-#else
-import FBSDKCoreKit
-#endif
-
 import FacebookGamingServices
+import Foundation
 
-protocol SwitchContextDialogMaking {
-  func makeSwitchContextDialog(
-    content: SwitchContextContent,
-    windowFinder: WindowFinding,
-    delegate: ContextDialogDelegate
-  ) -> Showable?
+class TestFileHandleFactory: FileHandleCreating {
+
+  var stubbedFileHandle = TestFileHandler()
+  var capturedURL: URL?
+
+  func fileHandleForReading(from url: URL) throws -> FileHandling {
+    capturedURL = url
+
+    return stubbedFileHandle
+  }
 }

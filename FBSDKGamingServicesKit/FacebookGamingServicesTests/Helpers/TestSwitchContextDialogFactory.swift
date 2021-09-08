@@ -16,18 +16,22 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if FBSDK_SWIFT_PACKAGE
-import FacebookCore
-#else
-import FBSDKCoreKit
-#endif
+@testable import FacebookGamingServices
 
-import FacebookGamingServices
+class TestSwitchContextDialogFactory: SwitchContextDialogMaking {
+  let dialog = TestShowable()
+  var wasMakeSwitchContextDialogCalled = false
+  var capturedDelegate: ContextDialogDelegate?
+  var shouldCreateDialog = true
 
-protocol SwitchContextDialogMaking {
   func makeSwitchContextDialog(
     content: SwitchContextContent,
     windowFinder: WindowFinding,
     delegate: ContextDialogDelegate
-  ) -> Showable?
+  ) -> Showable? {
+    wasMakeSwitchContextDialogCalled = true
+    capturedDelegate = delegate
+
+    return shouldCreateDialog ? dialog : nil
+  }
 }

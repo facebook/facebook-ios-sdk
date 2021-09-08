@@ -16,18 +16,37 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if FBSDK_SWIFT_PACKAGE
-import FacebookCore
-#else
-import FBSDKCoreKit
-#endif
-
 import FacebookGamingServices
+import XCTest
 
-protocol SwitchContextDialogMaking {
-  func makeSwitchContextDialog(
-    content: SwitchContextContent,
-    windowFinder: WindowFinding,
-    delegate: ContextDialogDelegate
-  ) -> Showable?
+class FBSDKVideoUploaderFactoryTests: XCTestCase, VideoUploaderDelegate {
+
+  func testCreatingVideoUploader() {
+    let uploader = VideoUploaderFactory().create(
+      videoName: name,
+      videoSize: 5,
+      parameters: ["foo": "bar"],
+      delegate: self
+    )
+
+    XCTAssertTrue(
+      uploader is VideoUploader,
+      "Should create the expected concrete video uploader"
+    )
+
+    XCTAssertTrue(
+      uploader.delegate === self,
+      "Should set the expected delegate on the uploader"
+    )
+  }
+
+  // MARK: - VideoUploaderDelegate conformance
+
+  // swiftlint:disable implicitly_unwrapped_optional
+
+  func videoChunkData(for videoUploader: VideoUploader!, startOffset: UInt, endOffset: UInt) -> Data! {
+    Data()
+  }
+  func videoUploader(_ videoUploader: VideoUploader!, didCompleteWithResults results: [String: Any]!) {}
+  func videoUploader(_ videoUploader: VideoUploader!, didFailWithError error: Error!) {}
 }

@@ -16,18 +16,28 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if FBSDK_SWIFT_PACKAGE
-import FacebookCore
-#else
-import FBSDKCoreKit
-#endif
+@import XCTest;
 
-import FacebookGamingServices
+#import <TestTools/FBSDKTestCoder.h>
 
-protocol SwitchContextDialogMaking {
-  func makeSwitchContextDialog(
-    content: SwitchContextContent,
-    windowFinder: WindowFinding,
-    delegate: ContextDialogDelegate
-  ) -> Showable?
-}
+#import "FBSDKApplicationDelegate+Testing.h"
+#import "FBSDKContextWebDialog+Testing.h"
+#import "FBSDKFileHandleCreating.h"
+#import "FBSDKFileHandleFactory.h"
+#import "FBSDKFileHandling.h"
+#import "FBSDKFriendFinderDialog+Testing.h"
+#import "FBSDKGamingGroupIntegration+Testing.h"
+#import "FBSDKGamingImageUploader+Testing.h"
+#import "FBSDKGamingPayload+Testing.h"
+#import "FBSDKGamingPayloadObserver+Testing.h"
+#import "FBSDKGamingServiceController.h"
+#import "FBSDKGamingServiceController+Testing.h"
+#import "FBSDKGamingServiceControllerCreating.h"
+#import "FBSDKGamingServiceControllerFactory.h"
+#import "FBSDKGamingServiceControllerProtocol.h"
+#import "FBSDKGamingVideoUploader+Testing.h"
+#import "FBSDKVideoUploader.h"
+#import "FBSDKVideoUploader+Testing.h"
+#import "FBSDKVideoUploaderCreating.h"
+#import "FBSDKVideoUploaderFactory.h"
+#import "FBSDKVideoUploading.h"

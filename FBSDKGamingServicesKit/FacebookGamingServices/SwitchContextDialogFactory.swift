@@ -22,12 +22,28 @@ import FacebookCore
 import FBSDKCoreKit
 #endif
 
-import FacebookGamingServices
+struct SwitchContextDialogFactory: SwitchContextDialogMaking {
 
-protocol SwitchContextDialogMaking {
+  let tokenProvider: AccessTokenProviding.Type
+
+  init(tokenProvider: AccessTokenProviding.Type) {
+    self.tokenProvider = tokenProvider
+  }
+
   func makeSwitchContextDialog(
     content: SwitchContextContent,
     windowFinder: WindowFinding,
     delegate: ContextDialogDelegate
-  ) -> Showable?
+  ) -> Showable? {
+    guard tokenProvider.currentAccessToken != nil else {
+      return nil
+    }
+
+    return SwitchContextDialog(
+      content: content,
+      windowFinder: windowFinder,
+      delegate: delegate
+    )
+  }
+
 }

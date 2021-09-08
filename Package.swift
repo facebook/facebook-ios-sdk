@@ -64,14 +64,6 @@ let package = Package(
         ),
 
         /*
-          The Facebook Gaming Services SDK
-        */
-        .library(
-            name: "FacebookGamingServices",
-            targets: ["FacebookGamingServices", "FBSDKGamingServicesKit"]
-        ),
-
-        /*
           The Facebook AEM Kit
         */
         .library(
@@ -247,57 +239,6 @@ let package = Package(
             ]
         ),
 
-        /*
-          The legacy Objective-C implementation that will be converted to Swift.
-          This will not contain interfaces for new features written in Swift.
-        */
-        .target(
-            name: "LegacyGamingServices",
-            dependencies: ["LegacyCore"],
-            path: "FBSDKGamingServicesKit/LegacyGamingServices",
-            cSettings: [
-                .headerSearchPath("Internal"),
-                .headerSearchPath("../../FBSDKCoreKit/FBSDKCoreKit/Internal"),
-                .headerSearchPath("../../FBSDKShareKit/FBSDKShareKit/Internal"),
-                .define(
-                    conditionalCompilationFlag,
-                    to: nil,
-                    .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil)
-                )
-            ]
-        ),
-
-        /*
-          The main Gaming Services SDK module
-        */
-        .target(
-            name: "FacebookGamingServices",
-            dependencies: ["FacebookCore", "LegacyGamingServices"],
-            cSettings: [
-                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil))
-            ],
-            swiftSettings: [
-                .define("FBSDK_SWIFT_PACKAGE")
-            ]
-        ),
-
-        /*
-          The legacy Objective-C interface that will be used to maintain
-          backwards compatibility with types that have been converted to Swift.
-
-          This will not contain interfaces for new features written in Swift.
-        */
-        .target(
-            name: "FBSDKGamingServicesKit",
-            dependencies: ["FacebookGamingServices"],
-            exclude: ["Exported"],
-            cSettings: [
-                .define("FBSDK_SWIFT_PACKAGE", to: nil, .when(platforms: [.iOS, .macOS, .tvOS], configuration: nil))
-            ],
-            swiftSettings: [
-                .define("FBSDK_SWIFT_PACKAGE")
-            ]
-        ),
     ],
     cxxLanguageStandard: CXXLanguageStandard.cxx11
 )

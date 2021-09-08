@@ -16,18 +16,35 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if FBSDK_SWIFT_PACKAGE
-import FacebookCore
-#else
-import FBSDKCoreKit
-#endif
+@import FacebookGamingServices;
 
-import FacebookGamingServices
+NS_ASSUME_NONNULL_BEGIN
 
-protocol SwitchContextDialogMaking {
-  func makeSwitchContextDialog(
-    content: SwitchContextContent,
-    windowFinder: WindowFinding,
-    delegate: ContextDialogDelegate
-  ) -> Showable?
-}
+@interface FBSDKGamingServiceController (Testing)
+
+- (instancetype)initWithServiceType:(FBSDKGamingServiceType)serviceType
+                  completionHandler:(FBSDKGamingServiceResultCompletion)completion
+                      pendingResult:(id)pendingResult
+                          urlOpener:(id<FBSDKURLOpener>)urlOpener
+                           settings:(id<FBSDKSettings>)settings;
+
+- (id<FBSDKSettings>)settings;
+
+- (void)callWithArgument:(nullable NSString *)argument;
+
+- (void)applicationDidBecomeActive:(UIApplication *)application;
+
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation;
+
+- (BOOL)isValidCallbackURL:(NSURL *)url forService:(NSString *)service;
+
+- (BOOL)isAuthenticationURL:(NSURL *)url;
+
+- (void)handleBridgeAPIError:(NSError *)error;
+
+@end
+
+NS_ASSUME_NONNULL_END

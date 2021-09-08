@@ -16,18 +16,23 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if FBSDK_SWIFT_PACKAGE
-import FacebookCore
-#else
-import FBSDKCoreKit
-#endif
-
 import FacebookGamingServices
+import XCTest
 
-protocol SwitchContextDialogMaking {
-  func makeSwitchContextDialog(
-    content: SwitchContextContent,
-    windowFinder: WindowFinding,
-    delegate: ContextDialogDelegate
-  ) -> Showable?
+class FBSDKFileHandleFactoryTests: XCTestCase {
+
+  func testCreatingFileHandle() throws {
+    let data = "foo".data(using: .utf8)
+    let url = URL(
+      fileURLWithPath: NSTemporaryDirectory(),
+      isDirectory: true
+    ).appendingPathComponent(name)
+
+    FileManager.default.createFile(atPath: url.path, contents: data, attributes: nil)
+
+    XCTAssertNotNil(
+      try? FileHandleFactory().fileHandleForReading(from: url),
+      "A file handle factory should be able to return a handle to a valid file"
+    )
+  }
 }

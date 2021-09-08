@@ -59,7 +59,6 @@ main() {
     CORE_KIT="FBSDKCoreKit"
     LOGIN_KIT="FBSDKLoginKit"
     SHARE_KIT="FBSDKShareKit"
-    LEGACY_GAMING_SERVICES="LegacyGamingServices"
     FACEBOOK_GAMING_SERVICES="FacebookGamingServices"
     GAMING_SERVICES_KIT="FBSDKGamingServicesKit"
 
@@ -73,7 +72,6 @@ main() {
 
     SDK_KITS=(
       "${SDK_BASE_KITS[@]}"
-      "$LEGACY_GAMING_SERVICES"
       "$FACEBOOK_GAMING_SERVICES"
       "$GAMING_SERVICES_KIT"
       "FBSDKTVOSKit"
@@ -100,18 +98,6 @@ main() {
     SDK_POD_SPECS=("${SDK_KITS[@]}" "$SDK_FRAMEWORK_NAME")
     SDK_POD_SPECS=("${SDK_POD_SPECS[@]/%/.podspec}")
 
-    SDK_LINT_POD_SPECS=(
-      "FBSDKCoreKit_Basics.podspec"
-      "FBAEMKit.podspec"
-      "FBSDKCoreKit.podspec"
-      "FBSDKLoginKit.podspec"
-      "FBSDKShareKit.podspec"
-      "LegacyGamingServices.podspec"
-      "FacebookGamingServices.podspec"
-      "FBSDKGamingServicesKit.podspec"
-      "FBSDKTVOSKit.podspec"
-    )
-
     SDK_CURRENT_VERSION=$(grep -Eo 'FBSDK_VERSION_STRING @".*"' "$SDK_DIR/$SDK_MAIN_VERSION_FILE" | awk -F'"' '{print $2}')
     SDK_CURRENT_GRAPH_API_VERSION=$(grep -Eo 'FBSDK_DEFAULT_GRAPH_API_VERSION @".*"' "$SDK_DIR/$SDK_MAIN_VERSION_FILE" | awk -F'"' '{print $2}')
 
@@ -122,7 +108,6 @@ main() {
       "FacebookCore"
       "FacebookLogin"
       "FacebookShare"
-      "FacebookGamingServices"
     )
 
     if [ -f "$PWD/internal/scripts/internal_globals.sh" ]; then SDK_INTERNAL=1; else SDK_INTERNAL=0; fi

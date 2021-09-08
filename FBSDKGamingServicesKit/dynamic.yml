@@ -17,23 +17,22 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 targets:
-  LegacyGamingServices-Dynamic:
+  FacebookGamingServices-Dynamic:
     type: framework
     platform: iOS
-    productName: LegacyGamingServices
+    productName: FacebookGamingServices
     sources:
-      - path: LegacyGamingServices
+      - path: FacebookGamingServices
         headerVisibility: public
         excludes:
           - Internal
           - include
-          - Info.plist
-      - path: LegacyGamingServices/Internal
+      - path: FacebookGamingServices/Internal
         headerVisibility: project
         createIntermediateGroups: true
     configFiles:
-      Debug: Configurations/LegacyGamingServices-Dynamic.xcconfig
-      Release: Configurations/LegacyGamingServices-Dynamic.xcconfig
+      Debug: Configurations/FacebookGamingServices-Dynamic.xcconfig
+      Release: Configurations/FacebookGamingServices-Dynamic.xcconfig
     dependencies:
       - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics-Dynamic
       - target: FBSDKCoreKit/FBSDKCoreKit-Dynamic
@@ -43,26 +42,6 @@ targets:
     preBuildScripts:
       - name: Run Swiftlint
         script: ../scripts/build_phase_swiftlint.sh
-    settings:
-      CLANG_WARN_STRICT_PROTOTYPES: NO
-      PRODUCT_NAME: LegacyGamingServices
-  FacebookGamingServices-Dynamic:
-    type: framework
-    platform: iOS
-    productName: FacebookGamingServices
-    sources:
-      - path: ../Sources/FacebookGamingServices
-        group: Sources
-    configFiles:
-      Debug: Configurations/FacebookGamingServices-Dynamic.xcconfig
-      Release: Configurations/FacebookGamingServices-Dynamic.xcconfig
-    dependencies:
-      - target: LegacyGamingServices-Dynamic
-      - sdk: UIKit.framework
-      - sdk: CoreGraphics.framework
-    preBuildScripts:
-      - name: Run Swiftlint
-        script: ../scripts/build_phase_swiftlint.sh ../Sources/FacebookGamingServices ../Tests/FacebookGamingServices
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
       PRODUCT_NAME: FacebookGamingServices
@@ -83,7 +62,7 @@ targets:
       - sdk: CoreGraphics.framework
     preBuildScripts:
       - name: Run Swiftlint
-        script: ../scripts/build_phase_swiftlint.sh ../Sources/FacebookGamingServices ../Tests/FacebookGamingServices
+        script: ../scripts/build_phase_swiftlint.sh FacebookGamingServices ../Sources/FBSDKGamingServicesKit FacebookGamingServicesTests
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
       PRODUCT_NAME: FBSDKGamingServicesKit

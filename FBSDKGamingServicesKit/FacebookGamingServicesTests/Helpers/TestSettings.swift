@@ -16,18 +16,30 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if FBSDK_SWIFT_PACKAGE
-import FacebookCore
-#else
-import FBSDKCoreKit
-#endif
-
 import FacebookGamingServices
+import FBSDKCoreKit
+import XCTest
 
-protocol SwitchContextDialogMaking {
-  func makeSwitchContextDialog(
-    content: SwitchContextContent,
-    windowFinder: WindowFinding,
-    delegate: ContextDialogDelegate
-  ) -> Showable?
+class TestSettings: SettingsProtocol {
+  static var appID: String?
+  static var clientToken: String?
+  static var userAgentSuffix: String?
+  static var sdkVersion: String?
+  static var loggingBehaviors = Set<LoggingBehavior>()
+
+  var appID: String?
+  var appURLSchemeSuffix: String?
+  var isDataProcessingRestricted = false
+  var isAutoLogAppEventsEnabled = false
+  var isSetATETimeExceedsInstallTime = false
+  var isSKAdNetworkReportEnabled = false
+  var loggingBehaviors = Set<LoggingBehavior>()
+  var advertisingTrackingStatus = AdvertisingTrackingStatus.unspecified
+  var installTimestamp: Date?
+  var advertiserTrackingEnabledTimestamp: Date?
+  var shouldLimitEventAndDataUsage = false
+  var shouldUseTokenOptimizations = false
+  var graphAPIVersion = ""
+  var isGraphErrorRecoveryEnabled = false
+  var graphAPIDebugParamValue: String?
 }

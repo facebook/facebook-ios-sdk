@@ -16,18 +16,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if FBSDK_SWIFT_PACKAGE
-import FacebookCore
-#else
-import FBSDKCoreKit
-#endif
-
 import FacebookGamingServices
+import Foundation
 
-protocol SwitchContextDialogMaking {
-  func makeSwitchContextDialog(
-    content: SwitchContextContent,
-    windowFinder: WindowFinding,
-    delegate: ContextDialogDelegate
-  ) -> Showable?
+class TestFileHandler: FileHandling {
+
+  var stubbedReadData = Data()
+  var stubbedSeekToEndOfFile: UInt64 = 0
+  var capturedFileOffset: UInt64 = 0
+
+  func seekToEndOfFile() -> UInt64 {
+    stubbedSeekToEndOfFile
+  }
+
+  func seek(toFileOffset offset: UInt64) {
+    capturedFileOffset = offset
+  }
+
+  func readData(ofLength length: UInt) -> Data {
+    stubbedReadData
+  }
 }

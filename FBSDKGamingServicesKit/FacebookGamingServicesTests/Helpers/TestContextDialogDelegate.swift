@@ -16,18 +16,19 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if FBSDK_SWIFT_PACKAGE
-import FacebookCore
-#else
-import FBSDKCoreKit
-#endif
-
 import FacebookGamingServices
+import XCTest
 
-protocol SwitchContextDialogMaking {
-  func makeSwitchContextDialog(
-    content: SwitchContextContent,
-    windowFinder: WindowFinding,
-    delegate: ContextDialogDelegate
-  ) -> Showable?
+class TestContextDialogDelegate: NSObject, ContextDialogDelegate {
+  func contextDialogDidComplete(_ contextDialog: ContextWebDialog) {
+    XCTFail("This should not be invoked")
+  }
+
+  func contextDialog(_ contextDialog: ContextWebDialog, didFailWithError error: Error) {
+    XCTFail("This should not be invoked")
+  }
+
+  func contextDialogDidCancel(_ contextDialog: ContextWebDialog) {
+    XCTFail("This should not be invoked")
+  }
 }

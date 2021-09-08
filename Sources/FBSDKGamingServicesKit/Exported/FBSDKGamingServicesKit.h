@@ -19,4 +19,4 @@
 // Used from BUCK, CocoaPods, and Xcodebuild to maintain backwards compatibility
 // for current users of FBSDKGamingServicesKit.
 
-#import <LegacyGamingServices/FBSDKGamingServicesKit.h>
+#import <FacebookGamingServices/FacebookGamingServices.h>

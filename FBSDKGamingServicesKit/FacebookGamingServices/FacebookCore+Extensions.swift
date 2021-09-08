@@ -22,12 +22,5 @@ import FacebookCore
 import FBSDKCoreKit
 #endif
 
-import FacebookGamingServices
-
-protocol SwitchContextDialogMaking {
-  func makeSwitchContextDialog(
-    content: SwitchContextContent,
-    windowFinder: WindowFinding,
-    delegate: ContextDialogDelegate
-  ) -> Showable?
-}
+// Default conformance to the window finding protocol
+extension InternalUtility: WindowFinding {}

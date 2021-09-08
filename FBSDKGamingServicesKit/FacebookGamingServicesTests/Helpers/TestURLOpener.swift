@@ -16,18 +16,21 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if FBSDK_SWIFT_PACKAGE
-import FacebookCore
-#else
-import FBSDKCoreKit
-#endif
-
 import FacebookGamingServices
+import FBSDKCoreKit
+import XCTest
 
-protocol SwitchContextDialogMaking {
-  func makeSwitchContextDialog(
-    content: SwitchContextContent,
-    windowFinder: WindowFinding,
-    delegate: ContextDialogDelegate
-  ) -> Showable?
+class TestURLOpener: URLOpener {
+
+  var capturedRequests = [SuccessBlock]()
+  var capturedURL: URL?
+
+  func open(
+    _ url: URL,
+    sender: URLOpening?,
+    handler: @escaping SuccessBlock
+  ) {
+    capturedURL = url
+    capturedRequests.append(handler)
+  }
 }

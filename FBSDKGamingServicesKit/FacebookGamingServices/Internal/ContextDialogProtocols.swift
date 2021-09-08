@@ -22,8 +22,6 @@ import FacebookCore
 import FBSDKCoreKit
 #endif
 
-import FacebookGamingServices
-
 protocol SwitchContextDialogMaking {
   func makeSwitchContextDialog(
     content: SwitchContextContent,

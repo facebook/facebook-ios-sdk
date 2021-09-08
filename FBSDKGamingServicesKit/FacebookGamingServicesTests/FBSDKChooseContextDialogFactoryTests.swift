@@ -16,44 +16,33 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@testable import FacebookGamingServices
-import TestTools
+import FacebookGamingServices
 import XCTest
 
-class SwitchContextDialogFactoryTests: XCTestCase {
+class FBSDKChooseContextDialogFactoryTests: XCTestCase {
 
-  let content = SwitchContextContent(contextID: "123")
-  let windowFinder = TestWindowFinder()
+  var content: ChooseContextContent {
+    let content = ChooseContextContent()
+    content.filter = .newPlayersOnly
+    content.maxParticipants = 100
+    content.minParticipants = 1000
+
+    return content
+  }
+
   let delegate = TestContextDialogDelegate()
-  let tokenProvider = TestAccessTokenProvider()
 
-  override func setUp() {
-    super.setUp()
-
-    TestAccessTokenProvider.reset()
-  }
-
-  override func tearDown() {
-    TestAccessTokenProvider.reset()
-
-    super.tearDown()
-  }
-
-  func testCreatingDialogWithAccessToken() throws {
-    TestAccessTokenProvider.stubbedAccessToken = SampleAccessTokens.validToken
-    let factory = SwitchContextDialogFactory(tokenProvider: TestAccessTokenProvider.self)
-
+  func testCreatingDialog() throws {
     let dialog = try XCTUnwrap(
-      factory.makeSwitchContextDialog(
-        content: content,
-        windowFinder: windowFinder,
+      ChooseContextDialogFactory().makeChooseContextDialog(
+        with: content,
         delegate: delegate
-      ) as? SwitchContextDialog,
+      ) as? ChooseContextDialog,
       "Should create a context dialog of the expected concrete type"
     )
 
     XCTAssertEqual(
-      dialog.dialogContent as? SwitchContextContent,
+      dialog.dialogContent as? ChooseContextContent,
       content,
       "Should create the dialog with the expected content"
     )
@@ -62,16 +51,17 @@ class SwitchContextDialogFactoryTests: XCTestCase {
       "Should create the dialog with the expected delegate"
     )
   }
+}
 
-  func testCreatingDialogWithMissingAccessToken() throws {
-    let factory = SwitchContextDialogFactory(tokenProvider: TestAccessTokenProvider.self)
-    XCTAssertNil(
-      factory.makeSwitchContextDialog(
-        content: content,
-        windowFinder: windowFinder,
-        delegate: delegate
-      ),
-      "Should not create a dialog with a missing access token"
-    )
+// swiftlint:disable override_in_extension
+extension ChooseContextContent {
+  open override func isEqual(_ object: Any?) -> Bool {
+    guard let other = object as? ChooseContextContent else {
+      return false
+    }
+
+    return filter == other.filter &&
+      maxParticipants == other.maxParticipants &&
+      minParticipants == other.minParticipants
   }
 }

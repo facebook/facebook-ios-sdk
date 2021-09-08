@@ -16,18 +16,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if FBSDK_SWIFT_PACKAGE
-import FacebookCore
-#else
-import FBSDKCoreKit
-#endif
-
 import FacebookGamingServices
+import XCTest
 
-protocol SwitchContextDialogMaking {
-  func makeSwitchContextDialog(
-    content: SwitchContextContent,
-    windowFinder: WindowFinding,
-    delegate: ContextDialogDelegate
-  ) -> Showable?
+class FBSDKGamingVideoUploaderConfigurationTests: XCTestCase { // swiftlint:disable:this type_name
+
+  let url = URL(string: "file://video.mp4")! // swiftlint:disable:this force_unwrapping
+  let caption = "Cool Video"
+  lazy var configuration = GamingVideoUploaderConfiguration(videoURL: url, caption: caption)
+
+  func testValuesAreSavedToConfig() {
+    XCTAssertEqual(configuration.caption, caption)
+    XCTAssertEqual(configuration.videoURL, url)
+  }
 }

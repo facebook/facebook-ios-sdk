@@ -16,18 +16,28 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if FBSDK_SWIFT_PACKAGE
-import FacebookCore
-#else
-import FBSDKCoreKit
-#endif
-
 import FacebookGamingServices
+import Foundation
 
-protocol SwitchContextDialogMaking {
-  func makeSwitchContextDialog(
-    content: SwitchContextContent,
-    windowFinder: WindowFinding,
-    delegate: ContextDialogDelegate
-  ) -> Showable?
+class TestVideoUploaderFactory: VideoUploaderCreating {
+
+  var capturedVideoName: String?
+  var capturedVideoSize: UInt?
+  var capturedParameters = [String: Any]()
+  var capturedDelegate: VideoUploaderDelegate?
+  var stubbedVideoUploader = TestVideoUploader()
+
+  func create(
+    videoName: String,
+    videoSize: UInt,
+    parameters: [String: Any],
+    delegate: VideoUploaderDelegate
+  ) -> VideoUploading {
+    capturedVideoName = videoName
+    capturedVideoSize = videoSize
+    capturedParameters = parameters
+    capturedDelegate = delegate
+
+    return stubbedVideoUploader
+  }
 }

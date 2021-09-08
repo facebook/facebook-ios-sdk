@@ -21,27 +21,11 @@ projectReferences:
     path: ../TestTools/TestTools.xcodeproj
 
 targets:
-  LegacyGamingServicesTests:
-    type: bundle.unit-test
-    platform: iOS
-    sources: LegacyGamingServicesTests
-    configFiles:
-      Debug: Configurations/LegacyGamingServicesTests.xcconfig
-      Release: Configurations/LegacyGamingServicesTests.xcconfig
-    dependencies:
-      - target: LegacyGamingServices-Dynamic
-        embed: false
-      - target: TestTools/TestTools
-        link: false
-        embed: false
-    settings:
-      GCC_WARN_UNUSED_FUNCTION: NO
-    transitivelyLinkDependencies: true
   FacebookGamingServicesTests:
     type: bundle.unit-test
     platform: iOS
     sources:
-      - path: ../Tests/FacebookGamingServices
+      - path: FacebookGamingServicesTests
         group: Tests
         createIntermediateGroups: false
       - path: ../Tests/GamingTestAssets.xcassets
@@ -51,7 +35,7 @@ targets:
       Debug: Configurations/FacebookGamingServicesTests.xcconfig
       Release: Configurations/FacebookGamingServicesTests.xcconfig
     dependencies:
-      - target: LegacyGamingServices-Dynamic
+      - target: TestTools/TestTools
         embed: false
       - target: FacebookGamingServices-Dynamic
         embed: false
@@ -70,8 +54,6 @@ targets:
       Release: Configurations/FBSDKGamingServicesKitTests.xcconfig
     dependencies:
       - target: TestTools/TestTools
-        embed: false
-      - target: LegacyGamingServices-Dynamic
         embed: false
       - target: FacebookGamingServices-Dynamic
         embed: false
