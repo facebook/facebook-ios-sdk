@@ -20,11 +20,19 @@
 set -e # immediately exit if any command has a non-zero exit status
 set -u # flag undefined variables as errors
 set -o pipefail # propogate errors in pipeline to be the result of the pipeline
-set -x # echo commands run
+# set -x # echo commands run (commented out for now since its noisy)
+
+CURRENT_VERSION=$(grep -Eo 'FBSDK_VERSION_STRING @".*"' FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h | awk -F'"' '{print $2}')
 
 push_specs_and_update() {
   for spec in "$@"; do
-    pod trunk push --allow-warnings "$spec".podspec || { echo "Failed to push $spec"; exit 1; }
+    echo "Checking version $CURRENT_VERSION for: $spec"
+    # The "|| [[ $? == 1 ]]" prevents a non-zero exit from grep to cause the script to exit (due to "set -e")
+    FOUND=$(pod trunk info "$spec" | grep "$CURRENT_VERSION" || [ $? = 1 ])
+    if [ -z "$FOUND" ]; then
+      echo "Running: pod trunk push --allow-warnings $spec.podspec"
+      pod trunk push --allow-warnings "$spec".podspec || { echo "Failed to push $spec"; exit 1; }
+    fi
   done
 
   rm -rf ~/Library/Caches/Cocoapods && \
@@ -51,5 +59,6 @@ push_specs_and_update FBSDKTVOSKit FacebookGamingServices
 # 6. FBSDKGamingServicesKit (dependencies: LegacyGamingServices, FacebookGamingServices)
 push_specs_and_update FBSDKGamingServicesKit
 
+# NOTE: The release might need to be published before publishing FacebookSDK will work since it tries to access a FacebookSDK_Static.zip from a release that hasn't been published
 # 7. FacebookSDK
-push_specs_and_update FacebokSDK
+push_specs_and_update FacebookSDK
