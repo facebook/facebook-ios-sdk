@@ -140,7 +140,6 @@ NS_SWIFT_NAME(InternalUtility)
 #pragma mark - FB Apps Installed
 
 @property (nonatomic, assign, readonly) BOOL isMessengerAppInstalled;
-@property (nonatomic, assign, readonly) BOOL isMSQRDPlayerAppInstalled;
 
 - (BOOL)isRegisteredCanOpenURLScheme:(NSString *)urlScheme;
 

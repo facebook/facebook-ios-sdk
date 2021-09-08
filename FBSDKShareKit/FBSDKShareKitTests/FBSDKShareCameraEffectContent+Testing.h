@@ -16,10 +16,22 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKShareKit/FBSDKShareKit.h>
+#import "TargetConditionals.h"
 
-#import "FBSDKMessageDialog.h"
-#import "FBSDKMessageDialog+Testing.h"
-#import "FBSDKShareBridgeAPIRequestFactory.h"
-#import "FBSDKShareCameraEffectContent+Testing.h"
-#import "FBSDKShareModelTestUtility.h"
+#if !TARGET_OS_TV
+
+ #import "FBSDKShareCameraEffectContent+Internal.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface FBSDKShareCameraEffectContent (Testing)
+
++ (void)configureWithInternalUtility:(id<FBSDKInternalUtility>)internalUtility;
+
++ (void)resetClassDependencies;
+
+@end
+
+NS_ASSUME_NONNULL_END
+
+#endif

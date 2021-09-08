@@ -24,10 +24,7 @@ class TestInternalUtility: InternalUtilityProtocol {
   var path: String?
   var queryParameters: [String: Any]?
   var isFacebookAppInstalled = false
-
-  init(isFacebookAppInstalled: Bool) {
-    self.isFacebookAppInstalled = isFacebookAppInstalled
-  }
+  var isMSQRDPlayerAppInstalled = false
 
   func url(withScheme scheme: String, host: String, path: String, queryParameters: [String: Any]) throws -> URL {
     self.scheme = scheme

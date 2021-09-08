@@ -20,7 +20,7 @@
 
 #if !TARGET_OS_TV
 
- #import "FBSDKShareCameraEffectContent.h"
+ #import "FBSDKShareCameraEffectContent+Internal.h"
 
  #import "FBSDKCameraEffectArguments+Internal.h"
  #import "FBSDKCameraEffectTextures+Internal.h"
@@ -40,9 +40,15 @@ static NSString *const kFBSDKShareCameraEffectContentRefKey = @"ref";
 static NSString *const kFBSDKShareCameraEffectContentPageIDKey = @"pageID";
 static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
 
+@interface FBSDKShareCameraEffectContent ()
+
+@property (class, nonatomic) BOOL hasBeenConfigured;
+
+@end
+
 @implementation FBSDKShareCameraEffectContent
 
- #pragma mark - Properties
+ #pragma mark - Instance Properties
 
 @synthesize effectID = _effectID;
 @synthesize effectArguments = _effectArguments;
@@ -55,10 +61,65 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
 @synthesize pageID = _pageID;
 @synthesize shareUUID = _shareUUID;
 
+ #pragma mark - Class Properties
+
+static BOOL _hasBeenConfigured;
+
++ (BOOL)hasBeenConfigured
+{
+  return _hasBeenConfigured;
+}
+
++ (void)setHasBeenConfigured:(BOOL)hasBeenConfigured
+{
+  _hasBeenConfigured = hasBeenConfigured;
+}
+
+static _Nullable id<FBSDKInternalUtility> _internalUtility;
+
++ (nullable id<FBSDKInternalUtility>)internalUtility
+{
+  return _internalUtility;
+}
+
++ (void)setInternalUtility:(nullable id<FBSDKInternalUtility>)internalUtility
+{
+  _internalUtility = internalUtility;
+}
+
+ #pragma mark - Class Configuration
+
++ (void)configureWithInternalUtility:(nonnull id<FBSDKInternalUtility>)internalUtility
+{
+  self.internalUtility = internalUtility;
+  self.hasBeenConfigured = YES;
+}
+
++ (void)configureClassDependencies
+{
+  if (self.hasBeenConfigured) {
+    return;
+  }
+
+  [self configureWithInternalUtility:FBSDKInternalUtility.sharedUtility];
+}
+
+ #if FBTEST
+
++ (void)resetClassDependencies
+{
+  self.internalUtility = nil;
+  self.hasBeenConfigured = NO;
+}
+
+ #endif
+
  #pragma mark - Initializer
 
 - (instancetype)init
 {
+  [self.class configureClassDependencies];
+
   self = [super init];
   if (self) {
     _shareUUID = [NSUUID UUID].UUIDString;
@@ -117,7 +178,7 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
 - (NSString *)schemeForMode:(FBSDKShareDialogMode)mode
 {
   if ((FBSDKShareDialogModeNative == mode) || (FBSDKShareDialogModeAutomatic == mode)) {
-    if ([FBSDKInternalUtility.sharedUtility isMSQRDPlayerAppInstalled]) {
+    if ([self.class.internalUtility isMSQRDPlayerAppInstalled]) {
       // If installed, launch MSQRD Player for testing effects.
       return FBSDK_CANOPENURL_MSQRD_PLAYER;
     }
@@ -177,16 +238,27 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
 - (BOOL)isEqualToShareCameraEffectContent:(FBSDKShareCameraEffectContent *)content
 {
   return (content
-    && [FBSDKInternalUtility.sharedUtility object:_effectID isEqualToObject:content.effectID]
-    && [FBSDKInternalUtility.sharedUtility object:_effectArguments isEqualToObject:content.effectArguments]
-    && [FBSDKInternalUtility.sharedUtility object:_effectTextures isEqualToObject:content.effectTextures]
-    && [FBSDKInternalUtility.sharedUtility object:_contentURL isEqualToObject:content.contentURL]
-    && [FBSDKInternalUtility.sharedUtility object:_hashtag isEqualToObject:content.hashtag]
-    && [FBSDKInternalUtility.sharedUtility object:_peopleIDs isEqualToObject:content.peopleIDs]
-    && [FBSDKInternalUtility.sharedUtility object:_placeID isEqualToObject:content.placeID]
-    && [FBSDKInternalUtility.sharedUtility object:_ref isEqualToObject:content.ref]
-    && [FBSDKInternalUtility.sharedUtility object:_shareUUID isEqualToObject:content.shareUUID]
-    && [FBSDKInternalUtility.sharedUtility object:_pageID isEqualToObject:content.pageID]);
+    && [self object:_effectID isEqualToObject:content.effectID]
+    && [self object:_effectArguments isEqualToObject:content.effectArguments]
+    && [self object:_effectTextures isEqualToObject:content.effectTextures]
+    && [self object:_contentURL isEqualToObject:content.contentURL]
+    && [self object:_hashtag isEqualToObject:content.hashtag]
+    && [self object:_peopleIDs isEqualToObject:content.peopleIDs]
+    && [self object:_placeID isEqualToObject:content.placeID]
+    && [self object:_ref isEqualToObject:content.ref]
+    && [self object:_shareUUID isEqualToObject:content.shareUUID]
+    && [self object:_pageID isEqualToObject:content.pageID]);
+}
+
+- (BOOL)object:(id)object isEqualToObject:(id)other
+{
+  if (object == other) {
+    return YES;
+  }
+  if (!object || !other) {
+    return NO;
+  }
+  return [object isEqual:other];
 }
 
  #pragma mark - NSCoding

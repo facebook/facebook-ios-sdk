@@ -26,6 +26,7 @@ NS_SWIFT_NAME(InternalUtilityProtocol)
 #pragma mark - FB Apps Installed
 
 @property (nonatomic, readonly) BOOL isFacebookAppInstalled;
+@property (nonatomic, readonly) BOOL isMSQRDPlayerAppInstalled;
 
 /**
   Constructs an NSURL.

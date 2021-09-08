@@ -96,7 +96,8 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
   }
 
   func testShowDialogThroughAppSwitch() throws {
-    let util = TestInternalUtility(isFacebookAppInstalled: true)
+    let util = TestInternalUtility()
+    util.isFacebookAppInstalled = true
     let dialog = try XCTUnwrap(SampleContextDialogs.chooseContextDialog(utility: util, delegate: self))
 
     dialog.show()
@@ -114,7 +115,7 @@ class ChooseContextDialogTests: XCTestCase, ContextDialogDelegate {
   }
 
   func testShowDialogThroughMSite() throws {
-    let util = TestInternalUtility(isFacebookAppInstalled: false)
+    let util = TestInternalUtility()
     let dialog = try XCTUnwrap(SampleContextDialogs.chooseContextDialog(utility: util, delegate: self))
 
     dialog.show()
