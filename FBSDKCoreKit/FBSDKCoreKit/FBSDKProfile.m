@@ -23,8 +23,14 @@
 
  #import "FBSDKProfile+Internal.h"
 
+ #import "FBSDKAccessToken.h"
  #import "FBSDKCoreKitBasicsImport.h"
+ #import "FBSDKGraphRequestConnecting.h"
+ #import "FBSDKInternalUtility.h"
  #import "FBSDKLocation.h"
+ #import "FBSDKMath.h"
+ #import "FBSDKSettings.h"
+ #import "FBSDKUnarchiverProvider.h"
  #import "FBSDKUserAgeRange.h"
 
  #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0

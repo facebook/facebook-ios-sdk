@@ -27,7 +27,13 @@
 
 #if !TARGET_OS_TV
 
- #import "FBSDKCoreKit+Internal.h"
+#if FBSDK_SWIFT_PACKAGE
+#import "FBSDKProfile.h"
+#import "FBSDKGraphRequest.h"
+#else
+#import <FBSDKCoreKit/FBSDKProfile.h>
+#import <FBSDKCoreKit/FBSDKGraphRequest.h>
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -55,8 +61,8 @@ typedef void (^FBSDKParseProfileBlock)(id result, FBSDKProfile *_Nonnull *_Nulla
 + (void)observeChangeAccessTokenChange:(NSNotification *)notification;
 + (void)configureWithStore:(id<FBSDKDataPersisting>)store
        accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
-       notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
-NS_SWIFT_NAME(configure(store:accessTokenProvider:notificationCenter:));
+        notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
+  NS_SWIFT_NAME(configure(store:accessTokenProvider:notificationCenter:));
 
 @end
 
