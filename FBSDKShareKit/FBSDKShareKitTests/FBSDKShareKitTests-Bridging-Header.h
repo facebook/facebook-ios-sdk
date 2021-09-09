@@ -18,6 +18,7 @@
 
 #import <FBSDKShareKit/FBSDKShareKit.h>
 
+#import "FBSDKHashtag.h"
 #import "FBSDKMessageDialog.h"
 #import "FBSDKMessageDialog+Testing.h"
 #import "FBSDKShareBridgeAPIRequestFactory.h"
