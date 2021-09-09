@@ -72,12 +72,13 @@ NSString *const FBSDKDialogConfigurationFeatureUseSafariViewController = @"use_s
 // treated as stale.
 const NSInteger FBSDKServerConfigurationVersion = 2;
 
+@interface FBSDKServerConfiguration ()
+@property (nonatomic) NSDictionary<NSString *, id> *dialogConfigurations;
+@property (nonatomic) NSDictionary<NSString *, id> *dialogFlows;
+@property (nonatomic) NSInteger version;
+@end
+
 @implementation FBSDKServerConfiguration
-{
-  NSDictionary<NSString *, id> *_dialogConfigurations;
-  NSDictionary<NSString *, id> *_dialogFlows;
-  NSInteger _version;
-}
 
 #pragma mark - Object Lifecycle
 

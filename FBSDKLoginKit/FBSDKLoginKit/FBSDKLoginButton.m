@@ -35,12 +35,17 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 
 FBSDKAppEventName const FBSDKAppEventNameFBSDKLoginButtonDidTap = @"fb_login_button_did_tap";
 
+@interface FBSDKLoginButton ()
+
+@property (nonatomic) BOOL hasShownTooltipBubble;
+@property (nonatomic) id<FBSDKLoginProviding> loginProvider;
+@property (nonatomic) NSString *userID;
+@property (nonatomic) NSString *userName;
+
+@end
+
 @implementation FBSDKLoginButton
 {
-  BOOL _hasShownTooltipBubble;
-  id<FBSDKLoginProviding> _loginProvider;
-  NSString *_userID;
-  NSString *_userName;
   id<FBSDKGraphRequestProviding> _graphRequestFactory;
 }
 

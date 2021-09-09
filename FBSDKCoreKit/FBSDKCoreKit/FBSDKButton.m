@@ -36,14 +36,12 @@
 @interface FBSDKButton ()
 
 @property (class, nonatomic) id applicationActivationNotifier;
+@property (nonatomic) BOOL skipIntrinsicContentSizing;
+@property (nonatomic) BOOL isExplicitlyDisabled;
 
 @end
 
 @implementation FBSDKButton
-{
-  BOOL _skipIntrinsicContentSizing;
-  BOOL _isExplicitlyDisabled;
-}
 
 static id _applicationActivationNotifier;
 

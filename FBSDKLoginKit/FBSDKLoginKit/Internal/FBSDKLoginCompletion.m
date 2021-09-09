@@ -56,13 +56,18 @@
 
  #pragma mark - Completers
 
+@interface FBSDKLoginURLCompleter ()
+
+@property (nonatomic) id<NSObject> observer;
+@property (nonatomic) BOOL performExplicitFallback;
+@property (nonatomic) id<FBSDKGraphRequestConnectionProviding> connectionProvider;
+@property (nonatomic) id<FBSDKAuthenticationTokenCreating> authenticationTokenCreator;
+
+@end
+
 @implementation FBSDKLoginURLCompleter
 {
   FBSDKLoginCompletionParameters *_parameters;
-  id<NSObject> _observer;
-  BOOL _performExplicitFallback;
-  id<FBSDKGraphRequestConnectionProviding> _connectionProvider;
-  id<FBSDKAuthenticationTokenCreating> _authenticationTokenCreator;
 }
 
 static id<FBSDKProfileCreating> _profileFactory;

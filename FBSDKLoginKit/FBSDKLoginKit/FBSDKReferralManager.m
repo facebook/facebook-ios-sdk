@@ -36,15 +36,13 @@ static int const FBClientStateChallengeLength = 20;
 
 @interface FBSDKReferralManager ()
 @property (nonatomic) NSString *expectedChallenge;
+@property (nonatomic) UIViewController *viewController;
+@property (nonatomic) FBSDKReferralManagerResultBlock handler;
+@property (nonatomic) FBSDKReferralManagerLogger *logger;
+@property (nonatomic) BOOL isPerformingReferral;
 @end
 
 @implementation FBSDKReferralManager
-{
-  UIViewController *_viewController;
-  FBSDKReferralManagerResultBlock _handler;
-  FBSDKReferralManagerLogger *_logger;
-  BOOL _isPerformingReferral;
-}
 
 static _Nullable id<FBSDKBridgeAPIRequestOpening> _bridgeAPIRequestOpener;
 

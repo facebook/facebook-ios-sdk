@@ -32,6 +32,7 @@
 @property (nonatomic, strong) id<FBSDKEventLogging> eventLogger;
 @property (nonatomic, strong) id<FBSDKNotificationObserving> notificationObserver;
 @property (nonatomic, strong) Class<FBSDKAccessTokenProviding> tokenWallet;
+@property (nonatomic) NSMutableSet *trackedImpressions;
 
 @end
 
@@ -39,9 +40,6 @@
 NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in extensions")
 #endif
 @implementation FBSDKViewImpressionTracker
-{
-  NSMutableSet *_trackedImpressions;
-}
 
 static dispatch_once_t token;
 

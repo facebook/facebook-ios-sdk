@@ -42,33 +42,38 @@ static const u_int FB_GROUP1_RECHECK_DURATION = 30 * 60; // seconds
 // Apple reports storage in binary gigabytes (1024^3) in their About menus, etc.
 static const u_int FB_GIGABYTE = 1024 * 1024 * 1024; // bytes
 
+@interface FBSDKAppEventsDeviceInfo ()
+
+// Ephemeral data, may change during the lifetime of an app.  We collect them in different
+// 'group' frequencies - group1 may gets collected once every 30 minutes.
+
+// group1
+@property (nonatomic) NSString *carrierName;
+@property (nonatomic) NSString *timeZoneAbbrev;
+@property (nonatomic) unsigned long long remainingDiskSpaceGB;
+@property (nonatomic) NSString *timeZoneName;
+
+// Persistent data, but we maintain it to make rebuilding the device info as fast as possible.
+@property (nonatomic) NSString *bundleIdentifier;
+@property (nonatomic) NSString *longVersion;
+@property (nonatomic) NSString *shortVersion;
+@property (nonatomic) NSString *sysVersion;
+@property (nonatomic) NSString *machine;
+@property (nonatomic) NSString *language;
+@property (nonatomic) unsigned long long totalDiskSpaceGB;
+@property (nonatomic) unsigned long long coreCount;
+@property (nonatomic) CGFloat width;
+@property (nonatomic) CGFloat height;
+@property (nonatomic) CGFloat density;
+
+// Other state
+@property (nonatomic) long lastGroup1CheckTime;
+@property (nonatomic) BOOL isEncodingDirty;
+
+@end
+
 @implementation FBSDKAppEventsDeviceInfo
 {
-  // Ephemeral data, may change during the lifetime of an app.  We collect them in different
-  // 'group' frequencies - group1 may gets collected once every 30 minutes.
-
-  // group1
-  NSString *_carrierName;
-  NSString *_timeZoneAbbrev;
-  unsigned long long _remainingDiskSpaceGB;
-  NSString *_timeZoneName;
-
-  // Persistent data, but we maintain it to make rebuilding the device info as fast as possible.
-  NSString *_bundleIdentifier;
-  NSString *_longVersion;
-  NSString *_shortVersion;
-  NSString *_sysVersion;
-  NSString *_machine;
-  NSString *_language;
-  unsigned long long _totalDiskSpaceGB;
-  unsigned long long _coreCount;
-  CGFloat _width;
-  CGFloat _height;
-  CGFloat _density;
-
-  // Other state
-  long _lastGroup1CheckTime;
-  BOOL _isEncodingDirty;
   NSString *_encodedDeviceInfo;
 }
 

@@ -33,11 +33,14 @@ static NSString *const kFBSDKAuthenticationTokenKeychainKey = @"com.facebook.sdk
 static NSString *const kFBSDKTokenUUIDKey = @"tokenUUID";
 static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
 
+@interface FBSDKTokenCache ()
+
+@property (nonatomic) FBSDKKeychainStore *keychainStore;
+@property (nonatomic) id<FBSDKSettings> settings;
+
+@end
+
 @implementation FBSDKTokenCache
-{
-  FBSDKKeychainStore *_keychainStore;
-  id<FBSDKSettings> _settings;
-}
 
 - (instancetype)initWithSettings:(id<FBSDKSettings>)settings
 {

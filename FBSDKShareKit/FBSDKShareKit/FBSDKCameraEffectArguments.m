@@ -27,10 +27,11 @@
 
 static NSString *const FBSDKCameraEffectArgumentsArgumentsKey = @"arguments";
 
+@interface FBSDKCameraEffectArguments ()
+@property (nonatomic) NSMutableDictionary<NSString *, id> *arguments;
+@end
+
 @implementation FBSDKCameraEffectArguments
-{
-  NSMutableDictionary<NSString *, id> *_arguments;
-}
 
  #pragma mark - Object Lifecycle
 

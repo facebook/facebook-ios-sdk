@@ -29,10 +29,11 @@ static NSString *const kErrorCategoryLogin = @"login";
 
 #define FBSDKERRORCONFIGURATION_DICTIONARY_KEY @"configurationDictionary"
 
+@interface FBSDKErrorConfiguration ()
+@property (nonatomic) NSMutableDictionary<NSString *, id> *configurationDictionary;
+@end
+
 @implementation FBSDKErrorConfiguration
-{
-  NSMutableDictionary<NSString *, id> *_configurationDictionary;
-}
 
 - (instancetype)initWithDictionary:(NSDictionary<NSString *, id> *)dictionary
 {

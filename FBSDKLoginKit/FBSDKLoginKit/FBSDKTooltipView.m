@@ -48,28 +48,34 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
  #if FBSDK_SWIFT_PACKAGE
 NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in extensions")
  #endif
+
+@interface FBSDKTooltipView ()
+
+@property (nonatomic) CGPoint positionInView;
+@property (nonatomic) CFAbsoluteTime displayTime;
+@property (nonatomic) CFTimeInterval minimumDisplayDuration;
+@property (nonatomic) UILabel *textLabel;
+@property (nonatomic) UITapGestureRecognizer *insideTapGestureRecognizer;
+@property (nonatomic) CGFloat leftWidth;
+@property (nonatomic) CGFloat rightWidth;
+@property (nonatomic) CGFloat arrowMidpoint;
+@property (nonatomic) BOOL pointingUp;
+@property (nonatomic) BOOL isFadingOut;
+// style
+@property (nonatomic) UIColor *innerStrokeColor;
+@property (nonatomic) CGFloat arrowHeight;
+@property (nonatomic) CGFloat textPadding;
+@property (nonatomic) CGFloat maximumTextWidth;
+@property (nonatomic) CGFloat verticalTextOffset;
+@property (nonatomic) CGFloat verticalCrossOffset;
+@property (nonatomic) NSArray *gradientColors;
+@property (nonatomic) UIColor *crossCloseGlyphColor;
+
+@end
+
 @implementation FBSDKTooltipView
 {
-  CGPoint _positionInView;
-  CFAbsoluteTime _displayTime;
-  CFTimeInterval _minimumDisplayDuration;
-  UILabel *_textLabel;
-  UITapGestureRecognizer *_insideTapGestureRecognizer;
-  CGFloat _leftWidth;
-  CGFloat _rightWidth;
-  CGFloat _arrowMidpoint;
-  BOOL _pointingUp;
-  BOOL _isFadingOut;
-  // style
-  UIColor *_innerStrokeColor;
-  CGFloat _arrowHeight;
-  CGFloat _textPadding;
-  CGFloat _maximumTextWidth;
-  CGFloat _verticalTextOffset;
-  CGFloat _verticalCrossOffset;
   FBSDKTooltipColorStyle _colorStyle;
-  NSArray *_gradientColors;
-  UIColor *_crossCloseGlyphColor;
 }
 
 - (instancetype)initWithTagline:(NSString *)tagline message:(NSString *)message colorStyle:(FBSDKTooltipColorStyle)colorStyle

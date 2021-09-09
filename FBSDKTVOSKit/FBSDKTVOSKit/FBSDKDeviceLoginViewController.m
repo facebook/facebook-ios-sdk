@@ -20,16 +20,14 @@
 
 #import <FBSDKLoginKit/FBSDKDeviceLoginManager.h>
 
-@interface FBSDKDeviceLoginViewController () <
-  FBSDKDeviceLoginManagerDelegate
->
+@interface FBSDKDeviceLoginViewController () <FBSDKDeviceLoginManagerDelegate>
+
+@property (nonatomic) FBSDKDeviceLoginManager *loginManager;
+@property (nonatomic) BOOL isRetry;
+
 @end
 
 @implementation FBSDKDeviceLoginViewController
-{
-  FBSDKDeviceLoginManager *_loginManager;
-  BOOL _isRetry;
-}
 
 - (void)viewDidDisappear:(BOOL)animated
 {

@@ -37,7 +37,6 @@ static id<FBSDKInfoDictionaryProviding> _infoDictionaryProvider;
 static BOOL _isConfigured;
 
 @implementation FBSDKAppLinkUtility
-{}
 
 + (void)configureWithRequestProvider:(id<FBSDKGraphRequestProviding>)requestProvider
               infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider

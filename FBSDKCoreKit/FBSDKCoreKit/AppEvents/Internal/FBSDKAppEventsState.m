@@ -33,10 +33,13 @@
 
 static NSArray<id<FBSDKEventsProcessing>> *_eventProcessors;
 
+@interface FBSDKAppEventsState ()
+
+@property (nonatomic) NSMutableArray *mutableEvents;
+
+@end
+
 @implementation FBSDKAppEventsState
-{
-  NSMutableArray *_mutableEvents;
-}
 
 + (void)configureWithEventProcessors:(nonnull NSArray<id<FBSDKEventsProcessing>> *)eventProcessors
 {

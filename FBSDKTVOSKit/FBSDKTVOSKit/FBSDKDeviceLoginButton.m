@@ -28,13 +28,12 @@
 
 @interface FBSDKDeviceLoginButton () <FBSDKDeviceLoginViewControllerDelegate>
 
+@property (nonatomic) NSString *userID;
+@property (nonatomic) NSString *userName;
+
 @end
 
 @implementation FBSDKDeviceLoginButton
-{
-  NSString *_userID;
-  NSString *_userName;
-}
 
 #pragma mark - Object Lifecycle
 

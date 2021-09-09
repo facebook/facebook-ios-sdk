@@ -25,10 +25,11 @@
  #import "FBSDKCoreKitBasicsImportForLoginKit.h"
  #import "FBSDKCoreKitImport.h"
 
+@interface FBSDKLoginManagerLoginResult ()
+@property (nonatomic) NSMutableDictionary<NSString *, id> *mutableLoggingExtras;
+@end
+
 @implementation FBSDKLoginManagerLoginResult
-{
-  NSMutableDictionary<NSString *, id> *_mutableLoggingExtras;
-}
 
 - (instancetype)initWithToken:(FBSDKAccessToken *)token
           authenticationToken:(FBSDKAuthenticationToken *)authenticationToken

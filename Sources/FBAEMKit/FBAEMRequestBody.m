@@ -28,11 +28,14 @@
 
 typedef void (^AEMCodeBlock)(void);
 
+@interface FBAEMRequestBody ()
+
+@property (nonatomic) NSMutableData *data;
+@property (nonatomic) NSMutableDictionary *json;
+
+@end
+
 @implementation FBAEMRequestBody
-{
-  NSMutableData *_data;
-  NSMutableDictionary<NSString *, id> *_json;
-}
 
 - (instancetype)init
 {

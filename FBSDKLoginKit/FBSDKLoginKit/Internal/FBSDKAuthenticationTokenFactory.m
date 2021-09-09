@@ -53,13 +53,12 @@ typedef void (^FBSDKVerifySignatureCompletionBlock)(BOOL success);
 
 @interface FBSDKAuthenticationTokenFactory () <NSURLSessionDelegate>
 
+@property (nonatomic) NSString *cert;
+@property (nonatomic) id<FBSDKSessionProviding> sessionProvider;
+
 @end
 
 @implementation FBSDKAuthenticationTokenFactory
-{
-  NSString *_cert;
-  id<FBSDKSessionProviding> _sessionProvider;
-}
 
 - (instancetype)init
 {

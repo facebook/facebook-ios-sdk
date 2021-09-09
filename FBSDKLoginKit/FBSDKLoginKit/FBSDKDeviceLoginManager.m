@@ -29,15 +29,18 @@
 
 static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 
+@interface FBSDKDeviceLoginManager ()
+
+@property (nonatomic) FBSDKDeviceLoginCodeInfo *codeInfo;
+@property (nonatomic) BOOL isCancelled;
+@property (nonatomic) NSNetService *loginAdvertisementService;
+@property (nonatomic) BOOL isSmartLoginEnabled;
+@property (nonatomic) id<FBSDKGraphRequestProviding> graphRequestFactory;
+@property (nonatomic) id<FBSDKDevicePolling> poller;
+
+@end
+
 @implementation FBSDKDeviceLoginManager
-{
-  FBSDKDeviceLoginCodeInfo *_codeInfo;
-  BOOL _isCancelled;
-  NSNetService *_loginAdvertisementService;
-  BOOL _isSmartLoginEnabled;
-  id<FBSDKGraphRequestProviding> _graphRequestFactory;
-  id<FBSDKDevicePolling> _poller;
-}
 
 + (void)initialize
 {

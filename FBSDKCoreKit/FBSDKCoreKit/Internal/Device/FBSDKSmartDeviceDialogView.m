@@ -26,12 +26,13 @@
  #import "FBSDKInternalUtility.h"
  #import "FBSDKLogo.h"
 
+@interface FBSDKSmartDeviceDialogView ()
+@property (nonatomic) UIActivityIndicatorView *spinner;
+@property (nonatomic) UILabel *confirmationCodeLabel;
+@property (nonatomic) UIImageView *qrImageView;
+@end
+
 @implementation FBSDKSmartDeviceDialogView
-{
-  UIActivityIndicatorView *_spinner;
-  UILabel *_confirmationCodeLabel;
-  UIImageView *_qrImageView;
-}
 
 - (instancetype)initWithFrame:(CGRect)frame
 {

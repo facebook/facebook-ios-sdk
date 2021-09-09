@@ -303,24 +303,22 @@ static id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> g_restrictiv
 @property (nonatomic) id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider> onDeviceMLModelManager;
 @property (nonatomic) id<FBSDKMetadataIndexing> metadataIndexer;
 @property (nonatomic) id<FBSDKAppEventsReporter> skAdNetworkReporter;
+@property (nonatomic) FBSDKEventBindingManager *eventBindingManager;
 #endif
 
 @property (nonatomic, assign) BOOL disableTimer; // for testing only.
+
+@property (nonatomic) FBSDKServerConfiguration *serverConfiguration;
+@property (nonatomic) FBSDKAppEventsState *appEventsState;
+@property (nonatomic) BOOL isUnityInit;
 
 @end
 
 #if FBSDK_SWIFT_PACKAGE
 NS_EXTENSION_UNAVAILABLE("The Facebook iOS SDK is not currently supported in extensions")
 #endif
+
 @implementation FBSDKAppEvents
-{
-  FBSDKServerConfiguration *_serverConfiguration;
-  FBSDKAppEventsState *_appEventsState;
-#if !TARGET_OS_TV
-  FBSDKEventBindingManager *_eventBindingManager;
-#endif
-  BOOL _isUnityInit;
-}
 
 #pragma mark - Object Lifecycle
 

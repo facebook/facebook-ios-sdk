@@ -29,10 +29,13 @@ NSString *const FBSDKAuthenticationTokenTokenStringCodingKey = @"FBSDKAuthentica
 NSString *const FBSDKAuthenticationTokenNonceCodingKey = @"FBSDKAuthenticationTokenNonceCodingKey";
 NSString *const FBSDKAuthenticationTokenGraphDomainCodingKey = @"FBSDKAuthenticationTokenGraphDomainCodingKey";
 
+@interface FBSDKAuthenticationToken ()
+
+@property (nonatomic) NSString *jti;
+
+@end
+
 @implementation FBSDKAuthenticationToken
-{
-  NSString *_jti;
-}
 
 - (instancetype)initWithTokenString:(NSString *)tokenString
                               nonce:(NSString *)nonce

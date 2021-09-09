@@ -105,14 +105,17 @@
 
 @end
 
+@interface FBSDKProfilePictureView ()
+
+@property (nonatomic) BOOL hasProfileImage;
+@property (nonatomic) UIImageView *imageView;
+@property (nonatomic) FBSDKProfilePictureViewState *lastState;
+@property (nonatomic) BOOL needsImageUpdate;
+@property (nonatomic) BOOL placeholderImageIsValid;
+
+@end
+
 @implementation FBSDKProfilePictureView
-{
-  BOOL _hasProfileImage;
-  UIImageView *_imageView;
-  FBSDKProfilePictureViewState *_lastState;
-  BOOL _needsImageUpdate;
-  BOOL _placeholderImageIsValid;
-}
 
  #pragma mark - Object Lifecycle
 

@@ -129,26 +129,26 @@ typedef void (^fbsdk_like_action_block)(FBSDKTriStateBOOL objectIsLiked,
 typedef void (^fbsdk_like_action_controller_ensure_verified_object_id_completion_block)(NSString *verifiedObjectID);
 
 @interface FBSDKLikeActionController () <FBSDKLikeDialogDelegate>
+
+@property (nonatomic) FBSDKAccessToken *accessToken;
+@property (nonatomic) NSUInteger contentAccessCount;
+@property (nonatomic) BOOL contentDiscarded;
+@property (nonatomic) NSMapTable *dialogToAnalyticsParametersMap;
+@property (nonatomic) NSMapTable *dialogToUpdateBlockMap;
+@property (nonatomic) NSString *likeCountStringWithLike;
+@property (nonatomic) NSString *likeCountStringWithoutLike;
+@property (nonatomic) BOOL objectIsLikedIsPending;
+@property (nonatomic) BOOL objectIsLikedOnServer;
+@property (nonatomic) BOOL objectIsPage;
+@property (nonatomic) FBSDKLikeActionControllerRefreshState refreshState;
+@property (nonatomic) NSString *socialSentenceWithLike;
+@property (nonatomic) NSString *socialSentenceWithoutLike;
+@property (nonatomic) NSString *unlikeToken;
+@property (nonatomic) NSString *verifiedObjectID;
+
 @end
 
 @implementation FBSDKLikeActionController
-{
-  FBSDKAccessToken *_accessToken;
-  NSUInteger _contentAccessCount;
-  BOOL _contentDiscarded;
-  NSMapTable *_dialogToAnalyticsParametersMap;
-  NSMapTable *_dialogToUpdateBlockMap;
-  NSString *_likeCountStringWithLike;
-  NSString *_likeCountStringWithoutLike;
-  BOOL _objectIsLikedIsPending;
-  BOOL _objectIsLikedOnServer;
-  BOOL _objectIsPage;
-  FBSDKLikeActionControllerRefreshState _refreshState;
-  NSString *_socialSentenceWithLike;
-  NSString *_socialSentenceWithoutLike;
-  NSString *_unlikeToken;
-  NSString *_verifiedObjectID;
-}
 
  #pragma mark - Class Methods
 

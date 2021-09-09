@@ -31,12 +31,15 @@
   #import <FBSDKCoreKit/FBSDKInternalUtility.h>
  #endif
 
+@interface FBSDKDeviceDialogView ()
+
+@property (nonatomic) UIActivityIndicatorView *spinner;
+@property (nonatomic) UILabel *confirmationCodeLabel;
+@property (nonatomic) UIImageView *qrImageView;
+
+@end
+
 @implementation FBSDKDeviceDialogView
-{
-  UIActivityIndicatorView *_spinner;
-  UILabel *_confirmationCodeLabel;
-  UIImageView *_qrImageView;
-}
 
 - (instancetype)initWithFrame:(CGRect)frame
 {

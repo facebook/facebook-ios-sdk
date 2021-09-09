@@ -27,10 +27,11 @@
 FBSDKAppEventName FBSDKAppEventNameFBSDKShareButtonImpression = @"fb_share_button_impression";
 FBSDKAppEventName FBSDKAppEventNameFBSDKShareButtonDidTap = @"fb_share_button_did_tap";
 
+@interface FBSDKShareButton ()
+@property (nonatomic) FBSDKShareDialog *dialog;
+@end
+
 @implementation FBSDKShareButton
-{
-  FBSDKShareDialog *_dialog;
-}
 
  #pragma mark - Properties
 

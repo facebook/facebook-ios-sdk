@@ -24,11 +24,14 @@
 
  #import "FBSDKLikeBoxBorderView.h"
 
+@interface FBSDKLikeBoxView ()
+
+@property (nonatomic) FBSDKLikeBoxBorderView *borderView;
+@property (nonatomic) UILabel *likeCountLabel;
+
+@end
+
 @implementation FBSDKLikeBoxView
-{
-  FBSDKLikeBoxBorderView *_borderView;
-  UILabel *_likeCountLabel;
-}
 
  #pragma mark - Object Lifecycle
 

@@ -27,10 +27,11 @@
 
 static NSString *const FBSDKCameraEffectTexturesTexturesKey = @"textures";
 
+@interface FBSDKCameraEffectTextures ()
+@property (nonatomic) NSMutableDictionary<NSString *, UIImage *> *textures;
+@end
+
 @implementation FBSDKCameraEffectTextures
-{
-  NSMutableDictionary<NSString *, UIImage *> *_textures;
-}
 
  #pragma mark - Object Lifecycle
 

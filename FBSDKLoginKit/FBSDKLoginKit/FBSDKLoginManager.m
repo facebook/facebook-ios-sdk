@@ -49,13 +49,18 @@ static NSString *const FBSDKOauthPath = @"/dialog/oauth";
 static NSString *const SFVCCanceledLogin = @"com.apple.SafariServices.Authentication";
 static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebAuthenticationSession";
 
+@interface FBSDKLoginManager ()
+
+@property (nonatomic) FBSDKLoginManagerLoginResultBlock handler;
+@property (nonatomic) FBSDKLoginConfiguration *configuration;
+
+@end
+
 @implementation FBSDKLoginManager
 {
-  FBSDKLoginManagerLoginResultBlock _handler;
   FBSDKLoginManagerLogger *_logger;
   FBSDKLoginManagerState _state;
   id<FBSDKKeychainStore> _keychainStore;
-  FBSDKLoginConfiguration *_configuration;
   Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> _tokenWallet;
   id<FBSDKURLHosting, FBSDKAppURLSchemeProviding, FBSDKAppAvailabilityChecker> _internalUtility;
   BOOL _usedSFAuthSession;

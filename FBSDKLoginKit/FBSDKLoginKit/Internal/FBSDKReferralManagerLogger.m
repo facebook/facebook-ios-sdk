@@ -46,13 +46,15 @@ FBSDKAppEventName const FBSDKAppEventNameFBReferralStart = @"fb_referral_start";
 /** Use to log the end of a referral request */
 FBSDKAppEventName const FBSDKAppEventNameFBReferralEnd = @"fb_referral_end";
 
+@interface FBSDKReferralManagerLogger ()
+
+@property (nonatomic) NSString *identifier;
+@property (nonatomic) NSMutableDictionary<NSString *, id> *extras;
+@property (nonatomic) NSString *loggingToken;
+
+@end
+
 @implementation FBSDKReferralManagerLogger
-{
-  @private
-  NSString *_identifier;
-  NSMutableDictionary<NSString *, id> *_extras;
-  NSString *_loggingToken;
-}
 
 - (instancetype)init
 {

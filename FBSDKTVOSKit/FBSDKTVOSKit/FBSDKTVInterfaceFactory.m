@@ -27,10 +27,11 @@
 static NSString *const FBSDKLoginButtonTag = @"FBSDKLoginButton";
 static NSString *const FBSDKLoginViewControllerTag = @"FBSDKLoginViewController";
 
+@interface FBSDKTVInterfaceFactory ()
+@property (nonatomic) id<TVInterfaceCreating> interfaceCreator;
+@end
+
 @implementation FBSDKTVInterfaceFactory
-{
-  id<TVInterfaceCreating> _interfaceCreator;
-}
 
 - (instancetype)initWithInterfaceCreator:(id<TVInterfaceCreating>)interfaceCreator
 {

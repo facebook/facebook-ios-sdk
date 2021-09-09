@@ -73,18 +73,18 @@ FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthMethodEnd = @"fb_mobile_lo
 /** Use to log the post-login heartbeat event after  the end of an auth request*/
 FBSDKAppEventName const FBSDKAppEventNameFBSessionAuthHeartbeat = @"fb_mobile_login_heartbeat";
 
+@interface FBSDKLoginManagerLogger ()
+
+@property (nonatomic) NSString *identifier;
+@property (nonatomic) NSMutableDictionary<NSString *, id> *extras;
+@property (nonatomic) NSString *lastResult;
+@property (nonatomic) NSError *lastError;
+@property (nonatomic) NSString *authMethod;
+@property (nonatomic) NSString *loggingToken;
+
+@end
+
 @implementation FBSDKLoginManagerLogger
-{
-  @private
-  NSString *_identifier;
-  NSMutableDictionary<NSString *, id> *_extras;
-
-  NSString *_lastResult;
-  NSError *_lastError;
-
-  NSString *_authMethod;
-  NSString *_loggingToken;
-}
 
 + (FBSDKLoginManagerLogger *)loggerFromParameters:(NSDictionary<NSString *, id> *)parameters
                                          tracking:(FBSDKLoginTracking)tracking

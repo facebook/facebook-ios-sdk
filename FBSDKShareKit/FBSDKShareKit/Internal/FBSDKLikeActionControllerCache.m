@@ -33,11 +33,14 @@
  #define FBSDK_LIKE_ACTION_CONTROLLER_CACHE_ACCESS_TOKEN_KEY @"accessTokenString"
  #define FBSDK_LIKE_ACTION_CONTROLLER_CACHE_ITEMS_KEY @"items"
 
+@interface FBSDKLikeActionControllerCache ()
+
+@property (nonatomic) NSString *accessTokenString;
+@property (nonatomic) NSMutableDictionary<NSString *, id> *items;
+
+@end
+
 @implementation FBSDKLikeActionControllerCache
-{
-  NSString *_accessTokenString;
-  NSMutableDictionary<NSString *, id> *_items;
-}
 
  #pragma mark - Object Lifecycle
 

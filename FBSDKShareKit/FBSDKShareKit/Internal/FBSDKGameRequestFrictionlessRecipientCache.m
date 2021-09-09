@@ -25,10 +25,11 @@
  #import "FBSDKCoreKitBasicsImportForShareKit.h"
  #import "FBSDKCoreKitImport.h"
 
+@interface FBSDKGameRequestFrictionlessRecipientCache ()
+@property (nonatomic) NSSet *recipientIDs;
+@end
+
 @implementation FBSDKGameRequestFrictionlessRecipientCache
-{
-  NSSet *_recipientIDs;
-}
 
  #pragma mark - Object Lifecycle
 

@@ -26,13 +26,11 @@
 @interface FBSDKAccessTokenExpirer ()
 
 @property (nonnull, nonatomic, readonly) id<FBSDKNotificationPosting, FBSDKNotificationObserving> notificationCenter;
+@property (nonatomic) NSTimer *timer;
 
 @end
 
 @implementation FBSDKAccessTokenExpirer
-{
-  NSTimer *_timer;
-}
 
 - (instancetype)initWithNotificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationObserving>)notificationCenter
 {

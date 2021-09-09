@@ -29,12 +29,10 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonImpression = @"fb_send_button_
 FBSDKAppEventName FBSDKAppEventNameFBSDKSendButtonDidTap = @"fb_send_button_did_tap";
 
 @interface FBSDKSendButton () <FBSDKButtonImpressionTracking>
+@property (nonatomic) FBSDKMessageDialog *dialog;
 @end
 
 @implementation FBSDKSendButton
-{
-  FBSDKMessageDialog *_dialog;
-}
 
  #pragma mark - Properties
 

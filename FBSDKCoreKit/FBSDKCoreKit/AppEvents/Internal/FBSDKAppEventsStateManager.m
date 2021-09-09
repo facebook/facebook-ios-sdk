@@ -26,30 +26,19 @@
 #import "FBSDKLogger.h"
 #import "FBSDKUnarchiverProvider.h"
 
-@interface FBSDKAppEventsStateManager (Internal)
+@interface FBSDKAppEventsStateManager ()
 // A quick optimization to allow returning empty array if we know there are no persisted events.
 @property (nonatomic, readwrite, assign) BOOL canSkipDiskCheck;
 @end
 
 @implementation FBSDKAppEventsStateManager
-{
-  BOOL _canSkipDiskCheck;
-}
 
 - (instancetype)init
 {
-  self.canSkipDiskCheck = NO;
+  if ((self = [super init])) {
+    _canSkipDiskCheck = NO;
+  }
   return self;
-}
-
-- (void)setCanSkipDiskCheck:(BOOL)canSkipDiskCheck
-{
-  _canSkipDiskCheck = canSkipDiskCheck;
-}
-
-- (BOOL)canSkipDiskCheck
-{
-  return _canSkipDiskCheck;
 }
 
 + (FBSDKAppEventsStateManager *)shared

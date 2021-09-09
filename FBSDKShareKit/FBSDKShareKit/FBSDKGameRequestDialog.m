@@ -33,16 +33,17 @@
 @interface FBSDKGameRequestDialog () <FBSDKWebDialogDelegate, FBSDKURLOpening>
 @end
 
+@interface FBSDKGameRequestDialog ()
+@property (nonatomic) BOOL dialogIsFrictionless;
+@property (nonatomic) BOOL isAwaitingResult;
+@property (nonatomic) FBSDKWebDialog *webDialog;
+@end
+
 @implementation FBSDKGameRequestDialog
-{
-  BOOL _dialogIsFrictionless;
-  BOOL _isAwaitingResult;
-  FBSDKWebDialog *_webDialog;
-}
 
  #pragma mark - Class Methods
 
-static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
+static FBSDKGameRequestFrictionlessRecipientCache * _recipientCache = nil;
 
 + (void)initialize
 {
