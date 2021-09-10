@@ -299,10 +299,21 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
     // Dispatch openURL calls to prevent hangs if we're inside the current app delegate's openURL flow already
     NSOperatingSystemVersion iOS10Version = { .majorVersion = 10, .minorVersion = 0, .patchVersion = 0 };
     if ([weakProcessInfo isOperatingSystemAtLeastVersion:iOS10Version]) {
-      if (@available(iOS 10.0, *)) {
-        [self.urlOpener openURL:url options:@{} completionHandler:^(BOOL success) {
-          handler(success, nil);
-        }];
+      if (self.urlOpener) {
+        if (@available(iOS 10.0, *)) {
+          [self.urlOpener openURL:url options:@{} completionHandler:^(BOOL success) {
+            handler(success, nil);
+          }];
+        }
+      } else {
+      #if FBTEST
+        // self.urlOpener should only be nil in test
+        NSDictionary *userInfo = @{FBSDKErrorLocalizedDescriptionKey : @"Cannot login due to urlOpener being nil"};
+        NSError *loginError = [[NSError alloc] initWithDomain:FBSDKErrorDomain
+                                                         code:FBSDKErrorUnknown
+                                                     userInfo:userInfo];
+        handler(false, loginError);
+      #endif
       }
     } else if (handler) {
       BOOL opened = [self.urlOpener openURL:url];
